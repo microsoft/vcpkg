@@ -1,0 +1,156 @@
+From e396a74da8e7c9c06f3145de65647d7d48524a07 Mon Sep 17 00:00:00 2001
+From: Robert Schumacher <roschuma@microsoft.com>
+Date: Thu, 5 May 2016 04:16:18 -0700
+Subject: [PATCH] OpenCV should follow FHS-like conventions
+
+---
+ CMakeLists.txt               | 11 +++++++----
+ cmake/OpenCVGenConfig.cmake  | 11 +++++------
+ cmake/OpenCVGenHeaders.cmake |  8 ++++++--
+ cmake/OpenCVModule.cmake     |  4 +++-
+ data/CMakeLists.txt          |  6 ++++--
+ include/CMakeLists.txt       |  6 ++++--
+ 6 files changed, 29 insertions(+), 17 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3ee50ff..8e3f57d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -250,6 +250,8 @@ OCV_OPTION(INSTALL_PYTHON_EXAMPLES  "Install Python examples"   OFF )
+ OCV_OPTION(INSTALL_ANDROID_EXAMPLES "Install Android examples"  OFF IF ANDROID )
+ OCV_OPTION(INSTALL_TO_MANGLED_PATHS "Enables mangled install paths, that help with side by side installs." OFF IF (UNIX AND NOT ANDROID AND NOT APPLE_FRAMEWORK AND BUILD_SHARED_LIBS) )
+ OCV_OPTION(INSTALL_TESTS            "Install accuracy and performance test binaries and test data" OFF)
++OCV_OPTION(INSTALL_HEADERS          "Install header files"      ON)
++OCV_OPTION(INSTALL_OTHER            "Install other files"       ON)
+ 
+ # OpenCV build options
+ # ===================================================
+@@ -315,7 +317,9 @@ else()
+ endif()
+ 
+ if(WIN32 AND CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
+-  if(DEFINED OpenCV_RUNTIME AND DEFINED OpenCV_ARCH)
++  if(DEFINED OpenCV_DISABLE_ARCH_PATH)
++    set(OpenCV_INSTALL_BINARIES_PREFIX "")
++  elseif(DEFINED OpenCV_RUNTIME AND DEFINED OpenCV_ARCH)
+     set(OpenCV_INSTALL_BINARIES_PREFIX "${OpenCV_ARCH}/${OpenCV_RUNTIME}/")
+   else()
+     message(STATUS "Can't detect runtime and/or arch")
+@@ -379,7 +383,7 @@ else()
+     set(OPENCV_3P_LIB_INSTALL_PATH  "${OpenCV_INSTALL_BINARIES_PREFIX}staticlib${LIB_SUFFIX}")
+     set(OPENCV_SAMPLES_SRC_INSTALL_PATH    samples/native)
+     set(OPENCV_JAR_INSTALL_PATH java)
+-    set(OPENCV_OTHER_INSTALL_PATH   etc)
++    set(OPENCV_OTHER_INSTALL_PATH   share/opencv)
+   else()
+     set(OPENCV_LIB_INSTALL_PATH     lib${LIB_SUFFIX})
+     set(OPENCV_3P_LIB_INSTALL_PATH  share/OpenCV/3rdparty/${OPENCV_LIB_INSTALL_PATH})
+@@ -736,8 +740,7 @@ endif()
+ # for UNIX it does not make sense as LICENSE and readme will be part of the package automatically
+ if(ANDROID OR NOT UNIX)
+   install(FILES ${OPENCV_LICENSE_FILE}
+-        PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
+-        DESTINATION ${CMAKE_INSTALL_PREFIX} COMPONENT libs)
++        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/opencv RENAME copyright CONFIGURATIONS Release COMPONENT libs)
+   if(OPENCV_README_FILE)
+     install(FILES ${OPENCV_README_FILE}
+             PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
+diff --git a/cmake/OpenCVGenConfig.cmake b/cmake/OpenCVGenConfig.cmake
+index dbfd7ca..94fc4a9 100644
+--- a/cmake/OpenCVGenConfig.cmake
++++ b/cmake/OpenCVGenConfig.cmake
+@@ -139,14 +139,13 @@ if(WIN32)
+   configure_file("${OpenCV_SOURCE_DIR}/cmake/templates/OpenCVConfig-version.cmake.in" "${CMAKE_BINARY_DIR}/win-install/OpenCVConfig-version.cmake" @ONLY)
+   if (CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
+     if(BUILD_SHARED_LIBS)
+-      install(FILES "${CMAKE_BINARY_DIR}/win-install/OpenCVConfig.cmake" DESTINATION "${OpenCV_INSTALL_BINARIES_PREFIX}lib" COMPONENT dev)
+-      install(EXPORT OpenCVModules DESTINATION "${OpenCV_INSTALL_BINARIES_PREFIX}lib" FILE OpenCVModules${modules_file_suffix}.cmake COMPONENT dev)
++      install(FILES "${CMAKE_BINARY_DIR}/win-install/OpenCVConfig.cmake" DESTINATION "cmake" COMPONENT dev)
++      install(EXPORT OpenCVModules DESTINATION "cmake" FILE OpenCVModules${modules_file_suffix}.cmake COMPONENT dev)
+     else()
+-      install(FILES "${CMAKE_BINARY_DIR}/win-install/OpenCVConfig.cmake" DESTINATION "${OpenCV_INSTALL_BINARIES_PREFIX}staticlib" COMPONENT dev)
+-      install(EXPORT OpenCVModules DESTINATION "${OpenCV_INSTALL_BINARIES_PREFIX}staticlib" FILE OpenCVModules${modules_file_suffix}.cmake COMPONENT dev)
++      install(FILES "${CMAKE_BINARY_DIR}/win-install/OpenCVConfig.cmake" DESTINATION "cmake" COMPONENT dev)
++      install(EXPORT OpenCVModules DESTINATION "cmake" FILE OpenCVModules${modules_file_suffix}.cmake COMPONENT dev)
+     endif()
+-    install(FILES "${CMAKE_BINARY_DIR}/win-install/OpenCVConfig-version.cmake" DESTINATION "${CMAKE_INSTALL_PREFIX}" COMPONENT dev)
+-    install(FILES "${OpenCV_SOURCE_DIR}/cmake/OpenCVConfig.cmake" DESTINATION "${CMAKE_INSTALL_PREFIX}/" COMPONENT dev)
++    install(FILES "${CMAKE_BINARY_DIR}/win-install/OpenCVConfig-version.cmake" DESTINATION "cmake" COMPONENT dev)
+   else ()
+     install(FILES "${CMAKE_BINARY_DIR}/win-install/OpenCVConfig.cmake" DESTINATION "${OpenCV_INSTALL_BINARIES_PREFIX}lib/cmake/opencv-${OPENCV_VERSION}" COMPONENT dev)
+     install(EXPORT OpenCVModules DESTINATION "${OpenCV_INSTALL_BINARIES_PREFIX}lib/cmake/opencv-${OPENCV_VERSION}" FILE OpenCVModules${modules_file_suffix}.cmake COMPONENT dev)
+diff --git a/cmake/OpenCVGenHeaders.cmake b/cmake/OpenCVGenHeaders.cmake
+index 2988979..810871b 100644
+--- a/cmake/OpenCVGenHeaders.cmake
++++ b/cmake/OpenCVGenHeaders.cmake
+@@ -1,7 +1,9 @@
+ # platform-specific config file
+ configure_file("${OpenCV_SOURCE_DIR}/cmake/templates/cvconfig.h.in" "${OPENCV_CONFIG_FILE_INCLUDE_DIR}/cvconfig.h")
+ configure_file("${OpenCV_SOURCE_DIR}/cmake/templates/cvconfig.h.in" "${OPENCV_CONFIG_FILE_INCLUDE_DIR}/opencv2/cvconfig.h")
+-install(FILES "${OPENCV_CONFIG_FILE_INCLUDE_DIR}/cvconfig.h" DESTINATION ${OPENCV_INCLUDE_INSTALL_PATH}/opencv2 COMPONENT dev)
++if(INSTALL_HEADERS)
++  install(FILES "${OPENCV_CONFIG_FILE_INCLUDE_DIR}/cvconfig.h" DESTINATION ${OPENCV_INCLUDE_INSTALL_PATH}/opencv2 COMPONENT dev)
++endif()
+ 
+ # ----------------------------------------------------------------------------
+ #  opencv_modules.hpp based on actual modules list
+@@ -25,4 +27,6 @@ set(OPENCV_MODULE_DEFINITIONS_CONFIGMAKE "${OPENCV_MODULE_DEFINITIONS_CONFIGMAKE
+ #endforeach()
+ 
+ configure_file("${OpenCV_SOURCE_DIR}/cmake/templates/opencv_modules.hpp.in" "${OPENCV_CONFIG_FILE_INCLUDE_DIR}/opencv2/opencv_modules.hpp")
+-install(FILES "${OPENCV_CONFIG_FILE_INCLUDE_DIR}/opencv2/opencv_modules.hpp" DESTINATION ${OPENCV_INCLUDE_INSTALL_PATH}/opencv2 COMPONENT dev)
++if(INSTALL_HEADERS)
++  install(FILES "${OPENCV_CONFIG_FILE_INCLUDE_DIR}/opencv2/opencv_modules.hpp" DESTINATION ${OPENCV_INCLUDE_INSTALL_PATH}/opencv2 COMPONENT dev)
++endif()
+diff --git a/cmake/OpenCVModule.cmake b/cmake/OpenCVModule.cmake
+index 3385385..530e53f 100644
+--- a/cmake/OpenCVModule.cmake
++++ b/cmake/OpenCVModule.cmake
+@@ -879,7 +879,9 @@ macro(_ocv_create_module)
+       foreach(hdr ${OPENCV_MODULE_${m}_HEADERS})
+         string(REGEX REPLACE "^.*opencv2/" "opencv2/" hdr2 "${hdr}")
+         if(NOT hdr2 MATCHES "opencv2/${m}/private.*" AND hdr2 MATCHES "^(opencv2/?.*)/[^/]+.h(..)?$" )
+-          install(FILES ${hdr} OPTIONAL DESTINATION "${OPENCV_INCLUDE_INSTALL_PATH}/${CMAKE_MATCH_1}" COMPONENT dev)
++          if(INSTALL_HEADERS)
++            install(FILES ${hdr} OPTIONAL DESTINATION "${OPENCV_INCLUDE_INSTALL_PATH}/${CMAKE_MATCH_1}" COMPONENT dev)
++          endif()
+         endif()
+       endforeach()
+     endif()
+diff --git a/data/CMakeLists.txt b/data/CMakeLists.txt
+index 1f0d720..86b9d89 100644
+--- a/data/CMakeLists.txt
++++ b/data/CMakeLists.txt
+@@ -1,8 +1,10 @@
+ file(GLOB HAAR_CASCADES haarcascades/*.xml)
+ file(GLOB LBP_CASCADES lbpcascades/*.xml)
+ 
+-install(FILES ${HAAR_CASCADES} DESTINATION ${OPENCV_OTHER_INSTALL_PATH}/haarcascades COMPONENT libs)
+-install(FILES ${LBP_CASCADES}  DESTINATION ${OPENCV_OTHER_INSTALL_PATH}/lbpcascades  COMPONENT libs)
++if(INSTALL_OTHER)
++  install(FILES ${HAAR_CASCADES} DESTINATION ${OPENCV_OTHER_INSTALL_PATH}/haarcascades COMPONENT libs)
++  install(FILES ${LBP_CASCADES}  DESTINATION ${OPENCV_OTHER_INSTALL_PATH}/lbpcascades  COMPONENT libs)
++endif()
+ 
+ if(INSTALL_TESTS AND OPENCV_TEST_DATA_PATH)
+   install(DIRECTORY "${OPENCV_TEST_DATA_PATH}/" DESTINATION "${OPENCV_TEST_DATA_INSTALL_PATH}" COMPONENT "tests")
+diff --git a/include/CMakeLists.txt b/include/CMakeLists.txt
+index b4e48e6..58dccc7 100644
+--- a/include/CMakeLists.txt
++++ b/include/CMakeLists.txt
+@@ -1,7 +1,9 @@
+ file(GLOB old_hdrs "opencv/*.h*")
+-install(FILES ${old_hdrs}
++if(INSTALL_HEADERS)
++  install(FILES ${old_hdrs}
+     DESTINATION ${OPENCV_INCLUDE_INSTALL_PATH}/opencv
+     COMPONENT dev)
+-install(FILES "opencv2/opencv.hpp"
++  install(FILES "opencv2/opencv.hpp"
+     DESTINATION ${OPENCV_INCLUDE_INSTALL_PATH}/opencv2
+     COMPONENT dev)
++endif()
+\ No newline at end of file
+-- 
+2.8.1.windows.1
+

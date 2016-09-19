@@ -1,0 +1,3 @@
+Source: libuv
+Version: 1.9.1
+Description: libuv is a multi-platform support library with a focus on asynchronous I/O.
