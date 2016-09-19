@@ -4,13 +4,13 @@ Fixing libpng:x86-uwp
 First, try building:
 
 ```
-PS D:\src\cpp-packages> vcpkg install libpng:x86-uwp
--- SYSROOT=D:/src/cpp-packages/sysroot/x86-uwp
--- DISTDIR=D:/src/cpp-packages/distdir
--- CURRENT_SOFTWARE_DIR=D:/src/cpp-packages/software/libpng_x86-uwp
--- CURRENT_WORKSRC_DIR=D:/src/cpp-packages/worksrc/libpng
--- CURRENT_PORT_DIR=D:/src/cpp-packages/ports/libpng/.
--- Using cached D:/src/cpp-packages/distdir/libpng-1.6.24.tar.xz
+PS D:\src\vcpkg> vcpkg install libpng:x86-uwp
+-- CURRENT_INSTALLED_DIR=D:/src/vcpkg/installed/x86-uwp
+-- DOWNLOADS=D:/src/vcpkg/downloads
+-- CURRENT_PACKAGES_DIR=D:/src/vcpkg/packages/libpng_x86-uwp
+-- CURRENT_BUILDTREES_DIR=D:/src/vcpkg/buildtrees/libpng
+-- CURRENT_PORT_DIR=D:/src/vcpkg/ports/libpng/.
+-- Using cached D:/src/vcpkg/downloads/libpng-1.6.24.tar.xz
 -- Extracting done
 -- Configuring x86-uwp-rel
 -- Configuring x86-uwp-rel done
@@ -21,16 +21,16 @@ CMake Error at scripts/cmake/execute_required_process.cmake:14 (message):
   Command failed: C:/Program
   Files/CMake/bin/cmake.exe;--build;.;--config;Release
 
-  Working Directory: D:/src/cpp-packages/worksrc/libpng/x86-uwp-rel
+  Working Directory: D:/src/vcpkg/buildtrees/libpng/x86-uwp-rel
 
   See logs for more information:
 
-      D:\src\cpp-packages\worksrc\libpng\build-x86-uwp-rel-out.log
-      D:\src\cpp-packages\worksrc\libpng\build-x86-uwp-rel-err.log
+      D:\src\vcpkg\buildtrees\libpng\build-x86-uwp-rel-out.log
+      D:\src\vcpkg\buildtrees\libpng\build-x86-uwp-rel-err.log
 
 Call Stack (most recent call first):
-  scripts/cmake/build_standard_cmake.cmake:3 (execute_required_process)
-  ports/libpng/portfile.cmake:22 (build_standard_cmake)
+  scripts/cmake/vcpkg_build_cmake.cmake:3 (execute_required_process)
+  ports/libpng/portfile.cmake:22 (vcpkg_build_cmake)
   scripts/ports.cmake:84 (include)
 
 
@@ -42,17 +42,17 @@ Next, looking at the above logs (build-...-out.log and build-...-err.log).
 ```
 // build-x86-uwp-rel-out.log
 ...
-"D:\src\cpp-packages\worksrc\libpng\x86-uwp-rel\ALL_BUILD.vcxproj" (default target) (1) ->
-"D:\src\cpp-packages\worksrc\libpng\x86-uwp-rel\png.vcxproj" (default target) (3) ->
+"D:\src\vcpkg\buildtrees\libpng\x86-uwp-rel\ALL_BUILD.vcxproj" (default target) (1) ->
+"D:\src\vcpkg\buildtrees\libpng\x86-uwp-rel\png.vcxproj" (default target) (3) ->
 (ClCompile target) -> 
-  D:\src\cpp-packages\worksrc\libpng\src\libpng-1.6.24\pngerror.c(775): warning C4013: 'ExitProcess' undefined; assuming extern returning int [D:\src\cpp-packages\worksrc\libpng\x86-uwp-rel\png.vcxproj]
+  D:\src\vcpkg\buildtrees\libpng\src\libpng-1.6.24\pngerror.c(775): warning C4013: 'ExitProcess' undefined; assuming extern returning int [D:\src\vcpkg\buildtrees\libpng\x86-uwp-rel\png.vcxproj]
 
 
-"D:\src\cpp-packages\worksrc\libpng\x86-uwp-rel\ALL_BUILD.vcxproj" (default target) (1) ->
-"D:\src\cpp-packages\worksrc\libpng\x86-uwp-rel\png.vcxproj" (default target) (3) ->
+"D:\src\vcpkg\buildtrees\libpng\x86-uwp-rel\ALL_BUILD.vcxproj" (default target) (1) ->
+"D:\src\vcpkg\buildtrees\libpng\x86-uwp-rel\png.vcxproj" (default target) (3) ->
 (Link target) -> 
-  pngerror.obj : error LNK2019: unresolved external symbol _ExitProcess referenced in function _png_longjmp [D:\src\cpp-packages\worksrc\libpng\x86-uwp-rel\png.vcxproj]
-  D:\src\cpp-packages\worksrc\libpng\x86-uwp-rel\Release\libpng16.dll : fatal error LNK1120: 1 unresolved externals [D:\src\cpp-packages\worksrc\libpng\x86-uwp-rel\png.vcxproj]
+  pngerror.obj : error LNK2019: unresolved external symbol _ExitProcess referenced in function _png_longjmp [D:\src\vcpkg\buildtrees\libpng\x86-uwp-rel\png.vcxproj]
+  D:\src\vcpkg\buildtrees\libpng\x86-uwp-rel\Release\libpng16.dll : fatal error LNK1120: 1 unresolved externals [D:\src\vcpkg\buildtrees\libpng\x86-uwp-rel\png.vcxproj]
 
     1 Warning(s)
     2 Error(s)
@@ -62,7 +62,7 @@ Time Elapsed 00:00:04.19
 Taking a look at [MSDN](https://msdn.microsoft.com/en-us/library/windows/desktop/ms682658(v=vs.85).aspx) shows that `ExitProcess` is only available for desktop apps. Additionally, it's useful to see the surrounding context:
 
 ```c
-/* worksrc\libpng\src\libpng-1.6.24\pngerror.c:769 */
+/* buildtrees\libpng\src\libpng-1.6.24\pngerror.c:769 */
     /* If control reaches this point, png_longjmp() must not return. The only
     * choice is to terminate the whole process (or maybe the thread); to do
     * this the ANSI-C abort() function is used unless a different method is
@@ -74,7 +74,7 @@ Taking a look at [MSDN](https://msdn.microsoft.com/en-us/library/windows/desktop
 
 A recursive search for `PNG_ABORT` reveals the definition:
 ```
-PS D:\src\cpp-packages\worksrc\libpng\src\libpng-1.6.24> findstr /snipl "PNG_ABORT" *
+PS D:\src\vcpkg\buildtrees\libpng\src\libpng-1.6.24> findstr /snipl "PNG_ABORT" *
 CHANGES:701:  Added PNG_SETJMP_SUPPORTED, PNG_SETJMP_NOT_SUPPORTED, and PNG_ABORT() macros
 libpng-manual.txt:432:errors will result in a call to PNG_ABORT() which defaults to abort().
 libpng-manual.txt:434:You can #define PNG_ABORT() to a function that does something
@@ -97,7 +97,7 @@ pngpriv.h:463:#    define PNG_ABORT() abort()
 This already gives us some great clues, but the full definition tells the complete story.
 
 ```c
-/* worksrc\libpng\src\libpng-1.6.24\pngpriv.h:459 */
+/* buildtrees\libpng\src\libpng-1.6.24\pngpriv.h:459 */
 #ifndef PNG_ABORT
 #  ifdef _WINDOWS_
 #    define PNG_ABORT() ExitProcess(0)
@@ -111,15 +111,15 @@ This already gives us some great clues, but the full definition tells the comple
 
 I recommend using git to create the patch file, since you'll already have it installed.
 ```
-PS D:\src\cpp-packages\worksrc\libpng\src\libpng-1.6.24> git init .
-Initialized empty Git repository in D:/src/cpp-packages/worksrc/libpng/src/libpng-1.6.24/.git/
+PS D:\src\vcpkg\buildtrees\libpng\src\libpng-1.6.24> git init .
+Initialized empty Git repository in D:/src/vcpkg/buildtrees/libpng/src/libpng-1.6.24/.git/
 
-PS D:\src\cpp-packages\worksrc\libpng\src\libpng-1.6.24> git add .
+PS D:\src\vcpkg\buildtrees\libpng\src\libpng-1.6.24> git add .
 warning: LF will be replaced by CRLF in ANNOUNCE.
 The file will have its original line endings in your working directory.
 ...
 
-PS D:\src\cpp-packages\worksrc\libpng\src\libpng-1.6.24> git commit -m "temp"
+PS D:\src\vcpkg\buildtrees\libpng\src\libpng-1.6.24> git commit -m "temp"
 [master (root-commit) 68f253f] temp
  422 files changed, 167717 insertions(+)
 ...
@@ -127,7 +127,7 @@ PS D:\src\cpp-packages\worksrc\libpng\src\libpng-1.6.24> git commit -m "temp"
 
 Now we can modify `pngpriv.h` to use `abort()` everywhere.
 ```c
-/* worksrc\libpng\src\libpng-1.6.24\pngpriv.h:459 */
+/* buildtrees\libpng\src\libpng-1.6.24\pngpriv.h:459 */
 #ifndef PNG_ABORT
 #  define PNG_ABORT() abort()
 #endif
@@ -135,51 +135,48 @@ Now we can modify `pngpriv.h` to use `abort()` everywhere.
 
 The output of `git diff` is already in patch format, so we just need to save the patch into the `ports/libpng` directory.
 ```
-PS worksrc\libpng\src\libpng-1.6.24> git diff | out-file -enc ascii ..\..\..\..\ports\libpng\use-abort-on-all-platforms.patch
+PS buildtrees\libpng\src\libpng-1.6.24> git diff | out-file -enc ascii ..\..\..\..\ports\libpng\use-abort-on-all-platforms.patch
 ```
 
 Finally, we need to apply the patch after extracting the source.
 ```cmake
 # ports\libpng\portfile.cmake
 ...
-extract_source_archive(${ARCHIVE})
+vcpkg_extract_source_archive(${ARCHIVE})
 
 find_program(GIT git)
-execute_required_process(
+vcpkg_execute_required_process(
     COMMAND ${GIT} init
-    WORKING_DIRECTORY ${CURRENT_WORKSRC_DIR}/src/libpng-1.6.24
+    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src/libpng-1.6.24
     LOGNAME git-init
 )
 execute_process(
     COMMAND ${GIT} apply "${CMAKE_CURRENT_LIST_DIR}/use-abort-on-all-platforms.patch" --ignore-whitespace --whitespace=nowarn
-    WORKING_DIRECTORY ${CURRENT_WORKSRC_DIR}/src/libpng-1.6.24
+    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src/libpng-1.6.24
 )
 
-configure_standard_cmake(
+vcpkg_configure_cmake(
 ...
 ```
 
-To be completely sure this works from the top, we need to clear out all the caches.
+To be completely sure this works from the top, we need to purge the package:
 
 ```
-PS D:\src\cpp-packages> vcpkg remove libpng:x86-uwp
+PS D:\src\vcpkg> vcpkg remove --purge libpng:x86-uwp
 Package libpng:x86-uwp was successfully removed
-PS D:\src\cpp-packages> vcpkg purge libpng:x86-uwp
-Cleaned up D:\src\cpp-packages\software\libpng_x86-uwp
-PS D:\src\cpp-packages> vcpkg clean libpng
-Cleaned up D:\src\cpp-packages\worksrc\libpng
 ```
+and delete the building directory: D:\src\vcpkg\buildtrees\libpng
 
 Now we try a fresh, from scratch install.
 ```
-PS D:\src\cpp-packages> vcpkg install libpng:x86-uwp
--- SYSROOT=D:/src/cpp-packages/sysroot/x86-uwp
--- DISTDIR=D:/src/cpp-packages/distdir
--- CURRENT_SOFTWARE_DIR=D:/src/cpp-packages/software/libpng_x86-uwp
--- CURRENT_WORKSRC_DIR=D:/src/cpp-packages/worksrc/libpng
--- CURRENT_PORT_DIR=D:/src/cpp-packages/ports/libpng/.
--- Using cached D:/src/cpp-packages/distdir/libpng-1.6.24.tar.xz
--- Extracting source D:/src/cpp-packages/distdir/libpng-1.6.24.tar.xz
+PS D:\src\vcpkg> vcpkg install libpng:x86-uwp
+-- CURRENT_INSTALLED_DIR=D:/src/vcpkg/installed/x86-uwp
+-- DOWNLOADS=D:/src/vcpkg/downloads
+-- CURRENT_PACKAGES_DIR=D:/src/vcpkg/packages/libpng_x86-uwp
+-- CURRENT_BUILDTREES_DIR=D:/src/vcpkg/buildtrees/libpng
+-- CURRENT_PORT_DIR=D:/src/vcpkg/ports/libpng/.
+-- Using cached D:/src/vcpkg/downloads/libpng-1.6.24.tar.xz
+-- Extracting source D:/src/vcpkg/downloads/libpng-1.6.24.tar.xz
 -- Extracting done
 -- Configuring x86-uwp-rel
 -- Configuring x86-uwp-rel done
