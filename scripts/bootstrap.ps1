@@ -4,7 +4,8 @@ param(
     [string]$disableMetrics = "0"
 )
 
-$vcpkgRoot = (get-item $PSScriptRoot).parent.FullName
+$scriptsdir = split-path -parent $MyInvocation.MyCommand.Definition
+$vcpkgRoot = Split-path $scriptsdir -Parent
 
 $gitHash = git rev-parse HEAD
 Write-Verbose("Git hash is " + $gitHash)
