@@ -14,10 +14,11 @@ Then, to hook up user-wide integration, run (note: requires admin on first use)
 ```
 C:\src\vcpkg> .\vcpkg integrate install
 ```
-Finally, install any packages with
+Install any packages with
 ```
 C:\src\vcpkg> .\vcpkg install sdl2 curl
 ```
+Finally, create a New Project (or open an existing one) in Visual Studio 2015. You can now `#include` and use any of the installed libraries.
 
 ## Examples
 See the [`docs\EXAMPLES.md`](docs/EXAMPLES.md) document for specific walkthroughs, including using a package and adding a new package.
