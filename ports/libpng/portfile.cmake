@@ -1,24 +1,19 @@
 include(vcpkg_common_functions)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libpng-1.6.24)
+
 vcpkg_download_distfile(ARCHIVE
     URL "http://download.sourceforge.net/libpng/libpng-1.6.24.tar.xz"
     FILENAME "libpng-1.6.24.tar.xz"
     MD5 ffcdbd549814787fa8010c372e35ff25
 )
 vcpkg_extract_source_archive(${ARCHIVE})
-
-find_program(GIT git)
-vcpkg_execute_required_process(
-    COMMAND ${GIT} init
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src/libpng-1.6.24
-    LOGNAME git-init
-)
-execute_process(
-    COMMAND ${GIT} apply "${CMAKE_CURRENT_LIST_DIR}/use-abort-on-all-platforms.patch" --ignore-whitespace --whitespace=nowarn
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src/libpng-1.6.24
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/use-abort-on-all-platforms.patch"
 )
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libpng-1.6.24
+    SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DPNG_STATIC=OFF
         -DPNG_TESTS=OFF
@@ -41,7 +36,7 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libpng/libpng16-debug.cmake ${CURR
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/lib/libpng
 )
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/libpng-1.6.24/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libpng)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libpng)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libpng/LICENSE ${CURRENT_PACKAGES_DIR}/share/libpng/copyright)
 vcpkg_copy_pdbs()
 
