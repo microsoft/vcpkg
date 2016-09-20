@@ -9,6 +9,7 @@
 #include "vcpkg_Environment.h"
 #include "vcpkg_Checks.h"
 #include "vcpkg_System.h"
+#include "vcpkg_Files.h"
 
 namespace vcpkg
 {
@@ -28,10 +29,11 @@ namespace vcpkg
     {
         return R"###(
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- version 1 -->
   <PropertyGroup>
     <VCLibPackagePath Condition="'$(VCLibPackagePath)' == ''">$(LOCALAPPDATA)\vcpkg\vcpkg.user</VCLibPackagePath>
   </PropertyGroup>
-  <Import Condition="'$(VCLibPackagePath)' != '' and Exists('$(VCLibPackagePath).props')" Project="$(VCLibPackagePath).props" />
+  <Import Condition="'$(VCLibPackagePath)' != '' and Exists('$(VCLibPackagePath).targets')" Project="$(VCLibPackagePath).targets" />
 </Project>
 )###";
     }
@@ -165,7 +167,25 @@ namespace vcpkg
         fs::create_directory(paths.buildsystems);
         fs::create_directory(tmp_dir);
 
-        if (!fs::exists(system_wide_targets_file))
+        bool should_install_system = true;
+        if (fs::exists(system_wide_targets_file))
+        {
+            auto system_wide_file_contents = Files::get_contents(system_wide_targets_file);
+            if (auto contents_data = system_wide_file_contents.get())
+            {
+                std::regex re(R"###(<!-- version (\d+) -->)###");
+                std::match_results<std::string::const_iterator> match;
+                auto found = std::regex_search(*contents_data, match, re);
+                if (found)
+                {
+                    int ver = atoi(match[1].str().c_str());
+                    if (ver >= 1)
+                        should_install_system = false;
+                }
+            }
+        }
+
+        if (should_install_system)
         {
             const fs::path sys_src_path = tmp_dir / "vcpkg.system.targets";
             std::ofstream(sys_src_path) << create_system_targets_shortcut();
