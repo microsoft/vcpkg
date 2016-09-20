@@ -5,7 +5,7 @@ environment:
 
 build_script:
   - powershell -exec bypass scripts\bootstrap.ps1
-  - for /D %l in (ports\*) do .\vcpkg.exe install %~nxl --triplet %TRIPLET%
+  - cmd: for /D %l in (ports\*) do .\vcpkg.exe install %~nxl --triplet %TRIPLET%
 
 matrix:
   fast_finish: true
