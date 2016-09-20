@@ -1,4 +1,4 @@
-include(winports_common_functions)
+include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
     URL "https://github.com/miloyip/rapidjson/archive/879def80f2e466cdf4c86dc7e53ea2dd4cafaea0.zip"
     FILENAME "rapidjson-879def80f2e466cdf4c86dc7e53ea2dd4cafaea0.zip"
