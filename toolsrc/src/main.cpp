@@ -23,6 +23,21 @@ void invalid_command(const std::string& cmd)
     exit(EXIT_FAILURE);
 }
 
+static fs::path find_file_recursively_up(const fs::path& starting_dir, const std::string& filename)
+{
+    fs::path current_dir = starting_dir;
+    for (; !current_dir.empty(); current_dir = current_dir.parent_path())
+    {
+        const fs::path candidate = current_dir / filename;
+        if (fs::exists(candidate))
+        {
+            break;
+        }
+    }
+
+    return current_dir;
+}
+
 static void inner(const vcpkg_cmd_arguments& args)
 {
     TrackProperty("command", args.command);
@@ -47,10 +62,16 @@ static void inner(const vcpkg_cmd_arguments& args)
         auto vcpkg_root_dir_env = System::wdupenv_str(L"VCPKG_ROOT");
 
         if (!vcpkg_root_dir_env.empty())
+        {
             vcpkg_root_dir = fs::absolute(vcpkg_root_dir_env);
+        }
         else
-            vcpkg_root_dir = fs::absolute(System::get_exe_path_of_current_process()).parent_path();
+        {
+            vcpkg_root_dir = find_file_recursively_up(fs::absolute(System::get_exe_path_of_current_process()), ".vcpkg-root");
+        }
     }
+
+    Checks::check_exit(!vcpkg_root_dir.empty(), "Error: Could not detect vcpkg-root.");
 
     const expected<vcpkg_paths> expected_paths = vcpkg_paths::create(vcpkg_root_dir);
     Checks::check_exit(!expected_paths.error_code(), "Error: Invalid vcpkg root directory %s: %s", vcpkg_root_dir.string(), expected_paths.error_code().message());
