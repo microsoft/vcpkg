@@ -11,7 +11,8 @@ file(RENAME ${CURRENT_BUILDTREES_DIR}/src/eigen-eigen-dc6cfdf9bcec ${CURRENT_BUI
 file(COPY ${CURRENT_BUILDTREES_DIR}/src/eigen/COPYING.README DESTINATION ${CURRENT_PACKAGES_DIR}/share/eigen/COPYING.README)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/eigen/COPYING.README ${CURRENT_PACKAGES_DIR}/share/eigen/copyright)
 
-message(${CURRENT_BUILDTREES_DIR})
+file(GLOB_RECURSE GARBAGE ${CURRENT_BUILDTREES_DIR}/src/eigen/Eigen/CMakeLists.*)
+file(REMOVE ${GARBAGE})
 
 # Copy the eigen header files
 file(COPY ${CURRENT_BUILDTREES_DIR}/src/eigen/Eigen/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/Eigen/)
