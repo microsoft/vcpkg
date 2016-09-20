@@ -25,11 +25,12 @@ if ($matchingTags.Length -gt 0)
 $gitHash = git rev-parse HEAD
 Write-Verbose("Git hash is " + $gitHash)
 
-$vcpkgPath = (get-item $PSScriptRoot).parent.FullName
+$scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
+$vcpkgRootDir = & $scriptsDir\findFileRecursivelyUp.ps1 $scriptsDir .vcpkg-root
 $gitStartOfHash = $gitHash.substring(0,6)
 $versionWithStartOfHash = "$version-$gitStartOfHash"
-$buildPath = "$vcpkgPath\build-$versionWithStartOfHash"
-$releasePath = "$vcpkgPath\release-$versionWithStartOfHash"
+$buildPath = "$vcpkgRootDir\build-$versionWithStartOfHash"
+$releasePath = "$vcpkgRootDir\release-$versionWithStartOfHash"
 Write-Verbose("Build Path " + $buildPath)
 Write-Verbose("Release Path " + $releasePath)
 
@@ -48,7 +49,7 @@ for ($disableMetrics = 0; $disableMetrics -le 1; $disableMetrics++)
     }
 
     # Partial checkout for building vcpkg
-    $dotGitDir = "$vcpkgPath\.git"
+    $dotGitDir = "$vcpkgRootDir\.git"
     $workTreeForBuildOnly = "$buildPath"
     $checkoutThisDirForBuildOnly1 = ".\scripts" # Must be relative to the root of the repository
     $checkoutThisDirForBuildOnly2 = ".\toolsrc" # Must be relative to the root of the repository
@@ -68,10 +69,10 @@ for ($disableMetrics = 0; $disableMetrics -le 1; $disableMetrics++)
     Copy-Item $buildPath\scripts\vcpkgmetricsuploader.exe $releasePath\scripts\vcpkgmetricsuploader.exe | Out-Null
 
     Write-Verbose("Archiving")
-    $outputArchive = "$vcpkgPath\vcpkg-$versionWithStartOfHash.zip"
+    $outputArchive = "$vcpkgRootDir\vcpkg-$versionWithStartOfHash.zip"
     if ($disableMetrics -ne 0)
     {
-        $outputArchive = "$vcpkgPath\vcpkg-$versionWithStartOfHash-external.zip"
+        $outputArchive = "$vcpkgRootDir\vcpkg-$versionWithStartOfHash-external.zip"
     }
     Compress-Archive -Path "$releasePath\*" -CompressionLevel Optimal -DestinationPath $outputArchive -Force | Out-Null
 

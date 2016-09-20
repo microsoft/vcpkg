@@ -5,9 +5,10 @@ param(
 
 Import-Module BitsTransfer
 
-$scriptsdir = split-path -parent $MyInvocation.MyCommand.Definition
-$vcpkgroot = Split-path $scriptsdir -Parent
-$downloadsdir = "$vcpkgroot\downloads"
+$scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
+$vcpkgRootDir = & $scriptsDir\findFileRecursivelyUp.ps1 $scriptsDir .vcpkg-root
+
+$downloadsDir = "$vcpkgRootDir\downloads"
 
 function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 {
@@ -24,7 +25,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 
     function promptForDownload([string]$title, [string]$message, [string]$yesDescription, [string]$noDescription)
     {
-        if ((Test-Path "$downloadsdir\AlwaysAllowEverything") -Or (Test-Path "$downloadsdir\AlwaysAllowDownloads"))
+        if ((Test-Path "$downloadsDir\AlwaysAllowEverything") -Or (Test-Path "$downloadsDir\AlwaysAllowDownloads"))
         {
             return $true
         }
@@ -41,7 +42,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
                 0 {return $true}
                 1 {return $false}
                 2 {
-                    New-Item "$downloadsdir\AlwaysAllowDownloads" -type file -force | Out-Null
+                    New-Item "$downloadsDir\AlwaysAllowDownloads" -type file -force | Out-Null
                     return $true
                 }
             }
@@ -52,7 +53,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 
     function performDownload(	[Parameter(Mandatory=$true)][string]$Dependency,
                                 [Parameter(Mandatory=$true)][string]$url,
-                                [Parameter(Mandatory=$true)][string]$downloaddir,
+                                [Parameter(Mandatory=$true)][string]$downloadDir,
                                 [Parameter(Mandatory=$true)][string]$downloadPath,
                                 [Parameter(Mandatory=$true)][string]$downloadVersion,
                                 [Parameter(Mandatory=$true)][string]$requiredVersion)
@@ -73,9 +74,9 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
             throw [System.IO.FileNotFoundException] ("Could not detect suitable version of " + $Dependency + " and download not allowed")
         }
 
-        if (!(Test-Path $downloaddir))
+        if (!(Test-Path $downloadDir))
         {
-            New-Item -ItemType directory -Path $downloaddir | Out-Null
+            New-Item -ItemType directory -Path $downloadDir | Out-Null
         }
 
         if ($Dependency -ne "git") # git fails with BITS
@@ -135,7 +136,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         $url = "https://cmake.org/files/v3.5/cmake-3.5.2-win32-x86.zip"
         $downloadName = "cmake-3.5.2-win32-x86.zip"
         $expectedDownloadedFileHash = "671073aee66b3480a564d0736792e40570a11e861bb34819bb7ae7858bbdfb80"
-        $executableFromDownload = "$downloadsdir\cmake-3.5.2-win32-x86\bin\cmake.exe"
+        $executableFromDownload = "$downloadsDir\cmake-3.5.2-win32-x86\bin\cmake.exe"
         $extractionType = $ExtractionType_ZIP
     }
     elseif($Dependency -eq "nuget")
@@ -145,7 +146,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         $url = "https://dist.nuget.org/win-x86-commandline/v3.4.3/nuget.exe"
         $downloadName = "nuget.exe"
         $expectedDownloadedFileHash = "3B1EA72943968D7AF6BACDB4F2F3A048A25AFD14564EF1D8B1C041FDB09EBB0A"
-        $executableFromDownload = "$downloadsdir\nuget.exe"
+        $executableFromDownload = "$downloadsDir\nuget.exe"
         $extractionType = $ExtractionType_NO_EXTRACTION_REQUIRED
     }
     elseif($Dependency -eq "git")
@@ -157,7 +158,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         $expectedDownloadedFileHash = "DE52D070219E9C4EC1DB179F2ADBF4B760686C3180608F0382A1F8C7031E72AD"
         # There is another copy of git.exe in PortableGit\bin. However, an installed version of git add the cmd dir to the PATH.
         # Therefore, choosing the cmd dir here as well. 
-        $executableFromDownload = "$downloadsdir\PortableGit\cmd\git.exe"
+        $executableFromDownload = "$downloadsDir\PortableGit\cmd\git.exe"
         $extractionType = $ExtractionType_SELF_EXTRACTING_7Z
     }
     else
@@ -165,8 +166,8 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         throw "Unknown program requested"
     }
 
-    $downloadPath = "$downloadsdir\$downloadName"
-    performDownload $Dependency $url $downloadsdir $downloadPath $downloadVersion $requiredVersion
+    $downloadPath = "$downloadsDir\$downloadName"
+    performDownload $Dependency $url $downloadsDir $downloadPath $downloadVersion $requiredVersion
 
     #calculating the hash
     $hashAlgorithm = [Security.Cryptography.HashAlgorithm]::Create("SHA256")
@@ -187,8 +188,8 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     {
         if (-not (Test-Path $executableFromDownload)) # consider renaming the extraction folder to make sure the extraction finished
         {
-            # Expand-Archive $downloadPath -dest "$downloadsdir" -Force # Requires powershell 5+
-            Expand-ZIPFile -File $downloadPath -Destination $downloadsdir
+            # Expand-Archive $downloadPath -dest "$downloadsDir" -Force # Requires powershell 5+
+            Expand-ZIPFile -File $downloadPath -Destination $downloadsDir
         }
     }
     elseif($extractionType -eq $ExtractionType_SELF_EXTRACTING_7Z)

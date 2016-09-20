@@ -4,13 +4,13 @@ param(
     [string]$disableMetrics = "0"
 )
 
-$scriptsdir = split-path -parent $MyInvocation.MyCommand.Definition
-$vcpkgRoot = Split-path $scriptsdir -Parent
+$scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
+$vcpkgRootDir = & $scriptsDir\findFileRecursivelyUp.ps1 $scriptsDir .vcpkg-root
 
 $gitHash = git rev-parse HEAD
 Write-Verbose("Git hash is " + $gitHash)
 $gitStartOfHash = $gitHash.substring(0,6)
-$vcpkgSourcesPath = "$vcpkgRoot\toolsrc"
+$vcpkgSourcesPath = "$vcpkgRootDir\toolsrc"
 Write-Verbose("vcpkg Path " + $vcpkgSourcesPath)
 
 if (!(Test-Path $vcpkgSourcesPath))
@@ -24,8 +24,8 @@ try{
 
     Write-Verbose("Placing vcpkg.exe in the correct location")
 
-    Copy-Item $vcpkgSourcesPath\Release\vcpkg.exe $vcpkgRoot\vcpkg.exe | Out-Null
-    Copy-Item $vcpkgSourcesPath\Release\vcpkgmetricsuploader.exe $vcpkgRoot\scripts\vcpkgmetricsuploader.exe | Out-Null
+    Copy-Item $vcpkgSourcesPath\Release\vcpkg.exe $vcpkgRootDir\vcpkg.exe | Out-Null
+    Copy-Item $vcpkgSourcesPath\Release\vcpkgmetricsuploader.exe $vcpkgRootDir\scripts\vcpkgmetricsuploader.exe | Out-Null
 }
 finally{
     popd
