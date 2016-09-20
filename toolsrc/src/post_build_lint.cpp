@@ -15,7 +15,7 @@ namespace vcpkg
         ERROR = 1
     };
 
-    static const fs::path DUMPBIN_EXE = R"(C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\dumpbin.exe)";
+    static const fs::path DUMPBIN_EXE = R"(%VS140COMNTOOLS%\..\..\VC\bin\dumpbin.exe)";
 
     namespace
     {
