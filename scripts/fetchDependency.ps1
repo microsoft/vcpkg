@@ -12,17 +12,6 @@ $downloadsDir = "$vcpkgRootDir\downloads"
 
 function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 {
-    function hasGreaterOrEqualVersion([Parameter(Mandatory=$true)]$requiredVersion, [Parameter(Mandatory=$true)]$availableVersion)
-    {
-        if ($availableVersion[0] -gt $requiredVersion[0]) {return $true}
-        if ($availableVersion[0] -lt $requiredVersion[0]) {return $false}
-
-        if ($availableVersion[1] -gt $requiredVersion[1]) {return $true}
-        if ($availableVersion[1] -lt $requiredVersion[1]) {return $false}
-
-        return ($availableVersion[2] -ge $requiredVersion[2])
-    }
-
     function promptForDownload([string]$title, [string]$message, [string]$yesDescription, [string]$noDescription)
     {
         if ((Test-Path "$downloadsDir\AlwaysAllowEverything") -Or (Test-Path "$downloadsDir\AlwaysAllowDownloads"))
