@@ -1,0 +1,3 @@
+Source: eigen
+Version: 3.2.9
+Description: C++ template library for linear algebra: matrices, vectors, numerical solvers, and related algorithms.
