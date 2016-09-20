@@ -86,7 +86,7 @@ To install for other architectures and platforms such as Universal Windows Platf
 PS D:\src\vcpkg> .\vcpkg install cpprestsdk:x86-uwp zlib:x64-windows
 ```
 
-See `vcpkg help arch` for all supported targets.
+See `vcpkg help triplet` for all supported targets.
 
 <a name="example-1-2"></a>
 ### Step 2: Use
