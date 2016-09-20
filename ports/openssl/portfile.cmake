@@ -27,7 +27,21 @@ vcpkg_configure_cmake(
         -DTARGET_TRIPLET=${TARGET_TRIPLET}
 )
 
-vcpkg_build_cmake()
+message(STATUS "Build ${TARGET_TRIPLET}-rel")
+vcpkg_execute_required_process(
+    COMMAND ${CMAKE_COMMAND} --build .
+    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+    LOGNAME build-${TARGET_TRIPLET}-rel
+)
+message(STATUS "Build ${TARGET_TRIPLET}-rel done")
+
+message(STATUS "Build ${TARGET_TRIPLET}-dbg")
+vcpkg_execute_required_process(
+    COMMAND ${CMAKE_COMMAND} --build .
+    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
+    LOGNAME build-${TARGET_TRIPLET}-dbg
+)
+message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE
