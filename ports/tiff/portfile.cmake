@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
-    URL "ftp://ftp.remotesensing.org/pub/libtiff/tiff-4.0.6.tar.gz"
+    URL "http://download.osgeo.org/libtiff/tiff-4.0.6.tar.gz"
     FILENAME "tiff-4.0.6.tar.gz"
     MD5 d1d2e940dea0b5ad435f21f03d96dd72
 )
