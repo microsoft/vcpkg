@@ -1,0 +1,11 @@
+environment:
+  matrix:
+    - TRIPLET: "x86-windows"
+    - TRIPLET: "x64-windows"
+
+build_script:
+  - powershell -exec bypass scripts\bootstrap.ps1
+  - 
+
+matrix:
+  fast_finish: true
