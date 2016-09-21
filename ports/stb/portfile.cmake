@@ -7,11 +7,10 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 
 # Put the licence file where vcpkg expects it
-file(RENAME ${CURRENT_BUILDTREES_DIR}/src/stb-e713a69f1ea6ee1e0d55725ed0731520045a5993 ${CURRENT_BUILDTREES_DIR}/src/stb)
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/stb/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/stb/README.md)
+set(SOURCE_DIR ${CURRENT_BUILDTREES_DIR}/src/stb-e713a69f1ea6ee1e0d55725ed0731520045a5993)
+file(COPY ${SOURCE_DIR}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/stb/README.md)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/stb/README.md ${CURRENT_PACKAGES_DIR}/share/stb/copyright)
 
 # Copy the stb header files
-file(GLOB HEADER_FILES ${CURRENT_BUILDTREES_DIR}/src/stb/*.h)
+file(GLOB HEADER_FILES ${SOURCE_DIR}/*.h)
 file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-vcpkg_copy_pdbs()
