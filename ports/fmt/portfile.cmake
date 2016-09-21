@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE_FILE
     URL "https://github.com/fmtlib/fmt/archive/3.0.0.tar.gz"
-    FILENAME "3.0.0.tar.gz"
+    FILENAME "fmt-3.0.0.tar.gz"
     MD5 deeac02aa6d00d6d04502087fdf88b6f
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
