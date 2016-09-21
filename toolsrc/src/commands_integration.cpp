@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <regex>
+#include <array>
 #include "vcpkg_Environment.h"
 #include "vcpkg_Checks.h"
 #include "vcpkg_System.h"
@@ -13,8 +14,11 @@
 
 namespace vcpkg
 {
-    static const fs::path old_system_wide_targets_file = "C:/Program Files (x86)/MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.nuget.targets";
-    static const fs::path system_wide_targets_file = "C:/Program Files (x86)/MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.system.targets";
+    static const std::array<fs::path, 2> old_system_target_files = {
+        "C:/Program Files (x86)/MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.nuget.targets",
+        "C:/Program Files (x86)/MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.system.targets"
+    };
+    static const fs::path system_wide_targets_file = "C:/Program Files (x86)/MSBuild/Microsoft.Cpp/v4.0/V140/ImportBefore/Default/vcpkg.system.props";
 
     static std::string create_appdata_targets_shortcut(const std::string& target_path) noexcept
     {
@@ -145,6 +149,7 @@ namespace vcpkg
     static void integrate_install(const vcpkg_paths& paths)
     {
         // TODO: This block of code should eventually be removed
+        for (auto&& old_system_wide_targets_file : old_system_target_files)
         {
             if (fs::exists(old_system_wide_targets_file))
             {
