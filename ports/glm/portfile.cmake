@@ -6,6 +6,9 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+# Remove glm/CMakeLists.txt
+file(REMOVE ${CURRENT_BUILDTREES_DIR}/src/glm/glm/CMakeLists.txt)
+
 # Put the license file where vcpkg expects it
 file(COPY ${CURRENT_BUILDTREES_DIR}/src/glm/copying.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/glm/)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/glm/copying.txt ${CURRENT_PACKAGES_DIR}/share/glm/copyright)
@@ -13,5 +16,3 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/glm/copying.txt ${CURRENT_PACKAGES_DIR
 # Copy the glm header files
 file(GLOB HEADER_FILES ${CURRENT_BUILDTREES_DIR}/src/glm/glm/*)
 file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/glm)
-vcpkg_copy_pdbs()
-
