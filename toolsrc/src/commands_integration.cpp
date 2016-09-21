@@ -202,6 +202,8 @@ namespace vcpkg
                 default:
                     Checks::unreachable();
             }
+
+            Checks::check_exit(fs::exists(system_wide_targets_file), "Error: failed to copy targets file to %s", system_wide_targets_file.string());
         }
 
         const fs::path appdata_src_path = tmp_dir / "vcpkg.user.targets";
