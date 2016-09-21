@@ -8,8 +8,8 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 # Put the licence file where vcpkg expects it
 file(RENAME ${CURRENT_BUILDTREES_DIR}/src/eigen-eigen-dc6cfdf9bcec ${CURRENT_BUILDTREES_DIR}/src/eigen)
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/eigen/COPYING.README DESTINATION ${CURRENT_PACKAGES_DIR}/share/eigen/COPYING.README)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/eigen/COPYING.README ${CURRENT_PACKAGES_DIR}/share/eigen/copyright)
+file(COPY ${CURRENT_BUILDTREES_DIR}/src/eigen/COPYING.README DESTINATION ${CURRENT_PACKAGES_DIR}/share/eigen3/COPYING.README)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/eigen3/COPYING.README ${CURRENT_PACKAGES_DIR}/share/eigen3/copyright)
 
 file(GLOB_RECURSE GARBAGE ${CURRENT_BUILDTREES_DIR}/src/eigen/Eigen/CMakeLists.*)
 file(REMOVE ${GARBAGE})
