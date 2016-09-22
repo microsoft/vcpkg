@@ -27,11 +27,11 @@ if(NOT VCPKG_TOOLCHAIN)
 
     if(CMAKE_BUILD_TYPE MATCHES "^Debug$" OR NOT DEFINED CMAKE_BUILD_TYPE)
         list(APPEND CMAKE_PREFIX_PATH
-            ${CMAKE_CURRENT_LIST_DIR}/../installed/${_VCPKG_TARGET_TRIPLET}/debug
+            ${CMAKE_CURRENT_LIST_DIR}/../../installed/${_VCPKG_TARGET_TRIPLET}/debug
         )
     endif()
     list(APPEND CMAKE_PREFIX_PATH
-        ${CMAKE_CURRENT_LIST_DIR}/../installed/${_VCPKG_TARGET_TRIPLET}
+        ${CMAKE_CURRENT_LIST_DIR}/../../installed/${_VCPKG_TARGET_TRIPLET}
     )
 
     include_directories(${CMAKE_CURRENT_LIST_DIR}/../installed/${_VCPKG_TARGET_TRIPLET}/include)
