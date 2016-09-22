@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
     URL "@URL@"
     FILENAME "@FILENAME@"
-    MD5 @MD5@
+    SHA512 @SHA512@
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

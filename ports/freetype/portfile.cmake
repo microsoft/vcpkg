@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
     URL "http://download.savannah.gnu.org/releases/freetype/freetype-2.6.3.tar.bz2"
     FILENAME "freetype-2.6.3.tar.bz2"
-    MD5 0037b25a8c090bc8a1218e867b32beb1
+    SHA512 e1f9018835fc88beeb4479537b59f866c52393ae18d24a1e0710a464cf948ab02b35c2c6043bc20c1db3a04871ee4eb0bb1d210550c0ea2780c8b1aea98fbf0d
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

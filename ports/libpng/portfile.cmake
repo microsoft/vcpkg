@@ -4,7 +4,7 @@ set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libpng-1.6.24)
 vcpkg_download_distfile(ARCHIVE
     URL "http://download.sourceforge.net/libpng/libpng-1.6.24.tar.xz"
     FILENAME "libpng-1.6.24.tar.xz"
-    MD5 ffcdbd549814787fa8010c372e35ff25
+    SHA512 7eccb90f530a9c728e280b2b1776304a808b5deea559632e7bcf4ea219c7cb5e453aa810215465304501127595000717d4b7c5b26a9f8e22e236ec04af53a90f
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(

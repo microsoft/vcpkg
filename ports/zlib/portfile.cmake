@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE_FILE
     URL "http://zlib.net/zlib128.zip"
     FILENAME "zlib128.zip"
-    MD5 126f8676442ffbd97884eb4d6f32afb4
+    SHA512 b0d7e71eca9032910c56fc1de6adbdc4f915bdeafd9a114591fc05701893004ef3363add8ad0e576c956b6be158f2fc339ab393f2dd40e8cc8c2885d641d807b
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 

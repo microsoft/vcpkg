@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
     URL "https://github.com/warmcat/libwebsockets/archive/v2.0.0.zip"
     FILENAME "libwebsockets-v2.0.0.zip"
-    MD5 1947a1887dda5b5f9624048f4b6b1507
+    SHA512 bf57a46f2c60095e7e6ec6656b185ffd2cf8f553bc22255ae8f6825d3613316d794f139cdefacbdf60ef997b0cd675fe356813d406c9b7c5a5ae838ce5326042
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
