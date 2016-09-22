@@ -17,11 +17,9 @@ namespace vcpkg
             System::println(System::color::warning, "Search strings are not yet implemented; showing full list of packages.");
         }
 
-        auto begin_it = fs::directory_iterator(paths.ports);
-        auto end_it = fs::directory_iterator();
-        for (; begin_it != end_it; ++begin_it)
+        for (auto it = fs::directory_iterator(paths.ports); it != fs::directory_iterator(); ++it)
         {
-            const auto& path = begin_it->path();
+            const fs::path& path = it->path();
 
             try
             {
