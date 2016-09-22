@@ -73,7 +73,7 @@ static void inner(const vcpkg_cmd_arguments& args)
     const auto vcpkg_default_triplet_env = System::wdupenv_str(L"VCPKG_DEFAULT_TRIPLET");
     if(!vcpkg_default_triplet_env.empty())
     {
-        default_target_triplet = {std::string(vcpkg_default_triplet_env.begin(), vcpkg_default_triplet_env.end())};
+        default_target_triplet = {Strings::utf16_to_utf8(vcpkg_default_triplet_env)};
     }
     else
     {
