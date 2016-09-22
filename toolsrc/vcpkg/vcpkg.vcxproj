@@ -129,6 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\commands_cache.cpp" />
+    <ClCompile Include="..\src\commands_list.cpp" />
     <ClCompile Include="..\src\commands_remove.cpp" />
     <ClCompile Include="..\src\commands_search.cpp" />
     <ClCompile Include="..\src\commands_update.cpp" />
