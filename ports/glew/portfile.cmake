@@ -6,6 +6,15 @@ vcpkg_download_distfile(ARCHIVE_FILE
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
+IF (TRIPLET_SYSTEM_ARCH MATCHES "x86")
+	SET(BUILD_ARCH "Win32")
+ELSEIF(TRIPLET_SYSTEM_ARCH MATCHES "arm")
+	MESSAGE(FATAL_ERROR, " ARM is currently not supported.")
+	RETURN()
+ELSE()
+	SET(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
+ENDIF()
+
 if(NOT EXISTS ${CURRENT_BUILDTREES_DIR}/src/glew-1.13.0/build/vc12/glew_shared14.vcxproj)
     message(STATUS "Upgrading projects")
     file(READ ${CURRENT_BUILDTREES_DIR}/src/glew-1.13.0/build/vc12/glew_shared.vcxproj PROJ)
@@ -26,22 +35,23 @@ vcpkg_build_msbuild(
 )
 
 message(STATUS "Installing")
+
 file(INSTALL
-    ${CURRENT_BUILDTREES_DIR}/src/glew-1.13.0/bin/Debug/Win32/glew32d.dll
-    ${CURRENT_BUILDTREES_DIR}/src/glew-1.13.0/bin/Debug/Win32/glew32d.pdb
+    ${CURRENT_BUILDTREES_DIR}/src/glew-1.13.0/bin/Debug/${BUILD_ARCH}/glew32d.dll
+    ${CURRENT_BUILDTREES_DIR}/src/glew-1.13.0/bin/Debug/${BUILD_ARCH}/glew32d.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
 )
 file(INSTALL
-    ${CURRENT_BUILDTREES_DIR}/src/glew-1.13.0/bin/Release/Win32/glew32.dll
-    ${CURRENT_BUILDTREES_DIR}/src/glew-1.13.0/bin/Release/Win32/glew32.pdb
+    ${CURRENT_BUILDTREES_DIR}/src/glew-1.13.0/bin/Release/${BUILD_ARCH}/glew32.dll
+    ${CURRENT_BUILDTREES_DIR}/src/glew-1.13.0/bin/Release/${BUILD_ARCH}/glew32.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/bin
 )
 file(INSTALL
-    ${CURRENT_BUILDTREES_DIR}/src/glew-1.13.0/lib/Debug/Win32/glew32d.lib
+    ${CURRENT_BUILDTREES_DIR}/src/glew-1.13.0/lib/Debug/${BUILD_ARCH}/glew32d.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
 )
 file(INSTALL
-    ${CURRENT_BUILDTREES_DIR}/src/glew-1.13.0/lib/Release/Win32/glew32.lib
+    ${CURRENT_BUILDTREES_DIR}/src/glew-1.13.0/lib/Release/${BUILD_ARCH}/glew32.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib
 )
 file(INSTALL
