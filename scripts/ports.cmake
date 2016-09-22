@@ -56,7 +56,7 @@ if(CMD MATCHES "^SCAFFOLD$")
             message(FATAL_ERROR "Error downloading file: ${error_code}")
         endif()
     endif()
-    file(MD5 ${DOWNLOADS}/${FILENAME} MD5)
+    file(SHA512 ${DOWNLOADS}/${FILENAME} SHA512)
 
     file(MAKE_DIRECTORY ports/${PORT})
     configure_file(scripts/templates/portfile.in.cmake ports/${PORT}/portfile.cmake @ONLY)
