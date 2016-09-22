@@ -131,6 +131,7 @@
     <ClCompile Include="..\src\commands_cache.cpp" />
     <ClCompile Include="..\src\commands_remove.cpp" />
     <ClCompile Include="..\src\commands_search.cpp" />
+    <ClCompile Include="..\src\commands_update.cpp" />
     <ClCompile Include="..\src\vcpkg_cmd_arguments.cpp" />
     <ClCompile Include="..\src\commands_other.cpp" />
     <ClCompile Include="..\src\vcpkg_Environment.cpp" />
