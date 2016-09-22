@@ -34,6 +34,9 @@ if(TRIPLET_SYSTEM_NAME MATCHES "WindowsStore")
     set(ENV{BOOST_BUILD_PATH} ${CMAKE_CURRENT_LIST_DIR})
 endif()
 
+
+file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+
 message(STATUS "Building ${TARGET_TRIPLET}-rel")
 vcpkg_execute_required_process(
     COMMAND "${CURRENT_BUILDTREES_DIR}/src/boost_1_61_0/b2.exe"
