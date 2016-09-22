@@ -6,6 +6,15 @@ vcpkg_download_distfile(ARCHIVE_FILE
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
+IF (TRIPLET_SYSTEM_ARCH MATCHES "x86")
+	SET(BUILD_ARCH "Win32")
+ELSEIF(TRIPLET_SYSTEM_ARCH MATCHES "arm")
+	MESSAGE(FATAL_ERROR, " ARM is currently not supported.")
+	RETURN()
+ELSE()
+	SET(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
+ENDIF()
+
 if(NOT EXISTS ${CURRENT_BUILDTREES_DIR}/src/glew-1.13.0/build/vc12/glew_shared14.vcxproj)
     message(STATUS "Upgrading projects")
     file(READ ${CURRENT_BUILDTREES_DIR}/src/glew-1.13.0/build/vc12/glew_shared.vcxproj PROJ)
@@ -26,11 +35,6 @@ vcpkg_build_msbuild(
 )
 
 message(STATUS "Installing")
-IF (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-	SET(BUILD_ARCH "Win32")
-ELSE()
-	SET(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
-ENDIF()
 
 file(INSTALL
     ${CURRENT_BUILDTREES_DIR}/src/glew-1.13.0/bin/Debug/${BUILD_ARCH}/glew32d.dll
