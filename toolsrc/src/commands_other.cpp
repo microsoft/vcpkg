@@ -1,12 +1,13 @@
 #include "vcpkg_Commands.h"
-#include <iostream>
+#include "vcpkg_System.h"
 #include "vcpkg.h"
 
 namespace vcpkg
 {
     void print_usage()
     {
-        std::cout << "Commands:\n"
+        System::println(
+            "Commands:\n"
             "  vcpkg search [pat]              Search for packages available to be built\n"
             "  vcpkg install <pkg>             Install a package\n"
             "  vcpkg remove <pkg>              Uninstall a package. \n"
@@ -14,9 +15,9 @@ namespace vcpkg
             "  vcpkg list                      List installed packages\n"
             "  vcpkg update                    Display list of packages for updating\n"
             "\n"
-            << INTEGRATE_COMMAND_HELPSTRING <<
+            "%s" // Integration help
             "\n"
-            "  vcpkg edit <pkg>                Open up a port for editing (uses %EDITOR%, default 'code')\n"
+            "  vcpkg edit <pkg>                Open up a port for editing (uses %%EDITOR%%, default 'code')\n"
             "  vcpkg import <pkg>              Import a pre-built library\n"
             "  vcpkg create <pkg> <url>\n"
             "             [archivename]        Create a new package\n"
@@ -34,17 +35,16 @@ namespace vcpkg
             "                                  (default: x86-windows, see 'vcpkg help triplet')\n"
             "\n"
             "  --vcpkg-root <path>             Specify the vcpkg root directory\n"
-            "                                  (default: %VCPKG_ROOT%)\n"
+            "                                  (default: %%VCPKG_ROOT%%)\n"
             "\n"
             "For more help (including examples) see the accompanying README.md."
-            "\n";
+            , INTEGRATE_COMMAND_HELPSTRING);
     }
 
     void print_example(const char* command_and_arguments)
     {
-        std::cout <<
-            "Example:\n"
-            "  vcpkg " << command_and_arguments << "\n";
+        System::println("Example:\n"
+                        "  vcpkg %s", command_and_arguments);
     }
 
     void internal_test_command(const vcpkg_cmd_arguments& /*args*/, const vcpkg_paths& /*paths*/)
