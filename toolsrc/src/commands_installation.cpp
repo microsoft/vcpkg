@@ -1,8 +1,6 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg.h"
-#include <iostream>
 #include <fstream>
-#include <iomanip>
 #include "vcpkg_Environment.h"
 #include "metrics.h"
 #include "vcpkg_Files.h"
@@ -107,43 +105,6 @@ namespace vcpkg
                 exit(EXIT_FAILURE);
             }
         }
-
-        exit(EXIT_SUCCESS);
-    }
-
-    void search_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
-    {
-        args.check_max_args(1);
-
-        if (args.command_arguments.size() == 1)
-        {
-            System::println(System::color::warning, "Search strings are not yet implemented; showing full list of packages.");
-        }
-
-        auto begin_it = fs::directory_iterator(paths.ports);
-        auto end_it = fs::directory_iterator();
-        for (; begin_it != end_it; ++begin_it)
-        {
-            const auto& path = begin_it->path();
-
-            try
-            {
-                auto pghs = get_paragraphs(path / "CONTROL");
-                if (pghs.empty())
-                    continue;
-                auto srcpgh = SourceParagraph(pghs[0]);
-                std::cout << std::left
-                    << std::setw(20) << srcpgh.name << ' '
-                    << std::setw(16) << srcpgh.version << ' '
-                    << shorten_description(srcpgh.description) << '\n';
-            }
-            catch (std::runtime_error const&)
-            {
-            }
-        }
-
-        System::println("\nIf your library is not listed, please open an issue at:\n"
-            "    https://github.com/Microsoft/vcpkg/issues");
 
         exit(EXIT_SUCCESS);
     }
