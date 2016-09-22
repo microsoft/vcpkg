@@ -69,7 +69,16 @@ static void inner(const vcpkg_cmd_arguments& args)
         return command_function(args, paths);
     }
 
-    triplet default_target_triplet = triplet::X86_WINDOWS;
+    triplet default_target_triplet;
+    const auto vcpkg_default_triplet_env = System::wdupenv_str(L"VCPKG_DEFAULT_TRIPLET");
+    if(!vcpkg_default_triplet_env.empty())
+    {
+        default_target_triplet = {std::string(vcpkg_default_triplet_env.begin(), vcpkg_default_triplet_env.end())};
+    }
+    else
+    {
+        default_target_triplet = triplet::X86_WINDOWS;
+    }
 
     if (args.target_triplet != nullptr)
     {
