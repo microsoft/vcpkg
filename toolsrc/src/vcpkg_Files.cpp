@@ -35,4 +35,19 @@ namespace vcpkg {namespace Files
 
         return std::move(output);
     }
+
+    fs::path find_file_recursively_up(const fs::path& starting_dir, const std::string& filename)
+    {
+        fs::path current_dir = starting_dir;
+        for (; !current_dir.empty(); current_dir = current_dir.parent_path())
+        {
+            const fs::path candidate = current_dir / filename;
+            if (fs::exists(candidate))
+            {
+                break;
+            }
+        }
+
+        return current_dir;
+    }
 }}

@@ -23,21 +23,6 @@ void invalid_command(const std::string& cmd)
     exit(EXIT_FAILURE);
 }
 
-static fs::path find_file_recursively_up(const fs::path& starting_dir, const std::string& filename)
-{
-    fs::path current_dir = starting_dir;
-    for (; !current_dir.empty(); current_dir = current_dir.parent_path())
-    {
-        const fs::path candidate = current_dir / filename;
-        if (fs::exists(candidate))
-        {
-            break;
-        }
-    }
-
-    return current_dir;
-}
-
 static void inner(const vcpkg_cmd_arguments& args)
 {
     TrackProperty("command", args.command);
@@ -67,7 +52,7 @@ static void inner(const vcpkg_cmd_arguments& args)
         }
         else
         {
-            vcpkg_root_dir = find_file_recursively_up(fs::absolute(System::get_exe_path_of_current_process()), ".vcpkg-root");
+            vcpkg_root_dir = Files::find_file_recursively_up(fs::absolute(System::get_exe_path_of_current_process()), ".vcpkg-root");
         }
     }
 
