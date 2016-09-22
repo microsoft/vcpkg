@@ -63,6 +63,9 @@
     <ClCompile Include="..\src\commands_owns.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\commands_import.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\post_build_lint.h">

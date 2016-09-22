@@ -131,6 +131,7 @@
     <ClCompile Include="..\src\commands_cache.cpp" />
     <ClCompile Include="..\src\commands_create.cpp" />
     <ClCompile Include="..\src\commands_edit.cpp" />
+    <ClCompile Include="..\src\commands_import.cpp" />
     <ClCompile Include="..\src\commands_list.cpp" />
     <ClCompile Include="..\src\commands_owns.cpp" />
     <ClCompile Include="..\src\commands_remove.cpp" />
