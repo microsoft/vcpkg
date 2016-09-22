@@ -1,7 +1,6 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
 #include "vcpkg.h"
-#include <iostream>
 
 namespace vcpkg
 {
@@ -11,9 +10,7 @@ namespace vcpkg
         if (args.command_arguments.size() == 0)
         {
             System::println(System::color::error, "Error: owns requires a pattern to search for as the first argument.");
-            std::cout <<
-                "example:\n"
-                "    vcpkg owns .dll\n";
+            print_example("owns .dll");
             exit(EXIT_FAILURE);
         }
         StatusParagraphs status_db = database_load_check(paths);
