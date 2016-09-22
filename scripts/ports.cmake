@@ -1,5 +1,17 @@
 cmake_minimum_required(VERSION 3.5)
-get_filename_component(VCPKG_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR} DIRECTORY)
+
+#Detect .vcpkg-root to figure VCPKG_ROOT_DIR
+SET(VCPKG_ROOT_DIR_CANDIDATE ${CMAKE_CURRENT_LIST_DIR})
+while(IS_DIRECTORY ${VCPKG_ROOT_DIR_CANDIDATE} AND NOT EXISTS "${VCPKG_ROOT_DIR_CANDIDATE}/.vcpkg-root")
+    get_filename_component(VCPKG_ROOT_DIR_TEMP ${VCPKG_ROOT_DIR_CANDIDATE} DIRECTORY)
+    if (VCPKG_ROOT_DIR_TEMP STREQUAL VCPKG_ROOT_DIR_CANDIDATE) # If unchanged, we have reached the root of the drive
+        message(FATAL_ERROR "Could not find .vcpkg-root")
+    else()
+        SET(VCPKG_ROOT_DIR_CANDIDATE ${VCPKG_ROOT_DIR_TEMP})
+    endif()
+endwhile()
+
+set(VCPKG_ROOT_DIR ${VCPKG_ROOT_DIR_CANDIDATE})
 
 string(REGEX REPLACE "([^-]*)-([^-]*)" "\\1" TRIPLET_SYSTEM_ARCH ${TARGET_TRIPLET})
 string(REGEX REPLACE "([^-]*)-([^-]*)" "\\2" TRIPLET_SYSTEM_NAME ${TARGET_TRIPLET})
