@@ -3,6 +3,7 @@ vcpkg_download_distfile(ARCHIVE
     URL "http://openal-soft.org/openal-releases/openal-soft-1.17.2.tar.bz2"
     FILENAME "openal-soft-1.17.2.tar.bz2"
     MD5 1764e0d8fec499589b47ebc724e0913d
+    SHA512 50c20cd3ddada55d91643a79c2894d5a14315d5fc1ed8e870e3d8d3f410e8b7d8da29b838226e7fce37fbeca719ff919b51806f72e4cd529a18fbe8bd68860e3
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

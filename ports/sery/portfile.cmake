@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
     URL "https://github.com/Ninetainedo/Sery/archive/v1.0.zip"
     FILENAME "sery-1.0.0.zip"
-    MD5 6af526fb1b029dd989a35e44a6fa59a8
+    SHA512 15ef97bf094e8931049d8dd667a778e23847555f0f8d5b949b250e26edcc2541744fac5c34d935880d070546777fa787b1baf018d8ca2240fcd18a820aded04f
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
