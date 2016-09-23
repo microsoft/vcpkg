@@ -113,6 +113,10 @@ namespace vcpkg
 
     void build_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
+        // Currently the code won't work for multiple packages if one of them depends on another.
+        // Allowing only 1 package for now. 
+        args.check_max_args(1);
+
         StatusParagraphs status_db = database_load_check(paths);
 
         std::vector<package_spec> specs = args.parse_all_arguments_as_package_specs(default_target_triplet);
