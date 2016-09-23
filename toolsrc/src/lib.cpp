@@ -135,7 +135,7 @@ static std::string get_fullpkgname_from_listfile(const fs::path& path)
 
 static fs::path prefix_path_for_package(const vcpkg_paths& paths, const BinaryParagraph& pgh)
 {
-    return paths.find_available_package({pgh.name, pgh.target_triplet});
+    return paths.package_dir({pgh.name, pgh.target_triplet});
 }
 
 static void write_update(const vcpkg_paths& paths, const StatusParagraph& p)
@@ -213,7 +213,7 @@ static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryPar
 std::vector<std::string> vcpkg::get_unmet_package_dependencies(const vcpkg_paths& paths, const package_spec& spec, const StatusParagraphs& status_db)
 {
     std::vector<std::unordered_map<std::string, std::string>> pghs;
-    const fs::path packages_dir_control_file_path = paths.find_available_package(spec) / "CONTROL";
+    const fs::path packages_dir_control_file_path = paths.package_dir(spec) / "CONTROL";
 
     if (fs::exists(packages_dir_control_file_path))
     {
@@ -230,7 +230,7 @@ std::vector<std::string> vcpkg::get_unmet_package_dependencies(const vcpkg_paths
         return BinaryParagraph(pghs[0]).depends;
     }
 
-    const fs::path ports_dir_control_file_path = paths.find_available_port_file(spec) / "CONTROL";
+    const fs::path ports_dir_control_file_path = paths.port_dir(spec) / "CONTROL";
     try
     {
         pghs = get_paragraphs(ports_dir_control_file_path);

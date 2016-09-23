@@ -11,8 +11,8 @@ namespace vcpkg
     {
         static expected<vcpkg_paths> create(const std::tr2::sys::path& vcpkg_root_dir);
 
-        fs::path find_available_package(const package_spec& spec) const;
-        fs::path find_available_port_file(const package_spec& spec) const;
+        fs::path package_dir(const package_spec& spec) const;
+        fs::path port_dir(const package_spec& spec) const;
 
         std::tr2::sys::path root;
         std::tr2::sys::path packages;

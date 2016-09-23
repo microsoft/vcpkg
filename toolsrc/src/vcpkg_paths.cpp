@@ -47,12 +47,12 @@ namespace vcpkg
         return paths;
     }
 
-    fs::path vcpkg_paths::find_available_package(const package_spec& spec) const
+    fs::path vcpkg_paths::package_dir(const package_spec& spec) const
     {
-        return this->packages / Strings::format("%s_%s", spec.name, spec.target_triplet);
+        return this->packages / spec.dir();
     }
 
-    fs::path vcpkg_paths::find_available_port_file(const package_spec& spec) const
+    fs::path vcpkg_paths::port_dir(const package_spec& spec) const
     {
         return this->ports / spec.name;
     }
