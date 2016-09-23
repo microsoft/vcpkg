@@ -199,13 +199,6 @@ namespace vcpkg
             expected<package_spec> current_spec = vcpkg::parse(command_argument, default_target_triplet);
             if (auto spec = current_spec.get())
             {
-                if(!spec->target_triplet.validate(paths))
-                {
-                    System::println(System::color::error, "Error: invalid triplet %s for package %s", spec->target_triplet.value, spec->name);
-                    TrackProperty("error", "invalid triplet: " + spec->target_triplet.value);
-                    help_topic_valid_triplet(paths);
-                    exit(EXIT_FAILURE);
-                }
                 specs.push_back(std::move(*spec));
             }
             else
