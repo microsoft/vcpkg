@@ -128,7 +128,7 @@ namespace vcpkg
             System::println("");
             for (const package_spec& p : unmet_dependencies)
             {
-                System::println("    %s", p.name);
+                System::println("    %s", to_string(p));
             }
             System::println("");
             exit(EXIT_FAILURE);
