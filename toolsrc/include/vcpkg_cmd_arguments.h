@@ -27,7 +27,7 @@ namespace vcpkg
         std::unordered_set<std::string> check_and_get_optional_command_arguments(const std::vector<std::string>& valid_options) const;
 
         void check_max_args(size_t arg_count, const char* example_text = nullptr) const;
-        std::vector<package_spec> parse_all_arguments_as_package_specs(const triplet& default_target_triplet, const char* example_text = nullptr) const;
+        std::vector<package_spec> parse_all_arguments_as_package_specs(const vcpkg_paths& paths, const triplet& default_target_triplet, const char* example_text = nullptr) const;
 
     private:
         std::unordered_set<std::string> optional_command_arguments;

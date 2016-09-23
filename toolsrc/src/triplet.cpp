@@ -1,4 +1,5 @@
 #include "triplet.h"
+#include "vcpkg.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Checks.h"
 
@@ -55,5 +56,20 @@ namespace vcpkg
             return "uwp";
 
         Checks::exit_with_message("Unknown system: %s", value);
+    }
+
+    bool triplet::validate(const vcpkg_paths & paths)
+    {
+        auto it = fs::directory_iterator(paths.triplets);
+        for(; it != fs::directory_iterator(); ++it)
+        {
+            std::string triplet_file_name = it->path().stem().generic_u8string();
+            if(value == triplet_file_name) // TODO: fuzzy compare
+            {
+                //value = triplet_file_name; // NOTE: uncomment when implementing fuzzy compare
+                return true;
+            }
+        }
+        return false;
     }
 }

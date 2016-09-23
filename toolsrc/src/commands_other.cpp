@@ -32,7 +32,7 @@ namespace vcpkg
             //"\n"
             "Options:\n"
             "  --triplet <t>                   Specify the target architecture triplet.\n"
-            "                                  (default: x86-windows, see 'vcpkg help triplet')\n"
+            "                                  (default: %%VCPKG_DEFAULT_TRIPLET%%, see 'vcpkg help triplet')\n"
             "\n"
             "  --vcpkg-root <path>             Specify the vcpkg root directory\n"
             "                                  (default: %%VCPKG_ROOT%%)\n"
