@@ -113,7 +113,23 @@ namespace vcpkg
 
     void build_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
+        StatusParagraphs status_db = database_load_check(paths);
+
         std::vector<package_spec> specs = args.parse_all_arguments_as_package_specs(default_target_triplet);
+        std::unordered_set<package_spec> unmet_dependencies = Dependencies::find_unmet_dependencies(paths, specs, status_db);
+        if (!unmet_dependencies.empty())
+        {
+            System::println(System::color::error, "The build command requires all dependencies to be already installed.");
+            System::println("The following dependencies are missing:");
+            System::println("");
+            for (const package_spec& p : unmet_dependencies)
+            {
+                System::println("    %s", p.name);
+            }
+            System::println("");
+            exit(EXIT_FAILURE);
+        }
+
         Environment::ensure_utilities_on_path(paths);
         for (const package_spec& spec : specs)
         {
