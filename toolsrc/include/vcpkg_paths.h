@@ -1,12 +1,18 @@
 #pragma once
 #include <filesystem>
 #include "expected.h"
+#include "package_spec.h"
 
 namespace vcpkg
 {
+    namespace fs = std::tr2::sys;
+
     struct vcpkg_paths
     {
         static expected<vcpkg_paths> create(const std::tr2::sys::path& vcpkg_root_dir);
+
+        fs::path find_available_package(const package_spec& spec) const;
+        fs::path find_available_port_file(const package_spec& spec) const;
 
         std::tr2::sys::path root;
         std::tr2::sys::path packages;

@@ -80,7 +80,7 @@ namespace vcpkg
                 continue;
             }
 
-            fs::path package_path = find_available_package(paths, spec);
+            fs::path package_path = paths.find_available_package(spec);
 
             expected<std::string> file_contents = Files::get_contents(package_path / "CONTROL");
 

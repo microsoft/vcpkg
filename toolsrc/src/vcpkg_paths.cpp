@@ -3,6 +3,7 @@
 #include "vcpkg_paths.h"
 #include "metrics.h"
 #include "vcpkg_System.h"
+#include "package_spec.h"
 
 namespace fs = std::tr2::sys;
 
@@ -44,5 +45,15 @@ namespace vcpkg
 
         paths.ports_cmake = paths.root / "scripts" / "ports.cmake";
         return paths;
+    }
+
+    fs::path vcpkg_paths::find_available_package(const package_spec& spec) const
+    {
+        return this->packages / Strings::format("%s_%s", spec.name, spec.target_triplet);
+    }
+
+    fs::path vcpkg_paths::find_available_port_file(const package_spec& spec) const
+    {
+        return this->ports / spec.name;
     }
 }
