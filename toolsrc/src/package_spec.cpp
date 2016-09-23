@@ -2,7 +2,7 @@
 
 namespace vcpkg
 {
-    expected<package_spec> parse(const std::string& spec, const triplet& default_target_triplet)
+    expected<package_spec> package_spec::from_string(const std::string& spec, const triplet& default_target_triplet)
     {
         auto pos = spec.find(':');
         if (pos == std::string::npos)

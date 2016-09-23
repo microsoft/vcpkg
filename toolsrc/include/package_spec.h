@@ -8,13 +8,13 @@ namespace vcpkg
 {
     struct package_spec
     {
+        static expected<package_spec> from_string(const std::string& spec, const triplet& default_target_triplet);
+
         std::string name;
         triplet target_triplet;
 
         std::string dir() const;
     };
-
-    expected<package_spec> parse(const std::string& spec, const triplet& default_target_triplet);
 
     std::string to_string(const package_spec& spec);
 

@@ -148,7 +148,7 @@ namespace vcpkg
             exit(EXIT_FAILURE);
         }
 
-        expected<package_spec> current_spec = vcpkg::parse(args.command_arguments[0], default_target_triplet);
+        expected<package_spec> current_spec = package_spec::from_string(args.command_arguments[0], default_target_triplet);
         if (auto spec = current_spec.get())
         {
             Environment::ensure_utilities_on_path(paths);

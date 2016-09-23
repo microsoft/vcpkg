@@ -196,7 +196,7 @@ namespace vcpkg
 
         for (const std::string& command_argument : command_arguments)
         {
-            expected<package_spec> current_spec = vcpkg::parse(command_argument, default_target_triplet);
+            expected<package_spec> current_spec = package_spec::from_string(command_argument, default_target_triplet);
             if (auto spec = current_spec.get())
             {
                 specs.push_back(std::move(*spec));
