@@ -69,30 +69,30 @@ static void inner(const vcpkg_cmd_arguments& args)
         return command_function(args, paths);
     }
 
-    triplet default_target_triplet = triplet::X86_WINDOWS;
-
-    if (args.target_triplet != nullptr)
+    triplet default_target_triplet;
+    if(args.target_triplet != nullptr)
     {
-        const std::string& target_triplet = *args.target_triplet;
-
-        auto it = fs::directory_iterator(paths.triplets);
-        for (; it != fs::directory_iterator(); ++it)
+        default_target_triplet = {*args.target_triplet};
+    }
+    else
+    {
+        const auto vcpkg_default_triplet_env = System::wdupenv_str(L"VCPKG_DEFAULT_TRIPLET");
+        if(!vcpkg_default_triplet_env.empty())
         {
-            std::string triplet_file_name = it->path().stem().generic_u8string();
-            if (target_triplet == triplet_file_name) // TODO: fuzzy compare
-            {
-                default_target_triplet = {triplet_file_name};
-                break;
-            }
+            default_target_triplet = {Strings::utf16_to_utf8(vcpkg_default_triplet_env)};
         }
-
-        if (it == fs::directory_iterator())
+        else
         {
-            System::println(System::color::error, "Error: invalid triplet: %s", target_triplet);
-            TrackProperty("error", "invalid triplet: " + target_triplet);
-            help_topic_valid_triplet(paths);
-            exit(EXIT_FAILURE);
+            default_target_triplet = triplet::X86_WINDOWS;
         }
+    }
+
+    if(!default_target_triplet.validate(paths))
+    {
+        System::println(System::color::error, "Error: invalid triplet: %s", default_target_triplet.value);
+        TrackProperty("error", "invalid triplet: " + default_target_triplet.value);
+        help_topic_valid_triplet(paths);
+        exit(EXIT_FAILURE);
     }
 
     if (auto command_function = find_command(args.command, get_available_commands_type_a()))

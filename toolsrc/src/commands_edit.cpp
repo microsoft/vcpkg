@@ -7,7 +7,7 @@ namespace vcpkg
     {
         static auto example = "edit zlib";
         args.check_max_args(1, example);
-        package_spec spec = args.parse_all_arguments_as_package_specs(default_target_triplet, example).at(0);
+        package_spec spec = args.parse_all_arguments_as_package_specs(paths, default_target_triplet, example).at(0);
 
         // Find editor
         std::wstring env_EDITOR = System::wdupenv_str(L"EDITOR");

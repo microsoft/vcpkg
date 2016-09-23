@@ -4,6 +4,8 @@
 
 namespace vcpkg
 {
+    struct vcpkg_paths;
+
     struct triplet
     {
         static const triplet X86_WINDOWS;
@@ -17,6 +19,8 @@ namespace vcpkg
         std::string architecture() const;
 
         std::string system() const;
+
+        bool validate(const vcpkg_paths& paths);
     };
 
     bool operator==(const triplet& left, const triplet& right);

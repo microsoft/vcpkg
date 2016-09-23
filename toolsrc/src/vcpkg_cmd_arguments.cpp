@@ -179,7 +179,7 @@ namespace vcpkg
         }
     }
 
-    std::vector<package_spec> vcpkg_cmd_arguments::parse_all_arguments_as_package_specs(const triplet& default_target_triplet, const char* example_text) const
+    std::vector<package_spec> vcpkg_cmd_arguments::parse_all_arguments_as_package_specs(const vcpkg_paths& paths, const triplet& default_target_triplet, const char* example_text) const
     {
         size_t arg_count = command_arguments.size();
         if (arg_count < 1)
