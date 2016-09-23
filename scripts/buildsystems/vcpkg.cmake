@@ -41,7 +41,7 @@ if(NOT VCPKG_TOOLCHAIN)
         function(add_executable name)
             _add_executable(${ARGV})
             add_custom_command(TARGET ${name} POST_BUILD
-                COMMAND powershell -executionpolicy remotesigned -file ${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1
+                COMMAND powershell -executionpolicy UnRestricted -file ${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1
                     -targetBinary $<TARGET_FILE:${name}>
                     -installedDir "${_VCPKG_TOOLCHAIN_DIR}/../installed/${_VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                     -OutVariable out
