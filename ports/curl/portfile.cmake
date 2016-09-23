@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE_FILE
     URL "https://curl.haxx.se/download/curl-7.48.0.tar.bz2"
     FILENAME "curl-7.48.0.tar.bz2"
-    MD5 d42e0fc34a5cace5739631cc040974fe
+    SHA512 9bb554eaf4ccaced0fa9b38de4f381eab84b96c1aa07a45d83ddfd38a925044d0fe9fac517263f67f009d2294a31c33dedb2267defbab0cb14f96091bbed5f92
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 

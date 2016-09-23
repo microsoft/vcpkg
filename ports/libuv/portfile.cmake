@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
     URL "https://github.com/libuv/libuv/archive/v1.9.1.zip"
     FILENAME "libuv-v1.9.1.zip"
-    MD5 4d1e74197920455203954cd8b75f0a2f
+    SHA512 3eb8711e3612fb3f5a1ddeb4614b2bec29c022ac5c6c2590bc5239825d758a73be0819c52747956a029859ef4e416bf3fce16665bac2c6c4890f736b47c38226
 )
 
 if(NOT EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src)

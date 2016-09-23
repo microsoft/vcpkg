@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
     URL "https://github.com/glfw/glfw/releases/download/3.1.2/glfw-3.1.2.zip"
     FILENAME "glfw-3.1.2.zip"
-    MD5 8023327bfe979b3fe735e449e2f54842
+    SHA512 c199137b32182182123869fe69ab991a296feb80dcf3db3cf5e070cdaef31ed958148d9b87e724c1937fa535960122bdceb92ea9dd38f7ef41e4e08e36210fe5
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
