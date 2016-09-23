@@ -60,7 +60,7 @@ namespace vcpkg
     {
         StatusParagraphs status_db = database_load_check(paths);
 
-        std::vector<package_spec> specs = args.parse_all_arguments_as_package_specs(paths, default_target_triplet);
+        std::vector<package_spec> specs = args.parse_all_arguments_as_package_specs(default_target_triplet);
         std::vector<package_spec> install_plan = Dependencies::create_dependency_ordered_install_plan(paths, specs, status_db);
         Checks::check_exit(!install_plan.empty(), "Install plan cannot be empty");
         std::string specs_string = to_string(install_plan[0]);
@@ -119,7 +119,7 @@ namespace vcpkg
 
         StatusParagraphs status_db = database_load_check(paths);
 
-        const package_spec spec = args.parse_all_arguments_as_package_specs(paths, default_target_triplet).at(0);
+        const package_spec spec = args.parse_all_arguments_as_package_specs(default_target_triplet).at(0);
         std::unordered_set<package_spec> unmet_dependencies = Dependencies::find_unmet_dependencies(paths, spec, status_db);
         if (!unmet_dependencies.empty())
         {
