@@ -28,7 +28,6 @@ namespace vcpkg
 
         void check_max_args(size_t arg_count, const char* example_text = nullptr) const;
         std::vector<package_spec> parse_all_arguments_as_package_specs(const triplet& default_target_triplet, const char* example_text = nullptr) const;
-        std::vector<package_spec> extract_package_specs_with_unmet_dependencies(const vcpkg_paths& paths, const triplet& default_target_triplet, const StatusParagraphs& status_db) const;
 
     private:
         std::unordered_set<std::string> optional_command_arguments;

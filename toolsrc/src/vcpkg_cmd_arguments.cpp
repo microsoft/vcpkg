@@ -179,47 +179,6 @@ namespace vcpkg
         }
     }
 
-    std::vector<package_spec> vcpkg_cmd_arguments::extract_package_specs_with_unmet_dependencies(const vcpkg_paths& paths, const triplet& default_target_triplet, const StatusParagraphs& status_db) const
-    {
-        std::vector<package_spec> specs = parse_all_arguments_as_package_specs(default_target_triplet);
-        std::unordered_set<package_spec> had_its_immediate_dependencies_added;
-        Graphs::Graph<package_spec> graph;
-        graph.add_vertices(specs);
-
-        while (!specs.empty())
-        {
-            package_spec spec = specs.back();
-            specs.pop_back();
-
-            if (had_its_immediate_dependencies_added.find(spec) != had_its_immediate_dependencies_added.end())
-            {
-                continue;
-            }
-
-            std::vector<std::string> dependencies_as_string = get_unmet_package_dependencies(paths, spec, status_db);
-
-            for (const std::string& dep_as_string : dependencies_as_string)
-            {
-                package_spec current_dep = {dep_as_string, spec.target_triplet};
-                auto it = status_db.find(current_dep.name, current_dep.target_triplet);
-                if (it != status_db.end() && (*it)->want == want_t::install)
-                {
-                    continue;
-                }
-
-                graph.add_edge(spec, current_dep);
-                if (had_its_immediate_dependencies_added.find(current_dep) == had_its_immediate_dependencies_added.end())
-                {
-                    specs.push_back(std::move(current_dep));
-                }
-            }
-
-            had_its_immediate_dependencies_added.insert(spec);
-        }
-
-        return graph.find_topological_sort();
-    }
-
     std::vector<package_spec> vcpkg_cmd_arguments::parse_all_arguments_as_package_specs(const triplet& default_target_triplet, const char* example_text) const
     {
         size_t arg_count = command_arguments.size();

@@ -6,6 +6,7 @@
 #include "vcpkg_Files.h"
 #include "post_build_lint.h"
 #include "vcpkg_System.h"
+#include "vcpkg_Dependencies.h"
 
 namespace vcpkg
 {
@@ -59,18 +60,19 @@ namespace vcpkg
     {
         StatusParagraphs status_db = database_load_check(paths);
 
-        std::vector<package_spec> specs = args.extract_package_specs_with_unmet_dependencies(paths, default_target_triplet, status_db);
-        Checks::check_exit(!specs.empty(), "Specs cannot be empty");
-        std::string specs_string = to_string(specs[0]);
-        for (size_t i = 1; i < specs.size(); ++i)
+        std::vector<package_spec> specs = args.parse_all_arguments_as_package_specs(default_target_triplet);
+        std::vector<package_spec> install_plan = Dependencies::create_dependency_ordered_install_plan(paths, specs, status_db);
+        Checks::check_exit(!install_plan.empty(), "Install plan cannot be empty");
+        std::string specs_string = to_string(install_plan[0]);
+        for (size_t i = 1; i < install_plan.size(); ++i)
         {
             specs_string.push_back(',');
-            specs_string.append(to_string(specs[i]));
+            specs_string.append(to_string(install_plan[i]));
         }
         TrackProperty("installplan", specs_string);
         Environment::ensure_utilities_on_path(paths);
 
-        for (const package_spec& spec : specs)
+        for (const package_spec& spec : install_plan)
         {
             if (status_db.find_installed(spec.name, spec.target_triplet) != status_db.end())
             {
