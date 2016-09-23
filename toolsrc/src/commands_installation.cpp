@@ -113,14 +113,14 @@ namespace vcpkg
 
     void build_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
-        // Currently the code won't work for multiple packages if one of them depends on another.
+        // Installing multiple packages leads to unintuitive behavior if one of them depends on another.
         // Allowing only 1 package for now. 
         args.check_max_args(1);
 
         StatusParagraphs status_db = database_load_check(paths);
 
-        std::vector<package_spec> specs = args.parse_all_arguments_as_package_specs(default_target_triplet);
-        std::unordered_set<package_spec> unmet_dependencies = Dependencies::find_unmet_dependencies(paths, specs, status_db);
+        const package_spec spec = args.parse_all_arguments_as_package_specs(default_target_triplet).at(0);
+        std::unordered_set<package_spec> unmet_dependencies = Dependencies::find_unmet_dependencies(paths, spec, status_db);
         if (!unmet_dependencies.empty())
         {
             System::println(System::color::error, "The build command requires all dependencies to be already installed.");
@@ -135,10 +135,7 @@ namespace vcpkg
         }
 
         Environment::ensure_utilities_on_path(paths);
-        for (const package_spec& spec : specs)
-        {
-            build_internal(spec, paths);
-        }
+        build_internal(spec, paths);
         exit(EXIT_SUCCESS);
     }
 
