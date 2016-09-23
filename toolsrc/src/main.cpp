@@ -70,38 +70,29 @@ static void inner(const vcpkg_cmd_arguments& args)
     }
 
     triplet default_target_triplet;
-    const auto vcpkg_default_triplet_env = System::wdupenv_str(L"VCPKG_DEFAULT_TRIPLET");
-    if(!vcpkg_default_triplet_env.empty())
+    if(args.target_triplet != nullptr)
     {
-        default_target_triplet = {Strings::utf16_to_utf8(vcpkg_default_triplet_env)};
+        default_target_triplet = {*args.target_triplet};
     }
     else
     {
-        default_target_triplet = triplet::X86_WINDOWS;
+        const auto vcpkg_default_triplet_env = System::wdupenv_str(L"VCPKG_DEFAULT_TRIPLET");
+        if(!vcpkg_default_triplet_env.empty())
+        {
+            default_target_triplet = {Strings::utf16_to_utf8(vcpkg_default_triplet_env)};
+        }
+        else
+        {
+            default_target_triplet = triplet::X86_WINDOWS;
+        }
     }
 
-    if (args.target_triplet != nullptr)
+    if(!default_target_triplet.validate(paths))
     {
-        const std::string& target_triplet = *args.target_triplet;
-
-        auto it = fs::directory_iterator(paths.triplets);
-        for (; it != fs::directory_iterator(); ++it)
-        {
-            std::string triplet_file_name = it->path().stem().generic_u8string();
-            if (target_triplet == triplet_file_name) // TODO: fuzzy compare
-            {
-                default_target_triplet = {triplet_file_name};
-                break;
-            }
-        }
-
-        if (it == fs::directory_iterator())
-        {
-            System::println(System::color::error, "Error: invalid triplet: %s", target_triplet);
-            TrackProperty("error", "invalid triplet: " + target_triplet);
-            help_topic_valid_triplet(paths);
-            exit(EXIT_FAILURE);
-        }
+        System::println(System::color::error, "Error: invalid triplet: %s", default_target_triplet.value);
+        TrackProperty("error", "invalid triplet: " + default_target_triplet.value);
+        help_topic_valid_triplet(paths);
+        exit(EXIT_FAILURE);
     }
 
     if (auto command_function = find_command(args.command, get_available_commands_type_a()))

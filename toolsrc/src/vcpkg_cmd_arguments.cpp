@@ -181,7 +181,7 @@ namespace vcpkg
 
     std::vector<package_spec> vcpkg_cmd_arguments::extract_package_specs_with_unmet_dependencies(const vcpkg_paths& paths, const triplet& default_target_triplet, const StatusParagraphs& status_db) const
     {
-        std::vector<package_spec> specs = parse_all_arguments_as_package_specs(default_target_triplet);
+        std::vector<package_spec> specs = parse_all_arguments_as_package_specs(paths, default_target_triplet);
         std::unordered_set<package_spec> had_its_immediate_dependencies_added;
         Graphs::Graph<package_spec> graph;
         graph.add_vertices(specs);
@@ -220,7 +220,7 @@ namespace vcpkg
         return graph.find_topological_sort();
     }
 
-    std::vector<package_spec> vcpkg_cmd_arguments::parse_all_arguments_as_package_specs(const triplet& default_target_triplet, const char* example_text) const
+    std::vector<package_spec> vcpkg_cmd_arguments::parse_all_arguments_as_package_specs(const vcpkg_paths& paths, const triplet& default_target_triplet, const char* example_text) const
     {
         size_t arg_count = command_arguments.size();
         if (arg_count < 1)
@@ -240,6 +240,13 @@ namespace vcpkg
             expected<package_spec> current_spec = vcpkg::parse(command_argument, default_target_triplet);
             if (auto spec = current_spec.get())
             {
+                if(!spec->target_triplet.validate(paths))
+                {
+                    System::println(System::color::error, "Error: invalid triplet %s for package %s", spec->target_triplet.value, spec->name);
+                    TrackProperty("error", "invalid triplet: " + spec->target_triplet.value);
+                    help_topic_valid_triplet(paths);
+                    exit(EXIT_FAILURE);
+                }
                 specs.push_back(std::move(*spec));
             }
             else

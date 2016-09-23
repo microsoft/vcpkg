@@ -111,7 +111,7 @@ namespace vcpkg
 
     void build_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
-        std::vector<package_spec> specs = args.parse_all_arguments_as_package_specs(default_target_triplet);
+        std::vector<package_spec> specs = args.parse_all_arguments_as_package_specs(paths, default_target_triplet);
         Environment::ensure_utilities_on_path(paths);
         for (const package_spec& spec : specs)
         {
