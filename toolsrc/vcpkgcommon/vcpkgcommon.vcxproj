@@ -131,6 +131,7 @@
     <ClInclude Include="..\include\vcpkg_Checks.h" />
     <ClInclude Include="..\include\vcpkg_Files.h" />
     <ClInclude Include="..\include\vcpkg_Graphs.h" />
+    <ClInclude Include="..\include\vcpkg_Sets.h" />
     <ClInclude Include="..\include\vcpkg_Strings.h" />
     <ClInclude Include="..\include\vcpkg_System.h" />
   </ItemGroup>

@@ -50,5 +50,8 @@
     <ClInclude Include="..\include\opt_bool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\vcpkg_Sets.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
