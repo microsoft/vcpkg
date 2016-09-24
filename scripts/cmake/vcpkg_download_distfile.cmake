@@ -3,10 +3,10 @@ function(vcpkg_download_distfile VAR)
     set(oneValueArgs FILENAME SHA512)
     set(multipleValuesArgs URLS)
     cmake_parse_arguments(vcpkg_download_distfile "" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
-
     set(downloaded_file_path ${DOWNLOADS}/${vcpkg_download_distfile_FILENAME})
-    if(EXISTS ${downloaded_file_path})
-        message(STATUS "Using cached ${downloaded_file_path}")
+
+    function(test_hash FILE_KIND CUSTOM_ERROR_ADVICE)
+        message(STATUS "Testing integrity of ${FILE_KIND}...")
         file(SHA512 ${downloaded_file_path} FILE_HASH)
         if(NOT "${FILE_HASH}" STREQUAL "${vcpkg_download_distfile_SHA512}")
             message(FATAL_ERROR
@@ -14,8 +14,14 @@ function(vcpkg_download_distfile VAR)
                 "        File path: [ ${downloaded_file_path} ]\n"
                 "    Expected hash: [ ${vcpkg_download_distfile_SHA512} ]\n"
                 "      Actual hash: [ ${FILE_HASH} ]\n"
-                "Please delete the file and try again if this file should be downloaded again.\n")
+                "${CUSTOM_ERROR_ADVICE}\n")
         endif()
+        message(STATUS "Testing integrity of ${FILE_KIND}... OK")
+    endfunction()
+
+    if(EXISTS ${downloaded_file_path})
+        message(STATUS "Using cached ${downloaded_file_path}")
+        test_hash("cached file" "Please delete the file and retry if this file should be downloaded again.")
     else()
         # Tries to download the file.
         foreach(url IN LISTS vcpkg_download_distfile_URLS)
@@ -39,17 +45,7 @@ function(vcpkg_download_distfile VAR)
             "    Failed to download file.\n"
             "    Add mirrors or submit an issue at https://github.com/Microsoft/vcpkg/issues\n")
         else()
-            message(STATUS "Testing integrity of downloaded file...")
-            file(SHA512 ${downloaded_file_path} FILE_HASH)
-            if(NOT "${FILE_HASH}" STREQUAL "${vcpkg_download_distfile_SHA512}")
-                message(FATAL_ERROR
-                    "\nFile does not have expected hash:\n"
-                    "        File path: [ ${downloaded_file_path} ]\n"
-                    "    Expected hash: [ ${vcpkg_download_distfile_SHA512} ]\n"
-                    "      Actual hash: [ ${FILE_HASH} ]\n"
-                    "The file may be corrupted.\n")
-            endif()
-            message(STATUS "Testing integrity of downloaded file... OK")
+            test_hash("downloaded file" "The file may be corrupted.")
         endif()
     endif()
     set(${VAR} ${downloaded_file_path} PARENT_SCOPE)
