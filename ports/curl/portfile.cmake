@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE_FILE
-    URL "https://curl.haxx.se/download/curl-7.48.0.tar.bz2"
+    URLS "https://curl.haxx.se/download/curl-7.48.0.tar.bz2"
     FILENAME "curl-7.48.0.tar.bz2"
     SHA512 9bb554eaf4ccaced0fa9b38de4f381eab84b96c1aa07a45d83ddfd38a925044d0fe9fac517263f67f009d2294a31c33dedb2267defbab0cb14f96091bbed5f92
 )

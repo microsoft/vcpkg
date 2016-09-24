@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libjpeg-turbo-1.4.90)
 
 vcpkg_download_distfile(ARCHIVE
-    URL "https://github.com/libjpeg-turbo/libjpeg-turbo/archive/1.4.90.zip"
+    URLS "https://github.com/libjpeg-turbo/libjpeg-turbo/archive/1.4.90.zip"
     FILENAME "libjpeg-turbo-1.4.90.zip"
     SHA512 43c3d26c70a7356bb0832276fe82eead040c3f4aa17df118f91a38615bfacfdfb25fab41965f9ca2b69d18e0b937a1bb753e93fa2c114e01d5174fc1100010b4
 )

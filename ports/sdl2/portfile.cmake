@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE_FILE
-    URL "http://libsdl.org/release/SDL2-2.0.4.tar.gz"
+    URLS "http://libsdl.org/release/SDL2-2.0.4.tar.gz"
     FILENAME "SDL2-2.0.4.tar.gz"
     SHA512 dd0a95878639856c0f4b8a579ace8071379ab64519fa139b22d3ed857a0f0db87a75bc8480c7207e02fbffd1fdbd448e3c0b882c451675b0e2f1a945af02e1d6
 )
