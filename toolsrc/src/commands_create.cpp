@@ -1,6 +1,7 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Environment.h"
+#include "vcpkg_Files.h"
 
 namespace vcpkg
 {
@@ -23,7 +24,11 @@ namespace vcpkg
             std::wstring custom_filename = L" ";
             if (args.command_arguments.size() >= 3)
             {
-                custom_filename = Strings::format(LR"( -DFILENAME="%s" )", Strings::utf8_to_utf16(args.command_arguments.at(2)));
+                const std::string& zip_file_name = args.command_arguments.at(2);
+                Checks::check_exit(!Files::has_invalid_chars_for_filesystem(zip_file_name),
+                                   R"(Filename cannot contain invalid chars %s, but was %s)",
+                                   Files::FILESYSTEM_INVALID_CHARACTERS, zip_file_name);
+                custom_filename = Strings::format(LR"( -DFILENAME="%s" )", Strings::utf8_to_utf16(zip_file_name));
             }
 
             const std::wstring cmdline = Strings::format(LR"(cmake -DCMD=SCAFFOLD -DPORT=%s -DTARGET_TRIPLET=%s -DURL=%s%s-P "%s")",
