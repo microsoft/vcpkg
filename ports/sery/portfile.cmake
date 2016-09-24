@@ -1,7 +1,6 @@
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
-    URL "https://githsdsdub.com/Ninetainedo/Sery/archive/v1.0.zip"
-    MIRRORS "2http://githdfdub.com/Ninetainedo/Sery/archive/v1.0.zip" "https://github.com/Ninetainedo/Sery/archive/v1.0.zip"
+    URL "https://github.com/Ninetainedo/Sery/archive/v1.0.zip"
     FILENAME "sery-1.0.0.zip"
     SHA512 15ef97bf094e8931049d8dd667a778e23847555f0f8d5b949b250e26edcc2541744fac5c34d935880d070546777fa787b1baf018d8ca2240fcd18a820aded04f
 )
