@@ -43,7 +43,7 @@ if(NOT VCPKG_TOOLCHAIN)
             add_custom_command(TARGET ${name} POST_BUILD
                 COMMAND powershell -executionpolicy UnRestricted -file ${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1
                     -targetBinary $<TARGET_FILE:${name}>
-                    -installedDir "${_VCPKG_TOOLCHAIN_DIR}/../installed/${_VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
+                    -installedDir "${_VCPKG_TOOLCHAIN_DIR}/../../installed/${_VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                     -OutVariable out
             )
         endfunction()
