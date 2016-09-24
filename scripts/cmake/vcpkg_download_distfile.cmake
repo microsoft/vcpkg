@@ -37,7 +37,7 @@ function(vcpkg_download_distfile VAR)
             message(FATAL_ERROR
             "\n"
             "    Failed to download file.\n"
-            "    Add mirrors or submit an issue at https://github.com/Microsoft/vcpkg/issues/new\n")
+            "    Add mirrors or submit an issue at https://github.com/Microsoft/vcpkg/issues\n")
         else()
             message(STATUS "Testing integrity of downloaded file...")
             file(SHA512 ${downloaded_file_path} FILE_HASH)
