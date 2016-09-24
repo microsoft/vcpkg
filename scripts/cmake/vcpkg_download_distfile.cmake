@@ -11,9 +11,9 @@ function(vcpkg_download_distfile VAR)
         if(NOT "${FILE_HASH}" STREQUAL "${vcpkg_download_distfile_SHA512}")
             message(FATAL_ERROR
                 "\nFile does not have expected hash:\n"
-                "        File path: [${downloaded_file_path}]\n"
-                "    Expected hash: [${vcpkg_download_distfile_SHA512}]\n"
-                "      Actual hash: [${FILE_HASH}]\n"
+                "        File path: [ ${downloaded_file_path} ]\n"
+                "    Expected hash: [ ${vcpkg_download_distfile_SHA512} ]\n"
+                "      Actual hash: [ ${FILE_HASH} ]\n"
                 "Please delete the file and try again if this file should be downloaded again.\n")
         endif()
     else()
@@ -44,9 +44,9 @@ function(vcpkg_download_distfile VAR)
             if(NOT "${FILE_HASH}" STREQUAL "${vcpkg_download_distfile_SHA512}")
                 message(FATAL_ERROR
                     "\nFile does not have expected hash:\n"
-                    "        File path: [${downloaded_file_path}]\n"
-                    "    Expected hash: [${vcpkg_download_distfile_SHA512}]\n"
-                    "      Actual hash: [${FILE_HASH}]\n"
+                    "        File path: [ ${downloaded_file_path} ]\n"
+                    "    Expected hash: [ ${vcpkg_download_distfile_SHA512} ]\n"
+                    "      Actual hash: [ ${FILE_HASH} ]\n"
                     "The file may be corrupted.\n")
             endif()
             message(STATUS "Testing integrity of downloaded file... OK")
