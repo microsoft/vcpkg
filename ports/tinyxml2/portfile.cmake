@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
-    URL "https://github.com/leethomason/tinyxml2/archive/3.0.0.zip"
+    URLS "https://github.com/leethomason/tinyxml2/archive/3.0.0.zip"
     FILENAME "tinyxml2-3.0.0.zip"
     SHA512 3581e086e41ea01418fdf74e53b932c41cada9a45b73fb71c15424672182dc2a1e55110f030962ae44df6f5d9f060478c5b04373f886da843a78fcabae8b063c
 )

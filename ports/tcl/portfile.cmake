@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
-    URL "http://prdownloads.sourceforge.net/tcl/tcl8.6.5-src.tar.gz"
+    URLS "http://prdownloads.sourceforge.net/tcl/tcl8.6.5-src.tar.gz"
     FILENAME "tcl8.6.5-src.tar.gz"
     MD5 0e6426a4ca9401825fbc6ecf3d89a326
 )
