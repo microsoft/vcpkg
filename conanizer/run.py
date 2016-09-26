@@ -7,8 +7,8 @@ from os import getenv
 
 ports_dir = os.path.join(VCPKG_ROOT_FOLDER, "ports")
 ports = [port for port in os.listdir(ports_dir) if os.path.isdir(os.path.join(ports_dir, port))]
-num_pages = getenv("CONAN_TOTAL_PAGES", 10)
-current_page = getenv("CONAN_CURRENT_PAGE", 1)
+num_pages = int(getenv("CONAN_TOTAL_PAGES", 10))
+current_page = int(getenv("CONAN_CURRENT_PAGE", 1))
 
 tmp_folder = temp_folder()
 # tmp_folder = "./.tmp"
