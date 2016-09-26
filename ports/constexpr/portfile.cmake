@@ -8,8 +8,8 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 # Put the licence file where vcpkg expects it
 set(SOURCE_DIR ${CURRENT_BUILDTREES_DIR}/src/constexpr-a98b1db39c909e0130d21d3910d4faf97035a625)
-file(COPY ${SOURCE_DIR}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/constexpr/README.md)
-file(COPY ${SOURCE_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/constexpr/copyright)
+file(COPY ${SOURCE_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/constexpr/LICENSE)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/constexpr/LICENSE ${CURRENT_PACKAGES_DIR}/share/constexpr/copyright)
 
 # Copy the constexpr header files
 file(GLOB HEADER_FILES ${SOURCE_DIR}/src/include/*.h)
