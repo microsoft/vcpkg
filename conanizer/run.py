@@ -19,7 +19,7 @@ except Exception:
 
 print("Working in folder: %s" % tmp_folder)
 
-visual_versions=[14, ]
+visual_versions=[10, 12, 14]
 sorted(ports)
 ports.reverse()
 to_upload = []
@@ -30,12 +30,13 @@ counter = 0
 for visual_version in visual_versions:
     for port_name in ports:
         if counter % num_pages == (current_page - 1):
-            port = Port(port_name, os.path.join(ports_dir, port_name))
-            ok = process_port(port, tmp_folder, visual_version)
-            if ok:
-                to_upload.append("%s/%s@lasote/vcpkg" % (port.name, port.version))
-            else:
-                failed.append(port.name)
+            for build_type in ["Debug", "Release"]:        
+                port = Port(port_name, os.path.join(ports_dir, port_name))
+                ok = process_port(port, tmp_folder, visual_version, build_type)
+                if ok:
+                    to_upload.append("%s/%s@lasote/vcpkg" % (port.name, port.version))
+                else:
+                    failed.append(port.name)
         counter +=1
 
 # Upload packages
@@ -48,4 +49,4 @@ if getenv("CONAN_PASSWORD", None):
         
 
 print("UPLOADED: %s" % str(to_upload))
-print("FAILED TO BUILD: %s" % str(to_upload))
+print("FAILED TO BUILD: %s" % str(failed))
