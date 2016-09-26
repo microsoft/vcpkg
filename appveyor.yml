@@ -1,0 +1,22 @@
+build: false
+environment:
+    PYTHON: "C:\\Python27"
+    PYTHON_VERSION: "2.7.8"
+    PYTHON_ARCH: "32"
+    CONAN_TOTAL_PAGES: 4
+    
+    matrix:
+        - CONAN_CURRENT_PAGE: 1
+        - CONAN_CURRENT_PAGE: 2  
+        - CONAN_CURRENT_PAGE: 3
+        - CONAN_CURRENT_PAGE: 4
+
+install:
+  # Workaround for CMake not wanting sh.exe on PATH for MinGW
+  - set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
+  - set PATH=%PATH%;%PYTHON%/Scripts/
+  - pip.exe install conan
+  - conan user # It creates the conan data directory
+
+test_script:
+  - python -m conanizer.run
