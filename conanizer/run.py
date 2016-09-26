@@ -23,6 +23,7 @@ visual_versions=[14, ]
 sorted(ports)
 ports.reverse()
 to_upload = []
+failed = []
 
 counter = 0
 # Compile ports
@@ -33,14 +34,18 @@ for visual_version in visual_versions:
             ok = process_port(port, tmp_folder, visual_version)
             if ok:
                 to_upload.append("%s/%s@lasote/vcpkg" % (port.name, port.version))
+            else:
+                failed.append(port.name)
         counter +=1
 
 # Upload packages
 if getenv("CONAN_PASSWORD", None):
     os.system("conan user lasote -p %s" % getenv("CONAN_PASSWORD"))
     for ref in to_upload:
-        ret = os.system("conan upload %s --all -r local" % str(ref))
+        ret = os.system("conan upload %s --all" % str(ref))
         if ret != 0:
             raise Exception("Error uploading!")
         
 
+print("UPLOADED: %s" % str(to_upload))
+print("FAILED TO BUILD: %s" % str(to_upload))
