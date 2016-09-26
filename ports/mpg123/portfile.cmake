@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
-    URL "http://downloads.sourceforge.net/project/mpg123/mpg123/1.23.3/mpg123-1.23.3.tar.bz2"
+    URLS "http://downloads.sourceforge.net/project/mpg123/mpg123/1.23.3/mpg123-1.23.3.tar.bz2"
     FILENAME "mpg123-1.23.3.tar.bz2"
     SHA512 a5ebfb36223a3966386bc8e5769b8543861872d20f9de037d07857e857000f20e198e0b1db04bdc56b18b19d5b4027d8261a104af0216d6ea45274b21a18dda4
 )

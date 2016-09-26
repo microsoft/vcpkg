@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE_FILE
-    URL "http://downloads.sourceforge.net/project/expat/expat/2.1.1/expat-2.1.1.tar.bz2"
+    URLS "http://downloads.sourceforge.net/project/expat/expat/2.1.1/expat-2.1.1.tar.bz2"
     FILENAME "expat-2.1.1.tar.bz2"
     SHA512 088e2ef3434f2affd4fc79fe46f0e9826b9b4c3931ddc780cd18892f1cd1e11365169c6807f45916a56bb6abcc627dcd17a23f970be0bf464f048f5be2713628
 )

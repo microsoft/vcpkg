@@ -1,11 +1,11 @@
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE_FILE
-    URL "https://github.com/cocos2d/cocos2d-x/archive/cocos2d-x-3.10.tar.gz"
+    URLS "https://github.com/cocos2d/cocos2d-x/archive/cocos2d-x-3.10.tar.gz"
     FILENAME "cocos2d-x-3.10.tar.gz"
     MD5 7c67068675ad28374448e844b0e463ff
 )
 vcpkg_download_distfile(DEPS_ARCHIVE_FILE
-    URL "https://github.com/cocos2d/cocos2d-x-3rd-party-libs-bin/archive/v3-deps-79.zip"
+    URLS "https://github.com/cocos2d/cocos2d-x-3rd-party-libs-bin/archive/v3-deps-79.zip"
     FILENAME "cocos2d-x-v3-deps-79.zip"
     MD5 5d88ff867205080b9ee8da532437e891
 )
