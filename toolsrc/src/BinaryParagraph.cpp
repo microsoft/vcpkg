@@ -8,25 +8,24 @@ namespace vcpkg
 {
     BinaryParagraph::BinaryParagraph() = default;
 
-    BinaryParagraph::BinaryParagraph(const std::unordered_map<std::string, std::string>& fields)
+    BinaryParagraph::BinaryParagraph(const std::unordered_map<std::string, std::string>& fields) :
+        name(required_field(fields, "Package")),
+        version(required_field(fields, "Version")),
+        description(optional_field(fields, "Description")),
+        maintainer(optional_field(fields, "Maintainer"))
     {
-        details::required_field(fields, name, "Package");
-        required_field(fields, version, "Version");
-        required_field(fields, target_triplet.value, "Architecture");
+        target_triplet.value = required_field(fields, "Architecture");
         {
-            std::string multi_arch;
-            required_field(fields, multi_arch, "Multi-Arch");
+            std::string multi_arch = required_field(fields, "Multi-Arch");
             Checks::check_throw(multi_arch == "same", "Multi-Arch must be 'same' but was %s", multi_arch);
         }
-        optional_field(fields, description, "Description");
-        std::string deps;
-        optional_field(fields, deps, "Depends");
+
+        std::string deps = optional_field(fields, "Depends");
         if (!deps.empty())
         {
-            depends.clear();
-            parse_depends(deps, depends);
+            this->depends.clear();
+            this->depends = parse_depends(deps);
         }
-        optional_field(fields, maintainer, "Maintainer");
     }
 
     BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh, const triplet& target_triplet)

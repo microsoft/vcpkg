@@ -4,29 +4,28 @@
 
 namespace vcpkg {namespace details
 {
-    void optional_field(const std::unordered_map<std::string, std::string>& fields, std::string& out, const std::string& fieldname)
+    std::string optional_field(const std::unordered_map<std::string, std::string>& fields, const std::string& fieldname)
     {
         auto it = fields.find(fieldname);
         if (it == fields.end())
         {
-            out.clear();
+            return std::string();
         }
 
-        else
-        {
-            out = it->second;
-        }
+        return it->second;
     };
 
-    void required_field(const std::unordered_map<std::string, std::string>& fields, std::string& out, const std::string& fieldname)
+    std::string required_field(const std::unordered_map<std::string, std::string>& fields, const std::string& fieldname)
     {
         auto it = fields.find(fieldname);
         vcpkg::Checks::check_throw(it != fields.end(), "Required field not present: %s", fieldname);
-        out = it->second;
+        return it->second;
     };
 
-    void parse_depends(const std::string& depends_string, std::vector<std::string>& out)
+    std::vector<std::string> parse_depends(const std::string& depends_string)
     {
+        std::vector<std::string> out;
+
         size_t cur = 0;
         do
         {
@@ -34,17 +33,21 @@ namespace vcpkg {namespace details
             if (pos == std::string::npos)
             {
                 out.push_back(depends_string.substr(cur));
-                return;
+                break;
             }
             out.push_back(depends_string.substr(cur, pos - cur));
 
             // skip comma and space
             ++pos;
             if (depends_string[pos] == ' ')
+            {
                 ++pos;
+            }
 
             cur = pos;
         }
         while (cur != std::string::npos);
+
+        return out;
     }
 }}
