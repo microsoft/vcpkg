@@ -17,11 +17,11 @@ tmp_folder = temp_folder()
 
 print("Working in folder: %s" % tmp_folder)
 
-visual_versions=[12]
+visual_versions=[10, 12, 14]
 sorted(ports)
 ports.reverse()
-to_upload = []
-failed = []
+to_upload = set()
+failed = set()
 
 counter = 0
 # Compile ports
@@ -34,9 +34,9 @@ for port_name in ports:
                 port = Port(port_name, os.path.join(ports_dir, port_name))
                 ok = process_port(port, tmp_folder, visual_version, build_type)
                 if ok:
-                    to_upload.append("%s/%s@lasote/vcpkg" % (port.name, port.version))
+                    to_upload.add("%s/%s@lasote/vcpkg" % (port.name, port.version))
                 else:
-                    failed.append(port.name)    
+                    failed.add(port.name)    
         counter += 1
 
 # Upload packages
