@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libpng-1.6.24)
 
 vcpkg_download_distfile(ARCHIVE
-    URL "http://download.sourceforge.net/libpng/libpng-1.6.24.tar.xz"
+    URLS "http://download.sourceforge.net/libpng/libpng-1.6.24.tar.xz"
     FILENAME "libpng-1.6.24.tar.xz"
     SHA512 7eccb90f530a9c728e280b2b1776304a808b5deea559632e7bcf4ea219c7cb5e453aa810215465304501127595000717d4b7c5b26a9f8e22e236ec04af53a90f
 )

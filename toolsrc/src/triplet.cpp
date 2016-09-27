@@ -58,13 +58,13 @@ namespace vcpkg
         Checks::exit_with_message("Unknown system: %s", value);
     }
 
-    bool triplet::validate(const vcpkg_paths & paths)
+    bool triplet::validate(const vcpkg_paths& paths) const
     {
         auto it = fs::directory_iterator(paths.triplets);
-        for(; it != fs::directory_iterator(); ++it)
+        for (; it != fs::directory_iterator(); ++it)
         {
             std::string triplet_file_name = it->path().stem().generic_u8string();
-            if(value == triplet_file_name) // TODO: fuzzy compare
+            if (value == triplet_file_name) // TODO: fuzzy compare
             {
                 //value = triplet_file_name; // NOTE: uncomment when implementing fuzzy compare
                 return true;

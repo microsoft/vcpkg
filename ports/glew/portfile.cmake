@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE_FILE
-    URL "http://downloads.sourceforge.net/project/glew/glew/1.13.0/glew-1.13.0.tgz"
+    URLS "http://downloads.sourceforge.net/project/glew/glew/1.13.0/glew-1.13.0.tgz"
     FILENAME "glew-1.13.0.tgz"
     SHA512 8fc8d7c0d2cd9235ea51db9972f492701827bff40642fdb3cc54c10b0737dba8e6d8d0dcd8c5aa5bfaaae39c6198ba3d4292cd1662fbe1977eb9a5d187ba635f
 )
