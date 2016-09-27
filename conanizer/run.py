@@ -12,10 +12,7 @@ current_page = int(getenv("CONAN_CURRENT_PAGE", 1))
 
 tmp_folder = temp_folder()
 # tmp_folder = "./.tmp"
-try:
-    shutil.rmtree(tmp_folder)
-except Exception:
-    pass
+
 
 print("Working in folder: %s" % tmp_folder)
 
@@ -37,7 +34,7 @@ for visual_version in visual_versions:
                     to_upload.append("%s/%s@lasote/vcpkg" % (port.name, port.version))
                 else:
                     failed.append(port.name)
-        counter +=1
+        counter += 1
 
 # Upload packages
 if getenv("CONAN_PASSWORD", None):

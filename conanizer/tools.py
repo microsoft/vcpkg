@@ -6,7 +6,11 @@ import os
 def process_port(port, tmp_folder, visual_version, build_type):
     try:
         print("Processing... %s:%s" % (port.source, port.version))
-        tmp_folder = os.path.join(tmp_folder, port.name)        
+        tmp_folder = os.path.join(tmp_folder, port.name)     
+        try:
+            shutil.rmtree(tmp_folder)
+        except Exception:
+            pass   
         new_template_to(port.name, port.version, tmp_folder)
         command = "cd %s && conan test_package -s compiler=\"Visual Studio\" -s compiler.version=%s -s build_type=%s" % (tmp_folder, visual_version, build_type)
         print(command)
