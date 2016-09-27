@@ -1,6 +1,7 @@
 import os
 import logging
-from . import VCPKG_ROOT_FOLDER, logger
+from . import VCPKG_ROOT_FOLDER
+from log import logger
 from model import Port
 from tools import new_template_to, temp_folder, process_port
 from os import getenv
@@ -29,7 +30,7 @@ for port_name in ports:
     for visual_version in visual_versions:        
         if counter % num_pages == (current_page - 1):
             for build_type in ["Debug", "Release"]:   
-                print("-------------------------- PROCESSING %s, Visual %s, %s--------------------------" % (port_name, visual_version, build_type))
+                logger.info("-------------------------- PROCESSING %s, Visual %s, %s--------------------------" % (port_name, visual_version, build_type))
                 port = Port(port_name, os.path.join(ports_dir, port_name))
                 ok = process_port(port, tmp_folder, visual_version, build_type)
                 if ok:
