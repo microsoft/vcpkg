@@ -20,7 +20,7 @@ namespace vcpkg
 
         std::string system() const;
 
-        bool validate(const vcpkg_paths& paths);
+        bool validate(const vcpkg_paths& paths) const;
     };
 
     bool operator==(const triplet& left, const triplet& right);
