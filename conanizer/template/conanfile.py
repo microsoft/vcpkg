@@ -36,7 +36,7 @@ class WrapperVspkgConan(ConanFile):
         if self.settings.compiler.version != "14":
             tools.replace_in_file("vcpkg/scripts/cmake/vcpkg_configure_cmake.cmake", "Visual Studio 14 2015", generator)
             
-        self._build_only_selected_build_type_patch()
+        # self._build_only_selected_build_type_patch()
             
         # Patch recipes for support any visual studio
         if self.settings.compiler.version != "14":
@@ -52,60 +52,60 @@ class WrapperVspkgConan(ConanFile):
         self.run("%s && cmake --build . %s" % (prepare_env_cmd, cmake.build_config))
     
     
-    def _build_only_selected_build_type_patch(self):
-        rm_prefix = "dbg" if self.settings.build_type == "Release" else "rel"
-        # Patch vcpkg_build_cmake
-        to_replace = 'message(STATUS "Build ${TARGET_TRIPLET}-%s")' % rm_prefix
-        with_to_replace = 'IF(FALSE)\n%s' % to_replace
-        tools.replace_in_file("vcpkg/scripts/cmake/vcpkg_build_cmake.cmake", to_replace, with_to_replace)
-        to_replace = 'message(STATUS "Build ${TARGET_TRIPLET}-%s done")' % rm_prefix
-        with_to_replace = '%s\nENDIF()' % to_replace
-        tools.replace_in_file("vcpkg/scripts/cmake/vcpkg_build_cmake.cmake", to_replace, with_to_replace)
-        
-        # Patch vcpkg_configure_cmake
-        to_replace = ' message(STATUS "Configuring ${TARGET_TRIPLET}-%s")' % rm_prefix
-        with_to_replace = 'IF(FALSE)\n%s' % to_replace
-        tools.replace_in_file("vcpkg/scripts/cmake/vcpkg_configure_cmake.cmake", to_replace, with_to_replace)
-        to_replace = 'message(STATUS "Configuring ${TARGET_TRIPLET}-%s done")' % rm_prefix
-        with_to_replace = '%s\nENDIF()' % to_replace
-        tools.replace_in_file("vcpkg/scripts/cmake/vcpkg_configure_cmake.cmake", to_replace, with_to_replace)
-       
-        # Patch vcpkg_build_msbuild
-        if self.settings.build_type == "Debug":
-            to_remove = '''message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-    vcpkg_execute_required_process(
-        COMMAND msbuild ${_csc_PROJECT_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}
-            /p:Configuration=${_csc_RELEASE_CONFIGURATION}
-            /p:Platform=${TRIPLET_SYSTEM_ARCH}
-            /p:VCPkgLocalAppDataDisabled=true
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-        LOGNAME build-${TARGET_TRIPLET}-rel
-    )'''   
-        else:
-            to_remove = '''message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-    vcpkg_execute_required_process(
-        COMMAND msbuild ${_csc_PROJECT_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}
-            /p:Configuration=${_csc_DEBUG_CONFIGURATION}
-            /p:Platform=${TRIPLET_SYSTEM_ARCH}
-            /p:VCPkgLocalAppDataDisabled=true
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-        LOGNAME build-${TARGET_TRIPLET}-dbg
-    )'''
-        tools.replace_in_file("vcpkg/scripts/cmake/vcpkg_build_msbuild.cmake", to_remove, "")
-        
-        # Patch vcpkg_install_cmake
-        to_replace = 'message(STATUS "Package ${TARGET_TRIPLET}-%s")' % rm_prefix
-        with_to_replace = 'IF(FALSE)\n%s' % to_replace
-        tools.replace_in_file("vcpkg/scripts/cmake/vcpkg_install_cmake.cmake", to_replace, with_to_replace)
-        to_replace = 'message(STATUS "Package ${TARGET_TRIPLET}-%s done")' % rm_prefix
-        with_to_replace = '%s\nENDIF()' % to_replace
-        tools.replace_in_file("vcpkg/scripts/cmake/vcpkg_install_cmake.cmake", to_replace, with_to_replace)
-       
-       # Patch port, do not remove debug includes
-        to_remove = 'file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)'
-        tools.replace_in_file("vcpkg/ports/%s/portfile.cmake" % self.name, to_remove, "")
+#     def _build_only_selected_build_type_patch(self):
+#         rm_prefix = "dbg" if self.settings.build_type == "Release" else "rel"
+#         # Patch vcpkg_build_cmake
+#         to_replace = 'message(STATUS "Build ${TARGET_TRIPLET}-%s")' % rm_prefix
+#         with_to_replace = 'IF(FALSE)\n%s' % to_replace
+#         tools.replace_in_file("vcpkg/scripts/cmake/vcpkg_build_cmake.cmake", to_replace, with_to_replace)
+#         to_replace = 'message(STATUS "Build ${TARGET_TRIPLET}-%s done")' % rm_prefix
+#         with_to_replace = '%s\nENDIF()' % to_replace
+#         tools.replace_in_file("vcpkg/scripts/cmake/vcpkg_build_cmake.cmake", to_replace, with_to_replace)
+#         
+#         # Patch vcpkg_configure_cmake
+#         to_replace = ' message(STATUS "Configuring ${TARGET_TRIPLET}-%s")' % rm_prefix
+#         with_to_replace = 'IF(FALSE)\n%s' % to_replace
+#         tools.replace_in_file("vcpkg/scripts/cmake/vcpkg_configure_cmake.cmake", to_replace, with_to_replace)
+#         to_replace = 'message(STATUS "Configuring ${TARGET_TRIPLET}-%s done")' % rm_prefix
+#         with_to_replace = '%s\nENDIF()' % to_replace
+#         tools.replace_in_file("vcpkg/scripts/cmake/vcpkg_configure_cmake.cmake", to_replace, with_to_replace)
+#        
+#         # Patch vcpkg_build_msbuild
+#         if self.settings.build_type == "Debug":
+#             to_remove = '''message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
+#     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+#     vcpkg_execute_required_process(
+#         COMMAND msbuild ${_csc_PROJECT_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}
+#             /p:Configuration=${_csc_RELEASE_CONFIGURATION}
+#             /p:Platform=${TRIPLET_SYSTEM_ARCH}
+#             /p:VCPkgLocalAppDataDisabled=true
+#         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+#         LOGNAME build-${TARGET_TRIPLET}-rel
+#     )'''   
+#         else:
+#             to_remove = '''message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
+#     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+#     vcpkg_execute_required_process(
+#         COMMAND msbuild ${_csc_PROJECT_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}
+#             /p:Configuration=${_csc_DEBUG_CONFIGURATION}
+#             /p:Platform=${TRIPLET_SYSTEM_ARCH}
+#             /p:VCPkgLocalAppDataDisabled=true
+#         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
+#         LOGNAME build-${TARGET_TRIPLET}-dbg
+#     )'''
+#         tools.replace_in_file("vcpkg/scripts/cmake/vcpkg_build_msbuild.cmake", to_remove, "")
+#         
+#         # Patch vcpkg_install_cmake
+#         to_replace = 'message(STATUS "Package ${TARGET_TRIPLET}-%s")' % rm_prefix
+#         with_to_replace = 'IF(FALSE)\n%s' % to_replace
+#         tools.replace_in_file("vcpkg/scripts/cmake/vcpkg_install_cmake.cmake", to_replace, with_to_replace)
+#         to_replace = 'message(STATUS "Package ${TARGET_TRIPLET}-%s done")' % rm_prefix
+#         with_to_replace = '%s\nENDIF()' % to_replace
+#         tools.replace_in_file("vcpkg/scripts/cmake/vcpkg_install_cmake.cmake", to_replace, with_to_replace)
+#        
+#        # Patch port, do not remove debug includes
+#         to_remove = 'file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)'
+#         tools.replace_in_file("vcpkg/ports/%s/portfile.cmake" % self.name, to_remove, "")
             
     def _get_triplet(self):
         tmp = {"x86_64": "x64-windows",
