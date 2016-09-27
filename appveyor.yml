@@ -3,13 +3,25 @@ environment:
     PYTHON: "C:\\Python27"
     PYTHON_VERSION: "2.7.8"
     PYTHON_ARCH: "32"
-    CONAN_TOTAL_PAGES: 4
+    CONAN_TOTAL_PAGES: 16
     
     matrix:
         - CONAN_CURRENT_PAGE: 1
         - CONAN_CURRENT_PAGE: 2  
         - CONAN_CURRENT_PAGE: 3
         - CONAN_CURRENT_PAGE: 4
+        - CONAN_CURRENT_PAGE: 5
+        - CONAN_CURRENT_PAGE: 6
+        - CONAN_CURRENT_PAGE: 7
+        - CONAN_CURRENT_PAGE: 8
+        - CONAN_CURRENT_PAGE: 9
+        - CONAN_CURRENT_PAGE: 10
+        - CONAN_CURRENT_PAGE: 11
+        - CONAN_CURRENT_PAGE: 12
+        - CONAN_CURRENT_PAGE: 13
+        - CONAN_CURRENT_PAGE: 14
+        - CONAN_CURRENT_PAGE: 15
+        - CONAN_CURRENT_PAGE: 16
 
 install:
   # Workaround for CMake not wanting sh.exe on PATH for MinGW
