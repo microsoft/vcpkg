@@ -26,17 +26,17 @@ counter = 0
 # Compile ports
 
 for port_name in ports:
-    print("-------------------------- PROCESSING %s --------------------------" % port_name)
     for visual_version in visual_versions:        
-        for build_type in ["Debug", "Release"]:    
-            if counter % num_pages == (current_page - 1):    
+        if counter % num_pages == (current_page - 1):
+            for build_type in ["Debug", "Release"]:   
+                print("-------------------------- PROCESSING %s, Visual %s, %s--------------------------" % (port_name, visual_version, build_type))
                 port = Port(port_name, os.path.join(ports_dir, port_name))
                 ok = process_port(port, tmp_folder, visual_version, build_type)
                 if ok:
                     to_upload.append("%s/%s@lasote/vcpkg" % (port.name, port.version))
                 else:
                     failed.append(port.name)    
-            counter += 1
+        counter += 1
 
 # Upload packages
 if getenv("CONAN_PASSWORD", None):
