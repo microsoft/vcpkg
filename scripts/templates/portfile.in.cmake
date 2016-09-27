@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
-    URL "@URL@"
+    URLS "@URL@"
     FILENAME "@FILENAME@"
     SHA512 @SHA512@
 )

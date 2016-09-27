@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
-    URL "https://github.com/miloyip/rapidjson/archive/879def80f2e466cdf4c86dc7e53ea2dd4cafaea0.zip"
+    URLS "https://github.com/miloyip/rapidjson/archive/879def80f2e466cdf4c86dc7e53ea2dd4cafaea0.zip"
     FILENAME "rapidjson-879def80f2e466cdf4c86dc7e53ea2dd4cafaea0.zip"
     SHA512 4d9ef7cce7d179344c33245c081a142ca5fcb2a0cc170ed39e3d0add008efab8e7389feec03e1ea83b30c5778cd0600865b08bc1c23592e5154dbe1f21f9547d
 )

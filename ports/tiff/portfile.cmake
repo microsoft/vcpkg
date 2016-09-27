@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
-    URL "http://download.osgeo.org/libtiff/tiff-4.0.6.tar.gz"
+    URLS "http://download.osgeo.org/libtiff/tiff-4.0.6.tar.gz"
     FILENAME "tiff-4.0.6.tar.gz"
     SHA512 2c8dbaaaab9f82a7722bfe8cb6fcfcf67472beb692f1b7dafaf322759e7016dad1bc58457c0f03db50aa5bd088fef2b37358fcbc1524e20e9e14a9620373fdf8
 )

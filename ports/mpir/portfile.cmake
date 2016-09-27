@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE_FILE
-    URL "http://mpir.org/mpir-2.7.2.tar.lz"
+    URLS "http://mpir.org/mpir-2.7.2.tar.lz"
     FILENAME "mpir-2.7.2.tar.lz"
     SHA512 2635c167ddbba99364ec741373768e0675d34f94fad8912d5433b95e6fbfdb0510f5e94a707acc42048254bc658c52c6671bb0c0dac31267c4b82b00c3e74efa
 )

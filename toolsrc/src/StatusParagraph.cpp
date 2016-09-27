@@ -19,8 +19,7 @@ namespace vcpkg
     StatusParagraph::StatusParagraph(const std::unordered_map<std::string, std::string>& fields)
         : package(fields)
     {
-        std::string status_field;
-        required_field(fields, status_field, "Status");
+        std::string status_field = required_field(fields, "Status");
 
         auto b = status_field.begin();
         auto mark = b;

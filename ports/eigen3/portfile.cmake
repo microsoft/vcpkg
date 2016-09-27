@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
-    URL "http://bitbucket.org/eigen/eigen/get/3.2.9.tar.bz2"
+    URLS "http://bitbucket.org/eigen/eigen/get/3.2.9.tar.bz2"
     FILENAME "eigen-3.2.9.tar.bz2"
     SHA512 2734ce70e0b04dc5839715a3cc9b8f90e05b341cfca42a7d586df213a9a14fe5642c76ccf36c16d020ae167c0d6e4d5cc306f0b3bf1f519c58372b0736ca7e63
 )
