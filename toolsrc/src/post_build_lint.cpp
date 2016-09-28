@@ -71,12 +71,10 @@ namespace vcpkg
             System::println(System::color::warning, "Include files should not be duplicated into the /debug/include directory. If this cannot be disabled in the project cmake, use\n"
                             "    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)"
             );
-            return
-                lint_status::ERROR;
+            return lint_status::ERROR;
         }
 
-        return
-            lint_status::SUCCESS;
+        return lint_status::SUCCESS;
     }
 
     static lint_status check_for_files_in_debug_share_directory(const package_spec& spec, const vcpkg_paths& paths)
