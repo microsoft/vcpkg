@@ -38,7 +38,7 @@ macro(debug_message)
     endif()
 endmacro()
 
-if(CMD MATCHES "^SCAFFOLD$")
+if(CMD MATCHES "^CREATE$")
     if(EXISTS ports/${PORT}/portfile.cmake)
         message(FATAL_ERROR "Portfile already exists: '${VCPKG_ROOT_DIR}/ports/${PORT}/portfile.cmake'")
     endif()
