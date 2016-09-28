@@ -21,20 +21,20 @@ if(NOT VCPKG_TOOLCHAIN)
         set(_VCPKG_TARGET_TRIPLET_PLAT windows)
     endif()
 
-    set(_VCPKG_TARGET_TRIPLET ${_VCPKG_TARGET_TRIPLET_ARCH}-${_VCPKG_TARGET_TRIPLET_PLAT})
+    set(VCPKG_TARGET_TRIPLET ${_VCPKG_TARGET_TRIPLET_ARCH}-${_VCPKG_TARGET_TRIPLET_PLAT} CACHE STRING "Vcpkg target triplet (ex. x86-windows)")
     set(_VCPKG_INSTALLED_DIR ${CMAKE_CURRENT_LIST_DIR}/../../installed)
     set(_VCPKG_TOOLCHAIN_DIR ${CMAKE_CURRENT_LIST_DIR})
 
     if(CMAKE_BUILD_TYPE MATCHES "^Debug$" OR NOT DEFINED CMAKE_BUILD_TYPE)
         list(APPEND CMAKE_PREFIX_PATH
-            ${_VCPKG_INSTALLED_DIR}/${_VCPKG_TARGET_TRIPLET}/debug
+            ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug
         )
     endif()
     list(APPEND CMAKE_PREFIX_PATH
-        ${_VCPKG_INSTALLED_DIR}/${_VCPKG_TARGET_TRIPLET}
+        ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}
     )
 
-    include_directories(${_VCPKG_INSTALLED_DIR}/${_VCPKG_TARGET_TRIPLET}/include)
+    include_directories(${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
 
     option(OVERRIDE_ADD_EXECUTABLE "Automatically copy dependencies into the output directory for executables." ON)
     if(OVERRIDE_ADD_EXECUTABLE)
@@ -43,7 +43,7 @@ if(NOT VCPKG_TOOLCHAIN)
             add_custom_command(TARGET ${name} POST_BUILD
                 COMMAND powershell -executionpolicy UnRestricted -file ${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1
                     -targetBinary $<TARGET_FILE:${name}>
-                    -installedDir "${_VCPKG_INSTALLED_DIR}/${_VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
+                    -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                     -OutVariable out
             )
         endfunction()
