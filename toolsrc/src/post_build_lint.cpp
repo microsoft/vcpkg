@@ -309,6 +309,18 @@ namespace vcpkg
         return lint_status::SUCCESS;
     }
 
+    static lint_status check_no_dlls_present(const std::vector<fs::path>& dlls)
+    {
+        if (dlls.empty())
+        {
+            return lint_status::SUCCESS;
+        }
+
+        System::println(System::color::warning, "DLLs should not be present in a static build, but the following DLLs were found:");
+        print_vector_of_files(dlls);
+        return lint_status::ERROR;
+    }
+
     static void operator +=(size_t& left, const lint_status& right)
     {
         left += static_cast<size_t>(right);
@@ -328,13 +340,31 @@ namespace vcpkg
         error_count += check_for_copyright_file(spec, paths);
         error_count += check_for_exes(spec, paths);
 
-        std::vector<fs::path> dlls;
-        recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "bin", ".dll", dlls);
-        recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "bin", ".dll", dlls);
+        triplet::BuildType build_type = spec.target_triplet().build_type();
+        switch (build_type)
+        {
+            case triplet::BuildType::DYNAMIC:
+                {
+                    std::vector<fs::path> dlls;
+                    recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "bin", ".dll", dlls);
+                    recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "bin", ".dll", dlls);
 
-        error_count += check_exports_of_dlls(dlls);
-        error_count += check_uwp_bit_of_dlls(spec.target_triplet().system(), dlls);
-        error_count += check_architecture(spec.target_triplet().architecture(), dlls);
+                    error_count += check_exports_of_dlls(dlls);
+                    error_count += check_uwp_bit_of_dlls(spec.target_triplet().system(), dlls);
+                    error_count += check_architecture(spec.target_triplet().architecture(), dlls);
+                    break;
+                }
+            case triplet::BuildType::STATIC:
+                {
+                    std::vector<fs::path> dlls;
+                    recursive_find_files_with_extension_in_dir(paths.packages / spec.dir(), ".dll", dlls);
+                    error_count += check_no_dlls_present(dlls);
+                    break;
+                }
+
+            default:
+                Checks::unreachable();
+        }
 
         std::vector<fs::path> libs;
         recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "lib", ".lib", libs);
