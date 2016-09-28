@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
-    URL "https://github.com/opencv/opencv/archive/92387b1ef8fad15196dd5f7fb4931444a68bc93a.zip"
+    URLS "https://github.com/opencv/opencv/archive/92387b1ef8fad15196dd5f7fb4931444a68bc93a.zip"
     FILENAME "opencv-92387b1ef8fad15196dd5f7fb4931444a68bc93a.zip"
     SHA512 b95fa1a5bce0ea9e9bd43173b904e5d779a2f640f4f8dbb36a12df462e8e4cdce3ff94b2fbd85cb96ddf338019f9888e9e7410c468c81b1de98d9c1da945a7eb
 )
@@ -32,6 +32,7 @@ vcpkg_configure_cmake(
         -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
         -DOPENCV_OTHER_INSTALL_PATH=share/opencv
         -DINSTALL_LICENSE=OFF
+        -DWITH_CUDA=OFF
     OPTIONS_DEBUG
         -DINSTALL_HEADERS=OFF
         -DINSTALL_OTHER=OFF
@@ -46,6 +47,6 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-debug.cmake "${OPE
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/opencv)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/opencv)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/opencv/LICENSE ${CURRENT_PACKAGES_DIR}/share/opencv/copyright)
 vcpkg_copy_pdbs()
