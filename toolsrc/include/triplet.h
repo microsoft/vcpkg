@@ -8,11 +8,19 @@ namespace vcpkg
     {
         static triplet from_canonical_name(const std::string& triplet_as_string);
 
+        enum class BuildType
+        {
+            DYNAMIC,
+            STATIC
+        };
+
         static const triplet X86_WINDOWS;
         static const triplet X64_WINDOWS;
         static const triplet X86_UWP;
         static const triplet X64_UWP;
         static const triplet ARM_UWP;
+
+        BuildType build_type() const;
 
         const std::string& canonical_name() const;
 
