@@ -1,16 +1,18 @@
 include(vcpkg_common_functions)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/boost_1_62_0)
+
 vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "http://sourceforge.net/projects/boost/files/boost/1.61.0/boost_1_61_0.tar.bz2"
-    FILENAME "boost_1_61_0.tar.bz2"
-    SHA512 a1c7338e2d2dbac8552ede7c554640d22cbb2fda7fbc325dc3cdcb51e769713626695426ffc158cbe0e1729dd9a7b5ad18af4800d74e24539e8d8564268c2b9d
+    URLS "https://sourceforge.net/projects/boost/files/boost/1.62.0/boost_1_62_0.tar.bz2"
+    FILENAME "boost_1_62_0.tar.bz2"
+    SHA512 5385ae3d5255a433a704169ad454d8dc2b0b5bcae3fb23defd6570df4ff7d845cf9fcbeebccdc1c5db0eec9f82ee3d90040de9507c8167467c635d3b215463be
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
-if(NOT EXISTS ${CURRENT_BUILDTREES_DIR}/src/boost_1_61_0/b2.exe)
+if(NOT EXISTS ${SOURCE_PATH}/b2.exe)
     message(STATUS "Bootstrapping")
     vcpkg_execute_required_process(
-        COMMAND "${CURRENT_BUILDTREES_DIR}/src/boost_1_61_0/bootstrap.bat"
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src/boost_1_61_0
+        COMMAND "${SOURCE_PATH}/bootstrap.bat"
+        WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME bootstrap
     )
 endif()
@@ -39,40 +41,40 @@ file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BU
 
 message(STATUS "Building ${TARGET_TRIPLET}-rel")
 vcpkg_execute_required_process(
-    COMMAND "${CURRENT_BUILDTREES_DIR}/src/boost_1_61_0/b2.exe"
+    COMMAND "${SOURCE_PATH}/b2.exe"
         --stagedir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/stage
         --build-dir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
         ${B2_OPTIONS}
         variant=release
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src/boost_1_61_0
+    WORKING_DIRECTORY ${SOURCE_PATH}
     LOGNAME build-${TARGET_TRIPLET}-rel
 )
 message(STATUS "Building ${TARGET_TRIPLET}-rel done")
 message(STATUS "Building ${TARGET_TRIPLET}-dbg")
 vcpkg_execute_required_process(
-    COMMAND "${CURRENT_BUILDTREES_DIR}/src/boost_1_61_0/b2.exe"
+    COMMAND "${SOURCE_PATH}/b2.exe"
         --stagedir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/stage
         --build-dir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
         ${B2_OPTIONS}
         variant=debug
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src/boost_1_61_0
+    WORKING_DIRECTORY ${SOURCE_PATH}
     LOGNAME build-${TARGET_TRIPLET}-dbg
 )
 message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
 
 message(STATUS "Packaging headers")
 file(
-    COPY ${CURRENT_BUILDTREES_DIR}/src/boost_1_61_0/boost
+    COPY ${SOURCE_PATH}/boost
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
     PATTERN "config/user.hpp" EXCLUDE
 )
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/boost_1_61_0/boost/config/user.hpp
+file(COPY ${SOURCE_PATH}/boost/config/user.hpp
     DESTINATION ${CURRENT_PACKAGES_DIR}/include/boost/config/
 )
 file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp
     "\n#define BOOST_ALL_DYN_LINK\n"
 )
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/boost_1_61_0/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/boost RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/boost RENAME copyright)
 message(STATUS "Packaging headers done")
 
 message(STATUS "Packaging ${TARGET_TRIPLET}-rel")
