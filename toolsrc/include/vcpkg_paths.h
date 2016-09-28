@@ -13,6 +13,7 @@ namespace vcpkg
 
         fs::path package_dir(const package_spec& spec) const;
         fs::path port_dir(const package_spec& spec) const;
+        bool validate_triplet(const triplet& t) const;
 
         std::tr2::sys::path root;
         std::tr2::sys::path packages;

@@ -1,6 +1,4 @@
 #include "triplet.h"
-#include "vcpkg.h"
-#include "vcpkg_System.h"
 #include "vcpkg_Checks.h"
 
 namespace vcpkg
@@ -48,20 +46,5 @@ namespace vcpkg
         auto it = std::find(this->value.cbegin(), this->value.cend(), '-');
         Checks::check_exit(it != this->value.end(), "Invalid triplet: %s", this->value);
         return std::string(it + 1, this->value.cend());
-    }
-
-    bool triplet::validate(const vcpkg_paths& paths) const
-    {
-        auto it = fs::directory_iterator(paths.triplets);
-        for (; it != fs::directory_iterator(); ++it)
-        {
-            std::string triplet_file_name = it->path().stem().generic_u8string();
-            if (this->value == triplet_file_name) // TODO: fuzzy compare
-            {
-                //this->value = triplet_file_name; // NOTE: uncomment when implementing fuzzy compare
-                return true;
-            }
-        }
-        return false;
     }
 }
