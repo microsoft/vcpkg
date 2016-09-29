@@ -11,6 +11,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DFMT_TEST=OFF
+        -DFMT_DOC=OFF
 )
 
 vcpkg_build_cmake()
