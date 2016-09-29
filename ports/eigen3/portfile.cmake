@@ -7,12 +7,14 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+file(GLOB_RECURSE GARBAGE ${SOURCE_PATH}/Eigen/CMakeLists.*)
+if(GARBAGE)
+    file(REMOVE ${GARBAGE})
+endif()
+
 # Put the licence file where vcpkg expects it
 file(COPY ${SOURCE_PATH}/COPYING.README DESTINATION ${CURRENT_PACKAGES_DIR}/share/eigen3/COPYING.README)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/eigen3/COPYING.README ${CURRENT_PACKAGES_DIR}/share/eigen3/copyright)
-
-file(GLOB_RECURSE GARBAGE ${SOURCE_PATH}/Eigen/CMakeLists.*)
-file(REMOVE ${GARBAGE})
 
 # Copy the eigen header files
 file(COPY ${SOURCE_PATH}/Eigen/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/Eigen/)
