@@ -1,4 +1,5 @@
 include(vcpkg_common_functions)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/cocos2d-x-cocos2d-x-3.10)
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "https://github.com/cocos2d/cocos2d-x/archive/cocos2d-x-3.10.tar.gz"
     FILENAME "cocos2d-x-3.10.tar.gz"
@@ -12,7 +13,7 @@ vcpkg_download_distfile(DEPS_ARCHIVE_FILE
 
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
-if(NOT EXISTS ${CURRENT_BUILDTREES_DIR}/src/cocos2d-x-cocos2d-x-3.10/external/unzip)
+if(NOT EXISTS ${SOURCE_PATH}/external/unzip)
     message(STATUS "Extracting dependencies ${DEPS_ARCHIVE_FILE}")
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/deps)
     vcpkg_execute_required_process(
@@ -20,15 +21,15 @@ if(NOT EXISTS ${CURRENT_BUILDTREES_DIR}/src/cocos2d-x-cocos2d-x-3.10/external/un
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/deps
         LOGNAME extract-deps
     )
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src/cocos2d-x-cocos2d-x-3.10/external)
-    file(RENAME ${CURRENT_BUILDTREES_DIR}/deps/cocos2d-x-3rd-party-libs-bin-3-deps-79 ${CURRENT_BUILDTREES_DIR}/src/cocos2d-x-cocos2d-x-3.10/external)
+    file(REMOVE_RECURSE ${SOURCE_PATH}/external)
+    file(RENAME ${CURRENT_BUILDTREES_DIR}/deps/cocos2d-x-3rd-party-libs-bin-3-deps-79 ${SOURCE_PATH}/external)
 endif()
 message(STATUS "Extracting dependencies done")
 
-file(REMOVE ${CURRENT_BUILDTREES_DIR}/src/cocos2d-x-cocos2d-x-3.10/cmake/Modules/FindGLFW3.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindGLFW3.cmake)
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/cocos2d-x-cocos2d-x-3.10
+    SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DUSE_CHIPMUNK=OFF
         -DUSE_BOX2D=OFF
@@ -42,6 +43,6 @@ vcpkg_configure_cmake(
 vcpkg_build_cmake()
 vcpkg_install_cmake()
 
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/cocos2d-x-cocos2d-x-3.10/licenses/LICENSE_cocos2d-x.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/cocos2d-x RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/licenses/LICENSE_cocos2d-x.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/cocos2d-x RENAME copyright)
 vcpkg_copy_pdbs()
 

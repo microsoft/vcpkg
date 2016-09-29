@@ -1,4 +1,5 @@
 include(vcpkg_common_functions)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/expat-2.1.1)
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "http://downloads.sourceforge.net/project/expat/expat/2.1.1/expat-2.1.1.tar.bz2"
     FILENAME "expat-2.1.1.tar.bz2"
@@ -7,7 +8,7 @@ vcpkg_download_distfile(ARCHIVE_FILE
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/expat-2.1.1
+    SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DBUILD_examples=OFF
         -DBUILD_tests=OFF
@@ -18,5 +19,5 @@ vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/expat-2.1.1/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/expat RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/expat RENAME copyright)
 vcpkg_copy_pdbs()

@@ -1,4 +1,5 @@
 include(vcpkg_common_functions)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/doctest-1.1.0)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/onqtam/doctest/archive/1.1.0.zip"
     FILENAME "doctest-1.1.0.zip"
@@ -7,7 +8,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 
 # Handle copyright
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/doctest-1.1.0/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/doctest RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/doctest RENAME copyright)
 
 # Copy header file
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/doctest-1.1.0/doctest/doctest.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/doctest)
+file(INSTALL ${SOURCE_PATH}/doctest/doctest.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/doctest)

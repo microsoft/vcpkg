@@ -1,4 +1,5 @@
 include(vcpkg_common_functions)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/curl-7.48.0)
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "https://curl.haxx.se/download/curl-7.48.0.tar.bz2"
     FILENAME "curl-7.48.0.tar.bz2"
@@ -7,7 +8,7 @@ vcpkg_download_distfile(ARCHIVE_FILE
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/curl-7.48.0
+    SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DBUILD_CURL_TESTS=OFF
         -DBUILD_CURL_EXE=OFF
@@ -19,6 +20,6 @@ vcpkg_configure_cmake(
 vcpkg_build_cmake()
 vcpkg_install_cmake()
 
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/curl-7.48.0/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/curl RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/curl RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 vcpkg_copy_pdbs()

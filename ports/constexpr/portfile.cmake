@@ -1,4 +1,5 @@
 include(vcpkg_common_functions)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/constexpr-a98b1db39c909e0130d21d3910d4faf97035a625)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/elbeno/constexpr/archive/a98b1db39c909e0130d21d3910d4faf97035a625.zip"
     FILENAME "constexpr-a98b1db39c909e0130d21d3910d4faf97035a625.zip"
@@ -7,10 +8,9 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 
 # Put the licence file where vcpkg expects it
-set(SOURCE_DIR ${CURRENT_BUILDTREES_DIR}/src/constexpr-a98b1db39c909e0130d21d3910d4faf97035a625)
-file(COPY ${SOURCE_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/constexpr/LICENSE)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/constexpr/LICENSE)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/constexpr/LICENSE ${CURRENT_PACKAGES_DIR}/share/constexpr/copyright)
 
 # Copy the constexpr header files
-file(GLOB HEADER_FILES ${SOURCE_DIR}/src/include/*.h)
+file(GLOB HEADER_FILES ${SOURCE_PATH}/src/include/*.h)
 file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include)

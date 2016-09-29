@@ -1,4 +1,5 @@
 include(vcpkg_common_functions)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/rapidxml-1.13)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sourceforge.net/projects/rapidxml/files/rapidxml/rapidxml%201.13/rapidxml-1.13.zip/download"
     FILENAME "rapidxml-1.13.zip"
@@ -7,8 +8,8 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 
 # Handle copyright
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/rapidxml-1.13/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/rapidxml)
+file(COPY ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/rapidxml)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/rapidxml/license.txt ${CURRENT_PACKAGES_DIR}/share/rapidxml/copyright)
 
 # Copy the header files
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/rapidxml-1.13/ DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN "*.hpp")
+file(INSTALL ${SOURCE_PATH}/ DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN "*.hpp")

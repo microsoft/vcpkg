@@ -1,4 +1,5 @@
 include(vcpkg_common_functions)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glm)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/g-truc/glm/releases/download/0.9.8.0/glm-0.9.8.0.zip"
     FILENAME "glm-0.9.8.0.zip"
@@ -7,12 +8,12 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 
 # Remove glm/CMakeLists.txt
-file(REMOVE ${CURRENT_BUILDTREES_DIR}/src/glm/glm/CMakeLists.txt)
+file(REMOVE ${SOURCE_PATH}/glm/CMakeLists.txt)
 
 # Put the license file where vcpkg expects it
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/glm/copying.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/glm/)
+file(COPY ${SOURCE_PATH}/copying.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/glm/)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/glm/copying.txt ${CURRENT_PACKAGES_DIR}/share/glm/copyright)
 
 # Copy the glm header files
-file(GLOB HEADER_FILES ${CURRENT_BUILDTREES_DIR}/src/glm/glm/*)
+file(GLOB HEADER_FILES ${SOURCE_PATH}/glm/*)
 file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/glm)
