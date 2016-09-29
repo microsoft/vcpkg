@@ -34,8 +34,7 @@ namespace vcpkg {namespace Checks
     {
         if (!expression)
         {
-            System::println(System::color::error, errorMessage);
-            exit(EXIT_FAILURE);
+            exit_with_message(errorMessage);
         }
     }
 }}

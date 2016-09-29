@@ -213,35 +213,40 @@ static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryPar
 std::vector<std::string> vcpkg::get_unmet_package_dependencies(const vcpkg_paths& paths, const package_spec& spec, const StatusParagraphs& status_db)
 {
     std::vector<std::unordered_map<std::string, std::string>> pghs;
-    const fs::path packages_dir_control_file_path = paths.package_dir(spec) / "CONTROL";
-
-    if (fs::exists(packages_dir_control_file_path))
     {
-        try
-        {
-            pghs = get_paragraphs(packages_dir_control_file_path);
-        }
-        catch (std::runtime_error)
-        {
-            // ??
-        }
+        const fs::path packages_dir_control_file_path = paths.package_dir(spec) / "CONTROL";
 
-        Checks::check_throw(pghs.size() == 1, "Invalid control file for package");
-        return BinaryParagraph(pghs[0]).depends;
+        auto control_contents_maybe = Files::get_contents(packages_dir_control_file_path);
+        if (auto control_contents = control_contents_maybe.get())
+        {
+            try
+            {
+                pghs = parse_paragraphs(*control_contents);
+            }
+            catch (std::runtime_error)
+            {
+            }
+            Checks::check_exit(pghs.size() == 1, "Invalid control file at %s", packages_dir_control_file_path.string());
+            return BinaryParagraph(pghs[0]).depends;
+        }
     }
 
     const fs::path ports_dir_control_file_path = paths.port_dir(spec) / "CONTROL";
-    try
+    auto control_contents_maybe = Files::get_contents(ports_dir_control_file_path);
+    if (auto control_contents = control_contents_maybe.get())
     {
-        pghs = get_paragraphs(ports_dir_control_file_path);
-    }
-    catch (std::runtime_error)
-    {
-        // ??
+        try
+        {
+            pghs = parse_paragraphs(*control_contents);
+        }
+        catch (std::runtime_error)
+        {
+        }
+        Checks::check_exit(pghs.size() == 1, "Invalid control file at %s", ports_dir_control_file_path.string());
+        return SourceParagraph(pghs[0]).depends;
     }
 
-    Checks::check_exit(pghs.size() == 1, "Invalid control file for package %s", spec);
-    return SourceParagraph(pghs[0]).depends;
+    Checks::exit_with_message("Could not find package named %s", spec);
 }
 
 void vcpkg::install_package(const vcpkg_paths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs& status_db)
