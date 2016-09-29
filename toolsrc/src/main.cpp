@@ -87,7 +87,7 @@ static void inner(const vcpkg_cmd_arguments& args)
         }
     }
 
-    if (!paths.validate_triplet(default_target_triplet))
+    if (!paths.is_valid_triplet(default_target_triplet))
     {
         System::println(System::color::error, "Error: invalid triplet: %s", default_target_triplet.value);
         TrackProperty("error", "invalid triplet: " + default_target_triplet.value);

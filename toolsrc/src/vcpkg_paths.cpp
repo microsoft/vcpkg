@@ -57,7 +57,7 @@ namespace vcpkg
         return this->ports / spec.name;
     }
 
-    bool vcpkg_paths::validate_triplet(const triplet& t) const
+    bool vcpkg_paths::is_valid_triplet(const triplet& t) const
     {
         auto it = fs::directory_iterator(this->triplets);
         for (; it != fs::directory_iterator(); ++it)
