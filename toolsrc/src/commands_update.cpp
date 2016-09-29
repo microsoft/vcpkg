@@ -7,6 +7,8 @@ namespace vcpkg
 {
     void update_command(const vcpkg_cmd_arguments& /*args*/, const vcpkg_paths& paths)
     {
+        System::println("Using local portfile versions. To update the local portfiles, use `git pull`.");
+
         auto status_db = database_load_check(paths);
 
         std::unordered_map<std::string, std::string> src_names_to_versions;

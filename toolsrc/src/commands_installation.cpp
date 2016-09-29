@@ -37,9 +37,16 @@ namespace vcpkg
 
         if (return_code != 0)
         {
-            System::println(System::color::error, "Error: build command failed");
+            System::println(System::color::error, "Error: building package %s failed", to_string(spec));
+            System::println("Please ensure sure you're using the latest portfiles with `vcpkg update`, then\n"
+                "submit an issue at https://github.com/Microsoft/vcpkg/issues including:\n"
+                "  Package: %s\n"
+                "  Vcpkg version: %s\n"
+                "\n"
+                "Additionally, attach any relevant sections from the log files above."
+                , to_string(spec), version());
             TrackProperty("error", "build failed");
-            TrackProperty("build_error", std::to_string(return_code));
+            TrackProperty("build_error", to_string(spec));
             exit(EXIT_FAILURE);
         }
 
