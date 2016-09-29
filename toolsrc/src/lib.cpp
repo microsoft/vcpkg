@@ -176,7 +176,7 @@ static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryPar
         auto status = it->status(ec);
         if (ec)
         {
-            System::println(System::color::error, "failed: %s", ec.message());
+            System::println(System::color::error, "failed: %s: %s", it->path().u8string(), ec.message());
             continue;
         }
         if (fs::is_directory(status))
@@ -184,7 +184,7 @@ static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryPar
             fs::create_directory(target, ec);
             if (ec)
             {
-                System::println(System::color::error, "failed: %s", ec.message());
+                System::println(System::color::error, "failed: %s: %s", target.u8string(), ec.message());
             }
 
             listfile << bpgh.target_triplet << "/" << suffix << "\n";
@@ -194,16 +194,16 @@ static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryPar
             fs::copy_file(*it, target, ec);
             if (ec)
             {
-                System::println(System::color::error, "failed: %s", ec.message());
+                System::println(System::color::error, "failed: %s: %s", target.u8string(), ec.message());
             }
             listfile << bpgh.target_triplet << "/" << suffix << "\n";
         }
         else if (!fs::status_known(status))
         {
-            std::cout << "unknown status: " << *it << "\n";
+            System::println(System::color::error, "failed: %s: unknown status", it->path().u8string());
         }
         else
-            std::cout << "warning: file does not exist: " << *it << "\n";
+            System::println(System::color::error, "failed: %s: cannot handle file type", it->path().u8string());
     }
 
     listfile.close();
@@ -374,16 +374,16 @@ void vcpkg::deinstall_package(const vcpkg_paths& paths, const package_spec& spec
                 fs::remove(target, ec);
                 if (ec)
                 {
-                    System::println(System::color::error, "failed: %s", ec.message());
+                    System::println(System::color::error, "failed: %s: %s", target.u8string(), ec.message());
                 }
             }
             else if (!fs::status_known(status))
             {
-                System::println(System::color::warning, "Warning: unknown status: %s", target.string());
+                System::println(System::color::warning, "Warning: unknown status: %s", target.u8string());
             }
             else
             {
-                System::println(System::color::warning, "Warning: ???: %s", target.string());
+                System::println(System::color::warning, "Warning: %s: cannot handle file type", target.u8string());
             }
         }
 

@@ -1,4 +1,5 @@
 include(vcpkg_common_functions)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/zlib-1.2.8)
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "http://zlib.net/zlib128.zip"
     FILENAME "zlib128.zip"
@@ -7,7 +8,7 @@ vcpkg_download_distfile(ARCHIVE_FILE
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/zlib-1.2.8
+    SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DSKIP_INSTALL_FILES=ON
     OPTIONS_DEBUG

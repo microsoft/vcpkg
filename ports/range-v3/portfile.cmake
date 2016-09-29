@@ -1,4 +1,5 @@
 include(vcpkg_common_functions)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/Range-V3-VS2015-ede9ad367fd5ec764fecb039c874614bd908e6b6)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/Microsoft/Range-V3-VS2015/archive/ede9ad367fd5ec764fecb039c874614bd908e6b6.zip"
     FILENAME "range-v3-ede9ad367fd5ec764fecb039c874614bd908e6b6.zip"
@@ -6,7 +7,7 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/Range-V3-VS2015-ede9ad367fd5ec764fecb039c874614bd908e6b6/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/range-v3)
+file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/range-v3)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/range-v3/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/range-v3/copyright)
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/Range-V3-VS2015-ede9ad367fd5ec764fecb039c874614bd908e6b6/include DESTINATION ${CURRENT_PACKAGES_DIR} FILES_MATCHING PATTERN "*.hpp")
+file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR} FILES_MATCHING PATTERN "*.hpp")
 vcpkg_copy_pdbs()

@@ -1,4 +1,5 @@
 include(vcpkg_common_functions)
+SET(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/rapidjson-879def80f2e466cdf4c86dc7e53ea2dd4cafaea0)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/miloyip/rapidjson/archive/879def80f2e466cdf4c86dc7e53ea2dd4cafaea0.zip"
     FILENAME "rapidjson-879def80f2e466cdf4c86dc7e53ea2dd4cafaea0.zip"
@@ -7,9 +8,9 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 
 # Put the licence file where vcpkg expects it
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/rapidjson-879def80f2e466cdf4c86dc7e53ea2dd4cafaea0/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/rapidjson)
+file(COPY ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/rapidjson)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/rapidjson/license.txt ${CURRENT_PACKAGES_DIR}/share/rapidjson/copyright)
 
 # Copy the rapidjson header files
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/rapidjson-879def80f2e466cdf4c86dc7e53ea2dd4cafaea0/include DESTINATION ${CURRENT_PACKAGES_DIR} FILES_MATCHING PATTERN "*.h")
+file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR} FILES_MATCHING PATTERN "*.h")
 vcpkg_copy_pdbs()

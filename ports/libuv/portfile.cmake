@@ -1,4 +1,5 @@
 include(vcpkg_common_functions)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src/libuv-1.9.1)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/libuv/libuv/archive/v1.9.1.zip"
     FILENAME "libuv-v1.9.1.zip"
@@ -52,13 +53,13 @@ if(TRIPLET_SYSTEM_ARCH MATCHES "x86|x64")
     message(STATUS "Building Release")
     vcpkg_execute_required_process(
         COMMAND cmd /c vcbuild.bat release ${TRIPLET_SYSTEM_ARCH} shared
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src/libuv-1.9.1
+        WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME ${TARGET_TRIPLET}-build-rel
     )
     message(STATUS "Building Debug")
     vcpkg_execute_required_process(
         COMMAND cmd /c vcbuild.bat debug ${TRIPLET_SYSTEM_ARCH} shared
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src/libuv-1.9.1
+        WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME ${TARGET_TRIPLET}-build-dbg
     )
 else()
@@ -75,28 +76,28 @@ file(MAKE_DIRECTORY
     )
 
 file(COPY
-    ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src/libuv-1.9.1/include/tree.h
-    ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src/libuv-1.9.1/include/uv.h
-    ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src/libuv-1.9.1/include/uv-version.h
-    ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src/libuv-1.9.1/include/uv-errno.h
-    ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src/libuv-1.9.1/include/uv-threadpool.h
-    ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src/libuv-1.9.1/include/uv-win.h
+    ${SOURCE_PATH}/include/tree.h
+    ${SOURCE_PATH}/include/uv.h
+    ${SOURCE_PATH}/include/uv-version.h
+    ${SOURCE_PATH}/include/uv-errno.h
+    ${SOURCE_PATH}/include/uv-threadpool.h
+    ${SOURCE_PATH}/include/uv-win.h
     DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 file(COPY
-    ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src/libuv-1.9.1/Debug/libuv.dll
+    ${SOURCE_PATH}/Debug/libuv.dll
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 file(COPY
-    ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src/libuv-1.9.1/Debug/libuv.lib
+    ${SOURCE_PATH}/Debug/libuv.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 file(COPY
-    ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src/libuv-1.9.1/Release/libuv.dll
+    ${SOURCE_PATH}/Release/libuv.dll
     DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
 file(COPY
-    ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src/libuv-1.9.1/Release/libuv.lib
+    ${SOURCE_PATH}/Release/libuv.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 file(COPY
-    ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src/libuv-1.9.1/LICENSE
+    ${SOURCE_PATH}/LICENSE
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/libuv)
 
 file(RENAME

@@ -1,4 +1,5 @@
 include(vcpkg_common_functions)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/freetype-2.6.3)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.savannah.gnu.org/releases/freetype/freetype-2.6.3.tar.bz2"
     FILENAME "freetype-2.6.3.tar.bz2"
@@ -7,12 +8,12 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/freetype-2.6.3
+    SOURCE_PATH ${SOURCE_PATH}
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-Support-Windows-DLLs-via-CMAKE_WINDOWS_EXPORT_ALL_SY.patch
 )
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/freetype-2.6.3
+    SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DBUILD_SHARED_LIBS=ON
 )
@@ -31,9 +32,9 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(COPY
-    ${CURRENT_BUILDTREES_DIR}/src/freetype-2.6.3/docs/LICENSE.TXT
-    ${CURRENT_BUILDTREES_DIR}/src/freetype-2.6.3/docs/FTL.TXT
-    ${CURRENT_BUILDTREES_DIR}/src/freetype-2.6.3/docs/GPLv2.TXT
+    ${SOURCE_PATH}/docs/LICENSE.TXT
+    ${SOURCE_PATH}/docs/FTL.TXT
+    ${SOURCE_PATH}/docs/GPLv2.TXT
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/freetype
 )
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/freetype/LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/freetype/copyright)

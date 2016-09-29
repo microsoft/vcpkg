@@ -31,7 +31,7 @@ namespace vcpkg
                 custom_filename = Strings::format(LR"( -DFILENAME="%s" )", Strings::utf8_to_utf16(zip_file_name));
             }
 
-            const std::wstring cmdline = Strings::format(LR"(cmake -DCMD=SCAFFOLD -DPORT=%s -DTARGET_TRIPLET=%s -DURL=%s%s-P "%s")",
+            const std::wstring cmdline = Strings::format(LR"(cmake -DCMD=CREATE -DPORT=%s -DTARGET_TRIPLET=%s -DURL=%s%s-P "%s")",
                                                          Strings::utf8_to_utf16(spec->name),
                                                          Strings::utf8_to_utf16(spec->target_triplet.value),
                                                          Strings::utf8_to_utf16(args.command_arguments.at(1)),

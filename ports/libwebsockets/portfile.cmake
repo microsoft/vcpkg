@@ -1,4 +1,5 @@
 include(vcpkg_common_functions)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libwebsockets-2.0.0)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/warmcat/libwebsockets/archive/v2.0.0.zip"
     FILENAME "libwebsockets-v2.0.0.zip"
@@ -7,7 +8,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libwebsockets-2.0.0
+    SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DLWS_WITH_STATIC=OFF
         -DLWS_USE_BUNDLED_ZLIB=OFF
@@ -30,6 +31,6 @@ file(RENAME
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
 
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/libwebsockets-2.0.0/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libwebsockets)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libwebsockets)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libwebsockets/LICENSE ${CURRENT_PACKAGES_DIR}/share/libwebsockets/copyright)
 vcpkg_copy_pdbs()

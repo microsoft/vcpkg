@@ -195,7 +195,7 @@ namespace vcpkg
             const fs::path sys_src_path = tmp_dir / "vcpkg.system.targets";
             std::ofstream(sys_src_path) << create_system_targets_shortcut();
 
-            const std::string param = Strings::format(R"(/c echo f | XCOPY "%s" "%s" /Y > nul)", sys_src_path.string(), system_wide_targets_file.string());
+            const std::string param = Strings::format(R"(/c mkdir "%s" & copy "%s" "%s" /Y > nul)", system_wide_targets_file.parent_path().string(), sys_src_path.string(), system_wide_targets_file.string());
             elevation_prompt_user_choice user_choice = elevated_cmd_execute(param);
             switch (user_choice)
             {

@@ -1,4 +1,5 @@
 include(vcpkg_common_functions)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glfw-3.1.2)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/glfw/glfw/releases/download/3.1.2/glfw-3.1.2.zip"
     FILENAME "glfw-3.1.2.zip"
@@ -7,20 +8,20 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 
 if(NOT EXISTS ${CURRENT_BUILDTREES_DIR}/patch.stamp)
-    file(READ ${CURRENT_BUILDTREES_DIR}/src/glfw-3.1.2/src/glfw3Config.cmake.in CONFIG)
+    file(READ ${SOURCE_PATH}/src/glfw3Config.cmake.in CONFIG)
     string(REPLACE "\"@GLFW_LIB_NAME@\"" "NAMES @GLFW_LIB_NAME@ @GLFW_LIB_NAME@dll"
         CONFIG ${CONFIG}
     )
     string(REPLACE "@PACKAGE_CMAKE_INSTALL_PREFIX@" "@PACKAGE_CMAKE_INSTALL_PREFIX@/../.."
         CONFIG ${CONFIG}
     )
-    file(WRITE ${CURRENT_BUILDTREES_DIR}/src/glfw-3.1.2/src/glfw3Config.cmake.in ${CONFIG})
-    file(APPEND ${CURRENT_BUILDTREES_DIR}/src/glfw-3.1.2/src/glfw3Config.cmake.in "set(GLFW3_LIBRARIES \${GLFW3_LIBRARY})\n")
+    file(WRITE ${SOURCE_PATH}/src/glfw3Config.cmake.in ${CONFIG})
+    file(APPEND ${SOURCE_PATH}/src/glfw3Config.cmake.in "set(GLFW3_LIBRARIES \${GLFW3_LIBRARY})\n")
     file(WRITE ${CURRENT_BUILDTREES_DIR}/patch.stamp)
 endif()
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glfw-3.1.2
+    SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DBUILD_SHARED_LIBS=ON
         -DGLFW_BUILD_EXAMPLES=OFF
@@ -52,7 +53,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/glfw3.lib)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/glfw3.lib)
 
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/glfw-3.1.2/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/glfw3)
+file(COPY ${SOURCE_PATH}/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/glfw3)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/glfw3/COPYING.txt ${CURRENT_PACKAGES_DIR}/share/glfw3/copyright)
 vcpkg_copy_pdbs()
 

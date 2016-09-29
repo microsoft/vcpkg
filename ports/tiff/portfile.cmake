@@ -1,4 +1,5 @@
 include(vcpkg_common_functions)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/tiff-4.0.6)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.osgeo.org/libtiff/tiff-4.0.6.tar.gz"
     FILENAME "tiff-4.0.6.tar.gz"
@@ -7,7 +8,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/tiff-4.0.6
+    SOURCE_PATH ${SOURCE_PATH}
     OPTIONS -Dcxx=OFF
 )
 
@@ -20,7 +21,7 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/share
 )
 file(COPY
-    ${CURRENT_BUILDTREES_DIR}/src/tiff-4.0.6/COPYRIGHT
+    ${SOURCE_PATH}/COPYRIGHT
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/tiff
 )
 file(RENAME
