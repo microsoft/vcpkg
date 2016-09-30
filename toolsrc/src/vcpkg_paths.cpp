@@ -5,8 +5,6 @@
 #include "vcpkg_System.h"
 #include "package_spec.h"
 
-namespace fs = std::tr2::sys;
-
 namespace vcpkg
 {
     expected<vcpkg_paths> vcpkg_paths::create(const fs::path& vcpkg_root_dir)
