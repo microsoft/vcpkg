@@ -1,5 +1,6 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
+#include "vcpkg_Input.h"
 
 namespace vcpkg
 {
@@ -7,7 +8,7 @@ namespace vcpkg
     {
         static const std::string example = create_example_string("edit zlib");
         args.check_exact_arg_count(1, example.c_str());
-        const package_spec spec = vcpkg_cmd_arguments::check_and_get_package_spec(args.command_arguments.at(0), default_target_triplet, example.c_str());
+        const package_spec spec = Input::check_and_get_package_spec(args.command_arguments.at(0), default_target_triplet, example.c_str());
 
         // Find editor
         std::wstring env_EDITOR = System::wdupenv_str(L"EDITOR");
