@@ -297,13 +297,9 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
     void integrate_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
-        if (args.command_arguments.size() != 1)
-        {
-            std::cout << "Commands:\n" <<
-                INTEGRATE_COMMAND_HELPSTRING <<
-                "\n";
-            exit(EXIT_FAILURE);
-        }
+        static const std::string example = Strings::format("Commands:\n"
+                                                           "%s", INTEGRATE_COMMAND_HELPSTRING);
+        args.check_exact_arg_count(1, example.c_str());
 
         if (args.command_arguments[0] == "install")
         {

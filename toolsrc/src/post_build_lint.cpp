@@ -309,7 +309,7 @@ namespace vcpkg
         return lint_status::SUCCESS;
     }
 
-    static void operator +=(unsigned int& left, const lint_status& right)
+    static void operator +=(size_t& left, const lint_status& right)
     {
         left += static_cast<unsigned int>(right);
     }
@@ -317,7 +317,7 @@ namespace vcpkg
     void perform_all_checks(const package_spec& spec, const vcpkg_paths& paths)
     {
         System::println("-- Performing post-build validation");
-        unsigned int error_count = 0;
+        size_t error_count = 0;
         error_count += check_for_files_in_include_directory(spec, paths);
         error_count += check_for_files_in_debug_include_directory(spec, paths);
         error_count += check_for_files_in_debug_share_directory(spec, paths);
@@ -345,7 +345,7 @@ namespace vcpkg
         if (error_count != 0)
         {
             const fs::path portfile = paths.ports / spec.name / "portfile.cmake";
-            System::println(System::color::error, "Found %d error(s). Please correct the portfile:\n    %s", error_count, portfile.string());
+            System::println(System::color::error, "Found %u error(s). Please correct the portfile:\n    %s", error_count, portfile.string());
             exit(EXIT_FAILURE);
         }
 

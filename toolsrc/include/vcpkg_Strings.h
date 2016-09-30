@@ -19,6 +19,11 @@ namespace vcpkg {namespace Strings {namespace details
         return s;
     }
 
+    inline size_t to_printf_arg(const size_t s)
+    {
+        return s;
+    }
+
     std::string format_internal(const char* fmtstr, ...);
 
     inline const wchar_t* to_wprintf_arg(const std::wstring& s)

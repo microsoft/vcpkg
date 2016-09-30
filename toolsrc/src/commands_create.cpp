@@ -7,13 +7,9 @@ namespace vcpkg
 {
     void create_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
-        args.check_max_args(3);
-        if (args.command_arguments.size() < 2)
-        {
-            System::println(System::color::error, "Error: create requires the archive's URL as the second argument.");
-            print_usage();
-            exit(EXIT_FAILURE);
-        }
+        static const std::string example = create_example_string(R"###(create zlib2 http://zlib.net/zlib128.zip "zlib128-2.zip")###");
+        args.check_max_arg_count(3, example.c_str());
+        args.check_min_arg_count(2, example.c_str());
 
         expected<package_spec> current_spec = package_spec::from_string(args.command_arguments[0], default_target_triplet);
         if (const package_spec* spec = current_spec.get())
