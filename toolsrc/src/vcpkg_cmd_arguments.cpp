@@ -50,6 +50,30 @@ namespace vcpkg
         option_field = new_setting;
     }
 
+    package_spec vcpkg_cmd_arguments::check_and_get_package_spec(const std::string& package_spec_as_string, const triplet& default_target_triplet, const char* example_text)
+    {
+        expected<package_spec> expected_spec = package_spec::from_string(package_spec_as_string, default_target_triplet);
+        if (auto spec = expected_spec.get())
+        {
+            return *spec;
+        }
+
+        System::println(System::color::error, "Error: %s: %s", expected_spec.error_code().message(), package_spec_as_string);
+        System::print(example_text);
+        exit(EXIT_FAILURE);
+    }
+
+    std::vector<package_spec> vcpkg_cmd_arguments::check_and_get_package_specs(const std::vector<std::string>& package_specs_as_strings, const triplet& default_target_triplet, const char* example_text)
+    {
+        std::vector<package_spec> specs;
+        for (const std::string& spec : package_specs_as_strings)
+        {
+            specs.push_back(check_and_get_package_spec(spec, default_target_triplet, example_text));
+        }
+
+        return specs;
+    }
+
     vcpkg_cmd_arguments vcpkg_cmd_arguments::create_from_command_line(const int argc, const wchar_t* const* const argv)
     {
         std::vector<std::string> v;
@@ -217,15 +241,6 @@ namespace vcpkg
     std::vector<package_spec> vcpkg_cmd_arguments::parse_all_arguments_as_package_specs(const triplet& default_target_triplet, const char* example_text) const
     {
         size_t arg_count = command_arguments.size();
-        if (arg_count < 1)
-        {
-            System::println(System::color::error, "Error: %s requires one or more package specifiers", this->command);
-            if (example_text == nullptr)
-                print_example(Strings::format("%s zlib zlib:x64-windows curl boost", this->command).c_str());
-            else
-                print_example(example_text);
-            exit(EXIT_FAILURE);
-        }
         std::vector<package_spec> specs;
         specs.reserve(arg_count);
 
