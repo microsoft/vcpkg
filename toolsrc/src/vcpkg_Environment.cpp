@@ -48,11 +48,11 @@ namespace vcpkg {namespace Environment
     void ensure_git_on_path(const vcpkg_paths& paths)
     {
         const fs::path downloaded_git = paths.downloads / "PortableGit" / "cmd";
-        const std::wstring path_buf = Strings::format(L"%s;%s;%s;%s",
-                                                      downloaded_git.native(),
-                                                      System::wdupenv_str(L"PATH"),
-                                                      default_git_installation_dir.native(),
-                                                      default_git_installation_dir_x86.native());
+        const std::wstring path_buf = Strings::wformat(L"%s;%s;%s;%s",
+                                                       downloaded_git.native(),
+                                                       System::wdupenv_str(L"PATH"),
+                                                       default_git_installation_dir.native(),
+                                                       default_git_installation_dir_x86.native());
         _wputenv_s(L"PATH", path_buf.c_str());
 
         static constexpr std::array<int, 3> git_version = {2,0,0};
@@ -63,11 +63,11 @@ namespace vcpkg {namespace Environment
     void ensure_cmake_on_path(const vcpkg_paths& paths)
     {
         const fs::path downloaded_cmake = paths.downloads / "cmake-3.5.2-win32-x86" / "bin";
-        const std::wstring path_buf = Strings::format(L"%s;%s;%s;%s",
-                                                      downloaded_cmake.native(),
-                                                      System::wdupenv_str(L"PATH"),
-                                                      default_cmake_installation_dir.native(),
-                                                      default_cmake_installation_dir_x86.native());
+        const std::wstring path_buf = Strings::wformat(L"%s;%s;%s;%s",
+                                                       downloaded_cmake.native(),
+                                                       System::wdupenv_str(L"PATH"),
+                                                       default_cmake_installation_dir.native(),
+                                                       default_cmake_installation_dir_x86.native());
         _wputenv_s(L"PATH", path_buf.c_str());
 
         static constexpr std::array<int, 3> cmake_version = {3,5,0};
@@ -77,7 +77,7 @@ namespace vcpkg {namespace Environment
 
     void ensure_nuget_on_path(const vcpkg_paths& paths)
     {
-        const std::wstring path_buf = Strings::format(L"%s;%s", paths.downloads.native(), System::wdupenv_str(L"PATH"));
+        const std::wstring path_buf = Strings::wformat(L"%s;%s", paths.downloads.native(), System::wdupenv_str(L"PATH"));
         _wputenv_s(L"PATH", path_buf.c_str());
 
         static constexpr std::array<int, 3> nuget_version = {1,0,0};

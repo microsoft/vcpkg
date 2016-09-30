@@ -238,7 +238,7 @@ namespace vcpkg
             exit(EXIT_SUCCESS);
         }
 
-        const std::wstring cmd_line = Strings::format(LR"(DEL "%s")", get_appdata_targets_path().native());
+        const std::wstring cmd_line = Strings::wformat(LR"(DEL "%s")", get_appdata_targets_path().native());
         const int exit_code = System::cmd_execute(cmd_line);
         if (exit_code)
         {
@@ -269,7 +269,7 @@ namespace vcpkg
         std::ofstream(nuspec_file_path) << create_nuspec_file(paths.root, nuget_id, nupkg_version);
 
         // Using all forward slashes for the command line
-        const std::wstring cmd_line = Strings::format(LR"(nuget.exe pack -OutputDirectory "%s" "%s" > nul)", buildsystems_dir.native(), nuspec_file_path.native());
+        const std::wstring cmd_line = Strings::wformat(LR"(nuget.exe pack -OutputDirectory "%s" "%s" > nul)", buildsystems_dir.native(), nuspec_file_path.native());
 
         const int exit_code = System::cmd_execute(cmd_line);
 

@@ -19,14 +19,14 @@ namespace vcpkg {namespace System
     int cmd_execute(const wchar_t* cmd_line)
     {
         // Basically we are wrapping it in quotes
-        const std::wstring& actual_cmd_line = Strings::format(LR"###("%s")###", cmd_line);
+        const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
         int exit_code = _wsystem(actual_cmd_line.c_str());
         return exit_code;
     }
 
     exit_code_and_output cmd_execute_and_capture_output(const wchar_t* cmd_line)
     {
-        const std::wstring& actual_cmd_line = Strings::format(LR"###("%s")###", cmd_line);
+        const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
 
         std::string output;
         char buf[1024];

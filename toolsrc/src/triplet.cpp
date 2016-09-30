@@ -1,6 +1,4 @@
 #include "triplet.h"
-#include "vcpkg.h"
-#include "vcpkg_System.h"
 #include "vcpkg_Checks.h"
 
 namespace vcpkg
@@ -38,38 +36,15 @@ namespace vcpkg
 
     std::string triplet::architecture() const
     {
-        if (*this == X86_WINDOWS || *this == X86_UWP)
-            return "x86";
-        if (*this == X64_WINDOWS || *this == X64_UWP)
-            return "x64";
-        if (*this == ARM_UWP)
-            return "arm";
-
-        Checks::exit_with_message("Unknown architecture: %s", value);
+        auto it = std::find(this->value.cbegin(), this->value.cend(), '-');
+        Checks::check_exit(it != this->value.end(), "Invalid triplet: %s", this->value);
+        return std::string(this->value.cbegin(), it);
     }
 
     std::string triplet::system() const
     {
-        if (*this == X86_WINDOWS || *this == X64_WINDOWS)
-            return "windows";
-        if (*this == X86_UWP || *this == X64_UWP || *this == ARM_UWP)
-            return "uwp";
-
-        Checks::exit_with_message("Unknown system: %s", value);
-    }
-
-    bool triplet::validate(const vcpkg_paths& paths) const
-    {
-        auto it = fs::directory_iterator(paths.triplets);
-        for (; it != fs::directory_iterator(); ++it)
-        {
-            std::string triplet_file_name = it->path().stem().generic_u8string();
-            if (value == triplet_file_name) // TODO: fuzzy compare
-            {
-                //value = triplet_file_name; // NOTE: uncomment when implementing fuzzy compare
-                return true;
-            }
-        }
-        return false;
+        auto it = std::find(this->value.cbegin(), this->value.cend(), '-');
+        Checks::check_exit(it != this->value.end(), "Invalid triplet: %s", this->value);
+        return std::string(it + 1, this->value.cend());
     }
 }

@@ -31,7 +31,7 @@ namespace vcpkg {namespace Strings {namespace details
         return s;
     }
 
-    std::wstring format_internal(const wchar_t* fmtstr, ...);
+    std::wstring wformat_internal(const wchar_t* fmtstr, ...);
 }}}
 
 namespace vcpkg {namespace Strings
@@ -44,10 +44,10 @@ namespace vcpkg {namespace Strings
     }
 
     template <class...Args>
-    std::wstring format(const wchar_t* fmtstr, const Args&...args)
+    std::wstring wformat(const wchar_t* fmtstr, const Args&...args)
     {
         using vcpkg::Strings::details::to_wprintf_arg;
-        return details::format_internal(fmtstr, to_wprintf_arg(to_wprintf_arg(args))...);
+        return details::wformat_internal(fmtstr, to_wprintf_arg(to_wprintf_arg(args))...);
     }
 
     std::wstring utf8_to_utf16(const std::string& s);

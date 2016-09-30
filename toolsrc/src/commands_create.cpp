@@ -28,15 +28,15 @@ namespace vcpkg
                 Checks::check_exit(!Files::has_invalid_chars_for_filesystem(zip_file_name),
                                    R"(Filename cannot contain invalid chars %s, but was %s)",
                                    Files::FILESYSTEM_INVALID_CHARACTERS, zip_file_name);
-                custom_filename = Strings::format(LR"( -DFILENAME="%s" )", Strings::utf8_to_utf16(zip_file_name));
+                custom_filename = Strings::wformat(LR"( -DFILENAME="%s" )", Strings::utf8_to_utf16(zip_file_name));
             }
 
-            const std::wstring cmdline = Strings::format(LR"(cmake -DCMD=CREATE -DPORT=%s -DTARGET_TRIPLET=%s -DURL=%s%s-P "%s")",
-                                                         Strings::utf8_to_utf16(spec->name),
-                                                         Strings::utf8_to_utf16(spec->target_triplet.value),
-                                                         Strings::utf8_to_utf16(args.command_arguments.at(1)),
-                                                         custom_filename,
-                                                         paths.ports_cmake.generic_wstring());
+            const std::wstring cmdline = Strings::wformat(LR"(cmake -DCMD=CREATE -DPORT=%s -DTARGET_TRIPLET=%s -DURL=%s%s-P "%s")",
+                                                          Strings::utf8_to_utf16(spec->name),
+                                                          Strings::utf8_to_utf16(spec->target_triplet.value),
+                                                          Strings::utf8_to_utf16(args.command_arguments.at(1)),
+                                                          custom_filename,
+                                                          paths.ports_cmake.generic_wstring());
 
             exit(System::cmd_execute(cmdline));
         }

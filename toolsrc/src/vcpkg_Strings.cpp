@@ -20,7 +20,7 @@ namespace vcpkg {namespace Strings {namespace details
         return output;
     }
 
-    std::wstring format_internal(const wchar_t* fmtstr, ...)
+    std::wstring wformat_internal(const wchar_t* fmtstr, ...)
     {
         va_list lst;
         va_start(lst, fmtstr);

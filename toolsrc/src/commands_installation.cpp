@@ -22,12 +22,12 @@ namespace vcpkg
     static void build_internal(const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir)
     {
         const fs::path ports_cmake_script_path = paths.ports_cmake;
-        const std::wstring command = Strings::format(LR"("%%VS140COMNTOOLS%%..\..\VC\vcvarsall.bat" %s && cmake -DCMD=BUILD -DPORT=%s -DTARGET_TRIPLET=%s "-DCURRENT_PORT_DIR=%s/." -P "%s")",
-                                                     Strings::utf8_to_utf16(spec.target_triplet.architecture()),
-                                                     Strings::utf8_to_utf16(spec.name),
-                                                     Strings::utf8_to_utf16(spec.target_triplet.value),
-                                                     port_dir.generic_wstring(),
-                                                     ports_cmake_script_path.generic_wstring());
+        const std::wstring command = Strings::wformat(LR"("%%VS140COMNTOOLS%%..\..\VC\vcvarsall.bat" %s && cmake -DCMD=BUILD -DPORT=%s -DTARGET_TRIPLET=%s "-DCURRENT_PORT_DIR=%s/." -P "%s")",
+                                                      Strings::utf8_to_utf16(spec.target_triplet.architecture()),
+                                                      Strings::utf8_to_utf16(spec.name),
+                                                      Strings::utf8_to_utf16(spec.target_triplet.value),
+                                                      port_dir.generic_wstring(),
+                                                      ports_cmake_script_path.generic_wstring());
 
         System::Stopwatch timer;
         timer.start();
@@ -39,12 +39,12 @@ namespace vcpkg
         {
             System::println(System::color::error, "Error: building package %s failed", to_string(spec));
             System::println("Please ensure sure you're using the latest portfiles with `vcpkg update`, then\n"
-                "submit an issue at https://github.com/Microsoft/vcpkg/issues including:\n"
-                "  Package: %s\n"
-                "  Vcpkg version: %s\n"
-                "\n"
-                "Additionally, attach any relevant sections from the log files above."
-                , to_string(spec), version());
+                            "submit an issue at https://github.com/Microsoft/vcpkg/issues including:\n"
+                            "  Package: %s\n"
+                            "  Vcpkg version: %s\n"
+                            "\n"
+                            "Additionally, attach any relevant sections from the log files above."
+                            , to_string(spec), version());
             TrackProperty("error", "build failed");
             TrackProperty("build_error", to_string(spec));
             exit(EXIT_FAILURE);
