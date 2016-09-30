@@ -35,8 +35,6 @@ namespace vcpkg
         void check_exact_arg_count(const size_t expected_arg_count) const;
         void check_exact_arg_count(const size_t expected_arg_count, const char* example_text) const;
 
-        std::vector<package_spec> parse_all_arguments_as_package_specs(const triplet& default_target_triplet, const char* example_text = nullptr) const;
-
     private:
         std::unordered_set<std::string> optional_command_arguments;
     };

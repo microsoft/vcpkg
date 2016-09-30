@@ -237,28 +237,4 @@ namespace vcpkg
             exit(EXIT_FAILURE);
         }
     }
-
-    std::vector<package_spec> vcpkg_cmd_arguments::parse_all_arguments_as_package_specs(const triplet& default_target_triplet, const char* example_text) const
-    {
-        size_t arg_count = command_arguments.size();
-        std::vector<package_spec> specs;
-        specs.reserve(arg_count);
-
-        for (const std::string& command_argument : command_arguments)
-        {
-            expected<package_spec> current_spec = package_spec::from_string(command_argument, default_target_triplet);
-            if (auto spec = current_spec.get())
-            {
-                specs.push_back(std::move(*spec));
-            }
-            else
-            {
-                System::println(System::color::error, "Error: %s: %s", current_spec.error_code().message(), command_argument);
-                print_example(Strings::format("%s zlib:x64-windows", this->command).c_str());
-                exit(EXIT_FAILURE);
-            }
-        }
-
-        return specs;
-    }
 }
