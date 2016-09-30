@@ -10,4 +10,6 @@ namespace vcpkg {namespace Input
     std::vector<package_spec> check_and_get_package_specs(const std::vector<std::string>& package_specs_as_strings, const triplet& default_target_triplet, const char* example_text);
 
     void check_triplet(const triplet& t, const vcpkg_paths& paths);
+
+    void check_all_triplets(std::vector<package_spec> triplets, const vcpkg_paths& paths);
 }}

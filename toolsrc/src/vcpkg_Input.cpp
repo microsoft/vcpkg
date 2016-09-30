@@ -39,4 +39,12 @@ namespace vcpkg {namespace Input
             exit(EXIT_FAILURE);
         }
     }
+
+    void check_all_triplets(std::vector<package_spec> triplets, const vcpkg_paths& paths)
+    {
+        for (const package_spec& spec : triplets)
+        {
+            check_triplet(spec.target_triplet, paths);
+        }
+    }
 }}
