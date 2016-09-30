@@ -122,7 +122,7 @@ namespace vcpkg
     {
         // Installing multiple packages leads to unintuitive behavior if one of them depends on another.
         // Allowing only 1 package for now. 
-        args.check_max_args(1);
+        args.check_max_arg_count(1);
 
         StatusParagraphs status_db = database_load_check(paths);
 

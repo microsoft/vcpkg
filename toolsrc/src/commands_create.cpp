@@ -7,7 +7,7 @@ namespace vcpkg
 {
     void create_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
-        args.check_max_args(3);
+        args.check_max_arg_count(3);
         if (args.command_arguments.size() < 2)
         {
             System::println(System::color::error, "Error: create requires the archive's URL as the second argument.");

@@ -26,7 +26,13 @@ namespace vcpkg
         std::vector<std::string> command_arguments;
         std::unordered_set<std::string> check_and_get_optional_command_arguments(const std::vector<std::string>& valid_options) const;
 
-        void check_max_args(size_t arg_count, const char* example_text = nullptr) const;
+        void check_max_arg_count(const size_t expected_arg_count) const;
+        void check_max_arg_count(const size_t expected_arg_count, const char* example_text) const;
+        void check_min_arg_count(const size_t expected_arg_count) const;
+        void check_min_arg_count(const size_t expected_arg_count, const char* example_text) const;
+        void check_exact_arg_count(const size_t expected_arg_count) const;
+        void check_exact_arg_count(const size_t expected_arg_count, const char* example_text) const;
+
         std::vector<package_spec> parse_all_arguments_as_package_specs(const triplet& default_target_triplet, const char* example_text = nullptr) const;
 
     private:

@@ -5,8 +5,8 @@ namespace vcpkg
 {
     void edit_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
-        static auto example = "edit zlib";
-        args.check_max_args(1, example);
+        static auto example = create_example_string("edit zlib").c_str();
+        args.check_max_arg_count(1, example);
         package_spec spec = args.parse_all_arguments_as_package_specs(default_target_triplet, example).at(0);
 
         // Find editor

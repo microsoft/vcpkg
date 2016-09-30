@@ -38,7 +38,7 @@ namespace vcpkg
 
     void search_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
-        args.check_max_args(1);
+        args.check_max_arg_count(1);
         if (args.command_arguments.size() == 0)
         {
             do_print(paths, [](std::string&) -> bool

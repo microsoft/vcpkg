@@ -6,7 +6,7 @@ namespace vcpkg
 {
     void list_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
-        args.check_max_args(0);
+        args.check_max_arg_count(0);
 
         std::vector<std::string> packages_output;
         for (auto&& pgh : database_load_check(paths))

@@ -166,15 +166,50 @@ namespace vcpkg
         return output;
     }
 
-    void vcpkg_cmd_arguments::check_max_args(size_t arg_count, const char* example_text) const
+    void vcpkg_cmd_arguments::check_max_arg_count(const size_t expected_arg_count) const
     {
-        if (command_arguments.size() > arg_count)
+        return check_max_arg_count(expected_arg_count, "");
+    }
+
+    void vcpkg_cmd_arguments::check_min_arg_count(const size_t expected_arg_count) const
+    {
+        return check_min_arg_count(expected_arg_count, "");
+    }
+
+    void vcpkg_cmd_arguments::check_exact_arg_count(const size_t expected_arg_count) const
+    {
+        return check_exact_arg_count(expected_arg_count, "");
+    }
+
+    void vcpkg_cmd_arguments::check_max_arg_count(const size_t expected_arg_count, const char* example_text) const
+    {
+        const size_t actual_arg_count = command_arguments.size();
+        if (actual_arg_count > expected_arg_count)
         {
-            System::println(System::color::error, "Error: too many arguments to command %s", command);
-            if (example_text != nullptr)
-                print_example(example_text);
-            else
-                print_usage();
+            System::println(System::color::error, "Error: %s requires at most %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
+            System::print(example_text);
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    void vcpkg_cmd_arguments::check_min_arg_count(const size_t expected_arg_count, const char* example_text) const
+    {
+        const size_t actual_arg_count = command_arguments.size();
+        if (actual_arg_count < expected_arg_count)
+        {
+            System::println(System::color::error, "Error: %s requires at least %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
+            System::print(example_text);
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    void vcpkg_cmd_arguments::check_exact_arg_count(const size_t expected_arg_count, const char* example_text) const
+    {
+        const size_t actual_arg_count = command_arguments.size();
+        if (actual_arg_count != expected_arg_count)
+        {
+            System::println(System::color::error, "Error: %s requires %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
+            System::print(example_text);
             exit(EXIT_FAILURE);
         }
     }

@@ -6,7 +6,7 @@ namespace vcpkg
 {
     void owns_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
-        args.check_max_args(1);
+        args.check_max_arg_count(1);
         if (args.command_arguments.size() == 0)
         {
             System::println(System::color::error, "Error: owns requires a pattern to search for as the first argument.");
