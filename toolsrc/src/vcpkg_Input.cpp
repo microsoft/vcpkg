@@ -1,5 +1,7 @@
 #include "vcpkg_Input.h"
 #include "vcpkg_System.h"
+#include "metrics.h"
+#include "vcpkg_Commands.h"
 
 namespace vcpkg {namespace Input
 {
@@ -25,5 +27,16 @@ namespace vcpkg {namespace Input
         }
 
         return specs;
+    }
+
+    void check_triplet(const triplet& t, const vcpkg_paths& paths)
+    {
+        if (!paths.is_valid_triplet(t))
+        {
+            System::println(System::color::error, "Error: invalid triplet: %s", t.value);
+            TrackProperty("error", "invalid triplet: " + t.value);
+            help_topic_valid_triplet(paths);
+            exit(EXIT_FAILURE);
+        }
     }
 }}
