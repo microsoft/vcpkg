@@ -6,7 +6,7 @@ namespace vcpkg
 {
     void version_command(const vcpkg_cmd_arguments& args)
     {
-        args.check_max_arg_count(0);
+        args.check_exact_arg_count(0);
         System::println("Vcpkg package management program version %s\n"
                         "\n"
                         "Vcpkg is provided \"as-is\" without warranty of any kind, express or implied.\n"
@@ -37,8 +37,9 @@ namespace vcpkg
         exit(EXIT_SUCCESS);
     }
 
-    void contact_command(const vcpkg_cmd_arguments& /*args*/)
+    void contact_command(const vcpkg_cmd_arguments& args)
     {
+        args.check_exact_arg_count(0);
         System::println("Send an email to vcpkg@microsoft.com with any feedback.");
         exit(EXIT_SUCCESS);
     }

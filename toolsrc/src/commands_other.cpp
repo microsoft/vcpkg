@@ -43,8 +43,9 @@ namespace vcpkg
 
     std::string create_example_string(const char* command_and_arguments)
     {
-        return Strings::format("Example:\n"
-                               "  vcpkg %s", command_and_arguments);
+        std::string cs = Strings::format("Example:\n"
+                                         "  vcpkg %s", command_and_arguments);
+        return cs;
     }
 
     void print_example(const char* command_and_arguments)

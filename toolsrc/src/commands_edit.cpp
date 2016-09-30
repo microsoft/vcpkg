@@ -5,9 +5,9 @@ namespace vcpkg
 {
     void edit_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
-        static auto example = create_example_string("edit zlib").c_str();
-        args.check_max_arg_count(1, example);
-        package_spec spec = args.parse_all_arguments_as_package_specs(default_target_triplet, example).at(0);
+        static const std::string example = create_example_string("edit zlib");
+        args.check_exact_arg_count(1, example.c_str());
+        package_spec spec = args.parse_all_arguments_as_package_specs(default_target_triplet, example.c_str()).at(0);
 
         // Find editor
         std::wstring env_EDITOR = System::wdupenv_str(L"EDITOR");

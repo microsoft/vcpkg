@@ -65,6 +65,8 @@ namespace vcpkg
 
     void install_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
+        static const std::string example = create_example_string("install zlib zlib:x64-windows curl boost");
+        args.check_min_arg_count(1, example.c_str());
         StatusParagraphs status_db = database_load_check(paths);
 
         std::vector<package_spec> specs = args.parse_all_arguments_as_package_specs(default_target_triplet);
@@ -120,10 +122,12 @@ namespace vcpkg
 
     void build_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
-        // Installing multiple packages leads to unintuitive behavior if one of them depends on another.
-        // Allowing only 1 package for now. 
-        args.check_max_arg_count(1);
+        static const std::string example = create_example_string("build zlib:x64-windows");
 
+        // Installing multiple packages leads to unintuitive behavior if one of them depends on another.
+        // Allowing only 1 package for now.
+
+        args.check_exact_arg_count(1, example.c_str());
         StatusParagraphs status_db = database_load_check(paths);
 
         const package_spec spec = args.parse_all_arguments_as_package_specs(default_target_triplet).at(0);
@@ -148,12 +152,8 @@ namespace vcpkg
 
     void build_external_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
-        if (args.command_arguments.size() != 2)
-        {
-            System::println(System::color::error, "Error: buildexternal requires the package name and the directory containing the CONTROL file");
-            print_example(R"(buildexternal mylib C:\path\to\mylib\)");
-            exit(EXIT_FAILURE);
-        }
+        static const std::string example = create_example_string(R"(build_external zlib2 C:\path\to\dir\with\controlfile\)");
+        args.check_exact_arg_count(2, example.c_str());
 
         expected<package_spec> current_spec = package_spec::from_string(args.command_arguments[0], default_target_triplet);
         if (auto spec = current_spec.get())

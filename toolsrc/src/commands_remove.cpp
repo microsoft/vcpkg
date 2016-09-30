@@ -22,6 +22,9 @@ namespace vcpkg
 
     void remove_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
+        static const std::string example = create_example_string("remove zlib zlib:x64-windows curl boost");
+        args.check_min_arg_count(1, example.c_str());
+
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_PURGE});
         auto status_db = database_load_check(paths);
 
