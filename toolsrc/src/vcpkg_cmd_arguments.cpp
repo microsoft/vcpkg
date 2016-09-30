@@ -186,7 +186,7 @@ namespace vcpkg
         const size_t actual_arg_count = command_arguments.size();
         if (actual_arg_count > expected_arg_count)
         {
-            System::println(System::color::error, "Error: %s requires at most %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
+            System::println(System::color::error, "Error: `%s` requires at most %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
             System::print(example_text);
             exit(EXIT_FAILURE);
         }
@@ -197,7 +197,7 @@ namespace vcpkg
         const size_t actual_arg_count = command_arguments.size();
         if (actual_arg_count < expected_arg_count)
         {
-            System::println(System::color::error, "Error: %s requires at least %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
+            System::println(System::color::error, "Error: `%s` requires at least %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
             System::print(example_text);
             exit(EXIT_FAILURE);
         }
@@ -208,7 +208,7 @@ namespace vcpkg
         const size_t actual_arg_count = command_arguments.size();
         if (actual_arg_count != expected_arg_count)
         {
-            System::println(System::color::error, "Error: %s requires %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
+            System::println(System::color::error, "Error: `%s` requires %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
             System::print(example_text);
             exit(EXIT_FAILURE);
         }
