@@ -44,7 +44,7 @@ namespace vcpkg {namespace Strings
     }
 
     template <class...Args>
-    std::wstring format(const wchar_t* fmtstr, const Args&...args)
+    std::wstring wformat(const wchar_t* fmtstr, const Args&...args)
     {
         using vcpkg::Strings::details::to_wprintf_arg;
         return details::wformat_internal(fmtstr, to_wprintf_arg(to_wprintf_arg(args))...);

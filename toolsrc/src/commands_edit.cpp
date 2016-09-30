@@ -15,7 +15,7 @@ namespace vcpkg
             env_EDITOR = LR"(C:\Program Files (x86)\Microsoft VS Code\Code.exe)";
 
         auto portpath = paths.ports / spec.name;
-        std::wstring cmdLine = Strings::format(LR"("%s" "%s" "%s")", env_EDITOR, portpath.native(), (portpath / "portfile.cmake").native());
+        std::wstring cmdLine = Strings::wformat(LR"("%s" "%s" "%s")", env_EDITOR, portpath.native(), (portpath / "portfile.cmake").native());
         exit(System::cmd_execute(cmdLine));
     }
 }

@@ -219,7 +219,7 @@ namespace vcpkg
         std::vector<fs::path> dlls_with_no_exports;
         for (const fs::path& dll : dlls)
         {
-            const std::wstring cmd_line = Strings::format(LR"("%s" /exports "%s")", DUMPBIN_EXE.native(), dll.native());
+            const std::wstring cmd_line = Strings::wformat(LR"("%s" /exports "%s")", DUMPBIN_EXE.native(), dll.native());
             System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
@@ -250,7 +250,7 @@ namespace vcpkg
         std::vector<fs::path> dlls_with_improper_uwp_bit;
         for (const fs::path& dll : dlls)
         {
-            const std::wstring cmd_line = Strings::format(LR"("%s" /headers "%s")", DUMPBIN_EXE.native(), dll.native());
+            const std::wstring cmd_line = Strings::wformat(LR"("%s" /headers "%s")", DUMPBIN_EXE.native(), dll.native());
             System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
@@ -282,7 +282,7 @@ namespace vcpkg
         std::vector<file_and_arch> binaries_with_invalid_architecture;
         for (const fs::path& f : files)
         {
-            const std::wstring cmd_line = Strings::format(LR"("%s" /headers "%s" | findstr machine)", DUMPBIN_EXE.native(), f.native());
+            const std::wstring cmd_line = Strings::wformat(LR"("%s" /headers "%s" | findstr machine)", DUMPBIN_EXE.native(), f.native());
             System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
