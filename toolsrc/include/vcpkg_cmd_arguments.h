@@ -4,9 +4,7 @@
 #include <vector>
 #include <unordered_set>
 #include "opt_bool.h"
-#include "package_spec.h"
 #include "vcpkg_paths.h"
-#include "StatusParagraphs.h"
 
 namespace vcpkg
 {
@@ -14,9 +12,6 @@ namespace vcpkg
     {
         static vcpkg_cmd_arguments create_from_command_line(const int argc, const wchar_t* const* const argv);
         static vcpkg_cmd_arguments create_from_arg_sequence(const std::string* arg_begin, const std::string* arg_end);
-
-        static package_spec check_and_get_package_spec(const std::string& package_spec_as_string, const triplet& default_target_triplet, const char* example_text);
-        static std::vector<package_spec> check_and_get_package_specs(const std::vector<std::string>& package_specs_as_strings, const triplet& default_target_triplet, const char* example_text);
 
         std::unique_ptr<std::string> vcpkg_root_dir;
         std::unique_ptr<std::string> target_triplet;

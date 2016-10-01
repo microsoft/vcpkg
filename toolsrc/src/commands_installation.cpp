@@ -7,6 +7,7 @@
 #include "post_build_lint.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Dependencies.h"
+#include "vcpkg_Input.h"
 
 namespace vcpkg
 {
@@ -69,7 +70,8 @@ namespace vcpkg
         args.check_min_arg_count(1, example.c_str());
         StatusParagraphs status_db = database_load_check(paths);
 
-        std::vector<package_spec> specs = vcpkg_cmd_arguments::check_and_get_package_specs(args.command_arguments, default_target_triplet, example.c_str());
+        std::vector<package_spec> specs = Input::check_and_get_package_specs(args.command_arguments, default_target_triplet, example.c_str());
+        Input::check_triplets(specs, paths);
         std::vector<package_spec> install_plan = Dependencies::create_dependency_ordered_install_plan(paths, specs, status_db);
         Checks::check_exit(!install_plan.empty(), "Install plan cannot be empty");
         std::string specs_string = to_string(install_plan[0]);
@@ -130,7 +132,8 @@ namespace vcpkg
         args.check_exact_arg_count(1, example.c_str());
         StatusParagraphs status_db = database_load_check(paths);
 
-        const package_spec spec = vcpkg_cmd_arguments::check_and_get_package_spec(args.command_arguments.at(0), default_target_triplet, example.c_str());
+        const package_spec spec = Input::check_and_get_package_spec(args.command_arguments.at(0), default_target_triplet, example.c_str());
+        Input::check_triplet(spec.target_triplet, paths);
         std::unordered_set<package_spec> unmet_dependencies = Dependencies::find_unmet_dependencies(paths, spec, status_db);
         if (!unmet_dependencies.empty())
         {
@@ -158,6 +161,7 @@ namespace vcpkg
         expected<package_spec> current_spec = package_spec::from_string(args.command_arguments[0], default_target_triplet);
         if (auto spec = current_spec.get())
         {
+            Input::check_triplet(spec->target_triplet, paths);
             Environment::ensure_utilities_on_path(paths);
             const fs::path port_dir = args.command_arguments.at(1);
             build_internal(*spec, paths, port_dir);

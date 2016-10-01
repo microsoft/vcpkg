@@ -11,6 +11,7 @@
 #include <Shlobj.h>
 #include "vcpkg_Files.h"
 #include "vcpkg_System.h"
+#include "vcpkg_Input.h"
 
 using namespace vcpkg;
 
@@ -87,13 +88,7 @@ static void inner(const vcpkg_cmd_arguments& args)
         }
     }
 
-    if (!paths.is_valid_triplet(default_target_triplet))
-    {
-        System::println(System::color::error, "Error: invalid triplet: %s", default_target_triplet.value);
-        TrackProperty("error", "invalid triplet: " + default_target_triplet.value);
-        help_topic_valid_triplet(paths);
-        exit(EXIT_FAILURE);
-    }
+    Input::check_triplet(default_target_triplet, paths);
 
     if (auto command_function = find_command(args.command, get_available_commands_type_a()))
     {
