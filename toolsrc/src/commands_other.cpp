@@ -66,8 +66,6 @@ namespace vcpkg
             {"install", install_command},
             {"remove", remove_command},
             {"build", build_command},
-            {"edit", edit_command},
-            {"create", create_command},
             {"build_external", build_external_command}
         };
         return t;
@@ -82,6 +80,8 @@ namespace vcpkg
             {"integrate", integrate_command},
             {"owns", owns_command},
             {"update", update_command},
+            {"edit", edit_command},
+            {"create", create_command},
             {"import", import_command},
             {"cache", cache_command},
             {"internal_test", internal_test_command},

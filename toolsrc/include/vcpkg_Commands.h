@@ -17,8 +17,8 @@ namespace vcpkg
     void install_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet);
     void remove_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet);
 
-    void edit_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet);
-    void create_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet);
+    void edit_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths);
+    void create_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths);
 
     void search_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths);
     void list_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths);
