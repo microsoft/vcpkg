@@ -2,6 +2,7 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Environment.h"
 #include "vcpkg_Files.h"
+#include "vcpkg_Input.h"
 
 namespace vcpkg
 {
@@ -14,6 +15,7 @@ namespace vcpkg
         expected<package_spec> current_spec = package_spec::from_string(args.command_arguments[0], default_target_triplet);
         if (const package_spec* spec = current_spec.get())
         {
+            Input::check_triplet(spec->target_triplet, paths);
             Environment::ensure_utilities_on_path(paths);
 
             // Space OR define the FILENAME with proper spacing
