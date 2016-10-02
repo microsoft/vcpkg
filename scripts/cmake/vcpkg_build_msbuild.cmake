@@ -44,7 +44,7 @@ function(vcpkg_build_msbuild)
     if(NOT DEFINED _csc_DEBUG_CONFIGURATION)
         set(_csc_DEBUG_CONFIGURATION Debug)
     endif()
-	if(NOT DEFINED _csc_PLATFORM)
+    if(NOT DEFINED _csc_PLATFORM)
         set(_csc_PLATFORM ${TRIPLET_SYSTEM_ARCH})
     endif()
 
