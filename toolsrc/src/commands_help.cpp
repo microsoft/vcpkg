@@ -9,8 +9,7 @@ namespace vcpkg
         args.check_exact_arg_count(0);
         System::println("Vcpkg package management program version %s\n"
                         "\n"
-                        "Vcpkg is provided \"as-is\" without warranty of any kind, express or implied.\n"
-                        "All rights reserved.", vcpkg::version()
+                        "See LICENSE.txt for license information.", vcpkg::version()
         );
         exit(EXIT_SUCCESS);
     }
