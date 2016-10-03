@@ -81,8 +81,6 @@ install_ace_library(${SOURCE_PATH} "ACE_Monitor_Control")
 install_ace_library(${SOURCE_PATH} "ACE_QoS")
 install_ace_library(${SOURCE_PATH} "ACE_RLECompression")
 
-vcpkg_copy_pdbs()
-
 # Handle copyright
 file(COPY ${SOURCE_PATH}/../COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ace)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/ace/COPYING ${CURRENT_PACKAGES_DIR}/share/ace/copyright)
