@@ -1,7 +1,7 @@
 # Usage: vcpkg_execute_required_process(COMMAND <cmd> [<args>...] WORKING_DIRECTORY </path/to/dir> LOGNAME <my_log_name>)
 function(vcpkg_execute_required_process)
     cmake_parse_arguments(vcpkg_execute_required_process "" "WORKING_DIRECTORY;LOGNAME" "COMMAND" ${ARGN})
-    #debug_message("vcpkg_execute_required_process(${vcpkg_execute_required_process_COMMAND})")
+    debug_message("vcpkg_execute_required_process(${vcpkg_execute_required_process_COMMAND})")
     execute_process(
         COMMAND ${vcpkg_execute_required_process_COMMAND}
         OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-out.log
