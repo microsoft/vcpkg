@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glm)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/g-truc/glm/releases/download/0.9.8.0/glm-0.9.8.0.zip"
-    FILENAME "glm-0.9.8.0.zip"
-    SHA512 5fe9d1f582e7bbef37fd23c9d10fd9cf7696bb7c6f8086a250248e97f84b0205a89a195c8838a1ddc4c0a4cb4c69d1764f90db6513a9691a94877b7ec6b2befb
+    URLS "https://github.com/g-truc/glm/releases/download/0.9.8.1/glm-0.9.8.1.zip"
+    FILENAME "glm-0.9.8.1.zip"
+    SHA512 93223ea7a08d969331a6b93d598c0b59dfc09e86770661c444f81939bd175053d3f6b1211a4aa4e59d732df39b97fe491eb35d4ac2efb286a1cf68ed29bfa80a
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

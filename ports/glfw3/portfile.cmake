@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glfw-3.1.2)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glfw-3.2.1)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/glfw/glfw/releases/download/3.1.2/glfw-3.1.2.zip"
-    FILENAME "glfw-3.1.2.zip"
-    SHA512 c199137b32182182123869fe69ab991a296feb80dcf3db3cf5e070cdaef31ed958148d9b87e724c1937fa535960122bdceb92ea9dd38f7ef41e4e08e36210fe5
+    URLS "https://github.com/glfw/glfw/releases/download/3.2.1/glfw-3.2.1.zip"
+    FILENAME "glfw-3.2.1.zip"
+    SHA512 73dd6d4a8d28a2b423f0fb25489659c1a845182b7ef09848d4f442cdc489528aea90f43ac84aeedb9d2301c4487f39782b647ee4959e67e83babb838372b980c
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
@@ -43,9 +43,9 @@ file(MAKE_DIRECTORY
 file(RENAME ${CURRENT_PACKAGES_DIR}/lib/glfw3.dll ${CURRENT_PACKAGES_DIR}/bin/glfw3.dll)
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/glfw3.dll ${CURRENT_PACKAGES_DIR}/debug/bin/glfw3.dll)
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/glfw ${CURRENT_PACKAGES_DIR}/share/glfw3)
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/glfw3 ${CURRENT_PACKAGES_DIR}/share/glfw3)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/glfw/glfwTargets-debug.cmake ${CURRENT_PACKAGES_DIR}/share/glfw3/glfwTargets-debug.cmake)
+file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/glfw3/glfw3Targets-debug.cmake ${CURRENT_PACKAGES_DIR}/share/glfw3/glfw3Targets-debug.cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
