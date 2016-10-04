@@ -13,7 +13,7 @@ namespace vcpkg
 
     StatusParagraphs::const_iterator StatusParagraphs::find(const std::string& name, const triplet& target_triplet) const
     {
-        return std::find_if(begin(), end(), [&](const auto& pgh)
+        return std::find_if(begin(), end(), [&](const std::unique_ptr<StatusParagraph>& pgh)
                             {
                                 return pgh->package.name == name && pgh->package.target_triplet == target_triplet;
                             });
@@ -21,7 +21,7 @@ namespace vcpkg
 
     StatusParagraphs::iterator StatusParagraphs::find(const std::string& name, const triplet& target_triplet)
     {
-        return std::find_if(begin(), end(), [&](const auto& pgh)
+        return std::find_if(begin(), end(), [&](const std::unique_ptr<StatusParagraph>& pgh)
                             {
                                 return pgh->package.name == name && pgh->package.target_triplet == target_triplet;
                             });
