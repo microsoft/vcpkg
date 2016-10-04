@@ -54,7 +54,7 @@ namespace vcpkg {namespace Strings
         std::transform(pattern.begin(), pattern.end(), back_inserter(patter_as_lower_case), tolower);
         return search(s.begin(), s.end(), patter_as_lower_case.begin(), patter_as_lower_case.end(), [](const char a, const char b)
                       {
-                          return (tolower(a) == b);
+                          return tolower(a) == b;
                       });
     }
 }}
