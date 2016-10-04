@@ -20,7 +20,7 @@ namespace vcpkg { namespace Dependencies
 
         while (!examine_stack.empty())
         {
-            package_spec spec = examine_stack.back();
+            const package_spec spec = examine_stack.back();
             examine_stack.pop_back();
 
             if (was_examined.find(spec) != was_examined.end())
@@ -32,8 +32,8 @@ namespace vcpkg { namespace Dependencies
 
             for (const std::string& dep_as_string : dependencies_as_string)
             {
-                package_spec current_dep = {dep_as_string, spec.target_triplet};
-                auto it = status_db.find(current_dep.name, current_dep.target_triplet);
+                const package_spec current_dep = package_spec::from_name_and_triplet(dep_as_string, spec.target_triplet());
+                auto it = status_db.find(current_dep.name(), current_dep.target_triplet());
                 if (it != status_db.end() && (*it)->want == want_t::install)
                 {
                     continue;

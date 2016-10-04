@@ -52,7 +52,7 @@ namespace vcpkg
 
     fs::path vcpkg_paths::port_dir(const package_spec& spec) const
     {
-        return this->ports / spec.name;
+        return this->ports / spec.name();
     }
 
     bool vcpkg_paths::is_valid_triplet(const triplet& t) const

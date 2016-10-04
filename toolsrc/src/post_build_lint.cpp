@@ -113,7 +113,7 @@ namespace vcpkg
 
         if (!misplaced_cmake_files.empty())
         {
-            System::println(System::color::warning, "The following cmake files were found outside /share/%s. Please place cmake files in /share/%s.", spec.name, spec.name);
+            System::println(System::color::warning, "The following cmake files were found outside /share/%s. Please place cmake files in /share/%s.", spec.name(), spec.name());
             print_vector_of_files(misplaced_cmake_files);
             return lint_status::ERROR;
         }
@@ -151,12 +151,12 @@ namespace vcpkg
 
     static lint_status check_for_copyright_file(const package_spec& spec, const vcpkg_paths& paths)
     {
-        const fs::path copyright_file = paths.packages / spec.dir() / "share" / spec.name / "copyright";
+        const fs::path copyright_file = paths.packages / spec.dir() / "share" / spec.name() / "copyright";
         if (fs::exists(copyright_file))
         {
             return lint_status::SUCCESS;
         }
-        const fs::path current_buildtrees_dir = paths.buildtrees / spec.name;
+        const fs::path current_buildtrees_dir = paths.buildtrees / spec.name();
         const fs::path current_buildtrees_dir_src = current_buildtrees_dir / "src";
 
         std::vector<fs::path> potential_copyright_files;
@@ -175,14 +175,14 @@ namespace vcpkg
             }
         }
 
-        System::println(System::color::warning, "The software license must be available at ${CURRENT_PACKAGES_DIR}/share/%s/copyright .", spec.name);
+        System::println(System::color::warning, "The software license must be available at ${CURRENT_PACKAGES_DIR}/share/%s/copyright .", spec.name());
         if (potential_copyright_files.size() == 1) // if there is only one candidate, provide the cmake lines needed to place it in the proper location
         {
             const fs::path found_file = potential_copyright_files[0];
             const fs::path relative_path = found_file.string().erase(0, current_buildtrees_dir.string().size() + 1); // The +1 is needed to remove the "/"
             System::println("\n    file(COPY ${CURRENT_BUILDTREES_DIR}/%s DESTINATION ${CURRENT_PACKAGES_DIR}/share/%s)\n"
                             "    file(RENAME ${CURRENT_PACKAGES_DIR}/share/%s/%s ${CURRENT_PACKAGES_DIR}/share/%s/copyright)",
-                            relative_path.generic_string(), spec.name, spec.name, found_file.filename().generic_string(), spec.name);
+                            relative_path.generic_string(), spec.name(), spec.name(), found_file.filename().generic_string(), spec.name());
             return lint_status::ERROR;
         }
 
@@ -193,7 +193,7 @@ namespace vcpkg
         }
 
         const fs::path current_packages_dir = paths.packages / spec.dir();
-        System::println("    %s/share/%s/copyright", current_packages_dir.generic_string(), spec.name);
+        System::println("    %s/share/%s/copyright", current_packages_dir.generic_string(), spec.name());
 
         return lint_status::ERROR;
     }
@@ -333,18 +333,18 @@ namespace vcpkg
         recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "bin", ".dll", dlls);
 
         error_count += check_exports_of_dlls(dlls);
-        error_count += check_uwp_bit_of_dlls(spec.target_triplet.system(), dlls);
-        error_count += check_architecture(spec.target_triplet.architecture(), dlls);
+        error_count += check_uwp_bit_of_dlls(spec.target_triplet().system(), dlls);
+        error_count += check_architecture(spec.target_triplet().architecture(), dlls);
 
         std::vector<fs::path> libs;
         recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "lib", ".lib", libs);
         recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "lib", ".lib", libs);
 
-        error_count += check_architecture(spec.target_triplet.architecture(), libs);
+        error_count += check_architecture(spec.target_triplet().architecture(), libs);
 
         if (error_count != 0)
         {
-            const fs::path portfile = paths.ports / spec.name / "portfile.cmake";
+            const fs::path portfile = paths.ports / spec.name() / "portfile.cmake";
             System::println(System::color::error, "Found %u error(s). Please correct the portfile:\n    %s", error_count, portfile.string());
             exit(EXIT_FAILURE);
         }

@@ -24,9 +24,9 @@ namespace vcpkg
     {
         const fs::path ports_cmake_script_path = paths.ports_cmake;
         const std::wstring command = Strings::wformat(LR"("%%VS140COMNTOOLS%%..\..\VC\vcvarsall.bat" %s && cmake -DCMD=BUILD -DPORT=%s -DTARGET_TRIPLET=%s "-DCURRENT_PORT_DIR=%s/." -P "%s")",
-                                                      Strings::utf8_to_utf16(spec.target_triplet.architecture()),
-                                                      Strings::utf8_to_utf16(spec.name),
-                                                      Strings::utf8_to_utf16(spec.target_triplet.canonical_name()),
+                                                      Strings::utf8_to_utf16(spec.target_triplet().architecture()),
+                                                      Strings::utf8_to_utf16(spec.name()),
+                                                      Strings::utf8_to_utf16(spec.target_triplet().canonical_name()),
                                                       port_dir.generic_wstring(),
                                                       ports_cmake_script_path.generic_wstring());
 
@@ -53,7 +53,7 @@ namespace vcpkg
 
         perform_all_checks(spec, paths);
 
-        create_binary_control_file(paths, port_dir, spec.target_triplet);
+        create_binary_control_file(paths, port_dir, spec.target_triplet());
 
         // const fs::path port_buildtrees_dir = paths.buildtrees / spec.name;
         // delete_directory(port_buildtrees_dir);
@@ -61,7 +61,7 @@ namespace vcpkg
 
     static void build_internal(const package_spec& spec, const vcpkg_paths& paths)
     {
-        return build_internal(spec, paths, paths.ports / spec.name);
+        return build_internal(spec, paths, paths.ports / spec.name());
     }
 
     void install_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
@@ -85,7 +85,7 @@ namespace vcpkg
 
         for (const package_spec& spec : install_plan)
         {
-            if (status_db.find_installed(spec.name, spec.target_triplet) != status_db.end())
+            if (status_db.find_installed(spec.name(), spec.target_triplet()) != status_db.end())
             {
                 System::println(System::color::success, "Package %s is already installed", spec);
                 continue;
@@ -133,7 +133,7 @@ namespace vcpkg
         StatusParagraphs status_db = database_load_check(paths);
 
         const package_spec spec = Input::check_and_get_package_spec(args.command_arguments.at(0), default_target_triplet, example.c_str());
-        Input::check_triplet(spec.target_triplet, paths);
+        Input::check_triplet(spec.target_triplet(), paths);
         std::unordered_set<package_spec> unmet_dependencies = Dependencies::find_unmet_dependencies(paths, spec, status_db);
         if (!unmet_dependencies.empty())
         {
@@ -161,7 +161,7 @@ namespace vcpkg
         expected<package_spec> current_spec = package_spec::from_string(args.command_arguments[0], default_target_triplet);
         if (auto spec = current_spec.get())
         {
-            Input::check_triplet(spec->target_triplet, paths);
+            Input::check_triplet(spec->target_triplet(), paths);
             Environment::ensure_utilities_on_path(paths);
             const fs::path port_dir = args.command_arguments.at(1);
             build_internal(*spec, paths, port_dir);

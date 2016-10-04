@@ -135,7 +135,7 @@ static std::string get_fullpkgname_from_listfile(const fs::path& path)
 
 static fs::path prefix_path_for_package(const vcpkg_paths& paths, const BinaryParagraph& pgh)
 {
-    return paths.package_dir({pgh.name, pgh.target_triplet});
+    return paths.package_dir(package_spec::from_name_and_triplet(pgh.name, pgh.target_triplet));
 }
 
 static void write_update(const vcpkg_paths& paths, const StatusParagraph& p)
@@ -316,7 +316,7 @@ static deinstall_plan deinstall_package_plan(
 
 void vcpkg::deinstall_package(const vcpkg_paths& paths, const package_spec& spec, StatusParagraphs& status_db)
 {
-    auto package_it = status_db.find(spec.name, spec.target_triplet);
+    auto package_it = status_db.find(spec.name(), spec.target_triplet());
     if (package_it == status_db.end())
     {
         System::println(System::color::success, "Package %s is not installed", spec);

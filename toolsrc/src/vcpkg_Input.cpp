@@ -44,7 +44,7 @@ namespace vcpkg {namespace Input
     {
         for (const package_spec& spec : triplets)
         {
-            check_triplet(spec.target_triplet, paths);
+            check_triplet(spec.target_triplet(), paths);
         }
     }
 }}
