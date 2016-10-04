@@ -73,14 +73,14 @@ static void inner(const vcpkg_cmd_arguments& args)
     triplet default_target_triplet;
     if (args.target_triplet != nullptr)
     {
-        default_target_triplet = {*args.target_triplet};
+        default_target_triplet = triplet::from_canonical_name(*args.target_triplet);
     }
     else
     {
         const auto vcpkg_default_triplet_env = System::wdupenv_str(L"VCPKG_DEFAULT_TRIPLET");
         if (!vcpkg_default_triplet_env.empty())
         {
-            default_target_triplet = {Strings::utf16_to_utf8(vcpkg_default_triplet_env)};
+            default_target_triplet = triplet::from_canonical_name(Strings::utf16_to_utf8(vcpkg_default_triplet_env));
         }
         else
         {

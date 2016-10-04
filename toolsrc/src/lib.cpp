@@ -158,7 +158,7 @@ static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryPar
     auto prefix_length = package_prefix_path.native().size();
 
     std::error_code ec;
-    fs::create_directory(paths.installed / bpgh.target_triplet.value, ec);
+    fs::create_directory(paths.installed / bpgh.target_triplet.canonical_name(), ec);
     listfile << bpgh.target_triplet << "\n";
 
     for (auto it = fs::recursive_directory_iterator(package_prefix_path); it != fs::recursive_directory_iterator(); ++it)
@@ -171,7 +171,7 @@ static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryPar
         }
 
         auto suffix = it->path().generic_u8string().substr(prefix_length + 1);
-        auto target = paths.installed / bpgh.target_triplet.value / suffix;
+        auto target = paths.installed / bpgh.target_triplet.canonical_name() / suffix;
 
         auto status = it->status(ec);
         if (ec)

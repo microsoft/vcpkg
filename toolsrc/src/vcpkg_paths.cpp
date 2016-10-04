@@ -61,7 +61,7 @@ namespace vcpkg
         for (; it != fs::directory_iterator(); ++it)
         {
             std::string triplet_file_name = it->path().stem().generic_u8string();
-            if (t.value == triplet_file_name) // TODO: fuzzy compare
+            if (t.canonical_name() == triplet_file_name) // TODO: fuzzy compare
             {
                 //t.value = triplet_file_name; // NOTE: uncomment when implementing fuzzy compare
                 return true;

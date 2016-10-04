@@ -12,9 +12,9 @@ namespace vcpkg
         name(required_field(fields, "Package")),
         version(required_field(fields, "Version")),
         description(optional_field(fields, "Description")),
-        maintainer(optional_field(fields, "Maintainer"))
+        maintainer(optional_field(fields, "Maintainer")),
+        target_triplet(triplet::from_canonical_name(required_field(fields, "Architecture")))
     {
-        target_triplet.value = required_field(fields, "Architecture");
         {
             std::string multi_arch = required_field(fields, "Multi-Arch");
             Checks::check_throw(multi_arch == "same", "Multi-Arch must be 'same' but was %s", multi_arch);

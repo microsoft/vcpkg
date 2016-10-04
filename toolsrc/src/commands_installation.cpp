@@ -26,7 +26,7 @@ namespace vcpkg
         const std::wstring command = Strings::wformat(LR"("%%VS140COMNTOOLS%%..\..\VC\vcvarsall.bat" %s && cmake -DCMD=BUILD -DPORT=%s -DTARGET_TRIPLET=%s "-DCURRENT_PORT_DIR=%s/." -P "%s")",
                                                       Strings::utf8_to_utf16(spec.target_triplet.architecture()),
                                                       Strings::utf8_to_utf16(spec.name),
-                                                      Strings::utf8_to_utf16(spec.target_triplet.value),
+                                                      Strings::utf8_to_utf16(spec.target_triplet.canonical_name()),
                                                       port_dir.generic_wstring(),
                                                       ports_cmake_script_path.generic_wstring());
 

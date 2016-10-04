@@ -16,7 +16,7 @@ namespace vcpkg
             return std::error_code(package_spec_parse_result::too_many_colons);
         }
 
-        return package_spec{spec.substr(0, pos), spec.substr(pos + 1)};
+        return package_spec{spec.substr(0, pos), triplet::from_canonical_name(spec.substr(pos + 1))};
     }
 
     std::string package_spec::dir() const
