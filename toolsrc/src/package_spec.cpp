@@ -19,7 +19,7 @@ namespace vcpkg
         auto pos2 = spec_as_string.find(':', pos + 1);
         if (pos2 != std::string::npos)
         {
-            return std::error_code(package_spec_parse_result::too_many_colons);
+            return std::error_code(package_spec_parse_result::TOO_MANY_COLONS);
         }
 
         const std::string name = spec_as_string.substr(0, pos);
@@ -31,7 +31,7 @@ namespace vcpkg
     {
         if (std::find_if_not(name.cbegin(), name.cend(), is_valid_package_spec_char) != name.end())
         {
-            return std::error_code(package_spec_parse_result::invalid_characters);
+            return std::error_code(package_spec_parse_result::INVALID_CHARACTERS);
         }
 
         package_spec p;

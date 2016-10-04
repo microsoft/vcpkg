@@ -13,11 +13,11 @@ namespace vcpkg
     {
         switch (static_cast<package_spec_parse_result>(ev))
         {
-            case package_spec_parse_result::success:
+            case package_spec_parse_result::SUCCESS:
                 return "OK";
-            case package_spec_parse_result::too_many_colons:
+            case package_spec_parse_result::TOO_MANY_COLONS:
                 return "Too many colons";
-            case package_spec_parse_result::invalid_characters:
+            case package_spec_parse_result::INVALID_CHARACTERS:
                 return "Contains invalid characters. Only alphanumeric ASCII characters and dashes are allowed";
             default:
                 Checks::unreachable();
