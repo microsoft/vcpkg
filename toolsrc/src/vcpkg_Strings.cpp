@@ -48,7 +48,7 @@ namespace vcpkg {namespace Strings
         return conversion.to_bytes(w);
     }
 
-    std::string::const_iterator case_insensitive_find(const std::string& s, const std::string& pattern)
+    std::string::const_iterator case_insensitive_ascii_find(const std::string& s, const std::string& pattern)
     {
         std::string pattern_as_lower_case;
         std::transform(pattern.begin(), pattern.end(), back_inserter(pattern_as_lower_case), tolower);

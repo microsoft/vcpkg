@@ -53,7 +53,7 @@ namespace vcpkg
         // At this point there is 1 argument
         do_print(paths, [&](std::string& port_name) -> bool
                  {
-                     return Strings::case_insensitive_find(port_name, args.command_arguments[0]) != port_name.end();
+                     return Strings::case_insensitive_ascii_find(port_name, args.command_arguments[0]) != port_name.end();
                  });
 
         System::println("\nIf your library is not listed, please open an issue at:\n"

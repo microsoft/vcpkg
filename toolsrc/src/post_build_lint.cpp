@@ -286,7 +286,7 @@ namespace vcpkg
             System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
-            if (Strings::case_insensitive_find(ec_data.output, expected_architecture) == ec_data.output.end())
+            if (Strings::case_insensitive_ascii_find(ec_data.output, expected_architecture) == ec_data.output.end())
             {
                 binaries_with_invalid_architecture.push_back({f, ec_data.output});
             }
