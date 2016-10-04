@@ -135,7 +135,7 @@ static std::string get_fullpkgname_from_listfile(const fs::path& path)
 
 static fs::path prefix_path_for_package(const vcpkg_paths& paths, const BinaryParagraph& pgh)
 {
-    return paths.package_dir(package_spec::from_name_and_triplet(pgh.name, pgh.target_triplet));
+    return paths.package_dir(*package_spec::from_name_and_triplet(pgh.name, pgh.target_triplet).get());
 }
 
 static void write_update(const vcpkg_paths& paths, const StatusParagraph& p)

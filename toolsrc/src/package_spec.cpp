@@ -3,35 +3,39 @@
 
 namespace vcpkg
 {
+    static bool is_valid_package_spec_char(char c)
+    {
+        return (c == '-') || (isalnum(c) && islower(c));
+    }
+
     expected<package_spec> package_spec::from_string(const std::string& spec_as_string, const triplet& default_target_triplet)
     {
-        std::string s(spec_as_string);
-        std::transform(s.begin(), s.end(), s.begin(), ::tolower);
-
-        auto pos = s.find(':');
+        auto pos = spec_as_string.find(':');
         if (pos == std::string::npos)
         {
-            return from_name_and_triplet(s, default_target_triplet);
+            return from_name_and_triplet(spec_as_string, default_target_triplet);
         }
 
-        auto pos2 = s.find(':', pos + 1);
+        auto pos2 = spec_as_string.find(':', pos + 1);
         if (pos2 != std::string::npos)
         {
             return std::error_code(package_spec_parse_result::too_many_colons);
         }
 
-        const std::string name = s.substr(0, pos);
-        const triplet target_triplet = triplet::from_canonical_name(s.substr(pos + 1));
+        const std::string name = spec_as_string.substr(0, pos);
+        const triplet target_triplet = triplet::from_canonical_name(spec_as_string.substr(pos + 1));
         return from_name_and_triplet(name, target_triplet);
     }
 
-    package_spec package_spec::from_name_and_triplet(const std::string& name, const triplet& target_triplet)
+    expected<package_spec> package_spec::from_name_and_triplet(const std::string& name, const triplet& target_triplet)
     {
-        std::string n(name);
-        std::transform(n.begin(), n.end(), n.begin(), ::tolower);
+        if (std::find_if_not(name.cbegin(), name.cend(), is_valid_package_spec_char) != name.end())
+        {
+            return std::error_code(package_spec_parse_result::invalid_characters);
+        }
 
         package_spec p;
-        p.m_name = n;
+        p.m_name = name;
         p.m_target_triplet = target_triplet;
         return p;
     }

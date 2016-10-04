@@ -7,7 +7,8 @@ namespace vcpkg {namespace Input
 {
     package_spec check_and_get_package_spec(const std::string& package_spec_as_string, const triplet& default_target_triplet, const char* example_text)
     {
-        expected<package_spec> expected_spec = package_spec::from_string(package_spec_as_string, default_target_triplet);
+        const std::string as_lowercase = Strings::ascii_to_lowercase(package_spec_as_string);
+        expected<package_spec> expected_spec = package_spec::from_string(as_lowercase, default_target_triplet);
         if (auto spec = expected_spec.get())
         {
             return *spec;

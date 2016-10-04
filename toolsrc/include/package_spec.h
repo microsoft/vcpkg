@@ -10,7 +10,7 @@ namespace vcpkg
     {
         static expected<package_spec> from_string(const std::string& spec_as_string, const triplet& default_target_triplet);
 
-        static package_spec from_name_and_triplet(const std::string& name, const triplet& target_triplet);
+        static expected<package_spec> from_name_and_triplet(const std::string& name, const triplet& target_triplet);
 
         const std::string& name() const;
 

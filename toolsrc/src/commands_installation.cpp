@@ -23,10 +23,11 @@ namespace vcpkg
     static void build_internal(const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir)
     {
         const fs::path ports_cmake_script_path = paths.ports_cmake;
+        auto&& target_triplet = spec.target_triplet();
         const std::wstring command = Strings::wformat(LR"("%%VS140COMNTOOLS%%..\..\VC\vcvarsall.bat" %s && cmake -DCMD=BUILD -DPORT=%s -DTARGET_TRIPLET=%s "-DCURRENT_PORT_DIR=%s/." -P "%s")",
-                                                      Strings::utf8_to_utf16(spec.target_triplet().architecture()),
+                                                      Strings::utf8_to_utf16(target_triplet.architecture()),
                                                       Strings::utf8_to_utf16(spec.name()),
-                                                      Strings::utf8_to_utf16(spec.target_triplet().canonical_name()),
+                                                      Strings::utf8_to_utf16(target_triplet.canonical_name()),
                                                       port_dir.generic_wstring(),
                                                       ports_cmake_script_path.generic_wstring());
 
@@ -53,7 +54,7 @@ namespace vcpkg
 
         perform_all_checks(spec, paths);
 
-        create_binary_control_file(paths, port_dir, spec.target_triplet());
+        create_binary_control_file(paths, port_dir, target_triplet);
 
         // const fs::path port_buildtrees_dir = paths.buildtrees / spec.name;
         // delete_directory(port_buildtrees_dir);
