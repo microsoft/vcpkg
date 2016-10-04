@@ -39,7 +39,7 @@ namespace vcpkg
         {
             if (pgh->state == install_state_t::not_installed && pgh->want == want_t::purge)
                 continue;
-            auto it = src_names_to_versions.find(pgh->package.name);
+            auto it = src_names_to_versions.find(pgh->package.spec.name());
             if (it == src_names_to_versions.end())
             {
                 // Package was not installed from portfile

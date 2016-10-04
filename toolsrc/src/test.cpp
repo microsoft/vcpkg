@@ -87,11 +87,11 @@ namespace UnitTest1
                 {"Multi-Arch", "same"},
             });
 
-            Assert::AreEqual("zlib", pgh.name.c_str());
+            Assert::AreEqual("zlib", pgh.spec.name().c_str());
             Assert::AreEqual("1.2.8", pgh.version.c_str());
             Assert::AreEqual("", pgh.maintainer.c_str());
             Assert::AreEqual("", pgh.description.c_str());
-            Assert::AreEqual("a", pgh.target_triplet.canonical_name().c_str());
+            Assert::AreEqual("a", pgh.spec.target_triplet().canonical_name().c_str());
             Assert::AreEqual(size_t(0), pgh.depends.size());
         }
 
@@ -106,7 +106,7 @@ namespace UnitTest1
                 {"Description", "d"},
                 {"Depends", "bd"}
             });
-            Assert::AreEqual("s", pgh.name.c_str());
+            Assert::AreEqual("s", pgh.spec.name().c_str());
             Assert::AreEqual("v", pgh.version.c_str());
             Assert::AreEqual("m", pgh.maintainer.c_str());
             Assert::AreEqual("d", pgh.description.c_str());

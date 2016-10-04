@@ -135,7 +135,7 @@ static std::string get_fullpkgname_from_listfile(const fs::path& path)
 
 static fs::path prefix_path_for_package(const vcpkg_paths& paths, const BinaryParagraph& pgh)
 {
-    return paths.package_dir(package_spec::from_name_and_triplet(pgh.name, pgh.target_triplet).get_or_throw());
+    return paths.package_dir(pgh.spec);
 }
 
 static void write_update(const vcpkg_paths& paths, const StatusParagraph& p)
@@ -157,9 +157,11 @@ static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryPar
     auto package_prefix_path = prefix_path_for_package(paths, bpgh);
     auto prefix_length = package_prefix_path.native().size();
 
+    const triplet& target_triplet = bpgh.spec.target_triplet();
+    const std::string& target_triplet_as_string = target_triplet.canonical_name();
     std::error_code ec;
-    fs::create_directory(paths.installed / bpgh.target_triplet.canonical_name(), ec);
-    listfile << bpgh.target_triplet << "\n";
+    fs::create_directory(paths.installed / target_triplet_as_string, ec);
+    listfile << target_triplet << "\n";
 
     for (auto it = fs::recursive_directory_iterator(package_prefix_path); it != fs::recursive_directory_iterator(); ++it)
     {
@@ -171,7 +173,7 @@ static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryPar
         }
 
         auto suffix = it->path().generic_u8string().substr(prefix_length + 1);
-        auto target = paths.installed / bpgh.target_triplet.canonical_name() / suffix;
+        auto target = paths.installed / target_triplet_as_string / suffix;
 
         auto status = it->status(ec);
         if (ec)
@@ -187,7 +189,7 @@ static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryPar
                 System::println(System::color::error, "failed: %s: %s", target.u8string(), ec.message());
             }
 
-            listfile << bpgh.target_triplet << "/" << suffix << "\n";
+            listfile << target_triplet << "/" << suffix << "\n";
         }
         else if (fs::is_regular_file(status))
         {
@@ -196,7 +198,7 @@ static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryPar
             {
                 System::println(System::color::error, "failed: %s: %s", target.u8string(), ec.message());
             }
-            listfile << bpgh.target_triplet << "/" << suffix << "\n";
+            listfile << target_triplet << "/" << suffix << "\n";
         }
         else if (!fs::status_known(status))
         {
@@ -257,7 +259,7 @@ void vcpkg::install_package(const vcpkg_paths& paths, const BinaryParagraph& bin
     spgh.state = install_state_t::half_installed;
     for (const std::string& dependency : spgh.package.depends)
     {
-        if (status_db.find_installed(dependency, spgh.package.target_triplet) == status_db.end())
+        if (status_db.find_installed(dependency, spgh.package.spec.target_triplet()) == status_db.end())
         {
             std::abort();
         }
@@ -297,12 +299,12 @@ static deinstall_plan deinstall_package_plan(
     {
         if (inst_pkg->want != want_t::install)
             continue;
-        if (inst_pkg->package.target_triplet != pkg.target_triplet)
+        if (inst_pkg->package.spec.target_triplet() != pkg.spec.target_triplet())
             continue;
 
         const auto& deps = inst_pkg->package.depends;
 
-        if (std::find(deps.begin(), deps.end(), pkg.name) != deps.end())
+        if (std::find(deps.begin(), deps.end(), pkg.spec.name()) != deps.end())
         {
             dependencies_out.push_back(inst_pkg.get());
         }
