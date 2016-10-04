@@ -32,25 +32,17 @@ namespace vcpkg { namespace Dependencies
 
             for (const std::string& dep_as_string : dependencies_as_string)
             {
-                const expected<package_spec> expected_dep = package_spec::from_name_and_triplet(dep_as_string, spec.target_triplet());
-                if (auto pdep = expected_dep.get())
+                const package_spec current_dep = package_spec::from_name_and_triplet(dep_as_string, spec.target_triplet()).get_or_throw();
+                auto it = status_db.find(current_dep.name(), current_dep.target_triplet());
+                if (it != status_db.end() && (*it)->want == want_t::install)
                 {
-                    const package_spec current_dep = *pdep;
-                    auto it = status_db.find(current_dep.name(), current_dep.target_triplet());
-                    if (it != status_db.end() && (*it)->want == want_t::install)
-                    {
-                        continue;
-                    }
-
-                    graph.add_edge(spec, current_dep);
-                    if (was_examined.find(current_dep) == was_examined.end())
-                    {
-                        examine_stack.push_back(std::move(current_dep));
-                    }
+                    continue;
                 }
-                else
+
+                graph.add_edge(spec, current_dep);
+                if (was_examined.find(current_dep) == was_examined.end())
                 {
-                    std::abort();
+                    examine_stack.push_back(std::move(current_dep));
                 }
             }
 
