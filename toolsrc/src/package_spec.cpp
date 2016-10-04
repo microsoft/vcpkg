@@ -1,22 +1,26 @@
 #include "package_spec.h"
+#include <algorithm>
 
 namespace vcpkg
 {
     expected<package_spec> package_spec::from_string(const std::string& spec, const triplet& default_target_triplet)
     {
-        auto pos = spec.find(':');
+        std::string s(spec);
+        std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+
+        auto pos = s.find(':');
         if (pos == std::string::npos)
         {
-            return package_spec{spec, default_target_triplet};
+            return package_spec{s, default_target_triplet};
         }
 
-        auto pos2 = spec.find(':', pos + 1);
+        auto pos2 = s.find(':', pos + 1);
         if (pos2 != std::string::npos)
         {
             return std::error_code(package_spec_parse_result::too_many_colons);
         }
 
-        return package_spec{spec.substr(0, pos), triplet::from_canonical_name(spec.substr(pos + 1))};
+        return package_spec{s.substr(0, pos), triplet::from_canonical_name(s.substr(pos + 1))};
     }
 
     std::string package_spec::dir() const
