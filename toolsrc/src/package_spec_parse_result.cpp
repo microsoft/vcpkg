@@ -17,6 +17,8 @@ namespace vcpkg
                 return "OK";
             case package_spec_parse_result::too_many_colons:
                 return "Too many colons";
+            case package_spec_parse_result::invalid_characters:
+                return "Contains invalid characters. Only alphanumeric ASCII characters and dashes are allowed";
             default:
                 Checks::unreachable();
         }
