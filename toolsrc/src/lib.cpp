@@ -133,11 +133,6 @@ static std::string get_fullpkgname_from_listfile(const fs::path& path)
     return ret;
 }
 
-static fs::path prefix_path_for_package(const vcpkg_paths& paths, const BinaryParagraph& pgh)
-{
-    return paths.package_dir(pgh.spec);
-}
-
 static void write_update(const vcpkg_paths& paths, const StatusParagraph& p)
 {
     static int update_id = 0;
@@ -154,7 +149,7 @@ static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryPar
 {
     std::fstream listfile(listfile_path(paths, bpgh), std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
 
-    auto package_prefix_path = prefix_path_for_package(paths, bpgh);
+    auto package_prefix_path = paths.package_dir(bpgh.spec);
     auto prefix_length = package_prefix_path.native().size();
 
     const triplet& target_triplet = bpgh.spec.target_triplet();
@@ -507,7 +502,7 @@ namespace
 
 void vcpkg::binary_import(const vcpkg_paths& paths, const fs::path& include_directory, const fs::path& project_directory, const BinaryParagraph& control_file_data)
 {
-    fs::path library_destination_path = prefix_path_for_package(paths, control_file_data);
+    fs::path library_destination_path = paths.package_dir(control_file_data.spec);
     fs::create_directory(library_destination_path);
     place_library_files_in(include_directory, project_directory, library_destination_path);
 
