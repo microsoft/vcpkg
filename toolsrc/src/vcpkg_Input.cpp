@@ -14,7 +14,8 @@ namespace vcpkg {namespace Input
             return *spec;
         }
 
-        System::println(System::color::error, "Error: %s: %s", expected_spec.error_code().message(), package_spec_as_string);
+        // Intentionally show the lowercased string
+        System::println(System::color::error, "Error: %s: %s", expected_spec.error_code().message(), as_lowercase);
         System::print(example_text);
         exit(EXIT_FAILURE);
     }
