@@ -5,7 +5,7 @@ namespace vcpkg
 {
     static bool is_valid_package_spec_char(char c)
     {
-        return (c == '-') || (isalnum(c) && islower(c));
+        return (c == '-') || isdigit(c) || (isalpha(c) && islower(c));
     }
 
     expected<package_spec> package_spec::from_string(const std::string& spec_as_string, const triplet& default_target_triplet)
