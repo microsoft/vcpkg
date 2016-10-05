@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 project(ragel CXX)
 
-find_program(NMAKE nmake)
-
 file(GLOB HEADERS
 	ragel/buffer.h
 	ragel/cdgoto.h
@@ -127,5 +125,4 @@ include_directories(aapl)
 
 add_executable(ragel ${SRC})
 
-install(TARGETS ragel DESTINATION tools)
-install(FILES ${HEADERS} DESTINATION include)
+install(TARGETS ragel DESTINATION tools CONFIGURATIONS Release)

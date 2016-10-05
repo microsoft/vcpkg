@@ -21,17 +21,10 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h DESTINATION ${SOURCE_PATH}/ragel)
 
 vcpkg_apply_patches(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-Remove-unistd.h-include-1.patch"
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0002-Remove-unistd.h-include-2.patch"
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0003-Fix-rsxgoto.cpp-build.patch"
+    PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/0001-Remove-unistd.h-include-1.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/0002-Remove-unistd.h-include-2.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/0003-Fix-rsxgoto.cpp-build.patch"
 )
 
 vcpkg_configure_cmake(
@@ -39,10 +32,9 @@ vcpkg_configure_cmake(
     GENERATOR "Visual Studio 14 2015"
 )
 
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/ragel.txt)
 
 # Handle copyright
 file(COPY ${CURRENT_BUILDTREES_DIR}/src/ragel-6.9/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ragel)
