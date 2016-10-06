@@ -80,4 +80,3 @@ for ($disableMetrics = 0; $disableMetrics -le 1; $disableMetrics++)
 
     Write-Verbose("Redistributable archive is: $outputArchive")
 }
-git tag $gitTagString
