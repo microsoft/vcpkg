@@ -311,7 +311,7 @@ namespace vcpkg
 
     static void operator +=(size_t& left, const lint_status& right)
     {
-        left += static_cast<unsigned int>(right);
+        left += static_cast<size_t>(right);
     }
 
     void perform_all_checks(const package_spec& spec, const vcpkg_paths& paths)
