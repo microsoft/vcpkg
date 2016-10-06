@@ -2,7 +2,7 @@
 param(
 
 )
-
+$ErrorActionPreference = "Stop"
 $version = git show HEAD:toolsrc/VERSION.txt
 #Remove the quotes from the string
 $version = $version.Substring(1, $version.length - 2)
