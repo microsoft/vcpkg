@@ -18,7 +18,6 @@ vcpkg_configure_cmake(
         -DBUILD_SHARED_LIBS=ON
 )
 
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include)

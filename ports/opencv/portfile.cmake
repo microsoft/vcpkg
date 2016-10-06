@@ -42,7 +42,6 @@ vcpkg_configure_cmake(
         -DINSTALL_OTHER=OFF
 )
 
-# vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 file(READ ${CURRENT_PACKAGES_DIR}/debug/share/opencv/OpenCVModules-debug.cmake OPENCV_DEBUG_MODULE)

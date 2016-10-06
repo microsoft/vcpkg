@@ -16,7 +16,6 @@ vcpkg_configure_cmake(
     
 )
 
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 # Handle copyright

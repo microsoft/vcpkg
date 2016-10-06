@@ -24,7 +24,6 @@ vcpkg_configure_cmake(
     -DBOND_LIBRARIES_ONLY=TRUE
 )
 
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 # Put the license file where vcpkg expects it

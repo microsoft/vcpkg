@@ -37,7 +37,6 @@ vcpkg_configure_cmake(
         -DBUILD_SHARED_LIBS=ON
 )
 
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)

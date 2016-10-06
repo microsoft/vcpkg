@@ -39,7 +39,6 @@ vcpkg_configure_cmake(
         -DgRPC_PROTOBUF_PROVIDER=package
 )
 
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/grpc)

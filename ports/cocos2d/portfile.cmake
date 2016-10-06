@@ -40,7 +40,6 @@ vcpkg_configure_cmake(
         -DUSE_PREBUILT_LIBS=OFF
 )
 
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 file(INSTALL ${SOURCE_PATH}/licenses/LICENSE_cocos2d-x.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/cocos2d-x RENAME copyright)
