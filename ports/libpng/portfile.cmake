@@ -13,7 +13,7 @@ vcpkg_apply_patches(
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/use-abort-on-all-platforms.patch"
 )
 
-if(VCPKG_BUILD_SHARED_LIBS)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(PNG_STATIC_LIBS OFF)
     set(PNG_SHARED_LIBS ON)
 else()
@@ -36,7 +36,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-if(VCPKG_BUILD_SHARED_LIBS)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     vcpkg_copy_pdbs()
 else()
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libpng16_static.lib ${CURRENT_PACKAGES_DIR}/lib/libpng16.lib)
