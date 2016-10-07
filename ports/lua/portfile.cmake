@@ -20,15 +20,11 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS_DEBUG
+        -DSKIP_INSTALL_HEADERS=ON
 )
 
 vcpkg_install_cmake()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/lua53.dll ${CURRENT_PACKAGES_DIR}/debug/bin/lua53.dll)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/lua53.dll ${CURRENT_PACKAGES_DIR}/bin/lua53.dll)
 
 # Handle copyright
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/lua)
