@@ -1,16 +1,17 @@
 include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/bullet3-2.83.7)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/bullet3-98d47809b4273d97ea06c9b2137ada10af581bb9)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/bulletphysics/bullet3/archive/2.83.7.zip"
-    FILENAME "2.83.7.zip"
-    SHA512 70f849ce8f08e9c096051cc2da18f3c64a8f7965db0be4b1f7e6e6b4590cad9594b3475e9bcb655bb5159a1f8c4f42f4bd684a43322940deae2f70cd2e6ef9de
+    URLS "https://github.com/erwincoumans/bullet3/archive/98d47809b4273d97ea06c9b2137ada10af581bb9.zip"
+    FILENAME "bullet3.zip"
+    SHA512 eaa3aa5ff124c87f153a9faeabe00955aaa2d87ed5d2297a96e02531eb7fd1286f2b654bd45401690747ca4391dd7c18486f4cbac0da7e835d52874345b9811d
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS 
+    OPTIONS
+	-DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
     -DUSE_MSVC_RUNTIME_LIBRARY_DLL=ON
     -DBUILD_DEMOS=OFF
     -DBUILD_CPU_DEMOS=OFF
@@ -18,6 +19,7 @@ vcpkg_configure_cmake(
     -DBUILD_BULLET3=OFF
     -DBUILD_EXTRAS=OFF
     -DBUILD_UNIT_TESTS=OFF
+	-DBUILD_SHARED_LIBS=ON
 	-DINSTALL_LIBS=ON
 )
 
