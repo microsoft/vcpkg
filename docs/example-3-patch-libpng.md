@@ -1,6 +1,6 @@
-Fixing libpng:x86-uwp
-=====================
+## Example 3: Patching libpng to work for uwp-x86
 
+### Initial error logs
 First, try building:
 
 ```
@@ -59,6 +59,9 @@ Next, looking at the above logs (build-...-out.log and build-...-err.log).
 
 Time Elapsed 00:00:04.19
 ```
+
+### Identify the problematic code
+
 Taking a look at [MSDN](https://msdn.microsoft.com/en-us/library/windows/desktop/ms682658(v=vs.85).aspx) shows that `ExitProcess` is only available for desktop apps. Additionally, it's useful to see the surrounding context:
 
 ```c
@@ -107,7 +110,9 @@ This already gives us some great clues, but the full definition tells the comple
 #endif
 ```
 
-`abort()` is a standard CRT call and certainly available in UWP, so we just need to convince libpng to be more platform agnostic. The easiest and most reliable way to achive is to patch the code; while in this particular case we could pass in a compiler flag to override `PNG_ABORT` because this is a private header, in general it is more reliable to avoid adding more required compiler switches when possible (especially when it isn't already exposed as a CMake option).
+`abort()` is a standard CRT call and certainly available in UWP, so we just need to convince libpng to be more platform agnostic. The easiest and most reliable way to achieve this is to patch the code; while in this particular case we could pass in a compiler flag to override `PNG_ABORT` because this is a private header, in general it is more reliable to avoid adding more required compiler switches when possible (especially when it isn't already exposed as a CMake option).
+
+### Patching the code to improve compatibility
 
 I recommend using git to create the patch file, since you'll already have it installed.
 ```
@@ -144,22 +149,18 @@ Finally, we need to apply the patch after extracting the source.
 ...
 vcpkg_extract_source_archive(${ARCHIVE})
 
-find_program(GIT git)
-vcpkg_execute_required_process(
-    COMMAND ${GIT} init
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src/libpng-1.6.24
-    LOGNAME git-init
-)
-execute_process(
-    COMMAND ${GIT} apply "${CMAKE_CURRENT_LIST_DIR}/use-abort-on-all-platforms.patch" --ignore-whitespace --whitespace=nowarn
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src/libpng-1.6.24
+vcpkg_apply_patches(
+    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libpng-1.6.24
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/use-abort-on-all-platforms.patch"
 )
 
 vcpkg_configure_cmake(
 ...
 ```
 
-To be completely sure this works from the top, we need to purge the package:
+### Verification
+
+To be completely sure this works from scratch, we need to purge the package:
 
 ```
 PS D:\src\vcpkg> vcpkg remove --purge libpng:x86-uwp
