@@ -1,4 +1,5 @@
 include(vcpkg_common_functions)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-1.0.2h)
 vcpkg_find_acquire_program(PERL)
 find_program(NMAKE nmake)
 
@@ -6,15 +7,15 @@ get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 set(ENV{PATH} "${PERL_EXE_PATH};$ENV{PATH}")
 
 vcpkg_download_distfile(OPENSSL_SOURCE_ARCHIVE
-    URL "https://www.openssl.org/source/openssl-1.0.2h.tar.gz"
+    URLS "https://www.openssl.org/source/openssl-1.0.2h.tar.gz"
     FILENAME "openssl-1.0.2h.tar.gz"
-    MD5 9392e65072ce4b614c1392eefc1f23d0
+    SHA512 780601f6f3f32f42b6d7bbc4c593db39a3575f9db80294a10a68b2b0bb79448d9bd529ca700b9977354cbdfc65887c76af0aa7b90d3ee421f74ab53e6f15c303
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${CURRENT_BUILDTREES_DIR}/src/openssl-1.0.2h)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-1.0.2h
+    SOURCE_PATH ${SOURCE_PATH}
     GENERATOR "NMake Makefiles"
     OPTIONS
         -DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}

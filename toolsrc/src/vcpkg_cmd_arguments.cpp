@@ -166,90 +166,51 @@ namespace vcpkg
         return output;
     }
 
-    void vcpkg_cmd_arguments::check_max_args(size_t arg_count, const char* example_text) const
+    void vcpkg_cmd_arguments::check_max_arg_count(const size_t expected_arg_count) const
     {
-        if (command_arguments.size() > arg_count)
+        return check_max_arg_count(expected_arg_count, "");
+    }
+
+    void vcpkg_cmd_arguments::check_min_arg_count(const size_t expected_arg_count) const
+    {
+        return check_min_arg_count(expected_arg_count, "");
+    }
+
+    void vcpkg_cmd_arguments::check_exact_arg_count(const size_t expected_arg_count) const
+    {
+        return check_exact_arg_count(expected_arg_count, "");
+    }
+
+    void vcpkg_cmd_arguments::check_max_arg_count(const size_t expected_arg_count, const char* example_text) const
+    {
+        const size_t actual_arg_count = command_arguments.size();
+        if (actual_arg_count > expected_arg_count)
         {
-            System::println(System::color::error, "Error: too many arguments to command %s", command);
-            if (example_text != nullptr)
-                print_example(example_text);
-            else
-                print_usage();
+            System::println(System::color::error, "Error: `%s` requires at most %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
+            System::print(example_text);
             exit(EXIT_FAILURE);
         }
     }
 
-    std::vector<package_spec> vcpkg_cmd_arguments::extract_package_specs_with_unmet_dependencies(const vcpkg_paths& paths, const triplet& default_target_triplet, const StatusParagraphs& status_db) const
+    void vcpkg_cmd_arguments::check_min_arg_count(const size_t expected_arg_count, const char* example_text) const
     {
-        std::vector<package_spec> specs = parse_all_arguments_as_package_specs(default_target_triplet);
-        std::unordered_set<package_spec> had_its_immediate_dependencies_added;
-        Graphs::Graph<package_spec> graph;
-        graph.add_vertices(specs);
-
-        while (!specs.empty())
+        const size_t actual_arg_count = command_arguments.size();
+        if (actual_arg_count < expected_arg_count)
         {
-            package_spec spec = specs.back();
-            specs.pop_back();
-
-            if (had_its_immediate_dependencies_added.find(spec) != had_its_immediate_dependencies_added.end())
-            {
-                continue;
-            }
-
-            std::vector<std::string> dependencies_as_string = get_unmet_package_dependencies(paths, spec, status_db);
-
-            for (const std::string& dep_as_string : dependencies_as_string)
-            {
-                package_spec current_dep = {dep_as_string, spec.target_triplet};
-                auto it = status_db.find(current_dep.name, current_dep.target_triplet);
-                if (it != status_db.end() && (*it)->want == want_t::install)
-                {
-                    continue;
-                }
-
-                graph.add_edge(spec, current_dep);
-                if (had_its_immediate_dependencies_added.find(current_dep) == had_its_immediate_dependencies_added.end())
-                {
-                    specs.push_back(std::move(current_dep));
-                }
-            }
-
-            had_its_immediate_dependencies_added.insert(spec);
-        }
-
-        return graph.find_topological_sort();
-    }
-
-    std::vector<package_spec> vcpkg_cmd_arguments::parse_all_arguments_as_package_specs(const triplet& default_target_triplet, const char* example_text) const
-    {
-        size_t arg_count = command_arguments.size();
-        if (arg_count < 1)
-        {
-            System::println(System::color::error, "Error: %s requires one or more package specifiers", this->command);
-            if (example_text == nullptr)
-                print_example(Strings::format("%s zlib zlib:x64-windows curl boost", this->command).c_str());
-            else
-                print_example(example_text);
+            System::println(System::color::error, "Error: `%s` requires at least %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
+            System::print(example_text);
             exit(EXIT_FAILURE);
         }
-        std::vector<package_spec> specs;
-        specs.reserve(arg_count);
+    }
 
-        for (const std::string& command_argument : command_arguments)
+    void vcpkg_cmd_arguments::check_exact_arg_count(const size_t expected_arg_count, const char* example_text) const
+    {
+        const size_t actual_arg_count = command_arguments.size();
+        if (actual_arg_count != expected_arg_count)
         {
-            expected<package_spec> current_spec = vcpkg::parse(command_argument, default_target_triplet);
-            if (auto spec = current_spec.get())
-            {
-                specs.push_back(std::move(*spec));
-            }
-            else
-            {
-                System::println(System::color::error, "Error: %s: %s", current_spec.error_code().message(), command_argument);
-                print_example(Strings::format("%s zlib:x64-windows", this->command).c_str());
-                exit(EXIT_FAILURE);
-            }
+            System::println(System::color::error, "Error: `%s` requires %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
+            System::print(example_text);
+            exit(EXIT_FAILURE);
         }
-
-        return specs;
     }
 }

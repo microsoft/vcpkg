@@ -1,14 +1,22 @@
 #include "vcpkg_Files.h"
 #include <fstream>
 #include <filesystem>
+#include <regex>
 
 namespace fs = std::tr2::sys;
 
 namespace vcpkg {namespace Files
 {
+    static const std::regex FILESYSTEM_INVALID_CHARACTERS_REGEX = std::regex(R"([\/:*?"<>|])");
+
     void check_is_directory(const fs::path& dirpath)
     {
         Checks::check_throw(fs::is_directory(dirpath), "The path %s is not a directory", dirpath.string());
+    }
+
+    bool has_invalid_chars_for_filesystem(const std::string s)
+    {
+        return std::regex_search(s, FILESYSTEM_INVALID_CHARACTERS_REGEX);
     }
 
     expected<std::string> get_contents(const fs::path& file_path) noexcept
@@ -34,5 +42,20 @@ namespace vcpkg {namespace Files
         file_stream.close();
 
         return std::move(output);
+    }
+
+    fs::path find_file_recursively_up(const fs::path& starting_dir, const std::string& filename)
+    {
+        fs::path current_dir = starting_dir;
+        for (; !current_dir.empty(); current_dir = current_dir.parent_path())
+        {
+            const fs::path candidate = current_dir / filename;
+            if (fs::exists(candidate))
+            {
+                break;
+            }
+        }
+
+        return current_dir;
     }
 }}

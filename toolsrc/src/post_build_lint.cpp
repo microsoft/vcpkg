@@ -71,12 +71,10 @@ namespace vcpkg
             System::println(System::color::warning, "Include files should not be duplicated into the /debug/include directory. If this cannot be disabled in the project cmake, use\n"
                             "    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)"
             );
-            return
-                lint_status::ERROR;
+            return lint_status::ERROR;
         }
 
-        return
-            lint_status::SUCCESS;
+        return lint_status::SUCCESS;
     }
 
     static lint_status check_for_files_in_debug_share_directory(const package_spec& spec, const vcpkg_paths& paths)
@@ -115,7 +113,7 @@ namespace vcpkg
 
         if (!misplaced_cmake_files.empty())
         {
-            System::println(System::color::warning, "The following cmake files were found outside /share/%s. Please place cmake files in /share/%s.", spec.name, spec.name);
+            System::println(System::color::warning, "The following cmake files were found outside /share/%s. Please place cmake files in /share/%s.", spec.name(), spec.name());
             print_vector_of_files(misplaced_cmake_files);
             return lint_status::ERROR;
         }
@@ -153,12 +151,12 @@ namespace vcpkg
 
     static lint_status check_for_copyright_file(const package_spec& spec, const vcpkg_paths& paths)
     {
-        const fs::path copyright_file = paths.packages / spec.dir() / "share" / spec.name / "copyright";
+        const fs::path copyright_file = paths.packages / spec.dir() / "share" / spec.name() / "copyright";
         if (fs::exists(copyright_file))
         {
             return lint_status::SUCCESS;
         }
-        const fs::path current_buildtrees_dir = paths.buildtrees / spec.name;
+        const fs::path current_buildtrees_dir = paths.buildtrees / spec.name();
         const fs::path current_buildtrees_dir_src = current_buildtrees_dir / "src";
 
         std::vector<fs::path> potential_copyright_files;
@@ -177,14 +175,14 @@ namespace vcpkg
             }
         }
 
-        System::println(System::color::warning, "The software license must be available at ${CURRENT_PACKAGES_DIR}/share/%s/copyright .", spec.name);
+        System::println(System::color::warning, "The software license must be available at ${CURRENT_PACKAGES_DIR}/share/%s/copyright .", spec.name());
         if (potential_copyright_files.size() == 1) // if there is only one candidate, provide the cmake lines needed to place it in the proper location
         {
             const fs::path found_file = potential_copyright_files[0];
             const fs::path relative_path = found_file.string().erase(0, current_buildtrees_dir.string().size() + 1); // The +1 is needed to remove the "/"
             System::println("\n    file(COPY ${CURRENT_BUILDTREES_DIR}/%s DESTINATION ${CURRENT_PACKAGES_DIR}/share/%s)\n"
                             "    file(RENAME ${CURRENT_PACKAGES_DIR}/share/%s/%s ${CURRENT_PACKAGES_DIR}/share/%s/copyright)",
-                            relative_path.generic_string(), spec.name, spec.name, found_file.filename().generic_string(), spec.name);
+                            relative_path.generic_string(), spec.name(), spec.name(), found_file.filename().generic_string(), spec.name());
             return lint_status::ERROR;
         }
 
@@ -195,7 +193,7 @@ namespace vcpkg
         }
 
         const fs::path current_packages_dir = paths.packages / spec.dir();
-        System::println("    %s/share/%s/copyright", current_packages_dir.generic_string(), spec.name);
+        System::println("    %s/share/%s/copyright", current_packages_dir.generic_string(), spec.name());
 
         return lint_status::ERROR;
     }
@@ -221,7 +219,7 @@ namespace vcpkg
         std::vector<fs::path> dlls_with_no_exports;
         for (const fs::path& dll : dlls)
         {
-            const std::wstring cmd_line = Strings::format(LR"("%s" /exports "%s")", DUMPBIN_EXE.native(), dll.native());
+            const std::wstring cmd_line = Strings::wformat(LR"("%s" /exports "%s")", DUMPBIN_EXE.native(), dll.native());
             System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
@@ -252,7 +250,7 @@ namespace vcpkg
         std::vector<fs::path> dlls_with_improper_uwp_bit;
         for (const fs::path& dll : dlls)
         {
-            const std::wstring cmd_line = Strings::format(LR"("%s" /headers "%s")", DUMPBIN_EXE.native(), dll.native());
+            const std::wstring cmd_line = Strings::wformat(LR"("%s" /headers "%s")", DUMPBIN_EXE.native(), dll.native());
             System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
@@ -284,11 +282,11 @@ namespace vcpkg
         std::vector<file_and_arch> binaries_with_invalid_architecture;
         for (const fs::path& f : files)
         {
-            const std::wstring cmd_line = Strings::format(LR"("%s" /headers "%s" | findstr machine)", DUMPBIN_EXE.native(), f.native());
+            const std::wstring cmd_line = Strings::wformat(LR"("%s" /headers "%s" | findstr machine)", DUMPBIN_EXE.native(), f.native());
             System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
-            if (Strings::case_insensitive_find(ec_data.output, expected_architecture) == ec_data.output.end())
+            if (Strings::case_insensitive_ascii_find(ec_data.output, expected_architecture) == ec_data.output.end())
             {
                 binaries_with_invalid_architecture.push_back({f, ec_data.output});
             }
@@ -311,15 +309,27 @@ namespace vcpkg
         return lint_status::SUCCESS;
     }
 
-    static void operator +=(unsigned int& left, const lint_status& right)
+    static lint_status check_no_dlls_present(const std::vector<fs::path>& dlls)
     {
-        left += static_cast<unsigned int>(right);
+        if (dlls.empty())
+        {
+            return lint_status::SUCCESS;
+        }
+
+        System::println(System::color::warning, "DLLs should not be present in a static build, but the following DLLs were found:");
+        print_vector_of_files(dlls);
+        return lint_status::ERROR;
+    }
+
+    static void operator +=(size_t& left, const lint_status& right)
+    {
+        left += static_cast<size_t>(right);
     }
 
     void perform_all_checks(const package_spec& spec, const vcpkg_paths& paths)
     {
         System::println("-- Performing post-build validation");
-        unsigned int error_count = 0;
+        size_t error_count = 0;
         error_count += check_for_files_in_include_directory(spec, paths);
         error_count += check_for_files_in_debug_include_directory(spec, paths);
         error_count += check_for_files_in_debug_share_directory(spec, paths);
@@ -330,24 +340,42 @@ namespace vcpkg
         error_count += check_for_copyright_file(spec, paths);
         error_count += check_for_exes(spec, paths);
 
-        std::vector<fs::path> dlls;
-        recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "bin", ".dll", dlls);
-        recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "bin", ".dll", dlls);
+        triplet::BuildType build_type = spec.target_triplet().build_type();
+        switch (build_type)
+        {
+            case triplet::BuildType::DYNAMIC:
+                {
+                    std::vector<fs::path> dlls;
+                    recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "bin", ".dll", dlls);
+                    recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "bin", ".dll", dlls);
 
-        error_count += check_exports_of_dlls(dlls);
-        error_count += check_uwp_bit_of_dlls(spec.target_triplet.system(), dlls);
-        error_count += check_architecture(spec.target_triplet.architecture(), dlls);
+                    error_count += check_exports_of_dlls(dlls);
+                    error_count += check_uwp_bit_of_dlls(spec.target_triplet().system(), dlls);
+                    error_count += check_architecture(spec.target_triplet().architecture(), dlls);
+                    break;
+                }
+            case triplet::BuildType::STATIC:
+                {
+                    std::vector<fs::path> dlls;
+                    recursive_find_files_with_extension_in_dir(paths.packages / spec.dir(), ".dll", dlls);
+                    error_count += check_no_dlls_present(dlls);
+                    break;
+                }
+
+            default:
+                Checks::unreachable();
+        }
 
         std::vector<fs::path> libs;
         recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "lib", ".lib", libs);
         recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "lib", ".lib", libs);
 
-        error_count += check_architecture(spec.target_triplet.architecture(), libs);
+        error_count += check_architecture(spec.target_triplet().architecture(), libs);
 
         if (error_count != 0)
         {
-            const fs::path portfile = paths.ports / spec.name / "portfile.cmake";
-            System::println(System::color::error, "Found %d error(s). Please correct the portfile:\n    %s", error_count, portfile.string());
+            const fs::path portfile = paths.ports / spec.name() / "portfile.cmake";
+            System::println(System::color::error, "Found %u error(s). Please correct the portfile:\n    %s", error_count, portfile.string());
             exit(EXIT_FAILURE);
         }
 

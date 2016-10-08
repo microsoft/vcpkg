@@ -3,8 +3,7 @@
 #include "vcpkg_paths.h"
 #include "metrics.h"
 #include "vcpkg_System.h"
-
-namespace fs = std::tr2::sys;
+#include "package_spec.h"
 
 namespace vcpkg
 {
@@ -44,5 +43,30 @@ namespace vcpkg
 
         paths.ports_cmake = paths.root / "scripts" / "ports.cmake";
         return paths;
+    }
+
+    fs::path vcpkg_paths::package_dir(const package_spec& spec) const
+    {
+        return this->packages / spec.dir();
+    }
+
+    fs::path vcpkg_paths::port_dir(const package_spec& spec) const
+    {
+        return this->ports / spec.name();
+    }
+
+    bool vcpkg_paths::is_valid_triplet(const triplet& t) const
+    {
+        auto it = fs::directory_iterator(this->triplets);
+        for (; it != fs::directory_iterator(); ++it)
+        {
+            std::string triplet_file_name = it->path().stem().generic_u8string();
+            if (t.canonical_name() == triplet_file_name) // TODO: fuzzy compare
+            {
+                //t.value = triplet_file_name; // NOTE: uncomment when implementing fuzzy compare
+                return true;
+            }
+        }
+        return false;
     }
 }

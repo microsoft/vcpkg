@@ -5,17 +5,16 @@ using namespace vcpkg::details;
 
 vcpkg::SourceParagraph::SourceParagraph() = default;
 
-vcpkg::SourceParagraph::SourceParagraph(const std::unordered_map<std::string, std::string>& fields)
+vcpkg::SourceParagraph::SourceParagraph(const std::unordered_map<std::string, std::string>& fields):
+    name(required_field(fields, "Source")),
+    version(required_field(fields, "Version")),
+    description(optional_field(fields, "Description")),
+    maintainer(optional_field(fields, "Maintainer"))
 {
-    required_field(fields, name, "Source");
-    required_field(fields, version, "Version");
-    optional_field(fields, description, "Description");
-    std::string deps;
-    optional_field(fields, deps, "Build-Depends");
+    std::string deps = optional_field(fields, "Build-Depends");
     if (!deps.empty())
     {
-        depends.clear();
-        parse_depends(deps, depends);
-    }
-    optional_field(fields, maintainer, "Maintainer");
+        this->depends.clear();
+        this->depends = parse_depends(deps);
+    };
 }

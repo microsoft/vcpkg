@@ -20,7 +20,7 @@ namespace vcpkg {namespace Strings {namespace details
         return output;
     }
 
-    std::wstring format_internal(const wchar_t* fmtstr, ...)
+    std::wstring wformat_internal(const wchar_t* fmtstr, ...)
     {
         va_list lst;
         va_start(lst, fmtstr);
@@ -48,13 +48,20 @@ namespace vcpkg {namespace Strings
         return conversion.to_bytes(w);
     }
 
-    std::string::const_iterator case_insensitive_find(const std::string& s, const std::string& pattern)
+    std::string::const_iterator case_insensitive_ascii_find(const std::string& s, const std::string& pattern)
     {
-        std::string patter_as_lower_case;
-        std::transform(pattern.begin(), pattern.end(), back_inserter(patter_as_lower_case), tolower);
-        return search(s.begin(), s.end(), patter_as_lower_case.begin(), patter_as_lower_case.end(), [](const char a, const char b)
+        std::string pattern_as_lower_case;
+        std::transform(pattern.begin(), pattern.end(), back_inserter(pattern_as_lower_case), tolower);
+        return search(s.begin(), s.end(), pattern_as_lower_case.begin(), pattern_as_lower_case.end(), [](const char a, const char b)
                       {
-                          return (tolower(a) == b);
+                          return tolower(a) == b;
                       });
+    }
+
+    std::string ascii_to_lowercase(const std::string& input)
+    {
+        std::string output = input;
+        std::transform(output.begin(), output.end(), output.begin(), ::tolower);
+        return output;
     }
 }}

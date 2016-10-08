@@ -6,18 +6,17 @@ namespace vcpkg
 {
     void version_command(const vcpkg_cmd_arguments& args)
     {
-        args.check_max_args(0);
+        args.check_exact_arg_count(0);
         System::println("Vcpkg package management program version %s\n"
                         "\n"
-                        "Vcpkg is provided \"as-is\" without warranty of any kind, express or implied.\n"
-                        "All rights reserved.", vcpkg::version()
+                        "See LICENSE.txt for license information.", vcpkg::version()
         );
         exit(EXIT_SUCCESS);
     }
 
     void help_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
-        args.check_max_args(1);
+        args.check_max_arg_count(1);
         if (args.command_arguments.empty())
         {
             print_usage();
@@ -37,8 +36,9 @@ namespace vcpkg
         exit(EXIT_SUCCESS);
     }
 
-    void contact_command(const vcpkg_cmd_arguments& /*args*/)
+    void contact_command(const vcpkg_cmd_arguments& args)
     {
+        args.check_exact_arg_count(0);
         System::println("Send an email to vcpkg@microsoft.com with any feedback.");
         exit(EXIT_SUCCESS);
     }

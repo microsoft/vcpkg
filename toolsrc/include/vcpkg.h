@@ -18,10 +18,6 @@ namespace vcpkg
     std::vector<std::unordered_map<std::string, std::string>> parse_paragraphs(const std::string& str);
     std::string shorten_description(const std::string& desc);
 
-    fs::path find_available_package(const vcpkg_paths& paths, const package_spec& spec);
-    fs::path find_available_port_file(const vcpkg_paths& paths, const package_spec& spec);
-    fs::path control_file_for_package(const fs::path& package_path);
-
     StatusParagraphs database_load_check(const vcpkg_paths& paths);
 
     std::vector<std::string> get_unmet_package_dependencies(const vcpkg_paths& paths, const package_spec& spec, const StatusParagraphs& status_db);

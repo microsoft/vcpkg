@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include "SourceParagraph.h"
 #include "triplet.h"
+#include "package_spec.h"
 
 namespace vcpkg
 {
@@ -18,11 +19,10 @@ namespace vcpkg
 
         std::string dir() const;
 
-        std::string name;
+        package_spec spec;
         std::string version;
         std::string description;
         std::string maintainer;
-        triplet target_triplet;
         std::vector<std::string> depends;
     };
 

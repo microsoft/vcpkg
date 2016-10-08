@@ -1,0 +1,3 @@
+Source: constexpr
+Version: 1.0
+Description: Small MIT License Library of general stdlib functions written as C++11 constexpr functions.

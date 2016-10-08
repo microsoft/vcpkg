@@ -2,7 +2,7 @@
 param(
 
 )
-
+$ErrorActionPreference = "Stop"
 $version = git show HEAD:toolsrc/VERSION.txt
 #Remove the quotes from the string
 $version = $version.Substring(1, $version.length - 2)
@@ -51,11 +51,9 @@ for ($disableMetrics = 0; $disableMetrics -le 1; $disableMetrics++)
     # Partial checkout for building vcpkg
     $dotGitDir = "$vcpkgRootDir\.git"
     $workTreeForBuildOnly = "$buildPath"
-    $checkoutThisDirForBuildOnly1 = ".\scripts" # Must be relative to the root of the repository
-    $checkoutThisDirForBuildOnly2 = ".\toolsrc" # Must be relative to the root of the repository
+    $checkoutForBuildOnly = ".\scripts",".\toolsrc",".vcpkg-root" # Must be relative to the root of the repository
     Write-Verbose("Creating partial temporary checkout: $buildPath")
-    git --git-dir="$dotGitDir" --work-tree="$workTreeForBuildOnly" checkout $gitHash -f -q -- $checkoutThisDirForBuildOnly1
-    git --git-dir="$dotGitDir" --work-tree="$workTreeForBuildOnly" checkout $gitHash -f -q -- $checkoutThisDirForBuildOnly2
+    git --git-dir="$dotGitDir" --work-tree="$workTreeForBuildOnly" checkout $gitHash -f -q -- $checkoutForBuildOnly
 
     & "$buildPath\scripts\bootstrap.ps1" -disableMetrics $disableMetrics
 
@@ -82,4 +80,3 @@ for ($disableMetrics = 0; $disableMetrics -le 1; $disableMetrics++)
 
     Write-Verbose("Redistributable archive is: $outputArchive")
 }
-git tag $gitTagString

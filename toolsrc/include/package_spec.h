@@ -8,13 +8,20 @@ namespace vcpkg
 {
     struct package_spec
     {
-        std::string name;
-        triplet target_triplet;
+        static expected<package_spec> from_string(const std::string& spec_as_string, const triplet& default_target_triplet);
+
+        static expected<package_spec> from_name_and_triplet(const std::string& name, const triplet& target_triplet);
+
+        const std::string& name() const;
+
+        const triplet& target_triplet() const;
 
         std::string dir() const;
-    };
 
-    expected<package_spec> parse(const std::string& spec, const triplet& default_target_triplet);
+    private:
+        std::string m_name;
+        triplet m_target_triplet;
+    };
 
     std::string to_string(const package_spec& spec);
 
@@ -33,8 +40,8 @@ namespace std
         size_t operator()(const vcpkg::package_spec& value) const
         {
             size_t hash = 17;
-            hash = hash * 31 + std::hash<std::string>()(value.name);
-            hash = hash * 31 + std::hash<vcpkg::triplet>()(value.target_triplet);
+            hash = hash * 31 + std::hash<std::string>()(value.name());
+            hash = hash * 31 + std::hash<vcpkg::triplet>()(value.target_triplet());
             return hash;
         }
     };
