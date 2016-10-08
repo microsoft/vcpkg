@@ -33,5 +33,14 @@ file(INSTALL
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
 )
 file(INSTALL
+	${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/ChakraCore.dll
+	${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/ChakraCore.pdb
+    DESTINATION ${CURRENT_PACKAGES_DIR}/release/bin
+)
+file(INSTALL
+	${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/Chakracore.lib
+    DESTINATION ${CURRENT_PACKAGES_DIR}/release/lib
+)
+file(INSTALL
 	${SOURCE_PATH}/LICENSE.txt
 	DESTINATION ${CURRENT_PACKAGES_DIR}/share/ChakraCore RENAME copyright)
