@@ -35,11 +35,11 @@ file(INSTALL
 file(INSTALL
 	${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/ChakraCore.dll
 	${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/ChakraCore.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/release/bin
+    DESTINATION ${CURRENT_PACKAGES_DIR}/bin
 )
 file(INSTALL
 	${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/Chakracore.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/release/lib
+    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
 )
 file(INSTALL
 	${SOURCE_PATH}/LICENSE.txt
