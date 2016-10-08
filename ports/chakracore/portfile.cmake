@@ -18,12 +18,6 @@ vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/Build/Chakra.Core.sln
 )
 
-# IF (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-# 	SET(BUILD_ARCH "Win32")
-# ELSE()
-# 	SET(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
-# ENDIF()
-
 file(INSTALL
 	${SOURCE_PATH}/lib/jsrt/ChakraCore.h
 	${SOURCE_PATH}/lib/jsrt/ChakraCommon.h
