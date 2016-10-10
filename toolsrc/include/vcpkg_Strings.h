@@ -19,6 +19,11 @@ namespace vcpkg {namespace Strings {namespace details
         return s;
     }
 
+    inline double to_printf_arg(const double s)
+    {
+        return s;
+    }
+
     inline size_t to_printf_arg(const size_t s)
     {
         return s;
