@@ -14,9 +14,9 @@ namespace vcpkg
 
         bool isRunning() const;
 
-        Stopwatch& start();
+        const Stopwatch& start();
 
-        Stopwatch& stop();
+        const Stopwatch& stop();
 
         Stopwatch& reset();
 
