@@ -4,6 +4,7 @@
 #include <iterator>
 #include <functional>
 #include "vcpkg_System.h"
+#include <set>
 
 namespace fs = std::tr2::sys;
 
@@ -279,16 +280,43 @@ namespace vcpkg
 
     static lint_status check_architecture(const std::string& expected_architecture, const std::vector<fs::path>& files)
     {
+        // static const std::regex machine_regex = std::regex(R"###([0-9A-F]+ machine \([^)]+\))###");
+
+        // Parenthesis is there to avoid some other occurrences of the word "machine". Those don't match the expected regex.
+        static const std::string machine_string_scan = "machine (";
+
         std::vector<file_and_arch> binaries_with_invalid_architecture;
+        std::set<fs::path> binaries_with_no_architecture(files.cbegin(), files.cend());
+
         for (const fs::path& f : files)
         {
-            const std::wstring cmd_line = Strings::wformat(LR"("%s" /headers "%s" | findstr machine)", DUMPBIN_EXE.native(), f.native());
+            const std::wstring cmd_line = Strings::wformat(LR"("%s" /headers "%s")", DUMPBIN_EXE.native(), f.native());
             System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
-            if (Strings::case_insensitive_ascii_find(ec_data.output, expected_architecture) == ec_data.output.end())
+            const std::string& s = ec_data.output;
+
+            for (size_t start, end, idx = s.find(machine_string_scan); idx != std::string::npos; idx = s.find(machine_string_scan, end))
             {
-                binaries_with_invalid_architecture.push_back({f, ec_data.output});
+                // Skip the space directly in front of "machine" and find the previous one. Get the index of the char after it.
+                // Go no further than a newline
+                start = std::max(s.find_last_of('\n', idx - 2) + 1, s.find_last_of(' ', idx - 2) + 1);
+
+                // Find the first close-parenthesis. Get the index of the char after it
+                // Go no futher than a newline
+                end = std::min(s.find_first_of('\n', idx) + 1, s.find_first_of(')', idx) + 1);
+
+                std::string machine_line(s.substr(start, end - start));
+
+                if (Strings::case_insensitive_ascii_find(machine_line, expected_architecture) != machine_line.end())
+                {
+                    binaries_with_no_architecture.erase(f);
+                }
+                else
+                {
+                    binaries_with_invalid_architecture.push_back({f, machine_line});
+                    break; // If one erroneous entry is found, we can abort this file
+                }
             }
         }
 
@@ -299,7 +327,20 @@ namespace vcpkg
             for (const file_and_arch& b : binaries_with_invalid_architecture)
             {
                 System::println("    %s", b.file.generic_string());
-                System::println("Expected %s, but was:\n %s", expected_architecture, b.actual_arch);
+                System::println("Expected %s, but was: %s", expected_architecture, b.actual_arch);
+            }
+            System::println("");
+
+            return lint_status::ERROR;
+        }
+
+        if (!binaries_with_no_architecture.empty())
+        {
+            System::println(System::color::warning, "Unable to detect architecture in the following files:");
+            System::println("");
+            for (const fs::path& b : binaries_with_no_architecture)
+            {
+                System::println("    %s", b.generic_string());
             }
             System::println("");
 

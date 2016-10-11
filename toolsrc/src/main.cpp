@@ -153,7 +153,7 @@ static void loadConfig()
     }
 }
 
-static System::Stopwatch g_timer;
+static System::Stopwatch2 g_timer;
 
 static std::string trim_path_from_command_line(const std::string& full_command_line)
 {

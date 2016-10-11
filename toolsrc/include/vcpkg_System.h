@@ -64,7 +64,7 @@ namespace vcpkg {namespace System
         return println(c, Strings::format(messageTemplate, messageArgs...).c_str());
     }
 
-    struct Stopwatch
+    struct Stopwatch2
     {
         int64_t start_time, end_time, freq;
 

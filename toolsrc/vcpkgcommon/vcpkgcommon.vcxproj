@@ -120,6 +120,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\Stopwatch.cpp" />
     <ClCompile Include="..\src\vcpkg_Checks.cpp" />
     <ClCompile Include="..\src\vcpkg_Files.cpp" />
     <ClCompile Include="..\src\vcpkg_Strings.cpp" />
@@ -128,6 +129,7 @@
   <ItemGroup>
     <ClInclude Include="..\include\expected.h" />
     <ClInclude Include="..\include\opt_bool.h" />
+    <ClInclude Include="..\include\Stopwatch.h" />
     <ClInclude Include="..\include\vcpkg_Checks.h" />
     <ClInclude Include="..\include\vcpkg_Files.h" />
     <ClInclude Include="..\include\vcpkg_Graphs.h" />
