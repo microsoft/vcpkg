@@ -32,6 +32,13 @@ function(vcpkg_configure_cmake)
         list(APPEND _csc_OPTIONS -DBUILD_SHARED_LIBS=ON)
     endif()
 
+    list(APPEND _csc_OPTIONS_RELEASE
+        "-DCMAKE_CXX_FLAGS_RELEASE=/MD /O2 /Ob2 /DNDEBUG /Zi"
+        "-DCMAKE_C_FLAGS_RELEASE=/MD /O2 /Ob2 /DNDEBUG /Zi"
+        "-DCMAKE_SHARED_LINKER_FLAGS_RELEASE=/DEBUG /INCREMENTAL:NO"
+        "-DCMAKE_EXE_LINKER_FLAGS_RELEASE=/DEBUG /INCREMENTAL:NO"
+    )
+
     message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
     vcpkg_execute_required_process(
