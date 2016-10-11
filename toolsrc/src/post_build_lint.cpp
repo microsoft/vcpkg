@@ -281,7 +281,9 @@ namespace vcpkg
     static lint_status check_architecture(const std::string& expected_architecture, const std::vector<fs::path>& files)
     {
         // static const std::regex machine_regex = std::regex(R"###([0-9A-F]+ machine \([^)]+\))###");
-        static const std::string machine_string_scan = "machine ("; // Parenthesis is there to avoid some other occurrences of the word "machine"
+
+        // Parenthesis is there to avoid some other occurrences of the word "machine". Those don't match the expected regex.
+        static const std::string machine_string_scan = "machine (";
 
         std::vector<file_and_arch> binaries_with_invalid_architecture;
         std::set<fs::path> binaries_with_no_architecture(files.cbegin(), files.cend());
@@ -296,11 +298,13 @@ namespace vcpkg
 
             for (size_t start, end, idx = s.find(machine_string_scan); idx != std::string::npos; idx = s.find(machine_string_scan, end))
             {
-                // Skip the space directly in front of "machine" and find the previous one. Get the index of the char after it
-                start = s.find_last_of(' ', idx - 2) + 1;
+                // Skip the space directly in front of "machine" and find the previous one. Get the index of the char after it.
+                // Go no further than a newline
+                start = std::max(s.find_last_of('\n', idx - 2) + 1, s.find_last_of(' ', idx - 2) + 1);
 
                 // Find the first close-parenthesis. Get the index of the char after it
-                end = s.find_first_of(')', idx) + 1;
+                // Go no futher than a newline
+                end = std::min(s.find_first_of('\n', idx) + 1, s.find_first_of(')', idx) + 1);
 
                 std::string machine_line(s.substr(start, end - start));
 
