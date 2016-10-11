@@ -8,11 +8,11 @@
 
 include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/double-conversion-master)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/double-conversion-d4d68e4e788bec89d55a6a3e33af674087837c82)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/google/double-conversion/archive/master.zip"
-    FILENAME "doubleconversion-201.zip"
-    SHA512 8ce810f9957a99b761e2058d00a17def65ba52e55c8ab95e96947a98a31c199748dc707c9d1883783d970e8f19ac9593ae20a5376e9cfdd53a12cf88eccdbb81
+    URLS "https://github.com/google/double-conversion/archive/d4d68e4e788bec89d55a6a3e33af674087837c82.zip"
+    FILENAME "d4d68e4e788bec89d55a6a3e33af674087837c82.zip"
+    SHA512 1406dc22b4ea71e1a2490f96cfed3230e122b97607c83ba106df4e90c7e4bfdcfc136c88741e7f1127237b38b4944d462ec5a4627a71f5ea3fe14afbcc64cd44
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
