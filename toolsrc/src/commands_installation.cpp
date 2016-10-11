@@ -31,7 +31,7 @@ namespace vcpkg
                                                       port_dir.generic_wstring(),
                                                       ports_cmake_script_path.generic_wstring());
 
-        System::Stopwatch timer;
+        System::Stopwatch2 timer;
         timer.start();
         int return_code = System::cmd_execute(command);
         timer.stop();
