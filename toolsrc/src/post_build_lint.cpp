@@ -13,7 +13,7 @@ namespace vcpkg
     enum class lint_status
     {
         SUCCESS = 0,
-        ERROR = 1
+        ERROR_DETECTED = 1
     };
 
     static const fs::path DUMPBIN_EXE = R"(%VS140COMNTOOLS%\..\..\VC\bin\dumpbin.exe)";
@@ -51,7 +51,7 @@ namespace vcpkg
         if (!fs::exists(include_dir) || fs::is_empty(include_dir))
         {
             System::println(System::color::warning, "The folder /include is empty. This indicates the library was not correctly installed.");
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         return lint_status::SUCCESS;
@@ -72,7 +72,7 @@ namespace vcpkg
             System::println(System::color::warning, "Include files should not be duplicated into the /debug/include directory. If this cannot be disabled in the project cmake, use\n"
                             "    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)"
             );
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         return lint_status::SUCCESS;
@@ -85,7 +85,7 @@ namespace vcpkg
         if (fs::exists(debug_share) && !fs::is_empty(debug_share))
         {
             System::println(System::color::warning, "No files should be present in /debug/share");
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         return lint_status::SUCCESS;
@@ -97,7 +97,7 @@ namespace vcpkg
         if (fs::exists(lib_cmake))
         {
             System::println(System::color::warning, "The /lib/cmake folder should be moved to just /cmake");
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         return lint_status::SUCCESS;
@@ -116,7 +116,7 @@ namespace vcpkg
         {
             System::println(System::color::warning, "The following cmake files were found outside /share/%s. Please place cmake files in /share/%s.", spec.name(), spec.name());
             print_vector_of_files(misplaced_cmake_files);
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         return lint_status::SUCCESS;
@@ -128,7 +128,7 @@ namespace vcpkg
         if (fs::exists(lib_cmake_debug))
         {
             System::println(System::color::warning, "The /debug/lib/cmake folder should be moved to just /debug/cmake");
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         return lint_status::SUCCESS;
@@ -144,7 +144,7 @@ namespace vcpkg
         {
             System::println(System::color::warning, "\nThe following dlls were found in /lib and /debug/lib. Please move them to /bin or /debug/bin, respectively.");
             print_vector_of_files(dlls);
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         return lint_status::SUCCESS;
@@ -184,7 +184,7 @@ namespace vcpkg
             System::println("\n    file(COPY ${CURRENT_BUILDTREES_DIR}/%s DESTINATION ${CURRENT_PACKAGES_DIR}/share/%s)\n"
                             "    file(RENAME ${CURRENT_PACKAGES_DIR}/share/%s/%s ${CURRENT_PACKAGES_DIR}/share/%s/copyright)",
                             relative_path.generic_string(), spec.name(), spec.name(), found_file.filename().generic_string(), spec.name());
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         if (potential_copyright_files.size() > 1)
@@ -196,7 +196,7 @@ namespace vcpkg
         const fs::path current_packages_dir = paths.packages / spec.dir();
         System::println("    %s/share/%s/copyright", current_packages_dir.generic_string(), spec.name());
 
-        return lint_status::ERROR;
+        return lint_status::ERROR_DETECTED;
     }
 
     static lint_status check_for_exes(const package_spec& spec, const vcpkg_paths& paths)
@@ -209,7 +209,7 @@ namespace vcpkg
         {
             System::println(System::color::warning, "The following EXEs were found in /bin and /debug/bin. EXEs are not valid distribution targets.");
             print_vector_of_files(exes);
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         return lint_status::SUCCESS;
@@ -235,7 +235,7 @@ namespace vcpkg
             System::println(System::color::warning, "The following DLLs have no exports:");
             print_vector_of_files(dlls_with_no_exports);
             System::println(System::color::warning, "DLLs without any exports are likely a bug in the build script.");
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         return lint_status::SUCCESS;
@@ -266,7 +266,7 @@ namespace vcpkg
             System::println(System::color::warning, "The following DLLs do not have the App Container bit set:");
             print_vector_of_files(dlls_with_improper_uwp_bit);
             System::println(System::color::warning, "This bit is required for Windows Store apps.");
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         return lint_status::SUCCESS;
@@ -331,7 +331,7 @@ namespace vcpkg
             }
             System::println("");
 
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         if (!binaries_with_no_architecture.empty())
@@ -344,7 +344,7 @@ namespace vcpkg
             }
             System::println("");
 
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         return lint_status::SUCCESS;
@@ -359,7 +359,7 @@ namespace vcpkg
 
         System::println(System::color::warning, "DLLs should not be present in a static build, but the following DLLs were found:");
         print_vector_of_files(dlls);
-        return lint_status::ERROR;
+        return lint_status::ERROR_DETECTED;
     }
 
     static void operator +=(size_t& left, const lint_status& right)
