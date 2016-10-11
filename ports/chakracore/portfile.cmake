@@ -9,7 +9,7 @@ vcpkg_download_distfile(ARCHIVE_FILE
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
-message(STATUS "Patching JavascriptPromise.cpp for PR#1440...")
+message(STATUS "Patching JavascriptPromise.cpp for https://github.com/Microsoft/ChakraCore/issues/1429")
 vcpkg_execute_required_process(
 	COMMAND ${POWERSHELL} -command (gc lib/runtime/library/JavascriptPromise.cpp -encoding utf7) -replace('«', '^<^<') -replace('»', '^>^>') | Set-Content lib/runtime/library/JavascriptPromise.cpp
 	WORKING_DIRECTORY ${SOURCE_PATH}
