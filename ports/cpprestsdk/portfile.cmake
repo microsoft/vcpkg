@@ -41,7 +41,6 @@ vcpkg_configure_cmake(
         -DCASA_INSTALL_HEADERS=OFF
 )
 
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 file(COPY ${CURRENT_BUILDTREES_DIR}/src/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/cpprestsdk)

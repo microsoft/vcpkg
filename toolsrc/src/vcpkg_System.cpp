@@ -19,14 +19,14 @@ namespace vcpkg {namespace System
     int cmd_execute(const wchar_t* cmd_line)
     {
         // Basically we are wrapping it in quotes
-        const std::wstring& actual_cmd_line = Strings::format(LR"###("%s")###", cmd_line);
+        const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
         int exit_code = _wsystem(actual_cmd_line.c_str());
         return exit_code;
     }
 
     exit_code_and_output cmd_execute_and_capture_output(const wchar_t* cmd_line)
     {
-        const std::wstring& actual_cmd_line = Strings::format(LR"###("%s")###", cmd_line);
+        const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
 
         std::string output;
         char buf[1024];
@@ -90,20 +90,20 @@ namespace vcpkg {namespace System
         return ret;
     }
 
-    void Stopwatch::start()
+    void Stopwatch2::start()
     {
         static_assert(sizeof(start_time) == sizeof(LARGE_INTEGER), "");
 
         QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&start_time));
     }
 
-    void Stopwatch::stop()
+    void Stopwatch2::stop()
     {
         QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&end_time));
         QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&freq));
     }
 
-    double Stopwatch::microseconds() const
+    double Stopwatch2::microseconds() const
     {
         return (reinterpret_cast<const LARGE_INTEGER*>(&end_time)->QuadPart -
             reinterpret_cast<const LARGE_INTEGER*>(&start_time)->QuadPart) * 1000000.0 / reinterpret_cast<const LARGE_INTEGER*>(&freq)->QuadPart;

@@ -5,8 +5,6 @@
 #include "vcpkg_System.h"
 #include "package_spec.h"
 
-namespace fs = std::tr2::sys;
-
 namespace vcpkg
 {
     expected<vcpkg_paths> vcpkg_paths::create(const fs::path& vcpkg_root_dir)
@@ -54,6 +52,21 @@ namespace vcpkg
 
     fs::path vcpkg_paths::port_dir(const package_spec& spec) const
     {
-        return this->ports / spec.name;
+        return this->ports / spec.name();
+    }
+
+    bool vcpkg_paths::is_valid_triplet(const triplet& t) const
+    {
+        auto it = fs::directory_iterator(this->triplets);
+        for (; it != fs::directory_iterator(); ++it)
+        {
+            std::string triplet_file_name = it->path().stem().generic_u8string();
+            if (t.canonical_name() == triplet_file_name) // TODO: fuzzy compare
+            {
+                //t.value = triplet_file_name; // NOTE: uncomment when implementing fuzzy compare
+                return true;
+            }
+        }
+        return false;
     }
 }

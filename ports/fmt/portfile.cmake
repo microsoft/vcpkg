@@ -11,9 +11,9 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DFMT_TEST=OFF
+        -DFMT_DOC=OFF
 )
 
-vcpkg_build_cmake()
 
 vcpkg_install_cmake()
 file(INSTALL ${SOURCE_PATH}/LICENSE.rst DESTINATION ${CURRENT_PACKAGES_DIR}/share/fmt RENAME copyright)

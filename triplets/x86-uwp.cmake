@@ -1,6 +1,7 @@
-set(CMAKE_SYSTEM_NAME WindowsStore)
-set(CMAKE_SYSTEM_VERSION 10.0)
+set(VCPKG_TARGET_ARCHITECTURE x86)
+set(VCPKG_CRT_LINKAGE dynamic)
+set(VCPKG_LIBRARY_LINKAGE dynamic)
 
-if(NOT CMAKE_GENERATOR MATCHES "Visual Studio 14 2015")
-    message(FATAL_ERROR "Visual Studio Generator must be used to target UWP")
-endif()
+set(VCPKG_CMAKE_SYSTEM_NAME WindowsStore)
+set(VCPKG_CMAKE_SYSTEM_VERSION 10.0)
+set(VCPKG_REQUIRE_GENERATOR "Visual Studio 14 2015 Win64")

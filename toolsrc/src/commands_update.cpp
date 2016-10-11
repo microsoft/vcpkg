@@ -5,8 +5,11 @@
 
 namespace vcpkg
 {
-    void update_command(const vcpkg_cmd_arguments& /*args*/, const vcpkg_paths& paths)
+    void update_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
+        args.check_exact_arg_count(0);
+        System::println("Using local portfile versions. To update the local portfiles, use `git pull`.");
+
         auto status_db = database_load_check(paths);
 
         std::unordered_map<std::string, std::string> src_names_to_versions;
@@ -36,7 +39,7 @@ namespace vcpkg
         {
             if (pgh->state == install_state_t::not_installed && pgh->want == want_t::purge)
                 continue;
-            auto it = src_names_to_versions.find(pgh->package.name);
+            auto it = src_names_to_versions.find(pgh->package.spec.name());
             if (it == src_names_to_versions.end())
             {
                 // Package was not installed from portfile

@@ -146,6 +146,7 @@
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\commands_help.cpp" />
     <ClCompile Include="..\src\post_build_lint.cpp" />
+    <ClCompile Include="..\src\vcpkg_Input.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\vcpkg_cmd_arguments.h" />
@@ -153,6 +154,7 @@
     <ClInclude Include="..\include\vcpkg_Dependencies.h" />
     <ClInclude Include="..\include\vcpkg_Environment.h" />
     <ClInclude Include="..\include\post_build_lint.h" />
+    <ClInclude Include="..\include\vcpkg_Input.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\vcpkgcommon\vcpkgcommon.vcxproj">

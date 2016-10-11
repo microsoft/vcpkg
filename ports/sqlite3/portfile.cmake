@@ -13,7 +13,6 @@ vcpkg_configure_cmake(
         -DSOURCE=${CURRENT_BUILDTREES_DIR}/src/sqlite-amalgamation-3120200
 )
 
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/sqlite3/copyright "SQLite is in the Public Domain.\nhttp://www.sqlite.org/copyright.html\n")

@@ -419,7 +419,7 @@ true
         const fs::path vcpkg_metrics_txt_path = temp_folder_path / ("vcpkg" + GenerateRandomUUID() + ".txt");
         std::ofstream(vcpkg_metrics_txt_path) << payload;
 
-        const std::wstring cmdLine = Strings::format(L"start %s %s", temp_folder_path_exe.native(), vcpkg_metrics_txt_path.native());
+        const std::wstring cmdLine = Strings::wformat(L"start %s %s", temp_folder_path_exe.native(), vcpkg_metrics_txt_path.native());
         System::cmd_execute(cmdLine);
     }
 }

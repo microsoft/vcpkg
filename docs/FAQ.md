@@ -3,15 +3,20 @@
 Vcpkg is a tool to acquire C++ open source library and rebuild them on Windows. 
 
 ## Can I contribute a new library?
-Yes! Start out by reading our [contribution guidelines](CONTRIBUTING.md).
+Yes! Start out by reading our [contribution guidelines](../CONTRIBUTING.md).
 
 ## Can Vcpkg create pre-built binary packages? What is the binary format used by Vcpkg?
 In the preview release, we do not have a supported way to distribute individual binary packages. This avoids the issue of trying to use a specific pre-built package against differently built dependencies. As such, we have also not specified a stable format for the built library packages.
 
 We instead recommend copying the entire system as a whole (which ensures that every package and its dependencies stay in sync with each other).
 
-## How will the libs will be updated locally?
+## How do I update libraries?
 The `vcpkg update` command lists all packages which are out-of-sync with your current portfiles. To update a package, follow the instructions in the command.
+
+## How do I get more libraries?
+The list of libraries is enumerated from the [`ports\`](../ports) directory. By design, you can add and remove libraries from this directory as you see fit for yourself or your company (see [Example #2](EXAMPLES.md#example-2)).
+
+We recommend cloning directly from [GitHub](https://github.com/microsoft/vcpkg) and using `git pull` to update the list of portfiles. Once you've updated your portfiles, `vcpkg update` will indicate any installed libraries that are now out of date.
 
 ## Can I build a private library with this tool?
 Yes. Follow [Example #2](EXAMPLES.md#example-2) for creating a portfile using a fake URL. Then, either pre-seed the `downloads\` folder with a zip containing your private sources or replace the normal `vcpkg_download_distfile` and `vcpkg_extract_source_archive` with functions that unpack your source code.
@@ -19,13 +24,13 @@ Yes. Follow [Example #2](EXAMPLES.md#example-2) for creating a portfile using a 
 ## Can I use a prebuilt private library with this tool?
 Yes. The `portfile.cmake` for a library is fundamentally a script that places the headers and binaries into the correct arrangement in the `${CURRENT_PACKAGES_DIR}`, so to pull in prebuilt binaries you can write a portfile which directly downloads and arranges the files.
 
-To see an example of this, look at the [`opengl`](../ports/opengl/portfile.cmake) package which simply copies files out of the Windows SDK.
+To see an example of this, look at [`ports\opengl\portfile.cmake`](../ports/opengl/portfile.cmake) package which simply copies files out of the Windows SDK.
 
 ## Which platforms I can target with Vcpkg?
 We currently target Windows Desktop (x86 and x64) as well as the Universal Windows Platform (x86, x64, and ARM). See `vcpkg help triplet` for the current list.
 
 ## Does `vcpkg.exe` run on Linux/OSX?
-No, for this preview we are focusing on Windows as a host platform. If you'd be interested in having Vcpkg run on Linux or OSX, please let us know in an [issue](https://github.com/microsoft/vcpkg/issues).
+No, for this preview we are focusing on Windows as a host platform. If you'd be interested in having Vcpkg run on Linux or OSX, please let us know in [this issue](https://github.com/microsoft/vcpkg/issues/57).
 
 ## How do I use different versions of a library on one machine?
 Within a single instance of Vcpkg (e.g. one set of `installed\`, `packages\`, `ports\` and so forth), you can only have one version of a library installed (otherwise, the headers would conflict with each other!). This is because a package in Vcpkg corresponds to the `X-dev` or `X-devel` packages in other system package managers.
@@ -48,13 +53,8 @@ By saving the changes to the portfile (and checking them in), you'll get the sam
 ## How is CMake used internally by Vcpkg?
 Vcpkg uses CMake internally as a build scripting language. This is because CMake is already an extremely common build system for cross-platform open source libraries and is becoming very popular for C++ projects in general. It is easy to acquire on Windows (does not require system-wide installation) and reasonably legible for unfamiliar users.
 
-## How does my list of libraries get updated?
-The list of libraries is enumerated from the `ports\` directory. By design, you can add and remove libraries from this directory as you see fit for yourself or your company (see [Example #2](EXAMPLES.md#example-2)).
-
-We recommend cloning directly from [GitHub](https://github.com/microsoft/vcpkg) and using `git pull` to update the list of portfiles. Once you've updated your portfiles, `vcpkg update` will indicate any installed libraries that are now out of date.
-
-## Will it support also downloading compiled binaries from a public or private server?
-We do plan to eventually support downloading precompiled binaries, similar to other systems package managers.
+## Will Vcpkg support downloading compiled binaries from a public or private server?
+We do plan to eventually support downloading precompiled binaries, similar to other system package managers.
 
 In a corporate scenario, we currently recommend building the libraries once and distributing the entire vcpkg root directory to everyone else on the project through some raw file transport such as a network share or HTTP host.
 
@@ -64,7 +64,7 @@ We plan to only support Visual Studio 2015 and above.
 ## Can I acquire my package's sources by Git url+tag?
 Yes, however we prefer compressed archives of the specific release/commit since the internal downloads and build trees are meant to be read only. Github provides archives for every commit, tag, and branch, so it's always possible to perform this substitution for repositories hosted there.
 
-See `ports\cpprestsdk\portfile.cmake` and `ports\opencv\portfile.cmake` for examples of using git directly.
+See [`ports\cpprestsdk\portfile.cmake`](../ports/cpprestsdk/portfile.cmake) for an example of using git directly.
 
 ## Why not NuGet?
 NuGet is a package manager for .NET libraries with a strong dependency on MSBuild. It does not meet the specific needs of Native C++ customers in at least three ways.

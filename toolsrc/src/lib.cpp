@@ -133,11 +133,6 @@ static std::string get_fullpkgname_from_listfile(const fs::path& path)
     return ret;
 }
 
-static fs::path prefix_path_for_package(const vcpkg_paths& paths, const BinaryParagraph& pgh)
-{
-    return paths.package_dir({pgh.name, pgh.target_triplet});
-}
-
 static void write_update(const vcpkg_paths& paths, const StatusParagraph& p)
 {
     static int update_id = 0;
@@ -154,12 +149,14 @@ static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryPar
 {
     std::fstream listfile(listfile_path(paths, bpgh), std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
 
-    auto package_prefix_path = prefix_path_for_package(paths, bpgh);
+    auto package_prefix_path = paths.package_dir(bpgh.spec);
     auto prefix_length = package_prefix_path.native().size();
 
+    const triplet& target_triplet = bpgh.spec.target_triplet();
+    const std::string& target_triplet_as_string = target_triplet.canonical_name();
     std::error_code ec;
-    fs::create_directory(paths.installed / bpgh.target_triplet.value, ec);
-    listfile << bpgh.target_triplet << "\n";
+    fs::create_directory(paths.installed / target_triplet_as_string, ec);
+    listfile << target_triplet << "\n";
 
     for (auto it = fs::recursive_directory_iterator(package_prefix_path); it != fs::recursive_directory_iterator(); ++it)
     {
@@ -171,7 +168,7 @@ static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryPar
         }
 
         auto suffix = it->path().generic_u8string().substr(prefix_length + 1);
-        auto target = paths.installed / bpgh.target_triplet.value / suffix;
+        auto target = paths.installed / target_triplet_as_string / suffix;
 
         auto status = it->status(ec);
         if (ec)
@@ -187,7 +184,7 @@ static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryPar
                 System::println(System::color::error, "failed: %s: %s", target.u8string(), ec.message());
             }
 
-            listfile << bpgh.target_triplet << "/" << suffix << "\n";
+            listfile << target_triplet << "/" << suffix << "\n";
         }
         else if (fs::is_regular_file(status))
         {
@@ -196,7 +193,7 @@ static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryPar
             {
                 System::println(System::color::error, "failed: %s: %s", target.u8string(), ec.message());
             }
-            listfile << bpgh.target_triplet << "/" << suffix << "\n";
+            listfile << target_triplet << "/" << suffix << "\n";
         }
         else if (!fs::status_known(status))
         {
@@ -213,35 +210,40 @@ static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryPar
 std::vector<std::string> vcpkg::get_unmet_package_dependencies(const vcpkg_paths& paths, const package_spec& spec, const StatusParagraphs& status_db)
 {
     std::vector<std::unordered_map<std::string, std::string>> pghs;
-    const fs::path packages_dir_control_file_path = paths.package_dir(spec) / "CONTROL";
-
-    if (fs::exists(packages_dir_control_file_path))
     {
-        try
-        {
-            pghs = get_paragraphs(packages_dir_control_file_path);
-        }
-        catch (std::runtime_error)
-        {
-            // ??
-        }
+        const fs::path packages_dir_control_file_path = paths.package_dir(spec) / "CONTROL";
 
-        Checks::check_throw(pghs.size() == 1, "Invalid control file for package");
-        return BinaryParagraph(pghs[0]).depends;
+        auto control_contents_maybe = Files::get_contents(packages_dir_control_file_path);
+        if (auto control_contents = control_contents_maybe.get())
+        {
+            try
+            {
+                pghs = parse_paragraphs(*control_contents);
+            }
+            catch (std::runtime_error)
+            {
+            }
+            Checks::check_exit(pghs.size() == 1, "Invalid control file at %s", packages_dir_control_file_path.string());
+            return BinaryParagraph(pghs[0]).depends;
+        }
     }
 
     const fs::path ports_dir_control_file_path = paths.port_dir(spec) / "CONTROL";
-    try
+    auto control_contents_maybe = Files::get_contents(ports_dir_control_file_path);
+    if (auto control_contents = control_contents_maybe.get())
     {
-        pghs = get_paragraphs(ports_dir_control_file_path);
-    }
-    catch (std::runtime_error)
-    {
-        // ??
+        try
+        {
+            pghs = parse_paragraphs(*control_contents);
+        }
+        catch (std::runtime_error)
+        {
+        }
+        Checks::check_exit(pghs.size() == 1, "Invalid control file at %s", ports_dir_control_file_path.string());
+        return SourceParagraph(pghs[0]).depends;
     }
 
-    Checks::check_exit(pghs.size() == 1, "Invalid control file for package %s", spec);
-    return SourceParagraph(pghs[0]).depends;
+    Checks::exit_with_message("Could not find package named %s", spec);
 }
 
 void vcpkg::install_package(const vcpkg_paths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs& status_db)
@@ -252,7 +254,7 @@ void vcpkg::install_package(const vcpkg_paths& paths, const BinaryParagraph& bin
     spgh.state = install_state_t::half_installed;
     for (const std::string& dependency : spgh.package.depends)
     {
-        if (status_db.find_installed(dependency, spgh.package.target_triplet) == status_db.end())
+        if (status_db.find_installed(dependency, spgh.package.spec.target_triplet()) == status_db.end())
         {
             std::abort();
         }
@@ -292,12 +294,12 @@ static deinstall_plan deinstall_package_plan(
     {
         if (inst_pkg->want != want_t::install)
             continue;
-        if (inst_pkg->package.target_triplet != pkg.target_triplet)
+        if (inst_pkg->package.spec.target_triplet() != pkg.spec.target_triplet())
             continue;
 
         const auto& deps = inst_pkg->package.depends;
 
-        if (std::find(deps.begin(), deps.end(), pkg.name) != deps.end())
+        if (std::find(deps.begin(), deps.end(), pkg.spec.name()) != deps.end())
         {
             dependencies_out.push_back(inst_pkg.get());
         }
@@ -311,7 +313,7 @@ static deinstall_plan deinstall_package_plan(
 
 void vcpkg::deinstall_package(const vcpkg_paths& paths, const package_spec& spec, StatusParagraphs& status_db)
 {
-    auto package_it = status_db.find(spec.name, spec.target_triplet);
+    auto package_it = status_db.find(spec.name(), spec.target_triplet());
     if (package_it == status_db.end())
     {
         System::println(System::color::success, "Package %s is not installed", spec);
@@ -500,7 +502,7 @@ namespace
 
 void vcpkg::binary_import(const vcpkg_paths& paths, const fs::path& include_directory, const fs::path& project_directory, const BinaryParagraph& control_file_data)
 {
-    fs::path library_destination_path = prefix_path_for_package(paths, control_file_data);
+    fs::path library_destination_path = paths.package_dir(control_file_data.spec);
     fs::create_directory(library_destination_path);
     place_library_files_in(include_directory, project_directory, library_destination_path);
 

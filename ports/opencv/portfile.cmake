@@ -11,10 +11,15 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/opencv-installation-options.patch"
 )
+file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty/libjpeg ${SOURCE_PATH}/3rdparty/libpng ${SOURCE_PATH}/3rdparty/zlib ${SOURCE_PATH}/3rdparty/libtiff)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DBUILD_ZLIB=OFF
+        -DBUILD_TIFF=OFF
+        -DBUILD_JPEG=OFF
+        -DBUILD_PNG=OFF
         -DINSTALL_CREATE_DISTRIB=ON
         -DBUILD_opencv_python2=OFF
         -DBUILD_opencv_python3=OFF
@@ -37,7 +42,6 @@ vcpkg_configure_cmake(
         -DINSTALL_OTHER=OFF
 )
 
-# vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 file(READ ${CURRENT_PACKAGES_DIR}/debug/share/opencv/OpenCVModules-debug.cmake OPENCV_DEBUG_MODULE)

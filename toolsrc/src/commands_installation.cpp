@@ -7,6 +7,7 @@
 #include "post_build_lint.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Dependencies.h"
+#include "vcpkg_Input.h"
 
 namespace vcpkg
 {
@@ -22,14 +23,15 @@ namespace vcpkg
     static void build_internal(const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir)
     {
         const fs::path ports_cmake_script_path = paths.ports_cmake;
-        const std::wstring command = Strings::format(LR"("%%VS140COMNTOOLS%%..\..\VC\vcvarsall.bat" %s && cmake -DCMD=BUILD -DPORT=%s -DTARGET_TRIPLET=%s "-DCURRENT_PORT_DIR=%s/." -P "%s")",
-                                                     Strings::utf8_to_utf16(spec.target_triplet.architecture()),
-                                                     Strings::utf8_to_utf16(spec.name),
-                                                     Strings::utf8_to_utf16(spec.target_triplet.value),
-                                                     port_dir.generic_wstring(),
-                                                     ports_cmake_script_path.generic_wstring());
+        auto&& target_triplet = spec.target_triplet();
+        const std::wstring command = Strings::wformat(LR"("%%VS140COMNTOOLS%%..\..\VC\vcvarsall.bat" %s && cmake -DCMD=BUILD -DPORT=%s -DTARGET_TRIPLET=%s "-DCURRENT_PORT_DIR=%s/." -P "%s")",
+                                                      Strings::utf8_to_utf16(target_triplet.architecture()),
+                                                      Strings::utf8_to_utf16(spec.name()),
+                                                      Strings::utf8_to_utf16(target_triplet.canonical_name()),
+                                                      port_dir.generic_wstring(),
+                                                      ports_cmake_script_path.generic_wstring());
 
-        System::Stopwatch timer;
+        System::Stopwatch2 timer;
         timer.start();
         int return_code = System::cmd_execute(command);
         timer.stop();
@@ -37,15 +39,22 @@ namespace vcpkg
 
         if (return_code != 0)
         {
-            System::println(System::color::error, "Error: build command failed");
+            System::println(System::color::error, "Error: building package %s failed", to_string(spec));
+            System::println("Please ensure sure you're using the latest portfiles with `vcpkg update`, then\n"
+                            "submit an issue at https://github.com/Microsoft/vcpkg/issues including:\n"
+                            "  Package: %s\n"
+                            "  Vcpkg version: %s\n"
+                            "\n"
+                            "Additionally, attach any relevant sections from the log files above."
+                            , to_string(spec), version());
             TrackProperty("error", "build failed");
-            TrackProperty("build_error", std::to_string(return_code));
+            TrackProperty("build_error", to_string(spec));
             exit(EXIT_FAILURE);
         }
 
         perform_all_checks(spec, paths);
 
-        create_binary_control_file(paths, port_dir, spec.target_triplet);
+        create_binary_control_file(paths, port_dir, target_triplet);
 
         // const fs::path port_buildtrees_dir = paths.buildtrees / spec.name;
         // delete_directory(port_buildtrees_dir);
@@ -53,14 +62,17 @@ namespace vcpkg
 
     static void build_internal(const package_spec& spec, const vcpkg_paths& paths)
     {
-        return build_internal(spec, paths, paths.ports / spec.name);
+        return build_internal(spec, paths, paths.ports / spec.name());
     }
 
     void install_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
+        static const std::string example = create_example_string("install zlib zlib:x64-windows curl boost");
+        args.check_min_arg_count(1, example.c_str());
         StatusParagraphs status_db = database_load_check(paths);
 
-        std::vector<package_spec> specs = args.parse_all_arguments_as_package_specs(default_target_triplet);
+        std::vector<package_spec> specs = Input::check_and_get_package_specs(args.command_arguments, default_target_triplet, example.c_str());
+        Input::check_triplets(specs, paths);
         std::vector<package_spec> install_plan = Dependencies::create_dependency_ordered_install_plan(paths, specs, status_db);
         Checks::check_exit(!install_plan.empty(), "Install plan cannot be empty");
         std::string specs_string = to_string(install_plan[0]);
@@ -74,7 +86,7 @@ namespace vcpkg
 
         for (const package_spec& spec : install_plan)
         {
-            if (status_db.find_installed(spec.name, spec.target_triplet) != status_db.end())
+            if (status_db.find_installed(spec.name(), spec.target_triplet()) != status_db.end())
             {
                 System::println(System::color::success, "Package %s is already installed", spec);
                 continue;
@@ -113,13 +125,16 @@ namespace vcpkg
 
     void build_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
-        // Installing multiple packages leads to unintuitive behavior if one of them depends on another.
-        // Allowing only 1 package for now. 
-        args.check_max_args(1);
+        static const std::string example = create_example_string("build zlib:x64-windows");
 
+        // Installing multiple packages leads to unintuitive behavior if one of them depends on another.
+        // Allowing only 1 package for now.
+
+        args.check_exact_arg_count(1, example.c_str());
         StatusParagraphs status_db = database_load_check(paths);
 
-        const package_spec spec = args.parse_all_arguments_as_package_specs(default_target_triplet).at(0);
+        const package_spec spec = Input::check_and_get_package_spec(args.command_arguments.at(0), default_target_triplet, example.c_str());
+        Input::check_triplet(spec.target_triplet(), paths);
         std::unordered_set<package_spec> unmet_dependencies = Dependencies::find_unmet_dependencies(paths, spec, status_db);
         if (!unmet_dependencies.empty())
         {
@@ -141,16 +156,13 @@ namespace vcpkg
 
     void build_external_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
-        if (args.command_arguments.size() != 2)
-        {
-            System::println(System::color::error, "Error: buildexternal requires the package name and the directory containing the CONTROL file");
-            print_example(R"(buildexternal mylib C:\path\to\mylib\)");
-            exit(EXIT_FAILURE);
-        }
+        static const std::string example = create_example_string(R"(build_external zlib2 C:\path\to\dir\with\controlfile\)");
+        args.check_exact_arg_count(2, example.c_str());
 
         expected<package_spec> current_spec = package_spec::from_string(args.command_arguments[0], default_target_triplet);
         if (auto spec = current_spec.get())
         {
+            Input::check_triplet(spec->target_triplet(), paths);
             Environment::ensure_utilities_on_path(paths);
             const fs::path port_dir = args.command_arguments.at(1);
             build_internal(*spec, paths, port_dir);

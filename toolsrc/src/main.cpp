@@ -11,6 +11,7 @@
 #include <Shlobj.h>
 #include "vcpkg_Files.h"
 #include "vcpkg_System.h"
+#include "vcpkg_Input.h"
 
 using namespace vcpkg;
 
@@ -70,16 +71,16 @@ static void inner(const vcpkg_cmd_arguments& args)
     }
 
     triplet default_target_triplet;
-    if(args.target_triplet != nullptr)
+    if (args.target_triplet != nullptr)
     {
-        default_target_triplet = {*args.target_triplet};
+        default_target_triplet = triplet::from_canonical_name(*args.target_triplet);
     }
     else
     {
         const auto vcpkg_default_triplet_env = System::wdupenv_str(L"VCPKG_DEFAULT_TRIPLET");
-        if(!vcpkg_default_triplet_env.empty())
+        if (!vcpkg_default_triplet_env.empty())
         {
-            default_target_triplet = {Strings::utf16_to_utf8(vcpkg_default_triplet_env)};
+            default_target_triplet = triplet::from_canonical_name(Strings::utf16_to_utf8(vcpkg_default_triplet_env));
         }
         else
         {
@@ -87,13 +88,7 @@ static void inner(const vcpkg_cmd_arguments& args)
         }
     }
 
-    if(!default_target_triplet.validate(paths))
-    {
-        System::println(System::color::error, "Error: invalid triplet: %s", default_target_triplet.value);
-        TrackProperty("error", "invalid triplet: " + default_target_triplet.value);
-        help_topic_valid_triplet(paths);
-        exit(EXIT_FAILURE);
-    }
+    Input::check_triplet(default_target_triplet, paths);
 
     if (auto command_function = find_command(args.command, get_available_commands_type_a()))
     {
@@ -158,7 +153,7 @@ static void loadConfig()
     }
 }
 
-static System::Stopwatch g_timer;
+static System::Stopwatch2 g_timer;
 
 static std::string trim_path_from_command_line(const std::string& full_command_line)
 {

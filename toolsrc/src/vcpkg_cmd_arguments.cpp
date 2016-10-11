@@ -166,49 +166,51 @@ namespace vcpkg
         return output;
     }
 
-    void vcpkg_cmd_arguments::check_max_args(size_t arg_count, const char* example_text) const
+    void vcpkg_cmd_arguments::check_max_arg_count(const size_t expected_arg_count) const
     {
-        if (command_arguments.size() > arg_count)
+        return check_max_arg_count(expected_arg_count, "");
+    }
+
+    void vcpkg_cmd_arguments::check_min_arg_count(const size_t expected_arg_count) const
+    {
+        return check_min_arg_count(expected_arg_count, "");
+    }
+
+    void vcpkg_cmd_arguments::check_exact_arg_count(const size_t expected_arg_count) const
+    {
+        return check_exact_arg_count(expected_arg_count, "");
+    }
+
+    void vcpkg_cmd_arguments::check_max_arg_count(const size_t expected_arg_count, const char* example_text) const
+    {
+        const size_t actual_arg_count = command_arguments.size();
+        if (actual_arg_count > expected_arg_count)
         {
-            System::println(System::color::error, "Error: too many arguments to command %s", command);
-            if (example_text != nullptr)
-                print_example(example_text);
-            else
-                print_usage();
+            System::println(System::color::error, "Error: `%s` requires at most %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
+            System::print(example_text);
             exit(EXIT_FAILURE);
         }
     }
 
-    std::vector<package_spec> vcpkg_cmd_arguments::parse_all_arguments_as_package_specs(const triplet& default_target_triplet, const char* example_text) const
+    void vcpkg_cmd_arguments::check_min_arg_count(const size_t expected_arg_count, const char* example_text) const
     {
-        size_t arg_count = command_arguments.size();
-        if (arg_count < 1)
+        const size_t actual_arg_count = command_arguments.size();
+        if (actual_arg_count < expected_arg_count)
         {
-            System::println(System::color::error, "Error: %s requires one or more package specifiers", this->command);
-            if (example_text == nullptr)
-                print_example(Strings::format("%s zlib zlib:x64-windows curl boost", this->command).c_str());
-            else
-                print_example(example_text);
+            System::println(System::color::error, "Error: `%s` requires at least %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
+            System::print(example_text);
             exit(EXIT_FAILURE);
         }
-        std::vector<package_spec> specs;
-        specs.reserve(arg_count);
+    }
 
-        for (const std::string& command_argument : command_arguments)
+    void vcpkg_cmd_arguments::check_exact_arg_count(const size_t expected_arg_count, const char* example_text) const
+    {
+        const size_t actual_arg_count = command_arguments.size();
+        if (actual_arg_count != expected_arg_count)
         {
-            expected<package_spec> current_spec = package_spec::from_string(command_argument, default_target_triplet);
-            if (auto spec = current_spec.get())
-            {
-                specs.push_back(std::move(*spec));
-            }
-            else
-            {
-                System::println(System::color::error, "Error: %s: %s", current_spec.error_code().message(), command_argument);
-                print_example(Strings::format("%s zlib:x64-windows", this->command).c_str());
-                exit(EXIT_FAILURE);
-            }
+            System::println(System::color::error, "Error: `%s` requires %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
+            System::print(example_text);
+            exit(EXIT_FAILURE);
         }
-
-        return specs;
     }
 }

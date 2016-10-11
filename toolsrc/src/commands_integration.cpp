@@ -238,7 +238,7 @@ namespace vcpkg
             exit(EXIT_SUCCESS);
         }
 
-        const std::wstring cmd_line = Strings::format(LR"(DEL "%s")", get_appdata_targets_path().native());
+        const std::wstring cmd_line = Strings::wformat(LR"(DEL "%s")", get_appdata_targets_path().native());
         const int exit_code = System::cmd_execute(cmd_line);
         if (exit_code)
         {
@@ -269,7 +269,7 @@ namespace vcpkg
         std::ofstream(nuspec_file_path) << create_nuspec_file(paths.root, nuget_id, nupkg_version);
 
         // Using all forward slashes for the command line
-        const std::wstring cmd_line = Strings::format(LR"(nuget.exe pack -OutputDirectory "%s" "%s" > nul)", buildsystems_dir.native(), nuspec_file_path.native());
+        const std::wstring cmd_line = Strings::wformat(LR"(nuget.exe pack -OutputDirectory "%s" "%s" > nul)", buildsystems_dir.native(), nuspec_file_path.native());
 
         const int exit_code = System::cmd_execute(cmd_line);
 
@@ -297,13 +297,9 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
     void integrate_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
-        if (args.command_arguments.size() != 1)
-        {
-            std::cout << "Commands:\n" <<
-                INTEGRATE_COMMAND_HELPSTRING <<
-                "\n";
-            exit(EXIT_FAILURE);
-        }
+        static const std::string example = Strings::format("Commands:\n"
+                                                           "%s", INTEGRATE_COMMAND_HELPSTRING);
+        args.check_exact_arg_count(1, example.c_str());
 
         if (args.command_arguments[0] == "install")
         {

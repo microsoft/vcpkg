@@ -1,19 +1,18 @@
 #include "triplet.h"
-#include "vcpkg.h"
-#include "vcpkg_System.h"
 #include "vcpkg_Checks.h"
+#include <algorithm>
 
 namespace vcpkg
 {
-    const triplet triplet::X86_WINDOWS = {"x86-windows"};
-    const triplet triplet::X64_WINDOWS = {"x64-windows"};
-    const triplet triplet::X86_UWP = {"x86-uwp"};
-    const triplet triplet::X64_UWP = {"x64-uwp"};
-    const triplet triplet::ARM_UWP = {"arm-uwp"};
+    const triplet triplet::X86_WINDOWS = from_canonical_name("x86-windows");
+    const triplet triplet::X64_WINDOWS = from_canonical_name("x64-windows");
+    const triplet triplet::X86_UWP = from_canonical_name("x86-uwp");
+    const triplet triplet::X64_UWP = from_canonical_name("x64-uwp");
+    const triplet triplet::ARM_UWP = from_canonical_name("arm-uwp");
 
     std::string to_string(const triplet& t)
     {
-        return t.value;
+        return t.canonical_name();
     }
 
     std::string to_printf_arg(const triplet& t)
@@ -23,7 +22,7 @@ namespace vcpkg
 
     bool operator==(const triplet& left, const triplet& right)
     {
-        return left.value == right.value;
+        return left.canonical_name() == right.canonical_name();
     }
 
     bool operator!=(const triplet& left, const triplet& right)
@@ -36,40 +35,43 @@ namespace vcpkg
         return os << to_string(t);
     }
 
+    triplet triplet::from_canonical_name(const std::string& triplet_as_string)
+    {
+        std::string s(triplet_as_string);
+        std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+
+        auto it = std::find(s.cbegin(), s.cend(), '-');
+        Checks::check_exit(it != s.cend(), "Invalid triplet: %s", triplet_as_string);
+
+        triplet t;
+        t.m_canonical_name = s;
+        return t;
+    }
+
+    const std::string& triplet::canonical_name() const
+    {
+        return this->m_canonical_name;
+    }
+
     std::string triplet::architecture() const
     {
-        if (*this == X86_WINDOWS || *this == X86_UWP)
-            return "x86";
-        if (*this == X64_WINDOWS || *this == X64_UWP)
-            return "x64";
-        if (*this == ARM_UWP)
-            return "arm";
-
-        Checks::exit_with_message("Unknown architecture: %s", value);
+        auto it = std::find(this->m_canonical_name.cbegin(), this->m_canonical_name.cend(), '-');
+        return std::string(this->m_canonical_name.cbegin(), it);
     }
 
     std::string triplet::system() const
     {
-        if (*this == X86_WINDOWS || *this == X64_WINDOWS)
-            return "windows";
-        if (*this == X86_UWP || *this == X64_UWP || *this == ARM_UWP)
-            return "uwp";
-
-        Checks::exit_with_message("Unknown system: %s", value);
+        auto it = std::find(this->m_canonical_name.cbegin(), this->m_canonical_name.cend(), '-');
+        return std::string(it + 1, this->m_canonical_name.cend());
     }
 
-    bool triplet::validate(const vcpkg_paths& paths) const
+    triplet::BuildType triplet::build_type() const
     {
-        auto it = fs::directory_iterator(paths.triplets);
-        for (; it != fs::directory_iterator(); ++it)
+        if (this->m_canonical_name.find("static") != std::string::npos)
         {
-            std::string triplet_file_name = it->path().stem().generic_u8string();
-            if (value == triplet_file_name) // TODO: fuzzy compare
-            {
-                //value = triplet_file_name; // NOTE: uncomment when implementing fuzzy compare
-                return true;
-            }
+            return BuildType::STATIC;
         }
-        return false;
+
+        return BuildType::DYNAMIC;
     }
 }

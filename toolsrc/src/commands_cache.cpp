@@ -7,7 +7,7 @@ namespace vcpkg
 {
     void cache_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
-        args.check_max_args(0);
+        args.check_exact_arg_count(0);
 
         auto begin_it = fs::directory_iterator(paths.packages);
         auto end_it = fs::directory_iterator();
