@@ -1,0 +1,29 @@
+From 59ebd2985f081229edc3c487367a1e5d5ac8db9a Mon Sep 17 00:00:00 2001
+From: Robert Schumacher <roschuma@microsoft.com>
+Date: Mon, 10 Oct 2016 23:00:38 -0700
+Subject: [PATCH] Add CONFIG_INSTALL_PATH option
+
+---
+ CMakeLists.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 774737d..5de689c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -401,8 +401,11 @@ install(TARGETS freetype
+   ARCHIVE DESTINATION lib
+   FRAMEWORK DESTINATION Library/Frameworks
+ )
++
++set(CONFIG_INSTALL_PATH "lib/cmake/freetype" CACHE STRING "location to install cmake config files")
++
+ install(EXPORT freetype-targets
+-  DESTINATION lib/cmake/freetype
++  DESTINATION ${CONFIG_INSTALL_PATH}
+   FILE freetype-config.cmake
+ )
+ 
+-- 
+2.9.2.windows.1
+

@@ -10,26 +10,29 @@ vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-Support-Windows-DLLs-via-CMAKE_WINDOWS_EXPORT_ALL_SY.patch
+            ${CMAKE_CURRENT_LIST_DIR}/0002-Add-CONFIG_INSTALL_PATH-option.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DBUILD_SHARED_LIBS=ON
+        -DCONFIG_INSTALL_PATH=share/freetype
 )
 
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include ${CURRENT_PACKAGES_DIR}/share)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/include/freetype2/freetype ${CURRENT_PACKAGES_DIR}/include/freetype2)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/include/freetype2/ft2build.h ${CURRENT_PACKAGES_DIR}/include/freetype2/ft2build.h)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/freetype ${CURRENT_PACKAGES_DIR}/share/freetype)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/freetype/freetype-config-debug.cmake ${CURRENT_PACKAGES_DIR}/share/freetype/freetype-config-debug.cmake)
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
+file(RENAME ${CURRENT_PACKAGES_DIR}/include/freetype2/freetype ${CURRENT_PACKAGES_DIR}/include/freetype)
+file(RENAME ${CURRENT_PACKAGES_DIR}/include/freetype2/ft2build.h ${CURRENT_PACKAGES_DIR}/include/ft2build.h)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/freetype2)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+file(READ ${CURRENT_PACKAGES_DIR}/debug/share/freetype/freetype-config-debug.cmake DEBUG_MODULE)
+string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" DEBUG_MODULE "${DEBUG_MODULE}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/freetype/freetype-config-debug.cmake "${DEBUG_MODULE}")
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
 file(COPY
     ${SOURCE_PATH}/docs/LICENSE.TXT
     ${SOURCE_PATH}/docs/FTL.TXT
