@@ -36,6 +36,8 @@ if(NOT VCPKG_TOOLCHAIN)
 
     include_directories(${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
 
+    set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools)
+
     option(OVERRIDE_ADD_EXECUTABLE "Automatically copy dependencies into the output directory for executables." ON)
     if(OVERRIDE_ADD_EXECUTABLE)
         function(add_executable name)

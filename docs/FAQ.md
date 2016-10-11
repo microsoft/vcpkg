@@ -3,7 +3,7 @@
 Vcpkg is a tool to acquire C++ open source library and rebuild them on Windows. 
 
 ## Can I contribute a new library?
-Yes! Start out by reading our [contribution guidelines](CONTRIBUTING.md).
+Yes! Start out by reading our [contribution guidelines](../CONTRIBUTING.md).
 
 ## Can Vcpkg create pre-built binary packages? What is the binary format used by Vcpkg?
 In the preview release, we do not have a supported way to distribute individual binary packages. This avoids the issue of trying to use a specific pre-built package against differently built dependencies. As such, we have also not specified a stable format for the built library packages.
