@@ -1,0 +1,4 @@
+Source: mongo-c-driver
+Version: 1.4.2
+Build-Depends: libbson
+Description: Client library written in C for MongoDB.
