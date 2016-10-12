@@ -8,7 +8,6 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 #Since libiconv uses automake, make and configure, we use a custom CMake file
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${CURRENT_BUILDTREES_DIR}/src/libiconv-1.14/)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/LibiconvConfig.cmake.in DESTINATION ${CURRENT_BUILDTREES_DIR}/src/libiconv-1.14/)
 
 vcpkg_apply_patches(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libiconv-1.14/

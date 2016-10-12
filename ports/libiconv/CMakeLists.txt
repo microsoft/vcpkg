@@ -30,9 +30,7 @@ include_directories(${Libiconv_SOURCE_DIR} ${Libiconv_BINARY_DIR})
 set(libname libcharset)
 set(libcharset_source_dir ${Libiconv_SOURCE_DIR}/libcharset)
 
-if(WIN32)
-  add_definitions(-DLIBDIR)
-endif()
+add_definitions(-DLIBDIR)
   
 configure_file(
   ${Libiconv_SOURCE_DIR}/libcharset/include/localcharset.h.build.in
@@ -58,18 +56,6 @@ configure_file(
   ${Libiconv_BINARY_DIR}/iconv.h
   )
 
-list(APPEND simple_header_config
-  uniwidth
-  unitypes
-  )
- 
-foreach(header ${simple_header_config})
-  configure_file(
-    ${Libiconv_SOURCE_DIR}/srclib/${header}.in.h
-    ${Libiconv_BINARY_DIR}/${header}.h
-    )
-endforeach()
-
 set(${libname}_sources
   ${Libiconv_SOURCE_DIR}/lib/iconv.c
   ${Libiconv_BINARY_DIR}/iconv.h
@@ -90,12 +76,3 @@ install(TARGETS ${Libiconv_TARGETS}
 )
 
 install(FILES ${Libiconv_headers} DESTINATION include)
-
-set(Libiconv_TARGETS_FILE ${Libiconv_BINARY_DIR}/LibiconvTargets.cmake)
-export(TARGETS ${Libiconv_TARGETS} FILE ${Libiconv_TARGETS_FILE})
-
-configure_file(
-  ${Libiconv_SOURCE_DIR}/LibiconvConfig.cmake.in
-  ${Libiconv_BINARY_DIR}/LibiconvConfig.cmake
-  @ONLY
-)
