@@ -28,7 +28,6 @@ vcpkg_build_msbuild(
 message(STATUS "Installing")
 file(INSTALL
     ${SOURCE_PATH}/msvc/Debug/Win32/double-conversion.lib
-    ${SOURCE_PATH}/msvc/Debug/Win32/double-conversion.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
 )
 file(INSTALL
@@ -46,26 +45,5 @@ message(STATUS "Installing done")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/doubleconversion)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/doubleconversion/LICENSE ${CURRENT_PACKAGES_DIR}/share/doubleconversion/copyright)
-
-# Move the Release CMake files.
-file(GLOB cacheFiles ${CURRENT_PACKAGES_DIR}/CMake/*.cmake)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/doubleconversion/release)
-foreach(cacheFile ${cacheFiles})
-    get_filename_component(filename ${cacheFile} NAME)
-    file(RENAME ${cacheFile} ${CURRENT_PACKAGES_DIR}/share/doubleconversion/release/${filename})
-endforeach()
-# Remove the original directory.
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/CMake)
-
-# Move the Debug CMake files.
-file(GLOB cacheFiles ${CURRENT_PACKAGES_DIR}/debug/CMake/*.cmake)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/doubleconversion/debug)
-foreach(cacheFile ${cacheFiles})
-    get_filename_component(filename ${cacheFile} NAME)
-    file(RENAME ${cacheFile} ${CURRENT_PACKAGES_DIR}/share/doubleconversion/debug/${filename})
-endforeach()
-# Remove the original directory.
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/CMake)
-
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/double-conversion)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/double-conversion/LICENSE ${CURRENT_PACKAGES_DIR}/share/double-conversion/copyright)
