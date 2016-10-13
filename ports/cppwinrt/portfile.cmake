@@ -31,8 +31,6 @@ set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/)
 file(COPY ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/cppwinrt/license.txt)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/cppwinrt/license.txt ${CURRENT_PACKAGES_DIR}/share/cppwinrt/copyright)
 
-set(HEADER_PATH ${SOURCE_PATH}/10.0.14393.0/winrt/)
-
 # Copy the cppwinrt header files
-file(GLOB HEADER_FILES ${HEADER_PATH}/*)
+file(GLOB HEADER_FILES ${SOURCE_PATH}/10.0.14393.0/winrt/*)
 file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/winrt)
