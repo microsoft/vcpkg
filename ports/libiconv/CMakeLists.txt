@@ -9,7 +9,6 @@ project(Libiconv)
 #
 # Options
 #
-set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries, Always ON since this code is LGPL" FORCE)
 
 # Config file
 configure_file(
@@ -17,6 +16,11 @@ configure_file(
   ${Libiconv_BINARY_DIR}/config.h
 )
 
+if(BUILD_SHARED_LIBS)
+  set(LIBICONV_DYNAMIC "1 /*LIBICONV_DYNAMIC*/")
+else()
+  set(LIBICONV_DYNAMIC "0 /*LIBICONV_DYNAMIC*/")
+endif()
 set(HAVE_WCHAR_T "1 /*HAVE_WCHAR_T*/")
 set(USE_MBSTATE_T "0 /*USE_MBSTATE_T*/")
 set(BROKEN_WCHAR_H "0 /*BROKEN_WCHAR_H*/")

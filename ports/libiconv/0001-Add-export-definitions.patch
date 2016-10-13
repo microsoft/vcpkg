@@ -4,7 +4,7 @@ index 0feb068..74e5613 100644
 +++ "b/include/iconv.h.build.in"
 @@ -27,6 +27,12 @@
  #define LIBICONV_DLL_EXPORTED __attribute__((__visibility__("default")))
-+#elif defined(_WIN32)
++#elif defined(_WIN32) && @LIBICONV_DYNAMIC@
 +  #if defined(libiconv_EXPORTS)
 +    #define LIBICONV_DLL_EXPORTED __declspec(dllexport)
 +  #else
@@ -21,7 +21,7 @@ index c691359..2a23585 100644
 +++ "b/libcharset/include/localcharset.h.build.in"
 @@ -24,6 +24,12 @@
  #define LIBCHARSET_DLL_EXPORTED __attribute__((__visibility__("default")))
-+#elif defined(_WIN32)
++#elif defined(_WIN32) && @LIBICONV_DYNAMIC@
 +  #if defined(libcharset_EXPORTS)
 +    #define LIBCHARSET_DLL_EXPORTED __declspec(dllexport)
 +  #else

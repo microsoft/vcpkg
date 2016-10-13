@@ -1,3 +1,4 @@
+include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/gnu/libiconv/libiconv-1.14.tar.gz"
@@ -22,8 +23,8 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Handle copyright
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/libiconv-1.14/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libiconv)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libiconv/COPYING ${CURRENT_PACKAGES_DIR}/share/libiconv/copyright)
+file(COPY ${CURRENT_BUILDTREES_DIR}/src/libiconv-1.14/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/libiconv)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/libiconv/COPYING.LIB ${CURRENT_PACKAGES_DIR}/share/libiconv/copyright)
 
 # clean out the debug include
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
