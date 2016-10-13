@@ -22,7 +22,7 @@ vcpkg_configure_cmake(
 	OPTIONS
 		-DNANODBC_EXAMPLES=OFF
 		-DNANODBC_TEST=OFF
-		-DNANODBC_USE_UNICODE=OFF # it's the default value.
+		-DNANODBC_USE_UNICODE=ON
 )
 
 vcpkg_install_cmake()	
