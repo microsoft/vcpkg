@@ -46,6 +46,7 @@ vcpkg_execute_required_process(
         --build-dir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
         ${B2_OPTIONS}
         variant=release
+        debug-symbols=on
     WORKING_DIRECTORY ${SOURCE_PATH}
     LOGNAME build-${TARGET_TRIPLET}-rel
 )
