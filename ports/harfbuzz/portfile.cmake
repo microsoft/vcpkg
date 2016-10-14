@@ -18,14 +18,24 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-Add-an-extra-path-input-for-Freetype.patch"
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-Set-d-suffix-for-debug-freetype-lib.patch"
+)
+
+file(TO_NATIVE_PATH "${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/include" FREETYPE_INCLUDE_DIR)
+file(TO_NATIVE_PATH "${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/lib" FREETYPE_LIB_DIR_DBG)
+file(TO_NATIVE_PATH "${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/lib" FREETYPE_LIB_DIR_REL)
+
 vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f Makefile.vc CFG=debug
+    COMMAND ${NMAKE} -f Makefile.vc CFG=debug FREETYPE=1 FREETYPE_DIR=${FREETYPE_INCLUDE_DIR} VCPKG_LIB_DIR=${FREETYPE_LIB_DIR_DBG}
     WORKING_DIRECTORY ${SOURCE_PATH}/win32/
     LOGNAME nmake-build-${TARGET_TRIPLET}-debug
 )
 
 vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f Makefile.vc CFG=release
+    COMMAND ${NMAKE} -f Makefile.vc CFG=release FREETYPE=1 FREETYPE_DIR=${FREETYPE_INCLUDE_DIR} VCPKG_LIB_DIR=${FREETYPE_LIB_DIR_REL}
     WORKING_DIRECTORY ${SOURCE_PATH}/win32/
     LOGNAME nmake-build-${TARGET_TRIPLET}-release
 )
@@ -33,7 +43,7 @@ vcpkg_execute_required_process(
 file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/debug" NATIVE_PACKAGES_DIR_DBG)
 
 vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f Makefile.vc CFG=debug PREFIX=${NATIVE_PACKAGES_DIR_DBG} install
+    COMMAND ${NMAKE} -f Makefile.vc CFG=debug FREETYPE=1 PREFIX=${NATIVE_PACKAGES_DIR_DBG} install
     WORKING_DIRECTORY ${SOURCE_PATH}/win32/
     LOGNAME nmake-install-${TARGET_TRIPLET}-debug
 )
@@ -42,7 +52,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" NATIVE_PACKAGES_DIR_REL)
 
 vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f Makefile.vc CFG=release PREFIX=${NATIVE_PACKAGES_DIR_REL} install
+    COMMAND ${NMAKE} -f Makefile.vc CFG=release FREETYPE=1 PREFIX=${NATIVE_PACKAGES_DIR_REL} install
     WORKING_DIRECTORY ${SOURCE_PATH}/win32/
     LOGNAME nmake-install-${TARGET_TRIPLET}-release
 )
