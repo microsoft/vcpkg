@@ -231,7 +231,7 @@ index 8e02d4a..0483660 100644
  } // namespace nanodbc
  
 diff --git a/src/nanodbc.h b/src/nanodbc.h
-index f4e7b3d..cbb6fed 100644
+index f4e7b3d..2bfc6a8 100644
 --- a/src/nanodbc.h
 +++ b/src/nanodbc.h
 @@ -164,6 +164,16 @@ namespace nanodbc
@@ -316,36 +316,6 @@ index f4e7b3d..cbb6fed 100644
  {
  public:
      //! \brief Provides support for retrieving output/return parameters.
-@@ -559,7 +570,7 @@ public:
-     //! \param direction ODBC parameter direction.
-     //! \throws database_error
-     template<class T>
--    void bind(short param, const T* value, param_direction direction = PARAM_IN);
-+	void bind(short param, const T* value, param_direction direction = PARAM_IN);
- 
-     //! \addtogroup bind_multi Binding multiple non-string values
-     //! \brief Binds the given values to the given parameter placeholder number in the prepared statement.
-@@ -582,17 +593,17 @@ public:
-     //! \brief Binds multiple values.
-     //! \see bind_multi
-     template<class T>
--    void bind(short param, const T* values, std::size_t elements, param_direction direction = PARAM_IN);
-+	void bind(short param, const T* values, std::size_t elements, param_direction direction = PARAM_IN);
- 
-     //! \brief Binds multiple values.
-     //! \see bind_multi
-     template<class T>
--    void bind(short param, const T* values, std::size_t elements, const T* null_sentry, param_direction direction = PARAM_IN);
-+	void bind(short param, const T* values, std::size_t elements, const T* null_sentry, param_direction direction = PARAM_IN);
- 
-     //! \brief Binds multiple values.
-     //! \see bind_multi
-     template<class T>
--    void bind(short param, const T* values, std::size_t elements, const bool* nulls, param_direction direction = PARAM_IN);
-+	void bind(short param, const T* values, std::size_t elements, const bool* nulls, param_direction direction = PARAM_IN);
- 
-     //! @}
- 
 @@ -734,7 +745,7 @@ private:
  // MARK: Connection -
  
@@ -364,42 +334,6 @@ index f4e7b3d..cbb6fed 100644
  {
  public:
      //! Empty result set.
-@@ -986,7 +997,7 @@ public:
-     //! \param result The column's value will be written to this parameter.
-     //! \throws database_error, index_range_error, type_incompatible_error, null_access_error
-     template<class T>
--    void get_ref(short column, T& result) const;
-+	void get_ref(short column, T& result) const;
- 
-     //! \brief Gets data from the given column of the current rowset.
-     //! If the data is null, fallback is returned instead.
-@@ -997,7 +1008,7 @@ public:
-     //! \param result The column's value will be written to this parameter.
-     //! \throws database_error, index_range_error, type_incompatible_error
-     template<class T>
--    void get_ref(short column, const T& fallback, T& result) const;
-+	void get_ref(short column, const T& fallback, T& result) const;
- 
-     //! \brief Gets data from the given column by name of the current rowset.
-     //!
-@@ -1005,7 +1016,7 @@ public:
-     //! \param result The column's value will be written to this parameter.
-     //! \throws database_error, index_range_error, type_incompatible_error, null_access_error
-     template<class T>
--    void get_ref(const string_type& column_name, T& result) const;
-+	void get_ref(const string_type& column_name, T& result) const;
- 
-     //! \brief Gets data from the given column by name of the current rowset.
-     //! If the data is null, fallback is returned instead.
-@@ -1015,7 +1026,7 @@ public:
-     //! \param result The column's value will be written to this parameter.
-     //! \throws database_error, index_range_error, type_incompatible_error
-     template<class T>
--    void get_ref(const string_type& column_name, const T& fallback, T& result) const;
-+	void get_ref(const string_type& column_name, const T& fallback, T& result) const;
- 
-     //! \brief Gets data from the given column of the current rowset.
-     //!
 @@ -1023,7 +1034,7 @@ public:
      //! \param column position.
      //! \throws database_error, index_range_error, type_incompatible_error, null_access_error
@@ -409,32 +343,6 @@ index f4e7b3d..cbb6fed 100644
  
      //! \brief Gets data from the given column of the current rowset.
      //! If the data is null, fallback is returned instead.
-@@ -1033,14 +1044,14 @@ public:
-     //! \param fallback if value is null, return fallback instead.
-     //! \throws database_error, index_range_error, type_incompatible_error
-     template<class T>
--    T get(short column, const T& fallback) const;
-+	T get(short column, const T& fallback) const;
- 
-     //! \brief Gets data from the given column by name of the current rowset.
-     //!
-     //! \param column_name column's name.
-     //! \throws database_error, index_range_error, type_incompatible_error, null_access_error
-     template<class T>
--    T get(const string_type& column_name) const;
-+	T get(const string_type& column_name) const;
- 
-     //! \brief Gets data from the given column by name of the current rowset.
-     //! If the data is null, fallback is returned instead.
-@@ -1049,7 +1060,7 @@ public:
-     //! \param fallback if value is null, return fallback instead.
-     //! \throws database_error, index_range_error, type_incompatible_error
-     template<class T>
--    T get(const string_type& column_name, const T& fallback) const;
-+	T get(const string_type& column_name, const T& fallback) const;
- 
-     //! \brief Returns true if and only if the given column of the current rowset is null.
-     //!
 @@ -1139,7 +1150,7 @@ private:
  //                                                  "Y88P"
  // MARK: Catalog -
