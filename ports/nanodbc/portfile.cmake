@@ -15,6 +15,7 @@ vcpkg_apply_patches(
 		${CMAKE_CURRENT_LIST_DIR}/0001_cmake.patch
 		${CMAKE_CURRENT_LIST_DIR}/0002_msvc14_codecvt.patch
 		${CMAKE_CURRENT_LIST_DIR}/0003_export_def.patch
+		${CMAKE_CURRENT_LIST_DIR}/0004_unicode.patch
 )
 
 vcpkg_configure_cmake(
