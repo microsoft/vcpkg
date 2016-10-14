@@ -30,7 +30,8 @@ file(REMOVE_RECURSE
 	${CURRENT_PACKAGES_DIR}/share
 	${CURRENT_PACKAGES_DIR}/debug/share
 	${CURRENT_PACKAGES_DIR}/bin
-	${CURRENT_PACKAGES_DIR}/debug/bin)
+	${CURRENT_PACKAGES_DIR}/debug/bin
+	${CURRENT_PACKAGES_DIR}/lib/debug)
 
 file(MAKE_DIRECTORY
 	${CURRENT_PACKAGES_DIR}/share
@@ -47,9 +48,16 @@ file(REMOVE
 	${CURRENT_PACKAGES_DIR}/debug/my-default.ini
 	${CURRENT_PACKAGES_DIR}/debug/README)
 
+# remove mysqlclient.lib
+file(REMOVE
+	${CURRENT_PACKAGES_DIR}/lib/mysqlclient.lib
+	${CURRENT_PACKAGES_DIR}/debug/lib/mysqlclient.lib)
+
 # correct the dll directory
 file (RENAME ${CURRENT_PACKAGES_DIR}/lib/libmysql.dll ${CURRENT_PACKAGES_DIR}/bin/libmysql.dll)
-file (RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libmysql.dll ${CURRENT_PACKAGES_DIR}/debug/libmysql.dll)
+file (RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libmysql.dll ${CURRENT_PACKAGES_DIR}/debug/bin/libmysql.dll)
+file (RENAME ${CURRENT_PACKAGES_DIR}/lib/libmysql.pdb ${CURRENT_PACKAGES_DIR}/bin/libmysql.pdb)
+file (RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libmysql.pdb ${CURRENT_PACKAGES_DIR}/debug/bin/libmysql.pdb)
 
 # copy license
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libmysql)
