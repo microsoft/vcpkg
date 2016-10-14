@@ -129,6 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\MachineType.cpp" />
+    <ClCompile Include="..\src\coff_file_reader.cpp" />
     <ClCompile Include="..\src\commands_cache.cpp" />
     <ClCompile Include="..\src\commands_create.cpp" />
     <ClCompile Include="..\src\commands_edit.cpp" />
@@ -150,6 +151,7 @@
     <ClCompile Include="..\src\vcpkg_Input.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\coff_file_reader.h" />
     <ClInclude Include="..\include\MachineType.h" />
     <ClInclude Include="..\include\vcpkg_cmd_arguments.h" />
     <ClInclude Include="..\include\vcpkg_Commands.h" />
