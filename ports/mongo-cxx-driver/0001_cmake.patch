@@ -1,0 +1,64 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 695f64c..87807d6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -59,7 +59,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
+ 
+ # Include the required modules
+ include(GenerateExportHeader)
+-include(InstallRequiredSystemLibraries)
+ 
+ # If the user did not customize the install prefix,
+ # set it to live under build so we don't inadverently pollute /usr/local
+diff --git a/cmake/FindLibBSON.cmake b/cmake/FindLibBSON.cmake
+index 52f5de0..7a0be52 100644
+--- a/cmake/FindLibBSON.cmake
++++ b/cmake/FindLibBSON.cmake
+@@ -26,7 +26,7 @@ if(LIBBSON_DIR)
+   # Trust the user's override path by default
+   set(LIBBSON_LIBRARIES bson-1.0 CACHE INTERNAL "")
+   set(LIBBSON_LIBRARY_DIRS ${LIBBSON_DIR}/lib CACHE INTERNAL "")
+-  set(LIBBSON_INCLUDE_DIRS ${LIBBSON_DIR}/include/libbson-1.0 CACHE INTERNAL "")
++  set(LIBBSON_INCLUDE_DIRS ${LIBBSON_DIR}/include CACHE INTERNAL "")
+   find_package_handle_standard_args(LIBBSON DEFAULT_MSG LIBBSON_LIBRARIES LIBBSON_LIBRARY_DIRS LIBBSON_INCLUDE_DIRS)
+ elseif (PKG_CONFIG_FOUND)
+   # The best we can do until libbson starts installing a libbson-config.cmake file
+diff --git a/cmake/FindLibMongoC.cmake b/cmake/FindLibMongoC.cmake
+index 830de11..7e0bc76 100644
+--- a/cmake/FindLibMongoC.cmake
++++ b/cmake/FindLibMongoC.cmake
+@@ -26,7 +26,7 @@ if(LIBMONGOC_DIR)
+   # Trust the user's override path by default
+   set(LIBMONGOC_LIBRARIES mongoc-1.0 CACHE INTERNAL "")
+   set(LIBMONGOC_LIBRARY_DIRS ${LIBMONGOC_DIR}/lib CACHE INTERNAL "")
+-  set(LIBMONGOC_INCLUDE_DIRS ${LIBMONGOC_DIR}/include/libmongoc-1.0 CACHE INTERNAL "")
++  set(LIBMONGOC_INCLUDE_DIRS ${LIBMONGOC_DIR}/include CACHE INTERNAL "")
+   find_package_handle_standard_args(LIBMONGOC DEFAULT_MSG LIBMONGOC_LIBRARIES LIBMONGOC_LIBRARY_DIRS LIBMONGOC_INCLUDE_DIRS)
+ elseif (PKG_CONFIG_FOUND)
+   # The best we can do until libMONGOC starts installing a libmongoc-config.cmake file
+diff --git a/src/bsoncxx/CMakeLists.txt b/src/bsoncxx/CMakeLists.txt
+index cea1bc9..481529c 100644
+--- a/src/bsoncxx/CMakeLists.txt
++++ b/src/bsoncxx/CMakeLists.txt
+@@ -60,7 +60,7 @@ endif()
+ 
+ set(BSONCXX_VERSION ${BSONCXX_VERSION_MAJOR}.${BSONCXX_VERSION_MINOR}.${BSONCXX_VERSION_PATCH}${BSONCXX_VERSION_EXTRA})
+ set(BSONCXX_INLINE_NAMESPACE "v${BSONCXX_ABI_VERSION}")
+-set(BSONCXX_HEADER_INSTALL_DIR "include/bsoncxx/${BSONCXX_INLINE_NAMESPACE}" CACHE INTERNAL "")
++set(BSONCXX_HEADER_INSTALL_DIR "include" CACHE INTERNAL "")
+ 
+ set(LIBBSON_REQUIRED_VERSION 1.3.4)
+ set(LIBBSON_REQUIRED_ABI_VERSION 1.0)
+diff --git a/src/mongocxx/CMakeLists.txt b/src/mongocxx/CMakeLists.txt
+index fdbe61a..7d5c2c9 100644
+--- a/src/mongocxx/CMakeLists.txt
++++ b/src/mongocxx/CMakeLists.txt
+@@ -32,7 +32,7 @@ set(MONGOCXX_ABI_VERSION _noabi)
+ 
+ set(MONGOCXX_VERSION ${MONGOCXX_VERSION_MAJOR}.${MONGOCXX_VERSION_MINOR}.${MONGOCXX_VERSION_PATCH}${MONGOCXX_VERSION_EXTRA})
+ set(MONGOCXX_INLINE_NAMESPACE "v${MONGOCXX_ABI_VERSION}")
+-set(MONGOCXX_HEADER_INSTALL_DIR "include/mongocxx/${MONGOCXX_INLINE_NAMESPACE}" CACHE INTERNAL "")
++set(MONGOCXX_HEADER_INSTALL_DIR "include" CACHE INTERNAL "")
+ 
+ add_subdirectory(config)
+ 
