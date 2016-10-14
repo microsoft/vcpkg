@@ -4,7 +4,7 @@
 #include <iterator>
 #include <functional>
 #include "vcpkg_System.h"
-#include <set>
+#include "coff_file_reader.h"
 
 namespace fs = std::tr2::sys;
 
@@ -278,72 +278,80 @@ namespace vcpkg
         std::string actual_arch;
     };
 
-    static lint_status check_architecture(const std::string& expected_architecture, const std::vector<fs::path>& files)
+    static std::string get_actual_architecture(const MachineType& machine_type)
     {
-        // static const std::regex machine_regex = std::regex(R"###([0-9A-F]+ machine \([^)]+\))###");
-
-        // Parenthesis is there to avoid some other occurrences of the word "machine". Those don't match the expected regex.
-        static const std::string machine_string_scan = "machine (";
-
-        std::vector<file_and_arch> binaries_with_invalid_architecture;
-        std::set<fs::path> binaries_with_no_architecture(files.cbegin(), files.cend());
-
-        for (const fs::path& f : files)
+        switch (machine_type)
         {
-            const std::wstring cmd_line = Strings::wformat(LR"("%s" /headers "%s")", DUMPBIN_EXE.native(), f.native());
-            System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
-            Checks::check_exit(ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
+            case MachineType::AMD64:
+            case MachineType::IA64:
+                return "x64";
+            case MachineType::I386:
+                return "x86";
+            case MachineType::ARM:
+            case MachineType::ARMNT:
+                return "arm";
+            default:
+                return "Machine Type Code = " + std::to_string(static_cast<uint16_t>(machine_type));
+        }
+    }
 
-            const std::string& s = ec_data.output;
+    static void print_invalid_architecture_files(const std::string& expected_architecture, std::vector<file_and_arch> binaries_with_invalid_architecture)
+    {
+        System::println(System::color::warning, "The following files were built for an incorrect architecture:");
+        System::println("");
+        for (const file_and_arch& b : binaries_with_invalid_architecture)
+        {
+            System::println("    %s", b.file.generic_string());
+            System::println("Expected %s, but was: %s", expected_architecture, b.actual_arch);
+            System::println("");
+        }
+    }
 
-            for (size_t start, end, idx = s.find(machine_string_scan); idx != std::string::npos; idx = s.find(machine_string_scan, end))
+    static lint_status check_dll_architecture(const std::string& expected_architecture, const std::vector<fs::path>& files)
+    {
+        std::vector<file_and_arch> binaries_with_invalid_architecture;
+
+        for (const fs::path& file : files)
+        {
+            Checks::check_exit(file.extension() == ".dll", "The file extension was not .dll: %s", file.generic_string());
+            COFFFileReader::dll_info info = COFFFileReader::read_dll(file);
+            const std::string actual_architecture = get_actual_architecture(info.machine_type);
+
+            if (expected_architecture != actual_architecture)
             {
-                // Skip the space directly in front of "machine" and find the previous one. Get the index of the char after it.
-                // Go no further than a newline
-                start = std::max(s.find_last_of('\n', idx - 2) + 1, s.find_last_of(' ', idx - 2) + 1);
-
-                // Find the first close-parenthesis. Get the index of the char after it
-                // Go no futher than a newline
-                end = std::min(s.find_first_of('\n', idx) + 1, s.find_first_of(')', idx) + 1);
-
-                std::string machine_line(s.substr(start, end - start));
-
-                if (Strings::case_insensitive_ascii_find(machine_line, expected_architecture) != machine_line.end())
-                {
-                    binaries_with_no_architecture.erase(f);
-                }
-                else
-                {
-                    binaries_with_invalid_architecture.push_back({f, machine_line});
-                    break; // If one erroneous entry is found, we can abort this file
-                }
+                binaries_with_invalid_architecture.push_back({file, actual_architecture});
             }
         }
 
         if (!binaries_with_invalid_architecture.empty())
         {
-            System::println(System::color::warning, "The following files were built for an incorrect architecture:");
-            System::println("");
-            for (const file_and_arch& b : binaries_with_invalid_architecture)
-            {
-                System::println("    %s", b.file.generic_string());
-                System::println("Expected %s, but was: %s", expected_architecture, b.actual_arch);
-            }
-            System::println("");
-
+            print_invalid_architecture_files(expected_architecture, binaries_with_invalid_architecture);
             return lint_status::ERROR_DETECTED;
         }
 
-        if (!binaries_with_no_architecture.empty())
-        {
-            System::println(System::color::warning, "Unable to detect architecture in the following files:");
-            System::println("");
-            for (const fs::path& b : binaries_with_no_architecture)
-            {
-                System::println("    %s", b.generic_string());
-            }
-            System::println("");
+        return lint_status::SUCCESS;
+    }
 
+    static lint_status check_lib_architecture(const std::string& expected_architecture, const std::vector<fs::path>& files)
+    {
+        std::vector<file_and_arch> binaries_with_invalid_architecture;
+
+        for (const fs::path& file : files)
+        {
+            Checks::check_exit(file.extension() == ".lib", "The file extension was not .lib: %s", file.generic_string());
+            COFFFileReader::lib_info info = COFFFileReader::read_lib(file);
+            Checks::check_exit(info.machine_types.size() == 1, "Found more than 1 architecture in file %s", file.generic_string());
+
+            const std::string actual_architecture = get_actual_architecture(info.machine_types.at(0));
+            if (expected_architecture != actual_architecture)
+            {
+                binaries_with_invalid_architecture.push_back({file, actual_architecture});
+            }
+        }
+
+        if (!binaries_with_invalid_architecture.empty())
+        {
+            print_invalid_architecture_files(expected_architecture, binaries_with_invalid_architecture);
             return lint_status::ERROR_DETECTED;
         }
 
@@ -392,7 +400,7 @@ namespace vcpkg
 
                     error_count += check_exports_of_dlls(dlls);
                     error_count += check_uwp_bit_of_dlls(spec.target_triplet().system(), dlls);
-                    error_count += check_architecture(spec.target_triplet().architecture(), dlls);
+                    error_count += check_dll_architecture(spec.target_triplet().architecture(), dlls);
                     break;
                 }
             case triplet::BuildType::STATIC:
@@ -400,6 +408,7 @@ namespace vcpkg
                     std::vector<fs::path> dlls;
                     recursive_find_files_with_extension_in_dir(paths.packages / spec.dir(), ".dll", dlls);
                     error_count += check_no_dlls_present(dlls);
+
                     break;
                 }
 
@@ -410,8 +419,7 @@ namespace vcpkg
         std::vector<fs::path> libs;
         recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "lib", ".lib", libs);
         recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "lib", ".lib", libs);
-
-        error_count += check_architecture(spec.target_triplet().architecture(), libs);
+        error_count += check_lib_architecture(spec.target_triplet().architecture(), libs);
 
         if (error_count != 0)
         {
