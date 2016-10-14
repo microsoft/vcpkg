@@ -20,7 +20,7 @@ namespace vcpkg {namespace Checks
     template <class...Args>
     _declspec(noreturn) void throw_with_message(const char* errorMessageTemplate, const Args&... errorMessageArgs)
     {
-        throw_with_message(Strings::format(errorMessageTemplate, errorMessageArgs...));
+        throw_with_message(Strings::format(errorMessageTemplate, errorMessageArgs...).c_str());
     }
 
     void check_throw(bool expression, const char* errorMessage);
