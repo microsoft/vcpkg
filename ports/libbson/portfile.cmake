@@ -1,6 +1,5 @@
 include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
-find_program(POWERSHELL powershell)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libbson-1.4.2)
 
 vcpkg_download_distfile(ARCHIVE

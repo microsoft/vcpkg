@@ -1,6 +1,5 @@
 include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
-find_program(POWERSHELL powershell)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mongo-cxx-driver-r3.0.2)
 
 vcpkg_download_distfile(ARCHIVE
@@ -18,8 +17,8 @@ vcpkg_apply_patches(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
 	OPTIONS
-		-DLIBBSON_DIR=${CURRENT_PACKAGES_DIR}/../libbson_${TARGET_TRIPLET}
-		-DLIBMONGOC_DIR=${CURRENT_PACKAGES_DIR}/../mongo-c-driver_${TARGET_TRIPLET}
+		-DLIBBSON_DIR=${CURRENT_INSTALLED_DIR}
+		-DLIBMONGOC_DIR=${CURRENT_INSTALLED_DIR}
 )
 
 vcpkg_install_cmake()	

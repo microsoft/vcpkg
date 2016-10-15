@@ -1,6 +1,5 @@
 include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
-find_program(POWERSHELL powershell)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mongo-c-driver-1.4.2)
 
 vcpkg_download_distfile(ARCHIVE
@@ -18,7 +17,7 @@ vcpkg_apply_patches(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
 	OPTIONS
-		-DBSON_ROOT_DIR=${CURRENT_PACKAGES_DIR}/../libbson_${TARGET_TRIPLET}
+		-DBSON_ROOT_DIR=${CURRENT_INSTALLED_DIR}
 )
 
 vcpkg_install_cmake()
