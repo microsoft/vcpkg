@@ -1,0 +1,378 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 44842d3..e89eed9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -118,7 +118,7 @@ IF(DEFINED MYSQL_PROJECT_NAME)
+   SET(MYSQL_PROJECT_NAME ${MYSQL_PROJECT_NAME} CACHE STRING
+       ${MYSQL_PROJECT_NAME_DOCSTRING} FORCE)
+ ELSE()
+-  SET(MYSQL_PROJECT_NAME "MySQL" CACHE STRING
++  SET(MYSQL_PROJECT_NAME "LibMySQL" CACHE STRING
+       ${MYSQL_PROJECT_NAME_DOCSTRING} FORCE)
+   MARK_AS_ADVANCED(MYSQL_PROJECT_NAME)
+ ENDIF()
+@@ -132,6 +132,9 @@ IF(CMAKE_BUILD_TYPE MATCHES "Debug" OR WITH_DEBUG)
+   ENDIF()
+ ENDIF()
+ 
++OPTION(FORCE_UNSUPPORTED_COMPILER "Disable compiler version checks" ON)
++MARK_AS_ADVANCED(FORCE_UNSUPPORTED_COMPILER)
++
+ OPTION(WITH_DEFAULT_COMPILER_OPTIONS
+   "Use flags from cmake/build_configurations/compiler_options.cmake"
+   ON)
+@@ -193,46 +196,30 @@ ENDIF()
+ INCLUDE(character_sets)
+ INCLUDE(cpu_info)
+ INCLUDE(zlib)
+-INCLUDE(lz4)
+-INCLUDE(libevent)
+ INCLUDE(ssl)
+-INCLUDE(readline)
+-INCLUDE(protobuf)
+ INCLUDE(mysql_version)
+ INCLUDE(libutils)
+ INCLUDE(dtrace)
+-INCLUDE(plugin)
+ INCLUDE(install_macros)
+ INCLUDE(install_layout)
+ INCLUDE(mysql_add_executable)
+ 
+ # Handle options
+-IF(EXISTS ${CMAKE_SOURCE_DIR}/rapid)
+-  OPTION(WITH_RAPID
+-    "Build additonal code(plugins) that is located in rapid directory" ON)
+-ELSE()
+-  OPTION(WITH_RAPID
+-    "Build additonal code(plugins) that is located in rapid directory" OFF)
+-ENDIF()
+ OPTION(DISABLE_SHARED 
+  "Don't build shared libraries, compile code as position-dependent" OFF)
++MARK_AS_ADVANCED(DISABLE_SHARED)
+ IF(DISABLE_SHARED)
+   SET(WITHOUT_DYNAMIC_PLUGINS 1)
+ ENDIF()
+ OPTION(ENABLED_PROFILING "Enable profiling" ON)
+-OPTION(WITHOUT_SERVER OFF)
++SET(WITHOUT_SERVER ON)
+ IF(UNIX)
+   OPTION(WITH_VALGRIND "Valgrind instrumentation" OFF)
+ ENDIF()
+ IF(WIN32)
+   OPTION(WITH_MSCRT_DEBUG "MS Visual Studio Debug CRT instrumentation" OFF)
+ ENDIF()
+-IF(NOT WITHOUT_SERVER)
+-  OPTION (WITH_UNIT_TESTS "Compile MySQL with unit tests" ON)
+-ENDIF()
+-OPTION(FORCE_UNSUPPORTED_COMPILER "Disable compiler version checks" OFF)
+-MARK_AS_ADVANCED(WITHOUT_SERVER DISABLE_SHARED FORCE_UNSUPPORTED_COMPILER)
+-
++OPTION (WITH_UNIT_TESTS "Compile MySQL with unit tests" OFF)
+ 
+ include(CheckCSourceCompiles)
+ include(CheckCXXSourceCompiles)
+@@ -452,18 +439,8 @@ ELSE()
+   SET(DEFAULT_TMPDIR "\"${TMPDIR}\"")
+ ENDIF()
+ 
+-INCLUDE(cmake/boost.cmake)
+-
+-IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
+-  OPTION(WITH_SYSTEMD "Enable installation of systemd support files" OFF)
+-  IF (WITH_SYSTEMD)
+-    INCLUDE(cmake/systemd.cmake)
+-  ENDIF()
+-ELSE()
+-  IF (WITH_SYSTEMD)
+-    MESSAGE(FATAL_ERROR "Installation of systemd support files not supported")
+-  ENDIF()
+-ENDIF()
++# Boost is not needed to build libmysql (yet)
++#INCLUDE(cmake/boost.cmake)
+ 
+ # Run platform tests
+ INCLUDE(configure.cmake)
+@@ -479,76 +456,6 @@ INCLUDE_DIRECTORIES(
+ MYSQL_CHECK_ZLIB_WITH_COMPRESS()
+ # Add bundled yassl/taocrypt or system openssl.
+ MYSQL_CHECK_SSL()
+-# Add system/bundled editline.
+-MYSQL_CHECK_EDITLINE()
+-# Add libevent
+-MYSQL_CHECK_LIBEVENT()
+-# Add lz4 library
+-MYSQL_CHECK_LZ4()
+-# Add protoc and libprotobuf
+-IF(NOT WITHOUT_SERVER)
+-  MYSQL_CHECK_PROTOBUF()
+-ENDIF()
+-
+-# Check for SYS_thread_selfid system call
+-CHECK_C_SOURCE_COMPILES("
+-#include <sys/types.h>
+-#include <sys/syscall.h>
+-#include <unistd.h>
+-int main(int ac, char **av)
+-{
+-  unsigned long long tid = syscall(SYS_thread_selfid);
+-  return (tid != 0 ? 0 : 1);
+-}"
+-HAVE_SYS_THREAD_SELFID)
+-
+-# Check for gettid() system call
+-CHECK_C_SOURCE_COMPILES("
+-#include <sys/types.h>
+-#include <sys/syscall.h>
+-#include <unistd.h>
+-int main(int ac, char **av)
+-{
+-  unsigned long long tid = syscall(SYS_gettid);
+-  return (tid != 0 ? 0 : 1);
+-}"
+-HAVE_SYS_GETTID)
+-
+-IF(CMAKE_SYSTEM_NAME MATCHES "Linux")
+-  # Check for pthread_setname_np
+-  CHECK_C_SOURCE_COMPILES("
+-  #include <pthread.h>
+-  int main(int ac, char **av)
+-  {
+-    const char *thread_name= 0;
+-    int ret = pthread_setname_np(pthread_self(), thread_name);
+-    return ret;
+-  }"
+-  HAVE_PTHREAD_SETNAME_NP)
+-ENDIF()
+-
+-# Check for pthread_getthreadid_np()
+-CHECK_C_SOURCE_COMPILES("
+-#include <pthread_np.h>
+-int main(int ac, char **av)
+-{
+-  unsigned long long tid = pthread_getthreadid_np();
+-  return (tid != 0 ? 0 : 1);
+-}"
+-HAVE_PTHREAD_GETTHREADID_NP)
+-
+-# Check for pthread_self() returning an integer type
+-CHECK_C_SOURCE_COMPILES("
+-#include <sys/types.h>
+-#include <pthread.h>
+-int main(int ac, char **av)
+-{
+-  unsigned long long tid = pthread_self();
+-  return (tid != 0 ? 0 : 1);
+-}"
+-HAVE_INTEGER_PTHREAD_SELF
+-FAIL_REGEX "warning: incompatible pointer to integer conversion"
+-)
+ 
+ #
+ # Setup maintainer mode options by the end. Platform checks are
+@@ -563,18 +470,15 @@ OPTION(MYSQL_MAINTAINER_MODE
+ 
+ INCLUDE(maintainer)
+ 
+-IF(WITH_UNIT_TESTS)
++IF(0) #WITH_UNIT_TESTS)
+  ENABLE_TESTING()
+ ENDIF()
+ 
+-IF(NOT WITHOUT_SERVER)
++IF(0) #NOT WITHOUT_SERVER)
+   SET (MYSQLD_STATIC_PLUGIN_LIBS "" CACHE INTERNAL "")
+   SET (MYSQLD_STATIC_EMBEDDED_PLUGIN_LIBS "" CACHE INTERNAL "")
+   # Add storage engines and plugins.
+   CONFIGURE_PLUGINS()
+-ELSE()
+-  # We may still want Cluster client libraries, use -DWITH_NDBCLUSTER=1
+-  ADD_SUBDIRECTORY(storage/ndb)
+ ENDIF()
+ 
+ ADD_SUBDIRECTORY(include)
+@@ -588,61 +492,18 @@ ADD_SUBDIRECTORY(libmysql)
+ ADD_SUBDIRECTORY(libbinlogevents)
+ ADD_SUBDIRECTORY(libbinlogstandalone)
+ 
+-IF(WITH_UNIT_TESTS)
+-  # Visual Studio 11 needs this extra flag in order to compile gmock.
+-  IF(WIN32)
+-    ADD_DEFINITIONS( /D _VARIADIC_MAX=10 )
+-  ENDIF()
+-  # libc++ doesn't have tuple in tr1
+-  IF(HAVE_LLVM_LIBCPP)
+-    ADD_DEFINITIONS(-DGTEST_USE_OWN_TR1_TUPLE=1)
+-  ENDIF()
+ 
+-  ADD_SUBDIRECTORY(unittest)
+-  ADD_SUBDIRECTORY(unittest/examples)
+-  ADD_SUBDIRECTORY(unittest/mytap)
+-  ADD_SUBDIRECTORY(unittest/mytap/t)
+-  IF(WITH_RAPID AND EXISTS ${CMAKE_SOURCE_DIR}/rapid/unittest/gunit)
+-    ADD_SUBDIRECTORY(rapid/unittest/gunit)
+-  ENDIF()
+-ENDIF()
+ 
++SET(WITH_INNOBASE_STORAGE_ENGINE 0)
+ ADD_SUBDIRECTORY(extra)
+-ADD_SUBDIRECTORY(client)
+ ADD_SUBDIRECTORY(sql/share)
+-ADD_SUBDIRECTORY(libservices)
+-
+-IF(UNIX)
+-  ADD_SUBDIRECTORY(man)
+-ENDIF()
+-
+-IF(NOT WITHOUT_SERVER)
+-  ADD_SUBDIRECTORY(testclients)
+-  ADD_SUBDIRECTORY(sql)
+-  OPTION (WITH_EMBEDDED_SERVER "Compile MySQL with embedded server" OFF)
+-  IF(WITH_EMBEDDED_SERVER) 
+-   ADD_SUBDIRECTORY(libmysqld)
+-   ADD_SUBDIRECTORY(libmysqld/examples)
+-  ENDIF(WITH_EMBEDDED_SERVER)
+-ENDIF()
+-
+-# scripts/mysql_config depends on client and server targets loaded above.
+-# It is referenced by some of the directories below, so we insert it here.
+ ADD_SUBDIRECTORY(scripts)
++ADD_SUBDIRECTORY(support-files)
+ 
+-IF(NOT WITHOUT_SERVER)
+-  ADD_SUBDIRECTORY(mysql-test)
+-  ADD_SUBDIRECTORY(mysql-test/lib/My/SafeProcess)
+-  ADD_SUBDIRECTORY(support-files)
+-  IF(EXISTS ${CMAKE_SOURCE_DIR}/internal/CMakeLists.txt)
+-    ADD_SUBDIRECTORY(internal)
+-  ENDIF()
+-  ADD_SUBDIRECTORY(packaging/rpm-oel)
+-  ADD_SUBDIRECTORY(packaging/rpm-fedora)
+-  ADD_SUBDIRECTORY(packaging/rpm-sles)
+-  ADD_SUBDIRECTORY(packaging/rpm-docker)
+-  ADD_SUBDIRECTORY(packaging/deb-in)
+-ENDIF()
++#
++# Directory where error message database is generated (GenError target)
++#
++FILE(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/sql/share)
+ 
+ INCLUDE(cmake/abi_check.cmake)
+ INCLUDE(cmake/tags.cmake)
+@@ -680,11 +541,7 @@ ELSE()
+   SET(CPACK_GENERATOR "TGZ")
+ ENDIF() 
+ ADD_SUBDIRECTORY(packaging/WiX)
+-ADD_SUBDIRECTORY(packaging/solaris)
+ 
+-IF(UNIX)
+-  INSTALL(FILES Docs/mysql.info DESTINATION ${INSTALL_INFODIR} OPTIONAL COMPONENT Info)
+-ENDIF()
+ #
+ # RPM installs documentation directly from the source tree
+ #
+diff --git a/extra/CMakeLists.txt b/extra/CMakeLists.txt
+index 3adf988..9e0ba30 100644
+--- a/extra/CMakeLists.txt
++++ b/extra/CMakeLists.txt
+@@ -70,87 +70,4 @@ ADD_DEFINITIONS(-DMUTEX_EVENT)
+ COPY_OPENSSL_DLLS(copy_openssl_extra)
+ IF (WIN32 AND WITH_SSL_PATH AND HAVE_CRYPTO_DLL)
+   ADD_DEPENDENCIES(GenError copy_openssl_extra)
+-ENDIF()
+-
+-
+-MYSQL_ADD_EXECUTABLE(my_print_defaults my_print_defaults.c)
+-TARGET_LINK_LIBRARIES(my_print_defaults  mysys mysys_ssl)
+-SET_TARGET_PROPERTIES(my_print_defaults PROPERTIES LINKER_LANGUAGE CXX)
+-
+-MYSQL_ADD_EXECUTABLE(perror perror.c)
+-ADD_DEPENDENCIES(perror GenError)
+-TARGET_LINK_LIBRARIES(perror mysys mysys_ssl)
+-SET_TARGET_PROPERTIES(perror PROPERTIES LINKER_LANGUAGE CXX)
+-
+-MYSQL_ADD_EXECUTABLE(resolveip resolveip.c)
+-TARGET_LINK_LIBRARIES(resolveip mysys mysys_ssl)
+-SET_TARGET_PROPERTIES(resolveip PROPERTIES LINKER_LANGUAGE CXX)
+-IF(CMAKE_SYSTEM_NAME STREQUAL "SunOS")
+-  INCLUDE(CheckFunctionExists)
+-  INCLUDE(CheckLibraryExists)
+-  MY_SEARCH_LIBS(inet_aton  "nsl;socket;resolv" SOLARIS_NSL)
+-  TARGET_LINK_LIBRARIES(resolveip ${SOLARIS_NSL})
+-ENDIF()
+-
+-
+-MYSQL_ADD_EXECUTABLE(replace replace.c)
+-TARGET_LINK_LIBRARIES(replace mysys)
+-
+-MYSQL_ADD_EXECUTABLE(lz4_decompress lz4_decompress.cc)
+-TARGET_LINK_LIBRARIES(lz4_decompress ${LZ4_LIBRARY})
+-
+-MYSQL_ADD_EXECUTABLE(zlib_decompress zlib_decompress.cc)
+-TARGET_LINK_LIBRARIES(zlib_decompress ${ZLIB_LIBRARY})
+-
+-IF(WITH_INNOBASE_STORAGE_ENGINE)
+-
+-  IF(LZ4_INCLUDE_DIR AND LZ4_LIBRARY)
+-    ADD_DEFINITIONS(-DHAVE_LZ4=1)
+-    INCLUDE_DIRECTORIES(${LZ4_INCLUDE_DIR})
+-  ENDIF()
+-
+-  # Add path to the InnoDB headers
+-  INCLUDE_DIRECTORIES(
+-    ${CMAKE_SOURCE_DIR}/storage/innobase/include
+-    ${CMAKE_SOURCE_DIR}/sql
+-  )
+-  # We use the InnoDB code directly in case the code changes.
+-  ADD_DEFINITIONS("-DUNIV_INNOCHECKSUM")
+-  SET(INNOBASE_SOURCES
+-      ../storage/innobase/buf/buf0checksum.cc
+-      ../storage/innobase/ut/ut0crc32.cc
+-      ../storage/innobase/ut/ut0ut.cc
+-      ../storage/innobase/buf/buf0buf.cc
+-      ../storage/innobase/page/page0zip.cc
+-      ../storage/innobase/os/os0file.cc
+-     )
+-
+-  # Avoid generating Hardware Capabilities due to crc32 instructions
+-  IF(CMAKE_SYSTEM_NAME MATCHES "SunOS" AND
+-     CMAKE_SYSTEM_PROCESSOR MATCHES "i386")
+-    INCLUDE(${MYSQL_CMAKE_SCRIPT_DIR}/compile_flags.cmake)
+-    MY_CHECK_CXX_COMPILER_FLAG("-Wa,-nH" HAVE_WA_NH)
+-    IF(HAVE_WA_NH)
+-      ADD_COMPILE_FLAGS(
+-        ../storage/innobase/ut/ut0crc32.cc
+-        COMPILE_FLAGS "-Wa,-nH"
+-      )
+-    ENDIF()
+-  ENDIF()
+-
+-  MYSQL_ADD_EXECUTABLE(innochecksum innochecksum.cc ${INNOBASE_SOURCES})
+-  TARGET_LINK_LIBRARIES(innochecksum mysys mysys_ssl ${LZ4_LIBRARY})
+-  ADD_DEPENDENCIES(innochecksum GenError)
+-ENDIF()
+-
+-IF(UNIX)
+-  MYSQL_ADD_EXECUTABLE(resolve_stack_dump resolve_stack_dump.cc)
+-  TARGET_LINK_LIBRARIES(resolve_stack_dump mysys mysys_ssl)
+-ENDIF()
+-
+-# In published release builds on Solaris, we need to bundle gcc source.
+-# PB2 will take care of putting it in extra/ when needed
+-IF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/gcc-4.8.1.tar.bz2)
+-  INSTALL(FILES gcc-4.8.1.tar.bz2 
+-          DESTINATION ${INSTALL_MYSQLSHAREDIR} COMPONENT Development)
+-ENDIF()
++ENDIF()
+\ No newline at end of file
+diff --git a/mysys/mysys_priv.h b/mysys/mysys_priv.h
+index 8b7a554..4353037 100644
+--- a/mysys/mysys_priv.h
++++ b/mysys/mysys_priv.h
+@@ -18,6 +18,7 @@
+ 
+ #include "my_global.h"
+ #include "mysql/psi/mysql_thread.h"
++#include "my_sys.h"
+ 
+ #ifdef HAVE_PSI_INTERFACE
+ 
