@@ -44,3 +44,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/data)
 # Handle copyright
 file(COPY ${CURRENT_BUILDTREES_DIR}/src/glbinding-2.1.1/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/glbinding)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/glbinding/LICENSE ${CURRENT_PACKAGES_DIR}/share/glbinding/copyright)
+
+vcpkg_copy_pdbs()
