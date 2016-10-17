@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/eigen-eigen-dc6cfdf9bcec)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://bitbucket.org/eigen/eigen/get/3.2.9.tar.bz2"
-    FILENAME "eigen-3.2.9.tar.bz2"
-    SHA512 2734ce70e0b04dc5839715a3cc9b8f90e05b341cfca42a7d586df213a9a14fe5642c76ccf36c16d020ae167c0d6e4d5cc306f0b3bf1f519c58372b0736ca7e63
+    URLS "http://bitbucket.org/eigen/eigen/get/3.2.10.tar.bz2"
+    FILENAME "eigen-3.2.10.tar.bz2"
+    SHA512 413c01a5b1b5d2e4366bc9289b1d613b21157e702b1c0d544e41ba5726acfbe0b60921ded37926010e9ce3642939e3ad39038e053d392b90a7a6302955ec5058
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
