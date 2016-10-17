@@ -1,5 +1,5 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CMAKE_CURRENT_LIST_DIR})
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/sqlite-amalgamation-3150000)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sqlite.org/2016/sqlite-amalgamation-3150000.zip"
     FILENAME "sqlite-amalgamation-3150000.zip"
@@ -7,10 +7,12 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -DSOURCE=${CURRENT_BUILDTREES_DIR}/src/sqlite-amalgamation-3150000
+        -DSOURCE=${SOURCE_PATH}
 )
 
 vcpkg_install_cmake()
