@@ -8,6 +8,10 @@
 
 include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+	message(FATAL_ERROR "Portfile not yet modified for building glbinding statically")
+endif()
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/cginternals/glbinding/archive/v2.1.1.zip"
     FILENAME "glbinding-2.1.1.zip"
@@ -24,6 +28,7 @@ vcpkg_configure_cmake(
 
 vcpkg_build_cmake()
 vcpkg_install_cmake()
+
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
