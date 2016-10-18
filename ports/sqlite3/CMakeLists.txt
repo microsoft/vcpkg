@@ -3,7 +3,11 @@ project(sqlite3 C)
 
 include_directories(${SOURCE})
 add_library(sqlite3 SHARED ${SOURCE}/sqlite3.c)
-target_compile_definitions(sqlite3 PRIVATE $<$<CONFIG:Debug>:-DSQLITE_DEBUG> "-DSQLITE_API=__declspec(dllexport)")
+target_compile_definitions(sqlite3 PRIVATE 
+    $<$<CONFIG:Debug>:-DSQLITE_DEBUG> "-DSQLITE_API=__declspec(dllexport)"
+    -DSQLITE_ENABLE_RTREE
+    -DSQLITE_ENABLE_UNLOCK_NOTIFY
+    )
 if(TRIPLET_SYSTEM_NAME MATCHES "WindowsStore")
     target_compile_definitions(sqlite3 PRIVATE -DSQLITE_OS_WINRT=1)
 endif()
