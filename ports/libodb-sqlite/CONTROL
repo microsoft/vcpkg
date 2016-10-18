@@ -1,0 +1,4 @@
+Source: libodb-sqlite
+Version:
+Description:
+Build-Depends: libodb, sqlite3
