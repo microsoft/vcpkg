@@ -1,5 +1,5 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/eigen-eigen-dc6cfdf9bcec)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/eigen-eigen-b9cd8366d4e8)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://bitbucket.org/eigen/eigen/get/3.2.10.tar.bz2"
     FILENAME "eigen-3.2.10.tar.bz2"
