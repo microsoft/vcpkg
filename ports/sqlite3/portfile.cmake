@@ -1,3 +1,4 @@
+include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/sqlite-amalgamation-3150000)
 vcpkg_download_distfile(ARCHIVE
@@ -14,7 +15,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DSOURCE=${SOURCE_PATH}
 )
-
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/sqlite3/copyright "SQLite is in the Public Domain.\nhttp://www.sqlite.org/copyright.html\n")

@@ -2,9 +2,17 @@ cmake_minimum_required(VERSION 3.0)
 project(sqlite3 C)
 
 include_directories(${SOURCE})
-add_library(sqlite3 SHARED ${SOURCE}/sqlite3.c)
+if(BUILD_SHARED_LIBS)
+    set(API "-DSQLITE_API=__declspec(dllexport)")
+else()
+    set(API "-DSQLITE_API=extern")
+endif()
+add_library(sqlite3 ${SOURCE}/sqlite3.c)
+
+
 target_compile_definitions(sqlite3 PRIVATE 
-    $<$<CONFIG:Debug>:-DSQLITE_DEBUG> "-DSQLITE_API=__declspec(dllexport)"
+    $<$<CONFIG:Debug>:-DSQLITE_DEBUG>
+    ${API}
     -DSQLITE_ENABLE_RTREE
     -DSQLITE_ENABLE_UNLOCK_NOTIFY
     )
