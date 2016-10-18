@@ -1,0 +1,40 @@
+From be3c446b1dd798b835052188813ee4e7cf135a81 Mon Sep 17 00:00:00 2001
+From: Vincent Lejeune <vljn.ovi@gmail.com>
+Date: Wed, 12 Oct 2016 00:27:35 +0200
+Subject: [PATCH] Add an extra path input for Freetype.
+
+---
+ win32/config-msvc.mak    | 3 +++
+ win32/detectenv-msvc.mak | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/win32/config-msvc.mak b/win32/config-msvc.mak
+index e0c6468..1ad0913 100644
+--- a/win32/config-msvc.mak
++++ b/win32/config-msvc.mak
+@@ -124,6 +124,9 @@ HB_DEFINES = $(HB_DEFINES) /DHAVE_CAIRO=1
+ 
+ # Enable freetype if desired
+ !if "$(FREETYPE)" == "1"
++HB_CFLAGS =	\
++	$(HB_CFLAGS)					\
++	/I$(FREETYPE_DIR)
+ HB_DEFINES = $(HB_DEFINES) /DHAVE_FREETYPE=1
+ HB_SOURCES = $(HB_SOURCES) $(HB_FT_sources)
+ HB_HEADERS = $(HB_HEADERS) $(HB_FT_headers)
+diff --git a/win32/detectenv-msvc.mak b/win32/detectenv-msvc.mak
+index 83d8786..ad67493 100644
+--- a/win32/detectenv-msvc.mak
++++ b/win32/detectenv-msvc.mak
+@@ -129,7 +129,7 @@ LDFLAGS_ARCH = /machine:x86
+ !if "$(VALID_CFGSET)" == "TRUE"
+ CFLAGS = $(CFLAGS_ADD) /W3 /Zi /I.. /I..\src /I. /I$(PREFIX)\include
+ 
+-LDFLAGS_BASE = $(LDFLAGS_ARCH) /libpath:$(PREFIX)\lib /DEBUG
++LDFLAGS_BASE = $(LDFLAGS_ARCH) /libpath:$(PREFIX)\lib  /libpath:$(VCPKG_LIB_DIR) /DEBUG
+ 
+ !if "$(CFG)" == "debug"
+ LDFLAGS = $(LDFLAGS_BASE)
+-- 
+2.10.0.windows.1
+

@@ -1,3 +1,4 @@
+include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/boost_1_62_0)
 
@@ -24,10 +25,21 @@ set(B2_OPTIONS
     -q
     --without-python
     threading=multi
-    link=shared
-    runtime-link=shared
     --debug-configuration
 )
+
+if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
+    list(APPEND B2_OPTIONS runtime-link=shared)
+elseif()
+    list(APPEND B2_OPTIONS runtime-link=static)
+endif()
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    list(APPEND B2_OPTIONS link=shared)
+elseif()
+    list(APPEND B2_OPTIONS link=static)
+endif()
+
 if(TRIPLET_SYSTEM_ARCH MATCHES "x64")
     list(APPEND B2_OPTIONS address-model=64)
 endif()
@@ -46,6 +58,7 @@ vcpkg_execute_required_process(
         --build-dir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
         ${B2_OPTIONS}
         variant=release
+        debug-symbols=on
     WORKING_DIRECTORY ${SOURCE_PATH}
     LOGNAME build-${TARGET_TRIPLET}-rel
 )
@@ -81,18 +94,26 @@ message(STATUS "Packaging ${TARGET_TRIPLET}-rel")
 file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/stage/lib/
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib
     FILES_MATCHING PATTERN "*.lib")
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/stage/lib/
-    DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-    FILES_MATCHING PATTERN "*.dll")
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/stage/lib/
+        DESTINATION ${CURRENT_PACKAGES_DIR}/bin
+        FILES_MATCHING PATTERN "*.dll")
+elseif()
+    message(STATUS ${VCPKG_LIBRARY_LINKAGE})
+endif()
 message(STATUS "Packaging ${TARGET_TRIPLET}-rel done")
 
 message(STATUS "Packaging ${TARGET_TRIPLET}-dbg")
 file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/stage/lib/
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
     FILES_MATCHING PATTERN "*.lib")
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/stage/lib/
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-    FILES_MATCHING PATTERN "*.dll")
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/stage/lib/
+        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
+        FILES_MATCHING PATTERN "*.dll")
+elseif()
+    message(STATUS ${VCPKG_LIBRARY_LINKAGE})
+endif()
 message(STATUS "Packaging ${TARGET_TRIPLET}-dbg done")
 
 vcpkg_copy_pdbs()

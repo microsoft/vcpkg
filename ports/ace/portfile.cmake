@@ -8,8 +8,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 
 if (TRIPLET_SYSTEM_ARCH MATCHES "arm")
-    message(FATAL_ERROR, "ARM is currently not supported.")
-    return()
+    message(FATAL_ERROR "ARM is currently not supported.")
 elseif (TRIPLET_SYSTEM_ARCH MATCHES "x86")
     set(MSBUILD_PLATFORM "Win32")
 else ()

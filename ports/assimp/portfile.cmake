@@ -36,3 +36,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 # Handle copyright
 file(COPY ${CURRENT_BUILDTREES_DIR}/src/assimp-3.3.1/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/assimp)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/assimp/LICENSE ${CURRENT_PACKAGES_DIR}/share/assimp/copyright)
+vcpkg_copy_pdbs()

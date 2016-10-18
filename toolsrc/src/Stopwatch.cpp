@@ -82,7 +82,7 @@ namespace vcpkg
         if (duration_cast<microseconds>(nanos) > microseconds())
         {
             auto t = nanos_as_double / duration_cast<nanoseconds>(microseconds(1)).count();
-            return Strings::format("%.4g micros", t);
+            return Strings::format("%.4g us", t);
         }
 
         return Strings::format("%.4g ns", nanos_as_double);

@@ -32,6 +32,18 @@ function(vcpkg_configure_cmake)
         list(APPEND _csc_OPTIONS -DBUILD_SHARED_LIBS=ON)
     endif()
 
+    list(APPEND _csc_OPTIONS
+        "-DCMAKE_CXX_FLAGS= /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc"
+        "-DCMAKE_C_FLAGS= /DWIN32 /D_WINDOWS /W3 /utf-8"
+    )
+
+    list(APPEND _csc_OPTIONS_RELEASE
+        "-DCMAKE_CXX_FLAGS_RELEASE=/MD /O2 /Oi /Gy /DNDEBUG /Zi"
+        "-DCMAKE_C_FLAGS_RELEASE=/MD /O2 /Oi /Gy /DNDEBUG /Zi"
+        "-DCMAKE_SHARED_LINKER_FLAGS_RELEASE=/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF"
+        "-DCMAKE_EXE_LINKER_FLAGS_RELEASE=/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF"
+    )
+
     message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
     vcpkg_execute_required_process(

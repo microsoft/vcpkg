@@ -4,7 +4,7 @@
 #include <iterator>
 #include <functional>
 #include "vcpkg_System.h"
-#include <set>
+#include "coff_file_reader.h"
 
 namespace fs = std::tr2::sys;
 
@@ -13,7 +13,7 @@ namespace vcpkg
     enum class lint_status
     {
         SUCCESS = 0,
-        ERROR = 1
+        ERROR_DETECTED = 1
     };
 
     static const fs::path DUMPBIN_EXE = R"(%VS140COMNTOOLS%\..\..\VC\bin\dumpbin.exe)";
@@ -51,7 +51,7 @@ namespace vcpkg
         if (!fs::exists(include_dir) || fs::is_empty(include_dir))
         {
             System::println(System::color::warning, "The folder /include is empty. This indicates the library was not correctly installed.");
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         return lint_status::SUCCESS;
@@ -72,7 +72,7 @@ namespace vcpkg
             System::println(System::color::warning, "Include files should not be duplicated into the /debug/include directory. If this cannot be disabled in the project cmake, use\n"
                             "    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)"
             );
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         return lint_status::SUCCESS;
@@ -85,7 +85,7 @@ namespace vcpkg
         if (fs::exists(debug_share) && !fs::is_empty(debug_share))
         {
             System::println(System::color::warning, "No files should be present in /debug/share");
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         return lint_status::SUCCESS;
@@ -97,7 +97,7 @@ namespace vcpkg
         if (fs::exists(lib_cmake))
         {
             System::println(System::color::warning, "The /lib/cmake folder should be moved to just /cmake");
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         return lint_status::SUCCESS;
@@ -116,7 +116,7 @@ namespace vcpkg
         {
             System::println(System::color::warning, "The following cmake files were found outside /share/%s. Please place cmake files in /share/%s.", spec.name(), spec.name());
             print_vector_of_files(misplaced_cmake_files);
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         return lint_status::SUCCESS;
@@ -128,7 +128,7 @@ namespace vcpkg
         if (fs::exists(lib_cmake_debug))
         {
             System::println(System::color::warning, "The /debug/lib/cmake folder should be moved to just /debug/cmake");
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         return lint_status::SUCCESS;
@@ -144,7 +144,7 @@ namespace vcpkg
         {
             System::println(System::color::warning, "\nThe following dlls were found in /lib and /debug/lib. Please move them to /bin or /debug/bin, respectively.");
             print_vector_of_files(dlls);
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         return lint_status::SUCCESS;
@@ -184,7 +184,7 @@ namespace vcpkg
             System::println("\n    file(COPY ${CURRENT_BUILDTREES_DIR}/%s DESTINATION ${CURRENT_PACKAGES_DIR}/share/%s)\n"
                             "    file(RENAME ${CURRENT_PACKAGES_DIR}/share/%s/%s ${CURRENT_PACKAGES_DIR}/share/%s/copyright)",
                             relative_path.generic_string(), spec.name(), spec.name(), found_file.filename().generic_string(), spec.name());
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         if (potential_copyright_files.size() > 1)
@@ -196,7 +196,7 @@ namespace vcpkg
         const fs::path current_packages_dir = paths.packages / spec.dir();
         System::println("    %s/share/%s/copyright", current_packages_dir.generic_string(), spec.name());
 
-        return lint_status::ERROR;
+        return lint_status::ERROR_DETECTED;
     }
 
     static lint_status check_for_exes(const package_spec& spec, const vcpkg_paths& paths)
@@ -209,7 +209,7 @@ namespace vcpkg
         {
             System::println(System::color::warning, "The following EXEs were found in /bin and /debug/bin. EXEs are not valid distribution targets.");
             print_vector_of_files(exes);
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         return lint_status::SUCCESS;
@@ -235,7 +235,7 @@ namespace vcpkg
             System::println(System::color::warning, "The following DLLs have no exports:");
             print_vector_of_files(dlls_with_no_exports);
             System::println(System::color::warning, "DLLs without any exports are likely a bug in the build script.");
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         return lint_status::SUCCESS;
@@ -266,7 +266,7 @@ namespace vcpkg
             System::println(System::color::warning, "The following DLLs do not have the App Container bit set:");
             print_vector_of_files(dlls_with_improper_uwp_bit);
             System::println(System::color::warning, "This bit is required for Windows Store apps.");
-            return lint_status::ERROR;
+            return lint_status::ERROR_DETECTED;
         }
 
         return lint_status::SUCCESS;
@@ -278,73 +278,81 @@ namespace vcpkg
         std::string actual_arch;
     };
 
-    static lint_status check_architecture(const std::string& expected_architecture, const std::vector<fs::path>& files)
+    static std::string get_actual_architecture(const MachineType& machine_type)
     {
-        // static const std::regex machine_regex = std::regex(R"###([0-9A-F]+ machine \([^)]+\))###");
-
-        // Parenthesis is there to avoid some other occurrences of the word "machine". Those don't match the expected regex.
-        static const std::string machine_string_scan = "machine (";
-
-        std::vector<file_and_arch> binaries_with_invalid_architecture;
-        std::set<fs::path> binaries_with_no_architecture(files.cbegin(), files.cend());
-
-        for (const fs::path& f : files)
+        switch (machine_type)
         {
-            const std::wstring cmd_line = Strings::wformat(LR"("%s" /headers "%s")", DUMPBIN_EXE.native(), f.native());
-            System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
-            Checks::check_exit(ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
+            case MachineType::AMD64:
+            case MachineType::IA64:
+                return "x64";
+            case MachineType::I386:
+                return "x86";
+            case MachineType::ARM:
+            case MachineType::ARMNT:
+                return "arm";
+            default:
+                return "Machine Type Code = " + std::to_string(static_cast<uint16_t>(machine_type));
+        }
+    }
 
-            const std::string& s = ec_data.output;
+    static void print_invalid_architecture_files(const std::string& expected_architecture, std::vector<file_and_arch> binaries_with_invalid_architecture)
+    {
+        System::println(System::color::warning, "The following files were built for an incorrect architecture:");
+        System::println("");
+        for (const file_and_arch& b : binaries_with_invalid_architecture)
+        {
+            System::println("    %s", b.file.generic_string());
+            System::println("Expected %s, but was: %s", expected_architecture, b.actual_arch);
+            System::println("");
+        }
+    }
 
-            for (size_t start, end, idx = s.find(machine_string_scan); idx != std::string::npos; idx = s.find(machine_string_scan, end))
+    static lint_status check_dll_architecture(const std::string& expected_architecture, const std::vector<fs::path>& files)
+    {
+        std::vector<file_and_arch> binaries_with_invalid_architecture;
+
+        for (const fs::path& file : files)
+        {
+            Checks::check_exit(file.extension() == ".dll", "The file extension was not .dll: %s", file.generic_string());
+            COFFFileReader::dll_info info = COFFFileReader::read_dll(file);
+            const std::string actual_architecture = get_actual_architecture(info.machine_type);
+
+            if (expected_architecture != actual_architecture)
             {
-                // Skip the space directly in front of "machine" and find the previous one. Get the index of the char after it.
-                // Go no further than a newline
-                start = std::max(s.find_last_of('\n', idx - 2) + 1, s.find_last_of(' ', idx - 2) + 1);
-
-                // Find the first close-parenthesis. Get the index of the char after it
-                // Go no futher than a newline
-                end = std::min(s.find_first_of('\n', idx) + 1, s.find_first_of(')', idx) + 1);
-
-                std::string machine_line(s.substr(start, end - start));
-
-                if (Strings::case_insensitive_ascii_find(machine_line, expected_architecture) != machine_line.end())
-                {
-                    binaries_with_no_architecture.erase(f);
-                }
-                else
-                {
-                    binaries_with_invalid_architecture.push_back({f, machine_line});
-                    break; // If one erroneous entry is found, we can abort this file
-                }
+                binaries_with_invalid_architecture.push_back({file, actual_architecture});
             }
         }
 
         if (!binaries_with_invalid_architecture.empty())
         {
-            System::println(System::color::warning, "The following files were built for an incorrect architecture:");
-            System::println("");
-            for (const file_and_arch& b : binaries_with_invalid_architecture)
-            {
-                System::println("    %s", b.file.generic_string());
-                System::println("Expected %s, but was: %s", expected_architecture, b.actual_arch);
-            }
-            System::println("");
-
-            return lint_status::ERROR;
+            print_invalid_architecture_files(expected_architecture, binaries_with_invalid_architecture);
+            return lint_status::ERROR_DETECTED;
         }
 
-        if (!binaries_with_no_architecture.empty())
-        {
-            System::println(System::color::warning, "Unable to detect architecture in the following files:");
-            System::println("");
-            for (const fs::path& b : binaries_with_no_architecture)
-            {
-                System::println("    %s", b.generic_string());
-            }
-            System::println("");
+        return lint_status::SUCCESS;
+    }
 
-            return lint_status::ERROR;
+    static lint_status check_lib_architecture(const std::string& expected_architecture, const std::vector<fs::path>& files)
+    {
+        std::vector<file_and_arch> binaries_with_invalid_architecture;
+
+        for (const fs::path& file : files)
+        {
+            Checks::check_exit(file.extension() == ".lib", "The file extension was not .lib: %s", file.generic_string());
+            COFFFileReader::lib_info info = COFFFileReader::read_lib(file);
+            Checks::check_exit(info.machine_types.size() == 1, "Found more than 1 architecture in file %s", file.generic_string());
+
+            const std::string actual_architecture = get_actual_architecture(info.machine_types.at(0));
+            if (expected_architecture != actual_architecture)
+            {
+                binaries_with_invalid_architecture.push_back({file, actual_architecture});
+            }
+        }
+
+        if (!binaries_with_invalid_architecture.empty())
+        {
+            print_invalid_architecture_files(expected_architecture, binaries_with_invalid_architecture);
+            return lint_status::ERROR_DETECTED;
         }
 
         return lint_status::SUCCESS;
@@ -359,7 +367,7 @@ namespace vcpkg
 
         System::println(System::color::warning, "DLLs should not be present in a static build, but the following DLLs were found:");
         print_vector_of_files(dlls);
-        return lint_status::ERROR;
+        return lint_status::ERROR_DETECTED;
     }
 
     static void operator +=(size_t& left, const lint_status& right)
@@ -392,7 +400,7 @@ namespace vcpkg
 
                     error_count += check_exports_of_dlls(dlls);
                     error_count += check_uwp_bit_of_dlls(spec.target_triplet().system(), dlls);
-                    error_count += check_architecture(spec.target_triplet().architecture(), dlls);
+                    error_count += check_dll_architecture(spec.target_triplet().architecture(), dlls);
                     break;
                 }
             case triplet::BuildType::STATIC:
@@ -400,6 +408,7 @@ namespace vcpkg
                     std::vector<fs::path> dlls;
                     recursive_find_files_with_extension_in_dir(paths.packages / spec.dir(), ".dll", dlls);
                     error_count += check_no_dlls_present(dlls);
+
                     break;
                 }
 
@@ -410,8 +419,7 @@ namespace vcpkg
         std::vector<fs::path> libs;
         recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "lib", ".lib", libs);
         recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "lib", ".lib", libs);
-
-        error_count += check_architecture(spec.target_triplet().architecture(), libs);
+        error_count += check_lib_architecture(spec.target_triplet().architecture(), libs);
 
         if (error_count != 0)
         {
