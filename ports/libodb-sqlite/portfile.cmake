@@ -26,3 +26,6 @@ else()
 endif()
 vcpkg_build_msbuild(PROJECT_PATH "${SOURCE_PATH}\\libodb-sqlite-vc12.sln" PLATFORM ${MSBUILD_PLATFORM}
                     OPTIONS "/p:useenv=true")
+
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libodb)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/libodb/LICENSE ${CURRENT_PACKAGES_DIR}/share/libodb/copyright)
