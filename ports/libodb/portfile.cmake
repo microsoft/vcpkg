@@ -21,6 +21,14 @@ vcpkg_configure_cmake(
     OPTIONS_DEBUG
         -DLIBODB_INSTALL_HEADERS=OFF
 )
+vcpkg_build_cmake()
+vcpkg_install_cmake()
+file(READ ${CURRENT_PACKAGES_DIR}/debug/share/libodb/libodbConfig-debug.cmake LIBODB_DEBUG_TARGETS)
+string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" LIBODB_DEBUG_TARGETS "${LIBODB_DEBUG_TARGETS}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/libodb/libodbConfig-debug.cmake "${LIBODB_DEBUG_TARGETS}")
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libodb)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libodb/LICENSE ${CURRENT_PACKAGES_DIR}/share/libodb/copyright)
+
+vcpkg_copy_pdbs()

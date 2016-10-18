@@ -16,16 +16,14 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_execute_required_process(COMMAND devenv libodb-sqlite-vc12.sln /upgrade WORKING_DIRECTORY ${SOURCE_PATH} LOGNAME devenv_upgrade.log)
-set(ENV{INCLUDE} "$ENV{INCLUDE};${CURRENT_INSTALLED_DIR}/include")
-set(ENV{LIB} "$ENV{LIB};${CURRENT_INSTALLED_DIR}/lib;${CURRENT_INSTALLED_DIR}/debug/lib")
-if(${TRIPLET_SYSTEM_ARCH} STREQUAL "x86")
-    set(MSBUILD_PLATFORM "Win32")
-else()
-    set(MSBUILD_PLATFORM "x64")
-endif()
-vcpkg_build_msbuild(PROJECT_PATH "${SOURCE_PATH}\\libodb-sqlite-vc12.sln" PLATFORM ${MSBUILD_PLATFORM}
-                    OPTIONS "/p:useenv=true")
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS_DEBUG
+        -DLIBODB_INSTALL_HEADERS=OFF
+)
+vcpkg_build_cmake()
+vcpkg_install_cmake()
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libodb)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libodb/LICENSE ${CURRENT_PACKAGES_DIR}/share/libodb/copyright)
