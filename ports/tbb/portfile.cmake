@@ -19,23 +19,61 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 # Installation
 message(STATUS "Installing")
-file(COPY ${SOURCE_PATH}/bin DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-file(COPY ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(COPY ${SOURCE_PATH}/lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+file(COPY
+  ${SOURCE_PATH}/include/tbb
+  ${SOURCE_PATH}/include/serial
+  DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-# Remove artefacts for other architectures
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/bin/ia32)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/lib/ia32) 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+  set(BIN_PATH ${SOURCE_PATH}/bin/intel64/vc14)
+  set(LIB_PATH ${SOURCE_PATH}/lib/intel64/vc14)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+  set(BIN_PATH ${SOURCE_PATH}/bin/ia32/vc14)
+  set(LIB_PATH ${SOURCE_PATH}/lib/ia32/vc14)
 else()
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/bin/intel64)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/lib/intel64)
+  message(FATAL_ERROR "Unsupported architecture")
 endif()
 
-vcpkg_copy_pdbs()
+file(COPY
+  ${LIB_PATH}/tbb.lib
+  ${LIB_PATH}/tbb_preview.lib
+  ${LIB_PATH}/tbbmalloc.lib
+  ${LIB_PATH}/tbbmalloc_proxy.lib
+  ${LIB_PATH}/tbbproxy.lib
+  ${LIB_PATH}/tbbproxy.pdb
+  DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+file(COPY
+  ${LIB_PATH}/tbb_debug.lib
+  ${LIB_PATH}/tbb_preview_debug.lib
+  ${LIB_PATH}/tbbmalloc_debug.lib
+  ${LIB_PATH}/tbbmalloc_proxy_debug.lib
+  ${LIB_PATH}/tbbproxy_debug.lib
+  ${LIB_PATH}/tbbproxy_debug.pdb
+  DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+
+file(COPY
+  ${BIN_PATH}/tbb.dll
+  ${BIN_PATH}/tbb_preview.dll
+  ${BIN_PATH}/tbbmalloc.dll
+  ${BIN_PATH}/tbbmalloc_proxy.dll
+  ${BIN_PATH}/tbb.pdb
+  ${BIN_PATH}/tbb_preview.pdb
+  ${BIN_PATH}/tbbmalloc.pdb
+  ${BIN_PATH}/tbbmalloc_proxy.pdb
+  DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+file(COPY
+  ${BIN_PATH}/tbb_debug.dll
+  ${BIN_PATH}/tbb_preview_debug.dll
+  ${BIN_PATH}/tbbmalloc_debug.dll
+  ${BIN_PATH}/tbbmalloc_proxy_debug.dll
+  ${BIN_PATH}/tbb_debug.pdb
+  ${BIN_PATH}/tbb_preview_debug.pdb
+  ${BIN_PATH}/tbbmalloc_debug.pdb
+  ${BIN_PATH}/tbbmalloc_proxy_debug.pdb
+  DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 
 message(STATUS "Installing done")
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tbb-20160916)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/tbb-20160916/LICENSE ${CURRENT_PACKAGES_DIR}/share/tbb-20160916/copyright)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tbb)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/tbb/LICENSE ${CURRENT_PACKAGES_DIR}/share/tbb/copyright)
