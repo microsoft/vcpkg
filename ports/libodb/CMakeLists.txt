@@ -19,13 +19,15 @@ else()
     target_compile_definitions(libodb PRIVATE
         -DLIBODB_STATIC_LIB)
 endif()
-install(TARGETS libodb EXPORT libodbConfig
+install(TARGETS libodb EXPORT odb_libodbConfig
+    COMPONENT libodb
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
 )
 if(LIBODB_INSTALL_HEADERS)
 install(DIRECTORY odb DESTINATION include/
+        COMPONENT libodb
         FILES_MATCHING
         PATTERN "*.h"
         PATTERN "*.hxx"
@@ -33,5 +35,5 @@ install(DIRECTORY odb DESTINATION include/
         PATTERN "*.txx"
 )
 endif()
-install(EXPORT libodbConfig NAMESPACE libodb:: DESTINATION share/libodb)
-export(TARGETS libodb NAMESPACE libodb:: FILE libodbConfig.cmake)
+install(EXPORT odb_libodbConfig NAMESPACE odb:: COMPONENT libodb DESTINATION share/odb)
+export(TARGETS libodb NAMESPACE odb:: FILE odb_libodbConfig.cmake)

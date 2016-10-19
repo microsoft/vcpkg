@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project(libodb-sqlite VERSION 2.4.0 LANGUAGES CXX)
-find_package(libodb REQUIRED VERSION 2.4.0)
+find_package(odb 2.4.0 REQUIRED COMPONENTS libodb)
+find_library(SQLITE3_LIBRARY names sqlite sqlite3)
 set(LIBODB_INSTALL_HEADERS ON CACHE BOOL "Install the header files (a debug install)")
 file(GLOB_RECURSE libodb_src LIST_DIRECTORIES False
     RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
@@ -13,7 +14,8 @@ target_include_directories(sqlite
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 
 )
-target_link_libraries(sqlite libodb::libodb)
+
+target_link_libraries(sqlite PRIVATE odb::libodb ${SQLITE3_LIBRARY})
 if(BUILD_SHARED_LIBS)
     target_compile_definitions(sqlite PRIVATE
         -DLIBODB_SQLITE_DYNAMIC_LIB
@@ -23,7 +25,7 @@ else()
         -DLIBODB_SQLITE_STATIC_LIB
         -DLIBODB_SQLITE_HAVE_UNLOCK_NOTIFY)
 endif()
-install(TARGETS sqlite EXPORT libodb_sqliteConfig
+install(TARGETS sqlite EXPORT odb_sqliteConfig
     COMPONENT sqlite
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
@@ -39,5 +41,5 @@ install(DIRECTORY odb DESTINATION include/
         PATTERN "*.txx"
 )
 endif()
-install(EXPORT libodb_sqliteConfig DESTINATION share/libodb)
-export(TARGETS sqlite NAMESPACE libodb FILE libodb_sqliteConfig.cmake)
+install(EXPORT odb_sqliteConfig NAMESPACE odb:: COMPONENT sqlite DESTINATION share/odb)
+export(TARGETS sqlite NAMESPACE odb:: FILE odb_sqliteConfig.cmake)
