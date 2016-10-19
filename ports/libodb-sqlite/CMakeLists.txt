@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project(libodb-sqlite VERSION 2.4.0 LANGUAGES CXX)
 find_package(odb 2.4.0 REQUIRED COMPONENTS libodb)
-find_library(SQLITE3_LIBRARY names sqlite sqlite3)
+find_package(sqlite3 REQUIRED)
 set(LIBODB_INSTALL_HEADERS ON CACHE BOOL "Install the header files (a debug install)")
 file(GLOB_RECURSE libodb_src LIST_DIRECTORIES False
     RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
@@ -15,7 +15,7 @@ target_include_directories(sqlite
 
 )
 
-target_link_libraries(sqlite PRIVATE odb::libodb ${SQLITE3_LIBRARY})
+target_link_libraries(sqlite PRIVATE odb::libodb sqlite3)
 if(BUILD_SHARED_LIBS)
     target_compile_definitions(sqlite PRIVATE
         -DLIBODB_SQLITE_DYNAMIC_LIB
