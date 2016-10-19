@@ -37,5 +37,5 @@ vcpkg_copy_pdbs()
 message(STATUS "Installing done")
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tbb-20160916)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/tbb-20160916/LICENSE ${CURRENT_PACKAGES_DIR}/share/tbb-20160916/copyright)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tbb)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/tbb/LICENSE ${CURRENT_PACKAGES_DIR}/share/tbb/copyright)
