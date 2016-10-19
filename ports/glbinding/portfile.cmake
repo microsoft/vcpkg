@@ -16,7 +16,7 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_configure_cmake(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glbinding-2.1.1)
-vcpkg_build_cmake()
+#vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 
@@ -26,10 +26,15 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/cmake/glbinding ${CURRENT_PACKAGES_DIR}/shar
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake)
 
 file(READ ${CURRENT_PACKAGES_DIR}/debug/cmake/glbinding/glbinding-export-debug.cmake GLBINDING_DEBUG_MODULE)
-string(REPLACE "\${IMPORT_PREFIX}" "\${IMPORT_PREFIX}/debug" GLBINDING_DEBUG_MODULE "${GLBINDING_DEBUG_MODULE}")
+string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" GLBINDING_DEBUG_MODULE "${GLBINDING_DEBUG_MODULE}")
+string(REPLACE "glbindingd.dll" "bin/glbindingd.dll" GLBINDING_DEBUG_MODULE "${GLBINDING_DEBUG_MODULE}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/glbinding/glbinding-export-debug.cmake "${GLBINDING_DEBUG_MODULE}")
-file(RENAME ${CURRENT_PACKAGES_DIR}/glbinding-config.cmake ${CURRENT_PACKAGES_DIR}/share/glbinding/glbinding-config.cmake)
+file(READ ${CURRENT_PACKAGES_DIR}/share/glbinding/glbinding-export-release.cmake RELEASE_CONF)
+string(REPLACE "glbinding.dll" "bin/glbinding.dll" RELEASE_CONF "${RELEASE_CONF}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/glbinding/glbinding-export-release.cmake "${RELEASE_CONF}")
+file(REMOVE ${CURRENT_PACKAGES_DIR}/glbinding-config.cmake)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/glbinding-config.cmake)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/glbinding/glbinding-export.cmake ${CURRENT_PACKAGES_DIR}/share/glbinding/glbinding-config.cmake)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
