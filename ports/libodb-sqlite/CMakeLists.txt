@@ -7,25 +7,25 @@ file(GLOB_RECURSE libodb_src LIST_DIRECTORIES False
     RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     *.cxx)
 list(FILTER libodb_src EXCLUDE REGEX /posix/.*)
-add_library(sqlite ${libodb_src})
-target_include_directories(sqlite
+add_library(libodb-sqlite ${libodb_src})
+target_include_directories(libodb-sqlite
     PUBLIC 
         $<INSTALL_INTERFACE:include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 
 )
 
-target_link_libraries(sqlite PRIVATE odb::libodb sqlite3)
+target_link_libraries(libodb-sqlite PRIVATE odb::libodb sqlite3)
 if(BUILD_SHARED_LIBS)
-    target_compile_definitions(sqlite PRIVATE
+    target_compile_definitions(libodb-sqlite PRIVATE
         -DLIBODB_SQLITE_DYNAMIC_LIB
         -DLIBODB_SQLITE_HAVE_UNLOCK_NOTIFY)
 else()
-    target_compile_definitions(sqlite PRIVATE
+    target_compile_definitions(libodb-sqlite PRIVATE
         -DLIBODB_SQLITE_STATIC_LIB
         -DLIBODB_SQLITE_HAVE_UNLOCK_NOTIFY)
 endif()
-install(TARGETS sqlite EXPORT odb_sqliteConfig
+install(TARGETS libodb-sqlite EXPORT odb_sqliteConfig
     COMPONENT sqlite
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
@@ -42,4 +42,4 @@ install(DIRECTORY odb DESTINATION include/
 )
 endif()
 install(EXPORT odb_sqliteConfig NAMESPACE odb:: COMPONENT sqlite DESTINATION share/odb)
-export(TARGETS sqlite NAMESPACE odb:: FILE odb_sqliteConfig.cmake)
+export(TARGETS libodb-sqlite NAMESPACE odb:: FILE odb_sqliteConfig.cmake)
