@@ -15,7 +15,7 @@ function(vcpkg_apply_patches)
         )
         
         if(error_code)
-            message(FATAL_ERROR
+            message(STATUS
                 "Applying patch failed: ${GIT} --work-tree=. apply \"${PATCH}\" --ignore-whitespace --whitespace=nowarn --verbose\n"
                 "Working Directory: ${_ap_SOURCE_PATH}\n"
                 "See logs for more information:\n"
