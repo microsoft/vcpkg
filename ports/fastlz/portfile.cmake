@@ -2,9 +2,9 @@ include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/FastLZ-master)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/ariya/FastLZ/archive/master.zip"
+    URLS "https://github.com/ariya/FastLZ/archive/f1217348a868bdb9ee0730244475aee05ab329c5.zip"
     FILENAME "fastlz.zip"
-    SHA512 2e7928a08b00c80b3a19936db1b2c7030b021e143db4811299b2548846499c735280e77fb101cb060031415c19028722add4c6ed86c1ddde3cd0d0de3f45d522
+    SHA512 edfefbf4151e7ea6451a6fbb6d464a2a0f48ab50622f936634ec3ea4542ad3e1f075892a422e0fc5a23f2092be4ec890e6f91c4622bcd0d195fed84d4044d5df
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
@@ -12,7 +12,7 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS 
+    OPTIONS
         -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
 )
 
