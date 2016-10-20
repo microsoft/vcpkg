@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glew-1.13.0)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glew-2.0.0)
 vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "http://downloads.sourceforge.net/project/glew/glew/1.13.0/glew-1.13.0.tgz"
-    FILENAME "glew-1.13.0.tgz"
-    SHA512 8fc8d7c0d2cd9235ea51db9972f492701827bff40642fdb3cc54c10b0737dba8e6d8d0dcd8c5aa5bfaaae39c6198ba3d4292cd1662fbe1977eb9a5d187ba635f
+    URLS "https://sourceforge.net/projects/glew/files/glew/2.0.0/glew-2.0.0.tgz"
+    FILENAME "glew-2.0.0.tgz"
+    SHA512 e9bcd5f19a4495ce6511dfd76e64b4e4d958603c513ee9063eb9fe24fc6e0413f168620661230f1baef558f2f907cef7fe7ab2bdf957a6f7bda5fe96e9319c6a
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
