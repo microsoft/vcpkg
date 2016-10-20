@@ -12,9 +12,9 @@ function(vcpkg_execute_required_process)
     file(TO_NATIVE_PATH "${CURRENT_BUILDTREES_DIR}" NATIVE_BUILDTREES_DIR)
     if(error_code)
         message(FATAL_ERROR
-            "Command failed: ${vcpkg_execute_required_process_COMMAND}\n"
-            "Working Directory: ${vcpkg_execute_required_process_WORKING_DIRECTORY}\n"
-            "See logs for more information:\n"
+            "  Command failed: ${vcpkg_execute_required_process_COMMAND}\n"
+            "  Working Directory: ${vcpkg_execute_required_process_WORKING_DIRECTORY}\n"
+            "  See logs for more information:\n"
             "    ${NATIVE_BUILDTREES_DIR}\\${vcpkg_execute_required_process_LOGNAME}-out.log\n"
             "    ${NATIVE_BUILDTREES_DIR}\\${vcpkg_execute_required_process_LOGNAME}-err.log\n")
     endif()
