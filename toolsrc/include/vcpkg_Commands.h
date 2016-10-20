@@ -35,6 +35,7 @@ namespace vcpkg
 
     void version_command(const vcpkg_cmd_arguments& args);
     void contact_command(const vcpkg_cmd_arguments& args);
+	void hash_command(const vcpkg_cmd_arguments& args);
 
     using command_type_a = void(*)(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet);
     using command_type_b = void(*)(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths);
