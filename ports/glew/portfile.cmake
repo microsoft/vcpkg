@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glew-2.0.0)
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "https://sourceforge.net/projects/glew/files/glew/2.0.0/glew-2.0.0.tgz"
-    FILENAME "glew-2.2.0.tgz"
+    FILENAME "glew-2.0.0.tgz"
     SHA512 e9bcd5f19a4495ce6511dfd76e64b4e4d958603c513ee9063eb9fe24fc6e0413f168620661230f1baef558f2f907cef7fe7ab2bdf957a6f7bda5fe96e9319c6a
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
