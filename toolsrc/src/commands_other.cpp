@@ -21,6 +21,7 @@ namespace vcpkg
             "  vcpkg import <pkg>              Import a pre-built library\n"
             "  vcpkg create <pkg> <url>\n"
             "             [archivename]        Create a new package\n"
+            "  vcpkg hash <path-to-file>       Hash the provided file with SHA512\n"
             "  vcpkg owns <pat>                Search for files in installed packages\n"
             "  vcpkg cache                     List cached compiled packages\n"
             "  vcpkg version                   Display version information\n"
@@ -93,7 +94,8 @@ namespace vcpkg
     {
         static std::vector<package_name_and_function<command_type_c>> t = {
             {"version", &version_command},
-            {"contact", &contact_command}
+            {"contact", &contact_command},
+            {"hash" , &hash_command}
         };
         return t;
     }
