@@ -1,9 +1,5 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
-#include "vcpkg.h"
-#include <iostream>
-#include <iomanip>
-#include <Windows.h>
 
 namespace fs = std::tr2::sys;
 
