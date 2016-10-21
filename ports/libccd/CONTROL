@@ -1,0 +1,3 @@
+Source: libccd
+Version: 2.0.0
+Description: Library for collision detection between two convex shapes
