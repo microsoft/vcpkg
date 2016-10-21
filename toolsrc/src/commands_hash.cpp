@@ -9,7 +9,7 @@ namespace fs = std::tr2::sys;
 
 namespace vcpkg
 {
-    void file_hash_sha512(fs::path const& path, std::wstring const& hashType)
+    static void do_file_hash(fs::path const& path, std::wstring const& hashType)
     {
         auto cmd_line = Strings::wformat(LR"(CertUtil.exe -hashfile "%s" %s)",
                                          path.c_str(), hashType.c_str());
@@ -38,11 +38,11 @@ namespace vcpkg
 
         if (args.command_arguments.size() == 1)
         {
-            file_hash_sha512(args.command_arguments[0], L"SHA512");
+            do_file_hash(args.command_arguments[0], L"SHA512");
         }
         if (args.command_arguments.size() == 2)
         {
-            file_hash_sha512(args.command_arguments[0], Strings::utf8_to_utf16(args.command_arguments[1]));
+            do_file_hash(args.command_arguments[0], Strings::utf8_to_utf16(args.command_arguments[1]));
         }
 
         exit(EXIT_SUCCESS);
