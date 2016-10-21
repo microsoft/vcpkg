@@ -1,18 +1,18 @@
 include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/PDCurses-3.4)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src)
 find_program(NMAKE nmake)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://sourceforge.net/projects/pdcurses/files/latest/download?source=files"
+    URLS "http://downloads.sourceforge.net/project/pdcurses/pdcurses/3.4/pdcurs34.zip"
     FILENAME "pdcurs34.zip"
-    SHA512 cf2144359935ea553954e60e74318168d4c6fcee48648dfec74325742a61786b285c59ad0a014cc1f4039a332c3dbf2031c64865025a0cd25ef8faacc5827d05
+    SHA512 0b916bfe37517abb80df7313608cc4e1ed7659a41ce82763000dfdfa5b8311ffd439193c74fc84a591f343147212bf1caf89e7db71f1f7e4fa70f534834cb039
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
 message(STATUS "Build ${TARGET_TRIPLET}")
 vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f vcwin32.mak WIDE=Y UTF8=Y PDCLIBS
+    COMMAND ${NMAKE} -f vcwin32.mak WIDE=Y UTF8=Y
     WORKING_DIRECTORY ${SOURCE_PATH}/win32
     LOGNAME build-${TARGET_TRIPLET}
 )
