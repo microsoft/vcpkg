@@ -25,6 +25,10 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    vcpkg_copy_pdbs()
+endif()
+
 # Avoid a copy of file in debug
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
