@@ -43,6 +43,13 @@ namespace vcpkg
                                                      return !fs::is_directory(current) && current.extension() == extension;
                                                  }, output);
         }
+
+        std::vector<fs::path> recursive_find_files_with_extension_in_dir(const fs::path& dir, const std::string& extension)
+        {
+            std::vector<fs::path> v;
+            recursive_find_files_with_extension_in_dir(dir, extension, &v);
+            return v;
+        }
     }
 
     static lint_status check_for_files_in_include_directory(const package_spec& spec, const vcpkg_paths& paths)
@@ -370,6 +377,36 @@ namespace vcpkg
         return lint_status::ERROR_DETECTED;
     }
 
+    static lint_status check_matching_debug_and_release_binaries(const std::vector<fs::path>& debug_binaries, const std::vector<fs::path>& release_binaries)
+    {
+        const size_t debug_count = debug_binaries.size();
+        const size_t release_count = release_binaries.size();
+        if (debug_count == release_count)
+        {
+            return lint_status::SUCCESS;
+        }
+
+        System::println(System::color::warning, "Mismatching number of debug and release binaries. Found %d for debug but %d for release.", debug_count, release_count);
+        System::println("Debug binaries");
+        print_vector_of_files(debug_binaries);
+
+        System::println("Release binaries");
+        print_vector_of_files(release_binaries);
+
+        if (debug_count == 0)
+        {
+            System::println(System::color::warning, "Debug binaries were not built");
+        }
+        if (release_count == 0)
+        {
+            System::println(System::color::warning, "Release binaries were not built");
+        }
+
+        System::println("");
+
+        return lint_status::ERROR_DETECTED;
+    }
+
     static void operator +=(size_t& left, const lint_status& right)
     {
         left += static_cast<size_t>(right);
@@ -394,9 +431,14 @@ namespace vcpkg
         {
             case triplet::BuildType::DYNAMIC:
                 {
+                    const std::vector<fs::path> debug_dlls = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "bin", ".dll");
+                    const std::vector<fs::path> release_dlls = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "bin", ".dll");
+
+                    error_count += check_matching_debug_and_release_binaries(debug_dlls, release_dlls);
+
                     std::vector<fs::path> dlls;
-                    recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "bin", ".dll", &dlls);
-                    recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "bin", ".dll", &dlls);
+                    dlls.insert(dlls.cend(), debug_dlls.cbegin(), debug_dlls.cend());
+                    dlls.insert(dlls.cend(), release_dlls.cbegin(), release_dlls.cend());
 
                     error_count += check_exports_of_dlls(dlls);
                     error_count += check_uwp_bit_of_dlls(spec.target_triplet().system(), dlls);
@@ -416,9 +458,15 @@ namespace vcpkg
                 Checks::unreachable();
         }
 
+        const std::vector<fs::path> debug_libs = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "lib", ".lib");
+        const std::vector<fs::path> release_libs = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "lib", ".lib");
+
+        error_count += check_matching_debug_and_release_binaries(debug_libs, release_libs);
+
         std::vector<fs::path> libs;
-        recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "lib", ".lib", &libs);
-        recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "lib", ".lib", &libs);
+        libs.insert(libs.cend(), debug_libs.cbegin(), debug_libs.cend());
+        libs.insert(libs.cend(), release_libs.cbegin(), release_libs.cend());
+
         error_count += check_lib_architecture(spec.target_triplet().architecture(), libs);
 
         if (error_count != 0)
