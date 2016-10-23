@@ -36,3 +36,9 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/BSD-LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libccd RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
+
+# Miscellaneous cleanup
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/ccd)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/ccd)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
