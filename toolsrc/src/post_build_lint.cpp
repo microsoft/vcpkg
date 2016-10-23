@@ -483,9 +483,10 @@ namespace vcpkg
             default:
                 Checks::unreachable();
         }
-
+#if 0
         error_count += check_no_subdirectories(paths.packages / spec.dir() / "lib");
         error_count += check_no_subdirectories(paths.packages / spec.dir() / "debug" / "lib");
+#endif
         const std::vector<fs::path> debug_libs = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "lib", ".lib");
         const std::vector<fs::path> release_libs = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "lib", ".lib");
 
