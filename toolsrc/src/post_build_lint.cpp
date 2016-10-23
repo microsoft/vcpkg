@@ -36,6 +36,14 @@ namespace vcpkg
             std::copy_if(fs::recursive_directory_iterator(dir), fs::recursive_directory_iterator(), std::back_inserter(*output), predicate);
         }
 
+        template <class Pred>
+        std::vector<fs::path> recursive_find_matching_paths_in_dir(const fs::path& dir, const Pred predicate)
+        {
+            std::vector<fs::path> v;
+            recursive_find_matching_paths_in_dir(dir, predicate, &v);
+            return v;
+        }
+
         void recursive_find_files_with_extension_in_dir(const fs::path& dir, const std::string& extension, std::vector<fs::path>* output)
         {
             recursive_find_matching_paths_in_dir(dir, [&extension](const fs::path& current)
@@ -407,6 +415,24 @@ namespace vcpkg
         return lint_status::ERROR_DETECTED;
     }
 
+    static lint_status check_no_subdirectories(const fs::path& dir)
+    {
+        const std::vector<fs::path> subdirectories = recursive_find_matching_paths_in_dir(dir, [&](const fs::path& current)
+                                                                                          {
+                                                                                              return fs::is_directory(current);
+                                                                                          });
+
+        if (!subdirectories.empty())
+        {
+            System::println("Directory %s should have no subdirectories", dir.generic_string());
+            System::println("The following subdirectories were found: ");
+            print_vector_of_files(subdirectories);
+            return lint_status::ERROR_DETECTED;
+        }
+
+        return lint_status::SUCCESS;
+    }
+
     static void operator +=(size_t& left, const lint_status& right)
     {
         left += static_cast<size_t>(right);
@@ -458,6 +484,8 @@ namespace vcpkg
                 Checks::unreachable();
         }
 
+        error_count += check_no_subdirectories(paths.packages / spec.dir() / "lib");
+        error_count += check_no_subdirectories(paths.packages / spec.dir() / "debug" / "lib");
         const std::vector<fs::path> debug_libs = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "lib", ".lib");
         const std::vector<fs::path> release_libs = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "lib", ".lib");
 
