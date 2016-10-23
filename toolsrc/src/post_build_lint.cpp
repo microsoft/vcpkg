@@ -424,7 +424,7 @@ namespace vcpkg
 
         if (!subdirectories.empty())
         {
-            System::println("Directory %s should have no subdirectories", dir.generic_string());
+            System::println(System::color::warning, "Directory %s should have no subdirectories", dir.generic_string());
             System::println("The following subdirectories were found: ");
             print_vector_of_files(subdirectories);
             return lint_status::ERROR_DETECTED;
