@@ -8,28 +8,47 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/builds/msvc/vs2015/libzmq/libzmq.vcxproj
-    RELEASE_CONFIGURATION ReleaseDLL
-    DEBUG_CONFIGURATION DebugDLL
-)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    vcpkg_build_msbuild(
+        PROJECT_PATH ${SOURCE_PATH}/builds/msvc/vs2015/libzmq/libzmq.vcxproj
+        RELEASE_CONFIGURATION ReleaseDLL
+        DEBUG_CONFIGURATION DebugDLL
+    )
+    file(INSTALL
+        ${SOURCE_PATH}/bin/Win32/Debug/v140/dynamic/libzmq.dll
+        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
+    )
+    file(INSTALL
+        ${SOURCE_PATH}/bin/Win32/Release/v140/dynamic/libzmq.dll
+        DESTINATION ${CURRENT_PACKAGES_DIR}/bin
+    )
+    file(INSTALL
+        ${SOURCE_PATH}/bin/Win32/Debug/v140/dynamic/libzmq.lib
+        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+    )
+    file(INSTALL
+        ${SOURCE_PATH}/bin/Win32/Release/v140/dynamic/libzmq.lib
+        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
+    )
+    vcpkg_copy_pdbs()
 
-file(INSTALL
-    ${SOURCE_PATH}/bin/Win32/Debug/v140/dynamic/libzmq.dll
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-)
-file(INSTALL
-    ${SOURCE_PATH}/bin/Win32/Release/v140/dynamic/libzmq.dll
-    DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-)
-file(INSTALL
-    ${SOURCE_PATH}/bin/Win32/Debug/v140/dynamic/libzmq.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-)
-file(INSTALL
-    ${SOURCE_PATH}/bin/Win32/Release/v140/dynamic/libzmq.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-)
+else()
+    vcpkg_build_msbuild(
+        PROJECT_PATH ${SOURCE_PATH}/builds/msvc/vs2015/libzmq/libzmq.vcxproj
+        RELEASE_CONFIGURATION ReleaseLIB
+        DEBUG_CONFIGURATION DebugLIB
+    )
+    file(INSTALL
+        ${SOURCE_PATH}/bin/Win32/Debug/v140/static/libzmq.lib
+        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+    )
+    file(INSTALL
+        ${SOURCE_PATH}/bin/Win32/Release/v140/static/libzmq.lib
+        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
+    )
+endif()
+
+
 file(INSTALL
     ${SOURCE_PATH}/include/
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
@@ -39,4 +58,3 @@ file(INSTALL
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/zeromq)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/zeromq/COPYING ${CURRENT_PACKAGES_DIR}/share/zeromq/copyright)
 
-vcpkg_copy_pdbs()
