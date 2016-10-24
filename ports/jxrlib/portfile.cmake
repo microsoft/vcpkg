@@ -19,6 +19,10 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    vcpkg_copy_pdbs()
+endif()
+
 # Handle copyright
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/jxrlib)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/jxrlib/LICENSE ${CURRENT_PACKAGES_DIR}/share/jxrlib/copyright)
