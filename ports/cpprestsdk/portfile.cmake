@@ -1,3 +1,4 @@
+include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 find_program(GIT git)
 
