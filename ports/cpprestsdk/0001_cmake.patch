@@ -1,16 +1,5 @@
-From cc9d3ca4d1d16134a1976b89b58b11372a2798d5 Mon Sep 17 00:00:00 2001
-From: Robert Schumacher <roschuma@microsoft.com>
-Date: Wed, 4 May 2016 21:37:23 -0700
-Subject: [PATCH] Use find_package on Windows. Enable 'install' target for all
- systems.
-
----
- Release/CMakeLists.txt     | 48 ++++++++++++++--------------------------------
- Release/src/CMakeLists.txt | 13 +++++++------
- 2 files changed, 21 insertions(+), 40 deletions(-)
-
 diff --git a/Release/CMakeLists.txt b/Release/CMakeLists.txt
-index cbe840b..3045948 100644
+index 1274102..fe245e6 100644
 --- a/Release/CMakeLists.txt
 +++ b/Release/CMakeLists.txt
 @@ -89,15 +89,6 @@ elseif(UNIX) # This includes OSX
@@ -29,10 +18,11 @@ index cbe840b..3045948 100644
  elseif(WIN32)
    option(BUILD_SHARED_LIBS "Build shared Libraries." ON)
    option(BUILD_SAMPLES "Build samples." ON)
-@@ -114,36 +105,25 @@ elseif(WIN32)
+@@ -113,37 +104,25 @@ elseif(WIN32)
+     set(Casablanca_DEFINITIONS "" CACHE INTERNAL "Definitions for consume casablanca library")
    endif()
    add_definitions(${Casablanca_DEFINITIONS} -D_WINSOCK_DEPRECATED_NO_WARNINGS -DWIN32)
- 
+-
 -  if (NOT CPPREST_EXCLUDE_WEBSOCKETS)
 -    set(NUGET_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../packages")
 -    set(PACKAGE_PATHS)
@@ -58,11 +48,12 @@ index cbe840b..3045948 100644
 -    endif()
 -
 -    set(Boost_INCLUDE_DIR "${NUGET_PATH}/boost.1.58.0.0/lib/native/include")
+-  endif()
 +  if (NOT CPPREST_EXCLUDE_WEBSOCKETS AND NOT WINDOWS_STORE)
 +    find_package(ZLIB REQUIRED)
 +    find_package(OpenSSL REQUIRED)
 +    find_package(Boost REQUIRED COMPONENTS regex system date_time)
-   endif()
++   endif()
  else()
    message(FATAL_ERROR "-- Unsupported Build Platform.")
  endif()
@@ -81,7 +72,7 @@ index cbe840b..3045948 100644
  if(ANDROID)
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-strict-aliasing")
 diff --git a/Release/src/CMakeLists.txt b/Release/src/CMakeLists.txt
-index cf086ed..3e5fffa 100644
+index 4074905..da907e5 100644
 --- a/Release/src/CMakeLists.txt
 +++ b/Release/src/CMakeLists.txt
 @@ -144,10 +144,11 @@ elseif(ANDROID)
@@ -102,6 +93,4 @@ index cf086ed..3e5fffa 100644
 +  LIBRARY DESTINATION lib
 +  ARCHIVE DESTINATION lib
 +  )
--- 
-2.8.1.windows.1
-
+\ No newline at end of file
