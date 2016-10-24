@@ -16,12 +16,10 @@ vcpkg_build_msbuild(
 
 file(INSTALL
     ${SOURCE_PATH}/bin/Win32/Debug/v140/dynamic/libzmq.dll
-    ${SOURCE_PATH}/bin/Win32/Debug/v140/dynamic/libzmq.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
 )
 file(INSTALL
     ${SOURCE_PATH}/bin/Win32/Release/v140/dynamic/libzmq.dll
-    ${SOURCE_PATH}/bin/Win32/Release/v140/dynamic/libzmq.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/bin
 )
 file(INSTALL
