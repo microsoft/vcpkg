@@ -11,6 +11,7 @@ vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS -DBUILD_CODEC:BOOL=OFF
+            -DOPENJPEG_INSTALL_PACKAGE_DIR=share/openjpeg
 )
 
 vcpkg_install_cmake()
@@ -18,9 +19,11 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle debug cmake config files (see https://github.com/Microsoft/vcpkg/issues/77)
-file(READ ${CURRENT_PACKAGES_DIR}/debug/lib/openjpeg-2.1/OpenJPEGTargets-debug.cmake OPENJPEG_DEBUG_MODULE)
+file(READ ${CURRENT_PACKAGES_DIR}/debug/share/openjpeg/OpenJPEGTargets-debug.cmake OPENJPEG_DEBUG_MODULE)
 string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" OPENJPEG_DEBUG_MODULE "${OPENJPEG_DEBUG_MODULE}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/lib/openjpeg-2.1/OpenJPEGTargets-debug.cmake  "${OPENJPEG_DEBUG_MODULE}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/openjpeg/OpenJPEGTargets-debug.cmake  "${OPENJPEG_DEBUG_MODULE}")
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openjpeg)
