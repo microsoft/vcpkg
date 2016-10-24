@@ -41,3 +41,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 # Handle copyright
 file(COPY ${CURRENT_BUILDTREES_DIR}/src/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libogg)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libogg/COPYING ${CURRENT_PACKAGES_DIR}/share/libogg/copyright)
+
+vcpkg_copy_pdbs()
