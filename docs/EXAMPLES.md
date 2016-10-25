@@ -6,7 +6,7 @@ Vcpkg helps you get C and C++ libraries on Windows.
 For short description of available commands, run `vcpkg help`.
 
 ## Table of Contents
-- <a href="#example-1">Example 1: Using the C++ REST SDK</a>
+- <a href="#example-1">Example 1: Using Sqlite</a>
   - <a href="#example-1-1">Step 1: Build</a>
   - <a href="#example-1-2">Step 2: Use</a>
     - <a href="#example-1-2-a">Option A: VS Project (User-wide integration)</a>
@@ -17,49 +17,35 @@ For short description of available commands, run `vcpkg help`.
 - <a href="example-3-patch-libpng.md">Example 3: Patching libpng to work for uwp-x86</a>
 
 <a name="example-1"></a>
-## Example 1: C++ REST SDK
+## Example 1: Using Sqlite
 <a name="example-1-1"></a>
 ### Step 1: Build
 
-First, we need to know what name C++ REST SDK goes by in the ports tree. To do that, we'll run the `search` command and inspect the output:
+First, we need to know what name [Sqlite](https://sqlite.org) goes by in the ports tree. To do that, we'll run the `search` command and inspect the output:
 ```
-PS D:\src\vcpkg> .\vcpkg search
-boost                1.60             Peer-reviewed portable C++ source libraries
-cpprestsdk           2.8              C++11 JSON, REST, and OAuth library The C++ RES...
-curl                 7.48.0           A library for transferring data with URLs
-expat                2.1.1            XML parser library written in C
-freetype             2.6.3            A library to render fonts.
-glew                 1.13.0           The OpenGL Extension Wrangler Library (GLEW) is a...
-glfw3                3.1.2            GLFW is a free, Open Source, multi-platform libra...
-libjpeg-turbo        1.4.90-1         libjpeg-turbo is a JPEG image codec that uses SIM...
-libpng               1.6.24-1         libpng is a library implementing an interface for...
-libuv                1.9.1            libuv is a multi-platform support library with a ...
-libwebsockets        2.0.0            Libwebsockets is a lightweight pure C library bui...
-mpg123               1.23.3           mpg123 is a real time MPEG 1.0/2.0/2.5 audio play...
-openal-soft          1.17.2           OpenAL Soft is an LGPL-licensed, cross-platform, ...
-opencv               3.1.0            computer vision library
-opengl               10.0.10240.0     Open Graphics Library (OpenGL)[3][4][5] is a cros...
-openssl              1.0.2h           OpenSSL is an open source project that provides a...
-range-v3             0.0.0-1          Range library for C++11/14/17.
-rapidjson            1.0.2-1          A fast JSON parser/generator for C++ with both SA...
-sdl2                 2.0.4            Simple DirectMedia Layer is a cross-platform deve...
-sqlite3              3120200          SQLite is a software library that implements a se...
-tiff                 4.0.6            A library that supports the manipulation of TIFF ...
-tinyxml2             3.0.0            A simple, small, efficient, C++ XML parser
-zlib                 1.2.8            A compression library
-```
-Looking at the list, we can see that the port is named "cpprestsdk".
+PS D:\src\vcpkg> .\vcpkg search sqlite
+libodb-sqlite        2.4.0            Sqlite support for the ODB ORM library
+sqlite3              3.15.0           SQLite is a software library that implements a se...
 
-Installing is then as simple as using the `install` command. Since we haven't built this library before, we'll first see an error message indicating that the control file failed to load, then the port will automatically begin building (and install when completed).
+If your library is not listed, please open an issue at:
+    https://github.com/Microsoft/vcpkg/issues
 ```
-PS D:\src\vcpkg> .\vcpkg install cpprestsdk
+Looking at the list, we can see that the port is named "sqlite3". You can also run the `search` command without arguments to see the full list of packages.
+
+Installing is then as simple as using the `install` command.
+```
+PS D:\src\vcpkg> .\vcpkg install sqlite3
 -- CURRENT_INSTALLED_DIR=D:/src/vcpkg/installed/x86-windows
 -- DOWNLOADS=D:/src/vcpkg/downloads
--- CURRENT_PACKAGES_DIR=D:/src/vcpkg/packages/cpprestsdk_x86-windows
--- CURRENT_BUILDTREES_DIR=D:/src/vcpkg/buildtrees/cpprestsdk
--- CURRENT_PORT_DIR=D:/src/vcpkg/ports/cpprestsdk/.
--- Cloning done
--- Adding worktree and patching done
+-- CURRENT_PACKAGES_DIR=D:/src/vcpkg/packages/sqlite3_x86-windows
+-- CURRENT_BUILDTREES_DIR=D:/src/vcpkg/buildtrees/sqlite3
+-- CURRENT_PORT_DIR=D:/src/vcpkg/ports/sqlite3/.
+-- Downloading https://sqlite.org/2016/sqlite-amalgamation-3150000.zip...
+-- Downloading https://sqlite.org/2016/sqlite-amalgamation-3150000.zip... OK
+-- Testing integrity of downloaded file...
+-- Testing integrity of downloaded file... OK
+-- Extracting source D:/src/vcpkg/downloads/sqlite-amalgamation-3150000.zip
+-- Extracting done
 -- Configuring x86-windows-rel
 -- Configuring x86-windows-rel done
 -- Configuring x86-windows-dbg
@@ -72,14 +58,16 @@ PS D:\src\vcpkg> .\vcpkg install cpprestsdk
 -- Package x86-windows-rel done
 -- Package x86-windows-dbg
 -- Package x86-windows-dbg done
-Package cpprestsdk:x86-windows is installed
+-- Performing post-build validation
+-- Performing post-build validation done
+Package sqlite3:x86-windows is installed
 ```
-In addition to installing, `vcpkg` caches a pristine copy of the built library inside the `packages\` directory (in this case, `packages\cpprestsdk_x86-windows`). This allows you to quickly uninstall and reinstall the library in the future using the `remove` and `install` commands.
+In addition to installing, `vcpkg` caches a pristine copy of the built library inside the `packages\` directory -- in this case, `packages\sqlite3_x86-windows`. This allows you to quickly uninstall and reinstall the library in the future using the `remove` and `install` commands.
 
 We can check that cpprestsdk was successfully installed for x86 windows desktop by running the `list` command.
 ```
 PS D:\src\vcpkg> .\vcpkg list
-cpprestsdk:x86-windows      2.8              A modern C++11 library to connect with web servic...
+sqlite3:x86-windows         3.15.0           SQLite is a software library that implements a se...
 ```
 
 To install for other architectures and platforms such as Universal Windows Platform or x64 Desktop, you can suffix the package name with `:<target>`.
@@ -105,6 +93,8 @@ Installing new libraries will make them instantly available.
 ```
 *Note: You will need to restart Visual Studio or perform a Build to update intellisense with the changes.* 
 
+You can now simply use File -> New Project in Visual Studio 2015 or Visual Studio "15" Preview and the library will be automatically available. For Sqlite, you can try out their [C/C++ sample](https://sqlite.org/quickstart.html).
+
 To remove the integration for your user, you can use `vcpkg integrate remove`.
 
 <a name="example-1-2-b"></a>
@@ -118,22 +108,19 @@ Let's first make a simple CMake project with a main file.
 cmake_minimum_required(VERSION 3.0)
 project(test)
 
-find_library(CPPREST_LIBRARY cpprest_2_8)
-find_path(CPPREST_INCLUDE_DIR cpprest/version.h)
+find_package(Sqlite3 REQUIRED)
 
-include_directories(${CPPREST_INCLUDE_DIR})
-link_libraries(${CPPREST_LIBRARY})
+link_libraries(sqlite3)
 add_executable(main main.cpp)
 ```
 ```cpp
 // main.cpp
-#include <cpprest/json.h>
+#include <sqlite3.h>
 #include <stdio.h>
 
 int main()
 {
-    auto v = web::json::value::parse(U("[1,2,3,4]"));
-    printf("Success\n");
+    printf("%s\n", sqlite3_libversion());
     return 0;
 }
 ```
@@ -153,8 +140,10 @@ Build succeeded.
 
 Time Elapsed 00:00:02.38
 PS D:\src\cmake-test\build> .\Debug\main.exe
-Success
+3.15.0
 ```
+
+*Note: The correct sqlite3.dll is automatically copied to the output folder when building for x86-windows. You will need to distribute this along with your application.*
 
 <a name="example-1-2-c"></a>
 #### Option C: Other buildsystems
