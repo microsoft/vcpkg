@@ -1,3 +1,4 @@
+include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-1.0.2h)
 vcpkg_find_acquire_program(PERL)
@@ -56,11 +57,13 @@ file(REMOVE
     ${CURRENT_PACKAGES_DIR}/debug/openssl.cnf
     ${CURRENT_PACKAGES_DIR}/openssl.cnf
 )
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/engines)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/engines ${CURRENT_PACKAGES_DIR}/bin/engines)
-endif()
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/engines)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/engines ${CURRENT_PACKAGES_DIR}/debug/bin/engines)
-endif()
+
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openssl RENAME copyright)
-vcpkg_copy_pdbs()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    vcpkg_copy_pdbs()
+else()
+    # They should be empty, only the exes deleted above were in these directories
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/)
+endif()
