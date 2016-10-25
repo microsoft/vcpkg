@@ -13,7 +13,7 @@ vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES 
-		${CMAKE_CURRENT_LIST_DIR}/0001_cmake.patch
+        ${CMAKE_CURRENT_LIST_DIR}/0001_cmake.patch
 )
 
 vcpkg_configure_cmake(
@@ -22,15 +22,15 @@ vcpkg_configure_cmake(
         -DBUILD_TESTS=OFF
         -DBUILD_SAMPLES=OFF
         -DCPPREST_EXCLUDE_WEBSOCKETS=ON
+    OPTIONS_DEBUG
+        -DCASA_INSTALL_HEADERS=OFF
 )
 
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
 file(INSTALL
-	${SOURCE_PATH}/license.txt
-	DESTINATION ${CURRENT_PACKAGES_DIR}/share/cpprestsdk RENAME copyright)
+    ${SOURCE_PATH}/license.txt
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/cpprestsdk RENAME copyright)
 
 vcpkg_copy_pdbs()
 
