@@ -2,7 +2,6 @@ include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/qt-5.7.0)
 set(OUTPUT_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
-set(ENV{QMAKESPEC} win32-msvc2015)
 set(ENV{QTDIR} ${OUTPUT_PATH}/qtbase)
 set(ENV{PATH} "${OUTPUT_PATH}/qtbase/bin;$ENV{PATH}")
 
@@ -24,14 +23,23 @@ endif()
 file(MAKE_DIRECTORY ${OUTPUT_PATH})
 message(STATUS "Configuring ${TARGET_TRIPLET}")
 
-#if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL static)
-#    list(APPEND QT_RUNTIME_LINKAGE "-static")
-#    list(APPEND QT_RUNTIME_LINKAGE "-static-runtime")
-#endif()
+if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL static)
+    list(APPEND QT_RUNTIME_LINKAGE "-static")
+    list(APPEND QT_RUNTIME_LINKAGE "-static-runtime")
+    vcpkg_apply_patches(
+        SOURCE_PATH ${SOURCE_PATH}
+        PATCHES "${CMAKE_CURRENT_LIST_DIR}/set-static-qmakespec.patch"
+    )
+else()
+    vcpkg_apply_patches(
+        SOURCE_PATH ${SOURCE_PATH}
+        PATCHES "${CMAKE_CURRENT_LIST_DIR}/set-shared-qmakespec.patch"
+    )
+endif()
 
 vcpkg_execute_required_process(
     COMMAND "${SOURCE_PATH}/configure.bat"
-        -confirm-license -opensource
+        -confirm-license -opensource -developer-build -platform win32-msvc2015
         -debug-and-release -force-debug-info ${QT_RUNTIME_LINKAGE}
         -nomake examples -nomake tests -skip webengine
         -prefix "${CURRENT_PACKAGES_DIR}"
