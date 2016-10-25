@@ -8,6 +8,13 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+# Map from triplet "x86" to "win32" as used in the vcxproj file.
+if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
+    set(MSBUILD_PLATFORM "Win32")
+else ()
+    set(MSBUILD_PLATFORM ${TRIPLET_SYSTEM_ARCH})
+endif()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     vcpkg_build_msbuild(
         PROJECT_PATH ${SOURCE_PATH}/builds/msvc/vs2015/libzmq/libzmq.vcxproj
@@ -15,19 +22,19 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         DEBUG_CONFIGURATION DebugDLL
     )
     file(INSTALL
-        ${SOURCE_PATH}/bin/Win32/Debug/v140/dynamic/libzmq.dll
+        ${SOURCE_PATH}/bin/${MSBUILD_PLATFORM}/Debug/v140/dynamic/libzmq.dll
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
     )
     file(INSTALL
-        ${SOURCE_PATH}/bin/Win32/Release/v140/dynamic/libzmq.dll
+        ${SOURCE_PATH}/bin/${MSBUILD_PLATFORM}/Release/v140/dynamic/libzmq.dll
         DESTINATION ${CURRENT_PACKAGES_DIR}/bin
     )
     file(INSTALL
-        ${SOURCE_PATH}/bin/Win32/Debug/v140/dynamic/libzmq.lib
+        ${SOURCE_PATH}/bin/${MSBUILD_PLATFORM}/Debug/v140/dynamic/libzmq.lib
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
     )
     file(INSTALL
-        ${SOURCE_PATH}/bin/Win32/Release/v140/dynamic/libzmq.lib
+        ${SOURCE_PATH}/bin/${MSBUILD_PLATFORM}/Release/v140/dynamic/libzmq.lib
         DESTINATION ${CURRENT_PACKAGES_DIR}/lib
     )
     vcpkg_copy_pdbs()
@@ -39,11 +46,11 @@ else()
         DEBUG_CONFIGURATION DebugLIB
     )
     file(INSTALL
-        ${SOURCE_PATH}/bin/Win32/Debug/v140/static/libzmq.lib
+        ${SOURCE_PATH}/bin/${MSBUILD_PLATFORM}/Debug/v140/static/libzmq.lib
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
     )
     file(INSTALL
-        ${SOURCE_PATH}/bin/Win32/Release/v140/static/libzmq.lib
+        ${SOURCE_PATH}/bin/${MSBUILD_PLATFORM}/Release/v140/static/libzmq.lib
         DESTINATION ${CURRENT_PACKAGES_DIR}/lib
     )
 endif()
