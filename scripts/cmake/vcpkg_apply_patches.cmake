@@ -16,11 +16,10 @@ function(vcpkg_apply_patches)
         
         if(error_code)
             message(STATUS
-                "Applying patch failed: ${GIT} --work-tree=. apply \"${PATCH}\" --ignore-whitespace --whitespace=nowarn --verbose\n"
-                "Working Directory: ${_ap_SOURCE_PATH}\n"
-                "See logs for more information:\n"
-                "    ${CURRENT_BUILDTREES_DIR}/${LOGNAME}-out.log\n"
-                "    ${CURRENT_BUILDTREES_DIR}/${LOGNAME}-err.log\n")
+                "Applying patch failed: ${GIT} --work-tree=. --git-dir=. apply \"${PATCH}\" --ignore-whitespace --whitespace=nowarn --verbose\n"
+                "-- Working Directory: ${_ap_SOURCE_PATH}\n"
+                "-- This is expected if this patch was previously applied.\n"
+                "-- See logs for more information: ${CURRENT_BUILDTREES_DIR}/${LOGNAME}-out.log ${CURRENT_BUILDTREES_DIR}/${LOGNAME}-err.log")
         endif()
 
         message(STATUS "Applying patch ${PATCH} done")
