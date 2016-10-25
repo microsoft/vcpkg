@@ -1,7 +1,8 @@
+include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/qt-5.7.0)
-set(ENV{QMAKESPEC} win32-msvc2015)
 set(OUTPUT_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
+set(ENV{QMAKESPEC} win32-msvc2015)
 set(ENV{QTDIR} ${OUTPUT_PATH}/qtbase)
 set(ENV{PATH} "${OUTPUT_PATH}/qtbase/bin;$ENV{PATH}")
 
@@ -22,10 +23,16 @@ endif()
 
 file(MAKE_DIRECTORY ${OUTPUT_PATH})
 message(STATUS "Configuring ${TARGET_TRIPLET}")
+
+#if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL static)
+#    list(APPEND QT_RUNTIME_LINKAGE "-static")
+#    list(APPEND QT_RUNTIME_LINKAGE "-static-runtime")
+#endif()
+
 vcpkg_execute_required_process(
     COMMAND "${SOURCE_PATH}/configure.bat"
         -confirm-license -opensource
-        -debug-and-release -force-debug-info
+        -debug-and-release -force-debug-info ${QT_RUNTIME_LINKAGE}
         -nomake examples -nomake tests -skip webengine
         -prefix "${CURRENT_PACKAGES_DIR}"
     WORKING_DIRECTORY ${OUTPUT_PATH}
@@ -92,6 +99,20 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Gamepad.lib ${CURRENT_PACKAGES_
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Gamepad.prl ${CURRENT_PACKAGES_DIR}/lib/Qt5Gamepad.prl)
 file(GLOB BINARY_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*.exe")
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
+foreach(BINARY ${BINARY_TOOLS})
+    execute_process(COMMAND dumpbin /PDBPATH ${BINARY}
+                    COMMAND findstr PDB
+        OUTPUT_VARIABLE PDB_LINE
+        ERROR_QUIET
+        RESULT_VARIABLE error_code
+    )
+    if(NOT error_code AND PDB_LINE MATCHES "PDB file found at")
+        string(REGEX MATCH '.*' PDB_PATH ${PDB_LINE}) # Extract the path which is in single quotes
+        string(REPLACE ' "" PDB_PATH ${PDB_PATH}) # Remove single quotes
+        file(INSTALL ${PDB_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+        file(REMOVE ${PDB_PATH})
+    endif()
+endforeach()
 file(INSTALL ${BINARY_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
 FILE(REMOVE ${BINARY_TOOLS})
 

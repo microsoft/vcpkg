@@ -1,4 +1,4 @@
 Source: qt5
 Version: 5.7
 Build-Depends:
-Description: Qt5 base components.
+Description: Qt5 application framework base components. Webengine, examples and tests not included.
