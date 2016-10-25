@@ -6,7 +6,7 @@ function(vcpkg_execute_required_process_repeat)
         execute_process(
             COMMAND ${vcpkg_execute_required_process_repeat_COMMAND}
             OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_repeat_LOGNAME}-out.log
-            ERROR_FILE ${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process__repeat_LOGNAME}-err.log
+            ERROR_FILE ${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_repeat_LOGNAME}-err.log
             RESULT_VARIABLE error_code
             WORKING_DIRECTORY ${vcpkg_execute_required_process_repeat_WORKING_DIRECTORY})
         #debug_message("error_code=${error_code}")
