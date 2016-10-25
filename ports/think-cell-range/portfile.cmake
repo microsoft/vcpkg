@@ -14,8 +14,3 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/think-cell-range/COPYING ${CURRENT_PAC
 file(COPY ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/think-cell-range)
 
 file(COPY ${SOURCE_PATH}/range/range.example.cpp DESTINATION ${CURRENT_PACKAGES_DIR}/share/think-cell-range)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${CURRENT_INSTALLED_DIR}/include
-    PATCHES "${SOURCE_PATH}/boost_patches/has_range_iterator.patch"
-)
