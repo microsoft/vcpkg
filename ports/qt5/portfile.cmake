@@ -21,8 +21,6 @@ if (EXISTS ${CURRENT_BUILDTREES_DIR}/src/qt-everywhere-opensource-src-5.7.0)
 endif()
 
 file(MAKE_DIRECTORY ${OUTPUT_PATH})
-message(STATUS "Configuring ${TARGET_TRIPLET}")
-
 if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL static)
     list(APPEND QT_RUNTIME_LINKAGE "-static")
     list(APPEND QT_RUNTIME_LINKAGE "-static-runtime")
@@ -37,9 +35,10 @@ else()
     )
 endif()
 
+message(STATUS "Configuring ${TARGET_TRIPLET}")
 vcpkg_execute_required_process(
     COMMAND "${SOURCE_PATH}/configure.bat"
-        -confirm-license -opensource -developer-build -platform win32-msvc2015
+        -confirm-license -opensource -platform win32-msvc2015
         -debug-and-release -force-debug-info ${QT_RUNTIME_LINKAGE}
         -nomake examples -nomake tests -skip webengine
         -prefix "${CURRENT_PACKAGES_DIR}"
@@ -49,7 +48,8 @@ vcpkg_execute_required_process(
 message(STATUS "Configure ${TARGET_TRIPLET} done")
 
 message(STATUS "Building ${TARGET_TRIPLET}")
-vcpkg_execute_required_process(
+vcpkg_execute_required_process_repeat(
+    COUNT 5
     COMMAND ${JOM}
     WORKING_DIRECTORY ${OUTPUT_PATH}
     LOGNAME build-${TARGET_TRIPLET}
@@ -71,19 +71,21 @@ file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
 file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/share/cmake)
 
-file(INSTALL ${CURRENT_PACKAGES_DIR}/bin
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug
-    FILES_MATCHING PATTERN "*d.dll"
-)
-file(INSTALL ${CURRENT_PACKAGES_DIR}/bin
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug
-    FILES_MATCHING PATTERN "*d.pdb"
-)
-file(GLOB DEBUG_BIN_FILES "${CURRENT_PACKAGES_DIR}/bin/*d.dll")
-file(REMOVE ${DEBUG_BIN_FILES})
-file(GLOB DEBUG_BIN_FILES "${CURRENT_PACKAGES_DIR}/bin/*d.pdb")
-file(REMOVE ${DEBUG_BIN_FILES})
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin/Qt5Gamepad.dll ${CURRENT_PACKAGES_DIR}/bin/Qt5Gamepad.dll)
+if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL dynamic)
+    file(INSTALL ${CURRENT_PACKAGES_DIR}/bin
+        DESTINATION ${CURRENT_PACKAGES_DIR}/debug
+        FILES_MATCHING PATTERN "*d.dll"
+    )
+    file(INSTALL ${CURRENT_PACKAGES_DIR}/bin
+        DESTINATION ${CURRENT_PACKAGES_DIR}/debug
+        FILES_MATCHING PATTERN "*d.pdb"
+    )
+    file(GLOB DEBUG_BIN_FILES "${CURRENT_PACKAGES_DIR}/bin/*d.dll")
+    file(REMOVE ${DEBUG_BIN_FILES})
+    file(GLOB DEBUG_BIN_FILES "${CURRENT_PACKAGES_DIR}/bin/*d.pdb")
+    file(REMOVE ${DEBUG_BIN_FILES})
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin/Qt5Gamepad.dll ${CURRENT_PACKAGES_DIR}/bin/Qt5Gamepad.dll)
+endif()
 
 file(INSTALL ${CURRENT_PACKAGES_DIR}/lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug
@@ -133,4 +135,5 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/phrasebooks ${SHARE_PATH}/phrasebooks)
 file(RENAME ${CURRENT_PACKAGES_DIR}/plugins ${SHARE_PATH}/plugins)
 file(RENAME ${CURRENT_PACKAGES_DIR}/qml ${SHARE_PATH}/qml)
 file(RENAME ${CURRENT_PACKAGES_DIR}/translations ${SHARE_PATH}/translations)
+file(RENAME ${CURRENT_PACKAGES_DIR}/qtvirtualkeyboard ${SHARE_PATH}/qtvirtualkeyboard)
 vcpkg_copy_pdbs()
