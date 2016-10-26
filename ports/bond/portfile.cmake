@@ -1,3 +1,7 @@
+include(${CMAKE_TRIPLET_FILE})
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(FATAL_ERROR "Static building not supported yet")
+endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/bond-53ea13692925bee4ba494ee9de3614f15c09d85d)
 vcpkg_download_distfile(ARCHIVE
