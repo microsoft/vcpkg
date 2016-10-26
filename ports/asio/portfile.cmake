@@ -1,5 +1,5 @@
-include(vcpkg_common_functions)
 #header-only library
+include(vcpkg_common_functions)
 SET(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/asio-asio-1-10-6/asio/)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/chriskohlhoff/asio/archive/asio-1-10-6.zip"
