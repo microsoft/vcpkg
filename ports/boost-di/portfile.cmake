@@ -1,4 +1,4 @@
-include(${CMAKE_TRIPLET_FILE})
+#header-only library
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/di-1.0.1)
 
