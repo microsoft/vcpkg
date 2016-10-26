@@ -1,3 +1,4 @@
+#header-only library
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/constexpr-a98b1db39c909e0130d21d3910d4faf97035a625)
 vcpkg_download_distfile(ARCHIVE
