@@ -37,7 +37,9 @@ file(INSTALL
 
 file(COPY ${SOURCE_PATH}/double-conversion DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-vcpkg_copy_pdbs()
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    vcpkg_copy_pdbs()
+endif()
 
 message(STATUS "Installing done")
 
