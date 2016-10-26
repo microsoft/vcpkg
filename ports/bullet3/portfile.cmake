@@ -33,4 +33,6 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/bullet3)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/bullet3/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/bullet3/copyright)
 
-vcpkg_copy_pdbs()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    vcpkg_copy_pdbs()
+endif()
