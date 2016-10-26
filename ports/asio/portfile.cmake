@@ -14,4 +14,3 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/asio/COPYING ${CURRENT_PACKAGES_DIR}/s
 
 # Copy the asio header files
 file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR} FILES_MATCHING PATTERN "*.hpp" PATTERN "*.ipp")
-vcpkg_copy_pdbs()
