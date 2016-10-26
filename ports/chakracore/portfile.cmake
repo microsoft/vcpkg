@@ -1,4 +1,8 @@
-﻿include(vcpkg_common_functions)
+﻿include(${CMAKE_TRIPLET_FILE})
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(FATAL_ERROR "Static building not supported yet")
+endif()
+include(vcpkg_common_functions)
 find_program(POWERSHELL powershell)
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ChakraCore-1.2.0.0)
