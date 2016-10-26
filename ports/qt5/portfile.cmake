@@ -58,7 +58,7 @@ message(STATUS "Build ${TARGET_TRIPLET} done")
 
 message(STATUS "Installing ${TARGET_TRIPLET}")
 vcpkg_execute_required_process(
-    COMMAND ${NMAKE} install
+    COMMAND ${JOM} install
     WORKING_DIRECTORY ${OUTPUT_PATH}
     LOGNAME install-${TARGET_TRIPLET}
 )
@@ -126,6 +126,12 @@ endforeach()
 file(INSTALL ${BINARY_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
 FILE(REMOVE ${BINARY_TOOLS})
 
+#if we are using dynamic linkage, the tools also require the dlls and platforms directory to run correctly
+if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL dynamic)
+    file(GLOB RELEASE_DLLS "${CURRENT_PACKAGES_DIR}/bin/*.dll")
+    file(INSTALL ${RELEASE_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+    file(INSTALL ${CURRENT_PACKAGES_DIR}/plugins/platforms DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+endif()
 set(SHARE_PATH ${CURRENT_PACKAGES_DIR}/share/qt5)
 file(MAKE_DIRECTORY ${SHARE_PATH})
 file(INSTALL ${SOURCE_PATH}/LICENSE.LGPLv3 DESTINATION ${SHARE_PATH} RENAME copyright)
