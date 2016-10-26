@@ -1,3 +1,4 @@
+#tool
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "https://github.com/google/protobuf/releases/download/v3.0.2/protobuf-cpp-3.0.2.tar.gz"
