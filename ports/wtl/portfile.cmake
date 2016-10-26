@@ -1,3 +1,4 @@
+#header-only library
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://downloads.sourceforge.net/project/wtl/WTL%209.1/WTL%209.1.5321%20Final/WTL91_5321_Final.zip?r=&ts=1477467616&use_mirror=netix"
