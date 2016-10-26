@@ -1,0 +1,5 @@
+Source: wtl
+Maintainer: jfrederich@gmail.com
+Version: 9.1
+Description: Windows Template Library (WTL) is a C++ library for developing Windows applications and UI components.
+Build-Depends:
