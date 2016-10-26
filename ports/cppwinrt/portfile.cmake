@@ -1,3 +1,4 @@
+#header-only library
 include(vcpkg_common_functions)
 find_program(GIT git)
 
