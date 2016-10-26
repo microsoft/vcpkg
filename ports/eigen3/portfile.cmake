@@ -1,3 +1,4 @@
+#header-only library
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/eigen-eigen-b9cd8366d4e8)
 vcpkg_download_distfile(ARCHIVE
@@ -18,4 +19,3 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/eigen3/COPYING.README ${CURRENT_PACKAG
 
 # Copy the eigen header files
 file(COPY ${SOURCE_PATH}/Eigen/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/Eigen/)
-vcpkg_copy_pdbs()
