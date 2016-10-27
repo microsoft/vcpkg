@@ -17,8 +17,9 @@ vcpkg_download_distfile(DIFF
 )
 FILE(READ "${DIFF}" content)
 STRING(REGEX REPLACE "include/" "" content "${content}")
-FILE(WRITE ${DIFF} "${content}")
-vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${DIFF})
+set(DIFF2 ${CURRENT_BUILDTREES_DIR}/src/boost-range-has_range_interator-hotfix_e7ebe14707130cda7b72e0ae5e93b17157fdb6a2.diff.fixed)
+FILE(WRITE ${DIFF2} "${content}")
+vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${DIFF2})
 
 if(NOT EXISTS ${SOURCE_PATH}/b2.exe)
     message(STATUS "Bootstrapping")
