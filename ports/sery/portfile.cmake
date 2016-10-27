@@ -1,3 +1,7 @@
+include(${CMAKE_TRIPLET_FILE})
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    message(FATAL_ERROR "Dynamic building not supported yet")
+endif()
 include(vcpkg_common_functions)
 SET(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src/Sery-1.0")
 vcpkg_download_distfile(ARCHIVE
