@@ -6,9 +6,9 @@
 #   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
 #
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ragel-6.9)
 include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ragel-6.9)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.colm.net/files/ragel/ragel-6.9.tar.gz"
     FILENAME "ragel-6.9.tar.gz"
