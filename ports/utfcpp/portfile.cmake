@@ -1,3 +1,4 @@
+#header-only library
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/utfcpp-2.3.4)
 vcpkg_download_distfile(ARCHIVE_FILE
