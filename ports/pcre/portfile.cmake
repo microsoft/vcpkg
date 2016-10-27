@@ -36,6 +36,10 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/man)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/man)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
+
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/pcre)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/pcre/COPYING ${CURRENT_PACKAGES_DIR}/share/pcre/copyright)
