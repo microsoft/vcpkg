@@ -1,4 +1,7 @@
 include(${CMAKE_TRIPLET_FILE})
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(FATAL_ERROR "Static building not supported yet. Portfile not modified and blocked by libbson.")
+endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mongo-cxx-driver-r3.0.2)
 
