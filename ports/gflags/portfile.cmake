@@ -50,7 +50,8 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gflags_nothreads.dll ${CURRENT_PACKAGES_
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gflags.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gflags.dll)
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gflags_nothreads.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gflags_nothreads.dll)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
 
 file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/gflags RENAME copyright)
 
