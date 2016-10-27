@@ -1,3 +1,4 @@
+include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/tinyxml2-3.0.0)
 vcpkg_download_distfile(ARCHIVE
