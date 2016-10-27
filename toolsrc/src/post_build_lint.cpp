@@ -403,11 +403,11 @@ namespace vcpkg
 
         if (debug_count == 0)
         {
-            System::println(System::color::warning, "Debug binaries were not built");
+            System::println(System::color::warning, "Debug binaries were not found");
         }
         if (release_count == 0)
         {
-            System::println(System::color::warning, "Release binaries were not built");
+            System::println(System::color::warning, "Release binaries were not found");
         }
 
         System::println("");
@@ -457,8 +457,8 @@ namespace vcpkg
         {
             case triplet::BuildType::DYNAMIC:
                 {
-                    const std::vector<fs::path> debug_dlls = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "bin", ".dll");
-                    const std::vector<fs::path> release_dlls = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "bin", ".dll");
+                    const std::vector<fs::path> debug_dlls = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "bin", ".dll");
+                    const std::vector<fs::path> release_dlls = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "bin", ".dll");
 
                     error_count += check_matching_debug_and_release_binaries(debug_dlls, release_dlls);
 
@@ -487,8 +487,8 @@ namespace vcpkg
         error_count += check_no_subdirectories(paths.packages / spec.dir() / "lib");
         error_count += check_no_subdirectories(paths.packages / spec.dir() / "debug" / "lib");
 #endif
-        const std::vector<fs::path> debug_libs = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "lib", ".lib");
-        const std::vector<fs::path> release_libs = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "lib", ".lib");
+        const std::vector<fs::path> debug_libs = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "lib", ".lib");
+        const std::vector<fs::path> release_libs = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "lib", ".lib");
 
         error_count += check_matching_debug_and_release_binaries(debug_libs, release_libs);
 
