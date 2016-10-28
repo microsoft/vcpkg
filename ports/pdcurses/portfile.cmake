@@ -13,16 +13,13 @@ vcpkg_extract_source_archive(${ARCHIVE})
 set(PDC_NMAKE_CMD ${NMAKE} -f vcwin32.mak WIDE=Y UTF8=Y)
 set(PDC_NMAKE_CWD ${SOURCE_PATH}/win32)
 set(PDC_PDCLIB ${SOURCE_PATH}/win32/pdcurses)
-set(PDC_PANELLIB ${SOURCE_PATH}/win32/panel)
 set(PDC_OUTPUT bin)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(PDC_PDCLIB ${PDC_PDCLIB}.lib)
-    set(PDC_PANELLIB ${PDC_PANELLIB}.lib)
     set(PDC_OUTPUT lib)
 else()
     set(PDC_PDCLIB ${PDC_PDCLIB}.dll)
-    set(PDC_PANELLIB ${PDC_PANELLIB}.dll)
     set(PDC_NMAKE_CMD ${PDC_NMAKE_CMD} DLL=Y)
 endif()
 
@@ -34,7 +31,7 @@ vcpkg_execute_required_process(
 )
 message(STATUS "Build ${TARGET_TRIPLET}-rel done")
 file (
-    COPY ${PDC_PDCLIB} ${PDC_PANELLIB}
+    COPY ${PDC_PDCLIB}
     DESTINATION ${CURRENT_PACKAGES_DIR}/${PDC_OUTPUT}
 )
 
@@ -46,7 +43,7 @@ vcpkg_execute_required_process(
 )
 message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
 file (
-    COPY ${PDC_PDCLIB} ${PDC_PANELLIB}
+    COPY ${PDC_PDCLIB}
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/${PDC_OUTPUT}
 )
 
