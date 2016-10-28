@@ -1,4 +1,9 @@
 include(${CMAKE_TRIPLET_FILE})
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+    message(FATAL_ERROR "64-bit builds are not supported for PDCurses.")
+endif()
+
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src)
 find_program(NMAKE nmake)
