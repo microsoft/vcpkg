@@ -7,6 +7,7 @@ set(ENV{PATH} "${OUTPUT_PATH}/qtbase/bin;$ENV{PATH}")
 
 find_program(NMAKE nmake)
 vcpkg_find_acquire_program(JOM)
+find_program(PYTHON python)
 get_filename_component(JOM_EXE_PATH ${JOM} DIRECTORY)
 set(ENV{PATH} "${JOM_EXE_PATH};$ENV{PATH}")
 
@@ -41,7 +42,11 @@ vcpkg_execute_required_process(
         -confirm-license -opensource -platform win32-msvc2015
         -debug-and-release -force-debug-info ${QT_RUNTIME_LINKAGE}
         -nomake examples -nomake tests -skip webengine
-        -prefix "${CURRENT_PACKAGES_DIR}"
+        -prefix ${CURRENT_PACKAGES_DIR}
+        -bindir ${CURRENT_PACKAGES_DIR}/bin
+        -hostbindir ${CURRENT_PACKAGES_DIR}/tools
+        -archdatadir ${CURRENT_PACKAGES_DIR}/share/qt5
+        -datadir ${CURRENT_PACKAGES_DIR}/share/qt5
     WORKING_DIRECTORY ${OUTPUT_PATH}
     LOGNAME configure-${TARGET_TRIPLET}
 )
@@ -68,7 +73,6 @@ message(STATUS "Packaging ${TARGET_TRIPLET}")
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug)
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib)
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
 file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/share/cmake)
 
 if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL dynamic)
@@ -108,7 +112,6 @@ file(REMOVE ${DEBUG_LIB_FILES})
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Gamepad.lib ${CURRENT_PACKAGES_DIR}/lib/Qt5Gamepad.lib)
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Gamepad.prl ${CURRENT_PACKAGES_DIR}/lib/Qt5Gamepad.prl)
 file(GLOB BINARY_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*.exe")
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
 foreach(BINARY ${BINARY_TOOLS})
     execute_process(COMMAND dumpbin /PDBPATH ${BINARY}
                     COMMAND findstr PDB
@@ -124,24 +127,19 @@ foreach(BINARY ${BINARY_TOOLS})
     endif()
 endforeach()
 file(INSTALL ${BINARY_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-FILE(REMOVE ${BINARY_TOOLS})
+file(REMOVE ${BINARY_TOOLS})
 
-#if we are using dynamic linkage, the tools also require the dlls and platforms directory to run correctly
 if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL dynamic)
     file(GLOB RELEASE_DLLS "${CURRENT_PACKAGES_DIR}/bin/*.dll")
     file(INSTALL ${RELEASE_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-    file(INSTALL ${CURRENT_PACKAGES_DIR}/plugins/platforms DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
 endif()
-set(SHARE_PATH ${CURRENT_PACKAGES_DIR}/share/qt5)
-file(MAKE_DIRECTORY ${SHARE_PATH})
-file(INSTALL ${SOURCE_PATH}/LICENSE.LGPLv3 DESTINATION ${SHARE_PATH} RENAME copyright)
-file(RENAME ${CURRENT_PACKAGES_DIR}/doc ${SHARE_PATH}/doc)
-file(RENAME ${CURRENT_PACKAGES_DIR}/mkspecs ${SHARE_PATH}/mkspecs)
-file(RENAME ${CURRENT_PACKAGES_DIR}/phrasebooks ${SHARE_PATH}/phrasebooks)
-file(RENAME ${CURRENT_PACKAGES_DIR}/plugins ${SHARE_PATH}/plugins)
-file(RENAME ${CURRENT_PACKAGES_DIR}/qml ${SHARE_PATH}/qml)
-file(RENAME ${CURRENT_PACKAGES_DIR}/translations ${SHARE_PATH}/translations)
-if (EXISTS ${CURRENT_PACKAGES_DIR}/qtvirtualkeyboard)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/qtvirtualkeyboard ${SHARE_PATH}/qtvirtualkeyboard)
-endif()
+
+vcpkg_execute_required_process(
+    COMMAND ${PYTHON} ${CMAKE_CURRENT_LIST_DIR}/fixcmake.py
+    WORKING_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/cmake
+    LOGNAME fix-cmake
+)
+
+file(INSTALL ${SOURCE_PATH}/LICENSE.LGPLv3 DESTINATION  ${CURRENT_PACKAGES_DIR}/share/qt5 RENAME copyright)
+
 vcpkg_copy_pdbs()
