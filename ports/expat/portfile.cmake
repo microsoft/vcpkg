@@ -1,7 +1,4 @@
 include(${CMAKE_TRIPLET_FILE})
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(FATAL_ERROR "Static building not supported yet")
-endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/expat-2.1.1)
 vcpkg_download_distfile(ARCHIVE_FILE
@@ -11,16 +8,24 @@ vcpkg_download_distfile(ARCHIVE_FILE
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(EXPAT_LINKAGE ON)
+else()
+    set(EXPAT_LINKAGE OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DBUILD_examples=OFF
         -DBUILD_tests=OFF
         -DBUILD_tools=OFF
+        -DBUILD_shared=${EXPAT_LINKAGE}
 )
 
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/expat RENAME copyright)
+
 vcpkg_copy_pdbs()
