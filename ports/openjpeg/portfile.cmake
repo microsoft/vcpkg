@@ -30,10 +30,8 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/vcruntime140.dll)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/msvcp140.dll)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/vcruntime140.dll)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    vcpkg_copy_pdbs()
-endif()
-
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openjpeg)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/openjpeg/LICENSE ${CURRENT_PACKAGES_DIR}/share/openjpeg/copyright)
+
+vcpkg_copy_pdbs()

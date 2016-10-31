@@ -60,10 +60,10 @@ file(REMOVE
 
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openssl RENAME copyright)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    vcpkg_copy_pdbs()
-else()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     # They should be empty, only the exes deleted above were in these directories
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/)
 endif()
+
+vcpkg_copy_pdbs()
