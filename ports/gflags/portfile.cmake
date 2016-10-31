@@ -1,7 +1,4 @@
 include(${CMAKE_TRIPLET_FILE})
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(FATAL_ERROR "Static building not supported yet")
-endif()
 include(vcpkg_common_functions)
 find_program(GIT git)
 
@@ -35,21 +32,24 @@ if(NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
 endif()
 message(STATUS "Adding worktree and patching done")
 
+set(F)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src
-    OPTIONS
-        -DBUILD_SHARED_LIBS=ON
 )
 
 vcpkg_install_cmake()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-file(RENAME ${CURRENT_PACKAGES_DIR}/cmake ${CURRENT_PACKAGES_DIR}/share/gflags)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gflags.dll ${CURRENT_PACKAGES_DIR}/bin/gflags.dll)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gflags_nothreads.dll ${CURRENT_PACKAGES_DIR}/bin/gflags_nothreads.dll)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gflags.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gflags.dll)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gflags_nothreads.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gflags_nothreads.dll)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gflags.dll ${CURRENT_PACKAGES_DIR}/bin/gflags.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gflags_nothreads.dll ${CURRENT_PACKAGES_DIR}/bin/gflags_nothreads.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gflags.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gflags.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gflags_nothreads.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gflags_nothreads.dll)
+endif()
 
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
+file(RENAME ${CURRENT_PACKAGES_DIR}/cmake ${CURRENT_PACKAGES_DIR}/share/gflags)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
 
