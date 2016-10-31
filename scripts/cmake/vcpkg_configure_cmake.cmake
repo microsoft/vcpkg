@@ -42,7 +42,7 @@ function(vcpkg_configure_cmake)
     if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL dynamic)
         list(APPEND _csc_OPTIONS_DEBUG
             "-DCMAKE_CXX_FLAGS_DEBUG=/D_DEBUG /MDd /Zi /Ob0 /Od /RTC1"
-            "-DCMAKE_C_FLAGS_RELEASE=/D_DEBUG /MDd /Zi /Ob0 /Od /RTC1"
+            "-DCMAKE_C_FLAGS_DEBUG=/D_DEBUG /MDd /Zi /Ob0 /Od /RTC1"
         )
         list(APPEND _csc_OPTIONS_RELEASE
             "-DCMAKE_CXX_FLAGS_RELEASE=/MD /O2 /Oi /Gy /DNDEBUG /Zi"
@@ -51,7 +51,7 @@ function(vcpkg_configure_cmake)
     elseif(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL static)
         list(APPEND _csc_OPTIONS_DEBUG
             "-DCMAKE_CXX_FLAGS_DEBUG=/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1"
-            "-DCMAKE_C_FLAGS_RELEASE=/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1"
+            "-DCMAKE_C_FLAGS_DEBUG=/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1"
         )
         list(APPEND _csc_OPTIONS_RELEASE
             "-DCMAKE_CXX_FLAGS_RELEASE=/MT /O2 /Oi /Gy /DNDEBUG /Zi"
