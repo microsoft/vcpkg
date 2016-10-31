@@ -14,7 +14,7 @@ include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glog-0472b91c5defdf90cff7292e3bf7bd86770a9a0a)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/google/glog/archive/0472b91c5defdf90cff7292e3bf7bd86770a9a0a.zip"
-    FILENAME "glog-0472b91c5defdf90cff7292e3bf7bd86770a9a0a"
+    FILENAME "glog-0472b91c5defdf90cff7292e3bf7bd86770a9a0a.zip"
     SHA512 24506ad1cc05e8361379b925ecfc8f32cc47692a47598401cca340eb2a528fe28b8b0d3636983056c7910469d105095bd3bacacff6278bffa18d85603c3dbfa8
 )
 vcpkg_extract_source_archive(${ARCHIVE})
