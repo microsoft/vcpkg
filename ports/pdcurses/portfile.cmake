@@ -20,11 +20,7 @@ set(PDC_NMAKE_CWD ${SOURCE_PATH}/win32)
 set(PDC_PDCLIB ${SOURCE_PATH}/win32/pdcurses)
 set(PDC_OUTPUT bin)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(PDC_PDCLIB ${PDC_PDCLIB}.lib)
-    set(PDC_OUTPUT lib)
-else()
-    set(PDC_PDCLIB ${PDC_PDCLIB}.dll)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(PDC_NMAKE_CMD ${PDC_NMAKE_CMD} DLL=Y)
 endif()
 
@@ -35,10 +31,17 @@ vcpkg_execute_required_process(
     LOGNAME build-${TARGET_TRIPLET}-rel
 )
 message(STATUS "Build ${TARGET_TRIPLET}-rel done")
+
 file (
-    COPY ${PDC_PDCLIB}
-    DESTINATION ${CURRENT_PACKAGES_DIR}/${PDC_OUTPUT}
+    COPY ${PDC_PDCLIB}.lib
+    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
 )
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    file (
+        COPY ${PDC_PDCLIB}.dll
+        DESTINATION ${CURRENT_PACKAGES_DIR}/bin
+    )
+endif()
 
 message(STATUS "Build ${TARGET_TRIPLET}-dbg")
 vcpkg_execute_required_process(
@@ -47,13 +50,22 @@ vcpkg_execute_required_process(
     LOGNAME build-${TARGET_TRIPLET}-dbg
 )
 message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
+
 file (
-    COPY ${PDC_PDCLIB}
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/${PDC_OUTPUT}
+    COPY ${PDC_PDCLIB}.lib
+    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
 )
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    file (
+        COPY ${PDC_PDCLIB}.dll
+        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
+    )
+endif()
 
 file(
     COPY ${SOURCE_PATH}/curses.h ${SOURCE_PATH}/panel.h ${SOURCE_PATH}/term.h
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/pdcurses RENAME copyright)
+
+vcpkg_copy_pdbs()
