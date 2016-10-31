@@ -32,8 +32,6 @@ if(NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
 endif()
 message(STATUS "Adding worktree and patching done")
 
-set(F)
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src
 )
