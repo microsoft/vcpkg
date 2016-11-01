@@ -31,7 +31,7 @@ Vcpkg is built with your contributions. Here are some ways you can contribute:
 * [Submit Issues](https://github.com/Microsoft/vcpkg/issues) in vcpkg or existing packages
 * [Submit Fixes and New Packages](https://github.com/Microsoft/vcpkg/pulls)
 
-Please refer to our [Contribution guidelines](docs/CONTRIBUTING.md) for more details.
+Please refer to our [Contribution guidelines](CONTRIBUTING.md) for more details.
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
