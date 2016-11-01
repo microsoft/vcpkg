@@ -1,11 +1,4 @@
 include(${CMAKE_TRIPLET_FILE})
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(BUILD_STATIC ON)
-    set(NOT_BUILD_STATIC OFF)
-else()
-    set(BUILD_STATIC OFF)
-    set(NOT_BUILD_STATIC ON)
-endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libjpeg-turbo-1.4.90)
 
@@ -23,6 +16,14 @@ vcpkg_apply_patches(
 vcpkg_find_acquire_program(NASM)
 get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
 set(ENV{PATH} "${NASM_EXE_PATH};$ENV{PATH}")
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(BUILD_STATIC OFF)
+    set(NOT_BUILD_STATIC ON)
+else()
+    set(BUILD_STATIC ON)
+    set(NOT_BUILD_STATIC OFF)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
