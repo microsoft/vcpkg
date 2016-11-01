@@ -27,6 +27,14 @@ for f in files:
             builder += "    else()"
             builder += "\n    " + line.replace("/lib/", "/debug/lib/")
             builder += "    endif()\n"
+        elif "_install_prefix}/lib/qtmaind.lib" in line:
+            builder += line.replace("/lib/", "/debug/lib/")
+        elif "_install_prefix}/plugins/${PLUGIN_LOCATION}" in line:
+            builder += "    if (${Configuration} STREQUAL \"RELEASE\")"
+            builder += "\n    " + line
+            builder += "    else()"
+            builder += "\n    " + line.replace("/plugins/", "/debug/plugins/")
+            builder += "    endif()\n"
         elif exepattern.search(line) != None:
             builder += line.replace("/bin/", "/tools/")
         else:

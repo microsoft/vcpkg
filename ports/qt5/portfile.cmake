@@ -7,9 +7,12 @@ set(ENV{PATH} "${OUTPUT_PATH}/qtbase/bin;$ENV{PATH}")
 
 find_program(NMAKE nmake)
 vcpkg_find_acquire_program(JOM)
-find_program(PYTHON python)
+vcpkg_find_acquire_program(PERL)
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
+get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
 get_filename_component(JOM_EXE_PATH ${JOM} DIRECTORY)
-set(ENV{PATH} "${JOM_EXE_PATH};$ENV{PATH}")
+set(ENV{PATH} "${JOM_EXE_PATH};${PYTHON3_EXE_PATH};${PERL_EXE_PATH};$ENV{PATH}")
 
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "http://download.qt.io/official_releases/qt/5.7/5.7.0/single/qt-everywhere-opensource-src-5.7.0.7z"
@@ -112,6 +115,17 @@ file(REMOVE ${DEBUG_LIB_FILES})
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Gamepad.lib ${CURRENT_PACKAGES_DIR}/lib/Qt5Gamepad.lib)
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Gamepad.prl ${CURRENT_PACKAGES_DIR}/lib/Qt5Gamepad.prl)
 file(GLOB BINARY_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*.exe")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/plugins")
+file(GLOB_RECURSE DEBUG_PLUGINS
+    "${CURRENT_PACKAGES_DIR}/plugins/*d.dll"
+    "${CURRENT_PACKAGES_DIR}/plugins/*d.pdb")
+foreach(file ${DEBUG_PLUGINS})
+    get_filename_component(file_n ${file} NAME)
+    file(RELATIVE_PATH file_rel "${CURRENT_PACKAGES_DIR}/plugins" ${file})
+    get_filename_component(rel_dir ${file_rel} DIRECTORY)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/plugins/${rel_dir}")
+    file(RENAME ${file} "${CURRENT_PACKAGES_DIR}/debug/plugins/${rel_dir}/${file_n}")
+endforeach()
 foreach(BINARY ${BINARY_TOOLS})
     execute_process(COMMAND dumpbin /PDBPATH ${BINARY}
                     COMMAND findstr PDB
@@ -135,7 +149,7 @@ if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL dynamic)
 endif()
 
 vcpkg_execute_required_process(
-    COMMAND ${PYTHON} ${CMAKE_CURRENT_LIST_DIR}/fixcmake.py
+    COMMAND ${PYTHON3} ${CMAKE_CURRENT_LIST_DIR}/fixcmake.py
     WORKING_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/cmake
     LOGNAME fix-cmake
 )
