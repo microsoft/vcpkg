@@ -1,4 +1,4 @@
-include(${CMAKE_TRIPLET_FILE})
+#header-only library
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/cppzmq-7faa9b061843fcbceb7ed94984ee8f20284ee759)
 vcpkg_download_distfile(ARCHIVE
