@@ -1,6 +1,10 @@
 include(${CMAKE_TRIPLET_FILE})
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(FATAL_ERROR "Static building not supported yet")
+    set(BUILD_STATIC ON)
+    set(NOT_BUILD_STATIC OFF)
+else()
+    set(BUILD_STATIC OFF)
+    set(NOT_BUILD_STATIC ON)
 endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libjpeg-turbo-1.4.90)
@@ -23,7 +27,8 @@ set(ENV{PATH} "${NASM_EXE_PATH};$ENV{PATH}")
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -DENABLE_STATIC=OFF
+        -DENABLE_STATIC=${BUILD_STATIC}
+        -DENABLE_SHARED=${NOT_BUILD_STATIC}
         -DWITH_CRT_DLL=ON
         -DENABLE_EXECUTABLES=OFF
         -DINSTALL_DOCS=OFF
