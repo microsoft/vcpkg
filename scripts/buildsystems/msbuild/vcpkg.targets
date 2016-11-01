@@ -1,6 +1,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
- <Target Name="RuntimeLibraryAnalyze" BeforeTargets="GetClCommandLines;ClCompile">
+ <Target Name="VcpkgCompileInputs" BeforeTargets="GetClCommandLines;ClCompile">
     <PropertyGroup>
       <VcpkgRuntimeLibrary Condition="'%(ClCompile.RuntimeLibrary)' == ''"></VcpkgRuntimeLibrary>
       <VcpkgRuntimeLibrary Condition="'%(ClCompile.RuntimeLibrary)' == 'MultiThreadedDebugDLL'"></VcpkgRuntimeLibrary>
@@ -44,15 +44,35 @@
       <Message Text="Selecting VcpkgTriplet: $(VcpkgTriplet)"/>
       <Message Text="Selecting VcpkgRoot: $(VcpkgRoot)"/>
     <ItemGroup Condition="'$(VcpkgEnabled)' == 'true'">
-      <Link>
-        <AdditionalDependencies Condition="'$(VcpkgConfiguration)' == 'Debug'">$(VcpkgRoot)debug\lib\*.lib;%(Link.AdditionalDependencies)</AdditionalDependencies>
-        <AdditionalDependencies Condition="'$(VcpkgConfiguration)' == 'Release'">$(VcpkgRoot)lib\*.lib;%(Link.AdditionalDependencies)</AdditionalDependencies>
-      </Link>
       <ClCompile>
         <AdditionalIncludeDirectories>$(VcpkgRoot)include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       </ClCompile>
     </ItemGroup>
   </Target>
+
+  <Target Name="VcpkgLinkInputs" 
+      DependsOnTargets="ComputeRCGeneratedLinkInputs;
+                        ComputeManifestGeneratedLinkerInputs;
+                        ComputeCustomBuildOutput;
+                        ComputeCLGeneratedLinkInputs;
+                        ComputeLinkInputsFromProject;
+                        ComputeReferenceLinkInputs;" 
+      BeforeTargets="Link">
+    <Message Text="LinkInputs: @(Link)" />
+    <ItemGroup Condition="'$(VcpkgEnabled)' == 'true'">
+      <VcpkgLink Include="$(VcpkgRoot)debug\lib\*.lib" Condition="'$(VcpkgConfiguration)' == 'Debug'"/>
+      <VcpkgLink Include="$(VcpkgRoot)lib\*.lib" Condition="'$(VcpkgConfiguration)' == 'Release'"/>
+
+      <Link>
+        <AdditionalDependencies>@(VcpkgLink);%(Link.AdditionalDependencies)</AdditionalDependencies>
+      </Link>
+    </ItemGroup>
+    <Message Text="VcpkgLinkInputs: @(VcpkgLink)" />
+  </Target>
+
+  <PropertyGroup>
+    <ComputeLinkInputsTargets >$(ComputeLinkInputsTargets);VcpkgLinkInputs</ComputeLinkInputsTargets >
+  </PropertyGroup>
 
   <Target Name="AppLocalFromInstalled" AfterTargets="CopyFilesToOutputDirectory" BeforeTargets="CopyLocalFilesOutputGroup" Condition="'$(VcpkgEnabled)' == 'true' and '$(OutputType)' == 'exe'">
     <WriteLinesToFile
