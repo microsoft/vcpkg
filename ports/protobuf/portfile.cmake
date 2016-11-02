@@ -40,6 +40,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/protoc.exe)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/protoc.exe)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 
 file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/protobuf-3.0.2/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/protobuf RENAME copyright)
 file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/protobuf-3.0.2-win32/bin/protoc.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
