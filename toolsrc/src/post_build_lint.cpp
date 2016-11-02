@@ -464,6 +464,29 @@ namespace vcpkg
         return lint_status::ERROR_DETECTED;
     }
 
+    static lint_status check_no_empty_folders(const fs::path& dir)
+    {
+        const std::vector<fs::path> empty_directories = recursive_find_matching_paths_in_dir(dir, [](const fs::path& current)
+                                                                                             {
+                                                                                                 return fs::is_directory(current) && fs::is_empty(current);
+                                                                                             });
+
+        if (!empty_directories.empty())
+        {
+            System::println(System::color::warning, "There should be no empty directories in %s", dir.generic_string());
+            System::println("The following empty directories were found: ");
+            print_vector_of_files(empty_directories);
+            System::println(System::color::warning, "If a directory should be populated but is not, this might indicate an error in the portfile.\n"
+                            "If the directories are not needed and their creation cannot be disabled, use something like this in the portfile to remove them)\n"
+                            "\n"
+                            R"###(    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/a/dir ${CURRENT_PACKAGES_DIR}/some/other/dir))###""\n"
+                            "\n");
+            return lint_status::ERROR_DETECTED;
+        }
+
+        return lint_status::SUCCESS;
+    }
+
     static void operator +=(size_t& left, const lint_status& right)
     {
         left += static_cast<size_t>(right);
@@ -529,6 +552,8 @@ namespace vcpkg
         libs.insert(libs.cend(), release_libs.cbegin(), release_libs.cend());
 
         error_count += check_lib_architecture(spec.target_triplet().architecture(), libs);
+
+        error_count += check_no_empty_folders(paths.packages / spec.dir());
 
         if (error_count != 0)
         {
