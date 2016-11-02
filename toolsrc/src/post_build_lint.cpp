@@ -433,6 +433,37 @@ namespace vcpkg
         return lint_status::SUCCESS;
     }
 
+    static lint_status check_bin_folders_are_not_present_in_static_build(const package_spec& spec, const vcpkg_paths& paths)
+    {
+        const fs::path bin = paths.packages / spec.dir() / "bin";
+        const fs::path debug_bin = paths.packages / spec.dir() / "debug" / "bin";
+
+        if (!fs::exists(bin) && !fs::exists(debug_bin))
+        {
+            return lint_status::SUCCESS;
+        }
+
+        if (fs::exists(bin))
+        {
+            System::println(System::color::warning, R"(There should be no bin\ directory in a static build, but %s is present.)", bin.generic_string());
+        }
+
+        if (fs::exists(debug_bin))
+        {
+            System::println(System::color::warning, R"(There should be no debug\bin\ directory in a static build, but %s is present.)", debug_bin.generic_string());
+        }
+
+        System::println(System::color::warning, R"(If the creation of bin\ and/or debug\bin\ cannot be disabled, use this in the portfile to remove them)" "\n"
+                        "\n"
+                        R"###(    if(VCPKG_LIBRARY_LINKAGE STREQUAL static))###""\n"
+                        R"###(        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin))###""\n"
+                        R"###(    endif())###"
+                        "\n"
+        );
+
+        return lint_status::ERROR_DETECTED;
+    }
+
     static void operator +=(size_t& left, const lint_status& right)
     {
         left += static_cast<size_t>(right);
@@ -477,6 +508,7 @@ namespace vcpkg
                     recursive_find_files_with_extension_in_dir(paths.packages / spec.dir(), ".dll", &dlls);
                     error_count += check_no_dlls_present(dlls);
 
+                    error_count += check_bin_folders_are_not_present_in_static_build(spec, paths);
                     break;
                 }
 
