@@ -41,3 +41,5 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/include/libgnuintl.h ${CURRENT_PACKAGES_DIR}
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/gettext)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/gettext/COPYING ${CURRENT_PACKAGES_DIR}/share/gettext/copyright)
+
+vcpkg_copy_pdbs()
