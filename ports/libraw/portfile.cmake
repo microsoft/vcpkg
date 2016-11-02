@@ -23,9 +23,13 @@ file(COPY ${LIBRAW_CMAKE_SOURCE_PATH}/cmake DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -DINSTALL_CMAKE_MODULE_PATH=${SOURCE_PATH}
 )
 
 vcpkg_install_cmake()
+
+file(COPY ${SOURCE_PATH}/FindLibRaw.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libraw/cmake/FindLibRaw.cmake)
 
 # Cleanup
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
