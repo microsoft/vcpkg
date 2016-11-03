@@ -26,7 +26,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# There is no way to suppress installation of the headers and resource files in build.
+# There is no way to suppress installation of the headers in debug builds.
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
