@@ -12,9 +12,5 @@ vcpkg::SourceParagraph::SourceParagraph(const std::unordered_map<std::string, st
     maintainer(optional_field(fields, "Maintainer"))
 {
     std::string deps = optional_field(fields, "Build-Depends");
-    if (!deps.empty())
-    {
-        this->depends.clear();
-        this->depends = parse_depends(deps);
-    };
+    this->depends = parse_depends(deps);
 }

@@ -23,11 +23,7 @@ namespace vcpkg
         }
 
         std::string deps = optional_field(fields, "Depends");
-        if (!deps.empty())
-        {
-            this->depends.clear();
-            this->depends = parse_depends(deps);
-        }
+        this->depends = parse_depends(deps);
     }
 
     BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh, const triplet& target_triplet)

@@ -24,6 +24,11 @@ namespace vcpkg {namespace details
 
     std::vector<std::string> parse_depends(const std::string& depends_string)
     {
+        if (depends_string.empty())
+        {
+            return {};
+        }
+
         std::vector<std::string> out;
 
         size_t cur = 0;
