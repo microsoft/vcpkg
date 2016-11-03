@@ -29,6 +29,20 @@ vcpkg_install_cmake()
 # There is no way to suppress installation of the headers in debug builds.
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
+# Both dynamic and static are built, so keep only the one needed
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/apr-1.lib
+                ${CURRENT_PACKAGES_DIR}/lib/aprapp-1.lib
+                ${CURRENT_PACKAGES_DIR}/debug/lib/apr-1.lib
+                ${CURRENT_PACKAGES_DIR}/debug/lib/aprapp-1.lib)
+else()
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libapr-1.lib
+                ${CURRENT_PACKAGES_DIR}/lib/libaprapp-1.lib
+                ${CURRENT_PACKAGES_DIR}/debug/lib/libapr-1.lib
+                ${CURRENT_PACKAGES_DIR}/debug/lib/libaprapp-1.lib)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
+
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/apr)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/apr/LICENSE ${CURRENT_PACKAGES_DIR}/share/apr/copyright)
