@@ -33,7 +33,7 @@ namespace vcpkg
             const std::string remaining_keys_as_string = Strings::join(remaining_keys, "\n    ");
             const std::string valid_keys_as_string = Strings::join(valid_entries, "\n    ");
 
-            System::println(System::color::error, "Error: There are invalid fields in the port file");
+            System::println(System::color::error, "Error: There are invalid fields in port file %s", port_dir.generic_string());
             System::println("The following fields were not expected in the port file:\n\n    %s\n\n", remaining_keys_as_string);
             System::println("This is the list of valid fields (case-sensitive): \n\n    %s\n", valid_keys_as_string);
             exit(EXIT_FAILURE);
