@@ -64,4 +64,25 @@ namespace vcpkg {namespace Strings
         std::transform(output.begin(), output.end(), output.begin(), ::tolower);
         return output;
     }
+
+    std::string join(const std::vector<std::string>& v, const std::string& delimiter)
+    {
+        if (v.empty())
+        {
+            return std::string();
+        }
+
+        std::string output;
+        size_t size = v.size();
+
+        output.append(v.at(0));
+
+        for (int i = 1; i < size; ++i)
+        {
+            output.append(delimiter);
+            output.append(v.at(i));
+        }
+
+        return output;
+    }
 }}
