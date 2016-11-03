@@ -18,7 +18,7 @@ namespace vcpkg {namespace details
     std::string required_field(const std::unordered_map<std::string, std::string>& fields, const std::string& fieldname)
     {
         auto it = fields.find(fieldname);
-        vcpkg::Checks::check_throw(it != fields.end(), "Required field not present: %s", fieldname);
+        vcpkg::Checks::check_exit(it != fields.end(), "Required field not present: %s", fieldname);
         return it->second;
     };
 
