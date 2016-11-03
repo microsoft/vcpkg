@@ -8,6 +8,7 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Dependencies.h"
 #include "vcpkg_Input.h"
+#include "vcpkg_Maps.h"
 
 namespace vcpkg
 {
@@ -23,6 +24,20 @@ namespace vcpkg
         auto pghs = get_paragraphs(port_dir / "CONTROL");
         Checks::check_exit(pghs.size() == 1, "Error: invalid control file");
         SourceParagraph source_paragraph(pghs[0]);
+
+        if (!source_paragraph.unparsed_fields.empty())
+        {
+            const std::vector<std::string> remaining_keys = Maps::extract_keys(source_paragraph.unparsed_fields);
+            const std::vector<std::string>& valid_entries = SourceParagraph::get_list_of_valid_entries();
+
+            const std::string remaining_keys_as_string = Strings::join(remaining_keys, "\n    ");
+            const std::string valid_keys_as_string = Strings::join(valid_entries, "\n    ");
+
+            System::println(System::color::error, "Error: There are invalid fields in the port file");
+            System::println("The following fields were not expected in the port file:\n\n    %s\n\n", remaining_keys_as_string);
+            System::println("This is the list of valid fields (case-sensitive): \n\n    %s\n", valid_keys_as_string);
+            exit(EXIT_FAILURE);
+        }
 
         const fs::path ports_cmake_script_path = paths.ports_cmake;
         auto&& target_triplet = spec.target_triplet();
