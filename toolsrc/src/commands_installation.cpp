@@ -25,20 +25,6 @@ namespace vcpkg
         Checks::check_exit(pghs.size() == 1, "Error: invalid control file");
         SourceParagraph source_paragraph(pghs[0]);
 
-        if (!source_paragraph.unparsed_fields.empty())
-        {
-            const std::vector<std::string> remaining_keys = Maps::extract_keys(source_paragraph.unparsed_fields);
-            const std::vector<std::string>& valid_entries = SourceParagraph::get_list_of_valid_fields();
-
-            const std::string remaining_keys_as_string = Strings::join(remaining_keys, "\n    ");
-            const std::string valid_keys_as_string = Strings::join(valid_entries, "\n    ");
-
-            System::println(System::color::error, "Error: There are invalid fields in port file %s", port_dir.generic_string());
-            System::println("The following fields were not expected in the port file:\n\n    %s\n\n", remaining_keys_as_string);
-            System::println("This is the list of valid fields (case-sensitive): \n\n    %s\n", valid_keys_as_string);
-            exit(EXIT_FAILURE);
-        }
-
         const fs::path ports_cmake_script_path = paths.ports_cmake;
         auto&& target_triplet = spec.target_triplet();
         const std::wstring command = Strings::wformat(LR"("%%VS140COMNTOOLS%%..\..\VC\vcvarsall.bat" %s && cmake -DCMD=BUILD -DPORT=%s -DTARGET_TRIPLET=%s "-DCURRENT_PORT_DIR=%s/." -P "%s")",

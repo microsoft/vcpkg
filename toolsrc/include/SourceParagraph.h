@@ -18,6 +18,5 @@ namespace vcpkg
         std::string description;
         std::string maintainer;
         std::vector<std::string> depends;
-        std::unordered_map<std::string, std::string> unparsed_fields;
     };
 }
