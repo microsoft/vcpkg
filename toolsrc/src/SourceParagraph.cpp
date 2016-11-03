@@ -38,14 +38,13 @@ namespace vcpkg
 
     SourceParagraph::SourceParagraph(std::unordered_map<std::string, std::string> fields)
     {
-        using namespace vcpkg::details;
-        this->name = remove_required_field(&fields, SourceParagraphRequiredField::SOURCE);
-        this->version = remove_required_field(&fields, SourceParagraphRequiredField::VERSION);
-        this->description = remove_optional_field(&fields, SourceParagraphOptionalField::DESCRIPTION);
-        this->maintainer = remove_optional_field(&fields, SourceParagraphOptionalField::MAINTAINER);
+        this->name = details::remove_required_field(&fields, SourceParagraphRequiredField::SOURCE);
+        this->version = details::remove_required_field(&fields, SourceParagraphRequiredField::VERSION);
+        this->description = details::remove_optional_field(&fields, SourceParagraphOptionalField::DESCRIPTION);
+        this->maintainer = details::remove_optional_field(&fields, SourceParagraphOptionalField::MAINTAINER);
 
-        std::string deps = remove_optional_field(&fields, SourceParagraphOptionalField::BUILD_DEPENDS);
-        this->depends = parse_depends(deps);
+        std::string deps = details::remove_optional_field(&fields, SourceParagraphOptionalField::BUILD_DEPENDS);
+        this->depends = details::parse_depends(deps);
 
         if (!fields.empty())
         {
