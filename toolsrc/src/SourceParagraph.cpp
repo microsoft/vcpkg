@@ -10,26 +10,26 @@ namespace vcpkg
         static const std::string VERSION = "Version";
     }
 
-    namespace SourceParagraphOptionalEntry
+    namespace SourceParagraphOptionalField
     {
         static const std::string DESCRIPTION = "Description";
         static const std::string MAINTAINER = "Maintainer";
         static const std::string BUILD_DEPENDS = "Build-Depends";
     }
 
-    const std::vector<std::string>& SourceParagraph::get_list_of_valid_entries()
+    const std::vector<std::string>& SourceParagraph::get_list_of_valid_fields()
     {
-        static const std::vector<std::string> valid_enties =
+        static const std::vector<std::string> valid_fields =
         {
             SourceParagraphRequiredField::SOURCE,
             SourceParagraphRequiredField::VERSION,
 
-            SourceParagraphOptionalEntry::DESCRIPTION,
-            SourceParagraphOptionalEntry::MAINTAINER,
-            SourceParagraphOptionalEntry::BUILD_DEPENDS
+            SourceParagraphOptionalField::DESCRIPTION,
+            SourceParagraphOptionalField::MAINTAINER,
+            SourceParagraphOptionalField::BUILD_DEPENDS
         };
 
-        return valid_enties;
+        return valid_fields;
     }
 
     SourceParagraph::SourceParagraph() = default;
@@ -39,10 +39,10 @@ namespace vcpkg
         using namespace vcpkg::details;
         this->name = remove_required_field(&fields, SourceParagraphRequiredField::SOURCE);
         this->version = remove_required_field(&fields, SourceParagraphRequiredField::VERSION);
-        this->description = remove_optional_field(&fields, SourceParagraphOptionalEntry::DESCRIPTION);
-        this->maintainer = remove_optional_field(&fields, SourceParagraphOptionalEntry::MAINTAINER);
+        this->description = remove_optional_field(&fields, SourceParagraphOptionalField::DESCRIPTION);
+        this->maintainer = remove_optional_field(&fields, SourceParagraphOptionalField::MAINTAINER);
 
-        std::string deps = remove_optional_field(&fields, SourceParagraphOptionalEntry::BUILD_DEPENDS);
+        std::string deps = remove_optional_field(&fields, SourceParagraphOptionalField::BUILD_DEPENDS);
         this->depends = parse_depends(deps);
 
         this->unparsed_fields = std::move(fields);

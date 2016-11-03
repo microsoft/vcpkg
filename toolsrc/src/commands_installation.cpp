@@ -28,7 +28,7 @@ namespace vcpkg
         if (!source_paragraph.unparsed_fields.empty())
         {
             const std::vector<std::string> remaining_keys = Maps::extract_keys(source_paragraph.unparsed_fields);
-            const std::vector<std::string>& valid_entries = SourceParagraph::get_list_of_valid_entries();
+            const std::vector<std::string>& valid_entries = SourceParagraph::get_list_of_valid_fields();
 
             const std::string remaining_keys_as_string = Strings::join(remaining_keys, "\n    ");
             const std::string valid_keys_as_string = Strings::join(valid_entries, "\n    ");
