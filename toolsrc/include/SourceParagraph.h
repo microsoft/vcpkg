@@ -7,8 +7,6 @@ namespace vcpkg
 {
     struct SourceParagraph
     {
-        static const std::vector<std::string>& get_list_of_valid_fields();
-
         SourceParagraph();
 
         explicit SourceParagraph(std::unordered_map<std::string, std::string> fields);

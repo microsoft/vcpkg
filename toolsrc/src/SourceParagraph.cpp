@@ -19,7 +19,7 @@ namespace vcpkg
         static const std::string BUILD_DEPENDS = "Build-Depends";
     }
 
-    const std::vector<std::string>& SourceParagraph::get_list_of_valid_fields()
+    static const std::vector<std::string>& get_list_of_valid_fields()
     {
         static const std::vector<std::string> valid_fields =
         {
