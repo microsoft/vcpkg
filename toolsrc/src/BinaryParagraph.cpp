@@ -6,24 +6,57 @@ using namespace vcpkg::details;
 
 namespace vcpkg
 {
+    //
+    namespace BinaryParagraphRequiredField
+    {
+        static const std::string PACKAGE = "Package";
+        static const std::string VERSION = "Version";
+        static const std::string ARCHITECTURE = "Architecture";
+        static const std::string MULTI_ARCH = "Multi-Arch";
+    }
+
+    namespace BinaryParagraphOptionalField
+    {
+        static const std::string DESCRIPTION = "Description";
+        static const std::string MAINTAINER = "Maintainer";
+        static const std::string DEPENDS = "Depends";
+    }
+
+    static const std::vector<std::string>& get_list_of_valid_fields()
+    {
+        static const std::vector<std::string> valid_fields =
+        {
+            BinaryParagraphRequiredField::PACKAGE,
+            BinaryParagraphRequiredField::VERSION,
+            BinaryParagraphRequiredField::ARCHITECTURE,
+
+            BinaryParagraphOptionalField::DESCRIPTION,
+            BinaryParagraphOptionalField::MAINTAINER,
+            BinaryParagraphOptionalField::DEPENDS
+        };
+
+        return valid_fields;
+    }
+
     BinaryParagraph::BinaryParagraph() = default;
 
-    BinaryParagraph::BinaryParagraph(const std::unordered_map<std::string, std::string>& fields) :
-        version(required_field(fields, "Version")),
-        description(optional_field(fields, "Description")),
-        maintainer(optional_field(fields, "Maintainer"))
+    BinaryParagraph::BinaryParagraph(std::unordered_map<std::string, std::string> fields)
     {
-        const std::string name = required_field(fields, "Package");
-        const triplet target_triplet = triplet::from_canonical_name(required_field(fields, "Architecture"));
+        const std::string name = details::remove_required_field(&fields, BinaryParagraphRequiredField::PACKAGE);
+        const std::string architecture = details::remove_required_field(&fields, BinaryParagraphRequiredField::ARCHITECTURE);
+        const triplet target_triplet = triplet::from_canonical_name(architecture);
+
         this->spec = package_spec::from_name_and_triplet(name, target_triplet).get_or_throw();
+        this->version = details::remove_required_field(&fields, BinaryParagraphRequiredField::VERSION);
 
-        {
-            std::string multi_arch = required_field(fields, "Multi-Arch");
-            Checks::check_throw(multi_arch == "same", "Multi-Arch must be 'same' but was %s", multi_arch);
-        }
+        this->description = details::remove_optional_field(&fields, BinaryParagraphOptionalField::DESCRIPTION);
+        this->maintainer = details::remove_optional_field(&fields, BinaryParagraphOptionalField::MAINTAINER);
 
-        std::string deps = optional_field(fields, "Depends");
-        this->depends = parse_depends(deps);
+        std::string multi_arch = details::remove_required_field(&fields, BinaryParagraphRequiredField::MULTI_ARCH);
+        Checks::check_exit(multi_arch == "same", "Multi-Arch must be 'same' but was %s", multi_arch);
+
+        std::string deps = details::remove_optional_field(&fields, BinaryParagraphOptionalField::DEPENDS);
+        this->depends = details::parse_depends(deps);
     }
 
     BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh, const triplet& target_triplet)
