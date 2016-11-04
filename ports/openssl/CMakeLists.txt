@@ -3,7 +3,7 @@ project(openssl NONE)
 
 include(vcpkg_execute_required_process)
 include(vcpkg_apply_patches)
-set(SOURCE_PATH ${CMAKE_CURRENT_BINARY_DIR}/openssl-1.0.2h)
+set(SOURCE_PATH ${CMAKE_CURRENT_BINARY_DIR}/openssl-1.0.2j)
 
 find_program(PERL perl)
 find_program(NMAKE nmake)

@@ -1,6 +1,6 @@
 include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-1.0.2h)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-1.0.2j)
 vcpkg_find_acquire_program(PERL)
 find_program(NMAKE nmake)
 
@@ -8,9 +8,9 @@ get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 set(ENV{PATH} "${PERL_EXE_PATH};$ENV{PATH}")
 
 vcpkg_download_distfile(OPENSSL_SOURCE_ARCHIVE
-    URLS "https://www.openssl.org/source/openssl-1.0.2h.tar.gz"
-    FILENAME "openssl-1.0.2h.tar.gz"
-    SHA512 780601f6f3f32f42b6d7bbc4c593db39a3575f9db80294a10a68b2b0bb79448d9bd529ca700b9977354cbdfc65887c76af0aa7b90d3ee421f74ab53e6f15c303
+    URLS "https://www.openssl.org/source/openssl-1.0.2j.tar.gz"
+    FILENAME "openssl-1.0.2j.tar.gz"
+    SHA512 7d6ccae4aa3ccec3a5d128da29c68401cdb1210cba6d212d55235fc3bc63d7085e2f119e2bbee7ddff6b7b5eef07c6196156791724cd2caf313a4c2fef724edd
 )
 
 file(COPY
@@ -30,7 +30,7 @@ vcpkg_configure_cmake(
         -DOPENSSL_SOURCE_ARCHIVE=${OPENSSL_SOURCE_ARCHIVE}
         -DCMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}
         -DTRIPLET_SYSTEM_ARCH=${TRIPLET_SYSTEM_ARCH}
-        -DVERSION=1.0.2h
+        -DVERSION=1.0.2j
         -DTARGET_TRIPLET=${TARGET_TRIPLET}
 )
 
