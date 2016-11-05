@@ -8,20 +8,23 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Dependencies.h"
 #include "vcpkg_Input.h"
+#include "vcpkg_Maps.h"
 
 namespace vcpkg
 {
-    static void create_binary_control_file(const vcpkg_paths& paths, const fs::path& port_dir, const triplet& target_triplet)
+    static void create_binary_control_file(const vcpkg_paths& paths, const SourceParagraph& source_paragraph, const triplet& target_triplet)
     {
-        auto pghs = get_paragraphs(port_dir / "CONTROL");
-        Checks::check_exit(pghs.size() == 1, "Error: invalid control file");
-        auto bpgh = BinaryParagraph(SourceParagraph(pghs[0]), target_triplet);
+        auto bpgh = BinaryParagraph(source_paragraph, target_triplet);
         const fs::path binary_control_file = paths.packages / bpgh.dir() / "CONTROL";
         std::ofstream(binary_control_file) << bpgh;
     }
 
     static void build_internal(const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir)
     {
+        auto pghs = get_paragraphs(port_dir / "CONTROL");
+        Checks::check_exit(pghs.size() == 1, "Error: invalid control file");
+        SourceParagraph source_paragraph(pghs[0]);
+
         const fs::path ports_cmake_script_path = paths.ports_cmake;
         auto&& target_triplet = spec.target_triplet();
         const std::wstring command = Strings::wformat(LR"("%%VS140COMNTOOLS%%..\..\VC\vcvarsall.bat" %s && cmake -DCMD=BUILD -DPORT=%s -DTARGET_TRIPLET=%s "-DCURRENT_PORT_DIR=%s/." -P "%s")",
@@ -54,7 +57,7 @@ namespace vcpkg
 
         perform_all_checks(spec, paths);
 
-        create_binary_control_file(paths, port_dir, target_triplet);
+        create_binary_control_file(paths, source_paragraph, target_triplet);
 
         // const fs::path port_buildtrees_dir = paths.buildtrees / spec.name;
         // delete_directory(port_buildtrees_dir);

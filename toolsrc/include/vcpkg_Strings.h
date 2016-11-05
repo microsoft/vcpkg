@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace vcpkg {namespace Strings {namespace details
 {
@@ -67,4 +68,6 @@ namespace vcpkg {namespace Strings
     std::string::const_iterator case_insensitive_ascii_find(const std::string& s, const std::string& pattern);
 
     std::string ascii_to_lowercase(const std::string& input);
+
+    std::string join(const std::vector<std::string>& v, const std::string& delimiter);
 }}

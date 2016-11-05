@@ -24,6 +24,11 @@ string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" OPENJPEG_DEBUG_MO
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/openjpeg/OpenJPEGTargets-debug.cmake  "${OPENJPEG_DEBUG_MODULE}")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
+# Cleanup bin directories in static builds
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
+
 # Cleanup Visual C++ Redistributable runtime
 file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/msvcp140.dll)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/vcruntime140.dll)

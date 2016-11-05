@@ -9,7 +9,7 @@ namespace vcpkg
     {
         SourceParagraph();
 
-        explicit SourceParagraph(const std::unordered_map<std::string, std::string>& fields);
+        explicit SourceParagraph(std::unordered_map<std::string, std::string> fields);
 
         std::string name;
         std::string version;
