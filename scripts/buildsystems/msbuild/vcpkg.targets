@@ -1,78 +1,43 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
- <Target Name="VcpkgCompileInputs" BeforeTargets="GetClCommandLines;ClCompile">
-    <PropertyGroup>
-      <VcpkgRuntimeLibrary Condition="'%(ClCompile.RuntimeLibrary)' == ''"></VcpkgRuntimeLibrary>
-      <VcpkgRuntimeLibrary Condition="'%(ClCompile.RuntimeLibrary)' == 'MultiThreadedDebugDLL'"></VcpkgRuntimeLibrary>
-      <VcpkgRuntimeLibrary Condition="'%(ClCompile.RuntimeLibrary)' == 'MultiThreadedDebug'">-static</VcpkgRuntimeLibrary>
-      <VcpkgRuntimeLibrary Condition="'%(ClCompile.RuntimeLibrary)' == 'MultiThreadedDLL'"></VcpkgRuntimeLibrary>
-      <VcpkgRuntimeLibrary Condition="'%(ClCompile.RuntimeLibrary)' == 'MultiThreaded'">-static</VcpkgRuntimeLibrary>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'Win32||'">
-      <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-      <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x86-windows$(VcpkgRuntimeLibrary)</VcpkgTriplet>
-    </PropertyGroup>
-
-      <Message Text="BeforeCompile: RuntimeLibrary=[%(ClCompile.RuntimeLibrary)]" />
-
-    <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'Win32|Windows Store|10.0'">
-      <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-      <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x86-uwp$(VcpkgRuntimeLibrary)</VcpkgTriplet>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'x64||'">
-      <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-      <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x64-windows$(VcpkgRuntimeLibrary)</VcpkgTriplet>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'x64|Windows Store|10.0'">
-      <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-      <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x64-uwp$(VcpkgRuntimeLibrary)</VcpkgTriplet>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'arm|Windows Store|10.0'">
-      <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-      <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">arm-uwp$(VcpkgRuntimeLibrary)</VcpkgTriplet>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(VcpkgEnabled)' == 'true'">
-      <VcpkgConfiguration Condition="'$(VcpkgConfiguration)' == ''">$(Configuration)</VcpkgConfiguration>
-      <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))\installed\$(VcpkgTriplet)\</VcpkgRoot>
-    </PropertyGroup>
-
-      <Message Text="Selecting VcpkgTriplet: $(VcpkgTriplet)"/>
-      <Message Text="Selecting VcpkgRoot: $(VcpkgRoot)"/>
-    <ItemGroup Condition="'$(VcpkgEnabled)' == 'true'">
-      <ClCompile>
-        <AdditionalIncludeDirectories>$(VcpkgRoot)include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      </ClCompile>
-    </ItemGroup>
-  </Target>
-
-  <Target Name="VcpkgLinkInputs" 
-      DependsOnTargets="ComputeRCGeneratedLinkInputs;
-                        ComputeManifestGeneratedLinkerInputs;
-                        ComputeCustomBuildOutput;
-                        ComputeCLGeneratedLinkInputs;
-                        ComputeLinkInputsFromProject;
-                        ComputeReferenceLinkInputs;" 
-      BeforeTargets="Link">
-    <Message Text="LinkInputs: @(Link)" />
-    <ItemGroup Condition="'$(VcpkgEnabled)' == 'true'">
-      <VcpkgLink Include="$(VcpkgRoot)debug\lib\*.lib" Condition="'$(VcpkgConfiguration)' == 'Debug'"/>
-      <VcpkgLink Include="$(VcpkgRoot)lib\*.lib" Condition="'$(VcpkgConfiguration)' == 'Release'"/>
-
-      <Link>
-        <AdditionalDependencies>@(VcpkgLink);%(Link.AdditionalDependencies)</AdditionalDependencies>
-      </Link>
-    </ItemGroup>
-    <Message Text="VcpkgLinkInputs: @(VcpkgLink)" />
-  </Target>
-
-  <PropertyGroup>
-    <ComputeLinkInputsTargets >$(ComputeLinkInputsTargets);VcpkgLinkInputs</ComputeLinkInputsTargets >
+  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'Win32||'">
+    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
+    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x86-windows</VcpkgTriplet>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'Win32|Windows Store|10.0'">
+    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
+    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x86-uwp</VcpkgTriplet>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'x64||'">
+    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
+    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x64-windows</VcpkgTriplet>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'x64|Windows Store|10.0'">
+    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
+    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x64-uwp</VcpkgTriplet>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'arm|Windows Store|10.0'">
+    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
+    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">arm-uwp</VcpkgTriplet>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(VcpkgEnabled)' == 'true'">
+    <VcpkgConfiguration Condition="'$(VcpkgConfiguration)' == ''">$(Configuration)</VcpkgConfiguration>
+    <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))\installed\$(VcpkgTriplet)\</VcpkgRoot>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup Condition="'$(VcpkgEnabled)' == 'true'">
+    <Link>
+      <AdditionalDependencies Condition="'$(VcpkgConfiguration)' == 'Debug'">$(VcpkgRoot)debug\lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(VcpkgConfiguration)' == 'Release'">$(VcpkgRoot)lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(VcpkgRoot)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
 
   <Target Name="AppLocalFromInstalled" AfterTargets="CopyFilesToOutputDirectory" BeforeTargets="CopyLocalFilesOutputGroup" Condition="'$(VcpkgEnabled)' == 'true' and '$(OutputType)' == 'exe'">
     <WriteLinesToFile
