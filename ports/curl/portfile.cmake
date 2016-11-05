@@ -14,7 +14,7 @@ vcpkg_extract_source_archive(${ARCHIVE_FILE})
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -DBUILD_CURL_TESTS=OFF
+        -DBUILD_TESTING=OFF
         -DBUILD_CURL_EXE=OFF
         -DENABLE_MANUAL=OFF
     OPTIONS_DEBUG
