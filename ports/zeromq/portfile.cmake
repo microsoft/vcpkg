@@ -2,9 +2,9 @@ include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libzmq-1a02b1b3f2fde6288579cbb0ff9a0b1f195e1812)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/zeromq/libzmq/archive/1a02b1b3f2fde6288579cbb0ff9a0b1f195e1812.zip"
-    FILENAME "zeromq-1a02b1b3f2fde6288579cbb0ff9a0b1f195e1812.zip"
-    SHA512 64a5cfb23dd2daa99c9c5a5e2b0693458658e34102b07169a43c63c159af88181ec36caaaa2c780303c4ceba3c4b901e409baebaf12106bdf6a14c5832dfa219
+    URLS "https://github.com/zeromq/libzmq/releases/download/v4.2.0/zeromq-4.2.0.tar.gz"
+    FILENAME "zeromq-4.2.0.tar.gz"
+    SHA512 3b6f0a1869fb1663ea40b3c3aa088b81399a35c051e4ade2b30bbac60bfceefe6b4403248a4635fb31d33767c1e478342f61c47b0ffdb4501419c13590ebeb96
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
