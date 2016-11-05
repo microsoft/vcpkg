@@ -48,7 +48,7 @@ namespace UnitTest1
             Assert::AreEqual("m", pgh.maintainer.c_str());
             Assert::AreEqual("d", pgh.description.c_str());
             Assert::AreEqual(size_t(1), pgh.depends.size());
-            Assert::AreEqual("bd", pgh.depends[0].c_str());
+            Assert::AreEqual("bd", pgh.depends[0].name.c_str());
         }
 
         TEST_METHOD(SourceParagraph_Two_Depends)
@@ -60,8 +60,8 @@ namespace UnitTest1
             });
 
             Assert::AreEqual(size_t(2), pgh.depends.size());
-            Assert::AreEqual("z", pgh.depends[0].c_str());
-            Assert::AreEqual("openssl", pgh.depends[1].c_str());
+            Assert::AreEqual("z", pgh.depends[0].name.c_str());
+            Assert::AreEqual("openssl", pgh.depends[1].name.c_str());
         }
 
         TEST_METHOD(SourceParagraph_Three_Depends)
@@ -73,17 +73,37 @@ namespace UnitTest1
             });
 
             Assert::AreEqual(size_t(3), pgh.depends.size());
-            Assert::AreEqual("z", pgh.depends[0].c_str());
-            Assert::AreEqual("openssl", pgh.depends[1].c_str());
-            Assert::AreEqual("xyz", pgh.depends[2].c_str());
+            Assert::AreEqual("z", pgh.depends[0].name.c_str());
+            Assert::AreEqual("openssl", pgh.depends[1].name.c_str());
+            Assert::AreEqual("xyz", pgh.depends[2].name.c_str());
         }
+
+        TEST_METHOD(SourceParagraph_Construct_Qualified_Depends)
+        {
+            vcpkg::SourceParagraph pgh({
+                { "Source", "zlib" },
+                { "Version", "1.2.8" },
+                { "Build-Depends", "libA [windows], libB [uwp]" }
+            });
+
+            Assert::AreEqual("zlib", pgh.name.c_str());
+            Assert::AreEqual("1.2.8", pgh.version.c_str());
+            Assert::AreEqual("", pgh.maintainer.c_str());
+            Assert::AreEqual("", pgh.description.c_str());
+            Assert::AreEqual(size_t(2), pgh.depends.size());
+            Assert::AreEqual("libA", pgh.depends[0].name.c_str());
+            Assert::AreEqual("windows", pgh.depends[0].qualifier.c_str());
+            Assert::AreEqual("libB", pgh.depends[1].name.c_str());
+            Assert::AreEqual("uwp", pgh.depends[1].qualifier.c_str());
+        }
+
 
         TEST_METHOD(BinaryParagraph_Construct_Minimum)
         {
             vcpkg::BinaryParagraph pgh({
                 {"Package", "zlib"},
                 {"Version", "1.2.8"},
-                {"Architecture", "a"},
+                {"Architecture", "x86-windows"},
                 {"Multi-Arch", "same"},
             });
 
@@ -91,7 +111,7 @@ namespace UnitTest1
             Assert::AreEqual("1.2.8", pgh.version.c_str());
             Assert::AreEqual("", pgh.maintainer.c_str());
             Assert::AreEqual("", pgh.description.c_str());
-            Assert::AreEqual("a", pgh.spec.target_triplet().canonical_name().c_str());
+            Assert::AreEqual("x86-windows", pgh.spec.target_triplet().canonical_name().c_str());
             Assert::AreEqual(size_t(0), pgh.depends.size());
         }
 
@@ -100,7 +120,7 @@ namespace UnitTest1
             vcpkg::BinaryParagraph pgh({
                 {"Package", "s"},
                 {"Version", "v"},
-                {"Architecture", "a"},
+                {"Architecture", "x86-windows"},
                 {"Multi-Arch", "same"},
                 {"Maintainer", "m"},
                 {"Description", "d"},
@@ -119,7 +139,7 @@ namespace UnitTest1
             vcpkg::BinaryParagraph pgh({
                 {"Package", "zlib"},
                 {"Version", "1.2.8"},
-                {"Architecture", "a"},
+                {"Architecture", "x86-windows"},
                 {"Multi-Arch", "same"},
                 {"Depends", "a, b, c"},
             });
@@ -253,7 +273,7 @@ namespace UnitTest1
             vcpkg::BinaryParagraph pgh({
                 {"Package", "zlib"},
                 {"Version", "1.2.8"},
-                {"Architecture", "a"},
+                {"Architecture", "x86-windows"},
                 {"Multi-Arch", "same"},
             });
             ss << pgh;
@@ -262,7 +282,7 @@ namespace UnitTest1
             Assert::AreEqual(size_t(4), pghs[0].size());
             Assert::AreEqual("zlib", pghs[0]["Package"].c_str());
             Assert::AreEqual("1.2.8", pghs[0]["Version"].c_str());
-            Assert::AreEqual("a", pghs[0]["Architecture"].c_str());
+            Assert::AreEqual("x86-windows", pghs[0]["Architecture"].c_str());
             Assert::AreEqual("same", pghs[0]["Multi-Arch"].c_str());
         }
 
@@ -272,7 +292,7 @@ namespace UnitTest1
             vcpkg::BinaryParagraph pgh({
                 {"Package", "zlib"},
                 {"Version", "1.2.8"},
-                {"Architecture", "a"},
+                {"Architecture", "x86-windows"},
                 {"Description", "first line\n second line"},
                 {"Maintainer", "abc <abc@abc.abc>"},
                 {"Depends", "dep"},
@@ -284,7 +304,7 @@ namespace UnitTest1
             Assert::AreEqual(size_t(7), pghs[0].size());
             Assert::AreEqual("zlib", pghs[0]["Package"].c_str());
             Assert::AreEqual("1.2.8", pghs[0]["Version"].c_str());
-            Assert::AreEqual("a", pghs[0]["Architecture"].c_str());
+            Assert::AreEqual("x86-windows", pghs[0]["Architecture"].c_str());
             Assert::AreEqual("same", pghs[0]["Multi-Arch"].c_str());
             Assert::AreEqual("first line\n second line", pghs[0]["Description"].c_str());
             Assert::AreEqual("dep", pghs[0]["Depends"].c_str());
@@ -296,7 +316,7 @@ namespace UnitTest1
             vcpkg::BinaryParagraph pgh({
                 {"Package", "zlib"},
                 {"Version", "1.2.8"},
-                {"Architecture", "a"},
+                {"Architecture", "x86-windows"},
                 {"Multi-Arch", "same"},
                 {"Depends", "a, b, c"},
             });

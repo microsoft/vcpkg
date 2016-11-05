@@ -138,7 +138,16 @@ namespace vcpkg
 
         const package_spec spec = Input::check_and_get_package_spec(args.command_arguments.at(0), default_target_triplet, example.c_str());
         Input::check_triplet(spec.target_triplet(), paths);
-        std::unordered_set<package_spec> unmet_dependencies = Dependencies::find_unmet_dependencies(paths, spec, status_db);
+
+        // Explicitly load and use the portfile's build dependencies when resolving the build command (instead of a cached package's dependencies).
+        auto first_level_deps = get_unmet_package_build_dependencies(paths, spec, status_db);
+        std::vector<package_spec> first_level_deps_specs;
+        for (auto&& dep : first_level_deps)
+        {
+            first_level_deps_specs.push_back(package_spec::from_name_and_triplet(dep, spec.target_triplet()).get_or_throw());
+        }
+
+        std::unordered_set<package_spec> unmet_dependencies = Dependencies::find_unmet_dependencies(paths, first_level_deps_specs, status_db);
         if (!unmet_dependencies.empty())
         {
             System::println(System::color::error, "The build command requires all dependencies to be already installed.");

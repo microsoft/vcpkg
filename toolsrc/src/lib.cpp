@@ -209,29 +209,33 @@ static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryPar
 // TODO: Refactoring between this function and install_package
 std::vector<std::string> vcpkg::get_unmet_package_dependencies(const vcpkg_paths& paths, const package_spec& spec, const StatusParagraphs& status_db)
 {
-    std::vector<std::unordered_map<std::string, std::string>> pghs;
-    {
-        const fs::path packages_dir_control_file_path = paths.package_dir(spec) / "CONTROL";
+    const fs::path packages_dir_control_file_path = paths.package_dir(spec) / "CONTROL";
 
-        auto control_contents_maybe = Files::get_contents(packages_dir_control_file_path);
-        if (auto control_contents = control_contents_maybe.get())
+    auto control_contents_maybe = Files::get_contents(packages_dir_control_file_path);
+    if (auto control_contents = control_contents_maybe.get())
+    {
+        std::vector<std::unordered_map<std::string, std::string>> pghs;
+        try
         {
-            try
-            {
-                pghs = parse_paragraphs(*control_contents);
-            }
-            catch (std::runtime_error)
-            {
-            }
-            Checks::check_exit(pghs.size() == 1, "Invalid control file at %s", packages_dir_control_file_path.string());
-            return BinaryParagraph(pghs[0]).depends;
+            pghs = parse_paragraphs(*control_contents);
         }
+        catch (std::runtime_error)
+        {
+        }
+        Checks::check_exit(pghs.size() == 1, "Invalid control file at %s", packages_dir_control_file_path.string());
+        return BinaryParagraph(pghs[0]).depends;
     }
 
+    return get_unmet_package_build_dependencies(paths, spec, status_db);
+}
+
+std::vector<std::string> vcpkg::get_unmet_package_build_dependencies(const vcpkg_paths& paths, const package_spec& spec, const StatusParagraphs& status_db)
+{
     const fs::path ports_dir_control_file_path = paths.port_dir(spec) / "CONTROL";
     auto control_contents_maybe = Files::get_contents(ports_dir_control_file_path);
     if (auto control_contents = control_contents_maybe.get())
     {
+        std::vector<std::unordered_map<std::string, std::string>> pghs;
         try
         {
             pghs = parse_paragraphs(*control_contents);
@@ -240,7 +244,7 @@ std::vector<std::string> vcpkg::get_unmet_package_dependencies(const vcpkg_paths
         {
         }
         Checks::check_exit(pghs.size() == 1, "Invalid control file at %s", ports_dir_control_file_path.string());
-        return SourceParagraph(pghs[0]).depends;
+        return filter_dependencies(SourceParagraph(pghs[0]).depends, spec.target_triplet());
     }
 
     Checks::exit_with_message("Could not find package named %s", spec);
@@ -252,11 +256,11 @@ void vcpkg::install_package(const vcpkg_paths& paths, const BinaryParagraph& bin
     spgh.package = binary_paragraph;
     spgh.want = want_t::install;
     spgh.state = install_state_t::half_installed;
-    for (const std::string& dependency : spgh.package.depends)
+    for (auto&& dep : spgh.package.depends)
     {
-        if (status_db.find_installed(dependency, spgh.package.spec.target_triplet()) == status_db.end())
+        if (status_db.find_installed(dep, spgh.package.spec.target_triplet()) == status_db.end())
         {
-            std::abort();
+            Checks::unreachable();
         }
     }
     write_update(paths, spgh);

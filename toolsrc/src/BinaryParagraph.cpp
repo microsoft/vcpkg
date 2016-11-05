@@ -56,7 +56,7 @@ namespace vcpkg
         Checks::check_exit(multi_arch == "same", "Multi-Arch must be 'same' but was %s", multi_arch);
 
         std::string deps = details::remove_optional_field(&fields, BinaryParagraphOptionalField::DEPENDS);
-        this->depends = details::parse_depends(deps);
+        this->depends = parse_depends(deps);
     }
 
     BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh, const triplet& target_triplet)
@@ -65,7 +65,7 @@ namespace vcpkg
         this->version = spgh.version;
         this->description = spgh.description;
         this->maintainer = spgh.maintainer;
-        this->depends = spgh.depends;
+        this->depends = filter_dependencies(spgh.depends, target_triplet);
     }
 
     std::string BinaryParagraph::displayname() const

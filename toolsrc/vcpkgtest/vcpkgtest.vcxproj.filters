@@ -15,7 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\test.cpp">
+    <ClCompile Include="..\src\tests_paragraph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tests_dependencies.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

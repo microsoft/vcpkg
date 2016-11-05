@@ -45,37 +45,4 @@ namespace vcpkg {namespace details
         return value;
     }
 
-    std::vector<std::string> parse_depends(const std::string& depends_string)
-    {
-        if (depends_string.empty())
-        {
-            return {};
-        }
-
-        std::vector<std::string> out;
-
-        size_t cur = 0;
-        do
-        {
-            auto pos = depends_string.find(',', cur);
-            if (pos == std::string::npos)
-            {
-                out.push_back(depends_string.substr(cur));
-                break;
-            }
-            out.push_back(depends_string.substr(cur, pos - cur));
-
-            // skip comma and space
-            ++pos;
-            if (depends_string[pos] == ' ')
-            {
-                ++pos;
-            }
-
-            cur = pos;
-        }
-        while (cur != std::string::npos);
-
-        return out;
-    }
 }}
