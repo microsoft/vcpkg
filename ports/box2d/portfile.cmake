@@ -1,12 +1,11 @@
 include(${CMAKE_TRIPLET_FILE})
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(FATAL_ERROR "Dynamic building not supported")
-endif()
 
 # Get architecture params
 set(PROJECT_ARCH "x64")
+set(PROJECT_ARCH_BITS "${PROJECT_ARCH}")
 if(TRIPLET_SYSTEM_ARCH MATCHES "x86")
     set(PROJECT_ARCH "Win32")
+    set(PROJECT_ARCH_BITS "x32")
 endif(TRIPLET_SYSTEM_ARCH MATCHES "x86")
 
 include(vcpkg_common_functions)
@@ -38,6 +37,11 @@ message(STATUS "Adding worktree done")
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/)
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/dll.patch"
+)
+
 # Put the licence and readme files where vcpkg expects it
 message(STATUS "Packaging license")
 file(COPY ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/box2d)
@@ -46,32 +50,50 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/box2d/License.txt ${CURRENT_PACKAGES_D
 message(STATUS "Packaging license done")
 
 # Building:
+set(PROJECT "./Box2D/Build/vs2015/Box2D.vcxproj")
+set(OUTPUTS_PATH "${SOURCE_PATH}/Box2D/Build/vs2015/bin/${PROJECT_ARCH_BITS}")
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(PROJECT "./Box2D/Build/vs2015/Box2D_dll.vcxproj")
+    set(OUTPUTS_PATH "${SOURCE_PATH}/Box2D/Build/vs2015/bin/dll/${PROJECT_ARCH_BITS}")
+endif(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+
 foreach(TYPE "Release" "Debug")
     message(STATUS "Building ${TARGET_TRIPLET}-${TYPE}")
     vcpkg_execute_required_process(
         COMMAND "devenv.exe"
             "./Box2D/Build/vs2015/Box2D.sln"
             /Build "${TYPE}|${PROJECT_ARCH}"
-            /Project "./Box2D/Build/vs2015/Box2D.vcxproj"
+            /Project "${PROJECT}"
             /Projectconfig "${TYPE}|${PROJECT_ARCH}"
         WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME build-${TARGET_TRIPLET}-${TYPE}
     )
     message(STATUS "Building ${TARGET_TRIPLET}-${TYPE} done")
 
-    message(STATUS "Packaging ${TARGET_TRIPLET}-${TYPE} lib")
-    set(TARGET_PATH "${CURRENT_PACKAGES_DIR}/lib")
+    set(TARGET_PATH "${CURRENT_PACKAGES_DIR}")
     if(TYPE STREQUAL Debug)
-        set(TARGET_PATH "${CURRENT_PACKAGES_DIR}/debug/lib")
+        set(TARGET_PATH "${CURRENT_PACKAGES_DIR}/debug")
     endif(TYPE STREQUAL Debug)
 
+    message(STATUS "Packaging ${TARGET_TRIPLET}-${TYPE} lib")
     file(
-        INSTALL ${SOURCE_PATH}/Box2D/Build/vs2015/bin/${PROJECT_ARCH}/${TYPE}/
-        DESTINATION ${TARGET_PATH}
+        INSTALL ${OUTPUTS_PATH}/${TYPE}/
+        DESTINATION ${TARGET_PATH}/lib
         FILES_MATCHING PATTERN "*.lib"
     )
-    file(RENAME ${TARGET_PATH}/Box2D.lib ${TARGET_PATH}/box2d.lib)
+    file(RENAME ${TARGET_PATH}/lib/Box2D.lib ${TARGET_PATH}/lib/box2d.lib)
     message(STATUS "Packaging ${TARGET_TRIPLET}-${TYPE} lib done")
+
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        message(STATUS "Packaging ${TARGET_TRIPLET}-${TYPE} dll")
+        file(
+            INSTALL ${OUTPUTS_PATH}/${TYPE}/
+            DESTINATION ${TARGET_PATH}/bin
+            FILES_MATCHING PATTERN "*.dll"
+        )
+        file(RENAME ${TARGET_PATH}/bin/Box2D.dll ${TARGET_PATH}/bin/box2d.dll)
+        message(STATUS "Packaging ${TARGET_TRIPLET}-${TYPE} dll done")
+    endif(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endforeach()
 
 message(STATUS "Packaging headers")
