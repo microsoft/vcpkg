@@ -30,6 +30,8 @@ namespace vcpkg
 
     void integrate_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths);
 
+    void portsdiff_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths);
+
     void help_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths);
     void help_topic_valid_triplet(const vcpkg_paths& paths);
 

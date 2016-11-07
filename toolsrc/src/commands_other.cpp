@@ -86,6 +86,7 @@ namespace vcpkg
             {"import", import_command},
             {"cache", cache_command},
             {"internal_test", internal_test_command},
+            {"portsdiff", portsdiff_command}
         };
         return t;
     }
