@@ -67,7 +67,7 @@ vcpkg (0.0.50)
   * Various updates in FAQ
   * Release builds now create pdbs (debug builds already did)
 
--- vcpkg team <vcpkg@microsoft.com>  WED, 07 Nov 2016 00:00:00 -0800
+-- vcpkg team <vcpkg@microsoft.com>  MON, 07 Nov 2016 00:01:00 -0800
 
 vcpkg (0.0.40)
 --------------
