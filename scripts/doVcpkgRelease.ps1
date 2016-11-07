@@ -54,6 +54,7 @@ for ($disableMetrics = 0; $disableMetrics -le 1; $disableMetrics++)
     $checkoutForBuildOnly = ".\scripts",".\toolsrc",".vcpkg-root" # Must be relative to the root of the repository
     Write-Verbose("Creating partial temporary checkout: $buildPath")
     git --git-dir="$dotGitDir" --work-tree="$workTreeForBuildOnly" checkout $gitHash -f -q -- $checkoutForBuildOnly
+    git reset
 
     & "$buildPath\scripts\bootstrap.ps1" -disableMetrics $disableMetrics
 
@@ -62,6 +63,7 @@ for ($disableMetrics = 0; $disableMetrics -le 1; $disableMetrics++)
     $checkoutThisDir = ".\" # Must be relative to the root of the repository
     Write-Verbose("Creating temporary checkout: $releasePath")
     git --git-dir=$dotGitDir --work-tree=$workTree checkout $gitHash -f -q -- $checkoutThisDir
+    git reset
 
     Copy-Item $buildPath\vcpkg.exe $releasePath\vcpkg.exe | Out-Null
     Copy-Item $buildPath\scripts\vcpkgmetricsuploader.exe $releasePath\scripts\vcpkgmetricsuploader.exe | Out-Null
