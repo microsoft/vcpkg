@@ -5,34 +5,65 @@
 
 namespace vcpkg
 {
-    void cache_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    template <class Pred>
+    static void do_print(const vcpkg_paths& paths, Pred predicate)
     {
-        args.check_exact_arg_count(0);
+        auto it = fs::directory_iterator(paths.packages);
+        const fs::directory_iterator end_it = fs::directory_iterator();
 
-        auto begin_it = fs::directory_iterator(paths.packages);
-        auto end_it = fs::directory_iterator();
-
-        if (begin_it == end_it)
+        if (it == end_it)
         {
             System::println("No packages are cached.");
             exit(EXIT_SUCCESS);
         }
 
-        for (; begin_it != end_it; ++begin_it)
+        for (; it != end_it; ++it)
         {
-            const auto& path = begin_it->path();
+            const fs::path& path = it->path();
 
-            auto file_contents = Files::get_contents(path / "CONTROL");
-            if (auto text = file_contents.get())
+            try
             {
-                auto pghs = parse_paragraphs(*text);
-                if (pghs.size() != 1)
-                    continue;
+                auto file_contents = Files::get_contents(path / "CONTROL");
+                if (auto text = file_contents.get())
+                {
+                    auto pghs = parse_paragraphs(*text);
+                    if (pghs.size() != 1)
+                        continue;
 
-                auto src = BinaryParagraph(pghs[0]);
-                System::println(src.displayname().c_str());
+                    const BinaryParagraph src = BinaryParagraph(pghs[0]);
+                    const std::string displayname = src.displayname();
+                    if (predicate(displayname))
+                    {
+                        System::println(displayname.c_str());
+                    }
+                }
+            }
+            catch (std::runtime_error const&)
+            {
             }
         }
+    }
+
+    void cache_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    {
+        static const std::string example = Strings::format(
+            "The argument should be a substring to search for, or no argument to display all cached libraries.\n%s", create_example_string("cache png"));
+        args.check_max_arg_count(1, example.c_str());
+
+        if (args.command_arguments.size() == 0)
+        {
+            do_print(paths, [](const std::string&) -> bool
+                     {
+                         return true;
+                     });
+            exit(EXIT_SUCCESS);
+        }
+
+        // At this point there is 1 argument
+        do_print(paths, [&](const std::string& port_name) -> bool
+                 {
+                     return Strings::case_insensitive_ascii_find(port_name, args.command_arguments[0]) != port_name.end();
+                 });
 
         exit(EXIT_SUCCESS);
     }
