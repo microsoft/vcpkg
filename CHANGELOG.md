@@ -1,3 +1,11 @@
+vcpkg (0.0.51)
+--------------
+  * Add simple substring search to `vcpkg cache`
+  * Add simple substring search to `vcpkg list`
+
+-- vcpkg team <vcpkg@microsoft.com>  MON, 07 Nov 2016 14:45:00 -0800
+
+
 vcpkg (0.0.50)
 --------------
   * Add ports:
@@ -68,6 +76,7 @@ vcpkg (0.0.50)
   * Release builds now create pdbs (debug builds already did)
 
 -- vcpkg team <vcpkg@microsoft.com>  MON, 07 Nov 2016 00:01:00 -0800
+
 
 vcpkg (0.0.40)
 --------------
