@@ -51,7 +51,7 @@ namespace vcpkg
         }
 
         // At this point there is 1 argument
-        do_print(paths, [&](std::string& port_name) -> bool
+        do_print(paths, [&](const std::string& port_name) -> bool
                  {
                      return Strings::case_insensitive_ascii_find(port_name, args.command_arguments[0]) != port_name.end();
                  });
