@@ -1,8 +1,6 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
 #include "vcpkg.h"
-#include <iostream>
-#include <iomanip>
 
 namespace fs = std::tr2::sys;
 
@@ -36,10 +34,10 @@ namespace vcpkg
 
     static void do_print(const SourceParagraph& source_paragraph)
     {
-        std::cout << std::left
-            << std::setw(20) << source_paragraph.name << ' '
-            << std::setw(16) << source_paragraph.version << ' '
-            << shorten_description(source_paragraph.description) << '\n';
+        System::println("%-20s %-16s %s",
+                        source_paragraph.name,
+                        source_paragraph.version,
+                        shorten_description(source_paragraph.description));
     }
 
     void search_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
