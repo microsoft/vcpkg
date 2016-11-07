@@ -6,6 +6,8 @@ set(PROJECT_ARCH_BITS "${PROJECT_ARCH}")
 if(TRIPLET_SYSTEM_ARCH MATCHES "x86")
     set(PROJECT_ARCH "Win32")
     set(PROJECT_ARCH_BITS "x32")
+elseif(TRIPLET_SYSTEM_ARCH MATCHES "arm")
+    message(FATAL_ERROR "ARM not supported")
 endif(TRIPLET_SYSTEM_ARCH MATCHES "x86")
 
 include(vcpkg_common_functions)
@@ -21,7 +23,7 @@ if(NOT EXISTS "${DOWNLOADS}/box2d.git")
         WORKING_DIRECTORY ${DOWNLOADS}
         LOGNAME clone
     )
-endif()
+endif(NOT EXISTS "${DOWNLOADS}/box2d.git")
 message(STATUS "Cloning done")
 
 if(NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
@@ -32,15 +34,10 @@ if(NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
         WORKING_DIRECTORY ${DOWNLOADS}/box2d.git
         LOGNAME worktree
     )
-endif()
+endif(NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
 message(STATUS "Adding worktree done")
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/dll.patch"
-)
 
 # Put the licence and readme files where vcpkg expects it
 message(STATUS "Packaging license")
@@ -52,10 +49,6 @@ message(STATUS "Packaging license done")
 # Building:
 set(PROJECT "./Box2D/Build/vs2015/Box2D.vcxproj")
 set(OUTPUTS_PATH "${SOURCE_PATH}/Box2D/Build/vs2015/bin/${PROJECT_ARCH_BITS}")
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(PROJECT "./Box2D/Build/vs2015/Box2D_dll.vcxproj")
-    set(OUTPUTS_PATH "${SOURCE_PATH}/Box2D/Build/vs2015/bin/dll/${PROJECT_ARCH_BITS}")
-endif(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 
 foreach(TYPE "Release" "Debug")
     message(STATUS "Building ${TARGET_TRIPLET}-${TYPE}")
@@ -83,18 +76,7 @@ foreach(TYPE "Release" "Debug")
     )
     file(RENAME ${TARGET_PATH}/lib/Box2D.lib ${TARGET_PATH}/lib/box2d.lib)
     message(STATUS "Packaging ${TARGET_TRIPLET}-${TYPE} lib done")
-
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        message(STATUS "Packaging ${TARGET_TRIPLET}-${TYPE} dll")
-        file(
-            INSTALL ${OUTPUTS_PATH}/${TYPE}/
-            DESTINATION ${TARGET_PATH}/bin
-            FILES_MATCHING PATTERN "*.dll"
-        )
-        file(RENAME ${TARGET_PATH}/bin/Box2D.dll ${TARGET_PATH}/bin/box2d.dll)
-        message(STATUS "Packaging ${TARGET_TRIPLET}-${TYPE} dll done")
-    endif(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-endforeach()
+endforeach(TYPE "Release" "Debug")
 
 message(STATUS "Packaging headers")
 file(
