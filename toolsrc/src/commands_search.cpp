@@ -43,7 +43,7 @@ namespace vcpkg
 
         if (args.command_arguments.size() == 0)
         {
-            do_print(paths, [](std::string&) -> bool
+            do_print(paths, [](const std::string&) -> bool
                      {
                          return true;
                      });
