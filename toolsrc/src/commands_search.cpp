@@ -8,9 +8,9 @@ namespace fs = std::tr2::sys;
 
 namespace vcpkg
 {
-    template <class Pred>
-    static void do_print(const vcpkg_paths& paths, Pred predicate)
+    static std::vector<SourceParagraph> read_all_source_paragraphs(const vcpkg_paths& paths)
     {
+        std::vector<SourceParagraph> output;
         for (auto it = fs::directory_iterator(paths.ports); it != fs::directory_iterator(); ++it)
         {
             const fs::path& path = it->path();
@@ -19,21 +19,27 @@ namespace vcpkg
             {
                 auto pghs = get_paragraphs(path / "CONTROL");
                 if (pghs.empty())
-                    continue;
-                auto srcpgh = SourceParagraph(pghs[0]);
-
-                if (predicate(srcpgh.name))
                 {
-                    std::cout << std::left
-                        << std::setw(20) << srcpgh.name << ' '
-                        << std::setw(16) << srcpgh.version << ' '
-                        << shorten_description(srcpgh.description) << '\n';
+                    continue;
                 }
+
+                auto srcpgh = SourceParagraph(pghs[0]);
+                output.push_back(srcpgh);
             }
             catch (std::runtime_error const&)
             {
             }
         }
+
+        return output;
+    }
+
+    static void do_print(const SourceParagraph& source_paragraph)
+    {
+        std::cout << std::left
+            << std::setw(20) << source_paragraph.name << ' '
+            << std::setw(16) << source_paragraph.version << ' '
+            << shorten_description(source_paragraph.description) << '\n';
     }
 
     void search_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
@@ -41,20 +47,28 @@ namespace vcpkg
         static const std::string example = Strings::format("The argument should be a substring to search for, or no argument to display all libraries.\n%s", create_example_string("search png"));
         args.check_max_arg_count(1, example.c_str());
 
+        const std::vector<SourceParagraph> source_paragraphs = read_all_source_paragraphs(paths);
+
         if (args.command_arguments.size() == 0)
         {
-            do_print(paths, [](const std::string&) -> bool
-                     {
-                         return true;
-                     });
-            exit(EXIT_SUCCESS);
+            for (const SourceParagraph& source_paragraph : source_paragraphs)
+            {
+                do_print(source_paragraph);
+            }
         }
+        else
+        {
+            // At this point there is 1 argument
+            for (const SourceParagraph& source_paragraph : source_paragraphs)
+            {
+                if (Strings::case_insensitive_ascii_find(source_paragraph.name, args.command_arguments[0]) == source_paragraph.name.end())
+                {
+                    continue;
+                }
 
-        // At this point there is 1 argument
-        do_print(paths, [&](const std::string& port_name) -> bool
-                 {
-                     return Strings::case_insensitive_ascii_find(port_name, args.command_arguments[0]) != port_name.end();
-                 });
+                do_print(source_paragraph);
+            }
+        }
 
         System::println("\nIf your library is not listed, please open an issue at:\n"
             "    https://github.com/Microsoft/vcpkg/issues");
