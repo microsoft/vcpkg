@@ -1,4 +1,3 @@
-include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libzmq-1a02b1b3f2fde6288579cbb0ff9a0b1f195e1812)
 vcpkg_download_distfile(ARCHIVE

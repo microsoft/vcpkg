@@ -6,7 +6,6 @@
 #   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
 #
 
-include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 #downloading 3.5 from their SVN repo and not the release tarball
 #because the 3.5 release did not build on windows, and fixes were backported

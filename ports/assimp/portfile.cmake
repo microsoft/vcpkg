@@ -6,7 +6,6 @@
 #   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
 #
 
-include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/assimp/assimp/archive/v3.3.1.zip"

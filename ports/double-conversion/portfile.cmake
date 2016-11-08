@@ -14,7 +14,6 @@
 #   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
 #
 
-include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/double-conversion-d4d68e4e788bec89d55a6a3e33af674087837c82)
 vcpkg_download_distfile(ARCHIVE

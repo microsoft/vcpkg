@@ -1,6 +1,6 @@
-include(${CMAKE_TRIPLET_FILE})
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(FATAL_ERROR "Dynamic building not supported") # See note below
+    message(STATUS "Warning: Dynamic building not supported. Building static.") # See note below
+    set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/cryptopp-CRYPTOPP_5_6_5)
@@ -37,8 +37,8 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/cryptest.exe)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/cryptest.exe)
 
 # Remove other files not required in package
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake) 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake) 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/cryptopp)

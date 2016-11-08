@@ -1,5 +1,3 @@
-include(${CMAKE_TRIPLET_FILE})
-
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     include(${CMAKE_CURRENT_LIST_DIR}/portfile-uwp.cmake)
     return()
