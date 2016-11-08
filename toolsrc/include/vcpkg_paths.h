@@ -14,7 +14,9 @@ namespace vcpkg
 
         fs::path package_dir(const package_spec& spec) const;
         fs::path port_dir(const package_spec& spec) const;
+        fs::path build_info_file_path(const package_spec& spec) const;
         fs::path listfile_path(const BinaryParagraph& pgh) const;
+
         bool is_valid_triplet(const triplet& t) const;
 
         fs::path root;

@@ -5,6 +5,7 @@
 #include <functional>
 #include "vcpkg_System.h"
 #include "coff_file_reader.h"
+#include "BuildInfo.h"
 
 namespace fs = std::tr2::sys;
 
@@ -495,6 +496,9 @@ namespace vcpkg
     void perform_all_checks(const package_spec& spec, const vcpkg_paths& paths)
     {
         System::println("-- Performing post-build validation");
+
+        BuildInfo build_info = read_build_info(paths.build_info_file_path(spec));
+
         size_t error_count = 0;
         error_count += check_for_files_in_include_directory(spec, paths);
         error_count += check_for_files_in_debug_include_directory(spec, paths);
@@ -506,10 +510,9 @@ namespace vcpkg
         error_count += check_for_copyright_file(spec, paths);
         error_count += check_for_exes(spec, paths);
 
-        triplet::BuildType build_type = spec.target_triplet().build_type();
-        switch (build_type)
+        switch (linkage_type_value_of(build_info.library_linkage))
         {
-            case triplet::BuildType::DYNAMIC:
+            case LinkageType::DYNAMIC:
                 {
                     const std::vector<fs::path> debug_dlls = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "bin", ".dll");
                     const std::vector<fs::path> release_dlls = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "bin", ".dll");
@@ -525,7 +528,7 @@ namespace vcpkg
                     error_count += check_dll_architecture(spec.target_triplet().architecture(), dlls);
                     break;
                 }
-            case triplet::BuildType::STATIC:
+            case LinkageType::STATIC:
                 {
                     std::vector<fs::path> dlls;
                     recursive_find_files_with_extension_in_dir(paths.packages / spec.dir(), ".dll", &dlls);
@@ -534,7 +537,12 @@ namespace vcpkg
                     error_count += check_bin_folders_are_not_present_in_static_build(spec, paths);
                     break;
                 }
-
+            case LinkageType::UNKNOWN:
+                {
+                    error_count += 1;
+                    System::println(System::color::warning, "Unknown library_linkage architecture: [ %s ]", build_info.library_linkage);
+                    break;
+                }
             default:
                 Checks::unreachable();
         }

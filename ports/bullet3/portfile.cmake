@@ -1,4 +1,3 @@
-include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/bullet3-98d47809b4273d97ea06c9b2137ada10af581bb9)
 vcpkg_download_distfile(ARCHIVE

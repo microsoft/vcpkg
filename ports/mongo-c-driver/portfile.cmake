@@ -1,6 +1,6 @@
-include(${CMAKE_TRIPLET_FILE})
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(FATAL_ERROR "Static building not supported yet. Portfile not modified and blocked by libbson.")
+    message(STATUS "Warning: Static building not supported yet. Building dynamic.") #Blocked by libbson
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mongo-c-driver-1.4.2)

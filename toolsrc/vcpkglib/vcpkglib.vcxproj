@@ -123,6 +123,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\include\BinaryParagraph.h" />
+    <ClInclude Include="..\include\BuildInfo.h" />
     <ClInclude Include="..\include\package_spec.h" />
     <ClInclude Include="..\include\package_spec_parse_result.h" />
     <ClInclude Include="..\include\Paragraphs.h" />
@@ -137,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\BinaryParagraph.cpp" />
+    <ClCompile Include="..\src\BuildInfo.cpp" />
     <ClCompile Include="..\src\vcpkg.cpp" />
     <ClCompile Include="..\src\package_spec.cpp" />
     <ClCompile Include="..\src\package_spec_parse_result.cpp" />

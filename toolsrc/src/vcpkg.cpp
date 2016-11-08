@@ -158,7 +158,7 @@ static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryPar
     for (auto it = fs::recursive_directory_iterator(package_prefix_path); it != fs::recursive_directory_iterator(); ++it)
     {
         const auto& filename = it->path().filename();
-        if (fs::is_regular_file(it->status()) && (filename == "CONTROL" || filename == "control"))
+        if (fs::is_regular_file(it->status()) && (_stricmp(filename.generic_string().c_str(), "CONTROL") == 0 || _stricmp(filename.generic_string().c_str(), "BUILD_INFO") == 0))
         {
             // Do not copy the control file
             continue;

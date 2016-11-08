@@ -1,4 +1,3 @@
-include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 find_program(GIT git)
 
@@ -64,8 +63,8 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/share/gflags/gflags-export-release.cmake "${G
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/gflags/gflags-export.cmake GFLAGS_CONFIG_MODULE)
-string(REPLACE "get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)" 
-               "get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)" 
+string(REPLACE "get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
+               "get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
                GFLAGS_CONFIG_MODULE "${GFLAGS_CONFIG_MODULE}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/gflags/gflags-export.cmake ${GFLAGS_CONFIG_MODULE})
 
