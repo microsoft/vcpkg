@@ -1,10 +1,8 @@
 include(${CMAKE_TRIPLET_FILE})
 
-# Get architecture params
-set(PROJECT_ARCH "x64")
-set(PROJECT_ARCH_BITS "${PROJECT_ARCH}")
+# Get output directory
+set(PROJECT_ARCH_BITS "x64")
 if(TRIPLET_SYSTEM_ARCH MATCHES "x86")
-    set(PROJECT_ARCH "Win32")
     set(PROJECT_ARCH_BITS "x32")
 elseif(TRIPLET_SYSTEM_ARCH MATCHES "arm")
     message(FATAL_ERROR "ARM not supported")
@@ -47,36 +45,27 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/box2d/License.txt ${CURRENT_PACKAGES_D
 message(STATUS "Packaging license done")
 
 # Building:
-set(PROJECT "./Box2D/Build/vs2015/Box2D.vcxproj")
 set(OUTPUTS_PATH "${SOURCE_PATH}/Box2D/Build/vs2015/bin/${PROJECT_ARCH_BITS}")
 
-foreach(TYPE "Release" "Debug")
-    message(STATUS "Building ${TARGET_TRIPLET}-${TYPE}")
-    vcpkg_execute_required_process(
-        COMMAND "devenv.exe"
-            "./Box2D/Build/vs2015/Box2D.sln"
-            /Build "${TYPE}|${PROJECT_ARCH}"
-            /Project "${PROJECT}"
-            /Projectconfig "${TYPE}|${PROJECT_ARCH}"
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME build-${TARGET_TRIPLET}-${TYPE}
-    )
-    message(STATUS "Building ${TARGET_TRIPLET}-${TYPE} done")
+vcpkg_build_msbuild(PROJECT_PATH ${SOURCE_PATH}/Box2D/Build/vs2015/Box2D.vcxproj)
 
-    set(TARGET_PATH "${CURRENT_PACKAGES_DIR}")
-    if(TYPE STREQUAL Debug)
-        set(TARGET_PATH "${CURRENT_PACKAGES_DIR}/debug")
-    endif(TYPE STREQUAL Debug)
+message(STATUS "Packaging ${TARGET_TRIPLET}-Release lib")
+file(
+    INSTALL ${OUTPUTS_PATH}/Release/
+    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
+    FILES_MATCHING PATTERN "*.lib"
+)
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/Box2D.lib ${CURRENT_PACKAGES_DIR}/lib/box2d.lib)
+message(STATUS "Packaging ${TARGET_TRIPLET}-Release lib done")
 
-    message(STATUS "Packaging ${TARGET_TRIPLET}-${TYPE} lib")
-    file(
-        INSTALL ${OUTPUTS_PATH}/${TYPE}/
-        DESTINATION ${TARGET_PATH}/lib
-        FILES_MATCHING PATTERN "*.lib"
-    )
-    file(RENAME ${TARGET_PATH}/lib/Box2D.lib ${TARGET_PATH}/lib/box2d.lib)
-    message(STATUS "Packaging ${TARGET_TRIPLET}-${TYPE} lib done")
-endforeach(TYPE "Release" "Debug")
+message(STATUS "Packaging ${TARGET_TRIPLET}-Debug lib")
+file(
+    INSTALL ${OUTPUTS_PATH}/Debug/
+    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+    FILES_MATCHING PATTERN "*.lib"
+)
+file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Box2D.lib ${CURRENT_PACKAGES_DIR}/debug/lib/box2d.lib)
+message(STATUS "Packaging ${TARGET_TRIPLET}-Debug lib done")
 
 message(STATUS "Packaging headers")
 file(
