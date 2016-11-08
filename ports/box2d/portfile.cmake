@@ -1,4 +1,3 @@
-include(${CMAKE_TRIPLET_FILE})
 
 # Get output directory
 set(PROJECT_ARCH_BITS "x64")

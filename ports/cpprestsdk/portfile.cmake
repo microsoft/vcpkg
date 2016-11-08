@@ -1,4 +1,3 @@
-include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/cpprestsdk-2.9.0)
 
@@ -12,7 +11,7 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES 
+    PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/0001_cmake.patch
 )
 

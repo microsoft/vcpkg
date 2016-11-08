@@ -6,7 +6,6 @@
 #   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
 #
 
-include(${CMAKE_TRIPLET_FILE})
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     message(FATAL_ERROR "Static building not supported yet")
 endif()

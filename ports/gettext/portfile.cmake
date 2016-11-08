@@ -8,7 +8,6 @@
 
 #Based on https://github.com/winlibs/gettext
 
-include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/gettext-0.19)
 vcpkg_download_distfile(ARCHIVE

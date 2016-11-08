@@ -1,4 +1,3 @@
-include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glfw-3.2.1)
 vcpkg_download_distfile(ARCHIVE

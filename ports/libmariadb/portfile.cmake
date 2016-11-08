@@ -1,4 +1,3 @@
-include(${CMAKE_TRIPLET_FILE})
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     message(FATAL_ERROR "Static building not supported yet")
 endif()
@@ -26,27 +25,27 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # fix libmariadb lib & dll directory.
-file(MAKE_DIRECTORY 
+file(MAKE_DIRECTORY
 	${CURRENT_PACKAGES_DIR}/bin
 	${CURRENT_PACKAGES_DIR}/debug/bin)
-file(RENAME 
-	${CURRENT_PACKAGES_DIR}/lib/mariadb/libmariadb.dll 
+file(RENAME
+	${CURRENT_PACKAGES_DIR}/lib/mariadb/libmariadb.dll
 	${CURRENT_PACKAGES_DIR}/bin/libmariadb.dll)
-file(RENAME 
-	${CURRENT_PACKAGES_DIR}/debug/lib/mariadb/libmariadb.dll 
+file(RENAME
+	${CURRENT_PACKAGES_DIR}/debug/lib/mariadb/libmariadb.dll
 	${CURRENT_PACKAGES_DIR}/debug/bin/libmariadb.dll)
-file(RENAME 
-	${CURRENT_PACKAGES_DIR}/lib/mariadb/libmariadb.lib 
+file(RENAME
+	${CURRENT_PACKAGES_DIR}/lib/mariadb/libmariadb.lib
 	${CURRENT_PACKAGES_DIR}/lib/libmariadb.lib)
-file(RENAME 
-	${CURRENT_PACKAGES_DIR}/debug/lib/mariadb/libmariadb.lib 
+file(RENAME
+	${CURRENT_PACKAGES_DIR}/debug/lib/mariadb/libmariadb.lib
 	${CURRENT_PACKAGES_DIR}/debug/lib/libmariadb.lib)
-file(REMOVE 
+file(REMOVE
 	${CURRENT_PACKAGES_DIR}/lib/mariadb/mariadbclient.lib
 	${CURRENT_PACKAGES_DIR}/debug/lib/mariadb/mariadbclient.lib)
 
 # remove plugin folder
-file(REMOVE_RECURSE 
+file(REMOVE_RECURSE
 	${CURRENT_PACKAGES_DIR}/lib/plugin
 	${CURRENT_PACKAGES_DIR}/debug/lib/plugin
 	${CURRENT_PACKAGES_DIR}/lib/mariadb

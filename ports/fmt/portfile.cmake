@@ -1,4 +1,3 @@
-include(${CMAKE_TRIPLET_FILE})
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     message(FATAL_ERROR "Dynamic building not supported yet")
 endif()

@@ -1,4 +1,3 @@
-include(${CMAKE_TRIPLET_FILE})
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     message(FATAL_ERROR "Static building not supported yet")
 endif()
@@ -19,7 +18,7 @@ else ()
     set(MSBUILD_PLATFORM ${TRIPLET_SYSTEM_ARCH})
 endif()
 
-# Add ace/config.h file 
+# Add ace/config.h file
 # see http://www.dre.vanderbilt.edu/~schmidt/DOC_ROOT/ACE/ACE-INSTALL.html#win32
 file(WRITE ${SOURCE_PATH}/config.h "#include \"ace/config-windows.h\"")
 vcpkg_build_msbuild(
@@ -27,16 +26,16 @@ vcpkg_build_msbuild(
     PLATFORM ${MSBUILD_PLATFORM}
 )
 
-# ACE itself does not define an install target, so it is not clear which 
-# headers are public and which not. For the moment we install everything 
+# ACE itself does not define an install target, so it is not clear which
+# headers are public and which not. For the moment we install everything
 # that is in the source path and ends in .h, .inl
 function(install_ace_headers_subdirectory SOURCE_PATH RELATIVE_PATH)
     file(GLOB HEADER_FILES ${SOURCE_PATH}/${RELATIVE_PATH}/*.h ${SOURCE_PATH}/${RELATIVE_PATH}/*.inl)
     file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/ace/${RELATIVE_PATH})
 endfunction()
 
-# We manually install header found in the ace directory because in that case 
-# we are supposed to install also *cpp files, see ACE_wrappers\debian\libace-dev.install file 
+# We manually install header found in the ace directory because in that case
+# we are supposed to install also *cpp files, see ACE_wrappers\debian\libace-dev.install file
 file(GLOB HEADER_FILES ${SOURCE_PATH}/*.h ${SOURCE_PATH}/*.inl ${SOURCE_PATH}/*.cpp)
 file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/ace/)
 
@@ -65,7 +64,7 @@ function(install_ace_library SOURCE_PATH ACE_LIBRARY)
         ${LIB_PATH}/${ACE_LIBRARY}.pdb
         DESTINATION ${CURRENT_PACKAGES_DIR}/bin
     )
-    
+
     file(INSTALL
         ${LIB_PATH}/${ACE_LIBRARY}d.lib
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib

@@ -1,5 +1,4 @@
-﻿include(${CMAKE_TRIPLET_FILE})
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+﻿if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     message(FATAL_ERROR "Static building not supported yet")
 endif()
 include(vcpkg_common_functions)

@@ -1,4 +1,3 @@
-include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/zziplib-0.13.62)
 vcpkg_download_distfile(ARCHIVE

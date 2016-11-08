@@ -1,4 +1,3 @@
-include(${CMAKE_TRIPLET_FILE})
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     message(FATAL_ERROR "Static building not supported yet. Portfile not modified and blocked by libbson.")
 endif()
@@ -24,7 +23,7 @@ vcpkg_configure_cmake(
 		-DLIBMONGOC_DIR=${CURRENT_INSTALLED_DIR}
 )
 
-vcpkg_install_cmake()	
+vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)

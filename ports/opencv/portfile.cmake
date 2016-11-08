@@ -1,4 +1,3 @@
-include(${CMAKE_TRIPLET_FILE})
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     message(FATAL_ERROR "Static building not supported yet. Portfile not modified and blocked by libjpeg-turbo.")
 endif()
