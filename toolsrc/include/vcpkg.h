@@ -17,6 +17,4 @@ namespace vcpkg
 
     void install_package(const vcpkg_paths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs& status_db);
     void deinstall_package(const vcpkg_paths& paths, const package_spec& spec, StatusParagraphs& status_db);
-
-    void search_file(const vcpkg_paths& paths, const std::string& file_substr, const StatusParagraphs& status_db);
 } // namespace vcpkg

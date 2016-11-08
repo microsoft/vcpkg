@@ -369,28 +369,3 @@ void vcpkg::deinstall_package(const vcpkg_paths& paths, const package_spec& spec
     write_update(paths, pkg);
     System::println(System::color::success, "Package %s was successfully removed", pkg.package.displayname());
 }
-
-void vcpkg::search_file(const vcpkg_paths& paths, const std::string& file_substr, const StatusParagraphs& status_db)
-{
-    std::string line;
-
-    for (auto&& pgh : status_db)
-    {
-        if (pgh->state != install_state_t::installed)
-            continue;
-
-        std::fstream listfile(paths.listfile_path(pgh->package));
-        while (std::getline(listfile, line))
-        {
-            if (line.empty())
-            {
-                continue;
-            }
-
-            if (line.find(file_substr) != std::string::npos)
-            {
-                System::println("%s: %s", pgh->package.displayname(), line);
-            }
-        }
-    }
-}
