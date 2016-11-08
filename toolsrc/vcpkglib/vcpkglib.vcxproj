@@ -133,6 +133,7 @@
     <ClInclude Include="..\include\vcpkg.h" />
     <ClInclude Include="..\include\vcpkglib_helpers.h" />
     <ClInclude Include="..\include\vcpkg_paths.h" />
+    <ClInclude Include="..\include\vcpkg_info.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\BinaryParagraph.cpp" />
@@ -146,7 +147,7 @@
     <ClCompile Include="..\src\triplet.cpp" />
     <ClCompile Include="..\src\vcpkglib_helpers.cpp" />
     <ClCompile Include="..\src\vcpkg_paths.cpp" />
-    <ClCompile Include="..\src\vcpkg_version.cpp" />
+    <ClCompile Include="..\src\vcpkg_info.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

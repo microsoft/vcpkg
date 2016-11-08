@@ -3,6 +3,7 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Files.h"
 #include "Paragraphs.h"
+#include "vcpkg_info.h"
 
 namespace vcpkg
 {
@@ -77,7 +78,7 @@ namespace vcpkg
             auto num1 = sscanf_s(version_contents->c_str(), "\"%d.%d.%d\"", &maj1, &min1, &rev1);
 
             int maj2, min2, rev2;
-            auto num2 = sscanf_s(version().c_str(), "%d.%d.%d-", &maj2, &min2, &rev2);
+            auto num2 = sscanf_s(Info::version().c_str(), "%d.%d.%d-", &maj2, &min2, &rev2);
 
             if (num1 == 3 && num2 == 3)
             {

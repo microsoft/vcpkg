@@ -10,6 +10,7 @@
 #include "vcpkg_Input.h"
 #include "vcpkg_Maps.h"
 #include "Paragraphs.h"
+#include "vcpkg_info.h"
 
 namespace vcpkg
 {
@@ -50,7 +51,7 @@ namespace vcpkg
                             "  Vcpkg version: %s\n"
                             "\n"
                             "Additionally, attach any relevant sections from the log files above."
-                            , to_string(spec), version());
+                            , to_string(spec), Info::version());
             TrackProperty("error", "build failed");
             TrackProperty("build_error", to_string(spec));
             exit(EXIT_FAILURE);

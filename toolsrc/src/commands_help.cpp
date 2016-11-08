@@ -1,6 +1,6 @@
 #include "vcpkg_Commands.h"
-#include "vcpkg.h"
 #include "vcpkg_System.h"
+#include "vcpkg_info.h"
 
 namespace vcpkg
 {
@@ -9,7 +9,7 @@ namespace vcpkg
         args.check_exact_arg_count(0);
         System::println("Vcpkg package management program version %s\n"
                         "\n"
-                        "See LICENSE.txt for license information.", vcpkg::version()
+                        "See LICENSE.txt for license information.", Info::version()
         );
         exit(EXIT_SUCCESS);
     }
@@ -39,7 +39,7 @@ namespace vcpkg
     void contact_command(const vcpkg_cmd_arguments& args)
     {
         args.check_exact_arg_count(0);
-        System::println("Send an email to vcpkg@microsoft.com with any feedback.");
+        System::println("Send an email to %s with any feedback.", Info::email());
         exit(EXIT_SUCCESS);
     }
 
