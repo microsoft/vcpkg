@@ -123,11 +123,6 @@ StatusParagraphs vcpkg::database_load_check(const vcpkg_paths& paths)
     return current_status_db;
 }
 
-static fs::path listfile_path(const vcpkg_paths& paths, const BinaryParagraph& pgh)
-{
-    return paths.vcpkg_dir_info / (pgh.fullstem() + ".list");
-}
-
 static std::string get_fullpkgname_from_listfile(const fs::path& path)
 {
     auto ret = path.stem().generic_u8string();
@@ -149,7 +144,7 @@ static void write_update(const vcpkg_paths& paths, const StatusParagraph& p)
 
 static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryParagraph& bpgh)
 {
-    std::fstream listfile(listfile_path(paths, bpgh), std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
+    std::fstream listfile(paths.listfile_path(bpgh), std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
 
     auto package_prefix_path = paths.package_dir(bpgh.spec);
     auto prefix_length = package_prefix_path.native().size();
@@ -308,7 +303,7 @@ void vcpkg::deinstall_package(const vcpkg_paths& paths, const package_spec& spec
     pkg.state = install_state_t::half_installed;
     write_update(paths, pkg);
 
-    std::fstream listfile(listfile_path(paths, pkg.package), std::ios_base::in | std::ios_base::binary);
+    std::fstream listfile(paths.listfile_path(pkg.package), std::ios_base::in | std::ios_base::binary);
     if (listfile)
     {
         std::vector<fs::path> dirs_touched;
@@ -367,7 +362,7 @@ void vcpkg::deinstall_package(const vcpkg_paths& paths, const package_spec& spec
         }
 
         listfile.close();
-        fs::remove(listfile_path(paths, pkg.package));
+        fs::remove(paths.listfile_path(pkg.package));
     }
 
     pkg.state = install_state_t::not_installed;
@@ -384,7 +379,7 @@ void vcpkg::search_file(const vcpkg_paths& paths, const std::string& file_substr
         if (pgh->state != install_state_t::installed)
             continue;
 
-        std::fstream listfile(listfile_path(paths, pgh->package));
+        std::fstream listfile(paths.listfile_path(pgh->package));
         while (std::getline(listfile, line))
         {
             if (line.empty())

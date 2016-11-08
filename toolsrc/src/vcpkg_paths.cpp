@@ -55,6 +55,11 @@ namespace vcpkg
         return this->ports / spec.name();
     }
 
+    fs::path vcpkg_paths::listfile_path(const BinaryParagraph& pgh) const
+    {
+        return this->vcpkg_dir_info / (pgh.fullstem() + ".list");
+    }
+
     bool vcpkg_paths::is_valid_triplet(const triplet& t) const
     {
         auto it = fs::directory_iterator(this->triplets);
