@@ -115,31 +115,7 @@ file(REMOVE ${DEBUG_LIB_FILES})
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Gamepad.lib ${CURRENT_PACKAGES_DIR}/lib/Qt5Gamepad.lib)
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Gamepad.prl ${CURRENT_PACKAGES_DIR}/lib/Qt5Gamepad.prl)
 file(GLOB BINARY_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*.exe")
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/plugins")
-file(GLOB_RECURSE DEBUG_PLUGINS
-    "${CURRENT_PACKAGES_DIR}/plugins/*d.dll"
-    "${CURRENT_PACKAGES_DIR}/plugins/*d.pdb")
-foreach(file ${DEBUG_PLUGINS})
-    get_filename_component(file_n ${file} NAME)
-    file(RELATIVE_PATH file_rel "${CURRENT_PACKAGES_DIR}/plugins" ${file})
-    get_filename_component(rel_dir ${file_rel} DIRECTORY)
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/plugins/${rel_dir}")
-    file(RENAME ${file} "${CURRENT_PACKAGES_DIR}/debug/plugins/${rel_dir}/${file_n}")
-endforeach()
-foreach(BINARY ${BINARY_TOOLS})
-    execute_process(COMMAND dumpbin /PDBPATH ${BINARY}
-                    COMMAND findstr PDB
-        OUTPUT_VARIABLE PDB_LINE
-        ERROR_QUIET
-        RESULT_VARIABLE error_code
-    )
-    if(NOT error_code AND PDB_LINE MATCHES "PDB file found at")
-        string(REGEX MATCH '.*' PDB_PATH ${PDB_LINE}) # Extract the path which is in single quotes
-        string(REPLACE ' "" PDB_PATH ${PDB_PATH}) # Remove single quotes
-        file(INSTALL ${PDB_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-        file(REMOVE ${PDB_PATH})
-    endif()
-endforeach()
+
 file(INSTALL ${BINARY_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
 file(REMOVE ${BINARY_TOOLS})
 
