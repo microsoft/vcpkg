@@ -16,7 +16,7 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_configure_cmake(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glbinding-2.1.1)
-#vcpkg_build_cmake()
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 

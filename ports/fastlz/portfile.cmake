@@ -16,6 +16,7 @@ vcpkg_configure_cmake(
         -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
 )
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

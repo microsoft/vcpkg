@@ -24,6 +24,7 @@ vcpkg_configure_cmake(
 		-DLIBMONGOC_DIR=${CURRENT_INSTALLED_DIR}
 )
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()	
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)

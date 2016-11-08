@@ -32,6 +32,7 @@ vcpkg_configure_cmake(
     GENERATOR "Visual Studio 14 2015"
 )
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/ragel.txt)

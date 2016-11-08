@@ -19,6 +19,7 @@ vcpkg_configure_cmake(
 )
 
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 file(INSTALL ${SOURCE_PATH}/LICENSE.rst DESTINATION ${CURRENT_PACKAGES_DIR}/share/fmt RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

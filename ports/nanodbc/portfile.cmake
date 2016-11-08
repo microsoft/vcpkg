@@ -29,6 +29,7 @@ vcpkg_configure_cmake(
 		-DNANODBC_USE_UNICODE=ON
 )
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()	
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

@@ -25,6 +25,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH}
     OPTIONS -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=True)
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
 file(RENAME ${CURRENT_PACKAGES_DIR}/CMake ${CURRENT_PACKAGES_DIR}/share/double-conversion)

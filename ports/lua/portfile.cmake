@@ -24,6 +24,7 @@ vcpkg_configure_cmake(
         -DSKIP_INSTALL_HEADERS=ON
 )
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 # Handle copyright

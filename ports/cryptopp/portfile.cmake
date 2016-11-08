@@ -26,6 +26,7 @@ vcpkg_configure_cmake(
         -DBUILD_DOCUMENTATION=OFF
 )
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 # There is no way to suppress installation of the headers and resource files in debug build.

@@ -24,6 +24,7 @@ vcpkg_configure_cmake(
     # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 # There is no way to suppress installation of the headers in debug builds.
