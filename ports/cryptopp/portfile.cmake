@@ -1,5 +1,6 @@
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(FATAL_ERROR "Dynamic building not supported") # See note below
+    message(STATUS "Warning: Dynamic building not supported. Building static.") # See note below
+    set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/cryptopp-CRYPTOPP_5_6_5)
