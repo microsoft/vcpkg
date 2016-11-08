@@ -26,7 +26,5 @@ namespace vcpkg
 
     void search_file(const vcpkg_paths& paths, const std::string& file_substr, const StatusParagraphs& status_db);
 
-    void binary_import(const vcpkg_paths& paths, const fs::path& include_directory, const fs::path& project_directory, const BinaryParagraph& control_file_data);
-
     const std::string& version();
 } // namespace vcpkg
