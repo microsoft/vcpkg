@@ -1,8 +1,8 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Files.h"
-#include "vcpkg.h"
 #include "Paragraphs.h"
+#include "BinaryParagraph.h"
 
 namespace vcpkg
 {
