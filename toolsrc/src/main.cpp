@@ -5,7 +5,6 @@
 #include <fstream>
 #include <memory>
 #include <cassert>
-#include "vcpkg.h"
 #include "vcpkg_Commands.h"
 #include "metrics.h"
 #include <Shlobj.h>
