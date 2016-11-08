@@ -2,9 +2,7 @@
 #include <windows.h>
 #include <shellapi.h>
 #include "vcpkg_Commands.h"
-#include "vcpkg.h"
 #include <fstream>
-#include <iostream>
 #include <regex>
 #include <array>
 #include "vcpkg_Environment.h"
