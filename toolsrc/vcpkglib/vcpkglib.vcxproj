@@ -136,7 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\BinaryParagraph.cpp" />
-    <ClCompile Include="..\src\lib.cpp" />
+    <ClCompile Include="..\src\vcpkg.cpp" />
     <ClCompile Include="..\src\package_spec.cpp" />
     <ClCompile Include="..\src\package_spec_parse_result.cpp" />
     <ClCompile Include="..\src\Paragraphs.cpp" />
@@ -144,7 +144,6 @@
     <ClCompile Include="..\src\StatusParagraph.cpp" />
     <ClCompile Include="..\src\StatusParagraphs.cpp" />
     <ClCompile Include="..\src\triplet.cpp" />
-    <ClCompile Include="..\src\vcpkg.cpp" />
     <ClCompile Include="..\src\vcpkglib_helpers.cpp" />
     <ClCompile Include="..\src\vcpkg_paths.cpp" />
     <ClCompile Include="..\src\vcpkg_version.cpp" />
