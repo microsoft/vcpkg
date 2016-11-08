@@ -11,6 +11,7 @@
 #include <cassert>
 #include "vcpkg_Files.h"
 #include "vcpkg_System.h"
+#include "Paragraphs.h"
 
 using namespace vcpkg;
 
@@ -51,7 +52,7 @@ static StatusParagraphs load_current_database(const fs::path& vcpkg_dir_status_f
     }
 
     auto text = Files::get_contents(vcpkg_dir_status_file).get_or_throw();
-    auto pghs = parse_paragraphs(text);
+    auto pghs = Paragraphs::parse_paragraphs(text);
 
     std::vector<std::unique_ptr<StatusParagraph>> status_pghs;
     for (auto&& p : pghs)
@@ -94,7 +95,7 @@ StatusParagraphs vcpkg::database_load_check(const vcpkg_paths& paths)
             continue;
 
         auto text = Files::get_contents(b->path()).get_or_throw();
-        auto pghs = parse_paragraphs(text);
+        auto pghs = Paragraphs::parse_paragraphs(text);
         for (auto&& p : pghs)
         {
             current_status_db.insert(std::make_unique<StatusParagraph>(p));
@@ -217,7 +218,7 @@ std::vector<std::string> vcpkg::get_unmet_package_dependencies(const vcpkg_paths
         std::vector<std::unordered_map<std::string, std::string>> pghs;
         try
         {
-            pghs = parse_paragraphs(*control_contents);
+            pghs = Paragraphs::parse_paragraphs(*control_contents);
         }
         catch (std::runtime_error)
         {
@@ -238,7 +239,7 @@ std::vector<std::string> vcpkg::get_unmet_package_build_dependencies(const vcpkg
         std::vector<std::unordered_map<std::string, std::string>> pghs;
         try
         {
-            pghs = parse_paragraphs(*control_contents);
+            pghs = Paragraphs::parse_paragraphs(*control_contents);
         }
         catch (std::runtime_error)
         {

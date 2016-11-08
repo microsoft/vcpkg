@@ -12,6 +12,7 @@
 #include "vcpkg_Files.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Input.h"
+#include "Paragraphs.h"
 
 using namespace vcpkg;
 
@@ -115,7 +116,7 @@ static void loadConfig()
         std::string config_contents = Files::get_contents(localappdata / "vcpkg" / "config").get_or_throw();
 
         std::unordered_map<std::string, std::string> keys;
-        auto pghs = parse_paragraphs(config_contents);
+        auto pghs = Paragraphs::parse_paragraphs(config_contents);
         if (pghs.size() > 0)
             keys = pghs[0];
 

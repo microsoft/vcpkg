@@ -1,6 +1,7 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
 #include "vcpkg.h"
+#include "Paragraphs.h"
 
 namespace fs = std::tr2::sys;
 
@@ -15,7 +16,7 @@ namespace vcpkg
 
             try
             {
-                auto pghs = get_paragraphs(path / "CONTROL");
+                auto pghs = Paragraphs::get_paragraphs(path / "CONTROL");
                 if (pghs.empty())
                 {
                     continue;

@@ -9,6 +9,7 @@
 #include "vcpkg_Dependencies.h"
 #include "vcpkg_Input.h"
 #include "vcpkg_Maps.h"
+#include "Paragraphs.h"
 
 namespace vcpkg
 {
@@ -21,7 +22,7 @@ namespace vcpkg
 
     static void build_internal(const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir)
     {
-        auto pghs = get_paragraphs(port_dir / "CONTROL");
+        auto pghs = Paragraphs::get_paragraphs(port_dir / "CONTROL");
         Checks::check_exit(pghs.size() == 1, "Error: invalid control file");
         SourceParagraph source_paragraph(pghs[0]);
 
@@ -111,7 +112,7 @@ namespace vcpkg
                     }
                 }
 
-                auto pghs = parse_paragraphs(file_contents.get_or_throw());
+                auto pghs = Paragraphs::parse_paragraphs(file_contents.get_or_throw());
                 Checks::check_throw(pghs.size() == 1, "multiple paragraphs in control file");
                 install_package(paths, BinaryParagraph(pghs[0]), status_db);
                 System::println(System::color::success, "Package %s is installed", spec);

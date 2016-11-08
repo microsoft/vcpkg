@@ -7,6 +7,7 @@
 #include <iostream>
 #include <iomanip>
 #include <set>
+#include "Paragraphs.h"
 
 namespace vcpkg
 {
@@ -52,7 +53,7 @@ namespace vcpkg
 
             try
             {
-                auto pghs = get_paragraphs(path / "CONTROL");
+                auto pghs = Paragraphs::get_paragraphs(path / "CONTROL");
                 if (pghs.empty())
                     continue;
                 auto srcpgh = SourceParagraph(pghs[0]);

@@ -2,6 +2,7 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Files.h"
 #include "vcpkg.h"
+#include "Paragraphs.h"
 
 namespace vcpkg
 {
@@ -17,7 +18,7 @@ namespace vcpkg
                 auto file_contents = Files::get_contents(path / "CONTROL");
                 if (auto text = file_contents.get())
                 {
-                    auto pghs = parse_paragraphs(*text);
+                    auto pghs = Paragraphs::parse_paragraphs(*text);
                     if (pghs.size() != 1)
                         continue;
 

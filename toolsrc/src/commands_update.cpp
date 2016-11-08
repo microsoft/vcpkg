@@ -2,6 +2,7 @@
 #include "vcpkg.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Files.h"
+#include "Paragraphs.h"
 
 namespace vcpkg
 {
@@ -21,7 +22,7 @@ namespace vcpkg
             const auto& path = begin_it->path();
             try
             {
-                auto pghs = get_paragraphs(path / "CONTROL");
+                auto pghs = Paragraphs::get_paragraphs(path / "CONTROL");
                 if (pghs.empty())
                     continue;
                 auto srcpgh = SourceParagraph(pghs[0]);

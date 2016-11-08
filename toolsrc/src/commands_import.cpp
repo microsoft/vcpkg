@@ -1,5 +1,6 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg.h"
+#include "Paragraphs.h"
 
 namespace vcpkg
 {
@@ -12,7 +13,7 @@ namespace vcpkg
         const fs::path include_directory(args.command_arguments[1]);
         const fs::path project_directory(args.command_arguments[2]);
 
-        auto pghs = get_paragraphs(control_file_path);
+        auto pghs = Paragraphs::get_paragraphs(control_file_path);
         Checks::check_throw(pghs.size() == 1, "Invalid control file for package");
 
         StatusParagraph spgh;

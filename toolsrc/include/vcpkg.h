@@ -14,8 +14,6 @@ namespace vcpkg
 
     extern bool g_do_dry_run;
 
-    std::vector<std::unordered_map<std::string, std::string>> get_paragraphs(const fs::path& control_path);
-    std::vector<std::unordered_map<std::string, std::string>> parse_paragraphs(const std::string& str);
     std::string shorten_description(const std::string& desc);
 
     StatusParagraphs database_load_check(const vcpkg_paths& paths);
