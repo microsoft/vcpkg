@@ -141,7 +141,7 @@ namespace vcpkg
         Input::check_triplet(spec.target_triplet(), paths);
 
         // Explicitly load and use the portfile's build dependencies when resolving the build command (instead of a cached package's dependencies).
-        auto first_level_deps = Dependencies::get_unmet_package_build_dependencies(paths, spec, status_db);
+        auto first_level_deps = Dependencies::get_unmet_package_build_dependencies(paths, spec);
         std::vector<package_spec> first_level_deps_specs;
         for (auto&& dep : first_level_deps)
         {
