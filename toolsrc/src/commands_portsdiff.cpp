@@ -1,6 +1,5 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
-#include "vcpkg.h"
 #include <map>
 #include <iterator>
 #include "vcpkg_Maps.h"
@@ -8,6 +7,7 @@
 #include <iomanip>
 #include <set>
 #include "Paragraphs.h"
+#include "SourceParagraph.h"
 
 namespace vcpkg
 {
