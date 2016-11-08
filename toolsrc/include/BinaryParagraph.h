@@ -2,7 +2,6 @@
 
 #include <unordered_map>
 #include "SourceParagraph.h"
-#include "triplet.h"
 #include "package_spec.h"
 
 namespace vcpkg
