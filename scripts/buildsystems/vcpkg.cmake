@@ -53,12 +53,14 @@ if(NOT VCPKG_TOOLCHAIN)
     if(OVERRIDE_ADD_EXECUTABLE)
         function(add_executable name)
             _add_executable(${ARGV})
+            if(NOT "IMPORTED" IN_LIST ARGV)
             add_custom_command(TARGET ${name} POST_BUILD
                 COMMAND powershell -noprofile -executionpolicy UnRestricted -file ${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1
                     -targetBinary $<TARGET_FILE:${name}>
                     -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                     -OutVariable out
             )
+            endif()
         endfunction()
     endif()
     set(VCPKG_TOOLCHAIN ON)
