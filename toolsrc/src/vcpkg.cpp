@@ -64,14 +64,6 @@ static StatusParagraphs load_current_database(const fs::path& vcpkg_dir_status_f
     return StatusParagraphs(std::move(status_pghs));
 }
 
-std::string vcpkg::shorten_description(const std::string& desc)
-{
-    auto simple_desc = std::regex_replace(desc.substr(0, 49), std::regex("\\n( |\\t)?"), "");
-    if (desc.size() > 49)
-        simple_desc.append("...");
-    return simple_desc;
-}
-
 StatusParagraphs vcpkg::database_load_check(const vcpkg_paths& paths)
 {
     auto updates_dir = paths.vcpkg_dir_updates;

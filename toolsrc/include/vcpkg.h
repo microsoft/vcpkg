@@ -13,8 +13,6 @@ namespace vcpkg
 
     extern bool g_do_dry_run;
 
-    std::string shorten_description(const std::string& desc);
-
     StatusParagraphs database_load_check(const vcpkg_paths& paths);
 
     void install_package(const vcpkg_paths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs& status_db);

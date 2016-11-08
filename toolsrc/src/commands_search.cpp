@@ -2,6 +2,7 @@
 #include "vcpkg_System.h"
 #include "vcpkg.h"
 #include "Paragraphs.h"
+#include "vcpkglib_helpers.h"
 
 namespace fs = std::tr2::sys;
 
@@ -38,7 +39,7 @@ namespace vcpkg
         System::println("%-20s %-16s %s",
                         source_paragraph.name,
                         source_paragraph.version,
-                        shorten_description(source_paragraph.description));
+                        details::shorten_description(source_paragraph.description));
     }
 
     void search_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)

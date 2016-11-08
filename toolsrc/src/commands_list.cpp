@@ -1,6 +1,7 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg.h"
 #include "vcpkg_System.h"
+#include "vcpkglib_helpers.h"
 
 namespace vcpkg
 {
@@ -9,7 +10,7 @@ namespace vcpkg
         System::println("%-27s %-16s %s",
                         pgh.package.displayname(),
                         pgh.package.version,
-                        shorten_description(pgh.package.description));
+                        details::shorten_description(pgh.package.description));
     }
 
     void list_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
