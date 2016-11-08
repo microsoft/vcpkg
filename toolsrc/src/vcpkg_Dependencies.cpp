@@ -5,7 +5,6 @@
 #include "package_spec.h"
 #include "StatusParagraphs.h"
 #include <unordered_set>
-#include "vcpkg.h"
 #include "vcpkg_Maps.h"
 #include "vcpkg_Files.h"
 #include "Paragraphs.h"
