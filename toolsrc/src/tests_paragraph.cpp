@@ -1,6 +1,6 @@
 #include "CppUnitTest.h"
-#include "vcpkg.h"
 #include "Paragraphs.h"
+#include "BinaryParagraph.h"
 
 #pragma comment(lib,"version")
 #pragma comment(lib,"winhttp")
