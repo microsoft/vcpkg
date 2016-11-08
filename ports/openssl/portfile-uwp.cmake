@@ -6,20 +6,22 @@
 #   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
 #
 
-include(${CMAKE_TRIPLET_FILE})
-
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     message(FATAL_ERROR "Static building not supported yet")
 endif()
 
-if (TARGET_TRIPLET MATCHES "arm-uwp")
+if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "This portfile only supports UWP")
+endif()
+
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
     set(UWP_PLATFORM  "arm")
-elseif (TARGET_TRIPLET MATCHES "x64-uwp")
+elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(UWP_PLATFORM  "x64")
-elseif (TARGET_TRIPLET MATCHES "x86-uwp")
+elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(UWP_PLATFORM  "Win32")
 else ()
-    message(FATAL_ERROR "Only UWP DLL builds are supported at the moment")
+    message(FATAL_ERROR "Unsupported architecture")
 endif()
 
 include(vcpkg_common_functions)
@@ -108,4 +110,4 @@ file(INSTALL ${SOURCE_PATH}/out32dll/ssleay32.lib
 
 
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openssl-microsoft RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openssl RENAME copyright)
