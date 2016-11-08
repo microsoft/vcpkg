@@ -81,7 +81,7 @@ namespace vcpkg { namespace Dependencies
         return build_dependency_graph(paths, specs, status_db).find_topological_sort();
     }
 
-    std::unordered_set<package_spec> find_unmet_dependencies(const vcpkg_paths& paths, const std::vector<package_spec>& specs, const StatusParagraphs& status_db)
+    std::unordered_set<package_spec> get_unmet_dependencies(const vcpkg_paths& paths, const std::vector<package_spec>& specs, const StatusParagraphs& status_db)
     {
         const Graphs::Graph<package_spec> dependency_graph = build_dependency_graph(paths, specs, status_db);
         return Maps::extract_key_set(dependency_graph.adjacency_list());

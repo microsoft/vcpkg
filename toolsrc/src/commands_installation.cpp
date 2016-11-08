@@ -148,7 +148,7 @@ namespace vcpkg
             first_level_deps_specs.push_back(package_spec::from_name_and_triplet(dep, spec.target_triplet()).get_or_throw());
         }
 
-        std::unordered_set<package_spec> unmet_dependencies = Dependencies::find_unmet_dependencies(paths, first_level_deps_specs, status_db);
+        std::unordered_set<package_spec> unmet_dependencies = Dependencies::get_unmet_dependencies(paths, first_level_deps_specs, status_db);
         if (!unmet_dependencies.empty())
         {
             System::println(System::color::error, "The build command requires all dependencies to be already installed.");
