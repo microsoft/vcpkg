@@ -1,7 +1,6 @@
 #pragma once
 
 #include <filesystem>
-#include <vector>
 #include <unordered_map>
 #include "package_spec.h"
 #include "BinaryParagraph.h"
@@ -17,9 +16,6 @@ namespace vcpkg
     std::string shorten_description(const std::string& desc);
 
     StatusParagraphs database_load_check(const vcpkg_paths& paths);
-
-    std::vector<std::string> get_unmet_package_dependencies(const vcpkg_paths& paths, const package_spec& spec, const StatusParagraphs& status_db);
-    std::vector<std::string> get_unmet_package_build_dependencies(const vcpkg_paths& paths, const package_spec& spec, const StatusParagraphs& status_db);
 
     void install_package(const vcpkg_paths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs& status_db);
     void deinstall_package(const vcpkg_paths& paths, const package_spec& spec, StatusParagraphs& status_db);

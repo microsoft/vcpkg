@@ -7,6 +7,8 @@
 #include <unordered_set>
 #include "vcpkg.h"
 #include "vcpkg_Maps.h"
+#include "vcpkg_Files.h"
+#include "Paragraphs.h"
 
 namespace vcpkg { namespace Dependencies
 {
@@ -60,5 +62,49 @@ namespace vcpkg { namespace Dependencies
     {
         const Graphs::Graph<package_spec> dependency_graph = build_dependency_graph(paths, specs, status_db);
         return Maps::extract_key_set(dependency_graph.adjacency_list());
+    }
+
+    // TODO: Refactoring between this function and install_package
+    std::vector<std::string> get_unmet_package_dependencies(const vcpkg_paths& paths, const package_spec& spec, const StatusParagraphs& status_db)
+    {
+        const fs::path packages_dir_control_file_path = paths.package_dir(spec) / "CONTROL";
+
+        auto control_contents_maybe = Files::get_contents(packages_dir_control_file_path);
+        if (auto control_contents = control_contents_maybe.get())
+        {
+            std::vector<std::unordered_map<std::string, std::string>> pghs;
+            try
+            {
+                pghs = Paragraphs::parse_paragraphs(*control_contents);
+            }
+            catch (std::runtime_error)
+            {
+            }
+            Checks::check_exit(pghs.size() == 1, "Invalid control file at %s", packages_dir_control_file_path.string());
+            return BinaryParagraph(pghs[0]).depends;
+        }
+
+        return get_unmet_package_build_dependencies(paths, spec, status_db);
+    }
+
+    std::vector<std::string> get_unmet_package_build_dependencies(const vcpkg_paths& paths, const package_spec& spec, const StatusParagraphs& status_db)
+    {
+        const fs::path ports_dir_control_file_path = paths.port_dir(spec) / "CONTROL";
+        auto control_contents_maybe = Files::get_contents(ports_dir_control_file_path);
+        if (auto control_contents = control_contents_maybe.get())
+        {
+            std::vector<std::unordered_map<std::string, std::string>> pghs;
+            try
+            {
+                pghs = Paragraphs::parse_paragraphs(*control_contents);
+            }
+            catch (std::runtime_error)
+            {
+            }
+            Checks::check_exit(pghs.size() == 1, "Invalid control file at %s", ports_dir_control_file_path.string());
+            return filter_dependencies(SourceParagraph(pghs[0]).depends, spec.target_triplet());
+        }
+
+        Checks::exit_with_message("Could not find package named %s", spec);
     }
 }}
