@@ -2,7 +2,6 @@
 #include <array>
 #include "vcpkg_Environment.h"
 #include "vcpkg_Commands.h"
-#include "vcpkg.h"
 #include "metrics.h"
 #include "vcpkg_System.h"
 
