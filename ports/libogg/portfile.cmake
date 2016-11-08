@@ -36,6 +36,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src
 )
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 # Handle copyright

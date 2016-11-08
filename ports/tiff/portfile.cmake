@@ -13,6 +13,7 @@ vcpkg_configure_cmake(
     OPTIONS -Dcxx=OFF
 )
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE

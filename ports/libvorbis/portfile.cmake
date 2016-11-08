@@ -52,6 +52,7 @@ vcpkg_configure_cmake(
     OPTIONS_DEBUG -DOGG_LIBRARIES=${OGG_LIB_DBG}
 )
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

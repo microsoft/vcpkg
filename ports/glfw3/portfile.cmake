@@ -30,6 +30,7 @@ vcpkg_configure_cmake(
         -DPACKAGE_CMAKE_INSTALL_PREFIX=\${CMAKE_CURRENT_LIST_DIR}/../..
 )
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)

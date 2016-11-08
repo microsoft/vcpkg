@@ -20,6 +20,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
 )
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 # remove debug header

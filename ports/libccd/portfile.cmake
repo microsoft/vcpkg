@@ -23,6 +23,7 @@ vcpkg_configure_cmake(
     # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 # Avoid a copy of file in debug

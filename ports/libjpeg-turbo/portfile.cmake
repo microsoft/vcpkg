@@ -37,6 +37,7 @@ vcpkg_configure_cmake(
     OPTIONS_DEBUG -DINSTALL_HEADERS=OFF
 )
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 file(COPY

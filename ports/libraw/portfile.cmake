@@ -27,6 +27,7 @@ vcpkg_configure_cmake(
         -DINSTALL_CMAKE_MODULE_PATH=${SOURCE_PATH}
 )
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 file(COPY ${SOURCE_PATH}/FindLibRaw.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libraw/cmake/FindLibRaw.cmake)

@@ -36,6 +36,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src
 )
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

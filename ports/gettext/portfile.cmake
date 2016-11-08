@@ -33,6 +33,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
 )
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 file(COPY ${SOURCE_PATH}/gettext-runtime/intl/libgnuintl.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
