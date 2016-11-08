@@ -1,8 +1,8 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
-#include "vcpkg.h"
 #include "Paragraphs.h"
 #include "vcpkglib_helpers.h"
+#include "SourceParagraph.h"
 
 namespace fs = std::tr2::sys;
 
