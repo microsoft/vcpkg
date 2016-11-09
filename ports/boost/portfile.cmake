@@ -41,13 +41,13 @@ set(B2_OPTIONS
 
 if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
     list(APPEND B2_OPTIONS runtime-link=shared)
-elseif()
+else()
     list(APPEND B2_OPTIONS runtime-link=static)
 endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     list(APPEND B2_OPTIONS link=shared)
-elseif()
+else()
     list(APPEND B2_OPTIONS link=static)
 endif()
 
@@ -109,7 +109,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/stage/lib/
         DESTINATION ${CURRENT_PACKAGES_DIR}/bin
         FILES_MATCHING PATTERN "*.dll")
-elseif()
+else()
     message(STATUS ${VCPKG_LIBRARY_LINKAGE})
 endif()
 message(STATUS "Packaging ${TARGET_TRIPLET}-rel done")
@@ -122,7 +122,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/stage/lib/
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
         FILES_MATCHING PATTERN "*.dll")
-elseif()
+else()
     message(STATUS ${VCPKG_LIBRARY_LINKAGE})
 endif()
 message(STATUS "Packaging ${TARGET_TRIPLET}-dbg done")
