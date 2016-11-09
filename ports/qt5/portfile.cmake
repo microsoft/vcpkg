@@ -50,6 +50,7 @@ vcpkg_execute_required_process(
         -hostbindir ${CURRENT_PACKAGES_DIR}/tools
         -archdatadir ${CURRENT_PACKAGES_DIR}/share/qt5
         -datadir ${CURRENT_PACKAGES_DIR}/share/qt5
+        -plugindir ${CURRENT_PACKAGES_DIR}/plugins
     WORKING_DIRECTORY ${OUTPUT_PATH}
     LOGNAME configure-${TARGET_TRIPLET}
 )
@@ -115,9 +116,20 @@ file(REMOVE ${DEBUG_LIB_FILES})
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Gamepad.lib ${CURRENT_PACKAGES_DIR}/lib/Qt5Gamepad.lib)
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Gamepad.prl ${CURRENT_PACKAGES_DIR}/lib/Qt5Gamepad.prl)
 file(GLOB BINARY_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*.exe")
-
 file(INSTALL ${BINARY_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
 file(REMOVE ${BINARY_TOOLS})
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/plugins")
+file(GLOB_RECURSE DEBUG_PLUGINS
+    "${CURRENT_PACKAGES_DIR}/plugins/*d.dll"
+    "${CURRENT_PACKAGES_DIR}/plugins/*d.pdb"
+)
+foreach(file ${DEBUG_PLUGINS})
+    get_filename_component(file_n ${file} NAME)
+    file(RELATIVE_PATH file_rel "${CURRENT_PACKAGES_DIR}/plugins" ${file})
+    get_filename_component(rel_dir ${file_rel} DIRECTORY)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/plugins/${rel_dir}")
+    file(RENAME ${file} "${CURRENT_PACKAGES_DIR}/debug/plugins/${rel_dir}/${file_n}")
+endforeach()
 
 if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL dynamic)
     file(GLOB RELEASE_DLLS "${CURRENT_PACKAGES_DIR}/bin/*.dll")
