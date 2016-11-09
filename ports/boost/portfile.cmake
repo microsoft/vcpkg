@@ -109,8 +109,6 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/stage/lib/
         DESTINATION ${CURRENT_PACKAGES_DIR}/bin
         FILES_MATCHING PATTERN "*.dll")
-else()
-    message(STATUS ${VCPKG_LIBRARY_LINKAGE})
 endif()
 message(STATUS "Packaging ${TARGET_TRIPLET}-rel done")
 
@@ -122,8 +120,6 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/stage/lib/
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
         FILES_MATCHING PATTERN "*.dll")
-else()
-    message(STATUS ${VCPKG_LIBRARY_LINKAGE})
 endif()
 message(STATUS "Packaging ${TARGET_TRIPLET}-dbg done")
 
