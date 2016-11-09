@@ -510,6 +510,17 @@ namespace vcpkg
         error_count += check_for_copyright_file(spec, paths);
         error_count += check_for_exes(spec, paths);
 
+        const std::vector<fs::path> debug_libs = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "lib", ".lib");
+        const std::vector<fs::path> release_libs = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "lib", ".lib");
+
+        error_count += check_matching_debug_and_release_binaries(debug_libs, release_libs);
+
+        std::vector<fs::path> libs;
+        libs.insert(libs.cend(), debug_libs.cbegin(), debug_libs.cend());
+        libs.insert(libs.cend(), release_libs.cbegin(), release_libs.cend());
+
+        error_count += check_lib_architecture(spec.target_triplet().architecture(), libs);
+
         switch (linkage_type_value_of(build_info.library_linkage))
         {
             case LinkageType::DYNAMIC:
@@ -550,16 +561,6 @@ namespace vcpkg
         error_count += check_no_subdirectories(paths.packages / spec.dir() / "lib");
         error_count += check_no_subdirectories(paths.packages / spec.dir() / "debug" / "lib");
 #endif
-        const std::vector<fs::path> debug_libs = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "lib", ".lib");
-        const std::vector<fs::path> release_libs = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "lib", ".lib");
-
-        error_count += check_matching_debug_and_release_binaries(debug_libs, release_libs);
-
-        std::vector<fs::path> libs;
-        libs.insert(libs.cend(), debug_libs.cbegin(), debug_libs.cend());
-        libs.insert(libs.cend(), release_libs.cbegin(), release_libs.cend());
-
-        error_count += check_lib_architecture(spec.target_triplet().architecture(), libs);
 
         error_count += check_no_empty_folders(paths.packages / spec.dir());
 
