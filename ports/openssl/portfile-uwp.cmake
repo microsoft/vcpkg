@@ -40,9 +40,9 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(${ARCHIVE})
 
-# file(REMOVE_RECURSE ${SOURCE_PATH}/tmp32dll)
-# file(REMOVE_RECURSE ${SOURCE_PATH}/out32dll)
-# file(REMOVE_RECURSE ${SOURCE_PATH}/inc32dll)
+file(REMOVE_RECURSE ${SOURCE_PATH}/tmp32dll)
+file(REMOVE_RECURSE ${SOURCE_PATH}/out32dll)
+file(REMOVE_RECURSE ${SOURCE_PATH}/inc32dll)
 
 file(COPY
 ${CMAKE_CURRENT_LIST_DIR}/setVSvars.bat
