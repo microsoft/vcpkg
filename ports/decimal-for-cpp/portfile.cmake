@@ -11,19 +11,19 @@
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(HEADER
-    URLS "https://github.com/vpiotr/decimal_for_cpp/blob/master/include/decimal.h"
+    URLS "https://raw.githubusercontent.com/vpiotr/decimal_for_cpp/98287a0f0f48aaed2cc146d7682396ae08ed0aea/include/decimal.h"
     FILENAME "decimal.h"
-    SHA512 46e29d76311df74422d240a4fd36e2689a9b58758da0415ef2a19d1703e35476403671f5801ce8665a8802511cec89e44a8868e144cee19986c2881f52ca6965
+    SHA512 9de1208760c74ff1e6b1a74957dabae33981d2f5d0ec402b48f27f4dc24c950ea69219a9ee9831959a8669a9c7908093d833a227924f1955cbe444a9f43c5f3a
 )
 
 vcpkg_download_distfile(LICENSE
-    URLS "https://github.com/vpiotr/decimal_for_cpp/blob/master/doc/license.txt"
-    FILENAME "License.txt"
-    SHA512 8edf6bb6929008e69f4e17727ded4964f6e036ef66c2909c7070b75b14791023a9c7303ac6e61c0cc746649175ff96c0477aa7593c66b64a5f999f37a1cf7a58
+    URLS "https://raw.githubusercontent.com/vpiotr/decimal_for_cpp/98287a0f0f48aaed2cc146d7682396ae08ed0aea/doc/license.txt"
+    FILENAME "decimal-for-cpp-License.txt"
+    SHA512 0b2be46b07a0536404887fae9665d6532ffd4cbfefbec42926c14e055f538c1f3a73b6e61ab7fa1584e634ad99304133d18855197df0a914cbb835674cc67677
 )
 
 
-file(COPY ${HEADER} DESTINATION ${CURRENT_PACKAGES_DIR}/include ) 
-file(COPY ${LICENSE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/decimal-for-cpp )
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/decimal-for-cpp/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/decimal-for-cpp/copyright) 
+file(COPY ${HEADER} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${LICENSE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/decimal-for-cpp)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/decimal-for-cpp/decimal-for-cpp-License.txt ${CURRENT_PACKAGES_DIR}/share/decimal-for-cpp/copyright)
 
