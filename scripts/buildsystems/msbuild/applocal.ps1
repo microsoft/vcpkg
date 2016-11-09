@@ -5,7 +5,7 @@ function resolve($targetBinary) {
     $targetBinaryPath = Resolve-Path $targetBinary
     $targetBinaryDir = Split-Path $targetBinaryPath -parent
 
-    $a = $(link /dump /imports $targetBinary | ? { $_ -match "^    [^ ].*\.dll" } | % { $_ -replace "^    ","" })
+    $a = $(dumpbin /DEPENDENTS $targetBinary | ? { $_ -match "^    [^ ].*\.dll" } | % { $_ -replace "^    ","" })
     $a | % {
         if (Test-Path "$installedDir\$_") {
             if (Test-Path "$targetBinaryDir\$_") {
