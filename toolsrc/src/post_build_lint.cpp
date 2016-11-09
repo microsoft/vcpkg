@@ -6,6 +6,7 @@
 #include "vcpkg_System.h"
 #include "coff_file_reader.h"
 #include "BuildInfo.h"
+#include <regex>
 
 namespace fs = std::tr2::sys;
 
@@ -488,6 +489,116 @@ namespace vcpkg
         return lint_status::SUCCESS;
     }
 
+    struct BuildInfo_and_files
+    {
+        explicit BuildInfo_and_files(const BuildType& build_type) : build_type(build_type)
+        {
+        }
+
+        BuildType build_type;
+        std::vector<fs::path> files;
+    };
+
+    static lint_status check_crt_linkage_of_libs(const BuildType& expected_build_type, const std::vector<fs::path>& libs)
+    {
+        static const std::regex DEBUG_STATIC_CRT(R"(/DEFAULTLIB:LIBCMTD)");
+        static const std::regex DEBUG_DYNAMIC_CRT(R"(/DEFAULTLIB:MSVCRTD)");
+
+        static const std::regex RELEASE_STATIC_CRT(R"(/DEFAULTLIB:LIBCMT[^D])");
+        static const std::regex RELEASE_DYNAMIC_CRT(R"(/DEFAULTLIB:MSVCRT[^D])");
+
+        lint_status output_status = lint_status::SUCCESS;
+
+        std::vector<fs::path> libs_with_no_crts;
+        std::vector<fs::path> libs_with_multiple_crts;
+
+        BuildInfo_and_files libs_with_debug_static_crt(BuildType::DEBUG_STATIC);
+        BuildInfo_and_files libs_with_debug_dynamic_crt(BuildType::DEBUG_DYNAMIC);
+        BuildInfo_and_files libs_with_release_static_crt(BuildType::RELEASE_STATIC);
+        BuildInfo_and_files libs_with_release_dynamic_crt(BuildType::RELEASE_DYNAMIC);
+
+        for (const fs::path& lib : libs)
+        {
+            const std::wstring cmd_line = Strings::wformat(LR"("%s" /directives "%s")", DUMPBIN_EXE.native(), lib.native());
+            System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
+            Checks::check_exit(ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
+
+            bool found_debug_static_crt = std::regex_search(ec_data.output.cbegin(), ec_data.output.cend(), DEBUG_STATIC_CRT);
+            bool found_debug_dynamic_crt = std::regex_search(ec_data.output.cbegin(), ec_data.output.cend(), DEBUG_DYNAMIC_CRT);
+            bool found_release_static_crt = std::regex_search(ec_data.output.cbegin(), ec_data.output.cend(), RELEASE_STATIC_CRT);
+            bool found_release_dynamic_crt = std::regex_search(ec_data.output.cbegin(), ec_data.output.cend(), RELEASE_DYNAMIC_CRT);
+
+            const size_t crts_found_count = found_debug_static_crt + found_debug_dynamic_crt + found_release_static_crt + found_release_dynamic_crt;
+
+            if (crts_found_count == 0)
+            {
+                libs_with_no_crts.push_back(lib);
+                continue;
+            }
+
+            if (crts_found_count > 1)
+            {
+                libs_with_multiple_crts.push_back(lib);
+                continue;
+            }
+
+            // now we have exactly 1 crt
+            if (found_debug_static_crt)
+            {
+                libs_with_debug_static_crt.files.push_back(lib);
+                continue;
+            }
+            if (found_debug_dynamic_crt)
+            {
+                libs_with_debug_dynamic_crt.files.push_back(lib);
+                continue;
+            }
+
+            if (found_release_static_crt)
+            {
+                libs_with_release_static_crt.files.push_back(lib);
+                continue;
+            }
+
+            libs_with_release_dynamic_crt.files.push_back(lib);
+        }
+
+        if (!libs_with_no_crts.empty())
+        {
+            System::println(System::color::warning, "Could not detect the crt linkage in the following libs:");
+            print_vector_of_files(libs_with_no_crts);
+            output_status = lint_status::ERROR_DETECTED;
+        }
+
+        if (!libs_with_multiple_crts.empty())
+        {
+            System::println(System::color::warning, "Detected multiple crt linkages for the following libs:");
+            print_vector_of_files(libs_with_multiple_crts);
+            output_status = lint_status::ERROR_DETECTED;
+        }
+
+        std::vector<BuildInfo_and_files> group_for_iteration = {
+            libs_with_debug_static_crt, libs_with_debug_dynamic_crt,
+            libs_with_release_static_crt, libs_with_release_dynamic_crt};
+
+        for (const BuildInfo_and_files& bif : group_for_iteration)
+        {
+            if (!bif.files.empty() && bif.build_type != expected_build_type)
+            {
+                System::println(System::color::warning, "Expected %s crt linkage, but the following libs had %s crt linkage:", expected_build_type.toString(), bif.build_type.toString());
+                print_vector_of_files(bif.files);
+                output_status = lint_status::ERROR_DETECTED;
+            }
+        }
+
+        if (output_status == lint_status::ERROR_DETECTED)
+        {
+            System::println(System::color::warning, "To inspect the lib files, use:\n    dumpbin.exe /directives mylibfile.lib");
+        }
+
+        return output_status;
+    }
+
     static void operator +=(size_t& left, const lint_status& right)
     {
         left += static_cast<size_t>(right);
@@ -546,6 +657,11 @@ namespace vcpkg
                     error_count += check_no_dlls_present(dlls);
 
                     error_count += check_bin_folders_are_not_present_in_static_build(spec, paths);
+
+#if 0
+                    error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::DEBUG, linkage_type_value_of(build_info.crt_linkage)), debug_libs);
+                    error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::RELEASE, linkage_type_value_of(build_info.crt_linkage)), release_libs);
+#endif
                     break;
                 }
             case LinkageType::UNKNOWN:
