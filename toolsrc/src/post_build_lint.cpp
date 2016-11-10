@@ -489,9 +489,9 @@ namespace vcpkg
         return lint_status::SUCCESS;
     }
 
-    struct BuildInfo_and_files
+    struct BuildType_and_files
     {
-        explicit BuildInfo_and_files(const BuildType& build_type) : build_type(build_type)
+        explicit BuildType_and_files(const BuildType& build_type) : build_type(build_type)
         {
         }
 
@@ -511,10 +511,10 @@ namespace vcpkg
 
         std::vector<fs::path> libs_with_multiple_crts;
 
-        BuildInfo_and_files libs_with_debug_static_crt(BuildType::DEBUG_STATIC);
-        BuildInfo_and_files libs_with_debug_dynamic_crt(BuildType::DEBUG_DYNAMIC);
-        BuildInfo_and_files libs_with_release_static_crt(BuildType::RELEASE_STATIC);
-        BuildInfo_and_files libs_with_release_dynamic_crt(BuildType::RELEASE_DYNAMIC);
+        BuildType_and_files libs_with_debug_static_crt(BuildType::DEBUG_STATIC);
+        BuildType_and_files libs_with_debug_dynamic_crt(BuildType::DEBUG_DYNAMIC);
+        BuildType_and_files libs_with_release_static_crt(BuildType::RELEASE_STATIC);
+        BuildType_and_files libs_with_release_dynamic_crt(BuildType::RELEASE_DYNAMIC);
 
         for (const fs::path& lib : libs)
         {
@@ -569,11 +569,11 @@ namespace vcpkg
             output_status = lint_status::ERROR_DETECTED;
         }
 
-        std::vector<BuildInfo_and_files> group_for_iteration = {
+        std::vector<BuildType_and_files> group_for_iteration = {
             libs_with_debug_static_crt, libs_with_debug_dynamic_crt,
             libs_with_release_static_crt, libs_with_release_dynamic_crt};
 
-        for (const BuildInfo_and_files& bif : group_for_iteration)
+        for (const BuildType_and_files& bif : group_for_iteration)
         {
             if (!bif.files.empty() && bif.build_type != expected_build_type)
             {
