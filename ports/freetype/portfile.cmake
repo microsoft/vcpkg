@@ -16,7 +16,6 @@ vcpkg_apply_patches(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -DBUILD_SHARED_LIBS=ON
         -DCONFIG_INSTALL_PATH=share/freetype
 )
 

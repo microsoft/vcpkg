@@ -1,4 +1,7 @@
-include(${CMAKE_TRIPLET_FILE})
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
+endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mysql-server-mysql-5.7.16)
 
@@ -15,7 +18,7 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES 
+    PATCHES
 		${CMAKE_CURRENT_LIST_DIR}/0001_cmake.patch
 )
 
@@ -26,11 +29,11 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # delete debug headers
-file(REMOVE_RECURSE 
+file(REMOVE_RECURSE
 	${CURRENT_PACKAGES_DIR}/debug/include)
 
 # delete useless vcruntime/scripts/bin/msg file
-file(REMOVE_RECURSE 
+file(REMOVE_RECURSE
 	${CURRENT_PACKAGES_DIR}/share
 	${CURRENT_PACKAGES_DIR}/debug/share
 	${CURRENT_PACKAGES_DIR}/bin
@@ -39,7 +42,6 @@ file(REMOVE_RECURSE
 
 file(MAKE_DIRECTORY
 	${CURRENT_PACKAGES_DIR}/share
-	${CURRENT_PACKAGES_DIR}/debug/share
 	${CURRENT_PACKAGES_DIR}/bin
 	${CURRENT_PACKAGES_DIR}/debug/bin)
 

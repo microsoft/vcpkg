@@ -16,10 +16,19 @@ vcpkg_find_acquire_program(NASM)
 get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
 set(ENV{PATH} "${NASM_EXE_PATH};$ENV{PATH}")
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(BUILD_STATIC OFF)
+    set(NOT_BUILD_STATIC ON)
+else()
+    set(BUILD_STATIC ON)
+    set(NOT_BUILD_STATIC OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -DENABLE_STATIC=OFF
+        -DENABLE_STATIC=${BUILD_STATIC}
+        -DENABLE_SHARED=${NOT_BUILD_STATIC}
         -DWITH_CRT_DLL=ON
         -DENABLE_EXECUTABLES=OFF
         -DINSTALL_DOCS=OFF

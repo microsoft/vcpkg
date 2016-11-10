@@ -1,178 +1,371 @@
 #include "vcpkg.h"
-#include <regex>
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <functional>
+#include <string>
+#include <unordered_map>
+#include <memory>
+#include <filesystem>
+#include <vector>
+#include <cassert>
 #include "vcpkg_Files.h"
-#include "vcpkglib_helpers.h"
+#include "vcpkg_System.h"
+#include "Paragraphs.h"
+#include <regex>
+
+using namespace vcpkg;
+
+bool vcpkg::g_do_dry_run = false;
 
 namespace
 {
-    using namespace vcpkg;
-
-    struct Parser
+    template <class M, class K, class V>
+    auto find_or_default(const M& map, const K& key, const V& val)
     {
-        Parser(const char* c, const char* e) : cur(c), end(e)
-        {
-        }
-
-    private:
-        const char* cur;
-        const char* const end;
-
-        void peek(char& ch) const
-        {
-            if (cur == end)
-                ch = 0;
-            else
-                ch = *cur;
-        }
-
-        void next(char& ch)
-        {
-            if (cur == end)
-                ch = 0;
-            else
-            {
-                ++cur;
-                peek(ch);
-            }
-        }
-
-        void skip_spaces(char& ch)
-        {
-            while (ch == ' ' || ch == '\t')
-                next(ch);
-        }
-
-        static bool is_alphanum(char ch)
-        {
-            return (ch >= 'A' && ch <= 'Z')
-                || (ch >= 'a' && ch <= 'z')
-                || (ch >= '0' && ch <= '9');
-        }
-
-        static bool is_lineend(char ch)
-        {
-            return ch == '\r' || ch == '\n' || ch == 0;
-        }
-
-        void get_fieldvalue(char& ch, std::string& fieldvalue)
-        {
-            fieldvalue.clear();
-
-            auto beginning_of_line = cur;
-            do
-            {
-                // scan to end of current line (it is part of the field value)
-                while (!is_lineend(ch))
-                    next(ch);
-
-                fieldvalue.append(beginning_of_line, cur);
-
-                if (ch == '\r')
-                    next(ch);
-                if (ch == '\n')
-                    next(ch);
-
-                if (is_alphanum(ch))
-                {
-                    // Line begins a new field.
-                    return;
-                }
-
-                beginning_of_line = cur;
-
-                // Line may continue the current field with data or terminate the paragraph,
-                // depending on first nonspace character.
-                skip_spaces(ch);
-
-                if (is_lineend(ch))
-                {
-                    // Line was whitespace or empty.
-                    // This terminates the field and the paragraph.
-                    // We leave the blank line's whitespace consumed, because it doesn't matter.
-                    return;
-                }
-
-                // First nonspace is not a newline. This continues the current field value.
-                // We forcibly convert all newlines into single '\n' for ease of text handling later on.
-                fieldvalue.push_back('\n');
-            }
-            while (true);
-        }
-
-        void get_fieldname(char& ch, std::string& fieldname)
-        {
-            auto begin_fieldname = cur;
-            while (is_alphanum(ch) || ch == '-')
-                next(ch);
-            Checks::check_throw(ch == ':', "Expected ':'");
-            fieldname = std::string(begin_fieldname, cur);
-
-            // skip ': '
-            next(ch);
-            skip_spaces(ch);
-        }
-
-        void get_paragraph(char& ch, std::unordered_map<std::string, std::string>& fields)
-        {
-            fields.clear();
-            std::string fieldname;
-            std::string fieldvalue;
-            do
-            {
-                get_fieldname(ch, fieldname);
-
-                auto it = fields.find(fieldname);
-                Checks::check_throw(it == fields.end(), "Duplicate field");
-
-                get_fieldvalue(ch, fieldvalue);
-
-                fields.emplace(fieldname, fieldvalue);
-            }
-            while (!is_lineend(ch));
-        }
-
-    public:
-        std::vector<std::unordered_map<std::string, std::string>> get_paragraphs()
-        {
-            std::vector<std::unordered_map<std::string, std::string>> paragraphs;
-
-            char ch;
-            peek(ch);
-
-            while (ch != 0)
-            {
-                if (ch == '\n' || ch == '\r' || ch == ' ' || ch == '\t')
-                {
-                    next(ch);
-                    continue;
-                }
-
-                paragraphs.emplace_back();
-                get_paragraph(ch, paragraphs.back());
-            }
-
-            return paragraphs;
-        }
-    };
+        auto it = map.find(key);
+        if (it == map.end())
+            return decltype(it->second)(val);
+        else
+            return it->second;
+    }
 }
 
-namespace vcpkg
+namespace
 {
-    std::string shorten_description(const std::string& desc)
+    std::fstream open_status_file(const vcpkg_paths& paths, std::ios_base::openmode mode = std::ios_base::app | std::ios_base::in | std::ios_base::out | std::ios_base::binary)
     {
-        auto simple_desc = std::regex_replace(desc.substr(0, 49), std::regex("\\n( |\\t)?"), "");
-        if (desc.size() > 49)
-            simple_desc.append("...");
-        return simple_desc;
+        return std::fstream(paths.vcpkg_dir_status_file, mode);
+    }
+}
+
+static StatusParagraphs load_current_database(const fs::path& vcpkg_dir_status_file, const fs::path& vcpkg_dir_status_file_old)
+{
+    if (!fs::exists(vcpkg_dir_status_file))
+    {
+        if (!fs::exists(vcpkg_dir_status_file_old))
+        {
+            // no status file, use empty db
+            return StatusParagraphs();
+        }
+
+        fs::rename(vcpkg_dir_status_file_old, vcpkg_dir_status_file);
     }
 
-    std::vector<std::unordered_map<std::string, std::string>> get_paragraphs(const fs::path& control_path)
+    auto text = Files::get_contents(vcpkg_dir_status_file).get_or_throw();
+    auto pghs = Paragraphs::parse_paragraphs(text);
+
+    std::vector<std::unique_ptr<StatusParagraph>> status_pghs;
+    for (auto&& p : pghs)
     {
-        return parse_paragraphs(Files::get_contents(control_path).get_or_throw());
+        status_pghs.push_back(std::make_unique<StatusParagraph>(p));
     }
 
-    std::vector<std::unordered_map<std::string, std::string>> parse_paragraphs(const std::string& str)
+    return StatusParagraphs(std::move(status_pghs));
+}
+
+StatusParagraphs vcpkg::database_load_check(const vcpkg_paths& paths)
+{
+    auto updates_dir = paths.vcpkg_dir_updates;
+
+    std::error_code ec;
+    fs::create_directory(paths.installed, ec);
+    fs::create_directory(paths.vcpkg_dir, ec);
+    fs::create_directory(paths.vcpkg_dir_info, ec);
+    fs::create_directory(updates_dir, ec);
+
+    const fs::path& status_file = paths.vcpkg_dir_status_file;
+    const fs::path status_file_old = status_file.parent_path() / "status-old";
+    const fs::path status_file_new = status_file.parent_path() / "status-new";
+
+    StatusParagraphs current_status_db = load_current_database(status_file, status_file_old);
+
+    auto b = fs::directory_iterator(updates_dir);
+    auto e = fs::directory_iterator();
+    if (b == e)
     {
-        return Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
+        // updates directory is empty, control file is up-to-date.
+        return current_status_db;
     }
+
+    for (; b != e; ++b)
+    {
+        if (!fs::is_regular_file(b->status()))
+            continue;
+        if (b->path().filename() == "incomplete")
+            continue;
+
+        auto text = Files::get_contents(b->path()).get_or_throw();
+        auto pghs = Paragraphs::parse_paragraphs(text);
+        for (auto&& p : pghs)
+        {
+            current_status_db.insert(std::make_unique<StatusParagraph>(p));
+        }
+    }
+
+    std::fstream(status_file_new, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc) << current_status_db;
+
+    if (fs::exists(status_file_old))
+        fs::remove(status_file_old);
+    if (fs::exists(status_file))
+        fs::rename(status_file, status_file_old);
+    fs::rename(status_file_new, status_file);
+    fs::remove(status_file_old);
+
+    b = fs::directory_iterator(updates_dir);
+    for (; b != e; ++b)
+    {
+        if (!fs::is_regular_file(b->status()))
+            continue;
+        fs::remove(b->path());
+    }
+
+    return current_status_db;
+}
+
+static std::string get_fullpkgname_from_listfile(const fs::path& path)
+{
+    auto ret = path.stem().generic_u8string();
+    std::replace(ret.begin(), ret.end(), '_', ':');
+    return ret;
+}
+
+static void write_update(const vcpkg_paths& paths, const StatusParagraph& p)
+{
+    static int update_id = 0;
+    auto my_update_id = update_id++;
+    auto tmp_update_filename = paths.vcpkg_dir_updates / "incomplete";
+    auto update_filename = paths.vcpkg_dir_updates / std::to_string(my_update_id);
+    std::fstream fs(tmp_update_filename, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
+    fs << p;
+    fs.close();
+    fs::rename(tmp_update_filename, update_filename);
+}
+
+static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryParagraph& bpgh)
+{
+    std::fstream listfile(paths.listfile_path(bpgh), std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
+
+    auto package_prefix_path = paths.package_dir(bpgh.spec);
+    auto prefix_length = package_prefix_path.native().size();
+
+    const triplet& target_triplet = bpgh.spec.target_triplet();
+    const std::string& target_triplet_as_string = target_triplet.canonical_name();
+    std::error_code ec;
+    fs::create_directory(paths.installed / target_triplet_as_string, ec);
+    listfile << target_triplet << "\n";
+
+    for (auto it = fs::recursive_directory_iterator(package_prefix_path); it != fs::recursive_directory_iterator(); ++it)
+    {
+        const auto& filename = it->path().filename();
+        if (fs::is_regular_file(it->status()) && (_stricmp(filename.generic_string().c_str(), "CONTROL") == 0 || _stricmp(filename.generic_string().c_str(), "BUILD_INFO") == 0))
+        {
+            // Do not copy the control file
+            continue;
+        }
+
+        auto suffix = it->path().generic_u8string().substr(prefix_length + 1);
+        auto target = paths.installed / target_triplet_as_string / suffix;
+
+        auto status = it->status(ec);
+        if (ec)
+        {
+            System::println(System::color::error, "failed: %s: %s", it->path().u8string(), ec.message());
+            continue;
+        }
+        if (fs::is_directory(status))
+        {
+            fs::create_directory(target, ec);
+            if (ec)
+            {
+                System::println(System::color::error, "failed: %s: %s", target.u8string(), ec.message());
+            }
+
+            listfile << target_triplet << "/" << suffix << "\n";
+        }
+        else if (fs::is_regular_file(status))
+        {
+            fs::copy_file(*it, target, ec);
+            if (ec)
+            {
+                System::println(System::color::error, "failed: %s: %s", target.u8string(), ec.message());
+            }
+            listfile << target_triplet << "/" << suffix << "\n";
+        }
+        else if (!fs::status_known(status))
+        {
+            System::println(System::color::error, "failed: %s: unknown status", it->path().u8string());
+        }
+        else
+            System::println(System::color::error, "failed: %s: cannot handle file type", it->path().u8string());
+    }
+
+    listfile.close();
+}
+
+void vcpkg::install_package(const vcpkg_paths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs& status_db)
+{
+    StatusParagraph spgh;
+    spgh.package = binary_paragraph;
+    spgh.want = want_t::install;
+    spgh.state = install_state_t::half_installed;
+    for (auto&& dep : spgh.package.depends)
+    {
+        if (status_db.find_installed(dep, spgh.package.spec.target_triplet()) == status_db.end())
+        {
+            Checks::unreachable();
+        }
+    }
+    write_update(paths, spgh);
+    status_db.insert(std::make_unique<StatusParagraph>(spgh));
+
+    install_and_write_listfile(paths, spgh.package);
+
+    spgh.state = install_state_t::installed;
+    write_update(paths, spgh);
+    status_db.insert(std::make_unique<StatusParagraph>(spgh));
+}
+
+enum class deinstall_plan
+{
+    not_installed,
+    dependencies_not_satisfied,
+    should_deinstall
+};
+
+static deinstall_plan deinstall_package_plan(
+    const StatusParagraphs::iterator package_it,
+    const StatusParagraphs& status_db,
+    std::vector<const StatusParagraph*>& dependencies_out)
+{
+    dependencies_out.clear();
+
+    if (package_it == status_db.end() || (*package_it)->state == install_state_t::not_installed)
+    {
+        return deinstall_plan::not_installed;
+    }
+
+    auto& pkg = (*package_it)->package;
+
+    for (auto&& inst_pkg : status_db)
+    {
+        if (inst_pkg->want != want_t::install)
+            continue;
+        if (inst_pkg->package.spec.target_triplet() != pkg.spec.target_triplet())
+            continue;
+
+        const auto& deps = inst_pkg->package.depends;
+
+        if (std::find(deps.begin(), deps.end(), pkg.spec.name()) != deps.end())
+        {
+            dependencies_out.push_back(inst_pkg.get());
+        }
+    }
+
+    if (!dependencies_out.empty())
+        return deinstall_plan::dependencies_not_satisfied;
+
+    return deinstall_plan::should_deinstall;
+}
+
+void vcpkg::deinstall_package(const vcpkg_paths& paths, const package_spec& spec, StatusParagraphs& status_db)
+{
+    auto package_it = status_db.find(spec.name(), spec.target_triplet());
+    if (package_it == status_db.end())
+    {
+        System::println(System::color::success, "Package %s is not installed", spec);
+        return;
+    }
+
+    auto& pkg = **package_it;
+
+    std::vector<const StatusParagraph*> deps;
+    auto plan = deinstall_package_plan(package_it, status_db, deps);
+    switch (plan)
+    {
+        case deinstall_plan::not_installed:
+            System::println(System::color::success, "Package %s is not installed", spec);
+            return;
+        case deinstall_plan::dependencies_not_satisfied:
+            System::println(System::color::error, "Error: Cannot remove package %s:", spec);
+            for (auto&& dep : deps)
+            {
+                System::println("  %s depends on %s", dep->package.displayname(), pkg.package.displayname());
+            }
+            exit(EXIT_FAILURE);
+        case deinstall_plan::should_deinstall:
+            break;
+        default:
+            Checks::unreachable();
+    }
+
+    pkg.want = want_t::purge;
+    pkg.state = install_state_t::half_installed;
+    write_update(paths, pkg);
+
+    std::fstream listfile(paths.listfile_path(pkg.package), std::ios_base::in | std::ios_base::binary);
+    if (listfile)
+    {
+        std::vector<fs::path> dirs_touched;
+        std::string suffix;
+        while (std::getline(listfile, suffix))
+        {
+            if (!suffix.empty() && suffix.back() == '\r')
+                suffix.pop_back();
+
+            std::error_code ec;
+
+            auto target = paths.installed / suffix;
+
+            auto status = fs::status(target, ec);
+            if (ec)
+            {
+                System::println(System::color::error, "failed: %s", ec.message());
+                continue;
+            }
+
+            if (fs::is_directory(status))
+            {
+                dirs_touched.push_back(target);
+            }
+            else if (fs::is_regular_file(status))
+            {
+                fs::remove(target, ec);
+                if (ec)
+                {
+                    System::println(System::color::error, "failed: %s: %s", target.u8string(), ec.message());
+                }
+            }
+            else if (!fs::status_known(status))
+            {
+                System::println(System::color::warning, "Warning: unknown status: %s", target.u8string());
+            }
+            else
+            {
+                System::println(System::color::warning, "Warning: %s: cannot handle file type", target.u8string());
+            }
+        }
+
+        auto b = dirs_touched.rbegin();
+        auto e = dirs_touched.rend();
+        for (; b != e; ++b)
+        {
+            if (fs::directory_iterator(*b) == fs::directory_iterator())
+            {
+                std::error_code ec;
+                fs::remove(*b, ec);
+                if (ec)
+                {
+                    System::println(System::color::error, "failed: %s", ec.message());
+                }
+            }
+        }
+
+        listfile.close();
+        fs::remove(paths.listfile_path(pkg.package));
+    }
+
+    pkg.state = install_state_t::not_installed;
+    write_update(paths, pkg);
+    System::println(System::color::success, "Package %s was successfully removed", pkg.package.displayname());
 }

@@ -1,4 +1,3 @@
-include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/boost_1_62_0)
 
@@ -8,6 +7,18 @@ vcpkg_download_distfile(ARCHIVE_FILE
     SHA512 5385ae3d5255a433a704169ad454d8dc2b0b5bcae3fb23defd6570df4ff7d845cf9fcbeebccdc1c5db0eec9f82ee3d90040de9507c8167467c635d3b215463be
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
+
+# apply boost range hotfix
+vcpkg_download_distfile(DIFF
+    URLS "https://github.com/boostorg/range/commit/e7ebe14707130cda7b72e0ae5e93b17157fdb6a2.diff"
+    FILENAME "boost-range-has_range_interator-hotfix_e7ebe14707130cda7b72e0ae5e93b17157fdb6a2.diff"
+    SHA512 77dad42bfd9bbab2bbddf361d5b7ad3dd6f812f4294c6dd1a677bb4d0191a4fff43bca32fdd4fce05d428562abb6e38afd0fd33ca6a8b5f28481d70cd2f3dd67
+)
+FILE(READ "${DIFF}" content)
+STRING(REGEX REPLACE "include/" "" content "${content}")
+set(DIFF2 ${CURRENT_BUILDTREES_DIR}/src/boost-range-has_range_interator-hotfix_e7ebe14707130cda7b72e0ae5e93b17157fdb6a2.diff.fixed)
+FILE(WRITE ${DIFF2} "${content}")
+vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${DIFF2})
 
 if(NOT EXISTS ${SOURCE_PATH}/b2.exe)
     message(STATUS "Bootstrapping")
@@ -30,13 +41,13 @@ set(B2_OPTIONS
 
 if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
     list(APPEND B2_OPTIONS runtime-link=shared)
-elseif()
+else()
     list(APPEND B2_OPTIONS runtime-link=static)
 endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     list(APPEND B2_OPTIONS link=shared)
-elseif()
+else()
     list(APPEND B2_OPTIONS link=static)
 endif()
 
@@ -98,8 +109,6 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/stage/lib/
         DESTINATION ${CURRENT_PACKAGES_DIR}/bin
         FILES_MATCHING PATTERN "*.dll")
-elseif()
-    message(STATUS ${VCPKG_LIBRARY_LINKAGE})
 endif()
 message(STATUS "Packaging ${TARGET_TRIPLET}-rel done")
 
@@ -111,8 +120,6 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/stage/lib/
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
         FILES_MATCHING PATTERN "*.dll")
-elseif()
-    message(STATUS ${VCPKG_LIBRARY_LINKAGE})
 endif()
 message(STATUS "Packaging ${TARGET_TRIPLET}-dbg done")
 

@@ -123,8 +123,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\include\BinaryParagraph.h" />
+    <ClInclude Include="..\include\BuildInfo.h" />
     <ClInclude Include="..\include\package_spec.h" />
     <ClInclude Include="..\include\package_spec_parse_result.h" />
+    <ClInclude Include="..\include\Paragraphs.h" />
     <ClInclude Include="..\include\SourceParagraph.h" />
     <ClInclude Include="..\include\StatusParagraph.h" />
     <ClInclude Include="..\include\StatusParagraphs.h" />
@@ -132,20 +134,22 @@
     <ClInclude Include="..\include\vcpkg.h" />
     <ClInclude Include="..\include\vcpkglib_helpers.h" />
     <ClInclude Include="..\include\vcpkg_paths.h" />
+    <ClInclude Include="..\include\vcpkg_info.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\BinaryParagraph.cpp" />
-    <ClCompile Include="..\src\lib.cpp" />
+    <ClCompile Include="..\src\BuildInfo.cpp" />
+    <ClCompile Include="..\src\vcpkg.cpp" />
     <ClCompile Include="..\src\package_spec.cpp" />
     <ClCompile Include="..\src\package_spec_parse_result.cpp" />
+    <ClCompile Include="..\src\Paragraphs.cpp" />
     <ClCompile Include="..\src\SourceParagraph.cpp" />
     <ClCompile Include="..\src\StatusParagraph.cpp" />
     <ClCompile Include="..\src\StatusParagraphs.cpp" />
     <ClCompile Include="..\src\triplet.cpp" />
-    <ClCompile Include="..\src\vcpkg.cpp" />
     <ClCompile Include="..\src\vcpkglib_helpers.cpp" />
     <ClCompile Include="..\src\vcpkg_paths.cpp" />
-    <ClCompile Include="..\src\vcpkg_version.cpp" />
+    <ClCompile Include="..\src\vcpkg_info.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

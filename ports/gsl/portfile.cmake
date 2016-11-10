@@ -1,3 +1,4 @@
+#header-only library
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/gsl-fd5ad87bf25cb5e87104ee58106dee9bc809cd93)
 vcpkg_download_distfile(ARCHIVE

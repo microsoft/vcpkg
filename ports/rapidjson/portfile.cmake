@@ -1,3 +1,4 @@
+#header-only library
 include(vcpkg_common_functions)
 SET(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/rapidjson-879def80f2e466cdf4c86dc7e53ea2dd4cafaea0)
 vcpkg_download_distfile(ARCHIVE

@@ -1,4 +1,7 @@
-include(${CMAKE_TRIPLET_FILE})
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(STATUS "Warning: Static building not supported yet. Building dynamic.") #Blocked by libbson
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
+endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mongo-cxx-driver-r3.0.2)
 
@@ -21,7 +24,7 @@ vcpkg_configure_cmake(
 		-DLIBMONGOC_DIR=${CURRENT_INSTALLED_DIR}
 )
 
-vcpkg_install_cmake()	
+vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)

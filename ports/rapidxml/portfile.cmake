@@ -1,3 +1,4 @@
+#header-only library
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/rapidxml-1.13)
 vcpkg_download_distfile(ARCHIVE

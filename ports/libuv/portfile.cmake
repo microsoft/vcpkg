@@ -1,3 +1,7 @@
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
+endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src/libuv-1.9.1)
 vcpkg_download_distfile(ARCHIVE

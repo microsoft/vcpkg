@@ -2,10 +2,8 @@
 #include <Windows.h>
 #include "vcpkg_cmd_arguments.h"
 #include "vcpkg_Commands.h"
-#include "vcpkg_Graphs.h"
 #include <unordered_set>
 #include "metrics.h"
-#include "vcpkg.h"
 #include "vcpkg_System.h"
 
 namespace vcpkg

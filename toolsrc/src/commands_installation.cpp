@@ -8,20 +8,25 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Dependencies.h"
 #include "vcpkg_Input.h"
+#include "vcpkg_Maps.h"
+#include "Paragraphs.h"
+#include "vcpkg_info.h"
 
 namespace vcpkg
 {
-    static void create_binary_control_file(const vcpkg_paths& paths, const fs::path& port_dir, const triplet& target_triplet)
+    static void create_binary_control_file(const vcpkg_paths& paths, const SourceParagraph& source_paragraph, const triplet& target_triplet)
     {
-        auto pghs = get_paragraphs(port_dir / "CONTROL");
-        Checks::check_exit(pghs.size() == 1, "Error: invalid control file");
-        auto bpgh = BinaryParagraph(SourceParagraph(pghs[0]), target_triplet);
+        auto bpgh = BinaryParagraph(source_paragraph, target_triplet);
         const fs::path binary_control_file = paths.packages / bpgh.dir() / "CONTROL";
         std::ofstream(binary_control_file) << bpgh;
     }
 
     static void build_internal(const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir)
     {
+        auto pghs = Paragraphs::get_paragraphs(port_dir / "CONTROL");
+        Checks::check_exit(pghs.size() == 1, "Error: invalid control file");
+        SourceParagraph source_paragraph(pghs[0]);
+
         const fs::path ports_cmake_script_path = paths.ports_cmake;
         auto&& target_triplet = spec.target_triplet();
         const std::wstring command = Strings::wformat(LR"("%%VS140COMNTOOLS%%..\..\VC\vcvarsall.bat" %s && cmake -DCMD=BUILD -DPORT=%s -DTARGET_TRIPLET=%s "-DCURRENT_PORT_DIR=%s/." -P "%s")",
@@ -46,7 +51,7 @@ namespace vcpkg
                             "  Vcpkg version: %s\n"
                             "\n"
                             "Additionally, attach any relevant sections from the log files above."
-                            , to_string(spec), version());
+                            , to_string(spec), Info::version());
             TrackProperty("error", "build failed");
             TrackProperty("build_error", to_string(spec));
             exit(EXIT_FAILURE);
@@ -54,7 +59,7 @@ namespace vcpkg
 
         perform_all_checks(spec, paths);
 
-        create_binary_control_file(paths, port_dir, target_triplet);
+        create_binary_control_file(paths, source_paragraph, target_triplet);
 
         // const fs::path port_buildtrees_dir = paths.buildtrees / spec.name;
         // delete_directory(port_buildtrees_dir);
@@ -108,7 +113,7 @@ namespace vcpkg
                     }
                 }
 
-                auto pghs = parse_paragraphs(file_contents.get_or_throw());
+                auto pghs = Paragraphs::parse_paragraphs(file_contents.get_or_throw());
                 Checks::check_throw(pghs.size() == 1, "multiple paragraphs in control file");
                 install_package(paths, BinaryParagraph(pghs[0]), status_db);
                 System::println(System::color::success, "Package %s is installed", spec);
@@ -135,7 +140,16 @@ namespace vcpkg
 
         const package_spec spec = Input::check_and_get_package_spec(args.command_arguments.at(0), default_target_triplet, example.c_str());
         Input::check_triplet(spec.target_triplet(), paths);
-        std::unordered_set<package_spec> unmet_dependencies = Dependencies::find_unmet_dependencies(paths, spec, status_db);
+
+        // Explicitly load and use the portfile's build dependencies when resolving the build command (instead of a cached package's dependencies).
+        auto first_level_deps = Dependencies::get_unmet_package_build_dependencies(paths, spec);
+        std::vector<package_spec> first_level_deps_specs;
+        for (auto&& dep : first_level_deps)
+        {
+            first_level_deps_specs.push_back(package_spec::from_name_and_triplet(dep, spec.target_triplet()).get_or_throw());
+        }
+
+        std::unordered_set<package_spec> unmet_dependencies = Dependencies::get_unmet_dependencies(paths, first_level_deps_specs, status_db);
         if (!unmet_dependencies.empty())
         {
             System::println(System::color::error, "The build command requires all dependencies to be already installed.");

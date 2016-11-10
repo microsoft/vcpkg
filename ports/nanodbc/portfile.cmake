@@ -1,4 +1,7 @@
-include(${CMAKE_TRIPLET_FILE})
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
+endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/nanodbc-2.12.4)
 
@@ -11,7 +14,7 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES 
+    PATCHES
 		${CMAKE_CURRENT_LIST_DIR}/0001_cmake.patch
 		${CMAKE_CURRENT_LIST_DIR}/0002_msvc14_codecvt.patch
 		${CMAKE_CURRENT_LIST_DIR}/0003_export_def.patch
@@ -26,7 +29,7 @@ vcpkg_configure_cmake(
 		-DNANODBC_USE_UNICODE=ON
 )
 
-vcpkg_install_cmake()	
+vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

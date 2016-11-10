@@ -19,7 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\test.cpp" />
+    <ClCompile Include="..\src\tests_dependencies.cpp" />
+    <ClCompile Include="..\src\tests_paragraph.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\vcpkgcommon\vcpkgcommon.vcxproj">
@@ -116,7 +117,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;$(VCInstallDir)UnitTest\include;C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
       <PrecompiledHeaderFile />

@@ -34,9 +34,9 @@ namespace vcpkg {namespace COFFFileReader
         return data;
     }
 
-    static void verify_equal_strings(const char* expected, const char* actual, int size)
+    static void verify_equal_strings(const char* expected, const char* actual, int size, const char* label)
     {
-        Checks::check_exit(memcmp(expected, actual, size) == 0, "Incorrect string found. Expected: %s but found %s", expected, actual);
+        Checks::check_exit(memcmp(expected, actual, size) == 0, "Incorrect string (%s) found. Expected: %s but found %s", label, expected, actual);
     }
 
     static void read_and_verify_PE_signature(fstream& fs)
@@ -52,7 +52,7 @@ namespace vcpkg {namespace COFFFileReader
         fs.seekg(offset_to_PE_signature);
         char signature[PE_SIGNATURE_SIZE];
         fs.read(signature, PE_SIGNATURE_SIZE);
-        verify_equal_strings(PE_SIGNATURE, signature, PE_SIGNATURE_SIZE);
+        verify_equal_strings(PE_SIGNATURE, signature, PE_SIGNATURE_SIZE, "PE_SIGNATURE");
         fs.seekg(offset_to_PE_signature + PE_SIGNATURE_SIZE, ios_base::beg);
     }
 
@@ -114,7 +114,7 @@ namespace vcpkg {namespace COFFFileReader
             fs.read(&ret.data[0], HEADER_SIZE);
 
             const std::string header_end = ret.data.substr(HEADER_END_OFFSET, HEADER_END_SIZE);
-            verify_equal_strings(HEADER_END, header_end.c_str(), HEADER_END_SIZE);
+            verify_equal_strings(HEADER_END, header_end.c_str(), HEADER_END_SIZE, "LIB HEADER_END");
 
             return ret;
         }
@@ -207,7 +207,7 @@ namespace vcpkg {namespace COFFFileReader
 
         char file_start[FILE_START_SIZE];
         fs.read(file_start, FILE_START_SIZE);
-        verify_equal_strings(FILE_START, file_start, FILE_START_SIZE);
+        verify_equal_strings(FILE_START, file_start, FILE_START_SIZE, "LIB FILE_START");
     }
 
     dll_info read_dll(const fs::path path)

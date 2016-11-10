@@ -6,7 +6,6 @@
 #   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
 #
 
-include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 #downloading 3.5 from their SVN repo and not the release tarball
 #because the 3.5 release did not build on windows, and fixes were backported
@@ -36,10 +35,11 @@ file(COPY ${CURRENT_BUILDTREES_DIR}/src/3.5/COPYING DESTINATION ${CURRENT_PACKAG
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/geos/COPYING ${CURRENT_PACKAGES_DIR}/share/geos/copyright)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libgeos.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libgeos.lib)
-    vcpkg_copy_pdbs()
 else()
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/geos.lib ${CURRENT_PACKAGES_DIR}/debug/lib/geos.lib)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/geos_c.lib ${CURRENT_PACKAGES_DIR}/debug/lib/geos_c.lib)
 
 endif()
+
+vcpkg_copy_pdbs()

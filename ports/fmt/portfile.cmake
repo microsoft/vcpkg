@@ -1,3 +1,7 @@
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
+    set(VCPKG_LIBRARY_LINKAGE static)
+endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fmt-3.0.0)
 vcpkg_download_distfile(ARCHIVE_FILE
@@ -27,5 +31,6 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/fmt/fmt-targets.cmake ${CURRENT_PA
 file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/cmake)
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/fmt/fmt-targets.cmake ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-debug.cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake)
 
 vcpkg_copy_pdbs()

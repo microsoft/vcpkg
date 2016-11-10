@@ -1,0 +1,25 @@
+From 0046f290a31b603a4caa9b728b54447b95ee5aa1 Mon Sep 17 00:00:00 2001
+From: vlj <vljn.ovi@gmail.com>
+Date: Mon, 24 Oct 2016 23:59:55 +0200
+Subject: [PATCH] Add vorbisenc.c to vorbis library.
+
+---
+ lib/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index a682ed4..2043294 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -68,7 +68,7 @@ include_directories(.)
+ include_directories(${OGG_INCLUDE_DIRS})
+ 
+ if (NOT BUILD_FRAMEWORK)
+-    add_library(vorbis ${VORBIS_HEADERS} ${VORBIS_SOURCES})
++    add_library(vorbis ${VORBIS_HEADERS} ${VORBIS_SOURCES} ${VORBISENC_SOURCES})
+     add_library(vorbisenc ${VORBISENC_SOURCES})
+     add_library(vorbisfile ${VORBISFILE_SOURCES})
+ 
+-- 
+2.10.0.windows.1
+

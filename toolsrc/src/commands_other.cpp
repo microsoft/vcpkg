@@ -1,6 +1,5 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
-#include "vcpkg.h"
 
 namespace vcpkg
 {
@@ -14,6 +13,7 @@ namespace vcpkg
             "  vcpkg remove --purge <pkg>      Uninstall and delete a package. \n"
             "  vcpkg list                      List installed packages\n"
             "  vcpkg update                    Display list of packages for updating\n"
+            "  vcpkg hash <file> [alg]         Hash a file by specific algorithm, default SHA512\n"
             "\n"
             "%s" // Integration help
             "\n"
@@ -85,6 +85,7 @@ namespace vcpkg
             {"import", import_command},
             {"cache", cache_command},
             {"internal_test", internal_test_command},
+            {"portsdiff", portsdiff_command}
         };
         return t;
     }
@@ -93,7 +94,8 @@ namespace vcpkg
     {
         static std::vector<package_name_and_function<command_type_c>> t = {
             {"version", &version_command},
-            {"contact", &contact_command}
+            {"contact", &contact_command},
+            {"hash", &hash_command},
         };
         return t;
     }

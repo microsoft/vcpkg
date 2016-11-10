@@ -1,3 +1,4 @@
+#header-only library
 include(vcpkg_common_functions)
 SET(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/asio-asio-1-10-6/asio/)
 vcpkg_download_distfile(ARCHIVE
@@ -13,4 +14,3 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/asio/COPYING ${CURRENT_PACKAGES_DIR}/s
 
 # Copy the asio header files
 file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR} FILES_MATCHING PATTERN "*.hpp" PATTERN "*.ipp")
-vcpkg_copy_pdbs()

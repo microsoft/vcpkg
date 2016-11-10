@@ -33,21 +33,42 @@ message(STATUS "Adding worktree and patching done")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src
-    OPTIONS
-        -DBUILD_SHARED_LIBS=ON
 )
 
 vcpkg_install_cmake()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-file(RENAME ${CURRENT_PACKAGES_DIR}/cmake ${CURRENT_PACKAGES_DIR}/share/gflags)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gflags.dll ${CURRENT_PACKAGES_DIR}/bin/gflags.dll)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gflags_nothreads.dll ${CURRENT_PACKAGES_DIR}/bin/gflags_nothreads.dll)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gflags.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gflags.dll)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gflags_nothreads.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gflags_nothreads.dll)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gflags.dll ${CURRENT_PACKAGES_DIR}/bin/gflags.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gflags_nothreads.dll ${CURRENT_PACKAGES_DIR}/bin/gflags_nothreads.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gflags.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gflags.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gflags_nothreads.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gflags_nothreads.dll)
+endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
+file(RENAME ${CURRENT_PACKAGES_DIR}/cmake ${CURRENT_PACKAGES_DIR}/share/gflags)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+file(READ ${CURRENT_PACKAGES_DIR}/debug/cmake/gflags-export-debug.cmake GFLAGS_DEBUG_MODULE)
+string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" GFLAGS_DEBUG_MODULE "${GFLAGS_DEBUG_MODULE}")
+string(REPLACE "/Lib/gflags.dll" "/bin/gflags.dll" GFLAGS_DEBUG_MODULE "${GFLAGS_DEBUG_MODULE}")
+string(REPLACE "/Lib/gflags_nothreads.dll" "/bin/gflags_nothreads.dll" GFLAGS_DEBUG_MODULE "${GFLAGS_DEBUG_MODULE}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/gflags/gflags-export-debug.cmake "${GFLAGS_DEBUG_MODULE}")
+
+file(READ ${CURRENT_PACKAGES_DIR}/share/gflags/gflags-export-release.cmake GFLAGS_RELEASE_MODULE)
+string(REPLACE "/Lib/gflags.dll" "/bin/gflags.dll" GFLAGS_RELEASE_MODULE "${GFLAGS_RELEASE_MODULE}")
+string(REPLACE "/Lib/gflags_nothreads.dll" "/bin/gflags_nothreads.dll" GFLAGS_RELEASE_MODULE "${GFLAGS_RELEASE_MODULE}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/gflags/gflags-export-release.cmake "${GFLAGS_RELEASE_MODULE}")
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
+
+file(READ ${CURRENT_PACKAGES_DIR}/share/gflags/gflags-export.cmake GFLAGS_CONFIG_MODULE)
+string(REPLACE "get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
+               "get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
+               GFLAGS_CONFIG_MODULE "${GFLAGS_CONFIG_MODULE}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/gflags/gflags-export.cmake ${GFLAGS_CONFIG_MODULE})
 
 file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/gflags RENAME copyright)
+
 
 vcpkg_copy_pdbs()

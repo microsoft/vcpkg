@@ -5,13 +5,14 @@
 #include <fstream>
 #include <memory>
 #include <cassert>
-#include "vcpkg.h"
 #include "vcpkg_Commands.h"
 #include "metrics.h"
 #include <Shlobj.h>
 #include "vcpkg_Files.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Input.h"
+#include "Paragraphs.h"
+#include "vcpkg_info.h"
 
 using namespace vcpkg;
 
@@ -115,7 +116,7 @@ static void loadConfig()
         std::string config_contents = Files::get_contents(localappdata / "vcpkg" / "config").get_or_throw();
 
         std::unordered_map<std::string, std::string> keys;
-        auto pghs = parse_paragraphs(config_contents);
+        auto pghs = Paragraphs::parse_paragraphs(config_contents);
         if (pghs.size() > 0)
             keys = pghs[0];
 
@@ -191,7 +192,7 @@ int wmain(const int argc, const wchar_t* const* const argv)
             Flush();
         });
 
-    TrackProperty("version", version());
+    TrackProperty("version", Info::version());
 
     const std::string trimmed_command_line = trim_path_from_command_line(Strings::utf16_to_utf8(GetCommandLineW()));
     TrackProperty("cmdline", trimmed_command_line);
@@ -233,10 +234,10 @@ int wmain(const int argc, const wchar_t* const* const argv)
     std::cerr
         << "vcpkg.exe has crashed.\n"
         << "Please send an email to:\n"
-        << "    vcpkg@microsoft.com\n"
+        << "    " << Info::email() << "\n"
         << "containing a brief summary of what you were trying to do and the following data blob:\n"
         << "\n"
-        << "Version=" << version() << "\n"
+        << "Version=" << Info::version() << "\n"
         << "EXCEPTION='" << exc_msg << "'\n"
         << "CMD=\n";
     for (int x = 0; x < argc; ++x)
