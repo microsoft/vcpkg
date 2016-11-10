@@ -4,14 +4,31 @@
 
 namespace vcpkg
 {
-    std::string BuildType::toString() const
+    const ConfigurationType& BuildType::config() const
     {
-        return Strings::format("[%s,%s]", to_string(config), to_string(linkage));
+        return this->m_config;
+    }
+
+    const LinkageType& BuildType::linkage() const
+    {
+        return this->m_linkage;
+    }
+
+    const std::regex& BuildType::crt_regex() const
+    {
+        static const std::regex r(this->m_crt_regex_as_string);
+        return r;
+    }
+
+    const std::string& BuildType::toString() const
+    {
+        static const std::string s = Strings::format("[%s,%s]", to_string(this->m_config), to_string(this->m_linkage));
+        return s;
     }
 
     bool operator==(const BuildType& lhs, const BuildType& rhs)
     {
-        return lhs.config == rhs.config && lhs.linkage == rhs.linkage;
+        return lhs.config() == rhs.config() && lhs.linkage() == rhs.linkage();
     }
 
     bool operator!=(const BuildType& lhs, const BuildType& rhs)
@@ -35,10 +52,10 @@ namespace vcpkg
         return build_info;
     }
 
-    const BuildType BuildType::DEBUG_STATIC = BuildType(ConfigurationType::DEBUG, LinkageType::STATIC);
-    const BuildType BuildType::DEBUG_DYNAMIC = BuildType(ConfigurationType::DEBUG, LinkageType::DYNAMIC);
-    const BuildType BuildType::RELEASE_STATIC = BuildType(ConfigurationType::RELEASE, LinkageType::STATIC);
-    const BuildType BuildType::RELEASE_DYNAMIC = BuildType(ConfigurationType::RELEASE, LinkageType::DYNAMIC);
+    const BuildType BuildType::DEBUG_STATIC = BuildType(ConfigurationType::DEBUG, LinkageType::STATIC, R"(/DEFAULTLIB:LIBCMTD)");
+    const BuildType BuildType::DEBUG_DYNAMIC = BuildType(ConfigurationType::DEBUG, LinkageType::DYNAMIC, R"(/DEFAULTLIB:MSVCRTD)");
+    const BuildType BuildType::RELEASE_STATIC = BuildType(ConfigurationType::RELEASE, LinkageType::STATIC, R"(/DEFAULTLIB:LIBCMT[^D])");
+    const BuildType BuildType::RELEASE_DYNAMIC = BuildType(ConfigurationType::RELEASE, LinkageType::DYNAMIC, R"(/DEFAULTLIB:MSVCRT[^D])");
 
     LinkageType linkage_type_value_of(const std::string& as_string)
 
