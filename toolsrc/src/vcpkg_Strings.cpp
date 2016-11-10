@@ -77,7 +77,7 @@ namespace vcpkg {namespace Strings
 
         output.append(v.at(0));
 
-        for (int i = 1; i < size; ++i)
+        for (size_t i = 1; i < size; ++i)
         {
             output.append(delimiter);
             output.append(v.at(i));
