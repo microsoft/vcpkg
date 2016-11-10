@@ -19,7 +19,6 @@ class VcpkgwrapperTestConan(ConanFile):
     def port_example(self):
         possibles = [os.path.join("port_examples", "%s.cpp" % self.port), 
                      os.path.join("port_examples", "%s.c" % self.port),]
-        possibles = [] # Until we solve the package_info problem, don't test anything
         for filename in possibles:
             if os.path.exists(os.path.join(self.conanfile_directory, filename)):
                 return filename.replace("\\", "\\\\")
