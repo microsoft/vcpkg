@@ -509,7 +509,6 @@ namespace vcpkg
 
         lint_status output_status = lint_status::SUCCESS;
 
-        std::vector<fs::path> libs_with_no_crts;
         std::vector<fs::path> libs_with_multiple_crts;
 
         BuildInfo_and_files libs_with_debug_static_crt(BuildType::DEBUG_STATIC);
@@ -532,7 +531,7 @@ namespace vcpkg
 
             if (crts_found_count == 0)
             {
-                libs_with_no_crts.push_back(lib);
+                // It can be valid for no crt to be detected. For example: openssl
                 continue;
             }
 
@@ -561,13 +560,6 @@ namespace vcpkg
             }
 
             libs_with_release_dynamic_crt.files.push_back(lib);
-        }
-
-        if (!libs_with_no_crts.empty())
-        {
-            System::println(System::color::warning, "Could not detect the crt linkage in the following libs:");
-            print_vector_of_files(libs_with_no_crts);
-            output_status = lint_status::ERROR_DETECTED;
         }
 
         if (!libs_with_multiple_crts.empty())
@@ -658,10 +650,8 @@ namespace vcpkg
 
                     error_count += check_bin_folders_are_not_present_in_static_build(spec, paths);
 
-#if 0
                     error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::DEBUG, linkage_type_value_of(build_info.crt_linkage)), debug_libs);
                     error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::RELEASE, linkage_type_value_of(build_info.crt_linkage)), release_libs);
-#endif
                     break;
                 }
             case LinkageType::UNKNOWN:
