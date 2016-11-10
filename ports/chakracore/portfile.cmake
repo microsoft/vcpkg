@@ -3,7 +3,6 @@
     set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
 include(vcpkg_common_functions)
-find_program(POWERSHELL powershell)
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ChakraCore-1.3.0)
 vcpkg_download_distfile(ARCHIVE_FILE
