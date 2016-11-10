@@ -535,6 +535,51 @@ namespace vcpkg
         return lint_status::SUCCESS;
     }
 
+    struct OutdatedDynamicCrt_and_file
+    {
+        fs::path file;
+        OutdatedDynamicCrt outdated_crt;
+    };
+
+    static lint_status check_outdated_crt_linkage_of_dlls(const std::vector<fs::path>& dlls)
+    {
+        const std::vector<OutdatedDynamicCrt> outdated_crts = OutdatedDynamicCrt::values();
+
+        std::vector<OutdatedDynamicCrt_and_file> dlls_with_outdated_crt;
+
+        for (const fs::path& dll : dlls)
+        {
+            const std::wstring cmd_line = Strings::wformat(LR"("%s" /dependents "%s")", DUMPBIN_EXE.native(), dll.native());
+            System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
+            Checks::check_exit(ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
+
+            for (const OutdatedDynamicCrt& outdated_crt : outdated_crts)
+            {
+                if (std::regex_search(ec_data.output.cbegin(), ec_data.output.cend(), outdated_crt.crt_regex()))
+                {
+                    dlls_with_outdated_crt.push_back({dll, outdated_crt});
+                    break;
+                }
+            }
+        }
+
+        if (!dlls_with_outdated_crt.empty())
+        {
+            System::println(System::color::warning, "Detected outdated dynamic CRT in the following files:");
+            System::println("");
+            for (const OutdatedDynamicCrt_and_file btf : dlls_with_outdated_crt)
+            {
+                System::println("    %s: %s", btf.file.generic_string(), btf.outdated_crt.toString());
+            }
+            System::println("");
+
+            System::println(System::color::warning, "To inspect the dll files, use:\n    dumpbin.exe /dependents mydllfile.dll");
+            return lint_status::ERROR_DETECTED;
+        }
+
+        return lint_status::SUCCESS;
+    }
+
     static void operator +=(size_t& left, const lint_status& right)
     {
         left += static_cast<size_t>(right);
@@ -584,6 +629,8 @@ namespace vcpkg
                     error_count += check_exports_of_dlls(dlls);
                     error_count += check_uwp_bit_of_dlls(spec.target_triplet().system(), dlls);
                     error_count += check_dll_architecture(spec.target_triplet().architecture(), dlls);
+
+                    error_count += check_outdated_crt_linkage_of_dlls(dlls);
                     break;
                 }
             case LinkageType::STATIC:

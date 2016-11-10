@@ -87,7 +87,6 @@ namespace vcpkg
     }
 
     std::string to_string(const ConfigurationType& conf)
-
     {
         switch (conf)
         {
@@ -131,5 +130,25 @@ namespace vcpkg
         Checks::check_throw(pghs.size() == 1, "Invalid BUILD_INFO file for package");
 
         return BuildInfo::create(pghs[0]);
+    }
+
+    const OutdatedDynamicCrt OutdatedDynamicCrt::MSVCP100_DLL = OutdatedDynamicCrt("msvcp100.dll", R"(msvcp100\.dll)");
+    const OutdatedDynamicCrt OutdatedDynamicCrt::MSVCP100D_DLL = OutdatedDynamicCrt("msvcp100d.dll", R"(msvcp100d\.dll)");
+    const OutdatedDynamicCrt OutdatedDynamicCrt::MSVCP110_DLL = OutdatedDynamicCrt("msvcp110.dll", R"(msvcp110\.dll)");
+    const OutdatedDynamicCrt OutdatedDynamicCrt::MSVCP110_WIN_DLL = OutdatedDynamicCrt("msvcp110_win.dll", R"(msvcp110_win\.dll)");
+    const OutdatedDynamicCrt OutdatedDynamicCrt::MSVCP120_DLL = OutdatedDynamicCrt("msvcp120.dll", R"(msvcp120\.dll)");
+    const OutdatedDynamicCrt OutdatedDynamicCrt::MSVCP120_CLR0400_DLL = OutdatedDynamicCrt("msvcp120_clr0400.dll", R"(msvcp120_clr0400\.dll)");
+    const OutdatedDynamicCrt OutdatedDynamicCrt::MSVCP60_DLL = OutdatedDynamicCrt("msvcp60.dll", R"(msvcp60\.dll)");
+    const OutdatedDynamicCrt OutdatedDynamicCrt::MSVCP_WIN_DLL = OutdatedDynamicCrt("msvcp60.dll", R"(msvcp60\.dll)");;
+
+    const std::regex& OutdatedDynamicCrt::crt_regex() const
+    {
+        static const std::regex r(this->m_crt_regex_as_string, std::regex_constants::icase);
+        return r;
+    }
+
+    const std::string& OutdatedDynamicCrt::toString() const
+    {
+        return this->m_dll_name;
     }
 }
