@@ -16,7 +16,7 @@ namespace vcpkg
 
     const std::regex& BuildType::crt_regex() const
     {
-        static const std::regex r(this->m_crt_regex_as_string);
+        static const std::regex r(this->m_crt_regex_as_string, std::regex_constants::icase);
         return r;
     }
 
