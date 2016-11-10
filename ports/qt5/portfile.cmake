@@ -144,4 +144,6 @@ vcpkg_execute_required_process(
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.LGPLv3 DESTINATION  ${CURRENT_PACKAGES_DIR}/share/qt5 RENAME copyright)
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/plugins/gamepads)
+
 vcpkg_copy_pdbs()
