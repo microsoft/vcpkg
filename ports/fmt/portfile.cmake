@@ -1,7 +1,7 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+#if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+#    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
+#    set(VCPKG_LIBRARY_LINKAGE static)
+#endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fmt-3.0.0)
 vcpkg_download_distfile(ARCHIVE_FILE
@@ -14,6 +14,7 @@ vcpkg_extract_source_archive(${ARCHIVE_FILE})
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        -DFMT_CMAKE_DIR=share/fmt
         -DFMT_TEST=OFF
         -DFMT_DOC=OFF
 )
@@ -21,16 +22,20 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 file(INSTALL ${SOURCE_PATH}/LICENSE.rst DESTINATION ${CURRENT_PACKAGES_DIR}/share/fmt RENAME copyright)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/fmt.dll ${CURRENT_PACKAGES_DIR}/bin/fmt.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/fmt.dll ${CURRENT_PACKAGES_DIR}/debug/bin/fmt.dll)
+
+endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/include/fmt/format.cc)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/include/fmt/ostream.cc)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/fmt/fmt-config-version.cmake ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-config-version.cmake)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/fmt/fmt-config.cmake ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-config.cmake)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/fmt/fmt-targets-release.cmake ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-release.cmake)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/fmt/fmt-targets.cmake ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets.cmake)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/cmake)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/fmt/fmt-targets.cmake ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-debug.cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake)
+file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/fmt/fmt-targets-debug.cmake ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-debug.cmake)
+file(READ ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-debug.cmake FMT_DEBUG_MODULE)
+string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" FMT_DEBUG_MODULE "${FMT_DEBUG_MODULE}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-debug.cmake "${FMT_DEBUG_MODULE}")
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 vcpkg_copy_pdbs()
