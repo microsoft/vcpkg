@@ -1,5 +1,5 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libzmq-1a02b1b3f2fde6288579cbb0ff9a0b1f195e1812)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/zeromq-4.2.0)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/zeromq/libzmq/releases/download/v4.2.0/zeromq-4.2.0.tar.gz"
     FILENAME "zeromq-4.2.0.tar.gz"
