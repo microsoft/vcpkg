@@ -17,7 +17,6 @@ vcpkg_extract_source_archive(${ARCHIVE})
 set(PDC_NMAKE_CMD ${NMAKE} -f vcwin32.mak WIDE=Y UTF8=Y)
 set(PDC_NMAKE_CWD ${SOURCE_PATH}/win32)
 set(PDC_PDCLIB ${SOURCE_PATH}/win32/pdcurses)
-set(PDC_OUTPUT bin)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(PDC_NMAKE_CMD ${PDC_NMAKE_CMD} DLL=Y)
