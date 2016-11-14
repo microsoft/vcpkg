@@ -130,6 +130,12 @@ foreach(file ${DEBUG_PLUGINS})
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/plugins/${rel_dir}")
     file(RENAME ${file} "${CURRENT_PACKAGES_DIR}/debug/plugins/${rel_dir}/${file_n}")
 endforeach()
+file(RENAME 
+	${CURRENT_PACKAGES_DIR}/debug/plugins/gamepads/xinputgamepadd.dll
+	${CURRENT_PACKAGES_DIR}/plugins/gamepads/xinputgamepad.dll)
+file(RENAME 
+	${CURRENT_PACKAGES_DIR}/debug/plugins/gamepads/xinputgamepadd.pdb
+	${CURRENT_PACKAGES_DIR}/plugins/gamepads/xinputgamepad.pdb)
 
 if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL dynamic)
     file(GLOB RELEASE_DLLS "${CURRENT_PACKAGES_DIR}/bin/*.dll")
@@ -143,7 +149,5 @@ vcpkg_execute_required_process(
 )
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.LGPLv3 DESTINATION  ${CURRENT_PACKAGES_DIR}/share/qt5 RENAME copyright)
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/plugins/gamepads)
 
 vcpkg_copy_pdbs()
