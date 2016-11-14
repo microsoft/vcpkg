@@ -131,10 +131,10 @@ foreach(file ${DEBUG_PLUGINS})
     file(RENAME ${file} "${CURRENT_PACKAGES_DIR}/debug/plugins/${rel_dir}/${file_n}")
 endforeach()
 file(RENAME 
-	${CURRENT_PACKAGES_DIR}/debug/plugins/gamepads/xinputgamepadd.dll
+	${CURRENT_PACKAGES_DIR}/debug/plugins/gamepads/xinputgamepad.dll
 	${CURRENT_PACKAGES_DIR}/plugins/gamepads/xinputgamepad.dll)
 file(RENAME 
-	${CURRENT_PACKAGES_DIR}/debug/plugins/gamepads/xinputgamepadd.pdb
+	${CURRENT_PACKAGES_DIR}/debug/plugins/gamepads/xinputgamepad.pdb
 	${CURRENT_PACKAGES_DIR}/plugins/gamepads/xinputgamepad.pdb)
 
 if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL dynamic)
