@@ -90,14 +90,14 @@ message(STATUS "Packaging headers")
 file(
     COPY ${SOURCE_PATH}/boost
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
-    PATTERN "config/user.hpp" EXCLUDE
 )
-file(COPY ${SOURCE_PATH}/boost/config/user.hpp
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include/boost/config/
-)
-file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp
-    "\n#define BOOST_ALL_DYN_LINK\n"
-)
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp
+        "\n#define BOOST_ALL_DYN_LINK\n"
+    )
+endif()
+
 file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/boost RENAME copyright)
 message(STATUS "Packaging headers done")
 
