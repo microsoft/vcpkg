@@ -1,0 +1,47 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0d78e1c..c952b2f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -16,4 +16,21 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+ 
+ add_subdirectory(src/signalrclient)
+-add_subdirectory(test)
++#add_subdirectory(test)
++
++set(HEADERS 
++	include/signalrclient/_exports.h
++	include/signalrclient/connection.h
++	include/signalrclient/connection_state.h
++	include/signalrclient/hub_connection.h
++	include/signalrclient/hub_exception.h
++	include/signalrclient/hub_proxy.h
++	include/signalrclient/log_writer.h
++	include/signalrclient/trace_level.h
++	include/signalrclient/transport_type.h
++	include/signalrclient/web_exception.h)
++
++install(
++  FILES ${HEADERS}
++  DESTINATION "include/signalrclient"
++)
+\ No newline at end of file
+diff --git a/src/signalrclient/CMakeLists.txt b/src/signalrclient/CMakeLists.txt
+index 76a5e1b..47e7dc3 100644
+--- a/src/signalrclient/CMakeLists.txt
++++ b/src/signalrclient/CMakeLists.txt
+@@ -24,4 +24,13 @@ set (SOURCES
+ 
+ add_library (signalrclient SHARED ${SOURCES})
+ 
++add_definitions(-DUNICODE -D_UNICODE)
++
+ target_link_libraries(signalrclient ${CPPREST_SO})
++
++install(
++  TARGETS signalrclient
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib
++  RUNTIME DESTINATION bin
++)
+\ No newline at end of file
