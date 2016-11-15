@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <unordered_set>
 
 namespace vcpkg { namespace Graphs
 {
@@ -21,7 +22,7 @@ namespace vcpkg { namespace Graphs
     {
         static void find_topological_sort_internal(V vertex,
                                                    ExplorationStatus& status,
-                                                   const std::unordered_map<V, std::vector<V>>& adjacency_list,
+                                                   const std::unordered_map<V, std::unordered_set<V>>& adjacency_list,
                                                    std::unordered_map<V, ExplorationStatus>& exploration_status,
                                                    std::vector<V>& sorted)
         {
@@ -63,7 +64,7 @@ namespace vcpkg { namespace Graphs
         void add_edge(V u, V v)
         {
             this->vertices[v];
-            this->vertices[u].push_back(v);
+            this->vertices[u].insert(v);
         }
 
         std::vector<V> find_topological_sort() const
@@ -108,12 +109,12 @@ namespace vcpkg { namespace Graphs
             return indegrees;
         }
 
-        const std::unordered_map<V, std::vector<V>>& adjacency_list() const
+        const std::unordered_map<V, std::unordered_set<V>>& adjacency_list() const
         {
             return this->vertices;
         }
 
     private:
-        std::unordered_map<V, std::vector<V>> vertices;
+        std::unordered_map<V, std::unordered_set<V>> vertices;
     };
 }}
