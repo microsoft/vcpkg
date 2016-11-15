@@ -20,5 +20,11 @@ namespace vcpkg {namespace Dependencies
         std::unique_ptr<SourceParagraph> spgh;
     };
 
-    std::vector<std::pair<package_spec, install_plan_action>> create_install_plan(const vcpkg_paths& paths, const std::vector<package_spec>& specs, const StatusParagraphs& status_db);
+    struct package_spec_with_install_plan
+    {
+        package_spec spec;
+        install_plan_action install_plan;
+    };
+
+    std::vector<package_spec_with_install_plan> create_install_plan(const vcpkg_paths& paths, const std::vector<package_spec>& specs, const StatusParagraphs& status_db);
 }}

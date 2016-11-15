@@ -11,7 +11,7 @@
 
 namespace vcpkg { namespace Dependencies
 {
-    std::vector<std::pair<package_spec, install_plan_action>> create_install_plan(const vcpkg_paths& paths, const std::vector<package_spec>& specs, const StatusParagraphs& status_db)
+    std::vector<package_spec_with_install_plan> create_install_plan(const vcpkg_paths& paths, const std::vector<package_spec>& specs, const StatusParagraphs& status_db)
     {
         std::unordered_map<package_spec, install_plan_action> was_examined; // Examine = we have checked its immediate (non-recursive) dependencies
         Graphs::Graph<package_spec> graph;
@@ -63,12 +63,12 @@ namespace vcpkg { namespace Dependencies
             was_examined.emplace(spec, install_plan_action{install_plan_kind::BUILD_AND_INSTALL, nullptr, std::make_unique<SourceParagraph>(std::move(*spgh))});
         }
 
-        std::vector<std::pair<package_spec, install_plan_action>> ret;
+        std::vector<package_spec_with_install_plan> ret;
 
-        std::vector<package_spec> pkgs = graph.find_topological_sort();
-        for (package_spec& pkg : pkgs)
+        const std::vector<package_spec> pkgs = graph.find_topological_sort();
+        for (const package_spec& pkg : pkgs)
         {
-            ret.emplace_back(pkg, std::move(was_examined[pkg]));
+            ret.push_back({ pkg, std::move(was_examined[pkg]) });
         }
         return ret;
     }

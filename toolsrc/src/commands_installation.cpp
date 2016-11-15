@@ -73,11 +73,11 @@ namespace vcpkg
         auto install_plan = Dependencies::create_install_plan(paths, specs, status_db);
         Checks::check_exit(!install_plan.empty(), "Install plan cannot be empty");
 
-        std::string specs_string = to_string(install_plan[0].first);
+        std::string specs_string = to_string(install_plan[0].spec);
         for (size_t i = 1; i < install_plan.size(); ++i)
         {
             specs_string.push_back(',');
-            specs_string.append(to_string(install_plan[i].first));
+            specs_string.append(to_string(install_plan[i].spec));
         }
         TrackProperty("installplan", specs_string);
         Environment::ensure_utilities_on_path(paths);
@@ -86,31 +86,31 @@ namespace vcpkg
         {
             try
             {
-                if (action.second.plan == Dependencies::install_plan_kind::ALREADY_INSTALLED)
+                if (action.install_plan.plan == Dependencies::install_plan_kind::ALREADY_INSTALLED)
                 {
-                    if (std::find(specs.begin(), specs.end(), action.first) != specs.end())
+                    if (std::find(specs.begin(), specs.end(), action.spec) != specs.end())
                     {
-                        System::println(System::color::success, "Package %s is already installed", action.first);
+                        System::println(System::color::success, "Package %s is already installed", action.spec);
                     }
                 }
-                else if (action.second.plan == Dependencies::install_plan_kind::BUILD_AND_INSTALL)
+                else if (action.install_plan.plan == Dependencies::install_plan_kind::BUILD_AND_INSTALL)
                 {
-                    build_internal(*action.second.spgh, action.first, paths, paths.port_dir(action.first));
-                    auto bpgh = try_load_cached_package(paths, action.first).get_or_throw();
+                    build_internal(*action.install_plan.spgh, action.spec, paths, paths.port_dir(action.spec));
+                    auto bpgh = try_load_cached_package(paths, action.spec).get_or_throw();
                     install_package(paths, bpgh, status_db);
-                    System::println(System::color::success, "Package %s is installed", action.first);
+                    System::println(System::color::success, "Package %s is installed", action.spec);
                 }
-                else if (action.second.plan == Dependencies::install_plan_kind::INSTALL)
+                else if (action.install_plan.plan == Dependencies::install_plan_kind::INSTALL)
                 {
-                    install_package(paths, *action.second.bpgh, status_db);
-                    System::println(System::color::success, "Package %s is installed", action.first);
+                    install_package(paths, *action.install_plan.bpgh, status_db);
+                    System::println(System::color::success, "Package %s is installed", action.spec);
                 }
                 else
                     Checks::unreachable();
             }
             catch (const std::exception& e)
             {
-                System::println(System::color::error, "Error: Could not install package %s: %s", action.first, e.what());
+                System::println(System::color::error, "Error: Could not install package %s: %s", action.spec, e.what());
                 exit(EXIT_FAILURE);
             }
         }
@@ -144,11 +144,11 @@ namespace vcpkg
             first_level_deps_specs.push_back(package_spec::from_name_and_triplet(dep, spec.target_triplet()).get_or_throw());
         }
 
-        auto unmet_dependencies = Dependencies::create_install_plan(paths, first_level_deps_specs, status_db);
+        std::vector<Dependencies::package_spec_with_install_plan> unmet_dependencies = Dependencies::create_install_plan(paths, first_level_deps_specs, status_db);
         unmet_dependencies.erase(
-            std::remove_if(unmet_dependencies.begin(), unmet_dependencies.end(), [](auto& p)
+            std::remove_if(unmet_dependencies.begin(), unmet_dependencies.end(), [](const Dependencies::package_spec_with_install_plan& p)
                            {
-                               return p.second.plan == Dependencies::install_plan_kind::ALREADY_INSTALLED;
+                               return p.install_plan.plan == Dependencies::install_plan_kind::ALREADY_INSTALLED;
                            }),
             unmet_dependencies.end());
 
@@ -159,7 +159,7 @@ namespace vcpkg
             System::println("");
             for (const auto& p : unmet_dependencies)
             {
-                System::println("    %s", to_string(p.first));
+                System::println("    %s", to_string(p.spec));
             }
             System::println("");
             exit(EXIT_FAILURE);
