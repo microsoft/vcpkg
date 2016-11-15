@@ -369,3 +369,39 @@ void vcpkg::deinstall_package(const vcpkg_paths& paths, const package_spec& spec
     write_update(paths, pkg);
     System::println(System::color::success, "Package %s was successfully removed", pkg.package.displayname());
 }
+
+expected<SourceParagraph> vcpkg::try_load_port(const fs::path& path)
+{
+    try
+    {
+        auto pghs = Paragraphs::get_paragraphs(path / "CONTROL");
+        Checks::check_exit(pghs.size() == 1, "Invalid control file at %s\\CONTROL", path.string());
+        return SourceParagraph(pghs[0]);
+    }
+    catch (std::runtime_error const&)
+    {
+    }
+
+    return std::errc::no_such_file_or_directory;
+}
+
+expected<BinaryParagraph> vcpkg::try_load_cached_package(const vcpkg_paths& paths, const package_spec& spec)
+{
+    const fs::path path = paths.package_dir(spec) / "CONTROL";
+
+    auto control_contents_maybe = Files::get_contents(path);
+    if (auto control_contents = control_contents_maybe.get())
+    {
+        std::vector<std::unordered_map<std::string, std::string>> pghs;
+        try
+        {
+            pghs = Paragraphs::parse_paragraphs(*control_contents);
+        }
+        catch (std::runtime_error)
+        {
+        }
+        Checks::check_exit(pghs.size() == 1, "Invalid control file at %s", path.string());
+        return BinaryParagraph(pghs[0]);
+    }
+    return control_contents_maybe.error_code();
+}

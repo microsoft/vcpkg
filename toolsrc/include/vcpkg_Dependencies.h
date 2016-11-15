@@ -2,14 +2,23 @@
 #include <vector>
 #include "package_spec.h"
 #include "StatusParagraphs.h"
-#include <unordered_set>
 #include "vcpkg_paths.h"
 
 namespace vcpkg {namespace Dependencies
 {
-    std::vector<package_spec> create_dependency_ordered_install_plan(const vcpkg_paths& paths, const std::vector<package_spec>& specs, const StatusParagraphs& status_db);
+    enum class install_plan_kind
+    {
+        BUILD_AND_INSTALL,
+        INSTALL,
+        ALREADY_INSTALLED
+    };
 
-    std::unordered_set<package_spec> get_unmet_dependencies(const vcpkg_paths& paths, const std::vector<package_spec>& specs, const StatusParagraphs& status_db);
+    struct install_plan_action
+    {
+        install_plan_kind plan;
+        std::unique_ptr<BinaryParagraph> bpgh;
+        std::unique_ptr<SourceParagraph> spgh;
+    };
 
-    std::vector<std::string> get_unmet_package_build_dependencies(const vcpkg_paths& paths, const package_spec& spec);
+    std::vector<std::pair<package_spec, install_plan_action>> create_install_plan(const vcpkg_paths& paths, const std::vector<package_spec>& specs, const StatusParagraphs& status_db);
 }}
