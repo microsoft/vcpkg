@@ -13,9 +13,12 @@
 
 namespace vcpkg
 {
+    using  Dependencies::package_spec_with_install_plan;
+    using Dependencies::install_plan_type;
+
     static void create_binary_control_file(const vcpkg_paths& paths, const SourceParagraph& source_paragraph, const triplet& target_triplet)
     {
-        auto bpgh = BinaryParagraph(source_paragraph, target_triplet);
+        const BinaryParagraph bpgh = BinaryParagraph(source_paragraph, target_triplet);
         const fs::path binary_control_file = paths.packages / bpgh.dir() / "CONTROL";
         std::ofstream(binary_control_file) << bpgh;
     }
@@ -23,7 +26,7 @@ namespace vcpkg
     static void build_internal(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir)
     {
         Checks::check_exit(spec.name() == source_paragraph.name, "inconsistent arguments to build_internal()");
-        auto&& target_triplet = spec.target_triplet();
+        const triplet& target_triplet = spec.target_triplet();
 
         const fs::path ports_cmake_script_path = paths.ports_cmake;
         const std::wstring command = Strings::wformat(LR"("%%VS140COMNTOOLS%%..\..\VC\vcvarsall.bat" %s && cmake -DCMD=BUILD -DPORT=%s -DTARGET_TRIPLET=%s "-DCURRENT_PORT_DIR=%s/." -P "%s")",
@@ -70,7 +73,7 @@ namespace vcpkg
 
         std::vector<package_spec> specs = Input::check_and_get_package_specs(args.command_arguments, default_target_triplet, example.c_str());
         Input::check_triplets(specs, paths);
-        auto install_plan = Dependencies::create_install_plan(paths, specs, status_db);
+        std::vector<package_spec_with_install_plan> install_plan = Dependencies::create_install_plan(paths, specs, status_db);
         Checks::check_exit(!install_plan.empty(), "Install plan cannot be empty");
 
         std::string specs_string = to_string(install_plan[0].spec);
@@ -82,27 +85,27 @@ namespace vcpkg
         TrackProperty("installplan", specs_string);
         Environment::ensure_utilities_on_path(paths);
 
-        for (const auto& action : install_plan)
+        for (const package_spec_with_install_plan& action : install_plan)
         {
             try
             {
-                if (action.install_plan.plan == Dependencies::install_plan_kind::ALREADY_INSTALLED)
+                if (action.plan.type == install_plan_type::ALREADY_INSTALLED)
                 {
                     if (std::find(specs.begin(), specs.end(), action.spec) != specs.end())
                     {
                         System::println(System::color::success, "Package %s is already installed", action.spec);
                     }
                 }
-                else if (action.install_plan.plan == Dependencies::install_plan_kind::BUILD_AND_INSTALL)
+                else if (action.plan.type == install_plan_type::BUILD_AND_INSTALL)
                 {
-                    build_internal(*action.install_plan.spgh, action.spec, paths, paths.port_dir(action.spec));
-                    auto bpgh = try_load_cached_package(paths, action.spec).get_or_throw();
+                    build_internal(*action.plan.spgh, action.spec, paths, paths.port_dir(action.spec));
+                    const BinaryParagraph bpgh = try_load_cached_package(paths, action.spec).get_or_throw();
                     install_package(paths, bpgh, status_db);
                     System::println(System::color::success, "Package %s is installed", action.spec);
                 }
-                else if (action.install_plan.plan == Dependencies::install_plan_kind::INSTALL)
+                else if (action.plan.type == install_plan_type::INSTALL)
                 {
-                    install_package(paths, *action.install_plan.bpgh, status_db);
+                    install_package(paths, *action.plan.bpgh, status_db);
                     System::println(System::color::success, "Package %s is installed", action.spec);
                 }
                 else
@@ -132,23 +135,23 @@ namespace vcpkg
         Input::check_triplet(spec.target_triplet(), paths);
 
         // Explicitly load and use the portfile's build dependencies when resolving the build command (instead of a cached package's dependencies).
-        auto maybe_spgh = try_load_port(paths, spec.name());
+        const expected<SourceParagraph> maybe_spgh = try_load_port(paths, spec.name());
         Checks::check_exit(!maybe_spgh.error_code(), "Could not find package named %s: %s", spec, maybe_spgh.error_code().message());
-        auto& spgh = *maybe_spgh.get();
+        const SourceParagraph& spgh = *maybe_spgh.get();
 
-        auto first_level_deps = filter_dependencies(spgh.depends, spec.target_triplet());
+        const std::vector<std::string> first_level_deps = filter_dependencies(spgh.depends, spec.target_triplet());
 
         std::vector<package_spec> first_level_deps_specs;
-        for (auto&& dep : first_level_deps)
+        for (const std::string& dep : first_level_deps)
         {
             first_level_deps_specs.push_back(package_spec::from_name_and_triplet(dep, spec.target_triplet()).get_or_throw());
         }
 
-        std::vector<Dependencies::package_spec_with_install_plan> unmet_dependencies = Dependencies::create_install_plan(paths, first_level_deps_specs, status_db);
+        std::vector<package_spec_with_install_plan> unmet_dependencies = Dependencies::create_install_plan(paths, first_level_deps_specs, status_db);
         unmet_dependencies.erase(
-            std::remove_if(unmet_dependencies.begin(), unmet_dependencies.end(), [](const Dependencies::package_spec_with_install_plan& p)
+            std::remove_if(unmet_dependencies.begin(), unmet_dependencies.end(), [](const package_spec_with_install_plan& p)
                            {
-                               return p.install_plan.plan == Dependencies::install_plan_kind::ALREADY_INSTALLED;
+                               return p.plan.type == install_plan_type::ALREADY_INSTALLED;
                            }),
             unmet_dependencies.end());
 
@@ -157,7 +160,7 @@ namespace vcpkg
             System::println(System::color::error, "The build command requires all dependencies to be already installed.");
             System::println("The following dependencies are missing:");
             System::println("");
-            for (const auto& p : unmet_dependencies)
+            for (const package_spec_with_install_plan& p : unmet_dependencies)
             {
                 System::println("    %s", to_string(p.spec));
             }
@@ -181,7 +184,7 @@ namespace vcpkg
             Input::check_triplet(spec->target_triplet(), paths);
             Environment::ensure_utilities_on_path(paths);
             const fs::path port_dir = args.command_arguments.at(1);
-            auto maybe_spgh = try_load_port(port_dir);
+            const expected<SourceParagraph> maybe_spgh = try_load_port(port_dir);
             if (auto spgh = maybe_spgh.get())
             {
                 build_internal(*spgh, *spec, paths, port_dir);

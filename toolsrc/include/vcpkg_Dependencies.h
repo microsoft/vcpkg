@@ -6,7 +6,7 @@
 
 namespace vcpkg {namespace Dependencies
 {
-    enum class install_plan_kind
+    enum class install_plan_type
     {
         BUILD_AND_INSTALL,
         INSTALL,
@@ -15,7 +15,7 @@ namespace vcpkg {namespace Dependencies
 
     struct install_plan_action
     {
-        install_plan_kind plan;
+        install_plan_type type;
         std::unique_ptr<BinaryParagraph> bpgh;
         std::unique_ptr<SourceParagraph> spgh;
     };
@@ -23,7 +23,7 @@ namespace vcpkg {namespace Dependencies
     struct package_spec_with_install_plan
     {
         package_spec spec;
-        install_plan_action install_plan;
+        install_plan_action plan;
     };
 
     std::vector<package_spec_with_install_plan> create_install_plan(const vcpkg_paths& paths, const std::vector<package_spec>& specs, const StatusParagraphs& status_db);
