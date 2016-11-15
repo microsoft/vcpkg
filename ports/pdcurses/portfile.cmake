@@ -10,7 +10,7 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-set(PDC_NMAKE_CMD ${NMAKE} /A -f vcwin32.mak WIDE=Y UTF8=Y)
+set(PDC_NMAKE_CMD ${NMAKE} /A -f vcpkg.mak WIDE=Y UTF8=Y)
 set(PDC_NMAKE_CWD ${SOURCE_PATH}/win32)
 set(PDC_PDCLIB ${SOURCE_PATH}/win32/pdcurses)
 
@@ -18,7 +18,7 @@ file(READ ${SOURCE_PATH}/win32/vcwin32.mak PDC_MAK)
 string(REPLACE "-Z7" "-ZI -Fdpdcurses.pdb" PDC_MAK ${PDC_MAK})
 string(REPLACE " -pdb:none" "" PDC_MAK ${PDC_MAK})
 string(REPLACE "/MACHINE:IX86 " "" PDC_MAK ${PDC_MAK})
-file(WRITE ${SOURCE_PATH}/win32/vcwin32.mak ${PDC_MAK})
+file(WRITE ${SOURCE_PATH}/win32/vcpkg.mak ${PDC_MAK})
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(PDC_NMAKE_CMD ${PDC_NMAKE_CMD} DLL=Y)
