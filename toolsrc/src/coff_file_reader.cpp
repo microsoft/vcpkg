@@ -8,7 +8,7 @@
 
 using namespace std;
 
-namespace vcpkg {namespace COFFFileReader
+namespace vcpkg { namespace COFFFileReader
 {
     template <class T>
     static T reinterpret_bytes(const char* data)
@@ -36,7 +36,7 @@ namespace vcpkg {namespace COFFFileReader
 
     static void verify_equal_strings(const char* expected, const char* actual, int size, const char* label)
     {
-        Checks::check_exit(memcmp(expected, actual, size) == 0, "Incorrect string (%s) found. Expected: %s but found %s", label, expected, actual);
+        Checks::check_exit(memcmp(expected, actual, size) == 0, "Incorrect string (%s) found. Expected: (%s) but found (%s)", label, expected, actual);
     }
 
     static void read_and_verify_PE_signature(fstream& fs)
@@ -113,8 +113,11 @@ namespace vcpkg {namespace COFFFileReader
             ret.data.resize(HEADER_SIZE);
             fs.read(&ret.data[0], HEADER_SIZE);
 
-            const std::string header_end = ret.data.substr(HEADER_END_OFFSET, HEADER_END_SIZE);
-            verify_equal_strings(HEADER_END, header_end.c_str(), HEADER_END_SIZE, "LIB HEADER_END");
+            if (ret.data[0] != '\0')
+            {
+                const std::string header_end = ret.data.substr(HEADER_END_OFFSET, HEADER_END_SIZE);
+                verify_equal_strings(HEADER_END, header_end.c_str(), HEADER_END_SIZE, "LIB HEADER_END");
+            }
 
             return ret;
         }
@@ -251,10 +254,13 @@ namespace vcpkg {namespace COFFFileReader
         for (uint32_t i = 0; i < archive_member_count; i++)
         {
             const archive_member_header header = archive_member_header::read(fs);
-            const uint16_t first_two_bytes = peek_value_from_stream<uint16_t>(fs);
-            const bool isImportHeader = getMachineType(first_two_bytes) == MachineType::UNKNOWN;
-            const MachineType machine = isImportHeader ? import_header::peek(fs).machineType() : coff_file_header::peek(fs).machineType();
-            machine_types.insert(machine);
+            if (header.data[0] != '\0')
+            {
+                const uint16_t first_two_bytes = peek_value_from_stream<uint16_t>(fs);
+                const bool isImportHeader = getMachineType(first_two_bytes) == MachineType::UNKNOWN;
+                const MachineType machine = isImportHeader ? import_header::peek(fs).machineType() : coff_file_header::peek(fs).machineType();
+                machine_types.insert(machine);
+            }
             skip_archive_member(fs, header.member_size());
         }
 
