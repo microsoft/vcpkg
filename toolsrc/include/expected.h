@@ -1,5 +1,6 @@
 #pragma once
 
+#include <system_error>
 #include "vcpkg_Checks.h"
 
 namespace vcpkg
