@@ -1,10 +1,10 @@
 #header-only library
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/eigen-eigen-b9cd8366d4e8)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/eigen-eigen-26667be4f70b)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://bitbucket.org/eigen/eigen/get/3.2.10.tar.bz2"
-    FILENAME "eigen-3.2.10.tar.bz2"
-    SHA512 413c01a5b1b5d2e4366bc9289b1d613b21157e702b1c0d544e41ba5726acfbe0b60921ded37926010e9ce3642939e3ad39038e053d392b90a7a6302955ec5058
+    URLS "http://bitbucket.org/eigen/eigen/get/3.3.0.tar.bz2"
+    FILENAME "eigen-3.3.0.tar.bz2"
+    SHA512 a1919accc9fcf64eca17b3e60a78eefeb1a187c261c28b8480604f36cf366cd6323e966d6b948f8a4ce0ae3213a3815bccd34661d1d8fb33315def4304bf163e
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
