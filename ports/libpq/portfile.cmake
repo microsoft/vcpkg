@@ -29,4 +29,5 @@ file(COPY ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/lib
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libpq/COPYRIGHT ${CURRENT_PACKAGES_DIR}/share/libpq/copyright)
 
 
+
 vcpkg_copy_pdbs()

@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 project(libpq VERSION 9.6.1 LANGUAGES C)
 
 find_package(OpenSSL REQUIRED)
+set(CMAKE_DEBUG_POSTFIX "d")
 configure_file(${CMAKE_CURRENT_LIST_DIR}/src/include/pg_config.h.win32 ${CMAKE_CURRENT_LIST_DIR}/src/include/pg_config.h)
 configure_file(${CMAKE_CURRENT_LIST_DIR}/src/include/pg_config_ext.h.win32 ${CMAKE_CURRENT_LIST_DIR}/src/include/pg_config_ext.h)
 configure_file(${CMAKE_CURRENT_LIST_DIR}/src/include/port/win32.h ${CMAKE_CURRENT_LIST_DIR}/src/include/pg_config_os.h)
@@ -61,11 +62,14 @@ set(pg_libpq_catalog_interface
     src/include/catalog/genbki.h
 )
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_DEBUG_POSTFIX "d")
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 add_library(libpq ${pg_port_src} ${pg_backend_src} ${pg_libpq_src})
 target_compile_definitions(libpq PRIVATE -DFRONTEND -DENABLE_THREAD_SAFETY -DUSE_OPENSSL -D_CRT_SECURE_NO_WARNINGS)
 target_link_libraries(libpq PRIVATE OpenSSL::SSL ws2_32 secur32 advapi32 shell32)
 target_include_directories(libpq PRIVATE src/include src/include/port/win32 src/include/port/win32_msvc src/port)
 set_target_properties(libpq PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
 install(TARGETS libpq
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
