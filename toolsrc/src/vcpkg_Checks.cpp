@@ -10,8 +10,9 @@ namespace vcpkg {namespace Checks
         System::println(System::color::error, "Error: Unreachable code was reached");
 #ifndef NDEBUG
         std::abort();
-#endif
+#else
         exit(EXIT_FAILURE);
+#endif
     }
 
     void exit_with_message(const char* errorMessage)
