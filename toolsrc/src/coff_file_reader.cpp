@@ -1,7 +1,5 @@
 #include "coff_file_reader.h"
 #include <iostream>
-#include <cstdint>
-#include <algorithm>
 #include "vcpkg_Checks.h"
 #include <set>
 #include <fstream>
