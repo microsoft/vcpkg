@@ -1,7 +1,3 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/SignalR-Client-Cpp-1.0.0-beta1)
 
@@ -20,9 +16,13 @@ vcpkg_apply_patches(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-	OPTIONS
+	OPTIONS_DEBUG
+		-DCPPREST_SO=${CURRENT_INSTALLED_DIR}/debug/lib/cpprest_2_9.lib
+	OPTIONS_RELEASE
 		-DCPPREST_SO=${CURRENT_INSTALLED_DIR}/lib/cpprest_2_9.lib
+    OPTIONS
 		-DCPPREST_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
+        -DDISABLE_TESTS=ON
 )
 
 vcpkg_install_cmake()
