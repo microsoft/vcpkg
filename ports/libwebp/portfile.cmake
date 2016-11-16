@@ -10,12 +10,14 @@ vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-add-install-to-cmake.patch
+            ${CMAKE_CURRENT_LIST_DIR}/0002-add-missing-directory-to-cmake.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     # dllexport support seem to be broken
     OPTIONS -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS:BOOL=ON
+            -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_install_cmake()
