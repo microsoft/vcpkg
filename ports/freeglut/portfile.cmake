@@ -1,7 +1,3 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://downloads.sourceforge.net/project/freeglut/freeglut/3.0.0/freeglut-3.0.0.tar.gz"
@@ -10,11 +6,21 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(FREEGLUT_STATIC OFF)
+    set(FREEGLUT_DYNAMIC ON)
+else()
+    set(FREEGLUT_STATIC ON)
+    set(FREEGLUT_DYNAMIC OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/freeglut-3.0.0
     OPTIONS
-        -DFREEGLUT_BUILD_STATIC_LIBS=OFF
+        -DFREEGLUT_BUILD_STATIC_LIBS=${FREEGLUT_STATIC}
+        -DFREEGLUT_BUILD_SHARED_LIBS=${FREEGLUT_DYNAMIC}
         -DFREEGLUT_BUILD_DEMOS=OFF
+        -DINSTALL_PDB=OFF # Installing pdbs failed on debug static. So, disable it and let vcpkg_copy_pdbs() do it
 )
 
 vcpkg_install_cmake()
@@ -24,3 +30,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 # Handle copyright
 file(COPY ${CURRENT_BUILDTREES_DIR}/src/freeglut-3.0.0/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/freeglut)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/freeglut/COPYING ${CURRENT_PACKAGES_DIR}/share/freeglut/copyright)
+
+vcpkg_copy_pdbs()
