@@ -7,11 +7,19 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(JSONCPP_STATIC OFF)
+    set(JSONCPP_DYNAMIC ON)
+else()
+    set(JSONCPP_STATIC ON)
+    set(JSONCPP_DYNAMIC OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS -DJSONCPP_WITH_CMAKE_PACKAGE:BOOL=ON
-            -DBUILD_STATIC_LIBS:BOOL=OFF
-            -DBUILD_SHARED_LIBS:BOOL=ON
+            -DBUILD_STATIC_LIBS:BOOL=${JSONCPP_STATIC}
+            -DBUILD_SHARED_LIBS:BOOL=${JSONCPP_DYNAMIC}
 )
 
 vcpkg_install_cmake()
