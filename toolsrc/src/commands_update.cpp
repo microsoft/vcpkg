@@ -37,7 +37,7 @@ namespace vcpkg
         std::string packages_list;
 
         std::vector<std::string> packages_output;
-        for (auto&& pgh : database_load_check(paths))
+        for (auto&& pgh : status_db)
         {
             if (pgh->state == install_state_t::not_installed && pgh->want == want_t::purge)
                 continue;
