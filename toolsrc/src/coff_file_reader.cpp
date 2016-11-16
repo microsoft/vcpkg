@@ -113,7 +113,7 @@ namespace vcpkg { namespace COFFFileReader
             ret.data.resize(HEADER_SIZE);
             fs.read(&ret.data[0], HEADER_SIZE);
 
-            if (ret.data[0] != '\0')
+            if (ret.data[0] != '\0') // Due to freeglut. github issue #223
             {
                 const std::string header_end = ret.data.substr(HEADER_END_OFFSET, HEADER_END_SIZE);
                 verify_equal_strings(HEADER_END, header_end.c_str(), HEADER_END_SIZE, "LIB HEADER_END");
@@ -254,7 +254,7 @@ namespace vcpkg { namespace COFFFileReader
         for (uint32_t i = 0; i < archive_member_count; i++)
         {
             const archive_member_header header = archive_member_header::read(fs);
-            if (header.data[0] != '\0')
+            if (header.data[0] != '\0') // Due to freeglut. github issue #223
             {
                 const uint16_t first_two_bytes = peek_value_from_stream<uint16_t>(fs);
                 const bool isImportHeader = getMachineType(first_two_bytes) == MachineType::UNKNOWN;
