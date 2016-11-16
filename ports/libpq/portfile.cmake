@@ -27,3 +27,5 @@ vcpkg_install_cmake()
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/libpq)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libpq/COPYRIGHT ${CURRENT_PACKAGES_DIR}/share/libpq/copyright)
+
+vcpkg_copy_pdbs()
