@@ -49,8 +49,6 @@ set(pg_libpq_src
     src/interfaces/libpq/pthread-win32.c
     src/interfaces/libpq/win32.c
     src/interfaces/libpq/libpq-dist.rc
-    src/interfaces/libpq/libpqddll.def
-    src/interfaces/libpq/libpqdll.def
 )
 set(pg_libpq_interface
     src/include/postgres_ext.h
@@ -63,7 +61,7 @@ add_library(libpq ${pg_port_src} ${pg_backend_src} ${pg_libpq_src})
 target_compile_definitions(libpq PRIVATE -DFRONTEND -DENABLE_THREAD_SAFETY -DUSE_OPENSSL -D_CRT_SECURE_NO_WARNINGS)
 target_link_libraries(libpq PRIVATE OpenSSL::SSL ws2_32 secur32 advapi32 shell32)
 target_include_directories(libpq PRIVATE src/include src/include/port/win32 src/include/port/win32_msvc src/port)
-
+set_target_properties(libpq PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
 install(TARGETS libpq
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
