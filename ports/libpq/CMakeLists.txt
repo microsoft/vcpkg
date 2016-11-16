@@ -56,6 +56,7 @@ set(pg_libpq_src
 set(pg_libpq_interface
     src/include/postgres_ext.h
     src/include/pg_config_ext.h
+    src/include/pg_config.h
     src/interfaces/libpq/libpq-fe.h
     )
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
