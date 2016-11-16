@@ -1,4 +1,4 @@
 Source: poco
 Version: 1.7.6
-Build-Depends: openssl, libmariadb
+Build-Depends: 
 Description: Modern, powerful open source C++ class libraries for building network and internet-based applications that run on desktop, server, mobile and embedded systems.
