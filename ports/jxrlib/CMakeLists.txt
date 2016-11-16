@@ -8,6 +8,9 @@ project(jxrlib C)
 # Need shared libs for ABI
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
+# Add a debug postfix
+set(CMAKE_DEBUG_POSTFIX "d")
+
 # helper macro to preserve original Makefile convention
 macro(JXR_MAKE_OBJ SET_NAME)
   foreach(src ${SRC_${SET_NAME}})
