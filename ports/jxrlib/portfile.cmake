@@ -9,6 +9,10 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
+# The file guiddef.h is part of the Windows SDK,
+# we then remove the local copy shipped with jxrlib
+file(REMOVE ${SOURCE_PATH}/common/include/guiddef.h)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS:BOOL=ON
