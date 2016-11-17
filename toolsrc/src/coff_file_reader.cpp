@@ -54,13 +54,13 @@ namespace vcpkg { namespace COFFFileReader
         fs.seekg(offset_to_PE_signature + PE_SIGNATURE_SIZE, ios_base::beg);
     }
 
-    static fpos_t align_offset_to_size(const fpos_t unaligned_offset, const int alignment_size)
+    static fpos_t align_to_size(const uint64_t unaligned, const uint64_t alignment_size)
     {
-        fpos_t aligned_offset = unaligned_offset - 1;
-        aligned_offset /= alignment_size;
-        aligned_offset += 1;
-        aligned_offset *= alignment_size;
-        return aligned_offset;
+        fpos_t aligned = unaligned - 1;
+        aligned /= alignment_size;
+        aligned += 1;
+        aligned *= alignment_size;
+        return aligned;
     }
 
     struct coff_file_header
@@ -129,12 +129,16 @@ namespace vcpkg { namespace COFFFileReader
 
         uint64_t member_size() const
         {
+            static const size_t ALIGNMENT_SIZE = 2;
+
             static const size_t HEADER_SIZE_OFFSET = 48;
             static const size_t HEADER_SIZE_FIELD_SIZE = 10;
             const std::string as_string = data.substr(HEADER_SIZE_OFFSET, HEADER_SIZE_FIELD_SIZE);
             // This is in ASCII decimal representation
             const uint64_t value = std::strtoull(as_string.c_str(), nullptr, 10);
-            return value;
+
+            const uint64_t aligned = align_to_size(value, ALIGNMENT_SIZE);
+            return aligned;
         }
 
         std::string data;
@@ -191,14 +195,6 @@ namespace vcpkg { namespace COFFFileReader
         std::string data;
     };
 
-    static void skip_archive_member(fstream& fs, uint64_t member_size)
-    {
-        static const size_t ALIGNMENT_SIZE = 2;
-
-        const fpos_t advance_by = align_offset_to_size(member_size, ALIGNMENT_SIZE);
-        fs.seekg(advance_by, ios_base::cur);
-    }
-
     static void read_and_verify_archive_file_signature(fstream& fs)
     {
         static const char* FILE_START = "!<arch>\n";
@@ -232,19 +228,19 @@ namespace vcpkg { namespace COFFFileReader
         // First Linker Member
         const archive_member_header first_linker_member_header = archive_member_header::read(fs);
         Checks::check_exit(first_linker_member_header.name().substr(0, 2) == "/ ", "Could not find proper first linker member");
-        skip_archive_member(fs, first_linker_member_header.member_size());
+        fs.seekg(first_linker_member_header.member_size(), ios_base::cur);
 
         const archive_member_header second_linker_member_header = archive_member_header::read(fs);
         Checks::check_exit(second_linker_member_header.name().substr(0, 2) == "/ ", "Could not find proper second linker member");
         // The first 4 bytes contains the number of archive members
         const uint32_t archive_member_count = peek_value_from_stream<uint32_t>(fs);
-        skip_archive_member(fs, second_linker_member_header.member_size());
+        fs.seekg(second_linker_member_header.member_size(), ios_base::cur);
 
         bool hasLongnameMemberHeader = peek_value_from_stream<uint16_t>(fs) == 0x2F2F;
         if (hasLongnameMemberHeader)
         {
             const archive_member_header longnames_member_header = archive_member_header::read(fs);
-            skip_archive_member(fs, longnames_member_header.member_size());
+            fs.seekg(longnames_member_header.member_size(), ios_base::cur);
         }
 
         std::set<MachineType> machine_types;
@@ -259,7 +255,7 @@ namespace vcpkg { namespace COFFFileReader
                 const MachineType machine = isImportHeader ? import_header::peek(fs).machineType() : coff_file_header::peek(fs).machineType();
                 machine_types.insert(machine);
             }
-            skip_archive_member(fs, header.member_size());
+            fs.seekg(header.member_size(), ios_base::cur);
         }
 
         return {std::vector<MachineType>(machine_types.cbegin(), machine_types.cend())};
