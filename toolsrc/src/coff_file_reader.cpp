@@ -195,8 +195,8 @@ namespace vcpkg { namespace COFFFileReader
     {
         static const size_t ALIGNMENT_SIZE = 2;
 
-        const fpos_t new_offset = align_to(member_size, ALIGNMENT_SIZE);
-        fs.seekg(new_offset, ios_base::cur);
+        const fpos_t advance_by = align_to(member_size, ALIGNMENT_SIZE);
+        fs.seekg(advance_by, ios_base::cur);
     }
 
     static void read_and_verify_archive_file_signature(fstream& fs)
