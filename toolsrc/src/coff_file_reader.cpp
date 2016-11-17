@@ -54,7 +54,7 @@ namespace vcpkg { namespace COFFFileReader
         fs.seekg(offset_to_PE_signature + PE_SIGNATURE_SIZE, ios_base::beg);
     }
 
-    static fpos_t align_to(const fpos_t unaligned_offset, const int alignment_size)
+    static fpos_t align_offset_to_size(const fpos_t unaligned_offset, const int alignment_size)
     {
         fpos_t aligned_offset = unaligned_offset - 1;
         aligned_offset /= alignment_size;
@@ -195,7 +195,7 @@ namespace vcpkg { namespace COFFFileReader
     {
         static const size_t ALIGNMENT_SIZE = 2;
 
-        const fpos_t advance_by = align_to(member_size, ALIGNMENT_SIZE);
+        const fpos_t advance_by = align_offset_to_size(member_size, ALIGNMENT_SIZE);
         fs.seekg(advance_by, ios_base::cur);
     }
 
