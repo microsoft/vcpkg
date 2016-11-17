@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 project(libpq VERSION 9.6.1 LANGUAGES C)
-set(CMAKE_DEBUG_POSTFIX "d")
+
 find_package(OpenSSL REQUIRED)
 configure_file(${CMAKE_CURRENT_LIST_DIR}/src/include/pg_config.h.win32 ${CMAKE_CURRENT_LIST_DIR}/src/include/pg_config.h)
 configure_file(${CMAKE_CURRENT_LIST_DIR}/src/include/pg_config_ext.h.win32 ${CMAKE_CURRENT_LIST_DIR}/src/include/pg_config_ext.h)
