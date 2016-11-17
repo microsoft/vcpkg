@@ -31,12 +31,15 @@ endif()
 message(STATUS "Bootstrapping done")
 
 set(B2_OPTIONS
-    toolset=msvc
-    threading=multi
     -j$ENV{NUMBER_OF_PROCESSORS}
     -q
-    --without-python    
     --debug-configuration
+    --hash
+
+    --without-python
+    toolset=msvc
+    threading=multi
+      
 )
 
 if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
