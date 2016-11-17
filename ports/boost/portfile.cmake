@@ -32,14 +32,12 @@ message(STATUS "Bootstrapping done")
 
 set(B2_OPTIONS
     -j$ENV{NUMBER_OF_PROCESSORS}
-    -q
     --debug-configuration
     --hash
 
     --without-python
     toolset=msvc
     threading=multi
-      
 )
 
 if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
@@ -66,7 +64,8 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 
 message(STATUS "Building ${TARGET_TRIPLET}-rel")
-vcpkg_execute_required_process(
+vcpkg_execute_required_process_repeat(
+    COUNT 2
     COMMAND "${SOURCE_PATH}/b2.exe"
         --stagedir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/stage
         --build-dir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
@@ -78,7 +77,8 @@ vcpkg_execute_required_process(
 )
 message(STATUS "Building ${TARGET_TRIPLET}-rel done")
 message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-vcpkg_execute_required_process(
+vcpkg_execute_required_process_repeat(
+    COUNT 2
     COMMAND "${SOURCE_PATH}/b2.exe"
         --stagedir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/stage
         --build-dir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
