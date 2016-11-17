@@ -13,8 +13,10 @@
 
 namespace vcpkg
 {
-    using  Dependencies::package_spec_with_install_plan;
+    using Dependencies::package_spec_with_install_plan;
     using Dependencies::install_plan_type;
+
+    static const std::string OPTION_CHECKS_ONLY = "--checks-only";
 
     static void create_binary_control_file(const vcpkg_paths& paths, const SourceParagraph& source_paragraph, const triplet& target_triplet)
     {
@@ -129,10 +131,18 @@ namespace vcpkg
         // Allowing only 1 package for now.
 
         args.check_exact_arg_count(1, example.c_str());
+
         StatusParagraphs status_db = database_load_check(paths);
 
         const package_spec spec = Input::check_and_get_package_spec(args.command_arguments.at(0), default_target_triplet, example.c_str());
         Input::check_triplet(spec.target_triplet(), paths);
+
+        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_CHECKS_ONLY});
+        if (options.find(OPTION_CHECKS_ONLY) != options.end())
+        {
+            perform_all_checks(spec, paths);
+            exit(EXIT_SUCCESS);
+        }
 
         // Explicitly load and use the portfile's build dependencies when resolving the build command (instead of a cached package's dependencies).
         const expected<SourceParagraph> maybe_spgh = try_load_port(paths, spec.name());
