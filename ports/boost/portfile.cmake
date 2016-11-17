@@ -36,6 +36,7 @@ set(B2_OPTIONS
     --hash
 
     --without-python
+    --layout=system
     toolset=msvc
     threading=multi
 )
@@ -118,7 +119,6 @@ else()
         get_filename_component(OLD_FILENAME ${LIB} NAME)
         get_filename_component(DIRECTORY_OF_LIB_FILE ${LIB} DIRECTORY)
         string(REPLACE "libboost_" "boost_" NEW_FILENAME ${OLD_FILENAME})
-        string(REPLACE "-s-" "-" NEW_FILENAME ${NEW_FILENAME})
         file(RENAME ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME} ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
     endforeach()
 endif()
@@ -138,7 +138,6 @@ else()
         get_filename_component(OLD_FILENAME ${LIB} NAME)
         get_filename_component(DIRECTORY_OF_LIB_FILE ${LIB} DIRECTORY)
         string(REPLACE "libboost_" "boost_" NEW_FILENAME ${OLD_FILENAME})
-        string(REPLACE "-sgd-" "-gd-" NEW_FILENAME ${NEW_FILENAME})
         file(RENAME ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME} ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
     endforeach()
 endif()
