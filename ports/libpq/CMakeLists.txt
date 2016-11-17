@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 project(libpq VERSION 9.6.1 LANGUAGES C)
-set(CMAKE_DEBUG_POSTFIX "d")
+#set(CMAKE_DEBUG_POSTFIX "d")
 find_package(OpenSSL REQUIRED)
 configure_file(${CMAKE_CURRENT_LIST_DIR}/src/include/pg_config.h.win32 ${CMAKE_CURRENT_LIST_DIR}/src/include/pg_config.h)
 configure_file(${CMAKE_CURRENT_LIST_DIR}/src/include/pg_config_ext.h.win32 ${CMAKE_CURRENT_LIST_DIR}/src/include/pg_config_ext.h)
@@ -56,6 +56,10 @@ set(pg_libpq_interface
     src/include/pg_config.h
     src/interfaces/libpq/libpq-fe.h
     )
+set(pg_libpq_catalog_interface
+    src/include/catalog/pg_type.h
+    src/include/catalog/genbki.h
+)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 add_library(libpq ${pg_port_src} ${pg_backend_src} ${pg_libpq_src})
 target_compile_definitions(libpq PRIVATE -DFRONTEND -DENABLE_THREAD_SAFETY -DUSE_OPENSSL -D_CRT_SECURE_NO_WARNINGS)
@@ -69,4 +73,5 @@ install(TARGETS libpq
     )
 if(INSTALL_INCLUDES)
     install(FILES ${pg_libpq_interface} DESTINATION include)
+    install(FILES ${pg_libpq_catalog_interface} DESTINATION include/catalog)
 endif()
