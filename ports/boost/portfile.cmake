@@ -31,11 +31,11 @@ endif()
 message(STATUS "Bootstrapping done")
 
 set(B2_OPTIONS
-    --toolset=msvc
+    toolset=msvc
+    threading=multi
     -j$ENV{NUMBER_OF_PROCESSORS}
     -q
-    --without-python
-    threading=multi
+    --without-python    
     --debug-configuration
 )
 
