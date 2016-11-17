@@ -14,9 +14,16 @@ vcpkg_apply_patches(
 		${CMAKE_CURRENT_LIST_DIR}/config_h.patch
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+	set(POCO_STATIC ON)
+else()
+	set(POCO_STATIC OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
 	OPTIONS
+		-DPOCO_STATIC=${POCO_STATIC}
 		-DENABLE_SEVENZIP=ON
 		-DENABLE_TESTS=OFF
 		-DPOCO_UNBUNDLED=ON # OFF means: using internal copy of sqlite, libz, pcre, expat, ...
