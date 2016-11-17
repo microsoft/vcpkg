@@ -1,4 +1,4 @@
 Source: pcre
-Version: 8.38
+Version: 8.38-1
 Description: Perl Compatible Regular Expresions
 Build-Depends: zlib

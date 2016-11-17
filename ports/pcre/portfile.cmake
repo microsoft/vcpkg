@@ -32,6 +32,16 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+foreach(FILE ${CURRENT_PACKAGES_DIR}/include/pcre.h ${CURRENT_PACKAGES_DIR}/include/pcreposix.h)
+    file(READ ${FILE} PCRE_H)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        string(REPLACE "defined(PCRE_STATIC)" "1" PCRE_H "${PCRE_H}")
+    else()
+        string(REPLACE "defined(PCRE_STATIC)" "0" PCRE_H "${PCRE_H}")
+    endif()
+    file(WRITE ${FILE} "${PCRE_H}")
+endforeach()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
