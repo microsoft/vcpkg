@@ -236,6 +236,11 @@ namespace vcpkg { namespace COFFFileReader
 
     struct marker_t
     {
+        void set_to_offset(const fpos_t position)
+        {
+            this->m_absolute_position = position;
+        }
+
         void set_to_current_pos(fstream& fs)
         {
             this->m_absolute_position = fs.tellg().seekpos();
@@ -289,15 +294,14 @@ namespace vcpkg { namespace COFFFileReader
 
         std::set<MachineType> machine_types;
         // Next we have the obj and pseudo-object files
-        for (uint32_t i = 0; i < offsets.data.size(); i++)
+        for (const uint32_t offset : offsets.data)
         {
-            const archive_member_header header = archive_member_header::read(fs);
+            marker.set_to_offset(offset + archive_member_header::HEADER_SIZE); // Skip the header, no need to read it.
+            marker.seek_to_marker(fs);
             const uint16_t first_two_bytes = peek_value_from_stream<uint16_t>(fs);
             const bool isImportHeader = getMachineType(first_two_bytes) == MachineType::UNKNOWN;
             const MachineType machine = isImportHeader ? import_header::read(fs).machineType() : coff_file_header::read(fs).machineType();
             machine_types.insert(machine);
-            marker.advance_by(archive_member_header::HEADER_SIZE + header.member_size());
-            marker.seek_to_marker(fs);
         }
 
         return {std::vector<MachineType>(machine_types.cbegin(), machine_types.cend())};
