@@ -75,14 +75,6 @@ namespace vcpkg { namespace COFFFileReader
             return ret;
         }
 
-        static coff_file_header peek(fstream& fs)
-        {
-            auto original_pos = fs.tellg().seekpos();
-            coff_file_header ret = read(fs);
-            fs.seekg(original_pos);
-            return ret;
-        }
-
         MachineType machineType() const
         {
             static const size_t MACHINE_TYPE_OFFSET = 0;
@@ -272,7 +264,7 @@ namespace vcpkg { namespace COFFFileReader
             {
                 const uint16_t first_two_bytes = peek_value_from_stream<uint16_t>(fs);
                 const bool isImportHeader = getMachineType(first_two_bytes) == MachineType::UNKNOWN;
-                const MachineType machine = isImportHeader ? import_header::read(fs).machineType() : coff_file_header::peek(fs).machineType();
+                const MachineType machine = isImportHeader ? import_header::read(fs).machineType() : coff_file_header::read(fs).machineType();
                 machine_types.insert(machine);
             }
             marker.advance_by(archive_member_header::HEADER_SIZE + header.member_size());
