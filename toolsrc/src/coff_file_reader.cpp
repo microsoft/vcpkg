@@ -173,14 +173,6 @@ namespace vcpkg { namespace COFFFileReader
             return ret;
         }
 
-        static import_header peek(fstream& fs)
-        {
-            auto original_pos = fs.tellg().seekpos();
-            import_header ret = read(fs);
-            fs.seekg(original_pos);
-            return ret;
-        }
-
         MachineType machineType() const
         {
             static const size_t MACHINE_TYPE_OFFSET = 6;
@@ -218,6 +210,27 @@ namespace vcpkg { namespace COFFFileReader
         return {machine};
     }
 
+    struct marker_t
+    {
+        void set_to_current_pos(fstream& fs)
+        {
+            this->m_absolute_position = fs.tellg().seekpos();
+        }
+
+        void seek_to_marker(fstream& fs) const
+        {
+            fs.seekg(this->m_absolute_position, ios_base::beg);
+        }
+
+        void advance_by(const uint64_t offset)
+        {
+            this->m_absolute_position += offset;
+        }
+
+    private:
+        fpos_t m_absolute_position = 0;
+    };
+
     lib_info read_lib(const fs::path path)
     {
         std::fstream fs(path, std::ios::in | std::ios::binary | std::ios::ate);
@@ -225,23 +238,30 @@ namespace vcpkg { namespace COFFFileReader
 
         read_and_verify_archive_file_signature(fs);
 
+        marker_t marker;
+        marker.set_to_current_pos(fs);
+
         // First Linker Member
         const archive_member_header first_linker_member_header = archive_member_header::read(fs);
         Checks::check_exit(first_linker_member_header.name().substr(0, 2) == "/ ", "Could not find proper first linker member");
-        fs.seekg(first_linker_member_header.member_size(), ios_base::cur);
+        marker.advance_by(archive_member_header::HEADER_SIZE + first_linker_member_header.member_size());
+        marker.seek_to_marker(fs);
 
         const archive_member_header second_linker_member_header = archive_member_header::read(fs);
         Checks::check_exit(second_linker_member_header.name().substr(0, 2) == "/ ", "Could not find proper second linker member");
         // The first 4 bytes contains the number of archive members
-        const uint32_t archive_member_count = peek_value_from_stream<uint32_t>(fs);
-        fs.seekg(second_linker_member_header.member_size(), ios_base::cur);
+        const uint32_t archive_member_count = read_value_from_stream<uint32_t>(fs);
+        marker.advance_by(archive_member_header::HEADER_SIZE + second_linker_member_header.member_size());
+        marker.seek_to_marker(fs);
 
-        bool hasLongnameMemberHeader = peek_value_from_stream<uint16_t>(fs) == 0x2F2F;
+        bool hasLongnameMemberHeader = read_value_from_stream<uint16_t>(fs) == 0x2F2F;
         if (hasLongnameMemberHeader)
         {
+            marker.seek_to_marker(fs);
             const archive_member_header longnames_member_header = archive_member_header::read(fs);
-            fs.seekg(longnames_member_header.member_size(), ios_base::cur);
+            marker.advance_by(archive_member_header::HEADER_SIZE + longnames_member_header.member_size());
         }
+        marker.seek_to_marker(fs);
 
         std::set<MachineType> machine_types;
         // Next we have the obj and pseudo-object files
@@ -252,10 +272,11 @@ namespace vcpkg { namespace COFFFileReader
             {
                 const uint16_t first_two_bytes = peek_value_from_stream<uint16_t>(fs);
                 const bool isImportHeader = getMachineType(first_two_bytes) == MachineType::UNKNOWN;
-                const MachineType machine = isImportHeader ? import_header::peek(fs).machineType() : coff_file_header::peek(fs).machineType();
+                const MachineType machine = isImportHeader ? import_header::read(fs).machineType() : coff_file_header::peek(fs).machineType();
                 machine_types.insert(machine);
             }
-            fs.seekg(header.member_size(), ios_base::cur);
+            marker.advance_by(archive_member_header::HEADER_SIZE + header.member_size());
+            marker.seek_to_marker(fs);
         }
 
         return {std::vector<MachineType>(machine_types.cbegin(), machine_types.cend())};
