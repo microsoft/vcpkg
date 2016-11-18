@@ -246,14 +246,13 @@ namespace vcpkg { namespace COFFFileReader
         marker.advance_by(archive_member_header::HEADER_SIZE + second_linker_member_header.member_size());
         marker.seek_to_marker(fs);
 
-        bool hasLongnameMemberHeader = read_value_from_stream<uint16_t>(fs) == 0x2F2F;
+        bool hasLongnameMemberHeader = peek_value_from_stream<uint16_t>(fs) == 0x2F2F;
         if (hasLongnameMemberHeader)
         {
-            marker.seek_to_marker(fs);
             const archive_member_header longnames_member_header = archive_member_header::read(fs);
             marker.advance_by(archive_member_header::HEADER_SIZE + longnames_member_header.member_size());
+            marker.seek_to_marker(fs);
         }
-        marker.seek_to_marker(fs);
 
         std::set<MachineType> machine_types;
         // Next we have the obj and pseudo-object files
