@@ -136,6 +136,38 @@ namespace vcpkg { namespace COFFFileReader
         std::string data;
     };
 
+    struct offsets_array
+    {
+        static offsets_array read(fstream& fs, const uint32_t offset_count)
+        {
+            static const size_t OFFSET_WIDTH = 4;
+
+            std::string raw_offsets;
+            const size_t raw_offset_size = offset_count * OFFSET_WIDTH;
+            raw_offsets.resize(raw_offset_size);
+            fs.read(&raw_offsets[0], raw_offset_size);
+
+            offsets_array ret;
+            for (uint32_t i = 0; i < offset_count; ++i)
+            {
+                const std::string value_as_string = raw_offsets.substr(OFFSET_WIDTH * i, OFFSET_WIDTH * (i + 1));
+                const uint32_t value = reinterpret_bytes<uint32_t>(value_as_string.c_str());
+
+                // Ignore offsets that point to offset 0. See vcpkg github #223 #288 #292
+                if (value != 0)
+                {
+                    ret.data.push_back(value);
+                }
+            }
+
+            // Sort the offsets, because it is possible for them to be unsorted. See vcpkg github #292
+            std::sort(ret.data.begin(), ret.data.end());
+            return ret;
+        }
+
+        std::vector<uint32_t> data;
+    };
+
     struct import_header
     {
         static const size_t HEADER_SIZE = 20;
@@ -243,6 +275,7 @@ namespace vcpkg { namespace COFFFileReader
         Checks::check_exit(second_linker_member_header.name().substr(0, 2) == "/ ", "Could not find proper second linker member");
         // The first 4 bytes contains the number of archive members
         const uint32_t archive_member_count = read_value_from_stream<uint32_t>(fs);
+        const offsets_array offsets = offsets_array::read(fs, archive_member_count);
         marker.advance_by(archive_member_header::HEADER_SIZE + second_linker_member_header.member_size());
         marker.seek_to_marker(fs);
 
@@ -256,16 +289,13 @@ namespace vcpkg { namespace COFFFileReader
 
         std::set<MachineType> machine_types;
         // Next we have the obj and pseudo-object files
-        for (uint32_t i = 0; i < archive_member_count; i++)
+        for (uint32_t i = 0; i < offsets.data.size(); i++)
         {
             const archive_member_header header = archive_member_header::read(fs);
-            if (header.data[0] != '\0') // Due to freeglut. github issue #223
-            {
-                const uint16_t first_two_bytes = peek_value_from_stream<uint16_t>(fs);
-                const bool isImportHeader = getMachineType(first_two_bytes) == MachineType::UNKNOWN;
-                const MachineType machine = isImportHeader ? import_header::read(fs).machineType() : coff_file_header::read(fs).machineType();
-                machine_types.insert(machine);
-            }
+            const uint16_t first_two_bytes = peek_value_from_stream<uint16_t>(fs);
+            const bool isImportHeader = getMachineType(first_two_bytes) == MachineType::UNKNOWN;
+            const MachineType machine = isImportHeader ? import_header::read(fs).machineType() : coff_file_header::read(fs).machineType();
+            machine_types.insert(machine);
             marker.advance_by(archive_member_header::HEADER_SIZE + header.member_size());
             marker.seek_to_marker(fs);
         }
