@@ -53,16 +53,22 @@ endif()
 set(ENV{GYP_MSVS_VERSION} 2015)
 set(ENV{PYTHON} ${PYTHON2})
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(LIBUV_LINKAGE shared)
+else()
+    set(LIBUV_LINKAGE static)
+endif()
+
 if(TRIPLET_SYSTEM_ARCH MATCHES "x86|x64")
     message(STATUS "Building Release")
     vcpkg_execute_required_process(
-        COMMAND cmd /c vcbuild.bat release ${TRIPLET_SYSTEM_ARCH} shared
+        COMMAND cmd /c vcbuild.bat release ${TRIPLET_SYSTEM_ARCH} ${LIBUV_LINKAGE}
         WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME ${TARGET_TRIPLET}-build-rel
     )
     message(STATUS "Building Debug")
     vcpkg_execute_required_process(
-        COMMAND cmd /c vcbuild.bat debug ${TRIPLET_SYSTEM_ARCH} shared
+        COMMAND cmd /c vcbuild.bat debug ${TRIPLET_SYSTEM_ARCH} ${LIBUV_LINKAGE}
         WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME ${TARGET_TRIPLET}-build-dbg
     )
