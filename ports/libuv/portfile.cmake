@@ -3,11 +3,11 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src/libuv-1.9.1)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src/libuv-1.10.1)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/libuv/libuv/archive/v1.9.1.zip"
-    FILENAME "libuv-v1.9.1.zip"
-    SHA512 3eb8711e3612fb3f5a1ddeb4614b2bec29c022ac5c6c2590bc5239825d758a73be0819c52747956a029859ef4e416bf3fce16665bac2c6c4890f736b47c38226
+    URLS "https://github.com/libuv/libuv/archive/v1.10.1.zip"
+    FILENAME "libuv-v1.10.1.zip"
+    SHA512 5a1e4b8e4584fccbc3df5bb46cf0efd7165169709d9b2a0e06fe534afbf7a262500cf665441ef64f8f7029b535f722119ab0faa4fb1367b05452d88a3e02bd2b
 )
 
 if(NOT EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src)
