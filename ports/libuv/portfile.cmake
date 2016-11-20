@@ -1,7 +1,3 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src/libuv-1.10.1)
 vcpkg_download_distfile(ARCHIVE
@@ -76,15 +72,7 @@ else()
     message(FATAL_ERROR "Unsupported platform")
 endif()
 
-file(MAKE_DIRECTORY
-    ${CURRENT_PACKAGES_DIR}/include
-    ${CURRENT_PACKAGES_DIR}/lib
-    ${CURRENT_PACKAGES_DIR}/bin
-    ${CURRENT_PACKAGES_DIR}/debug/lib
-    ${CURRENT_PACKAGES_DIR}/debug/bin
-    ${CURRENT_PACKAGES_DIR}/share/libuv
-    )
-
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
 file(COPY
     ${SOURCE_PATH}/include/tree.h
     ${SOURCE_PATH}/include/uv.h
@@ -94,23 +82,21 @@ file(COPY
     ${SOURCE_PATH}/include/uv-win.h
     DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-file(COPY
-    ${SOURCE_PATH}/Debug/libuv.dll
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-file(COPY
-    ${SOURCE_PATH}/Debug/libuv.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-file(COPY
-    ${SOURCE_PATH}/Release/libuv.dll
-    DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-file(COPY
-    ${SOURCE_PATH}/Release/libuv.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-file(COPY
-    ${SOURCE_PATH}/LICENSE
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/libuv)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/debug/lib)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(COPY ${SOURCE_PATH}/Debug/libuv.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    file(COPY ${SOURCE_PATH}/Release/libuv.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    file(COPY ${SOURCE_PATH}/Debug/libuv.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(COPY ${SOURCE_PATH}/Release/libuv.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+else()
+    file(COPY ${SOURCE_PATH}/Debug/lib/libuv.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    file(COPY ${SOURCE_PATH}/Release/lib/libuv.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+endif()
 
-file(RENAME
-    ${CURRENT_PACKAGES_DIR}/share/libuv/LICENSE
-    ${CURRENT_PACKAGES_DIR}/share/libuv/copyright)
+
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/libuv)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libuv)
+
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/libuv/LICENSE ${CURRENT_PACKAGES_DIR}/share/libuv/copyright)
 vcpkg_copy_pdbs()
