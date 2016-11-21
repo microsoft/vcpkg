@@ -19,7 +19,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(PORT_EXTRA_OPTIONS -DSOCI_STATIC=ON
                            -DSOCI_SHARED=OFF)
 elseif(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        set(PORT_EXTRA_OPTIONS -DSOCI_STATIC=OFF
+    set(PORT_EXTRA_OPTIONS -DSOCI_STATIC=OFF
                            -DSOCI_SHARED=ON)
 endif()
 vcpkg_configure_cmake(
