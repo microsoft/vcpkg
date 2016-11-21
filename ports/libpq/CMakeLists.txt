@@ -73,5 +73,6 @@ install(TARGETS libpq
     )
 if(INSTALL_INCLUDES)
     install(FILES ${pg_libpq_interface} DESTINATION include)
+    install(DIRECTORY src/include/libpq DESTINATION include)
     install(FILES ${pg_libpq_catalog_interface} DESTINATION include/catalog)
 endif()
