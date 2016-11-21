@@ -28,7 +28,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DSOCI_TESTS=OFF
         -DSOCI_CXX_C11=ON
-        -DLIBDIR=lib
+        -DSOCI_LIBDIR=lib # This is to always have output in the lib folder and not lib64 for 64-bit builds
         -DSOCI_STATIC=${SOCI_STATIC}
         -DSOCI_SHARED=${SOCI_DYNAMIC}
 )
