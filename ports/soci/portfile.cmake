@@ -15,19 +15,22 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(PORT_EXTRA_OPTIONS -DSOCI_STATIC=ON
-                           -DSOCI_SHARED=OFF)
-elseif(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(PORT_EXTRA_OPTIONS -DSOCI_STATIC=OFF
-                           -DSOCI_SHARED=ON)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(SOCI_STATIC OFF)
+    set(SOCI_DYNAMIC ON)
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    set(SOCI_STATIC ON)
+    set(SOCI_DYNAMIC OFF)
 endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DSOCI_TESTS=OFF
         -DSOCI_CXX_C11=ON
         -DLIBDIR=lib
+        -DSOCI_STATIC=${SOCI_STATIC}
+        -DSOCI_SHARED=${SOCI_DYNAMIC}
 )
 
 vcpkg_install_cmake()
