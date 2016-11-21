@@ -7,6 +7,9 @@
 #include "coff_file_reader.h"
 #include "BuildInfo.h"
 #include <regex>
+#include <set>
+#include <map>
+#include "vcpkg_Maps.h"
 
 namespace fs = std::tr2::sys;
 
@@ -417,6 +420,17 @@ namespace vcpkg
         return lint_status::ERROR_DETECTED;
     }
 
+    static lint_status check_lib_files_are_available_if_dlls_are_available(const size_t lib_count, const size_t dll_count, const fs::path& lib_dir)
+    {
+        if (lib_count == 0 && dll_count != 0)
+        {
+            System::println(System::color::warning, "Import libs were not present in %s", lib_dir.generic_string());
+            return lint_status::ERROR_DETECTED;
+        }
+
+        return lint_status::SUCCESS;
+    }
+
     static lint_status check_no_subdirectories(const fs::path& dir)
     {
         const std::vector<fs::path> subdirectories = recursive_find_matching_paths_in_dir(dir, [&](const fs::path& current)
@@ -602,8 +616,13 @@ namespace vcpkg
         error_count += check_for_copyright_file(spec, paths);
         error_count += check_for_exes(spec, paths);
 
-        const std::vector<fs::path> debug_libs = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "lib", ".lib");
-        const std::vector<fs::path> release_libs = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "lib", ".lib");
+        const fs::path debug_lib_dir = paths.packages / spec.dir() / "debug" / "lib";
+        const fs::path release_lib_dir = paths.packages / spec.dir() / "lib";
+        const fs::path debug_bin_dir = paths.packages / spec.dir() / "debug" / "bin";
+        const fs::path release_bin_dir = paths.packages / spec.dir() / "bin";
+
+        const std::vector<fs::path> debug_libs = recursive_find_files_with_extension_in_dir(debug_lib_dir, ".lib");
+        const std::vector<fs::path> release_libs = recursive_find_files_with_extension_in_dir(release_lib_dir, ".lib");
 
         error_count += check_matching_debug_and_release_binaries(debug_libs, release_libs);
 
@@ -617,10 +636,13 @@ namespace vcpkg
         {
             case LinkageType::DYNAMIC:
                 {
-                    const std::vector<fs::path> debug_dlls = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "debug" / "bin", ".dll");
-                    const std::vector<fs::path> release_dlls = recursive_find_files_with_extension_in_dir(paths.packages / spec.dir() / "bin", ".dll");
+                    const std::vector<fs::path> debug_dlls = recursive_find_files_with_extension_in_dir(debug_bin_dir, ".dll");
+                    const std::vector<fs::path> release_dlls = recursive_find_files_with_extension_in_dir(release_bin_dir, ".dll");
 
                     error_count += check_matching_debug_and_release_binaries(debug_dlls, release_dlls);
+
+                    error_count += check_lib_files_are_available_if_dlls_are_available(debug_libs.size(), debug_dlls.size(), debug_lib_dir);
+                    error_count += check_lib_files_are_available_if_dlls_are_available(release_libs.size(), release_dlls.size(), release_lib_dir);
 
                     std::vector<fs::path> dlls;
                     dlls.insert(dlls.cend(), debug_dlls.cbegin(), debug_dlls.cend());
