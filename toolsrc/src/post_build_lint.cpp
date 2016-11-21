@@ -7,9 +7,6 @@
 #include "coff_file_reader.h"
 #include "BuildInfo.h"
 #include <regex>
-#include <set>
-#include <map>
-#include "vcpkg_Maps.h"
 
 namespace fs = std::tr2::sys;
 
