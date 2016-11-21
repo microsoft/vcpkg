@@ -3,11 +3,11 @@
 #    set(VCPKG_LIBRARY_LINKAGE static)
 #endif()
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fmt-3.0.0)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fmt-3.0.1)
 vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "https://github.com/fmtlib/fmt/archive/3.0.0.tar.gz"
-    FILENAME "fmt-3.0.0.tar.gz"
-    SHA512 20c9b1ffe8b46cb5d22015122fc698a75ad854709d3de1a1316b6040d86f54bada4e6d7263f2f1fd94cb13ac37ee9447c162c6aec3f3af650455e8a8a9804871
+    URLS "https://github.com/fmtlib/fmt/archive/3.0.1.tar.gz"
+    FILENAME "fmt-3.0.1.tar.gz"
+    SHA512 daf5dfb2fe63eb611983fa248bd2182c6202cf1c4f0fc236f357040fce8e87ad531cdf59090306bb313ea333d546e516f467b385e05094e696d0ca091310aad6
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
