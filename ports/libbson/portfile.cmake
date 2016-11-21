@@ -30,6 +30,13 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 	file(REMOVE         ${CURRENT_PACKAGES_DIR}/lib/bson-1.0.lib)
 	file(REMOVE         ${CURRENT_PACKAGES_DIR}/debug/lib/bson-1.0.lib)
+	
+	# drop the __declspec(dllimport) when building static
+	vcpkg_apply_patches(
+		SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
+		PATCHES
+			${CMAKE_CURRENT_LIST_DIR}/static.patch
+	)
 else()
 	file(REMOVE         ${CURRENT_PACKAGES_DIR}/lib/bson-static-1.0.lib)
 	file(REMOVE         ${CURRENT_PACKAGES_DIR}/debug/lib/bson-static-1.0.lib)
