@@ -31,6 +31,10 @@ endif()
 message(STATUS "Bootstrapping done")
 
 set(B2_OPTIONS
+    -sZLIB_BINARY=zlib
+    -sZLIB_INCLUDE="${CURRENT_INSTALLED_DIR}\\include"
+    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+    -sNO_BZIP2=1
     -j$ENV{NUMBER_OF_PROCESSORS}
     --debug-configuration
     --hash
