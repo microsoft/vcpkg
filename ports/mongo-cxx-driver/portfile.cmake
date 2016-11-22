@@ -76,6 +76,13 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 	file(RENAME
 		${CURRENT_PACKAGES_DIR}/debug/lib/libmongocxx.lib
 		${CURRENT_PACKAGES_DIR}/debug/lib/mongocxx.lib)
+	
+	# define MONGOCXX_STATIC in config/export.hpp
+	vcpkg_apply_patches(
+		SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
+		PATCHES
+			${CMAKE_CURRENT_LIST_DIR}/static.patch
+	)
 else()
 	file(REMOVE         ${CURRENT_PACKAGES_DIR}/lib/libbsoncxx.lib)
 	file(REMOVE         ${CURRENT_PACKAGES_DIR}/debug/lib/libbsoncxx.lib)
