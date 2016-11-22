@@ -41,7 +41,11 @@ set(CONFIGURE_COMMAND_TEMPLATE cscript configure.js
 
 message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
 
-set(CRUNTIME /MD)
+if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
+    set(CRUNTIME /MD)
+else()
+    set(CRUNTIME /MT)
+endif()
 set(DEBUGMODE no)
 set(LIB_DIR ${CURRENT_INSTALLED_DIR}/lib)
 set(INCLUDE_DIR ${CURRENT_INSTALLED_DIR}/include)
@@ -82,7 +86,11 @@ message(STATUS "Installing ${TARGET_TRIPLET}-rel done")
 
 message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
 
-set(CRUNTIME /MDd)
+if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
+    set(CRUNTIME /MDd)
+else()
+    set(CRUNTIME /MTd)
+endif()
 set(DEBUGMODE yes)
 set(LIB_DIR ${CURRENT_INSTALLED_DIR}/debug/lib)
 set(INSTALL_DIR ${CURRENT_PACKAGES_DIR}/debug)
@@ -116,6 +124,15 @@ message(STATUS "Installing ${TARGET_TRIPLET}-dbg done")
 #
 # Cleanup
 #
+
+# You have to define LIBXML_STATIC or not, depending on how you link
+file(READ ${CURRENT_PACKAGES_DIR}/include/libxml2/libxml/xmlexports.h XMLEXPORTS_H)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    string(REPLACE "!defined(LIBXML_STATIC)" "0" XMLEXPORTS_H "${XMLEXPORTS_H}")
+else()
+    string(REPLACE "!defined(LIBXML_STATIC)" "1" XMLEXPORTS_H "${XMLEXPORTS_H}")
+endif()
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/libxml2/libxml/xmlexports.h "${XMLEXPORTS_H}")
 
 # Remove tools and debug include directories
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools)
