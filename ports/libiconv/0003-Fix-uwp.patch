@@ -1,0 +1,24 @@
+diff --git a/libcharset/lib/localcharset.c b/libcharset/lib/localcharset.c
+index 3aceb42..1d9e618 100644
+--- a/libcharset/lib/localcharset.c
++++ b/libcharset/lib/localcharset.c
+@@ -455,6 +455,7 @@ locale_charset (void)
+ # endif
+ 
+ #elif defined WIN32_NATIVE
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP)
+ 
+   static char buf[2 + 10 + 1];
+ 
+@@ -467,7 +468,10 @@ locale_charset (void)
+      encoding is the best bet.  */
+   sprintf (buf, "CP%u", GetACP ());
+   codeset = buf;
+-
++#else
++  // GetACP() not available to UWP apps
++  codeset = NULL;
++#endif
+ #elif defined OS2
+ 
+   const char *locale;
