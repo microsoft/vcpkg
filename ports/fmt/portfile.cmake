@@ -17,6 +17,7 @@ vcpkg_configure_cmake(
         -DFMT_CMAKE_DIR=share/fmt
         -DFMT_TEST=OFF
         -DFMT_DOC=OFF
+        -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
 )
 
 
@@ -36,6 +37,13 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/fmt/fmt-targets-debug.cmake ${CU
 file(READ ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-debug.cmake FMT_DEBUG_MODULE)
 string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" FMT_DEBUG_MODULE "${FMT_DEBUG_MODULE}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-debug.cmake "${FMT_DEBUG_MODULE}")
+
+file(READ ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-debug.cmake FMT_DEBUG_MODULE)
+string(REPLACE "lib/fmt.dll" "bin/fmt.dll" FMT_DEBUG_MODULE ${FMT_DEBUG_MODULE})
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-debug.cmake "${FMT_DEBUG_MODULE}")
+file(READ ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-release.cmake FMT_RELEASE_MODULE)
+string(REPLACE "lib/fmt.dll" "bin/fmt.dll" FMT_RELEASE_MODULE ${FMT_RELEASE_MODULE})
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-release.cmake "${FMT_RELEASE_MODULE}")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 vcpkg_copy_pdbs()
