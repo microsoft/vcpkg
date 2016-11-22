@@ -1,8 +1,3 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported yet. Building dynamic.") #Blocked by build failure
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
-
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mongo-cxx-driver-r3.0.3)
 
@@ -15,8 +10,14 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/disable_test_and_example.patch
+    PATCHES 
+		${CMAKE_CURRENT_LIST_DIR}/disable_test_and_example.patch
+		${CMAKE_CURRENT_LIST_DIR}/disable_shared.patch
 )
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+	set(ENABLE_SHARED ON)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -24,6 +25,7 @@ vcpkg_configure_cmake(
 		-DLIBBSON_DIR=${CURRENT_INSTALLED_DIR}
 		-DLIBMONGOC_DIR=${CURRENT_INSTALLED_DIR}
 		-DCMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP=ON
+		-DENABLE_SHARED=${ENABLE_SHARED}
 )
 
 vcpkg_install_cmake()
