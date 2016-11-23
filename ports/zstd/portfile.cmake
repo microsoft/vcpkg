@@ -21,11 +21,6 @@ file(COPY ${SOURCE_PATH}/lib/zstd.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 file(COPY ${SOURCE_PATH}/lib/common/zbuff.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 file(COPY ${SOURCE_PATH}/lib/dictBuilder/zdict.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-# Copy the command-line zstd exe
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/programs/Release/
-    DESTINATION ${CURRENT_PACKAGES_DIR}/tools
-    FILES_MATCHING PATTERN "zstd.exe")
-
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     # Dynamic libs of zstd appear to start with "zstdlib."
     file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/Release/
