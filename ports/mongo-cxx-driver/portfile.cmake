@@ -15,17 +15,12 @@ vcpkg_apply_patches(
 		${CMAKE_CURRENT_LIST_DIR}/disable_shared.patch
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-	set(ENABLE_SHARED ON)
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
 	OPTIONS
 		-DLIBBSON_DIR=${CURRENT_INSTALLED_DIR}
 		-DLIBMONGOC_DIR=${CURRENT_INSTALLED_DIR}
 		-DCMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP=ON
-		-DENABLE_SHARED=${ENABLE_SHARED}
 )
 
 vcpkg_install_cmake()
