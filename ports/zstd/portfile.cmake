@@ -7,47 +7,58 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+# Name dynamic libs to be non-versioned and simpler "zstd".
+# Avoid name conflict with static, so postfix static to "zstd-static"
+# This seems to be less painful than renaming a DLL file after creation.
+set(lib_cmake_filename ${SOURCE_PATH}/build/cmake/lib/CMakeLists.txt)
+if (NOT EXISTS ${lib_cmake_filename}.orig)
+    file(INSTALL ${SOURCE_PATH}/build/cmake/lib/CMakeLists.txt
+        DESTINATION ${SOURCE_PATH}/build/cmake/lib
+        RENAME CMakeLists.txt.orig)
+endif()
+file(READ "${lib_cmake_filename}" lib_cmake_content)
+string(REPLACE
+ "SET(SHARED_LIBRARY_OUTPUT_NAME \${LIBRARY_BASE_NAME}.\${LIBVER_MAJOR}.\${LIBVER_MINOR}.\${LIBVER_RELEASE})"
+ "SET(SHARED_LIBRARY_OUTPUT_NAME zstd)"
+ lib_cmake_content
+ "${lib_cmake_content}"
+)
+string(REPLACE
+ "SET(STATIC_LIBRARY_OUTPUT_NAME \${LIBRARY_BASE_NAME})"
+ "SET(STATIC_LIBRARY_OUTPUT_NAME zstd-static)"
+ lib_cmake_content
+ "${lib_cmake_content}"
+)
+file(WRITE "${lib_cmake_filename}" "${lib_cmake_content}")
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/build/cmake
     OPTIONS -DZSTD_LEGACY_SUPPORT=1
 )
-
 vcpkg_build_cmake()
 
-# Manual install since zstd guarded all their installation functions behind an if (UNIX)
+# Manual install
 message(STATUS "Installing")
 
 file(COPY ${SOURCE_PATH}/lib/zstd.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 file(COPY ${SOURCE_PATH}/lib/common/zbuff.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 file(COPY ${SOURCE_PATH}/lib/dictBuilder/zdict.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
+set(RELDIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/Release)
+set(DEBDIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/Debug)
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    # Dynamic libs of zstd appear to start with "zstdlib."
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/Release/
-        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-        FILES_MATCHING PATTERN "zstdlib.*.lib")
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/Release/
-        DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-        FILES_MATCHING PATTERN "zstdlib.*.dll")
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/Debug/
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-        FILES_MATCHING PATTERN "zstdlib.*.lib")
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/Debug/
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-        FILES_MATCHING PATTERN "zstdlib.*.dll")
+    file(INSTALL ${RELDIR}/ DESTINATION ${CURRENT_PACKAGES_DIR}/lib FILES_MATCHING PATTERN "zstd_*.lib")
+    file(INSTALL ${RELDIR}/ DESTINATION ${CURRENT_PACKAGES_DIR}/bin FILES_MATCHING PATTERN "zstd_*.dll")
+    file(INSTALL ${DEBDIR}/ DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib FILES_MATCHING PATTERN "zstd_*.lib")
+    file(INSTALL ${DEBDIR}/ DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin FILES_MATCHING PATTERN "zstd_*.dll")
+    vcpkg_copy_pdbs()
 else()
-    # Static libs of zstd appear to start with "zstdlib_"
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/Release/
-        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-        FILES_MATCHING PATTERN "zstdlib_*.lib")
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/Debug/
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-        FILES_MATCHING PATTERN "zstdlib_*.lib")
+    file(INSTALL ${RELDIR}/ DESTINATION ${CURRENT_PACKAGES_DIR}/lib FILES_MATCHING PATTERN "zstd-static_*.lib")
+    file(INSTALL ${DEBDIR}/ DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib FILES_MATCHING PATTERN "zstd-static_*.lib")
 endif()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/zstd)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/zstd/LICENSE ${CURRENT_PACKAGES_DIR}/share/zstd/copyright)
 
-vcpkg_copy_pdbs()
 message(STATUS "Installing done")
