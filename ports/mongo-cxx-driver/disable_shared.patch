@@ -1,5 +1,5 @@
 diff --git a/src/bsoncxx/CMakeLists.txt b/src/bsoncxx/CMakeLists.txt
-index a9a7ada..f4534b1 100644
+index a9a7ada..6b87a6d 100644
 --- a/src/bsoncxx/CMakeLists.txt
 +++ b/src/bsoncxx/CMakeLists.txt
 @@ -117,9 +117,15 @@ if (WIN32)
@@ -9,7 +9,7 @@ index a9a7ada..f4534b1 100644
 -add_library(bsoncxx SHARED
 -    ${bsoncxx_sources}
 -)
-+if(ENABLE_SHARED)
++if(BUILD_SHARED_LIBS)
 +	add_library(bsoncxx SHARED
 +		${bsoncxx_sources}
 +	)
@@ -22,7 +22,7 @@ index a9a7ada..f4534b1 100644
  set(bsoncxx_libs ${LIBBSON_LIBRARIES})
  
 diff --git a/src/mongocxx/CMakeLists.txt b/src/mongocxx/CMakeLists.txt
-index 2ef54e4..a2c8ca4 100644
+index 2ef54e4..53a13f7 100644
 --- a/src/mongocxx/CMakeLists.txt
 +++ b/src/mongocxx/CMakeLists.txt
 @@ -134,9 +134,15 @@ set_target_properties(mongocxx_mocked PROPERTIES
@@ -32,7 +32,7 @@ index 2ef54e4..a2c8ca4 100644
 -add_library(mongocxx SHARED
 -    ${mongocxx_sources}
 -)
-+if(ENABLE_SHARED)
++if(BUILD_SHARED_LIBS)
 +	add_library(mongocxx SHARED
 +		${mongocxx_sources}
 +	)
