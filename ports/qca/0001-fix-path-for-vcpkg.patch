@@ -1,0 +1,54 @@
+From bab44a6614d4a540af56860432bcc0d6bdf420c9 Mon Sep 17 00:00:00 2001
+From: devel <alexander.kaspar@gmail.com>
+Date: Wed, 23 Nov 2016 16:54:44 +0100
+Subject: [PATCH] fix path for vcpkg
+
+---
+ CMakeLists.txt | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 605621b..a8c3774 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -277,7 +277,7 @@ if(DEVELOPER_MODE)
+ # To prefer plugins from build tree when run qca from build tree
+   file(WRITE ${CMAKE_BINARY_DIR}/bin/qt.conf
+ "[Paths]
+-Plugins=${CMAKE_BINARY_DIR}/lib/${QCA_LIB_NAME}
++Plugins=${CMAKE_BINARY_DIR}/bin/${QCA_LIB_NAME}
+ ")
+ endif()
+ 
+@@ -401,10 +401,10 @@ endif(DOXYGEN_FOUND)
+ include(CMakePackageConfigHelpers)
+ configure_package_config_file(
+   "${CMAKE_CURRENT_SOURCE_DIR}/QcaConfig.cmake.in"
+-  "${CMAKE_CURRENT_BINARY_DIR}/lib/cmake/${QCA_CONFIG_NAME_BASE}/${QCA_CONFIG_NAME_BASE}Config.cmake"
+-  INSTALL_DESTINATION ${QCA_LIBRARY_INSTALL_DIR}/cmake/${QCA_CONFIG_NAME_BASE}
++  "${CMAKE_CURRENT_BINARY_DIR}/share/cmake/${QCA_CONFIG_NAME_BASE}/${QCA_CONFIG_NAME_BASE}Config.cmake"
++  INSTALL_DESTINATION ${CMAKE_BINARY_DIR}/share/cmake/${QCA_CONFIG_NAME_BASE}
+ )
+-write_basic_config_version_file("${CMAKE_CURRENT_BINARY_DIR}/lib/cmake/${QCA_CONFIG_NAME_BASE}/${QCA_CONFIG_NAME_BASE}ConfigVersion.cmake" VERSION ${QCA_LIB_VERSION_STRING} COMPATIBILITY AnyNewerVersion)
++write_basic_config_version_file("${CMAKE_BINARY_DIR}/share/cmake/${QCA_CONFIG_NAME_BASE}/${QCA_CONFIG_NAME_BASE}ConfigVersion.cmake" VERSION ${QCA_LIB_VERSION_STRING} COMPATIBILITY AnyNewerVersion)
+ 
+ if(NOT DEVELOPER_MODE)
+ 
+@@ -472,10 +472,10 @@ if(NOT DEVELOPER_MODE)
+     endif()
+   endif()
+ 
+-  install(EXPORT ${QCA_CONFIG_NAME_BASE}Targets DESTINATION ${QCA_LIBRARY_INSTALL_DIR}/cmake/${QCA_CONFIG_NAME_BASE} FILE ${QCA_CONFIG_NAME_BASE}Targets.cmake)
++  install(EXPORT ${QCA_CONFIG_NAME_BASE}Targets DESTINATION ${QCA_PREFIX_INSTALL_DIR}/share/cmake/${QCA_CONFIG_NAME_BASE} FILE ${QCA_CONFIG_NAME_BASE}Targets.cmake)
+   install(FILES
+-    "${CMAKE_CURRENT_BINARY_DIR}/lib/cmake/${QCA_CONFIG_NAME_BASE}/${QCA_CONFIG_NAME_BASE}Config.cmake"
+-    "${CMAKE_CURRENT_BINARY_DIR}/lib/cmake/${QCA_CONFIG_NAME_BASE}/${QCA_CONFIG_NAME_BASE}ConfigVersion.cmake"
+-    DESTINATION ${QCA_LIBRARY_INSTALL_DIR}/cmake/${QCA_CONFIG_NAME_BASE}
++    "${CMAKE_CURRENT_BINARY_DIR}/share/cmake/${QCA_CONFIG_NAME_BASE}/${QCA_CONFIG_NAME_BASE}Config.cmake"
++    "${CMAKE_CURRENT_BINARY_DIR}/share/cmake/${QCA_CONFIG_NAME_BASE}/${QCA_CONFIG_NAME_BASE}ConfigVersion.cmake"
++    DESTINATION ${QCA_PREFIX_INSTALL_DIR}/share/cmake/${QCA_CONFIG_NAME_BASE}
+     )
+ endif()
+-- 
+2.9.2.windows.1
+
