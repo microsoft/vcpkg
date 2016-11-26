@@ -44,7 +44,7 @@ file(INSTALL
 
 file(INSTALL
 	${SOURCE_PATH}/Inc/
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
+    DESTINATION ${CURRENT_PACKAGES_DIR}/include/DirectXTK
 )
 
 # Handle copyright
