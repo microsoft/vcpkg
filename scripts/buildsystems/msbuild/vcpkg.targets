@@ -31,11 +31,13 @@
 
   <ItemDefinitionGroup Condition="'$(VcpkgEnabled)' == 'true'">
     <Link>
-      <AdditionalDependencies Condition="'$(VcpkgConfiguration)' == 'Debug'">$(VcpkgRoot)debug\lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalDependencies Condition="'$(VcpkgConfiguration)' == 'Release'">$(VcpkgRoot)lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(VcpkgConfiguration)' == 'Debug' and '$(VcpkgAutoLink)' != 'false'">%(AdditionalDependencies);$(VcpkgRoot)debug\lib\*.lib</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(VcpkgConfiguration)' == 'Release' and '$(VcpkgAutoLink)' != 'false'">%(AdditionalDependencies);$(VcpkgRoot)lib\*.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories Condition="'$(VcpkgConfiguration)' == 'Release'">%(AdditionalLibraryDirectories);$(VcpkgRoot)lib;$(VcpkgRoot)lib\manual-link</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories Condition="'$(VcpkgConfiguration)' == 'Debug'">%(AdditionalLibraryDirectories);$(VcpkgRoot)debug\lib;$(VcpkgRoot)debug\lib\manual-link</AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(VcpkgRoot)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(VcpkgRoot)include</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
 

@@ -46,21 +46,27 @@ if(NOT VCPKG_TOOLCHAIN)
         list(APPEND CMAKE_PREFIX_PATH
             ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug
         )
+        list(APPEND CMAKE_LIBRARY_PATH
+            ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/manual-link
+        )
     endif()
     list(APPEND CMAKE_PREFIX_PATH
         ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}
+    )
+    list(APPEND CMAKE_LIBRARY_PATH
+        ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/manual-link
     )
 
     include_directories(${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
 
     set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools)
 
-    option(OVERRIDE_ADD_EXECUTABLE "Automatically copy dependencies into the output directory for executables." ON)
-    if(OVERRIDE_ADD_EXECUTABLE)
-        function(add_executable name)
-            _add_executable(${ARGV})
-            list(FIND ARGV "IMPORTED" IMPORTED_IDX)
-            if(IMPORTED_IDX EQUAL -1)
+    option(VCPKG_APPLOCAL_DEPS "Automatically copy dependencies into the output directory for executables." ON)
+    function(add_executable name)
+        _add_executable(${ARGV})
+        list(FIND ARGV "IMPORTED" IMPORTED_IDX)
+        if(IMPORTED_IDX EQUAL -1)
+            if(VCPKG_APPLOCAL_DEPS)
                 add_custom_command(TARGET ${name} POST_BUILD
                     COMMAND powershell -noprofile -executionpolicy UnRestricted -file ${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1
                         -targetBinary $<TARGET_FILE:${name}>
@@ -68,7 +74,17 @@ if(NOT VCPKG_TOOLCHAIN)
                         -OutVariable out
                 )
             endif()
-        endfunction()
-    endif()
+            set_target_properties(${name} PROPERTIES VS_GLOBAL_VcpkgEnabled false)
+        endif()
+    endfunction()
+
+    function(add_library name)
+        _add_library(${ARGV})
+        list(FIND ARGV "IMPORTED" IMPORTED_IDX)
+        if(IMPORTED_IDX EQUAL -1)
+            set_target_properties(${name} PROPERTIES VS_GLOBAL_VcpkgEnabled false)
+        endif()
+    endfunction()
+
     set(VCPKG_TOOLCHAIN ON)
 endif()
