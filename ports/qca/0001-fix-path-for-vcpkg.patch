@@ -26,11 +26,11 @@ index 605621b..a8c3774 100644
    "${CMAKE_CURRENT_SOURCE_DIR}/QcaConfig.cmake.in"
 -  "${CMAKE_CURRENT_BINARY_DIR}/lib/cmake/${QCA_CONFIG_NAME_BASE}/${QCA_CONFIG_NAME_BASE}Config.cmake"
 -  INSTALL_DESTINATION ${QCA_LIBRARY_INSTALL_DIR}/cmake/${QCA_CONFIG_NAME_BASE}
-+  "${CMAKE_CURRENT_BINARY_DIR}/share/cmake/${QCA_CONFIG_NAME_BASE}/${QCA_CONFIG_NAME_BASE}Config.cmake"
-+  INSTALL_DESTINATION ${CMAKE_BINARY_DIR}/share/cmake/${QCA_CONFIG_NAME_BASE}
++  "${CMAKE_BINARY_DIR}/share/qca/cmake/${QCA_CONFIG_NAME_BASE}Config.cmake"
++  INSTALL_DESTINATION ${CMAKE_BINARY_DIR}/share/qca/cmake
  )
 -write_basic_config_version_file("${CMAKE_CURRENT_BINARY_DIR}/lib/cmake/${QCA_CONFIG_NAME_BASE}/${QCA_CONFIG_NAME_BASE}ConfigVersion.cmake" VERSION ${QCA_LIB_VERSION_STRING} COMPATIBILITY AnyNewerVersion)
-+write_basic_config_version_file("${CMAKE_BINARY_DIR}/share/cmake/${QCA_CONFIG_NAME_BASE}/${QCA_CONFIG_NAME_BASE}ConfigVersion.cmake" VERSION ${QCA_LIB_VERSION_STRING} COMPATIBILITY AnyNewerVersion)
++write_basic_config_version_file("${CMAKE_BINARY_DIR}/share/qca/cmake/${QCA_CONFIG_NAME_BASE}ConfigVersion.cmake" VERSION ${QCA_LIB_VERSION_STRING} COMPATIBILITY AnyNewerVersion)
  
  if(NOT DEVELOPER_MODE)
  
@@ -39,14 +39,14 @@ index 605621b..a8c3774 100644
    endif()
  
 -  install(EXPORT ${QCA_CONFIG_NAME_BASE}Targets DESTINATION ${QCA_LIBRARY_INSTALL_DIR}/cmake/${QCA_CONFIG_NAME_BASE} FILE ${QCA_CONFIG_NAME_BASE}Targets.cmake)
-+  install(EXPORT ${QCA_CONFIG_NAME_BASE}Targets DESTINATION ${QCA_PREFIX_INSTALL_DIR}/share/cmake/${QCA_CONFIG_NAME_BASE} FILE ${QCA_CONFIG_NAME_BASE}Targets.cmake)
++  install(EXPORT ${QCA_CONFIG_NAME_BASE}Targets DESTINATION ${QCA_PREFIX_INSTALL_DIR}/share/qca/cmake FILE ${QCA_CONFIG_NAME_BASE}Targets.cmake)
    install(FILES
 -    "${CMAKE_CURRENT_BINARY_DIR}/lib/cmake/${QCA_CONFIG_NAME_BASE}/${QCA_CONFIG_NAME_BASE}Config.cmake"
 -    "${CMAKE_CURRENT_BINARY_DIR}/lib/cmake/${QCA_CONFIG_NAME_BASE}/${QCA_CONFIG_NAME_BASE}ConfigVersion.cmake"
 -    DESTINATION ${QCA_LIBRARY_INSTALL_DIR}/cmake/${QCA_CONFIG_NAME_BASE}
-+    "${CMAKE_CURRENT_BINARY_DIR}/share/cmake/${QCA_CONFIG_NAME_BASE}/${QCA_CONFIG_NAME_BASE}Config.cmake"
-+    "${CMAKE_CURRENT_BINARY_DIR}/share/cmake/${QCA_CONFIG_NAME_BASE}/${QCA_CONFIG_NAME_BASE}ConfigVersion.cmake"
-+    DESTINATION ${QCA_PREFIX_INSTALL_DIR}/share/cmake/${QCA_CONFIG_NAME_BASE}
++    "${CMAKE_BINARY_DIR}/share/qca/cmake/${QCA_CONFIG_NAME_BASE}Config.cmake"
++    "${CMAKE_BINARY_DIR}/share/qca/cmake/${QCA_CONFIG_NAME_BASE}ConfigVersion.cmake"
++    DESTINATION ${QCA_PREFIX_INSTALL_DIR}/share/qca/cmake
      )
  endif()
 -- 

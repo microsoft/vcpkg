@@ -7,7 +7,6 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 include(vcpkg_common_functions)
-include(${CMAKE_CURRENT_LIST_DIR}/qca_load_qtenv.cmake)
 
 find_program(GIT git)
 
@@ -39,48 +38,51 @@ message(STATUS "Adding worktree done")
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/)
 
-# Apply the patch to install 'crypto' and 'cmake targets' folder
+# Apply the patch to install to the expected folders
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-fix-path-for-vcpkg.patch
 )
 
+# Configure and build
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     CURRENT_PACKAGES_DIR ${CURRENT_PACKAGES_DIR}
     OPTIONS
-        #-DSOURCE=${SOURCE_PATH}
         -DBUILD_SHARED_LIBS=ON
         -DUSE_RELATIVE_PATHS=ON
         -DQT4_BUILD=OFF
         -DBUILD_TESTS=OFF
         -DBUILD_TOOLS=OFF
-        -DQCA_SUFFIX=qt5
+        -DQCA_SUFFIX=OFF    #
     OPTIONS_DEBUG
-        -DQCA_PLUGINS_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/debug/bin/Qca-qt5
+        -DQCA_PLUGINS_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/debug/bin/Qca     #
     OPTIONS_RELEASE
-        -DQCA_PLUGINS_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/bin/Qca-qt5
+        -DQCA_PLUGINS_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/bin/Qca           #
 )
 
 vcpkg_install_cmake()
 
+# Patch and copy cmake files
 message(STATUS "Patching files")
 
-file(RENAME 
-    ${CURRENT_PACKAGES_DIR}/debug/share/cmake/Qca-qt5/Qca-qt5Targets-debug.cmake
-    ${CURRENT_PACKAGES_DIR}/share/cmake/Qca-qt5/Qca-qt5Targets-debug.cmake
+file(READ 
+    ${CURRENT_PACKAGES_DIR}/debug/share/qca/cmake/QcaTargets-debug.cmake
+    QCA_DEBUG_CONFIG
+)
+string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" QCA_DEBUG_CONFIG "${QCA_DEBUG_CONFIG}")
+file(WRITE 
+    ${CURRENT_PACKAGES_DIR}/share/qca/cmake/QcaTargets-debug.cmake
+    "${QCA_DEBUG_CONFIG}"
 )
 
-set(T_DEBUG ${CURRENT_PACKAGES_DIR}/share/cmake/Qca-qt5/Qca-qt5Targets-debug.cmake)
-set(T_TARGETS ${CURRENT_PACKAGES_DIR}/share/cmake/Qca-qt5/Qca-qt5Targets.cmake)
-
-file(READ ${T_DEBUG} QCA_DEBUG_CONFIG)
-string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" QCA_DEBUG_CONFIG "${QCA_DEBUG_CONFIG}")
-file(WRITE ${T_DEBUG} "${QCA_DEBUG_CONFIG}")
-
-file(READ ${T_TARGETS} QCA_TARGET_CONFIG)
+file(READ ${CURRENT_PACKAGES_DIR}/share/qca/cmake/QcaTargets.cmake
+    QCA_TARGET_CONFIG
+)
 string(REPLACE "packages/qca_" "installed/" QCA_TARGET_CONFIG "${QCA_TARGET_CONFIG}")
-file(WRITE ${T_TARGETS} "${QCA_TARGET_CONFIG}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/qca/cmake/QcaTargets.cmake
+    "${QCA_TARGET_CONFIG}"
+)
 
 # Remove unneeded dirs
 file(REMOVE_RECURSE 
