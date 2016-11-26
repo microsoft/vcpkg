@@ -49,6 +49,7 @@ if(NOT VCPKG_TOOLCHAIN)
         list(APPEND CMAKE_LIBRARY_PATH
             ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/manual-link
         )
+        link_directories(${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/manual-link)
     endif()
     list(APPEND CMAKE_PREFIX_PATH
         ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}
@@ -56,6 +57,7 @@ if(NOT VCPKG_TOOLCHAIN)
     list(APPEND CMAKE_LIBRARY_PATH
         ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/manual-link
     )
+    link_directories(${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/manual-link)
 
     include_directories(${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
 
