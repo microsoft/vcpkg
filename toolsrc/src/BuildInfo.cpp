@@ -16,13 +16,13 @@ namespace vcpkg
 
     const std::regex& BuildType::crt_regex() const
     {
-        static const std::regex r(this->m_crt_regex_as_string, std::regex_constants::icase);
+        const std::regex r(this->m_crt_regex_as_string, std::regex_constants::icase);
         return r;
     }
 
     const std::string& BuildType::toString() const
     {
-        static const std::string s = Strings::format("[%s,%s]", to_string(this->m_config), to_string(this->m_linkage));
+        const std::string s = Strings::format("[%s,%s]", to_string(this->m_config), to_string(this->m_linkage));
         return s;
     }
 
@@ -153,7 +153,7 @@ namespace vcpkg
 
     const std::regex& OutdatedDynamicCrt::crt_regex() const
     {
-        static const std::regex r(this->m_crt_regex_as_string, std::regex_constants::icase);
+        const std::regex r(this->m_crt_regex_as_string, std::regex_constants::icase);
         return r;
     }
 
