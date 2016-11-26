@@ -9,10 +9,10 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}/
-    PATCHES 
-	${CMAKE_CURRENT_LIST_DIR}/0001-CMake-add-detection-of-recent-visual-studio-versions.patch
-	${CMAKE_CURRENT_LIST_DIR}/0002-CMake-fix-error-by-only-setting-properties-for-targe.patch
-	${CMAKE_CURRENT_LIST_DIR}/0003-CMake-configurable-cmake-config-install-location.patch
+    PATCHES
+    ${CMAKE_CURRENT_LIST_DIR}/0001-CMake-add-detection-of-recent-visual-studio-versions.patch
+    ${CMAKE_CURRENT_LIST_DIR}/0002-CMake-fix-error-by-only-setting-properties-for-targe.patch
+    ${CMAKE_CURRENT_LIST_DIR}/0003-CMake-configurable-cmake-config-install-location.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -26,13 +26,13 @@ vcpkg_configure_cmake(
     OPTIONS ${CMAKE_OPTIONS}
     -DPROJ_LIB_SUBDIR=lib
     -DPROJ_INCLUDE_SUBDIR=include
-	-DPROJ_DATA_SUBDIR=share/proj4
-	-DPROJ_CMAKE_CONFIG_SUBDIR=share/proj4
+    -DPROJ_DATA_SUBDIR=share/proj4
+    -DPROJ_CMAKE_CONFIG_SUBDIR=share/proj4
     -DBUILD_CS2CS=NO
     -DBUILD_PROJ=NO
     -DBUILD_GEOD=NO
     -DBUILD_NAD2BIN=NO
-	-DPROJ4_TESTS=NO
+    -DPROJ4_TESTS=NO
 )
 
 vcpkg_install_cmake(
@@ -40,7 +40,7 @@ vcpkg_install_cmake(
     -DBUILD_PROJ=NO
     -DBUILD_GEOD=NO
     -DBUILD_NAD2BIN=NO
-	-DPROJ4_TESTS=NO
+    -DPROJ4_TESTS=NO
 )
 
 # Remove duplicate headers installed from debug build
