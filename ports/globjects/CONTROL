@@ -1,0 +1,3 @@
+Source: globjects
+Version: 1.0.0
+Description: C++ library strictly wrapping OpenGL objects.
