@@ -15,15 +15,37 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
-)
-
+vcpkg_configure_cmake(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/globjects-1.0.0)
+#vcpkg_build_cmake()
 vcpkg_install_cmake()
 
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
+file(RENAME ${CURRENT_PACKAGES_DIR}/cmake/globjects ${CURRENT_PACKAGES_DIR}/share/globjects)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake)
+
+file(READ ${CURRENT_PACKAGES_DIR}/debug/cmake/globjects/globjects-export-debug.cmake globjects_DEBUG_MODULE)
+string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" globjects_DEBUG_MODULE "${globjects_DEBUG_MODULE}")
+string(REPLACE "globjectsd.dll" "bin/globjectsd.dll" globjects_DEBUG_MODULE "${globjects_DEBUG_MODULE}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/globjects/globjects-export-debug.cmake "${globjects_DEBUG_MODULE}")
+file(READ ${CURRENT_PACKAGES_DIR}/share/globjects/globjects-export-release.cmake RELEASE_CONF)
+string(REPLACE "globjects.dll" "bin/globjects.dll" RELEASE_CONF "${RELEASE_CONF}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/globjects/globjects-export-release.cmake "${RELEASE_CONF}")
+file(REMOVE ${CURRENT_PACKAGES_DIR}/globjects-config.cmake)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/globjects-config.cmake)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/globjects/globjects-export.cmake ${CURRENT_PACKAGES_DIR}/share/globjects/globjects-config.cmake)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/globjects.dll ${CURRENT_PACKAGES_DIR}/bin/globjects.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/globjectsd.dll ${CURRENT_PACKAGES_DIR}/debug/bin/globjectsd.dll)
+endif()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
+file(RENAME ${CURRENT_PACKAGES_DIR}/data ${CURRENT_PACKAGES_DIR}/share/data)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/data)
 # Handle copyright
-#file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/globjects)
-#file(RENAME ${CURRENT_PACKAGES_DIR}/share/globjects/LICENSE ${CURRENT_PACKAGES_DIR}/share/globjects/copyright)
+file(COPY ${CURRENT_BUILDTREES_DIR}/src/globjects-1.0.0/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/globjects)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/globjects/LICENSE ${CURRENT_PACKAGES_DIR}/share/globjects/copyright)
+
+vcpkg_copy_pdbs()
