@@ -1,4 +1,4 @@
-if (NOT TARGET_TRIPLET STREQUAL "x86-windows" OR NOT TARGET_TRIPLET STREQUAL "x64-windows")
+if (NOT TARGET_TRIPLET STREQUAL "x86-windows" AND NOT TARGET_TRIPLET STREQUAL "x64-windows")
     message(FATAL_ERROR "Error: Only x64 and x86 desktop builds are supported now.")
 endif()
 
