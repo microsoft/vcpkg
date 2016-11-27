@@ -1,7 +1,3 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/curl-curl-7_51_0)
 vcpkg_download_distfile(ARCHIVE_FILE
@@ -11,12 +7,19 @@ vcpkg_download_distfile(ARCHIVE_FILE
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
+if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
+    SET(CURL_STATICLIB OFF)
+else()
+    SET(CURL_STATICLIB ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DBUILD_TESTING=OFF
         -DBUILD_CURL_EXE=OFF
         -DENABLE_MANUAL=OFF
+        -DCURL_STATICLIB=${CURL_STATICLIB}
     OPTIONS_DEBUG
         -DENABLE_DEBUG=ON
 )
@@ -25,4 +28,9 @@ vcpkg_install_cmake()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/curl RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
+
 vcpkg_copy_pdbs()
