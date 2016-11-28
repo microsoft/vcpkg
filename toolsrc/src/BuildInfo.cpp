@@ -14,15 +14,15 @@ namespace vcpkg
         return this->m_linkage;
     }
 
-    const std::regex& BuildType::crt_regex() const
+    const std::regex BuildType::crt_regex() const
     {
-        static const std::regex r(this->m_crt_regex_as_string, std::regex_constants::icase);
+        const std::regex r(this->m_crt_regex_as_string, std::regex_constants::icase);
         return r;
     }
 
-    const std::string& BuildType::toString() const
+    const std::string BuildType::toString() const
     {
-        static const std::string s = Strings::format("[%s,%s]", to_string(this->m_config), to_string(this->m_linkage));
+        const std::string s = Strings::format("[%s,%s]", to_string(this->m_config), to_string(this->m_linkage));
         return s;
     }
 
@@ -151,9 +151,9 @@ namespace vcpkg
     const OutdatedDynamicCrt OutdatedDynamicCrt::MSVCRT20_DLL = OutdatedDynamicCrt("msvcrt20.dll", R"(msvcrt20\.dll)");;
     const OutdatedDynamicCrt OutdatedDynamicCrt::MSVCRT40_DLL = OutdatedDynamicCrt("msvcrt40.dll", R"(msvcrt40\.dll)");;
 
-    const std::regex& OutdatedDynamicCrt::crt_regex() const
+    const std::regex OutdatedDynamicCrt::crt_regex() const
     {
-        static const std::regex r(this->m_crt_regex_as_string, std::regex_constants::icase);
+        const std::regex r(this->m_crt_regex_as_string, std::regex_constants::icase);
         return r;
     }
 

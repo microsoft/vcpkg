@@ -1,6 +1,6 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
+    set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/DXUT-sept2016)
@@ -10,11 +10,6 @@ vcpkg_download_distfile(ARCHIVE_FILE
     SHA512 190006c194284a1f5d614477896b0469a59ece05dff37477dadbe98808a5c33e274c0c1bb1390f22d1b5e06c9f534f4b50d6002157b2a391e01c2192b8e08869
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/dll.patch
-)
 
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/Core/DXUT_2015.vcxproj
@@ -38,16 +33,8 @@ file(INSTALL
 )
 
 file(INSTALL
-	${SOURCE_PATH}/Core/Bin/Desktop_2015/${BUILD_ARCH}/Release/DXUT.dll
-	DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-
-file(INSTALL
 	${SOURCE_PATH}/Core/Bin/Desktop_2015/${BUILD_ARCH}/Release/DXUT.lib
 	DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-
-file(INSTALL
-	${SOURCE_PATH}/Core/Bin/Desktop_2015/${BUILD_ARCH}/Debug/DXUT.dll
-	DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 
 file(INSTALL
 	${SOURCE_PATH}/Core/Bin/Desktop_2015/${BUILD_ARCH}/Debug/DXUT.lib

@@ -1,4 +1,4 @@
-set(_supported_components libodb sqlite)
+set(_supported_components libodb sqlite pgsql)
 
 foreach(_comp ${odb_FIND_COMPONENTS})
     if(NOT ";${_supported_components};" MATCHES _comp)

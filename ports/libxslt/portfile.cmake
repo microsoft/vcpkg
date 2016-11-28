@@ -7,44 +7,36 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libxml2-2.9.4)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libxslt-1.1.29)
 vcpkg_download_distfile(ARCHIVE
-    URLS "ftp://xmlsoft.org/libxml2/libxml2-2.9.4.tar.gz"
-    FILENAME "libxml2-2.9.4.tar.gz"
-    SHA512 f5174ab1a3a0ec0037a47f47aa47def36674e02bfb42b57f609563f84c6247c585dbbb133c056953a5adb968d328f18cbc102eb0d00d48eb7c95478389e5daf9
+    URLS "ftp://xmlsoft.org/libxslt/libxslt-1.1.29.tar.gz"
+    FILENAME "libxslt-1.1.29.tar.gz"
+    SHA512 a1ce555a74a9dabe65e8f64bb66e27e77760fd76940d88f2d59f58dd63ca73c8ae59f3fcbd8e76c8f92ff992fb0c09328528c20ea38ccac83e63252106bf5f31
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
 find_program(NMAKE nmake)
 
-message(STATUS "NMAKE ${NMAKE}")
-
-
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}/
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-makefile.patch
-            ${CMAKE_CURRENT_LIST_DIR}/0002-Fix-uwp.patch
 )
 
 set(SCRIPTS_DIR ${SOURCE_PATH}/win32)
 
-set(IS_UWP no)
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    set(IS_UWP yes)
-endif()
-
-
 set(CONFIGURE_COMMAND_TEMPLATE cscript configure.js
-    zlib=yes
-    uwp=@IS_UWP@
     cruntime=@CRUNTIME@
     debug=@DEBUGMODE@
     prefix=@INSTALL_DIR@
     include=@INCLUDE_DIR@
     lib=@LIB_DIR@
-    bindir=@INSTALL_BIN_DIR@
+    bindir=$(PREFIX)\\tools\\
+    sodir=$(PREFIX)\\bin\\
 )
 
+# Create some directories ourselves, because the makefile doesn't
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
 
 #
 # Release
@@ -61,11 +53,9 @@ set(DEBUGMODE no)
 set(LIB_DIR ${CURRENT_INSTALLED_DIR}/lib)
 set(INCLUDE_DIR ${CURRENT_INSTALLED_DIR}/include)
 set(INSTALL_DIR ${CURRENT_PACKAGES_DIR})
-set(INSTALL_BIN_DIR "$(PREFIX)/tools")
 file(TO_NATIVE_PATH "${LIB_DIR}" LIB_DIR)
 file(TO_NATIVE_PATH "${INCLUDE_DIR}" INCLUDE_DIR)
 file(TO_NATIVE_PATH "${INSTALL_DIR}" INSTALL_DIR)
-file(TO_NATIVE_PATH "${INSTALL_BIN_DIR}" INSTALL_BIN_DIR)
 string(CONFIGURE "${CONFIGURE_COMMAND_TEMPLATE}" CONFIGURE_COMMAND)
 vcpkg_execute_required_process(
     COMMAND ${CONFIGURE_COMMAND}
@@ -142,39 +132,45 @@ message(STATUS "Installing ${TARGET_TRIPLET}-dbg done")
 # Cleanup
 #
 
-# You have to define LIBXML_STATIC or not, depending on how you link
-file(READ ${CURRENT_PACKAGES_DIR}/include/libxml2/libxml/xmlexports.h XMLEXPORTS_H)
+# You have to define LIB(E)XSLT_STATIC or not, depending on how you link
+file(READ ${CURRENT_PACKAGES_DIR}/include/libxslt/xsltexports.h XSLTEXPORTS_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    string(REPLACE "!defined(LIBXML_STATIC)" "0" XMLEXPORTS_H "${XMLEXPORTS_H}")
+    string(REPLACE "!defined(LIBXSLT_STATIC)" "0" XSLTEXPORTS_H "${XSLTEXPORTS_H}")
 else()
-    string(REPLACE "!defined(LIBXML_STATIC)" "1" XMLEXPORTS_H "${XMLEXPORTS_H}")
+    string(REPLACE "!defined(LIBXSLT_STATIC)" "1" XSLTEXPORTS_H "${XSLTEXPORTS_H}")
 endif()
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/libxml2/libxml/xmlexports.h "${XMLEXPORTS_H}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/libxslt/xsltexports.h "${XSLTEXPORTS_H}")
+
+file(READ ${CURRENT_PACKAGES_DIR}/include/libexslt/exsltexports.h EXSLTEXPORTS_H)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    string(REPLACE "!defined(LIBEXSLT_STATIC)" "0" EXSLTEXPORTS_H "${EXSLTEXPORTS_H}")
+else()
+    string(REPLACE "!defined(LIBEXSLT_STATIC)" "1" EXSLTEXPORTS_H "${EXSLTEXPORTS_H}")
+endif()
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/libexslt/exsltexports.h "${EXSLTEXPORTS_H}")
 
 # Remove tools and debug include directories
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/tools)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# Move includes to the expected directory
-file(RENAME ${CURRENT_PACKAGES_DIR}/include/libxml2/libxml ${CURRENT_PACKAGES_DIR}/include/libxml)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/libxml2)
-
 # The makefile builds both static and dynamic libraries, so remove the ones we don't want
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libxml2_a.lib ${CURRENT_PACKAGES_DIR}/lib/libxml2_a_dll.lib)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libxml2_a.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libxml2_a_dll.lib)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libxslt_a.lib ${CURRENT_PACKAGES_DIR}/lib/libexslt_a.lib)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libxslt_a.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libexslt_a.lib)
 else()
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libxml2.lib ${CURRENT_PACKAGES_DIR}/lib/libxml2_a_dll.lib)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libxml2.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libxml2_a_dll.lib)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libxslt.lib ${CURRENT_PACKAGES_DIR}/lib/libexslt.lib)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libxslt.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libexslt.lib)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
     # Rename the libs to match the dynamic lib names
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libxml2_a.lib ${CURRENT_PACKAGES_DIR}/lib/libxml2.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libxml2_a.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libxml2.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libxslt_a.lib ${CURRENT_PACKAGES_DIR}/lib/libxslt.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libexslt_a.lib ${CURRENT_PACKAGES_DIR}/lib/libexslt.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libxslt_a.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libxslt.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libexslt_a.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libexslt.lib)
 endif()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libxml2)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libxml2/COPYING ${CURRENT_PACKAGES_DIR}/share/libxml2/copyright)
+file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libxslt)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/libxslt/COPYING ${CURRENT_PACKAGES_DIR}/share/libxslt/copyright)
 
 vcpkg_copy_pdbs()
