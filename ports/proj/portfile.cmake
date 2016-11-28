@@ -43,6 +43,15 @@ vcpkg_install_cmake(
     -DPROJ4_TESTS=NO
 )
 
+# Rename library and adapt cmake configuration 
+# N.B. debug cmake export is not copied, as it's not relocatable
+file(READ ${CURRENT_PACKAGES_DIR}/share/proj/proj4-targets-release.cmake PROJ4_TARGETS_RELEASE)
+string(REPLACE "proj_4_9.lib" "proj.lib" PROJ4_TARGETS_RELEASE ${PROJ4_TARGETS_RELEASE})
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/proj/proj4-targets-release.cmake ${PROJ4_TARGETS_RELEASE})
+
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/proj_4_9.lib  ${CURRENT_PACKAGES_DIR}/lib/proj.lib)
+file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/proj_4_9_d.lib  ${CURRENT_PACKAGES_DIR}/debug/lib/projd.lib)
+
 # Remove duplicate headers installed from debug build
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 # Remove data installed from debug build
