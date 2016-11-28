@@ -19,5 +19,20 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+file(REMOVE_RECURSE 
+	${CURRENT_PACKAGES_DIR}/debug/include
+	${CURRENT_PACKAGES_DIR}/lib/cmake
+	${CURRENT_PACKAGES_DIR}/lib/pkgconfig
+	${CURRENT_PACKAGES_DIR}/debug/lib/cmake
+	${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig
+	${CURRENT_PACKAGES_DIR}/nuget
+	${CURRENT_PACKAGES_DIR}/debug/nuget)
+
+file(GLOB LIB_FILES          ${CURRENT_PACKAGES_DIR}/bin/*.lib)
+file(GLOB DEBUG_LIB_FILES    ${CURRENT_PACKAGES_DIR}/debug/bin/*.lib)
+file(COPY ${LIB_FILES}       DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+file(COPY ${DEBUG_LIB_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+file(REMOVE ${LIB_FILES} ${DEBUG_LIB_FILES})
+
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/aws-sdk-cpp RENAME copyright)
