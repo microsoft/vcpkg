@@ -26,8 +26,8 @@ vcpkg_configure_cmake(
     OPTIONS ${CMAKE_OPTIONS}
     -DPROJ_LIB_SUBDIR=lib
     -DPROJ_INCLUDE_SUBDIR=include
-    -DPROJ_DATA_SUBDIR=share/proj4
-    -DPROJ_CMAKE_CONFIG_SUBDIR=share/proj4
+    -DPROJ_DATA_SUBDIR=share/proj
+    -DPROJ_CMAKE_CONFIG_SUBDIR=share/proj
     -DBUILD_CS2CS=NO
     -DBUILD_PROJ=NO
     -DBUILD_GEOD=NO
@@ -49,5 +49,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
  
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/proj4)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/proj4/COPYING ${CURRENT_PACKAGES_DIR}/share/proj4/copyright)
+file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/proj)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/proj/COPYING ${CURRENT_PACKAGES_DIR}/share/proj/copyright)
