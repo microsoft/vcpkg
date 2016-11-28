@@ -35,13 +35,8 @@ vcpkg_configure_cmake(
     -DPROJ4_TESTS=NO
 )
 
-vcpkg_install_cmake(
-    -DBUILD_CS2CS=NO
-    -DBUILD_PROJ=NO
-    -DBUILD_GEOD=NO
-    -DBUILD_NAD2BIN=NO
-    -DPROJ4_TESTS=NO
-)
+vcpkg_install_cmake()
+
 
 # Rename library and adapt cmake configuration 
 # N.B. debug cmake export is not copied, as it's not relocatable
