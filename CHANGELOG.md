@@ -1,3 +1,46 @@
+vcpkg (0.0.60)
+--------------
+  * Add ports:
+    - box2d                2.3.1-374664b
+    - decimal-for-cpp      1.12
+    - jsoncpp              1.7.7
+    - libpq                9.6.1
+    - libxslt              1.1.29
+    - poco                 1.7.6-2
+    - qt5                  5.7-1
+    - signalrclient        1.0.0-beta1
+    - soci                 2016.10.22
+    - tclap                1.2.1
+  * Update ports:
+    - boost                1.62-1           -> 1.62-6
+    - chakracore           1.2.0.0          -> 1.3.0
+    - eigen3               3.2.10-2         -> 3.3.0
+    - fmt                  3.0.0-1          -> 3.0.1
+    - jxrlib               1.1              -> 1.1-1
+    - libbson              1.4.2            -> 1.5.0-rc6
+    - libuv                1.9.1            -> 1.10.1
+    - libwebp              0.5.1            -> 0.5.1-1
+    - mongo-c-driver       1.4.2            -> 1.5.0-rc6
+    - mongo-cxx-driver     3.0.2            -> 3.0.3
+    - pcre                 8.38             -> 8.38-1
+    - sdl2                 2.0.4            -> 2.0.5
+  * `vcpkg` has exceeded 100 libraries!
+  * Rework dependency handling
+  * Many more portfiles now support static builds. The remaining ones warn that static is not yet supported and will perform a dynamic build instead
+  * The triplet file is now automatically included and is available in every portfile
+  * Improvements in the post-build checks:
+    - Introduce `BUILD_INFO` file. This contains information about the settings used in the build. The post-build checks use this file to choose what checks to perform
+    - Add CRT checks
+    - Improve coff file reader. It is now more robust and it correctly handles a couple of corner cases
+    - A few miscellaneous checks to further prevent potential issues with the produced packages
+  * Improve integration and fix related issues
+  * Add support for VS 2017
+  * Introduce function that tries to repeatedly build up to a number of failures. This reduces/resolves issues from libraries with flaky builds
+  * Many fixes and improvements in existing portfiles and the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  WED, 23 Nov 2016 15:30:00 -0800
+
+
 vcpkg (0.0.51)
 --------------
   * Add simple substring search to `vcpkg cache`
