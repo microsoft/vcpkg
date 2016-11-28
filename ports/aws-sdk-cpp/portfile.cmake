@@ -1,3 +1,8 @@
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
+endif()
+
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/aws-sdk-cpp-1.0.34)
 vcpkg_download_distfile(ARCHIVE
