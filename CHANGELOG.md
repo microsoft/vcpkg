@@ -1,3 +1,29 @@
+vcpkg (0.0.61)
+--------------
+  * Add ports:
+    - cairo                1.14.6
+    - clockutils           1.1.1
+    - directxtk            oct2016-1
+    - directxtk12          oct2016
+    - glslang              1c573fbcfba6b3d631008b1babc838501ca925d3
+    - libodb-pgsql         2.4.0
+    - pixman               0.34.0
+    - proj                 4.9.3
+    - zstd                 1.1.1
+  * Update ports:
+    - chakracore           1.3.0            -> 1.3.1
+    - curl                 7.51.0           -> 7.51.0-1
+    - dxut                 11.14            -> 11.14-2
+    - fmt                  3.0.1            -> 3.0.1-1
+    - freetype             2.6.3-1          -> 2.6.3-2
+    - rxcpp                2.3.0            -> 3.0.0
+    - think-cell-range     1d785d9          -> e2d3018
+    - tiff                 4.0.6            -> 4.0.6-1
+  * Fixes and improvements in existing portfiles and the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  MON, 28 Nov 2016 18:30:00 -0800
+
+
 vcpkg (0.0.60)
 --------------
   * Add ports:
@@ -153,7 +179,7 @@ vcpkg (0.0.40)
   * Add mirror support
   * `vcpkg` now checks for valid package names: only ASCII lowercase chars, digits, or dashes are allowed
   * `vcpkg create` now also creates a templated CONTROL file
-  * `vcpkg create` now checks for invalid chars in the zip path  
+  * `vcpkg create` now checks for invalid chars in the zip path
   * `vcpkg edit` now throws an error if it cannot launch an editor
   * Fix `vcpkg integrate` to only apply to C++ projects instead of all projects
   * Fix `vcpkg integrate` locale-specific failures
