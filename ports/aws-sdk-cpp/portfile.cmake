@@ -1,3 +1,8 @@
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(STATUS "Warning: Static building not supported yet. Building dynamic.") #Blocked by CRT MD link issue.
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
+endif()
+
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/aws-sdk-cpp-1.0.34)
 vcpkg_download_distfile(ARCHIVE
@@ -28,11 +33,13 @@ file(REMOVE_RECURSE
 	${CURRENT_PACKAGES_DIR}/nuget
 	${CURRENT_PACKAGES_DIR}/debug/nuget)
 
-file(GLOB LIB_FILES          ${CURRENT_PACKAGES_DIR}/bin/*.lib)
-file(GLOB DEBUG_LIB_FILES    ${CURRENT_PACKAGES_DIR}/debug/bin/*.lib)
-file(COPY ${LIB_FILES}       DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-file(COPY ${DEBUG_LIB_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-file(REMOVE ${LIB_FILES} ${DEBUG_LIB_FILES})
+if(${VCPKG_LIBRARY_LINKAGE} STREQUAL dynamic)
+	file(GLOB LIB_FILES          ${CURRENT_PACKAGES_DIR}/bin/*.lib)
+	file(GLOB DEBUG_LIB_FILES    ${CURRENT_PACKAGES_DIR}/debug/bin/*.lib)
+	file(COPY ${LIB_FILES}       DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+	file(COPY ${DEBUG_LIB_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+	file(REMOVE ${LIB_FILES} ${DEBUG_LIB_FILES})
+endif()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/aws-sdk-cpp RENAME copyright)
