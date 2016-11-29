@@ -1,6 +1,6 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
+    set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/DXUT-sept2016)
@@ -11,46 +11,34 @@ vcpkg_download_distfile(ARCHIVE_FILE
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/dll.patch
-)
-
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/Core/DXUT_2015.vcxproj
-)
-
 IF (TRIPLET_SYSTEM_ARCH MATCHES "x86")
 	SET(BUILD_ARCH "Win32")
 ELSE()
 	SET(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
 ENDIF()
 
-file(INSTALL
-	${SOURCE_PATH}/Core/DDSTextureLoader.h
-	${SOURCE_PATH}/Core/DXErr.h
-	${SOURCE_PATH}/Core/DXUT.h
-	${SOURCE_PATH}/Core/DXUTDevice11.h
-	${SOURCE_PATH}/Core/DXUTmisc.h
-	${SOURCE_PATH}/Core/Screengrab.h
-	${SOURCE_PATH}/Core/WICTextureLoader.h
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
+vcpkg_build_msbuild(
+    PROJECT_PATH ${SOURCE_PATH}/DXUT_2015.sln
+	PLATFORM ${BUILD_ARCH}
 )
 
 file(INSTALL
-	${SOURCE_PATH}/Core/Bin/Desktop_2015/${BUILD_ARCH}/Release/DXUT.dll
-	DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+	${SOURCE_PATH}/Core/
+	${SOURCE_PATH}/Optional/
+    DESTINATION ${CURRENT_PACKAGES_DIR}/include
+	FILES_MATCHING PATTERN "*.h"
+)
+file(REMOVE_RECURSE 
+	${CURRENT_PACKAGES_DIR}/include/Bin)
 
 file(INSTALL
 	${SOURCE_PATH}/Core/Bin/Desktop_2015/${BUILD_ARCH}/Release/DXUT.lib
+	${SOURCE_PATH}/Optional/Bin/Desktop_2015/${BUILD_ARCH}/Release/DXUTOpt.lib
 	DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
 file(INSTALL
-	${SOURCE_PATH}/Core/Bin/Desktop_2015/${BUILD_ARCH}/Debug/DXUT.dll
-	DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-
-file(INSTALL
 	${SOURCE_PATH}/Core/Bin/Desktop_2015/${BUILD_ARCH}/Debug/DXUT.lib
+	${SOURCE_PATH}/Optional/Bin/Desktop_2015/${BUILD_ARCH}/Debug/DXUTOpt.lib
 	DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 
 vcpkg_copy_pdbs()

@@ -30,6 +30,28 @@ function(vcpkg_find_acquire_program VAR)
     set(URL "https://www.python.org/ftp/python/3.5.2/python-3.5.2-embed-amd64.zip")
     set(ARCHIVE "python-3.5.2-embed-amd64.zip")
     set(HASH 48bdcb6f94c993acad6782ee33ad4a07a0ea3b9b1bfcdeadf446d459a9224336837e2e7b518d54d8d99c5c3f4e9f8877ea1789cae513fa2eda2a3cad9e4dfd8f)
+  elseif(VAR MATCHES "PYTHON2")
+    find_program(PYTHON2 NAMES python2 python PATHS C:/python27 ENV PYTHON)
+    if(NOT PYTHON2 MATCHES "NOTFOUND")
+        execute_process(
+            COMMAND ${PYTHON2} --version
+            OUTPUT_VARIABLE PYTHON_VER_CHECK_OUT
+            ERROR_VARIABLE PYTHON_VER_CHECK_ERR
+        )
+        set(PYTHON_VER_CHECK "${PYTHON_VER_CHECK_OUT}${PYTHON_VER_CHECK_ERR}")
+        debug_message("PYTHON_VER_CHECK=${PYTHON_VER_CHECK}")
+        if(NOT PYTHON_VER_CHECK MATCHES "Python 2.7")
+            set(PYTHON2 PYTHON2-NOTFOUND)
+            find_program(PYTHON2 NAMES python2 python PATHS C:/python27 ENV PYTHON NO_SYSTEM_ENVIRONMENT_PATH)
+        endif()
+    endif()
+    if(PYTHON2 MATCHES "NOTFOUND")
+        message(FATAL_ERROR "libuv uses the GYP build system, which requires Python 2.7.\n"
+        "Python 2.7 was not found in the path or by searching inside C:\\Python27.\n"
+        "There is no portable redistributable for Python 2.7, so you will need to install the MSI located at:\n"
+        "    https://www.python.org/ftp/python/2.7.11/python-2.7.11.amd64.msi\n"
+        )
+    endif()
   elseif(VAR MATCHES "JOM")
     set(PROGNAME jom)
     set(PATHS ${DOWNLOADS}/tools/jom)

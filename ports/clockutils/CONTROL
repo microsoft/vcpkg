@@ -1,0 +1,3 @@
+Source: clockutils
+Version: 1.1.1
+Description: A lightweight c++ library for commonly needed tasks. Optimized for simplicity and speed.
