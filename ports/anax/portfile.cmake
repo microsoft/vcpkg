@@ -20,16 +20,8 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
-    SET(SHARED_FLAG ON)
-else()
-    SET(SHARED_FLAG OFF)
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS 
-        -DBUILD_SHARED_LIBS=${SHARED_FLAG}
 )
 
 vcpkg_install_cmake()
