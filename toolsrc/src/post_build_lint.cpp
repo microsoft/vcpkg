@@ -33,6 +33,12 @@ namespace vcpkg
         }
 
         template <class Pred>
+        void non_recursive_find_matching_paths_in_dir(const fs::path& dir, const Pred predicate, std::vector<fs::path>* output)
+        {
+            std::copy_if(fs::directory_iterator(dir), fs::directory_iterator(), std::back_inserter(*output), predicate);
+        }
+
+        template <class Pred>
         void recursive_find_matching_paths_in_dir(const fs::path& dir, const Pred predicate, std::vector<fs::path>* output)
         {
             std::copy_if(fs::recursive_directory_iterator(dir), fs::recursive_directory_iterator(), std::back_inserter(*output), predicate);
@@ -591,6 +597,34 @@ namespace vcpkg
         return lint_status::SUCCESS;
     }
 
+    static lint_status check_no_files_in_package_dir_and_debug_dir(const fs::path& package_dir)
+    {
+        std::vector<fs::path> misplaced_files;
+
+        non_recursive_find_matching_paths_in_dir(package_dir, [](const fs::path& current)
+                                                 {
+                                                     const std::string filename = current.filename().generic_string();
+                                                     return !fs::is_directory(current) && !((_stricmp(filename.c_str(), "CONTROL") == 0 || _stricmp(filename.c_str(), "BUILD_INFO") == 0));
+                                                 }, &misplaced_files);
+
+
+        const fs::path debug_dir = package_dir / "debug";
+        non_recursive_find_matching_paths_in_dir(debug_dir, [](const fs::path& current)
+                                                 {
+                                                     return !fs::is_directory(current);
+                                                 }, &misplaced_files);
+
+        if (!misplaced_files.empty())
+        {
+            System::println(System::color::warning, "The following files are placed in\n%s and\n%s: ", package_dir.generic_string(), debug_dir.generic_string());
+            print_vector_of_files(misplaced_files);
+            System::println(System::color::warning, "Files cannot be present in those directories.\n");
+            return lint_status::ERROR_DETECTED;
+        }
+
+        return lint_status::SUCCESS;
+    }
+
     static void operator +=(size_t& left, const lint_status& right)
     {
         left += static_cast<size_t>(right);
@@ -680,6 +714,7 @@ namespace vcpkg
 #endif
 
         error_count += check_no_empty_folders(paths.packages / spec.dir());
+        error_count += check_no_files_in_package_dir_and_debug_dir(package_dir);
 
         if (error_count != 0)
         {
