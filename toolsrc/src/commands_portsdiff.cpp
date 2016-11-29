@@ -8,6 +8,7 @@
 #include <set>
 #include "Paragraphs.h"
 #include "SourceParagraph.h"
+#include "vcpkg_Environment.h"
 
 namespace vcpkg
 {
@@ -87,13 +88,27 @@ namespace vcpkg
         return names_and_versions;
     }
 
+    static void check_commit_exists(const std::wstring& git_commit_id)
+    {
+        static const std::string VALID_COMMIT_OUTPUT = "commit\n";
+
+        const std::wstring cmd = Strings::wformat(LR"(git cat-file -t %s 2>NUL)", git_commit_id);
+        const System::exit_code_and_output output = System::cmd_execute_and_capture_output(cmd);
+        Checks::check_exit(output.output == VALID_COMMIT_OUTPUT, "Invalid commit id %s", Strings::utf16_to_utf8(git_commit_id));
+    }
+
     void portsdiff_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
         static const std::string example = Strings::format("The argument should be a branch/tag/hash to checkout.\n%s", create_example_string("portsdiff mybranchname"));
         args.check_min_arg_count(1, example.c_str());
         args.check_max_arg_count(2, example.c_str());
+
+        Environment::ensure_git_on_path(paths);
         const std::wstring git_commit_id_for_previous_snapshot = Strings::utf8_to_utf16(args.command_arguments.at(0));
         const std::wstring git_commit_id_for_current_snapshot = args.command_arguments.size() < 2 ? L"HEAD" : Strings::utf8_to_utf16(args.command_arguments.at(1));
+
+        check_commit_exists(git_commit_id_for_current_snapshot);
+        check_commit_exists(git_commit_id_for_previous_snapshot);
 
         const std::map<std::string, std::string> current_names_and_versions = read_ports_from_commit(paths, git_commit_id_for_current_snapshot);
         const std::map<std::string, std::string> previous_names_and_versions = read_ports_from_commit(paths, git_commit_id_for_previous_snapshot);
