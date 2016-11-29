@@ -690,7 +690,7 @@ namespace vcpkg
             case LinkageType::STATIC:
                 {
                     std::vector<fs::path> dlls;
-                    recursive_find_files_with_extension_in_dir(paths.packages / spec.dir(), ".dll", &dlls);
+                    recursive_find_files_with_extension_in_dir(package_dir, ".dll", &dlls);
                     error_count += check_no_dlls_present(dlls);
 
                     error_count += check_bin_folders_are_not_present_in_static_build(spec, paths);
@@ -709,11 +709,11 @@ namespace vcpkg
                 Checks::unreachable();
         }
 #if 0
-        error_count += check_no_subdirectories(paths.packages / spec.dir() / "lib");
-        error_count += check_no_subdirectories(paths.packages / spec.dir() / "debug" / "lib");
+        error_count += check_no_subdirectories(package_dir / "lib");
+        error_count += check_no_subdirectories(package_dir / "debug" / "lib");
 #endif
 
-        error_count += check_no_empty_folders(paths.packages / spec.dir());
+        error_count += check_no_empty_folders(package_dir);
         error_count += check_no_files_in_package_dir_and_debug_dir(package_dir);
 
         if (error_count != 0)
