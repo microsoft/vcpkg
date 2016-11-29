@@ -44,6 +44,16 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
 file(RENAME ${CURRENT_PACKAGES_DIR}/data ${CURRENT_PACKAGES_DIR}/share/data)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/data)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/AUTHORS
+            ${CURRENT_PACKAGES_DIR}/LICENSE
+            ${CURRENT_PACKAGES_DIR}/README.md
+            ${CURRENT_PACKAGES_DIR}/VERSION
+            ${CURRENT_PACKAGES_DIR}/debug/AUTHORS
+            ${CURRENT_PACKAGES_DIR}/debug/LICENSE
+            ${CURRENT_PACKAGES_DIR}/debug/README.md
+            ${CURRENT_PACKAGES_DIR}/debug/VERSION
+    )
+
 # Handle copyright
 file(COPY ${CURRENT_BUILDTREES_DIR}/src/globjects-1.0.0/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/globjects)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/globjects/LICENSE ${CURRENT_PACKAGES_DIR}/share/globjects/copyright)
