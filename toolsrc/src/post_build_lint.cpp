@@ -613,10 +613,11 @@ namespace vcpkg
         error_count += check_for_copyright_file(spec, paths);
         error_count += check_for_exes(spec, paths);
 
-        const fs::path debug_lib_dir = paths.packages / spec.dir() / "debug" / "lib";
-        const fs::path release_lib_dir = paths.packages / spec.dir() / "lib";
-        const fs::path debug_bin_dir = paths.packages / spec.dir() / "debug" / "bin";
-        const fs::path release_bin_dir = paths.packages / spec.dir() / "bin";
+        const fs::path package_dir = paths.package_dir(spec);
+        const fs::path debug_lib_dir = package_dir / "debug" / "lib";
+        const fs::path release_lib_dir = package_dir / "lib";
+        const fs::path debug_bin_dir = package_dir / "debug" / "bin";
+        const fs::path release_bin_dir = package_dir / "bin";
 
         const std::vector<fs::path> debug_libs = recursive_find_files_with_extension_in_dir(debug_lib_dir, ".lib");
         const std::vector<fs::path> release_libs = recursive_find_files_with_extension_in_dir(release_lib_dir, ".lib");
