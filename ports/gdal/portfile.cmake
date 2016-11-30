@@ -4,9 +4,6 @@ endif()
 
 include(vcpkg_common_functions)
 
-# Remove part pertaining to linkage
-string(REPLACE "-static" "" ARCH ${TARGET_TRIPLET})
-
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.osgeo.org/gdal/1.11.3/gdal1113.zip"
     FILENAME "gdal1113.zip"
@@ -15,13 +12,13 @@ vcpkg_download_distfile(ARCHIVE
 
 # Extract source into archictecture specific directory, because GDALs' nmake based build currently does not
 # support out of source builds.
-set(SOURCE_PATH_DEBUG   ${CURRENT_BUILDTREES_DIR}/src-${ARCH}-debug/gdal-1.11.3)
-set(SOURCE_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/src-${ARCH}-release/gdal-1.11.3)
+set(SOURCE_PATH_DEBUG   ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-debug/gdal-1.11.3)
+set(SOURCE_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-release/gdal-1.11.3)
 
 foreach(BUILD_TYPE debug release)
-    vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src-${ARCH}-${BUILD_TYPE})
+    vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE})
     vcpkg_apply_patches(
-        SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${ARCH}-${BUILD_TYPE}/gdal-1.11.3
+        SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-1.11.3
         PATCHES 
         ${CMAKE_CURRENT_LIST_DIR}/0001-Add-support-for-MSVC1900-backported-from-GDAL2.patch
         ${CMAKE_CURRENT_LIST_DIR}/0002-Add-variable-CXX_CRT_FLAGS-to-allow-for-selection-of.patch
