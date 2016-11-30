@@ -23,12 +23,16 @@ file(COPY ${LIBRAW_CMAKE_SOURCE_PATH}/cmake DESTINATION ${SOURCE_PATH})
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -DINSTALL_CMAKE_MODULE_PATH=${SOURCE_PATH}
+        -DINSTALL_CMAKE_MODULE_PATH=${CURRENT_PACKAGES_DIR}/share/libraw
 )
 
 vcpkg_install_cmake()
 
-file(COPY ${SOURCE_PATH}/FindLibRaw.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libraw/cmake/FindLibRaw.cmake)
+# Rename thread-safe version to be "raw.lib". This is unfortunately needed
+# because otherwise libraries that build on top of libraw have to choose.
+file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/raw.lib ${CURRENT_PACKAGES_DIR}/debug/lib/raw.lib)
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/raw_r.lib ${CURRENT_PACKAGES_DIR}/lib/raw.lib)
+file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/raw_r.lib ${CURRENT_PACKAGES_DIR}/debug/lib/raw.lib)
 
 # Cleanup
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -38,6 +42,8 @@ file(GLOB DEBUG_EXECUTABLES ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
 file(REMOVE ${DEBUG_EXECUTABLES})
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+else()
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/raw.dll ${CURRENT_PACKAGES_DIR}/debug/bin/raw.dll)
 endif()
 
 # Handle copyright
