@@ -568,10 +568,7 @@ namespace vcpkg { namespace PostBuildLint
                                                         }, &misplaced_files);
 
         const fs::path debug_dir = package_dir / "debug";
-        Files::non_recursive_find_matching_paths_in_dir(debug_dir, [](const fs::path& current)
-                                                        {
-                                                            return !fs::is_directory(current);
-                                                        }, &misplaced_files);
+        Files::non_recursive_find_all_files_in_dir(debug_dir, &misplaced_files);
 
         if (!misplaced_files.empty())
         {
