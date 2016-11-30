@@ -20,19 +20,6 @@ bool vcpkg::g_do_dry_run = false;
 
 namespace
 {
-    template <class M, class K, class V>
-    auto find_or_default(const M& map, const K& key, const V& val)
-    {
-        auto it = map.find(key);
-        if (it == map.end())
-            return decltype(it->second)(val);
-        else
-            return it->second;
-    }
-}
-
-namespace
-{
     std::fstream open_status_file(const vcpkg_paths& paths, std::ios_base::openmode mode = std::ios_base::app | std::ios_base::in | std::ios_base::out | std::ios_base::binary)
     {
         return std::fstream(paths.vcpkg_dir_status_file, mode);
