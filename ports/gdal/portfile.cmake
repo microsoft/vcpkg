@@ -22,7 +22,8 @@ foreach(BUILD_TYPE debug release)
         PATCHES 
         ${CMAKE_CURRENT_LIST_DIR}/0001-Add-support-for-MSVC1900-backported-from-GDAL2.patch
         ${CMAKE_CURRENT_LIST_DIR}/0002-Add-variable-CXX_CRT_FLAGS-to-allow-for-selection-of.patch
-  )
+        ${CMAKE_CURRENT_LIST_DIR}/0003-Ensures-inclusion-of-PDB-in-release-dll-if-so-reques.patch
+    )
 endforeach()
 
 find_program(NMAKE nmake REQUIRED)
@@ -48,9 +49,10 @@ if(TARGET_TRIPLET MATCHES "x64")
 endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    list(APPEND NMAKE_OPTIONS 
-        PROJ_FLAGS=-DPROJ_STATIC
-    )
+    list(APPEND NMAKE_OPTIONS PROJ_FLAGS=-DPROJ_STATIC)
+else()    
+    # Enables PDBs for release and debug builds
+    list(APPEND NMAKE_OPTIONS WITH_PDB=1)
 endif()
 
 if (VCPKG_CRT_LINKAGE STREQUAL static)
@@ -117,6 +119,10 @@ else()
   file(GLOB EXE_FILES ${CURRENT_PACKAGES_DIR}/bin/*.exe)
   file(REMOVE ${EXE_FILES} ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)
 endif()
+
+# Copy over PDBs
+vcpkg_copy_pdbs()
+
 # Handle copyright
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/gdal/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/gdal/copyright)
 
