@@ -10,7 +10,7 @@
 
 namespace fs = std::tr2::sys;
 
-namespace vcpkg
+namespace vcpkg { namespace PostBuildLint
 {
     enum class lint_status
     {
@@ -668,8 +668,8 @@ namespace vcpkg
                 Checks::unreachable();
         }
 #if 0
-        error_count += check_no_subdirectories(package_dir / "lib");
-        error_count += check_no_subdirectories(package_dir / "debug" / "lib");
+            error_count += check_no_subdirectories(package_dir / "lib");
+            error_count += check_no_subdirectories(package_dir / "debug" / "lib");
 #endif
 
         error_count += check_no_empty_folders(package_dir);
@@ -684,4 +684,4 @@ namespace vcpkg
 
         System::println("-- Performing post-build validation done");
     }
-}
+}}
