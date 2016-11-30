@@ -58,4 +58,19 @@ namespace vcpkg {namespace Files
 
         return current_dir;
     }
+
+    void recursive_find_files_with_extension_in_dir(const fs::path& dir, const std::string& extension, std::vector<fs::path>* output)
+    {
+        recursive_find_matching_paths_in_dir(dir, [&extension](const fs::path& current)
+                                             {
+                                                 return !fs::is_directory(current) && current.extension() == extension;
+                                             }, output);
+    }
+
+    std::vector<fs::path> recursive_find_files_with_extension_in_dir(const fs::path& dir, const std::string& extension)
+    {
+        std::vector<fs::path> v;
+        recursive_find_files_with_extension_in_dir(dir, extension, &v);
+        return v;
+    }
 }}

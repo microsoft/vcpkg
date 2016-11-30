@@ -1,7 +1,7 @@
 #include <filesystem>
 #include "vcpkg_paths.h"
 #include "package_spec.h"
-#include <iterator>
+#include "vcpkg_Files.h"
 #include <functional>
 #include "vcpkg_System.h"
 #include "coff_file_reader.h"
@@ -20,52 +20,14 @@ namespace vcpkg
 
     static const fs::path DUMPBIN_EXE = R"(%VS140COMNTOOLS%\..\..\VC\bin\dumpbin.exe)";
 
-    namespace
+    static void print_vector_of_files(const std::vector<fs::path>& paths)
     {
-        void print_vector_of_files(const std::vector<fs::path>& paths)
+        System::println("");
+        for (const fs::path& p : paths)
         {
-            System::println("");
-            for (const fs::path& p : paths)
-            {
-                System::println("    %s", p.generic_string());
-            }
-            System::println("");
+            System::println("    %s", p.generic_string());
         }
-
-        template <class Pred>
-        void non_recursive_find_matching_paths_in_dir(const fs::path& dir, const Pred predicate, std::vector<fs::path>* output)
-        {
-            std::copy_if(fs::directory_iterator(dir), fs::directory_iterator(), std::back_inserter(*output), predicate);
-        }
-
-        template <class Pred>
-        void recursive_find_matching_paths_in_dir(const fs::path& dir, const Pred predicate, std::vector<fs::path>* output)
-        {
-            std::copy_if(fs::recursive_directory_iterator(dir), fs::recursive_directory_iterator(), std::back_inserter(*output), predicate);
-        }
-
-        template <class Pred>
-        std::vector<fs::path> recursive_find_matching_paths_in_dir(const fs::path& dir, const Pred predicate)
-        {
-            std::vector<fs::path> v;
-            recursive_find_matching_paths_in_dir(dir, predicate, &v);
-            return v;
-        }
-
-        void recursive_find_files_with_extension_in_dir(const fs::path& dir, const std::string& extension, std::vector<fs::path>* output)
-        {
-            recursive_find_matching_paths_in_dir(dir, [&extension](const fs::path& current)
-                                                 {
-                                                     return !fs::is_directory(current) && current.extension() == extension;
-                                                 }, output);
-        }
-
-        std::vector<fs::path> recursive_find_files_with_extension_in_dir(const fs::path& dir, const std::string& extension)
-        {
-            std::vector<fs::path> v;
-            recursive_find_files_with_extension_in_dir(dir, extension, &v);
-            return v;
-        }
+        System::println("");
     }
 
     static lint_status check_for_files_in_include_directory(const fs::path& package_dir)
@@ -85,10 +47,10 @@ namespace vcpkg
         const fs::path debug_include_dir = package_dir / "debug" / "include";
         std::vector<fs::path> files_found;
 
-        recursive_find_matching_paths_in_dir(debug_include_dir, [&](const fs::path& current)
-                                             {
-                                                 return !fs::is_directory(current) && current.extension() != ".ifc";
-                                             }, &files_found);
+        Files::recursive_find_matching_paths_in_dir(debug_include_dir, [&](const fs::path& current)
+                                                    {
+                                                        return !fs::is_directory(current) && current.extension() != ".ifc";
+                                                    }, &files_found);
 
         if (!files_found.empty())
         {
@@ -129,10 +91,10 @@ namespace vcpkg
     static lint_status check_for_misplaced_cmake_files(const fs::path& package_dir, const package_spec& spec)
     {
         std::vector<fs::path> misplaced_cmake_files;
-        recursive_find_files_with_extension_in_dir(package_dir / "cmake", ".cmake", &misplaced_cmake_files);
-        recursive_find_files_with_extension_in_dir(package_dir / "debug" / "cmake", ".cmake", &misplaced_cmake_files);
-        recursive_find_files_with_extension_in_dir(package_dir / "lib" / "cmake", ".cmake", &misplaced_cmake_files);
-        recursive_find_files_with_extension_in_dir(package_dir / "debug" / "lib" / "cmake", ".cmake", &misplaced_cmake_files);
+        Files::recursive_find_files_with_extension_in_dir(package_dir / "cmake", ".cmake", &misplaced_cmake_files);
+        Files::recursive_find_files_with_extension_in_dir(package_dir / "debug" / "cmake", ".cmake", &misplaced_cmake_files);
+        Files::recursive_find_files_with_extension_in_dir(package_dir / "lib" / "cmake", ".cmake", &misplaced_cmake_files);
+        Files::recursive_find_files_with_extension_in_dir(package_dir / "debug" / "lib" / "cmake", ".cmake", &misplaced_cmake_files);
 
         if (!misplaced_cmake_files.empty())
         {
@@ -159,8 +121,8 @@ namespace vcpkg
     static lint_status check_for_dlls_in_lib_dirs(const fs::path& package_dir)
     {
         std::vector<fs::path> dlls;
-        recursive_find_files_with_extension_in_dir(package_dir / "lib", ".dll", &dlls);
-        recursive_find_files_with_extension_in_dir(package_dir / "debug" / "lib", ".dll", &dlls);
+        Files::recursive_find_files_with_extension_in_dir(package_dir / "lib", ".dll", &dlls);
+        Files::recursive_find_files_with_extension_in_dir(package_dir / "debug" / "lib", ".dll", &dlls);
 
         if (!dlls.empty())
         {
@@ -223,8 +185,8 @@ namespace vcpkg
     static lint_status check_for_exes(const fs::path& package_dir)
     {
         std::vector<fs::path> exes;
-        recursive_find_files_with_extension_in_dir(package_dir / "bin", ".exe", &exes);
-        recursive_find_files_with_extension_in_dir(package_dir / "debug" / "bin", ".exe", &exes);
+        Files::recursive_find_files_with_extension_in_dir(package_dir / "bin", ".exe", &exes);
+        Files::recursive_find_files_with_extension_in_dir(package_dir / "debug" / "bin", ".exe", &exes);
 
         if (!exes.empty())
         {
@@ -434,10 +396,10 @@ namespace vcpkg
 
     static lint_status check_no_subdirectories(const fs::path& dir)
     {
-        const std::vector<fs::path> subdirectories = recursive_find_matching_paths_in_dir(dir, [&](const fs::path& current)
-                                                                                          {
-                                                                                              return fs::is_directory(current);
-                                                                                          });
+        const std::vector<fs::path> subdirectories = Files::recursive_find_matching_paths_in_dir(dir, [&](const fs::path& current)
+                                                                                                 {
+                                                                                                     return fs::is_directory(current);
+                                                                                                 });
 
         if (!subdirectories.empty())
         {
@@ -483,10 +445,10 @@ namespace vcpkg
 
     static lint_status check_no_empty_folders(const fs::path& dir)
     {
-        const std::vector<fs::path> empty_directories = recursive_find_matching_paths_in_dir(dir, [](const fs::path& current)
-                                                                                             {
-                                                                                                 return fs::is_directory(current) && fs::is_empty(current);
-                                                                                             });
+        const std::vector<fs::path> empty_directories = Files::recursive_find_matching_paths_in_dir(dir, [](const fs::path& current)
+                                                                                                    {
+                                                                                                        return fs::is_directory(current) && fs::is_empty(current);
+                                                                                                    });
 
         if (!empty_directories.empty())
         {
@@ -599,17 +561,17 @@ namespace vcpkg
     {
         std::vector<fs::path> misplaced_files;
 
-        non_recursive_find_matching_paths_in_dir(package_dir, [](const fs::path& current)
-                                                 {
-                                                     const std::string filename = current.filename().generic_string();
-                                                     return !fs::is_directory(current) && !((_stricmp(filename.c_str(), "CONTROL") == 0 || _stricmp(filename.c_str(), "BUILD_INFO") == 0));
-                                                 }, &misplaced_files);
+        Files::non_recursive_find_matching_paths_in_dir(package_dir, [](const fs::path& current)
+                                                        {
+                                                            const std::string filename = current.filename().generic_string();
+                                                            return !fs::is_directory(current) && !((_stricmp(filename.c_str(), "CONTROL") == 0 || _stricmp(filename.c_str(), "BUILD_INFO") == 0));
+                                                        }, &misplaced_files);
 
         const fs::path debug_dir = package_dir / "debug";
-        non_recursive_find_matching_paths_in_dir(debug_dir, [](const fs::path& current)
-                                                 {
-                                                     return !fs::is_directory(current);
-                                                 }, &misplaced_files);
+        Files::non_recursive_find_matching_paths_in_dir(debug_dir, [](const fs::path& current)
+                                                        {
+                                                            return !fs::is_directory(current);
+                                                        }, &misplaced_files);
 
         if (!misplaced_files.empty())
         {
@@ -645,14 +607,13 @@ namespace vcpkg
         error_count += check_for_copyright_file(spec, paths);
         error_count += check_for_exes(package_dir);
 
-        
         const fs::path debug_lib_dir = package_dir / "debug" / "lib";
         const fs::path release_lib_dir = package_dir / "lib";
         const fs::path debug_bin_dir = package_dir / "debug" / "bin";
         const fs::path release_bin_dir = package_dir / "bin";
 
-        const std::vector<fs::path> debug_libs = recursive_find_files_with_extension_in_dir(debug_lib_dir, ".lib");
-        const std::vector<fs::path> release_libs = recursive_find_files_with_extension_in_dir(release_lib_dir, ".lib");
+        const std::vector<fs::path> debug_libs = Files::recursive_find_files_with_extension_in_dir(debug_lib_dir, ".lib");
+        const std::vector<fs::path> release_libs = Files::recursive_find_files_with_extension_in_dir(release_lib_dir, ".lib");
 
         error_count += check_matching_debug_and_release_binaries(debug_libs, release_libs);
 
@@ -666,8 +627,8 @@ namespace vcpkg
         {
             case LinkageType::DYNAMIC:
                 {
-                    const std::vector<fs::path> debug_dlls = recursive_find_files_with_extension_in_dir(debug_bin_dir, ".dll");
-                    const std::vector<fs::path> release_dlls = recursive_find_files_with_extension_in_dir(release_bin_dir, ".dll");
+                    const std::vector<fs::path> debug_dlls = Files::recursive_find_files_with_extension_in_dir(debug_bin_dir, ".dll");
+                    const std::vector<fs::path> release_dlls = Files::recursive_find_files_with_extension_in_dir(release_bin_dir, ".dll");
 
                     error_count += check_matching_debug_and_release_binaries(debug_dlls, release_dlls);
 
@@ -688,7 +649,7 @@ namespace vcpkg
             case LinkageType::STATIC:
                 {
                     std::vector<fs::path> dlls;
-                    recursive_find_files_with_extension_in_dir(package_dir, ".dll", &dlls);
+                    Files::recursive_find_files_with_extension_in_dir(package_dir, ".dll", &dlls);
                     error_count += check_no_dlls_present(dlls);
 
                     error_count += check_bin_folders_are_not_present_in_static_build(package_dir);
