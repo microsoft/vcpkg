@@ -1,14 +1,14 @@
-From bab44a6614d4a540af56860432bcc0d6bdf420c9 Mon Sep 17 00:00:00 2001
-From: devel <alexander.kaspar@gmail.com>
-Date: Wed, 23 Nov 2016 16:54:44 +0100
+From a3a8d50f3bdcb4df630f7126718c21f23efd7832 Mon Sep 17 00:00:00 2001
+From: Alexander Kaspar <alexander.kaspar@gmail.com>
+Date: Wed, 30 Nov 2016 15:45:12 +0100
 Subject: [PATCH] fix path for vcpkg
 
 ---
- CMakeLists.txt | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ CMakeLists.txt | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 605621b..a8c3774 100644
+index 605621b..3b5a9be 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -277,7 +277,7 @@ if(DEVELOPER_MODE)
@@ -20,6 +20,15 @@ index 605621b..a8c3774 100644
  ")
  endif()
  
+@@ -320,7 +320,7 @@ else (qca_CERTSTORE)
+   set( qca_CERTSTORE "${CMAKE_CURRENT_SOURCE_DIR}/certs/rootcerts.pem")
+   # note that INSTALL_FILES targets are relative to the current installation prefix...
+   if(NOT DEVELOPER_MODE)
+-    install(FILES "${qca_CERTSTORE}" DESTINATION "${QCA_PREFIX_INSTALL_DIR}/certs")
++    install(FILES "${qca_CERTSTORE}" DESTINATION "${QCA_PREFIX_INSTALL_DIR}/share/qca/certs")
+   endif()
+ endif (qca_CERTSTORE)
+ message(STATUS "certstore path: " ${qca_CERTSTORE})
 @@ -401,10 +401,10 @@ endif(DOXYGEN_FOUND)
  include(CMakePackageConfigHelpers)
  configure_package_config_file(
@@ -50,5 +59,5 @@ index 605621b..a8c3774 100644
      )
  endif()
 -- 
-2.9.2.windows.1
+2.8.1.windows.1
 
