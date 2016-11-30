@@ -54,11 +54,11 @@ vcpkg_configure_cmake(
         -DQT4_BUILD=OFF
         -DBUILD_TESTS=OFF
         -DBUILD_TOOLS=OFF
-        -DQCA_SUFFIX=OFF    #
+        -DQCA_SUFFIX=OFF
     OPTIONS_DEBUG
-        -DQCA_PLUGINS_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/debug/bin/Qca     #
+        -DQCA_PLUGINS_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/debug/bin/Qca
     OPTIONS_RELEASE
-        -DQCA_PLUGINS_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/bin/Qca           #
+        -DQCA_PLUGINS_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/bin/Qca
 )
 
 vcpkg_install_cmake()
