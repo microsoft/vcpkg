@@ -1,8 +1,3 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported yet. Building dynamic.") #Blocked by CRT MD link issue.
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
-
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/aws-sdk-cpp-1.0.34)
 vcpkg_download_distfile(ARCHIVE
@@ -18,8 +13,15 @@ vcpkg_apply_patches(
 		${CMAKE_CURRENT_LIST_DIR}/drop_git.patch
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+	set(FORCE_SHARED_CRT ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+	OPTIONS
+		-DENABLE_TESTING=OFF
+		-DFORCE_SHARED_CRT=${FORCE_SHARED_CRT}
 )
 
 vcpkg_install_cmake()
