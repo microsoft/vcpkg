@@ -14,7 +14,7 @@ vcpkg_apply_patches(
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-	set(FORCE_SHARED_CRT ON)
+	set(FORCE_SHARED_CRT OFF)
 endif()
 
 vcpkg_configure_cmake(
