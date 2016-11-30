@@ -37,8 +37,6 @@ message(STATUS "Adding worktree and patching done")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src
-    OPTIONS
-        -DBUILD_SHARED_LIBS=ON
 )
 
 vcpkg_install_cmake()
@@ -54,5 +52,16 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gtest.dll ${CURRENT_PACKAGES_DIR}/
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gtest_main.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gtest_main.dll)
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gmock.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gmock.dll)
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gmock_main.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gmock_main.dll)
+
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gtest.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/gtest.lib)
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gtest_main.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/gtest_main.lib)
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gmock.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/gmock.lib)
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gmock_main.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/gmock_main.lib)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gtest.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/gtest.lib)
+file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gtest_main.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/gtest_main.lib)
+file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gmock.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/gmock.lib)
+file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gmock_main.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/gmock_main.lib)
 
 vcpkg_copy_pdbs()

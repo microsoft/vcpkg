@@ -46,8 +46,8 @@ namespace vcpkg
 
         const ConfigurationType& config() const;
         const LinkageType& linkage() const;
-        const std::regex crt_regex() const;
-        const std::string toString() const;
+        std::regex crt_regex() const;
+        std::string toString() const;
 
     private:
         BuildType(const ConfigurationType& config, const LinkageType& linkage, const std::string& crt_regex_as_string)

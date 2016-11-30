@@ -20,19 +20,6 @@ bool vcpkg::g_do_dry_run = false;
 
 namespace
 {
-    template <class M, class K, class V>
-    auto find_or_default(const M& map, const K& key, const V& val)
-    {
-        auto it = map.find(key);
-        if (it == map.end())
-            return decltype(it->second)(val);
-        else
-            return it->second;
-    }
-}
-
-namespace
-{
     std::fstream open_status_file(const vcpkg_paths& paths, std::ios_base::openmode mode = std::ios_base::app | std::ios_base::in | std::ios_base::out | std::ios_base::binary)
     {
         return std::fstream(paths.vcpkg_dir_status_file, mode);
@@ -157,8 +144,8 @@ static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryPar
 
     for (auto it = fs::recursive_directory_iterator(package_prefix_path); it != fs::recursive_directory_iterator(); ++it)
     {
-        const auto& filename = it->path().filename();
-        if (fs::is_regular_file(it->status()) && (_stricmp(filename.generic_string().c_str(), "CONTROL") == 0 || _stricmp(filename.generic_string().c_str(), "BUILD_INFO") == 0))
+        const std::string filename = it->path().filename().generic_string();
+        if (fs::is_regular_file(it->status()) && (_stricmp(filename.c_str(), "CONTROL") == 0 || _stricmp(filename.c_str(), "BUILD_INFO") == 0))
         {
             // Do not copy the control file
             continue;
