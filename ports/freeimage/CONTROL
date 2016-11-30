@@ -1,0 +1,4 @@
+Source: freeimage
+Version: 3.17.0
+Build-Depends: zlib, libpng, libjpeg-turbo, tiff, openjpeg, libwebp, libraw, jxrlib
+Description: Support library for graphics image formats
