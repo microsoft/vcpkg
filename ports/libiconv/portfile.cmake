@@ -14,6 +14,7 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-Add-export-definitions.patch
             ${CMAKE_CURRENT_LIST_DIR}/0002-Config-for-MSVC.patch
+            ${CMAKE_CURRENT_LIST_DIR}/0003-Fix-uwp.patch
 )
 
 vcpkg_configure_cmake(

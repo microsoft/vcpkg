@@ -55,6 +55,8 @@ list(APPEND Libiconv_headers ${Libiconv_BINARY_DIR}/localcharset.h)
 #
 set(libname libiconv)
 
+add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+
 configure_file(
   ${Libiconv_SOURCE_DIR}/include/iconv.h.build.in
   ${Libiconv_BINARY_DIR}/iconv.h

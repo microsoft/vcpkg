@@ -16,38 +16,10 @@ if(NOT EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src)
     )
 endif()
 
-find_program(PYTHON2
-    NAMES python2 python
-    PATHS C:/python27 ENV PYTHON
-)
-if(NOT PYTHON2 MATCHES "NOTFOUND")
-    execute_process(
-        COMMAND ${PYTHON2} --version
-        OUTPUT_VARIABLE PYTHON_VER_CHECK_OUT
-        ERROR_VARIABLE PYTHON_VER_CHECK_ERR
-    )
-    set(PYTHON_VER_CHECK "${PYTHON_VER_CHECK_OUT}${PYTHON_VER_CHECK_ERR}")
-    debug_message("PYTHON_VER_CHECK=${PYTHON_VER_CHECK}")
-    if(NOT PYTHON_VER_CHECK MATCHES "Python 2.7")
-        set(PYTHON2 PYTHON2-NOTFOUND)
-        find_program(PYTHON2
-            NAMES python2 python
-            PATHS C:/python27 ENV PYTHON
-            NO_SYSTEM_ENVIRONMENT_PATH
-        )
-    endif()
-endif()
+vcpkg_find_acquire_program(PYTHON2)
 
-if(PYTHON2 MATCHES "NOTFOUND")
-    message(FATAL_ERROR "libuv uses the GYP build system, which requires Python 2.7.\n"
-    "Python 2.7 was not found in the path or by searching inside C:\\Python27.\n"
-    "There is no portable redistributable for Python 2.7, so you will need to install the MSI located at:\n"
-    "    https://www.python.org/ftp/python/2.7.11/python-2.7.11.amd64.msi\n"
-    )
-endif()
-
-set(ENV{GYP_MSVS_VERSION} 2015)
 set(ENV{PYTHON} ${PYTHON2})
+set(ENV{GYP_MSVS_VERSION} 2015)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(LIBUV_LINKAGE shared)
