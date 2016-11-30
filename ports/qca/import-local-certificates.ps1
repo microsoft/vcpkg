@@ -22,13 +22,8 @@ Write-Host "Importing: " $certs.Count " certificates ..."
 
 foreach ($cert in $certs)
 {
-    $certs.GetIssuerName()
-    $out = New-Object String[] -ArgumentList 3
-    $out[0] = "-----BEGIN CERTIFICATE-----"
-    $out[1] = [System.Convert]::ToBase64String($cert.PublicKey.EncodedKeyValue.RawData, "InsertLineBreaks")
-    $out[2] = "-----END CERTIFICATE-----"
-
-    [System.IO.File]::AppendAllLines($outfile, $out)
+    $outfile = $outpath + "/"  + $cert.Thumbprint + ".cer"
+    Export-Certificate -Cert $cert -FilePath $outfile
 }
 
 Write-Host "Written to: " $outfile
