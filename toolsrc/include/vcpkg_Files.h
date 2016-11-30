@@ -47,4 +47,6 @@ namespace vcpkg {namespace Files
     void non_recursive_find_all_files_in_dir(const fs::path& dir, std::vector<fs::path>* output);
 
     std::vector<fs::path> non_recursive_find_all_files_in_dir(const fs::path& dir);
+
+    void print_paths(const std::vector<fs::path>& paths);
 }}

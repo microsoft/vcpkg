@@ -17,16 +17,6 @@ namespace vcpkg { namespace PostBuildLint
 
     static const fs::path DUMPBIN_EXE = R"(%VS140COMNTOOLS%\..\..\VC\bin\dumpbin.exe)";
 
-    static void print_paths(const std::vector<fs::path>& paths)
-    {
-        System::println("");
-        for (const fs::path& p : paths)
-        {
-            System::println("    %s", p.generic_string());
-        }
-        System::println("");
-    }
-
     static lint_status check_for_files_in_include_directory(const fs::path& package_dir)
     {
         const fs::path include_dir = package_dir / "include";
@@ -96,7 +86,7 @@ namespace vcpkg { namespace PostBuildLint
         if (!misplaced_cmake_files.empty())
         {
             System::println(System::color::warning, "The following cmake files were found outside /share/%s. Please place cmake files in /share/%s.", spec.name(), spec.name());
-            print_paths(misplaced_cmake_files);
+            Files::print_paths(misplaced_cmake_files);
             return lint_status::ERROR_DETECTED;
         }
 
@@ -124,7 +114,7 @@ namespace vcpkg { namespace PostBuildLint
         if (!dlls.empty())
         {
             System::println(System::color::warning, "\nThe following dlls were found in /lib and /debug/lib. Please move them to /bin or /debug/bin, respectively.");
-            print_paths(dlls);
+            Files::print_paths(dlls);
             return lint_status::ERROR_DETECTED;
         }
 
@@ -172,7 +162,7 @@ namespace vcpkg { namespace PostBuildLint
         if (potential_copyright_files.size() > 1)
         {
             System::println(System::color::warning, "The following files are potential copyright files:");
-            print_paths(potential_copyright_files);
+            Files::print_paths(potential_copyright_files);
         }
 
         System::println("    %s/share/%s/copyright", packages_dir.generic_string(), spec.name());
@@ -188,7 +178,7 @@ namespace vcpkg { namespace PostBuildLint
         if (!exes.empty())
         {
             System::println(System::color::warning, "The following EXEs were found in /bin and /debug/bin. EXEs are not valid distribution targets.");
-            print_paths(exes);
+            Files::print_paths(exes);
             return lint_status::ERROR_DETECTED;
         }
 
@@ -213,7 +203,7 @@ namespace vcpkg { namespace PostBuildLint
         if (!dlls_with_no_exports.empty())
         {
             System::println(System::color::warning, "The following DLLs have no exports:");
-            print_paths(dlls_with_no_exports);
+            Files::print_paths(dlls_with_no_exports);
             System::println(System::color::warning, "DLLs without any exports are likely a bug in the build script.");
             return lint_status::ERROR_DETECTED;
         }
@@ -244,7 +234,7 @@ namespace vcpkg { namespace PostBuildLint
         if (!dlls_with_improper_uwp_bit.empty())
         {
             System::println(System::color::warning, "The following DLLs do not have the App Container bit set:");
-            print_paths(dlls_with_improper_uwp_bit);
+            Files::print_paths(dlls_with_improper_uwp_bit);
             System::println(System::color::warning, "This bit is required for Windows Store apps.");
             return lint_status::ERROR_DETECTED;
         }
@@ -346,7 +336,7 @@ namespace vcpkg { namespace PostBuildLint
         }
 
         System::println(System::color::warning, "DLLs should not be present in a static build, but the following DLLs were found:");
-        print_paths(dlls);
+        Files::print_paths(dlls);
         return lint_status::ERROR_DETECTED;
     }
 
@@ -361,10 +351,10 @@ namespace vcpkg { namespace PostBuildLint
 
         System::println(System::color::warning, "Mismatching number of debug and release binaries. Found %d for debug but %d for release.", debug_count, release_count);
         System::println("Debug binaries");
-        print_paths(debug_binaries);
+        Files::print_paths(debug_binaries);
 
         System::println("Release binaries");
-        print_paths(release_binaries);
+        Files::print_paths(release_binaries);
 
         if (debug_count == 0)
         {
@@ -402,7 +392,7 @@ namespace vcpkg { namespace PostBuildLint
         {
             System::println(System::color::warning, "Directory %s should have no subdirectories", dir.generic_string());
             System::println("The following subdirectories were found: ");
-            print_paths(subdirectories);
+            Files::print_paths(subdirectories);
             return lint_status::ERROR_DETECTED;
         }
 
@@ -451,7 +441,7 @@ namespace vcpkg { namespace PostBuildLint
         {
             System::println(System::color::warning, "There should be no empty directories in %s", dir.generic_string());
             System::println("The following empty directories were found: ");
-            print_paths(empty_directories);
+            Files::print_paths(empty_directories);
             System::println(System::color::warning, "If a directory should be populated but is not, this might indicate an error in the portfile.\n"
                             "If the directories are not needed and their creation cannot be disabled, use something like this in the portfile to remove them)\n"
                             "\n"
@@ -570,7 +560,7 @@ namespace vcpkg { namespace PostBuildLint
         if (!misplaced_files.empty())
         {
             System::println(System::color::warning, "The following files are placed in\n%s and\n%s: ", package_dir.generic_string(), debug_dir.generic_string());
-            print_paths(misplaced_files);
+            Files::print_paths(misplaced_files);
             System::println(System::color::warning, "Files cannot be present in those directories.\n");
             return lint_status::ERROR_DETECTED;
         }

@@ -1,6 +1,7 @@
 #include "vcpkg_Files.h"
 #include <fstream>
 #include <regex>
+#include "vcpkg_System.h"
 
 namespace vcpkg {namespace Files
 {
@@ -99,5 +100,15 @@ namespace vcpkg {namespace Files
         std::vector<fs::path> v;
         non_recursive_find_all_files_in_dir(dir, &v);
         return v;
+    }
+
+    void print_paths(const std::vector<fs::path>& paths)
+    {
+        System::println("");
+        for (const fs::path& p : paths)
+        {
+            System::println("    %s", p.generic_string());
+        }
+        System::println("");
     }
 }}
