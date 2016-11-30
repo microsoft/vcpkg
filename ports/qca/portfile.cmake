@@ -53,12 +53,13 @@ vcpkg_configure_cmake(
         -DUSE_RELATIVE_PATHS=ON
         -DQT4_BUILD=OFF
         -DBUILD_TESTS=OFF
-        -DBUILD_TOOLS=OFF
-        -DQCA_SUFFIX=OFF    #
+        -DBUILD_TOOLS=ON
+        -DQCA_SUFFIX=OFF
+        -DQCA_FEATURE_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/share/qca/mkspecs/features
     OPTIONS_DEBUG
-        -DQCA_PLUGINS_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/debug/bin/Qca     #
+        -DQCA_PLUGINS_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/debug/bin/Qca
     OPTIONS_RELEASE
-        -DQCA_PLUGINS_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/bin/Qca           #
+        -DQCA_PLUGINS_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/bin/Qca
 )
 
 vcpkg_install_cmake()
@@ -82,6 +83,20 @@ file(READ ${CURRENT_PACKAGES_DIR}/share/qca/cmake/QcaTargets.cmake
 string(REPLACE "packages/qca_" "installed/" QCA_TARGET_CONFIG "${QCA_TARGET_CONFIG}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/qca/cmake/QcaTargets.cmake
     "${QCA_TARGET_CONFIG}"
+)
+
+# Move tools
+file(COPY ${CURRENT_PACKAGES_DIR}/bin/mozcerts.exe
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/qca/tools
+)
+file(COPY ${CURRENT_PACKAGES_DIR}/bin/qcatool.exe
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/qca/tools
+)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/mozcerts.exe
+    ${CURRENT_PACKAGES_DIR}/bin/qcatool.exe
+    ${CURRENT_PACKAGES_DIR}/debug/bin/mozcerts.exe
+    ${CURRENT_PACKAGES_DIR}/debug/bin/mozcerts.pdb
+    ${CURRENT_PACKAGES_DIR}/debug/bin/qcatool.exe
 )
 
 # Remove unneeded dirs
