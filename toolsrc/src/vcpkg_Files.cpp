@@ -73,4 +73,34 @@ namespace vcpkg {namespace Files
         recursive_find_files_with_extension_in_dir(dir, extension, &v);
         return v;
     }
+
+    void recursive_find_all_files_in_dir(const fs::path& dir, std::vector<fs::path>* output)
+    {
+        recursive_find_matching_paths_in_dir(dir, [&](const fs::path& current)
+        {
+            return !fs::is_directory(current);
+        }, output);
+    }
+
+    std::vector<fs::path> recursive_find_all_files_in_dir(const fs::path& dir)
+    {
+        std::vector<fs::path> v;
+        recursive_find_all_files_in_dir(dir, &v);
+        return v;
+    }
+
+    void non_recursive_find_all_files_in_dir(const fs::path& dir, std::vector<fs::path>* output)
+    {
+        non_recursive_find_matching_paths_in_dir(dir, [&](const fs::path& current)
+        {
+            return !fs::is_directory(current);
+        }, output);
+    }
+
+    std::vector<fs::path> non_recursive_find_all_files_in_dir(const fs::path& dir)
+    {
+        std::vector<fs::path> v;
+        non_recursive_find_all_files_in_dir(dir, &v);
+        return v;
+    }
 }}
