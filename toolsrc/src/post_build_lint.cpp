@@ -1,4 +1,3 @@
-#include <filesystem>
 #include "vcpkg_paths.h"
 #include "package_spec.h"
 #include "vcpkg_Files.h"
@@ -7,8 +6,6 @@
 #include "coff_file_reader.h"
 #include "BuildInfo.h"
 #include <regex>
-
-namespace fs = std::tr2::sys;
 
 namespace vcpkg { namespace PostBuildLint
 {

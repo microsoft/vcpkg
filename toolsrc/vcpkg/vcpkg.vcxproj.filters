@@ -110,5 +110,8 @@
     <ClInclude Include="..\include\MachineType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\filesystem_fs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

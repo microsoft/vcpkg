@@ -4,8 +4,6 @@
 #include "Paragraphs.h"
 #include <regex>
 
-namespace fs = std::tr2::sys;
-
 namespace vcpkg { namespace PostBuildLint
 {
     enum class LinkageType

@@ -154,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\coff_file_reader.h" />
+    <ClInclude Include="..\include\filesystem_fs.h" />
     <ClInclude Include="..\include\MachineType.h" />
     <ClInclude Include="..\include\vcpkg_cmd_arguments.h" />
     <ClInclude Include="..\include\vcpkg_Commands.h" />

@@ -1,9 +1,6 @@
 #include "vcpkg_Files.h"
 #include <fstream>
-#include <filesystem>
 #include <regex>
-
-namespace fs = std::tr2::sys;
 
 namespace vcpkg {namespace Files
 {

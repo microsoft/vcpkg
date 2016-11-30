@@ -1,22 +1,20 @@
 #pragma once
 
 #include "expected.h"
-#include <filesystem>
+#include "filesystem_fs.h"
 #include <iterator>
 
 namespace vcpkg {namespace Files
 {
-    namespace fs = std::tr2::sys;
-
     static const char* FILESYSTEM_INVALID_CHARACTERS = R"(\/:*?"<>|)";
 
-    void check_is_directory(const std::tr2::sys::path& dirpath);
+    void check_is_directory(const fs::path& dirpath);
 
     bool has_invalid_chars_for_filesystem(const std::string s);
 
-    expected<std::string> get_contents(const std::tr2::sys::path& file_path) noexcept;
+    expected<std::string> get_contents(const fs::path& file_path) noexcept;
 
-    std::tr2::sys::path find_file_recursively_up(const std::tr2::sys::path& starting_dir, const std::string& filename);
+    fs::path find_file_recursively_up(const fs::path& starting_dir, const std::string& filename);
 
     template <class Pred>
     void non_recursive_find_matching_paths_in_dir(const fs::path& dir, const Pred predicate, std::vector<fs::path>* output)

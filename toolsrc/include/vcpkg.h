@@ -1,6 +1,5 @@
 #pragma once
 
-#include <filesystem>
 #include "package_spec.h"
 #include "BinaryParagraph.h"
 #include "StatusParagraphs.h"
@@ -8,8 +7,6 @@
 
 namespace vcpkg
 {
-    namespace fs = std::tr2::sys;
-
     extern bool g_do_dry_run;
 
     StatusParagraphs database_load_check(const vcpkg_paths& paths);

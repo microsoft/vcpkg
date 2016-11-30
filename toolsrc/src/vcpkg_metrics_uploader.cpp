@@ -1,10 +1,8 @@
 #include "metrics.h"
-#include <filesystem>
 #include "vcpkg_Checks.h"
 #include "vcpkg_Files.h"
 #include <Windows.h>
 
-namespace fs = std::tr2::sys;
 using namespace vcpkg;
 
 int WINAPI
