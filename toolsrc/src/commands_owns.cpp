@@ -1,30 +1,21 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
 #include "vcpkg.h"
-#include <fstream>
 
 namespace vcpkg
 {
     static void search_file(const vcpkg_paths& paths, const std::string& file_substr, const StatusParagraphs& status_db)
     {
-        std::string line;
-
-        for (auto&& pgh : status_db)
+        const std::vector<StatusParagraph_and_associated_files> installed_files = get_installed_files(paths, status_db);
+        for (const StatusParagraph_and_associated_files& pgh_and_file : installed_files)
         {
-            if (pgh->state != install_state_t::installed)
-                continue;
+            const StatusParagraph& pgh = pgh_and_file.pgh;
 
-            std::fstream listfile(paths.listfile_path(pgh->package));
-            while (std::getline(listfile, line))
+            for (const std::string& file : pgh_and_file.files)
             {
-                if (line.empty())
+                if (file.find(file_substr) != std::string::npos)
                 {
-                    continue;
-                }
-
-                if (line.find(file_substr) != std::string::npos)
-                {
-                    System::println("%s: %s", pgh->package.displayname(), line);
+                    System::println("%s: %s", pgh.package.displayname(), file);
                 }
             }
         }
