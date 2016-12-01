@@ -9,8 +9,7 @@ namespace vcpkg
 {
     StatusParagraphs database_load_check(const vcpkg_paths& paths);
 
-    void install_package(const vcpkg_paths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs& status_db);
-    void deinstall_package(const vcpkg_paths& paths, const package_spec& spec, StatusParagraphs& status_db);
+    void write_update(const vcpkg_paths& paths, const StatusParagraph& p);
 
     expected<SourceParagraph> try_load_port(const fs::path& control_path);
 
