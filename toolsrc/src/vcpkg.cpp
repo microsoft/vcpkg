@@ -97,13 +97,6 @@ StatusParagraphs vcpkg::database_load_check(const vcpkg_paths& paths)
     return current_status_db;
 }
 
-static std::string get_fullpkgname_from_listfile(const fs::path& path)
-{
-    auto ret = path.stem().generic_u8string();
-    std::replace(ret.begin(), ret.end(), '_', ':');
-    return ret;
-}
-
 void vcpkg::write_update(const vcpkg_paths& paths, const StatusParagraph& p)
 {
     static int update_id = 0;
