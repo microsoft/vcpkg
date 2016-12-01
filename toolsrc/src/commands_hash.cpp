@@ -1,8 +1,6 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
 
-namespace fs = std::tr2::sys;
-
 namespace vcpkg
 {
     static void do_file_hash(fs::path const& path, std::wstring const& hashType)

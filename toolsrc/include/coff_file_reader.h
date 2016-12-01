@@ -1,12 +1,10 @@
 #pragma once
 #include <vector>
 #include "MachineType.h"
-#include <filesystem>
+#include "filesystem_fs.h"
 
 namespace vcpkg {namespace COFFFileReader
 {
-    namespace fs = std::tr2::sys;
-
     struct dll_info
     {
         MachineType machine_type;

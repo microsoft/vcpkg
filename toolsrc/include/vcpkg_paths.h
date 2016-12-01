@@ -1,13 +1,11 @@
 #pragma once
-#include <filesystem>
+#include "filesystem_fs.h"
 #include "expected.h"
 #include "package_spec.h"
 #include "BinaryParagraph.h"
 
 namespace vcpkg
 {
-    namespace fs = std::tr2::sys;
-
     struct vcpkg_paths
     {
         static expected<vcpkg_paths> create(const fs::path& vcpkg_root_dir);

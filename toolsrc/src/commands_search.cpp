@@ -4,8 +4,6 @@
 #include "vcpkglib_helpers.h"
 #include "SourceParagraph.h"
 
-namespace fs = std::tr2::sys;
-
 namespace vcpkg
 {
     static std::vector<SourceParagraph> read_all_source_paragraphs(const vcpkg_paths& paths)

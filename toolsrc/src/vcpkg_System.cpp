@@ -3,8 +3,6 @@
 #include <Windows.h>
 #include <regex>
 
-namespace fs = std::tr2::sys;
-
 namespace vcpkg {namespace System
 {
     fs::path get_exe_path_of_current_process()

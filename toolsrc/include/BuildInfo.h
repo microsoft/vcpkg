@@ -4,9 +4,7 @@
 #include "Paragraphs.h"
 #include <regex>
 
-namespace fs = std::tr2::sys;
-
-namespace vcpkg
+namespace vcpkg { namespace PostBuildLint
 {
     enum class LinkageType
     {
@@ -128,4 +126,4 @@ namespace vcpkg
     };
 
     BuildInfo read_build_info(const fs::path& filepath);
-}
+}}

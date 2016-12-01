@@ -59,12 +59,144 @@ namespace vcpkg
             exit(EXIT_FAILURE);
         }
 
-        perform_all_checks(spec, paths);
+        PostBuildLint::perform_all_checks(spec, paths);
 
         create_binary_control_file(paths, source_paragraph, target_triplet);
 
         // const fs::path port_buildtrees_dir = paths.buildtrees / spec.name;
         // delete_directory(port_buildtrees_dir);
+    }
+
+    static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryParagraph& bpgh)
+    {
+        std::fstream listfile(paths.listfile_path(bpgh), std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
+
+        auto package_prefix_path = paths.package_dir(bpgh.spec);
+        auto prefix_length = package_prefix_path.native().size();
+
+        const triplet& target_triplet = bpgh.spec.target_triplet();
+        const std::string& target_triplet_as_string = target_triplet.canonical_name();
+        std::error_code ec;
+        fs::create_directory(paths.installed / target_triplet_as_string, ec);
+        listfile << target_triplet << "\n";
+
+        for (auto it = fs::recursive_directory_iterator(package_prefix_path); it != fs::recursive_directory_iterator(); ++it)
+        {
+            const std::string filename = it->path().filename().generic_string();
+            if (fs::is_regular_file(it->status()) && (_stricmp(filename.c_str(), "CONTROL") == 0 || _stricmp(filename.c_str(), "BUILD_INFO") == 0))
+            {
+                // Do not copy the control file
+                continue;
+            }
+
+            auto suffix = it->path().generic_u8string().substr(prefix_length + 1);
+            auto target = paths.installed / target_triplet_as_string / suffix;
+
+            auto status = it->status(ec);
+            if (ec)
+            {
+                System::println(System::color::error, "failed: %s: %s", it->path().u8string(), ec.message());
+                continue;
+            }
+            if (fs::is_directory(status))
+            {
+                fs::create_directory(target, ec);
+                if (ec)
+                {
+                    System::println(System::color::error, "failed: %s: %s", target.u8string(), ec.message());
+                }
+
+                listfile << target_triplet << "/" << suffix << "\n";
+            }
+            else if (fs::is_regular_file(status))
+            {
+                fs::copy_file(*it, target, ec);
+                if (ec)
+                {
+                    System::println(System::color::error, "failed: %s: %s", target.u8string(), ec.message());
+                }
+                listfile << target_triplet << "/" << suffix << "\n";
+            }
+            else if (!fs::status_known(status))
+            {
+                System::println(System::color::error, "failed: %s: unknown status", it->path().u8string());
+            }
+            else
+                System::println(System::color::error, "failed: %s: cannot handle file type", it->path().u8string());
+        }
+
+        listfile.close();
+    }
+
+    static std::map<std::string, fs::path> remove_first_n_chars_and_map(const std::vector<fs::path> absolute_paths, const size_t n)
+    {
+        std::map<std::string, fs::path> output;
+
+        for (const fs::path& absolute_path : absolute_paths)
+        {
+            std::string suffix = absolute_path.generic_string();
+            suffix.erase(0, n);
+            output.emplace(suffix, absolute_path);
+        }
+
+        return output;
+    }
+
+    static void print_map_values(const std::vector<std::string> keys, const std::map<std::string, fs::path>& map)
+    {
+        System::println("");
+        for (const std::string& key : keys)
+        {
+            System::println("    %s", map.at(key).generic_string());
+        }
+        System::println("");
+    }
+
+    static void install_package(const vcpkg_paths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs& status_db)
+    {
+        const fs::path package_dir = paths.package_dir(binary_paragraph.spec);
+        const std::vector<fs::path> package_files = Files::recursive_find_all_files_in_dir(package_dir);
+
+        const fs::path installed_dir = paths.installed / binary_paragraph.spec.target_triplet().canonical_name();
+        const std::vector<fs::path> installed_files = Files::recursive_find_all_files_in_dir(installed_dir);
+
+        const std::map<std::string, fs::path> package_files_relative_paths_to_absolute_paths = remove_first_n_chars_and_map(package_files, package_dir.generic_string().size() + 1);
+        const std::map<std::string, fs::path> installed_files_relative_paths_to_absolute_paths = remove_first_n_chars_and_map(installed_files, installed_dir.generic_string().size() + 1);
+
+        const std::vector<std::string> package_files_set = Maps::extract_keys(package_files_relative_paths_to_absolute_paths);
+        const std::vector<std::string> installed_files_set = Maps::extract_keys(installed_files_relative_paths_to_absolute_paths);
+
+        std::vector<std::string> intersection;
+        std::set_intersection(package_files_set.cbegin(), package_files_set.cend(),
+                              installed_files_set.cbegin(), installed_files_set.cend(),
+                              std::back_inserter(intersection));
+
+        if (!intersection.empty())
+        {
+            System::println(System::color::error, "The following files are already installed and are in conflict with %s:", binary_paragraph.spec);
+            print_map_values(intersection, installed_files_relative_paths_to_absolute_paths);
+            exit(EXIT_FAILURE);
+        }
+
+        StatusParagraph spgh;
+        spgh.package = binary_paragraph;
+        spgh.want = want_t::install;
+        spgh.state = install_state_t::half_installed;
+        for (auto&& dep : spgh.package.depends)
+        {
+            if (status_db.find_installed(dep, spgh.package.spec.target_triplet()) == status_db.end())
+            {
+                Checks::unreachable();
+            }
+        }
+        write_update(paths, spgh);
+        status_db.insert(std::make_unique<StatusParagraph>(spgh));
+
+        install_and_write_listfile(paths, spgh.package);
+
+        spgh.state = install_state_t::installed;
+        write_update(paths, spgh);
+        status_db.insert(std::make_unique<StatusParagraph>(spgh));
     }
 
     void install_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
@@ -140,7 +272,7 @@ namespace vcpkg
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_CHECKS_ONLY});
         if (options.find(OPTION_CHECKS_ONLY) != options.end())
         {
-            perform_all_checks(spec, paths);
+            PostBuildLint::perform_all_checks(spec, paths);
             exit(EXIT_SUCCESS);
         }
 
