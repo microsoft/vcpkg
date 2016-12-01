@@ -109,6 +109,39 @@ void vcpkg::write_update(const vcpkg_paths& paths, const StatusParagraph& p)
     fs::rename(tmp_update_filename, update_filename);
 }
 
+std::vector<StatusParagraph_and_associated_files> vcpkg::get_installed_files(const vcpkg_paths& paths, const StatusParagraphs& status_db)
+{
+    std::vector<StatusParagraph_and_associated_files> installed_files;
+
+    std::string line;
+
+    for (const std::unique_ptr<StatusParagraph>& pgh : status_db)
+    {
+        if (pgh->state != install_state_t::installed)
+        {
+            continue;
+        }
+
+        std::fstream listfile(paths.listfile_path(pgh->package));
+
+        std::vector<std::string> installed_files_of_current_pgh;
+        while (std::getline(listfile, line))
+        {
+            if (line.empty())
+            {
+                continue;
+            }
+
+            installed_files_of_current_pgh.push_back(line);
+        }
+
+        const StatusParagraph_and_associated_files pgh_and_files = {*pgh, std::move(installed_files_of_current_pgh)};
+        installed_files.push_back(pgh_and_files);
+    }
+
+    return installed_files;
+}
+
 expected<SourceParagraph> vcpkg::try_load_port(const fs::path& path)
 {
     try
