@@ -7,13 +7,9 @@
 #include <unordered_map>
 #include <memory>
 #include <vector>
-#include <cassert>
 #include "vcpkg_Files.h"
-#include "vcpkg_System.h"
 #include "Paragraphs.h"
 #include <regex>
-#include <map>
-#include "vcpkg_Maps.h"
 
 using namespace vcpkg;
 
