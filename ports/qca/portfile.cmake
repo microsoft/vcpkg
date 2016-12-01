@@ -1,4 +1,8 @@
-# For now only x[64|86]-windows triplet and dynamic linking is supported
+# This portfile adds the Qt Cryptographic Arcitecture
+# Changes to the original sources by this file:
+#   No -qt5 suffix, which is recommended just for Linux
+#   Output directories according to vcpkg
+#   Updated certstore. See certstore.pem in the output dirs
 #
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -44,6 +48,16 @@ vcpkg_apply_patches(
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-fix-path-for-vcpkg.patch
 )
 
+# Importing local certificates 
+message(STATUS "Importing certstore")
+file(REMOVE ${SOURCE_PATH}/certs/rootcerts.pem)
+vcpkg_execute_required_process(
+    COMMAND "& ${CMAKE_CURRENT_LIST_DIR}/import-local-certificates.ps1 -outpath ${SOURCE_PATH}/certs/"
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+    LOGNAME certimport
+)
+message(STATUS "Importing certstore done")
+
 # Configure and build
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -53,7 +67,7 @@ vcpkg_configure_cmake(
         -DUSE_RELATIVE_PATHS=ON
         -DQT4_BUILD=OFF
         -DBUILD_TESTS=OFF
-        -DBUILD_TOOLS=ON
+        -DBUILD_TOOLS=OFF
         -DQCA_SUFFIX=OFF
         -DQCA_FEATURE_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/share/qca/mkspecs/features
     OPTIONS_DEBUG
@@ -66,7 +80,6 @@ vcpkg_install_cmake()
 
 # Patch and copy cmake files
 message(STATUS "Patching files")
-
 file(READ 
     ${CURRENT_PACKAGES_DIR}/debug/share/qca/cmake/QcaTargets-debug.cmake
     QCA_DEBUG_CONFIG
@@ -85,20 +98,6 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/share/qca/cmake/QcaTargets.cmake
     "${QCA_TARGET_CONFIG}"
 )
 
-# Move tools
-file(COPY ${CURRENT_PACKAGES_DIR}/bin/mozcerts.exe
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/qca/tools
-)
-file(COPY ${CURRENT_PACKAGES_DIR}/bin/qcatool.exe
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/qca/tools
-)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/mozcerts.exe
-    ${CURRENT_PACKAGES_DIR}/bin/qcatool.exe
-    ${CURRENT_PACKAGES_DIR}/debug/bin/mozcerts.exe
-    ${CURRENT_PACKAGES_DIR}/debug/bin/mozcerts.pdb
-    ${CURRENT_PACKAGES_DIR}/debug/bin/qcatool.exe
-)
-
 # Remove unneeded dirs
 file(REMOVE_RECURSE 
     ${CURRENT_BUILDTREES_DIR}/share/man
@@ -106,7 +105,6 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share
 )
-
 message(STATUS "Patching files done")
 
 # Handle copyright

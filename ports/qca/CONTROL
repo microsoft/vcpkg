@@ -1,4 +1,4 @@
 Source: qca
 Version: 2.2.0
-Description: Qt Cryptographic Api (QCA)
+Description: Qt Cryptographic Architecture (QCA). Sources: https://cgit.kde.org/qca.git/
 Build-Depends: qt5
