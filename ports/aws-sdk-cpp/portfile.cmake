@@ -41,6 +41,12 @@ if(${VCPKG_LIBRARY_LINKAGE} STREQUAL dynamic)
 	file(COPY ${LIB_FILES}       DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 	file(COPY ${DEBUG_LIB_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 	file(REMOVE ${LIB_FILES} ${DEBUG_LIB_FILES})
+	
+	vcpkg_apply_patches( #define USE_IMPORT_EXPORT in SDKConfig.h
+		SOURCE_PATH ${SOURCE_PATH}
+		PATCHES 
+			${CURRENT_PACKAGES_DIR}/include/shared_define.patch
+	)
 endif()
 
 # Handle copyright
