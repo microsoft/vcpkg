@@ -5,7 +5,7 @@
 # This script imports LocalMachine certificates into rootcerts.pem
 # needed by qca.
 #
-# PS> .\import-local-certificates.ps1 -certstore Root -outpath C:\src\git\vcpkg\ports\qca
+# PS> .\import-local-certificates.ps1 [-certstore Root] -outpath C:\src\git\vcpkg\ports\qca
 #
 
 param (
@@ -15,15 +15,22 @@ param (
     [Parameter(Mandatory=$true)][string]$outpath
 )
 
-$certs = (Get-ChildItem -Path 'Cert:\LocalMachine\Root')
-$outfile = $outpath + "\rootcerts.pem"
+$certs = (Get-ChildItem -Path 'Cert:\LocalMachine\Root' -EKU "Server Authentication")
+$outfile = $outpath + "rootcerts.pem"
 
 Write-Host "Importing: " $certs.Count " certificates ..."
 
 foreach ($cert in $certs)
 {
-    $outfile = $outpath + "/"  + $cert.Thumbprint + ".cer"
-    Export-Certificate -Cert $cert -FilePath $outfile
+    $out = New-Object String[] -ArgumentList 5
+
+    $out[0] = " "
+    $out[1] = "# " + $cert.Issuer
+    $out[2] = "-----BEGIN CERTIFICATE-----"
+    $out[3] = $([Convert]::ToBase64String($cert.Export('Cert'), [System.Base64FormattingOptions]::InsertLineBreaks))
+    $out[4] = "-----END CERTIFICATE-----"
+ 
+    [System.IO.File]::AppendAllLines($outfile,$out)
 }
 
 Write-Host "Written to: " $outfile
