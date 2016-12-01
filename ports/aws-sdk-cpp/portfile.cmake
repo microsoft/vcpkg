@@ -45,9 +45,9 @@ if(${VCPKG_LIBRARY_LINKAGE} STREQUAL dynamic)
 	file(REMOVE ${LIB_FILES} ${DEBUG_LIB_FILES})
 	
 	vcpkg_apply_patches( #define USE_IMPORT_EXPORT in SDKConfig.h
-		SOURCE_PATH ${SOURCE_PATH}
+		SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
 		PATCHES 
-			${CURRENT_PACKAGES_DIR}/include/shared_define.patch
+			${CMAKE_CURRENT_LIST_DIR}/shared_define.patch
 	)
 endif()
 
