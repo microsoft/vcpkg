@@ -1,5 +1,10 @@
-if (NOT TARGET_TRIPLET STREQUAL "x86-windows" AND NOT TARGET_TRIPLET STREQUAL "x64-windows")
-    message(FATAL_ERROR "Error: Only x64 and x86 desktop builds are supported now.")
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL arm OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
+    message(FATAL_ERROR "Error: ARM and/or UWP builds are currently not supported.")
+endif()
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
 
 include(vcpkg_common_functions)
