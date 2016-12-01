@@ -1,4 +1,3 @@
-#include <filesystem>
 #include "expected.h"
 #include "vcpkg_paths.h"
 #include "metrics.h"

@@ -1,9 +1,7 @@
 #include "vcpkg_Files.h"
 #include <fstream>
-#include <filesystem>
 #include <regex>
-
-namespace fs = std::tr2::sys;
+#include "vcpkg_System.h"
 
 namespace vcpkg {namespace Files
 {
@@ -57,5 +55,60 @@ namespace vcpkg {namespace Files
         }
 
         return current_dir;
+    }
+
+    void recursive_find_files_with_extension_in_dir(const fs::path& dir, const std::string& extension, std::vector<fs::path>* output)
+    {
+        recursive_find_matching_paths_in_dir(dir, [&extension](const fs::path& current)
+                                             {
+                                                 return !fs::is_directory(current) && current.extension() == extension;
+                                             }, output);
+    }
+
+    std::vector<fs::path> recursive_find_files_with_extension_in_dir(const fs::path& dir, const std::string& extension)
+    {
+        std::vector<fs::path> v;
+        recursive_find_files_with_extension_in_dir(dir, extension, &v);
+        return v;
+    }
+
+    void recursive_find_all_files_in_dir(const fs::path& dir, std::vector<fs::path>* output)
+    {
+        recursive_find_matching_paths_in_dir(dir, [&](const fs::path& current)
+                                             {
+                                                 return !fs::is_directory(current);
+                                             }, output);
+    }
+
+    std::vector<fs::path> recursive_find_all_files_in_dir(const fs::path& dir)
+    {
+        std::vector<fs::path> v;
+        recursive_find_all_files_in_dir(dir, &v);
+        return v;
+    }
+
+    void non_recursive_find_all_files_in_dir(const fs::path& dir, std::vector<fs::path>* output)
+    {
+        non_recursive_find_matching_paths_in_dir(dir, [&](const fs::path& current)
+                                                 {
+                                                     return !fs::is_directory(current);
+                                                 }, output);
+    }
+
+    std::vector<fs::path> non_recursive_find_all_files_in_dir(const fs::path& dir)
+    {
+        std::vector<fs::path> v;
+        non_recursive_find_all_files_in_dir(dir, &v);
+        return v;
+    }
+
+    void print_paths(const std::vector<fs::path>& paths)
+    {
+        System::println("");
+        for (const fs::path& p : paths)
+        {
+            System::println("    %s", p.generic_string());
+        }
+        System::println("");
     }
 }}

@@ -59,7 +59,7 @@ namespace vcpkg
             exit(EXIT_FAILURE);
         }
 
-        perform_all_checks(spec, paths);
+        PostBuildLint::perform_all_checks(spec, paths);
 
         create_binary_control_file(paths, source_paragraph, target_triplet);
 
@@ -140,7 +140,7 @@ namespace vcpkg
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_CHECKS_ONLY});
         if (options.find(OPTION_CHECKS_ONLY) != options.end())
         {
-            perform_all_checks(spec, paths);
+            PostBuildLint::perform_all_checks(spec, paths);
             exit(EXIT_SUCCESS);
         }
 

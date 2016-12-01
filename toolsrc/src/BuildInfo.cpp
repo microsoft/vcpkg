@@ -2,7 +2,7 @@
 #include "vcpkg_Checks.h"
 #include "vcpkglib_helpers.h"
 
-namespace vcpkg
+namespace vcpkg { namespace PostBuildLint
 {
     const ConfigurationType& BuildType::config() const
     {
@@ -127,7 +127,7 @@ namespace vcpkg
     BuildInfo read_build_info(const fs::path& filepath)
     {
         const std::vector<std::unordered_map<std::string, std::string>> pghs = Paragraphs::get_paragraphs(filepath);
-        Checks::check_throw(pghs.size() == 1, "Invalid BUILD_INFO file for package");
+        Checks::check_exit(pghs.size() == 1, "Invalid BUILD_INFO file for package");
 
         return BuildInfo::create(pghs[0]);
     }
@@ -161,4 +161,4 @@ namespace vcpkg
     {
         return this->m_dll_name;
     }
-}
+}}

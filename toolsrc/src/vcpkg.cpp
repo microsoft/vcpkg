@@ -6,7 +6,6 @@
 #include <string>
 #include <unordered_map>
 #include <memory>
-#include <filesystem>
 #include <vector>
 #include <cassert>
 #include "vcpkg_Files.h"

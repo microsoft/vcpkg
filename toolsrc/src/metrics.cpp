@@ -10,11 +10,9 @@
 #include <Windows.h>
 #include <winhttp.h>
 #include <fstream>
-#include <filesystem>
+#include "filesystem_fs.h"
 #include "vcpkg_Strings.h"
 #include "vcpkg_System.h"
-
-namespace fs = std::tr2::sys;
 
 namespace vcpkg
 {

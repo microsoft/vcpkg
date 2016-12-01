@@ -1,12 +1,11 @@
 #pragma once
 
 #include "vcpkg_Strings.h"
-
-#include <filesystem>
+#include "filesystem_fs.h"
 
 namespace vcpkg {namespace System
 {
-    std::tr2::sys::path get_exe_path_of_current_process();
+    fs::path get_exe_path_of_current_process();
 
     struct exit_code_and_output
     {
