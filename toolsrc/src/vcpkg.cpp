@@ -12,18 +12,12 @@
 #include "vcpkg_System.h"
 #include "Paragraphs.h"
 #include <regex>
+#include <map>
+#include "vcpkg_Maps.h"
 
 using namespace vcpkg;
 
 bool vcpkg::g_do_dry_run = false;
-
-namespace
-{
-    std::fstream open_status_file(const vcpkg_paths& paths, std::ios_base::openmode mode = std::ios_base::app | std::ios_base::in | std::ios_base::out | std::ios_base::binary)
-    {
-        return std::fstream(paths.vcpkg_dir_status_file, mode);
-    }
-}
 
 static StatusParagraphs load_current_database(const fs::path& vcpkg_dir_status_file, const fs::path& vcpkg_dir_status_file_old)
 {
@@ -189,8 +183,56 @@ static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryPar
     listfile.close();
 }
 
+static std::map<std::string, fs::path> remove_first_n_chars_and_map(const std::vector<fs::path> absolute_paths, const size_t n)
+{
+    std::map<std::string, fs::path> output;
+
+    for (const fs::path& absolute_path : absolute_paths)
+    {
+        std::string suffix = absolute_path.generic_string();
+        suffix.erase(0, n);
+        output.emplace(suffix, absolute_path);
+    }
+
+    return output;
+}
+
+static void print_map_values(const std::vector<std::string> keys, const std::map<std::string, fs::path>& map)
+{
+    System::println("");
+    for (const std::string& key : keys)
+    {
+        System::println("    %s", map.at(key).generic_string());
+    }
+    System::println("");
+}
+
 void vcpkg::install_package(const vcpkg_paths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs& status_db)
 {
+    const fs::path package_dir = paths.package_dir(binary_paragraph.spec);
+    const std::vector<fs::path> package_files = Files::recursive_find_all_files_in_dir(package_dir);
+
+    const fs::path installed_dir = paths.installed / binary_paragraph.spec.target_triplet().canonical_name();
+    const std::vector<fs::path> installed_files = Files::recursive_find_all_files_in_dir(installed_dir);
+
+    const std::map<std::string, fs::path> package_files_relative_paths_to_absolute_paths = remove_first_n_chars_and_map(package_files, package_dir.generic_string().size() + 1);
+    const std::map<std::string, fs::path> installed_files_relative_paths_to_absolute_paths = remove_first_n_chars_and_map(installed_files, installed_dir.generic_string().size() + 1);
+
+    const std::vector<std::string> package_files_set = Maps::extract_keys(package_files_relative_paths_to_absolute_paths);
+    const std::vector<std::string> installed_files_set = Maps::extract_keys(installed_files_relative_paths_to_absolute_paths);
+
+    std::vector<std::string> intersection;
+    std::set_intersection(package_files_set.cbegin(), package_files_set.cend(),
+                          installed_files_set.cbegin(), installed_files_set.cend(),
+                          std::back_inserter(intersection));
+
+    if (!intersection.empty())
+    {
+        System::println(System::color::error, "The following files are already installed and are in conflict with %s:", binary_paragraph.spec);
+        print_map_values(intersection, installed_files_relative_paths_to_absolute_paths);
+        exit(EXIT_FAILURE);
+    }
+
     StatusParagraph spgh;
     spgh.package = binary_paragraph;
     spgh.want = want_t::install;
