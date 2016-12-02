@@ -170,7 +170,7 @@ namespace vcpkg
         std::vector<std::string> installed_files = extract_files_in_triplet(pgh_and_files, triplet);
         const size_t installed_remove_char_count = triplet.canonical_name().size() + 1; // +1 for the slash
         remove_first_n_chars(&installed_files, installed_remove_char_count);
-        std::sort(installed_files.begin(), installed_files.end());
+        std::sort(installed_files.begin(), installed_files.end()); // Should already be sorted
 
         std::vector<std::string> intersection;
         std::set_intersection(package_files.cbegin(), package_files.cend(),

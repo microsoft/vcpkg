@@ -111,6 +111,8 @@ void vcpkg::write_update(const vcpkg_paths& paths, const StatusParagraph& p)
 
 std::vector<StatusParagraph_and_associated_files> vcpkg::get_installed_files(const vcpkg_paths& paths, const StatusParagraphs& status_db)
 {
+    static const std::string MARK_FOR_REMOVAL = "";
+
     std::vector<StatusParagraph_and_associated_files> installed_files;
 
     std::string line;
@@ -134,6 +136,30 @@ std::vector<StatusParagraph_and_associated_files> vcpkg::get_installed_files(con
 
             installed_files_of_current_pgh.push_back(line);
         }
+
+        // Should already be sorted
+        std::sort(installed_files_of_current_pgh.begin(), installed_files_of_current_pgh.end());
+
+        // Since the files are sorted, we can detect the entries that represent directories
+        // by comparing every element with the next one and checking if the next has a slash immediately after the current one's length
+        for (int i = 1; i < installed_files_of_current_pgh.size(); i++)
+        {
+            std::string& current_string = installed_files_of_current_pgh.at(i - 1);
+            const std::string& next_string = installed_files_of_current_pgh.at(i);
+
+            const size_t potential_slash_char_index = current_string.length();
+            // Make sure the index exists first
+            if (next_string.size() > potential_slash_char_index && next_string.at(potential_slash_char_index) == '/')
+            {
+                current_string = MARK_FOR_REMOVAL;
+            }
+        }
+
+        installed_files_of_current_pgh.erase(std::remove_if(installed_files_of_current_pgh.begin(), installed_files_of_current_pgh.end(), [](const std::string& file)
+                                                            {
+                                                                return file == MARK_FOR_REMOVAL;
+                                                            }),
+                                             installed_files_of_current_pgh.end());
 
         const StatusParagraph_and_associated_files pgh_and_files = {*pgh, std::move(installed_files_of_current_pgh)};
         installed_files.push_back(pgh_and_files);
