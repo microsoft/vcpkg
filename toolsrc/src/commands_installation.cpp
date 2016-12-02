@@ -128,53 +128,67 @@ namespace vcpkg
         listfile.close();
     }
 
-    static std::map<std::string, fs::path> remove_first_n_chars_and_map(const std::vector<fs::path> absolute_paths, const size_t n)
+    static void remove_first_n_chars(std::vector<std::string>* strings, const size_t n)
     {
-        std::map<std::string, fs::path> output;
-
-        for (const fs::path& absolute_path : absolute_paths)
+        for (std::string& s : *strings)
         {
-            std::string suffix = absolute_path.generic_string();
-            suffix.erase(0, n);
-            output.emplace(suffix, absolute_path);
+            s.erase(0, n);
+        }
+    };
+
+    static std::vector<std::string> extract_files_in_triplet(const std::vector<StatusParagraph_and_associated_files>& pgh_and_files, const triplet& triplet)
+    {
+        std::vector<std::string> output;
+        for (const StatusParagraph_and_associated_files& t : pgh_and_files)
+        {
+            if (t.pgh.package.spec.target_triplet() != triplet)
+            {
+                continue;
+            }
+
+            output.insert(output.end(), t.files.cbegin(), t.files.cend());
         }
 
+        std::sort(output.begin(), output.end());
         return output;
     }
 
-    static void print_map_values(const std::vector<std::string> keys, const std::map<std::string, fs::path>& map)
-    {
-        System::println("");
-        for (const std::string& key : keys)
-        {
-            System::println("    %s", map.at(key).generic_string());
-        }
-        System::println("");
-    }
-
-    static void install_package(const vcpkg_paths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs& status_db)
+    void install_package(const vcpkg_paths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs& status_db)
     {
         const fs::path package_dir = paths.package_dir(binary_paragraph.spec);
-        const std::vector<fs::path> package_files = Files::recursive_find_all_files_in_dir(package_dir);
+        const std::vector<fs::path> package_file_paths = Files::recursive_find_all_files_in_dir(package_dir);
+        std::vector<std::string> package_files;
+        const size_t package_remove_char_count = package_dir.generic_string().size() + 1; // +1 for the slash
+        std::transform(package_file_paths.cbegin(), package_file_paths.cend(), std::back_inserter(package_files), [package_remove_char_count](const fs::path& path)
+                       {
+                           return path.generic_string().erase(0, package_remove_char_count);
+                       });
+        std::sort(package_files.begin(), package_files.end());
 
-        const fs::path installed_dir = paths.installed / binary_paragraph.spec.target_triplet().canonical_name();
-        const std::vector<fs::path> installed_files = Files::recursive_find_all_files_in_dir(installed_dir);
-
-        const std::map<std::string, fs::path> package_files_relative_paths_to_absolute_paths = remove_first_n_chars_and_map(package_files, package_dir.generic_string().size() + 1);
-        const std::map<std::string, fs::path> installed_files_relative_paths_to_absolute_paths = remove_first_n_chars_and_map(installed_files, installed_dir.generic_string().size() + 1);
-
-        const std::vector<std::string> package_files_set = Maps::extract_keys(package_files_relative_paths_to_absolute_paths);
-        const std::vector<std::string> installed_files_set = Maps::extract_keys(installed_files_relative_paths_to_absolute_paths);
+        const std::vector<StatusParagraph_and_associated_files>& pgh_and_files = get_installed_files(paths, status_db);
+        const triplet& triplet = binary_paragraph.spec.target_triplet();
+        std::vector<std::string> installed_files = extract_files_in_triplet(pgh_and_files, triplet);
+        const size_t installed_remove_char_count = triplet.canonical_name().size() + 1; // +1 for the slash
+        remove_first_n_chars(&installed_files, installed_remove_char_count);
+        std::sort(installed_files.begin(), installed_files.end()); // Should already be sorted
 
         std::vector<std::string> intersection;
-        std::set_intersection(package_files_set.cbegin(), package_files_set.cend(),
-                              installed_files_set.cbegin(), installed_files_set.cend(),
+        std::set_intersection(package_files.cbegin(), package_files.cend(),
+                              installed_files.cbegin(), installed_files.cend(),
                               std::back_inserter(intersection));
 
         if (!intersection.empty())
         {
-            System::println(System::color::error, "The following files are already installed and are in conflict with %s:", binary_paragraph.spec);
-            print_map_values(intersection, installed_files_relative_paths_to_absolute_paths);
+            const fs::path triplet_install_path = paths.installed / triplet.canonical_name();
+            System::println(System::color::error, "The following files are already installed in %s and are in conflict with %s",
+                            triplet_install_path.generic_string(),
+                            binary_paragraph.spec);
+            System::println("");
+            for (const std::string& s : intersection)
+            {
+                System::println("    %s", s);
+            }
+            System::println("");
             exit(EXIT_FAILURE);
         }
 
