@@ -1,5 +1,5 @@
 diff --git a/Microsoft.WindowsAzure.Storage/CMakeLists.txt b/Microsoft.WindowsAzure.Storage/CMakeLists.txt
-index f037c7f..a0b5982 100644
+index f037c7f..478bf48 100644
 --- a/Microsoft.WindowsAzure.Storage/CMakeLists.txt
 +++ b/Microsoft.WindowsAzure.Storage/CMakeLists.txt
 @@ -1,6 +1,10 @@
@@ -100,7 +100,7 @@ index f037c7f..a0b5982 100644
 +  set(AZURESTORAGE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes)
 +  set(AZURESTORAGE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/includes ${CASABLANCA_INCLUDE_DIRS})
  
-+  set(AZURESTORAGE_LIBRARY azure-storage-cpp)
++  set(AZURESTORAGE_LIBRARY wastorage)
 +  set(AZURESTORAGE_LIBRARIES ${AZURESTORAGE_LIBRARY} ${CASABLANCA_LIBRARIES})
 +else()
 +  # Reconfigure final output directory
