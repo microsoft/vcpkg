@@ -48,13 +48,18 @@ vcpkg_apply_patches(
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-fix-path-for-vcpkg.patch
 )
 
-# Importing local certificates 
+# According to:
+#   https://www.openssl.org/docs/faq.html#USER16
+# it is up to developers or admins to maintain CAs.
+# So we do it here:
+# Importing certificates from curl maintainers
+# See: https://curl.haxx.se/docs/caextract.html 
 message(STATUS "Importing certstore")
 file(REMOVE ${SOURCE_PATH}/certs/rootcerts.pem)
-vcpkg_execute_required_process(
-    COMMAND "& ${CMAKE_CURRENT_LIST_DIR}/import-local-certificates.ps1 -outpath ${SOURCE_PATH}/certs/"
-    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
-    LOGNAME certimport
+file(DOWNLOAD https://curl.haxx.se/ca/cacert.pem
+    ${SOURCE_PATH}/certs/rootcerts.pem
+    SHOW_PROGRESS
+    TLS_VERIFY ON
 )
 message(STATUS "Importing certstore done")
 
