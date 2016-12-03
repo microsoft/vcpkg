@@ -1,5 +1,5 @@
 # This portfile adds the Qt Cryptographic Arcitecture
-# Changes to the original sources by this file:
+# Changes to the original build:
 #   No -qt5 suffix, which is recommended just for Linux
 #   Output directories according to vcpkg
 #   Updated certstore. See certstore.pem in the output dirs
@@ -13,6 +13,9 @@ endif()
 include(vcpkg_common_functions)
 
 find_program(GIT git)
+vcpkg_find_acquire_program(PERL)
+get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
+set(ENV{PATH} "${PERL_EXE_PATH};$ENV{PATH}")
 
 # Set git variables to qca version 2.2.0 commit 
 set(GIT_URL "git://anongit.kde.org/qca.git")
@@ -52,14 +55,17 @@ vcpkg_apply_patches(
 #   https://www.openssl.org/docs/faq.html#USER16
 # it is up to developers or admins to maintain CAs.
 # So we do it here:
-# Importing certificates from curl maintainers
-# See: https://curl.haxx.se/docs/caextract.html 
 message(STATUS "Importing certstore")
 file(REMOVE ${SOURCE_PATH}/certs/rootcerts.pem)
-file(DOWNLOAD https://curl.haxx.se/ca/cacert.pem
-    ${SOURCE_PATH}/certs/rootcerts.pem
-    SHOW_PROGRESS
+# Using file(DOWNLOAD) to use https
+file(DOWNLOAD https://hg.mozilla.org/projects/nss/raw-file/tip/lib/ckfw/builtins/certdata.txt
+    ${CMAKE_CURRENT_LIST_DIR}/certdata.txt
     TLS_VERIFY ON
+)
+vcpkg_execute_required_process(
+    COMMAND ${PERL} ${CMAKE_CURRENT_LIST_DIR}/mk-ca-bundle.pl -n ${SOURCE_PATH}/certs/rootcerts.pem
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+    LOGNAME ca-bundle
 )
 message(STATUS "Importing certstore done")
 
