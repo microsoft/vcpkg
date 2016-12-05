@@ -1,22 +1,17 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 3.4)
 project (http-parser)
 
-set(PUBLIC_HDRS
-    http_parser.h
-)
-set(PRIVATE_HDRS
-)
-set(SRCS
-    http_parser.c
-)
-
-add_library(http_parser STATIC ${SRCS} ${PUBLIC_HDRS} ${PRIAVTE_HDRS})
-
-if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL )
-    install(TARGETS http_parser
-        ARCHIVE DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" )
+if (BUILD_SHARED_LIBS)
+  SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
 
-if(NOT SKIP_INSTALL_HEADERS AND NOT SKIP_INSTALL_ALL )
-    install(FILES ${PUBLIC_HDRS} DESTINATION "${CMAKE_INSTALL_PREFIX}/include")
+add_library(http_parser http_parser.c http_parser.h)
+
+install(TARGETS http_parser
+    RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}/bin"
+    ARCHIVE DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
+)
+
+if (NOT SKIP_INSTALL_HEADERS)
+    install(FILES http_parser.h DESTINATION "${CMAKE_INSTALL_PREFIX}/include")
 endif()
