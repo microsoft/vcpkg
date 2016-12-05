@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5c9c9c9..8376431 100644
+index 5c9c9c9..ae35185 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -149,26 +149,20 @@ endif ()
@@ -41,10 +41,10 @@ index 5c9c9c9..8376431 100644
  add_library(${PROJECT_NAME} ${sources} )
 -target_link_libraries(${PROJECT_NAME} ${NANA_LINKS}) 
 +if(NANA_CMAKE_ENABLE_JPEG AND NANA_CMAKE_LIBJPEG_FROM_OS)
-+    target_link_libraries(${PROJECT_NAME} ${PNG_LIBRARIES})
++    target_link_libraries(${PROJECT_NAME} ${JPEG_LIBRARIES})
 +endif()
 +if(NANA_CMAKE_ENABLE_PNG AND NANA_CMAKE_LIBPNG_FROM_OS)
-+    target_link_libraries(${PROJECT_NAME} ${JPEG_LIBRARIES})
++    target_link_libraries(${PROJECT_NAME} ${PNG_LIBRARIES})
 +endif()
  
   #  Headers: use INCLUDE_DIRECTORIES
