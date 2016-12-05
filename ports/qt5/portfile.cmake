@@ -13,7 +13,8 @@ get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
 get_filename_component(JOM_EXE_PATH ${JOM} DIRECTORY)
 set(ENV{PATH} "${JOM_EXE_PATH};${PYTHON3_EXE_PATH};${PERL_EXE_PATH};$ENV{PATH}")
-
+set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
+set(ENV{LIB} "${CURRENT_INSTALLED_DIR}/lib;$ENV{LIB}")
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "http://download.qt.io/official_releases/qt/5.7/5.7.0/single/qt-everywhere-opensource-src-5.7.0.7z"
     FILENAME "qt-5.7.0.7z"
@@ -44,7 +45,11 @@ vcpkg_execute_required_process(
     COMMAND "${SOURCE_PATH}/configure.bat"
         -confirm-license -opensource -platform win32-msvc2015
         -debug-and-release -force-debug-info ${QT_RUNTIME_LINKAGE}
+        -qt-zlib
+        -qt-libjpeg
+        -system-sqlite
         -nomake examples -nomake tests -skip webengine
+        -qt-sql-sqlite -qt-sql-psql
         -prefix ${CURRENT_PACKAGES_DIR}
         -bindir ${CURRENT_PACKAGES_DIR}/bin
         -hostbindir ${CURRENT_PACKAGES_DIR}/tools
@@ -67,7 +72,7 @@ message(STATUS "Build ${TARGET_TRIPLET} done")
 
 message(STATUS "Installing ${TARGET_TRIPLET}")
 vcpkg_execute_required_process(
-    COMMAND ${JOM} install
+    COMMAND ${JOM} -j1 install
     WORKING_DIRECTORY ${OUTPUT_PATH}
     LOGNAME install-${TARGET_TRIPLET}
 )
@@ -151,3 +156,4 @@ vcpkg_execute_required_process(
 file(INSTALL ${SOURCE_PATH}/LICENSE.LGPLv3 DESTINATION  ${CURRENT_PACKAGES_DIR}/share/qt5 RENAME copyright)
 
 vcpkg_copy_pdbs()
+
