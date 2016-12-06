@@ -100,7 +100,6 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         "\n#define BOOST_ALL_DYN_LINK\n"
     )
 endif()
-file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#define BOOST_AUTO_LINK_NOMANGLE\n")
 
 file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/boost RENAME copyright)
 message(STATUS "Packaging headers done")
