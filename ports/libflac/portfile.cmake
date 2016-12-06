@@ -26,6 +26,11 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(APPEND ${CURRENT_PACKAGES_DIR}/include/FLAC/export.h "#undef FLAC_API\n#define FLAC_API\n")
+    file(APPEND ${CURRENT_PACKAGES_DIR}/include/FLAC++/export.h "#undef FLAC_API\n#define FLAC_API\n")
+endif()
+
 # This license (BSD) is relevant only for library - if someone would want to install
 # FLAC cmd line tools as well additional license (GPL) should be included
 file(COPY ${SOURCE_PATH}/COPYING.Xiph DESTINATION ${CURRENT_PACKAGES_DIR}/share/libflac)
