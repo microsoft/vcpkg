@@ -33,7 +33,6 @@ if(NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
 endif()
 
 set(VCPKG_LIBRARY_LINKAGE "static")
-set(VCPKG_CRT_LINKAGE "static")
 
 vcpkg_configure_cmake(
     SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src"
