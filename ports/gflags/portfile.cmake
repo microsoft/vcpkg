@@ -47,7 +47,7 @@ file(READ ${CURRENT_PACKAGES_DIR}/share/gflags/gflags-targets.cmake GFLAGS_CONFI
 string(REPLACE "get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
                "get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
                GFLAGS_CONFIG_MODULE "${GFLAGS_CONFIG_MODULE}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/gflags/gflags-targets.cmake ${GFLAGS_CONFIG_MODULE})
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/gflags/gflags-targets.cmake "${GFLAGS_CONFIG_MODULE}")
 
 file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/gflags RENAME copyright)
 
