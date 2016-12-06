@@ -1,36 +1,21 @@
 include(vcpkg_common_functions)
 find_program(GIT git)
 
-set(GIT_URL "https://github.com/gflags/gflags.git")
-set(GIT_TAG "v2.2.0")
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://github.com/gflags/gflags/archive/v2.2.0.zip"
+    FILENAME "gflags-v2.2.0.zip"
+    SHA512 638d094cdcc759a35ebd0e57900216deec6113242d2dcc964beff7b88cf56e3dbab3dce6e10a055bfd94cb5daebb8632382219a5ef40a689e14c76b263d3eca5)
 
-if(NOT EXISTS "${DOWNLOADS}/gflags.git")
-    message(STATUS "Cloning")
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} clone --bare ${GIT_URL} ${DOWNLOADS}/gflags.git
-        WORKING_DIRECTORY ${DOWNLOADS}
-        LOGNAME clone
-    )
-endif()
-message(STATUS "Cloning done")
+vcpkg_extract_source_archive(${ARCHIVE})
 
-if(NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
-    message(STATUS "Adding worktree and patching")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR})
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} worktree add -f --detach ${CURRENT_BUILDTREES_DIR}/src ${GIT_TAG}
-        WORKING_DIRECTORY ${DOWNLOADS}/gflags.git
-        LOGNAME worktree
-    )
-endif()
-
-message(STATUS "Adding worktree")
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/gflags-2.2.0)
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src
+    SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-    -DGFLAGS_REGISTER_BUILD_DIR:BOOL=OFF
-    -DGFLAGS_REGISTER_INSTALL_PREFIX:BOOL=OFF
+        -DGFLAGS_REGISTER_BUILD_DIR:BOOL=OFF
+        -DGFLAGS_REGISTER_INSTALL_PREFIX:BOOL=OFF
+        -DBUILD_gflags_nothreads_LIB:BOOL=OFF
 )
 
 vcpkg_install_cmake()
@@ -38,9 +23,7 @@ vcpkg_install_cmake()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gflags.dll ${CURRENT_PACKAGES_DIR}/bin/gflags.dll)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gflags_nothreads.dll ${CURRENT_PACKAGES_DIR}/bin/gflags_nothreads.dll)
     file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gflags.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gflags.dll)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gflags_nothreads.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gflags_nothreads.dll)
 endif()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
