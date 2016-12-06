@@ -1,39 +1,34 @@
 diff --git a/Microsoft.WindowsAzure.Storage/CMakeLists.txt b/Microsoft.WindowsAzure.Storage/CMakeLists.txt
-index f037c7f..478bf48 100644
+index f037c7f..a4dd278 100644
 --- a/Microsoft.WindowsAzure.Storage/CMakeLists.txt
 +++ b/Microsoft.WindowsAzure.Storage/CMakeLists.txt
-@@ -1,6 +1,10 @@
- set(CMAKE_LEGACY_CYGWIN_WIN32 0)
- cmake_minimum_required(VERSION 2.6)
--project(azurestorage)
-+if(WIN32)
-+  project(wastorage)
-+else()
-+  project(azurestorage)
-+endif()
+@@ -51,20 +51,25 @@ if(UNIX)
+     find_package(UnitTest++ REQUIRED)
+   endif()
  
- enable_testing()
+-  option(BUILD_SHARED_LIBS "Build shared Libraries." ON)
  
-@@ -59,12 +63,25 @@ if(UNIX)
-   install(FILES ${WASCORE_HEADERS} DESTINATION include/wascore)
-   file(GLOB WASCORE_DATA includes/wascore/*.dat)
-   install(FILES ${WASCORE_DATA} DESTINATION include/wascore)
+-  file(GLOB WAS_HEADERS includes/was/*.h)
+-  install(FILES ${WAS_HEADERS} DESTINATION include/was)
+-  file(GLOB WASCORE_HEADERS includes/wascore/*.h)
+-  install(FILES ${WASCORE_HEADERS} DESTINATION include/wascore)
+-  file(GLOB WASCORE_DATA includes/wascore/*.dat)
+-  install(FILES ${WASCORE_DATA} DESTINATION include/wascore)
 +elseif(WIN32)
 +  message("-- Setting WIN32 options")
 +  find_package(Casablanca REQUIRED)
 +  add_definitions(-DUNICODE -D_UNICODE -D_WIN32)
-+  option(BUILD_SHARED_LIBS "Build shared Libraries." ON)
-+  option(WASTORE_INSTALL_HEADERS "Install header files." ON)
-+  if(WASTORE_INSTALL_HEADERS)
-+    include_directories(includes)
-+    file(GLOB WAS_HEADERS includes/was/*.h)
-+    file(GLOB WASCORE_HEADERS includes/wascore/*.h)
-+    file(GLOB WASCORE_DATA includes/wascore/*.dat)
-+  endif()
  else()
    message("-- Unsupported Build Platform.")
  endif()
  
++option(BUILD_SHARED_LIBS "Build shared Libraries." ON)
++option(WASTORE_INSTALL_HEADERS "Install header files." ON)
++if(WASTORE_INSTALL_HEADERS)
++  file(GLOB WAS_HEADERS includes/was/*.h)
++  file(GLOB WASCORE_HEADERS includes/wascore/basic_types.h includes/wascore/constants.h)
++  file(GLOB WASCORE_DATA includes/wascore/*.dat)
++endif()
 +
  # Compiler (not platform) specific settings
 -if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
@@ -41,7 +36,7 @@ index f037c7f..478bf48 100644
    message("-- Setting gcc options")
  
    set(WARNINGS "-Wall -Wextra -Wunused-parameter -Wcast-align -Wcast-qual -Wconversion -Wformat=2 -Winit-self -Winvalid-pch -Wmissing-format-attribute -Wmissing-include-dirs -Wpacked -Wredundant-decls -Wunreachable-code")
-@@ -81,37 +98,56 @@ if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
+@@ -81,22 +86,29 @@ if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
      add_definitions(-DBOOST_LOG_DYN_LINK)
    endif()
    add_definitions(-D_TURN_OFF_PLATFORM_STRING)
@@ -84,41 +79,14 @@ index f037c7f..478bf48 100644
  else()
    message("-- Unknown compiler, success is doubtful.")
  endif()
+@@ -109,7 +121,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries)
+ set(AZURESTORAGE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes)
+ set(AZURESTORAGE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/includes ${CASABLANCA_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIRS} ${LibXML++_INCLUDE_DIRS} ${UUID_INCLUDE_DIRS} ${Glibmm_INCLUDE_DIRS})
  
--# Reconfigure final output directory
--set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries)
--set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries)
--set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries)
-+if (WIN32)
-+  # Reconfigure final output directory
-+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries)
-+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries)
-+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries)
+-
+ set(AZURESTORAGE_LIBRARY azurestorage)
+ set(AZURESTORAGE_LIBRARIES ${AZURESTORAGE_LIBRARY} ${CASABLANCA_LIBRARIES} ${Boost_LIBRARIES} ${Boost_FRAMEWORK} ${OPENSSL_LIBRARIES} ${LibXML++_LIBRARIES} ${UUID_LIBRARIES} ${Glibmm_LIBRARIES})
  
--set(AZURESTORAGE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes)
--set(AZURESTORAGE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/includes ${CASABLANCA_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIRS} ${LibXML++_INCLUDE_DIRS} ${UUID_INCLUDE_DIRS} ${Glibmm_INCLUDE_DIRS})
-+  set(AZURESTORAGE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes)
-+  set(AZURESTORAGE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/includes ${CASABLANCA_INCLUDE_DIRS})
- 
-+  set(AZURESTORAGE_LIBRARY wastorage)
-+  set(AZURESTORAGE_LIBRARIES ${AZURESTORAGE_LIBRARY} ${CASABLANCA_LIBRARIES})
-+else()
-+  # Reconfigure final output directory
-+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries)
-+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries)
-+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries)
-+
-+  set(AZURESTORAGE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes)
-+  set(AZURESTORAGE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/includes ${CASABLANCA_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIRS} ${LibXML++_INCLUDE_DIRS} ${UUID_INCLUDE_DIRS} ${Glibmm_INCLUDE_DIRS})
- 
--set(AZURESTORAGE_LIBRARY azurestorage)
--set(AZURESTORAGE_LIBRARIES ${AZURESTORAGE_LIBRARY} ${CASABLANCA_LIBRARIES} ${Boost_LIBRARIES} ${Boost_FRAMEWORK} ${OPENSSL_LIBRARIES} ${LibXML++_LIBRARIES} ${UUID_LIBRARIES} ${Glibmm_LIBRARIES})
-+  set(AZURESTORAGE_LIBRARY azurestorage)
-+  set(AZURESTORAGE_LIBRARIES ${AZURESTORAGE_LIBRARY} ${CASABLANCA_LIBRARIES} ${Boost_LIBRARIES} ${Boost_FRAMEWORK} ${OPENSSL_LIBRARIES} ${LibXML++_LIBRARIES} ${UUID_LIBRARIES} ${Glibmm_LIBRARIES})
-+endif()
- 
- # Set version numbers centralized
- set (AZURESTORAGE_VERSION_MAJOR 2)
 diff --git a/Microsoft.WindowsAzure.Storage/cmake/Modules/FindCasablanca.cmake b/Microsoft.WindowsAzure.Storage/cmake/Modules/FindCasablanca.cmake
 index 5c1df3c..da66eb4 100644
 --- a/Microsoft.WindowsAzure.Storage/cmake/Modules/FindCasablanca.cmake
@@ -132,7 +100,7 @@ index 5c1df3c..da66eb4 100644
      ${CASABLANCA_PKGCONF_LIBRARY_DIRS}
      ${CASABLANCA_DIR}
 diff --git a/Microsoft.WindowsAzure.Storage/src/CMakeLists.txt b/Microsoft.WindowsAzure.Storage/src/CMakeLists.txt
-index b08111f..ee5c9ed 100644
+index b08111f..74ba2fb 100644
 --- a/Microsoft.WindowsAzure.Storage/src/CMakeLists.txt
 +++ b/Microsoft.WindowsAzure.Storage/src/CMakeLists.txt
 @@ -2,7 +2,7 @@ include_directories(${Boost_INCLUDE_DIR} ${OPENSSL_INCLUDE_DIR})
@@ -144,7 +112,7 @@ index b08111f..ee5c9ed 100644
    set(SOURCES
       xmlhelpers.cpp
       response_parsers.cpp
-@@ -64,14 +64,17 @@ if ("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
+@@ -64,24 +64,46 @@ if ("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
  endif()
  if (APPLE)
@@ -153,6 +121,18 @@ index b08111f..ee5c9ed 100644
  else()
 -	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 +  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
++endif()
++
++if(MSVC)
++  add_compile_options(/Yustdafx.h)
++  set_source_files_properties(stdafx.cpp PROPERTIES COMPILE_FLAGS "/Ycstdafx.h")
++
++  if (NOT CMAKE_GENERATOR MATCHES "Visual Studio .*")
++    set_property(SOURCE stdafx.cpp APPEND PROPERTY OBJECT_OUTPUTS "${CMAKE_CURRENT_BINARY_DIR}/stdafx.pch")
++    set_property(SOURCE ${SOURCES} APPEND PROPERTY OBJECT_DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/stdafx.pch")
++  endif()
++
++  list(APPEND SOURCES stdafx.cpp)
  endif()
  
  add_library(${AZURESTORAGE_LIBRARY} ${SOURCES})
@@ -164,18 +144,26 @@ index b08111f..ee5c9ed 100644
  
  # Portions specific to azure storage binary versioning and installation.
  if(UNIX)
-@@ -84,4 +87,14 @@ if(UNIX)
-     LIBRARY DESTINATION lib
-     ARCHIVE DESTINATION lib
-     )
+   set_target_properties(${AZURESTORAGE_LIBRARY} PROPERTIES
+     SOVERSION ${AZURESTORAGE_VERSION_MAJOR}
+     VERSION ${AZURESTORAGE_VERSION_MAJOR}.${AZURESTORAGE_VERSION_MINOR})
+-
+-  install(
+-    TARGETS ${AZURESTORAGE_LIBRARY}
+-    LIBRARY DESTINATION lib
+-    ARCHIVE DESTINATION lib
+-    )
 +elseif(WIN32)
-+  install(FILES ${WAS_HEADERS} DESTINATION include/was)
-+  install(FILES ${WASCORE_HEADERS} DESTINATION include/wascore)
-+  install(FILES ${WASCORE_DATA} DESTINATION include/wascore)
-+  install(
-+    TARGETS ${AZURESTORAGE_LIBRARY}
-+    RUNTIME DESTINATION bin
-+    LIBRARY DESTINATION lib
-+    ARCHIVE DESTINATION lib
-+    )
++  set_target_properties(${AZURESTORAGE_LIBRARY} PROPERTIES OUTPUT_NAME "wastorage")
  endif()
++
++install(FILES ${WAS_HEADERS} DESTINATION include/was)
++install(FILES ${WASCORE_HEADERS} DESTINATION include/wascore)
++install(FILES ${WASCORE_DATA} DESTINATION include/wascore)
++
++install(
++  TARGETS ${AZURESTORAGE_LIBRARY}
++  RUNTIME DESTINATION bin
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib
++)
