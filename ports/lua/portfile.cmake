@@ -21,6 +21,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
+        -DSKIP_INSTALL_TOOLS=ON
 )
 
 vcpkg_install_cmake()
