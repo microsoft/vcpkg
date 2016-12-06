@@ -51,5 +51,8 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/share/gflags/gflags-targets.cmake "${GFLAGS_C
 
 file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/gflags RENAME copyright)
 
+file(RENAME ${CURRENT_PACKAGES_DIR}/Include ${CURRENT_PACKAGES_DIR}/include)
+file(RENAME ${CURRENT_PACKAGES_DIR}/Lib ${CURRENT_PACKAGES_DIR}/lib)
+file(RENAME ${CURRENT_PACKAGES_DIR}/debug/Lib ${CURRENT_PACKAGES_DIR}/debug/lib)
 
 vcpkg_copy_pdbs()
