@@ -35,7 +35,7 @@ set(ENV{PATH} "${PERL_EXE_PATH};$ENV{PATH}")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/Microsoft/openssl/archive/OpenSSL_1_0_2_WinRT-stable.zip"
     FILENAME "openssl-microsoft-1.0.2.zip"
-    SHA512 f265b7dbeca6b86815dbc14af9f2b6688407efd921eb335b1acf5a642dddb6b6334a794fe0939666d9db66976db11a67ad78a3ed74484708d3bf2040aae598d2
+    SHA512 10c3d7eb354a0b39a837e0c48f31415444acd5b1e7df52ed49a735ea63bf8b7548602a266baa012f1703888e68fdd5cb070fc610584a2f3f9a555e7d62d8b44b
 )
 
 vcpkg_extract_source_archive(${ARCHIVE})
