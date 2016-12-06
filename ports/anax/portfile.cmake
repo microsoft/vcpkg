@@ -6,10 +6,6 @@
 #   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
 #
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
 include(vcpkg_common_functions)
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/anax-2.1.0)
@@ -20,8 +16,15 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/Add-bin-output.patch
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+	OPTIONS
+	-DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON 
 )
 
 vcpkg_install_cmake()
