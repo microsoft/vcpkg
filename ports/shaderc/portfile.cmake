@@ -37,8 +37,6 @@ if(NOT EXISTS "${SOURCE_PATH}/.git")
     )
 endif()
 
-set(GLSLANG_GIT_URL "https://github.com/KhronosGroup/glslang.git")
-set(GLSLANG_GIT_REF "1c573fbcfba6b3d631008b1babc838501ca925d3")
 set(SPIRVTOOLS_GIT_URL "https://github.com/KhronosGroup/SPIRV-Tools.git")
 set(SPIRVTOOLS_GIT_REF "f72189c249ba143c6a89a4cf1e7d53337b2ddd40")
 set(SPIRVHEADERS_GIT_URL "https://github.com/KhronosGroup/SPIRV-Headers.git")
@@ -60,7 +58,6 @@ if(NOT EXISTS "${DOWNLOADS}/SPIRV-Headers.git")
         LOGNAME clone
     )
 endif()
-
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/third_party/glslang)
 if(NOT EXISTS "${SOURCE_PATH}/third_party/spirv-tools/.git")
@@ -86,11 +83,19 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/build-version.inc DESTINATION ${SOURCE_PATH}
 
 #Note: glslang and spir tools doesn't export symbol and need to be build as static lib for cmake to work
 set(VCPKG_LIBRARY_LINKAGE "static")
-set(VCPKG_CRT_LINKAGE "static")
+set(OPTIONS)
+if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+    list(APPEND OPTIONS -DSHADERC_ENABLE_SHARED_CRT=ON)
+endif()
+
+# shaderc uses python to manipulate copyright information
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
+set(ENV{PATH} "${PYTHON3_EXE_PATH};$ENV{PATH}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DSHADERC_SKIP_TESTS=true
+    OPTIONS -DSHADERC_SKIP_TESTS=true ${OPTIONS}
     OPTIONS_DEBUG -DSUFFIX_D=true
     OPTIONS_RELEASE -DSUFFIX_D=false
 )
@@ -104,10 +109,6 @@ file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
 #Safe to remove as libs are static
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-#Provided by another package (glslang)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
-
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/shaderc)
