@@ -114,7 +114,11 @@ function(boost_rename_libs LIBS)
         string(REPLACE "libboost_" "boost_" NEW_FILENAME ${OLD_FILENAME})
         string(REPLACE "-s-" "-" NEW_FILENAME ${NEW_FILENAME}) # For Release libs
         string(REPLACE "-sgd-" "-gd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
-        file(RENAME ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME} ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
+        if (EXISTS ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
+            file(REMOVE ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME})
+        else()
+            file(RENAME ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME} ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
+        endif()
     endforeach()
 endfunction()
 
