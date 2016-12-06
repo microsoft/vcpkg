@@ -36,7 +36,6 @@ set(B2_OPTIONS
     --hash
 
     --without-python
-    --layout=system
     toolset=msvc
     threading=multi
 )
@@ -106,16 +105,16 @@ file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#define BOO
 file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/boost RENAME copyright)
 message(STATUS "Packaging headers done")
 
-function(boost_remove_lib_prefix_from_lib_files LIBS)
+# This function makes the static build lib names match the dynamic build lib names which FindBoost.cmake is looking for by default.
+# It also renames a couple of "libboost" lib files in the dynamic build (for example libboost_exception-vc140-mt-1_62.lib).
+function(boost_rename_libs LIBS)
     foreach(LIB ${${LIBS}})
         get_filename_component(OLD_FILENAME ${LIB} NAME)
         get_filename_component(DIRECTORY_OF_LIB_FILE ${LIB} DIRECTORY)
         string(REPLACE "libboost_" "boost_" NEW_FILENAME ${OLD_FILENAME})
-        if (EXISTS ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
-            file(REMOVE ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME})
-        else()
-            file(RENAME ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME} ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
-        endif()
+        string(REPLACE "-s-" "-" NEW_FILENAME ${NEW_FILENAME}) # For Release libs
+        string(REPLACE "-sgd-" "-gd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
+        file(RENAME ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME} ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
     endforeach()
 endfunction()
 
@@ -129,7 +128,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         FILES_MATCHING PATTERN "*.dll")
 endif()
 file(GLOB RELEASE_LIBS ${CURRENT_PACKAGES_DIR}/lib/libboost*.lib)
-boost_remove_lib_prefix_from_lib_files(RELEASE_LIBS)
+boost_rename_libs(RELEASE_LIBS)
 message(STATUS "Packaging ${TARGET_TRIPLET}-rel done")
 
 message(STATUS "Packaging ${TARGET_TRIPLET}-dbg")
@@ -142,7 +141,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         FILES_MATCHING PATTERN "*.dll")
 endif()
 file(GLOB DEBUG_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/libboost*.lib)
-boost_remove_lib_prefix_from_lib_files(DEBUG_LIBS)
+boost_rename_libs(DEBUG_LIBS)
 message(STATUS "Packaging ${TARGET_TRIPLET}-dbg done")
 
 vcpkg_copy_pdbs()
