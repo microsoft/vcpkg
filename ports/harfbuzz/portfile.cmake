@@ -55,5 +55,5 @@ vcpkg_execute_required_process(
 )
 
 # Handle copyright
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/harfbuzz-1.3.4/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/harfbuzz)
+file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/harfbuzz)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/harfbuzz/COPYING ${CURRENT_PACKAGES_DIR}/share/harfbuzz/copyright)
