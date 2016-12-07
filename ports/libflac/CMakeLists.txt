@@ -3,10 +3,6 @@ cmake_policy(SET CMP0005 NEW) # do not escape preprocessor defines
 
 project(libflac)
 
-if(NOT DEFINED LIBFLAC_OGG_LIB OR NOT DEFINED LIBFLAC_OGG_INCLUDES)
-    message(FATAL_ERROR "Ogg library required")
-endif()
-
 if(NOT DEFINED LIBFLAC_ARCHITECTURE)
     message(FATAL_ERROR "Target architecture not specified")
 endif()
@@ -20,7 +16,6 @@ file(GLOB LIBFLACXX_SOURCES
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${PROJECT_SOURCE_DIR}/src/libFLAC/include)
-include_directories(${LIBFLAC_OGG_INCLUDES})
 
 if(NOT LIBFLAC_ARCHITECTURE MATCHES arm)
     add_definitions(-DFLAC__SSE_OS)
@@ -49,7 +44,11 @@ add_library(libFLACXX ${LIBFLACXX_SOURCES})
 set_target_properties(libFLAC PROPERTIES OUTPUT_NAME flac)
 set_target_properties(libFLACXX PROPERTIES OUTPUT_NAME flac++)
 
-target_link_libraries(libFLAC ${LIBFLAC_OGG_LIB})
+find_library(OGG_LIBRARY ogg)
+find_path(OGG_INCLUDE_DIR ogg/ogg.h)
+
+include_directories(${OGG_INCLUDE_DIR})
+target_link_libraries(libFLAC ${OGG_LIBRARY})
 target_link_libraries(libFLACXX libFLAC)
 
 if(BUILD_SHARED_LIBS)
