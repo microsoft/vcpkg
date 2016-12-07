@@ -3,7 +3,6 @@ project(SFML)
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${PROJECT_SOURCE_DIR}/src)
-include_directories(${SFML_DEPENDENCIES_PATH}/include)
 
 if(NOT BUILD_SHARED_LIBS)
     add_definitions(-DSFML_STATIC)
