@@ -18,8 +18,6 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
             -DLIBFLAC_ARCHITECTURE=${VCPKG_TARGET_ARCHITECTURE}
-            -DLIBFLAC_OGG_LIB=${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/lib/ogg.lib
-            -DLIBFLAC_OGG_INCLUDES=${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/include
         OPTIONS_DEBUG
             -DLIBFLAC_SKIP_HEADERS=ON)
 
