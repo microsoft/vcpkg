@@ -74,6 +74,7 @@ namespace vcpkg
     const std::vector<package_name_and_function<command_type_b>>& get_available_commands_type_b()
     {
         static std::vector<package_name_and_function<command_type_b>> t = {
+            {"/?", help_command},
             {"help", help_command},
             {"search", search_command},
             {"list", list_command},
