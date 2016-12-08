@@ -31,6 +31,10 @@ endif()
 message(STATUS "Bootstrapping done")
 
 set(B2_OPTIONS
+    -sZLIB_BINARY=zlib
+    -sZLIB_INCLUDE="${CURRENT_INSTALLED_DIR}\\include"
+    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+    -sNO_BZIP2=1
     -j$ENV{NUMBER_OF_PROCESSORS}
     --debug-configuration
     --hash
@@ -60,6 +64,15 @@ if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
     set(ENV{BOOST_BUILD_PATH} ${CMAKE_CURRENT_LIST_DIR})
 endif()
 
+# Add build type specific options
+set(B2_OPTIONS_DBG
+	${B2_OPTIONS}
+    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
+)
+set(B2_OPTIONS_REL
+	${B2_OPTIONS}
+    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+)
 
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 
@@ -69,7 +82,7 @@ vcpkg_execute_required_process_repeat(
     COMMAND "${SOURCE_PATH}/b2.exe"
         --stagedir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/stage
         --build-dir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-        ${B2_OPTIONS}
+        ${B2_OPTIONS_REL}
         variant=release
         debug-symbols=on
     WORKING_DIRECTORY ${SOURCE_PATH}
@@ -82,7 +95,7 @@ vcpkg_execute_required_process_repeat(
     COMMAND "${SOURCE_PATH}/b2.exe"
         --stagedir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/stage
         --build-dir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-        ${B2_OPTIONS}
+        ${B2_OPTIONS_DBG}
         variant=debug
     WORKING_DIRECTORY ${SOURCE_PATH}
     LOGNAME build-${TARGET_TRIPLET}-dbg
