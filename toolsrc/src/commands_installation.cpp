@@ -349,7 +349,7 @@ namespace vcpkg
         }
 
         System::println(System::color::error, "Error: %s: %s", maybe_current_spec.error_code().message(), args.command_arguments[0]);
-        print_example(Strings::format("%s zlib:x64-windows", args.command).c_str());
+        print_example(Strings::format("%s zlib:x64-windows", args.command));
         exit(EXIT_FAILURE);
     }
 }

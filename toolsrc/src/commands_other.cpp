@@ -41,14 +41,14 @@ namespace vcpkg
             , INTEGRATE_COMMAND_HELPSTRING);
     }
 
-    std::string create_example_string(const char* command_and_arguments)
+    std::string create_example_string(const std::string& command_and_arguments)
     {
         std::string cs = Strings::format("Example:\n"
                                          "  vcpkg %s", command_and_arguments);
         return cs;
     }
 
-    void print_example(const char* command_and_arguments)
+    void print_example(const std::string& command_and_arguments)
     {
         System::println(create_example_string(command_and_arguments));
     }
