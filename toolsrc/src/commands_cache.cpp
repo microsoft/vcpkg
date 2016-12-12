@@ -52,7 +52,7 @@ namespace vcpkg
             for (const BinaryParagraph& binary_paragraph : binary_paragraphs)
             {
                 const std::string displayname = binary_paragraph.displayname();
-                System::println(displayname.c_str());
+                System::println(displayname);
             }
         }
         else
@@ -66,7 +66,7 @@ namespace vcpkg
                     continue;
                 }
 
-                System::println(displayname.c_str());
+                System::println(displayname);
             }
         }
 

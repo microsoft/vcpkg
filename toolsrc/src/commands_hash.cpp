@@ -20,7 +20,7 @@ namespace vcpkg
 
         auto hash = output.substr(start, end - start);
         hash.erase(std::remove_if(hash.begin(), hash.end(), isspace), hash.end());
-        System::println(hash.c_str());
+        System::println(hash);
     }
 
     void hash_command(const vcpkg_cmd_arguments& args)

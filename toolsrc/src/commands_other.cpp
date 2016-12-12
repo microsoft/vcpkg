@@ -50,7 +50,7 @@ namespace vcpkg
 
     void print_example(const char* command_and_arguments)
     {
-        System::println(create_example_string(command_and_arguments).c_str());
+        System::println(create_example_string(command_and_arguments));
     }
 
     void internal_test_command(const vcpkg_cmd_arguments& /*args*/, const vcpkg_paths& /*paths*/)

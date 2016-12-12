@@ -156,7 +156,7 @@ namespace vcpkg
             System::println(System::color::error, "Unknown option(s) for command '%s':", this->command);
             for (const std::string& option : options_copy)
             {
-                System::println(option.c_str());
+                System::println(option);
             }
             exit(EXIT_FAILURE);
         }
