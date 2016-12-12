@@ -39,6 +39,26 @@ namespace vcpkg {namespace System
     void print(color c, const char* message);
     void println(color c, const char* message);
 
+    inline void print(const std::string& message)
+    {
+        return print(message.c_str());
+    }
+
+    inline void println(const std::string& message)
+    {
+        return println(message.c_str());
+    }
+
+    inline void print(color c, const std::string& message)
+    {
+        return print(c, message.c_str());
+    }
+
+    inline void println(color c, const std::string& message)
+    {
+        return println(c, message.c_str());
+    }
+
     template <class...Args>
     void print(const char* messageTemplate, const Args&... messageArgs)
     {
