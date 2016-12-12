@@ -7,7 +7,7 @@ namespace vcpkg
     void edit_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
         static const std::string example = create_example_string("edit zlib");
-        args.check_exact_arg_count(1, example.c_str());
+        args.check_exact_arg_count(1, example);
         const std::string port_name = args.command_arguments.at(0);
 
         const fs::path portpath = paths.ports / port_name;

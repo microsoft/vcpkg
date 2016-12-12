@@ -179,7 +179,7 @@ namespace vcpkg
         return check_exact_arg_count(expected_arg_count, "");
     }
 
-    void vcpkg_cmd_arguments::check_max_arg_count(const size_t expected_arg_count, const char* example_text) const
+    void vcpkg_cmd_arguments::check_max_arg_count(const size_t expected_arg_count, const std::string& example_text) const
     {
         const size_t actual_arg_count = command_arguments.size();
         if (actual_arg_count > expected_arg_count)
@@ -190,7 +190,7 @@ namespace vcpkg
         }
     }
 
-    void vcpkg_cmd_arguments::check_min_arg_count(const size_t expected_arg_count, const char* example_text) const
+    void vcpkg_cmd_arguments::check_min_arg_count(const size_t expected_arg_count, const std::string& example_text) const
     {
         const size_t actual_arg_count = command_arguments.size();
         if (actual_arg_count < expected_arg_count)
@@ -201,7 +201,7 @@ namespace vcpkg
         }
     }
 
-    void vcpkg_cmd_arguments::check_exact_arg_count(const size_t expected_arg_count, const char* example_text) const
+    void vcpkg_cmd_arguments::check_exact_arg_count(const size_t expected_arg_count, const std::string& example_text) const
     {
         const size_t actual_arg_count = command_arguments.size();
         if (actual_arg_count != expected_arg_count)

@@ -43,7 +43,7 @@ namespace vcpkg
     void search_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
         static const std::string example = Strings::format("The argument should be a substring to search for, or no argument to display all libraries.\n%s", create_example_string("search png"));
-        args.check_max_arg_count(1, example.c_str());
+        args.check_max_arg_count(1, example);
 
         const std::vector<SourceParagraph> source_paragraphs = read_all_source_paragraphs(paths);
 

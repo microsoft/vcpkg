@@ -27,8 +27,8 @@ namespace vcpkg
     {
         static const std::string example = Strings::format(
             "The argument should be a file path\n%s", create_example_string("hash boost_1_62_0.tar.bz2"));
-        args.check_min_arg_count(1, example.c_str());
-        args.check_max_arg_count(2, example.c_str());
+        args.check_min_arg_count(1, example);
+        args.check_max_arg_count(2, example);
 
         if (args.command_arguments.size() == 1)
         {
