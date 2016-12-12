@@ -219,7 +219,7 @@ namespace vcpkg
         args.check_min_arg_count(1, example);
         StatusParagraphs status_db = database_load_check(paths);
 
-        std::vector<package_spec> specs = Input::check_and_get_package_specs(args.command_arguments, default_target_triplet, example.c_str());
+        std::vector<package_spec> specs = Input::check_and_get_package_specs(args.command_arguments, default_target_triplet, example);
         Input::check_triplets(specs, paths);
         std::vector<package_spec_with_install_plan> install_plan = Dependencies::create_install_plan(paths, specs, status_db);
         Checks::check_exit(!install_plan.empty(), "Install plan cannot be empty");
@@ -280,7 +280,7 @@ namespace vcpkg
 
         StatusParagraphs status_db = database_load_check(paths);
 
-        const package_spec spec = Input::check_and_get_package_spec(args.command_arguments.at(0), default_target_triplet, example.c_str());
+        const package_spec spec = Input::check_and_get_package_spec(args.command_arguments.at(0), default_target_triplet, example);
         Input::check_triplet(spec.target_triplet(), paths);
 
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_CHECKS_ONLY});
