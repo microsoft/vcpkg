@@ -36,8 +36,8 @@ namespace vcpkg {namespace System
 
     void print(const char* message);
     void println(const char* message);
-    void print(color c, const char* message);
-    void println(color c, const char* message);
+    void print(const color c, const char* message);
+    void println(const color c, const char* message);
 
     inline void print(const std::string& message)
     {
@@ -49,12 +49,12 @@ namespace vcpkg {namespace System
         return println(message.c_str());
     }
 
-    inline void print(color c, const std::string& message)
+    inline void print(const color c, const std::string& message)
     {
         return print(c, message.c_str());
     }
 
-    inline void println(color c, const std::string& message)
+    inline void println(const color c, const std::string& message)
     {
         return println(c, message.c_str());
     }
@@ -66,7 +66,7 @@ namespace vcpkg {namespace System
     }
 
     template <class...Args>
-    void print(color c, const char* messageTemplate, const Args&... messageArgs)
+    void print(const color c, const char* messageTemplate, const Args&... messageArgs)
     {
         return print(c, Strings::format(messageTemplate, messageArgs...).c_str());
     }
@@ -78,7 +78,7 @@ namespace vcpkg {namespace System
     }
 
     template <class...Args>
-    void println(color c, const char* messageTemplate, const Args&... messageArgs)
+    void println(const color c, const char* messageTemplate, const Args&... messageArgs)
     {
         return println(c, Strings::format(messageTemplate, messageArgs...).c_str());
     }
