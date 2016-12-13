@@ -1,3 +1,48 @@
+vcpkg (0.0.65)
+--------------
+  * Add ports:
+    - anax                 2.1.0-1
+    - aws-sdk-cpp          1.0.34-1
+    - azure-storage-cpp    2.5.0
+    - charls               2.0.0
+    - dimcli               1.0.3
+    - entityx              1.2.0
+    - freeimage            3.17.0
+    - gdal                 1.11.3
+    - globjects            1.0.0
+    - http-parser          2.7.1
+    - icu                  58.1
+    - libflac              1.3.1-1
+    - libssh2              1.8.0
+    - nana                 1.4.1
+    - qca                  2.2.0
+    - sfml                 2.4.1
+    - shaderc              2df47b51d83ad83cbc2e7f8ff2b56776293e8958
+    - uwebsockets          0.12.0
+    - yaml-cpp             0.5.4 candidate
+  * Update ports:
+    - boost                1.62-6           -> 1.62-8
+    - curl                 7.51.0-1         -> 7.51.0-2
+    - gflags               2.1.2            -> 2.2.0-2
+    - glbinding            2.1.1            -> 2.1.1-1
+    - glslang              1c573fbcfba6b3d631008b1babc838501ca925d3 -> 1c573fbcfba6b3d631008b1babc838501ca925d3-1
+    - harfbuzz             1.3.2            -> 1.3.4
+    - jxrlib               1.1-1            -> 1.1-2
+    - libraw               0.17.2           -> 0.17.2-2
+    - lua                  5.3.3            -> 5.3.3-1
+    - openssl              1.0.2j           -> 1.0.2j-1
+  * Improvements in the post-build checks:
+    - Add check for files in the `<package>\` dir and `<package>\debug\` dir
+  * Introduce pre-install checks:
+    - The `install` command now checks that files will not be overwrriten when installing a package. A particular file can only be owned by a single package
+  * Introduce 'lib\manul-link\' directory. Libraries placing the lib files in that directory are not automatically added to the link line
+  * Disable all interactions with CMake registry
+  * `vcpkg /?` is now a valid equivalent of `vcpkg help`
+  * Fixes and improvements in existing portfiles and the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  MON, 12 Dec 2016 18:15:00 -0800
+
+
 vcpkg (0.0.61)
 --------------
   * Add ports:
