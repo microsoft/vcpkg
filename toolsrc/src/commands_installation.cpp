@@ -161,7 +161,9 @@ namespace vcpkg
         const size_t package_remove_char_count = package_dir.generic_string().size() + 1; // +1 for the slash
         std::transform(package_file_paths.cbegin(), package_file_paths.cend(), std::back_inserter(package_files), [package_remove_char_count](const fs::path& path)
                        {
-                           return path.generic_string().erase(0, package_remove_char_count);
+                           std::string as_string = path.generic_string();
+                           as_string.erase(0, package_remove_char_count);
+                           return std::move(as_string);
                        });
         std::sort(package_files.begin(), package_files.end());
 
