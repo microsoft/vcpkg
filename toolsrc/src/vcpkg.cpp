@@ -161,8 +161,8 @@ std::vector<StatusParagraph_and_associated_files> vcpkg::get_installed_files(con
                                                             }),
                                              installed_files_of_current_pgh.end());
 
-        const StatusParagraph_and_associated_files pgh_and_files = {*pgh, std::move(installed_files_of_current_pgh)};
-        installed_files.push_back(pgh_and_files);
+        StatusParagraph_and_associated_files pgh_and_files = {*pgh, std::move(installed_files_of_current_pgh)};
+        installed_files.push_back(std::move(pgh_and_files));
     }
 
     return installed_files;
