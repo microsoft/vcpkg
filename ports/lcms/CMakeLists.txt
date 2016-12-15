@@ -41,7 +41,7 @@ set(SRCS
 )
 
 add_definitions(-DUNICODE -D_UNICODE)
-#string(REPLACE "/utf-8" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+string(REPLACE "/utf-8" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
 
 include_directories(
 "./include"
