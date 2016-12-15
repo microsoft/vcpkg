@@ -69,16 +69,16 @@ namespace vcpkg
 
     static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryParagraph& bpgh)
     {
-        std::fstream listfile(paths.listfile_path(bpgh), std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
+        std::vector<std::string> output;
 
-        auto package_prefix_path = paths.package_dir(bpgh.spec);
-        auto prefix_length = package_prefix_path.native().size();
+        const fs::path package_prefix_path = paths.package_dir(bpgh.spec);
+        const size_t prefix_length = package_prefix_path.native().size();
 
         const triplet& target_triplet = bpgh.spec.target_triplet();
         const std::string& target_triplet_as_string = target_triplet.canonical_name();
         std::error_code ec;
         fs::create_directory(paths.installed / target_triplet_as_string, ec);
-        listfile << target_triplet << "\n";
+        output.push_back(Strings::format(R"(%s)", target_triplet_as_string));
 
         for (auto it = fs::recursive_directory_iterator(package_prefix_path); it != fs::recursive_directory_iterator(); ++it)
         {
@@ -89,8 +89,8 @@ namespace vcpkg
                 continue;
             }
 
-            auto suffix = it->path().generic_u8string().substr(prefix_length + 1);
-            auto target = paths.installed / target_triplet_as_string / suffix;
+            const std::string suffix = it->path().generic_u8string().substr(prefix_length + 1);
+            const fs::path target = paths.installed / target_triplet_as_string / suffix;
 
             auto status = it->status(ec);
             if (ec)
@@ -98,6 +98,7 @@ namespace vcpkg
                 System::println(System::color::error, "failed: %s: %s", it->path().u8string(), ec.message());
                 continue;
             }
+
             if (fs::is_directory(status))
             {
                 fs::create_directory(target, ec);
@@ -106,25 +107,36 @@ namespace vcpkg
                     System::println(System::color::error, "failed: %s: %s", target.u8string(), ec.message());
                 }
 
-                listfile << target_triplet << "/" << suffix << "\n";
+                // Trailing backslash for directories
+                output.push_back(Strings::format(R"(%s/%s)", target_triplet_as_string, suffix));
+                continue;
             }
-            else if (fs::is_regular_file(status))
+
+            if (fs::is_regular_file(status))
             {
                 fs::copy_file(*it, target, ec);
                 if (ec)
                 {
                     System::println(System::color::error, "failed: %s: %s", target.u8string(), ec.message());
                 }
-                listfile << target_triplet << "/" << suffix << "\n";
+                output.push_back(Strings::format(R"(%s/%s)", target_triplet_as_string, suffix));
+                continue;
             }
-            else if (!fs::status_known(status))
+
+            if (!fs::status_known(status))
             {
                 System::println(System::color::error, "failed: %s: unknown status", it->path().u8string());
+                continue;
             }
-            else
-                System::println(System::color::error, "failed: %s: cannot handle file type", it->path().u8string());
+
+            System::println(System::color::error, "failed: %s: cannot handle file type", it->path().u8string());
         }
 
+        std::fstream listfile(paths.listfile_path(bpgh), std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
+        for (const std::string& line : output)
+        {
+            listfile << line << "\n";
+        }
         listfile.close();
     }
 
