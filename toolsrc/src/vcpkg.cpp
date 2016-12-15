@@ -10,6 +10,7 @@
 #include "vcpkg_Files.h"
 #include "Paragraphs.h"
 #include <regex>
+#include "metrics.h"
 
 using namespace vcpkg;
 
@@ -109,6 +110,82 @@ void vcpkg::write_update(const vcpkg_paths& paths, const StatusParagraph& p)
     fs::rename(tmp_update_filename, update_filename);
 }
 
+static void upgrade_to_slash_terminated_sorted_format(std::vector<std::string>* lines, const fs::path& listfile_path)
+{
+    static bool was_tracked = false;
+
+    if (lines->empty())
+    {
+        return;
+    }
+
+    if (lines->at(0).back() == '/')
+    {
+        return; // File already in the new format
+    }
+
+    if (!was_tracked)
+    {
+        was_tracked = true;
+        TrackProperty("listfile", "update to new format");
+    }
+
+    // The files are sorted such that directories are placed just before the files they contain
+    // (They are not necessarily sorted alphabetically, e.g. libflac)
+    // Therefore we can detect the entries that represent directories by comparing every element with the next one
+    // and checking if the next has a slash immediately after the current one's length
+    for (int i = 0; i < lines->size() - 1; i++)
+    {
+        std::string& current_string = lines->at(i);
+        const std::string& next_string = lines->at(i + 1);
+
+        const size_t potential_slash_char_index = current_string.length();
+        // Make sure the index exists first
+        if (next_string.size() > potential_slash_char_index && next_string.at(potential_slash_char_index) == '/')
+        {
+            current_string += '/'; // Mark as a directory
+        }
+    }
+
+    // After suffixing the directories with a slash, we can now sort.
+    // We cannot sort before adding the suffixes because the following (actual example):
+    /*
+        x86-windows/include/FLAC <<<<<< This would be separated from its group due to sorting
+        x86-windows/include/FLAC/all.h
+        x86-windows/include/FLAC/assert.h
+        x86-windows/include/FLAC/callback.h
+        x86-windows/include/FLAC++
+        x86-windows/include/FLAC++/all.h
+        x86-windows/include/FLAC++/decoder.h
+        x86-windows/include/FLAC++/encoder.h
+     *
+        x86-windows/include/FLAC/ <<<<<< This will now be kept with its group when sorting
+        x86-windows/include/FLAC/all.h
+        x86-windows/include/FLAC/assert.h
+        x86-windows/include/FLAC/callback.h
+        x86-windows/include/FLAC++/
+        x86-windows/include/FLAC++/all.h
+        x86-windows/include/FLAC++/decoder.h
+        x86-windows/include/FLAC++/encoder.h
+     */
+    // Note that after sorting, the FLAC++/ group will be placed before the FLAC/ group
+    // The new format is lexicographically sorted
+    std::sort(lines->begin(), lines->end());
+
+#if 0
+    // Replace the listfile on disk
+    const fs::path updated_listfile_path = listfile_path.generic_string() + "_updated";
+    std::fstream output(updated_listfile_path, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
+    for (const std::string& line : *lines)
+    {
+        output << line << "\n";
+    }
+    output.close();
+
+    fs::rename(updated_listfile_path, listfile_path);
+#endif
+}
+
 std::vector<StatusParagraph_and_associated_files> vcpkg::get_installed_files(const vcpkg_paths& paths, const StatusParagraphs& status_db)
 {
     static const std::string MARK_FOR_REMOVAL = "";
@@ -124,7 +201,8 @@ std::vector<StatusParagraph_and_associated_files> vcpkg::get_installed_files(con
             continue;
         }
 
-        std::fstream listfile(paths.listfile_path(pgh->package));
+        const fs::path listfile_path = paths.listfile_path(pgh->package);
+        std::fstream listfile(listfile_path);
 
         std::vector<std::string> installed_files_of_current_pgh;
         while (std::getline(listfile, line))
@@ -136,22 +214,14 @@ std::vector<StatusParagraph_and_associated_files> vcpkg::get_installed_files(con
 
             installed_files_of_current_pgh.push_back(line);
         }
+        listfile.close();
+        upgrade_to_slash_terminated_sorted_format(&installed_files_of_current_pgh, listfile_path);
 
-        // Should already be sorted
-        std::sort(installed_files_of_current_pgh.begin(), installed_files_of_current_pgh.end());
-
-        // Since the files are sorted, we can detect the entries that represent directories
-        // by comparing every element with the next one and checking if the next has a slash immediately after the current one's length
-        for (int i = 1; i < installed_files_of_current_pgh.size(); i++)
+        for (std::string& file : installed_files_of_current_pgh)
         {
-            std::string& current_string = installed_files_of_current_pgh.at(i - 1);
-            const std::string& next_string = installed_files_of_current_pgh.at(i);
-
-            const size_t potential_slash_char_index = current_string.length();
-            // Make sure the index exists first
-            if (next_string.size() > potential_slash_char_index && next_string.at(potential_slash_char_index) == '/')
+            if (file.back() == '/')
             {
-                current_string = MARK_FOR_REMOVAL;
+                file = MARK_FOR_REMOVAL;
             }
         }
 
