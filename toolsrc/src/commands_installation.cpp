@@ -132,12 +132,7 @@ namespace vcpkg
             System::println(System::color::error, "failed: %s: cannot handle file type", it->path().u8string());
         }
 
-        std::fstream listfile(paths.listfile_path(bpgh), std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
-        for (const std::string& line : output)
-        {
-            listfile << line << "\n";
-        }
-        listfile.close();
+        Files::write_all_lines(paths.listfile_path(bpgh), output);
     }
 
     static void remove_first_n_chars(std::vector<std::string>* strings, const size_t n)

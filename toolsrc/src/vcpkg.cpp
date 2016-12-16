@@ -175,13 +175,7 @@ static void upgrade_to_slash_terminated_sorted_format(std::vector<std::string>* 
 #if 0
     // Replace the listfile on disk
     const fs::path updated_listfile_path = listfile_path.generic_string() + "_updated";
-    std::fstream output(updated_listfile_path, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
-    for (const std::string& line : *lines)
-    {
-        output << line << "\n";
-    }
-    output.close();
-
+    Files::write_all_lines(updated_listfile_path, *lines);
     fs::rename(updated_listfile_path, listfile_path);
 #endif
 }
