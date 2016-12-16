@@ -69,4 +69,8 @@ namespace vcpkg {namespace Strings
     std::string ascii_to_lowercase(const std::string& input);
 
     std::string join(const std::vector<std::string>& v, const std::string& delimiter);
+
+    void trim(std::string* s);
+
+    std::string trimmed(const std::string& s);
 }}

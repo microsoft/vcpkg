@@ -4,9 +4,16 @@
 #include <algorithm>
 #include <codecvt>
 #include <iterator>
+#include <functional>
+#include <cctype>
 
 namespace vcpkg {namespace Strings {namespace details
 {
+    static const auto isspace = [](const char c)
+    {
+        return std::isspace(c);
+    };
+
     std::string format_internal(const char* fmtstr, ...)
     {
         va_list lst;
@@ -84,5 +91,18 @@ namespace vcpkg {namespace Strings
         }
 
         return output;
+    }
+
+    void trim(std::string* s)
+    {
+        s->erase(s->begin(), std::find_if_not(s->begin(), s->end(), details::isspace));
+        s->erase(std::find_if_not(s->rbegin(), s->rend(), details::isspace).base(), s->end());
+    }
+
+    std::string trimmed(const std::string& s)
+    {
+        auto whitespace_front = std::find_if_not(s.begin(), s.end(), details::isspace);
+        auto whitespace_back = std::find_if_not(s.rbegin(), s.rend(), details::isspace).base();
+        return (whitespace_back <= whitespace_front ? std::string() : std::string(whitespace_front, whitespace_back));
     }
 }}
