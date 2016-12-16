@@ -114,7 +114,11 @@ namespace vcpkg
 
             if (fs::is_regular_file(status))
             {
-                fs::copy_file(*it, target, ec);
+                if (fs::exists(target))
+                {
+                    System::println(System::color::warning, "File %s was already present and will be overwritten", target.u8string(), ec.message());
+                }
+                fs::copy_file(*it, target, fs::copy_options::overwrite_existing, ec);
                 if (ec)
                 {
                     System::println(System::color::error, "failed: %s: %s", target.u8string(), ec.message());
