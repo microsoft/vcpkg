@@ -182,8 +182,6 @@ static void upgrade_to_slash_terminated_sorted_format(std::vector<std::string>* 
 
 std::vector<StatusParagraph_and_associated_files> vcpkg::get_installed_files(const vcpkg_paths& paths, const StatusParagraphs& status_db)
 {
-    static const std::string MARK_FOR_REMOVAL = "";
-
     std::vector<StatusParagraph_and_associated_files> installed_files;
 
     std::string line;
@@ -211,19 +209,13 @@ std::vector<StatusParagraph_and_associated_files> vcpkg::get_installed_files(con
         listfile.close();
         upgrade_to_slash_terminated_sorted_format(&installed_files_of_current_pgh, listfile_path);
 
-        for (std::string& file : installed_files_of_current_pgh)
-        {
-            if (file.back() == '/')
-            {
-                file = MARK_FOR_REMOVAL;
-            }
-        }
-
-        installed_files_of_current_pgh.erase(std::remove_if(installed_files_of_current_pgh.begin(), installed_files_of_current_pgh.end(), [](const std::string& file)
-                                                            {
-                                                                return file == MARK_FOR_REMOVAL;
-                                                            }),
-                                             installed_files_of_current_pgh.end());
+        // Remove the directories
+        installed_files_of_current_pgh.erase(
+            std::remove_if(installed_files_of_current_pgh.begin(), installed_files_of_current_pgh.end(), [](const std::string& file) -> bool
+                           {
+                               return file.back() == '/';
+                           }
+            ), installed_files_of_current_pgh.end());
 
         StatusParagraph_and_associated_files pgh_and_files = {*pgh, std::move(installed_files_of_current_pgh)};
         installed_files.push_back(std::move(pgh_and_files));
