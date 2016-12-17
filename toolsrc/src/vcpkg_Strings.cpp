@@ -9,6 +9,7 @@
 
 namespace vcpkg {namespace Strings {namespace details
 {
+    // To disambiguate between two overloads
     static const auto isspace = [](const char c)
     {
         return std::isspace(c);
@@ -104,5 +105,14 @@ namespace vcpkg {namespace Strings
         auto whitespace_front = std::find_if_not(s.begin(), s.end(), details::isspace);
         auto whitespace_back = std::find_if_not(s.rbegin(), s.rend(), details::isspace).base();
         return (whitespace_back <= whitespace_front ? std::string() : std::string(whitespace_front, whitespace_back));
+    }
+
+    void trim_all_and_remove_whitespace_strings(std::vector<std::string>* strings)
+    {
+        strings->erase(std::remove_if(strings->begin(), strings->end(), [](std::string& s)-> bool
+                                      {
+                                          trim(&s);
+                                          return s == "";
+                                      }), strings->end());
     }
 }}

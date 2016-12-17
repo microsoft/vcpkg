@@ -73,4 +73,6 @@ namespace vcpkg {namespace Strings
     void trim(std::string* s);
 
     std::string trimmed(const std::string& s);
+
+    void trim_all_and_remove_whitespace_strings(std::vector<std::string>* strings);
 }}
