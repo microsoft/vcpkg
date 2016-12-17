@@ -184,8 +184,6 @@ std::vector<StatusParagraph_and_associated_files> vcpkg::get_installed_files(con
 {
     std::vector<StatusParagraph_and_associated_files> installed_files;
 
-    std::string line;
-
     for (const std::unique_ptr<StatusParagraph>& pgh : status_db)
     {
         if (pgh->state != install_state_t::installed)
@@ -194,19 +192,8 @@ std::vector<StatusParagraph_and_associated_files> vcpkg::get_installed_files(con
         }
 
         const fs::path listfile_path = paths.listfile_path(pgh->package);
-        std::fstream listfile(listfile_path);
-
-        std::vector<std::string> installed_files_of_current_pgh;
-        while (std::getline(listfile, line))
-        {
-            if (line.empty())
-            {
-                continue;
-            }
-
-            installed_files_of_current_pgh.push_back(line);
-        }
-        listfile.close();
+        std::vector<std::string> installed_files_of_current_pgh = Files::read_all_lines(listfile_path).get_or_throw();
+        Strings::trim_all_and_remove_whitespace_strings(&installed_files_of_current_pgh);
         upgrade_to_slash_terminated_sorted_format(&installed_files_of_current_pgh, listfile_path);
 
         // Remove the directories
