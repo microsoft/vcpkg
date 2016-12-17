@@ -37,48 +37,9 @@ if(NOT EXISTS "${SOURCE_PATH}/.git")
     )
 endif()
 
-set(SPIRVTOOLS_GIT_URL "https://github.com/KhronosGroup/SPIRV-Tools.git")
-set(SPIRVTOOLS_GIT_REF "f72189c249ba143c6a89a4cf1e7d53337b2ddd40")
-set(SPIRVHEADERS_GIT_URL "https://github.com/KhronosGroup/SPIRV-Headers.git")
-set(SPIRVHEADERS_GIT_REF "bd47a9abaefac00be692eae677daed1b977e625c")
-
-if(NOT EXISTS "${DOWNLOADS}/SPIRV-Tools.git")
-    message(STATUS "Cloning")
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} clone --bare ${SPIRVTOOLS_GIT_URL} ${DOWNLOADS}/SPIRV-Tools.git
-        WORKING_DIRECTORY ${DOWNLOADS}
-        LOGNAME clone
-    )
-endif()
-if(NOT EXISTS "${DOWNLOADS}/SPIRV-Headers.git")
-    message(STATUS "Cloning")
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} clone --bare ${SPIRVHEADERS_GIT_URL} ${DOWNLOADS}/SPIRV-Headers.git
-        WORKING_DIRECTORY ${DOWNLOADS}
-        LOGNAME clone
-    )
-endif()
-
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/third_party/glslang)
-if(NOT EXISTS "${SOURCE_PATH}/third_party/spirv-tools/.git")
-    message(STATUS "Adding worktree and patching")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR})
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} worktree add -f --detach ${SOURCE_PATH}/third_party/spirv-tools ${SPIRVTOOLS_GIT_REF}
-        WORKING_DIRECTORY ${DOWNLOADS}/SPIRV-Tools.git
-        LOGNAME worktree
-    )
-endif()
-if(NOT EXISTS "${SOURCE_PATH}/third_party/spirv-tools/external/spirv-headers/.git")
-    message(STATUS "Adding worktree and patching")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR})
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} worktree add -f --detach ${SOURCE_PATH}/third_party/spirv-tools/external/spirv-headers ${SPIRVHEADERS_GIT_REF}
-        WORKING_DIRECTORY ${DOWNLOADS}/SPIRV-Headers.git
-        LOGNAME worktree
-    )
-endif()
-
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists_spirv.txt DESTINATION ${SOURCE_PATH}/third_party/spirv-tools)
+file(RENAME ${SOURCE_PATH}/third_party/spirv-tools/CMakeLists_spirv.txt ${SOURCE_PATH}/third_party/spirv-tools/CMakeLists.txt)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/build-version.inc DESTINATION ${SOURCE_PATH}/glslc/src)
 
 #Note: glslang and spir tools doesn't export symbol and need to be build as static lib for cmake to work
@@ -102,13 +63,16 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*.exe")
 file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
 
 #Safe to remove as libs are static
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
+
+
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/shaderc.txt)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/shaderc)
