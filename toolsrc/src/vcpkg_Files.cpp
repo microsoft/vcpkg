@@ -12,7 +12,7 @@ namespace vcpkg {namespace Files
         Checks::check_exit(fs::is_directory(dirpath), "The path %s is not a directory", dirpath.string());
     }
 
-    bool has_invalid_chars_for_filesystem(const std::string s)
+    bool has_invalid_chars_for_filesystem(const std::string& s)
     {
         return std::regex_search(s, FILESYSTEM_INVALID_CHARACTERS_REGEX);
     }

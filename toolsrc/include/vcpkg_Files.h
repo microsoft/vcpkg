@@ -10,7 +10,7 @@ namespace vcpkg {namespace Files
 
     void check_is_directory(const fs::path& dirpath);
 
-    bool has_invalid_chars_for_filesystem(const std::string s);
+    bool has_invalid_chars_for_filesystem(const std::string& s);
 
     expected<std::string> get_contents(const fs::path& file_path) noexcept;
 
