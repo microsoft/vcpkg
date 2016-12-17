@@ -223,7 +223,7 @@ namespace vcpkg { namespace COFFFileReader
         verify_equal_strings(FILE_START, file_start, FILE_START_SIZE, "LIB FILE_START");
     }
 
-    dll_info read_dll(const fs::path path)
+    dll_info read_dll(const fs::path& path)
     {
         std::fstream fs(path, std::ios::in | std::ios::binary | std::ios::ate);
         Checks::check_exit(fs.is_open(), "Could not open file %s for reading", path.generic_string());
@@ -260,7 +260,7 @@ namespace vcpkg { namespace COFFFileReader
         fpos_t m_absolute_position = 0;
     };
 
-    lib_info read_lib(const fs::path path)
+    lib_info read_lib(const fs::path& path)
     {
         std::fstream fs(path, std::ios::in | std::ios::binary | std::ios::ate);
         Checks::check_exit(fs.is_open(), "Could not open file %s for reading", path.generic_string());

@@ -15,7 +15,7 @@ namespace vcpkg {namespace COFFFileReader
         std::vector<MachineType> machine_types;
     };
 
-    dll_info read_dll(const fs::path path);
+    dll_info read_dll(const fs::path& path);
 
-    lib_info read_lib(const fs::path path);
+    lib_info read_lib(const fs::path& path);
 }}
