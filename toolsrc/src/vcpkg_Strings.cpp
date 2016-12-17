@@ -109,9 +109,13 @@ namespace vcpkg {namespace Strings
 
     void trim_all_and_remove_whitespace_strings(std::vector<std::string>* strings)
     {
-        strings->erase(std::remove_if(strings->begin(), strings->end(), [](std::string& s)-> bool
+        for (std::string& s : *strings)
+        {
+            trim(&s);
+        }
+
+        strings->erase(std::remove_if(strings->begin(), strings->end(), [](const std::string& s)-> bool
                                       {
-                                          trim(&s);
                                           return s == "";
                                       }), strings->end());
     }
