@@ -151,7 +151,7 @@ namespace vcpkg { namespace PostBuildLint
     const OutdatedDynamicCrt OutdatedDynamicCrt::MSVCRT20_DLL = OutdatedDynamicCrt("msvcrt20.dll", R"(msvcrt20\.dll)");;
     const OutdatedDynamicCrt OutdatedDynamicCrt::MSVCRT40_DLL = OutdatedDynamicCrt("msvcrt40.dll", R"(msvcrt40\.dll)");;
 
-    const std::regex OutdatedDynamicCrt::crt_regex() const
+    std::regex OutdatedDynamicCrt::crt_regex() const
     {
         const std::regex r(this->m_crt_regex_as_string, std::regex_constants::icase);
         return r;

@@ -104,7 +104,7 @@ namespace vcpkg { namespace PostBuildLint
 
         OutdatedDynamicCrt() = delete;
 
-        const std::regex crt_regex() const;
+        std::regex crt_regex() const;
         const std::string& toString() const;
 
     private:
