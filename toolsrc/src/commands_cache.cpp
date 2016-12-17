@@ -15,7 +15,7 @@ namespace vcpkg
 
             try
             {
-                auto file_contents = Files::get_contents(path / "CONTROL");
+                auto file_contents = Files::read_contents(path / "CONTROL");
                 if (auto text = file_contents.get())
                 {
                     auto pghs = Paragraphs::parse_paragraphs(*text);

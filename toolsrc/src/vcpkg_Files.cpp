@@ -17,7 +17,7 @@ namespace vcpkg {namespace Files
         return std::regex_search(s, FILESYSTEM_INVALID_CHARACTERS_REGEX);
     }
 
-    expected<std::string> get_contents(const fs::path& file_path) noexcept
+    expected<std::string> read_contents(const fs::path& file_path) noexcept
     {
         std::fstream file_stream(file_path, std::ios_base::in | std::ios_base::binary);
         if (file_stream.fail())

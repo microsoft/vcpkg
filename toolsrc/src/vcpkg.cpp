@@ -27,7 +27,7 @@ static StatusParagraphs load_current_database(const fs::path& vcpkg_dir_status_f
         fs::rename(vcpkg_dir_status_file_old, vcpkg_dir_status_file);
     }
 
-    auto text = Files::get_contents(vcpkg_dir_status_file).get_or_throw();
+    auto text = Files::read_contents(vcpkg_dir_status_file).get_or_throw();
     auto pghs = Paragraphs::parse_paragraphs(text);
 
     std::vector<std::unique_ptr<StatusParagraph>> status_pghs;
@@ -70,7 +70,7 @@ StatusParagraphs vcpkg::database_load_check(const vcpkg_paths& paths)
         if (b->path().filename() == "incomplete")
             continue;
 
-        auto text = Files::get_contents(b->path()).get_or_throw();
+        auto text = Files::read_contents(b->path()).get_or_throw();
         auto pghs = Paragraphs::parse_paragraphs(text);
         for (auto&& p : pghs)
         {
@@ -230,7 +230,7 @@ expected<BinaryParagraph> vcpkg::try_load_cached_package(const vcpkg_paths& path
 {
     const fs::path path = paths.package_dir(spec) / "CONTROL";
 
-    auto control_contents_maybe = Files::get_contents(path);
+    auto control_contents_maybe = Files::read_contents(path);
     if (auto control_contents = control_contents_maybe.get())
     {
         std::vector<std::unordered_map<std::string, std::string>> pghs;

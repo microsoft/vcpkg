@@ -12,7 +12,7 @@ namespace vcpkg {namespace Files
 
     bool has_invalid_chars_for_filesystem(const std::string& s);
 
-    expected<std::string> get_contents(const fs::path& file_path) noexcept;
+    expected<std::string> read_contents(const fs::path& file_path) noexcept;
 
     expected<std::vector<std::string>> read_all_lines(const fs::path& file_path);
 

@@ -153,7 +153,7 @@ namespace vcpkg { namespace Paragraphs
 
     std::vector<std::unordered_map<std::string, std::string>> get_paragraphs(const fs::path& control_path)
     {
-        return parse_paragraphs(Files::get_contents(control_path).get_or_throw());
+        return parse_paragraphs(Files::read_contents(control_path).get_or_throw());
     }
 
     std::vector<std::unordered_map<std::string, std::string>> parse_paragraphs(const std::string& str)
