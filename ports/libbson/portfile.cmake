@@ -1,10 +1,10 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libbson-1.5.0-rc6)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libbson-1.5.1)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/mongodb/libbson/archive/1.5.0-rc6.tar.gz"
-    FILENAME "libbson-1.5.0-rc6.tar.gz"
-    SHA512 15cf590b488f7de8d614ddcc2c1536b05b607311f3cd3353418469c7a62177124fb4fb1c53f51b0de4c7491b21051c1ec47fbc12856cc69e37baebb3d65897c5
+    URLS "https://github.com/mongodb/libbson/archive/1.5.1.tar.gz"
+    FILENAME "libbson-1.5.1.tar.gz"
+    SHA512 b641e23ca041e532fe566167ad0292d12934e0fae2c110f81bf6ca3b71b5d01b651a604a7ce6da0d1b54b98cd95674ef331ef4e23c2dedfc706f371eac4efaec
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
