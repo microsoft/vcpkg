@@ -13,11 +13,6 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# don't package internal headers
-file(REMOVE ${CURRENT_PACKAGES_DIR}/include/libmodplug/it_defs.h)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/include/libmodplug/sndfile.h)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/include/libmodplug/stdafx.h)
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/modplug.dll ${CURRENT_PACKAGES_DIR}/bin/modplug.dll)
