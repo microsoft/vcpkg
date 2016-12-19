@@ -4,7 +4,7 @@ include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libmodplug-${MODPLUG_HASH})
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/Konstanty/libmodplug/archive/${MODPLUG_HASH}.zip"
-    FILENAME "libmodplug-0.8.8.5-${MODPLUG_HASH}"
+    FILENAME "libmodplug-0.8.8.5-${MODPLUG_HASH}.zip"
     SHA512 65840b7748284b400dfe99775e18f44dcc4846bc0ff522d18b9ded42c7032e10683e453110d530722d9e22547b7e5f4878ebfff92f232691cbd5b0638c48d88b)
 
 vcpkg_extract_source_archive(${ARCHIVE})
