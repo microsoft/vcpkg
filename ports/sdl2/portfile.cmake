@@ -47,6 +47,7 @@ else()
             -DSDL_STATIC=${SDL_STATIC_LIB}
             -DSDL_SHARED=${SDL_SHARED_LIB}
             -DFORCE_STATIC_VCRT=${SDL_STATIC_CRT}
+            -DLIBC=ON
     )
 
     vcpkg_install_cmake()
