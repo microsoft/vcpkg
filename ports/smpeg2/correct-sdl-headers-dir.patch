@@ -1,0 +1,17 @@
+diff --git a/smpeg.h b/smpeg.h
+index 6bc2dbd..d12c8f8 100644
+--- a/smpeg.h
++++ b/smpeg.h
+@@ -22,9 +22,9 @@
+ #ifndef _SMPEG_H_
+ #define _SMPEG_H_
+ 
+-#include "SDL.h"
+-#include "SDL_mutex.h"
+-#include "SDL_audio.h"
++#include "SDL2/SDL.h"
++#include "SDL2/SDL_mutex.h"
++#include "SDL2/SDL_audio.h"
+ #include "MPEGframe.h"
+ 
+ #ifdef __cplusplus
