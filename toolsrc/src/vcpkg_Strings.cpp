@@ -96,15 +96,15 @@ namespace vcpkg {namespace Strings
 
     void trim(std::string* s)
     {
-        s->erase(s->begin(), std::find_if_not(s->begin(), s->end(), details::isspace));
         s->erase(std::find_if_not(s->rbegin(), s->rend(), details::isspace).base(), s->end());
+        s->erase(s->begin(), std::find_if_not(s->begin(), s->end(), details::isspace));
     }
 
     std::string trimmed(const std::string& s)
     {
-        auto whitespace_front = std::find_if_not(s.begin(), s.end(), details::isspace);
         auto whitespace_back = std::find_if_not(s.rbegin(), s.rend(), details::isspace).base();
-        return (whitespace_back <= whitespace_front ? std::string() : std::string(whitespace_front, whitespace_back));
+        auto whitespace_front = std::find_if_not(s.begin(), whitespace_back, details::isspace);
+        return std::string(whitespace_front, whitespace_back);
     }
 
     void trim_all_and_remove_whitespace_strings(std::vector<std::string>* strings)
