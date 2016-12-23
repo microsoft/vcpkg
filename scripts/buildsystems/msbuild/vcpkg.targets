@@ -41,17 +41,17 @@
     </ClCompile>
   </ItemDefinitionGroup>
 
-  <Target Name="AppLocalFromInstalled" AfterTargets="CopyFilesToOutputDirectory" BeforeTargets="CopyLocalFilesOutputGroup" Condition="'$(VcpkgEnabled)' == 'true' and '$(OutputType)' == 'exe'">
+  <Target Name="AppLocalFromInstalled" AfterTargets="CopyFilesToOutputDirectory" BeforeTargets="CopyLocalFilesOutputGroup" Condition="'$(VcpkgEnabled)' == 'true'">
     <WriteLinesToFile
     File="$(TLogLocation)$(ProjectName).write.1u.tlog"
     Lines="^$(OutputPath)$(TargetName).$(OutputType);" Encoding="Unicode"/>
     <Exec Condition="'$(VcpkgConfiguration)' == 'Debug'"
-      Command="powershell.exe -ExecutionPolicy Unrestricted -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(OutputPath)$(TargetName).$(OutputType)%22 %22$(VcpkgRoot)debug\bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22"
+      Command="powershell.exe -ExecutionPolicy Unrestricted -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(TargetPath)%22 %22$(VcpkgRoot)debug\bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22"
       ConsoleToMSBuild="true">
         <Output TaskParameter="ConsoleOutput" ItemName="ReferenceCopyLocalPaths" />
     </Exec>
     <Exec Condition="'$(VcpkgConfiguration)' == 'Release'"
-      Command="powershell.exe -ExecutionPolicy Unrestricted -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(OutputPath)$(TargetName).$(OutputType)%22 %22$(VcpkgRoot)bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22"
+      Command="powershell.exe -ExecutionPolicy Unrestricted -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(TargetPath)%22 %22$(VcpkgRoot)bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22"
       ConsoleToMSBuild="true">
         <Output TaskParameter="ConsoleOutput" ItemName="ReferenceCopyLocalPaths" />
     </Exec>
