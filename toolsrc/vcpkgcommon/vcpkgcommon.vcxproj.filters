@@ -62,5 +62,8 @@
     <ClInclude Include="..\include\Stopwatch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\ImmutableSortedVector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
