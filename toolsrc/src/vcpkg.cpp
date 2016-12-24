@@ -134,7 +134,7 @@ static void upgrade_to_slash_terminated_sorted_format(std::vector<std::string>* 
     // (They are not necessarily sorted alphabetically, e.g. libflac)
     // Therefore we can detect the entries that represent directories by comparing every element with the next one
     // and checking if the next has a slash immediately after the current one's length
-    for (int i = 0; i < lines->size() - 1; i++)
+    for (size_t i = 0; i < lines->size() - 1; i++)
     {
         std::string& current_string = lines->at(i);
         const std::string& next_string = lines->at(i + 1);
