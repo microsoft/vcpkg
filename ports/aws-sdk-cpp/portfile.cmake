@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/aws-sdk-cpp-1.0.34)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/aws-sdk-cpp-1.0.47)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/aws/aws-sdk-cpp/archive/1.0.34.tar.gz"
-    FILENAME "aws-sdk-cpp-1.0.34.tar.gz"
-    SHA512 21ca03eb323eecb55c29866b73c07956a36aad7c9c051eb7ca201cfd356c3f9732c89898cf0c89660d6c1279dc52438bb389b37d613bf741bae81bb3e773a3c5
+    URLS "https://github.com/aws/aws-sdk-cpp/archive/1.0.47.tar.gz"
+    FILENAME "aws-sdk-cpp-1.0.47.tar.gz"
+    SHA512 ce7471bafe2763f1c382eed8afeaf6422058599a3aa11ae52909da668c45d12827fcd06b9b3ce34e3c2fa33297fd2e09421b8a89833d581efaf62b7108232acf
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
