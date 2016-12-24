@@ -25,15 +25,15 @@ src/ltable.c src/ltablib.c src/ltm.c src/lundump.c src/lutf8lib.c src/lvm.c src/
 # append headers to sources to make them show up in MSVC GUI
 LIST(APPEND SRC_LIBLUA ${HDR_LIBLUA})
 
-IF (BUILD_SHARED_LIBS)
-    ADD_DEFINITIONS ( -DLUA_BUILD_AS_DLL )
-ENDIF ()
-
 # remove warnings
 ADD_DEFINITIONS (-D_CRT_SECURE_NO_WARNINGS )
 
 #DLL
 ADD_LIBRARY ( lua ${SRC_LIBLUA} )
+
+IF (BUILD_SHARED_LIBS)
+    TARGET_COMPILE_DEFINITIONS (lua PRIVATE -DLUA_BUILD_AS_DLL )
+ENDIF ()
 
 INSTALL ( TARGETS lua
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
