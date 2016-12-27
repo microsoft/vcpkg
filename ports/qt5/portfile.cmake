@@ -47,6 +47,10 @@ vcpkg_execute_required_process(
         -debug-and-release -force-debug-info ${QT_RUNTIME_LINKAGE}
         -qt-zlib
         -qt-libjpeg
+        -no-libpng
+        -no-freetype
+        -no-pcre
+        -no-harfbuzz
         -system-sqlite
         -nomake examples -nomake tests -skip webengine
         -qt-sql-sqlite -qt-sql-psql
