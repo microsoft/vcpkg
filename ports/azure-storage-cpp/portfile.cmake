@@ -1,10 +1,10 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/azure-storage-cpp-2.5.0)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/azure-storage-cpp-2.6.0)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/Azure/azure-storage-cpp/archive/v2.5.0.tar.gz"
-    FILENAME "azure-storage-cpp/v2.5.0.tar.gz"
-    SHA512 128e02f4c4f741083b7860a1aacabaeee5616684d6a5f7f1b3a88abf7f74e6c46610ed62def2a743e67a20a1d12604b9c44c202d94b56ca0ca02847a2b6c9e1b
+    URLS "https://github.com/Azure/azure-storage-cpp/archive/v2.6.0.tar.gz"
+    FILENAME "azure-storage-cpp/v2.6.0.tar.gz"
+    SHA512 383fc709b04b7a116b553575f27a95b95a66105fe9b96d412fc4f1938e51288f81e49a9578c02993d0bc2a4771265694117b82fd5beaeaf4c32f81eeb8f9be6a
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
