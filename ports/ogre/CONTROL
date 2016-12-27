@@ -1,0 +1,4 @@
+Source: ogre
+Version: 2.1-06631aef218d
+Description: 3D rendering engine
+Build-Depends: freetype, freeimage, zlib, zziplib, rapidjson
