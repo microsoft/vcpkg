@@ -1,5 +1,4 @@
-#Header only
-
+#header-only library
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/gli-0.8.2.0)
 vcpkg_download_distfile(ARCHIVE
