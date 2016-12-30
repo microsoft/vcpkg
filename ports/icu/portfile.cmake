@@ -25,7 +25,7 @@ vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/source/allinone/allinone.sln
     PLATFORM ${BUILD_ARCH})
 
-# force rebuild of database as it sometimies gets overriden by dummy one
+# force rebuild of database as it sometimes gets overriden by dummy one
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/source/data/makedata.vcxproj
     PLATFORM ${BUILD_ARCH})
