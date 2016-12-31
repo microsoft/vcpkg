@@ -25,6 +25,11 @@ vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/source/allinone/allinone.sln
     PLATFORM ${BUILD_ARCH})
 
+# force rebuild of database as it sometimes gets overriden by dummy one
+vcpkg_build_msbuild(
+    PROJECT_PATH ${SOURCE_PATH}/source/data/makedata.vcxproj
+    PLATFORM ${BUILD_ARCH})
+
 set(ICU_VERSION 58)
 if(TRIPLET_SYSTEM_ARCH MATCHES "x64")
     set(ICU_BIN bin64)
