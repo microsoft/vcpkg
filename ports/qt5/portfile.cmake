@@ -49,7 +49,7 @@ vcpkg_execute_required_process(
         -qt-libjpeg
         -no-libpng
         -no-freetype
-        -no-pcre
+        -qt-pcre
         -no-harfbuzz
         -system-sqlite
         -nomake examples -nomake tests -skip webengine
