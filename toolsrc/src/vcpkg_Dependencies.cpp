@@ -58,7 +58,7 @@ namespace vcpkg { namespace Dependencies
 
             expected<SourceParagraph> maybe_spgh = try_load_port(paths, spec.name());
             SourceParagraph* spgh = maybe_spgh.get();
-            Checks::check_exit(spgh != nullptr, "Cannot find package");
+            Checks::check_exit(spgh != nullptr, "Cannot find package %s", spec.name());
             process_dependencies(filter_dependencies(spgh->depends, spec.target_triplet()));
             was_examined.emplace(spec, install_plan_action{install_plan_type::BUILD_AND_INSTALL, nullptr, std::make_unique<SourceParagraph>(std::move(*spgh))});
         }

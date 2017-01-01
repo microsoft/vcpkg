@@ -9,15 +9,15 @@ namespace vcpkg {namespace Files
 
     void check_is_directory(const fs::path& dirpath)
     {
-        Checks::check_throw(fs::is_directory(dirpath), "The path %s is not a directory", dirpath.string());
+        Checks::check_exit(fs::is_directory(dirpath), "The path %s is not a directory", dirpath.string());
     }
 
-    bool has_invalid_chars_for_filesystem(const std::string s)
+    bool has_invalid_chars_for_filesystem(const std::string& s)
     {
         return std::regex_search(s, FILESYSTEM_INVALID_CHARACTERS_REGEX);
     }
 
-    expected<std::string> get_contents(const fs::path& file_path) noexcept
+    expected<std::string> read_contents(const fs::path& file_path) noexcept
     {
         std::fstream file_stream(file_path, std::ios_base::in | std::ios_base::binary);
         if (file_stream.fail())
@@ -40,6 +40,35 @@ namespace vcpkg {namespace Files
         file_stream.close();
 
         return std::move(output);
+    }
+
+    expected<std::vector<std::string>> read_all_lines(const fs::path& file_path)
+    {
+        std::fstream file_stream(file_path, std::ios_base::in | std::ios_base::binary);
+        if (file_stream.fail())
+        {
+            return std::errc::no_such_file_or_directory;
+        }
+
+        std::vector<std::string> output;
+        std::string line;
+        while (std::getline(file_stream, line))
+        {
+            output.push_back(line);
+        }
+        file_stream.close();
+
+        return std::move(output);
+    }
+
+    void write_all_lines(const fs::path& file_path, const std::vector<std::string>& lines)
+    {
+        std::fstream output(file_path, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
+        for (const std::string& line : lines)
+        {
+            output << line << "\n";
+        }
+        output.close();
     }
 
     fs::path find_file_recursively_up(const fs::path& starting_dir, const std::string& filename)

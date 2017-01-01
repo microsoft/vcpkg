@@ -10,9 +10,9 @@ endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/icu)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://download.icu-project.org/files/icu4c/58.1/icu4c-58_1-src.zip"
-    FILENAME "icu4c-58_1-src.zip"
-    SHA512 b13b1d8aa5e6a08a5cecaea85252354150064ef98ed7bb66b70d32eac5c80874c11f1fc9e3a667075b867fcc848c33ad90e6cada3a279f65b62cb9d46e25181d)
+    URLS "http://download.icu-project.org/files/icu4c/58.2/icu4c-58_2-src.zip"
+    FILENAME "icu4c-58_2-src.zip"
+    SHA512 b985b553186d11d9e5157fc981af5483c435a7b4f3df9574d253d6229ecaf8af0f722488542c3f64f9726ad25e17978eae970d78300a55479df74495f6745d16)
 vcpkg_extract_source_archive(${ARCHIVE})
 
 if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
@@ -23,6 +23,11 @@ endif()
 
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/source/allinone/allinone.sln
+    PLATFORM ${BUILD_ARCH})
+
+# force rebuild of database as it sometimes gets overriden by dummy one
+vcpkg_build_msbuild(
+    PROJECT_PATH ${SOURCE_PATH}/source/data/makedata.vcxproj
     PLATFORM ${BUILD_ARCH})
 
 set(ICU_VERSION 58)

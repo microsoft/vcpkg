@@ -1,6 +1,6 @@
 include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/qt-5.7.0)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/qt-5.7.1)
 set(OUTPUT_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 set(ENV{QTDIR} ${OUTPUT_PATH}/qtbase)
 set(ENV{PATH} "${OUTPUT_PATH}/qtbase/bin;$ENV{PATH}")
@@ -16,13 +16,13 @@ set(ENV{PATH} "${JOM_EXE_PATH};${PYTHON3_EXE_PATH};${PERL_EXE_PATH};$ENV{PATH}")
 set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
 set(ENV{LIB} "${CURRENT_INSTALLED_DIR}/lib;$ENV{LIB}")
 vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "http://download.qt.io/official_releases/qt/5.7/5.7.0/single/qt-everywhere-opensource-src-5.7.0.7z"
-    FILENAME "qt-5.7.0.7z"
-    SHA512 96f0b6bd221be0ed819bc9b52eefcee1774945e25b89169fa927148c1c4a2d85faf63b1d09ef5067573bda9bbf1270fce5f181d086bfe585ddbad4cd77f7f418
+    URLS "http://download.qt.io/official_releases/qt/5.7/5.7.1/single/qt-everywhere-opensource-src-5.7.1.7z"
+    FILENAME "qt-5.7.1.7z"
+    SHA512 3ffcf490a1c0107a05113aebbf70015c50d05fbb35439273c243133ddb146d51aacae15ecd6411d563cc8cfe103df896394c365a69bc48fc86c3bce6a1af3107
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
-if (EXISTS ${CURRENT_BUILDTREES_DIR}/src/qt-everywhere-opensource-src-5.7.0)
-    file(RENAME ${CURRENT_BUILDTREES_DIR}/src/qt-everywhere-opensource-src-5.7.0 ${CURRENT_BUILDTREES_DIR}/src/qt-5.7.0)
+if (EXISTS ${CURRENT_BUILDTREES_DIR}/src/qt-everywhere-opensource-src-5.7.1)
+    file(RENAME ${CURRENT_BUILDTREES_DIR}/src/qt-everywhere-opensource-src-5.7.1 ${CURRENT_BUILDTREES_DIR}/src/qt-5.7.1)
 endif()
 
 file(MAKE_DIRECTORY ${OUTPUT_PATH})
@@ -47,6 +47,10 @@ vcpkg_execute_required_process(
         -debug-and-release -force-debug-info ${QT_RUNTIME_LINKAGE}
         -qt-zlib
         -qt-libjpeg
+        -no-libpng
+        -no-freetype
+        -qt-pcre
+        -no-harfbuzz
         -system-sqlite
         -nomake examples -nomake tests -skip webengine
         -qt-sql-sqlite -qt-sql-psql
@@ -117,7 +121,9 @@ file(REMOVE ${DEBUG_LIB_FILES})
 file(GLOB DEBUG_LIB_FILES "${CURRENT_PACKAGES_DIR}/lib/*d.prl")
 file(REMOVE ${DEBUG_LIB_FILES})
 file(GLOB DEBUG_LIB_FILES "${CURRENT_PACKAGES_DIR}/lib/*d.pdb")
-file(REMOVE ${DEBUG_LIB_FILES})
+if(DEBUG_LIB_FILES)
+    file(REMOVE ${DEBUG_LIB_FILES})
+endif()
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Gamepad.lib ${CURRENT_PACKAGES_DIR}/lib/Qt5Gamepad.lib)
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Gamepad.prl ${CURRENT_PACKAGES_DIR}/lib/Qt5Gamepad.prl)
 file(GLOB BINARY_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*.exe")

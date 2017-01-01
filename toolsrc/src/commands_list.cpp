@@ -17,7 +17,7 @@ namespace vcpkg
     {
         static const std::string example = Strings::format(
             "The argument should be a substring to search for, or no argument to display all installed libraries.\n%s", create_example_string("list png"));
-        args.check_max_arg_count(1, example.c_str());
+        args.check_max_arg_count(1, example);
 
         const StatusParagraphs status_paragraphs = database_load_check(paths);
         std::vector<StatusParagraph> installed_packages;

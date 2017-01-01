@@ -13,6 +13,7 @@ namespace vcpkg
     void TrackProperty(const std::string& name, const std::string& value);
     void TrackProperty(const std::string& name, const std::wstring& value);
     bool GetCompiledMetricsEnabled();
+    std::wstring GetSQMUser();
 
     void Upload(const std::string& payload);
     void Flush();

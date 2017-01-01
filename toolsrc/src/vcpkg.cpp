@@ -10,6 +10,7 @@
 #include "vcpkg_Files.h"
 #include "Paragraphs.h"
 #include <regex>
+#include "metrics.h"
 
 using namespace vcpkg;
 
@@ -26,7 +27,7 @@ static StatusParagraphs load_current_database(const fs::path& vcpkg_dir_status_f
         fs::rename(vcpkg_dir_status_file_old, vcpkg_dir_status_file);
     }
 
-    auto text = Files::get_contents(vcpkg_dir_status_file).get_or_throw();
+    auto text = Files::read_contents(vcpkg_dir_status_file).get_or_throw();
     auto pghs = Paragraphs::parse_paragraphs(text);
 
     std::vector<std::unique_ptr<StatusParagraph>> status_pghs;
@@ -69,7 +70,7 @@ StatusParagraphs vcpkg::database_load_check(const vcpkg_paths& paths)
         if (b->path().filename() == "incomplete")
             continue;
 
-        auto text = Files::get_contents(b->path()).get_or_throw();
+        auto text = Files::read_contents(b->path()).get_or_throw();
         auto pghs = Paragraphs::parse_paragraphs(text);
         for (auto&& p : pghs)
         {
@@ -109,13 +110,79 @@ void vcpkg::write_update(const vcpkg_paths& paths, const StatusParagraph& p)
     fs::rename(tmp_update_filename, update_filename);
 }
 
+static void upgrade_to_slash_terminated_sorted_format(std::vector<std::string>* lines, const fs::path& listfile_path)
+{
+    static bool was_tracked = false;
+
+    if (lines->empty())
+    {
+        return;
+    }
+
+    if (lines->at(0).back() == '/')
+    {
+        return; // File already in the new format
+    }
+
+    if (!was_tracked)
+    {
+        was_tracked = true;
+        TrackProperty("listfile", "update to new format");
+    }
+
+    // The files are sorted such that directories are placed just before the files they contain
+    // (They are not necessarily sorted alphabetically, e.g. libflac)
+    // Therefore we can detect the entries that represent directories by comparing every element with the next one
+    // and checking if the next has a slash immediately after the current one's length
+    for (size_t i = 0; i < lines->size() - 1; i++)
+    {
+        std::string& current_string = lines->at(i);
+        const std::string& next_string = lines->at(i + 1);
+
+        const size_t potential_slash_char_index = current_string.length();
+        // Make sure the index exists first
+        if (next_string.size() > potential_slash_char_index && next_string.at(potential_slash_char_index) == '/')
+        {
+            current_string += '/'; // Mark as a directory
+        }
+    }
+
+    // After suffixing the directories with a slash, we can now sort.
+    // We cannot sort before adding the suffixes because the following (actual example):
+    /*
+        x86-windows/include/FLAC <<<<<< This would be separated from its group due to sorting
+        x86-windows/include/FLAC/all.h
+        x86-windows/include/FLAC/assert.h
+        x86-windows/include/FLAC/callback.h
+        x86-windows/include/FLAC++
+        x86-windows/include/FLAC++/all.h
+        x86-windows/include/FLAC++/decoder.h
+        x86-windows/include/FLAC++/encoder.h
+     *
+        x86-windows/include/FLAC/ <<<<<< This will now be kept with its group when sorting
+        x86-windows/include/FLAC/all.h
+        x86-windows/include/FLAC/assert.h
+        x86-windows/include/FLAC/callback.h
+        x86-windows/include/FLAC++/
+        x86-windows/include/FLAC++/all.h
+        x86-windows/include/FLAC++/decoder.h
+        x86-windows/include/FLAC++/encoder.h
+     */
+    // Note that after sorting, the FLAC++/ group will be placed before the FLAC/ group
+    // The new format is lexicographically sorted
+    std::sort(lines->begin(), lines->end());
+
+#if 0
+    // Replace the listfile on disk
+    const fs::path updated_listfile_path = listfile_path.generic_string() + "_updated";
+    Files::write_all_lines(updated_listfile_path, *lines);
+    fs::rename(updated_listfile_path, listfile_path);
+#endif
+}
+
 std::vector<StatusParagraph_and_associated_files> vcpkg::get_installed_files(const vcpkg_paths& paths, const StatusParagraphs& status_db)
 {
-    static const std::string MARK_FOR_REMOVAL = "";
-
     std::vector<StatusParagraph_and_associated_files> installed_files;
-
-    std::string line;
 
     for (const std::unique_ptr<StatusParagraph>& pgh : status_db)
     {
@@ -124,45 +191,21 @@ std::vector<StatusParagraph_and_associated_files> vcpkg::get_installed_files(con
             continue;
         }
 
-        std::fstream listfile(paths.listfile_path(pgh->package));
+        const fs::path listfile_path = paths.listfile_path(pgh->package);
+        std::vector<std::string> installed_files_of_current_pgh = Files::read_all_lines(listfile_path).get_or_throw();
+        Strings::trim_all_and_remove_whitespace_strings(&installed_files_of_current_pgh);
+        upgrade_to_slash_terminated_sorted_format(&installed_files_of_current_pgh, listfile_path);
 
-        std::vector<std::string> installed_files_of_current_pgh;
-        while (std::getline(listfile, line))
-        {
-            if (line.empty())
-            {
-                continue;
-            }
+        // Remove the directories
+        installed_files_of_current_pgh.erase(
+            std::remove_if(installed_files_of_current_pgh.begin(), installed_files_of_current_pgh.end(), [](const std::string& file) -> bool
+                           {
+                               return file.back() == '/';
+                           }
+            ), installed_files_of_current_pgh.end());
 
-            installed_files_of_current_pgh.push_back(line);
-        }
-
-        // Should already be sorted
-        std::sort(installed_files_of_current_pgh.begin(), installed_files_of_current_pgh.end());
-
-        // Since the files are sorted, we can detect the entries that represent directories
-        // by comparing every element with the next one and checking if the next has a slash immediately after the current one's length
-        for (int i = 1; i < installed_files_of_current_pgh.size(); i++)
-        {
-            std::string& current_string = installed_files_of_current_pgh.at(i - 1);
-            const std::string& next_string = installed_files_of_current_pgh.at(i);
-
-            const size_t potential_slash_char_index = current_string.length();
-            // Make sure the index exists first
-            if (next_string.size() > potential_slash_char_index && next_string.at(potential_slash_char_index) == '/')
-            {
-                current_string = MARK_FOR_REMOVAL;
-            }
-        }
-
-        installed_files_of_current_pgh.erase(std::remove_if(installed_files_of_current_pgh.begin(), installed_files_of_current_pgh.end(), [](const std::string& file)
-                                                            {
-                                                                return file == MARK_FOR_REMOVAL;
-                                                            }),
-                                             installed_files_of_current_pgh.end());
-
-        const StatusParagraph_and_associated_files pgh_and_files = {*pgh, std::move(installed_files_of_current_pgh)};
-        installed_files.push_back(pgh_and_files);
+        StatusParagraph_and_associated_files pgh_and_files = {*pgh, std::move(installed_files_of_current_pgh)};
+        installed_files.push_back(std::move(pgh_and_files));
     }
 
     return installed_files;
@@ -187,7 +230,7 @@ expected<BinaryParagraph> vcpkg::try_load_cached_package(const vcpkg_paths& path
 {
     const fs::path path = paths.package_dir(spec) / "CONTROL";
 
-    auto control_contents_maybe = Files::get_contents(path);
+    auto control_contents_maybe = Files::read_contents(path);
     if (auto control_contents = control_contents_maybe.get())
     {
         std::vector<std::unordered_map<std::string, std::string>> pghs;

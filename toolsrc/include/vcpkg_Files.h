@@ -10,9 +10,13 @@ namespace vcpkg {namespace Files
 
     void check_is_directory(const fs::path& dirpath);
 
-    bool has_invalid_chars_for_filesystem(const std::string s);
+    bool has_invalid_chars_for_filesystem(const std::string& s);
 
-    expected<std::string> get_contents(const fs::path& file_path) noexcept;
+    expected<std::string> read_contents(const fs::path& file_path) noexcept;
+
+    expected<std::vector<std::string>> read_all_lines(const fs::path& file_path);
+
+    void write_all_lines(const fs::path& file_path, const std::vector<std::string>& lines);
 
     fs::path find_file_recursively_up(const fs::path& starting_dir, const std::string& filename);
 

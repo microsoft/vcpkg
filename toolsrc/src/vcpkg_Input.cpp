@@ -5,7 +5,7 @@
 
 namespace vcpkg {namespace Input
 {
-    package_spec check_and_get_package_spec(const std::string& package_spec_as_string, const triplet& default_target_triplet, const char* example_text)
+    package_spec check_and_get_package_spec(const std::string& package_spec_as_string, const triplet& default_target_triplet, const std::string& example_text)
     {
         const std::string as_lowercase = Strings::ascii_to_lowercase(package_spec_as_string);
         expected<package_spec> expected_spec = package_spec::from_string(as_lowercase, default_target_triplet);
@@ -20,7 +20,7 @@ namespace vcpkg {namespace Input
         exit(EXIT_FAILURE);
     }
 
-    std::vector<package_spec> check_and_get_package_specs(const std::vector<std::string>& package_specs_as_strings, const triplet& default_target_triplet, const char* example_text)
+    std::vector<package_spec> check_and_get_package_specs(const std::vector<std::string>& package_specs_as_strings, const triplet& default_target_triplet, const std::string& example_text)
     {
         std::vector<package_spec> specs;
         for (const std::string& spec : package_specs_as_strings)

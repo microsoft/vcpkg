@@ -61,6 +61,9 @@ In a corporate scenario, we currently recommend building the libraries once and 
 ## What Visual C++ toolsets are supported?
 We plan to only support Visual Studio 2015 and above.
 
+## Why does Visual Studio not use my libraries with user-wide integration enabled?
+Enabling user-wide integration (`vcpkg integrate install`) changes the default for some project properties. In particular, "C/C++/General/Additional Include Directories" and "Linker/General/Additional Library Directories" are normally blank *without* user-wide integration. *With* integration, a blank value means that the augmented default supplied by vcpkg is overridden, and headers/libraries will not be found. To reinstate the default, set the properties to inherit from parent.
+
 ## Can I acquire my package's sources by Git url+tag?
 Yes, however we prefer compressed archives of the specific release/commit since the internal downloads and build trees are meant to be read only. Github provides archives for every commit, tag, and branch, so it's always possible to perform this substitution for repositories hosted there.
 

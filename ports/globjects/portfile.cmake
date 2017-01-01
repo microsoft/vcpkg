@@ -15,7 +15,7 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_configure_cmake(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/globjects-1.0.0)
+vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH})
 #vcpkg_build_cmake()
 vcpkg_install_cmake()
 
@@ -55,7 +55,7 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/AUTHORS
     )
 
 # Handle copyright
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/globjects-1.0.0/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/globjects)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/globjects)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/globjects/LICENSE ${CURRENT_PACKAGES_DIR}/share/globjects/copyright)
 
 vcpkg_copy_pdbs()

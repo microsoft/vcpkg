@@ -71,7 +71,7 @@ namespace vcpkg
             System::println("\nTo update these packages, run\n    vcpkg remove --purge <pkgs>...\n    vcpkg install <pkgs>...");
         }
 
-        auto version_file = Files::get_contents(paths.root / "toolsrc" / "VERSION.txt");
+        auto version_file = Files::read_contents(paths.root / "toolsrc" / "VERSION.txt");
         if (auto version_contents = version_file.get())
         {
             int maj1, min1, rev1;

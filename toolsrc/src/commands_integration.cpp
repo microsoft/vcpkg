@@ -173,7 +173,7 @@ namespace vcpkg
         bool should_install_system = true;
         if (fs::exists(system_wide_targets_file))
         {
-            auto system_wide_file_contents = Files::get_contents(system_wide_targets_file);
+            auto system_wide_file_contents = Files::read_contents(system_wide_targets_file);
             if (auto contents_data = system_wide_file_contents.get())
             {
                 std::regex re(R"###(<!-- version (\d+) -->)###");
@@ -297,7 +297,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
     {
         static const std::string example = Strings::format("Commands:\n"
                                                            "%s", INTEGRATE_COMMAND_HELPSTRING);
-        args.check_exact_arg_count(1, example.c_str());
+        args.check_exact_arg_count(1, example);
 
         if (args.command_arguments[0] == "install")
         {

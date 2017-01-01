@@ -78,7 +78,7 @@ namespace vcpkg
     void import_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
         static const std::string example = create_example_string(R"(import C:\path\to\CONTROLfile C:\path\to\includedir C:\path\to\projectdir)");
-        args.check_exact_arg_count(3, example.c_str());
+        args.check_exact_arg_count(3, example);
 
         const fs::path control_file_path(args.command_arguments[0]);
         const fs::path include_directory(args.command_arguments[1]);

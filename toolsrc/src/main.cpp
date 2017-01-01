@@ -113,7 +113,7 @@ static void loadConfig()
 
     try
     {
-        std::string config_contents = Files::get_contents(localappdata / "vcpkg" / "config").get_or_throw();
+        std::string config_contents = Files::read_contents(localappdata / "vcpkg" / "config").get_or_throw();
 
         std::unordered_map<std::string, std::string> keys;
         auto pghs = Paragraphs::parse_paragraphs(config_contents);
@@ -197,6 +197,7 @@ int wmain(const int argc, const wchar_t* const* const argv)
     const std::string trimmed_command_line = trim_path_from_command_line(Strings::utf16_to_utf8(GetCommandLineW()));
     TrackProperty("cmdline", trimmed_command_line);
     loadConfig();
+    TrackProperty("sqmuser", GetSQMUser());
 
     const vcpkg_cmd_arguments args = vcpkg_cmd_arguments::create_from_command_line(argc, argv);
 

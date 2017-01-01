@@ -507,7 +507,7 @@ namespace vcpkg { namespace PostBuildLint
 
     static lint_status check_outdated_crt_linkage_of_dlls(const std::vector<fs::path>& dlls)
     {
-        const std::vector<OutdatedDynamicCrt> outdated_crts = OutdatedDynamicCrt::values();
+        const std::vector<OutdatedDynamicCrt>& outdated_crts = OutdatedDynamicCrt::values();
 
         std::vector<OutdatedDynamicCrt_and_file> dlls_with_outdated_crt;
 

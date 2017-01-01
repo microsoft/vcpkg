@@ -9,7 +9,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 
 # Handle copyright
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/asio-asio-1-10-6/asio/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/asio)
+file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/asio)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/asio/COPYING ${CURRENT_PACKAGES_DIR}/share/asio/copyright)
 
 # Copy the asio header files

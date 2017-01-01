@@ -31,12 +31,15 @@ endif()
 message(STATUS "Bootstrapping done")
 
 set(B2_OPTIONS
+    -sZLIB_BINARY=zlib
+    -sZLIB_INCLUDE="${CURRENT_INSTALLED_DIR}\\include"
+    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+    -sNO_BZIP2=1
     -j$ENV{NUMBER_OF_PROCESSORS}
     --debug-configuration
     --hash
 
     --without-python
-    --layout=system
     toolset=msvc
     threading=multi
 )
@@ -56,11 +59,20 @@ endif()
 if(TRIPLET_SYSTEM_ARCH MATCHES "x64")
     list(APPEND B2_OPTIONS address-model=64)
 endif()
-if(TRIPLET_SYSTEM_NAME MATCHES "WindowsStore")
+if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
     list(APPEND B2_OPTIONS windows-api=store)
     set(ENV{BOOST_BUILD_PATH} ${CMAKE_CURRENT_LIST_DIR})
 endif()
 
+# Add build type specific options
+set(B2_OPTIONS_DBG
+	${B2_OPTIONS}
+    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
+)
+set(B2_OPTIONS_REL
+	${B2_OPTIONS}
+    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+)
 
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 
@@ -70,7 +82,7 @@ vcpkg_execute_required_process_repeat(
     COMMAND "${SOURCE_PATH}/b2.exe"
         --stagedir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/stage
         --build-dir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-        ${B2_OPTIONS}
+        ${B2_OPTIONS_REL}
         variant=release
         debug-symbols=on
     WORKING_DIRECTORY ${SOURCE_PATH}
@@ -83,7 +95,7 @@ vcpkg_execute_required_process_repeat(
     COMMAND "${SOURCE_PATH}/b2.exe"
         --stagedir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/stage
         --build-dir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-        ${B2_OPTIONS}
+        ${B2_OPTIONS_DBG}
         variant=debug
     WORKING_DIRECTORY ${SOURCE_PATH}
     LOGNAME build-${TARGET_TRIPLET}-dbg
@@ -101,16 +113,19 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         "\n#define BOOST_ALL_DYN_LINK\n"
     )
 endif()
-file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#define BOOST_AUTO_LINK_NOMANGLE\n")
 
 file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/boost RENAME copyright)
 message(STATUS "Packaging headers done")
 
-function(boost_remove_lib_prefix_from_lib_files LIBS)
+# This function makes the static build lib names match the dynamic build lib names which FindBoost.cmake is looking for by default.
+# It also renames a couple of "libboost" lib files in the dynamic build (for example libboost_exception-vc140-mt-1_62.lib).
+function(boost_rename_libs LIBS)
     foreach(LIB ${${LIBS}})
         get_filename_component(OLD_FILENAME ${LIB} NAME)
         get_filename_component(DIRECTORY_OF_LIB_FILE ${LIB} DIRECTORY)
         string(REPLACE "libboost_" "boost_" NEW_FILENAME ${OLD_FILENAME})
+        string(REPLACE "-s-" "-" NEW_FILENAME ${NEW_FILENAME}) # For Release libs
+        string(REPLACE "-sgd-" "-gd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
         if (EXISTS ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
             file(REMOVE ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME})
         else()
@@ -129,7 +144,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         FILES_MATCHING PATTERN "*.dll")
 endif()
 file(GLOB RELEASE_LIBS ${CURRENT_PACKAGES_DIR}/lib/libboost*.lib)
-boost_remove_lib_prefix_from_lib_files(RELEASE_LIBS)
+boost_rename_libs(RELEASE_LIBS)
 message(STATUS "Packaging ${TARGET_TRIPLET}-rel done")
 
 message(STATUS "Packaging ${TARGET_TRIPLET}-dbg")
@@ -142,7 +157,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         FILES_MATCHING PATTERN "*.dll")
 endif()
 file(GLOB DEBUG_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/libboost*.lib)
-boost_remove_lib_prefix_from_lib_files(DEBUG_LIBS)
+boost_rename_libs(DEBUG_LIBS)
 message(STATUS "Packaging ${TARGET_TRIPLET}-dbg done")
 
 vcpkg_copy_pdbs()

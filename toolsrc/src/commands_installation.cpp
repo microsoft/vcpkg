@@ -69,16 +69,16 @@ namespace vcpkg
 
     static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryParagraph& bpgh)
     {
-        std::fstream listfile(paths.listfile_path(bpgh), std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
+        std::vector<std::string> output;
 
-        auto package_prefix_path = paths.package_dir(bpgh.spec);
-        auto prefix_length = package_prefix_path.native().size();
+        const fs::path package_prefix_path = paths.package_dir(bpgh.spec);
+        const size_t prefix_length = package_prefix_path.native().size();
 
         const triplet& target_triplet = bpgh.spec.target_triplet();
         const std::string& target_triplet_as_string = target_triplet.canonical_name();
         std::error_code ec;
         fs::create_directory(paths.installed / target_triplet_as_string, ec);
-        listfile << target_triplet << "\n";
+        output.push_back(Strings::format(R"(%s)", target_triplet_as_string));
 
         for (auto it = fs::recursive_directory_iterator(package_prefix_path); it != fs::recursive_directory_iterator(); ++it)
         {
@@ -89,8 +89,8 @@ namespace vcpkg
                 continue;
             }
 
-            auto suffix = it->path().generic_u8string().substr(prefix_length + 1);
-            auto target = paths.installed / target_triplet_as_string / suffix;
+            const std::string suffix = it->path().generic_u8string().substr(prefix_length + 1);
+            const fs::path target = paths.installed / target_triplet_as_string / suffix;
 
             auto status = it->status(ec);
             if (ec)
@@ -98,6 +98,7 @@ namespace vcpkg
                 System::println(System::color::error, "failed: %s: %s", it->path().u8string(), ec.message());
                 continue;
             }
+
             if (fs::is_directory(status))
             {
                 fs::create_directory(target, ec);
@@ -106,26 +107,36 @@ namespace vcpkg
                     System::println(System::color::error, "failed: %s: %s", target.u8string(), ec.message());
                 }
 
-                listfile << target_triplet << "/" << suffix << "\n";
+                // Trailing backslash for directories
+                output.push_back(Strings::format(R"(%s/%s)", target_triplet_as_string, suffix));
+                continue;
             }
-            else if (fs::is_regular_file(status))
+
+            if (fs::is_regular_file(status))
             {
-                fs::copy_file(*it, target, ec);
+                if (fs::exists(target))
+                {
+                    System::println(System::color::warning, "File %s was already present and will be overwritten", target.u8string(), ec.message());
+                }
+                fs::copy_file(*it, target, fs::copy_options::overwrite_existing, ec);
                 if (ec)
                 {
                     System::println(System::color::error, "failed: %s: %s", target.u8string(), ec.message());
                 }
-                listfile << target_triplet << "/" << suffix << "\n";
+                output.push_back(Strings::format(R"(%s/%s)", target_triplet_as_string, suffix));
+                continue;
             }
-            else if (!fs::status_known(status))
+
+            if (!fs::status_known(status))
             {
                 System::println(System::color::error, "failed: %s: unknown status", it->path().u8string());
+                continue;
             }
-            else
-                System::println(System::color::error, "failed: %s: cannot handle file type", it->path().u8string());
+
+            System::println(System::color::error, "failed: %s: cannot handle file type", it->path().u8string());
         }
 
-        listfile.close();
+        Files::write_all_lines(paths.listfile_path(bpgh), output);
     }
 
     static void remove_first_n_chars(std::vector<std::string>* strings, const size_t n)
@@ -161,7 +172,9 @@ namespace vcpkg
         const size_t package_remove_char_count = package_dir.generic_string().size() + 1; // +1 for the slash
         std::transform(package_file_paths.cbegin(), package_file_paths.cend(), std::back_inserter(package_files), [package_remove_char_count](const fs::path& path)
                        {
-                           return path.generic_string().erase(0, package_remove_char_count);
+                           std::string as_string = path.generic_string();
+                           as_string.erase(0, package_remove_char_count);
+                           return std::move(as_string);
                        });
         std::sort(package_files.begin(), package_files.end());
 
@@ -216,10 +229,10 @@ namespace vcpkg
     void install_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
         static const std::string example = create_example_string("install zlib zlib:x64-windows curl boost");
-        args.check_min_arg_count(1, example.c_str());
+        args.check_min_arg_count(1, example);
         StatusParagraphs status_db = database_load_check(paths);
 
-        std::vector<package_spec> specs = Input::check_and_get_package_specs(args.command_arguments, default_target_triplet, example.c_str());
+        std::vector<package_spec> specs = Input::check_and_get_package_specs(args.command_arguments, default_target_triplet, example);
         Input::check_triplets(specs, paths);
         std::vector<package_spec_with_install_plan> install_plan = Dependencies::create_install_plan(paths, specs, status_db);
         Checks::check_exit(!install_plan.empty(), "Install plan cannot be empty");
@@ -276,11 +289,11 @@ namespace vcpkg
         // Installing multiple packages leads to unintuitive behavior if one of them depends on another.
         // Allowing only 1 package for now.
 
-        args.check_exact_arg_count(1, example.c_str());
+        args.check_exact_arg_count(1, example);
 
         StatusParagraphs status_db = database_load_check(paths);
 
-        const package_spec spec = Input::check_and_get_package_spec(args.command_arguments.at(0), default_target_triplet, example.c_str());
+        const package_spec spec = Input::check_and_get_package_spec(args.command_arguments.at(0), default_target_triplet, example);
         Input::check_triplet(spec.target_triplet(), paths);
 
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_CHECKS_ONLY});
@@ -332,7 +345,7 @@ namespace vcpkg
     void build_external_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
         static const std::string example = create_example_string(R"(build_external zlib2 C:\path\to\dir\with\controlfile\)");
-        args.check_exact_arg_count(2, example.c_str());
+        args.check_exact_arg_count(2, example);
 
         expected<package_spec> maybe_current_spec = package_spec::from_string(args.command_arguments[0], default_target_triplet);
         if (auto spec = maybe_current_spec.get())
@@ -349,7 +362,7 @@ namespace vcpkg
         }
 
         System::println(System::color::error, "Error: %s: %s", maybe_current_spec.error_code().message(), args.command_arguments[0]);
-        print_example(Strings::format("%s zlib:x64-windows", args.command).c_str());
+        print_example(Strings::format("%s zlib:x64-windows", args.command));
         exit(EXIT_FAILURE);
     }
 }

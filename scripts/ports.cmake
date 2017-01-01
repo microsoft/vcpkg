@@ -33,7 +33,6 @@ endif()
 
 if(CMD MATCHES "^BUILD$")
     string(REGEX REPLACE "([^-]*)-([^-]*)" "\\1" TRIPLET_SYSTEM_ARCH ${TARGET_TRIPLET})
-    string(REGEX REPLACE "([^-]*)-([^-]*)" "\\2" TRIPLET_SYSTEM_NAME ${TARGET_TRIPLET})
 
     set(CMAKE_TRIPLET_FILE ${VCPKG_ROOT_DIR}/triplets/${TARGET_TRIPLET}.cmake)
     if(NOT EXISTS ${CMAKE_TRIPLET_FILE})

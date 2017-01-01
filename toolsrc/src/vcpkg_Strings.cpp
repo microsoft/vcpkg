@@ -4,9 +4,17 @@
 #include <algorithm>
 #include <codecvt>
 #include <iterator>
+#include <functional>
+#include <cctype>
 
 namespace vcpkg {namespace Strings {namespace details
 {
+    // To disambiguate between two overloads
+    static const auto isspace = [](const char c)
+    {
+        return std::isspace(c);
+    };
+
     std::string format_internal(const char* fmtstr, ...)
     {
         va_list lst;
@@ -84,5 +92,31 @@ namespace vcpkg {namespace Strings
         }
 
         return output;
+    }
+
+    void trim(std::string* s)
+    {
+        s->erase(std::find_if_not(s->rbegin(), s->rend(), details::isspace).base(), s->end());
+        s->erase(s->begin(), std::find_if_not(s->begin(), s->end(), details::isspace));
+    }
+
+    std::string trimmed(const std::string& s)
+    {
+        auto whitespace_back = std::find_if_not(s.rbegin(), s.rend(), details::isspace).base();
+        auto whitespace_front = std::find_if_not(s.begin(), whitespace_back, details::isspace);
+        return std::string(whitespace_front, whitespace_back);
+    }
+
+    void trim_all_and_remove_whitespace_strings(std::vector<std::string>* strings)
+    {
+        for (std::string& s : *strings)
+        {
+            trim(&s);
+        }
+
+        strings->erase(std::remove_if(strings->begin(), strings->end(), [](const std::string& s)-> bool
+                                      {
+                                          return s == "";
+                                      }), strings->end());
     }
 }}

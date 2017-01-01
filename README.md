@@ -27,7 +27,7 @@ Finally, create a New Project (or open an existing one) in Visual Studio 2015 or
 ## Examples
 See the [`docs\EXAMPLES.md`](docs/EXAMPLES.md) document for specific walkthroughs, including using a package and adding a new package.
 
-See a 4 mm [demo in video](https://www.youtube.com/watch?v=y41WFKbQFTw).
+See a 4 minute [demo in video](https://www.youtube.com/watch?v=y41WFKbQFTw).
 
 ## Contributing
 Vcpkg is built with your contributions. Here are some ways you can contribute:

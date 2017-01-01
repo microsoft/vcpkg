@@ -1,7 +1,3 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/SDL2-2.0.5)
 vcpkg_download_distfile(ARCHIVE_FILE
@@ -11,7 +7,13 @@ vcpkg_download_distfile(ARCHIVE_FILE
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
-if(TRIPLET_SYSTEM_NAME MATCHES "WindowsStore")
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/dont-ignore-default-libs.patch
+)
+
+if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
     vcpkg_build_msbuild(
         PROJECT_PATH ${SOURCE_PATH}/VisualC-WinRT/UWP_VS2015/SDL-UWP.vcxproj
     )
@@ -32,16 +34,37 @@ if(TRIPLET_SYSTEM_NAME MATCHES "WindowsStore")
     file(COPY ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR}/include)
     file(RENAME ${CURRENT_PACKAGES_DIR}/include/include ${CURRENT_PACKAGES_DIR}/include/SDL2)
 else()
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        set(SDL_STATIC_LIB ON)
+        set(SDL_SHARED_LIB OFF)
+    else()
+        set(SDL_STATIC_LIB OFF)
+        set(SDL_SHARED_LIB ON)
+    endif()
+    if(VCPKG_CRT_LINKAGE STREQUAL static)
+        set(SDL_STATIC_CRT ON)
+    else()
+        set(SDL_STATIC_CRT OFF)
+    endif()
+    
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
-            -DSDL_STATIC=OFF
+            -DSDL_STATIC=${SDL_STATIC_LIB}
+            -DSDL_SHARED=${SDL_SHARED_LIB}
+            -DFORCE_STATIC_VCRT=${SDL_STATIC_CRT}
+            -DLIBC=ON
     )
 
     vcpkg_install_cmake()
 
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 endif()
+
+file(COPY ${CURRENT_PACKAGES_DIR}/lib/SDL2main.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/SDL2main.lib)
+file(COPY ${CURRENT_PACKAGES_DIR}/debug/lib/SDL2main.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/SDL2main.lib)
 
 file(INSTALL ${SOURCE_PATH}/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/sdl2 RENAME copyright)
 vcpkg_copy_pdbs()

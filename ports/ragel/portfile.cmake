@@ -36,5 +36,5 @@ vcpkg_install_cmake()
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/ragel.txt)
 
 # Handle copyright
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/ragel-6.9/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ragel)
+file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ragel)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/ragel/COPYING ${CURRENT_PACKAGES_DIR}/share/ragel/copyright)

@@ -8,8 +8,8 @@ namespace vcpkg
     extern const char*const INTEGRATE_COMMAND_HELPSTRING;
 
     void print_usage();
-    void print_example(const char* command_and_arguments);
-    std::string create_example_string(const char* command_and_arguments);
+    void print_example(const std::string& command_and_arguments);
+    std::string create_example_string(const std::string& command_and_arguments);
     void update_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths);
 
     void build_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet);

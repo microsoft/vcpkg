@@ -56,7 +56,7 @@ namespace vcpkg {namespace System
         std::cout << "\n";
     }
 
-    void print(color c, const char* message)
+    void print(const color c, const char* message)
     {
         HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -69,7 +69,7 @@ namespace vcpkg {namespace System
         SetConsoleTextAttribute(hConsole, original_color);
     }
 
-    void println(color c, const char* message)
+    void println(const color c, const char* message)
     {
         print(c, message);
         std::cout << "\n";

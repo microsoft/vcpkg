@@ -17,7 +17,8 @@ target_compile_definitions(sqlite3 PRIVATE
     -DSQLITE_ENABLE_UNLOCK_NOTIFY
     )
 target_include_directories(sqlite3 INTERFACE $<INSTALL_INTERFACE:include>)
-if(TRIPLET_SYSTEM_NAME MATCHES "WindowsStore")
+
+if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
     target_compile_definitions(sqlite3 PRIVATE -DSQLITE_OS_WINRT=1)
 endif()
 

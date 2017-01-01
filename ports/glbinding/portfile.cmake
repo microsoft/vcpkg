@@ -7,14 +7,14 @@
 #
 
 include(vcpkg_common_functions)
-
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glbinding-2.1.1)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/cginternals/glbinding/archive/v2.1.1.zip"
     FILENAME "glbinding-2.1.1.zip"
     SHA512 66b21853a4f4760b7b22cafd5211958769c513e83be999018fe79cf56a9271e0e28566caaa2286393f54ac2154d564a68d12159598d03c965adf6756f3753f11
 )
 vcpkg_extract_source_archive(${ARCHIVE})
-vcpkg_configure_cmake(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glbinding-2.1.1)
+vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH})
 #vcpkg_build_cmake()
 vcpkg_install_cmake()
 
@@ -54,7 +54,7 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/AUTHORS
     )
 
 # Handle copyright
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/glbinding-2.1.1/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/glbinding)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/glbinding)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/glbinding/LICENSE ${CURRENT_PACKAGES_DIR}/share/glbinding/copyright)
 
 vcpkg_copy_pdbs()
