@@ -26,9 +26,9 @@ vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     vcpkg_apply_patches(
-    SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/auto-define-import-macro.patch)
+        SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
+        PATCHES
+            ${CMAKE_CURRENT_LIST_DIR}/auto-define-import-macro.patch)
 endif()
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/bzip2)
