@@ -1,0 +1,13 @@
+diff --git a/bzlib.h b/bzlib.h
+index e3ba1d6..d3bed44 100644
+--- a/bzlib.h
++++ b/bzlib.h
+@@ -26,6 +26,8 @@
+ extern "C" {
+ #endif
+ 
++#define BZ_IMPORT
++
+ #define BZ_RUN               0
+ #define BZ_FLUSH             1
+ #define BZ_FINISH            2
