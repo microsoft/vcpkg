@@ -8,7 +8,7 @@ include(vcpkg_common_functions)
 find_program(GIT git)
 
 set(GIT_URL "https://github.com/tfussell/xlnt.git")
-set(GIT_REV "f33e8870123042b8420f87b82673c11014f6babd")
+set(GIT_REV "c43561b4bdfb66caa78e2acfb7d513c0810cd4b0")
 
 if(NOT EXISTS "${DOWNLOADS}/xlnt.git")
     message(STATUS "Cloning")
@@ -44,6 +44,6 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/LICENCE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/xlnt RENAME copyright)
+file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/xlnt RENAME copyright)
 
 vcpkg_copy_pdbs()
