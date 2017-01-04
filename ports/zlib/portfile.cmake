@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/zlib-1.2.10)
 vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "http://zlib.net/zlib1210.zip"
+    URLS "http://www.zlib.net/zlib-1.2.10.tar.gz"
     FILENAME "zlib1210.zip"
-    SHA512 e1f0ffaa1d6d9c322d6fd30dc8fba202272205943b719e5d6525323e6773b4fcdd82885928c3f59b4bf7ca55babda9f379e174632bf3b25dc9067adb89f58409
+    SHA512 5fa71052a418a0f2b345fce28af9941bbd1c6ee276ce506ab3092157f15776ee41f96bb1799657227513b852913f96ac52dae8122a437f34b43933ee48d63ee0
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
