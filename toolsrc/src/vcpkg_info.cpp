@@ -6,7 +6,7 @@
 
 #define VCPKG_VERSION_AS_STRING MACRO_TO_STRING(VCPKG_VERSION)"" // Double quotes needed at the end to prevent blank token
 
-namespace vcpkg { namespace Info
+namespace vcpkg::Info
 {
     const std::string& version()
     {
@@ -31,4 +31,4 @@ namespace vcpkg { namespace Info
         static const std::string s_email = R"(vcpkg@microsoft.com)";
         return s_email;
     }
-}}
+}
