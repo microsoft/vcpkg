@@ -1,0 +1,28 @@
+diff --git a/archive.h b/archive.h
+index ff401e9..602717e 100644
+--- a/archive.h
++++ b/archive.h
+@@ -106,6 +106,9 @@ typedef ssize_t la_ssize_t;
+  * .lib.  The default here assumes you're building a DLL.  Only
+  * libarchive source should ever define __LIBARCHIVE_BUILD.
+  */
++
++#define LIBARCHIVE_STATIC
++
+ #if ((defined __WIN32__) || (defined _WIN32) || defined(__CYGWIN__)) && (!defined LIBARCHIVE_STATIC)
+ # ifdef __LIBARCHIVE_BUILD
+ #  ifdef __GNUC__
+diff --git a/archive_entry.h b/archive_entry.h
+index 71b1e87..44246b9 100644
+--- a/archive_entry.h
++++ b/archive_entry.h
+@@ -85,6 +85,9 @@ typedef int64_t la_int64_t;
+  * .lib.  The default here assumes you're building a DLL.  Only
+  * libarchive source should ever define __LIBARCHIVE_BUILD.
+  */
++
++#define LIBARCHIVE_STATIC
++
+ #if ((defined __WIN32__) || (defined _WIN32) || defined(__CYGWIN__)) && (!defined LIBARCHIVE_STATIC)
+ # ifdef __LIBARCHIVE_BUILD
+ #  ifdef __GNUC__
