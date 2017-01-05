@@ -9,9 +9,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES 
-		"${CMAKE_CURRENT_LIST_DIR}/use-abort-on-all-platforms.patch"
-		"${CMAKE_CURRENT_LIST_DIR}/set_zlib_root.patch"
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/use-abort-on-all-platforms.patch"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -21,7 +19,6 @@ else()
     set(PNG_STATIC_LIBS ON)
     set(PNG_SHARED_LIBS OFF)
 endif()
-#message(STATUS ${CURRENT_INSTALL_DIR})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -32,7 +29,6 @@ vcpkg_configure_cmake(
         -DSKIP_INSTALL_PROGRAMS=ON
         -DSKIP_INSTALL_EXECUTABLES=ON
         -DSKIP_INSTALL_FILES=ON
-		-DINSTALLED_DIR:PATH=${CURRENT_INSTALLED_DIR}
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
 )
