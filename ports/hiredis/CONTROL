@@ -1,0 +1,3 @@
+Source: hiredis
+Version: 0.13.1
+Description: Hiredis is a minimalistic C client library for the Redis database.
