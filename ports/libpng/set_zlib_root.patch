@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 186b65a..e485fd9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -40,6 +40,7 @@ set(PNGLIB_NAME libpng${PNGLIB_MAJOR}${PNGLIB_MINOR})
+ set(PNGLIB_VERSION ${PNGLIB_MAJOR}.${PNGLIB_MINOR}.${PNGLIB_RELEASE})
+ 
+ # needed packages
++set(ZLIB_ROOT ${INSTALLED_DIR})
+ find_package(ZLIB REQUIRED)
+ include_directories(${ZLIB_INCLUDE_DIR})
+ 
