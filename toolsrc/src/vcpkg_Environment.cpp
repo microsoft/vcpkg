@@ -5,7 +5,7 @@
 #include "metrics.h"
 #include "vcpkg_System.h"
 
-namespace vcpkg {namespace Environment
+namespace vcpkg::Environment
 {
     static const fs::path default_cmake_installation_dir = "C:/Program Files/CMake/bin";
     static const fs::path default_cmake_installation_dir_x86 = "C:/Program Files (x86)/CMake/bin";
@@ -83,4 +83,4 @@ namespace vcpkg {namespace Environment
         // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
         ensure_on_path(nuget_version, L"nuget 2>&1", L"powershell -ExecutionPolicy Bypass scripts\\fetchDependency.ps1 -Dependency nuget");
     }
-}}
+}

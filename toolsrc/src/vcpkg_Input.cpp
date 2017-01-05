@@ -3,7 +3,7 @@
 #include "metrics.h"
 #include "vcpkg_Commands.h"
 
-namespace vcpkg {namespace Input
+namespace vcpkg::Input
 {
     package_spec check_and_get_package_spec(const std::string& package_spec_as_string, const triplet& default_target_triplet, const std::string& example_text)
     {
@@ -49,4 +49,4 @@ namespace vcpkg {namespace Input
             check_triplet(spec.target_triplet(), paths);
         }
     }
-}}
+}

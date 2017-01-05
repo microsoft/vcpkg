@@ -4,7 +4,7 @@
 #include "StatusParagraphs.h"
 #include "vcpkg_paths.h"
 
-namespace vcpkg {namespace Dependencies
+namespace vcpkg::Dependencies
 {
     enum class install_plan_type
     {
@@ -27,4 +27,4 @@ namespace vcpkg {namespace Dependencies
     };
 
     std::vector<package_spec_with_install_plan> create_install_plan(const vcpkg_paths& paths, const std::vector<package_spec>& specs, const StatusParagraphs& status_db);
-}}
+}
