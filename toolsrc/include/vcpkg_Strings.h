@@ -2,7 +2,7 @@
 
 #include <vector>
 
-namespace vcpkg {namespace Strings {namespace details
+namespace vcpkg::Strings::details
 {
     inline const char* to_printf_arg(const std::string& s)
     {
@@ -42,9 +42,9 @@ namespace vcpkg {namespace Strings {namespace details
     }
 
     std::wstring wformat_internal(const wchar_t* fmtstr, ...);
-}}}
+}
 
-namespace vcpkg {namespace Strings
+namespace vcpkg::Strings
 {
     template <class...Args>
     std::string format(const char* fmtstr, const Args&...args)
@@ -75,4 +75,4 @@ namespace vcpkg {namespace Strings
     std::string trimmed(const std::string& s);
 
     void trim_all_and_remove_whitespace_strings(std::vector<std::string>* strings);
-}}
+}

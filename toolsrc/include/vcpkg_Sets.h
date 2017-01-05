@@ -3,7 +3,7 @@
 #include "vcpkg_Checks.h"
 #include <unordered_set>
 
-namespace vcpkg { namespace Sets
+namespace vcpkg::Sets
 {
     template <typename T, typename Container>
     void remove_all(std::unordered_set<T>* input_set, Container remove_these)
@@ -14,4 +14,4 @@ namespace vcpkg { namespace Sets
             input_set->erase(r);
         }
     }
-}}
+}
