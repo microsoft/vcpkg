@@ -42,7 +42,7 @@ namespace vcpkg::Input
         }
     }
 
-    void check_triplets(std::vector<package_spec> triplets, const vcpkg_paths& paths)
+    void check_triplets(const std::vector<package_spec>& triplets, const vcpkg_paths& paths)
     {
         for (const package_spec& spec : triplets)
         {
