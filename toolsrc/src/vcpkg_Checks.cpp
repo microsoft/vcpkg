@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include "vcpkg_System.h"
 
-namespace vcpkg {namespace Checks
+namespace vcpkg::Checks
 {
     void unreachable()
     {
@@ -41,4 +41,4 @@ namespace vcpkg {namespace Checks
             exit_with_message(errorMessage);
         }
     }
-}}
+}

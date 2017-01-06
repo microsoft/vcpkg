@@ -2,7 +2,7 @@
 #include "vcpkg_Checks.h"
 #include "vcpkglib_helpers.h"
 
-namespace vcpkg { namespace PostBuildLint
+namespace vcpkg::PostBuildLint
 {
     const ConfigurationType& BuildType::config() const
     {
@@ -161,4 +161,4 @@ namespace vcpkg { namespace PostBuildLint
     {
         return this->m_dll_name;
     }
-}}
+}

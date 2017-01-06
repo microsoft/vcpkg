@@ -1,7 +1,7 @@
 #pragma once
 #include "vcpkg_paths.h"
 
-namespace vcpkg {namespace Environment
+namespace vcpkg::Environment
 {
     void ensure_nuget_on_path(const vcpkg_paths& paths);
 
@@ -14,4 +14,4 @@ namespace vcpkg {namespace Environment
         ensure_cmake_on_path(paths);
         ensure_git_on_path(paths);
     }
-}}
+}

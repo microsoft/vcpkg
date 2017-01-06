@@ -237,13 +237,13 @@ true
 
     std::wstring GetSQMUser()
     {
-        LONG err = NULL;
+        LONG err;
 
         struct RAII_HKEY {
-            HKEY hkey = NULL;
+            HKEY hkey = nullptr;
             ~RAII_HKEY()
             {
-                if (hkey != NULL)
+                if (hkey != nullptr)
                     RegCloseKey(hkey);
             }
         } HKCU_SQMClient;
@@ -257,7 +257,7 @@ true
         std::array<wchar_t,128> buffer;
         DWORD lType = 0;
         DWORD dwBufferSize = static_cast<DWORD>(buffer.size() * sizeof(wchar_t));
-        err = RegQueryValueExW(HKCU_SQMClient.hkey, L"UserId", NULL, &lType, reinterpret_cast<LPBYTE>(buffer.data()), &dwBufferSize);
+        err = RegQueryValueExW(HKCU_SQMClient.hkey, L"UserId", nullptr, &lType, reinterpret_cast<LPBYTE>(buffer.data()), &dwBufferSize);
         if (err == ERROR_SUCCESS && lType == REG_SZ && dwBufferSize >= sizeof(wchar_t))
         {
             size_t sz = dwBufferSize / sizeof(wchar_t);

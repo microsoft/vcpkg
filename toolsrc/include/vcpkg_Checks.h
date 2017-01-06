@@ -2,7 +2,7 @@
 
 #include "vcpkg_Strings.h"
 
-namespace vcpkg {namespace Checks
+namespace vcpkg::Checks
 {
     __declspec(noreturn) void unreachable();
 
@@ -46,4 +46,4 @@ namespace vcpkg {namespace Checks
             exit_with_message(Strings::format(errorMessageTemplate, errorMessageArgs...).c_str());
         }
     }
-}}
+}

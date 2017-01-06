@@ -7,7 +7,7 @@
 #include <functional>
 #include <cctype>
 
-namespace vcpkg {namespace Strings {namespace details
+namespace vcpkg::Strings::details
 {
     // To disambiguate between two overloads
     static const auto isspace = [](const char c)
@@ -40,9 +40,9 @@ namespace vcpkg {namespace Strings {namespace details
 
         return output;
     }
-}}}
+}
 
-namespace vcpkg {namespace Strings
+namespace vcpkg::Strings
 {
     std::wstring utf8_to_utf16(const std::string& s)
     {
@@ -119,4 +119,4 @@ namespace vcpkg {namespace Strings
                                           return s == "";
                                       }), strings->end());
     }
-}}
+}

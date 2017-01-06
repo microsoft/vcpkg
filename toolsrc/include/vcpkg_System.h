@@ -3,7 +3,7 @@
 #include "vcpkg_Strings.h"
 #include "filesystem_fs.h"
 
-namespace vcpkg {namespace System
+namespace vcpkg::System
 {
     fs::path get_exe_path_of_current_process();
 
@@ -93,4 +93,4 @@ namespace vcpkg {namespace System
     };
 
     std::wstring wdupenv_str(const wchar_t* varname) noexcept;
-}}
+}

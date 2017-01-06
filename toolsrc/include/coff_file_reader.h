@@ -3,7 +3,7 @@
 #include "MachineType.h"
 #include "filesystem_fs.h"
 
-namespace vcpkg {namespace COFFFileReader
+namespace vcpkg::COFFFileReader
 {
     struct dll_info
     {
@@ -18,4 +18,4 @@ namespace vcpkg {namespace COFFFileReader
     dll_info read_dll(const fs::path& path);
 
     lib_info read_lib(const fs::path& path);
-}}
+}
