@@ -17,6 +17,10 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DCONFIG_INSTALL_PATH=share/freetype
+        -DWITH_ZLIB=ON
+        -DWITH_BZip2=ON
+        -DWITH_PNG=ON
+        -DWITH_HarfBuzz=OFF
 )
 
 vcpkg_install_cmake()
