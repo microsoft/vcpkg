@@ -32,13 +32,13 @@ if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL static)
     vcpkg_apply_patches(
         SOURCE_PATH ${SOURCE_PATH}
         PATCHES "${CMAKE_CURRENT_LIST_DIR}/set-static-qmakespec.patch"
-	QUIET
+        QUIET
     )
 else()
     vcpkg_apply_patches(
         SOURCE_PATH ${SOURCE_PATH}
         PATCHES "${CMAKE_CURRENT_LIST_DIR}/set-shared-qmakespec.patch"
-	QUIET
+        QUIET
     )
 endif()
 
