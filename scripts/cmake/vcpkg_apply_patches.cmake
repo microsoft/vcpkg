@@ -11,11 +11,11 @@
 #  ``SOURCE_PATH``
 #    The source path in which apply the patches.
 #  ``PATCHES``
-#    A list of patches that are applied to the source tree  
-#  ``QUIET`` 
-#    If this option is passed, the warning message when applyng 
-#    a patch failes is not printed. This is convenient for patches
-#    that are known to fail even on a clean source tree, and for 
+#    A list of patches that are applied to the source tree
+#  ``QUIET``
+#    If this option is passed, the warning message when applyng
+#    a patch fails is not printed. This is convenient for patches
+#    that are known to fail even on a clean source tree, and for
 #    which the standard warning message would be confusing for the user.
 #
 
