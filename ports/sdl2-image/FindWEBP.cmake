@@ -7,6 +7,7 @@
 #
 # Copyright (C) 2012 Raphael Kubo da Costa <rakuco@webkit.org>
 # Copyright (C) 2013 Igalia S.L.
+# Copyright (C) 2017 Patrick Bader
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -39,12 +40,16 @@ find_path(WEBP_INCLUDE_DIRS
 )
 mark_as_advanced(WEBP_INCLUDE_DIRS)
 
+if(CMAKE_BUILD_TYPE MATCHES DEBUG)
+    message("debug mode")
+endif(CMAKE_BUILD_TYPE MATCHES DEBUG)
+
 # Look for the library.
-find_library(
-    WEBP_LIBRARIES
-    NAMES webp
-    HINTS ${PC_WEBP_LIBDIR} ${PC_WEBP_LIBRARY_DIRS}
-)
+find_library(WEBP_LIBRARY_RELEASE NAMES webp HINTS ${PC_WEBP_LIBDIR} ${PC_WEBP_LIBRARY_DIRS})
+find_library(WEBP_LIBRARY_DEBUG NAMES webpd HINTS ${PC_WEBP_LIBDIR} ${PC_WEBP_LIBRARY_DIRS})
+
+select_library_configurations(WEBP)
+
 mark_as_advanced(WEBP_LIBRARIES)
 
 include(FindPackageHandleStandardArgs)
