@@ -8,10 +8,17 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/bson.patch
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DBSON_ROOT_DIR=${CURRENT_INSTALLED_DIR}
+		-DBSON_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
         -DENABLE_TESTS=OFF
         -DENABLE_EXAMPLES=OFF
         -DCMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP=ON
