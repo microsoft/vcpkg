@@ -88,7 +88,7 @@ install(TARGETS SDL2_image
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib)
 
-install(FILES SDL_image.h DESTINATION include/SDL2_image CONFIGURATIONS Release)
+install(FILES SDL_image.h DESTINATION include/SDL2 CONFIGURATIONS Release)
 
 
 message(STATUS "Link-time dependencies:")
