@@ -5,10 +5,6 @@
 #   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
 #   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
 #
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported. Building static.") # pixman does not export any symbols.
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
 
 include(vcpkg_common_functions)
 
@@ -27,6 +23,7 @@ file(RENAME ${SOURCE_PATH}/pixman/CMakeLists_pixman.txt ${SOURCE_PATH}/pixman/CM
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
 )
 
 vcpkg_install_cmake()
