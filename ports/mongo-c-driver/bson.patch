@@ -1,0 +1,24 @@
+diff --git a/build/cmake/FindBSON.cmake b/build/cmake/FindBSON.cmake
+index 4ac39ea..d11aa1f 100644
+--- a/build/cmake/FindBSON.cmake
++++ b/build/cmake/FindBSON.cmake
+@@ -12,6 +12,7 @@ endif ()
+ find_path(BSON_INCLUDE_DIR
+   NAMES
+     libbson-1.0/bson.h
++	bson.h
+   HINTS
+     ${BSON_ROOT_DIR}
+     ${_BSON_INCLUDEDIR}
+@@ -19,7 +20,10 @@ find_path(BSON_INCLUDE_DIR
+     include
+ )
+ 
+-set(BSON_INCLUDE_DIR "${BSON_INCLUDE_DIR}/libbson-1.0")
++set(BSON_INCLUDE_DIR "${BSON_INCLUDE_DIR}")
++if (NOT EXISTS ${BSON_INCLUDE_DIR}/bson.h)
++	set(BSON_INCLUDE_DIR "${BSON_INCLUDE_DIR}/libbson-1.0")
++endif()
+ 
+ if(WIN32 AND NOT CYGWIN)
+   if(MSVC)
