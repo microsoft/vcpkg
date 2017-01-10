@@ -10,10 +10,10 @@ include_directories(.)
 
 set(SICGPP_SOURCES
     sigc++/connection.cc
-	sigc++/signal_base.cc
-	sigc++/trackable.cc
-	sigc++/adaptors/lambda/lambda.cc
-	sigc++/functors/slot_base.cc)
+    sigc++/signal_base.cc
+    sigc++/trackable.cc
+    sigc++/adaptors/lambda/lambda.cc
+    sigc++/functors/slot_base.cc)
 
 add_library(sigc ${SICGPP_SOURCES})
 set_target_properties(sigc PROPERTIES OUTPUT_NAME sigc-${SIGCPP_API_VERSION})
