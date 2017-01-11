@@ -3,7 +3,7 @@
 #include <Windows.h>
 #include <regex>
 
-namespace vcpkg {namespace System
+namespace vcpkg::System
 {
     fs::path get_exe_path_of_current_process()
     {
@@ -104,6 +104,6 @@ namespace vcpkg {namespace System
     double Stopwatch2::microseconds() const
     {
         return (reinterpret_cast<const LARGE_INTEGER*>(&end_time)->QuadPart -
-            reinterpret_cast<const LARGE_INTEGER*>(&start_time)->QuadPart) * 1000000.0 / reinterpret_cast<const LARGE_INTEGER*>(&freq)->QuadPart;
+                reinterpret_cast<const LARGE_INTEGER*>(&start_time)->QuadPart) * 1000000.0 / reinterpret_cast<const LARGE_INTEGER*>(&freq)->QuadPart;
     }
-}}
+}

@@ -7,7 +7,7 @@
 #include "BuildInfo.h"
 #include <regex>
 
-namespace vcpkg { namespace PostBuildLint
+namespace vcpkg::PostBuildLint
 {
     enum class lint_status
     {
@@ -668,4 +668,4 @@ namespace vcpkg { namespace PostBuildLint
 
         System::println("-- Performing post-build validation done");
     }
-}}
+}

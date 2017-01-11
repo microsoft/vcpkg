@@ -164,9 +164,8 @@ namespace vcpkg
         return output;
     }
 
-    void install_package(const vcpkg_paths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs& status_db)
+    static ImmutableSortedVector<std::string> build_list_of_package_files(const fs::path& package_dir)
     {
-        const fs::path package_dir = paths.package_dir(binary_paragraph.spec);
         const std::vector<fs::path> package_file_paths = Files::recursive_find_all_files_in_dir(package_dir);
         std::vector<std::string> package_files;
         const size_t package_remove_char_count = package_dir.generic_string().size() + 1; // +1 for the slash
@@ -176,14 +175,27 @@ namespace vcpkg
                            as_string.erase(0, package_remove_char_count);
                            return std::move(as_string);
                        });
-        std::sort(package_files.begin(), package_files.end());
 
-        const std::vector<StatusParagraph_and_associated_files>& pgh_and_files = get_installed_files(paths, status_db);
-        const triplet& triplet = binary_paragraph.spec.target_triplet();
+        return ImmutableSortedVector<std::string>::create(std::move(package_files));
+    }
+
+    static ImmutableSortedVector<std::string> build_list_of_installed_files(const std::vector<StatusParagraph_and_associated_files>& pgh_and_files, const triplet& triplet)
+    {
         std::vector<std::string> installed_files = extract_files_in_triplet(pgh_and_files, triplet);
         const size_t installed_remove_char_count = triplet.canonical_name().size() + 1; // +1 for the slash
         remove_first_n_chars(&installed_files, installed_remove_char_count);
-        std::sort(installed_files.begin(), installed_files.end()); // Should already be sorted
+
+        return ImmutableSortedVector<std::string>::create(std::move(installed_files));
+    }
+
+    void install_package(const vcpkg_paths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs& status_db)
+    {
+        const fs::path package_dir = paths.package_dir(binary_paragraph.spec);
+        const triplet& triplet = binary_paragraph.spec.target_triplet();
+        const std::vector<StatusParagraph_and_associated_files> pgh_and_files = get_installed_files(paths, status_db);
+
+        const ImmutableSortedVector<std::string> package_files = build_list_of_package_files(package_dir);
+        const ImmutableSortedVector<std::string> installed_files = build_list_of_installed_files(pgh_and_files, triplet);
 
         std::vector<std::string> intersection;
         std::set_intersection(package_files.cbegin(), package_files.cend(),

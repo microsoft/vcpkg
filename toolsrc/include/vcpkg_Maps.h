@@ -4,7 +4,7 @@
 #include <unordered_set>
 #include <map>
 
-namespace vcpkg { namespace Maps
+namespace vcpkg::Maps
 {
     template <typename K, typename V>
     std::unordered_set<K> extract_key_set(const std::unordered_map<K, V>& input_map)
@@ -38,4 +38,4 @@ namespace vcpkg { namespace Maps
         }
         return key_set;
     }
-}}
+}

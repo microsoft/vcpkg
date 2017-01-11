@@ -3,7 +3,7 @@
 #include "metrics.h"
 #include "vcpkg_Commands.h"
 
-namespace vcpkg {namespace Input
+namespace vcpkg::Input
 {
     package_spec check_and_get_package_spec(const std::string& package_spec_as_string, const triplet& default_target_triplet, const std::string& example_text)
     {
@@ -42,11 +42,11 @@ namespace vcpkg {namespace Input
         }
     }
 
-    void check_triplets(std::vector<package_spec> triplets, const vcpkg_paths& paths)
+    void check_triplets(const std::vector<package_spec>& triplets, const vcpkg_paths& paths)
     {
         for (const package_spec& spec : triplets)
         {
             check_triplet(spec.target_triplet(), paths);
         }
     }
-}}
+}

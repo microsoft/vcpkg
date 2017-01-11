@@ -1,3 +1,43 @@
+vcpkg (0.0.66)
+--------------
+  * Add ports:
+    - antlr4               4.6
+    - bzip2                1.0.6
+    - dx                   1.0.0
+    - gli                  0.8.2
+    - libarchive           3.2.2
+    - libffi               3.1
+    - liblzma              5.2.2
+    - libmodplug           0.8.8.5-bb25b05
+    - libsigcpp            2.10
+    - lmdb                 0.9.18-1
+    - lz4                  1.7.4.2
+    - ogre                 1.9.0
+    - qwt                  6.1.3
+    - smpeg2               2.0.0
+    - spirv-tools          1.1-f72189c249ba143c6a89a4cf1e7d53337b2ddd40
+  * Update ports:
+    - aws-sdk-cpp          1.0.34-1         -> 1.0.47
+    - azure-storage-cpp    2.5.0            -> 2.6.0
+    - boost                1.62-8           -> 1.62-9
+    - chakracore           1.3.1            -> 1.4.0
+    - freetype             2.6.3-2          -> 2.6.3-3
+    - icu                  58.1             -> 58.2-1
+    - libbson              1.5.0-rc6        -> 1.5.1
+    - libvorbis                             -> 1.3.5-143caf4023a90c09a5eb685fdd46fb9b9c36b1ee
+    - lua                  5.3.3-1          -> 5.3.3-2
+    - mongo-c-driver       1.5.0-rc6        -> 1.5.1
+    - pixman               0.34.0           -> 0.34.0-1
+    - qt5                  5.7-1            -> 5.7.1-2
+    - sdl2                 2.0.5            -> 2.0.5-2
+    - zlib                 1.2.8            -> 1.2.10
+  * Improvements in pre-install checks:
+    - Refactor file-exists-check. Improved clarity and performance.
+  * Fixes and improvements in existing portfiles and the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  TUE, 10 Jan 2017 17:15:00 -0800
+
+
 vcpkg (0.0.65)
 --------------
   * Add ports:

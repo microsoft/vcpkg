@@ -31,6 +31,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 
 endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+#file(REMOVE ${CURRENT_PACKAGES_DIR}/include/fmt/format.cc)
+#file(REMOVE ${CURRENT_PACKAGES_DIR}/include/fmt/ostream.cc)
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/fmt/fmt-targets-debug.cmake ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-debug.cmake)
 file(READ ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-debug.cmake FMT_DEBUG_MODULE)
 string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" FMT_DEBUG_MODULE "${FMT_DEBUG_MODULE}")

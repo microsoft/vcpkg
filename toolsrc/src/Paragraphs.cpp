@@ -1,7 +1,7 @@
 #include "Paragraphs.h"
 #include "vcpkg_Files.h"
 
-namespace vcpkg { namespace Paragraphs
+namespace vcpkg::Paragraphs
 {
     struct Parser
     {
@@ -160,4 +160,4 @@ namespace vcpkg { namespace Paragraphs
     {
         return Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
     }
-}}
+}

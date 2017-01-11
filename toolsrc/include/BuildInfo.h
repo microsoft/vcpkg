@@ -4,7 +4,7 @@
 #include "Paragraphs.h"
 #include <regex>
 
-namespace vcpkg { namespace PostBuildLint
+namespace vcpkg::PostBuildLint
 {
     enum class LinkageType
     {
@@ -126,4 +126,4 @@ namespace vcpkg { namespace PostBuildLint
     };
 
     BuildInfo read_build_info(const fs::path& filepath);
-}}
+}

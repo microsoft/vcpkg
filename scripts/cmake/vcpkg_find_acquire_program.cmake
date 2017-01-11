@@ -46,8 +46,7 @@ function(vcpkg_find_acquire_program VAR)
         endif()
     endif()
     if(PYTHON2 MATCHES "NOTFOUND")
-        message(FATAL_ERROR "libuv uses the GYP build system, which requires Python 2.7.\n"
-        "Python 2.7 was not found in the path or by searching inside C:\\Python27.\n"
+        message(FATAL_ERROR "Python 2.7 was not found in the path or by searching inside C:\\Python27.\n"
         "There is no portable redistributable for Python 2.7, so you will need to install the MSI located at:\n"
         "    https://www.python.org/ftp/python/2.7.11/python-2.7.11.amd64.msi\n"
         )

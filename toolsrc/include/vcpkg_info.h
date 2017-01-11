@@ -2,9 +2,9 @@
 
 #include <string>
 
-namespace vcpkg { namespace Info
+namespace vcpkg::Info
 {
     const std::string& version();
 
     const std::string& email();
-}}
+}

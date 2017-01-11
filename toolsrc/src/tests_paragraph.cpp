@@ -7,14 +7,14 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace Microsoft { namespace VisualStudio { namespace CppUnitTestFramework
+namespace Microsoft::VisualStudio::CppUnitTestFramework
 {
     template <>
     inline std::wstring ToString<vcpkg::package_spec_parse_result>(const vcpkg::package_spec_parse_result& t)
     {
         return ToString(static_cast<uint32_t>(t));
     }
-}}}
+}
 
 namespace UnitTest1
 {

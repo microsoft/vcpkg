@@ -3,7 +3,7 @@
 #include <regex>
 #include "vcpkg_System.h"
 
-namespace vcpkg {namespace Files
+namespace vcpkg::Files
 {
     static const std::regex FILESYSTEM_INVALID_CHARACTERS_REGEX = std::regex(R"([\/:*?"<>|])");
 
@@ -140,4 +140,4 @@ namespace vcpkg {namespace Files
         }
         System::println("");
     }
-}}
+}

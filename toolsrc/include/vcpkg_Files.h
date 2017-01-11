@@ -4,7 +4,7 @@
 #include "filesystem_fs.h"
 #include <iterator>
 
-namespace vcpkg {namespace Files
+namespace vcpkg::Files
 {
     static const char* FILESYSTEM_INVALID_CHARACTERS = R"(\/:*?"<>|)";
 
@@ -53,4 +53,4 @@ namespace vcpkg {namespace Files
     std::vector<fs::path> non_recursive_find_all_files_in_dir(const fs::path& dir);
 
     void print_paths(const std::vector<fs::path>& paths);
-}}
+}

@@ -4,11 +4,11 @@
 endif()
 include(vcpkg_common_functions)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ChakraCore-1.3.1)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ChakraCore-1.4.0)
 vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "https://github.com/Microsoft/ChakraCore/archive/v1.3.1.tar.gz"
-    FILENAME "ChakraCore-1.3.1.tar.gz"
-    SHA512 52216a03333e44bce235917cfae5ccd6a756056678d9b81c63ec272d9ce5c6afabc673e7910dd3da54fda7927ea62ede980a4371dbb08f6ce4907121c27dbc53
+    URLS "https://github.com/Microsoft/ChakraCore/archive/v1.4.0.tar.gz"
+    FILENAME "ChakraCore-1.4.0.tar.gz"
+    SHA512 d515d56ff1c5776ca4663e27daa4d1c7ca58c57f097799de756980771b5701e35639eefa4db5921d7327e6607b8920df3b30677eb467123e04536df0d971cebc
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 

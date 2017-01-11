@@ -1,0 +1,146 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a376fce..2d035a1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -166,7 +166,7 @@ IF (MSVC)
+   #                       result of an assignment.
+   SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /we4706")
+   # /WX option is the same as gcc's -Werror option.
+-  SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /WX")
++  #SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /WX") <- breaks x64-debug
+   # /Oi option enables built-in functions.
+   SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /Oi")
+   #################################################################
+@@ -177,6 +177,7 @@ ENDIF (MSVC)
+ # Enable CTest/CDash support
+ include(CTest)
+ 
++OPTION(ENABLE_LZO2 "Enable use of LZO2 library" ON)
+ OPTION(ENABLE_NETTLE "Enable use of Nettle" ON)
+ OPTION(ENABLE_OPENSSL "Enable use of OpenSSL" ON)
+ OPTION(ENABLE_LZMA "Enable the use of the system found LZMA library if found" ON)
+@@ -357,7 +358,7 @@ IF(DEFINED __GNUWIN32PATH AND EXISTS "${__GNUWIN32PATH}")
+   # The zlib and the bzip2 Setup program have installed programs and DLLs into
+   # "C:/Program Files/GnuWin32" by default.
+   # This is convenience setting for Windows.
+-  SET(CMAKE_PREFIX_PATH ${__GNUWIN32PATH} $(CMAKE_PREFIX_PATH))
++  #SET(CMAKE_PREFIX_PATH ${__GNUWIN32PATH} $(CMAKE_PREFIX_PATH))
+   #
+   # If you didn't use Setup program or installed into nonstandard path,
+   # cmake cannot find out your zlib or bzip2 libraries and include files,
+@@ -397,11 +398,12 @@ IF(ZLIB_FOUND)
+     #
+     # Test if ZLIB_WINAPI macro is needed to use.
+     #
+-    TRY_MACRO_FOR_LIBRARY(
+-      "${ZLIB_INCLUDE_DIR}" "${ZLIB_LIBRARIES}"
+-      RUNS
+-      "#include <zlib.h>\nint main() {uLong f = zlibCompileFlags(); return (f&(1U<<10))?0:-1; }"
+-      ZLIB_WINAPI)
++	SET(ZLIB_WINAPI OFF) # skip following test, it crashes with weird message box
++    #TRY_MACRO_FOR_LIBRARY(
++    #  "${ZLIB_INCLUDE_DIR}" "${ZLIB_LIBRARIES}"
++    #  RUNS
++    #  "#include <zlib.h>\nint main() {uLong f = zlibCompileFlags(); return (f&(1U<<10))?0:-1; }"
++    #  ZLIB_WINAPI)
+     IF(ZLIB_WINAPI)
+       ADD_DEFINITIONS(-DZLIB_WINAPI)
+     ELSE(ZLIB_WINAPI)
+@@ -483,6 +485,7 @@ ENDIF(LZMA_FOUND)
+ #
+ # Find LZO2
+ #
++IF(ENABLE_LZO2)
+ IF (LZO2_INCLUDE_DIR)
+   # Already in cache, be silent
+   SET(LZO2_FIND_QUIETLY TRUE)
+@@ -504,6 +507,7 @@ IF(LZO2_FOUND)
+ ENDIF(LZO2_FOUND)
+ MARK_AS_ADVANCED(CLEAR LZO2_INCLUDE_DIR)
+ MARK_AS_ADVANCED(CLEAR LZO2_LIBRARY)
++ENDIF()
+ #
+ # Find LZ4
+ #
+@@ -923,7 +927,9 @@ IF(ENABLE_ICONV)
+     CHECK_ICONV("libc" "")
+ 
+     # If iconv isn't in libc and we have a libiconv, try that.
+-    FIND_LIBRARY(LIBICONV_PATH NAMES iconv libiconv)
++    FIND_LIBRARY(LIBICONV_PATH1 NAMES iconv libiconv)
++    FIND_LIBRARY(LIBCHARSET_PATH NAMES charset libcharset)
++    SET(LIBICONV_PATH ${LIBICONV_PATH1} ${LIBCHARSET_PATH})
+     IF(NOT HAVE_ICONV AND LIBICONV_PATH)
+       LIST(APPEND CMAKE_REQUIRED_LIBRARIES ${LIBICONV_PATH})
+       # Test if a macro is needed for the library.
+@@ -1307,9 +1313,13 @@ CHECK_C_SOURCE_COMPILES(
+   "#include <sys/sysmacros.h>\nint main() { return major(256); }"
+   MAJOR_IN_SYSMACROS)
+ 
++CMAKE_PUSH_CHECK_STATE()
++set(CMAKE_REQUIRED_INCLUDES ${LZMA_INCLUDE_DIR})
++set(CMAKE_REQUIRED_LIBRARIES ${LZMA_LIBRARIES})
+ CHECK_C_SOURCE_COMPILES(
+   "#include <lzma.h>\n#if LZMA_VERSION < 50020000\n#error unsupported\n#endif\nint main(void){lzma_stream_encoder_mt(0, 0); return 0;}"
+   HAVE_LZMA_STREAM_ENCODER_MT)
++CMAKE_POP_CHECK_STATE()
+ 
+ IF(HAVE_STRERROR_R)
+   SET(HAVE_DECL_STRERROR_R 1)
+@@ -1655,12 +1665,12 @@ INCLUDE_DIRECTORIES(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
+ ADD_DEFINITIONS(-DHAVE_CONFIG_H)
+ 
+ # Handle generation of the libarchive.pc file for pkg-config
+-INCLUDE(CreatePkgConfigFile)
++#INCLUDE(CreatePkgConfigFile)
+ 
+ #
+ # Register installation of PDF documents.
+ #
+-IF(WIN32 AND NOT CYGWIN)
++IF(0 AND WIN32 AND NOT CYGWIN)
+   #
+   # On Windows platform, It's better that we install PDF documents
+   # on one's computer.
+diff --git a/libarchive/CMakeLists.txt b/libarchive/CMakeLists.txt
+index 4cc9a2c..ef304c5 100644
+--- a/libarchive/CMakeLists.txt
++++ b/libarchive/CMakeLists.txt
+@@ -191,28 +191,24 @@ IF(WIN32 AND NOT CYGWIN)
+ ENDIF(WIN32 AND NOT CYGWIN)
+ 
+ # Libarchive is a shared library
+-ADD_LIBRARY(archive SHARED ${libarchive_SOURCES} ${include_HEADERS})
++ADD_LIBRARY(archive ${libarchive_SOURCES} ${include_HEADERS})
+ TARGET_LINK_LIBRARIES(archive ${ADDITIONAL_LIBS})
++IF(BUILD_SHARED_LIBS)
+ SET_TARGET_PROPERTIES(archive PROPERTIES SOVERSION ${SOVERSION})
+-
+-# archive_static is a static library
+-ADD_LIBRARY(archive_static STATIC ${libarchive_SOURCES} ${include_HEADERS})
+-TARGET_LINK_LIBRARIES(archive_static ${ADDITIONAL_LIBS})
+-SET_TARGET_PROPERTIES(archive_static PROPERTIES COMPILE_DEFINITIONS
+-  LIBARCHIVE_STATIC)
+-# On Posix systems, libarchive.so and libarchive.a can co-exist.
+-IF(NOT WIN32 OR CYGWIN)
+-  SET_TARGET_PROPERTIES(archive_static PROPERTIES OUTPUT_NAME archive)
+-ENDIF(NOT WIN32 OR CYGWIN)
++ELSE()
++SET_TARGET_PROPERTIES(archive PROPERTIES COMPILE_DEFINITIONS LIBARCHIVE_STATIC)
++ENDIF()
+ 
+ IF(ENABLE_INSTALL)
+   # How to install the libraries
+-  INSTALL(TARGETS archive archive_static
++  INSTALL(TARGETS archive
+           RUNTIME DESTINATION bin
+           LIBRARY DESTINATION lib
+           ARCHIVE DESTINATION lib)
+-  INSTALL_MAN(${libarchive_MANS})
++  #INSTALL_MAN(${libarchive_MANS})
++  IF(NOT ARCHIVE_SKIP_HEADERS)
+   INSTALL(FILES ${include_HEADERS} DESTINATION include)
++  ENDIF()
+ ENDIF()
+ 
+ add_subdirectory(test)
