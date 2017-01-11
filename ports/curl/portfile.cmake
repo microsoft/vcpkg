@@ -13,22 +13,48 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/0001_cmake.patch
 )
 
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    vcpkg_apply_patches(
+        SOURCE_PATH ${SOURCE_PATH}
+        PATCHES
+            ${CMAKE_CURRENT_LIST_DIR}/0002_fix_uwp.patch
+)
+endif()
+
 if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
     SET(CURL_STATICLIB OFF)
 else()
     SET(CURL_STATICLIB ON)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS
-        -DBUILD_TESTING=OFF
-        -DBUILD_CURL_EXE=OFF
-        -DENABLE_MANUAL=OFF
-        -DCURL_STATICLIB=${CURL_STATICLIB}
-    OPTIONS_DEBUG
-        -DENABLE_DEBUG=ON
-)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        OPTIONS
+            -DBUILD_TESTING=OFF
+            -DBUILD_CURL_EXE=OFF
+            -DENABLE_MANUAL=OFF
+            -DUSE_WIN32_LDAP=OFF
+            -DCURL_DISABLE_TELNET=ON
+            -DENABLE_IPV6=OFF
+            -DENABLE_UNIX_SOCKETS=OFF
+            -DCMAKE_USE_OPENSSL=ON
+            -DCURL_STATICLIB=${CURL_STATICLIB}
+        OPTIONS_DEBUG
+            -DENABLE_DEBUG=ON
+    )
+else()
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        OPTIONS
+            -DBUILD_TESTING=OFF
+            -DBUILD_CURL_EXE=OFF
+            -DENABLE_MANUAL=OFF
+            -DCURL_STATICLIB=${CURL_STATICLIB}
+        OPTIONS_DEBUG
+            -DENABLE_DEBUG=ON
+    )
+endif()
 
 vcpkg_install_cmake()
 
