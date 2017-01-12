@@ -11,13 +11,11 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    vcpkg_apply_patches(
-        SOURCE_PATH ${SOURCE_PATH}
-        PATCHES
-            ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-UWP.patch
+vcpkg_apply_patches(
+	SOURCE_PATH ${SOURCE_PATH}
+	PATCHES
+		${CMAKE_CURRENT_LIST_DIR}/0001-Fix-UWP.patch
 )
-endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
