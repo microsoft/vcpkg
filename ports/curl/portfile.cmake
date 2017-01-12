@@ -11,15 +11,8 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/0001_cmake.patch
+        ${CMAKE_CURRENT_LIST_DIR}/0002_fix_uwp.patch
 )
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    vcpkg_apply_patches(
-        SOURCE_PATH ${SOURCE_PATH}
-        PATCHES
-            ${CMAKE_CURRENT_LIST_DIR}/0002_fix_uwp.patch
-)
-endif()
 
 if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
     SET(CURL_STATICLIB OFF)
