@@ -4,11 +4,11 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/DirectXTK-oct2016)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/DirectXTK-dec2016)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/Microsoft/DirectXTK/archive/oct2016.tar.gz"
-    FILENAME "oct2016.tar.gz"
-    SHA512 b44ee28518ca65d38a3c915881ef79533b48b07d3738b616f1935d7c00a26d5e48b2292cde6acc34e933f85ba2a6362c585c60b2bbc704745d43cef53769a112
+    URLS "https://github.com/Microsoft/DirectXTK/archive/dec2016.tar.gz"
+    FILENAME "DirectXTK-dec2016.tar.gz"
+    SHA512 efb8a98d0872bf1835b274ba88615e88c4a58ab753c5ebef5a407c54d5f9a2197d1521f14651c60ea16c047918db6f54bf2ac58a6eb7330490b9bae619e8dad3
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
