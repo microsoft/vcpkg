@@ -4,11 +4,11 @@
 #include "vcpkg_Files.h"
 #include "vcpkg_Input.h"
 
-namespace vcpkg::Commands
+namespace vcpkg::Commands::Create
 {
-    void create_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
-        static const std::string example = Commands::Helpers::create_example_string(R"###(create zlib2 http://zlib.net/zlib128.zip "zlib128-2.zip")###");
+        static const std::string example = Commands::Help::create_example_string(R"###(create zlib2 http://zlib.net/zlib128.zip "zlib128-2.zip")###");
         args.check_max_arg_count(3, example);
         args.check_min_arg_count(2, example);
 

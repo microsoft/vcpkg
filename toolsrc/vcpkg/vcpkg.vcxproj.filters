@@ -87,9 +87,6 @@
     <ClCompile Include="..\src\commands_integrate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\commands_helpers.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\commands_available_commands.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

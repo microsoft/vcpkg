@@ -10,7 +10,7 @@
 #include "SourceParagraph.h"
 #include "vcpkg_Environment.h"
 
-namespace vcpkg::Commands
+namespace vcpkg::Commands::PortsDiff
 {
     static void do_print_name_and_version(const std::vector<std::string>& ports_to_print, const std::map<std::string, std::string>& names_and_versions)
     {
@@ -97,9 +97,9 @@ namespace vcpkg::Commands
         Checks::check_exit(output.output == VALID_COMMIT_OUTPUT, "Invalid commit id %s", Strings::utf16_to_utf8(git_commit_id));
     }
 
-    void portsdiff_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
-        static const std::string example = Strings::format("The argument should be a branch/tag/hash to checkout.\n%s", Commands::Helpers::create_example_string("portsdiff mybranchname"));
+        static const std::string example = Strings::format("The argument should be a branch/tag/hash to checkout.\n%s", Commands::Help::create_example_string("portsdiff mybranchname"));
         args.check_min_arg_count(1, example);
         args.check_max_arg_count(2, example);
 

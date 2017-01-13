@@ -4,7 +4,7 @@
 #include "vcpkg_Files.h"
 #include <fstream>
 
-namespace vcpkg::Commands
+namespace vcpkg::Commands::Import
 {
     struct Binaries
     {
@@ -75,9 +75,9 @@ namespace vcpkg::Commands
         std::ofstream(control_file_path) << control_file_data;
     }
 
-    void import_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
-        static const std::string example = Commands::Helpers::create_example_string(R"(import C:\path\to\CONTROLfile C:\path\to\includedir C:\path\to\projectdir)");
+        static const std::string example = Commands::Help::create_example_string(R"(import C:\path\to\CONTROLfile C:\path\to\includedir C:\path\to\projectdir)");
         args.check_exact_arg_count(3, example);
 
         const fs::path control_file_path(args.command_arguments[0]);

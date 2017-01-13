@@ -2,11 +2,11 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Input.h"
 
-namespace vcpkg::Commands
+namespace vcpkg::Commands::Edit
 {
-    void edit_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
-        static const std::string example = Commands::Helpers::create_example_string("edit zlib");
+        static const std::string example = Commands::Help::create_example_string("edit zlib");
         args.check_exact_arg_count(1, example);
         const std::string port_name = args.command_arguments.at(0);
 

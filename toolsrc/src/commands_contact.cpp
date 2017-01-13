@@ -2,9 +2,9 @@
 #include "vcpkg_System.h"
 #include "vcpkg_info.h"
 
-namespace vcpkg::Commands
+namespace vcpkg::Commands::Contact
 {
-    void contact_command(const vcpkg_cmd_arguments& args)
+    void  perform_and_exit(const vcpkg_cmd_arguments& args)
     {
         args.check_exact_arg_count(0);
         System::println("Send an email to %s with any feedback.", Info::email());

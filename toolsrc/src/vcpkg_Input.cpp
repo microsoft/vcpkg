@@ -37,7 +37,7 @@ namespace vcpkg::Input
         {
             System::println(System::color::error, "Error: invalid triplet: %s", t.canonical_name());
             TrackProperty("error", "invalid triplet: " + t.canonical_name());
-            Commands::help_topic_valid_triplet(paths);
+            Commands::Help::help_topic_valid_triplet(paths);
             exit(EXIT_FAILURE);
         }
     }

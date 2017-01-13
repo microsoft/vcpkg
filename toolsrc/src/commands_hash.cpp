@@ -1,7 +1,7 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
 
-namespace vcpkg::Commands
+namespace vcpkg::Commands::Hash
 {
     static void do_file_hash(fs::path const& path, std::wstring const& hashType)
     {
@@ -23,10 +23,10 @@ namespace vcpkg::Commands
         System::println(hash);
     }
 
-    void hash_command(const vcpkg_cmd_arguments& args)
+    void perform_and_exit(const vcpkg_cmd_arguments& args)
     {
         static const std::string example = Strings::format(
-            "The argument should be a file path\n%s", Commands::Helpers::create_example_string("hash boost_1_62_0.tar.bz2"));
+            "The argument should be a file path\n%s", Commands::Help::create_example_string("hash boost_1_62_0.tar.bz2"));
         args.check_min_arg_count(1, example);
         args.check_max_arg_count(2, example);
 

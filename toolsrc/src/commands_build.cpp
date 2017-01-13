@@ -10,7 +10,7 @@
 #include "vcpkg_info.h"
 #include <fstream>
 
-namespace vcpkg::Commands
+namespace vcpkg::Commands::Build
 {
     using Dependencies::package_spec_with_install_plan;
     using Dependencies::install_plan_type;
@@ -24,7 +24,7 @@ namespace vcpkg::Commands
         std::ofstream(binary_control_file) << bpgh;
     }
 
-    void build_internal(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir)
+    void build_package(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir)
     {
         Checks::check_exit(spec.name() == source_paragraph.name, "inconsistent arguments to build_internal()");
         const triplet& target_triplet = spec.target_triplet();
@@ -66,9 +66,9 @@ namespace vcpkg::Commands
         // delete_directory(port_buildtrees_dir);
     }
 
-    void build_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
+    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
-        static const std::string example = Helpers::create_example_string("build zlib:x64-windows");
+        static const std::string example = Commands::Help::create_example_string("build zlib:x64-windows");
 
         // Installing multiple packages leads to unintuitive behavior if one of them depends on another.
         // Allowing only 1 package for now.
@@ -122,7 +122,7 @@ namespace vcpkg::Commands
         }
 
         Environment::ensure_utilities_on_path(paths);
-        Commands::build_internal(spgh, spec, paths, paths.port_dir(spec));
+        build_package(spgh, spec, paths, paths.port_dir(spec));
         exit(EXIT_SUCCESS);
     }
 }

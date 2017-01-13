@@ -147,7 +147,6 @@
     <ClCompile Include="..\src\commands_update.cpp" />
     <ClCompile Include="..\src\commands_version.cpp" />
     <ClCompile Include="..\src\vcpkg_cmd_arguments.cpp" />
-    <ClCompile Include="..\src\commands_helpers.cpp" />
     <ClCompile Include="..\src\vcpkg_Dependencies.cpp" />
     <ClCompile Include="..\src\vcpkg_Environment.cpp" />
     <ClCompile Include="..\src\commands_install.cpp" />

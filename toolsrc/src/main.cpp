@@ -21,7 +21,7 @@ bool g_debugging = false;
 void invalid_command(const std::string& cmd)
 {
     System::println(System::color::error, "invalid command: %s", cmd);
-    Commands::Helpers::print_usage();
+    Commands::Help::print_usage();
     exit(EXIT_FAILURE);
 }
 
@@ -30,7 +30,7 @@ static void inner(const vcpkg_cmd_arguments& args)
     TrackProperty("command", args.command);
     if (args.command.empty())
     {
-        Commands::Helpers::print_usage();
+        Commands::Help::print_usage();
         exit(EXIT_FAILURE);
     }
 
