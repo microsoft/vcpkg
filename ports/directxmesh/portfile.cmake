@@ -5,6 +5,10 @@
 #   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
 #   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
 #
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
+    set(VCPKG_LIBRARY_LINKAGE static)
+endif()
 
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/DirectXMesh-oct2016)
