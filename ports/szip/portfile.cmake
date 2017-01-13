@@ -21,6 +21,12 @@ set(ARCHIVE ${SOURCE_PATH}/SZip.tar.gz)
 vcpkg_extract_source_archive(${ARCHIVE})
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/Szip)
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/disable-static-lib-in-shared-build.patch
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
