@@ -7,7 +7,7 @@
 #include "vcpkg_Dependencies.h"
 #include "vcpkg_Input.h"
 
-namespace vcpkg
+namespace vcpkg::Commands
 {
     using Dependencies::package_spec_with_install_plan;
     using Dependencies::install_plan_type;
@@ -185,7 +185,7 @@ namespace vcpkg
 
     void install_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
-        static const std::string example = create_example_string("install zlib zlib:x64-windows curl boost");
+        static const std::string example = Commands::Helpers::create_example_string("install zlib zlib:x64-windows curl boost");
         args.check_min_arg_count(1, example);
         StatusParagraphs status_db = database_load_check(paths);
 
@@ -216,7 +216,7 @@ namespace vcpkg
                 }
                 else if (action.plan.type == install_plan_type::BUILD_AND_INSTALL)
                 {
-                    Commands::details::build_internal(*action.plan.spgh, action.spec, paths, paths.port_dir(action.spec));
+                    Commands::build_internal(*action.plan.spgh, action.spec, paths, paths.port_dir(action.spec));
                     const BinaryParagraph bpgh = try_load_cached_package(paths, action.spec).get_or_throw();
                     install_package(paths, bpgh, status_db);
                     System::println(System::color::success, "Package %s is installed", action.spec);

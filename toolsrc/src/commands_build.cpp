@@ -10,7 +10,7 @@
 #include "vcpkg_info.h"
 #include <fstream>
 
-namespace vcpkg
+namespace vcpkg::Commands
 {
     using Dependencies::package_spec_with_install_plan;
     using Dependencies::install_plan_type;
@@ -24,53 +24,51 @@ namespace vcpkg
         std::ofstream(binary_control_file) << bpgh;
     }
 
-    namespace Commands::details
+    void build_internal(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir)
     {
-        void build_internal(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir)
+        Checks::check_exit(spec.name() == source_paragraph.name, "inconsistent arguments to build_internal()");
+        const triplet& target_triplet = spec.target_triplet();
+
+        const fs::path ports_cmake_script_path = paths.ports_cmake;
+        const std::wstring command = Strings::wformat(LR"("%%VS140COMNTOOLS%%..\..\VC\vcvarsall.bat" %s && cmake -DCMD=BUILD -DPORT=%s -DTARGET_TRIPLET=%s "-DCURRENT_PORT_DIR=%s/." -P "%s")",
+                                                      Strings::utf8_to_utf16(target_triplet.architecture()),
+                                                      Strings::utf8_to_utf16(source_paragraph.name),
+                                                      Strings::utf8_to_utf16(target_triplet.canonical_name()),
+                                                      port_dir.generic_wstring(),
+                                                      ports_cmake_script_path.generic_wstring());
+
+        System::Stopwatch2 timer;
+        timer.start();
+        int return_code = System::cmd_execute(command);
+        timer.stop();
+        TrackMetric("buildtimeus-" + to_string(spec), timer.microseconds());
+
+        if (return_code != 0)
         {
-            Checks::check_exit(spec.name() == source_paragraph.name, "inconsistent arguments to build_internal()");
-            const triplet& target_triplet = spec.target_triplet();
-
-            const fs::path ports_cmake_script_path = paths.ports_cmake;
-            const std::wstring command = Strings::wformat(LR"("%%VS140COMNTOOLS%%..\..\VC\vcvarsall.bat" %s && cmake -DCMD=BUILD -DPORT=%s -DTARGET_TRIPLET=%s "-DCURRENT_PORT_DIR=%s/." -P "%s")",
-                Strings::utf8_to_utf16(target_triplet.architecture()),
-                Strings::utf8_to_utf16(source_paragraph.name),
-                Strings::utf8_to_utf16(target_triplet.canonical_name()),
-                port_dir.generic_wstring(),
-                ports_cmake_script_path.generic_wstring());
-
-            System::Stopwatch2 timer;
-            timer.start();
-            int return_code = System::cmd_execute(command);
-            timer.stop();
-            TrackMetric("buildtimeus-" + to_string(spec), timer.microseconds());
-
-            if (return_code != 0)
-            {
-                System::println(System::color::error, "Error: building package %s failed", to_string(spec));
-                System::println("Please ensure sure you're using the latest portfiles with `vcpkg update`, then\n"
-                    "submit an issue at https://github.com/Microsoft/vcpkg/issues including:\n"
-                    "  Package: %s\n"
-                    "  Vcpkg version: %s\n"
-                    "\n"
-                    "Additionally, attach any relevant sections from the log files above."
-                    , to_string(spec), Info::version());
-                TrackProperty("error", "build failed");
-                TrackProperty("build_error", to_string(spec));
-                exit(EXIT_FAILURE);
-            }
-
-            PostBuildLint::perform_all_checks(spec, paths);
-
-            create_binary_control_file(paths, source_paragraph, target_triplet);
-
-            // const fs::path port_buildtrees_dir = paths.buildtrees / spec.name;
-            // delete_directory(port_buildtrees_dir);
+            System::println(System::color::error, "Error: building package %s failed", to_string(spec));
+            System::println("Please ensure sure you're using the latest portfiles with `vcpkg update`, then\n"
+                            "submit an issue at https://github.com/Microsoft/vcpkg/issues including:\n"
+                            "  Package: %s\n"
+                            "  Vcpkg version: %s\n"
+                            "\n"
+                            "Additionally, attach any relevant sections from the log files above."
+                            , to_string(spec), Info::version());
+            TrackProperty("error", "build failed");
+            TrackProperty("build_error", to_string(spec));
+            exit(EXIT_FAILURE);
         }
+
+        PostBuildLint::perform_all_checks(spec, paths);
+
+        create_binary_control_file(paths, source_paragraph, target_triplet);
+
+        // const fs::path port_buildtrees_dir = paths.buildtrees / spec.name;
+        // delete_directory(port_buildtrees_dir);
     }
+
     void build_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
-        static const std::string example = create_example_string("build zlib:x64-windows");
+        static const std::string example = Helpers::create_example_string("build zlib:x64-windows");
 
         // Installing multiple packages leads to unintuitive behavior if one of them depends on another.
         // Allowing only 1 package for now.
@@ -124,7 +122,7 @@ namespace vcpkg
         }
 
         Environment::ensure_utilities_on_path(paths);
-        Commands::details::build_internal(spgh, spec, paths, paths.port_dir(spec));
+        Commands::build_internal(spgh, spec, paths, paths.port_dir(spec));
         exit(EXIT_SUCCESS);
     }
 }

@@ -5,7 +5,7 @@
 #include "Paragraphs.h"
 #include "vcpkg_info.h"
 
-namespace vcpkg
+namespace vcpkg::Commands
 {
     void update_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {

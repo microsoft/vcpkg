@@ -10,7 +10,7 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Files.h"
 
-namespace vcpkg
+namespace vcpkg::Commands
 {
     static const std::array<fs::path, 2> old_system_target_files = {
         "C:/Program Files (x86)/MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.nuget.targets",

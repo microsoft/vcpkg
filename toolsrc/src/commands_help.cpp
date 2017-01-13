@@ -2,7 +2,7 @@
 #include "vcpkg_System.h"
 #include "vcpkg_info.h"
 
-namespace vcpkg
+namespace vcpkg::Commands
 {
     void version_command(const vcpkg_cmd_arguments& args)
     {
@@ -19,18 +19,18 @@ namespace vcpkg
         args.check_max_arg_count(1);
         if (args.command_arguments.empty())
         {
-            print_usage();
+            Commands::Helpers::print_usage();
             exit(EXIT_SUCCESS);
         }
         const auto& topic = args.command_arguments[0];
         if (topic == "triplet")
         {
-            help_topic_valid_triplet(paths);
+            Commands::help_topic_valid_triplet(paths);
         }
         else
         {
             System::println(System::color::error, "Error: unknown topic %s", topic);
-            print_usage();
+            Commands::Helpers::print_usage();
             exit(EXIT_FAILURE);
         }
         exit(EXIT_SUCCESS);

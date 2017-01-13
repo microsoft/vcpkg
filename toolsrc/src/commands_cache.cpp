@@ -4,7 +4,7 @@
 #include "Paragraphs.h"
 #include "BinaryParagraph.h"
 
-namespace vcpkg
+namespace vcpkg::Commands
 {
     static std::vector<BinaryParagraph> read_all_binary_paragraphs(const vcpkg_paths& paths)
     {
@@ -37,7 +37,7 @@ namespace vcpkg
     void cache_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
         static const std::string example = Strings::format(
-            "The argument should be a substring to search for, or no argument to display all cached libraries.\n%s", create_example_string("cache png"));
+            "The argument should be a substring to search for, or no argument to display all cached libraries.\n%s", Commands::Helpers::create_example_string("cache png"));
         args.check_max_arg_count(1, example);
 
         const std::vector<BinaryParagraph> binary_paragraphs = read_all_binary_paragraphs(paths);
