@@ -5,6 +5,12 @@
 
 namespace vcpkg
 {
+    //
+    namespace Commands::details
+    {
+        void build_internal(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir);
+    }
+
     extern const char*const INTEGRATE_COMMAND_HELPSTRING;
 
     void print_usage();

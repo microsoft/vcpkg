@@ -27,7 +27,7 @@ namespace vcpkg
             }
         }
 
-        std::wstring cmdLine = Strings::wformat(LR"("%s" "%s" "%s")", env_EDITOR, portpath.native(), (portpath / "portfile.cmake").native());
+        std::wstring cmdLine = Strings::wformat(LR"("%s" "%s" "%s" -n)", env_EDITOR, portpath.native(), (portpath / "portfile.cmake").native());
         exit(System::cmd_execute(cmdLine));
     }
 }

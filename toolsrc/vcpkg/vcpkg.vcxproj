@@ -130,6 +130,8 @@
   <ItemGroup>
     <ClCompile Include="..\MachineType.cpp" />
     <ClCompile Include="..\src\coff_file_reader.cpp" />
+    <ClCompile Include="..\src\commands_build.cpp" />
+    <ClCompile Include="..\src\commands_build_external.cpp" />
     <ClCompile Include="..\src\commands_cache.cpp" />
     <ClCompile Include="..\src\commands_create.cpp" />
     <ClCompile Include="..\src\commands_edit.cpp" />
