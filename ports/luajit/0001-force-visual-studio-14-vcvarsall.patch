@@ -1,0 +1,25 @@
+From 7fa4121a6fb4dbdd5f7f7ec2b99b3d6c02cbedb0 Mon Sep 17 00:00:00 2001
+From: Doug Crawford <doug.crawford@intelight-its.com>
+Date: Fri, 13 Jan 2017 16:05:29 -0700
+Subject: [PATCH] force visual studio 14 vcvarsall
+
+---
+ src/msvcbuild.bat | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/msvcbuild.bat b/src/msvcbuild.bat
+index 4b50185..1d77460 100644
+--- a/src/msvcbuild.bat
++++ b/src/msvcbuild.bat
+@@ -13,6 +13,8 @@
+ 
+ @if not defined INCLUDE goto :FAIL
+ 
++call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
++
+ @setlocal
+ @set LJCOMPILE=cl /nologo /c /O2 /W3 /D_CRT_SECURE_NO_DEPRECATE
+ @set LJLINK=link /nologo
+-- 
+2.10.2.windows.1
+
