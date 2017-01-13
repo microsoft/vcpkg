@@ -20,32 +20,32 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 
 IF (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-	SET(BUILD_ARCH "Win32")
+    SET(BUILD_ARCH "Win32")
 ELSE()
-	SET(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
+    SET(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
 ENDIF()
 
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/DirectXMesh_Desktop_2015.sln
-	PLATFORM ${BUILD_ARCH}
+    PLATFORM ${BUILD_ARCH}
 )
 
 file(INSTALL
-	${SOURCE_PATH}/DirectXMesh/DirectXMesh.h
-	${SOURCE_PATH}/DirectXMesh/DirectXMesh.inl
+    ${SOURCE_PATH}/DirectXMesh/DirectXMesh.h
+    ${SOURCE_PATH}/DirectXMesh/DirectXMesh.inl
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
 file(INSTALL
-	${SOURCE_PATH}/DirectXMesh/Bin/Desktop_2015/${BUILD_ARCH}/Debug/DirectXMesh.lib
-	DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    ${SOURCE_PATH}/DirectXMesh/Bin/Desktop_2015/${BUILD_ARCH}/Debug/DirectXMesh.lib
+    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 file(INSTALL
-	${SOURCE_PATH}/DirectXMesh/Bin/Desktop_2015/${BUILD_ARCH}/Release/DirectXMesh.lib
-	DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    ${SOURCE_PATH}/DirectXMesh/Bin/Desktop_2015/${BUILD_ARCH}/Release/DirectXMesh.lib
+    DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
 set(TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools)
 file(INSTALL
-	${SOURCE_PATH}/Meshconvert/Bin/Desktop_2015/${BUILD_ARCH}/Release/Meshconvert.exe
-	DESTINATION ${TOOL_PATH})
+    ${SOURCE_PATH}/Meshconvert/Bin/Desktop_2015/${BUILD_ARCH}/Release/Meshconvert.exe
+    DESTINATION ${TOOL_PATH})
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/directxmesh)

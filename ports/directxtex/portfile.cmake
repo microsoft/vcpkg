@@ -20,39 +20,39 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 
 IF (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-	SET(BUILD_ARCH "Win32")
+    SET(BUILD_ARCH "Win32")
 ELSE()
-	SET(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
+    SET(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
 ENDIF()
 
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/DirectXTex_Desktop_2015.sln
-	PLATFORM ${BUILD_ARCH}
+    PLATFORM ${BUILD_ARCH}
 )
 
 file(INSTALL
-	${SOURCE_PATH}/DirectXTex/DirectXTex.h
-	${SOURCE_PATH}/DirectXTex/DirectXTex.inl
+    ${SOURCE_PATH}/DirectXTex/DirectXTex.h
+    ${SOURCE_PATH}/DirectXTex/DirectXTex.inl
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
 file(INSTALL
-	${SOURCE_PATH}/DirectXTex/Bin/Desktop_2015/${BUILD_ARCH}/Debug/DirectXTex.lib
-	DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    ${SOURCE_PATH}/DirectXTex/Bin/Desktop_2015/${BUILD_ARCH}/Debug/DirectXTex.lib
+    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 file(INSTALL
-	${SOURCE_PATH}/DirectXTex/Bin/Desktop_2015/${BUILD_ARCH}/Release/DirectXTex.lib
-	DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    ${SOURCE_PATH}/DirectXTex/Bin/Desktop_2015/${BUILD_ARCH}/Release/DirectXTex.lib
+    DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
 set(TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools)
 file(MAKE_DIRECTORY ${TOOL_PATH})
 file(INSTALL
-	${SOURCE_PATH}/Texdiag/Bin/Desktop_2015/${BUILD_ARCH}/Release/texdiag.exe
-	DESTINATION ${TOOL_PATH})
+    ${SOURCE_PATH}/Texdiag/Bin/Desktop_2015/${BUILD_ARCH}/Release/texdiag.exe
+    DESTINATION ${TOOL_PATH})
 file(INSTALL
-	${SOURCE_PATH}/Texconv/Bin/Desktop_2015/${BUILD_ARCH}/Release/Texconv.exe
-	DESTINATION ${TOOL_PATH})
+    ${SOURCE_PATH}/Texconv/Bin/Desktop_2015/${BUILD_ARCH}/Release/Texconv.exe
+    DESTINATION ${TOOL_PATH})
 file(INSTALL
-	${SOURCE_PATH}/Texassemble/Bin/Desktop_2015/${BUILD_ARCH}/Release/Texassemble.exe
-	DESTINATION ${TOOL_PATH})
+    ${SOURCE_PATH}/Texassemble/Bin/Desktop_2015/${BUILD_ARCH}/Release/Texassemble.exe
+    DESTINATION ${TOOL_PATH})
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/DirectXTex)
