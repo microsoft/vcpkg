@@ -134,6 +134,7 @@
     <ClCompile Include="..\src\commands_build.cpp" />
     <ClCompile Include="..\src\commands_build_external.cpp" />
     <ClCompile Include="..\src\commands_cache.cpp" />
+    <ClCompile Include="..\src\commands_contact.cpp" />
     <ClCompile Include="..\src\commands_create.cpp" />
     <ClCompile Include="..\src\commands_edit.cpp" />
     <ClCompile Include="..\src\commands_hash.cpp" />
@@ -144,6 +145,7 @@
     <ClCompile Include="..\src\commands_remove.cpp" />
     <ClCompile Include="..\src\commands_search.cpp" />
     <ClCompile Include="..\src\commands_update.cpp" />
+    <ClCompile Include="..\src\commands_version.cpp" />
     <ClCompile Include="..\src\vcpkg_cmd_arguments.cpp" />
     <ClCompile Include="..\src\commands_helpers.cpp" />
     <ClCompile Include="..\src\vcpkg_Dependencies.cpp" />
