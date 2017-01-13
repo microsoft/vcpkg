@@ -11,6 +11,7 @@ namespace vcpkg::Commands::Edit
         const std::string port_name = args.command_arguments.at(0);
 
         const fs::path portpath = paths.ports / port_name;
+        Checks::check_exit(fs::is_directory(portpath), "Could not find port named %s", port_name);
 
         // Find editor
         std::wstring env_EDITOR = System::wdupenv_str(L"EDITOR");
