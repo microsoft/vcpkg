@@ -21,7 +21,7 @@ bool g_debugging = false;
 void invalid_command(const std::string& cmd)
 {
     System::println(System::color::error, "invalid command: %s", cmd);
-    print_usage();
+    Commands::Help::print_usage();
     exit(EXIT_FAILURE);
 }
 
@@ -30,11 +30,11 @@ static void inner(const vcpkg_cmd_arguments& args)
     TrackProperty("command", args.command);
     if (args.command.empty())
     {
-        print_usage();
+        Commands::Help::print_usage();
         exit(EXIT_FAILURE);
     }
 
-    if (auto command_function = find_command(args.command, get_available_commands_type_c()))
+    if (auto command_function = Commands::find(args.command, Commands::get_available_commands_type_c()))
     {
         return command_function(args);
     }
@@ -66,7 +66,7 @@ static void inner(const vcpkg_cmd_arguments& args)
     int exit_code = _wchdir(paths.root.c_str());
     Checks::check_exit(exit_code == 0, "Changing the working dir failed");
 
-    if (auto command_function = find_command(args.command, get_available_commands_type_b()))
+    if (auto command_function = Commands::find(args.command, Commands::get_available_commands_type_b()))
     {
         return command_function(args, paths);
     }
@@ -91,7 +91,7 @@ static void inner(const vcpkg_cmd_arguments& args)
 
     Input::check_triplet(default_target_triplet, paths);
 
-    if (auto command_function = find_command(args.command, get_available_commands_type_a()))
+    if (auto command_function = Commands::find(args.command, Commands::get_available_commands_type_a()))
     {
         return command_function(args, paths, default_target_triplet);
     }

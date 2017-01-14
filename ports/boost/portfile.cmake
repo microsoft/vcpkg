@@ -108,11 +108,10 @@ file(
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp
-        "\n#define BOOST_ALL_DYN_LINK\n"
-    )
-endif()
+# Disable Boost auto-link.
+file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp
+	"\n#define BOOST_ALL_NO_LIB\n"
+)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/boost RENAME copyright)
 message(STATUS "Packaging headers done")

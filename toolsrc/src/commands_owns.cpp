@@ -2,7 +2,7 @@
 #include "vcpkg_System.h"
 #include "vcpkg.h"
 
-namespace vcpkg
+namespace vcpkg::Commands::Owns
 {
     static void search_file(const vcpkg_paths& paths, const std::string& file_substr, const StatusParagraphs& status_db)
     {
@@ -21,9 +21,9 @@ namespace vcpkg
         }
     }
 
-    void owns_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
-        static const std::string example = Strings::format("The argument should be a pattern to search for. %s", create_example_string("owns zlib.dll"));
+        static const std::string example = Strings::format("The argument should be a pattern to search for. %s", Commands::Help::create_example_string("owns zlib.dll"));
         args.check_exact_arg_count(1, example);
 
         StatusParagraphs status_db = database_load_check(paths);

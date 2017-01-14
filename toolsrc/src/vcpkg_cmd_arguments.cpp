@@ -18,7 +18,7 @@ namespace vcpkg
         {
             System::println(System::color::error, "Error: expected value after %s", option_name);
             TrackProperty("error", "error option name");
-            print_usage();
+            Commands::Help::print_usage();
             exit(EXIT_FAILURE);
         }
 
@@ -26,7 +26,7 @@ namespace vcpkg
         {
             System::println(System::color::error, "Error: %s specified multiple times", option_name);
             TrackProperty("error", "error option specified multiple times");
-            print_usage();
+            Commands::Help::print_usage();
             exit(EXIT_FAILURE);
         }
 
@@ -42,7 +42,7 @@ namespace vcpkg
         {
             System::println(System::color::error, "Error: conflicting values specified for --%s", option_name);
             TrackProperty("error", "error conflicting switches");
-            print_usage();
+            Commands::Help::print_usage();
             exit(EXIT_FAILURE);
         }
         option_field = new_setting;
