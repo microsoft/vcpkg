@@ -57,8 +57,11 @@ message(STATUS "Installing")
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 	file(INSTALL
 		${SOURCE_PATH}/bin/Debug/${BUILD_ARCH}/glew32d.dll
+		DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin RENAME glew32.dll
+	)
+	file(INSTALL
 		${SOURCE_PATH}/bin/Debug/${BUILD_ARCH}/glew32d.pdb
-		DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
+		DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin RENAME glew32.pdb
 	)
 	file(INSTALL
 		${SOURCE_PATH}/bin/Release/${BUILD_ARCH}/glew32.dll
@@ -67,7 +70,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 	)
 	file(INSTALL
 		${SOURCE_PATH}/lib/Debug/${BUILD_ARCH}/glew32d.lib
-		DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+		DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib RENAME glew32.lib
 	)
 	file(INSTALL
 		${SOURCE_PATH}/lib/Release/${BUILD_ARCH}/glew32.lib
@@ -76,13 +79,11 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 else()
 	file(INSTALL
 		${SOURCE_PATH}/lib/Debug/${BUILD_ARCH}/glew32sd.lib
-		DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-		RENAME glew32d.lib
+		DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib RENAME glew32.lib
 	)
 	file(INSTALL
 		${SOURCE_PATH}/lib/Release/${BUILD_ARCH}/glew32s.lib
-		DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-		RENAME glew32.lib
+		DESTINATION ${CURRENT_PACKAGES_DIR}/lib RENAME glew32.lib
 	)
 endif()
 
