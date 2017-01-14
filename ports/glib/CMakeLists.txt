@@ -125,6 +125,11 @@ if(NOT GLIB_SKIP_TOOLS)
     configure_file(gobject/glib-mkenums.in ${CMAKE_SOURCE_DIR}/gobject/glib-mkenums @ONLY) # uses GLIB_VERSION
     install(FILES gobject/glib-mkenums DESTINATION tools/glib)
     
+    configure_file(gio/gdbus-2.0/codegen/gdbus-codegen.in ${CMAKE_SOURCE_DIR}/gio/gdbus-2.0/codegen/gdbus-codegen COPYONLY)
+    install(FILES gio/gdbus-2.0/codegen/gdbus-codegen DESTINATION tools/glib)
+    file(GLOB CODEGEN_SOURCES gio/gdbus-2.0/codegen/*.py)
+    install(FILES ${CODEGEN_SOURCES} DESTINATION tools/glib/codegen)
+    
     add_gio_tool(gdbus gio/gdbus-tool.c)    
     add_gio_tool(gio-querymodules gio/gio-querymodules.c)
     file(GLOB GIO_TOOL_SOURCES gio/gio-tool*.c)
