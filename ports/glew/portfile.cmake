@@ -57,15 +57,10 @@ message(STATUS "Installing")
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 	file(INSTALL
 		${SOURCE_PATH}/bin/Debug/${BUILD_ARCH}/glew32d.dll
-		DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin RENAME glew32.dll
-	)
-	file(INSTALL
-		${SOURCE_PATH}/bin/Debug/${BUILD_ARCH}/glew32d.pdb
-		DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin RENAME glew32.pdb
+		DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
 	)
 	file(INSTALL
 		${SOURCE_PATH}/bin/Release/${BUILD_ARCH}/glew32.dll
-		${SOURCE_PATH}/bin/Release/${BUILD_ARCH}/glew32.pdb
 		DESTINATION ${CURRENT_PACKAGES_DIR}/bin
 	)
 	file(INSTALL
