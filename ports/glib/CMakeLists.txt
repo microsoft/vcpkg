@@ -123,7 +123,7 @@ endmacro()
 
 if(NOT GLIB_SKIP_TOOLS)
     configure_file(gobject/glib-mkenums.in ${CMAKE_SOURCE_DIR}/gobject/glib-mkenums @ONLY) # uses GLIB_VERSION
-    install(FILES gobject/glib-mkenums DESTINATION tools)
+    install(FILES gobject/glib-mkenums DESTINATION tools/glib)
     
     add_gio_tool(gdbus gio/gdbus-tool.c)    
     add_gio_tool(gio-querymodules gio/gio-querymodules.c)
@@ -145,7 +145,7 @@ if(NOT GLIB_SKIP_TOOLS)
     add_glib_tool(gspawn-${WIN}-helper WIN32 glib/gspawn-win32-helper.c)
     add_glib_tool(gspawn-${WIN}-helper-console glib/gspawn-win32-helper-console.c)
     
-    install(TARGETS ${GLIB_TOOLS} RUNTIME DESTINATION tools)
+    install(TARGETS ${GLIB_TOOLS} RUNTIME DESTINATION tools/glib)
 endif()
 
 install(TARGETS ${GLIB_TARGETS} RUNTIME DESTINATION bin ARCHIVE DESTINATION lib LIBRARY DESTINATION lib)
