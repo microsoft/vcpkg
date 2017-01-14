@@ -30,13 +30,9 @@ vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/UVAtlas/UVAtlas_2015.sln
 	PLATFORM ${BUILD_ARCH}
 )
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/UVAtlasTool/UVAtlasTool_2015.sln
-	PLATFORM ${BUILD_ARCH}
-)
 
 file(INSTALL
-	${SOURCE_PATH}/Inc/
+	${SOURCE_PATH}/UVAtlas/Inc/
     DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 file(INSTALL
 	${SOURCE_PATH}/UVAtlas/Bin/Desktop_2015/${BUILD_ARCH}/Release/UVAtlas.lib
@@ -47,10 +43,10 @@ file(INSTALL
 file(INSTALL
 	${SOURCE_PATH}/UVAtlas/Bin/Desktop_2015/${BUILD_ARCH}/Debug/UVAtlas.lib
 	DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-file(INSTALL
-	${SOURCE_PATH}/UVAtlasTool/Bin/Desktop_2015/${BUILD_ARCH}/Release/UVAtlasTool.exe
-	DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/uvatlas)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/uvatlas/LICENSE ${CURRENT_PACKAGES_DIR}/share/uvatlas/copyright)
+file(COPY ${SOURCE_PATH}/MIT.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/uvatlas)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/uvatlas/MIT.txt ${CURRENT_PACKAGES_DIR}/share/uvatlas/copyright)
+
+message(STATUS "Installing done, uvatlastool.exe can be downloaded at: ")
+message(STATUS " https://github.com/Microsoft/UVAtlas/releases/download/sept2016/uvatlastool.exe")
