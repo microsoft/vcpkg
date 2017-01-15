@@ -6,12 +6,13 @@
 #   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
 #
 
+
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/LuaJIT-2.0.4)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/luajit2-2.1-20161104)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://luajit.org/download/LuaJIT-2.0.4.tar.gz"
-    FILENAME "LuaJIT-2.0.4.tar.gz"
-    SHA512 a72957bd85d8f457269e78bf08c19b28c5707df5d19920d61918f8a6913f55913ce13037fb9a6463c04cefde0c6644739f390e09d656e4bbc2c236927aa3f8f9
+    URLS "https://github.com/openresty/luajit2/archive/v2.1-20161104.zip"
+    FILENAME "luajit2-2.1-20161104.zip"
+    SHA512 71483ef1f00d57ae1716cf1b424cfda860f9545613dbde55381adb5cfb8b5291929e31fede921723a8009abcf110a0dc844f9c41df382ed43496d99e9e229775
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
