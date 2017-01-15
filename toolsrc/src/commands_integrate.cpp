@@ -10,7 +10,7 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Files.h"
 
-namespace vcpkg
+namespace vcpkg::Commands::Integrate
 {
     static const std::array<fs::path, 2> old_system_target_files = {
         "C:/Program Files (x86)/MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.nuget.targets",
@@ -293,7 +293,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
     "  vcpkg integrate remove          Remove user-wide integration\n"
     "  vcpkg integrate project         Generate a referencing nuget package for individual VS project use\n";
 
-    void integrate_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
         static const std::string example = Strings::format("Commands:\n"
                                                            "%s", INTEGRATE_COMMAND_HELPSTRING);

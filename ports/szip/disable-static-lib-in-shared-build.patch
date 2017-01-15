@@ -1,0 +1,39 @@
+--- a/src/CMakeLists.txt	Mon Aug 03 17:10:33 2015
++++ b/src/CMakeLists.txt	Fri Jan 13 09:38:07 2017
+@@ -22,20 +22,22 @@
+     ${SZIP_SRC_SOURCE_DIR}/szlib.h
+ )
+ 
+-add_library (${SZIP_LIB_TARGET} STATIC ${SZIP_SRCS} ${SZIP_PUBLIC_HEADERS})
+-#set_target_properties (${SZIP_LIB_TARGET}
+-#  PROPERTIES
+-#      LINK_FLAGS "-version-info 2:0:0"
+-#)
+-TARGET_C_PROPERTIES (${SZIP_LIB_TARGET} STATIC " " " ")
+-target_link_libraries (${SZIP_LIB_TARGET} ${LINK_LIBS})
+-set_target_properties(${SZIP_LIB_TARGET} PROPERTIES
+-    PUBLIC_HEADER "${SZIP_PUBLIC_HEADERS}"
+-    INTERFACE_INCLUDE_DIRECTORIES "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>"
+-)
+-set_global_variable (SZIP_LIBRARIES_TO_EXPORT ${SZIP_LIB_TARGET})
+-SZIP_SET_LIB_OPTIONS (${SZIP_LIB_TARGET} ${SZIP_LIB_NAME} STATIC)
+-set (install_targets ${SZIP_LIB_TARGET})
++if (NOT BUILD_SHARED_LIBS)
++  add_library (${SZIP_LIB_TARGET} STATIC ${SZIP_SRCS} ${SZIP_PUBLIC_HEADERS})
++  #set_target_properties (${SZIP_LIB_TARGET}
++  #  PROPERTIES
++  #      LINK_FLAGS "-version-info 2:0:0"
++  #)
++  TARGET_C_PROPERTIES (${SZIP_LIB_TARGET} STATIC " " " ")
++  target_link_libraries (${SZIP_LIB_TARGET} ${LINK_LIBS})
++  set_target_properties(${SZIP_LIB_TARGET} PROPERTIES
++      PUBLIC_HEADER "${SZIP_PUBLIC_HEADERS}"
++      INTERFACE_INCLUDE_DIRECTORIES "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>"
++  )
++  set_global_variable (SZIP_LIBRARIES_TO_EXPORT ${SZIP_LIB_TARGET})
++  SZIP_SET_LIB_OPTIONS (${SZIP_LIB_TARGET} ${SZIP_LIB_NAME} STATIC)
++  set (install_targets ${SZIP_LIB_TARGET})
++endif()
+ 
+ if (BUILD_SHARED_LIBS)
+   add_library (${SZIP_LIBSH_TARGET} SHARED ${SZIP_SRCS} ${SZIP_PUBLIC_HEADERS})

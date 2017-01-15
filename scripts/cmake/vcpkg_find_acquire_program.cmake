@@ -57,6 +57,12 @@ function(vcpkg_find_acquire_program VAR)
     set(URL "http://download.qt.io/official_releases/jom/jom_1_1_1.zip")
     set(ARCHIVE "jom_1_1_1.zip")
     set(HASH 23a26dc7e29979bec5dcd3bfcabf76397b93ace64f5d46f2254d6420158bac5eff1c1a8454e3427e7a2fe2c233c5f2cffc87b376772399e12e40b51be2c065f4)
+  elseif(VAR MATCHES "7Z")
+    set(PROGNAME 7z)
+    set(PATHS "C:/Program Files/7-Zip" ${DOWNLOADS}/tools/7z/Files/7-Zip)
+    set(URL "http://7-zip.org/a/7z1604.msi")
+    set(ARCHIVE "7z1604.msi")
+    set(HASH 556f95f7566fe23704d136239e4cf5e2a26f939ab43b44145c91b70d031a088d553e5c21301f1242a2295dcde3143b356211f0108c68e65eef8572407618326d)
   else()
     message(FATAL "unknown tool ${VAR} -- unable to acquire.")
   endif()
@@ -71,10 +77,21 @@ function(vcpkg_find_acquire_program VAR)
     if(DEFINED NOEXTRACT)
       file(COPY ${DOWNLOADS}/${ARCHIVE} DESTINATION ${DOWNLOADS}/tools/${PROGNAME})
     else()
-      execute_process(
-        COMMAND ${CMAKE_COMMAND} -E tar xzf ${DOWNLOADS}/${ARCHIVE}
-        WORKING_DIRECTORY ${DOWNLOADS}/tools/${PROGNAME}
-      )
+      get_filename_component(ARCHIVE_EXTENSION ${ARCHIVE} EXT)
+      string(TOLOWER "${ARCHIVE_EXTENSION}" ARCHIVE_EXTENSION)
+      if(${ARCHIVE_EXTENSION} STREQUAL ".msi")
+        file(TO_NATIVE_PATH "${DOWNLOADS}/${ARCHIVE}" ARCHIVE_NATIVE_PATH)
+        file(TO_NATIVE_PATH "${DOWNLOADS}/tools/${PROGNAME}" DESTINATION_NATIVE_PATH)
+        execute_process(
+          COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
+          WORKING_DIRECTORY ${DOWNLOADS}
+        )
+      else()
+        execute_process(
+          COMMAND ${CMAKE_COMMAND} -E tar xzf ${DOWNLOADS}/${ARCHIVE}
+          WORKING_DIRECTORY ${DOWNLOADS}/tools/${PROGNAME}
+        )
+      endif()
     endif()
 
     find_program(${VAR} ${PROGNAME} PATHS ${PATHS})

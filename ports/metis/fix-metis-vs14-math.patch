@@ -1,0 +1,11 @@
+--- a/libmetis/metislib.h	Sat Mar 30 17:24:45 2013
++++ b/libmetis/metislib.h	Wed Dec 21 18:30:59 2016
+@@ -31,7 +31,7 @@
+ #include <proto.h>
+ 
+ 
+-#if defined(COMPILER_MSC)
++#if defined(COMPILER_MSC) && (_MSC_VER < 1900)
+ #if defined(rint)
+   #undef rint
+ #endif
