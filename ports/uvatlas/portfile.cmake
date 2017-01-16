@@ -40,9 +40,6 @@ file(INSTALL
 file(INSTALL
 	${SOURCE_PATH}/UVAtlas/Bin/Desktop_2015/${BUILD_ARCH}/Debug/UVAtlas.lib
 	DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-file(INSTALL
-	${SOURCE_PATH}/UVAtlas/Bin/Desktop_2015/${BUILD_ARCH}/Debug/UVAtlas.lib
-	DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/MIT.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/uvatlas)
