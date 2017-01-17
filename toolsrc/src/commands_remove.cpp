@@ -4,7 +4,7 @@
 #include "vcpkg_Input.h"
 #include <fstream>
 
-namespace vcpkg
+namespace vcpkg::Commands::Remove
 {
     static const std::string OPTION_PURGE = "--purge";
 
@@ -166,9 +166,9 @@ namespace vcpkg
         System::println(System::color::success, "Package %s was successfully removed", pkg.package.displayname());
     }
 
-    void remove_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
+    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
-        static const std::string example = create_example_string("remove zlib zlib:x64-windows curl boost");
+        static const std::string example = Commands::Help::create_example_string("remove zlib zlib:x64-windows curl boost");
         args.check_min_arg_count(1, example);
 
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_PURGE});

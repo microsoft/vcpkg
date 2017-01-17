@@ -130,7 +130,11 @@
   <ItemGroup>
     <ClCompile Include="..\MachineType.cpp" />
     <ClCompile Include="..\src\coff_file_reader.cpp" />
+    <ClCompile Include="..\src\commands_available_commands.cpp" />
+    <ClCompile Include="..\src\commands_build.cpp" />
+    <ClCompile Include="..\src\commands_build_external.cpp" />
     <ClCompile Include="..\src\commands_cache.cpp" />
+    <ClCompile Include="..\src\commands_contact.cpp" />
     <ClCompile Include="..\src\commands_create.cpp" />
     <ClCompile Include="..\src\commands_edit.cpp" />
     <ClCompile Include="..\src\commands_hash.cpp" />
@@ -141,12 +145,12 @@
     <ClCompile Include="..\src\commands_remove.cpp" />
     <ClCompile Include="..\src\commands_search.cpp" />
     <ClCompile Include="..\src\commands_update.cpp" />
+    <ClCompile Include="..\src\commands_version.cpp" />
     <ClCompile Include="..\src\vcpkg_cmd_arguments.cpp" />
-    <ClCompile Include="..\src\commands_other.cpp" />
     <ClCompile Include="..\src\vcpkg_Dependencies.cpp" />
     <ClCompile Include="..\src\vcpkg_Environment.cpp" />
-    <ClCompile Include="..\src\commands_installation.cpp" />
-    <ClCompile Include="..\src\commands_integration.cpp" />
+    <ClCompile Include="..\src\commands_install.cpp" />
+    <ClCompile Include="..\src\commands_integrate.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\commands_help.cpp" />
     <ClCompile Include="..\src\post_build_lint.cpp" />

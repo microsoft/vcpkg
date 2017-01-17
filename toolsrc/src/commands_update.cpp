@@ -5,9 +5,9 @@
 #include "Paragraphs.h"
 #include "vcpkg_info.h"
 
-namespace vcpkg
+namespace vcpkg::Commands::Update
 {
-    void update_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
         args.check_exact_arg_count(0);
         System::println("Using local portfile versions. To update the local portfiles, use `git pull`.");
