@@ -1,3 +1,37 @@
+vcpkg (0.0.67)
+--------------
+  * Add ports:
+    - cereal               1.2.1
+    - directxmesh          oct2016
+    - directxtex           dec2016
+    - metis                5.1.0
+    - sdl2-image           2.0.1
+    - szip                 2.1
+  * Update ports:
+    - ace                  6.4.0            -> 6.4.2
+    - boost                1.62-9           -> 1.62-11
+    - curl                 7.51.0-2         -> 7.51.0-3
+    - directxtk            oct2016-1        -> dec2016
+    - directxtk12          oct2016          -> dec2016
+    - freetype             2.6.3-3          -> 2.6.3-4
+    - glew                 2.0.0            -> 2.0.0-1
+    - grpc                 1.1.0-dev-1674f65 -> 1.1.0-dev-1674f65-1
+    - http-parser          2.7.1            -> 2.7.1-1
+    - libssh2              1.8.0            -> 1.8.0-1
+    - libwebsockets        2.0.0            -> 2.0.0-1
+    - openssl              1.0.2j-1         -> 1.0.2j-2
+    - tiff                 4.0.6-1          -> 4.0.6-2
+    - zlib                 1.2.10           -> 1.2.11
+  * Add 7z to `vcpkg_find_acquire_program.cmake`
+  * Enhance `vcpkg_build_cmake.cmake` and `vcpkg_install_cmake.cmake`:
+    - Add option to disable parallel building (it is enabled by default)
+    - Add option to use the 64-bit toolset (for the 32-bit builds; output binaries are still 32-bit)
+  * Fix bug in `applocal.ps1` that would infinitely recurse when there were no depenndencies
+  * Fixes and improvements in existing portfiles and the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  WED, 18 Jan 2017 13:45:00 -0800
+
+
 vcpkg (0.0.66)
 --------------
   * Add ports:
