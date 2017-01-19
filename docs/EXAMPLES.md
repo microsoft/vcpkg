@@ -64,7 +64,7 @@ Package sqlite3:x86-windows is installed
 ```
 In addition to installing, `vcpkg` caches a pristine copy of the built library inside the `packages\` directory -- in this case, `packages\sqlite3_x86-windows`. This allows you to quickly uninstall and reinstall the library in the future using the `remove` and `install` commands.
 
-We can check that cpprestsdk was successfully installed for x86 windows desktop by running the `list` command.
+We can check that sqlite3 was successfully installed for x86 windows desktop by running the `list` command.
 ```
 PS D:\src\vcpkg> .\vcpkg list
 sqlite3:x86-windows         3.15.0           SQLite is a software library that implements a se...
@@ -72,7 +72,7 @@ sqlite3:x86-windows         3.15.0           SQLite is a software library that i
 
 To install for other architectures and platforms such as Universal Windows Platform or x64 Desktop, you can suffix the package name with `:<target>`.
 ```
-PS D:\src\vcpkg> .\vcpkg install cpprestsdk:x86-uwp zlib:x64-windows
+PS D:\src\vcpkg> .\vcpkg install sqlite3:x86-uwp zlib:x64-windows
 ```
 
 See `vcpkg help triplet` for all supported targets.
