@@ -89,5 +89,4 @@ file(INSTALL
 
 # Handle copyright
 file(COPY "${SOURCE_PATH}/sdk/PFiles/Microsoft SDKs/MPI/License/license_sdk.rtf" DESTINATION ${CURRENT_PACKAGES_DIR}/share/msmpi)
-#TODO: convert RTF to simple text?!
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/msmpi/license_sdk.rtf ${CURRENT_PACKAGES_DIR}/share/msmpi/copyright)
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/msmpi/copyright "See the accompanying license_sdk.rtf")
