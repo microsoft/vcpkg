@@ -1,18 +1,10 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mariadb-connector-c-2.3.1)
-
-if (EXISTS "${CURRENT_INSTALLED_DIR}/include/mysql.h")
-	message(FATAL_ERROR "FATAL ERROR: libmysql and libmariadb are incompatible.")
-endif()
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mariadb-connector-c-2.3.2)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/MariaDB/mariadb-connector-c/archive/v2.3.1.tar.gz"
-    FILENAME "mariadb-connector-c-2.3.1.tar.gz"
-    SHA512 d82f8348201d41dce6820c952a0503a5154c4e9c06feb471fe451a6fb968e5cff04423a64183cbb8e159a1b4e7265c12b5b7aef912f633395d9f1b0436fbfd2d
+    URLS "https://github.com/MariaDB/mariadb-connector-c/archive/v2.3.2.tar.gz"
+    FILENAME "mariadb-connector-c-2.3.2.tar.gz"
+    SHA512 f5574756ffce69e3dd15b7f7c14cfd0b4d69e3203ae4b383f05a110918916279ba7c0b9149d0dcb9ec93bbfc0927dfaf88bb40979ba1de710ce148d1fbe033af
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
@@ -26,24 +18,30 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # fix libmariadb lib & dll directory.
-file(MAKE_DIRECTORY
-	${CURRENT_PACKAGES_DIR}/bin
-	${CURRENT_PACKAGES_DIR}/debug/bin)
-file(RENAME
-	${CURRENT_PACKAGES_DIR}/lib/mariadb/libmariadb.dll
-	${CURRENT_PACKAGES_DIR}/bin/libmariadb.dll)
-file(RENAME
-	${CURRENT_PACKAGES_DIR}/debug/lib/mariadb/libmariadb.dll
-	${CURRENT_PACKAGES_DIR}/debug/bin/libmariadb.dll)
-file(RENAME
-	${CURRENT_PACKAGES_DIR}/lib/mariadb/libmariadb.lib
-	${CURRENT_PACKAGES_DIR}/lib/libmariadb.lib)
-file(RENAME
-	${CURRENT_PACKAGES_DIR}/debug/lib/mariadb/libmariadb.lib
-	${CURRENT_PACKAGES_DIR}/debug/lib/libmariadb.lib)
-file(REMOVE
-	${CURRENT_PACKAGES_DIR}/lib/mariadb/mariadbclient.lib
-	${CURRENT_PACKAGES_DIR}/debug/lib/mariadb/mariadbclient.lib)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+	file(RENAME
+		${CURRENT_PACKAGES_DIR}/lib/mariadb/mariadbclient.lib
+		${CURRENT_PACKAGES_DIR}/lib/mariadbclient.lib)		
+	file(RENAME
+		${CURRENT_PACKAGES_DIR}/debug/lib/mariadb/mariadbclient.lib
+		${CURRENT_PACKAGES_DIR}/debug/lib/mariadbclient.lib)
+else()
+	file(MAKE_DIRECTORY
+		${CURRENT_PACKAGES_DIR}/bin
+		${CURRENT_PACKAGES_DIR}/debug/bin)
+	file(RENAME
+		${CURRENT_PACKAGES_DIR}/lib/mariadb/libmariadb.dll
+		${CURRENT_PACKAGES_DIR}/bin/libmariadb.dll)
+	file(RENAME
+		${CURRENT_PACKAGES_DIR}/debug/lib/mariadb/libmariadb.dll
+		${CURRENT_PACKAGES_DIR}/debug/bin/libmariadb.dll)
+	file(RENAME
+		${CURRENT_PACKAGES_DIR}/lib/mariadb/libmariadb.lib
+		${CURRENT_PACKAGES_DIR}/lib/libmariadb.lib)
+	file(RENAME
+		${CURRENT_PACKAGES_DIR}/debug/lib/mariadb/libmariadb.lib
+		${CURRENT_PACKAGES_DIR}/debug/lib/libmariadb.lib)
+endif()
 
 # remove plugin folder
 file(REMOVE_RECURSE
@@ -54,23 +52,11 @@ file(REMOVE_RECURSE
 
 # copy & remove header files
 file(GLOB HEADER_FILES ${CURRENT_PACKAGES_DIR}/include/mariadb/*)
-file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/mariadb)
 file(REMOVE
-	${CURRENT_PACKAGES_DIR}/include/config-win.h
-	${CURRENT_PACKAGES_DIR}/include/dbug.h
-	${CURRENT_PACKAGES_DIR}/include/errmsg.h
-	${CURRENT_PACKAGES_DIR}/include/getopt.h
-	${CURRENT_PACKAGES_DIR}/include/hash.h
-	${CURRENT_PACKAGES_DIR}/include/ma_common.h
-	${CURRENT_PACKAGES_DIR}/include/ma_dyncol.h
-	${CURRENT_PACKAGES_DIR}/include/sha1.h
-	${CURRENT_PACKAGES_DIR}/include/thr_alarm.h
-	${CURRENT_PACKAGES_DIR}/include/violite.h
-	${CURRENT_PACKAGES_DIR}/include/mysql_version.h.in
-	${CURRENT_PACKAGES_DIR}/include/my_config.h.in
-	${CURRENT_PACKAGES_DIR}/include/CMakeLists.txt
-	${CURRENT_PACKAGES_DIR}/include/Makefile.am)
+	${CURRENT_PACKAGES_DIR}/include/mariadb/my_config.h.in
+	${CURRENT_PACKAGES_DIR}/include/mariadb/mysql_version.h.in
+	${CURRENT_PACKAGES_DIR}/include/mariadb/CMakeLists.txt
+	${CURRENT_PACKAGES_DIR}/include/mariadb/Makefile.am)
 
 # copy license file
 file(COPY ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/libmariadb)
