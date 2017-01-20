@@ -2,20 +2,20 @@ include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mysql-server-mysql-5.7.17)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/mysql/mysql-server/archive/mysql-5.7.17.tar.gz"
-    FILENAME "mysql-server-mysql-5.7.17.tar.gz"
-    SHA512 511027f28f0705f59a08ec369b1ebe5d9a77eb839d545898631f1ebbcb6b4b800f5b88511d3ae5d231c04e09a2d7b2b2d178264d36aeb2bc602cc1b0b248cfba
+	URLS "https://github.com/mysql/mysql-server/archive/mysql-5.7.17.tar.gz"
+	FILENAME "mysql-server-mysql-5.7.17.tar.gz"
+	SHA512 511027f28f0705f59a08ec369b1ebe5d9a77eb839d545898631f1ebbcb6b4b800f5b88511d3ae5d231c04e09a2d7b2b2d178264d36aeb2bc602cc1b0b248cfba
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
+	SOURCE_PATH ${SOURCE_PATH}
+	PATCHES
 		${CMAKE_CURRENT_LIST_DIR}/boost_and_build.patch
 )
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+	SOURCE_PATH ${SOURCE_PATH}
 	OPTIONS
 		-DWITHOUT_SERVER=ON
 		-DWITH_UNIT_TESTS=OFF
@@ -51,12 +51,12 @@ file(REMOVE
 	${CURRENT_PACKAGES_DIR}/debug/README)
 
 # remove not-related libs
-file (REMOVE 	
-	${CURRENT_PACKAGES_DIR}/lib/mysqlservices.lib	
+file (REMOVE
+	${CURRENT_PACKAGES_DIR}/lib/mysqlservices.lib
 	${CURRENT_PACKAGES_DIR}/debug/lib/mysqlservices.lib)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-	file(REMOVE 
+	file(REMOVE
 		${CURRENT_PACKAGES_DIR}/lib/libmysql.lib
 		${CURRENT_PACKAGES_DIR}/lib/libmysql.dll
 		${CURRENT_PACKAGES_DIR}/lib/libmysql.pdb
@@ -67,8 +67,10 @@ else()
 	file(REMOVE
 		${CURRENT_PACKAGES_DIR}/lib/mysqlclient.lib
 		${CURRENT_PACKAGES_DIR}/debug/lib/mysqlclient.lib)
-	
+
 	# correct the dll directory
+	file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
+	file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
 	file (RENAME ${CURRENT_PACKAGES_DIR}/lib/libmysql.dll ${CURRENT_PACKAGES_DIR}/bin/libmysql.dll)
 	file (RENAME ${CURRENT_PACKAGES_DIR}/lib/libmysql.pdb ${CURRENT_PACKAGES_DIR}/bin/libmysql.pdb)
 	file (RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libmysql.dll ${CURRENT_PACKAGES_DIR}/debug/bin/libmysql.dll)
