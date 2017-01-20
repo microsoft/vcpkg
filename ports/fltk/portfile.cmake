@@ -48,16 +48,6 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fltk-config)
 vcpkg_copy_pdbs()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin/libfltk_forms_SHAREDd.dll ${CURRENT_PACKAGES_DIR}/debug/bin/fltk_forms.dll)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin/libfltk_gl_SHAREDd.dll ${CURRENT_PACKAGES_DIR}/debug/bin/fltk_gl.dll)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin/libfltk_images_SHAREDd.dll ${CURRENT_PACKAGES_DIR}/debug/bin/fltk_images.dll)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin/libfltk_SHAREDd.dll ${CURRENT_PACKAGES_DIR}/debug/bin/fltk.dll)
-	
-   	file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin/libfltk_forms_SHAREDd.pdb ${CURRENT_PACKAGES_DIR}/debug/bin/fltk_forms.pdb)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin/libfltk_gl_SHAREDd.pdb ${CURRENT_PACKAGES_DIR}/debug/bin/fltk_gl.pdb)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin/libfltk_images_SHAREDd.pdb ${CURRENT_PACKAGES_DIR}/debug/bin/fltk_images.pdb)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin/libfltk_SHAREDd.pdb ${CURRENT_PACKAGES_DIR}/debug/bin/fltk.pdb)
-	
 	file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fltk_formsd.lib)
 	file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fltk_gld.lib)
 	file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fltk_imagesd.lib)
@@ -68,17 +58,6 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 	file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/fltk_images_SHAREDd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/fltk_imagesd.lib)
 	file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/fltk_SHAREDd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/fltkd.lib)
    
-   	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/libfltk_forms_SHARED.dll ${CURRENT_PACKAGES_DIR}/bin/fltk_forms.dll)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/libfltk_gl_SHARED.dll ${CURRENT_PACKAGES_DIR}/bin/fltk_gl.dll)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/libfltk_images_SHARED.dll ${CURRENT_PACKAGES_DIR}/bin/fltk_images.dll)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/libfltk_SHARED.dll ${CURRENT_PACKAGES_DIR}/bin/fltk.dll)
-	
-	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/libfltk_forms_SHARED.pdb ${CURRENT_PACKAGES_DIR}/bin/fltk_forms.pdb)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/libfltk_gl_SHARED.pdb ${CURRENT_PACKAGES_DIR}/bin/fltk_gl.pdb)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/libfltk_images_SHARED.pdb ${CURRENT_PACKAGES_DIR}/bin/fltk_images.pdb)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/libfltk_SHARED.pdb ${CURRENT_PACKAGES_DIR}/bin/fltk.pdb)
-	
-	
 	file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/fltk_forms.lib)
 	file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/fltk_gl.lib)
 	file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/fltk_images.lib)
