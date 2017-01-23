@@ -23,7 +23,10 @@ if (!(Test-Path $vcpkgSourcesPath))
 
 try{
     pushd $vcpkgSourcesPath
-    cmd /c "$env:VS140COMNTOOLS..\..\VC\vcvarsall.bat" x86 "&" msbuild "/p:VCPKG_VERSION=-$gitHash" "/p:DISABLE_METRICS=$disableMetrics" /p:Configuration=Release /p:Platform=x86 /m
+    $msbuildExeWithPlatformToolset = & $scriptsDir\findAnyMSBuildWithCppPlatformToolset.ps1
+    $msbuildExe = $msbuildExeWithPlatformToolset[0]
+    $platformToolset = $msbuildExeWithPlatformToolset[1]
+    & $msbuildExe "/p:VCPKG_VERSION=-$gitHash" "/p:DISABLE_METRICS=$disableMetrics" /p:Configuration=Release /p:Platform=x86 /p:PlatformToolset=$platformToolset /m
 
     Write-Verbose("Placing vcpkg.exe in the correct location")
 
