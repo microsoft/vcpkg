@@ -3,6 +3,7 @@
 #include "vcpkg_Files.h"
 #include <functional>
 #include "vcpkg_System.h"
+#include "vcpkg_Environment.h"
 #include "coff_file_reader.h"
 #include "BuildInfo.h"
 #include <regex>
@@ -14,8 +15,6 @@ namespace vcpkg::PostBuildLint
         SUCCESS = 0,
         ERROR_DETECTED = 1
     };
-
-    static const fs::path DUMPBIN_EXE = R"(%VS140COMNTOOLS%\..\..\VC\bin\dumpbin.exe)";
 
     static lint_status check_for_files_in_include_directory(const fs::path& package_dir)
     {
@@ -185,12 +184,12 @@ namespace vcpkg::PostBuildLint
         return lint_status::SUCCESS;
     }
 
-    static lint_status check_exports_of_dlls(const std::vector<fs::path>& dlls)
+    static lint_status check_exports_of_dlls(const std::vector<fs::path>& dlls, const fs::path& dumpbin_exe)
     {
         std::vector<fs::path> dlls_with_no_exports;
         for (const fs::path& dll : dlls)
         {
-            const std::wstring cmd_line = Strings::wformat(LR"("%s" /exports "%s")", DUMPBIN_EXE.native(), dll.native());
+            const std::wstring cmd_line = Strings::wformat(LR"("%s" /exports "%s")", dumpbin_exe.native(), dll.native());
             System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
@@ -211,7 +210,7 @@ namespace vcpkg::PostBuildLint
         return lint_status::SUCCESS;
     }
 
-    static lint_status check_uwp_bit_of_dlls(const std::string& expected_system_name, const std::vector<fs::path>& dlls)
+    static lint_status check_uwp_bit_of_dlls(const std::string& expected_system_name, const std::vector<fs::path>& dlls, const fs::path dumpbin_exe)
     {
         if (expected_system_name != "uwp")
         {
@@ -221,7 +220,7 @@ namespace vcpkg::PostBuildLint
         std::vector<fs::path> dlls_with_improper_uwp_bit;
         for (const fs::path& dll : dlls)
         {
-            const std::wstring cmd_line = Strings::wformat(LR"("%s" /headers "%s")", DUMPBIN_EXE.native(), dll.native());
+            const std::wstring cmd_line = Strings::wformat(LR"("%s" /headers "%s")", dumpbin_exe.native(), dll.native());
             System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
@@ -459,7 +458,7 @@ namespace vcpkg::PostBuildLint
         BuildType build_type;
     };
 
-    static lint_status check_crt_linkage_of_libs(const BuildType& expected_build_type, const std::vector<fs::path>& libs)
+    static lint_status check_crt_linkage_of_libs(const BuildType& expected_build_type, const std::vector<fs::path>& libs, const fs::path dumpbin_exe)
     {
         std::vector<BuildType> bad_build_types = BuildType::values();
         bad_build_types.erase(std::remove(bad_build_types.begin(), bad_build_types.end(), expected_build_type), bad_build_types.end());
@@ -468,7 +467,7 @@ namespace vcpkg::PostBuildLint
 
         for (const fs::path& lib : libs)
         {
-            const std::wstring cmd_line = Strings::wformat(LR"("%s" /directives "%s")", DUMPBIN_EXE.native(), lib.native());
+            const std::wstring cmd_line = Strings::wformat(LR"("%s" /directives "%s")", dumpbin_exe.native(), lib.native());
             System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
@@ -505,7 +504,7 @@ namespace vcpkg::PostBuildLint
         OutdatedDynamicCrt outdated_crt;
     };
 
-    static lint_status check_outdated_crt_linkage_of_dlls(const std::vector<fs::path>& dlls)
+    static lint_status check_outdated_crt_linkage_of_dlls(const std::vector<fs::path>& dlls, const fs::path dumpbin_exe)
     {
         const std::vector<OutdatedDynamicCrt>& outdated_crts = OutdatedDynamicCrt::values();
 
@@ -513,7 +512,7 @@ namespace vcpkg::PostBuildLint
 
         for (const fs::path& dll : dlls)
         {
-            const std::wstring cmd_line = Strings::wformat(LR"("%s" /dependents "%s")", DUMPBIN_EXE.native(), dll.native());
+            const std::wstring cmd_line = Strings::wformat(LR"("%s" /dependents "%s")", dumpbin_exe.native(), dll.native());
             System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
@@ -575,6 +574,8 @@ namespace vcpkg::PostBuildLint
 
     void perform_all_checks(const package_spec& spec, const vcpkg_paths& paths)
     {
+        const fs::path dumpbin_exe = Environment::get_dumpbin_exe(paths);
+
         System::println("-- Performing post-build validation");
 
         BuildInfo build_info = read_build_info(paths.build_info_file_path(spec));
@@ -623,11 +624,11 @@ namespace vcpkg::PostBuildLint
                     dlls.insert(dlls.cend(), debug_dlls.cbegin(), debug_dlls.cend());
                     dlls.insert(dlls.cend(), release_dlls.cbegin(), release_dlls.cend());
 
-                    error_count += check_exports_of_dlls(dlls);
-                    error_count += check_uwp_bit_of_dlls(spec.target_triplet().system(), dlls);
+                    error_count += check_exports_of_dlls(dlls, dumpbin_exe);
+                    error_count += check_uwp_bit_of_dlls(spec.target_triplet().system(), dlls, dumpbin_exe);
                     error_count += check_dll_architecture(spec.target_triplet().architecture(), dlls);
 
-                    error_count += check_outdated_crt_linkage_of_dlls(dlls);
+                    error_count += check_outdated_crt_linkage_of_dlls(dlls, dumpbin_exe);
                     break;
                 }
             case LinkageType::STATIC:
@@ -638,8 +639,8 @@ namespace vcpkg::PostBuildLint
 
                     error_count += check_bin_folders_are_not_present_in_static_build(package_dir);
 
-                    error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::DEBUG, linkage_type_value_of(build_info.crt_linkage)), debug_libs);
-                    error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::RELEASE, linkage_type_value_of(build_info.crt_linkage)), release_libs);
+                    error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::DEBUG, linkage_type_value_of(build_info.crt_linkage)), debug_libs, dumpbin_exe);
+                    error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::RELEASE, linkage_type_value_of(build_info.crt_linkage)), release_libs, dumpbin_exe);
                     break;
                 }
             case LinkageType::UNKNOWN:
