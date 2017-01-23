@@ -5,6 +5,7 @@
 #include "metrics.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Strings.h"
+#include "vcpkg_Files.h"
 
 namespace vcpkg::Environment
 {
@@ -109,11 +110,29 @@ namespace vcpkg::Environment
         // VS2017
         for (const std::string& instance : vs2017_installation_instances)
         {
-            const fs::path dumpbin_path = Strings::format(R"(%s\VC\Tools\MSVC\14.10.24911\bin\HostX86\x86\dumpbin.exe)", instance);
-            paths_examined.push_back(dumpbin_path);
-            if (fs::exists(dumpbin_path))
+            const fs::path msvc_path = Strings::format(R"(%s\VC\Tools\MSVC)", instance);
+            std::vector<fs::path> msvc_subdirectories;
+            Files::non_recursive_find_matching_paths_in_dir(msvc_path, [&](const fs::path& current)
             {
-                return dumpbin_path;
+                return fs::is_directory(current);
+            }, &msvc_subdirectories);
+
+            Checks::check_exit(!msvc_subdirectories.empty(), "No subdirectories were found in %s", msvc_path.generic_string());
+
+            // Sort them so that latest comes first
+            std::sort(msvc_subdirectories.begin(), msvc_subdirectories.end(), [&](const fs::path& left, const fs::path& right)
+            {
+                return left.filename() > right.filename();
+            });
+
+            for (const fs::path& subdir : msvc_subdirectories)
+            {
+                const fs::path dumpbin_path = Strings::format(R"(%s\bin\HostX86\x86\dumpbin.exe)", subdir.generic_string());
+                paths_examined.push_back(dumpbin_path);
+                if (fs::exists(dumpbin_path))
+                {
+                    return dumpbin_path;
+                }
             }
         }
 
