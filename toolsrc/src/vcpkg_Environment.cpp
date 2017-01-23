@@ -94,6 +94,13 @@ namespace vcpkg::Environment
         return Strings::split(ec_data.output, "\n");
     }
 
+    static const fs::path& get_VS2015_installation_instance()
+    {
+        static const fs::path vs2015_cmntools = fs::path(System::wdupenv_str(L"VS140COMNTOOLS")).parent_path(); // TODO: Check why this requires parent_path() call
+        static const fs::path vs2015_path = vs2015_cmntools.parent_path().parent_path();
+        return vs2015_path;
+    }
+
     static fs::path find_dumpbin_exe(const vcpkg_paths& paths)
     {
         const std::vector<std::string> vs2017_installation_instances = get_VS2017_installation_instances(paths);
@@ -111,8 +118,7 @@ namespace vcpkg::Environment
         }
 
         // VS2015
-        const fs::path vs2015_cmntools = fs::path(System::wdupenv_str(L"VS140COMNTOOLS")).parent_path(); // TODO: Check why this requires parent_path() call
-        const fs::path vs2015_dumpbin_exe = vs2015_cmntools.parent_path().parent_path() / "VC" / "bin" / "dumpbin.exe";
+        const fs::path vs2015_dumpbin_exe = get_VS2015_installation_instance() / "VC" / "bin" / "dumpbin.exe";
         paths_examined.push_back(vs2015_dumpbin_exe);
         if (fs::exists(vs2015_dumpbin_exe))
         {
