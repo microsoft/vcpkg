@@ -24,6 +24,7 @@ namespace vcpkg
         fs::path ports;
         fs::path installed;
         fs::path triplets;
+        fs::path scripts;
 
         fs::path buildsystems;
         fs::path buildsystems_msbuild_targets;

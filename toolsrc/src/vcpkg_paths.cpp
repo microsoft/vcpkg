@@ -31,8 +31,9 @@ namespace vcpkg
         paths.ports = paths.root / "ports";
         paths.installed = paths.root / "installed";
         paths.triplets = paths.root / "triplets";
+        paths.scripts = paths.root / "scripts";
 
-        paths.buildsystems = paths.root / "scripts" / "buildsystems";
+        paths.buildsystems = paths.scripts / "buildsystems";
         paths.buildsystems_msbuild_targets = paths.buildsystems / "msbuild" / "vcpkg.targets";
 
         paths.vcpkg_dir = paths.installed / "vcpkg";
@@ -40,7 +41,7 @@ namespace vcpkg
         paths.vcpkg_dir_info = paths.vcpkg_dir / "info";
         paths.vcpkg_dir_updates = paths.vcpkg_dir / "updates";
 
-        paths.ports_cmake = paths.root / "scripts" / "ports.cmake";
+        paths.ports_cmake = paths.scripts / "ports.cmake";
         return paths;
     }
 
