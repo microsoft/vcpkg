@@ -119,4 +119,25 @@ namespace vcpkg::Strings
                                           return s == "";
                                       }), strings->end());
     }
+
+    std::vector<std::string> split(const std::string& s, const std::string& delimiter)
+    {
+        std::vector<std::string> output;
+
+        size_t i = 0;
+        size_t pos = s.find(delimiter);
+        while (pos != std::string::npos)
+        {
+            output.push_back(s.substr(i, pos - i));
+            i = ++pos;
+            pos = s.find(delimiter, pos);
+
+            if (pos == std::string::npos)
+            {
+                output.push_back(s.substr(i, s.length()));
+            }
+        }
+
+        return output;
+    }
 }
