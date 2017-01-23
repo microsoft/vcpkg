@@ -14,4 +14,6 @@ namespace vcpkg::Environment
         ensure_cmake_on_path(paths);
         ensure_git_on_path(paths);
     }
+
+    const fs::path& get_dumpbin_exe(const vcpkg_paths& paths);
 }

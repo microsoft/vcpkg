@@ -4,6 +4,7 @@
 #include "vcpkg_Commands.h"
 #include "metrics.h"
 #include "vcpkg_System.h"
+#include "vcpkg_Strings.h"
 
 namespace vcpkg::Environment
 {
@@ -82,5 +83,54 @@ namespace vcpkg::Environment
         static constexpr std::array<int, 3> nuget_version = {1,0,0};
         // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
         ensure_on_path(nuget_version, L"nuget 2>&1", L"powershell -ExecutionPolicy Bypass scripts\\fetchDependency.ps1 -Dependency nuget");
+    }
+
+    static std::vector<std::string> get_VS2017_installation_instances(const vcpkg_paths& paths)
+    {
+        const fs::path script = paths.scripts / "findVisualStudioInstallationInstances.ps1";
+        const std::wstring cmd = Strings::wformat(L"powershell -ExecutionPolicy Bypass %s", script.native());
+        System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd);
+        Checks::check_exit(ec_data.exit_code == 0, "Could not run script to detect VS 2017 instances");
+        return Strings::split(ec_data.output, "\n");
+    }
+
+    static fs::path find_dumpbin_exe(const vcpkg_paths& paths)
+    {
+        const std::vector<std::string> vs2017_installation_instances = get_VS2017_installation_instances(paths);
+        std::vector<fs::path> paths_examined;
+
+        // VS2017
+        for (const std::string& instance : vs2017_installation_instances)
+        {
+            const fs::path dumpbin_path = Strings::format(R"(%s\VC\Tools\MSVC\14.10.24911\bin\HostX86\x86\dumpbin.exe)", instance);
+            paths_examined.push_back(dumpbin_path);
+            if (fs::exists(dumpbin_path))
+            {
+                return dumpbin_path;
+            }
+        }
+
+        // VS2015
+        const fs::path vs2015_cmntools = fs::path(System::wdupenv_str(L"VS140COMNTOOLS")).parent_path(); // TODO: Check why this requires parent_path() call
+        const fs::path vs2015_dumpbin_exe = vs2015_cmntools.parent_path().parent_path() / "VC" / "bin" / "dumpbin.exe";
+        paths_examined.push_back(vs2015_dumpbin_exe);
+        if (fs::exists(vs2015_dumpbin_exe))
+        {
+            return vs2015_dumpbin_exe;
+        }
+
+        System::println(System::color::error, "Could not detect dumpbin.exe.");
+        System::println("The following paths were examined:");
+        for (const fs::path& path : paths_examined)
+        {
+            System::println(path.generic_string());
+        }
+        exit(EXIT_FAILURE);
+    }
+
+    const fs::path& get_dumpbin_exe(const vcpkg_paths& paths)
+    {
+        static const fs::path dumpbin_exe = find_dumpbin_exe(paths);
+        return dumpbin_exe;
     }
 }
