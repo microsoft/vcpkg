@@ -106,7 +106,7 @@ namespace vcpkg::Environment
 
     static const fs::path& get_VS2015_installation_instance()
     {
-        static const fs::path vs2015_cmntools = fs::path(System::wdupenv_str(L"VS140COMNTOOLS")).parent_path(); // The call to parent path is needed because the env variable has a trailing backslash
+        static const fs::path vs2015_cmntools = fs::path(System::wdupenv_str(L"VS140COMNTOOLS")).parent_path(); // The call to parent_path() is needed because the env variable has a trailing backslash
         static const fs::path vs2015_path = vs2015_cmntools.parent_path().parent_path();
         return vs2015_path;
     }
