@@ -16,7 +16,8 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/fix-buildsystem.patch
-        ${CMAKE_CURRENT_LIST_DIR}/use-memset-not-bzero.patch)
+        ${CMAKE_CURRENT_LIST_DIR}/use-memset-not-bzero.patch
+        ${CMAKE_CURRENT_LIST_DIR}/override-broken-feature-checks.patch)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
