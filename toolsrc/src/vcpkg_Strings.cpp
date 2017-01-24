@@ -132,7 +132,7 @@ namespace vcpkg::Strings
             i = ++pos;
             pos = s.find(delimiter, pos);
 
-            if (pos == std::string::npos)
+            if (pos == std::string::npos && i != s.length()) // The second check is so no items are added if there is nothing after the last delimiter
             {
                 output.push_back(s.substr(i, s.length()));
             }
