@@ -123,7 +123,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         $requiredVersion = "3.7.2"
         $downloadVersion = "3.7.2"
         $url = "https://cmake.org/files/v3.7/cmake-3.7.2-win32-x86.zip"
-        $downloadName = "cmake-3.7.2-win32-x86.zip"
+        $downloadPath = "$downloadsDir\cmake-3.7.2-win32-x86.zip"
         $expectedDownloadedFileHash = "ec5e299d412e0272e01d4de5bf07718f42c96361f83d51cc39f91bf49cc3e5c3"
         $executableFromDownload = "$downloadsDir\cmake-3.7.2-win32-x86\bin\cmake.exe"
         $extractionType = $ExtractionType_ZIP
@@ -133,7 +133,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         $requiredVersion = "3.3.0"
         $downloadVersion = "3.5.0"
         $url = "https://dist.nuget.org/win-x86-commandline/v3.5.0/nuget.exe"
-        $downloadName = "nuget.exe"
+        $downloadPath = "$downloadsDir\nuget.exe"
         $expectedDownloadedFileHash = "399ec24c26ed54d6887cde61994bb3d1cada7956c1b19ff880f06f060c039918"
         $executableFromDownload = "$downloadsDir\nuget.exe"
         $extractionType = $ExtractionType_NO_EXTRACTION_REQUIRED
@@ -143,7 +143,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         $requiredVersion = "2.0.0"
         $downloadVersion = "2.11.0"
         $url = "https://github.com/git-for-windows/git/releases/download/v2.11.0.windows.3/PortableGit-2.11.0.3-32-bit.7z.exe" # We choose the 32-bit version
-        $downloadName = "PortableGit-2.11.0.3-32-bit.7z.exe"
+        $downloadPath = "$downloadsDir\PortableGit-2.11.0.3-32-bit.7z.exe"
         $expectedDownloadedFileHash = "8bf3769c37945e991903dd1b988c6b1d97bbf0f3afc9851508974f38bf94dc01"
         # There is another copy of git.exe in PortableGit\bin. However, an installed version of git add the cmd dir to the PATH.
         # Therefore, choosing the cmd dir here as well.
@@ -155,7 +155,6 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         throw "Unknown program requested"
     }
 
-    $downloadPath = "$downloadsDir\$downloadName"
     performDownload $Dependency $url $downloadsDir $downloadPath $downloadVersion $requiredVersion
 
     #calculating the hash
