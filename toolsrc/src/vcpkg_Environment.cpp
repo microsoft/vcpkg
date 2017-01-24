@@ -167,7 +167,7 @@ namespace vcpkg::Environment
         return dumpbin_exe;
     }
 
-    static fs::path find_vcvarsall_bat(const vcpkg_paths& paths)
+    static vcvarsall_and_platform_toolset find_vcvarsall_bat(const vcpkg_paths& paths)
     {
         const std::vector<std::string> vs2017_installation_instances = get_VS2017_installation_instances(paths);
         std::vector<fs::path> paths_examined;
@@ -179,7 +179,7 @@ namespace vcpkg::Environment
             paths_examined.push_back(vcvarsall_bat);
             if (fs::exists(vcvarsall_bat))
             {
-                return vcvarsall_bat;
+                return { vcvarsall_bat , L"v141"};
             }
         }
 
@@ -188,7 +188,7 @@ namespace vcpkg::Environment
         paths_examined.push_back(vs2015_vcvarsall_bat);
         if (fs::exists(vs2015_vcvarsall_bat))
         {
-            return vs2015_vcvarsall_bat;
+            return { vs2015_vcvarsall_bat, L"v140" };
         }
 
         System::println(System::color::error, "Could not detect vccarsall.bat.");
@@ -200,9 +200,9 @@ namespace vcpkg::Environment
         exit(EXIT_FAILURE);
     }
 
-    const fs::path& get_vcvarsall_bat(const vcpkg_paths& paths)
+    const vcvarsall_and_platform_toolset& get_vcvarsall_bat(const vcpkg_paths& paths)
     {
-        static const fs::path vcvarsall_bat = find_vcvarsall_bat(paths);
+        static const vcvarsall_and_platform_toolset vcvarsall_bat = find_vcvarsall_bat(paths);
         return vcvarsall_bat;
     }
 }
