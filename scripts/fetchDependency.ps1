@@ -130,11 +130,11 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     }
     elseif($Dependency -eq "nuget")
     {
-        $requiredVersion = "1.0.0"
-        $downloadVersion = "3.4.3"
-        $url = "https://dist.nuget.org/win-x86-commandline/v3.4.3/nuget.exe"
+        $requiredVersion = "3.3.0"
+        $downloadVersion = "3.5.0"
+        $url = "https://dist.nuget.org/win-x86-commandline/v3.5.0/nuget.exe"
         $downloadName = "nuget.exe"
-        $expectedDownloadedFileHash = "3B1EA72943968D7AF6BACDB4F2F3A048A25AFD14564EF1D8B1C041FDB09EBB0A"
+        $expectedDownloadedFileHash = "399ec24c26ed54d6887cde61994bb3d1cada7956c1b19ff880f06f060c039918"
         $executableFromDownload = "$downloadsDir\nuget.exe"
         $extractionType = $ExtractionType_NO_EXTRACTION_REQUIRED
     }
