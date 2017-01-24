@@ -14,7 +14,7 @@ namespace vcpkg::Environment
     static const fs::path default_git_installation_dir = "C:/Program Files/git/cmd";
     static const fs::path default_git_installation_dir_x86 = "C:/Program Files (x86)/git/cmd";
 
-    static void ensure_on_path(const std::array<int, 3>& version, const wchar_t* version_check_cmd, const wchar_t* install_cmd)
+    static void ensure_on_path(const std::array<int, 3>& version, const std::wstring& version_check_cmd, const std::wstring& install_cmd)
     {
         System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(version_check_cmd);
         if (ec_data.exit_code == 0)
@@ -57,8 +57,11 @@ namespace vcpkg::Environment
         _wputenv_s(L"PATH", path_buf.c_str());
 
         static constexpr std::array<int, 3> git_version = {2,0,0};
+        static const std::wstring version_check_cmd = L"git --version 2>&1";
+        const fs::path script = paths.scripts / "fetchDependency.ps1";
         // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
-        ensure_on_path(git_version, L"git --version 2>&1", L"powershell -ExecutionPolicy Bypass scripts\\fetchDependency.ps1 -Dependency git");
+        const std::wstring install_cmd = Strings::wformat(L"powershell -ExecutionPolicy Bypass %s -Dependency git", script.native());
+        ensure_on_path(git_version, version_check_cmd, install_cmd);
     }
 
     void ensure_cmake_on_path(const vcpkg_paths& paths)
@@ -72,8 +75,11 @@ namespace vcpkg::Environment
         _wputenv_s(L"PATH", path_buf.c_str());
 
         static constexpr std::array<int, 3> cmake_version = {3,7,2};
+        static const std::wstring version_check_cmd = L"cmake --version 2>&1";
+        const fs::path script = paths.scripts / "fetchDependency.ps1";
         // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
-        ensure_on_path(cmake_version, L"cmake --version 2>&1", L"powershell -ExecutionPolicy Bypass scripts\\fetchDependency.ps1 -Dependency cmake");
+        const std::wstring install_cmd = Strings::wformat(L"powershell -ExecutionPolicy Bypass %s -Dependency cmake", script.native());
+        ensure_on_path(cmake_version, version_check_cmd, install_cmd);
     }
 
     void ensure_nuget_on_path(const vcpkg_paths& paths)
@@ -82,8 +88,11 @@ namespace vcpkg::Environment
         _wputenv_s(L"PATH", path_buf.c_str());
 
         static constexpr std::array<int, 3> nuget_version = {1,0,0};
+        static const std::wstring version_check_cmd = L"nuget 2>&1";
+        const fs::path script = paths.scripts / "fetchDependency.ps1";
         // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
-        ensure_on_path(nuget_version, L"nuget 2>&1", L"powershell -ExecutionPolicy Bypass scripts\\fetchDependency.ps1 -Dependency nuget");
+        const std::wstring install_cmd = Strings::wformat(L"powershell -ExecutionPolicy Bypass %s -Dependency nuget", script.native());
+        ensure_on_path(nuget_version, version_check_cmd, install_cmd);
     }
 
     static std::vector<std::string> get_VS2017_installation_instances(const vcpkg_paths& paths)
