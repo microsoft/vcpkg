@@ -46,6 +46,13 @@ namespace vcpkg::Environment
         }
     }
 
+    static std::wstring create_default_install_cmd(const vcpkg_paths& paths, const std::wstring& tool_name)
+    {
+        const fs::path script = paths.scripts / "fetchDependency.ps1";
+        // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
+        return Strings::wformat(L"powershell -ExecutionPolicy Bypass %s -Dependency %s", script.native(), tool_name);
+    }
+
     void ensure_git_on_path(const vcpkg_paths& paths)
     {
         const fs::path downloaded_git = paths.downloads / "PortableGit" / "cmd";
@@ -58,9 +65,7 @@ namespace vcpkg::Environment
 
         static constexpr std::array<int, 3> git_version = {2,0,0};
         static const std::wstring version_check_cmd = L"git --version 2>&1";
-        const fs::path script = paths.scripts / "fetchDependency.ps1";
-        // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
-        const std::wstring install_cmd = Strings::wformat(L"powershell -ExecutionPolicy Bypass %s -Dependency git", script.native());
+        const std::wstring install_cmd = create_default_install_cmd(paths, L"git");
         ensure_on_path(git_version, version_check_cmd, install_cmd);
     }
 
@@ -76,22 +81,19 @@ namespace vcpkg::Environment
 
         static constexpr std::array<int, 3> cmake_version = {3,7,2};
         static const std::wstring version_check_cmd = L"cmake --version 2>&1";
-        const fs::path script = paths.scripts / "fetchDependency.ps1";
-        // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
-        const std::wstring install_cmd = Strings::wformat(L"powershell -ExecutionPolicy Bypass %s -Dependency cmake", script.native());
+        const std::wstring install_cmd = create_default_install_cmd(paths, L"cmake");
         ensure_on_path(cmake_version, version_check_cmd, install_cmd);
     }
 
     void ensure_nuget_on_path(const vcpkg_paths& paths)
     {
-        const std::wstring path_buf = Strings::wformat(L"%s;%s", paths.downloads.native(), System::wdupenv_str(L"PATH"));
+        const fs::path downloaded_nuget = paths.downloads / "nuget-3.5.0";
+        const std::wstring path_buf = Strings::wformat(L"%s;%s", downloaded_nuget.native(), System::wdupenv_str(L"PATH"));
         _wputenv_s(L"PATH", path_buf.c_str());
 
-        static constexpr std::array<int, 3> nuget_version = {1,0,0};
+        static constexpr std::array<int, 3> nuget_version = {3,3,0};
         static const std::wstring version_check_cmd = L"nuget 2>&1";
-        const fs::path script = paths.scripts / "fetchDependency.ps1";
-        // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
-        const std::wstring install_cmd = Strings::wformat(L"powershell -ExecutionPolicy Bypass %s -Dependency nuget", script.native());
+        const std::wstring install_cmd = create_default_install_cmd(paths, L"nuget");
         ensure_on_path(nuget_version, version_check_cmd, install_cmd);
     }
 
@@ -155,7 +157,7 @@ namespace vcpkg::Environment
         System::println("The following paths were examined:");
         for (const fs::path& path : paths_examined)
         {
-            System::println(path.generic_string());
+            System::println("    %s", path.generic_string());
         }
         exit(EXIT_FAILURE);
     }
@@ -166,7 +168,7 @@ namespace vcpkg::Environment
         return dumpbin_exe;
     }
 
-    static fs::path find_vcvarsall_bat(const vcpkg_paths& paths)
+    static vcvarsall_and_platform_toolset find_vcvarsall_bat(const vcpkg_paths& paths)
     {
         const std::vector<std::string> vs2017_installation_instances = get_VS2017_installation_instances(paths);
         std::vector<fs::path> paths_examined;
@@ -178,7 +180,7 @@ namespace vcpkg::Environment
             paths_examined.push_back(vcvarsall_bat);
             if (fs::exists(vcvarsall_bat))
             {
-                return vcvarsall_bat;
+                return { vcvarsall_bat , L"v141"};
             }
         }
 
@@ -187,21 +189,21 @@ namespace vcpkg::Environment
         paths_examined.push_back(vs2015_vcvarsall_bat);
         if (fs::exists(vs2015_vcvarsall_bat))
         {
-            return vs2015_vcvarsall_bat;
+            return { vs2015_vcvarsall_bat, L"v140" };
         }
 
         System::println(System::color::error, "Could not detect vccarsall.bat.");
         System::println("The following paths were examined:");
         for (const fs::path& path : paths_examined)
         {
-            System::println(path.generic_string());
+            System::println("    %s",path.generic_string());
         }
         exit(EXIT_FAILURE);
     }
 
-    const fs::path& get_vcvarsall_bat(const vcpkg_paths& paths)
+    const vcvarsall_and_platform_toolset& get_vcvarsall_bat(const vcpkg_paths& paths)
     {
-        static const fs::path vcvarsall_bat = find_vcvarsall_bat(paths);
+        static const vcvarsall_and_platform_toolset vcvarsall_bat = find_vcvarsall_bat(paths);
         return vcvarsall_bat;
     }
 }
