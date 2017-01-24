@@ -155,7 +155,7 @@ namespace vcpkg::Environment
         System::println("The following paths were examined:");
         for (const fs::path& path : paths_examined)
         {
-            System::println(path.generic_string());
+            System::println("    %s", path.generic_string());
         }
         exit(EXIT_FAILURE);
     }
@@ -194,7 +194,7 @@ namespace vcpkg::Environment
         System::println("The following paths were examined:");
         for (const fs::path& path : paths_examined)
         {
-            System::println(path.generic_string());
+            System::println("    %s",path.generic_string());
         }
         exit(EXIT_FAILURE);
     }
