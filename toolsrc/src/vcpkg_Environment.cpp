@@ -127,7 +127,7 @@ namespace vcpkg::Environment
 
             for (const fs::path& subdir : msvc_subdirectories)
             {
-                const fs::path dumpbin_path = Strings::format(R"(%s\bin\HostX86\x86\dumpbin.exe)", subdir.generic_string());
+                const fs::path dumpbin_path = subdir / "bin" / "HostX86" / "x86" / "dumpbin.exe";
                 paths_examined.push_back(dumpbin_path);
                 if (fs::exists(dumpbin_path))
                 {
