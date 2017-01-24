@@ -30,7 +30,9 @@ namespace vcpkg::Commands::Build
         const triplet& target_triplet = spec.target_triplet();
 
         const fs::path ports_cmake_script_path = paths.ports_cmake;
-        const std::wstring command = Strings::wformat(LR"("%%VS140COMNTOOLS%%..\..\VC\vcvarsall.bat" %s && cmake -DCMD=BUILD -DPORT=%s -DTARGET_TRIPLET=%s "-DCURRENT_PORT_DIR=%s/." -P "%s")",
+        const fs::path vcvarsall_bat = Environment::get_vcvarsall_bat(paths);
+        const std::wstring command = Strings::wformat(LR"("%s" %s && cmake -DCMD=BUILD -DPORT=%s -DTARGET_TRIPLET=%s "-DCURRENT_PORT_DIR=%s/." -P "%s")",
+                                                      vcvarsall_bat.native(),
                                                       Strings::utf8_to_utf16(target_triplet.architecture()),
                                                       Strings::utf8_to_utf16(source_paragraph.name),
                                                       Strings::utf8_to_utf16(target_triplet.canonical_name()),
