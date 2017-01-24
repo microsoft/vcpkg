@@ -8,9 +8,13 @@ vcpkg_download_distfile(ARCHIVE_FILE
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
-file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR})
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/add-disable-boost-autolink-option.patch
+)
+
 vcpkg_configure_cmake(
-SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DSHARED_LIBS=ON
         -DENABLE_SSL=ON
@@ -20,6 +24,8 @@ SOURCE_PATH ${SOURCE_PATH}
         -DENABLE_MYSQL=OFF
         -DENABLE_QT4=OFF
         -DBOOST_DYNAMIC=ON
+        -DDISABLE_BOOST_AUTOLINK=ON
+        -DENABLE_LIBWTTEST=OFF
 )
 vcpkg_install_cmake()
 
