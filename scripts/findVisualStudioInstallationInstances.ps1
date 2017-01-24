@@ -10,8 +10,7 @@ $vcpkgRootDir = & $scriptsDir\findFileRecursivelyUp.ps1 $scriptsDir .vcpkg-root
 
 $downloadsDir = "$vcpkgRootDir\downloads"
 
-& $scriptsDir\fetchDependency.ps1 "nuget"
-$nugetexe = "$downloadsDir\nuget-3.5.0\nuget.exe"
+$nugetexe = & $scriptsDir\fetchDependency.ps1 "nuget"
 $nugetPackageDir = "$downloadsDir\nuget-packages"
 
 $SetupAPIVersion = "1.3.269-rc"
