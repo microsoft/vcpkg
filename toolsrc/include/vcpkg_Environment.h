@@ -16,4 +16,6 @@ namespace vcpkg::Environment
     }
 
     const fs::path& get_dumpbin_exe(const vcpkg_paths& paths);
+
+    const fs::path& get_vcvarsall_bat(const vcpkg_paths& paths);
 }

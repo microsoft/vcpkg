@@ -158,4 +158,43 @@ namespace vcpkg::Environment
         static const fs::path dumpbin_exe = find_dumpbin_exe(paths);
         return dumpbin_exe;
     }
+
+    static fs::path find_vcvarsall_bat(const vcpkg_paths& paths)
+    {
+        const std::vector<std::string> vs2017_installation_instances = get_VS2017_installation_instances(paths);
+        std::vector<fs::path> paths_examined;
+
+        // VS2017
+        for (const fs::path& instance : vs2017_installation_instances)
+        {
+            const fs::path vcvarsall_bat = instance / "VC" / "Auxiliary" / "Build" / "vcvarsall.bat";
+            paths_examined.push_back(vcvarsall_bat);
+            if (fs::exists(vcvarsall_bat))
+            {
+                return vcvarsall_bat;
+            }
+        }
+
+        // VS2015
+        const fs::path vs2015_vcvarsall_bat = get_VS2015_installation_instance() / "VC" / "vcvarsall.bat";
+        paths_examined.push_back(vs2015_vcvarsall_bat);
+        if (fs::exists(vs2015_vcvarsall_bat))
+        {
+            return vs2015_vcvarsall_bat;
+        }
+
+        System::println(System::color::error, "Could not detect vccarsall.bat.");
+        System::println("The following paths were examined:");
+        for (const fs::path& path : paths_examined)
+        {
+            System::println(path.generic_string());
+        }
+        exit(EXIT_FAILURE);
+    }
+
+    const fs::path& get_vcvarsall_bat(const vcpkg_paths& paths)
+    {
+        static const fs::path vcvarsall_bat = find_vcvarsall_bat(paths);
+        return vcvarsall_bat;
+    }
 }
