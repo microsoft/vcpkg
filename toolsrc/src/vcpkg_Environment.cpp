@@ -63,7 +63,7 @@ namespace vcpkg::Environment
 
     void ensure_cmake_on_path(const vcpkg_paths& paths)
     {
-        const fs::path downloaded_cmake = paths.downloads / "cmake-3.5.2-win32-x86" / "bin";
+        const fs::path downloaded_cmake = paths.downloads / "cmake-3.7.2-win32-x86" / "bin";
         const std::wstring path_buf = Strings::wformat(L"%s;%s;%s;%s",
                                                        downloaded_cmake.native(),
                                                        System::wdupenv_str(L"PATH"),
@@ -71,7 +71,7 @@ namespace vcpkg::Environment
                                                        default_cmake_installation_dir_x86.native());
         _wputenv_s(L"PATH", path_buf.c_str());
 
-        static constexpr std::array<int, 3> cmake_version = {3,5,0};
+        static constexpr std::array<int, 3> cmake_version = {3,7,2};
         // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
         ensure_on_path(cmake_version, L"cmake --version 2>&1", L"powershell -ExecutionPolicy Bypass scripts\\fetchDependency.ps1 -Dependency cmake");
     }

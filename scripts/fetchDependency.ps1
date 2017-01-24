@@ -51,12 +51,12 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         {
             return
         }
-        
+
         $title = "Download " + $Dependency
         $message = ("No suitable version of " + $Dependency  + " was found (requires $requiredVersion or higher). Download portable version?")
         $yesDescription = "Downloads " + $Dependency + " v" + $downloadVersion +" app-locally."
-        $noDescription = "Does not download " + $Dependency + "."	
-        
+        $noDescription = "Does not download " + $Dependency + "."
+
         $userAllowedDownload = promptForDownload $title $message $yesDescription $noDescription
         if (!$userAllowedDownload)
         {
@@ -86,10 +86,10 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     $ExtractionType_NO_EXTRACTION_REQUIRED = 0
     $ExtractionType_ZIP = 1
     $ExtractionType_SELF_EXTRACTING_7Z = 2
-    
-    
+
+
     # Using this to wait for the execution to finish
-    function Invoke-Command() 
+    function Invoke-Command()
     {
         param ( [string]$program = $(throw "Please specify a program" ),
                 [string]$argumentString = "",
@@ -99,7 +99,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         $psi.FileName = $program
         $psi.Arguments = $argumentString
         $proc = [Diagnostics.Process]::Start($psi)
-        if ( $waitForExit ) 
+        if ( $waitForExit )
         {
             $proc.WaitForExit();
         }
@@ -120,12 +120,12 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 
     if($Dependency -eq "cmake")
     {
-        $requiredVersion = "3.5.0"
-        $downloadVersion = "3.5.2"
-        $url = "https://cmake.org/files/v3.5/cmake-3.5.2-win32-x86.zip"
-        $downloadName = "cmake-3.5.2-win32-x86.zip"
-        $expectedDownloadedFileHash = "671073aee66b3480a564d0736792e40570a11e861bb34819bb7ae7858bbdfb80"
-        $executableFromDownload = "$downloadsDir\cmake-3.5.2-win32-x86\bin\cmake.exe"
+        $requiredVersion = "3.7.2"
+        $downloadVersion = "3.7.2"
+        $url = "https://cmake.org/files/v3.7/cmake-3.7.2-win32-x86.zip"
+        $downloadName = "cmake-3.7.2-win32-x86.zip"
+        $expectedDownloadedFileHash = "ec5e299d412e0272e01d4de5bf07718f42c96361f83d51cc39f91bf49cc3e5c3"
+        $executableFromDownload = "$downloadsDir\cmake-3.7.2-win32-x86\bin\cmake.exe"
         $extractionType = $ExtractionType_ZIP
     }
     elseif($Dependency -eq "nuget")
@@ -146,7 +146,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         $downloadName = "PortableGit-2.8.3-32-bit.7z.exe"
         $expectedDownloadedFileHash = "DE52D070219E9C4EC1DB179F2ADBF4B760686C3180608F0382A1F8C7031E72AD"
         # There is another copy of git.exe in PortableGit\bin. However, an installed version of git add the cmd dir to the PATH.
-        # Therefore, choosing the cmd dir here as well. 
+        # Therefore, choosing the cmd dir here as well.
         $executableFromDownload = "$downloadsDir\PortableGit\cmd\git.exe"
         $extractionType = $ExtractionType_SELF_EXTRACTING_7Z
     }
@@ -186,7 +186,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         if (-not (Test-Path $executableFromDownload))
         {
             Invoke-Command $downloadPath "-y" -waitForExit:$true
-        }	
+        }
     }
     else
     {
