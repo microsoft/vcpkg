@@ -117,8 +117,6 @@ namespace vcpkg::Environment
                                                                 return fs::is_directory(current);
                                                             }, &msvc_subdirectories);
 
-            Checks::check_exit(!msvc_subdirectories.empty(), "No subdirectories were found in %s", msvc_path.generic_string());
-
             // Sort them so that latest comes first
             std::sort(msvc_subdirectories.begin(), msvc_subdirectories.end(), [&](const fs::path& left, const fs::path& right)
                       {
