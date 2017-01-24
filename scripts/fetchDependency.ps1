@@ -141,10 +141,10 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     elseif($Dependency -eq "git")
     {
         $requiredVersion = "2.0.0"
-        $downloadVersion = "2.8.3"
-        $url = "https://github.com/git-for-windows/git/releases/download/v2.8.3.windows.1/PortableGit-2.8.3-32-bit.7z.exe" # We choose the 32-bit version
-        $downloadName = "PortableGit-2.8.3-32-bit.7z.exe"
-        $expectedDownloadedFileHash = "DE52D070219E9C4EC1DB179F2ADBF4B760686C3180608F0382A1F8C7031E72AD"
+        $downloadVersion = "2.11.0"
+        $url = "https://github.com/git-for-windows/git/releases/download/v2.11.0.windows.3/PortableGit-2.11.0.3-32-bit.7z.exe" # We choose the 32-bit version
+        $downloadName = "PortableGit-2.11.0.3-32-bit.7z.exe"
+        $expectedDownloadedFileHash = "8bf3769c37945e991903dd1b988c6b1d97bbf0f3afc9851508974f38bf94dc01"
         # There is another copy of git.exe in PortableGit\bin. However, an installed version of git add the cmd dir to the PATH.
         # Therefore, choosing the cmd dir here as well.
         $executableFromDownload = "$downloadsDir\PortableGit\cmd\git.exe"
