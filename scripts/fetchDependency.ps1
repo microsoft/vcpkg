@@ -133,9 +133,9 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         $requiredVersion = "3.3.0"
         $downloadVersion = "3.5.0"
         $url = "https://dist.nuget.org/win-x86-commandline/v3.5.0/nuget.exe"
-        $downloadPath = "$downloadsDir\nuget.exe"
+        $downloadPath = "$downloadsDir\nuget-3.5.0\nuget.exe"
         $expectedDownloadedFileHash = "399ec24c26ed54d6887cde61994bb3d1cada7956c1b19ff880f06f060c039918"
-        $executableFromDownload = "$downloadsDir\nuget.exe"
+        $executableFromDownload = $downloadPath
         $extractionType = $ExtractionType_NO_EXTRACTION_REQUIRED
     }
     elseif($Dependency -eq "git")
@@ -153,6 +153,12 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     else
     {
         throw "Unknown program requested"
+    }
+
+    $downloadSubdir = Split-path $downloadPath -Parent
+    if (!(Test-Path $downloadSubdir))
+    {
+        New-Item -ItemType Directory -Path $downloadSubdir | Out-Null
     }
 
     performDownload $Dependency $url $downloadsDir $downloadPath $downloadVersion $requiredVersion

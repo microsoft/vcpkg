@@ -87,7 +87,8 @@ namespace vcpkg::Environment
 
     void ensure_nuget_on_path(const vcpkg_paths& paths)
     {
-        const std::wstring path_buf = Strings::wformat(L"%s;%s", paths.downloads.native(), System::wdupenv_str(L"PATH"));
+        const fs::path downloaded_nuget = paths.downloads / "nuget-3.5.0";
+        const std::wstring path_buf = Strings::wformat(L"%s;%s", downloaded_nuget.native(), System::wdupenv_str(L"PATH"));
         _wputenv_s(L"PATH", path_buf.c_str());
 
         static constexpr std::array<int, 3> nuget_version = {3,3,0};
