@@ -125,17 +125,16 @@ namespace vcpkg::Strings
         std::vector<std::string> output;
 
         size_t i = 0;
-        size_t pos = s.find(delimiter);
-        while (pos != std::string::npos)
+        for (size_t pos = s.find(delimiter); pos != std::string::npos;  pos = s.find(delimiter, pos))
         {
             output.push_back(s.substr(i, pos - i));
             i = ++pos;
-            pos = s.find(delimiter, pos);
+        }
 
-            if (pos == std::string::npos && i != s.length()) // The second check is so no items are added if there is nothing after the last delimiter
-            {
-                output.push_back(s.substr(i, s.length()));
-            }
+        // Add the rest of the string after the last delimiter, unless there is nothing after it
+        if (i != s.length())
+        {
+            output.push_back(s.substr(i, s.length()));
         }
 
         return output;
