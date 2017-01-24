@@ -46,6 +46,13 @@ namespace vcpkg::Environment
         }
     }
 
+    static std::wstring create_default_install_cmd(const vcpkg_paths& paths, const std::wstring& tool_name)
+    {
+        const fs::path script = paths.scripts / "fetchDependency.ps1";
+        // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
+        return Strings::wformat(L"powershell -ExecutionPolicy Bypass %s -Dependency %s", script.native(), tool_name);
+    }
+
     void ensure_git_on_path(const vcpkg_paths& paths)
     {
         const fs::path downloaded_git = paths.downloads / "PortableGit" / "cmd";
@@ -58,9 +65,7 @@ namespace vcpkg::Environment
 
         static constexpr std::array<int, 3> git_version = {2,0,0};
         static const std::wstring version_check_cmd = L"git --version 2>&1";
-        const fs::path script = paths.scripts / "fetchDependency.ps1";
-        // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
-        const std::wstring install_cmd = Strings::wformat(L"powershell -ExecutionPolicy Bypass %s -Dependency git", script.native());
+        const std::wstring install_cmd = create_default_install_cmd(paths, L"git");
         ensure_on_path(git_version, version_check_cmd, install_cmd);
     }
 
@@ -76,9 +81,7 @@ namespace vcpkg::Environment
 
         static constexpr std::array<int, 3> cmake_version = {3,7,2};
         static const std::wstring version_check_cmd = L"cmake --version 2>&1";
-        const fs::path script = paths.scripts / "fetchDependency.ps1";
-        // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
-        const std::wstring install_cmd = Strings::wformat(L"powershell -ExecutionPolicy Bypass %s -Dependency cmake", script.native());
+        const std::wstring install_cmd = create_default_install_cmd(paths, L"cmake");
         ensure_on_path(cmake_version, version_check_cmd, install_cmd);
     }
 
@@ -89,9 +92,7 @@ namespace vcpkg::Environment
 
         static constexpr std::array<int, 3> nuget_version = {1,0,0};
         static const std::wstring version_check_cmd = L"nuget 2>&1";
-        const fs::path script = paths.scripts / "fetchDependency.ps1";
-        // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
-        const std::wstring install_cmd = Strings::wformat(L"powershell -ExecutionPolicy Bypass %s -Dependency nuget", script.native());
+        const std::wstring install_cmd = create_default_install_cmd(paths, L"nuget");
         ensure_on_path(nuget_version, version_check_cmd, install_cmd);
     }
 
