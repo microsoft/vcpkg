@@ -26,7 +26,7 @@ try{
     $msbuildExeWithPlatformToolset = & $scriptsDir\findAnyMSBuildWithCppPlatformToolset.ps1
     $msbuildExe = $msbuildExeWithPlatformToolset[0]
     $platformToolset = $msbuildExeWithPlatformToolset[1]
-    & $msbuildExe "/p:VCPKG_VERSION=-$gitHash" "/p:DISABLE_METRICS=$disableMetrics" /p:Configuration=Release /p:Platform=x86 /p:PlatformToolset=$platformToolset /m
+    & $msbuildExe "/p:VCPKG_VERSION=-$gitHash" "/p:DISABLE_METRICS=$disableMetrics" /p:Configuration=Release /p:Platform=x86 /p:PlatformToolset=$platformToolset /m dirs.proj
 
     Write-Verbose("Placing vcpkg.exe in the correct location")
 
