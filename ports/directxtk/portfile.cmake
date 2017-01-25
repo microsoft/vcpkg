@@ -19,19 +19,19 @@ ELSE()
 ENDIF()
 
 vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/DirectXTK_Desktop_2015_Win10.sln
+    PROJECT_PATH ${SOURCE_PATH}/DirectXTK_Desktop_2015.sln
 	PLATFORM ${BUILD_ARCH}
 )
 
 file(INSTALL
-	${SOURCE_PATH}/Bin/Desktop_2015_Win10/${BUILD_ARCH}/Release/DirectXTK.lib
+	${SOURCE_PATH}/Bin/Desktop_2015/${BUILD_ARCH}/Release/DirectXTK.lib
 	DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
 file(INSTALL
-	${SOURCE_PATH}/Bin/Desktop_2015_Win10/${BUILD_ARCH}/Debug/DirectXTK.lib
+	${SOURCE_PATH}/Bin/Desktop_2015/${BUILD_ARCH}/Debug/DirectXTK.lib
 	DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 
-set(DXTK_TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/directxtk)
+set(DXTK_TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools)
 file(MAKE_DIRECTORY ${DXTK_TOOL_PATH})
 
 file(INSTALL
