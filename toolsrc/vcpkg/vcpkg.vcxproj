@@ -125,7 +125,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\MachineType.cpp" />
     <ClCompile Include="..\src\coff_file_reader.cpp" />
     <ClCompile Include="..\src\commands_available_commands.cpp" />
     <ClCompile Include="..\src\commands_build.cpp" />
@@ -143,6 +142,7 @@
     <ClCompile Include="..\src\commands_search.cpp" />
     <ClCompile Include="..\src\commands_update.cpp" />
     <ClCompile Include="..\src\commands_version.cpp" />
+    <ClCompile Include="..\src\MachineType.cpp" />
     <ClCompile Include="..\src\vcpkg_cmd_arguments.cpp" />
     <ClCompile Include="..\src\vcpkg_Dependencies.cpp" />
     <ClCompile Include="..\src\vcpkg_Environment.cpp" />
