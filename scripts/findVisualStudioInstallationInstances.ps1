@@ -32,9 +32,12 @@ if (!(Test-Path $SetupConsoleExe))
     throw $nugetOutput
 }
 
-$consoleOutput = & $SetupConsoleExe 2>&1
+$instances = & $SetupConsoleExe -nologo -value InstallationPath 2>&1
+$instanceCount = $instances.Length
+# The last item can be empty
+if ($instances[$entryCount - 1] -eq "")
+{
+    $instances = $instances[0..($instanceCount - 2)]
+}
 
-$key = "InstallationPath = "
-$paths = $consoleOutput | Select-String  -SimpleMatch $key
-$paths = $paths -replace $key, ""
-return $paths
+return $instances
