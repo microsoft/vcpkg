@@ -13,6 +13,7 @@
 #include "vcpkg_Input.h"
 #include "Paragraphs.h"
 #include "vcpkg_info.h"
+#include "vcpkg_Strings.h"
 
 using namespace vcpkg;
 
@@ -242,7 +243,7 @@ int wmain(const int argc, const wchar_t* const* const argv)
         << "EXCEPTION='" << exc_msg << "'\n"
         << "CMD=\n";
     for (int x = 0; x < argc; ++x)
-        std::cerr << argv[x] << "|\n";
+        std::cerr << Strings::utf16_to_utf8(argv[x]) << "|\n";
     std::cerr
         << "\n";
 }
