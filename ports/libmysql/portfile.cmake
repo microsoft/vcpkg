@@ -1,3 +1,7 @@
+if (EXISTS "${CURRENT_INSTALLED_DIR}/include/mysql/mysql.h")
+	message(FATAL_ERROR "FATAL ERROR: libmysql and libmariadb are incompatible.")
+endif()
+
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mysql-server-mysql-5.7.17)
 

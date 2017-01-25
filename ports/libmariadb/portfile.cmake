@@ -1,3 +1,8 @@
+
+if (EXISTS "${CURRENT_INSTALLED_DIR}/include/mysql/mysql.h")
+	message(FATAL_ERROR "FATAL ERROR: libmysql and libmariadb are incompatible.")
+endif()
+
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mariadb-connector-c-2.3.2)
 
@@ -57,6 +62,9 @@ file(REMOVE
 	${CURRENT_PACKAGES_DIR}/include/mariadb/mysql_version.h.in
 	${CURRENT_PACKAGES_DIR}/include/mariadb/CMakeLists.txt
 	${CURRENT_PACKAGES_DIR}/include/mariadb/Makefile.am)
+file(RENAME
+	${CURRENT_PACKAGES_DIR}/include/mariadb
+	${CURRENT_PACKAGES_DIR}/include/mysql)
 
 # copy license file
 file(COPY ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/libmariadb)
