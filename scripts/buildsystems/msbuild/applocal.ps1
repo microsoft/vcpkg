@@ -2,7 +2,14 @@
 param([string]$targetBinary, [string]$installedDir, [string]$tlogFile)
 
 function resolve($targetBinary) {
-    $targetBinaryPath = Resolve-Path $targetBinary
+    try
+    {
+        $targetBinaryPath = Resolve-Path $targetBinary -erroraction stop
+    }
+    catch [System.Management.Automation.ItemNotFoundException]
+    {
+        return
+    }
     $targetBinaryDir = Split-Path $targetBinaryPath -parent
 
     $a = $(dumpbin /DEPENDENTS $targetBinary | ? { $_ -match "^    [^ ].*\.dll" } | % { $_ -replace "^    ","" })

@@ -51,12 +51,12 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         {
             return
         }
-        
+
         $title = "Download " + $Dependency
         $message = ("No suitable version of " + $Dependency  + " was found (requires $requiredVersion or higher). Download portable version?")
         $yesDescription = "Downloads " + $Dependency + " v" + $downloadVersion +" app-locally."
-        $noDescription = "Does not download " + $Dependency + "."	
-        
+        $noDescription = "Does not download " + $Dependency + "."
+
         $userAllowedDownload = promptForDownload $title $message $yesDescription $noDescription
         if (!$userAllowedDownload)
         {
@@ -86,10 +86,10 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     $ExtractionType_NO_EXTRACTION_REQUIRED = 0
     $ExtractionType_ZIP = 1
     $ExtractionType_SELF_EXTRACTING_7Z = 2
-    
-    
+
+
     # Using this to wait for the execution to finish
-    function Invoke-Command() 
+    function Invoke-Command()
     {
         param ( [string]$program = $(throw "Please specify a program" ),
                 [string]$argumentString = "",
@@ -99,7 +99,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         $psi.FileName = $program
         $psi.Arguments = $argumentString
         $proc = [Diagnostics.Process]::Start($psi)
-        if ( $waitForExit ) 
+        if ( $waitForExit )
         {
             $proc.WaitForExit();
         }
@@ -120,33 +120,33 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 
     if($Dependency -eq "cmake")
     {
-        $requiredVersion = "3.5.0"
-        $downloadVersion = "3.5.2"
-        $url = "https://cmake.org/files/v3.5/cmake-3.5.2-win32-x86.zip"
-        $downloadName = "cmake-3.5.2-win32-x86.zip"
-        $expectedDownloadedFileHash = "671073aee66b3480a564d0736792e40570a11e861bb34819bb7ae7858bbdfb80"
-        $executableFromDownload = "$downloadsDir\cmake-3.5.2-win32-x86\bin\cmake.exe"
+        $requiredVersion = "3.7.2"
+        $downloadVersion = "3.7.2"
+        $url = "https://cmake.org/files/v3.7/cmake-3.7.2-win32-x86.zip"
+        $downloadPath = "$downloadsDir\cmake-3.7.2-win32-x86.zip"
+        $expectedDownloadedFileHash = "ec5e299d412e0272e01d4de5bf07718f42c96361f83d51cc39f91bf49cc3e5c3"
+        $executableFromDownload = "$downloadsDir\cmake-3.7.2-win32-x86\bin\cmake.exe"
         $extractionType = $ExtractionType_ZIP
     }
     elseif($Dependency -eq "nuget")
     {
-        $requiredVersion = "1.0.0"
-        $downloadVersion = "3.4.3"
-        $url = "https://dist.nuget.org/win-x86-commandline/v3.4.3/nuget.exe"
-        $downloadName = "nuget.exe"
-        $expectedDownloadedFileHash = "3B1EA72943968D7AF6BACDB4F2F3A048A25AFD14564EF1D8B1C041FDB09EBB0A"
-        $executableFromDownload = "$downloadsDir\nuget.exe"
+        $requiredVersion = "3.3.0"
+        $downloadVersion = "3.5.0"
+        $url = "https://dist.nuget.org/win-x86-commandline/v3.5.0/nuget.exe"
+        $downloadPath = "$downloadsDir\nuget-3.5.0\nuget.exe"
+        $expectedDownloadedFileHash = "399ec24c26ed54d6887cde61994bb3d1cada7956c1b19ff880f06f060c039918"
+        $executableFromDownload = $downloadPath
         $extractionType = $ExtractionType_NO_EXTRACTION_REQUIRED
     }
     elseif($Dependency -eq "git")
     {
         $requiredVersion = "2.0.0"
-        $downloadVersion = "2.8.3"
-        $url = "https://github.com/git-for-windows/git/releases/download/v2.8.3.windows.1/PortableGit-2.8.3-32-bit.7z.exe" # We choose the 32-bit version
-        $downloadName = "PortableGit-2.8.3-32-bit.7z.exe"
-        $expectedDownloadedFileHash = "DE52D070219E9C4EC1DB179F2ADBF4B760686C3180608F0382A1F8C7031E72AD"
+        $downloadVersion = "2.11.0"
+        $url = "https://github.com/git-for-windows/git/releases/download/v2.11.0.windows.3/PortableGit-2.11.0.3-32-bit.7z.exe" # We choose the 32-bit version
+        $downloadPath = "$downloadsDir\PortableGit-2.11.0.3-32-bit.7z.exe"
+        $expectedDownloadedFileHash = "8bf3769c37945e991903dd1b988c6b1d97bbf0f3afc9851508974f38bf94dc01"
         # There is another copy of git.exe in PortableGit\bin. However, an installed version of git add the cmd dir to the PATH.
-        # Therefore, choosing the cmd dir here as well. 
+        # Therefore, choosing the cmd dir here as well.
         $executableFromDownload = "$downloadsDir\PortableGit\cmd\git.exe"
         $extractionType = $ExtractionType_SELF_EXTRACTING_7Z
     }
@@ -155,7 +155,12 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         throw "Unknown program requested"
     }
 
-    $downloadPath = "$downloadsDir\$downloadName"
+    $downloadSubdir = Split-path $downloadPath -Parent
+    if (!(Test-Path $downloadSubdir))
+    {
+        New-Item -ItemType Directory -Path $downloadSubdir | Out-Null
+    }
+
     performDownload $Dependency $url $downloadsDir $downloadPath $downloadVersion $requiredVersion
 
     #calculating the hash
@@ -186,7 +191,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         if (-not (Test-Path $executableFromDownload))
         {
             Invoke-Command $downloadPath "-y" -waitForExit:$true
-        }	
+        }
     }
     else
     {
@@ -197,6 +202,8 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     {
         throw [System.IO.FileNotFoundException] ("Could not detect or download " + $Dependency)
     }
+
+    return $downloadPath
 }
 
 SelectProgram $Dependency

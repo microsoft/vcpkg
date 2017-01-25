@@ -1,3 +1,24 @@
+vcpkg (0.0.70)
+--------------
+  * Add ports:
+    - fltk                 1.3.4-1
+    - glib                 2.50.2
+    - lzo                  2.09
+    - uvatlas              sept2016
+  * Update ports:
+    - dx                   1.0.0            -> 1.0.1
+    - libmysql             5.7.16           -> 5.7.17
+  * Add support for Visual Studio 2017
+    - Previously, you could use Visual Studio 2017 for your own application and `vcpkg` integration would work, but you needed to have Visual Studio 2015 to build `vcpkg` itself as well as the libraries. This requirement has now been removed
+    - If both Visual Studio 2015 and Visual Studio 2017 are installed, Visual Studio 2017 tools will be preferred over those of Visual Studio 2015
+  * Bump required version & auto-downloaded version of `cmake` to 3.7.2 (was 3.5.x), which includes generators for Visual Studio 2017
+  * Bump auto-downloaded version of `nuget` to 3.5.0 (was 3.4.3)
+  * Bump auto-downloaded version of `git` to 2.11.0 (was 2.8.3)
+  * Fixes and improvements in existing portfiles and the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  MON, 23 Jan 2017 19:50:00 -0800
+
+
 vcpkg (0.0.67)
 --------------
   * Add ports:

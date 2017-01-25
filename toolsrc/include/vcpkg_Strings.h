@@ -75,4 +75,6 @@ namespace vcpkg::Strings
     std::string trimmed(const std::string& s);
 
     void trim_all_and_remove_whitespace_strings(std::vector<std::string>* strings);
+
+    std::vector<std::string> split(const std::string& s, const std::string& delimiter);
 }

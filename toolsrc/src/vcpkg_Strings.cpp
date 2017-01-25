@@ -119,4 +119,24 @@ namespace vcpkg::Strings
                                           return s == "";
                                       }), strings->end());
     }
+
+    std::vector<std::string> split(const std::string& s, const std::string& delimiter)
+    {
+        std::vector<std::string> output;
+
+        size_t i = 0;
+        for (size_t pos = s.find(delimiter); pos != std::string::npos;  pos = s.find(delimiter, pos))
+        {
+            output.push_back(s.substr(i, pos - i));
+            i = ++pos;
+        }
+
+        // Add the rest of the string after the last delimiter, unless there is nothing after it
+        if (i != s.length())
+        {
+            output.push_back(s.substr(i, s.length()));
+        }
+
+        return output;
+    }
 }
