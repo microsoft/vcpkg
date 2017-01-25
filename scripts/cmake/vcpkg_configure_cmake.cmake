@@ -2,6 +2,10 @@ find_program(vcpkg_configure_cmake_NINJA ninja)
 function(vcpkg_configure_cmake)
     cmake_parse_arguments(_csc "" "SOURCE_PATH;GENERATOR" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" ${ARGN})
 
+    if(NOT VCPKG_PLATFORM_TOOLSET)
+        message(FATAL_ERROR "Vcpkg has been updated with VS2017 support, however you need to rebuild vcpkg.exe by re-running bootstrap.ps1\n    powershell -exec bypass scripts\\bootstrap.ps1\n")
+    endif()
+
     if(_csc_GENERATOR)
         set(GENERATOR ${_csc_GENERATOR})
     elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND TRIPLET_SYSTEM_ARCH MATCHES "x86" AND VCPKG_PLATFORM_TOOLSET MATCHES "v140")
