@@ -31,9 +31,7 @@ endif()
 message(STATUS "Bootstrapping done")
 
 set(B2_OPTIONS
-    -sZLIB_BINARY=zlib
     -sZLIB_INCLUDE="${CURRENT_INSTALLED_DIR}\\include"
-    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
     -sNO_BZIP2=1
     -j$ENV{NUMBER_OF_PROCESSORS}
     --debug-configuration
@@ -65,12 +63,15 @@ if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
 endif()
 
 # Add build type specific options
-set(B2_OPTIONS_DBG
-	${B2_OPTIONS}
+set(B2_OPTIONS_DBG 
+    ${B2_OPTIONS}
+    -sZLIB_BINARY=zlibd
     -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
 )
-set(B2_OPTIONS_REL
-	${B2_OPTIONS}
+
+set(B2_OPTIONS_REL 
+    ${B2_OPTIONS}
+    -sZLIB_BINARY=zlib
     -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
 )
 
