@@ -1,5 +1,5 @@
 #include "vcpkg_Commands.h"
-#include "vcpkg.h"
+#include "vcpkglib.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Input.h"
 #include <fstream>

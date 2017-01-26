@@ -136,7 +136,7 @@
     <ClInclude Include="..\include\StatusParagraph.h" />
     <ClInclude Include="..\include\StatusParagraphs.h" />
     <ClInclude Include="..\include\triplet.h" />
-    <ClInclude Include="..\include\vcpkg.h" />
+    <ClInclude Include="..\include\vcpkglib.h" />
     <ClInclude Include="..\include\vcpkglib_helpers.h" />
     <ClInclude Include="..\include\vcpkg_cmd_arguments.h" />
     <ClInclude Include="..\include\vcpkg_Commands.h" />
@@ -172,7 +172,7 @@
     <ClCompile Include="..\src\MachineType.cpp" />
     <ClCompile Include="..\src\metrics.cpp" />
     <ClCompile Include="..\src\post_build_lint.cpp" />
-    <ClCompile Include="..\src\vcpkg.cpp" />
+    <ClCompile Include="..\src\vcpkglib.cpp" />
     <ClCompile Include="..\src\package_spec.cpp" />
     <ClCompile Include="..\src\package_spec_parse_result.cpp" />
     <ClCompile Include="..\src\Paragraphs.cpp" />

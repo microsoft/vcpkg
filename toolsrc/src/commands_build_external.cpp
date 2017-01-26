@@ -2,7 +2,7 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Environment.h"
 #include "vcpkg_Input.h"
-#include "vcpkg.h"
+#include "vcpkglib.h"
 
 namespace vcpkg::Commands::BuildExternal
 {

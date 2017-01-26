@@ -45,9 +45,6 @@
     <ClCompile Include="..\src\Paragraphs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\vcpkg_info.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -135,11 +132,11 @@
     <ClCompile Include="..\src\vcpkg_Dependencies.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\vcpkglib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\vcpkg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\package_spec.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -204,6 +201,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\vcpkg_Environment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkglib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

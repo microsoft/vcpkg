@@ -7,7 +7,7 @@
 #include <unordered_set>
 #include "vcpkg_Maps.h"
 #include "vcpkg_Files.h"
-#include "vcpkg.h"
+#include "vcpkglib.h"
 
 namespace vcpkg::Dependencies
 {

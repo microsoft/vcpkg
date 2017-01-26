@@ -1,6 +1,6 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
-#include "vcpkg.h"
+#include "vcpkglib.h"
 
 namespace vcpkg::Commands::Owns
 {

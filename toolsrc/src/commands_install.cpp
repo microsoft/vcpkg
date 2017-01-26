@@ -1,5 +1,5 @@
 #include "vcpkg_Commands.h"
-#include "vcpkg.h"
+#include "vcpkglib.h"
 #include "vcpkg_Environment.h"
 #include "metrics.h"
 #include "vcpkg_Files.h"
