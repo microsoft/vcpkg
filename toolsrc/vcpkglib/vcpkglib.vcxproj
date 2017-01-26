@@ -47,7 +47,7 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
-<PropertyGroup>
+  <PropertyGroup>
     <DISABLE_METRICS Condition="'$(DISABLE_METRICS)' == ''">0</DISABLE_METRICS>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -124,23 +124,54 @@
   <ItemGroup>
     <ClInclude Include="..\include\BinaryParagraph.h" />
     <ClInclude Include="..\include\BuildInfo.h" />
+    <ClInclude Include="..\include\coff_file_reader.h" />
+    <ClInclude Include="..\include\filesystem_fs.h" />
+    <ClInclude Include="..\include\MachineType.h" />
     <ClInclude Include="..\include\metrics.h" />
     <ClInclude Include="..\include\package_spec.h" />
     <ClInclude Include="..\include\package_spec_parse_result.h" />
     <ClInclude Include="..\include\Paragraphs.h" />
+    <ClInclude Include="..\include\post_build_lint.h" />
     <ClInclude Include="..\include\SourceParagraph.h" />
     <ClInclude Include="..\include\StatusParagraph.h" />
     <ClInclude Include="..\include\StatusParagraphs.h" />
     <ClInclude Include="..\include\triplet.h" />
     <ClInclude Include="..\include\vcpkg.h" />
     <ClInclude Include="..\include\vcpkglib_helpers.h" />
+    <ClInclude Include="..\include\vcpkg_cmd_arguments.h" />
+    <ClInclude Include="..\include\vcpkg_Commands.h" />
+    <ClInclude Include="..\include\vcpkg_Dependencies.h" />
+    <ClInclude Include="..\include\vcpkg_Environment.h" />
+    <ClInclude Include="..\include\vcpkg_Input.h" />
     <ClInclude Include="..\include\vcpkg_paths.h" />
     <ClInclude Include="..\include\vcpkg_info.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\BinaryParagraph.cpp" />
     <ClCompile Include="..\src\BuildInfo.cpp" />
+    <ClCompile Include="..\src\coff_file_reader.cpp" />
+    <ClCompile Include="..\src\commands_available_commands.cpp" />
+    <ClCompile Include="..\src\commands_build.cpp" />
+    <ClCompile Include="..\src\commands_build_external.cpp" />
+    <ClCompile Include="..\src\commands_cache.cpp" />
+    <ClCompile Include="..\src\commands_contact.cpp" />
+    <ClCompile Include="..\src\commands_create.cpp" />
+    <ClCompile Include="..\src\commands_edit.cpp" />
+    <ClCompile Include="..\src\commands_hash.cpp" />
+    <ClCompile Include="..\src\commands_help.cpp" />
+    <ClCompile Include="..\src\commands_import.cpp" />
+    <ClCompile Include="..\src\commands_install.cpp" />
+    <ClCompile Include="..\src\commands_integrate.cpp" />
+    <ClCompile Include="..\src\commands_list.cpp" />
+    <ClCompile Include="..\src\commands_owns.cpp" />
+    <ClCompile Include="..\src\commands_portsdiff.cpp" />
+    <ClCompile Include="..\src\commands_remove.cpp" />
+    <ClCompile Include="..\src\commands_search.cpp" />
+    <ClCompile Include="..\src\commands_update.cpp" />
+    <ClCompile Include="..\src\commands_version.cpp" />
+    <ClCompile Include="..\src\MachineType.cpp" />
     <ClCompile Include="..\src\metrics.cpp" />
+    <ClCompile Include="..\src\post_build_lint.cpp" />
     <ClCompile Include="..\src\vcpkg.cpp" />
     <ClCompile Include="..\src\package_spec.cpp" />
     <ClCompile Include="..\src\package_spec_parse_result.cpp" />
@@ -150,6 +181,10 @@
     <ClCompile Include="..\src\StatusParagraphs.cpp" />
     <ClCompile Include="..\src\triplet.cpp" />
     <ClCompile Include="..\src\vcpkglib_helpers.cpp" />
+    <ClCompile Include="..\src\vcpkg_cmd_arguments.cpp" />
+    <ClCompile Include="..\src\vcpkg_Dependencies.cpp" />
+    <ClCompile Include="..\src\vcpkg_Environment.cpp" />
+    <ClCompile Include="..\src\vcpkg_Input.cpp" />
     <ClCompile Include="..\src\vcpkg_paths.cpp" />
     <ClCompile Include="..\src\vcpkg_info.cpp" />
   </ItemGroup>

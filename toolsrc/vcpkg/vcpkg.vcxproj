@@ -125,52 +125,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\coff_file_reader.cpp" />
-    <ClCompile Include="..\src\commands_available_commands.cpp" />
-    <ClCompile Include="..\src\commands_build.cpp" />
-    <ClCompile Include="..\src\commands_build_external.cpp" />
-    <ClCompile Include="..\src\commands_cache.cpp" />
-    <ClCompile Include="..\src\commands_contact.cpp" />
-    <ClCompile Include="..\src\commands_create.cpp" />
-    <ClCompile Include="..\src\commands_edit.cpp" />
-    <ClCompile Include="..\src\commands_hash.cpp" />
-    <ClCompile Include="..\src\commands_import.cpp" />
-    <ClCompile Include="..\src\commands_list.cpp" />
-    <ClCompile Include="..\src\commands_owns.cpp" />
-    <ClCompile Include="..\src\commands_portsdiff.cpp" />
-    <ClCompile Include="..\src\commands_remove.cpp" />
-    <ClCompile Include="..\src\commands_search.cpp" />
-    <ClCompile Include="..\src\commands_update.cpp" />
-    <ClCompile Include="..\src\commands_version.cpp" />
-    <ClCompile Include="..\src\MachineType.cpp" />
-    <ClCompile Include="..\src\vcpkg_cmd_arguments.cpp" />
-    <ClCompile Include="..\src\vcpkg_Dependencies.cpp" />
-    <ClCompile Include="..\src\vcpkg_Environment.cpp" />
-    <ClCompile Include="..\src\commands_install.cpp" />
-    <ClCompile Include="..\src\commands_integrate.cpp" />
-    <ClCompile Include="..\src\main.cpp" />
-    <ClCompile Include="..\src\commands_help.cpp" />
-    <ClCompile Include="..\src\post_build_lint.cpp" />
-    <ClCompile Include="..\src\vcpkg_Input.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\include\coff_file_reader.h" />
-    <ClInclude Include="..\include\filesystem_fs.h" />
-    <ClInclude Include="..\include\MachineType.h" />
-    <ClInclude Include="..\include\vcpkg_cmd_arguments.h" />
-    <ClInclude Include="..\include\vcpkg_Commands.h" />
-    <ClInclude Include="..\include\vcpkg_Dependencies.h" />
-    <ClInclude Include="..\include\vcpkg_Environment.h" />
-    <ClInclude Include="..\include\post_build_lint.h" />
-    <ClInclude Include="..\include\vcpkg_Input.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\vcpkgcommon\vcpkgcommon.vcxproj">
       <Project>{7129f242-f20c-43e7-bbec-4e15b71890b2}</Project>
     </ProjectReference>
     <ProjectReference Include="..\vcpkglib\vcpkglib.vcxproj">
       <Project>{b98c92b7-2874-4537-9d46-d14e5c237f04}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
