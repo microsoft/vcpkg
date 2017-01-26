@@ -5,7 +5,6 @@
   <ItemGroup>
     <ProjectFile Include="vcpkg\vcpkg.vcxproj"/>
     <ProjectFile Include="vcpkglib\vcpkglib.vcxproj"/>
-    <ProjectFile Include="vcpkgcommon\vcpkgcommon.vcxproj"/>
     <ProjectFile Include="vcpkgmetricsuploader\vcpkgmetricsuploader.vcxproj"/>
   </ItemGroup>
 
