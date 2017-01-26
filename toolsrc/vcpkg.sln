@@ -9,8 +9,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vcpkgcommon", "vcpkgcommon\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vcpkglib", "vcpkglib\vcpkglib.vcxproj", "{B98C92B7-2874-4537-9D46-D14E5C237F04}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vcpkgmetrics", "vcpkgmetrics\vcpkgmetrics.vcxproj", "{7226078C-1D2A-4123-9EF1-8DF2B722B8F1}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vcpkgmetricsuploader", "vcpkgmetricsuploader\vcpkgmetricsuploader.vcxproj", "{7D6FDEEB-B299-4A23-85EE-F67C4DED47BE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vcpkgtest", "vcpkgtest\vcpkgtest.vcxproj", "{F27B8DB0-1279-4AF8-A2E3-1D49C4F0220D}"
@@ -47,14 +45,6 @@ Global
 		{B98C92B7-2874-4537-9D46-D14E5C237F04}.Release|x64.Build.0 = Release|x64
 		{B98C92B7-2874-4537-9D46-D14E5C237F04}.Release|x86.ActiveCfg = Release|Win32
 		{B98C92B7-2874-4537-9D46-D14E5C237F04}.Release|x86.Build.0 = Release|Win32
-		{7226078C-1D2A-4123-9EF1-8DF2B722B8F1}.Debug|x64.ActiveCfg = Debug|x64
-		{7226078C-1D2A-4123-9EF1-8DF2B722B8F1}.Debug|x64.Build.0 = Debug|x64
-		{7226078C-1D2A-4123-9EF1-8DF2B722B8F1}.Debug|x86.ActiveCfg = Debug|Win32
-		{7226078C-1D2A-4123-9EF1-8DF2B722B8F1}.Debug|x86.Build.0 = Debug|Win32
-		{7226078C-1D2A-4123-9EF1-8DF2B722B8F1}.Release|x64.ActiveCfg = Release|x64
-		{7226078C-1D2A-4123-9EF1-8DF2B722B8F1}.Release|x64.Build.0 = Release|x64
-		{7226078C-1D2A-4123-9EF1-8DF2B722B8F1}.Release|x86.ActiveCfg = Release|Win32
-		{7226078C-1D2A-4123-9EF1-8DF2B722B8F1}.Release|x86.Build.0 = Release|Win32
 		{7D6FDEEB-B299-4A23-85EE-F67C4DED47BE}.Debug|x64.ActiveCfg = Debug|x64
 		{7D6FDEEB-B299-4A23-85EE-F67C4DED47BE}.Debug|x64.Build.0 = Debug|x64
 		{7D6FDEEB-B299-4A23-85EE-F67C4DED47BE}.Debug|x86.ActiveCfg = Debug|Win32

@@ -131,8 +131,8 @@
     <ProjectReference Include="..\vcpkgcommon\vcpkgcommon.vcxproj">
       <Project>{7129f242-f20c-43e7-bbec-4e15b71890b2}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\vcpkgmetrics\vcpkgmetrics.vcxproj">
-      <Project>{7226078c-1d2a-4123-9ef1-8df2b722b8f1}</Project>
+    <ProjectReference Include="..\vcpkglib\vcpkglib.vcxproj">
+      <Project>{b98c92b7-2874-4537-9d46-d14e5c237f04}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

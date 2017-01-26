@@ -171,9 +171,6 @@
     <ProjectReference Include="..\vcpkglib\vcpkglib.vcxproj">
       <Project>{b98c92b7-2874-4537-9d46-d14e5c237f04}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\vcpkgmetrics\vcpkgmetrics.vcxproj">
-      <Project>{7226078c-1d2a-4123-9ef1-8df2b722b8f1}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
