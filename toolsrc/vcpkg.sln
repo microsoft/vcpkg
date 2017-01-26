@@ -5,8 +5,6 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vcpkg", "vcpkg\vcpkg.vcxproj", "{34671B80-54F9-46F5-8310-AC429C11D4FB}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vcpkgcommon", "vcpkgcommon\vcpkgcommon.vcxproj", "{7129F242-F20C-43E7-BBEC-4E15B71890B2}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vcpkglib", "vcpkglib\vcpkglib.vcxproj", "{B98C92B7-2874-4537-9D46-D14E5C237F04}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vcpkgmetricsuploader", "vcpkgmetricsuploader\vcpkgmetricsuploader.vcxproj", "{7D6FDEEB-B299-4A23-85EE-F67C4DED47BE}"
@@ -29,14 +27,6 @@ Global
 		{34671B80-54F9-46F5-8310-AC429C11D4FB}.Release|x64.Build.0 = Release|x64
 		{34671B80-54F9-46F5-8310-AC429C11D4FB}.Release|x86.ActiveCfg = Release|Win32
 		{34671B80-54F9-46F5-8310-AC429C11D4FB}.Release|x86.Build.0 = Release|Win32
-		{7129F242-F20C-43E7-BBEC-4E15B71890B2}.Debug|x64.ActiveCfg = Debug|x64
-		{7129F242-F20C-43E7-BBEC-4E15B71890B2}.Debug|x64.Build.0 = Debug|x64
-		{7129F242-F20C-43E7-BBEC-4E15B71890B2}.Debug|x86.ActiveCfg = Debug|Win32
-		{7129F242-F20C-43E7-BBEC-4E15B71890B2}.Debug|x86.Build.0 = Debug|Win32
-		{7129F242-F20C-43E7-BBEC-4E15B71890B2}.Release|x64.ActiveCfg = Release|x64
-		{7129F242-F20C-43E7-BBEC-4E15B71890B2}.Release|x64.Build.0 = Release|x64
-		{7129F242-F20C-43E7-BBEC-4E15B71890B2}.Release|x86.ActiveCfg = Release|Win32
-		{7129F242-F20C-43E7-BBEC-4E15B71890B2}.Release|x86.Build.0 = Release|Win32
 		{B98C92B7-2874-4537-9D46-D14E5C237F04}.Debug|x64.ActiveCfg = Debug|x64
 		{B98C92B7-2874-4537-9D46-D14E5C237F04}.Debug|x64.Build.0 = Debug|x64
 		{B98C92B7-2874-4537-9D46-D14E5C237F04}.Debug|x86.ActiveCfg = Debug|Win32

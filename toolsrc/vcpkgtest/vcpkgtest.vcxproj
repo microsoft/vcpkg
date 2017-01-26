@@ -23,9 +23,6 @@
     <ClCompile Include="..\src\tests_paragraph.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\vcpkgcommon\vcpkgcommon.vcxproj">
-      <Project>{7129f242-f20c-43e7-bbec-4e15b71890b2}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\vcpkglib\vcpkglib.vcxproj">
       <Project>{b98c92b7-2874-4537-9d46-d14e5c237f04}</Project>
     </ProjectReference>
