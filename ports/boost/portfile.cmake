@@ -32,7 +32,7 @@ message(STATUS "Bootstrapping done")
 
 set(B2_OPTIONS
     -sZLIB_INCLUDE="${CURRENT_INSTALLED_DIR}\\include"
-    -sNO_BZIP2=1
+    -sBZIP2_INCLUDE="${CURRENT_INSTALLED_DIR}\\include"
     -j$ENV{NUMBER_OF_PROCESSORS}
     --debug-configuration
     --hash
@@ -67,12 +67,16 @@ set(B2_OPTIONS_DBG
     ${B2_OPTIONS}
     -sZLIB_BINARY=zlibd
     -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
+    -sBZIP2_BINARY=bz2
+    -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
 )
 
 set(B2_OPTIONS_REL 
     ${B2_OPTIONS}
     -sZLIB_BINARY=zlib
     -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+    -sBZIP2_BINARY=bz2
+    -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
 )
 
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
