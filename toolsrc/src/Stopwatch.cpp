@@ -88,7 +88,7 @@ namespace vcpkg
         return Strings::format("%.4g ns", nanos_as_double);
     }
 
-    Stopwatch::Stopwatch() : m_isRunning(false), m_elapsedNanos(), m_startTick()
+    Stopwatch::Stopwatch() : m_isRunning(false), m_elapsedNanos(0), m_startTick()
     {
     }
 
