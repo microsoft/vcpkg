@@ -26,5 +26,13 @@ namespace vcpkg::Dependencies
         install_plan_action plan;
     };
 
+    enum class remove_plan_type
+    {
+        NOT_INSTALLED,
+        DEPENDENCIES_NOT_SATISFIED,
+        SHOULD_REMOVE
+    };
+
+
     std::vector<package_spec_with_install_plan> create_install_plan(const vcpkg_paths& paths, const std::vector<package_spec>& specs, const StatusParagraphs& status_db);
 }

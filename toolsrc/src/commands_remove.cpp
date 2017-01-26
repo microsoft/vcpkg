@@ -2,10 +2,13 @@
 #include "vcpkglib.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Input.h"
+#include "vcpkg_Dependencies.h"
 #include <fstream>
 
 namespace vcpkg::Commands::Remove
 {
+    using Dependencies::remove_plan_type;
+
     static const std::string OPTION_PURGE = "--purge";
 
     static void delete_directory(const fs::path& directory)
@@ -22,14 +25,7 @@ namespace vcpkg::Commands::Remove
         }
     }
 
-    enum class deinstall_plan
-    {
-        not_installed,
-        dependencies_not_satisfied,
-        should_deinstall
-    };
-
-    static deinstall_plan deinstall_package_plan(
+    static remove_plan_type deinstall_package_plan(
         const StatusParagraphs::iterator package_it,
         const StatusParagraphs& status_db,
         std::vector<const StatusParagraph*>& dependencies_out)
@@ -38,7 +34,7 @@ namespace vcpkg::Commands::Remove
 
         if (package_it == status_db.end() || (*package_it)->state == install_state_t::not_installed)
         {
-            return deinstall_plan::not_installed;
+            return remove_plan_type::NOT_INSTALLED;
         }
 
         auto& pkg = (*package_it)->package;
@@ -59,9 +55,9 @@ namespace vcpkg::Commands::Remove
         }
 
         if (!dependencies_out.empty())
-            return deinstall_plan::dependencies_not_satisfied;
+            return remove_plan_type::DEPENDENCIES_NOT_SATISFIED;
 
-        return deinstall_plan::should_deinstall;
+        return remove_plan_type::SHOULD_REMOVE;
     }
 
     static void deinstall_package(const vcpkg_paths& paths, const package_spec& spec, StatusParagraphs& status_db)
@@ -79,17 +75,17 @@ namespace vcpkg::Commands::Remove
         auto plan = deinstall_package_plan(package_it, status_db, deps);
         switch (plan)
         {
-            case deinstall_plan::not_installed:
+            case remove_plan_type::NOT_INSTALLED:
                 System::println(System::color::success, "Package %s is not installed", spec);
                 return;
-            case deinstall_plan::dependencies_not_satisfied:
+            case remove_plan_type::DEPENDENCIES_NOT_SATISFIED:
                 System::println(System::color::error, "Error: Cannot remove package %s:", spec);
                 for (auto&& dep : deps)
                 {
                     System::println("  %s depends on %s", dep->package.displayname(), pkg.package.displayname());
                 }
                 exit(EXIT_FAILURE);
-            case deinstall_plan::should_deinstall:
+            case remove_plan_type::SHOULD_REMOVE:
                 break;
             default:
                 Checks::unreachable();
