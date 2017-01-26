@@ -33,6 +33,7 @@ vcpkg_configure_cmake(
         -DENABLE_XATTR=OFF
         -DENABLE_ACL=OFF
         -DENABLE_TEST=OFF
+        -DENABLE_ICONV=OFF
         -DPOSIX_REGEX_LIB=NONE
     OPTIONS_DEBUG
         -DARCHIVE_SKIP_HEADERS=ON)
