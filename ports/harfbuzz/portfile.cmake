@@ -21,18 +21,31 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-file(TO_NATIVE_PATH "${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/include" FREETYPE_INCLUDE_DIR)
-file(TO_NATIVE_PATH "${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/lib" FREETYPE_LIB_DIR_DBG)
-file(TO_NATIVE_PATH "${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/lib" FREETYPE_LIB_DIR_REL)
+file(WRITE ${SOURCE_PATH}/win32/msvc_recommended_pragmas.h "/* I'm expected to exist */")
+
+# for GObject support, harfbuzz expects glib-mkenums tool (perl script) to be availible in $(PREFIX)/bin
+file(COPY ${CURRENT_INSTALLED_DIR}/tools/glib/glib-mkenums DESTINATION ${SOURCE_PATH}/bin)
+vcpkg_find_acquire_program(PERL)
+
+file(TO_NATIVE_PATH "${PERL}" PERL_INTERPRETER)
+file(TO_NATIVE_PATH "${SOURCE_PATH}" MKENUMS_TOOL_DIR)
+
+file(TO_NATIVE_PATH "${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/include" INCLUDE_DIR)
+file(TO_NATIVE_PATH "${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/lib" LIB_DIR_DBG)
+file(TO_NATIVE_PATH "${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/lib" LIB_DIR_REL)
+
+set(DEPENDENCIES FREETYPE=1 GLIB=1 GOBJECT=1)
 
 vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f Makefile.vc CFG=debug FREETYPE=1 FREETYPE_DIR=${FREETYPE_INCLUDE_DIR} ADDITIONAL_LIB_DIR=${FREETYPE_LIB_DIR_DBG}
+    COMMAND ${NMAKE} -f Makefile.vc CFG=debug ${DEPENDENCIES} FREETYPE_DIR=${INCLUDE_DIR} ADDITIONAL_LIB_DIR=${LIB_DIR_DBG}
+        PREFIX=${MKENUMS_TOOL_DIR} PERL=${PERL_INTERPRETER}
     WORKING_DIRECTORY ${SOURCE_PATH}/win32/
     LOGNAME nmake-build-${TARGET_TRIPLET}-debug
 )
 
 vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f Makefile.vc CFG=release FREETYPE=1 FREETYPE_DIR=${FREETYPE_INCLUDE_DIR} ADDITIONAL_LIB_DIR=${FREETYPE_LIB_DIR_REL}
+    COMMAND ${NMAKE} -f Makefile.vc CFG=release ${DEPENDENCIES} FREETYPE_DIR=${INCLUDE_DIR} ADDITIONAL_LIB_DIR=${LIB_DIR_REL}
+        PREFIX=${MKENUMS_TOOL_DIR} PERL=${PERL_INTERPRETER}
     WORKING_DIRECTORY ${SOURCE_PATH}/win32/
     LOGNAME nmake-build-${TARGET_TRIPLET}-release
 )
@@ -40,7 +53,7 @@ vcpkg_execute_required_process(
 file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/debug" NATIVE_PACKAGES_DIR_DBG)
 
 vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f Makefile.vc CFG=debug FREETYPE=1 PREFIX=${NATIVE_PACKAGES_DIR_DBG} install
+    COMMAND ${NMAKE} -f Makefile.vc CFG=debug ${DEPENDENCIES} PREFIX=${NATIVE_PACKAGES_DIR_DBG} install
     WORKING_DIRECTORY ${SOURCE_PATH}/win32/
     LOGNAME nmake-install-${TARGET_TRIPLET}-debug
 )
@@ -49,10 +62,15 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" NATIVE_PACKAGES_DIR_REL)
 
 vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f Makefile.vc CFG=release FREETYPE=1 PREFIX=${NATIVE_PACKAGES_DIR_REL} install
+    COMMAND ${NMAKE} -f Makefile.vc CFG=release ${DEPENDENCIES} PREFIX=${NATIVE_PACKAGES_DIR_REL} install
     WORKING_DIRECTORY ${SOURCE_PATH}/win32/
     LOGNAME nmake-install-${TARGET_TRIPLET}-release
 )
+
+file(GLOB EXECUTABLES
+    ${CURRENT_PACKAGES_DIR}/bin/*.exe
+    ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
+file(REMOVE ${EXECUTABLES})
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/harfbuzz)
