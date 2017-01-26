@@ -16,7 +16,8 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/fix-buildsystem.patch
-        ${CMAKE_CURRENT_LIST_DIR}/use-memset-not-bzero.patch)
+        ${CMAKE_CURRENT_LIST_DIR}/use-memset-not-bzero.patch
+        ${CMAKE_CURRENT_LIST_DIR}/override-broken-feature-checks.patch)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -32,6 +33,7 @@ vcpkg_configure_cmake(
         -DENABLE_XATTR=OFF
         -DENABLE_ACL=OFF
         -DENABLE_TEST=OFF
+        -DENABLE_ICONV=OFF
         -DPOSIX_REGEX_LIB=NONE
     OPTIONS_DEBUG
         -DARCHIVE_SKIP_HEADERS=ON)
