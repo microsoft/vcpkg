@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\main.cpp">
+    <ClCompile Include="..\src\vcpkg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
