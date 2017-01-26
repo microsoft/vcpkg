@@ -1,22 +1,22 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/boost_1_62_0)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/boost_1_63_0)
 
 vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "https://sourceforge.net/projects/boost/files/boost/1.62.0/boost_1_62_0.tar.bz2"
-    FILENAME "boost_1_62_0.tar.bz2"
-    SHA512 5385ae3d5255a433a704169ad454d8dc2b0b5bcae3fb23defd6570df4ff7d845cf9fcbeebccdc1c5db0eec9f82ee3d90040de9507c8167467c635d3b215463be
+    URLS "https://sourceforge.net/projects/boost/files/boost/1.63.0/boost_1_63_0.tar.bz2"
+    FILENAME "boost_1_63_0.tar.bz2"
+    SHA512 c915c5f5778dee49b8e9d0a40f37f90f56fb1fdb1d8ce92d97bf48bc7bc462212487badfe4bbe30b06196d1149cfb221da12ac54e97499b0d4cb6466813bb4ad
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
 # apply boost range hotfix
 vcpkg_download_distfile(DIFF
     URLS "https://github.com/boostorg/range/commit/e7ebe14707130cda7b72e0ae5e93b17157fdb6a2.diff"
-    FILENAME "boost-range-has_range_interator-hotfix_e7ebe14707130cda7b72e0ae5e93b17157fdb6a2.diff"
+    FILENAME "boost-range-has_range_iterator-hotfix_e7ebe14707130cda7b72e0ae5e93b17157fdb6a2.diff"
     SHA512 77dad42bfd9bbab2bbddf361d5b7ad3dd6f812f4294c6dd1a677bb4d0191a4fff43bca32fdd4fce05d428562abb6e38afd0fd33ca6a8b5f28481d70cd2f3dd67
 )
 FILE(READ "${DIFF}" content)
 STRING(REGEX REPLACE "include/" "" content "${content}")
-set(DIFF2 ${CURRENT_BUILDTREES_DIR}/src/boost-range-has_range_interator-hotfix_e7ebe14707130cda7b72e0ae5e93b17157fdb6a2.diff.fixed)
+set(DIFF2 ${CURRENT_BUILDTREES_DIR}/src/boost-range-has_range_iterator-hotfix_e7ebe14707130cda7b72e0ae5e93b17157fdb6a2.diff.fixed)
 FILE(WRITE ${DIFF2} "${content}")
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${DIFF2})
 
@@ -63,7 +63,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
 endif()
 
 # Add build type specific options
-set(B2_OPTIONS_DBG 
+set(B2_OPTIONS_DBG
     ${B2_OPTIONS}
     -sZLIB_BINARY=zlibd
     -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
@@ -71,7 +71,7 @@ set(B2_OPTIONS_DBG
     -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
 )
 
-set(B2_OPTIONS_REL 
+set(B2_OPTIONS_REL
     ${B2_OPTIONS}
     -sZLIB_BINARY=zlib
     -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
@@ -128,7 +128,7 @@ file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/
 message(STATUS "Packaging headers done")
 
 # This function makes the static build lib names match the dynamic build lib names which FindBoost.cmake is looking for by default.
-# It also renames a couple of "libboost" lib files in the dynamic build (for example libboost_exception-vc140-mt-1_62.lib).
+# It also renames a couple of "libboost" lib files in the dynamic build (for example libboost_exception-vc140-mt-1_63.lib).
 function(boost_rename_libs LIBS)
     foreach(LIB ${${LIBS}})
         get_filename_component(OLD_FILENAME ${LIB} NAME)
