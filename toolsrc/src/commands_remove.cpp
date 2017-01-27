@@ -1,9 +1,9 @@
+#include "pch.h"
 #include "vcpkg_Commands.h"
 #include "vcpkglib.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Input.h"
 #include "vcpkg_Dependencies.h"
-#include <fstream>
 
 namespace vcpkg::Commands::Remove
 {

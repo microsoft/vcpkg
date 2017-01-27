@@ -1,8 +1,8 @@
+#include "pch.h"
 #include "vcpkg_Commands.h"
 #include "Paragraphs.h"
 #include "StatusParagraph.h"
 #include "vcpkg_Files.h"
-#include <fstream>
 
 namespace vcpkg::Commands::Import
 {

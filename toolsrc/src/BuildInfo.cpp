@@ -1,3 +1,4 @@
+#include "pch.h"
 #include  "BuildInfo.h"
 #include "vcpkg_Checks.h"
 #include "vcpkglib_helpers.h"

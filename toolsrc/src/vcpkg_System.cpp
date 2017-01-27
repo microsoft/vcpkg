@@ -1,7 +1,5 @@
+#include "pch.h"
 #include "vcpkg_System.h"
-#include <iostream>
-#include <Windows.h>
-#include <regex>
 
 namespace vcpkg::System
 {

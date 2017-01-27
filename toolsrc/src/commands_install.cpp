@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "vcpkg_Commands.h"
 #include "vcpkglib.h"
 #include "vcpkg_Environment.h"

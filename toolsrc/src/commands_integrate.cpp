@@ -1,10 +1,5 @@
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <shellapi.h>
+#include "pch.h"
 #include "vcpkg_Commands.h"
-#include <fstream>
-#include <regex>
-#include <array>
 #include "vcpkg_Environment.h"
 #include "vcpkg_Checks.h"
 #include "vcpkg_System.h"

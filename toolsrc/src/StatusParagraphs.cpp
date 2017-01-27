@@ -1,5 +1,5 @@
+#include "pch.h"
 #include "StatusParagraphs.h"
-#include <algorithm>
 #include "vcpkg_Checks.h"
 
 namespace vcpkg

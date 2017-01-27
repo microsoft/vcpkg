@@ -1,6 +1,5 @@
+#include "pch.h"
 #include "vcpkg_Checks.h"
-
-#include <stdexcept>
 #include "vcpkg_System.h"
 
 namespace vcpkg::Checks

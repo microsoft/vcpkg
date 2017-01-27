@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Paragraphs.h"
 #include "vcpkg_Files.h"
 

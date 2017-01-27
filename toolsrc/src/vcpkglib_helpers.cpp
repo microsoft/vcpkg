@@ -1,7 +1,6 @@
+#include "pch.h"
 #include "vcpkg_Checks.h"
 #include "vcpkglib_helpers.h"
-#include <unordered_map>
-#include <regex>
 
 namespace vcpkg::details
 {

@@ -1,8 +1,6 @@
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include "pch.h"
 #include "vcpkg_cmd_arguments.h"
 #include "vcpkg_Commands.h"
-#include <unordered_set>
 #include "metrics.h"
 #include "vcpkg_System.h"
 

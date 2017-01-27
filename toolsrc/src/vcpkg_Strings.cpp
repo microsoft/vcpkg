@@ -1,11 +1,5 @@
+#include "pch.h"
 #include "vcpkg_Strings.h"
-
-#include <cstdarg>
-#include <algorithm>
-#include <codecvt>
-#include <iterator>
-#include <functional>
-#include <cctype>
 
 namespace vcpkg::Strings::details
 {

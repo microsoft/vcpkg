@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "MachineType.h"
 #include "vcpkg_Checks.h"
 

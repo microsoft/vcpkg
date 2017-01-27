@@ -1,5 +1,5 @@
+#include "pch.h"
 #include "package_spec.h"
-#include <algorithm>
 
 namespace vcpkg
 {

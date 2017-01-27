@@ -78,6 +78,8 @@
       <PreprocessorDefinitions>DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -89,6 +91,8 @@
       <PreprocessorDefinitions>DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -102,6 +106,8 @@
       <PreprocessorDefinitions>DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -119,6 +125,8 @@
       <PreprocessorDefinitions>DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -138,6 +146,7 @@
     <ClInclude Include="..\include\package_spec.h" />
     <ClInclude Include="..\include\package_spec_parse_result.h" />
     <ClInclude Include="..\include\Paragraphs.h" />
+    <ClInclude Include="..\include\pch.h" />
     <ClInclude Include="..\include\post_build_lint.h" />
     <ClInclude Include="..\include\SourceParagraph.h" />
     <ClInclude Include="..\include\StatusParagraph.h" />
@@ -186,6 +195,12 @@
     <ClCompile Include="..\src\commands_version.cpp" />
     <ClCompile Include="..\src\MachineType.cpp" />
     <ClCompile Include="..\src\metrics.cpp" />
+    <ClCompile Include="..\src\pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\src\post_build_lint.cpp" />
     <ClCompile Include="..\src\Stopwatch.cpp" />
     <ClCompile Include="..\src\vcpkglib.cpp" />

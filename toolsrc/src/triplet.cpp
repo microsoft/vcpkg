@@ -1,6 +1,6 @@
+#include "pch.h"
 #include "triplet.h"
 #include "vcpkg_Checks.h"
-#include <algorithm>
 
 namespace vcpkg
 {

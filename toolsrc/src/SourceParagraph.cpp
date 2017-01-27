@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "SourceParagraph.h"
 #include "vcpkglib_helpers.h"
 #include "vcpkg_System.h"

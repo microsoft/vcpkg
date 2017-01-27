@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "BinaryParagraph.h"
 #include "vcpkglib_helpers.h"
 #include "vcpkg_Checks.h"

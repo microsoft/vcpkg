@@ -1,12 +1,9 @@
+#include "pch.h"
 #include "vcpkg_Dependencies.h"
-#include <vector>
 #include "vcpkg_Graphs.h"
 #include "vcpkg_paths.h"
 #include "package_spec.h"
 #include "StatusParagraphs.h"
-#include <unordered_set>
-#include <unordered_map>
-#include "vcpkg_Maps.h"
 #include "vcpkg_Files.h"
 #include "vcpkglib.h"
 

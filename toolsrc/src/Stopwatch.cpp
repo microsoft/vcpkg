@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Stopwatch.h"
 #include "vcpkg_Checks.h"
 

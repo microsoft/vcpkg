@@ -1,12 +1,11 @@
+#include "pch.h"
 #include "vcpkg_paths.h"
 #include "package_spec.h"
 #include "vcpkg_Files.h"
-#include <functional>
 #include "vcpkg_System.h"
 #include "vcpkg_Environment.h"
 #include "coff_file_reader.h"
 #include "BuildInfo.h"
-#include <regex>
 
 namespace vcpkg::PostBuildLint
 {

@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "vcpkg_Commands.h"
 
 namespace vcpkg::Commands

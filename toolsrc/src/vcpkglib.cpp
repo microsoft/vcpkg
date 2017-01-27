@@ -1,15 +1,7 @@
+#include "pch.h"
 #include "vcpkglib.h"
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <functional>
-#include <string>
-#include <unordered_map>
-#include <memory>
-#include <vector>
 #include "vcpkg_Files.h"
 #include "Paragraphs.h"
-#include <regex>
 #include "metrics.h"
 
 using namespace vcpkg;

@@ -1,6 +1,5 @@
+#include "pch.h"
 #include "vcpkg_Files.h"
-#include <fstream>
-#include <regex>
 #include "vcpkg_System.h"
 
 namespace vcpkg::Files

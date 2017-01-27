@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "StatusParagraph.h"
 #include "vcpkglib_helpers.h"
 

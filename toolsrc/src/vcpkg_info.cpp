@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "vcpkg_info.h"
 #include "metrics.h"
 

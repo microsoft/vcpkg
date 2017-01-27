@@ -1,15 +1,5 @@
+#include "pch.h"
 #include "metrics.h"
-#include <utility>
-#include <array>
-#include <string>
-#include <iostream>
-#include <vector>
-#include <sys/timeb.h>
-#include <time.h>
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <winhttp.h>
-#include <fstream>
 #include "filesystem_fs.h"
 #include "vcpkg_Strings.h"
 #include "vcpkg_System.h"

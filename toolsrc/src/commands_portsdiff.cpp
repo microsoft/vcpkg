@@ -1,11 +1,7 @@
+#include "pch.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
-#include <map>
-#include <iterator>
 #include "vcpkg_Maps.h"
-#include <iostream>
-#include <iomanip>
-#include <set>
 #include "Paragraphs.h"
 #include "SourceParagraph.h"
 #include "vcpkg_Environment.h"

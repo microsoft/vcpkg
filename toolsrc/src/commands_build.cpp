@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "vcpkg_Commands.h"
 #include "StatusParagraphs.h"
 #include "vcpkglib.h"
@@ -8,7 +9,6 @@
 #include "vcpkg_Environment.h"
 #include "metrics.h"
 #include "vcpkg_info.h"
-#include <fstream>
 
 namespace vcpkg::Commands::Build
 {
