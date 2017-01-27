@@ -21,6 +21,7 @@
 #include <string>
 #include <regex>
 
+#include <filesystem>
 #include <iostream>
 #include <fstream>
 #include <memory>
@@ -34,6 +35,8 @@
 #include <cstdarg>
 #include <codecvt>
 #include <cctype>
+#include <cstdint>
 
 #include <sys/timeb.h>
 #include <time.h>
+#include <chrono>

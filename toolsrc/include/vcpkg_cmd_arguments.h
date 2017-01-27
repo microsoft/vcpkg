@@ -4,7 +4,6 @@
 #include <vector>
 #include <unordered_set>
 #include "opt_bool.h"
-#include "vcpkg_paths.h"
 
 namespace vcpkg
 {
