@@ -7,6 +7,7 @@
 
 namespace vcpkg::Commands::Remove
 {
+    using Dependencies::package_spec_with_remove_plan;
     using Dependencies::remove_plan_type;
 
     static const std::string OPTION_PURGE = "--purge";
@@ -57,7 +58,7 @@ namespace vcpkg::Commands::Remove
         if (!dependencies_out.empty())
             return remove_plan_type::DEPENDENCIES_NOT_SATISFIED;
 
-        return remove_plan_type::SHOULD_REMOVE;
+        return remove_plan_type::REMOVE;
     }
 
     static void deinstall_package(const vcpkg_paths& paths, const package_spec& spec, StatusParagraphs& status_db)
@@ -85,7 +86,7 @@ namespace vcpkg::Commands::Remove
                     System::println("  %s depends on %s", dep->package.displayname(), pkg.package.displayname());
                 }
                 exit(EXIT_FAILURE);
-            case remove_plan_type::SHOULD_REMOVE:
+            case remove_plan_type::REMOVE:
                 break;
             default:
                 Checks::unreachable();
@@ -173,6 +174,9 @@ namespace vcpkg::Commands::Remove
         std::vector<package_spec> specs = Input::check_and_get_package_specs(args.command_arguments, default_target_triplet, example);
         Input::check_triplets(specs, paths);
         bool alsoRemoveFolderFromPackages = options.find(OPTION_PURGE) != options.end();
+
+        const std::vector<package_spec_with_remove_plan> remove_plan = Dependencies::create_remove_plan(paths, specs, status_db);
+        Checks::check_exit(!remove_plan.empty(), "Remove plan cannot be empty");
 
         for (const package_spec& spec : specs)
         {

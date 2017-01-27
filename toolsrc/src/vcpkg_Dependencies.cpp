@@ -5,6 +5,7 @@
 #include "package_spec.h"
 #include "StatusParagraphs.h"
 #include <unordered_set>
+#include <unordered_map>
 #include "vcpkg_Maps.h"
 #include "vcpkg_Files.h"
 #include "vcpkglib.h"
@@ -64,6 +65,63 @@ namespace vcpkg::Dependencies
         }
 
         std::vector<package_spec_with_install_plan> ret;
+
+        const std::vector<package_spec> pkgs = graph.find_topological_sort();
+        for (const package_spec& pkg : pkgs)
+        {
+            ret.push_back({ pkg, std::move(was_examined[pkg]) });
+        }
+        return ret;
+    }
+
+    std::vector<package_spec_with_remove_plan> create_remove_plan(const vcpkg_paths& paths, const std::vector<package_spec>& specs, const StatusParagraphs& status_db)
+    {
+        std::unordered_set<package_spec> specs_as_set(specs.cbegin(), specs.cend());
+
+        std::unordered_map<package_spec, remove_plan_action> was_examined; // Examine = we have checked its immediate (non-recursive) dependencies
+        Graphs::Graph<package_spec> graph;
+        graph.add_vertices(specs);
+
+        std::vector<package_spec> examine_stack(specs);
+        while (!examine_stack.empty())
+        {
+            const package_spec spec = examine_stack.back();
+            examine_stack.pop_back();
+
+            if (was_examined.find(spec) != was_examined.end())
+            {
+                continue;
+            }
+
+            auto it = status_db.find(spec);
+            if (it == status_db.end() || (*it)->state == install_state_t::not_installed)
+            {
+                was_examined.emplace(spec, remove_plan_action{ remove_plan_type::NOT_INSTALLED, nullptr});
+                continue;
+            }
+
+            for (const std::unique_ptr<StatusParagraph>& an_installed_package : status_db)
+            {
+                if (an_installed_package->want != want_t::install)
+                    continue;
+                if (an_installed_package->package.spec.target_triplet() != spec.target_triplet())
+                    continue;
+
+                const std::vector<std::string>& deps = an_installed_package->package.depends;
+                if (std::find(deps.begin(), deps.end(), spec.name()) == deps.end())
+                {
+                    continue;
+                }
+
+                graph.add_edge(spec, an_installed_package.get()->package.spec);
+                examine_stack.push_back(an_installed_package.get()->package.spec);
+            }
+
+            const remove_plan_type type = specs_as_set.find(spec) != specs_as_set.end() ? remove_plan_type::REMOVE_USER_REQUESTED: remove_plan_type::REMOVE;
+            was_examined.emplace(spec, remove_plan_action{ type, std::make_unique<BinaryParagraph>(std::move((*it)->package))});
+        }
+
+        std::vector<package_spec_with_remove_plan> ret;
 
         const std::vector<package_spec> pkgs = graph.find_topological_sort();
         for (const package_spec& pkg : pkgs)

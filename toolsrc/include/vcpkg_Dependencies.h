@@ -30,9 +30,23 @@ namespace vcpkg::Dependencies
     {
         NOT_INSTALLED,
         DEPENDENCIES_NOT_SATISFIED,
-        SHOULD_REMOVE
+        REMOVE,
+        REMOVE_USER_REQUESTED
     };
 
+    struct remove_plan_action
+    {
+        remove_plan_type type;
+        std::unique_ptr<BinaryParagraph> bpgh;
+    };
+
+    struct package_spec_with_remove_plan
+    {
+        package_spec spec;
+        remove_plan_action plan;
+    };
 
     std::vector<package_spec_with_install_plan> create_install_plan(const vcpkg_paths& paths, const std::vector<package_spec>& specs, const StatusParagraphs& status_db);
+
+    std::vector<package_spec_with_remove_plan> create_remove_plan(const vcpkg_paths& paths, const std::vector<package_spec>& specs, const StatusParagraphs& status_db);
 }
