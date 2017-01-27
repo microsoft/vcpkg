@@ -17,11 +17,11 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-if (TRIPLET_SYSTEM_ARCH MATCHES "x86") 
-     set(BUILD_ARCH "Win32") 
-else() 
-     set(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH}) 
-endif() 
+if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
+     set(BUILD_ARCH "Win32")
+else()
+     set(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
+endif()
 
 
 vcpkg_build_msbuild(
@@ -36,5 +36,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/xercesc/NLS)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/xercesc/util/MsgLoaders/ICU/resources)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/xerces)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/xerces/LICENSE ${CURRENT_PACKAGES_DIR}/share/xerces/copyright)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/xerces-c)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/xerces-c/LICENSE ${CURRENT_PACKAGES_DIR}/share/xerces-c/copyright)
