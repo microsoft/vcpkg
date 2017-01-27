@@ -1,6 +1,7 @@
 #pragma once
 #include "StatusParagraph.h"
 #include <memory>
+#include <iterator>
 
 namespace vcpkg
 {
@@ -25,22 +26,22 @@ namespace vcpkg
 
         friend std::ostream& operator<<(std::ostream&, const StatusParagraphs&);
 
-        auto end()
+        iterator end()
         {
             return paragraphs.rend();
         }
 
-        auto end() const
+        const_iterator end() const
         {
             return paragraphs.rend();
         }
 
-        auto begin()
+        iterator begin()
         {
             return paragraphs.rbegin();
         }
 
-        auto begin() const
+        const_iterator begin() const
         {
             return paragraphs.rbegin();
         }
