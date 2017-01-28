@@ -18,12 +18,12 @@ namespace vcpkg
 
         std::string dir() const;
 
+        std::string toString() const;
+
     private:
         std::string m_name;
         triplet m_target_triplet;
     };
-
-    std::string to_string(const package_spec& spec);
 
     std::string to_printf_arg(const package_spec& spec);
 

@@ -192,11 +192,11 @@ namespace vcpkg::Commands::Install
         std::vector<package_spec_with_install_plan> install_plan = Dependencies::create_install_plan(paths, specs, status_db);
         Checks::check_exit(!install_plan.empty(), "Install plan cannot be empty");
 
-        std::string specs_string = to_string(install_plan[0].spec);
+        std::string specs_string = install_plan[0].spec.toString();
         for (size_t i = 1; i < install_plan.size(); ++i)
         {
             specs_string.push_back(',');
-            specs_string.append(to_string(install_plan[i].spec));
+            specs_string.append(install_plan[i].spec.toString());
         }
         TrackProperty("installplan", specs_string);
         Environment::ensure_utilities_on_path(paths);

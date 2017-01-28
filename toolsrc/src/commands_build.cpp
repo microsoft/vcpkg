@@ -44,20 +44,20 @@ namespace vcpkg::Commands::Build
         timer.start();
         int return_code = System::cmd_execute(command);
         timer.stop();
-        TrackMetric("buildtimeus-" + to_string(spec), timer.microseconds());
+        TrackMetric("buildtimeus-" + spec.toString(), timer.microseconds());
 
         if (return_code != 0)
         {
-            System::println(System::color::error, "Error: building package %s failed", to_string(spec));
+            System::println(System::color::error, "Error: building package %s failed", spec.toString());
             System::println("Please ensure sure you're using the latest portfiles with `vcpkg update`, then\n"
                             "submit an issue at https://github.com/Microsoft/vcpkg/issues including:\n"
                             "  Package: %s\n"
                             "  Vcpkg version: %s\n"
                             "\n"
                             "Additionally, attach any relevant sections from the log files above."
-                            , to_string(spec), Info::version());
+                            , spec.toString(), Info::version());
             TrackProperty("error", "build failed");
-            TrackProperty("build_error", to_string(spec));
+            TrackProperty("build_error", spec.toString());
             exit(EXIT_FAILURE);
         }
 
@@ -118,7 +118,7 @@ namespace vcpkg::Commands::Build
             System::println("");
             for (const package_spec_with_install_plan& p : unmet_dependencies)
             {
-                System::println("    %s", to_string(p.spec));
+                System::println("    %s", p.spec.toString());
             }
             System::println("");
             exit(EXIT_FAILURE);
