@@ -11,7 +11,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/harfbuzz-1.3.4)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src/harfbuzz-1.3.4)
 find_program(NMAKE nmake)
 
 vcpkg_download_distfile(ARCHIVE
@@ -19,7 +19,9 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "harfbuzz-1.3.4.tar.bz2"
     SHA512 72027ce64d735f1f7ecabcc78ba426d6155cebd564439feb77cefdfc28b00bfd9f6314e6735addaa90cee1d98cf6d2c0b61f77b446ba34e11f7eb7cdfdcd386a
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+# Harfbuzz only supports in-source builds, so to make sure we get a clean build, we need to re-extract every time
+file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src)
+vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src)
 
 file(WRITE ${SOURCE_PATH}/win32/msvc_recommended_pragmas.h "/* I'm expected to exist */")
 
