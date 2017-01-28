@@ -11,6 +11,7 @@ namespace vcpkg::Commands::Remove
     using Dependencies::remove_plan_type;
 
     static const std::string OPTION_PURGE = "--purge";
+    static const std::string OPTION_RECURSIVE = "--recursive";
 
     static void delete_directory(const fs::path& directory)
     {
@@ -163,6 +164,67 @@ namespace vcpkg::Commands::Remove
         System::println(System::color::success, "Package %s was successfully removed", pkg.package.displayname());
     }
 
+    static void sort_packages_by_name(std::vector<const package_spec_with_remove_plan*>* packages)
+    {
+        std::sort(packages->begin(), packages->end(), [](const package_spec_with_remove_plan* left, const package_spec_with_remove_plan* right) -> bool
+                  {
+                      return left->spec.name() < right->spec.name();
+                  });
+    }
+
+    static void print_plan(const std::vector<package_spec_with_remove_plan>& plan)
+    {
+        std::vector<const package_spec_with_remove_plan*> not_installed;
+        std::vector<const package_spec_with_remove_plan*> remove;
+
+        for (const package_spec_with_remove_plan& i : plan)
+        {
+            if (i.plan.type == remove_plan_type::NOT_INSTALLED)
+            {
+                not_installed.push_back(&i);
+                continue;
+            }
+
+            if (i.plan.type == remove_plan_type::REMOVE || i.plan.type == remove_plan_type::REMOVE_USER_REQUESTED)
+            {
+                remove.push_back(&i);
+                continue;
+            }
+
+            Checks::unreachable();
+        }
+
+        //std::copy_if(plan.cbegin(), plan.cend(), std::back_inserter(not_installed), [](const package_spec_with_remove_plan& i)
+        //             {
+        //                 return i.plan.type == remove_plan_type::NOT_INSTALLED;
+        //             });
+
+        if (!not_installed.empty())
+        {
+            sort_packages_by_name(&not_installed);
+            System::println("The following packages are not installed, so not removed:\n%s",
+                            Strings::Joiner::on("\n    ").prefix("    ").join(not_installed, [](const package_spec_with_remove_plan* p)
+                                                                              {
+                                                                                  return p->spec.toString();
+                                                                              }));
+        }
+
+        if (!remove.empty())
+        {
+            sort_packages_by_name(&remove);
+            System::println("The following packages will be removed:\n%s",
+                            Strings::Joiner::on("\n").join(remove, [](const package_spec_with_remove_plan* p)
+                                                           {
+                                                               if (p->plan.type == remove_plan_type::REMOVE_USER_REQUESTED)
+                                                               {
+                                                                   return "    " + p->spec.toString();
+                                                               }
+
+                                                               return "  * " + p->spec.toString();
+                                                           }));
+        }
+    }
+
     void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
         static const std::string example = Commands::Help::create_example_string("remove zlib zlib:x64-windows curl boost");
@@ -173,11 +235,27 @@ namespace vcpkg::Commands::Remove
 
         std::vector<package_spec> specs = Input::check_and_get_package_specs(args.command_arguments, default_target_triplet, example);
         Input::check_triplets(specs, paths);
-        bool alsoRemoveFolderFromPackages = options.find(OPTION_PURGE) != options.end();
+        const bool alsoRemoveFolderFromPackages = options.find(OPTION_PURGE) != options.end();
+        const bool isRecursive = options.find(OPTION_PURGE) != options.end();
 
         const std::vector<package_spec_with_remove_plan> remove_plan = Dependencies::create_remove_plan(paths, specs, status_db);
         Checks::check_exit(!remove_plan.empty(), "Remove plan cannot be empty");
 
+        print_plan(remove_plan);
+
+        const bool has_non_user_requested_packages = std::find_if(remove_plan.cbegin(), remove_plan.cend(), [](const package_spec_with_remove_plan& package)-> bool
+                                                                  {
+                                                                      return package.plan.type == remove_plan_type::REMOVE;
+                                                                  }) != remove_plan.cend();
+
+        if (has_non_user_requested_packages && !isRecursive)
+        {
+            System::println(System::color::warning, "Additional packages (*) need to be removed to complete this operation.\n"
+            "If you are sure you want to remove them, run the command with the --recursive option");
+            exit(EXIT_FAILURE);
+        }
+
+        //exit(EXIT_SUCCESS);
         for (const package_spec& spec : specs)
         {
             deinstall_package(paths, spec, status_db);
