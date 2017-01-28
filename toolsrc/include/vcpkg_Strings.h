@@ -68,7 +68,55 @@ namespace vcpkg::Strings
 
     std::string ascii_to_lowercase(const std::string& input);
 
-    std::string join(const std::vector<std::string>& v, const std::string& delimiter);
+    template <class T, class Transformer>
+    static std::string join(const std::vector<T>& v, const std::string& prefix, const std::string& delimiter, const std::string& suffix, Transformer transformer)
+    {
+        if (v.empty())
+        {
+            return std::string();
+        }
+
+        std::string output;
+        size_t size = v.size();
+
+        output.append(prefix);
+        output.append(transformer(v.at(0)));
+
+        for (size_t i = 1; i < size; ++i)
+        {
+            output.append(delimiter);
+            output.append(transformer(v.at(i)));
+        }
+
+        output.append(suffix);
+        return output;
+    }
+
+    static std::string join(const std::vector<std::string>& v, const std::string& prefix, const std::string& delimiter, const std::string& suffix);
+
+    class Joiner
+    {
+    public:
+        static Joiner on(const std::string& delimiter);
+
+        Joiner& prefix(const std::string& prefix);
+        Joiner& suffix(const std::string& suffix);
+
+        std::string join(const std::vector<std::string>& v) const;
+
+        template <class T, class Transformer>
+        std::string join(const std::vector<T>& v, Transformer transformer) const
+        {
+            return Strings::join(v, this->m_prefix, this->m_delimiter, this->m_suffix, transformer);
+        }
+
+    private:
+        explicit Joiner(const std::string& delimiter);
+
+        std::string m_prefix;
+        std::string m_delimiter;
+        std::string m_suffix;
+    };
 
     void trim(std::string* s);
 

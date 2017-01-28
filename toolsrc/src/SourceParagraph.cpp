@@ -53,8 +53,8 @@ namespace vcpkg
             const std::vector<std::string> remaining_fields = Maps::extract_keys(fields);
             const std::vector<std::string>& valid_fields = get_list_of_valid_fields();
 
-            const std::string remaining_fields_as_string = Strings::join(remaining_fields, "\n    ");
-            const std::string valid_fields_as_string = Strings::join(valid_fields, "\n    ");
+            const std::string remaining_fields_as_string = Strings::Joiner::on("\n    ").join(remaining_fields);
+            const std::string valid_fields_as_string = Strings::Joiner::on("\n    ").join(valid_fields);
 
             System::println(System::color::error, "Error: There are invalid fields in the Source Paragraph of %s", this->name);
             System::println("The following fields were not expected:\n\n    %s\n\n", remaining_fields_as_string);
