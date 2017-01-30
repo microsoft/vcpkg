@@ -6,6 +6,12 @@
 
 namespace vcpkg::Dependencies
 {
+    enum class request_type
+    {
+        USER_REQUESTED,
+        AUTO_SELECTED
+    };
+
     enum class install_plan_type
     {
         BUILD_AND_INSTALL,
@@ -29,13 +35,13 @@ namespace vcpkg::Dependencies
     enum class remove_plan_type
     {
         NOT_INSTALLED,
-        REMOVE_AUTO_SELECTED,
-        REMOVE_USER_REQUESTED
+        REMOVE
     };
 
     struct remove_plan_action
     {
-        remove_plan_type type;
+        remove_plan_type plan_type;
+        request_type request_type;
         std::unique_ptr<StatusParagraph> status_pgh;
     };
 

@@ -114,13 +114,13 @@ namespace vcpkg::Commands::Remove
 
         for (const package_spec_with_remove_plan& i : plan)
         {
-            if (i.plan.type == remove_plan_type::NOT_INSTALLED)
+            if (i.plan.plan_type == remove_plan_type::NOT_INSTALLED)
             {
                 not_installed.push_back(&i);
                 continue;
             }
 
-            if (i.plan.type == remove_plan_type::REMOVE_AUTO_SELECTED || i.plan.type == remove_plan_type::REMOVE_USER_REQUESTED)
+            if (i.plan.plan_type == remove_plan_type::REMOVE)
             {
                 remove.push_back(&i);
                 continue;
@@ -145,15 +145,17 @@ namespace vcpkg::Commands::Remove
             System::println("The following packages will be removed:\n%s",
                             Strings::Joiner::on("\n").join(remove, [](const package_spec_with_remove_plan* p)
                                                            {
-                                                               switch (p->plan.type)
+                                                               if (p->plan.request_type == Dependencies::request_type::AUTO_SELECTED)
                                                                {
-                                                                   case remove_plan_type::REMOVE_USER_REQUESTED:
-                                                                       return "    " + p->spec.toString();
-                                                                   case remove_plan_type::REMOVE_AUTO_SELECTED:
-                                                                       return "  * " + p->spec.toString();
-                                                                   default:
-                                                                       Checks::unreachable();
+                                                                   return "  * " + p->spec.toString();
                                                                }
+
+                                                               if (p->plan.request_type == Dependencies::request_type::USER_REQUESTED)
+                                                               {
+                                                                   return "    " + p->spec.toString();
+                                                               }
+
+                                                               Checks::unreachable();
                                                            }));
         }
     }
@@ -178,7 +180,7 @@ namespace vcpkg::Commands::Remove
 
         const bool has_non_user_requested_packages = std::find_if(remove_plan.cbegin(), remove_plan.cend(), [](const package_spec_with_remove_plan& package)-> bool
                                                                   {
-                                                                      return package.plan.type == remove_plan_type::REMOVE_AUTO_SELECTED;
+                                                                      return package.plan.plan_type == remove_plan_type::REMOVE_AUTO_SELECTED;
                                                                   }) != remove_plan.cend();
 
         if (has_non_user_requested_packages && !isRecursive)
@@ -191,11 +193,11 @@ namespace vcpkg::Commands::Remove
 
         for (const package_spec_with_remove_plan& action : remove_plan)
         {
-            if (action.plan.type == remove_plan_type::NOT_INSTALLED)
+            if (action.plan.plan_type == remove_plan_type::NOT_INSTALLED)
             {
                 System::println(System::color::success, "Package %s is not installed", action.spec);
             }
-            else if (action.plan.type == remove_plan_type::REMOVE_AUTO_SELECTED || action.plan.type == remove_plan_type::REMOVE_USER_REQUESTED)
+            else if (action.plan.plan_type == remove_plan_type::REMOVE_AUTO_SELECTED || action.plan.plan_type == remove_plan_type::REMOVE_USER_REQUESTED)
             {
                 const std::string display_name = action.spec.display_name();
                 System::println("Removing package %s... ", display_name);
