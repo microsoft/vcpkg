@@ -130,11 +130,6 @@ namespace vcpkg::Commands::Remove
             Checks::unreachable();
         }
 
-        //std::copy_if(plan.cbegin(), plan.cend(), std::back_inserter(not_installed), [](const package_spec_with_remove_plan& i)
-        //             {
-        //                 return i.plan.type == remove_plan_type::NOT_INSTALLED;
-        //             });
-
         if (!not_installed.empty())
         {
             sort_packages_by_name(&not_installed);
