@@ -50,6 +50,11 @@ namespace vcpkg
         return this->m_target_triplet;
     }
 
+    std::string package_spec::display_name() const
+    {
+        return Strings::format("%s:%s", this->name(), this->target_triplet());
+    }
+
     std::string package_spec::dir() const
     {
         return Strings::format("%s_%s", this->m_name, this->m_target_triplet);
@@ -57,7 +62,7 @@ namespace vcpkg
 
     std::string package_spec::toString() const
     {
-        return Strings::format("%s:%s", this->name(), this->target_triplet());
+        return this->display_name();
     }
 
     std::string to_printf_arg(const package_spec& spec)
