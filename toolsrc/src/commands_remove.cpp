@@ -183,7 +183,8 @@ namespace vcpkg::Commands::Remove
 
         if (has_non_user_requested_packages && !isRecursive)
         {
-            System::println(System::color::warning, "Additional packages (*) need to be removed to complete this operation.\n"
+            System::println(System::color::warning,
+                            "Additional packages (*) need to be removed to complete this operation.\n"
                             "If you are sure you want to remove them, run the command with the --recursive option");
             exit(EXIT_FAILURE);
         }
