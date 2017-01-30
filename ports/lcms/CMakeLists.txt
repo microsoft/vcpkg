@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.5)
 
 project(lcms)
 
-option(SHARED_LIBRARY "use shared library" ON)
-
 set(SRCS
 "src/cmstypes.c"
 "src/cmsvirt.c"
@@ -44,7 +42,7 @@ include_directories(
 
 add_library(lcms ${SRCS})
 
-if(NOT SKIP_INSTALL_HEADERS AND NOT SKIP_INSTALL_ALL )
+if(NOT SKIP_INSTALL_HEADERS )
 
   install(FILES 
     "./include/lcms2.h" 
@@ -52,7 +50,7 @@ if(NOT SKIP_INSTALL_HEADERS AND NOT SKIP_INSTALL_ALL )
     DESTINATION include
 	)
 
-endif(NOT SKIP_INSTALL_HEADERS AND NOT SKIP_INSTALL_ALL )
+endif(NOT SKIP_INSTALL_HEADERS )
 
 install(TARGETS lcms EXPORT lcms_EXPORT    
     RUNTIME DESTINATION bin
