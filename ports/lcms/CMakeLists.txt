@@ -4,11 +4,6 @@ project(lcms)
 
 option(SHARED_LIBRARY "use shared library" ON)
 
-set(LIBRARY_TYPE STATIC)
-if(SHARED_LIBRARY)
-  set(LIBRARY_TYPE SHARED)
-endif(SHARED_LIBRARY)
-
 set(SRCS
 "src/cmstypes.c"
 "src/cmsvirt.c"
@@ -47,9 +42,7 @@ include_directories(
 "./include"
 )
 
-add_library(lcms ${LIBRARY_TYPE}
-${SRCS}
-)
+add_library(lcms ${SRCS})
 
 if(NOT SKIP_INSTALL_HEADERS AND NOT SKIP_INSTALL_ALL )
 
