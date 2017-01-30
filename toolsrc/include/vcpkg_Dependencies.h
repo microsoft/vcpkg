@@ -16,8 +16,8 @@ namespace vcpkg::Dependencies
     struct install_plan_action
     {
         install_plan_type type;
-        std::unique_ptr<BinaryParagraph> bpgh;
-        std::unique_ptr<SourceParagraph> spgh;
+        std::unique_ptr<BinaryParagraph> binary_pgh;
+        std::unique_ptr<SourceParagraph> source_pgh;
     };
 
     struct package_spec_with_install_plan

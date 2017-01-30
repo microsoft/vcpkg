@@ -214,14 +214,14 @@ namespace vcpkg::Commands::Install
                 }
                 else if (action.plan.type == install_plan_type::BUILD_AND_INSTALL)
                 {
-                    Commands::Build::build_package(*action.plan.spgh, action.spec, paths, paths.port_dir(action.spec));
+                    Commands::Build::build_package(*action.plan.source_pgh, action.spec, paths, paths.port_dir(action.spec));
                     const BinaryParagraph bpgh = try_load_cached_package(paths, action.spec).get_or_throw();
                     install_package(paths, bpgh, status_db);
                     System::println(System::color::success, "Package %s is installed", action.spec);
                 }
                 else if (action.plan.type == install_plan_type::INSTALL)
                 {
-                    install_package(paths, *action.plan.bpgh, status_db);
+                    install_package(paths, *action.plan.binary_pgh, status_db);
                     System::println(System::color::success, "Package %s is installed", action.spec);
                 }
                 else
