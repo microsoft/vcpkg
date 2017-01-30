@@ -114,8 +114,8 @@ namespace vcpkg::Dependencies
                 examine_stack.push_back(an_installed_package.get()->package.spec);
             }
 
-            const remove_plan_type type = specs_as_set.find(spec) != specs_as_set.end() ? remove_plan_type::REMOVE_USER_REQUESTED: remove_plan_type::REMOVE;
-            was_examined.emplace(spec, remove_plan_action{ type, std::make_unique<BinaryParagraph>(std::move((*it)->package))});
+            const remove_plan_type type = specs_as_set.find(spec) != specs_as_set.end() ? remove_plan_type::REMOVE_USER_REQUESTED: remove_plan_type::REMOVE_AUTO_SELECTED;
+            was_examined.emplace(spec, remove_plan_action{ type, std::make_unique<StatusParagraph>(std::move(**it))});
         }
 
         std::vector<package_spec_with_remove_plan> ret;

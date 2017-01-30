@@ -27,72 +27,8 @@ namespace vcpkg::Commands::Remove
         }
     }
 
-    static remove_plan_type deinstall_package_plan(
-        const StatusParagraphs::iterator package_it,
-        const StatusParagraphs& status_db,
-        std::vector<const StatusParagraph*>& dependencies_out)
+    static void remove_package(const vcpkg_paths& paths, StatusParagraph& pkg)
     {
-        dependencies_out.clear();
-
-        if (package_it == status_db.end() || (*package_it)->state == install_state_t::not_installed)
-        {
-            return remove_plan_type::NOT_INSTALLED;
-        }
-
-        auto& pkg = (*package_it)->package;
-
-        for (auto&& inst_pkg : status_db)
-        {
-            if (inst_pkg->want != want_t::install)
-                continue;
-            if (inst_pkg->package.spec.target_triplet() != pkg.spec.target_triplet())
-                continue;
-
-            const auto& deps = inst_pkg->package.depends;
-
-            if (std::find(deps.begin(), deps.end(), pkg.spec.name()) != deps.end())
-            {
-                dependencies_out.push_back(inst_pkg.get());
-            }
-        }
-
-        if (!dependencies_out.empty())
-            return remove_plan_type::DEPENDENCIES_NOT_SATISFIED;
-
-        return remove_plan_type::REMOVE;
-    }
-
-    static void deinstall_package(const vcpkg_paths& paths, const package_spec& spec, StatusParagraphs& status_db)
-    {
-        auto package_it = status_db.find(spec.name(), spec.target_triplet());
-        if (package_it == status_db.end())
-        {
-            System::println(System::color::success, "Package %s is not installed", spec);
-            return;
-        }
-
-        auto& pkg = **package_it;
-
-        std::vector<const StatusParagraph*> deps;
-        auto plan = deinstall_package_plan(package_it, status_db, deps);
-        switch (plan)
-        {
-            case remove_plan_type::NOT_INSTALLED:
-                System::println(System::color::success, "Package %s is not installed", spec);
-                return;
-            case remove_plan_type::DEPENDENCIES_NOT_SATISFIED:
-                System::println(System::color::error, "Error: Cannot remove package %s:", spec);
-                for (auto&& dep : deps)
-                {
-                    System::println("  %s depends on %s", dep->package.displayname(), pkg.package.displayname());
-                }
-                exit(EXIT_FAILURE);
-            case remove_plan_type::REMOVE:
-                break;
-            default:
-                Checks::unreachable();
-        }
-
         pkg.want = want_t::purge;
         pkg.state = install_state_t::half_installed;
         write_update(paths, pkg);
@@ -185,7 +121,7 @@ namespace vcpkg::Commands::Remove
                 continue;
             }
 
-            if (i.plan.type == remove_plan_type::REMOVE || i.plan.type == remove_plan_type::REMOVE_USER_REQUESTED)
+            if (i.plan.type == remove_plan_type::REMOVE_AUTO_SELECTED || i.plan.type == remove_plan_type::REMOVE_USER_REQUESTED)
             {
                 remove.push_back(&i);
                 continue;
@@ -215,12 +151,15 @@ namespace vcpkg::Commands::Remove
             System::println("The following packages will be removed:\n%s",
                             Strings::Joiner::on("\n").join(remove, [](const package_spec_with_remove_plan* p)
                                                            {
-                                                               if (p->plan.type == remove_plan_type::REMOVE_USER_REQUESTED)
+                                                               switch (p->plan.type)
                                                                {
-                                                                   return "    " + p->spec.toString();
+                                                                   case remove_plan_type::REMOVE_USER_REQUESTED:
+                                                                       return "    " + p->spec.toString();
+                                                                   case remove_plan_type::REMOVE_AUTO_SELECTED:
+                                                                       return "  * " + p->spec.toString();
+                                                                   default:
+                                                                       Checks::unreachable();
                                                                }
-
-                                                               return "  * " + p->spec.toString();
                                                            }));
         }
     }
@@ -230,13 +169,13 @@ namespace vcpkg::Commands::Remove
         static const std::string example = Commands::Help::create_example_string("remove zlib zlib:x64-windows curl boost");
         args.check_min_arg_count(1, example);
 
-        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_PURGE});
+        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_PURGE, OPTION_RECURSIVE});
         auto status_db = database_load_check(paths);
 
         std::vector<package_spec> specs = Input::check_and_get_package_specs(args.command_arguments, default_target_triplet, example);
         Input::check_triplets(specs, paths);
         const bool alsoRemoveFolderFromPackages = options.find(OPTION_PURGE) != options.end();
-        const bool isRecursive = options.find(OPTION_PURGE) != options.end();
+        const bool isRecursive = options.find(OPTION_RECURSIVE) != options.end();
 
         const std::vector<package_spec_with_remove_plan> remove_plan = Dependencies::create_remove_plan(paths, specs, status_db);
         Checks::check_exit(!remove_plan.empty(), "Remove plan cannot be empty");
@@ -245,27 +184,36 @@ namespace vcpkg::Commands::Remove
 
         const bool has_non_user_requested_packages = std::find_if(remove_plan.cbegin(), remove_plan.cend(), [](const package_spec_with_remove_plan& package)-> bool
                                                                   {
-                                                                      return package.plan.type == remove_plan_type::REMOVE;
+                                                                      return package.plan.type == remove_plan_type::REMOVE_AUTO_SELECTED;
                                                                   }) != remove_plan.cend();
 
         if (has_non_user_requested_packages && !isRecursive)
         {
             System::println(System::color::warning, "Additional packages (*) need to be removed to complete this operation.\n"
-            "If you are sure you want to remove them, run the command with the --recursive option");
+                            "If you are sure you want to remove them, run the command with the --recursive option");
             exit(EXIT_FAILURE);
         }
 
-        //exit(EXIT_SUCCESS);
-        for (const package_spec& spec : specs)
+        for (const package_spec_with_remove_plan& action : remove_plan)
         {
-            deinstall_package(paths, spec, status_db);
-
-            if (alsoRemoveFolderFromPackages)
+            if (action.plan.type == remove_plan_type::NOT_INSTALLED)
             {
-                const fs::path spec_package_dir = paths.packages / spec.dir();
-                delete_directory(spec_package_dir);
+                System::println(System::color::success, "Package %s is not installed", action.spec);
             }
+            else if (action.plan.type == remove_plan_type::REMOVE_AUTO_SELECTED || action.plan.type == remove_plan_type::REMOVE_USER_REQUESTED)
+            {
+                remove_package(paths, *action.plan.status_pgh);
+
+                if (alsoRemoveFolderFromPackages)
+                {
+                    const fs::path spec_package_dir = paths.packages / action.spec.dir();
+                    delete_directory(spec_package_dir);
+                }
+            }
+            else
+                Checks::unreachable();
         }
+
         exit(EXIT_SUCCESS);
     }
 }

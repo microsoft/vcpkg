@@ -29,15 +29,14 @@ namespace vcpkg::Dependencies
     enum class remove_plan_type
     {
         NOT_INSTALLED,
-        DEPENDENCIES_NOT_SATISFIED,
-        REMOVE,
+        REMOVE_AUTO_SELECTED,
         REMOVE_USER_REQUESTED
     };
 
     struct remove_plan_action
     {
         remove_plan_type type;
-        std::unique_ptr<BinaryParagraph> bpgh;
+        std::unique_ptr<StatusParagraph> status_pgh;
     };
 
     struct package_spec_with_remove_plan
