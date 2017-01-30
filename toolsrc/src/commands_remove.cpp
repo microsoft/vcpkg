@@ -9,6 +9,7 @@ namespace vcpkg::Commands::Remove
 {
     using Dependencies::package_spec_with_remove_plan;
     using Dependencies::remove_plan_type;
+    using Dependencies::request_type;
 
     static const std::string OPTION_PURGE = "--purge";
     static const std::string OPTION_RECURSIVE = "--recursive";
@@ -180,7 +181,7 @@ namespace vcpkg::Commands::Remove
 
         const bool has_non_user_requested_packages = std::find_if(remove_plan.cbegin(), remove_plan.cend(), [](const package_spec_with_remove_plan& package)-> bool
                                                                   {
-                                                                      return package.plan.plan_type == remove_plan_type::REMOVE_AUTO_SELECTED;
+                                                                      return package.plan.request_type != request_type::USER_REQUESTED;
                                                                   }) != remove_plan.cend();
 
         if (has_non_user_requested_packages && !isRecursive)
@@ -197,7 +198,7 @@ namespace vcpkg::Commands::Remove
             {
                 System::println(System::color::success, "Package %s is not installed", action.spec);
             }
-            else if (action.plan.plan_type == remove_plan_type::REMOVE_AUTO_SELECTED || action.plan.plan_type == remove_plan_type::REMOVE_USER_REQUESTED)
+            else if (action.plan.plan_type == remove_plan_type::REMOVE)
             {
                 const std::string display_name = action.spec.display_name();
                 System::println("Removing package %s... ", display_name);
@@ -206,9 +207,8 @@ namespace vcpkg::Commands::Remove
 
                 if (alsoRemoveFolderFromPackages)
                 {
-                    const fs::path spec_package_dir = paths.packages / action.spec.dir();
                     System::println("Purging package %s... ", display_name);
-                    delete_directory(spec_package_dir);
+                    delete_directory(paths.packages / action.spec.dir());
                     System::println(System::color::success, "Purging package %s... done", display_name);
                 }
             }
