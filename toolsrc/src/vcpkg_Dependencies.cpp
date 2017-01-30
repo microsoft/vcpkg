@@ -90,7 +90,7 @@ namespace vcpkg::Dependencies
                 continue;
             }
 
-            auto it = status_db.find(spec);
+            const StatusParagraphs::const_iterator it = status_db.find(spec);
             if (it == status_db.end() || (*it)->state == install_state_t::not_installed)
             {
                 was_examined.emplace(spec, remove_plan_action{remove_plan_type::NOT_INSTALLED, request_type::USER_REQUESTED, nullptr});
@@ -115,7 +115,7 @@ namespace vcpkg::Dependencies
             }
 
             const request_type request_type = specs_as_set.find(spec) != specs_as_set.end() ? request_type::USER_REQUESTED : request_type::AUTO_SELECTED;
-            was_examined.emplace(spec, remove_plan_action{remove_plan_type::REMOVE, request_type,std::make_unique<StatusParagraph>(std::move(**it))});
+            was_examined.emplace(spec, remove_plan_action{remove_plan_type::REMOVE, request_type,it->get()});
         }
 
         std::vector<package_spec_with_remove_plan> ret;
