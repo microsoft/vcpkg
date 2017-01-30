@@ -97,7 +97,6 @@ namespace vcpkg::Commands::Remove
 
         pkg.state = install_state_t::not_installed;
         write_update(paths, pkg);
-        System::println(System::color::success, "Package %s was successfully removed", pkg.package.displayname());
     }
 
     static void sort_packages_by_name(std::vector<const package_spec_with_remove_plan*>* packages)
@@ -197,12 +196,17 @@ namespace vcpkg::Commands::Remove
             }
             else if (action.plan.type == remove_plan_type::REMOVE_AUTO_SELECTED || action.plan.type == remove_plan_type::REMOVE_USER_REQUESTED)
             {
+                const std::string display_name = action.spec.display_name();
+                System::println("Removing package %s... ", display_name);
                 remove_package(paths, *action.plan.status_pgh);
+                System::println(System::color::success, "Removing package %s... done", display_name);
 
                 if (alsoRemoveFolderFromPackages)
                 {
                     const fs::path spec_package_dir = paths.packages / action.spec.dir();
+                    System::println("Purging package %s... ", display_name);
                     delete_directory(spec_package_dir);
+                    System::println(System::color::success, "Purging package %s... done", display_name);
                 }
             }
             else
