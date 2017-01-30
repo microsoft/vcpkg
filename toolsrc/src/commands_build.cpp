@@ -107,7 +107,7 @@ namespace vcpkg::Commands::Build
         unmet_dependencies.erase(
             std::remove_if(unmet_dependencies.begin(), unmet_dependencies.end(), [](const package_spec_with_install_plan& p)
                            {
-                               return p.plan.type == install_plan_type::ALREADY_INSTALLED;
+                               return p.plan.plan_type == install_plan_type::ALREADY_INSTALLED;
                            }),
             unmet_dependencies.end());
 
