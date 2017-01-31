@@ -43,7 +43,6 @@ namespace vcpkg::Dependencies
     {
         remove_plan_type plan_type;
         request_type request_type;
-        StatusParagraph* status_pgh;
     };
 
     struct package_spec_with_remove_plan

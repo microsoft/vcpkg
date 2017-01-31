@@ -28,8 +28,10 @@ namespace vcpkg::Commands::Remove
         }
     }
 
-    static void remove_package(const vcpkg_paths& paths, StatusParagraph& pkg)
+    static void remove_package(const vcpkg_paths& paths, const package_spec& spec, StatusParagraphs* status_db)
     {
+        StatusParagraph& pkg = **status_db->find(spec.name(), spec.target_triplet());
+
         pkg.want = want_t::purge;
         pkg.state = install_state_t::half_installed;
         write_update(paths, pkg);
@@ -202,7 +204,7 @@ namespace vcpkg::Commands::Remove
             {
                 const std::string display_name = action.spec.display_name();
                 System::println("Removing package %s... ", display_name);
-                remove_package(paths, *action.plan.status_pgh);
+                remove_package(paths, action.spec, &status_db);
                 System::println(System::color::success, "Removing package %s... done", display_name);
 
                 if (alsoRemoveFolderFromPackages)
