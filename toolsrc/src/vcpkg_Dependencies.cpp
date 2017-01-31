@@ -9,6 +9,32 @@
 
 namespace vcpkg::Dependencies
 {
+    install_plan_action::install_plan_action() : plan_type(install_plan_type::UNKNOWN), binary_pgh(nullptr), source_pgh(nullptr)
+    {
+    }
+
+    install_plan_action::install_plan_action(const install_plan_type& plan_type, optional<BinaryParagraph> binary_pgh, optional<SourceParagraph> source_pgh)
+        : plan_type(std::move(plan_type)), binary_pgh(std::move(binary_pgh)), source_pgh(std::move(source_pgh))
+    {
+    }
+
+    package_spec_with_install_plan::package_spec_with_install_plan(const package_spec& spec, install_plan_action&& plan) : spec(spec), plan(std::move(plan))
+    {
+    }
+
+    remove_plan_action::remove_plan_action() : plan_type(remove_plan_type::UNKNOWN), request_type(request_type::UNKNOWN)
+    {
+    }
+
+    remove_plan_action::remove_plan_action(const remove_plan_type& plan_type, const Dependencies::request_type& request_type) : plan_type(plan_type), request_type(request_type)
+    {
+    }
+
+    package_spec_with_remove_plan::package_spec_with_remove_plan(const package_spec& spec, remove_plan_action&& plan)
+        : spec(spec), plan(std::move(plan))
+    {
+    }
+
     std::vector<package_spec_with_install_plan> create_install_plan(const vcpkg_paths& paths, const std::vector<package_spec>& specs, const StatusParagraphs& status_db)
     {
         std::unordered_map<package_spec, install_plan_action> was_examined; // Examine = we have checked its immediate (non-recursive) dependencies
@@ -66,7 +92,7 @@ namespace vcpkg::Dependencies
         const std::vector<package_spec> pkgs = graph.find_topological_sort();
         for (const package_spec& pkg : pkgs)
         {
-            ret.push_back({pkg, std::move(was_examined[pkg])});
+            ret.push_back(package_spec_with_install_plan(pkg, std::move(was_examined[pkg])));
         }
         return ret;
     }
@@ -93,7 +119,7 @@ namespace vcpkg::Dependencies
             const StatusParagraphs::const_iterator it = status_db.find(spec);
             if (it == status_db.end() || (*it)->state == install_state_t::not_installed)
             {
-                was_examined.emplace(spec, remove_plan_action{remove_plan_type::NOT_INSTALLED, request_type::USER_REQUESTED});
+                was_examined.emplace(spec, remove_plan_action(remove_plan_type::NOT_INSTALLED, request_type::USER_REQUESTED));
                 continue;
             }
 
@@ -115,7 +141,7 @@ namespace vcpkg::Dependencies
             }
 
             const request_type request_type = specs_as_set.find(spec) != specs_as_set.end() ? request_type::USER_REQUESTED : request_type::AUTO_SELECTED;
-            was_examined.emplace(spec, remove_plan_action{remove_plan_type::REMOVE});
+            was_examined.emplace(spec, remove_plan_action(remove_plan_type::REMOVE, request_type));
         }
 
         std::vector<package_spec_with_remove_plan> ret;
@@ -123,7 +149,7 @@ namespace vcpkg::Dependencies
         const std::vector<package_spec> pkgs = graph.find_topological_sort();
         for (const package_spec& pkg : pkgs)
         {
-            ret.push_back({pkg, std::move(was_examined[pkg])});
+            ret.push_back(package_spec_with_remove_plan(pkg, std::move(was_examined[pkg])));
         }
         return ret;
     }
