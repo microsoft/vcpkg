@@ -134,11 +134,11 @@ namespace vcpkg::Commands::Install
         return ImmutableSortedVector<std::string>::create(std::move(installed_files));
     }
 
-    void install_package(const vcpkg_paths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs& status_db)
+    void install_package(const vcpkg_paths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs* status_db)
     {
         const fs::path package_dir = paths.package_dir(binary_paragraph.spec);
         const triplet& triplet = binary_paragraph.spec.target_triplet();
-        const std::vector<StatusParagraph_and_associated_files> pgh_and_files = get_installed_files(paths, status_db);
+        const std::vector<StatusParagraph_and_associated_files> pgh_and_files = get_installed_files(paths, *status_db);
 
         const ImmutableSortedVector<std::string> package_files = build_list_of_package_files(package_dir);
         const ImmutableSortedVector<std::string> installed_files = build_list_of_installed_files(pgh_and_files, triplet);
@@ -166,19 +166,19 @@ namespace vcpkg::Commands::Install
         spgh.state = install_state_t::half_installed;
         for (auto&& dep : spgh.package.depends)
         {
-            if (status_db.find_installed(dep, spgh.package.spec.target_triplet()) == status_db.end())
+            if (status_db->find_installed(dep, spgh.package.spec.target_triplet()) == status_db->end())
             {
                 Checks::unreachable();
             }
         }
         write_update(paths, spgh);
-        status_db.insert(std::make_unique<StatusParagraph>(spgh));
+        status_db->insert(std::make_unique<StatusParagraph>(spgh));
 
         install_and_write_listfile(paths, spgh.package);
 
         spgh.state = install_state_t::installed;
         write_update(paths, spgh);
-        status_db.insert(std::make_unique<StatusParagraph>(spgh));
+        status_db->insert(std::make_unique<StatusParagraph>(spgh));
     }
 
     void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
@@ -216,12 +216,12 @@ namespace vcpkg::Commands::Install
                 {
                     Commands::Build::build_package(*action.plan.source_pgh, action.spec, paths, paths.port_dir(action.spec));
                     const BinaryParagraph bpgh = try_load_cached_package(paths, action.spec).get_or_throw();
-                    install_package(paths, bpgh, status_db);
+                    install_package(paths, bpgh, &status_db);
                     System::println(System::color::success, "Package %s is installed", action.spec);
                 }
                 else if (action.plan.plan_type == install_plan_type::INSTALL)
                 {
-                    install_package(paths, *action.plan.binary_pgh, status_db);
+                    install_package(paths, *action.plan.binary_pgh, &status_db);
                     System::println(System::color::success, "Package %s is installed", action.spec);
                 }
                 else
