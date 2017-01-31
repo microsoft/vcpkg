@@ -48,25 +48,7 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fltk-config)
 vcpkg_copy_pdbs()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-	file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fltk_formsd.lib)
-	file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fltk_gld.lib)
-	file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fltk_imagesd.lib)
-	file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fltkd.lib)
-	   
-	file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/fltk_forms_SHAREDd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/fltk_formsd.lib)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/fltk_gl_SHAREDd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/fltk_gld.lib)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/fltk_images_SHAREDd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/fltk_imagesd.lib)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/fltk_SHAREDd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/fltkd.lib)
-   
-	file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/fltk_forms.lib)
-	file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/fltk_gl.lib)
-	file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/fltk_images.lib)
-	file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/fltk.lib)
-	
-	file(RENAME ${CURRENT_PACKAGES_DIR}/lib/fltk_forms_SHARED.lib ${CURRENT_PACKAGES_DIR}/lib/fltk_forms.lib)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/lib/fltk_gl_SHARED.lib ${CURRENT_PACKAGES_DIR}/lib/fltk_gl.lib)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/lib/fltk_images_SHARED.lib ${CURRENT_PACKAGES_DIR}/lib/fltk_images.lib)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/lib/fltk_SHARED.lib ${CURRENT_PACKAGES_DIR}/lib/fltk.lib)
+
 	
 else()
 	file(REMOVE_RECURSE
@@ -76,11 +58,6 @@ else()
 
    
 endif()
-
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/fltk_formsd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/fltk_forms.lib)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/fltk_gld.lib ${CURRENT_PACKAGES_DIR}/debug/lib/fltk_gl.lib)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/fltk_imagesd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/fltk_images.lib)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/fltkd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/fltk.lib)
 
 
 
