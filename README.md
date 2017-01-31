@@ -7,7 +7,8 @@ For short description of available commands, run `vcpkg help`.
 
 ## Quick Start
 Prerequisites:
-- Visual Studio 2015 Update 3
+- Visual Studio 2015 Update 3 or
+- Visual Studio 2017
 - `git.exe` available in your path
 
 Clone this repository, then run
