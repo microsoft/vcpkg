@@ -1,3 +1,41 @@
+vcpkg (0.0.71)
+--------------
+  * Add ports:
+    - atk                  2.22.0
+    - fontconfig           2.12.1
+    - opus                 1.1.4
+    - pango                1.40.3
+    - xerces-c             3.1.4
+  * Update ports:
+    - boost                1.62-11          -> 1.63
+    - cairo                1.14.6           -> 1.15.4
+    - directxtk            dec2016          -> dec2016-1
+    - fltk                 1.3.4-1          -> 1.3.4-2
+    - gdal                 1.11.3           -> 1.11.3-1
+    - harfbuzz             1.3.4            -> 1.3.4-2
+    - libarchive           3.2.2            -> 3.2.2-2
+    - libmariadb           2.3.1            -> 2.3.2
+    - mpir                 2.7.2            -> 2.7.2-1
+    - openssl              1.0.2j-2         -> 1.0.2k-2
+    - wt                   3.3.6            -> 3.3.6-2
+  * Improve `vcpkg remove`:
+     - Now shows all dependencies that need to be removed instead of just the immediate dependencies
+     - Add `--recurse` option that removes all dependencies
+     - Improve messages
+  * Improve support for Visual Studio 2017
+    - Better VS2017 detection
+    - Fixed various issues with `bootstrap.ps1` and VS2017 support
+  * Fix `vcpkg_copy_pdbs()` under non-English locale
+  * Notable changes for buiding the `vcpkg` tool:
+    - Restructure `vcpkg` project hierarchy. Now only has 4 projects (down from 6). Most of the code now lives under vcpkglib.vcxproj
+    - Enable multiprocessor compilation
+    - Disable MinimalRebuild
+    - Use precompiled headers
+  * Fixes and improvements in existing portfiles and the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  MON, 30 Jan 2017 23:00:00 -0800
+
+
 vcpkg (0.0.70)
 --------------
   * Add ports:
