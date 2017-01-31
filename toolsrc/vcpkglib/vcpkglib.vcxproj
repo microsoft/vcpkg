@@ -166,6 +166,7 @@
     <ClInclude Include="..\include\vcpkg_Graphs.h" />
     <ClInclude Include="..\include\vcpkg_Input.h" />
     <ClInclude Include="..\include\vcpkg_Maps.h" />
+    <ClInclude Include="..\include\vcpkg_optional.h" />
     <ClInclude Include="..\include\vcpkg_paths.h" />
     <ClInclude Include="..\include\vcpkg_info.h" />
     <ClInclude Include="..\include\vcpkg_Sets.h" />

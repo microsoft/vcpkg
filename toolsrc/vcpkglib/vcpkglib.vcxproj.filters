@@ -260,5 +260,8 @@
     <ClInclude Include="..\include\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\vcpkg_optional.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

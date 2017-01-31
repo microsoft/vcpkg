@@ -3,6 +3,7 @@
 #include "package_spec.h"
 #include "StatusParagraphs.h"
 #include "vcpkg_paths.h"
+#include "vcpkg_optional.h"
 
 namespace vcpkg::Dependencies
 {
@@ -22,8 +23,8 @@ namespace vcpkg::Dependencies
     struct install_plan_action
     {
         install_plan_type plan_type;
-        std::unique_ptr<BinaryParagraph> binary_pgh;
-        std::unique_ptr<SourceParagraph> source_pgh;
+        optional<BinaryParagraph> binary_pgh;
+        optional<SourceParagraph> source_pgh;
     };
 
     struct package_spec_with_install_plan
