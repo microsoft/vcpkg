@@ -202,14 +202,14 @@ int wmain(const int argc, const wchar_t* const* const argv)
 
     const vcpkg_cmd_arguments args = vcpkg_cmd_arguments::create_from_command_line(argc, argv);
 
-    if (args.printmetrics != opt_bool::UNSPECIFIED)
-        SetPrintMetrics(args.printmetrics == opt_bool::ENABLED);
-    if (args.sendmetrics != opt_bool::UNSPECIFIED)
-        SetSendMetrics(args.sendmetrics == opt_bool::ENABLED);
+    if (args.printmetrics != opt_bool_t::UNSPECIFIED)
+        SetPrintMetrics(args.printmetrics == opt_bool_t::ENABLED);
+    if (args.sendmetrics != opt_bool_t::UNSPECIFIED)
+        SetSendMetrics(args.sendmetrics == opt_bool_t::ENABLED);
 
-    if (args.debug != opt_bool::UNSPECIFIED)
+    if (args.debug != opt_bool_t::UNSPECIFIED)
     {
-        g_debugging = (args.debug == opt_bool::ENABLED);
+        g_debugging = (args.debug == opt_bool_t::ENABLED);
     }
 
     if (g_debugging)

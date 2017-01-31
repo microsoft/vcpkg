@@ -14,9 +14,9 @@ namespace vcpkg
 
         std::unique_ptr<std::string> vcpkg_root_dir;
         std::unique_ptr<std::string> target_triplet;
-        opt_bool debug = opt_bool::UNSPECIFIED;
-        opt_bool sendmetrics = opt_bool::UNSPECIFIED;
-        opt_bool printmetrics = opt_bool::UNSPECIFIED;
+        opt_bool_t debug = opt_bool_t::UNSPECIFIED;
+        opt_bool_t  sendmetrics = opt_bool_t::UNSPECIFIED;
+        opt_bool_t  printmetrics = opt_bool_t::UNSPECIFIED;
 
         std::string command;
         std::vector<std::string> command_arguments;

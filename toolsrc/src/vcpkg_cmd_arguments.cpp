@@ -32,11 +32,11 @@ namespace vcpkg
     }
 
     static void parse_switch(
-        opt_bool new_setting,
+        opt_bool_t new_setting,
         const std::string& option_name,
-        opt_bool& option_field)
+        opt_bool_t& option_field)
     {
-        if (option_field != opt_bool::UNSPECIFIED && option_field != new_setting)
+        if (option_field != opt_bool_t::UNSPECIFIED && option_field != new_setting)
         {
             System::println(System::color::error, "Error: conflicting values specified for --%s", option_name);
             TrackProperty("error", "error conflicting switches");
@@ -94,27 +94,27 @@ namespace vcpkg
                 }
                 if (arg == "--debug")
                 {
-                    parse_switch(opt_bool::ENABLED, "debug", args.debug);
+                    parse_switch(opt_bool_t::ENABLED, "debug", args.debug);
                     continue;
                 }
                 if (arg == "--sendmetrics")
                 {
-                    parse_switch(opt_bool::ENABLED, "sendmetrics", args.sendmetrics);
+                    parse_switch(opt_bool_t::ENABLED, "sendmetrics", args.sendmetrics);
                     continue;
                 }
                 if (arg == "--printmetrics")
                 {
-                    parse_switch(opt_bool::ENABLED, "printmetrics", args.printmetrics);
+                    parse_switch(opt_bool_t::ENABLED, "printmetrics", args.printmetrics);
                     continue;
                 }
                 if (arg == "--no-sendmetrics")
                 {
-                    parse_switch(opt_bool::DISABLED, "sendmetrics", args.sendmetrics);
+                    parse_switch(opt_bool_t::DISABLED, "sendmetrics", args.sendmetrics);
                     continue;
                 }
                 if (arg == "--no-printmetrics")
                 {
-                    parse_switch(opt_bool::DISABLED, "printmetrics", args.printmetrics);
+                    parse_switch(opt_bool_t::DISABLED, "printmetrics", args.printmetrics);
                     continue;
                 }
 
