@@ -36,7 +36,7 @@ namespace vcpkg
         const std::string& option_name,
         opt_bool& option_field)
     {
-        if (option_field != opt_bool::unspecified && option_field != new_setting)
+        if (option_field != opt_bool::UNSPECIFIED && option_field != new_setting)
         {
             System::println(System::color::error, "Error: conflicting values specified for --%s", option_name);
             TrackProperty("error", "error conflicting switches");
@@ -94,27 +94,27 @@ namespace vcpkg
                 }
                 if (arg == "--debug")
                 {
-                    parse_switch(opt_bool::enabled, "debug", args.debug);
+                    parse_switch(opt_bool::ENABLED, "debug", args.debug);
                     continue;
                 }
                 if (arg == "--sendmetrics")
                 {
-                    parse_switch(opt_bool::enabled, "sendmetrics", args.sendmetrics);
+                    parse_switch(opt_bool::ENABLED, "sendmetrics", args.sendmetrics);
                     continue;
                 }
                 if (arg == "--printmetrics")
                 {
-                    parse_switch(opt_bool::enabled, "printmetrics", args.printmetrics);
+                    parse_switch(opt_bool::ENABLED, "printmetrics", args.printmetrics);
                     continue;
                 }
                 if (arg == "--no-sendmetrics")
                 {
-                    parse_switch(opt_bool::disabled, "sendmetrics", args.sendmetrics);
+                    parse_switch(opt_bool::DISABLED, "sendmetrics", args.sendmetrics);
                     continue;
                 }
                 if (arg == "--no-printmetrics")
                 {
-                    parse_switch(opt_bool::disabled, "printmetrics", args.printmetrics);
+                    parse_switch(opt_bool::DISABLED, "printmetrics", args.printmetrics);
                     continue;
                 }
 

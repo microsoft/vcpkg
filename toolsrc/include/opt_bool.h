@@ -4,8 +4,8 @@ namespace vcpkg
 {
     enum class opt_bool
     {
-        unspecified,
-        enabled,
-        disabled
+        UNSPECIFIED,
+        ENABLED,
+        DISABLED
     };
 }
