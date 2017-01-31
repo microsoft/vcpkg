@@ -153,7 +153,9 @@ namespace vcpkg::Commands::Install
             System::println(System::color::error, "The following files are already installed in %s and are in conflict with %s",
                             triplet_install_path.generic_string(),
                             binary_paragraph.spec);
-            Strings::join(intersection, "\n    ");
+            System::print("\n    ");
+            System::println(Strings::join(intersection, "\n    "));
+            System::println("");
             exit(EXIT_FAILURE);
         }
 
