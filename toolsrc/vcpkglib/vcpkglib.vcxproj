@@ -154,6 +154,7 @@
     <ClInclude Include="..\include\PostBuildLint_BuildType.h" />
     <ClInclude Include="..\include\PostBuildLint_ConfigurationType.h" />
     <ClInclude Include="..\include\PostBuildLint_LinkageType.h" />
+    <ClInclude Include="..\include\PostBuildLint_OutdatedDynamicCrt.h" />
     <ClInclude Include="..\include\SourceParagraph.h" />
     <ClInclude Include="..\include\StatusParagraph.h" />
     <ClInclude Include="..\include\StatusParagraphs.h" />
@@ -213,6 +214,7 @@
     <ClCompile Include="..\src\PostBuildLint.cpp" />
     <ClCompile Include="..\src\PostBuildLint_ConfigurationType.cpp" />
     <ClCompile Include="..\src\PostBuildLint_LinkageType.cpp" />
+    <ClCompile Include="..\src\PostBuildLint_OutdatedDynamicCrt.cpp" />
     <ClCompile Include="..\src\PostBuiltLint_BuildType.cpp" />
     <ClCompile Include="..\src\Stopwatch.cpp" />
     <ClCompile Include="..\src\vcpkglib.cpp" />

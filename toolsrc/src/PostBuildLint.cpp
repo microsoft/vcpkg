@@ -6,6 +6,8 @@
 #include "vcpkg_Environment.h"
 #include "coff_file_reader.h"
 #include "PostBuildLint_BuildInfo.h"
+#include "PostBuildLint_BuildType.h"
+#include "PostBuildLint_OutdatedDynamicCrt.h"
 
 namespace vcpkg::PostBuildLint
 {
