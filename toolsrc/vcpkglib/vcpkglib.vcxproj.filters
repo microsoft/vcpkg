@@ -156,6 +156,9 @@
     <ClCompile Include="..\src\opt_bool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\BuildPolicies.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\package_spec.h">
@@ -264,6 +267,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\vcpkg_optional.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\BuildPolicies.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

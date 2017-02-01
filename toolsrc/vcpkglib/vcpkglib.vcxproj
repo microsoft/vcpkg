@@ -138,6 +138,7 @@
   <ItemGroup>
     <ClInclude Include="..\include\BinaryParagraph.h" />
     <ClInclude Include="..\include\BuildInfo.h" />
+    <ClInclude Include="..\include\BuildPolicies.h" />
     <ClInclude Include="..\include\coff_file_reader.h" />
     <ClInclude Include="..\include\expected.h" />
     <ClInclude Include="..\include\filesystem_fs.h" />
@@ -176,6 +177,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\BinaryParagraph.cpp" />
     <ClCompile Include="..\src\BuildInfo.cpp" />
+    <ClCompile Include="..\src\BuildPolicies.cpp" />
     <ClCompile Include="..\src\coff_file_reader.cpp" />
     <ClCompile Include="..\src\commands_available_commands.cpp" />
     <ClCompile Include="..\src\commands_build.cpp" />
