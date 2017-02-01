@@ -151,6 +151,7 @@
     <ClInclude Include="..\include\Paragraphs.h" />
     <ClInclude Include="..\include\pch.h" />
     <ClInclude Include="..\include\PostBuildLint.h" />
+    <ClInclude Include="..\include\PostBuildLint_ConfigurationType.h" />
     <ClInclude Include="..\include\PostBuildLint_LinkageType.h" />
     <ClInclude Include="..\include\SourceParagraph.h" />
     <ClInclude Include="..\include\StatusParagraph.h" />
@@ -209,6 +210,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\src\PostBuildLint.cpp" />
+    <ClCompile Include="..\src\PostBuildLint_ConfigurationType.cpp" />
     <ClCompile Include="..\src\PostBuildLint_LinkageType.cpp" />
     <ClCompile Include="..\src\Stopwatch.cpp" />
     <ClCompile Include="..\src\vcpkglib.cpp" />

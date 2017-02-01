@@ -6,17 +6,10 @@
 #include "PostBuildLint_BuildPolicies.h"
 #include "opt_bool.h"
 #include "PostBuildLint_LinkageType.h"
+#include "PostBuildLint_ConfigurationType.h"
 
 namespace vcpkg::PostBuildLint
 {
-    enum class ConfigurationType
-    {
-        DEBUG = 1,
-        RELEASE = 2
-    };
-
-    std::string to_string(const ConfigurationType& conf);
-
     struct BuildType
     {
         static BuildType value_of(const ConfigurationType& config, const LinkageType& linkage);
