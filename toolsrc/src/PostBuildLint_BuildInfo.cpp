@@ -68,35 +68,6 @@ namespace vcpkg::PostBuildLint
     const BuildType BuildType::RELEASE_STATIC = BuildType(ConfigurationType::RELEASE, LinkageType::STATIC, R"(/DEFAULTLIB:LIBCMT[^D])");
     const BuildType BuildType::RELEASE_DYNAMIC = BuildType(ConfigurationType::RELEASE, LinkageType::DYNAMIC, R"(/DEFAULTLIB:MSVCRT[^D])");
 
-    LinkageType linkage_type_value_of(const std::string& as_string)
-
-    {
-        if (as_string == "dynamic")
-        {
-            return LinkageType::DYNAMIC;
-        }
-
-        if (as_string == "static")
-        {
-            return LinkageType::STATIC;
-        }
-
-        return LinkageType::UNKNOWN;
-    }
-
-    std::string to_string(const LinkageType& build_info)
-    {
-        switch (build_info)
-        {
-            case LinkageType::STATIC:
-                return "static";
-            case LinkageType::DYNAMIC:
-                return "dynamic";
-            default:
-                Checks::unreachable();
-        }
-    }
-
     std::string to_string(const ConfigurationType& conf)
     {
         switch (conf)

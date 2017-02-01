@@ -5,20 +5,10 @@
 #include <regex>
 #include "PostBuildLint_BuildPolicies.h"
 #include "opt_bool.h"
+#include "PostBuildLint_LinkageType.h"
 
 namespace vcpkg::PostBuildLint
 {
-    enum class LinkageType
-    {
-        DYNAMIC,
-        STATIC,
-        UNKNOWN
-    };
-
-    LinkageType linkage_type_value_of(const std::string& as_string);
-
-    std::string to_string(const LinkageType& build_info);
-
     enum class ConfigurationType
     {
         DEBUG = 1,
