@@ -26,16 +26,22 @@ namespace vcpkg::PostBuildLint::BuildPolicies
 
         switch (this->backing_enum)
         {
-        case DLLS_WITHOUT_LIBS:
-            return CMAKE_VARIABLE_DLLS_WITHOUT_LIBS;
-        case UNKNOWN:
-            Checks::exit_with_message("No CMake command corresponds to UNKNOWN");
-        default:
-            Checks::unreachable();
+            case DLLS_WITHOUT_LIBS:
+                return CMAKE_VARIABLE_DLLS_WITHOUT_LIBS;
+            case UNKNOWN:
+                Checks::exit_with_message("No CMake command corresponds to UNKNOWN");
+            default:
+                Checks::unreachable();
         }
     }
 
     type::type(): backing_enum(backing_enum_t::UNKNOWN) {}
+
+    const std::vector<type>& values()
+    {
+        static const std::vector<type>& v = {UNKNOWN, DLLS_WITHOUT_LIBS};
+        return v;
+    }
 
     type parse(const std::string& s)
     {
