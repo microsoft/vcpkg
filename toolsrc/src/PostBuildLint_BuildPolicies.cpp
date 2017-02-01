@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "BuildPolicies.h"
+#include "PostBuildLint_BuildPolicies.h"
 #include "vcpkg_Checks.h"
 
 namespace vcpkg::PostBuildLint::BuildPolicies

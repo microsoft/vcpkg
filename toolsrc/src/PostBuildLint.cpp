@@ -5,7 +5,7 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Environment.h"
 #include "coff_file_reader.h"
-#include "BuildInfo.h"
+#include "PostBuildLint_BuildInfo.h"
 
 namespace vcpkg::PostBuildLint
 {

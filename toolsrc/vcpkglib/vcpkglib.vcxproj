@@ -137,8 +137,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\include\BinaryParagraph.h" />
-    <ClInclude Include="..\include\BuildInfo.h" />
-    <ClInclude Include="..\include\BuildPolicies.h" />
+    <ClInclude Include="..\include\PostBuildLint_BuildInfo.h" />
+    <ClInclude Include="..\include\PostBuildLint_BuildPolicies.h" />
     <ClInclude Include="..\include\coff_file_reader.h" />
     <ClInclude Include="..\include\expected.h" />
     <ClInclude Include="..\include\filesystem_fs.h" />
@@ -150,7 +150,7 @@
     <ClInclude Include="..\include\package_spec_parse_result.h" />
     <ClInclude Include="..\include\Paragraphs.h" />
     <ClInclude Include="..\include\pch.h" />
-    <ClInclude Include="..\include\post_build_lint.h" />
+    <ClInclude Include="..\include\PostBuildLint.h" />
     <ClInclude Include="..\include\SourceParagraph.h" />
     <ClInclude Include="..\include\StatusParagraph.h" />
     <ClInclude Include="..\include\StatusParagraphs.h" />
@@ -176,8 +176,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\BinaryParagraph.cpp" />
-    <ClCompile Include="..\src\BuildInfo.cpp" />
-    <ClCompile Include="..\src\BuildPolicies.cpp" />
+    <ClCompile Include="..\src\PostBuildLint_BuildInfo.cpp" />
+    <ClCompile Include="..\src\PostBuildLint_BuildPolicies.cpp" />
     <ClCompile Include="..\src\coff_file_reader.cpp" />
     <ClCompile Include="..\src\commands_available_commands.cpp" />
     <ClCompile Include="..\src\commands_build.cpp" />
@@ -207,7 +207,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\src\post_build_lint.cpp" />
+    <ClCompile Include="..\src\PostBuildLint.cpp" />
     <ClCompile Include="..\src\Stopwatch.cpp" />
     <ClCompile Include="..\src\vcpkglib.cpp" />
     <ClCompile Include="..\src\package_spec.cpp" />

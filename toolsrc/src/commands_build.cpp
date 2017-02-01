@@ -3,7 +3,7 @@
 #include "StatusParagraphs.h"
 #include "vcpkglib.h"
 #include "vcpkg_Input.h"
-#include "post_build_lint.h"
+#include "PostBuildLint.h"
 #include "vcpkg_Dependencies.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Environment.h"

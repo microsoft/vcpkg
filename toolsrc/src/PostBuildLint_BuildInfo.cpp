@@ -1,5 +1,5 @@
 #include "pch.h"
-#include  "BuildInfo.h"
+#include  "PostBuildLint_BuildInfo.h"
 #include "vcpkg_Checks.h"
 #include "opt_bool.h"
 #include "vcpkglib_helpers.h"
