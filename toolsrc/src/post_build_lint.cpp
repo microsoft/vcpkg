@@ -368,11 +368,20 @@ namespace vcpkg::PostBuildLint
         return lint_status::ERROR_DETECTED;
     }
 
-    static lint_status check_lib_files_are_available_if_dlls_are_available(const size_t lib_count, const size_t dll_count, const fs::path& lib_dir)
+    static lint_status check_lib_files_are_available_if_dlls_are_available(const std::map<BuildPolicies::type, opt_bool_t>& policies, const size_t lib_count, const size_t dll_count, const fs::path& lib_dir)
     {
+        auto it = policies.find(BuildPolicies::DLLS_WITHOUT_LIBS);
+        if (it != policies.cend() && it->second == opt_bool_t::DISABLED)
+        {
+            return lint_status::SUCCESS;
+        }
+
         if (lib_count == 0 && dll_count != 0)
         {
             System::println(System::color::warning, "Import libs were not present in %s", lib_dir.generic_string());
+            System::println(System::color::warning,
+                            "If this is intended, add the following line in the portfile:\n"
+                            "    SET(%s disabled)", BuildPolicies::DLLS_WITHOUT_LIBS.cmake_variable());
             return lint_status::ERROR_DETECTED;
         }
 
@@ -616,8 +625,8 @@ namespace vcpkg::PostBuildLint
 
                     error_count += check_matching_debug_and_release_binaries(debug_dlls, release_dlls);
 
-                    error_count += check_lib_files_are_available_if_dlls_are_available(debug_libs.size(), debug_dlls.size(), debug_lib_dir);
-                    error_count += check_lib_files_are_available_if_dlls_are_available(release_libs.size(), release_dlls.size(), release_lib_dir);
+                    error_count += check_lib_files_are_available_if_dlls_are_available(build_info.policies, debug_libs.size(), debug_dlls.size(), debug_lib_dir);
+                    error_count += check_lib_files_are_available_if_dlls_are_available(build_info.policies, release_libs.size(), release_dlls.size(), release_lib_dir);
 
                     std::vector<fs::path> dlls;
                     dlls.insert(dlls.cend(), debug_dlls.cbegin(), debug_dlls.cend());
