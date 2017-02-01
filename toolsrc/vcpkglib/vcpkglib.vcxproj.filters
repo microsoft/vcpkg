@@ -165,6 +165,9 @@
     <ClCompile Include="..\src\PostBuildLint_ConfigurationType.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\PostBuiltLint_BuildType.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\package_spec.h">
@@ -282,6 +285,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\PostBuildLint_ConfigurationType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\PostBuildLint_BuildType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

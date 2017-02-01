@@ -151,6 +151,7 @@
     <ClInclude Include="..\include\Paragraphs.h" />
     <ClInclude Include="..\include\pch.h" />
     <ClInclude Include="..\include\PostBuildLint.h" />
+    <ClInclude Include="..\include\PostBuildLint_BuildType.h" />
     <ClInclude Include="..\include\PostBuildLint_ConfigurationType.h" />
     <ClInclude Include="..\include\PostBuildLint_LinkageType.h" />
     <ClInclude Include="..\include\SourceParagraph.h" />
@@ -212,6 +213,7 @@
     <ClCompile Include="..\src\PostBuildLint.cpp" />
     <ClCompile Include="..\src\PostBuildLint_ConfigurationType.cpp" />
     <ClCompile Include="..\src\PostBuildLint_LinkageType.cpp" />
+    <ClCompile Include="..\src\PostBuiltLint_BuildType.cpp" />
     <ClCompile Include="..\src\Stopwatch.cpp" />
     <ClCompile Include="..\src\vcpkglib.cpp" />
     <ClCompile Include="..\src\package_spec.cpp" />
