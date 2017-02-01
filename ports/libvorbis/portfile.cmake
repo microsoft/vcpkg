@@ -35,7 +35,9 @@ if(NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
     )
     message(STATUS "Patching")
     vcpkg_execute_required_process(
-        COMMAND ${GIT} apply ${CMAKE_CURRENT_LIST_DIR}/0001-Add-vorbisenc.c-to-vorbis-library.patch --ignore-whitespace --whitespace=fix
+        COMMAND ${GIT} apply ${CMAKE_CURRENT_LIST_DIR}/0001-Add-vorbisenc.c-to-vorbis-library.patch
+            ${CMAKE_CURRENT_LIST_DIR}/0002-Allow-deprecated-functions.patch 
+             --ignore-whitespace --whitespace=fix
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src
         LOGNAME patch
     )
