@@ -33,15 +33,12 @@ if(NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
         WORKING_DIRECTORY ${DOWNLOADS}/vorbis.git
         LOGNAME worktree
     )
-    message(STATUS "Patching")
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} apply ${CMAKE_CURRENT_LIST_DIR}/0001-Add-vorbisenc.c-to-vorbis-library.patch
-            ${CMAKE_CURRENT_LIST_DIR}/0002-Allow-deprecated-functions.patch 
-             --ignore-whitespace --whitespace=fix
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src
-        LOGNAME patch
-    )
 endif()
+vcpkg_apply_patches(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/0001-Add-vorbisenc.c-to-vorbis-library.patch
+        ${CMAKE_CURRENT_LIST_DIR}/0002-Allow-deprecated-functions.patch
+)
 
 file(TO_NATIVE_PATH "${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/include" OGG_INCLUDE)
 file(TO_NATIVE_PATH "${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/lib/ogg.lib" OGG_LIB_REL)
