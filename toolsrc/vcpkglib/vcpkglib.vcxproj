@@ -215,7 +215,7 @@
     <ClCompile Include="..\src\PostBuildLint_ConfigurationType.cpp" />
     <ClCompile Include="..\src\PostBuildLint_LinkageType.cpp" />
     <ClCompile Include="..\src\PostBuildLint_OutdatedDynamicCrt.cpp" />
-    <ClCompile Include="..\src\PostBuiltLint_BuildType.cpp" />
+    <ClCompile Include="..\src\PostBuildLint_BuildType.cpp" />
     <ClCompile Include="..\src\Stopwatch.cpp" />
     <ClCompile Include="..\src\vcpkglib.cpp" />
     <ClCompile Include="..\src\package_spec.cpp" />

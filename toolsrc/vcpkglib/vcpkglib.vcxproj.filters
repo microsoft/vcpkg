@@ -165,10 +165,10 @@
     <ClCompile Include="..\src\PostBuildLint_ConfigurationType.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\PostBuiltLint_BuildType.cpp">
+    <ClCompile Include="..\src\PostBuildLint_OutdatedDynamicCrt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\PostBuildLint_OutdatedDynamicCrt.cpp">
+    <ClCompile Include="..\src\PostBuildLint_BuildType.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
