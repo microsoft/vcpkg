@@ -70,15 +70,21 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 
         if ($Dependency -ne "git") # git fails with BITS
         {
-            Start-BitsTransfer -Source $url -Destination $downloadPath -ErrorAction SilentlyContinue
-        }
-        else
-        {
-            if (!(Test-Path $downloadPath))
-            {
-                Write-Host("Downloading $Dependency...")
-                (New-Object System.Net.WebClient).DownloadFile($url, $downloadPath)
+            try {
+                Start-BitsTransfer -Source $url -Destination $downloadPath -ErrorAction Stop
             }
+            catch [System.Exception] {
+                # If BITS fails for any reason, delete any potentially partially downloaded files and continue
+                if (Test-Path $downloadPath)
+                {
+                    Remove-Item $downloadPath
+                }
+            }
+        }
+        if (!(Test-Path $downloadPath))
+        {
+            Write-Host("Downloading $Dependency...")
+            (New-Object System.Net.WebClient).DownloadFile($url, $downloadPath)
         }
     }
 
