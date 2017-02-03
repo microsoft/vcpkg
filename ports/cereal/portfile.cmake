@@ -13,6 +13,4 @@ file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cerea
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/cereal/LICENSE ${CURRENT_PACKAGES_DIR}/share/cereal/copyright)
 
 # Copy the cereal header files
-execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory 
-				${SOURCE_PATH}/include/cereal/
-                ${CURRENT_PACKAGES_DIR}/include/cereal)
+file(COPY ${SOURCE_PATH}/include/cereal DESTINATION ${CURRENT_PACKAGES_DIR}/include)
