@@ -11,7 +11,16 @@ namespace vcpkg::Commands
 
     namespace Build
     {
-        void build_package(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir);
+        enum class BuildResult
+        {
+            BUILD_NOT_STARTED = 0,
+            SUCCESS,
+            CASCADED_DUE_TO_MISSING_DEPENDENCIES,
+            BUILD_FAILED,
+            POST_BUILD_CHECKS_FAILED,
+        };
+
+        BuildResult build_package(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir);
         void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet);
     }
 

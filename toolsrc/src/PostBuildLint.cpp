@@ -619,6 +619,7 @@ namespace vcpkg::PostBuildLint
         left += static_cast<size_t>(right);
     }
 
+
     static size_t perform_all_checks_and_return_error_count(const package_spec& spec, const vcpkg_paths& paths)
     {
         const fs::path dumpbin_exe = Environment::get_dumpbin_exe(paths);
@@ -710,19 +711,18 @@ namespace vcpkg::PostBuildLint
         return error_count;
     }
 
-    void perform_all_checks(const package_spec& spec, const vcpkg_paths& paths)
+    size_t perform_all_checks(const package_spec& spec, const vcpkg_paths& paths)
     {
         System::println("-- Performing post-build validation");
-
         const size_t error_count = perform_all_checks_and_return_error_count(spec, paths);
+        System::println("-- Performing post-build validation done");
 
         if (error_count != 0)
         {
             const fs::path portfile = paths.ports / spec.name() / "portfile.cmake";
             System::println(System::color::error, "Found %u error(s). Please correct the portfile:\n    %s", error_count, portfile.string());
-            exit(EXIT_FAILURE);
         }
 
-        System::println("-- Performing post-build validation done");
+        return error_count;
     }
 }

@@ -4,5 +4,5 @@
 
 namespace vcpkg::PostBuildLint
 {
-    void perform_all_checks(const package_spec& spec, const vcpkg_paths& paths);
+    size_t perform_all_checks(const package_spec& spec, const vcpkg_paths& paths);
 }

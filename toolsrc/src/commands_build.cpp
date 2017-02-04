@@ -9,6 +9,7 @@
 #include "vcpkg_Environment.h"
 #include "metrics.h"
 #include "vcpkg_info.h"
+#include "vcpkg_Enums.h"
 
 namespace vcpkg::Commands::Build
 {
@@ -24,7 +25,7 @@ namespace vcpkg::Commands::Build
         std::ofstream(binary_control_file) << bpgh;
     }
 
-    void build_package(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir)
+    BuildResult build_package(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir)
     {
         Checks::check_exit(spec.name() == source_paragraph.name, "inconsistent arguments to build_internal()");
         const triplet& target_triplet = spec.target_triplet();
@@ -58,15 +59,22 @@ namespace vcpkg::Commands::Build
                             , spec.toString(), Info::version());
             TrackProperty("error", "build failed");
             TrackProperty("build_error", spec.toString());
-            exit(EXIT_FAILURE);
+            return BuildResult::BUILD_FAILED;
         }
 
-        PostBuildLint::perform_all_checks(spec, paths);
+        const size_t error_count = PostBuildLint::perform_all_checks(spec, paths);
+
+        if (error_count != 0)
+        {
+            return BuildResult::POST_BUILD_CHECKS_FAILED;
+        }
 
         create_binary_control_file(paths, source_paragraph, target_triplet);
 
         // const fs::path port_buildtrees_dir = paths.buildtrees / spec.name;
         // delete_directory(port_buildtrees_dir);
+
+        return BuildResult::SUCCESS;
     }
 
     void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
@@ -86,7 +94,11 @@ namespace vcpkg::Commands::Build
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_CHECKS_ONLY});
         if (options.find(OPTION_CHECKS_ONLY) != options.end())
         {
-            PostBuildLint::perform_all_checks(spec, paths);
+            const size_t error_count = PostBuildLint::perform_all_checks(spec, paths);
+            if (error_count > 0)
+            {
+                exit(EXIT_FAILURE);
+            }
             exit(EXIT_SUCCESS);
         }
 
@@ -125,7 +137,12 @@ namespace vcpkg::Commands::Build
         }
 
         Environment::ensure_utilities_on_path(paths);
-        build_package(spgh, spec, paths, paths.port_dir(spec));
+        const BuildResult result = build_package(spgh, spec, paths, paths.port_dir(spec));
+        if (result != BuildResult::SUCCESS)
+        {
+            exit(EXIT_FAILURE);
+        }
+
         exit(EXIT_SUCCESS);
     }
 }

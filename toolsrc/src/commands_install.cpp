@@ -214,7 +214,11 @@ namespace vcpkg::Commands::Install
                 }
                 else if (action.plan.plan_type == install_plan_type::BUILD_AND_INSTALL)
                 {
-                    Commands::Build::build_package(*action.plan.source_pgh, action.spec, paths, paths.port_dir(action.spec));
+                    const Build::BuildResult result = Commands::Build::build_package(*action.plan.source_pgh, action.spec, paths, paths.port_dir(action.spec));
+                    if (result != Build::BuildResult::SUCCESS)
+                    {
+                        exit(EXIT_FAILURE);
+                    }
                     const BinaryParagraph bpgh = try_load_cached_package(paths, action.spec).get_or_throw();
                     install_package(paths, bpgh, &status_db);
                     System::println(System::color::success, "Package %s is installed", action.spec);

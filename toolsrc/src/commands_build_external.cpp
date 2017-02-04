@@ -21,7 +21,12 @@ namespace vcpkg::Commands::BuildExternal
             const expected<SourceParagraph> maybe_spgh = try_load_port(port_dir);
             if (auto spgh = maybe_spgh.get())
             {
-                Commands::Build::build_package(*spgh, *spec, paths, port_dir);
+                const Build::BuildResult result = Commands::Build::build_package(*spgh, *spec, paths, port_dir);
+                if (result !=Build::BuildResult::SUCCESS)
+                {
+                    exit(EXIT_FAILURE);
+                }
+
                 exit(EXIT_SUCCESS);
             }
         }
