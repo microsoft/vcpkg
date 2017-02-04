@@ -1,4 +1,4 @@
 Source: wt
-Version: 3.3.6-2
+Version: 3.3.6-3
 Description: Wt is a C++ library for developing web applications
 Build-Depends: boost, openssl
