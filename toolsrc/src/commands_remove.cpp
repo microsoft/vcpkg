@@ -196,26 +196,29 @@ namespace vcpkg::Commands::Remove
 
         for (const package_spec_with_remove_plan& action : remove_plan)
         {
-            if (action.plan.plan_type == remove_plan_type::NOT_INSTALLED)
-            {
-                System::println(System::color::success, "Package %s is not installed", action.spec);
-            }
-            else if (action.plan.plan_type == remove_plan_type::REMOVE)
-            {
-                const std::string display_name = action.spec.display_name();
-                System::println("Removing package %s... ", display_name);
-                remove_package(paths, action.spec, &status_db);
-                System::println(System::color::success, "Removing package %s... done", display_name);
+            const std::string display_name = action.spec.display_name();
 
-                if (alsoRemoveFolderFromPackages)
-                {
-                    System::println("Purging package %s... ", display_name);
-                    delete_directory(paths.packages / action.spec.dir());
-                    System::println(System::color::success, "Purging package %s... done", display_name);
-                }
+            switch (action.plan.plan_type)
+            {
+                case remove_plan_type::NOT_INSTALLED:
+                    System::println(System::color::success, "Package %s is not installed", display_name);
+                    break;
+                case remove_plan_type::REMOVE:
+                    System::println("Removing package %s... ", display_name);
+                    remove_package(paths, action.spec, &status_db);
+                    System::println(System::color::success, "Removing package %s... done", display_name);
+                    break;
+                case remove_plan_type::UNKNOWN:
+                default:
+                    Checks::unreachable();
             }
-            else
-                Checks::unreachable();
+
+            if (alsoRemoveFolderFromPackages)
+            {
+                System::println("Purging package %s... ", display_name);
+                delete_directory(paths.packages / action.spec.dir());
+                System::println(System::color::success, "Purging package %s... done", display_name);
+            }
         }
 
         exit(EXIT_SUCCESS);
