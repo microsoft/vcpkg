@@ -1,0 +1,3 @@
+Source: sqlite-modern-cpp
+Version: 2.4
+Description: The C++14 wrapper around sqlite library
