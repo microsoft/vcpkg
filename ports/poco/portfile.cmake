@@ -13,6 +13,7 @@ vcpkg_apply_patches(
     PATCHES
 		${CMAKE_CURRENT_LIST_DIR}/config_h.patch
 		${CMAKE_CURRENT_LIST_DIR}/find_pcre.patch
+		${CMAKE_CURRENT_LIST_DIR}/foundation-public-include-pcre.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
