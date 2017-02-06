@@ -20,7 +20,21 @@ $downloadPath = "$downloadsDir\$downloadName"
 
 if (!(Test-Path $downloadPath))
 {
-    Start-BitsTransfer -Source $url -Destination $downloadPath #-ErrorAction SilentlyContinue
+    try {
+        Start-BitsTransfer -Source $url -Destination $downloadPath -ErrorAction Stop
+    }
+    catch [System.Exception] {
+        # If BITS fails for any reason, delete any potentially partially downloaded files and continue
+        if (Test-Path $downloadPath)
+        {
+            Remove-Item $downloadPath
+        }
+    }
+}
+if (!(Test-Path $downloadPath))
+{
+    Write-Host("Downloading $downloadName...")
+    (New-Object System.Net.WebClient).DownloadFile($url, $downloadPath)
 }
 
 $nugetOutput = & $nugetexe install Microsoft.VisualStudio.Setup.Configuration.Native -Pre -Source $downloadsDir -OutputDirectory $nugetPackageDir 2>&1
