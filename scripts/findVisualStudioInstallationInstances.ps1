@@ -13,8 +13,8 @@ $downloadsDir = "$vcpkgRootDir\downloads"
 $nugetexe = & $scriptsDir\fetchDependency.ps1 "nuget"
 $nugetPackageDir = "$downloadsDir\nuget-packages"
 
-$SetupAPIVersion = "1.3.269-rc"
-$nugetOutput = & $nugetexe install Microsoft.VisualStudio.Setup.Configuration.Native -Pre -Source $downloadsDir -OutputDirectory $nugetPackageDir 2>&1
+$SetupAPIVersion = "1.5.125-rc"
+$nugetOutput = & $nugetexe install Microsoft.VisualStudio.Setup.Configuration.Native -Version $SetupAPIVersion -OutputDirectory $nugetPackageDir -nocache 2>&1
 
 $SetupConsoleExe = "$nugetPackageDir\Microsoft.VisualStudio.Setup.Configuration.Native.$SetupAPIVersion\tools\x86\Microsoft.VisualStudio.Setup.Configuration.Console.exe"
 
