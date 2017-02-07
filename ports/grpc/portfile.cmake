@@ -48,11 +48,32 @@ vcpkg_install_cmake()
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/grpc)
 file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/gRPC/gRPCConfig.cmake ${CURRENT_PACKAGES_DIR}/share/grpc/gRPCConfig.cmake)
 file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/gRPC/gRPCConfigVersion.cmake ${CURRENT_PACKAGES_DIR}/share/grpc/gRPCConfigVersion.cmake)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/gRPC/gRPCTargets.cmake ${CURRENT_PACKAGES_DIR}/share/grpc/gRPCTargets.cmake)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/gRPC/gRPCTargets-release.cmake ${CURRENT_PACKAGES_DIR}/share/grpc/gRPCTargets-release.cmake)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/gRPC/gRPCTargets-debug.cmake ${CURRENT_PACKAGES_DIR}/share/grpc/gRPCTargets-debug.cmake)
+
+# Update import target prefix in gRPCTargets.cmake
+file(READ ${CURRENT_PACKAGES_DIR}/lib/cmake/gRPC/gRPCTargets.cmake _contents)
+set(pattern "get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\n")
+string(REPLACE "${pattern}${pattern}" "${pattern}" _contents "${_contents}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/grpc/gRPCTargets.cmake "${_contents}")
+
+# Update paths in gRPCTargets-release.cmake
+file(READ ${CURRENT_PACKAGES_DIR}/lib/cmake/gRPC/gRPCTargets-release.cmake _contents)
+string(REPLACE "\${_IMPORT_PREFIX}/bin/" "\${_IMPORT_PREFIX}/tools/" _contents "${_contents}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/grpc/gRPCTargets-release.cmake "${_contents}")
+
+# Update paths in gRPCTargets-debug.cmake
+file(READ ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/gRPC/gRPCTargets-debug.cmake _contents)
+string(REPLACE "\${_IMPORT_PREFIX}/bin/" "\${_IMPORT_PREFIX}/tools/" _contents "${_contents}")
+string(REPLACE "\${_IMPORT_PREFIX}/lib/" "\${_IMPORT_PREFIX}/debug/lib/" _contents "${_contents}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/grpc/gRPCTargets-debug.cmake "${_contents}")
 
 file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/grpc RENAME copyright)
+
+# Install tools and plugins
+file(
+    INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/
+    DESTINATION ${CURRENT_PACKAGES_DIR}/tools
+    FILES_MATCHING PATTERN "*.exe"
+)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
