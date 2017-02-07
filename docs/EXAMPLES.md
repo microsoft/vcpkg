@@ -150,9 +150,9 @@ PS D:\src\cmake-test\build> .\Debug\main.exe
 
 Libraries are installed into the `installed\` subfolder, partitioned by architecture (e.g. x86-windows):
 * The header files are installed to `installed\x86-windows\include`
-* Release `.lib` files are installed to `installed\x86-windows\lib`
+* Release `.lib` files are installed to `installed\x86-windows\lib` or `installed\x86-windows\lib\manual-link`
 * Release `.dll` files are installed to `installed\x86-windows\bin`
-* Debug `.lib` files are installed to `installed\x86-windows\debug\lib`
+* Debug `.lib` files are installed to `installed\x86-windows\debug\lib` or `installed\x86-windows\debug\lib\manual-link`
 * Debug `.dll` files are installed to `installed\x86-windows\debug\bin`
 
 See your build system specific documentation for how to use prebuilt binaries.
