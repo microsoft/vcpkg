@@ -53,6 +53,8 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/gRPC/gRPCTargets-release.cmake ${C
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/gRPC/gRPCTargets-debug.cmake ${CURRENT_PACKAGES_DIR}/share/grpc/gRPCTargets-debug.cmake)
 
 file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/grpc RENAME copyright)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
+file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/grpc_cpp_plugin.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
