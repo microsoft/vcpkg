@@ -17,9 +17,15 @@ function(vcpkg_build_cmake)
         list(APPEND MSVC_EXTRA_ARGS "/m")
     endif()
 
+    if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/build.ninja)
+        set(BUILD_ARGS -v) # verbose output
+    else()
+        set(BUILD_ARGS ${MSVC_EXTRA_ARGS})
+    endif()
+
     message(STATUS "Build ${TARGET_TRIPLET}-rel")
     vcpkg_execute_required_process(
-        COMMAND ${CMAKE_COMMAND} --build . --config Release -- ${MSVC_EXTRA_ARGS}
+        COMMAND ${CMAKE_COMMAND} --build . --config Release -- ${BUILD_ARGS}
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
         LOGNAME build-${TARGET_TRIPLET}-rel
     )
@@ -27,7 +33,7 @@ function(vcpkg_build_cmake)
 
     message(STATUS "Build ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_required_process(
-        COMMAND ${CMAKE_COMMAND} --build . --config Debug -- ${MSVC_EXTRA_ARGS}
+        COMMAND ${CMAKE_COMMAND} --build . --config Debug -- ${BUILD_ARGS}
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
         LOGNAME build-${TARGET_TRIPLET}-dbg
     )

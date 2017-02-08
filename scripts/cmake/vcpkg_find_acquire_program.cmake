@@ -4,6 +4,7 @@ function(vcpkg_find_acquire_program VAR)
   endif()
 
   unset(NOEXTRACT)
+  unset(SUBDIR)
 
   if(VAR MATCHES "PERL")
     set(PROGNAME perl)
@@ -63,6 +64,13 @@ function(vcpkg_find_acquire_program VAR)
     set(URL "http://7-zip.org/a/7z1604.msi")
     set(ARCHIVE "7z1604.msi")
     set(HASH 556f95f7566fe23704d136239e4cf5e2a26f939ab43b44145c91b70d031a088d553e5c21301f1242a2295dcde3143b356211f0108c68e65eef8572407618326d)
+  elseif(VAR MATCHES "NINJA")
+    set(PROGNAME ninja)
+    set(SUBDIR "ninja-1.7.2")
+    set(PATHS ${DOWNLOADS}/tools/ninja/${SUBDIR})
+    set(URL "https://github.com/ninja-build/ninja/releases/download/v1.7.2/ninja-win.zip")
+    set(ARCHIVE "ninja-win.zip")
+    set(HASH cccab9281b274c564f9ad77a2115be1f19be67d7b2ee14a55d1db1b27f3b68db8e76076e4f804b61eb8e573e26a8ecc9985675a8dcf03fd7a77b7f57234f1393) 
   else()
     message(FATAL "unknown tool ${VAR} -- unable to acquire.")
   endif()
@@ -73,15 +81,15 @@ function(vcpkg_find_acquire_program VAR)
       EXPECTED_HASH SHA512=${HASH}
       SHOW_PROGRESS
     )
-    file(MAKE_DIRECTORY ${DOWNLOADS}/tools/${PROGNAME})
+    file(MAKE_DIRECTORY ${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR})
     if(DEFINED NOEXTRACT)
-      file(COPY ${DOWNLOADS}/${ARCHIVE} DESTINATION ${DOWNLOADS}/tools/${PROGNAME})
+      file(COPY ${DOWNLOADS}/${ARCHIVE} DESTINATION ${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR})
     else()
       get_filename_component(ARCHIVE_EXTENSION ${ARCHIVE} EXT)
       string(TOLOWER "${ARCHIVE_EXTENSION}" ARCHIVE_EXTENSION)
       if(${ARCHIVE_EXTENSION} STREQUAL ".msi")
         file(TO_NATIVE_PATH "${DOWNLOADS}/${ARCHIVE}" ARCHIVE_NATIVE_PATH)
-        file(TO_NATIVE_PATH "${DOWNLOADS}/tools/${PROGNAME}" DESTINATION_NATIVE_PATH)
+        file(TO_NATIVE_PATH "${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR}" DESTINATION_NATIVE_PATH)
         execute_process(
           COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
           WORKING_DIRECTORY ${DOWNLOADS}
@@ -89,7 +97,7 @@ function(vcpkg_find_acquire_program VAR)
       else()
         execute_process(
           COMMAND ${CMAKE_COMMAND} -E tar xzf ${DOWNLOADS}/${ARCHIVE}
-          WORKING_DIRECTORY ${DOWNLOADS}/tools/${PROGNAME}
+          WORKING_DIRECTORY ${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR}
         )
       endif()
     endif()
