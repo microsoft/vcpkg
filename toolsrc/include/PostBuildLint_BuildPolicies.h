@@ -6,6 +6,7 @@ namespace vcpkg::PostBuildLint::BuildPolicies
     enum class backing_enum_t
     {
         UNKNOWN = 0,
+        EMPTY_PACKAGE,
         DLLS_WITHOUT_LIBS
     };
 
@@ -22,10 +23,12 @@ namespace vcpkg::PostBuildLint::BuildPolicies
         backing_enum_t backing_enum;
     };
 
-    static constexpr int value_count = 2;
+    static constexpr int value_count = 3;
     const std::vector<type>& values();
 
+
     static constexpr type UNKNOWN(backing_enum_t::UNKNOWN);
+    static constexpr type EMPTY_PACKAGE(backing_enum_t::EMPTY_PACKAGE);
     static constexpr type DLLS_WITHOUT_LIBS(backing_enum_t::DLLS_WITHOUT_LIBS);
 
     type parse(const std::string& s);

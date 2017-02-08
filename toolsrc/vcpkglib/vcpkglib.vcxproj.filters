@@ -165,9 +165,6 @@
     <ClCompile Include="..\src\PostBuildLint_ConfigurationType.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\PostBuildLint_OutdatedDynamicCrt.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\PostBuildLint_BuildType.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -291,9 +288,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\PostBuildLint_BuildType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\PostBuildLint_OutdatedDynamicCrt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -7,7 +7,6 @@
 #include "coff_file_reader.h"
 #include "PostBuildLint_BuildInfo.h"
 #include "PostBuildLint_BuildType.h"
-#include "PostBuildLint_OutdatedDynamicCrt.h"
 
 namespace vcpkg::PostBuildLint
 {
@@ -16,6 +15,41 @@ namespace vcpkg::PostBuildLint
         SUCCESS = 0,
         ERROR_DETECTED = 1
     };
+
+    struct OutdatedDynamicCrt
+    {
+        std::string name;
+        std::regex regex;
+
+        OutdatedDynamicCrt(const std::string& name, const std::string& regex_as_string)
+            : name(name), regex(std::regex(regex_as_string, std::regex_constants::icase)) {}
+    };
+
+    const std::vector<OutdatedDynamicCrt>& get_outdated_dynamic_crts()
+    {
+        static const std::vector<OutdatedDynamicCrt> v = {
+            {"msvcp100.dll", R"(msvcp100\.dll)"},
+            {"msvcp100d.dll", R"(msvcp100d\.dll)"},
+            {"msvcp110.dll", R"(msvcp110\.dll)"},
+            {"msvcp110_win.dll", R"(msvcp110_win\.dll)"},
+            {"msvcp120.dll", R"(msvcp120\.dll)"},
+            {"msvcp120_clr0400.dll", R"(msvcp120_clr0400\.dll)"},
+            {"msvcp60.dll", R"(msvcp60\.dll)"},
+            {"msvcp60.dll", R"(msvcp60\.dll)"},
+
+            {"msvcr100.dll", R"(msvcr100\.dll)"},
+            {"msvcr100d.dll", R"(msvcr100d\.dll)"},
+            {"msvcr100_clr0400.dll", R"(msvcr100_clr0400\.dll)"},
+            {"msvcr110.dll", R"(msvcr110\.dll)"},
+            {"msvcr120.dll", R"(msvcr120\.dll)"},
+            {"msvcr120_clr0400.dll", R"(msvcr120_clr0400\.dll)"},
+            {"msvcrt.dll", R"(msvcrt\.dll)"},
+            {"msvcrt20.dll", R"(msvcrt20\.dll)"},
+            {"msvcrt40.dll", R"(msvcrt40\.dll)"}
+        };
+
+        return v;
+    }
 
     static lint_status check_for_files_in_include_directory(const fs::path& package_dir)
     {
@@ -516,7 +550,7 @@ namespace vcpkg::PostBuildLint
 
     static lint_status check_outdated_crt_linkage_of_dlls(const std::vector<fs::path>& dlls, const fs::path dumpbin_exe)
     {
-        const std::vector<OutdatedDynamicCrt>& outdated_crts = OutdatedDynamicCrt::values();
+        const std::vector<OutdatedDynamicCrt>& outdated_crts = get_outdated_dynamic_crts();
 
         std::vector<OutdatedDynamicCrt_and_file> dlls_with_outdated_crt;
 
@@ -528,7 +562,7 @@ namespace vcpkg::PostBuildLint
 
             for (const OutdatedDynamicCrt& outdated_crt : outdated_crts)
             {
-                if (std::regex_search(ec_data.output.cbegin(), ec_data.output.cend(), outdated_crt.crt_regex()))
+                if (std::regex_search(ec_data.output.cbegin(), ec_data.output.cend(), outdated_crt.regex))
                 {
                     dlls_with_outdated_crt.push_back({dll, outdated_crt});
                     break;
@@ -542,7 +576,7 @@ namespace vcpkg::PostBuildLint
             System::println("");
             for (const OutdatedDynamicCrt_and_file btf : dlls_with_outdated_crt)
             {
-                System::println("    %s: %s", btf.file.generic_string(), btf.outdated_crt.toString());
+                System::println("    %s: %s", btf.file.generic_string(), btf.outdated_crt.name);
             }
             System::println("");
 
@@ -582,16 +616,21 @@ namespace vcpkg::PostBuildLint
         left += static_cast<size_t>(right);
     }
 
-    void perform_all_checks(const package_spec& spec, const vcpkg_paths& paths)
+    static size_t perform_all_checks_and_return_error_count(const package_spec& spec, const vcpkg_paths& paths)
     {
         const fs::path dumpbin_exe = Environment::get_dumpbin_exe(paths);
-
-        System::println("-- Performing post-build validation");
 
         BuildInfo build_info = read_build_info(paths.build_info_file_path(spec));
         const fs::path package_dir = paths.package_dir(spec);
 
         size_t error_count = 0;
+
+        auto it = build_info.policies.find(BuildPolicies::EMPTY_PACKAGE);
+        if (it != build_info.policies.cend() && it->second == opt_bool_t::ENABLED)
+        {
+            return error_count;
+        }
+
         error_count += check_for_files_in_include_directory(package_dir);
         error_count += check_for_files_in_debug_include_directory(package_dir);
         error_count += check_for_files_in_debug_share_directory(package_dir);
@@ -663,12 +702,21 @@ namespace vcpkg::PostBuildLint
                 Checks::unreachable();
         }
 #if 0
-            error_count += check_no_subdirectories(package_dir / "lib");
-            error_count += check_no_subdirectories(package_dir / "debug" / "lib");
+        error_count += check_no_subdirectories(package_dir / "lib");
+        error_count += check_no_subdirectories(package_dir / "debug" / "lib");
 #endif
 
         error_count += check_no_empty_folders(package_dir);
         error_count += check_no_files_in_package_dir_and_debug_dir(package_dir);
+
+        return error_count;
+    }
+
+    void perform_all_checks(const package_spec& spec, const vcpkg_paths& paths)
+    {
+        System::println("-- Performing post-build validation");
+
+        const size_t error_count = perform_all_checks_and_return_error_count(spec, paths);
 
         if (error_count != 0)
         {

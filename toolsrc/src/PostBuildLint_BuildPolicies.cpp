@@ -5,12 +5,15 @@
 namespace vcpkg::PostBuildLint::BuildPolicies
 {
     static const std::string NAME_UNKNOWN = "PolicyUnknown";
+    static const std::string NAME_EMPTY_PACKAGE = "PolicyEmptyPackage";
     static const std::string NAME_DLLS_WITHOUT_LIBS = "PolicyDLLsWithoutLIBs";
 
     const std::string& type::toString() const
     {
         switch (this->backing_enum)
         {
+            case EMPTY_PACKAGE:
+                return NAME_EMPTY_PACKAGE;
             case DLLS_WITHOUT_LIBS:
                 return NAME_DLLS_WITHOUT_LIBS;
             case UNKNOWN:
@@ -22,10 +25,13 @@ namespace vcpkg::PostBuildLint::BuildPolicies
 
     const std::string& type::cmake_variable() const
     {
+        static const std::string CMAKE_VARIABLE_EMPTY_PACKAGE = "VCPKG_POLICY_EMPTY_PACKAGE";
         static const std::string CMAKE_VARIABLE_DLLS_WITHOUT_LIBS = "VCPKG_POLICY_DLLS_WITHOUT_LIBS";
 
         switch (this->backing_enum)
         {
+            case EMPTY_PACKAGE:
+                return CMAKE_VARIABLE_EMPTY_PACKAGE;
             case DLLS_WITHOUT_LIBS:
                 return CMAKE_VARIABLE_DLLS_WITHOUT_LIBS;
             case UNKNOWN:
@@ -39,12 +45,17 @@ namespace vcpkg::PostBuildLint::BuildPolicies
 
     const std::vector<type>& values()
     {
-        static const std::vector<type>& v = {UNKNOWN, DLLS_WITHOUT_LIBS};
+        static const std::vector<type>& v = {UNKNOWN, EMPTY_PACKAGE, DLLS_WITHOUT_LIBS};
         return v;
     }
 
     type parse(const std::string& s)
     {
+        if (s == NAME_EMPTY_PACKAGE)
+        {
+            return BuildPolicies::EMPTY_PACKAGE;
+        }
+
         if (s == NAME_DLLS_WITHOUT_LIBS)
         {
             return BuildPolicies::DLLS_WITHOUT_LIBS;
