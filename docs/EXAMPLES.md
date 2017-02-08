@@ -3,7 +3,7 @@
 ## Overview
 Vcpkg helps you get C and C++ libraries on Windows.
 
-For short description of available commands, run `vcpkg help`.
+For short description of available commands, run `./vcpkg help`.
 
 ## Table of Contents
 - <a href="#example-1">Example 1: Using the C++ REST SDK</a>
@@ -87,7 +87,7 @@ To install for other architectures and platforms such as Universal Windows Platf
 PS D:\src\vcpkg> .\vcpkg install cpprestsdk:x86-uwp zlib:x64-windows
 ```
 
-See `vcpkg help triplet` for all supported targets.
+See `.\vcpkg help triplet` for all supported targets.
 
 <a name="example-1-2"></a>
 ### Step 2: Use
@@ -105,7 +105,7 @@ Installing new libraries will make them instantly available.
 ```
 *Note: You will need to restart Visual Studio or perform a Build to update intellisense with the changes.* 
 
-To remove the integration for your user, you can use `vcpkg integrate remove`.
+To remove the integration for your user, you can use `./vcpkg integrate remove`.
 
 <a name="example-1-2-b"></a>
 #### Option B: CMake (Toolchain File)
