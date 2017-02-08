@@ -1,0 +1,3 @@
+Source: dxut
+Version: 11.14-2
+Description: A "GLUT"-like framework for Direct3D 11.x Win32 desktop applications

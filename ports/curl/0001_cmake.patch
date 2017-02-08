@@ -1,0 +1,13 @@
+diff --git a/CMake/FindLibSSH2.cmake b/CMake/FindLibSSH2.cmake
+index 12a7c61..9839c67 100644
+--- a/CMake/FindLibSSH2.cmake
++++ b/CMake/FindLibSSH2.cmake
+@@ -12,7 +12,7 @@ endif (LIBSSH2_INCLUDE_DIR AND LIBSSH2_LIBRARY)
+ FIND_PATH(LIBSSH2_INCLUDE_DIR libssh2.h
+ )
+ 
+-FIND_LIBRARY(LIBSSH2_LIBRARY NAMES ssh2
++FIND_LIBRARY(LIBSSH2_LIBRARY NAMES ssh2 libssh2
+ )
+ 
+ if(LIBSSH2_INCLUDE_DIR)

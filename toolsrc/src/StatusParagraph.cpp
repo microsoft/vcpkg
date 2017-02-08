@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "StatusParagraph.h"
 #include "vcpkglib_helpers.h"
 
@@ -5,6 +6,12 @@ using namespace vcpkg::details;
 
 namespace vcpkg
 {
+    //
+    namespace BinaryParagraphRequiredField
+    {
+        static const std::string STATUS = "Status";
+    }
+
     StatusParagraph::StatusParagraph() : want(want_t::error), state(install_state_t::error)
     {
     }
@@ -19,7 +26,7 @@ namespace vcpkg
     StatusParagraph::StatusParagraph(const std::unordered_map<std::string, std::string>& fields)
         : package(fields)
     {
-        std::string status_field = required_field(fields, "Status");
+        std::string status_field = required_field(fields, BinaryParagraphRequiredField::STATUS);
 
         auto b = status_field.begin();
         auto mark = b;

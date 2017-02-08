@@ -1,14 +1,17 @@
+#include "pch.h"
 #include "vcpkg_Checks.h"
-
-#include <stdexcept>
 #include "vcpkg_System.h"
 
-namespace vcpkg {namespace Checks
+namespace vcpkg::Checks
 {
     void unreachable()
     {
         System::println(System::color::error, "Error: Unreachable code was reached");
+#ifndef NDEBUG
+        std::abort();
+#else
         exit(EXIT_FAILURE);
+#endif
     }
 
     void exit_with_message(const char* errorMessage)
@@ -37,4 +40,4 @@ namespace vcpkg {namespace Checks
             exit_with_message(errorMessage);
         }
     }
-}}
+}

@@ -1,0 +1,3 @@
+Source: zeromq
+Version: 4.2.0
+Description: The ZeroMQ lightweight messaging kernel is a library which extends the standard socket interfaces with features traditionally provided by specialised messaging middleware products

@@ -1,3 +1,7 @@
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
+endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libwebsockets-2.0.0)
 vcpkg_download_distfile(ARCHIVE
@@ -6,6 +10,12 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 bf57a46f2c60095e7e6ec6656b185ffd2cf8f553bc22255ae8f6825d3613316d794f139cdefacbdf60ef997b0cd675fe356813d406c9b7c5a5ae838ce5326042
 )
 vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_apply_patches(
+	SOURCE_PATH ${SOURCE_PATH}
+	PATCHES
+		${CMAKE_CURRENT_LIST_DIR}/0001-Fix-UWP.patch
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

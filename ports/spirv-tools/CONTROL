@@ -1,0 +1,3 @@
+Source: spirv-tools
+Version: 1.1-f72189c249ba143c6a89a4cf1e7d53337b2ddd40
+Description: API and commands for processing SPIR-V modules

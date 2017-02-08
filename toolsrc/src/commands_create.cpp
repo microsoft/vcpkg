@@ -1,16 +1,17 @@
+#include "pch.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Environment.h"
 #include "vcpkg_Files.h"
 #include "vcpkg_Input.h"
 
-namespace vcpkg
+namespace vcpkg::Commands::Create
 {
-    void create_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
-        static const std::string example = create_example_string(R"###(create zlib2 http://zlib.net/zlib128.zip "zlib128-2.zip")###");
-        args.check_max_arg_count(3, example.c_str());
-        args.check_min_arg_count(2, example.c_str());
+        static const std::string example = Commands::Help::create_example_string(R"###(create zlib2 http://zlib.net/zlib128.zip "zlib128-2.zip")###");
+        args.check_max_arg_count(3, example);
+        args.check_min_arg_count(2, example);
 
         const std::string port_name = args.command_arguments.at(0);
         Environment::ensure_utilities_on_path(paths);

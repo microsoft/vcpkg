@@ -7,9 +7,20 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/add-component-options.patch
+			${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -Dcxx=OFF
+    OPTIONS
+        -Dcxx=OFF
+        -DBUILD_TOOLS=OFF
+        -DBUILD_DOCS=OFF
+        -DBUILD_CONTRIB=OFF
+        -DBUILD_TESTS=OFF
 )
 
 vcpkg_install_cmake()
@@ -19,18 +30,10 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/share
     ${CURRENT_PACKAGES_DIR}/share
 )
-file(COPY
+file(INSTALL
     ${SOURCE_PATH}/COPYRIGHT
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/tiff
+    RENAME copyright
 )
-file(RENAME
-    ${CURRENT_PACKAGES_DIR}/share/tiff/COPYRIGHT
-    ${CURRENT_PACKAGES_DIR}/share/tiff/c2
-)
-file(RENAME
-    ${CURRENT_PACKAGES_DIR}/share/tiff/c2
-    ${CURRENT_PACKAGES_DIR}/share/tiff/copyright
-)
-file(GLOB EXES ${CURRENT_PACKAGES_DIR}/bin/*.exe ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-file(REMOVE ${EXES})
+
 vcpkg_copy_pdbs()

@@ -1,3 +1,4 @@
 Source: boost
-Version: 1.62
+Version: 1.63
 Description: Peer-reviewed portable C++ source libraries
+Build-Depends: zlib, bzip2

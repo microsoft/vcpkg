@@ -4,7 +4,6 @@
 #include <vector>
 #include <unordered_set>
 #include "opt_bool.h"
-#include "vcpkg_paths.h"
 
 namespace vcpkg
 {
@@ -15,20 +14,20 @@ namespace vcpkg
 
         std::unique_ptr<std::string> vcpkg_root_dir;
         std::unique_ptr<std::string> target_triplet;
-        opt_bool debug = opt_bool::unspecified;
-        opt_bool sendmetrics = opt_bool::unspecified;
-        opt_bool printmetrics = opt_bool::unspecified;
+        opt_bool_t debug = opt_bool_t::UNSPECIFIED;
+        opt_bool_t  sendmetrics = opt_bool_t::UNSPECIFIED;
+        opt_bool_t  printmetrics = opt_bool_t::UNSPECIFIED;
 
         std::string command;
         std::vector<std::string> command_arguments;
         std::unordered_set<std::string> check_and_get_optional_command_arguments(const std::vector<std::string>& valid_options) const;
 
         void check_max_arg_count(const size_t expected_arg_count) const;
-        void check_max_arg_count(const size_t expected_arg_count, const char* example_text) const;
+        void check_max_arg_count(const size_t expected_arg_count, const std::string& example_text) const;
         void check_min_arg_count(const size_t expected_arg_count) const;
-        void check_min_arg_count(const size_t expected_arg_count, const char* example_text) const;
+        void check_min_arg_count(const size_t expected_arg_count, const std::string& example_text) const;
         void check_exact_arg_count(const size_t expected_arg_count) const;
-        void check_exact_arg_count(const size_t expected_arg_count, const char* example_text) const;
+        void check_exact_arg_count(const size_t expected_arg_count, const std::string& example_text) const;
 
     private:
         std::unordered_set<std::string> optional_command_arguments;

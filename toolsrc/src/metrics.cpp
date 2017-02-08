@@ -1,20 +1,8 @@
+#include "pch.h"
 #include "metrics.h"
-#include <utility>
-#include <array>
-#include <string>
-#include <iostream>
-#include <vector>
-#include <sys/timeb.h>
-#include <time.h>
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <winhttp.h>
-#include <fstream>
-#include <filesystem>
+#include "filesystem_fs.h"
 #include "vcpkg_Strings.h"
 #include "vcpkg_System.h"
-
-namespace fs = std::tr2::sys;
 
 namespace vcpkg
 {
@@ -235,6 +223,40 @@ true
     bool GetCompiledMetricsEnabled()
     {
         return DISABLE_METRICS == 0;
+    }
+
+    std::wstring GetSQMUser()
+    {
+        LONG err;
+
+        struct RAII_HKEY {
+            HKEY hkey = nullptr;
+            ~RAII_HKEY()
+            {
+                if (hkey != nullptr)
+                    RegCloseKey(hkey);
+            }
+        } HKCU_SQMClient;
+
+        err = RegOpenKeyExW(HKEY_CURRENT_USER, LR"(Software\Microsoft\SQMClient)", NULL, KEY_READ, &HKCU_SQMClient.hkey);
+        if (err != ERROR_SUCCESS)
+        {
+            return L"{}";
+        }
+
+        std::array<wchar_t,128> buffer;
+        DWORD lType = 0;
+        DWORD dwBufferSize = static_cast<DWORD>(buffer.size() * sizeof(wchar_t));
+        err = RegQueryValueExW(HKCU_SQMClient.hkey, L"UserId", nullptr, &lType, reinterpret_cast<LPBYTE>(buffer.data()), &dwBufferSize);
+        if (err == ERROR_SUCCESS && lType == REG_SZ && dwBufferSize >= sizeof(wchar_t))
+        {
+            size_t sz = dwBufferSize / sizeof(wchar_t);
+            if (buffer[sz - 1] == '\0')
+                --sz;
+            return std::wstring(buffer.begin(), buffer.begin() + sz);
+        }
+
+        return L"{}";
     }
 
     void SetUserInformation(const std::string& user_id, const std::string& first_use_time)

@@ -6,7 +6,6 @@
 #   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
 #
 
-include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/lua-5.3.3)
 vcpkg_download_distfile(ARCHIVE
@@ -22,6 +21,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
+        -DSKIP_INSTALL_TOOLS=ON
 )
 
 vcpkg_install_cmake()

@@ -1,20 +1,16 @@
-﻿include(vcpkg_common_functions)
-find_program(POWERSHELL powershell)
+﻿if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
+endif()
+include(vcpkg_common_functions)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ChakraCore-1.2.0.0)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ChakraCore-1.4.0)
 vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "https://github.com/Microsoft/ChakraCore/archive/v1.2.0.0.tar.gz"
-    FILENAME "ChakraCore-1.2.0.0.tar.gz"
-    SHA512 53e487028a30605a4e2589c40b65da060ca4884617fdba8877557e4db75f911be4433d260132cce3526647622bdc742a0aacda1443a16dfed3d3fdd442539528
+    URLS "https://github.com/Microsoft/ChakraCore/archive/v1.4.0.tar.gz"
+    FILENAME "ChakraCore-1.4.0.tar.gz"
+    SHA512 d515d56ff1c5776ca4663e27daa4d1c7ca58c57f097799de756980771b5701e35639eefa4db5921d7327e6607b8920df3b30677eb467123e04536df0d971cebc
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
-
-message(STATUS "Patching JavascriptPromise.cpp for https://github.com/Microsoft/ChakraCore/issues/1429")
-vcpkg_execute_required_process(
-	COMMAND ${POWERSHELL} -command (gc lib/runtime/library/JavascriptPromise.cpp -encoding utf7) -replace('«', '^<^<') -replace('»', '^>^>') | Set-Content lib/runtime/library/JavascriptPromise.cpp
-	WORKING_DIRECTORY ${SOURCE_PATH}
-)
-message(STATUS "Patching done.")
 
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/Build/Chakra.Core.sln

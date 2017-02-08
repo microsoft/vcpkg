@@ -55,6 +55,8 @@ function(vcpkg_build_msbuild)
             /p:Configuration=${_csc_RELEASE_CONFIGURATION}
             /p:Platform=${_csc_PLATFORM}
             /p:VCPkgLocalAppDataDisabled=true
+            /p:UseIntelMKL=No
+            /m
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
         LOGNAME build-${TARGET_TRIPLET}-rel
     )
@@ -66,6 +68,8 @@ function(vcpkg_build_msbuild)
             /p:Configuration=${_csc_DEBUG_CONFIGURATION}
             /p:Platform=${_csc_PLATFORM}
             /p:VCPkgLocalAppDataDisabled=true
+            /p:UseIntelMKL=No
+            /m
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
         LOGNAME build-${TARGET_TRIPLET}-dbg
     )

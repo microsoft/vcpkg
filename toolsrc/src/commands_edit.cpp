@@ -1,16 +1,18 @@
+#include "pch.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Input.h"
 
-namespace vcpkg
+namespace vcpkg::Commands::Edit
 {
-    void edit_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
-        static const std::string example = create_example_string("edit zlib");
-        args.check_exact_arg_count(1, example.c_str());
+        static const std::string example = Commands::Help::create_example_string("edit zlib");
+        args.check_exact_arg_count(1, example);
         const std::string port_name = args.command_arguments.at(0);
 
         const fs::path portpath = paths.ports / port_name;
+        Checks::check_exit(fs::is_directory(portpath), R"(Could not find port named "%s")", port_name);
 
         // Find editor
         std::wstring env_EDITOR = System::wdupenv_str(L"EDITOR");
@@ -27,7 +29,7 @@ namespace vcpkg
             }
         }
 
-        std::wstring cmdLine = Strings::wformat(LR"("%s" "%s" "%s")", env_EDITOR, portpath.native(), (portpath / "portfile.cmake").native());
+        std::wstring cmdLine = Strings::wformat(LR"("%s" "%s" "%s" -n)", env_EDITOR, portpath.native(), (portpath / "portfile.cmake").native());
         exit(System::cmd_execute(cmdLine));
     }
 }

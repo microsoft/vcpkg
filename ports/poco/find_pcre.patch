@@ -1,0 +1,13 @@
+diff --git a/cmake/FindPCRE.cmake b/cmake/FindPCRE.cmake
+index 03f07df..4da1895 100644
+--- a/cmake/FindPCRE.cmake
++++ b/cmake/FindPCRE.cmake
+@@ -16,7 +16,7 @@ ENDIF (PCRE_INCLUDE_DIRS)
+ 
+ FIND_PATH(PCRE_INCLUDE_DIR pcre.h)
+ 
+-SET(PCRE_NAMES pcre)
++SET(PCRE_NAMES pcred pcre)
+ FIND_LIBRARY(PCRE_LIBRARY NAMES ${PCRE_NAMES} )
+ 
+ # handle the QUIETLY and REQUIRED arguments and set PCRE_FOUND to TRUE if

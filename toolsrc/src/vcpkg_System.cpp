@@ -1,11 +1,7 @@
+#include "pch.h"
 #include "vcpkg_System.h"
-#include <iostream>
-#include <Windows.h>
-#include <regex>
 
-namespace fs = std::tr2::sys;
-
-namespace vcpkg {namespace System
+namespace vcpkg::System
 {
     fs::path get_exe_path_of_current_process()
     {
@@ -58,7 +54,7 @@ namespace vcpkg {namespace System
         std::cout << "\n";
     }
 
-    void print(color c, const char* message)
+    void print(const color c, const char* message)
     {
         HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -71,7 +67,7 @@ namespace vcpkg {namespace System
         SetConsoleTextAttribute(hConsole, original_color);
     }
 
-    void println(color c, const char* message)
+    void println(const color c, const char* message)
     {
         print(c, message);
         std::cout << "\n";
@@ -106,6 +102,6 @@ namespace vcpkg {namespace System
     double Stopwatch2::microseconds() const
     {
         return (reinterpret_cast<const LARGE_INTEGER*>(&end_time)->QuadPart -
-            reinterpret_cast<const LARGE_INTEGER*>(&start_time)->QuadPart) * 1000000.0 / reinterpret_cast<const LARGE_INTEGER*>(&freq)->QuadPart;
+                reinterpret_cast<const LARGE_INTEGER*>(&start_time)->QuadPart) * 1000000.0 / reinterpret_cast<const LARGE_INTEGER*>(&freq)->QuadPart;
     }
-}}
+}

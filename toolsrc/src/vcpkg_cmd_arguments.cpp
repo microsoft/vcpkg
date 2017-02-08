@@ -1,11 +1,7 @@
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include "pch.h"
 #include "vcpkg_cmd_arguments.h"
 #include "vcpkg_Commands.h"
-#include "vcpkg_Graphs.h"
-#include <unordered_set>
 #include "metrics.h"
-#include "vcpkg.h"
 #include "vcpkg_System.h"
 
 namespace vcpkg
@@ -20,7 +16,7 @@ namespace vcpkg
         {
             System::println(System::color::error, "Error: expected value after %s", option_name);
             TrackProperty("error", "error option name");
-            print_usage();
+            Commands::Help::print_usage();
             exit(EXIT_FAILURE);
         }
 
@@ -28,7 +24,7 @@ namespace vcpkg
         {
             System::println(System::color::error, "Error: %s specified multiple times", option_name);
             TrackProperty("error", "error option specified multiple times");
-            print_usage();
+            Commands::Help::print_usage();
             exit(EXIT_FAILURE);
         }
 
@@ -36,15 +32,15 @@ namespace vcpkg
     }
 
     static void parse_switch(
-        opt_bool new_setting,
+        opt_bool_t new_setting,
         const std::string& option_name,
-        opt_bool& option_field)
+        opt_bool_t& option_field)
     {
-        if (option_field != opt_bool::unspecified && option_field != new_setting)
+        if (option_field != opt_bool_t::UNSPECIFIED && option_field != new_setting)
         {
             System::println(System::color::error, "Error: conflicting values specified for --%s", option_name);
             TrackProperty("error", "error conflicting switches");
-            print_usage();
+            Commands::Help::print_usage();
             exit(EXIT_FAILURE);
         }
         option_field = new_setting;
@@ -98,27 +94,27 @@ namespace vcpkg
                 }
                 if (arg == "--debug")
                 {
-                    parse_switch(opt_bool::enabled, "debug", args.debug);
+                    parse_switch(opt_bool_t::ENABLED, "debug", args.debug);
                     continue;
                 }
                 if (arg == "--sendmetrics")
                 {
-                    parse_switch(opt_bool::enabled, "sendmetrics", args.sendmetrics);
+                    parse_switch(opt_bool_t::ENABLED, "sendmetrics", args.sendmetrics);
                     continue;
                 }
                 if (arg == "--printmetrics")
                 {
-                    parse_switch(opt_bool::enabled, "printmetrics", args.printmetrics);
+                    parse_switch(opt_bool_t::ENABLED, "printmetrics", args.printmetrics);
                     continue;
                 }
                 if (arg == "--no-sendmetrics")
                 {
-                    parse_switch(opt_bool::disabled, "sendmetrics", args.sendmetrics);
+                    parse_switch(opt_bool_t::DISABLED, "sendmetrics", args.sendmetrics);
                     continue;
                 }
                 if (arg == "--no-printmetrics")
                 {
-                    parse_switch(opt_bool::disabled, "printmetrics", args.printmetrics);
+                    parse_switch(opt_bool_t::DISABLED, "printmetrics", args.printmetrics);
                     continue;
                 }
 
@@ -158,7 +154,7 @@ namespace vcpkg
             System::println(System::color::error, "Unknown option(s) for command '%s':", this->command);
             for (const std::string& option : options_copy)
             {
-                System::println(option.c_str());
+                System::println(option);
             }
             exit(EXIT_FAILURE);
         }
@@ -181,7 +177,7 @@ namespace vcpkg
         return check_exact_arg_count(expected_arg_count, "");
     }
 
-    void vcpkg_cmd_arguments::check_max_arg_count(const size_t expected_arg_count, const char* example_text) const
+    void vcpkg_cmd_arguments::check_max_arg_count(const size_t expected_arg_count, const std::string& example_text) const
     {
         const size_t actual_arg_count = command_arguments.size();
         if (actual_arg_count > expected_arg_count)
@@ -192,7 +188,7 @@ namespace vcpkg
         }
     }
 
-    void vcpkg_cmd_arguments::check_min_arg_count(const size_t expected_arg_count, const char* example_text) const
+    void vcpkg_cmd_arguments::check_min_arg_count(const size_t expected_arg_count, const std::string& example_text) const
     {
         const size_t actual_arg_count = command_arguments.size();
         if (actual_arg_count < expected_arg_count)
@@ -203,7 +199,7 @@ namespace vcpkg
         }
     }
 
-    void vcpkg_cmd_arguments::check_exact_arg_count(const size_t expected_arg_count, const char* example_text) const
+    void vcpkg_cmd_arguments::check_exact_arg_count(const size_t expected_arg_count, const std::string& example_text) const
     {
         const size_t actual_arg_count = command_arguments.size();
         if (actual_arg_count != expected_arg_count)

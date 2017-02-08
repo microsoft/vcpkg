@@ -1,3 +1,4 @@
+#tool
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "https://github.com/google/protobuf/releases/download/v3.0.2/protobuf-cpp-3.0.2.tar.gz"
@@ -22,9 +23,21 @@ vcpkg_configure_cmake(
         -DCMAKE_INSTALL_CMAKEDIR=share/protobuf
 )
 
-vcpkg_install_cmake()
+# Using 64-bit toolset to avoid occassional Linker Out-of-Memory issues.
+vcpkg_install_cmake(MSVC_64_TOOLSET)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+# It appears that at this point the build hasn't actually finished. There is probably
+# a process spawned by the build, therefore we need to wait a bit.
+
+function(protobuf_try_remove_recurse_wait PATH_TO_REMOVE)
+    file(REMOVE_RECURSE ${PATH_TO_REMOVE})
+    if (EXISTS "${PATH_TO_REMOVE}")
+        execute_process(COMMAND ${CMAKE_COMMAND} -E sleep 5)
+        file(REMOVE_RECURSE ${PATH_TO_REMOVE})
+    endif()
+endfunction()
+
+protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-release.cmake RELEASE_MODULE)
 string(REPLACE "\${_IMPORT_PREFIX}/bin/protoc.exe" "\${_IMPORT_PREFIX}/tools/protoc.exe" RELEASE_MODULE "${RELEASE_MODULE}")
@@ -35,10 +48,9 @@ string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" DEBUG_MODULE "${D
 string(REPLACE "\${_IMPORT_PREFIX}/debug/bin/protoc.exe" "\${_IMPORT_PREFIX}/tools/protoc.exe" DEBUG_MODULE "${DEBUG_MODULE}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-debug.cmake "${DEBUG_MODULE}")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/protoc.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/protoc.exe)
+protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/share)
+protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin)
+protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/bin)
 
 file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/protobuf-3.0.2/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/protobuf RENAME copyright)
 file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/protobuf-3.0.2-win32/bin/protoc.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools)

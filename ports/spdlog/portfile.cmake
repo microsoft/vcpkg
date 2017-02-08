@@ -1,4 +1,4 @@
-include(${CMAKE_TRIPLET_FILE})
+#header-only library
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/spdlog-0.11.0)
 vcpkg_download_distfile(ARCHIVE

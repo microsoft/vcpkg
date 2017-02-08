@@ -1,6 +1,6 @@
+#include "pch.h"
 #include "triplet.h"
 #include "vcpkg_Checks.h"
-#include <algorithm>
 
 namespace vcpkg
 {
@@ -63,15 +63,5 @@ namespace vcpkg
     {
         auto it = std::find(this->m_canonical_name.cbegin(), this->m_canonical_name.cend(), '-');
         return std::string(it + 1, this->m_canonical_name.cend());
-    }
-
-    triplet::BuildType triplet::build_type() const
-    {
-        if (this->m_canonical_name.find("static") != std::string::npos)
-        {
-            return BuildType::STATIC;
-        }
-
-        return BuildType::DYNAMIC;
     }
 }

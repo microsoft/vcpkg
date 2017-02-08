@@ -22,33 +22,33 @@
     <ProjectGuid>{B98C92B7-2874-4537-9D46-D14E5C237F04}</ProjectGuid>
     <RootNamespace>vcpkglib</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <PlatformToolset Condition="'$(PlatformToolset)' == ''">v140</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DISABLE_METRICS Condition="'$(DISABLE_METRICS)' == ''">0</DISABLE_METRICS>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -75,8 +75,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -85,8 +89,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -97,8 +105,11 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -113,8 +124,11 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -123,29 +137,103 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\include\BinaryParagraph.h" />
+    <ClInclude Include="..\include\PostBuildLint_BuildInfo.h" />
+    <ClInclude Include="..\include\PostBuildLint_BuildPolicies.h" />
+    <ClInclude Include="..\include\coff_file_reader.h" />
+    <ClInclude Include="..\include\expected.h" />
+    <ClInclude Include="..\include\filesystem_fs.h" />
+    <ClInclude Include="..\include\ImmutableSortedVector.h" />
+    <ClInclude Include="..\include\MachineType.h" />
+    <ClInclude Include="..\include\metrics.h" />
+    <ClInclude Include="..\include\opt_bool.h" />
     <ClInclude Include="..\include\package_spec.h" />
     <ClInclude Include="..\include\package_spec_parse_result.h" />
+    <ClInclude Include="..\include\Paragraphs.h" />
+    <ClInclude Include="..\include\pch.h" />
+    <ClInclude Include="..\include\PostBuildLint.h" />
+    <ClInclude Include="..\include\PostBuildLint_BuildType.h" />
+    <ClInclude Include="..\include\PostBuildLint_ConfigurationType.h" />
+    <ClInclude Include="..\include\PostBuildLint_LinkageType.h" />
     <ClInclude Include="..\include\SourceParagraph.h" />
     <ClInclude Include="..\include\StatusParagraph.h" />
     <ClInclude Include="..\include\StatusParagraphs.h" />
+    <ClInclude Include="..\include\Stopwatch.h" />
     <ClInclude Include="..\include\triplet.h" />
-    <ClInclude Include="..\include\vcpkg.h" />
+    <ClInclude Include="..\include\vcpkglib.h" />
     <ClInclude Include="..\include\vcpkglib_helpers.h" />
+    <ClInclude Include="..\include\vcpkg_Checks.h" />
+    <ClInclude Include="..\include\vcpkg_cmd_arguments.h" />
+    <ClInclude Include="..\include\vcpkg_Commands.h" />
+    <ClInclude Include="..\include\vcpkg_Dependencies.h" />
+    <ClInclude Include="..\include\vcpkg_Environment.h" />
+    <ClInclude Include="..\include\vcpkg_Files.h" />
+    <ClInclude Include="..\include\vcpkg_Graphs.h" />
+    <ClInclude Include="..\include\vcpkg_Input.h" />
+    <ClInclude Include="..\include\vcpkg_Maps.h" />
+    <ClInclude Include="..\include\vcpkg_optional.h" />
     <ClInclude Include="..\include\vcpkg_paths.h" />
+    <ClInclude Include="..\include\vcpkg_info.h" />
+    <ClInclude Include="..\include\vcpkg_Sets.h" />
+    <ClInclude Include="..\include\vcpkg_Strings.h" />
+    <ClInclude Include="..\include\vcpkg_System.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\BinaryParagraph.cpp" />
-    <ClCompile Include="..\src\lib.cpp" />
+    <ClCompile Include="..\src\PostBuildLint_BuildInfo.cpp" />
+    <ClCompile Include="..\src\PostBuildLint_BuildPolicies.cpp" />
+    <ClCompile Include="..\src\coff_file_reader.cpp" />
+    <ClCompile Include="..\src\commands_available_commands.cpp" />
+    <ClCompile Include="..\src\commands_build.cpp" />
+    <ClCompile Include="..\src\commands_build_external.cpp" />
+    <ClCompile Include="..\src\commands_cache.cpp" />
+    <ClCompile Include="..\src\commands_contact.cpp" />
+    <ClCompile Include="..\src\commands_create.cpp" />
+    <ClCompile Include="..\src\commands_edit.cpp" />
+    <ClCompile Include="..\src\commands_hash.cpp" />
+    <ClCompile Include="..\src\commands_help.cpp" />
+    <ClCompile Include="..\src\commands_import.cpp" />
+    <ClCompile Include="..\src\commands_install.cpp" />
+    <ClCompile Include="..\src\commands_integrate.cpp" />
+    <ClCompile Include="..\src\commands_list.cpp" />
+    <ClCompile Include="..\src\commands_owns.cpp" />
+    <ClCompile Include="..\src\commands_portsdiff.cpp" />
+    <ClCompile Include="..\src\commands_remove.cpp" />
+    <ClCompile Include="..\src\commands_search.cpp" />
+    <ClCompile Include="..\src\commands_update.cpp" />
+    <ClCompile Include="..\src\commands_version.cpp" />
+    <ClCompile Include="..\src\MachineType.cpp" />
+    <ClCompile Include="..\src\metrics.cpp" />
+    <ClCompile Include="..\src\opt_bool.cpp" />
+    <ClCompile Include="..\src\pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\src\PostBuildLint.cpp" />
+    <ClCompile Include="..\src\PostBuildLint_ConfigurationType.cpp" />
+    <ClCompile Include="..\src\PostBuildLint_LinkageType.cpp" />
+    <ClCompile Include="..\src\PostBuildLint_BuildType.cpp" />
+    <ClCompile Include="..\src\Stopwatch.cpp" />
+    <ClCompile Include="..\src\vcpkglib.cpp" />
     <ClCompile Include="..\src\package_spec.cpp" />
     <ClCompile Include="..\src\package_spec_parse_result.cpp" />
+    <ClCompile Include="..\src\Paragraphs.cpp" />
     <ClCompile Include="..\src\SourceParagraph.cpp" />
     <ClCompile Include="..\src\StatusParagraph.cpp" />
     <ClCompile Include="..\src\StatusParagraphs.cpp" />
     <ClCompile Include="..\src\triplet.cpp" />
-    <ClCompile Include="..\src\vcpkg.cpp" />
     <ClCompile Include="..\src\vcpkglib_helpers.cpp" />
+    <ClCompile Include="..\src\vcpkg_Checks.cpp" />
+    <ClCompile Include="..\src\vcpkg_cmd_arguments.cpp" />
+    <ClCompile Include="..\src\vcpkg_Dependencies.cpp" />
+    <ClCompile Include="..\src\vcpkg_Environment.cpp" />
+    <ClCompile Include="..\src\vcpkg_Files.cpp" />
+    <ClCompile Include="..\src\vcpkg_Input.cpp" />
     <ClCompile Include="..\src\vcpkg_paths.cpp" />
-    <ClCompile Include="..\src\vcpkg_version.cpp" />
+    <ClCompile Include="..\src\vcpkg_info.cpp" />
+    <ClCompile Include="..\src\vcpkg_Strings.cpp" />
+    <ClCompile Include="..\src\vcpkg_System.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

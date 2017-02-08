@@ -16,10 +16,19 @@ vcpkg_find_acquire_program(NASM)
 get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
 set(ENV{PATH} "${NASM_EXE_PATH};$ENV{PATH}")
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(BUILD_STATIC OFF)
+    set(NOT_BUILD_STATIC ON)
+else()
+    set(BUILD_STATIC ON)
+    set(NOT_BUILD_STATIC OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -DENABLE_STATIC=OFF
+        -DENABLE_STATIC=${BUILD_STATIC}
+        -DENABLE_SHARED=${NOT_BUILD_STATIC}
         -DWITH_CRT_DLL=ON
         -DENABLE_EXECUTABLES=OFF
         -DINSTALL_DOCS=OFF
@@ -28,6 +37,14 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+# Rename libraries for static builds
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/jpeg-static.lib" "${CURRENT_PACKAGES_DIR}/lib/jpeg.lib")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/turbojpeg-static.lib" "${CURRENT_PACKAGES_DIR}/lib/turbojpeg.lib")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg.lib")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpeg.lib")
+endif()
 
 file(COPY
     ${SOURCE_PATH}/LICENSE.md

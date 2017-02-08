@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 #include "package_spec_parse_result.h"
 #include "triplet.h"
 #include "expected.h"
@@ -16,14 +15,16 @@ namespace vcpkg
 
         const triplet& target_triplet() const;
 
+        std::string display_name() const;
+
         std::string dir() const;
+
+        std::string toString() const;
 
     private:
         std::string m_name;
         triplet m_target_triplet;
     };
-
-    std::string to_string(const package_spec& spec);
 
     std::string to_printf_arg(const package_spec& spec);
 
