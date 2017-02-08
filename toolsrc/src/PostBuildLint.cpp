@@ -7,7 +7,6 @@
 #include "coff_file_reader.h"
 #include "PostBuildLint_BuildInfo.h"
 #include "PostBuildLint_BuildType.h"
-#include "PostBuildLint_OutdatedDynamicCrt.h"
 
 namespace vcpkg::PostBuildLint
 {
@@ -16,6 +15,38 @@ namespace vcpkg::PostBuildLint
         SUCCESS = 0,
         ERROR_DETECTED = 1
     };
+
+    struct OutdatedDynamicCrt
+    {
+        std::string name;
+        std::regex regex;
+    };
+
+    const std::vector<OutdatedDynamicCrt>& get_outdated_dynamic_crts()
+    {
+        static const std::vector<OutdatedDynamicCrt> v = {
+            {"msvcp100.dll", std::regex(R"(msvcp100\.dll)")},
+            {"msvcp100d.dll", std::regex(R"(msvcp100d\.dll)")},
+            {"msvcp110.dll", std::regex(R"(msvcp110\.dll)")},
+            {"msvcp110_win.dll", std::regex(R"(msvcp110_win\.dll)")},
+            {"msvcp120.dll", std::regex(R"(msvcp120\.dll)")},
+            {"msvcp120_clr0400.dll", std::regex(R"(msvcp120_clr0400\.dll)")},
+            {"msvcp60.dll", std::regex(R"(msvcp60\.dll)")},
+            {"msvcp60.dll", std::regex(R"(msvcp60\.dll)")},
+
+            {"msvcr100.dll", std::regex(R"(msvcr100\.dll)")},
+            {"msvcr100d.dll", std::regex(R"(msvcr100d\.dll)")},
+            {"msvcr100_clr0400.dll", std::regex(R"(msvcr100_clr0400\.dll)")},
+            {"msvcr110.dll", std::regex(R"(msvcr110\.dll)")},
+            {"msvcr120.dll", std::regex(R"(msvcr120\.dll)")},
+            {"msvcr120_clr0400.dll", std::regex(R"(msvcr120_clr0400\.dll)")},
+            {"msvcrt.dll", std::regex(R"(msvcrt\.dll)")},
+            {"msvcrt20.dll", std::regex(R"(msvcrt20\.dll)")},
+            {"msvcrt40.dll", std::regex(R"(msvcrt40\.dll)")}
+        };
+
+        return v;
+    }
 
     static lint_status check_for_files_in_include_directory(const fs::path& package_dir)
     {
@@ -516,7 +547,7 @@ namespace vcpkg::PostBuildLint
 
     static lint_status check_outdated_crt_linkage_of_dlls(const std::vector<fs::path>& dlls, const fs::path dumpbin_exe)
     {
-        const std::vector<OutdatedDynamicCrt>& outdated_crts = OutdatedDynamicCrt::values();
+        const std::vector<OutdatedDynamicCrt>& outdated_crts = get_outdated_dynamic_crts();
 
         std::vector<OutdatedDynamicCrt_and_file> dlls_with_outdated_crt;
 
@@ -528,7 +559,7 @@ namespace vcpkg::PostBuildLint
 
             for (const OutdatedDynamicCrt& outdated_crt : outdated_crts)
             {
-                if (std::regex_search(ec_data.output.cbegin(), ec_data.output.cend(), outdated_crt.crt_regex()))
+                if (std::regex_search(ec_data.output.cbegin(), ec_data.output.cend(), outdated_crt.regex))
                 {
                     dlls_with_outdated_crt.push_back({dll, outdated_crt});
                     break;
@@ -542,7 +573,7 @@ namespace vcpkg::PostBuildLint
             System::println("");
             for (const OutdatedDynamicCrt_and_file btf : dlls_with_outdated_crt)
             {
-                System::println("    %s: %s", btf.file.generic_string(), btf.outdated_crt.toString());
+                System::println("    %s: %s", btf.file.generic_string(), btf.outdated_crt.name);
             }
             System::println("");
 
@@ -625,47 +656,47 @@ namespace vcpkg::PostBuildLint
 
         switch (linkage_type_value_of(build_info.library_linkage))
         {
-        case LinkageType::DYNAMIC:
-        {
-            const std::vector<fs::path> debug_dlls = Files::recursive_find_files_with_extension_in_dir(debug_bin_dir, ".dll");
-            const std::vector<fs::path> release_dlls = Files::recursive_find_files_with_extension_in_dir(release_bin_dir, ".dll");
+            case LinkageType::DYNAMIC:
+                {
+                    const std::vector<fs::path> debug_dlls = Files::recursive_find_files_with_extension_in_dir(debug_bin_dir, ".dll");
+                    const std::vector<fs::path> release_dlls = Files::recursive_find_files_with_extension_in_dir(release_bin_dir, ".dll");
 
-            error_count += check_matching_debug_and_release_binaries(debug_dlls, release_dlls);
+                    error_count += check_matching_debug_and_release_binaries(debug_dlls, release_dlls);
 
-            error_count += check_lib_files_are_available_if_dlls_are_available(build_info.policies, debug_libs.size(), debug_dlls.size(), debug_lib_dir);
-            error_count += check_lib_files_are_available_if_dlls_are_available(build_info.policies, release_libs.size(), release_dlls.size(), release_lib_dir);
+                    error_count += check_lib_files_are_available_if_dlls_are_available(build_info.policies, debug_libs.size(), debug_dlls.size(), debug_lib_dir);
+                    error_count += check_lib_files_are_available_if_dlls_are_available(build_info.policies, release_libs.size(), release_dlls.size(), release_lib_dir);
 
-            std::vector<fs::path> dlls;
-            dlls.insert(dlls.cend(), debug_dlls.cbegin(), debug_dlls.cend());
-            dlls.insert(dlls.cend(), release_dlls.cbegin(), release_dlls.cend());
+                    std::vector<fs::path> dlls;
+                    dlls.insert(dlls.cend(), debug_dlls.cbegin(), debug_dlls.cend());
+                    dlls.insert(dlls.cend(), release_dlls.cbegin(), release_dlls.cend());
 
-            error_count += check_exports_of_dlls(dlls, dumpbin_exe);
-            error_count += check_uwp_bit_of_dlls(spec.target_triplet().system(), dlls, dumpbin_exe);
-            error_count += check_dll_architecture(spec.target_triplet().architecture(), dlls);
+                    error_count += check_exports_of_dlls(dlls, dumpbin_exe);
+                    error_count += check_uwp_bit_of_dlls(spec.target_triplet().system(), dlls, dumpbin_exe);
+                    error_count += check_dll_architecture(spec.target_triplet().architecture(), dlls);
 
-            error_count += check_outdated_crt_linkage_of_dlls(dlls, dumpbin_exe);
-            break;
-        }
-        case LinkageType::STATIC:
-        {
-            std::vector<fs::path> dlls;
-            Files::recursive_find_files_with_extension_in_dir(package_dir, ".dll", &dlls);
-            error_count += check_no_dlls_present(dlls);
+                    error_count += check_outdated_crt_linkage_of_dlls(dlls, dumpbin_exe);
+                    break;
+                }
+            case LinkageType::STATIC:
+                {
+                    std::vector<fs::path> dlls;
+                    Files::recursive_find_files_with_extension_in_dir(package_dir, ".dll", &dlls);
+                    error_count += check_no_dlls_present(dlls);
 
-            error_count += check_bin_folders_are_not_present_in_static_build(package_dir);
+                    error_count += check_bin_folders_are_not_present_in_static_build(package_dir);
 
-            error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::DEBUG, linkage_type_value_of(build_info.crt_linkage)), debug_libs, dumpbin_exe);
-            error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::RELEASE, linkage_type_value_of(build_info.crt_linkage)), release_libs, dumpbin_exe);
-            break;
-        }
-        case LinkageType::UNKNOWN:
-        {
-            error_count += 1;
-            System::println(System::color::warning, "Unknown library_linkage architecture: [ %s ]", build_info.library_linkage);
-            break;
-        }
-        default:
-            Checks::unreachable();
+                    error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::DEBUG, linkage_type_value_of(build_info.crt_linkage)), debug_libs, dumpbin_exe);
+                    error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::RELEASE, linkage_type_value_of(build_info.crt_linkage)), release_libs, dumpbin_exe);
+                    break;
+                }
+            case LinkageType::UNKNOWN:
+                {
+                    error_count += 1;
+                    System::println(System::color::warning, "Unknown library_linkage architecture: [ %s ]", build_info.library_linkage);
+                    break;
+                }
+            default:
+                Checks::unreachable();
         }
 #if 0
         error_count += check_no_subdirectories(package_dir / "lib");
