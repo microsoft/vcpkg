@@ -582,16 +582,21 @@ namespace vcpkg::PostBuildLint
         left += static_cast<size_t>(right);
     }
 
-    void perform_all_checks(const package_spec& spec, const vcpkg_paths& paths)
+    static size_t perform_all_checks_and_return_error_count(const package_spec& spec, const vcpkg_paths& paths)
     {
         const fs::path dumpbin_exe = Environment::get_dumpbin_exe(paths);
-
-        System::println("-- Performing post-build validation");
 
         BuildInfo build_info = read_build_info(paths.build_info_file_path(spec));
         const fs::path package_dir = paths.package_dir(spec);
 
         size_t error_count = 0;
+
+        auto it = build_info.policies.find(BuildPolicies::EMPTY_PACKAGE);
+        if (it != build_info.policies.cend() && it->second == opt_bool_t::ENABLED)
+        {
+            return error_count;
+        }
+
         error_count += check_for_files_in_include_directory(package_dir);
         error_count += check_for_files_in_debug_include_directory(package_dir);
         error_count += check_for_files_in_debug_share_directory(package_dir);
@@ -620,55 +625,64 @@ namespace vcpkg::PostBuildLint
 
         switch (linkage_type_value_of(build_info.library_linkage))
         {
-            case LinkageType::DYNAMIC:
-                {
-                    const std::vector<fs::path> debug_dlls = Files::recursive_find_files_with_extension_in_dir(debug_bin_dir, ".dll");
-                    const std::vector<fs::path> release_dlls = Files::recursive_find_files_with_extension_in_dir(release_bin_dir, ".dll");
+        case LinkageType::DYNAMIC:
+        {
+            const std::vector<fs::path> debug_dlls = Files::recursive_find_files_with_extension_in_dir(debug_bin_dir, ".dll");
+            const std::vector<fs::path> release_dlls = Files::recursive_find_files_with_extension_in_dir(release_bin_dir, ".dll");
 
-                    error_count += check_matching_debug_and_release_binaries(debug_dlls, release_dlls);
+            error_count += check_matching_debug_and_release_binaries(debug_dlls, release_dlls);
 
-                    error_count += check_lib_files_are_available_if_dlls_are_available(build_info.policies, debug_libs.size(), debug_dlls.size(), debug_lib_dir);
-                    error_count += check_lib_files_are_available_if_dlls_are_available(build_info.policies, release_libs.size(), release_dlls.size(), release_lib_dir);
+            error_count += check_lib_files_are_available_if_dlls_are_available(build_info.policies, debug_libs.size(), debug_dlls.size(), debug_lib_dir);
+            error_count += check_lib_files_are_available_if_dlls_are_available(build_info.policies, release_libs.size(), release_dlls.size(), release_lib_dir);
 
-                    std::vector<fs::path> dlls;
-                    dlls.insert(dlls.cend(), debug_dlls.cbegin(), debug_dlls.cend());
-                    dlls.insert(dlls.cend(), release_dlls.cbegin(), release_dlls.cend());
+            std::vector<fs::path> dlls;
+            dlls.insert(dlls.cend(), debug_dlls.cbegin(), debug_dlls.cend());
+            dlls.insert(dlls.cend(), release_dlls.cbegin(), release_dlls.cend());
 
-                    error_count += check_exports_of_dlls(dlls, dumpbin_exe);
-                    error_count += check_uwp_bit_of_dlls(spec.target_triplet().system(), dlls, dumpbin_exe);
-                    error_count += check_dll_architecture(spec.target_triplet().architecture(), dlls);
+            error_count += check_exports_of_dlls(dlls, dumpbin_exe);
+            error_count += check_uwp_bit_of_dlls(spec.target_triplet().system(), dlls, dumpbin_exe);
+            error_count += check_dll_architecture(spec.target_triplet().architecture(), dlls);
 
-                    error_count += check_outdated_crt_linkage_of_dlls(dlls, dumpbin_exe);
-                    break;
-                }
-            case LinkageType::STATIC:
-                {
-                    std::vector<fs::path> dlls;
-                    Files::recursive_find_files_with_extension_in_dir(package_dir, ".dll", &dlls);
-                    error_count += check_no_dlls_present(dlls);
+            error_count += check_outdated_crt_linkage_of_dlls(dlls, dumpbin_exe);
+            break;
+        }
+        case LinkageType::STATIC:
+        {
+            std::vector<fs::path> dlls;
+            Files::recursive_find_files_with_extension_in_dir(package_dir, ".dll", &dlls);
+            error_count += check_no_dlls_present(dlls);
 
-                    error_count += check_bin_folders_are_not_present_in_static_build(package_dir);
+            error_count += check_bin_folders_are_not_present_in_static_build(package_dir);
 
-                    error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::DEBUG, linkage_type_value_of(build_info.crt_linkage)), debug_libs, dumpbin_exe);
-                    error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::RELEASE, linkage_type_value_of(build_info.crt_linkage)), release_libs, dumpbin_exe);
-                    break;
-                }
-            case LinkageType::UNKNOWN:
-                {
-                    error_count += 1;
-                    System::println(System::color::warning, "Unknown library_linkage architecture: [ %s ]", build_info.library_linkage);
-                    break;
-                }
-            default:
-                Checks::unreachable();
+            error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::DEBUG, linkage_type_value_of(build_info.crt_linkage)), debug_libs, dumpbin_exe);
+            error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::RELEASE, linkage_type_value_of(build_info.crt_linkage)), release_libs, dumpbin_exe);
+            break;
+        }
+        case LinkageType::UNKNOWN:
+        {
+            error_count += 1;
+            System::println(System::color::warning, "Unknown library_linkage architecture: [ %s ]", build_info.library_linkage);
+            break;
+        }
+        default:
+            Checks::unreachable();
         }
 #if 0
-            error_count += check_no_subdirectories(package_dir / "lib");
-            error_count += check_no_subdirectories(package_dir / "debug" / "lib");
+        error_count += check_no_subdirectories(package_dir / "lib");
+        error_count += check_no_subdirectories(package_dir / "debug" / "lib");
 #endif
 
         error_count += check_no_empty_folders(package_dir);
         error_count += check_no_files_in_package_dir_and_debug_dir(package_dir);
+
+        return error_count;
+    }
+
+    void perform_all_checks(const package_spec& spec, const vcpkg_paths& paths)
+    {
+        System::println("-- Performing post-build validation");
+
+        const size_t error_count = perform_all_checks_and_return_error_count(spec, paths);
 
         if (error_count != 0)
         {
