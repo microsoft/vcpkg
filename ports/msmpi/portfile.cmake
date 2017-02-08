@@ -1,18 +1,53 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/msmpi-7.1)
-
-vcpkg_find_acquire_program(7Z)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/msmpi-8.0)
 
 vcpkg_download_distfile(SDK_ARCHIVE
-    URLS "https://download.microsoft.com/download/E/8/A/E8A080AF-040D-43FF-97B4-065D4F220301/msmpisdk.msi"
-    FILENAME "msmpisdk-7.1.msi"
-    SHA512 e3b479189e0effc83c030c74ac6e6762f577cfa94bffb2b35192aab3329b5cfad7933c353c0304754e6b097912b81dbfd4d4b52a5fe5563bd4f3578cd1cf71d7
+    URLS "https://download.microsoft.com/download/B/2/E/B2EB83FE-98C2-4156-834A-E1711E6884FB/msmpisdk.msi"
+    FILENAME "msmpisdk-8.0.msi"
+    SHA512 49c762873ba777ccb3c959a1d2ca1392e4c3c8d366e604ad707184ea432302e6649894ec6599162d0d40f3e6ebc0dada1eb9ca0da1cde0f6ba7a9b1847dac8c0
 )
-vcpkg_download_distfile(REDIST_ARCHIVE
-    URLS "https://download.microsoft.com/download/E/8/A/E8A080AF-040D-43FF-97B4-065D4F220301/MSMpiSetup.exe"
-    FILENAME "MSMpiSetup-7.1.exe"
-    SHA512 f75c448e49b1ab4f5e60c958f0c7c1766e06665d65d2bdec42578aa77fb9d5fdc0215cee6ec51909e77d13451490bfff1c324bf9eb4311cb886b98a6ad469a2d
-)
+
+# Check for correct version of installed redistributable package
+set(SYSTEM_MPIEXEC_FILEPATH "$ENV{PROGRAMFILES}/Microsoft MPI/Bin/mpiexec.exe")
+set(MSMPI_EXPECTED_FULL_VERSION "8.0.12438.0")
+
+if(EXISTS ${SYSTEM_MPIEXEC_FILEPATH})
+    set(MPIEXEC_VERSION_LOGNAME "mpiexec-version")
+    vcpkg_execute_required_process(
+        COMMAND ${SYSTEM_MPIEXEC_FILEPATH}
+        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
+        LOGNAME ${MPIEXEC_VERSION_LOGNAME}
+    )
+    file(READ ${CURRENT_BUILDTREES_DIR}/${MPIEXEC_VERSION_LOGNAME}-out.log MPIEXEC_OUTPUT)
+
+    if(${MPIEXEC_OUTPUT} MATCHES "\\[Version ([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)\\]")
+        if(NOT ${CMAKE_MATCH_1} STREQUAL ${MSMPI_EXPECTED_FULL_VERSION})
+            message(FATAL_ERROR
+                "  The version of the installed MSMPI redistributable packages does not match the version to be installed\n"
+                "  Expected version: ${MSMPI_EXPECTED_FULL_VERSION}\n"
+                "  Found version: ${CMAKE_MATCH_1}\n")
+        endif()
+    else()
+        message(FATAL_ERROR
+            "  Could not determine installed MSMPI redistributable package version.\n"
+            "  See logs for more information:\n"
+            "    ${CURRENT_BUILDTREES_DIR}\\${MPIEXEC_VERSION_LOGNAME}-out.log\n"
+            "    ${CURRENT_BUILDTREES_DIR}\\${MPIEXEC_VERSION_LOGNAME}-err.log\n")
+    endif()
+else()
+    vcpkg_download_distfile(REDIST_ARCHIVE
+        URLS "https://download.microsoft.com/download/B/2/E/B2EB83FE-98C2-4156-834A-E1711E6884FB/MSMpiSetup.exe"
+        FILENAME "MSMpiSetup-8.0.exe"
+        SHA512 f5271255817f5417de8e432cd21e5ff3c617911a30b7777560c0ceb6f4031ace5fa88fc7675759ae0964bcf4e2076fe367a06c129f3a9ad06871a08bf95ed68b
+    )
+
+    message(FATAL_ERROR
+        "  Could not find:\n"
+        "    ${SYSTEM_MPIEXEC_FILEPATH}\n"
+        "  Please install the MSMPI redistributable package before trying to install this port.\n"
+        "  The appropriate installer has been downloaded to:\n"
+        "    ${REDIST_ARCHIVE}\n")
+endif()
 
 file(TO_NATIVE_PATH "${SDK_ARCHIVE}" SDK_ARCHIVE)
 file(TO_NATIVE_PATH "${SOURCE_PATH}/sdk" SDK_SOURCE_DIR)
@@ -23,30 +58,23 @@ vcpkg_execute_required_process(
     LOGNAME extract-sdk
 )
 
-vcpkg_execute_required_process(
-    COMMAND ${7Z} e -o${SOURCE_PATH}/redist -aoa ${REDIST_ARCHIVE}
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
-    LOGNAME extract-redist
-)
-
 set(SOURCE_INCLUDE_PATH "${SOURCE_PATH}/sdk/PFiles/Microsoft SDKs/MPI/Include")
 set(SOURCE_LIB_PATH "${SOURCE_PATH}/sdk/PFiles/Microsoft SDKs/MPI/Lib")
-set(SOURCE_BIN_PATH "${SOURCE_PATH}/redist")
 
 # Install include files
 file(INSTALL
         "${SOURCE_INCLUDE_PATH}/mpi.h"
         "${SOURCE_INCLUDE_PATH}/mpif.h"
         "${SOURCE_INCLUDE_PATH}/mpi.f90"
+        "${SOURCE_INCLUDE_PATH}/mpio.h"
+        "${SOURCE_INCLUDE_PATH}/mspms.h"
+        "${SOURCE_INCLUDE_PATH}/pmidbg.h"
         "${SOURCE_INCLUDE_PATH}/${TRIPLET_SYSTEM_ARCH}/mpifptr.h"
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/include
 )
 
-# NOTE: we do not install the dlls here since they are not architecture independent (x86 only)
-#       and they seam not to be required by neither mpiexec nor programs build against msmpi.lib
-
-# Install release libraries and tools
+# Install release libraries
 file(INSTALL
         "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpi.lib"
         "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifec.lib"
@@ -54,12 +82,14 @@ file(INSTALL
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/lib
 )
-# file(INSTALL
-#         "${SOURCE_BIN_PATH}/msmpi.dll"
-#         "${SOURCE_BIN_PATH}/msmpires.dll"
-#     DESTINATION
-#         ${CURRENT_PACKAGES_DIR}/bin
-# )
+if(${TRIPLET_SYSTEM_ARCH} STREQUAL "x86")
+    file(INSTALL
+            "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifes.lib"
+            "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifms.lib"
+        DESTINATION
+            ${CURRENT_PACKAGES_DIR}/lib
+    )
+endif()
 
 # Install debug libraries
 # NOTE: since the binary distribution does not include any debug libraries we simply install the release libraries
@@ -70,22 +100,14 @@ file(INSTALL
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/debug/lib
 )
-# file(INSTALL
-#         "${SOURCE_BIN_PATH}/msmpi.dll"
-#         "${SOURCE_BIN_PATH}/msmpires.dll"
-#     DESTINATION
-#         ${CURRENT_PACKAGES_DIR}/debug/bin
-# )
-
-# Install tools
-file(INSTALL
-        "${SOURCE_BIN_PATH}/mpiexec.exe"
-        "${SOURCE_BIN_PATH}/msmpilaunchsvc.exe"
-        "${SOURCE_BIN_PATH}/smpd.exe"
-        "${SOURCE_BIN_PATH}/mpitrace.man"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/tools
-)
+if(${TRIPLET_SYSTEM_ARCH} STREQUAL "x86")
+    file(INSTALL
+            "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifes.lib"
+            "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifms.lib"
+        DESTINATION
+            ${CURRENT_PACKAGES_DIR}/debug/lib
+    )
+endif()
 
 # Handle copyright
 file(COPY "${SOURCE_PATH}/sdk/PFiles/Microsoft SDKs/MPI/License/license_sdk.rtf" DESTINATION ${CURRENT_PACKAGES_DIR}/share/msmpi)
