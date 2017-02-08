@@ -25,8 +25,9 @@ if (!(Test-Path $SetupConsoleExe))
 
 $instances = & $SetupConsoleExe -nologo -value InstallationPath 2>&1
 $instanceCount = $instances.Length
+
 # The last item can be empty
-if ($instances[$entryCount - 1] -eq "")
+if ($instanceCount -gt 0 -and $instances[$instanceCount - 1] -eq "")
 {
     $instances = $instances[0..($instanceCount - 2)]
 }
