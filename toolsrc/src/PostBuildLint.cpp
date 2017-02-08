@@ -20,29 +20,32 @@ namespace vcpkg::PostBuildLint
     {
         std::string name;
         std::regex regex;
+
+        OutdatedDynamicCrt(const std::string& name, const std::string& regex_as_string)
+            : name(name), regex(std::regex(regex_as_string, std::regex_constants::icase)) {}
     };
 
     const std::vector<OutdatedDynamicCrt>& get_outdated_dynamic_crts()
     {
         static const std::vector<OutdatedDynamicCrt> v = {
-            {"msvcp100.dll", std::regex(R"(msvcp100\.dll)")},
-            {"msvcp100d.dll", std::regex(R"(msvcp100d\.dll)")},
-            {"msvcp110.dll", std::regex(R"(msvcp110\.dll)")},
-            {"msvcp110_win.dll", std::regex(R"(msvcp110_win\.dll)")},
-            {"msvcp120.dll", std::regex(R"(msvcp120\.dll)")},
-            {"msvcp120_clr0400.dll", std::regex(R"(msvcp120_clr0400\.dll)")},
-            {"msvcp60.dll", std::regex(R"(msvcp60\.dll)")},
-            {"msvcp60.dll", std::regex(R"(msvcp60\.dll)")},
+            {"msvcp100.dll", R"(msvcp100\.dll)"},
+            {"msvcp100d.dll", R"(msvcp100d\.dll)"},
+            {"msvcp110.dll", R"(msvcp110\.dll)"},
+            {"msvcp110_win.dll", R"(msvcp110_win\.dll)"},
+            {"msvcp120.dll", R"(msvcp120\.dll)"},
+            {"msvcp120_clr0400.dll", R"(msvcp120_clr0400\.dll)"},
+            {"msvcp60.dll", R"(msvcp60\.dll)"},
+            {"msvcp60.dll", R"(msvcp60\.dll)"},
 
-            {"msvcr100.dll", std::regex(R"(msvcr100\.dll)")},
-            {"msvcr100d.dll", std::regex(R"(msvcr100d\.dll)")},
-            {"msvcr100_clr0400.dll", std::regex(R"(msvcr100_clr0400\.dll)")},
-            {"msvcr110.dll", std::regex(R"(msvcr110\.dll)")},
-            {"msvcr120.dll", std::regex(R"(msvcr120\.dll)")},
-            {"msvcr120_clr0400.dll", std::regex(R"(msvcr120_clr0400\.dll)")},
-            {"msvcrt.dll", std::regex(R"(msvcrt\.dll)")},
-            {"msvcrt20.dll", std::regex(R"(msvcrt20\.dll)")},
-            {"msvcrt40.dll", std::regex(R"(msvcrt40\.dll)")}
+            {"msvcr100.dll", R"(msvcr100\.dll)"},
+            {"msvcr100d.dll", R"(msvcr100d\.dll)"},
+            {"msvcr100_clr0400.dll", R"(msvcr100_clr0400\.dll)"},
+            {"msvcr110.dll", R"(msvcr110\.dll)"},
+            {"msvcr120.dll", R"(msvcr120\.dll)"},
+            {"msvcr120_clr0400.dll", R"(msvcr120_clr0400\.dll)"},
+            {"msvcrt.dll", R"(msvcrt\.dll)"},
+            {"msvcrt20.dll", R"(msvcrt20\.dll)"},
+            {"msvcrt40.dll", R"(msvcrt40\.dll)"}
         };
 
         return v;
