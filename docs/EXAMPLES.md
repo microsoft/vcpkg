@@ -3,7 +3,7 @@
 ## Overview
 Vcpkg helps you get C and C++ libraries on Windows.
 
-For short description of available commands, run `./vcpkg help`.
+For short description of available commands, run `.\vcpkg help`.
 
 ## Table of Contents
 - <a href="#example-1">Example 1: Using Sqlite</a>
