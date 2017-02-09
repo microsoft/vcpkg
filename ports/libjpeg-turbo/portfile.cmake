@@ -14,7 +14,7 @@ vcpkg_apply_patches(
 
 vcpkg_find_acquire_program(NASM)
 get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-set(ENV{PATH} "${NASM_EXE_PATH};$ENV{PATH}")
+set(ENV{PATH} "$ENV{PATH};${NASM_EXE_PATH}")
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(BUILD_STATIC OFF)

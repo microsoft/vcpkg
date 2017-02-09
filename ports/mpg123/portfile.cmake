@@ -13,7 +13,7 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_find_acquire_program(YASM)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
-set(ENV{PATH} "${YASM_EXE_PATH};$ENV{PATH}")
+set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
