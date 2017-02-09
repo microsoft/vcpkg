@@ -1,15 +1,28 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
+    set(VCPKG_LIBRARY_LINKAGE static)
 endif()
+
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/bond-53ea13692925bee4ba494ee9de3614f15c09d85d)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/bond-5.2.0)
 vcpkg_download_distfile(ARCHIVE
-  URLS "https://github.com/Microsoft/bond/archive/53ea13692925bee4ba494ee9de3614f15c09d85d.zip"
-  FILENAME "bond-5.0.0-4-g53ea136.zip"
-  SHA512  fe39dc211f6b99cba3f2284d78a524305dfb8dcd1f597639c45625df369f96c3321cb6782fef9eb34d34fab69c8da9015024eee34be6d0a76d730729517183da
-)
+  URLS "https://github.com/Microsoft/bond/archive/5.2.0.zip"
+  FILENAME "bond-5.2.0.zip"
+  SHA512  bc533d9e7431d0690b555aa4a42ca947f8025fc388f698c40cfeacf4286892ac5fd86d93df187009d4791e3eae240eb60886947cfe600838c6058274eb4d625c
+  )
+
 vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_apply_patches(
+  SOURCE_PATH ${SOURCE_PATH}
+  PATCHES
+    # Change Boost_USE_STATIC_LIBS to be compatible with vcpkg's treatment
+    # of Boost
+    ${CMAKE_CURRENT_LIST_DIR}/0001_boost_static_libs.patch
+    # Don't install rapidjson from the (empty) submodule. With vcpkg, we get
+    # rapidjson from vcpkg
+    ${CMAKE_CURRENT_LIST_DIR}/0002_omit_rapidjson.patch
+)
 
 # To build Bond, you'll either need to have the Haskell toolchain installed
 # or set the environment variable BOND_GBC_PATH to point to a directory that
@@ -35,10 +48,10 @@ file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/bond)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/bond/LICENSE ${CURRENT_PACKAGES_DIR}/share/bond/copyright)
 
 # vcpkg doesn't--as of version 0.0.30--like executables such as gbc.exe in
-# the output. Just delete it for now.
-file(REMOVE
-  ${CURRENT_PACKAGES_DIR}/bin/gbc.exe
-  ${CURRENT_PACKAGES_DIR}/debug/bin/gbc.exe)
+# the output. Just delete the bin/ directories for now.
+file(REMOVE_RECURSE
+  ${CURRENT_PACKAGES_DIR}/bin/
+  ${CURRENT_PACKAGES_DIR}/debug/bin/)
 
 # There's no way to supress installation of the headers in the debug build,
 # so we just delete them.
