@@ -17,6 +17,7 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DCMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP=1
         -DBUILD_TESTING=OFF
