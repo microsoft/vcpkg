@@ -546,6 +546,8 @@ namespace vcpkg::PostBuildLint
     {
         fs::path file;
         OutdatedDynamicCrt outdated_crt;
+
+        OutdatedDynamicCrt_and_file() = delete;
     };
 
     static lint_status check_outdated_crt_linkage_of_dlls(const std::vector<fs::path>& dlls, const fs::path dumpbin_exe)
