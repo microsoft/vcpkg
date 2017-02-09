@@ -487,7 +487,7 @@ namespace vcpkg::PostBuildLint
             System::println("The following empty directories were found: ");
             Files::print_paths(empty_directories);
             System::println(System::color::warning, "If a directory should be populated but is not, this might indicate an error in the portfile.\n"
-                            "If the directories are not needed and their creation cannot be disabled, use something like this in the portfile to remove them)\n"
+                            "If the directories are not needed and their creation cannot be disabled, use something like this in the portfile to remove them:\n"
                             "\n"
                             R"###(    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/a/dir ${CURRENT_PACKAGES_DIR}/some/other/dir))###""\n"
                             "\n");
