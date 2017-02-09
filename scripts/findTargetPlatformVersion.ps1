@@ -15,15 +15,16 @@ foreach ($ProgramFiles in $CandidateProgramFiles)
         continue
     }
 
-    $win10sdkVersions = Get-ChildItem $folder | Where-Object {$_.Name -match "^10"} | Sort-Object
-    $win10sdkVersionCount = $win10sdkVersions.Length
+    $win10sdkVersions = @(Get-ChildItem $folder | Where-Object {$_.Name -match "^10"} | Sort-Object)
+    [array]::Reverse($win10sdkVersions) # Newest SDK first
 
-    if ($win10sdkVersionCount -eq 0)
+    foreach ($win10sdkV in $win10sdkVersions)
     {
-        continue
+        if (Test-Path "$folder\$win10sdkV\um\windows.h")
+        {
+            return $win10sdkV.ToString()
+        }
     }
-
-    return $win10sdkVersions[$win10sdkVersionCount - 1].ToString()
 }
 
 # Windows 8.1 SDK
