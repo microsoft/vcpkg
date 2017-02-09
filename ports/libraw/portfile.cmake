@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/LibRaw-0.17.2)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/LibRaw-0.18.0)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.libraw.org/data/LibRaw-0.17.2.zip"
-    FILENAME "LibRaw-0.17.2"
-    SHA512 97d34c84dafdcad300d607fbd4df7b120aea1ecdbc2783a8616bc423fa6a7a15adfbeb975f8dab021be09d08ef466c401a3b65bfd1abcfa49d31d4ab91873e60
+    URLS "http://www.libraw.org/data/LibRaw-0.18.0.zip"
+    FILENAME "LibRaw-0.18.0.zip"
+    SHA512 c66ae2331caffe18c2835d76d6106052125fab2f549a6f06687b4c1fedaae1c46ee0e4ae4c23b0480976870d76e8cfdbb91dd3cf11e3433ccc070bf03c538bb1
 )
 set(LIBRAW_CMAKE_COMMIT "a71f3b83ee3dccd7be32f9a2f410df4d9bdbde0a")
 set(LIBRAW_CMAKE_SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/LibRaw-cmake-${LIBRAW_CMAKE_COMMIT})
