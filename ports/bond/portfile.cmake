@@ -36,6 +36,9 @@ vcpkg_apply_patches(
     # Don't install rapidjson from the (empty) submodule. With vcpkg, we get
     # rapidjson from vcpkg
     ${CMAKE_CURRENT_LIST_DIR}/0002_omit_rapidjson.patch
+    # Temporary until this is committed upstream. See
+    # https://github.com/Microsoft/bond/pull/324 for details.
+    ${CMAKE_CURRENT_LIST_DIR}/0003_rename_gbc_during_install.patch
 )
 
 vcpkg_configure_cmake(
@@ -50,6 +53,9 @@ vcpkg_install_cmake()
 # Put the license file where vcpkg expects it
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/bond)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/bond/LICENSE ${CURRENT_PACKAGES_DIR}/share/bond/copyright)
+
+# Drop a copy of gbc in tools/ so that it can be used
+file(COPY ${CURRENT_PACKAGES_DIR}/bin/gbc.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/)
 
 # vcpkg doesn't--as of version 0.0.30--like executables such as gbc.exe in
 # the output. Just delete the bin/ directories for now.
