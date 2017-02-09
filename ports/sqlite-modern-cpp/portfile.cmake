@@ -11,11 +11,10 @@ vcpkg_extract_source_archive(${ARCHIVE})
 file(INSTALL ${SOURCE_PATH}/hdr/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 # Handle copyright
-message("Download license...")
 vcpkg_download_distfile(LICENSE
 	URLS https://raw.githubusercontent.com/aminroosta/sqlite_modern_cpp/1d7747fcbb16325ec6673477b06f0c780de24a27/License.txt
 	FILENAME "sqlite_modern_cpp-2.4-license-mit.txt"
 	SHA512 4ffc41d14902b37841463b9e9274537cb48523a7ab7e5fbbbd14a01820d141e367851b0496aa18546ddab96100e7381db7fc35621c795a97c3290b618e18a8bd
 )
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/sqlite-modern-cpp)
-file(RENAME ${LICENSE} ${CURRENT_PACKAGES_DIR}/share/sqlite-modern-cpp/copyright)
+file(INSTALL ${LICENSE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/sqlite-modern-cpp RENAME copyright)
