@@ -3,8 +3,6 @@ param(
 
 )
 
-Import-Module BitsTransfer
-
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 $CandidateProgramFiles = "${env:PROGRAMFILES(X86)}", "${env:PROGRAMFILES}"
 
@@ -27,8 +25,6 @@ foreach ($ProgramFiles in $CandidateProgramFiles)
 
     return $win10sdkVersions[$win10sdkVersionCount - 1].ToString()
 }
-
-
 
 # Windows 8.1 SDK
 foreach ($ProgramFiles in $CandidateProgramFiles)
