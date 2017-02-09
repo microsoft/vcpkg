@@ -22,7 +22,8 @@ namespace vcpkg::PostBuildLint
         std::regex regex;
 
         OutdatedDynamicCrt(const std::string& name, const std::string& regex_as_string)
-            : name(name), regex(std::regex(regex_as_string, std::regex_constants::icase)) {}
+            : name(name),
+              regex(std::regex(regex_as_string, std::regex_constants::icase)) {}
     };
 
     const std::vector<OutdatedDynamicCrt>& get_outdated_dynamic_crts()
