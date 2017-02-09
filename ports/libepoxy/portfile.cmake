@@ -8,7 +8,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(${ARCHIVE})
 
-# ensure python is on path - not for meson but some source geneation scripts
+# ensure python is on path - not for meson but some source generation scripts
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_PATH ${PYTHON3} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${PYTHON3_PATH}")
