@@ -1,10 +1,10 @@
 #header-only library
 include(vcpkg_common_functions)
-SET(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/asio-asio-1-10-6/asio/)
+SET(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/asio-asio-1-10-8/asio/)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/chriskohlhoff/asio/archive/asio-1-10-6.zip"
-    FILENAME "asio-1-10-6.zip"
-    SHA512 7e3fde7e88d305d19b88482b73c8b7a41751d65e81bd23dd8ef45eb4e3ef3a10629696b4d347e5a68f08d6fb2dede15a2f38c7ee8d18ac88be769215542da4c6
+    URLS "https://github.com/chriskohlhoff/asio/archive/asio-1-10-8.zip"
+    FILENAME "asio-1-10-8.zip"
+    SHA512 bc9794a20fc7844a2a9d22bfa418005f61defbcecdd612daba0d317e6f8fc5a61d3a3b2d7d557b92584294b8adfccc3c47a8f0441f3e34a47a0f715ca1ba0e5b
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
