@@ -500,12 +500,12 @@ namespace vcpkg::PostBuildLint
     struct BuildType_and_file
     {
         fs::path file;
-        BuildType build_type;
+        BuildType::type build_type;
     };
 
-    static lint_status check_crt_linkage_of_libs(const BuildType& expected_build_type, const std::vector<fs::path>& libs, const fs::path dumpbin_exe)
+    static lint_status check_crt_linkage_of_libs(const BuildType::type& expected_build_type, const std::vector<fs::path>& libs, const fs::path dumpbin_exe)
     {
-        std::vector<BuildType> bad_build_types = BuildType::values();
+        std::vector<BuildType::type> bad_build_types(BuildType::values.cbegin(), BuildType::values.cend());
         bad_build_types.erase(std::remove(bad_build_types.begin(), bad_build_types.end(), expected_build_type), bad_build_types.end());
 
         std::vector<BuildType_and_file> libs_with_invalid_crt;
@@ -516,7 +516,7 @@ namespace vcpkg::PostBuildLint
             System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
-            for (const BuildType& bad_build_type : bad_build_types)
+            for (const BuildType::type& bad_build_type : bad_build_types)
             {
                 if (std::regex_search(ec_data.output.cbegin(), ec_data.output.cend(), bad_build_type.crt_regex()))
                 {
@@ -662,7 +662,7 @@ namespace vcpkg::PostBuildLint
 
         switch (build_info.library_linkage)
         {
-            case LinkageType::DYNAMIC:
+            case LinkageType::backing_enum_t::DYNAMIC:
                 {
                     const std::vector<fs::path> debug_dlls = Files::recursive_find_files_with_extension_in_dir(debug_bin_dir, ".dll");
                     const std::vector<fs::path> release_dlls = Files::recursive_find_files_with_extension_in_dir(release_bin_dir, ".dll");
@@ -683,7 +683,7 @@ namespace vcpkg::PostBuildLint
                     error_count += check_outdated_crt_linkage_of_dlls(dlls, dumpbin_exe);
                     break;
                 }
-            case LinkageType::STATIC:
+            case LinkageType::backing_enum_t::STATIC:
                 {
                     std::vector<fs::path> dlls;
                     Files::recursive_find_files_with_extension_in_dir(package_dir, ".dll", &dlls);
@@ -695,7 +695,7 @@ namespace vcpkg::PostBuildLint
                     error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::RELEASE, build_info.crt_linkage), release_libs, dumpbin_exe);
                     break;
                 }
-            case LinkageType::UNKNOWN:
+            case LinkageType::backing_enum_t::NULLVALUE:
             default:
                 Checks::unreachable();
         }

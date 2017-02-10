@@ -1,10 +1,11 @@
 #include "pch.h"
 #include "PostBuildLint_BuildPolicies.h"
-#include "vcpkg_Checks.h"
+#include "vcpkg_Enums.h"
 
 namespace vcpkg::PostBuildLint::BuildPolicies
 {
-    static const std::string NAME_UNKNOWN = "PolicyUnknown";
+    static const std::string NULLVALUE_STRING = Enums::nullvalue_toString(ENUM_NAME);
+
     static const std::string NAME_EMPTY_PACKAGE = "PolicyEmptyPackage";
     static const std::string NAME_DLLS_WITHOUT_LIBS = "PolicyDLLsWithoutLIBs";
 
@@ -16,10 +17,10 @@ namespace vcpkg::PostBuildLint::BuildPolicies
                 return NAME_EMPTY_PACKAGE;
             case DLLS_WITHOUT_LIBS:
                 return NAME_DLLS_WITHOUT_LIBS;
-            case UNKNOWN:
-                return NAME_UNKNOWN;
+            case NULLVALUE:
+                return NULLVALUE_STRING;
             default:
-                Checks::unreachable();
+                Enums::unreachable(ENUM_NAME);
         }
     }
 
@@ -34,19 +35,11 @@ namespace vcpkg::PostBuildLint::BuildPolicies
                 return CMAKE_VARIABLE_EMPTY_PACKAGE;
             case DLLS_WITHOUT_LIBS:
                 return CMAKE_VARIABLE_DLLS_WITHOUT_LIBS;
-            case UNKNOWN:
-                Checks::exit_with_message("No CMake command corresponds to UNKNOWN");
+            case NULLVALUE:
+                Enums::nullvalue_used(ENUM_NAME);
             default:
-                Checks::unreachable();
+                Enums::unreachable(ENUM_NAME);
         }
-    }
-
-    type::type(): backing_enum(backing_enum_t::UNKNOWN) {}
-
-    const std::vector<type>& values()
-    {
-        static const std::vector<type>& v = {UNKNOWN, EMPTY_PACKAGE, DLLS_WITHOUT_LIBS};
-        return v;
     }
 
     type parse(const std::string& s)
@@ -61,6 +54,6 @@ namespace vcpkg::PostBuildLint::BuildPolicies
             return BuildPolicies::DLLS_WITHOUT_LIBS;
         }
 
-        return BuildPolicies::UNKNOWN;
+        return BuildPolicies::NULLVALUE;
     }
 }

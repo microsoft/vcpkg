@@ -1,45 +1,47 @@
 #pragma once
 #include "PostBuildLint_ConfigurationType.h"
 #include "PostBuildLint_LinkageType.h"
-#include <vector>
+#include <array>
 #include <regex>
 
-namespace vcpkg::PostBuildLint
+namespace vcpkg::PostBuildLint::BuildType
 {
-    struct BuildType
+    enum class backing_enum_t
     {
-        static BuildType value_of(const ConfigurationType& config, const LinkageType& linkage);
-
-        static const BuildType DEBUG_STATIC;
-        static const BuildType DEBUG_DYNAMIC;
-        static const BuildType RELEASE_STATIC;
-        static const BuildType RELEASE_DYNAMIC;
-
-        static const std::vector<BuildType>& values()
-        {
-            static const std::vector<BuildType> v = { DEBUG_STATIC, DEBUG_DYNAMIC, RELEASE_STATIC, RELEASE_DYNAMIC };
-            return v;
-        }
-
-        BuildType() = delete;
-
-        const ConfigurationType& config() const;
-        const LinkageType& linkage() const;
-        std::regex crt_regex() const;
-        std::string toString() const;
-
-    private:
-        BuildType(const ConfigurationType& config, const LinkageType& linkage, const std::string& crt_regex_as_string)
-            : m_config(config), m_linkage(linkage), m_crt_regex_as_string(crt_regex_as_string)
-        {
-        }
-
-        ConfigurationType m_config;
-        LinkageType m_linkage;
-        std::string m_crt_regex_as_string;
+        DEBUG_STATIC = 1,
+        DEBUG_DYNAMIC,
+        RELEASE_STATIC,
+        RELEASE_DYNAMIC
     };
 
-    bool operator ==(const BuildType& lhs, const BuildType& rhs);
+    struct type
+    {
+        type() = delete;
 
-    bool operator !=(const BuildType& lhs, const BuildType& rhs);
+        constexpr explicit type(const backing_enum_t backing_enum, const ConfigurationType::type config, const LinkageType::type linkage) :
+            backing_enum(backing_enum), m_config(config), m_linkage(linkage) { }
+
+        constexpr operator backing_enum_t() const { return backing_enum; }
+
+        const ConfigurationType::type& config() const;
+        const LinkageType::type& linkage() const;
+        const std::regex& crt_regex() const;
+        const std::string& toString() const;
+
+    private:
+        backing_enum_t backing_enum;
+        ConfigurationType::type m_config;
+        LinkageType::type m_linkage;
+    };
+
+    static const std::string ENUM_NAME = "vcpkg::PostBuildLint::BuildType";
+
+    static constexpr type DEBUG_STATIC = type(backing_enum_t::DEBUG_STATIC, ConfigurationType::DEBUG, LinkageType::STATIC);
+    static constexpr type DEBUG_DYNAMIC = type(backing_enum_t::DEBUG_DYNAMIC, ConfigurationType::DEBUG, LinkageType::DYNAMIC);
+    static constexpr type RELEASE_STATIC = type(backing_enum_t::RELEASE_STATIC, ConfigurationType::RELEASE, LinkageType::STATIC);
+    static constexpr type RELEASE_DYNAMIC = type(backing_enum_t::RELEASE_DYNAMIC, ConfigurationType::RELEASE, LinkageType::DYNAMIC);
+
+    static constexpr std::array<type, 4> values = { DEBUG_STATIC, DEBUG_DYNAMIC, RELEASE_STATIC, RELEASE_DYNAMIC };
+
+    type value_of(const ConfigurationType::type& config, const LinkageType::type& linkage);
 }

@@ -1,34 +1,41 @@
 #include "pch.h"
 #include "PostBuildLint_LinkageType.h"
-#include "vcpkg_Checks.h"
+#include "vcpkg_Enums.h"
 
-namespace vcpkg::PostBuildLint
+namespace vcpkg::PostBuildLint::LinkageType
 {
-    LinkageType linkage_type_value_of(const std::string& as_string)
+    static const std::string NULLVALUE_STRING = Enums::nullvalue_toString(ENUM_NAME);
+
+    static const std::string NAME_DYNAMIC = "dynamic";
+    static const std::string NAME_STATIC = "static";
+
+    const std::string& type::toString() const
     {
-        if (as_string == "dynamic")
+        switch (this->backing_enum)
+        {
+        case LinkageType::DYNAMIC:
+            return NAME_DYNAMIC;
+        case LinkageType::STATIC:
+            return NAME_STATIC;
+        case LinkageType::NULLVALUE:
+            return NULLVALUE_STRING;
+        default:
+            Enums::unreachable(ENUM_NAME);
+        }
+    }
+
+    type value_of(const std::string& as_string)
+    {
+        if (as_string == NAME_DYNAMIC)
         {
             return LinkageType::DYNAMIC;
         }
 
-        if (as_string == "static")
+        if (as_string == NAME_STATIC)
         {
             return LinkageType::STATIC;
         }
 
-        return LinkageType::UNKNOWN;
-    }
-
-    std::string to_string(const LinkageType& build_info)
-    {
-        switch (build_info)
-        {
-        case LinkageType::STATIC:
-            return "static";
-        case LinkageType::DYNAMIC:
-            return "dynamic";
-        default:
-            Checks::unreachable();
-        }
+        return LinkageType::NULLVALUE;
     }
 }
