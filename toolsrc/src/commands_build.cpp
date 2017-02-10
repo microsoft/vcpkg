@@ -27,7 +27,7 @@ namespace vcpkg::Commands::Build
 
     BuildResult build_package(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir)
     {
-        Checks::check_exit(spec.name() == source_paragraph.name, "inconsistent arguments to build_internal()");
+        Checks::check_exit(spec.name() == source_paragraph.name, "inconsistent arguments to build_package()");
         const triplet& target_triplet = spec.target_triplet();
 
         const fs::path ports_cmake_script_path = paths.ports_cmake;
