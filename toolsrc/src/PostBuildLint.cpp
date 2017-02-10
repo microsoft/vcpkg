@@ -660,7 +660,7 @@ namespace vcpkg::PostBuildLint
 
         error_count += check_lib_architecture(spec.target_triplet().architecture(), libs);
 
-        switch (linkage_type_value_of(build_info.library_linkage))
+        switch (build_info.library_linkage)
         {
             case LinkageType::DYNAMIC:
                 {
@@ -691,16 +691,11 @@ namespace vcpkg::PostBuildLint
 
                     error_count += check_bin_folders_are_not_present_in_static_build(package_dir);
 
-                    error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::DEBUG, linkage_type_value_of(build_info.crt_linkage)), debug_libs, dumpbin_exe);
-                    error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::RELEASE, linkage_type_value_of(build_info.crt_linkage)), release_libs, dumpbin_exe);
+                    error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::DEBUG, build_info.crt_linkage), debug_libs, dumpbin_exe);
+                    error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::RELEASE, build_info.crt_linkage), release_libs, dumpbin_exe);
                     break;
                 }
             case LinkageType::UNKNOWN:
-                {
-                    error_count += 1;
-                    System::println(System::color::warning, "Unknown library_linkage architecture: [ %s ]", build_info.library_linkage);
-                    break;
-                }
             default:
                 Checks::unreachable();
         }

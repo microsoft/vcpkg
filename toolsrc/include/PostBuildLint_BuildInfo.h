@@ -4,6 +4,7 @@
 #include "Paragraphs.h"
 #include "PostBuildLint_BuildPolicies.h"
 #include "opt_bool.h"
+#include "PostBuildLint_LinkageType.h"
 
 namespace vcpkg::PostBuildLint
 {
@@ -11,8 +12,8 @@ namespace vcpkg::PostBuildLint
     {
         static BuildInfo create(std::unordered_map<std::string, std::string> pgh);
 
-        std::string crt_linkage;
-        std::string library_linkage;
+        LinkageType crt_linkage;
+        LinkageType library_linkage;
 
         std::map<BuildPolicies::type, opt_bool_t> policies;
     };

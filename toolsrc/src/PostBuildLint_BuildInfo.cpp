@@ -16,8 +16,13 @@ namespace vcpkg::PostBuildLint
     BuildInfo BuildInfo::create(std::unordered_map<std::string, std::string> pgh)
     {
         BuildInfo build_info;
-        build_info.crt_linkage = details::remove_required_field(&pgh, BuildInfoRequiredField::CRT_LINKAGE);
-        build_info.library_linkage = details::remove_required_field(&pgh, BuildInfoRequiredField::LIBRARY_LINKAGE);
+        const std::string crt_linkage_as_string = details::remove_required_field(&pgh, BuildInfoRequiredField::CRT_LINKAGE);
+        build_info.crt_linkage = linkage_type_value_of(crt_linkage_as_string);
+        Checks::check_exit(build_info.crt_linkage != LinkageType::UNKNOWN, "Invalid crt linkage type: [%s]", crt_linkage_as_string);
+
+        const std::string library_linkage_as_string = details::remove_required_field(&pgh, BuildInfoRequiredField::LIBRARY_LINKAGE);
+        build_info.library_linkage = linkage_type_value_of(library_linkage_as_string);
+        Checks::check_exit(build_info.library_linkage != LinkageType::UNKNOWN, "Invalid library linkage type: [%s]", library_linkage_as_string);
 
         // The remaining entries are policies
         for (const std::unordered_map<std::string, std::string>::value_type& p : pgh)
