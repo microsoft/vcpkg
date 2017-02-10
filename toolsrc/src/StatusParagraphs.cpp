@@ -29,9 +29,9 @@ namespace vcpkg
                             });
     }
 
-    StatusParagraphs::iterator StatusParagraphs::find_installed(const std::string& name, const triplet& target_triplet)
+    StatusParagraphs::const_iterator StatusParagraphs::find_installed(const std::string& name, const triplet& target_triplet) const
     {
-        auto it = find(name, target_triplet);
+        const const_iterator it = find(name, target_triplet);
         if (it != end() && (*it)->want == want_t::install)
         {
             return it;

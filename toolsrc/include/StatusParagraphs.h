@@ -20,7 +20,7 @@ namespace vcpkg
         }
         const_iterator find(const std::string& name, const triplet& target_triplet) const;
         iterator find(const std::string& name, const triplet& target_triplet);
-        iterator find_installed(const std::string& name, const triplet& target_triplet);
+        const_iterator find_installed(const std::string& name, const triplet& target_triplet) const;
 
         iterator insert(std::unique_ptr<StatusParagraph>);
 
