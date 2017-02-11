@@ -24,11 +24,12 @@ namespace vcpkg::Commands::Build
         std::ofstream(binary_control_file) << bpgh;
     }
 
-    BuildResult build_package(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir)
+    BuildResult build_package(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir, const DependencyStatus& dependency_status)
     {
         Checks::check_exit(spec.name() == source_paragraph.name, "inconsistent arguments to build_package()");
-        const triplet& target_triplet = spec.target_triplet();
+        Checks::check_exit(dependency_status == DependencyStatus::ALL_DEPENDENCIES_INSTALLED, "Dependencies must be satisfied before attempting to build a package");
 
+        const triplet& target_triplet = spec.target_triplet();
         const fs::path ports_cmake_script_path = paths.ports_cmake;
         const Environment::vcvarsall_and_platform_toolset vcvarsall_bat = Environment::get_vcvarsall_bat(paths);
         const std::wstring command = Strings::wformat(LR"("%s" %s >nul 2>&1 && cmake -DCMD=BUILD -DPORT=%s -DTARGET_TRIPLET=%s -DVCPKG_PLATFORM_TOOLSET=%s "-DCURRENT_PORT_DIR=%s/." -P "%s")",
@@ -76,6 +77,22 @@ namespace vcpkg::Commands::Build
         return BuildResult::SUCCESS;
     }
 
+    DependencyStatus check_dependencies(const SourceParagraph& source_paragraph, const package_spec& spec, const StatusParagraphs& status_db)
+    {
+        Checks::check_exit(spec.name() == source_paragraph.name, "inconsistent arguments to check_dependencies()");
+        const triplet& target_triplet = spec.target_triplet();
+
+        for (auto&& dep : source_paragraph.depends)
+        {
+            if (status_db.find_installed(dep.name, target_triplet) == status_db.end())
+            {
+                return DependencyStatus::MISSING_DEPENDENCIES;
+            }
+        }
+
+        return DependencyStatus::ALL_DEPENDENCIES_INSTALLED;
+    }
+
     void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
         static const std::string example = Commands::Help::create_example_string("build zlib:x64-windows");
@@ -90,7 +107,7 @@ namespace vcpkg::Commands::Build
         const package_spec spec = Input::check_and_get_package_spec(args.command_arguments.at(0), default_target_triplet, example);
         Input::check_triplet(spec.target_triplet(), paths);
 
-        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_CHECKS_ONLY});
+        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_CHECKS_ONLY });
         if (options.find(OPTION_CHECKS_ONLY) != options.end())
         {
             const size_t error_count = PostBuildLint::perform_all_checks(spec, paths);
@@ -106,24 +123,19 @@ namespace vcpkg::Commands::Build
         Checks::check_exit(!maybe_spgh.error_code(), "Could not find package named %s: %s", spec, maybe_spgh.error_code().message());
         const SourceParagraph& spgh = *maybe_spgh.get();
 
-        const std::vector<std::string> first_level_deps = filter_dependencies(spgh.depends, spec.target_triplet());
-
-        std::vector<package_spec> first_level_deps_specs;
-        for (const std::string& dep : first_level_deps)
+        Environment::ensure_utilities_on_path(paths);
+        const DependencyStatus dependency_status = check_dependencies(spgh, spec, status_db);
+        if (dependency_status == DependencyStatus::MISSING_DEPENDENCIES)
         {
-            first_level_deps_specs.push_back(package_spec::from_name_and_triplet(dep, spec.target_triplet()).get_or_throw());
-        }
+            std::vector<package_spec_with_install_plan> unmet_dependencies = Dependencies::create_install_plan(paths, { spec }, status_db);
+            unmet_dependencies.erase(
+                std::remove_if(unmet_dependencies.begin(), unmet_dependencies.end(), [&spec](const package_spec_with_install_plan& p)
+                               {
+                                   return (p.spec == spec) || (p.plan.plan_type == install_plan_type::ALREADY_INSTALLED);
+                               }),
+                unmet_dependencies.end());
 
-        std::vector<package_spec_with_install_plan> unmet_dependencies = Dependencies::create_install_plan(paths, first_level_deps_specs, status_db);
-        unmet_dependencies.erase(
-            std::remove_if(unmet_dependencies.begin(), unmet_dependencies.end(), [](const package_spec_with_install_plan& p)
-                           {
-                               return p.plan.plan_type == install_plan_type::ALREADY_INSTALLED;
-                           }),
-            unmet_dependencies.end());
-
-        if (!unmet_dependencies.empty())
-        {
+            Checks::check_exit(unmet_dependencies.empty());
             System::println(System::color::error, "The build command requires all dependencies to be already installed.");
             System::println("The following dependencies are missing:");
             System::println("");
@@ -135,8 +147,7 @@ namespace vcpkg::Commands::Build
             exit(EXIT_FAILURE);
         }
 
-        Environment::ensure_utilities_on_path(paths);
-        const BuildResult result = build_package(spgh, spec, paths, paths.port_dir(spec));
+        const BuildResult result = build_package(spgh, spec, paths, paths.port_dir(spec), dependency_status);
         if (result != BuildResult::SUCCESS)
         {
             exit(EXIT_FAILURE);

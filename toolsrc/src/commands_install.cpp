@@ -214,7 +214,9 @@ namespace vcpkg::Commands::Install
                 }
                 else if (action.plan.plan_type == install_plan_type::BUILD_AND_INSTALL)
                 {
-                    const Build::BuildResult result = Commands::Build::build_package(*action.plan.source_pgh, action.spec, paths, paths.port_dir(action.spec));
+                    const Build::DependencyStatus dependency_status = Build::check_dependencies(*action.plan.source_pgh, action.spec, status_db);
+                    Checks::check_exit(dependency_status == Build::DependencyStatus::ALL_DEPENDENCIES_INSTALLED);
+                    const Build::BuildResult result = Commands::Build::build_package(*action.plan.source_pgh, action.spec, paths, paths.port_dir(action.spec), dependency_status);
                     if (result != Build::BuildResult::SUCCESS)
                     {
                         exit(EXIT_FAILURE);

@@ -12,6 +12,8 @@ namespace vcpkg::Commands::BuildExternal
         static const std::string example = Commands::Help::create_example_string(R"(build_external zlib2 C:\path\to\dir\with\controlfile\)");
         args.check_exact_arg_count(2, example);
 
+        StatusParagraphs status_db = database_load_check(paths);
+
         expected<package_spec> maybe_current_spec = package_spec::from_string(args.command_arguments[0], default_target_triplet);
         if (auto spec = maybe_current_spec.get())
         {
@@ -21,8 +23,10 @@ namespace vcpkg::Commands::BuildExternal
             const expected<SourceParagraph> maybe_spgh = try_load_port(port_dir);
             if (auto spgh = maybe_spgh.get())
             {
-                const Build::BuildResult result = Commands::Build::build_package(*spgh, *spec, paths, port_dir);
-                if (result !=Build::BuildResult::SUCCESS)
+                const Build::DependencyStatus dependency_status = Build::check_dependencies(*spgh, *spec, status_db);
+                Checks::check_exit(dependency_status == Build::DependencyStatus::ALL_DEPENDENCIES_INSTALLED);
+                const Build::BuildResult result = Commands::Build::build_package(*spgh, *spec, paths, port_dir, dependency_status);
+                if (result != Build::BuildResult::SUCCESS)
                 {
                     exit(EXIT_FAILURE);
                 }
