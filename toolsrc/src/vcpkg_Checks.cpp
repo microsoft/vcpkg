@@ -33,6 +33,14 @@ namespace vcpkg::Checks
         }
     }
 
+    void check_exit(bool expression)
+    {
+        if (!expression)
+        {
+            exit(EXIT_FAILURE);
+        }
+    }
+
     void check_exit(bool expression, const char* errorMessage)
     {
         if (!expression)

@@ -35,6 +35,8 @@ namespace vcpkg::Checks
         }
     }
 
+    void check_exit(bool expression);
+
     void check_exit(bool expression, const char* errorMessage);
 
     template <class...Args>
