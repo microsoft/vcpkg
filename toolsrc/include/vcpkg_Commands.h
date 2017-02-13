@@ -22,7 +22,7 @@ namespace vcpkg::Commands
         };
 
         const std::string& to_string(const BuildResult build_result);
-        std::string create_error_message(const std::string& package_id, const BuildResult build_result);
+        std::string create_error_message(const BuildResult build_result, const std::string& package_id);
 
         BuildResult build_package(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir, const StatusParagraphs& status_db);
         void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet);

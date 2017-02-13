@@ -58,7 +58,7 @@ namespace vcpkg::Commands::CI
                     results.push_back(result);
                     if (result != Build::BuildResult::SUCCEEDED)
                     {
-                        System::println(System::color::error, Build::create_error_message(action.spec.toString(), result));
+                        System::println(System::color::error, Build::create_error_message(result, action.spec.toString()));
                         continue;
                     }
                     const BinaryParagraph bpgh = try_load_cached_package(paths, action.spec).get_or_throw();
