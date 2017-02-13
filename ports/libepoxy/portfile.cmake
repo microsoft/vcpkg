@@ -1,3 +1,7 @@
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
+endif()
 
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libepoxy-2432daf4cf58b5ff11e008ca34811588285c43b3)
