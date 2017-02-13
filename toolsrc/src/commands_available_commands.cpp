@@ -7,6 +7,7 @@ namespace vcpkg::Commands
     {
         static std::vector<package_name_and_function<command_type_a>> t = {
             {"install", &Install::perform_and_exit},
+            { "ci", &CI::perform_and_exit },
             {"remove", &Remove::perform_and_exit},
             {"build", &Build::perform_and_exit},
             {"build_external", &BuildExternal::perform_and_exit}

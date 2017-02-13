@@ -180,6 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\BinaryParagraph.cpp" />
+    <ClCompile Include="..\src\commands_ci.cpp" />
     <ClCompile Include="..\src\PostBuildLint_BuildInfo.cpp" />
     <ClCompile Include="..\src\PostBuildLint_BuildPolicies.cpp" />
     <ClCompile Include="..\src\coff_file_reader.cpp" />

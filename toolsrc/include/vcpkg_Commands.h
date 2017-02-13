@@ -35,6 +35,12 @@ namespace vcpkg::Commands
 
     namespace Install
     {
+        void install_package(const vcpkg_paths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs* status_db);
+        void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet);
+    }
+
+    namespace CI
+    {
         void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet);
     }
 

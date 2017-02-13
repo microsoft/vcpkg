@@ -171,6 +171,9 @@
     <ClCompile Include="..\src\vcpkg_Enums.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\commands_ci.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\package_spec.h">
