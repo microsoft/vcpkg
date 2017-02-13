@@ -24,12 +24,19 @@ namespace vcpkg::Commands::Build
         std::ofstream(binary_control_file) << bpgh;
     }
 
-    BuildResult build_package(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir, const DependencyStatus& dependency_status)
+    BuildResult build_package(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir, const StatusParagraphs& status_db)
     {
         Checks::check_exit(spec.name() == source_paragraph.name, "inconsistent arguments to build_package()");
-        Checks::check_exit(dependency_status == DependencyStatus::ALL_DEPENDENCIES_INSTALLED, "Dependencies must be satisfied before attempting to build a package");
 
         const triplet& target_triplet = spec.target_triplet();
+        for (auto&& dep : source_paragraph.depends)
+        {
+            if (status_db.find_installed(dep.name, target_triplet) == status_db.end())
+            {
+                return BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES;
+            }
+        }
+
         const fs::path ports_cmake_script_path = paths.ports_cmake;
         const Environment::vcvarsall_and_platform_toolset vcvarsall_bat = Environment::get_vcvarsall_bat(paths);
         const std::wstring command = Strings::wformat(LR"("%s" %s >nul 2>&1 && cmake -DCMD=BUILD -DPORT=%s -DTARGET_TRIPLET=%s -DVCPKG_PLATFORM_TOOLSET=%s "-DCURRENT_PORT_DIR=%s/." -P "%s")",
@@ -74,23 +81,31 @@ namespace vcpkg::Commands::Build
         // const fs::path port_buildtrees_dir = paths.buildtrees / spec.name;
         // delete_directory(port_buildtrees_dir);
 
-        return BuildResult::SUCCESS;
+        return BuildResult::SUCCEEDED;
     }
 
-    DependencyStatus check_dependencies(const SourceParagraph& source_paragraph, const package_spec& spec, const StatusParagraphs& status_db)
+    const std::string& to_string(const BuildResult build_result)
     {
-        Checks::check_exit(spec.name() == source_paragraph.name, "inconsistent arguments to check_dependencies()");
-        const triplet& target_triplet = spec.target_triplet();
+        static const std::string BUILD_NOT_STARTED_STRING = "BUILD_NOT_STARTED";
+        static const std::string SUCCEEDED_STRING = "SUCCEEDED";
+        static const std::string BUILD_FAILED_STRING = "BUILD_FAILED";
+        static const std::string POST_BUILD_CHECKS_FAILED_STRING = "POST_BUILD_CHECKS_FAILED";
+        static const std::string CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING = "CASCADED_DUE_TO_MISSING_DEPENDENCIES";
 
-        for (auto&& dep : source_paragraph.depends)
+        switch (build_result)
         {
-            if (status_db.find_installed(dep.name, target_triplet) == status_db.end())
-            {
-                return DependencyStatus::MISSING_DEPENDENCIES;
-            }
+            case BuildResult::BUILD_NOT_STARTED: return BUILD_NOT_STARTED_STRING;
+            case BuildResult::SUCCEEDED: return SUCCEEDED_STRING;
+            case BuildResult::BUILD_FAILED: return BUILD_FAILED_STRING;
+            case BuildResult::POST_BUILD_CHECKS_FAILED: return POST_BUILD_CHECKS_FAILED_STRING;
+            case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES: return CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING;
+            default: Checks::unreachable();
         }
+    }
 
-        return DependencyStatus::ALL_DEPENDENCIES_INSTALLED;
+    std::string create_error_message(const std::string& package_id, const BuildResult build_result)
+    {
+        return Strings::format("Error: Building package %s failed with: %s", package_id, Build::to_string(build_result));
     }
 
     void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
@@ -124,8 +139,8 @@ namespace vcpkg::Commands::Build
         const SourceParagraph& spgh = *maybe_spgh.get();
 
         Environment::ensure_utilities_on_path(paths);
-        const DependencyStatus dependency_status = check_dependencies(spgh, spec, status_db);
-        if (dependency_status == DependencyStatus::MISSING_DEPENDENCIES)
+        const BuildResult result = build_package(spgh, spec, paths, paths.port_dir(spec), status_db);
+        if (result == BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES)
         {
             std::vector<package_spec_with_install_plan> unmet_dependencies = Dependencies::create_install_plan(paths, { spec }, status_db);
             unmet_dependencies.erase(
@@ -147,9 +162,9 @@ namespace vcpkg::Commands::Build
             exit(EXIT_FAILURE);
         }
 
-        const BuildResult result = build_package(spgh, spec, paths, paths.port_dir(spec), dependency_status);
-        if (result != BuildResult::SUCCESS)
+        if (result != BuildResult::SUCCEEDED)
         {
+            System::println(System::color::error, Build::create_error_message(spec.toString(), result));
             exit(EXIT_FAILURE);
         }
 

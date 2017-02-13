@@ -23,11 +23,10 @@ namespace vcpkg::Commands::BuildExternal
             const expected<SourceParagraph> maybe_spgh = try_load_port(port_dir);
             if (auto spgh = maybe_spgh.get())
             {
-                const Build::DependencyStatus dependency_status = Build::check_dependencies(*spgh, *spec, status_db);
-                Checks::check_exit(dependency_status == Build::DependencyStatus::ALL_DEPENDENCIES_INSTALLED);
-                const Build::BuildResult result = Commands::Build::build_package(*spgh, *spec, paths, port_dir, dependency_status);
-                if (result != Build::BuildResult::SUCCESS)
+                const Build::BuildResult result = Commands::Build::build_package(*spgh, *spec, paths, port_dir, status_db);
+                if (result != Build::BuildResult::SUCCEEDED)
                 {
+                    System::println(System::color::error, Build::create_error_message(spec->toString(), result));
                     exit(EXIT_FAILURE);
                 }
 

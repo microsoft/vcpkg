@@ -12,22 +12,19 @@ namespace vcpkg::Commands
 
     namespace Build
     {
-        enum class DependencyStatus
-        {
-            ALL_DEPENDENCIES_INSTALLED,
-            MISSING_DEPENDENCIES
-        };
-
         enum class BuildResult
         {
             BUILD_NOT_STARTED = 0,
-            SUCCESS,
+            SUCCEEDED,
             BUILD_FAILED,
             POST_BUILD_CHECKS_FAILED,
+            CASCADED_DUE_TO_MISSING_DEPENDENCIES
         };
 
-        DependencyStatus check_dependencies(const SourceParagraph& source_paragraph, const package_spec& spec, const StatusParagraphs& status_db);
-        BuildResult build_package(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir, const DependencyStatus& dependency_status);
+        const std::string& to_string(const BuildResult build_result);
+        std::string create_error_message(const std::string& package_id, const BuildResult build_result);
+
+        BuildResult build_package(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir, const StatusParagraphs& status_db);
         void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet);
     }
 
