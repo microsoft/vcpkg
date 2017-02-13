@@ -1,3 +1,7 @@
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(STATUS "Warning: Static building not supported. Building dynamic.")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
+endif()
 
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/gdk-pixbuf-2.36.5)
