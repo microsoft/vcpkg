@@ -22,8 +22,6 @@ include_directories(
 	${GLIB_INCLUDE_DIR})
 
 
-## section: source files
-# Add your source files here (one file per line), please SORT in alphabetical order for future maintenance
 SET (SRCS
 	./agent/address.c
 	./agent/agent.c
@@ -67,9 +65,6 @@ SET (SRCS
 	./stun/utils.c
 	./libnice.def
 	)
-
-## section: header files
-# Add your header files here(one file per line), please SORT in alphabetical order for future maintenance!
 SET(HEADERS
 	./config.h
 	./agent/address.h
