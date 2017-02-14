@@ -29,7 +29,7 @@ namespace vcpkg::System
         auto pipe = _wpopen(actual_cmd_line.c_str(), L"r");
         if (pipe == nullptr)
         {
-            return {1, output};
+            return { 1, output };
         }
         while (fgets(buf, 1024, pipe))
         {
@@ -37,10 +37,10 @@ namespace vcpkg::System
         }
         if (!feof(pipe))
         {
-            return {1, output};
+            return { 1, output };
         }
         auto ec = _pclose(pipe);
-        return {ec, output};
+        return { ec, output };
     }
 
     void print(const char* message)
@@ -84,6 +84,11 @@ namespace vcpkg::System
             free(buffer);
         }
         return ret;
+    }
+
+    void set_environmental_variable(const wchar_t* varname, const wchar_t* varvalue) noexcept
+    {
+        _wputenv_s(varname, varvalue);
     }
 
     void Stopwatch2::start()

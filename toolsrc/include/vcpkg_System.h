@@ -93,4 +93,6 @@ namespace vcpkg::System
     };
 
     std::wstring get_environmental_variable(const wchar_t* varname) noexcept;
+
+    void set_environmental_variable(const wchar_t* varname, const wchar_t* varvalue) noexcept;
 }

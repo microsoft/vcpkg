@@ -60,7 +60,7 @@ namespace vcpkg::Environment
                                                        System::get_environmental_variable(L"PATH"),
                                                        default_git_installation_dir.native(),
                                                        default_git_installation_dir_x86.native());
-        _wputenv_s(L"PATH", path_buf.c_str());
+        System::set_environmental_variable(L"PATH", path_buf.c_str());
 
         static constexpr std::array<int, 3> git_version = {2,0,0};
         static const std::wstring version_check_cmd = L"git --version 2>&1";
@@ -76,7 +76,7 @@ namespace vcpkg::Environment
                                                        System::get_environmental_variable(L"PATH"),
                                                        default_cmake_installation_dir.native(),
                                                        default_cmake_installation_dir_x86.native());
-        _wputenv_s(L"PATH", path_buf.c_str());
+        System::set_environmental_variable(L"PATH", path_buf.c_str());
 
         static constexpr std::array<int, 3> cmake_version = {3,7,2};
         static const std::wstring version_check_cmd = L"cmake --version 2>&1";
@@ -88,7 +88,7 @@ namespace vcpkg::Environment
     {
         const fs::path downloaded_nuget = paths.downloads / "nuget-3.5.0";
         const std::wstring path_buf = Strings::wformat(L"%s;%s", downloaded_nuget.native(), System::get_environmental_variable(L"PATH"));
-        _wputenv_s(L"PATH", path_buf.c_str());
+        System::set_environmental_variable(L"PATH", path_buf.c_str());
 
         static constexpr std::array<int, 3> nuget_version = {3,3,0};
         static const std::wstring version_check_cmd = L"nuget 2>&1";
