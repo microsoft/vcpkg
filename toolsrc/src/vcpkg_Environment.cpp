@@ -191,7 +191,7 @@ namespace vcpkg::Environment
             return { vs2015_vcvarsall_bat, L"v140" };
         }
 
-        System::println(System::color::error, "Could not detect vccarsall.bat.");
+        System::println(System::color::error, "Could not detect vcvarsall.bat.");
         System::println("The following paths were examined:");
         for (const fs::path& path : paths_examined)
         {
