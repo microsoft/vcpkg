@@ -57,12 +57,12 @@ namespace vcpkg::Environment
         const fs::path downloaded_git = paths.downloads / "PortableGit" / "cmd";
         const std::wstring path_buf = Strings::wformat(L"%s;%s;%s;%s",
                                                        downloaded_git.native(),
-                                                       System::get_environmental_variable(L"PATH"),
+                                                       *System::get_environmental_variable(L"PATH"),
                                                        default_git_installation_dir.native(),
                                                        default_git_installation_dir_x86.native());
         System::set_environmental_variable(L"PATH", path_buf.c_str());
 
-        static constexpr std::array<int, 3> git_version = {2,0,0};
+        static constexpr std::array<int, 3> git_version = { 2,0,0 };
         static const std::wstring version_check_cmd = L"git --version 2>&1";
         const std::wstring install_cmd = create_default_install_cmd(paths, L"git");
         ensure_on_path(git_version, version_check_cmd, install_cmd);
@@ -73,12 +73,12 @@ namespace vcpkg::Environment
         const fs::path downloaded_cmake = paths.downloads / "cmake-3.7.2-win32-x86" / "bin";
         const std::wstring path_buf = Strings::wformat(L"%s;%s;%s;%s",
                                                        downloaded_cmake.native(),
-                                                       System::get_environmental_variable(L"PATH"),
+                                                       *System::get_environmental_variable(L"PATH"),
                                                        default_cmake_installation_dir.native(),
                                                        default_cmake_installation_dir_x86.native());
         System::set_environmental_variable(L"PATH", path_buf.c_str());
 
-        static constexpr std::array<int, 3> cmake_version = {3,7,2};
+        static constexpr std::array<int, 3> cmake_version = { 3,7,2 };
         static const std::wstring version_check_cmd = L"cmake --version 2>&1";
         const std::wstring install_cmd = create_default_install_cmd(paths, L"cmake");
         ensure_on_path(cmake_version, version_check_cmd, install_cmd);
@@ -87,10 +87,10 @@ namespace vcpkg::Environment
     void ensure_nuget_on_path(const vcpkg_paths& paths)
     {
         const fs::path downloaded_nuget = paths.downloads / "nuget-3.5.0";
-        const std::wstring path_buf = Strings::wformat(L"%s;%s", downloaded_nuget.native(), System::get_environmental_variable(L"PATH"));
+        const std::wstring path_buf = Strings::wformat(L"%s;%s", downloaded_nuget.native(), *System::get_environmental_variable(L"PATH"));
         System::set_environmental_variable(L"PATH", path_buf.c_str());
 
-        static constexpr std::array<int, 3> nuget_version = {3,3,0};
+        static constexpr std::array<int, 3> nuget_version = { 3,3,0 };
         static const std::wstring version_check_cmd = L"nuget 2>&1";
         const std::wstring install_cmd = create_default_install_cmd(paths, L"nuget");
         ensure_on_path(nuget_version, version_check_cmd, install_cmd);
@@ -105,10 +105,22 @@ namespace vcpkg::Environment
         return Strings::split(ec_data.output, "\n");
     }
 
-    static const fs::path& get_VS2015_installation_instance()
+    static optional<fs::path> find_vs2015_installation_instance()
     {
-        static const fs::path vs2015_cmntools = fs::path(System::get_environmental_variable(L"VS140COMNTOOLS")).parent_path(); // The call to parent_path() is needed because the env variable has a trailing backslash
+        const optional<std::wstring> vs2015_cmntools_optional = System::get_environmental_variable(L"VS140COMNTOOLS");
+        if (!vs2015_cmntools_optional)
+        {
+            return nullptr;
+        }
+
+        static const fs::path vs2015_cmntools = fs::path(*vs2015_cmntools_optional).parent_path(); // The call to parent_path() is needed because the env variable has a trailing backslash
         static const fs::path vs2015_path = vs2015_cmntools.parent_path().parent_path();
+        return std::make_unique<fs::path>(vs2015_path);
+    }
+
+    static const optional<fs::path>& get_VS2015_installation_instance()
+    {
+        static const optional<fs::path> vs2015_path = find_vs2015_installation_instance();
         return vs2015_path;
     }
 
@@ -145,11 +157,15 @@ namespace vcpkg::Environment
         }
 
         // VS2015
-        const fs::path vs2015_dumpbin_exe = get_VS2015_installation_instance() / "VC" / "bin" / "dumpbin.exe";
-        paths_examined.push_back(vs2015_dumpbin_exe);
-        if (fs::exists(vs2015_dumpbin_exe))
+        const optional<fs::path>& vs_2015_installation_instance = get_VS2015_installation_instance();
+        if (vs_2015_installation_instance)
         {
-            return vs2015_dumpbin_exe;
+            const fs::path vs2015_dumpbin_exe = *vs_2015_installation_instance / "VC" / "bin" / "dumpbin.exe";
+            paths_examined.push_back(vs2015_dumpbin_exe);
+            if (fs::exists(vs2015_dumpbin_exe))
+            {
+                return vs2015_dumpbin_exe;
+            }
         }
 
         System::println(System::color::error, "Could not detect dumpbin.exe.");
@@ -179,23 +195,28 @@ namespace vcpkg::Environment
             paths_examined.push_back(vcvarsall_bat);
             if (fs::exists(vcvarsall_bat))
             {
-                return { vcvarsall_bat , L"v141"};
+                return { vcvarsall_bat , L"v141" };
             }
         }
 
         // VS2015
-        const fs::path vs2015_vcvarsall_bat = get_VS2015_installation_instance() / "VC" / "vcvarsall.bat";
-        paths_examined.push_back(vs2015_vcvarsall_bat);
-        if (fs::exists(vs2015_vcvarsall_bat))
+        const optional<fs::path>& vs_2015_installation_instance = get_VS2015_installation_instance();
+        if (vs_2015_installation_instance)
         {
-            return { vs2015_vcvarsall_bat, L"v140" };
+            const fs::path vs2015_vcvarsall_bat = *vs_2015_installation_instance / "VC" / "vcvarsall.bat";
+
+            paths_examined.push_back(vs2015_vcvarsall_bat);
+            if (fs::exists(vs2015_vcvarsall_bat))
+            {
+                return { vs2015_vcvarsall_bat, L"v140" };
+            }
         }
 
         System::println(System::color::error, "Could not detect vcvarsall.bat.");
         System::println("The following paths were examined:");
         for (const fs::path& path : paths_examined)
         {
-            System::println("    %s",path.generic_string());
+            System::println("    %s", path.generic_string());
         }
         exit(EXIT_FAILURE);
     }

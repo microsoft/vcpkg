@@ -2,6 +2,7 @@
 
 #include "vcpkg_Strings.h"
 #include "filesystem_fs.h"
+#include "vcpkg_optional.h"
 
 namespace vcpkg::System
 {
@@ -92,7 +93,7 @@ namespace vcpkg::System
         double microseconds() const;
     };
 
-    std::wstring get_environmental_variable(const wchar_t* varname) noexcept;
+    optional<std::wstring> get_environmental_variable(const wchar_t* varname) noexcept;
 
     void set_environmental_variable(const wchar_t* varname, const wchar_t* varvalue) noexcept;
 }
