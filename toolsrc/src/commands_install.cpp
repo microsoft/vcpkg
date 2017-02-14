@@ -218,6 +218,7 @@ namespace vcpkg::Commands::Install
                     if (result != Build::BuildResult::SUCCEEDED)
                     {
                         System::println(System::color::error, Build::create_error_message(result, action.spec.toString()));
+                        System::println(Build::create_user_troubleshooting_message(action.spec));
                         exit(EXIT_FAILURE);
                     }
                     const BinaryParagraph bpgh = try_load_cached_package(paths, action.spec).get_or_throw();

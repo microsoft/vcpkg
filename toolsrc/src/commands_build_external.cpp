@@ -27,6 +27,7 @@ namespace vcpkg::Commands::BuildExternal
                 if (result != Build::BuildResult::SUCCEEDED)
                 {
                     System::println(System::color::error, Build::create_error_message(result, spec->toString()));
+                    System::println(Build::create_user_troubleshooting_message(*spec));
                     exit(EXIT_FAILURE);
                 }
 

@@ -56,14 +56,6 @@ namespace vcpkg::Commands::Build
 
         if (return_code != 0)
         {
-            System::println(System::color::error, "Error: building package %s failed", spec.toString());
-            System::println("Please ensure sure you're using the latest portfiles with `vcpkg update`, then\n"
-                            "submit an issue at https://github.com/Microsoft/vcpkg/issues including:\n"
-                            "  Package: %s\n"
-                            "  Vcpkg version: %s\n"
-                            "\n"
-                            "Additionally, attach any relevant sections from the log files above."
-                            , spec.toString(), Info::version());
             TrackProperty("error", "build failed");
             TrackProperty("build_error", spec.toString());
             return BuildResult::BUILD_FAILED;
@@ -106,6 +98,17 @@ namespace vcpkg::Commands::Build
     std::string create_error_message(const BuildResult build_result, const std::string& package_id)
     {
         return Strings::format("Error: Building package %s failed with: %s", package_id, Build::to_string(build_result));
+    }
+
+    std::string create_user_troubleshooting_message(const package_spec& spec)
+    {
+        return Strings::format("Please ensure sure you're using the latest portfiles with `vcpkg update`, then\n"
+                               "submit an issue at https://github.com/Microsoft/vcpkg/issues including:\n"
+                               "  Package: %s\n"
+                               "  Vcpkg version: %s\n"
+                               "\n"
+                               "Additionally, attach any relevant sections from the log files above."
+                               , spec.toString(), Info::version());
     }
 
     void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
@@ -165,6 +168,7 @@ namespace vcpkg::Commands::Build
         if (result != BuildResult::SUCCEEDED)
         {
             System::println(System::color::error, Build::create_error_message(result, spec.toString()));
+            System::println(Build::create_user_troubleshooting_message(spec));
             exit(EXIT_FAILURE);
         }
 
