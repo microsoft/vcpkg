@@ -136,7 +136,7 @@ namespace vcpkg::Commands::Integrate
 
     static fs::path get_appdata_targets_path()
     {
-        return fs::path(System::wdupenv_str(L"LOCALAPPDATA")) / "vcpkg" / "vcpkg.user.targets";
+        return fs::path(System::get_environmental_variable(L"LOCALAPPDATA")) / "vcpkg" / "vcpkg.user.targets";
     }
 
     static void integrate_install(const vcpkg_paths& paths)

@@ -57,7 +57,7 @@ namespace vcpkg::Environment
         const fs::path downloaded_git = paths.downloads / "PortableGit" / "cmd";
         const std::wstring path_buf = Strings::wformat(L"%s;%s;%s;%s",
                                                        downloaded_git.native(),
-                                                       System::wdupenv_str(L"PATH"),
+                                                       System::get_environmental_variable(L"PATH"),
                                                        default_git_installation_dir.native(),
                                                        default_git_installation_dir_x86.native());
         _wputenv_s(L"PATH", path_buf.c_str());
@@ -73,7 +73,7 @@ namespace vcpkg::Environment
         const fs::path downloaded_cmake = paths.downloads / "cmake-3.7.2-win32-x86" / "bin";
         const std::wstring path_buf = Strings::wformat(L"%s;%s;%s;%s",
                                                        downloaded_cmake.native(),
-                                                       System::wdupenv_str(L"PATH"),
+                                                       System::get_environmental_variable(L"PATH"),
                                                        default_cmake_installation_dir.native(),
                                                        default_cmake_installation_dir_x86.native());
         _wputenv_s(L"PATH", path_buf.c_str());
@@ -87,7 +87,7 @@ namespace vcpkg::Environment
     void ensure_nuget_on_path(const vcpkg_paths& paths)
     {
         const fs::path downloaded_nuget = paths.downloads / "nuget-3.5.0";
-        const std::wstring path_buf = Strings::wformat(L"%s;%s", downloaded_nuget.native(), System::wdupenv_str(L"PATH"));
+        const std::wstring path_buf = Strings::wformat(L"%s;%s", downloaded_nuget.native(), System::get_environmental_variable(L"PATH"));
         _wputenv_s(L"PATH", path_buf.c_str());
 
         static constexpr std::array<int, 3> nuget_version = {3,3,0};
@@ -107,7 +107,7 @@ namespace vcpkg::Environment
 
     static const fs::path& get_VS2015_installation_instance()
     {
-        static const fs::path vs2015_cmntools = fs::path(System::wdupenv_str(L"VS140COMNTOOLS")).parent_path(); // The call to parent_path() is needed because the env variable has a trailing backslash
+        static const fs::path vs2015_cmntools = fs::path(System::get_environmental_variable(L"VS140COMNTOOLS")).parent_path(); // The call to parent_path() is needed because the env variable has a trailing backslash
         static const fs::path vs2015_path = vs2015_cmntools.parent_path().parent_path();
         return vs2015_path;
     }

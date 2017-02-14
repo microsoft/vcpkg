@@ -15,7 +15,7 @@ namespace vcpkg::Commands::Edit
         Checks::check_exit(fs::is_directory(portpath), R"(Could not find port named "%s")", port_name);
 
         // Find editor
-        std::wstring env_EDITOR = System::wdupenv_str(L"EDITOR");
+        std::wstring env_EDITOR = System::get_environmental_variable(L"EDITOR");
         if (env_EDITOR.empty())
         {
             static const std::wstring CODE_EXE_PATH = LR"(C:\Program Files (x86)\Microsoft VS Code\Code.exe)";

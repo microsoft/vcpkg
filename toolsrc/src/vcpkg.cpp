@@ -47,7 +47,7 @@ static void inner(const vcpkg_cmd_arguments& args)
     }
     else
     {
-        auto vcpkg_root_dir_env = System::wdupenv_str(L"VCPKG_ROOT");
+        auto vcpkg_root_dir_env = System::get_environmental_variable(L"VCPKG_ROOT");
 
         if (!vcpkg_root_dir_env.empty())
         {
@@ -79,7 +79,7 @@ static void inner(const vcpkg_cmd_arguments& args)
     }
     else
     {
-        const auto vcpkg_default_triplet_env = System::wdupenv_str(L"VCPKG_DEFAULT_TRIPLET");
+        const auto vcpkg_default_triplet_env = System::get_environmental_variable(L"VCPKG_DEFAULT_TRIPLET");
         if (!vcpkg_default_triplet_env.empty())
         {
             default_target_triplet = triplet::from_canonical_name(Strings::utf16_to_utf8(vcpkg_default_triplet_env));
