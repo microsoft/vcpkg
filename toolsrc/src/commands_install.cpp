@@ -217,7 +217,7 @@ namespace vcpkg::Commands::Install
                     const Build::BuildResult result = Commands::Build::build_package(*action.plan.source_pgh, action.spec, paths, paths.port_dir(action.spec), status_db);
                     if (result != Build::BuildResult::SUCCEEDED)
                     {
-                        System::println(System::color::error, Build::create_error_message(result, action.spec.toString()));
+                        System::println(System::color::error, Build::create_error_message(result, action.spec));
                         System::println(Build::create_user_troubleshooting_message(action.spec));
                         exit(EXIT_FAILURE);
                     }

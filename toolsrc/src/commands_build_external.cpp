@@ -26,7 +26,7 @@ namespace vcpkg::Commands::BuildExternal
                 const Build::BuildResult result = Commands::Build::build_package(*spgh, *spec, paths, port_dir, status_db);
                 if (result != Build::BuildResult::SUCCEEDED)
                 {
-                    System::println(System::color::error, Build::create_error_message(result, spec->toString()));
+                    System::println(System::color::error, Build::create_error_message(result, *spec));
                     System::println(Build::create_user_troubleshooting_message(*spec));
                     exit(EXIT_FAILURE);
                 }

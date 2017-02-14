@@ -95,9 +95,9 @@ namespace vcpkg::Commands::Build
         }
     }
 
-    std::string create_error_message(const BuildResult build_result, const std::string& package_id)
+    std::string create_error_message(const BuildResult build_result, const package_spec& spec)
     {
-        return Strings::format("Error: Building package %s failed with: %s", package_id, Build::to_string(build_result));
+        return Strings::format("Error: Building package %s failed with: %s", spec.toString(), Build::to_string(build_result));
     }
 
     std::string create_user_troubleshooting_message(const package_spec& spec)
@@ -167,7 +167,7 @@ namespace vcpkg::Commands::Build
 
         if (result != BuildResult::SUCCEEDED)
         {
-            System::println(System::color::error, Build::create_error_message(result, spec.toString()));
+            System::println(System::color::error, Build::create_error_message(result, spec));
             System::println(Build::create_user_troubleshooting_message(spec));
             exit(EXIT_FAILURE);
         }
