@@ -8,11 +8,6 @@
 
 namespace vcpkg::Environment
 {
-    static const fs::path default_cmake_installation_dir = "C:/Program Files/CMake/bin";
-    static const fs::path default_cmake_installation_dir_x86 = "C:/Program Files (x86)/CMake/bin";
-    static const fs::path default_git_installation_dir = "C:/Program Files/git/cmd";
-    static const fs::path default_git_installation_dir_x86 = "C:/Program Files (x86)/git/cmd";
-
     static void ensure_on_path(const std::array<int, 3>& version, const std::wstring& version_check_cmd, const std::wstring& install_cmd)
     {
         System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(version_check_cmd);
@@ -54,12 +49,15 @@ namespace vcpkg::Environment
 
     void ensure_git_on_path(const vcpkg_paths& paths)
     {
+        static const fs::path default_git_installation_dir = Environment::get_ProgramFiles_Platform_bitness() / "git/cmd";
+        static const fs::path default_git_installation_dir_32 = Environment::get_ProgramFiles_32_bit() / "git/cmd";
+
         const fs::path downloaded_git = paths.downloads / "PortableGit" / "cmd";
         const std::wstring path_buf = Strings::wformat(L"%s;%s;%s;%s",
                                                        downloaded_git.native(),
                                                        *System::get_environmental_variable(L"PATH"),
                                                        default_git_installation_dir.native(),
-                                                       default_git_installation_dir_x86.native());
+                                                       default_git_installation_dir_32.native());
         System::set_environmental_variable(L"PATH", path_buf.c_str());
 
         static constexpr std::array<int, 3> git_version = { 2,0,0 };
@@ -70,12 +68,15 @@ namespace vcpkg::Environment
 
     void ensure_cmake_on_path(const vcpkg_paths& paths)
     {
+        static const fs::path default_cmake_installation_dir = Environment::get_ProgramFiles_Platform_bitness() / "CMake/bin";
+        static const fs::path default_cmake_installation_dir_32 = Environment::get_ProgramFiles_32_bit() / "CMake/bin";
+
         const fs::path downloaded_cmake = paths.downloads / "cmake-3.7.2-win32-x86" / "bin";
         const std::wstring path_buf = Strings::wformat(L"%s;%s;%s;%s",
                                                        downloaded_cmake.native(),
                                                        *System::get_environmental_variable(L"PATH"),
                                                        default_cmake_installation_dir.native(),
-                                                       default_cmake_installation_dir_x86.native());
+                                                       default_cmake_installation_dir_32.native());
         System::set_environmental_variable(L"PATH", path_buf.c_str());
 
         static constexpr std::array<int, 3> cmake_version = { 3,7,2 };
@@ -225,5 +226,39 @@ namespace vcpkg::Environment
     {
         static const vcvarsall_and_platform_toolset vcvarsall_bat = find_vcvarsall_bat(paths);
         return vcvarsall_bat;
+    }
+
+    static fs::path find_ProgramFiles_32_bit()
+    {
+        const optional<std::wstring> program_files_X86 = System::get_environmental_variable(L"ProgramFiles(x86)");
+        if (program_files_X86)
+        {
+            return *program_files_X86;
+        }
+
+        return *System::get_environmental_variable(L"PROGRAMFILES");
+    }
+
+    const fs::path& get_ProgramFiles_32_bit()
+    {
+        static const fs::path p = find_ProgramFiles_32_bit();
+        return p;
+    }
+
+    static fs::path find_ProgramFiles_Platform_bitness()
+    {
+        const optional<std::wstring> program_files_W6432 = System::get_environmental_variable(L"ProgramW6432");
+        if (program_files_W6432)
+        {
+            return *program_files_W6432;
+        }
+
+        return *System::get_environmental_variable(L"PROGRAMFILES");
+    }
+
+    const fs::path& get_ProgramFiles_Platform_bitness()
+    {
+        static const fs::path p = find_ProgramFiles_Platform_bitness();
+        return p;
     }
 }

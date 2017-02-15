@@ -8,10 +8,10 @@
 namespace vcpkg::Commands::Integrate
 {
     static const std::array<fs::path, 2> old_system_target_files = {
-        "C:/Program Files (x86)/MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.nuget.targets",
-        "C:/Program Files (x86)/MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.system.targets"
+        Environment::get_ProgramFiles_32_bit() / "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.nuget.targets",
+        Environment::get_ProgramFiles_32_bit() / "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.system.targets"
     };
-    static const fs::path system_wide_targets_file = "C:/Program Files (x86)/MSBuild/Microsoft.Cpp/v4.0/V140/ImportBefore/Default/vcpkg.system.props";
+    static const fs::path system_wide_targets_file = Environment::get_ProgramFiles_32_bit() / "MSBuild/Microsoft.Cpp/v4.0/V140/ImportBefore/Default/vcpkg.system.props";
 
     static std::string create_appdata_targets_shortcut(const std::string& target_path) noexcept
     {
@@ -109,7 +109,7 @@ namespace vcpkg::Commands::Integrate
 
     static elevation_prompt_user_choice elevated_cmd_execute(const std::string& param)
     {
-        SHELLEXECUTEINFO shExInfo = {0};
+        SHELLEXECUTEINFO shExInfo = { 0 };
         shExInfo.cbSize = sizeof(shExInfo);
         shExInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
         shExInfo.hwnd = nullptr;
