@@ -1,0 +1,7 @@
+function(vcpkg_get_program_files_platform_bitness ret)
+    if(DEFINED ENV{ProgramW6432})
+        set(${ret} $ENV{ProgramW6432} PARENT_SCOPE)
+    else()
+        set(${ret} $ENV{PROGRAMFILES} PARENT_SCOPE)
+    endif()
+endfunction()

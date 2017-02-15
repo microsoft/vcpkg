@@ -1,0 +1,7 @@
+function(vcpkg_get_program_files_32_bit ret)
+    if(DEFINED ENV{ProgramFiles\(X86\)})
+        set(${ret} $ENV{ProgramFiles\(X86\)} PARENT_SCOPE)
+    else()
+        set(${ret} $ENV{PROGRAMFILES} PARENT_SCOPE)
+    endif()
+endfunction()

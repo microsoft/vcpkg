@@ -10,13 +10,8 @@ vcpkg_download_distfile(SDK_ARCHIVE
 ### Check for correct version of installed redistributable package
 
 # We always want the ProgramFiles folder even on a 64-bit machine (not the ProgramFilesx86 folder)
-# The following makes sure both 32-bit and 64-bit processes get the correct ProgramFiles
-if(DEFINED ENV{ProgramW6432})
-    set(PROGRAM_FILES_FOLDER $ENV{ProgramW6432})
-else()
-    set(PROGRAM_FILES_FOLDER $ENV{PROGRAMFILES})
-endif()
-set(SYSTEM_MPIEXEC_FILEPATH "${PROGRAM_FILES_FOLDER}/Microsoft MPI/Bin/mpiexec.exe")
+vcpkg_get_program_files_platform_bitness(PROGRAM_FILES_PLATFORM_BITNESS)
+set(SYSTEM_MPIEXEC_FILEPATH "${PROGRAM_FILES_PLATFORM_BITNESS}/Microsoft MPI/Bin/mpiexec.exe")
 set(MSMPI_EXPECTED_FULL_VERSION "8.0.12438.0")
 
 if(EXISTS ${SYSTEM_MPIEXEC_FILEPATH})
