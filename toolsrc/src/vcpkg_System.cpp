@@ -14,6 +14,9 @@ namespace vcpkg::System
 
     int cmd_execute(const wchar_t* cmd_line)
     {
+        // Flush cout before launching external process
+        std::cout << std::flush;
+
         // Basically we are wrapping it in quotes
         const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
         int exit_code = _wsystem(actual_cmd_line.c_str());
@@ -22,6 +25,9 @@ namespace vcpkg::System
 
     exit_code_and_output cmd_execute_and_capture_output(const wchar_t* cmd_line)
     {
+        // Flush cout before launching external process
+        std::cout << std::flush;
+
         const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
 
         std::string output;
