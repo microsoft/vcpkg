@@ -18,7 +18,9 @@ foreach ($instance in $VisualStudio2017InstallationInstances)
 }
 
 # VS2015
-$CandidateProgramFiles = "${env:PROGRAMFILES(X86)}", "${env:PROGRAMFILES}"
+$programFiles32 = & $scriptsDir\getProgramFiles32bit.ps1
+$programFilesP = & $scriptsDir\getProgramFilesPlatformBitness.ps1
+$CandidateProgramFiles = $programFiles32, $programFilesP
 foreach ($ProgramFiles in $CandidateProgramFiles)
 {
     $clExe= "$ProgramFiles\Microsoft Visual Studio 14.0\\VC\bin\cl.exe"
