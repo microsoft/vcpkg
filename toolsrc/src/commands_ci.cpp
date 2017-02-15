@@ -35,16 +35,19 @@ namespace vcpkg::Commands::CI
             specs.push_back(package_spec::from_name_and_triplet(p.filename().generic_string(), target_triplet).get_or_throw());
         }
 
-        std::vector<package_spec_with_install_plan> install_plan = Dependencies::create_install_plan(paths, specs, status_db);
+        const std::vector<package_spec_with_install_plan> install_plan = Dependencies::create_install_plan(paths, specs, status_db);
         Checks::check_exit(!install_plan.empty(), "Install plan cannot be empty");
 
         Environment::ensure_utilities_on_path(paths);
 
         std::vector<BuildResult> results;
         Stopwatch stopwatch = Stopwatch::createStarted();
+        size_t counter = 0;
+        const size_t package_count = install_plan.size();
         for (const package_spec_with_install_plan& action : install_plan)
         {
-            System::println(stopwatch.toString());
+            counter++;
+            System::println("Starting package %d/%d: %s. Time Elapsed: %s", counter, package_count, action.spec.toString(), stopwatch.toString());
             try
             {
                 if (action.plan.plan_type == install_plan_type::ALREADY_INSTALLED)
