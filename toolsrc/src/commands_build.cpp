@@ -49,7 +49,7 @@ namespace vcpkg::Commands::Build
         if (return_code != 0)
         {
             System::println(System::color::error, "Error: building package %s failed", spec.toString());
-            System::println("Please ensure sure you're using the latest portfiles with `vcpkg update`, then\n"
+            System::println("Please ensure sure you're using the latest portfiles with `.\\vcpkg update`, then\n"
                             "submit an issue at https://github.com/Microsoft/vcpkg/issues including:\n"
                             "  Package: %s\n"
                             "  Vcpkg version: %s\n"
