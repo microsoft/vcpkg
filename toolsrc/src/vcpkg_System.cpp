@@ -75,7 +75,6 @@ namespace vcpkg::System
 
     optional<std::wstring> get_environmental_variable(const wchar_t* varname) noexcept
     {
-        std::wstring ret;
         wchar_t* buffer;
         _wdupenv_s(&buffer, nullptr, varname);
 
@@ -83,10 +82,8 @@ namespace vcpkg::System
         {
             return nullptr;
         }
-
-        ret = buffer;
-        free(buffer);
-        return std::make_unique<std::wstring>(ret);
+        std::unique_ptr<wchar_t, void(__cdecl *)(void*)> bufptr(buffer, free);
+        return std::make_unique<std::wstring>(buffer);
     }
 
     void set_environmental_variable(const wchar_t* varname, const wchar_t* varvalue) noexcept
