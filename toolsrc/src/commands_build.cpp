@@ -9,6 +9,7 @@
 #include "vcpkg_Environment.h"
 #include "metrics.h"
 #include "vcpkg_info.h"
+#include "vcpkg_Enums.h"
 
 namespace vcpkg::Commands::Build
 {
@@ -78,7 +79,7 @@ namespace vcpkg::Commands::Build
 
     const std::string& to_string(const BuildResult build_result)
     {
-        static const std::string BUILD_NOT_STARTED_STRING = "BUILD_NOT_STARTED";
+        static const std::string NULLVALUE_STRING = Enums::nullvalue_toString("vcpkg::Commands::Build::BuildResult");
         static const std::string SUCCEEDED_STRING = "SUCCEEDED";
         static const std::string BUILD_FAILED_STRING = "BUILD_FAILED";
         static const std::string POST_BUILD_CHECKS_FAILED_STRING = "POST_BUILD_CHECKS_FAILED";
@@ -86,7 +87,7 @@ namespace vcpkg::Commands::Build
 
         switch (build_result)
         {
-            case BuildResult::BUILD_NOT_STARTED: return BUILD_NOT_STARTED_STRING;
+            case BuildResult::NULLVALUE: return NULLVALUE_STRING;
             case BuildResult::SUCCEEDED: return SUCCEEDED_STRING;
             case BuildResult::BUILD_FAILED: return BUILD_FAILED_STRING;
             case BuildResult::POST_BUILD_CHECKS_FAILED: return POST_BUILD_CHECKS_FAILED_STRING;
