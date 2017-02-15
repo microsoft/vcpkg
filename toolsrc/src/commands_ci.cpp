@@ -12,6 +12,7 @@ namespace vcpkg::Commands::CI
 {
     using Dependencies::package_spec_with_install_plan;
     using Dependencies::install_plan_type;
+    using Build::BuildResult;
 
     void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
@@ -37,10 +38,9 @@ namespace vcpkg::Commands::CI
         std::vector<package_spec_with_install_plan> install_plan = Dependencies::create_install_plan(paths, specs, status_db);
         Checks::check_exit(!install_plan.empty(), "Install plan cannot be empty");
 
-        std::vector<Build::BuildResult> results;
-
         Environment::ensure_utilities_on_path(paths);
 
+        std::vector<BuildResult> results;
         Stopwatch stopwatch = Stopwatch::createStarted();
         for (const package_spec_with_install_plan& action : install_plan)
         {
@@ -49,14 +49,14 @@ namespace vcpkg::Commands::CI
             {
                 if (action.plan.plan_type == install_plan_type::ALREADY_INSTALLED)
                 {
-                    results.push_back(Build::BuildResult::SUCCEEDED);
+                    results.push_back(BuildResult::SUCCEEDED);
                     System::println(System::color::success, "Package %s is already installed", action.spec);
                 }
                 else if (action.plan.plan_type == install_plan_type::BUILD_AND_INSTALL)
                 {
-                    const Build::BuildResult result = Commands::Build::build_package(*action.plan.source_pgh, action.spec, paths, paths.port_dir(action.spec), status_db);
+                    const BuildResult result = Commands::Build::build_package(*action.plan.source_pgh, action.spec, paths, paths.port_dir(action.spec), status_db);
                     results.push_back(result);
-                    if (result != Build::BuildResult::SUCCEEDED)
+                    if (result != BuildResult::SUCCEEDED)
                     {
                         System::println(System::color::error, Build::create_error_message(result, action.spec));
                         continue;
@@ -67,7 +67,7 @@ namespace vcpkg::Commands::CI
                 }
                 else if (action.plan.plan_type == install_plan_type::INSTALL)
                 {
-                    results.push_back(Build::BuildResult::SUCCEEDED);
+                    results.push_back(BuildResult::SUCCEEDED);
                     Install::install_package(paths, *action.plan.binary_pgh, &status_db);
                     System::println(System::color::success, "Package %s is installed", action.spec);
                 }
@@ -81,12 +81,35 @@ namespace vcpkg::Commands::CI
             }
         }
 
+        System::println(stopwatch.toString());
+
         for (int i = 0; i < results.size(); i++)
         {
+            if (results[i] == BuildResult::SUCCEEDED)
+            {
+                continue;
+            }
+
             System::println("%s: %s", install_plan[i].spec.toString(), Build::to_string(results[i]));
         }
 
-        System::println(stopwatch.toString());
+        std::map<BuildResult, int> summary;
+        for (const BuildResult& v : Build::BuildResult_values)
+        {
+            summary[v] = 0;
+        }
+
+        for (const BuildResult& r : results)
+        {
+            summary[r]++;
+        }
+
+        System::println("\n\nSUMMARY");
+        for (const std::pair<const BuildResult, int>& entry : summary)
+        {
+            System::println("    %s: %d", Build::to_string(entry.first), entry.second);
+        }
+
         exit(EXIT_SUCCESS);
     }
 }
