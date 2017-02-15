@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/sqlite-amalgamation-3150000)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/sqlite-amalgamation-3170000)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://sqlite.org/2016/sqlite-amalgamation-3150000.zip"
-    FILENAME "sqlite-amalgamation-3150000.zip"
-    SHA512 82fea23b2158c448cbe2b80121eb32652df49eb85357edbaeef0c343ef478433706ebc4cd8add1985763db223d9268d0f7e74fc8db59353c15267cbc3d2078a8
+    URLS "https://sqlite.org/2017/sqlite-amalgamation-3170000.zip"
+    FILENAME "sqlite-amalgamation-3170000.zip"
+    SHA512 36dc05dbb21428237332e813181d4dd0c2ffaedb92a53934630c25421617afd9c1a65784665d222501f1b4b5c6445f425f8c512572a97e42603510dcc0796344
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
