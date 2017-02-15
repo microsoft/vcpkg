@@ -27,5 +27,5 @@ namespace vcpkg::Environment
 
     const fs::path& get_ProgramFiles_32_bit();
 
-    const fs::path& get_ProgramFiles_Platform_bitness();
+    const fs::path& get_ProgramFiles_platform_bitness();
 }

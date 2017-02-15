@@ -49,7 +49,7 @@ namespace vcpkg::Environment
 
     void ensure_git_on_path(const vcpkg_paths& paths)
     {
-        static const fs::path default_git_installation_dir = Environment::get_ProgramFiles_Platform_bitness() / "git/cmd";
+        static const fs::path default_git_installation_dir = Environment::get_ProgramFiles_platform_bitness() / "git/cmd";
         static const fs::path default_git_installation_dir_32 = Environment::get_ProgramFiles_32_bit() / "git/cmd";
 
         const fs::path downloaded_git = paths.downloads / "PortableGit" / "cmd";
@@ -68,7 +68,7 @@ namespace vcpkg::Environment
 
     void ensure_cmake_on_path(const vcpkg_paths& paths)
     {
-        static const fs::path default_cmake_installation_dir = Environment::get_ProgramFiles_Platform_bitness() / "CMake/bin";
+        static const fs::path default_cmake_installation_dir = Environment::get_ProgramFiles_platform_bitness() / "CMake/bin";
         static const fs::path default_cmake_installation_dir_32 = Environment::get_ProgramFiles_32_bit() / "CMake/bin";
 
         const fs::path downloaded_cmake = paths.downloads / "cmake-3.7.2-win32-x86" / "bin";
@@ -245,7 +245,7 @@ namespace vcpkg::Environment
         return p;
     }
 
-    static fs::path find_ProgramFiles_Platform_bitness()
+    static fs::path find_ProgramFiles_platform_bitness()
     {
         const optional<std::wstring> program_files_W6432 = System::get_environmental_variable(L"ProgramW6432");
         if (program_files_W6432)
@@ -256,9 +256,9 @@ namespace vcpkg::Environment
         return *System::get_environmental_variable(L"PROGRAMFILES");
     }
 
-    const fs::path& get_ProgramFiles_Platform_bitness()
+    const fs::path& get_ProgramFiles_platform_bitness()
     {
-        static const fs::path p = find_ProgramFiles_Platform_bitness();
+        static const fs::path p = find_ProgramFiles_platform_bitness();
         return p;
     }
 }
