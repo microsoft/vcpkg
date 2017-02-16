@@ -58,8 +58,7 @@ namespace vcpkg::Strings
 
     std::string::const_iterator case_insensitive_ascii_find(const std::string& s, const std::string& pattern)
     {
-        std::string pattern_as_lower_case;
-        std::transform(pattern.begin(), pattern.end(), back_inserter(pattern_as_lower_case), &details::tolower_char);
+        const std::string pattern_as_lower_case(ascii_to_lowercase(pattern));
         return search(s.begin(), s.end(), pattern_as_lower_case.begin(), pattern_as_lower_case.end(), [](const char a, const char b)
                       {
                           return details::tolower_char(a) == b;
