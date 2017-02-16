@@ -32,7 +32,7 @@ namespace vcpkg
 
     static std::string GenerateRandomUUID()
     {
-        int partSizes[] = {8, 4, 4, 4, 12};
+        int partSizes[] = { 8, 4, 4, 4, 12 };
         char uuid[37];
         memset(uuid, 0, sizeof(uuid));
         int num;
@@ -101,7 +101,7 @@ namespace vcpkg
                 // Note: this treats incoming Strings as Latin-1
                 static constexpr const char hex[16] = {
                     '0', '1', '2', '3', '4', '5', '6', '7',
-                    '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+                    '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
                 encoded.append("\\u00");
                 encoded.push_back(hex[ch / 16]);
                 encoded.push_back(hex[ch % 16]);
@@ -229,8 +229,10 @@ true
     {
         LONG err;
 
-        struct RAII_HKEY {
+        struct RAII_HKEY
+        {
             HKEY hkey = nullptr;
+
             ~RAII_HKEY()
             {
                 if (hkey != nullptr)
@@ -244,7 +246,7 @@ true
             return L"{}";
         }
 
-        std::array<wchar_t,128> buffer;
+        std::array<wchar_t, 128> buffer;
         DWORD lType = 0;
         DWORD dwBufferSize = static_cast<DWORD>(buffer.size() * sizeof(wchar_t));
         err = RegQueryValueExW(HKCU_SQMClient.hkey, L"UserId", nullptr, &lType, reinterpret_cast<LPBYTE>(buffer.data()), &dwBufferSize);
@@ -356,7 +358,6 @@ true
         if (bResults)
         {
             DWORD availableData = 0, readData = 0, totalData = 0;
-
             while ((bResults = WinHttpQueryDataAvailable(hRequest, &availableData)) == TRUE && availableData > 0)
             {
                 responseBuffer.resize(responseBuffer.size() + availableData);
