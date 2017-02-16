@@ -52,12 +52,15 @@ namespace vcpkg::Environment
         static const fs::path default_git_installation_dir = Environment::get_ProgramFiles_platform_bitness() / "git/cmd";
         static const fs::path default_git_installation_dir_32 = Environment::get_ProgramFiles_32_bit() / "git/cmd";
 
-        const fs::path downloaded_git = paths.downloads / "PortableGit" / "cmd";
-        const std::wstring path_buf = Strings::wformat(L"%s;%s;%s;%s",
-                                                       downloaded_git.native(),
+        const fs::path portable_git = paths.downloads / "PortableGit" / "cmd"; // TODO: Remove next time we bump the version
+        const fs::path min_git = paths.downloads / "MinGit-2.11.1-32-bit" / "cmd";
+        const std::wstring path_buf = Strings::wformat(L"%s;%s;%s;%s;%s",
+                                                       min_git.native(),
+                                                       portable_git.native(),
                                                        *System::get_environmental_variable(L"PATH"),
                                                        default_git_installation_dir.native(),
                                                        default_git_installation_dir_32.native());
+
         System::set_environmental_variable(L"PATH", path_buf.c_str());
 
         static constexpr std::array<int, 3> git_version = { 2,0,0 };

@@ -113,8 +113,11 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 
     function Expand-ZIPFile($file, $destination)
     {
-            Write-Host($file)
-            Write-Host($destination)
+        if (!(Test-Path $destination))
+        {
+            New-Item -ItemType Directory -Path $destination | Out-Null
+        }
+
         $shell = new-object -com shell.application
         $zip = $shell.NameSpace($file)
         foreach($item in $zip.items())
@@ -133,6 +136,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         $expectedDownloadedFileHash = "ec5e299d412e0272e01d4de5bf07718f42c96361f83d51cc39f91bf49cc3e5c3"
         $executableFromDownload = "$downloadsDir\cmake-3.7.2-win32-x86\bin\cmake.exe"
         $extractionType = $ExtractionType_ZIP
+        $extractionFolder = $downloadsDir
     }
     elseif($Dependency -eq "nuget")
     {
@@ -147,14 +151,15 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     elseif($Dependency -eq "git")
     {
         $requiredVersion = "2.0.0"
-        $downloadVersion = "2.11.0"
-        $url = "https://github.com/git-for-windows/git/releases/download/v2.11.0.windows.3/PortableGit-2.11.0.3-32-bit.7z.exe" # We choose the 32-bit version
-        $downloadPath = "$downloadsDir\PortableGit-2.11.0.3-32-bit.7z.exe"
-        $expectedDownloadedFileHash = "8bf3769c37945e991903dd1b988c6b1d97bbf0f3afc9851508974f38bf94dc01"
-        # There is another copy of git.exe in PortableGit\bin. However, an installed version of git add the cmd dir to the PATH.
+        $downloadVersion = "2.11.1"
+        $url = "https://github.com/git-for-windows/git/releases/download/v2.11.1.windows.1/MinGit-2.11.1-32-bit.zip" # We choose the 32-bit version
+        $downloadPath = "$downloadsDir\MinGit-2.11.1-32-bit.zip"
+        $expectedDownloadedFileHash = "6ca79af09015625f350ef4ad74a75cfb001b340aec095b6963be9d45becb3bba"
+        # There is another copy of git.exe in MinGit\bin. However, an installed version of git add the cmd dir to the PATH.
         # Therefore, choosing the cmd dir here as well.
-        $executableFromDownload = "$downloadsDir\PortableGit\cmd\git.exe"
-        $extractionType = $ExtractionType_SELF_EXTRACTING_7Z
+        $executableFromDownload = "$downloadsDir\MinGit-2.11.1-32-bit\cmd\git.exe"
+        $extractionType = $ExtractionType_ZIP
+        $extractionFolder = "$downloadsDir\MinGit-2.11.1-32-bit"
     }
     else
     {
@@ -188,8 +193,8 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     {
         if (-not (Test-Path $executableFromDownload)) # consider renaming the extraction folder to make sure the extraction finished
         {
-            # Expand-Archive $downloadPath -dest "$downloadsDir" -Force # Requires powershell 5+
-            Expand-ZIPFile -File $downloadPath -Destination $downloadsDir
+            # Expand-Archive $downloadPath -dest "$extractionFolder" -Force # Requires powershell 5+
+            Expand-ZIPFile -File $downloadPath -Destination $extractionFolder
         }
     }
     elseif($extractionType -eq $ExtractionType_SELF_EXTRACTING_7Z)
