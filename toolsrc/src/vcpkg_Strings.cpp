@@ -9,6 +9,7 @@ namespace vcpkg::Strings::details
         return std::isspace(c);
     };
 
+    // Avoids C4244 warnings because of char<->int conversion that occur when using std::tolower()
     static char tolower_char(const char c)
     {
         return static_cast<char>(std::tolower(c));
