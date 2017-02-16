@@ -24,7 +24,7 @@ namespace vcpkg::Commands::Install
         const std::string& target_triplet_as_string = target_triplet.canonical_name();
         std::error_code ec;
         fs::create_directory(paths.installed / target_triplet_as_string, ec);
-        output.push_back(Strings::format(R"(%s)", target_triplet_as_string));
+        output.push_back(Strings::format(R"(%s/)", target_triplet_as_string));
 
         for (auto it = fs::recursive_directory_iterator(package_prefix_path); it != fs::recursive_directory_iterator(); ++it)
         {
@@ -54,7 +54,7 @@ namespace vcpkg::Commands::Install
                 }
 
                 // Trailing backslash for directories
-                output.push_back(Strings::format(R"(%s/%s)", target_triplet_as_string, suffix));
+                output.push_back(Strings::format(R"(%s/%s/)", target_triplet_as_string, suffix));
                 continue;
             }
 
@@ -81,6 +81,8 @@ namespace vcpkg::Commands::Install
 
             System::println(System::color::error, "failed: %s: cannot handle file type", it->path().u8string());
         }
+
+        std::sort(output.begin(), output.end());
 
         Files::write_all_lines(paths.listfile_path(bpgh), output);
     }
