@@ -68,7 +68,7 @@ namespace vcpkg::System
         GetConsoleScreenBufferInfo(hConsole, &consoleScreenBufferInfo);
         auto original_color = consoleScreenBufferInfo.wAttributes;
 
-        SetConsoleTextAttribute(hConsole, static_cast<int>(c) | (original_color & 0xF0));
+        SetConsoleTextAttribute(hConsole, static_cast<WORD>(c) | (original_color & 0xF0));
         std::cout << message;
         SetConsoleTextAttribute(hConsole, original_color);
     }
