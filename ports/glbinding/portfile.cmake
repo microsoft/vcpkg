@@ -53,6 +53,19 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/AUTHORS
             ${CURRENT_PACKAGES_DIR}/debug/VERSION
     )
 
+# There are some executables that are only built if glfw is found by CMake (see source/tools/*/CMakeLists.txt).
+# glfw is not listed as a dependency for glbinding, so this only happen on systems where package glfw3 is present.
+# glbinding's CMake doesn't offer the choice to exlude those tools from the build process, so deleting them here:
+file(REMOVE ${CURRENT_PACKAGES_DIR}/glcontexts.exe
+            ${CURRENT_PACKAGES_DIR}/glfunctions.exe
+            ${CURRENT_PACKAGES_DIR}/glmeta.exe
+            ${CURRENT_PACKAGES_DIR}/glqueries.exe
+            ${CURRENT_PACKAGES_DIR}/debug/glcontextsd.exe
+            ${CURRENT_PACKAGES_DIR}/debug/glfunctionsd.exe
+            ${CURRENT_PACKAGES_DIR}/debug/glmetad.exe
+            ${CURRENT_PACKAGES_DIR}/debug/glqueriesd.exe
+)
+
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/glbinding)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/glbinding/LICENSE ${CURRENT_PACKAGES_DIR}/share/glbinding/copyright)
