@@ -154,7 +154,7 @@ namespace vcpkg::Commands::Build
                                }),
                 unmet_dependencies.end());
 
-            Checks::check_exit(unmet_dependencies.empty());
+            Checks::check_exit(!unmet_dependencies.empty());
             System::println(System::color::error, "The build command requires all dependencies to be already installed.");
             System::println("The following dependencies are missing:");
             System::println("");
