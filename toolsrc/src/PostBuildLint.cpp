@@ -425,24 +425,6 @@ namespace vcpkg::PostBuildLint
         return lint_status::SUCCESS;
     }
 
-    static lint_status check_no_subdirectories(const fs::path& dir)
-    {
-        const std::vector<fs::path> subdirectories = Files::recursive_find_matching_paths_in_dir(dir, [&](const fs::path& current)
-                                                                                                 {
-                                                                                                     return fs::is_directory(current);
-                                                                                                 });
-
-        if (!subdirectories.empty())
-        {
-            System::println(System::color::warning, "Directory %s should have no subdirectories", dir.generic_string());
-            System::println("The following subdirectories were found: ");
-            Files::print_paths(subdirectories);
-            return lint_status::ERROR_DETECTED;
-        }
-
-        return lint_status::SUCCESS;
-    }
-
     static lint_status check_bin_folders_are_not_present_in_static_build(const fs::path& package_dir)
     {
         const fs::path bin = package_dir / "bin";
@@ -700,10 +682,6 @@ namespace vcpkg::PostBuildLint
             default:
                 Checks::unreachable();
         }
-#if 0
-        error_count += check_no_subdirectories(package_dir / "lib");
-        error_count += check_no_subdirectories(package_dir / "debug" / "lib");
-#endif
 
         error_count += check_no_empty_folders(package_dir);
         error_count += check_no_files_in_package_dir_and_debug_dir(package_dir);
