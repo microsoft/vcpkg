@@ -20,7 +20,7 @@ namespace vcpkg::Strings::details
         va_list lst;
         va_start(lst, fmtstr);
 
-        auto sz = _vscprintf(fmtstr, lst);
+        const int sz = _vscprintf(fmtstr, lst);
         std::string output(sz, '\0');
         _vsnprintf_s(&output[0], output.size() + 1, output.size() + 1, fmtstr, lst);
         va_end(lst);
@@ -33,7 +33,7 @@ namespace vcpkg::Strings::details
         va_list lst;
         va_start(lst, fmtstr);
 
-        auto sz = _vscwprintf(fmtstr, lst);
+        const int sz = _vscwprintf(fmtstr, lst);
         std::wstring output(sz, '\0');
         _vsnwprintf_s(&output[0], output.size() + 1, output.size() + 1, fmtstr, lst);
         va_end(lst);
