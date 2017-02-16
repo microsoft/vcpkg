@@ -176,7 +176,7 @@ namespace vcpkg::Commands::Remove
         const bool alsoRemoveFolderFromPackages = options.find(OPTION_PURGE) != options.end();
         const bool isRecursive = options.find(OPTION_RECURSE) != options.end();
 
-        const std::vector<package_spec_with_remove_plan> remove_plan = Dependencies::create_remove_plan(paths, specs, status_db);
+        const std::vector<package_spec_with_remove_plan> remove_plan = Dependencies::create_remove_plan(specs, status_db);
         Checks::check_exit(!remove_plan.empty(), "Remove plan cannot be empty");
 
         print_plan(remove_plan);

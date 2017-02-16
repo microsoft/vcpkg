@@ -97,7 +97,7 @@ namespace vcpkg::Dependencies
         return ret;
     }
 
-    std::vector<package_spec_with_remove_plan> create_remove_plan(const vcpkg_paths& paths, const std::vector<package_spec>& specs, const StatusParagraphs& status_db)
+    std::vector<package_spec_with_remove_plan> create_remove_plan(const std::vector<package_spec>& specs, const StatusParagraphs& status_db)
     {
         std::unordered_set<package_spec> specs_as_set(specs.cbegin(), specs.cend());
 
