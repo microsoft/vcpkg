@@ -357,7 +357,7 @@ true
         {
             DWORD availableData = 0, readData = 0, totalData = 0;
 
-            while ((bResults = WinHttpQueryDataAvailable(hRequest, &availableData)) && availableData > 0)
+            while ((bResults = WinHttpQueryDataAvailable(hRequest, &availableData)) == TRUE && availableData > 0)
             {
                 responseBuffer.resize(responseBuffer.size() + availableData);
 
