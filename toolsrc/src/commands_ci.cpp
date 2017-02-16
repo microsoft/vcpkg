@@ -86,7 +86,7 @@ namespace vcpkg::Commands::CI
 
         System::println(stopwatch.toString());
 
-        for (int i = 0; i < results.size(); i++)
+        for (size_t i = 0; i < results.size(); i++)
         {
             if (results[i] == BuildResult::SUCCEEDED)
             {
