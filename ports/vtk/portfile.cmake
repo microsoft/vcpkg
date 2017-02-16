@@ -16,9 +16,10 @@ vcpkg_apply_patches(
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    # HACK: The FindHDF5.cmake script does not seam to detect the HDF5_DEFINITIONS correctly
-    #       if HDF5 has been built without the tools, so we set the BUILT_AS_DYNAMIC_LIB=1 flag
-    #       here explicitly because we now it has been build as dynamic in the current case.
+    # HACK: The FindHDF5.cmake script does not seem to detect the HDF5_DEFINITIONS correctly
+    #       if HDF5 has been built without the tools (which is the case in the HDF5 port),
+    #       so we set the BUILT_AS_DYNAMIC_LIB=1 flag here explicitly because we know HDF5
+    #       has been build as dynamic library in the current case.
     list(APPEND ADDITIONAL_OPTIONS "-DHDF5_DEFINITIONS=-DH5_BUILT_AS_DYNAMIC_LIB=1")
 endif()
 
