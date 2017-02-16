@@ -3,11 +3,11 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/opencv-92387b1ef8fad15196dd5f7fb4931444a68bc93a)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/opencv-3.2.0)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/opencv/opencv/archive/92387b1ef8fad15196dd5f7fb4931444a68bc93a.zip"
-    FILENAME "opencv-92387b1ef8fad15196dd5f7fb4931444a68bc93a.zip"
-    SHA512 b95fa1a5bce0ea9e9bd43173b904e5d779a2f640f4f8dbb36a12df462e8e4cdce3ff94b2fbd85cb96ddf338019f9888e9e7410c468c81b1de98d9c1da945a7eb
+    URLS "https://github.com/opencv/opencv/archive/3.2.0.zip"
+    FILENAME "opencv-3.2.0.zip"
+    SHA512 c6418d2a7654fe9d50611e756778df4c6736f2de76b85773efbf490bb475dd95ec1041fe57a87163ce11a7db44430cd378c8416af3319f979ced92532bf5ebb5
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
@@ -24,7 +24,6 @@ vcpkg_configure_cmake(
         -DBUILD_TIFF=OFF
         -DBUILD_JPEG=OFF
         -DBUILD_PNG=OFF
-        -DINSTALL_CREATE_DISTRIB=ON
         -DBUILD_opencv_python2=OFF
         -DBUILD_opencv_python3=OFF
         -DBUILD_opencv_apps=OFF

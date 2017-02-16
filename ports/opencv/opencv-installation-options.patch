@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3ee50ff..64b0405 100644
+index cc45f6f..b4265bd 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -250,6 +250,10 @@ OCV_OPTION(INSTALL_PYTHON_EXAMPLES  "Install Python examples"   OFF )
+@@ -263,6 +263,10 @@ OCV_OPTION(INSTALL_PYTHON_EXAMPLES  "Install Python examples"   OFF )
  OCV_OPTION(INSTALL_ANDROID_EXAMPLES "Install Android examples"  OFF IF ANDROID )
  OCV_OPTION(INSTALL_TO_MANGLED_PATHS "Enables mangled install paths, that help with side by side installs." OFF IF (UNIX AND NOT ANDROID AND NOT APPLE_FRAMEWORK AND BUILD_SHARED_LIBS) )
  OCV_OPTION(INSTALL_TESTS            "Install accuracy and performance test binaries and test data" OFF)
@@ -13,36 +13,18 @@ index 3ee50ff..64b0405 100644
  
  # OpenCV build options
  # ===================================================
-@@ -315,7 +319,9 @@ else()
+@@ -330,7 +334,9 @@ else()
  endif()
  
  if(WIN32 AND CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
 -  if(DEFINED OpenCV_RUNTIME AND DEFINED OpenCV_ARCH)
 +  if(DEFINED OpenCV_DISABLE_ARCH_PATH)
-+    set(OpenCV_INSTALL_BINARIES_PREFIX "")
++    ocv_update(OpenCV_INSTALL_BINARIES_PREFIX "")
 +  elseif(DEFINED OpenCV_RUNTIME AND DEFINED OpenCV_ARCH)
-     set(OpenCV_INSTALL_BINARIES_PREFIX "${OpenCV_ARCH}/${OpenCV_RUNTIME}/")
+     ocv_update(OpenCV_INSTALL_BINARIES_PREFIX "${OpenCV_ARCH}/${OpenCV_RUNTIME}/")
    else()
      message(STATUS "Can't detect runtime and/or arch")
-@@ -379,7 +385,7 @@ else()
-     set(OPENCV_3P_LIB_INSTALL_PATH  "${OpenCV_INSTALL_BINARIES_PREFIX}staticlib${LIB_SUFFIX}")
-     set(OPENCV_SAMPLES_SRC_INSTALL_PATH    samples/native)
-     set(OPENCV_JAR_INSTALL_PATH java)
--    set(OPENCV_OTHER_INSTALL_PATH   etc)
-+    set(OPENCV_OTHER_INSTALL_PATH   etc CACHE STRING "")
-   else()
-     set(OPENCV_LIB_INSTALL_PATH     lib${LIB_SUFFIX})
-     set(OPENCV_3P_LIB_INSTALL_PATH  share/OpenCV/3rdparty/${OPENCV_LIB_INSTALL_PATH})
-@@ -393,7 +399,7 @@ else()
-   if(LIB_SUFFIX AND NOT SIZEOF_VOID_P_BITS EQUAL LIB_SUFFIX)
-     set(OPENCV_CONFIG_INSTALL_PATH lib${LIB_SUFFIX}/cmake/opencv)
-   else()
--    set(OPENCV_CONFIG_INSTALL_PATH share/OpenCV)
-+    set(OPENCV_CONFIG_INSTALL_PATH share/OpenCV CACHE STRING "")
-   endif()
- endif()
- 
-@@ -734,7 +740,7 @@ if(NOT OPENCV_LICENSE_FILE)
+@@ -784,7 +790,7 @@ if(NOT OPENCV_LICENSE_FILE)
  endif()
  
  # for UNIX it does not make sense as LICENSE and readme will be part of the package automatically
@@ -50,29 +32,29 @@ index 3ee50ff..64b0405 100644
 +if(ANDROID OR NOT UNIX AND INSTALL_LICENSE)
    install(FILES ${OPENCV_LICENSE_FILE}
          PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
-         DESTINATION ${CMAKE_INSTALL_PREFIX} COMPONENT libs)
+         DESTINATION ./ COMPONENT libs)
 diff --git a/cmake/OpenCVGenConfig.cmake b/cmake/OpenCVGenConfig.cmake
-index dbfd7ca..8bfa448 100644
+index 206acfd..b4c223e 100644
 --- a/cmake/OpenCVGenConfig.cmake
 +++ b/cmake/OpenCVGenConfig.cmake
-@@ -103,7 +103,7 @@ set(OpenCV_INCLUDE_DIRS_CONFIGCMAKE "\"\${OpenCV_INSTALL_PATH}/${OPENCV_INCLUDE_
- set(OpenCV2_INCLUDE_DIRS_CONFIGCMAKE "\"\"")
- set(OpenCV_3RDPARTY_LIB_DIRS_CONFIGCMAKE "\"\${OpenCV_INSTALL_PATH}/${OPENCV_3P_LIB_INSTALL_PATH}\"")
+@@ -91,7 +91,7 @@ function(ocv_gen_config TMP_DIR NESTED_PATH ROOT_NAME)
+   endif()
+ endfunction()
  
--if(UNIX) # ANDROID configuration is created here also
-+if(UNIX OR INSTALL_FORCE_UNIX_PATHS) # ANDROID configuration is created here also
-   #http://www.vtk.org/Wiki/CMake/Tutorials/Packaging reference
-   # For a command "find_package(<name> [major[.minor]] [EXACT] [REQUIRED|QUIET])"
-   # cmake will look in the following dir on unix:
-@@ -127,7 +127,7 @@ endif()
+-if(UNIX AND NOT ANDROID)
++if((UNIX AND NOT ANDROID) OR INSTALL_FORCE_UNIX_PATHS)
+   ocv_gen_config("${CMAKE_BINARY_DIR}/unix-install" "" "")
+ endif()
+ 
+@@ -103,7 +103,7 @@ endif()
  # --------------------------------------------------------------------------------------------
  #  Part 3/3: ${BIN_DIR}/win-install/OpenCVConfig.cmake  -> For use within binary installers/packages
  # --------------------------------------------------------------------------------------------
 -if(WIN32)
 +if(WIN32 AND NOT INSTALL_FORCE_UNIX_PATHS)
-   set(OpenCV_INCLUDE_DIRS_CONFIGCMAKE "\"\${OpenCV_CONFIG_PATH}/include\" \"\${OpenCV_CONFIG_PATH}/include/opencv\"")
-   set(OpenCV2_INCLUDE_DIRS_CONFIGCMAKE "\"\"")
- 
+   if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
+     if(BUILD_SHARED_LIBS)
+       set(_lib_suffix "lib")
 diff --git a/cmake/OpenCVGenHeaders.cmake b/cmake/OpenCVGenHeaders.cmake
 index 2988979..810871b 100644
 --- a/cmake/OpenCVGenHeaders.cmake
@@ -97,10 +79,10 @@ index 2988979..810871b 100644
 +  install(FILES "${OPENCV_CONFIG_FILE_INCLUDE_DIR}/opencv2/opencv_modules.hpp" DESTINATION ${OPENCV_INCLUDE_INSTALL_PATH}/opencv2 COMPONENT dev)
 +endif()
 diff --git a/cmake/OpenCVModule.cmake b/cmake/OpenCVModule.cmake
-index 3385385..530e53f 100644
+index 742a287..c8242dd 100644
 --- a/cmake/OpenCVModule.cmake
 +++ b/cmake/OpenCVModule.cmake
-@@ -879,7 +879,9 @@ macro(_ocv_create_module)
+@@ -880,7 +880,9 @@ macro(_ocv_create_module)
        foreach(hdr ${OPENCV_MODULE_${m}_HEADERS})
          string(REGEX REPLACE "^.*opencv2/" "opencv2/" hdr2 "${hdr}")
          if(NOT hdr2 MATCHES "opencv2/${m}/private.*" AND hdr2 MATCHES "^(opencv2/?.*)/[^/]+.h(..)?$" )
@@ -111,19 +93,6 @@ index 3385385..530e53f 100644
          endif()
        endforeach()
      endif()
-diff --git a/cmake/templates/OpenCVConfig.cmake.in b/cmake/templates/OpenCVConfig.cmake.in
-index 80ffbaf..0585c9f 100644
---- a/cmake/templates/OpenCVConfig.cmake.in
-+++ b/cmake/templates/OpenCVConfig.cmake.in
-@@ -112,7 +112,7 @@ set(OpenCV_USE_MANGLED_PATHS @OpenCV_USE_MANGLED_PATHS_CONFIGCMAKE@)
- # Extract the directory where *this* file has been installed (determined at cmake run-time)
- get_filename_component(OpenCV_CONFIG_PATH "${CMAKE_CURRENT_LIST_FILE}" PATH CACHE)
- 
--if(NOT WIN32 OR ANDROID)
-+if(NOT WIN32 OR ANDROID OR "@INSTALL_FORCE_UNIX_PATHS@")
-   if(ANDROID)
-     set(OpenCV_INSTALL_PATH "${OpenCV_CONFIG_PATH}/../../..")
-   else()
 diff --git a/data/CMakeLists.txt b/data/CMakeLists.txt
 index 1f0d720..86b9d89 100644
 --- a/data/CMakeLists.txt
@@ -142,19 +111,27 @@ index 1f0d720..86b9d89 100644
  if(INSTALL_TESTS AND OPENCV_TEST_DATA_PATH)
    install(DIRECTORY "${OPENCV_TEST_DATA_PATH}/" DESTINATION "${OPENCV_TEST_DATA_INSTALL_PATH}" COMPONENT "tests")
 diff --git a/include/CMakeLists.txt b/include/CMakeLists.txt
-index b4e48e6..6ea20d6 100644
+index b4e48e6..d5ed455 100644
 --- a/include/CMakeLists.txt
 +++ b/include/CMakeLists.txt
 @@ -1,7 +1,9 @@
 -file(GLOB old_hdrs "opencv/*.h*")
 -install(FILES ${old_hdrs}
-+if(INSTALL_HEADERS)
-+  file(GLOB old_hdrs "opencv/*.h*")
-+  install(FILES ${old_hdrs}
-     DESTINATION ${OPENCV_INCLUDE_INSTALL_PATH}/opencv
-     COMPONENT dev)
+-    DESTINATION ${OPENCV_INCLUDE_INSTALL_PATH}/opencv
+-    COMPONENT dev)
 -install(FILES "opencv2/opencv.hpp"
-+  install(FILES "opencv2/opencv.hpp"
-     DESTINATION ${OPENCV_INCLUDE_INSTALL_PATH}/opencv2
-     COMPONENT dev)
+-    DESTINATION ${OPENCV_INCLUDE_INSTALL_PATH}/opencv2
+-    COMPONENT dev)
++if(INSTALL_HEADERS)
++    file(GLOB old_hdrs "opencv/*.h*")
++    install(FILES ${old_hdrs}
++        DESTINATION ${OPENCV_INCLUDE_INSTALL_PATH}/opencv
++        COMPONENT dev)
++    install(FILES "opencv2/opencv.hpp"
++        DESTINATION ${OPENCV_INCLUDE_INSTALL_PATH}/opencv2
++        COMPONENT dev)
 +endif()
+\ No newline at end of file
+-- 
+2.9.0.windows.1
+
