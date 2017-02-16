@@ -1,3 +1,22 @@
+vcpkg (0.0.73)
+--------------
+  * Add ports:
+    - gdk-pixbuf           2.36.5
+    - openvr               1.0.5
+  * Update ports:
+    - lmdb                 0.9.18-1         -> 0.9.18-2
+    - opencv               3.1.0-1          -> 3.2.0
+    - sqlite3              3.15.0           -> 3.17.0
+  * Add functions to correctly find the "Program Files" folders in all parts of `vcpkg` (C++, CMake, powershell)
+  * Flush std::cout before launching an external process. Fixes issues when redirecting std::cout to a file
+  * Update version of the automatically acquired nasm. Resolves build failure with libjpeg-turbo
+  * Change the format of the listfile. The file is now sorted and directories now have a trailing slash so they can easily be identified.
+     - Old listfiles will be automatically updated on first access. This will happen to all old listfiles when a new package is installed (`vcpkg install`) or after a call to `vcpkg owns`.
+  * Fixes and improvements in existing portfiles and the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  WED, 15 Feb 2017 19:30:00 -0800
+
+
 vcpkg (0.0.72)
 --------------
   * Add ports:
