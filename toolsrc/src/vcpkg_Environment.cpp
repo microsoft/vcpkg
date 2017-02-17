@@ -74,7 +74,7 @@ namespace vcpkg::Environment
         static const fs::path default_cmake_installation_dir = Environment::get_ProgramFiles_platform_bitness() / "CMake/bin";
         static const fs::path default_cmake_installation_dir_32 = Environment::get_ProgramFiles_32_bit() / "CMake/bin";
 
-        const fs::path downloaded_cmake = paths.downloads / "cmake-3.7.2-win32-x86" / "bin";
+        const fs::path downloaded_cmake = paths.downloads / "cmake-3.8.0-rc1-win32-x86" / "bin";
         const std::wstring path_buf = Strings::wformat(L"%s;%s;%s;%s",
                                                        downloaded_cmake.native(),
                                                        *System::get_environmental_variable(L"PATH"),
@@ -82,7 +82,7 @@ namespace vcpkg::Environment
                                                        default_cmake_installation_dir_32.native());
         System::set_environmental_variable(L"PATH", path_buf.c_str());
 
-        static constexpr std::array<int, 3> cmake_version = { 3,7,2 };
+        static constexpr std::array<int, 3> cmake_version = { 3,8,0 };
         static const std::wstring version_check_cmd = L"cmake --version 2>&1";
         const std::wstring install_cmd = create_default_install_cmd(paths, L"cmake");
         ensure_on_path(cmake_version, version_check_cmd, install_cmd);
