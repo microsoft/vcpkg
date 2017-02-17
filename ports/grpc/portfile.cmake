@@ -3,39 +3,28 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 include(vcpkg_common_functions)
-find_program(GIT git)
 
-set(GIT_URL "https://github.com/grpc/grpc.git")
-set(GIT_REV "1674f650ad9411448a35b7c19c5dbdaf0ebd8916")
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/grpc-1.1.2)
 
-if(NOT EXISTS "${DOWNLOADS}/grpc.git")
-    message(STATUS "Cloning")
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} clone --bare ${GIT_URL} ${DOWNLOADS}/grpc.git
-        WORKING_DIRECTORY ${DOWNLOADS}
-        LOGNAME clone
-    )
+if(EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
+    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
 endif()
-message(STATUS "Cloning done")
 
-if(NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
-    message(STATUS "Adding worktree")
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} worktree add -f --detach ${CURRENT_BUILDTREES_DIR}/src ${GIT_REV}
-        WORKING_DIRECTORY ${DOWNLOADS}/grpc.git
-        LOGNAME worktree
-    )
-    message(STATUS "Updating sumbodules")
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} submodule update --init third_party/nanopb
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src
-        LOGNAME submodule
-    )
-endif()
-message(STATUS "Adding worktree and updating sumbodules done")
+vcpkg_download_distfile(ARCHIVE_FILE
+    URLS "https://github.com/grpc/grpc/archive/v1.1.2.zip"
+    FILENAME "grpc-v1.1.2.tar.gz"
+    SHA512 6e0666ecb72f0a78148fadf627e05b5ba0f1c893919f1e691775d09374e7c4b9b05ff1d276e716ac2a81eb2a3fb88c4a095928589286d2f083bd60539050f5d9
+)
+vcpkg_extract_source_archive(${ARCHIVE_FILE})
+
+# patch is from https://github.com/grpc/grpc/commit/a5fac1f8a00b0ba6ca784baa4783ab947579693b
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/grpc-fix-cmake-build.patch
+)
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src
+    SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DgRPC_INSTALL=ON
         -DgRPC_ZLIB_PROVIDER=package
@@ -66,7 +55,7 @@ string(REPLACE "\${_IMPORT_PREFIX}/bin/" "\${_IMPORT_PREFIX}/tools/" _contents "
 string(REPLACE "\${_IMPORT_PREFIX}/lib/" "\${_IMPORT_PREFIX}/debug/lib/" _contents "${_contents}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/grpc/gRPCTargets-debug.cmake "${_contents}")
 
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/grpc RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/grpc RENAME copyright)
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
 file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/grpc_cpp_plugin.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
 
