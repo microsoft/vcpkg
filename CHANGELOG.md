@@ -1,3 +1,12 @@
+vcpkg (0.0.74)
+--------------
+  * Bump required version & auto-downloaded version of `cmake` to 3.8.0 (was 3.7.x). This fixes UWP builds with Visual Studio 2017
+  * Fix `vcpkg build` not printing out the missing dependencies on fail
+  * Fixes and improvements in the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  THU, 16 Feb 2017 18:15:00 -0800
+
+
 vcpkg (0.0.73)
 --------------
   * Add ports:
