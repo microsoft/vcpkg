@@ -115,17 +115,9 @@ namespace vcpkg::Commands::Build
     void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
         static const std::string example = Commands::Help::create_example_string("build zlib:x64-windows");
-
-        // Installing multiple packages leads to unintuitive behavior if one of them depends on another.
-        // Allowing only 1 package for now.
-
-        args.check_exact_arg_count(1, example);
-
-        StatusParagraphs status_db = database_load_check(paths);
-
+        args.check_exact_arg_count(1, example); // Build only takes a single package and all dependencies must already be installed
         const package_spec spec = Input::check_and_get_package_spec(args.command_arguments.at(0), default_target_triplet, example);
         Input::check_triplet(spec.target_triplet(), paths);
-
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_CHECKS_ONLY });
         if (options.find(OPTION_CHECKS_ONLY) != options.end())
         {
@@ -143,6 +135,7 @@ namespace vcpkg::Commands::Build
         const SourceParagraph& spgh = *maybe_spgh.get();
 
         Environment::ensure_utilities_on_path(paths);
+        StatusParagraphs status_db = database_load_check(paths);
         const BuildResult result = build_package(spgh, spec, paths, paths.port_dir(spec), status_db);
         if (result == BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES)
         {
