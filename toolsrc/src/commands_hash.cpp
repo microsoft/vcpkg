@@ -30,6 +30,7 @@ namespace vcpkg::Commands::Hash
             "The argument should be a file path\n%s", Commands::Help::create_example_string("hash boost_1_62_0.tar.bz2"));
         args.check_min_arg_count(1, example);
         args.check_max_arg_count(2, example);
+        args.check_and_get_optional_command_arguments({});
 
         if (args.command_arguments.size() == 1)
         {
