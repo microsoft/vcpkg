@@ -1,7 +1,13 @@
 [CmdletBinding()]
 param(
-    [string]$Dependency
+    [string]$Dependency,
+    [ValidateNotNullOrEmpty()]
+    [string]$downloadPromptOverride = "0"
 )
+
+$downloadPromptOverride_NO_OVERRIDE= 0
+$downloadPromptOverride_DO_NOT_PROMPT = 1
+$downloadPromptOverride_ALWAYS_PROMPT = 2
 
 Import-Module BitsTransfer
 
@@ -12,9 +18,13 @@ $downloadsDir = "$vcpkgRootDir\downloads"
 
 function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 {
-    function promptForDownload([string]$title, [string]$message, [string]$yesDescription, [string]$noDescription)
+    function promptForDownload([string]$title, [string]$message, [string]$yesDescription, [string]$noDescription, [string]$downloadPromptOverride)
     {
-        if ((Test-Path "$downloadsDir\AlwaysAllowEverything") -Or (Test-Path "$downloadsDir\AlwaysAllowDownloads"))
+        $do_not_prompt =    ($downloadPromptOverride -eq $downloadPromptOverride_DO_NOT_PROMPT) -Or
+                            (Test-Path "$downloadsDir\AlwaysAllowEverything") -Or
+                            (Test-Path "$downloadsDir\AlwaysAllowDownloads")
+
+        if (($downloadPromptOverride -ne $downloadPromptOverride_ALWAYS_PROMPT) -And $do_not_prompt)
         {
             return $true
         }
@@ -57,7 +67,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         $yesDescription = "Downloads " + $Dependency + " v" + $downloadVersion +" app-locally."
         $noDescription = "Does not download " + $Dependency + "."
 
-        $userAllowedDownload = promptForDownload $title $message $yesDescription $noDescription
+        $userAllowedDownload = promptForDownload $title $message $yesDescription $noDescription $downloadPromptOverride
         if (!$userAllowedDownload)
         {
             throw [System.IO.FileNotFoundException] ("Could not detect suitable version of " + $Dependency + " and download not allowed")
