@@ -14,17 +14,10 @@ namespace vcpkg::Commands::CI
     using Dependencies::install_plan_type;
     using Build::BuildResult;
 
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
+    static std::vector<package_spec> load_all_package_specs(const fs::path& directory, const triplet& target_triplet)
     {
-        static const std::string example = Commands::Help::create_example_string("ci x64-windows");
-        args.check_max_arg_count(1, example);
-        const triplet target_triplet = args.command_arguments.size() == 1 ? triplet::from_canonical_name(args.command_arguments.at(0)) : default_target_triplet;
-        Input::check_triplet(target_triplet, paths);
-
-        StatusParagraphs status_db = database_load_check(paths);
-
         std::vector<fs::path> port_folders;
-        Files::non_recursive_find_matching_paths_in_dir(paths.ports, [](const fs::path& current)
+        Files::non_recursive_find_matching_paths_in_dir(directory, [](const fs::path& current)
                                                         {
                                                             return fs::is_directory(current);
                                                         }, &port_folders);
@@ -35,6 +28,19 @@ namespace vcpkg::Commands::CI
             specs.push_back(package_spec::from_name_and_triplet(p.filename().generic_string(), target_triplet).get_or_throw());
         }
 
+        return specs;
+    }
+
+    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
+    {
+        static const std::string example = Commands::Help::create_example_string("ci x64-windows");
+        args.check_max_arg_count(1, example);
+        const triplet target_triplet = args.command_arguments.size() == 1 ? triplet::from_canonical_name(args.command_arguments.at(0)) : default_target_triplet;
+        Input::check_triplet(target_triplet, paths);
+        args.check_and_get_optional_command_arguments({});
+        const std::vector<package_spec> specs = load_all_package_specs(paths.ports, target_triplet);
+
+        StatusParagraphs status_db = database_load_check(paths);
         const std::vector<package_spec_with_install_plan> install_plan = Dependencies::create_install_plan(paths, specs, status_db);
         Checks::check_exit(!install_plan.empty(), "Install plan cannot be empty");
 
