@@ -296,6 +296,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         static const std::string example = Strings::format("Commands:\n"
                                                            "%s", INTEGRATE_COMMAND_HELPSTRING);
         args.check_exact_arg_count(1, example);
+        args.check_and_get_optional_command_arguments({});
 
         if (args.command_arguments[0] == "install")
         {
