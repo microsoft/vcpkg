@@ -187,10 +187,11 @@ namespace vcpkg::Commands::Install
     {
         static const std::string example = Commands::Help::create_example_string("install zlib zlib:x64-windows curl boost");
         args.check_min_arg_count(1, example);
-        StatusParagraphs status_db = database_load_check(paths);
-
         std::vector<package_spec> specs = Input::check_and_get_package_specs(args.command_arguments, default_target_triplet, example);
         Input::check_triplets(specs, paths);
+        args.check_and_get_optional_command_arguments({});
+
+        StatusParagraphs status_db = database_load_check(paths);
         std::vector<package_spec_with_install_plan> install_plan = Dependencies::create_install_plan(paths, specs, status_db);
         Checks::check_exit(!install_plan.empty(), "Install plan cannot be empty");
 
