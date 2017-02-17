@@ -10,6 +10,7 @@ namespace vcpkg::Commands::Edit
     {
         static const std::string example = Commands::Help::create_example_string("edit zlib");
         args.check_exact_arg_count(1, example);
+        args.check_and_get_optional_command_arguments({});
         const std::string port_name = args.command_arguments.at(0);
 
         const fs::path portpath = paths.ports / port_name;
