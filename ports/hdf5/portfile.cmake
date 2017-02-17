@@ -30,6 +30,9 @@ vcpkg_configure_cmake(
         -DHDF5_ENABLE_SZIP_ENCODING=ON
         -DHDF5_INSTALL_DATA_DIR=share/hdf5/data
         -DHDF5_INSTALL_CMAKE_DIR=share/hdf5
+        "-DSZIP_LIBRARY_DEBUG=${CURRENT_INSTALLED_DIR}\\debug\\lib\\szip_D.lib"
+        "-DSZIP_LIBRARY_RELEASE=${CURRENT_INSTALLED_DIR}\\lib\\szip.lib"
+        "-DSZIP_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}\\include"
 )
 
 vcpkg_install_cmake()
