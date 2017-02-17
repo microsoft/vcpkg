@@ -1,0 +1,3 @@
+Source: pthread
+Version: 2.10.0-19fd50
+Description: pthread library for windows
