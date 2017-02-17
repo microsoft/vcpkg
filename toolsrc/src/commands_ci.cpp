@@ -41,13 +41,13 @@ namespace vcpkg::Commands::CI
         Environment::ensure_utilities_on_path(paths);
 
         std::vector<BuildResult> results;
-        Stopwatch stopwatch = Stopwatch::createStarted();
+        const ElapsedTime timer = ElapsedTime::createStarted();
         size_t counter = 0;
         const size_t package_count = install_plan.size();
         for (const package_spec_with_install_plan& action : install_plan)
         {
             counter++;
-            System::println("Starting package %d/%d: %s. Time Elapsed: %s", counter, package_count, action.spec.toString(), stopwatch.toString());
+            System::println("Starting package %d/%d: %s. Time Elapsed: %s", counter, package_count, action.spec.toString(), timer.toString());
             try
             {
                 if (action.plan.plan_type == install_plan_type::ALREADY_INSTALLED)
@@ -84,7 +84,7 @@ namespace vcpkg::Commands::CI
             }
         }
 
-        System::println(stopwatch.toString());
+        System::println(timer.toString());
 
         for (size_t i = 0; i < results.size(); i++)
         {
