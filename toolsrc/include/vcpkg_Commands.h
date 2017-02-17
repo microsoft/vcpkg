@@ -79,17 +79,17 @@ namespace vcpkg::Commands
         void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths);
     }
 
-    namespace Import
-    {
-        void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths);
-    }
-
     namespace Owns
     {
         void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths);
     }
 
     namespace Cache
+    {
+        void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths);
+    }
+
+    namespace Import
     {
         void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths);
     }
