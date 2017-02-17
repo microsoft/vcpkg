@@ -8,6 +8,8 @@ namespace vcpkg::Commands::Contact
     void  perform_and_exit(const vcpkg_cmd_arguments& args)
     {
         args.check_exact_arg_count(0);
+        args.check_and_get_optional_command_arguments({});
+
         System::println("Send an email to %s with any feedback.", Info::email());
         exit(EXIT_SUCCESS);
     }

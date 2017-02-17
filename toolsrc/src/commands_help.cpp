@@ -67,6 +67,8 @@ namespace vcpkg::Commands::Help
     void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
         args.check_max_arg_count(1);
+        args.check_and_get_optional_command_arguments({});
+
         if (args.command_arguments.empty())
         {
             print_usage();

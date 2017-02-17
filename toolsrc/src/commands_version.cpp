@@ -8,6 +8,8 @@ namespace vcpkg::Commands::Version
     void perform_and_exit(const vcpkg_cmd_arguments& args)
     {
         args.check_exact_arg_count(0);
+        args.check_and_get_optional_command_arguments({});
+
         System::println("Vcpkg package management program version %s\n"
                         "\n"
                         "See LICENSE.txt for license information.", Info::version()
