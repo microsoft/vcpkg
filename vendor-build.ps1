@@ -21,8 +21,9 @@ if (!(Test-Path vcpkg.exe)) {
 	lua-intf:x86-windows-mixed `
 	pion:x86-windows-mixed `
 	rapidxml:x86-windows-mixed `
-	snmp-pp:x86-windows-mixed
+	snmp-pp:x86-windows-mixed `
+	pthread:x86-windows-mixed
 if ($LastExitCode -ne 0) { throw }
 
 # update the version anytime the installed package versions change
-Write-Output 1 > installed/version.txt
+Write-Output 2 > installed/version.txt
