@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "Stopwatch.h"
+#include "vcpkg_Chrono.h"
 #include "vcpkg_Checks.h"
 
 namespace vcpkg

@@ -157,7 +157,7 @@
     <ClInclude Include="..\include\SourceParagraph.h" />
     <ClInclude Include="..\include\StatusParagraph.h" />
     <ClInclude Include="..\include\StatusParagraphs.h" />
-    <ClInclude Include="..\include\Stopwatch.h" />
+    <ClInclude Include="..\include\vcpkg_Chrono.h" />
     <ClInclude Include="..\include\triplet.h" />
     <ClInclude Include="..\include\vcpkglib.h" />
     <ClInclude Include="..\include\vcpkglib_helpers.h" />
@@ -216,7 +216,7 @@
     <ClCompile Include="..\src\PostBuildLint_ConfigurationType.cpp" />
     <ClCompile Include="..\src\PostBuildLint_LinkageType.cpp" />
     <ClCompile Include="..\src\PostBuildLint_BuildType.cpp" />
-    <ClCompile Include="..\src\Stopwatch.cpp" />
+    <ClCompile Include="..\src\vcpkg_Chrono.cpp" />
     <ClCompile Include="..\src\vcpkglib.cpp" />
     <ClCompile Include="..\src\package_spec.cpp" />
     <ClCompile Include="..\src\package_spec_parse_result.cpp" />

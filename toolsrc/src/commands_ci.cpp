@@ -6,7 +6,7 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Dependencies.h"
 #include "vcpkg_Input.h"
-#include "Stopwatch.h"
+#include "vcpkg_Chrono.h"
 
 namespace vcpkg::Commands::CI
 {
