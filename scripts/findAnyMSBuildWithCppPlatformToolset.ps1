@@ -33,19 +33,28 @@ if (-not $DisableVS2015)
         # In 64-bit systems, this is under the Wow6432Node.
         try
         {
-            $VS14InstallDir = $(gp Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\visualstudio\14.0 InstallDir -erroraction Stop | % InstallDir)
+            $VS14InstallDir = $(gp Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\visualstudio\14.0 InstallDir -erroraction Stop | % { $_.InstallDir })
             Write-Verbose "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\visualstudio\14.0 - Found"
         }
         catch
         {
-            $VS14InstallDir = $(gp Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\visualstudio\14.0 InstallDir -erroraction Stop | % InstallDir)
+            $VS14InstallDir = $(gp Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\visualstudio\14.0 InstallDir -erroraction Stop | % { $_.InstallDir })
             Write-Verbose "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\visualstudio\14.0 - Found"
         }
         if (!(Test-Path "${VS14InstallDir}..\..\VC\bin\cl.exe")) { throw }
         Write-Verbose "${VS14InstallDir}..\..\VC\bin\cl.exe - Found"
 
-        $MSBuild14 = $(gp Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\msbuild\toolsversions\14.0 MSBuildToolsPath -erroraction Stop | % MSBuildToolsPath)
-        Write-Verbose "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\msbuild\toolsversions\14.0 - Found"
+
+        try
+        {
+            $MSBuild14 = $(gp Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\msbuild\toolsversions\14.0 MSBuildToolsPath -erroraction Stop | % { $_.MSBuildToolsPath })
+            Write-Verbose "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\msbuild\toolsversions\14.0 - Found"
+        }
+        catch
+        {
+            $MSBuild14 = $(gp Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\msbuild\toolsversions\14.0 MSBuildToolsPath -erroraction Stop | % { $_.MSBuildToolsPath })
+            Write-Verbose "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\msbuild\toolsversions\14.0 - Found"
+        }
         if (!(Test-Path "${MSBuild14}MSBuild.exe")) { throw }
         Write-Verbose "${MSBuild14}MSBuild.exe - Found"
 
