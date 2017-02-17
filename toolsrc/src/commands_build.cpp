@@ -112,13 +112,8 @@ namespace vcpkg::Commands::Build
                                , spec.toString(), Info::version());
     }
 
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
+    void perform_and_exit(const package_spec& spec, const fs::path& port_dir, const std::unordered_set<std::string>& options, const vcpkg_paths& paths)
     {
-        static const std::string example = Commands::Help::create_example_string("build zlib:x64-windows");
-        args.check_exact_arg_count(1, example); // Build only takes a single package and all dependencies must already be installed
-        const package_spec spec = Input::check_and_get_package_spec(args.command_arguments.at(0), default_target_triplet, example);
-        Input::check_triplet(spec.target_triplet(), paths);
-        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_CHECKS_ONLY });
         if (options.find(OPTION_CHECKS_ONLY) != options.end())
         {
             const size_t error_count = PostBuildLint::perform_all_checks(spec, paths);
@@ -129,8 +124,7 @@ namespace vcpkg::Commands::Build
             exit(EXIT_SUCCESS);
         }
 
-        // Explicitly load and use the portfile's build dependencies when resolving the build command (instead of a cached package's dependencies).
-        const expected<SourceParagraph> maybe_spgh = try_load_port(paths, spec.name());
+        const expected<SourceParagraph> maybe_spgh = try_load_port(port_dir);
         Checks::check_exit(!maybe_spgh.error_code(), "Could not find package named %s: %s", spec, maybe_spgh.error_code().message());
         const SourceParagraph& spgh = *maybe_spgh.get();
 
@@ -167,5 +161,15 @@ namespace vcpkg::Commands::Build
         }
 
         exit(EXIT_SUCCESS);
+    }
+
+    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
+    {
+        static const std::string example = Commands::Help::create_example_string("build zlib:x64-windows");
+        args.check_exact_arg_count(1, example); // Build only takes a single package and all dependencies must already be installed
+        const package_spec spec = Input::check_and_get_package_spec(args.command_arguments.at(0), default_target_triplet, example);
+        Input::check_triplet(spec.target_triplet(), paths);
+        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_CHECKS_ONLY });
+        perform_and_exit(spec, paths.port_dir(spec), options, paths);
     }
 }
