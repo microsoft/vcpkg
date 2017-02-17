@@ -135,6 +135,11 @@ namespace vcpkg
         return args;
     }
 
+    void vcpkg_cmd_arguments::check_no_optional_command_arguments() const
+    {
+        this->check_and_get_optional_command_arguments({});
+    }
+
     std::unordered_set<std::string> vcpkg_cmd_arguments::check_and_get_optional_command_arguments(const std::vector<std::string>& valid_options) const
     {
         std::unordered_set<std::string> output;

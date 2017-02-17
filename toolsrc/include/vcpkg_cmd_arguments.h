@@ -20,6 +20,7 @@ namespace vcpkg
 
         std::string command;
         std::vector<std::string> command_arguments;
+        void vcpkg_cmd_arguments::check_no_optional_command_arguments() const;
         std::unordered_set<std::string> check_and_get_optional_command_arguments(const std::vector<std::string>& valid_options) const;
 
         void check_max_arg_count(const size_t expected_arg_count) const;
