@@ -8,7 +8,6 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Environment.h"
 #include "metrics.h"
-#include "vcpkg_info.h"
 #include "vcpkg_Enums.h"
 
 namespace vcpkg::Commands::Build

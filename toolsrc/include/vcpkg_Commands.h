@@ -127,6 +127,7 @@ namespace vcpkg::Commands
 
     namespace Contact
     {
+        const std::string& email();
         void perform_and_exit(const vcpkg_cmd_arguments& args);
     }
 

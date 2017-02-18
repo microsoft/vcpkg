@@ -4,7 +4,6 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Files.h"
 #include "Paragraphs.h"
-#include "vcpkg_info.h"
 
 namespace vcpkg::Commands::Update
 {

@@ -173,7 +173,6 @@
     <ClInclude Include="..\include\vcpkg_Maps.h" />
     <ClInclude Include="..\include\vcpkg_optional.h" />
     <ClInclude Include="..\include\vcpkg_paths.h" />
-    <ClInclude Include="..\include\vcpkg_info.h" />
     <ClInclude Include="..\include\vcpkg_Sets.h" />
     <ClInclude Include="..\include\vcpkg_Strings.h" />
     <ClInclude Include="..\include\vcpkg_System.h" />
@@ -234,7 +233,6 @@
     <ClCompile Include="..\src\vcpkg_Files.cpp" />
     <ClCompile Include="..\src\vcpkg_Input.cpp" />
     <ClCompile Include="..\src\vcpkg_paths.cpp" />
-    <ClCompile Include="..\src\vcpkg_info.cpp" />
     <ClCompile Include="..\src\vcpkg_Strings.cpp" />
     <ClCompile Include="..\src\vcpkg_System.cpp" />
   </ItemGroup>

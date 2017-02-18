@@ -12,7 +12,6 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Input.h"
 #include "Paragraphs.h"
-#include "vcpkg_info.h"
 #include "vcpkg_Strings.h"
 
 using namespace vcpkg;
@@ -235,7 +234,7 @@ int wmain(const int argc, const wchar_t* const* const argv)
     std::cerr
         << "vcpkg.exe has crashed.\n"
         << "Please send an email to:\n"
-        << "    " << Info::email() << "\n"
+        << "    " << Commands::Contact::email() << "\n"
         << "containing a brief summary of what you were trying to do and the following data blob:\n"
         << "\n"
         << "Version=" << Commands::Version::version() << "\n"
