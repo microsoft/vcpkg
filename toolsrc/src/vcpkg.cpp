@@ -192,7 +192,7 @@ int wmain(const int argc, const wchar_t* const* const argv)
             Flush();
         });
 
-    TrackProperty("version", Info::version());
+    TrackProperty("version", Commands::Version::version());
 
     const std::string trimmed_command_line = trim_path_from_command_line(Strings::utf16_to_utf8(GetCommandLineW()));
     TrackProperty("cmdline", trimmed_command_line);
@@ -238,7 +238,7 @@ int wmain(const int argc, const wchar_t* const* const argv)
         << "    " << Info::email() << "\n"
         << "containing a brief summary of what you were trying to do and the following data blob:\n"
         << "\n"
-        << "Version=" << Info::version() << "\n"
+        << "Version=" << Commands::Version::version() << "\n"
         << "EXCEPTION='" << exc_msg << "'\n"
         << "CMD=\n";
     for (int x = 0; x < argc; ++x)

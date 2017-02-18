@@ -109,7 +109,7 @@ namespace vcpkg::Commands::Build
                                "  Vcpkg version: %s\n"
                                "\n"
                                "Additionally, attach any relevant sections from the log files above."
-                               , spec.toString(), Info::version());
+                               , spec.toString(), Version::version());
     }
 
     void perform_and_exit(const package_spec& spec, const fs::path& port_dir, const std::unordered_set<std::string>& options, const vcpkg_paths& paths)

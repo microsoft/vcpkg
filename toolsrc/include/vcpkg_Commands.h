@@ -121,6 +121,7 @@ namespace vcpkg::Commands
 
     namespace Version
     {
+        const std::string& version();
         void perform_and_exit(const vcpkg_cmd_arguments& args);
     }
 
