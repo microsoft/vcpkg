@@ -3,10 +3,10 @@
 #include "vcpkg_System.h"
 #include "metrics.h"
 
-#define STRINGIFY(X) #X
+#define STRINGIFY(...) #__VA_ARGS__
 #define MACRO_TO_STRING(X) STRINGIFY(X)
 
-#define VCPKG_VERSION_AS_STRING MACRO_TO_STRING(VCPKG_VERSION)"" // Double quotes needed at the end to prevent blank token
+#define VCPKG_VERSION_AS_STRING MACRO_TO_STRING(VCPKG_VERSION)
 
 namespace vcpkg::Commands::Version
 {
@@ -15,12 +15,7 @@ namespace vcpkg::Commands::Version
         static const std::string s_version =
 #include "../VERSION.txt"
 
-
-#pragma warning( push )
-#pragma warning( disable : 4003)
-            // VCPKG_VERSION can be defined but have no value, which yields C4003.
             + std::string(VCPKG_VERSION_AS_STRING)
-#pragma warning( pop )
 #ifndef NDEBUG
             + std::string("-debug")
 #endif
