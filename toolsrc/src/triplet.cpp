@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "triplet.h"
 #include "vcpkg_Checks.h"
+#include "vcpkg_Strings.h"
 
 namespace vcpkg
 {
@@ -37,9 +38,7 @@ namespace vcpkg
 
     triplet triplet::from_canonical_name(const std::string& triplet_as_string)
     {
-        std::string s(triplet_as_string);
-        std::transform(s.begin(), s.end(), s.begin(), ::tolower);
-
+        const std::string s(Strings::ascii_to_lowercase(triplet_as_string));
         auto it = std::find(s.cbegin(), s.cend(), '-');
         Checks::check_exit(it != s.cend(), "Invalid triplet: %s", triplet_as_string);
 

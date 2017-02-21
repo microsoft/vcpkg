@@ -1,19 +1,26 @@
 #include "pch.h"
 #include "PostBuildLint_ConfigurationType.h"
-#include "vcpkg_Checks.h"
+#include "vcpkg_Enums.h"
 
-namespace vcpkg::PostBuildLint
+namespace vcpkg::PostBuildLint::ConfigurationType
 {
-    std::string to_string(const ConfigurationType& conf)
+    static const std::string NULLVALUE_STRING = Enums::nullvalue_toString(ENUM_NAME);
+
+    static const std::string NAME_DEBUG = "Debug";
+    static const std::string NAME_RELEASE = "Release";
+
+    const std::string& type::toString() const
     {
-        switch (conf)
+        switch (this->backing_enum)
         {
-            case ConfigurationType::DEBUG:
-                return "Debug";
-            case ConfigurationType::RELEASE:
-                return "Release";
-            default:
-                Checks::unreachable();
+        case ConfigurationType::DEBUG:
+            return NAME_DEBUG;
+        case ConfigurationType::RELEASE:
+            return NAME_RELEASE;
+        case ConfigurationType::NULLVALUE:
+            return NULLVALUE_STRING;
+        default:
+            Enums::unreachable(ENUM_NAME);
         }
     }
 }

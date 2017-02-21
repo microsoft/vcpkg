@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0d743da4..92f91103 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -39,7 +39,6 @@ install (DIRECTORY
+     cpp/inc/bond
+     cpp/generated/bond
+     python/inc/bond
+-    thirdparty/rapidjson/include/rapidjson
+     DESTINATION include
+     PATTERN *.cpp EXCLUDE)
+ 

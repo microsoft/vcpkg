@@ -75,5 +75,5 @@ namespace vcpkg::Dependencies
 
     std::vector<package_spec_with_install_plan> create_install_plan(const vcpkg_paths& paths, const std::vector<package_spec>& specs, const StatusParagraphs& status_db);
 
-    std::vector<package_spec_with_remove_plan> create_remove_plan(const vcpkg_paths& paths, const std::vector<package_spec>& specs, const StatusParagraphs& status_db);
+    std::vector<package_spec_with_remove_plan> create_remove_plan(const std::vector<package_spec>& specs, const StatusParagraphs& status_db);
 }

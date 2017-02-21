@@ -1,14 +1,21 @@
 #include "pch.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
-#include "vcpkg_info.h"
 
 namespace vcpkg::Commands::Contact
 {
-    void  perform_and_exit(const vcpkg_cmd_arguments& args)
+    const std::string& email()
+    {
+        static const std::string s_email = R"(vcpkg@microsoft.com)";
+        return s_email;
+    }
+
+    void perform_and_exit(const vcpkg_cmd_arguments& args)
     {
         args.check_exact_arg_count(0);
-        System::println("Send an email to %s with any feedback.", Info::email());
+        args.check_and_get_optional_command_arguments({});
+
+        System::println("Send an email to %s with any feedback.", email());
         exit(EXIT_SUCCESS);
     }
 }

@@ -80,7 +80,7 @@ namespace vcpkg::Dependencies
                 continue;
             }
 
-            expected<SourceParagraph> maybe_spgh = try_load_port(paths, spec.name());
+            expected<SourceParagraph> maybe_spgh = try_load_port(paths.port_dir(spec));
             SourceParagraph* spgh = maybe_spgh.get();
             Checks::check_exit(spgh != nullptr, "Cannot find package %s", spec.name());
             process_dependencies(filter_dependencies(spgh->depends, spec.target_triplet()));
@@ -97,7 +97,7 @@ namespace vcpkg::Dependencies
         return ret;
     }
 
-    std::vector<package_spec_with_remove_plan> create_remove_plan(const vcpkg_paths& paths, const std::vector<package_spec>& specs, const StatusParagraphs& status_db)
+    std::vector<package_spec_with_remove_plan> create_remove_plan(const std::vector<package_spec>& specs, const StatusParagraphs& status_db)
     {
         std::unordered_set<package_spec> specs_as_set(specs.cbegin(), specs.cend());
 

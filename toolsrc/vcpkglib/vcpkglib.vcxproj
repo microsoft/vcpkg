@@ -22,7 +22,7 @@
     <ProjectGuid>{B98C92B7-2874-4537-9D46-D14E5C237F04}</ProjectGuid>
     <RootNamespace>vcpkglib</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
-    <PlatformToolset Condition="'$(PlatformToolset)' == ''">v140</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -85,7 +85,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
@@ -157,7 +157,7 @@
     <ClInclude Include="..\include\SourceParagraph.h" />
     <ClInclude Include="..\include\StatusParagraph.h" />
     <ClInclude Include="..\include\StatusParagraphs.h" />
-    <ClInclude Include="..\include\Stopwatch.h" />
+    <ClInclude Include="..\include\vcpkg_Chrono.h" />
     <ClInclude Include="..\include\triplet.h" />
     <ClInclude Include="..\include\vcpkglib.h" />
     <ClInclude Include="..\include\vcpkglib_helpers.h" />
@@ -165,6 +165,7 @@
     <ClInclude Include="..\include\vcpkg_cmd_arguments.h" />
     <ClInclude Include="..\include\vcpkg_Commands.h" />
     <ClInclude Include="..\include\vcpkg_Dependencies.h" />
+    <ClInclude Include="..\include\vcpkg_Enums.h" />
     <ClInclude Include="..\include\vcpkg_Environment.h" />
     <ClInclude Include="..\include\vcpkg_Files.h" />
     <ClInclude Include="..\include\vcpkg_Graphs.h" />
@@ -172,13 +173,13 @@
     <ClInclude Include="..\include\vcpkg_Maps.h" />
     <ClInclude Include="..\include\vcpkg_optional.h" />
     <ClInclude Include="..\include\vcpkg_paths.h" />
-    <ClInclude Include="..\include\vcpkg_info.h" />
     <ClInclude Include="..\include\vcpkg_Sets.h" />
     <ClInclude Include="..\include\vcpkg_Strings.h" />
     <ClInclude Include="..\include\vcpkg_System.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\BinaryParagraph.cpp" />
+    <ClCompile Include="..\src\commands_ci.cpp" />
     <ClCompile Include="..\src\PostBuildLint_BuildInfo.cpp" />
     <ClCompile Include="..\src\PostBuildLint_BuildPolicies.cpp" />
     <ClCompile Include="..\src\coff_file_reader.cpp" />
@@ -214,7 +215,7 @@
     <ClCompile Include="..\src\PostBuildLint_ConfigurationType.cpp" />
     <ClCompile Include="..\src\PostBuildLint_LinkageType.cpp" />
     <ClCompile Include="..\src\PostBuildLint_BuildType.cpp" />
-    <ClCompile Include="..\src\Stopwatch.cpp" />
+    <ClCompile Include="..\src\vcpkg_Chrono.cpp" />
     <ClCompile Include="..\src\vcpkglib.cpp" />
     <ClCompile Include="..\src\package_spec.cpp" />
     <ClCompile Include="..\src\package_spec_parse_result.cpp" />
@@ -227,11 +228,11 @@
     <ClCompile Include="..\src\vcpkg_Checks.cpp" />
     <ClCompile Include="..\src\vcpkg_cmd_arguments.cpp" />
     <ClCompile Include="..\src\vcpkg_Dependencies.cpp" />
+    <ClCompile Include="..\src\vcpkg_Enums.cpp" />
     <ClCompile Include="..\src\vcpkg_Environment.cpp" />
     <ClCompile Include="..\src\vcpkg_Files.cpp" />
     <ClCompile Include="..\src\vcpkg_Input.cpp" />
     <ClCompile Include="..\src\vcpkg_paths.cpp" />
-    <ClCompile Include="..\src\vcpkg_info.cpp" />
     <ClCompile Include="..\src\vcpkg_Strings.cpp" />
     <ClCompile Include="..\src\vcpkg_System.cpp" />
   </ItemGroup>

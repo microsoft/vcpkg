@@ -22,7 +22,8 @@ namespace vcpkg::PostBuildLint
         std::regex regex;
 
         OutdatedDynamicCrt(const std::string& name, const std::string& regex_as_string)
-            : name(name), regex(std::regex(regex_as_string, std::regex_constants::icase)) {}
+            : name(name),
+              regex(std::regex(regex_as_string, std::regex_constants::icase)) {}
     };
 
     const std::vector<OutdatedDynamicCrt>& get_outdated_dynamic_crts()
@@ -424,24 +425,6 @@ namespace vcpkg::PostBuildLint
         return lint_status::SUCCESS;
     }
 
-    static lint_status check_no_subdirectories(const fs::path& dir)
-    {
-        const std::vector<fs::path> subdirectories = Files::recursive_find_matching_paths_in_dir(dir, [&](const fs::path& current)
-                                                                                                 {
-                                                                                                     return fs::is_directory(current);
-                                                                                                 });
-
-        if (!subdirectories.empty())
-        {
-            System::println(System::color::warning, "Directory %s should have no subdirectories", dir.generic_string());
-            System::println("The following subdirectories were found: ");
-            Files::print_paths(subdirectories);
-            return lint_status::ERROR_DETECTED;
-        }
-
-        return lint_status::SUCCESS;
-    }
-
     static lint_status check_bin_folders_are_not_present_in_static_build(const fs::path& package_dir)
     {
         const fs::path bin = package_dir / "bin";
@@ -486,7 +469,7 @@ namespace vcpkg::PostBuildLint
             System::println("The following empty directories were found: ");
             Files::print_paths(empty_directories);
             System::println(System::color::warning, "If a directory should be populated but is not, this might indicate an error in the portfile.\n"
-                            "If the directories are not needed and their creation cannot be disabled, use something like this in the portfile to remove them)\n"
+                            "If the directories are not needed and their creation cannot be disabled, use something like this in the portfile to remove them:\n"
                             "\n"
                             R"###(    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/a/dir ${CURRENT_PACKAGES_DIR}/some/other/dir))###""\n"
                             "\n");
@@ -499,12 +482,12 @@ namespace vcpkg::PostBuildLint
     struct BuildType_and_file
     {
         fs::path file;
-        BuildType build_type;
+        BuildType::type build_type;
     };
 
-    static lint_status check_crt_linkage_of_libs(const BuildType& expected_build_type, const std::vector<fs::path>& libs, const fs::path dumpbin_exe)
+    static lint_status check_crt_linkage_of_libs(const BuildType::type& expected_build_type, const std::vector<fs::path>& libs, const fs::path dumpbin_exe)
     {
-        std::vector<BuildType> bad_build_types = BuildType::values();
+        std::vector<BuildType::type> bad_build_types(BuildType::values.cbegin(), BuildType::values.cend());
         bad_build_types.erase(std::remove(bad_build_types.begin(), bad_build_types.end(), expected_build_type), bad_build_types.end());
 
         std::vector<BuildType_and_file> libs_with_invalid_crt;
@@ -515,7 +498,7 @@ namespace vcpkg::PostBuildLint
             System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
-            for (const BuildType& bad_build_type : bad_build_types)
+            for (const BuildType::type& bad_build_type : bad_build_types)
             {
                 if (std::regex_search(ec_data.output.cbegin(), ec_data.output.cend(), bad_build_type.crt_regex()))
                 {
@@ -546,6 +529,8 @@ namespace vcpkg::PostBuildLint
     {
         fs::path file;
         OutdatedDynamicCrt outdated_crt;
+
+        OutdatedDynamicCrt_and_file() = delete;
     };
 
     static lint_status check_outdated_crt_linkage_of_dlls(const std::vector<fs::path>& dlls, const fs::path dumpbin_exe)
@@ -616,6 +601,7 @@ namespace vcpkg::PostBuildLint
         left += static_cast<size_t>(right);
     }
 
+
     static size_t perform_all_checks_and_return_error_count(const package_spec& spec, const vcpkg_paths& paths)
     {
         const fs::path dumpbin_exe = Environment::get_dumpbin_exe(paths);
@@ -657,9 +643,9 @@ namespace vcpkg::PostBuildLint
 
         error_count += check_lib_architecture(spec.target_triplet().architecture(), libs);
 
-        switch (linkage_type_value_of(build_info.library_linkage))
+        switch (build_info.library_linkage)
         {
-            case LinkageType::DYNAMIC:
+            case LinkageType::backing_enum_t::DYNAMIC:
                 {
                     const std::vector<fs::path> debug_dlls = Files::recursive_find_files_with_extension_in_dir(debug_bin_dir, ".dll");
                     const std::vector<fs::path> release_dlls = Files::recursive_find_files_with_extension_in_dir(release_bin_dir, ".dll");
@@ -680,7 +666,7 @@ namespace vcpkg::PostBuildLint
                     error_count += check_outdated_crt_linkage_of_dlls(dlls, dumpbin_exe);
                     break;
                 }
-            case LinkageType::STATIC:
+            case LinkageType::backing_enum_t::STATIC:
                 {
                     std::vector<fs::path> dlls;
                     Files::recursive_find_files_with_extension_in_dir(package_dir, ".dll", &dlls);
@@ -688,23 +674,14 @@ namespace vcpkg::PostBuildLint
 
                     error_count += check_bin_folders_are_not_present_in_static_build(package_dir);
 
-                    error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::DEBUG, linkage_type_value_of(build_info.crt_linkage)), debug_libs, dumpbin_exe);
-                    error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::RELEASE, linkage_type_value_of(build_info.crt_linkage)), release_libs, dumpbin_exe);
+                    error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::DEBUG, build_info.crt_linkage), debug_libs, dumpbin_exe);
+                    error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::RELEASE, build_info.crt_linkage), release_libs, dumpbin_exe);
                     break;
                 }
-            case LinkageType::UNKNOWN:
-                {
-                    error_count += 1;
-                    System::println(System::color::warning, "Unknown library_linkage architecture: [ %s ]", build_info.library_linkage);
-                    break;
-                }
+            case LinkageType::backing_enum_t::NULLVALUE:
             default:
                 Checks::unreachable();
         }
-#if 0
-        error_count += check_no_subdirectories(package_dir / "lib");
-        error_count += check_no_subdirectories(package_dir / "debug" / "lib");
-#endif
 
         error_count += check_no_empty_folders(package_dir);
         error_count += check_no_files_in_package_dir_and_debug_dir(package_dir);
@@ -712,19 +689,18 @@ namespace vcpkg::PostBuildLint
         return error_count;
     }
 
-    void perform_all_checks(const package_spec& spec, const vcpkg_paths& paths)
+    size_t perform_all_checks(const package_spec& spec, const vcpkg_paths& paths)
     {
         System::println("-- Performing post-build validation");
-
         const size_t error_count = perform_all_checks_and_return_error_count(spec, paths);
+        System::println("-- Performing post-build validation done");
 
         if (error_count != 0)
         {
             const fs::path portfile = paths.ports / spec.name() / "portfile.cmake";
             System::println(System::color::error, "Found %u error(s). Please correct the portfile:\n    %s", error_count, portfile.string());
-            exit(EXIT_FAILURE);
         }
 
-        System::println("-- Performing post-build validation done");
+        return error_count;
     }
 }

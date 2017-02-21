@@ -4,13 +4,13 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Files.h"
 #include "Paragraphs.h"
-#include "vcpkg_info.h"
 
 namespace vcpkg::Commands::Update
 {
     void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
         args.check_exact_arg_count(0);
+        args.check_and_get_optional_command_arguments({});
         System::println("Using local portfile versions. To update the local portfiles, use `git pull`.");
 
         auto status_db = database_load_check(paths);
@@ -79,7 +79,7 @@ namespace vcpkg::Commands::Update
             auto num1 = sscanf_s(version_contents->c_str(), "\"%d.%d.%d\"", &maj1, &min1, &rev1);
 
             int maj2, min2, rev2;
-            auto num2 = sscanf_s(Info::version().c_str(), "%d.%d.%d-", &maj2, &min2, &rev2);
+            auto num2 = sscanf_s(Version::version().c_str(), "%d.%d.%d-", &maj2, &min2, &rev2);
 
             if (num1 == 3 && num2 == 3)
             {

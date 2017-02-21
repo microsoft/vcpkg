@@ -1,10 +1,10 @@
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/SFML-2.4.1)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/SFML-2.4.2)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.sfml-dev.org/files/SFML-2.4.1-sources.zip"
-    FILENAME "SFML-2.4.1-sources.zip"
-    SHA512 e2a49927e1db6ab94fa52b88460782fa2b28ccd4a8c75793e10c7669b24736f63aab723c2e1d8befc96f6f5cf4ed185f13da2550da721d206780003f158e5507)
+    URLS "http://www.sfml-dev.org/files/SFML-2.4.2-sources.zip"
+    FILENAME "SFML-2.4.2-sources.zip"
+    SHA512 14f2b9f244bbff681d1992581f20012f3073456e4baed0fb2bf2cf82538e9c5ddd8ce01b0cfb3874af47091ec19654aa23c426df04fe1ffcfa209623dc362f85)
 
 vcpkg_extract_source_archive(${ARCHIVE})
 

@@ -24,6 +24,7 @@ vcpkg_configure_cmake(
 		-DWITHOUT_SERVER=ON
 		-DWITH_UNIT_TESTS=OFF
 		-DENABLED_PROFILING=OFF
+		-DWIX_DIR=OFF
 )
 
 vcpkg_install_cmake()

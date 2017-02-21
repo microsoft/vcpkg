@@ -1,32 +1,69 @@
 [CmdletBinding()]
 param(
+    [Parameter(Mandatory=$False)]
+    [switch]$DisableVS2017 = $False,
 
+    [Parameter(Mandatory=$False)]
+    [switch]$DisableVS2015 = $False
 )
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 
-# VS2017
-$VisualStudio2017InstallationInstances = & $scriptsDir\findVisualStudioInstallationInstances.ps1
-foreach ($instance in $VisualStudio2017InstallationInstances)
+if (-not $DisableVS2017)
 {
-    $VCFolder= "$instance\VC\Tools\MSVC\"
-
-    if (Test-Path $VCFolder)
+    # VS2017
+    $VisualStudio2017InstallationInstances = & $scriptsDir\findVisualStudioInstallationInstances.ps1
+    foreach ($instance in $VisualStudio2017InstallationInstances)
     {
-        return "$instance\MSBuild\15.0\Bin\MSBuild.exe","v141"
+        $VCFolder= "$instance\VC\Tools\MSVC\"
+
+        if (Test-Path $VCFolder)
+        {
+            return "$instance\MSBuild\15.0\Bin\MSBuild.exe","v141"
+        }
     }
 }
 
-# VS2015
-$CandidateProgramFiles = "${env:PROGRAMFILES(X86)}", "${env:PROGRAMFILES}"
-foreach ($ProgramFiles in $CandidateProgramFiles)
+if (-not $DisableVS2015)
 {
-    $clExe= "$ProgramFiles\Microsoft Visual Studio 14.0\\VC\bin\cl.exe"
-
-    if (Test-Path $clExe)
+    # Try to locate VS2015 through the Registry
+    try
     {
-        return "$ProgramFiles\MSBuild\14.0\Bin\MSBuild.exe","v140"
+        # First ensure the compiler was installed (optional in 2015)
+        # In 64-bit systems, this is under the Wow6432Node.
+        try
+        {
+            $VS14InstallDir = $(gp Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\visualstudio\14.0 InstallDir -erroraction Stop | % { $_.InstallDir })
+            Write-Verbose "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\visualstudio\14.0 - Found"
+        }
+        catch
+        {
+            $VS14InstallDir = $(gp Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\visualstudio\14.0 InstallDir -erroraction Stop | % { $_.InstallDir })
+            Write-Verbose "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\visualstudio\14.0 - Found"
+        }
+        if (!(Test-Path "${VS14InstallDir}..\..\VC\bin\cl.exe")) { throw }
+        Write-Verbose "${VS14InstallDir}..\..\VC\bin\cl.exe - Found"
+
+
+        try
+        {
+            $MSBuild14 = $(gp Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\msbuild\toolsversions\14.0 MSBuildToolsPath -erroraction Stop | % { $_.MSBuildToolsPath })
+            Write-Verbose "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\msbuild\toolsversions\14.0 - Found"
+        }
+        catch
+        {
+            $MSBuild14 = $(gp Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\msbuild\toolsversions\14.0 MSBuildToolsPath -erroraction Stop | % { $_.MSBuildToolsPath })
+            Write-Verbose "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\msbuild\toolsversions\14.0 - Found"
+        }
+        if (!(Test-Path "${MSBuild14}MSBuild.exe")) { throw }
+        Write-Verbose "${MSBuild14}MSBuild.exe - Found"
+
+        return "${MSBuild14}MSBuild.exe","v140"
+    }
+    catch
+    {
+        Write-Verbose "Unable to locate a VS2015 installation with C++ support"
     }
 }
 
-throw "Could not find MSBuild with C++ support. VS2015 or above with C++ support need to be installed."
+throw "Could not find MSBuild version with C++ support. VS2015 or VS2017 (with C++) needs to be installed."

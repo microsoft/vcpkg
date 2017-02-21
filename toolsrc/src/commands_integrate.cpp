@@ -8,10 +8,10 @@
 namespace vcpkg::Commands::Integrate
 {
     static const std::array<fs::path, 2> old_system_target_files = {
-        "C:/Program Files (x86)/MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.nuget.targets",
-        "C:/Program Files (x86)/MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.system.targets"
+        Environment::get_ProgramFiles_32_bit() / "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.nuget.targets",
+        Environment::get_ProgramFiles_32_bit() / "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.system.targets"
     };
-    static const fs::path system_wide_targets_file = "C:/Program Files (x86)/MSBuild/Microsoft.Cpp/v4.0/V140/ImportBefore/Default/vcpkg.system.props";
+    static const fs::path system_wide_targets_file = Environment::get_ProgramFiles_32_bit() / "MSBuild/Microsoft.Cpp/v4.0/V140/ImportBefore/Default/vcpkg.system.props";
 
     static std::string create_appdata_targets_shortcut(const std::string& target_path) noexcept
     {
@@ -109,7 +109,7 @@ namespace vcpkg::Commands::Integrate
 
     static elevation_prompt_user_choice elevated_cmd_execute(const std::string& param)
     {
-        SHELLEXECUTEINFO shExInfo = {0};
+        SHELLEXECUTEINFO shExInfo = { 0 };
         shExInfo.cbSize = sizeof(shExInfo);
         shExInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
         shExInfo.hwnd = nullptr;
@@ -136,7 +136,7 @@ namespace vcpkg::Commands::Integrate
 
     static fs::path get_appdata_targets_path()
     {
-        return fs::path(System::wdupenv_str(L"LOCALAPPDATA")) / "vcpkg" / "vcpkg.user.targets";
+        return fs::path(*System::get_environmental_variable(L"LOCALAPPDATA")) / "vcpkg" / "vcpkg.user.targets";
     }
 
     static void integrate_install(const vcpkg_paths& paths)
@@ -214,10 +214,13 @@ namespace vcpkg::Commands::Integrate
             exit(EXIT_FAILURE);
         }
         System::println(System::color::success, "Applied user-wide integration for this vcpkg root.");
+        const fs::path cmake_toolchain = paths.buildsystems / "vcpkg.cmake";
         System::println("\n"
-            "All C++ projects can now #include any installed libraries.\n"
+            "All MSBuild C++ projects can now #include any installed libraries.\n"
             "Linking will be handled automatically.\n"
-            "Installing new libraries will make them instantly available.");
+            "Installing new libraries will make them instantly available.\n"
+            "\n"
+            "CMake projects should use -DCMAKE_TOOLCHAIN_FILE=%s", cmake_toolchain.generic_string());
 
         exit(EXIT_SUCCESS);
     }
@@ -293,6 +296,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         static const std::string example = Strings::format("Commands:\n"
                                                            "%s", INTEGRATE_COMMAND_HELPSTRING);
         args.check_exact_arg_count(1, example);
+        args.check_and_get_optional_command_arguments({});
 
         if (args.command_arguments[0] == "install")
         {

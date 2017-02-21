@@ -9,12 +9,18 @@ namespace vcpkg::Strings::details
         return std::isspace(c);
     };
 
+    // Avoids C4244 warnings because of char<->int conversion that occur when using std::tolower()
+    static char tolower_char(const char c)
+    {
+        return static_cast<char>(std::tolower(c));
+    }
+
     std::string format_internal(const char* fmtstr, ...)
     {
         va_list lst;
         va_start(lst, fmtstr);
 
-        auto sz = _vscprintf(fmtstr, lst);
+        const int sz = _vscprintf(fmtstr, lst);
         std::string output(sz, '\0');
         _vsnprintf_s(&output[0], output.size() + 1, output.size() + 1, fmtstr, lst);
         va_end(lst);
@@ -27,7 +33,7 @@ namespace vcpkg::Strings::details
         va_list lst;
         va_start(lst, fmtstr);
 
-        auto sz = _vscwprintf(fmtstr, lst);
+        const int sz = _vscwprintf(fmtstr, lst);
         std::wstring output(sz, '\0');
         _vsnwprintf_s(&output[0], output.size() + 1, output.size() + 1, fmtstr, lst);
         va_end(lst);
@@ -52,18 +58,17 @@ namespace vcpkg::Strings
 
     std::string::const_iterator case_insensitive_ascii_find(const std::string& s, const std::string& pattern)
     {
-        std::string pattern_as_lower_case;
-        std::transform(pattern.begin(), pattern.end(), back_inserter(pattern_as_lower_case), tolower);
+        const std::string pattern_as_lower_case(ascii_to_lowercase(pattern));
         return search(s.begin(), s.end(), pattern_as_lower_case.begin(), pattern_as_lower_case.end(), [](const char a, const char b)
                       {
-                          return tolower(a) == b;
+                          return details::tolower_char(a) == b;
                       });
     }
 
     std::string ascii_to_lowercase(const std::string& input)
     {
-        std::string output = input;
-        std::transform(output.begin(), output.end(), output.begin(), ::tolower);
+        std::string output(input);
+        std::transform(output.begin(), output.end(), output.begin(), &details::tolower_char);
         return output;
     }
 

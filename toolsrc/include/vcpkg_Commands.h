@@ -2,6 +2,8 @@
 
 #include "vcpkg_cmd_arguments.h"
 #include "vcpkg_paths.h"
+#include "StatusParagraphs.h"
+#include <array>
 
 namespace vcpkg::Commands
 {
@@ -11,7 +13,23 @@ namespace vcpkg::Commands
 
     namespace Build
     {
-        void build_package(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir);
+        enum class BuildResult
+        {
+            NULLVALUE = 0,
+            SUCCEEDED,
+            BUILD_FAILED,
+            POST_BUILD_CHECKS_FAILED,
+            CASCADED_DUE_TO_MISSING_DEPENDENCIES
+        };
+
+        static constexpr std::array<BuildResult, 4> BuildResult_values = { BuildResult::SUCCEEDED, BuildResult::BUILD_FAILED, BuildResult::POST_BUILD_CHECKS_FAILED, BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES };
+
+        const std::string& to_string(const BuildResult build_result);
+        std::string create_error_message(const BuildResult build_result, const package_spec& spec);
+        std::string create_user_troubleshooting_message(const package_spec& spec);
+
+        BuildResult build_package(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir, const StatusParagraphs& status_db);
+        void perform_and_exit(const package_spec& spec, const fs::path& port_dir, const std::unordered_set<std::string>& options, const vcpkg_paths& paths);
         void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet);
     }
 
@@ -21,6 +39,12 @@ namespace vcpkg::Commands
     }
 
     namespace Install
+    {
+        void install_package(const vcpkg_paths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs* status_db);
+        void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet);
+    }
+
+    namespace CI
     {
         void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet);
     }
@@ -55,17 +79,17 @@ namespace vcpkg::Commands
         void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths);
     }
 
-    namespace Import
-    {
-        void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths);
-    }
-
     namespace Owns
     {
         void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths);
     }
 
     namespace Cache
+    {
+        void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths);
+    }
+
+    namespace Import
     {
         void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths);
     }
@@ -97,11 +121,13 @@ namespace vcpkg::Commands
 
     namespace Version
     {
+        const std::string& version();
         void perform_and_exit(const vcpkg_cmd_arguments& args);
     }
 
     namespace Contact
     {
+        const std::string& email();
         void perform_and_exit(const vcpkg_cmd_arguments& args);
     }
 

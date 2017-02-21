@@ -1,3 +1,68 @@
+vcpkg (0.0.74)
+--------------
+  * Bump required version & auto-downloaded version of `cmake` to 3.8.0 (was 3.7.x). This fixes UWP builds with Visual Studio 2017
+  * Fix `vcpkg build` not printing out the missing dependencies on fail
+  * Fixes and improvements in the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  THU, 16 Feb 2017 18:15:00 -0800
+
+
+vcpkg (0.0.73)
+--------------
+  * Add ports:
+    - gdk-pixbuf           2.36.5
+    - openvr               1.0.5
+  * Update ports:
+    - lmdb                 0.9.18-1         -> 0.9.18-2
+    - opencv               3.1.0-1          -> 3.2.0
+    - sqlite3              3.15.0           -> 3.17.0
+  * Add functions to correctly find the "Program Files" folders in all parts of `vcpkg` (C++, CMake, powershell)
+  * Flush std::cout before launching an external process. Fixes issues when redirecting std::cout to a file
+  * Update version of the automatically acquired nasm. Resolves build failure with libjpeg-turbo
+  * Change the format of the listfile. The file is now sorted and directories now have a trailing slash so they can easily be identified.
+     - Old listfiles will be automatically updated on first access. This will happen to all old listfiles when a new package is installed (`vcpkg install`) or after a call to `vcpkg owns`.
+  * Fixes and improvements in existing portfiles and the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  WED, 15 Feb 2017 19:30:00 -0800
+
+
+vcpkg (0.0.72)
+--------------
+  * Add ports:
+    - cuda                 8.0
+    - hdf5                 1.8.18
+    - lcms                 2.8
+    - libepoxy             1.4.0-2432daf-1
+    - libnice              0.1.13
+    - msmpi                8.0
+    - parmetis             4.0.3
+    - sqlite-modern-cpp    2.4
+    - websocketpp          0.7.0
+  * Update ports:
+    - asio                 1.10.6           -> 1.10.8
+    - aws-sdk-cpp          1.0.47           -> 1.0.61
+    - bond                 5.0.0-4-g53ea136 -> 5.2.0
+    - cpprestsdk           2.9.0-1          -> 2.9.0-2
+    - fmt                  3.0.1-1          -> 3.0.1-4
+    - grpc                 1.1.0-dev-1674f65-1 -> 1.1.0-dev-1674f65-2
+    - libraw               0.17.2-2         -> 0.18.0-1
+    - libvorbis            1.3.5-143caf4023a90c09a5eb685fdd46fb9b9c36b1ee -> 1.3.5-1-143caf4023a90c09a5eb685fdd46fb9b9c36b1ee
+    - poco                 1.7.6-2          -> 1.7.6-3
+    - rapidjson            1.0.2-1          -> 1.1.0
+    - sfml                 2.4.1            -> 2.4.2
+    - wt                   3.3.6-2          -> 3.3.6-3
+  * Introduce Build Policies:
+     - Packages with special characteristics (e.g. CUDA) can now use Build Policies to control which post-build checks apply to them.
+  * Improve support for Visual Studio 2017
+    - Add auto-detection for Windows SDK
+    - Fixed various issues with `bootstrap.ps1` and VS2017 support
+  * Automatic acquisition of perl now uses the 32-bit version isntead of the 64-bit version
+  * Fix `vcpkg remove --purge` not applying to non-installed packages
+  * Fixes and improvements in existing portfiles and the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  TUE, 14 Feb 2017 11:30:00 -0800
+
+
 vcpkg (0.0.71)
 --------------
   * Add ports:

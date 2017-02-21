@@ -12,8 +12,9 @@ namespace vcpkg::Commands::Create
         static const std::string example = Commands::Help::create_example_string(R"###(create zlib2 http://zlib.net/zlib128.zip "zlib128-2.zip")###");
         args.check_max_arg_count(3, example);
         args.check_min_arg_count(2, example);
-
+        args.check_and_get_optional_command_arguments({});
         const std::string port_name = args.command_arguments.at(0);
+
         Environment::ensure_utilities_on_path(paths);
 
         // Space OR define the FILENAME with proper spacing

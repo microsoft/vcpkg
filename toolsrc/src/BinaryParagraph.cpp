@@ -23,22 +23,6 @@ namespace vcpkg
         static const std::string DEPENDS = "Depends";
     }
 
-    static const std::vector<std::string>& get_list_of_valid_fields()
-    {
-        static const std::vector<std::string> valid_fields =
-        {
-            BinaryParagraphRequiredField::PACKAGE,
-            BinaryParagraphRequiredField::VERSION,
-            BinaryParagraphRequiredField::ARCHITECTURE,
-
-            BinaryParagraphOptionalField::DESCRIPTION,
-            BinaryParagraphOptionalField::MAINTAINER,
-            BinaryParagraphOptionalField::DEPENDS
-        };
-
-        return valid_fields;
-    }
-
     BinaryParagraph::BinaryParagraph() = default;
 
     BinaryParagraph::BinaryParagraph(std::unordered_map<std::string, std::string> fields)

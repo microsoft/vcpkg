@@ -1,15 +1,10 @@
 #include "pch.h"
 #include "PostBuildLint_BuildType.h"
-#include "vcpkg_Checks.h"
+#include "vcpkg_Enums.h"
 
-namespace vcpkg::PostBuildLint
+namespace vcpkg::PostBuildLint::BuildType
 {
-    const BuildType BuildType::DEBUG_STATIC = BuildType(ConfigurationType::DEBUG, LinkageType::STATIC, R"(/DEFAULTLIB:LIBCMTD)");
-    const BuildType BuildType::DEBUG_DYNAMIC = BuildType(ConfigurationType::DEBUG, LinkageType::DYNAMIC, R"(/DEFAULTLIB:MSVCRTD)");
-    const BuildType BuildType::RELEASE_STATIC = BuildType(ConfigurationType::RELEASE, LinkageType::STATIC, R"(/DEFAULTLIB:LIBCMT[^D])");
-    const BuildType BuildType::RELEASE_DYNAMIC = BuildType(ConfigurationType::RELEASE, LinkageType::DYNAMIC, R"(/DEFAULTLIB:MSVCRT[^D])");
-
-    BuildType BuildType::value_of(const ConfigurationType& config, const LinkageType& linkage)
+    type value_of(const ConfigurationType::type& config, const LinkageType::type& linkage)
     {
         if (config == ConfigurationType::DEBUG && linkage == LinkageType::STATIC)
         {
@@ -31,38 +26,60 @@ namespace vcpkg::PostBuildLint
             return RELEASE_DYNAMIC;
         }
 
-        Checks::unreachable();
+        Enums::unreachable(ENUM_NAME);
     }
 
-    const ConfigurationType& BuildType::config() const
+    const ConfigurationType::type& type::config() const
     {
         return this->m_config;
     }
 
-    const LinkageType& BuildType::linkage() const
+    const LinkageType::type& type::linkage() const
     {
         return this->m_linkage;
     }
 
-    std::regex BuildType::crt_regex() const
+    const std::regex& type::crt_regex() const
     {
-        const std::regex r(this->m_crt_regex_as_string, std::regex_constants::icase);
-        return r;
+        static const std::regex REGEX_DEBUG_STATIC(R"(/DEFAULTLIB:LIBCMTD)", std::regex_constants::icase);
+        static const std::regex REGEX_DEBUG_DYNAMIC(R"(/DEFAULTLIB:MSVCRTD)", std::regex_constants::icase);
+        static const std::regex REGEX_RELEASE_STATIC(R"(/DEFAULTLIB:LIBCMT[^D])", std::regex_constants::icase);
+        static const std::regex REGEX_RELEASE_DYNAMIC(R"(/DEFAULTLIB:MSVCRT[^D])", std::regex_constants::icase);
+
+        switch (backing_enum)
+        {
+            case BuildType::DEBUG_STATIC:
+                return REGEX_DEBUG_STATIC;
+            case BuildType::DEBUG_DYNAMIC:
+                return REGEX_DEBUG_DYNAMIC;
+            case BuildType::RELEASE_STATIC:
+                return REGEX_RELEASE_STATIC;
+            case BuildType::RELEASE_DYNAMIC:
+                return REGEX_RELEASE_DYNAMIC;
+            default:
+                Enums::unreachable(ENUM_NAME);
+        }
     }
 
-    std::string BuildType::toString() const
+    const std::string& type::toString() const
     {
-        const std::string s = Strings::format("[%s,%s]", to_string(this->m_config), to_string(this->m_linkage));
-        return s;
-    }
+        static const std::string NAME_DEBUG_STATIC("Debug,Static");
+        static const std::string NAME_DEBUG_DYNAMIC("Debug,Dynamic");
+        static const std::string NAME_RELEASE_STATIC("Release,Static");
+        static const std::string NAME_RELEASE_DYNAMIC("Release,Dynamic");
 
-    bool operator==(const BuildType& lhs, const BuildType& rhs)
-    {
-        return lhs.config() == rhs.config() && lhs.linkage() == rhs.linkage();
-    }
-
-    bool operator!=(const BuildType& lhs, const BuildType& rhs)
-    {
-        return !(lhs == rhs);
+        switch (backing_enum)
+        {
+            case BuildType::DEBUG_STATIC:
+                return NAME_DEBUG_STATIC;
+            case BuildType::DEBUG_DYNAMIC:
+                return NAME_DEBUG_DYNAMIC;
+            case BuildType::RELEASE_STATIC:
+                return NAME_RELEASE_STATIC;
+            case BuildType::RELEASE_DYNAMIC:
+                return NAME_RELEASE_DYNAMIC;
+            default:
+                Enums::unreachable(ENUM_NAME);
+        }
     }
 }

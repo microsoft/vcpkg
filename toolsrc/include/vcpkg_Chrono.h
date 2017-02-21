@@ -5,6 +5,25 @@
 
 namespace vcpkg
 {
+    class ElapsedTime
+    {
+    public:
+        static ElapsedTime createStarted();
+
+        constexpr ElapsedTime() :m_startTick() {}
+
+        template <class TimeUnit>
+        TimeUnit elapsed() const
+        {
+            return std::chrono::duration_cast<TimeUnit>(std::chrono::high_resolution_clock::now() - this->m_startTick);
+        }
+
+        std::string toString() const;
+
+    private:
+        std::chrono::steady_clock::time_point m_startTick;
+    };
+
     class Stopwatch
     {
     public:

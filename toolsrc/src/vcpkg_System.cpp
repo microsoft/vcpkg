@@ -14,6 +14,9 @@ namespace vcpkg::System
 
     int cmd_execute(const wchar_t* cmd_line)
     {
+        // Flush cout before launching external process
+        std::cout << std::flush;
+
         // Basically we are wrapping it in quotes
         const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
         int exit_code = _wsystem(actual_cmd_line.c_str());
@@ -22,6 +25,9 @@ namespace vcpkg::System
 
     exit_code_and_output cmd_execute_and_capture_output(const wchar_t* cmd_line)
     {
+        // Flush cout before launching external process
+        std::cout << std::flush;
+
         const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
 
         std::string output;
@@ -29,7 +35,7 @@ namespace vcpkg::System
         auto pipe = _wpopen(actual_cmd_line.c_str(), L"r");
         if (pipe == nullptr)
         {
-            return {1, output};
+            return { 1, output };
         }
         while (fgets(buf, 1024, pipe))
         {
@@ -37,10 +43,10 @@ namespace vcpkg::System
         }
         if (!feof(pipe))
         {
-            return {1, output};
+            return { 1, output };
         }
         auto ec = _pclose(pipe);
-        return {ec, output};
+        return { ec, output };
     }
 
     void print(const char* message)
@@ -62,7 +68,7 @@ namespace vcpkg::System
         GetConsoleScreenBufferInfo(hConsole, &consoleScreenBufferInfo);
         auto original_color = consoleScreenBufferInfo.wAttributes;
 
-        SetConsoleTextAttribute(hConsole, static_cast<int>(c) | (original_color & 0xF0));
+        SetConsoleTextAttribute(hConsole, static_cast<WORD>(c) | (original_color & 0xF0));
         std::cout << message;
         SetConsoleTextAttribute(hConsole, original_color);
     }
@@ -73,17 +79,22 @@ namespace vcpkg::System
         std::cout << "\n";
     }
 
-    std::wstring wdupenv_str(const wchar_t* varname) noexcept
+    optional<std::wstring> get_environmental_variable(const wchar_t* varname) noexcept
     {
-        std::wstring ret;
         wchar_t* buffer;
         _wdupenv_s(&buffer, nullptr, varname);
-        if (buffer != nullptr)
+
+        if (buffer == nullptr)
         {
-            ret = buffer;
-            free(buffer);
+            return nullptr;
         }
-        return ret;
+        std::unique_ptr<wchar_t, void(__cdecl *)(void*)> bufptr(buffer, free);
+        return std::make_unique<std::wstring>(buffer);
+    }
+
+    void set_environmental_variable(const wchar_t* varname, const wchar_t* varvalue) noexcept
+    {
+        _wputenv_s(varname, varvalue);
     }
 
     void Stopwatch2::start()

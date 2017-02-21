@@ -164,12 +164,10 @@ static void upgrade_to_slash_terminated_sorted_format(std::vector<std::string>* 
     // The new format is lexicographically sorted
     std::sort(lines->begin(), lines->end());
 
-#if 0
     // Replace the listfile on disk
     const fs::path updated_listfile_path = listfile_path.generic_string() + "_updated";
     Files::write_all_lines(updated_listfile_path, *lines);
     fs::rename(updated_listfile_path, listfile_path);
-#endif
 }
 
 std::vector<StatusParagraph_and_associated_files> vcpkg::get_installed_files(const vcpkg_paths& paths, const StatusParagraphs& status_db)

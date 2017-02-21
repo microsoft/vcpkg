@@ -12,7 +12,6 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Input.h"
 #include "Paragraphs.h"
-#include "vcpkg_info.h"
 #include "vcpkg_Strings.h"
 
 using namespace vcpkg;
@@ -47,11 +46,10 @@ static void inner(const vcpkg_cmd_arguments& args)
     }
     else
     {
-        auto vcpkg_root_dir_env = System::wdupenv_str(L"VCPKG_ROOT");
-
-        if (!vcpkg_root_dir_env.empty())
+        const optional<std::wstring> vcpkg_root_dir_env = System::get_environmental_variable(L"VCPKG_ROOT");
+        if (vcpkg_root_dir_env)
         {
-            vcpkg_root_dir = fs::absolute(vcpkg_root_dir_env);
+            vcpkg_root_dir = fs::absolute(*vcpkg_root_dir_env);
         }
         else
         {
@@ -79,10 +77,10 @@ static void inner(const vcpkg_cmd_arguments& args)
     }
     else
     {
-        const auto vcpkg_default_triplet_env = System::wdupenv_str(L"VCPKG_DEFAULT_TRIPLET");
-        if (!vcpkg_default_triplet_env.empty())
+        const optional<std::wstring> vcpkg_default_triplet_env = System::get_environmental_variable(L"VCPKG_DEFAULT_TRIPLET");
+        if (vcpkg_default_triplet_env)
         {
-            default_target_triplet = triplet::from_canonical_name(Strings::utf16_to_utf8(vcpkg_default_triplet_env));
+            default_target_triplet = triplet::from_canonical_name(Strings::utf16_to_utf8(*vcpkg_default_triplet_env));
         }
         else
         {
@@ -193,7 +191,7 @@ int wmain(const int argc, const wchar_t* const* const argv)
             Flush();
         });
 
-    TrackProperty("version", Info::version());
+    TrackProperty("version", Commands::Version::version());
 
     const std::string trimmed_command_line = trim_path_from_command_line(Strings::utf16_to_utf8(GetCommandLineW()));
     TrackProperty("cmdline", trimmed_command_line);
@@ -236,10 +234,10 @@ int wmain(const int argc, const wchar_t* const* const argv)
     std::cerr
         << "vcpkg.exe has crashed.\n"
         << "Please send an email to:\n"
-        << "    " << Info::email() << "\n"
+        << "    " << Commands::Contact::email() << "\n"
         << "containing a brief summary of what you were trying to do and the following data blob:\n"
         << "\n"
-        << "Version=" << Info::version() << "\n"
+        << "Version=" << Commands::Version::version() << "\n"
         << "EXCEPTION='" << exc_msg << "'\n"
         << "CMD=\n";
     for (int x = 0; x < argc; ++x)

@@ -53,7 +53,7 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/include/mongocxx/test_util
     ${CURRENT_PACKAGES_DIR}/include/mongocxx/private
     ${CURRENT_PACKAGES_DIR}/include/mongocxx/exception/private
-    ${CURRENT_PACKAGES_DIR}/include/mongocxx/options
+    ${CURRENT_PACKAGES_DIR}/include/mongocxx/options/private
 
     ${CURRENT_PACKAGES_DIR}/debug/include)
 
