@@ -22,7 +22,7 @@
 function(vcpkg_apply_patches)
     cmake_parse_arguments(_ap "QUIET" "SOURCE_PATH" "PATCHES" ${ARGN})
 
-    find_program(GIT git)
+    find_program(GIT NAMES git git.cmd)
     set(PATCHNUM 0)
     foreach(PATCH ${_ap_PATCHES})
         message(STATUS "Applying patch ${PATCH}")
