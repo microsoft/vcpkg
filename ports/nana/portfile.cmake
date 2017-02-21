@@ -1,10 +1,11 @@
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/nana)
+set(VERSION 66be23c9204c5567d1c51e6f57ba23bffa517a7c)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/nana-${VERSION})
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://downloads.sourceforge.net/project/nanapro/Nana/Nana 1.x/nana 1.4.1.zip"
-    FILENAME "nana 1.4.1.zip"
-    SHA512 38a4fe4c9f932d0e69753c0c1e28d0c8f7cc1ab73c639b87dd5ba102ed25da1ee04c93ec5d6bb79945f7bc118cc131022604c75c1bb6eaced3a071eb137115cd)
+    URLS "https://github.com/cnjinhao/nana/archive/${VERSION}.zip"
+    FILENAME "nana-${VERSION}.zip"
+    SHA512 07a611850ebdd3be29fcc5dd199511af859da9e6ad9365b41900ab669e2c1c506c9c264a13a35d60b2d7906b577c8412f2423d67595b75f4de6f6c65b1db1f37)
 
 vcpkg_extract_source_archive(${ARCHIVE})
 
@@ -32,5 +33,5 @@ endif()
 
 vcpkg_copy_pdbs()
 
-file(COPY ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/nana)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/nana/LICENSE_1_0.txt ${CURRENT_PACKAGES_DIR}/share/nana/copyright)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/nana)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/nana/LICENSE ${CURRENT_PACKAGES_DIR}/share/nana/copyright)
