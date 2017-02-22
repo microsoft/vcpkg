@@ -7,6 +7,43 @@
 
 namespace vcpkg::Commands::Search
 {
+    static const std::string OPTION_GRAPH = "--graph"; //TODO: This should find a better home, eventually
+
+    static std::string replace_dashes_with_underscore(const std::string& input)
+    {
+        std::string output = input;
+        std::replace(output.begin(), output.end(), '-', '_');
+        return output;
+    }
+
+    static std::string create_graph_as_string(const std::vector<SourceParagraph>& source_paragraphs)
+    {
+        int empty_node_count = 0;
+
+        std::string s;
+        s.append("digraph G{ rankdir=LR; edge [minlen=3]; overlap=false;");
+
+        for (const SourceParagraph& source_paragraph : source_paragraphs)
+        {
+            if (source_paragraph.depends.empty())
+            {
+                empty_node_count++;
+                continue;
+            }
+
+            const std::string name = replace_dashes_with_underscore(source_paragraph.name);
+            s.append(Strings::format("%s;", name));
+            for (const dependency& d : source_paragraph.depends)
+            {
+                const std::string dependency_name = replace_dashes_with_underscore(d.name);
+                s.append(Strings::format("%s -> %s;", name, dependency_name));
+            }
+        }
+
+        s.append(Strings::format("empty [label=\"%d singletons...\"]; }", empty_node_count));
+        return s;
+    }
+
     static std::vector<SourceParagraph> read_all_source_paragraphs(const vcpkg_paths& paths)
     {
         std::vector<SourceParagraph> output;
@@ -25,9 +62,7 @@ namespace vcpkg::Commands::Search
                 auto srcpgh = SourceParagraph(pghs[0]);
                 output.push_back(srcpgh);
             }
-            catch (std::runtime_error const&)
-            {
-            }
+            catch (std::runtime_error const&) { }
         }
 
         return output;
@@ -46,9 +81,15 @@ namespace vcpkg::Commands::Search
         static const std::string example = Strings::format("The argument should be a substring to search for, or no argument to display all libraries.\n%s",
                                                            Commands::Help::create_example_string("search png"));
         args.check_max_arg_count(1, example);
-        args.check_and_get_optional_command_arguments({});
+        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_GRAPH });
 
         const std::vector<SourceParagraph> source_paragraphs = read_all_source_paragraphs(paths);
+        if (options.find(OPTION_GRAPH) != options.cend())
+        {
+            const std::string graph_as_string = create_graph_as_string(source_paragraphs);
+            System::println(graph_as_string);
+            exit(EXIT_SUCCESS);
+        }
 
         if (args.command_arguments.size() == 0)
         {
