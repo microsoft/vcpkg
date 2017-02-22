@@ -91,7 +91,7 @@ namespace vcpkg::Commands::Search
             exit(EXIT_SUCCESS);
         }
 
-        if (args.command_arguments.size() == 0)
+        if (args.command_arguments.empty())
         {
             for (const SourceParagraph& source_paragraph : source_paragraphs)
             {
