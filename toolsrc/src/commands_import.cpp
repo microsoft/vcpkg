@@ -86,7 +86,7 @@ namespace vcpkg::Commands::Import
         const fs::path project_directory(args.command_arguments[2]);
 
         auto pghs = Paragraphs::get_paragraphs(control_file_path);
-        Checks::check_throw(pghs.size() == 1, "Invalid control file for package");
+        Checks::check_exit(pghs.size() == 1, "Invalid control file %s for package", control_file_path.generic_string());
 
         StatusParagraph spgh;
         spgh.package = BinaryParagraph(pghs[0]);
