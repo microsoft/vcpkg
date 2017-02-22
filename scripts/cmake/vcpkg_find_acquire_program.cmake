@@ -32,9 +32,9 @@ function(vcpkg_find_acquire_program VAR)
   elseif(VAR MATCHES "PYTHON3")
     set(PROGNAME python)
     set(PATHS ${DOWNLOADS}/tools/python)
-    set(URL "https://www.python.org/ftp/python/3.5.2/python-3.5.2-embed-amd64.zip")
-    set(ARCHIVE "python-3.5.2-embed-amd64.zip")
-    set(HASH 48bdcb6f94c993acad6782ee33ad4a07a0ea3b9b1bfcdeadf446d459a9224336837e2e7b518d54d8d99c5c3f4e9f8877ea1789cae513fa2eda2a3cad9e4dfd8f)
+    set(URL "https://www.python.org/ftp/python/3.5.3/python-3.5.3-embed-win32.zip")
+    set(ARCHIVE "python-3.5.3-embed-win32.zip")
+    set(HASH c8cfdc09d052dc27e4380e8e4bf0d32a4c0def7e03896c1fa6cabc26dde78bb74dbb04e3673cc36e3e307d65a1ef284d69174f0cc80008c83bc6178f192ac5cf)
   elseif(VAR MATCHES "PYTHON2")
     find_program(PYTHON2 NAMES python2 python PATHS C:/python27 ENV PYTHON)
     if(NOT PYTHON2 MATCHES "NOTFOUND")
@@ -53,7 +53,7 @@ function(vcpkg_find_acquire_program VAR)
     if(PYTHON2 MATCHES "NOTFOUND")
         message(FATAL_ERROR "Python 2.7 was not found in the path or by searching inside C:\\Python27.\n"
         "There is no portable redistributable for Python 2.7, so you will need to install the MSI located at:\n"
-        "    https://www.python.org/ftp/python/2.7.11/python-2.7.11.amd64.msi\n"
+        "    https://www.python.org/ftp/python/2.7.13/python-2.7.13.msi\n"
         )
     endif()
   elseif(VAR MATCHES "JOM")
