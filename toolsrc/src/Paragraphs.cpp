@@ -101,7 +101,7 @@ namespace vcpkg::Paragraphs
             auto begin_fieldname = cur;
             while (is_alphanum(ch) || ch == '-')
                 next(ch);
-            Checks::check_throw(ch == ':', "Expected ':'");
+            Checks::check_exit(ch == ':', "Expected ':'");
             fieldname = std::string(begin_fieldname, cur);
 
             // skip ': '
@@ -119,7 +119,7 @@ namespace vcpkg::Paragraphs
                 get_fieldname(ch, fieldname);
 
                 auto it = fields.find(fieldname);
-                Checks::check_throw(it == fields.end(), "Duplicate field");
+                Checks::check_exit(it == fields.end(), "Duplicate field");
 
                 get_fieldvalue(ch, fieldvalue);
 
