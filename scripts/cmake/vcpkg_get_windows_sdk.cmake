@@ -1,6 +1,6 @@
 function(vcpkg_get_windows_sdk ret)
     execute_process(
-        COMMAND powershell.exe ${VCPKG_ROOT_DIR}/scripts/getWindowsSDK.ps1
+        COMMAND powershell.exe -ExecutionPolicy Bypass ${VCPKG_ROOT_DIR}/scripts/getWindowsSDK.ps1
         OUTPUT_VARIABLE WINDOWS_SDK
         RESULT_VARIABLE error_code)
 
