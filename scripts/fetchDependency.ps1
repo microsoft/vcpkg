@@ -81,6 +81,14 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         if ($Dependency -ne "git") # git fails with BITS
         {
             try {
+                $WC = New-Object System.Net.WebClient
+                $ProxyAuth = !$WC.Proxy.IsBypassed($url)
+                If($ProxyAuth){
+                    $ProxyCred = Get-Credential -Message "Enter credentials for Proxy Authentication"
+                    $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyAuthentication","Basic")
+                    $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyCredential",$ProxyCred)
+                }
+
                 Start-BitsTransfer -Source $url -Destination $downloadPath -ErrorAction Stop
             }
             catch [System.Exception] {
