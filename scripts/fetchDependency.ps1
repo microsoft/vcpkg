@@ -9,7 +9,7 @@ $downloadPromptOverride_NO_OVERRIDE= 0
 $downloadPromptOverride_DO_NOT_PROMPT = 1
 $downloadPromptOverride_ALWAYS_PROMPT = 2
 
-Import-Module BitsTransfer
+Import-Module BitsTransfer -Verbose:$false
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 $vcpkgRootDir = & $scriptsDir\findFileRecursivelyUp.ps1 $scriptsDir .vcpkg-root
