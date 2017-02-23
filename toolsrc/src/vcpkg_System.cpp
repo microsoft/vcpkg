@@ -51,13 +51,13 @@ namespace vcpkg::System
 
     void print(const char* message)
     {
-        std::cout << message;
+        fputs(message, stdout);
     }
 
     void println(const char* message)
     {
         print(message);
-        std::cout << "\n";
+        putchar('\n');
     }
 
     void print(const color c, const char* message)
@@ -69,14 +69,14 @@ namespace vcpkg::System
         auto original_color = consoleScreenBufferInfo.wAttributes;
 
         SetConsoleTextAttribute(hConsole, static_cast<WORD>(c) | (original_color & 0xF0));
-        std::cout << message;
+        print(message);
         SetConsoleTextAttribute(hConsole, original_color);
     }
 
     void println(const color c, const char* message)
     {
         print(c, message);
-        std::cout << "\n";
+        putchar('\n');
     }
 
     optional<std::wstring> get_environmental_variable(const wchar_t* varname) noexcept
