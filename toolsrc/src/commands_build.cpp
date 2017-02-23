@@ -38,8 +38,8 @@ namespace vcpkg::Commands::Build
         }
 
         // If these environment variables are set while running the VS2017 developer prompt, it will not correctly initialize the build environment.
-        _wputenv_s(L"VSINSTALLDIR", L"");
-        _wputenv_s(L"DevEnvDir", L"");
+        System::set_environmental_variable(L"VSINSTALLDIR", L"");
+        System::set_environmental_variable(L"DevEnvDir", L"");
 
         const fs::path ports_cmake_script_path = paths.ports_cmake;
         const Environment::vcvarsall_and_platform_toolset vcvarsall_bat = Environment::get_vcvarsall_bat(paths);
