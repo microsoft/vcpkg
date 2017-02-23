@@ -36,7 +36,7 @@ for f in files:
             builder += "\n    " + line.replace("/plugins/", "/debug/plugins/")
             builder += "    endif()\n"
         elif exepattern.search(line) != None:
-            builder += line.replace("/bin/", "/tools/")
+            builder += line.replace("/bin/", "/tools/qt5/")
         else:
             builder += line
     new_file = open(f, "w")

@@ -12,7 +12,7 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
 get_filename_component(JOM_EXE_PATH ${JOM} DIRECTORY)
-set(ENV{PATH} "${JOM_EXE_PATH};${PYTHON3_EXE_PATH};$ENV{PATH};${PERL_EXE_PATH}")
+set(ENV{PATH} "${JOM_EXE_PATH};${PYTHON3_EXE_PATH};${CURRENT_INSTALLED_DIR}/bin;$ENV{PATH};${PERL_EXE_PATH}")
 set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
 set(ENV{LIB} "${CURRENT_INSTALLED_DIR}/lib;$ENV{LIB}")
 vcpkg_download_distfile(ARCHIVE_FILE
@@ -25,6 +25,12 @@ if (EXISTS ${CURRENT_BUILDTREES_DIR}/src/qt-everywhere-opensource-src-5.7.1)
     file(RENAME ${CURRENT_BUILDTREES_DIR}/src/qt-everywhere-opensource-src-5.7.1 ${CURRENT_BUILDTREES_DIR}/src/qt-5.7.1)
 endif()
 
+if(EXISTS ${OUTPUT_PATH})
+    file(REMOVE_RECURSE ${OUTPUT_PATH})
+    if(EXISTS ${OUTPUT_PATH})
+        message(FATAL_ERROR "Could not clean output directory.")
+    endif()
+endif()
 file(MAKE_DIRECTORY ${OUTPUT_PATH})
 if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL static)
     list(APPEND QT_RUNTIME_LINKAGE "-static")
@@ -48,13 +54,26 @@ vcpkg_execute_required_process(
         -confirm-license -opensource -platform win32-msvc2015
         -debug-and-release -force-debug-info ${QT_RUNTIME_LINKAGE}
         -qt-zlib
-        -qt-libjpeg
+        -no-libjpeg
         -no-libpng
         -no-freetype
         -qt-pcre
         -no-harfbuzz
+        -no-angle
+        -no-inotify
+        -no-mtdev
+        -no-evdev
+        -system-doubleconversion
+        -no-iconv
         -system-sqlite
-        -nomake examples -nomake tests -skip webengine
+        -no-opengl
+        -no-style-windowsxp
+        -no-style-windowsvista
+        -no-style-fusion
+        -mp
+        -nomake examples -nomake tests
+        -skip webengine -skip 3d -skip activeqt -skip androidextras -skip canvas3d -skip charts -skip connectivity -skip datavis3d -skip declarative
+        -skip graphicaleffects -skip wayland -skip webchannel -skip webview -skip translations -skip script -skip multimedia -skip purchasing
         -qt-sql-sqlite -qt-sql-psql
         -prefix ${CURRENT_PACKAGES_DIR}
         -bindir ${CURRENT_PACKAGES_DIR}/bin
@@ -68,8 +87,7 @@ vcpkg_execute_required_process(
 message(STATUS "Configure ${TARGET_TRIPLET} done")
 
 message(STATUS "Building ${TARGET_TRIPLET}")
-vcpkg_execute_required_process_repeat(
-    COUNT 5
+vcpkg_execute_required_process(
     COMMAND ${JOM}
     WORKING_DIRECTORY ${OUTPUT_PATH}
     LOGNAME build-${TARGET_TRIPLET}
@@ -103,7 +121,9 @@ if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL dynamic)
     file(REMOVE ${DEBUG_BIN_FILES})
     file(GLOB DEBUG_BIN_FILES "${CURRENT_PACKAGES_DIR}/bin/*d.pdb")
     file(REMOVE ${DEBUG_BIN_FILES})
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin/Qt5Gamepad.dll ${CURRENT_PACKAGES_DIR}/bin/Qt5Gamepad.dll)
+    if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin/Qt5Gamepad.dll)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin/Qt5Gamepad.dll ${CURRENT_PACKAGES_DIR}/bin/Qt5Gamepad.dll)
+    endif()
 endif()
 
 file(INSTALL ${CURRENT_PACKAGES_DIR}/lib
@@ -126,10 +146,14 @@ file(GLOB DEBUG_LIB_FILES "${CURRENT_PACKAGES_DIR}/lib/*d.pdb")
 if(DEBUG_LIB_FILES)
     file(REMOVE ${DEBUG_LIB_FILES})
 endif()
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Gamepad.lib ${CURRENT_PACKAGES_DIR}/lib/Qt5Gamepad.lib)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Gamepad.prl ${CURRENT_PACKAGES_DIR}/lib/Qt5Gamepad.prl)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Gamepad.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Gamepad.lib ${CURRENT_PACKAGES_DIR}/lib/Qt5Gamepad.lib)
+endif()
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Gamepad.prl)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Gamepad.prl ${CURRENT_PACKAGES_DIR}/lib/Qt5Gamepad.prl)
+endif()
 file(GLOB BINARY_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*.exe")
-file(INSTALL ${BINARY_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+file(INSTALL ${BINARY_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qt5)
 file(REMOVE ${BINARY_TOOLS})
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/plugins")
 file(GLOB_RECURSE DEBUG_PLUGINS
@@ -143,17 +167,26 @@ foreach(file ${DEBUG_PLUGINS})
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/plugins/${rel_dir}")
     file(RENAME ${file} "${CURRENT_PACKAGES_DIR}/debug/plugins/${rel_dir}/${file_n}")
 endforeach()
-file(RENAME 
-	${CURRENT_PACKAGES_DIR}/debug/plugins/gamepads/xinputgamepad.dll
-	${CURRENT_PACKAGES_DIR}/plugins/gamepads/xinputgamepad.dll)
-file(RENAME 
-	${CURRENT_PACKAGES_DIR}/debug/plugins/gamepads/xinputgamepad.pdb
-	${CURRENT_PACKAGES_DIR}/plugins/gamepads/xinputgamepad.pdb)
 
-if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL dynamic)
-    file(GLOB RELEASE_DLLS "${CURRENT_PACKAGES_DIR}/bin/*.dll")
-    file(INSTALL ${RELEASE_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/plugins/gamepads/xinputgamepad.dll)
+    file(RENAME 
+        ${CURRENT_PACKAGES_DIR}/debug/plugins/gamepads/xinputgamepad.dll
+        ${CURRENT_PACKAGES_DIR}/plugins/gamepads/xinputgamepad.dll)
 endif()
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/plugins/gamepads/xinputgamepad.pdb)
+    file(RENAME 
+        ${CURRENT_PACKAGES_DIR}/debug/plugins/gamepads/xinputgamepad.pdb
+        ${CURRENT_PACKAGES_DIR}/plugins/gamepads/xinputgamepad.pdb)
+endif()
+
+if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/lib/Qt5Bootstrap.lib AND EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrapd.lib)
+    # QT bug: https://bugreports.qt.io/browse/QTBUG-55499
+    # The release copy of Qt5Bootstrap.lib is not created when using -debug-and-release
+    # Comments from Oswald Buddenhagen indicate this is an internal library, so simply removing the mismatch should be safe.
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrapd.lib)
+endif()
+
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/qt5)
 
 vcpkg_execute_required_process(
     COMMAND ${PYTHON3} ${CMAKE_CURRENT_LIST_DIR}/fixcmake.py
