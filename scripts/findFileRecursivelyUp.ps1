@@ -11,8 +11,8 @@ $currentDir = $startingDir
 
 while (!($currentDir -eq "") -and !(Test-Path "$currentDir\$filename"))
 {
-    Write-Verbose "Examining: $currentDir"
+    Write-Verbose "Examining $currentDir for $filename"
     $currentDir = Split-path $currentDir -Parent
 }
-Write-Verbose "Found: $currentDir"
+Write-Verbose "Examining $currentDir for $filename - Found"
 return $currentDir
