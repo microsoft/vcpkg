@@ -3,8 +3,6 @@ param(
 
 )
 
-Import-Module BitsTransfer
-
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 $vcpkgRootDir = & $scriptsDir\findFileRecursivelyUp.ps1 $scriptsDir .vcpkg-root
 
