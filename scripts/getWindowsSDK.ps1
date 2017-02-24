@@ -4,9 +4,7 @@ param(
 )
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
-$programFiles32 = & $scriptsDir\getProgramFiles32bit.ps1
-$programFilesP = & $scriptsDir\getProgramFilesPlatformBitness.ps1
-$CandidateProgramFiles = $programFiles32, $programFilesP
+$CandidateProgramFiles = $(& $scriptsDir\getProgramFiles32bit.ps1), $(& $scriptsDir\getProgramFilesPlatformBitness.ps1)
 
 # Windows 10 SDK
 foreach ($ProgramFiles in $CandidateProgramFiles)
