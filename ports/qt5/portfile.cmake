@@ -71,13 +71,12 @@ vcpkg_execute_required_process(
         -no-style-windowsvista
         -no-style-fusion
         -mp
-        -nomake examples -nomake tests
-        # Doesn't work: only -skip webengine
-        -skip webengine -skip connectivity -skip declarative
+        -nomake examples -nomake tests -no-compile-examples
+        -skip webengine -skip declarative
         -qt-sql-sqlite -qt-sql-psql
         -prefix ${CURRENT_PACKAGES_DIR}
         -bindir ${CURRENT_PACKAGES_DIR}/bin
-        -hostbindir ${CURRENT_PACKAGES_DIR}/tools
+        -hostbindir ${CURRENT_PACKAGES_DIR}/tools/qt5
         -archdatadir ${CURRENT_PACKAGES_DIR}/share/qt5
         -datadir ${CURRENT_PACKAGES_DIR}/share/qt5
         -plugindir ${CURRENT_PACKAGES_DIR}/plugins
