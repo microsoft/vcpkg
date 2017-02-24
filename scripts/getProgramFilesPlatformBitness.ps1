@@ -3,9 +3,15 @@ param(
 
 )
 
-if (Test-Path env:ProgramW6432)
+$out = ${env:ProgramW6432}
+if ($out -eq $null)
 {
-    return ${env:ProgramW6432}
+    $out = ${env:PROGRAMFILES}
 }
 
-return ${env:PROGRAMFILES}
+if ($out -eq $null)
+{
+    throw "Could not find [Program Files Platform Bitness]"
+}
+
+return $out

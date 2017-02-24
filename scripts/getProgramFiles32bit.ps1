@@ -3,9 +3,15 @@ param(
 
 )
 
-if (Test-Path env:PROGRAMFILES`(X86`))
+$out = ${env:PROGRAMFILES(X86)}
+if ($out -eq $null)
 {
-    return ${env:PROGRAMFILES(X86)}
+    $out = ${env:PROGRAMFILES}
 }
 
-return ${env:PROGRAMFILES}
+if ($out -eq $null)
+{
+    throw "Could not find [Program Files 32-bit]"
+}
+
+return $out
