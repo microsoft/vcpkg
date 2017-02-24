@@ -231,6 +231,19 @@ namespace vcpkg::Environment
         return vcvarsall_bat;
     }
 
+    static fs::path find_ProgramFiles()
+    {
+        const optional<std::wstring> program_files = System::get_environmental_variable(L"PROGRAMFILES");
+        Checks::check_exit(program_files.get() != nullptr, "Could not detect the PROGRAMFILES environmental variable");
+        return *program_files;
+    }
+
+    static const fs::path& get_ProgramFiles()
+    {
+        static const fs::path p = find_ProgramFiles();
+        return p;
+    }
+
     static fs::path find_ProgramFiles_32_bit()
     {
         const optional<std::wstring> program_files_X86 = System::get_environmental_variable(L"ProgramFiles(x86)");
@@ -239,7 +252,7 @@ namespace vcpkg::Environment
             return *program_files_X86;
         }
 
-        return *System::get_environmental_variable(L"PROGRAMFILES");
+        return get_ProgramFiles();
     }
 
     const fs::path& get_ProgramFiles_32_bit()
@@ -256,7 +269,7 @@ namespace vcpkg::Environment
             return *program_files_W6432;
         }
 
-        return *System::get_environmental_variable(L"PROGRAMFILES");
+        return get_ProgramFiles();
     }
 
     const fs::path& get_ProgramFiles_platform_bitness()
