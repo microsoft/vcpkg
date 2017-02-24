@@ -1,7 +1,10 @@
 function(vcpkg_get_program_files_platform_bitness ret)
-    if(DEFINED ENV{ProgramW6432})
-        set(${ret} $ENV{ProgramW6432} PARENT_SCOPE)
-    else()
-        set(${ret} $ENV{PROGRAMFILES} PARENT_SCOPE)
+
+    set(ret_temp $ENV{ProgramW6432})
+    if (NOT DEFINED ret_temp)
+        set(ret_temp $ENV{PROGRAMFILES})
     endif()
+
+    set(${ret} ${ret_temp} PARENT_SCOPE)
+
 endfunction()
