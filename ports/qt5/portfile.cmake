@@ -72,8 +72,8 @@ vcpkg_execute_required_process(
         -no-style-fusion
         -mp
         -nomake examples -nomake tests
-        -skip webengine -skip 3d -skip activeqt -skip androidextras -skip canvas3d -skip charts -skip connectivity -skip datavis3d -skip declarative
-        -skip graphicaleffects -skip wayland -skip webchannel -skip webview -skip translations -skip script -skip multimedia -skip purchasing
+        # Doesn't work: only -skip webengine
+        -skip webengine -skip connectivity -skip declarative
         -qt-sql-sqlite -qt-sql-psql
         -prefix ${CURRENT_PACKAGES_DIR}
         -bindir ${CURRENT_PACKAGES_DIR}/bin
