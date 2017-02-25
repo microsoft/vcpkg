@@ -54,12 +54,16 @@ foreach ($ProgramFiles in $CandidateProgramFiles)
 {
     $clExe= "$ProgramFiles\Microsoft Visual Studio 14.0\VC\bin\cl.exe"
 
-    if (Test-Path $clExe)
+    if (!(Test-Path $clExe))
     {
-        $instance = New-MSBuildInstance "$ProgramFiles\MSBuild\14.0\Bin\MSBuild.exe" "v140"
-        Write-Verbose "Found $instance"
-        $validInstances.Add($instance) > $null
+        Write-Verbose "$clExe - Not Found"
+        continue
     }
+
+    Write-Verbose "$clExe - Found"
+    $instance = New-MSBuildInstance "$ProgramFiles\MSBuild\14.0\Bin\MSBuild.exe" "v140"
+    Write-Verbose "Found $instance"
+    $validInstances.Add($instance) > $null
 }
 
 # VS2015 - through the registry
@@ -84,7 +88,6 @@ $(NewCppRegistryPair "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\visualstud
 foreach ($pair in $registryPairs)
 {
     $vsEntry = $pair.visualStudioEntry
-    Write-Verbose "$vsEntry - Checking"
     try
     {
         $VS14InstallDir = $(gp $vsEntry InstallDir -erroraction Stop | % { $_.InstallDir })
@@ -112,7 +115,6 @@ foreach ($pair in $registryPairs)
     Write-Verbose "$clExePath - Found"
 
     $msbuildEntry = $pair.msBuildEntry
-    Write-Verbose "$msbuildEntry - Checking"
     try
     {
         $MSBuild14 = $(gp $msbuildEntry MSBuildToolsPath -erroraction Stop | % { $_.MSBuildToolsPath })

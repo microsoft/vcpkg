@@ -26,7 +26,6 @@ Write-Verbose "Looking for Windows 10 SDK"
 foreach ($ProgramFiles in $CandidateProgramFiles)
 {
     $folder = "$ProgramFiles\Windows Kits\10\Include"
-    Write-Verbose "$folder - Checking"
     if (!(Test-Path $folder))
     {
         Write-Verbose "$folder - Not Found"
@@ -40,7 +39,6 @@ foreach ($ProgramFiles in $CandidateProgramFiles)
     foreach ($win10sdkV in $win10sdkVersions)
     {
         $windowsheader = "$folder\$win10sdkV\um\windows.h"
-        Write-Verbose "$windowsheader - Checking"
         if (!(Test-Path $windowsheader))
         {
             Write-Verbose "$windowsheader - Not Found"
@@ -60,7 +58,6 @@ Write-Verbose "Looking for Windows 8.1 SDK"
 foreach ($ProgramFiles in $CandidateProgramFiles)
 {
     $folder = "$ProgramFiles\Windows Kits\8.1\Include"
-    Write-Verbose "$folder - Checking"
     if (!(Test-Path $folder))
     {
         Write-Verbose "$folder - Not Found"
