@@ -4,7 +4,7 @@
 #include "vcpkg_Maps.h"
 #include "SourceParagraph.h"
 #include "vcpkg_Environment.h"
-#include "PostBuildLint_BuildInfo.h"
+#include "Paragraphs.h"
 
 namespace vcpkg::Commands::PortsDiff
 {

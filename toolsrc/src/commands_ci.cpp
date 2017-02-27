@@ -8,6 +8,7 @@
 #include "vcpkg_Input.h"
 #include "vcpkg_Chrono.h"
 #include "PostBuildLint_BuildInfo.h"
+#include "Paragraphs.h"
 
 namespace vcpkg::Commands::CI
 {

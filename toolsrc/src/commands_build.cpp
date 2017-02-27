@@ -9,7 +9,7 @@
 #include "vcpkg_Environment.h"
 #include "metrics.h"
 #include "vcpkg_Enums.h"
-#include "PostBuildLint_BuildInfo.h"
+#include "Paragraphs.h"
 
 namespace vcpkg::Commands::Build
 {

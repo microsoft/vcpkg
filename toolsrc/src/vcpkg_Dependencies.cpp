@@ -5,7 +5,7 @@
 #include "package_spec.h"
 #include "StatusParagraphs.h"
 #include "vcpkg_Files.h"
-#include "PostBuildLint_BuildInfo.h"
+#include "Paragraphs.h"
 
 namespace vcpkg::Dependencies
 {

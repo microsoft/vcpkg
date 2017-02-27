@@ -7,7 +7,7 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Dependencies.h"
 #include "vcpkg_Input.h"
-#include "PostBuildLint_BuildInfo.h"
+#include "Paragraphs.h"
 
 namespace vcpkg::Commands::Install
 {
