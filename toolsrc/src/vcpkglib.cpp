@@ -232,4 +232,24 @@ namespace vcpkg
         }
         return control_contents_maybe.error_code();
     }
+
+    std::vector<SourceParagraph> load_all_ports(const fs::path& ports_dir)
+    {
+        std::vector<SourceParagraph> output;
+        for (auto it = fs::directory_iterator(ports_dir); it != fs::directory_iterator(); ++it)
+        {
+            const fs::path& path = it->path();
+            expected<SourceParagraph> source_paragraph = try_load_port(path);
+            if (auto srcpgh = source_paragraph.get())
+            {
+                output.emplace_back(*srcpgh);
+            }
+            else
+            {
+                Checks::exit_with_message("Error loading port from %s: %s", path.generic_string(), source_paragraph.error_code().message());
+            }
+        }
+
+        return output;
+    }
 }

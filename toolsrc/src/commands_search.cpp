@@ -4,6 +4,7 @@
 #include "Paragraphs.h"
 #include "vcpkglib_helpers.h"
 #include "SourceParagraph.h"
+#include "vcpkglib.h"
 
 namespace vcpkg::Commands::Search
 {
@@ -44,30 +45,6 @@ namespace vcpkg::Commands::Search
         return s;
     }
 
-    static std::vector<SourceParagraph> read_all_source_paragraphs(const vcpkg_paths& paths)
-    {
-        std::vector<SourceParagraph> output;
-        for (auto it = fs::directory_iterator(paths.ports); it != fs::directory_iterator(); ++it)
-        {
-            const fs::path& path = it->path();
-
-            try
-            {
-                auto pghs = Paragraphs::get_paragraphs(path / "CONTROL");
-                if (pghs.empty())
-                {
-                    continue;
-                }
-
-                auto srcpgh = SourceParagraph(pghs[0]);
-                output.push_back(srcpgh);
-            }
-            catch (std::runtime_error const&) { }
-        }
-
-        return output;
-    }
-
     static void do_print(const SourceParagraph& source_paragraph)
     {
         System::println("%-20s %-16s %s",
@@ -83,7 +60,7 @@ namespace vcpkg::Commands::Search
         args.check_max_arg_count(1, example);
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_GRAPH });
 
-        const std::vector<SourceParagraph> source_paragraphs = read_all_source_paragraphs(paths);
+        const std::vector<SourceParagraph> source_paragraphs = load_all_ports(paths.ports);
         if (options.find(OPTION_GRAPH) != options.cend())
         {
             const std::string graph_as_string = create_graph_as_string(source_paragraphs);

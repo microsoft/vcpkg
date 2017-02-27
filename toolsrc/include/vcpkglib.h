@@ -23,4 +23,6 @@ namespace vcpkg
     expected<SourceParagraph> try_load_port(const fs::path& control_path);
 
     expected<BinaryParagraph> try_load_cached_package(const vcpkg_paths& paths, const package_spec& spec);
+
+    std::vector<SourceParagraph> load_all_ports(const fs::path& ports_dir);
 } // namespace vcpkg
