@@ -2,9 +2,9 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Maps.h"
-#include "Paragraphs.h"
 #include "SourceParagraph.h"
 #include "vcpkg_Environment.h"
+#include "vcpkglib.h"
 
 namespace vcpkg::Commands::PortsDiff
 {
@@ -40,25 +40,14 @@ namespace vcpkg::Commands::PortsDiff
         }
     }
 
-    static std::map<std::string, std::string> read_all_ports(const fs::path& ports_folder_path)
+    static std::map<std::string, std::string> read_port_names_and_versions(const fs::path& ports_folder_path)
     {
         std::map<std::string, std::string> names_and_versions;
 
-        for (auto it = fs::directory_iterator(ports_folder_path); it != fs::directory_iterator(); ++it)
+        std::vector<SourceParagraph> ports = load_all_ports(ports_folder_path);
+        for (SourceParagraph& port : ports)
         {
-            const fs::path& path = it->path();
-
-            try
-            {
-                auto pghs = Paragraphs::get_paragraphs(path / "CONTROL");
-                if (pghs.empty())
-                    continue;
-                auto srcpgh = SourceParagraph(pghs[0]);
-                names_and_versions.emplace(srcpgh.name, srcpgh.version);
-            }
-            catch (std::runtime_error const&)
-            {
-            }
+            names_and_versions.emplace(std::move(port.name), std::move(port.version));
         }
 
         return names_and_versions;
@@ -79,7 +68,7 @@ namespace vcpkg::Commands::PortsDiff
                                                   checkout_this_dir,
                                                   L".vcpkg-root");
         System::cmd_execute(cmd);
-        std::map<std::string, std::string> names_and_versions = read_all_ports(temp_checkout_path / ports_dir_name_as_string);
+        std::map<std::string, std::string> names_and_versions = read_port_names_and_versions(temp_checkout_path / ports_dir_name_as_string);
         fs::remove_all(temp_checkout_path);
         return names_and_versions;
     }
