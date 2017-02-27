@@ -242,7 +242,7 @@ namespace vcpkg
             expected<SourceParagraph> source_paragraph = try_load_port(path);
             if (auto srcpgh = source_paragraph.get())
             {
-                output.emplace_back(*srcpgh);
+                output.emplace_back(std::move(*srcpgh));
             }
             else
             {
