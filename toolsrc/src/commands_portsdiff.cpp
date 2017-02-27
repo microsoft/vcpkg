@@ -4,7 +4,7 @@
 #include "vcpkg_Maps.h"
 #include "SourceParagraph.h"
 #include "vcpkg_Environment.h"
-#include "vcpkglib.h"
+#include "PostBuildLint_BuildInfo.h"
 
 namespace vcpkg::Commands::PortsDiff
 {
@@ -44,7 +44,7 @@ namespace vcpkg::Commands::PortsDiff
     {
         std::map<std::string, std::string> names_and_versions;
 
-        std::vector<SourceParagraph> ports = load_all_ports(ports_folder_path);
+        std::vector<SourceParagraph> ports = Paragraphs::load_all_ports(ports_folder_path);
         for (SourceParagraph& port : ports)
         {
             names_and_versions.emplace(std::move(port.name), std::move(port.version));

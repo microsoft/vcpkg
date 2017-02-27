@@ -5,7 +5,7 @@
 #include "package_spec.h"
 #include "StatusParagraphs.h"
 #include "vcpkg_Files.h"
-#include "vcpkglib.h"
+#include "PostBuildLint_BuildInfo.h"
 
 namespace vcpkg::Dependencies
 {
@@ -72,7 +72,7 @@ namespace vcpkg::Dependencies
                 continue;
             }
 
-            expected<BinaryParagraph> maybe_bpgh = try_load_cached_package(paths, spec);
+            expected<BinaryParagraph> maybe_bpgh = Paragraphs::try_load_cached_package(paths, spec);
             if (BinaryParagraph* bpgh = maybe_bpgh.get())
             {
                 process_dependencies(bpgh->depends);
@@ -80,7 +80,7 @@ namespace vcpkg::Dependencies
                 continue;
             }
 
-            expected<SourceParagraph> maybe_spgh = try_load_port(paths.port_dir(spec));
+            expected<SourceParagraph> maybe_spgh = Paragraphs::try_load_port(paths.port_dir(spec));
             SourceParagraph* spgh = maybe_spgh.get();
             Checks::check_exit(spgh != nullptr, "Cannot find package %s", spec.name());
             process_dependencies(filter_dependencies(spgh->depends, spec.target_triplet()));

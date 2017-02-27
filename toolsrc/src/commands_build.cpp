@@ -9,6 +9,7 @@
 #include "vcpkg_Environment.h"
 #include "metrics.h"
 #include "vcpkg_Enums.h"
+#include "PostBuildLint_BuildInfo.h"
 
 namespace vcpkg::Commands::Build
 {
@@ -127,7 +128,7 @@ namespace vcpkg::Commands::Build
             exit(EXIT_SUCCESS);
         }
 
-        const expected<SourceParagraph> maybe_spgh = try_load_port(port_dir);
+        const expected<SourceParagraph> maybe_spgh = Paragraphs::try_load_port(port_dir);
         Checks::check_exit(!maybe_spgh.error_code(), "Could not find package named %s: %s", spec, maybe_spgh.error_code().message());
         const SourceParagraph& spgh = *maybe_spgh.get();
 

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "package_spec.h"
-#include "BinaryParagraph.h"
 #include "StatusParagraphs.h"
 #include "vcpkg_paths.h"
 #include "ImmutableSortedVector.h"
@@ -19,10 +17,4 @@ namespace vcpkg
     };
 
     std::vector<StatusParagraph_and_associated_files> get_installed_files(const vcpkg_paths& paths, const StatusParagraphs& status_db);
-
-    expected<SourceParagraph> try_load_port(const fs::path& control_path);
-
-    expected<BinaryParagraph> try_load_cached_package(const vcpkg_paths& paths, const package_spec& spec);
-
-    std::vector<SourceParagraph> load_all_ports(const fs::path& ports_dir);
 } // namespace vcpkg

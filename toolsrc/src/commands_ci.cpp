@@ -7,6 +7,7 @@
 #include "vcpkg_Dependencies.h"
 #include "vcpkg_Input.h"
 #include "vcpkg_Chrono.h"
+#include "PostBuildLint_BuildInfo.h"
 
 namespace vcpkg::Commands::CI
 {
@@ -70,7 +71,7 @@ namespace vcpkg::Commands::CI
                         System::println(System::color::error, Build::create_error_message(result, action.spec));
                         continue;
                     }
-                    const BinaryParagraph bpgh = try_load_cached_package(paths, action.spec).get_or_throw();
+                    const BinaryParagraph bpgh = Paragraphs::try_load_cached_package(paths, action.spec).get_or_throw();
                     Install::install_package(paths, bpgh, &status_db);
                     System::println(System::color::success, "Package %s is installed", action.spec);
                 }

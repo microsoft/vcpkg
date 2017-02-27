@@ -6,9 +6,7 @@ namespace vcpkg::Paragraphs
 {
     struct Parser
     {
-        Parser(const char* c, const char* e) : cur(c), end(e)
-        {
-        }
+        Parser(const char* c, const char* e) : cur(c), end(e) { }
 
     private:
         const char* cur;
@@ -166,5 +164,57 @@ namespace vcpkg::Paragraphs
     std::vector<std::unordered_map<std::string, std::string>> parse_paragraphs(const std::string& str)
     {
         return Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
+    }
+
+    expected<SourceParagraph> try_load_port(const fs::path& path)
+    {
+        try
+        {
+            auto pghs = get_paragraphs(path / "CONTROL");
+            Checks::check_exit(pghs.size() == 1, "Invalid control file at %s\\CONTROL", path.string());
+            return SourceParagraph(pghs[0]);
+        }
+        catch (std::runtime_error const&) {}
+
+        return std::errc::no_such_file_or_directory;
+    }
+
+    expected<BinaryParagraph> try_load_cached_package(const vcpkg_paths& paths, const package_spec& spec)
+    {
+        const fs::path path = paths.package_dir(spec) / "CONTROL";
+
+        auto control_contents_maybe = Files::read_contents(path);
+        if (auto control_contents = control_contents_maybe.get())
+        {
+            std::vector<std::unordered_map<std::string, std::string>> pghs;
+            try
+            {
+                pghs = parse_paragraphs(*control_contents);
+            }
+            catch (std::runtime_error) {}
+            Checks::check_exit(pghs.size() == 1, "Invalid control file at %s", path.string());
+            return BinaryParagraph(pghs[0]);
+        }
+        return control_contents_maybe.error_code();
+    }
+
+    std::vector<SourceParagraph> load_all_ports(const fs::path& ports_dir)
+    {
+        std::vector<SourceParagraph> output;
+        for (auto it = fs::directory_iterator(ports_dir); it != fs::directory_iterator(); ++it)
+        {
+            const fs::path& path = it->path();
+            expected<SourceParagraph> source_paragraph = try_load_port(path);
+            if (auto srcpgh = source_paragraph.get())
+            {
+                output.emplace_back(std::move(*srcpgh));
+            }
+            else
+            {
+                Checks::exit_with_message("Error loading port from %s: %s", path.generic_string(), source_paragraph.error_code().message());
+            }
+        }
+
+        return output;
     }
 }
