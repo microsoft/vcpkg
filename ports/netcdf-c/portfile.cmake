@@ -20,6 +20,7 @@ vcpkg_apply_patches(
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/no-install-deps.patch
         ${CMAKE_CURRENT_LIST_DIR}/config-pkg-location.patch
+        ${CMAKE_CURRENT_LIST_DIR}/transitive-hdf5.patch
 )
 
 vcpkg_configure_cmake(
