@@ -1,0 +1,90 @@
+diff --git a/hl/src/CMakeLists.txt b/hl/src/CMakeLists.txt
+index 872e42d..146d0a9 100644
+--- a/hl/src/CMakeLists.txt
++++ b/hl/src/CMakeLists.txt
+@@ -29,16 +29,20 @@ set (HL_HEADERS
+     ${HDF5_HL_SRC_SOURCE_DIR}/hdf5_hl.h
+ )
+ 
+-add_library (${HDF5_HL_LIB_TARGET} STATIC ${HL_SRCS} ${HL_HEADERS})
+-TARGET_C_PROPERTIES (${HDF5_HL_LIB_TARGET} STATIC " " " ")
+-target_link_libraries (${HDF5_HL_LIB_TARGET} ${HDF5_LIB_TARGET})
+-H5_SET_LIB_OPTIONS (${HDF5_HL_LIB_TARGET} ${HDF5_HL_LIB_NAME} STATIC)
+-set_target_properties (${HDF5_HL_LIB_TARGET} PROPERTIES
+-    FOLDER libraries/hl
+-    INTERFACE_INCLUDE_DIRECTORIES "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>"
+-)
+-set_global_variable (HDF5_LIBRARIES_TO_EXPORT "${HDF5_LIBRARIES_TO_EXPORT};${HDF5_HL_LIB_TARGET}")
+-set (install_targets ${HDF5_HL_LIB_TARGET})
++set (install_targets)
++
++if (NOT DISABLE_STATIC_LIBS)
++  add_library (${HDF5_HL_LIB_TARGET} STATIC ${HL_SRCS} ${HL_HEADERS})
++  TARGET_C_PROPERTIES (${HDF5_HL_LIB_TARGET} STATIC " " " ")
++  target_link_libraries (${HDF5_HL_LIB_TARGET} ${HDF5_LIB_TARGET})
++  H5_SET_LIB_OPTIONS (${HDF5_HL_LIB_TARGET} ${HDF5_HL_LIB_NAME} STATIC)
++  set_target_properties (${HDF5_HL_LIB_TARGET} PROPERTIES
++      FOLDER libraries/hl
++      INTERFACE_INCLUDE_DIRECTORIES "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>"
++  )
++  set_global_variable (HDF5_LIBRARIES_TO_EXPORT "${HDF5_LIBRARIES_TO_EXPORT};${HDF5_HL_LIB_TARGET}")
++  set (install_targets ${install_targets} ${HDF5_HL_LIB_TARGET})
++endif (NOT DISABLE_STATIC_LIBS)
+ 
+ if (BUILD_SHARED_LIBS)
+   add_library (${HDF5_HL_LIBSH_TARGET} SHARED ${HL_SRCS} ${HL_HEADERS})
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index d93612b..a63cc3a 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -851,30 +851,33 @@ add_custom_command (
+ #-----------------------------------------------------------------------------
+ set (gen_SRCS ${HDF5_BINARY_DIR}/H5Tinit.c ${HDF5_BINARY_DIR}/H5lib_settings.c)
+ 
+-add_library (${HDF5_LIB_TARGET} STATIC ${common_SRCS} ${gen_SRCS} ${H5_PUBLIC_HEADERS} ${H5_PRIVATE_HEADERS} ${H5_GENERATED_HEADERS})
+-TARGET_C_PROPERTIES (${HDF5_LIB_TARGET} STATIC " " " ")
+-target_link_libraries (${HDF5_LIB_TARGET} ${LINK_LIBS})
+-if (NOT WIN32)
++set (install_targets)
++if (NOT DISABLE_STATIC_LIBS)
++  add_library (${HDF5_LIB_TARGET} STATIC ${common_SRCS} ${gen_SRCS} ${H5_PUBLIC_HEADERS} ${H5_PRIVATE_HEADERS} ${H5_GENERATED_HEADERS})
++  TARGET_C_PROPERTIES (${HDF5_LIB_TARGET} STATIC " " " ")
++  target_link_libraries (${HDF5_LIB_TARGET} ${LINK_LIBS})
++  if (NOT WIN32)
+   target_link_libraries (${HDF5_LIB_TARGET} dl)
+-endif (NOT WIN32)
+-if (H5_HAVE_PARALLEL AND MPI_C_FOUND)
++  endif (NOT WIN32)
++  if (H5_HAVE_PARALLEL AND MPI_C_FOUND)
+   target_link_libraries (${HDF5_LIB_TARGET} ${MPI_C_LIBRARIES})
+-endif (H5_HAVE_PARALLEL AND MPI_C_FOUND)
+-set_global_variable (HDF5_LIBRARIES_TO_EXPORT ${HDF5_LIB_TARGET})
+-H5_SET_LIB_OPTIONS (${HDF5_LIB_TARGET} ${HDF5_LIB_NAME} STATIC)
+-set_target_properties (${HDF5_LIB_TARGET} PROPERTIES
+-    FOLDER libraries
+-    INTERFACE_INCLUDE_DIRECTORIES "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>"
+-)
++  endif (H5_HAVE_PARALLEL AND MPI_C_FOUND)
++  set_global_variable (HDF5_LIBRARIES_TO_EXPORT ${HDF5_LIB_TARGET})
++  H5_SET_LIB_OPTIONS (${HDF5_LIB_TARGET} ${HDF5_LIB_NAME} STATIC)
++  set_target_properties (${HDF5_LIB_TARGET} PROPERTIES
++      FOLDER libraries
++      INTERFACE_INCLUDE_DIRECTORIES "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>"
++  )
+ 
+-option (HDF5_ENABLE_DEBUG_APIS "Turn on extra debug output in all packages" OFF)
+-if (HDF5_ENABLE_DEBUG_APIS)
++  option (HDF5_ENABLE_DEBUG_APIS "Turn on extra debug output in all packages" OFF)
++  if (HDF5_ENABLE_DEBUG_APIS)
+   set_target_properties (${HDF5_LIB_TARGET} PROPERTIES
+       COMPILE_DEFINITIONS
+           "H5Z_DEBUG;H5T_DEBUG;H5ST_DEBUG;H5S_DEBUG;H5O_DEBUG;H5I_DEBUG;H5HL_DEBUG;H5F_DEBUG;H5D_DEBUG;H5B2_DEBUG;H5AC_DEBUG"
+   )
+-endif (HDF5_ENABLE_DEBUG_APIS)
+-set (install_targets ${HDF5_LIB_TARGET})
++  endif (HDF5_ENABLE_DEBUG_APIS)
++  set (install_targets ${install_targets} ${HDF5_LIB_TARGET})
++endif (NOT DISABLE_STATIC_LIBS)
+ 
+ if (BUILD_SHARED_LIBS)
+   file (MAKE_DIRECTORY "${HDF5_BINARY_DIR}/shared")

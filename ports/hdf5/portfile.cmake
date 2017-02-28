@@ -7,13 +7,32 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/hdf5-1.8.18)
+# set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/hdf5-1.8.18)
+# vcpkg_download_distfile(ARCHIVE
+#     URLS "https://support.hdfgroup.org/ftp/HDF5/current18/src/hdf5-1.8.18.tar.bz2"
+#     FILENAME "hdf5-1.8.18.tar.bz2"
+#     SHA512 01f6d14bdd3be2ced9c63cc9e1820cd7ea11db649ff9f3a3055c18c4b0fffe777fd23baad536e3bce31c4d76fe17db64a3972762e1bb4d232927c1ca140e72b2
+# )
+# vcpkg_extract_source_archive(${ARCHIVE})
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/CMake-hdf5-1.10.0-patch1/hdf5-1.10.0-patch1)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://support.hdfgroup.org/ftp/HDF5/current18/src/hdf5-1.8.18.tar.bz2"
-    FILENAME "hdf5-1.8.18.tar.bz2"
-    SHA512 01f6d14bdd3be2ced9c63cc9e1820cd7ea11db649ff9f3a3055c18c4b0fffe777fd23baad536e3bce31c4d76fe17db64a3972762e1bb4d232927c1ca140e72b2
+    URLS "http://hdf4.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.0-patch1/src/CMake-hdf5-1.10.0-patch1.zip"
+    FILENAME "CMake-hdf5-1.10.0-patch1.zip"
+    SHA512 ec2edb43438661323be5998ecf64c4dd537ddc7451e31f89390260d16883e60a1ccc1bf745bcb809af22f2bf7157d50331a33910b8ebf5c59cd50693dfb2ef8f
 )
 vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/use-szip-config.patch
+        ${CMAKE_CURRENT_LIST_DIR}/disable-static-libs.patch
+)
+
+set(DISABLE_STATIC_LIBS OFF)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(DISABLE_STATIC_LIBS ON)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -21,6 +40,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DCMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP=1
         -DBUILD_TESTING=OFF
+        -DDISABLE_STATIC_LIBS=${DISABLE_STATIC_LIBS}
         -DHDF5_BUILD_EXAMPLES=OFF
         -DHDF5_BUILD_TOOLS=OFF
         -DHDF5_BUILD_CPP_LIB=OFF
@@ -30,9 +50,6 @@ vcpkg_configure_cmake(
         -DHDF5_ENABLE_SZIP_ENCODING=ON
         -DHDF5_INSTALL_DATA_DIR=share/hdf5/data
         -DHDF5_INSTALL_CMAKE_DIR=share/hdf5
-        "-DSZIP_LIBRARY_DEBUG=${CURRENT_INSTALLED_DIR}\\debug\\lib\\szip_D.lib"
-        "-DSZIP_LIBRARY_RELEASE=${CURRENT_INSTALLED_DIR}\\lib\\szip.lib"
-        "-DSZIP_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}\\include"
 )
 
 vcpkg_install_cmake()
