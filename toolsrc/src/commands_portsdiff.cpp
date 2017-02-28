@@ -40,19 +40,6 @@ namespace vcpkg::Commands::PortsDiff
         }
     }
 
-    static std::map<std::string, std::string> read_port_names_and_versions(const fs::path& ports_folder_path)
-    {
-        std::map<std::string, std::string> names_and_versions;
-
-        std::vector<SourceParagraph> ports = Paragraphs::load_all_ports(ports_folder_path);
-        for (SourceParagraph& port : ports)
-        {
-            names_and_versions.emplace(std::move(port.name), std::move(port.version));
-        }
-
-        return names_and_versions;
-    }
-
     static std::map<std::string, std::string> read_ports_from_commit(const vcpkg_paths& paths, const std::wstring& git_commit_id)
     {
         const fs::path dot_git_dir = paths.root / ".git";
@@ -68,7 +55,8 @@ namespace vcpkg::Commands::PortsDiff
                                                   checkout_this_dir,
                                                   L".vcpkg-root");
         System::cmd_execute(cmd);
-        std::map<std::string, std::string> names_and_versions = read_port_names_and_versions(temp_checkout_path / ports_dir_name_as_string);
+        const std::vector<SourceParagraph> source_paragraphs = Paragraphs::load_all_ports(temp_checkout_path / ports_dir_name_as_string);
+        const std::map<std::string, std::string> names_and_versions = Paragraphs::extract_port_names_and_versions(source_paragraphs);
         fs::remove_all(temp_checkout_path);
         return names_and_versions;
     }

@@ -15,25 +15,8 @@ namespace vcpkg::Commands::Update
 
         auto status_db = database_load_check(paths);
 
-        std::unordered_map<std::string, std::string> src_names_to_versions;
-
-        auto begin_it = fs::directory_iterator(paths.ports);
-        auto end_it = fs::directory_iterator();
-        for (; begin_it != end_it; ++begin_it)
-        {
-            const auto& path = begin_it->path();
-            try
-            {
-                auto pghs = Paragraphs::get_paragraphs(path / "CONTROL");
-                if (pghs.empty())
-                    continue;
-                auto srcpgh = SourceParagraph(pghs[0]);
-                src_names_to_versions.emplace(srcpgh.name, srcpgh.version);
-            }
-            catch (std::runtime_error const&)
-            {
-            }
-        }
+        const std::vector<SourceParagraph> source_paragraphs = Paragraphs::load_all_ports(paths.ports);
+        const std::map<std::string, std::string> src_names_to_versions = Paragraphs::extract_port_names_and_versions(source_paragraphs);
 
         std::string packages_list;
 
