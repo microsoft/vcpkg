@@ -7,7 +7,6 @@
 #include "vcpkg_Dependencies.h"
 #include "vcpkg_Input.h"
 #include "vcpkg_Chrono.h"
-#include "PostBuildLint_BuildInfo.h"
 #include "Paragraphs.h"
 
 namespace vcpkg::Commands::CI
@@ -16,18 +15,13 @@ namespace vcpkg::Commands::CI
     using Dependencies::install_plan_type;
     using Build::BuildResult;
 
-    static std::vector<package_spec> load_all_package_specs(const fs::path& directory, const triplet& target_triplet)
+    static std::vector<package_spec> load_all_package_specs(const fs::path& ports_directory, const triplet& target_triplet)
     {
-        std::vector<fs::path> port_folders;
-        Files::non_recursive_find_matching_paths_in_dir(directory, [](const fs::path& current)
-                                                        {
-                                                            return fs::is_directory(current);
-                                                        }, &port_folders);
-
+        std::vector<SourceParagraph> ports = Paragraphs::load_all_ports(ports_directory);
         std::vector<package_spec> specs;
-        for (const fs::path& p : port_folders)
+        for (const SourceParagraph& p : ports)
         {
-            specs.push_back(package_spec::from_name_and_triplet(p.filename().generic_string(), target_triplet).get_or_throw());
+            specs.push_back(package_spec::from_name_and_triplet(p.name, target_triplet).get_or_throw());
         }
 
         return specs;
