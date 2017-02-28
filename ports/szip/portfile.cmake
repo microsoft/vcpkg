@@ -25,6 +25,7 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/disable-static-lib-in-shared-build.patch
+        ${CMAKE_CURRENT_LIST_DIR}/default-component-shared.patch
 )
 
 vcpkg_configure_cmake(
