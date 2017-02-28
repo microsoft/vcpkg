@@ -27,6 +27,7 @@ vcpkg_apply_patches(
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/use-szip-config.patch
         ${CMAKE_CURRENT_LIST_DIR}/disable-static-libs.patch
+        ${CMAKE_CURRENT_LIST_DIR}/link-libraries-private.patch
 )
 
 set(DISABLE_STATIC_LIBS OFF)
