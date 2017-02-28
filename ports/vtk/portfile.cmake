@@ -13,6 +13,7 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/transfer-3rd-party-module-definitions.patch
         ${CMAKE_CURRENT_LIST_DIR}/transfer-hdf5-definitions.patch
         ${CMAKE_CURRENT_LIST_DIR}/netcdf-use-hdf5-definitions.patch
+        ${CMAKE_CURRENT_LIST_DIR}/dont-define-ssize_t.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -25,8 +26,10 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DBUILD_EXAMPLES=OFF
         -DVTK_Group_MPI=ON
         -DVTK_Group_Qt=ON
         -DVTK_QT_VERSION=5
@@ -50,7 +53,14 @@ vcpkg_configure_cmake(
         -DVTK_INSTALL_DATA_DIR=share/vtk/data
         -DVTK_INSTALL_DOC_DIR=share/vtk/doc
         -DVTK_INSTALL_PACKAGE_DIR=share/vtk
+        -DVTK_FORBID_DOWNLOADS=ON
         ${ADDITIONAL_OPTIONS}
+    OPTIONS_RELEASE
+        -DHDF5_C_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/hdf5.lib
+        -DHDF5_C_HL_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/hdf5_hl.lib
+    OPTIONS_DEBUG
+        -DHDF5_C_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/hdf5_D.lib
+        -DHDF5_C_HL_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/hdf5_hl_D.lib
 )
 
 vcpkg_install_cmake()
