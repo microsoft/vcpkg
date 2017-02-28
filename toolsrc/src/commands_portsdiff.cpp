@@ -26,11 +26,6 @@ namespace vcpkg::Commands::PortsDiff
     {
         for (const std::string& name : ports_to_print)
         {
-            if (name == "")
-            {
-                continue;
-            }
-
             const std::string& previous_version = previous_names_and_versions.at(name);
             const std::string& current_version = current_names_and_versions.at(name);
             std::cout << std::left
