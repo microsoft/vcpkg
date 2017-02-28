@@ -36,9 +36,9 @@ set(B2_OPTIONS
     -j$ENV{NUMBER_OF_PROCESSORS}
     --debug-configuration
     --hash
+    -q
 
     --without-python
-    toolset=msvc
     threading=multi
 )
 
@@ -57,9 +57,23 @@ endif()
 if(TRIPLET_SYSTEM_ARCH MATCHES "x64")
     list(APPEND B2_OPTIONS address-model=64)
 endif()
+
+if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+    message(WARNING "Combination of VS2017 and UWP is partially supported; using reference Winmd's from VS2015")
+endif()
 if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
     list(APPEND B2_OPTIONS windows-api=store)
-    set(ENV{BOOST_BUILD_PATH} ${CMAKE_CURRENT_LIST_DIR})
+    set(ENV{BOOST_BUILD_PATH} ${CMAKE_CURRENT_LIST_DIR}/uwp)
+else()
+    set(ENV{BOOST_BUILD_PATH} ${CMAKE_CURRENT_LIST_DIR}/vs2017)
+endif()
+
+if(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+    list(APPEND B2_OPTIONS toolset=msvc-14.1)
+elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v140")
+    list(APPEND B2_OPTIONS toolset=msvc-14.0)
+else()
+    message(FATAL_ERROR "Unsupported value for VCPKG_PLATFORM_TOOLSET: '${VCPKG_PLATFORM_TOOLSET}'")
 endif()
 
 # Add build type specific options
@@ -147,6 +161,7 @@ function(boost_rename_libs LIBS)
         get_filename_component(DIRECTORY_OF_LIB_FILE ${LIB} DIRECTORY)
         string(REPLACE "libboost_" "boost_" NEW_FILENAME ${OLD_FILENAME})
         string(REPLACE "-s-" "-" NEW_FILENAME ${NEW_FILENAME}) # For Release libs
+        string(REPLACE "-vc141-" "-vc140-" NEW_FILENAME ${NEW_FILENAME}) # To merge VS2017 and VS2015 binaries
         string(REPLACE "-sgd-" "-gd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
         if (EXISTS ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
             file(REMOVE ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME})
@@ -165,7 +180,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         DESTINATION ${CURRENT_PACKAGES_DIR}/bin
         FILES_MATCHING PATTERN "*.dll")
 endif()
-file(GLOB RELEASE_LIBS ${CURRENT_PACKAGES_DIR}/lib/libboost*.lib)
+file(GLOB RELEASE_LIBS ${CURRENT_PACKAGES_DIR}/lib/*.lib)
 boost_rename_libs(RELEASE_LIBS)
 message(STATUS "Packaging ${TARGET_TRIPLET}-rel done")
 
@@ -178,7 +193,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
         FILES_MATCHING PATTERN "*.dll")
 endif()
-file(GLOB DEBUG_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/libboost*.lib)
+file(GLOB DEBUG_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/*.lib)
 boost_rename_libs(DEBUG_LIBS)
 message(STATUS "Packaging ${TARGET_TRIPLET}-dbg done")
 
