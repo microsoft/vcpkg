@@ -209,10 +209,6 @@ namespace vcpkg::Paragraphs
             {
                 output.emplace_back(std::move(*srcpgh));
             }
-            else
-            {
-                Checks::exit_with_message("Error loading port from %s: %s", path.generic_string(), source_paragraph.error_code().message());
-            }
         }
 
         return output;
