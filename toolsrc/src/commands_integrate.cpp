@@ -228,20 +228,25 @@ namespace vcpkg::Commands::Integrate
     static void integrate_remove()
     {
         const fs::path path = get_appdata_targets_path();
-        if (!fs::exists(path))
+
+        std::error_code ec;
+        bool was_deleted = fs::remove(path, ec);
+
+        if (ec)
         {
-            System::println(System::color::success, "User-wide integration is not installed");
-            exit(EXIT_SUCCESS);
+            System::println(System::color::error, "Error: Unable to remove user-wide integration: %d", ec.message());
+            exit(EXIT_FAILURE);
         }
 
-        const std::wstring cmd_line = Strings::wformat(LR"(DEL "%s")", path.native());
-        const int exit_code = System::cmd_execute(cmd_line);
-        if (exit_code)
+        if (was_deleted)
         {
-            System::println(System::color::error, "Error: Unable to remove user-wide integration: %d", exit_code);
-            exit(exit_code);
+            System::println(System::color::success, "User-wide integration was removed");
         }
-        System::println(System::color::success, "User-wide integration was removed");
+        else
+        {
+            System::println(System::color::success, "User-wide integration is not installed");
+        }
+
         exit(EXIT_SUCCESS);
     }
 
