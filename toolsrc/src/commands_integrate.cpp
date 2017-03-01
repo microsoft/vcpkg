@@ -227,14 +227,14 @@ namespace vcpkg::Commands::Integrate
 
     static void integrate_remove()
     {
-        auto path = get_appdata_targets_path();
+        const fs::path path = get_appdata_targets_path();
         if (!fs::exists(path))
         {
             System::println(System::color::success, "User-wide integration is not installed");
             exit(EXIT_SUCCESS);
         }
 
-        const std::wstring cmd_line = Strings::wformat(LR"(DEL "%s")", get_appdata_targets_path().native());
+        const std::wstring cmd_line = Strings::wformat(LR"(DEL "%s")", path.native());
         const int exit_code = System::cmd_execute(cmd_line);
         if (exit_code)
         {
