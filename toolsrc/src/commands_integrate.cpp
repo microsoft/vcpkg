@@ -272,12 +272,7 @@ namespace vcpkg::Commands::Integrate
         const int exit_code = System::cmd_execute(cmd_line);
 
         const fs::path nuget_package = buildsystems_dir / Strings::format("%s.%s.nupkg", nuget_id, nupkg_version);
-        if (exit_code != 0 || !fs::exists(nuget_package))
-        {
-            System::println(System::color::error, "Error: NuGet package creation failed");
-            exit(EXIT_FAILURE);
-        }
-
+        Checks::check_exit(exit_code == 0 && fs::exists(nuget_package), "Error: NuGet package creation failed");
         System::println(System::color::success, "Created nupkg: %s", nuget_package.string());
 
         System::println(R"(
