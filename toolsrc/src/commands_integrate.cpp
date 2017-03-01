@@ -166,20 +166,17 @@ namespace vcpkg::Commands::Integrate
         fs::create_directory(tmp_dir);
 
         bool should_install_system = true;
-        if (fs::exists(system_wide_targets_file))
+        const expected<std::string> system_wide_file_contents = Files::read_contents(system_wide_targets_file);
+        if (auto contents_data = system_wide_file_contents.get())
         {
-            auto system_wide_file_contents = Files::read_contents(system_wide_targets_file);
-            if (auto contents_data = system_wide_file_contents.get())
+            std::regex re(R"###(<!-- version (\d+) -->)###");
+            std::match_results<std::string::const_iterator> match;
+            auto found = std::regex_search(*contents_data, match, re);
+            if (found)
             {
-                std::regex re(R"###(<!-- version (\d+) -->)###");
-                std::match_results<std::string::const_iterator> match;
-                auto found = std::regex_search(*contents_data, match, re);
-                if (found)
-                {
-                    int ver = atoi(match[1].str().c_str());
-                    if (ver >= 1)
-                        should_install_system = false;
-                }
+                int ver = atoi(match[1].str().c_str());
+                if (ver >= 1)
+                    should_install_system = false;
             }
         }
 
