@@ -1,3 +1,7 @@
+# Lua can be compiled as either C or C++.
+# Default configuration is C, set COMPILE_AS_CPP to ON to use C++.
+# See http://stackoverflow.com/questions/13560945/c-and-c-library-using-longjmp for why would you want to do that.
+
 PROJECT ( lua )
 
 IF( NOT WIN32 )
@@ -61,7 +65,8 @@ IF (NOT DEFINED SKIP_INSTALL_HEADERS)
             src/lauxlib.h
         DESTINATION include
     )
+    # If using C++, don't install extern "C" wrapper.
     IF (NOT COMPILE_AS_CPP)
-	    INSTALL(FILES src/lua.hpp DESTINATION include)
+        INSTALL(FILES src/lua.hpp DESTINATION include)
     ENDIF ()
 ENDIF ()
