@@ -1,3 +1,8 @@
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    message(STATUS "Building as static libraries not currently supported. Building as DLLs instead.")
+    set(VCPKG_LIBRARY_LINKAGE "dynamic")
+endif()
+
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ffmpeg-3.2.4)
 vcpkg_download_distfile(ARCHIVE
