@@ -1,3 +1,4 @@
+include(vcpkg_acquire_msys)
 include(vcpkg_download_distfile)
 include(vcpkg_extract_source_archive)
 include(vcpkg_execute_required_process)
