@@ -7,11 +7,11 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/lua-5.3.3)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/lua-5.3.4)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.lua.org/ftp/lua-5.3.3.tar.gz"
-    FILENAME "lua-5.3.3.tar.gz"
-    SHA512 7b8122ed48ea2a9faa47d1b69b4a5b1523bb7be67e78f252bb4339bf75e957a88c5405156e22b4b63ccf607a5407bf017a4cee1ce12b1aa5262047655960a3cc
+    URLS "http://www.lua.org/ftp/lua-5.3.4.tar.gz"
+    FILENAME "lua-5.3.4.tar.gz"
+    SHA512 739e31f82e6a60fa99910c2005e991b3a1e21339af52847f653cb190b30842054d189ca116ffcfdf9b36e07888c9ce5642b1dd2988cc7eff9f8789f9a2e34997
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
@@ -19,12 +19,21 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DCOMPILE_AS_CPP=OFF
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
         -DSKIP_INSTALL_TOOLS=ON
 )
 
 vcpkg_install_cmake()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    file(READ ${CURRENT_PACKAGES_DIR}/include/luaconf.h LUA_CONF_H)
+    string(REPLACE "defined(LUA_BUILD_AS_DLL)" "1" LUA_CONF_H "${LUA_CONF_H}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/include/luaconf.h "${LUA_CONF_H}")
+endif()
 
 # Handle copyright
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/lua)
