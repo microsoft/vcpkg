@@ -12,26 +12,13 @@ namespace vcpkg::Commands::Import
         std::vector<fs::path> libs;
     };
 
-    static Binaries detect_files_in_directory_ending_with(const fs::path& path)
+    static Binaries find_binaries_in_dir(const fs::path& path)
     {
         Files::check_is_directory(path);
 
         Binaries binaries;
-
-        for (auto it = fs::recursive_directory_iterator(path); it != fs::recursive_directory_iterator(); ++it)
-        {
-            fs::path file = *it;
-            // Skip if directory ?????
-            if (file.extension() == ".dll")
-            {
-                binaries.dlls.push_back(file);
-            }
-            else if (file.extension() == ".lib")
-            {
-                binaries.libs.push_back(file);
-            }
-        }
-
+        binaries.dlls = Files::recursive_find_files_with_extension_in_dir(path, ".dll");
+        binaries.libs = Files::recursive_find_files_with_extension_in_dir(path, ".lib");
         return binaries;
     }
 
@@ -51,8 +38,8 @@ namespace vcpkg::Commands::Import
         Files::check_is_directory(include_directory);
         Files::check_is_directory(project_directory);
         Files::check_is_directory(destination_path);
-        Binaries debug_binaries = detect_files_in_directory_ending_with(project_directory / "Debug");
-        Binaries release_binaries = detect_files_in_directory_ending_with(project_directory / "Release");
+        Binaries debug_binaries = find_binaries_in_dir(project_directory / "Debug");
+        Binaries release_binaries = find_binaries_in_dir(project_directory / "Release");
 
         fs::path destination_include_directory = destination_path / "include";
         fs::copy(include_directory, destination_include_directory, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
