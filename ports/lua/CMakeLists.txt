@@ -1,6 +1,11 @@
 # Lua can be compiled as either C or C++.
 # Default configuration is C, set COMPILE_AS_CPP to ON to use C++.
 # See http://stackoverflow.com/questions/13560945/c-and-c-library-using-longjmp for why would you want to do that.
+# Primary differences:
+# - Exceptions will be used instead of setjmp/longjmp
+# - The name mangling for functions will be C++ instead of C.
+#     - This is a source-incompatible change because extern "C" is chosen by the including application.
+# - The lua.hpp header will not be available.
 
 PROJECT ( lua )
 
