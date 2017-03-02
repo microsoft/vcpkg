@@ -22,6 +22,10 @@ src/lopcodes.c src/loslib.c src/lparser.c src/lstate.c src/lstring.c src/lstrlib
 src/ltable.c src/ltablib.c src/ltm.c src/lundump.c src/lutf8lib.c src/lvm.c src/lzio.c
 )
 
+IF (COMPILE_AS_CPP)
+    SET_SOURCE_FILES_PROPERTIES(${SRC_LIBLUA} src/lua.c src/luac.c PROPERTIES LANGUAGE CXX)
+ENDIF ()
+
 # append headers to sources to make them show up in MSVC GUI
 LIST(APPEND SRC_LIBLUA ${HDR_LIBLUA})
 
@@ -54,8 +58,10 @@ IF (NOT DEFINED SKIP_INSTALL_HEADERS)
             src/lualib.h
             src/lua.h
             src/luaconf.h
-            src/lua.hpp
             src/lauxlib.h
         DESTINATION include
     )
+    IF (NOT COMPILE_AS_CPP)
+	    INSTALL(FILES src/lua.hpp DESTINATION include)
+    ENDIF ()
 ENDIF ()
