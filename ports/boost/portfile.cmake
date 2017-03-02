@@ -163,7 +163,9 @@ function(boost_rename_libs LIBS)
         string(REPLACE "-s-" "-" NEW_FILENAME ${NEW_FILENAME}) # For Release libs
         string(REPLACE "-vc141-" "-vc140-" NEW_FILENAME ${NEW_FILENAME}) # To merge VS2017 and VS2015 binaries
         string(REPLACE "-sgd-" "-gd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
-        if (EXISTS ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
+        if ("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
+            # nothing to do
+        elseif (EXISTS ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
             file(REMOVE ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME})
         else()
             file(RENAME ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME} ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
