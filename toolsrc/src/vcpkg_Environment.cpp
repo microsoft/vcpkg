@@ -44,7 +44,7 @@ namespace vcpkg::Environment
     {
         const fs::path script = paths.scripts / "fetchDependency.ps1";
         // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
-        return Strings::wformat(L"powershell -ExecutionPolicy Bypass %s -Dependency %s", script.native(), tool_name);
+        return Strings::wformat(LR"(powershell -ExecutionPolicy Bypass "%s" -Dependency %s)", script.native(), tool_name);
     }
 
     void ensure_git_on_path(const vcpkg_paths& paths)
