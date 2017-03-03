@@ -4,7 +4,7 @@
 
 namespace vcpkg::Checks
 {
-    void unreachable()
+    __declspec(noreturn) void unreachable()
     {
         System::println(System::color::error, "Error: Unreachable code was reached");
 #ifndef NDEBUG
@@ -14,13 +14,13 @@ namespace vcpkg::Checks
 #endif
     }
 
-    void exit_with_message(const char* errorMessage)
+    __declspec(noreturn) void exit_with_message(const char* errorMessage)
     {
         System::println(System::color::error, errorMessage);
         exit(EXIT_FAILURE);
     }
 
-    void throw_with_message(const char* errorMessage)
+    __declspec(noreturn) void throw_with_message(const char* errorMessage)
     {
         throw std::runtime_error(errorMessage);
     }
