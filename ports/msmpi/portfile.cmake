@@ -96,6 +96,7 @@ endif()
 
 # Install debug libraries
 # NOTE: since the binary distribution does not include any debug libraries we simply install the release libraries
+SET(VCPKG_POLICY_NO_DEBUG_BINARIES enabled)
 file(INSTALL
         "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpi.lib"
         "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifec.lib"
