@@ -601,6 +601,17 @@ namespace vcpkg::PostBuildLint
         left += static_cast<size_t>(right);
     }
 
+    template <class T>
+    static bool contains_and_enabled(const std::map<T, opt_bool_t> map, const T& key)
+    {
+        auto it = map.find(key);
+        if (it != map.cend() && it->second == opt_bool_t::ENABLED)
+        {
+            return true;
+        }
+
+        return false;
+    }
 
     static size_t perform_all_checks_and_return_error_count(const package_spec& spec, const vcpkg_paths& paths)
     {
@@ -611,8 +622,7 @@ namespace vcpkg::PostBuildLint
 
         size_t error_count = 0;
 
-        auto it = build_info.policies.find(BuildPolicies::EMPTY_PACKAGE);
-        if (it != build_info.policies.cend() && it->second == opt_bool_t::ENABLED)
+        if (contains_and_enabled(build_info.policies, BuildPolicies::EMPTY_PACKAGE))
         {
             return error_count;
         }
@@ -674,7 +684,10 @@ namespace vcpkg::PostBuildLint
 
                     error_count += check_bin_folders_are_not_present_in_static_build(package_dir);
 
-                    error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::DEBUG, build_info.crt_linkage), debug_libs, dumpbin_exe);
+                    if (!contains_and_enabled(build_info.policies, BuildPolicies::NO_DEBUG_BINARIES))
+                    {
+                        error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::DEBUG, build_info.crt_linkage), debug_libs, dumpbin_exe);
+                    }
                     error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::RELEASE, build_info.crt_linkage), release_libs, dumpbin_exe);
                     break;
                 }

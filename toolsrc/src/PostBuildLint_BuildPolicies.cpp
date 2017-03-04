@@ -8,6 +8,7 @@ namespace vcpkg::PostBuildLint::BuildPolicies
 
     static const std::string NAME_EMPTY_PACKAGE = "PolicyEmptyPackage";
     static const std::string NAME_DLLS_WITHOUT_LIBS = "PolicyDLLsWithoutLIBs";
+    static const std::string NAME_NO_DEBUG_BINARIES = "PolicyNoDebugBinaries";
 
     const std::string& type::toString() const
     {
@@ -17,6 +18,8 @@ namespace vcpkg::PostBuildLint::BuildPolicies
                 return NAME_EMPTY_PACKAGE;
             case DLLS_WITHOUT_LIBS:
                 return NAME_DLLS_WITHOUT_LIBS;
+            case NO_DEBUG_BINARIES:
+                return NAME_NO_DEBUG_BINARIES;
             case NULLVALUE:
                 return NULLVALUE_STRING;
             default:
@@ -28,6 +31,7 @@ namespace vcpkg::PostBuildLint::BuildPolicies
     {
         static const std::string CMAKE_VARIABLE_EMPTY_PACKAGE = "VCPKG_POLICY_EMPTY_PACKAGE";
         static const std::string CMAKE_VARIABLE_DLLS_WITHOUT_LIBS = "VCPKG_POLICY_DLLS_WITHOUT_LIBS";
+        static const std::string CMAKE_VARIABLE_NO_DEBUG_BINARIES = "VCPKG_POLICY_NO_DEBUG_BINARIES";
 
         switch (this->backing_enum)
         {
@@ -35,6 +39,8 @@ namespace vcpkg::PostBuildLint::BuildPolicies
                 return CMAKE_VARIABLE_EMPTY_PACKAGE;
             case DLLS_WITHOUT_LIBS:
                 return CMAKE_VARIABLE_DLLS_WITHOUT_LIBS;
+            case NO_DEBUG_BINARIES:
+                return CMAKE_VARIABLE_NO_DEBUG_BINARIES;
             case NULLVALUE:
                 Enums::nullvalue_used(ENUM_NAME);
             default:
@@ -52,6 +58,11 @@ namespace vcpkg::PostBuildLint::BuildPolicies
         if (s == NAME_DLLS_WITHOUT_LIBS)
         {
             return BuildPolicies::DLLS_WITHOUT_LIBS;
+        }
+
+        if (s == NAME_NO_DEBUG_BINARIES)
+        {
+            return BuildPolicies::NO_DEBUG_BINARIES;
         }
 
         return BuildPolicies::NULLVALUE;
