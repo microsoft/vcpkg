@@ -19,6 +19,11 @@ namespace vcpkg::Strings::details
         return s;
     }
 
+    inline long long to_printf_arg(const long long s)
+    {
+        return s;
+    }
+
     inline double to_printf_arg(const double s)
     {
         return s;
