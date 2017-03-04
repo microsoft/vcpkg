@@ -684,7 +684,7 @@ namespace vcpkg::PostBuildLint
 
                     error_count += check_bin_folders_are_not_present_in_static_build(package_dir);
 
-                    if (!contains_and_enabled(build_info.policies, BuildPolicies::NO_DEBUG_BINARIES))
+                    if (!contains_and_enabled(build_info.policies, BuildPolicies::ONLY_RELEASE_CRT))
                     {
                         error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::DEBUG, build_info.crt_linkage), debug_libs, dumpbin_exe);
                     }
