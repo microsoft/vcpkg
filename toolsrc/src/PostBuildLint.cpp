@@ -29,24 +29,24 @@ namespace vcpkg::PostBuildLint
     const std::vector<OutdatedDynamicCrt>& get_outdated_dynamic_crts()
     {
         static const std::vector<OutdatedDynamicCrt> v = {
-            {"msvcp100.dll", R"(msvcp100\.dll)"},
-            {"msvcp100d.dll", R"(msvcp100d\.dll)"},
-            {"msvcp110.dll", R"(msvcp110\.dll)"},
-            {"msvcp110_win.dll", R"(msvcp110_win\.dll)"},
-            {"msvcp120.dll", R"(msvcp120\.dll)"},
-            {"msvcp120_clr0400.dll", R"(msvcp120_clr0400\.dll)"},
-            {"msvcp60.dll", R"(msvcp60\.dll)"},
-            {"msvcp60.dll", R"(msvcp60\.dll)"},
+            { "msvcp100.dll", R"(msvcp100\.dll)" },
+            { "msvcp100d.dll", R"(msvcp100d\.dll)" },
+            { "msvcp110.dll", R"(msvcp110\.dll)" },
+            { "msvcp110_win.dll", R"(msvcp110_win\.dll)" },
+            { "msvcp120.dll", R"(msvcp120\.dll)" },
+            { "msvcp120_clr0400.dll", R"(msvcp120_clr0400\.dll)" },
+            { "msvcp60.dll", R"(msvcp60\.dll)" },
+            { "msvcp60.dll", R"(msvcp60\.dll)" },
 
-            {"msvcr100.dll", R"(msvcr100\.dll)"},
-            {"msvcr100d.dll", R"(msvcr100d\.dll)"},
-            {"msvcr100_clr0400.dll", R"(msvcr100_clr0400\.dll)"},
-            {"msvcr110.dll", R"(msvcr110\.dll)"},
-            {"msvcr120.dll", R"(msvcr120\.dll)"},
-            {"msvcr120_clr0400.dll", R"(msvcr120_clr0400\.dll)"},
-            {"msvcrt.dll", R"(msvcrt\.dll)"},
-            {"msvcrt20.dll", R"(msvcrt20\.dll)"},
-            {"msvcrt40.dll", R"(msvcrt40\.dll)"}
+            { "msvcr100.dll", R"(msvcr100\.dll)" },
+            { "msvcr100d.dll", R"(msvcr100d\.dll)" },
+            { "msvcr100_clr0400.dll", R"(msvcr100_clr0400\.dll)" },
+            { "msvcr110.dll", R"(msvcr110\.dll)" },
+            { "msvcr120.dll", R"(msvcr120\.dll)" },
+            { "msvcr120_clr0400.dll", R"(msvcr120_clr0400\.dll)" },
+            { "msvcrt.dll", R"(msvcrt\.dll)" },
+            { "msvcrt20.dll", R"(msvcrt20\.dll)" },
+            { "msvcrt40.dll", R"(msvcrt40\.dll)" }
         };
 
         return v;
@@ -324,7 +324,7 @@ namespace vcpkg::PostBuildLint
 
             if (expected_architecture != actual_architecture)
             {
-                binaries_with_invalid_architecture.push_back({file, actual_architecture});
+                binaries_with_invalid_architecture.push_back({ file, actual_architecture });
             }
         }
 
@@ -350,7 +350,7 @@ namespace vcpkg::PostBuildLint
             const std::string actual_architecture = get_actual_architecture(info.machine_types.at(0));
             if (expected_architecture != actual_architecture)
             {
-                binaries_with_invalid_architecture.push_back({file, actual_architecture});
+                binaries_with_invalid_architecture.push_back({ file, actual_architecture });
             }
         }
 
@@ -502,7 +502,7 @@ namespace vcpkg::PostBuildLint
             {
                 if (std::regex_search(ec_data.output.cbegin(), ec_data.output.cend(), bad_build_type.crt_regex()))
                 {
-                    libs_with_invalid_crt.push_back({lib, bad_build_type});
+                    libs_with_invalid_crt.push_back({ lib, bad_build_type });
                     break;
                 }
             }
@@ -549,7 +549,7 @@ namespace vcpkg::PostBuildLint
             {
                 if (std::regex_search(ec_data.output.cbegin(), ec_data.output.cend(), outdated_crt.regex))
                 {
-                    dlls_with_outdated_crt.push_back({dll, outdated_crt});
+                    dlls_with_outdated_crt.push_back({ dll, outdated_crt });
                     break;
                 }
             }
