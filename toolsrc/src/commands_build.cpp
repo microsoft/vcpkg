@@ -6,6 +6,7 @@
 #include "PostBuildLint.h"
 #include "vcpkg_Dependencies.h"
 #include "vcpkg_System.h"
+#include "vcpkg_Chrono.h"
 #include "vcpkg_Environment.h"
 #include "metrics.h"
 #include "vcpkg_Enums.h"
@@ -53,11 +54,11 @@ namespace vcpkg::Commands::Build
                                                       port_dir.generic_wstring(),
                                                       ports_cmake_script_path.generic_wstring());
 
-        System::Stopwatch2 timer;
-        timer.start();
+        ElapsedTime timer = ElapsedTime::createStarted();
+
         int return_code = System::cmd_execute(command);
-        timer.stop();
-        TrackMetric("buildtimeus-" + spec.toString(), timer.microseconds());
+        auto buildtimeus = timer.microseconds();
+        TrackMetric("buildtimeus-" + spec.toString(), buildtimeus);
 
         if (return_code != 0)
         {

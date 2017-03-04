@@ -13,6 +13,7 @@
 #include "vcpkg_Input.h"
 #include "Paragraphs.h"
 #include "vcpkg_Strings.h"
+#include "vcpkg_Chrono.h"
 
 using namespace vcpkg;
 
@@ -153,8 +154,6 @@ static void loadConfig()
     }
 }
 
-static System::Stopwatch2 g_timer;
-
 static std::string trim_path_from_command_line(const std::string& full_command_line)
 {
     Checks::check_exit(full_command_line.size() > 0, "Internal failure - cannot have empty command line");
@@ -175,16 +174,18 @@ static std::string trim_path_from_command_line(const std::string& full_command_l
     return std::string(it, full_command_line.cend());
 }
 
+static ElapsedTime g_timer;
+
 int wmain(const int argc, const wchar_t* const* const argv)
 {
     if (argc == 0)
         std::abort();
 
-    g_timer.start();
+    g_timer = ElapsedTime::createStarted();
     atexit([]()
         {
-            g_timer.stop();
-            TrackMetric("elapsed_us", g_timer.microseconds());
+            auto elapsed_us = g_timer.microseconds();
+            TrackMetric("elapsed_us", elapsed_us);
             Flush();
         });
 

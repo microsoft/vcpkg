@@ -84,15 +84,6 @@ namespace vcpkg::System
         return println(c, Strings::format(messageTemplate, messageArgs...).c_str());
     }
 
-    struct Stopwatch2
-    {
-        int64_t start_time, end_time, freq;
-
-        void start();
-        void stop();
-        double microseconds() const;
-    };
-
     optional<std::wstring> get_environmental_variable(const wchar_t* varname) noexcept;
 
     void set_environmental_variable(const wchar_t* varname, const wchar_t* varvalue) noexcept;

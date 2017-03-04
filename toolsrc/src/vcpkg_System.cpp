@@ -96,23 +96,4 @@ namespace vcpkg::System
     {
         _wputenv_s(varname, varvalue);
     }
-
-    void Stopwatch2::start()
-    {
-        static_assert(sizeof(start_time) == sizeof(LARGE_INTEGER), "");
-
-        QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&start_time));
-    }
-
-    void Stopwatch2::stop()
-    {
-        QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&end_time));
-        QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&freq));
-    }
-
-    double Stopwatch2::microseconds() const
-    {
-        return (reinterpret_cast<const LARGE_INTEGER*>(&end_time)->QuadPart -
-                reinterpret_cast<const LARGE_INTEGER*>(&start_time)->QuadPart) * 1000000.0 / reinterpret_cast<const LARGE_INTEGER*>(&freq)->QuadPart;
-    }
 }
