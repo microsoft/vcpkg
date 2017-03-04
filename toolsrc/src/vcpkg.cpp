@@ -180,9 +180,6 @@ int wmain(const int argc, const wchar_t* const* const argv)
     if (argc == 0)
         std::abort();
 
-    std::cout.sync_with_stdio(false);
-    std::cout.imbue(std::locale::classic());
-
     g_timer.start();
     atexit([]()
         {
@@ -231,17 +228,22 @@ int wmain(const int argc, const wchar_t* const* const argv)
         exc_msg = "unknown error(...)";
     }
     TrackProperty("error", exc_msg);
-    std::cerr
-        << "vcpkg.exe has crashed.\n"
-        << "Please send an email to:\n"
-        << "    " << Commands::Contact::email() << "\n"
-        << "containing a brief summary of what you were trying to do and the following data blob:\n"
-        << "\n"
-        << "Version=" << Commands::Version::version() << "\n"
-        << "EXCEPTION='" << exc_msg << "'\n"
-        << "CMD=\n";
+
+    fflush(stdout);
+    System::print(
+            "vcpkg.exe has crashed.\n"
+            "Please send an email to:\n"
+            "    %s\n"
+            "containing a brief summary of what you were trying to do and the following data blob:\n"
+            "\n"
+            "Version=%s\n"
+            "EXCEPTION='%s'\n"
+            "CMD=\n",
+            Commands::Contact::email(),
+            Commands::Version::version(),
+            exc_msg);
+    fflush(stdout);
     for (int x = 0; x < argc; ++x)
-        std::cerr << Strings::utf16_to_utf8(argv[x]) << "|\n";
-    std::cerr
-        << "\n";
+        System::println("%s|", Strings::utf16_to_utf8(argv[x]));
+    fflush(stdout);
 }

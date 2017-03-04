@@ -15,14 +15,20 @@ namespace vcpkg::Strings::details
         return static_cast<char>(std::tolower(c));
     }
 
+    static _locale_t& c_locale()
+    {
+        static _locale_t c_locale_impl = _create_locale(LC_ALL, "C");
+        return c_locale_impl;
+    }
+
     std::string format_internal(const char* fmtstr, ...)
     {
         va_list lst;
         va_start(lst, fmtstr);
 
-        const int sz = _vscprintf(fmtstr, lst);
+        const int sz = _vscprintf_l(fmtstr, c_locale(), lst);
         std::string output(sz, '\0');
-        _vsnprintf_s(&output[0], output.size() + 1, output.size() + 1, fmtstr, lst);
+        _vsnprintf_s_l(&output[0], output.size() + 1, output.size() + 1, fmtstr, c_locale(), lst);
         va_end(lst);
 
         return output;
@@ -33,9 +39,9 @@ namespace vcpkg::Strings::details
         va_list lst;
         va_start(lst, fmtstr);
 
-        const int sz = _vscwprintf(fmtstr, lst);
+        const int sz = _vscwprintf_l(fmtstr, c_locale(), lst);
         std::wstring output(sz, '\0');
-        _vsnwprintf_s(&output[0], output.size() + 1, output.size() + 1, fmtstr, lst);
+        _vsnwprintf_s_l(&output[0], output.size() + 1, output.size() + 1, fmtstr, c_locale(), lst);
         va_end(lst);
 
         return output;
