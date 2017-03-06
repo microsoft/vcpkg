@@ -16,10 +16,12 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/fix-dynamic.patch)
+if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
+	vcpkg_apply_patches(
+			SOURCE_PATH ${SOURCE_PATH}
+			PATCHES
+					${CMAKE_CURRENT_LIST_DIR}/fix-dynamic.patch)
+endif()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h DESTINATION ${SOURCE_PATH})

@@ -1,13 +1,13 @@
-cmake_minimum_required ( VERSION 3.0 )
-PROJECT ( fftw3 )
+cmake_minimum_required (VERSION 3.0)
+project (fftw3)
 
 # From: http://stackoverflow.com/questions/10252336/fftw-in-visual-studio-2010
 
 # Standard:          /DWIN32 /D_WINDOWS /W3 /Zm1000 /EHsc /GR
-IF (WIN32)
-        SET(CMAKE_CXX_FLAGS "/DWIN32 /D_WINDOWS /W4 /Zi /EHsc /GR- /MP /openmp /bigobj") 
-        ADD_DEFINITIONS(-D_OPENMP -DFFTW_DLL -DLIBFFTWF33_EXPORTS) # Visual Studio 2005 and up supports OpenMP
-ENDIF (WIN32)
+if (WIN32)
+        set(CMAKE_CXX_FLAGS "/DWIN32 /D_WINDOWS /W4 /Zi /EHsc /GR- /MP /openmp /bigobj")
+        add_definitions(-D_OPENMP -DFFTW_DLL -DLIBFFTWF33_EXPORTS) # Visual Studio 2005 and up supports OpenMP
+endif (WIN32)
 
 
 file(GLOB           fftw_api_SOURCE                 api/*.c             api/*.h)
@@ -21,11 +21,11 @@ file(GLOB           fftw_kernel_SOURCE              kernel/*.c          kernel/*
 file(GLOB           fftw_rdft_SOURCE                rdft/*.c            rdft/*.h)
 file(GLOB           fftw_rdft_scalar_SOURCE         rdft/scalar/*.c     rdft/scalar/*.h)
 
-file(GLOB           fftw_rdft_scalar_r2cb_SOURCE    rdft/scalar/r2cb/*.c 
+file(GLOB           fftw_rdft_scalar_r2cb_SOURCE    rdft/scalar/r2cb/*.c
                                                     rdft/scalar/r2cb/*.h)
-file(GLOB           fftw_rdft_scalar_r2cf_SOURCE    rdft/scalar/r2cf/*.c 
+file(GLOB           fftw_rdft_scalar_r2cf_SOURCE    rdft/scalar/r2cf/*.c
                                                     rdft/scalar/r2cf/*.h)
-file(GLOB           fftw_rdft_scalar_r2r_SOURCE     rdft/scalar/r2r/*.c 
+file(GLOB           fftw_rdft_scalar_r2r_SOURCE     rdft/scalar/r2r/*.c
                                                     rdft/scalar/r2r/*.h)
 
 file(GLOB           fftw_rdft_simd_SOURCE           rdft/simd/*.c       rdft/simd/*.h)
@@ -37,9 +37,9 @@ file(GLOB           fftw_simd_support_SOURCE        simd-support/*.c    simd-sup
 
 
 set(${fftw_threads_SOURCE}
-    threads/api.c 
-    threads/conf.c 
-    threads/ct.c 
+    threads/api.c
+    threads/conf.c
+    threads/ct.c
     threads/dft-vrank-qeq1.c
     threads/f77api.c
     threads/hc2hc.c
@@ -65,7 +65,7 @@ include_directories(
 )
 
 # Create a target for the library
-ADD_LIBRARY(fftw3 SHARED 
+add_library(fftw3
     ${fftw_api_SOURCE}
     ${fftw_dft_SOURCE}
     ${fftw_dft_scalar_SOURCE}
