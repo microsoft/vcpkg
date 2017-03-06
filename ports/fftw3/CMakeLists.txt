@@ -5,8 +5,7 @@ project (fftw3)
 
 # Standard:          /DWIN32 /D_WINDOWS /W3 /Zm1000 /EHsc /GR
 if (WIN32)
-        set(CMAKE_CXX_FLAGS "/DWIN32 /D_WINDOWS /W4 /Zi /EHsc /GR- /MP /openmp /bigobj")
-        add_definitions(-D_OPENMP -DLIBFFTWF33_EXPORTS) # Visual Studio 2005 and up supports OpenMP
+    add_definitions(-D_OPENMP -DLIBFFTWF33_EXPORTS /openmp /bigobj) # Visual Studio 2005 and up supports OpenMP
 endif (WIN32)
 
 if (BUILD_SHARED_LIBS)
@@ -57,7 +56,7 @@ include_directories(
     api
     dft
     dft/scalar
-    dft/scalar/codelets # rellay needed?
+    dft/scalar/codelets # really needed?
     dft/simd
     dft/simd/sse2
     rdft
