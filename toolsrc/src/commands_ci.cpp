@@ -98,11 +98,6 @@ namespace vcpkg::Commands::CI
 
         for (size_t i = 0; i < results.size(); i++)
         {
-            if (results[i] == BuildResult::SUCCEEDED)
-            {
-                continue;
-            }
-
             System::println("%s: %s: %dms", install_plan[i].spec.toString(), Build::to_string(results[i]), timing[i]);
         }
 
