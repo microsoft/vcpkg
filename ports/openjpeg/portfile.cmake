@@ -12,7 +12,6 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS -DBUILD_CODEC:BOOL=OFF
             -DOPENJPEG_INSTALL_PACKAGE_DIR=share/openjpeg
-            -DCMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP=ON
 )
 
 vcpkg_install_cmake()

@@ -20,7 +20,6 @@ vcpkg_configure_cmake(
     OPTIONS
         -DLIBBSON_DIR=${CURRENT_INSTALLED_DIR}
         -DLIBMONGOC_DIR=${CURRENT_INSTALLED_DIR}
-        -DCMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP=ON
 )
 
 vcpkg_install_cmake()

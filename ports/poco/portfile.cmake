@@ -30,7 +30,6 @@ vcpkg_configure_cmake(
         -DENABLE_SEVENZIP=ON
         -DENABLE_TESTS=OFF
         -DPOCO_UNBUNDLED=ON # OFF means: using internal copy of sqlite, libz, pcre, expat, ...
-        -DCMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP=ON
 )
 
 vcpkg_install_cmake()

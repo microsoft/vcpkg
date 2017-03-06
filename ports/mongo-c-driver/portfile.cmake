@@ -20,7 +20,6 @@ vcpkg_configure_cmake(
         -DBSON_ROOT_DIR=${CURRENT_INSTALLED_DIR}
         -DENABLE_TESTS=OFF
         -DENABLE_EXAMPLES=OFF
-        -DCMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP=ON
 )
 
 vcpkg_install_cmake()
