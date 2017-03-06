@@ -210,7 +210,7 @@
 #define HAVE_SINL 1
 
 /* Define to 1 if you have the `snprintf' function. */
-#undef HAVE_SNPRINTF
+#define HAVE_SNPRINTF 1
 
 /* Define to 1 if you have the `sqrt' function. */
 #define HAVE_SQRT 1
@@ -308,43 +308,43 @@
 #undef PTHREAD_CREATE_JOINABLE
 
 /* The size of `double', as computed by sizeof. */
-#define SIZEOF_DOUBLE 8
+#undef SIZEOF_DOUBLE
 
 /* The size of `fftw_r2r_kind', as computed by sizeof. */
 #undef SIZEOF_FFTW_R2R_KIND
 
 /* The size of `float', as computed by sizeof. */
-#define SIZEOF_FLOAT 4
+#undef SIZEOF_FLOAT
 
 /* The size of `int', as computed by sizeof. */
-#define SIZEOF_INT 4
+#undef SIZEOF_INT
 
 /* The size of `long', as computed by sizeof. */
-#define SIZEOF_LONG 4
+#undef SIZEOF_LONG
 
 /* The size of `long long', as computed by sizeof. */
-#define SIZEOF_LONG_LONG 8
+#undef SIZEOF_LONG_LONG
 
 /* The size of `MPI_Fint', as computed by sizeof. */
 #undef SIZEOF_MPI_FINT
 
 /* The size of `ptrdiff_t', as computed by sizeof. */
-#define SIZEOF_PTRDIFF_T 4
+#undef SIZEOF_PTRDIFF_T
 
 /* The size of `size_t', as computed by sizeof. */
-#define SIZEOF_SIZE_T 4
+#undef SIZEOF_SIZE_T
 
 /* The size of `unsigned int', as computed by sizeof. */
-#define SIZEOF_UNSIGNED_INT 4
+#undef SIZEOF_UNSIGNED_INT
 
 /* The size of `unsigned long', as computed by sizeof. */
-#define SIZEOF_UNSIGNED_LONG 4
+#undef SIZEOF_UNSIGNED_LONG
 
 /* The size of `unsigned long long', as computed by sizeof. */
-#define SIZEOF_UNSIGNED_LONG_LONG 8
+#undef SIZEOF_UNSIGNED_LONG_LONG
 
 /* The size of `void *', as computed by sizeof. */
-#define SIZEOF_VOID_P 4
+#undef SIZEOF_VOID_P
 
 /* If using the C implementation of alloca, define if you know the
    direction of stack growth for your system; otherwise it will be
