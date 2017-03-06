@@ -6,8 +6,12 @@ project (fftw3)
 # Standard:          /DWIN32 /D_WINDOWS /W3 /Zm1000 /EHsc /GR
 if (WIN32)
         set(CMAKE_CXX_FLAGS "/DWIN32 /D_WINDOWS /W4 /Zi /EHsc /GR- /MP /openmp /bigobj")
-        add_definitions(-D_OPENMP -DFFTW_DLL -DLIBFFTWF33_EXPORTS) # Visual Studio 2005 and up supports OpenMP
+        add_definitions(-D_OPENMP -DLIBFFTWF33_EXPORTS) # Visual Studio 2005 and up supports OpenMP
 endif (WIN32)
+
+if (BUILD_SHARED_LIBS)
+    add_definitions(-DFFTW_DLL)
+endif()
 
 
 file(GLOB           fftw_api_SOURCE                 api/*.c             api/*.h)

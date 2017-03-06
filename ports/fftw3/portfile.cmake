@@ -16,28 +16,25 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(${ARCHIVE})
 
-if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
-	vcpkg_apply_patches(
-			SOURCE_PATH ${SOURCE_PATH}
-			PATCHES
-					${CMAKE_CURRENT_LIST_DIR}/fix-dynamic.patch)
-endif()
-
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 file(COPY ${SOURCE_PATH}/api/fftw3.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+
+if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
+    vcpkg_apply_patches(
+            SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
+            PATCHES
+                    ${CMAKE_CURRENT_LIST_DIR}/fix-dynamic.patch)
+endif()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/fftw3)
