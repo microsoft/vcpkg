@@ -65,6 +65,9 @@ function(vcpkg_configure_cmake)
         "-DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON"
         "-DCMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY=ON"
         "-DBoost_COMPILER=-vc140"
+        "-DCMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP=TRUE"
+        "-DCMAKE_VERBOSE_MAKEFILE=ON"
+        "-DCMAKE_TOOLCHAIN_FILE=${CMAKE_TRIPLET_FILE}"
     )
     if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL dynamic)
         list(APPEND _csc_OPTIONS_DEBUG
@@ -95,9 +98,7 @@ function(vcpkg_configure_cmake)
     vcpkg_execute_required_process(
         COMMAND ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}
             -G ${GENERATOR}
-            -DCMAKE_VERBOSE_MAKEFILE=ON
             -DCMAKE_BUILD_TYPE=Release
-            -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TRIPLET_FILE}
             -DCMAKE_PREFIX_PATH=${CURRENT_INSTALLED_DIR}
             -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
@@ -110,9 +111,7 @@ function(vcpkg_configure_cmake)
     vcpkg_execute_required_process(
         COMMAND ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}
             -G ${GENERATOR}
-            -DCMAKE_VERBOSE_MAKEFILE=ON
             -DCMAKE_BUILD_TYPE=Debug
-            -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TRIPLET_FILE}
             -DCMAKE_PREFIX_PATH=${CURRENT_INSTALLED_DIR}/debug\\\\\\\;${CURRENT_INSTALLED_DIR}
             -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
