@@ -1,5 +1,5 @@
---- a/CMakeLists.txt  2016-10-30 02:23:04.000000000 +0100
-+++ b/CMakeLists.txt  2017-03-06 11:10:51.125636200 +0100
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
 @@ -372,6 +372,8 @@
    ENDIF()
    SET_TARGET_PROPERTIES(portaudio PROPERTIES OUTPUT_NAME portaudio_${TARGET_POSTFIX} FOLDER "Portaudio")
