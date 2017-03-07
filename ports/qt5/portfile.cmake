@@ -86,7 +86,14 @@ vcpkg_execute_required_process(
 message(STATUS "Configure ${TARGET_TRIPLET} done")
 
 message(STATUS "Building ${TARGET_TRIPLET}")
-vcpkg_execute_required_process(
+# Multiple executions are required due to https://bugreports.qt.io/browse/QTBUG-53393
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(COUNT 1)
+else()
+    set(COUNT 3)
+endif()
+vcpkg_execute_required_process_repeat(
+    COUNT ${COUNT}
     COMMAND ${JOM}
     WORKING_DIRECTORY ${OUTPUT_PATH}
     LOGNAME build-${TARGET_TRIPLET}
