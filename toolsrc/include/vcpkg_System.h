@@ -28,6 +28,10 @@ namespace vcpkg::System
         return cmd_execute_and_capture_output(cmd_line.c_str());
     }
 
+    std::wstring create_powershell_script_cmd(const fs::path& script_path);
+
+    std::wstring create_powershell_script_cmd(const fs::path& script_path, const std::wstring& args);
+
     enum class color
     {
         success = 10,

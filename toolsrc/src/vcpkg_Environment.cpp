@@ -43,8 +43,7 @@ namespace vcpkg::Environment
     static std::wstring create_default_install_cmd(const vcpkg_paths& paths, const std::wstring& tool_name)
     {
         const fs::path script = paths.scripts / "fetchDependency.ps1";
-        // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
-        return Strings::wformat(LR"(powershell -ExecutionPolicy Bypass "%s" -Dependency %s)", script.native(), tool_name);
+        return System::create_powershell_script_cmd(script, Strings::wformat(L"-Dependency %s", tool_name));
     }
 
     void ensure_git_on_path(const vcpkg_paths& paths)
@@ -103,7 +102,7 @@ namespace vcpkg::Environment
     static std::vector<std::string> get_VS2017_installation_instances(const vcpkg_paths& paths)
     {
         const fs::path script = paths.scripts / "findVisualStudioInstallationInstances.ps1";
-        const std::wstring cmd = Strings::wformat(L"powershell -ExecutionPolicy Bypass %s", script.native());
+        const std::wstring cmd = System::create_powershell_script_cmd(script);
         System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd);
         Checks::check_exit(ec_data.exit_code == 0, "Could not run script to detect VS 2017 instances");
         return Strings::split(ec_data.output, "\n");
