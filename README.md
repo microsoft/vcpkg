@@ -9,6 +9,7 @@ For short description of available commands, run `vcpkg help`.
 Prerequisites:
 - Visual Studio 2015 Update 3 or
 - Visual Studio 2017
+- CMake 3.8.0 or higher (note: downloaded automatically if not found)
 - `git.exe` available in your path
 
 Clone this repository, then run
