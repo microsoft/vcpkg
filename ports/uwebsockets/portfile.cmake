@@ -1,9 +1,10 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/uwebsockets-0.12.0)
+set(VERSION 0.13.0)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/uwebsockets-${VERSION})
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/uWebSockets/uWebSockets/archive/v0.12.0.zip"
-    FILENAME "uwebsockets-v0.12.0.zip"
-    SHA512 ea10682608d5f6c8b246f186dfc2f14f496858cc7e468880b96b111f10058daf529f1aa9662a851e21494dde9a4faadf2b9904483dac5350d0ca8736500cdda8
+    URLS "https://github.com/uWebSockets/uWebSockets/archive/v${VERSION}.zip"
+    FILENAME "uwebsockets-v${VERSION}.zip"
+    SHA512 d3912296ed9e20900dc401e841238b84fe273e2e828500347d311948b8cb9dc3a08039b87f82d32a5844e39782201fe39641f336040a4a0493787760f1b5c618
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
