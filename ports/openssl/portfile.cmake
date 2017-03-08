@@ -10,7 +10,7 @@ vcpkg_find_acquire_program(PERL)
 find_program(NMAKE nmake)
 
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH}")
+set(ENV{PATH} "${PERL_EXE_PATH};$ENV{PATH}")
 
 vcpkg_download_distfile(OPENSSL_SOURCE_ARCHIVE
     URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz"
