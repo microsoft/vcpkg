@@ -74,7 +74,7 @@ namespace vcpkg::Strings
     std::string ascii_to_lowercase(const std::string& input);
 
     template <class T, class Transformer>
-    static std::string join(const std::vector<T>& v, const std::string& prefix, const std::string& delimiter, const std::string& suffix, Transformer transformer)
+    std::string join(const std::string& delimiter, const std::vector<T>& v, Transformer transformer)
     {
         if (v.empty())
         {
@@ -84,7 +84,6 @@ namespace vcpkg::Strings
         std::string output;
         size_t size = v.size();
 
-        output.append(prefix);
         output.append(transformer(v.at(0)));
 
         for (size_t i = 1; i < size; ++i)
@@ -93,35 +92,35 @@ namespace vcpkg::Strings
             output.append(transformer(v.at(i)));
         }
 
-        output.append(suffix);
         return output;
     }
 
-    static std::string join(const std::vector<std::string>& v, const std::string& prefix, const std::string& delimiter, const std::string& suffix);
+    std::string join(const std::string& delimiter, const std::vector<std::string>& v);
 
-    class Joiner
+    template <class T, class Transformer>
+    std::wstring wjoin(const std::wstring& delimiter, const std::vector<T>& v, Transformer transformer)
     {
-    public:
-        static Joiner on(const std::string& delimiter);
-
-        Joiner& prefix(const std::string& prefix);
-        Joiner& suffix(const std::string& suffix);
-
-        std::string join(const std::vector<std::string>& v) const;
-
-        template <class T, class Transformer>
-        std::string join(const std::vector<T>& v, Transformer transformer) const
+        if (v.empty())
         {
-            return Strings::join(v, this->m_prefix, this->m_delimiter, this->m_suffix, transformer);
+            return std::wstring();
         }
 
-    private:
-        explicit Joiner(const std::string& delimiter);
+        std::wstring output;
+        size_t size = v.size();
 
-        std::string m_prefix;
-        std::string m_delimiter;
-        std::string m_suffix;
-    };
+        output.append(transformer(v.at(0)));
+
+        for (size_t i = 1; i < size; ++i)
+        {
+            output.append(delimiter);
+            output.append(transformer(v.at(i)));
+        }
+
+        return output;
+    }
+
+    std::wstring wjoin(const std::wstring& delimiter, const std::vector<std::wstring>& v);
+
 
     void trim(std::string* s);
 

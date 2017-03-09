@@ -136,17 +136,17 @@ namespace vcpkg::Commands::Remove
         {
             sort_packages_by_name(&not_installed);
             System::println("The following packages are not installed, so not removed:\n%s",
-                            Strings::Joiner::on("\n    ").prefix("    ").join(not_installed, [](const package_spec_with_remove_plan* p)
-                                                                              {
-                                                                                  return p->spec.toString();
-                                                                              }));
+                            Strings::join("\n    ", not_installed, [](const package_spec_with_remove_plan* p)
+                                          {
+                                              return "    " + p->spec.toString();
+                                          }));
         }
 
         if (!remove.empty())
         {
             sort_packages_by_name(&remove);
             System::println("The following packages will be removed:\n%s",
-                            Strings::Joiner::on("\n").join(remove, [](const package_spec_with_remove_plan* p)
+                            Strings::join("\n", remove, [](const package_spec_with_remove_plan* p)
                                                            {
                                                                if (p->plan.request_type == Dependencies::request_type::AUTO_SELECTED)
                                                                {

@@ -78,38 +78,14 @@ namespace vcpkg::Strings
         return output;
     }
 
-    std::string join(const std::vector<std::string>& v, const std::string& prefix, const std::string& delimiter, const std::string& suffix)
+    std::string join(const std::string& delimiter, const std::vector<std::string>& v)
     {
-        return join(v, prefix, delimiter, suffix, [](const std::string& i) -> std::string
-        {
-            return i;
-        });
+        return join(delimiter, v, [](const std::string& p) -> const std::string& { return p; });
     }
 
-    Joiner Joiner::on(const std::string& delimiter)
+    std::wstring wjoin(const std::wstring& delimiter, const std::vector<std::wstring>& v)
     {
-        return Joiner(delimiter);
-    }
-
-    Joiner& Joiner::prefix(const std::string& prefix)
-    {
-        this->m_prefix = prefix;
-        return *this;
-    }
-
-    Joiner& Joiner::suffix(const std::string& suffix)
-    {
-        this->m_suffix = suffix;
-        return *this;
-    }
-
-    std::string Joiner::join(const std::vector<std::string>& v) const
-    {
-        return Strings::join(v, this->m_prefix, this->m_delimiter, this->m_suffix);
-    }
-
-    Joiner::Joiner(const std::string& delimiter) : m_prefix(""), m_delimiter(delimiter), m_suffix("")
-    {
+        return wjoin(delimiter, v, [](const std::wstring& p) -> const std::wstring&{ return p; });
     }
 
     void trim(std::string* s)

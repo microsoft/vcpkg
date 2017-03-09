@@ -158,7 +158,7 @@ namespace vcpkg::Commands::Install
                             triplet_install_path.generic_string(),
                             binary_paragraph.spec);
             System::print("\n    ");
-            System::println(Strings::Joiner::on("\n    ").join(intersection));
+            System::println(Strings::join("\n    ", intersection));
             System::println("");
             exit(EXIT_FAILURE);
         }
