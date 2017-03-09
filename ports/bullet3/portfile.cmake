@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/bullet3-98d47809b4273d97ea06c9b2137ada10af581bb9)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/bullet3-2.86.1)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/bulletphysics/bullet3/archive/98d47809b4273d97ea06c9b2137ada10af581bb9.zip"
-    FILENAME "bullet3-98d47809b4273d97ea06c9b2137ada10af581bb9.zip"
-    SHA512 eaa3aa5ff124c87f153a9faeabe00955aaa2d87ed5d2297a96e02531eb7fd1286f2b654bd45401690747ca4391dd7c18486f4cbac0da7e835d52874345b9811d
+    URLS "https://github.com/bulletphysics/bullet3/archive/2.86.1.zip"
+    FILENAME "bullet3-2.86.1.zip"
+    SHA512 96c67bed63db4b7d46196cebda57b80543ea37bd19f013adcfe19ee6c2c3319ed007bcd1ebbe345d8c75b7e80588f4a7d85cb6a07e1a5eea759d97ce4d94f972
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
