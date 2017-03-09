@@ -12,6 +12,12 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(${ARCHIVE})
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+    vcpkg_find_acquire_program(NASM)
+    get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
+    set(ENV{PATH} "$ENV{PATH};${NASM_EXE_PATH}")
+endif()
+
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
