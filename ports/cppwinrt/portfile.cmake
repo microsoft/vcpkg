@@ -1,32 +1,13 @@
-#header-only library
 include(vcpkg_common_functions)
 find_program(GIT git)
 
-set(GIT_URL "https://github.com/Microsoft/cppwinrt")
-set(GIT_REF "9e01842")
-
-if(NOT EXISTS "${DOWNLOADS}/cppwinrt.git")
-    message(STATUS "Cloning")
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} clone --bare ${GIT_URL} ${DOWNLOADS}/cppwinrt.git
-        WORKING_DIRECTORY ${DOWNLOADS}
-        LOGNAME clone
-    )
-endif()
-message(STATUS "Cloning done")
-
-if(NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
-    message(STATUS "Adding worktree")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR})
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} worktree add -f --detach ${CURRENT_BUILDTREES_DIR}/src ${GIT_REF}
-        WORKING_DIRECTORY ${DOWNLOADS}/cppwinrt.git
-        LOGNAME worktree
-    )
-endif()
-message(STATUS "Adding worktree done")
-
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/cppwinrt-february_2017_refresh)
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://github.com/Microsoft/cppwinrt/archive/february_2017_refresh.tar.gz"
+    FILENAME "cppwinrt-february_2017_refresh.tar.gz"
+    SHA512 0e2ed94d65ae4c7297ae4d82d64a43fa59fac7b35fbe42ea939f135f0f6eb867f57fac70b6a9cc9a78912de75aa4482d48007f83a3781b147d237ae637fdaa0e
+)
+vcpkg_extract_source_archive(${ARCHIVE})
 
 # Put the licence file where vcpkg expects it
 file(COPY ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/cppwinrt/license.txt)
