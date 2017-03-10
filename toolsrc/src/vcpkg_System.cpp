@@ -107,4 +107,32 @@ namespace vcpkg::System
     {
         _wputenv_s(varname, varvalue);
     }
+
+    static bool is_string_keytype(DWORD hkey_type)
+    {
+        return hkey_type == REG_SZ || hkey_type == REG_MULTI_SZ || hkey_type == REG_EXPAND_SZ;
+    }
+
+    optional<std::wstring> get_registry_string(HKEY base, const wchar_t* subKey, const wchar_t* valuename)
+    {
+        HKEY k = nullptr;
+        LSTATUS ec = RegOpenKeyExW(base, subKey, NULL, KEY_READ, &k);
+        if (ec != ERROR_SUCCESS)
+            return nullptr;
+
+        DWORD dwBufferSize = 0;
+        DWORD dwType = 0;
+        auto rc = RegQueryValueExW(k, valuename, nullptr, &dwType, nullptr, &dwBufferSize);
+        if (rc != ERROR_SUCCESS || !is_string_keytype(dwType) || dwBufferSize == 0 || dwBufferSize % sizeof(wchar_t) != 0)
+            return nullptr;
+        std::wstring ret;
+        ret.resize(dwBufferSize / sizeof(wchar_t));
+
+        rc = RegQueryValueExW(k, valuename, nullptr, &dwType, reinterpret_cast<LPBYTE>(ret.data()), &dwBufferSize);
+        if (rc != ERROR_SUCCESS || !is_string_keytype(dwType) || dwBufferSize != sizeof(wchar_t) * ret.size())
+            return nullptr;
+
+        ret.pop_back(); // remove extra trailing null byte
+        return std::make_unique<std::wstring>(std::move(ret));
+    }
 }

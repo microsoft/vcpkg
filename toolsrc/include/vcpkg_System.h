@@ -1,11 +1,14 @@
 #pragma once
 
+#include <Windows.h>
 #include "vcpkg_Strings.h"
 #include "filesystem_fs.h"
 #include "vcpkg_optional.h"
 
 namespace vcpkg::System
 {
+    optional<std::wstring> get_registry_string(HKEY base, const wchar_t* subkey, const wchar_t* valuename);
+
     fs::path get_exe_path_of_current_process();
 
     struct exit_code_and_output
