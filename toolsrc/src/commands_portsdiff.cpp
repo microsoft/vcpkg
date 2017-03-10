@@ -13,10 +13,7 @@ namespace vcpkg::Commands::PortsDiff
         for (const std::string& name : ports_to_print)
         {
             const std::string& version = names_and_versions.at(name);
-            std::cout << std::left
-                << std::setw(20) << name << ' '
-                << std::setw(16) << version << ' '
-                << '\n';
+            System::println("%-20s %-16s", name, version);
         }
     }
 
@@ -28,10 +25,7 @@ namespace vcpkg::Commands::PortsDiff
         {
             const std::string& previous_version = previous_names_and_versions.at(name);
             const std::string& current_version = current_names_and_versions.at(name);
-            std::cout << std::left
-                << std::setw(20) << name << ' '
-                << std::setw(16) << previous_version << " -> " << current_version
-                << '\n';
+            System::println("%-20s %-16s -> %s", name, previous_version, current_version);
         }
     }
 
