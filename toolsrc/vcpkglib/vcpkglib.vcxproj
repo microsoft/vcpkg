@@ -137,6 +137,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\include\BinaryParagraph.h" />
+    <ClInclude Include="..\include\lazy.h" />
     <ClInclude Include="..\include\PostBuildLint_BuildInfo.h" />
     <ClInclude Include="..\include\PostBuildLint_BuildPolicies.h" />
     <ClInclude Include="..\include\coff_file_reader.h" />

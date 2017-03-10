@@ -293,5 +293,8 @@
     <ClInclude Include="..\include\vcpkg_Chrono.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\lazy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
