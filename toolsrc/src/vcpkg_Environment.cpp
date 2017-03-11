@@ -46,15 +46,15 @@ namespace vcpkg::Environment
             const fs::path msvc_path = Strings::format(R"(%s\VC\Tools\MSVC)", instance);
             std::vector<fs::path> msvc_subdirectories;
             Files::non_recursive_find_matching_paths_in_dir(msvc_path, [&](const fs::path& current)
-            {
-                return fs::is_directory(current);
-            }, &msvc_subdirectories);
+                                                            {
+                                                                return fs::is_directory(current);
+                                                            }, &msvc_subdirectories);
 
             // Sort them so that latest comes first
             std::sort(msvc_subdirectories.begin(), msvc_subdirectories.end(), [&](const fs::path& left, const fs::path& right)
-            {
-                return left.filename() > right.filename();
-            });
+                      {
+                          return left.filename() > right.filename();
+                      });
 
             for (const fs::path& subdir : msvc_subdirectories)
             {

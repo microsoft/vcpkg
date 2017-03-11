@@ -40,10 +40,10 @@ namespace vcpkg
     static optional<fs::path> find_if_has_equal_or_greater_version(const std::vector<fs::path>& candidate_paths, const std::wstring& version_check_arguments, const std::array<int, 3>& expected_version)
     {
         auto it = std::find_if(candidate_paths.cbegin(), candidate_paths.cend(), [&](const fs::path& p)
-        {
-            const std::wstring cmd = Strings::wformat(LR"("%s" %s)", p.native(), version_check_arguments);
-            return exists_and_has_equal_or_greater_version(cmd, expected_version);
-        });
+                               {
+                                   const std::wstring cmd = Strings::wformat(LR"("%s" %s)", p.native(), version_check_arguments);
+                                   return exists_and_has_equal_or_greater_version(cmd, expected_version);
+                               });
 
         if (it != candidate_paths.cend())
         {
@@ -83,7 +83,7 @@ namespace vcpkg
 
         const fs::path actual_downloaded_path = rc.output;
         Checks::check_exit(expected_downloaded_path == actual_downloaded_path, "Expected dependency downloaded path to be %s, but was %s",
-            expected_downloaded_path.generic_string(), actual_downloaded_path.generic_string());
+                           expected_downloaded_path.generic_string(), actual_downloaded_path.generic_string());
         return actual_downloaded_path;
     }
 
