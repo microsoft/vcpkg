@@ -1,104 +1,12 @@
 #include "pch.h"
 #include "vcpkg_Environment.h"
 #include "vcpkg_Commands.h"
-#include "metrics.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Strings.h"
 #include "vcpkg_Files.h"
 
 namespace vcpkg::Environment
 {
-    static void ensure_on_path(const std::array<int, 3>& version, const std::wstring& version_check_cmd, const std::wstring& install_cmd)
-    {
-        System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(version_check_cmd);
-        if (ec_data.exit_code == 0)
-        {
-            // version check
-            std::regex re(R"###((\d+)\.(\d+)\.(\d+))###");
-            std::match_results<std::string::const_iterator> match;
-            auto found = std::regex_search(ec_data.output, match, re);
-            if (found)
-            {
-                int d1 = atoi(match[1].str().c_str());
-                int d2 = atoi(match[2].str().c_str());
-                int d3 = atoi(match[3].str().c_str());
-                if (d1 > version[0] || (d1 == version[0] && d2 > version[1]) || (d1 == version[0] && d2 == version[1] && d3 >= version[2]))
-                {
-                    // satisfactory version found
-                    return;
-                }
-            }
-        }
-
-        auto rc = System::cmd_execute(install_cmd);
-        if (rc)
-        {
-            System::println(System::color::error, "Launching powershell failed or was denied");
-            TrackProperty("error", "powershell install failed");
-            TrackProperty("installcmd", install_cmd);
-            exit(rc);
-        }
-    }
-
-    static std::wstring create_default_install_cmd(const vcpkg_paths& paths, const std::wstring& tool_name)
-    {
-        const fs::path script = paths.scripts / "fetchDependency.ps1";
-        return System::create_powershell_script_cmd(script, Strings::wformat(L"-Dependency %s", tool_name));
-    }
-
-    void ensure_git_on_path(const vcpkg_paths& paths)
-    {
-        static const fs::path default_git_installation_dir = Environment::get_ProgramFiles_platform_bitness() / "git/cmd";
-        static const fs::path default_git_installation_dir_32 = Environment::get_ProgramFiles_32_bit() / "git/cmd";
-
-        const fs::path portable_git = paths.downloads / "PortableGit" / "cmd"; // TODO: Remove next time we bump the version
-        const fs::path min_git = paths.downloads / "MinGit-2.11.1-32-bit" / "cmd";
-        const std::wstring path_buf = Strings::wformat(L"%s;%s;%s;%s;%s",
-                                                       min_git.native(),
-                                                       portable_git.native(),
-                                                       *System::get_environmental_variable(L"PATH"),
-                                                       default_git_installation_dir.native(),
-                                                       default_git_installation_dir_32.native());
-
-        System::set_environmental_variable(L"PATH", path_buf.c_str());
-
-        static constexpr std::array<int, 3> git_version = { 2,0,0 };
-        static const std::wstring version_check_cmd = L"git --version 2>&1";
-        const std::wstring install_cmd = create_default_install_cmd(paths, L"git");
-        ensure_on_path(git_version, version_check_cmd, install_cmd);
-    }
-
-    void ensure_cmake_on_path(const vcpkg_paths& paths)
-    {
-        static const fs::path default_cmake_installation_dir = Environment::get_ProgramFiles_platform_bitness() / "CMake/bin";
-        static const fs::path default_cmake_installation_dir_32 = Environment::get_ProgramFiles_32_bit() / "CMake/bin";
-
-        const fs::path downloaded_cmake = paths.downloads / "cmake-3.8.0-rc1-win32-x86" / "bin";
-        const std::wstring path_buf = Strings::wformat(L"%s;%s;%s;%s",
-                                                       downloaded_cmake.native(),
-                                                       *System::get_environmental_variable(L"PATH"),
-                                                       default_cmake_installation_dir.native(),
-                                                       default_cmake_installation_dir_32.native());
-        System::set_environmental_variable(L"PATH", path_buf.c_str());
-
-        static constexpr std::array<int, 3> cmake_version = { 3,8,0 };
-        static const std::wstring version_check_cmd = L"cmake --version 2>&1";
-        const std::wstring install_cmd = create_default_install_cmd(paths, L"cmake");
-        ensure_on_path(cmake_version, version_check_cmd, install_cmd);
-    }
-
-    void ensure_nuget_on_path(const vcpkg_paths& paths)
-    {
-        const fs::path downloaded_nuget = paths.downloads / "nuget-3.5.0";
-        const std::wstring path_buf = Strings::wformat(L"%s;%s", downloaded_nuget.native(), *System::get_environmental_variable(L"PATH"));
-        System::set_environmental_variable(L"PATH", path_buf.c_str());
-
-        static constexpr std::array<int, 3> nuget_version = { 3,3,0 };
-        static const std::wstring version_check_cmd = L"nuget 2>&1";
-        const std::wstring install_cmd = create_default_install_cmd(paths, L"nuget");
-        ensure_on_path(nuget_version, version_check_cmd, install_cmd);
-    }
-
     static std::vector<std::string> get_VS2017_installation_instances(const vcpkg_paths& paths)
     {
         const fs::path script = paths.scripts / "findVisualStudioInstallationInstances.ps1";
@@ -138,15 +46,15 @@ namespace vcpkg::Environment
             const fs::path msvc_path = Strings::format(R"(%s\VC\Tools\MSVC)", instance);
             std::vector<fs::path> msvc_subdirectories;
             Files::non_recursive_find_matching_paths_in_dir(msvc_path, [&](const fs::path& current)
-                                                            {
-                                                                return fs::is_directory(current);
-                                                            }, &msvc_subdirectories);
+            {
+                return fs::is_directory(current);
+            }, &msvc_subdirectories);
 
             // Sort them so that latest comes first
             std::sort(msvc_subdirectories.begin(), msvc_subdirectories.end(), [&](const fs::path& left, const fs::path& right)
-                      {
-                          return left.filename() > right.filename();
-                      });
+            {
+                return left.filename() > right.filename();
+            });
 
             for (const fs::path& subdir : msvc_subdirectories)
             {

@@ -3,18 +3,6 @@
 
 namespace vcpkg::Environment
 {
-    void ensure_nuget_on_path(const vcpkg_paths& paths);
-
-    void ensure_git_on_path(const vcpkg_paths& paths);
-
-    void ensure_cmake_on_path(const vcpkg_paths& paths);
-
-    inline void ensure_utilities_on_path(const vcpkg_paths& paths)
-    {
-        ensure_cmake_on_path(paths);
-        ensure_git_on_path(paths);
-    }
-
     const fs::path& get_dumpbin_exe(const vcpkg_paths& paths);
 
     struct vcvarsall_and_platform_toolset
