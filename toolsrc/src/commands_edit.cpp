@@ -16,25 +16,53 @@ namespace vcpkg::Commands::Edit
         const fs::path portpath = paths.ports / port_name;
         Checks::check_exit(fs::is_directory(portpath), R"(Could not find port named "%s")", port_name);
 
-        // Find editor
-        const optional<std::wstring> env_EDITOR_optional = System::get_environmental_variable(L"EDITOR");
+        // Find the user's selected editor
         std::wstring env_EDITOR;
 
-        if (env_EDITOR_optional)
+        if (env_EDITOR.empty())
         {
-            env_EDITOR = *env_EDITOR_optional;
+            const optional<std::wstring> env_EDITOR_optional = System::get_environmental_variable(L"EDITOR");
+            if (env_EDITOR_optional)
+            {
+                env_EDITOR = *env_EDITOR_optional;
+            }
         }
-        else
+
+        if (env_EDITOR.empty())
         {
-            static const fs::path CODE_EXE_PATH = Environment::get_ProgramFiles_32_bit() / "Microsoft VS Code/Code.exe";
+            const fs::path CODE_EXE_PATH = Environment::get_ProgramFiles_32_bit() / "Microsoft VS Code/Code.exe";
             if (fs::exists(CODE_EXE_PATH))
             {
                 env_EDITOR = CODE_EXE_PATH;
             }
-            else
+        }
+
+        if (env_EDITOR.empty())
+        {
+            static const std::array<const wchar_t*, 4> regkeys = {
+                LR"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{C26E74D1-022E-4238-8B9D-1E7564A36CC9}_is1)",
+                LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{C26E74D1-022E-4238-8B9D-1E7564A36CC9}_is1)",
+                LR"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{F8A2A208-72B3-4D61-95FC-8A65D340689B}_is1)",
+                LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{F8A2A208-72B3-4D61-95FC-8A65D340689B}_is1)",
+            };
+            for (auto&& keypath : regkeys)
             {
-                Checks::exit_with_message("Visual Studio Code was not found and the environmental variable EDITOR is not set");
+                auto code_installpath = System::get_registry_string(HKEY_LOCAL_MACHINE, keypath, L"InstallLocation");
+                if (code_installpath)
+                {
+                    auto p = fs::path(*code_installpath) / "Code.exe";
+                    if (fs::exists(p))
+                    {
+                        env_EDITOR = p.native();
+                        break;
+                    }
+                }
             }
+        }
+
+        if (env_EDITOR.empty())
+        {
+            Checks::exit_with_message("Visual Studio Code was not found and the environment variable EDITOR is not set");
         }
 
         std::wstring cmdLine = Strings::wformat(LR"("%s" "%s" "%s" -n)", env_EDITOR, portpath.native(), (portpath / "portfile.cmake").native());
