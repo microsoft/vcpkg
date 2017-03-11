@@ -1,3 +1,36 @@
+vcpkg (0.0.76)
+--------------
+  * Add ports:
+    - ffmpeg               3.2.4-2
+    - fftw3                3.3.6-p11
+    - flatbuffers          1.6.0
+    - netcdf-c             4.4.1.1-1
+    - netcdf-cxx4          4.3.0
+    - portaudio            19.0.6.00
+    - vtk                  7.1.0
+  * Update ports:
+    - azure-storage-cpp    2.6.0            -> 3.0.0
+    - boost                1.63             -> 1.63-2
+    - bullet3              2.83.7.98d4780   -> 2.86.1
+    - catch                1.5.7            -> 1.8.1
+    - cppwinrt             1.010.0.14393.0  -> feb2017_refresh-14393
+    - hdf5                 1.8.18           -> 1.10.0-patch1-1
+    - libflac              1.3.2            -> 1.3.2-1
+    - libpng               1.6.24-1         -> 1.6.28
+    - lua                  5.3.3-2          -> 5.3.4
+    - msmpi                8.0              -> 8.0-1
+    - openjpeg             2.1.2            -> 2.1.2-1
+    - poco                 1.7.6-3          -> 1.7.6-4
+    - szip                 2.1              -> 2.1-1
+    - zeromq               4.2.0            -> 4.2.2
+  * `vcpkg` now launches external commands (most notably builds) in a sanitized environment
+  * Better proxy handling when fetching dependencies (cmake/git/nuget)
+  * Fix more VS2017 issues
+  * Fixes and improvements in existing portfiles and the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  MON, 10 Mar 2017 17:45:00 -0800
+
+
 vcpkg (0.0.75)
 --------------
   * Add ports:
