@@ -1,19 +1,29 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mpir-2.7.2)
+
+set(MPIR_VERSION 3.0.0)
+set(MPIR_HASH "c735105db8b86db739fd915bf16064e6bc82d0565ad8858059e4e93f62c9d72d9a1c02a5ca9859b184346a8dc64fa714d4d61404cff1e405dc548cbd54d0a88e")
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mpir-${MPIR_VERSION})
+
 vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "http://mpir.org/mpir-2.7.2.tar.bz2"
-    FILENAME "mpir-2.7.2.tar.bz2"
-    SHA512 8436a0123201f9e30130ea340331c5a6445dddb58ce1f6c6a3a8303c310ac5b3c279c83b5c520a757cba82c2b14e92da44583e0eec287090cf69cbb29d516a9c
+    URLS "http://mpir.org/mpir-${MPIR_VERSION}.tar.bz2"
+    FILENAME "mpir-${MPIR_VERSION}.tar.bz2"
+    SHA512 ${MPIR_HASH}
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
+if(VCPKG_PLATFORM_TOOLSET MATCHES "v141*")
+    set(MSVC_VERSION 15)
+else()
+    set(MSVC_VERSION 14)
+endif()
+
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 	vcpkg_build_msbuild(
-		PROJECT_PATH ${SOURCE_PATH}/build.vc14/dll_mpir_gc/dll_mpir_gc.vcxproj
+		PROJECT_PATH ${SOURCE_PATH}/build.vc${MSVC_VERSION}/dll_mpir_gc/dll_mpir_gc.vcxproj
 	)
 else()
 	vcpkg_build_msbuild(
-		PROJECT_PATH ${SOURCE_PATH}/build.vc14/lib_mpir_gc/lib_mpir_gc.vcxproj
+		PROJECT_PATH ${SOURCE_PATH}/build.vc${MSVC_VERSION}/lib_mpir_gc/lib_mpir_gc.vcxproj
 	)
 endif()
 
