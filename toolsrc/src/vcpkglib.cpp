@@ -3,6 +3,7 @@
 #include "vcpkg_Files.h"
 #include "Paragraphs.h"
 #include "metrics.h"
+#include "vcpkg_Strings.h"
 
 namespace vcpkg
 {
@@ -159,7 +160,7 @@ namespace vcpkg
             x86-windows/include/FLAC++/all.h
             x86-windows/include/FLAC++/decoder.h
             x86-windows/include/FLAC++/encoder.h
-         */
+        */
         // Note that after sorting, the FLAC++/ group will be placed before the FLAC/ group
         // The new format is lexicographically sorted
         std::sort(lines->begin(), lines->end());
@@ -199,5 +200,16 @@ namespace vcpkg
         }
 
         return installed_files;
+    }
+
+    CMakeVariable::CMakeVariable(const std::wstring& varname, const wchar_t* varvalue) : s(Strings::wformat(LR"("-D%s=%s")", varname, varvalue)) { }
+    CMakeVariable::CMakeVariable(const std::wstring& varname, const std::string& varvalue) : CMakeVariable(varname, Strings::utf8_to_utf16(varvalue).c_str()) { }
+    CMakeVariable::CMakeVariable(const std::wstring& varname, const std::wstring& varvalue) : CMakeVariable(varname, varvalue.c_str()) {}
+    CMakeVariable::CMakeVariable(const std::wstring& varname, const fs::path& path) : CMakeVariable(varname, path.generic_wstring()) {}
+
+    std::wstring make_cmake_cmd(const fs::path& cmake_exe, const fs::path& cmake_script, const std::vector<CMakeVariable>& pass_variables)
+    {
+        std::wstring cmd_cmake_pass_variables = Strings::wjoin(L" ", pass_variables, [](auto&& v) { return v.s; });
+        return Strings::wformat(LR"("%s" %s -P "%s")", cmake_exe.native(), cmd_cmake_pass_variables, cmake_script.generic_wstring());
     }
 }
