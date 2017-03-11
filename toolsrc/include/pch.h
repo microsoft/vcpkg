@@ -6,6 +6,7 @@
 #include <shellapi.h>
 #include <Shlobj.h>
 #include <winhttp.h>
+#include <process.h>
 
 #include <cassert>
 #include <stdexcept>

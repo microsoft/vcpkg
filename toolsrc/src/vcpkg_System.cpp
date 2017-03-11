@@ -6,17 +6,91 @@ namespace vcpkg::System
 {
     fs::path get_exe_path_of_current_process()
     {
-        wchar_t buf[_MAX_PATH ];
+        wchar_t buf[_MAX_PATH];
         int bytes = GetModuleFileNameW(nullptr, buf, _MAX_PATH);
         if (bytes == 0)
             std::abort();
         return fs::path(buf, buf + bytes);
     }
 
+    int cmd_execute_clean(const wchar_t* cmd_line)
+    {
+        static const std::wstring system_root = *get_environmental_variable(L"SystemRoot");
+        static const std::wstring system_32 = system_root + LR"(\system32)";
+        static const std::wstring new_PATH = Strings::wformat(LR"(Path=%s;%s;%s\WindowsPowerShell\v1.0\)", system_32, system_root, system_32);
+
+        std::vector<std::wstring> env_wstrings =
+        {
+            L"ALLUSERSPROFILE",
+            L"APPDATA",
+            L"CommonProgramFiles",
+            L"CommonProgramFiles(x86)",
+            L"CommonProgramW6432",
+            L"COMPUTERNAME",
+            L"ComSpec",
+            L"HOMEDRIVE",
+            L"HOMEPATH",
+            L"LOCALAPPDATA",
+            L"LOGONSERVER",
+            L"NUMBER_OF_PROCESSORS",
+            L"OS",
+            L"PATHEXT",
+            L"PROCESSOR_ARCHITECTURE",
+            L"PROCESSOR_IDENTIFIER",
+            L"PROCESSOR_LEVEL",
+            L"PROCESSOR_REVISION",
+            L"ProgramData",
+            L"ProgramFiles",
+            L"ProgramFiles(x86)",
+            L"ProgramW6432",
+            L"PROMPT",
+            L"PSModulePath",
+            L"PUBLIC",
+            L"SystemDrive",
+            L"SystemRoot",
+            L"TEMP",
+            L"TMP",
+            L"USERDNSDOMAIN",
+            L"USERDOMAIN",
+            L"USERDOMAIN_ROAMINGPROFILE",
+            L"USERNAME",
+            L"USERPROFILE",
+            L"windir",
+            // Enables proxy information to be passed to Curl, the underlying download library in cmake.exe
+            L"HTTP_PROXY",
+            L"HTTPS_PROXY",
+        };
+
+        // Flush stdout before launching external process
+        _flushall();
+
+        std::vector<const wchar_t*> env_cstr;
+        env_cstr.reserve(env_wstrings.size() + 2);
+
+        for (auto&& env_wstring : env_wstrings)
+        {
+            auto v = System::get_environmental_variable(env_wstring.c_str());
+            if (v == nullptr || v->empty())
+                continue;
+
+            env_wstring.push_back(L'=');
+            env_wstring.append(*v);
+            env_cstr.push_back(env_wstring.c_str());
+        }
+
+        env_cstr.push_back(new_PATH.c_str());
+        env_cstr.push_back(nullptr);
+
+        // Basically we are wrapping it in quotes
+        const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
+        auto exit_code = _wspawnlpe(_P_WAIT, L"cmd.exe", L"cmd.exe", L"/c", actual_cmd_line.c_str(), nullptr, env_cstr.data());
+        return static_cast<int>(exit_code);
+    }
+
     int cmd_execute(const wchar_t* cmd_line)
     {
         // Flush stdout before launching external process
-        fflush(stdout);
+        _flushall();
 
         // Basically we are wrapping it in quotes
         const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
@@ -58,7 +132,7 @@ namespace vcpkg::System
     std::wstring create_powershell_script_cmd(const fs::path& script_path, const std::wstring& args)
     {
         // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
-       return Strings::wformat(LR"(powershell -ExecutionPolicy Bypass -Command "& {& '%s' %s}")", script_path.native(), args);
+        return Strings::wformat(LR"(powershell -ExecutionPolicy Bypass -Command "& {& '%s' %s}")", script_path.native(), args);
     }
 
     void print(const char* message)
