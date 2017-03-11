@@ -213,11 +213,11 @@ namespace vcpkg::Commands::Integrate
         System::println(System::color::success, "Applied user-wide integration for this vcpkg root.");
         const fs::path cmake_toolchain = paths.buildsystems / "vcpkg.cmake";
         System::println("\n"
-            "All MSBuild C++ projects can now #include any installed libraries.\n"
-            "Linking will be handled automatically.\n"
-            "Installing new libraries will make them instantly available.\n"
-            "\n"
-            "CMake projects should use -DCMAKE_TOOLCHAIN_FILE=%s", cmake_toolchain.generic_string());
+                        "All MSBuild C++ projects can now #include any installed libraries.\n"
+                        "Linking will be handled automatically.\n"
+                        "Installing new libraries will make them instantly available.\n"
+                        "\n"
+                        "CMake projects should use -DCMAKE_TOOLCHAIN_FILE=%s", cmake_toolchain.generic_string());
 
         exit(EXIT_SUCCESS);
     }
@@ -249,7 +249,7 @@ namespace vcpkg::Commands::Integrate
 
     static void integrate_project(const vcpkg_paths& paths)
     {
-        Environment::ensure_nuget_on_path(paths);
+        const fs::path& nuget_exe = paths.get_nuget_exe();
 
         const fs::path& buildsystems_dir = paths.buildsystems;
         const fs::path tmp_dir = buildsystems_dir / "tmp";
@@ -267,7 +267,7 @@ namespace vcpkg::Commands::Integrate
         std::ofstream(nuspec_file_path) << create_nuspec_file(paths.root, nuget_id, nupkg_version);
 
         // Using all forward slashes for the command line
-        const std::wstring cmd_line = Strings::wformat(LR"(nuget.exe pack -OutputDirectory "%s" "%s" > nul)", buildsystems_dir.native(), nuspec_file_path.native());
+        const std::wstring cmd_line = Strings::wformat(LR"("%s" pack -OutputDirectory "%s" "%s" > nul)", nuget_exe.native(), buildsystems_dir.native(), nuspec_file_path.native());
 
         const int exit_code = System::cmd_execute(cmd_line);
 
