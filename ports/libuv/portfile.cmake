@@ -16,8 +16,11 @@ if(NOT EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src)
     )
 endif()
 
-vcpkg_find_acquire_program(PYTHON2)
+find_program(GIT git)
+get_filename_component(GIT_EXE_PATH ${GIT} DIRECTORY)
+set(ENV{PATH} "$ENV{PATH};${GIT_EXE_PATH}")
 
+vcpkg_find_acquire_program(PYTHON2)
 set(ENV{PYTHON} ${PYTHON2})
 set(ENV{GYP_MSVS_VERSION} 2015)
 
