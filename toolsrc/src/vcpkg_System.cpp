@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "vcpkg_System.h"
+#include "vcpkg_Checks.h"
 
 namespace vcpkg::System
 {
@@ -92,15 +93,16 @@ namespace vcpkg::System
 
     optional<std::wstring> get_environmental_variable(const wchar_t* varname) noexcept
     {
-        wchar_t* buffer;
-        _wdupenv_s(&buffer, nullptr, varname);
-
-        if (buffer == nullptr)
-        {
+        auto sz = GetEnvironmentVariableW(varname, nullptr, 0);
+        if (sz == 0)
             return nullptr;
-        }
-        std::unique_ptr<wchar_t, void(__cdecl *)(void*)> bufptr(buffer, free);
-        return std::make_unique<std::wstring>(buffer);
+
+        auto ret = std::make_unique<std::wstring>(sz, L'\0');
+        Checks::check_exit(MAXDWORD >= ret->size());
+        auto sz2 = GetEnvironmentVariableW(varname, ret->data(), static_cast<DWORD>(ret->size()));
+        Checks::check_exit(sz2 + 1 == sz);
+        ret->pop_back();
+        return ret;
     }
 
     void set_environmental_variable(const wchar_t* varname, const wchar_t* varvalue) noexcept
