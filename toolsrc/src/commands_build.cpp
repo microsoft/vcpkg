@@ -60,7 +60,7 @@ namespace vcpkg::Commands::Build
 
         const ElapsedTime timer = ElapsedTime::createStarted();
 
-        int return_code = System::cmd_execute(command);
+        int return_code = System::cmd_execute_clean(command);
         auto buildtimeus = timer.microseconds();
         TrackMetric("buildtimeus-" + spec.toString(), buildtimeus);
 

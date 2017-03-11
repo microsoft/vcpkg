@@ -46,7 +46,7 @@ namespace vcpkg::Commands::PortsDiff
                                                   checkout_this_dir,
                                                   L".vcpkg-root",
                                                   git_exe.native());
-        System::cmd_execute(cmd);
+        System::cmd_execute_clean(cmd);
         const std::vector<SourceParagraph> source_paragraphs = Paragraphs::load_all_ports(temp_checkout_path / ports_dir_name_as_string);
         const std::map<std::string, std::string> names_and_versions = Paragraphs::extract_port_names_and_versions(source_paragraphs);
         fs::remove_all(temp_checkout_path);

@@ -30,12 +30,12 @@ namespace vcpkg::Commands::Create
         {
             const std::string& zip_file_name = args.command_arguments.at(2);
             Checks::check_exit(!Files::has_invalid_chars_for_filesystem(zip_file_name),
-                R"(Filename cannot contain invalid chars %s, but was %s)",
-                Files::FILESYSTEM_INVALID_CHARACTERS, zip_file_name);
+                               R"(Filename cannot contain invalid chars %s, but was %s)",
+                               Files::FILESYSTEM_INVALID_CHARACTERS, zip_file_name);
             cmake_args.push_back({ L"FILENAME", zip_file_name });
         }
 
         const std::wstring cmd_launch_cmake = make_cmake_cmd(cmake_exe, paths.ports_cmake, cmake_args);
-        exit(System::cmd_execute(cmd_launch_cmake));
+        exit(System::cmd_execute_clean(cmd_launch_cmake));
     }
 }
