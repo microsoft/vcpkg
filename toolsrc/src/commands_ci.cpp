@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "vcpkg_Commands.h"
 #include "vcpkglib.h"
-#include "vcpkg_Environment.h"
 #include "vcpkg_Files.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Dependencies.h"
@@ -39,8 +38,6 @@ namespace vcpkg::Commands::CI
         StatusParagraphs status_db = database_load_check(paths);
         const std::vector<package_spec_with_install_plan> install_plan = Dependencies::create_install_plan(paths, specs, status_db);
         Checks::check_exit(!install_plan.empty(), "Install plan cannot be empty");
-
-        Environment::ensure_utilities_on_path(paths);
 
         std::vector<BuildResult> results;
         std::vector<std::chrono::milliseconds::rep> timing;
