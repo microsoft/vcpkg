@@ -31,18 +31,21 @@ namespace vcpkg::Commands::PortsDiff
 
     static std::map<std::string, std::string> read_ports_from_commit(const vcpkg_paths& paths, const std::wstring& git_commit_id)
     {
+        const fs::path& git_exe = paths.get_git_exe();
         const fs::path dot_git_dir = paths.root / ".git";
         const std::wstring ports_dir_name_as_string = paths.ports.filename().native();
         const fs::path temp_checkout_path = paths.root / Strings::wformat(L"%s-%s", ports_dir_name_as_string, git_commit_id);
         fs::create_directory(temp_checkout_path);
         const std::wstring checkout_this_dir = Strings::wformat(LR"(.\%s)", ports_dir_name_as_string); // Must be relative to the root of the repository
 
-        const std::wstring cmd = Strings::wformat(LR"(git --git-dir="%s" --work-tree="%s" checkout %s -f -q -- %s %s & git reset >NUL)",
+        const std::wstring cmd = Strings::wformat(LR"("%s" --git-dir="%s" --work-tree="%s" checkout %s -f -q -- %s %s & "%s" reset >NUL)",
+                                                  git_exe.native(),
                                                   dot_git_dir.native(),
                                                   temp_checkout_path.native(),
                                                   git_commit_id,
                                                   checkout_this_dir,
-                                                  L".vcpkg-root");
+                                                  L".vcpkg-root",
+                                                  git_exe.native());
         System::cmd_execute(cmd);
         const std::vector<SourceParagraph> source_paragraphs = Paragraphs::load_all_ports(temp_checkout_path / ports_dir_name_as_string);
         const std::map<std::string, std::string> names_and_versions = Paragraphs::extract_port_names_and_versions(source_paragraphs);
@@ -50,11 +53,11 @@ namespace vcpkg::Commands::PortsDiff
         return names_and_versions;
     }
 
-    static void check_commit_exists(const std::wstring& git_commit_id)
+    static void check_commit_exists(const fs::path& git_exe, const std::wstring& git_commit_id)
     {
         static const std::string VALID_COMMIT_OUTPUT = "commit\n";
 
-        const std::wstring cmd = Strings::wformat(LR"(git cat-file -t %s 2>NUL)", git_commit_id);
+        const std::wstring cmd = Strings::wformat(LR"("%s" cat-file -t %s 2>NUL)", git_exe.native(), git_commit_id);
         const System::exit_code_and_output output = System::cmd_execute_and_capture_output(cmd);
         Checks::check_exit(output.output == VALID_COMMIT_OUTPUT, "Invalid commit id %s", Strings::utf16_to_utf8(git_commit_id));
     }
@@ -66,12 +69,13 @@ namespace vcpkg::Commands::PortsDiff
         args.check_max_arg_count(2, example);
         args.check_and_get_optional_command_arguments({});
 
-        Environment::ensure_git_on_path(paths);
+        const fs::path& git_exe = paths.get_git_exe();
+
         const std::wstring git_commit_id_for_previous_snapshot = Strings::utf8_to_utf16(args.command_arguments.at(0));
         const std::wstring git_commit_id_for_current_snapshot = args.command_arguments.size() < 2 ? L"HEAD" : Strings::utf8_to_utf16(args.command_arguments.at(1));
 
-        check_commit_exists(git_commit_id_for_current_snapshot);
-        check_commit_exists(git_commit_id_for_previous_snapshot);
+        check_commit_exists(git_exe, git_commit_id_for_current_snapshot);
+        check_commit_exists(git_exe, git_commit_id_for_previous_snapshot);
 
         const std::map<std::string, std::string> current_names_and_versions = read_ports_from_commit(paths, git_commit_id_for_current_snapshot);
         const std::map<std::string, std::string> previous_names_and_versions = read_ports_from_commit(paths, git_commit_id_for_previous_snapshot);
