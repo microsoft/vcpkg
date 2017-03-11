@@ -417,6 +417,6 @@ true
         std::ofstream(vcpkg_metrics_txt_path) << payload;
 
         const std::wstring cmdLine = Strings::wformat(L"start %s %s", temp_folder_path_exe.native(), vcpkg_metrics_txt_path.native());
-        System::cmd_execute(cmdLine);
+        System::cmd_execute_clean(cmdLine);
     }
 }

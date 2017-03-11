@@ -269,7 +269,7 @@ namespace vcpkg::Commands::Integrate
         // Using all forward slashes for the command line
         const std::wstring cmd_line = Strings::wformat(LR"("%s" pack -OutputDirectory "%s" "%s" > nul)", nuget_exe.native(), buildsystems_dir.native(), nuspec_file_path.native());
 
-        const int exit_code = System::cmd_execute(cmd_line);
+        const int exit_code = System::cmd_execute_clean(cmd_line);
 
         const fs::path nuget_package = buildsystems_dir / Strings::format("%s.%s.nupkg", nuget_id, nupkg_version);
         Checks::check_exit(exit_code == 0 && fs::exists(nuget_package), "Error: NuGet package creation failed");
