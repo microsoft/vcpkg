@@ -1,10 +1,14 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libjpeg-turbo-1.4.90)
+
+set(LIBJPEGTURBO_VERSION 1.5.1)
+set(LIBJPEGTURBO_HASH "7b89f3c707daa98b0ed19ec417aab5273a1248ce7f98722a671ea80558a8eb0e73b136ce7be7c059f9f42262e682743abcab64e325f82cd4bd1531e0a4035209")
+
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libjpeg-turbo-${LIBJPEGTURBO_VERSION})
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/libjpeg-turbo/libjpeg-turbo/archive/1.4.90.zip"
-    FILENAME "libjpeg-turbo-1.4.90.zip"
-    SHA512 43c3d26c70a7356bb0832276fe82eead040c3f4aa17df118f91a38615bfacfdfb25fab41965f9ca2b69d18e0b937a1bb753e93fa2c114e01d5174fc1100010b4
+    URLS "https://github.com/libjpeg-turbo/libjpeg-turbo/archive/${LIBJPEGTURBO_VERSION}.zip"
+    FILENAME "libjpeg-turbo-${LIBJPEGTURBO_VERSION}.zip"
+    SHA512 ${LIBJPEGTURBO_HASH}
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
