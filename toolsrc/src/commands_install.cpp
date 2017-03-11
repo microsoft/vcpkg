@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "vcpkg_Commands.h"
 #include "vcpkglib.h"
-#include "vcpkg_Environment.h"
 #include "metrics.h"
 #include "vcpkg_Files.h"
 #include "vcpkg_System.h"
@@ -203,7 +202,6 @@ namespace vcpkg::Commands::Install
             specs_string.append(install_plan[i].spec.toString());
         }
         TrackProperty("installplan", specs_string);
-        Environment::ensure_utilities_on_path(paths);
 
         for (const package_spec_with_install_plan& action : install_plan)
         {
