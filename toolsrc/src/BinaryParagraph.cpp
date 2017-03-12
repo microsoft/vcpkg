@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "BinaryParagraph.h"
 #include "vcpkglib_helpers.h"
 #include "vcpkg_Checks.h"
@@ -20,22 +21,6 @@ namespace vcpkg
         static const std::string DESCRIPTION = "Description";
         static const std::string MAINTAINER = "Maintainer";
         static const std::string DEPENDS = "Depends";
-    }
-
-    static const std::vector<std::string>& get_list_of_valid_fields()
-    {
-        static const std::vector<std::string> valid_fields =
-        {
-            BinaryParagraphRequiredField::PACKAGE,
-            BinaryParagraphRequiredField::VERSION,
-            BinaryParagraphRequiredField::ARCHITECTURE,
-
-            BinaryParagraphOptionalField::DESCRIPTION,
-            BinaryParagraphOptionalField::MAINTAINER,
-            BinaryParagraphOptionalField::DEPENDS
-        };
-
-        return valid_fields;
     }
 
     BinaryParagraph::BinaryParagraph() = default;
@@ -70,7 +55,7 @@ namespace vcpkg
 
     std::string BinaryParagraph::displayname() const
     {
-        return Strings::format("%s:%s", this->spec.name(), this->spec.target_triplet());
+        return this->spec.display_name();
     }
 
     std::string BinaryParagraph::dir() const

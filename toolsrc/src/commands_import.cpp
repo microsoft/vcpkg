@@ -1,10 +1,10 @@
+#include "pch.h"
 #include "vcpkg_Commands.h"
 #include "Paragraphs.h"
 #include "StatusParagraph.h"
 #include "vcpkg_Files.h"
-#include <fstream>
 
-namespace vcpkg
+namespace vcpkg::Commands::Import
 {
     struct Binaries
     {
@@ -12,26 +12,13 @@ namespace vcpkg
         std::vector<fs::path> libs;
     };
 
-    static Binaries detect_files_in_directory_ending_with(const fs::path& path)
+    static Binaries find_binaries_in_dir(const fs::path& path)
     {
         Files::check_is_directory(path);
 
         Binaries binaries;
-
-        for (auto it = fs::recursive_directory_iterator(path); it != fs::recursive_directory_iterator(); ++it)
-        {
-            fs::path file = *it;
-            // Skip if directory ?????
-            if (file.extension() == ".dll")
-            {
-                binaries.dlls.push_back(file);
-            }
-            else if (file.extension() == ".lib")
-            {
-                binaries.libs.push_back(file);
-            }
-        }
-
+        binaries.dlls = Files::recursive_find_files_with_extension_in_dir(path, ".dll");
+        binaries.libs = Files::recursive_find_files_with_extension_in_dir(path, ".lib");
         return binaries;
     }
 
@@ -51,8 +38,8 @@ namespace vcpkg
         Files::check_is_directory(include_directory);
         Files::check_is_directory(project_directory);
         Files::check_is_directory(destination_path);
-        Binaries debug_binaries = detect_files_in_directory_ending_with(project_directory / "Debug");
-        Binaries release_binaries = detect_files_in_directory_ending_with(project_directory / "Release");
+        Binaries debug_binaries = find_binaries_in_dir(project_directory / "Debug");
+        Binaries release_binaries = find_binaries_in_dir(project_directory / "Release");
 
         fs::path destination_include_directory = destination_path / "include";
         fs::copy(include_directory, destination_include_directory, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
@@ -75,17 +62,18 @@ namespace vcpkg
         std::ofstream(control_file_path) << control_file_data;
     }
 
-    void import_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
-        static const std::string example = create_example_string(R"(import C:\path\to\CONTROLfile C:\path\to\includedir C:\path\to\projectdir)");
+        static const std::string example = Commands::Help::create_example_string(R"(import C:\path\to\CONTROLfile C:\path\to\includedir C:\path\to\projectdir)");
         args.check_exact_arg_count(3, example);
+        args.check_and_get_optional_command_arguments({});
 
         const fs::path control_file_path(args.command_arguments[0]);
         const fs::path include_directory(args.command_arguments[1]);
         const fs::path project_directory(args.command_arguments[2]);
 
         auto pghs = Paragraphs::get_paragraphs(control_file_path);
-        Checks::check_throw(pghs.size() == 1, "Invalid control file for package");
+        Checks::check_exit(pghs.size() == 1, "Invalid control file %s for package", control_file_path.generic_string());
 
         StatusParagraph spgh;
         spgh.package = BinaryParagraph(pghs[0]);

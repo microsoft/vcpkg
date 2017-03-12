@@ -1,12 +1,10 @@
+#include "pch.h"
 #include "coff_file_reader.h"
-#include <iostream>
 #include "vcpkg_Checks.h"
-#include <set>
-#include <fstream>
 
 using namespace std;
 
-namespace vcpkg { namespace COFFFileReader
+namespace vcpkg::COFFFileReader
 {
     template <class T>
     static T reinterpret_bytes(const char* data)
@@ -306,4 +304,4 @@ namespace vcpkg { namespace COFFFileReader
 
         return {std::vector<MachineType>(machine_types.cbegin(), machine_types.cend())};
     }
-}}
+}

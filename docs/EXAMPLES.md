@@ -3,7 +3,7 @@
 ## Overview
 Vcpkg helps you get C and C++ libraries on Windows.
 
-For short description of available commands, run `vcpkg help`.
+For short description of available commands, run `.\vcpkg help`.
 
 ## Table of Contents
 - <a href="#example-1">Example 1: Using Sqlite</a>
@@ -64,7 +64,7 @@ Package sqlite3:x86-windows is installed
 ```
 In addition to installing, `vcpkg` caches a pristine copy of the built library inside the `packages\` directory -- in this case, `packages\sqlite3_x86-windows`. This allows you to quickly uninstall and reinstall the library in the future using the `remove` and `install` commands.
 
-We can check that cpprestsdk was successfully installed for x86 windows desktop by running the `list` command.
+We can check that sqlite3 was successfully installed for x86 windows desktop by running the `list` command.
 ```
 PS D:\src\vcpkg> .\vcpkg list
 sqlite3:x86-windows         3.15.0           SQLite is a software library that implements a se...
@@ -72,10 +72,10 @@ sqlite3:x86-windows         3.15.0           SQLite is a software library that i
 
 To install for other architectures and platforms such as Universal Windows Platform or x64 Desktop, you can suffix the package name with `:<target>`.
 ```
-PS D:\src\vcpkg> .\vcpkg install cpprestsdk:x86-uwp zlib:x64-windows
+PS D:\src\vcpkg> .\vcpkg install sqlite3:x86-uwp zlib:x64-windows
 ```
 
-See `vcpkg help triplet` for all supported targets.
+See `.\vcpkg help triplet` for all supported targets.
 
 <a name="example-1-2"></a>
 ### Step 2: Use
@@ -95,7 +95,7 @@ Installing new libraries will make them instantly available.
 
 You can now simply use File -> New Project in Visual Studio 2015 or Visual Studio "15" Preview and the library will be automatically available. For Sqlite, you can try out their [C/C++ sample](https://sqlite.org/quickstart.html).
 
-To remove the integration for your user, you can use `vcpkg integrate remove`.
+To remove the integration for your user, you can use `.\vcpkg integrate remove`.
 
 <a name="example-1-2-b"></a>
 #### Option B: CMake (Toolchain File)
@@ -150,9 +150,9 @@ PS D:\src\cmake-test\build> .\Debug\main.exe
 
 Libraries are installed into the `installed\` subfolder, partitioned by architecture (e.g. x86-windows):
 * The header files are installed to `installed\x86-windows\include`
-* Release `.lib` files are installed to `installed\x86-windows\lib`
+* Release `.lib` files are installed to `installed\x86-windows\lib` or `installed\x86-windows\lib\manual-link`
 * Release `.dll` files are installed to `installed\x86-windows\bin`
-* Debug `.lib` files are installed to `installed\x86-windows\debug\lib`
+* Debug `.lib` files are installed to `installed\x86-windows\debug\lib` or `installed\x86-windows\debug\lib\manual-link`
 * Debug `.dll` files are installed to `installed\x86-windows\debug\bin`
 
 See your build system specific documentation for how to use prebuilt binaries.

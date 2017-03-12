@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0d743da4..72d62c5e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -49,7 +49,14 @@ install (EXPORT bond
+ 
+ # if BOND_GBC_PATH is set we must copy over that gbc to the install location
+ if (BOND_GBC_PATH)
+-    install (FILES
+-        ${BOND_GBC_PATH}
+-        DESTINATION bin)
++  if (WIN32)
++    set(INSTALLED_GBC_NAME gbc.exe)
++  else()
++    set(INSTALLED_GBC_NAME gbc)
++  endif()
++
++  install (
++    FILES ${BOND_GBC_PATH}
++    DESTINATION bin
++    RENAME ${INSTALLED_GBC_NAME})
+ endif()

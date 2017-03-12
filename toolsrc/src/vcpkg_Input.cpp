@@ -1,9 +1,10 @@
+#include "pch.h"
 #include "vcpkg_Input.h"
 #include "vcpkg_System.h"
 #include "metrics.h"
 #include "vcpkg_Commands.h"
 
-namespace vcpkg {namespace Input
+namespace vcpkg::Input
 {
     package_spec check_and_get_package_spec(const std::string& package_spec_as_string, const triplet& default_target_triplet, const std::string& example_text)
     {
@@ -37,16 +38,16 @@ namespace vcpkg {namespace Input
         {
             System::println(System::color::error, "Error: invalid triplet: %s", t.canonical_name());
             TrackProperty("error", "invalid triplet: " + t.canonical_name());
-            help_topic_valid_triplet(paths);
+            Commands::Help::help_topic_valid_triplet(paths);
             exit(EXIT_FAILURE);
         }
     }
 
-    void check_triplets(std::vector<package_spec> triplets, const vcpkg_paths& paths)
+    void check_triplets(const std::vector<package_spec>& triplets, const vcpkg_paths& paths)
     {
         for (const package_spec& spec : triplets)
         {
             check_triplet(spec.target_triplet(), paths);
         }
     }
-}}
+}

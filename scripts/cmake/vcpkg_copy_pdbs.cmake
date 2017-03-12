@@ -13,6 +13,9 @@ function(vcpkg_copy_pdbs)
 
         set(DLLS_WITHOUT_MATCHING_PDBS)
 
+        set(PREVIOUS_VSLANG $ENV{VSLANG})
+        set(ENV{VSLANG} 1033)
+
         foreach(DLL ${DLLS})
             execute_process(COMMAND dumpbin /PDBPATH ${DLL}
                             COMMAND findstr PDB
@@ -30,6 +33,8 @@ function(vcpkg_copy_pdbs)
                 list(APPEND DLLS_WITHOUT_MATCHING_PDBS ${DLL})
             endif()
         endforeach()
+
+        set(ENV{VSLANG} ${PREVIOUS_VSLANG})
 
         list(LENGTH DLLS_WITHOUT_MATCHING_PDBS UNMATCHED_DLLS_LENGTH)
         if(UNMATCHED_DLLS_LENGTH GREATER 0)

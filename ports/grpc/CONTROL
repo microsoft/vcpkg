@@ -1,4 +1,4 @@
 Source: grpc
-Version: 1.1.0-dev-1674f65
+Version: 1.1.2-1
 Build-Depends: zlib, openssl, protobuf
 Description: An RPC library and framework

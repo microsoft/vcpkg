@@ -1,0 +1,23 @@
+diff --git a/cmake/Config.cmake b/cmake/Config.cmake
+index ed225d14..1573c915 100644
+--- a/cmake/Config.cmake
++++ b/cmake/Config.cmake
+@@ -19,7 +19,7 @@ if (MSVC)
+     # disable MSVC warnings
+     add_compile_options (/bigobj /FIbond/core/warning.h /W4 /WX)
+     add_definitions (-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS)
+-    set (Boost_USE_STATIC_LIBS ON)
++    set (Boost_USE_STATIC_LIBS OFF)
+ endif (MSVC)
+ 
+ if (WIN32)
+@@ -90,9 +90,6 @@ if (DEFINED ENV{APPVEYOR} AND ("$ENV{BOND_BUILD}" STREQUAL "C++"))
+     endif()
+ endif()
+ 
+-# disable Boost auto-linking
+-add_definitions (-DBOOST_ALL_NO_LIB)
+-
+ # VS2015U2 fixed a bug with atomics and emits a warning without this definition.
+ add_definitions (-D_ENABLE_ATOMIC_ALIGNMENT_FIX)
+ 

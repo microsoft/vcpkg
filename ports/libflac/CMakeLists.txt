@@ -24,15 +24,23 @@ endif()
 
 if(LIBFLAC_ARCHITECTURE MATCHES x86)
     add_definitions(-DFLAC__CPU_IA32)
+    add_definitions(-DFLAC__HAS_NASM)
+    enable_language(ASM_NASM)
+    list(APPEND LIBFLAC_SOURCES
+        src/libFLAC/ia32/cpu_asm.nasm
+        src/libFLAC/ia32/fixed_asm.nasm
+        src/libFLAC/ia32/lpc_asm.nasm)
+    set(CMAKE_ASM_NASM_FLAGS "-i${PROJECT_SOURCE_DIR}/src/libFLAC/ia32/ -f win32 -d OBJ_FORMAT_win32")
 elseif(LIBFLAC_ARCHITECTURE MATCHES x64)
     add_definitions(-DFLAC__CPU_X86_64)
+    add_definitions(-DENABLE_64_BIT_WORDS)
 endif()
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
     add_definitions(-DFLAC__OVERFLOW_DETECT)
 endif()
 
-add_definitions(-DVERSION="1.3.1")
+add_definitions(-DPACKAGE_VERSION="1.3.2")
 add_definitions(-DFLAC__HAS_OGG)
 add_definitions(-DFLAC__ALIGN_MALLOC_DATA) # 32 byte boundary
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)

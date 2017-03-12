@@ -15,7 +15,7 @@ include(vcpkg_common_functions)
 find_program(GIT git)
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-set(ENV{PATH} "${PERL_EXE_PATH};$ENV{PATH}")
+set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH}")
 
 # Set git variables to qca version 2.2.0 commit 
 set(GIT_URL "git://anongit.kde.org/qca.git")

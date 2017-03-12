@@ -4,13 +4,19 @@
 endif()
 include(vcpkg_common_functions)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ChakraCore-1.3.1)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ChakraCore-1.4.1)
 vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "https://github.com/Microsoft/ChakraCore/archive/v1.3.1.tar.gz"
-    FILENAME "ChakraCore-1.3.1.tar.gz"
-    SHA512 52216a03333e44bce235917cfae5ccd6a756056678d9b81c63ec272d9ce5c6afabc673e7910dd3da54fda7927ea62ede980a4371dbb08f6ce4907121c27dbc53
+    URLS "https://github.com/Microsoft/ChakraCore/archive/v1.4.1.tar.gz"
+    FILENAME "ChakraCore-1.4.1.tar.gz"
+    SHA512 9ca89de88a4d6102826ce4e301ea81b70296cca72131043f9942de715dee2862791c6f33ebce1f12fcafc1554a872a2cf9317313d56c57abff0a6d814a77f2d5
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES 
+		${CMAKE_CURRENT_LIST_DIR}/disable_warning_as_error.patch
+)
 
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/Build/Chakra.Core.sln
@@ -19,6 +25,8 @@ vcpkg_build_msbuild(
 file(INSTALL
 	${SOURCE_PATH}/lib/jsrt/ChakraCore.h
 	${SOURCE_PATH}/lib/jsrt/ChakraCommon.h
+	${SOURCE_PATH}/lib/jsrt/ChakraCommonWindows.h
+	${SOURCE_PATH}/lib/jsrt/ChakraDebug.h
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
 file(INSTALL
@@ -39,6 +47,12 @@ file(INSTALL
 	${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/Chakracore.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib
 )
+file(INSTALL
+	${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/ch.exe
+	${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/GCStress.exe
+	${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/rl.exe
+	DESTINATION ${CURRENT_PACKAGES_DIR}/tools/chakracore)
+vcpkg_copy_pdbs()
 file(INSTALL
 	${SOURCE_PATH}/LICENSE.txt
 	DESTINATION ${CURRENT_PACKAGES_DIR}/share/ChakraCore RENAME copyright)

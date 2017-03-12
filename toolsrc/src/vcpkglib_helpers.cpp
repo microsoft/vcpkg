@@ -1,9 +1,8 @@
+#include "pch.h"
 #include "vcpkg_Checks.h"
 #include "vcpkglib_helpers.h"
-#include <unordered_map>
-#include <regex>
 
-namespace vcpkg {namespace details
+namespace vcpkg::details
 {
     std::string optional_field(const std::unordered_map<std::string, std::string>& fields, const std::string& fieldname)
     {
@@ -53,4 +52,4 @@ namespace vcpkg {namespace details
             simple_desc.append("...");
         return simple_desc;
     }
-}}
+}

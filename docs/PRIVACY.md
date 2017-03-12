@@ -5,14 +5,14 @@
 ## Do you collect telemetry data? What is it used for? 
 
 We do collect telemetry data from usage of "vcpkg.exe". We explicitly ONLY collect information from invocations of the tool itself; we do NOT add any tracking information into the produced libraries. 
-We use this information to understand the usage the issue and what we can do to improve the tool. 
+We use this information to understand usage issues and to guide tool improvements.
 
 
 ## What telemetry is collected? 
 
 We collect the command line used, the time of invocation, and how long the command took. Some commands also add additional calculated information (such as the full set of libraries to install). We generate a completely random UUID on first use and attach it to each event. For this preview, we do not offer a mechanism to disable this data collection since it is critical for improving the product. In the full release, you will be able to opt-out with a simple configuration. For more information about how Microsoft protects your privacy, see https://privacy.microsoft.com/en-us/privacy.
 
-Here is an example of an event for the command line "vcpkg install zlib": 
+Here is an example of an event for the command line `vcpkg install zlib`:
 ```
 [{
     "ver": 1, 
@@ -40,7 +40,7 @@ Here is an example of an event for the command line "vcpkg install zlib":
     } 
 }] 
 ```
-In the source code (included in every release), you can search for calls to the functions "TrackProperty" and "TrackMetric" to see every specific data point we collect. 
+In the source code (included in `toolsrc\`), you can search for calls to the functions `TrackProperty()` and `TrackMetric()` to see every specific data point we collect.
 
 
 ## Is the data stored on my system? 

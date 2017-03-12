@@ -1,0 +1,91 @@
+diff --git a/lib/lws-plat-win.c b/lib/lws-plat-win.c
+index dd3e95a..eb1690a 100644
+--- a/lib/lws-plat-win.c
++++ b/lib/lws-plat-win.c
+@@ -155,7 +155,7 @@ lws_plat_service_tsi(struct lws_context *context, int timeout_ms, int tsi)
+ {
+ 	struct lws_context_per_thread *pt = &context->pt[tsi];
+ 	WSANETWORKEVENTS networkevents;
+-	struct lws_pollfd *pfd;
++	struct lws_pollfd *pfd = NULL;
+ 	struct lws *wsi;
+ 	unsigned int i;
+ 	DWORD ev;
+@@ -493,6 +493,7 @@ lws_plat_inet_ntop(int af, const void *src, char *dst, int cnt)
+ 	return ok ? dst : NULL;
+ }
+ 
++#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP)
+ static lws_filefd_type
+ _lws_plat_file_open(struct lws *wsi, const char *filename,
+ 		    unsigned long *filelen, int flags)
+@@ -516,6 +517,35 @@ _lws_plat_file_open(struct lws *wsi, const char *filename,
+ 
+ 	return ret;
+ }
++#else
++static lws_filefd_type
++_lws_plat_file_open(struct lws *wsi, const char *filename,
++    unsigned long *filelen, int flags)
++{
++    HANDLE ret;
++    WCHAR buf[MAX_PATH];
++
++    (void)wsi;
++    MultiByteToWideChar(CP_UTF8, 0, filename, -1, buf, ARRAY_SIZE(buf));
++    if ((flags & 7) == _O_RDONLY) {
++        ret = CreateFile2(buf, GENERIC_READ, FILE_SHARE_READ, OPEN_EXISTING, NULL);
++    }
++    else {
++        lwsl_err("%s: open for write not implemented\n", __func__);
++        *filelen = 0;
++        return LWS_INVALID_FILE;
++    }
++
++    if (ret != LWS_INVALID_FILE)
++    {
++        struct stat info;
++        int result = stat(filename, &info);
++        *filelen = result != 0 ? -1 : (long)(info.st_size);
++    }
++
++    return ret;
++}
++#endif
+ 
+ static int
+ _lws_plat_file_close(struct lws *wsi, lws_filefd_type fd)
+diff --git a/lib/private-libwebsockets.h b/lib/private-libwebsockets.h
+index 23f8f4d..bc32aef 100644
+--- a/lib/private-libwebsockets.h
++++ b/lib/private-libwebsockets.h
+@@ -48,12 +48,25 @@
+ #endif
+ 
+ #if defined(WIN32) || defined(_WIN32)
++
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY != WINAPI_FAMILY_DESKTOP_APP)
++    #ifndef WINVER
++        #define WINVER 0x0602
++        #define _WIN32_WINNT WINVER
++    #endif
++
++    #define getenv(x) NULL
++    #define _WINSOCK_DEPRECATED_NO_WARNINGS
++#else
++
+ #if (WINVER < 0x0501)
+-#undef WINVER
+-#undef _WIN32_WINNT
+-#define WINVER 0x0501
+-#define _WIN32_WINNT WINVER
++    #undef WINVER
++    #undef _WIN32_WINNT
++    #define WINVER 0x0501
++    #define _WIN32_WINNT WINVER
++    #endif
+ #endif
++
+ #define LWS_NO_DAEMONIZE
+ #define LWS_ERRNO WSAGetLastError()
+ #define LWS_EAGAIN WSAEWOULDBLOCK

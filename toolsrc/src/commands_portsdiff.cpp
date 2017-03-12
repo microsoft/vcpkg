@@ -1,26 +1,19 @@
+#include "pch.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
-#include <map>
-#include <iterator>
 #include "vcpkg_Maps.h"
-#include <iostream>
-#include <iomanip>
-#include <set>
-#include "Paragraphs.h"
 #include "SourceParagraph.h"
 #include "vcpkg_Environment.h"
+#include "Paragraphs.h"
 
-namespace vcpkg
+namespace vcpkg::Commands::PortsDiff
 {
     static void do_print_name_and_version(const std::vector<std::string>& ports_to_print, const std::map<std::string, std::string>& names_and_versions)
     {
         for (const std::string& name : ports_to_print)
         {
             const std::string& version = names_and_versions.at(name);
-            std::cout << std::left
-                << std::setw(20) << name << ' '
-                << std::setw(16) << version << ' '
-                << '\n';
+            System::println("%-20s %-16s", name, version);
         }
     }
 
@@ -30,85 +23,59 @@ namespace vcpkg
     {
         for (const std::string& name : ports_to_print)
         {
-            if (name == "")
-            {
-                continue;
-            }
-
             const std::string& previous_version = previous_names_and_versions.at(name);
             const std::string& current_version = current_names_and_versions.at(name);
-            std::cout << std::left
-                << std::setw(20) << name << ' '
-                << std::setw(16) << previous_version << " -> " << current_version
-                << '\n';
+            System::println("%-20s %-16s -> %s", name, previous_version, current_version);
         }
-    }
-
-    static std::map<std::string, std::string> read_all_ports(const fs::path& ports_folder_path)
-    {
-        std::map<std::string, std::string> names_and_versions;
-
-        for (auto it = fs::directory_iterator(ports_folder_path); it != fs::directory_iterator(); ++it)
-        {
-            const fs::path& path = it->path();
-
-            try
-            {
-                auto pghs = Paragraphs::get_paragraphs(path / "CONTROL");
-                if (pghs.empty())
-                    continue;
-                auto srcpgh = SourceParagraph(pghs[0]);
-                names_and_versions.emplace(srcpgh.name, srcpgh.version);
-            }
-            catch (std::runtime_error const&)
-            {
-            }
-        }
-
-        return names_and_versions;
     }
 
     static std::map<std::string, std::string> read_ports_from_commit(const vcpkg_paths& paths, const std::wstring& git_commit_id)
     {
+        const fs::path& git_exe = paths.get_git_exe();
         const fs::path dot_git_dir = paths.root / ".git";
         const std::wstring ports_dir_name_as_string = paths.ports.filename().native();
         const fs::path temp_checkout_path = paths.root / Strings::wformat(L"%s-%s", ports_dir_name_as_string, git_commit_id);
         fs::create_directory(temp_checkout_path);
         const std::wstring checkout_this_dir = Strings::wformat(LR"(.\%s)", ports_dir_name_as_string); // Must be relative to the root of the repository
 
-        const std::wstring cmd = Strings::wformat(LR"(git --git-dir="%s" --work-tree="%s" checkout %s -f -q -- %s %s & git reset >NUL)",
+        const std::wstring cmd = Strings::wformat(LR"("%s" --git-dir="%s" --work-tree="%s" checkout %s -f -q -- %s %s & "%s" reset >NUL)",
+                                                  git_exe.native(),
                                                   dot_git_dir.native(),
                                                   temp_checkout_path.native(),
                                                   git_commit_id,
                                                   checkout_this_dir,
-                                                  L".vcpkg-root");
-        System::cmd_execute(cmd);
-        std::map<std::string, std::string> names_and_versions = read_all_ports(temp_checkout_path / ports_dir_name_as_string);
+                                                  L".vcpkg-root",
+                                                  git_exe.native());
+        System::cmd_execute_clean(cmd);
+        const std::vector<SourceParagraph> source_paragraphs = Paragraphs::load_all_ports(temp_checkout_path / ports_dir_name_as_string);
+        const std::map<std::string, std::string> names_and_versions = Paragraphs::extract_port_names_and_versions(source_paragraphs);
         fs::remove_all(temp_checkout_path);
         return names_and_versions;
     }
 
-    static void check_commit_exists(const std::wstring& git_commit_id)
+    static void check_commit_exists(const fs::path& git_exe, const std::wstring& git_commit_id)
     {
         static const std::string VALID_COMMIT_OUTPUT = "commit\n";
 
-        const std::wstring cmd = Strings::wformat(LR"(git cat-file -t %s 2>NUL)", git_commit_id);
+        const std::wstring cmd = Strings::wformat(LR"("%s" cat-file -t %s 2>NUL)", git_exe.native(), git_commit_id);
         const System::exit_code_and_output output = System::cmd_execute_and_capture_output(cmd);
         Checks::check_exit(output.output == VALID_COMMIT_OUTPUT, "Invalid commit id %s", Strings::utf16_to_utf8(git_commit_id));
     }
 
-    void portsdiff_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
-        static const std::string example = Strings::format("The argument should be a branch/tag/hash to checkout.\n%s", create_example_string("portsdiff mybranchname"));
+        static const std::string example = Strings::format("The argument should be a branch/tag/hash to checkout.\n%s", Commands::Help::create_example_string("portsdiff mybranchname"));
         args.check_min_arg_count(1, example);
         args.check_max_arg_count(2, example);
+        args.check_and_get_optional_command_arguments({});
 
-        Environment::ensure_git_on_path(paths);
+        const fs::path& git_exe = paths.get_git_exe();
+
         const std::wstring git_commit_id_for_previous_snapshot = Strings::utf8_to_utf16(args.command_arguments.at(0));
         const std::wstring git_commit_id_for_current_snapshot = args.command_arguments.size() < 2 ? L"HEAD" : Strings::utf8_to_utf16(args.command_arguments.at(1));
 
-        check_commit_exists(git_commit_id_for_current_snapshot);
-        check_commit_exists(git_commit_id_for_previous_snapshot);
+        check_commit_exists(git_exe, git_commit_id_for_current_snapshot);
+        check_commit_exists(git_exe, git_commit_id_for_previous_snapshot);
 
         const std::map<std::string, std::string> current_names_and_versions = read_ports_from_commit(paths, git_commit_id_for_current_snapshot);
         const std::map<std::string, std::string> previous_names_and_versions = read_ports_from_commit(paths, git_commit_id_for_previous_snapshot);

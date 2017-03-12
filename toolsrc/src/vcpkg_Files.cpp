@@ -1,9 +1,8 @@
+#include "pch.h"
 #include "vcpkg_Files.h"
-#include <fstream>
-#include <regex>
 #include "vcpkg_System.h"
 
-namespace vcpkg {namespace Files
+namespace vcpkg::Files
 {
     static const std::regex FILESYSTEM_INVALID_CHARACTERS_REGEX = std::regex(R"([\/:*?"<>|])");
 
@@ -103,7 +102,7 @@ namespace vcpkg {namespace Files
 
     void recursive_find_all_files_in_dir(const fs::path& dir, std::vector<fs::path>* output)
     {
-        recursive_find_matching_paths_in_dir(dir, [&](const fs::path& current)
+        recursive_find_matching_paths_in_dir(dir, [](const fs::path& current)
                                              {
                                                  return !fs::is_directory(current);
                                              }, output);
@@ -118,7 +117,7 @@ namespace vcpkg {namespace Files
 
     void non_recursive_find_all_files_in_dir(const fs::path& dir, std::vector<fs::path>* output)
     {
-        non_recursive_find_matching_paths_in_dir(dir, [&](const fs::path& current)
+        non_recursive_find_matching_paths_in_dir(dir, [](const fs::path& current)
                                                  {
                                                      return !fs::is_directory(current);
                                                  }, output);
@@ -140,4 +139,4 @@ namespace vcpkg {namespace Files
         }
         System::println("");
     }
-}}
+}

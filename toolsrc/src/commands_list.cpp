@@ -1,9 +1,10 @@
+#include "pch.h"
 #include "vcpkg_Commands.h"
-#include "vcpkg.h"
+#include "vcpkglib.h"
 #include "vcpkg_System.h"
 #include "vcpkglib_helpers.h"
 
-namespace vcpkg
+namespace vcpkg::Commands::List
 {
     static void do_print(const StatusParagraph& pgh)
     {
@@ -13,11 +14,12 @@ namespace vcpkg
                         details::shorten_description(pgh.package.description));
     }
 
-    void list_command(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
         static const std::string example = Strings::format(
-            "The argument should be a substring to search for, or no argument to display all installed libraries.\n%s", create_example_string("list png"));
+            "The argument should be a substring to search for, or no argument to display all installed libraries.\n%s", Commands::Help::create_example_string("list png"));
         args.check_max_arg_count(1, example);
+        args.check_and_get_optional_command_arguments({});
 
         const StatusParagraphs status_paragraphs = database_load_check(paths);
         std::vector<StatusParagraph> installed_packages;

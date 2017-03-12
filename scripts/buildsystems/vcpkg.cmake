@@ -57,6 +57,8 @@ if(NOT VCPKG_TOOLCHAIN)
         ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/manual-link
     )
 
+    set(Boost_COMPILER "-vc140")
+
     set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools)
 
     option(VCPKG_APPLOCAL_DEPS "Automatically copy dependencies into the output directory for executables." ON)

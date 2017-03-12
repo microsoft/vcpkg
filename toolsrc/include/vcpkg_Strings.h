@@ -2,7 +2,7 @@
 
 #include <vector>
 
-namespace vcpkg {namespace Strings {namespace details
+namespace vcpkg::Strings::details
 {
     inline const char* to_printf_arg(const std::string& s)
     {
@@ -15,6 +15,11 @@ namespace vcpkg {namespace Strings {namespace details
     }
 
     inline int to_printf_arg(const int s)
+    {
+        return s;
+    }
+
+    inline long long to_printf_arg(const long long s)
     {
         return s;
     }
@@ -42,9 +47,9 @@ namespace vcpkg {namespace Strings {namespace details
     }
 
     std::wstring wformat_internal(const wchar_t* fmtstr, ...);
-}}}
+}
 
-namespace vcpkg {namespace Strings
+namespace vcpkg::Strings
 {
     template <class...Args>
     std::string format(const char* fmtstr, const Args&...args)
@@ -68,11 +73,60 @@ namespace vcpkg {namespace Strings
 
     std::string ascii_to_lowercase(const std::string& input);
 
-    std::string join(const std::vector<std::string>& v, const std::string& delimiter);
+    template <class T, class Transformer>
+    std::string join(const std::string& delimiter, const std::vector<T>& v, Transformer transformer)
+    {
+        if (v.empty())
+        {
+            return std::string();
+        }
+
+        std::string output;
+        size_t size = v.size();
+
+        output.append(transformer(v.at(0)));
+
+        for (size_t i = 1; i < size; ++i)
+        {
+            output.append(delimiter);
+            output.append(transformer(v.at(i)));
+        }
+
+        return output;
+    }
+
+    std::string join(const std::string& delimiter, const std::vector<std::string>& v);
+
+    template <class T, class Transformer>
+    std::wstring wjoin(const std::wstring& delimiter, const std::vector<T>& v, Transformer transformer)
+    {
+        if (v.empty())
+        {
+            return std::wstring();
+        }
+
+        std::wstring output;
+        size_t size = v.size();
+
+        output.append(transformer(v.at(0)));
+
+        for (size_t i = 1; i < size; ++i)
+        {
+            output.append(delimiter);
+            output.append(transformer(v.at(i)));
+        }
+
+        return output;
+    }
+
+    std::wstring wjoin(const std::wstring& delimiter, const std::vector<std::wstring>& v);
+
 
     void trim(std::string* s);
 
     std::string trimmed(const std::string& s);
 
     void trim_all_and_remove_whitespace_strings(std::vector<std::string>* strings);
-}}
+
+    std::vector<std::string> split(const std::string& s, const std::string& delimiter);
+}

@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-namespace vcpkg { namespace Graphs
+namespace vcpkg::Graphs
 {
     enum class ExplorationStatus
     {
@@ -117,4 +117,4 @@ namespace vcpkg { namespace Graphs
     private:
         std::unordered_map<V, std::unordered_set<V>> vertices;
     };
-}}
+}

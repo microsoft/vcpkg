@@ -20,7 +20,6 @@ vcpkg_configure_cmake(
     OPTIONS
         -DLIBBSON_DIR=${CURRENT_INSTALLED_DIR}
         -DLIBMONGOC_DIR=${CURRENT_INSTALLED_DIR}
-        -DCMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP=ON
 )
 
 vcpkg_install_cmake()
@@ -53,7 +52,7 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/include/mongocxx/test_util
     ${CURRENT_PACKAGES_DIR}/include/mongocxx/private
     ${CURRENT_PACKAGES_DIR}/include/mongocxx/exception/private
-    ${CURRENT_PACKAGES_DIR}/include/mongocxx/options
+    ${CURRENT_PACKAGES_DIR}/include/mongocxx/options/private
 
     ${CURRENT_PACKAGES_DIR}/debug/include)
 

@@ -1,11 +1,10 @@
+#include "pch.h"
 #include "vcpkg_Checks.h"
-
-#include <stdexcept>
 #include "vcpkg_System.h"
 
-namespace vcpkg {namespace Checks
+namespace vcpkg::Checks
 {
-    void unreachable()
+    __declspec(noreturn) void unreachable()
     {
         System::println(System::color::error, "Error: Unreachable code was reached");
 #ifndef NDEBUG
@@ -15,13 +14,13 @@ namespace vcpkg {namespace Checks
 #endif
     }
 
-    void exit_with_message(const char* errorMessage)
+    __declspec(noreturn) void exit_with_message(const char* errorMessage)
     {
         System::println(System::color::error, errorMessage);
         exit(EXIT_FAILURE);
     }
 
-    void throw_with_message(const char* errorMessage)
+    __declspec(noreturn) void throw_with_message(const char* errorMessage)
     {
         throw std::runtime_error(errorMessage);
     }
@@ -34,6 +33,14 @@ namespace vcpkg {namespace Checks
         }
     }
 
+    void check_exit(bool expression)
+    {
+        if (!expression)
+        {
+            exit(EXIT_FAILURE);
+        }
+    }
+
     void check_exit(bool expression, const char* errorMessage)
     {
         if (!expression)
@@ -41,4 +48,4 @@ namespace vcpkg {namespace Checks
             exit_with_message(errorMessage);
         }
     }
-}}
+}

@@ -1,15 +1,5 @@
+#include "pch.h"
 #include "metrics.h"
-#include <utility>
-#include <array>
-#include <string>
-#include <iostream>
-#include <vector>
-#include <sys/timeb.h>
-#include <time.h>
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <winhttp.h>
-#include <fstream>
 #include "filesystem_fs.h"
 #include "vcpkg_Strings.h"
 #include "vcpkg_System.h"
@@ -42,7 +32,7 @@ namespace vcpkg
 
     static std::string GenerateRandomUUID()
     {
-        int partSizes[] = {8, 4, 4, 4, 12};
+        int partSizes[] = { 8, 4, 4, 4, 12 };
         char uuid[37];
         memset(uuid, 0, sizeof(uuid));
         int num;
@@ -111,7 +101,7 @@ namespace vcpkg
                 // Note: this treats incoming Strings as Latin-1
                 static constexpr const char hex[16] = {
                     '0', '1', '2', '3', '4', '5', '6', '7',
-                    '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+                    '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
                 encoded.append("\\u00");
                 encoded.push_back(hex[ch / 16]);
                 encoded.push_back(hex[ch % 16]);
@@ -237,36 +227,12 @@ true
 
     std::wstring GetSQMUser()
     {
-        LONG err = NULL;
+        auto hkcu_sqmclient = System::get_registry_string(HKEY_CURRENT_USER, LR"(Software\Microsoft\SQMClient)", L"UserId");
 
-        struct RAII_HKEY {
-            HKEY hkey = NULL;
-            ~RAII_HKEY()
-            {
-                if (hkey != NULL)
-                    RegCloseKey(hkey);
-            }
-        } HKCU_SQMClient;
-
-        err = RegOpenKeyExW(HKEY_CURRENT_USER, LR"(Software\Microsoft\SQMClient)", NULL, KEY_READ, &HKCU_SQMClient.hkey);
-        if (err != ERROR_SUCCESS)
-        {
+        if (hkcu_sqmclient)
+            return std::move(*hkcu_sqmclient);
+        else
             return L"{}";
-        }
-
-        std::array<wchar_t,128> buffer;
-        DWORD lType = 0;
-        DWORD dwBufferSize = static_cast<DWORD>(buffer.size() * sizeof(wchar_t));
-        err = RegQueryValueExW(HKCU_SQMClient.hkey, L"UserId", NULL, &lType, reinterpret_cast<LPBYTE>(buffer.data()), &dwBufferSize);
-        if (err == ERROR_SUCCESS && lType == REG_SZ && dwBufferSize >= sizeof(wchar_t))
-        {
-            size_t sz = dwBufferSize / sizeof(wchar_t);
-            if (buffer[sz - 1] == '\0')
-                --sz;
-            return std::wstring(buffer.begin(), buffer.begin() + sz);
-        }
-
-        return L"{}";
     }
 
     void SetUserInformation(const std::string& user_id, const std::string& first_use_time)
@@ -366,8 +332,7 @@ true
         if (bResults)
         {
             DWORD availableData = 0, readData = 0, totalData = 0;
-
-            while ((bResults = WinHttpQueryDataAvailable(hRequest, &availableData)) && availableData > 0)
+            while ((bResults = WinHttpQueryDataAvailable(hRequest, &availableData)) == TRUE && availableData > 0)
             {
                 responseBuffer.resize(responseBuffer.size() + availableData);
 
@@ -452,6 +417,6 @@ true
         std::ofstream(vcpkg_metrics_txt_path) << payload;
 
         const std::wstring cmdLine = Strings::wformat(L"start %s %s", temp_folder_path_exe.native(), vcpkg_metrics_txt_path.native());
-        System::cmd_execute(cmdLine);
+        System::cmd_execute_clean(cmdLine);
     }
 }

@@ -7,11 +7,11 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/pcre-8.38)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/pcre-8.39)
 vcpkg_download_distfile(ARCHIVE
-    URLS "ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.38.zip"
-    FILENAME "pcre-8.38.zip"
-    SHA512 82f1c2bdd0a6cc086e3734621ac7a2773cb28f42cf5e400b9bbe8c16655465d9367bce82c6db69577c40ec137b30f1b2443a8d91998a514f81e1c2210828a113
+    URLS "ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.39.zip" "https://downloads.sourceforge.net/project/pcre/pcre/8.39/pcre-8.39.zip"
+    FILENAME "pcre-8.39.zip"
+    SHA512 14e6336fe603b7110ba9d54a92af8449bbd4a82fe33d14bc912a048336fc90686464354141316c7890e80e7501af88f657cb7247de6717674e80ba044a279a00
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

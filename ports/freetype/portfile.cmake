@@ -11,12 +11,17 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-Support-Windows-DLLs-via-CMAKE_WINDOWS_EXPORT_ALL_SY.patch
             ${CMAKE_CURRENT_LIST_DIR}/0002-Add-CONFIG_INSTALL_PATH-option.patch
+            ${CMAKE_CURRENT_LIST_DIR}/0003-Fix-UWP.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DCONFIG_INSTALL_PATH=share/freetype
+        -DWITH_ZLIB=ON
+        -DWITH_BZip2=ON
+        -DWITH_PNG=ON
+        -DWITH_HarfBuzz=OFF
 )
 
 vcpkg_install_cmake()

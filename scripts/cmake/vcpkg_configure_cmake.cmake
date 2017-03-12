@@ -1,23 +1,46 @@
-find_program(vcpkg_configure_cmake_NINJA ninja)
 function(vcpkg_configure_cmake)
-    cmake_parse_arguments(_csc "" "SOURCE_PATH;GENERATOR" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" ${ARGN})
+    cmake_parse_arguments(_csc "PREFER_NINJA" "SOURCE_PATH;GENERATOR" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" ${ARGN})
+
+    if(NOT VCPKG_PLATFORM_TOOLSET)
+        message(FATAL_ERROR "Vcpkg has been updated with VS2017 support, however you need to rebuild vcpkg.exe by re-running bootstrap.ps1\n    powershell -exec bypass scripts\\bootstrap.ps1\n")
+    endif()
 
     if(_csc_GENERATOR)
         set(GENERATOR ${_csc_GENERATOR})
-    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND TRIPLET_SYSTEM_ARCH MATCHES "x86")
+    elseif(_csc_PREFER_NINJA AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        set(GENERATOR "Ninja")
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND TRIPLET_SYSTEM_ARCH MATCHES "x86" AND VCPKG_PLATFORM_TOOLSET MATCHES "v140")
         set(GENERATOR "Visual Studio 14 2015")
-    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND TRIPLET_SYSTEM_ARCH MATCHES "x64")
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND TRIPLET_SYSTEM_ARCH MATCHES "x64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v140")
         set(GENERATOR "Visual Studio 14 2015 Win64")
-    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND TRIPLET_SYSTEM_ARCH MATCHES "arm")
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND TRIPLET_SYSTEM_ARCH MATCHES "arm" AND VCPKG_PLATFORM_TOOLSET MATCHES "v140")
         set(GENERATOR "Visual Studio 14 2015 ARM")
-    # elseif(NOT vcpkg_configure_cmake_NINJA MATCHES "NOTFOUND")
-    #     set(GENERATOR "Ninja")
-    elseif(TRIPLET_SYSTEM_ARCH MATCHES "x86")
+    elseif(TRIPLET_SYSTEM_ARCH MATCHES "x86" AND VCPKG_PLATFORM_TOOLSET MATCHES "v140")
         set(GENERATOR "Visual Studio 14 2015")
-    elseif(TRIPLET_SYSTEM_ARCH MATCHES "x64")
+    elseif(TRIPLET_SYSTEM_ARCH MATCHES "x64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v140")
         set(GENERATOR "Visual Studio 14 2015 Win64")
     elseif(TRIPLET_SYSTEM_ARCH MATCHES "arm")
-        set(GENERATOR "Visual Studio 14 2015 ARM")
+        set(GENERATOR "Visual Studio 14 2015 ARM" AND VCPKG_PLATFORM_TOOLSET MATCHES "v140")
+
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND TRIPLET_SYSTEM_ARCH MATCHES "x86" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+        set(GENERATOR "Visual Studio 15 2017")
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND TRIPLET_SYSTEM_ARCH MATCHES "x64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+        set(GENERATOR "Visual Studio 15 2017 Win64")
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND TRIPLET_SYSTEM_ARCH MATCHES "arm" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+        set(GENERATOR "Visual Studio 15 2017 ARM")
+    elseif(TRIPLET_SYSTEM_ARCH MATCHES "x86" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+        set(GENERATOR "Visual Studio 15 2017")
+    elseif(TRIPLET_SYSTEM_ARCH MATCHES "x64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+        set(GENERATOR "Visual Studio 15 2017 Win64")
+    elseif(TRIPLET_SYSTEM_ARCH MATCHES "arm")
+        set(GENERATOR "Visual Studio 15 2017 ARM" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+    endif()
+    
+    # If we use Ninja, make sure it's on PATH
+    if(GENERATOR STREQUAL "Ninja")
+        vcpkg_find_acquire_program(NINJA)
+        get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
+        set(ENV{PATH} "$ENV{PATH};${NINJA_PATH}")
     endif()
 
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
@@ -33,14 +56,18 @@ function(vcpkg_configure_cmake)
     elseif(DEFINED VCPKG_LIBRARY_LINKAGE AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
         list(APPEND _csc_OPTIONS -DBUILD_SHARED_LIBS=OFF)
     endif()
-    
+
 
     list(APPEND _csc_OPTIONS
-        "-DCMAKE_CXX_FLAGS= /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc"
-        "-DCMAKE_C_FLAGS= /DWIN32 /D_WINDOWS /W3 /utf-8"
+        "-DCMAKE_CXX_FLAGS= /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP"
+        "-DCMAKE_C_FLAGS= /DWIN32 /D_WINDOWS /W3 /utf-8 /MP"
         "-DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON"
         "-DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON"
         "-DCMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY=ON"
+        "-DBoost_COMPILER=-vc140"
+        "-DCMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP=TRUE"
+        "-DCMAKE_VERBOSE_MAKEFILE=ON"
+        "-DCMAKE_TOOLCHAIN_FILE=${CMAKE_TRIPLET_FILE}"
     )
     if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL dynamic)
         list(APPEND _csc_OPTIONS_DEBUG
@@ -71,9 +98,7 @@ function(vcpkg_configure_cmake)
     vcpkg_execute_required_process(
         COMMAND ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}
             -G ${GENERATOR}
-            -DCMAKE_VERBOSE_MAKEFILE=ON
             -DCMAKE_BUILD_TYPE=Release
-            -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TRIPLET_FILE}
             -DCMAKE_PREFIX_PATH=${CURRENT_INSTALLED_DIR}
             -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
@@ -86,9 +111,7 @@ function(vcpkg_configure_cmake)
     vcpkg_execute_required_process(
         COMMAND ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}
             -G ${GENERATOR}
-            -DCMAKE_VERBOSE_MAKEFILE=ON
             -DCMAKE_BUILD_TYPE=Debug
-            -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TRIPLET_FILE}
             -DCMAKE_PREFIX_PATH=${CURRENT_INSTALLED_DIR}/debug\\\\\\\;${CURRENT_INSTALLED_DIR}
             -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
