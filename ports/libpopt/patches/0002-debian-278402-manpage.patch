@@ -1,0 +1,30 @@
+Index: popt-1.16/popt.3
+===================================================================
+--- popt-1.16.orig/popt.3	2010-05-13 04:58:04.357009234 +0100
++++ popt-1.16/popt.3	2010-05-13 04:58:09.716009057 +0100
+@@ -657,21 +657,22 @@
+ .nf
+ #include <popt.h>
+ #include <stdio.h>
++#include <stdlib.h>
+ 
+ void usage(poptContext optCon, int exitcode, char *error, char *addl) {
+     poptPrintUsage(optCon, stderr, 0);
+-    if (error) fprintf(stderr, "%s: %s\n", error, addl);
++    if (error) fprintf(stderr, "%s: %s\\n", error, addl);
+     exit(exitcode);
+ }
+ 
+ int main(int argc, char *argv[]) {
+-   char    c;            /* used for argument parsing */
++   int     c;            /* used for argument parsing */
+    int     i = 0;        /* used for tracking options */
+-   char    *portname;
+    int     speed = 0;    /* used in argument parsing to set speed */
+    int     raw = 0;      /* raw mode? */ 
+    int     j;
+    char    buf[BUFSIZ+1];
++   const char *portname;
+    poptContext optCon;   /* context for parsing command-line options */
+ 
+    struct poptOption optionsTable[] = {
