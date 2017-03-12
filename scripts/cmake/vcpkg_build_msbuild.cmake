@@ -7,6 +7,7 @@
 #  vcpkg_build_msbuild(PROJECT_PATH <sln_project_path>
 #                      [RELEASE_CONFIGURATION <release_configuration>] # (default = "Release")
 #                      [DEBUG_CONFIGURATION <debug_configuration>] @ (default = "Debug")
+#                      [TARGET_PLATFORM_VERSION <windows_target_platform_version>]
 #                      [PLATFORM <platform>] # (default = "${TRIPLET_SYSTEM_ARCH}")
 #                      [OPTIONS arg1 [arg2 ...]]
 #                      [OPTIONS_RELEASE arg1 [arg2 ...]]
@@ -21,9 +22,8 @@
 #  ``DEBUG_CONFIGURATION``
 #    The configuration (``/p:Configuration`` msbuild parameter)
 #    used for Debug builds.
-#  ``DEBUG_CONFIGURATION``
-#    The configuration (``/p:Configuration`` msbuild parameter)
-#    used for Debug builds.
+#  ``TARGET_PLATFORM_VERSION``
+#    The WindowsTargetPlatformVersion (``/p:WindowsTargetPlatformVersion`` msbuild parameter)
 #  ``PLATFORM``
 #    The platform (``/p:Platform`` msbuild parameter)
 #    used for the build.
@@ -36,7 +36,7 @@
 #
 
 function(vcpkg_build_msbuild)
-    cmake_parse_arguments(_csc "" "PROJECT_PATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM" "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG" ${ARGN})
+    cmake_parse_arguments(_csc "" "PROJECT_PATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;TARGET_PLATFORM_VERSION" "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG" ${ARGN})
 
     if(NOT DEFINED _csc_RELEASE_CONFIGURATION)
         set(_csc_RELEASE_CONFIGURATION Release)
@@ -47,6 +47,9 @@ function(vcpkg_build_msbuild)
     if(NOT DEFINED _csc_PLATFORM)
         set(_csc_PLATFORM ${TRIPLET_SYSTEM_ARCH})
     endif()
+    if(DEFINED _csc_TARGET_PLATFORM_VERSION)
+        set(_csc_TARGET_PLATFORM_VERSION /p:WindowsTargetPlatformVersion=${_csc_TARGET_PLATFORM_VERSION})
+    endif()
 
     message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
@@ -56,6 +59,7 @@ function(vcpkg_build_msbuild)
             /p:Platform=${_csc_PLATFORM}
             /p:VCPkgLocalAppDataDisabled=true
             /p:UseIntelMKL=No
+            ${_csc_TARGET_PLATFORM_VERSION}
             /m
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
         LOGNAME build-${TARGET_TRIPLET}-rel
@@ -69,6 +73,7 @@ function(vcpkg_build_msbuild)
             /p:Platform=${_csc_PLATFORM}
             /p:VCPkgLocalAppDataDisabled=true
             /p:UseIntelMKL=No
+            ${_csc_TARGET_PLATFORM_VERSION}  
             /m
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
         LOGNAME build-${TARGET_TRIPLET}-dbg
