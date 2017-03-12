@@ -43,8 +43,7 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/flatc.exe)
-    make_directory(${CURRENT_PACKAGES_DIR}/tools/flatbuffers)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/flatc.exe ${CURRENT_PACKAGES_DIR}/tools/flatbuffers/flatc.exe)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/flatc.exe ${CURRENT_PACKAGES_DIR}/tools/flatc.exe)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 endif()
 if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/flatbuffers.dll)
@@ -55,8 +54,6 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/flatbuffers.dll)
     make_directory(${CURRENT_PACKAGES_DIR}/debug/bin)
     file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/flatbuffers.dll ${CURRENT_PACKAGES_DIR}/debug/bin/flatbuffers.dll)
 endif()
-
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/flatbuffers)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
