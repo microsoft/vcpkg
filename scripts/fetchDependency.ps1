@@ -232,7 +232,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         throw [System.IO.FileNotFoundException] ("Could not detect or download " + $Dependency)
     }
 
-    return $downloadPath
+    return $executableFromDownload
 }
 
 SelectProgram $Dependency
