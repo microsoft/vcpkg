@@ -1,3 +1,4 @@
 Source: xlnt
-Version: 0.9.1
+Version: 0.9.4
 Description: Cross-platform user-friendly xlsx library for C++14
+Depends: zlib cryptopp expat

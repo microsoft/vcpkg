@@ -8,7 +8,7 @@ include(vcpkg_common_functions)
 find_program(GIT git)
 
 set(GIT_URL "https://github.com/tfussell/xlnt.git")
-set(GIT_REV "c43561b4bdfb66caa78e2acfb7d513c0810cd4b0")
+set(GIT_REV "f908dca6fe342f44b814073947aaccc69df7c9b6")
 
 if(NOT EXISTS "${DOWNLOADS}/xlnt.git")
     message(STATUS "Cloning")
