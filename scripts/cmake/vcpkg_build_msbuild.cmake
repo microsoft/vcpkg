@@ -47,20 +47,25 @@ function(vcpkg_build_msbuild)
     if(NOT DEFINED _csc_PLATFORM)
         set(_csc_PLATFORM ${TRIPLET_SYSTEM_ARCH})
     endif()
-    if(DEFINED _csc_TARGET_PLATFORM_VERSION)
-        set(_csc_TARGET_PLATFORM_VERSION /p:WindowsTargetPlatformVersion=${_csc_TARGET_PLATFORM_VERSION})
+    if(NOT DEFINED _csc_TARGET_PLATFORM_VERSION)
+        vcpkg_get_windows_sdk(_csc_TARGET_PLATFORM_VERSION)
     endif()
+
+    list(APPEND _csc_OPTIONS
+        /p:Platform=${_csc_PLATFORM}
+        /p:VCPkgLocalAppDataDisabled=true
+        /p:UseIntelMKL=No
+        /p:WindowsTargetPlatformVersion=${_csc_TARGET_PLATFORM_VERSION}
+        /m
+    )
 
     message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
     vcpkg_execute_required_process(
-        COMMAND msbuild ${_csc_PROJECT_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}
+        COMMAND msbuild ${_csc_PROJECT_PATH}
             /p:Configuration=${_csc_RELEASE_CONFIGURATION}
-            /p:Platform=${_csc_PLATFORM}
-            /p:VCPkgLocalAppDataDisabled=true
-            /p:UseIntelMKL=No
-            ${_csc_TARGET_PLATFORM_VERSION}
-            /m
+            ${_csc_OPTIONS}
+            ${_csc_OPTIONS_RELEASE}
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
         LOGNAME build-${TARGET_TRIPLET}-rel
     )
@@ -68,13 +73,10 @@ function(vcpkg_build_msbuild)
     message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
     vcpkg_execute_required_process(
-        COMMAND msbuild ${_csc_PROJECT_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}
+        COMMAND msbuild ${_csc_PROJECT_PATH}
             /p:Configuration=${_csc_DEBUG_CONFIGURATION}
-            /p:Platform=${_csc_PLATFORM}
-            /p:VCPkgLocalAppDataDisabled=true
-            /p:UseIntelMKL=No
-            ${_csc_TARGET_PLATFORM_VERSION}  
-            /m
+            ${_csc_OPTIONS}
+            ${_csc_OPTIONS_DEBUG}
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
         LOGNAME build-${TARGET_TRIPLET}-dbg
     )
