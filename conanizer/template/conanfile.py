@@ -29,7 +29,8 @@ class WrapperVspkgConan(ConanFile):
             # TODO: Restrict settings
             raise ConanException("Not valid compiler")
         
-        generator = {"14": "Visual Studio 14 2015",
+        generator = {"15": "Visual Studio 15 2017",
+                     "14": "Visual Studio 14 2015",
                      "12": "Visual Studio 12 2013",
                      "10": "Visual Studio 10 2010"}[str(self.settings.compiler.version)]
 
