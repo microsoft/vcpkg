@@ -16,7 +16,7 @@ namespace vcpkg
     };
 }
 
-#define LINE_INFO vcpkg::LineInfo(__LINE__, __FILE__)
+#define VCPKG_LINE_INFO vcpkg::LineInfo(__LINE__, __FILE__)
 
 namespace vcpkg::Checks
 {
