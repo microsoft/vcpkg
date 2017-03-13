@@ -4,8 +4,6 @@ project(gtk+ C)
 configure_file(config.h.win32 ${CMAKE_CURRENT_SOURCE_DIR}/config.h COPYONLY)
 configure_file(gdk/gdkconfig.h.win32_broadway ${CMAKE_CURRENT_SOURCE_DIR}/gdk/gdkconfig.h COPYONLY)
 
-set(GTK_VERSION 3.22.8)
-
 set(GLIB_LIB_SUFFIX 2.0)
 set(PANGO_LIB_SUFFIX 1.0)
 set(ATK_LIB_SUFFIX 1.0)
