@@ -11,7 +11,7 @@ vcpkg_download_distfile(ARCHIVE_FILE
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
-if(VCPKG_PLATFORM_TOOLSET MATCHES "v141*")
+if(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
     set(MSVC_VERSION 15)
 else()
     set(MSVC_VERSION 14)
@@ -30,10 +30,10 @@ else()
 	)
 endif()
 
-IF (TRIPLET_SYSTEM_ARCH MATCHES "x86")
+IF (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
 	SET(BUILD_ARCH "Win32")
 ELSE()
-	SET(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
+	SET(BUILD_ARCH ${VCPKG_TARGET_ARCHITECTURE})
 ENDIF()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -46,12 +46,10 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 	)
 	file(INSTALL
 		${SOURCE_PATH}/dll/${BUILD_ARCH}/Debug/mpir.dll
-		${SOURCE_PATH}/dll/${BUILD_ARCH}/Debug/mpir.pdb
 		DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
 	)
 	file(INSTALL
 		${SOURCE_PATH}/dll/${BUILD_ARCH}/Release/mpir.dll
-		${SOURCE_PATH}/dll/${BUILD_ARCH}/Release/mpir.pdb
 		DESTINATION ${CURRENT_PACKAGES_DIR}/bin
 	)
 	file(INSTALL
@@ -80,7 +78,7 @@ else()
 		${SOURCE_PATH}/lib/${BUILD_ARCH}/Release/mpir.lib
 		DESTINATION ${CURRENT_PACKAGES_DIR}/lib
 	)
-	file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/mpir RENAME copyright)
+	file(INSTALL ${SOURCE_PATH}/COPYING.lib DESTINATION ${CURRENT_PACKAGES_DIR}/share/mpir RENAME copyright)
 endif()
 
 message(STATUS "Installing done")
