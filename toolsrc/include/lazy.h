@@ -9,7 +9,7 @@ namespace vcpkg
         lazy() : value(T()), initialized(false) {}
 
         template <class F>
-        T const& get_lazy(F& f) const
+        T const& get_lazy(const F& f) const
         {
             if (!initialized)
             {
