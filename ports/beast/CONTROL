@@ -1,0 +1,4 @@
+Source: beast
+Version: 1.0.0-b30
+Build-Depends: boost
+Description: Boost.Asio based header only HTTP and WebSocket on C++11
