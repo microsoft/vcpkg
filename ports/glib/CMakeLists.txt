@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
-project(glib)
+project(glib C)
 
-set(GLIB_VERSION 2.50.2)
 set(GLIB_DLL_SUFFIX 2)
 set(GLIB_LIB_SUFFIX 2.0)
 
