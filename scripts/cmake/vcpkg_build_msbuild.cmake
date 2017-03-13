@@ -9,6 +9,7 @@
 #                      [DEBUG_CONFIGURATION <debug_configuration>] @ (default = "Debug")
 #                      [TARGET_PLATFORM_VERSION <windows_target_platform_version>]
 #                      [PLATFORM <platform>] # (default = "${TRIPLET_SYSTEM_ARCH}")
+#                      [PLATFORM_TOOLSET <platform_toolset>] # (default = "${VCPKG_PLATFORM_TOOLSET}")
 #                      [OPTIONS arg1 [arg2 ...]]
 #                      [OPTIONS_RELEASE arg1 [arg2 ...]]
 #                      [OPTIONS_DEBUG arg1 [arg2 ...]]
@@ -29,6 +30,9 @@
 #  ``PLATFORM``
 #    The platform (``/p:Platform`` msbuild parameter)
 #    used for the build.
+#  ``PLATFORM_TOOLSET``
+#    The platform toolset (``/p:PlatformToolset`` msbuild parameter)
+#    used for the build.
 #  ``OPTIONS``
 #    The options passed to msbuild for all builds.
 #  ``OPTIONS_RELEASE``
@@ -39,7 +43,7 @@
 
 
 function(vcpkg_build_msbuild)
-    cmake_parse_arguments(_csc "" "PROJECT_PATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;TARGET_PLATFORM_VERSION;TARGET" "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG" ${ARGN})
+    cmake_parse_arguments(_csc "" "PROJECT_PATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;PLATFORM_TOOLSET;TARGET_PLATFORM_VERSION;TARGET" "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG" ${ARGN})
 
     if(NOT DEFINED _csc_RELEASE_CONFIGURATION)
         set(_csc_RELEASE_CONFIGURATION Release)
@@ -49,6 +53,9 @@ function(vcpkg_build_msbuild)
     endif()
     if(NOT DEFINED _csc_PLATFORM)
         set(_csc_PLATFORM ${TRIPLET_SYSTEM_ARCH})
+    endif()
+    if(NOT DEFINED _csc_PLATFORM_TOOLSET)
+        set(_csc_PLATFORM_TOOLSET ${VCPKG_PLATFORM_TOOLSET})
     endif()
     if(NOT DEFINED _csc_TARGET_PLATFORM_VERSION)
         vcpkg_get_windows_sdk(_csc_TARGET_PLATFORM_VERSION)
@@ -60,6 +67,7 @@ function(vcpkg_build_msbuild)
     list(APPEND _csc_OPTIONS
         /t:${_csc_TARGET}
         /p:Platform=${_csc_PLATFORM}
+        /p:PlatformToolset=${_csc_PLATFORM_TOOLSET}
         /p:VCPkgLocalAppDataDisabled=true
         /p:UseIntelMKL=No
         /p:WindowsTargetPlatformVersion=${_csc_TARGET_PLATFORM_VERSION}
