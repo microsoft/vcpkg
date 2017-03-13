@@ -11,10 +11,12 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/cmake DESTINATION ${SOURCE_PATH}/build)
+
 vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH} 
-    PATCHES "${CURRENT_PORT_DIR}/0001-cmake-build-system.patch"
-            "${CURRENT_PORT_DIR}/0002-fix-build.patch")
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-fix-build.patch")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
