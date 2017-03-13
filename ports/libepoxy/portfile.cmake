@@ -4,11 +4,11 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libepoxy-2432daf4cf58b5ff11e008ca34811588285c43b3)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libepoxy-7d58fd3d47d2d69f2b1b9f08325302e4eeff9ebe)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/anholt/libepoxy/archive/2432daf4cf58b5ff11e008ca34811588285c43b3.zip"
-    FILENAME "libepoxy-2432daf4cf58b5ff11e008ca34811588285c43b3.zip"
-    SHA512 70b59b6c5722eb87522927fdedab44f74ffd2d71d2ae42509de07b0c3e13f71320b25da0d4c75dca75c4208ea7a525483267d6ccb8acd5274728c015c7ac4006)
+    URLS "https://github.com/anholt/libepoxy/archive/7d58fd3d47d2d69f2b1b9f08325302e4eeff9ebe.zip"
+    FILENAME "libepoxy-7d58fd3d47d2d69f2b1b9f08325302e4eeff9ebe.zip"
+    SHA512 7e97a7832ea136565be92d6f6f0afead2fff9ac7b2999ef9e7865ac18dfbeab354e5a652b1a86e982a323dca9a1446df07821c26d315b7da4ca72b5be7345695)
 
 vcpkg_extract_source_archive(${ARCHIVE})
 
