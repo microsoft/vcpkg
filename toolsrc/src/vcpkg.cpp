@@ -1,7 +1,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-#include <iostream>
 #include <fstream>
 #include <memory>
 #include <cassert>
@@ -14,10 +13,9 @@
 #include "Paragraphs.h"
 #include "vcpkg_Strings.h"
 #include "vcpkg_Chrono.h"
+#include "vcpkglib.h"
 
 using namespace vcpkg;
-
-bool g_debugging = false;
 
 void invalid_command(const std::string& cmd)
 {

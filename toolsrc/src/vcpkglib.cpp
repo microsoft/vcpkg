@@ -7,6 +7,8 @@
 
 namespace vcpkg
 {
+    bool g_debugging = false;
+
     static StatusParagraphs load_current_database(const fs::path& vcpkg_dir_status_file, const fs::path& vcpkg_dir_status_file_old)
     {
         if (!fs::exists(vcpkg_dir_status_file))
