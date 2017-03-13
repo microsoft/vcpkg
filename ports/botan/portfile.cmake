@@ -36,13 +36,19 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
         set(BOTAN_FLAG_DEBUGMODE --debug-mode)
         set(BOTAN_DEBUG_PREFIX d)
     else()
+        set(BOTAN_FLAG_DEBUGMODE)
         set(BOTAN_FLAG_PREFIX ${CURRENT_PACKAGES_DIR})
     endif()
    
     message(STATUS "Configure ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}")
 
+    if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
+        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
+    endif()
+    make_directory(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
+
     vcpkg_execute_required_process(
-        COMMAND "${PYTHON3}" "configure.py" 
+        COMMAND "${PYTHON3}" "${SOURCE_PATH}/configure.py" 
             --cc=msvc
             --cpu=${BOTAN_FLAG_CPU}
             ${BOTAN_FLAG_SHARED} 
@@ -51,24 +57,23 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
             --with-pkcs11
             --prefix=${BOTAN_FLAG_PREFIX}
             --link-method=copy          
-        WORKING_DIRECTORY "${SOURCE_PATH}"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
         LOGNAME configure-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
     message(STATUS "Configure ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE} done")
 
     message(STATUS "Build ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}")
     vcpkg_execute_required_process(
         COMMAND ${JOM}
-        WORKING_DIRECTORY "${SOURCE_PATH}"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
         LOGNAME jom-build-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
     message(STATUS "Build ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE} done")
 
     message(STATUS "Package ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}")
     vcpkg_execute_required_process(
-        COMMAND "${PYTHON3}" "src/scripts/install.py" 
+        COMMAND "${PYTHON3}" "${SOURCE_PATH}/src/scripts/install.py" 
             --destdir=${BOTAN_FLAG_PREFIX}
-            --build-dir=build
             --docdir=share 
-        WORKING_DIRECTORY "${SOURCE_PATH}"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
         LOGNAME install-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
 
     file(MAKE_DIRECTORY ${BOTAN_FLAG_PREFIX}/tools/)
