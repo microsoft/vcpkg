@@ -55,7 +55,7 @@ namespace vcpkg
 
     static std::vector<fs::path> find_from_PATH(const std::wstring& name)
     {
-        const std::wstring cmd = Strings::wformat(L"where.exe %s", name);
+        const std::wstring cmd = Strings::wformat(L"where.exe %s 2>&1", name);
         auto out = System::cmd_execute_and_capture_output(cmd);
         if (out.exit_code != 0)
         {
