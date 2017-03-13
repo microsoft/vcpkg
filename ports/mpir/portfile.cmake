@@ -16,17 +16,14 @@ if(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
 else()
     set(MSVC_VERSION 14)
 endif()
-vcpkg_get_windows_sdk(WINDOWS_SDK)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 	vcpkg_build_msbuild(
 		PROJECT_PATH ${SOURCE_PATH}/build.vc${MSVC_VERSION}/dll_mpir_gc/dll_mpir_gc.vcxproj
-		TARGET_PLATFORM_VERSION ${WINDOWS_SDK}
 	)
 else()
 	vcpkg_build_msbuild(
 		PROJECT_PATH ${SOURCE_PATH}/build.vc${MSVC_VERSION}/lib_mpir_gc/lib_mpir_gc.vcxproj
-		TARGET_PLATFORM_VERSION ${WINDOWS_SDK}
 	)
 endif()
 
