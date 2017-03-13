@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "vcpkg_Checks.h"
 #include "vcpkg_System.h"
+#include "vcpkglib.h"
 
 namespace vcpkg
 {
@@ -12,9 +13,10 @@ namespace vcpkg
 
 namespace vcpkg::Checks
 {
-    __declspec(noreturn) void unreachable()
+    __declspec(noreturn) void unreachable(const LineInfo& line_info)
     {
         System::println(System::color::error, "Error: Unreachable code was reached");
+        System::println(System::color::error, line_info.toString()); // Always print line_info here
 #ifndef NDEBUG
         std::abort();
 #else

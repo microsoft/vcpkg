@@ -129,7 +129,7 @@ namespace vcpkg::Commands::Remove
                 continue;
             }
 
-            Checks::unreachable();
+            Checks::unreachable(VCPKG_LINE_INFO);
         }
 
         if (!not_installed.empty())
@@ -158,7 +158,7 @@ namespace vcpkg::Commands::Remove
                                                                    return "    " + p->spec.toString();
                                                                }
 
-                                                               Checks::unreachable();
+                                                               Checks::unreachable(VCPKG_LINE_INFO);
                                                            }));
         }
     }
@@ -208,7 +208,7 @@ namespace vcpkg::Commands::Remove
                     break;
                 case remove_plan_type::UNKNOWN:
                 default:
-                    Checks::unreachable();
+                    Checks::unreachable(VCPKG_LINE_INFO);
             }
 
             if (alsoRemoveFolderFromPackages)

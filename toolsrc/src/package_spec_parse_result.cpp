@@ -20,7 +20,7 @@ namespace vcpkg
             case package_spec_parse_result::INVALID_CHARACTERS:
                 return "Contains invalid characters. Only alphanumeric lowercase ASCII characters and dashes are allowed";
             default:
-                Checks::unreachable();
+                Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
 

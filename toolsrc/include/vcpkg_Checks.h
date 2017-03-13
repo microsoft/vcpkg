@@ -20,7 +20,7 @@ namespace vcpkg
 
 namespace vcpkg::Checks
 {
-    __declspec(noreturn) void unreachable();
+    __declspec(noreturn) void unreachable(const LineInfo& line_info);
 
     // Part of the reason these exist is to not include extra headers in this one to avoid circular #includes. 
     _declspec(noreturn) void exit_with_message(const char* errorMessage);

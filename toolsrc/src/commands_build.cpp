@@ -101,7 +101,7 @@ namespace vcpkg::Commands::Build
             case BuildResult::BUILD_FAILED: return BUILD_FAILED_STRING;
             case BuildResult::POST_BUILD_CHECKS_FAILED: return POST_BUILD_CHECKS_FAILED_STRING;
             case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES: return CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING;
-            default: Checks::unreachable();
+            default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
 

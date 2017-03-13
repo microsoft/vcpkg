@@ -156,7 +156,7 @@ namespace vcpkg::Commands::Integrate
                         System::println(System::color::warning, "Warning: Previous integration file was not removed");
                         exit(EXIT_FAILURE);
                     default:
-                        Checks::unreachable();
+                        Checks::unreachable(VCPKG_LINE_INFO);
                 }
             }
         }
@@ -195,7 +195,7 @@ namespace vcpkg::Commands::Integrate
                     System::println(System::color::warning, "Warning: integration was not applied");
                     exit(EXIT_FAILURE);
                 default:
-                    Checks::unreachable();
+                    Checks::unreachable(VCPKG_LINE_INFO);
             }
 
             Checks::check_exit(fs::exists(system_wide_targets_file), "Error: failed to copy targets file to %s", system_wide_targets_file.string());

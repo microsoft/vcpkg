@@ -81,7 +81,7 @@ namespace vcpkg::Commands::CI
                     System::println(System::color::success, "Package %s is installed from cache", action.spec);
                 }
                 else
-                    Checks::unreachable();
+                    Checks::unreachable(VCPKG_LINE_INFO);
             }
             catch (const std::exception& e)
             {

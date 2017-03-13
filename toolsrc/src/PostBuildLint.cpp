@@ -693,7 +693,7 @@ namespace vcpkg::PostBuildLint
                 }
             case LinkageType::backing_enum_t::NULLVALUE:
             default:
-                Checks::unreachable();
+                Checks::unreachable(VCPKG_LINE_INFO);
         }
 
         error_count += check_no_empty_folders(package_dir);
