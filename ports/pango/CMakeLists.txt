@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(pango)
+project(pango C)
 
 set(PANGO_LIB_SUFFIX 1.0)
 set(PANGO_DLL_SUFFIX 1)
