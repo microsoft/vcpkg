@@ -53,6 +53,7 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
             --cpu=${BOTAN_FLAG_CPU}
             ${BOTAN_FLAG_SHARED} 
             ${BOTAN_FLAG_DEBUGMODE}
+            "--distribution-info=vcpkg ${TARGET_TRIPLET}"
             --makefile-style=nmake
             --with-pkcs11
             --prefix=${BOTAN_FLAG_PREFIX}
@@ -76,13 +77,8 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
         LOGNAME install-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
 
-    file(MAKE_DIRECTORY ${BOTAN_FLAG_PREFIX}/tools/)
-    file(RENAME ${BOTAN_FLAG_PREFIX}/bin/botan-cli.exe ${BOTAN_FLAG_PREFIX}/tools/botan-cli.exe)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         file(RENAME ${BOTAN_FLAG_PREFIX}/lib/botan${BOTAN_DEBUG_PREFIX}.dll ${BOTAN_FLAG_PREFIX}/bin/botan${BOTAN_DEBUG_PREFIX}.dll)
-        if(BOTAN_BUILD_TYPE STREQUAL dbg)
-            file(COPY ${SOURCE_PATH}/botan${BOTAN_DEBUG_PREFIX}.pdb DESTINATION ${BOTAN_FLAG_PREFIX}/bin/)
-        endif()
     endif()
     
     message(STATUS "Package ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE} done")
@@ -91,9 +87,16 @@ endfunction()
 BOTAN_BUILD(rel)
 BOTAN_BUILD(dbg)
 
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/botan)
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/botan-cli.exe ${CURRENT_PACKAGES_DIR}/tools/botan/botan-cli.exe)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/botan-cli.exe)
+
+file(RENAME ${CURRENT_PACKAGES_DIR}/include/botan-2/botan ${CURRENT_PACKAGES_DIR}/include/botan)
+
 file(REMOVE_RECURSE 
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share
+    ${CURRENT_PACKAGES_DIR}/include/botan-2
     ${CURRENT_PACKAGES_DIR}/share/botan-${BOTAN_VERSION}/manual)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -101,6 +104,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         ${CURRENT_PACKAGES_DIR}/bin
         ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
+
+vcpkg_copy_pdbs()
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/botan)
 
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/botan-${BOTAN_VERSION}/ ${CURRENT_PACKAGES_DIR}/share/botan/)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/botan/license.txt ${CURRENT_PACKAGES_DIR}/share/botan/copyright)
