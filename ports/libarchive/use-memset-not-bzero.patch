@@ -1,0 +1,26 @@
+diff --git a/libarchive/archive_write_add_filter_xz.c b/libarchive/archive_write_add_filter_xz.c
+index 46a6c38..b0f25a6 100644
+--- a/libarchive/archive_write_add_filter_xz.c
++++ b/libarchive/archive_write_add_filter_xz.c
+@@ -233,7 +233,7 @@ archive_compressor_xz_init_stream(struct archive_write_filter *f,
+ 	if (f->code == ARCHIVE_FILTER_XZ) {
+ #ifdef HAVE_LZMA_STREAM_ENCODER_MT
+ 		if (data->threads != 1) {
+-			bzero(&mt_options, sizeof(mt_options));
++			memset(&mt_options, 0, sizeof(mt_options));
+ 			mt_options.threads = data->threads;
+ 			mt_options.timeout = 300;
+ 			mt_options.filters = data->lzmafilters;
+diff --git a/libarchive/archive_write_set_format_xar.c b/libarchive/archive_write_set_format_xar.c
+index a2dbc03..15a013c 100644
+--- a/libarchive/archive_write_set_format_xar.c
++++ b/libarchive/archive_write_set_format_xar.c
+@@ -2913,7 +2913,7 @@ compression_init_encoder_xz(struct archive *a,
+ 	*strm = lzma_init_data;
+ #ifdef HAVE_LZMA_STREAM_ENCODER_MT
+ 	if (threads > 1) {
+-		bzero(&mt_options, sizeof(mt_options));
++		memset(&mt_options, 0, sizeof(mt_options));
+ 		mt_options.threads = threads;
+ 		mt_options.timeout = 300;
+ 		mt_options.filters = lzmafilters;

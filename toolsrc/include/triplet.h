@@ -4,23 +4,24 @@
 
 namespace vcpkg
 {
-    struct vcpkg_paths;
-
     struct triplet
     {
+        static triplet from_canonical_name(const std::string& triplet_as_string);
+
         static const triplet X86_WINDOWS;
         static const triplet X64_WINDOWS;
         static const triplet X86_UWP;
         static const triplet X64_UWP;
         static const triplet ARM_UWP;
 
-        std::string value;
+        const std::string& canonical_name() const;
 
         std::string architecture() const;
 
         std::string system() const;
 
-        bool validate(const vcpkg_paths& paths);
+    private:
+        std::string m_canonical_name;
     };
 
     bool operator==(const triplet& left, const triplet& right);
@@ -43,7 +44,7 @@ namespace std
         {
             std::hash<std::string> hasher;
             size_t hash = 17;
-            hash = hash * 31 + hasher(t.value);
+            hash = hash * 31 + hasher(t.canonical_name());
             return hash;
         }
     };

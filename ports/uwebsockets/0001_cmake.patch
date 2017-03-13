@@ -1,0 +1,41 @@
+commit 2b244f92ddf5e58bf81ccb40a8f23a3f94d9941b
+Author: Alexander Karatarakis <alkarata@microsoft.com>
+Date:   Tue Mar 7 17:13:52 2017 -0800
+
+    Fixes
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 33a8ae0..0b9c006 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,7 +12,7 @@ if(NOT LIBUV_INCLUDE_DIR)
+     find_path(LIBUV_INCLUDE_DIR uv.h)
+ endif()
+ if(NOT LIBUV_LIBRARY)
+-    find_library(LIBUV_LIBRARY NAMES uv uv1)
++    find_library(LIBUV_LIBRARY NAMES libuv uv uv1)
+ endif()
+ 
+ add_library(uWS src/Extensions.cpp src/Group.cpp src/WebSocketImpl.cpp src/Networking.cpp src/Hub.cpp src/Node.cpp src/WebSocket.cpp src/HTTPSocket.cpp src/Socket.cpp src/uUV.cpp)
+@@ -38,4 +38,20 @@ install (TARGETS uWS DESTINATION /usr/lib64)
+ install (FILES src/Extensions.h src/WebSocketProtocol.h src/Networking.h src/WebSocket.h src/Hub.h src/Group.h src/Node.h src/Socket.h src/HTTPSocket.h src/uWS.h src/uUV.h DESTINATION /usr/include/uWS)
+ endif (UNIX)
+ 
+-add_subdirectory(examples)
++#add_subdirectory(examples)
++
++if(WIN32)
++    target_link_libraries (uWS PUBLIC psapi.lib iphlpapi.lib userenv.lib)
++    install (FILES src/Extensions.h src/WebSocketProtocol.h src/Networking.h src/WebSocket.h src/Hub.h src/Group.h src/Node.h src/Socket.h src/HTTPSocket.h src/uWS.h DESTINATION include/uWS)
++
++	if(BUILD_SHARED_LIBS)
++		target_link_libraries (uWS PUBLIC ws2_32.lib)
++	endif()
++endif()
++
++install(
++    TARGETS uWS
++    RUNTIME DESTINATION bin
++    LIBRARY DESTINATION lib
++    ARCHIVE DESTINATION lib
++)

@@ -2,7 +2,7 @@
 
 #include "vcpkg_Strings.h"
 
-namespace vcpkg {namespace Checks
+namespace vcpkg::Checks
 {
     __declspec(noreturn) void unreachable();
 
@@ -20,7 +20,7 @@ namespace vcpkg {namespace Checks
     template <class...Args>
     _declspec(noreturn) void throw_with_message(const char* errorMessageTemplate, const Args&... errorMessageArgs)
     {
-        throw_with_message(Strings::format(errorMessageTemplate, errorMessageArgs...));
+        throw_with_message(Strings::format(errorMessageTemplate, errorMessageArgs...).c_str());
     }
 
     void check_throw(bool expression, const char* errorMessage);
@@ -35,6 +35,8 @@ namespace vcpkg {namespace Checks
         }
     }
 
+    void check_exit(bool expression);
+
     void check_exit(bool expression, const char* errorMessage);
 
     template <class...Args>
@@ -46,4 +48,4 @@ namespace vcpkg {namespace Checks
             exit_with_message(Strings::format(errorMessageTemplate, errorMessageArgs...).c_str());
         }
     }
-}}
+}

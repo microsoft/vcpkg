@@ -1,0 +1,10 @@
+--- a/libmetis/CMakeLists.txt	Sat Mar 30 17:24:45 2013
++++ b/libmetis/CMakeLists.txt	Wed Dec 21 17:41:37 2016
+@@ -11,6 +11,6 @@
+ if(METIS_INSTALL)
+   install(TARGETS metis
+     LIBRARY DESTINATION lib
+-    RUNTIME DESTINATION lib
++    RUNTIME DESTINATION bin
+     ARCHIVE DESTINATION lib)
+ endif()

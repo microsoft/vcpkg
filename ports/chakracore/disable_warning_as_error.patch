@@ -1,0 +1,20 @@
+diff --git a/bin/NativeTests/NativeTests.vcxproj b/bin/NativeTests/NativeTests.vcxproj
+index d020992..ac70a65 100644
+--- a/bin/NativeTests/NativeTests.vcxproj
++++ b/bin/NativeTests/NativeTests.vcxproj
+@@ -30,6 +30,15 @@
+       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+       <SmallerTypeCheck>false</SmallerTypeCheck>
+       <MinimalRebuild>false</MinimalRebuild>
++      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</TreatWarningAsError>
++      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</TreatWarningAsError>
++      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">false</TreatWarningAsError>
++      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">false</TreatWarningAsError>
++      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">false</TreatWarningAsError>
++      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Test|ARM'">false</TreatWarningAsError>
++      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</TreatWarningAsError>
++      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</TreatWarningAsError>
++      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Test|x64'">false</TreatWarningAsError>
+       <!-- <CallingConvention Condition="'$(Platform)'=='Win32'">CDecl</CallingConvention> -->
+     </ClCompile>
+     <Link>

@@ -2,14 +2,14 @@
 
 #include <unordered_map>
 #include "SourceParagraph.h"
-#include "triplet.h"
+#include "package_spec.h"
 
 namespace vcpkg
 {
     struct BinaryParagraph
     {
         BinaryParagraph();
-        explicit BinaryParagraph(const std::unordered_map<std::string, std::string>& fields);
+        explicit BinaryParagraph(std::unordered_map<std::string, std::string> fields);
         BinaryParagraph(const SourceParagraph& spgh, const triplet& target_triplet);
 
         std::string displayname() const;
@@ -18,11 +18,10 @@ namespace vcpkg
 
         std::string dir() const;
 
-        std::string name;
+        package_spec spec;
         std::string version;
         std::string description;
         std::string maintainer;
-        triplet target_triplet;
         std::vector<std::string> depends;
     };
 

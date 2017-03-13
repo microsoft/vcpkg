@@ -5,8 +5,9 @@ namespace vcpkg
 {
     enum class package_spec_parse_result
     {
-        success = 0,
-        too_many_colons
+        SUCCESS = 0,
+        TOO_MANY_COLONS,
+        INVALID_CHARACTERS
     };
 
     struct package_spec_parse_result_category_impl final : std::error_category
@@ -30,5 +31,6 @@ namespace std
 {
     template <>
     struct is_error_code_enum<vcpkg::package_spec_parse_result> : ::std::true_type
-    {};
+    {
+    };
 }

@@ -1,5 +1,5 @@
+#include "pch.h"
 #include "StatusParagraphs.h"
-#include <algorithm>
 #include "vcpkg_Checks.h"
 
 namespace vcpkg
@@ -13,23 +13,25 @@ namespace vcpkg
 
     StatusParagraphs::const_iterator StatusParagraphs::find(const std::string& name, const triplet& target_triplet) const
     {
-        return std::find_if(begin(), end(), [&](const auto& pgh)
+        return std::find_if(begin(), end(), [&](const std::unique_ptr<StatusParagraph>& pgh)
                             {
-                                return pgh->package.name == name && pgh->package.target_triplet == target_triplet;
+                                const package_spec& spec = pgh->package.spec;
+                                return spec.name() == name && spec.target_triplet() == target_triplet;
                             });
     }
 
     StatusParagraphs::iterator StatusParagraphs::find(const std::string& name, const triplet& target_triplet)
     {
-        return std::find_if(begin(), end(), [&](const auto& pgh)
+        return std::find_if(begin(), end(), [&](const std::unique_ptr<StatusParagraph>& pgh)
                             {
-                                return pgh->package.name == name && pgh->package.target_triplet == target_triplet;
+                                const package_spec& spec = pgh->package.spec;
+                                return spec.name() == name && spec.target_triplet() == target_triplet;
                             });
     }
 
-    StatusParagraphs::iterator StatusParagraphs::find_installed(const std::string& name, const triplet& target_triplet)
+    StatusParagraphs::const_iterator StatusParagraphs::find_installed(const std::string& name, const triplet& target_triplet) const
     {
-        auto it = find(name, target_triplet);
+        const const_iterator it = find(name, target_triplet);
         if (it != end() && (*it)->want == want_t::install)
         {
             return it;
@@ -40,19 +42,18 @@ namespace vcpkg
 
     StatusParagraphs::iterator StatusParagraphs::insert(std::unique_ptr<StatusParagraph> pgh)
     {
-        Checks::check_throw(pgh != nullptr, "Inserted null paragraph");
-        auto ptr = find(pgh->package.name, pgh->package.target_triplet);
+        Checks::check_exit(pgh != nullptr, "Inserted null paragraph");
+        const package_spec& spec = pgh->package.spec;
+        auto ptr = find(spec.name(), spec.target_triplet());
         if (ptr == end())
         {
             paragraphs.push_back(std::move(pgh));
             return paragraphs.rbegin();
         }
-        else
-        {
-            // consume data from provided pgh.
-            **ptr = std::move(*pgh);
-            return ptr;
-        }
+
+        // consume data from provided pgh.
+        **ptr = std::move(*pgh);
+        return ptr;
     }
 
     std::ostream& vcpkg::operator<<(std::ostream& os, const StatusParagraphs& l)

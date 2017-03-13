@@ -1,0 +1,4 @@
+Source: atk
+Version: 2.22.0
+Description: GNOME Accessibility Toolkit
+Build-Depends: glib, gettext

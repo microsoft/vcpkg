@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 439e26a..05416d8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -187,6 +187,7 @@ endforeach(flag ${test_flags})
+ 
+ if(MSVC)
+     set(CMAKE_DEBUG_POSTFIX "d")
++	add_definitions(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE)
+ endif()
+ 
+ option(ld-version-script "Enable linker version script" ON)
+diff --git a/libtiff/tif_dirread.c b/libtiff/tif_dirread.c
+index a0dc68b..3c4e101 100644
+--- a/libtiff/tif_dirread.c
++++ b/libtiff/tif_dirread.c
+@@ -3690,7 +3690,7 @@ TIFFReadDirectory(TIFF* tif)
+ 			case TIFFTAG_SMAXSAMPLEVALUE:
+ 				{
+ 
+-					double *data;
++					double *data = NULL;
+ 					enum TIFFReadDirEntryErr err;
+ 					uint32 saved_flags;
+ 					int m;

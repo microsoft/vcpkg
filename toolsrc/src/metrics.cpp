@@ -1,20 +1,8 @@
+#include "pch.h"
 #include "metrics.h"
-#include <utility>
-#include <array>
-#include <string>
-#include <iostream>
-#include <vector>
-#include <sys/timeb.h>
-#include <time.h>
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <winhttp.h>
-#include <fstream>
-#include <filesystem>
+#include "filesystem_fs.h"
 #include "vcpkg_Strings.h"
 #include "vcpkg_System.h"
-
-namespace fs = std::tr2::sys;
 
 namespace vcpkg
 {
@@ -44,7 +32,7 @@ namespace vcpkg
 
     static std::string GenerateRandomUUID()
     {
-        int partSizes[] = {8, 4, 4, 4, 12};
+        int partSizes[] = { 8, 4, 4, 4, 12 };
         char uuid[37];
         memset(uuid, 0, sizeof(uuid));
         int num;
@@ -113,7 +101,7 @@ namespace vcpkg
                 // Note: this treats incoming Strings as Latin-1
                 static constexpr const char hex[16] = {
                     '0', '1', '2', '3', '4', '5', '6', '7',
-                    '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+                    '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
                 encoded.append("\\u00");
                 encoded.push_back(hex[ch / 16]);
                 encoded.push_back(hex[ch % 16]);
@@ -237,6 +225,16 @@ true
         return DISABLE_METRICS == 0;
     }
 
+    std::wstring GetSQMUser()
+    {
+        auto hkcu_sqmclient = System::get_registry_string(HKEY_CURRENT_USER, LR"(Software\Microsoft\SQMClient)", L"UserId");
+
+        if (hkcu_sqmclient)
+            return std::move(*hkcu_sqmclient);
+        else
+            return L"{}";
+    }
+
     void SetUserInformation(const std::string& user_id, const std::string& first_use_time)
     {
         g_metricmessage.user_id = user_id;
@@ -334,8 +332,7 @@ true
         if (bResults)
         {
             DWORD availableData = 0, readData = 0, totalData = 0;
-
-            while ((bResults = WinHttpQueryDataAvailable(hRequest, &availableData)) && availableData > 0)
+            while ((bResults = WinHttpQueryDataAvailable(hRequest, &availableData)) == TRUE && availableData > 0)
             {
                 responseBuffer.resize(responseBuffer.size() + availableData);
 
@@ -419,7 +416,7 @@ true
         const fs::path vcpkg_metrics_txt_path = temp_folder_path / ("vcpkg" + GenerateRandomUUID() + ".txt");
         std::ofstream(vcpkg_metrics_txt_path) << payload;
 
-        const std::wstring cmdLine = Strings::format(L"start %s %s", temp_folder_path_exe.native(), vcpkg_metrics_txt_path.native());
-        System::cmd_execute(cmdLine);
+        const std::wstring cmdLine = Strings::wformat(L"start %s %s", temp_folder_path_exe.native(), vcpkg_metrics_txt_path.native());
+        System::cmd_execute_clean(cmdLine);
     }
 }

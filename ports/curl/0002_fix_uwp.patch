@@ -1,0 +1,109 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ed3f38a..d6480b7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1010,7 +1010,9 @@ include(CMake/OtherTests.cmake)
+ add_definitions(-DHAVE_CONFIG_H)
+ 
+ # For windows, do not allow the compiler to use default target (Vista).
+-if(WIN32)
++if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
++  add_definitions(-D_WIN32_WINNT=0x0A00 -DHAVE_STRUCT_POLLFD -D_WINSOCK_DEPRECATED_NO_WARNINGS)
++elseif(WIN32)
+   add_definitions(-D_WIN32_WINNT=0x0501)
+ endif(WIN32)
+ 
+diff --git a/lib/curl_gethostname.c b/lib/curl_gethostname.c
+index 2591fd8..cef38ac 100644
+--- a/lib/curl_gethostname.c
++++ b/lib/curl_gethostname.c
+@@ -21,6 +21,7 @@
+  ***************************************************************************/
+ 
+ #include "curl_setup.h"
++#include "curl/curl.h"
+ 
+ #include "curl_gethostname.h"
+ 
+@@ -64,9 +65,10 @@ int Curl_gethostname(char *name, GETHOSTNAME_TYPE_ARG2 namelen) {
+ #ifdef DEBUGBUILD
+ 
+   /* Override host name when environment variable CURL_GETHOSTNAME is set */
+-  const char *force_hostname = getenv("CURL_GETHOSTNAME");
++  char *force_hostname = curl_getenv("CURL_GETHOSTNAME");
+   if(force_hostname) {
+     strncpy(name, force_hostname, namelen);
++    free(force_hostname);
+     err = 0;
+   }
+   else {
+diff --git a/lib/curl_ntlm_core.c b/lib/curl_ntlm_core.c
+index 812a073..02c8416 100644
+--- a/lib/curl_ntlm_core.c
++++ b/lib/curl_ntlm_core.c
+@@ -696,9 +696,12 @@ CURLcode Curl_ntlm_core_mk_ntlmv2_resp(unsigned char *ntlmv2hash,
+ 
+   /* Calculate the timestamp */
+ #ifdef DEBUGBUILD
+-  char *force_timestamp = getenv("CURL_FORCETIME");
+-  if(force_timestamp)
++  char *force_timestamp = curl_getenv("CURL_FORCETIME");
++  if (force_timestamp)
++  {
+     tw = CURL_OFF_T_C(11644473600) * 10000000;
++    free(force_timestamp);
++  }
+   else
+ #endif
+     tw = ((curl_off_t)time(NULL) + CURL_OFF_T_C(11644473600)) * 10000000;
+diff --git a/lib/ftp.c b/lib/ftp.c
+index b231731..d50779f 100644
+--- a/lib/ftp.c
++++ b/lib/ftp.c
+@@ -3250,7 +3250,7 @@ static CURLcode ftp_done(struct connectdata *conn, CURLcode status,
+   ssize_t nread;
+   int ftpcode;
+   CURLcode result = CURLE_OK;
+-  char *path;
++  char *path = NULL;
+   const char *path_to_use = data->state.path;
+ 
+   if(!ftp)
+diff --git a/lib/smb.c b/lib/smb.c
+index 7cb0c96..2f43d3c 100644
+--- a/lib/smb.c
++++ b/lib/smb.c
+@@ -32,8 +32,12 @@
+ 
+ #ifdef HAVE_PROCESS_H
+ #include <process.h>
++#if defined(CURL_WINDOWS_APP)
++#define getpid GetCurrentProcessId
++#else
+ #define getpid _getpid
+ #endif
++#endif
+ 
+ #include "smb.h"
+ #include "urldata.h"
+diff --git a/lib/vtls/vtls.c b/lib/vtls/vtls.c
+index 56a8823..5a895ed 100644
+--- a/lib/vtls/vtls.c
++++ b/lib/vtls/vtls.c
+@@ -197,7 +197,7 @@ unsigned int Curl_rand(struct Curl_easy *data)
+   static bool seeded = FALSE;
+ 
+ #ifdef CURLDEBUG
+-  char *force_entropy = getenv("CURL_ENTROPY");
++  char *force_entropy = curl_getenv("CURL_ENTROPY");
+   if(force_entropy) {
+     if(!seeded) {
+       size_t elen = strlen(force_entropy);
+@@ -208,6 +208,7 @@ unsigned int Curl_rand(struct Curl_easy *data)
+     }
+     else
+       randseed++;
++    free(force_entropy);
+     return randseed;
+   }
+ #endif
