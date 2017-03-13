@@ -24,6 +24,8 @@
 #    used for Debug builds.
 #  ``TARGET_PLATFORM_VERSION``
 #    The WindowsTargetPlatformVersion (``/p:WindowsTargetPlatformVersion`` msbuild parameter)
+#  ``TARGET``
+#    The MSBuild target to build. (``/t:<TARGET>``)
 #  ``PLATFORM``
 #    The platform (``/p:Platform`` msbuild parameter)
 #    used for the build.
@@ -35,8 +37,9 @@
 #    The options passed to msbuild for Debug builds.
 #
 
+
 function(vcpkg_build_msbuild)
-    cmake_parse_arguments(_csc "" "PROJECT_PATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;TARGET_PLATFORM_VERSION" "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG" ${ARGN})
+    cmake_parse_arguments(_csc "" "PROJECT_PATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;TARGET_PLATFORM_VERSION;TARGET" "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG" ${ARGN})
 
     if(NOT DEFINED _csc_RELEASE_CONFIGURATION)
         set(_csc_RELEASE_CONFIGURATION Release)
@@ -50,8 +53,12 @@ function(vcpkg_build_msbuild)
     if(NOT DEFINED _csc_TARGET_PLATFORM_VERSION)
         vcpkg_get_windows_sdk(_csc_TARGET_PLATFORM_VERSION)
     endif()
+    if(NOT DEFINED _csc_TARGET)
+        set(_csc_TARGET Rebuild)
+    endif()
 
     list(APPEND _csc_OPTIONS
+        /t:${_csc_TARGET}
         /p:Platform=${_csc_PLATFORM}
         /p:VCPkgLocalAppDataDisabled=true
         /p:UseIntelMKL=No
