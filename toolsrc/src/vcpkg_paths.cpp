@@ -12,7 +12,7 @@ namespace vcpkg
     {
         static const std::regex re(R"###((\d+)\.(\d+)\.(\d+))###");
 
-        auto rc = System::cmd_execute_and_capture_output(Strings::wformat(LR"(%s 2>&1)", version_cmd));
+        auto rc = System::cmd_execute_and_capture_output(Strings::wformat(LR"(%s)", version_cmd));
         if (rc.exit_code != 0)
         {
             return false;
@@ -55,7 +55,7 @@ namespace vcpkg
 
     static std::vector<fs::path> find_from_PATH(const std::wstring& name)
     {
-        const std::wstring cmd = Strings::wformat(L"where.exe %s 2>&1", name);
+        const std::wstring cmd = Strings::wformat(L"where.exe %s", name);
         auto out = System::cmd_execute_and_capture_output(cmd);
         if (out.exit_code != 0)
         {

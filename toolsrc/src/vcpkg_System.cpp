@@ -103,7 +103,7 @@ namespace vcpkg::System
         // Flush stdout before launching external process
         fflush(stdout);
 
-        const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
+        const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s 2>&1")###", cmd_line);
 
         std::string output;
         char buf[1024];
