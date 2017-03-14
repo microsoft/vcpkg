@@ -43,7 +43,7 @@ namespace vcpkg::PostBuildLint::BuildPolicies
             case ONLY_RELEASE_CRT:
                 return CMAKE_VARIABLE_ONLY_RELEASE_CRT;
             case NULLVALUE:
-                Enums::nullvalue_used(ENUM_NAME);
+                Enums::nullvalue_used(VCPKG_LINE_INFO, ENUM_NAME);
             default:
                 Checks::unreachable(VCPKG_LINE_INFO);
         }
