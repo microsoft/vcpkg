@@ -3,14 +3,6 @@
 #include "vcpkg_System.h"
 #include "vcpkglib.h"
 
-namespace vcpkg
-{
-    std::string LineInfo::toString() const
-    {
-        return Strings::format("%s(%d)", this->file_name, this->line_number);
-    }
-}
-
 namespace vcpkg::Checks
 {
     __declspec(noreturn) void unreachable(const LineInfo& line_info)
