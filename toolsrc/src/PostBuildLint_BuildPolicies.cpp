@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PostBuildLint_BuildPolicies.h"
 #include "vcpkg_Enums.h"
+#include "vcpkg_Checks.h"
 
 namespace vcpkg::PostBuildLint::BuildPolicies
 {
@@ -23,7 +24,7 @@ namespace vcpkg::PostBuildLint::BuildPolicies
             case NULLVALUE:
                 return NULLVALUE_STRING;
             default:
-                Enums::unreachable(ENUM_NAME);
+                Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
 
@@ -44,7 +45,7 @@ namespace vcpkg::PostBuildLint::BuildPolicies
             case NULLVALUE:
                 Enums::nullvalue_used(ENUM_NAME);
             default:
-                Enums::unreachable(ENUM_NAME);
+                Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
 

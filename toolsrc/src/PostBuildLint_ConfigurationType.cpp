@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PostBuildLint_ConfigurationType.h"
 #include "vcpkg_Enums.h"
+#include "package_spec.h"
 
 namespace vcpkg::PostBuildLint::ConfigurationType
 {
@@ -20,7 +21,7 @@ namespace vcpkg::PostBuildLint::ConfigurationType
         case ConfigurationType::NULLVALUE:
             return NULLVALUE_STRING;
         default:
-            Enums::unreachable(ENUM_NAME);
+            Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
 }

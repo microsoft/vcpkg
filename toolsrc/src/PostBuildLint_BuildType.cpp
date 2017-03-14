@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "PostBuildLint_BuildType.h"
-#include "vcpkg_Enums.h"
+#include "vcpkg_Checks.h"
 
 namespace vcpkg::PostBuildLint::BuildType
 {
@@ -26,7 +26,7 @@ namespace vcpkg::PostBuildLint::BuildType
             return RELEASE_DYNAMIC;
         }
 
-        Enums::unreachable(ENUM_NAME);
+        Checks::unreachable(VCPKG_LINE_INFO);
     }
 
     const ConfigurationType::type& type::config() const
@@ -57,7 +57,7 @@ namespace vcpkg::PostBuildLint::BuildType
             case BuildType::RELEASE_DYNAMIC:
                 return REGEX_RELEASE_DYNAMIC;
             default:
-                Enums::unreachable(ENUM_NAME);
+                Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
 
@@ -79,7 +79,7 @@ namespace vcpkg::PostBuildLint::BuildType
             case BuildType::RELEASE_DYNAMIC:
                 return NAME_RELEASE_DYNAMIC;
             default:
-                Enums::unreachable(ENUM_NAME);
+                Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
 }
