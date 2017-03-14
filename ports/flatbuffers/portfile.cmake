@@ -37,12 +37,14 @@ vcpkg_configure_cmake(
     # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/flatc.exe)
+    make_directory(${CURRENT_PACKAGES_DIR}/tools)
     file(RENAME ${CURRENT_PACKAGES_DIR}/bin/flatc.exe ${CURRENT_PACKAGES_DIR}/tools/flatc.exe)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 endif()
