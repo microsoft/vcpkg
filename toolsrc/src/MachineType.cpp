@@ -36,7 +36,7 @@ namespace vcpkg
             case MachineType::WCEMIPSV2:
                 return t;
             default:
-                Checks::exit_with_message("Unknown machine type code 0x%x", value);
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown machine type code 0x%x", value);
         }
     }
 }

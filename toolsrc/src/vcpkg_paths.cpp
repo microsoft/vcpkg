@@ -82,8 +82,8 @@ namespace vcpkg
         }
 
         const fs::path actual_downloaded_path = rc.output;
-        Checks::check_exit(expected_downloaded_path == actual_downloaded_path, "Expected dependency downloaded path to be %s, but was %s",
-                           expected_downloaded_path.generic_string(), actual_downloaded_path.generic_string());
+        Checks::check_exit(VCPKG_LINE_INFO, expected_downloaded_path == actual_downloaded_path, "Expected dependency downloaded path to be %s, but was %s",
+                                          expected_downloaded_path.generic_string(), actual_downloaded_path.generic_string());
         return actual_downloaded_path;
     }
 

@@ -175,7 +175,7 @@ namespace vcpkg::Commands::Remove
 
         auto status_db = database_load_check(paths);
         const std::vector<package_spec_with_remove_plan> remove_plan = Dependencies::create_remove_plan(specs, status_db);
-        Checks::check_exit(!remove_plan.empty(), "Remove plan cannot be empty");
+        Checks::check_exit(VCPKG_LINE_INFO, !remove_plan.empty(), "Remove plan cannot be empty");
 
         print_plan(remove_plan);
 

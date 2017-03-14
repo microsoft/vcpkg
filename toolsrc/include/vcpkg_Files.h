@@ -8,7 +8,7 @@ namespace vcpkg::Files
 {
     static const char* FILESYSTEM_INVALID_CHARACTERS = R"(\/:*?"<>|)";
 
-    void check_is_directory(const fs::path& dirpath);
+    void check_is_directory(const LineInfo& line_info, const fs::path& dirpath);
 
     bool has_invalid_chars_for_filesystem(const std::string& s);
 

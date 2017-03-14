@@ -31,14 +31,14 @@ namespace vcpkg
         const std::string architecture = details::remove_required_field(&fields, BinaryParagraphRequiredField::ARCHITECTURE);
         const triplet target_triplet = triplet::from_canonical_name(architecture);
 
-        this->spec = package_spec::from_name_and_triplet(name, target_triplet).get_or_throw();
+        this->spec = package_spec::from_name_and_triplet(name, target_triplet).get_or_throw(VCPKG_LINE_INFO);
         this->version = details::remove_required_field(&fields, BinaryParagraphRequiredField::VERSION);
 
         this->description = details::remove_optional_field(&fields, BinaryParagraphOptionalField::DESCRIPTION);
         this->maintainer = details::remove_optional_field(&fields, BinaryParagraphOptionalField::MAINTAINER);
 
         std::string multi_arch = details::remove_required_field(&fields, BinaryParagraphRequiredField::MULTI_ARCH);
-        Checks::check_exit(multi_arch == "same", "Multi-Arch must be 'same' but was %s", multi_arch);
+        Checks::check_exit(VCPKG_LINE_INFO, multi_arch == "same", "Multi-Arch must be 'same' but was %s", multi_arch);
 
         std::string deps = details::remove_optional_field(&fields, BinaryParagraphOptionalField::DEPENDS);
         this->depends = parse_depends(deps);
@@ -46,7 +46,7 @@ namespace vcpkg
 
     BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh, const triplet& target_triplet)
     {
-        this->spec = package_spec::from_name_and_triplet(spgh.name, target_triplet).get_or_throw();
+        this->spec = package_spec::from_name_and_triplet(spgh.name, target_triplet).get_or_throw(VCPKG_LINE_INFO);
         this->version = spgh.version;
         this->description = spgh.description;
         this->maintainer = spgh.maintainer;

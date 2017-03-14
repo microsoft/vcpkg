@@ -172,9 +172,9 @@ namespace vcpkg::System
             return nullptr;
 
         auto ret = std::make_unique<std::wstring>(sz, L'\0');
-        Checks::check_exit(MAXDWORD >= ret->size());
+        Checks::check_exit(VCPKG_LINE_INFO, MAXDWORD >= ret->size());
         auto sz2 = GetEnvironmentVariableW(varname, ret->data(), static_cast<DWORD>(ret->size()));
-        Checks::check_exit(sz2 + 1 == sz);
+        Checks::check_exit(VCPKG_LINE_INFO, sz2 + 1 == sz);
         ret->pop_back();
         return ret;
     }

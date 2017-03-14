@@ -11,6 +11,6 @@ namespace vcpkg::Enums
 
     __declspec(noreturn) void nullvalue_used(const LineInfo& line_info, const std::string& enum_name)
     {
-        Checks::exit_with_message("NULLVALUE of enum %s was used", enum_name);
+        Checks::exit_with_message(VCPKG_LINE_INFO, "NULLVALUE of enum %s was used", enum_name);
     }
 }

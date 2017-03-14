@@ -40,7 +40,7 @@ namespace vcpkg
     {
         const std::string s(Strings::ascii_to_lowercase(triplet_as_string));
         auto it = std::find(s.cbegin(), s.cend(), '-');
-        Checks::check_exit(it != s.cend(), "Invalid triplet: %s", triplet_as_string);
+        Checks::check_exit(VCPKG_LINE_INFO, it != s.cend(), "Invalid triplet: %s", triplet_as_string);
 
         triplet t;
         t.m_canonical_name = s;

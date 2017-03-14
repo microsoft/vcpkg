@@ -40,15 +40,15 @@ namespace vcpkg
             return this->m_error_code;
         }
 
-        T&& get_or_throw() &&
+        T&& get_or_throw(const LineInfo& line_info) &&
         {
-            throw_if_error();
+            throw_if_error(line_info);
             return std::move(this->m_t);
         }
 
-        const T& get_or_throw() const &
+        const T& get_or_throw(const LineInfo& line_info) const &
         {
-            throw_if_error();
+            throw_if_error(line_info);
             return this->m_t;
         }
 
@@ -71,9 +71,9 @@ namespace vcpkg
         }
 
     private:
-        void throw_if_error() const
+        void throw_if_error(const LineInfo& line_info) const
         {
-            Checks::check_throw(!this->m_error_code, this->m_error_code.message().c_str());
+            Checks::check_throw(line_info, !this->m_error_code, this->m_error_code.message().c_str());
         }
 
         std::error_code m_error_code;

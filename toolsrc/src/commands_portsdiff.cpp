@@ -59,7 +59,7 @@ namespace vcpkg::Commands::PortsDiff
 
         const std::wstring cmd = Strings::wformat(LR"("%s" cat-file -t %s)", git_exe.native(), git_commit_id);
         const System::exit_code_and_output output = System::cmd_execute_and_capture_output(cmd);
-        Checks::check_exit(output.output == VALID_COMMIT_OUTPUT, "Invalid commit id %s", Strings::utf16_to_utf8(git_commit_id));
+        Checks::check_exit(VCPKG_LINE_INFO, output.output == VALID_COMMIT_OUTPUT, "Invalid commit id %s", Strings::utf16_to_utf8(git_commit_id));
     }
 
     void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)

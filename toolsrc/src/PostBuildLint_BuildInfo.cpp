@@ -19,17 +19,17 @@ namespace vcpkg::PostBuildLint
         BuildInfo build_info;
         const std::string crt_linkage_as_string = details::remove_required_field(&pgh, BuildInfoRequiredField::CRT_LINKAGE);
         build_info.crt_linkage = LinkageType::value_of(crt_linkage_as_string);
-        Checks::check_exit(build_info.crt_linkage != LinkageType::NULLVALUE, "Invalid crt linkage type: [%s]", crt_linkage_as_string);
+        Checks::check_exit(VCPKG_LINE_INFO, build_info.crt_linkage != LinkageType::NULLVALUE, "Invalid crt linkage type: [%s]", crt_linkage_as_string);
 
         const std::string library_linkage_as_string = details::remove_required_field(&pgh, BuildInfoRequiredField::LIBRARY_LINKAGE);
         build_info.library_linkage = LinkageType::value_of(library_linkage_as_string);
-        Checks::check_exit(build_info.library_linkage != LinkageType::NULLVALUE, "Invalid library linkage type: [%s]", library_linkage_as_string);
+        Checks::check_exit(VCPKG_LINE_INFO, build_info.library_linkage != LinkageType::NULLVALUE, "Invalid library linkage type: [%s]", library_linkage_as_string);
 
         // The remaining entries are policies
         for (const std::unordered_map<std::string, std::string>::value_type& p : pgh)
         {
             const BuildPolicies::type policy = BuildPolicies::parse(p.first);
-            Checks::check_exit(policy != BuildPolicies::NULLVALUE, "Unknown policy found: %s", p.first);
+            Checks::check_exit(VCPKG_LINE_INFO, policy != BuildPolicies::NULLVALUE, "Unknown policy found: %s", p.first);
             const opt_bool_t status = opt_bool::parse(p.second);
             build_info.policies.emplace(policy, status);
         }
@@ -40,7 +40,7 @@ namespace vcpkg::PostBuildLint
     BuildInfo read_build_info(const fs::path& filepath)
     {
         const std::vector<std::unordered_map<std::string, std::string>> pghs = Paragraphs::get_paragraphs(filepath);
-        Checks::check_exit(pghs.size() == 1, "Invalid BUILD_INFO file for package");
+        Checks::check_exit(VCPKG_LINE_INFO, pghs.size() == 1, "Invalid BUILD_INFO file for package");
 
         return BuildInfo::create(pghs[0]);
     }

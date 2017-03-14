@@ -99,7 +99,7 @@ namespace vcpkg::Paragraphs
             auto begin_fieldname = cur;
             while (is_alphanum(ch) || ch == '-')
                 next(ch);
-            Checks::check_exit(ch == ':', "Expected ':'");
+            Checks::check_exit(VCPKG_LINE_INFO, ch == ':', "Expected ':'");
             fieldname = std::string(begin_fieldname, cur);
 
             // skip ': '
@@ -117,7 +117,7 @@ namespace vcpkg::Paragraphs
                 get_fieldname(ch, fieldname);
 
                 auto it = fields.find(fieldname);
-                Checks::check_exit(it == fields.end(), "Duplicate field");
+                Checks::check_exit(VCPKG_LINE_INFO, it == fields.end(), "Duplicate field");
 
                 get_fieldvalue(ch, fieldvalue);
 
@@ -158,7 +158,7 @@ namespace vcpkg::Paragraphs
             return parse_paragraphs(*spgh);
         }
 
-        Checks::exit_with_message("Error while reading %s: %s", control_path.generic_string(), contents.error_code().message());
+        Checks::exit_with_message(VCPKG_LINE_INFO, "Error while reading %s: %s", control_path.generic_string(), contents.error_code().message());
     }
 
     std::vector<std::unordered_map<std::string, std::string>> parse_paragraphs(const std::string& str)
@@ -171,7 +171,7 @@ namespace vcpkg::Paragraphs
         try
         {
             auto pghs = get_paragraphs(path / "CONTROL");
-            Checks::check_exit(pghs.size() == 1, "Invalid control file at %s\\CONTROL", path.string());
+            Checks::check_exit(VCPKG_LINE_INFO, pghs.size() == 1, "Invalid control file at %s\\CONTROL", path.string());
             return SourceParagraph(pghs[0]);
         }
         catch (std::runtime_error const&) {}
@@ -192,7 +192,7 @@ namespace vcpkg::Paragraphs
                 pghs = parse_paragraphs(*control_contents);
             }
             catch (std::runtime_error) {}
-            Checks::check_exit(pghs.size() == 1, "Invalid control file at %s", path.string());
+            Checks::check_exit(VCPKG_LINE_INFO, pghs.size() == 1, "Invalid control file at %s", path.string());
             return BinaryParagraph(pghs[0]);
         }
         return control_contents_maybe.error_code();

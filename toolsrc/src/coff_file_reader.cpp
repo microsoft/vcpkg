@@ -30,9 +30,9 @@ namespace vcpkg::COFFFileReader
         return data;
     }
 
-    static void verify_equal_strings(const char* expected, const char* actual, int size, const char* label)
+    static void verify_equal_strings(const LineInfo& line_info, const char* expected, const char* actual, int size, const char* label)
     {
-        Checks::check_exit(memcmp(expected, actual, size) == 0, "Incorrect string (%s) found. Expected: (%s) but found (%s)", label, expected, actual);
+        Checks::check_exit(line_info, memcmp(expected, actual, size) == 0, "Incorrect string (%s) found. Expected: (%s) but found (%s)", label, expected, actual);
     }
 
     static void read_and_verify_PE_signature(fstream& fs)
@@ -48,7 +48,7 @@ namespace vcpkg::COFFFileReader
         fs.seekg(offset_to_PE_signature);
         char signature[PE_SIGNATURE_SIZE];
         fs.read(signature, PE_SIGNATURE_SIZE);
-        verify_equal_strings(PE_SIGNATURE, signature, PE_SIGNATURE_SIZE, "PE_SIGNATURE");
+        verify_equal_strings(VCPKG_LINE_INFO, PE_SIGNATURE, signature, PE_SIGNATURE_SIZE, "PE_SIGNATURE");
         fs.seekg(offset_to_PE_signature + PE_SIGNATURE_SIZE, ios_base::beg);
     }
 
@@ -104,7 +104,7 @@ namespace vcpkg::COFFFileReader
             if (ret.data[0] != '\0') // Due to freeglut. github issue #223
             {
                 const std::string header_end = ret.data.substr(HEADER_END_OFFSET, HEADER_END_SIZE);
-                verify_equal_strings(HEADER_END, header_end.c_str(), HEADER_END_SIZE, "LIB HEADER_END");
+                verify_equal_strings(VCPKG_LINE_INFO, HEADER_END, header_end.c_str(), HEADER_END_SIZE, "LIB HEADER_END");
             }
 
             return ret;
@@ -186,11 +186,11 @@ namespace vcpkg::COFFFileReader
 
             const std::string sig1_as_string = ret.data.substr(SIG1_OFFSET, SIG1_SIZE);
             const uint16_t sig1 = reinterpret_bytes<uint16_t>(sig1_as_string.c_str());
-            Checks::check_exit(sig1 == SIG1, "Sig1 was incorrect. Expected %s but got %s", SIG1, sig1);
+            Checks::check_exit(VCPKG_LINE_INFO, sig1 == SIG1, "Sig1 was incorrect. Expected %s but got %s", SIG1, sig1);
 
             const std::string sig2_as_string = ret.data.substr(SIG2_OFFSET, SIG2_SIZE);
             const uint16_t sig2 = reinterpret_bytes<uint16_t>(sig2_as_string.c_str());
-            Checks::check_exit(sig2 == SIG2, "Sig2 was incorrect. Expected %s but got %s", SIG2, sig2);
+            Checks::check_exit(VCPKG_LINE_INFO, sig2 == SIG2, "Sig2 was incorrect. Expected %s but got %s", SIG2, sig2);
 
             return ret;
         }
@@ -218,13 +218,13 @@ namespace vcpkg::COFFFileReader
 
         char file_start[FILE_START_SIZE];
         fs.read(file_start, FILE_START_SIZE);
-        verify_equal_strings(FILE_START, file_start, FILE_START_SIZE, "LIB FILE_START");
+        verify_equal_strings(VCPKG_LINE_INFO, FILE_START, file_start, FILE_START_SIZE, "LIB FILE_START");
     }
 
     dll_info read_dll(const fs::path& path)
     {
         std::fstream fs(path, std::ios::in | std::ios::binary | std::ios::ate);
-        Checks::check_exit(fs.is_open(), "Could not open file %s for reading", path.generic_string());
+        Checks::check_exit(VCPKG_LINE_INFO, fs.is_open(), "Could not open file %s for reading", path.generic_string());
 
         read_and_verify_PE_signature(fs);
         coff_file_header header = coff_file_header::read(fs);
@@ -261,7 +261,7 @@ namespace vcpkg::COFFFileReader
     lib_info read_lib(const fs::path& path)
     {
         std::fstream fs(path, std::ios::in | std::ios::binary | std::ios::ate);
-        Checks::check_exit(fs.is_open(), "Could not open file %s for reading", path.generic_string());
+        Checks::check_exit(VCPKG_LINE_INFO, fs.is_open(), "Could not open file %s for reading", path.generic_string());
 
         read_and_verify_archive_file_signature(fs);
 
@@ -270,12 +270,12 @@ namespace vcpkg::COFFFileReader
 
         // First Linker Member
         const archive_member_header first_linker_member_header = archive_member_header::read(fs);
-        Checks::check_exit(first_linker_member_header.name().substr(0, 2) == "/ ", "Could not find proper first linker member");
+        Checks::check_exit(VCPKG_LINE_INFO, first_linker_member_header.name().substr(0, 2) == "/ ", "Could not find proper first linker member");
         marker.advance_by(archive_member_header::HEADER_SIZE + first_linker_member_header.member_size());
         marker.seek_to_marker(fs);
 
         const archive_member_header second_linker_member_header = archive_member_header::read(fs);
-        Checks::check_exit(second_linker_member_header.name().substr(0, 2) == "/ ", "Could not find proper second linker member");
+        Checks::check_exit(VCPKG_LINE_INFO, second_linker_member_header.name().substr(0, 2) == "/ ", "Could not find proper second linker member");
         // The first 4 bytes contains the number of archive members
         const uint32_t archive_member_count = read_value_from_stream<uint32_t>(fs);
         const offsets_array offsets = offsets_array::read(fs, archive_member_count);
