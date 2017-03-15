@@ -1,3 +1,8 @@
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    message(STATUS "Warning: Dynamic building not supported by libvpx yet. Building static.")
+    set(VCPKG_LIBRARY_LINKAGE static)
+endif()
+
 include(vcpkg_common_functions)
 
 set(LIBVPX_VERSION 1.6.1)
@@ -25,16 +30,11 @@ set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 
 message(STATUS "Installing MSYS Packages")
 vcpkg_execute_required_process(
-    COMMAND 
+    COMMAND
         ${BASH} --noprofile --norc -c
         "pacman -Sy --noconfirm --needed make"
     WORKING_DIRECTORY ${MSYS_ROOT}
     LOGNAME pacman-${TARGET_TRIPLET})
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported by libvpx yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
 
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 
@@ -61,10 +61,10 @@ set(LIBVPX_TARGET_VS "vs14")
 message(STATUS "Generating makefile")
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 vcpkg_execute_required_process(
-    COMMAND 
+    COMMAND
         ${BASH} --noprofile --norc
         "${SOURCE_PATH_UNIX}/configure"
-        --target=${LIBVPX_TARGET_ARCH}-${LIBVPX_TARGET_VS}        
+        --target=${LIBVPX_TARGET_ARCH}-${LIBVPX_TARGET_VS}
         ${LIBVPX_CRT_LINKAGE}
         --disable-examples
         --disable-tools
@@ -72,9 +72,13 @@ vcpkg_execute_required_process(
     WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}"
     LOGNAME configure-${TARGET_TRIPLET})
 
+find_program(GIT git)
+get_filename_component(GIT_EXE_PATH ${GIT} DIRECTORY)
+set(ENV{PATH} "$ENV{PATH};${GIT_EXE_PATH}")
+
 message(STATUS "Generating MSBuild projects")
 vcpkg_execute_required_process(
-    COMMAND 
+    COMMAND
         ${BASH} --noprofile --norc -c "make dist"
     WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}"
     LOGNAME generate-${TARGET_TRIPLET})
@@ -97,9 +101,9 @@ else()
     set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx-vp8-vp9-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${LIBVPX_VERSION}/include/vpx")
 endif()
 file(
-    INSTALL 
+    INSTALL
         ${LIBVPX_INCLUDE_DIR}
-    DESTINATION 
+    DESTINATION
         "${CURRENT_PACKAGES_DIR}/include"
     RENAME
         "vpx")
