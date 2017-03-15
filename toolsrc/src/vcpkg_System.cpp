@@ -132,7 +132,7 @@ namespace vcpkg::System
     std::wstring create_powershell_script_cmd(const fs::path& script_path, const std::wstring& args)
     {
         // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
-        return Strings::wformat(LR"(powershell -ExecutionPolicy Bypass -Command "& {& '%s' %s}")", script_path.native(), args);
+        return Strings::wformat(LR"(powershell -NoProfile -ExecutionPolicy Bypass -Command "& {& '%s' %s}")", script_path.native(), args);
     }
 
     void print(const char* message)
