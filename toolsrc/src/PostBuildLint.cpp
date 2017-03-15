@@ -98,12 +98,12 @@ namespace vcpkg::PostBuildLint
         return lint_status::SUCCESS;
     }
 
-    static lint_status check_folder_lib_cmake(const fs::path& package_dir)
+    static lint_status check_folder_lib_cmake(const fs::path& package_dir, const package_spec& spec)
     {
         const fs::path lib_cmake = package_dir / "lib" / "cmake";
         if (fs::exists(lib_cmake))
         {
-            System::println(System::color::warning, "The /lib/cmake folder should be moved to just /cmake");
+            System::println(System::color::warning, "The /lib/cmake folder should be moved to /share/%s/cmake.", spec.name());
             return lint_status::ERROR_DETECTED;
         }
 
@@ -630,7 +630,7 @@ namespace vcpkg::PostBuildLint
         error_count += check_for_files_in_include_directory(package_dir);
         error_count += check_for_files_in_debug_include_directory(package_dir);
         error_count += check_for_files_in_debug_share_directory(package_dir);
-        error_count += check_folder_lib_cmake(package_dir);
+        error_count += check_folder_lib_cmake(package_dir, spec);
         error_count += check_for_misplaced_cmake_files(package_dir, spec);
         error_count += check_folder_debug_lib_cmake(package_dir);
         error_count += check_for_dlls_in_lib_dirs(package_dir);
