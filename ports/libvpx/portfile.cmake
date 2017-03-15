@@ -72,10 +72,6 @@ vcpkg_execute_required_process(
     WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}"
     LOGNAME configure-${TARGET_TRIPLET})
 
-find_program(GIT git)
-get_filename_component(GIT_EXE_PATH ${GIT} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${GIT_EXE_PATH}")
-
 message(STATUS "Generating MSBuild projects")
 vcpkg_execute_required_process(
     COMMAND
