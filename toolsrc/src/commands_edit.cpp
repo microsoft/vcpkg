@@ -56,6 +56,12 @@ namespace vcpkg::Commands::Edit
                         env_EDITOR = p.native();
                         break;
                     }
+                    auto p_insiders = fs::path(*code_installpath) / "Code - Insiders.exe";
+                    if (fs::exists(p_insiders))
+                    {
+                        env_EDITOR = p_insiders.native();
+                        break;
+                    }
                 }
             }
         }
