@@ -13,13 +13,20 @@ vcpkg_download_distfile(ARCHIVE
 	SHA512 c5ae22c507b57a13d880d79e9671730829114d0276508b0a41b373d3abae9057d960fce84fafe1be468d943910853baaa70c88f2516e20a0c41f3895bf217f7b
 )
 vcpkg_extract_source_archive(${ARCHIVE})
+file(REMOVE_RECURSE ${SOURCE_PATH}/dlib/external/libjpeg)
+file(REMOVE_RECURSE ${SOURCE_PATH}/dlib/external/libpng)
+file(REMOVE_RECURSE ${SOURCE_PATH}/dlib/external/zlib)
 
 vcpkg_configure_cmake(
 	SOURCE_PATH ${SOURCE_PATH}
 	PREFER_NINJA 
-	
-	OPTIONS_DEBUG 
-		-DDLIB_ENALE_ASSERTS=ON 
+	OPTIONS
+		-DDLIB_LINK_WITH_SQLITE3=ON
+		-DDLIB_USE_FFTW=ON
+		#-DDLIB_USE_CUDA=ON
+	OPTIONS_DEBUG
+		-DDLIB_ENABLE_ASSERTS=ON
+		#-DDLIB_ENABLE_STACK_TRACE=ON
 )
 
 vcpkg_install_cmake()
