@@ -31,9 +31,9 @@ namespace vcpkg::Commands::Build
         Checks::check_exit(VCPKG_LINE_INFO, spec.name() == source_paragraph.name, "inconsistent arguments to build_package()");
 
         const triplet& target_triplet = spec.target_triplet();
-        for (auto&& dep : source_paragraph.depends)
+        for (auto&& dep : filter_dependencies(source_paragraph.depends, target_triplet))
         {
-            if (status_db.find_installed(dep.name, target_triplet) == status_db.end())
+            if (status_db.find_installed(dep, target_triplet) == status_db.end())
             {
                 return BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES;
             }
