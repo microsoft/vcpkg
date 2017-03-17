@@ -8,7 +8,7 @@ include(vcpkg_common_functions)
 find_program(GIT git)
 
 set(GIT_URL "https://github.com/tfussell/xlnt.git")
-set(GIT_REV "f908dca6fe342f44b814073947aaccc69df7c9b6")
+set(GIT_REV "d7cd24c9f2092f691e266e872a3f297e10f60315")
 
 if(NOT EXISTS "${DOWNLOADS}/xlnt.git")
     message(STATUS "Cloning")
@@ -27,14 +27,8 @@ if(NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
         WORKING_DIRECTORY ${DOWNLOADS}/xlnt.git
         LOGNAME worktree
     )
-    message(STATUS "Updating sumbodules")
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} submodule update --init --remote
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src
-        LOGNAME submodule
-    )
 endif()
-message(STATUS "Adding worktree and updating sumbodules done")
+message(STATUS "Adding worktree done")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src
