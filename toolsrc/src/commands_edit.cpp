@@ -14,7 +14,7 @@ namespace vcpkg::Commands::Edit
         const std::string port_name = args.command_arguments.at(0);
 
         const fs::path portpath = paths.ports / port_name;
-        Checks::check_exit(fs::is_directory(portpath), R"(Could not find port named "%s")", port_name);
+        Checks::check_exit(VCPKG_LINE_INFO, fs::is_directory(portpath), R"(Could not find port named "%s")", port_name);
 
         // Find the user's selected editor
         std::wstring env_EDITOR;
@@ -56,13 +56,19 @@ namespace vcpkg::Commands::Edit
                         env_EDITOR = p.native();
                         break;
                     }
+                    auto p_insiders = fs::path(*code_installpath) / "Code - Insiders.exe";
+                    if (fs::exists(p_insiders))
+                    {
+                        env_EDITOR = p_insiders.native();
+                        break;
+                    }
                 }
             }
         }
 
         if (env_EDITOR.empty())
         {
-            Checks::exit_with_message("Visual Studio Code was not found and the environment variable EDITOR is not set");
+            Checks::exit_with_message(VCPKG_LINE_INFO, "Visual Studio Code was not found and the environment variable EDITOR is not set");
         }
 
         std::wstring cmdLine = Strings::wformat(LR"("%s" "%s" "%s" -n)", env_EDITOR, portpath.native(), (portpath / "portfile.cmake").native());

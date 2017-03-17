@@ -5,17 +5,19 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/pango-1.40.3)
+set(PANGO_VERSION 1.40.4)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/pango-${PANGO_VERSION})
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://ftp.gnome.org/pub/GNOME/sources/pango/1.40/pango-1.40.3.tar.xz"
-    FILENAME "pango-1.40.3.tar.xz"
-    SHA512 ff82395e8487624dffe212975b72b3383dcebb197a8675c8b409665e3e2e30fc23d9a6c25c3129a115adb7182b2a71a49550dbe881eb7ee9bbc572de6ba18d27)
+    URLS "http://ftp.gnome.org/pub/GNOME/sources/pango/1.40/pango-${PANGO_VERSION}.tar.xz"
+    FILENAME "pango-${PANGO_VERSION}.tar.xz"
+    SHA512 8c7413f6712eaf9fd4bd92a9260a85e7e4bd5e1a03c4c89db139e1704e8681e9834f8b98394b9f4b87babd45155a15b6cffd583ad8f89a48a4849305d43aa613)
 
 vcpkg_extract_source_archive(${ARCHIVE})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
 	OPTIONS_DEBUG
 	    -DPANGO_SKIP_HEADERS=ON)
 

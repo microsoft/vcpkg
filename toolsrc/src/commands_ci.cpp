@@ -20,7 +20,7 @@ namespace vcpkg::Commands::CI
         std::vector<package_spec> specs;
         for (const SourceParagraph& p : ports)
         {
-            specs.push_back(package_spec::from_name_and_triplet(p.name, target_triplet).get_or_throw());
+            specs.push_back(package_spec::from_name_and_triplet(p.name, target_triplet).get_or_throw(VCPKG_LINE_INFO));
         }
 
         return specs;
@@ -37,7 +37,7 @@ namespace vcpkg::Commands::CI
 
         StatusParagraphs status_db = database_load_check(paths);
         const std::vector<package_spec_with_install_plan> install_plan = Dependencies::create_install_plan(paths, specs, status_db);
-        Checks::check_exit(!install_plan.empty(), "Install plan cannot be empty");
+        Checks::check_exit(VCPKG_LINE_INFO, !install_plan.empty(), "Install plan cannot be empty");
 
         std::vector<BuildResult> results;
         std::vector<std::chrono::milliseconds::rep> timing;
@@ -70,7 +70,7 @@ namespace vcpkg::Commands::CI
                         System::println(System::color::error, Build::create_error_message(result, action.spec));
                         continue;
                     }
-                    const BinaryParagraph bpgh = Paragraphs::try_load_cached_package(paths, action.spec).get_or_throw();
+                    const BinaryParagraph bpgh = Paragraphs::try_load_cached_package(paths, action.spec).get_or_throw(VCPKG_LINE_INFO);
                     Install::install_package(paths, bpgh, &status_db);
                     System::println(System::color::success, "Package %s is installed", action.spec);
                 }
@@ -81,7 +81,7 @@ namespace vcpkg::Commands::CI
                     System::println(System::color::success, "Package %s is installed from cache", action.spec);
                 }
                 else
-                    Checks::unreachable();
+                    Checks::unreachable(VCPKG_LINE_INFO);
             }
             catch (const std::exception& e)
             {

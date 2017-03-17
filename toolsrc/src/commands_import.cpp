@@ -14,7 +14,7 @@ namespace vcpkg::Commands::Import
 
     static Binaries find_binaries_in_dir(const fs::path& path)
     {
-        Files::check_is_directory(path);
+        Files::check_is_directory(VCPKG_LINE_INFO, path);
 
         Binaries binaries;
         binaries.dlls = Files::recursive_find_files_with_extension_in_dir(path, ".dll");
@@ -35,9 +35,9 @@ namespace vcpkg::Commands::Import
 
     static void place_library_files_in(const fs::path& include_directory, const fs::path& project_directory, const fs::path& destination_path)
     {
-        Files::check_is_directory(include_directory);
-        Files::check_is_directory(project_directory);
-        Files::check_is_directory(destination_path);
+        Files::check_is_directory(VCPKG_LINE_INFO, include_directory);
+        Files::check_is_directory(VCPKG_LINE_INFO, project_directory);
+        Files::check_is_directory(VCPKG_LINE_INFO, destination_path);
         Binaries debug_binaries = find_binaries_in_dir(project_directory / "Debug");
         Binaries release_binaries = find_binaries_in_dir(project_directory / "Release");
 
@@ -73,7 +73,7 @@ namespace vcpkg::Commands::Import
         const fs::path project_directory(args.command_arguments[2]);
 
         auto pghs = Paragraphs::get_paragraphs(control_file_path);
-        Checks::check_exit(pghs.size() == 1, "Invalid control file %s for package", control_file_path.generic_string());
+        Checks::check_exit(VCPKG_LINE_INFO, pghs.size() == 1, "Invalid control file %s for package", control_file_path.generic_string());
 
         StatusParagraph spgh;
         spgh.package = BinaryParagraph(pghs[0]);

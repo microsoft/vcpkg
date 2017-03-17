@@ -10,11 +10,12 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glib-2.50.2)
+set(GLIB_VERSION 2.50.3)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glib-${GLIB_VERSION})
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnome.org/pub/gnome/sources/glib/2.50/glib-2.50.2.tar.xz"
-    FILENAME "glib-2.50.2.tar.xz"
-    SHA512 63d7b5ece8d7d15b10e06ef10a8e0a4446f30a8d9c97daa3352ec00dfef622728bd42ed24cbf67e553166a0f9e29a3e3d024d1d085b9804fd67608db438b6771)
+    URLS "https://ftp.gnome.org/pub/gnome/sources/glib/2.50/glib-${GLIB_VERSION}.tar.xz"
+    FILENAME "glib-${GLIB_VERSION}.tar.xz"
+    SHA512 ef35806c15170b6608445f255136c0bebd2d433adf903c2af2865f6a57b4f2fcfc1e4a7cea1a0dac48ff5fe26248fbf7886dba4a8d209506f0a94160df8fb7af)
 
 vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
@@ -29,6 +30,9 @@ file(REMOVE ${SOURCE_PATH}/glib/win_iconv.c)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DGLIB_VERSION=${GLIB_VERSION}
     OPTIONS_DEBUG
         -DGLIB_SKIP_HEADERS=ON
         -DGLIB_SKIP_TOOLS=ON)

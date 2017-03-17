@@ -103,7 +103,7 @@ namespace vcpkg::System
         // Flush stdout before launching external process
         fflush(stdout);
 
-        const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
+        const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s 2>&1")###", cmd_line);
 
         std::string output;
         char buf[1024];
@@ -132,7 +132,7 @@ namespace vcpkg::System
     std::wstring create_powershell_script_cmd(const fs::path& script_path, const std::wstring& args)
     {
         // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
-        return Strings::wformat(LR"(powershell -ExecutionPolicy Bypass -Command "& {& '%s' %s}")", script_path.native(), args);
+        return Strings::wformat(LR"(powershell -NoProfile -ExecutionPolicy Bypass -Command "& {& '%s' %s}")", script_path.native(), args);
     }
 
     void print(const char* message)
@@ -172,9 +172,9 @@ namespace vcpkg::System
             return nullptr;
 
         auto ret = std::make_unique<std::wstring>(sz, L'\0');
-        Checks::check_exit(MAXDWORD >= ret->size());
+        Checks::check_exit(VCPKG_LINE_INFO, MAXDWORD >= ret->size());
         auto sz2 = GetEnvironmentVariableW(varname, ret->data(), static_cast<DWORD>(ret->size()));
-        Checks::check_exit(sz2 + 1 == sz);
+        Checks::check_exit(VCPKG_LINE_INFO, sz2 + 1 == sz);
         ret->pop_back();
         return ret;
     }

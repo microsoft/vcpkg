@@ -12,7 +12,7 @@ namespace vcpkg
     {
         static const std::regex re(R"###((\d+)\.(\d+)\.(\d+))###");
 
-        auto rc = System::cmd_execute_and_capture_output(Strings::wformat(LR"(%s 2>&1)", version_cmd));
+        auto rc = System::cmd_execute_and_capture_output(Strings::wformat(LR"(%s)", version_cmd));
         if (rc.exit_code != 0)
         {
             return false;
@@ -81,9 +81,9 @@ namespace vcpkg
             exit(rc.exit_code);
         }
 
-        const fs::path actual_downloaded_path = rc.output;
-        Checks::check_exit(expected_downloaded_path == actual_downloaded_path, "Expected dependency downloaded path to be %s, but was %s",
-                           expected_downloaded_path.generic_string(), actual_downloaded_path.generic_string());
+        const fs::path actual_downloaded_path = Strings::trimmed(rc.output);
+        Checks::check_exit(VCPKG_LINE_INFO, expected_downloaded_path == actual_downloaded_path, "Expected dependency downloaded path to be %s, but was %s",
+                                          expected_downloaded_path.generic_string(), actual_downloaded_path.generic_string());
         return actual_downloaded_path;
     }
 

@@ -6,9 +6,9 @@ namespace vcpkg::Files
 {
     static const std::regex FILESYSTEM_INVALID_CHARACTERS_REGEX = std::regex(R"([\/:*?"<>|])");
 
-    void check_is_directory(const fs::path& dirpath)
+    void check_is_directory(const LineInfo& line_info, const fs::path& dirpath)
     {
-        Checks::check_exit(fs::is_directory(dirpath), "The path %s is not a directory", dirpath.string());
+        Checks::check_exit(VCPKG_LINE_INFO, fs::is_directory(dirpath), "The path %s is not a directory", dirpath.string());
     }
 
     bool has_invalid_chars_for_filesystem(const std::string& s)

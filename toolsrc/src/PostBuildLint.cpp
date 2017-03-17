@@ -98,12 +98,12 @@ namespace vcpkg::PostBuildLint
         return lint_status::SUCCESS;
     }
 
-    static lint_status check_folder_lib_cmake(const fs::path& package_dir)
+    static lint_status check_folder_lib_cmake(const fs::path& package_dir, const package_spec& spec)
     {
         const fs::path lib_cmake = package_dir / "lib" / "cmake";
         if (fs::exists(lib_cmake))
         {
-            System::println(System::color::warning, "The /lib/cmake folder should be moved to just /cmake");
+            System::println(System::color::warning, "The /lib/cmake folder should be moved to /share/%s/cmake.", spec.name());
             return lint_status::ERROR_DETECTED;
         }
 
@@ -227,7 +227,7 @@ namespace vcpkg::PostBuildLint
         {
             const std::wstring cmd_line = Strings::wformat(LR"("%s" /exports "%s")", dumpbin_exe.native(), dll.native());
             System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
-            Checks::check_exit(ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
+            Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
             if (ec_data.output.find("ordinal hint RVA      name") == std::string::npos)
             {
@@ -258,7 +258,7 @@ namespace vcpkg::PostBuildLint
         {
             const std::wstring cmd_line = Strings::wformat(LR"("%s" /headers "%s")", dumpbin_exe.native(), dll.native());
             System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
-            Checks::check_exit(ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
+            Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
             if (ec_data.output.find("App Container") == std::string::npos)
             {
@@ -318,7 +318,7 @@ namespace vcpkg::PostBuildLint
 
         for (const fs::path& file : files)
         {
-            Checks::check_exit(file.extension() == ".dll", "The file extension was not .dll: %s", file.generic_string());
+            Checks::check_exit(VCPKG_LINE_INFO, file.extension() == ".dll", "The file extension was not .dll: %s", file.generic_string());
             COFFFileReader::dll_info info = COFFFileReader::read_dll(file);
             const std::string actual_architecture = get_actual_architecture(info.machine_type);
 
@@ -343,9 +343,9 @@ namespace vcpkg::PostBuildLint
 
         for (const fs::path& file : files)
         {
-            Checks::check_exit(file.extension() == ".lib", "The file extension was not .lib: %s", file.generic_string());
+            Checks::check_exit(VCPKG_LINE_INFO, file.extension() == ".lib", "The file extension was not .lib: %s", file.generic_string());
             COFFFileReader::lib_info info = COFFFileReader::read_lib(file);
-            Checks::check_exit(info.machine_types.size() == 1, "Found more than 1 architecture in file %s", file.generic_string());
+            Checks::check_exit(VCPKG_LINE_INFO, info.machine_types.size() == 1, "Found more than 1 architecture in file %s", file.generic_string());
 
             const std::string actual_architecture = get_actual_architecture(info.machine_types.at(0));
             if (expected_architecture != actual_architecture)
@@ -496,7 +496,7 @@ namespace vcpkg::PostBuildLint
         {
             const std::wstring cmd_line = Strings::wformat(LR"("%s" /directives "%s")", dumpbin_exe.native(), lib.native());
             System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
-            Checks::check_exit(ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
+            Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
             for (const BuildType::type& bad_build_type : bad_build_types)
             {
@@ -543,7 +543,7 @@ namespace vcpkg::PostBuildLint
         {
             const std::wstring cmd_line = Strings::wformat(LR"("%s" /dependents "%s")", dumpbin_exe.native(), dll.native());
             System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
-            Checks::check_exit(ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
+            Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
             for (const OutdatedDynamicCrt& outdated_crt : outdated_crts)
             {
@@ -630,7 +630,7 @@ namespace vcpkg::PostBuildLint
         error_count += check_for_files_in_include_directory(package_dir);
         error_count += check_for_files_in_debug_include_directory(package_dir);
         error_count += check_for_files_in_debug_share_directory(package_dir);
-        error_count += check_folder_lib_cmake(package_dir);
+        error_count += check_folder_lib_cmake(package_dir, spec);
         error_count += check_for_misplaced_cmake_files(package_dir, spec);
         error_count += check_folder_debug_lib_cmake(package_dir);
         error_count += check_for_dlls_in_lib_dirs(package_dir);
@@ -693,7 +693,7 @@ namespace vcpkg::PostBuildLint
                 }
             case LinkageType::backing_enum_t::NULLVALUE:
             default:
-                Checks::unreachable();
+                Checks::unreachable(VCPKG_LINE_INFO);
         }
 
         error_count += check_no_empty_folders(package_dir);

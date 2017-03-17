@@ -31,14 +31,14 @@ namespace vcpkg::details
     std::string required_field(const std::unordered_map<std::string, std::string>& fields, const std::string& fieldname)
     {
         auto it = fields.find(fieldname);
-        Checks::check_exit(it != fields.end(), "Required field not present: %s", fieldname);
+        Checks::check_exit(VCPKG_LINE_INFO, it != fields.end(), "Required field not present: %s", fieldname);
         return it->second;
     }
 
     std::string remove_required_field(std::unordered_map<std::string, std::string>* fields, const std::string& fieldname)
     {
         auto it = fields->find(fieldname);
-        Checks::check_exit(it != fields->end(), "Required field not present: %s", fieldname);
+        Checks::check_exit(VCPKG_LINE_INFO, it != fields->end(), "Required field not present: %s", fieldname);
 
         const std::string value = std::move(it->second);
         fields->erase(it);

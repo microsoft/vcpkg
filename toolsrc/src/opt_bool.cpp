@@ -24,6 +24,6 @@ namespace vcpkg::opt_bool
             return opt_bool_t::DISABLED;
         }
 
-        Checks::exit_with_message("Could not convert string [%s] to opt_bool", s);
+        Checks::exit_with_message(VCPKG_LINE_INFO, "Could not convert string [%s] to opt_bool", s);
     }
 }

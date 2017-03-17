@@ -28,18 +28,24 @@ else()
     set(NOT_BUILD_STATIC OFF)
 endif()
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+    set(LIBJPEGTURBO_SIMD -DWITH_SIMD=OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DENABLE_STATIC=${BUILD_STATIC}
         -DENABLE_SHARED=${NOT_BUILD_STATIC}
         -DWITH_CRT_DLL=ON
         -DENABLE_EXECUTABLES=OFF
         -DINSTALL_DOCS=OFF
-    # OPTIONS_RELEASE -DOPTIMIZE=1
+        ${LIBJPEGTURBO_SIMD}
     OPTIONS_DEBUG -DINSTALL_HEADERS=OFF
 )
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 # Rename libraries for static builds

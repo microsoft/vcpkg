@@ -88,7 +88,7 @@ namespace vcpkg::Commands::Search
             }
         }
 
-        System::println("\nIf your library is not listed, please open an issue at:\n"
+        System::println("\nIf your library is not listed, please open an issue at and/or consider making a pull request:\n"
             "    https://github.com/Microsoft/vcpkg/issues");
 
         exit(EXIT_SUCCESS);

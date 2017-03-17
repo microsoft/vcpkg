@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PostBuildLint_LinkageType.h"
 #include "vcpkg_Enums.h"
+#include "vcpkg_Checks.h"
 
 namespace vcpkg::PostBuildLint::LinkageType
 {
@@ -20,7 +21,7 @@ namespace vcpkg::PostBuildLint::LinkageType
         case LinkageType::NULLVALUE:
             return NULLVALUE_STRING;
         default:
-            Enums::unreachable(ENUM_NAME);
+            Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
 

@@ -156,7 +156,7 @@ namespace vcpkg::Commands::Integrate
                         System::println(System::color::warning, "Warning: Previous integration file was not removed");
                         exit(EXIT_FAILURE);
                     default:
-                        Checks::unreachable();
+                        Checks::unreachable(VCPKG_LINE_INFO);
                 }
             }
         }
@@ -195,10 +195,10 @@ namespace vcpkg::Commands::Integrate
                     System::println(System::color::warning, "Warning: integration was not applied");
                     exit(EXIT_FAILURE);
                 default:
-                    Checks::unreachable();
+                    Checks::unreachable(VCPKG_LINE_INFO);
             }
 
-            Checks::check_exit(fs::exists(system_wide_targets_file), "Error: failed to copy targets file to %s", system_wide_targets_file.string());
+            Checks::check_exit(VCPKG_LINE_INFO, fs::exists(system_wide_targets_file), "Error: failed to copy targets file to %s", system_wide_targets_file.string());
         }
 
         const fs::path appdata_src_path = tmp_dir / "vcpkg.user.targets";
@@ -272,7 +272,7 @@ namespace vcpkg::Commands::Integrate
         const int exit_code = System::cmd_execute_clean(cmd_line);
 
         const fs::path nuget_package = buildsystems_dir / Strings::format("%s.%s.nupkg", nuget_id, nupkg_version);
-        Checks::check_exit(exit_code == 0 && fs::exists(nuget_package), "Error: NuGet package creation failed");
+        Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0 && fs::exists(nuget_package), "Error: NuGet package creation failed");
         System::println(System::color::success, "Created nupkg: %s", nuget_package.string());
 
         System::println(R"(

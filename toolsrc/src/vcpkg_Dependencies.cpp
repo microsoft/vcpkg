@@ -56,7 +56,7 @@ namespace vcpkg::Dependencies
                 {
                     for (const std::string& dep_as_string : dependencies_as_string)
                     {
-                        const package_spec current_dep = package_spec::from_name_and_triplet(dep_as_string, spec.target_triplet()).get_or_throw();
+                        const package_spec current_dep = package_spec::from_name_and_triplet(dep_as_string, spec.target_triplet()).get_or_throw(VCPKG_LINE_INFO);
                         graph.add_edge(spec, current_dep);
                         if (was_examined.find(current_dep) == was_examined.end())
                         {
@@ -82,7 +82,7 @@ namespace vcpkg::Dependencies
 
             expected<SourceParagraph> maybe_spgh = Paragraphs::try_load_port(paths.port_dir(spec));
             SourceParagraph* spgh = maybe_spgh.get();
-            Checks::check_exit(spgh != nullptr, "Cannot find package %s", spec.name());
+            Checks::check_exit(VCPKG_LINE_INFO, spgh != nullptr, "Cannot find package %s", spec.name());
             process_dependencies(filter_dependencies(spgh->depends, spec.target_triplet()));
             was_examined.emplace(spec, install_plan_action{install_plan_type::BUILD_AND_INSTALL, nullptr, std::make_unique<SourceParagraph>(std::move(*spgh))});
         }
