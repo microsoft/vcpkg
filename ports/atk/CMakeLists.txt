@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(atk)
+project(atk C)
 
 set(ATK_LIB_SUFFIX 1.0)
 set(ATK_DLL_SUFFIX 1)
