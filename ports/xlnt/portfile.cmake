@@ -1,43 +1,31 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(STATIC "OFF")
-else()
-    set(STATIC "ON")
-endif()
-
 include(vcpkg_common_functions)
-find_program(GIT git)
 
-set(GIT_URL "https://github.com/tfussell/xlnt.git")
-set(GIT_REV "d7cd24c9f2092f691e266e872a3f297e10f60315")
+set(XLNT_REV 9dccde4bff34cfbafbdc3811fdd05326ac6bd0aa)
+set(XLNT_HASH 85bb651e42e33a829672ee76d14504fcbab683bb6b468d728837f1163b5ca1395c9aa80b3bed91a243e065599cdbf23cad769375f77792f71c173b02061771af)
+set(XLNT_SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/xlnt-${XLNT_REV})
 
-if(NOT EXISTS "${DOWNLOADS}/xlnt.git")
-    message(STATUS "Cloning")
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} clone --bare ${GIT_URL} ${DOWNLOADS}/xlnt.git
-        WORKING_DIRECTORY ${DOWNLOADS}
-        LOGNAME clone
-    )
+vcpkg_download_distfile(ARCHIVE
+    URLS https://github.com/tfussell/xlnt/archive/${XLNT_REV}.zip
+    FILENAME xlnt-${XLNT_REV}.zip
+    SHA512 ${XLNT_HASH}
+)
+
+vcpkg_extract_source_archive(${ARCHIVE})
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(STATIC OFF)
+else()
+    set(STATIC ON)
 endif()
-message(STATUS "Cloning done")
-
-if(NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
-    message(STATUS "Adding worktree")
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} worktree add -f --detach ${CURRENT_BUILDTREES_DIR}/src ${GIT_REV}
-        WORKING_DIRECTORY ${DOWNLOADS}/xlnt.git
-        LOGNAME worktree
-    )
-endif()
-message(STATUS "Adding worktree done")
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src
+    SOURCE_PATH ${XLNT_SOURCE_PATH}
     OPTIONS -DTESTS=OFF -DSAMPLES=OFF -DBENCHMARKS=OFF -DSTATIC=${STATIC}
 )
 
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/xlnt RENAME copyright)
+file(INSTALL ${XLNT_SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/xlnt RENAME copyright)
 
 vcpkg_copy_pdbs()
