@@ -18,7 +18,7 @@ include_directories(src/liblzma/lzma)
 include_directories(src/liblzma/rangecoder)
 include_directories(src/liblzma/simple)
 
-add_library(liblzma
+add_library(lzma
     src/common/tuklib_cpucores.c
     src/common/tuklib_physmem.c
     src/liblzma/check/check.c
@@ -93,7 +93,7 @@ add_library(liblzma
     src/liblzma/simple/sparc.c
     src/liblzma/simple/x86.c)
 
-install(TARGETS liblzma
+install(TARGETS lzma
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib)
