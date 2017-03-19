@@ -10,6 +10,11 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/gdcm-include-dir.patch"
 )
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(GDCM_BUILD_SHARED_LIBS ON)
+else()
+    set(GDCM_BUILD_SHARED_LIBS OFF)
+endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
 	# PREFER_NINJA # Disable this option if project cannot be built with Ninja
@@ -17,7 +22,7 @@ vcpkg_configure_cmake(
 		-DGDCM_BUILD_DOCBOOK_MANPAGES=OFF
 		-DGDCM_BUILD_SHARED_LIBS=ON
 		-DGDCM_USE_SYSTEM_EXPAT=ON
-		-DGDCM_USE_SYSTEM_ZLIB=ON
+		-DGDCM_USE_SYSTEM_ZLIB=${GDCM_BUILD_SHARED_LIBS}
 		${ADDITIONAL_OPTIONS}
 )
 
