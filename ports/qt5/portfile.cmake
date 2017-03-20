@@ -66,7 +66,7 @@ vcpkg_execute_required_process(
         -system-doubleconversion
         -no-iconv
         -system-sqlite
-        -no-opengl
+        -opengl desktop # other options are "-no-opengl" and "-opengl angle"
         -no-style-windowsxp
         -no-style-windowsvista
         -no-style-fusion
