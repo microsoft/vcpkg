@@ -8,7 +8,7 @@ $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 $vcpkgRootDir = & $scriptsDir\findFileRecursivelyUp.ps1 $scriptsDir .vcpkg-root
 
 $gitHash = "unknownhash"
-if (Get-Command "git.exe" -ErrorAction SilentlyContinue)
+if (Get-Command "git" -ErrorAction SilentlyContinue)
 {
     $gitHash = git rev-parse HEAD
 }
