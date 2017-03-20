@@ -1,11 +1,11 @@
 
 include(vcpkg_common_functions)
-set(GTK_VERSION 3.22.9)
+set(GTK_VERSION 3.22.11)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/gtk+-${GTK_VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnome.org/pub/gnome/sources/gtk+/3.22/gtk+-${GTK_VERSION}.tar.xz"
     FILENAME "gtk+-${GTK_VERSION}.tar.xz"
-    SHA512 cfed67a6263172cdef5a8d5f1548017f2e241667779d810ed84aa14ecdd18b917b213b3e71ac97f8d7099ba97a6829b45322ab15c8540ff406247d1519a08550)
+    SHA512 0dd8c0b8cf01a687bd7b9548308a8719fda4a30e0b47139db049906333d23c1eee3867af130dc3ecd0fb4a1381c8065e9929ccd9cb4def376bbb0b136ec05a7e)
 
 vcpkg_extract_source_archive(${ARCHIVE})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
