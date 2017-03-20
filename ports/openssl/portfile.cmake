@@ -5,7 +5,7 @@ endif()
 
 include(vcpkg_common_functions)
 set(OPENSSL_VERSION 1.0.2k)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-${OPENSSL_VERSION})
+set(MASTER_COPY_SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-${OPENSSL_VERSION})
 vcpkg_find_acquire_program(PERL)
 find_program(NMAKE nmake)
 
@@ -20,41 +20,86 @@ vcpkg_download_distfile(OPENSSL_SOURCE_ARCHIVE
 
 vcpkg_extract_source_archive(${OPENSSL_SOURCE_ARCHIVE})
 vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH ${MASTER_COPY_SOURCE_PATH}
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/PerlScriptSpaceInPathFixes.patch
             ${CMAKE_CURRENT_LIST_DIR}/ConfigureIncludeQuotesFix.patch
             ${CMAKE_CURRENT_LIST_DIR}/STRINGIFYPatch.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    GENERATOR "NMake Makefiles"
-    OPTIONS
-        -DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}
-        -DCURRENT_PACKAGES_DIR=${CURRENT_PACKAGES_DIR}
-        -DCURRENT_BUILDTREES_DIR=${CURRENT_BUILDTREES_DIR}
-        -DOPENSSL_SOURCE_MASTER_COPY=${SOURCE_PATH}
-        -DCMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}
-        -DTRIPLET_SYSTEM_ARCH=${TRIPLET_SYSTEM_ARCH}
-        -DOPENSSL_VERSION=${OPENSSL_VERSION}
-        -DTARGET_TRIPLET=${TARGET_TRIPLET}
+set(CONFIGURE_COMMAND ${PERL} Configure
+    enable-static-engine
+    enable-capieng
+    no-asm
+    no-ssl2
 )
 
+if(TARGET_TRIPLET MATCHES "x86-windows")
+    set(OPENSSL_ARCH VC-WIN32)
+    set(OPENSSL_DO "ms\\do_ms.bat")
+elseif(TARGET_TRIPLET MATCHES "x64")
+    set(OPENSSL_ARCH VC-WIN64A)
+    set(OPENSSL_DO "ms\\do_win64a.bat")
+else()
+    message(FATAL_ERROR "Unsupported target triplet: ${TARGET_TRIPLET}")
+endif()
+
+file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+
 message(STATUS "Build ${TARGET_TRIPLET}-rel")
+file(COPY ${MASTER_COPY_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+set(SOURCE_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/openssl-${OPENSSL_VERSION})
+set(OPENSSLDIR_RELEASE ${CURRENT_PACKAGES_DIR})
+
 vcpkg_execute_required_process(
-    COMMAND ${CMAKE_COMMAND} --build .
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-    LOGNAME build-${TARGET_TRIPLET}-rel
+    COMMAND ${CONFIGURE_COMMAND} ${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_RELEASE}" "--openssldir=${OPENSSLDIR_RELEASE}"
+    WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+    LOGNAME configure-perl-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-rel
 )
+vcpkg_execute_required_process(
+    COMMAND ${OPENSSL_DO}
+    WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+    LOGNAME configure-do-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-rel
+)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    vcpkg_execute_required_process(COMMAND ${NMAKE} -f ms\\ntdll.mak install
+                                   WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+                                   LOGNAME build-${TARGET_TRIPLET}-rel)
+else()
+    vcpkg_execute_required_process(COMMAND ${NMAKE} -f ms\\nt.mak install
+                                   WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+                                   LOGNAME build-${TARGET_TRIPLET}-rel)
+endif()
+
+
 message(STATUS "Build ${TARGET_TRIPLET}-rel done")
 
 message(STATUS "Build ${TARGET_TRIPLET}-dbg")
+file(COPY ${MASTER_COPY_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+set(SOURCE_PATH_DEBUG ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/openssl-${OPENSSL_VERSION})
+set(OPENSSLDIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug)
+
 vcpkg_execute_required_process(
-    COMMAND ${CMAKE_COMMAND} --build .
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-    LOGNAME build-${TARGET_TRIPLET}-dbg
+    COMMAND ${CONFIGURE_COMMAND} debug-${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_DEBUG}" "--openssldir=${OPENSSLDIR_DEBUG}"
+    WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
+    LOGNAME configure-perl-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-dbg
 )
+vcpkg_execute_required_process(
+    COMMAND ${OPENSSL_DO}
+    WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
+    LOGNAME configure-do-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-dbg
+)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    vcpkg_execute_required_process(COMMAND ${NMAKE} -f ms\\ntdll.mak install
+                                   WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
+                                   LOGNAME build-${TARGET_TRIPLET}-dbg)
+else()
+    vcpkg_execute_required_process(COMMAND ${NMAKE} -f ms\\nt.mak install
+                                   WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
+                                   LOGNAME build-${TARGET_TRIPLET}-dbg)
+endif()
+
 message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
