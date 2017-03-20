@@ -2,25 +2,16 @@ cmake_minimum_required(VERSION 3.0)
 project(openssl NONE)
 
 include(vcpkg_execute_required_process)
-include(vcpkg_apply_patches)
 set(SOURCE_PATH ${CMAKE_CURRENT_BINARY_DIR}/openssl-${OPENSSL_VERSION})
 
 find_program(PERL perl)
 find_program(NMAKE nmake)
 
-message(STATUS "Extracting source ${OPENSSL_SOURCE_ARCHIVE}")
-vcpkg_execute_required_process(
-    COMMAND ${CMAKE_COMMAND} -E tar xjf "${OPENSSL_SOURCE_ARCHIVE}"
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    LOGNAME extract-${TARGET_TRIPLET}-rel
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/PerlScriptSpaceInPathFixes.patch
-            ${CMAKE_CURRENT_LIST_DIR}/ConfigureIncludeQuotesFix.patch
-            ${CMAKE_CURRENT_LIST_DIR}/STRINGIFYPatch.patch
-)
+if(CMAKE_BUILD_TYPE MATCHES "Debug")
+    file(COPY ${OPENSSL_SOURCE_MASTER_COPY} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+else()
+    file(COPY ${OPENSSL_SOURCE_MASTER_COPY} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+endif()
 
 set(CONFIGURE_COMMAND ${PERL} Configure
     enable-static-engine
@@ -45,7 +36,6 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
         debug-${OPENSSL_ARCH}
         "--prefix=${OPENSSLDIR}"
         "--openssldir=${OPENSSLDIR}"
-
     )
 else()
     set(OPENSSLDIR ${CURRENT_PACKAGES_DIR})
