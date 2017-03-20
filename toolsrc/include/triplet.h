@@ -49,12 +49,4 @@ namespace std
         }
     };
 
-    template <>
-    struct equal_to<vcpkg::triplet>
-    {
-        bool operator()(const vcpkg::triplet& left, const vcpkg::triplet& right) const
-        {
-            return left == right;
-        }
-    };
 } // namespace std
