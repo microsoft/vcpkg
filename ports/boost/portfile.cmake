@@ -14,6 +14,14 @@ vcpkg_download_distfile(DIFF
     FILENAME "boost-range-has_range_iterator-hotfix_e7ebe14707130cda7b72e0ae5e93b17157fdb6a2.diff"
     SHA512 77dad42bfd9bbab2bbddf361d5b7ad3dd6f812f4294c6dd1a677bb4d0191a4fff43bca32fdd4fce05d428562abb6e38afd0fd33ca6a8b5f28481d70cd2f3dd67
 )
+
+# apply boost TLS fix for VS2017
+vcpkg_download_distfile(DIFF
+    URLS "https://github.com/boostorg/thread/commit/bd0379af57fa294df310221492da618844182658.diff"
+    FILENAME "boost-thread-on_tls_callback-bd0379af57fa294df310221492da618844182658.diff"
+    SHA512 29501de9da5d101c762c9617eb74f072ec47eb9ef0021f036545bc883cbeb09c24b2ba7f78c24fb1a5d6b1fb3d7ae1def05a75be8634fc32bde0dface571c0a8
+)
+
 FILE(READ "${DIFF}" content)
 STRING(REGEX REPLACE "include/" "" content "${content}")
 set(DIFF2 ${CURRENT_BUILDTREES_DIR}/src/boost-range-has_range_iterator-hotfix_e7ebe14707130cda7b72e0ae5e93b17157fdb6a2.diff.fixed)
