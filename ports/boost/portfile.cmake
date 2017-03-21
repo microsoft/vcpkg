@@ -29,7 +29,8 @@ FILE(WRITE ${DIFF2} "${content}")
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${DIFF2})
 
 FILE(READ "${TLS_DIFF}" content)
-set(TLS_DIFF2 ${CURRENT_BUILDTREES_DIR}/src/boost-thread-on_tls_callback-bd0379af57fa294df310221492da618844182658.diff)
+STRING(REGEX REPLACE "src/win32/" "libs/thread/src/win32/" content "${content}")
+set(TLS_DIFF2 ${CURRENT_BUILDTREES_DIR}/src/boost-thread-on_tls_callback-bd0379af57fa294df310221492da618844182658.diff.fixed)
 FILE(WRITE ${TLS_DIFF2} "${content}")
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${TLS_DIFF2})
 
