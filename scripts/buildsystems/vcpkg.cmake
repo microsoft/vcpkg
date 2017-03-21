@@ -59,6 +59,16 @@ if(NOT VCPKG_TOOLCHAIN)
 
     set(Boost_COMPILER "-vc140")
 
+    file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _programfiles)
+    set(CMAKE_SYSTEM_IGNORE_PATH
+        "${_programfiles}/OpenSSL"
+        "${_programfiles}/OpenSSL-Win32"
+        "${_programfiles}/OpenSSL-Win64"
+        "C:/OpenSSL/"
+        "C:/OpenSSL-Win32/"
+        "C:/OpenSSL-Win64/"
+    )
+
     set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools)
 
     option(VCPKG_APPLOCAL_DEPS "Automatically copy dependencies into the output directory for executables." ON)
