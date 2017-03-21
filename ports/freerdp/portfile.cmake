@@ -8,10 +8,15 @@ set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/FreeRDP-${FREERDP_VERSION_ESCAPED}
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/FreeRDP/FreeRDP/archive/${FREERDP_VERSION}.tar.gz"
-    FILENAME "${FREERDP_VERSION}.tar.gz"
+    FILENAME "freerdp-${FREERDP_VERSION}.tar.gz"
     SHA512 ${FREERDP_HASH}
 )
 vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/DontInstallSystemRuntimeLibs.patch
+)
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
     set(FREERDP_CRT_LINKAGE -DMSVC_RUNTIME=static)
@@ -38,7 +43,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/winpr2.dll"          "${CURRENT_PACKAGES_DIR}/debug/bin/winpr2.dll")
 endif()
 
-if(NOT TARGET_TRIPLET MATCHES "uwp")   
+if(NOT TARGET_TRIPLET MATCHES "uwp")
     make_directory("${CURRENT_PACKAGES_DIR}/tools")
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/winpr-hash.exe"     "${CURRENT_PACKAGES_DIR}/tools/winpr-hash.exe")
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/winpr-makecert.exe" "${CURRENT_PACKAGES_DIR}/tools/winpr-makecert.exe")
