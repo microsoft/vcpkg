@@ -16,7 +16,7 @@ vcpkg_download_distfile(DIFF
 )
 
 # apply boost TLS fix for VS2017
-vcpkg_download_distfile(DIFF
+vcpkg_download_distfile(TLS_DIFF
     URLS "https://github.com/boostorg/thread/commit/bd0379af57fa294df310221492da618844182658.diff"
     FILENAME "boost-thread-on_tls_callback-bd0379af57fa294df310221492da618844182658.diff"
     SHA512 29501de9da5d101c762c9617eb74f072ec47eb9ef0021f036545bc883cbeb09c24b2ba7f78c24fb1a5d6b1fb3d7ae1def05a75be8634fc32bde0dface571c0a8
@@ -27,6 +27,11 @@ STRING(REGEX REPLACE "include/" "" content "${content}")
 set(DIFF2 ${CURRENT_BUILDTREES_DIR}/src/boost-range-has_range_iterator-hotfix_e7ebe14707130cda7b72e0ae5e93b17157fdb6a2.diff.fixed)
 FILE(WRITE ${DIFF2} "${content}")
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${DIFF2})
+
+FILE(READ "${TLS_DIFF}" content)
+set(TLS_DIFF2 ${CURRENT_BUILDTREES_DIR}/src/boost-thread-on_tls_callback-bd0379af57fa294df310221492da618844182658.diff)
+FILE(WRITE ${TLS_DIFF2} "${content}")
+vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${TLS_DIFF2})
 
 if(NOT EXISTS ${SOURCE_PATH}/b2.exe)
     message(STATUS "Bootstrapping")
