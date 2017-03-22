@@ -1,3 +1,48 @@
+vcpkg (0.0.77)
+--------------
+  * Add ports:
+    - beast                1.0.0-b30
+    - botan                2.0.1
+    - cairomm              1.15.3-1
+    - dlfcn-win32          1.1.0
+    - freerdp              2.0.0-beta1+android11
+    - gdcm2                2.6.7
+    - jbigkit              2.1
+    - libpopt              1.16-10~vcpkg1
+    - libvpx               1.6.1-1
+    - libwebm              1.0.0.27-1
+    - msgpack              2.1.1
+    - nlohmann-json        2.1.1
+    - pcre2                10.23
+    - tinyexr              v0.9.5-d16ea6
+    - xlnt                 0.9.4
+  * Update ports:
+    - antlr4               4.6              -> 4.6-1
+    - atk                  2.22.0           -> 2.24.0
+    - boost                1.63-2           -> 1.63-3
+    - dlib                 19.2             -> 19.4-1
+    - glib                 2.50.2           -> 2.50.3
+    - gtk                  3.22.8           -> 3.22.11
+    - libepoxy             1.4.0-2432daf-1  -> 1.4.1-7d58fd3
+    - libjpeg-turbo        1.4.90-1         -> 1.5.1-1
+    - liblzma              5.2.3            -> 5.2.3-1
+    - mpg123               1.23.3           -> 1.24.0-1
+    - mpir                 2.7.2-1          -> 3.0.0-2
+    - pango                1.40.3           -> 1.40.4
+    - qt5                  5.7.1-5          -> 5.7.1-6
+    - uwebsockets          0.12.0           -> 0.13.0-1
+  * Improvements and fixes in the sanizited environment introduced in the previous version
+  * `--debug` flag now gives line information when an error occurs. Applies to any `vcpkg` command
+  * Fixes and improvements around launching powershell scripts
+    - Correct handling of spaces in the path
+    - Ignore user profile (-NoProfile)
+  * `openssl`: Enable building in paths with space and ignore installed versions in `C:/OpenSSL/`
+  * Fixes and improvements in existing portfiles and the `vcpkg` tool itself
+
+
+-- vcpkg team <vcpkg@microsoft.com>  WED, 22 Mar 2017 15:30:00 -0800
+
+
 vcpkg (0.0.76)
 --------------
   * Add ports:
