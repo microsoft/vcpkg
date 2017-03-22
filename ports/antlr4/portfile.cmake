@@ -1,15 +1,17 @@
 include(vcpkg_common_functions)
+
+set(VERSION 4.6)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/runtime)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.antlr.org/download/antlr4-cpp-runtime-4.6-source.zip"
-    FILENAME "antlr4-cpp-runtime-4.6-source.zip"
+    FILENAME "antlr4-cpp-runtime-${VERSION}-source.zip"
     SHA512 e123c2227e41ce80da5a3758725a018690ed70a4e10c23da26c966259e6bdafa192f4363f5a7e1181ef9a47bf3cc50d6b0ca7b26c8dd2b19222a7edf54de8de2
 )
 
 # license not exist in antlr folder.
 vcpkg_download_distfile(LICENSE
-    URLS https://raw.githubusercontent.com/antlr/antlr4/4.6/LICENSE.txt
+    URLS https://raw.githubusercontent.com/antlr/antlr4/${VERSION}/LICENSE.txt
     FILENAME "antlr4-copyright"
     SHA512 c72ae3d5c9f3f07160405b5ca44f01116a9602d82291d6cd218fcc5ec6e8baf985e4baa2acf3d621079585385708bd171c96ef44dd808e60c40a48bc1f56c9ae
 )
@@ -19,6 +21,7 @@ vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src
     PATCHES     ${CMAKE_CURRENT_LIST_DIR}/crt_mt.patch
+                ${CMAKE_CURRENT_LIST_DIR}/Fix-building-in-Visual-Studio-2017.patch
 )
 
 if (${VCPKG_LIBRARY_LINKAGE} STREQUAL static)
