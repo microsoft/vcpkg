@@ -706,13 +706,14 @@ namespace vcpkg::PostBuildLint
     {
         System::println("-- Performing post-build validation");
         const size_t error_count = perform_all_checks_and_return_error_count(spec, paths);
-        System::println("-- Performing post-build validation done");
 
         if (error_count != 0)
         {
             const fs::path portfile = paths.ports / spec.name() / "portfile.cmake";
             System::println(System::color::error, "Found %u error(s). Please correct the portfile:\n    %s", error_count, portfile.string());
         }
+
+        System::println("-- Performing post-build validation done");
 
         return error_count;
     }
