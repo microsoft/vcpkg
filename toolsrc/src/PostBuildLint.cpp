@@ -408,7 +408,7 @@ namespace vcpkg::PostBuildLint
     static lint_status check_lib_files_are_available_if_dlls_are_available(const std::map<BuildPolicies::type, opt_bool_t>& policies, const size_t lib_count, const size_t dll_count, const fs::path& lib_dir)
     {
         auto it = policies.find(BuildPolicies::DLLS_WITHOUT_LIBS);
-        if (it != policies.cend() && it->second == opt_bool_t::DISABLED)
+        if (it != policies.cend() && it->second == opt_bool_t::ENABLED)
         {
             return lint_status::SUCCESS;
         }
@@ -418,7 +418,7 @@ namespace vcpkg::PostBuildLint
             System::println(System::color::warning, "Import libs were not present in %s", lib_dir.generic_string());
             System::println(System::color::warning,
                             "If this is intended, add the following line in the portfile:\n"
-                            "    SET(%s disabled)", BuildPolicies::DLLS_WITHOUT_LIBS.cmake_variable());
+                            "    SET(%s enabled)", BuildPolicies::DLLS_WITHOUT_LIBS.cmake_variable());
             return lint_status::ERROR_DETECTED;
         }
 
