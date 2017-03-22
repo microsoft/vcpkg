@@ -252,7 +252,7 @@ if (FONTCONFIG_LIBRARY MATCHES NOTFOUND)
   message(FATAL_ERROR "The fontconfig library could not be found. Check to ensure that it is properly installed.")
 endif()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if (BUILD_SHARED_LIBS)
   add_library(cairo ${SOURCES})
   # cairo produces a lot of warnings which are disabled here because they otherwise fill up the log files
   target_compile_options(cairo PUBLIC "/wd4244" PUBLIC "/wd4146" PUBLIC "/wd4312" PUBLIC "/wd4267" PUBLIC "/wd4996" PUBLIC "/wd4311" PUBLIC "/wd4334" PUBLIC "/wd4101")
@@ -263,7 +263,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     LIBRARY DESTINATION bin
     ARCHIVE DESTINATION lib
   )
-elseif (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+else()
   add_library(cairo-static ${SOURCES})
   target_compile_options(cairo-static PUBLIC "/DCAIRO_WIN32_STATIC_BUILD=1")
   # cairo produces a lot of warnings which are disabled here because they otherwise fill up the log files
@@ -275,8 +275,6 @@ elseif (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
   )
-else()
-  message(FATAL_ERROR "VCPKG_LIBRARY_LINKAGE is not defined or has an unexpected value")
 endif()
 
 # GObject support module
