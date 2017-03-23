@@ -6,46 +6,53 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 5a1e4b8e4584fccbc3df5bb46cf0efd7165169709d9b2a0e06fe534afbf7a262500cf665441ef64f8f7029b535f722119ab0faa4fb1367b05452d88a3e02bd2b
 )
 
-if(NOT EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src)
-    message(STATUS "Extracting source ${ARCHIVE}")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src)
-    vcpkg_execute_required_process(
-        COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE}
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src
-        LOGNAME extract-${TARGET_TRIPLET}
-    )
+vcpkg_download_distfile(GYP
+    URLS "https://chromium.googlesource.com/external/gyp/+archive/aae1e3efb50786df20e9572621fb746865f0df53.tar.gz"
+    FILENAME "gyp-aae1e3efb50786df20e9572621fb746865f0df53.tar.gz"
+    SHA512 ccabd8dc611fdb608dca460c14710089612034f6f8151ae41cf22397ac191110ddec8195a7c239096e517a5527cdabf9a1e6108d9aa8140efd09c5ffcce1a1e7
+)
+
+if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src)
+    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src)
 endif()
 
-find_program(GIT git)
-get_filename_component(GIT_EXE_PATH ${GIT} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${GIT_EXE_PATH}")
+file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src)
+vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src)
+
+file(MAKE_DIRECTORY ${SOURCE_PATH}/build/gyp)
+vcpkg_extract_source_archive(${GYP} ${SOURCE_PATH}/build/gyp)
 
 vcpkg_find_acquire_program(PYTHON2)
 set(ENV{PYTHON} ${PYTHON2})
 set(ENV{GYP_MSVS_VERSION} 2015)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(LIBUV_LINKAGE shared)
+    set(LIBUV_LINKAGE shared_library)
 else()
-    set(LIBUV_LINKAGE static)
+    set(LIBUV_LINKAGE static_library)
 endif()
 
-if(TRIPLET_SYSTEM_ARCH MATCHES "x86|x64")
-    message(STATUS "Building Release")
-    vcpkg_execute_required_process(
-        COMMAND cmd /c vcbuild.bat release ${TRIPLET_SYSTEM_ARCH} ${LIBUV_LINKAGE}
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME ${TARGET_TRIPLET}-build-rel
-    )
-    message(STATUS "Building Debug")
-    vcpkg_execute_required_process(
-        COMMAND cmd /c vcbuild.bat debug ${TRIPLET_SYSTEM_ARCH} ${LIBUV_LINKAGE}
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME ${TARGET_TRIPLET}-build-dbg
-    )
+if(TRIPLET_SYSTEM_ARCH MATCHES "x86")
+    set(GYP_ARCH ia32)
+    set(MSBUILD_PLATFORM WIN32)
+elseif(TRIPLET_SYSTEM_ARCH MATCHES "x64")
+    set(GYP_ARCH x64)
+    set(MSBUILD_PLATFORM x64)
 else()
     message(FATAL_ERROR "Unsupported platform")
 endif()
+
+message(STATUS "Generating solution")
+vcpkg_execute_required_process(
+    COMMAND "${PYTHON2}" gyp_uv.py -Dtarget_arch=${GYP_ARCH} -Duv_library=${LIBUV_LINKAGE}
+    WORKING_DIRECTORY ${SOURCE_PATH}
+    LOGNAME ${TARGET_TRIPLET}-generate
+)
+
+vcpkg_build_msbuild(
+    PROJECT_PATH ${SOURCE_PATH}/uv.sln
+    PLATFORM ${MSBUILD_PLATFORM}
+)
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
 file(COPY
