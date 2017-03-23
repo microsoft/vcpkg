@@ -33,8 +33,7 @@ namespace vcpkg::Checks
     __declspec(noreturn) void exit_with_message(const LineInfo& line_info, const char* errorMessage)
     {
         System::println(System::color::error, errorMessage);
-        print_line_info_if_debug(line_info);
-        exit(EXIT_FAILURE);
+        exit_fail(line_info);
     }
 
     __declspec(noreturn) void throw_with_message(const LineInfo& line_info, const char* errorMessage)
