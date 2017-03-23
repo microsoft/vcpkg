@@ -85,7 +85,7 @@ namespace vcpkg::Environment
         {
             System::println("    %s", path.generic_string());
         }
-        exit(EXIT_FAILURE);
+        Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
     const fs::path& get_dumpbin_exe(const vcpkg_paths& paths)
@@ -129,7 +129,7 @@ namespace vcpkg::Environment
         {
             System::println("    %s", path.generic_string());
         }
-        exit(EXIT_FAILURE);
+        Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
     const vcvarsall_and_platform_toolset& get_vcvarsall_bat(const vcpkg_paths& paths)

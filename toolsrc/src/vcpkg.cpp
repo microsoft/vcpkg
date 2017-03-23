@@ -21,7 +21,7 @@ void invalid_command(const std::string& cmd)
 {
     System::println(System::color::error, "invalid command: %s", cmd);
     Commands::Help::print_usage();
-    exit(EXIT_FAILURE);
+    Checks::exit_fail(VCPKG_LINE_INFO);
 }
 
 static void inner(const vcpkg_cmd_arguments& args)
@@ -30,7 +30,7 @@ static void inner(const vcpkg_cmd_arguments& args)
     if (args.command.empty())
     {
         Commands::Help::print_usage();
-        exit(EXIT_FAILURE);
+        Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
     if (auto command_function = Commands::find(args.command, Commands::get_available_commands_type_c()))
@@ -209,14 +209,14 @@ int wmain(const int argc, const wchar_t* const* const argv)
     if (g_debugging)
     {
         inner(args);
-        exit(EXIT_FAILURE);
+        Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
     std::string exc_msg;
     try
     {
         inner(args);
-        exit(EXIT_FAILURE);
+        Checks::exit_fail(VCPKG_LINE_INFO);
     }
     catch (std::exception& e)
     {

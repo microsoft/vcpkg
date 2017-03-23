@@ -18,7 +18,7 @@ namespace vcpkg::Input
         // Intentionally show the lowercased string
         System::println(System::color::error, "Error: %s: %s", expected_spec.error_code().message(), as_lowercase);
         System::print(example_text);
-        exit(EXIT_FAILURE);
+        Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
     std::vector<package_spec> check_and_get_package_specs(const std::vector<std::string>& package_specs_as_strings, const triplet& default_target_triplet, const std::string& example_text)
@@ -39,7 +39,7 @@ namespace vcpkg::Input
             System::println(System::color::error, "Error: invalid triplet: %s", t.canonical_name());
             TrackProperty("error", "invalid triplet: " + t.canonical_name());
             Commands::Help::help_topic_valid_triplet(paths);
-            exit(EXIT_FAILURE);
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
     }
 

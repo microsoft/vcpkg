@@ -78,7 +78,7 @@ namespace vcpkg
             System::println(System::color::error, "Launching powershell failed or was denied");
             TrackProperty("error", "powershell install failed");
             TrackProperty("installcmd", install_cmd);
-            exit(rc.exit_code);
+            Checks::exit_with_code(VCPKG_LINE_INFO, rc.exit_code);
         }
 
         const fs::path actual_downloaded_path = Strings::trimmed(rc.output);

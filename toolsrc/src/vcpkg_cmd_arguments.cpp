@@ -17,7 +17,7 @@ namespace vcpkg
             System::println(System::color::error, "Error: expected value after %s", option_name);
             TrackProperty("error", "error option name");
             Commands::Help::print_usage();
-            exit(EXIT_FAILURE);
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
         if (option_field != nullptr)
@@ -25,7 +25,7 @@ namespace vcpkg
             System::println(System::color::error, "Error: %s specified multiple times", option_name);
             TrackProperty("error", "error option specified multiple times");
             Commands::Help::print_usage();
-            exit(EXIT_FAILURE);
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
         option_field = std::make_unique<std::string>(*arg_begin);
@@ -41,7 +41,7 @@ namespace vcpkg
             System::println(System::color::error, "Error: conflicting values specified for --%s", option_name);
             TrackProperty("error", "error conflicting switches");
             Commands::Help::print_usage();
-            exit(EXIT_FAILURE);
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
         option_field = new_setting;
     }
@@ -155,7 +155,7 @@ namespace vcpkg
             {
                 System::println(option);
             }
-            exit(EXIT_FAILURE);
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
         return output;
@@ -183,7 +183,7 @@ namespace vcpkg
         {
             System::println(System::color::error, "Error: `%s` requires at most %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
             System::print(example_text);
-            exit(EXIT_FAILURE);
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
     }
 
@@ -194,7 +194,7 @@ namespace vcpkg
         {
             System::println(System::color::error, "Error: `%s` requires at least %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
             System::print(example_text);
-            exit(EXIT_FAILURE);
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
     }
 
@@ -205,7 +205,7 @@ namespace vcpkg
         {
             System::println(System::color::error, "Error: `%s` requires %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
             System::print(example_text);
-            exit(EXIT_FAILURE);
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
     }
 }

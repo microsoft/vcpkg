@@ -4,6 +4,7 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Maps.h"
 #include "triplet.h"
+#include "vcpkg_Checks.h"
 
 namespace vcpkg
 {
@@ -59,7 +60,7 @@ namespace vcpkg
             System::println(System::color::error, "Error: There are invalid fields in the Source Paragraph of %s", this->name);
             System::println("The following fields were not expected:\n\n    %s\n\n", remaining_fields_as_string);
             System::println("This is the list of valid fields (case-sensitive): \n\n    %s\n", valid_fields_as_string);
-            exit(EXIT_FAILURE);
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
     }
 
