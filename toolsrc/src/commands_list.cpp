@@ -33,7 +33,7 @@ namespace vcpkg::Commands::List
         if (installed_packages.empty())
         {
             System::println("No packages are installed. Did you mean `search`?");
-            exit(EXIT_SUCCESS);
+            Checks::exit_success(VCPKG_LINE_INFO);
         }
 
         std::sort(installed_packages.begin(), installed_packages.end(),
@@ -64,6 +64,6 @@ namespace vcpkg::Commands::List
             }
         }
 
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

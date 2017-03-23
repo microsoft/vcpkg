@@ -159,7 +159,7 @@ namespace vcpkg::Commands::Install
             System::print("\n    ");
             System::println(Strings::join("\n    ", intersection));
             System::println("");
-            exit(EXIT_FAILURE);
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
         StatusParagraph spgh;
@@ -221,7 +221,7 @@ namespace vcpkg::Commands::Install
                     {
                         System::println(System::color::error, Build::create_error_message(result, action.spec));
                         System::println(Build::create_user_troubleshooting_message(action.spec));
-                        exit(EXIT_FAILURE);
+                        Checks::exit_fail(VCPKG_LINE_INFO);
                     }
                     const BinaryParagraph bpgh = Paragraphs::try_load_cached_package(paths, action.spec).get_or_throw(VCPKG_LINE_INFO);
                     install_package(paths, bpgh, &status_db);
@@ -238,10 +238,10 @@ namespace vcpkg::Commands::Install
             catch (const std::exception& e)
             {
                 System::println(System::color::error, "Error: Could not install package %s: %s", action.spec, e.what());
-                exit(EXIT_FAILURE);
+                Checks::exit_fail(VCPKG_LINE_INFO);
             }
         }
 
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

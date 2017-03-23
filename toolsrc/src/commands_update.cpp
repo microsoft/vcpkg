@@ -75,6 +75,6 @@ namespace vcpkg::Commands::Update
             }
         }
 
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

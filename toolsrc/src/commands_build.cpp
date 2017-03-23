@@ -126,11 +126,8 @@ namespace vcpkg::Commands::Build
         if (options.find(OPTION_CHECKS_ONLY) != options.end())
         {
             const size_t error_count = PostBuildLint::perform_all_checks(spec, paths);
-            if (error_count > 0)
-            {
-                exit(EXIT_FAILURE);
-            }
-            exit(EXIT_SUCCESS);
+            Checks::check_exit(VCPKG_LINE_INFO, error_count == 0);
+            Checks::exit_success(VCPKG_LINE_INFO);
         }
 
         const expected<SourceParagraph> maybe_spgh = Paragraphs::try_load_port(port_dir);
@@ -158,17 +155,17 @@ namespace vcpkg::Commands::Build
                 System::println("    %s", p.spec.toString());
             }
             System::println("");
-            exit(EXIT_FAILURE);
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
         if (result != BuildResult::SUCCEEDED)
         {
             System::println(System::color::error, Build::create_error_message(result, spec));
             System::println(Build::create_user_troubleshooting_message(spec));
-            exit(EXIT_FAILURE);
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 
     void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)

@@ -72,7 +72,7 @@ namespace vcpkg::Commands::Help
         if (args.command_arguments.empty())
         {
             print_usage();
-            exit(EXIT_SUCCESS);
+            Checks::exit_success(VCPKG_LINE_INFO);
         }
         const auto& topic = args.command_arguments[0];
         if (topic == "triplet")
@@ -83,8 +83,8 @@ namespace vcpkg::Commands::Help
         {
             System::println(System::color::error, "Error: unknown topic %s", topic);
             print_usage();
-            exit(EXIT_FAILURE);
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

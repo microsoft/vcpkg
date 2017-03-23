@@ -189,7 +189,7 @@ namespace vcpkg::Commands::Remove
             System::println(System::color::warning,
                             "Additional packages (*) need to be removed to complete this operation.\n"
                             "If you are sure you want to remove them, run the command with the --recurse option");
-            exit(EXIT_FAILURE);
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
         for (const package_spec_with_remove_plan& action : remove_plan)
@@ -219,6 +219,6 @@ namespace vcpkg::Commands::Remove
             }
         }
 
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

@@ -46,7 +46,7 @@ namespace vcpkg::Commands::Cache
         if (binary_paragraphs.empty())
         {
             System::println("No packages are cached.");
-            exit(EXIT_SUCCESS);
+            Checks::exit_success(VCPKG_LINE_INFO);
         }
 
         if (args.command_arguments.size() == 0)
@@ -72,6 +72,6 @@ namespace vcpkg::Commands::Cache
             }
         }
 
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

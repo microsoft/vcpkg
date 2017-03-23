@@ -115,6 +115,6 @@ namespace vcpkg::Commands::CI
             System::println("    %s: %d", Build::to_string(entry.first), entry.second);
         }
 
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

@@ -36,6 +36,6 @@ namespace vcpkg::Commands::Create
         }
 
         const std::wstring cmd_launch_cmake = make_cmake_cmd(cmake_exe, paths.ports_cmake, cmake_args);
-        exit(System::cmd_execute_clean(cmd_launch_cmake));
+        Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute_clean(cmd_launch_cmake));
     }
 }

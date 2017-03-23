@@ -32,6 +32,6 @@ namespace vcpkg::Commands::Version
                         "\n"
                         "See LICENSE.txt for license information.", version()
         );
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

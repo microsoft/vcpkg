@@ -30,6 +30,6 @@ namespace vcpkg::Commands::Owns
 
         StatusParagraphs status_db = database_load_check(paths);
         search_file(paths, args.command_arguments[0], status_db);
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

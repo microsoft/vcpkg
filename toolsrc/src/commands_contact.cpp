@@ -16,6 +16,6 @@ namespace vcpkg::Commands::Contact
         args.check_and_get_optional_command_arguments({});
 
         System::println("Send an email to %s with any feedback.", email());
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

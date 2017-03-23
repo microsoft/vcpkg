@@ -64,7 +64,7 @@ namespace vcpkg::Commands::Search
         {
             const std::string graph_as_string = create_graph_as_string(source_paragraphs);
             System::println(graph_as_string);
-            exit(EXIT_SUCCESS);
+            Checks::exit_success(VCPKG_LINE_INFO);
         }
 
         if (args.command_arguments.empty())
@@ -91,6 +91,6 @@ namespace vcpkg::Commands::Search
         System::println("\nIf your library is not listed, please open an issue at and/or consider making a pull request:\n"
             "    https://github.com/Microsoft/vcpkg/issues");
 
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

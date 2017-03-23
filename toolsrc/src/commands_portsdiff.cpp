@@ -133,6 +133,6 @@ namespace vcpkg::Commands::PortsDiff
             System::println("There were no changes in the ports between the two commits.");
         }
 
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

@@ -80,6 +80,6 @@ namespace vcpkg::Commands::Import
         auto& control_file_data = spgh.package;
 
         do_import(paths, include_directory, project_directory, control_file_data);
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

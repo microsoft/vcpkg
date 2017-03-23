@@ -72,6 +72,6 @@ namespace vcpkg::Commands::Edit
         }
 
         std::wstring cmdLine = Strings::wformat(LR"("%s" "%s" "%s" -n)", env_EDITOR, portpath.native(), (portpath / "portfile.cmake").native());
-        exit(System::cmd_execute(cmdLine));
+        Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute(cmdLine));
     }
 }

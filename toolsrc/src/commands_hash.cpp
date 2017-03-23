@@ -41,6 +41,6 @@ namespace vcpkg::Commands::Hash
             do_file_hash(args.command_arguments[0], Strings::utf8_to_utf16(args.command_arguments[1]));
         }
 
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

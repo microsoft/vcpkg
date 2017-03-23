@@ -154,7 +154,7 @@ namespace vcpkg::Commands::Integrate
                         break;
                     case elevation_prompt_user_choice::no:
                         System::println(System::color::warning, "Warning: Previous integration file was not removed");
-                        exit(EXIT_FAILURE);
+                        Checks::exit_fail(VCPKG_LINE_INFO);
                     default:
                         Checks::unreachable(VCPKG_LINE_INFO);
                 }
@@ -193,7 +193,7 @@ namespace vcpkg::Commands::Integrate
                     break;
                 case elevation_prompt_user_choice::no:
                     System::println(System::color::warning, "Warning: integration was not applied");
-                    exit(EXIT_FAILURE);
+                    Checks::exit_fail(VCPKG_LINE_INFO);
                 default:
                     Checks::unreachable(VCPKG_LINE_INFO);
             }
@@ -208,7 +208,7 @@ namespace vcpkg::Commands::Integrate
         if (!fs::copy_file(appdata_src_path, appdata_dst_path, fs::copy_options::overwrite_existing))
         {
             System::println(System::color::error, "Error: Failed to copy file: %s -> %s", appdata_src_path.string(), appdata_dst_path.string());
-            exit(EXIT_FAILURE);
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
         System::println(System::color::success, "Applied user-wide integration for this vcpkg root.");
         const fs::path cmake_toolchain = paths.buildsystems / "vcpkg.cmake";
@@ -219,7 +219,7 @@ namespace vcpkg::Commands::Integrate
                         "\n"
                         "CMake projects should use -DCMAKE_TOOLCHAIN_FILE=%s", cmake_toolchain.generic_string());
 
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 
     static void integrate_remove()
@@ -240,7 +240,7 @@ namespace vcpkg::Commands::Integrate
             System::println(System::color::success, "User-wide integration is not installed");
         }
 
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 
     static void integrate_project(const vcpkg_paths& paths)
@@ -276,7 +276,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
     Install-Package %s -Source "%s"
 )", nuget_id, buildsystems_dir.generic_string());
 
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 
     const char* const INTEGRATE_COMMAND_HELPSTRING =
