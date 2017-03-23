@@ -1,0 +1,4 @@
+Source: libtiff
+Version: 4.0.7
+Description: A library providing support for the Tag Image File Format (TIFF)
+Build-Depends: freeglut, libjbig, liblzma, libjpeg-turbo, zlib
