@@ -304,7 +304,6 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
             return integrate_project(paths);
         }
 
-        System::println(System::color::error, "Unknown parameter %s for integrate", args.command_arguments[0]);
-        exit(EXIT_FAILURE);
+        Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown parameter %s for integrate", args.command_arguments[0]);
     }
 }
