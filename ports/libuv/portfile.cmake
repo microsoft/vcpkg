@@ -7,9 +7,11 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 vcpkg_download_distfile(GYP
-    URLS "https://chromium.googlesource.com/external/gyp/+archive/aae1e3efb50786df20e9572621fb746865f0df53.tar.gz"
-    FILENAME "gyp-aae1e3efb50786df20e9572621fb746865f0df53.tar.gz"
-    SHA512 ccabd8dc611fdb608dca460c14710089612034f6f8151ae41cf22397ac191110ddec8195a7c239096e517a5527cdabf9a1e6108d9aa8140efd09c5ffcce1a1e7
+    URLS
+        "https://github.com/adblockplus/gyp/archive/a7055b3989c1074adca03b4b4829e7f0e57f6efd.zip"
+        "https://github.com/bnoordhuis/gyp/archive/a7055b3989c1074adca03b4b4829e7f0e57f6efd.zip"
+    FILENAME "gyp-a7055b3989c1074adca03b4b4829e7f0e57f6efd.zip"
+    SHA512 edf00b4a44de21e9d90288164c3b746a7628cc10f56c8b82031b1240db61d3e2c5a48fc4037d87411b740b29c2c6ec40d671f59241f276c6a091dd53ca58381e
 )
 
 if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src)
@@ -19,8 +21,9 @@ endif()
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src)
 vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-src)
 
-file(MAKE_DIRECTORY ${SOURCE_PATH}/build/gyp)
-vcpkg_extract_source_archive(${GYP} ${SOURCE_PATH}/build/gyp)
+file(MAKE_DIRECTORY ${SOURCE_PATH}/build)
+vcpkg_extract_source_archive(${GYP} ${SOURCE_PATH}/build)
+file(RENAME ${SOURCE_PATH}/build/gyp-a7055b3989c1074adca03b4b4829e7f0e57f6efd ${SOURCE_PATH}/build/gyp)
 
 vcpkg_find_acquire_program(PYTHON2)
 set(ENV{PYTHON} ${PYTHON2})
