@@ -11,12 +11,12 @@ namespace vcpkg::Checks
 
     _declspec(noreturn) inline void exit_fail(const LineInfo& line_info)
     {
-        return exit_with_code(line_info, EXIT_FAILURE);
+        exit_with_code(line_info, EXIT_FAILURE);
     }
 
     _declspec(noreturn) inline void exit_success(const LineInfo& line_info)
     {
-        return exit_with_code(line_info, EXIT_SUCCESS);
+        exit_with_code(line_info, EXIT_SUCCESS);
     }
 
     // Part of the reason these exist is to not include extra headers in this one to avoid circular #includes. 
