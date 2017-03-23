@@ -20,14 +20,14 @@ namespace vcpkg::Checks
 #ifndef NDEBUG
         std::abort();
 #else
-        exit(EXIT_FAILURE);
+        ::exit(EXIT_FAILURE);
 #endif
     }
 
     void exit_with_code(const LineInfo& line_info, const int exit_code)
     {
         print_line_info_if_debug(line_info);
-        exit(exit_code);
+        ::exit(exit_code);
     }
 
     __declspec(noreturn) void exit_with_message(const LineInfo& line_info, const char* errorMessage)
