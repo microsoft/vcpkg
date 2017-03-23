@@ -10,17 +10,20 @@ vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/add-component-options.patch
-			${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch
+            ${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch
+            ${CMAKE_CURRENT_LIST_DIR}/fix-cxx-shared-libs.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
-        -Dcxx=OFF
         -DBUILD_TOOLS=OFF
         -DBUILD_DOCS=OFF
         -DBUILD_CONTRIB=OFF
         -DBUILD_TESTS=OFF
+        -Djbig=OFF # This is disabled by default due to GPL/Proprietary licensing.
+        -Djpeg12=OFF
 )
 
 vcpkg_install_cmake()
