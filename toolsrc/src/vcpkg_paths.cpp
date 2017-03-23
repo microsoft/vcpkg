@@ -165,9 +165,8 @@ namespace vcpkg
 
         if (paths.root.empty())
         {
-            System::println(System::color::error, "Invalid vcpkg root directory: %s", paths.root.string());
             TrackProperty("error", "Invalid vcpkg root directory");
-            exit(EXIT_FAILURE);
+            Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid vcpkg root directory: %s", paths.root.string());
         }
 
         paths.packages = paths.root / "packages";

@@ -72,9 +72,8 @@ namespace vcpkg
 
             if (arg[0] == '-' && arg[1] != '-')
             {
-                System::println(System::color::error, "Error: short options are not supported: %s", arg);
                 TrackProperty("error", "error short options are not supported");
-                exit(EXIT_FAILURE);
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Error: short options are not supported: %s", arg);
             }
 
             if (arg[0] == '-' && arg[1] == '-')
