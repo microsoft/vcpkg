@@ -229,11 +229,7 @@ namespace vcpkg::Commands::Integrate
         std::error_code ec;
         bool was_deleted = fs::remove(path, ec);
 
-        if (ec)
-        {
-            System::println(System::color::error, "Error: Unable to remove user-wide integration: %d", ec.message());
-            exit(EXIT_FAILURE);
-        }
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Error: Unable to remove user-wide integration: %d", ec.message());
 
         if (was_deleted)
         {
