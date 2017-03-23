@@ -24,6 +24,12 @@ namespace vcpkg::Checks
 #endif
     }
 
+    void exit_with_code(const LineInfo& line_info, const int exit_code)
+    {
+        print_line_info_if_debug(line_info);
+        exit(exit_code);
+    }
+
     __declspec(noreturn) void exit_with_message(const LineInfo& line_info, const char* errorMessage)
     {
         System::println(System::color::error, errorMessage);
