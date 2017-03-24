@@ -1,4 +1,4 @@
 Source: tiff
-Version: 4.0.6-3
+Version: 4.0.7
 Build-Depends: zlib, libjpeg-turbo, liblzma, freeglut
 Description: A library that supports the manipulation of TIFF image files
