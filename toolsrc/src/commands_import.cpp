@@ -72,11 +72,11 @@ namespace vcpkg::Commands::Import
         const fs::path include_directory(args.command_arguments[1]);
         const fs::path project_directory(args.command_arguments[2]);
 
-        auto pghs = Paragraphs::get_paragraphs(control_file_path);
-        Checks::check_exit(VCPKG_LINE_INFO, pghs.size() == 1, "Invalid control file %s for package", control_file_path.generic_string());
+        const expected<std::unordered_map<std::string, std::string>> pghs = Paragraphs::get_single_paragraph(control_file_path);
+        Checks::check_exit(VCPKG_LINE_INFO, pghs.get() != nullptr, "Invalid control file %s for package", control_file_path.generic_string());
 
         StatusParagraph spgh;
-        spgh.package = BinaryParagraph(pghs[0]);
+        spgh.package = BinaryParagraph(*pghs.get());
         auto& control_file_data = spgh.package;
 
         do_import(paths, include_directory, project_directory, control_file_data);

@@ -22,8 +22,7 @@ namespace vcpkg
             fs::rename(vcpkg_dir_status_file_old, vcpkg_dir_status_file);
         }
 
-        auto text = Files::read_contents(vcpkg_dir_status_file).get_or_throw(VCPKG_LINE_INFO);
-        auto pghs = Paragraphs::parse_paragraphs(text);
+        auto pghs = Paragraphs::get_paragraphs(vcpkg_dir_status_file).get_or_throw(VCPKG_LINE_INFO);
 
         std::vector<std::unique_ptr<StatusParagraph>> status_pghs;
         for (auto&& p : pghs)
@@ -65,8 +64,7 @@ namespace vcpkg
             if (b->path().filename() == "incomplete")
                 continue;
 
-            auto text = Files::read_contents(b->path()).get_or_throw(VCPKG_LINE_INFO);
-            auto pghs = Paragraphs::parse_paragraphs(text);
+            auto pghs = Paragraphs::get_paragraphs(b->path()).get_or_throw(VCPKG_LINE_INFO);
             for (auto&& p : pghs)
             {
                 current_status_db.insert(std::make_unique<StatusParagraph>(p));

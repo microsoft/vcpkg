@@ -111,10 +111,8 @@ static void loadConfig()
 
     try
     {
-        std::string config_contents = Files::read_contents(localappdata / "vcpkg" / "config").get_or_throw(VCPKG_LINE_INFO);
-
+        auto pghs = Paragraphs::get_paragraphs(localappdata / "vcpkg" / "config").get_or_throw(VCPKG_LINE_INFO);
         std::unordered_map<std::string, std::string> keys;
-        auto pghs = Paragraphs::parse_paragraphs(config_contents);
         if (pghs.size() > 0)
             keys = pghs[0];
 

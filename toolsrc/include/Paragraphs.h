@@ -8,8 +8,10 @@
 
 namespace vcpkg::Paragraphs
 {
-    std::vector<std::unordered_map<std::string, std::string>> get_paragraphs(const fs::path& control_path);
-    std::vector<std::unordered_map<std::string, std::string>> parse_paragraphs(const std::string& str);
+    expected<std::unordered_map<std::string, std::string>> get_single_paragraph(const fs::path& control_path);
+    expected<std::vector<std::unordered_map<std::string, std::string>>> get_paragraphs(const fs::path& control_path);
+    expected<std::unordered_map<std::string, std::string>> parse_single_paragraph(const std::string& str);
+    expected<std::vector<std::unordered_map<std::string, std::string>>> parse_paragraphs(const std::string& str);
 
     expected<SourceParagraph> try_load_port(const fs::path& control_path);
 
