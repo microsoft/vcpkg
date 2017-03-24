@@ -7,6 +7,7 @@
 #include "coff_file_reader.h"
 #include "PostBuildLint_BuildInfo.h"
 #include "PostBuildLint_BuildType.h"
+#include "PostBuildLint.h"
 
 namespace vcpkg::PostBuildLint
 {
@@ -52,8 +53,25 @@ namespace vcpkg::PostBuildLint
         return v;
     }
 
-    static lint_status check_for_files_in_include_directory(const fs::path& package_dir)
+    template <class T>
+    static bool contains_and_enabled(const std::map<T, opt_bool_t> map, const T& key)
     {
+        auto it = map.find(key);
+        if (it != map.cend() && it->second == opt_bool_t::ENABLED)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    static lint_status check_for_files_in_include_directory(const std::map<BuildPolicies::type, opt_bool_t>& policies, const fs::path& package_dir)
+    {
+        if (contains_and_enabled(policies, BuildPolicies::EMPTY_INCLUDE_FOLDER))
+        {
+            return lint_status::SUCCESS;
+        }
+
         const fs::path include_dir = package_dir / "include";
         if (!fs::exists(include_dir) || fs::is_empty(include_dir))
         {
@@ -601,18 +619,6 @@ namespace vcpkg::PostBuildLint
         left += static_cast<size_t>(right);
     }
 
-    template <class T>
-    static bool contains_and_enabled(const std::map<T, opt_bool_t> map, const T& key)
-    {
-        auto it = map.find(key);
-        if (it != map.cend() && it->second == opt_bool_t::ENABLED)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
     static size_t perform_all_checks_and_return_error_count(const package_spec& spec, const vcpkg_paths& paths)
     {
         const fs::path dumpbin_exe = Environment::get_dumpbin_exe(paths);
@@ -627,7 +633,7 @@ namespace vcpkg::PostBuildLint
             return error_count;
         }
 
-        error_count += check_for_files_in_include_directory(package_dir);
+        error_count += check_for_files_in_include_directory(build_info.policies, package_dir);
         error_count += check_for_files_in_debug_include_directory(package_dir);
         error_count += check_for_files_in_debug_share_directory(package_dir);
         error_count += check_folder_lib_cmake(package_dir, spec);

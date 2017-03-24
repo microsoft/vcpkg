@@ -9,7 +9,8 @@ namespace vcpkg::PostBuildLint::BuildPolicies
         NULLVALUE = 0,
         EMPTY_PACKAGE,
         DLLS_WITHOUT_LIBS,
-        ONLY_RELEASE_CRT
+        ONLY_RELEASE_CRT,
+        EMPTY_INCLUDE_FOLDER
     };
 
     struct type
@@ -31,8 +32,9 @@ namespace vcpkg::PostBuildLint::BuildPolicies
     static constexpr type EMPTY_PACKAGE(backing_enum_t::EMPTY_PACKAGE);
     static constexpr type DLLS_WITHOUT_LIBS(backing_enum_t::DLLS_WITHOUT_LIBS);
     static constexpr type ONLY_RELEASE_CRT(backing_enum_t::ONLY_RELEASE_CRT);
+    static constexpr type EMPTY_INCLUDE_FOLDER(backing_enum_t::EMPTY_INCLUDE_FOLDER);
 
-    static constexpr std::array<type, 3> values = { EMPTY_PACKAGE, DLLS_WITHOUT_LIBS, ONLY_RELEASE_CRT };
+    static constexpr std::array<type, 4> values = { EMPTY_PACKAGE, DLLS_WITHOUT_LIBS, ONLY_RELEASE_CRT, EMPTY_INCLUDE_FOLDER };
 
     type parse(const std::string& s);
 }
