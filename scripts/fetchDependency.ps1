@@ -101,7 +101,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         }
         if (!(Test-Path $downloadPath))
         {
-            Write-Host("Downloading $Dependency...")
+            Write-Verbose("Downloading $Dependency...")
             (New-Object System.Net.WebClient).DownloadFile($url, $downloadPath)
         }
     }
