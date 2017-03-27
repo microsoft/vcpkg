@@ -7,9 +7,9 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 2605af46c2c049f66dc982b1c4e506a8f115d47cc6c61a80f08921c667e52ad3097c485280ee43711c84b84a1490929e085b89cf9ad4c83b93222315210e92aa
 )
 vcpkg_download_distfile(DIFF
-    URLS "https://github.com/Microsoft/Range-V3-VS2015/compare/fork_base...2cb66781c8ac72a55fff1436e8fc8170a2ce8509.diff"
-    FILENAME "range-v3-fork_base_to_2cb66781c8ac72a55fff1436e8fc8170a2ce8509.diff"
-    SHA512 5c1728387967a5c14596d6d71e7c28f0206c22b652f4c96955711bcb805816eb106b62fcfde0a7d514eeed28fe6ce1f8c593fa3ef7df70f8da3b88b6d79c1515
+    URLS "https://github.com/Microsoft/Range-V3-VS2015/compare/fork_base...00ed689bac7a9dcd8601dbde382758675516799d.diff"
+    FILENAME "range-v3-fork_base_to_00ed689bac7a9dcd8601dbde382758675516799d.diff"
+    SHA512 615a53ebac22df03e865bdcc86580914c4505ec5fc691b6a2f864f7bf63690b99d0da0db2d5b1026e34b0a3f7557f30dfa0cad65643bae0b53c0ec066af9eb8e
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
