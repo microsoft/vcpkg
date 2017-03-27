@@ -3,9 +3,9 @@ include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/pybind11-2.0.1)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/pybind/pybind11/archive/v2.0.1.tar.gz"
-    FILENAME "pybind11-2.0.1.tar.gz"
-    SHA512 c156d01321b79eaac7992f431b30a9f4fb06e92909bf02e76a45e2d9329e7949dad686ee42a49c293214aec2a79eb400fa3373d2ba4876271895822096b50ff4
+    URLS "https://github.com/pybind/pybind11/archive/v2.1.0.tar.gz"
+    FILENAME "pybind11-2.1.0.tar.gz"
+    SHA512 2f74dcd2b82d8e41da7db36351284fe04511038bec66bdde820da9c0fce92f6d2c5aeb2e48264058a91a775a1a6a99bc757d26ebf001de3df4183d700d46efa1
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
