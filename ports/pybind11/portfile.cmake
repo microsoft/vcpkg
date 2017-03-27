@@ -16,24 +16,9 @@ else()
     set(CRUNTIME /MT)
 endif()
 
-#STREQUAL empty here means the enviroment variable is not defined.
-if(NOT $ENV{PYTHON} STREQUAL "")
-    set(PYTHON_VER $ENV{PYTHON})
-else()
-    message(FATAL_ERROR "You must set the PYTHON environment variable, eg. set PYTHON=3.5 or export PYTHON=3.5")
-endif()
-
-if(NOT $ENV{CPP} STREQUAL "")
-    set(CPP_STD $ENV{CPP})
-else()
-    message(FATAL_ERROR "You must set the CPP environment variable, eg. set CPP=11 or export CPP=11.")
-endif()
-message(STATUS "Using C++${CPP_STD} and Python ${PYTHON_VER}")
 vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
-            -DPYBIND11_PYTHON_VERSION=${PYTHON_VER}
-            -DPYBIND11_CPP_STANDARD=${CPP_STD}
 )
 
 vcpkg_install_cmake()
