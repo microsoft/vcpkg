@@ -109,7 +109,8 @@ namespace vcpkg::PostBuildLint
 
         if (fs::exists(debug_share) && !fs::is_empty(debug_share))
         {
-            System::println(System::color::warning, "No files should be present in /debug/share");
+            System::println(System::color::warning, "/debug/share should not exist. Please reorganize any important files, then use\n"
+                            "    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)");
             return lint_status::ERROR_DETECTED;
         }
 
