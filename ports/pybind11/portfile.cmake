@@ -1,6 +1,6 @@
 include(vcpkg_common_functions)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/pybind11-2.0.1)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/pybind11-2.1.0)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/pybind/pybind11/archive/v2.1.0.tar.gz"
