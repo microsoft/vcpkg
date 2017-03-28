@@ -2,6 +2,40 @@
 
 #include <vector>
 
+namespace vcpkg
+{
+    struct cstring_view
+    {
+        cstring_view(const char* cstr) : cstr(cstr) {}
+        cstring_view(const std::string& str) : cstr(str.c_str()) {}
+
+        operator const char*() const { return cstr; }
+
+        const char* c_str() const { return cstr; }
+
+    private:
+        const char* cstr;
+    };
+
+    inline const char* to_printf_arg(const cstring_view spec) { return spec.c_str(); }
+
+
+    struct cwstring_view
+    {
+        cwstring_view(const wchar_t* cstr) : cstr(cstr) {}
+        cwstring_view(const std::wstring& str) : cstr(str.c_str()) {}
+
+        operator const wchar_t*() const { return cstr; }
+
+        const wchar_t* c_str() const { return cstr; }
+
+    private:
+        const wchar_t* cstr;
+    };
+
+    inline const wchar_t* to_wprintf_arg(const cwstring_view spec) { return spec.c_str(); }
+}
+
 namespace vcpkg::Strings::details
 {
     inline const char* to_printf_arg(const std::string& s)
