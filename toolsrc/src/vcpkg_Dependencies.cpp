@@ -56,7 +56,7 @@ namespace vcpkg::Dependencies
                 {
                     for (const std::string& dep_as_string : dependencies_as_string)
                     {
-                        const package_spec current_dep = package_spec::from_name_and_triplet(dep_as_string, spec.target_triplet()).get_or_throw(VCPKG_LINE_INFO);
+                        const package_spec current_dep = package_spec::from_name_and_triplet(dep_as_string, spec.target_triplet()).get_or_exit(VCPKG_LINE_INFO);
                         graph.add_edge(spec, current_dep);
                         if (was_examined.find(current_dep) == was_examined.end())
                         {

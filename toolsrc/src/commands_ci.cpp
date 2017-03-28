@@ -20,7 +20,7 @@ namespace vcpkg::Commands::CI
         std::vector<package_spec> specs;
         for (const SourceParagraph& p : ports)
         {
-            specs.push_back(package_spec::from_name_and_triplet(p.name, target_triplet).get_or_throw(VCPKG_LINE_INFO));
+            specs.push_back(package_spec::from_name_and_triplet(p.name, target_triplet).get_or_exit(VCPKG_LINE_INFO));
         }
 
         return specs;
@@ -70,7 +70,7 @@ namespace vcpkg::Commands::CI
                         System::println(System::color::error, Build::create_error_message(result, action.spec));
                         continue;
                     }
-                    const BinaryParagraph bpgh = Paragraphs::try_load_cached_package(paths, action.spec).get_or_throw(VCPKG_LINE_INFO);
+                    const BinaryParagraph bpgh = Paragraphs::try_load_cached_package(paths, action.spec).get_or_exit(VCPKG_LINE_INFO);
                     Install::install_package(paths, bpgh, &status_db);
                     System::println(System::color::success, "Package %s is installed", action.spec);
                 }

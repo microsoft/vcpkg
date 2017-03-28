@@ -153,14 +153,14 @@ namespace UnitTest1
         TEST_METHOD(parse_paragraphs_empty)
         {
             const char* str = "";
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).get_or_throw(VCPKG_LINE_INFO);
+            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).get_or_exit(VCPKG_LINE_INFO);
             Assert::IsTrue(pghs.empty());
         }
 
         TEST_METHOD(parse_paragraphs_one_field)
         {
             const char* str = "f1: v1";
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).get_or_throw(VCPKG_LINE_INFO);
+            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).get_or_exit(VCPKG_LINE_INFO);
             Assert::AreEqual(size_t(1), pghs.size());
             Assert::AreEqual(size_t(1), pghs[0].size());
             Assert::AreEqual("v1", pghs[0]["f1"].c_str());
@@ -171,7 +171,7 @@ namespace UnitTest1
             const char* str =
                 "f1: v1\n"
                 "f2: v2";
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).get_or_throw(VCPKG_LINE_INFO);
+            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).get_or_exit(VCPKG_LINE_INFO);
             Assert::AreEqual(size_t(1), pghs.size());
             Assert::AreEqual(size_t(2), pghs[0].size());
             Assert::AreEqual("v1", pghs[0]["f1"].c_str());
@@ -186,7 +186,7 @@ namespace UnitTest1
                 "\n"
                 "f3: v3\n"
                 "f4: v4";
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).get_or_throw(VCPKG_LINE_INFO);
+            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).get_or_exit(VCPKG_LINE_INFO);
             Assert::AreEqual(size_t(2), pghs.size());
             Assert::AreEqual(size_t(2), pghs[0].size());
             Assert::AreEqual("v1", pghs[0]["f1"].c_str());
@@ -204,7 +204,7 @@ namespace UnitTest1
                 "F:\n"
                 "0:\n"
                 "F-2:\n";
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).get_or_throw(VCPKG_LINE_INFO);
+            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).get_or_exit(VCPKG_LINE_INFO);
             Assert::AreEqual(size_t(1), pghs.size());
             Assert::AreEqual(size_t(5), pghs[0].size());
         }
@@ -218,7 +218,7 @@ namespace UnitTest1
                 "\n"
                 "f3: v3\n"
                 "f4: v4";
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).get_or_throw(VCPKG_LINE_INFO);
+            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).get_or_exit(VCPKG_LINE_INFO);
             Assert::AreEqual(size_t(2), pghs.size());
         }
 
@@ -227,7 +227,7 @@ namespace UnitTest1
             const char* str =
                 "f1:\n"
                 "f2: ";
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).get_or_throw(VCPKG_LINE_INFO);
+            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).get_or_exit(VCPKG_LINE_INFO);
             Assert::AreEqual(size_t(1), pghs.size());
             Assert::AreEqual(size_t(2), pghs[0].size());
             Assert::AreEqual("", pghs[0]["f1"].c_str());
@@ -243,7 +243,7 @@ namespace UnitTest1
                 "f2:\r\n"
                 " f2\r\n"
                 " continue\r\n";
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).get_or_throw(VCPKG_LINE_INFO);
+            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).get_or_exit(VCPKG_LINE_INFO);
             Assert::AreEqual(size_t(1), pghs.size());
             Assert::AreEqual("simple\n f1", pghs[0]["f1"].c_str());
             Assert::AreEqual("\n f2\n continue", pghs[0]["f2"].c_str());
@@ -257,7 +257,7 @@ namespace UnitTest1
                 "\r\n"
                 "f3: v3\r\n"
                 "f4: v4";
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).get_or_throw(VCPKG_LINE_INFO);
+            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).get_or_exit(VCPKG_LINE_INFO);
             Assert::AreEqual(size_t(2), pghs.size());
             Assert::AreEqual(size_t(2), pghs[0].size());
             Assert::AreEqual("v1", pghs[0]["f1"].c_str());
@@ -277,7 +277,7 @@ namespace UnitTest1
                 {"Multi-Arch", "same"},
             });
             ss << pgh;
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss.str()).get_or_throw(VCPKG_LINE_INFO);
+            auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss.str()).get_or_exit(VCPKG_LINE_INFO);
             Assert::AreEqual(size_t(1), pghs.size());
             Assert::AreEqual(size_t(4), pghs[0].size());
             Assert::AreEqual("zlib", pghs[0]["Package"].c_str());
@@ -299,7 +299,7 @@ namespace UnitTest1
                 {"Multi-Arch", "same"},
             });
             ss << pgh;
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss.str()).get_or_throw(VCPKG_LINE_INFO);
+            auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss.str()).get_or_exit(VCPKG_LINE_INFO);
             Assert::AreEqual(size_t(1), pghs.size());
             Assert::AreEqual(size_t(7), pghs[0].size());
             Assert::AreEqual("zlib", pghs[0]["Package"].c_str());
@@ -321,7 +321,7 @@ namespace UnitTest1
                 {"Depends", "a, b, c"},
             });
             ss << pgh;
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss.str()).get_or_throw(VCPKG_LINE_INFO);
+            auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss.str()).get_or_exit(VCPKG_LINE_INFO);
             Assert::AreEqual(size_t(1), pghs.size());
             Assert::AreEqual("a, b, c", pghs[0]["Depends"].c_str());
         }

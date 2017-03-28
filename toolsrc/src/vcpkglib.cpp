@@ -22,7 +22,7 @@ namespace vcpkg
             fs::rename(vcpkg_dir_status_file_old, vcpkg_dir_status_file);
         }
 
-        auto pghs = Paragraphs::get_paragraphs(vcpkg_dir_status_file).get_or_throw(VCPKG_LINE_INFO);
+        auto pghs = Paragraphs::get_paragraphs(vcpkg_dir_status_file).get_or_exit(VCPKG_LINE_INFO);
 
         std::vector<std::unique_ptr<StatusParagraph>> status_pghs;
         for (auto&& p : pghs)
@@ -64,7 +64,7 @@ namespace vcpkg
             if (b->path().filename() == "incomplete")
                 continue;
 
-            auto pghs = Paragraphs::get_paragraphs(b->path()).get_or_throw(VCPKG_LINE_INFO);
+            auto pghs = Paragraphs::get_paragraphs(b->path()).get_or_exit(VCPKG_LINE_INFO);
             for (auto&& p : pghs)
             {
                 current_status_db.insert(std::make_unique<StatusParagraph>(p));
@@ -183,7 +183,7 @@ namespace vcpkg
             }
 
             const fs::path listfile_path = paths.listfile_path(pgh->package);
-            std::vector<std::string> installed_files_of_current_pgh = Files::read_all_lines(listfile_path).get_or_throw(VCPKG_LINE_INFO);
+            std::vector<std::string> installed_files_of_current_pgh = Files::read_all_lines(listfile_path).get_or_exit(VCPKG_LINE_INFO);
             Strings::trim_all_and_remove_whitespace_strings(&installed_files_of_current_pgh);
             upgrade_to_slash_terminated_sorted_format(&installed_files_of_current_pgh, listfile_path);
 
