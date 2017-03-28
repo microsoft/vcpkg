@@ -25,7 +25,7 @@ namespace vcpkg::Checks
     template <class Arg1, class...Args>
     _declspec(noreturn) void exit_with_message(const LineInfo& line_info, const char* errorMessageTemplate, const Arg1 errorMessageArg1, const Args&... errorMessageArgs)
     {
-        exit_with_message(line_info, Strings::format(errorMessageTemplate, errorMessageArg1, errorMessageArgs...).c_str());
+        exit_with_message(line_info, Strings::format(errorMessageTemplate, errorMessageArg1, errorMessageArgs...));
     }
 
     _declspec(noreturn) void throw_with_message(const LineInfo& line_info, const cstring_view errorMessage);
@@ -33,7 +33,7 @@ namespace vcpkg::Checks
     template <class Arg1, class...Args>
     _declspec(noreturn) void throw_with_message(const LineInfo& line_info, const char* errorMessageTemplate, const Arg1 errorMessageArg1, const Args&... errorMessageArgs)
     {
-        throw_with_message(line_info, Strings::format(errorMessageTemplate, errorMessageArg1, errorMessageArgs...).c_str());
+        throw_with_message(line_info, Strings::format(errorMessageTemplate, errorMessageArg1, errorMessageArgs...));
     }
 
     void check_throw(const LineInfo& line_info, bool expression, const cstring_view errorMessage);
@@ -44,7 +44,7 @@ namespace vcpkg::Checks
         if (!expression)
         {
             // Only create the string if the expression is false
-            throw_with_message(line_info, Strings::format(errorMessageTemplate, errorMessageArg1, errorMessageArgs...).c_str());
+            throw_with_message(line_info, Strings::format(errorMessageTemplate, errorMessageArg1, errorMessageArgs...));
         }
     }
 
@@ -58,7 +58,7 @@ namespace vcpkg::Checks
         if (!expression)
         {
             // Only create the string if the expression is false
-            exit_with_message(line_info, Strings::format(errorMessageTemplate, errorMessageArg1, errorMessageArgs...).c_str());
+            exit_with_message(line_info, Strings::format(errorMessageTemplate, errorMessageArg1, errorMessageArgs...));
         }
     }
 }

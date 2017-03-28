@@ -38,25 +38,25 @@ namespace vcpkg::System
     template <class Arg1, class...Args>
     void print(const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
     {
-        return print(Strings::format(messageTemplate, messageArg1, messageArgs...).c_str());
+        return print(Strings::format(messageTemplate, messageArg1, messageArgs...));
     }
 
     template <class Arg1, class...Args>
     void print(const color c, const Arg1& messageArg1, const char* messageTemplate, const Args&... messageArgs)
     {
-        return print(c, Strings::format(messageTemplate, messageArg1, messageArgs...).c_str());
+        return print(c, Strings::format(messageTemplate, messageArg1, messageArgs...));
     }
 
     template <class Arg1, class...Args>
     void println(const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
     {
-        return println(Strings::format(messageTemplate, messageArg1, messageArgs...).c_str());
+        return println(Strings::format(messageTemplate, messageArg1, messageArgs...));
     }
 
     template <class Arg1, class...Args>
     void println(const color c, const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
     {
-        return println(c, Strings::format(messageTemplate, messageArg1, messageArgs...).c_str());
+        return println(c, Strings::format(messageTemplate, messageArg1, messageArgs...));
     }
 
     optional<std::wstring> get_environmental_variable(const cwstring_view varname) noexcept;
