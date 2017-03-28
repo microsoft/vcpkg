@@ -85,7 +85,8 @@ if(NOT VCPKG_TOOLCHAIN)
     function(add_executable name)
         _add_executable(${ARGV})
         list(FIND ARGV "IMPORTED" IMPORTED_IDX)
-        if(IMPORTED_IDX EQUAL -1)
+        list(FIND ARGV "ALIAS" ALIAS_IDX)
+        if(IMPORTED_IDX EQUAL -1 AND ALIAS_IDX EQUAL -1)
             if(VCPKG_APPLOCAL_DEPS)
                 add_custom_command(TARGET ${name} POST_BUILD
                     COMMAND powershell -noprofile -executionpolicy UnRestricted -file ${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1
