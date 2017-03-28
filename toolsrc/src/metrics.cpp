@@ -228,11 +228,7 @@ true
     std::wstring GetSQMUser()
     {
         auto hkcu_sqmclient = System::get_registry_string(HKEY_CURRENT_USER, LR"(Software\Microsoft\SQMClient)", L"UserId");
-
-        if (hkcu_sqmclient)
-            return std::move(*hkcu_sqmclient);
-        else
-            return L"{}";
+        return hkcu_sqmclient.value_or(L"{}");
     }
 
     void SetUserInformation(const std::string& user_id, const std::string& first_use_time)

@@ -19,14 +19,14 @@ namespace vcpkg::Environment
     static optional<fs::path> find_vs2015_installation_instance()
     {
         const optional<std::wstring> vs2015_cmntools_optional = System::get_environmental_variable(L"VS140COMNTOOLS");
-        if (!vs2015_cmntools_optional)
+        if (auto v = vs2015_cmntools_optional.get())
         {
-            return nullptr;
+            static const fs::path vs2015_cmntools = fs::path(*v).parent_path(); // The call to parent_path() is needed because the env variable has a trailing backslash
+            static const fs::path vs2015_path = vs2015_cmntools.parent_path().parent_path();
+            return vs2015_path;
         }
 
-        static const fs::path vs2015_cmntools = fs::path(*vs2015_cmntools_optional).parent_path(); // The call to parent_path() is needed because the env variable has a trailing backslash
-        static const fs::path vs2015_path = vs2015_cmntools.parent_path().parent_path();
-        return std::make_unique<fs::path>(vs2015_path);
+        return nullopt;
     }
 
     static const optional<fs::path>& get_VS2015_installation_instance()
@@ -69,9 +69,9 @@ namespace vcpkg::Environment
 
         // VS2015
         const optional<fs::path>& vs_2015_installation_instance = get_VS2015_installation_instance();
-        if (vs_2015_installation_instance)
+        if (auto v = vs_2015_installation_instance.get())
         {
-            const fs::path vs2015_dumpbin_exe = *vs_2015_installation_instance / "VC" / "bin" / "dumpbin.exe";
+            const fs::path vs2015_dumpbin_exe = *v / "VC" / "bin" / "dumpbin.exe";
             paths_examined.push_back(vs2015_dumpbin_exe);
             if (fs::exists(vs2015_dumpbin_exe))
             {
@@ -112,9 +112,9 @@ namespace vcpkg::Environment
 
         // VS2015
         const optional<fs::path>& vs_2015_installation_instance = get_VS2015_installation_instance();
-        if (vs_2015_installation_instance)
+        if (auto v = vs_2015_installation_instance.get())
         {
-            const fs::path vs2015_vcvarsall_bat = *vs_2015_installation_instance / "VC" / "vcvarsall.bat";
+            const fs::path vs2015_vcvarsall_bat = *v / "VC" / "vcvarsall.bat";
 
             paths_examined.push_back(vs2015_vcvarsall_bat);
             if (fs::exists(vs2015_vcvarsall_bat))
@@ -138,50 +138,37 @@ namespace vcpkg::Environment
         return vcvarsall_bat;
     }
 
-    static fs::path find_ProgramFiles()
-    {
-        const optional<std::wstring> program_files = System::get_environmental_variable(L"PROGRAMFILES");
-        Checks::check_exit(VCPKG_LINE_INFO, program_files.get() != nullptr, "Could not detect the PROGRAMFILES environmental variable");
-        return *program_files;
-    }
-
     static const fs::path& get_ProgramFiles()
     {
-        static const fs::path p = find_ProgramFiles();
+        static const fs::path p = System::get_environmental_variable(L"PROGRAMFILES").get_or_exit(VCPKG_LINE_INFO);
         return p;
-    }
-
-    static fs::path find_ProgramFiles_32_bit()
-    {
-        const optional<std::wstring> program_files_X86 = System::get_environmental_variable(L"ProgramFiles(x86)");
-        if (program_files_X86)
-        {
-            return *program_files_X86;
-        }
-
-        return get_ProgramFiles();
     }
 
     const fs::path& get_ProgramFiles_32_bit()
     {
-        static const fs::path p = find_ProgramFiles_32_bit();
+        static const fs::path p = []() -> fs::path
+            {
+                auto value = System::get_environmental_variable(L"ProgramFiles(x86)");
+                if (auto v = value.get())
+                {
+                    return std::move(*v);
+                }
+                return get_ProgramFiles();
+            }();
         return p;
-    }
-
-    static fs::path find_ProgramFiles_platform_bitness()
-    {
-        const optional<std::wstring> program_files_W6432 = System::get_environmental_variable(L"ProgramW6432");
-        if (program_files_W6432)
-        {
-            return *program_files_W6432;
-        }
-
-        return get_ProgramFiles();
     }
 
     const fs::path& get_ProgramFiles_platform_bitness()
     {
-        static const fs::path p = find_ProgramFiles_platform_bitness();
+        static const fs::path p = []() -> fs::path
+            {
+                auto value = System::get_environmental_variable(L"ProgramW6432");
+                if (auto v = value.get())
+                {
+                    return std::move(*v);
+                }
+                return get_ProgramFiles();
+            }();
         return p;
     }
 }

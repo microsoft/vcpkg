@@ -216,7 +216,11 @@ namespace vcpkg::Commands::Install
                 }
                 else if (action.plan.plan_type == install_plan_type::BUILD_AND_INSTALL)
                 {
-                    const Build::BuildResult result = Commands::Build::build_package(*action.plan.source_pgh, action.spec, paths, paths.port_dir(action.spec), status_db);
+                    const Build::BuildResult result = Commands::Build::build_package(action.plan.source_pgh.get_or_exit(VCPKG_LINE_INFO),
+                                                                                     action.spec,
+                                                                                     paths,
+                                                                                     paths.port_dir(action.spec),
+                                                                                     status_db);
                     if (result != Build::BuildResult::SUCCEEDED)
                     {
                         System::println(System::color::error, Build::create_error_message(result, action.spec));
@@ -229,7 +233,7 @@ namespace vcpkg::Commands::Install
                 }
                 else if (action.plan.plan_type == install_plan_type::INSTALL)
                 {
-                    install_package(paths, *action.plan.binary_pgh, &status_db);
+                    install_package(paths, action.plan.binary_pgh.get_or_exit(VCPKG_LINE_INFO), &status_db);
                     System::println(System::color::success, "Package %s is installed", action.spec);
                 }
                 else

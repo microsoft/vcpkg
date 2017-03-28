@@ -9,7 +9,7 @@
 
 namespace vcpkg::Dependencies
 {
-    install_plan_action::install_plan_action() : plan_type(install_plan_type::UNKNOWN), binary_pgh(nullptr), source_pgh(nullptr)
+    install_plan_action::install_plan_action() : plan_type(install_plan_type::UNKNOWN), binary_pgh(nullopt), source_pgh(nullopt)
     {
     }
 
@@ -68,7 +68,7 @@ namespace vcpkg::Dependencies
             auto it = status_db.find(spec);
             if (it != status_db.end() && (*it)->want == want_t::install)
             {
-                was_examined.emplace(spec, install_plan_action{install_plan_type::ALREADY_INSTALLED, nullptr, nullptr});
+                was_examined.emplace(spec, install_plan_action{install_plan_type::ALREADY_INSTALLED, nullopt, nullopt });
                 continue;
             }
 
@@ -76,7 +76,7 @@ namespace vcpkg::Dependencies
             if (BinaryParagraph* bpgh = maybe_bpgh.get())
             {
                 process_dependencies(bpgh->depends);
-                was_examined.emplace(spec, install_plan_action{install_plan_type::INSTALL, std::make_unique<BinaryParagraph>(std::move(*bpgh)), nullptr});
+                was_examined.emplace(spec, install_plan_action{install_plan_type::INSTALL, std::move(*bpgh), nullopt });
                 continue;
             }
 
@@ -84,7 +84,7 @@ namespace vcpkg::Dependencies
             SourceParagraph* spgh = maybe_spgh.get();
             Checks::check_exit(VCPKG_LINE_INFO, spgh != nullptr, "Cannot find package %s", spec.name());
             process_dependencies(filter_dependencies(spgh->depends, spec.target_triplet()));
-            was_examined.emplace(spec, install_plan_action{install_plan_type::BUILD_AND_INSTALL, nullptr, std::make_unique<SourceParagraph>(std::move(*spgh))});
+            was_examined.emplace(spec, install_plan_action{install_plan_type::BUILD_AND_INSTALL, nullopt, std::move(*spgh)});
         }
 
         std::vector<package_spec_with_install_plan> ret;

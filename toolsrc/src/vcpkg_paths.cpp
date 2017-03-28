@@ -47,10 +47,10 @@ namespace vcpkg
 
         if (it != candidate_paths.cend())
         {
-            return std::make_unique<fs::path>(std::move(*it));
+            return std::move(*it);
         }
 
-        return nullptr;
+        return nullopt;
     }
 
     static std::vector<fs::path> find_from_PATH(const std::wstring& name)
@@ -101,9 +101,10 @@ namespace vcpkg
         candidate_paths.push_back(Environment::get_ProgramFiles_platform_bitness() / "CMake" / "bin" / "cmake.exe");
         candidate_paths.push_back(Environment::get_ProgramFiles_32_bit() / "CMake" / "bin");
 
-        if (auto ret = find_if_has_equal_or_greater_version(candidate_paths, version_check_arguments, expected_version))
+        const optional<fs::path> path = find_if_has_equal_or_greater_version(candidate_paths, version_check_arguments, expected_version);
+        if (auto p = path.get())
         {
-            return *ret;
+            return *p;
         }
 
         return fetch_dependency(scripts_folder, L"cmake", downloaded_copy);
@@ -121,9 +122,10 @@ namespace vcpkg
         candidate_paths.push_back(downloaded_copy);
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
 
-        if (auto ret = find_if_has_equal_or_greater_version(candidate_paths, version_check_arguments, expected_version))
+        auto path = find_if_has_equal_or_greater_version(candidate_paths, version_check_arguments, expected_version);
+        if (auto p = path.get())
         {
-            return *ret;
+            return *p;
         }
 
         return fetch_dependency(scripts_folder, L"nuget", downloaded_copy);
@@ -143,9 +145,10 @@ namespace vcpkg
         candidate_paths.push_back(Environment::get_ProgramFiles_platform_bitness() / "git" / "cmd" / "git.exe");
         candidate_paths.push_back(Environment::get_ProgramFiles_32_bit() / "git" / "cmd" / "git.exe");
 
-        if (auto ret = find_if_has_equal_or_greater_version(candidate_paths, version_check_arguments, expected_version))
+        const optional<fs::path> path = find_if_has_equal_or_greater_version(candidate_paths, version_check_arguments, expected_version);
+        if (auto p = path.get())
         {
-            return *ret;
+            return *p;
         }
 
         return fetch_dependency(scripts_folder, L"git", downloaded_copy);

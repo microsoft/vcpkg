@@ -136,7 +136,8 @@ namespace vcpkg::Commands::Integrate
 
     static fs::path get_appdata_targets_path()
     {
-        return fs::path(*System::get_environmental_variable(L"LOCALAPPDATA")) / "vcpkg" / "vcpkg.user.targets";
+        static const fs::path local_app_data = fs::path(System::get_environmental_variable(L"LOCALAPPDATA").get_or_exit(VCPKG_LINE_INFO));
+        return local_app_data / "vcpkg" / "vcpkg.user.targets";
     }
 
     static void integrate_install(const vcpkg_paths& paths)

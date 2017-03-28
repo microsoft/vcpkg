@@ -15,7 +15,7 @@ namespace vcpkg::System
 
     int cmd_execute_clean(const cwstring_view cmd_line)
     {
-        static const std::wstring system_root = *get_environmental_variable(L"SystemRoot");
+        static const std::wstring system_root = get_environmental_variable(L"SystemRoot").get_or_exit(VCPKG_LINE_INFO);
         static const std::wstring system_32 = system_root + LR"(\system32)";
         static const std::wstring new_PATH = Strings::wformat(LR"(Path=%s;%s;%s\WindowsPowerShell\v1.0\)", system_32, system_root, system_32);
 
@@ -69,8 +69,9 @@ namespace vcpkg::System
 
         for (auto&& env_wstring : env_wstrings)
         {
-            auto v = System::get_environmental_variable(env_wstring.c_str());
-            if (v == nullptr || v->empty())
+            const optional<std::wstring> value = System::get_environmental_variable(env_wstring.c_str());
+            auto v = value.get();
+            if (!v || v->empty())
                 continue;
 
             env_wstring.push_back(L'=');
@@ -164,14 +165,14 @@ namespace vcpkg::System
     {
         auto sz = GetEnvironmentVariableW(varname, nullptr, 0);
         if (sz == 0)
-            return nullptr;
+            return nullopt;
 
         auto ret = std::make_unique<std::wstring>(sz, L'\0');
         Checks::check_exit(VCPKG_LINE_INFO, MAXDWORD >= ret->size());
         auto sz2 = GetEnvironmentVariableW(varname, ret->data(), static_cast<DWORD>(ret->size()));
         Checks::check_exit(VCPKG_LINE_INFO, sz2 + 1 == sz);
         ret->pop_back();
-        return ret;
+        return *ret.release();
     }
 
     void set_environmental_variable(const cwstring_view varname, const cwstring_view varvalue) noexcept
@@ -189,21 +190,21 @@ namespace vcpkg::System
         HKEY k = nullptr;
         LSTATUS ec = RegOpenKeyExW(base, subKey, NULL, KEY_READ, &k);
         if (ec != ERROR_SUCCESS)
-            return nullptr;
+            return nullopt;
 
         DWORD dwBufferSize = 0;
         DWORD dwType = 0;
         auto rc = RegQueryValueExW(k, valuename, nullptr, &dwType, nullptr, &dwBufferSize);
         if (rc != ERROR_SUCCESS || !is_string_keytype(dwType) || dwBufferSize == 0 || dwBufferSize % sizeof(wchar_t) != 0)
-            return nullptr;
+            return nullopt;
         std::wstring ret;
         ret.resize(dwBufferSize / sizeof(wchar_t));
 
         rc = RegQueryValueExW(k, valuename, nullptr, &dwType, reinterpret_cast<LPBYTE>(ret.data()), &dwBufferSize);
         if (rc != ERROR_SUCCESS || !is_string_keytype(dwType) || dwBufferSize != sizeof(wchar_t) * ret.size())
-            return nullptr;
+            return nullopt;
 
         ret.pop_back(); // remove extra trailing null byte
-        return std::make_unique<std::wstring>(std::move(ret));
+        return ret;
     }
 }

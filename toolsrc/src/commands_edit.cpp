@@ -22,9 +22,9 @@ namespace vcpkg::Commands::Edit
         if (env_EDITOR.empty())
         {
             const optional<std::wstring> env_EDITOR_optional = System::get_environmental_variable(L"EDITOR");
-            if (env_EDITOR_optional)
+            if (auto e = env_EDITOR_optional.get())
             {
-                env_EDITOR = *env_EDITOR_optional;
+                env_EDITOR = *e;
             }
         }
 
@@ -47,16 +47,16 @@ namespace vcpkg::Commands::Edit
             };
             for (auto&& keypath : regkeys)
             {
-                auto code_installpath = System::get_registry_string(HKEY_LOCAL_MACHINE, keypath, L"InstallLocation");
-                if (code_installpath)
+                const optional<std::wstring> code_installpath = System::get_registry_string(HKEY_LOCAL_MACHINE, keypath, L"InstallLocation");
+                if (auto c = code_installpath.get())
                 {
-                    auto p = fs::path(*code_installpath) / "Code.exe";
+                    auto p = fs::path(*c) / "Code.exe";
                     if (fs::exists(p))
                     {
                         env_EDITOR = p.native();
                         break;
                     }
-                    auto p_insiders = fs::path(*code_installpath) / "Code - Insiders.exe";
+                    auto p_insiders = fs::path(*c) / "Code - Insiders.exe";
                     if (fs::exists(p_insiders))
                     {
                         env_EDITOR = p_insiders.native();
