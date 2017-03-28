@@ -1,12 +1,3 @@
-From 1721a0f7ff75176e9a9f0e04dc11f1a5d5c0f550 Mon Sep 17 00:00:00 2001
-From: Tobias Kohlbau <tobias.kohlbau@etit.tu-chemnitz.de>
-Date: Mon, 27 Mar 2017 14:53:47 +0200
-Subject: [PATCH] removes waldboost_detector binary
-
----
- modules/xobjdetect/CMakeLists.txt | 3 ---
- 1 file changed, 3 deletions(-)
-
 diff --git a/modules/xobjdetect/CMakeLists.txt b/modules/xobjdetect/CMakeLists.txt
 index 567909b..2f30b41 100644
 --- a/modules/xobjdetect/CMakeLists.txt
@@ -17,6 +8,6 @@ index 567909b..2f30b41 100644
 -if (NOT APPLE_FRAMEWORK)
 -    add_subdirectory(tools)
 -endif()
--- 
+--
 2.12.0.windows.1
 

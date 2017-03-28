@@ -13,22 +13,11 @@ namespace vcpkg::Commands::Cache
         for (auto it = fs::directory_iterator(paths.packages); it != fs::directory_iterator(); ++it)
         {
             const fs::path& path = it->path();
-
-            try
+            const expected<std::unordered_map<std::string, std::string>> pghs = Paragraphs::get_single_paragraph(path / "CONTROL");
+            if (auto p = pghs.get())
             {
-                auto file_contents = Files::read_contents(path / "CONTROL");
-                if (auto text = file_contents.get())
-                {
-                    auto pghs = Paragraphs::parse_paragraphs(*text);
-                    if (pghs.size() != 1)
-                        continue;
-
-                    const BinaryParagraph binary_paragraph = BinaryParagraph(pghs[0]);
-                    output.push_back(binary_paragraph);
-                }
-            }
-            catch (std::runtime_error const&)
-            {
+                const BinaryParagraph binary_paragraph = BinaryParagraph(*p);
+                output.push_back(binary_paragraph);
             }
         }
 

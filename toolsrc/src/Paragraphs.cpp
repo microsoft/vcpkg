@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Paragraphs.h"
 #include "vcpkg_Files.h"
+#include "paragraph_parse_result.h"
 
 namespace vcpkg::Paragraphs
 {
@@ -150,7 +151,18 @@ namespace vcpkg::Paragraphs
         }
     };
 
-    std::vector<std::unordered_map<std::string, std::string>> get_paragraphs(const fs::path& control_path)
+    expected<std::unordered_map<std::string, std::string>> get_single_paragraph(const fs::path& control_path)
+    {
+        const expected<std::string> contents = Files::read_contents(control_path);
+        if (auto spgh = contents.get())
+        {
+            return parse_single_paragraph(*spgh);
+        }
+
+        return contents.error_code();
+    }
+
+    expected<std::vector<std::unordered_map<std::string, std::string>>> get_paragraphs(const fs::path& control_path)
     {
         const expected<std::string> contents = Files::read_contents(control_path);
         if (auto spgh = contents.get())
@@ -158,44 +170,47 @@ namespace vcpkg::Paragraphs
             return parse_paragraphs(*spgh);
         }
 
-        Checks::exit_with_message(VCPKG_LINE_INFO, "Error while reading %s: %s", control_path.generic_string(), contents.error_code().message());
+        return contents.error_code();
     }
 
-    std::vector<std::unordered_map<std::string, std::string>> parse_paragraphs(const std::string& str)
+    expected<std::unordered_map<std::string, std::string>> parse_single_paragraph(const std::string& str)
+    {
+        const std::vector<std::unordered_map<std::string, std::string>> p = Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
+
+        if (p.size() == 1)
+        {
+            return p.at(0);
+        }
+
+        return std::error_code(paragraph_parse_result::EXPECTED_ONE_PARAGRAPH);
+    }
+
+    expected<std::vector<std::unordered_map<std::string, std::string>>> parse_paragraphs(const std::string& str)
     {
         return Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
     }
 
     expected<SourceParagraph> try_load_port(const fs::path& path)
     {
-        try
+        expected<std::unordered_map<std::string, std::string>> pghs = get_single_paragraph(path / "CONTROL");
+        if (auto p = pghs.get())
         {
-            auto pghs = get_paragraphs(path / "CONTROL");
-            Checks::check_exit(VCPKG_LINE_INFO, pghs.size() == 1, "Invalid control file at %s\\CONTROL", path.string());
-            return SourceParagraph(pghs[0]);
+            return SourceParagraph(*p);
         }
-        catch (std::runtime_error const&) {}
 
-        return std::errc::no_such_file_or_directory;
+        return pghs.error_code();
     }
 
     expected<BinaryParagraph> try_load_cached_package(const vcpkg_paths& paths, const package_spec& spec)
     {
-        const fs::path path = paths.package_dir(spec) / "CONTROL";
+        expected<std::unordered_map<std::string, std::string>> pghs = get_single_paragraph(paths.package_dir(spec) / "CONTROL");
 
-        auto control_contents_maybe = Files::read_contents(path);
-        if (auto control_contents = control_contents_maybe.get())
+        if (auto p = pghs.get())
         {
-            std::vector<std::unordered_map<std::string, std::string>> pghs;
-            try
-            {
-                pghs = parse_paragraphs(*control_contents);
-            }
-            catch (std::runtime_error) {}
-            Checks::check_exit(VCPKG_LINE_INFO, pghs.size() == 1, "Invalid control file at %s", path.string());
-            return BinaryParagraph(pghs[0]);
+            return BinaryParagraph(*p);
         }
-        return control_contents_maybe.error_code();
+
+        return pghs.error_code();
     }
 
     std::vector<SourceParagraph> load_all_ports(const fs::path& ports_dir)
