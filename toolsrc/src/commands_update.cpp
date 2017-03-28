@@ -50,7 +50,7 @@ namespace vcpkg::Commands::Update
             System::println("The following packages differ from their port versions:");
             for (auto&& package : packages_output)
             {
-                System::println("    %s", package.c_str());
+                System::println("    %s", package);
             }
             System::println("\nTo update these packages, run\n    vcpkg remove --purge <pkgs>...\n    vcpkg install <pkgs>...");
         }

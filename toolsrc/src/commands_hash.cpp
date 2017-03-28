@@ -7,7 +7,7 @@ namespace vcpkg::Commands::Hash
     static void do_file_hash(fs::path const& path, std::wstring const& hashType)
     {
         auto cmd_line = Strings::wformat(LR"(CertUtil.exe -hashfile "%s" %s)",
-                                         path.c_str(), hashType.c_str());
+                                         path.c_str(), hashType);
         auto ec_data = System::cmd_execute_and_capture_output(cmd_line);
         Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
