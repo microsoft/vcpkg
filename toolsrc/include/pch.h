@@ -3,6 +3,8 @@
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 
+#include <windows.h>
+
 #include <algorithm>
 #include <array>
 #include <cassert>
@@ -33,5 +35,4 @@
 #include <unordered_set>
 #include <utility>
 #include <vector>
-#include <windows.h>
 #include <winhttp.h>
