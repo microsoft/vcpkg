@@ -17,6 +17,20 @@ vcpkg_apply_patches(
 )
 file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty/libjpeg ${SOURCE_PATH}/3rdparty/libpng ${SOURCE_PATH}/3rdparty/zlib ${SOURCE_PATH}/3rdparty/libtiff)
 
+# Uncomment the following lines and the lines under OPTIONS to build opencv_contrib
+# Important: after uncommenting you've add protobuf dependency within CONTROL file
+#SET(CONTRIB_SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/opencv_contrib-3.2.0)
+#vcpkg_download_distfile(CONTRIB_ARCHIVE
+#    URLS "https://github.com/opencv/opencv_contrib/archive/3.2.0.zip"
+#    FILENAME "opencv_contrib-3.2.0.zip"
+#    SHA512 da6cda7a7ae1d722967e18f9b8d60895b93bbc3664dfdb1645cb4d8b337a9c4207b9073fd546a596c48a489f92d15191aa34c7c607167b536fbe4937b8424b43
+#)
+#vcpkg_extract_source_archive(${CONTRIB_ARCHIVE})
+#vcpkg_apply_patches(
+#    SOURCE_PATH ${CONTRIB_SOURCE_PATH}
+#    PATCHES "${CMAKE_CURRENT_LIST_DIR}/open_contrib-remove-waldboost.patch"
+#)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
@@ -40,6 +54,9 @@ vcpkg_configure_cmake(
         -DOPENCV_OTHER_INSTALL_PATH=share/opencv
         -DINSTALL_LICENSE=OFF
         -DWITH_CUDA=OFF
+        #-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules # uncomment the following 3 lines to build opencv_contrib modules
+        #-DBUILD_PROTOBUF=OFF
+        #-DUPDATE_PROTO_FILES=ON
     OPTIONS_DEBUG
         -DINSTALL_HEADERS=OFF
         -DINSTALL_OTHER=OFF
@@ -55,4 +72,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/opencv)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/opencv/LICENSE ${CURRENT_PACKAGES_DIR}/share/opencv/copyright)
+
 vcpkg_copy_pdbs()
