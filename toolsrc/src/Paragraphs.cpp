@@ -229,9 +229,9 @@ namespace vcpkg::Paragraphs
         return output;
     }
 
-    std::map<std::string, std::string> extract_port_names_and_versions(const std::vector<SourceParagraph>& source_paragraphs)
+    std::map<std::string, version_t> extract_port_names_and_versions(const std::vector<SourceParagraph>& source_paragraphs)
     {
-        std::map<std::string, std::string> names_and_versions;
+        std::map<std::string, version_t> names_and_versions;
         for (const SourceParagraph& port : source_paragraphs)
         {
             names_and_versions.emplace(port.name, port.version);

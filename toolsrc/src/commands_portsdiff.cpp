@@ -7,28 +7,28 @@
 
 namespace vcpkg::Commands::PortsDiff
 {
-    static void do_print_name_and_version(const std::vector<std::string>& ports_to_print, const std::map<std::string, std::string>& names_and_versions)
+    static void do_print_name_and_version(const std::vector<std::string>& ports_to_print, const std::map<std::string, version_t>& names_and_versions)
     {
         for (const std::string& name : ports_to_print)
         {
-            const std::string& version = names_and_versions.at(name);
+            const version_t& version = names_and_versions.at(name);
             System::println("%-20s %-16s", name, version);
         }
     }
 
     static void do_print_name_and_previous_version_and_current_version(const std::vector<std::string>& ports_to_print,
-                                                                       const std::map<std::string, std::string>& previous_names_and_versions,
-                                                                       const std::map<std::string, std::string>& current_names_and_versions)
+                                                                       const std::map<std::string, version_t>& previous_names_and_versions,
+                                                                       const std::map<std::string, version_t>& current_names_and_versions)
     {
         for (const std::string& name : ports_to_print)
         {
-            const std::string& previous_version = previous_names_and_versions.at(name);
-            const std::string& current_version = current_names_and_versions.at(name);
+            const version_t& previous_version = previous_names_and_versions.at(name);
+            const version_t& current_version = current_names_and_versions.at(name);
             System::println("%-20s %-16s -> %s", name, previous_version, current_version);
         }
     }
 
-    static std::map<std::string, std::string> read_ports_from_commit(const vcpkg_paths& paths, const std::wstring& git_commit_id)
+    static std::map<std::string, version_t> read_ports_from_commit(const vcpkg_paths& paths, const std::wstring& git_commit_id)
     {
         const fs::path& git_exe = paths.get_git_exe();
         const fs::path dot_git_dir = paths.root / ".git";
@@ -47,7 +47,7 @@ namespace vcpkg::Commands::PortsDiff
                                                   git_exe.native());
         System::cmd_execute_clean(cmd);
         const std::vector<SourceParagraph> source_paragraphs = Paragraphs::load_all_ports(temp_checkout_path / ports_dir_name_as_string);
-        const std::map<std::string, std::string> names_and_versions = Paragraphs::extract_port_names_and_versions(source_paragraphs);
+        const std::map<std::string, version_t> names_and_versions = Paragraphs::extract_port_names_and_versions(source_paragraphs);
         fs::remove_all(temp_checkout_path);
         return names_and_versions;
     }
@@ -76,8 +76,8 @@ namespace vcpkg::Commands::PortsDiff
         check_commit_exists(git_exe, git_commit_id_for_current_snapshot);
         check_commit_exists(git_exe, git_commit_id_for_previous_snapshot);
 
-        const std::map<std::string, std::string> current_names_and_versions = read_ports_from_commit(paths, git_commit_id_for_current_snapshot);
-        const std::map<std::string, std::string> previous_names_and_versions = read_ports_from_commit(paths, git_commit_id_for_previous_snapshot);
+        const std::map<std::string, version_t> current_names_and_versions = read_ports_from_commit(paths, git_commit_id_for_current_snapshot);
+        const std::map<std::string, version_t> previous_names_and_versions = read_ports_from_commit(paths, git_commit_id_for_previous_snapshot);
 
         // Already sorted, so set_difference can work on std::vector too
         std::vector<std::string> current_ports = Maps::extract_keys(current_names_and_versions);

@@ -7,16 +7,41 @@
 
 namespace vcpkg::Commands::Update
 {
+    std::map<std::string, version_diff_t> find_outdated_packages(const StatusParagraphs& status_db)
+    {
+        std::map<std::string, version_diff_t> output;
+        for (auto&& pgh : status_db)
+        {
+            if (pgh->state == install_state_t::not_installed && pgh->want == want_t::purge)
+                continue;
+            auto it = src_names_to_versions.find(pgh->package.spec.name());
+            if (it == src_names_to_versions.end())
+            {
+                // Package was not installed from portfile
+                continue;
+            }
+            if (it->second != pgh->package.version)
+            {
+                packages_output.push_back(Strings::format("%-27s %s -> %s",
+                    pgh->package.displayname(),
+                    pgh->package.version,
+                    it->second));
+                packages_list.append(" " + pgh->package.displayname());
+            }
+        }
+        std::sort(packages_output.begin(), packages_output.end());
+    }
+
     void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
     {
         args.check_exact_arg_count(0);
         args.check_and_get_optional_command_arguments({});
         System::println("Using local portfile versions. To update the local portfiles, use `git pull`.");
 
-        auto status_db = database_load_check(paths);
+        StatusParagraphs status_db = database_load_check(paths);
 
         const std::vector<SourceParagraph> source_paragraphs = Paragraphs::load_all_ports(paths.ports);
-        const std::map<std::string, std::string> src_names_to_versions = Paragraphs::extract_port_names_and_versions(source_paragraphs);
+        const std::map<std::string, version_t> src_names_to_versions = Paragraphs::extract_port_names_and_versions(source_paragraphs);
 
         std::vector<StatusParagraph*> installed_packages = get_installed_ports(status_db);
 
