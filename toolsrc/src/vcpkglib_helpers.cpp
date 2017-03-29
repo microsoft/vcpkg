@@ -47,7 +47,7 @@ namespace vcpkg::details
 
     std::string shorten_description(const std::string& desc)
     {
-        auto simple_desc = std::regex_replace(desc, std::regex("\\n( |\\t)?"), "");
+        auto simple_desc = std::regex_replace(desc, std::regex("\\s+"), " ");
         return simple_desc.size() <= 52
             ? simple_desc
             : simple_desc.substr(0, 49) + "...";
