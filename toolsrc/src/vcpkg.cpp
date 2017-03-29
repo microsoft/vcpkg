@@ -111,23 +111,28 @@ static void loadConfig()
 
     try
     {
-        auto pghs = Paragraphs::get_paragraphs(localappdata / "vcpkg" / "config").get_or_exit(VCPKG_LINE_INFO);
-        std::unordered_map<std::string, std::string> keys;
-        if (pghs.size() > 0)
-            keys = pghs[0];
-
-        for (size_t x = 1; x < pghs.size(); ++x)
+        auto maybe_pghs = Paragraphs::get_paragraphs(localappdata / "vcpkg" / "config");
+        if (auto p_pghs = maybe_pghs.get())
         {
-            for (auto&& p : pghs[x])
-                keys.insert(p);
+            const auto& pghs = *p_pghs;
+
+            std::unordered_map<std::string, std::string> keys;
+            if (pghs.size() > 0)
+                keys = pghs[0];
+
+            for (size_t x = 1; x < pghs.size(); ++x)
+            {
+                for (auto&& p : pghs[x])
+                    keys.insert(p);
+            }
+
+            auto user_id = keys["User-Id"];
+            auto user_time = keys["User-Since"];
+            Checks::check_throw(VCPKG_LINE_INFO, !user_id.empty() && !user_time.empty(), ""); // Use as goto to the catch statement
+
+            SetUserInformation(user_id, user_time);
+            return;
         }
-
-        auto user_id = keys["User-Id"];
-        auto user_time = keys["User-Since"];
-        Checks::check_throw(VCPKG_LINE_INFO, !user_id.empty() && !user_time.empty(), ""); // Use as goto to the catch statement
-
-        SetUserInformation(user_id, user_time);
-        return;
     }
     catch (...)
     {
