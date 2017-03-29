@@ -69,7 +69,7 @@ namespace vcpkg::System
 
         for (auto&& env_wstring : env_wstrings)
         {
-            const optional<std::wstring> value = System::get_environmental_variable(env_wstring.c_str());
+            const optional<std::wstring> value = System::get_environmental_variable(env_wstring);
             auto v = value.get();
             if (!v || v->empty())
                 continue;
