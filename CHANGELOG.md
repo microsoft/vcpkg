@@ -1,3 +1,25 @@
+vcpkg (0.0.78)
+--------------
+  * Add ports:
+    - libp7-baical         4.1
+    - pybind11             2.1.0
+    - xxhash               0.6.2
+  * Update ports:
+    - catch                1.8.1            -> 1.8.2
+    - glog                 0.3.4-0472b91    -> 0.3.4-0472b91-1
+    - libuv                1.10.1           -> 1.10.1-2
+    - libwebp              0.5.1-1          -> 0.6.0-1
+    - range-v3             20150729-vcpkg2  -> 20150729-vcpkg3
+    - tiff                 4.0.6-2          -> 4.0.7
+    - uwebsockets          0.13.0-1         -> 0.14.1
+  * `--debug` flag enhanced to give line information on any exit. Applies to any `vcpkg` command
+  * Improve error messages when requesting a portfile that does not exist (for example via command line or via dependencies)
+  * Add `EMPTY_INCLUDE_FOLDER` policy
+  * Fixes and improvements in existing portfiles and the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  TUE, 28 Mar 2017 21:15:00 -0800
+
+
 vcpkg (0.0.77)
 --------------
   * Add ports:
@@ -38,7 +60,6 @@ vcpkg (0.0.77)
     - Ignore user profile (-NoProfile)
   * `openssl`: Enable building in paths with space and ignore installed versions in `C:/OpenSSL/`
   * Fixes and improvements in existing portfiles and the `vcpkg` tool itself
-
 
 -- vcpkg team <vcpkg@microsoft.com>  WED, 22 Mar 2017 15:30:00 -0800
 
