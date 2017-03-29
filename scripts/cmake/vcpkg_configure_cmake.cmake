@@ -100,7 +100,6 @@ function(vcpkg_configure_cmake)
         COMMAND ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}
             -G ${GENERATOR}
             -DCMAKE_BUILD_TYPE=Release
-            -DCMAKE_PREFIX_PATH=${CURRENT_INSTALLED_DIR}
             -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
         LOGNAME config-${TARGET_TRIPLET}-rel
@@ -113,7 +112,6 @@ function(vcpkg_configure_cmake)
         COMMAND ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}
             -G ${GENERATOR}
             -DCMAKE_BUILD_TYPE=Debug
-            -DCMAKE_PREFIX_PATH=${CURRENT_INSTALLED_DIR}/debug\\\\\\\;${CURRENT_INSTALLED_DIR}
             -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
         LOGNAME config-${TARGET_TRIPLET}-dbg
