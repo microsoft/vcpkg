@@ -67,9 +67,6 @@ vcpkg_execute_required_process(
         -no-iconv
         -system-sqlite
         -opengl desktop # other options are "-no-opengl" and "-opengl angle"
-        -no-style-windowsxp
-        -no-style-windowsvista
-        -no-style-fusion
         -mp
         -nomake examples -nomake tests -no-compile-examples
         -skip webengine -skip declarative
