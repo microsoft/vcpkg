@@ -18,13 +18,11 @@ namespace vcpkg::Commands::Update
         const std::vector<SourceParagraph> source_paragraphs = Paragraphs::load_all_ports(paths.ports);
         const std::map<std::string, std::string> src_names_to_versions = Paragraphs::extract_port_names_and_versions(source_paragraphs);
 
-        std::string packages_list;
+        std::vector<StatusParagraph*> installed_packages = get_installed_ports(status_db);
 
         std::vector<std::string> packages_output;
-        for (auto&& pgh : status_db)
+        for (const StatusParagraph* pgh : installed_packages)
         {
-            if (pgh->state == install_state_t::not_installed && pgh->want == want_t::purge)
-                continue;
             auto it = src_names_to_versions.find(pgh->package.spec.name());
             if (it == src_names_to_versions.end())
             {
@@ -37,7 +35,6 @@ namespace vcpkg::Commands::Update
                                                           pgh->package.displayname(),
                                                           pgh->package.version,
                                                           it->second));
-                packages_list.append(" " + pgh->package.displayname());
             }
         }
         std::sort(packages_output.begin(), packages_output.end());

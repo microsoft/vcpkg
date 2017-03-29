@@ -22,13 +22,7 @@ namespace vcpkg::Commands::List
         args.check_and_get_optional_command_arguments({});
 
         const StatusParagraphs status_paragraphs = database_load_check(paths);
-        std::vector<StatusParagraph> installed_packages;
-        for (auto&& pgh : status_paragraphs)
-        {
-            if (pgh->state == install_state_t::not_installed && pgh->want == want_t::purge)
-                continue;
-            installed_packages.push_back(*pgh);
-        }
+        std::vector<StatusParagraph*> installed_packages = get_installed_ports(status_paragraphs);
 
         if (installed_packages.empty())
         {
@@ -37,30 +31,30 @@ namespace vcpkg::Commands::List
         }
 
         std::sort(installed_packages.begin(), installed_packages.end(),
-                  [ ]( const StatusParagraph& lhs, const StatusParagraph& rhs ) -> bool
+                  [ ]( const StatusParagraph* lhs, const StatusParagraph* rhs ) -> bool
                   {
-                      return lhs.package.displayname() < rhs.package.displayname();
+                      return lhs->package.displayname() < rhs->package.displayname();
                   });
 
         if (args.command_arguments.size() == 0)
         {
-            for (const StatusParagraph& status_paragraph : installed_packages)
+            for (const StatusParagraph* status_paragraph : installed_packages)
             {
-                do_print(status_paragraph);
+                do_print(*status_paragraph);
             }
         }
         else
         {
             // At this point there is 1 argument
-            for (const StatusParagraph& status_paragraph : installed_packages)
+            for (const StatusParagraph* status_paragraph : installed_packages)
             {
-                const std::string displayname = status_paragraph.package.displayname();
+                const std::string displayname = status_paragraph->package.displayname();
                 if (Strings::case_insensitive_ascii_find(displayname, args.command_arguments[0]) == displayname.end())
                 {
                     continue;
                 }
 
-                do_print(status_paragraph);
+                do_print(*status_paragraph);
             }
         }
 

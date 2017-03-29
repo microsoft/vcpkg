@@ -171,6 +171,19 @@ namespace vcpkg
         fs::rename(updated_listfile_path, listfile_path);
     }
 
+    std::vector<StatusParagraph*> get_installed_ports(const StatusParagraphs& status_db)
+    {
+        std::vector<StatusParagraph*> installed_packages;
+        for (auto&& pgh : status_db)
+        {
+            if (pgh->state == install_state_t::not_installed && pgh->want == want_t::purge)
+                continue;
+            installed_packages.push_back(pgh.get());
+        }
+
+        return installed_packages;
+    }
+
     std::vector<StatusParagraph_and_associated_files> get_installed_files(const vcpkg_paths& paths, const StatusParagraphs& status_db)
     {
         std::vector<StatusParagraph_and_associated_files> installed_files;
