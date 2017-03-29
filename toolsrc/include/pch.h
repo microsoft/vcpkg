@@ -1,43 +1,38 @@
 #pragma once
 
-#define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
-#include <Windows.h>
-#include <shellapi.h>
-#include <Shlobj.h>
-#include <winhttp.h>
-#include <process.h>
+#define WIN32_LEAN_AND_MEAN
 
-#include <cassert>
-#include <stdexcept>
-#include <system_error>
-
-#include <array>
-#include <vector>
-#include <set>
-#include <map>
-#include <unordered_set>
-#include <unordered_map>
-
-#include <string>
-#include <regex>
-
-#include <filesystem>
-#include <iostream>
-#include <fstream>
-#include <memory>
-#include <iomanip>
+#include <windows.h>
 
 #include <algorithm>
-#include <functional>
-#include <iterator>
-#include <utility>
-
-#include <cstdarg>
-#include <codecvt>
+#include <array>
+#include <cassert>
 #include <cctype>
-#include <cstdint>
-
-#include <sys/timeb.h>
-#include <time.h>
 #include <chrono>
+#include <codecvt>
+#include <cstdarg>
+#include <cstdint>
+#include <filesystem>
+#include <fstream>
+#include <functional>
+#include <iomanip>
+#include <iostream>
+#include <iterator>
+#include <map>
+#include <memory>
+#include <process.h>
+#include <regex>
+#include <set>
+#include <shellapi.h>
+#include <shlobj.h>
+#include <stdexcept>
+#include <string>
+#include <sys/timeb.h>
+#include <system_error>
+#include <time.h>
+#include <unordered_map>
+#include <unordered_set>
+#include <utility>
+#include <vector>
+#include <winhttp.h>
