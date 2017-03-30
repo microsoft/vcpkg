@@ -8,6 +8,17 @@
 
 namespace vcpkg::Commands::PortsDiff
 {
+    struct updated_port
+    {
+        static bool compare_by_name(const updated_port& left, const updated_port& right)
+        {
+            return left.port < right.port;
+        }
+
+        std::string port;
+        version_diff_t version_diff;
+    };
+
     template <class T>
     struct set_element_presence
     {
@@ -27,11 +38,11 @@ namespace vcpkg::Commands::PortsDiff
         std::vector<T> only_right;
     };
 
-    static std::vector<name_and_version_diff_t> find_updated_ports(const std::vector<std::string>& ports,
+    static std::vector<updated_port> find_updated_ports(const std::vector<std::string>& ports,
                                                                    const std::map<std::string, version_t>& previous_names_and_versions,
                                                                    const std::map<std::string, version_t>& current_names_and_versions)
     {
-        std::vector<name_and_version_diff_t> output;
+        std::vector<updated_port> output;
         for (const std::string& name : ports)
         {
             const version_t& previous_version = previous_names_and_versions.at(name);
@@ -128,14 +139,14 @@ namespace vcpkg::Commands::PortsDiff
         }
 
         const std::vector<std::string>& common_ports = setp.both;
-        const std::vector<name_and_version_diff_t> updated_ports = find_updated_ports(common_ports, previous_names_and_versions, current_names_and_versions);
+        const std::vector<updated_port> updated_ports = find_updated_ports(common_ports, previous_names_and_versions, current_names_and_versions);
 
         if (!updated_ports.empty())
         {
             System::println("\nThe following %d ports were updated:\n", updated_ports.size());
-            for (const name_and_version_diff_t& p : updated_ports)
+            for (const updated_port& p : updated_ports)
             {
-                System::println("%-20s %-16s", p.name, p.version_diff.toString());
+                System::println("%-20s %-16s", p.port, p.version_diff.toString());
             }
         }
 

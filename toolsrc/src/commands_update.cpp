@@ -7,13 +7,18 @@
 
 namespace vcpkg::Commands::Update
 {
-    std::vector<name_and_version_diff_t> find_outdated_packages(const vcpkg_paths& paths, const StatusParagraphs& status_db)
+    bool outdated_package::compare_by_name(const outdated_package& left, const outdated_package& right)
+    {
+        return left.spec.name() < right.spec.name();
+    }
+
+    std::vector<outdated_package> find_outdated_packages(const vcpkg_paths& paths, const StatusParagraphs& status_db)
     {
         const std::vector<SourceParagraph> source_paragraphs = Paragraphs::load_all_ports(paths.ports);
         const std::map<std::string, version_t> src_names_to_versions = Paragraphs::extract_port_names_and_versions(source_paragraphs);
         const std::vector<StatusParagraph*> installed_packages = get_installed_ports(status_db);
 
-        std::vector<name_and_version_diff_t> output;
+        std::vector<outdated_package> output;
         for (const StatusParagraph* pgh : installed_packages)
         {
             auto it = src_names_to_versions.find(pgh->package.spec.name());
@@ -24,7 +29,7 @@ namespace vcpkg::Commands::Update
             }
             if (it->second != pgh->package.version)
             {
-                output.push_back({ pgh->package.displayname(), version_diff_t(pgh->package.version, it->second) });
+                output.push_back({ pgh->package.spec, version_diff_t(pgh->package.version, it->second) });
             }
         }
 
@@ -39,8 +44,8 @@ namespace vcpkg::Commands::Update
 
         const StatusParagraphs status_db = database_load_check(paths);
 
-        const auto outdated_packages = ImmutableSortedVector<name_and_version_diff_t>::create(find_outdated_packages(paths, status_db),
-                                                                                              &name_and_version_diff_t::compare_by_name);
+        const auto outdated_packages = ImmutableSortedVector<outdated_package>::create(find_outdated_packages(paths, status_db),
+                                                                                       &outdated_package::compare_by_name);
 
         if (outdated_packages.empty())
         {
@@ -51,7 +56,7 @@ namespace vcpkg::Commands::Update
             System::println("The following packages differ from their port versions:");
             for (auto&& package : outdated_packages)
             {
-                System::println("    %-27s %s", package.name, package.version_diff.toString());
+                System::println("    %-27s %s", package.spec.display_name(), package.version_diff.toString());
             }
             System::println("\nTo update these packages, run\n    vcpkg remove --purge <pkgs>...\n    vcpkg install <pkgs>...");
         }

@@ -4,6 +4,7 @@
 #include "vcpkg_paths.h"
 #include "StatusParagraphs.h"
 #include <array>
+#include "version_t.h"
 
 namespace vcpkg::Commands
 {
@@ -56,6 +57,15 @@ namespace vcpkg::Commands
 
     namespace Update
     {
+        struct outdated_package
+        {
+            static bool compare_by_name(const outdated_package& left, const outdated_package& right);
+
+            package_spec spec;
+            version_diff_t version_diff;
+        };
+
+        std::vector<outdated_package> find_outdated_packages(const vcpkg_paths& paths, const StatusParagraphs& status_db);
         void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths);
     }
 
