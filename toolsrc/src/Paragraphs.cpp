@@ -32,6 +32,16 @@ namespace vcpkg::Paragraphs
             }
         }
 
+        void skip_comment(char& ch)
+        {
+            while (ch != '\r')
+                next(ch);
+            if (ch == '\r')
+                next(ch);
+            if (ch == '\n')
+                next(ch);
+        }
+
         void skip_spaces(char& ch)
         {
             while (ch == ' ' || ch == '\t')
@@ -43,6 +53,11 @@ namespace vcpkg::Paragraphs
             return (ch >= 'A' && ch <= 'Z')
                    || (ch >= 'a' && ch <= 'z')
                    || (ch >= '0' && ch <= '9');
+        }
+
+        static bool is_comment(char ch)
+        {
+            return (ch == '#');
         }
 
         static bool is_lineend(char ch)
@@ -68,7 +83,7 @@ namespace vcpkg::Paragraphs
                 if (ch == '\n')
                     next(ch);
 
-                if (is_alphanum(ch))
+                if (is_alphanum(ch) || is_comment(ch))
                 {
                     // Line begins a new field.
                     return;
@@ -115,6 +130,12 @@ namespace vcpkg::Paragraphs
             std::string fieldvalue;
             do
             {
+                if (is_comment(ch))
+                {
+                    skip_comment(ch);
+                    continue;
+                }
+
                 get_fieldname(ch, fieldname);
 
                 auto it = fields.find(fieldname);
