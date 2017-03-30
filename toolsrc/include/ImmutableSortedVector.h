@@ -9,6 +9,8 @@ namespace vcpkg
     template <class T>
     class ImmutableSortedVector
     {
+        typedef typename std::vector<T>::size_type size_type;
+
     public:
         static ImmutableSortedVector<T> create(std::vector<T> vector)
         {
@@ -17,6 +19,19 @@ namespace vcpkg
             if (!std::is_sorted(out.delegate.cbegin(), out.delegate.cend()))
             {
                 std::sort(out.delegate.begin(), out.delegate.end());
+            }
+
+            return out;
+        }
+
+        template <class Compare>
+        static ImmutableSortedVector<T> create(std::vector<T> vector, Compare comp)
+        {
+            ImmutableSortedVector<T> out;
+            out.delegate = std::move(vector);
+            if (!std::is_sorted(out.delegate.cbegin(), out.delegate.cend(), comp))
+            {
+                std::sort(out.delegate.begin(), out.delegate.end(), comp);
             }
 
             return out;
@@ -40,6 +55,16 @@ namespace vcpkg
         typename std::vector<T>::const_iterator cend() const
         {
             return this->delegate.cend();
+        }
+
+        bool empty() const
+        {
+            return this->delegate.empty();
+        }
+
+        size_type size() const
+        {
+            return this->delegate.size();
         }
 
     private:
