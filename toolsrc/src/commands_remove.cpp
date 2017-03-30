@@ -13,6 +13,7 @@ namespace vcpkg::Commands::Remove
 
     static const std::string OPTION_PURGE = "--purge";
     static const std::string OPTION_RECURSE = "--recurse";
+    static const std::string OPTION_DRY_RUN = "--dry-run";
 
     static void delete_directory(const fs::path& directory)
     {
@@ -147,19 +148,19 @@ namespace vcpkg::Commands::Remove
             sort_packages_by_name(&remove);
             System::println("The following packages will be removed:\n%s",
                             Strings::join("\n", remove, [](const package_spec_with_remove_plan* p)
-                                                           {
-                                                               if (p->plan.request_type == Dependencies::request_type::AUTO_SELECTED)
-                                                               {
-                                                                   return "  * " + p->spec.toString();
-                                                               }
+                                          {
+                                              if (p->plan.request_type == Dependencies::request_type::AUTO_SELECTED)
+                                              {
+                                                  return "  * " + p->spec.toString();
+                                              }
 
-                                                               if (p->plan.request_type == Dependencies::request_type::USER_REQUESTED)
-                                                               {
-                                                                   return "    " + p->spec.toString();
-                                                               }
+                                              if (p->plan.request_type == Dependencies::request_type::USER_REQUESTED)
+                                              {
+                                                  return "    " + p->spec.toString();
+                                              }
 
-                                                               Checks::unreachable(VCPKG_LINE_INFO);
-                                                           }));
+                                              Checks::unreachable(VCPKG_LINE_INFO);
+                                          }));
         }
     }
 
@@ -169,15 +170,20 @@ namespace vcpkg::Commands::Remove
         args.check_min_arg_count(1, example);
         std::vector<package_spec> specs = Input::check_and_get_package_specs(args.command_arguments, default_target_triplet, example);
         Input::check_triplets(specs, paths);
-        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_PURGE, OPTION_RECURSE });
+        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_PURGE, OPTION_RECURSE, OPTION_DRY_RUN });
         const bool alsoRemoveFolderFromPackages = options.find(OPTION_PURGE) != options.end();
         const bool isRecursive = options.find(OPTION_RECURSE) != options.end();
+        const bool dryRun = options.find(OPTION_DRY_RUN) != options.end();
 
         auto status_db = database_load_check(paths);
         const std::vector<package_spec_with_remove_plan> remove_plan = Dependencies::create_remove_plan(specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !remove_plan.empty(), "Remove plan cannot be empty");
 
         print_plan(remove_plan);
+        if (dryRun)
+        {
+            Checks::exit_success(VCPKG_LINE_INFO);
+        }
 
         const bool has_non_user_requested_packages = std::find_if(remove_plan.cbegin(), remove_plan.cend(), [](const package_spec_with_remove_plan& package)-> bool
                                                                   {
