@@ -4,27 +4,55 @@
 #include "vcpkg_Maps.h"
 #include "SourceParagraph.h"
 #include "Paragraphs.h"
+#include "ImmutableSortedVector.h"
 
 namespace vcpkg::Commands::PortsDiff
 {
+    template <class T>
+    struct set_element_presence
+    {
+        static set_element_presence create(std::vector<T> left, std::vector<T> right)
+        {
+            // TODO: This can be done with one pass instead of three passes
+            set_element_presence output;
+            std::set_difference(left.cbegin(), left.cend(), right.cbegin(), right.cend(), std::back_inserter(output.only_left));
+            std::set_intersection(left.cbegin(), left.cend(), right.cbegin(), right.cend(), std::back_inserter(output.both));
+            std::set_difference(right.cbegin(), right.cend(), left.cbegin(), left.cend(), std::back_inserter(output.only_right));
+
+            return output;
+        }
+
+        std::vector<T> only_left;
+        std::vector<T> both;
+        std::vector<T> only_right;
+    };
+
+    static std::vector<name_and_version_diff_t> find_updated_ports(const std::vector<std::string>& ports,
+                                                                   const std::map<std::string, version_t>& previous_names_and_versions,
+                                                                   const std::map<std::string, version_t>& current_names_and_versions)
+    {
+        std::vector<name_and_version_diff_t> output;
+        for (const std::string& name : ports)
+        {
+            const version_t& previous_version = previous_names_and_versions.at(name);
+            const version_t& current_version = current_names_and_versions.at(name);
+            if (previous_version == current_version)
+            {
+                continue;
+            }
+
+            output.push_back({ name, version_diff_t(previous_version, current_version) });
+        }
+
+        return output;
+    }
+
     static void do_print_name_and_version(const std::vector<std::string>& ports_to_print, const std::map<std::string, version_t>& names_and_versions)
     {
         for (const std::string& name : ports_to_print)
         {
             const version_t& version = names_and_versions.at(name);
             System::println("%-20s %-16s", name, version);
-        }
-    }
-
-    static void do_print_name_and_previous_version_and_current_version(const std::vector<std::string>& ports_to_print,
-                                                                       const std::map<std::string, version_t>& previous_names_and_versions,
-                                                                       const std::map<std::string, version_t>& current_names_and_versions)
-    {
-        for (const std::string& name : ports_to_print)
-        {
-            const version_t& previous_version = previous_names_and_versions.at(name);
-            const version_t& current_version = current_names_and_versions.at(name);
-            System::println("%-20s %-16s -> %s", name, previous_version, current_version);
         }
     }
 
@@ -83,48 +111,32 @@ namespace vcpkg::Commands::PortsDiff
         std::vector<std::string> current_ports = Maps::extract_keys(current_names_and_versions);
         std::vector<std::string> previous_ports = Maps::extract_keys(previous_names_and_versions);
 
-        std::vector<std::string> added_ports;
-        std::set_difference(
-            current_ports.cbegin(), current_ports.cend(),
-            previous_ports.cbegin(), previous_ports.cend(),
-            std::back_inserter(added_ports));
+        const set_element_presence<std::string> setp = set_element_presence<std::string>::create(current_ports, previous_ports);
 
+        const std::vector<std::string>& added_ports = setp.only_left;
         if (!added_ports.empty())
         {
             System::println("\nThe following %d ports were added:\n", added_ports.size());
             do_print_name_and_version(added_ports, current_names_and_versions);
         }
 
-        std::vector<std::string> removed_ports;
-        std::set_difference(
-            previous_ports.cbegin(), previous_ports.cend(),
-            current_ports.cbegin(), current_ports.cend(),
-            std::back_inserter(removed_ports));
-
+        const std::vector<std::string>& removed_ports = setp.only_right;
         if (!removed_ports.empty())
         {
             System::println("\nThe following %d ports were removed:\n", removed_ports.size());
             do_print_name_and_version(removed_ports, previous_names_and_versions);
         }
 
-        std::vector<std::string> potentially_updated_ports;
-        std::set_intersection(
-            current_ports.cbegin(), current_ports.cend(),
-            previous_ports.cbegin(), previous_ports.cend(),
-            std::back_inserter(potentially_updated_ports));
-
-        std::vector<std::string> updated_ports;
-        std::copy_if(potentially_updated_ports.cbegin(), potentially_updated_ports.cend(), std::back_inserter(updated_ports),
-                     [&](const std::string& port) -> bool
-                     {
-                         return current_names_and_versions.at(port) != previous_names_and_versions.at(port);
-                     }
-        );
+        const std::vector<std::string>& common_ports = setp.both;
+        const std::vector<name_and_version_diff_t> updated_ports = find_updated_ports(common_ports, previous_names_and_versions, current_names_and_versions);
 
         if (!updated_ports.empty())
         {
             System::println("\nThe following %d ports were updated:\n", updated_ports.size());
-            do_print_name_and_previous_version_and_current_version(updated_ports, previous_names_and_versions, current_names_and_versions);
+            for (const name_and_version_diff_t& p : updated_ports)
+            {
+                System::println("%-20s %-16s", p.name, p.version_diff.toString());
+            }
         }
 
         if (added_ports.empty() && removed_ports.empty() && updated_ports.empty())
