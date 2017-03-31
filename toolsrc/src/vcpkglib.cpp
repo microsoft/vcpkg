@@ -215,10 +215,10 @@ namespace vcpkg
         return installed_files;
     }
 
-    CMakeVariable::CMakeVariable(const std::wstring& varname, const wchar_t* varvalue) : s(Strings::wformat(LR"("-D%s=%s")", varname, varvalue)) { }
-    CMakeVariable::CMakeVariable(const std::wstring& varname, const std::string& varvalue) : CMakeVariable(varname, Strings::utf8_to_utf16(varvalue).c_str()) { }
-    CMakeVariable::CMakeVariable(const std::wstring& varname, const std::wstring& varvalue) : CMakeVariable(varname, varvalue.c_str()) {}
-    CMakeVariable::CMakeVariable(const std::wstring& varname, const fs::path& path) : CMakeVariable(varname, path.generic_wstring()) {}
+    CMakeVariable::CMakeVariable(const cwstring_view varname, const wchar_t* varvalue) : s(Strings::wformat(LR"("-D%s=%s")", varname, varvalue)) { }
+    CMakeVariable::CMakeVariable(const cwstring_view varname, const std::string& varvalue) : CMakeVariable(varname, Strings::utf8_to_utf16(varvalue).c_str()) { }
+    CMakeVariable::CMakeVariable(const cwstring_view varname, const std::wstring& varvalue) : CMakeVariable(varname, varvalue.c_str()) {}
+    CMakeVariable::CMakeVariable(const cwstring_view varname, const fs::path& path) : CMakeVariable(varname, path.generic_wstring()) {}
 
     std::wstring make_cmake_cmd(const fs::path& cmake_exe, const fs::path& cmake_script, const std::vector<CMakeVariable>& pass_variables)
     {
