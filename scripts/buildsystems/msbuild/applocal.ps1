@@ -3,7 +3,19 @@ param([string]$targetBinary, [string]$installedDir, [string]$tlogFile)
 
 $g_searched = @{}
 
-function resolve($targetBinary) {
+function deployBinary([string]$targetBinaryDir, [string]$targetBinaryName) {
+    if (Test-Path "$targetBinaryDir\$targetBinaryName") {
+        Write-Verbose "  ${targetBinaryName}: already present - Only recurse"
+    }
+    else {
+        Copy-Item "$installedDir\$targetBinaryName" $targetBinaryDir
+        Write-Verbose "  ${targetBinaryName}: Copying $installedDir\$targetBinaryName"
+    }
+    "$targetBinaryDir\$targetBinaryName"
+    if ($tlogFile) { Add-Content $tlogFile "$targetBinaryDir\$targetBinaryName" }
+}
+
+function resolve([string]$targetBinary) {
     Write-Verbose "Resolving $targetBinary..."
     try
     {
@@ -26,15 +38,7 @@ function resolve($targetBinary) {
         }
         $g_searched.Set_Item($_, $true)
         if (Test-Path "$installedDir\$_") {
-            if (Test-Path "$targetBinaryDir\$_") {
-                Write-Verbose "  ${_}: already present - Only recurse"
-            }
-            else {
-                Copy-Item $installedDir\$_ $targetBinaryDir
-                Write-Verbose "  ${_}: Copying $installedDir\$_"
-            }
-            "$targetBinaryDir\$_"
-            if ($tlogFile) { Add-Content $tlogFile "$targetBinaryDir\$_" }
+            deployBinary($targetBinaryDir, $_)
             resolve("$targetBinaryDir\$_")
         } else {
             Write-Verbose "  ${_}: $installedDir\$_ not found"
