@@ -42,7 +42,7 @@ namespace vcpkg::System
     }
 
     template <class Arg1, class...Args>
-    void print(const color c, const Arg1& messageArg1, const char* messageTemplate, const Args&... messageArgs)
+    void print(const color c, const char* messageTemplate, const Arg1& messageArg1,  const Args&... messageArgs)
     {
         return print(c, Strings::format(messageTemplate, messageArg1, messageArgs...));
     }
