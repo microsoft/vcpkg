@@ -22,13 +22,13 @@ namespace vcpkg
 
         optional(T&& t) : m_is_present(true), m_t(std::move(t)) { }
 
-        T&& get_or_exit(const LineInfo& line_info) &&
+        T&& value_or_exit(const LineInfo& line_info) &&
         {
             this->exit_if_null(line_info);
             return std::move(this->m_t);
         }
 
-        const T& get_or_exit(const LineInfo& line_info) const &
+        const T& value_or_exit(const LineInfo& line_info) const &
         {
             this->exit_if_null(line_info);
             return this->m_t;

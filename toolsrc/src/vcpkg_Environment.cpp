@@ -140,7 +140,7 @@ namespace vcpkg::Environment
 
     static const fs::path& get_ProgramFiles()
     {
-        static const fs::path p = System::get_environmental_variable(L"PROGRAMFILES").get_or_exit(VCPKG_LINE_INFO);
+        static const fs::path p = System::get_environmental_variable(L"PROGRAMFILES").value_or_exit(VCPKG_LINE_INFO);
         return p;
     }
 

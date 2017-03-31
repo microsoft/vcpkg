@@ -62,7 +62,7 @@ namespace vcpkg::Commands::CI
                 }
                 else if (action.plan.plan_type == install_plan_type::BUILD_AND_INSTALL)
                 {
-                    const BuildResult result = Commands::Build::build_package(action.plan.source_pgh.get_or_exit(VCPKG_LINE_INFO),
+                    const BuildResult result = Commands::Build::build_package(action.plan.source_pgh.value_or_exit(VCPKG_LINE_INFO),
                                                                               action.spec,
                                                                               paths,
                                                                               paths.port_dir(action.spec),
@@ -81,7 +81,7 @@ namespace vcpkg::Commands::CI
                 else if (action.plan.plan_type == install_plan_type::INSTALL)
                 {
                     results.back() = BuildResult::SUCCEEDED;
-                    Install::install_package(paths, action.plan.binary_pgh.get_or_exit(VCPKG_LINE_INFO), &status_db);
+                    Install::install_package(paths, action.plan.binary_pgh.value_or_exit(VCPKG_LINE_INFO), &status_db);
                     System::println(System::color::success, "Package %s is installed from cache", action.spec);
                 }
                 else
