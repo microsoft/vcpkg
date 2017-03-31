@@ -14,9 +14,7 @@ Invoke-VcpkgBuild "gtest"
 Invoke-VcpkgBuild "zlib"
 Invoke-VcpkgBuild "sqlite3"
 Invoke-VcpkgBuild "boost"
-Invoke-VcpkgBuild "civetweb"
 Invoke-VcpkgBuild "fmt"
-Invoke-VcpkgBuild "protobuf"
 Invoke-VcpkgBuild "hiredis"
 Invoke-VcpkgBuild "json-c"
 Invoke-VcpkgBuild "libevent"
@@ -29,4 +27,4 @@ Invoke-VcpkgBuild "snmp-pp"
 Invoke-VcpkgBuild "pthread"
 
 # update the version anytime the installed package versions change
-Write-Output 2 > installed/version.txt
+Write-Output 3 > installed/version.txt
