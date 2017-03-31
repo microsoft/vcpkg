@@ -145,6 +145,27 @@ PS D:\src\cmake-test\build> .\Debug\main.exe
 
 *Note: The correct sqlite3.dll is automatically copied to the output folder when building for x86-windows. You will need to distribute this along with your application.*
 
+Unlike other platforms, we do not automatically add the `include\` directory to your compilation line by default. If you're using a library that does not provide CMake integration, you will need to explicitly search for the files and add them yourself using [`find_path()`][1] and [`find_library()`][2].
+
+```cmake
+# To find and use catch
+find_path(CATCH_INCLUDE_DIR catch.hpp)
+include_directories(${CATCH_INCLUDE_DIR})
+
+# To find and use azure-storage-cpp
+find_path(WASTORAGE_INCLUDE_DIR was/blob.h)
+find_library(WASTORAGE_LIBRARY wastorage)
+include_directories(${WASTORAGE_INCLUDE_DIR})
+link_libraries(${WASTORAGE_LIBRARY})
+
+# Note that we recommend using the target-specific directives for a cleaner cmake:
+#     target_include_directories(main ${LIBRARY})
+#     target_link_libraries(main PRIVATE ${LIBRARY})
+```
+
+[1]: https://cmake.org/cmake/help/latest/command/find_path.html
+[2]: https://cmake.org/cmake/help/latest/command/find_library.html
+
 <a name="example-1-2-c"></a>
 #### Option C: Other buildsystems
 
