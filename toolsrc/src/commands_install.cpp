@@ -227,7 +227,7 @@ namespace vcpkg::Commands::Install
                         System::println(Build::create_user_troubleshooting_message(action.spec));
                         Checks::exit_fail(VCPKG_LINE_INFO);
                     }
-                    const BinaryParagraph bpgh = Paragraphs::try_load_cached_package(paths, action.spec).get_or_exit(VCPKG_LINE_INFO);
+                    const BinaryParagraph bpgh = Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO);
                     install_package(paths, bpgh, &status_db);
                     System::println(System::color::success, "Package %s is installed", action.spec);
                 }

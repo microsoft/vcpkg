@@ -13,5 +13,5 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     szArgList = CommandLineToArgvW(GetCommandLineW(), &argCount);
 
     Checks::check_exit(VCPKG_LINE_INFO, argCount == 2, "Requires exactly one argument, the path to the payload file");
-    Upload(Files::read_contents(szArgList[1]).get_or_exit(VCPKG_LINE_INFO));
+    Upload(Files::read_contents(szArgList[1]).value_or_exit(VCPKG_LINE_INFO));
 }

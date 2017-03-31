@@ -60,7 +60,7 @@ static void inner(const vcpkg_cmd_arguments& args)
 
     const expected<vcpkg_paths> expected_paths = vcpkg_paths::create(vcpkg_root_dir);
     Checks::check_exit(VCPKG_LINE_INFO, !expected_paths.error_code(), "Error: Invalid vcpkg root directory %s: %s", vcpkg_root_dir.string(), expected_paths.error_code().message());
-    const vcpkg_paths paths = expected_paths.get_or_exit(VCPKG_LINE_INFO);
+    const vcpkg_paths paths = expected_paths.value_or_exit(VCPKG_LINE_INFO);
     int exit_code = _wchdir(paths.root.c_str());
     Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Changing the working dir failed");
 
