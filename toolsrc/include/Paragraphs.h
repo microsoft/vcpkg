@@ -2,7 +2,7 @@
 
 #include "filesystem_fs.h"
 #include <map>
-#include "expected.h"
+#include "vcpkg_expected.h"
 #include "BinaryParagraph.h"
 #include "vcpkg_paths.h"
 

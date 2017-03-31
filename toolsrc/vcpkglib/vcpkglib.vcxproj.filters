@@ -239,9 +239,6 @@
     <ClInclude Include="..\include\vcpkglib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\expected.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\ImmutableSortedVector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -306,6 +303,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\paragraph_parse_result.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg_expected.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -9,7 +9,7 @@ namespace vcpkg
     class expected
     {
     public:
-        // Constructors are intentionally implicit 
+        // Constructors are intentionally implicit
         expected(const std::error_code& ec) : m_error_code(ec), m_t()
         {
         }

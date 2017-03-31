@@ -1,6 +1,6 @@
 #pragma once
 #include "filesystem_fs.h"
-#include "expected.h"
+#include "vcpkg_expected.h"
 #include "package_spec.h"
 #include "BinaryParagraph.h"
 #include "lazy.h"

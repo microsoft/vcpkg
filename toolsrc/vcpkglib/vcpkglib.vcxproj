@@ -143,7 +143,7 @@
     <ClInclude Include="..\include\PostBuildLint_BuildInfo.h" />
     <ClInclude Include="..\include\PostBuildLint_BuildPolicies.h" />
     <ClInclude Include="..\include\coff_file_reader.h" />
-    <ClInclude Include="..\include\expected.h" />
+    <ClInclude Include="..\include\vcpkg_expected.h" />
     <ClInclude Include="..\include\filesystem_fs.h" />
     <ClInclude Include="..\include\ImmutableSortedVector.h" />
     <ClInclude Include="..\include\MachineType.h" />

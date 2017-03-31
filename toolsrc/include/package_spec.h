@@ -1,7 +1,7 @@
 #pragma once
 #include "package_spec_parse_result.h"
 #include "triplet.h"
-#include "expected.h"
+#include "vcpkg_expected.h"
 
 namespace vcpkg
 {
