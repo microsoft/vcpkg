@@ -81,10 +81,15 @@ namespace vcpkg::Dependencies
             }
 
             expected<SourceParagraph> maybe_spgh = Paragraphs::try_load_port(paths.port_dir(spec));
-            SourceParagraph* spgh = maybe_spgh.get();
-            Checks::check_exit(VCPKG_LINE_INFO, spgh != nullptr, "Cannot find package %s", spec.name());
-            process_dependencies(filter_dependencies(spgh->depends, spec.target_triplet()));
-            was_examined.emplace(spec, install_plan_action{install_plan_type::BUILD_AND_INSTALL, nullopt, std::move(*spgh)});
+            if (auto spgh = maybe_spgh.get())
+            {
+                process_dependencies(filter_dependencies(spgh->depends, spec.target_triplet()));
+                was_examined.emplace(spec, install_plan_action{ install_plan_type::BUILD_AND_INSTALL, nullopt, std::move(*spgh) });
+            }
+            else
+            {
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot find package %s", spec.name());
+            }
         }
 
         std::vector<package_spec_with_install_plan> ret;
