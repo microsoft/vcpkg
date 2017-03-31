@@ -198,6 +198,12 @@ vcpkg_execute_required_process(
 )
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.LGPLv3 DESTINATION  ${CURRENT_PACKAGES_DIR}/share/qt5 RENAME copyright)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/plugins)
+    file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/qtdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/plugins)
+endif()
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/plugins)
+    file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/qtdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/plugins)
+endif()
 
 vcpkg_copy_pdbs()
 
