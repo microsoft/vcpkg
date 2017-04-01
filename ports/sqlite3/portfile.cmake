@@ -13,6 +13,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DSOURCE=${SOURCE_PATH}
+        -DVCPKG_CMAKE_SYSTEM_NAME=${VCPKG_CMAKE_SYSTEM_NAME}
 )
 vcpkg_build_cmake()
 vcpkg_install_cmake()
