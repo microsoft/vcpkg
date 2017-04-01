@@ -12,9 +12,15 @@ namespace vcpkg::Commands::Import
         std::vector<fs::path> libs;
     };
 
+
+    void check_is_directory(const LineInfo& line_info, const fs::path& dirpath)
+    {
+        Checks::check_exit(line_info, fs::is_directory(dirpath), "The path %s is not a directory", dirpath.string());
+    }
+
     static Binaries find_binaries_in_dir(const fs::path& path)
     {
-        Files::check_is_directory(VCPKG_LINE_INFO, path);
+        check_is_directory(VCPKG_LINE_INFO, path);
 
         Binaries binaries;
         binaries.dlls = Files::recursive_find_files_with_extension_in_dir(path, ".dll");
@@ -35,9 +41,9 @@ namespace vcpkg::Commands::Import
 
     static void place_library_files_in(const fs::path& include_directory, const fs::path& project_directory, const fs::path& destination_path)
     {
-        Files::check_is_directory(VCPKG_LINE_INFO, include_directory);
-        Files::check_is_directory(VCPKG_LINE_INFO, project_directory);
-        Files::check_is_directory(VCPKG_LINE_INFO, destination_path);
+        check_is_directory(VCPKG_LINE_INFO, include_directory);
+        check_is_directory(VCPKG_LINE_INFO, project_directory);
+        check_is_directory(VCPKG_LINE_INFO, destination_path);
         Binaries debug_binaries = find_binaries_in_dir(project_directory / "Debug");
         Binaries release_binaries = find_binaries_in_dir(project_directory / "Release");
 
