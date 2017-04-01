@@ -621,7 +621,8 @@ namespace vcpkg::PostBuildLint
 
     static size_t perform_all_checks_and_return_error_count(const package_spec& spec, const vcpkg_paths& paths)
     {
-        const fs::path dumpbin_exe = paths.get_dumpbin_exe();
+        // for dumpbin
+        const toolset_t& toolset = paths.get_toolset();
 
         BuildInfo build_info = read_build_info(paths.build_info_file_path(spec));
         const fs::path package_dir = paths.package_dir(spec);
@@ -675,11 +676,11 @@ namespace vcpkg::PostBuildLint
                     dlls.insert(dlls.cend(), debug_dlls.cbegin(), debug_dlls.cend());
                     dlls.insert(dlls.cend(), release_dlls.cbegin(), release_dlls.cend());
 
-                    error_count += check_exports_of_dlls(dlls, dumpbin_exe);
-                    error_count += check_uwp_bit_of_dlls(spec.target_triplet().system(), dlls, dumpbin_exe);
+                    error_count += check_exports_of_dlls(dlls, toolset.dumpbin);
+                    error_count += check_uwp_bit_of_dlls(spec.target_triplet().system(), dlls, toolset.dumpbin);
                     error_count += check_dll_architecture(spec.target_triplet().architecture(), dlls);
 
-                    error_count += check_outdated_crt_linkage_of_dlls(dlls, dumpbin_exe);
+                    error_count += check_outdated_crt_linkage_of_dlls(dlls, toolset.dumpbin);
                     break;
                 }
             case LinkageType::backing_enum_t::STATIC:
@@ -692,9 +693,9 @@ namespace vcpkg::PostBuildLint
 
                     if (!contains_and_enabled(build_info.policies, BuildPolicies::ONLY_RELEASE_CRT))
                     {
-                        error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::DEBUG, build_info.crt_linkage), debug_libs, dumpbin_exe);
+                        error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::DEBUG, build_info.crt_linkage), debug_libs, toolset.dumpbin);
                     }
-                    error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::RELEASE, build_info.crt_linkage), release_libs, dumpbin_exe);
+                    error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::RELEASE, build_info.crt_linkage), release_libs, toolset.dumpbin);
                     break;
                 }
             case LinkageType::backing_enum_t::NULLVALUE:

@@ -7,10 +7,11 @@
 
 namespace vcpkg
 {
-    struct vcvarsall_and_platform_toolset
+    struct toolset_t
     {
-        fs::path path;
-        std::wstring platform_toolset;
+        fs::path dumpbin;
+        fs::path vcvarsall;
+        cwstring_view version;
     };
 
     struct vcpkg_paths
@@ -46,12 +47,12 @@ namespace vcpkg
         const fs::path& get_cmake_exe() const;
         const fs::path& get_git_exe() const;
         const fs::path& get_nuget_exe() const;
-        const fs::path& get_dumpbin_exe() const;
-        const vcvarsall_and_platform_toolset& get_vcvarsall_bat() const;
+        const toolset_t& get_toolset() const;
 
     private:
         lazy<fs::path> cmake_exe;
         lazy<fs::path> git_exe;
         lazy<fs::path> nuget_exe;
+        lazy<toolset_t> toolset;
     };
 }

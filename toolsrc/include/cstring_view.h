@@ -6,6 +6,7 @@ namespace vcpkg
     template<class CharType>
     struct basic_cstring_view
     {
+        constexpr basic_cstring_view() : cstr(nullptr) {}
         constexpr basic_cstring_view(const CharType* cstr) : cstr(cstr) {}
         basic_cstring_view(const std::basic_string<CharType>& str) : cstr(str.c_str()) {}
 

@@ -269,23 +269,33 @@ namespace vcpkg
         return vs2015_path;
     }
 
-    static fs::path find_dumpbin_exe(const vcpkg_paths& paths)
+    static toolset_t find_toolset_instance(const vcpkg_paths& paths)
     {
         const std::vector<std::string> vs2017_installation_instances = get_VS2017_installation_instances(paths);
+        // Note: this will contain a mix of vcvarsall.bat locations and dumpbin.exe locations.
         std::vector<fs::path> paths_examined;
 
         // VS2017
-        for (const std::string& instance : vs2017_installation_instances)
+        for (const fs::path& instance : vs2017_installation_instances)
         {
-            const fs::path msvc_path = Strings::format(R"(%s\VC\Tools\MSVC)", instance);
+            const fs::path vc_dir = instance / "VC";
+
+            // Skip any instances that do not have vcvarsall.
+            const fs::path vcvarsall_bat = vc_dir / "Auxiliary" / "Build" / "vcvarsall.bat";
+            paths_examined.push_back(vcvarsall_bat);
+            if (!fs::exists(vcvarsall_bat))
+                continue;
+
+            // Locate the "best" MSVC toolchain version
+            const fs::path msvc_path = vc_dir / "Tools" / "MSVC";
             std::vector<fs::path> msvc_subdirectories;
-            Files::non_recursive_find_matching_paths_in_dir(msvc_path, [&](const fs::path& current)
+            Files::non_recursive_find_matching_paths_in_dir(msvc_path, [](const fs::path& current)
                                                             {
                                                                 return fs::is_directory(current);
                                                             }, &msvc_subdirectories);
 
             // Sort them so that latest comes first
-            std::sort(msvc_subdirectories.begin(), msvc_subdirectories.end(), [&](const fs::path& left, const fs::path& right)
+            std::sort(msvc_subdirectories.begin(), msvc_subdirectories.end(), [](const fs::path& left, const fs::path& right)
                       {
                           return left.filename() > right.filename();
                       });
@@ -296,51 +306,8 @@ namespace vcpkg
                 paths_examined.push_back(dumpbin_path);
                 if (fs::exists(dumpbin_path))
                 {
-                    return dumpbin_path;
+                    return { dumpbin_path, vcvarsall_bat , L"v141" };
                 }
-            }
-        }
-
-        // VS2015
-        const optional<fs::path>& vs_2015_installation_instance = get_VS2015_installation_instance();
-        if (auto v = vs_2015_installation_instance.get())
-        {
-            const fs::path vs2015_dumpbin_exe = *v / "VC" / "bin" / "dumpbin.exe";
-            paths_examined.push_back(vs2015_dumpbin_exe);
-            if (fs::exists(vs2015_dumpbin_exe))
-            {
-                return vs2015_dumpbin_exe;
-            }
-        }
-
-        System::println(System::color::error, "Could not detect dumpbin.exe.");
-        System::println("The following paths were examined:");
-        for (const fs::path& path : paths_examined)
-        {
-            System::println("    %s", path.generic_string());
-        }
-        Checks::exit_fail(VCPKG_LINE_INFO);
-    }
-
-    const fs::path& vcpkg_paths::get_dumpbin_exe() const
-    {
-        static const fs::path dumpbin_exe = find_dumpbin_exe(*this);
-        return dumpbin_exe;
-    }
-
-    static vcvarsall_and_platform_toolset find_vcvarsall_bat(const vcpkg_paths& paths)
-    {
-        const std::vector<std::string> vs2017_installation_instances = get_VS2017_installation_instances(paths);
-        std::vector<fs::path> paths_examined;
-
-        // VS2017
-        for (const fs::path& instance : vs2017_installation_instances)
-        {
-            const fs::path vcvarsall_bat = instance / "VC" / "Auxiliary" / "Build" / "vcvarsall.bat";
-            paths_examined.push_back(vcvarsall_bat);
-            if (fs::exists(vcvarsall_bat))
-            {
-                return { vcvarsall_bat , L"v141" };
             }
         }
 
@@ -353,22 +320,26 @@ namespace vcpkg
             paths_examined.push_back(vs2015_vcvarsall_bat);
             if (fs::exists(vs2015_vcvarsall_bat))
             {
-                return { vs2015_vcvarsall_bat, L"v140" };
+                const fs::path vs2015_dumpbin_exe = *v / "VC" / "bin" / "dumpbin.exe";
+                paths_examined.push_back(vs2015_dumpbin_exe);
+                if (fs::exists(vs2015_dumpbin_exe))
+                {
+                    return { vs2015_dumpbin_exe, vs2015_vcvarsall_bat, L"v140" };
+                }
             }
         }
 
-        System::println(System::color::error, "Could not detect vcvarsall.bat.");
+        System::println(System::color::error, "Could not locate a complete toolset.");
         System::println("The following paths were examined:");
         for (const fs::path& path : paths_examined)
         {
-            System::println("    %s", path.generic_string());
+            System::println("    %s", path.u8string());
         }
         Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
-    const vcvarsall_and_platform_toolset& vcpkg_paths::get_vcvarsall_bat() const
+    const toolset_t& vcpkg_paths::get_toolset() const
     {
-        static const vcvarsall_and_platform_toolset vcvarsall_bat = find_vcvarsall_bat(*this);
-        return vcvarsall_bat;
+        return this->toolset.get_lazy([this]() { return find_toolset_instance(*this); });
     }
 }

@@ -42,8 +42,8 @@ namespace vcpkg::Commands::Build
         const fs::path& git_exe_path = paths.get_git_exe();
 
         const fs::path ports_cmake_script_path = paths.ports_cmake;
-        const vcvarsall_and_platform_toolset vcvarsall_bat = paths.get_vcvarsall_bat();
-        const std::wstring cmd_set_environment = Strings::wformat(LR"("%s" %s >nul 2>&1)", vcvarsall_bat.path.native(), Strings::utf8_to_utf16(target_triplet.architecture()));
+        const toolset_t& toolset = paths.get_toolset();
+        const std::wstring cmd_set_environment = Strings::wformat(LR"("%s" %s >nul 2>&1)", toolset.vcvarsall.native(), Strings::utf8_to_utf16(target_triplet.architecture()));
 
         const std::wstring cmd_launch_cmake = make_cmake_cmd(cmake_exe_path, ports_cmake_script_path,
                                                              {
@@ -51,7 +51,7 @@ namespace vcpkg::Commands::Build
                                                                  { L"PORT", source_paragraph.name },
                                                                  { L"CURRENT_PORT_DIR", port_dir / "/." },
                                                                  { L"TARGET_TRIPLET", target_triplet.canonical_name() },
-                                                                 { L"VCPKG_PLATFORM_TOOLSET", vcvarsall_bat.platform_toolset },
+                                                                 { L"VCPKG_PLATFORM_TOOLSET", toolset.version },
                                                                  { L"GIT", git_exe_path }
                                                              });
 
