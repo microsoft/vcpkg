@@ -42,7 +42,7 @@ namespace vcpkg::System
     }
 
     template <class Arg1, class...Args>
-    void print(const color c, const char* messageTemplate, const Arg1& messageArg1,  const Args&... messageArgs)
+    void print(const color c, const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
     {
         return print(c, Strings::format(messageTemplate, messageArg1, messageArgs...));
     }
@@ -62,4 +62,8 @@ namespace vcpkg::System
     optional<std::wstring> get_environmental_variable(const cwstring_view varname) noexcept;
 
     optional<std::wstring> get_registry_string(HKEY base, const cwstring_view subkey, const cwstring_view valuename);
+
+    const fs::path& get_ProgramFiles_32_bit();
+
+    const fs::path& get_ProgramFiles_platform_bitness();
 }

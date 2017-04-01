@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "expected.h"
+#include "vcpkg_expected.h"
 #include "vcpkg_paths.h"
 #include "metrics.h"
 #include "vcpkg_System.h"
@@ -98,8 +98,8 @@ namespace vcpkg
         std::vector<fs::path> candidate_paths;
         candidate_paths.push_back(downloaded_copy);
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
-        candidate_paths.push_back(Environment::get_ProgramFiles_platform_bitness() / "CMake" / "bin" / "cmake.exe");
-        candidate_paths.push_back(Environment::get_ProgramFiles_32_bit() / "CMake" / "bin");
+        candidate_paths.push_back(System::get_ProgramFiles_platform_bitness() / "CMake" / "bin" / "cmake.exe");
+        candidate_paths.push_back(System::get_ProgramFiles_32_bit() / "CMake" / "bin");
 
         const optional<fs::path> path = find_if_has_equal_or_greater_version(candidate_paths, version_check_arguments, expected_version);
         if (auto p = path.get())
@@ -142,8 +142,8 @@ namespace vcpkg
         std::vector<fs::path> candidate_paths;
         candidate_paths.push_back(downloaded_copy);
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
-        candidate_paths.push_back(Environment::get_ProgramFiles_platform_bitness() / "git" / "cmd" / "git.exe");
-        candidate_paths.push_back(Environment::get_ProgramFiles_32_bit() / "git" / "cmd" / "git.exe");
+        candidate_paths.push_back(System::get_ProgramFiles_platform_bitness() / "git" / "cmd" / "git.exe");
+        candidate_paths.push_back(System::get_ProgramFiles_32_bit() / "git" / "cmd" / "git.exe");
 
         const optional<fs::path> path = find_if_has_equal_or_greater_version(candidate_paths, version_check_arguments, expected_version);
         if (auto p = path.get())

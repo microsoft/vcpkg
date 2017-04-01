@@ -137,38 +137,4 @@ namespace vcpkg::Environment
         static const vcvarsall_and_platform_toolset vcvarsall_bat = find_vcvarsall_bat(paths);
         return vcvarsall_bat;
     }
-
-    static const fs::path& get_ProgramFiles()
-    {
-        static const fs::path p = System::get_environmental_variable(L"PROGRAMFILES").value_or_exit(VCPKG_LINE_INFO);
-        return p;
-    }
-
-    const fs::path& get_ProgramFiles_32_bit()
-    {
-        static const fs::path p = []() -> fs::path
-            {
-                auto value = System::get_environmental_variable(L"ProgramFiles(x86)");
-                if (auto v = value.get())
-                {
-                    return std::move(*v);
-                }
-                return get_ProgramFiles();
-            }();
-        return p;
-    }
-
-    const fs::path& get_ProgramFiles_platform_bitness()
-    {
-        static const fs::path p = []() -> fs::path
-            {
-                auto value = System::get_environmental_variable(L"ProgramW6432");
-                if (auto v = value.get())
-                {
-                    return std::move(*v);
-                }
-                return get_ProgramFiles();
-            }();
-        return p;
-    }
 }

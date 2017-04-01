@@ -12,8 +12,4 @@ namespace vcpkg::Environment
     };
 
     const vcvarsall_and_platform_toolset& get_vcvarsall_bat(const vcpkg_paths& paths);
-
-    const fs::path& get_ProgramFiles_32_bit();
-
-    const fs::path& get_ProgramFiles_platform_bitness();
 }
