@@ -4,7 +4,7 @@
 #include "vcpkg_Maps.h"
 #include "SourceParagraph.h"
 #include "Paragraphs.h"
-#include "ImmutableSortedVector.h"
+#include "SortedVector.h"
 
 namespace vcpkg::Commands::PortsDiff
 {

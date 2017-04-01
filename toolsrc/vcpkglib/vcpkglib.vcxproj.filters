@@ -236,9 +236,6 @@
     <ClInclude Include="..\include\vcpkglib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\ImmutableSortedVector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\opt_bool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -309,6 +306,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\vcpkg_Util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\SortedVector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

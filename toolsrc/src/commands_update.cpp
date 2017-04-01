@@ -44,7 +44,7 @@ namespace vcpkg::Commands::Update
 
         const StatusParagraphs status_db = database_load_check(paths);
 
-        const auto outdated_packages = ImmutableSortedVector<outdated_package>::create(find_outdated_packages(paths, status_db),
+        const auto outdated_packages = SortedVector<outdated_package>(find_outdated_packages(paths, status_db),
                                                                                        &outdated_package::compare_by_name);
 
         if (outdated_packages.empty())

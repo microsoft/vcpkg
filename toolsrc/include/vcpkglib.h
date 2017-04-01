@@ -2,7 +2,7 @@
 
 #include "StatusParagraphs.h"
 #include "vcpkg_paths.h"
-#include "ImmutableSortedVector.h"
+#include "SortedVector.h"
 
 namespace vcpkg
 {
@@ -15,7 +15,7 @@ namespace vcpkg
     struct StatusParagraph_and_associated_files
     {
         StatusParagraph pgh;
-        ImmutableSortedVector<std::string> files;
+        SortedVector<std::string> files;
     };
 
     std::vector<StatusParagraph*> get_installed_ports(const StatusParagraphs& status_db);

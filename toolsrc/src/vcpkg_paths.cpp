@@ -5,6 +5,7 @@
 #include "vcpkg_System.h"
 #include "package_spec.h"
 #include "vcpkg_Files.h"
+#include "vcpkg_Util.h"
 
 namespace vcpkg
 {
@@ -62,10 +63,7 @@ namespace vcpkg
             return {};
         }
 
-        const std::vector<std::string> paths_to_add = Strings::split(out.output, "\n");
-        std::vector<fs::path> v;
-        v.insert(v.end(), paths_to_add.cbegin(), paths_to_add.cend());
-        return v;
+        return Util::fmap(Strings::split(out.output, "\n"), [](auto&& s) { return fs::path(s); });
     }
 
     static fs::path fetch_dependency(const fs::path scripts_folder, const std::wstring& tool_name, const fs::path& expected_downloaded_path)
@@ -252,21 +250,16 @@ namespace vcpkg
         return Strings::split(ec_data.output, "\n");
     }
 
-    static const optional<fs::path>& get_VS2015_installation_instance()
+    static optional<fs::path> get_VS2015_installation_instance()
     {
-        static const optional<fs::path> vs2015_path = []() -> optional<fs::path>
-            {
-                const optional<std::wstring> vs2015_cmntools_optional = System::get_environmental_variable(L"VS140COMNTOOLS");
-                if (auto v = vs2015_cmntools_optional.get())
-                {
-                    static const fs::path vs2015_cmntools = fs::path(*v).parent_path(); // The call to parent_path() is needed because the env variable has a trailing backslash
-                    static const fs::path vs2015_path = vs2015_cmntools.parent_path().parent_path();
-                    return vs2015_path;
-                }
+        const optional<std::wstring> vs2015_cmntools_optional = System::get_environmental_variable(L"VS140COMNTOOLS");
+        if (auto v = vs2015_cmntools_optional.get())
+        {
+            const fs::path vs2015_cmntools = fs::path(*v).parent_path(); // The call to parent_path() is needed because the env variable has a trailing backslash
+            return vs2015_cmntools.parent_path().parent_path();
+        }
 
-                return nullopt;
-            }();
-        return vs2015_path;
+        return nullopt;
     }
 
     static toolset_t find_toolset_instance(const vcpkg_paths& paths)
@@ -312,7 +305,7 @@ namespace vcpkg
         }
 
         // VS2015
-        const optional<fs::path>& vs_2015_installation_instance = get_VS2015_installation_instance();
+        const optional<fs::path> vs_2015_installation_instance = get_VS2015_installation_instance();
         if (auto v = vs_2015_installation_instance.get())
         {
             const fs::path vs2015_vcvarsall_bat = *v / "VC" / "vcvarsall.bat";
