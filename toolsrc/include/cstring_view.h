@@ -5,12 +5,12 @@ namespace vcpkg
 {
     struct cstring_view
     {
-        cstring_view(const char* cstr) : cstr(cstr) {}
+        constexpr cstring_view(const char* cstr) : cstr(cstr) {}
         cstring_view(const std::string& str) : cstr(str.c_str()) {}
 
-        operator const char*() const { return cstr; }
+        constexpr operator const char*() const { return cstr; }
 
-        const char* c_str() const { return cstr; }
+        constexpr const char* c_str() const { return cstr; }
 
     private:
         const char* cstr;
@@ -20,12 +20,12 @@ namespace vcpkg
 
     struct cwstring_view
     {
-        cwstring_view(const wchar_t* cstr) : cstr(cstr) {}
+        constexpr cwstring_view(const wchar_t* cstr) : cstr(cstr) {}
         cwstring_view(const std::wstring& str) : cstr(str.c_str()) {}
 
-        operator const wchar_t*() const { return cstr; }
+        constexpr operator const wchar_t*() const { return cstr; }
 
-        const wchar_t* c_str() const { return cstr; }
+        constexpr const wchar_t* c_str() const { return cstr; }
 
     private:
         const wchar_t* cstr;
