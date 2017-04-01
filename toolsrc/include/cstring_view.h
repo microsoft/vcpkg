@@ -3,33 +3,24 @@
 
 namespace vcpkg
 {
-    struct cstring_view
+    template<class CharType>
+    struct basic_cstring_view
     {
-        constexpr cstring_view(const char* cstr) : cstr(cstr) {}
-        cstring_view(const std::string& str) : cstr(str.c_str()) {}
+        constexpr basic_cstring_view(const CharType* cstr) : cstr(cstr) {}
+        basic_cstring_view(const std::basic_string<CharType>& str) : cstr(str.c_str()) {}
 
-        constexpr operator const char*() const { return cstr; }
+        constexpr operator const CharType*() const { return cstr; }
 
-        constexpr const char* c_str() const { return cstr; }
+        constexpr const CharType* c_str() const { return cstr; }
 
     private:
-        const char* cstr;
+        const CharType* cstr;
     };
+
+    using cstring_view = basic_cstring_view<char>;
+    using cwstring_view = basic_cstring_view<wchar_t>;
 
     inline const char* to_printf_arg(const cstring_view spec) { return spec.c_str(); }
-
-    struct cwstring_view
-    {
-        constexpr cwstring_view(const wchar_t* cstr) : cstr(cstr) {}
-        cwstring_view(const std::wstring& str) : cstr(str.c_str()) {}
-
-        constexpr operator const wchar_t*() const { return cstr; }
-
-        constexpr const wchar_t* c_str() const { return cstr; }
-
-    private:
-        const wchar_t* cstr;
-    };
 
     inline const wchar_t* to_wprintf_arg(const cwstring_view spec) { return spec.c_str(); }
 
