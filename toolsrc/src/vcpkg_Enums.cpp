@@ -9,7 +9,8 @@ namespace vcpkg::Enums
         return Strings::format("%s_NULLVALUE", enum_name);
     }
 
-    __declspec(noreturn) void nullvalue_used(const LineInfo& line_info, const std::string& enum_name)
+    [[noreturn]]
+    void nullvalue_used(const LineInfo& line_info, const std::string& enum_name)
     {
         Checks::exit_with_message(line_info, "NULLVALUE of enum %s was used", enum_name);
     }
