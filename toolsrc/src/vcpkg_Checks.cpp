@@ -36,20 +36,6 @@ namespace vcpkg::Checks
         exit_fail(line_info);
     }
 
-    __declspec(noreturn) void throw_with_message(const LineInfo& line_info, const cstring_view errorMessage)
-    {
-        print_line_info_if_debug(line_info);
-        throw std::runtime_error(errorMessage);
-    }
-
-    void check_throw(const LineInfo& line_info, bool expression, const cstring_view errorMessage)
-    {
-        if (!expression)
-        {
-            throw_with_message(line_info, errorMessage);
-        }
-    }
-
     void check_exit(const LineInfo& line_info, bool expression)
     {
         if (!expression)
