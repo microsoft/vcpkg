@@ -2,7 +2,7 @@ function(vcpkg_configure_cmake)
     cmake_parse_arguments(_csc "PREFER_NINJA" "SOURCE_PATH;GENERATOR" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" ${ARGN})
 
     if(NOT VCPKG_PLATFORM_TOOLSET)
-        message(FATAL_ERROR "Vcpkg has been updated with VS2017 support, however you need to rebuild vcpkg.exe by re-running bootstrap.ps1\n    powershell -exec bypass scripts\\bootstrap.ps1\n")
+        message(FATAL_ERROR "Vcpkg has been updated with VS2017 support, however you need to rebuild vcpkg.exe by re-running bootstrap-vcpkg.bat\n")
     endif()
 
     if(_csc_GENERATOR)

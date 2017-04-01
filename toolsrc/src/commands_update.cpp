@@ -56,7 +56,7 @@ namespace vcpkg::Commands::Update
             System::println("The following packages differ from their port versions:");
             for (auto&& package : outdated_packages)
             {
-                System::println("    %-27s %s", package.spec.display_name(), package.version_diff.toString());
+                System::println("    %-32s %s", package.spec.display_name(), package.version_diff.toString());
             }
             System::println("\nTo update these packages, run\n    vcpkg remove --purge <pkgs>...\n    vcpkg install <pkgs>...");
         }
@@ -74,7 +74,7 @@ namespace vcpkg::Commands::Update
             {
                 if (maj1 != maj2 || min1 != min2 || rev1 != rev2)
                 {
-                    System::println("Different source is available for vcpkg (%d.%d.%d -> %d.%d.%d). Use powershell -exec bypass scripts/bootstrap.ps1 to update.",
+                    System::println("Different source is available for vcpkg (%d.%d.%d -> %d.%d.%d). Use bootstrap-vcpkg.bat to update.",
                                     maj2, min2, rev2,
                                     maj1, min1, rev1);
                 }

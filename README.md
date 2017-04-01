@@ -14,7 +14,7 @@ Prerequisites:
 
 Clone this repository, then run
 ```
-C:\src\vcpkg> powershell -exec bypass scripts\bootstrap.ps1
+C:\src\vcpkg> .\bootstrap-vcpkg.bat
 ```
 Then, to hook up user-wide integration, run (note: requires admin on first use)
 ```
