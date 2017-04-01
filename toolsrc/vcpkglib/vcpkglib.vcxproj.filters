@@ -311,7 +311,5 @@
     <ClInclude Include="..\include\version_t.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
