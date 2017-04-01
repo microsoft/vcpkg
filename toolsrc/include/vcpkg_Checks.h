@@ -28,26 +28,6 @@ namespace vcpkg::Checks
         exit_with_message(line_info, Strings::format(errorMessageTemplate, errorMessageArg1, errorMessageArgs...));
     }
 
-    _declspec(noreturn) void throw_with_message(const LineInfo& line_info, const cstring_view errorMessage);
-
-    template <class Arg1, class...Args>
-    _declspec(noreturn) void throw_with_message(const LineInfo& line_info, const char* errorMessageTemplate, const Arg1 errorMessageArg1, const Args&... errorMessageArgs)
-    {
-        throw_with_message(line_info, Strings::format(errorMessageTemplate, errorMessageArg1, errorMessageArgs...));
-    }
-
-    void check_throw(const LineInfo& line_info, bool expression, const cstring_view errorMessage);
-
-    template <class Arg1, class...Args>
-    void check_throw(const LineInfo& line_info, bool expression, const char* errorMessageTemplate, const Arg1 errorMessageArg1, const Args&... errorMessageArgs)
-    {
-        if (!expression)
-        {
-            // Only create the string if the expression is false
-            throw_with_message(line_info, Strings::format(errorMessageTemplate, errorMessageArg1, errorMessageArgs...));
-        }
-    }
-
     void check_exit(const LineInfo& line_info, bool expression);
 
     void check_exit(const LineInfo& line_info, bool expression, const cstring_view errorMessage);
