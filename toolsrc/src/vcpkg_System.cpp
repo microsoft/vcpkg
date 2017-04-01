@@ -175,11 +175,6 @@ namespace vcpkg::System
         return *ret.release();
     }
 
-    void set_environmental_variable(const cwstring_view varname, const cwstring_view varvalue) noexcept
-    {
-        _wputenv_s(varname, varvalue);
-    }
-
     static bool is_string_keytype(DWORD hkey_type)
     {
         return hkey_type == REG_SZ || hkey_type == REG_MULTI_SZ || hkey_type == REG_EXPAND_SZ;

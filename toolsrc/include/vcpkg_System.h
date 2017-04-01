@@ -61,7 +61,5 @@ namespace vcpkg::System
 
     optional<std::wstring> get_environmental_variable(const cwstring_view varname) noexcept;
 
-    void set_environmental_variable(const cwstring_view varname, const cwstring_view varvalue) noexcept;
-
     optional<std::wstring> get_registry_string(HKEY base, const cwstring_view subkey, const cwstring_view valuename);
 }
