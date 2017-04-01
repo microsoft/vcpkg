@@ -302,5 +302,8 @@
     <ClInclude Include="..\include\vcpkg_expected.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\cstring_view.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
