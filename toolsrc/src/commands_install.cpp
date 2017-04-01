@@ -116,14 +116,13 @@ namespace vcpkg::Commands::Install
     static ImmutableSortedVector<std::string> build_list_of_package_files(const fs::path& package_dir)
     {
         const std::vector<fs::path> package_file_paths = Files::recursive_find_all_files_in_dir(package_dir);
-        std::vector<std::string> package_files;
         const size_t package_remove_char_count = package_dir.generic_string().size() + 1; // +1 for the slash
-        std::transform(package_file_paths.cbegin(), package_file_paths.cend(), std::back_inserter(package_files), [package_remove_char_count](const fs::path& path)
-                       {
-                           std::string as_string = path.generic_string();
-                           as_string.erase(0, package_remove_char_count);
-                           return std::move(as_string);
-                       });
+        auto package_files = Util::fmap(package_file_paths, [package_remove_char_count](const fs::path& path)
+        {
+            std::string as_string = path.generic_string();
+            as_string.erase(0, package_remove_char_count);
+            return std::move(as_string);
+        });
 
         return ImmutableSortedVector<std::string>::create(std::move(package_files));
     }
