@@ -167,12 +167,13 @@ namespace vcpkg::System
         if (sz == 0)
             return nullopt;
 
-        auto ret = std::make_unique<std::wstring>(sz, L'\0');
-        Checks::check_exit(VCPKG_LINE_INFO, MAXDWORD >= ret->size());
-        auto sz2 = GetEnvironmentVariableW(varname, ret->data(), static_cast<DWORD>(ret->size()));
+        std::wstring ret(sz, L'\0');
+
+        Checks::check_exit(VCPKG_LINE_INFO, MAXDWORD >= ret.size());
+        auto sz2 = GetEnvironmentVariableW(varname, ret.data(), static_cast<DWORD>(ret.size()));
         Checks::check_exit(VCPKG_LINE_INFO, sz2 + 1 == sz);
-        ret->pop_back();
-        return *ret.release();
+        ret.pop_back();
+        return ret;
     }
 
     static bool is_string_keytype(DWORD hkey_type)
