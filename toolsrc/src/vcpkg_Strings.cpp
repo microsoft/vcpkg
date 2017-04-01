@@ -78,16 +78,6 @@ namespace vcpkg::Strings
         return output;
     }
 
-    std::string join(const std::string& delimiter, const std::vector<std::string>& v)
-    {
-        return join(delimiter, v, [](const std::string& p) -> const std::string& { return p; });
-    }
-
-    std::wstring wjoin(const std::wstring& delimiter, const std::vector<std::wstring>& v)
-    {
-        return wjoin(delimiter, v, [](const std::wstring& p) -> const std::wstring&{ return p; });
-    }
-
     void trim(std::string* s)
     {
         s->erase(std::find_if_not(s->rbegin(), s->rend(), details::isspace).base(), s->end());

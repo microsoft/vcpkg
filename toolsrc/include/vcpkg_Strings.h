@@ -74,15 +74,18 @@ namespace vcpkg::Strings
 
     std::string ascii_to_lowercase(const std::string& input);
 
-    template <class T, class Transformer>
-    std::string join(const std::string& delimiter, const std::vector<T>& v, Transformer transformer)
+    template <class T, class Transformer, class CharType>
+    std::basic_string<CharType> join(
+        const CharType* delimiter,
+        const std::vector<T>& v,
+        Transformer transformer)
     {
         if (v.empty())
         {
-            return std::string();
+            return std::basic_string<CharType>();
         }
 
-        std::string output;
+        std::basic_string<CharType> output;
         size_t size = v.size();
 
         output.append(transformer(v.at(0)));
@@ -95,33 +98,13 @@ namespace vcpkg::Strings
 
         return output;
     }
-
-    std::string join(const std::string& delimiter, const std::vector<std::string>& v);
-
-    template <class T, class Transformer>
-    std::wstring wjoin(const std::wstring& delimiter, const std::vector<T>& v, Transformer transformer)
+    template <class T, class CharType>
+    std::basic_string<CharType> join(
+        const CharType* delimiter,
+        const std::vector<T>& v)
     {
-        if (v.empty())
-        {
-            return std::wstring();
-        }
-
-        std::wstring output;
-        size_t size = v.size();
-
-        output.append(transformer(v.at(0)));
-
-        for (size_t i = 1; i < size; ++i)
-        {
-            output.append(delimiter);
-            output.append(transformer(v.at(i)));
-        }
-
-        return output;
+        return join(delimiter, v, [](const T& x) -> const T&{ return x; });
     }
-
-    std::wstring wjoin(const std::wstring& delimiter, const std::vector<std::wstring>& v);
-
 
     void trim(std::string* s);
 

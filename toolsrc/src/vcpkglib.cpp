@@ -222,7 +222,7 @@ namespace vcpkg
 
     std::wstring make_cmake_cmd(const fs::path& cmake_exe, const fs::path& cmake_script, const std::vector<CMakeVariable>& pass_variables)
     {
-        std::wstring cmd_cmake_pass_variables = Strings::wjoin(L" ", pass_variables, [](auto&& v) { return v.s; });
+        std::wstring cmd_cmake_pass_variables = Strings::join(L" ", pass_variables, [](auto&& v) { return v.s; });
         return Strings::wformat(LR"("%s" %s -P "%s")", cmake_exe.native(), cmd_cmake_pass_variables, cmake_script.generic_wstring());
     }
 }
