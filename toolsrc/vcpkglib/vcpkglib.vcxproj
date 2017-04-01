@@ -176,7 +176,6 @@
     <ClInclude Include="..\include\vcpkg_Maps.h" />
     <ClInclude Include="..\include\vcpkg_optional.h" />
     <ClInclude Include="..\include\vcpkg_paths.h" />
-    <ClInclude Include="..\include\vcpkg_Sets.h" />
     <ClInclude Include="..\include\vcpkg_Strings.h" />
     <ClInclude Include="..\include\vcpkg_System.h" />
     <ClInclude Include="..\include\version_t.h" />

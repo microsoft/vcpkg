@@ -254,9 +254,6 @@
     <ClInclude Include="..\include\vcpkg_Maps.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\vcpkg_Sets.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\vcpkg_Strings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
