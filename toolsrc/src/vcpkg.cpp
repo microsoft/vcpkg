@@ -128,15 +128,14 @@ static void loadConfig()
 
             auto user_id = keys["User-Id"];
             auto user_time = keys["User-Since"];
-            Checks::check_throw(VCPKG_LINE_INFO, !user_id.empty() && !user_time.empty(), ""); // Use as goto to the catch statement
-
-            SetUserInformation(user_id, user_time);
-            return;
+            if (!user_id.empty() && !user_time.empty())
+            {
+                SetUserInformation(user_id, user_time);
+                return;
+            }
         }
     }
-    catch (...)
-    {
-    }
+    catch (...) { }
 
     // config file not found, could not be read, or invalid
     std::string user_id, user_time;
@@ -150,9 +149,7 @@ static void loadConfig()
             << "User-Id: " << user_id << "\n"
             << "User-Since: " << user_time << "\n";
     }
-    catch (...)
-    {
-    }
+    catch (...) { }
 }
 
 static std::string trim_path_from_command_line(const std::string& full_command_line)
@@ -233,17 +230,17 @@ int wmain(const int argc, const wchar_t* const* const argv)
 
     fflush(stdout);
     System::print(
-            "vcpkg.exe has crashed.\n"
-            "Please send an email to:\n"
-            "    %s\n"
-            "containing a brief summary of what you were trying to do and the following data blob:\n"
-            "\n"
-            "Version=%s\n"
-            "EXCEPTION='%s'\n"
-            "CMD=\n",
-            Commands::Contact::email(),
-            Commands::Version::version(),
-            exc_msg);
+        "vcpkg.exe has crashed.\n"
+        "Please send an email to:\n"
+        "    %s\n"
+        "containing a brief summary of what you were trying to do and the following data blob:\n"
+        "\n"
+        "Version=%s\n"
+        "EXCEPTION='%s'\n"
+        "CMD=\n",
+        Commands::Contact::email(),
+        Commands::Version::version(),
+        exc_msg);
     fflush(stdout);
     for (int x = 0; x < argc; ++x)
         System::println("%s|", Strings::utf16_to_utf8(argv[x]));
