@@ -51,9 +51,6 @@
     <ClCompile Include="..\src\vcpkg_Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg_Environment.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\coff_file_reader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -231,9 +228,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\vcpkg_Dependencies.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\vcpkg_Environment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\vcpkglib.h">

@@ -169,7 +169,6 @@
     <ClInclude Include="..\include\vcpkg_Commands.h" />
     <ClInclude Include="..\include\vcpkg_Dependencies.h" />
     <ClInclude Include="..\include\vcpkg_Enums.h" />
-    <ClInclude Include="..\include\vcpkg_Environment.h" />
     <ClInclude Include="..\include\vcpkg_Files.h" />
     <ClInclude Include="..\include\vcpkg_Graphs.h" />
     <ClInclude Include="..\include\vcpkg_Input.h" />
@@ -234,7 +233,6 @@
     <ClCompile Include="..\src\vcpkg_cmd_arguments.cpp" />
     <ClCompile Include="..\src\vcpkg_Dependencies.cpp" />
     <ClCompile Include="..\src\vcpkg_Enums.cpp" />
-    <ClCompile Include="..\src\vcpkg_Environment.cpp" />
     <ClCompile Include="..\src\vcpkg_Files.cpp" />
     <ClCompile Include="..\src\vcpkg_Input.cpp" />
     <ClCompile Include="..\src\vcpkg_paths.cpp" />

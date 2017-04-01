@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "vcpkg_Commands.h"
-#include "vcpkg_Environment.h"
 #include "vcpkg_Checks.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Files.h"

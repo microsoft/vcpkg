@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
-#include "vcpkg_Environment.h"
 #include "vcpkg_Input.h"
 
 namespace vcpkg::Commands::BuildExternal

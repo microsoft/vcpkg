@@ -7,7 +7,6 @@
 #include "vcpkg_Dependencies.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Chrono.h"
-#include "vcpkg_Environment.h"
 #include "metrics.h"
 #include "vcpkg_Enums.h"
 #include "Paragraphs.h"
@@ -43,7 +42,7 @@ namespace vcpkg::Commands::Build
         const fs::path& git_exe_path = paths.get_git_exe();
 
         const fs::path ports_cmake_script_path = paths.ports_cmake;
-        const Environment::vcvarsall_and_platform_toolset vcvarsall_bat = Environment::get_vcvarsall_bat(paths);
+        const vcvarsall_and_platform_toolset vcvarsall_bat = paths.get_vcvarsall_bat();
         const std::wstring cmd_set_environment = Strings::wformat(LR"("%s" %s >nul 2>&1)", vcvarsall_bat.path.native(), Strings::utf8_to_utf16(target_triplet.architecture()));
 
         const std::wstring cmd_launch_cmake = make_cmake_cmd(cmake_exe_path, ports_cmake_script_path,

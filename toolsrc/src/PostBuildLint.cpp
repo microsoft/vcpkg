@@ -3,7 +3,6 @@
 #include "package_spec.h"
 #include "vcpkg_Files.h"
 #include "vcpkg_System.h"
-#include "vcpkg_Environment.h"
 #include "coff_file_reader.h"
 #include "PostBuildLint_BuildInfo.h"
 #include "PostBuildLint_BuildType.h"
@@ -622,7 +621,7 @@ namespace vcpkg::PostBuildLint
 
     static size_t perform_all_checks_and_return_error_count(const package_spec& spec, const vcpkg_paths& paths)
     {
-        const fs::path dumpbin_exe = Environment::get_dumpbin_exe(paths);
+        const fs::path dumpbin_exe = paths.get_dumpbin_exe();
 
         BuildInfo build_info = read_build_info(paths.build_info_file_path(spec));
         const fs::path package_dir = paths.package_dir(spec);

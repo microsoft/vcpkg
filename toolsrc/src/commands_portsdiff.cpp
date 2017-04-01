@@ -3,7 +3,6 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Maps.h"
 #include "SourceParagraph.h"
-#include "vcpkg_Environment.h"
 #include "Paragraphs.h"
 
 namespace vcpkg::Commands::PortsDiff
