@@ -178,6 +178,7 @@
     <ClInclude Include="..\include\vcpkg_paths.h" />
     <ClInclude Include="..\include\vcpkg_Strings.h" />
     <ClInclude Include="..\include\vcpkg_System.h" />
+    <ClInclude Include="..\include\vcpkg_Util.h" />
     <ClInclude Include="..\include\version_t.h" />
   </ItemGroup>
   <ItemGroup>

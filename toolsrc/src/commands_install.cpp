@@ -6,6 +6,7 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Dependencies.h"
 #include "vcpkg_Input.h"
+#include "vcpkg_Util.h"
 #include "Paragraphs.h"
 
 namespace vcpkg::Commands::Install
@@ -185,16 +186,25 @@ namespace vcpkg::Commands::Install
 
     void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
     {
+        // input sanitization
         static const std::string example = Commands::Help::create_example_string("install zlib zlib:x64-windows curl boost");
         args.check_min_arg_count(1, example);
-        std::vector<package_spec> specs = Input::check_and_get_package_specs(args.command_arguments, default_target_triplet, example);
-        Input::check_triplets(specs, paths);
+
+        auto specs = Util::fmap(args.command_arguments, [&](auto&& arg)
+        {
+            auto spec = Input::check_and_get_package_spec(arg, default_target_triplet, example);
+            Input::check_triplet(spec.target_triplet(), paths);
+            return spec;
+        });
+
         args.check_and_get_optional_command_arguments({});
 
+        // create the plan
         StatusParagraphs status_db = database_load_check(paths);
         std::vector<package_spec_with_install_plan> install_plan = Dependencies::create_install_plan(paths, specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !install_plan.empty(), "Install plan cannot be empty");
 
+        // log the plan
         std::string specs_string = install_plan[0].spec.toString();
         for (size_t i = 1; i < install_plan.size(); ++i)
         {
@@ -203,6 +213,7 @@ namespace vcpkg::Commands::Install
         }
         TrackProperty("installplan", specs_string);
 
+        // execute the plan
         for (const package_spec_with_install_plan& action : install_plan)
         {
             try

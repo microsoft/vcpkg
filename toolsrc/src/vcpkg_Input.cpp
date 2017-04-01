@@ -6,7 +6,7 @@
 
 namespace vcpkg::Input
 {
-    package_spec check_and_get_package_spec(const std::string& package_spec_as_string, const triplet& default_target_triplet, const std::string& example_text)
+    package_spec check_and_get_package_spec(const std::string& package_spec_as_string, const triplet& default_target_triplet, cstring_view example_text)
     {
         const std::string as_lowercase = Strings::ascii_to_lowercase(package_spec_as_string);
         expected<package_spec> expected_spec = package_spec::from_string(as_lowercase, default_target_triplet);
@@ -21,17 +21,6 @@ namespace vcpkg::Input
         Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
-    std::vector<package_spec> check_and_get_package_specs(const std::vector<std::string>& package_specs_as_strings, const triplet& default_target_triplet, const std::string& example_text)
-    {
-        std::vector<package_spec> specs;
-        for (const std::string& spec : package_specs_as_strings)
-        {
-            specs.push_back(check_and_get_package_spec(spec, default_target_triplet, example_text));
-        }
-
-        return specs;
-    }
-
     void check_triplet(const triplet& t, const vcpkg_paths& paths)
     {
         if (!paths.is_valid_triplet(t))
@@ -40,14 +29,6 @@ namespace vcpkg::Input
             TrackProperty("error", "invalid triplet: " + t.canonical_name());
             Commands::Help::help_topic_valid_triplet(paths);
             Checks::exit_fail(VCPKG_LINE_INFO);
-        }
-    }
-
-    void check_triplets(const std::vector<package_spec>& triplets, const vcpkg_paths& paths)
-    {
-        for (const package_spec& spec : triplets)
-        {
-            check_triplet(spec.target_triplet(), paths);
         }
     }
 }

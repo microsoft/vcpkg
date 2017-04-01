@@ -4,6 +4,7 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Input.h"
 #include "vcpkg_Dependencies.h"
+#include "vcpkg_Util.h"
 
 namespace vcpkg::Commands::Remove
 {
@@ -168,8 +169,14 @@ namespace vcpkg::Commands::Remove
     {
         static const std::string example = Commands::Help::create_example_string("remove zlib zlib:x64-windows curl boost");
         args.check_min_arg_count(1, example);
-        std::vector<package_spec> specs = Input::check_and_get_package_specs(args.command_arguments, default_target_triplet, example);
-        Input::check_triplets(specs, paths);
+
+        auto specs = Util::fmap(args.command_arguments, [&](auto&& arg)
+        {
+            auto spec = Input::check_and_get_package_spec(arg, default_target_triplet, example);
+            Input::check_triplet(spec.target_triplet(), paths);
+            return spec;
+        });
+
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_PURGE, OPTION_RECURSE, OPTION_DRY_RUN });
         const bool alsoRemoveFolderFromPackages = options.find(OPTION_PURGE) != options.end();
         const bool isRecursive = options.find(OPTION_RECURSE) != options.end();
