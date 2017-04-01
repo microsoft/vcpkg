@@ -5,14 +5,6 @@
 
 namespace vcpkg::Checks
 {
-    static void print_line_info_if_debug(const LineInfo& line_info)
-    {
-        if (g_debugging)
-        {
-            System::println(System::color::error, line_info.toString());
-        }
-    }
-
     __declspec(noreturn) void unreachable(const LineInfo& line_info)
     {
         System::println(System::color::error, "Error: Unreachable code was reached");
@@ -26,7 +18,11 @@ namespace vcpkg::Checks
 
     void exit_with_code(const LineInfo& line_info, const int exit_code)
     {
-        print_line_info_if_debug(line_info);
+        if (g_debugging)
+        {
+            System::println(System::color::error, line_info.toString());
+        }
+
         ::exit(exit_code);
     }
 
