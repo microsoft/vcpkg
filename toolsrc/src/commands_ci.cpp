@@ -10,7 +10,7 @@
 
 namespace vcpkg::Commands::CI
 {
-    using Dependencies::package_spec_with_install_plan;
+    using Dependencies::PackageSpecWithInstallPlan;
     using Dependencies::InstallPlanType;
     using Build::BuildResult;
 
@@ -36,7 +36,7 @@ namespace vcpkg::Commands::CI
         const std::vector<PackageSpec> specs = load_all_package_specs(paths.ports, target_triplet);
 
         StatusParagraphs status_db = database_load_check(paths);
-        const std::vector<package_spec_with_install_plan> install_plan = Dependencies::create_install_plan(paths, specs, status_db);
+        const std::vector<PackageSpecWithInstallPlan> install_plan = Dependencies::create_install_plan(paths, specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !install_plan.empty(), "Install plan cannot be empty");
 
         std::vector<BuildResult> results;
@@ -44,7 +44,7 @@ namespace vcpkg::Commands::CI
         const ElapsedTime timer = ElapsedTime::create_started();
         size_t counter = 0;
         const size_t package_count = install_plan.size();
-        for (const package_spec_with_install_plan& action : install_plan)
+        for (const PackageSpecWithInstallPlan& action : install_plan)
         {
             const ElapsedTime build_timer = ElapsedTime::create_started();
             counter++;

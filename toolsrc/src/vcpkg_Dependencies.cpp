@@ -18,7 +18,7 @@ namespace vcpkg::Dependencies
     {
     }
 
-    package_spec_with_install_plan::package_spec_with_install_plan(const PackageSpec& spec, InstallPlanAction&& plan) : spec(spec), plan(std::move(plan))
+    PackageSpecWithInstallPlan::PackageSpecWithInstallPlan(const PackageSpec& spec, InstallPlanAction&& plan) : spec(spec), plan(std::move(plan))
     {
     }
 
@@ -35,7 +35,7 @@ namespace vcpkg::Dependencies
     {
     }
 
-    std::vector<package_spec_with_install_plan> create_install_plan(const vcpkg_paths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db)
+    std::vector<PackageSpecWithInstallPlan> create_install_plan(const vcpkg_paths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db)
     {
         std::unordered_map<PackageSpec, InstallPlanAction> was_examined; // Examine = we have checked its immediate (non-recursive) dependencies
         Graphs::Graph<PackageSpec> graph;
@@ -92,12 +92,12 @@ namespace vcpkg::Dependencies
             }
         }
 
-        std::vector<package_spec_with_install_plan> ret;
+        std::vector<PackageSpecWithInstallPlan> ret;
 
         const std::vector<PackageSpec> pkgs = graph.find_topological_sort();
         for (const PackageSpec& pkg : pkgs)
         {
-            ret.push_back(package_spec_with_install_plan(pkg, std::move(was_examined[pkg])));
+            ret.push_back(PackageSpecWithInstallPlan(pkg, std::move(was_examined[pkg])));
         }
         return ret;
     }

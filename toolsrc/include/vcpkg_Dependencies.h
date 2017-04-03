@@ -36,9 +36,9 @@ namespace vcpkg::Dependencies
         optional<SourceParagraph> source_pgh;
     };
 
-    struct package_spec_with_install_plan
+    struct PackageSpecWithInstallPlan
     {
-        package_spec_with_install_plan(const PackageSpec& spec, InstallPlanAction&& plan);
+        PackageSpecWithInstallPlan(const PackageSpec& spec, InstallPlanAction&& plan);
 
         PackageSpec spec;
         InstallPlanAction plan;
@@ -73,7 +73,7 @@ namespace vcpkg::Dependencies
         remove_plan_action plan;
     };
 
-    std::vector<package_spec_with_install_plan> create_install_plan(const vcpkg_paths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
+    std::vector<PackageSpecWithInstallPlan> create_install_plan(const vcpkg_paths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
 
     std::vector<package_spec_with_remove_plan> create_remove_plan(const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
 }

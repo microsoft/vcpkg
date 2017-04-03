@@ -11,7 +11,7 @@
 
 namespace vcpkg::Commands::Install
 {
-    using Dependencies::package_spec_with_install_plan;
+    using Dependencies::PackageSpecWithInstallPlan;
     using Dependencies::InstallPlanType;
 
     static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryParagraph& bpgh)
@@ -200,7 +200,7 @@ namespace vcpkg::Commands::Install
 
         // create the plan
         StatusParagraphs status_db = database_load_check(paths);
-        std::vector<package_spec_with_install_plan> install_plan = Dependencies::create_install_plan(paths, specs, status_db);
+        std::vector<PackageSpecWithInstallPlan> install_plan = Dependencies::create_install_plan(paths, specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !install_plan.empty(), "Install plan cannot be empty");
 
         // log the plan
@@ -213,7 +213,7 @@ namespace vcpkg::Commands::Install
         Metrics::track_property("installplan", specs_string);
 
         // execute the plan
-        for (const package_spec_with_install_plan& action : install_plan)
+        for (const PackageSpecWithInstallPlan& action : install_plan)
         {
             try
             {

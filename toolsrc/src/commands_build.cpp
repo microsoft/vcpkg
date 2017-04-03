@@ -13,7 +13,7 @@
 
 namespace vcpkg::Commands::Build
 {
-    using Dependencies::package_spec_with_install_plan;
+    using Dependencies::PackageSpecWithInstallPlan;
     using Dependencies::InstallPlanType;
 
     static const std::string OPTION_CHECKS_ONLY = "--checks-only";
@@ -144,9 +144,9 @@ namespace vcpkg::Commands::Build
         const BuildResult result = build_package(spgh, spec, paths, paths.port_dir(spec), status_db);
         if (result == BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES)
         {
-            std::vector<package_spec_with_install_plan> unmet_dependencies = Dependencies::create_install_plan(paths, { spec }, status_db);
+            std::vector<PackageSpecWithInstallPlan> unmet_dependencies = Dependencies::create_install_plan(paths, { spec }, status_db);
             unmet_dependencies.erase(
-                std::remove_if(unmet_dependencies.begin(), unmet_dependencies.end(), [&spec](const package_spec_with_install_plan& p)
+                std::remove_if(unmet_dependencies.begin(), unmet_dependencies.end(), [&spec](const PackageSpecWithInstallPlan& p)
                                {
                                    return (p.spec == spec) || (p.plan.plan_type == InstallPlanType::ALREADY_INSTALLED);
                                }),
@@ -156,7 +156,7 @@ namespace vcpkg::Commands::Build
             System::println(System::color::error, "The build command requires all dependencies to be already installed.");
             System::println("The following dependencies are missing:");
             System::println("");
-            for (const package_spec_with_install_plan& p : unmet_dependencies)
+            for (const PackageSpecWithInstallPlan& p : unmet_dependencies)
             {
                 System::println("    %s", p.spec.toString());
             }
