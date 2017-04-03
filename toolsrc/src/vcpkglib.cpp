@@ -120,7 +120,7 @@ namespace vcpkg
         if (!was_tracked)
         {
             was_tracked = true;
-            Metrics::TrackProperty("listfile", "update to new format");
+            Metrics::track_property("listfile", "update to new format");
         }
 
         // The files are sorted such that directories are placed just before the files they contain

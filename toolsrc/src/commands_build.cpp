@@ -68,12 +68,12 @@ namespace vcpkg::Commands::Build
 
         int return_code = System::cmd_execute_clean(command);
         auto buildtimeus = timer.microseconds();
-        Metrics::TrackMetric("buildtimeus-" + spec.toString(), buildtimeus);
+        Metrics::track_metric("buildtimeus-" + spec.toString(), buildtimeus);
 
         if (return_code != 0)
         {
-            Metrics::TrackProperty("error", "build failed");
-            Metrics::TrackProperty("build_error", spec.toString());
+            Metrics::track_property("error", "build failed");
+            Metrics::track_property("build_error", spec.toString());
             return BuildResult::BUILD_FAILED;
         }
 

@@ -19,7 +19,7 @@ namespace vcpkg::Commands::Version
 #ifndef NDEBUG
             + std::string("-debug")
 #endif
-            + std::string(Metrics::GetCompiledMetricsEnabled() ? "" : "-external");
+            + std::string(Metrics::get_compiled_metrics_enabled() ? "" : "-external");
         return s_version;
     }
 

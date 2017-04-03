@@ -220,45 +220,45 @@ true
     ;
     static bool g_should_print_metrics = false;
 
-    bool GetCompiledMetricsEnabled()
+    bool get_compiled_metrics_enabled()
     {
         return DISABLE_METRICS == 0;
     }
 
-    std::wstring GetSQMUser()
+    std::wstring get_SQM_user()
     {
         auto hkcu_sqmclient = System::get_registry_string(HKEY_CURRENT_USER, LR"(Software\Microsoft\SQMClient)", L"UserId");
         return hkcu_sqmclient.value_or(L"{}");
     }
 
-    void SetUserInformation(const std::string& user_id, const std::string& first_use_time)
+    void set_user_information(const std::string& user_id, const std::string& first_use_time)
     {
         g_metricmessage.user_id = user_id;
         g_metricmessage.user_timestamp = first_use_time;
     }
 
-    void InitUserInformation(std::string& user_id, std::string& first_use_time)
+    void init_user_information(std::string& user_id, std::string& first_use_time)
     {
         user_id = GenerateRandomUUID();
         first_use_time = GetCurrentDateTime();
     }
 
-    void SetSendMetrics(bool should_send_metrics)
+    void set_send_metrics(bool should_send_metrics)
     {
         g_should_send_metrics = should_send_metrics;
     }
 
-    void SetPrintMetrics(bool should_print_metrics)
+    void set_print_metrics(bool should_print_metrics)
     {
         g_should_print_metrics = should_print_metrics;
     }
 
-    void TrackMetric(const std::string& name, double value)
+    void track_metric(const std::string& name, double value)
     {
         g_metricmessage.TrackMetric(name, value);
     }
 
-    void TrackProperty(const std::string& name, const std::wstring& value)
+    void track_property(const std::string& name, const std::wstring& value)
     {
         // Note: this is not valid UTF-16 -> UTF-8, it just yields a close enough approximation for our purposes.
         std::string converted_value;
@@ -274,12 +274,12 @@ true
         g_metricmessage.TrackProperty(name, converted_value);
     }
 
-    void TrackProperty(const std::string& name, const std::string& value)
+    void track_property(const std::string& name, const std::string& value)
     {
         g_metricmessage.TrackProperty(name, value);
     }
 
-    void Upload(const std::string& payload)
+    void upload(const std::string& payload)
     {
         HINTERNET hSession = nullptr, hConnect = nullptr, hRequest = nullptr;
         BOOL bResults = FALSE;
@@ -371,7 +371,7 @@ true
         return fs::path(buf, buf + bytes);
     }
 
-    void Flush()
+    void flush()
     {
         std::string payload = g_metricmessage.format_event_data_template();
         if (g_should_print_metrics)
@@ -379,7 +379,7 @@ true
         if (!g_should_send_metrics)
             return;
 
-        // Upload(payload);
+        // upload(payload);
 
         wchar_t temp_folder[MAX_PATH];
         GetTempPathW(MAX_PATH, temp_folder);
