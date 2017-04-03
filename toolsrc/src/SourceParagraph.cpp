@@ -3,7 +3,7 @@
 #include "vcpkglib_helpers.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Maps.h"
-#include "triplet.h"
+#include "Triplet.h"
 #include "vcpkg_Checks.h"
 
 namespace vcpkg
@@ -125,7 +125,7 @@ namespace vcpkg
         return out;
     }
 
-    std::vector<std::string> filter_dependencies(const std::vector<vcpkg::dependency>& deps, const triplet& t)
+    std::vector<std::string> filter_dependencies(const std::vector<vcpkg::dependency>& deps, const Triplet& t)
     {
         std::vector<std::string> ret;
         for (auto&& dep : deps)

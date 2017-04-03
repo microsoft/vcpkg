@@ -18,14 +18,14 @@ namespace vcpkg::Commands::Build
 
     static const std::string OPTION_CHECKS_ONLY = "--checks-only";
 
-    static void create_binary_control_file(const vcpkg_paths& paths, const SourceParagraph& source_paragraph, const triplet& target_triplet)
+    static void create_binary_control_file(const vcpkg_paths& paths, const SourceParagraph& source_paragraph, const Triplet& target_triplet)
     {
         const BinaryParagraph bpgh = BinaryParagraph(source_paragraph, target_triplet);
         const fs::path binary_control_file = paths.packages / bpgh.dir() / "CONTROL";
         std::ofstream(binary_control_file) << bpgh;
     }
 
-    std::wstring make_build_env_cmd(const triplet& target_triplet, const toolset_t& toolset)
+    std::wstring make_build_env_cmd(const Triplet& target_triplet, const toolset_t& toolset)
     {
         return Strings::wformat(LR"("%s" %s >nul 2>&1)",
             toolset.vcvarsall.native(),
@@ -36,7 +36,7 @@ namespace vcpkg::Commands::Build
     {
         Checks::check_exit(VCPKG_LINE_INFO, spec.name() == source_paragraph.name, "inconsistent arguments to build_package()");
 
-        const triplet& target_triplet = spec.target_triplet();
+        const Triplet& target_triplet = spec.target_triplet();
         for (auto&& dep : filter_dependencies(source_paragraph.depends, target_triplet))
         {
             if (status_db.find_installed(dep, target_triplet) == status_db.end())
@@ -174,7 +174,7 @@ namespace vcpkg::Commands::Build
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
+    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet)
     {
         static const std::string example = Commands::Help::create_example_string("build zlib:x64-windows");
         args.check_exact_arg_count(1, example); // Build only takes a single package and all dependencies must already be installed

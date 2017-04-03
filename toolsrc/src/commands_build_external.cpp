@@ -5,7 +5,7 @@
 
 namespace vcpkg::Commands::BuildExternal
 {
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
+    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet)
     {
         static const std::string example = Commands::Help::create_example_string(R"(build_external zlib2 C:\path\to\dir\with\controlfile\)");
         args.check_exact_arg_count(2, example);

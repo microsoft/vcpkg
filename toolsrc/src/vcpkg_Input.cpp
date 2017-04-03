@@ -6,7 +6,7 @@
 
 namespace vcpkg::Input
 {
-    PackageSpec check_and_get_package_spec(const std::string& package_spec_as_string, const triplet& default_target_triplet, CStringView example_text)
+    PackageSpec check_and_get_package_spec(const std::string& package_spec_as_string, const Triplet& default_target_triplet, CStringView example_text)
     {
         const std::string as_lowercase = Strings::ascii_to_lowercase(package_spec_as_string);
         expected<PackageSpec> expected_spec = PackageSpec::from_string(as_lowercase, default_target_triplet);
@@ -21,7 +21,7 @@ namespace vcpkg::Input
         Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
-    void check_triplet(const triplet& t, const vcpkg_paths& paths)
+    void check_triplet(const Triplet& t, const vcpkg_paths& paths)
     {
         if (!paths.is_valid_triplet(t))
         {

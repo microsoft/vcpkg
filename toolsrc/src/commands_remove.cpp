@@ -162,7 +162,7 @@ namespace vcpkg::Commands::Remove
         }
     }
 
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_triplet)
+    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet)
     {
         static const std::string OPTION_PURGE = "--purge";
         static const std::string OPTION_NO_PURGE = "--no-purge";
@@ -173,7 +173,7 @@ namespace vcpkg::Commands::Remove
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_PURGE, OPTION_NO_PURGE, OPTION_RECURSE, OPTION_DRY_RUN, OPTION_OUTDATED });
 
         StatusParagraphs status_db = database_load_check(paths);
-        std::vector<package_spec> specs;
+        std::vector<PackageSpec> specs;
         if (options.find(OPTION_OUTDATED) != options.cend())
         {
             args.check_exact_arg_count(0, example);
@@ -182,7 +182,7 @@ namespace vcpkg::Commands::Remove
         else
         {
             args.check_min_arg_count(1, example);
-            specs = Util::fmap(args.command_arguments, [&](auto&& arg) { return Input::check_and_get_package_spec(arg, default_triplet, example); });
+            specs = Util::fmap(args.command_arguments, [&](auto&& arg) { return Input::check_and_get_package_spec(arg, default_target_triplet, example); });
             for (auto&& spec : specs)
                 Input::check_triplet(spec.target_triplet(), paths);
         }

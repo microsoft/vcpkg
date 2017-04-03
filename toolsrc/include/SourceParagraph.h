@@ -5,7 +5,7 @@
 
 namespace vcpkg
 {
-    struct triplet;
+    struct Triplet;
 
     struct dependency
     {
@@ -28,7 +28,7 @@ namespace vcpkg
         std::vector<dependency> depends;
     };
 
-    std::vector<std::string> filter_dependencies(const std::vector<vcpkg::dependency>& deps, const triplet& t);
+    std::vector<std::string> filter_dependencies(const std::vector<vcpkg::dependency>& deps, const Triplet& t);
 
     std::vector<vcpkg::dependency> expand_qualified_dependencies(const std::vector<std::string>& depends);
     std::vector<std::string> parse_depends(const std::string& depends_string);

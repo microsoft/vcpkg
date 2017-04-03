@@ -8,7 +8,7 @@ namespace vcpkg
         return (c == '-') || isdigit(c) || (isalpha(c) && islower(c));
     }
 
-    expected<PackageSpec> PackageSpec::from_string(const std::string& spec_as_string, const triplet& default_target_triplet)
+    expected<PackageSpec> PackageSpec::from_string(const std::string& spec_as_string, const Triplet& default_target_triplet)
     {
         auto pos = spec_as_string.find(':');
         if (pos == std::string::npos)
@@ -23,11 +23,11 @@ namespace vcpkg
         }
 
         const std::string name = spec_as_string.substr(0, pos);
-        const triplet target_triplet = triplet::from_canonical_name(spec_as_string.substr(pos + 1));
+        const Triplet target_triplet = Triplet::from_canonical_name(spec_as_string.substr(pos + 1));
         return from_name_and_triplet(name, target_triplet);
     }
 
-    expected<PackageSpec> PackageSpec::from_name_and_triplet(const std::string& name, const triplet& target_triplet)
+    expected<PackageSpec> PackageSpec::from_name_and_triplet(const std::string& name, const Triplet& target_triplet)
     {
         if (std::find_if_not(name.cbegin(), name.cend(), is_valid_package_spec_char) != name.end())
         {
@@ -45,7 +45,7 @@ namespace vcpkg
         return this->m_name;
     }
 
-    const triplet& PackageSpec::target_triplet() const
+    const Triplet& PackageSpec::target_triplet() const
     {
         return this->m_target_triplet;
     }

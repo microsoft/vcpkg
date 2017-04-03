@@ -21,7 +21,7 @@ namespace vcpkg::Commands::Install
         const fs::path package_prefix_path = paths.package_dir(bpgh.spec);
         const size_t prefix_length = package_prefix_path.native().size();
 
-        const triplet& target_triplet = bpgh.spec.target_triplet();
+        const Triplet& target_triplet = bpgh.spec.target_triplet();
         const std::string& target_triplet_as_string = target_triplet.canonical_name();
         std::error_code ec;
         fs::create_directory(paths.installed / target_triplet_as_string, ec);
@@ -96,7 +96,7 @@ namespace vcpkg::Commands::Install
         }
     };
 
-    static std::vector<std::string> extract_files_in_triplet(const std::vector<StatusParagraph_and_associated_files>& pgh_and_files, const triplet& triplet)
+    static std::vector<std::string> extract_files_in_triplet(const std::vector<StatusParagraph_and_associated_files>& pgh_and_files, const Triplet& triplet)
     {
         std::vector<std::string> output;
         for (const StatusParagraph_and_associated_files& t : pgh_and_files)
@@ -127,7 +127,7 @@ namespace vcpkg::Commands::Install
         return SortedVector<std::string>(std::move(package_files));
     }
 
-    static SortedVector<std::string> build_list_of_installed_files(const std::vector<StatusParagraph_and_associated_files>& pgh_and_files, const triplet& triplet)
+    static SortedVector<std::string> build_list_of_installed_files(const std::vector<StatusParagraph_and_associated_files>& pgh_and_files, const Triplet& triplet)
     {
         std::vector<std::string> installed_files = extract_files_in_triplet(pgh_and_files, triplet);
         const size_t installed_remove_char_count = triplet.canonical_name().size() + 1; // +1 for the slash
@@ -139,7 +139,7 @@ namespace vcpkg::Commands::Install
     void install_package(const vcpkg_paths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs* status_db)
     {
         const fs::path package_dir = paths.package_dir(binary_paragraph.spec);
-        const triplet& triplet = binary_paragraph.spec.target_triplet();
+        const Triplet& triplet = binary_paragraph.spec.target_triplet();
         const std::vector<StatusParagraph_and_associated_files> pgh_and_files = get_installed_files(paths, *status_db);
 
         const SortedVector<std::string> package_files = build_list_of_package_files(package_dir);
@@ -183,7 +183,7 @@ namespace vcpkg::Commands::Install
         status_db->insert(std::make_unique<StatusParagraph>(spgh));
     }
 
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
+    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet)
     {
         // input sanitization
         static const std::string example = Commands::Help::create_example_string("install zlib zlib:x64-windows curl boost");

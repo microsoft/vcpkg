@@ -23,7 +23,7 @@ namespace vcpkg
         fs::path build_info_file_path(const PackageSpec& spec) const;
         fs::path listfile_path(const BinaryParagraph& pgh) const;
 
-        bool is_valid_triplet(const triplet& t) const;
+        bool is_valid_triplet(const Triplet& t) const;
 
         fs::path root;
         fs::path packages;

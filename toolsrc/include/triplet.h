@@ -4,15 +4,15 @@
 
 namespace vcpkg
 {
-    struct triplet
+    struct Triplet
     {
-        static triplet from_canonical_name(const std::string& triplet_as_string);
+        static Triplet from_canonical_name(const std::string& triplet_as_string);
 
-        static const triplet X86_WINDOWS;
-        static const triplet X64_WINDOWS;
-        static const triplet X86_UWP;
-        static const triplet X64_UWP;
-        static const triplet ARM_UWP;
+        static const Triplet X86_WINDOWS;
+        static const Triplet X64_WINDOWS;
+        static const Triplet X86_UWP;
+        static const Triplet X64_UWP;
+        static const Triplet ARM_UWP;
 
         const std::string& canonical_name() const;
 
@@ -24,23 +24,23 @@ namespace vcpkg
         std::string m_canonical_name;
     };
 
-    bool operator==(const triplet& left, const triplet& right);
+    bool operator==(const Triplet& left, const Triplet& right);
 
-    bool operator!=(const triplet& left, const triplet& right);
+    bool operator!=(const Triplet& left, const Triplet& right);
 
-    std::string to_string(const triplet& spec);
+    std::string to_string(const Triplet& spec);
 
-    std::string to_printf_arg(const triplet& spec);
+    std::string to_printf_arg(const Triplet& spec);
 
-    std::ostream& operator<<(std::ostream& os, const triplet& spec);
+    std::ostream& operator<<(std::ostream& os, const Triplet& spec);
 }
 
 namespace std
 {
     template <>
-    struct hash<vcpkg::triplet>
+    struct hash<vcpkg::Triplet>
     {
-        size_t operator()(const vcpkg::triplet& t) const
+        size_t operator()(const vcpkg::Triplet& t) const
         {
             std::hash<std::string> hasher;
             size_t hash = 17;

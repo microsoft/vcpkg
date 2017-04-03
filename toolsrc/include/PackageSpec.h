@@ -1,19 +1,19 @@
 #pragma once
 #include "PackageSpecParseResult.h"
-#include "triplet.h"
+#include "Triplet.h"
 #include "vcpkg_expected.h"
 
 namespace vcpkg
 {
     struct PackageSpec
     {
-        static expected<PackageSpec> from_string(const std::string& spec_as_string, const triplet& default_target_triplet);
+        static expected<PackageSpec> from_string(const std::string& spec_as_string, const Triplet& default_target_triplet);
 
-        static expected<PackageSpec> from_name_and_triplet(const std::string& name, const triplet& target_triplet);
+        static expected<PackageSpec> from_name_and_triplet(const std::string& name, const Triplet& target_triplet);
 
         const std::string& name() const;
 
-        const triplet& target_triplet() const;
+        const Triplet& target_triplet() const;
 
         std::string display_name() const;
 
@@ -23,7 +23,7 @@ namespace vcpkg
 
     private:
         std::string m_name;
-        triplet m_target_triplet;
+        Triplet m_target_triplet;
     };
 
     std::string to_printf_arg(const PackageSpec& spec);
@@ -42,7 +42,7 @@ namespace std
         {
             size_t hash = 17;
             hash = hash * 31 + std::hash<std::string>()(value.name());
-            hash = hash * 31 + std::hash<vcpkg::triplet>()(value.target_triplet());
+            hash = hash * 31 + std::hash<vcpkg::Triplet>()(value.target_triplet());
             return hash;
         }
     };

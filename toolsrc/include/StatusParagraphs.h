@@ -18,9 +18,9 @@ namespace vcpkg
         {
             return find(spec.name(), spec.target_triplet());
         }
-        const_iterator find(const std::string& name, const triplet& target_triplet) const;
-        iterator find(const std::string& name, const triplet& target_triplet);
-        const_iterator find_installed(const std::string& name, const triplet& target_triplet) const;
+        const_iterator find(const std::string& name, const Triplet& target_triplet) const;
+        iterator find(const std::string& name, const Triplet& target_triplet);
+        const_iterator find_installed(const std::string& name, const Triplet& target_triplet) const;
 
         iterator insert(std::unique_ptr<StatusParagraph>);
 

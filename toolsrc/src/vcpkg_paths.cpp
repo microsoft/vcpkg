@@ -211,7 +211,7 @@ namespace vcpkg
         return this->vcpkg_dir_info / (pgh.fullstem() + ".list");
     }
 
-    bool vcpkg_paths::is_valid_triplet(const triplet& t) const
+    bool vcpkg_paths::is_valid_triplet(const Triplet& t) const
     {
         auto it = fs::directory_iterator(this->triplets);
         for (; it != fs::directory_iterator(); ++it)

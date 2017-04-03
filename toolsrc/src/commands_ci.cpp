@@ -14,7 +14,7 @@ namespace vcpkg::Commands::CI
     using Dependencies::install_plan_type;
     using Build::BuildResult;
 
-    static std::vector<PackageSpec> load_all_package_specs(const fs::path& ports_directory, const triplet& target_triplet)
+    static std::vector<PackageSpec> load_all_package_specs(const fs::path& ports_directory, const Triplet& target_triplet)
     {
         std::vector<SourceParagraph> ports = Paragraphs::load_all_ports(ports_directory);
         std::vector<PackageSpec> specs;
@@ -26,11 +26,11 @@ namespace vcpkg::Commands::CI
         return specs;
     }
 
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
+    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet)
     {
         static const std::string example = Commands::Help::create_example_string("ci x64-windows");
         args.check_max_arg_count(1, example);
-        const triplet target_triplet = args.command_arguments.size() == 1 ? triplet::from_canonical_name(args.command_arguments.at(0)) : default_target_triplet;
+        const Triplet target_triplet = args.command_arguments.size() == 1 ? Triplet::from_canonical_name(args.command_arguments.at(0)) : default_target_triplet;
         Input::check_triplet(target_triplet, paths);
         args.check_and_get_optional_command_arguments({});
         const std::vector<PackageSpec> specs = load_all_package_specs(paths.ports, target_triplet);

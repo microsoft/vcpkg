@@ -10,7 +10,7 @@ namespace vcpkg
     {
         BinaryParagraph();
         explicit BinaryParagraph(std::unordered_map<std::string, std::string> fields);
-        BinaryParagraph(const SourceParagraph& spgh, const triplet& target_triplet);
+        BinaryParagraph(const SourceParagraph& spgh, const Triplet& target_triplet);
 
         std::string displayname() const;
 

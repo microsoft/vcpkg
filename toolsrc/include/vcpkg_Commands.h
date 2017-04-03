@@ -8,7 +8,7 @@
 
 namespace vcpkg::Commands
 {
-    using command_type_a = void(*)(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet);
+    using command_type_a = void(*)(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet);
     using command_type_b = void(*)(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths);
     using command_type_c = void(*)(const vcpkg_cmd_arguments& args);
 
@@ -29,32 +29,32 @@ namespace vcpkg::Commands
         std::string create_error_message(const BuildResult build_result, const PackageSpec& spec);
         std::string create_user_troubleshooting_message(const PackageSpec& spec);
 
-        std::wstring make_build_env_cmd(const triplet& target_triplet, const toolset_t& toolset);
+        std::wstring make_build_env_cmd(const Triplet& target_triplet, const toolset_t& toolset);
 
         BuildResult build_package(const SourceParagraph& source_paragraph, const PackageSpec& spec, const vcpkg_paths& paths, const fs::path& port_dir, const StatusParagraphs& status_db);
         void perform_and_exit(const PackageSpec& spec, const fs::path& port_dir, const std::unordered_set<std::string>& options, const vcpkg_paths& paths);
-        void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet);
+        void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet);
     }
 
     namespace BuildExternal
     {
-        void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet);
+        void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet);
     }
 
     namespace Install
     {
         void install_package(const vcpkg_paths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs* status_db);
-        void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet);
+        void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet);
     }
 
     namespace CI
     {
-        void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet);
+        void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet);
     }
 
     namespace Remove
     {
-        void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet);
+        void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet);
     }
 
     namespace Update
@@ -73,7 +73,7 @@ namespace vcpkg::Commands
 
     namespace Env
     {
-        void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_triplet);
+        void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const Triplet& default_triplet);
     }
 
     namespace Create

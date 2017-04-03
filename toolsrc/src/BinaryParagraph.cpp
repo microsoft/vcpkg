@@ -29,7 +29,7 @@ namespace vcpkg
     {
         const std::string name = details::remove_required_field(&fields, BinaryParagraphRequiredField::PACKAGE);
         const std::string architecture = details::remove_required_field(&fields, BinaryParagraphRequiredField::ARCHITECTURE);
-        const triplet target_triplet = triplet::from_canonical_name(architecture);
+        const Triplet target_triplet = Triplet::from_canonical_name(architecture);
 
         this->spec = PackageSpec::from_name_and_triplet(name, target_triplet).value_or_exit(VCPKG_LINE_INFO);
         this->version = details::remove_required_field(&fields, BinaryParagraphRequiredField::VERSION);
@@ -44,7 +44,7 @@ namespace vcpkg
         this->depends = parse_depends(deps);
     }
 
-    BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh, const triplet& target_triplet)
+    BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh, const Triplet& target_triplet)
     {
         this->spec = PackageSpec::from_name_and_triplet(spgh.name, target_triplet).value_or_exit(VCPKG_LINE_INFO);
         this->version = spgh.version;

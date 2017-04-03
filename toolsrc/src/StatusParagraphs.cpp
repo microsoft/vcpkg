@@ -11,7 +11,7 @@ namespace vcpkg
     {
     };
 
-    StatusParagraphs::const_iterator StatusParagraphs::find(const std::string& name, const triplet& target_triplet) const
+    StatusParagraphs::const_iterator StatusParagraphs::find(const std::string& name, const Triplet& target_triplet) const
     {
         return std::find_if(begin(), end(), [&](const std::unique_ptr<StatusParagraph>& pgh)
                             {
@@ -20,7 +20,7 @@ namespace vcpkg
                             });
     }
 
-    StatusParagraphs::iterator StatusParagraphs::find(const std::string& name, const triplet& target_triplet)
+    StatusParagraphs::iterator StatusParagraphs::find(const std::string& name, const Triplet& target_triplet)
     {
         return std::find_if(begin(), end(), [&](const std::unique_ptr<StatusParagraph>& pgh)
                             {
@@ -29,7 +29,7 @@ namespace vcpkg
                             });
     }
 
-    StatusParagraphs::const_iterator StatusParagraphs::find_installed(const std::string& name, const triplet& target_triplet) const
+    StatusParagraphs::const_iterator StatusParagraphs::find_installed(const std::string& name, const Triplet& target_triplet) const
     {
         const const_iterator it = find(name, target_triplet);
         if (it != end() && (*it)->want == want_t::install)
