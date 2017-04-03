@@ -5,7 +5,7 @@
 
 namespace vcpkg
 {
-    enum class install_state_t
+    enum class InstallState
     {
         error,
         not_installed,
@@ -30,12 +30,12 @@ namespace vcpkg
 
         BinaryParagraph package;
         want_t want;
-        install_state_t state;
+        InstallState state;
     };
 
     std::ostream& operator<<(std::ostream& os, const StatusParagraph& pgh);
 
-    std::string to_string(install_state_t f);
+    std::string to_string(InstallState f);
 
     std::string to_string(want_t f);
 }

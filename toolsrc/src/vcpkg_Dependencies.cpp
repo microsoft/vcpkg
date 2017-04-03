@@ -122,7 +122,7 @@ namespace vcpkg::Dependencies
             }
 
             const StatusParagraphs::const_iterator it = status_db.find(spec);
-            if (it == status_db.end() || (*it)->state == install_state_t::not_installed)
+            if (it == status_db.end() || (*it)->state == InstallState::not_installed)
             {
                 was_examined.emplace(spec, remove_plan_action(remove_plan_type::NOT_INSTALLED, request_type::USER_REQUESTED));
                 continue;

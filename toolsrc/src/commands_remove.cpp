@@ -32,7 +32,7 @@ namespace vcpkg::Commands::Remove
         StatusParagraph& pkg = **status_db->find(spec.name(), spec.target_triplet());
 
         pkg.want = want_t::purge;
-        pkg.state = install_state_t::half_installed;
+        pkg.state = InstallState::half_installed;
         write_update(paths, pkg);
 
         std::fstream listfile(paths.listfile_path(pkg.package), std::ios_base::in | std::ios_base::binary);
@@ -97,7 +97,7 @@ namespace vcpkg::Commands::Remove
             fs::remove(paths.listfile_path(pkg.package));
         }
 
-        pkg.state = install_state_t::not_installed;
+        pkg.state = InstallState::not_installed;
         write_update(paths, pkg);
     }
 
