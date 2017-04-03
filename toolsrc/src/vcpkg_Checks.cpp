@@ -29,7 +29,7 @@ namespace vcpkg::Checks
     }
 
     [[noreturn]]
-    void exit_with_message(const LineInfo& line_info, const cstring_view errorMessage)
+    void exit_with_message(const LineInfo& line_info, const CStringView errorMessage)
     {
         System::println(System::color::error, errorMessage);
         exit_fail(line_info);
@@ -43,7 +43,7 @@ namespace vcpkg::Checks
         }
     }
 
-    void check_exit(const LineInfo& line_info, bool expression, const cstring_view errorMessage)
+    void check_exit(const LineInfo& line_info, bool expression, const CStringView errorMessage)
     {
         if (!expression)
         {

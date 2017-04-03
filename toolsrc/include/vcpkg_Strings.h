@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "cstring_view.h"
+#include "CStringView.h"
 
 namespace vcpkg::Strings::details
 {
@@ -66,9 +66,9 @@ namespace vcpkg::Strings
         return details::wformat_internal(fmtstr, to_wprintf_arg(to_wprintf_arg(args))...);
     }
 
-    std::wstring utf8_to_utf16(const cstring_view s);
+    std::wstring utf8_to_utf16(const CStringView s);
 
-    std::string utf16_to_utf8(const cwstring_view w);
+    std::string utf16_to_utf8(const CWStringView w);
 
     std::string::const_iterator case_insensitive_ascii_find(const std::string& s, const std::string& pattern);
 

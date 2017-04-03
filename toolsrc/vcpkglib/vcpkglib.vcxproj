@@ -137,7 +137,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\include\BinaryParagraph.h" />
-    <ClInclude Include="..\include\cstring_view.h" />
+    <ClInclude Include="..\include\CStringView.h" />
     <ClInclude Include="..\include\lazy.h" />
     <ClInclude Include="..\include\LineInfo.h" />
     <ClInclude Include="..\include\paragraph_parse_result.h" />

@@ -25,7 +25,7 @@ namespace vcpkg::Checks
 
     // Part of the reason these exist is to not include extra headers in this one to avoid circular #includes. 
     [[noreturn]]
-    void exit_with_message(const LineInfo& line_info, const cstring_view errorMessage);
+    void exit_with_message(const LineInfo& line_info, const CStringView errorMessage);
 
     template <class Arg1, class...Args>
     [[noreturn]]
@@ -36,7 +36,7 @@ namespace vcpkg::Checks
 
     void check_exit(const LineInfo& line_info, bool expression);
 
-    void check_exit(const LineInfo& line_info, bool expression, const cstring_view errorMessage);
+    void check_exit(const LineInfo& line_info, bool expression, const CStringView errorMessage);
 
     template <class Arg1, class...Args>
     void check_exit(const LineInfo& line_info, bool expression, const char* errorMessageTemplate, const Arg1 errorMessageArg1, const Args&... errorMessageArgs)

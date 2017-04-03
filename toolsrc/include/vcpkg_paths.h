@@ -11,7 +11,7 @@ namespace vcpkg
     {
         fs::path dumpbin;
         fs::path vcvarsall;
-        cwstring_view version;
+        CWStringView version;
     };
 
     struct vcpkg_paths
