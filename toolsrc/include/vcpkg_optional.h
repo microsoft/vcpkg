@@ -4,23 +4,23 @@
 
 namespace vcpkg
 {
-    struct nullopt_t
+    struct NullOpt
     {
-        explicit constexpr nullopt_t(int) {}
+        explicit constexpr NullOpt(int) {}
     };
 
-    const static constexpr nullopt_t nullopt{ 0 };
+    const static constexpr NullOpt nullopt{ 0 };
 
     template <class T>
-    class optional
+    class Optional
     {
     public:
         // Constructors are intentionally implicit
-        constexpr optional(nullopt_t) : m_is_present(false), m_t() { }
+        constexpr Optional(NullOpt) : m_is_present(false), m_t() { }
 
-        optional(const T& t) : m_is_present(true), m_t(t) { }
+        Optional(const T& t) : m_is_present(true), m_t(t) { }
 
-        optional(T&& t) : m_is_present(true), m_t(std::move(t)) { }
+        Optional(T&& t) : m_is_present(true), m_t(std::move(t)) { }
 
         T&& value_or_exit(const LineInfo& line_info) &&
         {

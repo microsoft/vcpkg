@@ -20,7 +20,7 @@ namespace vcpkg::Commands::Edit
 
         if (env_EDITOR.empty())
         {
-            const optional<std::wstring> env_EDITOR_optional = System::get_environmental_variable(L"EDITOR");
+            const Optional<std::wstring> env_EDITOR_optional = System::get_environmental_variable(L"EDITOR");
             if (auto e = env_EDITOR_optional.get())
             {
                 env_EDITOR = *e;
@@ -46,7 +46,7 @@ namespace vcpkg::Commands::Edit
             };
             for (auto&& keypath : regkeys)
             {
-                const optional<std::wstring> code_installpath = System::get_registry_string(HKEY_LOCAL_MACHINE, keypath, L"InstallLocation");
+                const Optional<std::wstring> code_installpath = System::get_registry_string(HKEY_LOCAL_MACHINE, keypath, L"InstallLocation");
                 if (auto c = code_installpath.get())
                 {
                     auto p = fs::path(*c) / "Code.exe";

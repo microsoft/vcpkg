@@ -25,15 +25,15 @@ namespace vcpkg::Dependencies
     struct InstallPlanAction
     {
         InstallPlanAction();
-        InstallPlanAction(const InstallPlanType& plan_type, optional<BinaryParagraph> binary_pgh, optional<SourceParagraph> source_pgh);
+        InstallPlanAction(const InstallPlanType& plan_type, Optional<BinaryParagraph> binary_pgh, Optional<SourceParagraph> source_pgh);
         InstallPlanAction(const InstallPlanAction&) = delete;
         InstallPlanAction(InstallPlanAction&&) = default;
         InstallPlanAction& operator=(const InstallPlanAction&) = delete;
         InstallPlanAction& operator=(InstallPlanAction&&) = default;
 
         InstallPlanType plan_type;
-        optional<BinaryParagraph> binary_pgh;
-        optional<SourceParagraph> source_pgh;
+        Optional<BinaryParagraph> binary_pgh;
+        Optional<SourceParagraph> source_pgh;
     };
 
     struct PackageSpecWithInstallPlan

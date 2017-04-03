@@ -69,7 +69,7 @@ namespace vcpkg::System
 
         for (auto&& env_wstring : env_wstrings)
         {
-            const optional<std::wstring> value = System::get_environmental_variable(env_wstring);
+            const Optional<std::wstring> value = System::get_environmental_variable(env_wstring);
             auto v = value.get();
             if (!v || v->empty())
                 continue;
@@ -161,7 +161,7 @@ namespace vcpkg::System
         putchar('\n');
     }
 
-    optional<std::wstring> get_environmental_variable(const CWStringView varname) noexcept
+    Optional<std::wstring> get_environmental_variable(const CWStringView varname) noexcept
     {
         auto sz = GetEnvironmentVariableW(varname, nullptr, 0);
         if (sz == 0)
@@ -181,7 +181,7 @@ namespace vcpkg::System
         return hkey_type == REG_SZ || hkey_type == REG_MULTI_SZ || hkey_type == REG_EXPAND_SZ;
     }
 
-    optional<std::wstring> get_registry_string(HKEY base, const CWStringView subKey, const CWStringView valuename)
+    Optional<std::wstring> get_registry_string(HKEY base, const CWStringView subKey, const CWStringView valuename)
     {
         HKEY k = nullptr;
         LSTATUS ec = RegOpenKeyExW(base, subKey, NULL, KEY_READ, &k);

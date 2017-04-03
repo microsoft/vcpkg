@@ -45,7 +45,7 @@ static void inner(const VcpkgCmdArguments& args)
     }
     else
     {
-        const optional<std::wstring> vcpkg_root_dir_env = System::get_environmental_variable(L"VCPKG_ROOT");
+        const Optional<std::wstring> vcpkg_root_dir_env = System::get_environmental_variable(L"VCPKG_ROOT");
         if (auto v = vcpkg_root_dir_env.get())
         {
             vcpkg_root_dir = fs::absolute(*v);
@@ -76,7 +76,7 @@ static void inner(const VcpkgCmdArguments& args)
     }
     else
     {
-        const optional<std::wstring> vcpkg_default_triplet_env = System::get_environmental_variable(L"VCPKG_DEFAULT_TRIPLET");
+        const Optional<std::wstring> vcpkg_default_triplet_env = System::get_environmental_variable(L"VCPKG_DEFAULT_TRIPLET");
         if (auto v = vcpkg_default_triplet_env.get())
         {
             default_target_triplet = Triplet::from_canonical_name(Strings::utf16_to_utf8(*v));

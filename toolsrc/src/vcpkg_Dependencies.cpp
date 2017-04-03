@@ -13,7 +13,7 @@ namespace vcpkg::Dependencies
     {
     }
 
-    InstallPlanAction::InstallPlanAction(const InstallPlanType& plan_type, optional<BinaryParagraph> binary_pgh, optional<SourceParagraph> source_pgh)
+    InstallPlanAction::InstallPlanAction(const InstallPlanType& plan_type, Optional<BinaryParagraph> binary_pgh, Optional<SourceParagraph> source_pgh)
         : plan_type(std::move(plan_type)), binary_pgh(std::move(binary_pgh)), source_pgh(std::move(source_pgh))
     {
     }

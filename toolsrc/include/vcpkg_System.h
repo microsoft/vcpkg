@@ -59,9 +59,9 @@ namespace vcpkg::System
         return println(c, Strings::format(messageTemplate, messageArg1, messageArgs...));
     }
 
-    optional<std::wstring> get_environmental_variable(const CWStringView varname) noexcept;
+    Optional<std::wstring> get_environmental_variable(const CWStringView varname) noexcept;
 
-    optional<std::wstring> get_registry_string(HKEY base, const CWStringView subkey, const CWStringView valuename);
+    Optional<std::wstring> get_registry_string(HKEY base, const CWStringView subkey, const CWStringView valuename);
 
     const fs::path& get_ProgramFiles_32_bit();
 

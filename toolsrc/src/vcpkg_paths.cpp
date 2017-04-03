@@ -38,7 +38,7 @@ namespace vcpkg
         return false;
     }
 
-    static optional<fs::path> find_if_has_equal_or_greater_version(const std::vector<fs::path>& candidate_paths, const std::wstring& version_check_arguments, const std::array<int, 3>& expected_version)
+    static Optional<fs::path> find_if_has_equal_or_greater_version(const std::vector<fs::path>& candidate_paths, const std::wstring& version_check_arguments, const std::array<int, 3>& expected_version)
     {
         auto it = std::find_if(candidate_paths.cbegin(), candidate_paths.cend(), [&](const fs::path& p)
                                {
@@ -99,7 +99,7 @@ namespace vcpkg
         candidate_paths.push_back(System::get_ProgramFiles_platform_bitness() / "CMake" / "bin" / "cmake.exe");
         candidate_paths.push_back(System::get_ProgramFiles_32_bit() / "CMake" / "bin");
 
-        const optional<fs::path> path = find_if_has_equal_or_greater_version(candidate_paths, version_check_arguments, expected_version);
+        const Optional<fs::path> path = find_if_has_equal_or_greater_version(candidate_paths, version_check_arguments, expected_version);
         if (auto p = path.get())
         {
             return *p;
@@ -143,7 +143,7 @@ namespace vcpkg
         candidate_paths.push_back(System::get_ProgramFiles_platform_bitness() / "git" / "cmd" / "git.exe");
         candidate_paths.push_back(System::get_ProgramFiles_32_bit() / "git" / "cmd" / "git.exe");
 
-        const optional<fs::path> path = find_if_has_equal_or_greater_version(candidate_paths, version_check_arguments, expected_version);
+        const Optional<fs::path> path = find_if_has_equal_or_greater_version(candidate_paths, version_check_arguments, expected_version);
         if (auto p = path.get())
         {
             return *p;
@@ -250,9 +250,9 @@ namespace vcpkg
         return Strings::split(ec_data.output, "\n");
     }
 
-    static optional<fs::path> get_VS2015_installation_instance()
+    static Optional<fs::path> get_VS2015_installation_instance()
     {
-        const optional<std::wstring> vs2015_cmntools_optional = System::get_environmental_variable(L"VS140COMNTOOLS");
+        const Optional<std::wstring> vs2015_cmntools_optional = System::get_environmental_variable(L"VS140COMNTOOLS");
         if (auto v = vs2015_cmntools_optional.get())
         {
             const fs::path vs2015_cmntools = fs::path(*v).parent_path(); // The call to parent_path() is needed because the env variable has a trailing backslash
@@ -305,7 +305,7 @@ namespace vcpkg
         }
 
         // VS2015
-        const optional<fs::path> vs_2015_installation_instance = get_VS2015_installation_instance();
+        const Optional<fs::path> vs_2015_installation_instance = get_VS2015_installation_instance();
         if (auto v = vs_2015_installation_instance.get())
         {
             const fs::path vs2015_vcvarsall_bat = *v / "VC" / "vcvarsall.bat";
