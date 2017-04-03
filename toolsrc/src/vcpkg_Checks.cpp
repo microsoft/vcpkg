@@ -9,7 +9,7 @@ namespace vcpkg::Checks
     void unreachable(const LineInfo& line_info)
     {
         System::println(System::Color::error, "Error: Unreachable code was reached");
-        System::println(System::Color::error, line_info.toString()); // Always print line_info here
+        System::println(System::Color::error, line_info.to_string()); // Always print line_info here
 #ifndef NDEBUG
         std::abort();
 #else
@@ -22,7 +22,7 @@ namespace vcpkg::Checks
     {
         if (g_debugging)
         {
-            System::println(System::Color::error, line_info.toString());
+            System::println(System::Color::error, line_info.to_string());
         }
 
         ::exit(exit_code);

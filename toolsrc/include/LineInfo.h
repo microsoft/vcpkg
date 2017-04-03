@@ -10,7 +10,7 @@ namespace vcpkg
         constexpr LineInfo() : line_number(0), file_name(nullptr) {}
         constexpr LineInfo(const int line_number, const char* file_name) : line_number(line_number), file_name(file_name) {}
 
-        std::string toString() const;
+        std::string to_string() const;
     };
 }
 
