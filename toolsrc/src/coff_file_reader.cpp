@@ -61,13 +61,13 @@ namespace vcpkg::COFFFileReader
         return aligned;
     }
 
-    struct coff_file_header
+    struct CoffFileHeader
     {
         static const size_t HEADER_SIZE = 20;
 
-        static coff_file_header read(fstream& fs)
+        static CoffFileHeader read(fstream& fs)
         {
-            coff_file_header ret;
+            CoffFileHeader ret;
             ret.data.resize(HEADER_SIZE);
             fs.read(&ret.data[0], HEADER_SIZE);
             return ret;
@@ -87,17 +87,17 @@ namespace vcpkg::COFFFileReader
         std::string data;
     };
 
-    struct archive_member_header
+    struct ArchiveMemberHeader
     {
         static const size_t HEADER_SIZE = 60;
 
-        static archive_member_header read(fstream& fs)
+        static ArchiveMemberHeader read(fstream& fs)
         {
             static const size_t HEADER_END_OFFSET = 58;
             static const char* HEADER_END = "`\n";
             static const size_t HEADER_END_SIZE = 2;
 
-            archive_member_header ret;
+            ArchiveMemberHeader ret;
             ret.data.resize(HEADER_SIZE);
             fs.read(&ret.data[0], HEADER_SIZE);
 
@@ -134,9 +134,9 @@ namespace vcpkg::COFFFileReader
         std::string data;
     };
 
-    struct offsets_array
+    struct OffsetsArray
     {
-        static offsets_array read(fstream& fs, const uint32_t offset_count)
+        static OffsetsArray read(fstream& fs, const uint32_t offset_count)
         {
             static const size_t OFFSET_WIDTH = 4;
 
@@ -145,7 +145,7 @@ namespace vcpkg::COFFFileReader
             raw_offsets.resize(raw_offset_size);
             fs.read(&raw_offsets[0], raw_offset_size);
 
-            offsets_array ret;
+            OffsetsArray ret;
             for (uint32_t i = 0; i < offset_count; ++i)
             {
                 const std::string value_as_string = raw_offsets.substr(OFFSET_WIDTH * i, OFFSET_WIDTH * (i + 1));
@@ -166,11 +166,11 @@ namespace vcpkg::COFFFileReader
         std::vector<uint32_t> data;
     };
 
-    struct import_header
+    struct ImportHeader
     {
         static const size_t HEADER_SIZE = 20;
 
-        static import_header read(fstream& fs)
+        static ImportHeader read(fstream& fs)
         {
             static const size_t SIG1_OFFSET = 0;
             static const uint16_t SIG1 = static_cast<uint16_t>(MachineType::UNKNOWN);
@@ -180,7 +180,7 @@ namespace vcpkg::COFFFileReader
             static const uint16_t SIG2 = 0xFFFF;
             static const size_t SIG2_SIZE = 2;
 
-            import_header ret;
+            ImportHeader ret;
             ret.data.resize(HEADER_SIZE);
             fs.read(&ret.data[0], HEADER_SIZE);
 
@@ -227,12 +227,12 @@ namespace vcpkg::COFFFileReader
         Checks::check_exit(VCPKG_LINE_INFO, fs.is_open(), "Could not open file %s for reading", path.generic_string());
 
         read_and_verify_PE_signature(fs);
-        coff_file_header header = coff_file_header::read(fs);
+        CoffFileHeader header = CoffFileHeader::read(fs);
         MachineType machine = header.machineType();
         return {machine};
     }
 
-    struct marker_t
+    struct Marker
     {
         void set_to_offset(const fpos_t position)
         {
@@ -265,28 +265,28 @@ namespace vcpkg::COFFFileReader
 
         read_and_verify_archive_file_signature(fs);
 
-        marker_t marker;
+        Marker marker;
         marker.set_to_current_pos(fs);
 
         // First Linker Member
-        const archive_member_header first_linker_member_header = archive_member_header::read(fs);
+        const ArchiveMemberHeader first_linker_member_header = ArchiveMemberHeader::read(fs);
         Checks::check_exit(VCPKG_LINE_INFO, first_linker_member_header.name().substr(0, 2) == "/ ", "Could not find proper first linker member");
-        marker.advance_by(archive_member_header::HEADER_SIZE + first_linker_member_header.member_size());
+        marker.advance_by(ArchiveMemberHeader::HEADER_SIZE + first_linker_member_header.member_size());
         marker.seek_to_marker(fs);
 
-        const archive_member_header second_linker_member_header = archive_member_header::read(fs);
+        const ArchiveMemberHeader second_linker_member_header = ArchiveMemberHeader::read(fs);
         Checks::check_exit(VCPKG_LINE_INFO, second_linker_member_header.name().substr(0, 2) == "/ ", "Could not find proper second linker member");
         // The first 4 bytes contains the number of archive members
         const uint32_t archive_member_count = read_value_from_stream<uint32_t>(fs);
-        const offsets_array offsets = offsets_array::read(fs, archive_member_count);
-        marker.advance_by(archive_member_header::HEADER_SIZE + second_linker_member_header.member_size());
+        const OffsetsArray offsets = OffsetsArray::read(fs, archive_member_count);
+        marker.advance_by(ArchiveMemberHeader::HEADER_SIZE + second_linker_member_header.member_size());
         marker.seek_to_marker(fs);
 
         bool hasLongnameMemberHeader = peek_value_from_stream<uint16_t>(fs) == 0x2F2F;
         if (hasLongnameMemberHeader)
         {
-            const archive_member_header longnames_member_header = archive_member_header::read(fs);
-            marker.advance_by(archive_member_header::HEADER_SIZE + longnames_member_header.member_size());
+            const ArchiveMemberHeader longnames_member_header = ArchiveMemberHeader::read(fs);
+            marker.advance_by(ArchiveMemberHeader::HEADER_SIZE + longnames_member_header.member_size());
             marker.seek_to_marker(fs);
         }
 
@@ -294,11 +294,11 @@ namespace vcpkg::COFFFileReader
         // Next we have the obj and pseudo-object files
         for (const uint32_t offset : offsets.data)
         {
-            marker.set_to_offset(offset + archive_member_header::HEADER_SIZE); // Skip the header, no need to read it.
+            marker.set_to_offset(offset + ArchiveMemberHeader::HEADER_SIZE); // Skip the header, no need to read it.
             marker.seek_to_marker(fs);
             const uint16_t first_two_bytes = peek_value_from_stream<uint16_t>(fs);
             const bool isImportHeader = getMachineType(first_two_bytes) == MachineType::UNKNOWN;
-            const MachineType machine = isImportHeader ? import_header::read(fs).machineType() : coff_file_header::read(fs).machineType();
+            const MachineType machine = isImportHeader ? ImportHeader::read(fs).machineType() : CoffFileHeader::read(fs).machineType();
             machine_types.insert(machine);
         }
 
