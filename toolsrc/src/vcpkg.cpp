@@ -179,7 +179,7 @@ int wmain(const int argc, const wchar_t* const* const argv)
     if (argc == 0)
         std::abort();
 
-    g_timer = ElapsedTime::createStarted();
+    g_timer = ElapsedTime::create_started();
     atexit([]()
         {
             auto elapsed_us = g_timer.microseconds();

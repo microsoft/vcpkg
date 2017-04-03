@@ -49,14 +49,14 @@ namespace vcpkg
         return Strings::format("%.4g ns", nanos_as_double);
     }
 
-    ElapsedTime ElapsedTime::createStarted()
+    ElapsedTime ElapsedTime::create_started()
     {
         ElapsedTime t;
-        t.m_startTick = std::chrono::high_resolution_clock::now();
+        t.m_start_tick = std::chrono::high_resolution_clock::now();
         return t;
     }
 
-    std::string ElapsedTime::toString() const
+    std::string ElapsedTime::to_string() const
     {
         return format_time_userfriendly(elapsed<std::chrono::nanoseconds>());
     }

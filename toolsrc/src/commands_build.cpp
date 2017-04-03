@@ -64,7 +64,7 @@ namespace vcpkg::Commands::Build
 
         const std::wstring command = Strings::wformat(LR"(%s && %s)", cmd_set_environment, cmd_launch_cmake);
 
-        const ElapsedTime timer = ElapsedTime::createStarted();
+        const ElapsedTime timer = ElapsedTime::create_started();
 
         int return_code = System::cmd_execute_clean(command);
         auto buildtimeus = timer.microseconds();

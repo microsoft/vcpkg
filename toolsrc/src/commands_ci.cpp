@@ -41,12 +41,12 @@ namespace vcpkg::Commands::CI
 
         std::vector<BuildResult> results;
         std::vector<std::chrono::milliseconds::rep> timing;
-        const ElapsedTime timer = ElapsedTime::createStarted();
+        const ElapsedTime timer = ElapsedTime::create_started();
         size_t counter = 0;
         const size_t package_count = install_plan.size();
         for (const package_spec_with_install_plan& action : install_plan)
         {
-            const ElapsedTime build_timer = ElapsedTime::createStarted();
+            const ElapsedTime build_timer = ElapsedTime::create_started();
             counter++;
             System::println("Starting package %d/%d: %s", counter, package_count, action.spec.toString());
 
@@ -92,10 +92,10 @@ namespace vcpkg::Commands::CI
                 System::println(System::color::error, "Error: Could not install package %s: %s", action.spec, e.what());
                 results.back() = BuildResult::NULLVALUE;
             }
-            System::println("Elapsed time for package %s: %s", action.spec, build_timer.toString());
+            System::println("Elapsed time for package %s: %s", action.spec, build_timer.to_string());
         }
 
-        System::println("Total time taken: %s", timer.toString());
+        System::println("Total time taken: %s", timer.to_string());
 
         for (size_t i = 0; i < results.size(); i++)
         {
