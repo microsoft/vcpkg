@@ -16,7 +16,7 @@ namespace vcpkg::Input
         }
 
         // Intentionally show the lowercased string
-        System::println(System::color::error, "Error: %s: %s", expected_spec.error_code().message(), as_lowercase);
+        System::println(System::Color::error, "Error: %s: %s", expected_spec.error_code().message(), as_lowercase);
         System::print(example_text);
         Checks::exit_fail(VCPKG_LINE_INFO);
     }
@@ -25,7 +25,7 @@ namespace vcpkg::Input
     {
         if (!paths.is_valid_triplet(t))
         {
-            System::println(System::color::error, "Error: invalid triplet: %s", t.canonical_name());
+            System::println(System::Color::error, "Error: invalid triplet: %s", t.canonical_name());
             Metrics::track_property("error", "invalid triplet: " + t.canonical_name());
             Commands::Help::help_topic_valid_triplet(paths);
             Checks::exit_fail(VCPKG_LINE_INFO);

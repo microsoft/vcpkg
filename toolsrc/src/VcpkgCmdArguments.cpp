@@ -14,7 +14,7 @@ namespace vcpkg
     {
         if (arg_begin == arg_end)
         {
-            System::println(System::color::error, "Error: expected value after %s", option_name);
+            System::println(System::Color::error, "Error: expected value after %s", option_name);
             Metrics::track_property("error", "error option name");
             Commands::Help::print_usage();
             Checks::exit_fail(VCPKG_LINE_INFO);
@@ -22,7 +22,7 @@ namespace vcpkg
 
         if (option_field != nullptr)
         {
-            System::println(System::color::error, "Error: %s specified multiple times", option_name);
+            System::println(System::Color::error, "Error: %s specified multiple times", option_name);
             Metrics::track_property("error", "error option specified multiple times");
             Commands::Help::print_usage();
             Checks::exit_fail(VCPKG_LINE_INFO);
@@ -38,7 +38,7 @@ namespace vcpkg
     {
         if (option_field != OptBoolT::UNSPECIFIED && option_field != new_setting)
         {
-            System::println(System::color::error, "Error: conflicting values specified for --%s", option_name);
+            System::println(System::Color::error, "Error: conflicting values specified for --%s", option_name);
             Metrics::track_property("error", "error conflicting switches");
             Commands::Help::print_usage();
             Checks::exit_fail(VCPKG_LINE_INFO);
@@ -150,7 +150,7 @@ namespace vcpkg
 
         if (!options_copy.empty())
         {
-            System::println(System::color::error, "Unknown option(s) for command '%s':", this->command);
+            System::println(System::Color::error, "Unknown option(s) for command '%s':", this->command);
             for (const std::string& option : options_copy)
             {
                 System::println(option);
@@ -181,7 +181,7 @@ namespace vcpkg
         const size_t actual_arg_count = command_arguments.size();
         if (actual_arg_count > expected_arg_count)
         {
-            System::println(System::color::error, "Error: `%s` requires at most %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
+            System::println(System::Color::error, "Error: `%s` requires at most %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
             System::print(example_text);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
@@ -192,7 +192,7 @@ namespace vcpkg
         const size_t actual_arg_count = command_arguments.size();
         if (actual_arg_count < expected_arg_count)
         {
-            System::println(System::color::error, "Error: `%s` requires at least %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
+            System::println(System::Color::error, "Error: `%s` requires at least %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
             System::print(example_text);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
@@ -203,7 +203,7 @@ namespace vcpkg
         const size_t actual_arg_count = command_arguments.size();
         if (actual_arg_count != expected_arg_count)
         {
-            System::println(System::color::error, "Error: `%s` requires %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
+            System::println(System::Color::error, "Error: `%s` requires %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
             System::print(example_text);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }

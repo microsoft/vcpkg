@@ -142,7 +142,7 @@ namespace vcpkg::System
         putchar('\n');
     }
 
-    void print(const color c, const CStringView message)
+    void print(const Color c, const CStringView message)
     {
         HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -155,7 +155,7 @@ namespace vcpkg::System
         SetConsoleTextAttribute(hConsole, original_color);
     }
 
-    void println(const color c, const CStringView message)
+    void println(const Color c, const CStringView message)
     {
         print(c, message);
         putchar('\n');

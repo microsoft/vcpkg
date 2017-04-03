@@ -8,8 +8,8 @@ namespace vcpkg::Checks
     [[noreturn]]
     void unreachable(const LineInfo& line_info)
     {
-        System::println(System::color::error, "Error: Unreachable code was reached");
-        System::println(System::color::error, line_info.toString()); // Always print line_info here
+        System::println(System::Color::error, "Error: Unreachable code was reached");
+        System::println(System::Color::error, line_info.toString()); // Always print line_info here
 #ifndef NDEBUG
         std::abort();
 #else
@@ -22,7 +22,7 @@ namespace vcpkg::Checks
     {
         if (g_debugging)
         {
-            System::println(System::color::error, line_info.toString());
+            System::println(System::Color::error, line_info.toString());
         }
 
         ::exit(exit_code);
@@ -31,7 +31,7 @@ namespace vcpkg::Checks
     [[noreturn]]
     void exit_with_message(const LineInfo& line_info, const CStringView errorMessage)
     {
-        System::println(System::color::error, errorMessage);
+        System::println(System::Color::error, errorMessage);
         exit_fail(line_info);
     }
 

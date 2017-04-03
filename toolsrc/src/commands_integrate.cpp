@@ -153,7 +153,7 @@ namespace vcpkg::Commands::Integrate
                     case elevation_prompt_user_choice::yes:
                         break;
                     case elevation_prompt_user_choice::no:
-                        System::println(System::color::warning, "Warning: Previous integration file was not removed");
+                        System::println(System::Color::warning, "Warning: Previous integration file was not removed");
                         Checks::exit_fail(VCPKG_LINE_INFO);
                     default:
                         Checks::unreachable(VCPKG_LINE_INFO);
@@ -192,7 +192,7 @@ namespace vcpkg::Commands::Integrate
                 case elevation_prompt_user_choice::yes:
                     break;
                 case elevation_prompt_user_choice::no:
-                    System::println(System::color::warning, "Warning: integration was not applied");
+                    System::println(System::Color::warning, "Warning: integration was not applied");
                     Checks::exit_fail(VCPKG_LINE_INFO);
                 default:
                     Checks::unreachable(VCPKG_LINE_INFO);
@@ -207,10 +207,10 @@ namespace vcpkg::Commands::Integrate
 
         if (!fs::copy_file(appdata_src_path, appdata_dst_path, fs::copy_options::overwrite_existing))
         {
-            System::println(System::color::error, "Error: Failed to copy file: %s -> %s", appdata_src_path.string(), appdata_dst_path.string());
+            System::println(System::Color::error, "Error: Failed to copy file: %s -> %s", appdata_src_path.string(), appdata_dst_path.string());
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
-        System::println(System::color::success, "Applied user-wide integration for this vcpkg root.");
+        System::println(System::Color::success, "Applied user-wide integration for this vcpkg root.");
         const fs::path cmake_toolchain = paths.buildsystems / "vcpkg.cmake";
         System::println("\n"
                         "All MSBuild C++ projects can now #include any installed libraries.\n"
@@ -233,11 +233,11 @@ namespace vcpkg::Commands::Integrate
 
         if (was_deleted)
         {
-            System::println(System::color::success, "User-wide integration was removed");
+            System::println(System::Color::success, "User-wide integration was removed");
         }
         else
         {
-            System::println(System::color::success, "User-wide integration is not installed");
+            System::println(System::Color::success, "User-wide integration is not installed");
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
@@ -269,7 +269,7 @@ namespace vcpkg::Commands::Integrate
 
         const fs::path nuget_package = buildsystems_dir / Strings::format("%s.%s.nupkg", nuget_id, nupkg_version);
         Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0 && fs::exists(nuget_package), "Error: NuGet package creation failed");
-        System::println(System::color::success, "Created nupkg: %s", nuget_package.string());
+        System::println(System::Color::success, "Created nupkg: %s", nuget_package.string());
 
         System::println(R"(
 With a project open, go to Tools->NuGet Package Manager->Package Manager Console and paste:

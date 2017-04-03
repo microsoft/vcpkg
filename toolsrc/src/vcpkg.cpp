@@ -19,7 +19,7 @@ using namespace vcpkg;
 
 void invalid_command(const std::string& cmd)
 {
-    System::println(System::color::error, "invalid command: %s", cmd);
+    System::println(System::Color::error, "invalid command: %s", cmd);
     Commands::Help::print_usage();
     Checks::exit_fail(VCPKG_LINE_INFO);
 }

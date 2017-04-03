@@ -58,7 +58,7 @@ namespace vcpkg::Commands::CI
                 if (action.plan.plan_type == InstallPlanType::ALREADY_INSTALLED)
                 {
                     results.back() = BuildResult::SUCCEEDED;
-                    System::println(System::color::success, "Package %s is already installed", action.spec);
+                    System::println(System::Color::success, "Package %s is already installed", action.spec);
                 }
                 else if (action.plan.plan_type == InstallPlanType::BUILD_AND_INSTALL)
                 {
@@ -71,25 +71,25 @@ namespace vcpkg::Commands::CI
                     results.back() = result;
                     if (result != BuildResult::SUCCEEDED)
                     {
-                        System::println(System::color::error, Build::create_error_message(result, action.spec));
+                        System::println(System::Color::error, Build::create_error_message(result, action.spec));
                         continue;
                     }
                     const BinaryParagraph bpgh = Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO);
                     Install::install_package(paths, bpgh, &status_db);
-                    System::println(System::color::success, "Package %s is installed", action.spec);
+                    System::println(System::Color::success, "Package %s is installed", action.spec);
                 }
                 else if (action.plan.plan_type == InstallPlanType::INSTALL)
                 {
                     results.back() = BuildResult::SUCCEEDED;
                     Install::install_package(paths, action.plan.binary_pgh.value_or_exit(VCPKG_LINE_INFO), &status_db);
-                    System::println(System::color::success, "Package %s is installed from cache", action.spec);
+                    System::println(System::Color::success, "Package %s is installed from cache", action.spec);
                 }
                 else
                     Checks::unreachable(VCPKG_LINE_INFO);
             }
             catch (const std::exception& e)
             {
-                System::println(System::color::error, "Error: Could not install package %s: %s", action.spec, e.what());
+                System::println(System::Color::error, "Error: Could not install package %s: %s", action.spec, e.what());
                 results.back() = BuildResult::NULLVALUE;
             }
             System::println("Elapsed time for package %s: %s", action.spec, build_timer.to_string());

@@ -23,7 +23,7 @@ namespace vcpkg::System
 
     std::wstring create_powershell_script_cmd(const fs::path& script_path, const CWStringView args = L"");
 
-    enum class color
+    enum class Color
     {
         success = 10,
         error = 12,
@@ -32,8 +32,8 @@ namespace vcpkg::System
 
     void print(const CStringView message);
     void println(const CStringView message);
-    void print(const color c, const CStringView message);
-    void println(const color c, const CStringView message);
+    void print(const Color c, const CStringView message);
+    void println(const Color c, const CStringView message);
 
     template <class Arg1, class...Args>
     void print(const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
@@ -42,7 +42,7 @@ namespace vcpkg::System
     }
 
     template <class Arg1, class...Args>
-    void print(const color c, const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
+    void print(const Color c, const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
     {
         return print(c, Strings::format(messageTemplate, messageArg1, messageArgs...));
     }
@@ -54,7 +54,7 @@ namespace vcpkg::System
     }
 
     template <class Arg1, class...Args>
-    void println(const color c, const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
+    void println(const Color c, const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
     {
         return println(c, Strings::format(messageTemplate, messageArg1, messageArgs...));
     }

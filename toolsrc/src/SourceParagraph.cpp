@@ -57,7 +57,7 @@ namespace vcpkg
             const std::string remaining_fields_as_string = Strings::join("\n    ", remaining_fields);
             const std::string valid_fields_as_string = Strings::join("\n    ", valid_fields);
 
-            System::println(System::color::error, "Error: There are invalid fields in the Source Paragraph of %s", this->name);
+            System::println(System::Color::error, "Error: There are invalid fields in the Source Paragraph of %s", this->name);
             System::println("The following fields were not expected:\n\n    %s\n\n", remaining_fields_as_string);
             System::println("This is the list of valid fields (case-sensitive): \n\n    %s\n", valid_fields_as_string);
             Checks::exit_fail(VCPKG_LINE_INFO);

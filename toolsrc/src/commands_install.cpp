@@ -42,7 +42,7 @@ namespace vcpkg::Commands::Install
             auto status = it->status(ec);
             if (ec)
             {
-                System::println(System::color::error, "failed: %s: %s", it->path().u8string(), ec.message());
+                System::println(System::Color::error, "failed: %s: %s", it->path().u8string(), ec.message());
                 continue;
             }
 
@@ -51,7 +51,7 @@ namespace vcpkg::Commands::Install
                 fs::create_directory(target, ec);
                 if (ec)
                 {
-                    System::println(System::color::error, "failed: %s: %s", target.u8string(), ec.message());
+                    System::println(System::Color::error, "failed: %s: %s", target.u8string(), ec.message());
                 }
 
                 // Trailing backslash for directories
@@ -63,12 +63,12 @@ namespace vcpkg::Commands::Install
             {
                 if (fs::exists(target))
                 {
-                    System::println(System::color::warning, "File %s was already present and will be overwritten", target.u8string(), ec.message());
+                    System::println(System::Color::warning, "File %s was already present and will be overwritten", target.u8string(), ec.message());
                 }
                 fs::copy_file(*it, target, fs::copy_options::overwrite_existing, ec);
                 if (ec)
                 {
-                    System::println(System::color::error, "failed: %s: %s", target.u8string(), ec.message());
+                    System::println(System::Color::error, "failed: %s: %s", target.u8string(), ec.message());
                 }
                 output.push_back(Strings::format(R"(%s/%s)", target_triplet_as_string, suffix));
                 continue;
@@ -76,11 +76,11 @@ namespace vcpkg::Commands::Install
 
             if (!fs::status_known(status))
             {
-                System::println(System::color::error, "failed: %s: unknown status", it->path().u8string());
+                System::println(System::Color::error, "failed: %s: unknown status", it->path().u8string());
                 continue;
             }
 
-            System::println(System::color::error, "failed: %s: cannot handle file type", it->path().u8string());
+            System::println(System::Color::error, "failed: %s: cannot handle file type", it->path().u8string());
         }
 
         std::sort(output.begin(), output.end());
@@ -153,7 +153,7 @@ namespace vcpkg::Commands::Install
         if (!intersection.empty())
         {
             const fs::path triplet_install_path = paths.installed / triplet.canonical_name();
-            System::println(System::color::error, "The following files are already installed in %s and are in conflict with %s",
+            System::println(System::Color::error, "The following files are already installed in %s and are in conflict with %s",
                             triplet_install_path.generic_string(),
                             binary_paragraph.spec);
             System::print("\n    ");
@@ -221,7 +221,7 @@ namespace vcpkg::Commands::Install
                 {
                     if (std::find(specs.begin(), specs.end(), action.spec) != specs.end())
                     {
-                        System::println(System::color::success, "Package %s is already installed", action.spec);
+                        System::println(System::Color::success, "Package %s is already installed", action.spec);
                     }
                 }
                 else if (action.plan.plan_type == InstallPlanType::BUILD_AND_INSTALL)
@@ -233,25 +233,25 @@ namespace vcpkg::Commands::Install
                                                                                      status_db);
                     if (result != Build::BuildResult::SUCCEEDED)
                     {
-                        System::println(System::color::error, Build::create_error_message(result, action.spec));
+                        System::println(System::Color::error, Build::create_error_message(result, action.spec));
                         System::println(Build::create_user_troubleshooting_message(action.spec));
                         Checks::exit_fail(VCPKG_LINE_INFO);
                     }
                     const BinaryParagraph bpgh = Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO);
                     install_package(paths, bpgh, &status_db);
-                    System::println(System::color::success, "Package %s is installed", action.spec);
+                    System::println(System::Color::success, "Package %s is installed", action.spec);
                 }
                 else if (action.plan.plan_type == InstallPlanType::INSTALL)
                 {
                     install_package(paths, action.plan.binary_pgh.value_or_exit(VCPKG_LINE_INFO), &status_db);
-                    System::println(System::color::success, "Package %s is installed", action.spec);
+                    System::println(System::Color::success, "Package %s is installed", action.spec);
                 }
                 else
                     Checks::unreachable(VCPKG_LINE_INFO);
             }
             catch (const std::exception& e)
             {
-                System::println(System::color::error, "Error: Could not install package %s: %s", action.spec, e.what());
+                System::println(System::Color::error, "Error: Could not install package %s: %s", action.spec, e.what());
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
         }

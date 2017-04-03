@@ -153,7 +153,7 @@ namespace vcpkg::Commands::Build
                 unmet_dependencies.end());
 
             Checks::check_exit(VCPKG_LINE_INFO, !unmet_dependencies.empty());
-            System::println(System::color::error, "The build command requires all dependencies to be already installed.");
+            System::println(System::Color::error, "The build command requires all dependencies to be already installed.");
             System::println("The following dependencies are missing:");
             System::println("");
             for (const PackageSpecWithInstallPlan& p : unmet_dependencies)
@@ -166,7 +166,7 @@ namespace vcpkg::Commands::Build
 
         if (result != BuildResult::SUCCEEDED)
         {
-            System::println(System::color::error, Build::create_error_message(result, spec));
+            System::println(System::Color::error, Build::create_error_message(result, spec));
             System::println(Build::create_user_troubleshooting_message(spec));
             Checks::exit_fail(VCPKG_LINE_INFO);
         }

@@ -73,7 +73,7 @@ namespace vcpkg
         System::ExitCodeAndOutput rc = System::cmd_execute_and_capture_output(install_cmd);
         if (rc.exit_code)
         {
-            System::println(System::color::error, "Launching powershell failed or was denied");
+            System::println(System::Color::error, "Launching powershell failed or was denied");
             Metrics::track_property("error", "powershell install failed");
             Metrics::track_property("installcmd", install_cmd);
             Checks::exit_with_code(VCPKG_LINE_INFO, rc.exit_code);
@@ -322,7 +322,7 @@ namespace vcpkg
             }
         }
 
-        System::println(System::color::error, "Could not locate a complete toolset.");
+        System::println(System::Color::error, "Could not locate a complete toolset.");
         System::println("The following paths were examined:");
         for (const fs::path& path : paths_examined)
         {

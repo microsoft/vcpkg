@@ -81,7 +81,7 @@ namespace vcpkg::Commands::Help
         }
         else
         {
-            System::println(System::color::error, "Error: unknown topic %s", topic);
+            System::println(System::Color::error, "Error: unknown topic %s", topic);
             print_usage();
             Checks::exit_fail(VCPKG_LINE_INFO);
         }

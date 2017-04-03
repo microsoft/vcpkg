@@ -19,11 +19,11 @@ namespace vcpkg::Commands::Remove
         fs::remove_all(directory, ec);
         if (!ec)
         {
-            System::println(System::color::success, "Cleaned up %s", directory.string());
+            System::println(System::Color::success, "Cleaned up %s", directory.string());
         }
         if (fs::exists(directory))
         {
-            System::println(System::color::warning, "Some files in %s were unable to be removed. Close any editors operating in this directory and retry.", directory.string());
+            System::println(System::Color::warning, "Some files in %s were unable to be removed. Close any editors operating in this directory and retry.", directory.string());
         }
     }
 
@@ -52,7 +52,7 @@ namespace vcpkg::Commands::Remove
                 auto status = fs::status(target, ec);
                 if (ec)
                 {
-                    System::println(System::color::error, "failed: %s", ec.message());
+                    System::println(System::Color::error, "failed: %s", ec.message());
                     continue;
                 }
 
@@ -65,16 +65,16 @@ namespace vcpkg::Commands::Remove
                     fs::remove(target, ec);
                     if (ec)
                     {
-                        System::println(System::color::error, "failed: %s: %s", target.u8string(), ec.message());
+                        System::println(System::Color::error, "failed: %s: %s", target.u8string(), ec.message());
                     }
                 }
                 else if (!fs::status_known(status))
                 {
-                    System::println(System::color::warning, "Warning: unknown status: %s", target.u8string());
+                    System::println(System::Color::warning, "Warning: unknown status: %s", target.u8string());
                 }
                 else
                 {
-                    System::println(System::color::warning, "Warning: %s: cannot handle file type", target.u8string());
+                    System::println(System::Color::warning, "Warning: %s: cannot handle file type", target.u8string());
                 }
             }
 
@@ -88,7 +88,7 @@ namespace vcpkg::Commands::Remove
                     fs::remove(*b, ec);
                     if (ec)
                     {
-                        System::println(System::color::error, "failed: %s", ec.message());
+                        System::println(System::Color::error, "failed: %s", ec.message());
                     }
                 }
             }
@@ -191,7 +191,7 @@ namespace vcpkg::Commands::Remove
         if (options.find(OPTION_PURGE) != options.end() && !alsoRemoveFolderFromPackages)
         {
             // User specified --purge and --no-purge
-            System::println(System::color::error, "Error: cannot specify both --no-purge and --purge.");
+            System::println(System::Color::error, "Error: cannot specify both --no-purge and --purge.");
             System::print(example);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
@@ -210,11 +210,11 @@ namespace vcpkg::Commands::Remove
 
         if (has_non_user_requested_packages)
         {
-            System::println(System::color::warning, "Additional packages (*) need to be removed to complete this operation.");
+            System::println(System::Color::warning, "Additional packages (*) need to be removed to complete this operation.");
 
             if (!isRecursive)
             {
-                System::println(System::color::warning, "If you are sure you want to remove them, run the command with the --recurse option");
+                System::println(System::Color::warning, "If you are sure you want to remove them, run the command with the --recurse option");
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
         }
@@ -231,12 +231,12 @@ namespace vcpkg::Commands::Remove
             switch (action.plan.plan_type)
             {
                 case RemovePlanType::NOT_INSTALLED:
-                    System::println(System::color::success, "Package %s is not installed", display_name);
+                    System::println(System::Color::success, "Package %s is not installed", display_name);
                     break;
                 case RemovePlanType::REMOVE:
                     System::println("Removing package %s... ", display_name);
                     remove_package(paths, action.spec, &status_db);
-                    System::println(System::color::success, "Removing package %s... done", display_name);
+                    System::println(System::Color::success, "Removing package %s... done", display_name);
                     break;
                 case RemovePlanType::UNKNOWN:
                 default:
@@ -247,7 +247,7 @@ namespace vcpkg::Commands::Remove
             {
                 System::println("Purging package %s... ", display_name);
                 delete_directory(paths.packages / action.spec.dir());
-                System::println(System::color::success, "Purging package %s... done", display_name);
+                System::println(System::Color::success, "Purging package %s... done", display_name);
             }
         }
 
