@@ -22,14 +22,14 @@ namespace vcpkg::Dependencies
         ALREADY_INSTALLED
     };
 
-    struct install_plan_action
+    struct InstallPlanAction
     {
-        install_plan_action();
-        install_plan_action(const InstallPlanType& plan_type, optional<BinaryParagraph> binary_pgh, optional<SourceParagraph> source_pgh);
-        install_plan_action(const install_plan_action&) = delete;
-        install_plan_action(install_plan_action&&) = default;
-        install_plan_action& operator=(const install_plan_action&) = delete;
-        install_plan_action& operator=(install_plan_action&&) = default;
+        InstallPlanAction();
+        InstallPlanAction(const InstallPlanType& plan_type, optional<BinaryParagraph> binary_pgh, optional<SourceParagraph> source_pgh);
+        InstallPlanAction(const InstallPlanAction&) = delete;
+        InstallPlanAction(InstallPlanAction&&) = default;
+        InstallPlanAction& operator=(const InstallPlanAction&) = delete;
+        InstallPlanAction& operator=(InstallPlanAction&&) = default;
 
         InstallPlanType plan_type;
         optional<BinaryParagraph> binary_pgh;
@@ -38,10 +38,10 @@ namespace vcpkg::Dependencies
 
     struct package_spec_with_install_plan
     {
-        package_spec_with_install_plan(const PackageSpec& spec, install_plan_action&& plan);
+        package_spec_with_install_plan(const PackageSpec& spec, InstallPlanAction&& plan);
 
         PackageSpec spec;
-        install_plan_action plan;
+        InstallPlanAction plan;
     };
 
     enum class remove_plan_type
