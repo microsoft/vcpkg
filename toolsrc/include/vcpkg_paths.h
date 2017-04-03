@@ -7,7 +7,7 @@
 
 namespace vcpkg
 {
-    struct toolset_t
+    struct Toolset
     {
         fs::path dumpbin;
         fs::path vcvarsall;
@@ -47,12 +47,12 @@ namespace vcpkg
         const fs::path& get_cmake_exe() const;
         const fs::path& get_git_exe() const;
         const fs::path& get_nuget_exe() const;
-        const toolset_t& get_toolset() const;
+        const Toolset& get_toolset() const;
 
     private:
         Lazy<fs::path> cmake_exe;
         Lazy<fs::path> git_exe;
         Lazy<fs::path> nuget_exe;
-        Lazy<toolset_t> toolset;
+        Lazy<Toolset> toolset;
     };
 }

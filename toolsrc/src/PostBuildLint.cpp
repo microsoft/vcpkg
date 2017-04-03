@@ -622,7 +622,7 @@ namespace vcpkg::PostBuildLint
     static size_t perform_all_checks_and_return_error_count(const PackageSpec& spec, const vcpkg_paths& paths)
     {
         // for dumpbin
-        const toolset_t& toolset = paths.get_toolset();
+        const Toolset& toolset = paths.get_toolset();
 
         BuildInfo build_info = read_build_info(paths.build_info_file_path(spec));
         const fs::path package_dir = paths.package_dir(spec);

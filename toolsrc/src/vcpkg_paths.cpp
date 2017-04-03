@@ -262,7 +262,7 @@ namespace vcpkg
         return nullopt;
     }
 
-    static toolset_t find_toolset_instance(const vcpkg_paths& paths)
+    static Toolset find_toolset_instance(const vcpkg_paths& paths)
     {
         const std::vector<std::string> vs2017_installation_instances = get_VS2017_installation_instances(paths);
         // Note: this will contain a mix of vcvarsall.bat locations and dumpbin.exe locations.
@@ -331,7 +331,7 @@ namespace vcpkg
         Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
-    const toolset_t& vcpkg_paths::get_toolset() const
+    const Toolset& vcpkg_paths::get_toolset() const
     {
         return this->toolset.get_lazy([this]() { return find_toolset_instance(*this); });
     }

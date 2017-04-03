@@ -25,7 +25,7 @@ namespace vcpkg::Commands::Build
         std::ofstream(binary_control_file) << bpgh;
     }
 
-    std::wstring make_build_env_cmd(const Triplet& target_triplet, const toolset_t& toolset)
+    std::wstring make_build_env_cmd(const Triplet& target_triplet, const Toolset& toolset)
     {
         return Strings::wformat(LR"("%s" %s >nul 2>&1)",
             toolset.vcvarsall.native(),
@@ -49,7 +49,7 @@ namespace vcpkg::Commands::Build
         const fs::path& git_exe_path = paths.get_git_exe();
 
         const fs::path ports_cmake_script_path = paths.ports_cmake;
-        const toolset_t& toolset = paths.get_toolset();
+        const Toolset& toolset = paths.get_toolset();
         const auto cmd_set_environment = make_build_env_cmd(target_triplet, toolset);
 
         const std::wstring cmd_launch_cmake = make_cmake_cmd(cmake_exe_path, ports_cmake_script_path,
