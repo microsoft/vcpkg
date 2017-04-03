@@ -4,7 +4,7 @@
 #include "vcpkg_paths.h"
 #include "StatusParagraphs.h"
 #include <array>
-#include "version_t.h"
+#include "VersionT.h"
 
 namespace vcpkg::Commands
 {

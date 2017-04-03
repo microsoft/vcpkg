@@ -5,7 +5,7 @@
 #include "vcpkg_expected.h"
 #include "BinaryParagraph.h"
 #include "vcpkg_paths.h"
-#include "version_t.h"
+#include "VersionT.h"
 
 namespace vcpkg::Paragraphs
 {
@@ -22,5 +22,5 @@ namespace vcpkg::Paragraphs
 
     std::vector<SourceParagraph> load_all_ports(const fs::path& ports_dir);
 
-    std::map<std::string, version_t> extract_port_names_and_versions(const std::vector<SourceParagraph>& source_paragraphs);
+    std::map<std::string, VersionT> extract_port_names_and_versions(const std::vector<SourceParagraph>& source_paragraphs);
 }

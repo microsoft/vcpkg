@@ -179,10 +179,10 @@
     <ClInclude Include="..\include\vcpkg_Strings.h" />
     <ClInclude Include="..\include\vcpkg_System.h" />
     <ClInclude Include="..\include\vcpkg_Util.h" />
-    <ClInclude Include="..\include\version_t.h" />
+    <ClInclude Include="..\include\VersionT.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\include\version_t.cpp" />
+    <ClCompile Include="..\include\VersionT.cpp" />
     <ClCompile Include="..\src\BinaryParagraph.cpp" />
     <ClCompile Include="..\src\commands_ci.cpp" />
     <ClCompile Include="..\src\commands_env.cpp" />
