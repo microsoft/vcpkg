@@ -295,7 +295,7 @@ namespace vcpkg::PostBuildLint
         return lint_status::SUCCESS;
     }
 
-    struct file_and_arch
+    struct FileAndArch
     {
         fs::path file;
         std::string actual_arch;
@@ -318,11 +318,11 @@ namespace vcpkg::PostBuildLint
         }
     }
 
-    static void print_invalid_architecture_files(const std::string& expected_architecture, std::vector<file_and_arch> binaries_with_invalid_architecture)
+    static void print_invalid_architecture_files(const std::string& expected_architecture, std::vector<FileAndArch> binaries_with_invalid_architecture)
     {
         System::println(System::Color::warning, "The following files were built for an incorrect architecture:");
         System::println("");
-        for (const file_and_arch& b : binaries_with_invalid_architecture)
+        for (const FileAndArch& b : binaries_with_invalid_architecture)
         {
             System::println("    %s", b.file.generic_string());
             System::println("Expected %s, but was: %s", expected_architecture, b.actual_arch);
@@ -332,7 +332,7 @@ namespace vcpkg::PostBuildLint
 
     static lint_status check_dll_architecture(const std::string& expected_architecture, const std::vector<fs::path>& files)
     {
-        std::vector<file_and_arch> binaries_with_invalid_architecture;
+        std::vector<FileAndArch> binaries_with_invalid_architecture;
 
         for (const fs::path& file : files)
         {
@@ -357,7 +357,7 @@ namespace vcpkg::PostBuildLint
 
     static lint_status check_lib_architecture(const std::string& expected_architecture, const std::vector<fs::path>& files)
     {
-        std::vector<file_and_arch> binaries_with_invalid_architecture;
+        std::vector<FileAndArch> binaries_with_invalid_architecture;
 
         for (const fs::path& file : files)
         {
