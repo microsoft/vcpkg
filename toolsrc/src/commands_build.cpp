@@ -14,7 +14,7 @@
 namespace vcpkg::Commands::Build
 {
     using Dependencies::package_spec_with_install_plan;
-    using Dependencies::install_plan_type;
+    using Dependencies::InstallPlanType;
 
     static const std::string OPTION_CHECKS_ONLY = "--checks-only";
 
@@ -148,7 +148,7 @@ namespace vcpkg::Commands::Build
             unmet_dependencies.erase(
                 std::remove_if(unmet_dependencies.begin(), unmet_dependencies.end(), [&spec](const package_spec_with_install_plan& p)
                                {
-                                   return (p.spec == spec) || (p.plan.plan_type == install_plan_type::ALREADY_INSTALLED);
+                                   return (p.spec == spec) || (p.plan.plan_type == InstallPlanType::ALREADY_INSTALLED);
                                }),
                 unmet_dependencies.end());
 

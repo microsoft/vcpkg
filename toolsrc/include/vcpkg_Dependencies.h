@@ -14,7 +14,7 @@ namespace vcpkg::Dependencies
         AUTO_SELECTED
     };
 
-    enum class install_plan_type
+    enum class InstallPlanType
     {
         UNKNOWN,
         BUILD_AND_INSTALL,
@@ -25,13 +25,13 @@ namespace vcpkg::Dependencies
     struct install_plan_action
     {
         install_plan_action();
-        install_plan_action(const install_plan_type& plan_type, optional<BinaryParagraph> binary_pgh, optional<SourceParagraph> source_pgh);
+        install_plan_action(const InstallPlanType& plan_type, optional<BinaryParagraph> binary_pgh, optional<SourceParagraph> source_pgh);
         install_plan_action(const install_plan_action&) = delete;
         install_plan_action(install_plan_action&&) = default;
         install_plan_action& operator=(const install_plan_action&) = delete;
         install_plan_action& operator=(install_plan_action&&) = default;
 
-        install_plan_type plan_type;
+        InstallPlanType plan_type;
         optional<BinaryParagraph> binary_pgh;
         optional<SourceParagraph> source_pgh;
     };

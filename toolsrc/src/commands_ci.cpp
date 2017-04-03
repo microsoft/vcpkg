@@ -11,7 +11,7 @@
 namespace vcpkg::Commands::CI
 {
     using Dependencies::package_spec_with_install_plan;
-    using Dependencies::install_plan_type;
+    using Dependencies::InstallPlanType;
     using Build::BuildResult;
 
     static std::vector<PackageSpec> load_all_package_specs(const fs::path& ports_directory, const Triplet& target_triplet)
@@ -55,12 +55,12 @@ namespace vcpkg::Commands::CI
 
             try
             {
-                if (action.plan.plan_type == install_plan_type::ALREADY_INSTALLED)
+                if (action.plan.plan_type == InstallPlanType::ALREADY_INSTALLED)
                 {
                     results.back() = BuildResult::SUCCEEDED;
                     System::println(System::color::success, "Package %s is already installed", action.spec);
                 }
-                else if (action.plan.plan_type == install_plan_type::BUILD_AND_INSTALL)
+                else if (action.plan.plan_type == InstallPlanType::BUILD_AND_INSTALL)
                 {
                     const BuildResult result = Commands::Build::build_package(action.plan.source_pgh.value_or_exit(VCPKG_LINE_INFO),
                                                                               action.spec,
@@ -78,7 +78,7 @@ namespace vcpkg::Commands::CI
                     Install::install_package(paths, bpgh, &status_db);
                     System::println(System::color::success, "Package %s is installed", action.spec);
                 }
-                else if (action.plan.plan_type == install_plan_type::INSTALL)
+                else if (action.plan.plan_type == InstallPlanType::INSTALL)
                 {
                     results.back() = BuildResult::SUCCEEDED;
                     Install::install_package(paths, action.plan.binary_pgh.value_or_exit(VCPKG_LINE_INFO), &status_db);

@@ -9,11 +9,11 @@
 
 namespace vcpkg::Dependencies
 {
-    install_plan_action::install_plan_action() : plan_type(install_plan_type::UNKNOWN), binary_pgh(nullopt), source_pgh(nullopt)
+    install_plan_action::install_plan_action() : plan_type(InstallPlanType::UNKNOWN), binary_pgh(nullopt), source_pgh(nullopt)
     {
     }
 
-    install_plan_action::install_plan_action(const install_plan_type& plan_type, optional<BinaryParagraph> binary_pgh, optional<SourceParagraph> source_pgh)
+    install_plan_action::install_plan_action(const InstallPlanType& plan_type, optional<BinaryParagraph> binary_pgh, optional<SourceParagraph> source_pgh)
         : plan_type(std::move(plan_type)), binary_pgh(std::move(binary_pgh)), source_pgh(std::move(source_pgh))
     {
     }
@@ -68,7 +68,7 @@ namespace vcpkg::Dependencies
             auto it = status_db.find(spec);
             if (it != status_db.end() && (*it)->want == Want::INSTALL)
             {
-                was_examined.emplace(spec, install_plan_action{install_plan_type::ALREADY_INSTALLED, nullopt, nullopt });
+                was_examined.emplace(spec, install_plan_action{InstallPlanType::ALREADY_INSTALLED, nullopt, nullopt });
                 continue;
             }
 
@@ -76,7 +76,7 @@ namespace vcpkg::Dependencies
             if (BinaryParagraph* bpgh = maybe_bpgh.get())
             {
                 process_dependencies(bpgh->depends);
-                was_examined.emplace(spec, install_plan_action{install_plan_type::INSTALL, std::move(*bpgh), nullopt });
+                was_examined.emplace(spec, install_plan_action{InstallPlanType::INSTALL, std::move(*bpgh), nullopt });
                 continue;
             }
 
@@ -84,7 +84,7 @@ namespace vcpkg::Dependencies
             if (auto spgh = maybe_spgh.get())
             {
                 process_dependencies(filter_dependencies(spgh->depends, spec.target_triplet()));
-                was_examined.emplace(spec, install_plan_action{ install_plan_type::BUILD_AND_INSTALL, nullopt, std::move(*spgh) });
+                was_examined.emplace(spec, install_plan_action{ InstallPlanType::BUILD_AND_INSTALL, nullopt, std::move(*spgh) });
             }
             else
             {

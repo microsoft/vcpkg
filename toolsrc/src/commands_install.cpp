@@ -12,7 +12,7 @@
 namespace vcpkg::Commands::Install
 {
     using Dependencies::package_spec_with_install_plan;
-    using Dependencies::install_plan_type;
+    using Dependencies::InstallPlanType;
 
     static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryParagraph& bpgh)
     {
@@ -217,14 +217,14 @@ namespace vcpkg::Commands::Install
         {
             try
             {
-                if (action.plan.plan_type == install_plan_type::ALREADY_INSTALLED)
+                if (action.plan.plan_type == InstallPlanType::ALREADY_INSTALLED)
                 {
                     if (std::find(specs.begin(), specs.end(), action.spec) != specs.end())
                     {
                         System::println(System::color::success, "Package %s is already installed", action.spec);
                     }
                 }
-                else if (action.plan.plan_type == install_plan_type::BUILD_AND_INSTALL)
+                else if (action.plan.plan_type == InstallPlanType::BUILD_AND_INSTALL)
                 {
                     const Build::BuildResult result = Commands::Build::build_package(action.plan.source_pgh.value_or_exit(VCPKG_LINE_INFO),
                                                                                      action.spec,
@@ -241,7 +241,7 @@ namespace vcpkg::Commands::Install
                     install_package(paths, bpgh, &status_db);
                     System::println(System::color::success, "Package %s is installed", action.spec);
                 }
-                else if (action.plan.plan_type == install_plan_type::INSTALL)
+                else if (action.plan.plan_type == InstallPlanType::INSTALL)
                 {
                     install_package(paths, action.plan.binary_pgh.value_or_exit(VCPKG_LINE_INFO), &status_db);
                     System::println(System::color::success, "Package %s is installed", action.spec);
