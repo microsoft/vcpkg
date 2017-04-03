@@ -10,7 +10,7 @@ namespace vcpkg::PostBuildLint::ConfigurationType
     static const std::string NAME_DEBUG = "Debug";
     static const std::string NAME_RELEASE = "Release";
 
-    const std::string& type::toString() const
+    const std::string& Type::toString() const
     {
         switch (this->backing_enum)
         {

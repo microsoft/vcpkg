@@ -4,7 +4,7 @@
 
 namespace vcpkg::PostBuildLint::BuildType
 {
-    Type value_of(const ConfigurationType::type& config, const LinkageType::type& linkage)
+    Type value_of(const ConfigurationType::Type& config, const LinkageType::type& linkage)
     {
         if (config == ConfigurationType::DEBUG && linkage == LinkageType::STATIC)
         {
@@ -29,7 +29,7 @@ namespace vcpkg::PostBuildLint::BuildType
         Checks::unreachable(VCPKG_LINE_INFO);
     }
 
-    const ConfigurationType::type& Type::config() const
+    const ConfigurationType::Type& Type::config() const
     {
         return this->m_config;
     }
