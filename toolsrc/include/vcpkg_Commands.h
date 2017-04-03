@@ -64,7 +64,7 @@ namespace vcpkg::Commands
             static bool compare_by_name(const OutdatedPackage& left, const OutdatedPackage& right);
 
             PackageSpec spec;
-            version_diff_t version_diff;
+            VersionDiff version_diff;
         };
 
         std::vector<OutdatedPackage> find_outdated_packages(const vcpkg_paths& paths, const StatusParagraphs& status_db);

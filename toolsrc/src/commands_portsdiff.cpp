@@ -16,7 +16,7 @@ namespace vcpkg::Commands::PortsDiff
         }
 
         std::string port;
-        version_diff_t version_diff;
+        VersionDiff version_diff;
     };
 
     template <class T>
@@ -52,7 +52,7 @@ namespace vcpkg::Commands::PortsDiff
                 continue;
             }
 
-            output.push_back({ name, version_diff_t(previous_version, current_version) });
+            output.push_back({ name, VersionDiff(previous_version, current_version) });
         }
 
         return output;

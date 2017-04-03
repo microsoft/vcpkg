@@ -10,10 +10,10 @@ namespace vcpkg
     bool operator!=(const VersionT& left, const VersionT& right) { return left.value != right.value; }
     std::string to_printf_arg(const VersionT& version) { return version.value; }
 
-    version_diff_t::version_diff_t() : left(), right() {}
-    version_diff_t::version_diff_t(const VersionT& left, const VersionT& right) : left(left), right(right) {}
+    VersionDiff::VersionDiff() : left(), right() {}
+    VersionDiff::VersionDiff(const VersionT& left, const VersionT& right) : left(left), right(right) {}
 
-    std::string version_diff_t::toString() const
+    std::string VersionDiff::toString() const
     {
         return Strings::format("%s -> %s", left.value, right.value);
     }

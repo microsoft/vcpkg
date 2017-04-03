@@ -15,13 +15,13 @@ namespace vcpkg
     bool operator !=(const VersionT& left, const VersionT& right);
     std::string to_printf_arg(const VersionT& version);
 
-    struct version_diff_t
+    struct VersionDiff
     {
         VersionT left;
         VersionT right;
 
-        version_diff_t();
-        version_diff_t(const VersionT& left, const VersionT& right);
+        VersionDiff();
+        VersionDiff(const VersionT& left, const VersionT& right);
 
         std::string toString() const;
     };
