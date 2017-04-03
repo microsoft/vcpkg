@@ -8,9 +8,9 @@
 
 namespace vcpkg::Commands
 {
-    using command_type_a = void(*)(const VcpkgCmdArguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet);
-    using command_type_b = void(*)(const VcpkgCmdArguments& args, const vcpkg_paths& paths);
-    using command_type_c = void(*)(const VcpkgCmdArguments& args);
+    using CommandTypeA = void(*)(const VcpkgCmdArguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet);
+    using CommandTypeB = void(*)(const VcpkgCmdArguments& args, const vcpkg_paths& paths);
+    using CommandTypeC = void(*)(const VcpkgCmdArguments& args);
 
     namespace Build
     {
@@ -160,9 +160,9 @@ namespace vcpkg::Commands
         T function;
     };
 
-    const std::vector<package_name_and_function<command_type_a>>& get_available_commands_type_a();
-    const std::vector<package_name_and_function<command_type_b>>& get_available_commands_type_b();
-    const std::vector<package_name_and_function<command_type_c>>& get_available_commands_type_c();
+    const std::vector<package_name_and_function<CommandTypeA>>& get_available_commands_type_a();
+    const std::vector<package_name_and_function<CommandTypeB>>& get_available_commands_type_b();
+    const std::vector<package_name_and_function<CommandTypeC>>& get_available_commands_type_c();
 
     template <typename T>
     T find(const std::string& command_name, const std::vector<package_name_and_function<T>> available_commands)
