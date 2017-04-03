@@ -5,7 +5,7 @@
 
 namespace vcpkg::PostBuildLint::LinkageType
 {
-    static const std::string NULLVALUE_STRING = Enums::nullvalue_toString(ENUM_NAME);
+    static const std::string NULLVALUE_STRING = Enums::nullvalue_to_string(ENUM_NAME);
 
     static const std::string NAME_DYNAMIC = "dynamic";
     static const std::string NAME_STATIC = "static";

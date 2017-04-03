@@ -5,7 +5,7 @@
 
 namespace vcpkg::PostBuildLint::ConfigurationType
 {
-    static const std::string NULLVALUE_STRING = Enums::nullvalue_toString(ENUM_NAME);
+    static const std::string NULLVALUE_STRING = Enums::nullvalue_to_string(ENUM_NAME);
 
     static const std::string NAME_DEBUG = "Debug";
     static const std::string NAME_RELEASE = "Release";

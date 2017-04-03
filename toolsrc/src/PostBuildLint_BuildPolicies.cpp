@@ -5,7 +5,7 @@
 
 namespace vcpkg::PostBuildLint::BuildPolicies
 {
-    static const std::string NULLVALUE_STRING = Enums::nullvalue_toString(ENUM_NAME);
+    static const std::string NULLVALUE_STRING = Enums::nullvalue_to_string(ENUM_NAME);
 
     static const std::string NAME_EMPTY_PACKAGE = "PolicyEmptyPackage";
     static const std::string NAME_DLLS_WITHOUT_LIBS = "PolicyDLLsWithoutLIBs";

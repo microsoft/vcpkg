@@ -4,7 +4,7 @@
 
 namespace vcpkg::Enums
 {
-    std::string nullvalue_toString(const std::string& enum_name)
+    std::string nullvalue_to_string(const std::string& enum_name)
     {
         return Strings::format("%s_NULLVALUE", enum_name);
     }
