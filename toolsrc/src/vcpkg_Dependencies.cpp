@@ -30,7 +30,7 @@ namespace vcpkg::Dependencies
     {
     }
 
-    package_spec_with_remove_plan::package_spec_with_remove_plan(const PackageSpec& spec, RemovePlanAction&& plan)
+    PackageSpecWithRemovePlan::PackageSpecWithRemovePlan(const PackageSpec& spec, RemovePlanAction&& plan)
         : spec(spec), plan(std::move(plan))
     {
     }
@@ -102,7 +102,7 @@ namespace vcpkg::Dependencies
         return ret;
     }
 
-    std::vector<package_spec_with_remove_plan> create_remove_plan(const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db)
+    std::vector<PackageSpecWithRemovePlan> create_remove_plan(const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db)
     {
         std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
 
@@ -149,12 +149,12 @@ namespace vcpkg::Dependencies
             was_examined.emplace(spec, RemovePlanAction(RemovePlanType::REMOVE, request_type));
         }
 
-        std::vector<package_spec_with_remove_plan> ret;
+        std::vector<PackageSpecWithRemovePlan> ret;
 
         const std::vector<PackageSpec> pkgs = graph.find_topological_sort();
         for (const PackageSpec& pkg : pkgs)
         {
-            ret.push_back(package_spec_with_remove_plan(pkg, std::move(was_examined[pkg])));
+            ret.push_back(PackageSpecWithRemovePlan(pkg, std::move(was_examined[pkg])));
         }
         return ret;
     }

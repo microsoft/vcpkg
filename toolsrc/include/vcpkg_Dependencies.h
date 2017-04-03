@@ -65,9 +65,9 @@ namespace vcpkg::Dependencies
         RequestType request_type;
     };
 
-    struct package_spec_with_remove_plan
+    struct PackageSpecWithRemovePlan
     {
-        package_spec_with_remove_plan(const PackageSpec& spec, RemovePlanAction&& plan);
+        PackageSpecWithRemovePlan(const PackageSpec& spec, RemovePlanAction&& plan);
 
         PackageSpec spec;
         RemovePlanAction plan;
@@ -75,5 +75,5 @@ namespace vcpkg::Dependencies
 
     std::vector<PackageSpecWithInstallPlan> create_install_plan(const vcpkg_paths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
 
-    std::vector<package_spec_with_remove_plan> create_remove_plan(const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
+    std::vector<PackageSpecWithRemovePlan> create_remove_plan(const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
 }

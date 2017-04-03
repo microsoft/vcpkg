@@ -8,7 +8,7 @@
 
 namespace vcpkg::Commands::Remove
 {
-    using Dependencies::package_spec_with_remove_plan;
+    using Dependencies::PackageSpecWithRemovePlan;
     using Dependencies::RemovePlanType;
     using Dependencies::RequestType;
     using Update::OutdatedPackage;
@@ -101,20 +101,20 @@ namespace vcpkg::Commands::Remove
         write_update(paths, pkg);
     }
 
-    static void sort_packages_by_name(std::vector<const package_spec_with_remove_plan*>* packages)
+    static void sort_packages_by_name(std::vector<const PackageSpecWithRemovePlan*>* packages)
     {
-        std::sort(packages->begin(), packages->end(), [](const package_spec_with_remove_plan* left, const package_spec_with_remove_plan* right) -> bool
+        std::sort(packages->begin(), packages->end(), [](const PackageSpecWithRemovePlan* left, const PackageSpecWithRemovePlan* right) -> bool
                   {
                       return left->spec.name() < right->spec.name();
                   });
     }
 
-    static void print_plan(const std::vector<package_spec_with_remove_plan>& plan)
+    static void print_plan(const std::vector<PackageSpecWithRemovePlan>& plan)
     {
-        std::vector<const package_spec_with_remove_plan*> not_installed;
-        std::vector<const package_spec_with_remove_plan*> remove;
+        std::vector<const PackageSpecWithRemovePlan*> not_installed;
+        std::vector<const PackageSpecWithRemovePlan*> remove;
 
-        for (const package_spec_with_remove_plan& i : plan)
+        for (const PackageSpecWithRemovePlan& i : plan)
         {
             if (i.plan.plan_type == RemovePlanType::NOT_INSTALLED)
             {
@@ -135,7 +135,7 @@ namespace vcpkg::Commands::Remove
         {
             sort_packages_by_name(&not_installed);
             System::println("The following packages are not installed, so not removed:\n%s",
-                            Strings::join("\n    ", not_installed, [](const package_spec_with_remove_plan* p)
+                            Strings::join("\n    ", not_installed, [](const PackageSpecWithRemovePlan* p)
                                           {
                                               return "    " + p->spec.toString();
                                           }));
@@ -145,7 +145,7 @@ namespace vcpkg::Commands::Remove
         {
             sort_packages_by_name(&remove);
             System::println("The following packages will be removed:\n%s",
-                            Strings::join("\n", remove, [](const package_spec_with_remove_plan* p)
+                            Strings::join("\n", remove, [](const PackageSpecWithRemovePlan* p)
                                           {
                                               if (p->plan.request_type == Dependencies::RequestType::AUTO_SELECTED)
                                               {
@@ -198,12 +198,12 @@ namespace vcpkg::Commands::Remove
         const bool isRecursive = options.find(OPTION_RECURSE) != options.cend();
         const bool dryRun = options.find(OPTION_DRY_RUN) != options.cend();
 
-        const std::vector<package_spec_with_remove_plan> remove_plan = Dependencies::create_remove_plan(specs, status_db);
+        const std::vector<PackageSpecWithRemovePlan> remove_plan = Dependencies::create_remove_plan(specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !remove_plan.empty(), "Remove plan cannot be empty");
 
         print_plan(remove_plan);
 
-        const bool has_non_user_requested_packages = std::find_if(remove_plan.cbegin(), remove_plan.cend(), [](const package_spec_with_remove_plan& package)-> bool
+        const bool has_non_user_requested_packages = std::find_if(remove_plan.cbegin(), remove_plan.cend(), [](const PackageSpecWithRemovePlan& package)-> bool
                                                                   {
                                                                       return package.plan.request_type != RequestType::USER_REQUESTED;
                                                                   }) != remove_plan.cend();
@@ -224,7 +224,7 @@ namespace vcpkg::Commands::Remove
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        for (const package_spec_with_remove_plan& action : remove_plan)
+        for (const PackageSpecWithRemovePlan& action : remove_plan)
         {
             const std::string display_name = action.spec.display_name();
 
