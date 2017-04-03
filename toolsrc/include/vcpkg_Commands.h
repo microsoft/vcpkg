@@ -154,20 +154,20 @@ namespace vcpkg::Commands
     }
 
     template <class T>
-    struct package_name_and_function
+    struct PackageNameAndFunction
     {
         std::string name;
         T function;
     };
 
-    const std::vector<package_name_and_function<CommandTypeA>>& get_available_commands_type_a();
-    const std::vector<package_name_and_function<CommandTypeB>>& get_available_commands_type_b();
-    const std::vector<package_name_and_function<CommandTypeC>>& get_available_commands_type_c();
+    const std::vector<PackageNameAndFunction<CommandTypeA>>& get_available_commands_type_a();
+    const std::vector<PackageNameAndFunction<CommandTypeB>>& get_available_commands_type_b();
+    const std::vector<PackageNameAndFunction<CommandTypeC>>& get_available_commands_type_c();
 
     template <typename T>
-    T find(const std::string& command_name, const std::vector<package_name_and_function<T>> available_commands)
+    T find(const std::string& command_name, const std::vector<PackageNameAndFunction<T>> available_commands)
     {
-        for (const package_name_and_function<T>& cmd : available_commands)
+        for (const PackageNameAndFunction<T>& cmd : available_commands)
         {
             if (cmd.name == command_name)
             {

@@ -3,9 +3,9 @@
 
 namespace vcpkg::Commands
 {
-    const std::vector<package_name_and_function<CommandTypeA>>& get_available_commands_type_a()
+    const std::vector<PackageNameAndFunction<CommandTypeA>>& get_available_commands_type_a()
     {
-        static std::vector<package_name_and_function<CommandTypeA>> t = {
+        static std::vector<PackageNameAndFunction<CommandTypeA>> t = {
             {"install", &Install::perform_and_exit},
             { "ci", &CI::perform_and_exit },
             {"remove", &Remove::perform_and_exit},
@@ -16,9 +16,9 @@ namespace vcpkg::Commands
         return t;
     }
 
-    const std::vector<package_name_and_function<CommandTypeB>>& get_available_commands_type_b()
+    const std::vector<PackageNameAndFunction<CommandTypeB>>& get_available_commands_type_b()
     {
-        static std::vector<package_name_and_function<CommandTypeB>> t = {
+        static std::vector<PackageNameAndFunction<CommandTypeB>> t = {
             {"/?", &Help::perform_and_exit},
             {"help", &Help::perform_and_exit},
             {"search", &Search::perform_and_exit},
@@ -35,9 +35,9 @@ namespace vcpkg::Commands
         return t;
     }
 
-    const std::vector<package_name_and_function<CommandTypeC>>& get_available_commands_type_c()
+    const std::vector<PackageNameAndFunction<CommandTypeC>>& get_available_commands_type_c()
     {
-        static std::vector<package_name_and_function<CommandTypeC>> t = {
+        static std::vector<PackageNameAndFunction<CommandTypeC>> t = {
             {"version", &Version::perform_and_exit},
             {"contact", &Contact::perform_and_exit},
             {"hash", &Hash::perform_and_exit},
