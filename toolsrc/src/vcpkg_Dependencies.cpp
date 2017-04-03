@@ -22,15 +22,15 @@ namespace vcpkg::Dependencies
     {
     }
 
-    remove_plan_action::remove_plan_action() : plan_type(RemovePlanType::UNKNOWN), request_type(RequestType::UNKNOWN)
+    RemovePlanAction::RemovePlanAction() : plan_type(RemovePlanType::UNKNOWN), request_type(RequestType::UNKNOWN)
     {
     }
 
-    remove_plan_action::remove_plan_action(const RemovePlanType& plan_type, const Dependencies::RequestType& request_type) : plan_type(plan_type), request_type(request_type)
+    RemovePlanAction::RemovePlanAction(const RemovePlanType& plan_type, const Dependencies::RequestType& request_type) : plan_type(plan_type), request_type(request_type)
     {
     }
 
-    package_spec_with_remove_plan::package_spec_with_remove_plan(const PackageSpec& spec, remove_plan_action&& plan)
+    package_spec_with_remove_plan::package_spec_with_remove_plan(const PackageSpec& spec, RemovePlanAction&& plan)
         : spec(spec), plan(std::move(plan))
     {
     }
@@ -106,7 +106,7 @@ namespace vcpkg::Dependencies
     {
         std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
 
-        std::unordered_map<PackageSpec, remove_plan_action> was_examined; // Examine = we have checked its immediate (non-recursive) dependencies
+        std::unordered_map<PackageSpec, RemovePlanAction> was_examined; // Examine = we have checked its immediate (non-recursive) dependencies
         Graphs::Graph<PackageSpec> graph;
         graph.add_vertices(specs);
 
@@ -124,7 +124,7 @@ namespace vcpkg::Dependencies
             const StatusParagraphs::const_iterator it = status_db.find(spec);
             if (it == status_db.end() || (*it)->state == InstallState::NOT_INSTALLED)
             {
-                was_examined.emplace(spec, remove_plan_action(RemovePlanType::NOT_INSTALLED, RequestType::USER_REQUESTED));
+                was_examined.emplace(spec, RemovePlanAction(RemovePlanType::NOT_INSTALLED, RequestType::USER_REQUESTED));
                 continue;
             }
 
@@ -146,7 +146,7 @@ namespace vcpkg::Dependencies
             }
 
             const RequestType request_type = specs_as_set.find(spec) != specs_as_set.end() ? RequestType::USER_REQUESTED : RequestType::AUTO_SELECTED;
-            was_examined.emplace(spec, remove_plan_action(RemovePlanType::REMOVE, request_type));
+            was_examined.emplace(spec, RemovePlanAction(RemovePlanType::REMOVE, request_type));
         }
 
         std::vector<package_spec_with_remove_plan> ret;
