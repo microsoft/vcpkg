@@ -33,7 +33,7 @@ namespace vcpkg::Commands::Search
 
             const std::string name = replace_dashes_with_underscore(source_paragraph.name);
             s.append(Strings::format("%s;", name));
-            for (const dependency& d : source_paragraph.depends)
+            for (const Dependency& d : source_paragraph.depends)
             {
                 const std::string dependency_name = replace_dashes_with_underscore(d.name);
                 s.append(Strings::format("%s -> %s;", name, dependency_name));

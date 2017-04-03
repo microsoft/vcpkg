@@ -64,14 +64,14 @@ namespace vcpkg
         }
     }
 
-    std::vector<dependency> vcpkg::expand_qualified_dependencies(const std::vector<std::string>& depends)
+    std::vector<Dependency> vcpkg::expand_qualified_dependencies(const std::vector<std::string>& depends)
     {
-        auto convert = [&](const std::string& depend_string) -> dependency {
+        auto convert = [&](const std::string& depend_string) -> Dependency {
             auto pos = depend_string.find(' ');
             if (pos == std::string::npos)
                 return{ depend_string, "" };
             // expect of the form "\w+ \[\w+\]"
-            dependency dep;
+            Dependency dep;
             dep.name = depend_string.substr(0, pos);
             if (depend_string.c_str()[pos + 1] != '[' || depend_string[depend_string.size() - 1] != ']')
             {
@@ -82,7 +82,7 @@ namespace vcpkg
             return dep;
         };
 
-        std::vector<vcpkg::dependency> ret;
+        std::vector<vcpkg::Dependency> ret;
 
         for (auto&& depend_string : depends)
         {
@@ -125,7 +125,7 @@ namespace vcpkg
         return out;
     }
 
-    std::vector<std::string> filter_dependencies(const std::vector<vcpkg::dependency>& deps, const Triplet& t)
+    std::vector<std::string> filter_dependencies(const std::vector<vcpkg::Dependency>& deps, const Triplet& t)
     {
         std::vector<std::string> ret;
         for (auto&& dep : deps)
@@ -138,7 +138,7 @@ namespace vcpkg
         return ret;
     }
 
-    std::ostream & operator<<(std::ostream & os, const dependency & p)
+    std::ostream & operator<<(std::ostream & os, const Dependency & p)
     {
         os << p.name;
         return os;
