@@ -185,6 +185,7 @@
     <ClCompile Include="..\include\version_t.cpp" />
     <ClCompile Include="..\src\BinaryParagraph.cpp" />
     <ClCompile Include="..\src\commands_ci.cpp" />
+    <ClCompile Include="..\src\commands_env.cpp" />
     <ClCompile Include="..\src\LineInfo.cpp" />
     <ClCompile Include="..\src\paragraph_parse_result.cpp" />
     <ClCompile Include="..\src\PostBuildLint_BuildInfo.cpp" />

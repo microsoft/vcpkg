@@ -25,6 +25,13 @@ namespace vcpkg::Commands::Build
         std::ofstream(binary_control_file) << bpgh;
     }
 
+    std::wstring make_build_env_cmd(const triplet& target_triplet, const toolset_t& toolset)
+    {
+        return Strings::wformat(LR"("%s" %s >nul 2>&1)",
+            toolset.vcvarsall.native(),
+            Strings::utf8_to_utf16(target_triplet.architecture()));
+    }
+
     BuildResult build_package(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir, const StatusParagraphs& status_db)
     {
         Checks::check_exit(VCPKG_LINE_INFO, spec.name() == source_paragraph.name, "inconsistent arguments to build_package()");
@@ -43,7 +50,7 @@ namespace vcpkg::Commands::Build
 
         const fs::path ports_cmake_script_path = paths.ports_cmake;
         const toolset_t& toolset = paths.get_toolset();
-        const std::wstring cmd_set_environment = Strings::wformat(LR"("%s" %s >nul 2>&1)", toolset.vcvarsall.native(), Strings::utf8_to_utf16(target_triplet.architecture()));
+        const auto cmd_set_environment = make_build_env_cmd(target_triplet, toolset);
 
         const std::wstring cmd_launch_cmake = make_cmake_cmd(cmake_exe_path, ports_cmake_script_path,
                                                              {

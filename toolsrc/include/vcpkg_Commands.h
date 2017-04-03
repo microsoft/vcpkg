@@ -29,6 +29,8 @@ namespace vcpkg::Commands
         std::string create_error_message(const BuildResult build_result, const package_spec& spec);
         std::string create_user_troubleshooting_message(const package_spec& spec);
 
+        std::wstring make_build_env_cmd(const triplet& target_triplet, const toolset_t& toolset);
+
         BuildResult build_package(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir, const StatusParagraphs& status_db);
         void perform_and_exit(const package_spec& spec, const fs::path& port_dir, const std::unordered_set<std::string>& options, const vcpkg_paths& paths);
         void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet);
@@ -67,6 +69,11 @@ namespace vcpkg::Commands
 
         std::vector<outdated_package> find_outdated_packages(const vcpkg_paths& paths, const StatusParagraphs& status_db);
         void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths);
+    }
+
+    namespace Env
+    {
+        void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_triplet);
     }
 
     namespace Create
