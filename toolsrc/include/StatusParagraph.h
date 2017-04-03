@@ -13,7 +13,7 @@ namespace vcpkg
         INSTALLED,
     };
 
-    enum class want_t
+    enum class Want
     {
         error,
         unknown,
@@ -29,7 +29,7 @@ namespace vcpkg
         explicit StatusParagraph(const std::unordered_map<std::string, std::string>& fields);
 
         BinaryParagraph package;
-        want_t want;
+        Want want;
         InstallState state;
     };
 
@@ -37,5 +37,5 @@ namespace vcpkg
 
     std::string to_string(InstallState f);
 
-    std::string to_string(want_t f);
+    std::string to_string(Want f);
 }

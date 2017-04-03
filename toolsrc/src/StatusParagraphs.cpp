@@ -32,7 +32,7 @@ namespace vcpkg
     StatusParagraphs::const_iterator StatusParagraphs::find_installed(const std::string& name, const Triplet& target_triplet) const
     {
         const const_iterator it = find(name, target_triplet);
-        if (it != end() && (*it)->want == want_t::install)
+        if (it != end() && (*it)->want == Want::install)
         {
             return it;
         }

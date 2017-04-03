@@ -176,7 +176,7 @@ namespace vcpkg
         std::vector<StatusParagraph*> installed_packages;
         for (auto&& pgh : status_db)
         {
-            if (pgh->state == InstallState::NOT_INSTALLED && pgh->want == want_t::purge)
+            if (pgh->state == InstallState::NOT_INSTALLED && pgh->want == Want::purge)
                 continue;
             installed_packages.push_back(pgh.get());
         }

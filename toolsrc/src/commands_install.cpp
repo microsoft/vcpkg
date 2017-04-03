@@ -164,7 +164,7 @@ namespace vcpkg::Commands::Install
 
         StatusParagraph spgh;
         spgh.package = binary_paragraph;
-        spgh.want = want_t::install;
+        spgh.want = Want::install;
         spgh.state = InstallState::HALF_INSTALLED;
         for (auto&& dep : spgh.package.depends)
         {
