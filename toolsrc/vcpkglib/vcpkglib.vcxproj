@@ -166,7 +166,7 @@
     <ClInclude Include="..\include\vcpkglib.h" />
     <ClInclude Include="..\include\vcpkglib_helpers.h" />
     <ClInclude Include="..\include\vcpkg_Checks.h" />
-    <ClInclude Include="..\include\vcpkg_cmd_arguments.h" />
+    <ClInclude Include="..\include\VcpkgCmdArguments.h" />
     <ClInclude Include="..\include\vcpkg_Commands.h" />
     <ClInclude Include="..\include\vcpkg_Dependencies.h" />
     <ClInclude Include="..\include\vcpkg_Enums.h" />
@@ -234,7 +234,7 @@
     <ClCompile Include="..\src\triplet.cpp" />
     <ClCompile Include="..\src\vcpkglib_helpers.cpp" />
     <ClCompile Include="..\src\vcpkg_Checks.cpp" />
-    <ClCompile Include="..\src\vcpkg_cmd_arguments.cpp" />
+    <ClCompile Include="..\src\VcpkgCmdArguments.cpp" />
     <ClCompile Include="..\src\vcpkg_Dependencies.cpp" />
     <ClCompile Include="..\src\vcpkg_Enums.cpp" />
     <ClCompile Include="..\src\vcpkg_Files.cpp" />

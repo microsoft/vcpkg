@@ -7,7 +7,7 @@
 
 namespace vcpkg::Commands::Create
 {
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths)
     {
         static const std::string example = Commands::Help::create_example_string(R"###(create zlib2 http://zlib.net/zlib1211.zip "zlib1211-2.zip")###");
         args.check_max_arg_count(3, example);

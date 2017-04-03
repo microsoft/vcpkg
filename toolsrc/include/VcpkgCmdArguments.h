@@ -7,10 +7,10 @@
 
 namespace vcpkg
 {
-    struct vcpkg_cmd_arguments
+    struct VcpkgCmdArguments
     {
-        static vcpkg_cmd_arguments create_from_command_line(const int argc, const wchar_t* const* const argv);
-        static vcpkg_cmd_arguments create_from_arg_sequence(const std::string* arg_begin, const std::string* arg_end);
+        static VcpkgCmdArguments create_from_command_line(const int argc, const wchar_t* const* const argv);
+        static VcpkgCmdArguments create_from_arg_sequence(const std::string* arg_begin, const std::string* arg_end);
 
         std::unique_ptr<std::string> vcpkg_root_dir;
         std::unique_ptr<std::string> target_triplet;

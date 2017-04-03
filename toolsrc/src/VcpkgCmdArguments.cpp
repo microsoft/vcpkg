@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "vcpkg_cmd_arguments.h"
+#include "VcpkgCmdArguments.h"
 #include "vcpkg_Commands.h"
 #include "metrics.h"
 #include "vcpkg_System.h"
@@ -46,7 +46,7 @@ namespace vcpkg
         option_field = new_setting;
     }
 
-    vcpkg_cmd_arguments vcpkg_cmd_arguments::create_from_command_line(const int argc, const wchar_t* const* const argv)
+    VcpkgCmdArguments VcpkgCmdArguments::create_from_command_line(const int argc, const wchar_t* const* const argv)
     {
         std::vector<std::string> v;
         for (int i = 1; i < argc; ++i)
@@ -54,12 +54,12 @@ namespace vcpkg
             v.push_back(Strings::utf16_to_utf8(argv[i]));
         }
 
-        return vcpkg_cmd_arguments::create_from_arg_sequence(v.data(), v.data() + v.size());
+        return VcpkgCmdArguments::create_from_arg_sequence(v.data(), v.data() + v.size());
     }
 
-    vcpkg_cmd_arguments vcpkg_cmd_arguments::create_from_arg_sequence(const std::string* arg_begin, const std::string* arg_end)
+    VcpkgCmdArguments VcpkgCmdArguments::create_from_arg_sequence(const std::string* arg_begin, const std::string* arg_end)
     {
-        vcpkg_cmd_arguments args;
+        VcpkgCmdArguments args;
 
         for (; arg_begin != arg_end; ++arg_begin)
         {
@@ -134,7 +134,7 @@ namespace vcpkg
         return args;
     }
 
-    std::unordered_set<std::string> vcpkg_cmd_arguments::check_and_get_optional_command_arguments(const std::vector<std::string>& valid_options) const
+    std::unordered_set<std::string> VcpkgCmdArguments::check_and_get_optional_command_arguments(const std::vector<std::string>& valid_options) const
     {
         std::unordered_set<std::string> output;
         auto options_copy = this->optional_command_arguments;
@@ -161,22 +161,22 @@ namespace vcpkg
         return output;
     }
 
-    void vcpkg_cmd_arguments::check_max_arg_count(const size_t expected_arg_count) const
+    void VcpkgCmdArguments::check_max_arg_count(const size_t expected_arg_count) const
     {
         return check_max_arg_count(expected_arg_count, "");
     }
 
-    void vcpkg_cmd_arguments::check_min_arg_count(const size_t expected_arg_count) const
+    void VcpkgCmdArguments::check_min_arg_count(const size_t expected_arg_count) const
     {
         return check_min_arg_count(expected_arg_count, "");
     }
 
-    void vcpkg_cmd_arguments::check_exact_arg_count(const size_t expected_arg_count) const
+    void VcpkgCmdArguments::check_exact_arg_count(const size_t expected_arg_count) const
     {
         return check_exact_arg_count(expected_arg_count, "");
     }
 
-    void vcpkg_cmd_arguments::check_max_arg_count(const size_t expected_arg_count, const std::string& example_text) const
+    void VcpkgCmdArguments::check_max_arg_count(const size_t expected_arg_count, const std::string& example_text) const
     {
         const size_t actual_arg_count = command_arguments.size();
         if (actual_arg_count > expected_arg_count)
@@ -187,7 +187,7 @@ namespace vcpkg
         }
     }
 
-    void vcpkg_cmd_arguments::check_min_arg_count(const size_t expected_arg_count, const std::string& example_text) const
+    void VcpkgCmdArguments::check_min_arg_count(const size_t expected_arg_count, const std::string& example_text) const
     {
         const size_t actual_arg_count = command_arguments.size();
         if (actual_arg_count < expected_arg_count)
@@ -198,7 +198,7 @@ namespace vcpkg
         }
     }
 
-    void vcpkg_cmd_arguments::check_exact_arg_count(const size_t expected_arg_count, const std::string& example_text) const
+    void VcpkgCmdArguments::check_exact_arg_count(const size_t expected_arg_count, const std::string& example_text) const
     {
         const size_t actual_arg_count = command_arguments.size();
         if (actual_arg_count != expected_arg_count)

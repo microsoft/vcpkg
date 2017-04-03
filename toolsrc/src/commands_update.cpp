@@ -36,7 +36,7 @@ namespace vcpkg::Commands::Update
         return output;
     }
 
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths)
     {
         args.check_exact_arg_count(0);
         args.check_and_get_optional_command_arguments({});

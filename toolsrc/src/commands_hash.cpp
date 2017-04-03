@@ -24,7 +24,7 @@ namespace vcpkg::Commands::Hash
         System::println(hash);
     }
 
-    void perform_and_exit(const vcpkg_cmd_arguments& args)
+    void perform_and_exit(const VcpkgCmdArguments& args)
     {
         static const std::string example = Strings::format(
             "The argument should be a file path\n%s", Commands::Help::create_example_string("hash boost_1_62_0.tar.bz2"));

@@ -22,7 +22,7 @@ namespace vcpkg::Commands::Owns
         }
     }
 
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths)
     {
         static const std::string example = Strings::format("The argument should be a pattern to search for. %s", Commands::Help::create_example_string("owns zlib.dll"));
         args.check_exact_arg_count(1, example);

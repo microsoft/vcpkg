@@ -108,9 +108,6 @@
     <ClCompile Include="..\src\MachineType.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg_cmd_arguments.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\vcpkg_Dependencies.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -180,6 +177,9 @@
     <ClCompile Include="..\src\ParagraphParseResult.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\VcpkgCmdArguments.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\SourceParagraph.h">
@@ -219,9 +219,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\MachineType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\vcpkg_cmd_arguments.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\vcpkg_Commands.h">
@@ -312,6 +309,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\ParagraphParseResult.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\VcpkgCmdArguments.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

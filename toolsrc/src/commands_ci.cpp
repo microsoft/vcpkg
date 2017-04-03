@@ -26,7 +26,7 @@ namespace vcpkg::Commands::CI
         return specs;
     }
 
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet)
     {
         static const std::string example = Commands::Help::create_example_string("ci x64-windows");
         args.check_max_arg_count(1, example);

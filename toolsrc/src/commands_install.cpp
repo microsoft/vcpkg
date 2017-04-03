@@ -183,7 +183,7 @@ namespace vcpkg::Commands::Install
         status_db->insert(std::make_unique<StatusParagraph>(spgh));
     }
 
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet)
     {
         // input sanitization
         static const std::string example = Commands::Help::create_example_string("install zlib zlib:x64-windows curl boost");

@@ -162,7 +162,7 @@ namespace vcpkg::Commands::Remove
         }
     }
 
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet)
     {
         static const std::string OPTION_PURGE = "--purge";
         static const std::string OPTION_NO_PURGE = "--no-purge";

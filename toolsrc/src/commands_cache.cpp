@@ -24,7 +24,7 @@ namespace vcpkg::Commands::Cache
         return output;
     }
 
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths)
     {
         static const std::string example = Strings::format(
             "The argument should be a substring to search for, or no argument to display all cached libraries.\n%s", Commands::Help::create_example_string("cache png"));

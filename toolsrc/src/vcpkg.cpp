@@ -24,7 +24,7 @@ void invalid_command(const std::string& cmd)
     Checks::exit_fail(VCPKG_LINE_INFO);
 }
 
-static void inner(const vcpkg_cmd_arguments& args)
+static void inner(const VcpkgCmdArguments& args)
 {
     Metrics::track_property("command", args.command);
     if (args.command.empty())
@@ -194,7 +194,7 @@ int wmain(const int argc, const wchar_t* const* const argv)
     loadConfig();
     Metrics::track_property("sqmuser", Metrics::get_SQM_user());
 
-    const vcpkg_cmd_arguments args = vcpkg_cmd_arguments::create_from_command_line(argc, argv);
+    const VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(argc, argv);
 
     if (args.printmetrics != OptBoolT::UNSPECIFIED)
         Metrics::set_print_metrics(args.printmetrics == OptBoolT::ENABLED);

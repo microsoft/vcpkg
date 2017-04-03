@@ -174,7 +174,7 @@ namespace vcpkg::Commands::Build
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet)
     {
         static const std::string example = Commands::Help::create_example_string("build zlib:x64-windows");
         args.check_exact_arg_count(1, example); // Build only takes a single package and all dependencies must already be installed

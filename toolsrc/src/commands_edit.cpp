@@ -5,7 +5,7 @@
 
 namespace vcpkg::Commands::Edit
 {
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths)
     {
         static const std::string example = Commands::Help::create_example_string("edit zlib");
         args.check_exact_arg_count(1, example);

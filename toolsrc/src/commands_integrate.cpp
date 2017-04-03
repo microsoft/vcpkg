@@ -284,7 +284,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
     "  vcpkg integrate remove          Remove user-wide integration\n"
     "  vcpkg integrate project         Generate a referencing nuget package for individual VS project use\n";
 
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths)
     {
         static const std::string example = Strings::format("Commands:\n"
                                                            "%s", INTEGRATE_COMMAND_HELPSTRING);
