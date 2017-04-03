@@ -28,7 +28,7 @@ namespace vcpkg::PostBuildLint
         // The remaining entries are policies
         for (const std::unordered_map<std::string, std::string>::value_type& p : pgh)
         {
-            const BuildPolicies::type policy = BuildPolicies::parse(p.first);
+            const BuildPolicies::Type policy = BuildPolicies::parse(p.first);
             Checks::check_exit(VCPKG_LINE_INFO, policy != BuildPolicies::NULLVALUE, "Unknown policy found: %s", p.first);
             const OptBoolT status = OptBool::parse(p.second);
             build_info.policies.emplace(policy, status);

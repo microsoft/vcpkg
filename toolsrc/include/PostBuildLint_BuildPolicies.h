@@ -4,7 +4,7 @@
 
 namespace vcpkg::PostBuildLint::BuildPolicies
 {
-    enum class backing_enum_t
+    enum class BackingEnum
     {
         NULLVALUE = 0,
         EMPTY_PACKAGE,
@@ -13,28 +13,28 @@ namespace vcpkg::PostBuildLint::BuildPolicies
         EMPTY_INCLUDE_FOLDER
     };
 
-    struct type
+    struct Type
     {
-        constexpr type() : backing_enum(backing_enum_t::NULLVALUE) {}
-        constexpr explicit type(backing_enum_t backing_enum) : backing_enum(backing_enum) { }
-        constexpr operator backing_enum_t() const { return backing_enum; }
+        constexpr Type() : backing_enum(BackingEnum::NULLVALUE) {}
+        constexpr explicit Type(BackingEnum backing_enum) : backing_enum(backing_enum) { }
+        constexpr operator BackingEnum() const { return backing_enum; }
 
         const std::string& toString() const;
         const std::string& cmake_variable() const;
 
     private:
-        backing_enum_t backing_enum;
+        BackingEnum backing_enum;
     };
 
     static const std::string ENUM_NAME = "vcpkg::PostBuildLint::BuildPolicies";
 
-    static constexpr type NULLVALUE(backing_enum_t::NULLVALUE);
-    static constexpr type EMPTY_PACKAGE(backing_enum_t::EMPTY_PACKAGE);
-    static constexpr type DLLS_WITHOUT_LIBS(backing_enum_t::DLLS_WITHOUT_LIBS);
-    static constexpr type ONLY_RELEASE_CRT(backing_enum_t::ONLY_RELEASE_CRT);
-    static constexpr type EMPTY_INCLUDE_FOLDER(backing_enum_t::EMPTY_INCLUDE_FOLDER);
+    static constexpr Type NULLVALUE(BackingEnum::NULLVALUE);
+    static constexpr Type EMPTY_PACKAGE(BackingEnum::EMPTY_PACKAGE);
+    static constexpr Type DLLS_WITHOUT_LIBS(BackingEnum::DLLS_WITHOUT_LIBS);
+    static constexpr Type ONLY_RELEASE_CRT(BackingEnum::ONLY_RELEASE_CRT);
+    static constexpr Type EMPTY_INCLUDE_FOLDER(BackingEnum::EMPTY_INCLUDE_FOLDER);
 
-    static constexpr std::array<type, 4> values = { EMPTY_PACKAGE, DLLS_WITHOUT_LIBS, ONLY_RELEASE_CRT, EMPTY_INCLUDE_FOLDER };
+    static constexpr std::array<Type, 4> values = { EMPTY_PACKAGE, DLLS_WITHOUT_LIBS, ONLY_RELEASE_CRT, EMPTY_INCLUDE_FOLDER };
 
-    type parse(const std::string& s);
+    Type parse(const std::string& s);
 }

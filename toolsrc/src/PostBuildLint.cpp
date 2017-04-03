@@ -64,7 +64,7 @@ namespace vcpkg::PostBuildLint
         return false;
     }
 
-    static lint_status check_for_files_in_include_directory(const std::map<BuildPolicies::type, OptBoolT>& policies, const fs::path& package_dir)
+    static lint_status check_for_files_in_include_directory(const std::map<BuildPolicies::Type, OptBoolT>& policies, const fs::path& package_dir)
     {
         if (contains_and_enabled(policies, BuildPolicies::EMPTY_INCLUDE_FOLDER))
         {
@@ -423,7 +423,7 @@ namespace vcpkg::PostBuildLint
         return lint_status::ERROR_DETECTED;
     }
 
-    static lint_status check_lib_files_are_available_if_dlls_are_available(const std::map<BuildPolicies::type, OptBoolT>& policies, const size_t lib_count, const size_t dll_count, const fs::path& lib_dir)
+    static lint_status check_lib_files_are_available_if_dlls_are_available(const std::map<BuildPolicies::Type, OptBoolT>& policies, const size_t lib_count, const size_t dll_count, const fs::path& lib_dir)
     {
         auto it = policies.find(BuildPolicies::DLLS_WITHOUT_LIBS);
         if (it != policies.cend() && it->second == OptBoolT::ENABLED)

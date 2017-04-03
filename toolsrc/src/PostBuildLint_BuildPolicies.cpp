@@ -12,7 +12,7 @@ namespace vcpkg::PostBuildLint::BuildPolicies
     static const std::string NAME_ONLY_RELEASE_CRT = "PolicyOnlyReleaseCRT";
     static const std::string NAME_EMPTY_INCLUDE_FOLDER = "PolicyEmptyIncludeFolder";
 
-    const std::string& type::toString() const
+    const std::string& Type::toString() const
     {
         switch (this->backing_enum)
         {
@@ -31,7 +31,7 @@ namespace vcpkg::PostBuildLint::BuildPolicies
         }
     }
 
-    const std::string& type::cmake_variable() const
+    const std::string& Type::cmake_variable() const
     {
         static const std::string CMAKE_VARIABLE_EMPTY_PACKAGE = "VCPKG_POLICY_EMPTY_PACKAGE";
         static const std::string CMAKE_VARIABLE_DLLS_WITHOUT_LIBS = "VCPKG_POLICY_DLLS_WITHOUT_LIBS";
@@ -55,7 +55,7 @@ namespace vcpkg::PostBuildLint::BuildPolicies
         }
     }
 
-    type parse(const std::string& s)
+    Type parse(const std::string& s)
     {
         if (s == NAME_EMPTY_PACKAGE)
         {
