@@ -12,7 +12,7 @@ namespace vcpkg
         static const std::string STATUS = "Status";
     }
 
-    StatusParagraph::StatusParagraph() : want(Want::error), state(InstallState::ERROR_STATE)
+    StatusParagraph::StatusParagraph() : want(Want::ERROR_STATE), state(InstallState::ERROR_STATE)
     {
     }
 
@@ -39,16 +39,16 @@ namespace vcpkg
         want = [](const std::string& text)
             {
                 if (text == "unknown")
-                    return Want::unknown;
+                    return Want::UNKNOWN;
                 if (text == "install")
-                    return Want::install;
+                    return Want::INSTALL;
                 if (text == "hold")
-                    return Want::hold;
+                    return Want::HOLD;
                 if (text == "deinstall")
-                    return Want::deinstall;
+                    return Want::DEINSTALL;
                 if (text == "purge")
-                    return Want::purge;
-                return Want::error;
+                    return Want::PURGE;
+                return Want::ERROR_STATE;
             }(std::string(mark, b));
 
         if (std::distance(b, e) < 4)
@@ -82,11 +82,11 @@ namespace vcpkg
     {
         switch (f)
         {
-            case Want::deinstall: return "deinstall";
-            case Want::hold: return "hold";
-            case Want::install: return "install";
-            case Want::purge: return "purge";
-            case Want::unknown: return "unknown";
+            case Want::DEINSTALL: return "deinstall";
+            case Want::HOLD: return "hold";
+            case Want::INSTALL: return "install";
+            case Want::PURGE: return "purge";
+            case Want::UNKNOWN: return "unknown";
             default: return "error";
         }
     }

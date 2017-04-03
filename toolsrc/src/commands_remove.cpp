@@ -31,7 +31,7 @@ namespace vcpkg::Commands::Remove
     {
         StatusParagraph& pkg = **status_db->find(spec.name(), spec.target_triplet());
 
-        pkg.want = Want::purge;
+        pkg.want = Want::PURGE;
         pkg.state = InstallState::HALF_INSTALLED;
         write_update(paths, pkg);
 

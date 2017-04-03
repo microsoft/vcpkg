@@ -66,7 +66,7 @@ namespace vcpkg::Dependencies
                 };
 
             auto it = status_db.find(spec);
-            if (it != status_db.end() && (*it)->want == Want::install)
+            if (it != status_db.end() && (*it)->want == Want::INSTALL)
             {
                 was_examined.emplace(spec, install_plan_action{install_plan_type::ALREADY_INSTALLED, nullopt, nullopt });
                 continue;
@@ -130,7 +130,7 @@ namespace vcpkg::Dependencies
 
             for (const std::unique_ptr<StatusParagraph>& an_installed_package : status_db)
             {
-                if (an_installed_package->want != Want::install)
+                if (an_installed_package->want != Want::INSTALL)
                     continue;
                 if (an_installed_package->package.spec.target_triplet() != spec.target_triplet())
                     continue;

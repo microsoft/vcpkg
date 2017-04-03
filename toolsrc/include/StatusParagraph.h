@@ -15,12 +15,12 @@ namespace vcpkg
 
     enum class Want
     {
-        error,
-        unknown,
-        install,
-        hold,
-        deinstall,
-        purge
+        ERROR_STATE,
+        UNKNOWN,
+        INSTALL,
+        HOLD,
+        DEINSTALL,
+        PURGE
     };
 
     struct StatusParagraph
