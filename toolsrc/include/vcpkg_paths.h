@@ -3,7 +3,7 @@
 #include "vcpkg_expected.h"
 #include "package_spec.h"
 #include "BinaryParagraph.h"
-#include "lazy.h"
+#include "Lazy.h"
 
 namespace vcpkg
 {
@@ -50,9 +50,9 @@ namespace vcpkg
         const toolset_t& get_toolset() const;
 
     private:
-        lazy<fs::path> cmake_exe;
-        lazy<fs::path> git_exe;
-        lazy<fs::path> nuget_exe;
-        lazy<toolset_t> toolset;
+        Lazy<fs::path> cmake_exe;
+        Lazy<fs::path> git_exe;
+        Lazy<fs::path> nuget_exe;
+        Lazy<toolset_t> toolset;
     };
 }

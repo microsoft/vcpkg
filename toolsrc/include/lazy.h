@@ -3,10 +3,10 @@
 namespace vcpkg
 {
     template <typename T>
-    class lazy
+    class Lazy
     {
     public:
-        lazy() : value(T()), initialized(false) {}
+        Lazy() : value(T()), initialized(false) {}
 
         template <class F>
         T const& get_lazy(const F& f) const
