@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "vcpkg_paths.h"
-#include "package_spec.h"
+#include "PackageSpec.h"
 #include "vcpkg_Files.h"
 #include "vcpkg_System.h"
 #include "coff_file_reader.h"
@@ -116,7 +116,7 @@ namespace vcpkg::PostBuildLint
         return lint_status::SUCCESS;
     }
 
-    static lint_status check_folder_lib_cmake(const fs::path& package_dir, const package_spec& spec)
+    static lint_status check_folder_lib_cmake(const fs::path& package_dir, const PackageSpec& spec)
     {
         const fs::path lib_cmake = package_dir / "lib" / "cmake";
         if (fs::exists(lib_cmake))
@@ -128,7 +128,7 @@ namespace vcpkg::PostBuildLint
         return lint_status::SUCCESS;
     }
 
-    static lint_status check_for_misplaced_cmake_files(const fs::path& package_dir, const package_spec& spec)
+    static lint_status check_for_misplaced_cmake_files(const fs::path& package_dir, const PackageSpec& spec)
     {
         std::vector<fs::path> misplaced_cmake_files;
         Files::recursive_find_files_with_extension_in_dir(package_dir / "cmake", ".cmake", &misplaced_cmake_files);
@@ -174,7 +174,7 @@ namespace vcpkg::PostBuildLint
         return lint_status::SUCCESS;
     }
 
-    static lint_status check_for_copyright_file(const package_spec& spec, const vcpkg_paths& paths)
+    static lint_status check_for_copyright_file(const PackageSpec& spec, const vcpkg_paths& paths)
     {
         const fs::path packages_dir = paths.packages / spec.dir();
         const fs::path copyright_file = packages_dir / "share" / spec.name() / "copyright";
@@ -619,7 +619,7 @@ namespace vcpkg::PostBuildLint
         left += static_cast<size_t>(right);
     }
 
-    static size_t perform_all_checks_and_return_error_count(const package_spec& spec, const vcpkg_paths& paths)
+    static size_t perform_all_checks_and_return_error_count(const PackageSpec& spec, const vcpkg_paths& paths)
     {
         // for dumpbin
         const toolset_t& toolset = paths.get_toolset();
@@ -709,7 +709,7 @@ namespace vcpkg::PostBuildLint
         return error_count;
     }
 
-    size_t perform_all_checks(const package_spec& spec, const vcpkg_paths& paths)
+    size_t perform_all_checks(const PackageSpec& spec, const vcpkg_paths& paths)
     {
         System::println("-- Performing post-build validation");
         const size_t error_count = perform_all_checks_and_return_error_count(spec, paths);

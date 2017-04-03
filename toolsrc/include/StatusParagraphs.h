@@ -14,7 +14,7 @@ namespace vcpkg
         using iterator = container::reverse_iterator;
         using const_iterator = container::const_reverse_iterator;
 
-        const_iterator find(const package_spec& spec) const
+        const_iterator find(const PackageSpec& spec) const
         {
             return find(spec.name(), spec.target_triplet());
         }

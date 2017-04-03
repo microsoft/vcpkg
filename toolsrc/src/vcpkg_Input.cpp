@@ -6,10 +6,10 @@
 
 namespace vcpkg::Input
 {
-    package_spec check_and_get_package_spec(const std::string& package_spec_as_string, const triplet& default_target_triplet, CStringView example_text)
+    PackageSpec check_and_get_package_spec(const std::string& package_spec_as_string, const triplet& default_target_triplet, CStringView example_text)
     {
         const std::string as_lowercase = Strings::ascii_to_lowercase(package_spec_as_string);
-        expected<package_spec> expected_spec = package_spec::from_string(as_lowercase, default_target_triplet);
+        expected<PackageSpec> expected_spec = PackageSpec::from_string(as_lowercase, default_target_triplet);
         if (auto spec = expected_spec.get())
         {
             return *spec;

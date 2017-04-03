@@ -5,11 +5,11 @@
 
 namespace vcpkg
 {
-    struct package_spec
+    struct PackageSpec
     {
-        static expected<package_spec> from_string(const std::string& spec_as_string, const triplet& default_target_triplet);
+        static expected<PackageSpec> from_string(const std::string& spec_as_string, const triplet& default_target_triplet);
 
-        static expected<package_spec> from_name_and_triplet(const std::string& name, const triplet& target_triplet);
+        static expected<PackageSpec> from_name_and_triplet(const std::string& name, const triplet& target_triplet);
 
         const std::string& name() const;
 
@@ -26,19 +26,19 @@ namespace vcpkg
         triplet m_target_triplet;
     };
 
-    std::string to_printf_arg(const package_spec& spec);
+    std::string to_printf_arg(const PackageSpec& spec);
 
-    bool operator==(const package_spec& left, const package_spec& right);
+    bool operator==(const PackageSpec& left, const PackageSpec& right);
 
-    std::ostream& operator<<(std::ostream& os, const package_spec& spec);
+    std::ostream& operator<<(std::ostream& os, const PackageSpec& spec);
 } //namespace vcpkg
 
 namespace std
 {
     template <>
-    struct hash<vcpkg::package_spec>
+    struct hash<vcpkg::PackageSpec>
     {
-        size_t operator()(const vcpkg::package_spec& value) const
+        size_t operator()(const vcpkg::PackageSpec& value) const
         {
             size_t hash = 17;
             hash = hash * 31 + std::hash<std::string>()(value.name());
@@ -48,9 +48,9 @@ namespace std
     };
 
     template <>
-    struct equal_to<vcpkg::package_spec>
+    struct equal_to<vcpkg::PackageSpec>
     {
-        bool operator()(const vcpkg::package_spec& left, const vcpkg::package_spec& right) const
+        bool operator()(const vcpkg::PackageSpec& left, const vcpkg::PackageSpec& right) const
         {
             return left == right;
         }

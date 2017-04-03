@@ -3,7 +3,7 @@
 #include "vcpkg_paths.h"
 #include "metrics.h"
 #include "vcpkg_System.h"
-#include "package_spec.h"
+#include "PackageSpec.h"
 #include "vcpkg_Files.h"
 #include "vcpkg_Util.h"
 
@@ -191,17 +191,17 @@ namespace vcpkg
         return paths;
     }
 
-    fs::path vcpkg_paths::package_dir(const package_spec& spec) const
+    fs::path vcpkg_paths::package_dir(const PackageSpec& spec) const
     {
         return this->packages / spec.dir();
     }
 
-    fs::path vcpkg_paths::port_dir(const package_spec& spec) const
+    fs::path vcpkg_paths::port_dir(const PackageSpec& spec) const
     {
         return this->ports / spec.name();
     }
 
-    fs::path vcpkg_paths::build_info_file_path(const package_spec& spec) const
+    fs::path vcpkg_paths::build_info_file_path(const PackageSpec& spec) const
     {
         return this->package_dir(spec) / "BUILD_INFO";
     }

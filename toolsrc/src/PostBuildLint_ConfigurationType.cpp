@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "PostBuildLint_ConfigurationType.h"
 #include "vcpkg_Enums.h"
-#include "package_spec.h"
+#include "PackageSpec.h"
 
 namespace vcpkg::PostBuildLint::ConfigurationType
 {

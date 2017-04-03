@@ -1,7 +1,7 @@
 #pragma once
 #include "filesystem_fs.h"
 #include "vcpkg_expected.h"
-#include "package_spec.h"
+#include "PackageSpec.h"
 #include "BinaryParagraph.h"
 #include "Lazy.h"
 
@@ -18,9 +18,9 @@ namespace vcpkg
     {
         static expected<vcpkg_paths> create(const fs::path& vcpkg_root_dir);
 
-        fs::path package_dir(const package_spec& spec) const;
-        fs::path port_dir(const package_spec& spec) const;
-        fs::path build_info_file_path(const package_spec& spec) const;
+        fs::path package_dir(const PackageSpec& spec) const;
+        fs::path port_dir(const PackageSpec& spec) const;
+        fs::path build_info_file_path(const PackageSpec& spec) const;
         fs::path listfile_path(const BinaryParagraph& pgh) const;
 
         bool is_valid_triplet(const triplet& t) const;

@@ -2,7 +2,7 @@
 
 #include <unordered_map>
 #include "SourceParagraph.h"
-#include "package_spec.h"
+#include "PackageSpec.h"
 
 namespace vcpkg
 {
@@ -18,7 +18,7 @@ namespace vcpkg
 
         std::string dir() const;
 
-        package_spec spec;
+        PackageSpec spec;
         std::string version;
         std::string description;
         std::string maintainer;

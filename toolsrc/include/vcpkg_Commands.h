@@ -26,13 +26,13 @@ namespace vcpkg::Commands
         static constexpr std::array<BuildResult, 4> BuildResult_values = { BuildResult::SUCCEEDED, BuildResult::BUILD_FAILED, BuildResult::POST_BUILD_CHECKS_FAILED, BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES };
 
         const std::string& to_string(const BuildResult build_result);
-        std::string create_error_message(const BuildResult build_result, const package_spec& spec);
-        std::string create_user_troubleshooting_message(const package_spec& spec);
+        std::string create_error_message(const BuildResult build_result, const PackageSpec& spec);
+        std::string create_user_troubleshooting_message(const PackageSpec& spec);
 
         std::wstring make_build_env_cmd(const triplet& target_triplet, const toolset_t& toolset);
 
-        BuildResult build_package(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir, const StatusParagraphs& status_db);
-        void perform_and_exit(const package_spec& spec, const fs::path& port_dir, const std::unordered_set<std::string>& options, const vcpkg_paths& paths);
+        BuildResult build_package(const SourceParagraph& source_paragraph, const PackageSpec& spec, const vcpkg_paths& paths, const fs::path& port_dir, const StatusParagraphs& status_db);
+        void perform_and_exit(const PackageSpec& spec, const fs::path& port_dir, const std::unordered_set<std::string>& options, const vcpkg_paths& paths);
         void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet);
     }
 
@@ -63,7 +63,7 @@ namespace vcpkg::Commands
         {
             static bool compare_by_name(const outdated_package& left, const outdated_package& right);
 
-            package_spec spec;
+            PackageSpec spec;
             version_diff_t version_diff;
         };
 

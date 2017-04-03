@@ -222,7 +222,7 @@ namespace vcpkg::Paragraphs
         return pghs.error_code();
     }
 
-    expected<BinaryParagraph> try_load_cached_package(const vcpkg_paths& paths, const package_spec& spec)
+    expected<BinaryParagraph> try_load_cached_package(const vcpkg_paths& paths, const PackageSpec& spec)
     {
         expected<std::unordered_map<std::string, std::string>> pghs = get_single_paragraph(paths.package_dir(spec) / "CONTROL");
 

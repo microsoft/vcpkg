@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "package_spec.h"
+#include "PackageSpec.h"
 #include "StatusParagraphs.h"
 #include "vcpkg_paths.h"
 #include "vcpkg_optional.h"
@@ -38,9 +38,9 @@ namespace vcpkg::Dependencies
 
     struct package_spec_with_install_plan
     {
-        package_spec_with_install_plan(const package_spec& spec, install_plan_action&& plan);
+        package_spec_with_install_plan(const PackageSpec& spec, install_plan_action&& plan);
 
-        package_spec spec;
+        PackageSpec spec;
         install_plan_action plan;
     };
 
@@ -67,13 +67,13 @@ namespace vcpkg::Dependencies
 
     struct package_spec_with_remove_plan
     {
-        package_spec_with_remove_plan(const package_spec& spec, remove_plan_action&& plan);
+        package_spec_with_remove_plan(const PackageSpec& spec, remove_plan_action&& plan);
 
-        package_spec spec;
+        PackageSpec spec;
         remove_plan_action plan;
     };
 
-    std::vector<package_spec_with_install_plan> create_install_plan(const vcpkg_paths& paths, const std::vector<package_spec>& specs, const StatusParagraphs& status_db);
+    std::vector<package_spec_with_install_plan> create_install_plan(const vcpkg_paths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
 
-    std::vector<package_spec_with_remove_plan> create_remove_plan(const std::vector<package_spec>& specs, const StatusParagraphs& status_db);
+    std::vector<package_spec_with_remove_plan> create_remove_plan(const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
 }

@@ -350,7 +350,7 @@ namespace UnitTest1
 
         TEST_METHOD(package_spec_parse)
         {
-            vcpkg::expected<vcpkg::package_spec> spec = vcpkg::package_spec::from_string("zlib", vcpkg::triplet::X86_WINDOWS);
+            vcpkg::expected<vcpkg::PackageSpec> spec = vcpkg::PackageSpec::from_string("zlib", vcpkg::triplet::X86_WINDOWS);
             Assert::AreEqual(vcpkg::package_spec_parse_result::SUCCESS, vcpkg::to_package_spec_parse_result(spec.error_code()));
             Assert::AreEqual("zlib", spec.get()->name().c_str());
             Assert::AreEqual(vcpkg::triplet::X86_WINDOWS.canonical_name(), spec.get()->target_triplet().canonical_name());
@@ -358,7 +358,7 @@ namespace UnitTest1
 
         TEST_METHOD(package_spec_parse_with_arch)
         {
-            vcpkg::expected<vcpkg::package_spec> spec = vcpkg::package_spec::from_string("zlib:x64-uwp", vcpkg::triplet::X86_WINDOWS);
+            vcpkg::expected<vcpkg::PackageSpec> spec = vcpkg::PackageSpec::from_string("zlib:x64-uwp", vcpkg::triplet::X86_WINDOWS);
             Assert::AreEqual(vcpkg::package_spec_parse_result::SUCCESS, vcpkg::to_package_spec_parse_result(spec.error_code()));
             Assert::AreEqual("zlib", spec.get()->name().c_str());
             Assert::AreEqual(vcpkg::triplet::X64_UWP.canonical_name(), spec.get()->target_triplet().canonical_name());
@@ -366,7 +366,7 @@ namespace UnitTest1
 
         TEST_METHOD(package_spec_parse_with_multiple_colon)
         {
-            auto ec = vcpkg::package_spec::from_string("zlib:x86-uwp:", vcpkg::triplet::X86_WINDOWS).error_code();
+            auto ec = vcpkg::PackageSpec::from_string("zlib:x86-uwp:", vcpkg::triplet::X86_WINDOWS).error_code();
             Assert::AreEqual(vcpkg::package_spec_parse_result::TOO_MANY_COLONS, vcpkg::to_package_spec_parse_result(ec));
         }
 

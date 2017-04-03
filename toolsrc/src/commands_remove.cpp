@@ -27,7 +27,7 @@ namespace vcpkg::Commands::Remove
         }
     }
 
-    static void remove_package(const vcpkg_paths& paths, const package_spec& spec, StatusParagraphs* status_db)
+    static void remove_package(const vcpkg_paths& paths, const PackageSpec& spec, StatusParagraphs* status_db)
     {
         StatusParagraph& pkg = **status_db->find(spec.name(), spec.target_triplet());
 

@@ -32,7 +32,7 @@ namespace vcpkg::Commands::Build
             Strings::utf8_to_utf16(target_triplet.architecture()));
     }
 
-    BuildResult build_package(const SourceParagraph& source_paragraph, const package_spec& spec, const vcpkg_paths& paths, const fs::path& port_dir, const StatusParagraphs& status_db)
+    BuildResult build_package(const SourceParagraph& source_paragraph, const PackageSpec& spec, const vcpkg_paths& paths, const fs::path& port_dir, const StatusParagraphs& status_db)
     {
         Checks::check_exit(VCPKG_LINE_INFO, spec.name() == source_paragraph.name, "inconsistent arguments to build_package()");
 
@@ -111,12 +111,12 @@ namespace vcpkg::Commands::Build
         }
     }
 
-    std::string create_error_message(const BuildResult build_result, const package_spec& spec)
+    std::string create_error_message(const BuildResult build_result, const PackageSpec& spec)
     {
         return Strings::format("Error: Building package %s failed with: %s", spec.toString(), Build::to_string(build_result));
     }
 
-    std::string create_user_troubleshooting_message(const package_spec& spec)
+    std::string create_user_troubleshooting_message(const PackageSpec& spec)
     {
         return Strings::format("Please ensure you're using the latest portfiles with `.\\vcpkg update`, then\n"
                                "submit an issue at https://github.com/Microsoft/vcpkg/issues including:\n"
@@ -127,7 +127,7 @@ namespace vcpkg::Commands::Build
                                , spec.toString(), Version::version());
     }
 
-    void perform_and_exit(const package_spec& spec, const fs::path& port_dir, const std::unordered_set<std::string>& options, const vcpkg_paths& paths)
+    void perform_and_exit(const PackageSpec& spec, const fs::path& port_dir, const std::unordered_set<std::string>& options, const vcpkg_paths& paths)
     {
         if (options.find(OPTION_CHECKS_ONLY) != options.end())
         {
@@ -178,7 +178,7 @@ namespace vcpkg::Commands::Build
     {
         static const std::string example = Commands::Help::create_example_string("build zlib:x64-windows");
         args.check_exact_arg_count(1, example); // Build only takes a single package and all dependencies must already be installed
-        const package_spec spec = Input::check_and_get_package_spec(args.command_arguments.at(0), default_target_triplet, example);
+        const PackageSpec spec = Input::check_and_get_package_spec(args.command_arguments.at(0), default_target_triplet, example);
         Input::check_triplet(spec.target_triplet(), paths);
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_CHECKS_ONLY });
         perform_and_exit(spec, paths.port_dir(spec), options, paths);

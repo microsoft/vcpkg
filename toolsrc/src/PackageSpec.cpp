@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "package_spec.h"
+#include "PackageSpec.h"
 
 namespace vcpkg
 {
@@ -8,7 +8,7 @@ namespace vcpkg
         return (c == '-') || isdigit(c) || (isalpha(c) && islower(c));
     }
 
-    expected<package_spec> package_spec::from_string(const std::string& spec_as_string, const triplet& default_target_triplet)
+    expected<PackageSpec> PackageSpec::from_string(const std::string& spec_as_string, const triplet& default_target_triplet)
     {
         auto pos = spec_as_string.find(':');
         if (pos == std::string::npos)
@@ -27,55 +27,55 @@ namespace vcpkg
         return from_name_and_triplet(name, target_triplet);
     }
 
-    expected<package_spec> package_spec::from_name_and_triplet(const std::string& name, const triplet& target_triplet)
+    expected<PackageSpec> PackageSpec::from_name_and_triplet(const std::string& name, const triplet& target_triplet)
     {
         if (std::find_if_not(name.cbegin(), name.cend(), is_valid_package_spec_char) != name.end())
         {
             return std::error_code(package_spec_parse_result::INVALID_CHARACTERS);
         }
 
-        package_spec p;
+        PackageSpec p;
         p.m_name = name;
         p.m_target_triplet = target_triplet;
         return p;
     }
 
-    const std::string& package_spec::name() const
+    const std::string& PackageSpec::name() const
     {
         return this->m_name;
     }
 
-    const triplet& package_spec::target_triplet() const
+    const triplet& PackageSpec::target_triplet() const
     {
         return this->m_target_triplet;
     }
 
-    std::string package_spec::display_name() const
+    std::string PackageSpec::display_name() const
     {
         return Strings::format("%s:%s", this->name(), this->target_triplet());
     }
 
-    std::string package_spec::dir() const
+    std::string PackageSpec::dir() const
     {
         return Strings::format("%s_%s", this->m_name, this->m_target_triplet);
     }
 
-    std::string package_spec::toString() const
+    std::string PackageSpec::toString() const
     {
         return this->display_name();
     }
 
-    std::string to_printf_arg(const package_spec& spec)
+    std::string to_printf_arg(const PackageSpec& spec)
     {
         return spec.toString();
     }
 
-    bool operator==(const package_spec& left, const package_spec& right)
+    bool operator==(const PackageSpec& left, const PackageSpec& right)
     {
         return left.name() == right.name() && left.target_triplet() == right.target_triplet();
     }
 
-    std::ostream& operator<<(std::ostream& os, const package_spec& spec)
+    std::ostream& operator<<(std::ostream& os, const PackageSpec& spec)
     {
         return os << spec.toString();
     }

@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\package_spec.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\package_spec_parse_result.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -180,11 +177,11 @@
     <ClCompile Include="..\src\OptBool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\PackageSpec.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\package_spec.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\package_spec_parse_result.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -312,6 +309,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\OptBool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\PackageSpec.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

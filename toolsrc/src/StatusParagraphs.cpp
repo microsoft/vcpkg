@@ -15,7 +15,7 @@ namespace vcpkg
     {
         return std::find_if(begin(), end(), [&](const std::unique_ptr<StatusParagraph>& pgh)
                             {
-                                const package_spec& spec = pgh->package.spec;
+                                const PackageSpec& spec = pgh->package.spec;
                                 return spec.name() == name && spec.target_triplet() == target_triplet;
                             });
     }
@@ -24,7 +24,7 @@ namespace vcpkg
     {
         return std::find_if(begin(), end(), [&](const std::unique_ptr<StatusParagraph>& pgh)
                             {
-                                const package_spec& spec = pgh->package.spec;
+                                const PackageSpec& spec = pgh->package.spec;
                                 return spec.name() == name && spec.target_triplet() == target_triplet;
                             });
     }
@@ -43,7 +43,7 @@ namespace vcpkg
     StatusParagraphs::iterator StatusParagraphs::insert(std::unique_ptr<StatusParagraph> pgh)
     {
         Checks::check_exit(VCPKG_LINE_INFO, pgh != nullptr, "Inserted null paragraph");
-        const package_spec& spec = pgh->package.spec;
+        const PackageSpec& spec = pgh->package.spec;
         auto ptr = find(spec.name(), spec.target_triplet());
         if (ptr == end())
         {
