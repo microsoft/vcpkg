@@ -15,7 +15,7 @@ namespace vcpkg
         if (arg_begin == arg_end)
         {
             System::println(System::color::error, "Error: expected value after %s", option_name);
-            TrackProperty("error", "error option name");
+            Metrics::TrackProperty("error", "error option name");
             Commands::Help::print_usage();
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
@@ -23,7 +23,7 @@ namespace vcpkg
         if (option_field != nullptr)
         {
             System::println(System::color::error, "Error: %s specified multiple times", option_name);
-            TrackProperty("error", "error option specified multiple times");
+            Metrics::TrackProperty("error", "error option specified multiple times");
             Commands::Help::print_usage();
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
@@ -39,7 +39,7 @@ namespace vcpkg
         if (option_field != opt_bool_t::UNSPECIFIED && option_field != new_setting)
         {
             System::println(System::color::error, "Error: conflicting values specified for --%s", option_name);
-            TrackProperty("error", "error conflicting switches");
+            Metrics::TrackProperty("error", "error conflicting switches");
             Commands::Help::print_usage();
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
@@ -72,7 +72,7 @@ namespace vcpkg
 
             if (arg[0] == '-' && arg[1] != '-')
             {
-                TrackProperty("error", "error short options are not supported");
+                Metrics::TrackProperty("error", "error short options are not supported");
                 Checks::exit_with_message(VCPKG_LINE_INFO, "Error: short options are not supported: %s", arg);
             }
 

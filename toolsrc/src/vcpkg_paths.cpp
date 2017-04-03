@@ -74,8 +74,8 @@ namespace vcpkg
         if (rc.exit_code)
         {
             System::println(System::color::error, "Launching powershell failed or was denied");
-            TrackProperty("error", "powershell install failed");
-            TrackProperty("installcmd", install_cmd);
+            Metrics::TrackProperty("error", "powershell install failed");
+            Metrics::TrackProperty("installcmd", install_cmd);
             Checks::exit_with_code(VCPKG_LINE_INFO, rc.exit_code);
         }
 
@@ -166,7 +166,7 @@ namespace vcpkg
 
         if (paths.root.empty())
         {
-            TrackProperty("error", "Invalid vcpkg root directory");
+            Metrics::TrackProperty("error", "Invalid vcpkg root directory");
             Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid vcpkg root directory: %s", paths.root.string());
         }
 

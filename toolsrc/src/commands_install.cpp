@@ -210,7 +210,7 @@ namespace vcpkg::Commands::Install
             specs_string.push_back(',');
             specs_string.append(install_plan[i].spec.toString());
         }
-        TrackProperty("installplan", specs_string);
+        Metrics::TrackProperty("installplan", specs_string);
 
         // execute the plan
         for (const package_spec_with_install_plan& action : install_plan)

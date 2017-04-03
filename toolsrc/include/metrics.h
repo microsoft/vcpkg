@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace vcpkg
+namespace vcpkg::Metrics
 {
     void SetSendMetrics(bool should_send_metrics);
     void SetPrintMetrics(bool should_print_metrics);

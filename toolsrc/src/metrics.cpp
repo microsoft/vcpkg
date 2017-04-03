@@ -4,7 +4,7 @@
 #include "vcpkg_Strings.h"
 #include "vcpkg_System.h"
 
-namespace vcpkg
+namespace vcpkg::Metrics
 {
     static std::string GetCurrentDateTime()
     {

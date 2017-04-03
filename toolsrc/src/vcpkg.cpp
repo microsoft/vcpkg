@@ -26,7 +26,7 @@ void invalid_command(const std::string& cmd)
 
 static void inner(const vcpkg_cmd_arguments& args)
 {
-    TrackProperty("command", args.command);
+    Metrics::TrackProperty("command", args.command);
     if (args.command.empty())
     {
         Commands::Help::print_usage();
@@ -130,7 +130,7 @@ static void loadConfig()
             auto user_time = keys["User-Since"];
             if (!user_id.empty() && !user_time.empty())
             {
-                SetUserInformation(user_id, user_time);
+                Metrics::SetUserInformation(user_id, user_time);
                 return;
             }
         }
@@ -139,8 +139,8 @@ static void loadConfig()
 
     // config file not found, could not be read, or invalid
     std::string user_id, user_time;
-    InitUserInformation(user_id, user_time);
-    SetUserInformation(user_id, user_time);
+    Metrics::InitUserInformation(user_id, user_time);
+    Metrics::SetUserInformation(user_id, user_time);
     try
     {
         std::error_code ec;
@@ -183,23 +183,23 @@ int wmain(const int argc, const wchar_t* const* const argv)
     atexit([]()
         {
             auto elapsed_us = g_timer.microseconds();
-            TrackMetric("elapsed_us", elapsed_us);
-            Flush();
+            Metrics::TrackMetric("elapsed_us", elapsed_us);
+            Metrics::Flush();
         });
 
-    TrackProperty("version", Commands::Version::version());
+    Metrics::TrackProperty("version", Commands::Version::version());
 
     const std::string trimmed_command_line = trim_path_from_command_line(Strings::utf16_to_utf8(GetCommandLineW()));
-    TrackProperty("cmdline", trimmed_command_line);
+    Metrics::TrackProperty("cmdline", trimmed_command_line);
     loadConfig();
-    TrackProperty("sqmuser", GetSQMUser());
+    Metrics::TrackProperty("sqmuser", Metrics::GetSQMUser());
 
     const vcpkg_cmd_arguments args = vcpkg_cmd_arguments::create_from_command_line(argc, argv);
 
     if (args.printmetrics != opt_bool_t::UNSPECIFIED)
-        SetPrintMetrics(args.printmetrics == opt_bool_t::ENABLED);
+        Metrics::SetPrintMetrics(args.printmetrics == opt_bool_t::ENABLED);
     if (args.sendmetrics != opt_bool_t::UNSPECIFIED)
-        SetSendMetrics(args.sendmetrics == opt_bool_t::ENABLED);
+        Metrics::SetSendMetrics(args.sendmetrics == opt_bool_t::ENABLED);
 
     if (args.debug != opt_bool_t::UNSPECIFIED)
     {
@@ -226,7 +226,7 @@ int wmain(const int argc, const wchar_t* const* const argv)
     {
         exc_msg = "unknown error(...)";
     }
-    TrackProperty("error", exc_msg);
+    Metrics::TrackProperty("error", exc_msg);
 
     fflush(stdout);
     System::print(
