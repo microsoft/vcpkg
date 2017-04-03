@@ -60,7 +60,7 @@ namespace vcpkg::Commands::Update
             }
             System::println("\n"
                 "To update these packages, run\n"
-                "    vcpkg remove --purge --outdated\n"
+                "    vcpkg remove --outdated\n"
                 "    vcpkg install <pkgs>...");
         }
 

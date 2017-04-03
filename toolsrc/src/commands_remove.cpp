@@ -13,11 +13,6 @@ namespace vcpkg::Commands::Remove
     using Dependencies::request_type;
     using Update::outdated_package;
 
-    static const std::string OPTION_PURGE = "--purge";
-    static const std::string OPTION_RECURSE = "--recurse";
-    static const std::string OPTION_DRY_RUN = "--dry-run";
-    static const std::string OPTION_OUTDATED = "--outdated";
-
     static void delete_directory(const fs::path& directory)
     {
         std::error_code ec;
@@ -169,8 +164,13 @@ namespace vcpkg::Commands::Remove
 
     void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_triplet)
     {
+        static const std::string OPTION_PURGE = "--purge";
+        static const std::string OPTION_NO_PURGE = "--no-purge";
+        static const std::string OPTION_RECURSE = "--recurse";
+        static const std::string OPTION_DRY_RUN = "--dry-run";
+        static const std::string OPTION_OUTDATED = "--outdated";
         static const std::string example = Commands::Help::create_example_string("remove zlib zlib:x64-windows curl boost");
-        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_PURGE, OPTION_RECURSE, OPTION_DRY_RUN, OPTION_OUTDATED });
+        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_PURGE, OPTION_NO_PURGE, OPTION_RECURSE, OPTION_DRY_RUN, OPTION_OUTDATED });
 
         StatusParagraphs status_db = database_load_check(paths);
         std::vector<package_spec> specs;
@@ -187,7 +187,14 @@ namespace vcpkg::Commands::Remove
                 Input::check_triplet(spec.target_triplet(), paths);
         }
 
-        const bool alsoRemoveFolderFromPackages = options.find(OPTION_PURGE) != options.cend();
+        const bool alsoRemoveFolderFromPackages = options.find(OPTION_NO_PURGE) == options.end();
+        if (options.find(OPTION_PURGE) != options.end() && !alsoRemoveFolderFromPackages)
+        {
+            // User specified --purge and --no-purge
+            System::println(System::color::error, "Error: cannot specify both --no-purge and --purge.");
+            System::print(example);
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
         const bool isRecursive = options.find(OPTION_RECURSE) != options.cend();
         const bool dryRun = options.find(OPTION_DRY_RUN) != options.cend();
 
