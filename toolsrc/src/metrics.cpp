@@ -6,19 +6,17 @@
 
 namespace vcpkg::Metrics
 {
-    static std::string GetCurrentDateTime()
+    static std::string get_current_date_time()
     {
         struct tm newtime;
-        time_t now;
-        int milli;
         std::array<char, 80> date;
         date.fill(0);
 
         struct _timeb timebuffer;
 
         _ftime_s(&timebuffer);
-        now = timebuffer.time;
-        milli = timebuffer.millitm;
+        time_t now = timebuffer.time;
+        int milli = timebuffer.millitm;
 
         errno_t err = gmtime_s(&newtime, &now);
         if (err)
@@ -30,7 +28,7 @@ namespace vcpkg::Metrics
         return std::string(&date[0]) + "." + std::to_string(milli) + "Z";
     }
 
-    static std::string GenerateRandomUUID()
+    static std::string generate_random_UUID()
     {
         int partSizes[] = { 8, 4, 4, 4, 12 };
         char uuid[37];
@@ -79,7 +77,7 @@ namespace vcpkg::Metrics
 
     static const std::string& get_session_id()
     {
-        static const std::string id = GenerateRandomUUID();
+        static const std::string id = generate_random_UUID();
         return id;
     }
 
@@ -148,9 +146,9 @@ namespace vcpkg::Metrics
 
     struct MetricMessage
     {
-        std::string user_id = GenerateRandomUUID();
+        std::string user_id = generate_random_UUID();
         std::string user_timestamp;
-        std::string timestamp = GetCurrentDateTime();
+        std::string timestamp = get_current_date_time();
         std::string properties;
         std::string measurements;
 
@@ -239,8 +237,8 @@ true
 
     void init_user_information(std::string& user_id, std::string& first_use_time)
     {
-        user_id = GenerateRandomUUID();
-        first_use_time = GetCurrentDateTime();
+        user_id = generate_random_UUID();
+        first_use_time = get_current_date_time();
     }
 
     void set_send_metrics(bool should_send_metrics)
@@ -409,7 +407,7 @@ true
                 return;
         }
 
-        const fs::path vcpkg_metrics_txt_path = temp_folder_path / ("vcpkg" + GenerateRandomUUID() + ".txt");
+        const fs::path vcpkg_metrics_txt_path = temp_folder_path / ("vcpkg" + generate_random_UUID() + ".txt");
         std::ofstream(vcpkg_metrics_txt_path) << payload;
 
         const std::wstring cmdLine = Strings::wformat(L"start %s %s", temp_folder_path_exe.native(), vcpkg_metrics_txt_path.native());
