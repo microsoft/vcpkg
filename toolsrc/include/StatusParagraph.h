@@ -7,10 +7,10 @@ namespace vcpkg
 {
     enum class InstallState
     {
-        error,
-        not_installed,
-        half_installed,
-        installed,
+        ERROR_STATE,
+        NOT_INSTALLED,
+        HALF_INSTALLED,
+        INSTALLED,
     };
 
     enum class want_t

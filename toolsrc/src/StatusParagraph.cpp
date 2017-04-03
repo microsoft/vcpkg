@@ -12,7 +12,7 @@ namespace vcpkg
         static const std::string STATUS = "Status";
     }
 
-    StatusParagraph::StatusParagraph() : want(want_t::error), state(InstallState::error)
+    StatusParagraph::StatusParagraph() : want(want_t::error), state(InstallState::ERROR_STATE)
     {
     }
 
@@ -58,12 +58,12 @@ namespace vcpkg
         state = [](const std::string& text)
             {
                 if (text == "not-installed")
-                    return InstallState::not_installed;
+                    return InstallState::NOT_INSTALLED;
                 if (text == "installed")
-                    return InstallState::installed;
+                    return InstallState::INSTALLED;
                 if (text == "half-installed")
-                    return InstallState::half_installed;
-                return InstallState::error;
+                    return InstallState::HALF_INSTALLED;
+                return InstallState::ERROR_STATE;
             }(std::string(b, e));
     }
 
@@ -71,9 +71,9 @@ namespace vcpkg
     {
         switch (f)
         {
-            case InstallState::half_installed: return "half-installed";
-            case InstallState::installed: return "installed";
-            case InstallState::not_installed: return "not-installed";
+            case InstallState::HALF_INSTALLED: return "half-installed";
+            case InstallState::INSTALLED: return "installed";
+            case InstallState::NOT_INSTALLED: return "not-installed";
             default: return "error";
         }
     }

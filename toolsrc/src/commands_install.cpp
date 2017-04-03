@@ -165,7 +165,7 @@ namespace vcpkg::Commands::Install
         StatusParagraph spgh;
         spgh.package = binary_paragraph;
         spgh.want = want_t::install;
-        spgh.state = InstallState::half_installed;
+        spgh.state = InstallState::HALF_INSTALLED;
         for (auto&& dep : spgh.package.depends)
         {
             if (status_db->find_installed(dep, spgh.package.spec.target_triplet()) == status_db->end())
@@ -178,7 +178,7 @@ namespace vcpkg::Commands::Install
 
         install_and_write_listfile(paths, spgh.package);
 
-        spgh.state = InstallState::installed;
+        spgh.state = InstallState::INSTALLED;
         write_update(paths, spgh);
         status_db->insert(std::make_unique<StatusParagraph>(spgh));
     }
