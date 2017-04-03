@@ -59,15 +59,15 @@ namespace vcpkg::Commands
 
     namespace Update
     {
-        struct outdated_package
+        struct OutdatedPackage
         {
-            static bool compare_by_name(const outdated_package& left, const outdated_package& right);
+            static bool compare_by_name(const OutdatedPackage& left, const OutdatedPackage& right);
 
             PackageSpec spec;
             version_diff_t version_diff;
         };
 
-        std::vector<outdated_package> find_outdated_packages(const vcpkg_paths& paths, const StatusParagraphs& status_db);
+        std::vector<OutdatedPackage> find_outdated_packages(const vcpkg_paths& paths, const StatusParagraphs& status_db);
         void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths);
     }
 

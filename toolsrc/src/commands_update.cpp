@@ -7,18 +7,18 @@
 
 namespace vcpkg::Commands::Update
 {
-    bool outdated_package::compare_by_name(const outdated_package& left, const outdated_package& right)
+    bool OutdatedPackage::compare_by_name(const OutdatedPackage& left, const OutdatedPackage& right)
     {
         return left.spec.name() < right.spec.name();
     }
 
-    std::vector<outdated_package> find_outdated_packages(const vcpkg_paths& paths, const StatusParagraphs& status_db)
+    std::vector<OutdatedPackage> find_outdated_packages(const vcpkg_paths& paths, const StatusParagraphs& status_db)
     {
         const std::vector<SourceParagraph> source_paragraphs = Paragraphs::load_all_ports(paths.ports);
         const std::map<std::string, version_t> src_names_to_versions = Paragraphs::extract_port_names_and_versions(source_paragraphs);
         const std::vector<StatusParagraph*> installed_packages = get_installed_ports(status_db);
 
-        std::vector<outdated_package> output;
+        std::vector<OutdatedPackage> output;
         for (const StatusParagraph* pgh : installed_packages)
         {
             auto it = src_names_to_versions.find(pgh->package.spec.name());
@@ -44,8 +44,8 @@ namespace vcpkg::Commands::Update
 
         const StatusParagraphs status_db = database_load_check(paths);
 
-        const auto outdated_packages = SortedVector<outdated_package>(find_outdated_packages(paths, status_db),
-                                                                                       &outdated_package::compare_by_name);
+        const auto outdated_packages = SortedVector<OutdatedPackage>(find_outdated_packages(paths, status_db),
+                                                                                       &OutdatedPackage::compare_by_name);
 
         if (outdated_packages.empty())
         {
