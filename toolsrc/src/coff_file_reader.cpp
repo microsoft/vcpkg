@@ -221,7 +221,7 @@ namespace vcpkg::COFFFileReader
         verify_equal_strings(VCPKG_LINE_INFO, FILE_START, file_start, FILE_START_SIZE, "LIB FILE_START");
     }
 
-    dll_info read_dll(const fs::path& path)
+    DllInfo read_dll(const fs::path& path)
     {
         std::fstream fs(path, std::ios::in | std::ios::binary | std::ios::ate);
         Checks::check_exit(VCPKG_LINE_INFO, fs.is_open(), "Could not open file %s for reading", path.generic_string());
@@ -258,7 +258,7 @@ namespace vcpkg::COFFFileReader
         fpos_t m_absolute_position = 0;
     };
 
-    lib_info read_lib(const fs::path& path)
+    LibInfo read_lib(const fs::path& path)
     {
         std::fstream fs(path, std::ios::in | std::ios::binary | std::ios::ate);
         Checks::check_exit(VCPKG_LINE_INFO, fs.is_open(), "Could not open file %s for reading", path.generic_string());

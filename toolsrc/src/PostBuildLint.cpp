@@ -337,7 +337,7 @@ namespace vcpkg::PostBuildLint
         for (const fs::path& file : files)
         {
             Checks::check_exit(VCPKG_LINE_INFO, file.extension() == ".dll", "The file extension was not .dll: %s", file.generic_string());
-            COFFFileReader::dll_info info = COFFFileReader::read_dll(file);
+            COFFFileReader::DllInfo info = COFFFileReader::read_dll(file);
             const std::string actual_architecture = get_actual_architecture(info.machine_type);
 
             if (expected_architecture != actual_architecture)
@@ -362,7 +362,7 @@ namespace vcpkg::PostBuildLint
         for (const fs::path& file : files)
         {
             Checks::check_exit(VCPKG_LINE_INFO, file.extension() == ".lib", "The file extension was not .lib: %s", file.generic_string());
-            COFFFileReader::lib_info info = COFFFileReader::read_lib(file);
+            COFFFileReader::LibInfo info = COFFFileReader::read_lib(file);
             Checks::check_exit(VCPKG_LINE_INFO, info.machine_types.size() == 1, "Found more than 1 architecture in file %s", file.generic_string());
 
             const std::string actual_architecture = get_actual_architecture(info.machine_types.at(0));

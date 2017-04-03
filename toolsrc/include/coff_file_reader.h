@@ -5,17 +5,17 @@
 
 namespace vcpkg::COFFFileReader
 {
-    struct dll_info
+    struct DllInfo
     {
         MachineType machine_type;
     };
 
-    struct lib_info
+    struct LibInfo
     {
         std::vector<MachineType> machine_types;
     };
 
-    dll_info read_dll(const fs::path& path);
+    DllInfo read_dll(const fs::path& path);
 
-    lib_info read_lib(const fs::path& path);
+    LibInfo read_lib(const fs::path& path);
 }
