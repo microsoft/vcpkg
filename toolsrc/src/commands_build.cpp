@@ -136,7 +136,7 @@ namespace vcpkg::Commands::Build
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        const expected<SourceParagraph> maybe_spgh = Paragraphs::try_load_port(port_dir);
+        const Expected<SourceParagraph> maybe_spgh = Paragraphs::try_load_port(port_dir);
         Checks::check_exit(VCPKG_LINE_INFO, !maybe_spgh.error_code(), "Could not find package named %s: %s", spec, maybe_spgh.error_code().message());
         const SourceParagraph& spgh = *maybe_spgh.get();
 

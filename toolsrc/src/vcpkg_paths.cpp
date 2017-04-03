@@ -152,7 +152,7 @@ namespace vcpkg
         return fetch_dependency(scripts_folder, L"git", downloaded_copy);
     }
 
-    expected<vcpkg_paths> vcpkg_paths::create(const fs::path& vcpkg_root_dir)
+    Expected<vcpkg_paths> vcpkg_paths::create(const fs::path& vcpkg_root_dir)
     {
         std::error_code ec;
         const fs::path canonical_vcpkg_root_dir = fs::canonical(vcpkg_root_dir, ec);

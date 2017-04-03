@@ -72,7 +72,7 @@ namespace vcpkg::Dependencies
                 continue;
             }
 
-            expected<BinaryParagraph> maybe_bpgh = Paragraphs::try_load_cached_package(paths, spec);
+            Expected<BinaryParagraph> maybe_bpgh = Paragraphs::try_load_cached_package(paths, spec);
             if (BinaryParagraph* bpgh = maybe_bpgh.get())
             {
                 process_dependencies(bpgh->depends);
@@ -80,7 +80,7 @@ namespace vcpkg::Dependencies
                 continue;
             }
 
-            expected<SourceParagraph> maybe_spgh = Paragraphs::try_load_port(paths.port_dir(spec));
+            Expected<SourceParagraph> maybe_spgh = Paragraphs::try_load_port(paths.port_dir(spec));
             if (auto spgh = maybe_spgh.get())
             {
                 process_dependencies(filter_dependencies(spgh->depends, spec.target_triplet()));

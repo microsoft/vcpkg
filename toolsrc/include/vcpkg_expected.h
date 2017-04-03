@@ -6,34 +6,34 @@
 namespace vcpkg
 {
     template <class T>
-    class expected
+    class Expected
     {
     public:
         // Constructors are intentionally implicit
-        expected(const std::error_code& ec) : m_error_code(ec), m_t()
+        Expected(const std::error_code& ec) : m_error_code(ec), m_t()
         {
         }
 
-        expected(std::errc ec) : expected(std::make_error_code(ec))
+        Expected(std::errc ec) : Expected(std::make_error_code(ec))
         {
         }
 
-        expected(const T& t) : m_error_code(), m_t(t)
+        Expected(const T& t) : m_error_code(), m_t(t)
         {
         }
 
-        expected(T&& t) : m_error_code(), m_t(std::move(t))
+        Expected(T&& t) : m_error_code(), m_t(std::move(t))
         {
         }
 
-        expected() : expected(std::error_code(), T())
+        Expected() : Expected(std::error_code(), T())
         {
         }
 
-        expected(const expected&) = default;
-        expected(expected&&) = default;
-        expected& operator=(const expected&) = default;
-        expected& operator=(expected&&) = default;
+        Expected(const Expected&) = default;
+        Expected(Expected&&) = default;
+        Expected& operator=(const Expected&) = default;
+        Expected& operator=(Expected&&) = default;
 
         std::error_code error_code() const
         {

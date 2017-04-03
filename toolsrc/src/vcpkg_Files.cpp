@@ -11,7 +11,7 @@ namespace vcpkg::Files
         return std::regex_search(s, FILESYSTEM_INVALID_CHARACTERS_REGEX);
     }
 
-    expected<std::string> read_contents(const fs::path& file_path) noexcept
+    Expected<std::string> read_contents(const fs::path& file_path) noexcept
     {
         std::fstream file_stream(file_path, std::ios_base::in | std::ios_base::binary);
         if (file_stream.fail())
@@ -36,7 +36,7 @@ namespace vcpkg::Files
         return std::move(output);
     }
 
-    expected<std::vector<std::string>> read_all_lines(const fs::path& file_path)
+    Expected<std::vector<std::string>> read_all_lines(const fs::path& file_path)
     {
         std::fstream file_stream(file_path, std::ios_base::in | std::ios_base::binary);
         if (file_stream.fail())

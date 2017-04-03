@@ -16,7 +16,7 @@ namespace vcpkg
 
     struct vcpkg_paths
     {
-        static expected<vcpkg_paths> create(const fs::path& vcpkg_root_dir);
+        static Expected<vcpkg_paths> create(const fs::path& vcpkg_root_dir);
 
         fs::path package_dir(const PackageSpec& spec) const;
         fs::path port_dir(const PackageSpec& spec) const;

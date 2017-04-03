@@ -7,9 +7,9 @@ namespace vcpkg
 {
     struct PackageSpec
     {
-        static expected<PackageSpec> from_string(const std::string& spec_as_string, const Triplet& default_target_triplet);
+        static Expected<PackageSpec> from_string(const std::string& spec_as_string, const Triplet& default_target_triplet);
 
-        static expected<PackageSpec> from_name_and_triplet(const std::string& name, const Triplet& target_triplet);
+        static Expected<PackageSpec> from_name_and_triplet(const std::string& name, const Triplet& target_triplet);
 
         const std::string& name() const;
 
