@@ -20,12 +20,12 @@ namespace vcpkg::Commands::PortsDiff
     };
 
     template <class T>
-    struct set_element_presence
+    struct SetElementPresence
     {
-        static set_element_presence create(std::vector<T> left, std::vector<T> right)
+        static SetElementPresence create(std::vector<T> left, std::vector<T> right)
         {
             // TODO: This can be done with one pass instead of three passes
-            set_element_presence output;
+            SetElementPresence output;
             std::set_difference(left.cbegin(), left.cend(), right.cbegin(), right.cend(), std::back_inserter(output.only_left));
             std::set_intersection(left.cbegin(), left.cend(), right.cbegin(), right.cend(), std::back_inserter(output.both));
             std::set_difference(right.cbegin(), right.cend(), left.cbegin(), left.cend(), std::back_inserter(output.only_right));
@@ -122,7 +122,7 @@ namespace vcpkg::Commands::PortsDiff
         std::vector<std::string> current_ports = Maps::extract_keys(current_names_and_versions);
         std::vector<std::string> previous_ports = Maps::extract_keys(previous_names_and_versions);
 
-        const set_element_presence<std::string> setp = set_element_presence<std::string>::create(current_ports, previous_ports);
+        const SetElementPresence<std::string> setp = SetElementPresence<std::string>::create(current_ports, previous_ports);
 
         const std::vector<std::string>& added_ports = setp.only_left;
         if (!added_ports.empty())
