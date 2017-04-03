@@ -10,8 +10,8 @@ namespace vcpkg::Commands::Remove
 {
     using Dependencies::package_spec_with_remove_plan;
     using Dependencies::remove_plan_type;
-    using Dependencies::request_type;
-    using Update::outdated_package;
+    using Dependencies::RequestType;
+    using Update::OutdatedPackage;
 
     static void delete_directory(const fs::path& directory)
     {
@@ -147,12 +147,12 @@ namespace vcpkg::Commands::Remove
             System::println("The following packages will be removed:\n%s",
                             Strings::join("\n", remove, [](const package_spec_with_remove_plan* p)
                                           {
-                                              if (p->plan.request_type == Dependencies::request_type::AUTO_SELECTED)
+                                              if (p->plan.request_type == Dependencies::RequestType::AUTO_SELECTED)
                                               {
                                                   return "  * " + p->spec.toString();
                                               }
 
-                                              if (p->plan.request_type == Dependencies::request_type::USER_REQUESTED)
+                                              if (p->plan.request_type == Dependencies::RequestType::USER_REQUESTED)
                                               {
                                                   return "    " + p->spec.toString();
                                               }
@@ -205,7 +205,7 @@ namespace vcpkg::Commands::Remove
 
         const bool has_non_user_requested_packages = std::find_if(remove_plan.cbegin(), remove_plan.cend(), [](const package_spec_with_remove_plan& package)-> bool
                                                                   {
-                                                                      return package.plan.request_type != request_type::USER_REQUESTED;
+                                                                      return package.plan.request_type != RequestType::USER_REQUESTED;
                                                                   }) != remove_plan.cend();
 
         if (has_non_user_requested_packages)

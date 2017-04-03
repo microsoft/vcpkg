@@ -7,7 +7,7 @@
 
 namespace vcpkg::Dependencies
 {
-    enum class request_type
+    enum class RequestType
     {
         UNKNOWN,
         USER_REQUESTED,
@@ -54,7 +54,7 @@ namespace vcpkg::Dependencies
     struct remove_plan_action
     {
         remove_plan_action();
-        remove_plan_action(const remove_plan_type& plan_type, const request_type& request_type);
+        remove_plan_action(const remove_plan_type& plan_type, const RequestType& request_type);
         remove_plan_action(const remove_plan_action&) = delete;
         remove_plan_action(remove_plan_action&&) = default;
         remove_plan_action& operator=(const remove_plan_action&) = delete;
@@ -62,7 +62,7 @@ namespace vcpkg::Dependencies
 
 
         remove_plan_type plan_type;
-        request_type request_type;
+        RequestType request_type;
     };
 
     struct package_spec_with_remove_plan
