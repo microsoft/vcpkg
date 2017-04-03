@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "vcpkg_paths.h"
+#include "VcpkgPaths.h"
 #include "PackageSpec.h"
 #include "vcpkg_Files.h"
 #include "vcpkg_System.h"
@@ -174,7 +174,7 @@ namespace vcpkg::PostBuildLint
         return lint_status::SUCCESS;
     }
 
-    static lint_status check_for_copyright_file(const PackageSpec& spec, const vcpkg_paths& paths)
+    static lint_status check_for_copyright_file(const PackageSpec& spec, const VcpkgPaths& paths)
     {
         const fs::path packages_dir = paths.packages / spec.dir();
         const fs::path copyright_file = packages_dir / "share" / spec.name() / "copyright";
@@ -619,7 +619,7 @@ namespace vcpkg::PostBuildLint
         left += static_cast<size_t>(right);
     }
 
-    static size_t perform_all_checks_and_return_error_count(const PackageSpec& spec, const vcpkg_paths& paths)
+    static size_t perform_all_checks_and_return_error_count(const PackageSpec& spec, const VcpkgPaths& paths)
     {
         // for dumpbin
         const Toolset& toolset = paths.get_toolset();
@@ -709,7 +709,7 @@ namespace vcpkg::PostBuildLint
         return error_count;
     }
 
-    size_t perform_all_checks(const PackageSpec& spec, const vcpkg_paths& paths)
+    size_t perform_all_checks(const PackageSpec& spec, const VcpkgPaths& paths)
     {
         System::println("-- Performing post-build validation");
         const size_t error_count = perform_all_checks_and_return_error_count(spec, paths);

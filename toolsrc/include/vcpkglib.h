@@ -1,16 +1,16 @@
 #pragma once
 
 #include "StatusParagraphs.h"
-#include "vcpkg_paths.h"
+#include "VcpkgPaths.h"
 #include "SortedVector.h"
 
 namespace vcpkg
 {
     extern bool g_debugging;
 
-    StatusParagraphs database_load_check(const vcpkg_paths& paths);
+    StatusParagraphs database_load_check(const VcpkgPaths& paths);
 
-    void write_update(const vcpkg_paths& paths, const StatusParagraph& p);
+    void write_update(const VcpkgPaths& paths, const StatusParagraph& p);
 
     struct StatusParagraph_and_associated_files
     {
@@ -19,7 +19,7 @@ namespace vcpkg
     };
 
     std::vector<StatusParagraph*> get_installed_ports(const StatusParagraphs& status_db);
-    std::vector<StatusParagraph_and_associated_files> get_installed_files(const vcpkg_paths& paths, const StatusParagraphs& status_db);
+    std::vector<StatusParagraph_and_associated_files> get_installed_files(const VcpkgPaths& paths, const StatusParagraphs& status_db);
 
 
     struct CMakeVariable

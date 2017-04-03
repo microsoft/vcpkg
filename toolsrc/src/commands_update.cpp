@@ -12,7 +12,7 @@ namespace vcpkg::Commands::Update
         return left.spec.name() < right.spec.name();
     }
 
-    std::vector<OutdatedPackage> find_outdated_packages(const vcpkg_paths& paths, const StatusParagraphs& status_db)
+    std::vector<OutdatedPackage> find_outdated_packages(const VcpkgPaths& paths, const StatusParagraphs& status_db)
     {
         const std::vector<SourceParagraph> source_paragraphs = Paragraphs::load_all_ports(paths.ports);
         const std::map<std::string, VersionT> src_names_to_versions = Paragraphs::extract_port_names_and_versions(source_paragraphs);
@@ -36,7 +36,7 @@ namespace vcpkg::Commands::Update
         return output;
     }
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         args.check_exact_arg_count(0);
         args.check_and_get_optional_command_arguments({});

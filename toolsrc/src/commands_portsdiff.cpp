@@ -67,7 +67,7 @@ namespace vcpkg::Commands::PortsDiff
         }
     }
 
-    static std::map<std::string, VersionT> read_ports_from_commit(const vcpkg_paths& paths, const std::wstring& git_commit_id)
+    static std::map<std::string, VersionT> read_ports_from_commit(const VcpkgPaths& paths, const std::wstring& git_commit_id)
     {
         const fs::path& git_exe = paths.get_git_exe();
         const fs::path dot_git_dir = paths.root / ".git";
@@ -100,7 +100,7 @@ namespace vcpkg::Commands::PortsDiff
         Checks::check_exit(VCPKG_LINE_INFO, output.output == VALID_COMMIT_OUTPUT, "Invalid commit id %s", Strings::utf16_to_utf8(git_commit_id));
     }
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         static const std::string example = Strings::format("The argument should be a branch/tag/hash to checkout.\n%s", Commands::Help::create_example_string("portsdiff mybranchname"));
         args.check_min_arg_count(1, example);

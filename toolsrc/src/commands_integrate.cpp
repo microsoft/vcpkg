@@ -139,7 +139,7 @@ namespace vcpkg::Commands::Integrate
         return local_app_data / "vcpkg" / "vcpkg.user.targets";
     }
 
-    static void integrate_install(const vcpkg_paths& paths)
+    static void integrate_install(const VcpkgPaths& paths)
     {
         // TODO: This block of code should eventually be removed
         for (auto&& old_system_wide_targets_file : old_system_target_files)
@@ -243,7 +243,7 @@ namespace vcpkg::Commands::Integrate
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 
-    static void integrate_project(const vcpkg_paths& paths)
+    static void integrate_project(const VcpkgPaths& paths)
     {
         const fs::path& nuget_exe = paths.get_nuget_exe();
 
@@ -284,7 +284,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
     "  vcpkg integrate remove          Remove user-wide integration\n"
     "  vcpkg integrate project         Generate a referencing nuget package for individual VS project use\n";
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         static const std::string example = Strings::format("Commands:\n"
                                                            "%s", INTEGRATE_COMMAND_HELPSTRING);

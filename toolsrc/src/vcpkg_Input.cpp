@@ -21,7 +21,7 @@ namespace vcpkg::Input
         Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
-    void check_triplet(const Triplet& t, const vcpkg_paths& paths)
+    void check_triplet(const Triplet& t, const VcpkgPaths& paths)
     {
         if (!paths.is_valid_triplet(t))
         {

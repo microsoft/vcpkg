@@ -4,7 +4,7 @@
 #include <map>
 #include "vcpkg_expected.h"
 #include "BinaryParagraph.h"
-#include "vcpkg_paths.h"
+#include "VcpkgPaths.h"
 #include "VersionT.h"
 
 namespace vcpkg::Paragraphs
@@ -18,7 +18,7 @@ namespace vcpkg::Paragraphs
 
     Expected<SourceParagraph> try_load_port(const fs::path& control_path);
 
-    Expected<BinaryParagraph> try_load_cached_package(const vcpkg_paths& paths, const PackageSpec& spec);
+    Expected<BinaryParagraph> try_load_cached_package(const VcpkgPaths& paths, const PackageSpec& spec);
 
     std::vector<SourceParagraph> load_all_ports(const fs::path& ports_dir);
 

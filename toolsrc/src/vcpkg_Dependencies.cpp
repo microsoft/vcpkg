@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "vcpkg_Dependencies.h"
 #include "vcpkg_Graphs.h"
-#include "vcpkg_paths.h"
+#include "VcpkgPaths.h"
 #include "PackageSpec.h"
 #include "StatusParagraphs.h"
 #include "vcpkg_Files.h"
@@ -35,7 +35,7 @@ namespace vcpkg::Dependencies
     {
     }
 
-    std::vector<PackageSpecWithInstallPlan> create_install_plan(const vcpkg_paths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db)
+    std::vector<PackageSpecWithInstallPlan> create_install_plan(const VcpkgPaths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db)
     {
         std::unordered_map<PackageSpec, InstallPlanAction> was_examined; // Examine = we have checked its immediate (non-recursive) dependencies
         Graphs::Graph<PackageSpec> graph;

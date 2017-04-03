@@ -14,9 +14,9 @@ namespace vcpkg
         CWStringView version;
     };
 
-    struct vcpkg_paths
+    struct VcpkgPaths
     {
-        static Expected<vcpkg_paths> create(const fs::path& vcpkg_root_dir);
+        static Expected<VcpkgPaths> create(const fs::path& vcpkg_root_dir);
 
         fs::path package_dir(const PackageSpec& spec) const;
         fs::path port_dir(const PackageSpec& spec) const;

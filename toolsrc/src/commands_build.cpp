@@ -18,7 +18,7 @@ namespace vcpkg::Commands::Build
 
     static const std::string OPTION_CHECKS_ONLY = "--checks-only";
 
-    static void create_binary_control_file(const vcpkg_paths& paths, const SourceParagraph& source_paragraph, const Triplet& target_triplet)
+    static void create_binary_control_file(const VcpkgPaths& paths, const SourceParagraph& source_paragraph, const Triplet& target_triplet)
     {
         const BinaryParagraph bpgh = BinaryParagraph(source_paragraph, target_triplet);
         const fs::path binary_control_file = paths.packages / bpgh.dir() / "CONTROL";
@@ -32,7 +32,7 @@ namespace vcpkg::Commands::Build
             Strings::utf8_to_utf16(target_triplet.architecture()));
     }
 
-    BuildResult build_package(const SourceParagraph& source_paragraph, const PackageSpec& spec, const vcpkg_paths& paths, const fs::path& port_dir, const StatusParagraphs& status_db)
+    BuildResult build_package(const SourceParagraph& source_paragraph, const PackageSpec& spec, const VcpkgPaths& paths, const fs::path& port_dir, const StatusParagraphs& status_db)
     {
         Checks::check_exit(VCPKG_LINE_INFO, spec.name() == source_paragraph.name, "inconsistent arguments to build_package()");
 
@@ -127,7 +127,7 @@ namespace vcpkg::Commands::Build
                                , spec.toString(), Version::version());
     }
 
-    void perform_and_exit(const PackageSpec& spec, const fs::path& port_dir, const std::unordered_set<std::string>& options, const vcpkg_paths& paths)
+    void perform_and_exit(const PackageSpec& spec, const fs::path& port_dir, const std::unordered_set<std::string>& options, const VcpkgPaths& paths)
     {
         if (options.find(OPTION_CHECKS_ONLY) != options.end())
         {
@@ -174,7 +174,7 @@ namespace vcpkg::Commands::Build
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_target_triplet)
     {
         static const std::string example = Commands::Help::create_example_string("build zlib:x64-windows");
         args.check_exact_arg_count(1, example); // Build only takes a single package and all dependencies must already be installed

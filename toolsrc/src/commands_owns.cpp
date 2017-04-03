@@ -5,7 +5,7 @@
 
 namespace vcpkg::Commands::Owns
 {
-    static void search_file(const vcpkg_paths& paths, const std::string& file_substr, const StatusParagraphs& status_db)
+    static void search_file(const VcpkgPaths& paths, const std::string& file_substr, const StatusParagraphs& status_db)
     {
         const std::vector<StatusParagraph_and_associated_files> installed_files = get_installed_files(paths, status_db);
         for (const StatusParagraph_and_associated_files& pgh_and_file : installed_files)
@@ -22,7 +22,7 @@ namespace vcpkg::Commands::Owns
         }
     }
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         static const std::string example = Strings::format("The argument should be a pattern to search for. %s", Commands::Help::create_example_string("owns zlib.dll"));
         args.check_exact_arg_count(1, example);

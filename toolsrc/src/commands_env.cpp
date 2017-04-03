@@ -4,7 +4,7 @@
 
 namespace vcpkg::Commands::Env
 {
-    void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths, const Triplet& default_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
         static const std::string example = Commands::Help::create_example_string(R"(env --Triplet x64-windows)");
         args.check_exact_arg_count(0, example);

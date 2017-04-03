@@ -2,7 +2,7 @@
 #include <vector>
 #include "PackageSpec.h"
 #include "StatusParagraphs.h"
-#include "vcpkg_paths.h"
+#include "VcpkgPaths.h"
 #include "vcpkg_optional.h"
 
 namespace vcpkg::Dependencies
@@ -73,7 +73,7 @@ namespace vcpkg::Dependencies
         RemovePlanAction plan;
     };
 
-    std::vector<PackageSpecWithInstallPlan> create_install_plan(const vcpkg_paths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
+    std::vector<PackageSpecWithInstallPlan> create_install_plan(const VcpkgPaths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
 
     std::vector<PackageSpecWithRemovePlan> create_remove_plan(const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
 }

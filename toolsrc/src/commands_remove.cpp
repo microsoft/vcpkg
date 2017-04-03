@@ -27,7 +27,7 @@ namespace vcpkg::Commands::Remove
         }
     }
 
-    static void remove_package(const vcpkg_paths& paths, const PackageSpec& spec, StatusParagraphs* status_db)
+    static void remove_package(const VcpkgPaths& paths, const PackageSpec& spec, StatusParagraphs* status_db)
     {
         StatusParagraph& pkg = **status_db->find(spec.name(), spec.target_triplet());
 
@@ -162,7 +162,7 @@ namespace vcpkg::Commands::Remove
         }
     }
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_target_triplet)
     {
         static const std::string OPTION_PURGE = "--purge";
         static const std::string OPTION_NO_PURGE = "--no-purge";

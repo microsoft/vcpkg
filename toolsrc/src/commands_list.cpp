@@ -14,7 +14,7 @@ namespace vcpkg::Commands::List
                         details::shorten_description(pgh.package.description));
     }
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         static const std::string example = Strings::format(
             "The argument should be a substring to search for, or no argument to display all installed libraries.\n%s", Commands::Help::create_example_string("list png"));

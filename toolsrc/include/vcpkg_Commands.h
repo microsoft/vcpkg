@@ -1,15 +1,15 @@
 #pragma once
 
 #include "VcpkgCmdArguments.h"
-#include "vcpkg_paths.h"
+#include "VcpkgPaths.h"
 #include "StatusParagraphs.h"
 #include <array>
 #include "VersionT.h"
 
 namespace vcpkg::Commands
 {
-    using CommandTypeA = void(*)(const VcpkgCmdArguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet);
-    using CommandTypeB = void(*)(const VcpkgCmdArguments& args, const vcpkg_paths& paths);
+    using CommandTypeA = void(*)(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_target_triplet);
+    using CommandTypeB = void(*)(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     using CommandTypeC = void(*)(const VcpkgCmdArguments& args);
 
     namespace Build
@@ -31,30 +31,30 @@ namespace vcpkg::Commands
 
         std::wstring make_build_env_cmd(const Triplet& target_triplet, const Toolset& toolset);
 
-        BuildResult build_package(const SourceParagraph& source_paragraph, const PackageSpec& spec, const vcpkg_paths& paths, const fs::path& port_dir, const StatusParagraphs& status_db);
-        void perform_and_exit(const PackageSpec& spec, const fs::path& port_dir, const std::unordered_set<std::string>& options, const vcpkg_paths& paths);
-        void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet);
+        BuildResult build_package(const SourceParagraph& source_paragraph, const PackageSpec& spec, const VcpkgPaths& paths, const fs::path& port_dir, const StatusParagraphs& status_db);
+        void perform_and_exit(const PackageSpec& spec, const fs::path& port_dir, const std::unordered_set<std::string>& options, const VcpkgPaths& paths);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_target_triplet);
     }
 
     namespace BuildExternal
     {
-        void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_target_triplet);
     }
 
     namespace Install
     {
-        void install_package(const vcpkg_paths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs* status_db);
-        void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet);
+        void install_package(const VcpkgPaths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs* status_db);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_target_triplet);
     }
 
     namespace CI
     {
-        void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_target_triplet);
     }
 
     namespace Remove
     {
-        void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_target_triplet);
     }
 
     namespace Update
@@ -67,67 +67,67 @@ namespace vcpkg::Commands
             VersionDiff version_diff;
         };
 
-        std::vector<OutdatedPackage> find_outdated_packages(const vcpkg_paths& paths, const StatusParagraphs& status_db);
-        void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths);
+        std::vector<OutdatedPackage> find_outdated_packages(const VcpkgPaths& paths, const StatusParagraphs& status_db);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
     namespace Env
     {
-        void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths, const Triplet& default_triplet);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
     }
 
     namespace Create
     {
-        void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
     namespace Edit
     {
-        void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
     namespace Search
     {
-        void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
     namespace List
     {
-        void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
     namespace Owns
     {
-        void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
     namespace Cache
     {
-        void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
     namespace Import
     {
-        void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
     namespace Integrate
     {
         extern const char*const INTEGRATE_COMMAND_HELPSTRING;
 
-        void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
     namespace PortsDiff
     {
-        void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
     namespace Help
     {
-        void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
 
-        void help_topic_valid_triplet(const vcpkg_paths& paths);
+        void help_topic_valid_triplet(const VcpkgPaths& paths);
 
         void print_usage();
 

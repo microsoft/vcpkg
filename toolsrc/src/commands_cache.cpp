@@ -7,7 +7,7 @@
 
 namespace vcpkg::Commands::Cache
 {
-    static std::vector<BinaryParagraph> read_all_binary_paragraphs(const vcpkg_paths& paths)
+    static std::vector<BinaryParagraph> read_all_binary_paragraphs(const VcpkgPaths& paths)
     {
         std::vector<BinaryParagraph> output;
         for (auto it = fs::directory_iterator(paths.packages); it != fs::directory_iterator(); ++it)
@@ -24,7 +24,7 @@ namespace vcpkg::Commands::Cache
         return output;
     }
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         static const std::string example = Strings::format(
             "The argument should be a substring to search for, or no argument to display all cached libraries.\n%s", Commands::Help::create_example_string("cache png"));

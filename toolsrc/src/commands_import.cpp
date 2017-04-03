@@ -58,7 +58,7 @@ namespace vcpkg::Commands::Import
         copy_files_into_directory(debug_binaries.libs, destination_path / "debug" / "lib");
     }
 
-    static void do_import(const vcpkg_paths& paths, const fs::path& include_directory, const fs::path& project_directory, const BinaryParagraph& control_file_data)
+    static void do_import(const VcpkgPaths& paths, const fs::path& include_directory, const fs::path& project_directory, const BinaryParagraph& control_file_data)
     {
         fs::path library_destination_path = paths.package_dir(control_file_data.spec);
         fs::create_directory(library_destination_path);
@@ -68,7 +68,7 @@ namespace vcpkg::Commands::Import
         std::ofstream(control_file_path) << control_file_data;
     }
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         static const std::string example = Commands::Help::create_example_string(R"(import C:\path\to\CONTROLfile C:\path\to\includedir C:\path\to\projectdir)");
         args.check_exact_arg_count(3, example);

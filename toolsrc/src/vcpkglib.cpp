@@ -33,7 +33,7 @@ namespace vcpkg
         return StatusParagraphs(std::move(status_pghs));
     }
 
-    StatusParagraphs database_load_check(const vcpkg_paths& paths)
+    StatusParagraphs database_load_check(const VcpkgPaths& paths)
     {
         auto updates_dir = paths.vcpkg_dir_updates;
 
@@ -91,7 +91,7 @@ namespace vcpkg
         return current_status_db;
     }
 
-    void write_update(const vcpkg_paths& paths, const StatusParagraph& p)
+    void write_update(const VcpkgPaths& paths, const StatusParagraph& p)
     {
         static int update_id = 0;
         auto my_update_id = update_id++;
@@ -184,7 +184,7 @@ namespace vcpkg
         return installed_packages;
     }
 
-    std::vector<StatusParagraph_and_associated_files> get_installed_files(const vcpkg_paths& paths, const StatusParagraphs& status_db)
+    std::vector<StatusParagraph_and_associated_files> get_installed_files(const VcpkgPaths& paths, const StatusParagraphs& status_db)
     {
         std::vector<StatusParagraph_and_associated_files> installed_files;
 

@@ -14,7 +14,7 @@ namespace vcpkg::Commands::Install
     using Dependencies::PackageSpecWithInstallPlan;
     using Dependencies::InstallPlanType;
 
-    static void install_and_write_listfile(const vcpkg_paths& paths, const BinaryParagraph& bpgh)
+    static void install_and_write_listfile(const VcpkgPaths& paths, const BinaryParagraph& bpgh)
     {
         std::vector<std::string> output;
 
@@ -136,7 +136,7 @@ namespace vcpkg::Commands::Install
         return SortedVector<std::string>(std::move(installed_files));
     }
 
-    void install_package(const vcpkg_paths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs* status_db)
+    void install_package(const VcpkgPaths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs* status_db)
     {
         const fs::path package_dir = paths.package_dir(binary_paragraph.spec);
         const Triplet& triplet = binary_paragraph.spec.target_triplet();
@@ -183,7 +183,7 @@ namespace vcpkg::Commands::Install
         status_db->insert(std::make_unique<StatusParagraph>(spgh));
     }
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths, const Triplet& default_target_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_target_triplet)
     {
         // input sanitization
         static const std::string example = Commands::Help::create_example_string("install zlib zlib:x64-windows curl boost");

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "vcpkg_expected.h"
-#include "vcpkg_paths.h"
+#include "VcpkgPaths.h"
 #include "metrics.h"
 #include "vcpkg_System.h"
 #include "PackageSpec.h"
@@ -152,7 +152,7 @@ namespace vcpkg
         return fetch_dependency(scripts_folder, L"git", downloaded_copy);
     }
 
-    Expected<vcpkg_paths> vcpkg_paths::create(const fs::path& vcpkg_root_dir)
+    Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir)
     {
         std::error_code ec;
         const fs::path canonical_vcpkg_root_dir = fs::canonical(vcpkg_root_dir, ec);
@@ -161,7 +161,7 @@ namespace vcpkg
             return ec;
         }
 
-        vcpkg_paths paths;
+        VcpkgPaths paths;
         paths.root = canonical_vcpkg_root_dir;
 
         if (paths.root.empty())
@@ -191,27 +191,27 @@ namespace vcpkg
         return paths;
     }
 
-    fs::path vcpkg_paths::package_dir(const PackageSpec& spec) const
+    fs::path VcpkgPaths::package_dir(const PackageSpec& spec) const
     {
         return this->packages / spec.dir();
     }
 
-    fs::path vcpkg_paths::port_dir(const PackageSpec& spec) const
+    fs::path VcpkgPaths::port_dir(const PackageSpec& spec) const
     {
         return this->ports / spec.name();
     }
 
-    fs::path vcpkg_paths::build_info_file_path(const PackageSpec& spec) const
+    fs::path VcpkgPaths::build_info_file_path(const PackageSpec& spec) const
     {
         return this->package_dir(spec) / "BUILD_INFO";
     }
 
-    fs::path vcpkg_paths::listfile_path(const BinaryParagraph& pgh) const
+    fs::path VcpkgPaths::listfile_path(const BinaryParagraph& pgh) const
     {
         return this->vcpkg_dir_info / (pgh.fullstem() + ".list");
     }
 
-    bool vcpkg_paths::is_valid_triplet(const Triplet& t) const
+    bool VcpkgPaths::is_valid_triplet(const Triplet& t) const
     {
         auto it = fs::directory_iterator(this->triplets);
         for (; it != fs::directory_iterator(); ++it)
@@ -226,22 +226,22 @@ namespace vcpkg
         return false;
     }
 
-    const fs::path& vcpkg_paths::get_cmake_exe() const
+    const fs::path& VcpkgPaths::get_cmake_exe() const
     {
         return this->cmake_exe.get_lazy([this]() { return get_cmake_path(this->downloads, this->scripts); });
     }
 
-    const fs::path& vcpkg_paths::get_git_exe() const
+    const fs::path& VcpkgPaths::get_git_exe() const
     {
         return this->git_exe.get_lazy([this]() { return get_git_path(this->downloads, this->scripts); });
     }
 
-    const fs::path& vcpkg_paths::get_nuget_exe() const
+    const fs::path& VcpkgPaths::get_nuget_exe() const
     {
         return this->nuget_exe.get_lazy([this]() { return get_nuget_path(this->downloads, this->scripts); });
     }
 
-    static std::vector<std::string> get_VS2017_installation_instances(const vcpkg_paths& paths)
+    static std::vector<std::string> get_VS2017_installation_instances(const VcpkgPaths& paths)
     {
         const fs::path script = paths.scripts / "findVisualStudioInstallationInstances.ps1";
         const std::wstring cmd = System::create_powershell_script_cmd(script);
@@ -262,7 +262,7 @@ namespace vcpkg
         return nullopt;
     }
 
-    static Toolset find_toolset_instance(const vcpkg_paths& paths)
+    static Toolset find_toolset_instance(const VcpkgPaths& paths)
     {
         const std::vector<std::string> vs2017_installation_instances = get_VS2017_installation_instances(paths);
         // Note: this will contain a mix of vcvarsall.bat locations and dumpbin.exe locations.
@@ -331,7 +331,7 @@ namespace vcpkg
         Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
-    const Toolset& vcpkg_paths::get_toolset() const
+    const Toolset& VcpkgPaths::get_toolset() const
     {
         return this->toolset.get_lazy([this]() { return find_toolset_instance(*this); });
     }

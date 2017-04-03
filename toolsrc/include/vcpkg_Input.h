@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "PackageSpec.h"
-#include "vcpkg_paths.h"
+#include "VcpkgPaths.h"
 
 namespace vcpkg::Input
 {
@@ -10,5 +10,5 @@ namespace vcpkg::Input
         const Triplet& default_target_triplet,
         CStringView example_text);
 
-    void check_triplet(const Triplet& t, const vcpkg_paths& paths);
+    void check_triplet(const Triplet& t, const VcpkgPaths& paths);
 }

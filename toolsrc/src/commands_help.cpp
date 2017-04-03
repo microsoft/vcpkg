@@ -4,7 +4,7 @@
 
 namespace vcpkg::Commands::Help
 {
-    void help_topic_valid_triplet(const vcpkg_paths& paths)
+    void help_topic_valid_triplet(const VcpkgPaths& paths)
     {
         System::println("Available architecture triplets:");
         auto it = fs::directory_iterator(paths.triplets);
@@ -64,7 +64,7 @@ namespace vcpkg::Commands::Help
         System::println(create_example_string(command_and_arguments));
     }
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         args.check_max_arg_count(1);
         args.check_and_get_optional_command_arguments({});
