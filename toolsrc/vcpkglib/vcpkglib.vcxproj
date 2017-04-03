@@ -151,7 +151,7 @@
     <ClInclude Include="..\include\metrics.h" />
     <ClInclude Include="..\include\OptBool.h" />
     <ClInclude Include="..\include\PackageSpec.h" />
-    <ClInclude Include="..\include\package_spec_parse_result.h" />
+    <ClInclude Include="..\include\PackageSpecParseResult.h" />
     <ClInclude Include="..\include\Paragraphs.h" />
     <ClInclude Include="..\include\pch.h" />
     <ClInclude Include="..\include\PostBuildLint.h" />
@@ -226,7 +226,7 @@
     <ClCompile Include="..\src\vcpkg_Chrono.cpp" />
     <ClCompile Include="..\src\vcpkglib.cpp" />
     <ClCompile Include="..\src\PackageSpec.cpp" />
-    <ClCompile Include="..\src\package_spec_parse_result.cpp" />
+    <ClCompile Include="..\src\PackageSpecParseResult.cpp" />
     <ClCompile Include="..\src\Paragraphs.cpp" />
     <ClCompile Include="..\src\SourceParagraph.cpp" />
     <ClCompile Include="..\src\StatusParagraph.cpp" />

@@ -3,14 +3,14 @@
 
 namespace vcpkg
 {
-    enum class package_spec_parse_result
+    enum class PackageSpecParseResult
     {
         SUCCESS = 0,
         TOO_MANY_COLONS,
         INVALID_CHARACTERS
     };
 
-    struct package_spec_parse_result_category_impl final : std::error_category
+    struct PackageSpecParseResultCategoryImpl final : std::error_category
     {
         virtual const char* name() const noexcept override;
 
@@ -19,18 +19,18 @@ namespace vcpkg
 
     const std::error_category& package_spec_parse_result_category();
 
-    std::error_code make_error_code(package_spec_parse_result e);
+    std::error_code make_error_code(PackageSpecParseResult e);
 
-    package_spec_parse_result to_package_spec_parse_result(int i);
+    PackageSpecParseResult to_package_spec_parse_result(int i);
 
-    package_spec_parse_result to_package_spec_parse_result(std::error_code ec);
+    PackageSpecParseResult to_package_spec_parse_result(std::error_code ec);
 }
 
 // Enable implicit conversion to std::error_code
 namespace std
 {
     template <>
-    struct is_error_code_enum<vcpkg::package_spec_parse_result> : ::std::true_type
+    struct is_error_code_enum<vcpkg::PackageSpecParseResult> : ::std::true_type
     {
     };
 }

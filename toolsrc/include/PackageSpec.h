@@ -1,5 +1,5 @@
 #pragma once
-#include "package_spec_parse_result.h"
+#include "PackageSpecParseResult.h"
 #include "triplet.h"
 #include "vcpkg_expected.h"
 
