@@ -99,7 +99,7 @@ namespace vcpkg::System
         return exit_code;
     }
 
-    exit_code_and_output cmd_execute_and_capture_output(const CWStringView cmd_line)
+    ExitCodeAndOutput cmd_execute_and_capture_output(const CWStringView cmd_line)
     {
         // Flush stdout before launching external process
         fflush(stdout);

@@ -9,7 +9,7 @@ namespace vcpkg::System
 {
     fs::path get_exe_path_of_current_process();
 
-    struct exit_code_and_output
+    struct ExitCodeAndOutput
     {
         int exit_code;
         std::string output;
@@ -19,7 +19,7 @@ namespace vcpkg::System
 
     int cmd_execute(const CWStringView cmd_line);
 
-    exit_code_and_output cmd_execute_and_capture_output(const CWStringView cmd_line);
+    ExitCodeAndOutput cmd_execute_and_capture_output(const CWStringView cmd_line);
 
     std::wstring create_powershell_script_cmd(const fs::path& script_path, const CWStringView args = L"");
 

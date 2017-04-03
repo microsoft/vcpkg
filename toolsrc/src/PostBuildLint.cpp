@@ -244,7 +244,7 @@ namespace vcpkg::PostBuildLint
         for (const fs::path& dll : dlls)
         {
             const std::wstring cmd_line = Strings::wformat(LR"("%s" /exports "%s")", dumpbin_exe.native(), dll.native());
-            System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
+            System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
             if (ec_data.output.find("ordinal hint RVA      name") == std::string::npos)
@@ -275,7 +275,7 @@ namespace vcpkg::PostBuildLint
         for (const fs::path& dll : dlls)
         {
             const std::wstring cmd_line = Strings::wformat(LR"("%s" /headers "%s")", dumpbin_exe.native(), dll.native());
-            System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
+            System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
             if (ec_data.output.find("App Container") == std::string::npos)
@@ -513,7 +513,7 @@ namespace vcpkg::PostBuildLint
         for (const fs::path& lib : libs)
         {
             const std::wstring cmd_line = Strings::wformat(LR"("%s" /directives "%s")", dumpbin_exe.native(), lib.native());
-            System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
+            System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
             for (const BuildType::Type& bad_build_type : bad_build_types)
@@ -560,7 +560,7 @@ namespace vcpkg::PostBuildLint
         for (const fs::path& dll : dlls)
         {
             const std::wstring cmd_line = Strings::wformat(LR"("%s" /dependents "%s")", dumpbin_exe.native(), dll.native());
-            System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
+            System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
             for (const OutdatedDynamicCrt& outdated_crt : outdated_crts)

@@ -70,7 +70,7 @@ namespace vcpkg
     {
         const fs::path script = scripts_folder / "fetchDependency.ps1";
         auto install_cmd = System::create_powershell_script_cmd(script, Strings::wformat(L"-Dependency %s", tool_name));
-        System::exit_code_and_output rc = System::cmd_execute_and_capture_output(install_cmd);
+        System::ExitCodeAndOutput rc = System::cmd_execute_and_capture_output(install_cmd);
         if (rc.exit_code)
         {
             System::println(System::color::error, "Launching powershell failed or was denied");
@@ -245,7 +245,7 @@ namespace vcpkg
     {
         const fs::path script = paths.scripts / "findVisualStudioInstallationInstances.ps1";
         const std::wstring cmd = System::create_powershell_script_cmd(script);
-        System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd);
+        System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd);
         Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Could not run script to detect VS 2017 instances");
         return Strings::split(ec_data.output, "\n");
     }
