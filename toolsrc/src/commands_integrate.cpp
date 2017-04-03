@@ -100,13 +100,13 @@ namespace vcpkg::Commands::Integrate
         return nuspec_file_content;
     }
 
-    enum class elevation_prompt_user_choice
+    enum class ElevationPromptChoice
     {
-        yes,
-        no
+        YES,
+        NO
     };
 
-    static elevation_prompt_user_choice elevated_cmd_execute(const std::string& param)
+    static ElevationPromptChoice elevated_cmd_execute(const std::string& param)
     {
         SHELLEXECUTEINFO shExInfo = { 0 };
         shExInfo.cbSize = sizeof(shExInfo);
@@ -122,15 +122,15 @@ namespace vcpkg::Commands::Integrate
 
         if (!ShellExecuteExA(&shExInfo))
         {
-            return elevation_prompt_user_choice::no;
+            return ElevationPromptChoice::NO;
         }
         if (shExInfo.hProcess == nullptr)
         {
-            return elevation_prompt_user_choice::no;
+            return ElevationPromptChoice::NO;
         }
         WaitForSingleObject(shExInfo.hProcess, INFINITE);
         CloseHandle(shExInfo.hProcess);
-        return elevation_prompt_user_choice::yes;
+        return ElevationPromptChoice::YES;
     }
 
     static fs::path get_appdata_targets_path()
@@ -147,12 +147,12 @@ namespace vcpkg::Commands::Integrate
             if (fs::exists(old_system_wide_targets_file))
             {
                 const std::string param = Strings::format(R"(/c DEL "%s" /Q > nul)", old_system_wide_targets_file.string());
-                elevation_prompt_user_choice user_choice = elevated_cmd_execute(param);
+                ElevationPromptChoice user_choice = elevated_cmd_execute(param);
                 switch (user_choice)
                 {
-                    case elevation_prompt_user_choice::yes:
+                    case ElevationPromptChoice::YES:
                         break;
-                    case elevation_prompt_user_choice::no:
+                    case ElevationPromptChoice::NO:
                         System::println(System::Color::warning, "Warning: Previous integration file was not removed");
                         Checks::exit_fail(VCPKG_LINE_INFO);
                     default:
@@ -186,12 +186,12 @@ namespace vcpkg::Commands::Integrate
             std::ofstream(sys_src_path) << create_system_targets_shortcut();
 
             const std::string param = Strings::format(R"(/c mkdir "%s" & copy "%s" "%s" /Y > nul)", system_wide_targets_file.parent_path().string(), sys_src_path.string(), system_wide_targets_file.string());
-            elevation_prompt_user_choice user_choice = elevated_cmd_execute(param);
+            ElevationPromptChoice user_choice = elevated_cmd_execute(param);
             switch (user_choice)
             {
-                case elevation_prompt_user_choice::yes:
+                case ElevationPromptChoice::YES:
                     break;
-                case elevation_prompt_user_choice::no:
+                case ElevationPromptChoice::NO:
                     System::println(System::Color::warning, "Warning: integration was not applied");
                     Checks::exit_fail(VCPKG_LINE_INFO);
                 default:
