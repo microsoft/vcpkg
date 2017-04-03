@@ -23,6 +23,6 @@ namespace vcpkg
         VersionDiff();
         VersionDiff(const VersionT& left, const VersionT& right);
 
-        std::string toString() const;
+        std::string to_string() const;
     };
 }

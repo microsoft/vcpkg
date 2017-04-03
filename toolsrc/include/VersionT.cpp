@@ -13,7 +13,7 @@ namespace vcpkg
     VersionDiff::VersionDiff() : left(), right() {}
     VersionDiff::VersionDiff(const VersionT& left, const VersionT& right) : left(left), right(right) {}
 
-    std::string VersionDiff::toString() const
+    std::string VersionDiff::to_string() const
     {
         return Strings::format("%s -> %s", left.value, right.value);
     }

@@ -56,7 +56,7 @@ namespace vcpkg::Commands::Update
             System::println("The following packages differ from their port versions:");
             for (auto&& package : outdated_packages)
             {
-                System::println("    %-32s %s", package.spec.display_name(), package.version_diff.toString());
+                System::println("    %-32s %s", package.spec.display_name(), package.version_diff.to_string());
             }
             System::println("\n"
                 "To update these packages, run\n"

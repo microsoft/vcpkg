@@ -146,7 +146,7 @@ namespace vcpkg::Commands::PortsDiff
             System::println("\nThe following %d ports were updated:\n", updated_ports.size());
             for (const updated_port& p : updated_ports)
             {
-                System::println("%-20s %-16s", p.port, p.version_diff.toString());
+                System::println("%-20s %-16s", p.port, p.version_diff.to_string());
             }
         }
 
