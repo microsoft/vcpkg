@@ -22,11 +22,11 @@ namespace vcpkg::Dependencies
     {
     }
 
-    remove_plan_action::remove_plan_action() : plan_type(remove_plan_type::UNKNOWN), request_type(RequestType::UNKNOWN)
+    remove_plan_action::remove_plan_action() : plan_type(RemovePlanType::UNKNOWN), request_type(RequestType::UNKNOWN)
     {
     }
 
-    remove_plan_action::remove_plan_action(const remove_plan_type& plan_type, const Dependencies::RequestType& request_type) : plan_type(plan_type), request_type(request_type)
+    remove_plan_action::remove_plan_action(const RemovePlanType& plan_type, const Dependencies::RequestType& request_type) : plan_type(plan_type), request_type(request_type)
     {
     }
 
@@ -124,7 +124,7 @@ namespace vcpkg::Dependencies
             const StatusParagraphs::const_iterator it = status_db.find(spec);
             if (it == status_db.end() || (*it)->state == InstallState::NOT_INSTALLED)
             {
-                was_examined.emplace(spec, remove_plan_action(remove_plan_type::NOT_INSTALLED, RequestType::USER_REQUESTED));
+                was_examined.emplace(spec, remove_plan_action(RemovePlanType::NOT_INSTALLED, RequestType::USER_REQUESTED));
                 continue;
             }
 
@@ -146,7 +146,7 @@ namespace vcpkg::Dependencies
             }
 
             const RequestType request_type = specs_as_set.find(spec) != specs_as_set.end() ? RequestType::USER_REQUESTED : RequestType::AUTO_SELECTED;
-            was_examined.emplace(spec, remove_plan_action(remove_plan_type::REMOVE, request_type));
+            was_examined.emplace(spec, remove_plan_action(RemovePlanType::REMOVE, request_type));
         }
 
         std::vector<package_spec_with_remove_plan> ret;

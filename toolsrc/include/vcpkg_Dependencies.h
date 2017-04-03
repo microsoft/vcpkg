@@ -44,7 +44,7 @@ namespace vcpkg::Dependencies
         InstallPlanAction plan;
     };
 
-    enum class remove_plan_type
+    enum class RemovePlanType
     {
         UNKNOWN,
         NOT_INSTALLED,
@@ -54,14 +54,14 @@ namespace vcpkg::Dependencies
     struct remove_plan_action
     {
         remove_plan_action();
-        remove_plan_action(const remove_plan_type& plan_type, const RequestType& request_type);
+        remove_plan_action(const RemovePlanType& plan_type, const RequestType& request_type);
         remove_plan_action(const remove_plan_action&) = delete;
         remove_plan_action(remove_plan_action&&) = default;
         remove_plan_action& operator=(const remove_plan_action&) = delete;
         remove_plan_action& operator=(remove_plan_action&&) = default;
 
 
-        remove_plan_type plan_type;
+        RemovePlanType plan_type;
         RequestType request_type;
     };
 

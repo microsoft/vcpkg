@@ -9,7 +9,7 @@
 namespace vcpkg::Commands::Remove
 {
     using Dependencies::package_spec_with_remove_plan;
-    using Dependencies::remove_plan_type;
+    using Dependencies::RemovePlanType;
     using Dependencies::RequestType;
     using Update::OutdatedPackage;
 
@@ -116,13 +116,13 @@ namespace vcpkg::Commands::Remove
 
         for (const package_spec_with_remove_plan& i : plan)
         {
-            if (i.plan.plan_type == remove_plan_type::NOT_INSTALLED)
+            if (i.plan.plan_type == RemovePlanType::NOT_INSTALLED)
             {
                 not_installed.push_back(&i);
                 continue;
             }
 
-            if (i.plan.plan_type == remove_plan_type::REMOVE)
+            if (i.plan.plan_type == RemovePlanType::REMOVE)
             {
                 remove.push_back(&i);
                 continue;
@@ -230,15 +230,15 @@ namespace vcpkg::Commands::Remove
 
             switch (action.plan.plan_type)
             {
-                case remove_plan_type::NOT_INSTALLED:
+                case RemovePlanType::NOT_INSTALLED:
                     System::println(System::color::success, "Package %s is not installed", display_name);
                     break;
-                case remove_plan_type::REMOVE:
+                case RemovePlanType::REMOVE:
                     System::println("Removing package %s... ", display_name);
                     remove_package(paths, action.spec, &status_db);
                     System::println(System::color::success, "Removing package %s... done", display_name);
                     break;
-                case remove_plan_type::UNKNOWN:
+                case RemovePlanType::UNKNOWN:
                 default:
                     Checks::unreachable(VCPKG_LINE_INFO);
             }
