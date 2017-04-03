@@ -4,7 +4,7 @@
 
 namespace vcpkg::PostBuildLint::BuildType
 {
-    type value_of(const ConfigurationType::type& config, const LinkageType::type& linkage)
+    Type value_of(const ConfigurationType::type& config, const LinkageType::type& linkage)
     {
         if (config == ConfigurationType::DEBUG && linkage == LinkageType::STATIC)
         {
@@ -29,17 +29,17 @@ namespace vcpkg::PostBuildLint::BuildType
         Checks::unreachable(VCPKG_LINE_INFO);
     }
 
-    const ConfigurationType::type& type::config() const
+    const ConfigurationType::type& Type::config() const
     {
         return this->m_config;
     }
 
-    const LinkageType::type& type::linkage() const
+    const LinkageType::type& Type::linkage() const
     {
         return this->m_linkage;
     }
 
-    const std::regex& type::crt_regex() const
+    const std::regex& Type::crt_regex() const
     {
         static const std::regex REGEX_DEBUG_STATIC(R"(/DEFAULTLIB:LIBCMTD)", std::regex_constants::icase);
         static const std::regex REGEX_DEBUG_DYNAMIC(R"(/DEFAULTLIB:MSVCRTD)", std::regex_constants::icase);
@@ -61,7 +61,7 @@ namespace vcpkg::PostBuildLint::BuildType
         }
     }
 
-    const std::string& type::toString() const
+    const std::string& Type::toString() const
     {
         static const std::string NAME_DEBUG_STATIC("Debug,Static");
         static const std::string NAME_DEBUG_DYNAMIC("Debug,Dynamic");

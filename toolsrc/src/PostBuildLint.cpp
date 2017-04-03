@@ -500,12 +500,12 @@ namespace vcpkg::PostBuildLint
     struct BuildType_and_file
     {
         fs::path file;
-        BuildType::type build_type;
+        BuildType::Type build_type;
     };
 
-    static lint_status check_crt_linkage_of_libs(const BuildType::type& expected_build_type, const std::vector<fs::path>& libs, const fs::path dumpbin_exe)
+    static lint_status check_crt_linkage_of_libs(const BuildType::Type& expected_build_type, const std::vector<fs::path>& libs, const fs::path dumpbin_exe)
     {
-        std::vector<BuildType::type> bad_build_types(BuildType::values.cbegin(), BuildType::values.cend());
+        std::vector<BuildType::Type> bad_build_types(BuildType::values.cbegin(), BuildType::values.cend());
         bad_build_types.erase(std::remove(bad_build_types.begin(), bad_build_types.end(), expected_build_type), bad_build_types.end());
 
         std::vector<BuildType_and_file> libs_with_invalid_crt;
@@ -516,7 +516,7 @@ namespace vcpkg::PostBuildLint
             System::exit_code_and_output ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
 
-            for (const BuildType::type& bad_build_type : bad_build_types)
+            for (const BuildType::Type& bad_build_type : bad_build_types)
             {
                 if (std::regex_search(ec_data.output.cbegin(), ec_data.output.cend(), bad_build_type.crt_regex()))
                 {
