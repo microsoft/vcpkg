@@ -13,7 +13,7 @@ namespace vcpkg
         using size_type = typename std::vector<T>::size_type;
         using iterator = typename std::vector<T>::const_iterator;
 
-        explicit SortedVector<T>(std::vector<T> v) : m_data(std::move(v))
+        explicit SortedVector(std::vector<T> v) : m_data(std::move(v))
         {
             if (!std::is_sorted(m_data.begin(), m_data.end()))
             {
@@ -21,7 +21,7 @@ namespace vcpkg
             }
         }
         template <class Compare>
-        SortedVector<T>(std::vector<T> v, Compare comp) : m_data(std::move(v))
+        SortedVector(std::vector<T> v, Compare comp) : m_data(std::move(v))
         {
             if (!std::is_sorted(m_data.cbegin(), m_data.cend(), comp))
             {
