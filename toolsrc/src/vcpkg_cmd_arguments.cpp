@@ -32,11 +32,11 @@ namespace vcpkg
     }
 
     static void parse_switch(
-        opt_bool_t new_setting,
+        OptBoolT new_setting,
         const std::string& option_name,
-        opt_bool_t& option_field)
+        OptBoolT& option_field)
     {
-        if (option_field != opt_bool_t::UNSPECIFIED && option_field != new_setting)
+        if (option_field != OptBoolT::UNSPECIFIED && option_field != new_setting)
         {
             System::println(System::color::error, "Error: conflicting values specified for --%s", option_name);
             Metrics::track_property("error", "error conflicting switches");
@@ -93,27 +93,27 @@ namespace vcpkg
                 }
                 if (arg == "--debug")
                 {
-                    parse_switch(opt_bool_t::ENABLED, "debug", args.debug);
+                    parse_switch(OptBoolT::ENABLED, "debug", args.debug);
                     continue;
                 }
                 if (arg == "--sendmetrics")
                 {
-                    parse_switch(opt_bool_t::ENABLED, "sendmetrics", args.sendmetrics);
+                    parse_switch(OptBoolT::ENABLED, "sendmetrics", args.sendmetrics);
                     continue;
                 }
                 if (arg == "--printmetrics")
                 {
-                    parse_switch(opt_bool_t::ENABLED, "printmetrics", args.printmetrics);
+                    parse_switch(OptBoolT::ENABLED, "printmetrics", args.printmetrics);
                     continue;
                 }
                 if (arg == "--no-sendmetrics")
                 {
-                    parse_switch(opt_bool_t::DISABLED, "sendmetrics", args.sendmetrics);
+                    parse_switch(OptBoolT::DISABLED, "sendmetrics", args.sendmetrics);
                     continue;
                 }
                 if (arg == "--no-printmetrics")
                 {
-                    parse_switch(opt_bool_t::DISABLED, "printmetrics", args.printmetrics);
+                    parse_switch(OptBoolT::DISABLED, "printmetrics", args.printmetrics);
                     continue;
                 }
 

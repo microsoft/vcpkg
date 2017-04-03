@@ -1,7 +1,7 @@
 #include "pch.h"
 #include  "PostBuildLint_BuildInfo.h"
 #include "vcpkg_Checks.h"
-#include "opt_bool.h"
+#include "OptBool.h"
 #include "vcpkglib_helpers.h"
 #include "Paragraphs.h"
 
@@ -30,7 +30,7 @@ namespace vcpkg::PostBuildLint
         {
             const BuildPolicies::type policy = BuildPolicies::parse(p.first);
             Checks::check_exit(VCPKG_LINE_INFO, policy != BuildPolicies::NULLVALUE, "Unknown policy found: %s", p.first);
-            const opt_bool_t status = opt_bool::parse(p.second);
+            const OptBoolT status = OptBool::parse(p.second);
             build_info.policies.emplace(policy, status);
         }
 
