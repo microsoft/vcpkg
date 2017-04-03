@@ -8,9 +8,9 @@
 
 namespace vcpkg::Commands::PortsDiff
 {
-    struct updated_port
+    struct UpdatedPort
     {
-        static bool compare_by_name(const updated_port& left, const updated_port& right)
+        static bool compare_by_name(const UpdatedPort& left, const UpdatedPort& right)
         {
             return left.port < right.port;
         }
@@ -38,11 +38,11 @@ namespace vcpkg::Commands::PortsDiff
         std::vector<T> only_right;
     };
 
-    static std::vector<updated_port> find_updated_ports(const std::vector<std::string>& ports,
+    static std::vector<UpdatedPort> find_updated_ports(const std::vector<std::string>& ports,
                                                                    const std::map<std::string, VersionT>& previous_names_and_versions,
                                                                    const std::map<std::string, VersionT>& current_names_and_versions)
     {
-        std::vector<updated_port> output;
+        std::vector<UpdatedPort> output;
         for (const std::string& name : ports)
         {
             const VersionT& previous_version = previous_names_and_versions.at(name);
@@ -139,12 +139,12 @@ namespace vcpkg::Commands::PortsDiff
         }
 
         const std::vector<std::string>& common_ports = setp.both;
-        const std::vector<updated_port> updated_ports = find_updated_ports(common_ports, previous_names_and_versions, current_names_and_versions);
+        const std::vector<UpdatedPort> updated_ports = find_updated_ports(common_ports, previous_names_and_versions, current_names_and_versions);
 
         if (!updated_ports.empty())
         {
             System::println("\nThe following %d ports were updated:\n", updated_ports.size());
-            for (const updated_port& p : updated_ports)
+            for (const UpdatedPort& p : updated_ports)
             {
                 System::println("%-20s %-16s", p.port, p.version_diff.to_string());
             }
