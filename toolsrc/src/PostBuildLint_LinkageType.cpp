@@ -10,7 +10,7 @@ namespace vcpkg::PostBuildLint::LinkageType
     static const std::string NAME_DYNAMIC = "dynamic";
     static const std::string NAME_STATIC = "static";
 
-    const std::string& type::toString() const
+    const std::string& Type::toString() const
     {
         switch (this->backing_enum)
         {
@@ -25,7 +25,7 @@ namespace vcpkg::PostBuildLint::LinkageType
         }
     }
 
-    type value_of(const std::string& as_string)
+    Type value_of(const std::string& as_string)
     {
         if (as_string == NAME_DYNAMIC)
         {

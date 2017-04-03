@@ -3,32 +3,32 @@
 
 namespace vcpkg::PostBuildLint::LinkageType
 {
-    enum class backing_enum_t
+    enum class BackingEnum
     {
         NULLVALUE = 0,
         DYNAMIC,
         STATIC
     };
 
-    struct type
+    struct Type
     {
-        constexpr type() : backing_enum(backing_enum_t::NULLVALUE) {}
-        constexpr explicit type(backing_enum_t backing_enum) : backing_enum(backing_enum) { }
-        constexpr operator backing_enum_t() const { return backing_enum; }
+        constexpr Type() : backing_enum(BackingEnum::NULLVALUE) {}
+        constexpr explicit Type(BackingEnum backing_enum) : backing_enum(backing_enum) { }
+        constexpr operator BackingEnum() const { return backing_enum; }
 
         const std::string& toString() const;
 
     private:
-        backing_enum_t backing_enum;
+        BackingEnum backing_enum;
     };
 
     static const std::string ENUM_NAME = "vcpkg::PostBuildLint::LinkageType";
 
-    static constexpr type NULLVALUE(backing_enum_t::NULLVALUE);
-    static constexpr type DYNAMIC(backing_enum_t::DYNAMIC);
-    static constexpr type STATIC(backing_enum_t::STATIC);
+    static constexpr Type NULLVALUE(BackingEnum::NULLVALUE);
+    static constexpr Type DYNAMIC(BackingEnum::DYNAMIC);
+    static constexpr Type STATIC(BackingEnum::STATIC);
 
-    static constexpr std::array<type, 2> values = { DYNAMIC, STATIC };
+    static constexpr std::array<Type, 2> values = { DYNAMIC, STATIC };
 
-    type value_of(const std::string& as_string);
+    Type value_of(const std::string& as_string);
 }

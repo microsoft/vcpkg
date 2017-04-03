@@ -11,8 +11,8 @@ namespace vcpkg::PostBuildLint
     {
         static BuildInfo create(std::unordered_map<std::string, std::string> pgh);
 
-        LinkageType::type crt_linkage;
-        LinkageType::type library_linkage;
+        LinkageType::Type crt_linkage;
+        LinkageType::Type library_linkage;
 
         std::map<BuildPolicies::Type, OptBoolT> policies;
     };

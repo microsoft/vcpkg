@@ -18,20 +18,20 @@ namespace vcpkg::PostBuildLint::BuildType
     {
         Type() = delete;
 
-        constexpr explicit Type(const BackingEnum backing_enum, const ConfigurationType::Type config, const LinkageType::type linkage) :
+        constexpr explicit Type(const BackingEnum backing_enum, const ConfigurationType::Type config, const LinkageType::Type linkage) :
             backing_enum(backing_enum), m_config(config), m_linkage(linkage) { }
 
         constexpr operator BackingEnum() const { return backing_enum; }
 
         const ConfigurationType::Type& config() const;
-        const LinkageType::type& linkage() const;
+        const LinkageType::Type& linkage() const;
         const std::regex& crt_regex() const;
         const std::string& toString() const;
 
     private:
         BackingEnum backing_enum;
         ConfigurationType::Type m_config;
-        LinkageType::type m_linkage;
+        LinkageType::Type m_linkage;
     };
 
     static const std::string ENUM_NAME = "vcpkg::PostBuildLint::BuildType";
@@ -43,5 +43,5 @@ namespace vcpkg::PostBuildLint::BuildType
 
     static constexpr std::array<Type, 4> values = { DEBUG_STATIC, DEBUG_DYNAMIC, RELEASE_STATIC, RELEASE_DYNAMIC };
 
-    Type value_of(const ConfigurationType::Type& config, const LinkageType::type& linkage);
+    Type value_of(const ConfigurationType::Type& config, const LinkageType::Type& linkage);
 }

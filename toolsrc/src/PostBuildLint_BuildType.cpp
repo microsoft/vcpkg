@@ -4,7 +4,7 @@
 
 namespace vcpkg::PostBuildLint::BuildType
 {
-    Type value_of(const ConfigurationType::Type& config, const LinkageType::type& linkage)
+    Type value_of(const ConfigurationType::Type& config, const LinkageType::Type& linkage)
     {
         if (config == ConfigurationType::DEBUG && linkage == LinkageType::STATIC)
         {
@@ -34,7 +34,7 @@ namespace vcpkg::PostBuildLint::BuildType
         return this->m_config;
     }
 
-    const LinkageType::type& Type::linkage() const
+    const LinkageType::Type& Type::linkage() const
     {
         return this->m_linkage;
     }

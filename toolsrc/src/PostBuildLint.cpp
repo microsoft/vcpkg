@@ -662,7 +662,7 @@ namespace vcpkg::PostBuildLint
 
         switch (build_info.library_linkage)
         {
-            case LinkageType::backing_enum_t::DYNAMIC:
+            case LinkageType::BackingEnum::DYNAMIC:
                 {
                     const std::vector<fs::path> debug_dlls = Files::recursive_find_files_with_extension_in_dir(debug_bin_dir, ".dll");
                     const std::vector<fs::path> release_dlls = Files::recursive_find_files_with_extension_in_dir(release_bin_dir, ".dll");
@@ -683,7 +683,7 @@ namespace vcpkg::PostBuildLint
                     error_count += check_outdated_crt_linkage_of_dlls(dlls, toolset.dumpbin);
                     break;
                 }
-            case LinkageType::backing_enum_t::STATIC:
+            case LinkageType::BackingEnum::STATIC:
                 {
                     std::vector<fs::path> dlls;
                     Files::recursive_find_files_with_extension_in_dir(package_dir, ".dll", &dlls);
@@ -698,7 +698,7 @@ namespace vcpkg::PostBuildLint
                     error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::RELEASE, build_info.crt_linkage), release_libs, toolset.dumpbin);
                     break;
                 }
-            case LinkageType::backing_enum_t::NULLVALUE:
+            case LinkageType::BackingEnum::NULLVALUE:
             default:
                 Checks::unreachable(VCPKG_LINE_INFO);
         }
