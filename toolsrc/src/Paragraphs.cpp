@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Paragraphs.h"
 #include "vcpkg_Files.h"
-#include "paragraph_parse_result.h"
+#include "ParagraphParseResult.h"
 
 namespace vcpkg::Paragraphs
 {
@@ -203,7 +203,7 @@ namespace vcpkg::Paragraphs
             return p.at(0);
         }
 
-        return std::error_code(paragraph_parse_result::EXPECTED_ONE_PARAGRAPH);
+        return std::error_code(ParagraphParseResult::EXPECTED_ONE_PARAGRAPH);
     }
 
     expected<std::vector<std::unordered_map<std::string, std::string>>> parse_paragraphs(const std::string& str)

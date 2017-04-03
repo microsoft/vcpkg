@@ -3,13 +3,13 @@
 
 namespace vcpkg
 {
-    enum class paragraph_parse_result
+    enum class ParagraphParseResult
     {
         SUCCESS = 0,
         EXPECTED_ONE_PARAGRAPH
     };
 
-    struct paragraph_parse_result_category_impl final : std::error_category
+    struct ParagraphParseResultCategoryImpl final : std::error_category
     {
         virtual const char* name() const noexcept override;
 
@@ -18,18 +18,18 @@ namespace vcpkg
 
     const std::error_category& paragraph_parse_result_category();
 
-    std::error_code make_error_code(paragraph_parse_result e);
+    std::error_code make_error_code(ParagraphParseResult e);
 
-    paragraph_parse_result to_paragraph_parse_result(int i);
+    ParagraphParseResult to_paragraph_parse_result(int i);
 
-    paragraph_parse_result to_paragraph_parse_result(std::error_code ec);
+    ParagraphParseResult to_paragraph_parse_result(std::error_code ec);
 }
 
 // Enable implicit conversion to std::error_code
 namespace std
 {
     template <>
-    struct is_error_code_enum<vcpkg::paragraph_parse_result> : ::std::true_type
+    struct is_error_code_enum<vcpkg::ParagraphParseResult> : ::std::true_type
     {
     };
 }
