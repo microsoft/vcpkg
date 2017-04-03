@@ -12,14 +12,14 @@ namespace vcpkg
 
     void write_update(const VcpkgPaths& paths, const StatusParagraph& p);
 
-    struct StatusParagraph_and_associated_files
+    struct StatusParagraphAndAssociatedFiles
     {
         StatusParagraph pgh;
         SortedVector<std::string> files;
     };
 
     std::vector<StatusParagraph*> get_installed_ports(const StatusParagraphs& status_db);
-    std::vector<StatusParagraph_and_associated_files> get_installed_files(const VcpkgPaths& paths, const StatusParagraphs& status_db);
+    std::vector<StatusParagraphAndAssociatedFiles> get_installed_files(const VcpkgPaths& paths, const StatusParagraphs& status_db);
 
 
     struct CMakeVariable

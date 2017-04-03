@@ -184,9 +184,9 @@ namespace vcpkg
         return installed_packages;
     }
 
-    std::vector<StatusParagraph_and_associated_files> get_installed_files(const VcpkgPaths& paths, const StatusParagraphs& status_db)
+    std::vector<StatusParagraphAndAssociatedFiles> get_installed_files(const VcpkgPaths& paths, const StatusParagraphs& status_db)
     {
-        std::vector<StatusParagraph_and_associated_files> installed_files;
+        std::vector<StatusParagraphAndAssociatedFiles> installed_files;
 
         for (const std::unique_ptr<StatusParagraph>& pgh : status_db)
         {
@@ -208,7 +208,7 @@ namespace vcpkg
                                }
                 ), installed_files_of_current_pgh.end());
 
-            StatusParagraph_and_associated_files pgh_and_files = { *pgh, SortedVector<std::string>(std::move(installed_files_of_current_pgh)) };
+            StatusParagraphAndAssociatedFiles pgh_and_files = { *pgh, SortedVector<std::string>(std::move(installed_files_of_current_pgh)) };
             installed_files.push_back(std::move(pgh_and_files));
         }
 

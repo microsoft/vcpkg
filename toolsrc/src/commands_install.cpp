@@ -96,10 +96,10 @@ namespace vcpkg::Commands::Install
         }
     };
 
-    static std::vector<std::string> extract_files_in_triplet(const std::vector<StatusParagraph_and_associated_files>& pgh_and_files, const Triplet& triplet)
+    static std::vector<std::string> extract_files_in_triplet(const std::vector<StatusParagraphAndAssociatedFiles>& pgh_and_files, const Triplet& triplet)
     {
         std::vector<std::string> output;
-        for (const StatusParagraph_and_associated_files& t : pgh_and_files)
+        for (const StatusParagraphAndAssociatedFiles& t : pgh_and_files)
         {
             if (t.pgh.package.spec.target_triplet() != triplet)
             {
@@ -127,7 +127,7 @@ namespace vcpkg::Commands::Install
         return SortedVector<std::string>(std::move(package_files));
     }
 
-    static SortedVector<std::string> build_list_of_installed_files(const std::vector<StatusParagraph_and_associated_files>& pgh_and_files, const Triplet& triplet)
+    static SortedVector<std::string> build_list_of_installed_files(const std::vector<StatusParagraphAndAssociatedFiles>& pgh_and_files, const Triplet& triplet)
     {
         std::vector<std::string> installed_files = extract_files_in_triplet(pgh_and_files, triplet);
         const size_t installed_remove_char_count = triplet.canonical_name().size() + 1; // +1 for the slash
@@ -140,7 +140,7 @@ namespace vcpkg::Commands::Install
     {
         const fs::path package_dir = paths.package_dir(binary_paragraph.spec);
         const Triplet& triplet = binary_paragraph.spec.target_triplet();
-        const std::vector<StatusParagraph_and_associated_files> pgh_and_files = get_installed_files(paths, *status_db);
+        const std::vector<StatusParagraphAndAssociatedFiles> pgh_and_files = get_installed_files(paths, *status_db);
 
         const SortedVector<std::string> package_files = build_list_of_package_files(package_dir);
         const SortedVector<std::string> installed_files = build_list_of_installed_files(pgh_and_files, triplet);
