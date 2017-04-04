@@ -1,0 +1,29 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 497dd93..0ea1bb0 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -76,7 +76,7 @@ if(MSVC AND MSVC_VERSION LESS 1900)
+ endif(MSVC AND MSVC_VERSION LESS 1900)
+ 
+ include(GNUInstallDirs)
+-
++set(GD_CONFIG libgd-config)
+ if (BUILD_SHARED_LIBS)
+ 	add_library(${GD_LIB} ${LIBGD_SRC_FILES})
+ 	set_target_properties(${GD_LIB} PROPERTIES
+@@ -163,6 +163,7 @@ if (BUILD_STATIC_LIBS)
+ endif()
+ 
+ install(TARGETS ${GD_INSTALL_TARGETS}
++        EXPORT ${GD_CONFIG}
+         RUNTIME DESTINATION bin
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+@@ -182,3 +183,7 @@ install(FILES
+ 	gdfx.h
+ 	gdpp.h
+ 	DESTINATION include)
++
++install(EXPORT ${GD_CONFIG} DESTINATION cmake)
++
++export(TARGETS libgd FILE ${GD_CONFIG}.cmake)

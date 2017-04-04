@@ -13,7 +13,8 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-fix-cmake.patch")
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-fix-cmake.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/0002-export-cmake-targets.patch")
 
 #delete CMake builtins modules
 file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/modules/CMakeParseArguments.cmake)
@@ -50,3 +51,8 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libgd)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libgd/COPYING ${CURRENT_PACKAGES_DIR}/share/libgd/copyright)
+file(RENAME ${CURRENT_PACKAGES_DIR}/cmake/libgd-config-release.cmake ${CURRENT_PACKAGES_DIR}/share/libgd/libgd-release.cmake)
+file(RENAME ${CURRENT_PACKAGES_DIR}/debug/cmake/libgd-config-debug.cmake ${CURRENT_PACKAGES_DIR}/share/libgd/libgd-debug.cmake)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake)
