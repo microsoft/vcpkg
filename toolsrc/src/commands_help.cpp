@@ -21,6 +21,7 @@ namespace vcpkg::Commands::Help
             "  vcpkg search [pat]              Search for packages available to be built\n"
             "  vcpkg install <pkg>             Install a package\n"
             "  vcpkg remove <pkg>              Uninstall a package. \n"
+            "  vcpkg remove --outdated         Uninstall all out-of-date packages\n"
             "  vcpkg remove --purge <pkg>      Uninstall and delete a package. \n"
             "  vcpkg list                      List installed packages\n"
             "  vcpkg update                    Display list of packages for updating\n"

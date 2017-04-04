@@ -58,7 +58,10 @@ namespace vcpkg::Commands::Update
             {
                 System::println("    %-32s %s", package.spec.display_name(), package.version_diff.toString());
             }
-            System::println("\nTo update these packages, run\n    vcpkg remove --purge <pkgs>...\n    vcpkg install <pkgs>...");
+            System::println("\n"
+                "To update these packages, run\n"
+                "    vcpkg remove --purge --outdated\n"
+                "    vcpkg install <pkgs>...");
         }
 
         auto version_file = Files::read_contents(paths.root / "toolsrc" / "VERSION.txt");
