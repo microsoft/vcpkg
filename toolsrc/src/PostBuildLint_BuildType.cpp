@@ -61,7 +61,7 @@ namespace vcpkg::PostBuildLint::BuildType
         }
     }
 
-    const std::string& Type::toString() const
+    const std::string& Type::to_string() const
     {
         static const std::string NAME_DEBUG_STATIC("Debug,Static");
         static const std::string NAME_DEBUG_DYNAMIC("Debug,Dynamic");

@@ -12,7 +12,7 @@ namespace vcpkg::PostBuildLint::BuildPolicies
     static const std::string NAME_ONLY_RELEASE_CRT = "PolicyOnlyReleaseCRT";
     static const std::string NAME_EMPTY_INCLUDE_FOLDER = "PolicyEmptyIncludeFolder";
 
-    const std::string& Type::toString() const
+    const std::string& Type::to_string() const
     {
         switch (this->backing_enum)
         {

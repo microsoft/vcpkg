@@ -528,11 +528,11 @@ namespace vcpkg::PostBuildLint
 
         if (!libs_with_invalid_crt.empty())
         {
-            System::println(System::Color::warning, "Expected %s crt linkage, but the following libs had invalid crt linkage:", expected_build_type.toString());
+            System::println(System::Color::warning, "Expected %s crt linkage, but the following libs had invalid crt linkage:", expected_build_type.to_string());
             System::println("");
             for (const BuildType_and_file btf : libs_with_invalid_crt)
             {
-                System::println("    %s: %s", btf.file.generic_string(), btf.build_type.toString());
+                System::println("    %s: %s", btf.file.generic_string(), btf.build_type.to_string());
             }
             System::println("");
 

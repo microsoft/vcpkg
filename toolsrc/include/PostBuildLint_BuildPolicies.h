@@ -19,7 +19,7 @@ namespace vcpkg::PostBuildLint::BuildPolicies
         constexpr explicit Type(BackingEnum backing_enum) : backing_enum(backing_enum) { }
         constexpr operator BackingEnum() const { return backing_enum; }
 
-        const std::string& toString() const;
+        const std::string& to_string() const;
         const std::string& cmake_variable() const;
 
     private:

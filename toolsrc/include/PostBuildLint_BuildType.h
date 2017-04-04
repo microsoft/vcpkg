@@ -26,7 +26,7 @@ namespace vcpkg::PostBuildLint::BuildType
         const ConfigurationType::Type& config() const;
         const LinkageType::Type& linkage() const;
         const std::regex& crt_regex() const;
-        const std::string& toString() const;
+        const std::string& to_string() const;
 
     private:
         BackingEnum backing_enum;
