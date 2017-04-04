@@ -48,7 +48,7 @@ namespace vcpkg::Commands::CI
         {
             const ElapsedTime build_timer = ElapsedTime::create_started();
             counter++;
-            System::println("Starting package %d/%d: %s", counter, package_count, action.spec.toString());
+            System::println("Starting package %d/%d: %s", counter, package_count, action.spec.to_string());
 
             timing.push_back(-1);
             results.push_back(BuildResult::NULLVALUE);
@@ -99,7 +99,7 @@ namespace vcpkg::Commands::CI
 
         for (size_t i = 0; i < results.size(); i++)
         {
-            System::println("%s: %s: %dms", install_plan[i].spec.toString(), Build::to_string(results[i]), timing[i]);
+            System::println("%s: %s: %dms", install_plan[i].spec.to_string(), Build::to_string(results[i]), timing[i]);
         }
 
         std::map<BuildResult, int> summary;

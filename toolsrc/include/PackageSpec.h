@@ -19,7 +19,7 @@ namespace vcpkg
 
         std::string dir() const;
 
-        std::string toString() const;
+        std::string to_string() const;
 
     private:
         std::string m_name;

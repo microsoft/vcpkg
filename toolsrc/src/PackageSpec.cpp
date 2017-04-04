@@ -60,14 +60,14 @@ namespace vcpkg
         return Strings::format("%s_%s", this->m_name, this->m_target_triplet);
     }
 
-    std::string PackageSpec::toString() const
+    std::string PackageSpec::to_string() const
     {
         return this->display_name();
     }
 
     std::string to_printf_arg(const PackageSpec& spec)
     {
-        return spec.toString();
+        return spec.to_string();
     }
 
     bool operator==(const PackageSpec& left, const PackageSpec& right)
@@ -77,6 +77,6 @@ namespace vcpkg
 
     std::ostream& operator<<(std::ostream& os, const PackageSpec& spec)
     {
-        return os << spec.toString();
+        return os << spec.to_string();
     }
 }

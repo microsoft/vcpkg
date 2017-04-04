@@ -137,7 +137,7 @@ namespace vcpkg::Commands::Remove
             System::println("The following packages are not installed, so not removed:\n%s",
                             Strings::join("\n    ", not_installed, [](const PackageSpecWithRemovePlan* p)
                                           {
-                                              return "    " + p->spec.toString();
+                                              return "    " + p->spec.to_string();
                                           }));
         }
 
@@ -149,12 +149,12 @@ namespace vcpkg::Commands::Remove
                                           {
                                               if (p->plan.request_type == Dependencies::RequestType::AUTO_SELECTED)
                                               {
-                                                  return "  * " + p->spec.toString();
+                                                  return "  * " + p->spec.to_string();
                                               }
 
                                               if (p->plan.request_type == Dependencies::RequestType::USER_REQUESTED)
                                               {
-                                                  return "    " + p->spec.toString();
+                                                  return "    " + p->spec.to_string();
                                               }
 
                                               Checks::unreachable(VCPKG_LINE_INFO);

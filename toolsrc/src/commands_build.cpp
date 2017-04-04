@@ -68,12 +68,12 @@ namespace vcpkg::Commands::Build
 
         int return_code = System::cmd_execute_clean(command);
         auto buildtimeus = timer.microseconds();
-        Metrics::track_metric("buildtimeus-" + spec.toString(), buildtimeus);
+        Metrics::track_metric("buildtimeus-" + spec.to_string(), buildtimeus);
 
         if (return_code != 0)
         {
             Metrics::track_property("error", "build failed");
-            Metrics::track_property("build_error", spec.toString());
+            Metrics::track_property("build_error", spec.to_string());
             return BuildResult::BUILD_FAILED;
         }
 
@@ -113,7 +113,7 @@ namespace vcpkg::Commands::Build
 
     std::string create_error_message(const BuildResult build_result, const PackageSpec& spec)
     {
-        return Strings::format("Error: Building package %s failed with: %s", spec.toString(), Build::to_string(build_result));
+        return Strings::format("Error: Building package %s failed with: %s", spec.to_string(), Build::to_string(build_result));
     }
 
     std::string create_user_troubleshooting_message(const PackageSpec& spec)
@@ -124,7 +124,7 @@ namespace vcpkg::Commands::Build
                                "  Vcpkg version: %s\n"
                                "\n"
                                "Additionally, attach any relevant sections from the log files above."
-                               , spec.toString(), Version::version());
+                               , spec.to_string(), Version::version());
     }
 
     void perform_and_exit(const PackageSpec& spec, const fs::path& port_dir, const std::unordered_set<std::string>& options, const VcpkgPaths& paths)
@@ -158,7 +158,7 @@ namespace vcpkg::Commands::Build
             System::println("");
             for (const PackageSpecWithInstallPlan& p : unmet_dependencies)
             {
-                System::println("    %s", p.spec.toString());
+                System::println("    %s", p.spec.to_string());
             }
             System::println("");
             Checks::exit_fail(VCPKG_LINE_INFO);
