@@ -11,10 +11,12 @@ namespace vcpkg::Commands::Remove
     using Dependencies::package_spec_with_remove_plan;
     using Dependencies::remove_plan_type;
     using Dependencies::request_type;
+    using Update::outdated_package;
 
     static const std::string OPTION_PURGE = "--purge";
     static const std::string OPTION_RECURSE = "--recurse";
     static const std::string OPTION_DRY_RUN = "--dry-run";
+    static const std::string OPTION_OUTDATED = "--outdated";
 
     static void delete_directory(const fs::path& directory)
     {
@@ -165,44 +167,54 @@ namespace vcpkg::Commands::Remove
         }
     }
 
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
+    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_triplet)
     {
         static const std::string example = Commands::Help::create_example_string("remove zlib zlib:x64-windows curl boost");
-        args.check_min_arg_count(1, example);
+        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_PURGE, OPTION_RECURSE, OPTION_DRY_RUN, OPTION_OUTDATED });
 
-        auto specs = Util::fmap(args.command_arguments, [&](auto&& arg)
+        StatusParagraphs status_db = database_load_check(paths);
+        std::vector<package_spec> specs;
+        if (options.find(OPTION_OUTDATED) != options.cend())
         {
-            auto spec = Input::check_and_get_package_spec(arg, default_target_triplet, example);
-            Input::check_triplet(spec.target_triplet(), paths);
-            return spec;
-        });
+            args.check_exact_arg_count(0, example);
+            specs = Util::fmap(Update::find_outdated_packages(paths, status_db), [](auto&& outdated) { return outdated.spec; });
+        }
+        else
+        {
+            args.check_min_arg_count(1, example);
+            specs = Util::fmap(args.command_arguments, [&](auto&& arg) { return Input::check_and_get_package_spec(arg, default_triplet, example); });
+            for (auto&& spec : specs)
+                Input::check_triplet(spec.target_triplet(), paths);
+        }
 
-        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_PURGE, OPTION_RECURSE, OPTION_DRY_RUN });
-        const bool alsoRemoveFolderFromPackages = options.find(OPTION_PURGE) != options.end();
-        const bool isRecursive = options.find(OPTION_RECURSE) != options.end();
-        const bool dryRun = options.find(OPTION_DRY_RUN) != options.end();
+        const bool alsoRemoveFolderFromPackages = options.find(OPTION_PURGE) != options.cend();
+        const bool isRecursive = options.find(OPTION_RECURSE) != options.cend();
+        const bool dryRun = options.find(OPTION_DRY_RUN) != options.cend();
 
-        auto status_db = database_load_check(paths);
         const std::vector<package_spec_with_remove_plan> remove_plan = Dependencies::create_remove_plan(specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !remove_plan.empty(), "Remove plan cannot be empty");
 
         print_plan(remove_plan);
-        if (dryRun)
-        {
-            Checks::exit_success(VCPKG_LINE_INFO);
-        }
 
         const bool has_non_user_requested_packages = std::find_if(remove_plan.cbegin(), remove_plan.cend(), [](const package_spec_with_remove_plan& package)-> bool
                                                                   {
                                                                       return package.plan.request_type != request_type::USER_REQUESTED;
                                                                   }) != remove_plan.cend();
 
-        if (has_non_user_requested_packages && !isRecursive)
+        if (has_non_user_requested_packages)
         {
-            System::println(System::color::warning,
-                            "Additional packages (*) need to be removed to complete this operation.\n"
-                            "If you are sure you want to remove them, run the command with the --recurse option");
-            Checks::exit_fail(VCPKG_LINE_INFO);
+            System::println(System::color::warning, "Additional packages (*) need to be removed to complete this operation.");
+
+            if (!isRecursive)
+            {
+                System::println(System::color::warning, "If you are sure you want to remove them, run the command with the --recurse option");
+                Checks::exit_fail(VCPKG_LINE_INFO);
+            }
+        }
+
+        if (dryRun)
+        {
+            Checks::exit_success(VCPKG_LINE_INFO);
         }
 
         for (const package_spec_with_remove_plan& action : remove_plan)
