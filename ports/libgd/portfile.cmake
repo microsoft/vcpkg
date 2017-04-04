@@ -51,8 +51,12 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libgd)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libgd/COPYING ${CURRENT_PACKAGES_DIR}/share/libgd/copyright)
-file(RENAME ${CURRENT_PACKAGES_DIR}/cmake/libgd-config-release.cmake ${CURRENT_PACKAGES_DIR}/share/libgd/libgd-release.cmake)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/cmake/libgd-config-debug.cmake ${CURRENT_PACKAGES_DIR}/share/libgd/libgd-debug.cmake)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake)
+# Fix up paths on debug config
+file(READ ${CURRENT_PACKAGES_DIR}/debug/share/libgd/libgd-config-debug.cmake GD_DEBUG_MODULE)
+string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" GD_DEBUG_MODULE "${GD_DEBUG_MODULE}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/libgd/libgd-config-debug.cmake "${GD_DEBUG_MODULE}")
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/libgd/libgd-config.cmake ${CURRENT_PACKAGES_DIR}/share/libgd/libgd-config.cmake)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/libgd/libgd-config-release.cmake ${CURRENT_PACKAGES_DIR}/share/libgd/libgd-config-release.cmake)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
