@@ -1,3 +1,34 @@
+vcpkg (0.0.79)
+--------------
+  * Add ports:
+    - ecm                  5.32.0
+    - libgd                2.2.4-1
+    - octomap              cefed0c1d79afafa5aeb05273cf1246b093b771c-1
+  * Update ports:
+    - boost                1.63-3 -> 1.63-4
+    - cuda                 8.0 -> 8.0-1
+    - freeimage            3.17.0 -> 3.17.0-1
+    - freetype             2.6.3-4 -> 2.6.3-5
+    - glfw3                3.2.1 -> 3.2.1-1
+    - libarchive           3.2.2-2 -> 3.3.1
+    - pqp                  1.3 -> 1.3-1
+    - qt5                  5.7.1-6 -> 5.7.1-7
+    - sqlite3              3.17.0 -> 3.18.0-1
+  * `vcpkg` has exceeded 200 libraries!
+  * `vcpkg remove` command has been reworked:
+    - `vcpkg remove <pkg>` now uninstalls and deletes the package by default. Previously, this was the behavior of `vpckg remove --purge <pkg>`
+    - `vcpkg remove <pkg> --no-purge` now uninstalls the package without deleting it. Previously, this was the behavior or `vcpkg remove <pkg>`
+    - Added new option `--dry-run`: This will print out the remove plan, but will not actually perform the removal
+    - Added new option `--outdated`: Using `vcpkg remove --outdated` will remove all packages for which updates are available
+  * Add `bootstrap-vcpkg.bat` in the root directory for easier building of `vcpkg`
+    - Also fix a regression with `vcpkg` bootstrapping
+  * Add information about how to use header-only libraries from cmake in [EXAMPLES.md](docs\EXAMPLES.md)
+  * `vcpkg build_external` changed to `vcpkg build-external` (underscore to dash)
+  * Fixes and improvements in existing portfiles and the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  WED, 05 Apr 2017 15:00:00 -0800
+
+
 vcpkg (0.0.78)
 --------------
   * Add ports:

@@ -30,7 +30,7 @@ set(CUDA_REQUIRED_VERSION "V8.0.0")
 if (error_code)
     message(FATAL_ERROR "Could not find CUDA. Before continuing, please download and install CUDA  (${CUDA_REQUIRED_VERSION} or higher) from:"
                         "\n    https://developer.nvidia.com/cuda-downloads\n"
-                        "\nAlso ensure vcpkg has been rebuilt with the latest version (Mar 5 2017 or later)")
+                        "\nAlso ensure vcpkg has been rebuilt with the latest version (v0.0.79 or later)")
 endif()
 
 string(REGEX MATCH "V([0-9]+)\\.([0-9]+)\\.([0-9]+)" CUDA_VERSION ${NVCC_OUTPUT})
