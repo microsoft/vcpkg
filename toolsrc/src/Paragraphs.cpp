@@ -34,7 +34,7 @@ namespace vcpkg::Paragraphs
 
         void skip_comment(char& ch)
         {
-            while (ch != '\r')
+            while (ch != '\r' && ch != '\n' && ch != '\0')
                 next(ch);
             if (ch == '\r')
                 next(ch);
