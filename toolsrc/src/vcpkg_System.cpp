@@ -59,6 +59,8 @@ namespace vcpkg::System
             // Enables proxy information to be passed to Curl, the underlying download library in cmake.exe
             L"HTTP_PROXY",
             L"HTTPS_PROXY",
+            // Enables find_package(CUDA) in CMake
+            L"CUDA_PATH",
         };
 
         // Flush stdout before launching external process
