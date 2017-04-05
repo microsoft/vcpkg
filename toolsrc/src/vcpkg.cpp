@@ -184,6 +184,7 @@ int wmain(const int argc, const wchar_t* const* const argv)
         {
             auto elapsed_us = g_timer.microseconds();
             Metrics::track_metric("elapsed_us", elapsed_us);
+            g_debugging = false;
             Metrics::flush();
         });
 

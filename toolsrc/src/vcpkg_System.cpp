@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Checks.h"
+#include "vcpkglib.h"
 
 namespace vcpkg::System
 {
@@ -86,7 +87,11 @@ namespace vcpkg::System
 
         // Basically we are wrapping it in quotes
         const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
+        if (g_debugging)
+            System::println("[DEBUG] _wspawnlpe(cmd.exe /c %s)", Strings::utf16_to_utf8(actual_cmd_line));
         auto exit_code = _wspawnlpe(_P_WAIT, L"cmd.exe", L"cmd.exe", L"/c", actual_cmd_line.c_str(), nullptr, env_cstr.data());
+        if (g_debugging)
+            System::println("[DEBUG] _wspawnlpe() returned %d", exit_code);
         return static_cast<int>(exit_code);
     }
 
