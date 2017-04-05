@@ -289,6 +289,16 @@ namespace UnitTest1
             Assert::AreEqual("v4", pghs[1]["f4"].c_str());
         }
 
+		TEST_METHOD(parse_comment_before_single_slashN)
+		{
+			const char* str =
+				"f1: v1\r\n"
+				"#comment\n";
+			auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
+			Assert::AreEqual(size_t(1), pghs[0].size());
+			Assert::AreEqual("v1", pghs[0]["f1"].c_str());
+		}
+
         TEST_METHOD(BinaryParagraph_serialize_min)
         {
             std::stringstream ss;
