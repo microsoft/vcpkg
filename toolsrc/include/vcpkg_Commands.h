@@ -86,6 +86,11 @@ namespace vcpkg::Commands
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
+    namespace DependInfo
+    {
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
+    }
+
     namespace Search
     {
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);

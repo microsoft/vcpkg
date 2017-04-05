@@ -26,6 +26,7 @@ namespace vcpkg::Commands
             {"integrate", &Integrate::perform_and_exit},
             {"owns", &Owns::perform_and_exit},
             {"update", &Update::perform_and_exit},
+            {"depend-info", &DependInfo::perform_and_exit},
             {"edit", &Edit::perform_and_exit},
             {"create", &Create::perform_and_exit},
             {"import", &Import::perform_and_exit},
