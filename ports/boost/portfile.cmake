@@ -1,6 +1,9 @@
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/boost_1_63_0)
 
+######################
+# Acquire and arrange sources
+######################
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "https://sourceforge.net/projects/boost/files/boost/1.63.0/boost_1_63_0.tar.bz2"
     FILENAME "boost_1_63_0.tar.bz2"
@@ -34,6 +37,39 @@ set(TLS_DIFF2 ${CURRENT_BUILDTREES_DIR}/src/boost-thread-on_tls_callback-bd0379a
 FILE(WRITE ${TLS_DIFF2} "${content}")
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${TLS_DIFF2})
 
+######################
+# Cleanup previous builds
+######################
+file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+    # It is possible for a file in this folder to be locked due to antivirus or vctip
+    execute_process(COMMAND ${CMAKE_COMMAND} -E sleep 1)
+    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+    if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+        message(FATAL_ERROR "Unable to remove directory: ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel\n  Files are likely in use.")
+    endif()
+endif()
+
+file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+    # It is possible for a file in this folder to be locked due to antivirus or vctip
+    execute_process(COMMAND ${CMAKE_COMMAND} -E sleep 1)
+    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+    if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+        message(FATAL_ERROR "Unable to remove directory: ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg\n  Files are likely in use.")
+    endif()
+endif()
+
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug)
+    message(FATAL_ERROR "Error: directory exists: ${CURRENT_PACKAGES_DIR}/debug\n  The previous package was not fully cleared. This is an internal error.")
+endif()
+file(MAKE_DIRECTORY
+    ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
+    ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+
+######################
+# Bootstrap b2
+######################
 if(NOT EXISTS ${SOURCE_PATH}/b2.exe)
     message(STATUS "Bootstrapping")
     vcpkg_execute_required_process(
@@ -44,6 +80,9 @@ if(NOT EXISTS ${SOURCE_PATH}/b2.exe)
 endif()
 message(STATUS "Bootstrapping done")
 
+######################
+# Generate configuration
+######################
 set(B2_OPTIONS
     -sZLIB_INCLUDE="${CURRENT_INSTALLED_DIR}\\include"
     -sBZIP2_INCLUDE="${CURRENT_INSTALLED_DIR}\\include"
@@ -72,14 +111,60 @@ if(TRIPLET_SYSTEM_ARCH MATCHES "x64")
     list(APPEND B2_OPTIONS address-model=64)
 endif()
 
-if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
-    message(WARNING "Combination of VS2017 and UWP is partially supported; using reference Winmd's from VS2015")
-endif()
 if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
-    list(APPEND B2_OPTIONS windows-api=store)
-    set(ENV{BOOST_BUILD_PATH} ${CMAKE_CURRENT_LIST_DIR}/uwp)
+    list(APPEND B2_OPTIONS
+        windows-api=store
+        # --without-atomic
+        # --without-chrono
+        # --without-system
+        # --without-date_time
+        # --without-exception
+        # --without-serialization
+        # --without-fiber
+        # --without-context
+        # --without-graph_parallel
+        # --without-signals
+        # --without-coroutine2
+        # --without-graph
+        # --without-math
+        # --without-random
+        # --without-regex
+        ################################
+        --without-type_erasure # depends on thread
+        --without-log # depends on filesystem
+        --without-mpi # Needs "using mpi ;"
+        --without-wave # depends on filesystem
+        --without-coroutine # depends on thread
+        --without-metaparse # depends on test
+        --without-locale # libs\locale\src\encoding\wconv_codepage.ipp(114): error C3861: 'IsDBCSLeadByteEx': identifier not found
+        --without-timer # libs\timer\src\cpu_timer.cpp(126): error C2039: 'GetProcessTimes': is not a member of '`global namespace''
+        --without-program_options # libs\program_options\src\parsers.cpp(194): error C2065: 'environ': undeclared identifier
+
+        --without-test
+        --without-filesystem # libs\filesystem\src\operations.cpp(178): error C2039: 'GetEnvironmentVariableW': is not a member of '`global namespace''
+        --without-thread
+        --without-iostreams
+        --without-container
+    )
+    if(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+        find_path(PATH_TO_CL cl.exe)
+        find_path(PLATFORM_WINMD_DIR platform.winmd PATHS "${PATH_TO_CL}/../../../lib/x86/store/references" NO_DEFAULT_PATH)
+        if(PLATFORM_WINMD_DIR MATCHES "NOTFOUND")
+            message(FATAL_ERROR "Could not find `platform.winmd` in VS2017. Do you have the Universal Windows Platform development workload installed?")
+        endif()
+    else()
+        find_path(PLATFORM_WINMD_DIR platform.winmd PATHS "$ENV{VS140COMNTOOLS}/../../VC/LIB/store/references")
+        if(PLATFORM_WINMD_DIR MATCHES "NOTFOUND")
+            message(FATAL_ERROR "Could not find `platform.winmd` in VS2015.")
+        endif()
+    endif()
+    file(TO_NATIVE_PATH "${PLATFORM_WINMD_DIR}" PLATFORM_WINMD_DIR)
+    string(REPLACE "\\" "\\\\" PLATFORM_WINMD_DIR ${PLATFORM_WINMD_DIR}) # escape backslashes
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/uwp/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/user-config.jam ESCAPE_QUOTES @ONLY)
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/uwp/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/user-config.jam ESCAPE_QUOTES @ONLY)
 else()
-    set(ENV{BOOST_BUILD_PATH} ${CMAKE_CURRENT_LIST_DIR}/vs2017)
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/desktop/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/user-config.jam @ONLY)
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/desktop/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/user-config.jam @ONLY)
 endif()
 
 if(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
@@ -107,31 +192,11 @@ set(B2_OPTIONS_REL
     -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
 )
 
-file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-    # It is possible for a file in this folder to be locked due to antivirus or vctip
-    execute_process(COMMAND ${CMAKE_COMMAND} -E sleep 1)
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-    if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        message(FATAL_ERROR "Unable to remove directory: ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel\n  Files are likely in use.")
-    endif()
-endif()
-
-file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-    # It is possible for a file in this folder to be locked due to antivirus or vctip
-    execute_process(COMMAND ${CMAKE_COMMAND} -E sleep 1)
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-    if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        message(FATAL_ERROR "Unable to remove directory: ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg\n  Files are likely in use.")
-    endif()
-endif()
-
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug)
-    message(FATAL_ERROR "Error: directory exists: ${CURRENT_PACKAGES_DIR}/debug\n  The previous package was not fully cleared. This is an internal error.")
-endif()
-
+######################
+# Perform build + Package
+######################
 message(STATUS "Building ${TARGET_TRIPLET}-rel")
+set(ENV{BOOST_BUILD_PATH} ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
 vcpkg_execute_required_process_repeat(
     COUNT 2
     COMMAND "${SOURCE_PATH}/b2.exe"
@@ -145,6 +210,7 @@ vcpkg_execute_required_process_repeat(
 )
 message(STATUS "Building ${TARGET_TRIPLET}-rel done")
 message(STATUS "Building ${TARGET_TRIPLET}-dbg")
+set(ENV{BOOST_BUILD_PATH} ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 vcpkg_execute_required_process_repeat(
     COUNT 2
     COMMAND "${SOURCE_PATH}/b2.exe"
