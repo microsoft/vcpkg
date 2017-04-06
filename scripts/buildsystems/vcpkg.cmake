@@ -89,7 +89,7 @@ if(NOT VCPKG_TOOLCHAIN)
         if(IMPORTED_IDX EQUAL -1 AND ALIAS_IDX EQUAL -1)
             if(VCPKG_APPLOCAL_DEPS)
                 add_custom_command(TARGET ${name} POST_BUILD
-                    COMMAND powershell -noprofile -executionpolicy UnRestricted -file ${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1
+                    COMMAND powershell -noprofile -executionpolicy Bypass -file ${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1
                         -targetBinary $<TARGET_FILE:${name}>
                         -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                         -OutVariable out
