@@ -1,0 +1,44 @@
+diff --git a/src/mongoc/mongoc-gridfs-file.c b/src/mongoc/mongoc-gridfs-file.c
+index 5beb610..7e74ff7 100644
+--- a/src/mongoc/mongoc-gridfs-file.c
++++ b/src/mongoc/mongoc-gridfs-file.c
+@@ -734,7 +734,7 @@ _mongoc_gridfs_file_refresh_page (mongoc_gridfs_file_t *file)
+    bson_t query;
+    bson_t child;
+    bson_t opts;
+-   const bson_t *chunk;
++   const bson_t *chunk = 0;
+    const char *key;
+    bson_iter_t iter;
+    int64_t existing_chunks;
+diff --git a/src/mongoc/mongoc-handshake.c b/src/mongoc/mongoc-handshake.c
+index 4e181bd..b274fc1 100644
+--- a/src/mongoc/mongoc-handshake.c
++++ b/src/mongoc/mongoc-handshake.c
+@@ -195,7 +195,8 @@ _get_os_version (void)
+    char *ret = bson_malloc (HANDSHAKE_OS_VERSION_MAX);
+    bool found = false;
+ 
+-#ifdef _WIN32
++#if defined (WINAPI_FAMILY_PARTITION) && !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
++#elif defined (_WIN32)
+    OSVERSIONINFO osvi;
+    ZeroMemory (&osvi, sizeof (OSVERSIONINFO));
+    osvi.dwOSVersionInfoSize = sizeof (OSVERSIONINFO);
+diff --git a/src/mongoc/mongoc-util.c b/src/mongoc/mongoc-util.c
+index 6dbb26d..7f33780 100644
+--- a/src/mongoc/mongoc-util.c
++++ b/src/mongoc/mongoc-util.c
+@@ -46,7 +46,11 @@ _mongoc_hex_md5 (const char *input)
+ void
+ _mongoc_usleep (int64_t usec)
+ {
+-#ifdef _WIN32
++#if defined (WINAPI_FAMILY_PARTITION) && !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
++   if (usec / 1000 > MAXDWORD || usec < 0)
++      __fastfail(-1);
++   Sleep((DWORD)(usec / 1000));
++#elif defined(_WIN32)
+    LARGE_INTEGER ft;
+    HANDLE timer;
+ 

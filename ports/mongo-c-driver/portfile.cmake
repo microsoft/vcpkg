@@ -12,7 +12,13 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/bson.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch
 )
+
+set(ENABLE_SSL "WINDOWS")
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(ENABLE_SSL "OPENSSL")
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -20,10 +26,13 @@ vcpkg_configure_cmake(
         -DBSON_ROOT_DIR=${CURRENT_INSTALLED_DIR}
         -DENABLE_TESTS=OFF
         -DENABLE_EXAMPLES=OFF
+        -DENABLE_SSL=${ENABLE_SSL}
 )
 
 vcpkg_install_cmake()
 
+# This rename is needed because the official examples expect to use #include <mongoc.h>
+# See Microsoft/vcpkg#904
 file(RENAME
     ${CURRENT_PACKAGES_DIR}/include/libmongoc-1.0
     ${CURRENT_PACKAGES_DIR}/temp)
@@ -50,3 +59,6 @@ else()
 endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver RENAME copyright)
+file(COPY ${SOURCE_PATH}/THIRD_PARTY_NOTICES DESTINATION ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver)
+
+vcpkg_copy_pdbs()
