@@ -27,9 +27,13 @@ namespace vcpkg::Commands::Build
 
     std::wstring make_build_env_cmd(const Triplet& target_triplet, const Toolset& toolset)
     {
-        return Strings::wformat(LR"("%s" %s >nul 2>&1)",
-            toolset.vcvarsall.native(),
-            Strings::utf8_to_utf16(target_triplet.architecture()));
+        const wchar_t * tonull = L" >nul";
+        if (g_debugging)
+        {
+            tonull = L"";
+        }
+
+        return Strings::wformat(LR"("%s" %s %s 2>&1)", toolset.vcvarsall.native(), Strings::utf8_to_utf16(target_triplet.architecture()), tonull);
     }
 
     BuildResult build_package(const SourceParagraph& source_paragraph, const PackageSpec& spec, const VcpkgPaths& paths, const fs::path& port_dir, const StatusParagraphs& status_db)
