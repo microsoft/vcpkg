@@ -102,7 +102,11 @@ namespace vcpkg::System
 
         // Basically we are wrapping it in quotes
         const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
+        if (g_debugging)
+            System::println("[DEBUG] _wsystem(%s)", Strings::utf16_to_utf8(actual_cmd_line));
         int exit_code = _wsystem(actual_cmd_line.c_str());
+        if (g_debugging)
+            System::println("[DEBUG] _wsystem() returned %d", exit_code);
         return exit_code;
     }
 
