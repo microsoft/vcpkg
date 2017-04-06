@@ -18,7 +18,7 @@ namespace vcpkg::System
     {
         static const std::wstring system_root = get_environmental_variable(L"SystemRoot").value_or_exit(VCPKG_LINE_INFO);
         static const std::wstring system_32 = system_root + LR"(\system32)";
-        static const std::wstring new_PATH = Strings::wformat(LR"(Path=%s;%s;%s\WindowsPowerShell\v1.0\)", system_32, system_root, system_32);
+        static const std::wstring new_PATH = Strings::wformat(LR"(Path=%s;%s;%s\Wbem;%s\WindowsPowerShell\v1.0\)", system_32, system_root, system_32, system_32);
 
         std::vector<std::wstring> env_wstrings =
         {
