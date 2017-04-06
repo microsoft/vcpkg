@@ -29,6 +29,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+# This rename is needed because the official examples expect to use #include <bson.h>
+# See Microsoft/vcpkg#904
 file(RENAME
     ${CURRENT_PACKAGES_DIR}/include/libbson-1.0
     ${CURRENT_PACKAGES_DIR}/temp)
@@ -54,3 +56,6 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libbson RENAME copyright)
+file(COPY ${SOURCE_PATH}/THIRD_PARTY_NOTICES DESTINATION ${CURRENT_PACKAGES_DIR}/share/libbson)
+
+vcpkg_copy_pdbs()
