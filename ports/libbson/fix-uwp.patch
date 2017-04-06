@@ -1,0 +1,58 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 553f13b..03dc546 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -194,6 +194,8 @@ set (HEADERS
+    ${SOURCE_DIR}/src/bson/bson-writer.h
+ )
+ 
++add_definitions(-D_CRT_SECURE_NO_WARNINGS)
++
+ add_library(bson_shared SHARED ${SOURCES} ${HEADERS})
+ add_library(bson_static STATIC ${SOURCES} ${HEADERS})
+ 
+@@ -272,8 +274,10 @@ if (ENABLE_TESTS)
+          DESTINATION ${PROJECT_BINARY_DIR}/tests)
+ endif ()  # ENABLE_TESTS
+ 
++set(INSTALL_TARGETS bson_shared bson_static CACHE INTERNAL "List of library targets to install")
++
+ install(
+-  TARGETS bson_shared bson_static
++  TARGETS ${INSTALL_TARGETS}
+   LIBRARY DESTINATION lib
+   ARCHIVE DESTINATION lib
+   RUNTIME DESTINATION bin
+diff --git a/src/bson/bson-compat.h b/src/bson/bson-compat.h
+index 05fc614..e8e2214 100644
+--- a/src/bson/bson-compat.h
++++ b/src/bson/bson-compat.h
+@@ -39,11 +39,11 @@
+ 
+ 
+ #ifdef BSON_OS_WIN32
+-# if defined(_WIN32_WINNT) && (_WIN32_WINNT < 0x0600)
++# if defined(_WIN32_WINNT) && (_WIN32_WINNT < 0x0602)
+ #  undef _WIN32_WINNT
+ # endif
+ # ifndef _WIN32_WINNT
+-#  define _WIN32_WINNT 0x0600
++#  define _WIN32_WINNT 0x0602
+ # endif
+ # ifndef NOMINMAX
+ #  define NOMINMAX
+diff --git a/src/bson/bson-iso8601.c b/src/bson/bson-iso8601.c
+index 8beea90..cb4b531 100644
+--- a/src/bson/bson-iso8601.c
++++ b/src/bson/bson-iso8601.c
+@@ -117,8 +117,8 @@ _bson_iso8601_date_parse (const char *str,
+    const char *day_ptr;
+    const char *hour_ptr;
+    const char *min_ptr;
+-   const char *sec_ptr;
+-   const char *millis_ptr;
++   const char *sec_ptr = NULL;
++   const char *millis_ptr = NULL;
+    const char *tz_ptr;
+ 
+    int32_t year_len = 0;
