@@ -64,9 +64,4 @@ namespace vcpkg
     {
         return left.name() == right.name() && left.target_triplet() == right.target_triplet();
     }
-
-    std::ostream& operator<<(std::ostream& os, const PackageSpec& spec)
-    {
-        return os << spec.to_string();
-    }
 }

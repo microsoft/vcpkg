@@ -25,8 +25,6 @@ namespace vcpkg
     };
 
     bool operator==(const PackageSpec& left, const PackageSpec& right);
-
-    std::ostream& operator<<(std::ostream& os, const PackageSpec& spec);
 } //namespace vcpkg
 
 namespace std
