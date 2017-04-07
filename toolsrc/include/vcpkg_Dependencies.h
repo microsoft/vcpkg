@@ -40,6 +40,8 @@ namespace vcpkg::Dependencies
 
     struct PackageSpecWithInstallPlan
     {
+        static bool compare_by_name(const PackageSpecWithInstallPlan* left, const PackageSpecWithInstallPlan* right);
+
         PackageSpecWithInstallPlan(const PackageSpec& spec, InstallPlanAction&& plan);
 
         PackageSpec spec;
