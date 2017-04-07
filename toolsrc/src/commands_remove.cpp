@@ -116,19 +116,17 @@ namespace vcpkg::Commands::Remove
 
         for (const PackageSpecWithRemovePlan& i : plan)
         {
-            if (i.plan.plan_type == RemovePlanType::NOT_INSTALLED)
+            switch (i.plan.plan_type)
             {
-                not_installed.push_back(&i);
-                continue;
+                case RemovePlanType::NOT_INSTALLED:
+                    not_installed.push_back(&i);
+                    continue;
+                case RemovePlanType::REMOVE:
+                    remove.push_back(&i);
+                    continue;
+                default:
+                    Checks::unreachable(VCPKG_LINE_INFO);
             }
-
-            if (i.plan.plan_type == RemovePlanType::REMOVE)
-            {
-                remove.push_back(&i);
-                continue;
-            }
-
-            Checks::unreachable(VCPKG_LINE_INFO);
         }
 
         if (!not_installed.empty())
@@ -147,12 +145,12 @@ namespace vcpkg::Commands::Remove
             System::println("The following packages will be removed:\n%s",
                             Strings::join("\n", remove, [](const PackageSpecWithRemovePlan* p)
                                           {
-                                              if (p->plan.request_type == Dependencies::RequestType::AUTO_SELECTED)
+                                              if (p->plan.request_type == RequestType::AUTO_SELECTED)
                                               {
                                                   return "  * " + p->spec.to_string();
                                               }
 
-                                              if (p->plan.request_type == Dependencies::RequestType::USER_REQUESTED)
+                                              if (p->plan.request_type == RequestType::USER_REQUESTED)
                                               {
                                                   return "    " + p->spec.to_string();
                                               }
