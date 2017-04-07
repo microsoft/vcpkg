@@ -141,7 +141,7 @@ namespace vcpkg::Commands::Build
         }
 
         const Expected<SourceParagraph> maybe_spgh = Paragraphs::try_load_port(port_dir);
-        Checks::check_exit(VCPKG_LINE_INFO, !maybe_spgh.error_code(), "Could not find package named %s: %s", spec.display_name(), maybe_spgh.error_code().message());
+        Checks::check_exit(VCPKG_LINE_INFO, !maybe_spgh.error_code(), "Could not find package named %s: %s", spec, maybe_spgh.error_code().message());
         const SourceParagraph& spgh = *maybe_spgh.get();
 
         StatusParagraphs status_db = database_load_check(paths);

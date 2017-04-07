@@ -48,7 +48,7 @@ namespace vcpkg::Commands::CI
         {
             const ElapsedTime build_timer = ElapsedTime::create_started();
             counter++;
-            const std::string display_name = action.spec.display_name();
+            const std::string display_name = action.spec.to_string();
             System::println("Starting package %d/%d: %s", counter, package_count, display_name);
 
             timing.push_back(-1);
@@ -97,10 +97,10 @@ namespace vcpkg::Commands::CI
             }
             catch (const std::exception& e)
             {
-                System::println(System::Color::error, "Error: Could not install package %s: %s", action.spec.display_name(), e.what());
+                System::println(System::Color::error, "Error: Could not install package %s: %s", action.spec, e.what());
                 results.back() = BuildResult::NULLVALUE;
             }
-            System::println("Elapsed time for package %s: %s", action.spec.display_name(), build_timer.to_string());
+            System::println("Elapsed time for package %s: %s", action.spec, build_timer.to_string());
         }
 
         System::println("Total time taken: %s", timer.to_string());

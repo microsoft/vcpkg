@@ -55,7 +55,7 @@ namespace vcpkg
 
     std::string BinaryParagraph::displayname() const
     {
-        return this->spec.display_name();
+        return this->spec.to_string();
     }
 
     std::string BinaryParagraph::dir() const

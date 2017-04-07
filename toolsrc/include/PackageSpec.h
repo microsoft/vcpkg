@@ -15,8 +15,6 @@ namespace vcpkg
 
         const Triplet& target_triplet() const;
 
-        std::string display_name() const;
-
         std::string dir() const;
 
         std::string to_string() const;

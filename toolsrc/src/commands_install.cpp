@@ -201,7 +201,7 @@ namespace vcpkg::Commands::Install
             const fs::path triplet_install_path = paths.installed / triplet.canonical_name();
             System::println(System::Color::error, "The following files are already installed in %s and are in conflict with %s",
                             triplet_install_path.generic_string(),
-                            binary_paragraph.spec.display_name());
+                            binary_paragraph.spec);
             System::print("\n    ");
             System::println(Strings::join("\n    ", intersection));
             System::println("");
@@ -281,7 +281,7 @@ namespace vcpkg::Commands::Install
         // execute the plan
         for (const PackageSpecWithInstallPlan& action : install_plan)
         {
-            const std::string display_name = action.spec.display_name();
+            const std::string display_name = action.spec.to_string();
 
             try
             {
@@ -324,7 +324,7 @@ namespace vcpkg::Commands::Install
             }
             catch (const std::exception& e)
             {
-                System::println(System::Color::error, "Error: Could not install package %s: %s", action.spec.display_name(), e.what());
+                System::println(System::Color::error, "Error: Could not install package %s: %s", action.spec, e.what());
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
         }

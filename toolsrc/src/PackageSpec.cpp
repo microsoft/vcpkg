@@ -50,11 +50,6 @@ namespace vcpkg
         return this->m_target_triplet;
     }
 
-    std::string PackageSpec::display_name() const
-    {
-        return Strings::format("%s:%s", this->name(), this->target_triplet());
-    }
-
     std::string PackageSpec::dir() const
     {
         return Strings::format("%s_%s", this->m_name, this->m_target_triplet);
@@ -62,7 +57,7 @@ namespace vcpkg
 
     std::string PackageSpec::to_string() const
     {
-        return this->display_name();
+        return Strings::format("%s:%s", this->name(), this->target_triplet());
     }
 
     bool operator==(const PackageSpec& left, const PackageSpec& right)

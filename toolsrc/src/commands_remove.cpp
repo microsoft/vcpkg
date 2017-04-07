@@ -200,7 +200,7 @@ namespace vcpkg::Commands::Remove
 
         for (const PackageSpecWithRemovePlan& action : remove_plan)
         {
-            const std::string display_name = action.spec.display_name();
+            const std::string display_name = action.spec.to_string();
 
             switch (action.plan.plan_type)
             {
