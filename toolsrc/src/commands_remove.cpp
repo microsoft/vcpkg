@@ -125,7 +125,7 @@ namespace vcpkg::Commands::Remove
         {
             std::sort(not_installed.begin(), not_installed.end(), &PackageSpecWithRemovePlan::compare_by_name);
             System::println("The following packages are not installed, so not removed:\n%s",
-                            Strings::join("\n    ", not_installed, [](const PackageSpecWithRemovePlan* p)
+                            Strings::join("\n", not_installed, [](const PackageSpecWithRemovePlan* p)
                                           {
                                               return "    " + p->spec.to_string();
                                           }));
