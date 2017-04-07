@@ -145,17 +145,15 @@ namespace vcpkg::Commands::Remove
             System::println("The following packages will be removed:\n%s",
                             Strings::join("\n", remove, [](const PackageSpecWithRemovePlan* p)
                                           {
-                                              if (p->plan.request_type == RequestType::AUTO_SELECTED)
+                                              switch (p->plan.request_type)
                                               {
-                                                  return "  * " + p->spec.to_string();
+                                                  case RequestType::AUTO_SELECTED:
+                                                      return "  * " + p->spec.to_string();
+                                                  case RequestType::USER_REQUESTED:
+                                                      return "    " + p->spec.to_string();
+                                                  default:
+                                                      Checks::unreachable(VCPKG_LINE_INFO);
                                               }
-
-                                              if (p->plan.request_type == RequestType::USER_REQUESTED)
-                                              {
-                                                  return "    " + p->spec.to_string();
-                                              }
-
-                                              Checks::unreachable(VCPKG_LINE_INFO);
                                           }));
         }
     }
