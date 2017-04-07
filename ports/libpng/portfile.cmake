@@ -9,7 +9,9 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/use-abort-on-all-platforms.patch"
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/use-abort-on-all-platforms.patch
+        ${CMAKE_CURRENT_LIST_DIR}/dont-double-eval-CMAKE_SYSTEM_PROCESSOR.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
