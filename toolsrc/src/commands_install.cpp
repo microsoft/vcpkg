@@ -288,7 +288,7 @@ namespace vcpkg::Commands::Install
                 switch (action.plan.plan_type)
                 {
                     case InstallPlanType::ALREADY_INSTALLED:
-                        System::println(System::Color::success, "Package %s is already installed", action.spec.display_name());
+                        System::println(System::Color::success, "Package %s is already installed", display_name);
                         break;
                     case InstallPlanType::BUILD_AND_INSTALL:
                         {
