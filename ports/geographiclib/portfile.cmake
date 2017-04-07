@@ -40,7 +40,7 @@ else()
 endif()
 
 vcpkg_install_cmake()
-file(REMOVE ${CURRENT_PACKAGES_DIR}/cmake)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake)
 
 file(COPY ${CURRENT_BUILDTREES_DIR}/src/GeographicLib-1.47/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/geographiclib)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/geographiclib/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/geographiclib/copyright)
