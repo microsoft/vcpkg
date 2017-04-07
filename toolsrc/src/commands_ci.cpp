@@ -56,37 +56,39 @@ namespace vcpkg::Commands::CI
 
             try
             {
-                if (action.plan.plan_type == InstallPlanType::ALREADY_INSTALLED)
+                switch (action.plan.plan_type)
                 {
-                    results.back() = BuildResult::SUCCEEDED;
-                    System::println(System::Color::success, "Package %s is already installed", display_name);
+                    case InstallPlanType::ALREADY_INSTALLED:
+                        results.back() = BuildResult::SUCCEEDED;
+                        System::println(System::Color::success, "Package %s is already installed", display_name);
+                        break;
+                    case InstallPlanType::BUILD_AND_INSTALL:
+                        {
+                            const BuildResult result = Commands::Build::build_package(action.plan.source_pgh.value_or_exit(VCPKG_LINE_INFO),
+                                                                                      action.spec,
+                                                                                      paths,
+                                                                                      paths.port_dir(action.spec),
+                                                                                      status_db);
+                            timing.back() = build_timer.elapsed<std::chrono::milliseconds>().count();
+                            results.back() = result;
+                            if (result != BuildResult::SUCCEEDED)
+                            {
+                                System::println(System::Color::error, Build::create_error_message(result, action.spec));
+                                continue;
+                            }
+                            const BinaryParagraph bpgh = Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO);
+                            Install::install_package(paths, bpgh, &status_db);
+                            System::println(System::Color::success, "Package %s is installed", display_name);
+                            break;
+                        }
+                    case InstallPlanType::INSTALL:
+                        results.back() = BuildResult::SUCCEEDED;
+                        Install::install_package(paths, action.plan.binary_pgh.value_or_exit(VCPKG_LINE_INFO), &status_db);
+                        System::println(System::Color::success, "Package %s is installed from cache", display_name);
+                        break;
+                    default:
+                        Checks::unreachable(VCPKG_LINE_INFO);
                 }
-                else if (action.plan.plan_type == InstallPlanType::BUILD_AND_INSTALL)
-                {
-                    const BuildResult result = Commands::Build::build_package(action.plan.source_pgh.value_or_exit(VCPKG_LINE_INFO),
-                                                                              action.spec,
-                                                                              paths,
-                                                                              paths.port_dir(action.spec),
-                                                                              status_db);
-                    timing.back() = build_timer.elapsed<std::chrono::milliseconds>().count();
-                    results.back() = result;
-                    if (result != BuildResult::SUCCEEDED)
-                    {
-                        System::println(System::Color::error, Build::create_error_message(result, action.spec));
-                        continue;
-                    }
-                    const BinaryParagraph bpgh = Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO);
-                    Install::install_package(paths, bpgh, &status_db);
-                    System::println(System::Color::success, "Package %s is installed", display_name);
-                }
-                else if (action.plan.plan_type == InstallPlanType::INSTALL)
-                {
-                    results.back() = BuildResult::SUCCEEDED;
-                    Install::install_package(paths, action.plan.binary_pgh.value_or_exit(VCPKG_LINE_INFO), &status_db);
-                    System::println(System::Color::success, "Package %s is installed from cache", display_name);
-                }
-                else
-                    Checks::unreachable(VCPKG_LINE_INFO);
             }
             catch (const std::exception& e)
             {
