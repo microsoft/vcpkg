@@ -311,6 +311,7 @@ namespace vcpkg::Commands::Install
                         install_package(paths, action.plan.binary_pgh.value_or_exit(VCPKG_LINE_INFO), &status_db);
                         System::println(System::Color::success, "Installing package %s... done", action.spec);
                         break;
+                    case InstallPlanType::UNKNOWN:
                     default:
                         Checks::unreachable(VCPKG_LINE_INFO);
                 }
