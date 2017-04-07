@@ -22,10 +22,11 @@ namespace vcpkg::Dependencies
         }
     }
 
-    InstallPlanAction::InstallPlanAction() : plan_type(InstallPlanType::UNKNOWN), binary_pgh(nullopt), source_pgh(nullopt) { }
+    InstallPlanAction::InstallPlanAction() : plan_type(InstallPlanType::UNKNOWN), request_type(RequestType::UNKNOWN), binary_pgh(nullopt), source_pgh(nullopt) { }
 
-    InstallPlanAction::InstallPlanAction(const InstallPlanType& plan_type, Optional<BinaryParagraph> binary_pgh, Optional<SourceParagraph> source_pgh)
-        : plan_type(std::move(plan_type)), binary_pgh(std::move(binary_pgh)), source_pgh(std::move(source_pgh)) { }
+    InstallPlanAction::InstallPlanAction(const InstallPlanType& plan_type, const RequestType& request_type, Optional<BinaryParagraph> binary_pgh, Optional<SourceParagraph> source_pgh)
+        : plan_type(std::move(plan_type)), request_type(request_type), binary_pgh(std::move(binary_pgh)), source_pgh(std::move(source_pgh)) { }
+
     bool PackageSpecWithInstallPlan::compare_by_name(const PackageSpecWithInstallPlan* left, const PackageSpecWithInstallPlan* right)
     {
         return left->spec.name() < right->spec.name();
@@ -47,6 +48,8 @@ namespace vcpkg::Dependencies
 
     std::vector<PackageSpecWithInstallPlan> create_install_plan(const VcpkgPaths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db)
     {
+        std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
+
         std::unordered_map<PackageSpec, InstallPlanAction> was_examined; // Examine = we have checked its immediate (non-recursive) dependencies
         Graphs::Graph<PackageSpec> graph;
         graph.add_vertices(specs);
@@ -75,10 +78,11 @@ namespace vcpkg::Dependencies
                     }
                 };
 
+            const RequestType request_type = specs_as_set.find(spec) != specs_as_set.end() ? RequestType::USER_REQUESTED : RequestType::AUTO_SELECTED;
             auto it = status_db.find(spec);
             if (it != status_db.end() && (*it)->want == Want::INSTALL)
             {
-                was_examined.emplace(spec, InstallPlanAction{ InstallPlanType::ALREADY_INSTALLED, nullopt, nullopt });
+                was_examined.emplace(spec, InstallPlanAction{ InstallPlanType::ALREADY_INSTALLED, request_type, nullopt, nullopt });
                 continue;
             }
 
@@ -86,7 +90,7 @@ namespace vcpkg::Dependencies
             if (BinaryParagraph* bpgh = maybe_bpgh.get())
             {
                 process_dependencies(bpgh->depends);
-                was_examined.emplace(spec, InstallPlanAction{ InstallPlanType::INSTALL, std::move(*bpgh), nullopt });
+                was_examined.emplace(spec, InstallPlanAction{ InstallPlanType::INSTALL, request_type, std::move(*bpgh), nullopt });
                 continue;
             }
 
@@ -94,7 +98,7 @@ namespace vcpkg::Dependencies
             if (auto spgh = maybe_spgh.get())
             {
                 process_dependencies(filter_dependencies(spgh->depends, spec.target_triplet()));
-                was_examined.emplace(spec, InstallPlanAction{ InstallPlanType::BUILD_AND_INSTALL, nullopt, std::move(*spgh) });
+                was_examined.emplace(spec, InstallPlanAction{ InstallPlanType::BUILD_AND_INSTALL, request_type, nullopt, std::move(*spgh) });
             }
             else
             {

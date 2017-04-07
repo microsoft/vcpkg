@@ -27,13 +27,14 @@ namespace vcpkg::Dependencies
     struct InstallPlanAction
     {
         InstallPlanAction();
-        InstallPlanAction(const InstallPlanType& plan_type, Optional<BinaryParagraph> binary_pgh, Optional<SourceParagraph> source_pgh);
+        InstallPlanAction(const InstallPlanType& plan_type, const RequestType& request_type, Optional<BinaryParagraph> binary_pgh, Optional<SourceParagraph> source_pgh);
         InstallPlanAction(const InstallPlanAction&) = delete;
         InstallPlanAction(InstallPlanAction&&) = default;
         InstallPlanAction& operator=(const InstallPlanAction&) = delete;
         InstallPlanAction& operator=(InstallPlanAction&&) = default;
 
         InstallPlanType plan_type;
+        RequestType request_type;
         Optional<BinaryParagraph> binary_pgh;
         Optional<SourceParagraph> source_pgh;
     };
@@ -63,7 +64,6 @@ namespace vcpkg::Dependencies
         RemovePlanAction(RemovePlanAction&&) = default;
         RemovePlanAction& operator=(const RemovePlanAction&) = delete;
         RemovePlanAction& operator=(RemovePlanAction&&) = default;
-
 
         RemovePlanType plan_type;
         RequestType request_type;
