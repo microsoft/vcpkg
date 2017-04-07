@@ -64,6 +64,7 @@ namespace vcpkg::Commands::CI
                         break;
                     case InstallPlanType::BUILD_AND_INSTALL:
                         {
+                            System::println("Building package %s... ", display_name);
                             const BuildResult result = Commands::Build::build_package(action.plan.source_pgh.value_or_exit(VCPKG_LINE_INFO),
                                                                                       action.spec,
                                                                                       paths,
@@ -76,15 +77,19 @@ namespace vcpkg::Commands::CI
                                 System::println(System::Color::error, Build::create_error_message(result, action.spec));
                                 continue;
                             }
+                            System::println(System::Color::success, "Building package %s... done", display_name);
+
                             const BinaryParagraph bpgh = Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO);
+                            System::println("Installing package %s... ", display_name);
                             Install::install_package(paths, bpgh, &status_db);
-                            System::println(System::Color::success, "Package %s is installed", display_name);
+                            System::println(System::Color::success, "Installing package %s... done", display_name);
                             break;
                         }
                     case InstallPlanType::INSTALL:
                         results.back() = BuildResult::SUCCEEDED;
+                        System::println("Installing package %s... ", display_name);
                         Install::install_package(paths, action.plan.binary_pgh.value_or_exit(VCPKG_LINE_INFO), &status_db);
-                        System::println(System::Color::success, "Package %s is installed from cache", display_name);
+                        System::println(System::Color::success, "Installing package %s... done", display_name);
                         break;
                     default:
                         Checks::unreachable(VCPKG_LINE_INFO);
