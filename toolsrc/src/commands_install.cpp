@@ -286,10 +286,7 @@ namespace vcpkg::Commands::Install
                 switch (action.plan.plan_type)
                 {
                     case InstallPlanType::ALREADY_INSTALLED:
-                        if (std::find(specs.begin(), specs.end(), action.spec) != specs.end())
-                        {
-                            System::println(System::Color::success, "Package %s is already installed", action.spec);
-                        }
+                        System::println(System::Color::success, "Package %s is already installed", action.spec);
                         break;
                     case InstallPlanType::BUILD_AND_INSTALL:
                         {
