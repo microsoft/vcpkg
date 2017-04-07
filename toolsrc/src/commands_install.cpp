@@ -304,13 +304,15 @@ namespace vcpkg::Commands::Install
                         Checks::exit_fail(VCPKG_LINE_INFO);
                     }
                     const BinaryParagraph bpgh = Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO);
+                    System::println("Installing package %s... ", action.spec);
                     install_package(paths, bpgh, &status_db);
-                    System::println(System::Color::success, "Package %s is installed", action.spec);
+                    System::println(System::Color::success, "Installing package %s... done", action.spec);
                 }
                 else if (action.plan.plan_type == InstallPlanType::INSTALL)
                 {
+                    System::println("Installing package %s... ", action.spec);
                     install_package(paths, action.plan.binary_pgh.value_or_exit(VCPKG_LINE_INFO), &status_db);
-                    System::println(System::Color::success, "Package %s is installed", action.spec);
+                    System::println(System::Color::success, "Installing package %s... done", action.spec);
                 }
                 else
                     Checks::unreachable(VCPKG_LINE_INFO);
