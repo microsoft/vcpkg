@@ -14,7 +14,7 @@ include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/geographiclib-1.47)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://jaist.dl.sourceforge.net/project/geographiclib/distrib/GeographicLib-1.47-patch1.zip"
-    FILENAME "geographiclib-1.47-latch1.zip"
+    FILENAME "geographiclib-1.47-patch1.zip"
     SHA512 d8fdfd7ae093057ec1a4ab922457fe71a3fb9975df5b673c276d62a0e9c4f212dc63652830b9d89e3890bc96aafd335992943cf6a1bce8260acf932d1eb7abfd
 )
 vcpkg_extract_source_archive(${ARCHIVE})
@@ -40,7 +40,7 @@ else()
 endif()
 
 vcpkg_install_cmake()
-file(RENAME ${CURRENT_PACKAGES_DIR}/cmake ${CURRENT_PACKAGES_DIR}/share/geographiclib)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/cmake)
 
 file(COPY ${CURRENT_BUILDTREES_DIR}/src/GeographicLib-1.47/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/geographiclib)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/geographiclib/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/geographiclib/copyright)
