@@ -13,35 +13,25 @@ namespace vcpkg::Dependencies
     {
         switch (request_type)
         {
-        case RequestType::AUTO_SELECTED:
-            return Strings::format("  * %s", s);
-        case RequestType::USER_REQUESTED:
-            return Strings::format("    %s", s);
-        default:
-            Checks::unreachable(VCPKG_LINE_INFO);
+            case RequestType::AUTO_SELECTED:
+                return Strings::format("  * %s", s);
+            case RequestType::USER_REQUESTED:
+                return Strings::format("    %s", s);
+            default:
+                Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
 
-    InstallPlanAction::InstallPlanAction() : plan_type(InstallPlanType::UNKNOWN), binary_pgh(nullopt), source_pgh(nullopt)
-    {
-    }
+    InstallPlanAction::InstallPlanAction() : plan_type(InstallPlanType::UNKNOWN), binary_pgh(nullopt), source_pgh(nullopt) { }
 
     InstallPlanAction::InstallPlanAction(const InstallPlanType& plan_type, Optional<BinaryParagraph> binary_pgh, Optional<SourceParagraph> source_pgh)
-        : plan_type(std::move(plan_type)), binary_pgh(std::move(binary_pgh)), source_pgh(std::move(source_pgh))
-    {
-    }
+        : plan_type(std::move(plan_type)), binary_pgh(std::move(binary_pgh)), source_pgh(std::move(source_pgh)) { }
 
-    PackageSpecWithInstallPlan::PackageSpecWithInstallPlan(const PackageSpec& spec, InstallPlanAction&& plan) : spec(spec), plan(std::move(plan))
-    {
-    }
+    PackageSpecWithInstallPlan::PackageSpecWithInstallPlan(const PackageSpec& spec, InstallPlanAction&& plan) : spec(spec), plan(std::move(plan)) { }
 
-    RemovePlanAction::RemovePlanAction() : plan_type(RemovePlanType::UNKNOWN), request_type(RequestType::UNKNOWN)
-    {
-    }
+    RemovePlanAction::RemovePlanAction() : plan_type(RemovePlanType::UNKNOWN), request_type(RequestType::UNKNOWN) { }
 
-    RemovePlanAction::RemovePlanAction(const RemovePlanType& plan_type, const Dependencies::RequestType& request_type) : plan_type(plan_type), request_type(request_type)
-    {
-    }
+    RemovePlanAction::RemovePlanAction(const RemovePlanType& plan_type, const Dependencies::RequestType& request_type) : plan_type(plan_type), request_type(request_type) { }
 
     bool PackageSpecWithRemovePlan::compare_by_name(const PackageSpecWithRemovePlan* left, const PackageSpecWithRemovePlan* right)
     {
@@ -49,9 +39,7 @@ namespace vcpkg::Dependencies
     }
 
     PackageSpecWithRemovePlan::PackageSpecWithRemovePlan(const PackageSpec& spec, RemovePlanAction&& plan)
-        : spec(spec), plan(std::move(plan))
-    {
-    }
+        : spec(spec), plan(std::move(plan)) { }
 
     std::vector<PackageSpecWithInstallPlan> create_install_plan(const VcpkgPaths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db)
     {
@@ -86,7 +74,7 @@ namespace vcpkg::Dependencies
             auto it = status_db.find(spec);
             if (it != status_db.end() && (*it)->want == Want::INSTALL)
             {
-                was_examined.emplace(spec, InstallPlanAction{InstallPlanType::ALREADY_INSTALLED, nullopt, nullopt });
+                was_examined.emplace(spec, InstallPlanAction{ InstallPlanType::ALREADY_INSTALLED, nullopt, nullopt });
                 continue;
             }
 
@@ -94,7 +82,7 @@ namespace vcpkg::Dependencies
             if (BinaryParagraph* bpgh = maybe_bpgh.get())
             {
                 process_dependencies(bpgh->depends);
-                was_examined.emplace(spec, InstallPlanAction{InstallPlanType::INSTALL, std::move(*bpgh), nullopt });
+                was_examined.emplace(spec, InstallPlanAction{ InstallPlanType::INSTALL, std::move(*bpgh), nullopt });
                 continue;
             }
 
