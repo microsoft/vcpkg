@@ -16,7 +16,7 @@ endif()
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/cmake.patch
+        ${CMAKE_CURRENT_LIST_DIR}/static-builds.patch
 )
 
 vcpkg_configure_cmake(
