@@ -201,7 +201,7 @@ namespace vcpkg::Commands::Install
             const fs::path triplet_install_path = paths.installed / triplet.canonical_name();
             System::println(System::Color::error, "The following files are already installed in %s and are in conflict with %s",
                             triplet_install_path.generic_string(),
-                            binary_paragraph.spec);
+                            binary_paragraph.spec.display_name());
             System::print("\n    ");
             System::println(Strings::join("\n    ", intersection));
             System::println("");
@@ -281,16 +281,18 @@ namespace vcpkg::Commands::Install
         // execute the plan
         for (const PackageSpecWithInstallPlan& action : install_plan)
         {
+            const std::string display_name = action.spec.display_name();
+
             try
             {
                 switch (action.plan.plan_type)
                 {
                     case InstallPlanType::ALREADY_INSTALLED:
-                        System::println(System::Color::success, "Package %s is already installed", action.spec);
+                        System::println(System::Color::success, "Package %s is already installed", action.spec.display_name());
                         break;
                     case InstallPlanType::BUILD_AND_INSTALL:
                         {
-                            System::println("Building package %s... ", action.spec);
+                            System::println("Building package %s... ", display_name);
                             const Build::BuildResult result = Commands::Build::build_package(action.plan.source_pgh.value_or_exit(VCPKG_LINE_INFO),
                                                                                              action.spec,
                                                                                              paths,
@@ -302,18 +304,18 @@ namespace vcpkg::Commands::Install
                                 System::println(Build::create_user_troubleshooting_message(action.spec));
                                 Checks::exit_fail(VCPKG_LINE_INFO);
                             }
-                            System::println(System::Color::success, "Building package %s... done", action.spec);
+                            System::println(System::Color::success, "Building package %s... done", display_name);
 
                             const BinaryParagraph bpgh = Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO);
-                            System::println("Installing package %s... ", action.spec);
+                            System::println("Installing package %s... ", display_name);
                             install_package(paths, bpgh, &status_db);
-                            System::println(System::Color::success, "Installing package %s... done", action.spec);
+                            System::println(System::Color::success, "Installing package %s... done", display_name);
                             break;
                         }
                     case InstallPlanType::INSTALL:
-                        System::println("Installing package %s... ", action.spec);
+                        System::println("Installing package %s... ", display_name);
                         install_package(paths, action.plan.binary_pgh.value_or_exit(VCPKG_LINE_INFO), &status_db);
-                        System::println(System::Color::success, "Installing package %s... done", action.spec);
+                        System::println(System::Color::success, "Installing package %s... done", display_name);
                         break;
                     case InstallPlanType::UNKNOWN:
                     default:
@@ -322,7 +324,7 @@ namespace vcpkg::Commands::Install
             }
             catch (const std::exception& e)
             {
-                System::println(System::Color::error, "Error: Could not install package %s: %s", action.spec, e.what());
+                System::println(System::Color::error, "Error: Could not install package %s: %s", action.spec.display_name(), e.what());
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
         }

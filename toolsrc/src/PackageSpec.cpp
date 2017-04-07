@@ -65,11 +65,6 @@ namespace vcpkg
         return this->display_name();
     }
 
-    std::string to_printf_arg(const PackageSpec& spec)
-    {
-        return spec.to_string();
-    }
-
     bool operator==(const PackageSpec& left, const PackageSpec& right)
     {
         return left.name() == right.name() && left.target_triplet() == right.target_triplet();

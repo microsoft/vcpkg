@@ -26,8 +26,6 @@ namespace vcpkg
         Triplet m_target_triplet;
     };
 
-    std::string to_printf_arg(const PackageSpec& spec);
-
     bool operator==(const PackageSpec& left, const PackageSpec& right);
 
     std::ostream& operator<<(std::ostream& os, const PackageSpec& spec);
