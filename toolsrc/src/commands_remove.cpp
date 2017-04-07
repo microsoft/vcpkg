@@ -101,14 +101,6 @@ namespace vcpkg::Commands::Remove
         write_update(paths, pkg);
     }
 
-    static void sort_packages_by_name(std::vector<const PackageSpecWithRemovePlan*>* packages)
-    {
-        std::sort(packages->begin(), packages->end(), [](const PackageSpecWithRemovePlan* left, const PackageSpecWithRemovePlan* right) -> bool
-                  {
-                      return left->spec.name() < right->spec.name();
-                  });
-    }
-
     static void print_plan(const std::vector<PackageSpecWithRemovePlan>& plan)
     {
         std::vector<const PackageSpecWithRemovePlan*> not_installed;
@@ -131,7 +123,7 @@ namespace vcpkg::Commands::Remove
 
         if (!not_installed.empty())
         {
-            sort_packages_by_name(&not_installed);
+            std::sort(not_installed.begin(), not_installed.end(), &PackageSpecWithRemovePlan::compare_by_name);
             System::println("The following packages are not installed, so not removed:\n%s",
                             Strings::join("\n    ", not_installed, [](const PackageSpecWithRemovePlan* p)
                                           {
@@ -141,7 +133,7 @@ namespace vcpkg::Commands::Remove
 
         if (!remove.empty())
         {
-            sort_packages_by_name(&remove);
+            std::sort(remove.begin(), remove.end(), &PackageSpecWithRemovePlan::compare_by_name);
             System::println("The following packages will be removed:\n%s",
                             Strings::join("\n", remove, [](const PackageSpecWithRemovePlan* p)
                                           {

@@ -30,6 +30,11 @@ namespace vcpkg::Dependencies
     {
     }
 
+    bool PackageSpecWithRemovePlan::compare_by_name(const PackageSpecWithRemovePlan* left, const PackageSpecWithRemovePlan* right)
+    {
+        return left->spec.name() < right->spec.name();
+    }
+
     PackageSpecWithRemovePlan::PackageSpecWithRemovePlan(const PackageSpec& spec, RemovePlanAction&& plan)
         : spec(spec), plan(std::move(plan))
     {

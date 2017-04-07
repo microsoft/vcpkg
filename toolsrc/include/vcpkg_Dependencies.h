@@ -67,6 +67,8 @@ namespace vcpkg::Dependencies
 
     struct PackageSpecWithRemovePlan
     {
+        static bool compare_by_name(const PackageSpecWithRemovePlan* left, const PackageSpecWithRemovePlan* right);
+
         PackageSpecWithRemovePlan(const PackageSpec& spec, RemovePlanAction&& plan);
 
         PackageSpec spec;
