@@ -283,39 +283,40 @@ namespace vcpkg::Commands::Install
         {
             try
             {
-                if (action.plan.plan_type == InstallPlanType::ALREADY_INSTALLED)
+                switch (action.plan.plan_type)
                 {
-                    if (std::find(specs.begin(), specs.end(), action.spec) != specs.end())
-                    {
-                        System::println(System::Color::success, "Package %s is already installed", action.spec);
-                    }
+                    case InstallPlanType::ALREADY_INSTALLED:
+                        if (std::find(specs.begin(), specs.end(), action.spec) != specs.end())
+                        {
+                            System::println(System::Color::success, "Package %s is already installed", action.spec);
+                        }
+                        break;
+                    case InstallPlanType::BUILD_AND_INSTALL:
+                        {
+                            const Build::BuildResult result = Commands::Build::build_package(action.plan.source_pgh.value_or_exit(VCPKG_LINE_INFO),
+                                                                                             action.spec,
+                                                                                             paths,
+                                                                                             paths.port_dir(action.spec),
+                                                                                             status_db);
+                            if (result != Build::BuildResult::SUCCEEDED)
+                            {
+                                System::println(System::Color::error, Build::create_error_message(result, action.spec));
+                                System::println(Build::create_user_troubleshooting_message(action.spec));
+                                Checks::exit_fail(VCPKG_LINE_INFO);
+                            }
+                            const BinaryParagraph bpgh = Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO);
+                            System::println("Installing package %s... ", action.spec);
+                            install_package(paths, bpgh, &status_db);
+                            System::println(System::Color::success, "Installing package %s... done", action.spec);
+                        }
+                    case InstallPlanType::INSTALL:
+                        System::println("Installing package %s... ", action.spec);
+                        install_package(paths, action.plan.binary_pgh.value_or_exit(VCPKG_LINE_INFO), &status_db);
+                        System::println(System::Color::success, "Installing package %s... done", action.spec);
+                        break;
+                    default:
+                        Checks::unreachable(VCPKG_LINE_INFO);
                 }
-                else if (action.plan.plan_type == InstallPlanType::BUILD_AND_INSTALL)
-                {
-                    const Build::BuildResult result = Commands::Build::build_package(action.plan.source_pgh.value_or_exit(VCPKG_LINE_INFO),
-                                                                                     action.spec,
-                                                                                     paths,
-                                                                                     paths.port_dir(action.spec),
-                                                                                     status_db);
-                    if (result != Build::BuildResult::SUCCEEDED)
-                    {
-                        System::println(System::Color::error, Build::create_error_message(result, action.spec));
-                        System::println(Build::create_user_troubleshooting_message(action.spec));
-                        Checks::exit_fail(VCPKG_LINE_INFO);
-                    }
-                    const BinaryParagraph bpgh = Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO);
-                    System::println("Installing package %s... ", action.spec);
-                    install_package(paths, bpgh, &status_db);
-                    System::println(System::Color::success, "Installing package %s... done", action.spec);
-                }
-                else if (action.plan.plan_type == InstallPlanType::INSTALL)
-                {
-                    System::println("Installing package %s... ", action.spec);
-                    install_package(paths, action.plan.binary_pgh.value_or_exit(VCPKG_LINE_INFO), &status_db);
-                    System::println(System::Color::success, "Installing package %s... done", action.spec);
-                }
-                else
-                    Checks::unreachable(VCPKG_LINE_INFO);
             }
             catch (const std::exception& e)
             {
