@@ -308,6 +308,7 @@ namespace vcpkg::Commands::Install
                             System::println("Installing package %s... ", action.spec);
                             install_package(paths, bpgh, &status_db);
                             System::println(System::Color::success, "Installing package %s... done", action.spec);
+                            break;
                         }
                     case InstallPlanType::INSTALL:
                         System::println("Installing package %s... ", action.spec);
