@@ -70,6 +70,12 @@ namespace vcpkg::Dependencies
                     for (const std::string& dep_as_string : dependencies_as_string)
                     {
                         const PackageSpec current_dep = PackageSpec::from_name_and_triplet(dep_as_string, spec.target_triplet()).value_or_exit(VCPKG_LINE_INFO);
+                        auto it = status_db.find_installed(current_dep);
+                        if (it != status_db.end())
+                        {
+                            continue;
+                        }
+
                         graph.add_edge(spec, current_dep);
                         if (was_examined.find(current_dep) == was_examined.end())
                         {
@@ -79,8 +85,8 @@ namespace vcpkg::Dependencies
                 };
 
             const RequestType request_type = specs_as_set.find(spec) != specs_as_set.end() ? RequestType::USER_REQUESTED : RequestType::AUTO_SELECTED;
-            auto it = status_db.find(spec);
-            if (it != status_db.end() && (*it)->want == Want::INSTALL)
+            auto it = status_db.find_installed(spec);
+            if (it != status_db.end())
             {
                 was_examined.emplace(spec, InstallPlanAction{ InstallPlanType::ALREADY_INSTALLED, request_type, nullopt, nullopt });
                 continue;
