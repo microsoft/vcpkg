@@ -121,32 +121,18 @@ namespace vcpkg::Commands::Remove
             }
         }
 
+       auto print_lambda = [](const PackageSpecWithRemovePlan* p) { return to_output_string(p->plan.request_type, p->spec.to_string()); };
+
         if (!not_installed.empty())
         {
             std::sort(not_installed.begin(), not_installed.end(), &PackageSpecWithRemovePlan::compare_by_name);
-            System::println("The following packages are not installed, so not removed:\n%s",
-                            Strings::join("\n", not_installed, [](const PackageSpecWithRemovePlan* p)
-                                          {
-                                              return "    " + p->spec.to_string();
-                                          }));
+            System::println("The following packages are not installed, so not removed:\n%s", Strings::join("\n", not_installed, print_lambda));
         }
 
         if (!remove.empty())
         {
             std::sort(remove.begin(), remove.end(), &PackageSpecWithRemovePlan::compare_by_name);
-            System::println("The following packages will be removed:\n%s",
-                            Strings::join("\n", remove, [](const PackageSpecWithRemovePlan* p)
-                                          {
-                                              switch (p->plan.request_type)
-                                              {
-                                                  case RequestType::AUTO_SELECTED:
-                                                      return "  * " + p->spec.to_string();
-                                                  case RequestType::USER_REQUESTED:
-                                                      return "    " + p->spec.to_string();
-                                                  default:
-                                                      Checks::unreachable(VCPKG_LINE_INFO);
-                                              }
-                                          }));
+            System::println("The following packages will be removed:\n%s", Strings::join("\n", remove, print_lambda));
         }
     }
 

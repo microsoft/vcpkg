@@ -9,6 +9,19 @@
 
 namespace vcpkg::Dependencies
 {
+    std::string to_output_string(RequestType request_type, const CStringView s)
+    {
+        switch (request_type)
+        {
+        case RequestType::AUTO_SELECTED:
+            return Strings::format("  * %s", s);
+        case RequestType::USER_REQUESTED:
+            return Strings::format("    %s", s);
+        default:
+            Checks::unreachable(VCPKG_LINE_INFO);
+        }
+    }
+
     InstallPlanAction::InstallPlanAction() : plan_type(InstallPlanType::UNKNOWN), binary_pgh(nullopt), source_pgh(nullopt)
     {
     }

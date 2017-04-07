@@ -14,6 +14,8 @@ namespace vcpkg::Dependencies
         AUTO_SELECTED
     };
 
+    std::string to_output_string(RequestType request_type, const CStringView s);
+
     enum class InstallPlanType
     {
         UNKNOWN,
