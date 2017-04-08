@@ -23,10 +23,11 @@ namespace vcpkg::Commands::Install
         const size_t prefix_length = package_prefix_path.native().size();
 
         const Triplet& target_triplet = bpgh.spec.target_triplet();
-        const std::string& target_triplet_as_string = target_triplet.canonical_name();
+        const std::string& triplet_subfolder = target_triplet.canonical_name();
+        const fs::path triplet_subfolder_path = paths.installed / triplet_subfolder;
         std::error_code ec;
-        fs::create_directory(paths.installed / target_triplet_as_string, ec);
-        output.push_back(Strings::format(R"(%s/)", target_triplet_as_string));
+        fs::create_directory(triplet_subfolder_path, ec);
+        output.push_back(Strings::format(R"(%s/)", triplet_subfolder));
 
         for (auto it = fs::recursive_directory_iterator(package_prefix_path); it != fs::recursive_directory_iterator(); ++it)
         {
@@ -38,7 +39,7 @@ namespace vcpkg::Commands::Install
             }
 
             const std::string suffix = it->path().generic_u8string().substr(prefix_length + 1);
-            const fs::path target = paths.installed / target_triplet_as_string / suffix;
+            const fs::path target = triplet_subfolder_path / suffix;
 
             auto status = it->status(ec);
             if (ec)
@@ -56,7 +57,7 @@ namespace vcpkg::Commands::Install
                 }
 
                 // Trailing backslash for directories
-                output.push_back(Strings::format(R"(%s/%s/)", target_triplet_as_string, suffix));
+                output.push_back(Strings::format(R"(%s/%s/)", triplet_subfolder, suffix));
                 continue;
             }
 
@@ -71,7 +72,7 @@ namespace vcpkg::Commands::Install
                 {
                     System::println(System::Color::error, "failed: %s: %s", target.u8string(), ec.message());
                 }
-                output.push_back(Strings::format(R"(%s/%s)", target_triplet_as_string, suffix));
+                output.push_back(Strings::format(R"(%s/%s)", triplet_subfolder, suffix));
                 continue;
             }
 

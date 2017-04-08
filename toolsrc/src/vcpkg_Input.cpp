@@ -25,8 +25,8 @@ namespace vcpkg::Input
     {
         if (!paths.is_valid_triplet(t))
         {
-            System::println(System::Color::error, "Error: invalid triplet: %s", t.canonical_name());
-            Metrics::track_property("error", "invalid triplet: " + t.canonical_name());
+            System::println(System::Color::error, "Error: invalid triplet: %s", t);
+            Metrics::track_property("error", "invalid triplet: " + t.to_string());
             Commands::Help::help_topic_valid_triplet(paths);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
