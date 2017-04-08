@@ -8,12 +8,13 @@ namespace vcpkg
         VersionT();
         VersionT(const std::string& value);
 
+        std::string to_string() const;
+
         std::string value;
     };
 
     bool operator ==(const VersionT& left, const VersionT& right);
     bool operator !=(const VersionT& left, const VersionT& right);
-    std::string to_printf_arg(const VersionT& version);
 
     struct VersionDiff
     {
