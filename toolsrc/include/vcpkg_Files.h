@@ -6,11 +6,17 @@
 
 namespace vcpkg::Files
 {
+    __interface Filesystem
+    {
+        virtual Expected<std::string> read_contents(const fs::path& file_path) noexcept = 0;
+    };
+
+    Filesystem& get_real_filesystem();
+
     static const char* FILESYSTEM_INVALID_CHARACTERS = R"(\/:*?"<>|)";
 
     bool has_invalid_chars_for_filesystem(const std::string& s);
 
-    Expected<std::string> read_contents(const fs::path& file_path) noexcept;
 
     Expected<std::vector<std::string>> read_all_lines(const fs::path& file_path);
 

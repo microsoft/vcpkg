@@ -14,7 +14,7 @@ namespace vcpkg::Commands::Update
 
     std::vector<OutdatedPackage> find_outdated_packages(const VcpkgPaths& paths, const StatusParagraphs& status_db)
     {
-        const std::vector<SourceParagraph> source_paragraphs = Paragraphs::load_all_ports(paths.ports);
+        const std::vector<SourceParagraph> source_paragraphs = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
         const std::map<std::string, VersionT> src_names_to_versions = Paragraphs::extract_port_names_and_versions(source_paragraphs);
         const std::vector<StatusParagraph*> installed_packages = get_installed_ports(status_db);
 
@@ -64,7 +64,7 @@ namespace vcpkg::Commands::Update
                 "    vcpkg install <pkgs>...");
         }
 
-        auto version_file = Files::read_contents(paths.root / "toolsrc" / "VERSION.txt");
+        auto version_file = paths.get_filesystem().read_contents(paths.root / "toolsrc" / "VERSION.txt");
         if (auto version_contents = version_file.get())
         {
             int maj1, min1, rev1;

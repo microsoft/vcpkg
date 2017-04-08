@@ -12,7 +12,7 @@ namespace vcpkg::Commands::DependInfo
         args.check_exact_arg_count(0, example);
         args.check_and_get_optional_command_arguments({});
 
-        const std::vector<SourceParagraph> source_paragraphs = Paragraphs::load_all_ports(paths.ports);
+        const std::vector<SourceParagraph> source_paragraphs = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
 
         for (const SourceParagraph& source_paragraph : source_paragraphs)
         {

@@ -166,7 +166,7 @@ namespace vcpkg::Commands::Integrate
         fs::create_directory(tmp_dir);
 
         bool should_install_system = true;
-        const Expected<std::string> system_wide_file_contents = Files::read_contents(system_wide_targets_file);
+        const Expected<std::string> system_wide_file_contents = paths.get_filesystem().read_contents(system_wide_targets_file);
         if (auto contents_data = system_wide_file_contents.get())
         {
             std::regex re(R"###(<!-- version (\d+) -->)###");

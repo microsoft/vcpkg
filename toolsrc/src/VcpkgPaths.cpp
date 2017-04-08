@@ -6,6 +6,7 @@
 #include "PackageSpec.h"
 #include "vcpkg_Files.h"
 #include "vcpkg_Util.h"
+#include "..\include\VcpkgPaths.h"
 
 namespace vcpkg
 {
@@ -334,5 +335,9 @@ namespace vcpkg
     const Toolset& VcpkgPaths::get_toolset() const
     {
         return this->toolset.get_lazy([this]() { return find_toolset_instance(*this); });
+    }
+    Files::Filesystem & VcpkgPaths::get_filesystem() const
+    {
+        return Files::get_real_filesystem();
     }
 }

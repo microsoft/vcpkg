@@ -111,7 +111,7 @@ static void loadConfig()
 
     try
     {
-        auto maybe_pghs = Paragraphs::get_paragraphs(localappdata / "vcpkg" / "config");
+        auto maybe_pghs = Paragraphs::get_paragraphs(Files::get_real_filesystem(), localappdata / "vcpkg" / "config");
         if (auto p_pghs = maybe_pghs.get())
         {
             const auto& pghs = *p_pghs;

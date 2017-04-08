@@ -6,34 +6,43 @@ namespace vcpkg::Files
 {
     static const std::regex FILESYSTEM_INVALID_CHARACTERS_REGEX = std::regex(R"([\/:*?"<>|])");
 
+    struct RealFilesystem : Filesystem
+    {
+        Expected<std::string> read_contents(const fs::path& file_path) noexcept override
+        {
+            std::fstream file_stream(file_path, std::ios_base::in | std::ios_base::binary);
+            if (file_stream.fail())
+            {
+                return std::errc::no_such_file_or_directory;
+            }
+
+            file_stream.seekg(0, file_stream.end);
+            auto length = file_stream.tellg();
+            file_stream.seekg(0, file_stream.beg);
+
+            if (length > SIZE_MAX)
+            {
+                return std::errc::file_too_large;
+            }
+
+            std::string output;
+            output.resize(static_cast<size_t>(length));
+            file_stream.read(&output[0], length);
+            file_stream.close();
+
+            return std::move(output);
+        }
+    };
+
+    Filesystem & get_real_filesystem()
+    {
+        static RealFilesystem real_fs;
+        return real_fs;
+    }
+
     bool has_invalid_chars_for_filesystem(const std::string& s)
     {
         return std::regex_search(s, FILESYSTEM_INVALID_CHARACTERS_REGEX);
-    }
-
-    Expected<std::string> read_contents(const fs::path& file_path) noexcept
-    {
-        std::fstream file_stream(file_path, std::ios_base::in | std::ios_base::binary);
-        if (file_stream.fail())
-        {
-            return std::errc::no_such_file_or_directory;
-        }
-
-        file_stream.seekg(0, file_stream.end);
-        auto length = file_stream.tellg();
-        file_stream.seekg(0, file_stream.beg);
-
-        if (length > SIZE_MAX)
-        {
-            return std::errc::file_too_large;
-        }
-
-        std::string output;
-        output.resize(static_cast<size_t>(length));
-        file_stream.read(&output[0], length);
-        file_stream.close();
-
-        return std::move(output);
     }
 
     Expected<std::vector<std::string>> read_all_lines(const fs::path& file_path)

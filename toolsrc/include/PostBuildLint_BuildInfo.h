@@ -1,6 +1,7 @@
 #pragma once
 
 #include "filesystem_fs.h"
+#include "vcpkg_Files.h"
 #include "PostBuildLint_BuildPolicies.h"
 #include "OptBool.h"
 #include "PostBuildLint_LinkageType.h"
@@ -17,5 +18,5 @@ namespace vcpkg::PostBuildLint
         std::map<BuildPolicies::Type, OptBoolT> policies;
     };
 
-    BuildInfo read_build_info(const fs::path& filepath);
+    BuildInfo read_build_info(Files::Filesystem& fs, const fs::path& filepath);
 }

@@ -624,7 +624,7 @@ namespace vcpkg::PostBuildLint
         // for dumpbin
         const Toolset& toolset = paths.get_toolset();
 
-        BuildInfo build_info = read_build_info(paths.build_info_file_path(spec));
+        BuildInfo build_info = read_build_info(paths.get_filesystem(), paths.build_info_file_path(spec));
         const fs::path package_dir = paths.package_dir(spec);
 
         size_t error_count = 0;

@@ -9,7 +9,7 @@ namespace vcpkg
 {
     bool g_debugging = false;
 
-    static StatusParagraphs load_current_database(const fs::path& vcpkg_dir_status_file, const fs::path& vcpkg_dir_status_file_old)
+    static StatusParagraphs load_current_database(Files::Filesystem& fs, const fs::path& vcpkg_dir_status_file, const fs::path& vcpkg_dir_status_file_old)
     {
         if (!fs::exists(vcpkg_dir_status_file))
         {
@@ -22,7 +22,7 @@ namespace vcpkg
             fs::rename(vcpkg_dir_status_file_old, vcpkg_dir_status_file);
         }
 
-        auto pghs = Paragraphs::get_paragraphs(vcpkg_dir_status_file).value_or_exit(VCPKG_LINE_INFO);
+        auto pghs = Paragraphs::get_paragraphs(fs, vcpkg_dir_status_file).value_or_exit(VCPKG_LINE_INFO);
 
         std::vector<std::unique_ptr<StatusParagraph>> status_pghs;
         for (auto&& p : pghs)
@@ -47,7 +47,7 @@ namespace vcpkg
         const fs::path status_file_old = status_file.parent_path() / "status-old";
         const fs::path status_file_new = status_file.parent_path() / "status-new";
 
-        StatusParagraphs current_status_db = load_current_database(status_file, status_file_old);
+        StatusParagraphs current_status_db = load_current_database(paths.get_filesystem(), status_file, status_file_old);
 
         auto b = fs::directory_iterator(updates_dir);
         auto e = fs::directory_iterator();
@@ -64,7 +64,7 @@ namespace vcpkg
             if (b->path().filename() == "incomplete")
                 continue;
 
-            auto pghs = Paragraphs::get_paragraphs(b->path()).value_or_exit(VCPKG_LINE_INFO);
+            auto pghs = Paragraphs::get_paragraphs(paths.get_filesystem(), b->path()).value_or_exit(VCPKG_LINE_INFO);
             for (auto&& p : pghs)
             {
                 current_status_db.insert(std::make_unique<StatusParagraph>(p));

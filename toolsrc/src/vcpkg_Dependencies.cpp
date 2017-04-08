@@ -100,7 +100,7 @@ namespace vcpkg::Dependencies
                 continue;
             }
 
-            Expected<SourceParagraph> maybe_spgh = Paragraphs::try_load_port(paths.port_dir(spec));
+            Expected<SourceParagraph> maybe_spgh = Paragraphs::try_load_port(paths.get_filesystem(), paths.port_dir(spec));
             if (auto spgh = maybe_spgh.get())
             {
                 process_dependencies(filter_dependencies(spgh->depends, spec.target_triplet()));
