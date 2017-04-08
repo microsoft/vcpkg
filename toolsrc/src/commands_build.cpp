@@ -117,7 +117,7 @@ namespace vcpkg::Commands::Build
 
     std::string create_error_message(const BuildResult build_result, const PackageSpec& spec)
     {
-        return Strings::format("Error: Building package %s failed with: %s", spec.to_string(), Build::to_string(build_result));
+        return Strings::format("Error: Building package %s failed with: %s", spec, Build::to_string(build_result));
     }
 
     std::string create_user_troubleshooting_message(const PackageSpec& spec)
@@ -128,7 +128,7 @@ namespace vcpkg::Commands::Build
                                "  Vcpkg version: %s\n"
                                "\n"
                                "Additionally, attach any relevant sections from the log files above."
-                               , spec.to_string(), Version::version());
+                               , spec, Version::version());
     }
 
     void perform_and_exit(const PackageSpec& spec, const fs::path& port_dir, const std::unordered_set<std::string>& options, const VcpkgPaths& paths)
@@ -162,7 +162,7 @@ namespace vcpkg::Commands::Build
             System::println("");
             for (const PackageSpecWithInstallPlan& p : unmet_dependencies)
             {
-                System::println("    %s", p.spec.to_string());
+                System::println("    %s", p.spec);
             }
             System::println("");
             Checks::exit_fail(VCPKG_LINE_INFO);

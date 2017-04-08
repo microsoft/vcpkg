@@ -107,7 +107,7 @@ namespace vcpkg::Commands::CI
 
         for (size_t i = 0; i < results.size(); i++)
         {
-            System::println("%s: %s: %dms", install_plan[i].spec.to_string(), Build::to_string(results[i]), timing[i]);
+            System::println("%s: %s: %dms", install_plan[i].spec, Build::to_string(results[i]), timing[i]);
         }
 
         std::map<BuildResult, int> summary;
