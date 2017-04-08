@@ -26,8 +26,6 @@ namespace vcpkg
     bool operator==(const Triplet& left, const Triplet& right);
 
     bool operator!=(const Triplet& left, const Triplet& right);
-
-    std::ostream& operator<<(std::ostream& os, const Triplet& spec);
 }
 
 namespace std

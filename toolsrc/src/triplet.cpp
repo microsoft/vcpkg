@@ -21,11 +21,6 @@ namespace vcpkg
         return !(left == right);
     }
 
-    std::ostream& operator<<(std::ostream& os, const Triplet& t)
-    {
-        return os << t.to_string();
-    }
-
     Triplet Triplet::from_canonical_name(const std::string& triplet_as_string)
     {
         const std::string s(Strings::ascii_to_lowercase(triplet_as_string));

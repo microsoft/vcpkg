@@ -85,7 +85,7 @@ namespace vcpkg
 
             os << "\n";
         }
-        os << "Architecture: " << p.spec.target_triplet() << "\n";
+        os << "Architecture: " << p.spec.target_triplet().to_string() << "\n";
         os << "Multi-Arch: same\n";
         if (!p.maintainer.empty())
             os << "Maintainer: " << p.maintainer << "\n";
