@@ -8,7 +8,7 @@ namespace vcpkg::Files
 
     struct RealFilesystem : Filesystem
     {
-        Expected<std::string> read_contents(const fs::path& file_path) noexcept override
+        virtual Expected<std::string> read_contents(const fs::path& file_path) const override
         {
             std::fstream file_stream(file_path, std::ios_base::in | std::ios_base::binary);
             if (file_stream.fail())
@@ -32,6 +32,110 @@ namespace vcpkg::Files
 
             return std::move(output);
         }
+        virtual Expected<std::vector<std::string>> read_all_lines(const fs::path& file_path) const override
+        {
+            std::fstream file_stream(file_path, std::ios_base::in | std::ios_base::binary);
+            if (file_stream.fail())
+            {
+                return std::errc::no_such_file_or_directory;
+            }
+
+            std::vector<std::string> output;
+            std::string line;
+            while (std::getline(file_stream, line))
+            {
+                output.push_back(line);
+            }
+            file_stream.close();
+
+            return std::move(output);
+        }
+        virtual fs::path find_file_recursively_up(const fs::path & starting_dir, const std::string & filename) const override
+        {
+            fs::path current_dir = starting_dir;
+            for (; !current_dir.empty(); current_dir = current_dir.parent_path())
+            {
+                const fs::path candidate = current_dir / filename;
+                if (fs::exists(candidate))
+                {
+                    break;
+                }
+            }
+
+            return current_dir;
+        }
+
+        virtual std::vector<fs::path> recursive_find_all_files_in_dir(const fs::path & dir) const override
+        {
+            std::vector<fs::path> ret;
+
+            fs::recursive_directory_iterator b(dir), e{};
+            for (; b != e; ++b)
+            {
+                ret.push_back(b->path());
+            }
+
+            return ret;
+        }
+        virtual std::vector<fs::path> non_recursive_find_all_files_in_dir(const fs::path & dir) const override
+        {
+            std::vector<fs::path> ret;
+
+            fs::directory_iterator b(dir), e{};
+            for (; b != e; ++b)
+            {
+                ret.push_back(b->path());
+            }
+
+            return ret;
+        }
+
+        virtual void write_all_lines(const fs::path & file_path, const std::vector<std::string>& lines) override
+        {
+            std::fstream output(file_path, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
+            for (const std::string& line : lines)
+            {
+                output << line << "\n";
+            }
+            output.close();
+        }
+
+        virtual void rename(const fs::path & oldpath, const fs::path & newpath) override
+        {
+            fs::rename(oldpath, newpath);
+        }
+        virtual void remove(const fs::path & path) override
+        {
+            fs::remove(path);
+        }
+        virtual bool exists(const fs::path & path) const override
+        {
+            return fs::exists(path);
+        }
+        virtual bool is_directory(const fs::path & path) const override
+        {
+            return fs::is_directory(path);
+        }
+        virtual bool is_regular_file(const fs::path & path) const override
+        {
+            return fs::is_regular_file(path);
+        }
+        virtual bool is_empty(const fs::path & path) const override
+        {
+            return fs::is_empty(path);
+        }
+        virtual bool create_directory(const fs::path & path, std::error_code & ec) override
+        {
+            return fs::create_directory(path, ec);
+        }
+        virtual void copy(const fs::path & oldpath, const fs::path & newpath, fs::copy_options opts) override
+        {
+            fs::copy(oldpath, newpath, opts);
+        }
+        virtual void copy_file(const fs::path & oldpath, const fs::path & newpath, fs::copy_options opts, std::error_code & ec) override
+        {
+            fs::copy_file(oldpath, newpath, opts, ec);
+        }
     };
 
     Filesystem & get_real_filesystem()
@@ -43,95 +147,6 @@ namespace vcpkg::Files
     bool has_invalid_chars_for_filesystem(const std::string& s)
     {
         return std::regex_search(s, FILESYSTEM_INVALID_CHARACTERS_REGEX);
-    }
-
-    Expected<std::vector<std::string>> read_all_lines(const fs::path& file_path)
-    {
-        std::fstream file_stream(file_path, std::ios_base::in | std::ios_base::binary);
-        if (file_stream.fail())
-        {
-            return std::errc::no_such_file_or_directory;
-        }
-
-        std::vector<std::string> output;
-        std::string line;
-        while (std::getline(file_stream, line))
-        {
-            output.push_back(line);
-        }
-        file_stream.close();
-
-        return std::move(output);
-    }
-
-    void write_all_lines(const fs::path& file_path, const std::vector<std::string>& lines)
-    {
-        std::fstream output(file_path, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
-        for (const std::string& line : lines)
-        {
-            output << line << "\n";
-        }
-        output.close();
-    }
-
-    fs::path find_file_recursively_up(const fs::path& starting_dir, const std::string& filename)
-    {
-        fs::path current_dir = starting_dir;
-        for (; !current_dir.empty(); current_dir = current_dir.parent_path())
-        {
-            const fs::path candidate = current_dir / filename;
-            if (fs::exists(candidate))
-            {
-                break;
-            }
-        }
-
-        return current_dir;
-    }
-
-    void recursive_find_files_with_extension_in_dir(const fs::path& dir, const std::string& extension, std::vector<fs::path>* output)
-    {
-        recursive_find_matching_paths_in_dir(dir, [&extension](const fs::path& current)
-                                             {
-                                                 return !fs::is_directory(current) && current.extension() == extension;
-                                             }, output);
-    }
-
-    std::vector<fs::path> recursive_find_files_with_extension_in_dir(const fs::path& dir, const std::string& extension)
-    {
-        std::vector<fs::path> v;
-        recursive_find_files_with_extension_in_dir(dir, extension, &v);
-        return v;
-    }
-
-    void recursive_find_all_files_in_dir(const fs::path& dir, std::vector<fs::path>* output)
-    {
-        recursive_find_matching_paths_in_dir(dir, [](const fs::path& current)
-                                             {
-                                                 return !fs::is_directory(current);
-                                             }, output);
-    }
-
-    std::vector<fs::path> recursive_find_all_files_in_dir(const fs::path& dir)
-    {
-        std::vector<fs::path> v;
-        recursive_find_all_files_in_dir(dir, &v);
-        return v;
-    }
-
-    void non_recursive_find_all_files_in_dir(const fs::path& dir, std::vector<fs::path>* output)
-    {
-        non_recursive_find_matching_paths_in_dir(dir, [](const fs::path& current)
-                                                 {
-                                                     return !fs::is_directory(current);
-                                                 }, output);
-    }
-
-    std::vector<fs::path> non_recursive_find_all_files_in_dir(const fs::path& dir)
-    {
-        std::vector<fs::path> v;
-        non_recursive_find_all_files_in_dir(dir, &v);
-        return v;
     }
 
     void print_paths(const std::vector<fs::path>& paths)

@@ -265,6 +265,8 @@ namespace vcpkg
 
     static Toolset find_toolset_instance(const VcpkgPaths& paths)
     {
+        const auto& fs = paths.get_filesystem();
+
         const std::vector<std::string> vs2017_installation_instances = get_VS2017_installation_instances(paths);
         // Note: this will contain a mix of vcvarsall.bat locations and dumpbin.exe locations.
         std::vector<fs::path> paths_examined;
@@ -282,11 +284,10 @@ namespace vcpkg
 
             // Locate the "best" MSVC toolchain version
             const fs::path msvc_path = vc_dir / "Tools" / "MSVC";
-            std::vector<fs::path> msvc_subdirectories;
-            Files::non_recursive_find_matching_paths_in_dir(msvc_path, [](const fs::path& current)
-                                                            {
-                                                                return fs::is_directory(current);
-                                                            }, &msvc_subdirectories);
+            std::vector<fs::path> msvc_subdirectories = paths.get_filesystem().non_recursive_find_all_files_in_dir(msvc_path);
+            Util::unstable_keep_if(msvc_subdirectories, [&fs](const fs::path& path) {
+                return fs.is_directory(path);
+            });
 
             // Sort them so that latest comes first
             std::sort(msvc_subdirectories.begin(), msvc_subdirectories.end(), [](const fs::path& left, const fs::path& right)
@@ -298,7 +299,7 @@ namespace vcpkg
             {
                 const fs::path dumpbin_path = subdir / "bin" / "HostX86" / "x86" / "dumpbin.exe";
                 paths_examined.push_back(dumpbin_path);
-                if (fs::exists(dumpbin_path))
+                if (fs.exists(dumpbin_path))
                 {
                     return { dumpbin_path, vcvarsall_bat , L"v141" };
                 }
@@ -312,11 +313,11 @@ namespace vcpkg
             const fs::path vs2015_vcvarsall_bat = *v / "VC" / "vcvarsall.bat";
 
             paths_examined.push_back(vs2015_vcvarsall_bat);
-            if (fs::exists(vs2015_vcvarsall_bat))
+            if (fs.exists(vs2015_vcvarsall_bat))
             {
                 const fs::path vs2015_dumpbin_exe = *v / "VC" / "bin" / "dumpbin.exe";
                 paths_examined.push_back(vs2015_dumpbin_exe);
-                if (fs::exists(vs2015_dumpbin_exe))
+                if (fs.exists(vs2015_dumpbin_exe))
                 {
                     return { vs2015_dumpbin_exe, vs2015_vcvarsall_bat, L"v140" };
                 }

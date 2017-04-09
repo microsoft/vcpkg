@@ -52,7 +52,7 @@ static void inner(const VcpkgCmdArguments& args)
         }
         else
         {
-            vcpkg_root_dir = Files::find_file_recursively_up(fs::absolute(System::get_exe_path_of_current_process()), ".vcpkg-root");
+            vcpkg_root_dir = Files::get_real_filesystem().find_file_recursively_up(fs::absolute(System::get_exe_path_of_current_process()), ".vcpkg-root");
         }
     }
 

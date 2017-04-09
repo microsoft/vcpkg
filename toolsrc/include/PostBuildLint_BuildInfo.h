@@ -18,5 +18,5 @@ namespace vcpkg::PostBuildLint
         std::map<BuildPolicies::Type, OptBoolT> policies;
     };
 
-    BuildInfo read_build_info(Files::Filesystem& fs, const fs::path& filepath);
+    BuildInfo read_build_info(const Files::Filesystem& fs, const fs::path& filepath);
 }

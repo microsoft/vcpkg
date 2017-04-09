@@ -37,7 +37,7 @@ namespace vcpkg::PostBuildLint
         return build_info;
     }
 
-    BuildInfo read_build_info(Files::Filesystem& fs, const fs::path& filepath)
+    BuildInfo read_build_info(const Files::Filesystem& fs, const fs::path& filepath)
     {
         const Expected<std::unordered_map<std::string, std::string>> pghs = Paragraphs::get_single_paragraph(fs, filepath);
         Checks::check_exit(VCPKG_LINE_INFO, pghs.get() != nullptr, "Invalid BUILD_INFO file for package");

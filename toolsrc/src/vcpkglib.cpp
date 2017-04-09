@@ -3,6 +3,7 @@
 #include "vcpkg_Files.h"
 #include "Paragraphs.h"
 #include "metrics.h"
+#include "vcpkg_Util.h"
 #include "vcpkg_Strings.h"
 
 namespace vcpkg
@@ -35,36 +36,36 @@ namespace vcpkg
 
     StatusParagraphs database_load_check(const VcpkgPaths& paths)
     {
+        auto& fs = paths.get_filesystem();
+
         auto updates_dir = paths.vcpkg_dir_updates;
 
         std::error_code ec;
-        fs::create_directory(paths.installed, ec);
-        fs::create_directory(paths.vcpkg_dir, ec);
-        fs::create_directory(paths.vcpkg_dir_info, ec);
-        fs::create_directory(updates_dir, ec);
+        fs.create_directory(paths.installed, ec);
+        fs.create_directory(paths.vcpkg_dir, ec);
+        fs.create_directory(paths.vcpkg_dir_info, ec);
+        fs.create_directory(updates_dir, ec);
 
         const fs::path& status_file = paths.vcpkg_dir_status_file;
         const fs::path status_file_old = status_file.parent_path() / "status-old";
         const fs::path status_file_new = status_file.parent_path() / "status-new";
 
-        StatusParagraphs current_status_db = load_current_database(paths.get_filesystem(), status_file, status_file_old);
+        StatusParagraphs current_status_db = load_current_database(fs, status_file, status_file_old);
 
-        auto b = fs::directory_iterator(updates_dir);
-        auto e = fs::directory_iterator();
-        if (b == e)
+        auto update_files = fs.non_recursive_find_all_files_in_dir(updates_dir);
+        if (update_files.empty())
         {
             // updates directory is empty, control file is up-to-date.
             return current_status_db;
         }
-
-        for (; b != e; ++b)
+        for (auto&& file : update_files)
         {
-            if (!fs::is_regular_file(b->status()))
+            if (!fs.is_regular_file(file))
                 continue;
-            if (b->path().filename() == "incomplete")
+            if (file.filename() == "incomplete")
                 continue;
 
-            auto pghs = Paragraphs::get_paragraphs(paths.get_filesystem(), b->path()).value_or_exit(VCPKG_LINE_INFO);
+            auto pghs = Paragraphs::get_paragraphs(fs, file).value_or_exit(VCPKG_LINE_INFO);
             for (auto&& p : pghs)
             {
                 current_status_db.insert(std::make_unique<StatusParagraph>(p));
@@ -73,19 +74,14 @@ namespace vcpkg
 
         std::fstream(status_file_new, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc) << current_status_db;
 
-        if (fs::exists(status_file_old))
-            fs::remove(status_file_old);
-        if (fs::exists(status_file))
-            fs::rename(status_file, status_file_old);
-        fs::rename(status_file_new, status_file);
-        fs::remove(status_file_old);
+        fs.rename(status_file_new, status_file);
 
-        b = fs::directory_iterator(updates_dir);
-        for (; b != e; ++b)
+        for (auto&& file : update_files)
         {
-            if (!fs::is_regular_file(b->status()))
+            if (!fs.is_regular_file(file))
                 continue;
-            fs::remove(b->path());
+
+            fs.remove(file);
         }
 
         return current_status_db;
@@ -97,13 +93,13 @@ namespace vcpkg
         auto my_update_id = update_id++;
         auto tmp_update_filename = paths.vcpkg_dir_updates / "incomplete";
         auto update_filename = paths.vcpkg_dir_updates / std::to_string(my_update_id);
-        std::fstream fs(tmp_update_filename, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
-        fs << p;
-        fs.close();
-        fs::rename(tmp_update_filename, update_filename);
+        std::fstream file(tmp_update_filename, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
+        file << p;
+        file.close();
+        paths.get_filesystem().rename(tmp_update_filename, update_filename);
     }
 
-    static void upgrade_to_slash_terminated_sorted_format(std::vector<std::string>* lines, const fs::path& listfile_path)
+    static void upgrade_to_slash_terminated_sorted_format(Files::Filesystem& fs, std::vector<std::string>* lines, const fs::path& listfile_path)
     {
         static bool was_tracked = false;
 
@@ -167,8 +163,8 @@ namespace vcpkg
 
         // Replace the listfile on disk
         const fs::path updated_listfile_path = listfile_path.generic_string() + "_updated";
-        Files::write_all_lines(updated_listfile_path, *lines);
-        fs::rename(updated_listfile_path, listfile_path);
+        fs.write_all_lines(updated_listfile_path, *lines);
+        fs.rename(updated_listfile_path, listfile_path);
     }
 
     std::vector<StatusParagraph*> get_installed_ports(const StatusParagraphs& status_db)
@@ -186,6 +182,8 @@ namespace vcpkg
 
     std::vector<StatusParagraphAndAssociatedFiles> get_installed_files(const VcpkgPaths& paths, const StatusParagraphs& status_db)
     {
+        auto& fs = paths.get_filesystem();
+
         std::vector<StatusParagraphAndAssociatedFiles> installed_files;
 
         for (const std::unique_ptr<StatusParagraph>& pgh : status_db)
@@ -196,9 +194,9 @@ namespace vcpkg
             }
 
             const fs::path listfile_path = paths.listfile_path(pgh->package);
-            std::vector<std::string> installed_files_of_current_pgh = Files::read_all_lines(listfile_path).value_or_exit(VCPKG_LINE_INFO);
+            std::vector<std::string> installed_files_of_current_pgh = fs.read_all_lines(listfile_path).value_or_exit(VCPKG_LINE_INFO);
             Strings::trim_all_and_remove_whitespace_strings(&installed_files_of_current_pgh);
-            upgrade_to_slash_terminated_sorted_format(&installed_files_of_current_pgh, listfile_path);
+            upgrade_to_slash_terminated_sorted_format(fs, &installed_files_of_current_pgh, listfile_path);
 
             // Remove the directories
             installed_files_of_current_pgh.erase(

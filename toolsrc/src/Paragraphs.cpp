@@ -172,7 +172,7 @@ namespace vcpkg::Paragraphs
         }
     };
 
-    Expected<std::unordered_map<std::string, std::string>> get_single_paragraph(Files::Filesystem& fs, const fs::path& control_path)
+    Expected<std::unordered_map<std::string, std::string>> get_single_paragraph(const Files::Filesystem& fs, const fs::path& control_path)
     {
         const Expected<std::string> contents = fs.read_contents(control_path);
         if (auto spgh = contents.get())
@@ -183,7 +183,7 @@ namespace vcpkg::Paragraphs
         return contents.error_code();
     }
 
-    Expected<std::vector<std::unordered_map<std::string, std::string>>> get_paragraphs(Files::Filesystem& fs, const fs::path& control_path)
+    Expected<std::vector<std::unordered_map<std::string, std::string>>> get_paragraphs(const Files::Filesystem& fs, const fs::path& control_path)
     {
         const Expected<std::string> contents = fs.read_contents(control_path);
         if (auto spgh = contents.get())
@@ -211,7 +211,7 @@ namespace vcpkg::Paragraphs
         return Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
     }
 
-    Expected<SourceParagraph> try_load_port(Files::Filesystem& fs, const fs::path& path)
+    Expected<SourceParagraph> try_load_port(const Files::Filesystem& fs, const fs::path& path)
     {
         Expected<std::unordered_map<std::string, std::string>> pghs = get_single_paragraph(fs, path / "CONTROL");
         if (auto p = pghs.get())
@@ -234,7 +234,7 @@ namespace vcpkg::Paragraphs
         return pghs.error_code();
     }
 
-    std::vector<SourceParagraph> load_all_ports(Files::Filesystem& fs, const fs::path& ports_dir)
+    std::vector<SourceParagraph> load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir)
     {
         std::vector<SourceParagraph> output;
         for (auto it = fs::directory_iterator(ports_dir); it != fs::directory_iterator(); ++it)
