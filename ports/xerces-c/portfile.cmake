@@ -8,8 +8,12 @@
 
 include(vcpkg_common_functions)
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message(STATUS "Static linking not supported; building dynamic instead")
-    set(VCPKG_LIBRARY_LINKAGE )
+    message(STATUS "Static libraries not supported; building dynamic instead")
+    set(VCPKG_LIBRARY_LINKAGE "dynamic")
+endif()
+if (VCPKG_CRT_LINKAGE STREQUAL "static")
+    message(STATUS "Static linking against the CRT not supported; building dynamic instead")
+    set(VCPKG_CRT_LINKAGE "dynamic")
 endif()
 
 
