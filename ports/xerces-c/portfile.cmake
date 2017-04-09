@@ -47,6 +47,8 @@ file(COPY ${SOURCE_PATH}/Build/${OUTPUT_DIR}/VC14/Release/xerces-c_3_1.dll DESTI
 file(COPY ${SOURCE_PATH}/Build/${OUTPUT_DIR}/VC14/Release/xerces-c_3.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
 file(COPY ${SOURCE_PATH}/src/xercesc DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN *.hpp)
+# Certain headers under xercesc/util include .c files, so we need these copied over as well
+file(COPY ${SOURCE_PATH}/src/xercesc DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN *.c)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/xercesc/NLS)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/xercesc/util/MsgLoaders/ICU/resources)
