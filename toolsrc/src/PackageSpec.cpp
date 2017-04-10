@@ -45,7 +45,7 @@ namespace vcpkg
         return this->m_name;
     }
 
-    const Triplet& PackageSpec::target_triplet() const
+    const Triplet& PackageSpec::triplet() const
     {
         return this->m_target_triplet;
     }
@@ -57,11 +57,11 @@ namespace vcpkg
 
     std::string PackageSpec::to_string() const
     {
-        return Strings::format("%s:%s", this->name(), this->target_triplet());
+        return Strings::format("%s:%s", this->name(), this->triplet());
     }
 
     bool operator==(const PackageSpec& left, const PackageSpec& right)
     {
-        return left.name() == right.name() && left.target_triplet() == right.target_triplet();
+        return left.name() == right.name() && left.triplet() == right.triplet();
     }
 }

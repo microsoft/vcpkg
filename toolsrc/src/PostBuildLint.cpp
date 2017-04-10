@@ -658,7 +658,7 @@ namespace vcpkg::PostBuildLint
         libs.insert(libs.cend(), debug_libs.cbegin(), debug_libs.cend());
         libs.insert(libs.cend(), release_libs.cbegin(), release_libs.cend());
 
-        error_count += check_lib_architecture(spec.target_triplet().architecture(), libs);
+        error_count += check_lib_architecture(spec.triplet().architecture(), libs);
 
         switch (build_info.library_linkage)
         {
@@ -677,8 +677,8 @@ namespace vcpkg::PostBuildLint
                     dlls.insert(dlls.cend(), release_dlls.cbegin(), release_dlls.cend());
 
                     error_count += check_exports_of_dlls(dlls, toolset.dumpbin);
-                    error_count += check_uwp_bit_of_dlls(spec.target_triplet().system(), dlls, toolset.dumpbin);
-                    error_count += check_dll_architecture(spec.target_triplet().architecture(), dlls);
+                    error_count += check_uwp_bit_of_dlls(spec.triplet().system(), dlls, toolset.dumpbin);
+                    error_count += check_dll_architecture(spec.triplet().architecture(), dlls);
 
                     error_count += check_outdated_crt_linkage_of_dlls(dlls, toolset.dumpbin);
                     break;

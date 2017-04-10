@@ -22,7 +22,7 @@ namespace vcpkg::Commands::Install
         const fs::path package_prefix_path = paths.package_dir(bpgh.spec);
         const size_t prefix_length = package_prefix_path.native().size();
 
-        const Triplet& target_triplet = bpgh.spec.target_triplet();
+        const Triplet& target_triplet = bpgh.spec.triplet();
         const std::string& triplet_subfolder = target_triplet.canonical_name();
         const fs::path triplet_subfolder_path = paths.installed / triplet_subfolder;
         std::error_code ec;
@@ -103,7 +103,7 @@ namespace vcpkg::Commands::Install
         std::vector<std::string> output;
         for (const StatusParagraphAndAssociatedFiles& t : pgh_and_files)
         {
-            if (t.pgh.package.spec.target_triplet() != triplet)
+            if (t.pgh.package.spec.triplet() != triplet)
             {
                 continue;
             }
@@ -186,7 +186,7 @@ namespace vcpkg::Commands::Install
     void install_package(const VcpkgPaths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs* status_db)
     {
         const fs::path package_dir = paths.package_dir(binary_paragraph.spec);
-        const Triplet& triplet = binary_paragraph.spec.target_triplet();
+        const Triplet& triplet = binary_paragraph.spec.triplet();
         const std::vector<StatusParagraphAndAssociatedFiles> pgh_and_files = get_installed_files(paths, *status_db);
 
         const SortedVector<std::string> package_files = build_list_of_package_files(package_dir);
@@ -215,7 +215,7 @@ namespace vcpkg::Commands::Install
         spgh.state = InstallState::HALF_INSTALLED;
         for (auto&& dep : spgh.package.depends)
         {
-            if (status_db->find_installed(dep, spgh.package.spec.target_triplet()) == status_db->end())
+            if (status_db->find_installed(dep, spgh.package.spec.triplet()) == status_db->end())
             {
                 Checks::unreachable(VCPKG_LINE_INFO);
             }
@@ -243,7 +243,7 @@ namespace vcpkg::Commands::Install
                                     return Input::check_and_get_package_spec(arg, default_triplet, example);
                                 });
         for (auto&& spec : specs)
-            Input::check_triplet(spec.target_triplet(), paths);
+            Input::check_triplet(spec.triplet(), paths);
 
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_DRY_RUN });
         const bool dryRun = options.find(OPTION_DRY_RUN) != options.cend();

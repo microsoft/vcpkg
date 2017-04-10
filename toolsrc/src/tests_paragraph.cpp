@@ -111,7 +111,7 @@ namespace UnitTest1
             Assert::AreEqual("1.2.8", pgh.version.c_str());
             Assert::AreEqual("", pgh.maintainer.c_str());
             Assert::AreEqual("", pgh.description.c_str());
-            Assert::AreEqual("x86-windows", pgh.spec.target_triplet().canonical_name().c_str());
+            Assert::AreEqual("x86-windows", pgh.spec.triplet().canonical_name().c_str());
             Assert::AreEqual(size_t(0), pgh.depends.size());
         }
 
@@ -363,7 +363,7 @@ namespace UnitTest1
             vcpkg::Expected<vcpkg::PackageSpec> spec = vcpkg::PackageSpec::from_string("zlib", vcpkg::Triplet::X86_WINDOWS);
             Assert::AreEqual(vcpkg::PackageSpecParseResult::SUCCESS, vcpkg::to_package_spec_parse_result(spec.error_code()));
             Assert::AreEqual("zlib", spec.get()->name().c_str());
-            Assert::AreEqual(vcpkg::Triplet::X86_WINDOWS.canonical_name(), spec.get()->target_triplet().canonical_name());
+            Assert::AreEqual(vcpkg::Triplet::X86_WINDOWS.canonical_name(), spec.get()->triplet().canonical_name());
         }
 
         TEST_METHOD(package_spec_parse_with_arch)
@@ -371,7 +371,7 @@ namespace UnitTest1
             vcpkg::Expected<vcpkg::PackageSpec> spec = vcpkg::PackageSpec::from_string("zlib:x64-uwp", vcpkg::Triplet::X86_WINDOWS);
             Assert::AreEqual(vcpkg::PackageSpecParseResult::SUCCESS, vcpkg::to_package_spec_parse_result(spec.error_code()));
             Assert::AreEqual("zlib", spec.get()->name().c_str());
-            Assert::AreEqual(vcpkg::Triplet::X64_UWP.canonical_name(), spec.get()->target_triplet().canonical_name());
+            Assert::AreEqual(vcpkg::Triplet::X64_UWP.canonical_name(), spec.get()->triplet().canonical_name());
         }
 
         TEST_METHOD(package_spec_parse_with_multiple_colon)

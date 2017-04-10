@@ -16,14 +16,14 @@ namespace vcpkg
 
         const_iterator find(const PackageSpec& spec) const
         {
-            return find(spec.name(), spec.target_triplet());
+            return find(spec.name(), spec.triplet());
         }
         const_iterator find(const std::string& name, const Triplet& target_triplet) const;
         iterator find(const std::string& name, const Triplet& target_triplet);
 
         const_iterator find_installed(const PackageSpec& spec) const
         {
-            return find_installed(spec.name(), spec.target_triplet());
+            return find_installed(spec.name(), spec.triplet());
         }
         const_iterator find_installed(const std::string& name, const Triplet& target_triplet) const;
 

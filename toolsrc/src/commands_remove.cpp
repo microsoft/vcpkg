@@ -29,7 +29,7 @@ namespace vcpkg::Commands::Remove
 
     static void remove_package(const VcpkgPaths& paths, const PackageSpec& spec, StatusParagraphs* status_db)
     {
-        StatusParagraph& pkg = **status_db->find(spec.name(), spec.target_triplet());
+        StatusParagraph& pkg = **status_db->find(spec.name(), spec.triplet());
 
         pkg.want = Want::PURGE;
         pkg.state = InstallState::HALF_INSTALLED;
@@ -158,7 +158,7 @@ namespace vcpkg::Commands::Remove
             args.check_min_arg_count(1, example);
             specs = Util::fmap(args.command_arguments, [&](auto&& arg) { return Input::check_and_get_package_spec(arg, default_triplet, example); });
             for (auto&& spec : specs)
-                Input::check_triplet(spec.target_triplet(), paths);
+                Input::check_triplet(spec.triplet(), paths);
         }
 
         const bool alsoRemoveFolderFromPackages = options.find(OPTION_NO_PURGE) == options.end();

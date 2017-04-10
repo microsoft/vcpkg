@@ -65,7 +65,7 @@ namespace vcpkg
 
     std::string BinaryParagraph::fullstem() const
     {
-        return Strings::format("%s_%s_%s", this->spec.name(), this->version, this->spec.target_triplet());
+        return Strings::format("%s_%s_%s", this->spec.name(), this->version, this->spec.triplet());
     }
 
     std::ostream& operator<<(std::ostream& os, const BinaryParagraph& p)
@@ -85,7 +85,7 @@ namespace vcpkg
 
             os << "\n";
         }
-        os << "Architecture: " << p.spec.target_triplet().to_string() << "\n";
+        os << "Architecture: " << p.spec.triplet().to_string() << "\n";
         os << "Multi-Arch: same\n";
         if (!p.maintainer.empty())
             os << "Maintainer: " << p.maintainer << "\n";

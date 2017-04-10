@@ -40,7 +40,7 @@ namespace vcpkg::Commands::Build
     {
         Checks::check_exit(VCPKG_LINE_INFO, spec.name() == source_paragraph.name, "inconsistent arguments to build_package()");
 
-        const Triplet& target_triplet = spec.target_triplet();
+        const Triplet& target_triplet = spec.triplet();
         for (auto&& dep : filter_dependencies(source_paragraph.depends, target_triplet))
         {
             if (status_db.find_installed(dep, target_triplet) == status_db.end())
@@ -183,7 +183,7 @@ namespace vcpkg::Commands::Build
         static const std::string example = Commands::Help::create_example_string("build zlib:x64-windows");
         args.check_exact_arg_count(1, example); // Build only takes a single package and all dependencies must already be installed
         const PackageSpec spec = Input::check_and_get_package_spec(args.command_arguments.at(0), default_triplet, example);
-        Input::check_triplet(spec.target_triplet(), paths);
+        Input::check_triplet(spec.triplet(), paths);
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_CHECKS_ONLY });
         perform_and_exit(spec, paths.port_dir(spec), options, paths);
     }

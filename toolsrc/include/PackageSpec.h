@@ -13,7 +13,7 @@ namespace vcpkg
 
         const std::string& name() const;
 
-        const Triplet& target_triplet() const;
+        const Triplet& triplet() const;
 
         std::string dir() const;
 
@@ -36,7 +36,7 @@ namespace std
         {
             size_t hash = 17;
             hash = hash * 31 + std::hash<std::string>()(value.name());
-            hash = hash * 31 + std::hash<vcpkg::Triplet>()(value.target_triplet());
+            hash = hash * 31 + std::hash<vcpkg::Triplet>()(value.triplet());
             return hash;
         }
     };
