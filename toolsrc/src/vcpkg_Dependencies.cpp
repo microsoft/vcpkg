@@ -98,6 +98,38 @@ namespace vcpkg::Dependencies
         , plan_type(plan_type)
         , request_type(request_type) { }
 
+    bool ExportPlanAction::compare_by_name(const ExportPlanAction* left, const ExportPlanAction* right)
+    {
+        return left->spec.name() < right->spec.name();
+    }
+
+    ExportPlanAction::ExportPlanAction() : spec()
+                                         , any_paragraph()
+                                         , plan_type(ExportPlanType::UNKNOWN)
+                                         , request_type(RequestType::UNKNOWN) { }
+
+    ExportPlanAction::ExportPlanAction(const PackageSpec& spec, const AnyParagraph& any_paragraph, const RequestType& request_type) : ExportPlanAction()
+    {
+        this->spec = spec;
+        this->request_type = request_type;
+
+        if (auto p = any_paragraph.binary_paragraph.get())
+        {
+            this->plan_type = ExportPlanType::ALREADY_BUILT;
+            this->any_paragraph.binary_paragraph = *p;
+            return;
+        }
+
+        if (auto p = any_paragraph.source_paragraph.get())
+        {
+            this->plan_type = ExportPlanType::PORT_AVAILABLE_BUT_NOT_BUILT;
+            this->any_paragraph.source_paragraph = *p;
+            return;
+        }
+
+        this->plan_type = ExportPlanType::UNKNOWN;
+    }
+
     bool RemovePlanAction::compare_by_name(const RemovePlanAction* left, const RemovePlanAction* right)
     {
         return left->spec.name() < right->spec.name();
@@ -203,5 +235,43 @@ namespace vcpkg::Dependencies
         const std::vector<StatusParagraph*>& installed_ports = get_installed_ports(status_db);
         const std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
         return Graphs::topological_sort(specs, RemoveAdjacencyProvider{ status_db, installed_ports, specs_as_set });
+    }
+
+    std::vector<ExportPlanAction> create_export_plan(const VcpkgPaths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db)
+    {
+        struct ExportAdjacencyProvider final : Graphs::AdjacencyProvider<PackageSpec, ExportPlanAction>
+        {
+            const VcpkgPaths& paths;
+            const StatusParagraphs& status_db;
+            const std::unordered_set<PackageSpec>& specs_as_set;
+
+            ExportAdjacencyProvider(const VcpkgPaths& p, const StatusParagraphs& s, const std::unordered_set<PackageSpec>& specs_as_set) : paths(p)
+                                                                                                                                         , status_db(s)
+                                                                                                                                         , specs_as_set(specs_as_set) {}
+
+            std::vector<PackageSpec> adjacency_list(const ExportPlanAction& plan) const override
+            {
+                return plan.any_paragraph.dependencies(plan.spec.triplet());
+            }
+
+            ExportPlanAction load_vertex_data(const PackageSpec& spec) const override
+            {
+                const RequestType request_type = specs_as_set.find(spec) != specs_as_set.end() ? RequestType::USER_REQUESTED : RequestType::AUTO_SELECTED;
+
+                Expected<BinaryParagraph> maybe_bpgh = Paragraphs::try_load_cached_package(paths, spec);
+                if (auto bpgh = maybe_bpgh.get())
+                    return ExportPlanAction{ spec,{ nullopt, *bpgh, nullopt }, request_type };
+
+                Expected<SourceParagraph> maybe_spgh = Paragraphs::try_load_port(paths.get_filesystem(), paths.port_dir(spec));
+                if (auto spgh = maybe_spgh.get())
+                    return ExportPlanAction{ spec,{ nullopt, nullopt, *spgh }, request_type };
+
+                return ExportPlanAction{ spec ,{ nullopt, nullopt, nullopt }, request_type };
+            }
+        };
+
+        const std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
+        std::vector<ExportPlanAction> toposort = Graphs::topological_sort(specs, ExportAdjacencyProvider{ paths, status_db, specs_as_set });
+        return toposort;
     }
 }

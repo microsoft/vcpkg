@@ -183,6 +183,9 @@
     <ClCompile Include="..\src\commands_depends.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\commands_export.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\SourceParagraph.h">

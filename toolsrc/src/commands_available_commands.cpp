@@ -11,7 +11,8 @@ namespace vcpkg::Commands
             { "remove", &Remove::perform_and_exit },
             { "build", &Build::perform_and_exit },
             { "env", &Env::perform_and_exit },
-            { "build-external", &BuildExternal::perform_and_exit }
+            { "build-external", &BuildExternal::perform_and_exit },
+            { "export", &Export::perform_and_exit },
         };
         return t;
     }
@@ -31,7 +32,7 @@ namespace vcpkg::Commands
             { "create", &Create::perform_and_exit },
             { "import", &Import::perform_and_exit },
             { "cache", &Cache::perform_and_exit },
-            { "portsdiff", &PortsDiff::perform_and_exit }
+            { "portsdiff", &PortsDiff::perform_and_exit },
         };
         return t;
     }

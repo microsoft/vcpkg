@@ -187,6 +187,7 @@
     <ClCompile Include="..\src\commands_ci.cpp" />
     <ClCompile Include="..\src\commands_depends.cpp" />
     <ClCompile Include="..\src\commands_env.cpp" />
+    <ClCompile Include="..\src\commands_export.cpp" />
     <ClCompile Include="..\src\LineInfo.cpp" />
     <ClCompile Include="..\src\ParagraphParseResult.cpp" />
     <ClCompile Include="..\src\PostBuildLint_BuildInfo.cpp" />

@@ -73,7 +73,33 @@ namespace vcpkg::Dependencies
         RequestType request_type;
     };
 
+    enum class ExportPlanType
+    {
+        UNKNOWN,
+        PORT_AVAILABLE_BUT_NOT_BUILT,
+        ALREADY_BUILT
+    };
+
+    struct ExportPlanAction
+    {
+        static bool compare_by_name(const ExportPlanAction* left, const ExportPlanAction* right);
+
+        ExportPlanAction();
+        ExportPlanAction(const PackageSpec& spec, const AnyParagraph& any_paragraph, const RequestType& request_type);
+        ExportPlanAction(const ExportPlanAction&) = delete;
+        ExportPlanAction(ExportPlanAction&&) = default;
+        ExportPlanAction& operator=(const ExportPlanAction&) = delete;
+        ExportPlanAction& operator=(ExportPlanAction&&) = default;
+
+        PackageSpec spec;
+        AnyParagraph any_paragraph;
+        ExportPlanType plan_type;
+        RequestType request_type;
+    };
+
     std::vector<InstallPlanAction> create_install_plan(const VcpkgPaths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
 
     std::vector<RemovePlanAction> create_remove_plan(const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
+
+    std::vector<ExportPlanAction> create_export_plan(const VcpkgPaths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
 }
