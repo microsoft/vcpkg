@@ -29,7 +29,7 @@ namespace vcpkg::Commands
         std::string create_error_message(const BuildResult build_result, const PackageSpec& spec);
         std::string create_user_troubleshooting_message(const PackageSpec& spec);
 
-        std::wstring make_build_env_cmd(const Triplet& target_triplet, const Toolset& toolset);
+        std::wstring make_build_env_cmd(const Triplet& triplet, const Toolset& toolset);
 
         BuildResult build_package(const SourceParagraph& source_paragraph, const PackageSpec& spec, const VcpkgPaths& paths, const fs::path& port_dir, const StatusParagraphs& status_db);
         void perform_and_exit(const PackageSpec& spec, const fs::path& port_dir, const std::unordered_set<std::string>& options, const VcpkgPaths& paths);
