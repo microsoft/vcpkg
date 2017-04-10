@@ -14,13 +14,13 @@ namespace vcpkg::Commands::CI
     using Dependencies::InstallPlanType;
     using Build::BuildResult;
 
-    static std::vector<PackageSpec> load_all_package_specs(const fs::path& ports_directory, const Triplet& target_triplet)
+    static std::vector<PackageSpec> load_all_package_specs(const fs::path& ports_directory, const Triplet& triplet)
     {
         std::vector<SourceParagraph> ports = Paragraphs::load_all_ports(ports_directory);
         std::vector<PackageSpec> specs;
         for (const SourceParagraph& p : ports)
         {
-            specs.push_back(PackageSpec::from_name_and_triplet(p.name, target_triplet).value_or_exit(VCPKG_LINE_INFO));
+            specs.push_back(PackageSpec::from_name_and_triplet(p.name, triplet).value_or_exit(VCPKG_LINE_INFO));
         }
 
         return specs;
@@ -30,10 +30,10 @@ namespace vcpkg::Commands::CI
     {
         static const std::string example = Commands::Help::create_example_string("ci x64-windows");
         args.check_max_arg_count(1, example);
-        const Triplet target_triplet = args.command_arguments.size() == 1 ? Triplet::from_canonical_name(args.command_arguments.at(0)) : default_triplet;
-        Input::check_triplet(target_triplet, paths);
+        const Triplet triplet = args.command_arguments.size() == 1 ? Triplet::from_canonical_name(args.command_arguments.at(0)) : default_triplet;
+        Input::check_triplet(triplet, paths);
         args.check_and_get_optional_command_arguments({});
-        const std::vector<PackageSpec> specs = load_all_package_specs(paths.ports, target_triplet);
+        const std::vector<PackageSpec> specs = load_all_package_specs(paths.ports, triplet);
 
         StatusParagraphs status_db = database_load_check(paths);
         const std::vector<PackageSpecWithInstallPlan> install_plan = Dependencies::create_install_plan(paths, specs, status_db);
