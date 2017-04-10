@@ -238,12 +238,12 @@ namespace vcpkg::Commands::Install
         static const std::string example = Commands::Help::create_example_string("install zlib zlib:x64-windows curl boost");
         args.check_min_arg_count(1, example);
 
-        auto specs = Util::fmap(args.command_arguments, [&](auto&& arg)
+        const std::vector<PackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg)
                                 {
-                                    auto spec = Input::check_and_get_package_spec(arg, default_target_triplet, example);
-                                    Input::check_triplet(spec.target_triplet(), paths);
-                                    return spec;
+                                    return Input::check_and_get_package_spec(arg, default_target_triplet, example);
                                 });
+        for (auto&& spec : specs)
+            Input::check_triplet(spec.target_triplet(), paths);
 
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_DRY_RUN });
         const bool dryRun = options.find(OPTION_DRY_RUN) != options.cend();
