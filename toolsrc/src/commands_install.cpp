@@ -22,8 +22,8 @@ namespace vcpkg::Commands::Install
         const fs::path package_prefix_path = paths.package_dir(bpgh.spec);
         const size_t prefix_length = package_prefix_path.native().size();
 
-        const Triplet& target_triplet = bpgh.spec.triplet();
-        const std::string& triplet_subfolder = target_triplet.canonical_name();
+        const Triplet& triplet = bpgh.spec.triplet();
+        const std::string& triplet_subfolder = triplet.canonical_name();
         const fs::path triplet_subfolder_path = paths.installed / triplet_subfolder;
         std::error_code ec;
         fs::create_directory(triplet_subfolder_path, ec);
