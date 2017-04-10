@@ -18,14 +18,14 @@ namespace vcpkg::Commands::Build
 
     static const std::string OPTION_CHECKS_ONLY = "--checks-only";
 
-    static void create_binary_control_file(const VcpkgPaths& paths, const SourceParagraph& source_paragraph, const Triplet& target_triplet)
+    static void create_binary_control_file(const VcpkgPaths& paths, const SourceParagraph& source_paragraph, const Triplet& triplet)
     {
-        const BinaryParagraph bpgh = BinaryParagraph(source_paragraph, target_triplet);
+        const BinaryParagraph bpgh = BinaryParagraph(source_paragraph, triplet);
         const fs::path binary_control_file = paths.packages / bpgh.dir() / "CONTROL";
         std::ofstream(binary_control_file) << bpgh;
     }
 
-    std::wstring make_build_env_cmd(const Triplet& target_triplet, const Toolset& toolset)
+    std::wstring make_build_env_cmd(const Triplet& triplet, const Toolset& toolset)
     {
         const wchar_t * tonull = L" >nul";
         if (g_debugging)
@@ -33,17 +33,17 @@ namespace vcpkg::Commands::Build
             tonull = L"";
         }
 
-        return Strings::wformat(LR"("%s" %s %s 2>&1)", toolset.vcvarsall.native(), Strings::utf8_to_utf16(target_triplet.architecture()), tonull);
+        return Strings::wformat(LR"("%s" %s %s 2>&1)", toolset.vcvarsall.native(), Strings::utf8_to_utf16(triplet.architecture()), tonull);
     }
 
     BuildResult build_package(const SourceParagraph& source_paragraph, const PackageSpec& spec, const VcpkgPaths& paths, const fs::path& port_dir, const StatusParagraphs& status_db)
     {
         Checks::check_exit(VCPKG_LINE_INFO, spec.name() == source_paragraph.name, "inconsistent arguments to build_package()");
 
-        const Triplet& target_triplet = spec.triplet();
-        for (auto&& dep : filter_dependencies(source_paragraph.depends, target_triplet))
+        const Triplet& triplet = spec.triplet();
+        for (auto&& dep : filter_dependencies(source_paragraph.depends, triplet))
         {
-            if (status_db.find_installed(dep, target_triplet) == status_db.end())
+            if (status_db.find_installed(dep, triplet) == status_db.end())
             {
                 return BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES;
             }
@@ -54,14 +54,14 @@ namespace vcpkg::Commands::Build
 
         const fs::path ports_cmake_script_path = paths.ports_cmake;
         const Toolset& toolset = paths.get_toolset();
-        const auto cmd_set_environment = make_build_env_cmd(target_triplet, toolset);
+        const auto cmd_set_environment = make_build_env_cmd(triplet, toolset);
 
         const std::wstring cmd_launch_cmake = make_cmake_cmd(cmake_exe_path, ports_cmake_script_path,
                                                              {
                                                                  { L"CMD", L"BUILD" },
                                                                  { L"PORT", source_paragraph.name },
                                                                  { L"CURRENT_PORT_DIR", port_dir / "/." },
-                                                                 { L"TARGET_TRIPLET", target_triplet.canonical_name() },
+                                                                 { L"TARGET_TRIPLET", triplet.canonical_name() },
                                                                  { L"VCPKG_PLATFORM_TOOLSET", toolset.version },
                                                                  { L"GIT", git_exe_path }
                                                              });
@@ -88,7 +88,7 @@ namespace vcpkg::Commands::Build
             return BuildResult::POST_BUILD_CHECKS_FAILED;
         }
 
-        create_binary_control_file(paths, source_paragraph, target_triplet);
+        create_binary_control_file(paths, source_paragraph, triplet);
 
         // const fs::path port_buildtrees_dir = paths.buildtrees / spec.name;
         // delete_directory(port_buildtrees_dir);
