@@ -8,12 +8,12 @@ namespace vcpkg
         return (c == '-') || isdigit(c) || (isalpha(c) && islower(c));
     }
 
-    Expected<PackageSpec> PackageSpec::from_string(const std::string& spec_as_string, const Triplet& default_target_triplet)
+    Expected<PackageSpec> PackageSpec::from_string(const std::string& spec_as_string, const Triplet& default_triplet)
     {
         auto pos = spec_as_string.find(':');
         if (pos == std::string::npos)
         {
-            return from_name_and_triplet(spec_as_string, default_target_triplet);
+            return from_name_and_triplet(spec_as_string, default_triplet);
         }
 
         auto pos2 = spec_as_string.find(':', pos + 1);

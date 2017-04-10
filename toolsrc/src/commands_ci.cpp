@@ -26,11 +26,11 @@ namespace vcpkg::Commands::CI
         return specs;
     }
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_target_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
         static const std::string example = Commands::Help::create_example_string("ci x64-windows");
         args.check_max_arg_count(1, example);
-        const Triplet target_triplet = args.command_arguments.size() == 1 ? Triplet::from_canonical_name(args.command_arguments.at(0)) : default_target_triplet;
+        const Triplet target_triplet = args.command_arguments.size() == 1 ? Triplet::from_canonical_name(args.command_arguments.at(0)) : default_triplet;
         Input::check_triplet(target_triplet, paths);
         args.check_and_get_optional_command_arguments({});
         const std::vector<PackageSpec> specs = load_all_package_specs(paths.ports, target_triplet);

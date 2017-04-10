@@ -178,11 +178,11 @@ namespace vcpkg::Commands::Build
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_target_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
         static const std::string example = Commands::Help::create_example_string("build zlib:x64-windows");
         args.check_exact_arg_count(1, example); // Build only takes a single package and all dependencies must already be installed
-        const PackageSpec spec = Input::check_and_get_package_spec(args.command_arguments.at(0), default_target_triplet, example);
+        const PackageSpec spec = Input::check_and_get_package_spec(args.command_arguments.at(0), default_triplet, example);
         Input::check_triplet(spec.target_triplet(), paths);
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_CHECKS_ONLY });
         perform_and_exit(spec, paths.port_dir(spec), options, paths);

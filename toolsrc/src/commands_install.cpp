@@ -230,7 +230,7 @@ namespace vcpkg::Commands::Install
         status_db->insert(std::make_unique<StatusParagraph>(spgh));
     }
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_target_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
         static const std::string OPTION_DRY_RUN = "--dry-run";
 
@@ -240,7 +240,7 @@ namespace vcpkg::Commands::Install
 
         const std::vector<PackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg)
                                 {
-                                    return Input::check_and_get_package_spec(arg, default_target_triplet, example);
+                                    return Input::check_and_get_package_spec(arg, default_triplet, example);
                                 });
         for (auto&& spec : specs)
             Input::check_triplet(spec.target_triplet(), paths);
