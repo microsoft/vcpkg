@@ -70,9 +70,9 @@ static void inner(const VcpkgCmdArguments& args)
     }
 
     Triplet default_triplet;
-    if (args.target_triplet != nullptr)
+    if (args.triplet != nullptr)
     {
-        default_triplet = Triplet::from_canonical_name(*args.target_triplet);
+        default_triplet = Triplet::from_canonical_name(*args.triplet);
     }
     else
     {
