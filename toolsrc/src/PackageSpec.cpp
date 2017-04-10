@@ -23,11 +23,11 @@ namespace vcpkg
         }
 
         const std::string name = spec_as_string.substr(0, pos);
-        const Triplet target_triplet = Triplet::from_canonical_name(spec_as_string.substr(pos + 1));
-        return from_name_and_triplet(name, target_triplet);
+        const Triplet triplet = Triplet::from_canonical_name(spec_as_string.substr(pos + 1));
+        return from_name_and_triplet(name, triplet);
     }
 
-    Expected<PackageSpec> PackageSpec::from_name_and_triplet(const std::string& name, const Triplet& target_triplet)
+    Expected<PackageSpec> PackageSpec::from_name_and_triplet(const std::string& name, const Triplet& triplet)
     {
         if (std::find_if_not(name.cbegin(), name.cend(), is_valid_package_spec_char) != name.end())
         {
@@ -36,7 +36,7 @@ namespace vcpkg
 
         PackageSpec p;
         p.m_name = name;
-        p.m_target_triplet = target_triplet;
+        p.m_triplet = triplet;
         return p;
     }
 
@@ -47,12 +47,12 @@ namespace vcpkg
 
     const Triplet& PackageSpec::triplet() const
     {
-        return this->m_target_triplet;
+        return this->m_triplet;
     }
 
     std::string PackageSpec::dir() const
     {
-        return Strings::format("%s_%s", this->m_name, this->m_target_triplet);
+        return Strings::format("%s_%s", this->m_name, this->m_triplet);
     }
 
     std::string PackageSpec::to_string() const

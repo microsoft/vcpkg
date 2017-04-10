@@ -9,7 +9,7 @@ namespace vcpkg
     {
         static Expected<PackageSpec> from_string(const std::string& spec_as_string, const Triplet& default_triplet);
 
-        static Expected<PackageSpec> from_name_and_triplet(const std::string& name, const Triplet& target_triplet);
+        static Expected<PackageSpec> from_name_and_triplet(const std::string& name, const Triplet& triplet);
 
         const std::string& name() const;
 
@@ -21,7 +21,7 @@ namespace vcpkg
 
     private:
         std::string m_name;
-        Triplet m_target_triplet;
+        Triplet m_triplet;
     };
 
     bool operator==(const PackageSpec& left, const PackageSpec& right);
