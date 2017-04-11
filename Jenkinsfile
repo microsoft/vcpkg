@@ -5,6 +5,8 @@ node('windows') {
 		}
 
 		stage("Build") {
+			bat 'git config --global user.email "jenkins@intelight-its.com"'
+			bat 'git config --global user.name "jenkins"'
 			bat 'powershell ".\\vendor-build.ps1"'
 		}
 
