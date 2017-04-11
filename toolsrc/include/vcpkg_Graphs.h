@@ -17,39 +17,55 @@ namespace vcpkg::Graphs
         FULLY_EXPLORED
     };
 
+    template <class V, class Func>
+    static void topological_sort_internal(V vertex,
+                                          ExplorationStatus& status,
+                                          const Func adjacency_list_provider,
+                                          std::unordered_map<V, ExplorationStatus>& exploration_status,
+                                          std::vector<V>& sorted)
+    {
+        status = ExplorationStatus::PARTIALLY_EXPLORED;
+
+        auto neighbours = adjacency_list_provider(vertex);
+
+        for (V neighbour : neighbours)
+        {
+            ExplorationStatus& neighbour_status = exploration_status[neighbour];
+            if (neighbour_status == ExplorationStatus::NOT_EXPLORED)
+            {
+                topological_sort_internal(neighbour, neighbour_status, adjacency_list_provider, exploration_status, sorted);
+            }
+            else if (neighbour_status == ExplorationStatus::PARTIALLY_EXPLORED)
+            {
+                throw std::runtime_error("cycle in graph");
+            }
+        }
+        status = ExplorationStatus::FULLY_EXPLORED;
+        sorted.push_back(vertex);
+    }
+
+    template <class V, class Func>
+    std::vector<V> topological_sort(const std::vector<V>& starting_vertices, const Func adjacency_list_provider)
+    {
+        std::vector<V> sorted;
+        std::unordered_map<V, ExplorationStatus> exploration_status;
+
+        for (auto& vertex : starting_vertices)
+        {
+            ExplorationStatus& status = exploration_status[vertex];
+            if (status == ExplorationStatus::NOT_EXPLORED)
+            {
+                topological_sort_internal(vertex, status, adjacency_list_provider, exploration_status, sorted);
+            }
+        }
+
+        return sorted;
+    }
+
     template <class V>
     class Graph
     {
-        template <class Func>
-        static void topological_sort_internal(V vertex,
-                                                   ExplorationStatus& status,
-                                                   const Func adjacency_list_provider,
-                                                   std::unordered_map<V, ExplorationStatus>& exploration_status,
-                                                   std::vector<V>& sorted)
-        {
-            status = ExplorationStatus::PARTIALLY_EXPLORED;
-
-            auto neighbours = adjacency_list_provider(vertex);
-
-            for (V neighbour : neighbours)
-            {
-                ExplorationStatus& neighbour_status = exploration_status[neighbour];
-                if (neighbour_status == ExplorationStatus::NOT_EXPLORED)
-                {
-                    topological_sort_internal(neighbour, neighbour_status, adjacency_list_provider, exploration_status, sorted);
-                }
-                else if (neighbour_status == ExplorationStatus::PARTIALLY_EXPLORED)
-                {
-                    throw std::runtime_error("cycle in graph");
-                }
-            }
-
-            status = ExplorationStatus::FULLY_EXPLORED;
-            sorted.push_back(vertex);
-        }
-
     public:
-
         void add_vertex(V v)
         {
             this->vertices[v];
@@ -88,11 +104,9 @@ namespace vcpkg::Graphs
                     ExplorationStatus& status = exploration_status[vertex];
                     if (status == ExplorationStatus::NOT_EXPLORED)
                     {
-                        topological_sort_internal(vertex,
-                                                       status,
-                                                       [this](const V& v) { return this->vertices.at(v); },
-                                                       exploration_status,
-                                                       sorted);
+                        topological_sort_internal(vertex, status,
+                                                  [this](const V& v) { return this->vertices.at(v); },
+                                                  exploration_status, sorted);
                     }
                 }
             }
