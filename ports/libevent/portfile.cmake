@@ -9,6 +9,13 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -DEVENT__BUILD_SHARED_LIBRARIES=OFF
+        -DEVENT__DISABLE_OPENSSL=ON
+        -DEVENT__DISABLE_BENCHMARK=ON
+        -DEVENT__DISABLE_TESTS=ON
+        -DEVENT__DISABLE_REGRESS=ON
+        -DEVENT__DISABLE_SAMPLES=ON
 )
 
 vcpkg_install_cmake()
