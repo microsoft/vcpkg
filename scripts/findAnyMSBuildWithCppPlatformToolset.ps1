@@ -91,11 +91,11 @@ foreach ($pair in $registryPairs)
     try
     {
         $VS14InstallDir = $(gp $vsEntry InstallDir -erroraction Stop | % { $_.InstallDir })
-        Write-Verbose "$vsEntry - Found"
+        Write-Verbose "$vsEntry\InstallDir - Found"
     }
     catch
     {
-        Write-Verbose "$vsEntry - Not Found"
+        Write-Verbose "$vsEntry\InstallDir - Not Found"
         continue
     }
 
@@ -118,11 +118,11 @@ foreach ($pair in $registryPairs)
     try
     {
         $MSBuild14 = $(gp $msbuildEntry MSBuildToolsPath -erroraction Stop | % { $_.MSBuildToolsPath })
-        Write-Verbose "$msbuildEntry - Found"
+        Write-Verbose "$msbuildEntry\MSBuildToolsPath - Found"
     }
     catch
     {
-        Write-Verbose "$msbuildEntry - Not Found"
+        Write-Verbose "$msbuildEntry\MSBuildToolsPath - Not Found"
         continue
     }
 
