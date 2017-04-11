@@ -114,7 +114,7 @@ namespace vcpkg::Dependencies
 
         std::vector<PackageSpecWithInstallPlan> ret;
 
-        const std::vector<PackageSpec> pkgs = graph.find_topological_sort();
+        const std::vector<PackageSpec> pkgs = graph.topological_sort();
         for (const PackageSpec& pkg : pkgs)
         {
             ret.push_back(PackageSpecWithInstallPlan(pkg, std::move(was_examined[pkg])));
@@ -171,7 +171,7 @@ namespace vcpkg::Dependencies
 
         std::vector<PackageSpecWithRemovePlan> ret;
 
-        const std::vector<PackageSpec> pkgs = graph.find_topological_sort();
+        const std::vector<PackageSpec> pkgs = graph.topological_sort();
         for (const PackageSpec& pkg : pkgs)
         {
             ret.push_back(PackageSpecWithRemovePlan(pkg, std::move(was_examined[pkg])));

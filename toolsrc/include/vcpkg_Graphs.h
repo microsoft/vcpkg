@@ -21,7 +21,7 @@ namespace vcpkg::Graphs
     class Graph
     {
         template <class Func>
-        static void find_topological_sort_internal(V vertex,
+        static void topological_sort_internal(V vertex,
                                                    ExplorationStatus& status,
                                                    const Func adjacency_list_provider,
                                                    std::unordered_map<V, ExplorationStatus>& exploration_status,
@@ -36,7 +36,7 @@ namespace vcpkg::Graphs
                 ExplorationStatus& neighbour_status = exploration_status[neighbour];
                 if (neighbour_status == ExplorationStatus::NOT_EXPLORED)
                 {
-                    find_topological_sort_internal(neighbour, neighbour_status, adjacency_list_provider, exploration_status, sorted);
+                    topological_sort_internal(neighbour, neighbour_status, adjacency_list_provider, exploration_status, sorted);
                 }
                 else if (neighbour_status == ExplorationStatus::PARTIALLY_EXPLORED)
                 {
@@ -70,7 +70,7 @@ namespace vcpkg::Graphs
             this->vertices[u].insert(v);
         }
 
-        std::vector<V> find_topological_sort() const
+        std::vector<V> topological_sort() const
         {
             std::unordered_map<V, int> indegrees = count_indegrees();
 
@@ -88,7 +88,7 @@ namespace vcpkg::Graphs
                     ExplorationStatus& status = exploration_status[vertex];
                     if (status == ExplorationStatus::NOT_EXPLORED)
                     {
-                        find_topological_sort_internal(vertex,
+                        topological_sort_internal(vertex,
                                                        status,
                                                        [this](const V& v) { return this->vertices.at(v); },
                                                        exploration_status,
