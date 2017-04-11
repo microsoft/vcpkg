@@ -141,10 +141,12 @@ namespace vcpkg::Commands::Integrate
 
     static void integrate_install(const VcpkgPaths& paths)
     {
+        auto& fs = paths.get_filesystem();
+
         // TODO: This block of code should eventually be removed
         for (auto&& old_system_wide_targets_file : old_system_target_files)
         {
-            if (fs::exists(old_system_wide_targets_file))
+            if (fs.exists(old_system_wide_targets_file))
             {
                 const std::string param = Strings::format(R"(/c DEL "%s" /Q > nul)", old_system_wide_targets_file.string());
                 ElevationPromptChoice user_choice = elevated_cmd_execute(param);
@@ -161,12 +163,13 @@ namespace vcpkg::Commands::Integrate
             }
         }
 
+        std::error_code ec;
         const fs::path tmp_dir = paths.buildsystems / "tmp";
-        fs::create_directory(paths.buildsystems);
-        fs::create_directory(tmp_dir);
+        fs.create_directory(paths.buildsystems, ec);
+        fs.create_directory(tmp_dir, ec);
 
         bool should_install_system = true;
-        const Expected<std::string> system_wide_file_contents = paths.get_filesystem().read_contents(system_wide_targets_file);
+        const Expected<std::string> system_wide_file_contents = fs.read_contents(system_wide_targets_file);
         if (auto contents_data = system_wide_file_contents.get())
         {
             std::regex re(R"###(<!-- version (\d+) -->)###");
@@ -198,14 +201,16 @@ namespace vcpkg::Commands::Integrate
                     Checks::unreachable(VCPKG_LINE_INFO);
             }
 
-            Checks::check_exit(VCPKG_LINE_INFO, fs::exists(system_wide_targets_file), "Error: failed to copy targets file to %s", system_wide_targets_file.string());
+            Checks::check_exit(VCPKG_LINE_INFO, fs.exists(system_wide_targets_file), "Error: failed to copy targets file to %s", system_wide_targets_file.string());
         }
 
         const fs::path appdata_src_path = tmp_dir / "vcpkg.user.targets";
         std::ofstream(appdata_src_path) << create_appdata_targets_shortcut(paths.buildsystems_msbuild_targets.string());
         auto appdata_dst_path = get_appdata_targets_path();
 
-        if (!fs::copy_file(appdata_src_path, appdata_dst_path, fs::copy_options::overwrite_existing))
+        auto rc = fs.copy_file(appdata_src_path, appdata_dst_path, fs::copy_options::overwrite_existing, ec);
+
+        if (!rc || ec)
         {
             System::println(System::Color::error, "Error: Failed to copy file: %s -> %s", appdata_src_path.string(), appdata_dst_path.string());
             Checks::exit_fail(VCPKG_LINE_INFO);
@@ -222,12 +227,12 @@ namespace vcpkg::Commands::Integrate
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 
-    static void integrate_remove()
+    static void integrate_remove(Files::Filesystem& fs)
     {
         const fs::path path = get_appdata_targets_path();
 
         std::error_code ec;
-        bool was_deleted = fs::remove(path, ec);
+        bool was_deleted = fs.remove(path, ec);
 
         Checks::check_exit(VCPKG_LINE_INFO, !ec, "Error: Unable to remove user-wide integration: %d", ec.message());
 
@@ -245,12 +250,15 @@ namespace vcpkg::Commands::Integrate
 
     static void integrate_project(const VcpkgPaths& paths)
     {
+        auto& fs = paths.get_filesystem();
+
         const fs::path& nuget_exe = paths.get_nuget_exe();
 
         const fs::path& buildsystems_dir = paths.buildsystems;
         const fs::path tmp_dir = buildsystems_dir / "tmp";
-        fs::create_directory(buildsystems_dir);
-        fs::create_directory(tmp_dir);
+        std::error_code ec;
+        fs.create_directory(buildsystems_dir, ec);
+        fs.create_directory(tmp_dir, ec);
 
         const fs::path targets_file_path = tmp_dir / "vcpkg.nuget.targets";
         const fs::path props_file_path = tmp_dir / "vcpkg.nuget.props";
@@ -268,7 +276,7 @@ namespace vcpkg::Commands::Integrate
         const int exit_code = System::cmd_execute_clean(cmd_line);
 
         const fs::path nuget_package = buildsystems_dir / Strings::format("%s.%s.nupkg", nuget_id, nupkg_version);
-        Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0 && fs::exists(nuget_package), "Error: NuGet package creation failed");
+        Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0 && fs.exists(nuget_package), "Error: NuGet package creation failed");
         System::println(System::Color::success, "Created nupkg: %s", nuget_package.string());
 
         System::println(R"(
@@ -297,7 +305,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         }
         if (args.command_arguments[0] == "remove")
         {
-            return integrate_remove();
+            return integrate_remove(paths.get_filesystem());
         }
         if (args.command_arguments[0] == "project")
         {

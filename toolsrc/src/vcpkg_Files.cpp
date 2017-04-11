@@ -56,7 +56,7 @@ namespace vcpkg::Files
             for (; !current_dir.empty(); current_dir = current_dir.parent_path())
             {
                 const fs::path candidate = current_dir / filename;
-                if (fs::exists(candidate))
+                if (exists(candidate))
                 {
                     break;
                 }
@@ -69,7 +69,7 @@ namespace vcpkg::Files
         {
             std::vector<fs::path> ret;
 
-            fs::recursive_directory_iterator b(dir), e{};
+            fs::stdfs::recursive_directory_iterator b(dir), e{};
             for (; b != e; ++b)
             {
                 ret.push_back(b->path());
@@ -81,7 +81,7 @@ namespace vcpkg::Files
         {
             std::vector<fs::path> ret;
 
-            fs::directory_iterator b(dir), e{};
+            fs::stdfs::directory_iterator b(dir), e{};
             for (; b != e; ++b)
             {
                 ret.push_back(b->path());
@@ -102,39 +102,52 @@ namespace vcpkg::Files
 
         virtual void rename(const fs::path & oldpath, const fs::path & newpath) override
         {
-            fs::rename(oldpath, newpath);
+            fs::stdfs::rename(oldpath, newpath);
         }
-        virtual void remove(const fs::path & path) override
+        virtual bool remove(const fs::path & path) override
         {
-            fs::remove(path);
+            return fs::stdfs::remove(path);
+        }
+        virtual bool remove(const fs::path & path, std::error_code& ec) override
+        {
+            return fs::stdfs::remove(path, ec);
+        }
+        virtual std::uintmax_t remove_all(const fs::path & path, std::error_code& ec) override
+        {
+            return fs::stdfs::remove_all(path, ec);
         }
         virtual bool exists(const fs::path & path) const override
         {
-            return fs::exists(path);
+            return fs::stdfs::exists(path);
         }
         virtual bool is_directory(const fs::path & path) const override
         {
-            return fs::is_directory(path);
+            return fs::stdfs::is_directory(path);
         }
         virtual bool is_regular_file(const fs::path & path) const override
         {
-            return fs::is_regular_file(path);
+            return fs::stdfs::is_regular_file(path);
         }
         virtual bool is_empty(const fs::path & path) const override
         {
-            return fs::is_empty(path);
+            return fs::stdfs::is_empty(path);
         }
         virtual bool create_directory(const fs::path & path, std::error_code & ec) override
         {
-            return fs::create_directory(path, ec);
+            return fs::stdfs::create_directory(path, ec);
         }
         virtual void copy(const fs::path & oldpath, const fs::path & newpath, fs::copy_options opts) override
         {
-            fs::copy(oldpath, newpath, opts);
+            fs::stdfs::copy(oldpath, newpath, opts);
         }
-        virtual void copy_file(const fs::path & oldpath, const fs::path & newpath, fs::copy_options opts, std::error_code & ec) override
+        virtual bool copy_file(const fs::path & oldpath, const fs::path & newpath, fs::copy_options opts, std::error_code & ec) override
         {
-            fs::copy_file(oldpath, newpath, opts, ec);
+            return fs::stdfs::copy_file(oldpath, newpath, opts, ec);
+        }
+
+        virtual fs::file_status status(const fs::path& path, std::error_code& ec) const override
+        {
+            return fs::stdfs::status(path, ec);
         }
     };
 

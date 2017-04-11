@@ -156,7 +156,7 @@ namespace vcpkg
     Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir)
     {
         std::error_code ec;
-        const fs::path canonical_vcpkg_root_dir = fs::canonical(vcpkg_root_dir, ec);
+        const fs::path canonical_vcpkg_root_dir = fs::stdfs::canonical(vcpkg_root_dir, ec);
         if (ec)
         {
             return ec;
@@ -214,10 +214,9 @@ namespace vcpkg
 
     bool VcpkgPaths::is_valid_triplet(const Triplet& t) const
     {
-        auto it = fs::directory_iterator(this->triplets);
-        for (; it != fs::directory_iterator(); ++it)
+        for (auto&& path : get_filesystem().non_recursive_find_all_files_in_dir(this->triplets))
         {
-            std::string triplet_file_name = it->path().stem().generic_u8string();
+            std::string triplet_file_name = path.stem().generic_u8string();
             if (t.canonical_name() == triplet_file_name) // TODO: fuzzy compare
             {
                 //t.value = triplet_file_name; // NOTE: uncomment when implementing fuzzy compare
@@ -279,7 +278,7 @@ namespace vcpkg
             // Skip any instances that do not have vcvarsall.
             const fs::path vcvarsall_bat = vc_dir / "Auxiliary" / "Build" / "vcvarsall.bat";
             paths_examined.push_back(vcvarsall_bat);
-            if (!fs::exists(vcvarsall_bat))
+            if (!fs.exists(vcvarsall_bat))
                 continue;
 
             // Locate the "best" MSVC toolchain version

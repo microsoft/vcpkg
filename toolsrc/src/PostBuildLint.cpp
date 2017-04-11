@@ -73,7 +73,7 @@ namespace vcpkg::PostBuildLint
         return false;
     }
 
-    static LintStatus check_for_files_in_include_directory(const std::map<BuildPolicies::Type, OptBoolT>& policies, const fs::path& package_dir)
+    static LintStatus check_for_files_in_include_directory(const Files::Filesystem& fs, const std::map<BuildPolicies::Type, OptBoolT>& policies, const fs::path& package_dir)
     {
         if (contains_and_enabled(policies, BuildPolicies::EMPTY_INCLUDE_FOLDER))
         {
@@ -81,7 +81,7 @@ namespace vcpkg::PostBuildLint
         }
 
         const fs::path include_dir = package_dir / "include";
-        if (!fs::exists(include_dir) || fs::is_empty(include_dir))
+        if (!fs.exists(include_dir) || fs.is_empty(include_dir))
         {
             System::println(System::Color::warning, "The folder /include is empty. This indicates the library was not correctly installed.");
             return LintStatus::ERROR_DETECTED;
@@ -657,7 +657,7 @@ namespace vcpkg::PostBuildLint
             return error_count;
         }
 
-        error_count += check_for_files_in_include_directory(build_info.policies, package_dir);
+        error_count += check_for_files_in_include_directory(fs, build_info.policies, package_dir);
         error_count += check_for_files_in_debug_include_directory(fs, package_dir);
         error_count += check_for_files_in_debug_share_directory(fs, package_dir);
         error_count += check_folder_lib_cmake(fs, package_dir, spec);
@@ -681,11 +681,13 @@ namespace vcpkg::PostBuildLint
 
         error_count += check_matching_debug_and_release_binaries(debug_libs, release_libs);
 
-        std::vector<fs::path> libs;
-        libs.insert(libs.cend(), debug_libs.cbegin(), debug_libs.cend());
-        libs.insert(libs.cend(), release_libs.cbegin(), release_libs.cend());
+        {
+            std::vector<fs::path> libs;
+            libs.insert(libs.cend(), debug_libs.cbegin(), debug_libs.cend());
+            libs.insert(libs.cend(), release_libs.cbegin(), release_libs.cend());
 
-        error_count += check_lib_architecture(spec.target_triplet().architecture(), libs);
+            error_count += check_lib_architecture(spec.target_triplet().architecture(), libs);
+        }
 
         switch (build_info.library_linkage)
         {

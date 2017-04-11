@@ -30,24 +30,24 @@ namespace vcpkg::Commands::Install
         fs.create_directory(paths.installed / target_triplet_as_string, ec);
         output.push_back(Strings::format(R"(%s/)", target_triplet_as_string));
 
-        // TODO: replace use of recursive_directory_iterator with filesystem abstraction.
-        for (auto it = fs::recursive_directory_iterator(package_prefix_path); it != fs::recursive_directory_iterator(); ++it)
+        auto files = fs.recursive_find_all_files_in_dir(package_prefix_path);
+        for (auto&& file : files)
         {
-            auto status = it->status(ec);
+            auto status = fs.status(file, ec);
             if (ec)
             {
-                System::println(System::Color::error, "failed: %s: %s", it->path().u8string(), ec.message());
+                System::println(System::Color::error, "failed: %s: %s", file.u8string(), ec.message());
                 continue;
             }
 
-            const std::string filename = it->path().filename().generic_string();
+            const std::string filename = file.filename().generic_string();
             if (fs::is_regular_file(status) && (_stricmp(filename.c_str(), "CONTROL") == 0 || _stricmp(filename.c_str(), "BUILD_INFO") == 0))
             {
                 // Do not copy the control file
                 continue;
             }
 
-            const std::string suffix = it->path().generic_u8string().substr(prefix_length + 1);
+            const std::string suffix = file.generic_u8string().substr(prefix_length + 1);
             const fs::path target = paths.installed / target_triplet_as_string / suffix;
 
             if (fs::is_directory(status))
@@ -69,7 +69,7 @@ namespace vcpkg::Commands::Install
                 {
                     System::println(System::Color::warning, "File %s was already present and will be overwritten", target.u8string(), ec.message());
                 }
-                fs.copy_file(*it, target, fs::copy_options::overwrite_existing, ec);
+                fs.copy_file(file, target, fs::copy_options::overwrite_existing, ec);
                 if (ec)
                 {
                     System::println(System::Color::error, "failed: %s: %s", target.u8string(), ec.message());
@@ -80,11 +80,11 @@ namespace vcpkg::Commands::Install
 
             if (!fs::status_known(status))
             {
-                System::println(System::Color::error, "failed: %s: unknown status", it->path().u8string());
+                System::println(System::Color::error, "failed: %s: unknown status", file.u8string());
                 continue;
             }
 
-            System::println(System::Color::error, "failed: %s: cannot handle file type", it->path().u8string());
+            System::println(System::Color::error, "failed: %s: cannot handle file type", file.u8string());
         }
 
         std::sort(output.begin(), output.end());

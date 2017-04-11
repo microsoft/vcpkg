@@ -69,11 +69,13 @@ namespace vcpkg::Commands::PortsDiff
 
     static std::map<std::string, VersionT> read_ports_from_commit(const VcpkgPaths& paths, const std::wstring& git_commit_id)
     {
+        std::error_code ec;
+        auto& fs = paths.get_filesystem();
         const fs::path& git_exe = paths.get_git_exe();
         const fs::path dot_git_dir = paths.root / ".git";
         const std::wstring ports_dir_name_as_string = paths.ports.filename().native();
         const fs::path temp_checkout_path = paths.root / Strings::wformat(L"%s-%s", ports_dir_name_as_string, git_commit_id);
-        fs::create_directory(temp_checkout_path);
+        fs.create_directory(temp_checkout_path, ec);
         const std::wstring checkout_this_dir = Strings::wformat(LR"(.\%s)", ports_dir_name_as_string); // Must be relative to the root of the repository
 
         const std::wstring cmd = Strings::wformat(LR"("%s" --git-dir="%s" --work-tree="%s" checkout %s -f -q -- %s %s & "%s" reset >NUL)",
@@ -87,7 +89,7 @@ namespace vcpkg::Commands::PortsDiff
         System::cmd_execute_clean(cmd);
         const std::vector<SourceParagraph> source_paragraphs = Paragraphs::load_all_ports(paths.get_filesystem(), temp_checkout_path / ports_dir_name_as_string);
         const std::map<std::string, VersionT> names_and_versions = Paragraphs::extract_port_names_and_versions(source_paragraphs);
-        fs::remove_all(temp_checkout_path);
+        fs.remove_all(temp_checkout_path, ec);
         return names_and_versions;
     }
 

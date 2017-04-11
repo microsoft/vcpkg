@@ -15,14 +15,17 @@ namespace vcpkg::Files
 
         virtual void write_all_lines(const fs::path& file_path, const std::vector<std::string>& lines) = 0;
         virtual void rename(const fs::path& oldpath, const fs::path& newpath) = 0;
-        virtual void remove(const fs::path& path) = 0;
+        virtual bool remove(const fs::path& path) = 0;
+        virtual bool remove(const fs::path& path, std::error_code& ec) = 0;
+        virtual std::uintmax_t remove_all(const fs::path& path, std::error_code& ec) = 0;
         virtual bool exists(const fs::path& path) const = 0;
         virtual bool is_directory(const fs::path& path) const = 0;
         virtual bool is_regular_file(const fs::path& path) const = 0;
         virtual bool is_empty(const fs::path& path) const = 0;
         virtual bool create_directory(const fs::path& path, std::error_code& ec) = 0;
         virtual void copy(const fs::path& oldpath, const fs::path& newpath, fs::copy_options opts) = 0;
-        virtual void copy_file(const fs::path& oldpath, const fs::path& newpath, fs::copy_options opts, std::error_code& ec) = 0;
+        virtual bool copy_file(const fs::path& oldpath, const fs::path& newpath, fs::copy_options opts, std::error_code& ec) = 0;
+        virtual fs::file_status status(const fs::path& path, std::error_code& ec) const = 0;
     };
 
     Filesystem& get_real_filesystem();

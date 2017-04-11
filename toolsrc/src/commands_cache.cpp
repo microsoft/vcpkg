@@ -10,9 +10,8 @@ namespace vcpkg::Commands::Cache
     static std::vector<BinaryParagraph> read_all_binary_paragraphs(const VcpkgPaths& paths)
     {
         std::vector<BinaryParagraph> output;
-        for (auto it = fs::directory_iterator(paths.packages); it != fs::directory_iterator(); ++it)
+        for (auto&& path : paths.get_filesystem().non_recursive_find_all_files_in_dir(paths.packages))
         {
-            const fs::path& path = it->path();
             const Expected<std::unordered_map<std::string, std::string>> pghs = Paragraphs::get_single_paragraph(paths.get_filesystem(), path / "CONTROL");
             if (auto p = pghs.get())
             {

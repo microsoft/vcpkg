@@ -41,18 +41,18 @@ static void inner(const VcpkgCmdArguments& args)
     fs::path vcpkg_root_dir;
     if (args.vcpkg_root_dir != nullptr)
     {
-        vcpkg_root_dir = fs::absolute(Strings::utf8_to_utf16(*args.vcpkg_root_dir));
+        vcpkg_root_dir = fs::stdfs::absolute(Strings::utf8_to_utf16(*args.vcpkg_root_dir));
     }
     else
     {
         const Optional<std::wstring> vcpkg_root_dir_env = System::get_environmental_variable(L"VCPKG_ROOT");
         if (auto v = vcpkg_root_dir_env.get())
         {
-            vcpkg_root_dir = fs::absolute(*v);
+            vcpkg_root_dir = fs::stdfs::absolute(*v);
         }
         else
         {
-            vcpkg_root_dir = Files::get_real_filesystem().find_file_recursively_up(fs::absolute(System::get_exe_path_of_current_process()), ".vcpkg-root");
+            vcpkg_root_dir = Files::get_real_filesystem().find_file_recursively_up(fs::stdfs::absolute(System::get_exe_path_of_current_process()), ".vcpkg-root");
         }
     }
 
@@ -144,7 +144,7 @@ static void loadConfig()
     try
     {
         std::error_code ec;
-        fs::create_directory(localappdata / "vcpkg", ec);
+        Files::get_real_filesystem().create_directory(localappdata / "vcpkg", ec);
         std::ofstream(localappdata / "vcpkg" / "config", std::ios_base::out | std::ios_base::trunc)
             << "User-Id: " << user_id << "\n"
             << "User-Since: " << user_time << "\n";

@@ -12,15 +12,15 @@ namespace vcpkg
 
     static StatusParagraphs load_current_database(Files::Filesystem& fs, const fs::path& vcpkg_dir_status_file, const fs::path& vcpkg_dir_status_file_old)
     {
-        if (!fs::exists(vcpkg_dir_status_file))
+        if (!fs.exists(vcpkg_dir_status_file))
         {
-            if (!fs::exists(vcpkg_dir_status_file_old))
+            if (!fs.exists(vcpkg_dir_status_file_old))
             {
                 // no status file, use empty db
                 return StatusParagraphs();
             }
 
-            fs::rename(vcpkg_dir_status_file_old, vcpkg_dir_status_file);
+            fs.rename(vcpkg_dir_status_file_old, vcpkg_dir_status_file);
         }
 
         auto pghs = Paragraphs::get_paragraphs(fs, vcpkg_dir_status_file).value_or_exit(VCPKG_LINE_INFO);

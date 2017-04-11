@@ -7,10 +7,9 @@ namespace vcpkg::Commands::Help
     void help_topic_valid_triplet(const VcpkgPaths& paths)
     {
         System::println("Available architecture triplets:");
-        auto it = fs::directory_iterator(paths.triplets);
-        for (; it != fs::directory_iterator(); ++it)
+        for (auto&& path : paths.get_filesystem().non_recursive_find_all_files_in_dir(paths.triplets))
         {
-            System::println("  %s", it->path().stem().filename().string());
+            System::println("  %s", path.stem().filename().string());
         }
     }
 
