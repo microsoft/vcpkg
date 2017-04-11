@@ -21,10 +21,10 @@ Invoke-VcpkgBuild "libevent"
 Invoke-VcpkgBuild "luajit"
 Invoke-VcpkgBuild "lua-lsqlite3"
 Invoke-VcpkgBuild "lua-intf"
-Invoke-VcpkgBuild "pion"
 Invoke-VcpkgBuild "rapidxml"
 Invoke-VcpkgBuild "snmp-pp"
 Invoke-VcpkgBuild "pthread"
+Invoke-VcpkgBuild "websocketpp"
 
 # update the version anytime the installed package versions change
-Write-Output 3 > installed/version.txt
+Write-Output 4 > installed/version.txt
