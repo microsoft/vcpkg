@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/aws-sdk-cpp-1.0.47)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/aws-sdk-cpp-1.0.61)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/aws/aws-sdk-cpp/archive/1.0.47.tar.gz"
-    FILENAME "aws-sdk-cpp-1.0.47.tar.gz"
-    SHA512 ce7471bafe2763f1c382eed8afeaf6422058599a3aa11ae52909da668c45d12827fcd06b9b3ce34e3c2fa33297fd2e09421b8a89833d581efaf62b7108232acf
+    URLS "https://github.com/aws/aws-sdk-cpp/archive/1.0.61.tar.gz"
+    FILENAME "aws-sdk-cpp-1.0.61.tar.gz"
+    SHA512 aef0a85a32db24dc4fba0fc49c2533074580f3df628e787ff0808f03deea5dac42e19b1edc966706784e98cfed17a350c3eff4f222df7cc756065be56d1fc6a6
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
@@ -11,6 +11,7 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES 
 		${CMAKE_CURRENT_LIST_DIR}/drop_git.patch
+		${CMAKE_CURRENT_LIST_DIR}/disable_warning_as_error.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
@@ -21,6 +22,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+	PREFER_NINJA
 	OPTIONS
 		-DENABLE_TESTING=OFF
 		-DFORCE_SHARED_CRT=${FORCE_SHARED_CRT}
@@ -44,11 +46,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 	file(COPY ${DEBUG_LIB_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 	file(REMOVE ${LIB_FILES} ${DEBUG_LIB_FILES})
 	
-	vcpkg_apply_patches( #define USE_IMPORT_EXPORT in SDKConfig.h
-		SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
-		PATCHES 
-			${CMAKE_CURRENT_LIST_DIR}/shared_define.patch
-	)
+	file(APPEND ${CURRENT_PACKAGES_DIR}/include/aws/core/SDKConfig.h "#define USE_IMPORT_EXPORT")
 endif()
 
 # Handle copyright

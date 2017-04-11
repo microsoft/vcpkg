@@ -1,9 +1,15 @@
 [CmdletBinding()]
 param(
-    [string]$Dependency
+    [string]$Dependency,
+    [ValidateNotNullOrEmpty()]
+    [string]$downloadPromptOverride = "0"
 )
 
-Import-Module BitsTransfer
+$downloadPromptOverride_NO_OVERRIDE= 0
+$downloadPromptOverride_DO_NOT_PROMPT = 1
+$downloadPromptOverride_ALWAYS_PROMPT = 2
+
+Import-Module BitsTransfer -Verbose:$false
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 $vcpkgRootDir = & $scriptsDir\findFileRecursivelyUp.ps1 $scriptsDir .vcpkg-root
@@ -12,9 +18,13 @@ $downloadsDir = "$vcpkgRootDir\downloads"
 
 function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 {
-    function promptForDownload([string]$title, [string]$message, [string]$yesDescription, [string]$noDescription)
+    function promptForDownload([string]$title, [string]$message, [string]$yesDescription, [string]$noDescription, [string]$downloadPromptOverride)
     {
-        if ((Test-Path "$downloadsDir\AlwaysAllowEverything") -Or (Test-Path "$downloadsDir\AlwaysAllowDownloads"))
+        $do_not_prompt =    ($downloadPromptOverride -eq $downloadPromptOverride_DO_NOT_PROMPT) -Or
+                            (Test-Path "$downloadsDir\AlwaysAllowEverything") -Or
+                            (Test-Path "$downloadsDir\AlwaysAllowDownloads")
+
+        if (($downloadPromptOverride -ne $downloadPromptOverride_ALWAYS_PROMPT) -And $do_not_prompt)
         {
             return $true
         }
@@ -51,13 +61,13 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         {
             return
         }
-        
+
         $title = "Download " + $Dependency
         $message = ("No suitable version of " + $Dependency  + " was found (requires $requiredVersion or higher). Download portable version?")
         $yesDescription = "Downloads " + $Dependency + " v" + $downloadVersion +" app-locally."
-        $noDescription = "Does not download " + $Dependency + "."	
-        
-        $userAllowedDownload = promptForDownload $title $message $yesDescription $noDescription
+        $noDescription = "Does not download " + $Dependency + "."
+
+        $userAllowedDownload = promptForDownload $title $message $yesDescription $noDescription $downloadPromptOverride
         if (!$userAllowedDownload)
         {
             throw [System.IO.FileNotFoundException] ("Could not detect suitable version of " + $Dependency + " and download not allowed")
@@ -70,15 +80,29 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 
         if ($Dependency -ne "git") # git fails with BITS
         {
-            Start-BitsTransfer -Source $url -Destination $downloadPath -ErrorAction SilentlyContinue
-        }
-        else
-        {
-            if (!(Test-Path $downloadPath))
-            {
-                Write-Host("Downloading $Dependency...")
-                (New-Object System.Net.WebClient).DownloadFile($url, $downloadPath)
+            try {
+                $WC = New-Object System.Net.WebClient
+                $ProxyAuth = !$WC.Proxy.IsBypassed($url)
+                If($ProxyAuth){
+                    $ProxyCred = Get-Credential -Message "Enter credentials for Proxy Authentication"
+                    $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyAuthentication","Basic")
+                    $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyCredential",$ProxyCred)
+                }
+
+                Start-BitsTransfer -Source $url -Destination $downloadPath -ErrorAction Stop
             }
+            catch [System.Exception] {
+                # If BITS fails for any reason, delete any potentially partially downloaded files and continue
+                if (Test-Path $downloadPath)
+                {
+                    Remove-Item $downloadPath
+                }
+            }
+        }
+        if (!(Test-Path $downloadPath))
+        {
+            Write-Verbose("Downloading $Dependency...")
+            (New-Object System.Net.WebClient).DownloadFile($url, $downloadPath)
         }
     }
 
@@ -86,10 +110,10 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     $ExtractionType_NO_EXTRACTION_REQUIRED = 0
     $ExtractionType_ZIP = 1
     $ExtractionType_SELF_EXTRACTING_7Z = 2
-    
-    
+
+
     # Using this to wait for the execution to finish
-    function Invoke-Command() 
+    function Invoke-Command()
     {
         param ( [string]$program = $(throw "Please specify a program" ),
                 [string]$argumentString = "",
@@ -99,7 +123,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         $psi.FileName = $program
         $psi.Arguments = $argumentString
         $proc = [Diagnostics.Process]::Start($psi)
-        if ( $waitForExit ) 
+        if ( $waitForExit )
         {
             $proc.WaitForExit();
         }
@@ -107,8 +131,11 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 
     function Expand-ZIPFile($file, $destination)
     {
-            Write-Host($file)
-            Write-Host($destination)
+        if (!(Test-Path $destination))
+        {
+            New-Item -ItemType Directory -Path $destination | Out-Null
+        }
+
         $shell = new-object -com shell.application
         $zip = $shell.NameSpace($file)
         foreach($item in $zip.items())
@@ -120,42 +147,49 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 
     if($Dependency -eq "cmake")
     {
-        $requiredVersion = "3.5.0"
-        $downloadVersion = "3.5.2"
-        $url = "https://cmake.org/files/v3.5/cmake-3.5.2-win32-x86.zip"
-        $downloadName = "cmake-3.5.2-win32-x86.zip"
-        $expectedDownloadedFileHash = "671073aee66b3480a564d0736792e40570a11e861bb34819bb7ae7858bbdfb80"
-        $executableFromDownload = "$downloadsDir\cmake-3.5.2-win32-x86\bin\cmake.exe"
+        $requiredVersion = "3.8.0"
+        $downloadVersion = "3.8.0"
+        $url = "https://cmake.org/files/v3.8/cmake-3.8.0-rc1-win32-x86.zip"
+        $downloadPath = "$downloadsDir\cmake-3.8.0-rc1-win32-x86.zip"
+        $expectedDownloadedFileHash = "ccdbd92fbfb548aa35a545e4e45ff19fd6d13c88c90370acdf940c3cf464e9c9"
+        $executableFromDownload = "$downloadsDir\cmake-3.8.0-rc1-win32-x86\bin\cmake.exe"
         $extractionType = $ExtractionType_ZIP
+        $extractionFolder = $downloadsDir
     }
     elseif($Dependency -eq "nuget")
     {
-        $requiredVersion = "1.0.0"
-        $downloadVersion = "3.4.3"
-        $url = "https://dist.nuget.org/win-x86-commandline/v3.4.3/nuget.exe"
-        $downloadName = "nuget.exe"
-        $expectedDownloadedFileHash = "3B1EA72943968D7AF6BACDB4F2F3A048A25AFD14564EF1D8B1C041FDB09EBB0A"
-        $executableFromDownload = "$downloadsDir\nuget.exe"
+        $requiredVersion = "3.3.0"
+        $downloadVersion = "3.5.0"
+        $url = "https://dist.nuget.org/win-x86-commandline/v3.5.0/nuget.exe"
+        $downloadPath = "$downloadsDir\nuget-3.5.0\nuget.exe"
+        $expectedDownloadedFileHash = "399ec24c26ed54d6887cde61994bb3d1cada7956c1b19ff880f06f060c039918"
+        $executableFromDownload = $downloadPath
         $extractionType = $ExtractionType_NO_EXTRACTION_REQUIRED
     }
     elseif($Dependency -eq "git")
     {
         $requiredVersion = "2.0.0"
-        $downloadVersion = "2.8.3"
-        $url = "https://github.com/git-for-windows/git/releases/download/v2.8.3.windows.1/PortableGit-2.8.3-32-bit.7z.exe" # We choose the 32-bit version
-        $downloadName = "PortableGit-2.8.3-32-bit.7z.exe"
-        $expectedDownloadedFileHash = "DE52D070219E9C4EC1DB179F2ADBF4B760686C3180608F0382A1F8C7031E72AD"
-        # There is another copy of git.exe in PortableGit\bin. However, an installed version of git add the cmd dir to the PATH.
-        # Therefore, choosing the cmd dir here as well. 
-        $executableFromDownload = "$downloadsDir\PortableGit\cmd\git.exe"
-        $extractionType = $ExtractionType_SELF_EXTRACTING_7Z
+        $downloadVersion = "2.11.1"
+        $url = "https://github.com/git-for-windows/git/releases/download/v2.11.1.windows.1/MinGit-2.11.1-32-bit.zip" # We choose the 32-bit version
+        $downloadPath = "$downloadsDir\MinGit-2.11.1-32-bit.zip"
+        $expectedDownloadedFileHash = "6ca79af09015625f350ef4ad74a75cfb001b340aec095b6963be9d45becb3bba"
+        # There is another copy of git.exe in MinGit\bin. However, an installed version of git add the cmd dir to the PATH.
+        # Therefore, choosing the cmd dir here as well.
+        $executableFromDownload = "$downloadsDir\MinGit-2.11.1-32-bit\cmd\git.exe"
+        $extractionType = $ExtractionType_ZIP
+        $extractionFolder = "$downloadsDir\MinGit-2.11.1-32-bit"
     }
     else
     {
         throw "Unknown program requested"
     }
 
-    $downloadPath = "$downloadsDir\$downloadName"
+    $downloadSubdir = Split-path $downloadPath -Parent
+    if (!(Test-Path $downloadSubdir))
+    {
+        New-Item -ItemType Directory -Path $downloadSubdir | Out-Null
+    }
+
     performDownload $Dependency $url $downloadsDir $downloadPath $downloadVersion $requiredVersion
 
     #calculating the hash
@@ -177,8 +211,8 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     {
         if (-not (Test-Path $executableFromDownload)) # consider renaming the extraction folder to make sure the extraction finished
         {
-            # Expand-Archive $downloadPath -dest "$downloadsDir" -Force # Requires powershell 5+
-            Expand-ZIPFile -File $downloadPath -Destination $downloadsDir
+            # Expand-Archive $downloadPath -dest "$extractionFolder" -Force # Requires powershell 5+
+            Expand-ZIPFile -File $downloadPath -Destination $extractionFolder
         }
     }
     elseif($extractionType -eq $ExtractionType_SELF_EXTRACTING_7Z)
@@ -186,7 +220,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         if (-not (Test-Path $executableFromDownload))
         {
             Invoke-Command $downloadPath "-y" -waitForExit:$true
-        }	
+        }
     }
     else
     {
@@ -197,6 +231,8 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     {
         throw [System.IO.FileNotFoundException] ("Could not detect or download " + $Dependency)
     }
+
+    return $executableFromDownload
 }
 
 SelectProgram $Dependency

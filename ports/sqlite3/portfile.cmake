@@ -1,18 +1,23 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/sqlite-amalgamation-3150000)
+
+set(SQLITE_VERSION 3180000)
+set(SQLITE_HASH d390c1d83afc27ec184ea6ab392477647cc80eb97ca177797cd494409c5646435c7a84502cc74ded1b654af13e65d2eef444bb0255a127e59d2cf40d5d0c1192)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/sqlite-amalgamation-${SQLITE_VERSION})
+
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://sqlite.org/2016/sqlite-amalgamation-3150000.zip"
-    FILENAME "sqlite-amalgamation-3150000.zip"
-    SHA512 82fea23b2158c448cbe2b80121eb32652df49eb85357edbaeef0c343ef478433706ebc4cd8add1985763db223d9268d0f7e74fc8db59353c15267cbc3d2078a8
-)
+    URLS "https://sqlite.org/2017/sqlite-amalgamation-${SQLITE_VERSION}.zip"
+    FILENAME "sqlite-amalgamation-${SQLITE_VERSION}.zip"
+    SHA512 ${SQLITE_HASH})
 vcpkg_extract_source_archive(${ARCHIVE})
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DSOURCE=${SOURCE_PATH}
+        -DVCPKG_CMAKE_SYSTEM_NAME=${VCPKG_CMAKE_SYSTEM_NAME}
 )
 vcpkg_build_cmake()
 vcpkg_install_cmake()

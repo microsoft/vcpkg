@@ -2,7 +2,7 @@ diff --git a/Configure b/Configure
 index c98107a..77ad9d3 100644
 --- a/Configure
 +++ b/Configure
-@@ -970,7 +970,7 @@ PROCESS_ARGS:
+@@ -972,7 +972,7 @@ PROCESS_ARGS:
  				}
  			elsif (/^--with-zlib-include=(.*)$/)
  				{

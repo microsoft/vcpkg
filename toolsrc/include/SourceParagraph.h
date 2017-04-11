@@ -5,15 +5,15 @@
 
 namespace vcpkg
 {
-    struct triplet;
+    struct Triplet;
 
-    struct dependency
+    struct Dependency
     {
         std::string name;
         std::string qualifier;
     };
 
-    std::ostream& operator<<(std::ostream& os, const dependency& p);
+    std::ostream& operator<<(std::ostream& os, const Dependency& p);
 
     struct SourceParagraph
     {
@@ -25,11 +25,11 @@ namespace vcpkg
         std::string version;
         std::string description;
         std::string maintainer;
-        std::vector<dependency> depends;
+        std::vector<Dependency> depends;
     };
 
-    std::vector<std::string> filter_dependencies(const std::vector<vcpkg::dependency>& deps, const triplet& t);
+    std::vector<std::string> filter_dependencies(const std::vector<Dependency>& deps, const Triplet& t);
 
-    std::vector<vcpkg::dependency> expand_qualified_dependencies(const std::vector<std::string>& depends);
+    std::vector<Dependency> expand_qualified_dependencies(const std::vector<std::string>& depends);
     std::vector<std::string> parse_depends(const std::string& depends_string);
 }

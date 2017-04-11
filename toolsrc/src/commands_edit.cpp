@@ -1,34 +1,76 @@
+#include "pch.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Input.h"
 
 namespace vcpkg::Commands::Edit
 {
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         static const std::string example = Commands::Help::create_example_string("edit zlib");
         args.check_exact_arg_count(1, example);
+        args.check_and_get_optional_command_arguments({});
         const std::string port_name = args.command_arguments.at(0);
 
         const fs::path portpath = paths.ports / port_name;
-        Checks::check_exit(fs::is_directory(portpath), "Could not find port named %s", port_name);
+        Checks::check_exit(VCPKG_LINE_INFO, fs::is_directory(portpath), R"(Could not find port named "%s")", port_name);
 
-        // Find editor
-        std::wstring env_EDITOR = System::wdupenv_str(L"EDITOR");
+        // Find the user's selected editor
+        std::wstring env_EDITOR;
+
         if (env_EDITOR.empty())
         {
-            static const std::wstring CODE_EXE_PATH = LR"(C:\Program Files (x86)\Microsoft VS Code\Code.exe)";
+            const Optional<std::wstring> env_EDITOR_optional = System::get_environmental_variable(L"EDITOR");
+            if (auto e = env_EDITOR_optional.get())
+            {
+                env_EDITOR = *e;
+            }
+        }
+
+        if (env_EDITOR.empty())
+        {
+            const fs::path CODE_EXE_PATH = System::get_ProgramFiles_32_bit() / "Microsoft VS Code/Code.exe";
             if (fs::exists(CODE_EXE_PATH))
             {
                 env_EDITOR = CODE_EXE_PATH;
             }
-            else
+        }
+
+        if (env_EDITOR.empty())
+        {
+            static const std::array<const wchar_t*, 4> regkeys = {
+                LR"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{C26E74D1-022E-4238-8B9D-1E7564A36CC9}_is1)",
+                LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{C26E74D1-022E-4238-8B9D-1E7564A36CC9}_is1)",
+                LR"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{F8A2A208-72B3-4D61-95FC-8A65D340689B}_is1)",
+                LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{F8A2A208-72B3-4D61-95FC-8A65D340689B}_is1)",
+            };
+            for (auto&& keypath : regkeys)
             {
-                Checks::exit_with_message("Visual Studio Code was not found and the environmental variable EDITOR is not set");
+                const Optional<std::wstring> code_installpath = System::get_registry_string(HKEY_LOCAL_MACHINE, keypath, L"InstallLocation");
+                if (auto c = code_installpath.get())
+                {
+                    auto p = fs::path(*c) / "Code.exe";
+                    if (fs::exists(p))
+                    {
+                        env_EDITOR = p.native();
+                        break;
+                    }
+                    auto p_insiders = fs::path(*c) / "Code - Insiders.exe";
+                    if (fs::exists(p_insiders))
+                    {
+                        env_EDITOR = p_insiders.native();
+                        break;
+                    }
+                }
             }
         }
 
+        if (env_EDITOR.empty())
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO, "Visual Studio Code was not found and the environment variable EDITOR is not set");
+        }
+
         std::wstring cmdLine = Strings::wformat(LR"("%s" "%s" "%s" -n)", env_EDITOR, portpath.native(), (portpath / "portfile.cmake").native());
-        exit(System::cmd_execute(cmdLine));
+        Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute(cmdLine));
     }
 }

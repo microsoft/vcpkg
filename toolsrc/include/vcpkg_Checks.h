@@ -1,49 +1,50 @@
 #pragma once
 
 #include "vcpkg_Strings.h"
+#include "LineInfo.h"
 
 namespace vcpkg::Checks
 {
-    __declspec(noreturn) void unreachable();
+    [[noreturn]]
+    void unreachable(const LineInfo& line_info);
+
+    [[noreturn]]
+    void exit_with_code(const LineInfo& line_info, const int exit_code);
+
+    [[noreturn]]
+    inline void exit_fail(const LineInfo& line_info)
+    {
+        exit_with_code(line_info, EXIT_FAILURE);
+    }
+
+    [[noreturn]]
+    inline void exit_success(const LineInfo& line_info)
+    {
+        exit_with_code(line_info, EXIT_SUCCESS);
+    }
 
     // Part of the reason these exist is to not include extra headers in this one to avoid circular #includes. 
-    _declspec(noreturn) void exit_with_message(const char* errorMessage);
+    [[noreturn]]
+    void exit_with_message(const LineInfo& line_info, const CStringView errorMessage);
 
-    template <class...Args>
-    _declspec(noreturn) void exit_with_message(const char* errorMessageTemplate, const Args&... errorMessageArgs)
+    template <class Arg1, class...Args>
+    [[noreturn]]
+    void exit_with_message(const LineInfo& line_info, const char* errorMessageTemplate, const Arg1 errorMessageArg1, const Args&... errorMessageArgs)
     {
-        exit_with_message(Strings::format(errorMessageTemplate, errorMessageArgs...).c_str());
+        exit_with_message(line_info, Strings::format(errorMessageTemplate, errorMessageArg1, errorMessageArgs...));
     }
 
-    _declspec(noreturn) void throw_with_message(const char* errorMessage);
+    void check_exit(const LineInfo& line_info, bool expression);
 
-    template <class...Args>
-    _declspec(noreturn) void throw_with_message(const char* errorMessageTemplate, const Args&... errorMessageArgs)
-    {
-        throw_with_message(Strings::format(errorMessageTemplate, errorMessageArgs...).c_str());
-    }
+    void check_exit(const LineInfo& line_info, bool expression, const CStringView errorMessage);
 
-    void check_throw(bool expression, const char* errorMessage);
-
-    template <class...Args>
-    void check_throw(bool expression, const char* errorMessageTemplate, const Args&... errorMessageArgs)
+    template <class Arg1, class...Args>
+    void check_exit(const LineInfo& line_info, bool expression, const char* errorMessageTemplate, const Arg1 errorMessageArg1, const Args&... errorMessageArgs)
     {
         if (!expression)
         {
             // Only create the string if the expression is false
-            throw_with_message(Strings::format(errorMessageTemplate, errorMessageArgs...).c_str());
-        }
-    }
-
-    void check_exit(bool expression, const char* errorMessage);
-
-    template <class...Args>
-    void check_exit(bool expression, const char* errorMessageTemplate, const Args&... errorMessageArgs)
-    {
-        if (!expression)
-        {
-            // Only create the string if the expression is false
-            exit_with_message(Strings::format(errorMessageTemplate, errorMessageArgs...).c_str());
+            exit_with_message(line_info, Strings::format(errorMessageTemplate, errorMessageArg1, errorMessageArgs...));
         }
     }
 }

@@ -7,7 +7,7 @@ index eba6d58..5d971a2 100644
  		}
  	$arg =~ s|\\|/|g;	# compensate for bug/feature in cygwin glob...
 -	foreach (glob $arg)
-+	foreach (glob "\"$arg\"")
++	foreach (glob qq("$arg"))
  		{
  		push @filelist, $_;
  		}
@@ -15,7 +15,7 @@ diff --git a/util/mk1mf.pl b/util/mk1mf.pl
 index 128a405..fd853da 100644
 --- a/util/mk1mf.pl
 +++ b/util/mk1mf.pl
-@@ -427,7 +427,7 @@ EOF
+@@ -428,7 +428,7 @@ EOF
  		{
  		$extra_install .= <<"EOF"
  	\$(MKDIR) \"\$(INSTALLTOP)${o}lib${o}engines\"
@@ -24,7 +24,7 @@ index 128a405..fd853da 100644
  EOF
  		}
  	}
-@@ -607,7 +607,7 @@ install: all
+@@ -608,7 +608,7 @@ install: all
  	\$(MKDIR) \"\$(INSTALLTOP)${o}include${o}openssl\"
  	\$(MKDIR) \"\$(INSTALLTOP)${o}lib\"
  	\$(CP) \"\$(INCO_D)${o}*.\[ch\]\" \"\$(INSTALLTOP)${o}include${o}openssl\"

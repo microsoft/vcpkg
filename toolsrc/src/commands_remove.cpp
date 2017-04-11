@@ -1,12 +1,17 @@
+#include "pch.h"
 #include "vcpkg_Commands.h"
-#include "vcpkg.h"
+#include "vcpkglib.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Input.h"
-#include <fstream>
+#include "vcpkg_Dependencies.h"
+#include "vcpkg_Util.h"
 
 namespace vcpkg::Commands::Remove
 {
-    static const std::string OPTION_PURGE = "--purge";
+    using Dependencies::PackageSpecWithRemovePlan;
+    using Dependencies::RemovePlanType;
+    using Dependencies::RequestType;
+    using Update::OutdatedPackage;
 
     static void delete_directory(const fs::path& directory)
     {
@@ -14,89 +19,20 @@ namespace vcpkg::Commands::Remove
         fs::remove_all(directory, ec);
         if (!ec)
         {
-            System::println(System::color::success, "Cleaned up %s", directory.string());
+            System::println(System::Color::success, "Cleaned up %s", directory.string());
         }
         if (fs::exists(directory))
         {
-            System::println(System::color::warning, "Some files in %s were unable to be removed. Close any editors operating in this directory and retry.", directory.string());
+            System::println(System::Color::warning, "Some files in %s were unable to be removed. Close any editors operating in this directory and retry.", directory.string());
         }
     }
 
-    enum class deinstall_plan
+    static void remove_package(const VcpkgPaths& paths, const PackageSpec& spec, StatusParagraphs* status_db)
     {
-        not_installed,
-        dependencies_not_satisfied,
-        should_deinstall
-    };
+        StatusParagraph& pkg = **status_db->find(spec.name(), spec.triplet());
 
-    static deinstall_plan deinstall_package_plan(
-        const StatusParagraphs::iterator package_it,
-        const StatusParagraphs& status_db,
-        std::vector<const StatusParagraph*>& dependencies_out)
-    {
-        dependencies_out.clear();
-
-        if (package_it == status_db.end() || (*package_it)->state == install_state_t::not_installed)
-        {
-            return deinstall_plan::not_installed;
-        }
-
-        auto& pkg = (*package_it)->package;
-
-        for (auto&& inst_pkg : status_db)
-        {
-            if (inst_pkg->want != want_t::install)
-                continue;
-            if (inst_pkg->package.spec.target_triplet() != pkg.spec.target_triplet())
-                continue;
-
-            const auto& deps = inst_pkg->package.depends;
-
-            if (std::find(deps.begin(), deps.end(), pkg.spec.name()) != deps.end())
-            {
-                dependencies_out.push_back(inst_pkg.get());
-            }
-        }
-
-        if (!dependencies_out.empty())
-            return deinstall_plan::dependencies_not_satisfied;
-
-        return deinstall_plan::should_deinstall;
-    }
-
-    static void deinstall_package(const vcpkg_paths& paths, const package_spec& spec, StatusParagraphs& status_db)
-    {
-        auto package_it = status_db.find(spec.name(), spec.target_triplet());
-        if (package_it == status_db.end())
-        {
-            System::println(System::color::success, "Package %s is not installed", spec);
-            return;
-        }
-
-        auto& pkg = **package_it;
-
-        std::vector<const StatusParagraph*> deps;
-        auto plan = deinstall_package_plan(package_it, status_db, deps);
-        switch (plan)
-        {
-            case deinstall_plan::not_installed:
-                System::println(System::color::success, "Package %s is not installed", spec);
-                return;
-            case deinstall_plan::dependencies_not_satisfied:
-                System::println(System::color::error, "Error: Cannot remove package %s:", spec);
-                for (auto&& dep : deps)
-                {
-                    System::println("  %s depends on %s", dep->package.displayname(), pkg.package.displayname());
-                }
-                exit(EXIT_FAILURE);
-            case deinstall_plan::should_deinstall:
-                break;
-            default:
-                Checks::unreachable();
-        }
-
-        pkg.want = want_t::purge;
-        pkg.state = install_state_t::half_installed;
+        pkg.want = Want::PURGE;
+        pkg.state = InstallState::HALF_INSTALLED;
         write_update(paths, pkg);
 
         std::fstream listfile(paths.listfile_path(pkg.package), std::ios_base::in | std::ios_base::binary);
@@ -116,7 +52,7 @@ namespace vcpkg::Commands::Remove
                 auto status = fs::status(target, ec);
                 if (ec)
                 {
-                    System::println(System::color::error, "failed: %s", ec.message());
+                    System::println(System::Color::error, "failed: %s", ec.message());
                     continue;
                 }
 
@@ -129,16 +65,16 @@ namespace vcpkg::Commands::Remove
                     fs::remove(target, ec);
                     if (ec)
                     {
-                        System::println(System::color::error, "failed: %s: %s", target.u8string(), ec.message());
+                        System::println(System::Color::error, "failed: %s: %s", target.u8string(), ec.message());
                     }
                 }
                 else if (!fs::status_known(status))
                 {
-                    System::println(System::color::warning, "Warning: unknown status: %s", target.u8string());
+                    System::println(System::Color::warning, "Warning: unknown status: %s", target.u8string());
                 }
                 else
                 {
-                    System::println(System::color::warning, "Warning: %s: cannot handle file type", target.u8string());
+                    System::println(System::Color::warning, "Warning: %s: cannot handle file type", target.u8string());
                 }
             }
 
@@ -152,7 +88,7 @@ namespace vcpkg::Commands::Remove
                     fs::remove(*b, ec);
                     if (ec)
                     {
-                        System::println(System::color::error, "failed: %s", ec.message());
+                        System::println(System::Color::error, "failed: %s", ec.message());
                     }
                 }
             }
@@ -161,33 +97,134 @@ namespace vcpkg::Commands::Remove
             fs::remove(paths.listfile_path(pkg.package));
         }
 
-        pkg.state = install_state_t::not_installed;
+        pkg.state = InstallState::NOT_INSTALLED;
         write_update(paths, pkg);
-        System::println(System::color::success, "Package %s was successfully removed", pkg.package.displayname());
     }
 
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths, const triplet& default_target_triplet)
+    static void print_plan(const std::vector<PackageSpecWithRemovePlan>& plan)
     {
-        static const std::string example = Commands::Help::create_example_string("remove zlib zlib:x64-windows curl boost");
-        args.check_min_arg_count(1, example);
+        std::vector<const PackageSpecWithRemovePlan*> not_installed;
+        std::vector<const PackageSpecWithRemovePlan*> remove;
 
-        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_PURGE});
-        auto status_db = database_load_check(paths);
-
-        std::vector<package_spec> specs = Input::check_and_get_package_specs(args.command_arguments, default_target_triplet, example);
-        Input::check_triplets(specs, paths);
-        bool alsoRemoveFolderFromPackages = options.find(OPTION_PURGE) != options.end();
-
-        for (const package_spec& spec : specs)
+        for (const PackageSpecWithRemovePlan& i : plan)
         {
-            deinstall_package(paths, spec, status_db);
+            switch (i.plan.plan_type)
+            {
+                case RemovePlanType::NOT_INSTALLED:
+                    not_installed.push_back(&i);
+                    continue;
+                case RemovePlanType::REMOVE:
+                    remove.push_back(&i);
+                    continue;
+                default:
+                    Checks::unreachable(VCPKG_LINE_INFO);
+            }
+        }
+
+       auto print_lambda = [](const PackageSpecWithRemovePlan* p) { return to_output_string(p->plan.request_type, p->spec.to_string()); };
+
+        if (!not_installed.empty())
+        {
+            std::sort(not_installed.begin(), not_installed.end(), &PackageSpecWithRemovePlan::compare_by_name);
+            System::println("The following packages are not installed, so not removed:\n%s", Strings::join("\n", not_installed, print_lambda));
+        }
+
+        if (!remove.empty())
+        {
+            std::sort(remove.begin(), remove.end(), &PackageSpecWithRemovePlan::compare_by_name);
+            System::println("The following packages will be removed:\n%s", Strings::join("\n", remove, print_lambda));
+        }
+    }
+
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
+    {
+        static const std::string OPTION_PURGE = "--purge";
+        static const std::string OPTION_NO_PURGE = "--no-purge";
+        static const std::string OPTION_RECURSE = "--recurse";
+        static const std::string OPTION_DRY_RUN = "--dry-run";
+        static const std::string OPTION_OUTDATED = "--outdated";
+        static const std::string example = Commands::Help::create_example_string("remove zlib zlib:x64-windows curl boost");
+        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_PURGE, OPTION_NO_PURGE, OPTION_RECURSE, OPTION_DRY_RUN, OPTION_OUTDATED });
+
+        StatusParagraphs status_db = database_load_check(paths);
+        std::vector<PackageSpec> specs;
+        if (options.find(OPTION_OUTDATED) != options.cend())
+        {
+            args.check_exact_arg_count(0, example);
+            specs = Util::fmap(Update::find_outdated_packages(paths, status_db), [](auto&& outdated) { return outdated.spec; });
+        }
+        else
+        {
+            args.check_min_arg_count(1, example);
+            specs = Util::fmap(args.command_arguments, [&](auto&& arg) { return Input::check_and_get_package_spec(arg, default_triplet, example); });
+            for (auto&& spec : specs)
+                Input::check_triplet(spec.triplet(), paths);
+        }
+
+        const bool alsoRemoveFolderFromPackages = options.find(OPTION_NO_PURGE) == options.end();
+        if (options.find(OPTION_PURGE) != options.end() && !alsoRemoveFolderFromPackages)
+        {
+            // User specified --purge and --no-purge
+            System::println(System::Color::error, "Error: cannot specify both --no-purge and --purge.");
+            System::print(example);
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+        const bool isRecursive = options.find(OPTION_RECURSE) != options.cend();
+        const bool dryRun = options.find(OPTION_DRY_RUN) != options.cend();
+
+        const std::vector<PackageSpecWithRemovePlan> remove_plan = Dependencies::create_remove_plan(specs, status_db);
+        Checks::check_exit(VCPKG_LINE_INFO, !remove_plan.empty(), "Remove plan cannot be empty");
+
+        print_plan(remove_plan);
+
+        const bool has_non_user_requested_packages = std::find_if(remove_plan.cbegin(), remove_plan.cend(), [](const PackageSpecWithRemovePlan& package)-> bool
+                                                                  {
+                                                                      return package.plan.request_type != RequestType::USER_REQUESTED;
+                                                                  }) != remove_plan.cend();
+
+        if (has_non_user_requested_packages)
+        {
+            System::println(System::Color::warning, "Additional packages (*) need to be removed to complete this operation.");
+
+            if (!isRecursive)
+            {
+                System::println(System::Color::warning, "If you are sure you want to remove them, run the command with the --recurse option");
+                Checks::exit_fail(VCPKG_LINE_INFO);
+            }
+        }
+
+        if (dryRun)
+        {
+            Checks::exit_success(VCPKG_LINE_INFO);
+        }
+
+        for (const PackageSpecWithRemovePlan& action : remove_plan)
+        {
+            const std::string display_name = action.spec.to_string();
+
+            switch (action.plan.plan_type)
+            {
+                case RemovePlanType::NOT_INSTALLED:
+                    System::println(System::Color::success, "Package %s is not installed", display_name);
+                    break;
+                case RemovePlanType::REMOVE:
+                    System::println("Removing package %s... ", display_name);
+                    remove_package(paths, action.spec, &status_db);
+                    System::println(System::Color::success, "Removing package %s... done", display_name);
+                    break;
+                case RemovePlanType::UNKNOWN:
+                default:
+                    Checks::unreachable(VCPKG_LINE_INFO);
+            }
 
             if (alsoRemoveFolderFromPackages)
             {
-                const fs::path spec_package_dir = paths.packages / spec.dir();
-                delete_directory(spec_package_dir);
+                System::println("Purging package %s... ", display_name);
+                delete_directory(paths.packages / action.spec.dir());
+                System::println(System::Color::success, "Purging package %s... done", display_name);
             }
         }
-        exit(EXIT_SUCCESS);
+
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

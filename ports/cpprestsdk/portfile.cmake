@@ -13,11 +13,21 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/0001_cmake.patch
+        ${CMAKE_CURRENT_LIST_DIR}/0002_no_websocketpp_in_uwp.patch
 )
+
+set(OPTIONS)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    SET(WEBSOCKETPP_PATH "${CURRENT_INSTALLED_DIR}/share/websocketpp")
+    list(APPEND OPTIONS
+        -DWEBSOCKETPP_CONFIG=${WEBSOCKETPP_PATH}
+        -DWEBSOCKETPP_CONFIG_VERSION=${WEBSOCKETPP_PATH})
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/Release
     OPTIONS
+        ${OPTIONS}
         -DBUILD_TESTS=OFF
         -DBUILD_SAMPLES=OFF
         -DCPPREST_EXCLUDE_WEBSOCKETS=OFF

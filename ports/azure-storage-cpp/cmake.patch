@@ -1,5 +1,5 @@
 diff --git a/Microsoft.WindowsAzure.Storage/CMakeLists.txt b/Microsoft.WindowsAzure.Storage/CMakeLists.txt
-index f037c7f..a4dd278 100644
+index 07878c2..8d1c47e 100644
 --- a/Microsoft.WindowsAzure.Storage/CMakeLists.txt
 +++ b/Microsoft.WindowsAzure.Storage/CMakeLists.txt
 @@ -51,20 +51,25 @@ if(UNIX)

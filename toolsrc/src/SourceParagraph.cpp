@@ -1,8 +1,10 @@
+#include "pch.h"
 #include "SourceParagraph.h"
 #include "vcpkglib_helpers.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Maps.h"
-#include "triplet.h"
+#include "Triplet.h"
+#include "vcpkg_Checks.h"
 
 namespace vcpkg
 {
@@ -52,24 +54,24 @@ namespace vcpkg
             const std::vector<std::string> remaining_fields = Maps::extract_keys(fields);
             const std::vector<std::string>& valid_fields = get_list_of_valid_fields();
 
-            const std::string remaining_fields_as_string = Strings::join(remaining_fields, "\n    ");
-            const std::string valid_fields_as_string = Strings::join(valid_fields, "\n    ");
+            const std::string remaining_fields_as_string = Strings::join("\n    ", remaining_fields);
+            const std::string valid_fields_as_string = Strings::join("\n    ", valid_fields);
 
-            System::println(System::color::error, "Error: There are invalid fields in the Source Paragraph of %s", this->name);
+            System::println(System::Color::error, "Error: There are invalid fields in the Source Paragraph of %s", this->name);
             System::println("The following fields were not expected:\n\n    %s\n\n", remaining_fields_as_string);
             System::println("This is the list of valid fields (case-sensitive): \n\n    %s\n", valid_fields_as_string);
-            exit(EXIT_FAILURE);
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
     }
 
-    std::vector<dependency> vcpkg::expand_qualified_dependencies(const std::vector<std::string>& depends)
+    std::vector<Dependency> vcpkg::expand_qualified_dependencies(const std::vector<std::string>& depends)
     {
-        auto convert = [&](const std::string& depend_string) -> dependency {
+        auto convert = [&](const std::string& depend_string) -> Dependency {
             auto pos = depend_string.find(' ');
             if (pos == std::string::npos)
                 return{ depend_string, "" };
             // expect of the form "\w+ \[\w+\]"
-            dependency dep;
+            Dependency dep;
             dep.name = depend_string.substr(0, pos);
             if (depend_string.c_str()[pos + 1] != '[' || depend_string[depend_string.size() - 1] != ']')
             {
@@ -80,7 +82,7 @@ namespace vcpkg
             return dep;
         };
 
-        std::vector<vcpkg::dependency> ret;
+        std::vector<vcpkg::Dependency> ret;
 
         for (auto&& depend_string : depends)
         {
@@ -123,7 +125,7 @@ namespace vcpkg
         return out;
     }
 
-    std::vector<std::string> filter_dependencies(const std::vector<vcpkg::dependency>& deps, const triplet& t)
+    std::vector<std::string> filter_dependencies(const std::vector<vcpkg::Dependency>& deps, const Triplet& t)
     {
         std::vector<std::string> ret;
         for (auto&& dep : deps)
@@ -136,7 +138,7 @@ namespace vcpkg
         return ret;
     }
 
-    std::ostream & operator<<(std::ostream & os, const dependency & p)
+    std::ostream & operator<<(std::ostream & os, const Dependency & p)
     {
         os << p.name;
         return os;

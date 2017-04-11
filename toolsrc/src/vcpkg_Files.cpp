@@ -1,23 +1,17 @@
+#include "pch.h"
 #include "vcpkg_Files.h"
-#include <fstream>
-#include <regex>
 #include "vcpkg_System.h"
 
 namespace vcpkg::Files
 {
     static const std::regex FILESYSTEM_INVALID_CHARACTERS_REGEX = std::regex(R"([\/:*?"<>|])");
 
-    void check_is_directory(const fs::path& dirpath)
-    {
-        Checks::check_exit(fs::is_directory(dirpath), "The path %s is not a directory", dirpath.string());
-    }
-
     bool has_invalid_chars_for_filesystem(const std::string& s)
     {
         return std::regex_search(s, FILESYSTEM_INVALID_CHARACTERS_REGEX);
     }
 
-    expected<std::string> read_contents(const fs::path& file_path) noexcept
+    Expected<std::string> read_contents(const fs::path& file_path) noexcept
     {
         std::fstream file_stream(file_path, std::ios_base::in | std::ios_base::binary);
         if (file_stream.fail())
@@ -42,7 +36,7 @@ namespace vcpkg::Files
         return std::move(output);
     }
 
-    expected<std::vector<std::string>> read_all_lines(const fs::path& file_path)
+    Expected<std::vector<std::string>> read_all_lines(const fs::path& file_path)
     {
         std::fstream file_stream(file_path, std::ios_base::in | std::ios_base::binary);
         if (file_stream.fail())
@@ -103,7 +97,7 @@ namespace vcpkg::Files
 
     void recursive_find_all_files_in_dir(const fs::path& dir, std::vector<fs::path>* output)
     {
-        recursive_find_matching_paths_in_dir(dir, [&](const fs::path& current)
+        recursive_find_matching_paths_in_dir(dir, [](const fs::path& current)
                                              {
                                                  return !fs::is_directory(current);
                                              }, output);
@@ -118,7 +112,7 @@ namespace vcpkg::Files
 
     void non_recursive_find_all_files_in_dir(const fs::path& dir, std::vector<fs::path>* output)
     {
-        non_recursive_find_matching_paths_in_dir(dir, [&](const fs::path& current)
+        non_recursive_find_matching_paths_in_dir(dir, [](const fs::path& current)
                                                  {
                                                      return !fs::is_directory(current);
                                                  }, output);

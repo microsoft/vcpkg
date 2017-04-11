@@ -1,5 +1,5 @@
-# Vcpkg
-
+# Vcpkg ![](https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/5261/badge)
+ 
 ## Overview
 Vcpkg helps you get C and C++ libraries on Windows. This tool and ecosystem are currently in a preview state; your involvement is vital to its success.
 
@@ -7,12 +7,14 @@ For short description of available commands, run `vcpkg help`.
 
 ## Quick Start
 Prerequisites:
-- Visual Studio 2015 Update 3
+- Visual Studio 2015 Update 3 or
+- Visual Studio 2017
+- CMake 3.8.0 or higher (note: downloaded automatically if not found)
 - `git.exe` available in your path
 
 Clone this repository, then run
 ```
-C:\src\vcpkg> powershell -exec bypass scripts\bootstrap.ps1
+C:\src\vcpkg> .\bootstrap-vcpkg.bat
 ```
 Then, to hook up user-wide integration, run (note: requires admin on first use)
 ```
@@ -22,7 +24,7 @@ Install any packages with
 ```
 C:\src\vcpkg> .\vcpkg install sdl2 curl
 ```
-Finally, create a New Project (or open an existing one) in Visual Studio 2015 or Visual Studio "15" Preview. You can now `#include` and use any of the installed libraries.
+Finally, create a New Project (or open an existing one) in Visual Studio 2015 or Visual Studio 2017. You can now `#include` and use any of the installed libraries.
 
 ## Examples
 See the [`docs\EXAMPLES.md`](docs/EXAMPLES.md) document for specific walkthroughs, including using a package and adding a new package.

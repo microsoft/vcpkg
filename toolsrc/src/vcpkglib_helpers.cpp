@@ -1,7 +1,6 @@
+#include "pch.h"
 #include "vcpkg_Checks.h"
 #include "vcpkglib_helpers.h"
-#include <unordered_map>
-#include <regex>
 
 namespace vcpkg::details
 {
@@ -32,14 +31,14 @@ namespace vcpkg::details
     std::string required_field(const std::unordered_map<std::string, std::string>& fields, const std::string& fieldname)
     {
         auto it = fields.find(fieldname);
-        Checks::check_exit(it != fields.end(), "Required field not present: %s", fieldname);
+        Checks::check_exit(VCPKG_LINE_INFO, it != fields.end(), "Required field not present: %s", fieldname);
         return it->second;
     }
 
     std::string remove_required_field(std::unordered_map<std::string, std::string>* fields, const std::string& fieldname)
     {
         auto it = fields->find(fieldname);
-        Checks::check_exit(it != fields->end(), "Required field not present: %s", fieldname);
+        Checks::check_exit(VCPKG_LINE_INFO, it != fields->end(), "Required field not present: %s", fieldname);
 
         const std::string value = std::move(it->second);
         fields->erase(it);
@@ -48,9 +47,9 @@ namespace vcpkg::details
 
     std::string shorten_description(const std::string& desc)
     {
-        auto simple_desc = std::regex_replace(desc.substr(0, 49), std::regex("\\n( |\\t)?"), "");
-        if (desc.size() > 49)
-            simple_desc.append("...");
-        return simple_desc;
+        auto simple_desc = std::regex_replace(desc, std::regex("\\s+"), " ");
+        return simple_desc.size() <= 52
+            ? simple_desc
+            : simple_desc.substr(0, 49) + "...";
     }
 }

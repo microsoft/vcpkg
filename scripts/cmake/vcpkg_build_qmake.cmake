@@ -12,11 +12,7 @@
 # [1] : http://doc.qt.io/qt-5/qmake-variable-reference.html
 
 function(vcpkg_build_qmake)
-    vcpkg_find_acquire_program("JOM")
-    
-    if(NOT JOM)
-        BUILD_ERROR("vcpkg_install_qmake: impossible to find jom.")
-    endif()
+    vcpkg_find_acquire_program(JOM)
 
     # Make sure that the linker finds the libraries used 
     set(ENV_LIB_BACKUP ENV{LIB})

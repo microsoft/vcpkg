@@ -1,34 +1,22 @@
+#include "pch.h"
 #include "metrics.h"
-#include <utility>
-#include <array>
-#include <string>
-#include <iostream>
-#include <vector>
-#include <sys/timeb.h>
-#include <time.h>
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <winhttp.h>
-#include <fstream>
 #include "filesystem_fs.h"
 #include "vcpkg_Strings.h"
 #include "vcpkg_System.h"
 
-namespace vcpkg
+namespace vcpkg::Metrics
 {
-    static std::string GetCurrentDateTime()
+    static std::string get_current_date_time()
     {
         struct tm newtime;
-        time_t now;
-        int milli;
         std::array<char, 80> date;
         date.fill(0);
 
         struct _timeb timebuffer;
 
         _ftime_s(&timebuffer);
-        now = timebuffer.time;
-        milli = timebuffer.millitm;
+        time_t now = timebuffer.time;
+        int milli = timebuffer.millitm;
 
         errno_t err = gmtime_s(&newtime, &now);
         if (err)
@@ -40,9 +28,9 @@ namespace vcpkg
         return std::string(&date[0]) + "." + std::to_string(milli) + "Z";
     }
 
-    static std::string GenerateRandomUUID()
+    static std::string generate_random_UUID()
     {
-        int partSizes[] = {8, 4, 4, 4, 12};
+        int partSizes[] = { 8, 4, 4, 4, 12 };
         char uuid[37];
         memset(uuid, 0, sizeof(uuid));
         int num;
@@ -89,7 +77,7 @@ namespace vcpkg
 
     static const std::string& get_session_id()
     {
-        static const std::string id = GenerateRandomUUID();
+        static const std::string id = generate_random_UUID();
         return id;
     }
 
@@ -111,7 +99,7 @@ namespace vcpkg
                 // Note: this treats incoming Strings as Latin-1
                 static constexpr const char hex[16] = {
                     '0', '1', '2', '3', '4', '5', '6', '7',
-                    '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+                    '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
                 encoded.append("\\u00");
                 encoded.push_back(hex[ch / 16]);
                 encoded.push_back(hex[ch % 16]);
@@ -158,9 +146,9 @@ namespace vcpkg
 
     struct MetricMessage
     {
-        std::string user_id = GenerateRandomUUID();
+        std::string user_id = generate_random_UUID();
         std::string user_timestamp;
-        std::string timestamp = GetCurrentDateTime();
+        std::string timestamp = get_current_date_time();
         std::string properties;
         std::string measurements;
 
@@ -230,73 +218,45 @@ true
     ;
     static bool g_should_print_metrics = false;
 
-    bool GetCompiledMetricsEnabled()
+    bool get_compiled_metrics_enabled()
     {
         return DISABLE_METRICS == 0;
     }
 
-    std::wstring GetSQMUser()
+    std::wstring get_SQM_user()
     {
-        LONG err;
-
-        struct RAII_HKEY {
-            HKEY hkey = nullptr;
-            ~RAII_HKEY()
-            {
-                if (hkey != nullptr)
-                    RegCloseKey(hkey);
-            }
-        } HKCU_SQMClient;
-
-        err = RegOpenKeyExW(HKEY_CURRENT_USER, LR"(Software\Microsoft\SQMClient)", NULL, KEY_READ, &HKCU_SQMClient.hkey);
-        if (err != ERROR_SUCCESS)
-        {
-            return L"{}";
-        }
-
-        std::array<wchar_t,128> buffer;
-        DWORD lType = 0;
-        DWORD dwBufferSize = static_cast<DWORD>(buffer.size() * sizeof(wchar_t));
-        err = RegQueryValueExW(HKCU_SQMClient.hkey, L"UserId", nullptr, &lType, reinterpret_cast<LPBYTE>(buffer.data()), &dwBufferSize);
-        if (err == ERROR_SUCCESS && lType == REG_SZ && dwBufferSize >= sizeof(wchar_t))
-        {
-            size_t sz = dwBufferSize / sizeof(wchar_t);
-            if (buffer[sz - 1] == '\0')
-                --sz;
-            return std::wstring(buffer.begin(), buffer.begin() + sz);
-        }
-
-        return L"{}";
+        auto hkcu_sqmclient = System::get_registry_string(HKEY_CURRENT_USER, LR"(Software\Microsoft\SQMClient)", L"UserId");
+        return hkcu_sqmclient.value_or(L"{}");
     }
 
-    void SetUserInformation(const std::string& user_id, const std::string& first_use_time)
+    void set_user_information(const std::string& user_id, const std::string& first_use_time)
     {
         g_metricmessage.user_id = user_id;
         g_metricmessage.user_timestamp = first_use_time;
     }
 
-    void InitUserInformation(std::string& user_id, std::string& first_use_time)
+    void init_user_information(std::string& user_id, std::string& first_use_time)
     {
-        user_id = GenerateRandomUUID();
-        first_use_time = GetCurrentDateTime();
+        user_id = generate_random_UUID();
+        first_use_time = get_current_date_time();
     }
 
-    void SetSendMetrics(bool should_send_metrics)
+    void set_send_metrics(bool should_send_metrics)
     {
         g_should_send_metrics = should_send_metrics;
     }
 
-    void SetPrintMetrics(bool should_print_metrics)
+    void set_print_metrics(bool should_print_metrics)
     {
         g_should_print_metrics = should_print_metrics;
     }
 
-    void TrackMetric(const std::string& name, double value)
+    void track_metric(const std::string& name, double value)
     {
         g_metricmessage.TrackMetric(name, value);
     }
 
-    void TrackProperty(const std::string& name, const std::wstring& value)
+    void track_property(const std::string& name, const std::wstring& value)
     {
         // Note: this is not valid UTF-16 -> UTF-8, it just yields a close enough approximation for our purposes.
         std::string converted_value;
@@ -312,12 +272,12 @@ true
         g_metricmessage.TrackProperty(name, converted_value);
     }
 
-    void TrackProperty(const std::string& name, const std::string& value)
+    void track_property(const std::string& name, const std::string& value)
     {
         g_metricmessage.TrackProperty(name, value);
     }
 
-    void Upload(const std::string& payload)
+    void upload(const std::string& payload)
     {
         HINTERNET hSession = nullptr, hConnect = nullptr, hRequest = nullptr;
         BOOL bResults = FALSE;
@@ -366,8 +326,7 @@ true
         if (bResults)
         {
             DWORD availableData = 0, readData = 0, totalData = 0;
-
-            while ((bResults = WinHttpQueryDataAvailable(hRequest, &availableData)) && availableData > 0)
+            while ((bResults = WinHttpQueryDataAvailable(hRequest, &availableData)) == TRUE && availableData > 0)
             {
                 responseBuffer.resize(responseBuffer.size() + availableData);
 
@@ -410,7 +369,7 @@ true
         return fs::path(buf, buf + bytes);
     }
 
-    void Flush()
+    void flush()
     {
         std::string payload = g_metricmessage.format_event_data_template();
         if (g_should_print_metrics)
@@ -418,7 +377,7 @@ true
         if (!g_should_send_metrics)
             return;
 
-        // Upload(payload);
+        // upload(payload);
 
         wchar_t temp_folder[MAX_PATH];
         GetTempPathW(MAX_PATH, temp_folder);
@@ -448,10 +407,10 @@ true
                 return;
         }
 
-        const fs::path vcpkg_metrics_txt_path = temp_folder_path / ("vcpkg" + GenerateRandomUUID() + ".txt");
+        const fs::path vcpkg_metrics_txt_path = temp_folder_path / ("vcpkg" + generate_random_UUID() + ".txt");
         std::ofstream(vcpkg_metrics_txt_path) << payload;
 
         const std::wstring cmdLine = Strings::wformat(L"start %s %s", temp_folder_path_exe.native(), vcpkg_metrics_txt_path.native());
-        System::cmd_execute(cmdLine);
+        System::cmd_execute_clean(cmdLine);
     }
 }

@@ -39,8 +39,9 @@ if(NOT VCPKG_TOOLCHAIN)
     endif()
 
     set(VCPKG_TARGET_TRIPLET ${_VCPKG_TARGET_TRIPLET_ARCH}-${_VCPKG_TARGET_TRIPLET_PLAT} CACHE STRING "Vcpkg target triplet (ex. x86-windows)")
-    set(_VCPKG_INSTALLED_DIR ${CMAKE_CURRENT_LIST_DIR}/../../installed)
     set(_VCPKG_TOOLCHAIN_DIR ${CMAKE_CURRENT_LIST_DIR})
+    get_filename_component(_VCPKG_ROOT_DIR ${_VCPKG_TOOLCHAIN_DIR}/../.. ABSOLUTE)
+    set(_VCPKG_INSTALLED_DIR ${_VCPKG_ROOT_DIR}/installed)
 
     if(CMAKE_BUILD_TYPE MATCHES "^Debug$" OR NOT DEFINED CMAKE_BUILD_TYPE)
         list(APPEND CMAKE_PREFIX_PATH
@@ -57,16 +58,38 @@ if(NOT VCPKG_TOOLCHAIN)
         ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/manual-link
     )
 
+    set(Boost_COMPILER "-vc140")
+
+    if (NOT DEFINED CMAKE_SYSTEM_VERSION)
+        include(${_VCPKG_ROOT_DIR}/scripts/cmake/vcpkg_get_windows_sdk.cmake)
+        # This is used as an implicit parameter for vcpkg_get_windows_sdk
+        set(VCPKG_ROOT_DIR ${_VCPKG_ROOT_DIR})
+        vcpkg_get_windows_sdk(WINDOWS_SDK_VERSION)
+        unset(VCPKG_ROOT_DIR)
+        set(CMAKE_SYSTEM_VERSION ${WINDOWS_SDK_VERSION})
+    endif()
+
+    file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _programfiles)
+    set(CMAKE_SYSTEM_IGNORE_PATH
+        "${_programfiles}/OpenSSL"
+        "${_programfiles}/OpenSSL-Win32"
+        "${_programfiles}/OpenSSL-Win64"
+        "C:/OpenSSL/"
+        "C:/OpenSSL-Win32/"
+        "C:/OpenSSL-Win64/"
+    )
+
     set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools)
 
     option(VCPKG_APPLOCAL_DEPS "Automatically copy dependencies into the output directory for executables." ON)
     function(add_executable name)
         _add_executable(${ARGV})
         list(FIND ARGV "IMPORTED" IMPORTED_IDX)
-        if(IMPORTED_IDX EQUAL -1)
+        list(FIND ARGV "ALIAS" ALIAS_IDX)
+        if(IMPORTED_IDX EQUAL -1 AND ALIAS_IDX EQUAL -1)
             if(VCPKG_APPLOCAL_DEPS)
                 add_custom_command(TARGET ${name} POST_BUILD
-                    COMMAND powershell -noprofile -executionpolicy UnRestricted -file ${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1
+                    COMMAND powershell -noprofile -executionpolicy Bypass -file ${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1
                         -targetBinary $<TARGET_FILE:${name}>
                         -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                         -OutVariable out

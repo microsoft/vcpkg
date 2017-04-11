@@ -1,6 +1,9 @@
+#include "pch.h"
 #include "StatusParagraphs.h"
-#include <algorithm>
 #include "vcpkg_Checks.h"
+#include <algorithm>
+#include <algorithm>
+#include <algorithm>
 
 namespace vcpkg
 {
@@ -11,28 +14,28 @@ namespace vcpkg
     {
     };
 
-    StatusParagraphs::const_iterator StatusParagraphs::find(const std::string& name, const triplet& target_triplet) const
+    StatusParagraphs::const_iterator StatusParagraphs::find(const std::string& name, const Triplet& triplet) const
     {
         return std::find_if(begin(), end(), [&](const std::unique_ptr<StatusParagraph>& pgh)
                             {
-                                const package_spec& spec = pgh->package.spec;
-                                return spec.name() == name && spec.target_triplet() == target_triplet;
+                                const PackageSpec& spec = pgh->package.spec;
+                                return spec.name() == name && spec.triplet() == triplet;
                             });
     }
 
-    StatusParagraphs::iterator StatusParagraphs::find(const std::string& name, const triplet& target_triplet)
+    StatusParagraphs::iterator StatusParagraphs::find(const std::string& name, const Triplet& triplet)
     {
         return std::find_if(begin(), end(), [&](const std::unique_ptr<StatusParagraph>& pgh)
                             {
-                                const package_spec& spec = pgh->package.spec;
-                                return spec.name() == name && spec.target_triplet() == target_triplet;
+                                const PackageSpec& spec = pgh->package.spec;
+                                return spec.name() == name && spec.triplet() == triplet;
                             });
     }
 
-    StatusParagraphs::iterator StatusParagraphs::find_installed(const std::string& name, const triplet& target_triplet)
+    StatusParagraphs::const_iterator StatusParagraphs::find_installed(const std::string& name, const Triplet& triplet) const
     {
-        auto it = find(name, target_triplet);
-        if (it != end() && (*it)->want == want_t::install)
+        const const_iterator it = find(name, triplet);
+        if (it != end() && (*it)->want == Want::INSTALL && (*it)->state == InstallState::INSTALLED)
         {
             return it;
         }
@@ -42,9 +45,9 @@ namespace vcpkg
 
     StatusParagraphs::iterator StatusParagraphs::insert(std::unique_ptr<StatusParagraph> pgh)
     {
-        Checks::check_throw(pgh != nullptr, "Inserted null paragraph");
-        const package_spec& spec = pgh->package.spec;
-        auto ptr = find(spec.name(), spec.target_triplet());
+        Checks::check_exit(VCPKG_LINE_INFO, pgh != nullptr, "Inserted null paragraph");
+        const PackageSpec& spec = pgh->package.spec;
+        auto ptr = find(spec.name(), spec.triplet());
         if (ptr == end())
         {
             paragraphs.push_back(std::move(pgh));

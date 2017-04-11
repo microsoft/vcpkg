@@ -1,6 +1,7 @@
 #pragma once
 #include "StatusParagraph.h"
 #include <memory>
+#include <iterator>
 
 namespace vcpkg
 {
@@ -13,34 +14,39 @@ namespace vcpkg
         using iterator = container::reverse_iterator;
         using const_iterator = container::const_reverse_iterator;
 
-        const_iterator find(const package_spec& spec) const
+        const_iterator find(const PackageSpec& spec) const
         {
-            return find(spec.name(), spec.target_triplet());
+            return find(spec.name(), spec.triplet());
         }
-        const_iterator find(const std::string& name, const triplet& target_triplet) const;
-        iterator find(const std::string& name, const triplet& target_triplet);
-        iterator find_installed(const std::string& name, const triplet& target_triplet);
+        const_iterator find(const std::string& name, const Triplet& triplet) const;
+        iterator find(const std::string& name, const Triplet& triplet);
+
+        const_iterator find_installed(const PackageSpec& spec) const
+        {
+            return find_installed(spec.name(), spec.triplet());
+        }
+        const_iterator find_installed(const std::string& name, const Triplet& triplet) const;
 
         iterator insert(std::unique_ptr<StatusParagraph>);
 
         friend std::ostream& operator<<(std::ostream&, const StatusParagraphs&);
 
-        auto end()
+        iterator end()
         {
             return paragraphs.rend();
         }
 
-        auto end() const
+        const_iterator end() const
         {
             return paragraphs.rend();
         }
 
-        auto begin()
+        iterator begin()
         {
             return paragraphs.rbegin();
         }
 
-        auto begin() const
+        const_iterator begin() const
         {
             return paragraphs.rbegin();
         }

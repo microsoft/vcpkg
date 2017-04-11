@@ -1,248 +1,249 @@
-#include "vcpkg.h"
-#include <iostream>
-#include <iomanip>
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+
 #include <fstream>
-#include <functional>
-#include <string>
-#include <unordered_map>
 #include <memory>
-#include <vector>
-#include "vcpkg_Files.h"
-#include "Paragraphs.h"
-#include <regex>
+#include <cassert>
+#include "vcpkg_Commands.h"
 #include "metrics.h"
+#include <Shlobj.h>
+#include "vcpkg_Files.h"
+#include "vcpkg_System.h"
+#include "vcpkg_Input.h"
+#include "Paragraphs.h"
+#include "vcpkg_Strings.h"
+#include "vcpkg_Chrono.h"
+#include "vcpkglib.h"
 
 using namespace vcpkg;
 
-static StatusParagraphs load_current_database(const fs::path& vcpkg_dir_status_file, const fs::path& vcpkg_dir_status_file_old)
+void invalid_command(const std::string& cmd)
 {
-    if (!fs::exists(vcpkg_dir_status_file))
-    {
-        if (!fs::exists(vcpkg_dir_status_file_old))
-        {
-            // no status file, use empty db
-            return StatusParagraphs();
-        }
-
-        fs::rename(vcpkg_dir_status_file_old, vcpkg_dir_status_file);
-    }
-
-    auto text = Files::read_contents(vcpkg_dir_status_file).get_or_throw();
-    auto pghs = Paragraphs::parse_paragraphs(text);
-
-    std::vector<std::unique_ptr<StatusParagraph>> status_pghs;
-    for (auto&& p : pghs)
-    {
-        status_pghs.push_back(std::make_unique<StatusParagraph>(p));
-    }
-
-    return StatusParagraphs(std::move(status_pghs));
+    System::println(System::Color::error, "invalid command: %s", cmd);
+    Commands::Help::print_usage();
+    Checks::exit_fail(VCPKG_LINE_INFO);
 }
 
-StatusParagraphs vcpkg::database_load_check(const vcpkg_paths& paths)
+static void inner(const VcpkgCmdArguments& args)
 {
-    auto updates_dir = paths.vcpkg_dir_updates;
-
-    std::error_code ec;
-    fs::create_directory(paths.installed, ec);
-    fs::create_directory(paths.vcpkg_dir, ec);
-    fs::create_directory(paths.vcpkg_dir_info, ec);
-    fs::create_directory(updates_dir, ec);
-
-    const fs::path& status_file = paths.vcpkg_dir_status_file;
-    const fs::path status_file_old = status_file.parent_path() / "status-old";
-    const fs::path status_file_new = status_file.parent_path() / "status-new";
-
-    StatusParagraphs current_status_db = load_current_database(status_file, status_file_old);
-
-    auto b = fs::directory_iterator(updates_dir);
-    auto e = fs::directory_iterator();
-    if (b == e)
+    Metrics::track_property("command", args.command);
+    if (args.command.empty())
     {
-        // updates directory is empty, control file is up-to-date.
-        return current_status_db;
+        Commands::Help::print_usage();
+        Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
-    for (; b != e; ++b)
+    if (auto command_function = Commands::find(args.command, Commands::get_available_commands_type_c()))
     {
-        if (!fs::is_regular_file(b->status()))
-            continue;
-        if (b->path().filename() == "incomplete")
-            continue;
+        return command_function(args);
+    }
 
-        auto text = Files::read_contents(b->path()).get_or_throw();
-        auto pghs = Paragraphs::parse_paragraphs(text);
-        for (auto&& p : pghs)
+    fs::path vcpkg_root_dir;
+    if (args.vcpkg_root_dir != nullptr)
+    {
+        vcpkg_root_dir = fs::absolute(Strings::utf8_to_utf16(*args.vcpkg_root_dir));
+    }
+    else
+    {
+        const Optional<std::wstring> vcpkg_root_dir_env = System::get_environmental_variable(L"VCPKG_ROOT");
+        if (auto v = vcpkg_root_dir_env.get())
         {
-            current_status_db.insert(std::make_unique<StatusParagraph>(p));
+            vcpkg_root_dir = fs::absolute(*v);
+        }
+        else
+        {
+            vcpkg_root_dir = Files::find_file_recursively_up(fs::absolute(System::get_exe_path_of_current_process()), ".vcpkg-root");
         }
     }
 
-    std::fstream(status_file_new, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc) << current_status_db;
+    Checks::check_exit(VCPKG_LINE_INFO, !vcpkg_root_dir.empty(), "Error: Could not detect vcpkg-root.");
 
-    if (fs::exists(status_file_old))
-        fs::remove(status_file_old);
-    if (fs::exists(status_file))
-        fs::rename(status_file, status_file_old);
-    fs::rename(status_file_new, status_file);
-    fs::remove(status_file_old);
+    const Expected<VcpkgPaths> expected_paths = VcpkgPaths::create(vcpkg_root_dir);
+    Checks::check_exit(VCPKG_LINE_INFO, !expected_paths.error_code(), "Error: Invalid vcpkg root directory %s: %s", vcpkg_root_dir.string(), expected_paths.error_code().message());
+    const VcpkgPaths paths = expected_paths.value_or_exit(VCPKG_LINE_INFO);
+    int exit_code = _wchdir(paths.root.c_str());
+    Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Changing the working dir failed");
 
-    b = fs::directory_iterator(updates_dir);
-    for (; b != e; ++b)
+    if (auto command_function = Commands::find(args.command, Commands::get_available_commands_type_b()))
     {
-        if (!fs::is_regular_file(b->status()))
-            continue;
-        fs::remove(b->path());
+        return command_function(args, paths);
     }
 
-    return current_status_db;
-}
-
-void vcpkg::write_update(const vcpkg_paths& paths, const StatusParagraph& p)
-{
-    static int update_id = 0;
-    auto my_update_id = update_id++;
-    auto tmp_update_filename = paths.vcpkg_dir_updates / "incomplete";
-    auto update_filename = paths.vcpkg_dir_updates / std::to_string(my_update_id);
-    std::fstream fs(tmp_update_filename, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
-    fs << p;
-    fs.close();
-    fs::rename(tmp_update_filename, update_filename);
-}
-
-static void upgrade_to_slash_terminated_sorted_format(std::vector<std::string>* lines, const fs::path& listfile_path)
-{
-    static bool was_tracked = false;
-
-    if (lines->empty())
+    Triplet default_triplet;
+    if (args.triplet != nullptr)
     {
-        return;
+        default_triplet = Triplet::from_canonical_name(*args.triplet);
     }
-
-    if (lines->at(0).back() == '/')
+    else
     {
-        return; // File already in the new format
-    }
-
-    if (!was_tracked)
-    {
-        was_tracked = true;
-        TrackProperty("listfile", "update to new format");
-    }
-
-    // The files are sorted such that directories are placed just before the files they contain
-    // (They are not necessarily sorted alphabetically, e.g. libflac)
-    // Therefore we can detect the entries that represent directories by comparing every element with the next one
-    // and checking if the next has a slash immediately after the current one's length
-    for (size_t i = 0; i < lines->size() - 1; i++)
-    {
-        std::string& current_string = lines->at(i);
-        const std::string& next_string = lines->at(i + 1);
-
-        const size_t potential_slash_char_index = current_string.length();
-        // Make sure the index exists first
-        if (next_string.size() > potential_slash_char_index && next_string.at(potential_slash_char_index) == '/')
+        const Optional<std::wstring> vcpkg_default_triplet_env = System::get_environmental_variable(L"VCPKG_DEFAULT_TRIPLET");
+        if (auto v = vcpkg_default_triplet_env.get())
         {
-            current_string += '/'; // Mark as a directory
+            default_triplet = Triplet::from_canonical_name(Strings::utf16_to_utf8(*v));
+        }
+        else
+        {
+            default_triplet = Triplet::X86_WINDOWS;
         }
     }
 
-    // After suffixing the directories with a slash, we can now sort.
-    // We cannot sort before adding the suffixes because the following (actual example):
-    /*
-        x86-windows/include/FLAC <<<<<< This would be separated from its group due to sorting
-        x86-windows/include/FLAC/all.h
-        x86-windows/include/FLAC/assert.h
-        x86-windows/include/FLAC/callback.h
-        x86-windows/include/FLAC++
-        x86-windows/include/FLAC++/all.h
-        x86-windows/include/FLAC++/decoder.h
-        x86-windows/include/FLAC++/encoder.h
-     *
-        x86-windows/include/FLAC/ <<<<<< This will now be kept with its group when sorting
-        x86-windows/include/FLAC/all.h
-        x86-windows/include/FLAC/assert.h
-        x86-windows/include/FLAC/callback.h
-        x86-windows/include/FLAC++/
-        x86-windows/include/FLAC++/all.h
-        x86-windows/include/FLAC++/decoder.h
-        x86-windows/include/FLAC++/encoder.h
-     */
-    // Note that after sorting, the FLAC++/ group will be placed before the FLAC/ group
-    // The new format is lexicographically sorted
-    std::sort(lines->begin(), lines->end());
+    Input::check_triplet(default_triplet, paths);
 
-#if 0
-    // Replace the listfile on disk
-    const fs::path updated_listfile_path = listfile_path.generic_string() + "_updated";
-    Files::write_all_lines(updated_listfile_path, *lines);
-    fs::rename(updated_listfile_path, listfile_path);
-#endif
-}
-
-std::vector<StatusParagraph_and_associated_files> vcpkg::get_installed_files(const vcpkg_paths& paths, const StatusParagraphs& status_db)
-{
-    std::vector<StatusParagraph_and_associated_files> installed_files;
-
-    for (const std::unique_ptr<StatusParagraph>& pgh : status_db)
+    if (auto command_function = Commands::find(args.command, Commands::get_available_commands_type_a()))
     {
-        if (pgh->state != install_state_t::installed)
-        {
-            continue;
-        }
-
-        const fs::path listfile_path = paths.listfile_path(pgh->package);
-        std::vector<std::string> installed_files_of_current_pgh = Files::read_all_lines(listfile_path).get_or_throw();
-        Strings::trim_all_and_remove_whitespace_strings(&installed_files_of_current_pgh);
-        upgrade_to_slash_terminated_sorted_format(&installed_files_of_current_pgh, listfile_path);
-
-        // Remove the directories
-        installed_files_of_current_pgh.erase(
-            std::remove_if(installed_files_of_current_pgh.begin(), installed_files_of_current_pgh.end(), [](const std::string& file) -> bool
-                           {
-                               return file.back() == '/';
-                           }
-            ), installed_files_of_current_pgh.end());
-
-        StatusParagraph_and_associated_files pgh_and_files = {*pgh, ImmutableSortedVector<std::string>::create(std::move(installed_files_of_current_pgh))};
-        installed_files.push_back(std::move(pgh_and_files));
+        return command_function(args, paths, default_triplet);
     }
 
-    return installed_files;
+    return invalid_command(args.command);
 }
 
-expected<SourceParagraph> vcpkg::try_load_port(const fs::path& path)
+static void loadConfig()
 {
+    fs::path localappdata;
+    {
+        // Config path in AppDataLocal
+        wchar_t* localappdatapath = nullptr;
+        if (S_OK != SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &localappdatapath))
+            __fastfail(1);
+        localappdata = localappdatapath;
+        CoTaskMemFree(localappdatapath);
+    }
+
     try
     {
-        auto pghs = Paragraphs::get_paragraphs(path / "CONTROL");
-        Checks::check_exit(pghs.size() == 1, "Invalid control file at %s\\CONTROL", path.string());
-        return SourceParagraph(pghs[0]);
-    }
-    catch (std::runtime_error const&)
-    {
-    }
+        auto maybe_pghs = Paragraphs::get_paragraphs(localappdata / "vcpkg" / "config");
+        if (auto p_pghs = maybe_pghs.get())
+        {
+            const auto& pghs = *p_pghs;
 
-    return std::errc::no_such_file_or_directory;
+            std::unordered_map<std::string, std::string> keys;
+            if (pghs.size() > 0)
+                keys = pghs[0];
+
+            for (size_t x = 1; x < pghs.size(); ++x)
+            {
+                for (auto&& p : pghs[x])
+                    keys.insert(p);
+            }
+
+            auto user_id = keys["User-Id"];
+            auto user_time = keys["User-Since"];
+            if (!user_id.empty() && !user_time.empty())
+            {
+                Metrics::set_user_information(user_id, user_time);
+                return;
+            }
+        }
+    }
+    catch (...) { }
+
+    // config file not found, could not be read, or invalid
+    std::string user_id, user_time;
+    Metrics::init_user_information(user_id, user_time);
+    Metrics::set_user_information(user_id, user_time);
+    try
+    {
+        std::error_code ec;
+        fs::create_directory(localappdata / "vcpkg", ec);
+        std::ofstream(localappdata / "vcpkg" / "config", std::ios_base::out | std::ios_base::trunc)
+            << "User-Id: " << user_id << "\n"
+            << "User-Since: " << user_time << "\n";
+    }
+    catch (...) { }
 }
 
-expected<BinaryParagraph> vcpkg::try_load_cached_package(const vcpkg_paths& paths, const package_spec& spec)
+static std::string trim_path_from_command_line(const std::string& full_command_line)
 {
-    const fs::path path = paths.package_dir(spec) / "CONTROL";
+    Checks::check_exit(VCPKG_LINE_INFO, full_command_line.size() > 0, "Internal failure - cannot have empty command line");
 
-    auto control_contents_maybe = Files::read_contents(path);
-    if (auto control_contents = control_contents_maybe.get())
+    if (full_command_line[0] == '"')
     {
-        std::vector<std::unordered_map<std::string, std::string>> pghs;
-        try
-        {
-            pghs = Paragraphs::parse_paragraphs(*control_contents);
-        }
-        catch (std::runtime_error)
-        {
-        }
-        Checks::check_exit(pghs.size() == 1, "Invalid control file at %s", path.string());
-        return BinaryParagraph(pghs[0]);
+        auto it = std::find(full_command_line.cbegin() + 1, full_command_line.cend(), '"');
+        if (it != full_command_line.cend()) // Skip over the quote
+            ++it;
+        while (it != full_command_line.cend() && *it == ' ') // Skip over a space
+            ++it;
+        return std::string(it, full_command_line.cend());
     }
-    return control_contents_maybe.error_code();
+
+    auto it = std::find(full_command_line.cbegin(), full_command_line.cend(), ' ');
+    while (it != full_command_line.cend() && *it == ' ')
+        ++it;
+    return std::string(it, full_command_line.cend());
+}
+
+static ElapsedTime g_timer;
+
+int wmain(const int argc, const wchar_t* const* const argv)
+{
+    if (argc == 0)
+        std::abort();
+
+    g_timer = ElapsedTime::create_started();
+    atexit([]()
+        {
+            auto elapsed_us = g_timer.microseconds();
+            Metrics::track_metric("elapsed_us", elapsed_us);
+            g_debugging = false;
+            Metrics::flush();
+        });
+
+    Metrics::track_property("version", Commands::Version::version());
+
+    const std::string trimmed_command_line = trim_path_from_command_line(Strings::utf16_to_utf8(GetCommandLineW()));
+    Metrics::track_property("cmdline", trimmed_command_line);
+    loadConfig();
+    Metrics::track_property("sqmuser", Metrics::get_SQM_user());
+
+    const VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(argc, argv);
+
+    if (args.printmetrics != OptBoolT::UNSPECIFIED)
+        Metrics::set_print_metrics(args.printmetrics == OptBoolT::ENABLED);
+    if (args.sendmetrics != OptBoolT::UNSPECIFIED)
+        Metrics::set_send_metrics(args.sendmetrics == OptBoolT::ENABLED);
+
+    if (args.debug != OptBoolT::UNSPECIFIED)
+    {
+        g_debugging = (args.debug == OptBoolT::ENABLED);
+    }
+
+    if (g_debugging)
+    {
+        inner(args);
+        Checks::exit_fail(VCPKG_LINE_INFO);
+    }
+
+    std::string exc_msg;
+    try
+    {
+        inner(args);
+        Checks::exit_fail(VCPKG_LINE_INFO);
+    }
+    catch (std::exception& e)
+    {
+        exc_msg = e.what();
+    }
+    catch (...)
+    {
+        exc_msg = "unknown error(...)";
+    }
+    Metrics::track_property("error", exc_msg);
+
+    fflush(stdout);
+    System::print(
+        "vcpkg.exe has crashed.\n"
+        "Please send an email to:\n"
+        "    %s\n"
+        "containing a brief summary of what you were trying to do and the following data blob:\n"
+        "\n"
+        "Version=%s\n"
+        "EXCEPTION='%s'\n"
+        "CMD=\n",
+        Commands::Contact::email(),
+        Commands::Version::version(),
+        exc_msg);
+    fflush(stdout);
+    for (int x = 0; x < argc; ++x)
+        System::println("%s|", Strings::utf16_to_utf8(argv[x]));
+    fflush(stdout);
 }

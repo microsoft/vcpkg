@@ -1,26 +1,25 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/uwebsockets-0.12.0)
+set(VERSION 0.14.1)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/uwebsockets-${VERSION})
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/uWebSockets/uWebSockets/archive/v0.12.0.zip"
-    FILENAME "uwebsockets-v0.12.0.zip"
-    SHA512 ea10682608d5f6c8b246f186dfc2f14f496858cc7e468880b96b111f10058daf529f1aa9662a851e21494dde9a4faadf2b9904483dac5350d0ca8736500cdda8
+    URLS "https://github.com/uWebSockets/uWebSockets/archive/v${VERSION}.zip"
+    FILENAME "uwebsockets-v${VERSION}.zip"
+    SHA512 1fb798ba49b45c48991ef3c657da9ef8f46d18009c77d9a2c6b98345f97ad7d7806e5490dc478dd5d05bc92bbeb849ac5a300fb91028f786274da89587c04c6e
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0001_cmake.patch
-)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS_DEBUG
+        -DINSTALL_HEADERS=OFF
 )
 
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/uwebsockets)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/uwebsockets/LICENSE ${CURRENT_PACKAGES_DIR}/share/uwebsockets/copyright)
+
 vcpkg_copy_pdbs()

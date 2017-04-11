@@ -5,22 +5,22 @@
 
 namespace vcpkg
 {
-    enum class install_state_t
+    enum class InstallState
     {
-        error,
-        not_installed,
-        half_installed,
-        installed,
+        ERROR_STATE,
+        NOT_INSTALLED,
+        HALF_INSTALLED,
+        INSTALLED,
     };
 
-    enum class want_t
+    enum class Want
     {
-        error,
-        unknown,
-        install,
-        hold,
-        deinstall,
-        purge
+        ERROR_STATE,
+        UNKNOWN,
+        INSTALL,
+        HOLD,
+        DEINSTALL,
+        PURGE
     };
 
     struct StatusParagraph
@@ -29,13 +29,13 @@ namespace vcpkg
         explicit StatusParagraph(const std::unordered_map<std::string, std::string>& fields);
 
         BinaryParagraph package;
-        want_t want;
-        install_state_t state;
+        Want want;
+        InstallState state;
     };
 
     std::ostream& operator<<(std::ostream& os, const StatusParagraph& pgh);
 
-    std::string to_string(install_state_t f);
+    std::string to_string(InstallState f);
 
-    std::string to_string(want_t f);
+    std::string to_string(Want f);
 }

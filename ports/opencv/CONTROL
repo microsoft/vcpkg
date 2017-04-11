@@ -1,4 +1,6 @@
 Source: opencv
-Version: 3.1.0-1
+Version: 3.2.0
 Build-Depends: zlib, libpng, libjpeg-turbo, tiff
+#Use the following line instead for optional features from OpenCV-contrib that require protobuf
+#Build-Depends: zlib, libpng, libjpeg-turbo, tiff, protobuf
 Description: computer vision library

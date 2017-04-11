@@ -1,44 +1,53 @@
+#include "pch.h"
 #include "vcpkg_Checks.h"
-
-#include <stdexcept>
 #include "vcpkg_System.h"
+#include "vcpkglib.h"
 
 namespace vcpkg::Checks
 {
-    void unreachable()
+    [[noreturn]]
+    void unreachable(const LineInfo& line_info)
     {
-        System::println(System::color::error, "Error: Unreachable code was reached");
+        System::println(System::Color::error, "Error: Unreachable code was reached");
+        System::println(System::Color::error, line_info.to_string()); // Always print line_info here
 #ifndef NDEBUG
         std::abort();
 #else
-        exit(EXIT_FAILURE);
+        ::exit(EXIT_FAILURE);
 #endif
     }
 
-    void exit_with_message(const char* errorMessage)
+    [[noreturn]]
+    void exit_with_code(const LineInfo& line_info, const int exit_code)
     {
-        System::println(System::color::error, errorMessage);
-        exit(EXIT_FAILURE);
+        if (g_debugging)
+        {
+            System::println(System::Color::error, line_info.to_string());
+        }
+
+        ::exit(exit_code);
     }
 
-    void throw_with_message(const char* errorMessage)
+    [[noreturn]]
+    void exit_with_message(const LineInfo& line_info, const CStringView errorMessage)
     {
-        throw std::runtime_error(errorMessage);
+        System::println(System::Color::error, errorMessage);
+        exit_fail(line_info);
     }
 
-    void check_throw(bool expression, const char* errorMessage)
+    void check_exit(const LineInfo& line_info, bool expression)
     {
         if (!expression)
         {
-            throw_with_message(errorMessage);
+            exit_with_message(line_info, "");
         }
     }
 
-    void check_exit(bool expression, const char* errorMessage)
+    void check_exit(const LineInfo& line_info, bool expression, const CStringView errorMessage)
     {
         if (!expression)
         {
-            exit_with_message(errorMessage);
+            exit_with_message(line_info, errorMessage);
         }
     }
 }

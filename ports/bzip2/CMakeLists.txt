@@ -20,6 +20,12 @@ if(BUILD_SHARED_LIBS)
     target_compile_definitions(libbz2 PRIVATE -DBZ_BUILD_DLL)
 endif()
 
+if(MSVC)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+    add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
+    add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
+endif()
+
 install(TARGETS libbz2
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib

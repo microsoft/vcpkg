@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "StatusParagraph.h"
 #include "vcpkglib_helpers.h"
 
@@ -11,7 +12,7 @@ namespace vcpkg
         static const std::string STATUS = "Status";
     }
 
-    StatusParagraph::StatusParagraph() : want(want_t::error), state(install_state_t::error)
+    StatusParagraph::StatusParagraph() : want(Want::ERROR_STATE), state(InstallState::ERROR_STATE)
     {
     }
 
@@ -38,16 +39,16 @@ namespace vcpkg
         want = [](const std::string& text)
             {
                 if (text == "unknown")
-                    return want_t::unknown;
+                    return Want::UNKNOWN;
                 if (text == "install")
-                    return want_t::install;
+                    return Want::INSTALL;
                 if (text == "hold")
-                    return want_t::hold;
+                    return Want::HOLD;
                 if (text == "deinstall")
-                    return want_t::deinstall;
+                    return Want::DEINSTALL;
                 if (text == "purge")
-                    return want_t::purge;
-                return want_t::error;
+                    return Want::PURGE;
+                return Want::ERROR_STATE;
             }(std::string(mark, b));
 
         if (std::distance(b, e) < 4)
@@ -57,35 +58,35 @@ namespace vcpkg
         state = [](const std::string& text)
             {
                 if (text == "not-installed")
-                    return install_state_t::not_installed;
+                    return InstallState::NOT_INSTALLED;
                 if (text == "installed")
-                    return install_state_t::installed;
+                    return InstallState::INSTALLED;
                 if (text == "half-installed")
-                    return install_state_t::half_installed;
-                return install_state_t::error;
+                    return InstallState::HALF_INSTALLED;
+                return InstallState::ERROR_STATE;
             }(std::string(b, e));
     }
 
-    std::string to_string(install_state_t f)
+    std::string to_string(InstallState f)
     {
         switch (f)
         {
-            case install_state_t::half_installed: return "half-installed";
-            case install_state_t::installed: return "installed";
-            case install_state_t::not_installed: return "not-installed";
+            case InstallState::HALF_INSTALLED: return "half-installed";
+            case InstallState::INSTALLED: return "installed";
+            case InstallState::NOT_INSTALLED: return "not-installed";
             default: return "error";
         }
     }
 
-    std::string to_string(want_t f)
+    std::string to_string(Want f)
     {
         switch (f)
         {
-            case want_t::deinstall: return "deinstall";
-            case want_t::hold: return "hold";
-            case want_t::install: return "install";
-            case want_t::purge: return "purge";
-            case want_t::unknown: return "unknown";
+            case Want::DEINSTALL: return "deinstall";
+            case Want::HOLD: return "hold";
+            case Want::INSTALL: return "install";
+            case Want::PURGE: return "purge";
+            case Want::UNKNOWN: return "unknown";
             default: return "error";
         }
     }

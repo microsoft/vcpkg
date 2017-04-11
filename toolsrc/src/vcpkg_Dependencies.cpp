@@ -1,26 +1,63 @@
+#include "pch.h"
 #include "vcpkg_Dependencies.h"
-#include <vector>
 #include "vcpkg_Graphs.h"
-#include "vcpkg_paths.h"
-#include "package_spec.h"
+#include "VcpkgPaths.h"
+#include "PackageSpec.h"
 #include "StatusParagraphs.h"
-#include <unordered_set>
-#include "vcpkg_Maps.h"
 #include "vcpkg_Files.h"
-#include "vcpkg.h"
+#include "Paragraphs.h"
 
 namespace vcpkg::Dependencies
 {
-    std::vector<package_spec_with_install_plan> create_install_plan(const vcpkg_paths& paths, const std::vector<package_spec>& specs, const StatusParagraphs& status_db)
+    std::string to_output_string(RequestType request_type, const CStringView s)
     {
-        std::unordered_map<package_spec, install_plan_action> was_examined; // Examine = we have checked its immediate (non-recursive) dependencies
-        Graphs::Graph<package_spec> graph;
+        switch (request_type)
+        {
+            case RequestType::AUTO_SELECTED:
+                return Strings::format("  * %s", s);
+            case RequestType::USER_REQUESTED:
+                return Strings::format("    %s", s);
+            default:
+                Checks::unreachable(VCPKG_LINE_INFO);
+        }
+    }
+
+    InstallPlanAction::InstallPlanAction() : plan_type(InstallPlanType::UNKNOWN), request_type(RequestType::UNKNOWN), binary_pgh(nullopt), source_pgh(nullopt) { }
+
+    InstallPlanAction::InstallPlanAction(const InstallPlanType& plan_type, const RequestType& request_type, Optional<BinaryParagraph> binary_pgh, Optional<SourceParagraph> source_pgh)
+        : plan_type(std::move(plan_type)), request_type(request_type), binary_pgh(std::move(binary_pgh)), source_pgh(std::move(source_pgh)) { }
+
+    bool PackageSpecWithInstallPlan::compare_by_name(const PackageSpecWithInstallPlan* left, const PackageSpecWithInstallPlan* right)
+    {
+        return left->spec.name() < right->spec.name();
+    }
+
+    PackageSpecWithInstallPlan::PackageSpecWithInstallPlan(const PackageSpec& spec, InstallPlanAction&& plan) : spec(spec), plan(std::move(plan)) { }
+
+    RemovePlanAction::RemovePlanAction() : plan_type(RemovePlanType::UNKNOWN), request_type(RequestType::UNKNOWN) { }
+
+    RemovePlanAction::RemovePlanAction(const RemovePlanType& plan_type, const Dependencies::RequestType& request_type) : plan_type(plan_type), request_type(request_type) { }
+
+    bool PackageSpecWithRemovePlan::compare_by_name(const PackageSpecWithRemovePlan* left, const PackageSpecWithRemovePlan* right)
+    {
+        return left->spec.name() < right->spec.name();
+    }
+
+    PackageSpecWithRemovePlan::PackageSpecWithRemovePlan(const PackageSpec& spec, RemovePlanAction&& plan)
+        : spec(spec), plan(std::move(plan)) { }
+
+    std::vector<PackageSpecWithInstallPlan> create_install_plan(const VcpkgPaths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db)
+    {
+        std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
+
+        std::unordered_map<PackageSpec, InstallPlanAction> was_examined; // Examine = we have checked its immediate (non-recursive) dependencies
+        Graphs::Graph<PackageSpec> graph;
         graph.add_vertices(specs);
 
-        std::vector<package_spec> examine_stack(specs);
+        std::vector<PackageSpec> examine_stack(specs);
         while (!examine_stack.empty())
         {
-            const package_spec spec = examine_stack.back();
+            const PackageSpec spec = examine_stack.back();
             examine_stack.pop_back();
 
             if (was_examined.find(spec) != was_examined.end())
@@ -32,7 +69,13 @@ namespace vcpkg::Dependencies
                 {
                     for (const std::string& dep_as_string : dependencies_as_string)
                     {
-                        const package_spec current_dep = package_spec::from_name_and_triplet(dep_as_string, spec.target_triplet()).get_or_throw();
+                        const PackageSpec current_dep = PackageSpec::from_name_and_triplet(dep_as_string, spec.triplet()).value_or_exit(VCPKG_LINE_INFO);
+                        auto it = status_db.find_installed(current_dep);
+                        if (it != status_db.end())
+                        {
+                            continue;
+                        }
+
                         graph.add_edge(spec, current_dep);
                         if (was_examined.find(current_dep) == was_examined.end())
                         {
@@ -41,34 +84,97 @@ namespace vcpkg::Dependencies
                     }
                 };
 
-            auto it = status_db.find(spec);
-            if (it != status_db.end() && (*it)->want == want_t::install)
+            const RequestType request_type = specs_as_set.find(spec) != specs_as_set.end() ? RequestType::USER_REQUESTED : RequestType::AUTO_SELECTED;
+            auto it = status_db.find_installed(spec);
+            if (it != status_db.end())
             {
-                was_examined.emplace(spec, install_plan_action{install_plan_type::ALREADY_INSTALLED, nullptr, nullptr});
+                was_examined.emplace(spec, InstallPlanAction{ InstallPlanType::ALREADY_INSTALLED, request_type, nullopt, nullopt });
                 continue;
             }
 
-            expected<BinaryParagraph> maybe_bpgh = try_load_cached_package(paths, spec);
+            Expected<BinaryParagraph> maybe_bpgh = Paragraphs::try_load_cached_package(paths, spec);
             if (BinaryParagraph* bpgh = maybe_bpgh.get())
             {
                 process_dependencies(bpgh->depends);
-                was_examined.emplace(spec, install_plan_action{install_plan_type::INSTALL, std::make_unique<BinaryParagraph>(std::move(*bpgh)), nullptr});
+                was_examined.emplace(spec, InstallPlanAction{ InstallPlanType::INSTALL, request_type, std::move(*bpgh), nullopt });
                 continue;
             }
 
-            expected<SourceParagraph> maybe_spgh = try_load_port(paths, spec.name());
-            SourceParagraph* spgh = maybe_spgh.get();
-            Checks::check_exit(spgh != nullptr, "Cannot find package %s", spec.name());
-            process_dependencies(filter_dependencies(spgh->depends, spec.target_triplet()));
-            was_examined.emplace(spec, install_plan_action{install_plan_type::BUILD_AND_INSTALL, nullptr, std::make_unique<SourceParagraph>(std::move(*spgh))});
+            Expected<SourceParagraph> maybe_spgh = Paragraphs::try_load_port(paths.port_dir(spec));
+            if (auto spgh = maybe_spgh.get())
+            {
+                process_dependencies(filter_dependencies(spgh->depends, spec.triplet()));
+                was_examined.emplace(spec, InstallPlanAction{ InstallPlanType::BUILD_AND_INSTALL, request_type, nullopt, std::move(*spgh) });
+            }
+            else
+            {
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot find package %s", spec.name());
+            }
         }
 
-        std::vector<package_spec_with_install_plan> ret;
+        std::vector<PackageSpecWithInstallPlan> ret;
 
-        const std::vector<package_spec> pkgs = graph.find_topological_sort();
-        for (const package_spec& pkg : pkgs)
+        const std::vector<PackageSpec> pkgs = graph.find_topological_sort();
+        for (const PackageSpec& pkg : pkgs)
         {
-            ret.push_back({ pkg, std::move(was_examined[pkg]) });
+            ret.push_back(PackageSpecWithInstallPlan(pkg, std::move(was_examined[pkg])));
+        }
+        return ret;
+    }
+
+    std::vector<PackageSpecWithRemovePlan> create_remove_plan(const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db)
+    {
+        std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
+
+        std::unordered_map<PackageSpec, RemovePlanAction> was_examined; // Examine = we have checked its immediate (non-recursive) dependencies
+        Graphs::Graph<PackageSpec> graph;
+        graph.add_vertices(specs);
+
+        std::vector<PackageSpec> examine_stack(specs);
+        while (!examine_stack.empty())
+        {
+            const PackageSpec spec = examine_stack.back();
+            examine_stack.pop_back();
+
+            if (was_examined.find(spec) != was_examined.end())
+            {
+                continue;
+            }
+
+            const StatusParagraphs::const_iterator it = status_db.find(spec);
+            if (it == status_db.end() || (*it)->state == InstallState::NOT_INSTALLED)
+            {
+                was_examined.emplace(spec, RemovePlanAction(RemovePlanType::NOT_INSTALLED, RequestType::USER_REQUESTED));
+                continue;
+            }
+
+            for (const std::unique_ptr<StatusParagraph>& an_installed_package : status_db)
+            {
+                if (an_installed_package->want != Want::INSTALL)
+                    continue;
+                if (an_installed_package->package.spec.triplet() != spec.triplet())
+                    continue;
+
+                const std::vector<std::string>& deps = an_installed_package->package.depends;
+                if (std::find(deps.begin(), deps.end(), spec.name()) == deps.end())
+                {
+                    continue;
+                }
+
+                graph.add_edge(spec, an_installed_package.get()->package.spec);
+                examine_stack.push_back(an_installed_package.get()->package.spec);
+            }
+
+            const RequestType request_type = specs_as_set.find(spec) != specs_as_set.end() ? RequestType::USER_REQUESTED : RequestType::AUTO_SELECTED;
+            was_examined.emplace(spec, RemovePlanAction(RemovePlanType::REMOVE, request_type));
+        }
+
+        std::vector<PackageSpecWithRemovePlan> ret;
+
+        const std::vector<PackageSpec> pkgs = graph.find_topological_sort();
+        for (const PackageSpec& pkg : pkgs)
+        {
+            ret.push_back(PackageSpecWithRemovePlan(pkg, std::move(was_examined[pkg])));
         }
         return ret;
     }

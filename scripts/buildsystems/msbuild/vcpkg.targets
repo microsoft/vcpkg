@@ -9,6 +9,16 @@
     <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x86-uwp</VcpkgTriplet>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == '||'">
+    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
+    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x86-windows</VcpkgTriplet>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == '|Windows Store|10.0'">
+    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
+    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x86-uwp</VcpkgTriplet>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'x64||'">
     <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
     <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x64-windows</VcpkgTriplet>
@@ -39,20 +49,30 @@
     <ClCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(VcpkgRoot)include</AdditionalIncludeDirectories>
     </ClCompile>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(VcpkgRoot)include</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemDefinitionGroup>
+
+  <Target Name="VcpkgTripletSelection" BeforeTargets="ClCompile">
+    <Message Text="Using triplet &quot;$(VcpkgTriplet)&quot; from &quot;$(VcpkgRoot)&quot;" Importance="Normal" Condition="'$(VcpkgEnabled)' == 'true'"/>
+    <Message Text="Not using Vcpkg because VcpkgEnabled is &quot;$(VcpkgEnabled)&quot;" Importance="Normal" Condition="'$(VcpkgEnabled)' != 'true'"/>
+  </Target>
 
   <Target Name="AppLocalFromInstalled" AfterTargets="CopyFilesToOutputDirectory" BeforeTargets="CopyLocalFilesOutputGroup;RegisterOutput" Condition="'$(VcpkgEnabled)' == 'true'">
     <WriteLinesToFile
     File="$(TLogLocation)$(ProjectName).write.1u.tlog"
     Lines="^$(OutputPath)$(TargetName).$(OutputType);" Encoding="Unicode"/>
     <Exec Condition="'$(VcpkgConfiguration)' == 'Debug'"
-      Command="powershell.exe -ExecutionPolicy Unrestricted -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(TargetPath)%22 %22$(VcpkgRoot)debug\bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22"
-      ConsoleToMSBuild="true">
+      Command="powershell.exe -ExecutionPolicy Bypass -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(TargetPath)%22 %22$(VcpkgRoot)debug\bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22"
+      ConsoleToMSBuild="true"
+      StandardOutputImportance="Normal">
         <Output TaskParameter="ConsoleOutput" ItemName="ReferenceCopyLocalPaths" />
     </Exec>
     <Exec Condition="'$(VcpkgConfiguration)' == 'Release'"
-      Command="powershell.exe -ExecutionPolicy Unrestricted -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(TargetPath)%22 %22$(VcpkgRoot)bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22"
-      ConsoleToMSBuild="true">
+      Command="powershell.exe -ExecutionPolicy Bypass -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(TargetPath)%22 %22$(VcpkgRoot)bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22"
+      ConsoleToMSBuild="true"
+      StandardOutputImportance="Normal">
         <Output TaskParameter="ConsoleOutput" ItemName="ReferenceCopyLocalPaths" />
     </Exec>
   </Target>

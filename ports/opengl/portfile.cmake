@@ -1,9 +1,21 @@
-set(OPENGLPATH "C:\\Program Files (x86)\\Windows Kits\\10\\Lib\\10.0.10240.0\\um\\${TRIPLET_SYSTEM_ARCH}\\OpenGL32.Lib")
-set(LICENSEPATH "C:\\Program Files (x86)\\Windows Kits\\10\\Licenses\\10.0.10240.0\\sdk_license.rtf")
-set(HEADERSPATH "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.10240.0\\um")
+include(vcpkg_common_functions)
+
+vcpkg_get_program_files_32_bit(PROGRAM_FILES_32_BIT)
+vcpkg_get_windows_sdk(WINDOWS_SDK)
+
+if (WINDOWS_SDK MATCHES "10.")
+    set(OPENGLPATH "${PROGRAM_FILES_32_BIT}\\Windows Kits\\10\\Lib\\${WINDOWS_SDK}\\um\\${TRIPLET_SYSTEM_ARCH}\\OpenGL32.Lib")
+    set(LICENSEPATH "${PROGRAM_FILES_32_BIT}\\Windows Kits\\10\\Licenses\\${WINDOWS_SDK}\\sdk_license.rtf")
+    set(HEADERSPATH "${PROGRAM_FILES_32_BIT}\\Windows Kits\\10\\Include\\${WINDOWS_SDK}\\um")
+elseif(WINDOWS_SDK MATCHES "8.")
+    set(OPENGLPATH "${PROGRAM_FILES_32_BIT}\\Windows Kits\\8.1\\Lib\\winv6.3\\um\\${TRIPLET_SYSTEM_ARCH}\\OpenGL32.Lib")
+    set(HEADERSPATH "${PROGRAM_FILES_32_BIT}\\Windows Kits\\8.1\\Include\\um")
+else()
+    message(FATAL_ERROR "Portfile not yet configured for Windows SDK with version: ${WINDOWS_SDK}")
+endif()
 
 if (NOT EXISTS "${OPENGLPATH}")
-    message(FATAL_ERROR "Cannot find Windows 10.0.10240.0 SDK. File does not exist: ${OPENGLPATH}")
+    message(FATAL_ERROR "Cannot find Windows ${WINDOWS_SDK} SDK. File does not exist: ${OPENGLPATH}")
 endif()
 
 file(MAKE_DIRECTORY
@@ -13,13 +25,17 @@ file(MAKE_DIRECTORY
     ${CURRENT_PACKAGES_DIR}/share/opengl
 )
 
-file(COPY ${LICENSEPATH} DESTINATION ${CURRENT_PACKAGES_DIR}/include/gl)
 file(COPY
     "${HEADERSPATH}\\gl\\GL.h"
     "${HEADERSPATH}\\gl\\GLU.h"
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
+    DESTINATION ${CURRENT_PACKAGES_DIR}/include/gl
     )
 file(COPY ${OPENGLPATH} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 file(COPY ${OPENGLPATH} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-file(COPY ${LICENSEPATH} DESTINATION ${CURRENT_PACKAGES_DIR}/share/opengl)
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/opengl/copyright "See the accompanying sdk_license.rtf")
+
+if (DEFINED LICENSEPATH)
+    file(COPY ${LICENSEPATH} DESTINATION ${CURRENT_PACKAGES_DIR}/share/opengl)
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/opengl/copyright "See the accompanying sdk_license.rtf")
+else()
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/opengl/copyright "See https://developer.microsoft.com/en-us/windows/downloads/windows-8-1-sdk for the Windows 8.1 SDK license")
+endif()

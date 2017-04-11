@@ -8,15 +8,29 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch
+)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(TARGET_TO_INSTALL bson_static)
+else()
+    set(TARGET_TO_INSTALL bson_shared)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DENABLE_TESTS=OFF
-        -DCMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP=ON
+        -DINSTALL_TARGETS=${TARGET_TO_INSTALL}
 )
 
 vcpkg_install_cmake()
 
+# This rename is needed because the official examples expect to use #include <bson.h>
+# See Microsoft/vcpkg#904
 file(RENAME
     ${CURRENT_PACKAGES_DIR}/include/libbson-1.0
     ${CURRENT_PACKAGES_DIR}/temp)
@@ -26,11 +40,6 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/temp ${CURRENT_PACKAGES_DIR}/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(REMOVE         ${CURRENT_PACKAGES_DIR}/lib/bson-1.0.lib)
-    file(REMOVE         ${CURRENT_PACKAGES_DIR}/debug/lib/bson-1.0.lib)
-
     file(RENAME
         ${CURRENT_PACKAGES_DIR}/lib/bson-static-1.0.lib
         ${CURRENT_PACKAGES_DIR}/lib/bson-1.0.lib)
@@ -44,9 +53,9 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
         PATCHES
             ${CMAKE_CURRENT_LIST_DIR}/static.patch
     )
-else()
-    file(REMOVE         ${CURRENT_PACKAGES_DIR}/lib/bson-static-1.0.lib)
-    file(REMOVE         ${CURRENT_PACKAGES_DIR}/debug/lib/bson-static-1.0.lib)
 endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libbson RENAME copyright)
+file(COPY ${SOURCE_PATH}/THIRD_PARTY_NOTICES DESTINATION ${CURRENT_PACKAGES_DIR}/share/libbson)
+
+vcpkg_copy_pdbs()

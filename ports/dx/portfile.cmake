@@ -1,10 +1,10 @@
 #header-only library
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/dx-1.0.0)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/dx-1.0.1)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/sdcb/dx/archive/1.0.0.tar.gz"
-    FILENAME "dx-1.0.0.tar.gz"
-    SHA512 7d0e0550eb27c3a7d3a9c4b78f29290aaf60c02a7c2fabb6e4769673592bc031f8ed430cd777e02096b9b9a8981c7e05b45448bf5c182704e080e61eaeab62f8
+    URLS "https://github.com/sdcb/dx/archive/v1.0.1.tar.gz"
+    FILENAME "dx-1.0.1.tar.gz"
+    SHA512 b40eb4daf774bfdb394b207bb29652fbf44361f5d8f9b60509c7a3215cd403dbf0c10454979c0c2e97d839496ef20940070a42837375993cd67d58afacc990e0
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

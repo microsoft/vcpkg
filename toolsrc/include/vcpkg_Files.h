@@ -1,6 +1,6 @@
 #pragma once
 
-#include "expected.h"
+#include "vcpkg_expected.h"
 #include "filesystem_fs.h"
 #include <iterator>
 
@@ -8,13 +8,11 @@ namespace vcpkg::Files
 {
     static const char* FILESYSTEM_INVALID_CHARACTERS = R"(\/:*?"<>|)";
 
-    void check_is_directory(const fs::path& dirpath);
-
     bool has_invalid_chars_for_filesystem(const std::string& s);
 
-    expected<std::string> read_contents(const fs::path& file_path) noexcept;
+    Expected<std::string> read_contents(const fs::path& file_path) noexcept;
 
-    expected<std::vector<std::string>> read_all_lines(const fs::path& file_path);
+    Expected<std::vector<std::string>> read_all_lines(const fs::path& file_path);
 
     void write_all_lines(const fs::path& file_path, const std::vector<std::string>& lines);
 

@@ -1,11 +1,5 @@
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <shellapi.h>
+#include "pch.h"
 #include "vcpkg_Commands.h"
-#include <fstream>
-#include <regex>
-#include <array>
-#include "vcpkg_Environment.h"
 #include "vcpkg_Checks.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Files.h"
@@ -13,10 +7,10 @@
 namespace vcpkg::Commands::Integrate
 {
     static const std::array<fs::path, 2> old_system_target_files = {
-        "C:/Program Files (x86)/MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.nuget.targets",
-        "C:/Program Files (x86)/MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.system.targets"
+        System::get_ProgramFiles_32_bit() / "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.nuget.targets",
+        System::get_ProgramFiles_32_bit() / "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.system.targets"
     };
-    static const fs::path system_wide_targets_file = "C:/Program Files (x86)/MSBuild/Microsoft.Cpp/v4.0/V140/ImportBefore/Default/vcpkg.system.props";
+    static const fs::path system_wide_targets_file = System::get_ProgramFiles_32_bit() / "MSBuild/Microsoft.Cpp/v4.0/V140/ImportBefore/Default/vcpkg.system.props";
 
     static std::string create_appdata_targets_shortcut(const std::string& target_path) noexcept
     {
@@ -106,15 +100,15 @@ namespace vcpkg::Commands::Integrate
         return nuspec_file_content;
     }
 
-    enum class elevation_prompt_user_choice
+    enum class ElevationPromptChoice
     {
-        yes,
-        no
+        YES,
+        NO
     };
 
-    static elevation_prompt_user_choice elevated_cmd_execute(const std::string& param)
+    static ElevationPromptChoice elevated_cmd_execute(const std::string& param)
     {
-        SHELLEXECUTEINFO shExInfo = {0};
+        SHELLEXECUTEINFO shExInfo = { 0 };
         shExInfo.cbSize = sizeof(shExInfo);
         shExInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
         shExInfo.hwnd = nullptr;
@@ -128,23 +122,24 @@ namespace vcpkg::Commands::Integrate
 
         if (!ShellExecuteExA(&shExInfo))
         {
-            return elevation_prompt_user_choice::no;
+            return ElevationPromptChoice::NO;
         }
         if (shExInfo.hProcess == nullptr)
         {
-            return elevation_prompt_user_choice::no;
+            return ElevationPromptChoice::NO;
         }
         WaitForSingleObject(shExInfo.hProcess, INFINITE);
         CloseHandle(shExInfo.hProcess);
-        return elevation_prompt_user_choice::yes;
+        return ElevationPromptChoice::YES;
     }
 
     static fs::path get_appdata_targets_path()
     {
-        return fs::path(System::wdupenv_str(L"LOCALAPPDATA")) / "vcpkg" / "vcpkg.user.targets";
+        static const fs::path local_app_data = fs::path(System::get_environmental_variable(L"LOCALAPPDATA").value_or_exit(VCPKG_LINE_INFO));
+        return local_app_data / "vcpkg" / "vcpkg.user.targets";
     }
 
-    static void integrate_install(const vcpkg_paths& paths)
+    static void integrate_install(const VcpkgPaths& paths)
     {
         // TODO: This block of code should eventually be removed
         for (auto&& old_system_wide_targets_file : old_system_target_files)
@@ -152,16 +147,16 @@ namespace vcpkg::Commands::Integrate
             if (fs::exists(old_system_wide_targets_file))
             {
                 const std::string param = Strings::format(R"(/c DEL "%s" /Q > nul)", old_system_wide_targets_file.string());
-                elevation_prompt_user_choice user_choice = elevated_cmd_execute(param);
+                ElevationPromptChoice user_choice = elevated_cmd_execute(param);
                 switch (user_choice)
                 {
-                    case elevation_prompt_user_choice::yes:
+                    case ElevationPromptChoice::YES:
                         break;
-                    case elevation_prompt_user_choice::no:
-                        System::println(System::color::warning, "Warning: Previous integration file was not removed");
-                        exit(EXIT_FAILURE);
+                    case ElevationPromptChoice::NO:
+                        System::println(System::Color::warning, "Warning: Previous integration file was not removed");
+                        Checks::exit_fail(VCPKG_LINE_INFO);
                     default:
-                        Checks::unreachable();
+                        Checks::unreachable(VCPKG_LINE_INFO);
                 }
             }
         }
@@ -171,20 +166,17 @@ namespace vcpkg::Commands::Integrate
         fs::create_directory(tmp_dir);
 
         bool should_install_system = true;
-        if (fs::exists(system_wide_targets_file))
+        const Expected<std::string> system_wide_file_contents = Files::read_contents(system_wide_targets_file);
+        if (auto contents_data = system_wide_file_contents.get())
         {
-            auto system_wide_file_contents = Files::read_contents(system_wide_targets_file);
-            if (auto contents_data = system_wide_file_contents.get())
+            std::regex re(R"###(<!-- version (\d+) -->)###");
+            std::match_results<std::string::const_iterator> match;
+            auto found = std::regex_search(*contents_data, match, re);
+            if (found)
             {
-                std::regex re(R"###(<!-- version (\d+) -->)###");
-                std::match_results<std::string::const_iterator> match;
-                auto found = std::regex_search(*contents_data, match, re);
-                if (found)
-                {
-                    int ver = atoi(match[1].str().c_str());
-                    if (ver >= 1)
-                        should_install_system = false;
-                }
+                int ver = atoi(match[1].str().c_str());
+                if (ver >= 1)
+                    should_install_system = false;
             }
         }
 
@@ -194,19 +186,19 @@ namespace vcpkg::Commands::Integrate
             std::ofstream(sys_src_path) << create_system_targets_shortcut();
 
             const std::string param = Strings::format(R"(/c mkdir "%s" & copy "%s" "%s" /Y > nul)", system_wide_targets_file.parent_path().string(), sys_src_path.string(), system_wide_targets_file.string());
-            elevation_prompt_user_choice user_choice = elevated_cmd_execute(param);
+            ElevationPromptChoice user_choice = elevated_cmd_execute(param);
             switch (user_choice)
             {
-                case elevation_prompt_user_choice::yes:
+                case ElevationPromptChoice::YES:
                     break;
-                case elevation_prompt_user_choice::no:
-                    System::println(System::color::warning, "Warning: integration was not applied");
-                    exit(EXIT_FAILURE);
+                case ElevationPromptChoice::NO:
+                    System::println(System::Color::warning, "Warning: integration was not applied");
+                    Checks::exit_fail(VCPKG_LINE_INFO);
                 default:
-                    Checks::unreachable();
+                    Checks::unreachable(VCPKG_LINE_INFO);
             }
 
-            Checks::check_exit(fs::exists(system_wide_targets_file), "Error: failed to copy targets file to %s", system_wide_targets_file.string());
+            Checks::check_exit(VCPKG_LINE_INFO, fs::exists(system_wide_targets_file), "Error: failed to copy targets file to %s", system_wide_targets_file.string());
         }
 
         const fs::path appdata_src_path = tmp_dir / "vcpkg.user.targets";
@@ -215,41 +207,45 @@ namespace vcpkg::Commands::Integrate
 
         if (!fs::copy_file(appdata_src_path, appdata_dst_path, fs::copy_options::overwrite_existing))
         {
-            System::println(System::color::error, "Error: Failed to copy file: %s -> %s", appdata_src_path.string(), appdata_dst_path.string());
-            exit(EXIT_FAILURE);
+            System::println(System::Color::error, "Error: Failed to copy file: %s -> %s", appdata_src_path.string(), appdata_dst_path.string());
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
-        System::println(System::color::success, "Applied user-wide integration for this vcpkg root.");
+        System::println(System::Color::success, "Applied user-wide integration for this vcpkg root.");
+        const fs::path cmake_toolchain = paths.buildsystems / "vcpkg.cmake";
         System::println("\n"
-            "All C++ projects can now #include any installed libraries.\n"
-            "Linking will be handled automatically.\n"
-            "Installing new libraries will make them instantly available.");
+                        "All MSBuild C++ projects can now #include any installed libraries.\n"
+                        "Linking will be handled automatically.\n"
+                        "Installing new libraries will make them instantly available.\n"
+                        "\n"
+                        "CMake projects should use -DCMAKE_TOOLCHAIN_FILE=%s", cmake_toolchain.generic_string());
 
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 
     static void integrate_remove()
     {
-        auto path = get_appdata_targets_path();
-        if (!fs::exists(path))
+        const fs::path path = get_appdata_targets_path();
+
+        std::error_code ec;
+        bool was_deleted = fs::remove(path, ec);
+
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Error: Unable to remove user-wide integration: %d", ec.message());
+
+        if (was_deleted)
         {
-            System::println(System::color::success, "User-wide integration is not installed");
-            exit(EXIT_SUCCESS);
+            System::println(System::Color::success, "User-wide integration was removed");
+        }
+        else
+        {
+            System::println(System::Color::success, "User-wide integration is not installed");
         }
 
-        const std::wstring cmd_line = Strings::wformat(LR"(DEL "%s")", get_appdata_targets_path().native());
-        const int exit_code = System::cmd_execute(cmd_line);
-        if (exit_code)
-        {
-            System::println(System::color::error, "Error: Unable to remove user-wide integration: %d", exit_code);
-            exit(exit_code);
-        }
-        System::println(System::color::success, "User-wide integration was removed");
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 
-    static void integrate_project(const vcpkg_paths& paths)
+    static void integrate_project(const VcpkgPaths& paths)
     {
-        Environment::ensure_nuget_on_path(paths);
+        const fs::path& nuget_exe = paths.get_nuget_exe();
 
         const fs::path& buildsystems_dir = paths.buildsystems;
         const fs::path tmp_dir = buildsystems_dir / "tmp";
@@ -267,25 +263,20 @@ namespace vcpkg::Commands::Integrate
         std::ofstream(nuspec_file_path) << create_nuspec_file(paths.root, nuget_id, nupkg_version);
 
         // Using all forward slashes for the command line
-        const std::wstring cmd_line = Strings::wformat(LR"(nuget.exe pack -OutputDirectory "%s" "%s" > nul)", buildsystems_dir.native(), nuspec_file_path.native());
+        const std::wstring cmd_line = Strings::wformat(LR"("%s" pack -OutputDirectory "%s" "%s" > nul)", nuget_exe.native(), buildsystems_dir.native(), nuspec_file_path.native());
 
-        const int exit_code = System::cmd_execute(cmd_line);
+        const int exit_code = System::cmd_execute_clean(cmd_line);
 
         const fs::path nuget_package = buildsystems_dir / Strings::format("%s.%s.nupkg", nuget_id, nupkg_version);
-        if (exit_code != 0 || !fs::exists(nuget_package))
-        {
-            System::println(System::color::error, "Error: NuGet package creation failed");
-            exit(EXIT_FAILURE);
-        }
-
-        System::println(System::color::success, "Created nupkg: %s", nuget_package.string());
+        Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0 && fs::exists(nuget_package), "Error: NuGet package creation failed");
+        System::println(System::Color::success, "Created nupkg: %s", nuget_package.string());
 
         System::println(R"(
 With a project open, go to Tools->NuGet Package Manager->Package Manager Console and paste:
     Install-Package %s -Source "%s"
 )", nuget_id, buildsystems_dir.generic_string());
 
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 
     const char* const INTEGRATE_COMMAND_HELPSTRING =
@@ -293,11 +284,12 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
     "  vcpkg integrate remove          Remove user-wide integration\n"
     "  vcpkg integrate project         Generate a referencing nuget package for individual VS project use\n";
 
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         static const std::string example = Strings::format("Commands:\n"
                                                            "%s", INTEGRATE_COMMAND_HELPSTRING);
         args.check_exact_arg_count(1, example);
+        args.check_and_get_optional_command_arguments({});
 
         if (args.command_arguments[0] == "install")
         {
@@ -312,7 +304,6 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
             return integrate_project(paths);
         }
 
-        System::println(System::color::error, "Unknown parameter %s for integrate", args.command_arguments[0]);
-        exit(EXIT_FAILURE);
+        Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown parameter %s for integrate", args.command_arguments[0]);
     }
 }

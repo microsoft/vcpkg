@@ -1,32 +1,39 @@
  # libFLAC uses winapi functions not available in WindowsStore
-if (VCPKG_TARGET_ARCHITECTURE STREQUAL arm OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     message(FATAL_ERROR "Error: UWP builds are currently not supported.")
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/flac-1.3.1)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/flac-1.3.2)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://downloads.xiph.org/releases/flac/flac-1.3.1.tar.xz"
-    FILENAME "flac-1.3.1.tar.xz"
-    SHA512 923cd0ffe2155636febf2b4633791bc83370d57080461b97ebb69ea21a4b1be7c0ff376c7fc8ca3979af4714e761112114a24b49ff6c80228b58b929db6e96d5)
+    URLS "http://downloads.xiph.org/releases/flac/flac-1.3.2.tar.xz"
+    FILENAME "flac-1.3.2.tar.xz"
+    SHA512 63910e8ebbe508316d446ffc9eb6d02efbd5f47d29d2ea7864da9371843c8e671854db6e89ba043fe08aef1845b8ece70db80f1cce853f591ca30d56ef7c3a15)
 
 vcpkg_extract_source_archive(${ARCHIVE})
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+    vcpkg_find_acquire_program(NASM)
+    get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
+    set(ENV{PATH} "$ENV{PATH};${NASM_EXE_PATH}")
+endif()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS
-            -DLIBFLAC_ARCHITECTURE=${VCPKG_TARGET_ARCHITECTURE}
-        OPTIONS_DEBUG
-            -DLIBFLAC_SKIP_HEADERS=ON)
+    PREFER_NINJA
+    OPTIONS
+        -DLIBFLAC_ARCHITECTURE=${VCPKG_TARGET_ARCHITECTURE}
+    OPTIONS_DEBUG
+        -DLIBFLAC_SKIP_HEADERS=ON)
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(APPEND ${CURRENT_PACKAGES_DIR}/include/FLAC/export.h "#undef FLAC_API\n#define FLAC_API\n")
-    file(APPEND ${CURRENT_PACKAGES_DIR}/include/FLAC++/export.h "#undef FLAC_API\n#define FLAC_API\n")
+    file(APPEND ${CURRENT_PACKAGES_DIR}/include/FLAC++/export.h "#undef FLACPP_API\n#define FLACPP_API\n")
 endif()
 
 # This license (BSD) is relevant only for library - if someone would want to install

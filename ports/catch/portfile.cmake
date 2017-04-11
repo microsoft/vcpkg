@@ -10,14 +10,14 @@
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(HEADER
-    URLS "https://raw.githubusercontent.com/philsquared/Catch/e27c4ee04282f60aefcc9b1062a74f92cf6c1a2b/single_include/catch.hpp"
+    URLS "https://github.com/philsquared/Catch/releases/download/v1.8.2/catch.hpp"
     FILENAME "catch.hpp"
-    SHA512 c2fec38227bb1725c30f955583dbd012f86eef83512a0c154e91b77249df372db067710ae110463eb07adec722d214114fd6a2cebff7ee43c5fd567a6a1ba221
+    SHA512 17ef87db95cc2f5097c46223df6832f7eaad8178266bb10532d0cc73f8ec96c61e96a21e8ace3df743830c9d06d10da2b67563435d69d211c1d5cc6980aecf67
 )
 
 vcpkg_download_distfile(LICENSE
-    URLS "https://raw.githubusercontent.com/philsquared/Catch/e27c4ee04282f60aefcc9b1062a74f92cf6c1a2b/LICENSE_1_0.txt"
-    FILENAME "License_1_0.txt"
+    URLS "https://raw.githubusercontent.com/philsquared/Catch/v1.8.2/LICENSE_1_0.txt"
+    FILENAME "LICENSE_1_0.txt"
     SHA512 d6078467835dba8932314c1c1e945569a64b065474d7aced27c9a7acc391d52e9f234138ed9f1aa9cd576f25f12f557e0b733c14891d42c16ecdc4a7bd4d60b8
 )
 

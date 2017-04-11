@@ -1,9 +1,10 @@
+#include "pch.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
 
 namespace vcpkg::Commands::Help
 {
-    void help_topic_valid_triplet(const vcpkg_paths& paths)
+    void help_topic_valid_triplet(const VcpkgPaths& paths)
     {
         System::println("Available architecture triplets:");
         auto it = fs::directory_iterator(paths.triplets);
@@ -18,9 +19,9 @@ namespace vcpkg::Commands::Help
         System::println(
             "Commands:\n"
             "  vcpkg search [pat]              Search for packages available to be built\n"
-            "  vcpkg install <pkg>             Install a package\n"
-            "  vcpkg remove <pkg>              Uninstall a package. \n"
-            "  vcpkg remove --purge <pkg>      Uninstall and delete a package. \n"
+            "  vcpkg install <pkg>...          Install a package\n"
+            "  vcpkg remove <pkg>...           Uninstall a package\n"
+            "  vcpkg remove --outdated         Uninstall all out-of-date packages\n"
             "  vcpkg list                      List installed packages\n"
             "  vcpkg update                    Display list of packages for updating\n"
             "  vcpkg hash <file> [alg]         Hash a file by specific algorithm, default SHA512\n"
@@ -63,13 +64,15 @@ namespace vcpkg::Commands::Help
         System::println(create_example_string(command_and_arguments));
     }
 
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         args.check_max_arg_count(1);
+        args.check_and_get_optional_command_arguments({});
+
         if (args.command_arguments.empty())
         {
             print_usage();
-            exit(EXIT_SUCCESS);
+            Checks::exit_success(VCPKG_LINE_INFO);
         }
         const auto& topic = args.command_arguments[0];
         if (topic == "triplet")
@@ -78,10 +81,10 @@ namespace vcpkg::Commands::Help
         }
         else
         {
-            System::println(System::color::error, "Error: unknown topic %s", topic);
+            System::println(System::Color::error, "Error: unknown topic %s", topic);
             print_usage();
-            exit(EXIT_FAILURE);
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

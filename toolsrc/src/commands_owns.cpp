@@ -1,13 +1,14 @@
+#include "pch.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
-#include "vcpkg.h"
+#include "vcpkglib.h"
 
 namespace vcpkg::Commands::Owns
 {
-    static void search_file(const vcpkg_paths& paths, const std::string& file_substr, const StatusParagraphs& status_db)
+    static void search_file(const VcpkgPaths& paths, const std::string& file_substr, const StatusParagraphs& status_db)
     {
-        const std::vector<StatusParagraph_and_associated_files> installed_files = get_installed_files(paths, status_db);
-        for (const StatusParagraph_and_associated_files& pgh_and_file : installed_files)
+        const std::vector<StatusParagraphAndAssociatedFiles> installed_files = get_installed_files(paths, status_db);
+        for (const StatusParagraphAndAssociatedFiles& pgh_and_file : installed_files)
         {
             const StatusParagraph& pgh = pgh_and_file.pgh;
 
@@ -21,13 +22,14 @@ namespace vcpkg::Commands::Owns
         }
     }
 
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         static const std::string example = Strings::format("The argument should be a pattern to search for. %s", Commands::Help::create_example_string("owns zlib.dll"));
         args.check_exact_arg_count(1, example);
+        args.check_and_get_optional_command_arguments({});
 
         StatusParagraphs status_db = database_load_check(paths);
         search_file(paths, args.command_arguments[0], status_db);
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a376fce..2d035a1 100644
+index 1ca9d8f..61c3b2a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -166,7 +166,7 @@ IF (MSVC)
@@ -11,15 +11,7 @@ index a376fce..2d035a1 100644
    # /Oi option enables built-in functions.
    SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /Oi")
    #################################################################
-@@ -177,6 +177,7 @@ ENDIF (MSVC)
- # Enable CTest/CDash support
- include(CTest)
- 
-+OPTION(ENABLE_LZO2 "Enable use of LZO2 library" ON)
- OPTION(ENABLE_NETTLE "Enable use of Nettle" ON)
- OPTION(ENABLE_OPENSSL "Enable use of OpenSSL" ON)
- OPTION(ENABLE_LZMA "Enable the use of the system found LZMA library if found" ON)
-@@ -357,7 +358,7 @@ IF(DEFINED __GNUWIN32PATH AND EXISTS "${__GNUWIN32PATH}")
+@@ -359,7 +359,7 @@ IF(DEFINED __GNUWIN32PATH AND EXISTS "${__GNUWIN32PATH}")
    # The zlib and the bzip2 Setup program have installed programs and DLLs into
    # "C:/Program Files/GnuWin32" by default.
    # This is convenience setting for Windows.
@@ -28,7 +20,7 @@ index a376fce..2d035a1 100644
    #
    # If you didn't use Setup program or installed into nonstandard path,
    # cmake cannot find out your zlib or bzip2 libraries and include files,
-@@ -397,11 +398,12 @@ IF(ZLIB_FOUND)
+@@ -399,11 +399,12 @@ IF(ZLIB_FOUND)
      #
      # Test if ZLIB_WINAPI macro is needed to use.
      #
@@ -37,7 +29,7 @@ index a376fce..2d035a1 100644
 -      RUNS
 -      "#include <zlib.h>\nint main() {uLong f = zlibCompileFlags(); return (f&(1U<<10))?0:-1; }"
 -      ZLIB_WINAPI)
-+	SET(ZLIB_WINAPI OFF) # skip following test, it crashes with weird message box
++    SET(ZLIB_WINAPI OFF) # skip following test, it crashes with weird message box
 +    #TRY_MACRO_FOR_LIBRARY(
 +    #  "${ZLIB_INCLUDE_DIR}" "${ZLIB_LIBRARIES}"
 +    #  RUNS
@@ -46,40 +38,73 @@ index a376fce..2d035a1 100644
      IF(ZLIB_WINAPI)
        ADD_DEFINITIONS(-DZLIB_WINAPI)
      ELSE(ZLIB_WINAPI)
-@@ -483,6 +485,7 @@ ENDIF(LZMA_FOUND)
- #
- # Find LZO2
- #
-+IF(ENABLE_LZO2)
- IF (LZO2_INCLUDE_DIR)
-   # Already in cache, be silent
-   SET(LZO2_FIND_QUIETLY TRUE)
-@@ -504,6 +507,7 @@ IF(LZO2_FOUND)
- ENDIF(LZO2_FOUND)
- MARK_AS_ADVANCED(CLEAR LZO2_INCLUDE_DIR)
- MARK_AS_ADVANCED(CLEAR LZO2_LIBRARY)
-+ENDIF()
- #
- # Find LZ4
- #
-@@ -923,7 +927,9 @@ IF(ENABLE_ICONV)
-     CHECK_ICONV("libc" "")
+@@ -462,8 +463,6 @@ ENDIF()
+ IF(LIBLZMA_FOUND)
+   SET(HAVE_LIBLZMA 1)
+   SET(HAVE_LZMA_H 1)
+-  SET(CMAKE_REQUIRED_INCLUDES ${LIBLZMA_INCLUDE_DIR})
+-  SET(CMAKE_REQUIRED_LIBRARIES ${LIBLZMA_LIBRARIES})
+   INCLUDE_DIRECTORIES(${LIBLZMA_INCLUDE_DIRS})
+   LIST(APPEND ADDITIONAL_LIBS ${LIBLZMA_LIBRARIES})
+   # Test if a macro is needed for the library.
+@@ -1227,7 +1226,8 @@ CHECK_FUNCTION_EXISTS_GLIBC(localtime_r HAVE_LOCALTIME_R)
+ CHECK_FUNCTION_EXISTS_GLIBC(lstat HAVE_LSTAT)
+ CHECK_FUNCTION_EXISTS_GLIBC(lutimes HAVE_LUTIMES)
+ CHECK_FUNCTION_EXISTS_GLIBC(mbrtowc HAVE_MBRTOWC)
+-CHECK_FUNCTION_EXISTS_GLIBC(memmove HAVE_MEMMOVE)
++#CHECK_FUNCTION_EXISTS_GLIBC(memmove HAVE_MEMMOVE)
++set(HAVE_MEMMOVE 1)
+ CHECK_FUNCTION_EXISTS_GLIBC(mkdir HAVE_MKDIR)
+ CHECK_FUNCTION_EXISTS_GLIBC(mkfifo HAVE_MKFIFO)
+ CHECK_FUNCTION_EXISTS_GLIBC(mknod HAVE_MKNOD)
+@@ -1258,11 +1258,16 @@ CHECK_FUNCTION_EXISTS_GLIBC(utime HAVE_UTIME)
+ CHECK_FUNCTION_EXISTS_GLIBC(utimes HAVE_UTIMES)
+ CHECK_FUNCTION_EXISTS_GLIBC(utimensat HAVE_UTIMENSAT)
+ CHECK_FUNCTION_EXISTS_GLIBC(vfork HAVE_VFORK)
+-CHECK_FUNCTION_EXISTS_GLIBC(wcrtomb HAVE_WCRTOMB)
+-CHECK_FUNCTION_EXISTS_GLIBC(wcscmp HAVE_WCSCMP)
+-CHECK_FUNCTION_EXISTS_GLIBC(wcscpy HAVE_WCSCPY)
+-CHECK_FUNCTION_EXISTS_GLIBC(wcslen HAVE_WCSLEN)
+-CHECK_FUNCTION_EXISTS_GLIBC(wctomb HAVE_WCTOMB)
++#CHECK_FUNCTION_EXISTS_GLIBC(wcrtomb HAVE_WCRTOMB)
++set(HAVE_WCRTOMB 1)
++#CHECK_FUNCTION_EXISTS_GLIBC(wcscmp HAVE_WCSCMP)
++set(HAVE_WCSCMP 1)
++#CHECK_FUNCTION_EXISTS_GLIBC(wcscpy HAVE_WCSCPY)
++set(HAVE_WCSCPY 1)
++#CHECK_FUNCTION_EXISTS_GLIBC(wcslen HAVE_WCSLEN)
++set(HAVE_WCSLEN 1)
++#CHECK_FUNCTION_EXISTS_GLIBC(wctomb HAVE_WCTOMB)
++set(HAVE_WCTOMB 1)
+ CHECK_FUNCTION_EXISTS_GLIBC(_ctime64_s HAVE__CTIME64_S)
+ CHECK_FUNCTION_EXISTS_GLIBC(_fseeki64 HAVE__FSEEKI64)
+ CHECK_FUNCTION_EXISTS_GLIBC(_get_timezone HAVE__GET_TIMEZONE)
+@@ -1274,10 +1279,14 @@ CHECK_FUNCTION_EXISTS(cygwin_conv_path HAVE_CYGWIN_CONV_PATH)
+ CHECK_FUNCTION_EXISTS(fseeko HAVE_FSEEKO)
+ CHECK_FUNCTION_EXISTS(strerror_r HAVE_STRERROR_R)
+ CHECK_FUNCTION_EXISTS(strftime HAVE_STRFTIME)
+-CHECK_FUNCTION_EXISTS(vprintf HAVE_VPRINTF)
+-CHECK_FUNCTION_EXISTS(wmemcmp HAVE_WMEMCMP)
+-CHECK_FUNCTION_EXISTS(wmemcpy HAVE_WMEMCPY)
+-CHECK_FUNCTION_EXISTS(wmemmove HAVE_WMEMMOVE)
++#CHECK_FUNCTION_EXISTS(vprintf HAVE_VPRINTF)
++set(HAVE_VPRINTF 1)
++#CHECK_FUNCTION_EXISTS(wmemcmp HAVE_WMEMCMP)
++set(HAVE_WMEMCMP 1)
++#CHECK_FUNCTION_EXISTS(wmemcpy HAVE_WMEMCPY)
++set(HAVE_WMEMCPY 1)
++#CHECK_FUNCTION_EXISTS(wmemmove HAVE_WMEMMOVE)
++set(HAVE_WMEMMOVE 1)
  
-     # If iconv isn't in libc and we have a libiconv, try that.
--    FIND_LIBRARY(LIBICONV_PATH NAMES iconv libiconv)
-+    FIND_LIBRARY(LIBICONV_PATH1 NAMES iconv libiconv)
-+    FIND_LIBRARY(LIBCHARSET_PATH NAMES charset libcharset)
-+    SET(LIBICONV_PATH ${LIBICONV_PATH1} ${LIBCHARSET_PATH})
-     IF(NOT HAVE_ICONV AND LIBICONV_PATH)
-       LIST(APPEND CMAKE_REQUIRED_LIBRARIES ${LIBICONV_PATH})
-       # Test if a macro is needed for the library.
-@@ -1307,9 +1313,13 @@ CHECK_C_SOURCE_COMPILES(
+ CMAKE_POP_CHECK_STATE()	# Restore the state of the variables
+ 
+@@ -1314,9 +1323,13 @@ CHECK_C_SOURCE_COMPILES(
    "#include <sys/sysmacros.h>\nint main() { return major(256); }"
    MAJOR_IN_SYSMACROS)
  
 +CMAKE_PUSH_CHECK_STATE()
-+set(CMAKE_REQUIRED_INCLUDES ${LZMA_INCLUDE_DIR})
-+set(CMAKE_REQUIRED_LIBRARIES ${LZMA_LIBRARIES})
++SET(CMAKE_REQUIRED_INCLUDES ${LIBLZMA_INCLUDE_DIR})
++SET(CMAKE_REQUIRED_LIBRARIES ${LIBLZMA_LIBRARIES})
  CHECK_C_SOURCE_COMPILES(
    "#include <lzma.h>\n#if LZMA_VERSION < 50020000\n#error unsupported\n#endif\nint main(void){lzma_stream_encoder_mt(0, 0); return 0;}"
    HAVE_LZMA_STREAM_ENCODER_MT)
@@ -87,7 +112,7 @@ index a376fce..2d035a1 100644
  
  IF(HAVE_STRERROR_R)
    SET(HAVE_DECL_STRERROR_R 1)
-@@ -1655,12 +1665,12 @@ INCLUDE_DIRECTORIES(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
+@@ -1689,12 +1702,12 @@ INCLUDE_DIRECTORIES(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
  ADD_DEFINITIONS(-DHAVE_CONFIG_H)
  
  # Handle generation of the libarchive.pc file for pkg-config
@@ -103,30 +128,32 @@ index a376fce..2d035a1 100644
    # On Windows platform, It's better that we install PDF documents
    # on one's computer.
 diff --git a/libarchive/CMakeLists.txt b/libarchive/CMakeLists.txt
-index 4cc9a2c..ef304c5 100644
+index 1f85c01..11b2fb1 100644
 --- a/libarchive/CMakeLists.txt
 +++ b/libarchive/CMakeLists.txt
-@@ -191,28 +191,24 @@ IF(WIN32 AND NOT CYGWIN)
+@@ -210,28 +210,22 @@ IF(WIN32 AND NOT CYGWIN)
+   LIST(APPEND libarchive_SOURCES filter_fork_windows.c)
  ENDIF(WIN32 AND NOT CYGWIN)
  
- # Libarchive is a shared library
+-# Libarchive is a shared library
 -ADD_LIBRARY(archive SHARED ${libarchive_SOURCES} ${include_HEADERS})
 +ADD_LIBRARY(archive ${libarchive_SOURCES} ${include_HEADERS})
  TARGET_LINK_LIBRARIES(archive ${ADDITIONAL_LIBS})
-+IF(BUILD_SHARED_LIBS)
- SET_TARGET_PROPERTIES(archive PROPERTIES SOVERSION ${SOVERSION})
+-SET_TARGET_PROPERTIES(archive PROPERTIES SOVERSION ${SOVERSION})
 -
 -# archive_static is a static library
 -ADD_LIBRARY(archive_static STATIC ${libarchive_SOURCES} ${include_HEADERS})
 -TARGET_LINK_LIBRARIES(archive_static ${ADDITIONAL_LIBS})
 -SET_TARGET_PROPERTIES(archive_static PROPERTIES COMPILE_DEFINITIONS
--  LIBARCHIVE_STATIC)
++IF(BUILD_SHARED_LIBS)
++    SET_TARGET_PROPERTIES(archive PROPERTIES SOVERSION ${SOVERSION})
++ELSE()
++    SET_TARGET_PROPERTIES(archive PROPERTIES COMPILE_DEFINITIONS
+   LIBARCHIVE_STATIC)
 -# On Posix systems, libarchive.so and libarchive.a can co-exist.
 -IF(NOT WIN32 OR CYGWIN)
 -  SET_TARGET_PROPERTIES(archive_static PROPERTIES OUTPUT_NAME archive)
 -ENDIF(NOT WIN32 OR CYGWIN)
-+ELSE()
-+SET_TARGET_PROPERTIES(archive PROPERTIES COMPILE_DEFINITIONS LIBARCHIVE_STATIC)
 +ENDIF()
  
  IF(ENABLE_INSTALL)
@@ -138,9 +165,6 @@ index 4cc9a2c..ef304c5 100644
            ARCHIVE DESTINATION lib)
 -  INSTALL_MAN(${libarchive_MANS})
 +  #INSTALL_MAN(${libarchive_MANS})
-+  IF(NOT ARCHIVE_SKIP_HEADERS)
    INSTALL(FILES ${include_HEADERS} DESTINATION include)
-+  ENDIF()
  ENDIF()
  
- add_subdirectory(test)

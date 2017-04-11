@@ -18,6 +18,7 @@ find_package(JXR  REQUIRED)
 find_package(LibRaw REQUIRED)
 
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+option(INSTALL_HEADERS "Install the development headers" ON)
 
 set(REAL_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Source)
 
@@ -125,7 +126,7 @@ target_include_directories(FreeImage PRIVATE ${REAL_SOURCE_DIR}
                                              ${LibRaw_INCLUDE_DIRS}
                                              ${FreeImage_Private_OpenEXR_INCLUDE_DIRS}
                                              ${CMAKE_CURRENT_BINARY_DIR})
-                                             
+
 
 target_link_libraries(FreeImage ${ZLIB_LIBRARIES}
                                 ${JPEG_LIBRARIES}
@@ -139,10 +140,39 @@ target_link_libraries(FreeImage ${ZLIB_LIBRARIES}
 
 target_compile_definitions(FreeImage PRIVATE ${PNG_DEFINITIONS})
 
+# FreeImagePlus
+file(GLOB FREEIMAGEPLUS_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Wrapper/FreeImagePlus/src/*.cpp)
+add_library(FreeImagePlus
+    ${FREEIMAGEPLUS_SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/Wrapper/FreeImagePlus/FreeImagePlus.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/Wrapper/FreeImagePlus/FreeImagePlus.rc)
+
+if(${BUILD_SHARED_LIBS})
+    target_compile_definitions(FreeImagePlus PRIVATE -DFIP_EXPORTS)
+else()
+    target_compile_definitions(FreeImagePlus PRIVATE -DFREEIMAGE_LIB)
+endif()
+
+target_include_directories(FreeImagePlus PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Wrapper/FreeImagePlus
+                                                 ${CMAKE_CURRENT_BINARY_DIR}
+                                                 ${REAL_SOURCE_DIR})
+
+target_link_libraries(FreeImagePlus PUBLIC FreeImage)
+
+list(APPEND PUBLIC_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/Wrapper/FreeImagePlus/FreeImagePlus.h)
+
 install(TARGETS FreeImage
         COMPONENT runtime
         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT bin
         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT shlib
         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT lib)
 
-install(FILES ${PUBLIC_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(TARGETS FreeImagePlus
+        COMPONENT runtime-cpp
+        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT bin
+        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT shlib
+        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT lib)
+
+if(INSTALL_HEADERS)
+    install(FILES ${PUBLIC_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+endif()

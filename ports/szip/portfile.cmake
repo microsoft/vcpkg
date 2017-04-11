@@ -25,12 +25,12 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/disable-static-lib-in-shared-build.patch
+        ${CMAKE_CURRENT_LIST_DIR}/default-component-shared.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -DCMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP=1
         -DSZIP_INSTALL_DATA_DIR=share/szip/data
         -DSZIP_INSTALL_CMAKE_DIR=share/szip
 )

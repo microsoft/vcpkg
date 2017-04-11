@@ -1,3 +1,12 @@
+# Lua can be compiled as either C or C++.
+# Default configuration is C, set COMPILE_AS_CPP to ON to use C++.
+# See http://stackoverflow.com/questions/13560945/c-and-c-library-using-longjmp for why would you want to do that.
+# Primary differences:
+# - Exceptions will be used instead of setjmp/longjmp
+# - The name mangling for functions will be C++ instead of C.
+#     - This is a source-incompatible change because extern "C" is chosen by the including application.
+# - The lua.hpp header will not be available.
+
 PROJECT ( lua )
 
 IF( NOT WIN32 )
@@ -21,6 +30,10 @@ src/linit.c src/liolib.c src/llex.c src/lmathlib.c src/lmem.c src/loadlib.c src/
 src/lopcodes.c src/loslib.c src/lparser.c src/lstate.c src/lstring.c src/lstrlib.c
 src/ltable.c src/ltablib.c src/ltm.c src/lundump.c src/lutf8lib.c src/lvm.c src/lzio.c
 )
+
+IF (COMPILE_AS_CPP)
+    SET_SOURCE_FILES_PROPERTIES(${SRC_LIBLUA} src/lua.c src/luac.c PROPERTIES LANGUAGE CXX)
+ENDIF ()
 
 # append headers to sources to make them show up in MSVC GUI
 LIST(APPEND SRC_LIBLUA ${HDR_LIBLUA})
@@ -54,8 +67,11 @@ IF (NOT DEFINED SKIP_INSTALL_HEADERS)
             src/lualib.h
             src/lua.h
             src/luaconf.h
-            src/lua.hpp
             src/lauxlib.h
         DESTINATION include
     )
+    # If using C++, don't install extern "C" wrapper.
+    IF (NOT COMPILE_AS_CPP)
+        INSTALL(FILES src/lua.hpp DESTINATION include)
+    ENDIF ()
 ENDIF ()

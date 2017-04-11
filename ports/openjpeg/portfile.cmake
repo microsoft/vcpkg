@@ -9,6 +9,7 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS -DBUILD_CODEC:BOOL=OFF
             -DOPENJPEG_INSTALL_PACKAGE_DIR=share/openjpeg
 )
@@ -22,17 +23,6 @@ file(READ ${CURRENT_PACKAGES_DIR}/debug/share/openjpeg/OpenJPEGTargets-debug.cma
 string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" OPENJPEG_DEBUG_MODULE "${OPENJPEG_DEBUG_MODULE}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/openjpeg/OpenJPEGTargets-debug.cmake  "${OPENJPEG_DEBUG_MODULE}")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-
-# Cleanup bin directories in static builds
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
-
-# Cleanup Visual C++ Redistributable runtime
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/msvcp140.dll)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/vcruntime140.dll)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/msvcp140.dll)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/vcruntime140.dll)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openjpeg)

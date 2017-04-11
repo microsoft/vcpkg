@@ -1,15 +1,14 @@
 #pragma once
 #include <vector>
-#include "package_spec.h"
-#include "vcpkg_paths.h"
+#include "PackageSpec.h"
+#include "VcpkgPaths.h"
 
 namespace vcpkg::Input
 {
-    package_spec check_and_get_package_spec(const std::string& package_spec_as_string, const triplet& default_target_triplet, const std::string& example_text);
+    PackageSpec check_and_get_package_spec(
+        const std::string& package_spec_as_string,
+        const Triplet& default_triplet,
+        CStringView example_text);
 
-    std::vector<package_spec> check_and_get_package_specs(const std::vector<std::string>& package_specs_as_strings, const triplet& default_target_triplet, const std::string& example_text);
-
-    void check_triplet(const triplet& t, const vcpkg_paths& paths);
-
-    void check_triplets(const std::vector<package_spec>& triplets, const vcpkg_paths& paths);
+    void check_triplet(const Triplet& t, const VcpkgPaths& paths);
 }

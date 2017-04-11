@@ -7,7 +7,8 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-if(NOT EXISTS ${CURRENT_BUILDTREES_DIR}/patch.stamp)
+if(NOT EXISTS ${SOURCE_PATH}/patch-config.stamp)
+    message(STATUS "Patching src/glfw3Config.cmake.in")
     file(READ ${SOURCE_PATH}/src/glfw3Config.cmake.in CONFIG)
     string(REPLACE "\"@GLFW_LIB_NAME@\"" "NAMES @GLFW_LIB_NAME@ @GLFW_LIB_NAME@dll"
         CONFIG ${CONFIG}
@@ -17,8 +18,13 @@ if(NOT EXISTS ${CURRENT_BUILDTREES_DIR}/patch.stamp)
     #)
     file(WRITE ${SOURCE_PATH}/src/glfw3Config.cmake.in ${CONFIG})
     file(APPEND ${SOURCE_PATH}/src/glfw3Config.cmake.in "set(GLFW3_LIBRARIES \${GLFW3_LIBRARY})\n")
-    file(WRITE ${CURRENT_BUILDTREES_DIR}/patch.stamp)
+    file(WRITE ${SOURCE_PATH}/patch-config.stamp)
 endif()
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/move-cmake-min-req.patch
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

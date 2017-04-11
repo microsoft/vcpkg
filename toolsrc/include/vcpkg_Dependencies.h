@@ -1,30 +1,85 @@
 #pragma once
 #include <vector>
-#include "package_spec.h"
+#include "PackageSpec.h"
 #include "StatusParagraphs.h"
-#include "vcpkg_paths.h"
+#include "VcpkgPaths.h"
+#include "vcpkg_optional.h"
 
 namespace vcpkg::Dependencies
 {
-    enum class install_plan_type
+    enum class RequestType
     {
+        UNKNOWN,
+        USER_REQUESTED,
+        AUTO_SELECTED
+    };
+
+    std::string to_output_string(RequestType request_type, const CStringView s);
+
+    enum class InstallPlanType
+    {
+        UNKNOWN,
         BUILD_AND_INSTALL,
         INSTALL,
         ALREADY_INSTALLED
     };
 
-    struct install_plan_action
+    struct InstallPlanAction
     {
-        install_plan_type type;
-        std::unique_ptr<BinaryParagraph> bpgh;
-        std::unique_ptr<SourceParagraph> spgh;
+        InstallPlanAction();
+        InstallPlanAction(const InstallPlanType& plan_type, const RequestType& request_type, Optional<BinaryParagraph> binary_pgh, Optional<SourceParagraph> source_pgh);
+        InstallPlanAction(const InstallPlanAction&) = delete;
+        InstallPlanAction(InstallPlanAction&&) = default;
+        InstallPlanAction& operator=(const InstallPlanAction&) = delete;
+        InstallPlanAction& operator=(InstallPlanAction&&) = default;
+
+        InstallPlanType plan_type;
+        RequestType request_type;
+        Optional<BinaryParagraph> binary_pgh;
+        Optional<SourceParagraph> source_pgh;
     };
 
-    struct package_spec_with_install_plan
+    struct PackageSpecWithInstallPlan
     {
-        package_spec spec;
-        install_plan_action plan;
+        static bool compare_by_name(const PackageSpecWithInstallPlan* left, const PackageSpecWithInstallPlan* right);
+
+        PackageSpecWithInstallPlan(const PackageSpec& spec, InstallPlanAction&& plan);
+
+        PackageSpec spec;
+        InstallPlanAction plan;
     };
 
-    std::vector<package_spec_with_install_plan> create_install_plan(const vcpkg_paths& paths, const std::vector<package_spec>& specs, const StatusParagraphs& status_db);
+    enum class RemovePlanType
+    {
+        UNKNOWN,
+        NOT_INSTALLED,
+        REMOVE
+    };
+
+    struct RemovePlanAction
+    {
+        RemovePlanAction();
+        RemovePlanAction(const RemovePlanType& plan_type, const RequestType& request_type);
+        RemovePlanAction(const RemovePlanAction&) = delete;
+        RemovePlanAction(RemovePlanAction&&) = default;
+        RemovePlanAction& operator=(const RemovePlanAction&) = delete;
+        RemovePlanAction& operator=(RemovePlanAction&&) = default;
+
+        RemovePlanType plan_type;
+        RequestType request_type;
+    };
+
+    struct PackageSpecWithRemovePlan
+    {
+        static bool compare_by_name(const PackageSpecWithRemovePlan* left, const PackageSpecWithRemovePlan* right);
+
+        PackageSpecWithRemovePlan(const PackageSpec& spec, RemovePlanAction&& plan);
+
+        PackageSpec spec;
+        RemovePlanAction plan;
+    };
+
+    std::vector<PackageSpecWithInstallPlan> create_install_plan(const VcpkgPaths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
+
+    std::vector<PackageSpecWithRemovePlan> create_remove_plan(const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
 }

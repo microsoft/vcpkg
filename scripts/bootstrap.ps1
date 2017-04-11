@@ -8,7 +8,7 @@ $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 $vcpkgRootDir = & $scriptsDir\findFileRecursivelyUp.ps1 $scriptsDir .vcpkg-root
 
 $gitHash = "unknownhash"
-if (Get-Command "git.exe" -ErrorAction SilentlyContinue)
+if (Get-Command "git" -ErrorAction SilentlyContinue)
 {
     $gitHash = git rev-parse HEAD
 }
@@ -23,7 +23,11 @@ if (!(Test-Path $vcpkgSourcesPath))
 
 try{
     pushd $vcpkgSourcesPath
-    cmd /c "$env:VS140COMNTOOLS..\..\VC\vcvarsall.bat" x86 "&" msbuild "/p:VCPKG_VERSION=-$gitHash" "/p:DISABLE_METRICS=$disableMetrics" /p:Configuration=Release /p:Platform=x86 /m
+    $msbuildExeWithPlatformToolset = & $scriptsDir\findAnyMSBuildWithCppPlatformToolset.ps1
+    $msbuildExe = $msbuildExeWithPlatformToolset[0]
+    $platformToolset = $msbuildExeWithPlatformToolset[1]
+    $windowsSDK = & $scriptsDir\getWindowsSDK.ps1
+    & $msbuildExe "/p:VCPKG_VERSION=-$gitHash" "/p:DISABLE_METRICS=$disableMetrics" /p:Configuration=Release /p:Platform=x86 /p:PlatformToolset=$platformToolset /p:TargetPlatformVersion=$windowsSDK /m dirs.proj
 
     Write-Verbose("Placing vcpkg.exe in the correct location")
 

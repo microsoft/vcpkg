@@ -1,96 +1,69 @@
 #pragma once
 
+#include <Windows.h>
 #include "vcpkg_Strings.h"
 #include "filesystem_fs.h"
+#include "vcpkg_optional.h"
 
 namespace vcpkg::System
 {
     fs::path get_exe_path_of_current_process();
 
-    struct exit_code_and_output
+    struct ExitCodeAndOutput
     {
         int exit_code;
         std::string output;
     };
 
-    int cmd_execute(const wchar_t* cmd_line);
+    int cmd_execute_clean(const CWStringView cmd_line);
 
-    inline int cmd_execute(const std::wstring& cmd_line)
-    {
-        return cmd_execute(cmd_line.c_str());
-    }
+    int cmd_execute(const CWStringView cmd_line);
 
-    exit_code_and_output cmd_execute_and_capture_output(const wchar_t* cmd_line);
+    ExitCodeAndOutput cmd_execute_and_capture_output(const CWStringView cmd_line);
 
-    inline exit_code_and_output cmd_execute_and_capture_output(const std::wstring& cmd_line)
-    {
-        return cmd_execute_and_capture_output(cmd_line.c_str());
-    }
+    std::wstring create_powershell_script_cmd(const fs::path& script_path, const CWStringView args = L"");
 
-    enum class color
+    enum class Color
     {
         success = 10,
         error = 12,
         warning = 14,
     };
 
-    void print(const char* message);
-    void println(const char* message);
-    void print(const color c, const char* message);
-    void println(const color c, const char* message);
+    void print(const CStringView message);
+    void println(const CStringView message);
+    void print(const Color c, const CStringView message);
+    void println(const Color c, const CStringView message);
 
-    inline void print(const std::string& message)
+    template <class Arg1, class...Args>
+    void print(const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
     {
-        return print(message.c_str());
+        return print(Strings::format(messageTemplate, messageArg1, messageArgs...));
     }
 
-    inline void println(const std::string& message)
+    template <class Arg1, class...Args>
+    void print(const Color c, const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
     {
-        return println(message.c_str());
+        return print(c, Strings::format(messageTemplate, messageArg1, messageArgs...));
     }
 
-    inline void print(const color c, const std::string& message)
+    template <class Arg1, class...Args>
+    void println(const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
     {
-        return print(c, message.c_str());
+        return println(Strings::format(messageTemplate, messageArg1, messageArgs...));
     }
 
-    inline void println(const color c, const std::string& message)
+    template <class Arg1, class...Args>
+    void println(const Color c, const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
     {
-        return println(c, message.c_str());
+        return println(c, Strings::format(messageTemplate, messageArg1, messageArgs...));
     }
 
-    template <class...Args>
-    void print(const char* messageTemplate, const Args&... messageArgs)
-    {
-        return print(Strings::format(messageTemplate, messageArgs...).c_str());
-    }
+    Optional<std::wstring> get_environmental_variable(const CWStringView varname) noexcept;
 
-    template <class...Args>
-    void print(const color c, const char* messageTemplate, const Args&... messageArgs)
-    {
-        return print(c, Strings::format(messageTemplate, messageArgs...).c_str());
-    }
+    Optional<std::wstring> get_registry_string(HKEY base, const CWStringView subkey, const CWStringView valuename);
 
-    template <class...Args>
-    void println(const char* messageTemplate, const Args&... messageArgs)
-    {
-        return println(Strings::format(messageTemplate, messageArgs...).c_str());
-    }
+    const fs::path& get_ProgramFiles_32_bit();
 
-    template <class...Args>
-    void println(const color c, const char* messageTemplate, const Args&... messageArgs)
-    {
-        return println(c, Strings::format(messageTemplate, messageArgs...).c_str());
-    }
-
-    struct Stopwatch2
-    {
-        int64_t start_time, end_time, freq;
-
-        void start();
-        void stop();
-        double microseconds() const;
-    };
-
-    std::wstring wdupenv_str(const wchar_t* varname) noexcept;
+    const fs::path& get_ProgramFiles_platform_bitness();
 }

@@ -1,9 +1,16 @@
 #pragma once
 
 #include <vector>
+#include "CStringView.h"
 
 namespace vcpkg::Strings::details
 {
+    template<class T>
+    auto to_printf_arg(const T& t) -> decltype(t.to_string())
+    {
+        return t.to_string();
+    }
+
     inline const char* to_printf_arg(const std::string& s)
     {
         return s.c_str();
@@ -15,6 +22,11 @@ namespace vcpkg::Strings::details
     }
 
     inline int to_printf_arg(const int s)
+    {
+        return s;
+    }
+
+    inline long long to_printf_arg(const long long s)
     {
         return s;
     }
@@ -60,19 +72,51 @@ namespace vcpkg::Strings
         return details::wformat_internal(fmtstr, to_wprintf_arg(to_wprintf_arg(args))...);
     }
 
-    std::wstring utf8_to_utf16(const std::string& s);
+    std::wstring utf8_to_utf16(const CStringView s);
 
-    std::string utf16_to_utf8(const std::wstring& w);
+    std::string utf16_to_utf8(const CWStringView w);
 
     std::string::const_iterator case_insensitive_ascii_find(const std::string& s, const std::string& pattern);
 
     std::string ascii_to_lowercase(const std::string& input);
 
-    std::string join(const std::vector<std::string>& v, const std::string& delimiter);
+    template <class T, class Transformer, class CharType>
+    std::basic_string<CharType> join(
+        const CharType* delimiter,
+        const std::vector<T>& v,
+        Transformer transformer)
+    {
+        if (v.empty())
+        {
+            return std::basic_string<CharType>();
+        }
+
+        std::basic_string<CharType> output;
+        size_t size = v.size();
+
+        output.append(transformer(v.at(0)));
+
+        for (size_t i = 1; i < size; ++i)
+        {
+            output.append(delimiter);
+            output.append(transformer(v.at(i)));
+        }
+
+        return output;
+    }
+    template <class T, class CharType>
+    std::basic_string<CharType> join(
+        const CharType* delimiter,
+        const std::vector<T>& v)
+    {
+        return join(delimiter, v, [](const T& x) -> const T&{ return x; });
+    }
 
     void trim(std::string* s);
 
     std::string trimmed(const std::string& s);
 
     void trim_all_and_remove_whitespace_strings(std::vector<std::string>* strings);
+
+    std::vector<std::string> split(const std::string& s, const std::string& delimiter);
 }

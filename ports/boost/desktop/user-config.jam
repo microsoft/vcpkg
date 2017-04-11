@@ -1,0 +1,7 @@
+using msvc : 14.0 : cl.exe :
+<setup>echo
+;
+
+using msvc : 14.1 : cl.exe :
+<setup>echo
+;

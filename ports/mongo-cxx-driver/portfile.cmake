@@ -13,6 +13,7 @@ vcpkg_apply_patches(
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/disable_test_and_example.patch
         ${CMAKE_CURRENT_LIST_DIR}/disable_shared.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch
 )
 
 vcpkg_configure_cmake(
@@ -20,7 +21,6 @@ vcpkg_configure_cmake(
     OPTIONS
         -DLIBBSON_DIR=${CURRENT_INSTALLED_DIR}
         -DLIBMONGOC_DIR=${CURRENT_INSTALLED_DIR}
-        -DCMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP=ON
 )
 
 vcpkg_install_cmake()
@@ -53,7 +53,7 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/include/mongocxx/test_util
     ${CURRENT_PACKAGES_DIR}/include/mongocxx/private
     ${CURRENT_PACKAGES_DIR}/include/mongocxx/exception/private
-    ${CURRENT_PACKAGES_DIR}/include/mongocxx/options
+    ${CURRENT_PACKAGES_DIR}/include/mongocxx/options/private
 
     ${CURRENT_PACKAGES_DIR}/debug/include)
 
@@ -87,3 +87,6 @@ else()
 endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/mongo-cxx-driver RENAME copyright)
+file(COPY ${SOURCE_PATH}/THIRD-PARTY-NOTICES DESTINATION ${CURRENT_PACKAGES_DIR}/share/mongo-cxx-driver)
+
+vcpkg_copy_pdbs()

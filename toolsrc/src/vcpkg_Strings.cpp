@@ -1,11 +1,5 @@
+#include "pch.h"
 #include "vcpkg_Strings.h"
-
-#include <cstdarg>
-#include <algorithm>
-#include <codecvt>
-#include <iterator>
-#include <functional>
-#include <cctype>
 
 namespace vcpkg::Strings::details
 {
@@ -15,14 +9,26 @@ namespace vcpkg::Strings::details
         return std::isspace(c);
     };
 
+    // Avoids C4244 warnings because of char<->int conversion that occur when using std::tolower()
+    static char tolower_char(const char c)
+    {
+        return static_cast<char>(std::tolower(c));
+    }
+
+    static _locale_t& c_locale()
+    {
+        static _locale_t c_locale_impl = _create_locale(LC_ALL, "C");
+        return c_locale_impl;
+    }
+
     std::string format_internal(const char* fmtstr, ...)
     {
         va_list lst;
         va_start(lst, fmtstr);
 
-        auto sz = _vscprintf(fmtstr, lst);
+        const int sz = _vscprintf_l(fmtstr, c_locale(), lst);
         std::string output(sz, '\0');
-        _vsnprintf_s(&output[0], output.size() + 1, output.size() + 1, fmtstr, lst);
+        _vsnprintf_s_l(&output[0], output.size() + 1, output.size() + 1, fmtstr, c_locale(), lst);
         va_end(lst);
 
         return output;
@@ -33,9 +39,9 @@ namespace vcpkg::Strings::details
         va_list lst;
         va_start(lst, fmtstr);
 
-        auto sz = _vscwprintf(fmtstr, lst);
+        const int sz = _vscwprintf_l(fmtstr, c_locale(), lst);
         std::wstring output(sz, '\0');
-        _vsnwprintf_s(&output[0], output.size() + 1, output.size() + 1, fmtstr, lst);
+        _vsnwprintf_s_l(&output[0], output.size() + 1, output.size() + 1, fmtstr, c_locale(), lst);
         va_end(lst);
 
         return output;
@@ -44,13 +50,13 @@ namespace vcpkg::Strings::details
 
 namespace vcpkg::Strings
 {
-    std::wstring utf8_to_utf16(const std::string& s)
+    std::wstring utf8_to_utf16(const CStringView s)
     {
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> conversion;
         return conversion.from_bytes(s);
     }
 
-    std::string utf16_to_utf8(const std::wstring& w)
+    std::string utf16_to_utf8(const CWStringView w)
     {
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> conversion;
         return conversion.to_bytes(w);
@@ -58,39 +64,17 @@ namespace vcpkg::Strings
 
     std::string::const_iterator case_insensitive_ascii_find(const std::string& s, const std::string& pattern)
     {
-        std::string pattern_as_lower_case;
-        std::transform(pattern.begin(), pattern.end(), back_inserter(pattern_as_lower_case), tolower);
+        const std::string pattern_as_lower_case(ascii_to_lowercase(pattern));
         return search(s.begin(), s.end(), pattern_as_lower_case.begin(), pattern_as_lower_case.end(), [](const char a, const char b)
                       {
-                          return tolower(a) == b;
+                          return details::tolower_char(a) == b;
                       });
     }
 
     std::string ascii_to_lowercase(const std::string& input)
     {
-        std::string output = input;
-        std::transform(output.begin(), output.end(), output.begin(), ::tolower);
-        return output;
-    }
-
-    std::string join(const std::vector<std::string>& v, const std::string& delimiter)
-    {
-        if (v.empty())
-        {
-            return std::string();
-        }
-
-        std::string output;
-        size_t size = v.size();
-
-        output.append(v.at(0));
-
-        for (size_t i = 1; i < size; ++i)
-        {
-            output.append(delimiter);
-            output.append(v.at(i));
-        }
-
+        std::string output(input);
+        std::transform(output.begin(), output.end(), output.begin(), &details::tolower_char);
         return output;
     }
 
@@ -118,5 +102,25 @@ namespace vcpkg::Strings
                                       {
                                           return s == "";
                                       }), strings->end());
+    }
+
+    std::vector<std::string> split(const std::string& s, const std::string& delimiter)
+    {
+        std::vector<std::string> output;
+
+        size_t i = 0;
+        for (size_t pos = s.find(delimiter); pos != std::string::npos; pos = s.find(delimiter, pos))
+        {
+            output.push_back(s.substr(i, pos - i));
+            i = ++pos;
+        }
+
+        // Add the rest of the string after the last delimiter, unless there is nothing after it
+        if (i != s.length())
+        {
+            output.push_back(s.substr(i, s.length()));
+        }
+
+        return output;
     }
 }

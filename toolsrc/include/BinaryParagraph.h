@@ -2,7 +2,7 @@
 
 #include <unordered_map>
 #include "SourceParagraph.h"
-#include "package_spec.h"
+#include "PackageSpec.h"
 
 namespace vcpkg
 {
@@ -10,7 +10,7 @@ namespace vcpkg
     {
         BinaryParagraph();
         explicit BinaryParagraph(std::unordered_map<std::string, std::string> fields);
-        BinaryParagraph(const SourceParagraph& spgh, const triplet& target_triplet);
+        BinaryParagraph(const SourceParagraph& spgh, const Triplet& triplet);
 
         std::string displayname() const;
 
@@ -18,7 +18,7 @@ namespace vcpkg
 
         std::string dir() const;
 
-        package_spec spec;
+        PackageSpec spec;
         std::string version;
         std::string description;
         std::string maintainer;

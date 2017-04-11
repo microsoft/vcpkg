@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Files.h"
@@ -6,45 +7,35 @@
 
 namespace vcpkg::Commands::Cache
 {
-    static std::vector<BinaryParagraph> read_all_binary_paragraphs(const vcpkg_paths& paths)
+    static std::vector<BinaryParagraph> read_all_binary_paragraphs(const VcpkgPaths& paths)
     {
         std::vector<BinaryParagraph> output;
         for (auto it = fs::directory_iterator(paths.packages); it != fs::directory_iterator(); ++it)
         {
             const fs::path& path = it->path();
-
-            try
+            const Expected<std::unordered_map<std::string, std::string>> pghs = Paragraphs::get_single_paragraph(path / "CONTROL");
+            if (auto p = pghs.get())
             {
-                auto file_contents = Files::read_contents(path / "CONTROL");
-                if (auto text = file_contents.get())
-                {
-                    auto pghs = Paragraphs::parse_paragraphs(*text);
-                    if (pghs.size() != 1)
-                        continue;
-
-                    const BinaryParagraph binary_paragraph = BinaryParagraph(pghs[0]);
-                    output.push_back(binary_paragraph);
-                }
-            }
-            catch (std::runtime_error const&)
-            {
+                const BinaryParagraph binary_paragraph = BinaryParagraph(*p);
+                output.push_back(binary_paragraph);
             }
         }
 
         return output;
     }
 
-    void perform_and_exit(const vcpkg_cmd_arguments& args, const vcpkg_paths& paths)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         static const std::string example = Strings::format(
             "The argument should be a substring to search for, or no argument to display all cached libraries.\n%s", Commands::Help::create_example_string("cache png"));
         args.check_max_arg_count(1, example);
+        args.check_and_get_optional_command_arguments({});
 
         const std::vector<BinaryParagraph> binary_paragraphs = read_all_binary_paragraphs(paths);
         if (binary_paragraphs.empty())
         {
             System::println("No packages are cached.");
-            exit(EXIT_SUCCESS);
+            Checks::exit_success(VCPKG_LINE_INFO);
         }
 
         if (args.command_arguments.size() == 0)
@@ -70,6 +61,6 @@ namespace vcpkg::Commands::Cache
             }
         }
 
-        exit(EXIT_SUCCESS);
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 }

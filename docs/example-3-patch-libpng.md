@@ -160,10 +160,10 @@ vcpkg_configure_cmake(
 
 ### Verification
 
-To be completely sure this works from scratch, we need to purge the package:
+To be completely sure this works from scratch, we need to remove the package and rebuild it:
 
 ```
-PS D:\src\vcpkg> vcpkg remove --purge libpng:x86-uwp
+PS D:\src\vcpkg> vcpkg remove libpng:x86-uwp
 Package libpng:x86-uwp was successfully removed
 ```
 and delete the building directory: D:\src\vcpkg\buildtrees\libpng

@@ -101,6 +101,8 @@ file(GLOB SOURCES
 "cairo-tor-scan-converter.c"
 "cairo-tor22-scan-converter.c"
 "cairo-clip-tor-scan-converter.c"
+"cairo-tag-attributes.c"
+"cairo-tag-stack.c"
 "cairo-toy-font-face.c"
 "cairo-traps.c"
 "cairo-tristrip.c"
@@ -127,6 +129,7 @@ file(GLOB SOURCES
 "cairo-type1-subset.c"
 "cairo-type3-glyph-surface.c"
 # pdf
+"cairo-pdf-interchange.c"
 "cairo-pdf-operators.c"
 "cairo-pdf-shading.c"
 "cairo-pdf-surface.c"
@@ -140,6 +143,8 @@ file(GLOB SOURCES
 "cairo-svg-surface.c"
 # script surface
 "cairo-script-surface.c"
+# fontconfig + freetype
+"cairo-ft-font.c"
 )
 
 set(CMAKE_DEBUG_POSTFIX "d")
@@ -222,29 +227,85 @@ endif()
 add_library(user32 UNKNOWN IMPORTED)
 set_property(TARGET user32 PROPERTY IMPORTED_LOCATION "${USER32_LIBRARY}")
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+# Find dependencies of optional modules
+
+# Find FreeType
+if(CMAKE_BUILD_TYPE STREQUAL Debug)
+    set(FREETYPE_SUFFIX d)
+endif()
+find_library(FREETYPE_LIBRARY freetype${FREETYPE_SUFFIX})
+if (FREETYPE_LIBRARY MATCHES NOTFOUND)
+  message(FATAL_ERROR "The freetype library could not be found. Check to ensure that it is properly installed.")
+endif()
+
+# Cairo needs to be told which features of FreeType are availible
+add_definitions(
+    -DHAVE_FT_GLYPHSLOT_EMBOLDEN=1
+    -DHAVE_FT_LIBRARY_SETLCDFILTER=1
+    -DHAVE_FT_GLYPHSLOT_OBLIQUE=1
+    -DHAVE_FT_LOAD_SFNT_TABLE=1
+    -DHAVE_FT_GET_X11_FONT_FORMAT=1)
+
+# Find FontConfig
+find_library(FONTCONFIG_LIBRARY fontconfig)
+if (FONTCONFIG_LIBRARY MATCHES NOTFOUND)
+  message(FATAL_ERROR "The fontconfig library could not be found. Check to ensure that it is properly installed.")
+endif()
+
+if (BUILD_SHARED_LIBS)
   add_library(cairo ${SOURCES})
   # cairo produces a lot of warnings which are disabled here because they otherwise fill up the log files
   target_compile_options(cairo PUBLIC "/wd4244" PUBLIC "/wd4146" PUBLIC "/wd4312" PUBLIC "/wd4267" PUBLIC "/wd4996" PUBLIC "/wd4311" PUBLIC "/wd4334" PUBLIC "/wd4101")
-  target_link_libraries(cairo gdi32 msimg32 user32 zlib libpng pixman)
+  target_link_libraries(cairo gdi32 msimg32 user32 zlib libpng pixman ${FREETYPE_LIBRARY} ${FONTCONFIG_LIBRARY})
 
   install(TARGETS cairo
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION bin
     ARCHIVE DESTINATION lib
   )
-elseif (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+else()
   add_library(cairo-static ${SOURCES})
   target_compile_options(cairo-static PUBLIC "/DCAIRO_WIN32_STATIC_BUILD=1")
   # cairo produces a lot of warnings which are disabled here because they otherwise fill up the log files
   target_compile_options(cairo-static PUBLIC "/wd4244" PUBLIC "/wd4146" PUBLIC "/wd4312" PUBLIC "/wd4267" PUBLIC "/wd4996" PUBLIC "/wd4311" PUBLIC "/wd4334" PUBLIC "/wd4101")
-  target_link_libraries(cairo-static gdi32 msimg32 user32 zlib libpng pixman)
+  target_link_libraries(cairo-static gdi32 msimg32 user32 zlib libpng pixman ${FREETYPE_LIBRARY} ${FONTCONFIG_LIBRARY})
 
   install(TARGETS cairo-static
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
   )
-else()
-  message(FATAL_ERROR "VCPKG_LIBRARY_LINKAGE is not defined or has an unexpected value")
 endif()
+
+# GObject support module
+
+set(CAIRO_GOBJECT_SOURCES
+    "../util/cairo-gobject/cairo-gobject-enums.c"
+    "../util/cairo-gobject/cairo-gobject-structs.c")
+
+# GObject support sources do not include header with export macro
+if(BUILD_SHARED_LIBS)
+    set_source_files_properties(
+        "../util/cairo-gobject/cairo-gobject-enums.c"
+        "../util/cairo-gobject/cairo-gobject-structs.c"
+        PROPERTIES COMPILE_DEFINITIONS cairo_public=__declspec\(dllexport\))
+endif()
+
+# Make GLib's GObject available
+find_library(GLIB_LIBRARY NAMES glib-2.0)
+find_library(GOBJECT_LIBRARY NAMES gobject-2.0)
+set(GLIB_LIBRARIES ${GLIB_LIBRARY} ${GOBJECT_LIBRARY})
+if (GLIB_LIBRARIES MATCHES NOTFOUND)
+  message(FATAL_ERROR "The glib library could not be found. Check to ensure that it is properly installed.")
+endif()
+
+add_library(cairo-gobject ${CAIRO_GOBJECT_SOURCES})
+if(BUILD_SHARED_LIBS)   
+    target_link_libraries(cairo-gobject cairo ${GLIB_LIBRARIES})
+else()
+    target_link_libraries(cairo-gobject cairo-static ${GLIB_LIBRARIES})
+endif()
+install(TARGETS cairo-gobject
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib)

@@ -5,19 +5,11 @@
 
 using namespace vcpkg;
 
-int WINAPI
-WinMain(
-    _In_ HINSTANCE hInstance,
-         _In_opt_ HINSTANCE hPrevInstance,
-         _In_ LPSTR lpCmdLine,
-         _In_ int nShowCmd
-)
+int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
-    LPWSTR* szArgList;
     int argCount;
+    LPWSTR * szArgList = CommandLineToArgvW(GetCommandLineW(), &argCount);
 
-    szArgList = CommandLineToArgvW(GetCommandLineW(), &argCount);
-
-    Checks::check_exit(argCount == 2, "Requires exactly one argument, the path to the payload file");
-    Upload(Files::read_contents(szArgList[1]).get_or_throw());
+    Checks::check_exit(VCPKG_LINE_INFO, argCount == 2, "Requires exactly one argument, the path to the payload file");
+    Metrics::upload(Files::read_contents(szArgList[1]).value_or_exit(VCPKG_LINE_INFO));
 }
