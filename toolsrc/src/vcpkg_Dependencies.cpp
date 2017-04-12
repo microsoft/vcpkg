@@ -114,8 +114,6 @@ namespace vcpkg::Dependencies
 
     std::vector<PackageSpecWithInstallPlan> create_install_plan(const VcpkgPaths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db)
     {
-        std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
-
         struct InstallAdjacencyProvider final : Graphs::AdjacencyProvider<PackageSpec, AnyParagraph>
         {
             const VcpkgPaths& paths;
@@ -151,6 +149,7 @@ namespace vcpkg::Dependencies
 
         auto toposort = Graphs::topological_sort(specs, InstallAdjacencyProvider{ paths, status_db });
 
+        std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
         std::vector<PackageSpecWithInstallPlan> ret;
         for (const AnyParagraph& pkg : toposort)
         {
