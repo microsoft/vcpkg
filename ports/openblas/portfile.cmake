@@ -21,6 +21,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     message(WARNING "openblas only support dynamic link for msvc")
     set(VCPKG_LIBRARY_LINKAGE "dynamic")
 endif()
+
 if(TARGET_TRIPLET STREQUAL "x86-windows")
     message(WARNING "current only port openblas for x64-windows")
     set(TARGET_TRIPLET "x64-windows")
