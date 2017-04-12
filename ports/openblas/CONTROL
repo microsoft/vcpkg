@@ -1,0 +1,3 @@
+Source: openblas
+Version: v0.2.19
+Description: OpenBLAS is an optimized BLAS library based on GotoBLAS2 1.13 BSD version.
