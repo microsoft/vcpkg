@@ -62,7 +62,6 @@ PS D:\src\vcpkg> .\vcpkg install sqlite3
 -- Performing post-build validation done
 Package sqlite3:x86-windows is installed
 ```
-In addition to installing, `vcpkg` caches a pristine copy of the built library inside the `packages\` directory -- in this case, `packages\sqlite3_x86-windows`. This allows you to quickly uninstall and reinstall the library in the future using the `remove` and `install` commands.
 
 We can check that sqlite3 was successfully installed for x86 windows desktop by running the `list` command.
 ```
