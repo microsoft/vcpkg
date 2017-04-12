@@ -18,7 +18,7 @@ namespace vcpkg::Graphs
     };
 
     template <class V, class Func>
-    static void topological_sort_internal(V vertex,
+    static void topological_sort_internal(const V& vertex,
                                           ExplorationStatus& status,
                                           const Func adjacency_list_provider,
                                           std::unordered_map<V, ExplorationStatus>& exploration_status,
