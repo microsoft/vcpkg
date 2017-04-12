@@ -92,7 +92,7 @@ Installing new libraries will make them instantly available.
 ```
 *Note: You will need to restart Visual Studio or perform a Build to update intellisense with the changes.* 
 
-You can now simply use File -> New Project in Visual Studio 2015 or Visual Studio "15" Preview and the library will be automatically available. For Sqlite, you can try out their [C/C++ sample](https://sqlite.org/quickstart.html).
+You can now simply use File -> New Project in Visual Studio 2015 or Visual Studio 2017 and the library will be automatically available. For Sqlite, you can try out their [C/C++ sample](https://sqlite.org/quickstart.html).
 
 To remove the integration for your user, you can use `.\vcpkg integrate remove`.
 
