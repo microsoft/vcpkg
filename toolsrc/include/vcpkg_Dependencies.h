@@ -4,9 +4,20 @@
 #include "StatusParagraphs.h"
 #include "VcpkgPaths.h"
 #include "vcpkg_optional.h"
+#include "Paragraphs.h"
 
 namespace vcpkg::Dependencies
 {
+    struct AnyParagraph
+    {
+        std::vector<PackageSpec> edges() const;
+
+        PackageSpec spec;
+        Optional<StatusParagraph> status_paragraph;
+        Optional<BinaryParagraph> binary_paragraph;
+        Optional<SourceParagraph> source_paragraph;
+    };
+
     enum class RequestType
     {
         UNKNOWN,
@@ -27,6 +38,7 @@ namespace vcpkg::Dependencies
     struct InstallPlanAction
     {
         InstallPlanAction();
+        explicit InstallPlanAction(const AnyParagraph& any_paragraph, const RequestType& request_type);
         InstallPlanAction(const InstallPlanType& plan_type, const RequestType& request_type, Optional<BinaryParagraph> binary_pgh, Optional<SourceParagraph> source_pgh);
         InstallPlanAction(const InstallPlanAction&) = delete;
         InstallPlanAction(InstallPlanAction&&) = default;
