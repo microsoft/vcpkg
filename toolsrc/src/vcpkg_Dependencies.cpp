@@ -190,10 +190,9 @@ namespace vcpkg::Dependencies
                 continue;
             }
 
-            for (const std::unique_ptr<StatusParagraph>& an_installed_package : status_db)
+            const std::vector<StatusParagraph*> installed_ports = get_installed_ports(status_db);
+            for (const StatusParagraph* an_installed_package : installed_ports)
             {
-                if (an_installed_package->want != Want::INSTALL)
-                    continue;
                 if (an_installed_package->package.spec.triplet() != spec.triplet())
                     continue;
 
@@ -203,8 +202,8 @@ namespace vcpkg::Dependencies
                     continue;
                 }
 
-                graph.add_edge(spec, an_installed_package.get()->package.spec);
-                examine_stack.push_back(an_installed_package.get()->package.spec);
+                graph.add_edge(spec, an_installed_package->package.spec);
+                examine_stack.push_back(an_installed_package->package.spec);
             }
 
             const RequestType request_type = specs_as_set.find(spec) != specs_as_set.end() ? RequestType::USER_REQUESTED : RequestType::AUTO_SELECTED;
