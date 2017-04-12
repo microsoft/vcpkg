@@ -1,5 +1,5 @@
 [cmdletbinding()]
-param([string]$targetBinary, [string]$installedDir, [string]$tlogFile)
+param([string]$targetBinary, [string]$installedDir, [string]$tlogFile, [string]$copiedFilesLog)
 
 $g_searched = @{}
 # Note: installedDir is actually the bin\ directory.
@@ -14,7 +14,7 @@ function deployBinary([string]$targetBinaryDir, [string]$SourceDir, [string]$tar
         Write-Verbose "  ${targetBinaryName}: Copying $SourceDir\$targetBinaryName"
         Copy-Item "$SourceDir\$targetBinaryName" $targetBinaryDir
     }
-    "$targetBinaryDir\$targetBinaryName"
+    if ($copiedFilesLog) { Add-Content $copiedFilesLog "$targetBinaryDir\$targetBinaryName" }
     if ($tlogFile) { Add-Content $tlogFile "$targetBinaryDir\$targetBinaryName" }
 }
 

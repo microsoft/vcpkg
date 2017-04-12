@@ -60,7 +60,7 @@ macro(extract_vcproj_sources VC_PROJECT OUT_VAR)
 endmacro()
 
 # main module
-extract_vcproj_sources(build/win32/vs14/glib.vcxproj GLIB_SOURCES)
+extract_vcproj_sources(win32/vs14/glib.vcxproj GLIB_SOURCES)
 list(APPEND GLIB_SOURCES glib/libcharset/localcharset.c) # modified internal version with prefixed symbols
 add_library(glib ${GLIB_SOURCES})
 target_compile_definitions(glib PRIVATE USE_SYSTEM_PCRE ${GLIB_EXPORT_MACRO} GLIB_COMPILATION G_LOG_DOMAIN="GLib" LIBDIR)
@@ -77,7 +77,7 @@ target_include_directories(gthread PRIVATE ${LIBINTL_INCLUDE_DIR})
 list(APPEND GLIB_TARGETS gthread)
 
 # gobject
-extract_vcproj_sources(build/win32/vs14/gobject.vcxproj GOBJECT_SOURCES)
+extract_vcproj_sources(win32/vs14/gobject.vcxproj GOBJECT_SOURCES)
 add_library(gobject ${GOBJECT_SOURCES})
 target_compile_definitions(gobject PRIVATE GOBJECT_COMPILATION ${GLIB_EXPORT_MACRO} G_LOG_DOMAIN="GLib-GObject")
 target_link_libraries(gobject gthread glib ${FFI_LIBRARY})
@@ -92,7 +92,7 @@ target_include_directories(gmodule PRIVATE ${LIBINTL_INCLUDE_DIR})
 list(APPEND GLIB_TARGETS gmodule)
 
 # gio
-extract_vcproj_sources(build/win32/vs14/gio.vcxproj GIO_SOURCES)
+extract_vcproj_sources(win32/vs14/gio.vcxproj GIO_SOURCES)
 add_library(gio ${GIO_SOURCES})
 target_compile_definitions(gio PRIVATE GIO_COMPILATION ${GLIB_EXPORT_MACRO} G_LOG_DOMAIN="GLib-GIO")
 target_link_libraries(gio glib gmodule gobject ws2_32 shlwapi dnsapi iphlpapi ${ZLIB_LIBRARIES})

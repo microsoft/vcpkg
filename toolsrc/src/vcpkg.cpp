@@ -69,29 +69,29 @@ static void inner(const VcpkgCmdArguments& args)
         return command_function(args, paths);
     }
 
-    Triplet default_target_triplet;
-    if (args.target_triplet != nullptr)
+    Triplet default_triplet;
+    if (args.triplet != nullptr)
     {
-        default_target_triplet = Triplet::from_canonical_name(*args.target_triplet);
+        default_triplet = Triplet::from_canonical_name(*args.triplet);
     }
     else
     {
         const Optional<std::wstring> vcpkg_default_triplet_env = System::get_environmental_variable(L"VCPKG_DEFAULT_TRIPLET");
         if (auto v = vcpkg_default_triplet_env.get())
         {
-            default_target_triplet = Triplet::from_canonical_name(Strings::utf16_to_utf8(*v));
+            default_triplet = Triplet::from_canonical_name(Strings::utf16_to_utf8(*v));
         }
         else
         {
-            default_target_triplet = Triplet::X86_WINDOWS;
+            default_triplet = Triplet::X86_WINDOWS;
         }
     }
 
-    Input::check_triplet(default_target_triplet, paths);
+    Input::check_triplet(default_triplet, paths);
 
     if (auto command_function = Commands::find(args.command, Commands::get_available_commands_type_a()))
     {
-        return command_function(args, paths, default_target_triplet);
+        return command_function(args, paths, default_triplet);
     }
 
     return invalid_command(args.command);

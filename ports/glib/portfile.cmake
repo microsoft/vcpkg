@@ -10,12 +10,12 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 include(vcpkg_common_functions)
-set(GLIB_VERSION 2.50.3)
+set(GLIB_VERSION 2.52.1)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glib-${GLIB_VERSION})
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnome.org/pub/gnome/sources/glib/2.50/glib-${GLIB_VERSION}.tar.xz"
+    URLS "https://ftp.gnome.org/pub/gnome/sources/glib/2.52/glib-${GLIB_VERSION}.tar.xz"
     FILENAME "glib-${GLIB_VERSION}.tar.xz"
-    SHA512 ef35806c15170b6608445f255136c0bebd2d433adf903c2af2865f6a57b4f2fcfc1e4a7cea1a0dac48ff5fe26248fbf7886dba4a8d209506f0a94160df8fb7af)
+    SHA512 6f0475b4ee1078867671a79b1751674926ba1caa872cec3896e2830c61c3cde67972afa9f2d606a2b6705e9846222462b003c6e966a9b63982f3fc3fb58c4d37)
 
 vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(

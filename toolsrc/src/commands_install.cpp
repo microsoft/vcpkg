@@ -24,11 +24,11 @@ namespace vcpkg::Commands::Install
         const fs::path package_prefix_path = paths.package_dir(bpgh.spec);
         const size_t prefix_length = package_prefix_path.native().size();
 
-        const Triplet& target_triplet = bpgh.spec.target_triplet();
-        const std::string& target_triplet_as_string = target_triplet.canonical_name();
+        const std::string& triplet_string = bpgh.spec.triplet().canonical_name();
+        const fs::path installed_subfolder_path = paths.installed / triplet_string;
         std::error_code ec;
-        fs.create_directory(paths.installed / target_triplet_as_string, ec);
-        output.push_back(Strings::format(R"(%s/)", target_triplet_as_string));
+        fs.create_directory(installed_subfolder_path, ec);
+        output.push_back(Strings::format(R"(%s/)", triplet_string));
 
         auto files = fs.recursive_find_all_files_in_dir(package_prefix_path);
         for (auto&& file : files)
@@ -48,7 +48,7 @@ namespace vcpkg::Commands::Install
             }
 
             const std::string suffix = file.generic_u8string().substr(prefix_length + 1);
-            const fs::path target = paths.installed / target_triplet_as_string / suffix;
+            const fs::path target = installed_subfolder_path / suffix;
 
             if (fs::is_directory(status))
             {
@@ -59,7 +59,7 @@ namespace vcpkg::Commands::Install
                 }
 
                 // Trailing backslash for directories
-                output.push_back(Strings::format(R"(%s/%s/)", target_triplet_as_string, suffix));
+                output.push_back(Strings::format(R"(%s/%s/)", triplet_string, suffix));
                 continue;
             }
 
@@ -74,7 +74,7 @@ namespace vcpkg::Commands::Install
                 {
                     System::println(System::Color::error, "failed: %s: %s", target.u8string(), ec.message());
                 }
-                output.push_back(Strings::format(R"(%s/%s)", target_triplet_as_string, suffix));
+                output.push_back(Strings::format(R"(%s/%s)", triplet_string, suffix));
                 continue;
             }
 
@@ -105,7 +105,7 @@ namespace vcpkg::Commands::Install
         std::vector<std::string> output;
         for (const StatusParagraphAndAssociatedFiles& t : pgh_and_files)
         {
-            if (t.pgh.package.spec.target_triplet() != triplet)
+            if (t.pgh.package.spec.triplet() != triplet)
             {
                 continue;
             }
@@ -188,7 +188,7 @@ namespace vcpkg::Commands::Install
     void install_package(const VcpkgPaths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs* status_db)
     {
         const fs::path package_dir = paths.package_dir(binary_paragraph.spec);
-        const Triplet& triplet = binary_paragraph.spec.target_triplet();
+        const Triplet& triplet = binary_paragraph.spec.triplet();
         const std::vector<StatusParagraphAndAssociatedFiles> pgh_and_files = get_installed_files(paths, *status_db);
 
         const SortedVector<std::string> package_files = build_list_of_package_files(paths.get_filesystem(), package_dir);
@@ -217,7 +217,7 @@ namespace vcpkg::Commands::Install
         spgh.state = InstallState::HALF_INSTALLED;
         for (auto&& dep : spgh.package.depends)
         {
-            if (status_db->find_installed(dep, spgh.package.spec.target_triplet()) == status_db->end())
+            if (status_db->find_installed(dep, spgh.package.spec.triplet()) == status_db->end())
             {
                 Checks::unreachable(VCPKG_LINE_INFO);
             }
@@ -232,7 +232,7 @@ namespace vcpkg::Commands::Install
         status_db->insert(std::make_unique<StatusParagraph>(spgh));
     }
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_target_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
         static const std::string OPTION_DRY_RUN = "--dry-run";
 
@@ -240,12 +240,12 @@ namespace vcpkg::Commands::Install
         static const std::string example = Commands::Help::create_example_string("install zlib zlib:x64-windows curl boost");
         args.check_min_arg_count(1, example);
 
-        auto specs = Util::fmap(args.command_arguments, [&](auto&& arg)
+        const std::vector<PackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg)
                                 {
-                                    auto spec = Input::check_and_get_package_spec(arg, default_target_triplet, example);
-                                    Input::check_triplet(spec.target_triplet(), paths);
-                                    return spec;
+                                    return Input::check_and_get_package_spec(arg, default_triplet, example);
                                 });
+        for (auto&& spec : specs)
+            Input::check_triplet(spec.triplet(), paths);
 
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_DRY_RUN });
         const bool dryRun = options.find(OPTION_DRY_RUN) != options.cend();
@@ -284,16 +284,18 @@ namespace vcpkg::Commands::Install
         // execute the plan
         for (const PackageSpecWithInstallPlan& action : install_plan)
         {
+            const std::string display_name = action.spec.to_string();
+
             try
             {
                 switch (action.plan.plan_type)
                 {
                     case InstallPlanType::ALREADY_INSTALLED:
-                        System::println(System::Color::success, "Package %s is already installed", action.spec);
+                        System::println(System::Color::success, "Package %s is already installed", display_name);
                         break;
                     case InstallPlanType::BUILD_AND_INSTALL:
                         {
-                            System::println("Building package %s... ", action.spec);
+                            System::println("Building package %s... ", display_name);
                             const Build::BuildResult result = Commands::Build::build_package(action.plan.source_pgh.value_or_exit(VCPKG_LINE_INFO),
                                                                                              action.spec,
                                                                                              paths,
@@ -305,18 +307,18 @@ namespace vcpkg::Commands::Install
                                 System::println(Build::create_user_troubleshooting_message(action.spec));
                                 Checks::exit_fail(VCPKG_LINE_INFO);
                             }
-                            System::println(System::Color::success, "Building package %s... done", action.spec);
+                            System::println(System::Color::success, "Building package %s... done", display_name);
 
                             const BinaryParagraph bpgh = Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO);
-                            System::println("Installing package %s... ", action.spec);
+                            System::println("Installing package %s... ", display_name);
                             install_package(paths, bpgh, &status_db);
-                            System::println(System::Color::success, "Installing package %s... done", action.spec);
+                            System::println(System::Color::success, "Installing package %s... done", display_name);
                             break;
                         }
                     case InstallPlanType::INSTALL:
-                        System::println("Installing package %s... ", action.spec);
+                        System::println("Installing package %s... ", display_name);
                         install_package(paths, action.plan.binary_pgh.value_or_exit(VCPKG_LINE_INFO), &status_db);
-                        System::println(System::Color::success, "Installing package %s... done", action.spec);
+                        System::println(System::Color::success, "Installing package %s... done", display_name);
                         break;
                     case InstallPlanType::UNKNOWN:
                     default:

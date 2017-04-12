@@ -88,7 +88,7 @@ namespace vcpkg
                 if (arg == "--triplet")
                 {
                     ++arg_begin;
-                    parse_value(arg_begin, arg_end, "--triplet", args.target_triplet);
+                    parse_value(arg_begin, arg_end, "--triplet", args.triplet);
                     continue;
                 }
                 if (arg == "--debug")

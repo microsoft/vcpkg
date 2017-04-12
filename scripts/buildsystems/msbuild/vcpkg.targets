@@ -62,18 +62,21 @@
   <Target Name="AppLocalFromInstalled" AfterTargets="CopyFilesToOutputDirectory" BeforeTargets="CopyLocalFilesOutputGroup;RegisterOutput" Condition="'$(VcpkgEnabled)' == 'true'">
     <WriteLinesToFile
     File="$(TLogLocation)$(ProjectName).write.1u.tlog"
-    Lines="^$(OutputPath)$(TargetName).$(OutputType);" Encoding="Unicode"/>
+    Lines="^$(TargetPath);$([System.IO.Path]::Combine($(ProjectDir),$(IntDir)))vcpkg.applocal.log" Encoding="Unicode"/>
     <Exec Condition="'$(VcpkgConfiguration)' == 'Debug'"
-      Command="powershell.exe -ExecutionPolicy Unrestricted -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(TargetPath)%22 %22$(VcpkgRoot)debug\bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22"
-      ConsoleToMSBuild="true"
+      Command="powershell.exe -ExecutionPolicy Bypass -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(TargetPath)%22 %22$(VcpkgRoot)debug\bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22 %22$(IntDir)vcpkg.applocal.log%22"
       StandardOutputImportance="Normal">
-        <Output TaskParameter="ConsoleOutput" ItemName="ReferenceCopyLocalPaths" />
     </Exec>
     <Exec Condition="'$(VcpkgConfiguration)' == 'Release'"
-      Command="powershell.exe -ExecutionPolicy Unrestricted -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(TargetPath)%22 %22$(VcpkgRoot)bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22"
-      ConsoleToMSBuild="true"
+      Command="powershell.exe -ExecutionPolicy Bypass -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(TargetPath)%22 %22$(VcpkgRoot)bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22 %22$(IntDir)vcpkg.applocal.log%22"
       StandardOutputImportance="Normal">
-        <Output TaskParameter="ConsoleOutput" ItemName="ReferenceCopyLocalPaths" />
     </Exec>
+    <ReadLinesFromFile File="$(IntDir)vcpkg.applocal.log">
+      <Output TaskParameter="Lines" ItemName="VcpkgAppLocalDLLs" />
+    </ReadLinesFromFile>
+    <Message Text="@(VcpkgAppLocalDLLs,'%0A')" Importance="Normal" />
+    <ItemGroup>
+      <ReferenceCopyLocalPaths Include="@(VcpkgAppLocalDLLs)" />
+    </ItemGroup>
   </Target>
 </Project>

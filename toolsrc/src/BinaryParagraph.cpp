@@ -29,9 +29,9 @@ namespace vcpkg
     {
         const std::string name = details::remove_required_field(&fields, BinaryParagraphRequiredField::PACKAGE);
         const std::string architecture = details::remove_required_field(&fields, BinaryParagraphRequiredField::ARCHITECTURE);
-        const Triplet target_triplet = Triplet::from_canonical_name(architecture);
+        const Triplet triplet = Triplet::from_canonical_name(architecture);
 
-        this->spec = PackageSpec::from_name_and_triplet(name, target_triplet).value_or_exit(VCPKG_LINE_INFO);
+        this->spec = PackageSpec::from_name_and_triplet(name, triplet).value_or_exit(VCPKG_LINE_INFO);
         this->version = details::remove_required_field(&fields, BinaryParagraphRequiredField::VERSION);
 
         this->description = details::remove_optional_field(&fields, BinaryParagraphOptionalField::DESCRIPTION);
@@ -44,18 +44,18 @@ namespace vcpkg
         this->depends = parse_depends(deps);
     }
 
-    BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh, const Triplet& target_triplet)
+    BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh, const Triplet& triplet)
     {
-        this->spec = PackageSpec::from_name_and_triplet(spgh.name, target_triplet).value_or_exit(VCPKG_LINE_INFO);
+        this->spec = PackageSpec::from_name_and_triplet(spgh.name, triplet).value_or_exit(VCPKG_LINE_INFO);
         this->version = spgh.version;
         this->description = spgh.description;
         this->maintainer = spgh.maintainer;
-        this->depends = filter_dependencies(spgh.depends, target_triplet);
+        this->depends = filter_dependencies(spgh.depends, triplet);
     }
 
     std::string BinaryParagraph::displayname() const
     {
-        return this->spec.display_name();
+        return this->spec.to_string();
     }
 
     std::string BinaryParagraph::dir() const
@@ -65,7 +65,7 @@ namespace vcpkg
 
     std::string BinaryParagraph::fullstem() const
     {
-        return Strings::format("%s_%s_%s", this->spec.name(), this->version, this->spec.target_triplet());
+        return Strings::format("%s_%s_%s", this->spec.name(), this->version, this->spec.triplet());
     }
 
     std::ostream& operator<<(std::ostream& os, const BinaryParagraph& p)
@@ -85,7 +85,7 @@ namespace vcpkg
 
             os << "\n";
         }
-        os << "Architecture: " << p.spec.target_triplet() << "\n";
+        os << "Architecture: " << p.spec.triplet().to_string() << "\n";
         os << "Multi-Arch: same\n";
         if (!p.maintainer.empty())
             os << "Maintainer: " << p.maintainer << "\n";

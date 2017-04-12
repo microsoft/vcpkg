@@ -1,5 +1,5 @@
-# Vcpkg
-
+# Vcpkg ![](https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/5261/badge)
+ 
 ## Overview
 Vcpkg helps you get C and C++ libraries on Windows. This tool and ecosystem are currently in a preview state; your involvement is vital to its success.
 

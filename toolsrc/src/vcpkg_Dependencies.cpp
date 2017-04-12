@@ -69,7 +69,7 @@ namespace vcpkg::Dependencies
                 {
                     for (const std::string& dep_as_string : dependencies_as_string)
                     {
-                        const PackageSpec current_dep = PackageSpec::from_name_and_triplet(dep_as_string, spec.target_triplet()).value_or_exit(VCPKG_LINE_INFO);
+                        const PackageSpec current_dep = PackageSpec::from_name_and_triplet(dep_as_string, spec.triplet()).value_or_exit(VCPKG_LINE_INFO);
                         auto it = status_db.find_installed(current_dep);
                         if (it != status_db.end())
                         {
@@ -103,7 +103,7 @@ namespace vcpkg::Dependencies
             Expected<SourceParagraph> maybe_spgh = Paragraphs::try_load_port(paths.get_filesystem(), paths.port_dir(spec));
             if (auto spgh = maybe_spgh.get())
             {
-                process_dependencies(filter_dependencies(spgh->depends, spec.target_triplet()));
+                process_dependencies(filter_dependencies(spgh->depends, spec.triplet()));
                 was_examined.emplace(spec, InstallPlanAction{ InstallPlanType::BUILD_AND_INSTALL, request_type, nullopt, std::move(*spgh) });
             }
             else
@@ -152,7 +152,7 @@ namespace vcpkg::Dependencies
             {
                 if (an_installed_package->want != Want::INSTALL)
                     continue;
-                if (an_installed_package->package.spec.target_triplet() != spec.target_triplet())
+                if (an_installed_package->package.spec.triplet() != spec.triplet())
                     continue;
 
                 const std::vector<std::string>& deps = an_installed_package->package.depends;

@@ -30,7 +30,7 @@ namespace vcpkg::Commands::Remove
     static void remove_package(const VcpkgPaths& paths, const PackageSpec& spec, StatusParagraphs* status_db)
     {
         auto& fs = paths.get_filesystem();
-        StatusParagraph& pkg = **status_db->find(spec.name(), spec.target_triplet());
+        StatusParagraph& pkg = **status_db->find(spec.name(), spec.triplet());
 
         pkg.want = Want::PURGE;
         pkg.state = InstallState::HALF_INSTALLED;
@@ -136,7 +136,7 @@ namespace vcpkg::Commands::Remove
         }
     }
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_target_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
         static const std::string OPTION_PURGE = "--purge";
         static const std::string OPTION_NO_PURGE = "--no-purge";
@@ -156,9 +156,9 @@ namespace vcpkg::Commands::Remove
         else
         {
             args.check_min_arg_count(1, example);
-            specs = Util::fmap(args.command_arguments, [&](auto&& arg) { return Input::check_and_get_package_spec(arg, default_target_triplet, example); });
+            specs = Util::fmap(args.command_arguments, [&](auto&& arg) { return Input::check_and_get_package_spec(arg, default_triplet, example); });
             for (auto&& spec : specs)
-                Input::check_triplet(spec.target_triplet(), paths);
+                Input::check_triplet(spec.triplet(), paths);
         }
 
         const bool alsoRemoveFolderFromPackages = options.find(OPTION_NO_PURGE) == options.end();
@@ -200,7 +200,7 @@ namespace vcpkg::Commands::Remove
 
         for (const PackageSpecWithRemovePlan& action : remove_plan)
         {
-            const std::string display_name = action.spec.display_name();
+            const std::string display_name = action.spec.to_string();
 
             switch (action.plan.plan_type)
             {

@@ -4,7 +4,7 @@ function(vcpkg_copy_tool_dependencies TOOL_DIR)
     macro(search_for_dependencies PATH_TO_SEARCH)
         file(GLOB TOOLS ${TOOL_DIR}/*.exe ${TOOL_DIR}/*.dll)
         foreach(TOOL ${TOOLS})
-            execute_process(COMMAND powershell -noprofile -executionpolicy UnRestricted -nologo
+            execute_process(COMMAND powershell -noprofile -executionpolicy Bypass -nologo
                 -file ${VCPKG_ROOT_DIR}/scripts/buildsystems/msbuild/applocal.ps1
                 -targetBinary ${TOOL}
                 -installedDir ${PATH_TO_SEARCH}

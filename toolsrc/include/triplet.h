@@ -15,10 +15,9 @@ namespace vcpkg
         static const Triplet ARM_UWP;
 
         const std::string& canonical_name() const;
-
         std::string architecture() const;
-
         std::string system() const;
+        const std::string& to_string() const;
 
     private:
         std::string m_canonical_name;
@@ -27,12 +26,6 @@ namespace vcpkg
     bool operator==(const Triplet& left, const Triplet& right);
 
     bool operator!=(const Triplet& left, const Triplet& right);
-
-    std::string to_string(const Triplet& spec);
-
-    std::string to_printf_arg(const Triplet& spec);
-
-    std::ostream& operator<<(std::ostream& os, const Triplet& spec);
 }
 
 namespace std

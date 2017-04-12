@@ -72,6 +72,8 @@ file(INSTALL
 )
 file(INSTALL
     ${SOURCE_PATH}/ports/MSVC++/mpg123.h
+    ${SOURCE_PATH}/src/libmpg123/fmt123.h
+    ${SOURCE_PATH}/src/libmpg123/mpg123.h.in
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
 
