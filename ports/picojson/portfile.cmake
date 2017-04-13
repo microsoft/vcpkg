@@ -1,10 +1,10 @@
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/picojson-master)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/picojson-rel-v1.3.0)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/kazuho/picojson/archive/master.zip"
-    FILENAME "picojson-1.3.1.zip"
-    SHA512 961138c1233ee960c8810cd0e53af27b42956ec0ed4017085b2330417833f91ba728dd76e64ece019a37eb5f8a857cc57d36c3370a27707d995091ab409c4819
+    URLS "https://github.com/kazuho/picojson/archive/rel/v1.3.0.zip"
+    FILENAME "picojson-1.3.0.zip"
+    SHA512 d1da5748b6a03e92ca4fa475a918842f5eede955f747359fa4d9d85f9ed9efac8b3748a306c2f9f71b9924099ba5e1f8f949e50cdf6f26bc3778865121725ddf
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
@@ -16,3 +16,4 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/picojson/LICENSE ${CURRENT_PACKAGES_DI
 file(INSTALL ${SOURCE_PATH}/picojson.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/picojson)
 
 vcpkg_copy_pdbs()
+
