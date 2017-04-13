@@ -13,7 +13,7 @@ namespace vcpkg::Files
         virtual std::vector<fs::path> get_files_recursive(const fs::path& dir) const = 0;
         virtual std::vector<fs::path> get_files_non_recursive(const fs::path& dir) const = 0;
 
-        virtual void write_all_lines(const fs::path& file_path, const std::vector<std::string>& lines) = 0;
+        virtual void write_lines(const fs::path& file_path, const std::vector<std::string>& lines) = 0;
         virtual void write_contents(const fs::path& file_path, const std::string& data) = 0;
         virtual void rename(const fs::path& oldpath, const fs::path& newpath) = 0;
         virtual bool remove(const fs::path& path) = 0;

@@ -89,7 +89,7 @@ namespace vcpkg::Commands::Install
 
         std::sort(output.begin(), output.end());
 
-        fs.write_all_lines(paths.listfile_path(bpgh), output);
+        fs.write_lines(paths.listfile_path(bpgh), output);
     }
 
     static void remove_first_n_chars(std::vector<std::string>* strings, const size_t n)

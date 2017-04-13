@@ -90,7 +90,7 @@ namespace vcpkg::Files
             return ret;
         }
 
-        virtual void write_all_lines(const fs::path & file_path, const std::vector<std::string>& lines) override
+        virtual void write_lines(const fs::path & file_path, const std::vector<std::string>& lines) override
         {
             std::fstream output(file_path, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
             for (const std::string& line : lines)

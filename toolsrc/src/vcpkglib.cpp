@@ -165,7 +165,7 @@ namespace vcpkg
 
         // Replace the listfile on disk
         const fs::path updated_listfile_path = listfile_path.generic_string() + "_updated";
-        fs.write_all_lines(updated_listfile_path, *lines);
+        fs.write_lines(updated_listfile_path, *lines);
         fs.rename(updated_listfile_path, listfile_path);
     }
 
