@@ -93,18 +93,15 @@ namespace vcpkg::Dependencies
     RemovePlanAction::RemovePlanAction() : plan_type(RemovePlanType::UNKNOWN)
                                          , request_type(RequestType::UNKNOWN) { }
 
-    RemovePlanAction::RemovePlanAction(const RemovePlanType& plan_type, const RequestType& request_type)
-        : plan_type(plan_type)
+    RemovePlanAction::RemovePlanAction(const PackageSpec& spec, const RemovePlanType& plan_type, const RequestType& request_type)
+        : spec(spec)
+        , plan_type(plan_type)
         , request_type(request_type) { }
 
-    bool PackageSpecWithRemovePlan::compare_by_name(const PackageSpecWithRemovePlan* left, const PackageSpecWithRemovePlan* right)
+    bool RemovePlanAction::compare_by_name(const RemovePlanAction* left, const RemovePlanAction* right)
     {
         return left->spec.name() < right->spec.name();
     }
-
-    PackageSpecWithRemovePlan::PackageSpecWithRemovePlan(const PackageSpec& spec, RemovePlanAction&& plan)
-        : spec(spec)
-        , plan(std::move(plan)) { }
 
     std::vector<InstallPlanAction> create_install_plan(const VcpkgPaths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db)
     {
@@ -134,13 +131,13 @@ namespace vcpkg::Dependencies
 
                 Expected<BinaryParagraph> maybe_bpgh = Paragraphs::try_load_cached_package(paths, spec);
                 if (auto bpgh = maybe_bpgh.get())
-                    return InstallPlanAction{ spec, {nullopt, *bpgh, nullopt}, request_type };
+                    return InstallPlanAction{ spec, { nullopt, *bpgh, nullopt }, request_type };
 
                 Expected<SourceParagraph> maybe_spgh = Paragraphs::try_load_port(paths.port_dir(spec));
                 if (auto spgh = maybe_spgh.get())
-                    return InstallPlanAction{ spec, {nullopt, nullopt, *spgh}, request_type };
+                    return InstallPlanAction{ spec, { nullopt, nullopt, *spgh }, request_type };
 
-                return InstallPlanAction{ spec , {nullopt, nullopt, nullopt}, request_type };
+                return InstallPlanAction{ spec , { nullopt, nullopt, nullopt }, request_type };
             }
         };
 
@@ -148,18 +145,20 @@ namespace vcpkg::Dependencies
         return Graphs::topological_sort(specs, InstallAdjacencyProvider{ paths, status_db, specs_as_set });
     }
 
-    std::vector<PackageSpecWithRemovePlan> create_remove_plan(const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db)
+    std::vector<RemovePlanAction> create_remove_plan(const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db)
     {
-        struct RemoveAdjacencyProvider final : Graphs::AdjacencyProvider<PackageSpec, SpecAndRemovePlanType>
+        struct RemoveAdjacencyProvider final : Graphs::AdjacencyProvider<PackageSpec, RemovePlanAction>
         {
             const StatusParagraphs& status_db;
             const std::vector<StatusParagraph*>& installed_ports;
+            const std::unordered_set<PackageSpec>& specs_as_set;
 
-            RemoveAdjacencyProvider(const StatusParagraphs& status_db, const std::vector<StatusParagraph*>& installed_ports)
+            RemoveAdjacencyProvider(const StatusParagraphs& status_db, const std::vector<StatusParagraph*>& installed_ports, const std::unordered_set<PackageSpec>& specs_as_set)
                 : status_db(status_db)
-                , installed_ports(installed_ports) { }
+                , installed_ports(installed_ports)
+                , specs_as_set(specs_as_set) { }
 
-            std::vector<PackageSpec> adjacency_list(const SpecAndRemovePlanType& p) const override
+            std::vector<PackageSpec> adjacency_list(const RemovePlanAction& p) const override
             {
                 if (p.plan_type == RemovePlanType::NOT_INSTALLED)
                 {
@@ -183,29 +182,20 @@ namespace vcpkg::Dependencies
                 return dependents;
             }
 
-            SpecAndRemovePlanType load_vertex_data(const PackageSpec& spec) const override
+            RemovePlanAction load_vertex_data(const PackageSpec& spec) const override
             {
+                const RequestType request_type = specs_as_set.find(spec) != specs_as_set.end() ? RequestType::USER_REQUESTED : RequestType::AUTO_SELECTED;
                 const StatusParagraphs::const_iterator it = status_db.find_installed(spec);
                 if (it == status_db.end())
                 {
-                    return { spec, RemovePlanType::NOT_INSTALLED };
+                    return RemovePlanAction{ spec, RemovePlanType::NOT_INSTALLED, request_type };
                 }
-                return { spec, RemovePlanType::REMOVE };
+                return RemovePlanAction{ spec, RemovePlanType::REMOVE, request_type };
             }
         };
 
         const std::vector<StatusParagraph*>& installed_ports = get_installed_ports(status_db);
-        const std::vector<SpecAndRemovePlanType> toposort = Graphs::topological_sort(specs, RemoveAdjacencyProvider{ status_db, installed_ports });
-
         const std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
-        std::vector<PackageSpecWithRemovePlan> ret;
-        for (const SpecAndRemovePlanType& pkg : toposort)
-        {
-            auto spec = pkg.spec;
-            const RequestType request_type = specs_as_set.find(spec) != specs_as_set.end() ? RequestType::USER_REQUESTED : RequestType::AUTO_SELECTED;
-            RemovePlanAction r(pkg.plan_type, request_type);
-            ret.push_back(PackageSpecWithRemovePlan(spec, std::move(r)));
-        }
-        return ret;
+        return Graphs::topological_sort(specs, RemoveAdjacencyProvider{ status_db, installed_ports, specs_as_set });
     }
 }

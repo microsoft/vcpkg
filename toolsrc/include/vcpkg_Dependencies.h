@@ -7,15 +7,6 @@
 
 namespace vcpkg::Dependencies
 {
-    struct AnyParagraph
-    {
-        std::vector<PackageSpec> dependencies(const Triplet& triplet) const;
-
-        Optional<StatusParagraph> status_paragraph;
-        Optional<BinaryParagraph> binary_paragraph;
-        Optional<SourceParagraph> source_paragraph;
-    };
-
     enum class RequestType
     {
         UNKNOWN,
@@ -24,6 +15,15 @@ namespace vcpkg::Dependencies
     };
 
     std::string to_output_string(RequestType request_type, const CStringView s);
+
+    struct AnyParagraph
+    {
+        std::vector<PackageSpec> dependencies(const Triplet& triplet) const;
+
+        Optional<StatusParagraph> status_paragraph;
+        Optional<BinaryParagraph> binary_paragraph;
+        Optional<SourceParagraph> source_paragraph;
+    };
 
     enum class InstallPlanType
     {
@@ -57,36 +57,23 @@ namespace vcpkg::Dependencies
         REMOVE
     };
 
-    struct SpecAndRemovePlanType
-    {
-        PackageSpec spec;
-        RemovePlanType plan_type;
-    };
-
     struct RemovePlanAction
     {
+        static bool compare_by_name(const RemovePlanAction* left, const RemovePlanAction* right);
+
         RemovePlanAction();
-        RemovePlanAction(const RemovePlanType& plan_type, const RequestType& request_type);
+        RemovePlanAction(const PackageSpec& spec, const RemovePlanType& plan_type, const RequestType& request_type);
         RemovePlanAction(const RemovePlanAction&) = delete;
         RemovePlanAction(RemovePlanAction&&) = default;
         RemovePlanAction& operator=(const RemovePlanAction&) = delete;
         RemovePlanAction& operator=(RemovePlanAction&&) = default;
 
+        PackageSpec spec;
         RemovePlanType plan_type;
         RequestType request_type;
     };
 
-    struct PackageSpecWithRemovePlan
-    {
-        static bool compare_by_name(const PackageSpecWithRemovePlan* left, const PackageSpecWithRemovePlan* right);
-
-        PackageSpecWithRemovePlan(const PackageSpec& spec, RemovePlanAction&& plan);
-
-        PackageSpec spec;
-        RemovePlanAction plan;
-    };
-
     std::vector<InstallPlanAction> create_install_plan(const VcpkgPaths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
 
-    std::vector<PackageSpecWithRemovePlan> create_remove_plan(const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
+    std::vector<RemovePlanAction> create_remove_plan(const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
 }
