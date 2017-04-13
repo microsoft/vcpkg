@@ -64,4 +64,9 @@ namespace vcpkg
     {
         return left.name() == right.name() && left.triplet() == right.triplet();
     }
+
+    bool operator!=(const PackageSpec& left, const PackageSpec& right)
+    {
+        return !(left == right);
+    }
 }

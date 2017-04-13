@@ -3,6 +3,7 @@
 #include "vcpkg_Checks.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Files.h"
+#include "vcpkg_Util.h"
 
 namespace vcpkg::Commands::Integrate
 {
@@ -66,10 +67,10 @@ namespace vcpkg::Commands::Integrate
         dir_id.erase(1, 1); // Erasing the ":"
 
         // NuGet id cannot have invalid characters. We will only use alphanumeric and dot.
-        dir_id.erase(std::remove_if(dir_id.begin(), dir_id.end(), [](char c)
-                                    {
-                                        return !isalnum(c) && (c != '.');
-                                    }), dir_id.end());
+        Util::keep_if(dir_id, [](char c)
+                      {
+                          return isalnum(c) || (c == '.');
+                      });
 
         const std::string nuget_id = "vcpkg." + dir_id;
         return nuget_id;

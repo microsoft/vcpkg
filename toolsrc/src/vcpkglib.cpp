@@ -5,6 +5,7 @@
 #include "metrics.h"
 #include "vcpkg_Util.h"
 #include "vcpkg_Strings.h"
+#include "vcpkg_Util.h"
 
 namespace vcpkg
 {
@@ -200,12 +201,10 @@ namespace vcpkg
             upgrade_to_slash_terminated_sorted_format(fs, &installed_files_of_current_pgh, listfile_path);
 
             // Remove the directories
-            installed_files_of_current_pgh.erase(
-                std::remove_if(installed_files_of_current_pgh.begin(), installed_files_of_current_pgh.end(), [](const std::string& file) -> bool
-                               {
-                                   return file.back() == '/';
-                               }
-                ), installed_files_of_current_pgh.end());
+            Util::keep_if(installed_files_of_current_pgh, [](const std::string& file) -> bool
+            {
+                return file.back() != '/';
+            });
 
             StatusParagraphAndAssociatedFiles pgh_and_files = { *pgh, SortedVector<std::string>(std::move(installed_files_of_current_pgh)) };
             installed_files.push_back(std::move(pgh_and_files));

@@ -2,8 +2,6 @@
 #include "StatusParagraphs.h"
 #include "vcpkg_Checks.h"
 #include <algorithm>
-#include <algorithm>
-#include <algorithm>
 
 namespace vcpkg
 {

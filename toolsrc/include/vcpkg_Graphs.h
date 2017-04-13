@@ -1,7 +1,6 @@
 #pragma once
 
 #include <unordered_map>
-#include <unordered_set>
 
 namespace vcpkg::Graphs
 {
@@ -17,104 +16,54 @@ namespace vcpkg::Graphs
         FULLY_EXPLORED
     };
 
-    template <class V>
-    class Graph
+    template <class V, class U>
+    __interface AdjacencyProvider
     {
-        static void find_topological_sort_internal(V vertex,
-                                                   ExplorationStatus& status,
-                                                   const std::unordered_map<V, std::unordered_set<V>>& adjacency_list,
-                                                   std::unordered_map<V, ExplorationStatus>& exploration_status,
-                                                   std::vector<V>& sorted)
-        {
-            status = ExplorationStatus::PARTIALLY_EXPLORED;
+        std::vector<V> adjacency_list(const U& vertex) const;
 
-            for (V neighbour : adjacency_list.at(vertex))
-            {
-                ExplorationStatus& neighbour_status = exploration_status[neighbour];
-                if (neighbour_status == ExplorationStatus::NOT_EXPLORED)
-                {
-                    find_topological_sort_internal(neighbour, neighbour_status, adjacency_list, exploration_status, sorted);
-                }
-                else if (neighbour_status == ExplorationStatus::PARTIALLY_EXPLORED)
-                {
-                    throw std::runtime_error("cycle in graph");
-                }
-            }
-
-            status = ExplorationStatus::FULLY_EXPLORED;
-            sorted.push_back(vertex);
-        }
-
-    public:
-
-        void add_vertex(V v)
-        {
-            this->vertices[v];
-        }
-
-        // TODO: Change with iterators
-        void add_vertices(const std::vector<V>& vs)
-        {
-            for (const V& v : vs)
-            {
-                this->vertices[v];
-            }
-        }
-
-        void add_edge(V u, V v)
-        {
-            this->vertices[v];
-            this->vertices[u].insert(v);
-        }
-
-        std::vector<V> find_topological_sort() const
-        {
-            std::unordered_map<V, int> indegrees = count_indegrees();
-
-            std::vector<V> sorted;
-            sorted.reserve(indegrees.size());
-
-            std::unordered_map<V, ExplorationStatus> exploration_status;
-            exploration_status.reserve(indegrees.size());
-
-            for (auto& pair : indegrees)
-            {
-                if (pair.second == 0) // Starting from vertices with indegree == 0. Not required.
-                {
-                    V vertex = pair.first;
-                    ExplorationStatus& status = exploration_status[vertex];
-                    if (status == ExplorationStatus::NOT_EXPLORED)
-                    {
-                        find_topological_sort_internal(vertex, status, this->vertices, exploration_status, sorted);
-                    }
-                }
-            }
-
-            return sorted;
-        }
-
-        std::unordered_map<V, int> count_indegrees() const
-        {
-            std::unordered_map<V, int> indegrees;
-
-            for (auto& pair : this->vertices)
-            {
-                indegrees[pair.first];
-                for (V neighbour : pair.second)
-                {
-                    ++indegrees[neighbour];
-                }
-            }
-
-            return indegrees;
-        }
-
-        const std::unordered_map<V, std::unordered_set<V>>& adjacency_list() const
-        {
-            return this->vertices;
-        }
-
-    private:
-        std::unordered_map<V, std::unordered_set<V>> vertices;
+        U load_vertex_data(const V& vertex) const;
     };
+
+    template <class V, class U>
+    static void topological_sort_internal(const V& vertex,
+                                          const AdjacencyProvider<V, U>& f,
+                                          std::unordered_map<V, ExplorationStatus>& exploration_status,
+                                          std::vector<U>& sorted)
+    {
+        ExplorationStatus& status = exploration_status[vertex];
+        switch (status)
+        {
+            case ExplorationStatus::FULLY_EXPLORED:
+                return;
+            case ExplorationStatus::PARTIALLY_EXPLORED:
+                Checks::exit_with_message(VCPKG_LINE_INFO, "cycle in graph");
+            case ExplorationStatus::NOT_EXPLORED:
+                {
+                    status = ExplorationStatus::PARTIALLY_EXPLORED;
+                    U vertex_data = f.load_vertex_data(vertex);
+                    for (const V& neighbour : f.adjacency_list(vertex_data))
+                        topological_sort_internal(neighbour, f, exploration_status, sorted);
+
+                    sorted.push_back(std::move(vertex_data));
+                    status = ExplorationStatus::FULLY_EXPLORED;
+                    return;
+                }
+            default:
+                Checks::unreachable(VCPKG_LINE_INFO);
+        }
+    }
+
+    template <class V, class U>
+    std::vector<U> topological_sort(const std::vector<V>& starting_vertices, const AdjacencyProvider<V, U>& f)
+    {
+        std::vector<U> sorted;
+        std::unordered_map<V, ExplorationStatus> exploration_status;
+
+        for (auto& vertex : starting_vertices)
+        {
+            topological_sort_internal(vertex, f, exploration_status, sorted);
+        }
+
+        return sorted;
+    }
 }

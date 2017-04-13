@@ -8,7 +8,7 @@
 
 namespace vcpkg::Commands::Remove
 {
-    using Dependencies::PackageSpecWithRemovePlan;
+    using Dependencies::RemovePlanAction;
     using Dependencies::RemovePlanType;
     using Dependencies::RequestType;
     using Update::OutdatedPackage;
@@ -101,14 +101,14 @@ namespace vcpkg::Commands::Remove
         write_update(paths, pkg);
     }
 
-    static void print_plan(const std::vector<PackageSpecWithRemovePlan>& plan)
+    static void print_plan(const std::vector<RemovePlanAction>& plan)
     {
-        std::vector<const PackageSpecWithRemovePlan*> not_installed;
-        std::vector<const PackageSpecWithRemovePlan*> remove;
+        std::vector<const RemovePlanAction*> not_installed;
+        std::vector<const RemovePlanAction*> remove;
 
-        for (const PackageSpecWithRemovePlan& i : plan)
+        for (const RemovePlanAction& i : plan)
         {
-            switch (i.plan.plan_type)
+            switch (i.plan_type)
             {
                 case RemovePlanType::NOT_INSTALLED:
                     not_installed.push_back(&i);
@@ -121,17 +121,17 @@ namespace vcpkg::Commands::Remove
             }
         }
 
-       auto print_lambda = [](const PackageSpecWithRemovePlan* p) { return to_output_string(p->plan.request_type, p->spec.to_string()); };
+       auto print_lambda = [](const RemovePlanAction* p) { return Dependencies::to_output_string(p->request_type, p->spec.to_string()); };
 
         if (!not_installed.empty())
         {
-            std::sort(not_installed.begin(), not_installed.end(), &PackageSpecWithRemovePlan::compare_by_name);
+            std::sort(not_installed.begin(), not_installed.end(), &RemovePlanAction::compare_by_name);
             System::println("The following packages are not installed, so not removed:\n%s", Strings::join("\n", not_installed, print_lambda));
         }
 
         if (!remove.empty())
         {
-            std::sort(remove.begin(), remove.end(), &PackageSpecWithRemovePlan::compare_by_name);
+            std::sort(remove.begin(), remove.end(), &RemovePlanAction::compare_by_name);
             System::println("The following packages will be removed:\n%s", Strings::join("\n", remove, print_lambda));
         }
     }
@@ -172,14 +172,14 @@ namespace vcpkg::Commands::Remove
         const bool isRecursive = options.find(OPTION_RECURSE) != options.cend();
         const bool dryRun = options.find(OPTION_DRY_RUN) != options.cend();
 
-        const std::vector<PackageSpecWithRemovePlan> remove_plan = Dependencies::create_remove_plan(specs, status_db);
+        const std::vector<RemovePlanAction> remove_plan = Dependencies::create_remove_plan(specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !remove_plan.empty(), "Remove plan cannot be empty");
 
         print_plan(remove_plan);
 
-        const bool has_non_user_requested_packages = std::find_if(remove_plan.cbegin(), remove_plan.cend(), [](const PackageSpecWithRemovePlan& package)-> bool
+        const bool has_non_user_requested_packages = std::find_if(remove_plan.cbegin(), remove_plan.cend(), [](const RemovePlanAction& package)-> bool
                                                                   {
-                                                                      return package.plan.request_type != RequestType::USER_REQUESTED;
+                                                                      return package.request_type != RequestType::USER_REQUESTED;
                                                                   }) != remove_plan.cend();
 
         if (has_non_user_requested_packages)
@@ -198,11 +198,11 @@ namespace vcpkg::Commands::Remove
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        for (const PackageSpecWithRemovePlan& action : remove_plan)
+        for (const RemovePlanAction& action : remove_plan)
         {
             const std::string display_name = action.spec.to_string();
 
-            switch (action.plan.plan_type)
+            switch (action.plan_type)
             {
                 case RemovePlanType::NOT_INSTALLED:
                     System::println(System::Color::success, "Package %s is not installed", display_name);

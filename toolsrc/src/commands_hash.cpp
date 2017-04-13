@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
+#include "vcpkg_Util.h"
 
 namespace vcpkg::Commands::Hash
 {
@@ -20,7 +21,7 @@ namespace vcpkg::Commands::Hash
         Checks::check_exit(VCPKG_LINE_INFO, end != std::string::npos, "Unexpected output format from command: %s", Strings::utf16_to_utf8(cmd_line));
 
         auto hash = output.substr(start, end - start);
-        hash.erase(std::remove_if(hash.begin(), hash.end(), isspace), hash.end());
+        Util::keep_if(hash, [](char c) {return !isspace(c); });
         System::println(hash);
     }
 

@@ -62,7 +62,6 @@ PS D:\src\vcpkg> .\vcpkg install sqlite3
 -- Performing post-build validation done
 Package sqlite3:x86-windows is installed
 ```
-In addition to installing, `vcpkg` caches a pristine copy of the built library inside the `packages\` directory -- in this case, `packages\sqlite3_x86-windows`. This allows you to quickly uninstall and reinstall the library in the future using the `remove` and `install` commands.
 
 We can check that sqlite3 was successfully installed for x86 windows desktop by running the `list` command.
 ```
@@ -93,7 +92,7 @@ Installing new libraries will make them instantly available.
 ```
 *Note: You will need to restart Visual Studio or perform a Build to update intellisense with the changes.* 
 
-You can now simply use File -> New Project in Visual Studio 2015 or Visual Studio "15" Preview and the library will be automatically available. For Sqlite, you can try out their [C/C++ sample](https://sqlite.org/quickstart.html).
+You can now simply use File -> New Project in Visual Studio 2015 or Visual Studio 2017 and the library will be automatically available. For Sqlite, you can try out their [C/C++ sample](https://sqlite.org/quickstart.html).
 
 To remove the integration for your user, you can use `.\vcpkg integrate remove`.
 

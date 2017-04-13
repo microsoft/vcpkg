@@ -10,7 +10,7 @@
 
 namespace vcpkg::Commands::CI
 {
-    using Dependencies::PackageSpecWithInstallPlan;
+    using Dependencies::InstallPlanAction;
     using Dependencies::InstallPlanType;
     using Build::BuildResult;
 
@@ -36,7 +36,7 @@ namespace vcpkg::Commands::CI
         const std::vector<PackageSpec> specs = load_all_package_specs(paths.get_filesystem(), paths.ports, triplet);
 
         StatusParagraphs status_db = database_load_check(paths);
-        const std::vector<PackageSpecWithInstallPlan> install_plan = Dependencies::create_install_plan(paths, specs, status_db);
+        const std::vector<InstallPlanAction> install_plan = Dependencies::create_install_plan(paths, specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !install_plan.empty(), "Install plan cannot be empty");
 
         std::vector<BuildResult> results;
@@ -44,7 +44,7 @@ namespace vcpkg::Commands::CI
         const ElapsedTime timer = ElapsedTime::create_started();
         size_t counter = 0;
         const size_t package_count = install_plan.size();
-        for (const PackageSpecWithInstallPlan& action : install_plan)
+        for (const InstallPlanAction& action : install_plan)
         {
             const ElapsedTime build_timer = ElapsedTime::create_started();
             counter++;
@@ -56,7 +56,7 @@ namespace vcpkg::Commands::CI
 
             try
             {
-                switch (action.plan.plan_type)
+                switch (action.plan_type)
                 {
                     case InstallPlanType::ALREADY_INSTALLED:
                         results.back() = BuildResult::SUCCEEDED;
@@ -65,7 +65,7 @@ namespace vcpkg::Commands::CI
                     case InstallPlanType::BUILD_AND_INSTALL:
                         {
                             System::println("Building package %s... ", display_name);
-                            const BuildResult result = Commands::Build::build_package(action.plan.source_pgh.value_or_exit(VCPKG_LINE_INFO),
+                            const BuildResult result = Commands::Build::build_package(action.any_paragraph.source_paragraph.value_or_exit(VCPKG_LINE_INFO),
                                                                                       action.spec,
                                                                                       paths,
                                                                                       paths.port_dir(action.spec),
@@ -88,7 +88,7 @@ namespace vcpkg::Commands::CI
                     case InstallPlanType::INSTALL:
                         results.back() = BuildResult::SUCCEEDED;
                         System::println("Installing package %s... ", display_name);
-                        Install::install_package(paths, action.plan.binary_pgh.value_or_exit(VCPKG_LINE_INFO), &status_db);
+                        Install::install_package(paths, action.any_paragraph.binary_paragraph.value_or_exit(VCPKG_LINE_INFO), &status_db);
                         System::println(System::Color::success, "Installing package %s... done", display_name);
                         break;
                     default:

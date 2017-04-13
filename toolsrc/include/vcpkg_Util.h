@@ -27,4 +27,10 @@ namespace vcpkg::Util
     {
         cont.erase(std::partition(cont.begin(), cont.end(), pred), cont.end());
     }
+
+    template<class Container, class Pred>
+    void keep_if(Container& cont, Pred pred)
+    {
+        cont.erase(std::remove_if(cont.begin(), cont.end(), pred), cont.end());
+    }
 }
