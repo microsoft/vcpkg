@@ -32,7 +32,7 @@ namespace vcpkg::Files
 
             return std::move(output);
         }
-        virtual Expected<std::vector<std::string>> read_all_lines(const fs::path& file_path) const override
+        virtual Expected<std::vector<std::string>> read_lines(const fs::path& file_path) const override
         {
             std::fstream file_stream(file_path, std::ios_base::in | std::ios_base::binary);
             if (file_stream.fail())

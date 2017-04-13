@@ -36,7 +36,7 @@ namespace vcpkg::Commands::Remove
         pkg.state = InstallState::HALF_INSTALLED;
         write_update(paths, pkg);
 
-        auto maybe_lines = fs.read_all_lines(paths.listfile_path(pkg.package));
+        auto maybe_lines = fs.read_lines(paths.listfile_path(pkg.package));
 
         if (auto lines = maybe_lines.get())
         {
