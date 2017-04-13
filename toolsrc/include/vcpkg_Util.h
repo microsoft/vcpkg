@@ -21,4 +21,10 @@ namespace vcpkg::Util
 
         return ret;
     }
+
+    template<class Container, class Pred>
+    void keep_if(Container& cont, Pred pred)
+    {
+        cont.erase(std::remove_if(cont.begin(), cont.end(), pred), cont.end());
+    }
 }
