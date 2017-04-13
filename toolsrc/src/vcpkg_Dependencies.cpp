@@ -115,11 +115,11 @@ namespace vcpkg::Dependencies
                                                                                                                                           , status_db(s)
                                                                                                                                           , specs_as_set(specs_as_set) {}
 
-            std::vector<PackageSpec> adjacency_list(const InstallPlanAction& p) const override
+            std::vector<PackageSpec> adjacency_list(const InstallPlanAction& plan) const override
             {
-                if (p.any_paragraph.status_paragraph.get())
+                if (plan.any_paragraph.status_paragraph.get())
                     return std::vector<PackageSpec>{};
-                return p.any_paragraph.dependencies(p.spec.triplet());
+                return plan.any_paragraph.dependencies(plan.spec.triplet());
             }
 
             InstallPlanAction load_vertex_data(const PackageSpec& spec) const override
@@ -143,10 +143,10 @@ namespace vcpkg::Dependencies
 
         const std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
         std::vector<InstallPlanAction> toposort = Graphs::topological_sort(specs, InstallAdjacencyProvider{ paths, status_db, specs_as_set });
-        Util::erase_remove_if(toposort, [](const InstallPlanAction& p)
-        {
-            return  p.request_type == RequestType::AUTO_SELECTED && p.plan_type == InstallPlanType::ALREADY_INSTALLED;
-        });
+        Util::erase_remove_if(toposort, [](const InstallPlanAction& plan)
+                              {
+                                  return plan.request_type == RequestType::AUTO_SELECTED && plan.plan_type == InstallPlanType::ALREADY_INSTALLED;
+                              });
 
         return toposort;
     }
@@ -164,14 +164,14 @@ namespace vcpkg::Dependencies
                 , installed_ports(installed_ports)
                 , specs_as_set(specs_as_set) { }
 
-            std::vector<PackageSpec> adjacency_list(const RemovePlanAction& p) const override
+            std::vector<PackageSpec> adjacency_list(const RemovePlanAction& plan) const override
             {
-                if (p.plan_type == RemovePlanType::NOT_INSTALLED)
+                if (plan.plan_type == RemovePlanType::NOT_INSTALLED)
                 {
                     return {};
                 }
 
-                const PackageSpec& spec = p.spec;
+                const PackageSpec& spec = plan.spec;
                 std::vector<PackageSpec> dependents;
                 for (const StatusParagraph* an_installed_package : installed_ports)
                 {
