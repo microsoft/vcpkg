@@ -10,6 +10,7 @@
 #include "metrics.h"
 #include "vcpkg_Enums.h"
 #include "Paragraphs.h"
+#include "vcpkg_Util.h"
 
 namespace vcpkg::Commands::Build
 {
@@ -149,12 +150,10 @@ namespace vcpkg::Commands::Build
         if (result == BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES)
         {
             std::vector<InstallPlanAction> unmet_dependencies = Dependencies::create_install_plan(paths, { spec }, status_db);
-            unmet_dependencies.erase(
-                std::remove_if(unmet_dependencies.begin(), unmet_dependencies.end(), [&spec](const InstallPlanAction& p)
-                               {
-                                   return (p.spec == spec) || (p.plan_type == InstallPlanType::ALREADY_INSTALLED);
-                               }),
-                unmet_dependencies.end());
+            Util::erase_remove_if(unmet_dependencies, [&spec](const InstallPlanAction& p)
+            {
+                return (p.spec == spec) || (p.plan_type == InstallPlanType::ALREADY_INSTALLED);
+            });
 
             Checks::check_exit(VCPKG_LINE_INFO, !unmet_dependencies.empty());
             System::println(System::Color::error, "The build command requires all dependencies to be already installed.");

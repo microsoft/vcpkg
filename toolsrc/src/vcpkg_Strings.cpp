@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "vcpkg_Strings.h"
+#include "vcpkg_Util.h"
 
 namespace vcpkg::Strings::details
 {
@@ -98,10 +99,7 @@ namespace vcpkg::Strings
             trim(&s);
         }
 
-        strings->erase(std::remove_if(strings->begin(), strings->end(), [](const std::string& s)-> bool
-                                      {
-                                          return s == "";
-                                      }), strings->end());
+        Util::erase_remove_if(*strings, [](const std::string& s) { return s == ""; });
     }
 
     std::vector<std::string> split(const std::string& s, const std::string& delimiter)
