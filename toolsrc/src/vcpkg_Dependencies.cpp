@@ -11,13 +11,13 @@
 
 namespace vcpkg::Dependencies
 {
-    std::vector<PackageSpec> AnyParagraph::dependencies() const
+    std::vector<PackageSpec> AnyParagraph::dependencies(const Triplet& triplet) const
     {
         auto to_package_specs = [&](const std::vector<std::string>& dependencies_as_string)
             {
                 return Util::fmap(dependencies_as_string, [&](const std::string s)
                                   {
-                                      return PackageSpec::from_name_and_triplet(s, this->spec.triplet()).value_or_exit(VCPKG_LINE_INFO);
+                                      return PackageSpec::from_name_and_triplet(s, triplet).value_or_exit(VCPKG_LINE_INFO);
                                   });
             };
 
@@ -33,10 +33,10 @@ namespace vcpkg::Dependencies
 
         if (auto p = this->source_paragraph.get())
         {
-            return to_package_specs(filter_dependencies(p->depends, this->spec.triplet()));
+            return to_package_specs(filter_dependencies(p->depends, triplet));
         }
 
-        Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot get dependencies for package %s because there was none of: source/binary/status paragraphs", spec.to_string());
+        Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot get dependencies because there was none of: source/binary/status paragraphs");
     }
 
     std::string to_output_string(RequestType request_type, const CStringView s)
@@ -52,51 +52,43 @@ namespace vcpkg::Dependencies
         }
     }
 
-    InstallPlanAction::InstallPlanAction() : plan_type(InstallPlanType::UNKNOWN)
-                                           , request_type(RequestType::UNKNOWN)
-                                           , binary_pgh(nullopt)
-                                           , source_pgh(nullopt) { }
+    InstallPlanAction::InstallPlanAction() : spec()
+                                           , any_paragraph()
+                                           , plan_type(InstallPlanType::UNKNOWN)
+                                           , request_type(RequestType::UNKNOWN) { }
 
-    InstallPlanAction::InstallPlanAction(const AnyParagraph& any_paragraph, const RequestType& request_type) : InstallPlanAction()
+    InstallPlanAction::InstallPlanAction(const PackageSpec& spec, const AnyParagraph& any_paragraph, const RequestType& request_type) : InstallPlanAction()
     {
+        this->spec = spec;
         this->request_type = request_type;
-        if (any_paragraph.status_paragraph.get())
+        if (auto p = any_paragraph.status_paragraph.get())
         {
             this->plan_type = InstallPlanType::ALREADY_INSTALLED;
+            this->any_paragraph.status_paragraph = *p;
             return;
         }
 
         if (auto p = any_paragraph.binary_paragraph.get())
         {
             this->plan_type = InstallPlanType::INSTALL;
-            this->binary_pgh = *p;
+            this->any_paragraph.binary_paragraph = *p;
             return;
         }
 
         if (auto p = any_paragraph.source_paragraph.get())
         {
             this->plan_type = InstallPlanType::BUILD_AND_INSTALL;
-            this->source_pgh = *p;
+            this->any_paragraph.source_paragraph = *p;
             return;
         }
 
         this->plan_type = InstallPlanType::UNKNOWN;
     }
 
-    InstallPlanAction::InstallPlanAction(const InstallPlanType& plan_type, const RequestType& request_type, Optional<BinaryParagraph> binary_pgh, Optional<SourceParagraph> source_pgh)
-        : plan_type(std::move(plan_type))
-        , request_type(request_type)
-        , binary_pgh(std::move(binary_pgh))
-        , source_pgh(std::move(source_pgh)) { }
-
-    bool PackageSpecWithInstallPlan::compare_by_name(const PackageSpecWithInstallPlan* left, const PackageSpecWithInstallPlan* right)
+    bool InstallPlanAction::compare_by_name(const InstallPlanAction* left, const InstallPlanAction* right)
     {
         return left->spec.name() < right->spec.name();
     }
-
-    PackageSpecWithInstallPlan::PackageSpecWithInstallPlan(const PackageSpec& spec, InstallPlanAction&& plan)
-        : spec(spec)
-        , plan(std::move(plan)) { }
 
     RemovePlanAction::RemovePlanAction() : plan_type(RemovePlanType::UNKNOWN)
                                          , request_type(RequestType::UNKNOWN) { }
@@ -114,62 +106,47 @@ namespace vcpkg::Dependencies
         : spec(spec)
         , plan(std::move(plan)) { }
 
-    std::vector<PackageSpecWithInstallPlan> create_install_plan(const VcpkgPaths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db)
+    std::vector<InstallPlanAction> create_install_plan(const VcpkgPaths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db)
     {
-        struct InstallAdjacencyProvider final : Graphs::AdjacencyProvider<PackageSpec, AnyParagraph>
+        struct InstallAdjacencyProvider final : Graphs::AdjacencyProvider<PackageSpec, InstallPlanAction>
         {
             const VcpkgPaths& paths;
             const StatusParagraphs& status_db;
+            const std::unordered_set<PackageSpec>& specs_as_set;
 
-            InstallAdjacencyProvider(const VcpkgPaths& p, const StatusParagraphs& s) : paths(p)
-                                                                                     , status_db(s) {}
+            InstallAdjacencyProvider(const VcpkgPaths& p, const StatusParagraphs& s, const std::unordered_set<PackageSpec>& specs_as_set) : paths(p)
+                                                                                                                                          , status_db(s)
+                                                                                                                                          , specs_as_set(specs_as_set) {}
 
-            std::vector<PackageSpec> adjacency_list(const AnyParagraph& p) const override
+            std::vector<PackageSpec> adjacency_list(const InstallPlanAction& p) const override
             {
-                if (p.status_paragraph.get())
+                if (p.any_paragraph.status_paragraph.get())
                     return std::vector<PackageSpec>{};
-                return p.dependencies();
+                return p.any_paragraph.dependencies(p.spec.triplet());
             }
 
-            AnyParagraph load_vertex_data(const PackageSpec& spec) const override
+            InstallPlanAction load_vertex_data(const PackageSpec& spec) const override
             {
+                const RequestType request_type = specs_as_set.find(spec) != specs_as_set.end() ? RequestType::USER_REQUESTED : RequestType::AUTO_SELECTED;
                 auto it = status_db.find_installed(spec);
                 if (it != status_db.end())
-                    return { spec, *it->get(), nullopt, nullopt };
+                    return InstallPlanAction{ spec, { *it->get(), nullopt, nullopt }, request_type };
 
                 Expected<BinaryParagraph> maybe_bpgh = Paragraphs::try_load_cached_package(paths, spec);
                 if (auto bpgh = maybe_bpgh.get())
-                    return { spec, nullopt, *bpgh, nullopt };
+                    return InstallPlanAction{ spec, {nullopt, *bpgh, nullopt}, request_type };
 
                 Expected<SourceParagraph> maybe_spgh = Paragraphs::try_load_port(paths.port_dir(spec));
                 if (auto spgh = maybe_spgh.get())
-                    return { spec, nullopt, nullopt, *spgh };
+                    return InstallPlanAction{ spec, {nullopt, nullopt, *spgh}, request_type };
 
-                return { spec , nullopt, nullopt, nullopt };
+                return InstallPlanAction{ spec , {nullopt, nullopt, nullopt}, request_type };
             }
         };
 
-        const std::vector<AnyParagraph> toposort = Graphs::topological_sort(specs, InstallAdjacencyProvider{ paths, status_db });
-
         const std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
-        std::vector<PackageSpecWithInstallPlan> ret;
-        for (const AnyParagraph& pkg : toposort)
-        {
-            auto spec = pkg.spec;
-            const RequestType request_type = specs_as_set.find(spec) != specs_as_set.end() ? RequestType::USER_REQUESTED : RequestType::AUTO_SELECTED;
-            if (pkg.status_paragraph && request_type != RequestType::USER_REQUESTED)
-                continue;
-            InstallPlanAction a(pkg, request_type);
-            ret.push_back(PackageSpecWithInstallPlan(spec, std::move(a)));
-        }
-        return ret;
+        return Graphs::topological_sort(specs, InstallAdjacencyProvider{ paths, status_db, specs_as_set });
     }
-
-    struct SpecAndRemovePlanType
-    {
-        PackageSpec spec;
-        RemovePlanType plan_type;
-    };
 
     std::vector<PackageSpecWithRemovePlan> create_remove_plan(const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db)
     {
@@ -211,7 +188,7 @@ namespace vcpkg::Dependencies
                 const StatusParagraphs::const_iterator it = status_db.find_installed(spec);
                 if (it == status_db.end())
                 {
-                    return {spec, RemovePlanType::NOT_INSTALLED};
+                    return { spec, RemovePlanType::NOT_INSTALLED };
                 }
                 return { spec, RemovePlanType::REMOVE };
             }

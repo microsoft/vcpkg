@@ -9,9 +9,8 @@ namespace vcpkg::Dependencies
 {
     struct AnyParagraph
     {
-        std::vector<PackageSpec> dependencies() const;
+        std::vector<PackageSpec> dependencies(const Triplet& triplet) const;
 
-        PackageSpec spec;
         Optional<StatusParagraph> status_paragraph;
         Optional<BinaryParagraph> binary_paragraph;
         Optional<SourceParagraph> source_paragraph;
@@ -36,28 +35,19 @@ namespace vcpkg::Dependencies
 
     struct InstallPlanAction
     {
+        static bool compare_by_name(const InstallPlanAction* left, const InstallPlanAction* right);
+
         InstallPlanAction();
-        explicit InstallPlanAction(const AnyParagraph& any_paragraph, const RequestType& request_type);
-        InstallPlanAction(const InstallPlanType& plan_type, const RequestType& request_type, Optional<BinaryParagraph> binary_pgh, Optional<SourceParagraph> source_pgh);
+        explicit InstallPlanAction(const PackageSpec& spec, const AnyParagraph& any_paragraph, const RequestType& request_type);
         InstallPlanAction(const InstallPlanAction&) = delete;
         InstallPlanAction(InstallPlanAction&&) = default;
         InstallPlanAction& operator=(const InstallPlanAction&) = delete;
         InstallPlanAction& operator=(InstallPlanAction&&) = default;
 
+        PackageSpec spec;
+        AnyParagraph any_paragraph;
         InstallPlanType plan_type;
         RequestType request_type;
-        Optional<BinaryParagraph> binary_pgh;
-        Optional<SourceParagraph> source_pgh;
-    };
-
-    struct PackageSpecWithInstallPlan
-    {
-        static bool compare_by_name(const PackageSpecWithInstallPlan* left, const PackageSpecWithInstallPlan* right);
-
-        PackageSpecWithInstallPlan(const PackageSpec& spec, InstallPlanAction&& plan);
-
-        PackageSpec spec;
-        InstallPlanAction plan;
     };
 
     enum class RemovePlanType
@@ -65,6 +55,12 @@ namespace vcpkg::Dependencies
         UNKNOWN,
         NOT_INSTALLED,
         REMOVE
+    };
+
+    struct SpecAndRemovePlanType
+    {
+        PackageSpec spec;
+        RemovePlanType plan_type;
     };
 
     struct RemovePlanAction
@@ -90,7 +86,7 @@ namespace vcpkg::Dependencies
         RemovePlanAction plan;
     };
 
-    std::vector<PackageSpecWithInstallPlan> create_install_plan(const VcpkgPaths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
+    std::vector<InstallPlanAction> create_install_plan(const VcpkgPaths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
 
     std::vector<PackageSpecWithRemovePlan> create_remove_plan(const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
 }
