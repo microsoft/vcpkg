@@ -25,6 +25,7 @@ namespace vcpkg
     };
 
     bool operator==(const PackageSpec& left, const PackageSpec& right);
+    bool operator!=(const PackageSpec& left, const PackageSpec& right);
 } //namespace vcpkg
 
 namespace std
