@@ -254,12 +254,7 @@ namespace vcpkg::Commands::Install
         Checks::check_exit(VCPKG_LINE_INFO, !install_plan.empty(), "Install plan cannot be empty");
 
         // log the plan
-        std::string specs_string = install_plan[0].spec.to_string();
-        for (size_t i = 1; i < install_plan.size(); ++i)
-        {
-            specs_string.push_back(',');
-            specs_string.append(install_plan[i].spec.to_string());
-        }
+        const std::string specs_string = Strings::join(",", install_plan, [](const InstallPlanAction& plan) {return plan.spec.to_string(); });
         Metrics::track_property("installplan", specs_string);
 
         print_plan(install_plan);
