@@ -214,7 +214,7 @@ namespace vcpkg
 
     bool VcpkgPaths::is_valid_triplet(const Triplet& t) const
     {
-        for (auto&& path : get_filesystem().non_recursive_find_all_files_in_dir(this->triplets))
+        for (auto&& path : get_filesystem().get_files_non_recursive(this->triplets))
         {
             std::string triplet_file_name = path.stem().generic_u8string();
             if (t.canonical_name() == triplet_file_name) // TODO: fuzzy compare
@@ -283,7 +283,7 @@ namespace vcpkg
 
             // Locate the "best" MSVC toolchain version
             const fs::path msvc_path = vc_dir / "Tools" / "MSVC";
-            std::vector<fs::path> msvc_subdirectories = paths.get_filesystem().non_recursive_find_all_files_in_dir(msvc_path);
+            std::vector<fs::path> msvc_subdirectories = fs.get_files_non_recursive(msvc_path);
             Util::unstable_keep_if(msvc_subdirectories, [&fs](const fs::path& path) {
                 return fs.is_directory(path);
             });

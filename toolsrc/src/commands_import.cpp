@@ -20,7 +20,7 @@ namespace vcpkg::Commands::Import
 
     static Binaries find_binaries_in_dir(const Files::Filesystem& fs, const fs::path& path)
     {
-        auto files = fs.recursive_find_all_files_in_dir(path);
+        auto files = fs.get_files_recursive(path);
 
         check_is_directory(VCPKG_LINE_INFO, fs, path);
 

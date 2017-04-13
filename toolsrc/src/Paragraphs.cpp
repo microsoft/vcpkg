@@ -237,7 +237,7 @@ namespace vcpkg::Paragraphs
     std::vector<SourceParagraph> load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir)
     {
         std::vector<SourceParagraph> output;
-        for (auto&& path : fs.non_recursive_find_all_files_in_dir(ports_dir))
+        for (auto&& path : fs.get_files_non_recursive(ports_dir))
         {
             Expected<SourceParagraph> source_paragraph = try_load_port(fs, path);
             if (auto srcpgh = source_paragraph.get())

@@ -30,7 +30,7 @@ namespace vcpkg::Commands::Install
         fs.create_directory(installed_subfolder_path, ec);
         output.push_back(Strings::format(R"(%s/)", triplet_string));
 
-        auto files = fs.recursive_find_all_files_in_dir(package_prefix_path);
+        auto files = fs.get_files_recursive(package_prefix_path);
         for (auto&& file : files)
         {
             auto status = fs.status(file, ec);
@@ -119,7 +119,7 @@ namespace vcpkg::Commands::Install
 
     static SortedVector<std::string> build_list_of_package_files(const Files::Filesystem& fs, const fs::path& package_dir)
     {
-        const std::vector<fs::path> package_file_paths = fs.recursive_find_all_files_in_dir(package_dir);
+        const std::vector<fs::path> package_file_paths = fs.get_files_recursive(package_dir);
         const size_t package_remove_char_count = package_dir.generic_string().size() + 1; // +1 for the slash
         auto package_files = Util::fmap(package_file_paths, [package_remove_char_count](const fs::path& path)
                                         {

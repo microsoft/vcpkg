@@ -65,7 +65,7 @@ namespace vcpkg::Files
             return current_dir;
         }
 
-        virtual std::vector<fs::path> recursive_find_all_files_in_dir(const fs::path & dir) const override
+        virtual std::vector<fs::path> get_files_recursive(const fs::path & dir) const override
         {
             std::vector<fs::path> ret;
 
@@ -77,7 +77,7 @@ namespace vcpkg::Files
 
             return ret;
         }
-        virtual std::vector<fs::path> non_recursive_find_all_files_in_dir(const fs::path & dir) const override
+        virtual std::vector<fs::path> get_files_non_recursive(const fs::path & dir) const override
         {
             std::vector<fs::path> ret;
 

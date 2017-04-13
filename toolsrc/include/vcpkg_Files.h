@@ -10,8 +10,8 @@ namespace vcpkg::Files
         virtual Expected<std::string> read_contents(const fs::path& file_path) const = 0;
         virtual Expected<std::vector<std::string>> read_lines(const fs::path& file_path) const = 0;
         virtual fs::path find_file_recursively_up(const fs::path& starting_dir, const std::string& filename) const = 0;
-        virtual std::vector<fs::path> recursive_find_all_files_in_dir(const fs::path& dir) const = 0;
-        virtual std::vector<fs::path> non_recursive_find_all_files_in_dir(const fs::path& dir) const = 0;
+        virtual std::vector<fs::path> get_files_recursive(const fs::path& dir) const = 0;
+        virtual std::vector<fs::path> get_files_non_recursive(const fs::path& dir) const = 0;
 
         virtual void write_all_lines(const fs::path& file_path, const std::vector<std::string>& lines) = 0;
         virtual void write_contents(const fs::path& file_path, const std::string& data) = 0;

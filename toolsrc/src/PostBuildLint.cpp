@@ -94,7 +94,7 @@ namespace vcpkg::PostBuildLint
     {
         const fs::path debug_include_dir = package_dir / "debug" / "include";
 
-        std::vector<fs::path> files_found = fs.recursive_find_all_files_in_dir(debug_include_dir);
+        std::vector<fs::path> files_found = fs.get_files_recursive(debug_include_dir);
 
         Util::unstable_keep_if(files_found, [&fs](const fs::path& path)
         {
@@ -151,7 +151,7 @@ namespace vcpkg::PostBuildLint
         std::vector<fs::path> misplaced_cmake_files;
         for (auto&& dir : dirs)
         {
-            auto files = fs.recursive_find_all_files_in_dir(dir);
+            auto files = fs.get_files_recursive(dir);
             for (auto&& file : files)
             {
                 if (!fs.is_directory(file) && file.extension() == ".cmake")
@@ -183,7 +183,7 @@ namespace vcpkg::PostBuildLint
 
     static LintStatus check_for_dlls_in_lib_dir(const Files::Filesystem& fs, const fs::path& package_dir)
     {
-        std::vector<fs::path> dlls = fs.recursive_find_all_files_in_dir(package_dir / "lib");
+        std::vector<fs::path> dlls = fs.get_files_recursive(package_dir / "lib");
         Util::unstable_keep_if(dlls, has_extension_pred(fs, ".dll"));
 
         if (!dlls.empty())
@@ -209,14 +209,13 @@ namespace vcpkg::PostBuildLint
 
         std::vector<fs::path> potential_copyright_files;
         // We only search in the root of each unpacked source archive to reduce false positives
-        auto src_dirs = fs.non_recursive_find_all_files_in_dir(current_buildtrees_dir_src);
+        auto src_dirs = fs.get_files_non_recursive(current_buildtrees_dir_src);
         for (auto&& src_dir : src_dirs)
         {
             if (!fs.is_directory(src_dir))
                 continue;
 
-            auto src_files = fs.non_recursive_find_all_files_in_dir(src_dir);
-            for (auto&& src_file : src_files)
+            for (auto&& src_file : fs.get_files_non_recursive(src_dir))
             {
                 const std::string filename = src_file.filename().string();
 
@@ -246,7 +245,7 @@ namespace vcpkg::PostBuildLint
 
     static LintStatus check_for_exes(const Files::Filesystem& fs, const fs::path& package_dir)
     {
-        std::vector<fs::path> exes = fs.recursive_find_all_files_in_dir(package_dir / "bin");
+        std::vector<fs::path> exes = fs.get_files_recursive(package_dir / "bin");
         Util::unstable_keep_if(exes, has_extension_pred(fs, ".exe"));
 
         if (!exes.empty())
@@ -497,7 +496,7 @@ namespace vcpkg::PostBuildLint
 
     static LintStatus check_no_empty_folders(const Files::Filesystem& fs, const fs::path& dir)
     {
-        std::vector<fs::path> empty_directories = fs.recursive_find_all_files_in_dir(dir);
+        std::vector<fs::path> empty_directories = fs.get_files_recursive(dir);
 
         Util::unstable_keep_if(empty_directories, [&fs](const fs::path& current)
         {
@@ -615,7 +614,7 @@ namespace vcpkg::PostBuildLint
 
     static LintStatus check_no_files_in_dir(const Files::Filesystem& fs, const fs::path& dir)
     {
-        std::vector<fs::path> misplaced_files = fs.non_recursive_find_all_files_in_dir(dir);
+        std::vector<fs::path> misplaced_files = fs.get_files_non_recursive(dir);
         Util::unstable_keep_if(misplaced_files, [&fs](const fs::path& path)
         {
             const std::string filename = path.filename().generic_string();
@@ -674,9 +673,9 @@ namespace vcpkg::PostBuildLint
         const fs::path debug_bin_dir = package_dir / "debug" / "bin";
         const fs::path release_bin_dir = package_dir / "bin";
 
-        std::vector<fs::path> debug_libs = fs.recursive_find_all_files_in_dir(debug_lib_dir);
+        std::vector<fs::path> debug_libs = fs.get_files_recursive(debug_lib_dir);
         Util::unstable_keep_if(debug_libs, has_extension_pred(fs, ".lib"));
-        std::vector<fs::path> release_libs = fs.recursive_find_all_files_in_dir(release_lib_dir);
+        std::vector<fs::path> release_libs = fs.get_files_recursive(release_lib_dir);
         Util::unstable_keep_if(release_libs, has_extension_pred(fs, ".lib"));
 
         error_count += check_matching_debug_and_release_binaries(debug_libs, release_libs);
@@ -693,9 +692,9 @@ namespace vcpkg::PostBuildLint
         {
             case LinkageType::BackingEnum::DYNAMIC:
                 {
-                    std::vector<fs::path> debug_dlls = fs.recursive_find_all_files_in_dir(debug_bin_dir);
+                    std::vector<fs::path> debug_dlls = fs.get_files_recursive(debug_bin_dir);
                     Util::unstable_keep_if(debug_dlls, has_extension_pred(fs, ".dll"));
-                    std::vector<fs::path> release_dlls = fs.recursive_find_all_files_in_dir(release_bin_dir);
+                    std::vector<fs::path> release_dlls = fs.get_files_recursive(release_bin_dir);
                     Util::unstable_keep_if(release_dlls, has_extension_pred(fs, ".dll"));
 
                     error_count += check_matching_debug_and_release_binaries(debug_dlls, release_dlls);
@@ -716,7 +715,7 @@ namespace vcpkg::PostBuildLint
                 }
             case LinkageType::BackingEnum::STATIC:
                 {
-                    std::vector<fs::path> dlls = fs.recursive_find_all_files_in_dir(package_dir);
+                    std::vector<fs::path> dlls = fs.get_files_recursive(package_dir);
                     Util::unstable_keep_if(dlls, has_extension_pred(fs, ".dll"));
                     error_count += check_no_dlls_present(dlls);
 
