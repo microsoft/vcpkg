@@ -6,7 +6,7 @@ namespace vcpkg::Files
 {
     static const std::regex FILESYSTEM_INVALID_CHARACTERS_REGEX = std::regex(R"([\/:*?"<>|])");
 
-    struct RealFilesystem : Filesystem
+    struct RealFilesystem final : Filesystem
     {
         virtual Expected<std::string> read_contents(const fs::path& file_path) const override
         {
@@ -77,6 +77,7 @@ namespace vcpkg::Files
 
             return ret;
         }
+
         virtual std::vector<fs::path> get_files_non_recursive(const fs::path & dir) const override
         {
             std::vector<fs::path> ret;
