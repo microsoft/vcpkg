@@ -7,10 +7,11 @@
 #include "vcpkg_Files.h"
 #include "vcpkg_Util.h"
 #include "vcpkglib.h"
+#include "Paragraphs.h"
 
 namespace vcpkg::Dependencies
 {
-    std::vector<PackageSpec> AnyParagraph::edges() const
+    std::vector<PackageSpec> AnyParagraph::dependencies() const
     {
         auto to_package_specs = [&](const std::vector<std::string>& dependencies_as_string)
             {
@@ -127,7 +128,7 @@ namespace vcpkg::Dependencies
             {
                 if (p.status_paragraph.get())
                     return std::vector<PackageSpec>{};
-                return p.edges();
+                return p.dependencies();
             }
 
             AnyParagraph load_vertex_data(const PackageSpec& spec) const override

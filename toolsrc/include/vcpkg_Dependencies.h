@@ -4,13 +4,12 @@
 #include "StatusParagraphs.h"
 #include "VcpkgPaths.h"
 #include "vcpkg_optional.h"
-#include "Paragraphs.h"
 
 namespace vcpkg::Dependencies
 {
     struct AnyParagraph
     {
-        std::vector<PackageSpec> edges() const;
+        std::vector<PackageSpec> dependencies() const;
 
         PackageSpec spec;
         Optional<StatusParagraph> status_paragraph;
