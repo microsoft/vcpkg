@@ -411,7 +411,7 @@ true
         }
 
         const fs::path vcpkg_metrics_txt_path = temp_folder_path / ("vcpkg" + generate_random_UUID() + ".txt");
-        std::ofstream(vcpkg_metrics_txt_path) << payload;
+        fs.write_contents(vcpkg_metrics_txt_path, payload);
 
         const std::wstring cmdLine = Strings::wformat(L"start %s %s", temp_folder_path_exe.native(), vcpkg_metrics_txt_path.native());
         System::cmd_execute_clean(cmdLine);

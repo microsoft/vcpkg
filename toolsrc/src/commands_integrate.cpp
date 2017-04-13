@@ -186,7 +186,7 @@ namespace vcpkg::Commands::Integrate
         if (should_install_system)
         {
             const fs::path sys_src_path = tmp_dir / "vcpkg.system.targets";
-            std::ofstream(sys_src_path) << create_system_targets_shortcut();
+            fs.write_contents(sys_src_path, create_system_targets_shortcut());
 
             const std::string param = Strings::format(R"(/c mkdir "%s" & copy "%s" "%s" /Y > nul)", system_wide_targets_file.parent_path().string(), sys_src_path.string(), system_wide_targets_file.string());
             ElevationPromptChoice user_choice = elevated_cmd_execute(param);
@@ -205,7 +205,7 @@ namespace vcpkg::Commands::Integrate
         }
 
         const fs::path appdata_src_path = tmp_dir / "vcpkg.user.targets";
-        std::ofstream(appdata_src_path) << create_appdata_targets_shortcut(paths.buildsystems_msbuild_targets.string());
+        fs.write_contents(appdata_src_path, create_appdata_targets_shortcut(paths.buildsystems_msbuild_targets.string()));
         auto appdata_dst_path = get_appdata_targets_path();
 
         auto rc = fs.copy_file(appdata_src_path, appdata_dst_path, fs::copy_options::overwrite_existing, ec);
@@ -266,9 +266,9 @@ namespace vcpkg::Commands::Integrate
         const std::string nuget_id = get_nuget_id(paths.root);
         const std::string nupkg_version = "1.0.0";
 
-        std::ofstream(targets_file_path) << create_nuget_targets_file(paths.buildsystems_msbuild_targets);
-        std::ofstream(props_file_path) << create_nuget_props_file();
-        std::ofstream(nuspec_file_path) << create_nuspec_file(paths.root, nuget_id, nupkg_version);
+        fs.write_contents(targets_file_path, create_nuget_targets_file(paths.buildsystems_msbuild_targets));
+        fs.write_contents(props_file_path, create_nuget_props_file());
+        fs.write_contents(nuspec_file_path, create_nuspec_file(paths.root, nuget_id, nupkg_version));
 
         // Using all forward slashes for the command line
         const std::wstring cmd_line = Strings::wformat(LR"("%s" pack -OutputDirectory "%s" "%s" > nul)", nuget_exe.native(), buildsystems_dir.native(), nuspec_file_path.native());

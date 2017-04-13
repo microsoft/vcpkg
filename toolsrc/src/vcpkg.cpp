@@ -144,10 +144,12 @@ static void loadConfig()
     try
     {
         std::error_code ec;
-        Files::get_real_filesystem().create_directory(localappdata / "vcpkg", ec);
-        std::ofstream(localappdata / "vcpkg" / "config", std::ios_base::out | std::ios_base::trunc)
-            << "User-Id: " << user_id << "\n"
-            << "User-Since: " << user_time << "\n";
+        auto& fs = Files::get_real_filesystem();
+        fs.create_directory(localappdata / "vcpkg", ec);
+        fs.write_contents(localappdata / "vcpkg" / "config",
+            Strings::format(
+                "User-Id: %s\n"
+                "User-Since: %s\n", user_id, user_time));
     }
     catch (...) { }
 }

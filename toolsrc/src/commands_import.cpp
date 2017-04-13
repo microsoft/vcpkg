@@ -72,13 +72,14 @@ namespace vcpkg::Commands::Import
 
     static void do_import(const VcpkgPaths& paths, const fs::path& include_directory, const fs::path& project_directory, const BinaryParagraph& control_file_data)
     {
+        auto& fs = paths.get_filesystem();
         fs::path library_destination_path = paths.package_dir(control_file_data.spec);
         std::error_code ec;
-        paths.get_filesystem().create_directory(library_destination_path, ec);
+        fs.create_directory(library_destination_path, ec);
         place_library_files_in(paths.get_filesystem(), include_directory, project_directory, library_destination_path);
 
         fs::path control_file_path = library_destination_path / "CONTROL";
-        std::ofstream(control_file_path) << control_file_data;
+        fs.write_contents(control_file_path, Strings::serialize(control_file_data));
     }
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)

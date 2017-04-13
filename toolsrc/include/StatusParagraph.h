@@ -33,7 +33,7 @@ namespace vcpkg
         InstallState state;
     };
 
-    std::ostream& operator<<(std::ostream& os, const StatusParagraph& pgh);
+    void serialize(const StatusParagraph& pgh, std::string& out_str);
 
     std::string to_string(InstallState f);
 

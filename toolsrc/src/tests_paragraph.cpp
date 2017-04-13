@@ -1,6 +1,7 @@
 #include "CppUnitTest.h"
 #include "Paragraphs.h"
 #include "BinaryParagraph.h"
+#include "vcpkg_Strings.h"
 
 #pragma comment(lib,"version")
 #pragma comment(lib,"winhttp")
@@ -15,6 +16,8 @@ namespace Microsoft::VisualStudio::CppUnitTestFramework
         return ToString(static_cast<uint32_t>(t));
     }
 }
+
+namespace Strings = vcpkg::Strings;
 
 namespace UnitTest1
 {
@@ -289,27 +292,26 @@ namespace UnitTest1
             Assert::AreEqual("v4", pghs[1]["f4"].c_str());
         }
 
-		TEST_METHOD(parse_comment_before_single_slashN)
-		{
-			const char* str =
-				"f1: v1\r\n"
-				"#comment\n";
-			auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
-			Assert::AreEqual(size_t(1), pghs[0].size());
-			Assert::AreEqual("v1", pghs[0]["f1"].c_str());
-		}
+        TEST_METHOD(parse_comment_before_single_slashN)
+        {
+            const char* str =
+                "f1: v1\r\n"
+                "#comment\n";
+            auto pghs = vcpkg::Paragraphs::parse_paragraphs(str).value_or_exit(VCPKG_LINE_INFO);
+            Assert::AreEqual(size_t(1), pghs[0].size());
+            Assert::AreEqual("v1", pghs[0]["f1"].c_str());
+        }
 
         TEST_METHOD(BinaryParagraph_serialize_min)
         {
-            std::stringstream ss;
             vcpkg::BinaryParagraph pgh({
                 { "Package", "zlib" },
                 { "Version", "1.2.8" },
                 { "Architecture", "x86-windows" },
                 { "Multi-Arch", "same" },
             });
-            ss << pgh;
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss.str()).value_or_exit(VCPKG_LINE_INFO);
+            std::string ss = Strings::serialize(pgh);
+            auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);
             Assert::AreEqual(size_t(1), pghs.size());
             Assert::AreEqual(size_t(4), pghs[0].size());
             Assert::AreEqual("zlib", pghs[0]["Package"].c_str());
@@ -320,7 +322,6 @@ namespace UnitTest1
 
         TEST_METHOD(BinaryParagraph_serialize_max)
         {
-            std::stringstream ss;
             vcpkg::BinaryParagraph pgh({
                 { "Package", "zlib" },
                 { "Version", "1.2.8" },
@@ -330,8 +331,8 @@ namespace UnitTest1
                 { "Depends", "dep" },
                 { "Multi-Arch", "same" },
             });
-            ss << pgh;
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss.str()).value_or_exit(VCPKG_LINE_INFO);
+            std::string ss = Strings::serialize(pgh);
+            auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);
             Assert::AreEqual(size_t(1), pghs.size());
             Assert::AreEqual(size_t(7), pghs[0].size());
             Assert::AreEqual("zlib", pghs[0]["Package"].c_str());
@@ -344,7 +345,6 @@ namespace UnitTest1
 
         TEST_METHOD(BinaryParagraph_serialize_multiple_deps)
         {
-            std::stringstream ss;
             vcpkg::BinaryParagraph pgh({
                 { "Package", "zlib" },
                 { "Version", "1.2.8" },
@@ -352,8 +352,8 @@ namespace UnitTest1
                 { "Multi-Arch", "same" },
                 { "Depends", "a, b, c" },
             });
-            ss << pgh;
-            auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss.str()).value_or_exit(VCPKG_LINE_INFO);
+            std::string ss = Strings::serialize(pgh);
+            auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);
             Assert::AreEqual(size_t(1), pghs.size());
             Assert::AreEqual("a, b, c", pghs[0]["Depends"].c_str());
         }

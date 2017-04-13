@@ -22,7 +22,7 @@ namespace vcpkg::Commands::Build
     {
         const BinaryParagraph bpgh = BinaryParagraph(source_paragraph, triplet);
         const fs::path binary_control_file = paths.packages / bpgh.dir() / "CONTROL";
-        std::ofstream(binary_control_file) << bpgh;
+        paths.get_filesystem().write_contents(binary_control_file, Strings::serialize(bpgh));
     }
 
     std::wstring make_build_env_cmd(const Triplet& triplet, const Toolset& toolset)

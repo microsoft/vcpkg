@@ -16,11 +16,10 @@ namespace vcpkg
     {
     }
 
-    std::ostream& operator<<(std::ostream& os, const StatusParagraph& p)
+    void serialize(const StatusParagraph& pgh, std::string& out_str)
     {
-        os << p.package;
-        os << "Status: " << to_string(p.want) << " ok " << to_string(p.state) << "\n";
-        return os;
+        serialize(pgh.package, out_str);
+        out_str.append("Status: ").append(to_string(pgh.want)).append(" ok ").append(to_string(pgh.state)).push_back('\n');
     }
 
     StatusParagraph::StatusParagraph(const std::unordered_map<std::string, std::string>& fields)

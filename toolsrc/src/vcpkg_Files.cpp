@@ -149,6 +149,16 @@ namespace vcpkg::Files
         {
             return fs::stdfs::status(path, ec);
         }
+        virtual void write_contents(const fs::path& file_path, const std::string& data) override
+        {
+            FILE* f = nullptr;
+            auto ec = _wfopen_s(&f, file_path.native().c_str(), L"wb");
+            Checks::check_exit(VCPKG_LINE_INFO, ec == 0);
+            auto count = fwrite(data.data(), sizeof(data[0]), data.size(), f);
+            fclose(f);
+
+            Checks::check_exit(VCPKG_LINE_INFO, count == data.size());
+        }
     };
 
     Filesystem & get_real_filesystem()

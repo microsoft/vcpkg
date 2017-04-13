@@ -72,7 +72,7 @@ namespace vcpkg
             }
         }
 
-        std::fstream(status_file_new, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc) << current_status_db;
+        fs.write_contents(status_file_new, Strings::serialize(current_status_db));
 
         fs.rename(status_file_new, status_file);
 
@@ -90,13 +90,14 @@ namespace vcpkg
     void write_update(const VcpkgPaths& paths, const StatusParagraph& p)
     {
         static int update_id = 0;
+        auto& fs = paths.get_filesystem();
+
         auto my_update_id = update_id++;
         auto tmp_update_filename = paths.vcpkg_dir_updates / "incomplete";
         auto update_filename = paths.vcpkg_dir_updates / std::to_string(my_update_id);
-        std::fstream file(tmp_update_filename, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
-        file << p;
-        file.close();
-        paths.get_filesystem().rename(tmp_update_filename, update_filename);
+
+        fs.write_contents(tmp_update_filename, Strings::serialize(p));
+        fs.rename(tmp_update_filename, update_filename);
     }
 
     static void upgrade_to_slash_terminated_sorted_format(Files::Filesystem& fs, std::vector<std::string>* lines, const fs::path& listfile_path)
