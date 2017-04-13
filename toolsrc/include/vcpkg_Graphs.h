@@ -40,7 +40,7 @@ namespace vcpkg::Graphs
             case ExplorationStatus::NOT_EXPLORED:
                 {
                     status = ExplorationStatus::PARTIALLY_EXPLORED;
-                    const U& vertex_data = f.load_vertex_data(vertex);
+                    U vertex_data = f.load_vertex_data(vertex);
                     for (const V& neighbour : f.adjacency_list(vertex_data))
                         topological_sort_internal(neighbour, f, exploration_status, sorted);
 
