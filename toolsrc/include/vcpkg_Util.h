@@ -39,4 +39,14 @@ namespace vcpkg::Util
     {
         return std::find_if_not(cont.cbegin(), cont.cend(), pred);
     }
+
+    template<class K, class V, class Container, class Func>
+     void group_by(const Container& cont, std::map<K, std::vector<const V*>>* output, Func f)
+    {
+        for (const V& element : cont)
+        {
+            K key = f(element);
+            (*output)[key].push_back(&element);
+        }
+    }
 }
