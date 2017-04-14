@@ -140,46 +140,40 @@ namespace vcpkg::Commands::Install
 
     static void print_plan(const std::vector<InstallPlanAction>& plan)
     {
-        std::vector<const InstallPlanAction*> already_installed;
-        std::vector<const InstallPlanAction*> build_and_install;
-        std::vector<const InstallPlanAction*> install;
+        static constexpr std::array<InstallPlanType, 3> order = { InstallPlanType::ALREADY_INSTALLED, InstallPlanType::BUILD_AND_INSTALL, InstallPlanType::INSTALL };
 
-        for (const InstallPlanAction& i : plan)
+        std::map<InstallPlanType, std::vector<const InstallPlanAction*>> group_by_plan_type;
+        Util::group_by(plan, &group_by_plan_type, [](const InstallPlanAction& p) { return p.plan_type; });
+
+        for (const InstallPlanType plan_type : order)
         {
-            switch (i.plan_type)
+            auto it = group_by_plan_type.find(plan_type);
+            if (it == group_by_plan_type.cend())
+            {
+                continue;
+            }
+
+            std::vector<const InstallPlanAction*> cont = it->second;
+            std::sort(cont.begin(), cont.end(), &InstallPlanAction::compare_by_name);
+            const std::string as_string = Strings::join("\n", cont, [](const InstallPlanAction* p)
+                                                        {
+                                                            return Dependencies::to_output_string(p->request_type, p->spec.to_string());
+                                                        });
+
+            switch (plan_type)
             {
                 case InstallPlanType::ALREADY_INSTALLED:
-                    already_installed.push_back(&i);
+                    System::println("The following packages are already installed:\n%s", as_string);
                     continue;
                 case InstallPlanType::BUILD_AND_INSTALL:
-                    build_and_install.push_back(&i);
+                    System::println("The following packages will be built and installed:\n%s", as_string);
                     continue;
                 case InstallPlanType::INSTALL:
-                    install.push_back(&i);
+                    System::println("The following packages will be installed:\n%s", as_string);
                     continue;
                 default:
                     Checks::unreachable(VCPKG_LINE_INFO);
             }
-        }
-
-        auto print_lambda = [](const InstallPlanAction* p) { return Dependencies::to_output_string(p->request_type, p->spec.to_string()); };
-
-        if (!already_installed.empty())
-        {
-            std::sort(already_installed.begin(), already_installed.end(), &InstallPlanAction::compare_by_name);
-            System::println("The following packages are already installed:\n%s", Strings::join("\n", already_installed, print_lambda));
-        }
-
-        if (!build_and_install.empty())
-        {
-            std::sort(build_and_install.begin(), build_and_install.end(), &InstallPlanAction::compare_by_name);
-            System::println("The following packages will be built and installed:\n%s", Strings::join("\n", build_and_install, print_lambda));
-        }
-
-        if (!install.empty())
-        {
-            std::sort(install.begin(), install.end(), &InstallPlanAction::compare_by_name);
-            System::println("The following packages will be installed:\n%s", Strings::join("\n", install, print_lambda));
         }
     }
 
@@ -239,9 +233,9 @@ namespace vcpkg::Commands::Install
         args.check_min_arg_count(1, example);
 
         const std::vector<PackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg)
-                                {
-                                    return Input::check_and_get_package_spec(arg, default_triplet, example);
-                                });
+                                                          {
+                                                              return Input::check_and_get_package_spec(arg, default_triplet, example);
+                                                          });
         for (auto&& spec : specs)
             Input::check_triplet(spec.triplet(), paths);
 
@@ -254,15 +248,15 @@ namespace vcpkg::Commands::Install
         Checks::check_exit(VCPKG_LINE_INFO, !install_plan.empty(), "Install plan cannot be empty");
 
         // log the plan
-        const std::string specs_string = Strings::join(",", install_plan, [](const InstallPlanAction& plan) {return plan.spec.to_string(); });
+        const std::string specs_string = Strings::join(",", install_plan, [](const InstallPlanAction& plan) { return plan.spec.to_string(); });
         Metrics::track_property("installplan", specs_string);
 
         print_plan(install_plan);
 
         const bool has_non_user_requested_packages = Util::find_if(install_plan, [](const InstallPlanAction& package)-> bool
-                                                                  {
-                                                                      return package.request_type != RequestType::USER_REQUESTED;
-                                                                  }) != install_plan.cend();
+                                                                   {
+                                                                       return package.request_type != RequestType::USER_REQUESTED;
+                                                                   }) != install_plan.cend();
 
         if (has_non_user_requested_packages)
         {

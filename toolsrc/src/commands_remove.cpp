@@ -103,36 +103,37 @@ namespace vcpkg::Commands::Remove
 
     static void print_plan(const std::vector<RemovePlanAction>& plan)
     {
-        std::vector<const RemovePlanAction*> not_installed;
-        std::vector<const RemovePlanAction*> remove;
+        static constexpr std::array<RemovePlanType, 2> order = { RemovePlanType::NOT_INSTALLED, RemovePlanType::REMOVE };
 
-        for (const RemovePlanAction& i : plan)
+        std::map<RemovePlanType, std::vector<const RemovePlanAction*>> group_by_plan_type;
+        Util::group_by(plan, &group_by_plan_type, [](const RemovePlanAction& p) { return p.plan_type; });
+
+        for (const RemovePlanType plan_type : order)
         {
-            switch (i.plan_type)
+            auto it = group_by_plan_type.find(plan_type);
+            if (it == group_by_plan_type.cend())
             {
-                case RemovePlanType::NOT_INSTALLED:
-                    not_installed.push_back(&i);
-                    continue;
-                case RemovePlanType::REMOVE:
-                    remove.push_back(&i);
-                    continue;
-                default:
-                    Checks::unreachable(VCPKG_LINE_INFO);
+                continue;
             }
-        }
 
-       auto print_lambda = [](const RemovePlanAction* p) { return Dependencies::to_output_string(p->request_type, p->spec.to_string()); };
+            std::vector<const RemovePlanAction*> cont = it->second;
+            std::sort(cont.begin(), cont.end(), &RemovePlanAction::compare_by_name);
+            const std::string as_string = Strings::join("\n", cont, [](const RemovePlanAction* p)
+            {
+                return Dependencies::to_output_string(p->request_type, p->spec.to_string());
+            });
 
-        if (!not_installed.empty())
-        {
-            std::sort(not_installed.begin(), not_installed.end(), &RemovePlanAction::compare_by_name);
-            System::println("The following packages are not installed, so not removed:\n%s", Strings::join("\n", not_installed, print_lambda));
-        }
-
-        if (!remove.empty())
-        {
-            std::sort(remove.begin(), remove.end(), &RemovePlanAction::compare_by_name);
-            System::println("The following packages will be removed:\n%s", Strings::join("\n", remove, print_lambda));
+            switch (plan_type)
+            {
+            case RemovePlanType::NOT_INSTALLED:
+                System::println("The following packages are not installed, so not removed:\n%s", as_string);
+                continue;
+            case RemovePlanType::REMOVE:
+                System::println("The following packages will be removed:\n%s", as_string);
+                continue;
+            default:
+                Checks::unreachable(VCPKG_LINE_INFO);
+            }
         }
     }
 
