@@ -27,4 +27,16 @@ namespace vcpkg::Util
     {
         cont.erase(std::remove_if(cont.begin(), cont.end(), pred), cont.end());
     }
+
+    template<class Container, class Pred>
+    auto find_if(const Container& cont, Pred pred)
+    {
+        return std::find_if(cont.cbegin(), cont.cend(), pred);
+    }
+
+    template<class Container, class Pred>
+    auto find_if_not(const Container& cont, Pred pred)
+    {
+        return std::find_if_not(cont.cbegin(), cont.cend(), pred);
+    }
 }
