@@ -44,8 +44,16 @@ foreach ($ProgramFiles in $CandidateProgramFiles)
             Write-Verbose "$windowsheader - Not Found"
             continue
         }
-
         Write-Verbose "$windowsheader - Found"
+
+        $ddkheader = "$folder\$win10sdkV\shared\sdkddkver.h"
+        if (!(Test-Path $ddkheader))
+        {
+            Write-Verbose "$ddkheader - Not Found"
+            continue
+        }
+
+        Write-Verbose "$ddkheader - Found"
         $win10sdkVersionString = $win10sdkV.ToString()
         Write-Verbose "Found $win10sdkVersionString"
         $validInstances.Add($win10sdkVersionString) > $null
