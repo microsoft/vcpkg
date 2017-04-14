@@ -119,20 +119,20 @@ namespace vcpkg::Commands::Remove
             std::vector<const RemovePlanAction*> cont = it->second;
             std::sort(cont.begin(), cont.end(), &RemovePlanAction::compare_by_name);
             const std::string as_string = Strings::join("\n", cont, [](const RemovePlanAction* p)
-            {
-                return Dependencies::to_output_string(p->request_type, p->spec.to_string());
-            });
+                                                        {
+                                                            return Dependencies::to_output_string(p->request_type, p->spec.to_string());
+                                                        });
 
             switch (plan_type)
             {
-            case RemovePlanType::NOT_INSTALLED:
-                System::println("The following packages are not installed, so not removed:\n%s", as_string);
-                continue;
-            case RemovePlanType::REMOVE:
-                System::println("The following packages will be removed:\n%s", as_string);
-                continue;
-            default:
-                Checks::unreachable(VCPKG_LINE_INFO);
+                case RemovePlanType::NOT_INSTALLED:
+                    System::println("The following packages are not installed, so not removed:\n%s", as_string);
+                    continue;
+                case RemovePlanType::REMOVE:
+                    System::println("The following packages will be removed:\n%s", as_string);
+                    continue;
+                default:
+                    Checks::unreachable(VCPKG_LINE_INFO);
             }
         }
     }
@@ -179,9 +179,9 @@ namespace vcpkg::Commands::Remove
         print_plan(remove_plan);
 
         const bool has_non_user_requested_packages = Util::find_if(remove_plan, [](const RemovePlanAction& package)-> bool
-                                                                  {
-                                                                      return package.request_type != RequestType::USER_REQUESTED;
-                                                                  }) != remove_plan.cend();
+                                                                   {
+                                                                       return package.request_type != RequestType::USER_REQUESTED;
+                                                                   }) != remove_plan.cend();
 
         if (has_non_user_requested_packages)
         {
