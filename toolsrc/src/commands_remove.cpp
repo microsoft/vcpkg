@@ -177,7 +177,7 @@ namespace vcpkg::Commands::Remove
 
         print_plan(remove_plan);
 
-        const bool has_non_user_requested_packages = std::find_if(remove_plan.cbegin(), remove_plan.cend(), [](const RemovePlanAction& package)-> bool
+        const bool has_non_user_requested_packages = Util::find_if(remove_plan, [](const RemovePlanAction& package)-> bool
                                                                   {
                                                                       return package.request_type != RequestType::USER_REQUESTED;
                                                                   }) != remove_plan.cend();

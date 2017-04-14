@@ -40,7 +40,7 @@ namespace vcpkg
 
     static Optional<fs::path> find_if_has_equal_or_greater_version(const std::vector<fs::path>& candidate_paths, const std::wstring& version_check_arguments, const std::array<int, 3>& expected_version)
     {
-        auto it = std::find_if(candidate_paths.cbegin(), candidate_paths.cend(), [&](const fs::path& p)
+        auto it = Util::find_if(candidate_paths, [&](const fs::path& p)
                                {
                                    const std::wstring cmd = Strings::wformat(LR"("%s" %s)", p.native(), version_check_arguments);
                                    return exists_and_has_equal_or_greater_version(cmd, expected_version);

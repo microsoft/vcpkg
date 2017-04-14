@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "PackageSpec.h"
+#include "vcpkg_Util.h"
 
 namespace vcpkg
 {
@@ -29,7 +30,7 @@ namespace vcpkg
 
     Expected<PackageSpec> PackageSpec::from_name_and_triplet(const std::string& name, const Triplet& triplet)
     {
-        if (std::find_if_not(name.cbegin(), name.cend(), is_valid_package_spec_char) != name.end())
+        if (Util::find_if_not(name, is_valid_package_spec_char) != name.end())
         {
             return std::error_code(PackageSpecParseResult::INVALID_CHARACTERS);
         }

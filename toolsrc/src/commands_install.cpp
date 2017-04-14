@@ -259,7 +259,7 @@ namespace vcpkg::Commands::Install
 
         print_plan(install_plan);
 
-        const bool has_non_user_requested_packages = std::find_if(install_plan.cbegin(), install_plan.cend(), [](const InstallPlanAction& package)-> bool
+        const bool has_non_user_requested_packages = Util::find_if(install_plan, [](const InstallPlanAction& package)-> bool
                                                                   {
                                                                       return package.request_type != RequestType::USER_REQUESTED;
                                                                   }) != install_plan.cend();
