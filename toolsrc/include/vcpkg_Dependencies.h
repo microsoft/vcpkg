@@ -38,7 +38,7 @@ namespace vcpkg::Dependencies
         static bool compare_by_name(const InstallPlanAction* left, const InstallPlanAction* right);
 
         InstallPlanAction();
-        explicit InstallPlanAction(const PackageSpec& spec, const AnyParagraph& any_paragraph, const RequestType& request_type);
+        InstallPlanAction(const PackageSpec& spec, const AnyParagraph& any_paragraph, const RequestType& request_type);
         InstallPlanAction(const InstallPlanAction&) = delete;
         InstallPlanAction(InstallPlanAction&&) = default;
         InstallPlanAction& operator=(const InstallPlanAction&) = delete;
