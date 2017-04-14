@@ -99,10 +99,7 @@ namespace vcpkg::Strings
             trim(&s);
         }
 
-        Util::keep_if(*strings, [](const std::string& s)-> bool
-        {
-            return s != "";
-        });
+        Util::erase_remove_if(*strings, [](const std::string& s) { return s == ""; });
     }
 
     std::vector<std::string> split(const std::string& s, const std::string& delimiter)

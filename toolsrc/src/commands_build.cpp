@@ -150,9 +150,9 @@ namespace vcpkg::Commands::Build
         if (result == BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES)
         {
             std::vector<InstallPlanAction> unmet_dependencies = Dependencies::create_install_plan(paths, { spec }, status_db);
-            Util::keep_if(unmet_dependencies, [&spec](const InstallPlanAction& p)
+            Util::erase_remove_if(unmet_dependencies, [&spec](const InstallPlanAction& p)
             {
-                return (p.spec != spec) && (p.plan_type != InstallPlanType::ALREADY_INSTALLED);
+                return (p.spec == spec) || (p.plan_type == InstallPlanType::ALREADY_INSTALLED);
             });
 
             Checks::check_exit(VCPKG_LINE_INFO, !unmet_dependencies.empty());

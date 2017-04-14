@@ -21,7 +21,7 @@ namespace vcpkg::Commands::Hash
         Checks::check_exit(VCPKG_LINE_INFO, end != std::string::npos, "Unexpected output format from command: %s", Strings::utf16_to_utf8(cmd_line));
 
         auto hash = output.substr(start, end - start);
-        Util::keep_if(hash, [](char c) {return !isspace(c); });
+        Util::erase_remove_if(hash, isspace);
         System::println(hash);
     }
 

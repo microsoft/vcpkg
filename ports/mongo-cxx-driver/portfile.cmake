@@ -1,10 +1,10 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mongo-cxx-driver-r3.1.0)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mongo-cxx-driver-r3.1.1)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/mongodb/mongo-cxx-driver/archive/r3.1.0.tar.gz"
-    FILENAME "mongo-cxx-driver-r3.1.0.tar.gz"
-    SHA512 2c9323f5e28304057b6ed6fc8bf33aad14db1313e234eaa74a96fb4cf93e99d24fd8c7c3f20b4b29cda7b1fe5c58f08dcb5cddcffbf62259c08334312fda4fba
+    URLS "https://github.com/mongodb/mongo-cxx-driver/archive/r3.1.1.tar.gz"
+    FILENAME "mongo-cxx-driver-r3.1.1.tar.gz"
+    SHA512 ba8a735e5645cbce4497df71a4577e891d507f577dbd5270ec8a82e54c39c2806bf2ff4848b621f18b36d31fb6031e5b4211972b661c43009bff0ed7ab6cf338
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

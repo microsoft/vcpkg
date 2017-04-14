@@ -67,10 +67,7 @@ namespace vcpkg::Commands::Integrate
         dir_id.erase(1, 1); // Erasing the ":"
 
         // NuGet id cannot have invalid characters. We will only use alphanumeric and dot.
-        Util::keep_if(dir_id, [](char c)
-                      {
-                          return isalnum(c) || (c == '.');
-                      });
+        Util::erase_remove_if(dir_id, [](char c) { return !isalnum(c) && (c != '.'); });
 
         const std::string nuget_id = "vcpkg." + dir_id;
         return nuget_id;

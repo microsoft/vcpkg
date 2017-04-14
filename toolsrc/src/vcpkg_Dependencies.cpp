@@ -143,10 +143,10 @@ namespace vcpkg::Dependencies
 
         const std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
         std::vector<InstallPlanAction> toposort = Graphs::topological_sort(specs, InstallAdjacencyProvider{ paths, status_db, specs_as_set });
-        Util::keep_if(toposort, [](const InstallPlanAction& p)
-                      {
-                          return !(p.request_type == RequestType::AUTO_SELECTED && p.plan_type == InstallPlanType::ALREADY_INSTALLED);
-                      });
+        Util::erase_remove_if(toposort, [](const InstallPlanAction& p)
+        {
+            return  p.request_type == RequestType::AUTO_SELECTED && p.plan_type == InstallPlanType::ALREADY_INSTALLED;
+        });
 
         return toposort;
     }

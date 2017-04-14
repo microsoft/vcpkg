@@ -1,15 +1,16 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mongo-c-driver-1.5.1)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mongo-c-driver-1.6.2)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/mongodb/mongo-c-driver/archive/1.5.1.tar.gz"
-    FILENAME "mongo-c-driver-1.5.1.tar.gz"
-    SHA512 2977e6e1fb3c45256161d2c9bd711fea69b9f8c9ff15362fa636068e0a347c42e10d72fed5649504b552c8212f21cb1ae74d2dc8ca3d1388f49e63b2baf6e16d
+    URLS "https://github.com/mongodb/mongo-c-driver/archive/1.6.2.tar.gz"
+    FILENAME "mongo-c-driver-1.6.2.tar.gz"
+    SHA512 3533fed665c70b71f0e9473156bab1575f60b0b3db412f19c0a625e1e35683a3077f96b8a0ba337fd755675029f47b68dc3a5fc8f39254bb0be589da57cffad3
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/bson.patch
         ${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch
