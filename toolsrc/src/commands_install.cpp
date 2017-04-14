@@ -17,77 +17,79 @@ namespace vcpkg::Commands::Install
 
     static void install_and_write_listfile(const VcpkgPaths& paths, const BinaryParagraph& bpgh)
     {
+        auto&& fs = paths.get_filesystem();
+
         std::vector<std::string> output;
 
         const fs::path package_prefix_path = paths.package_dir(bpgh.spec);
         const size_t prefix_length = package_prefix_path.native().size();
 
-        const Triplet& triplet = bpgh.spec.triplet();
-        const std::string& triplet_subfolder = triplet.canonical_name();
-        const fs::path triplet_subfolder_path = paths.installed / triplet_subfolder;
+        const std::string& triplet_string = bpgh.spec.triplet().canonical_name();
+        const fs::path installed_subfolder_path = paths.installed / triplet_string;
         std::error_code ec;
-        fs::create_directory(triplet_subfolder_path, ec);
-        output.push_back(Strings::format(R"(%s/)", triplet_subfolder));
+        fs.create_directory(installed_subfolder_path, ec);
+        output.push_back(Strings::format(R"(%s/)", triplet_string));
 
-        for (auto it = fs::recursive_directory_iterator(package_prefix_path); it != fs::recursive_directory_iterator(); ++it)
+        auto files = fs.get_files_recursive(package_prefix_path);
+        for (auto&& file : files)
         {
-            const std::string filename = it->path().filename().generic_string();
-            if (fs::is_regular_file(it->status()) && (_stricmp(filename.c_str(), "CONTROL") == 0 || _stricmp(filename.c_str(), "BUILD_INFO") == 0))
+            auto status = fs.status(file, ec);
+            if (ec)
+            {
+                System::println(System::Color::error, "failed: %s: %s", file.u8string(), ec.message());
+                continue;
+            }
+
+            const std::string filename = file.filename().generic_string();
+            if (fs::is_regular_file(status) && (_stricmp(filename.c_str(), "CONTROL") == 0 || _stricmp(filename.c_str(), "BUILD_INFO") == 0))
             {
                 // Do not copy the control file
                 continue;
             }
 
-            const std::string suffix = it->path().generic_u8string().substr(prefix_length + 1);
-            const fs::path target = triplet_subfolder_path / suffix;
-
-            auto status = it->status(ec);
-            if (ec)
-            {
-                System::println(System::Color::error, "failed: %s: %s", it->path().u8string(), ec.message());
-                continue;
-            }
+            const std::string suffix = file.generic_u8string().substr(prefix_length + 1);
+            const fs::path target = installed_subfolder_path / suffix;
 
             if (fs::is_directory(status))
             {
-                fs::create_directory(target, ec);
+                fs.create_directory(target, ec);
                 if (ec)
                 {
                     System::println(System::Color::error, "failed: %s: %s", target.u8string(), ec.message());
                 }
 
                 // Trailing backslash for directories
-                output.push_back(Strings::format(R"(%s/%s/)", triplet_subfolder, suffix));
+                output.push_back(Strings::format(R"(%s/%s/)", triplet_string, suffix));
                 continue;
             }
 
             if (fs::is_regular_file(status))
             {
-                if (fs::exists(target))
+                if (fs.exists(target))
                 {
                     System::println(System::Color::warning, "File %s was already present and will be overwritten", target.u8string(), ec.message());
                 }
-                fs::copy_file(*it, target, fs::copy_options::overwrite_existing, ec);
+                fs.copy_file(file, target, fs::copy_options::overwrite_existing, ec);
                 if (ec)
                 {
                     System::println(System::Color::error, "failed: %s: %s", target.u8string(), ec.message());
                 }
-                output.push_back(Strings::format(R"(%s/%s)", triplet_subfolder, suffix));
+                output.push_back(Strings::format(R"(%s/%s)", triplet_string, suffix));
                 continue;
             }
 
             if (!fs::status_known(status))
             {
-                System::println(System::Color::error, "failed: %s: unknown status", it->path().u8string());
+                System::println(System::Color::error, "failed: %s: unknown status", file.u8string());
                 continue;
             }
 
-            System::println(System::Color::error, "failed: %s: cannot handle file type", it->path().u8string());
+            System::println(System::Color::error, "failed: %s: cannot handle file type", file.u8string());
         }
 
         std::sort(output.begin(), output.end());
 
-        Files::write_all_lines(paths.listfile_path(bpgh), output);
+        fs.write_lines(paths.listfile_path(bpgh), output);
     }
 
     static void remove_first_n_chars(std::vector<std::string>* strings, const size_t n)
@@ -115,9 +117,9 @@ namespace vcpkg::Commands::Install
         return output;
     }
 
-    static SortedVector<std::string> build_list_of_package_files(const fs::path& package_dir)
+    static SortedVector<std::string> build_list_of_package_files(const Files::Filesystem& fs, const fs::path& package_dir)
     {
-        const std::vector<fs::path> package_file_paths = Files::recursive_find_all_files_in_dir(package_dir);
+        const std::vector<fs::path> package_file_paths = fs.get_files_recursive(package_dir);
         const size_t package_remove_char_count = package_dir.generic_string().size() + 1; // +1 for the slash
         auto package_files = Util::fmap(package_file_paths, [package_remove_char_count](const fs::path& path)
                                         {
@@ -183,7 +185,7 @@ namespace vcpkg::Commands::Install
         const Triplet& triplet = binary_paragraph.spec.triplet();
         const std::vector<StatusParagraphAndAssociatedFiles> pgh_and_files = get_installed_files(paths, *status_db);
 
-        const SortedVector<std::string> package_files = build_list_of_package_files(package_dir);
+        const SortedVector<std::string> package_files = build_list_of_package_files(paths.get_filesystem(), package_dir);
         const SortedVector<std::string> installed_files = build_list_of_installed_files(pgh_and_files, triplet);
 
         std::vector<std::string> intersection;

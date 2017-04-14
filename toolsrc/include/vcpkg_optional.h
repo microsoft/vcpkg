@@ -1,5 +1,4 @@
 #pragma once
-#include "LineInfo.h"
 #include "vcpkg_Checks.h"
 
 namespace vcpkg

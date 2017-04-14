@@ -29,7 +29,7 @@ namespace vcpkg
 
         iterator insert(std::unique_ptr<StatusParagraph>);
 
-        friend std::ostream& operator<<(std::ostream&, const StatusParagraphs&);
+        friend void serialize(const StatusParagraphs& pgh, std::string& out_str);
 
         iterator end()
         {
@@ -55,5 +55,5 @@ namespace vcpkg
         std::vector<std::unique_ptr<StatusParagraph>> paragraphs;
     };
 
-    std::ostream& operator<<(std::ostream&, const StatusParagraphs&);
+    void serialize(const StatusParagraphs& pgh, std::string& out_str);
 }

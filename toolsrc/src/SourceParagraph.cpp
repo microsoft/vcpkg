@@ -138,9 +138,8 @@ namespace vcpkg
         return ret;
     }
 
-    std::ostream & operator<<(std::ostream & os, const Dependency & p)
+    const std::string& to_string(const Dependency& dep)
     {
-        os << p.name;
-        return os;
+        return dep.name;
     }
 }

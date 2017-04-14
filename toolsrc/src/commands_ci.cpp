@@ -14,9 +14,9 @@ namespace vcpkg::Commands::CI
     using Dependencies::InstallPlanType;
     using Build::BuildResult;
 
-    static std::vector<PackageSpec> load_all_package_specs(const fs::path& ports_directory, const Triplet& triplet)
+    static std::vector<PackageSpec> load_all_package_specs(Files::Filesystem& fs, const fs::path& ports_directory, const Triplet& triplet)
     {
-        std::vector<SourceParagraph> ports = Paragraphs::load_all_ports(ports_directory);
+        std::vector<SourceParagraph> ports = Paragraphs::load_all_ports(fs, ports_directory);
         std::vector<PackageSpec> specs;
         for (const SourceParagraph& p : ports)
         {
@@ -33,7 +33,7 @@ namespace vcpkg::Commands::CI
         const Triplet triplet = args.command_arguments.size() == 1 ? Triplet::from_canonical_name(args.command_arguments.at(0)) : default_triplet;
         Input::check_triplet(triplet, paths);
         args.check_and_get_optional_command_arguments({});
-        const std::vector<PackageSpec> specs = load_all_package_specs(paths.ports, triplet);
+        const std::vector<PackageSpec> specs = load_all_package_specs(paths.get_filesystem(), paths.ports, triplet);
 
         StatusParagraphs status_db = database_load_check(paths);
         const std::vector<InstallPlanAction> install_plan = Dependencies::create_install_plan(paths, specs, status_db);

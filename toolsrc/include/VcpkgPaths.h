@@ -4,6 +4,7 @@
 #include "PackageSpec.h"
 #include "BinaryParagraph.h"
 #include "Lazy.h"
+#include "vcpkg_Files.h"
 
 namespace vcpkg
 {
@@ -48,6 +49,8 @@ namespace vcpkg
         const fs::path& get_git_exe() const;
         const fs::path& get_nuget_exe() const;
         const Toolset& get_toolset() const;
+
+        Files::Filesystem& get_filesystem() const;
 
     private:
         Lazy<fs::path> cmake_exe;

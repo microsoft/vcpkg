@@ -13,15 +13,15 @@ namespace vcpkg::Commands::Remove
     using Dependencies::RequestType;
     using Update::OutdatedPackage;
 
-    static void delete_directory(const fs::path& directory)
+    static void delete_directory(Files::Filesystem& fs, const fs::path& directory)
     {
         std::error_code ec;
-        fs::remove_all(directory, ec);
+        fs.remove_all(directory, ec);
         if (!ec)
         {
             System::println(System::Color::success, "Cleaned up %s", directory.string());
         }
-        if (fs::exists(directory))
+        if (fs.exists(directory))
         {
             System::println(System::Color::warning, "Some files in %s were unable to be removed. Close any editors operating in this directory and retry.", directory.string());
         }
@@ -29,18 +29,19 @@ namespace vcpkg::Commands::Remove
 
     static void remove_package(const VcpkgPaths& paths, const PackageSpec& spec, StatusParagraphs* status_db)
     {
+        auto& fs = paths.get_filesystem();
         StatusParagraph& pkg = **status_db->find(spec.name(), spec.triplet());
 
         pkg.want = Want::PURGE;
         pkg.state = InstallState::HALF_INSTALLED;
         write_update(paths, pkg);
 
-        std::fstream listfile(paths.listfile_path(pkg.package), std::ios_base::in | std::ios_base::binary);
-        if (listfile)
+        auto maybe_lines = fs.read_lines(paths.listfile_path(pkg.package));
+
+        if (auto lines = maybe_lines.get())
         {
             std::vector<fs::path> dirs_touched;
-            std::string suffix;
-            while (std::getline(listfile, suffix))
+            for (auto&& suffix : *lines)
             {
                 if (!suffix.empty() && suffix.back() == '\r')
                     suffix.pop_back();
@@ -49,7 +50,7 @@ namespace vcpkg::Commands::Remove
 
                 auto target = paths.installed / suffix;
 
-                auto status = fs::status(target, ec);
+                auto status = fs.status(target, ec);
                 if (ec)
                 {
                     System::println(System::Color::error, "failed: %s", ec.message());
@@ -62,7 +63,7 @@ namespace vcpkg::Commands::Remove
                 }
                 else if (fs::is_regular_file(status))
                 {
-                    fs::remove(target, ec);
+                    fs.remove(target, ec);
                     if (ec)
                     {
                         System::println(System::Color::error, "failed: %s: %s", target.u8string(), ec.message());
@@ -82,10 +83,10 @@ namespace vcpkg::Commands::Remove
             auto e = dirs_touched.rend();
             for (; b != e; ++b)
             {
-                if (fs::directory_iterator(*b) == fs::directory_iterator())
+                if (fs.is_empty(*b))
                 {
                     std::error_code ec;
-                    fs::remove(*b, ec);
+                    fs.remove(*b, ec);
                     if (ec)
                     {
                         System::println(System::Color::error, "failed: %s", ec.message());
@@ -93,8 +94,7 @@ namespace vcpkg::Commands::Remove
                 }
             }
 
-            listfile.close();
-            fs::remove(paths.listfile_path(pkg.package));
+            fs.remove(paths.listfile_path(pkg.package));
         }
 
         pkg.state = InstallState::NOT_INSTALLED;
@@ -221,7 +221,7 @@ namespace vcpkg::Commands::Remove
             if (alsoRemoveFolderFromPackages)
             {
                 System::println("Purging package %s... ", display_name);
-                delete_directory(paths.packages / action.spec.dir());
+                delete_directory(paths.get_filesystem(), paths.packages / action.spec.dir());
                 System::println(System::Color::success, "Purging package %s... done", display_name);
             }
         }

@@ -3,6 +3,7 @@
 #include "filesystem_fs.h"
 #include "vcpkg_Strings.h"
 #include "vcpkg_System.h"
+#include "vcpkg_Files.h"
 
 namespace vcpkg::Metrics
 {
@@ -385,30 +386,32 @@ true
         const fs::path temp_folder_path = temp_folder;
         const fs::path temp_folder_path_exe = temp_folder_path / "vcpkgmetricsuploader.exe";
 
+        auto& fs = Files::get_real_filesystem();
+
         if (true)
         {
-            const fs::path exe_path = []() -> fs::path
+            const fs::path exe_path = [&fs]() -> fs::path
                 {
                     auto vcpkgdir = get_bindir().parent_path();
                     auto path = vcpkgdir / "vcpkgmetricsuploader.exe";
-                    if (fs::exists(path))
+                    if (fs.exists(path))
                         return path;
 
                     path = vcpkgdir / "scripts" / "vcpkgmetricsuploader.exe";
-                    if (fs::exists(path))
+                    if (fs.exists(path))
                         return path;
 
                     return L"";
                 }();
 
             std::error_code ec;
-            fs::copy_file(exe_path, temp_folder_path_exe, fs::copy_options::skip_existing, ec);
+            fs.copy_file(exe_path, temp_folder_path_exe, fs::copy_options::skip_existing, ec);
             if (ec)
                 return;
         }
 
         const fs::path vcpkg_metrics_txt_path = temp_folder_path / ("vcpkg" + generate_random_UUID() + ".txt");
-        std::ofstream(vcpkg_metrics_txt_path) << payload;
+        fs.write_contents(vcpkg_metrics_txt_path, payload);
 
         const std::wstring cmdLine = Strings::wformat(L"start %s %s", temp_folder_path_exe.native(), vcpkg_metrics_txt_path.native());
         System::cmd_execute_clean(cmdLine);

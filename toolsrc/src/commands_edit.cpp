@@ -7,13 +7,15 @@ namespace vcpkg::Commands::Edit
 {
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
+        auto& fs = paths.get_filesystem();
+
         static const std::string example = Commands::Help::create_example_string("edit zlib");
         args.check_exact_arg_count(1, example);
         args.check_and_get_optional_command_arguments({});
         const std::string port_name = args.command_arguments.at(0);
 
         const fs::path portpath = paths.ports / port_name;
-        Checks::check_exit(VCPKG_LINE_INFO, fs::is_directory(portpath), R"(Could not find port named "%s")", port_name);
+        Checks::check_exit(VCPKG_LINE_INFO, fs.is_directory(portpath), R"(Could not find port named "%s")", port_name);
 
         // Find the user's selected editor
         std::wstring env_EDITOR;
@@ -30,7 +32,7 @@ namespace vcpkg::Commands::Edit
         if (env_EDITOR.empty())
         {
             const fs::path CODE_EXE_PATH = System::get_ProgramFiles_32_bit() / "Microsoft VS Code/Code.exe";
-            if (fs::exists(CODE_EXE_PATH))
+            if (fs.exists(CODE_EXE_PATH))
             {
                 env_EDITOR = CODE_EXE_PATH;
             }
@@ -50,13 +52,13 @@ namespace vcpkg::Commands::Edit
                 if (auto c = code_installpath.get())
                 {
                     auto p = fs::path(*c) / "Code.exe";
-                    if (fs::exists(p))
+                    if (fs.exists(p))
                     {
                         env_EDITOR = p.native();
                         break;
                     }
                     auto p_insiders = fs::path(*c) / "Code - Insiders.exe";
-                    if (fs::exists(p_insiders))
+                    if (fs.exists(p_insiders))
                     {
                         env_EDITOR = p_insiders.native();
                         break;
