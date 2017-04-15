@@ -62,7 +62,7 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/include/config.h ${CURRENT_PACKAGES_DIR}/inc
 
 file(READ ${SOURCE_PATH}/cblas.h CBLAS_H)
 string(REPLACE "#include \"common.h\"" "#include \"openblas_common.h\"" CBLAS_H ${CBLAS_H})
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/cblas.h)
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/cblas.h ${CBLAS_H})
 
 # openblas is BSD
 file(COPY ${CURRENT_BUILDTREES_DIR}/src/OpenBLAS-0.2.19/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openblas)
