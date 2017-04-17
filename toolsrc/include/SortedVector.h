@@ -42,6 +42,16 @@ namespace vcpkg
             return this->m_data.cend();
         }
 
+        iterator cbegin() const
+        {
+            return this->m_data.cbegin();
+        }
+
+        iterator cend() const
+        {
+            return this->m_data.cend();
+        }
+
         bool empty() const
         {
             return this->m_data.empty();
