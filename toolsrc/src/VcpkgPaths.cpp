@@ -6,7 +6,6 @@
 #include "PackageSpec.h"
 #include "vcpkg_Files.h"
 #include "vcpkg_Util.h"
-#include "..\include\VcpkgPaths.h"
 
 namespace vcpkg
 {
