@@ -40,7 +40,7 @@ namespace vcpkg::Commands::CI
         Checks::check_exit(VCPKG_LINE_INFO, !install_plan.empty(), "Install plan cannot be empty");
 
         std::vector<BuildResult> results;
-        std::vector<std::chrono::milliseconds::rep> timing;
+        std::vector<std::string> timing;
         const ElapsedTime timer = ElapsedTime::create_started();
         size_t counter = 0;
         const size_t package_count = install_plan.size();
@@ -51,7 +51,7 @@ namespace vcpkg::Commands::CI
             const std::string display_name = action.spec.to_string();
             System::println("Starting package %d/%d: %s", counter, package_count, display_name);
 
-            timing.push_back(-1);
+            timing.push_back("0");
             results.push_back(BuildResult::NULLVALUE);
 
             try
@@ -65,12 +65,13 @@ namespace vcpkg::Commands::CI
                     case InstallPlanType::BUILD_AND_INSTALL:
                         {
                             System::println("Building package %s... ", display_name);
-                            const BuildResult result = Commands::Build::build_package(action.any_paragraph.source_paragraph.value_or_exit(VCPKG_LINE_INFO),
+                            auto&& source_paragraph = action.any_paragraph.source_paragraph.value_or_exit(VCPKG_LINE_INFO);
+                            const BuildResult result = Commands::Build::build_package(source_paragraph,
                                                                                       action.spec,
                                                                                       paths,
                                                                                       paths.port_dir(action.spec),
                                                                                       status_db);
-                            timing.back() = build_timer.elapsed<std::chrono::milliseconds>().count();
+                            timing.back() = build_timer.to_string();
                             results.back() = result;
                             if (result != BuildResult::SUCCEEDED)
                             {
@@ -107,7 +108,7 @@ namespace vcpkg::Commands::CI
 
         for (size_t i = 0; i < results.size(); i++)
         {
-            System::println("%s: %s: %dms", install_plan[i].spec, Build::to_string(results[i]), timing[i]);
+            System::println("%s: %s: %s", install_plan[i].spec, Build::to_string(results[i]), timing[i]);
         }
 
         std::map<BuildResult, int> summary;
