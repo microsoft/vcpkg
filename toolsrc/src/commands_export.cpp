@@ -14,12 +14,9 @@ namespace vcpkg::Commands::Export
     using Dependencies::RequestType;
     using Dependencies::ExportPlanType;
 
-    static void print_plan(const std::vector<ExportPlanAction>& plan)
+    static void print_plan(const std::map<ExportPlanType, std::vector<const ExportPlanAction*>>& group_by_plan_type)
     {
         static constexpr std::array<ExportPlanType, 2> order = { ExportPlanType::ALREADY_BUILT, ExportPlanType::PORT_AVAILABLE_BUT_NOT_BUILT };
-
-        std::map<ExportPlanType, std::vector<const ExportPlanAction*>> group_by_plan_type;
-        Util::group_by(plan, &group_by_plan_type, [](const ExportPlanAction& p) { return p.plan_type; });
 
         for (const ExportPlanType plan_type : order)
         {
@@ -72,7 +69,9 @@ namespace vcpkg::Commands::Export
         std::vector<ExportPlanAction> export_plan = Dependencies::create_export_plan(paths, specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !export_plan.empty(), "Export plan cannot be empty");
 
-        print_plan(export_plan);
+        std::map<ExportPlanType, std::vector<const ExportPlanAction*>> group_by_plan_type;
+        Util::group_by(export_plan, &group_by_plan_type, [](const ExportPlanAction& p) { return p.plan_type; });
+        print_plan(group_by_plan_type);
 
         const bool has_non_user_requested_packages = std::find_if(export_plan.cbegin(), export_plan.cend(), [](const ExportPlanAction& package)-> bool
                                                                   {
@@ -93,7 +92,7 @@ namespace vcpkg::Commands::Export
         const fs::path output = paths.root / "exported";
         std::error_code ec;
         fs.remove_all(output, ec);
-        paths.get_filesystem().create_directory(output, ec);
+        fs.create_directory(output, ec);
 
         // execute the plan
         for (const ExportPlanAction& action : export_plan)

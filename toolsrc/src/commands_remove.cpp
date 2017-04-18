@@ -87,12 +87,9 @@ namespace vcpkg::Commands::Remove
         write_update(paths, pkg);
     }
 
-    static void print_plan(const std::vector<RemovePlanAction>& plan)
+    static void print_plan(const std::map<RemovePlanType, std::vector<const RemovePlanAction*>>& group_by_plan_type)
     {
         static constexpr std::array<RemovePlanType, 2> order = { RemovePlanType::NOT_INSTALLED, RemovePlanType::REMOVE };
-
-        std::map<RemovePlanType, std::vector<const RemovePlanAction*>> group_by_plan_type;
-        Util::group_by(plan, &group_by_plan_type, [](const RemovePlanAction& p) { return p.plan_type; });
 
         for (const RemovePlanType plan_type : order)
         {
@@ -162,7 +159,9 @@ namespace vcpkg::Commands::Remove
         const std::vector<RemovePlanAction> remove_plan = Dependencies::create_remove_plan(specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !remove_plan.empty(), "Remove plan cannot be empty");
 
-        print_plan(remove_plan);
+        std::map<RemovePlanType, std::vector<const RemovePlanAction*>> group_by_plan_type;
+        Util::group_by(remove_plan, &group_by_plan_type, [](const RemovePlanAction& p) { return p.plan_type; });
+        print_plan(group_by_plan_type);
 
         const bool has_non_user_requested_packages = Util::find_if(remove_plan, [](const RemovePlanAction& package)-> bool
                                                                    {

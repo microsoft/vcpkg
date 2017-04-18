@@ -169,12 +169,9 @@ namespace vcpkg::Commands::Install
         return SortedVector<std::string>(std::move(installed_files));
     }
 
-    static void print_plan(const std::vector<InstallPlanAction>& plan)
+    static void print_plan(const std::map<InstallPlanType, std::vector<const InstallPlanAction*>>& group_by_plan_type)
     {
         static constexpr std::array<InstallPlanType, 3> order = { InstallPlanType::ALREADY_INSTALLED, InstallPlanType::BUILD_AND_INSTALL, InstallPlanType::INSTALL };
-
-        std::map<InstallPlanType, std::vector<const InstallPlanAction*>> group_by_plan_type;
-        Util::group_by(plan, &group_by_plan_type, [](const InstallPlanAction& p) { return p.plan_type; });
 
         for (const InstallPlanType plan_type : order)
         {
@@ -286,7 +283,9 @@ namespace vcpkg::Commands::Install
         const std::string specs_string = Strings::join(",", install_plan, [](const InstallPlanAction& plan) { return plan.spec.to_string(); });
         Metrics::track_property("installplan", specs_string);
 
-        print_plan(install_plan);
+        std::map<InstallPlanType, std::vector<const InstallPlanAction*>> group_by_plan_type;
+        Util::group_by(install_plan, &group_by_plan_type, [](const InstallPlanAction& p) { return p.plan_type; });
+        print_plan(group_by_plan_type);
 
         const bool has_non_user_requested_packages = Util::find_if(install_plan, [](const InstallPlanAction& package)-> bool
                                                                    {
