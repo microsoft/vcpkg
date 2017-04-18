@@ -15,22 +15,26 @@ namespace vcpkg::Commands::Install
     using Dependencies::RequestType;
     using Dependencies::InstallPlanType;
 
-    static void install_and_write_listfile(const VcpkgPaths& paths, const BinaryParagraph& bpgh)
+    struct InstallationDirs
     {
-        auto&& fs = paths.get_filesystem();
+        fs::path source_dir; // "source" from source-destination, not source code.
+        fs::path destination_root;
+        std::string destination_subdirectory;
+        fs::path listfile;
+    };
 
+    static void install_and_write_listfile(Files::Filesystem& fs,  const InstallationDirs& dirs)
+    {
         std::vector<std::string> output;
 
-        const fs::path package_prefix_path = paths.package_dir(bpgh.spec);
-        const size_t prefix_length = package_prefix_path.native().size();
+        const size_t prefix_length = dirs.source_dir.native().size();
 
-        const std::string& triplet_string = bpgh.spec.triplet().canonical_name();
-        const fs::path installed_subfolder_path = paths.installed / triplet_string;
+        const fs::path destination = dirs.destination_root / dirs.destination_subdirectory;
         std::error_code ec;
-        fs.create_directory(installed_subfolder_path, ec);
-        output.push_back(Strings::format(R"(%s/)", triplet_string));
+        fs.create_directory(destination, ec);
+        output.push_back(Strings::format(R"(%s/)", dirs.destination_subdirectory));
 
-        auto files = fs.get_files_recursive(package_prefix_path);
+        auto files = fs.get_files_recursive(dirs.source_dir);
         for (auto&& file : files)
         {
             auto status = fs.status(file, ec);
@@ -48,7 +52,7 @@ namespace vcpkg::Commands::Install
             }
 
             const std::string suffix = file.generic_u8string().substr(prefix_length + 1);
-            const fs::path target = installed_subfolder_path / suffix;
+            const fs::path target = destination / suffix;
 
             if (fs::is_directory(status))
             {
@@ -59,7 +63,7 @@ namespace vcpkg::Commands::Install
                 }
 
                 // Trailing backslash for directories
-                output.push_back(Strings::format(R"(%s/%s/)", triplet_string, suffix));
+                output.push_back(Strings::format(R"(%s/%s/)", dirs.destination_subdirectory, suffix));
                 continue;
             }
 
@@ -74,7 +78,7 @@ namespace vcpkg::Commands::Install
                 {
                     System::println(System::Color::error, "failed: %s: %s", target.u8string(), ec.message());
                 }
-                output.push_back(Strings::format(R"(%s/%s)", triplet_string, suffix));
+                output.push_back(Strings::format(R"(%s/%s)", dirs.destination_subdirectory, suffix));
                 continue;
             }
 
@@ -89,7 +93,7 @@ namespace vcpkg::Commands::Install
 
         std::sort(output.begin(), output.end());
 
-        fs.write_lines(paths.listfile_path(bpgh), output);
+        fs.write_lines(dirs.listfile, output);
     }
 
     static void remove_first_n_chars(std::vector<std::string>* strings, const size_t n)
@@ -219,7 +223,13 @@ namespace vcpkg::Commands::Install
         write_update(paths, spgh);
         status_db->insert(std::make_unique<StatusParagraph>(spgh));
 
-        install_and_write_listfile(paths, spgh.package);
+        InstallationDirs dirs;
+        dirs.source_dir = package_dir;
+        dirs.destination_root = paths.installed;
+        dirs.destination_subdirectory = triplet.to_string();
+        dirs.listfile = paths.listfile_path(binary_paragraph);
+
+        install_and_write_listfile(paths.get_filesystem(), dirs);
 
         spgh.state = InstallState::INSTALLED;
         write_update(paths, spgh);
