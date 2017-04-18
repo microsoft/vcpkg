@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "vcpkg_Files.h"
 #include "vcpkg_System.h"
+#include <thread>
 
 namespace vcpkg::Files
 {
@@ -115,7 +116,22 @@ namespace vcpkg::Files
         }
         virtual std::uintmax_t remove_all(const fs::path & path, std::error_code& ec) override
         {
-            return fs::stdfs::remove_all(path, ec);
+            // Working around the currently buggy remove_all()
+            std::uintmax_t out = fs::stdfs::remove_all(path, ec);
+
+            for (int i = 0; i < 5 && this->exists(path); i++)
+            {
+                using namespace std::chrono_literals;
+                std::this_thread::sleep_for(i * 100ms);
+                out += fs::stdfs::remove_all(path, ec);
+            }
+
+            if (this->exists(path))
+            {
+                System::println(System::Color::warning, "Some files in %s were unable to be removed. Close any editors operating in this directory and retry.", path.string());
+            }
+
+            return out;
         }
         virtual bool exists(const fs::path & path) const override
         {
