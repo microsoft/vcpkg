@@ -13,20 +13,6 @@ namespace vcpkg::Commands::Remove
     using Dependencies::RequestType;
     using Update::OutdatedPackage;
 
-    static void delete_directory(Files::Filesystem& fs, const fs::path& directory)
-    {
-        std::error_code ec;
-        fs.remove_all(directory, ec);
-        if (!ec)
-        {
-            System::println(System::Color::success, "Cleaned up %s", directory.string());
-        }
-        if (fs.exists(directory))
-        {
-            System::println(System::Color::warning, "Some files in %s were unable to be removed. Close any editors operating in this directory and retry.", directory.string());
-        }
-    }
-
     static void remove_package(const VcpkgPaths& paths, const PackageSpec& spec, StatusParagraphs* status_db)
     {
         auto& fs = paths.get_filesystem();
@@ -221,7 +207,9 @@ namespace vcpkg::Commands::Remove
             if (alsoRemoveFolderFromPackages)
             {
                 System::println("Purging package %s... ", display_name);
-                delete_directory(paths.get_filesystem(), paths.packages / action.spec.dir());
+                Files::Filesystem& fs = paths.get_filesystem();
+                std::error_code ec;
+                fs.remove_all(paths.packages / action.spec.dir(), ec);
                 System::println(System::Color::success, "Purging package %s... done", display_name);
             }
         }
