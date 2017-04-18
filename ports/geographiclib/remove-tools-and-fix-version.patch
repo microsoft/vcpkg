@@ -23,8 +23,25 @@ index e79923b..3448362 100644
  if (MSVC AND BUILD_NETGEOGRAPHICLIB)
    if (GEOGRAPHICLIB_PRECISION EQUAL 2)
      set (NETGEOGRAPHICLIB_LIBRARIES NETGeographicLib)
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index 0c8ad64..7dc4096 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -14,10 +14,10 @@ configure_file (project-config.cmake.in
+ configure_file (project-config-version.cmake.in
+   "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-config-version.cmake" @ONLY)
+ export (TARGETS
+-  ${PROJECT_SHARED_LIBRARIES} ${PROJECT_STATIC_LIBRARIES} ${TOOLS}
++  ${PROJECT_SHARED_LIBRARIES} ${PROJECT_STATIC_LIBRARIES}
+   FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-targets.cmake")
+ export (TARGETS
+-  ${PROJECT_SHARED_LIBRARIES} ${PROJECT_STATIC_LIBRARIES} ${TOOLS}
++  ${PROJECT_SHARED_LIBRARIES} ${PROJECT_STATIC_LIBRARIES}
+   NAMESPACE ${PROJECT_NAME}::
+   FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-namespace-targets.cmake")
+ 
 diff --git a/cmake/project-config-version.cmake.in b/cmake/project-config-version.cmake.in
-index 3b3b9e8..a5ea344 100644
+index 3b3b9e8..bc2ce19 100644
 --- a/cmake/project-config-version.cmake.in
 +++ b/cmake/project-config-version.cmake.in
 @@ -18,10 +18,10 @@ elseif (NOT (APPLE OR (NOT DEFINED CMAKE_SIZEOF_VOID_P) OR
@@ -32,7 +49,7 @@ index 3b3b9e8..a5ea344 100644
    set (REASON "sizeof(*void) =  @CMAKE_SIZEOF_VOID_P@")
    set (PACKAGE_VERSION_UNSUITABLE TRUE)
 -elseif (MSVC AND NOT MSVC_VERSION STREQUAL "@MSVC_VERSION@")
-+# elseif (MSVC AND NOT MSVC_VERSION STREQUAL "@MSVC_VERSION@")
++#elseif (MSVC AND NOT MSVC_VERSION STREQUAL "@MSVC_VERSION@")
    # Reject if there's a mismatch in MSVC compiler versions
 -  set (REASON "_MSC_VER = @MSVC_VERSION@")
 -  set (PACKAGE_VERSION_UNSUITABLE TRUE)
