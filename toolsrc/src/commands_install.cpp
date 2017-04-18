@@ -23,7 +23,7 @@ namespace vcpkg::Commands::Install
         fs::path listfile;
     };
 
-    static void install_and_write_listfile(Files::Filesystem& fs,  const InstallationDirs& dirs)
+    static void install_and_write_listfile(Files::Filesystem& fs, const InstallationDirs& dirs)
     {
         std::vector<std::string> output;
 
@@ -209,19 +209,19 @@ namespace vcpkg::Commands::Install
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
-        StatusParagraph spgh;
-        spgh.package = binary_paragraph;
-        spgh.want = Want::INSTALL;
-        spgh.state = InstallState::HALF_INSTALLED;
-        for (auto&& dep : spgh.package.depends)
+        StatusParagraph source_paragraph;
+        source_paragraph.package = binary_paragraph;
+        source_paragraph.want = Want::INSTALL;
+        source_paragraph.state = InstallState::HALF_INSTALLED;
+        for (auto&& dep : source_paragraph.package.depends)
         {
-            if (status_db->find_installed(dep, spgh.package.spec.triplet()) == status_db->end())
+            if (status_db->find_installed(dep, source_paragraph.package.spec.triplet()) == status_db->end())
             {
                 Checks::unreachable(VCPKG_LINE_INFO);
             }
         }
-        write_update(paths, spgh);
-        status_db->insert(std::make_unique<StatusParagraph>(spgh));
+        write_update(paths, source_paragraph);
+        status_db->insert(std::make_unique<StatusParagraph>(source_paragraph));
 
         InstallationDirs dirs;
         dirs.source_dir = package_dir;
@@ -231,9 +231,9 @@ namespace vcpkg::Commands::Install
 
         install_and_write_listfile(paths.get_filesystem(), dirs);
 
-        spgh.state = InstallState::INSTALLED;
-        write_update(paths, spgh);
-        status_db->insert(std::make_unique<StatusParagraph>(spgh));
+        source_paragraph.state = InstallState::INSTALLED;
+        write_update(paths, source_paragraph);
+        status_db->insert(std::make_unique<StatusParagraph>(source_paragraph));
     }
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
@@ -295,11 +295,12 @@ namespace vcpkg::Commands::Install
                     case InstallPlanType::BUILD_AND_INSTALL:
                         {
                             System::println("Building package %s... ", display_name);
-                            const Build::BuildResult result = Commands::Build::build_package(action.any_paragraph.source_paragraph.value_or_exit(VCPKG_LINE_INFO),
-                                                                                             action.spec,
-                                                                                             paths,
-                                                                                             paths.port_dir(action.spec),
-                                                                                             status_db);
+                            const Build::BuildResult result = Commands::Build::build_package(
+                                action.any_paragraph.source_paragraph.value_or_exit(VCPKG_LINE_INFO),
+                                action.spec,
+                                paths,
+                                paths.port_dir(action.spec),
+                                status_db);
                             if (result != Build::BuildResult::SUCCEEDED)
                             {
                                 System::println(System::Color::error, Build::create_error_message(result, action.spec));
