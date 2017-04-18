@@ -137,6 +137,10 @@ namespace vcpkg::Files
         {
             return fs::stdfs::create_directory(path, ec);
         }
+        virtual bool create_directories(const fs::path& path, std::error_code& ec) override
+        {
+            return fs::stdfs::create_directories(path, ec);
+        }
         virtual void copy(const fs::path & oldpath, const fs::path & newpath, fs::copy_options opts) override
         {
             fs::stdfs::copy(oldpath, newpath, opts);
@@ -160,6 +164,7 @@ namespace vcpkg::Files
 
             Checks::check_exit(VCPKG_LINE_INFO, count == data.size());
         }
+
     };
 
     Filesystem & get_real_filesystem()
