@@ -45,10 +45,19 @@ namespace vcpkg::Commands
     {
         struct InstallationDirs
         {
+            static InstallationDirs initiliaze_dirs(Files::Filesystem& fs,
+                                                    const fs::path& source_dir,
+                                                    const fs::path& destination_root,
+                                                    const std::string& destination_subdirectory,
+                                                    const fs::path& listfile);
+
+
             fs::path source_dir; // "source" from source-destination, not source code.
             fs::path destination_root;
             std::string destination_subdirectory;
             fs::path listfile;
+
+            fs::path destination() const;
         };
 
         void install_files_and_write_listfile(Files::Filesystem& fs, const InstallationDirs& dirs);
@@ -167,7 +176,7 @@ namespace vcpkg::Commands
         void perform_and_exit(const VcpkgCmdArguments& args);
     }
 
-    template <class T>
+    template<class T>
     struct PackageNameAndFunction
     {
         std::string name;
@@ -178,7 +187,7 @@ namespace vcpkg::Commands
     const std::vector<PackageNameAndFunction<CommandTypeB>>& get_available_commands_type_b();
     const std::vector<PackageNameAndFunction<CommandTypeC>>& get_available_commands_type_c();
 
-    template <typename T>
+    template<typename T>
     T find(const std::string& command_name, const std::vector<PackageNameAndFunction<T>> available_commands)
     {
         for (const PackageNameAndFunction<T>& cmd : available_commands)
