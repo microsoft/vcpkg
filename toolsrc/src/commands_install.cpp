@@ -15,15 +15,7 @@ namespace vcpkg::Commands::Install
     using Dependencies::RequestType;
     using Dependencies::InstallPlanType;
 
-    struct InstallationDirs
-    {
-        fs::path source_dir; // "source" from source-destination, not source code.
-        fs::path destination_root;
-        std::string destination_subdirectory;
-        fs::path listfile;
-    };
-
-    static void install_and_write_listfile(Files::Filesystem& fs, const InstallationDirs& dirs)
+    void install_files_and_write_listfile(Files::Filesystem& fs, const InstallationDirs& dirs)
     {
         std::vector<std::string> output;
 
@@ -229,7 +221,7 @@ namespace vcpkg::Commands::Install
         dirs.destination_subdirectory = triplet.to_string();
         dirs.listfile = paths.listfile_path(binary_paragraph);
 
-        install_and_write_listfile(paths.get_filesystem(), dirs);
+        install_files_and_write_listfile(paths.get_filesystem(), dirs);
 
         source_paragraph.state = InstallState::INSTALLED;
         write_update(paths, source_paragraph);
