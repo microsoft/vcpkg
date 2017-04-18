@@ -9,6 +9,7 @@
 
 namespace vcpkg::Commands::Export
 {
+    using Install::InstallDir;
     using Dependencies::ExportPlanAction;
     using Dependencies::RequestType;
     using Dependencies::ExportPlanType;
@@ -86,6 +87,28 @@ namespace vcpkg::Commands::Export
         if (dryRun)
         {
             Checks::exit_success(VCPKG_LINE_INFO);
+        }
+
+        Files::Filesystem& fs = paths.get_filesystem();
+        const fs::path output = paths.root / "exported";
+        std::error_code ec;
+        fs.remove_all(output, ec);
+        paths.get_filesystem().create_directory(output, ec);
+
+        // execute the plan
+        for (const ExportPlanAction& action : export_plan)
+        {
+            const std::string display_name = action.spec.to_string();
+            System::println("Exporting package %s... ", display_name);
+
+            const BinaryParagraph& binary_paragraph = action.any_paragraph.binary_paragraph.value_or_exit(VCPKG_LINE_INFO);
+            const InstallDir dirs = InstallDir::from_destination_root(
+                output,
+                action.spec.triplet().to_string(),
+                output / "vcpkg" / "info" / (binary_paragraph.fullstem() + ".list"));
+
+            Install::install_files_and_write_listfile(paths.get_filesystem(), paths.package_dir(action.spec), dirs);
+            System::println(System::Color::success, "Exporting package %s... done", display_name);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
