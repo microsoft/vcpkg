@@ -15,47 +15,63 @@ namespace vcpkg::Commands::Install
     using Dependencies::RequestType;
     using Dependencies::InstallPlanType;
 
-    InstallationDirs InstallationDirs::initiliaze_dirs(Files::Filesystem& fs,
-                                                       const fs::path& source_dir,
-                                                       const fs::path& destination_root,
-                                                       const std::string& destination_subdirectory,
-                                                       const fs::path& listfile)
+    InstallationDirs InstallationDirs::initiliaze(Files::Filesystem& fs,
+                                                  const fs::path& source_dir,
+                                                  const fs::path& destination_root,
+                                                  const std::string& destination_subdirectory,
+                                                  const fs::path& listfile)
     {
-        std::error_code ec;
         InstallationDirs dirs;
-        dirs.source_dir = source_dir;
-        Checks::check_exit(VCPKG_LINE_INFO, fs.exists(dirs.source_dir), "Source directory %s does not exist", dirs.source_dir.generic_string());
+        dirs.m_source_dir = source_dir;
+        dirs.m_destination = destination_root / destination_subdirectory;
+        dirs.m_destination_subdirectory = destination_subdirectory;
+        dirs.m_listfile = listfile;
 
-        dirs.destination_root = destination_root;
-        dirs.destination_subdirectory = destination_subdirectory;
-        const fs::path destination = dirs.destination_root / dirs.destination_subdirectory;
-        fs.create_directories(destination, ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create destination directory %s", destination.generic_string());
+        std::error_code ec;
+        Checks::check_exit(VCPKG_LINE_INFO, fs.exists(dirs.source_dir()), "Source directory %s does not exist", dirs.source_dir().generic_string());
 
-        dirs.listfile = listfile;
-        const fs::path listfile_parent = listfile.parent_path();
+        fs.create_directories(dirs.destination(), ec);
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create destination directory %s", dirs.destination().generic_string());
+
+        const fs::path listfile_parent = dirs.listfile().parent_path();
         fs.create_directories(listfile_parent, ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directory for listfile %s", dirs.listfile.generic_string());
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directory for listfile %s", dirs.listfile().generic_string());
 
         return dirs;
     }
 
-    fs::path InstallationDirs::destination() const
+    const fs::path& InstallationDirs::source_dir() const
     {
-        return this->destination_root / this->destination_subdirectory;
+        return this->m_source_dir;
+    }
+
+    const fs::path& InstallationDirs::destination() const
+    {
+        return this->m_destination;
+    }
+
+    const std::string& InstallationDirs::destination_subdirectory() const
+    {
+        return this->m_destination_subdirectory;
+    }
+
+    const fs::path& InstallationDirs::listfile() const
+    {
+        return this->m_listfile;
     }
 
     void install_files_and_write_listfile(Files::Filesystem& fs, const InstallationDirs& dirs)
     {
         std::vector<std::string> output;
-
-        const size_t prefix_length = dirs.source_dir.native().size();
-
-        const fs::path destination = dirs.destination();
         std::error_code ec;
-        output.push_back(Strings::format(R"(%s/)", dirs.destination_subdirectory));
 
-        auto files = fs.get_files_recursive(dirs.source_dir);
+        const fs::path& source_dir = dirs.source_dir();
+        const size_t prefix_length = source_dir.native().size();
+        const fs::path& destination = dirs.destination();
+        const std::string& destination_subdirectory = dirs.destination_subdirectory();
+
+        output.push_back(Strings::format(R"(%s/)", destination_subdirectory));
+        auto files = fs.get_files_recursive(source_dir);
         for (auto&& file : files)
         {
             auto status = fs.status(file, ec);
@@ -84,7 +100,7 @@ namespace vcpkg::Commands::Install
                 }
 
                 // Trailing backslash for directories
-                output.push_back(Strings::format(R"(%s/%s/)", dirs.destination_subdirectory, suffix));
+                output.push_back(Strings::format(R"(%s/%s/)", destination_subdirectory, suffix));
                 continue;
             }
 
@@ -99,7 +115,7 @@ namespace vcpkg::Commands::Install
                 {
                     System::println(System::Color::error, "failed: %s: %s", target.u8string(), ec.message());
                 }
-                output.push_back(Strings::format(R"(%s/%s)", dirs.destination_subdirectory, suffix));
+                output.push_back(Strings::format(R"(%s/%s)", destination_subdirectory, suffix));
                 continue;
             }
 
@@ -114,7 +130,7 @@ namespace vcpkg::Commands::Install
 
         std::sort(output.begin(), output.end());
 
-        fs.write_lines(dirs.listfile, output);
+        fs.write_lines(dirs.listfile(), output);
     }
 
     static void remove_first_n_chars(std::vector<std::string>* strings, const size_t n)
@@ -244,11 +260,11 @@ namespace vcpkg::Commands::Install
         write_update(paths, source_paragraph);
         status_db->insert(std::make_unique<StatusParagraph>(source_paragraph));
 
-        InstallationDirs dirs;
-        dirs.source_dir = package_dir;
-        dirs.destination_root = paths.installed;
-        dirs.destination_subdirectory = triplet.to_string();
-        dirs.listfile = paths.listfile_path(binary_paragraph);
+        const InstallationDirs dirs = InstallationDirs::initiliaze(paths.get_filesystem(),
+                                                                   package_dir,
+                                                                   paths.installed,
+                                                                   triplet.to_string(),
+                                                                   paths.listfile_path(binary_paragraph));
 
         install_files_and_write_listfile(paths.get_filesystem(), dirs);
 

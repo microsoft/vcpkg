@@ -45,19 +45,23 @@ namespace vcpkg::Commands
     {
         struct InstallationDirs
         {
-            static InstallationDirs initiliaze_dirs(Files::Filesystem& fs,
-                                                    const fs::path& source_dir,
-                                                    const fs::path& destination_root,
-                                                    const std::string& destination_subdirectory,
-                                                    const fs::path& listfile);
+            static InstallationDirs initiliaze(Files::Filesystem& fs,
+                                               const fs::path& source_dir,
+                                               const fs::path& destination_root,
+                                               const std::string& destination_subdirectory,
+                                               const fs::path& listfile);
 
+        private:
+            fs::path m_source_dir; // "source" from source-destination, not source code.
+            fs::path m_destination;
+            std::string m_destination_subdirectory;
+            fs::path m_listfile;
 
-            fs::path source_dir; // "source" from source-destination, not source code.
-            fs::path destination_root;
-            std::string destination_subdirectory;
-            fs::path listfile;
-
-            fs::path destination() const;
+        public:
+            const fs::path& source_dir() const;
+            const fs::path& destination() const;
+            const std::string& destination_subdirectory() const;
+            const fs::path& listfile() const;
         };
 
         void install_files_and_write_listfile(Files::Filesystem& fs, const InstallationDirs& dirs);
