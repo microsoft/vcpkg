@@ -83,6 +83,16 @@ namespace vcpkg::Commands::Export
             System::println(System::Color::warning, "Additional packages (*) need to be exported to complete this operation.");
         }
 
+        auto it = group_by_plan_type.find(ExportPlanType::PORT_AVAILABLE_BUT_NOT_BUILT);
+        if (it != group_by_plan_type.cend() && !it->second.empty())
+        {
+            System::println(System::Color::error, "There are packages that have not been built.");
+            auto s = Strings::join(" ", specs, [](const PackageSpec& spec) { return spec.to_string(); });
+            System::println("To build them, run:\n"
+                            "    vcpkg install %s", s);
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+
         if (dryRun)
         {
             Checks::exit_success(VCPKG_LINE_INFO);
@@ -97,6 +107,11 @@ namespace vcpkg::Commands::Export
         // execute the plan
         for (const ExportPlanAction& action : export_plan)
         {
+            if (action.plan_type != ExportPlanType::ALREADY_BUILT)
+            {
+                Checks::unreachable(VCPKG_LINE_INFO);
+            }
+
             const std::string display_name = action.spec.to_string();
             System::println("Exporting package %s... ", display_name);
 
