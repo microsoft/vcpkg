@@ -45,8 +45,7 @@ namespace vcpkg::Commands
     {
         struct InstallationDirs
         {
-            static InstallationDirs initiliaze(Files::Filesystem& fs,
-                                               const fs::path& source_dir,
+            static InstallationDirs initiliaze(const fs::path& source_dir,
                                                const fs::path& destination_root,
                                                const std::string& destination_subdirectory,
                                                const fs::path& listfile);

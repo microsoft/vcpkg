@@ -15,8 +15,7 @@ namespace vcpkg::Commands::Install
     using Dependencies::RequestType;
     using Dependencies::InstallPlanType;
 
-    InstallationDirs InstallationDirs::initiliaze(Files::Filesystem& fs,
-                                                  const fs::path& source_dir,
+    InstallationDirs InstallationDirs::initiliaze(const fs::path& source_dir,
                                                   const fs::path& destination_root,
                                                   const std::string& destination_subdirectory,
                                                   const fs::path& listfile)
@@ -26,17 +25,6 @@ namespace vcpkg::Commands::Install
         dirs.m_destination = destination_root / destination_subdirectory;
         dirs.m_destination_subdirectory = destination_subdirectory;
         dirs.m_listfile = listfile;
-
-        std::error_code ec;
-        Checks::check_exit(VCPKG_LINE_INFO, fs.exists(dirs.source_dir()), "Source directory %s does not exist", dirs.source_dir().generic_string());
-
-        fs.create_directories(dirs.destination(), ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create destination directory %s", dirs.destination().generic_string());
-
-        const fs::path listfile_parent = dirs.listfile().parent_path();
-        fs.create_directories(listfile_parent, ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directory for listfile %s", dirs.listfile().generic_string());
-
         return dirs;
     }
 
@@ -69,6 +57,14 @@ namespace vcpkg::Commands::Install
         const size_t prefix_length = source_dir.native().size();
         const fs::path& destination = dirs.destination();
         const std::string& destination_subdirectory = dirs.destination_subdirectory();
+        const fs::path& listfile = dirs.listfile();
+
+        Checks::check_exit(VCPKG_LINE_INFO, fs.exists(source_dir), "Source directory %s does not exist", source_dir.generic_string());
+        fs.create_directories(destination, ec);
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create destination directory %s", destination.generic_string());
+        const fs::path listfile_parent = listfile.parent_path();
+        fs.create_directories(listfile_parent, ec);
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directory for listfile %s", listfile.generic_string());
 
         output.push_back(Strings::format(R"(%s/)", destination_subdirectory));
         auto files = fs.get_files_recursive(source_dir);
@@ -130,7 +126,7 @@ namespace vcpkg::Commands::Install
 
         std::sort(output.begin(), output.end());
 
-        fs.write_lines(dirs.listfile(), output);
+        fs.write_lines(listfile, output);
     }
 
     static void remove_first_n_chars(std::vector<std::string>* strings, const size_t n)
@@ -260,8 +256,7 @@ namespace vcpkg::Commands::Install
         write_update(paths, source_paragraph);
         status_db->insert(std::make_unique<StatusParagraph>(source_paragraph));
 
-        const InstallationDirs dirs = InstallationDirs::initiliaze(paths.get_filesystem(),
-                                                                   package_dir,
+        const InstallationDirs dirs = InstallationDirs::initiliaze(package_dir,
                                                                    paths.installed,
                                                                    triplet.to_string(),
                                                                    paths.listfile_path(binary_paragraph));
