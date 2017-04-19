@@ -125,6 +125,8 @@ namespace vcpkg::Commands::Export
             System::println(System::Color::success, "Exporting package %s... done", display_name);
         }
 
+        System::println(System::Color::success, R"(Files exported at: "%s")", output.generic_string());
+
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 }
