@@ -119,7 +119,7 @@ namespace vcpkg::Commands::Export
             const InstallDir dirs = InstallDir::from_destination_root(
                 output,
                 action.spec.triplet().to_string(),
-                output / "vcpkg" / "info" / (binary_paragraph.fullstem() + ".list"));
+                output / "installed" / "vcpkg" / "info" / (binary_paragraph.fullstem() + ".list"));
 
             Install::install_files_and_write_listfile(paths.get_filesystem(), paths.package_dir(action.spec), dirs);
             System::println(System::Color::success, "Exporting package %s... done", display_name);
