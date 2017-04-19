@@ -1,3 +1,44 @@
+vcpkg (0.0.80)
+--------------
+  * Add ports:
+    - clapack              3.2.1
+    - geographiclib        1.47-patch1-3
+    - libevent             2.1.8-1
+    - mdnsresponder        765.30.11
+    - openblas             v0.2.19-1
+    - picojson             1.3.0
+    - sdl2-mixer           2.0.1
+    - sdl2-net             2.0.1
+    - sdl2-ttf             2.0.14
+  * Update ports:
+    - azure-storage-cpp    3.0.0 -> 3.0.0-2
+    - catch                1.8.2 -> 1.9.1
+    - eigen3               3.3.0 -> 3.3.3
+    - glib                 2.50.3 -> 2.52.1
+    - libbson              1.5.1 -> 1.6.2
+    - libpng               1.6.28 -> 1.6.28-1
+    - libvorbis            1.3.5-1-143caf4023a90c09a5eb685fdd46fb9b9c36b1ee -> 1.3.5-143caf4-2
+    - libxml2              2.9.4 -> 2.9.4-1
+    - mongo-c-driver       1.5.1 -> 1.6.2
+    - mongo-cxx-driver     3.0.3-1 -> 3.1.1
+    - opencv               3.2.0 -> 3.2.0-1
+    - qwt                  6.1.3 -> 6.1.3-1
+    - uwebsockets          0.14.1 -> 0.14.2
+    - xerces-c             3.1.4 -> 3.1.4-3
+  * Added `System32\Wbem` to the sanizited environment
+  * `--debug` flag will now show environment information when launching external commands
+  * `vcpkg install` command has been enhanced:
+    - When a package build starts or ends, a message with the package name is diplayed
+    - Before the start of the build, a summary of the install plan is displayed
+    - Added new option `--dry-run`: This will print out the install plan, but will not actually perform the install
+  * Add CI badge in the front page
+  * Fix WindowsSDK detection to correctly handle the new optional c++ desktop deployment of the Windows SDK.
+  * Reduce verbosity of `vcpkg remove` when purging the package
+  * Fixes and improvements in the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  WED, 18 Apr 2017 18:00:00 -0800
+
+
 vcpkg (0.0.79)
 --------------
   * Add ports:
