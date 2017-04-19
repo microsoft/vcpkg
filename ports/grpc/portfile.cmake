@@ -4,15 +4,17 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 include(vcpkg_common_functions)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/grpc-1.1.2)
+set(GRPC_VERSION 1.1.2)
+
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/grpc-${GRPC_VERSION})
 
 if(EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
 endif()
 
 vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "https://github.com/grpc/grpc/archive/v1.1.2.zip"
-    FILENAME "grpc-v1.1.2.tar.gz"
+    URLS "https://github.com/grpc/grpc/archive/v${GRPC_VERSION}.zip"
+    FILENAME "grpc-v${GRPC_VERSION}.tar.gz"
     SHA512 6e0666ecb72f0a78148fadf627e05b5ba0f1c893919f1e691775d09374e7c4b9b05ff1d276e716ac2a81eb2a3fb88c4a095928589286d2f083bd60539050f5d9
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
