@@ -45,10 +45,10 @@ namespace vcpkg::Commands
     {
         struct InstallationDirs
         {
-            static InstallationDirs initiliaze(const fs::path& source_dir,
-                                               const fs::path& destination_root,
-                                               const std::string& destination_subdirectory,
-                                               const fs::path& listfile);
+            static InstallationDirs from_destination_root(const fs::path& source_dir,
+                                                          const fs::path& destination_root,
+                                                          const std::string& destination_subdirectory,
+                                                          const fs::path& listfile);
 
         private:
             fs::path m_source_dir; // "source" from source-destination, not source code.

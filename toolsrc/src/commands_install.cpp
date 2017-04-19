@@ -15,10 +15,10 @@ namespace vcpkg::Commands::Install
     using Dependencies::RequestType;
     using Dependencies::InstallPlanType;
 
-    InstallationDirs InstallationDirs::initiliaze(const fs::path& source_dir,
-                                                  const fs::path& destination_root,
-                                                  const std::string& destination_subdirectory,
-                                                  const fs::path& listfile)
+    InstallationDirs InstallationDirs::from_destination_root(const fs::path& source_dir,
+                                                             const fs::path& destination_root,
+                                                             const std::string& destination_subdirectory,
+                                                             const fs::path& listfile)
     {
         InstallationDirs dirs;
         dirs.m_source_dir = source_dir;
@@ -256,10 +256,10 @@ namespace vcpkg::Commands::Install
         write_update(paths, source_paragraph);
         status_db->insert(std::make_unique<StatusParagraph>(source_paragraph));
 
-        const InstallationDirs dirs = InstallationDirs::initiliaze(package_dir,
-                                                                   paths.installed,
-                                                                   triplet.to_string(),
-                                                                   paths.listfile_path(binary_paragraph));
+        const InstallationDirs dirs = InstallationDirs::from_destination_root(package_dir,
+                                                                              paths.installed,
+                                                                              triplet.to_string(),
+                                                                              paths.listfile_path(binary_paragraph));
 
         install_files_and_write_listfile(paths.get_filesystem(), dirs);
 
