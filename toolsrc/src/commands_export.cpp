@@ -87,7 +87,15 @@ namespace vcpkg::Commands::Export
         if (it != group_by_plan_type.cend() && !it->second.empty())
         {
             System::println(System::Color::error, "There are packages that have not been built.");
-            auto s = Strings::join(" ", specs, [](const PackageSpec& spec) { return spec.to_string(); });
+
+            // No need to show all of them, just the user-requested ones. Dependency resolution will handle the rest.
+            std::vector<const ExportPlanAction*> unbuilt = it->second;
+            Util::erase_remove_if(unbuilt, [](const ExportPlanAction* a)
+            {
+                return a->request_type != RequestType::USER_REQUESTED;
+            });
+
+            auto s = Strings::join(" ", unbuilt, [](const ExportPlanAction* a) { return a->spec.to_string(); });
             System::println("To build them, run:\n"
                             "    vcpkg install %s", s);
             Checks::exit_fail(VCPKG_LINE_INFO);
