@@ -73,10 +73,10 @@ namespace vcpkg::Commands::Export
         Util::group_by(export_plan, &group_by_plan_type, [](const ExportPlanAction& p) { return p.plan_type; });
         print_plan(group_by_plan_type);
 
-        const bool has_non_user_requested_packages = std::find_if(export_plan.cbegin(), export_plan.cend(), [](const ExportPlanAction& package)-> bool
-                                                                  {
-                                                                      return package.request_type != RequestType::USER_REQUESTED;
-                                                                  }) != export_plan.cend();
+        const bool has_non_user_requested_packages = Util::find_if(export_plan, [](const ExportPlanAction& package)-> bool
+                                                                   {
+                                                                       return package.request_type != RequestType::USER_REQUESTED;
+                                                                   }) != export_plan.cend();
 
         if (has_non_user_requested_packages)
         {
