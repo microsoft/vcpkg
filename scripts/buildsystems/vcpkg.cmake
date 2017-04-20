@@ -40,7 +40,19 @@ if(NOT VCPKG_TOOLCHAIN)
 
     set(VCPKG_TARGET_TRIPLET ${_VCPKG_TARGET_TRIPLET_ARCH}-${_VCPKG_TARGET_TRIPLET_PLAT} CACHE STRING "Vcpkg target triplet (ex. x86-windows)")
     set(_VCPKG_TOOLCHAIN_DIR ${CMAKE_CURRENT_LIST_DIR})
-    get_filename_component(_VCPKG_ROOT_DIR ${_VCPKG_TOOLCHAIN_DIR}/../.. ABSOLUTE)
+
+    #Detect .vcpkg-root to figure VCPKG_ROOT_DIR
+    SET(_VCPKG_ROOT_DIR_CANDIDATE ${CMAKE_CURRENT_LIST_DIR})
+    while(IS_DIRECTORY ${_VCPKG_ROOT_DIR_CANDIDATE} AND NOT EXISTS "${_VCPKG_ROOT_DIR_CANDIDATE}/.vcpkg-root")
+        get_filename_component(_VCPKG_ROOT_DIR_TEMP ${_VCPKG_ROOT_DIR_CANDIDATE} DIRECTORY)
+        if (_VCPKG_ROOT_DIR_TEMP STREQUAL _VCPKG_ROOT_DIR_CANDIDATE) # If unchanged, we have reached the root of the drive
+            message(FATAL_ERROR "Could not find .vcpkg-root")
+        else()
+            SET(_VCPKG_ROOT_DIR_CANDIDATE ${_VCPKG_ROOT_DIR_TEMP})
+        endif()
+    endwhile()
+    set(_VCPKG_ROOT_DIR ${_VCPKG_ROOT_DIR_CANDIDATE})
+
     set(_VCPKG_INSTALLED_DIR ${_VCPKG_ROOT_DIR}/installed)
 
     if(CMAKE_BUILD_TYPE MATCHES "^Debug$" OR NOT DEFINED CMAKE_BUILD_TYPE)
