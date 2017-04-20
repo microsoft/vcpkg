@@ -35,7 +35,7 @@ namespace vcpkg::Commands::Integrate
 )###";
     }
 
-    static std::string create_nuget_targets_file(const fs::path& msbuild_vcpkg_targets_file) noexcept
+    static std::string create_nuget_targets_file_contents(const fs::path& msbuild_vcpkg_targets_file) noexcept
     {
         const std::string as_string = msbuild_vcpkg_targets_file.string();
 
@@ -49,7 +49,7 @@ namespace vcpkg::Commands::Integrate
 )###", as_string, as_string);
     }
 
-    static std::string create_nuget_props_file() noexcept
+    static std::string create_nuget_props_file_contents() noexcept
     {
         return R"###(
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
@@ -73,9 +73,9 @@ namespace vcpkg::Commands::Integrate
         return nuget_id;
     }
 
-    static std::string create_nuspec_file(const fs::path& vcpkg_root_dir, const std::string& nuget_id, const std::string& nupkg_version)
+    static std::string create_nuspec_file_contents(const fs::path& vcpkg_root_dir, const std::string& nuget_id, const std::string& nupkg_version)
     {
-        const std::string nuspec_file_content_template = R"(
+        static constexpr auto content_template = R"(
 <package>
     <metadata>
         <id>@NUGET_ID@</id>
@@ -92,10 +92,10 @@ namespace vcpkg::Commands::Integrate
 </package>
 )";
 
-        std::string nuspec_file_content = std::regex_replace(nuspec_file_content_template, std::regex("@NUGET_ID@"), nuget_id);
-        nuspec_file_content = std::regex_replace(nuspec_file_content, std::regex("@VCPKG_DIR@"), vcpkg_root_dir.string());
-        nuspec_file_content = std::regex_replace(nuspec_file_content, std::regex("@VERSION@"), nupkg_version);
-        return nuspec_file_content;
+        std::string content = std::regex_replace(content_template, std::regex("@NUGET_ID@"), nuget_id);
+        content = std::regex_replace(content, std::regex("@VCPKG_DIR@"), vcpkg_root_dir.string());
+        content = std::regex_replace(content, std::regex("@VERSION@"), nupkg_version);
+        return content;
     }
 
     enum class ElevationPromptChoice
@@ -264,9 +264,9 @@ namespace vcpkg::Commands::Integrate
         const std::string nuget_id = get_nuget_id(paths.root);
         const std::string nupkg_version = "1.0.0";
 
-        fs.write_contents(targets_file_path, create_nuget_targets_file(paths.buildsystems_msbuild_targets));
-        fs.write_contents(props_file_path, create_nuget_props_file());
-        fs.write_contents(nuspec_file_path, create_nuspec_file(paths.root, nuget_id, nupkg_version));
+        fs.write_contents(targets_file_path, create_nuget_targets_file_contents(paths.buildsystems_msbuild_targets));
+        fs.write_contents(props_file_path, create_nuget_props_file_contents());
+        fs.write_contents(nuspec_file_path, create_nuspec_file_contents(paths.root, nuget_id, nupkg_version));
 
         // Using all forward slashes for the command line
         const std::wstring cmd_line = Strings::wformat(LR"("%s" pack -OutputDirectory "%s" "%s" > nul)", nuget_exe.native(), buildsystems_dir.native(), nuspec_file_path.native());
