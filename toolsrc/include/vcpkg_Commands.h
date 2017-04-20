@@ -43,12 +43,12 @@ namespace vcpkg::Commands
 
     namespace Install
     {
-        struct InstallationDirs
+        struct InstallDir
         {
-            static InstallationDirs from_destination_root(const fs::path& source_dir,
-                                                          const fs::path& destination_root,
-                                                          const std::string& destination_subdirectory,
-                                                          const fs::path& listfile);
+            static InstallDir from_destination_root(const fs::path& source_dir,
+                                                    const fs::path& destination_root,
+                                                    const std::string& destination_subdirectory,
+                                                    const fs::path& listfile);
 
         private:
             fs::path m_source_dir; // "source" from source-destination, not source code.
@@ -63,7 +63,7 @@ namespace vcpkg::Commands
             const fs::path& listfile() const;
         };
 
-        void install_files_and_write_listfile(Files::Filesystem& fs, const InstallationDirs& dirs);
+        void install_files_and_write_listfile(Files::Filesystem& fs, const InstallDir& dirs);
         void install_package(const VcpkgPaths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs* status_db);
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
     }

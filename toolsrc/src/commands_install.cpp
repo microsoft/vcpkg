@@ -15,12 +15,12 @@ namespace vcpkg::Commands::Install
     using Dependencies::RequestType;
     using Dependencies::InstallPlanType;
 
-    InstallationDirs InstallationDirs::from_destination_root(const fs::path& source_dir,
+    InstallDir InstallDir::from_destination_root(const fs::path& source_dir,
                                                              const fs::path& destination_root,
                                                              const std::string& destination_subdirectory,
                                                              const fs::path& listfile)
     {
-        InstallationDirs dirs;
+        InstallDir dirs;
         dirs.m_source_dir = source_dir;
         dirs.m_destination = destination_root / destination_subdirectory;
         dirs.m_destination_subdirectory = destination_subdirectory;
@@ -28,27 +28,27 @@ namespace vcpkg::Commands::Install
         return dirs;
     }
 
-    const fs::path& InstallationDirs::source_dir() const
+    const fs::path& InstallDir::source_dir() const
     {
         return this->m_source_dir;
     }
 
-    const fs::path& InstallationDirs::destination() const
+    const fs::path& InstallDir::destination() const
     {
         return this->m_destination;
     }
 
-    const std::string& InstallationDirs::destination_subdirectory() const
+    const std::string& InstallDir::destination_subdirectory() const
     {
         return this->m_destination_subdirectory;
     }
 
-    const fs::path& InstallationDirs::listfile() const
+    const fs::path& InstallDir::listfile() const
     {
         return this->m_listfile;
     }
 
-    void install_files_and_write_listfile(Files::Filesystem& fs, const InstallationDirs& dirs)
+    void install_files_and_write_listfile(Files::Filesystem& fs, const InstallDir& dirs)
     {
         std::vector<std::string> output;
         std::error_code ec;
@@ -256,7 +256,7 @@ namespace vcpkg::Commands::Install
         write_update(paths, source_paragraph);
         status_db->insert(std::make_unique<StatusParagraph>(source_paragraph));
 
-        const InstallationDirs dirs = InstallationDirs::from_destination_root(package_dir,
+        const InstallDir dirs = InstallDir::from_destination_root(package_dir,
                                                                               paths.installed,
                                                                               triplet.to_string(),
                                                                               paths.listfile_path(binary_paragraph));
