@@ -80,7 +80,7 @@ namespace vcpkg::Commands::Integrate
     <metadata>
         <id>@NUGET_ID@</id>
         <version>@VERSION@</version>
-        <authors>cpp-packages</authors>
+        <authors>vcpkg</authors>
         <description>
             This package imports all libraries currently installed in @VCPKG_DIR@. This package does not contain any libraries and instead refers to the folder directly (like a symlink).
         </description>
