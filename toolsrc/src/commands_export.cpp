@@ -125,7 +125,7 @@ namespace vcpkg::Commands::Export
 
             const BinaryParagraph& binary_paragraph = action.any_paragraph.binary_paragraph.value_or_exit(VCPKG_LINE_INFO);
             const InstallDir dirs = InstallDir::from_destination_root(
-                output,
+                output / "installed",
                 action.spec.triplet().to_string(),
                 output / "installed" / "vcpkg" / "info" / (binary_paragraph.fullstem() + ".list"));
 
