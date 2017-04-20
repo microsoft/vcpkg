@@ -6,6 +6,7 @@
 #include "vcpkg_Input.h"
 #include "vcpkg_Util.h"
 #include "Paragraphs.h"
+#include <regex>
 
 namespace vcpkg::Commands::Export
 {
@@ -134,6 +135,49 @@ namespace vcpkg::Commands::Export
         }
 
         System::println(System::Color::success, R"(Files exported at: "%s")", output.generic_string());
+
+        const std::string nuspec_file_content_template = R"(
+<package>
+    <metadata>
+        <id>@NUGET_ID@</id>
+        <version>@VERSION@</version>
+        <authors>cpp-packages</authors>
+        <description>
+            Placeholder description
+        </description>
+    </metadata>
+    <files>
+        <file src="exported\**" target="" />
+        <file src="exported\.vcpkg-root" target="" />
+        <file src="scripts\buildsystems\msbuild\applocal.ps1" target="build\native\applocal.ps1" />
+        <file src="scripts\buildsystems\msbuild\vcpkg.targets" target="build\native\@NUGET_ID@.targets" />
+        <file src="scripts\buildsystems\vcpkg.cmake" target="build\native\vcpkg.cmake" />
+    </files>
+</package>
+)";
+
+        const std::string nuget_id = "placeholder_id";
+        const std::string nupkg_version = "1.0.0";
+        const fs::path vcpkg_root_file = (output / ".vcpkg-root");
+
+        fs.write_contents(vcpkg_root_file, "");
+
+        std::string nuspec_file_content = std::regex_replace(nuspec_file_content_template, std::regex("@NUGET_ID@"), nuget_id);
+        //nuspec_file_content = std::regex_replace(nuspec_file_content, std::regex("@VCPKG_DIR@"), vcpkg_root_dir.string());
+        nuspec_file_content = std::regex_replace(nuspec_file_content, std::regex("@VERSION@"), nupkg_version);
+
+        const fs::path nuspec_file_path = paths.root /  "export.nuspec";
+        fs.write_contents(nuspec_file_path, nuspec_file_content);
+
+        const fs::path& nuget_exe = paths.get_nuget_exe();
+
+        const std::wstring cmd_line = Strings::wformat(LR"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes)", nuget_exe.native(), paths.root.native(), nuspec_file_path.native());
+
+
+        const int exit_code = System::cmd_execute_clean(cmd_line);
+        Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: NuGet package creation failed");
+
+
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
