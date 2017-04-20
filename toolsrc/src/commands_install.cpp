@@ -15,22 +15,15 @@ namespace vcpkg::Commands::Install
     using Dependencies::RequestType;
     using Dependencies::InstallPlanType;
 
-    InstallDir InstallDir::from_destination_root(const fs::path& source_dir,
-                                                             const fs::path& destination_root,
-                                                             const std::string& destination_subdirectory,
-                                                             const fs::path& listfile)
+    InstallDir InstallDir::from_destination_root(const fs::path& destination_root,
+                                                 const std::string& destination_subdirectory,
+                                                 const fs::path& listfile)
     {
         InstallDir dirs;
-        dirs.m_source_dir = source_dir;
         dirs.m_destination = destination_root / destination_subdirectory;
         dirs.m_destination_subdirectory = destination_subdirectory;
         dirs.m_listfile = listfile;
         return dirs;
-    }
-
-    const fs::path& InstallDir::source_dir() const
-    {
-        return this->m_source_dir;
     }
 
     const fs::path& InstallDir::destination() const
@@ -48,16 +41,15 @@ namespace vcpkg::Commands::Install
         return this->m_listfile;
     }
 
-    void install_files_and_write_listfile(Files::Filesystem& fs, const InstallDir& dirs)
+    void install_files_and_write_listfile(Files::Filesystem& fs, const fs::path& source_dir, const InstallDir& destination_dir)
     {
         std::vector<std::string> output;
         std::error_code ec;
 
-        const fs::path& source_dir = dirs.source_dir();
         const size_t prefix_length = source_dir.native().size();
-        const fs::path& destination = dirs.destination();
-        const std::string& destination_subdirectory = dirs.destination_subdirectory();
-        const fs::path& listfile = dirs.listfile();
+        const fs::path& destination = destination_dir.destination();
+        const std::string& destination_subdirectory = destination_dir.destination_subdirectory();
+        const fs::path& listfile = destination_dir.listfile();
 
         Checks::check_exit(VCPKG_LINE_INFO, fs.exists(source_dir), "Source directory %s does not exist", source_dir.generic_string());
         fs.create_directories(destination, ec);
@@ -256,12 +248,11 @@ namespace vcpkg::Commands::Install
         write_update(paths, source_paragraph);
         status_db->insert(std::make_unique<StatusParagraph>(source_paragraph));
 
-        const InstallDir dirs = InstallDir::from_destination_root(package_dir,
-                                                                              paths.installed,
-                                                                              triplet.to_string(),
-                                                                              paths.listfile_path(binary_paragraph));
+        const InstallDir install_dir = InstallDir::from_destination_root(paths.installed,
+                                                                         triplet.to_string(),
+                                                                         paths.listfile_path(binary_paragraph));
 
-        install_files_and_write_listfile(paths.get_filesystem(), dirs);
+        install_files_and_write_listfile(paths.get_filesystem(), package_dir, install_dir);
 
         source_paragraph.state = InstallState::INSTALLED;
         write_update(paths, source_paragraph);
