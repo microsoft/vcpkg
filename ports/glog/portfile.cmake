@@ -31,10 +31,7 @@ vcpkg_install_cmake()
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/glog)
 
-file(GLOB GLOG_CMAKE_FILES 
-    ${CURRENT_PACKAGES_DIR}/cmake/lib/glog/*.cmake 
-    ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/glog/*.cmake
-    ${CURRENT_PACKAGES_DIR}/debug/share/glog/*.cmake)
+file(GLOB GLOG_CMAKE_FILES ${CURRENT_PACKAGES_DIR}/debug/share/glog/*.cmake)
 file(COPY ${GLOG_CMAKE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share/glog)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

@@ -30,18 +30,3 @@ index 1429590..5ed110d 100644
  
 -install (EXPORT glog-targets NAMESPACE glog:: DESTINATION lib/cmake/glog)
 +install (EXPORT glog-targets NAMESPACE glog:: DESTINATION share/glog)
-diff --git a/glog-config.cmake.in b/glog-config.cmake.in
-index e3c44ae..fb59e95 100644
---- a/glog-config.cmake.in
-+++ b/glog-config.cmake.in
-@@ -5,3 +5,10 @@ include (CMakeFindDependencyMacro)
- @gflags_DEPENDENCY@
- 
- include ("${CMAKE_CURRENT_LIST_DIR}/glog-targets.cmake")
-+
-+# set common names for FindGlog
-+# should be installed to ${CMAKE_INSTALL_PREFIX}/share/glog
-+set(GLOG_FOUND ON)
-+set(GLOG_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/../../include")
-+set(GLOG_LIBRARIES glog::glog)
-+set_target_properties(${GLOG_LIBRARIES} PROPERTIES MAP_IMPORTED_CONFIG_RELWITHDEBINFO RELEASE)
