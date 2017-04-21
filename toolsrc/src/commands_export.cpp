@@ -15,6 +15,34 @@ namespace vcpkg::Commands::Export
     using Dependencies::RequestType;
     using Dependencies::ExportPlanType;
 
+    static std::string create_nuspec_file_contents(const std::string& exported_dir_filename, const std::string& nuget_id, const std::string& nupkg_version)
+    {
+        static constexpr auto content_template = R"(
+<package>
+    <metadata>
+        <id>@NUGET_ID@</id>
+        <version>@VERSION@</version>
+        <authors>vcpkg</authors>
+        <description>
+            Vcpkg NuGet export
+        </description>
+    </metadata>
+    <files>
+        <file src="@EXPORTED_DIR@\**" target="" />
+        <file src="@EXPORTED_DIR@\.vcpkg-root" target="" />
+        <file src="scripts\buildsystems\msbuild\applocal.ps1" target="build\native\applocal.ps1" />
+        <file src="scripts\buildsystems\msbuild\vcpkg.targets" target="build\native\@NUGET_ID@.targets" />
+        <file src="scripts\buildsystems\vcpkg.cmake" target="build\native\vcpkg.cmake" />
+    </files>
+</package>
+)";
+
+        std::string nuspec_file_content = std::regex_replace(content_template, std::regex("@NUGET_ID@"), nuget_id);
+        nuspec_file_content = std::regex_replace(nuspec_file_content, std::regex("@VERSION@"), nupkg_version);
+        nuspec_file_content = std::regex_replace(nuspec_file_content, std::regex("@EXPORTED_DIR@"), exported_dir_filename);
+        return nuspec_file_content;
+    }
+
     static void print_plan(const std::map<ExportPlanType, std::vector<const ExportPlanAction*>>& group_by_plan_type)
     {
         static constexpr std::array<ExportPlanType, 2> order = { ExportPlanType::ALREADY_BUILT, ExportPlanType::PORT_AVAILABLE_BUT_NOT_BUILT };
@@ -92,9 +120,9 @@ namespace vcpkg::Commands::Export
             // No need to show all of them, just the user-requested ones. Dependency resolution will handle the rest.
             std::vector<const ExportPlanAction*> unbuilt = it->second;
             Util::erase_remove_if(unbuilt, [](const ExportPlanAction* a)
-            {
-                return a->request_type != RequestType::USER_REQUESTED;
-            });
+                                  {
+                                      return a->request_type != RequestType::USER_REQUESTED;
+                                  });
 
             auto s = Strings::join(" ", unbuilt, [](const ExportPlanAction* a) { return a->spec.to_string(); });
             System::println("To build them, run:\n"
@@ -107,11 +135,21 @@ namespace vcpkg::Commands::Export
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
+        const tm date_time = System::get_current_date_time();
+
+        // Format is: YYYY-mm-dd_HH-MM-SS
+        // 19 characters + 1 null terminating character will be written for a total of 20 chars
+        char mbstr[20];
+        const size_t bytes_written = std::strftime(mbstr, sizeof(mbstr), "%Y-%m-%d_%H-%M-%S", &date_time);
+        Checks::check_exit(VCPKG_LINE_INFO, bytes_written == 19, "Expected 19 bytes to be written, but %u were written", bytes_written);
+        const std::string date_time_as_string(mbstr);
+        const std::string exported_dir_filename = ("exported-" + date_time_as_string);
+
         Files::Filesystem& fs = paths.get_filesystem();
-        const fs::path output = paths.root / "exported";
+        const fs::path exported_dir_path = paths.root / exported_dir_filename;
         std::error_code ec;
-        fs.remove_all(output, ec);
-        fs.create_directory(output, ec);
+        fs.remove_all(exported_dir_path, ec);
+        fs.create_directory(exported_dir_path, ec);
 
         // execute the plan
         for (const ExportPlanAction& action : export_plan)
@@ -126,58 +164,34 @@ namespace vcpkg::Commands::Export
 
             const BinaryParagraph& binary_paragraph = action.any_paragraph.binary_paragraph.value_or_exit(VCPKG_LINE_INFO);
             const InstallDir dirs = InstallDir::from_destination_root(
-                output / "installed",
+                exported_dir_path / "installed",
                 action.spec.triplet().to_string(),
-                output / "installed" / "vcpkg" / "info" / (binary_paragraph.fullstem() + ".list"));
+                exported_dir_path / "installed" / "vcpkg" / "info" / (binary_paragraph.fullstem() + ".list"));
 
             Install::install_files_and_write_listfile(paths.get_filesystem(), paths.package_dir(action.spec), dirs);
             System::println(System::Color::success, "Exporting package %s... done", display_name);
         }
 
-        System::println(System::Color::success, R"(Files exported at: "%s")", output.generic_string());
-
-        const std::string nuspec_file_content_template = R"(
-<package>
-    <metadata>
-        <id>@NUGET_ID@</id>
-        <version>@VERSION@</version>
-        <authors>cpp-packages</authors>
-        <description>
-            Placeholder description
-        </description>
-    </metadata>
-    <files>
-        <file src="exported\**" target="" />
-        <file src="exported\.vcpkg-root" target="" />
-        <file src="scripts\buildsystems\msbuild\applocal.ps1" target="build\native\applocal.ps1" />
-        <file src="scripts\buildsystems\msbuild\vcpkg.targets" target="build\native\@NUGET_ID@.targets" />
-        <file src="scripts\buildsystems\vcpkg.cmake" target="build\native\vcpkg.cmake" />
-    </files>
-</package>
-)";
-
-        const std::string nuget_id = "placeholder_id";
-        const std::string nupkg_version = "1.0.0";
-        const fs::path vcpkg_root_file = (output / ".vcpkg-root");
-
+        const fs::path vcpkg_root_file = (exported_dir_path / ".vcpkg-root");
         fs.write_contents(vcpkg_root_file, "");
 
-        std::string nuspec_file_content = std::regex_replace(nuspec_file_content_template, std::regex("@NUGET_ID@"), nuget_id);
-        //nuspec_file_content = std::regex_replace(nuspec_file_content, std::regex("@VCPKG_DIR@"), vcpkg_root_dir.string());
-        nuspec_file_content = std::regex_replace(nuspec_file_content, std::regex("@VERSION@"), nupkg_version);
+        System::println(System::Color::success, R"(Files exported at: "%s")", exported_dir_path.generic_string());
 
-        const fs::path nuspec_file_path = paths.root /  "export.nuspec";
+        const std::string nuget_id = "vcpkg-" + exported_dir_filename;
+        const std::string nupkg_version = "1.0.0";
+
+        const std::string nuspec_file_content = create_nuspec_file_contents(exported_dir_path.filename().string(), nuget_id, nupkg_version);
+
+        const fs::path nuspec_file_path = paths.root / "export.nuspec";
         fs.write_contents(nuspec_file_path, nuspec_file_content);
 
         const fs::path& nuget_exe = paths.get_nuget_exe();
 
+        // -NoDefaultExcludes is needed for ".vcpkg-root"
         const std::wstring cmd_line = Strings::wformat(LR"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes)", nuget_exe.native(), paths.root.native(), nuspec_file_path.native());
-
 
         const int exit_code = System::cmd_execute_clean(cmd_line);
         Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: NuGet package creation failed");
-
-
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
