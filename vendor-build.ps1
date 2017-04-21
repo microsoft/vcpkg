@@ -27,4 +27,4 @@ Invoke-VcpkgBuild "pthread"
 Invoke-VcpkgBuild "websocketpp"
 
 # update the version anytime the installed package versions change
-Write-Output 4 > installed/version.txt
+Write-Output 5 > installed/version.txt
