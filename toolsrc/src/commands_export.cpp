@@ -92,7 +92,7 @@ namespace vcpkg::Commands::Export
         const fs::path& nuget_exe = paths.get_nuget_exe();
 
         // -NoDefaultExcludes is needed for ".vcpkg-root"
-        const std::wstring cmd_line = Strings::wformat(LR"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes)", nuget_exe.native(), paths.root.native(), nuspec_file_path.native());
+        const std::wstring cmd_line = Strings::wformat(LR"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes > nul)", nuget_exe.native(), paths.root.native(), nuspec_file_path.native());
 
         const int exit_code = System::cmd_execute_clean(cmd_line);
         Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: NuGet package creation failed");
