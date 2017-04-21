@@ -7,6 +7,8 @@
 
 namespace vcpkg::System
 {
+    tm get_current_date_time();
+
     fs::path get_exe_path_of_current_process();
 
     struct ExitCodeAndOutput

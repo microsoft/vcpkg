@@ -5,6 +5,15 @@
 
 namespace vcpkg::System
 {
+    tm get_current_date_time()
+    {
+        using std::chrono::system_clock;
+        std::time_t now_time = system_clock::to_time_t(system_clock::now());
+        tm parts;
+        localtime_s(&parts, &now_time);
+        return parts;
+    }
+
     fs::path get_exe_path_of_current_process()
     {
         wchar_t buf[_MAX_PATH];
