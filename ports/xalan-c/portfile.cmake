@@ -39,6 +39,13 @@ vcpkg_build_msbuild(
     # Need this for it to pick up xerces-c port: https://github.com/Microsoft/vcpkg/issues/891
     OPTIONS /p:ForceImportBeforeCppTargets=${VCPKG_ROOT_DIR}/scripts/buildsystems/msbuild/vcpkg.targets)
 
+# This is needed to generate the required LocalMsgIndex.hpp header
+vcpkg_build_msbuild(
+    PROJECT_PATH ${SOURCE_PATH}/c/projects/Win32/VC10/Utils/XalanMsgLib/XalanMsgLib.vcxproj
+    PLATFORM ${BUILD_ARCH}
+    # Need this for it to pick up xerces-c port: https://github.com/Microsoft/vcpkg/issues/891
+    OPTIONS /p:ForceImportBeforeCppTargets=${VCPKG_ROOT_DIR}/scripts/buildsystems/msbuild/vcpkg.targets)
+
 file(COPY ${SOURCE_PATH}/c/Build/${OUTPUT_DIR}/VC10/Debug/XalanMessages_1_11D.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 file(COPY ${SOURCE_PATH}/c/Build/${OUTPUT_DIR}/VC10/Debug/Xalan-C_1_11D.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 file(COPY ${SOURCE_PATH}/c/Build/${OUTPUT_DIR}/VC10/Debug/Xalan-C_1D.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
@@ -47,6 +54,10 @@ file(COPY ${SOURCE_PATH}/c/Build/${OUTPUT_DIR}/VC10/Release/Xalan-C_1_11.dll DES
 file(COPY ${SOURCE_PATH}/c/Build/${OUTPUT_DIR}/VC10/Release/Xalan-C_1.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
 file(COPY ${SOURCE_PATH}/c/src/xalanc DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN *.hpp)
+
+# LocalMsgIndex.hpp is here
+file(COPY ${SOURCE_PATH}/c/Build/${OUTPUT_DIR}/VC10/Release/Nls/Include/LocalMsgIndex.hpp 
+     DESTINATION ${CURRENT_PACKAGES_DIR}/include/xalanc/PlatformSupport)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/xalanc/NLS)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/xalanc/util/MsgLoaders/ICU/resources)
