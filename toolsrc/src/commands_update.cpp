@@ -77,7 +77,7 @@ namespace vcpkg::Commands::Update
             {
                 if (maj1 != maj2 || min1 != min2 || rev1 != rev2)
                 {
-                    System::println("Different source is available for vcpkg (%d.%d.%d -> %d.%d.%d). Use bootstrap-vcpkg.bat to update.",
+                    System::println("Different source is available for vcpkg (%d.%d.%d -> %d.%d.%d). Use ./bootstrap-vcpkg.bat to update.",
                                     maj2, min2, rev2,
                                     maj1, min1, rev1);
                 }
