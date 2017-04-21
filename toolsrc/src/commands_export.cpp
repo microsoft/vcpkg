@@ -76,6 +76,41 @@ namespace vcpkg::Commands::Export
         }
     }
 
+    static void do_nuget_export(const VcpkgPaths& paths, const fs::path& exported_dir_path)
+    {
+        Files::Filesystem& fs = paths.get_filesystem();
+
+        const std::string exported_dir_filename = exported_dir_path.filename().string();
+        const std::string nuget_id = "vcpkg-" + exported_dir_filename;
+        const std::string nupkg_version = "1.0.0";
+
+        const std::string nuspec_file_content = create_nuspec_file_contents(exported_dir_filename, nuget_id, nupkg_version);
+
+        const fs::path nuspec_file_path = paths.root / "export.nuspec";
+        fs.write_contents(nuspec_file_path, nuspec_file_content);
+
+        const fs::path& nuget_exe = paths.get_nuget_exe();
+
+        // -NoDefaultExcludes is needed for ".vcpkg-root"
+        const std::wstring cmd_line = Strings::wformat(LR"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes)", nuget_exe.native(), paths.root.native(), nuspec_file_path.native());
+
+        const int exit_code = System::cmd_execute_clean(cmd_line);
+        Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: NuGet package creation failed");
+    }
+
+    static std::string create_exported_dir_filename()
+    {
+        const tm date_time = System::get_current_date_time();
+
+        // Format is: YYYY-mm-dd_HH-MM-SS
+        // 19 characters + 1 null terminating character will be written for a total of 20 chars
+        char mbstr[20];
+        const size_t bytes_written = std::strftime(mbstr, sizeof(mbstr), "%Y-%m-%d_%H-%M-%S", &date_time);
+        Checks::check_exit(VCPKG_LINE_INFO, bytes_written == 19, "Expected 19 bytes to be written, but %u were written", bytes_written);
+        const std::string date_time_as_string(mbstr);
+       return  ("exported-" + date_time_as_string);
+    }
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
         static const std::string OPTION_DRY_RUN = "--dry-run";
@@ -135,15 +170,7 @@ namespace vcpkg::Commands::Export
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        const tm date_time = System::get_current_date_time();
-
-        // Format is: YYYY-mm-dd_HH-MM-SS
-        // 19 characters + 1 null terminating character will be written for a total of 20 chars
-        char mbstr[20];
-        const size_t bytes_written = std::strftime(mbstr, sizeof(mbstr), "%Y-%m-%d_%H-%M-%S", &date_time);
-        Checks::check_exit(VCPKG_LINE_INFO, bytes_written == 19, "Expected 19 bytes to be written, but %u were written", bytes_written);
-        const std::string date_time_as_string(mbstr);
-        const std::string exported_dir_filename = ("exported-" + date_time_as_string);
+        const std::string exported_dir_filename = create_exported_dir_filename();
 
         Files::Filesystem& fs = paths.get_filesystem();
         const fs::path exported_dir_path = paths.root / exported_dir_filename;
@@ -176,22 +203,6 @@ namespace vcpkg::Commands::Export
         fs.write_contents(vcpkg_root_file, "");
 
         System::println(System::Color::success, R"(Files exported at: "%s")", exported_dir_path.generic_string());
-
-        const std::string nuget_id = "vcpkg-" + exported_dir_filename;
-        const std::string nupkg_version = "1.0.0";
-
-        const std::string nuspec_file_content = create_nuspec_file_contents(exported_dir_path.filename().string(), nuget_id, nupkg_version);
-
-        const fs::path nuspec_file_path = paths.root / "export.nuspec";
-        fs.write_contents(nuspec_file_path, nuspec_file_content);
-
-        const fs::path& nuget_exe = paths.get_nuget_exe();
-
-        // -NoDefaultExcludes is needed for ".vcpkg-root"
-        const std::wstring cmd_line = Strings::wformat(LR"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes)", nuget_exe.native(), paths.root.native(), nuspec_file_path.native());
-
-        const int exit_code = System::cmd_execute_clean(cmd_line);
-        Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: NuGet package creation failed");
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
