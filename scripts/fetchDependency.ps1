@@ -149,10 +149,10 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     {
         $requiredVersion = "3.8.0"
         $downloadVersion = "3.8.0"
-        $url = "https://cmake.org/files/v3.8/cmake-3.8.0-rc1-win32-x86.zip"
-        $downloadPath = "$downloadsDir\cmake-3.8.0-rc1-win32-x86.zip"
-        $expectedDownloadedFileHash = "ccdbd92fbfb548aa35a545e4e45ff19fd6d13c88c90370acdf940c3cf464e9c9"
-        $executableFromDownload = "$downloadsDir\cmake-3.8.0-rc1-win32-x86\bin\cmake.exe"
+        $url = "https://cmake.org/files/v3.8/cmake-3.8.0-win32-x86.zip"
+        $downloadPath = "$downloadsDir\cmake-3.8.0-win32-x86.zip"
+        $expectedDownloadedFileHash = "857fca00974ad6ac12fa042373d85ad1288770d4f09fbd99753c822df76b1c6c"
+        $executableFromDownload = "$downloadsDir\cmake-3.8.0-win32-x86\bin\cmake.exe"
         $extractionType = $ExtractionType_ZIP
         $extractionFolder = $downloadsDir
     }
