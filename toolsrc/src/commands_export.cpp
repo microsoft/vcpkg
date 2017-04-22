@@ -108,14 +108,70 @@ namespace vcpkg::Commands::Export
         const size_t bytes_written = std::strftime(mbstr, sizeof(mbstr), "%Y-%m-%d_%H-%M-%S", &date_time);
         Checks::check_exit(VCPKG_LINE_INFO, bytes_written == 19, "Expected 19 bytes to be written, but %u were written", bytes_written);
         const std::string date_time_as_string(mbstr);
-       return  ("exported-" + date_time_as_string);
+        return ("exported-" + date_time_as_string);
+    }
+
+    enum class ArchiveFormat
+    {
+        ZIP,
+        _7ZIP
+    };
+
+    std::wstring get_extension(ArchiveFormat f)
+    {
+        switch (f)
+        {
+            case ArchiveFormat::ZIP:
+                return L"zip";
+            case ArchiveFormat::_7ZIP:
+                return L"7z";
+            default:
+                Checks::unreachable(VCPKG_LINE_INFO);
+        }
+    }
+
+    std::wstring get_option(ArchiveFormat f)
+    {
+        switch (f)
+        {
+            case ArchiveFormat::ZIP:
+                return L"zip";
+            case ArchiveFormat::_7ZIP:
+                return L"7zip";
+            default:
+                Checks::unreachable(VCPKG_LINE_INFO);
+        }
+    }
+
+    static void do_archive_export(const VcpkgPaths& paths, const fs::path& exported_dir_path, const ArchiveFormat& format)
+    {
+        const std::wstring extension = get_extension(format);
+        const std::wstring option = get_option(format);
+
+        const std::wstring exported_dir_filename = exported_dir_path.filename().native();
+        const std::wstring exported_archive_filename = Strings::wformat(L"vcpkg-%s.%s", exported_dir_filename, extension);
+        const std::wstring exported_archive_path = (paths.root / exported_archive_filename).native();
+
+        const fs::path& cmake_exe = paths.get_cmake_exe();
+
+        // -NoDefaultExcludes is needed for ".vcpkg-root"
+        const std::wstring cmd_line = Strings::wformat(LR"("%s" -E tar "cf" "%s" --format=%s -- "%s")",
+                                                       cmake_exe.native(), exported_archive_path, option, exported_dir_path.native());
+
+        const int exit_code = System::cmd_execute_clean(cmd_line);
+        Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: %s creation failed", exported_dir_path.generic_string());
     }
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
         static const std::string OPTION_DRY_RUN = "--dry-run";
+        static const std::string OPTION_RAW = "--raw";
+        static const std::string OPTION_NUGET = "--nuget";
+        static const std::string OPTION_ZIP = "--zip";
+        static const std::string OPTION_7ZIP = "--7zip";
+
         // input sanitization
-        static const std::string example = Commands::Help::create_example_string("export zlib zlib:x64-windows curl boost");
+        static const std::string example = Commands::Help::create_example_string("export zlib zlib:x64-windows boost --nuget");
         args.check_min_arg_count(1, example);
 
         const std::vector<PackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg)
@@ -125,8 +181,18 @@ namespace vcpkg::Commands::Export
         for (auto&& spec : specs)
             Input::check_triplet(spec.triplet(), paths);
 
-        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_DRY_RUN });
+        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments(
+            {
+                OPTION_DRY_RUN, OPTION_RAW, OPTION_NUGET, OPTION_ZIP, OPTION_7ZIP
+            });
         const bool dryRun = options.find(OPTION_DRY_RUN) != options.cend();
+        const bool raw = options.find(OPTION_RAW) != options.cend();
+        const bool nuget = options.find(OPTION_NUGET) != options.cend();
+        const bool zip = options.find(OPTION_ZIP) != options.cend();
+        const bool _7zip = options.find(OPTION_7ZIP) != options.cend();
+
+        Checks::check_exit(VCPKG_LINE_INFO, raw || nuget || zip,
+                                          "Must provide at least one of the following options: --raw --nuget --zip --7zip");
 
         // create the plan
         StatusParagraphs status_db = database_load_check(paths);
@@ -202,7 +268,36 @@ namespace vcpkg::Commands::Export
         const fs::path vcpkg_root_file = (exported_dir_path / ".vcpkg-root");
         fs.write_contents(vcpkg_root_file, "");
 
-        System::println(System::Color::success, R"(Files exported at: "%s")", exported_dir_path.generic_string());
+        if (raw)
+        {
+            System::println(System::Color::success, R"(Files exported at: "%s")", exported_dir_path.generic_string());
+        }
+
+        if (nuget)
+        {
+            System::println("Creating nuget file at %s... ", paths.root.generic_string());
+            do_nuget_export(paths, exported_dir_path);
+            System::println(System::Color::success, "Creating nuget file at %s... done", paths.root.generic_string());
+        }
+
+        if (zip)
+        {
+            System::println("Creating zip file at %s... ", paths.root.generic_string());
+            do_archive_export(paths, exported_dir_path, ArchiveFormat::ZIP);
+            System::println(System::Color::success, "Creating zip file at %s... done", paths.root.generic_string());
+        }
+
+        if (_7zip)
+        {
+            System::println("Creating 7zip file at %s... ", paths.root.generic_string());
+            do_archive_export(paths, exported_dir_path, ArchiveFormat::_7ZIP);
+            System::println(System::Color::success, "Creating 7zip file at %s... done", paths.root.generic_string());
+        }
+
+        if (!raw)
+        {
+            fs.remove_all(exported_dir_path, ec);
+        }
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
