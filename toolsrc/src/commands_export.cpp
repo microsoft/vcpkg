@@ -102,11 +102,11 @@ namespace vcpkg::Commands::Export
     {
         const tm date_time = System::get_current_date_time();
 
-        // Format is: YYYY-mm-dd_HH-MM-SS
-        // 19 characters + 1 null terminating character will be written for a total of 20 chars
-        char mbstr[20];
-        const size_t bytes_written = std::strftime(mbstr, sizeof(mbstr), "%Y-%m-%d_%H-%M-%S", &date_time);
-        Checks::check_exit(VCPKG_LINE_INFO, bytes_written == 19, "Expected 19 bytes to be written, but %u were written", bytes_written);
+        // Format is: YYYYmmdd-HHMMSS
+        // 15 characters + 1 null terminating character will be written for a total of 16 chars
+        char mbstr[16];
+        const size_t bytes_written = std::strftime(mbstr, sizeof(mbstr), "%Y%m%d-%H%M%S", &date_time);
+        Checks::check_exit(VCPKG_LINE_INFO, bytes_written == 15, "Expected 15 bytes to be written, but %u were written", bytes_written);
         const std::string date_time_as_string(mbstr);
         return ("exported-" + date_time_as_string);
     }
