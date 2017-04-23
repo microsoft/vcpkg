@@ -191,7 +191,7 @@ namespace vcpkg::Commands::Export
         const bool zip = options.find(OPTION_ZIP) != options.cend();
         const bool _7zip = options.find(OPTION_7ZIP) != options.cend();
 
-        Checks::check_exit(VCPKG_LINE_INFO, raw || nuget || zip,
+        Checks::check_exit(VCPKG_LINE_INFO, raw || nuget || zip || _7zip,
                                           "Must provide at least one of the following options: --raw --nuget --zip --7zip");
 
         // create the plan
