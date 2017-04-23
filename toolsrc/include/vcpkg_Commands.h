@@ -31,8 +31,25 @@ namespace vcpkg::Commands
 
         std::wstring make_build_env_cmd(const Triplet& triplet, const Toolset& toolset);
 
-        BuildResult build_package(const SourceParagraph& source_paragraph, const PackageSpec& spec, const VcpkgPaths& paths, const fs::path& port_dir, const StatusParagraphs& status_db);
-        void perform_and_exit(const PackageSpec& spec, const fs::path& port_dir, const std::unordered_set<std::string>& options, const VcpkgPaths& paths);
+        struct ExtendedBuildResult
+        {
+            BuildResult code;
+            std::vector<PackageSpec> unmet_dependencies;
+        };
+
+        ExtendedBuildResult build_package(
+            const SourceParagraph& source_paragraph,
+            const PackageSpec& spec,
+            const VcpkgPaths& paths,
+            const fs::path& port_dir,
+            const StatusParagraphs& status_db);
+
+        void perform_and_exit(
+            const PackageSpec& spec,
+            const fs::path& port_dir,
+            const std::unordered_set<std::string>& options,
+            const VcpkgPaths& paths);
+
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
     }
 

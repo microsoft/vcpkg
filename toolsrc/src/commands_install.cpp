@@ -317,15 +317,15 @@ namespace vcpkg::Commands::Install
                     case InstallPlanType::BUILD_AND_INSTALL:
                         {
                             System::println("Building package %s... ", display_name);
-                            const Build::BuildResult result = Commands::Build::build_package(
+                            const auto result = Commands::Build::build_package(
                                 action.any_paragraph.source_paragraph.value_or_exit(VCPKG_LINE_INFO),
                                 action.spec,
                                 paths,
                                 paths.port_dir(action.spec),
                                 status_db);
-                            if (result != Build::BuildResult::SUCCEEDED)
+                            if (result.code != Build::BuildResult::SUCCEEDED)
                             {
-                                System::println(System::Color::error, Build::create_error_message(result, action.spec));
+                                System::println(System::Color::error, Build::create_error_message(result.code, action.spec));
                                 System::println(Build::create_user_troubleshooting_message(action.spec));
                                 Checks::exit_fail(VCPKG_LINE_INFO);
                             }
