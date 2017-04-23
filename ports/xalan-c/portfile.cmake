@@ -10,6 +10,15 @@
 #   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
 #
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    message(STATUS "Only DLL builds are currently supported.")
+    set(VCPKG_LIBRARY_LINKAGE "dynamic")
+endif()
+
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
+    message(FATAL_ERROR "Only dynamic linking against the CRT is currently supported.")
+endif()
+
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/xalan-c-1.11)
 vcpkg_download_distfile(ARCHIVE
