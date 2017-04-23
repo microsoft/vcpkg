@@ -277,10 +277,13 @@ namespace vcpkg::Commands::Integrate
         Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0 && fs.exists(nuget_package), "Error: NuGet package creation failed");
         System::println(System::Color::success, "Created nupkg: %s", nuget_package.string());
 
+        auto source_path = buildsystems_dir.u8string();
+        source_path = std::regex_replace(source_path, std::regex("`"), "``");
+
         System::println(R"(
 With a project open, go to Tools->NuGet Package Manager->Package Manager Console and paste:
     Install-Package %s -Source "%s"
-)", nuget_id, buildsystems_dir.generic_string());
+)", nuget_id, source_path);
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
