@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(fontconfig)
 
 add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS)
-add_definitions(-FI${FC_INCLUDE_DIR}/config.h)
+add_definitions(-FI"${FC_INCLUDE_DIR}/config.h")
 
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
     set(LIB_SUFFIX d)
