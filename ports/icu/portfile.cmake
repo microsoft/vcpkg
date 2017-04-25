@@ -1,83 +1,145 @@
-if (VCPKG_TARGET_ARCHITECTURE STREQUAL arm OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "Error: ARM and/or UWP builds are currently not supported.")
-endif()
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
+    message(FATAL_ERROR "Error: UWP builds are currently not supported.")
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/icu)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/icu-59.1/icu)
+set(ICU_VERSION 59)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://download.icu-project.org/files/icu4c/58.2/icu4c-58_2-src.zip"
-    FILENAME "icu4c-58_2-src.zip"
-    SHA512 b985b553186d11d9e5157fc981af5483c435a7b4f3df9574d253d6229ecaf8af0f722488542c3f64f9726ad25e17978eae970d78300a55479df74495f6745d16)
-vcpkg_extract_source_archive(${ARCHIVE})
+    URLS "http://download.icu-project.org/files/icu4c/59.1/icu4c-59_1-src.zip"
+    FILENAME "icu4c-59_1-src.zip"
+    SHA512 1d3b39678e7cc4e9794e724982886a4918642231048eb76b9f683aad5a19e0b7c52b3b9c7107cb1a3879464682c4a3a97b58ab012d082bd9e5a80c67adf8ce8b)
+vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src/icu-59.1)
 
-if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-    set(BUILD_ARCH "Win32")
+vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/disable-escapestr-tool.patch)
+
+# Acquire tools
+vcpkg_acquire_msys(MSYS_ROOT)
+
+# Insert msys into the path between the compiler toolset and windows system32. This prevents masking of "link.exe" but DOES mask "find.exe".
+string(REPLACE ";$ENV{SystemRoot}\\system32;" ";${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "$ENV{PATH}")
+string(REPLACE ";$ENV{SystemRoot}\\System32;" ";${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\System32;" NEWPATH "${NEWPATH}")
+set(ENV{PATH} "${NEWPATH}")
+set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+
+vcpkg_execute_required_process(
+    COMMAND ${BASH} --noprofile --norc -c "pacman -Sy --noconfirm --needed make"
+    WORKING_DIRECTORY "${MSYS_ROOT}"
+    LOGNAME "pacman-${TARGET_TRIPLET}")
+
+set(CONFIGURE_OPTIONS "--host=i686-pc-mingw32 --disable-samples --disable-tests")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --disable-static --enable-shared")
 else()
-    set(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
+    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --enable-static --disable-shared")
 endif()
 
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/source/allinone/allinone.sln
-    PLATFORM ${BUILD_ARCH})
+set(CONFIGURE_OPTIONS_RELASE "--disable-debug --enable-release --prefix=${CURRENT_PACKAGES_DIR}")
+set(CONFIGURE_OPTIONS_DEBUG  "--enable-debug --disable-release --prefix=${CURRENT_PACKAGES_DIR}/debug")
 
-# force rebuild of database as it sometimes gets overriden by dummy one
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/source/data/makedata.vcxproj
-    PLATFORM ${BUILD_ARCH})
-
-set(ICU_VERSION 58)
-if(TRIPLET_SYSTEM_ARCH MATCHES "x64")
-    set(ICU_BIN bin64)
-    set(ICU_LIB lib64)
+if(VCPKG_CRT_LINKAGE STREQUAL static)
+    set(ICU_RUNTIME "-MT")
 else()
-    set(ICU_BIN bin)
-    set(ICU_LIB lib)
+    set(ICU_RUNTIME "-MD")
 endif()
 
-function(install_module MODULENAME)
-    if(${MODULENAME} STREQUAL icudt) # Database doesn't have debug mode
-        set(DEBUG_DLLNAME ${MODULENAME}${ICU_VERSION}.dll)
-        set(DEBUG_LIBNAME ${MODULENAME}.lib)
-    else()
-        set(DEBUG_DLLNAME ${MODULENAME}${ICU_VERSION}d.dll)
-        set(DEBUG_LIBNAME ${MODULENAME}d.lib)
-    endif()
-    set(RELEASE_DLLNAME ${MODULENAME}${ICU_VERSION}.dll)
-    set(RELEASE_LIBNAME ${MODULENAME}.lib)
-    file(INSTALL
-        ${SOURCE_PATH}/${ICU_BIN}/${RELEASE_DLLNAME}
-        DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(INSTALL
-        ${SOURCE_PATH}/${ICU_BIN}/${DEBUG_DLLNAME}
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(INSTALL
-        ${SOURCE_PATH}/${ICU_LIB}/${RELEASE_LIBNAME}
-        DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-    file(INSTALL
-        ${SOURCE_PATH}/${ICU_LIB}/${DEBUG_LIBNAME}
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-endfunction()
+# Configure release
+message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
+file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+set(ENV{CFLAGS} "${ICU_RUNTIME} -O2 -Oi -Zi")
+set(ENV{CXXFLAGS} "${ICU_RUNTIME} -O2 -Oi -Zi")
+set(ENV{LDFLAGS} "-DEBUG -INCREMENTAL:NO -OPT:REF -OPT:ICF")
+vcpkg_execute_required_process(
+    COMMAND ${BASH} --noprofile --norc -c 
+        "${SOURCE_PATH}/source/runConfigureICU MSYS/MSVC ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_RELASE}"
+    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+    LOGNAME "configure-${TARGET_TRIPLET}-rel")
+message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
 
-install_module(icuuc) # Common library
-install_module(icuio) # Unicode stdio
-install_module(icutu) # Tool utility library
-install_module(icuin) # I18n library
-install_module(icudt) # Database
+# Configure debug
+message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
+file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+set(ENV{CFLAGS} "${ICU_RUNTIME}d -Od -Zi -RTC1")
+set(ENV{CXXFLAGS} "${ICU_RUNTIME}d -Od -Zi -RTC1")
+set(ENV{LDFLAGS} "-DEBUG")
+vcpkg_execute_required_process(
+    COMMAND ${BASH} --noprofile --norc -c 
+        "${SOURCE_PATH}/source/runConfigureICU MSYS/MSVC ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_DEBUG}"
+    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
+    LOGNAME "configure-${TARGET_TRIPLET}-dbg")
+message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
 
+unset(ENV{CFLAGS})
+unset(ENV{CXXFLAGS})
+unset(ENV{LDFLAGS})
+
+# Build release
+message(STATUS "Package ${TARGET_TRIPLET}-rel")
+vcpkg_execute_required_process(
+    COMMAND ${BASH} --noprofile --norc -c "make && make install"
+    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+    LOGNAME "build-${TARGET_TRIPLET}-rel")
+message(STATUS "Package ${TARGET_TRIPLET}-rel done")
+
+# Build debug
+message(STATUS "Package ${TARGET_TRIPLET}-dbg")
+vcpkg_execute_required_process(
+    COMMAND ${BASH} --noprofile --norc -c "make && make install"
+    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
+    LOGNAME "build-${TARGET_TRIPLET}-dbg")
+message(STATUS "Package ${TARGET_TRIPLET}-dbg done")
+
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/bin
+    ${CURRENT_PACKAGES_DIR}/debug/bin
+    ${CURRENT_PACKAGES_DIR}/debug/include
+    ${CURRENT_PACKAGES_DIR}/share
+    ${CURRENT_PACKAGES_DIR}/debug/share
+    ${CURRENT_PACKAGES_DIR}/lib/pkgconfig
+    ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig
+    ${CURRENT_PACKAGES_DIR}/lib/icu
+    ${CURRENT_PACKAGES_DIR}/debug/lib/icud)
+
+file(GLOB TEST_LIBS
+    ${CURRENT_PACKAGES_DIR}/lib/*test*
+    ${CURRENT_PACKAGES_DIR}/debug/lib/*test*)
+file(REMOVE ${TEST_LIBS})
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    # copy icu dlls from lib to bin
+    file(GLOB RELEASE_DLLS ${CURRENT_PACKAGES_DIR}/lib/icu*${ICU_VERSION}.dll)
+    file(GLOB DEBUG_DLLS ${CURRENT_PACKAGES_DIR}/debug/lib/icu*d${ICU_VERSION}.dll)
+    file(COPY ${RELEASE_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+    file(COPY ${DEBUG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+else()
+    # rename static libraries to match import libs
+    # see https://gitlab.kitware.com/cmake/cmake/issues/16617
+    foreach(MODULE dt in io tu uc)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/sicu${MODULE}.lib ${CURRENT_PACKAGES_DIR}/lib/icu${MODULE}.lib)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/sicu${MODULE}d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/icu${MODULE}d.lib)
+    endforeach()
+
+    # force U_STATIC_IMPLEMENTATION macro
+    foreach(HEADER utypes.h utf_old.h platform.h)
+        file(READ ${CURRENT_PACKAGES_DIR}/include/unicode/${HEADER} HEADER_CONTENTS)
+        string(REPLACE "defined(U_STATIC_IMPLEMENTATION)" "1" HEADER_CONTENTS "${HEADER_CONTENTS}")
+        file(WRITE ${CURRENT_PACKAGES_DIR}/include/unicode/${HEADER} "${HEADER_CONTENTS}")
+    endforeach()
+endif()
+
+# remove any remaining dlls in /lib
+file(GLOB DUMMY_DLLS ${CURRENT_PACKAGES_DIR}/lib/*.dll ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
+if(DUMMY_DLLS)
+    file(REMOVE ${DUMMY_DLLS})
+endif()
+
+# Generates warnings about missing pdbs for icudt.dll
+# This is expected because ICU database contains no executable code
 vcpkg_copy_pdbs()
-	
-file(INSTALL
-    ${SOURCE_PATH}/include/
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-	
-file(COPY 
-    ${SOURCE_PATH}/LICENSE 
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/icu)
-file(RENAME 
-    ${CURRENT_PACKAGES_DIR}/share/icu/LICENSE 
-    ${CURRENT_PACKAGES_DIR}/share/icu/copyright)
+
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/icu)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/icu/LICENSE ${CURRENT_PACKAGES_DIR}/share/icu/copyright)
