@@ -15,7 +15,7 @@ namespace vcpkg::PostBuildLint
         LinkageType::Type crt_linkage;
         LinkageType::Type library_linkage;
 
-        std::map<BuildPolicies::Type, OptBoolT> policies;
+        std::map<BuildPolicies, OptBoolT> policies;
     };
 
     BuildInfo read_build_info(const Files::Filesystem& fs, const fs::path& filepath);

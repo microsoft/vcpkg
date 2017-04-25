@@ -73,9 +73,9 @@ namespace vcpkg::PostBuildLint
         return false;
     }
 
-    static LintStatus check_for_files_in_include_directory(const Files::Filesystem& fs, const std::map<BuildPolicies::Type, OptBoolT>& policies, const fs::path& package_dir)
+    static LintStatus check_for_files_in_include_directory(const Files::Filesystem& fs, const std::map<BuildPolicies, OptBoolT>& policies, const fs::path& package_dir)
     {
-        if (contains_and_enabled(policies, BuildPolicies::EMPTY_INCLUDE_FOLDER))
+        if (contains_and_enabled(policies, BuildPoliciesC::EMPTY_INCLUDE_FOLDER))
         {
             return LintStatus::SUCCESS;
         }
@@ -443,9 +443,9 @@ namespace vcpkg::PostBuildLint
         return LintStatus::ERROR_DETECTED;
     }
 
-    static LintStatus check_lib_files_are_available_if_dlls_are_available(const std::map<BuildPolicies::Type, OptBoolT>& policies, const size_t lib_count, const size_t dll_count, const fs::path& lib_dir)
+    static LintStatus check_lib_files_are_available_if_dlls_are_available(const std::map<BuildPolicies, OptBoolT>& policies, const size_t lib_count, const size_t dll_count, const fs::path& lib_dir)
     {
-        auto it = policies.find(BuildPolicies::DLLS_WITHOUT_LIBS);
+        auto it = policies.find(BuildPoliciesC::DLLS_WITHOUT_LIBS);
         if (it != policies.cend() && it->second == OptBoolT::ENABLED)
         {
             return LintStatus::SUCCESS;
@@ -456,7 +456,7 @@ namespace vcpkg::PostBuildLint
             System::println(System::Color::warning, "Import libs were not present in %s", lib_dir.u8string());
             System::println(System::Color::warning,
                             "If this is intended, add the following line in the portfile:\n"
-                            "    SET(%s enabled)", BuildPolicies::DLLS_WITHOUT_LIBS.cmake_variable());
+                            "    SET(%s enabled)", BuildPoliciesC::DLLS_WITHOUT_LIBS.cmake_variable());
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -651,7 +651,7 @@ namespace vcpkg::PostBuildLint
 
         size_t error_count = 0;
 
-        if (contains_and_enabled(build_info.policies, BuildPolicies::EMPTY_PACKAGE))
+        if (contains_and_enabled(build_info.policies, BuildPoliciesC::EMPTY_PACKAGE))
         {
             return error_count;
         }
@@ -721,7 +721,7 @@ namespace vcpkg::PostBuildLint
 
                     error_count += check_bin_folders_are_not_present_in_static_build(fs, package_dir);
 
-                    if (!contains_and_enabled(build_info.policies, BuildPolicies::ONLY_RELEASE_CRT))
+                    if (!contains_and_enabled(build_info.policies, BuildPoliciesC::ONLY_RELEASE_CRT))
                     {
                         error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::DEBUG, build_info.crt_linkage), debug_libs, toolset.dumpbin);
                     }
