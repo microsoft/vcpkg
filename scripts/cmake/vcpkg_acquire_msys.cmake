@@ -8,7 +8,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
       set(_vam_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITECTURE})
   endif()
 
-  if(_vam_HOST_ARCHITECTURE STREQUAL "x64")
+  if(_vam_HOST_ARCHITECTURE STREQUAL "AMD64")
     set(TOOLSUBPATH msys64)
     set(URL "https://sourceforge.net/projects/msys2/files/Base/x86_64/msys2-base-x86_64-20161025.tar.xz/download")
     set(ARCHIVE "msys2-base-x86_64-20161025.tar.xz")
