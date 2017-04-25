@@ -114,52 +114,51 @@ namespace vcpkg::Commands::Export
         return output_path;
     }
 
-    enum class ArchiveFormat
+    struct ArchiveFormat final
     {
-        ZIP,
-        _7ZIP
+        enum class BackingEnum
+        {
+            ZIP = 1,
+            _7ZIP,
+        };
+
+        constexpr ArchiveFormat() = delete;
+
+        constexpr ArchiveFormat(BackingEnum backing_enum, const wchar_t* extension, const wchar_t* cmake_option)
+            : backing_enum(backing_enum)
+            , m_extension(extension)
+            , m_cmake_option(cmake_option) { }
+
+        constexpr operator BackingEnum() const { return backing_enum; }
+        constexpr CWStringView extension() const { return this->m_extension; }
+        constexpr CWStringView cmake_option() const { return this->m_cmake_option; }
+
+    private:
+        BackingEnum backing_enum;
+        const wchar_t* m_extension;
+        const wchar_t* m_cmake_option;
     };
 
-    std::wstring get_extension(ArchiveFormat f)
+    namespace ArchiveFormatC
     {
-        switch (f)
-        {
-            case ArchiveFormat::ZIP:
-                return L"zip";
-            case ArchiveFormat::_7ZIP:
-                return L"7z";
-            default:
-                Checks::unreachable(VCPKG_LINE_INFO);
-        }
-    }
-
-    std::wstring get_option(ArchiveFormat f)
-    {
-        switch (f)
-        {
-            case ArchiveFormat::ZIP:
-                return L"zip";
-            case ArchiveFormat::_7ZIP:
-                return L"7zip";
-            default:
-                Checks::unreachable(VCPKG_LINE_INFO);
-        }
+        constexpr const ArchiveFormat ZIP(ArchiveFormat::BackingEnum::ZIP, L"zip", L"zip");
+        constexpr const ArchiveFormat _7ZIP(ArchiveFormat::BackingEnum::_7ZIP, L"7z", L"7zip");
     }
 
     static fs::path do_archive_export(const VcpkgPaths& paths, const fs::path& raw_exported_dir, const fs::path& output_dir, const ArchiveFormat& format)
     {
         const fs::path& cmake_exe = paths.get_cmake_exe();
 
-        const std::wstring extension = get_extension(format);
-        const std::wstring option = get_option(format);
-
         const std::wstring exported_dir_filename = raw_exported_dir.filename().native();
-        const std::wstring exported_archive_filename = Strings::wformat(L"%s.%s", exported_dir_filename, extension);
+        const std::wstring exported_archive_filename = Strings::wformat(L"%s.%s", exported_dir_filename, format.extension());
         const fs::path exported_archive_path = (output_dir / exported_archive_filename);
 
         // -NoDefaultExcludes is needed for ".vcpkg-root"
         const std::wstring cmd_line = Strings::wformat(LR"("%s" -E tar "cf" "%s" --format=%s -- "%s")",
-                                                       cmake_exe.native(), exported_archive_path.native(), option, raw_exported_dir.native());
+                                                       cmake_exe.native(),
+                                                       exported_archive_path.native(),
+                                                       format.cmake_option(),
+                                                       raw_exported_dir.native());
 
         const int exit_code = System::cmd_execute_clean(cmd_line);
         Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: %s creation failed", exported_archive_path.generic_string());
@@ -289,7 +288,7 @@ namespace vcpkg::Commands::Export
         if (zip)
         {
             System::println("Creating zip archive... ");
-            const fs::path output_path = do_archive_export(paths, raw_exported_dir_path, export_to_path, ArchiveFormat::ZIP);
+            const fs::path output_path = do_archive_export(paths, raw_exported_dir_path, export_to_path, ArchiveFormatC::ZIP);
             System::println(System::Color::success, "Creating zip archive... done");
             System::println(System::Color::success, "Zip archive exported at: %s", output_path.generic_string());
         }
@@ -297,7 +296,7 @@ namespace vcpkg::Commands::Export
         if (_7zip)
         {
             System::println("Creating 7zip archive... ");
-            const fs::path output_path = do_archive_export(paths, raw_exported_dir_path, export_to_path, ArchiveFormat::_7ZIP);
+            const fs::path output_path = do_archive_export(paths, raw_exported_dir_path, export_to_path, ArchiveFormatC::_7ZIP);
             System::println(System::Color::success, "Creating 7zip archive... done");
             System::println(System::Color::success, "7zip archive exported at: %s", output_path.generic_string());
         }
