@@ -81,7 +81,7 @@ namespace vcpkg::Commands::Export
         Files::Filesystem& fs = paths.get_filesystem();
 
         const std::string exported_dir_filename = exported_dir_path.filename().string();
-        const std::string nuget_id = "vcpkg-" + exported_dir_filename;
+        const std::string nuget_id = exported_dir_filename;
         const std::string nupkg_version = "1.0.0";
 
         const std::string nuspec_file_content = create_nuspec_file_contents(exported_dir_filename, nuget_id, nupkg_version);
@@ -108,7 +108,7 @@ namespace vcpkg::Commands::Export
         const size_t bytes_written = std::strftime(mbstr, sizeof(mbstr), "%Y%m%d-%H%M%S", &date_time);
         Checks::check_exit(VCPKG_LINE_INFO, bytes_written == 15, "Expected 15 bytes to be written, but %u were written", bytes_written);
         const std::string date_time_as_string(mbstr);
-        return ("exported-" + date_time_as_string);
+        return ("vcpkg-exported-" + date_time_as_string);
     }
 
     enum class ArchiveFormat
@@ -149,7 +149,7 @@ namespace vcpkg::Commands::Export
         const std::wstring option = get_option(format);
 
         const std::wstring exported_dir_filename = exported_dir_path.filename().native();
-        const std::wstring exported_archive_filename = Strings::wformat(L"vcpkg-%s.%s", exported_dir_filename, extension);
+        const std::wstring exported_archive_filename = Strings::wformat(L"%s.%s", exported_dir_filename, extension);
         const std::wstring exported_archive_path = (paths.root / exported_archive_filename).native();
 
         const fs::path& cmake_exe = paths.get_cmake_exe();
