@@ -86,9 +86,17 @@ if(NOT VCPKG_TOOLCHAIN)
         "${_programfiles}/OpenSSL"
         "${_programfiles}/OpenSSL-Win32"
         "${_programfiles}/OpenSSL-Win64"
+        "${_programfiles}/OpenSSL-Win32/lib/VC"
+        "${_programfiles}/OpenSSL-Win64/lib/VC"
+        "${_programfiles}/OpenSSL-Win32/lib/VC/static"
+        "${_programfiles}/OpenSSL-Win64/lib/VC/static"
         "C:/OpenSSL/"
         "C:/OpenSSL-Win32/"
         "C:/OpenSSL-Win64/"
+        "C:/OpenSSL-Win32/lib/VC"
+        "C:/OpenSSL-Win64/lib/VC"
+        "C:/OpenSSL-Win32/lib/VC/static"
+        "C:/OpenSSL-Win64/lib/VC/static"
     )
 
     set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools)
