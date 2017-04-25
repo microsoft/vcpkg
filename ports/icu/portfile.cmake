@@ -16,11 +16,12 @@ vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
 
 # Acquire tools
 vcpkg_acquire_msys(MSYS_ROOT)
-set(ENV{PATH} "${MSYS_ROOT}/usr/bin;$ENV{PATH}") # no idea why, but when PATH is appended to instead of prepended, the build freezes
+
+# Insert msys into the path between the compiler toolset and windows system32. This prevents masking of "link.exe" but DOES mask "find.exe".
+string(REPLACE ";$ENV{SystemRoot}\\system32;" ";${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "$ENV{PATH}")
+string(REPLACE ";$ENV{SystemRoot}\\System32;" ";${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\System32;" NEWPATH "${NEWPATH}")
+set(ENV{PATH} "${NEWPATH}")
 set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
-if(EXISTS ${MSYS_ROOT}/usr/bin/link.exe)
-    file(RENAME ${MSYS_ROOT}/usr/bin/link.exe ${MSYS_ROOT}/usr/bin/link.exe-renamed)
-endif()
 
 vcpkg_execute_required_process(
     COMMAND ${BASH} --noprofile --norc -c "pacman -Sy --noconfirm --needed make"
@@ -91,10 +92,6 @@ vcpkg_execute_required_process(
     WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
     LOGNAME "build-${TARGET_TRIPLET}-dbg")
 message(STATUS "Package ${TARGET_TRIPLET}-dbg done")
-
-if(EXISTS ${MSYS_ROOT}/usr/bin/link.exe-renamed)
-    file(RENAME ${MSYS_ROOT}/usr/bin/link.exe-renamed ${MSYS_ROOT}/usr/bin/link.exe)
-endif()
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/bin
