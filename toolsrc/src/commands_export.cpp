@@ -15,7 +15,7 @@ namespace vcpkg::Commands::Export
     using Dependencies::RequestType;
     using Dependencies::ExportPlanType;
 
-    static std::string create_nuspec_file_contents(const std::string& exported_dir_filename, const std::string& nuget_id, const std::string& nupkg_version)
+    static std::string create_nuspec_file_contents(const std::string& raw_exported_dir_filename, const std::string& nuget_id, const std::string& nupkg_version)
     {
         static constexpr auto content_template = R"(
 <package>
@@ -28,8 +28,8 @@ namespace vcpkg::Commands::Export
         </description>
     </metadata>
     <files>
-        <file src="@EXPORTED_DIR@\**" target="" />
-        <file src="@EXPORTED_DIR@\.vcpkg-root" target="" />
+        <file src="@RAW_EXPORTED_DIR@\**" target="" />
+        <file src="@RAW_EXPORTED_DIR@\.vcpkg-root" target="" />
         <file src="scripts\buildsystems\msbuild\applocal.ps1" target="build\native\applocal.ps1" />
         <file src="scripts\buildsystems\msbuild\vcpkg.targets" target="build\native\@NUGET_ID@.targets" />
         <file src="scripts\buildsystems\vcpkg.cmake" target="build\native\vcpkg.cmake" />
@@ -39,7 +39,7 @@ namespace vcpkg::Commands::Export
 
         std::string nuspec_file_content = std::regex_replace(content_template, std::regex("@NUGET_ID@"), nuget_id);
         nuspec_file_content = std::regex_replace(nuspec_file_content, std::regex("@VERSION@"), nupkg_version);
-        nuspec_file_content = std::regex_replace(nuspec_file_content, std::regex("@EXPORTED_DIR@"), exported_dir_filename);
+        nuspec_file_content = std::regex_replace(nuspec_file_content, std::regex("@RAW_EXPORTED_DIR@"), raw_exported_dir_filename);
         return nuspec_file_content;
     }
 
@@ -76,29 +76,7 @@ namespace vcpkg::Commands::Export
         }
     }
 
-    static void do_nuget_export(const VcpkgPaths& paths, const fs::path& exported_dir_path)
-    {
-        Files::Filesystem& fs = paths.get_filesystem();
-
-        const std::string exported_dir_filename = exported_dir_path.filename().string();
-        const std::string nuget_id = exported_dir_filename;
-        const std::string nupkg_version = "1.0.0";
-
-        const std::string nuspec_file_content = create_nuspec_file_contents(exported_dir_filename, nuget_id, nupkg_version);
-
-        const fs::path nuspec_file_path = paths.root / "export.nuspec";
-        fs.write_contents(nuspec_file_path, nuspec_file_content);
-
-        const fs::path& nuget_exe = paths.get_nuget_exe();
-
-        // -NoDefaultExcludes is needed for ".vcpkg-root"
-        const std::wstring cmd_line = Strings::wformat(LR"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes > nul)", nuget_exe.native(), paths.root.native(), nuspec_file_path.native());
-
-        const int exit_code = System::cmd_execute_clean(cmd_line);
-        Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: NuGet package creation failed");
-    }
-
-    static std::string create_exported_dir_filename()
+    static std::string create_export_id()
     {
         const tm date_time = System::get_current_date_time();
 
@@ -109,6 +87,31 @@ namespace vcpkg::Commands::Export
         Checks::check_exit(VCPKG_LINE_INFO, bytes_written == 15, "Expected 15 bytes to be written, but %u were written", bytes_written);
         const std::string date_time_as_string(mbstr);
         return ("vcpkg-exported-" + date_time_as_string);
+    }
+
+    static fs::path do_nuget_export(const VcpkgPaths& paths, const fs::path& raw_exported_dir, const fs::path& output_dir)
+    {
+        static const std::string NUPKG_VERSION = "1.0.0";
+
+        Files::Filesystem& fs = paths.get_filesystem();
+        const fs::path& nuget_exe = paths.get_nuget_exe();
+
+        const std::string filename = raw_exported_dir.filename().string();
+        const std::string nuget_id = filename;
+
+        const std::string nuspec_file_content = create_nuspec_file_contents(filename, nuget_id, NUPKG_VERSION);
+        const fs::path nuspec_file_path = output_dir / "export.nuspec";
+        fs.write_contents(nuspec_file_path, nuspec_file_content);
+
+        // -NoDefaultExcludes is needed for ".vcpkg-root"
+        const std::wstring cmd_line = Strings::wformat(LR"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes > nul)",
+                                                       nuget_exe.native(), output_dir.native(), nuspec_file_path.native());
+
+        const int exit_code = System::cmd_execute_clean(cmd_line);
+        Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: NuGet package creation failed");
+
+        const fs::path output_path = output_dir / (nuget_id + ".nupkg");
+        return output_path;
     }
 
     enum class ArchiveFormat
@@ -143,23 +146,24 @@ namespace vcpkg::Commands::Export
         }
     }
 
-    static void do_archive_export(const VcpkgPaths& paths, const fs::path& exported_dir_path, const ArchiveFormat& format)
+    static fs::path do_archive_export(const VcpkgPaths& paths, const fs::path& raw_exported_dir, const fs::path& output_dir, const ArchiveFormat& format)
     {
+        const fs::path& cmake_exe = paths.get_cmake_exe();
+
         const std::wstring extension = get_extension(format);
         const std::wstring option = get_option(format);
 
-        const std::wstring exported_dir_filename = exported_dir_path.filename().native();
+        const std::wstring exported_dir_filename = raw_exported_dir.filename().native();
         const std::wstring exported_archive_filename = Strings::wformat(L"%s.%s", exported_dir_filename, extension);
-        const std::wstring exported_archive_path = (paths.root / exported_archive_filename).native();
-
-        const fs::path& cmake_exe = paths.get_cmake_exe();
+        const fs::path exported_archive_path = (output_dir / exported_archive_filename);
 
         // -NoDefaultExcludes is needed for ".vcpkg-root"
         const std::wstring cmd_line = Strings::wformat(LR"("%s" -E tar "cf" "%s" --format=%s -- "%s")",
-                                                       cmake_exe.native(), exported_archive_path, option, exported_dir_path.native());
+                                                       cmake_exe.native(), exported_archive_path.native(), option, raw_exported_dir.native());
 
         const int exit_code = System::cmd_execute_clean(cmd_line);
-        Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: %s creation failed", exported_dir_path.generic_string());
+        Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: %s creation failed", exported_archive_path.generic_string());
+        return exported_archive_path;
     }
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
@@ -236,13 +240,14 @@ namespace vcpkg::Commands::Export
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        const std::string exported_dir_filename = create_exported_dir_filename();
+        const std::string export_id = create_export_id();
 
         Files::Filesystem& fs = paths.get_filesystem();
-        const fs::path exported_dir_path = paths.root / exported_dir_filename;
+        const fs::path export_to_path = paths.root;
+        const fs::path raw_exported_dir_path = export_to_path / export_id;
         std::error_code ec;
-        fs.remove_all(exported_dir_path, ec);
-        fs.create_directory(exported_dir_path, ec);
+        fs.remove_all(raw_exported_dir_path, ec);
+        fs.create_directory(raw_exported_dir_path, ec);
 
         // execute the plan
         for (const ExportPlanAction& action : export_plan)
@@ -257,46 +262,49 @@ namespace vcpkg::Commands::Export
 
             const BinaryParagraph& binary_paragraph = action.any_paragraph.binary_paragraph.value_or_exit(VCPKG_LINE_INFO);
             const InstallDir dirs = InstallDir::from_destination_root(
-                exported_dir_path / "installed",
+                raw_exported_dir_path / "installed",
                 action.spec.triplet().to_string(),
-                exported_dir_path / "installed" / "vcpkg" / "info" / (binary_paragraph.fullstem() + ".list"));
+                raw_exported_dir_path / "installed" / "vcpkg" / "info" / (binary_paragraph.fullstem() + ".list"));
 
             Install::install_files_and_write_listfile(paths.get_filesystem(), paths.package_dir(action.spec), dirs);
             System::println(System::Color::success, "Exporting package %s... done", display_name);
         }
 
-        const fs::path vcpkg_root_file = (exported_dir_path / ".vcpkg-root");
+        const fs::path vcpkg_root_file = (raw_exported_dir_path / ".vcpkg-root");
         fs.write_contents(vcpkg_root_file, "");
 
         if (raw)
         {
-            System::println(System::Color::success, R"(Files exported at: "%s")", exported_dir_path.generic_string());
+            System::println(System::Color::success, R"(Files exported at: "%s")", raw_exported_dir_path.generic_string());
         }
 
         if (nuget)
         {
-            System::println("Creating nuget file at %s... ", paths.root.generic_string());
-            do_nuget_export(paths, exported_dir_path);
-            System::println(System::Color::success, "Creating nuget file at %s... done", paths.root.generic_string());
+            System::println("Creating nuget package... ");
+            const fs::path output_path = do_nuget_export(paths, raw_exported_dir_path, export_to_path);
+            System::println(System::Color::success, "Creating nuget package... done");
+            System::println(System::Color::success, "Nuget package exported at: %s", output_path.generic_string());
         }
 
         if (zip)
         {
-            System::println("Creating zip file at %s... ", paths.root.generic_string());
-            do_archive_export(paths, exported_dir_path, ArchiveFormat::ZIP);
-            System::println(System::Color::success, "Creating zip file at %s... done", paths.root.generic_string());
+            System::println("Creating zip archive... ");
+            const fs::path output_path = do_archive_export(paths, raw_exported_dir_path, export_to_path, ArchiveFormat::ZIP);
+            System::println(System::Color::success, "Creating zip archive... done");
+            System::println(System::Color::success, "Zip archive exported at: %s", output_path.generic_string());
         }
 
         if (_7zip)
         {
-            System::println("Creating 7zip file at %s... ", paths.root.generic_string());
-            do_archive_export(paths, exported_dir_path, ArchiveFormat::_7ZIP);
-            System::println(System::Color::success, "Creating 7zip file at %s... done", paths.root.generic_string());
+            System::println("Creating 7zip archive... ");
+            const fs::path output_path = do_archive_export(paths, raw_exported_dir_path, export_to_path, ArchiveFormat::_7ZIP);
+            System::println(System::Color::success, "Creating 7zip archive... done");
+            System::println(System::Color::success, "7zip archive exported at: %s", output_path.generic_string());
         }
 
         if (!raw)
         {
-            fs.remove_all(exported_dir_path, ec);
+            fs.remove_all(raw_exported_dir_path, ec);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
