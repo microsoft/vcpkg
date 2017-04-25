@@ -46,6 +46,7 @@ namespace vcpkg::System
             L"OS",
             L"PATHEXT",
             L"PROCESSOR_ARCHITECTURE",
+            L"PROCESSOR_ARCHITEW6432",
             L"PROCESSOR_IDENTIFIER",
             L"PROCESSOR_LEVEL",
             L"PROCESSOR_REVISION",
