@@ -30,9 +30,10 @@ namespace vcpkg::Commands::Export
     <files>
         <file src="@RAW_EXPORTED_DIR@\installed\**" target="installed" />
         <file src="@RAW_EXPORTED_DIR@\.vcpkg-root" target="" />
-        <file src="@RAW_EXPORTED_DIR@\msbuild\applocal.ps1" target="build\native\applocal.ps1" />
-        <file src="@RAW_EXPORTED_DIR@\msbuild\vcpkg.targets" target="build\native\@NUGET_ID@.targets" />
+        <file src="@RAW_EXPORTED_DIR@\msbuild\applocal.ps1" target="build\native\msbuild\applocal.ps1" />
+        <file src="@RAW_EXPORTED_DIR@\msbuild\vcpkg.targets" target="build\native\msbuild\vcpkg.targets" />
         <file src="@RAW_EXPORTED_DIR@\vcpkg.cmake" target="build\native\vcpkg.cmake" />
+        <file src="@RAW_EXPORTED_DIR@\vcpkg.targets" target="build\native\@NUGET_ID@.targets" />
     </files>
 </package>
 )";
@@ -41,6 +42,15 @@ namespace vcpkg::Commands::Export
         nuspec_file_content = std::regex_replace(nuspec_file_content, std::regex("@VERSION@"), nupkg_version);
         nuspec_file_content = std::regex_replace(nuspec_file_content, std::regex("@RAW_EXPORTED_DIR@"), raw_exported_dir_filename);
         return nuspec_file_content;
+    }
+
+    static std::string create_targets_redirect(const std::string& target_path) noexcept
+    {
+        return Strings::format(R"###(
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Condition="Exists('%s')" Project="%s" />
+</Project>
+)###", target_path, target_path);
     }
 
     static void print_plan(const std::map<ExportPlanType, std::vector<const ExportPlanAction*>>& group_by_plan_type)
@@ -86,7 +96,7 @@ namespace vcpkg::Commands::Export
         const size_t bytes_written = std::strftime(mbstr, sizeof(mbstr), "%Y%m%d-%H%M%S", &date_time);
         Checks::check_exit(VCPKG_LINE_INFO, bytes_written == 15, "Expected 15 bytes to be written, but %u were written", bytes_written);
         const std::string date_time_as_string(mbstr);
-        return ("vcpkg-exported-" + date_time_as_string);
+        return ("vcpkg-export-" + date_time_as_string);
     }
 
     static fs::path do_nuget_export(const VcpkgPaths& paths, const fs::path& raw_exported_dir, const fs::path& output_dir)
@@ -279,6 +289,10 @@ namespace vcpkg::Commands::Export
         fs.copy_file(paths.buildsystems / "msbuild" / "vcpkg.targets", raw_exported_dir_path / "msbuild" / "vcpkg.targets", fs::copy_options::overwrite_existing, ec);
         Checks::check_exit(VCPKG_LINE_INFO, !ec);
         fs.copy_file(paths.buildsystems / "vcpkg.cmake", raw_exported_dir_path / "vcpkg.cmake", fs::copy_options::overwrite_existing, ec);
+        Checks::check_exit(VCPKG_LINE_INFO, !ec);
+        const std::string targets_redirect_content = create_targets_redirect("msbuild/vcpkg.targets");
+        const fs::path targets_redirect = raw_exported_dir_path / "vcpkg.targets";
+        fs.write_contents(targets_redirect, targets_redirect_content);
         Checks::check_exit(VCPKG_LINE_INFO, !ec);
 
         if (raw)
