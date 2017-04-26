@@ -25,7 +25,10 @@ find_path(CAIRO_INCLUDE_DIR cairo.h)
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
     set(CAIRO_SUFFIX d)
 endif()
-find_library(CAIRO_LIBRARY cairo${CAIRO_SUFFIX})
+find_library(CAIRO_LIBRARY 
+    NAMES
+        cairo${CAIRO_SUFFIX}
+        cairo-static${CAIRO_SUFFIX})
 find_library(CAIRO_GOBJECT_LIBRARY cairo-gobject${CAIRO_SUFFIX})
 set(CAIRO_LIBRARIES ${CAIRO_LIBRARY} ${CAIRO_GOBJECT_LIBRARY})
 

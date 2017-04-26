@@ -1,9 +1,3 @@
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
-
 include(vcpkg_common_functions)
 set(PANGO_VERSION 1.40.5)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/pango-${PANGO_VERSION})
@@ -15,12 +9,18 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/0001-fix-static-symbols-export.diff)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
 	OPTIONS_DEBUG
 	    -DPANGO_SKIP_HEADERS=ON)
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
