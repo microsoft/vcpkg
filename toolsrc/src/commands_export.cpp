@@ -29,10 +29,8 @@ namespace vcpkg::Commands::Export
     </metadata>
     <files>
         <file src="@RAW_EXPORTED_DIR@\installed\**" target="installed" />
+        <file src="@RAW_EXPORTED_DIR@\scripts\**" target="scripts" />
         <file src="@RAW_EXPORTED_DIR@\.vcpkg-root" target="" />
-        <file src="@RAW_EXPORTED_DIR@\msbuild\applocal.ps1" target="build\native\msbuild\applocal.ps1" />
-        <file src="@RAW_EXPORTED_DIR@\msbuild\vcpkg.targets" target="build\native\msbuild\vcpkg.targets" />
-        <file src="@RAW_EXPORTED_DIR@\vcpkg.cmake" target="build\native\vcpkg.cmake" />
         <file src="@RAW_EXPORTED_DIR@\vcpkg.targets" target="build\native\@NUGET_ID@.targets" />
     </files>
 </package>
@@ -280,17 +278,30 @@ namespace vcpkg::Commands::Export
         }
 
         // Copy files needed for integration
-        fs.copy_file(paths.root / ".vcpkg-root", raw_exported_dir_path / ".vcpkg-root", fs::copy_options::overwrite_existing, ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec);
-        fs.create_directories(raw_exported_dir_path / "msbuild", ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec);
-        fs.copy_file(paths.buildsystems / "msbuild" / "applocal.ps1", raw_exported_dir_path / "msbuild" / "applocal.ps1", fs::copy_options::overwrite_existing, ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec);
-        fs.copy_file(paths.buildsystems / "msbuild" / "vcpkg.targets", raw_exported_dir_path / "msbuild" / "vcpkg.targets", fs::copy_options::overwrite_existing, ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec);
-        fs.copy_file(paths.buildsystems / "vcpkg.cmake", raw_exported_dir_path / "vcpkg.cmake", fs::copy_options::overwrite_existing, ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec);
-        const std::string targets_redirect_content = create_targets_redirect("msbuild/vcpkg.targets");
+        const std::vector<fs::path> integration_files_relative_to_root =
+        {
+            { ".vcpkg-root" },
+            { fs::path{ "scripts" } / "buildsystems" / "msbuild" / "applocal.ps1" },
+            { fs::path{ "scripts" } / "buildsystems" / "msbuild" / "vcpkg.targets" },
+            { fs::path{ "scripts" } / "buildsystems" / "vcpkg.cmake" },
+            { fs::path{ "scripts" } / "cmake" / "vcpkg_get_windows_sdk.cmake" },
+            { fs::path{ "scripts" } / "cmake" / "vcpkg_get_windows_sdk.cmake" },
+            { fs::path{ "scripts" } / "getWindowsSDK.ps1" },
+            { fs::path{ "scripts" } / "getProgramFilesPlatformBitness.ps1" },
+        };
+
+        for (const fs::path& file : integration_files_relative_to_root)
+        {
+            const fs::path source = paths.root / file;
+            const fs::path destination = raw_exported_dir_path / file;
+            fs.create_directories(destination.parent_path(), ec);
+            Checks::check_exit(VCPKG_LINE_INFO, !ec);
+            fs.copy_file(source, destination, fs::copy_options::overwrite_existing, ec);
+            Checks::check_exit(VCPKG_LINE_INFO, !ec);
+        }
+
+        // This file will be placed in "build\native" in the nuget package. Therefore, go up two dirs.
+        const std::string targets_redirect_content = create_targets_redirect("../../scripts/buildsystems/msbuild/vcpkg.targets");
         const fs::path targets_redirect = raw_exported_dir_path / "vcpkg.targets";
         fs.write_contents(targets_redirect, targets_redirect_content);
         Checks::check_exit(VCPKG_LINE_INFO, !ec);
