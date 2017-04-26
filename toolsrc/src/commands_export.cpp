@@ -28,11 +28,11 @@ namespace vcpkg::Commands::Export
         </description>
     </metadata>
     <files>
-        <file src="@RAW_EXPORTED_DIR@\**" target="" />
+        <file src="@RAW_EXPORTED_DIR@\installed\**" target="installed" />
         <file src="@RAW_EXPORTED_DIR@\.vcpkg-root" target="" />
-        <file src="scripts\buildsystems\msbuild\applocal.ps1" target="build\native\applocal.ps1" />
-        <file src="scripts\buildsystems\msbuild\vcpkg.targets" target="build\native\@NUGET_ID@.targets" />
-        <file src="scripts\buildsystems\vcpkg.cmake" target="build\native\vcpkg.cmake" />
+        <file src="@RAW_EXPORTED_DIR@\msbuild\applocal.ps1" target="build\native\applocal.ps1" />
+        <file src="@RAW_EXPORTED_DIR@\msbuild\vcpkg.targets" target="build\native\@NUGET_ID@.targets" />
+        <file src="@RAW_EXPORTED_DIR@\vcpkg.cmake" target="build\native\vcpkg.cmake" />
     </files>
 </package>
 )";
@@ -269,8 +269,17 @@ namespace vcpkg::Commands::Export
             System::println(System::Color::success, "Exporting package %s... done", display_name);
         }
 
-        const fs::path vcpkg_root_file = (raw_exported_dir_path / ".vcpkg-root");
-        fs.write_contents(vcpkg_root_file, "");
+        // Copy files needed for integration
+        fs.copy_file(paths.root / ".vcpkg-root", raw_exported_dir_path / ".vcpkg-root", fs::copy_options::overwrite_existing, ec);
+        Checks::check_exit(VCPKG_LINE_INFO, !ec);
+        fs.create_directories(raw_exported_dir_path / "msbuild", ec);
+        Checks::check_exit(VCPKG_LINE_INFO, !ec);
+        fs.copy_file(paths.buildsystems / "msbuild" / "applocal.ps1", raw_exported_dir_path / "msbuild" / "applocal.ps1", fs::copy_options::overwrite_existing, ec);
+        Checks::check_exit(VCPKG_LINE_INFO, !ec);
+        fs.copy_file(paths.buildsystems / "msbuild" / "vcpkg.targets", raw_exported_dir_path / "msbuild" / "vcpkg.targets", fs::copy_options::overwrite_existing, ec);
+        Checks::check_exit(VCPKG_LINE_INFO, !ec);
+        fs.copy_file(paths.buildsystems / "vcpkg.cmake", raw_exported_dir_path / "vcpkg.cmake", fs::copy_options::overwrite_existing, ec);
+        Checks::check_exit(VCPKG_LINE_INFO, !ec);
 
         if (raw)
         {
