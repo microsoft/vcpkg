@@ -28,10 +28,10 @@ namespace vcpkg::PostBuildLint
         BackingEnum backing_enum;
     };
 
-    static const std::string ENUM_NAME = "vcpkg::PostBuildLint::BuildPolicies";
-
     namespace BuildPoliciesC
     {
+        static constexpr const char* ENUM_NAME = "vcpkg::PostBuildLint::BuildPolicies";
+
         static constexpr BuildPolicies NULLVALUE(BuildPolicies::BackingEnum::NULLVALUE);
         static constexpr BuildPolicies EMPTY_PACKAGE(BuildPolicies::BackingEnum::EMPTY_PACKAGE);
         static constexpr BuildPolicies DLLS_WITHOUT_LIBS(BuildPolicies::BackingEnum::DLLS_WITHOUT_LIBS);

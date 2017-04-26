@@ -5,7 +5,7 @@
 
 namespace vcpkg::PostBuildLint
 {
-    static const std::string NULLVALUE_STRING = Enums::nullvalue_to_string(ENUM_NAME);
+    static const std::string NULLVALUE_STRING = Enums::nullvalue_to_string(BuildPoliciesC::ENUM_NAME);
 
     static const std::string NAME_EMPTY_PACKAGE = "PolicyEmptyPackage";
     static const std::string NAME_DLLS_WITHOUT_LIBS = "PolicyDLLsWithoutLIBs";
@@ -74,7 +74,7 @@ namespace vcpkg::PostBuildLint
             case BuildPoliciesC::EMPTY_INCLUDE_FOLDER:
                 return CMAKE_VARIABLE_EMPTY_INCLUDE_FOLDER;
             case BuildPoliciesC::NULLVALUE:
-                Enums::nullvalue_used(VCPKG_LINE_INFO, ENUM_NAME);
+                Enums::nullvalue_used(VCPKG_LINE_INFO, BuildPoliciesC::ENUM_NAME);
             default:
                 Checks::unreachable(VCPKG_LINE_INFO);
         }
