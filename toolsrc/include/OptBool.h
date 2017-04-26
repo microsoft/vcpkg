@@ -29,9 +29,9 @@ namespace vcpkg
 
     namespace OptBoolC
     {
-        constexpr OptBool UNSPECIFIED(OptBool::BackingEnum::UNSPECIFIED);
-        constexpr OptBool ENABLED(OptBool::BackingEnum::ENABLED);
-        constexpr OptBool DISABLED(OptBool::BackingEnum::DISABLED);
+        static constexpr OptBool UNSPECIFIED(OptBool::BackingEnum::UNSPECIFIED);
+        static constexpr OptBool ENABLED(OptBool::BackingEnum::ENABLED);
+        static constexpr OptBool DISABLED(OptBool::BackingEnum::DISABLED);
     }
 
     template<class T>

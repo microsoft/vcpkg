@@ -32,11 +32,11 @@ namespace vcpkg::PostBuildLint
 
     namespace BuildPoliciesC
     {
-        constexpr BuildPolicies NULLVALUE(BuildPolicies::BackingEnum::NULLVALUE);
-        constexpr BuildPolicies EMPTY_PACKAGE(BuildPolicies::BackingEnum::EMPTY_PACKAGE);
-        constexpr BuildPolicies DLLS_WITHOUT_LIBS(BuildPolicies::BackingEnum::DLLS_WITHOUT_LIBS);
-        constexpr BuildPolicies ONLY_RELEASE_CRT(BuildPolicies::BackingEnum::ONLY_RELEASE_CRT);
-        constexpr BuildPolicies EMPTY_INCLUDE_FOLDER(BuildPolicies::BackingEnum::EMPTY_INCLUDE_FOLDER);
+        static constexpr BuildPolicies NULLVALUE(BuildPolicies::BackingEnum::NULLVALUE);
+        static constexpr BuildPolicies EMPTY_PACKAGE(BuildPolicies::BackingEnum::EMPTY_PACKAGE);
+        static constexpr BuildPolicies DLLS_WITHOUT_LIBS(BuildPolicies::BackingEnum::DLLS_WITHOUT_LIBS);
+        static constexpr BuildPolicies ONLY_RELEASE_CRT(BuildPolicies::BackingEnum::ONLY_RELEASE_CRT);
+        static constexpr BuildPolicies EMPTY_INCLUDE_FOLDER(BuildPolicies::BackingEnum::EMPTY_INCLUDE_FOLDER);
 
-        constexpr std::array<BuildPolicies, 4> VALUES = { EMPTY_PACKAGE,DLLS_WITHOUT_LIBS, ONLY_RELEASE_CRT, EMPTY_INCLUDE_FOLDER };
+        static constexpr std::array<BuildPolicies, 4> VALUES = { EMPTY_PACKAGE,DLLS_WITHOUT_LIBS, ONLY_RELEASE_CRT, EMPTY_INCLUDE_FOLDER };
     }}
