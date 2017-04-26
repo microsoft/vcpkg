@@ -2,19 +2,19 @@
 #pragma once
 #include <string>
 
-namespace vcpkg::PostBuildLint::ConfigurationType
+namespace vcpkg::PostBuildLint
 {
-    enum class BackingEnum
+    struct ConfigurationType
     {
-        NULLVALUE = 0,
-        DEBUG = 1,
-        RELEASE = 2
-    };
+        enum class BackingEnum
+        {
+            NULLVALUE = 0,
+            DEBUG = 1,
+            RELEASE = 2
+        };
 
-    struct Type
-    {
-        constexpr Type() : backing_enum(BackingEnum::NULLVALUE) {}
-        constexpr explicit Type(BackingEnum backing_enum) : backing_enum(backing_enum) { }
+        constexpr ConfigurationType() : backing_enum(BackingEnum::NULLVALUE) {}
+        constexpr explicit ConfigurationType(BackingEnum backing_enum) : backing_enum(backing_enum) { }
         constexpr operator BackingEnum() const { return backing_enum; }
 
         const std::string& to_string() const;
@@ -23,11 +23,14 @@ namespace vcpkg::PostBuildLint::ConfigurationType
         BackingEnum backing_enum;
     };
 
-    static const std::string ENUM_NAME = "vcpkg::PostBuildLint::ConfigurationType";
+    namespace ConfigurationTypeC
+    {
+        static constexpr const char* ENUM_NAME = "vcpkg::PostBuildLint::ConfigurationType";
 
-    static constexpr Type NULLVALUE(BackingEnum::NULLVALUE);
-    static constexpr Type DEBUG(BackingEnum::DEBUG);
-    static constexpr Type RELEASE(BackingEnum::RELEASE);
+        static constexpr ConfigurationType NULLVALUE(ConfigurationType::BackingEnum::NULLVALUE);
+        static constexpr ConfigurationType DEBUG(ConfigurationType::BackingEnum::DEBUG);
+        static constexpr ConfigurationType RELEASE(ConfigurationType::BackingEnum::RELEASE);
 
-    static constexpr std::array<Type, 2> values = { DEBUG, RELEASE };
+        static constexpr std::array<ConfigurationType, 2> VALUES = { DEBUG, RELEASE };
+    }
 }

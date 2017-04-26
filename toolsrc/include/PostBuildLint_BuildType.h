@@ -16,11 +16,11 @@ namespace vcpkg::PostBuildLint
             RELEASE_DYNAMIC
         };
 
-        static BuildType value_of(const ConfigurationType::Type& config, const LinkageType& linkage);
+        static BuildType value_of(const ConfigurationType& config, const LinkageType& linkage);
 
         BuildType() = delete;
 
-        constexpr explicit BuildType(const BackingEnum backing_enum, const ConfigurationType::Type config, const LinkageType linkage)
+        constexpr explicit BuildType(const BackingEnum backing_enum, const ConfigurationType config, const LinkageType linkage)
             :
             backing_enum(backing_enum)
             , m_config(config)
@@ -28,14 +28,14 @@ namespace vcpkg::PostBuildLint
 
         constexpr operator BackingEnum() const { return backing_enum; }
 
-        const ConfigurationType::Type& config() const;
+        const ConfigurationType& config() const;
         const LinkageType& linkage() const;
         const std::regex& crt_regex() const;
         const std::string& to_string() const;
 
     private:
         BackingEnum backing_enum;
-        ConfigurationType::Type m_config;
+        ConfigurationType m_config;
         LinkageType m_linkage;
     };
 
@@ -43,10 +43,10 @@ namespace vcpkg::PostBuildLint
     {
         static constexpr const char* ENUM_NAME = "vcpkg::PostBuildLint::BuildType";
 
-        static constexpr BuildType DEBUG_STATIC = BuildType(BuildType::BackingEnum::DEBUG_STATIC, ConfigurationType::DEBUG, LinkageTypeC::STATIC);
-        static constexpr BuildType DEBUG_DYNAMIC = BuildType(BuildType::BackingEnum::DEBUG_DYNAMIC, ConfigurationType::DEBUG, LinkageTypeC::DYNAMIC);
-        static constexpr BuildType RELEASE_STATIC = BuildType(BuildType::BackingEnum::RELEASE_STATIC, ConfigurationType::RELEASE, LinkageTypeC::STATIC);
-        static constexpr BuildType RELEASE_DYNAMIC = BuildType(BuildType::BackingEnum::RELEASE_DYNAMIC, ConfigurationType::RELEASE, LinkageTypeC::DYNAMIC);
+        static constexpr BuildType DEBUG_STATIC = BuildType(BuildType::BackingEnum::DEBUG_STATIC, ConfigurationTypeC::DEBUG, LinkageTypeC::STATIC);
+        static constexpr BuildType DEBUG_DYNAMIC = BuildType(BuildType::BackingEnum::DEBUG_DYNAMIC, ConfigurationTypeC::DEBUG, LinkageTypeC::DYNAMIC);
+        static constexpr BuildType RELEASE_STATIC = BuildType(BuildType::BackingEnum::RELEASE_STATIC, ConfigurationTypeC::RELEASE, LinkageTypeC::STATIC);
+        static constexpr BuildType RELEASE_DYNAMIC = BuildType(BuildType::BackingEnum::RELEASE_DYNAMIC, ConfigurationTypeC::RELEASE, LinkageTypeC::DYNAMIC);
 
         static constexpr std::array<BuildType, 4> VALUES = { DEBUG_STATIC, DEBUG_DYNAMIC, RELEASE_STATIC, RELEASE_DYNAMIC };
     }}

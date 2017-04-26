@@ -4,24 +4,24 @@
 
 namespace vcpkg::PostBuildLint
 {
-    BuildType BuildType::value_of(const ConfigurationType::Type& config, const LinkageType& linkage)
+    BuildType BuildType::value_of(const ConfigurationType& config, const LinkageType& linkage)
     {
-        if (config == ConfigurationType::DEBUG && linkage == LinkageTypeC::STATIC)
+        if (config == ConfigurationTypeC::DEBUG && linkage == LinkageTypeC::STATIC)
         {
             return BuildTypeC::DEBUG_STATIC;
         }
 
-        if (config == ConfigurationType::DEBUG && linkage == LinkageTypeC::DYNAMIC)
+        if (config == ConfigurationTypeC::DEBUG && linkage == LinkageTypeC::DYNAMIC)
         {
             return BuildTypeC::DEBUG_DYNAMIC;
         }
 
-        if (config == ConfigurationType::RELEASE && linkage == LinkageTypeC::STATIC)
+        if (config == ConfigurationTypeC::RELEASE && linkage == LinkageTypeC::STATIC)
         {
             return BuildTypeC::RELEASE_STATIC;
         }
 
-        if (config == ConfigurationType::RELEASE && linkage == LinkageTypeC::DYNAMIC)
+        if (config == ConfigurationTypeC::RELEASE && linkage == LinkageTypeC::DYNAMIC)
         {
             return BuildTypeC::RELEASE_DYNAMIC;
         }
@@ -29,7 +29,7 @@ namespace vcpkg::PostBuildLint
         Checks::unreachable(VCPKG_LINE_INFO);
     }
 
-    const ConfigurationType::Type& BuildType::config() const
+    const ConfigurationType& BuildType::config() const
     {
         return this->m_config;
     }

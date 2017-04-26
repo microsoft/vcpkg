@@ -723,9 +723,9 @@ namespace vcpkg::PostBuildLint
 
                     if (!contains_and_enabled(build_info.policies, BuildPoliciesC::ONLY_RELEASE_CRT))
                     {
-                        error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::DEBUG, build_info.crt_linkage), debug_libs, toolset.dumpbin);
+                        error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationTypeC::DEBUG, build_info.crt_linkage), debug_libs, toolset.dumpbin);
                     }
-                    error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::RELEASE, build_info.crt_linkage), release_libs, toolset.dumpbin);
+                    error_count += check_crt_linkage_of_libs(BuildType::value_of(ConfigurationTypeC::RELEASE, build_info.crt_linkage), release_libs, toolset.dumpbin);
                     break;
                 }
             case LinkageType::BackingEnum::NULLVALUE:
