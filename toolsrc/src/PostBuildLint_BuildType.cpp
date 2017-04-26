@@ -4,24 +4,24 @@
 
 namespace vcpkg::PostBuildLint::BuildType
 {
-    Type value_of(const ConfigurationType::Type& config, const LinkageType::Type& linkage)
+    Type value_of(const ConfigurationType::Type& config, const LinkageType& linkage)
     {
-        if (config == ConfigurationType::DEBUG && linkage == LinkageType::STATIC)
+        if (config == ConfigurationType::DEBUG && linkage == LinkageTypeC::STATIC)
         {
             return DEBUG_STATIC;
         }
 
-        if (config == ConfigurationType::DEBUG && linkage == LinkageType::DYNAMIC)
+        if (config == ConfigurationType::DEBUG && linkage == LinkageTypeC::DYNAMIC)
         {
             return DEBUG_DYNAMIC;
         }
 
-        if (config == ConfigurationType::RELEASE && linkage == LinkageType::STATIC)
+        if (config == ConfigurationType::RELEASE && linkage == LinkageTypeC::STATIC)
         {
             return RELEASE_STATIC;
         }
 
-        if (config == ConfigurationType::RELEASE && linkage == LinkageType::DYNAMIC)
+        if (config == ConfigurationType::RELEASE && linkage == LinkageTypeC::DYNAMIC)
         {
             return RELEASE_DYNAMIC;
         }
@@ -34,7 +34,7 @@ namespace vcpkg::PostBuildLint::BuildType
         return this->m_config;
     }
 
-    const LinkageType::Type& Type::linkage() const
+    const LinkageType& Type::linkage() const
     {
         return this->m_linkage;
     }
