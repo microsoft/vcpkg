@@ -14,9 +14,9 @@ namespace vcpkg::PostBuildLint
     static auto has_extension_pred(const Files::Filesystem& fs, const std::string& ext)
     {
         return [&fs, ext](const fs::path& path)
-        {
-            return !fs.is_directory(path) && path.extension() == ext;
-        };
+            {
+                return !fs.is_directory(path) && path.extension() == ext;
+            };
     }
 
     enum class LintStatus
@@ -31,8 +31,8 @@ namespace vcpkg::PostBuildLint
         std::regex regex;
 
         OutdatedDynamicCrt(const std::string& name, const std::string& regex_as_string)
-            : name(name),
-              regex(std::regex(regex_as_string, std::regex_constants::icase)) {}
+            : name(name)
+            , regex(std::regex(regex_as_string, std::regex_constants::icase)) {}
     };
 
     const std::vector<OutdatedDynamicCrt>& get_outdated_dynamic_crts()
@@ -61,11 +61,11 @@ namespace vcpkg::PostBuildLint
         return v;
     }
 
-    template <class T>
-    static bool contains_and_enabled(const std::map<T, OptBoolT> map, const T& key)
+    template<class T>
+    static bool contains_and_enabled(const std::map<T, OptBool> map, const T& key)
     {
         auto it = map.find(key);
-        if (it != map.cend() && it->second == OptBoolT::ENABLED)
+        if (it != map.cend() && it->second == OptBoolC::ENABLED)
         {
             return true;
         }
@@ -73,7 +73,7 @@ namespace vcpkg::PostBuildLint
         return false;
     }
 
-    static LintStatus check_for_files_in_include_directory(const Files::Filesystem& fs, const std::map<BuildPolicies, OptBoolT>& policies, const fs::path& package_dir)
+    static LintStatus check_for_files_in_include_directory(const Files::Filesystem& fs, const std::map<BuildPolicies, OptBool>& policies, const fs::path& package_dir)
     {
         if (contains_and_enabled(policies, BuildPoliciesC::EMPTY_INCLUDE_FOLDER))
         {
@@ -97,9 +97,9 @@ namespace vcpkg::PostBuildLint
         std::vector<fs::path> files_found = fs.get_files_recursive(debug_include_dir);
 
         Util::unstable_keep_if(files_found, [&fs](const fs::path& path)
-        {
-            return !fs.is_directory(path) && path.extension() != ".ifc";
-        });
+                               {
+                                   return !fs.is_directory(path) && path.extension() != ".ifc";
+                               });
 
         if (!files_found.empty())
         {
@@ -443,10 +443,10 @@ namespace vcpkg::PostBuildLint
         return LintStatus::ERROR_DETECTED;
     }
 
-    static LintStatus check_lib_files_are_available_if_dlls_are_available(const std::map<BuildPolicies, OptBoolT>& policies, const size_t lib_count, const size_t dll_count, const fs::path& lib_dir)
+    static LintStatus check_lib_files_are_available_if_dlls_are_available(const std::map<BuildPolicies, OptBool>& policies, const size_t lib_count, const size_t dll_count, const fs::path& lib_dir)
     {
         auto it = policies.find(BuildPoliciesC::DLLS_WITHOUT_LIBS);
-        if (it != policies.cend() && it->second == OptBoolT::ENABLED)
+        if (it != policies.cend() && it->second == OptBoolC::ENABLED)
         {
             return LintStatus::SUCCESS;
         }
@@ -499,9 +499,9 @@ namespace vcpkg::PostBuildLint
         std::vector<fs::path> empty_directories = fs.get_files_recursive(dir);
 
         Util::unstable_keep_if(empty_directories, [&fs](const fs::path& current)
-        {
-            return fs.is_directory(current) && fs.is_empty(current);
-        });
+                               {
+                                   return fs.is_directory(current) && fs.is_empty(current);
+                               });
 
         if (!empty_directories.empty())
         {
@@ -616,12 +616,12 @@ namespace vcpkg::PostBuildLint
     {
         std::vector<fs::path> misplaced_files = fs.get_files_non_recursive(dir);
         Util::unstable_keep_if(misplaced_files, [&fs](const fs::path& path)
-        {
-            const std::string filename = path.filename().generic_string();
-            if (_stricmp(filename.c_str(), "CONTROL") == 0 || _stricmp(filename.c_str(), "BUILD_INFO") == 0)
-                return false;
-            return !fs.is_directory(path);
-        });
+                               {
+                                   const std::string filename = path.filename().generic_string();
+                                   if (_stricmp(filename.c_str(), "CONTROL") == 0 || _stricmp(filename.c_str(), "BUILD_INFO") == 0)
+                                       return false;
+                                   return !fs.is_directory(path);
+                               });
 
         if (!misplaced_files.empty())
         {

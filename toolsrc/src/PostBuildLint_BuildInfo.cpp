@@ -30,7 +30,7 @@ namespace vcpkg::PostBuildLint
         {
             const BuildPolicies policy = BuildPolicies::parse(p.first);
             Checks::check_exit(VCPKG_LINE_INFO, policy != BuildPoliciesC::NULLVALUE, "Unknown policy found: %s", p.first);
-            const OptBoolT status = OptBool::parse(p.second);
+            const OptBool status = OptBool::parse(p.second);
             build_info.policies.emplace(policy, status);
         }
 

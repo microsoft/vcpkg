@@ -199,14 +199,14 @@ int wmain(const int argc, const wchar_t* const* const argv)
 
     const VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(argc, argv);
 
-    if (args.printmetrics != OptBoolT::UNSPECIFIED)
-        Metrics::set_print_metrics(args.printmetrics == OptBoolT::ENABLED);
-    if (args.sendmetrics != OptBoolT::UNSPECIFIED)
-        Metrics::set_send_metrics(args.sendmetrics == OptBoolT::ENABLED);
+    if (args.printmetrics != OptBoolC::UNSPECIFIED)
+        Metrics::set_print_metrics(args.printmetrics == OptBoolC::ENABLED);
+    if (args.sendmetrics != OptBoolC::UNSPECIFIED)
+        Metrics::set_send_metrics(args.sendmetrics == OptBoolC::ENABLED);
 
-    if (args.debug != OptBoolT::UNSPECIFIED)
+    if (args.debug != OptBoolC::UNSPECIFIED)
     {
-        g_debugging = (args.debug == OptBoolT::ENABLED);
+        g_debugging = (args.debug == OptBoolC::ENABLED);
     }
 
     if (g_debugging)

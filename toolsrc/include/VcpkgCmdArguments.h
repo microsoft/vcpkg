@@ -14,9 +14,9 @@ namespace vcpkg
 
         std::unique_ptr<std::string> vcpkg_root_dir;
         std::unique_ptr<std::string> triplet;
-        OptBoolT debug = OptBoolT::UNSPECIFIED;
-        OptBoolT  sendmetrics = OptBoolT::UNSPECIFIED;
-        OptBoolT  printmetrics = OptBoolT::UNSPECIFIED;
+        OptBool debug = OptBoolC::UNSPECIFIED;
+        OptBool  sendmetrics = OptBoolC::UNSPECIFIED;
+        OptBool  printmetrics = OptBoolC::UNSPECIFIED;
 
         std::string command;
         std::vector<std::string> command_arguments;
