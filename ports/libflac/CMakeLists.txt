@@ -25,12 +25,13 @@ endif()
 if(LIBFLAC_ARCHITECTURE MATCHES x86)
     add_definitions(-DFLAC__CPU_IA32)
     add_definitions(-DFLAC__HAS_NASM)
-    enable_language(ASM_NASM)
-    list(APPEND LIBFLAC_SOURCES
-        src/libFLAC/ia32/cpu_asm.nasm
-        src/libFLAC/ia32/fixed_asm.nasm
-        src/libFLAC/ia32/lpc_asm.nasm)
-    set(CMAKE_ASM_NASM_FLAGS "-i\"${PROJECT_SOURCE_DIR}/src/libFLAC/ia32/\" -f win32 -d OBJ_FORMAT_win32")
+    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/nasm)
+    foreach(ASM_SOURCE cpu_asm fixed_asm lpc_asm)
+        execute_process(COMMAND nasm "-i${PROJECT_SOURCE_DIR}/src/libFLAC/ia32/" -f win32 -d OBJ_FORMAT_win32 -f win32 
+            -o "${CMAKE_BINARY_DIR}/nasm/${ASM_SOURCE}.obj" "${PROJECT_SOURCE_DIR}/src/libFLAC/ia32/${ASM_SOURCE}.nasm"
+            WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+        list(APPEND LIBFLAC_SOURCES ${CMAKE_BINARY_DIR}/nasm/${ASM_SOURCE}.obj)
+    endforeach()
 elseif(LIBFLAC_ARCHITECTURE MATCHES x64)
     add_definitions(-DFLAC__CPU_X86_64)
     add_definitions(-DENABLE_64_BIT_WORDS)
