@@ -15,7 +15,10 @@ namespace vcpkg::Commands::Export
     using Dependencies::RequestType;
     using Dependencies::ExportPlanType;
 
-    static std::string create_nuspec_file_contents(const std::string& raw_exported_dir, const std::string& nuget_id, const std::string& nupkg_version)
+    static std::string create_nuspec_file_contents(const std::string& raw_exported_dir,
+                                                   const std::string& targets_redirect_path,
+                                                   const std::string& nuget_id,
+                                                   const std::string& nupkg_version)
     {
         static constexpr auto content_template = R"(
 <package>
@@ -31,7 +34,7 @@ namespace vcpkg::Commands::Export
         <file src="@RAW_EXPORTED_DIR@\installed\**" target="installed" />
         <file src="@RAW_EXPORTED_DIR@\scripts\**" target="scripts" />
         <file src="@RAW_EXPORTED_DIR@\.vcpkg-root" target="" />
-        <file src="@RAW_EXPORTED_DIR@\vcpkg.targets" target="build\native\@NUGET_ID@.targets" />
+        <file src="@TARGETS_REDIRECT_PATH@" target="build\native\@NUGET_ID@.targets" />
     </files>
 </package>
 )";
@@ -39,6 +42,7 @@ namespace vcpkg::Commands::Export
         std::string nuspec_file_content = std::regex_replace(content_template, std::regex("@NUGET_ID@"), nuget_id);
         nuspec_file_content = std::regex_replace(nuspec_file_content, std::regex("@VERSION@"), nupkg_version);
         nuspec_file_content = std::regex_replace(nuspec_file_content, std::regex("@RAW_EXPORTED_DIR@"), raw_exported_dir);
+        nuspec_file_content = std::regex_replace(nuspec_file_content, std::regex("@TARGETS_REDIRECT_PATH@"), targets_redirect_path);
         return nuspec_file_content;
     }
 
@@ -104,8 +108,13 @@ namespace vcpkg::Commands::Export
         Files::Filesystem& fs = paths.get_filesystem();
         const fs::path& nuget_exe = paths.get_nuget_exe();
 
+        // This file will be placed in "build\native" in the nuget package. Therefore, go up two dirs.
+        const std::string targets_redirect_content = create_targets_redirect("../../scripts/buildsystems/msbuild/vcpkg.targets");
+        const fs::path targets_redirect = paths.buildsystems / "tmp" / "vcpkg.export.nuget.targets";
+        fs.write_contents(targets_redirect, targets_redirect_content);
+
         const std::string nuget_id = raw_exported_dir.filename().string();
-        const std::string nuspec_file_content = create_nuspec_file_contents(raw_exported_dir.string(), nuget_id, NUPKG_VERSION);
+        const std::string nuspec_file_content = create_nuspec_file_contents(raw_exported_dir.string(), targets_redirect.string(), nuget_id, NUPKG_VERSION);
         const fs::path nuspec_file_path = paths.buildsystems / "tmp" / "vcpkg.export.nuspec";
         fs.write_contents(nuspec_file_path, nuspec_file_content);
 
@@ -297,12 +306,6 @@ namespace vcpkg::Commands::Export
             fs.copy_file(source, destination, fs::copy_options::overwrite_existing, ec);
             Checks::check_exit(VCPKG_LINE_INFO, !ec);
         }
-
-        // This file will be placed in "build\native" in the nuget package. Therefore, go up two dirs.
-        const std::string targets_redirect_content = create_targets_redirect("../../scripts/buildsystems/msbuild/vcpkg.targets");
-        const fs::path targets_redirect = raw_exported_dir_path / "vcpkg.targets";
-        fs.write_contents(targets_redirect, targets_redirect_content);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec);
 
         if (raw)
         {
