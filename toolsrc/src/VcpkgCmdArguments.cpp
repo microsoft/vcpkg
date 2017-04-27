@@ -78,6 +78,9 @@ namespace vcpkg
 
             if (arg[0] == '-' && arg[1] == '-')
             {
+                // make argument case insensitive
+                auto& f = std::use_facet<std::ctype<char>>(std::locale());
+                f.tolower(&arg[0], &arg[0] + arg.size());
                 // command switch
                 if (arg == "--vcpkg-root")
                 {
