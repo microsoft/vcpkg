@@ -24,9 +24,12 @@ set(ENV{PATH} "${NEWPATH}")
 set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 
 vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc -c "pacman -Sy --noconfirm --needed make"
+    COMMAND ${BASH} --noprofile --norc -c "pacman -Sy --noconfirm --needed make automake1.15"
     WORKING_DIRECTORY "${MSYS_ROOT}"
     LOGNAME "pacman-${TARGET_TRIPLET}")
+
+set(AUTOMAKE_DIR ${MSYS_ROOT}/usr/share/automake-1.15)
+file(COPY ${AUTOMAKE_DIR}/config.guess ${AUTOMAKE_DIR}/config.sub DESTINATION ${SOURCE_PATH}/source)
 
 set(CONFIGURE_OPTIONS "--host=i686-pc-mingw32 --disable-samples --disable-tests")
 
