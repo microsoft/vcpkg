@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\tests_arguments.cpp" />
     <ClCompile Include="..\src\tests_dependencies.cpp" />
     <ClCompile Include="..\src\tests_paragraph.cpp" />
   </ItemGroup>
