@@ -15,7 +15,7 @@ namespace vcpkg::Commands::Export
     using Dependencies::RequestType;
     using Dependencies::ExportPlanType;
 
-    static std::string create_nuspec_file_contents(const std::string& raw_exported_dir_filename, const std::string& nuget_id, const std::string& nupkg_version)
+    static std::string create_nuspec_file_contents(const std::string& raw_exported_dir, const std::string& nuget_id, const std::string& nupkg_version)
     {
         static constexpr auto content_template = R"(
 <package>
@@ -38,7 +38,7 @@ namespace vcpkg::Commands::Export
 
         std::string nuspec_file_content = std::regex_replace(content_template, std::regex("@NUGET_ID@"), nuget_id);
         nuspec_file_content = std::regex_replace(nuspec_file_content, std::regex("@VERSION@"), nupkg_version);
-        nuspec_file_content = std::regex_replace(nuspec_file_content, std::regex("@RAW_EXPORTED_DIR@"), raw_exported_dir_filename);
+        nuspec_file_content = std::regex_replace(nuspec_file_content, std::regex("@RAW_EXPORTED_DIR@"), raw_exported_dir);
         return nuspec_file_content;
     }
 
@@ -104,11 +104,9 @@ namespace vcpkg::Commands::Export
         Files::Filesystem& fs = paths.get_filesystem();
         const fs::path& nuget_exe = paths.get_nuget_exe();
 
-        const std::string filename = raw_exported_dir.filename().string();
-        const std::string nuget_id = filename;
-
-        const std::string nuspec_file_content = create_nuspec_file_contents(filename, nuget_id, NUPKG_VERSION);
-        const fs::path nuspec_file_path = output_dir / "export.nuspec";
+        const std::string nuget_id = raw_exported_dir.filename().string();
+        const std::string nuspec_file_content = create_nuspec_file_contents(raw_exported_dir.string(), nuget_id, NUPKG_VERSION);
+        const fs::path nuspec_file_path = paths.buildsystems / "tmp" / "vcpkg.export.nuspec";
         fs.write_contents(nuspec_file_path, nuspec_file_content);
 
         // -NoDefaultExcludes is needed for ".vcpkg-root"
@@ -118,7 +116,7 @@ namespace vcpkg::Commands::Export
         const int exit_code = System::cmd_execute_clean(cmd_line);
         Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: NuGet package creation failed");
 
-        const fs::path output_path = output_dir / (nuget_id + ".nupkg");
+        const fs::path output_path = paths.buildsystems / "tmp" / (nuget_id + ".nupkg");
         return output_path;
     }
 
