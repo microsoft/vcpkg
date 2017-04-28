@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
 #include <utility>
+#include <vector>
 
 namespace vcpkg::Util
 {
@@ -47,7 +47,7 @@ namespace vcpkg::Util
     }
 
     template<class K, class V, class Container, class Func>
-     void group_by(const Container& cont, std::map<K, std::vector<const V*>>* output, Func f)
+    void group_by(const Container& cont, std::map<K, std::vector<const V*>>* output, Func f)
     {
         for (const V& element : cont)
         {

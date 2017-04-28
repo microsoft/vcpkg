@@ -1,4 +1,5 @@
 #include "pch.h"
+
 #include "VersionT.h"
 #include "vcpkg_Strings.h"
 
@@ -14,8 +15,5 @@ namespace vcpkg
     VersionDiff::VersionDiff() : left(), right() {}
     VersionDiff::VersionDiff(const VersionT& left, const VersionT& right) : left(left), right(right) {}
 
-    std::string VersionDiff::to_string() const
-    {
-        return Strings::format("%s -> %s", left.value, right.value);
-    }
+    std::string VersionDiff::to_string() const { return Strings::format("%s -> %s", left.value, right.value); }
 }

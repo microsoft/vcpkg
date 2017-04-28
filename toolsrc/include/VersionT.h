@@ -13,8 +13,8 @@ namespace vcpkg
         std::string value;
     };
 
-    bool operator ==(const VersionT& left, const VersionT& right);
-    bool operator !=(const VersionT& left, const VersionT& right);
+    bool operator==(const VersionT& left, const VersionT& right);
+    bool operator!=(const VersionT& left, const VersionT& right);
 
     struct VersionDiff
     {

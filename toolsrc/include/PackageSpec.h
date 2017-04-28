@@ -26,28 +26,22 @@ namespace vcpkg
 
     bool operator==(const PackageSpec& left, const PackageSpec& right);
     bool operator!=(const PackageSpec& left, const PackageSpec& right);
-} //namespace vcpkg
+}
 
-namespace std
+template<>
+struct std::hash<vcpkg::PackageSpec>
 {
-    template <>
-    struct hash<vcpkg::PackageSpec>
+    size_t operator()(const vcpkg::PackageSpec& value) const
     {
-        size_t operator()(const vcpkg::PackageSpec& value) const
-        {
-            size_t hash = 17;
-            hash = hash * 31 + std::hash<std::string>()(value.name());
-            hash = hash * 31 + std::hash<vcpkg::Triplet>()(value.triplet());
-            return hash;
-        }
-    };
+        size_t hash = 17;
+        hash = hash * 31 + std::hash<std::string>()(value.name());
+        hash = hash * 31 + std::hash<vcpkg::Triplet>()(value.triplet());
+        return hash;
+    }
+};
 
-    template <>
-    struct equal_to<vcpkg::PackageSpec>
-    {
-        bool operator()(const vcpkg::PackageSpec& left, const vcpkg::PackageSpec& right) const
-        {
-            return left == right;
-        }
-    };
-} // namespace std
+template<>
+struct std::equal_to<vcpkg::PackageSpec>
+{
+    bool operator()(const vcpkg::PackageSpec& left, const vcpkg::PackageSpec& right) const { return left == right; }
+};

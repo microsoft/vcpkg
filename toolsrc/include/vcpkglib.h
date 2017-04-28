@@ -1,8 +1,8 @@
 #pragma once
 
+#include "SortedVector.h"
 #include "StatusParagraphs.h"
 #include "VcpkgPaths.h"
-#include "SortedVector.h"
 
 namespace vcpkg
 {
@@ -19,8 +19,8 @@ namespace vcpkg
     };
 
     std::vector<StatusParagraph*> get_installed_ports(const StatusParagraphs& status_db);
-    std::vector<StatusParagraphAndAssociatedFiles> get_installed_files(const VcpkgPaths& paths, const StatusParagraphs& status_db);
-
+    std::vector<StatusParagraphAndAssociatedFiles> get_installed_files(const VcpkgPaths& paths,
+                                                                       const StatusParagraphs& status_db);
 
     struct CMakeVariable
     {
@@ -32,6 +32,8 @@ namespace vcpkg
         std::wstring s;
     };
 
-    std::wstring make_cmake_cmd(const fs::path& cmake_exe, const fs::path& cmake_script, const std::vector<CMakeVariable>& pass_variables);
+    std::wstring make_cmake_cmd(const fs::path& cmake_exe,
+                                const fs::path& cmake_script,
+                                const std::vector<CMakeVariable>& pass_variables);
 
 } // namespace vcpkg

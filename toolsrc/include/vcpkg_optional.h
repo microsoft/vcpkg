@@ -10,18 +10,18 @@ namespace vcpkg
 
     const static constexpr NullOpt nullopt{ 0 };
 
-    template <class T>
+    template<class T>
     class Optional
     {
     public:
-        constexpr Optional() : m_is_present(false), m_t() { }
+        constexpr Optional() : m_is_present(false), m_t() {}
 
         // Constructors are intentionally implicit
-        constexpr Optional(NullOpt) : m_is_present(false), m_t() { }
+        constexpr Optional(NullOpt) : m_is_present(false), m_t() {}
 
-        Optional(const T& t) : m_is_present(true), m_t(t) { }
+        Optional(const T& t) : m_is_present(true), m_t(t) {}
 
-        Optional(T&& t) : m_is_present(true), m_t(std::move(t)) { }
+        Optional(T&& t) : m_is_present(true), m_t(std::move(t)) {}
 
         T&& value_or_exit(const LineInfo& line_info) &&
         {
@@ -35,37 +35,25 @@ namespace vcpkg
             return this->m_t;
         }
 
-        constexpr explicit operator bool() const
-        {
-            return this->m_is_present;
-        }
+        constexpr explicit operator bool() const { return this->m_is_present; }
 
-        constexpr bool has_value() const
-        {
-            return m_is_present;
-        }
+        constexpr bool has_value() const { return m_is_present; }
 
-        template <class U>
+        template<class U>
         T value_or(U&& default_value) const &
         {
             return bool(*this) ? this->m_t : static_cast<T>(std::forward<U>(default_value));
         }
 
-        template <class U>
+        template<class U>
         T value_or(U&& default_value) &&
         {
             return bool(*this) ? std::move(this->m_t) : static_cast<T>(std::forward<U>(default_value));
         }
 
-        const T* get() const
-        {
-            return bool(*this) ? &this->m_t : nullptr;
-        }
+        const T* get() const { return bool(*this) ? &this->m_t : nullptr; }
 
-        T* get()
-        {
-            return bool(*this) ? &this->m_t : nullptr;
-        }
+        T* get() { return bool(*this) ? &this->m_t : nullptr; }
 
     private:
         void exit_if_null(const LineInfo& line_info) const

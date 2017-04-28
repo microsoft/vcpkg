@@ -1,7 +1,7 @@
 #pragma once
 
-#include <string>
 #include <map>
+#include <string>
 
 namespace vcpkg
 {
@@ -20,7 +20,7 @@ namespace vcpkg
         static OptBool from_map(const std::map<T, std::string>& map, const T& key);
 
         constexpr OptBool() : backing_enum(BackingEnum::UNSPECIFIED) {}
-        constexpr explicit OptBool(BackingEnum backing_enum) : backing_enum(backing_enum) { }
+        constexpr explicit OptBool(BackingEnum backing_enum) : backing_enum(backing_enum) {}
         constexpr operator BackingEnum() const { return backing_enum; }
 
     private:

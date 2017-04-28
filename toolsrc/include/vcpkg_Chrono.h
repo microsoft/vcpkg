@@ -12,16 +12,13 @@ namespace vcpkg
 
         constexpr ElapsedTime() : m_start_tick() {}
 
-        template <class TimeUnit>
+        template<class TimeUnit>
         TimeUnit elapsed() const
         {
             return std::chrono::duration_cast<TimeUnit>(std::chrono::high_resolution_clock::now() - this->m_start_tick);
         }
 
-        double microseconds() const
-        {
-            return elapsed<std::chrono::duration<double, std::micro>>().count();
-        }
+        double microseconds() const { return elapsed<std::chrono::duration<double, std::micro>>().count(); }
 
         std::string to_string() const;
 

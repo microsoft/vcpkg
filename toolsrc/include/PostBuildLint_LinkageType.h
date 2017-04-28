@@ -15,7 +15,7 @@ namespace vcpkg::PostBuildLint
         static LinkageType value_of(const std::string& as_string);
 
         constexpr LinkageType() : backing_enum(BackingEnum::NULLVALUE) {}
-        constexpr explicit LinkageType(BackingEnum backing_enum) : backing_enum(backing_enum) { }
+        constexpr explicit LinkageType(BackingEnum backing_enum) : backing_enum(backing_enum) {}
         constexpr operator BackingEnum() const { return backing_enum; }
 
         const std::string& to_string() const;

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <unordered_map>
 #include "BinaryParagraph.h"
+#include <unordered_map>
 
 namespace vcpkg
 {

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "filesystem_fs.h"
-#include <map>
-#include "vcpkg_expected.h"
 #include "BinaryParagraph.h"
 #include "VcpkgPaths.h"
 #include "VersionT.h"
+#include "filesystem_fs.h"
+#include "vcpkg_expected.h"
+#include <map>
 
 namespace vcpkg::Paragraphs
 {
@@ -22,5 +22,6 @@ namespace vcpkg::Paragraphs
 
     std::vector<SourceParagraph> load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir);
 
-    std::map<std::string, VersionT> extract_port_names_and_versions(const std::vector<SourceParagraph>& source_paragraphs);
+    std::map<std::string, VersionT>
+    extract_port_names_and_versions(const std::vector<SourceParagraph>& source_paragraphs);
 }

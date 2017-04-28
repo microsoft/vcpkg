@@ -1,6 +1,6 @@
 #pragma once
-#include <string>
 #include <array>
+#include <string>
 
 namespace vcpkg::PostBuildLint
 {
@@ -18,7 +18,7 @@ namespace vcpkg::PostBuildLint
         static BuildPolicies parse(const std::string& s);
 
         constexpr BuildPolicies() : backing_enum(BackingEnum::NULLVALUE) {}
-        constexpr explicit BuildPolicies(BackingEnum backing_enum) : backing_enum(backing_enum) { }
+        constexpr explicit BuildPolicies(BackingEnum backing_enum) : backing_enum(backing_enum) {}
         constexpr operator BackingEnum() const { return backing_enum; }
 
         const std::string& to_string() const;
@@ -38,5 +38,8 @@ namespace vcpkg::PostBuildLint
         static constexpr BuildPolicies ONLY_RELEASE_CRT(BuildPolicies::BackingEnum::ONLY_RELEASE_CRT);
         static constexpr BuildPolicies EMPTY_INCLUDE_FOLDER(BuildPolicies::BackingEnum::EMPTY_INCLUDE_FOLDER);
 
-        static constexpr std::array<BuildPolicies, 4> VALUES = { EMPTY_PACKAGE,DLLS_WITHOUT_LIBS, ONLY_RELEASE_CRT, EMPTY_INCLUDE_FOLDER };
-    }}
+        static constexpr std::array<BuildPolicies, 4> VALUES = {
+            EMPTY_PACKAGE, DLLS_WITHOUT_LIBS, ONLY_RELEASE_CRT, EMPTY_INCLUDE_FOLDER
+        };
+    }
+}

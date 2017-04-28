@@ -1,9 +1,9 @@
 #pragma once
-#include <vector>
 #include "PackageSpec.h"
 #include "StatusParagraphs.h"
 #include "VcpkgPaths.h"
 #include "vcpkg_optional.h"
+#include <vector>
 
 namespace vcpkg::Dependencies
 {
@@ -97,9 +97,14 @@ namespace vcpkg::Dependencies
         RequestType request_type;
     };
 
-    std::vector<InstallPlanAction> create_install_plan(const VcpkgPaths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
+    std::vector<InstallPlanAction> create_install_plan(const VcpkgPaths& paths,
+                                                       const std::vector<PackageSpec>& specs,
+                                                       const StatusParagraphs& status_db);
 
-    std::vector<RemovePlanAction> create_remove_plan(const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
+    std::vector<RemovePlanAction> create_remove_plan(const std::vector<PackageSpec>& specs,
+                                                     const StatusParagraphs& status_db);
 
-    std::vector<ExportPlanAction> create_export_plan(const VcpkgPaths& paths, const std::vector<PackageSpec>& specs, const StatusParagraphs& status_db);
+    std::vector<ExportPlanAction> create_export_plan(const VcpkgPaths& paths,
+                                                     const std::vector<PackageSpec>& specs,
+                                                     const StatusParagraphs& status_db);
 }

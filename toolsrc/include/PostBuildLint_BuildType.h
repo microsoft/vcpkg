@@ -20,11 +20,10 @@ namespace vcpkg::PostBuildLint
 
         BuildType() = delete;
 
-        constexpr explicit BuildType(const BackingEnum backing_enum, const ConfigurationType config, const LinkageType linkage)
-            :
-            backing_enum(backing_enum)
-            , m_config(config)
-            , m_linkage(linkage) { }
+        constexpr BuildType(const BackingEnum backing_enum, const ConfigurationType config, const LinkageType linkage)
+            : backing_enum(backing_enum), m_config(config), m_linkage(linkage)
+        {
+        }
 
         constexpr operator BackingEnum() const { return backing_enum; }
 
@@ -41,12 +40,19 @@ namespace vcpkg::PostBuildLint
 
     namespace BuildTypeC
     {
+        namespace CC = ConfigurationTypeC;
+        namespace LC = LinkageTypeC;
+        using BE = BuildType::BackingEnum;
+
         static constexpr const char* ENUM_NAME = "vcpkg::PostBuildLint::BuildType";
 
-        static constexpr BuildType DEBUG_STATIC = BuildType(BuildType::BackingEnum::DEBUG_STATIC, ConfigurationTypeC::DEBUG, LinkageTypeC::STATIC);
-        static constexpr BuildType DEBUG_DYNAMIC = BuildType(BuildType::BackingEnum::DEBUG_DYNAMIC, ConfigurationTypeC::DEBUG, LinkageTypeC::DYNAMIC);
-        static constexpr BuildType RELEASE_STATIC = BuildType(BuildType::BackingEnum::RELEASE_STATIC, ConfigurationTypeC::RELEASE, LinkageTypeC::STATIC);
-        static constexpr BuildType RELEASE_DYNAMIC = BuildType(BuildType::BackingEnum::RELEASE_DYNAMIC, ConfigurationTypeC::RELEASE, LinkageTypeC::DYNAMIC);
+        static constexpr BuildType DEBUG_STATIC = { BE::DEBUG_STATIC, CC::DEBUG, LC::STATIC };
+        static constexpr BuildType DEBUG_DYNAMIC = { BE::DEBUG_DYNAMIC, CC::DEBUG, LC::DYNAMIC };
+        static constexpr BuildType RELEASE_STATIC = { BE::RELEASE_STATIC, CC::RELEASE, LC::STATIC };
+        static constexpr BuildType RELEASE_DYNAMIC = { BE::RELEASE_DYNAMIC, CC::RELEASE, LC::DYNAMIC };
 
-        static constexpr std::array<BuildType, 4> VALUES = { DEBUG_STATIC, DEBUG_DYNAMIC, RELEASE_STATIC, RELEASE_DYNAMIC };
-    }}
+        static constexpr std::array<BuildType, 4> VALUES = {
+            DEBUG_STATIC, DEBUG_DYNAMIC, RELEASE_STATIC, RELEASE_DYNAMIC
+        };
+    }
+}

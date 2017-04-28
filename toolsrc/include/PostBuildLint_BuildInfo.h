@@ -1,10 +1,10 @@
 #pragma once
 
+#include "OptBool.h"
+#include "PostBuildLint_BuildPolicies.h"
+#include "PostBuildLint_LinkageType.h"
 #include "filesystem_fs.h"
 #include "vcpkg_Files.h"
-#include "PostBuildLint_BuildPolicies.h"
-#include "OptBool.h"
-#include "PostBuildLint_LinkageType.h"
 
 namespace vcpkg::PostBuildLint
 {

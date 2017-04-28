@@ -182,7 +182,6 @@
     <ClInclude Include="..\include\VersionT.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\include\VersionT.cpp" />
     <ClCompile Include="..\src\BinaryParagraph.cpp" />
     <ClCompile Include="..\src\commands_ci.cpp" />
     <ClCompile Include="..\src\commands_depends.cpp" />
@@ -244,6 +243,7 @@
     <ClCompile Include="..\src\VcpkgPaths.cpp" />
     <ClCompile Include="..\src\vcpkg_Strings.cpp" />
     <ClCompile Include="..\src\vcpkg_System.cpp" />
+    <ClCompile Include="..\src\VersionT.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
