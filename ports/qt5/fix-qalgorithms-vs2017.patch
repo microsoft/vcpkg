@@ -80,13 +80,13 @@ index 303374b..7e84695 100644
 @@ -660,9 +661,13 @@ Q_DECL_CONSTEXPR Q_ALWAYS_INLINE uint qt_builtin_popcountll(quint64 v) Q_DECL_NO
  #endif // MSVC
  #endif // QT_HAS_CONSTEXPR_BUILTINS
-
+ 
 +#ifndef QT_POPCOUNT_CONSTEXPR
 +#define QT_POPCOUNT_CONSTEXPR Q_DECL_CONSTEXPR
 +#endif
 +
  } //namespace QAlgorithmsPrivate
-
+ 
 -Q_DECL_CONST_FUNCTION Q_DECL_CONSTEXPR inline uint qPopulationCount(quint32 v) Q_DECL_NOTHROW
 +Q_DECL_CONST_FUNCTION QT_POPCOUNT_CONSTEXPR inline uint qPopulationCount(quint32 v) Q_DECL_NOTHROW
  {
@@ -95,7 +95,7 @@ index 303374b..7e84695 100644
 @@ -675,7 +680,7 @@ Q_DECL_CONST_FUNCTION Q_DECL_CONSTEXPR inline uint qPopulationCount(quint32 v) Q
  #endif
  }
-
+ 
 -Q_DECL_CONST_FUNCTION Q_DECL_CONSTEXPR inline uint qPopulationCount(quint8 v) Q_DECL_NOTHROW
 +Q_DECL_CONST_FUNCTION QT_POPCOUNT_CONSTEXPR inline uint qPopulationCount(quint8 v) Q_DECL_NOTHROW
  {
@@ -104,7 +104,7 @@ index 303374b..7e84695 100644
 @@ -685,7 +690,7 @@ Q_DECL_CONST_FUNCTION Q_DECL_CONSTEXPR inline uint qPopulationCount(quint8 v) Q_
  #endif
  }
-
+ 
 -Q_DECL_CONST_FUNCTION Q_DECL_CONSTEXPR inline uint qPopulationCount(quint16 v) Q_DECL_NOTHROW
 +Q_DECL_CONST_FUNCTION QT_POPCOUNT_CONSTEXPR inline uint qPopulationCount(quint16 v) Q_DECL_NOTHROW
  {
@@ -113,7 +113,7 @@ index 303374b..7e84695 100644
 @@ -696,7 +701,7 @@ Q_DECL_CONST_FUNCTION Q_DECL_CONSTEXPR inline uint qPopulationCount(quint16 v) Q
  #endif
  }
-
+ 
 -Q_DECL_CONST_FUNCTION Q_DECL_CONSTEXPR inline uint qPopulationCount(quint64 v) Q_DECL_NOTHROW
 +Q_DECL_CONST_FUNCTION QT_POPCOUNT_CONSTEXPR inline uint qPopulationCount(quint64 v) Q_DECL_NOTHROW
  {
@@ -122,7 +122,7 @@ index 303374b..7e84695 100644
 @@ -711,7 +716,7 @@ Q_DECL_CONST_FUNCTION Q_DECL_CONSTEXPR inline uint qPopulationCount(quint64 v) Q
  #endif
  }
-
+ 
 -Q_DECL_CONST_FUNCTION Q_DECL_CONSTEXPR inline uint qPopulationCount(long unsigned int v) Q_DECL_NOTHROW
 +Q_DECL_CONST_FUNCTION QT_POPCOUNT_CONSTEXPR inline uint qPopulationCount(long unsigned int v) Q_DECL_NOTHROW
  {
@@ -133,6 +133,6 @@ index 303374b..7e84695 100644
  #undef QALGORITHMS_USE_BUILTIN_POPCOUNT
  #endif
 +#undef QT_POPCOUNT_CONSTEXPR
-
+ 
  Q_DECL_RELAXED_CONSTEXPR inline uint qCountTrailingZeroBits(quint32 v) Q_DECL_NOTHROW
  {

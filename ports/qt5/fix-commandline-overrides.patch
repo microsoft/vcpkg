@@ -18,7 +18,7 @@ index eaaa161..fdec8ea 100644
 +++ b/qtbase/mkspecs/features/qt_configure.prf
 @@ -401,6 +401,7 @@ defineReplace(qtConfPrepareArgs) {
  }
-
+ 
  defineTest(qtConfSetupLibraries) {
 +    asspfx = $${currentConfig}.commandline.assignments
      for (l, $${currentConfig}.libraries._KEYS_) {
@@ -69,7 +69,7 @@ index eaaa161..fdec8ea 100644
 +    }
 +    export($${asspfx}._KEYS_)
 +
-
+ 
      # reverse mapping for assignments on command line.
 -    for (a, $${currentConfig}.commandline.assignments._KEYS_) {
 -        apfx = $${currentConfig}.commandline.assignments.$${a}
@@ -81,7 +81,7 @@ index eaaa161..fdec8ea 100644
 @@ -479,6 +514,18 @@ defineTest(qtConfLibrary_inline) {
          export($${1}.libs)
      }
-
+ 
 +    incdir = $$val_escape(config.input.$${input}.incdir)
 +    !isEmpty(incdir) {
 +        $${1}.includedir = $$incdir
@@ -96,7 +96,7 @@ index eaaa161..fdec8ea 100644
 +
      return(true)
  }
-
+ 
 diff --git a/qtbase/src/gui/configure.json b/qtbase/src/gui/configure.json
 index 1f50116..af03362 100644
 --- a/qtbase/src/gui/configure.json
@@ -115,7 +115,7 @@ index 1e08aa7..314970e 100644
 --- a/qtbase/src/network/configure.json
 +++ b/qtbase/src/network/configure.json
 @@ -7,9 +7,6 @@
-
+ 
      "commandline": {
          "assignments": {
 -            "OPENSSL_LIBS": "openssl.libs",
