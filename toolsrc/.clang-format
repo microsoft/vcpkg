@@ -1,6 +1,7 @@
 ---
 BasedOnStyle: WebKit
 Language: Cpp
+Standard: Cpp11
 
 UseTab: Never
 IndentWidth: 4
