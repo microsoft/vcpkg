@@ -1,7 +1,8 @@
 #include "pch.h"
+
 #include "vcpkg_Commands.h"
-#include "vcpkg_System.h"
 #include "vcpkg_Input.h"
+#include "vcpkg_System.h"
 
 namespace vcpkg::Commands::Edit
 {
@@ -48,7 +49,8 @@ namespace vcpkg::Commands::Edit
             };
             for (auto&& keypath : regkeys)
             {
-                const Optional<std::wstring> code_installpath = System::get_registry_string(HKEY_LOCAL_MACHINE, keypath, L"InstallLocation");
+                const Optional<std::wstring> code_installpath =
+                    System::get_registry_string(HKEY_LOCAL_MACHINE, keypath, L"InstallLocation");
                 if (auto c = code_installpath.get())
                 {
                     auto p = fs::path(*c) / "Code.exe";
@@ -69,10 +71,12 @@ namespace vcpkg::Commands::Edit
 
         if (env_EDITOR.empty())
         {
-            Checks::exit_with_message(VCPKG_LINE_INFO, "Visual Studio Code was not found and the environment variable EDITOR is not set");
+            Checks::exit_with_message(
+                VCPKG_LINE_INFO, "Visual Studio Code was not found and the environment variable EDITOR is not set");
         }
 
-        std::wstring cmdLine = Strings::wformat(LR"("%s" "%s" "%s" -n)", env_EDITOR, portpath.native(), (portpath / "portfile.cmake").native());
+        std::wstring cmdLine = Strings::wformat(
+            LR"("%s" "%s" "%s" -n)", env_EDITOR, portpath.native(), (portpath / "portfile.cmake").native());
         Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute(cmdLine));
     }
 }

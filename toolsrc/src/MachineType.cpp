@@ -1,4 +1,5 @@
 #include "pch.h"
+
 #include "MachineType.h"
 #include "vcpkg_Checks.h"
 
@@ -33,10 +34,8 @@ namespace vcpkg
             case MachineType::SH4:
             case MachineType::SH5:
             case MachineType::THUMB:
-            case MachineType::WCEMIPSV2:
-                return t;
-            default:
-                Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown machine type code 0x%x", value);
+            case MachineType::WCEMIPSV2: return t;
+            default: Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown machine type code 0x%x", value);
         }
     }
 }

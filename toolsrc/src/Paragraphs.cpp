@@ -1,13 +1,14 @@
 #include "pch.h"
+
+#include "ParagraphParseResult.h"
 #include "Paragraphs.h"
 #include "vcpkg_Files.h"
-#include "ParagraphParseResult.h"
 
 namespace vcpkg::Paragraphs
 {
     struct Parser
     {
-        Parser(const char* c, const char* e) : cur(c), end(e) { }
+        Parser(const char* c, const char* e) : cur(c), end(e) {}
 
     private:
         const char* cur;
@@ -36,10 +37,8 @@ namespace vcpkg::Paragraphs
         {
             while (ch != '\r' && ch != '\n' && ch != '\0')
                 next(ch);
-            if (ch == '\r')
-                next(ch);
-            if (ch == '\n')
-                next(ch);
+            if (ch == '\r') next(ch);
+            if (ch == '\n') next(ch);
         }
 
         void skip_spaces(char& ch)
@@ -50,20 +49,12 @@ namespace vcpkg::Paragraphs
 
         static bool is_alphanum(char ch)
         {
-            return (ch >= 'A' && ch <= 'Z')
-                   || (ch >= 'a' && ch <= 'z')
-                   || (ch >= '0' && ch <= '9');
+            return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9');
         }
 
-        static bool is_comment(char ch)
-        {
-            return (ch == '#');
-        }
+        static bool is_comment(char ch) { return (ch == '#'); }
 
-        static bool is_lineend(char ch)
-        {
-            return ch == '\r' || ch == '\n' || ch == 0;
-        }
+        static bool is_lineend(char ch) { return ch == '\r' || ch == '\n' || ch == 0; }
 
         void get_fieldvalue(char& ch, std::string& fieldvalue)
         {
@@ -78,10 +69,8 @@ namespace vcpkg::Paragraphs
 
                 fieldvalue.append(beginning_of_line, cur);
 
-                if (ch == '\r')
-                    next(ch);
-                if (ch == '\n')
-                    next(ch);
+                if (ch == '\r') next(ch);
+                if (ch == '\n') next(ch);
 
                 if (is_alphanum(ch) || is_comment(ch))
                 {
@@ -106,8 +95,7 @@ namespace vcpkg::Paragraphs
                 // First nonspace is not a newline. This continues the current field value.
                 // We forcibly convert all newlines into single '\n' for ease of text handling later on.
                 fieldvalue.push_back('\n');
-            }
-            while (true);
+            } while (true);
         }
 
         void get_fieldname(char& ch, std::string& fieldname)
@@ -144,8 +132,7 @@ namespace vcpkg::Paragraphs
                 get_fieldvalue(ch, fieldvalue);
 
                 fields.emplace(fieldname, fieldvalue);
-            }
-            while (!is_lineend(ch));
+            } while (!is_lineend(ch));
         }
 
     public:
@@ -172,7 +159,8 @@ namespace vcpkg::Paragraphs
         }
     };
 
-    Expected<std::unordered_map<std::string, std::string>> get_single_paragraph(const Files::Filesystem& fs, const fs::path& control_path)
+    Expected<std::unordered_map<std::string, std::string>> get_single_paragraph(const Files::Filesystem& fs,
+                                                                                const fs::path& control_path)
     {
         const Expected<std::string> contents = fs.read_contents(control_path);
         if (auto spgh = contents.get())
@@ -183,7 +171,8 @@ namespace vcpkg::Paragraphs
         return contents.error_code();
     }
 
-    Expected<std::vector<std::unordered_map<std::string, std::string>>> get_paragraphs(const Files::Filesystem& fs, const fs::path& control_path)
+    Expected<std::vector<std::unordered_map<std::string, std::string>>> get_paragraphs(const Files::Filesystem& fs,
+                                                                                       const fs::path& control_path)
     {
         const Expected<std::string> contents = fs.read_contents(control_path);
         if (auto spgh = contents.get())
@@ -196,7 +185,8 @@ namespace vcpkg::Paragraphs
 
     Expected<std::unordered_map<std::string, std::string>> parse_single_paragraph(const std::string& str)
     {
-        const std::vector<std::unordered_map<std::string, std::string>> p = Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
+        const std::vector<std::unordered_map<std::string, std::string>> p =
+            Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
 
         if (p.size() == 1)
         {
@@ -224,7 +214,8 @@ namespace vcpkg::Paragraphs
 
     Expected<BinaryParagraph> try_load_cached_package(const VcpkgPaths& paths, const PackageSpec& spec)
     {
-        Expected<std::unordered_map<std::string, std::string>> pghs = get_single_paragraph(paths.get_filesystem(), paths.package_dir(spec) / "CONTROL");
+        Expected<std::unordered_map<std::string, std::string>> pghs =
+            get_single_paragraph(paths.get_filesystem(), paths.package_dir(spec) / "CONTROL");
 
         if (auto p = pghs.get())
         {
@@ -249,7 +240,8 @@ namespace vcpkg::Paragraphs
         return output;
     }
 
-    std::map<std::string, VersionT> extract_port_names_and_versions(const std::vector<SourceParagraph>& source_paragraphs)
+    std::map<std::string, VersionT>
+    extract_port_names_and_versions(const std::vector<SourceParagraph>& source_paragraphs)
     {
         std::map<std::string, VersionT> names_and_versions;
         for (const SourceParagraph& port : source_paragraphs)

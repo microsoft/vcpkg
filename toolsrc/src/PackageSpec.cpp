@@ -1,13 +1,11 @@
 #include "pch.h"
+
 #include "PackageSpec.h"
 #include "vcpkg_Util.h"
 
 namespace vcpkg
 {
-    static bool is_valid_package_spec_char(char c)
-    {
-        return (c == '-') || isdigit(c) || (isalpha(c) && islower(c));
-    }
+    static bool is_valid_package_spec_char(char c) { return (c == '-') || isdigit(c) || (isalpha(c) && islower(c)); }
 
     Expected<PackageSpec> PackageSpec::from_string(const std::string& spec_as_string, const Triplet& default_triplet)
     {
@@ -41,33 +39,18 @@ namespace vcpkg
         return p;
     }
 
-    const std::string& PackageSpec::name() const
-    {
-        return this->m_name;
-    }
+    const std::string& PackageSpec::name() const { return this->m_name; }
 
-    const Triplet& PackageSpec::triplet() const
-    {
-        return this->m_triplet;
-    }
+    const Triplet& PackageSpec::triplet() const { return this->m_triplet; }
 
-    std::string PackageSpec::dir() const
-    {
-        return Strings::format("%s_%s", this->m_name, this->m_triplet);
-    }
+    std::string PackageSpec::dir() const { return Strings::format("%s_%s", this->m_name, this->m_triplet); }
 
-    std::string PackageSpec::to_string() const
-    {
-        return Strings::format("%s:%s", this->name(), this->triplet());
-    }
+    std::string PackageSpec::to_string() const { return Strings::format("%s:%s", this->name(), this->triplet()); }
 
     bool operator==(const PackageSpec& left, const PackageSpec& right)
     {
         return left.name() == right.name() && left.triplet() == right.triplet();
     }
 
-    bool operator!=(const PackageSpec& left, const PackageSpec& right)
-    {
-        return !(left == right);
-    }
+    bool operator!=(const PackageSpec& left, const PackageSpec& right) { return !(left == right); }
 }

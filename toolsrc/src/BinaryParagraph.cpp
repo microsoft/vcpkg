@@ -1,13 +1,13 @@
 #include "pch.h"
+
 #include "BinaryParagraph.h"
-#include "vcpkglib_helpers.h"
 #include "vcpkg_Checks.h"
+#include "vcpkglib_helpers.h"
 
 using namespace vcpkg::details;
 
 namespace vcpkg
 {
-    //
     namespace BinaryParagraphRequiredField
     {
         static const std::string PACKAGE = "Package";
@@ -28,7 +28,8 @@ namespace vcpkg
     BinaryParagraph::BinaryParagraph(std::unordered_map<std::string, std::string> fields)
     {
         const std::string name = details::remove_required_field(&fields, BinaryParagraphRequiredField::PACKAGE);
-        const std::string architecture = details::remove_required_field(&fields, BinaryParagraphRequiredField::ARCHITECTURE);
+        const std::string architecture =
+            details::remove_required_field(&fields, BinaryParagraphRequiredField::ARCHITECTURE);
         const Triplet triplet = Triplet::from_canonical_name(architecture);
 
         this->spec = PackageSpec::from_name_and_triplet(name, triplet).value_or_exit(VCPKG_LINE_INFO);
@@ -53,15 +54,9 @@ namespace vcpkg
         this->depends = filter_dependencies(spgh.depends, triplet);
     }
 
-    std::string BinaryParagraph::displayname() const
-    {
-        return this->spec.to_string();
-    }
+    std::string BinaryParagraph::displayname() const { return this->spec.to_string(); }
 
-    std::string BinaryParagraph::dir() const
-    {
-        return this->spec.dir();
-    }
+    std::string BinaryParagraph::dir() const { return this->spec.dir(); }
 
     std::string BinaryParagraph::fullstem() const
     {
@@ -82,9 +77,7 @@ namespace vcpkg
         out_str.append("Architecture: ").append(pgh.spec.triplet().to_string()).push_back('\n');
         out_str.append("Multi-Arch: same\n");
 
-        if (!pgh.maintainer.empty())
-            out_str.append("Maintainer: ").append(pgh.maintainer).push_back('\n');
-        if (!pgh.description.empty())
-            out_str.append("Description: ").append(pgh.description).push_back('\n');
+        if (!pgh.maintainer.empty()) out_str.append("Maintainer: ").append(pgh.maintainer).push_back('\n');
+        if (!pgh.description.empty()) out_str.append("Description: ").append(pgh.description).push_back('\n');
     }
 }

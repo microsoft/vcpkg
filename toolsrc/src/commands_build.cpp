@@ -1,16 +1,17 @@
 #include "pch.h"
-#include "vcpkg_Commands.h"
-#include "StatusParagraphs.h"
-#include "vcpkglib.h"
-#include "vcpkg_Input.h"
-#include "PostBuildLint.h"
-#include "vcpkg_Dependencies.h"
-#include "vcpkg_System.h"
-#include "vcpkg_Chrono.h"
-#include "metrics.h"
-#include "vcpkg_Enums.h"
+
 #include "Paragraphs.h"
+#include "PostBuildLint.h"
+#include "StatusParagraphs.h"
+#include "metrics.h"
+#include "vcpkg_Chrono.h"
+#include "vcpkg_Commands.h"
+#include "vcpkg_Dependencies.h"
+#include "vcpkg_Enums.h"
+#include "vcpkg_Input.h"
+#include "vcpkg_System.h"
 #include "vcpkg_Util.h"
+#include "vcpkglib.h"
 
 namespace vcpkg::Commands::Build
 {
@@ -19,7 +20,9 @@ namespace vcpkg::Commands::Build
 
     static const std::string OPTION_CHECKS_ONLY = "--checks-only";
 
-    static void create_binary_control_file(const VcpkgPaths& paths, const SourceParagraph& source_paragraph, const Triplet& triplet)
+    static void create_binary_control_file(const VcpkgPaths& paths,
+                                           const SourceParagraph& source_paragraph,
+                                           const Triplet& triplet)
     {
         const BinaryParagraph bpgh = BinaryParagraph(source_paragraph, triplet);
         const fs::path binary_control_file = paths.packages / bpgh.dir() / "CONTROL";
@@ -28,23 +31,24 @@ namespace vcpkg::Commands::Build
 
     std::wstring make_build_env_cmd(const Triplet& triplet, const Toolset& toolset)
     {
-        const wchar_t * tonull = L" >nul";
+        const wchar_t* tonull = L" >nul";
         if (g_debugging)
         {
             tonull = L"";
         }
 
-        return Strings::wformat(LR"("%s" %s %s 2>&1)", toolset.vcvarsall.native(), Strings::utf8_to_utf16(triplet.architecture()), tonull);
+        return Strings::wformat(
+            LR"("%s" %s %s 2>&1)", toolset.vcvarsall.native(), Strings::utf8_to_utf16(triplet.architecture()), tonull);
     }
 
-    ExtendedBuildResult build_package(
-        const SourceParagraph& source_paragraph,
-        const PackageSpec& spec,
-        const VcpkgPaths& paths,
-        const fs::path& port_dir,
-        const StatusParagraphs& status_db)
+    ExtendedBuildResult build_package(const SourceParagraph& source_paragraph,
+                                      const PackageSpec& spec,
+                                      const VcpkgPaths& paths,
+                                      const fs::path& port_dir,
+                                      const StatusParagraphs& status_db)
     {
-        Checks::check_exit(VCPKG_LINE_INFO, spec.name() == source_paragraph.name, "inconsistent arguments to build_package()");
+        Checks::check_exit(
+            VCPKG_LINE_INFO, spec.name() == source_paragraph.name, "inconsistent arguments to build_package()");
 
         const Triplet& triplet = spec.triplet();
         {
@@ -53,7 +57,8 @@ namespace vcpkg::Commands::Build
             {
                 if (status_db.find_installed(dep, triplet) == status_db.end())
                 {
-                    missing_specs.push_back(PackageSpec::from_name_and_triplet(dep, triplet).value_or_exit(VCPKG_LINE_INFO));
+                    missing_specs.push_back(
+                        PackageSpec::from_name_and_triplet(dep, triplet).value_or_exit(VCPKG_LINE_INFO));
                 }
             }
             // Fail the build if any dependencies were missing
@@ -70,15 +75,14 @@ namespace vcpkg::Commands::Build
         const Toolset& toolset = paths.get_toolset();
         const auto cmd_set_environment = make_build_env_cmd(triplet, toolset);
 
-        const std::wstring cmd_launch_cmake = make_cmake_cmd(cmake_exe_path, ports_cmake_script_path,
-                                                             {
-                                                                 { L"CMD", L"BUILD" },
-                                                                 { L"PORT", source_paragraph.name },
-                                                                 { L"CURRENT_PORT_DIR", port_dir / "/." },
-                                                                 { L"TARGET_TRIPLET", triplet.canonical_name() },
-                                                                 { L"VCPKG_PLATFORM_TOOLSET", toolset.version },
-                                                                 { L"GIT", git_exe_path }
-                                                             });
+        const std::wstring cmd_launch_cmake = make_cmake_cmd(cmake_exe_path,
+                                                             ports_cmake_script_path,
+                                                             { { L"CMD", L"BUILD" },
+                                                               { L"PORT", source_paragraph.name },
+                                                               { L"CURRENT_PORT_DIR", port_dir / "/." },
+                                                               { L"TARGET_TRIPLET", triplet.canonical_name() },
+                                                               { L"VCPKG_PLATFORM_TOOLSET", toolset.version },
+                                                               { L"GIT", git_exe_path } });
 
         const std::wstring command = Strings::wformat(LR"(%s && %s)", cmd_set_environment, cmd_launch_cmake);
 
@@ -141,11 +145,15 @@ namespace vcpkg::Commands::Build
                                "  Package: %s\n"
                                "  Vcpkg version: %s\n"
                                "\n"
-                               "Additionally, attach any relevant sections from the log files above."
-                               , spec, Version::version());
+                               "Additionally, attach any relevant sections from the log files above.",
+                               spec,
+                               Version::version());
     }
 
-    void perform_and_exit(const PackageSpec& spec, const fs::path& port_dir, const std::unordered_set<std::string>& options, const VcpkgPaths& paths)
+    void perform_and_exit(const PackageSpec& spec,
+                          const fs::path& port_dir,
+                          const std::unordered_set<std::string>& options,
+                          const VcpkgPaths& paths)
     {
         if (options.find(OPTION_CHECKS_ONLY) != options.end())
         {
@@ -155,14 +163,19 @@ namespace vcpkg::Commands::Build
         }
 
         const Expected<SourceParagraph> maybe_spgh = Paragraphs::try_load_port(paths.get_filesystem(), port_dir);
-        Checks::check_exit(VCPKG_LINE_INFO, !maybe_spgh.error_code(), "Could not find package named %s: %s", spec, maybe_spgh.error_code().message());
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           !maybe_spgh.error_code(),
+                           "Could not find package named %s: %s",
+                           spec,
+                           maybe_spgh.error_code().message());
         const SourceParagraph& spgh = *maybe_spgh.get();
 
         StatusParagraphs status_db = database_load_check(paths);
         const auto result = build_package(spgh, spec, paths, paths.port_dir(spec), status_db);
         if (result.code == BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES)
         {
-            System::println(System::Color::error, "The build command requires all dependencies to be already installed.");
+            System::println(System::Color::error,
+                            "The build command requires all dependencies to be already installed.");
             System::println("The following dependencies are missing:");
             System::println("");
             for (const auto& p : result.unmet_dependencies)
@@ -186,10 +199,13 @@ namespace vcpkg::Commands::Build
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
         static const std::string example = Commands::Help::create_example_string("build zlib:x64-windows");
-        args.check_exact_arg_count(1, example); // Build only takes a single package and all dependencies must already be installed
-        const PackageSpec spec = Input::check_and_get_package_spec(args.command_arguments.at(0), default_triplet, example);
+        args.check_exact_arg_count(
+            1, example); // Build only takes a single package and all dependencies must already be installed
+        const PackageSpec spec =
+            Input::check_and_get_package_spec(args.command_arguments.at(0), default_triplet, example);
         Input::check_triplet(spec.triplet(), paths);
-        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_CHECKS_ONLY });
+        const std::unordered_set<std::string> options =
+            args.check_and_get_optional_command_arguments({ OPTION_CHECKS_ONLY });
         perform_and_exit(spec, paths.port_dir(spec), options, paths);
     }
 }

@@ -1,6 +1,7 @@
 #include "pch.h"
-#include "vcpkg_Chrono.h"
+
 #include "vcpkg_Checks.h"
+#include "vcpkg_Chrono.h"
 
 namespace vcpkg
 {
@@ -56,8 +57,5 @@ namespace vcpkg
         return t;
     }
 
-    std::string ElapsedTime::to_string() const
-    {
-        return format_time_userfriendly(elapsed<std::chrono::nanoseconds>());
-    }
+    std::string ElapsedTime::to_string() const { return format_time_userfriendly(elapsed<std::chrono::nanoseconds>()); }
 }

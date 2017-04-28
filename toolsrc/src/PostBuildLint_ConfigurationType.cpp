@@ -1,7 +1,8 @@
 #include "pch.h"
+
+#include "PackageSpec.h"
 #include "PostBuildLint_ConfigurationType.h"
 #include "vcpkg_Enums.h"
-#include "PackageSpec.h"
 
 namespace vcpkg::PostBuildLint
 {
@@ -14,14 +15,10 @@ namespace vcpkg::PostBuildLint
     {
         switch (this->backing_enum)
         {
-        case ConfigurationTypeC::DEBUG:
-            return NAME_DEBUG;
-        case ConfigurationTypeC::RELEASE:
-            return NAME_RELEASE;
-        case ConfigurationTypeC::NULLVALUE:
-            return NULLVALUE_STRING;
-        default:
-            Checks::unreachable(VCPKG_LINE_INFO);
+            case ConfigurationTypeC::DEBUG: return NAME_DEBUG;
+            case ConfigurationTypeC::RELEASE: return NAME_RELEASE;
+            case ConfigurationTypeC::NULLVALUE: return NULLVALUE_STRING;
+            default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
 }

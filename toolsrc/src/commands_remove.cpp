@@ -1,10 +1,11 @@
 #include "pch.h"
+
 #include "vcpkg_Commands.h"
-#include "vcpkglib.h"
-#include "vcpkg_System.h"
-#include "vcpkg_Input.h"
 #include "vcpkg_Dependencies.h"
+#include "vcpkg_Input.h"
+#include "vcpkg_System.h"
 #include "vcpkg_Util.h"
+#include "vcpkglib.h"
 
 namespace vcpkg::Commands::Remove
 {
@@ -29,8 +30,7 @@ namespace vcpkg::Commands::Remove
             std::vector<fs::path> dirs_touched;
             for (auto&& suffix : *lines)
             {
-                if (!suffix.empty() && suffix.back() == '\r')
-                    suffix.pop_back();
+                if (!suffix.empty() && suffix.back() == '\r') suffix.pop_back();
 
                 std::error_code ec;
 
@@ -89,7 +89,8 @@ namespace vcpkg::Commands::Remove
 
     static void print_plan(const std::map<RemovePlanType, std::vector<const RemovePlanAction*>>& group_by_plan_type)
     {
-        static constexpr std::array<RemovePlanType, 2> order = { RemovePlanType::NOT_INSTALLED, RemovePlanType::REMOVE };
+        static constexpr std::array<RemovePlanType, 2> order = { RemovePlanType::NOT_INSTALLED,
+                                                                 RemovePlanType::REMOVE };
 
         for (const RemovePlanType plan_type : order)
         {
@@ -101,10 +102,9 @@ namespace vcpkg::Commands::Remove
 
             std::vector<const RemovePlanAction*> cont = it->second;
             std::sort(cont.begin(), cont.end(), &RemovePlanAction::compare_by_name);
-            const std::string as_string = Strings::join("\n", cont, [](const RemovePlanAction* p)
-                                                        {
-                                                            return Dependencies::to_output_string(p->request_type, p->spec.to_string());
-                                                        });
+            const std::string as_string = Strings::join("\n", cont, [](const RemovePlanAction* p) {
+                return Dependencies::to_output_string(p->request_type, p->spec.to_string());
+            });
 
             switch (plan_type)
             {
@@ -114,8 +114,7 @@ namespace vcpkg::Commands::Remove
                 case RemovePlanType::REMOVE:
                     System::println("The following packages will be removed:\n%s", as_string);
                     continue;
-                default:
-                    Checks::unreachable(VCPKG_LINE_INFO);
+                default: Checks::unreachable(VCPKG_LINE_INFO);
             }
         }
     }
@@ -127,20 +126,25 @@ namespace vcpkg::Commands::Remove
         static const std::string OPTION_RECURSE = "--recurse";
         static const std::string OPTION_DRY_RUN = "--dry-run";
         static const std::string OPTION_OUTDATED = "--outdated";
-        static const std::string example = Commands::Help::create_example_string("remove zlib zlib:x64-windows curl boost");
-        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_PURGE, OPTION_NO_PURGE, OPTION_RECURSE, OPTION_DRY_RUN, OPTION_OUTDATED });
+        static const std::string example =
+            Commands::Help::create_example_string("remove zlib zlib:x64-windows curl boost");
+        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments(
+            { OPTION_PURGE, OPTION_NO_PURGE, OPTION_RECURSE, OPTION_DRY_RUN, OPTION_OUTDATED });
 
         StatusParagraphs status_db = database_load_check(paths);
         std::vector<PackageSpec> specs;
         if (options.find(OPTION_OUTDATED) != options.cend())
         {
             args.check_exact_arg_count(0, example);
-            specs = Util::fmap(Update::find_outdated_packages(paths, status_db), [](auto&& outdated) { return outdated.spec; });
+            specs = Util::fmap(Update::find_outdated_packages(paths, status_db),
+                               [](auto&& outdated) { return outdated.spec; });
         }
         else
         {
             args.check_min_arg_count(1, example);
-            specs = Util::fmap(args.command_arguments, [&](auto&& arg) { return Input::check_and_get_package_spec(arg, default_triplet, example); });
+            specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
+                return Input::check_and_get_package_spec(arg, default_triplet, example);
+            });
             for (auto&& spec : specs)
                 Input::check_triplet(spec.triplet(), paths);
         }
@@ -163,18 +167,20 @@ namespace vcpkg::Commands::Remove
         Util::group_by(remove_plan, &group_by_plan_type, [](const RemovePlanAction& p) { return p.plan_type; });
         print_plan(group_by_plan_type);
 
-        const bool has_non_user_requested_packages = Util::find_if(remove_plan, [](const RemovePlanAction& package)-> bool
-                                                                   {
-                                                                       return package.request_type != RequestType::USER_REQUESTED;
-                                                                   }) != remove_plan.cend();
+        const bool has_non_user_requested_packages =
+            Util::find_if(remove_plan, [](const RemovePlanAction& package) -> bool {
+                return package.request_type != RequestType::USER_REQUESTED;
+            }) != remove_plan.cend();
 
         if (has_non_user_requested_packages)
         {
-            System::println(System::Color::warning, "Additional packages (*) need to be removed to complete this operation.");
+            System::println(System::Color::warning,
+                            "Additional packages (*) need to be removed to complete this operation.");
 
             if (!isRecursive)
             {
-                System::println(System::Color::warning, "If you are sure you want to remove them, run the command with the --recurse option");
+                System::println(System::Color::warning,
+                                "If you are sure you want to remove them, run the command with the --recurse option");
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
         }
@@ -199,8 +205,7 @@ namespace vcpkg::Commands::Remove
                     System::println(System::Color::success, "Removing package %s... done", display_name);
                     break;
                 case RemovePlanType::UNKNOWN:
-                default:
-                    Checks::unreachable(VCPKG_LINE_INFO);
+                default: Checks::unreachable(VCPKG_LINE_INFO);
             }
 
             if (alsoRemoveFolderFromPackages)

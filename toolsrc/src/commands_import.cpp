@@ -1,7 +1,8 @@
 #include "pch.h"
-#include "vcpkg_Commands.h"
+
 #include "Paragraphs.h"
 #include "StatusParagraph.h"
+#include "vcpkg_Commands.h"
 #include "vcpkg_Files.h"
 
 namespace vcpkg::Commands::Import
@@ -11,7 +12,6 @@ namespace vcpkg::Commands::Import
         std::vector<fs::path> dlls;
         std::vector<fs::path> libs;
     };
-
 
     static void check_is_directory(const LineInfo& line_info, const Files::Filesystem& fs, const fs::path& dirpath)
     {
@@ -27,8 +27,7 @@ namespace vcpkg::Commands::Import
         Binaries binaries;
         for (auto&& file : files)
         {
-            if (fs.is_directory(file))
-                continue;
+            if (fs.is_directory(file)) continue;
             auto ext = file.extension();
             if (ext == ".dll")
                 binaries.dlls.push_back(std::move(file));
@@ -38,7 +37,9 @@ namespace vcpkg::Commands::Import
         return binaries;
     }
 
-    static void copy_files_into_directory(Files::Filesystem& fs, const std::vector<fs::path>& files, const fs::path& destination_folder)
+    static void copy_files_into_directory(Files::Filesystem& fs,
+                                          const std::vector<fs::path>& files,
+                                          const fs::path& destination_folder)
     {
         std::error_code ec;
         fs.create_directory(destination_folder, ec);
@@ -50,7 +51,10 @@ namespace vcpkg::Commands::Import
         }
     }
 
-    static void place_library_files_in(Files::Filesystem& fs, const fs::path& include_directory, const fs::path& project_directory, const fs::path& destination_path)
+    static void place_library_files_in(Files::Filesystem& fs,
+                                       const fs::path& include_directory,
+                                       const fs::path& project_directory,
+                                       const fs::path& destination_path)
     {
         check_is_directory(VCPKG_LINE_INFO, fs, include_directory);
         check_is_directory(VCPKG_LINE_INFO, fs, project_directory);
@@ -59,7 +63,9 @@ namespace vcpkg::Commands::Import
         Binaries release_binaries = find_binaries_in_dir(fs, project_directory / "Release");
 
         fs::path destination_include_directory = destination_path / "include";
-        fs.copy(include_directory, destination_include_directory, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+        fs.copy(include_directory,
+                destination_include_directory,
+                fs::copy_options::recursive | fs::copy_options::overwrite_existing);
 
         copy_files_into_directory(fs, release_binaries.dlls, destination_path / "bin");
         copy_files_into_directory(fs, release_binaries.libs, destination_path / "lib");
@@ -70,7 +76,10 @@ namespace vcpkg::Commands::Import
         copy_files_into_directory(fs, debug_binaries.libs, destination_path / "debug" / "lib");
     }
 
-    static void do_import(const VcpkgPaths& paths, const fs::path& include_directory, const fs::path& project_directory, const BinaryParagraph& control_file_data)
+    static void do_import(const VcpkgPaths& paths,
+                          const fs::path& include_directory,
+                          const fs::path& project_directory,
+                          const BinaryParagraph& control_file_data)
     {
         auto& fs = paths.get_filesystem();
         fs::path library_destination_path = paths.package_dir(control_file_data.spec);
@@ -84,7 +93,8 @@ namespace vcpkg::Commands::Import
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const std::string example = Commands::Help::create_example_string(R"(import C:\path\to\CONTROLfile C:\path\to\includedir C:\path\to\projectdir)");
+        static const std::string example = Commands::Help::create_example_string(
+            R"(import C:\path\to\CONTROLfile C:\path\to\includedir C:\path\to\projectdir)");
         args.check_exact_arg_count(3, example);
         args.check_and_get_optional_command_arguments({});
 
@@ -92,8 +102,12 @@ namespace vcpkg::Commands::Import
         const fs::path include_directory(args.command_arguments[1]);
         const fs::path project_directory(args.command_arguments[2]);
 
-        const Expected<std::unordered_map<std::string, std::string>> pghs = Paragraphs::get_single_paragraph(paths.get_filesystem(), control_file_path);
-        Checks::check_exit(VCPKG_LINE_INFO, pghs.get() != nullptr, "Invalid control file %s for package", control_file_path.generic_string());
+        const Expected<std::unordered_map<std::string, std::string>> pghs =
+            Paragraphs::get_single_paragraph(paths.get_filesystem(), control_file_path);
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           pghs.get() != nullptr,
+                           "Invalid control file %s for package",
+                           control_file_path.generic_string());
 
         StatusParagraph spgh;
         spgh.package = BinaryParagraph(*pghs.get());

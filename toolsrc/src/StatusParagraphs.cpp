@@ -1,4 +1,5 @@
 #include "pch.h"
+
 #include "StatusParagraphs.h"
 #include "vcpkg_Checks.h"
 #include <algorithm>
@@ -8,29 +9,26 @@ namespace vcpkg
     StatusParagraphs::StatusParagraphs() = default;
 
     StatusParagraphs::StatusParagraphs(std::vector<std::unique_ptr<StatusParagraph>>&& ps)
-        : paragraphs(std::move(ps))
-    {
-    };
+        : paragraphs(std::move(ps)){};
 
     StatusParagraphs::const_iterator StatusParagraphs::find(const std::string& name, const Triplet& triplet) const
     {
-        return std::find_if(begin(), end(), [&](const std::unique_ptr<StatusParagraph>& pgh)
-                            {
-                                const PackageSpec& spec = pgh->package.spec;
-                                return spec.name() == name && spec.triplet() == triplet;
-                            });
+        return std::find_if(begin(), end(), [&](const std::unique_ptr<StatusParagraph>& pgh) {
+            const PackageSpec& spec = pgh->package.spec;
+            return spec.name() == name && spec.triplet() == triplet;
+        });
     }
 
     StatusParagraphs::iterator StatusParagraphs::find(const std::string& name, const Triplet& triplet)
     {
-        return std::find_if(begin(), end(), [&](const std::unique_ptr<StatusParagraph>& pgh)
-                            {
-                                const PackageSpec& spec = pgh->package.spec;
-                                return spec.name() == name && spec.triplet() == triplet;
-                            });
+        return std::find_if(begin(), end(), [&](const std::unique_ptr<StatusParagraph>& pgh) {
+            const PackageSpec& spec = pgh->package.spec;
+            return spec.name() == name && spec.triplet() == triplet;
+        });
     }
 
-    StatusParagraphs::const_iterator StatusParagraphs::find_installed(const std::string& name, const Triplet& triplet) const
+    StatusParagraphs::const_iterator StatusParagraphs::find_installed(const std::string& name,
+                                                                      const Triplet& triplet) const
     {
         const const_iterator it = find(name, triplet);
         if (it != end() && (*it)->want == Want::INSTALL && (*it)->state == InstallState::INSTALLED)

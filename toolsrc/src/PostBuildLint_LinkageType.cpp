@@ -1,7 +1,8 @@
 #include "pch.h"
+
 #include "PostBuildLint_LinkageType.h"
-#include "vcpkg_Enums.h"
 #include "vcpkg_Checks.h"
+#include "vcpkg_Enums.h"
 
 namespace vcpkg::PostBuildLint
 {
@@ -29,14 +30,10 @@ namespace vcpkg::PostBuildLint
     {
         switch (this->backing_enum)
         {
-            case LinkageTypeC::DYNAMIC:
-                return NAME_DYNAMIC;
-            case LinkageTypeC::STATIC:
-                return NAME_STATIC;
-            case LinkageTypeC::NULLVALUE:
-                return NULLVALUE_STRING;
-            default:
-                Checks::unreachable(VCPKG_LINE_INFO);
+            case LinkageTypeC::DYNAMIC: return NAME_DYNAMIC;
+            case LinkageTypeC::STATIC: return NAME_STATIC;
+            case LinkageTypeC::NULLVALUE: return NULLVALUE_STRING;
+            default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
 }

@@ -1,4 +1,5 @@
 #include "pch.h"
+
 #include "PostBuildLint_BuildType.h"
 #include "vcpkg_Checks.h"
 
@@ -29,15 +30,9 @@ namespace vcpkg::PostBuildLint
         Checks::unreachable(VCPKG_LINE_INFO);
     }
 
-    const ConfigurationType& BuildType::config() const
-    {
-        return this->m_config;
-    }
+    const ConfigurationType& BuildType::config() const { return this->m_config; }
 
-    const LinkageType& BuildType::linkage() const
-    {
-        return this->m_linkage;
-    }
+    const LinkageType& BuildType::linkage() const { return this->m_linkage; }
 
     const std::regex& BuildType::crt_regex() const
     {
@@ -48,16 +43,11 @@ namespace vcpkg::PostBuildLint
 
         switch (backing_enum)
         {
-            case BuildTypeC::DEBUG_STATIC:
-                return REGEX_DEBUG_STATIC;
-            case BuildTypeC::DEBUG_DYNAMIC:
-                return REGEX_DEBUG_DYNAMIC;
-            case BuildTypeC::RELEASE_STATIC:
-                return REGEX_RELEASE_STATIC;
-            case BuildTypeC::RELEASE_DYNAMIC:
-                return REGEX_RELEASE_DYNAMIC;
-            default:
-                Checks::unreachable(VCPKG_LINE_INFO);
+            case BuildTypeC::DEBUG_STATIC: return REGEX_DEBUG_STATIC;
+            case BuildTypeC::DEBUG_DYNAMIC: return REGEX_DEBUG_DYNAMIC;
+            case BuildTypeC::RELEASE_STATIC: return REGEX_RELEASE_STATIC;
+            case BuildTypeC::RELEASE_DYNAMIC: return REGEX_RELEASE_DYNAMIC;
+            default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
 
@@ -70,16 +60,11 @@ namespace vcpkg::PostBuildLint
 
         switch (backing_enum)
         {
-            case BuildTypeC::DEBUG_STATIC:
-                return NAME_DEBUG_STATIC;
-            case BuildTypeC::DEBUG_DYNAMIC:
-                return NAME_DEBUG_DYNAMIC;
-            case BuildTypeC::RELEASE_STATIC:
-                return NAME_RELEASE_STATIC;
-            case BuildTypeC::RELEASE_DYNAMIC:
-                return NAME_RELEASE_DYNAMIC;
-            default:
-                Checks::unreachable(VCPKG_LINE_INFO);
+            case BuildTypeC::DEBUG_STATIC: return NAME_DEBUG_STATIC;
+            case BuildTypeC::DEBUG_DYNAMIC: return NAME_DEBUG_DYNAMIC;
+            case BuildTypeC::RELEASE_STATIC: return NAME_RELEASE_STATIC;
+            case BuildTypeC::RELEASE_DYNAMIC: return NAME_RELEASE_DYNAMIC;
+            default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
 }

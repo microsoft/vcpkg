@@ -1,4 +1,5 @@
 #include "pch.h"
+
 #include "Triplet.h"
 #include "vcpkg_Checks.h"
 #include "vcpkg_Strings.h"
@@ -16,10 +17,7 @@ namespace vcpkg
         return left.canonical_name() == right.canonical_name();
     }
 
-    bool operator!=(const Triplet& left, const Triplet& right)
-    {
-        return !(left == right);
-    }
+    bool operator!=(const Triplet& left, const Triplet& right) { return !(left == right); }
 
     Triplet Triplet::from_canonical_name(const std::string& triplet_as_string)
     {
@@ -32,10 +30,7 @@ namespace vcpkg
         return t;
     }
 
-    const std::string& Triplet::canonical_name() const
-    {
-        return this->m_canonical_name;
-    }
+    const std::string& Triplet::canonical_name() const { return this->m_canonical_name; }
 
     std::string Triplet::architecture() const
     {
@@ -49,8 +44,5 @@ namespace vcpkg
         return std::string(it + 1, this->m_canonical_name.cend());
     }
 
-    const std::string& Triplet::to_string() const
-    {
-        return this->m_canonical_name;
-    }
+    const std::string& Triplet::to_string() const { return this->m_canonical_name; }
 }

@@ -1,16 +1,16 @@
 #include "pch.h"
+
 #include "VcpkgCmdArguments.h"
-#include "vcpkg_Commands.h"
 #include "metrics.h"
+#include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
 
 namespace vcpkg
 {
-    static void parse_value(
-        const std::string* arg_begin,
-        const std::string* arg_end,
-        const std::string& option_name,
-        std::unique_ptr<std::string>& option_field)
+    static void parse_value(const std::string* arg_begin,
+                            const std::string* arg_end,
+                            const std::string& option_name,
+                            std::unique_ptr<std::string>& option_field)
     {
         if (arg_begin == arg_end)
         {
@@ -31,10 +31,7 @@ namespace vcpkg
         option_field = std::make_unique<std::string>(*arg_begin);
     }
 
-    static void parse_switch(
-        OptBool new_setting,
-        const std::string& option_name,
-        OptBool& option_field)
+    static void parse_switch(OptBool new_setting, const std::string& option_name, OptBool& option_field)
     {
         if (option_field != OptBoolC::UNSPECIFIED && option_field != new_setting)
         {
@@ -57,7 +54,8 @@ namespace vcpkg
         return VcpkgCmdArguments::create_from_arg_sequence(v.data(), v.data() + v.size());
     }
 
-    VcpkgCmdArguments VcpkgCmdArguments::create_from_arg_sequence(const std::string* arg_begin, const std::string* arg_end)
+    VcpkgCmdArguments VcpkgCmdArguments::create_from_arg_sequence(const std::string* arg_begin,
+                                                                  const std::string* arg_end)
     {
         VcpkgCmdArguments args;
 
@@ -137,7 +135,8 @@ namespace vcpkg
         return args;
     }
 
-    std::unordered_set<std::string> VcpkgCmdArguments::check_and_get_optional_command_arguments(const std::vector<std::string>& valid_options) const
+    std::unordered_set<std::string>
+    VcpkgCmdArguments::check_and_get_optional_command_arguments(const std::vector<std::string>& valid_options) const
     {
         std::unordered_set<std::string> output;
         auto options_copy = this->optional_command_arguments;
@@ -184,7 +183,11 @@ namespace vcpkg
         const size_t actual_arg_count = command_arguments.size();
         if (actual_arg_count > expected_arg_count)
         {
-            System::println(System::Color::error, "Error: `%s` requires at most %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
+            System::println(System::Color::error,
+                            "Error: `%s` requires at most %u arguments, but %u were provided",
+                            this->command,
+                            expected_arg_count,
+                            actual_arg_count);
             System::print(example_text);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
@@ -195,18 +198,27 @@ namespace vcpkg
         const size_t actual_arg_count = command_arguments.size();
         if (actual_arg_count < expected_arg_count)
         {
-            System::println(System::Color::error, "Error: `%s` requires at least %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
+            System::println(System::Color::error,
+                            "Error: `%s` requires at least %u arguments, but %u were provided",
+                            this->command,
+                            expected_arg_count,
+                            actual_arg_count);
             System::print(example_text);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
     }
 
-    void VcpkgCmdArguments::check_exact_arg_count(const size_t expected_arg_count, const std::string& example_text) const
+    void VcpkgCmdArguments::check_exact_arg_count(const size_t expected_arg_count,
+                                                  const std::string& example_text) const
     {
         const size_t actual_arg_count = command_arguments.size();
         if (actual_arg_count != expected_arg_count)
         {
-            System::println(System::Color::error, "Error: `%s` requires %u arguments, but %u were provided", this->command, expected_arg_count, actual_arg_count);
+            System::println(System::Color::error,
+                            "Error: `%s` requires %u arguments, but %u were provided",
+                            this->command,
+                            expected_arg_count,
+                            actual_arg_count);
             System::print(example_text);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }

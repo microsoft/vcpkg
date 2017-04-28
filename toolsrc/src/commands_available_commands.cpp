@@ -1,4 +1,5 @@
 #include "pch.h"
+
 #include "vcpkg_Commands.h"
 
 namespace vcpkg::Commands
@@ -6,12 +7,9 @@ namespace vcpkg::Commands
     const std::vector<PackageNameAndFunction<CommandTypeA>>& get_available_commands_type_a()
     {
         static std::vector<PackageNameAndFunction<CommandTypeA>> t = {
-            { "install", &Install::perform_and_exit },
-            { "ci", &CI::perform_and_exit },
-            { "remove", &Remove::perform_and_exit },
-            { "build", &Build::perform_and_exit },
-            { "env", &Env::perform_and_exit },
-            { "build-external", &BuildExternal::perform_and_exit },
+            { "install", &Install::perform_and_exit }, { "ci", &CI::perform_and_exit },
+            { "remove", &Remove::perform_and_exit },   { "build", &Build::perform_and_exit },
+            { "env", &Env::perform_and_exit },         { "build-external", &BuildExternal::perform_and_exit },
             { "export", &Export::perform_and_exit },
         };
         return t;

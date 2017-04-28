@@ -1,17 +1,19 @@
 #include "pch.h"
-#include "vcpkglib.h"
-#include "vcpkg_Files.h"
+
 #include "Paragraphs.h"
 #include "metrics.h"
-#include "vcpkg_Util.h"
+#include "vcpkg_Files.h"
 #include "vcpkg_Strings.h"
 #include "vcpkg_Util.h"
+#include "vcpkglib.h"
 
 namespace vcpkg
 {
     bool g_debugging = false;
 
-    static StatusParagraphs load_current_database(Files::Filesystem& fs, const fs::path& vcpkg_dir_status_file, const fs::path& vcpkg_dir_status_file_old)
+    static StatusParagraphs load_current_database(Files::Filesystem& fs,
+                                                  const fs::path& vcpkg_dir_status_file,
+                                                  const fs::path& vcpkg_dir_status_file_old)
     {
         if (!fs.exists(vcpkg_dir_status_file))
         {
@@ -61,10 +63,8 @@ namespace vcpkg
         }
         for (auto&& file : update_files)
         {
-            if (!fs.is_regular_file(file))
-                continue;
-            if (file.filename() == "incomplete")
-                continue;
+            if (!fs.is_regular_file(file)) continue;
+            if (file.filename() == "incomplete") continue;
 
             auto pghs = Paragraphs::get_paragraphs(fs, file).value_or_exit(VCPKG_LINE_INFO);
             for (auto&& p : pghs)
@@ -79,8 +79,7 @@ namespace vcpkg
 
         for (auto&& file : update_files)
         {
-            if (!fs.is_regular_file(file))
-                continue;
+            if (!fs.is_regular_file(file)) continue;
 
             fs.remove(file);
         }
@@ -101,7 +100,9 @@ namespace vcpkg
         fs.rename(tmp_update_filename, update_filename);
     }
 
-    static void upgrade_to_slash_terminated_sorted_format(Files::Filesystem& fs, std::vector<std::string>* lines, const fs::path& listfile_path)
+    static void upgrade_to_slash_terminated_sorted_format(Files::Filesystem& fs,
+                                                          std::vector<std::string>* lines,
+                                                          const fs::path& listfile_path)
     {
         static bool was_tracked = false;
 
@@ -174,15 +175,15 @@ namespace vcpkg
         std::vector<StatusParagraph*> installed_packages;
         for (auto&& pgh : status_db)
         {
-            if (pgh->state != InstallState::INSTALLED || pgh->want != Want::INSTALL)
-                continue;
+            if (pgh->state != InstallState::INSTALLED || pgh->want != Want::INSTALL) continue;
             installed_packages.push_back(pgh.get());
         }
 
         return installed_packages;
     }
 
-    std::vector<StatusParagraphAndAssociatedFiles> get_installed_files(const VcpkgPaths& paths, const StatusParagraphs& status_db)
+    std::vector<StatusParagraphAndAssociatedFiles> get_installed_files(const VcpkgPaths& paths,
+                                                                       const StatusParagraphs& status_db)
     {
         auto& fs = paths.get_filesystem();
 
@@ -196,28 +197,47 @@ namespace vcpkg
             }
 
             const fs::path listfile_path = paths.listfile_path(pgh->package);
-            std::vector<std::string> installed_files_of_current_pgh = fs.read_lines(listfile_path).value_or_exit(VCPKG_LINE_INFO);
+            std::vector<std::string> installed_files_of_current_pgh =
+                fs.read_lines(listfile_path).value_or_exit(VCPKG_LINE_INFO);
             Strings::trim_all_and_remove_whitespace_strings(&installed_files_of_current_pgh);
             upgrade_to_slash_terminated_sorted_format(fs, &installed_files_of_current_pgh, listfile_path);
 
             // Remove the directories
-            Util::erase_remove_if(installed_files_of_current_pgh, [](const std::string& file) { return file.back() == '/'; });
+            Util::erase_remove_if(installed_files_of_current_pgh,
+                                  [](const std::string& file) { return file.back() == '/'; });
 
-            StatusParagraphAndAssociatedFiles pgh_and_files = { *pgh, SortedVector<std::string>(std::move(installed_files_of_current_pgh)) };
+            StatusParagraphAndAssociatedFiles pgh_and_files = {
+                *pgh, SortedVector<std::string>(std::move(installed_files_of_current_pgh))
+            };
             installed_files.push_back(std::move(pgh_and_files));
         }
 
         return installed_files;
     }
 
-    CMakeVariable::CMakeVariable(const CWStringView varname, const wchar_t* varvalue) : s(Strings::wformat(LR"("-D%s=%s")", varname, varvalue)) { }
-    CMakeVariable::CMakeVariable(const CWStringView varname, const std::string& varvalue) : CMakeVariable(varname, Strings::utf8_to_utf16(varvalue).c_str()) { }
-    CMakeVariable::CMakeVariable(const CWStringView varname, const std::wstring& varvalue) : CMakeVariable(varname, varvalue.c_str()) {}
-    CMakeVariable::CMakeVariable(const CWStringView varname, const fs::path& path) : CMakeVariable(varname, path.generic_wstring()) {}
+    CMakeVariable::CMakeVariable(const CWStringView varname, const wchar_t* varvalue)
+        : s(Strings::wformat(LR"("-D%s=%s")", varname, varvalue))
+    {
+    }
+    CMakeVariable::CMakeVariable(const CWStringView varname, const std::string& varvalue)
+        : CMakeVariable(varname, Strings::utf8_to_utf16(varvalue).c_str())
+    {
+    }
+    CMakeVariable::CMakeVariable(const CWStringView varname, const std::wstring& varvalue)
+        : CMakeVariable(varname, varvalue.c_str())
+    {
+    }
+    CMakeVariable::CMakeVariable(const CWStringView varname, const fs::path& path)
+        : CMakeVariable(varname, path.generic_wstring())
+    {
+    }
 
-    std::wstring make_cmake_cmd(const fs::path& cmake_exe, const fs::path& cmake_script, const std::vector<CMakeVariable>& pass_variables)
+    std::wstring make_cmake_cmd(const fs::path& cmake_exe,
+                                const fs::path& cmake_script,
+                                const std::vector<CMakeVariable>& pass_variables)
     {
         std::wstring cmd_cmake_pass_variables = Strings::join(L" ", pass_variables, [](auto&& v) { return v.s; });
-        return Strings::wformat(LR"("%s" %s -P "%s")", cmake_exe.native(), cmd_cmake_pass_variables, cmake_script.generic_wstring());
+        return Strings::wformat(
+            LR"("%s" %s -P "%s")", cmake_exe.native(), cmd_cmake_pass_variables, cmake_script.generic_wstring());
     }
 }

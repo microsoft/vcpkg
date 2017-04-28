@@ -1,7 +1,8 @@
 #include "pch.h"
+
 #include "PostBuildLint_BuildPolicies.h"
-#include "vcpkg_Enums.h"
 #include "vcpkg_Checks.h"
+#include "vcpkg_Enums.h"
 
 namespace vcpkg::PostBuildLint
 {
@@ -41,18 +42,12 @@ namespace vcpkg::PostBuildLint
     {
         switch (this->backing_enum)
         {
-            case BuildPoliciesC::EMPTY_PACKAGE:
-                return NAME_EMPTY_PACKAGE;
-            case BuildPoliciesC::DLLS_WITHOUT_LIBS:
-                return NAME_DLLS_WITHOUT_LIBS;
-            case BuildPoliciesC::ONLY_RELEASE_CRT:
-                return NAME_ONLY_RELEASE_CRT;
-            case BuildPoliciesC::EMPTY_INCLUDE_FOLDER:
-                return NAME_EMPTY_INCLUDE_FOLDER;
-            case BuildPoliciesC::NULLVALUE:
-                return NULLVALUE_STRING;
-            default:
-                Checks::unreachable(VCPKG_LINE_INFO);
+            case BuildPoliciesC::EMPTY_PACKAGE: return NAME_EMPTY_PACKAGE;
+            case BuildPoliciesC::DLLS_WITHOUT_LIBS: return NAME_DLLS_WITHOUT_LIBS;
+            case BuildPoliciesC::ONLY_RELEASE_CRT: return NAME_ONLY_RELEASE_CRT;
+            case BuildPoliciesC::EMPTY_INCLUDE_FOLDER: return NAME_EMPTY_INCLUDE_FOLDER;
+            case BuildPoliciesC::NULLVALUE: return NULLVALUE_STRING;
+            default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
 
@@ -65,18 +60,12 @@ namespace vcpkg::PostBuildLint
 
         switch (this->backing_enum)
         {
-            case BuildPoliciesC::EMPTY_PACKAGE:
-                return CMAKE_VARIABLE_EMPTY_PACKAGE;
-            case BuildPoliciesC::DLLS_WITHOUT_LIBS:
-                return CMAKE_VARIABLE_DLLS_WITHOUT_LIBS;
-            case BuildPoliciesC::ONLY_RELEASE_CRT:
-                return CMAKE_VARIABLE_ONLY_RELEASE_CRT;
-            case BuildPoliciesC::EMPTY_INCLUDE_FOLDER:
-                return CMAKE_VARIABLE_EMPTY_INCLUDE_FOLDER;
-            case BuildPoliciesC::NULLVALUE:
-                Enums::nullvalue_used(VCPKG_LINE_INFO, BuildPoliciesC::ENUM_NAME);
-            default:
-                Checks::unreachable(VCPKG_LINE_INFO);
+            case BuildPoliciesC::EMPTY_PACKAGE: return CMAKE_VARIABLE_EMPTY_PACKAGE;
+            case BuildPoliciesC::DLLS_WITHOUT_LIBS: return CMAKE_VARIABLE_DLLS_WITHOUT_LIBS;
+            case BuildPoliciesC::ONLY_RELEASE_CRT: return CMAKE_VARIABLE_ONLY_RELEASE_CRT;
+            case BuildPoliciesC::EMPTY_INCLUDE_FOLDER: return CMAKE_VARIABLE_EMPTY_INCLUDE_FOLDER;
+            case BuildPoliciesC::NULLVALUE: Enums::nullvalue_used(VCPKG_LINE_INFO, BuildPoliciesC::ENUM_NAME);
+            default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
 }

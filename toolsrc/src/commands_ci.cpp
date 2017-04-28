@@ -1,12 +1,13 @@
 #include "pch.h"
-#include "vcpkg_Commands.h"
-#include "vcpkglib.h"
-#include "vcpkg_Files.h"
-#include "vcpkg_System.h"
-#include "vcpkg_Dependencies.h"
-#include "vcpkg_Input.h"
-#include "vcpkg_Chrono.h"
+
 #include "Paragraphs.h"
+#include "vcpkg_Chrono.h"
+#include "vcpkg_Commands.h"
+#include "vcpkg_Dependencies.h"
+#include "vcpkg_Files.h"
+#include "vcpkg_Input.h"
+#include "vcpkg_System.h"
+#include "vcpkglib.h"
 
 namespace vcpkg::Commands::CI
 {
@@ -14,7 +15,9 @@ namespace vcpkg::Commands::CI
     using Dependencies::InstallPlanType;
     using Build::BuildResult;
 
-    static std::vector<PackageSpec> load_all_package_specs(Files::Filesystem& fs, const fs::path& ports_directory, const Triplet& triplet)
+    static std::vector<PackageSpec> load_all_package_specs(Files::Filesystem& fs,
+                                                           const fs::path& ports_directory,
+                                                           const Triplet& triplet)
     {
         std::vector<SourceParagraph> ports = Paragraphs::load_all_ports(fs, ports_directory);
         std::vector<PackageSpec> specs;
@@ -30,7 +33,9 @@ namespace vcpkg::Commands::CI
     {
         static const std::string example = Commands::Help::create_example_string("ci x64-windows");
         args.check_max_arg_count(1, example);
-        const Triplet triplet = args.command_arguments.size() == 1 ? Triplet::from_canonical_name(args.command_arguments.at(0)) : default_triplet;
+        const Triplet triplet = args.command_arguments.size() == 1
+                                    ? Triplet::from_canonical_name(args.command_arguments.at(0))
+                                    : default_triplet;
         Input::check_triplet(triplet, paths);
         args.check_and_get_optional_command_arguments({});
         const std::vector<PackageSpec> specs = load_all_package_specs(paths.get_filesystem(), paths.ports, triplet);
@@ -63,39 +68,37 @@ namespace vcpkg::Commands::CI
                         System::println(System::Color::success, "Package %s is already installed", display_name);
                         break;
                     case InstallPlanType::BUILD_AND_INSTALL:
+                    {
+                        System::println("Building package %s... ", display_name);
+                        auto&& source_paragraph = action.any_paragraph.source_paragraph.value_or_exit(VCPKG_LINE_INFO);
+                        const auto result_ex = Commands::Build::build_package(
+                            source_paragraph, action.spec, paths, paths.port_dir(action.spec), status_db);
+                        const auto result = result_ex.code;
+
+                        timing.back() = build_timer.to_string();
+                        results.back() = result;
+                        if (result != BuildResult::SUCCEEDED)
                         {
-                            System::println("Building package %s... ", display_name);
-                            auto&& source_paragraph = action.any_paragraph.source_paragraph.value_or_exit(VCPKG_LINE_INFO);
-                            const auto result_ex = Commands::Build::build_package(source_paragraph,
-                                                                                  action.spec,
-                                                                                  paths,
-                                                                                  paths.port_dir(action.spec),
-                                                                                  status_db);
-                            const auto result = result_ex.code;
-
-                            timing.back() = build_timer.to_string();
-                            results.back() = result;
-                            if (result != BuildResult::SUCCEEDED)
-                            {
-                                System::println(System::Color::error, Build::create_error_message(result, action.spec));
-                                continue;
-                            }
-                            System::println(System::Color::success, "Building package %s... done", display_name);
-
-                            const BinaryParagraph bpgh = Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO);
-                            System::println("Installing package %s... ", display_name);
-                            Install::install_package(paths, bpgh, &status_db);
-                            System::println(System::Color::success, "Installing package %s... done", display_name);
-                            break;
+                            System::println(System::Color::error, Build::create_error_message(result, action.spec));
+                            continue;
                         }
+                        System::println(System::Color::success, "Building package %s... done", display_name);
+
+                        const BinaryParagraph bpgh =
+                            Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO);
+                        System::println("Installing package %s... ", display_name);
+                        Install::install_package(paths, bpgh, &status_db);
+                        System::println(System::Color::success, "Installing package %s... done", display_name);
+                        break;
+                    }
                     case InstallPlanType::INSTALL:
                         results.back() = BuildResult::SUCCEEDED;
                         System::println("Installing package %s... ", display_name);
-                        Install::install_package(paths, action.any_paragraph.binary_paragraph.value_or_exit(VCPKG_LINE_INFO), &status_db);
+                        Install::install_package(
+                            paths, action.any_paragraph.binary_paragraph.value_or_exit(VCPKG_LINE_INFO), &status_db);
                         System::println(System::Color::success, "Installing package %s... done", display_name);
                         break;
-                    default:
-                        Checks::unreachable(VCPKG_LINE_INFO);
+                    default: Checks::unreachable(VCPKG_LINE_INFO);
                 }
             }
             catch (const std::exception& e)

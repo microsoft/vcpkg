@@ -1,7 +1,8 @@
 #include "pch.h"
+
+#include "metrics.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
-#include "metrics.h"
 
 #define STRINGIFY(...) #__VA_ARGS__
 #define MACRO_TO_STRING(X) STRINGIFY(X)
@@ -15,7 +16,7 @@ namespace vcpkg::Commands::Version
         static const std::string s_version =
 #include "../VERSION.txt"
 
-            + std::string(VCPKG_VERSION_AS_STRING)
+            +std::string(VCPKG_VERSION_AS_STRING)
 #ifndef NDEBUG
             + std::string("-debug")
 #endif
@@ -30,8 +31,8 @@ namespace vcpkg::Commands::Version
 
         System::println("Vcpkg package management program version %s\n"
                         "\n"
-                        "See LICENSE.txt for license information.", version()
-        );
+                        "See LICENSE.txt for license information.",
+                        version());
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 }
