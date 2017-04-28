@@ -120,28 +120,7 @@ namespace vcpkg::Commands::Remove
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
-        enum SwitchType
-        {
-            SINGLE,
-            SINGLE_WITH_NO,
-            VALUE,
-        };
-
-        struct Option
-        {
-            CStringView name;
-            SwitchType type;
-        };
-
-        static constexpr Option options_table[] = {
-            Option{"--purge", SINGLE_WITH_NO},
-            Option{"--recurse", SINGLE_WITH_NO},
-            Option{"--dry-run", SINGLE_WITH_NO},
-            Option{"--outdated", SINGLE},
-            Option{"--logfile", VALUE},
-        };
-
-        static constexpr CStringView OPTION_PURGE = "--purge";
+        static const std::string OPTION_PURGE = "--purge";
         static const std::string OPTION_NO_PURGE = "--no-purge";
         static const std::string OPTION_RECURSE = "--recurse";
         static const std::string OPTION_DRY_RUN = "--dry-run";
