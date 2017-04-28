@@ -4,24 +4,24 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/bond-5.2.0)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/bond-5.3.1)
 
 vcpkg_download_distfile(ARCHIVE
-  URLS "https://github.com/Microsoft/bond/archive/5.2.0.zip"
-  FILENAME "bond-5.2.0.zip"
-  SHA512  bc533d9e7431d0690b555aa4a42ca947f8025fc388f698c40cfeacf4286892ac5fd86d93df187009d4791e3eae240eb60886947cfe600838c6058274eb4d625c
+  URLS "https://github.com/Microsoft/bond/archive/5.3.1.zip"
+  FILENAME "bond-5.3.1.zip"
+  SHA512 aa1b3b6cbbbfbdb450306b59d0216c4b63b25ce2f5852387b42cb5c098e8fb6f90d8d1f688344fa4375244510009767d7d46a6a0b5f49c725b22cf3e9d73d1e5
 )
 vcpkg_download_distfile(GBC_ARCHIVE
-  URLS "https://github.com/Microsoft/bond/releases/download/5.2.0/gbc-5.2.0-amd64.zip"
-  FILENAME "gbc-5.2.0-amd64.zip"
-  SHA512 9413c0035939788724e08ac858bfc3b2ccefbba74ed737b22eca35ec0da576aa2bf8403e606d2ac20b3fbc827933c289630266824613e04b1921b66fef00e132
+  URLS "https://github.com/Microsoft/bond/releases/download/5.3.1/gbc-5.3.1-amd64.exe.zip"
+  FILENAME "gbc-5.3.1-amd64.zip"
+  SHA512 fb1eff0b7bd34cba26fa6a0ffeba7789cff55976e95a695aa2cf6ae60b5c4e8b0dd15f0d7968599bd5b17c9b8b325aa29e3e13aca4854ec38ed50253d67038e4
 )
 
 vcpkg_extract_source_archive(${ARCHIVE})
 
 # Extract the precompiled gbc
 vcpkg_extract_source_archive(${GBC_ARCHIVE} ${CURRENT_BUILDTREES_DIR}/tools/)
-set(FETCHED_GBC_PATH ${CURRENT_BUILDTREES_DIR}/tools/gbc-5.2.0-amd64.exe)
+set(FETCHED_GBC_PATH ${CURRENT_BUILDTREES_DIR}/tools/gbc-5.3.1-amd64.exe)
 
 if (NOT EXISTS ${FETCHED_GBC_PATH})
     message(FATAL_ERROR "Fetching GBC failed. Expected '${FETCHED_GBC_PATH}' to exists, but it doesn't.")
@@ -36,9 +36,6 @@ vcpkg_apply_patches(
     # Don't install rapidjson from the (empty) submodule. With vcpkg, we get
     # rapidjson from vcpkg
     ${CMAKE_CURRENT_LIST_DIR}/0002_omit_rapidjson.patch
-    # Temporary until this is committed upstream. See
-    # https://github.com/Microsoft/bond/pull/324 for details.
-    ${CMAKE_CURRENT_LIST_DIR}/0003_rename_gbc_during_install.patch
 )
 
 vcpkg_configure_cmake(

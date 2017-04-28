@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0d743da4..92f91103 100644
+index 72d62c5e..d7eb5cd4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -39,7 +39,6 @@ install (DIRECTORY
