@@ -1,0 +1,18 @@
+diff --git a/taglib/toolkit/tfilestream.cpp b/taglib/toolkit/tfilestream.cpp
+index b267aaa..3db0521 100644
+--- a/taglib/toolkit/tfilestream.cpp
++++ b/taglib/toolkit/tfilestream.cpp
+@@ -54,7 +54,12 @@ namespace
+     if(!path.wstr().empty())
+       return CreateFile2(path.wstr().c_str(), access, FILE_SHARE_READ, OPEN_EXISTING, NULL);
+     else if(!path.str().empty())
+-      return CreateFile2(std::wstring(path.str().cbegin(), path.str().end()).c_str(), access, FILE_SHARE_READ, OPEN_EXISTING, NULL);
++    {
++      auto size = MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, path.str().data(), path.str().size(), NULL, 0);
++      std::wstring tmp(size, L'\0');
++      MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, path.str().data(), path.str().size(), &tmp[0], tmp.size());
++      return CreateFile2(tmp.c_str(), access, FILE_SHARE_READ, OPEN_EXISTING, NULL);
++    }
+     else
+       return InvalidFileHandle;
+   }
