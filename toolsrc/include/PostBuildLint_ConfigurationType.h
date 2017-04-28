@@ -1,5 +1,5 @@
 #pragma once
-#pragma once
+#include "CStringView.h"
 #include <string>
 
 namespace vcpkg::PostBuildLint
@@ -25,7 +25,7 @@ namespace vcpkg::PostBuildLint
 
     namespace ConfigurationTypeC
     {
-        static constexpr const char* ENUM_NAME = "vcpkg::PostBuildLint::ConfigurationType";
+        static constexpr CStringView ENUM_NAME = "vcpkg::PostBuildLint::ConfigurationType";
 
         static constexpr ConfigurationType NULLVALUE(ConfigurationType::BackingEnum::NULLVALUE);
         static constexpr ConfigurationType DEBUG(ConfigurationType::BackingEnum::DEBUG);

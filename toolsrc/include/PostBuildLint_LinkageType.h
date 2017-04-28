@@ -1,4 +1,5 @@
 #pragma once
+#include "CStringView.h"
 #include <string>
 
 namespace vcpkg::PostBuildLint
@@ -26,7 +27,7 @@ namespace vcpkg::PostBuildLint
 
     namespace LinkageTypeC
     {
-        static constexpr const char* ENUM_NAME = "vcpkg::PostBuildLint::LinkageType";
+        static constexpr CStringView ENUM_NAME = "vcpkg::PostBuildLint::LinkageType";
 
         static constexpr LinkageType NULLVALUE(LinkageType::BackingEnum::NULLVALUE);
         static constexpr LinkageType DYNAMIC(LinkageType::BackingEnum::DYNAMIC);

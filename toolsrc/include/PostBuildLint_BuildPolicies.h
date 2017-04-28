@@ -1,4 +1,5 @@
 #pragma once
+#include "CStringView.h"
 #include <array>
 #include <string>
 
@@ -30,7 +31,7 @@ namespace vcpkg::PostBuildLint
 
     namespace BuildPoliciesC
     {
-        static constexpr const char* ENUM_NAME = "vcpkg::PostBuildLint::BuildPolicies";
+        static constexpr CStringView ENUM_NAME = "vcpkg::PostBuildLint::BuildPolicies";
 
         static constexpr BuildPolicies NULLVALUE(BuildPolicies::BackingEnum::NULLVALUE);
         static constexpr BuildPolicies EMPTY_PACKAGE(BuildPolicies::BackingEnum::EMPTY_PACKAGE);

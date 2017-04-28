@@ -1,4 +1,5 @@
 #pragma once
+#include "CStringView.h"
 #include "PostBuildLint_ConfigurationType.h"
 #include "PostBuildLint_LinkageType.h"
 #include <array>
@@ -44,7 +45,7 @@ namespace vcpkg::PostBuildLint
         namespace LC = LinkageTypeC;
         using BE = BuildType::BackingEnum;
 
-        static constexpr const char* ENUM_NAME = "vcpkg::PostBuildLint::BuildType";
+        static constexpr CStringView ENUM_NAME = "vcpkg::PostBuildLint::BuildType";
 
         static constexpr BuildType DEBUG_STATIC = {BE::DEBUG_STATIC, CC::DEBUG, LC::STATIC};
         static constexpr BuildType DEBUG_DYNAMIC = {BE::DEBUG_DYNAMIC, CC::DEBUG, LC::DYNAMIC};
