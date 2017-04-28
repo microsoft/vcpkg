@@ -174,9 +174,8 @@ namespace vcpkg::Commands::Install
 
     static void print_plan(const std::map<InstallPlanType, std::vector<const InstallPlanAction*>>& group_by_plan_type)
     {
-        static constexpr std::array<InstallPlanType, 3> order = { InstallPlanType::ALREADY_INSTALLED,
-                                                                  InstallPlanType::BUILD_AND_INSTALL,
-                                                                  InstallPlanType::INSTALL };
+        static constexpr std::array<InstallPlanType, 3> order = {
+            InstallPlanType::ALREADY_INSTALLED, InstallPlanType::BUILD_AND_INSTALL, InstallPlanType::INSTALL};
 
         for (const InstallPlanType plan_type : order)
         {
@@ -277,8 +276,7 @@ namespace vcpkg::Commands::Install
         for (auto&& spec : specs)
             Input::check_triplet(spec.triplet(), paths);
 
-        const std::unordered_set<std::string> options =
-            args.check_and_get_optional_command_arguments({ OPTION_DRY_RUN });
+        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_DRY_RUN});
         const bool dryRun = options.find(OPTION_DRY_RUN) != options.cend();
 
         // create the plan

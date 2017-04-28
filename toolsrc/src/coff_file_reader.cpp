@@ -237,7 +237,7 @@ namespace vcpkg::COFFFileReader
         read_and_verify_PE_signature(fs);
         CoffFileHeader header = CoffFileHeader::read(fs);
         MachineType machine = header.machineType();
-        return { machine };
+        return {machine};
     }
 
     struct Marker
@@ -303,6 +303,6 @@ namespace vcpkg::COFFFileReader
             machine_types.insert(machine);
         }
 
-        return { std::vector<MachineType>(machine_types.cbegin(), machine_types.cend()) };
+        return {std::vector<MachineType>(machine_types.cbegin(), machine_types.cend())};
     }
 }

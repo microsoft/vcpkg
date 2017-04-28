@@ -32,7 +32,7 @@ namespace vcpkg::Commands::Update
             }
             if (it->second != pgh->package.version)
             {
-                output.push_back({ pgh->package.spec, VersionDiff(pgh->package.version, it->second) });
+                output.push_back({pgh->package.spec, VersionDiff(pgh->package.version, it->second)});
             }
         }
 

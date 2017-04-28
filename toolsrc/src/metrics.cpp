@@ -32,7 +32,7 @@ namespace vcpkg::Metrics
 
     static std::string generate_random_UUID()
     {
-        int partSizes[] = { 8, 4, 4, 4, 12 };
+        int partSizes[] = {8, 4, 4, 4, 12};
         char uuid[37];
         memset(uuid, 0, sizeof(uuid));
         int num;
@@ -99,8 +99,8 @@ namespace vcpkg::Metrics
             else if (ch < 0x20 || ch >= 0x80)
             {
                 // Note: this treats incoming Strings as Latin-1
-                static constexpr const char hex[16] = { '0', '1', '2', '3', '4', '5', '6', '7',
-                                                        '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+                static constexpr const char hex[16] = {
+                    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
                 encoded.append("\\u00");
                 encoded.push_back(hex[ch / 16]);
                 encoded.push_back(hex[ch % 16]);

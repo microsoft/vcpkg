@@ -96,7 +96,7 @@ namespace vcpkg
 
     static fs::path get_cmake_path(const fs::path& downloads_folder, const fs::path scripts_folder)
     {
-        static constexpr std::array<int, 3> expected_version = { 3, 8, 0 };
+        static constexpr std::array<int, 3> expected_version = {3, 8, 0};
         static const std::wstring version_check_arguments = L"--version";
 
         const fs::path downloaded_copy = downloads_folder / "cmake-3.8.0-win32-x86" / "bin" / "cmake.exe";
@@ -120,7 +120,7 @@ namespace vcpkg
 
     fs::path get_nuget_path(const fs::path& downloads_folder, const fs::path scripts_folder)
     {
-        static constexpr std::array<int, 3> expected_version = { 3, 3, 0 };
+        static constexpr std::array<int, 3> expected_version = {3, 3, 0};
         static const std::wstring version_check_arguments = L"";
 
         const fs::path downloaded_copy = downloads_folder / "nuget-3.5.0" / "nuget.exe";
@@ -141,7 +141,7 @@ namespace vcpkg
 
     fs::path get_git_path(const fs::path& downloads_folder, const fs::path scripts_folder)
     {
-        static constexpr std::array<int, 3> expected_version = { 2, 0, 0 };
+        static constexpr std::array<int, 3> expected_version = {2, 0, 0};
         static const std::wstring version_check_arguments = L"--version";
 
         const fs::path downloaded_copy = downloads_folder / "MinGit-2.11.1-32-bit" / "cmd" / "git.exe";
@@ -301,7 +301,7 @@ namespace vcpkg
                 paths_examined.push_back(dumpbin_path);
                 if (fs.exists(dumpbin_path))
                 {
-                    return { dumpbin_path, vcvarsall_bat, L"v141" };
+                    return {dumpbin_path, vcvarsall_bat, L"v141"};
                 }
             }
         }
@@ -319,7 +319,7 @@ namespace vcpkg
                 paths_examined.push_back(vs2015_dumpbin_exe);
                 if (fs.exists(vs2015_dumpbin_exe))
                 {
-                    return { vs2015_dumpbin_exe, vs2015_vcvarsall_bat, L"v140" };
+                    return {vs2015_dumpbin_exe, vs2015_vcvarsall_bat, L"v140"};
                 }
             }
         }

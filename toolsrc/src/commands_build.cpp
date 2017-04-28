@@ -64,7 +64,7 @@ namespace vcpkg::Commands::Build
             // Fail the build if any dependencies were missing
             if (!missing_specs.empty())
             {
-                return { BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES, std::move(missing_specs) };
+                return {BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES, std::move(missing_specs)};
             }
         }
 
@@ -77,12 +77,12 @@ namespace vcpkg::Commands::Build
 
         const std::wstring cmd_launch_cmake = make_cmake_cmd(cmake_exe_path,
                                                              ports_cmake_script_path,
-                                                             { { L"CMD", L"BUILD" },
-                                                               { L"PORT", source_paragraph.name },
-                                                               { L"CURRENT_PORT_DIR", port_dir / "/." },
-                                                               { L"TARGET_TRIPLET", triplet.canonical_name() },
-                                                               { L"VCPKG_PLATFORM_TOOLSET", toolset.version },
-                                                               { L"GIT", git_exe_path } });
+                                                             {{L"CMD", L"BUILD"},
+                                                              {L"PORT", source_paragraph.name},
+                                                              {L"CURRENT_PORT_DIR", port_dir / "/."},
+                                                              {L"TARGET_TRIPLET", triplet.canonical_name()},
+                                                              {L"VCPKG_PLATFORM_TOOLSET", toolset.version},
+                                                              {L"GIT", git_exe_path}});
 
         const std::wstring command = Strings::wformat(LR"(%s && %s)", cmd_set_environment, cmd_launch_cmake);
 
@@ -96,14 +96,14 @@ namespace vcpkg::Commands::Build
         {
             Metrics::track_property("error", "build failed");
             Metrics::track_property("build_error", spec.to_string());
-            return { BuildResult::BUILD_FAILED, {} };
+            return {BuildResult::BUILD_FAILED, {}};
         }
 
         const size_t error_count = PostBuildLint::perform_all_checks(spec, paths);
 
         if (error_count != 0)
         {
-            return { BuildResult::POST_BUILD_CHECKS_FAILED, {} };
+            return {BuildResult::POST_BUILD_CHECKS_FAILED, {}};
         }
 
         create_binary_control_file(paths, source_paragraph, triplet);
@@ -111,7 +111,7 @@ namespace vcpkg::Commands::Build
         // const fs::path port_buildtrees_dir = paths.buildtrees / spec.name;
         // delete_directory(port_buildtrees_dir);
 
-        return { BuildResult::SUCCEEDED, {} };
+        return {BuildResult::SUCCEEDED, {}};
     }
 
     const std::string& to_string(const BuildResult build_result)
@@ -205,7 +205,7 @@ namespace vcpkg::Commands::Build
             Input::check_and_get_package_spec(args.command_arguments.at(0), default_triplet, example);
         Input::check_triplet(spec.triplet(), paths);
         const std::unordered_set<std::string> options =
-            args.check_and_get_optional_command_arguments({ OPTION_CHECKS_ONLY });
+            args.check_and_get_optional_command_arguments({OPTION_CHECKS_ONLY});
         perform_and_exit(spec, paths.port_dir(spec), options, paths);
     }
 }

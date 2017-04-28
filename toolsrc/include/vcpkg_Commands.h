@@ -29,8 +29,7 @@ namespace vcpkg::Commands
             BuildResult::SUCCEEDED,
             BuildResult::BUILD_FAILED,
             BuildResult::POST_BUILD_CHECKS_FAILED,
-            BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES
-        };
+            BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES};
 
         const std::string& to_string(const BuildResult build_result);
         std::string create_error_message(const BuildResult build_result, const PackageSpec& spec);

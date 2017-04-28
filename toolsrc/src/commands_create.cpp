@@ -20,7 +20,7 @@ namespace vcpkg::Commands::Create
 
         const fs::path& cmake_exe = paths.get_cmake_exe();
 
-        std::vector<CMakeVariable> cmake_args{ { L"CMD", L"CREATE" }, { L"PORT", port_name }, { L"URL", url } };
+        std::vector<CMakeVariable> cmake_args{{L"CMD", L"CREATE"}, {L"PORT", port_name}, {L"URL", url}};
 
         if (args.command_arguments.size() >= 3)
         {
@@ -30,7 +30,7 @@ namespace vcpkg::Commands::Create
                                R"(Filename cannot contain invalid chars %s, but was %s)",
                                Files::FILESYSTEM_INVALID_CHARACTERS,
                                zip_file_name);
-            cmake_args.push_back({ L"FILENAME", zip_file_name });
+            cmake_args.push_back({L"FILENAME", zip_file_name});
         }
 
         const std::wstring cmd_launch_cmake = make_cmake_cmd(cmake_exe, paths.ports_cmake, cmake_args);

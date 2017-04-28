@@ -62,8 +62,8 @@ namespace vcpkg::Commands::Export
 
     static void print_plan(const std::map<ExportPlanType, std::vector<const ExportPlanAction*>>& group_by_plan_type)
     {
-        static constexpr std::array<ExportPlanType, 2> order = { ExportPlanType::ALREADY_BUILT,
-                                                                 ExportPlanType::PORT_AVAILABLE_BUT_NOT_BUILT };
+        static constexpr std::array<ExportPlanType, 2> order = {ExportPlanType::ALREADY_BUILT,
+                                                                ExportPlanType::PORT_AVAILABLE_BUT_NOT_BUILT};
 
         for (const ExportPlanType plan_type : order)
         {
@@ -219,7 +219,7 @@ namespace vcpkg::Commands::Export
             Input::check_triplet(spec.triplet(), paths);
 
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments(
-            { OPTION_DRY_RUN, OPTION_RAW, OPTION_NUGET, OPTION_ZIP, OPTION_7ZIP });
+            {OPTION_DRY_RUN, OPTION_RAW, OPTION_NUGET, OPTION_ZIP, OPTION_7ZIP});
         const bool dryRun = options.find(OPTION_DRY_RUN) != options.cend();
         const bool raw = options.find(OPTION_RAW) != options.cend();
         const bool nuget = options.find(OPTION_NUGET) != options.cend();
@@ -305,14 +305,14 @@ namespace vcpkg::Commands::Export
 
         // Copy files needed for integration
         const std::vector<fs::path> integration_files_relative_to_root = {
-            { ".vcpkg-root" },
-            { fs::path{ "scripts" } / "buildsystems" / "msbuild" / "applocal.ps1" },
-            { fs::path{ "scripts" } / "buildsystems" / "msbuild" / "vcpkg.targets" },
-            { fs::path{ "scripts" } / "buildsystems" / "vcpkg.cmake" },
-            { fs::path{ "scripts" } / "cmake" / "vcpkg_get_windows_sdk.cmake" },
-            { fs::path{ "scripts" } / "getWindowsSDK.ps1" },
-            { fs::path{ "scripts" } / "getProgramFilesPlatformBitness.ps1" },
-            { fs::path{ "scripts" } / "getProgramFiles32bit.ps1" },
+            {".vcpkg-root"},
+            {fs::path{"scripts"} / "buildsystems" / "msbuild" / "applocal.ps1"},
+            {fs::path{"scripts"} / "buildsystems" / "msbuild" / "vcpkg.targets"},
+            {fs::path{"scripts"} / "buildsystems" / "vcpkg.cmake"},
+            {fs::path{"scripts"} / "cmake" / "vcpkg_get_windows_sdk.cmake"},
+            {fs::path{"scripts"} / "getWindowsSDK.ps1"},
+            {fs::path{"scripts"} / "getProgramFilesPlatformBitness.ps1"},
+            {fs::path{"scripts"} / "getProgramFiles32bit.ps1"},
         };
 
         for (const fs::path& file : integration_files_relative_to_root)

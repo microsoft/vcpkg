@@ -32,6 +32,6 @@ namespace vcpkg::PostBuildLint
         static constexpr LinkageType DYNAMIC(LinkageType::BackingEnum::DYNAMIC);
         static constexpr LinkageType STATIC(LinkageType::BackingEnum::STATIC);
 
-        static constexpr std::array<LinkageType, 2> VALUES = { DYNAMIC, STATIC };
+        static constexpr std::array<LinkageType, 2> VALUES = {DYNAMIC, STATIC};
     }
 }

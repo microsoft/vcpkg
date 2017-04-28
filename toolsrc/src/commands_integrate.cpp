@@ -10,8 +10,7 @@ namespace vcpkg::Commands::Integrate
 {
     static const std::array<fs::path, 2> old_system_target_files = {
         System::get_ProgramFiles_32_bit() / "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.nuget.targets",
-        System::get_ProgramFiles_32_bit() / "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.system.targets"
-    };
+        System::get_ProgramFiles_32_bit() / "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.system.targets"};
     static const fs::path system_wide_targets_file =
         System::get_ProgramFiles_32_bit() / "MSBuild/Microsoft.Cpp/v4.0/V140/ImportBefore/Default/vcpkg.system.props";
 
@@ -114,7 +113,7 @@ namespace vcpkg::Commands::Integrate
 
     static ElevationPromptChoice elevated_cmd_execute(const std::string& param)
     {
-        SHELLEXECUTEINFO shExInfo = { 0 };
+        SHELLEXECUTEINFO shExInfo = {0};
         shExInfo.cbSize = sizeof(shExInfo);
         shExInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
         shExInfo.hwnd = nullptr;

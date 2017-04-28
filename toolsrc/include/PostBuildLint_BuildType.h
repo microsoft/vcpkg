@@ -46,13 +46,12 @@ namespace vcpkg::PostBuildLint
 
         static constexpr const char* ENUM_NAME = "vcpkg::PostBuildLint::BuildType";
 
-        static constexpr BuildType DEBUG_STATIC = { BE::DEBUG_STATIC, CC::DEBUG, LC::STATIC };
-        static constexpr BuildType DEBUG_DYNAMIC = { BE::DEBUG_DYNAMIC, CC::DEBUG, LC::DYNAMIC };
-        static constexpr BuildType RELEASE_STATIC = { BE::RELEASE_STATIC, CC::RELEASE, LC::STATIC };
-        static constexpr BuildType RELEASE_DYNAMIC = { BE::RELEASE_DYNAMIC, CC::RELEASE, LC::DYNAMIC };
+        static constexpr BuildType DEBUG_STATIC = {BE::DEBUG_STATIC, CC::DEBUG, LC::STATIC};
+        static constexpr BuildType DEBUG_DYNAMIC = {BE::DEBUG_DYNAMIC, CC::DEBUG, LC::DYNAMIC};
+        static constexpr BuildType RELEASE_STATIC = {BE::RELEASE_STATIC, CC::RELEASE, LC::STATIC};
+        static constexpr BuildType RELEASE_DYNAMIC = {BE::RELEASE_DYNAMIC, CC::RELEASE, LC::DYNAMIC};
 
         static constexpr std::array<BuildType, 4> VALUES = {
-            DEBUG_STATIC, DEBUG_DYNAMIC, RELEASE_STATIC, RELEASE_DYNAMIC
-        };
+            DEBUG_STATIC, DEBUG_DYNAMIC, RELEASE_STATIC, RELEASE_DYNAMIC};
     }
 }

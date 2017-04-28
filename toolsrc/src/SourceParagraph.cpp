@@ -25,12 +25,12 @@ namespace vcpkg
 
     static const std::vector<std::string>& get_list_of_valid_fields()
     {
-        static const std::vector<std::string> valid_fields = { SourceParagraphRequiredField::SOURCE,
-                                                               SourceParagraphRequiredField::VERSION,
+        static const std::vector<std::string> valid_fields = {SourceParagraphRequiredField::SOURCE,
+                                                              SourceParagraphRequiredField::VERSION,
 
-                                                               SourceParagraphOptionalField::DESCRIPTION,
-                                                               SourceParagraphOptionalField::MAINTAINER,
-                                                               SourceParagraphOptionalField::BUILD_DEPENDS };
+                                                              SourceParagraphOptionalField::DESCRIPTION,
+                                                              SourceParagraphOptionalField::MAINTAINER,
+                                                              SourceParagraphOptionalField::BUILD_DEPENDS};
 
         return valid_fields;
     }
@@ -67,14 +67,14 @@ namespace vcpkg
     {
         auto convert = [&](const std::string& depend_string) -> Dependency {
             auto pos = depend_string.find(' ');
-            if (pos == std::string::npos) return { depend_string, "" };
+            if (pos == std::string::npos) return {depend_string, ""};
             // expect of the form "\w+ \[\w+\]"
             Dependency dep;
             dep.name = depend_string.substr(0, pos);
             if (depend_string.c_str()[pos + 1] != '[' || depend_string[depend_string.size() - 1] != ']')
             {
                 // Error, but for now just slurp the entire string.
-                return { depend_string, "" };
+                return {depend_string, ""};
             }
             dep.qualifier = depend_string.substr(pos + 2, depend_string.size() - pos - 3);
             return dep;

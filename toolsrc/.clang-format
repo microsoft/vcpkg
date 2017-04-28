@@ -23,7 +23,7 @@ BinPackParameters: false
 BreakBeforeBinaryOperators: None
 BreakConstructorInitializersBeforeComma: true
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
-Cpp11BracedListStyle: false
+Cpp11BracedListStyle: true
 IndentCaseLabels: true
 KeepEmptyLinesAtTheStartOfBlocks: false
 NamespaceIndentation: All

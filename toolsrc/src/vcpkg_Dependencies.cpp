@@ -168,17 +168,16 @@ namespace vcpkg::Dependencies
                                                      ? RequestType::USER_REQUESTED
                                                      : RequestType::AUTO_SELECTED;
                 auto it = status_db.find_installed(spec);
-                if (it != status_db.end())
-                    return InstallPlanAction{ spec, { *it->get(), nullopt, nullopt }, request_type };
+                if (it != status_db.end()) return InstallPlanAction{spec, {*it->get(), nullopt, nullopt}, request_type};
 
                 Expected<BinaryParagraph> maybe_bpgh = Paragraphs::try_load_cached_package(paths, spec);
                 if (auto bpgh = maybe_bpgh.get())
-                    return InstallPlanAction{ spec, { nullopt, *bpgh, nullopt }, request_type };
+                    return InstallPlanAction{spec, {nullopt, *bpgh, nullopt}, request_type};
 
                 Expected<SourceParagraph> maybe_spgh =
                     Paragraphs::try_load_port(paths.get_filesystem(), paths.port_dir(spec));
                 if (auto spgh = maybe_spgh.get())
-                    return InstallPlanAction{ spec, { nullopt, nullopt, *spgh }, request_type };
+                    return InstallPlanAction{spec, {nullopt, nullopt, *spgh}, request_type};
 
                 Checks::exit_with_message(VCPKG_LINE_INFO, "Could not find package %s", spec);
             }
@@ -186,7 +185,7 @@ namespace vcpkg::Dependencies
 
         const std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
         std::vector<InstallPlanAction> toposort =
-            Graphs::topological_sort(specs, InstallAdjacencyProvider{ paths, status_db, specs_as_set });
+            Graphs::topological_sort(specs, InstallAdjacencyProvider{paths, status_db, specs_as_set});
         Util::erase_remove_if(toposort, [](const InstallPlanAction& plan) {
             return plan.request_type == RequestType::AUTO_SELECTED &&
                    plan.plan_type == InstallPlanType::ALREADY_INSTALLED;
@@ -241,15 +240,15 @@ namespace vcpkg::Dependencies
                 const StatusParagraphs::const_iterator it = status_db.find_installed(spec);
                 if (it == status_db.end())
                 {
-                    return RemovePlanAction{ spec, RemovePlanType::NOT_INSTALLED, request_type };
+                    return RemovePlanAction{spec, RemovePlanType::NOT_INSTALLED, request_type};
                 }
-                return RemovePlanAction{ spec, RemovePlanType::REMOVE, request_type };
+                return RemovePlanAction{spec, RemovePlanType::REMOVE, request_type};
             }
         };
 
         const std::vector<StatusParagraph*>& installed_ports = get_installed_ports(status_db);
         const std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
-        return Graphs::topological_sort(specs, RemoveAdjacencyProvider{ status_db, installed_ports, specs_as_set });
+        return Graphs::topological_sort(specs, RemoveAdjacencyProvider{status_db, installed_ports, specs_as_set});
     }
 
     std::vector<ExportPlanAction> create_export_plan(const VcpkgPaths& paths,
@@ -282,20 +281,20 @@ namespace vcpkg::Dependencies
 
                 Expected<BinaryParagraph> maybe_bpgh = Paragraphs::try_load_cached_package(paths, spec);
                 if (auto bpgh = maybe_bpgh.get())
-                    return ExportPlanAction{ spec, { nullopt, *bpgh, nullopt }, request_type };
+                    return ExportPlanAction{spec, {nullopt, *bpgh, nullopt}, request_type};
 
                 Expected<SourceParagraph> maybe_spgh =
                     Paragraphs::try_load_port(paths.get_filesystem(), paths.port_dir(spec));
                 if (auto spgh = maybe_spgh.get())
-                    return ExportPlanAction{ spec, { nullopt, nullopt, *spgh }, request_type };
+                    return ExportPlanAction{spec, {nullopt, nullopt, *spgh}, request_type};
 
-                return ExportPlanAction{ spec, { nullopt, nullopt, nullopt }, request_type };
+                return ExportPlanAction{spec, {nullopt, nullopt, nullopt}, request_type};
             }
         };
 
         const std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
         std::vector<ExportPlanAction> toposort =
-            Graphs::topological_sort(specs, ExportAdjacencyProvider{ paths, status_db, specs_as_set });
+            Graphs::topological_sort(specs, ExportAdjacencyProvider{paths, status_db, specs_as_set});
         return toposort;
     }
 }

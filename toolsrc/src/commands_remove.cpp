@@ -89,8 +89,7 @@ namespace vcpkg::Commands::Remove
 
     static void print_plan(const std::map<RemovePlanType, std::vector<const RemovePlanAction*>>& group_by_plan_type)
     {
-        static constexpr std::array<RemovePlanType, 2> order = { RemovePlanType::NOT_INSTALLED,
-                                                                 RemovePlanType::REMOVE };
+        static constexpr std::array<RemovePlanType, 2> order = {RemovePlanType::NOT_INSTALLED, RemovePlanType::REMOVE};
 
         for (const RemovePlanType plan_type : order)
         {
@@ -135,9 +134,11 @@ namespace vcpkg::Commands::Remove
         };
 
         static constexpr Option options_table[] = {
-            Option{ "--purge", SINGLE_WITH_NO },   Option{ "--recurse", SINGLE_WITH_NO },
-            Option{ "--dry-run", SINGLE_WITH_NO }, Option{ "--outdated", SINGLE },
-            Option{ "--logfile", VALUE },
+            Option{"--purge", SINGLE_WITH_NO},
+            Option{"--recurse", SINGLE_WITH_NO},
+            Option{"--dry-run", SINGLE_WITH_NO},
+            Option{"--outdated", SINGLE},
+            Option{"--logfile", VALUE},
         };
 
         static constexpr CStringView OPTION_PURGE = "--purge";
@@ -148,7 +149,7 @@ namespace vcpkg::Commands::Remove
         static const std::string example =
             Commands::Help::create_example_string("remove zlib zlib:x64-windows curl boost");
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments(
-            { OPTION_PURGE, OPTION_NO_PURGE, OPTION_RECURSE, OPTION_DRY_RUN, OPTION_OUTDATED });
+            {OPTION_PURGE, OPTION_NO_PURGE, OPTION_RECURSE, OPTION_DRY_RUN, OPTION_OUTDATED});
 
         StatusParagraphs status_db = database_load_check(paths);
         std::vector<PackageSpec> specs;

@@ -31,6 +31,6 @@ namespace vcpkg::PostBuildLint
         static constexpr ConfigurationType DEBUG(ConfigurationType::BackingEnum::DEBUG);
         static constexpr ConfigurationType RELEASE(ConfigurationType::BackingEnum::RELEASE);
 
-        static constexpr std::array<ConfigurationType, 2> VALUES = { DEBUG, RELEASE };
+        static constexpr std::array<ConfigurationType, 2> VALUES = {DEBUG, RELEASE};
     }
 }

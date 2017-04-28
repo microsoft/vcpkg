@@ -39,7 +39,6 @@ namespace vcpkg::PostBuildLint
         static constexpr BuildPolicies EMPTY_INCLUDE_FOLDER(BuildPolicies::BackingEnum::EMPTY_INCLUDE_FOLDER);
 
         static constexpr std::array<BuildPolicies, 4> VALUES = {
-            EMPTY_PACKAGE, DLLS_WITHOUT_LIBS, ONLY_RELEASE_CRT, EMPTY_INCLUDE_FOLDER
-        };
+            EMPTY_PACKAGE, DLLS_WITHOUT_LIBS, ONLY_RELEASE_CRT, EMPTY_INCLUDE_FOLDER};
     }
 }

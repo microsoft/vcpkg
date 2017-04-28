@@ -8,7 +8,7 @@ namespace vcpkg
         explicit constexpr NullOpt(int) {}
     };
 
-    const static constexpr NullOpt nullopt{ 0 };
+    const static constexpr NullOpt nullopt{0};
 
     template<class T>
     class Optional

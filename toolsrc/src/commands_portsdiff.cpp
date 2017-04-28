@@ -57,7 +57,7 @@ namespace vcpkg::Commands::PortsDiff
                 continue;
             }
 
-            output.push_back({ name, VersionDiff(previous_version, current_version) });
+            output.push_back({name, VersionDiff(previous_version, current_version)});
         }
 
         return output;

@@ -129,7 +129,7 @@ namespace vcpkg::System
         auto pipe = _wpopen(actual_cmd_line.c_str(), L"r");
         if (pipe == nullptr)
         {
-            return { 1, output };
+            return {1, output};
         }
         while (fgets(buf, 1024, pipe))
         {
@@ -137,10 +137,10 @@ namespace vcpkg::System
         }
         if (!feof(pipe))
         {
-            return { 1, output };
+            return {1, output};
         }
         auto ec = _pclose(pipe);
-        return { ec, output };
+        return {ec, output};
     }
 
     std::wstring create_powershell_script_cmd(const fs::path& script_path, const CWStringView args)
