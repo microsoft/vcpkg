@@ -1,5 +1,3 @@
-# taglib
-
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/taglib-1.11.1)
 vcpkg_download_distfile(ARCHIVE
@@ -10,21 +8,17 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 
 #patches for UWP
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-	vcpkg_apply_patches(
-		SOURCE_PATH ${SOURCE_PATH}
-		PATCHES 
-			${CMAKE_CURRENT_LIST_DIR}/ignore_c4996_error.patch
-			${CMAKE_CURRENT_LIST_DIR}/replace_non-uwp_functions.patch
-	)
-endif()
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/ignore_c4996_error.patch
+        ${CMAKE_CURRENT_LIST_DIR}/replace_non-uwp_functions.patch
+        ${CMAKE_CURRENT_LIST_DIR}/dont-assume-latin-1.patch
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
 
 vcpkg_install_cmake()
@@ -33,9 +27,13 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # copyright file
-file(COPY ${CURRENT_PORT_DIR}/copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/taglib)
+file(COPY ${SOURCE_PATH}/COPYING.LGPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/taglib)
+file(COPY ${SOURCE_PATH}/COPYING.MPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/taglib)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/taglib/COPYING.LGPL ${CURRENT_PACKAGES_DIR}/share/taglib/copyright)
 
 # remove bin directory for static builds (taglib creates a cmake batch file there)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
+
+vcpkg_copy_pdbs()
