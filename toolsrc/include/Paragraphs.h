@@ -22,6 +22,6 @@ namespace vcpkg::Paragraphs
 
     std::vector<SourceParagraph> load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir);
 
-    std::map<std::string, VersionT>
-    extract_port_names_and_versions(const std::vector<SourceParagraph>& source_paragraphs);
+    std::map<std::string, VersionT> extract_port_names_and_versions(
+        const std::vector<SourceParagraph>& source_paragraphs);
 }

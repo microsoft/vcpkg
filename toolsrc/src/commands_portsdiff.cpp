@@ -42,10 +42,10 @@ namespace vcpkg::Commands::PortsDiff
         std::vector<T> only_right;
     };
 
-    static std::vector<UpdatedPort>
-    find_updated_ports(const std::vector<std::string>& ports,
-                       const std::map<std::string, VersionT>& previous_names_and_versions,
-                       const std::map<std::string, VersionT>& current_names_and_versions)
+    static std::vector<UpdatedPort> find_updated_ports(
+        const std::vector<std::string>& ports,
+        const std::map<std::string, VersionT>& previous_names_and_versions,
+        const std::map<std::string, VersionT>& current_names_and_versions)
     {
         std::vector<UpdatedPort> output;
         for (const std::string& name : ports)

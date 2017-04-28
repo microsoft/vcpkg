@@ -27,5 +27,5 @@ Cpp11BracedListStyle: false
 IndentCaseLabels: true
 KeepEmptyLinesAtTheStartOfBlocks: false
 NamespaceIndentation: All
-PenaltyReturnTypeOnItsOwnLine: 100
+PenaltyReturnTypeOnItsOwnLine: 1000
 SpaceAfterTemplateKeyword: false

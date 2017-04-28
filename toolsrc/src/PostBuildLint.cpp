@@ -495,11 +495,11 @@ namespace vcpkg::PostBuildLint
         return LintStatus::ERROR_DETECTED;
     }
 
-    static LintStatus
-    check_lib_files_are_available_if_dlls_are_available(const std::map<BuildPolicies, OptBool>& policies,
-                                                        const size_t lib_count,
-                                                        const size_t dll_count,
-                                                        const fs::path& lib_dir)
+    static LintStatus check_lib_files_are_available_if_dlls_are_available(
+        const std::map<BuildPolicies, OptBool>& policies,
+        const size_t lib_count,
+        const size_t dll_count,
+        const fs::path& lib_dir)
     {
         auto it = policies.find(BuildPoliciesC::DLLS_WITHOUT_LIBS);
         if (it != policies.cend() && it->second == OptBoolC::ENABLED)

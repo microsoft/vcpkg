@@ -240,8 +240,8 @@ namespace vcpkg::Paragraphs
         return output;
     }
 
-    std::map<std::string, VersionT>
-    extract_port_names_and_versions(const std::vector<SourceParagraph>& source_paragraphs)
+    std::map<std::string, VersionT> extract_port_names_and_versions(
+        const std::vector<SourceParagraph>& source_paragraphs)
     {
         std::map<std::string, VersionT> names_and_versions;
         for (const SourceParagraph& port : source_paragraphs)

@@ -148,8 +148,10 @@ namespace vcpkg::Files
         {
             fs::stdfs::copy(oldpath, newpath, opts);
         }
-        virtual bool
-        copy_file(const fs::path& oldpath, const fs::path& newpath, fs::copy_options opts, std::error_code& ec) override
+        virtual bool copy_file(const fs::path& oldpath,
+                               const fs::path& newpath,
+                               fs::copy_options opts,
+                               std::error_code& ec) override
         {
             return fs::stdfs::copy_file(oldpath, newpath, opts, ec);
         }
