@@ -1,19 +1,19 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+#include "Paragraphs.h"
+#include "metrics.h"
+#include "vcpkg_Chrono.h"
+#include "vcpkg_Commands.h"
+#include "vcpkg_Files.h"
+#include "vcpkg_Input.h"
+#include "vcpkg_Strings.h"
+#include "vcpkg_System.h"
+#include "vcpkglib.h"
+#include <Shlobj.h>
+#include <cassert>
 #include <fstream>
 #include <memory>
-#include <cassert>
-#include "vcpkg_Commands.h"
-#include "metrics.h"
-#include <Shlobj.h>
-#include "vcpkg_Files.h"
-#include "vcpkg_System.h"
-#include "vcpkg_Input.h"
-#include "Paragraphs.h"
-#include "vcpkg_Strings.h"
-#include "vcpkg_Chrono.h"
-#include "vcpkglib.h"
 
 using namespace vcpkg;
 
@@ -52,14 +52,19 @@ static void inner(const VcpkgCmdArguments& args)
         }
         else
         {
-            vcpkg_root_dir = Files::get_real_filesystem().find_file_recursively_up(fs::stdfs::absolute(System::get_exe_path_of_current_process()), ".vcpkg-root");
+            vcpkg_root_dir = Files::get_real_filesystem().find_file_recursively_up(
+                fs::stdfs::absolute(System::get_exe_path_of_current_process()), ".vcpkg-root");
         }
     }
 
     Checks::check_exit(VCPKG_LINE_INFO, !vcpkg_root_dir.empty(), "Error: Could not detect vcpkg-root.");
 
     const Expected<VcpkgPaths> expected_paths = VcpkgPaths::create(vcpkg_root_dir);
-    Checks::check_exit(VCPKG_LINE_INFO, !expected_paths.error_code(), "Error: Invalid vcpkg root directory %s: %s", vcpkg_root_dir.string(), expected_paths.error_code().message());
+    Checks::check_exit(VCPKG_LINE_INFO,
+                       !expected_paths.error_code(),
+                       "Error: Invalid vcpkg root directory %s: %s",
+                       vcpkg_root_dir.string(),
+                       expected_paths.error_code().message());
     const VcpkgPaths paths = expected_paths.value_or_exit(VCPKG_LINE_INFO);
     int exit_code = _wchdir(paths.root.c_str());
     Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Changing the working dir failed");
@@ -76,7 +81,8 @@ static void inner(const VcpkgCmdArguments& args)
     }
     else
     {
-        const Optional<std::wstring> vcpkg_default_triplet_env = System::get_environmental_variable(L"VCPKG_DEFAULT_TRIPLET");
+        const Optional<std::wstring> vcpkg_default_triplet_env =
+            System::get_environmental_variable(L"VCPKG_DEFAULT_TRIPLET");
         if (auto v = vcpkg_default_triplet_env.get())
         {
             default_triplet = Triplet::from_canonical_name(Strings::utf16_to_utf8(*v));
@@ -103,8 +109,7 @@ static void loadConfig()
     {
         // Config path in AppDataLocal
         wchar_t* localappdatapath = nullptr;
-        if (S_OK != SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &localappdatapath))
-            __fastfail(1);
+        if (S_OK != SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &localappdatapath)) __fastfail(1);
         localappdata = localappdatapath;
         CoTaskMemFree(localappdatapath);
     }
@@ -117,8 +122,7 @@ static void loadConfig()
             const auto& pghs = *p_pghs;
 
             std::unordered_map<std::string, std::string> keys;
-            if (pghs.size() > 0)
-                keys = pghs[0];
+            if (pghs.size() > 0) keys = pghs[0];
 
             for (size_t x = 1; x < pghs.size(); ++x)
             {
@@ -135,7 +139,9 @@ static void loadConfig()
             }
         }
     }
-    catch (...) { }
+    catch (...)
+    {
+    }
 
     // config file not found, could not be read, or invalid
     std::string user_id, user_time;
@@ -147,16 +153,20 @@ static void loadConfig()
         auto& fs = Files::get_real_filesystem();
         fs.create_directory(localappdata / "vcpkg", ec);
         fs.write_contents(localappdata / "vcpkg" / "config",
-            Strings::format(
-                "User-Id: %s\n"
-                "User-Since: %s\n", user_id, user_time));
+                          Strings::format("User-Id: %s\n"
+                                          "User-Since: %s\n",
+                                          user_id,
+                                          user_time));
     }
-    catch (...) { }
+    catch (...)
+    {
+    }
 }
 
 static std::string trim_path_from_command_line(const std::string& full_command_line)
 {
-    Checks::check_exit(VCPKG_LINE_INFO, full_command_line.size() > 0, "Internal failure - cannot have empty command line");
+    Checks::check_exit(
+        VCPKG_LINE_INFO, full_command_line.size() > 0, "Internal failure - cannot have empty command line");
 
     if (full_command_line[0] == '"')
     {
@@ -178,17 +188,15 @@ static ElapsedTime g_timer;
 
 int wmain(const int argc, const wchar_t* const* const argv)
 {
-    if (argc == 0)
-        std::abort();
+    if (argc == 0) std::abort();
 
     g_timer = ElapsedTime::create_started();
-    atexit([]()
-        {
-            auto elapsed_us = g_timer.microseconds();
-            Metrics::track_metric("elapsed_us", elapsed_us);
-            g_debugging = false;
-            Metrics::flush();
-        });
+    atexit([]() {
+        auto elapsed_us = g_timer.microseconds();
+        Metrics::track_metric("elapsed_us", elapsed_us);
+        g_debugging = false;
+        Metrics::flush();
+    });
 
     Metrics::track_property("version", Commands::Version::version());
 
@@ -199,10 +207,8 @@ int wmain(const int argc, const wchar_t* const* const argv)
 
     const VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(argc, argv);
 
-    if (args.printmetrics != OptBoolC::UNSPECIFIED)
-        Metrics::set_print_metrics(args.printmetrics == OptBoolC::ENABLED);
-    if (args.sendmetrics != OptBoolC::UNSPECIFIED)
-        Metrics::set_send_metrics(args.sendmetrics == OptBoolC::ENABLED);
+    if (args.printmetrics != OptBoolC::UNSPECIFIED) Metrics::set_print_metrics(args.printmetrics == OptBoolC::ENABLED);
+    if (args.sendmetrics != OptBoolC::UNSPECIFIED) Metrics::set_send_metrics(args.sendmetrics == OptBoolC::ENABLED);
 
     if (args.debug != OptBoolC::UNSPECIFIED)
     {
@@ -232,18 +238,17 @@ int wmain(const int argc, const wchar_t* const* const argv)
     Metrics::track_property("error", exc_msg);
 
     fflush(stdout);
-    System::print(
-        "vcpkg.exe has crashed.\n"
-        "Please send an email to:\n"
-        "    %s\n"
-        "containing a brief summary of what you were trying to do and the following data blob:\n"
-        "\n"
-        "Version=%s\n"
-        "EXCEPTION='%s'\n"
-        "CMD=\n",
-        Commands::Contact::email(),
-        Commands::Version::version(),
-        exc_msg);
+    System::print("vcpkg.exe has crashed.\n"
+                  "Please send an email to:\n"
+                  "    %s\n"
+                  "containing a brief summary of what you were trying to do and the following data blob:\n"
+                  "\n"
+                  "Version=%s\n"
+                  "EXCEPTION='%s'\n"
+                  "CMD=\n",
+                  Commands::Contact::email(),
+                  Commands::Version::version(),
+                  exc_msg);
     fflush(stdout);
     for (int x = 0; x < argc; ++x)
         System::println("%s|", Strings::utf16_to_utf8(argv[x]));
