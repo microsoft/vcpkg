@@ -4,6 +4,7 @@
 #include "vcpkg_Chrono.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_Dependencies.h"
+#include "vcpkg_Enums.h"
 #include "vcpkg_Files.h"
 #include "vcpkg_Input.h"
 #include "vcpkg_System.h"
@@ -117,8 +118,9 @@ namespace vcpkg::Commands::CI
         }
 
         std::map<BuildResult, int> summary;
-        for (const BuildResult& v : Build::BuildResult_values)
+        for (BuildResult v : Enums::make_enum_range<BuildResult>())
         {
+            if (v == BuildResult::NULLVALUE) continue;
             summary[v] = 0;
         }
 

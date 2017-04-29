@@ -7,6 +7,14 @@
 
 namespace vcpkg
 {
+    // Optional<bool> optbool_parse(const std::string& s)
+    //{
+    //    if (s == to_string(true)) return true;
+    //    if (s == to_string(false)) return false;
+    //    if (s == to_string(Optional<bool>::UNSPECIFIED)) return Optional<bool>::UNSPECIFIED;
+    //    Checks::exit_with_message(VCPKG_LINE_INFO, "Could not convert string [%s] to Optional<bool>", s);
+    //}
+
     static void parse_value(const std::string* arg_begin,
                             const std::string* arg_end,
                             const std::string& option_name,
@@ -31,9 +39,9 @@ namespace vcpkg
         option_field = std::make_unique<std::string>(*arg_begin);
     }
 
-    static void parse_switch(OptBool new_setting, const std::string& option_name, OptBool& option_field)
+    static void parse_switch(bool new_setting, const std::string& option_name, Optional<bool>& option_field)
     {
-        if (option_field != OptBoolC::UNSPECIFIED && option_field != new_setting)
+        if (option_field && option_field != new_setting)
         {
             System::println(System::Color::error, "Error: conflicting values specified for --%s", option_name);
             Metrics::track_property("error", "error conflicting switches");
@@ -94,27 +102,27 @@ namespace vcpkg
                 }
                 if (arg == "--debug")
                 {
-                    parse_switch(OptBoolC::ENABLED, "debug", args.debug);
+                    parse_switch(true, "debug", args.debug);
                     continue;
                 }
                 if (arg == "--sendmetrics")
                 {
-                    parse_switch(OptBoolC::ENABLED, "sendmetrics", args.sendmetrics);
+                    parse_switch(true, "sendmetrics", args.sendmetrics);
                     continue;
                 }
                 if (arg == "--printmetrics")
                 {
-                    parse_switch(OptBoolC::ENABLED, "printmetrics", args.printmetrics);
+                    parse_switch(true, "printmetrics", args.printmetrics);
                     continue;
                 }
                 if (arg == "--no-sendmetrics")
                 {
-                    parse_switch(OptBoolC::DISABLED, "sendmetrics", args.sendmetrics);
+                    parse_switch(false, "sendmetrics", args.sendmetrics);
                     continue;
                 }
                 if (arg == "--no-printmetrics")
                 {
-                    parse_switch(OptBoolC::DISABLED, "printmetrics", args.printmetrics);
+                    parse_switch(false, "printmetrics", args.printmetrics);
                     continue;
                 }
 

@@ -29,9 +29,9 @@ namespace vcpkg::Checks
 
     void check_exit(const LineInfo& line_info, bool expression, const CStringView errorMessage);
 
-    template<class Arg1, class... Args>
+    template<class Conditional, class Arg1, class... Args>
     void check_exit(const LineInfo& line_info,
-                    bool expression,
+                    Conditional&& expression,
                     const char* errorMessageTemplate,
                     const Arg1 errorMessageArg1,
                     const Args&... errorMessageArgs)

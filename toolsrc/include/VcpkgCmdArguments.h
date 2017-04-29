@@ -1,6 +1,6 @@
 #pragma once
 
-#include "OptBool.h"
+#include "vcpkg_optional.h"
 #include <memory>
 #include <unordered_set>
 #include <vector>
@@ -14,9 +14,9 @@ namespace vcpkg
 
         std::unique_ptr<std::string> vcpkg_root_dir;
         std::unique_ptr<std::string> triplet;
-        OptBool debug = OptBoolC::UNSPECIFIED;
-        OptBool sendmetrics = OptBoolC::UNSPECIFIED;
-        OptBool printmetrics = OptBoolC::UNSPECIFIED;
+        Optional<bool> debug = nullopt;
+        Optional<bool> sendmetrics = nullopt;
+        Optional<bool> printmetrics = nullopt;
 
         std::string command;
         std::vector<std::string> command_arguments;

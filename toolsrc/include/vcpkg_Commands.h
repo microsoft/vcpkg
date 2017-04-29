@@ -18,18 +18,13 @@ namespace vcpkg::Commands
     {
         enum class BuildResult
         {
-            NULLVALUE = 0,
+            NULLVALUE,
             SUCCEEDED,
             BUILD_FAILED,
             POST_BUILD_CHECKS_FAILED,
-            CASCADED_DUE_TO_MISSING_DEPENDENCIES
+            CASCADED_DUE_TO_MISSING_DEPENDENCIES,
+            COUNT,
         };
-
-        static constexpr std::array<BuildResult, 4> BuildResult_values = {
-            BuildResult::SUCCEEDED,
-            BuildResult::BUILD_FAILED,
-            BuildResult::POST_BUILD_CHECKS_FAILED,
-            BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES};
 
         const std::string& to_string(const BuildResult build_result);
         std::string create_error_message(const BuildResult build_result, const PackageSpec& spec);

@@ -1,13 +1,20 @@
 #include "pch.h"
 
-#include "OptBool.h"
 #include "Paragraphs.h"
 #include "PostBuildLint_BuildInfo.h"
 #include "vcpkg_Checks.h"
+#include "vcpkg_optional.h"
 #include "vcpkglib_helpers.h"
 
 namespace vcpkg::PostBuildLint
 {
+    Optional<LinkageType> to_linkagetype(const std::string& str)
+    {
+        if (str == "dynamic") return LinkageType::DYNAMIC;
+        if (str == "static") return LinkageType::STATIC;
+        return nullopt;
+    }
+
     namespace BuildInfoRequiredField
     {
         static const std::string CRT_LINKAGE = "CRTLinkage";
@@ -19,28 +26,31 @@ namespace vcpkg::PostBuildLint
         BuildInfo build_info;
         const std::string crt_linkage_as_string =
             details::remove_required_field(&pgh, BuildInfoRequiredField::CRT_LINKAGE);
-        build_info.crt_linkage = LinkageType::value_of(crt_linkage_as_string);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           build_info.crt_linkage != LinkageTypeC::NULLVALUE,
-                           "Invalid crt linkage type: [%s]",
-                           crt_linkage_as_string);
+        auto crtlinkage = to_linkagetype(crt_linkage_as_string);
+        if (auto p = crtlinkage.get())
+            build_info.crt_linkage = *p;
+        else
+            Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid crt linkage type: [%s]", crt_linkage_as_string);
 
         const std::string library_linkage_as_string =
             details::remove_required_field(&pgh, BuildInfoRequiredField::LIBRARY_LINKAGE);
-        build_info.library_linkage = LinkageType::value_of(library_linkage_as_string);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           build_info.library_linkage != LinkageTypeC::NULLVALUE,
-                           "Invalid library linkage type: [%s]",
-                           library_linkage_as_string);
+        auto liblinkage = to_linkagetype(library_linkage_as_string);
+        if (auto p = liblinkage.get())
+            build_info.library_linkage = *p;
+        else
+            Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid library linkage type: [%s]", library_linkage_as_string);
 
         // The remaining entries are policies
         for (const std::unordered_map<std::string, std::string>::value_type& p : pgh)
         {
-            const BuildPolicies policy = BuildPolicies::parse(p.first);
-            Checks::check_exit(
-                VCPKG_LINE_INFO, policy != BuildPoliciesC::NULLVALUE, "Unknown policy found: %s", p.first);
-            const OptBool status = OptBool::parse(p.second);
-            build_info.policies.emplace(policy, status);
+            auto policy = to_build_policy(p.first);
+            Checks::check_exit(VCPKG_LINE_INFO, policy, "Unknown policy found: %s", p.first);
+            if (p.second == "enabled")
+                build_info.policies.emplace(policy.value_or_exit(VCPKG_LINE_INFO), true);
+            else if (p.second == "disabled")
+                build_info.policies.emplace(policy.value_or_exit(VCPKG_LINE_INFO), false);
+            else
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown setting for policy '%s': %s", p.first, p.second);
         }
 
         return build_info;

@@ -135,15 +135,6 @@
     <ClCompile Include="..\src\PostBuildLint_BuildPolicies.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\PostBuildLint_LinkageType.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\PostBuildLint_ConfigurationType.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\PostBuildLint_BuildType.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\vcpkg_Enums.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -157,9 +148,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\commands_env.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\OptBool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\PackageSpec.cpp">
@@ -266,15 +254,6 @@
     <ClInclude Include="..\include\PostBuildLint_BuildPolicies.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\PostBuildLint_LinkageType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\PostBuildLint_ConfigurationType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\PostBuildLint_BuildType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\vcpkg_Enums.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -297,9 +276,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\CStringView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\OptBool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\PackageSpec.h">

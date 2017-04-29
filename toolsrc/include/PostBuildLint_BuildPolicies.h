@@ -1,44 +1,34 @@
 #pragma once
+
+#include "CStringView.h"
+#include "vcpkg_Checks.h"
+#include "vcpkg_optional.h"
 #include <array>
 #include <string>
 
 namespace vcpkg::PostBuildLint
 {
-    struct BuildPolicies final
+    enum class BuildPolicy
     {
-        enum class BackingEnum
-        {
-            NULLVALUE = 0,
-            EMPTY_PACKAGE,
-            DLLS_WITHOUT_LIBS,
-            ONLY_RELEASE_CRT,
-            EMPTY_INCLUDE_FOLDER
-        };
-
-        static BuildPolicies parse(const std::string& s);
-
-        constexpr BuildPolicies() : backing_enum(BackingEnum::NULLVALUE) {}
-        constexpr explicit BuildPolicies(BackingEnum backing_enum) : backing_enum(backing_enum) {}
-        constexpr operator BackingEnum() const { return backing_enum; }
-
-        const std::string& to_string() const;
-        const std::string& cmake_variable() const;
-
-    private:
-        BackingEnum backing_enum;
+        EMPTY_PACKAGE,
+        DLLS_WITHOUT_LIBS,
+        ONLY_RELEASE_CRT,
+        EMPTY_INCLUDE_FOLDER,
+        COUNT,
     };
 
-    namespace BuildPoliciesC
+    inline CStringView to_string(BuildPolicy backing_enum)
     {
-        static constexpr const char* ENUM_NAME = "vcpkg::PostBuildLint::BuildPolicies";
-
-        static constexpr BuildPolicies NULLVALUE(BuildPolicies::BackingEnum::NULLVALUE);
-        static constexpr BuildPolicies EMPTY_PACKAGE(BuildPolicies::BackingEnum::EMPTY_PACKAGE);
-        static constexpr BuildPolicies DLLS_WITHOUT_LIBS(BuildPolicies::BackingEnum::DLLS_WITHOUT_LIBS);
-        static constexpr BuildPolicies ONLY_RELEASE_CRT(BuildPolicies::BackingEnum::ONLY_RELEASE_CRT);
-        static constexpr BuildPolicies EMPTY_INCLUDE_FOLDER(BuildPolicies::BackingEnum::EMPTY_INCLUDE_FOLDER);
-
-        static constexpr std::array<BuildPolicies, 4> VALUES = {
-            EMPTY_PACKAGE, DLLS_WITHOUT_LIBS, ONLY_RELEASE_CRT, EMPTY_INCLUDE_FOLDER};
+        switch (backing_enum)
+        {
+            case BuildPolicy::EMPTY_PACKAGE: return "PolicyEmptyPackage";
+            case BuildPolicy::DLLS_WITHOUT_LIBS: return "PolicyDLLsWithoutLIBs";
+            case BuildPolicy::ONLY_RELEASE_CRT: return "PolicyOnlyReleaseCRT";
+            case BuildPolicy::EMPTY_INCLUDE_FOLDER: return "PolicyEmptyIncludeFolder";
+            default: Checks::unreachable(VCPKG_LINE_INFO);
+        }
     }
+
+    Optional<BuildPolicy> to_build_policy(const std::string& s);
+    CStringView to_cmake_variable(BuildPolicy s);
 }

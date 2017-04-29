@@ -145,33 +145,14 @@ namespace vcpkg::Commands::Export
 
     struct ArchiveFormat final
     {
-        enum class BackingEnum
-        {
-            ZIP = 1,
-            _7ZIP,
-        };
-
-        constexpr ArchiveFormat() = delete;
-
-        constexpr ArchiveFormat(BackingEnum backing_enum, const wchar_t* extension, const wchar_t* cmake_option)
-            : backing_enum(backing_enum), m_extension(extension), m_cmake_option(cmake_option)
-        {
-        }
-
-        constexpr operator BackingEnum() const { return backing_enum; }
-        constexpr CWStringView extension() const { return this->m_extension; }
-        constexpr CWStringView cmake_option() const { return this->m_cmake_option; }
-
-    private:
-        BackingEnum backing_enum;
-        const wchar_t* m_extension;
-        const wchar_t* m_cmake_option;
+        CWStringView extension;
+        CWStringView cmake_option;
     };
 
     namespace ArchiveFormatC
     {
-        constexpr const ArchiveFormat ZIP(ArchiveFormat::BackingEnum::ZIP, L"zip", L"zip");
-        constexpr const ArchiveFormat _7ZIP(ArchiveFormat::BackingEnum::_7ZIP, L"7z", L"7zip");
+        constexpr const ArchiveFormat ZIP{L"zip", L"zip"};
+        constexpr const ArchiveFormat _7ZIP{L"7z", L"7zip"};
     }
 
     static fs::path do_archive_export(const VcpkgPaths& paths,
@@ -183,14 +164,14 @@ namespace vcpkg::Commands::Export
 
         const std::wstring exported_dir_filename = raw_exported_dir.filename().native();
         const std::wstring exported_archive_filename =
-            Strings::wformat(L"%s.%s", exported_dir_filename, format.extension());
+            Strings::wformat(L"%s.%s", exported_dir_filename, format.extension);
         const fs::path exported_archive_path = (output_dir / exported_archive_filename);
 
         // -NoDefaultExcludes is needed for ".vcpkg-root"
         const std::wstring cmd_line = Strings::wformat(LR"("%s" -E tar "cf" "%s" --format=%s -- "%s")",
                                                        cmake_exe.native(),
                                                        exported_archive_path.native(),
-                                                       format.cmake_option(),
+                                                       format.cmake_option,
                                                        raw_exported_dir.native());
 
         const int exit_code = System::cmd_execute_clean(cmd_line);

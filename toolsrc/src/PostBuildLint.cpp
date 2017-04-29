@@ -3,9 +3,9 @@
 #include "PackageSpec.h"
 #include "PostBuildLint.h"
 #include "PostBuildLint_BuildInfo.h"
-#include "PostBuildLint_BuildType.h"
 #include "VcpkgPaths.h"
 #include "coff_file_reader.h"
+#include "vcpkg_Enums.h"
 #include "vcpkg_Files.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Util.h"
@@ -59,22 +59,19 @@ namespace vcpkg::PostBuildLint
     }
 
     template<class T>
-    static bool contains_and_enabled(const std::map<T, OptBool> map, const T& key)
+    static bool contains_and_enabled(const std::map<T, bool> map, const T& key)
     {
         auto it = map.find(key);
-        if (it != map.cend() && it->second == OptBoolC::ENABLED)
-        {
-            return true;
-        }
+        if (it != map.cend()) return it->second;
 
         return false;
     }
 
     static LintStatus check_for_files_in_include_directory(const Files::Filesystem& fs,
-                                                           const std::map<BuildPolicies, OptBool>& policies,
+                                                           const std::map<BuildPolicy, bool>& policies,
                                                            const fs::path& package_dir)
     {
-        if (contains_and_enabled(policies, BuildPoliciesC::EMPTY_INCLUDE_FOLDER))
+        if (contains_and_enabled(policies, BuildPolicy::EMPTY_INCLUDE_FOLDER))
         {
             return LintStatus::SUCCESS;
         }
@@ -495,14 +492,13 @@ namespace vcpkg::PostBuildLint
         return LintStatus::ERROR_DETECTED;
     }
 
-    static LintStatus check_lib_files_are_available_if_dlls_are_available(
-        const std::map<BuildPolicies, OptBool>& policies,
-        const size_t lib_count,
-        const size_t dll_count,
-        const fs::path& lib_dir)
+    static LintStatus check_lib_files_are_available_if_dlls_are_available(const std::map<BuildPolicy, bool>& policies,
+                                                                          const size_t lib_count,
+                                                                          const size_t dll_count,
+                                                                          const fs::path& lib_dir)
     {
-        auto it = policies.find(BuildPoliciesC::DLLS_WITHOUT_LIBS);
-        if (it != policies.cend() && it->second == OptBoolC::ENABLED)
+        auto it = policies.find(BuildPolicy::DLLS_WITHOUT_LIBS);
+        if (it != policies.cend() && it->second)
         {
             return LintStatus::SUCCESS;
         }
@@ -513,7 +509,7 @@ namespace vcpkg::PostBuildLint
             System::println(System::Color::warning,
                             "If this is intended, add the following line in the portfile:\n"
                             "    SET(%s enabled)",
-                            BuildPoliciesC::DLLS_WITHOUT_LIBS.cmake_variable());
+                            to_cmake_variable(BuildPolicy::DLLS_WITHOUT_LIBS));
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -588,21 +584,27 @@ namespace vcpkg::PostBuildLint
         return LintStatus::SUCCESS;
     }
 
-    struct BuildType_and_file
+    enum class ConfigurationType
     {
-        fs::path file;
-        BuildType build_type;
+        DEBUG,
+        RELEASE,
     };
 
-    static LintStatus check_crt_linkage_of_libs(const BuildType& expected_build_type,
+    static CStringView to_crt_string(ConfigurationType config, LinkageType linkage)
+    {
+        if (config == ConfigurationType::RELEASE && linkage == LinkageType::STATIC) return "/MT";
+        if (config == ConfigurationType::RELEASE && linkage == LinkageType::DYNAMIC) return "/MD";
+        if (config == ConfigurationType::DEBUG && linkage == LinkageType::STATIC) return "/MTd";
+        if (config == ConfigurationType::DEBUG && linkage == LinkageType::DYNAMIC) return "/MDd";
+        Checks::unreachable(VCPKG_LINE_INFO);
+    }
+
+    static LintStatus check_crt_linkage_of_libs(ConfigurationType valid_config,
+                                                LinkageType valid_crt_linkage,
                                                 const std::vector<fs::path>& libs,
                                                 const fs::path dumpbin_exe)
     {
-        std::vector<BuildType> bad_build_types(BuildTypeC::VALUES.cbegin(), BuildTypeC::VALUES.cend());
-        bad_build_types.erase(std::remove(bad_build_types.begin(), bad_build_types.end(), expected_build_type),
-                              bad_build_types.end());
-
-        std::vector<BuildType_and_file> libs_with_invalid_crt;
+        std::vector<std::pair<fs::path, CStringView>> libs_with_invalid_crt;
 
         for (const fs::path& lib : libs)
         {
@@ -614,11 +616,43 @@ namespace vcpkg::PostBuildLint
                                "Running command:\n   %s\n failed",
                                Strings::utf16_to_utf8(cmd_line));
 
-            for (const BuildType& bad_build_type : bad_build_types)
+            if (valid_config != ConfigurationType::DEBUG || valid_crt_linkage != LinkageType::STATIC)
             {
-                if (std::regex_search(ec_data.output.cbegin(), ec_data.output.cend(), bad_build_type.crt_regex()))
+                static const std::regex REGEX_DEBUG_STATIC(R"(/DEFAULTLIB:LIBCMTD)", std::regex_constants::icase);
+                if (std::regex_search(ec_data.output.cbegin(), ec_data.output.cend(), REGEX_DEBUG_STATIC))
                 {
-                    libs_with_invalid_crt.push_back({lib, bad_build_type});
+                    libs_with_invalid_crt.push_back(
+                        {lib, to_crt_string(ConfigurationType::DEBUG, LinkageType::STATIC)});
+                    break;
+                }
+            }
+            if (valid_config != ConfigurationType::RELEASE || valid_crt_linkage != LinkageType::STATIC)
+            {
+                static const std::regex REGEX_RELEASE_STATIC(R"(/DEFAULTLIB:LIBCMT[^D])", std::regex_constants::icase);
+                if (std::regex_search(ec_data.output.cbegin(), ec_data.output.cend(), REGEX_RELEASE_STATIC))
+                {
+                    libs_with_invalid_crt.push_back(
+                        {lib, to_crt_string(ConfigurationType::RELEASE, LinkageType::STATIC)});
+                    break;
+                }
+            }
+            if (valid_config != ConfigurationType::DEBUG || valid_crt_linkage != LinkageType::DYNAMIC)
+            {
+                static const std::regex REGEX_DEBUG_DYNAMIC(R"(/DEFAULTLIB:MSVCRTD)", std::regex_constants::icase);
+                if (std::regex_search(ec_data.output.cbegin(), ec_data.output.cend(), REGEX_DEBUG_DYNAMIC))
+                {
+                    libs_with_invalid_crt.push_back(
+                        {lib, to_crt_string(ConfigurationType::DEBUG, LinkageType::DYNAMIC)});
+                    break;
+                }
+            }
+            if (valid_config != ConfigurationType::RELEASE || valid_crt_linkage != LinkageType::DYNAMIC)
+            {
+                static const std::regex REGEX_RELEASE_DYNAMIC(R"(/DEFAULTLIB:MSVCRT[^D])", std::regex_constants::icase);
+                if (std::regex_search(ec_data.output.cbegin(), ec_data.output.cend(), REGEX_RELEASE_DYNAMIC))
+                {
+                    libs_with_invalid_crt.push_back(
+                        {lib, to_crt_string(ConfigurationType::RELEASE, LinkageType::DYNAMIC)});
                     break;
                 }
             }
@@ -628,11 +662,11 @@ namespace vcpkg::PostBuildLint
         {
             System::println(System::Color::warning,
                             "Expected %s crt linkage, but the following libs had invalid crt linkage:",
-                            expected_build_type.to_string());
+                            to_crt_string(valid_config, valid_crt_linkage));
             System::println("");
-            for (const BuildType_and_file btf : libs_with_invalid_crt)
+            for (const auto& btf : libs_with_invalid_crt)
             {
-                System::println("    %s: %s", btf.file.generic_string(), btf.build_type.to_string());
+                System::println("    %s: %s", btf.first.generic_string(), btf.second);
             }
             System::println("");
 
@@ -731,7 +765,7 @@ namespace vcpkg::PostBuildLint
 
         size_t error_count = 0;
 
-        if (contains_and_enabled(build_info.policies, BuildPoliciesC::EMPTY_PACKAGE))
+        if (contains_and_enabled(build_info.policies, BuildPolicy::EMPTY_PACKAGE))
         {
             return error_count;
         }
@@ -770,7 +804,7 @@ namespace vcpkg::PostBuildLint
 
         switch (build_info.library_linkage)
         {
-            case LinkageType::BackingEnum::DYNAMIC:
+            case LinkageType::DYNAMIC:
             {
                 std::vector<fs::path> debug_dlls = fs.get_files_recursive(debug_bin_dir);
                 Util::unstable_keep_if(debug_dlls, has_extension_pred(fs, ".dll"));
@@ -795,7 +829,7 @@ namespace vcpkg::PostBuildLint
                 error_count += check_outdated_crt_linkage_of_dlls(dlls, toolset.dumpbin);
                 break;
             }
-            case LinkageType::BackingEnum::STATIC:
+            case LinkageType::STATIC:
             {
                 std::vector<fs::path> dlls = fs.get_files_recursive(package_dir);
                 Util::unstable_keep_if(dlls, has_extension_pred(fs, ".dll"));
@@ -803,20 +837,15 @@ namespace vcpkg::PostBuildLint
 
                 error_count += check_bin_folders_are_not_present_in_static_build(fs, package_dir);
 
-                if (!contains_and_enabled(build_info.policies, BuildPoliciesC::ONLY_RELEASE_CRT))
+                if (!contains_and_enabled(build_info.policies, BuildPolicy::ONLY_RELEASE_CRT))
                 {
                     error_count += check_crt_linkage_of_libs(
-                        BuildType::value_of(ConfigurationTypeC::DEBUG, build_info.crt_linkage),
-                        debug_libs,
-                        toolset.dumpbin);
+                        ConfigurationType::DEBUG, build_info.crt_linkage, debug_libs, toolset.dumpbin);
                 }
-                error_count +=
-                    check_crt_linkage_of_libs(BuildType::value_of(ConfigurationTypeC::RELEASE, build_info.crt_linkage),
-                                              release_libs,
-                                              toolset.dumpbin);
+                error_count += check_crt_linkage_of_libs(
+                    ConfigurationType::RELEASE, build_info.crt_linkage, release_libs, toolset.dumpbin);
                 break;
             }
-            case LinkageType::BackingEnum::NULLVALUE:
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
 
