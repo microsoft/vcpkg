@@ -64,4 +64,29 @@ namespace vcpkg
         bool m_is_present;
         T m_t;
     };
+
+    template<class T>
+    bool operator==(const Optional<T>& o, const T& t)
+    {
+        if (auto p = o.get()) return *p == t;
+        return false;
+    }
+    template<class T>
+    bool operator==(const T& t, const Optional<T>& o)
+    {
+        if (auto p = o.get()) return t == *p;
+        return false;
+    }
+    template<class T>
+    bool operator!=(const Optional<T>& o, const T& t)
+    {
+        if (auto p = o.get()) return *p != t;
+        return true;
+    }
+    template<class T>
+    bool operator!=(const T& t, const Optional<T>& o)
+    {
+        if (auto p = o.get()) return t != *p;
+        return true;
+    }
 }

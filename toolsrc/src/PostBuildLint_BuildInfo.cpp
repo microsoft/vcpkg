@@ -1,9 +1,9 @@
 #include "pch.h"
 
-#include "OptBool.h"
 #include "Paragraphs.h"
 #include "PostBuildLint_BuildInfo.h"
 #include "vcpkg_Checks.h"
+#include "vcpkg_optional.h"
 #include "vcpkglib_helpers.h"
 
 namespace vcpkg::PostBuildLint
@@ -39,8 +39,12 @@ namespace vcpkg::PostBuildLint
             const BuildPolicies policy = BuildPolicies::parse(p.first);
             Checks::check_exit(
                 VCPKG_LINE_INFO, policy != BuildPoliciesC::NULLVALUE, "Unknown policy found: %s", p.first);
-            const OptBool status = OptBool::parse(p.second);
-            build_info.policies.emplace(policy, status);
+            if (p.second == "enabled")
+                build_info.policies.emplace(policy, true);
+            else if (p.second == "disabled")
+                build_info.policies.emplace(policy, false);
+            else
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown setting for policy '%s': %s", p.first, p.second);
         }
 
         return build_info;

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "OptBool.h"
 #include "PostBuildLint_BuildPolicies.h"
 #include "PostBuildLint_LinkageType.h"
 #include "filesystem_fs.h"
@@ -15,7 +14,7 @@ namespace vcpkg::PostBuildLint
         LinkageType crt_linkage;
         LinkageType library_linkage;
 
-        std::map<BuildPolicies, OptBool> policies;
+        std::map<BuildPolicies, bool> policies;
     };
 
     BuildInfo read_build_info(const Files::Filesystem& fs, const fs::path& filepath);

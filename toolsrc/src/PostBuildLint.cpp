@@ -59,19 +59,16 @@ namespace vcpkg::PostBuildLint
     }
 
     template<class T>
-    static bool contains_and_enabled(const std::map<T, OptBool> map, const T& key)
+    static bool contains_and_enabled(const std::map<T, bool> map, const T& key)
     {
         auto it = map.find(key);
-        if (it != map.cend() && it->second == OptBoolC::ENABLED)
-        {
-            return true;
-        }
+        if (it != map.cend()) return it->second;
 
         return false;
     }
 
     static LintStatus check_for_files_in_include_directory(const Files::Filesystem& fs,
-                                                           const std::map<BuildPolicies, OptBool>& policies,
+                                                           const std::map<BuildPolicies, bool>& policies,
                                                            const fs::path& package_dir)
     {
         if (contains_and_enabled(policies, BuildPoliciesC::EMPTY_INCLUDE_FOLDER))
@@ -495,14 +492,13 @@ namespace vcpkg::PostBuildLint
         return LintStatus::ERROR_DETECTED;
     }
 
-    static LintStatus check_lib_files_are_available_if_dlls_are_available(
-        const std::map<BuildPolicies, OptBool>& policies,
-        const size_t lib_count,
-        const size_t dll_count,
-        const fs::path& lib_dir)
+    static LintStatus check_lib_files_are_available_if_dlls_are_available(const std::map<BuildPolicies, bool>& policies,
+                                                                          const size_t lib_count,
+                                                                          const size_t dll_count,
+                                                                          const fs::path& lib_dir)
     {
         auto it = policies.find(BuildPoliciesC::DLLS_WITHOUT_LIBS);
-        if (it != policies.cend() && it->second == OptBoolC::ENABLED)
+        if (it != policies.cend() && it->second)
         {
             return LintStatus::SUCCESS;
         }
