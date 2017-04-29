@@ -18,6 +18,30 @@ namespace vcpkg
         const CharType* cstr;
     };
 
+    template<class CharType>
+    bool operator==(const std::basic_string<CharType>& l, const BasicCStringView<CharType>& r)
+    {
+        return l == r.c_str();
+    }
+
+    template<class CharType>
+    bool operator==(const BasicCStringView<CharType>& r, const std::basic_string<CharType>& l)
+    {
+        return l == r.c_str();
+    }
+
+    template<class CharType>
+    bool operator!=(const BasicCStringView<CharType>& r, const std::basic_string<CharType>& l)
+    {
+        return l != r.c_str();
+    }
+
+    template<class CharType>
+    bool operator!=(const std::basic_string<CharType>& l, const BasicCStringView<CharType>& r)
+    {
+        return l != r.c_str();
+    }
+
     using CStringView = BasicCStringView<char>;
     using CWStringView = BasicCStringView<wchar_t>;
 
