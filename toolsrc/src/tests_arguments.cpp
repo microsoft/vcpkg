@@ -10,7 +10,7 @@ using namespace vcpkg;
 
 namespace UnitTest1
 {
-    struct ArgumentTests : TestClass<ArgumentTests>
+    TEST_CLASS(ArgumentTests)
     {
         TEST_METHOD(create_from_arg_sequence_options_lower)
         {

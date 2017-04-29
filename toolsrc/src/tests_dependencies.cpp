@@ -11,7 +11,7 @@ using namespace vcpkg;
 
 namespace UnitTest1
 {
-    struct ArgumentTests : TestClass<ArgumentTests>
+    TEST_CLASS(DependencyTests)
     {
         TEST_METHOD(parse_depends_one)
         {
