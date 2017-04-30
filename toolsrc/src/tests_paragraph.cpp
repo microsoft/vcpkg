@@ -21,7 +21,7 @@ namespace Strings = vcpkg::Strings;
 
 namespace UnitTest1
 {
-    struct ArgumentTests : TestClass<ArgumentTests>
+    TEST_CLASS(ControlParsing)
     {
         TEST_METHOD(SourceParagraph_Construct_Minimum)
         {
