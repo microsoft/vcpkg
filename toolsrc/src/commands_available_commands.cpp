@@ -10,7 +10,7 @@ namespace vcpkg::Commands
             {"install", &Install::perform_and_exit},
             {"ci", &CI::perform_and_exit},
             {"remove", &Remove::perform_and_exit},
-            {"build", &Build::perform_and_exit},
+            {"build", &BuildCommand::perform_and_exit},
             {"env", &Env::perform_and_exit},
             {"build-external", &BuildExternal::perform_and_exit},
             {"export", &Export::perform_and_exit},

@@ -2,13 +2,15 @@
 
 #include "PackageSpec.h"
 #include "PostBuildLint.h"
-#include "PostBuildLint_BuildInfo.h"
 #include "PostBuildLint_BuildType.h"
 #include "VcpkgPaths.h"
 #include "coff_file_reader.h"
+#include "vcpkg_Build.h"
 #include "vcpkg_Files.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Util.h"
+
+using vcpkg::Build::BuildInfo;
 
 namespace vcpkg::PostBuildLint
 {
@@ -715,14 +717,14 @@ namespace vcpkg::PostBuildLint
 
     static void operator+=(size_t& left, const LintStatus& right) { left += static_cast<size_t>(right); }
 
-    static size_t perform_all_checks_and_return_error_count(const PackageSpec& spec, const VcpkgPaths& paths)
+    static size_t perform_all_checks_and_return_error_count(const PackageSpec& spec,
+                                                            const VcpkgPaths& paths,
+                                                            const BuildInfo& build_info)
     {
         const auto& fs = paths.get_filesystem();
 
         // for dumpbin
         const Toolset& toolset = paths.get_toolset();
-
-        BuildInfo build_info = read_build_info(fs, paths.build_info_file_path(spec));
         const fs::path package_dir = paths.package_dir(spec);
 
         size_t error_count = 0;
@@ -823,10 +825,10 @@ namespace vcpkg::PostBuildLint
         return error_count;
     }
 
-    size_t perform_all_checks(const PackageSpec& spec, const VcpkgPaths& paths)
+    size_t perform_all_checks(const PackageSpec& spec, const VcpkgPaths& paths, const BuildInfo& build_info)
     {
         System::println("-- Performing post-build validation");
-        const size_t error_count = perform_all_checks_and_return_error_count(spec, paths);
+        const size_t error_count = perform_all_checks_and_return_error_count(spec, paths, build_info);
 
         if (error_count != 0)
         {

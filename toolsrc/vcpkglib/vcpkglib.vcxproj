@@ -141,7 +141,7 @@
     <ClInclude Include="..\include\lazy.h" />
     <ClInclude Include="..\include\LineInfo.h" />
     <ClInclude Include="..\include\ParagraphParseResult.h" />
-    <ClInclude Include="..\include\PostBuildLint_BuildInfo.h" />
+    <ClInclude Include="..\include\vcpkg_Build.h" />
     <ClInclude Include="..\include\PostBuildLint_BuildPolicies.h" />
     <ClInclude Include="..\include\coff_file_reader.h" />
     <ClInclude Include="..\include\vcpkg_expected.h" />
@@ -188,7 +188,7 @@
     <ClCompile Include="..\src\commands_export.cpp" />
     <ClCompile Include="..\src\LineInfo.cpp" />
     <ClCompile Include="..\src\ParagraphParseResult.cpp" />
-    <ClCompile Include="..\src\PostBuildLint_BuildInfo.cpp" />
+    <ClCompile Include="..\src\vcpkg_Build.cpp" />
     <ClCompile Include="..\src\PostBuildLint_BuildPolicies.cpp" />
     <ClCompile Include="..\src\coff_file_reader.cpp" />
     <ClCompile Include="..\src\commands_available_commands.cpp" />

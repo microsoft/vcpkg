@@ -14,41 +14,8 @@ namespace vcpkg::Commands
     using CommandTypeB = void (*)(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     using CommandTypeC = void (*)(const VcpkgCmdArguments& args);
 
-    namespace Build
+    namespace BuildCommand
     {
-        enum class BuildResult
-        {
-            NULLVALUE = 0,
-            SUCCEEDED,
-            BUILD_FAILED,
-            POST_BUILD_CHECKS_FAILED,
-            CASCADED_DUE_TO_MISSING_DEPENDENCIES
-        };
-
-        static constexpr std::array<BuildResult, 4> BuildResult_values = {
-            BuildResult::SUCCEEDED,
-            BuildResult::BUILD_FAILED,
-            BuildResult::POST_BUILD_CHECKS_FAILED,
-            BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES};
-
-        const std::string& to_string(const BuildResult build_result);
-        std::string create_error_message(const BuildResult build_result, const PackageSpec& spec);
-        std::string create_user_troubleshooting_message(const PackageSpec& spec);
-
-        std::wstring make_build_env_cmd(const Triplet& triplet, const Toolset& toolset);
-
-        struct ExtendedBuildResult
-        {
-            BuildResult code;
-            std::vector<PackageSpec> unmet_dependencies;
-        };
-
-        ExtendedBuildResult build_package(const SourceParagraph& source_paragraph,
-                                          const PackageSpec& spec,
-                                          const VcpkgPaths& paths,
-                                          const fs::path& port_dir,
-                                          const StatusParagraphs& status_db);
-
         void perform_and_exit(const PackageSpec& spec,
                               const fs::path& port_dir,
                               const std::unordered_set<std::string>& options,

@@ -2,6 +2,7 @@
 
 #include "Paragraphs.h"
 #include "metrics.h"
+#include "vcpkg_Build.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_Dependencies.h"
 #include "vcpkg_Files.h"
@@ -324,12 +325,12 @@ namespace vcpkg::Commands::Install
                     case InstallPlanType::BUILD_AND_INSTALL:
                     {
                         System::println("Building package %s... ", display_name);
-                        const auto result = Commands::Build::build_package(
-                            action.any_paragraph.source_paragraph.value_or_exit(VCPKG_LINE_INFO),
-                            action.spec,
-                            paths,
-                            paths.port_dir(action.spec),
-                            status_db);
+                        const auto result =
+                            Build::build_package(action.any_paragraph.source_paragraph.value_or_exit(VCPKG_LINE_INFO),
+                                                 action.spec,
+                                                 paths,
+                                                 paths.port_dir(action.spec),
+                                                 status_db);
                         if (result.code != Build::BuildResult::SUCCEEDED)
                         {
                             System::println(System::Color::error,

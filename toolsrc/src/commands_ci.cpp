@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "Paragraphs.h"
+#include "vcpkg_Build.h"
 #include "vcpkg_Chrono.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_Dependencies.h"
@@ -71,7 +72,7 @@ namespace vcpkg::Commands::CI
                     {
                         System::println("Building package %s... ", display_name);
                         auto&& source_paragraph = action.any_paragraph.source_paragraph.value_or_exit(VCPKG_LINE_INFO);
-                        const auto result_ex = Commands::Build::build_package(
+                        const auto result_ex = Build::build_package(
                             source_paragraph, action.spec, paths, paths.port_dir(action.spec), status_db);
                         const auto result = result_ex.code;
 

@@ -17,6 +17,6 @@ namespace vcpkg::Commands::BuildExternal
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({});
 
         const fs::path port_dir = args.command_arguments.at(1);
-        Build::perform_and_exit(spec, port_dir, options, paths);
+        BuildCommand::perform_and_exit(spec, port_dir, options, paths);
     }
 }
