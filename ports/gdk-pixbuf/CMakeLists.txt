@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(gdk-pixbuf)
+project(gdk-pixbuf C)
 
 set(GDK_PIXBUF_LIB_SUFFIX 2.0)
 set(GDK_PIXBUF_DLL_SUFFIX 2)
