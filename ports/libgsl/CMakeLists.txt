@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.8)
 project(libgsl C)
 
 option(INSTALL_HEADERS "Install public header files" ON)
-set(WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 # Function to extract parameter from makefile. Space separated values are returned as lists
 function(extract_from_makefile PATTERN RETURN FILEPATH)
@@ -45,6 +44,7 @@ file(GLOB_RECURSE PUBLIC_HEADERS gsl*.h)
 list(APPEND PUBLIC_HEADERS ${CMAKE_CURRENT_BINARY_DIR}/gsl_types.h)
 
 add_library(libgsl ${SOURCES})
+set_target_properties(libgsl PROPERTIES DEFINE_SYMBOL DLL_EXPORT WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 if(INSTALL_HEADERS)
     set_target_properties(libgsl PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
@@ -52,11 +52,6 @@ endif()
 target_include_directories(libgsl PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 # For the build, we need to copy all headers to the gsl directory
 file(COPY ${PUBLIC_HEADERS} DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/gsl")
-
-if(BUILD_SHARED_LIBS)
-    target_compile_definitions(libgsl PRIVATE -DDLL_EXPORT)
-endif()
-
 
 set(TARGET_INSTALL_OPTIONS)
 if(INSTALL_HEADERS)
