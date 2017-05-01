@@ -1,4 +1,3 @@
 Source: pcre
-Version: 8.38-1
+Version: 8.40
 Description: Perl Compatible Regular Expresions
-Build-Depends: zlib
