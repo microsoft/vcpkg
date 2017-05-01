@@ -29,7 +29,7 @@ namespace vcpkg
 // Enable implicit conversion to std::error_code
 namespace std
 {
-    template <>
+    template<>
     struct is_error_code_enum<vcpkg::PackageSpecParseResult> : ::std::true_type
     {
     };

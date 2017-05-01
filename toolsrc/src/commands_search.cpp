@@ -1,13 +1,14 @@
 #include "pch.h"
+
+#include "Paragraphs.h"
+#include "SourceParagraph.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
-#include "Paragraphs.h"
 #include "vcpkglib_helpers.h"
-#include "SourceParagraph.h"
 
 namespace vcpkg::Commands::Search
 {
-    static const std::string OPTION_GRAPH = "--graph"; //TODO: This should find a better home, eventually
+    static const std::string OPTION_GRAPH = "--graph"; // TODO: This should find a better home, eventually
 
     static std::string replace_dashes_with_underscore(const std::string& input)
     {
@@ -54,12 +55,14 @@ namespace vcpkg::Commands::Search
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const std::string example = Strings::format("The argument should be a substring to search for, or no argument to display all libraries.\n%s",
-                                                           Commands::Help::create_example_string("search png"));
+        static const std::string example = Strings::format(
+            "The argument should be a substring to search for, or no argument to display all libraries.\n%s",
+            Commands::Help::create_example_string("search png"));
         args.check_max_arg_count(1, example);
-        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({ OPTION_GRAPH });
+        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_GRAPH});
 
-        const std::vector<SourceParagraph> source_paragraphs = Paragraphs::load_all_ports(paths.ports);
+        const std::vector<SourceParagraph> source_paragraphs =
+            Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
         if (options.find(OPTION_GRAPH) != options.cend())
         {
             const std::string graph_as_string = create_graph_as_string(source_paragraphs);
@@ -79,7 +82,8 @@ namespace vcpkg::Commands::Search
             // At this point there is 1 argument
             for (const SourceParagraph& source_paragraph : source_paragraphs)
             {
-                if (Strings::case_insensitive_ascii_find(source_paragraph.name, args.command_arguments[0]) == source_paragraph.name.end())
+                if (Strings::case_insensitive_ascii_find(source_paragraph.name, args.command_arguments[0]) ==
+                    source_paragraph.name.end())
                 {
                     continue;
                 }
@@ -88,7 +92,8 @@ namespace vcpkg::Commands::Search
             }
         }
 
-        System::println("\nIf your library is not listed, please open an issue at and/or consider making a pull request:\n"
+        System::println(
+            "\nIf your library is not listed, please open an issue at and/or consider making a pull request:\n"
             "    https://github.com/Microsoft/vcpkg/issues");
 
         Checks::exit_success(VCPKG_LINE_INFO);

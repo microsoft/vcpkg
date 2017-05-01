@@ -1,8 +1,8 @@
 #pragma once
 
-#include <unordered_map>
-#include "SourceParagraph.h"
 #include "PackageSpec.h"
+#include "SourceParagraph.h"
+#include <unordered_map>
 
 namespace vcpkg
 {
@@ -25,5 +25,5 @@ namespace vcpkg
         std::vector<std::string> depends;
     };
 
-    std::ostream& operator<<(std::ostream& os, const BinaryParagraph& pgh);
+    void serialize(const BinaryParagraph& pgh, std::string& out_str);
 }

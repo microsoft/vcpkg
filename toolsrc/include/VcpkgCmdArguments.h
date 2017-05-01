@@ -1,9 +1,9 @@
 #pragma once
 
+#include "vcpkg_optional.h"
 #include <memory>
-#include <vector>
 #include <unordered_set>
-#include "OptBool.h"
+#include <vector>
 
 namespace vcpkg
 {
@@ -14,13 +14,14 @@ namespace vcpkg
 
         std::unique_ptr<std::string> vcpkg_root_dir;
         std::unique_ptr<std::string> triplet;
-        OptBoolT debug = OptBoolT::UNSPECIFIED;
-        OptBoolT  sendmetrics = OptBoolT::UNSPECIFIED;
-        OptBoolT  printmetrics = OptBoolT::UNSPECIFIED;
+        Optional<bool> debug = nullopt;
+        Optional<bool> sendmetrics = nullopt;
+        Optional<bool> printmetrics = nullopt;
 
         std::string command;
         std::vector<std::string> command_arguments;
-        std::unordered_set<std::string> check_and_get_optional_command_arguments(const std::vector<std::string>& valid_options) const;
+        std::unordered_set<std::string> check_and_get_optional_command_arguments(
+            const std::vector<std::string>& valid_options) const;
 
         void check_max_arg_count(const size_t expected_arg_count) const;
         void check_max_arg_count(const size_t expected_arg_count, const std::string& example_text) const;

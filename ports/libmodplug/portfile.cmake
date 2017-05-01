@@ -1,14 +1,14 @@
 
-set(MODPLUG_HASH bb25b059a963f62aa0a3fe4c580da7da47f2b9c0)
+set(MODPLUG_HASH 5a39f5913d07ba3e61d8d5afdba00b70165da81d)
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libmodplug-${MODPLUG_HASH})
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/Konstanty/libmodplug/archive/${MODPLUG_HASH}.zip"
-    FILENAME "libmodplug-0.8.8.5-${MODPLUG_HASH}.zip"
-    SHA512 65840b7748284b400dfe99775e18f44dcc4846bc0ff522d18b9ded42c7032e10683e453110d530722d9e22547b7e5f4878ebfff92f232691cbd5b0638c48d88b)
+    FILENAME "libmodplug-${MODPLUG_HASH}.zip"
+    SHA512 71b1314c44c98694c66ac17b638e997b99abc1ad61f7ac2e971000bdd4276d50d538259f4ee4dd39a3f672d28d3d322a32c83a9be0b1ffe5099ecc81273b5b55)
 
 vcpkg_extract_source_archive(${ARCHIVE})
-vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH})
+vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH} PREFER_NINJA)
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

@@ -1,12 +1,12 @@
 #pragma once
 
-#include <vector>
 #include <algorithm>
+#include <vector>
 
 // Add more forwarding functions to the m_data std::vector as needed.
 namespace vcpkg
 {
-    template <class T>
+    template<class T>
     class SortedVector
     {
     public:
@@ -23,7 +23,7 @@ namespace vcpkg
             }
         }
 
-        template <class Compare>
+        template<class Compare>
         SortedVector(std::vector<T> v, Compare comp) : m_data(std::move(v))
         {
             if (!std::is_sorted(m_data.cbegin(), m_data.cend(), comp))
@@ -32,25 +32,17 @@ namespace vcpkg
             }
         }
 
-        iterator begin() const
-        {
-            return this->m_data.cbegin();
-        }
+        iterator begin() const { return this->m_data.cbegin(); }
 
-        iterator end() const
-        {
-            return this->m_data.cend();
-        }
+        iterator end() const { return this->m_data.cend(); }
 
-        bool empty() const
-        {
-            return this->m_data.empty();
-        }
+        iterator cbegin() const { return this->m_data.cbegin(); }
 
-        size_type size() const
-        {
-            return this->m_data.size();
-        }
+        iterator cend() const { return this->m_data.cend(); }
+
+        bool empty() const { return this->m_data.empty(); }
+
+        size_type size() const { return this->m_data.size(); }
 
     private:
         std::vector<T> m_data;

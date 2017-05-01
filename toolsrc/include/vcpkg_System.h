@@ -1,12 +1,14 @@
 #pragma once
 
-#include <Windows.h>
-#include "vcpkg_Strings.h"
 #include "filesystem_fs.h"
+#include "vcpkg_Strings.h"
 #include "vcpkg_optional.h"
+#include <Windows.h>
 
 namespace vcpkg::System
 {
+    tm get_current_date_time();
+
     fs::path get_exe_path_of_current_process();
 
     struct ExitCodeAndOutput
@@ -35,25 +37,25 @@ namespace vcpkg::System
     void print(const Color c, const CStringView message);
     void println(const Color c, const CStringView message);
 
-    template <class Arg1, class...Args>
+    template<class Arg1, class... Args>
     void print(const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
     {
         return print(Strings::format(messageTemplate, messageArg1, messageArgs...));
     }
 
-    template <class Arg1, class...Args>
+    template<class Arg1, class... Args>
     void print(const Color c, const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
     {
         return print(c, Strings::format(messageTemplate, messageArg1, messageArgs...));
     }
 
-    template <class Arg1, class...Args>
+    template<class Arg1, class... Args>
     void println(const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
     {
         return println(Strings::format(messageTemplate, messageArg1, messageArgs...));
     }
 
-    template <class Arg1, class...Args>
+    template<class Arg1, class... Args>
     void println(const Color c, const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
     {
         return println(c, Strings::format(messageTemplate, messageArg1, messageArgs...));

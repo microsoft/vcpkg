@@ -1,13 +1,13 @@
 #include "pch.h"
+
 #include "BinaryParagraph.h"
-#include "vcpkglib_helpers.h"
 #include "vcpkg_Checks.h"
+#include "vcpkglib_helpers.h"
 
 using namespace vcpkg::details;
 
 namespace vcpkg
 {
-    //
     namespace BinaryParagraphRequiredField
     {
         static const std::string PACKAGE = "Package";
@@ -28,7 +28,8 @@ namespace vcpkg
     BinaryParagraph::BinaryParagraph(std::unordered_map<std::string, std::string> fields)
     {
         const std::string name = details::remove_required_field(&fields, BinaryParagraphRequiredField::PACKAGE);
-        const std::string architecture = details::remove_required_field(&fields, BinaryParagraphRequiredField::ARCHITECTURE);
+        const std::string architecture =
+            details::remove_required_field(&fields, BinaryParagraphRequiredField::ARCHITECTURE);
         const Triplet triplet = Triplet::from_canonical_name(architecture);
 
         this->spec = PackageSpec::from_name_and_triplet(name, triplet).value_or_exit(VCPKG_LINE_INFO);
@@ -53,44 +54,30 @@ namespace vcpkg
         this->depends = filter_dependencies(spgh.depends, triplet);
     }
 
-    std::string BinaryParagraph::displayname() const
-    {
-        return this->spec.to_string();
-    }
+    std::string BinaryParagraph::displayname() const { return this->spec.to_string(); }
 
-    std::string BinaryParagraph::dir() const
-    {
-        return this->spec.dir();
-    }
+    std::string BinaryParagraph::dir() const { return this->spec.dir(); }
 
     std::string BinaryParagraph::fullstem() const
     {
         return Strings::format("%s_%s_%s", this->spec.name(), this->version, this->spec.triplet());
     }
 
-    std::ostream& operator<<(std::ostream& os, const BinaryParagraph& p)
+    void serialize(const BinaryParagraph& pgh, std::string& out_str)
     {
-        os << "Package: " << p.spec.name() << "\n";
-        os << "Version: " << p.version << "\n";
-        if (!p.depends.empty())
+        out_str.append("Package: ").append(pgh.spec.name()).push_back('\n');
+        out_str.append("Version: ").append(pgh.version).push_back('\n');
+        if (!pgh.depends.empty())
         {
-            os << "Depends: " << p.depends.front();
-
-            auto b = p.depends.begin() + 1;
-            auto e = p.depends.end();
-            for (; b != e; ++b)
-            {
-                os << ", " << *b;
-            }
-
-            os << "\n";
+            out_str.append("Depends: ");
+            out_str.append(Strings::join(", ", pgh.depends));
+            out_str.push_back('\n');
         }
-        os << "Architecture: " << p.spec.triplet().to_string() << "\n";
-        os << "Multi-Arch: same\n";
-        if (!p.maintainer.empty())
-            os << "Maintainer: " << p.maintainer << "\n";
-        if (!p.description.empty())
-            os << "Description: " << p.description << "\n";
-        return os;
+
+        out_str.append("Architecture: ").append(pgh.spec.triplet().to_string()).push_back('\n');
+        out_str.append("Multi-Arch: same\n");
+
+        if (!pgh.maintainer.empty()) out_str.append("Maintainer: ").append(pgh.maintainer).push_back('\n');
+        if (!pgh.description.empty()) out_str.append("Description: ").append(pgh.description).push_back('\n');
     }
 }

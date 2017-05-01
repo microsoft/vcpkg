@@ -1,12 +1,12 @@
 #include "pch.h"
+
 #include "vcpkg_Checks.h"
 #include "vcpkg_System.h"
 #include "vcpkglib.h"
 
 namespace vcpkg::Checks
 {
-    [[noreturn]]
-    void unreachable(const LineInfo& line_info)
+    [[noreturn]] void unreachable(const LineInfo& line_info)
     {
         System::println(System::Color::error, "Error: Unreachable code was reached");
         System::println(System::Color::error, line_info.to_string()); // Always print line_info here
@@ -17,8 +17,7 @@ namespace vcpkg::Checks
 #endif
     }
 
-    [[noreturn]]
-    void exit_with_code(const LineInfo& line_info, const int exit_code)
+    [[noreturn]] void exit_with_code(const LineInfo& line_info, const int exit_code)
     {
         if (g_debugging)
         {
@@ -28,8 +27,7 @@ namespace vcpkg::Checks
         ::exit(exit_code);
     }
 
-    [[noreturn]]
-    void exit_with_message(const LineInfo& line_info, const CStringView errorMessage)
+    [[noreturn]] void exit_with_message(const LineInfo& line_info, const CStringView errorMessage)
     {
         System::println(System::Color::error, errorMessage);
         exit_fail(line_info);

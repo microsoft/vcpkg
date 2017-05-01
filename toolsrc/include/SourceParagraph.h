@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
 namespace vcpkg
 {
@@ -13,7 +13,7 @@ namespace vcpkg
         std::string qualifier;
     };
 
-    std::ostream& operator<<(std::ostream& os, const Dependency& p);
+    const std::string& to_string(const Dependency& dep);
 
     struct SourceParagraph
     {

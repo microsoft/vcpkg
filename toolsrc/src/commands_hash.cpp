@@ -1,4 +1,5 @@
 #include "pch.h"
+
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Util.h"
@@ -7,18 +8,26 @@ namespace vcpkg::Commands::Hash
 {
     static void do_file_hash(fs::path const& path, std::wstring const& hashType)
     {
-        auto cmd_line = Strings::wformat(LR"(CertUtil.exe -hashfile "%s" %s)",
-                                         path.c_str(), hashType);
+        auto cmd_line = Strings::wformat(LR"(CertUtil.exe -hashfile "%s" %s)", path.c_str(), hashType);
         auto ec_data = System::cmd_execute_and_capture_output(cmd_line);
-        Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::utf16_to_utf8(cmd_line));
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           ec_data.exit_code == 0,
+                           "Running command:\n   %s\n failed",
+                           Strings::utf16_to_utf8(cmd_line));
 
         std::string const& output = ec_data.output;
 
         auto start = output.find_first_of("\r\n");
-        Checks::check_exit(VCPKG_LINE_INFO, start != std::string::npos, "Unexpected output format from command: %s", Strings::utf16_to_utf8(cmd_line));
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           start != std::string::npos,
+                           "Unexpected output format from command: %s",
+                           Strings::utf16_to_utf8(cmd_line));
 
         auto end = output.find_first_of("\r\n", start + 1);
-        Checks::check_exit(VCPKG_LINE_INFO, end != std::string::npos, "Unexpected output format from command: %s", Strings::utf16_to_utf8(cmd_line));
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           end != std::string::npos,
+                           "Unexpected output format from command: %s",
+                           Strings::utf16_to_utf8(cmd_line));
 
         auto hash = output.substr(start, end - start);
         Util::erase_remove_if(hash, isspace);
@@ -27,8 +36,9 @@ namespace vcpkg::Commands::Hash
 
     void perform_and_exit(const VcpkgCmdArguments& args)
     {
-        static const std::string example = Strings::format(
-            "The argument should be a file path\n%s", Commands::Help::create_example_string("hash boost_1_62_0.tar.bz2"));
+        static const std::string example =
+            Strings::format("The argument should be a file path\n%s",
+                            Commands::Help::create_example_string("hash boost_1_62_0.tar.bz2"));
         args.check_min_arg_count(1, example);
         args.check_max_arg_count(2, example);
         args.check_and_get_optional_command_arguments({});

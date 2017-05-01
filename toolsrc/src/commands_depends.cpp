@@ -1,8 +1,9 @@
 #include "pch.h"
-#include "vcpkg_Commands.h"
-#include "vcpkg_System.h"
+
 #include "Paragraphs.h"
+#include "vcpkg_Commands.h"
 #include "vcpkg_Strings.h"
+#include "vcpkg_System.h"
 
 namespace vcpkg::Commands::DependInfo
 {
@@ -12,7 +13,8 @@ namespace vcpkg::Commands::DependInfo
         args.check_exact_arg_count(0, example);
         args.check_and_get_optional_command_arguments({});
 
-        const std::vector<SourceParagraph> source_paragraphs = Paragraphs::load_all_ports(paths.ports);
+        const std::vector<SourceParagraph> source_paragraphs =
+            Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
 
         for (const SourceParagraph& source_paragraph : source_paragraphs)
         {

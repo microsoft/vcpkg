@@ -1,16 +1,18 @@
 #pragma once
 
+#include "StatusParagraphs.h"
 #include "VcpkgCmdArguments.h"
 #include "VcpkgPaths.h"
-#include "StatusParagraphs.h"
-#include <array>
 #include "VersionT.h"
+#include <array>
 
 namespace vcpkg::Commands
 {
-    using CommandTypeA = void(*)(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
-    using CommandTypeB = void(*)(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
-    using CommandTypeC = void(*)(const VcpkgCmdArguments& args);
+    using CommandTypeA = void (*)(const VcpkgCmdArguments& args,
+                                  const VcpkgPaths& paths,
+                                  const Triplet& default_triplet);
+    using CommandTypeB = void (*)(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
+    using CommandTypeC = void (*)(const VcpkgCmdArguments& args);
 
     namespace Build
     {
@@ -23,7 +25,11 @@ namespace vcpkg::Commands
             CASCADED_DUE_TO_MISSING_DEPENDENCIES
         };
 
-        static constexpr std::array<BuildResult, 4> BuildResult_values = { BuildResult::SUCCEEDED, BuildResult::BUILD_FAILED, BuildResult::POST_BUILD_CHECKS_FAILED, BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES };
+        static constexpr std::array<BuildResult, 4> BuildResult_values = {
+            BuildResult::SUCCEEDED,
+            BuildResult::BUILD_FAILED,
+            BuildResult::POST_BUILD_CHECKS_FAILED,
+            BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES};
 
         const std::string& to_string(const BuildResult build_result);
         std::string create_error_message(const BuildResult build_result, const PackageSpec& spec);
@@ -31,8 +37,23 @@ namespace vcpkg::Commands
 
         std::wstring make_build_env_cmd(const Triplet& triplet, const Toolset& toolset);
 
-        BuildResult build_package(const SourceParagraph& source_paragraph, const PackageSpec& spec, const VcpkgPaths& paths, const fs::path& port_dir, const StatusParagraphs& status_db);
-        void perform_and_exit(const PackageSpec& spec, const fs::path& port_dir, const std::unordered_set<std::string>& options, const VcpkgPaths& paths);
+        struct ExtendedBuildResult
+        {
+            BuildResult code;
+            std::vector<PackageSpec> unmet_dependencies;
+        };
+
+        ExtendedBuildResult build_package(const SourceParagraph& source_paragraph,
+                                          const PackageSpec& spec,
+                                          const VcpkgPaths& paths,
+                                          const fs::path& port_dir,
+                                          const StatusParagraphs& status_db);
+
+        void perform_and_exit(const PackageSpec& spec,
+                              const fs::path& port_dir,
+                              const std::unordered_set<std::string>& options,
+                              const VcpkgPaths& paths);
+
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
     }
 
@@ -43,7 +64,34 @@ namespace vcpkg::Commands
 
     namespace Install
     {
-        void install_package(const VcpkgPaths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs* status_db);
+        struct InstallDir
+        {
+            static InstallDir from_destination_root(const fs::path& destination_root,
+                                                    const std::string& destination_subdirectory,
+                                                    const fs::path& listfile);
+
+        private:
+            fs::path m_destination;
+            std::string m_destination_subdirectory;
+            fs::path m_listfile;
+
+        public:
+            const fs::path& destination() const;
+            const std::string& destination_subdirectory() const;
+            const fs::path& listfile() const;
+        };
+
+        void install_files_and_write_listfile(Files::Filesystem& fs,
+                                              const fs::path& source_dir,
+                                              const InstallDir& dirs);
+        void install_package(const VcpkgPaths& paths,
+                             const BinaryParagraph& binary_paragraph,
+                             StatusParagraphs* status_db);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
+    }
+
+    namespace Export
+    {
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
     }
 
@@ -118,7 +166,7 @@ namespace vcpkg::Commands
 
     namespace Integrate
     {
-        extern const char*const INTEGRATE_COMMAND_HELPSTRING;
+        extern const char* const INTEGRATE_COMMAND_HELPSTRING;
 
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
@@ -158,7 +206,7 @@ namespace vcpkg::Commands
         void perform_and_exit(const VcpkgCmdArguments& args);
     }
 
-    template <class T>
+    template<class T>
     struct PackageNameAndFunction
     {
         std::string name;
@@ -169,7 +217,7 @@ namespace vcpkg::Commands
     const std::vector<PackageNameAndFunction<CommandTypeB>>& get_available_commands_type_b();
     const std::vector<PackageNameAndFunction<CommandTypeC>>& get_available_commands_type_c();
 
-    template <typename T>
+    template<typename T>
     T find(const std::string& command_name, const std::vector<PackageNameAndFunction<T>> available_commands)
     {
         for (const PackageNameAndFunction<T>& cmd : available_commands)

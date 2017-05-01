@@ -2,8 +2,8 @@
 #include "SourceParagraph.h"
 #include "Triplet.h"
 
-#pragma comment(lib,"version")
-#pragma comment(lib,"winhttp")
+#pragma comment(lib, "version")
+#pragma comment(lib, "winhttp")
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -11,9 +11,8 @@ using namespace vcpkg;
 
 namespace UnitTest1
 {
-    TEST_CLASS(DependencyTests)
+    class DependencyTests : public TestClass<DependencyTests>
     {
-    public:
         TEST_METHOD(parse_depends_one)
         {
             auto v = expand_qualified_dependencies(parse_depends("libA [windows]"));

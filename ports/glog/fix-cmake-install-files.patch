@@ -1,0 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1429590..5ed110d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -390,7 +390,8 @@ if (HAVE_NO_UNNAMED_TYPE_TEMPLATE_ARGS)
+ endif (HAVE_NO_UNNAMED_TYPE_TEMPLATE_ARGS)
+ 
+ if (gflags_FOUND)
+-  target_include_directories (glog PUBLIC ${gflags_INCLUDE_DIR})
++  # when set to PUBLIC, will cause some wrong interface_include_directory for vcpkg
++  target_include_directories (glog PRIVATE ${gflags_INCLUDE_DIR})
+   target_link_libraries (glog PUBLIC ${gflags_LIBRARIES})
+ 
+   if (NOT BUILD_SHARED_LIBS)
+@@ -557,7 +558,7 @@ endif (gflags_FOUND)
+ 
+ configure_package_config_file (glog-config.cmake.in
+   ${CMAKE_CURRENT_BINARY_DIR}/glog-config.cmake
+-  INSTALL_DESTINATION lib/cmake/glog
++  INSTALL_DESTINATION share/glog
+   NO_CHECK_REQUIRED_COMPONENTS_MACRO)
+ 
+ write_basic_package_version_file (glog-config-version.cmake VERSION
+@@ -569,6 +570,6 @@ export (PACKAGE glog)
+ install (FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/glog-config.cmake
+   ${CMAKE_CURRENT_BINARY_DIR}/glog-config-version.cmake
+-  DESTINATION lib/cmake/glog)
++  DESTINATION share/glog)
+ 
+-install (EXPORT glog-targets NAMESPACE glog:: DESTINATION lib/cmake/glog)
++install (EXPORT glog-targets NAMESPACE glog:: DESTINATION share/glog)

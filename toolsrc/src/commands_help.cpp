@@ -1,4 +1,5 @@
 #include "pch.h"
+
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
 
@@ -7,10 +8,9 @@ namespace vcpkg::Commands::Help
     void help_topic_valid_triplet(const VcpkgPaths& paths)
     {
         System::println("Available architecture triplets:");
-        auto it = fs::directory_iterator(paths.triplets);
-        for (; it != fs::directory_iterator(); ++it)
+        for (auto&& path : paths.get_filesystem().get_files_non_recursive(paths.triplets))
         {
-            System::println("  %s", it->path().stem().filename().string());
+            System::println("  %s", path.stem().filename().string());
         }
     }
 
@@ -48,14 +48,15 @@ namespace vcpkg::Commands::Help
             "  --vcpkg-root <path>             Specify the vcpkg root directory\n"
             "                                  (default: %%VCPKG_ROOT%%)\n"
             "\n"
-            "For more help (including examples) see the accompanying README.md."
-            , Integrate::INTEGRATE_COMMAND_HELPSTRING);
+            "For more help (including examples) see the accompanying README.md.",
+            Integrate::INTEGRATE_COMMAND_HELPSTRING);
     }
 
     std::string create_example_string(const std::string& command_and_arguments)
     {
         std::string cs = Strings::format("Example:\n"
-                                         "  vcpkg %s", command_and_arguments);
+                                         "  vcpkg %s",
+                                         command_and_arguments);
         return cs;
     }
 

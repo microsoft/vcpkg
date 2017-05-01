@@ -1,45 +1,40 @@
 #include "pch.h"
+
 #include "PostBuildLint_BuildType.h"
 #include "vcpkg_Checks.h"
 
-namespace vcpkg::PostBuildLint::BuildType
+namespace vcpkg::PostBuildLint
 {
-    Type value_of(const ConfigurationType::Type& config, const LinkageType::Type& linkage)
+    BuildType BuildType::value_of(const ConfigurationType& config, const LinkageType& linkage)
     {
-        if (config == ConfigurationType::DEBUG && linkage == LinkageType::STATIC)
+        if (config == ConfigurationTypeC::DEBUG && linkage == LinkageTypeC::STATIC)
         {
-            return DEBUG_STATIC;
+            return BuildTypeC::DEBUG_STATIC;
         }
 
-        if (config == ConfigurationType::DEBUG && linkage == LinkageType::DYNAMIC)
+        if (config == ConfigurationTypeC::DEBUG && linkage == LinkageTypeC::DYNAMIC)
         {
-            return DEBUG_DYNAMIC;
+            return BuildTypeC::DEBUG_DYNAMIC;
         }
 
-        if (config == ConfigurationType::RELEASE && linkage == LinkageType::STATIC)
+        if (config == ConfigurationTypeC::RELEASE && linkage == LinkageTypeC::STATIC)
         {
-            return RELEASE_STATIC;
+            return BuildTypeC::RELEASE_STATIC;
         }
 
-        if (config == ConfigurationType::RELEASE && linkage == LinkageType::DYNAMIC)
+        if (config == ConfigurationTypeC::RELEASE && linkage == LinkageTypeC::DYNAMIC)
         {
-            return RELEASE_DYNAMIC;
+            return BuildTypeC::RELEASE_DYNAMIC;
         }
 
         Checks::unreachable(VCPKG_LINE_INFO);
     }
 
-    const ConfigurationType::Type& Type::config() const
-    {
-        return this->m_config;
-    }
+    const ConfigurationType& BuildType::config() const { return this->m_config; }
 
-    const LinkageType::Type& Type::linkage() const
-    {
-        return this->m_linkage;
-    }
+    const LinkageType& BuildType::linkage() const { return this->m_linkage; }
 
-    const std::regex& Type::crt_regex() const
+    const std::regex& BuildType::crt_regex() const
     {
         static const std::regex REGEX_DEBUG_STATIC(R"(/DEFAULTLIB:LIBCMTD)", std::regex_constants::icase);
         static const std::regex REGEX_DEBUG_DYNAMIC(R"(/DEFAULTLIB:MSVCRTD)", std::regex_constants::icase);
@@ -48,20 +43,15 @@ namespace vcpkg::PostBuildLint::BuildType
 
         switch (backing_enum)
         {
-            case BuildType::DEBUG_STATIC:
-                return REGEX_DEBUG_STATIC;
-            case BuildType::DEBUG_DYNAMIC:
-                return REGEX_DEBUG_DYNAMIC;
-            case BuildType::RELEASE_STATIC:
-                return REGEX_RELEASE_STATIC;
-            case BuildType::RELEASE_DYNAMIC:
-                return REGEX_RELEASE_DYNAMIC;
-            default:
-                Checks::unreachable(VCPKG_LINE_INFO);
+            case BuildTypeC::DEBUG_STATIC: return REGEX_DEBUG_STATIC;
+            case BuildTypeC::DEBUG_DYNAMIC: return REGEX_DEBUG_DYNAMIC;
+            case BuildTypeC::RELEASE_STATIC: return REGEX_RELEASE_STATIC;
+            case BuildTypeC::RELEASE_DYNAMIC: return REGEX_RELEASE_DYNAMIC;
+            default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
 
-    const std::string& Type::to_string() const
+    const std::string& BuildType::to_string() const
     {
         static const std::string NAME_DEBUG_STATIC("Debug,Static");
         static const std::string NAME_DEBUG_DYNAMIC("Debug,Dynamic");
@@ -70,16 +60,11 @@ namespace vcpkg::PostBuildLint::BuildType
 
         switch (backing_enum)
         {
-            case BuildType::DEBUG_STATIC:
-                return NAME_DEBUG_STATIC;
-            case BuildType::DEBUG_DYNAMIC:
-                return NAME_DEBUG_DYNAMIC;
-            case BuildType::RELEASE_STATIC:
-                return NAME_RELEASE_STATIC;
-            case BuildType::RELEASE_DYNAMIC:
-                return NAME_RELEASE_DYNAMIC;
-            default:
-                Checks::unreachable(VCPKG_LINE_INFO);
+            case BuildTypeC::DEBUG_STATIC: return NAME_DEBUG_STATIC;
+            case BuildTypeC::DEBUG_DYNAMIC: return NAME_DEBUG_DYNAMIC;
+            case BuildTypeC::RELEASE_STATIC: return NAME_RELEASE_STATIC;
+            case BuildTypeC::RELEASE_DYNAMIC: return NAME_RELEASE_DYNAMIC;
+            default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
 }

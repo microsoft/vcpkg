@@ -149,7 +149,6 @@
     <ClInclude Include="..\include\SortedVector.h" />
     <ClInclude Include="..\include\MachineType.h" />
     <ClInclude Include="..\include\metrics.h" />
-    <ClInclude Include="..\include\OptBool.h" />
     <ClInclude Include="..\include\PackageSpec.h" />
     <ClInclude Include="..\include\PackageSpecParseResult.h" />
     <ClInclude Include="..\include\Paragraphs.h" />
@@ -182,11 +181,11 @@
     <ClInclude Include="..\include\VersionT.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\include\VersionT.cpp" />
     <ClCompile Include="..\src\BinaryParagraph.cpp" />
     <ClCompile Include="..\src\commands_ci.cpp" />
     <ClCompile Include="..\src\commands_depends.cpp" />
     <ClCompile Include="..\src\commands_env.cpp" />
+    <ClCompile Include="..\src\commands_export.cpp" />
     <ClCompile Include="..\src\LineInfo.cpp" />
     <ClCompile Include="..\src\ParagraphParseResult.cpp" />
     <ClCompile Include="..\src\PostBuildLint_BuildInfo.cpp" />
@@ -213,7 +212,6 @@
     <ClCompile Include="..\src\commands_version.cpp" />
     <ClCompile Include="..\src\MachineType.cpp" />
     <ClCompile Include="..\src\metrics.cpp" />
-    <ClCompile Include="..\src\OptBool.cpp" />
     <ClCompile Include="..\src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -243,6 +241,7 @@
     <ClCompile Include="..\src\VcpkgPaths.cpp" />
     <ClCompile Include="..\src\vcpkg_Strings.cpp" />
     <ClCompile Include="..\src\vcpkg_System.cpp" />
+    <ClCompile Include="..\src\VersionT.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

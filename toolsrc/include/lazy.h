@@ -2,13 +2,13 @@
 
 namespace vcpkg
 {
-    template <typename T>
+    template<typename T>
     class Lazy
     {
     public:
         Lazy() : value(T()), initialized(false) {}
 
-        template <class F>
+        template<class F>
         T const& get_lazy(const F& f) const
         {
             if (!initialized)

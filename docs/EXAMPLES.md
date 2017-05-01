@@ -101,7 +101,30 @@ To remove the integration for your user, you can use `.\vcpkg integrate remove`.
 
 The best way to use installed libraries with cmake is via the toolchain file `scripts\buildsystems\vcpkg.cmake`. To use this file, you simply need to add it onto your CMake command line as `-DCMAKE_TOOLCHAIN_FILE=D:\src\vcpkg\scripts\buildsystems\vcpkg.cmake`.
 
-Let's first make a simple CMake project with a main file.
+Alternatively, if you are using CMake through Open Folder with Visual Studio 2017 you can define `CMAKE_TOOLCHAIN_FILE` by adding a `variables` section to each of your `CMakeSettings.json` configurations:
+
+```json
+{
+    "configurations": [
+        {
+        "name": "x86-Debug",
+        "generator": "Visual Studio 15 2017",
+        "configurationType" : "Debug",
+        "buildRoot":  "${env.LOCALAPPDATA}\\CMakeBuild\\${workspaceHash}\\build\\${name}",
+        "cmakeCommandArgs": "",
+        "buildCommandArgs": "-m -v:minimal",
+        "variables": [
+          {
+            "name": "CMAKE_TOOLCHAIN_FILE",
+            "value": "D:\\src\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake"
+          }
+        ]
+        }
+    ]
+}
+```
+
+Now let's make a simple CMake project with a main file.
 ```cmake
 # CMakeLists.txt
 cmake_minimum_required(VERSION 3.0)

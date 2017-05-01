@@ -1,7 +1,7 @@
 #pragma once
 
-#include <unordered_map>
 #include "BinaryParagraph.h"
+#include <unordered_map>
 
 namespace vcpkg
 {
@@ -33,7 +33,7 @@ namespace vcpkg
         InstallState state;
     };
 
-    std::ostream& operator<<(std::ostream& os, const StatusParagraph& pgh);
+    void serialize(const StatusParagraph& pgh, std::string& out_str);
 
     std::string to_string(InstallState f);
 

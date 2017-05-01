@@ -1,9 +1,9 @@
 #pragma once
 
-#include "filesystem_fs.h"
 #include "PostBuildLint_BuildPolicies.h"
-#include "OptBool.h"
 #include "PostBuildLint_LinkageType.h"
+#include "filesystem_fs.h"
+#include "vcpkg_Files.h"
 
 namespace vcpkg::PostBuildLint
 {
@@ -11,11 +11,11 @@ namespace vcpkg::PostBuildLint
     {
         static BuildInfo create(std::unordered_map<std::string, std::string> pgh);
 
-        LinkageType::Type crt_linkage;
-        LinkageType::Type library_linkage;
+        LinkageType crt_linkage;
+        LinkageType library_linkage;
 
-        std::map<BuildPolicies::Type, OptBoolT> policies;
+        std::map<BuildPolicies, bool> policies;
     };
 
-    BuildInfo read_build_info(const fs::path& filepath);
+    BuildInfo read_build_info(const Files::Filesystem& fs, const fs::path& filepath);
 }

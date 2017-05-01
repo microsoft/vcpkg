@@ -1,0 +1,29 @@
+diff --git a/taglib/toolkit/tfilestream.cpp b/taglib/toolkit/tfilestream.cpp
+index 5205bae..b267aaa 100644
+--- a/taglib/toolkit/tfilestream.cpp	
++++ b/taglib/toolkit/tfilestream.cpp
+@@ -52,9 +52,9 @@ namespace
+     const DWORD access = readOnly ? GENERIC_READ : (GENERIC_READ | GENERIC_WRITE);
+ 
+     if(!path.wstr().empty())
+-      return CreateFileW(path.wstr().c_str(), access, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
++      return CreateFile2(path.wstr().c_str(), access, FILE_SHARE_READ, OPEN_EXISTING, NULL);
+     else if(!path.str().empty())
+-      return CreateFileA(path.str().c_str(), access, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
++      return CreateFile2(std::wstring(path.str().cbegin(), path.str().end()).c_str(), access, FILE_SHARE_READ, OPEN_EXISTING, NULL);
+     else
+       return InvalidFileHandle;
+   }
+@@ -437,9 +437,10 @@ long FileStream::length()
+ #ifdef _WIN32
+ 
+   SetLastError(NO_ERROR);
+-  const DWORD fileSize = GetFileSize(d->file, NULL);
++  LARGE_INTEGER fileSize;
++  GetFileSizeEx(d->file, &fileSize);
+   if(GetLastError() == NO_ERROR) {
+-    return static_cast<long>(fileSize);
++    return fileSize.QuadPart;
+   }
+   else {
+     debug("FileStream::length() -- Failed to get the file size.");

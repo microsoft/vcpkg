@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
 #include <utility>
+#include <vector>
 
 namespace vcpkg::Util
 {
@@ -23,8 +23,36 @@ namespace vcpkg::Util
     }
 
     template<class Container, class Pred>
+    void unstable_keep_if(Container& cont, Pred pred)
+    {
+        cont.erase(std::partition(cont.begin(), cont.end(), pred), cont.end());
+    }
+
+    template<class Container, class Pred>
     void erase_remove_if(Container& cont, Pred pred)
     {
         cont.erase(std::remove_if(cont.begin(), cont.end(), pred), cont.end());
+    }
+
+    template<class Container, class Pred>
+    auto find_if(const Container& cont, Pred pred)
+    {
+        return std::find_if(cont.cbegin(), cont.cend(), pred);
+    }
+
+    template<class Container, class Pred>
+    auto find_if_not(const Container& cont, Pred pred)
+    {
+        return std::find_if_not(cont.cbegin(), cont.cend(), pred);
+    }
+
+    template<class K, class V, class Container, class Func>
+    void group_by(const Container& cont, std::map<K, std::vector<const V*>>* output, Func f)
+    {
+        for (const V& element : cont)
+        {
+            K key = f(element);
+            (*output)[key].push_back(&element);
+        }
     }
 }

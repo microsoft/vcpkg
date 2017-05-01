@@ -30,7 +30,7 @@ namespace vcpkg
 
 namespace std
 {
-    template <>
+    template<>
     struct hash<vcpkg::Triplet>
     {
         size_t operator()(const vcpkg::Triplet& t) const
