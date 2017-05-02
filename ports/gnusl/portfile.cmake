@@ -37,7 +37,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libgsl)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libgsl/COPYING ${CURRENT_PACKAGES_DIR}/share/libgsl/copyright)
+file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/gnusl)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/gnusl/COPYING ${CURRENT_PACKAGES_DIR}/share/gnusl/copyright)
 
 vcpkg_copy_pdbs()
