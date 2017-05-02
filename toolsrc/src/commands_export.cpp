@@ -338,7 +338,7 @@ namespace vcpkg::Commands::Export
             const std::string nuget_id = raw_exported_dir_path.filename().string();
             const fs::path output_path = do_nuget_export(paths, nuget_id, raw_exported_dir_path, export_to_path);
             System::println(System::Color::success, "Creating nuget package... done");
-            System::println(System::Color::success, "Nuget package exported at: %s", output_path.generic_string());
+            System::println(System::Color::success, "NuGet package exported at: %s", output_path.generic_string());
 
             System::println(R"(
 With a project open, go to Tools->NuGet Package Manager->Package Manager Console and paste:
