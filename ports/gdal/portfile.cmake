@@ -19,7 +19,7 @@ foreach(BUILD_TYPE debug release)
     vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE})
     vcpkg_apply_patches(
         SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-1.11.3
-        PATCHES 
+        PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/0001-Add-support-for-MSVC1900-backported-from-GDAL2.patch
         ${CMAKE_CURRENT_LIST_DIR}/0002-Add-variable-CXX_CRT_FLAGS-to-allow-for-selection-of.patch
         ${CMAKE_CURRENT_LIST_DIR}/0003-Ensures-inclusion-of-PDB-in-release-dll-if-so-reques.patch
@@ -47,6 +47,51 @@ file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" GEOS_INCLUDE_DIR)
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib" GEOS_LIBRARY_REL)
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/geos_c.lib" GEOS_LIBRARY_DBG)
 
+# Setup expat libraries + include path
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" EXPAT_INCLUDE_DIR)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/expat.lib" EXPAT_LIBRARY_REL)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/expat.lib" EXPAT_LIBRARY_DBG)
+
+# Setup curl libraries + include path
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" CURL_INCLUDE_DIR)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libcurl_imp.lib" CURL_LIBRARY_REL)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libcurl_imp.lib" CURL_LIBRARY_DBG)
+
+# Setup sqlite3 libraries + include path
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" SQLITE_INCLUDE_DIR)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/sqlite3.lib" SQLITE_LIBRARY_REL)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/sqlite3.lib" SQLITE_LIBRARY_DBG)
+
+# Setup MySQL libraries + include path
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include/mysql" MYSQL_INCLUDE_DIR)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libmysql.lib" MYSQL_LIBRARY_REL)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libmysql.lib" MYSQL_LIBRARY_DBG)
+
+# Setup PostgreSQL libraries + include path
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" PGSQL_INCLUDE_DIR)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libpq.lib" PGSQL_LIBRARY_REL)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.lib" PGSQL_LIBRARY_DBG)
+
+# Setup OpenJPEG libraries + include path
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" OPENJPEG_INCLUDE_DIR)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/openjp2.lib" OPENJPEG_LIBRARY_REL)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/openjp2.lib" OPENJPEG_LIBRARY_DBG)
+
+# Setup WebP libraries + include path
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" WEBP_INCLUDE_DIR)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/webp.lib" WEBP_LIBRARY_REL)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/webpd.lib" WEBP_LIBRARY_DBG)
+
+# Setup libxml2 libraries + include path
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" XML2_INCLUDE_DIR)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib" XML2_LIBRARY_REL)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib" XML2_LIBRARY_DBG)
+
+# Setup liblzma libraries + include path
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" LZMA_INCLUDE_DIR)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/lzma.lib" LZMA_LIBRARY_REL)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/lzma.lib" LZMA_LIBRARY_DBG)
+
 set(NMAKE_OPTIONS
     GDAL_HOME=${NATIVE_PACKAGES_DIR}
     DATADIR=${NATIVE_DATA_DIR}
@@ -54,6 +99,18 @@ set(NMAKE_OPTIONS
     GEOS_DIR=${GEOS_INCLUDE_DIR}
     "GEOS_CFLAGS=-I${GEOS_INCLUDE_DIR} -DHAVE_GEOS"
     PROJ_INCLUDE=-I${PROJ_INCLUDE_DIR}
+    EXPAT_DIR=${EXPAT_INCLUDE_DIR}
+    EXPAT_INCLUDE=-I${EXPAT_INCLUDE_DIR}
+    CURL_INC=-I${CURL_INCLUDE_DIR}
+    SQLITE_INC=-I${SQLITE_INCLUDE_DIR}
+    MYSQL_INC_DIR=${MYSQL_INCLUDE_DIR}
+    PG_INC_DIR=${PGSQL_INCLUDE_DIR}
+    OPENJPEG_ENABLED=YES
+    OPENJPEG_CFLAGS=-I${OPENJPEG_INCLUDE_DIR}
+    OPENJPEG_VERSION=20100
+    WEBP_ENABLED=YES
+    WEBP_CFLAGS=-I${WEBP_INCLUDE_DIR}
+    LIBXML2_INC=-I${XML2_INCLUDE_DIR}
     PNG_EXTERNAL_LIB=1
     PNGDIR=${PNG_INCLUDE_DIR}
     MSVC_VER=1900
@@ -65,7 +122,7 @@ endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     list(APPEND NMAKE_OPTIONS PROJ_FLAGS=-DPROJ_STATIC)
-else()    
+else()
     # Enables PDBs for release and debug builds
     list(APPEND NMAKE_OPTIONS WITH_PDB=1)
 endif()
@@ -82,6 +139,14 @@ set(NMAKE_OPTIONS_REL
     PROJ_LIBRARY=${PROJ_LIBRARY_REL}
     PNG_LIB=${PNG_LIBRARY_REL}
     GEOS_LIB=${GEOS_LIBRARY_REL}
+    EXPAT_LIB=${EXPAT_LIBRARY_REL}
+    "CURL_LIB=${CURL_LIBRARY_REL} wsock32.lib wldap32.lib winmm.lib"
+    SQLITE_LIB=${SQLITE_LIBRARY_REL}
+    MYSQL_LIB=${MYSQL_LIBRARY_REL}
+    PG_LIB=${PGSQL_LIBRARY_REL}
+    OPENJPEG_LIB=${OPENJPEG_LIBRARY_REL}
+    WEBP_LIBS=${WEBP_LIBRARY_REL}
+    LIBXML2_LIB=${XML2_LIBRARY_REL}
 )
 
 set(NMAKE_OPTIONS_DBG
@@ -90,6 +155,14 @@ set(NMAKE_OPTIONS_DBG
     PROJ_LIBRARY=${PROJ_LIBRARY_DBG}
     PNG_LIB=${PNG_LIBRARY_DBG}
     GEOS_LIB=${GEOS_LIBRARY_DBG}
+    EXPAT_LIB=${EXPAT_LIBRARY_DBG}
+    "CURL_LIB=${CURL_LIBRARY_DBG} wsock32.lib wldap32.lib winmm.lib"
+    SQLITE_LIB=${SQLITE_LIBRARY_DBG}
+    MYSQL_LIB=${MYSQL_LIBRARY_DBG}
+    PG_LIB=${PGSQL_LIBRARY_DBG}
+    OPENJPEG_LIB=${OPENJPEG_LIBRARY_DBG}
+    WEBP_LIBS=${WEBP_LIBRARY_DBG}
+    LIBXML2_LIB=${XML2_LIBRARY_DBG}
     DEBUG=1
 )
 ################
@@ -97,7 +170,7 @@ set(NMAKE_OPTIONS_DBG
 ################
 message(STATUS "Building ${TARGET_TRIPLET}-rel")
 vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f makefile.vc 
+    COMMAND ${NMAKE} -f makefile.vc
     "${NMAKE_OPTIONS_REL}"
     WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
     LOGNAME nmake-build-${TARGET_TRIPLET}-release
@@ -109,7 +182,7 @@ message(STATUS "Building ${TARGET_TRIPLET}-rel done")
 ################
 message(STATUS "Building ${TARGET_TRIPLET}-dbg")
 vcpkg_execute_required_process(
-  COMMAND ${NMAKE} /G -f makefile.vc 
+  COMMAND ${NMAKE} /G -f makefile.vc
   "${NMAKE_OPTIONS_DBG}"
   WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
   LOGNAME nmake-build-${TARGET_TRIPLET}-debug
@@ -120,7 +193,7 @@ message(STATUS "Packaging ${TARGET_TRIPLET}")
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/gdal/html)
 
 vcpkg_execute_required_process(
-  COMMAND ${NMAKE} -f makefile.vc 
+  COMMAND ${NMAKE} -f makefile.vc
   "${NMAKE_OPTIONS_REL}"
   "install"
   "devinstall"
