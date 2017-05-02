@@ -1,12 +1,13 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/boost_1_64_0)
+set(VERSION 1_64)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/boost_${VERSION}_0)
 
 ######################
 # Acquire and arrange sources
 ######################
 vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "https://sourceforge.net/projects/boost/files/boost/1.64.0/boost_1_64_0.tar.bz2"
-    FILENAME "boost_1_64_0.tar.bz2"
+    URLS "https://sourceforge.net/projects/boost/files/boost/1.64.0/boost_${VERSION}_0.tar.bz2"
+    FILENAME "boost_${VERSION}_0.tar.bz2"
     SHA512 68477f148f61be617552ef48559c5c2cb90d42264cabd6d5e87215d0d5024b48fca27c4afcfc1f77e490c6220d44fb1abdf0a53703867a2e4132c2857f69fedf
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
@@ -261,6 +262,11 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 file(GLOB RELEASE_LIBS ${CURRENT_PACKAGES_DIR}/lib/*.lib)
 boost_rename_libs(RELEASE_LIBS)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+file(RENAME
+    ${CURRENT_PACKAGES_DIR}/lib/boost_test_exec_monitor-vc140-mt-${VERSION}.lib
+    ${CURRENT_PACKAGES_DIR}/lib/manual-link/boost_test_exec_monitor-vc140-mt-${VERSION}.lib
+)
 message(STATUS "Packaging ${TARGET_TRIPLET}-rel done")
 
 message(STATUS "Packaging ${TARGET_TRIPLET}-dbg")
@@ -274,6 +280,11 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 file(GLOB DEBUG_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/*.lib)
 boost_rename_libs(DEBUG_LIBS)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+file(RENAME
+    ${CURRENT_PACKAGES_DIR}/debug/lib/boost_test_exec_monitor-vc140-mt-gd-${VERSION}.lib
+    ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/boost_test_exec_monitor-vc140-mt-gd-${VERSION}.lib
+)
 message(STATUS "Packaging ${TARGET_TRIPLET}-dbg done")
 
 vcpkg_copy_pdbs()
