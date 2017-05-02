@@ -137,6 +137,12 @@ namespace vcpkg::Commands::Remove
             args.check_exact_arg_count(0, example);
             specs = Util::fmap(Update::find_outdated_packages(paths, status_db),
                                [](auto&& outdated) { return outdated.spec; });
+
+            if (specs.empty())
+            {
+                System::println(System::Color::success, "There are no oudated packages.");
+                Checks::exit_success(VCPKG_LINE_INFO);
+            }
         }
         else
         {
@@ -144,6 +150,7 @@ namespace vcpkg::Commands::Remove
             specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
                 return Input::check_and_get_package_spec(arg, default_triplet, example);
             });
+
             for (auto&& spec : specs)
                 Input::check_triplet(spec.triplet(), paths);
         }
