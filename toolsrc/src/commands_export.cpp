@@ -109,6 +109,7 @@ namespace vcpkg::Commands::Export
     }
 
     static fs::path do_nuget_export(const VcpkgPaths& paths,
+                                    const std::string& nuget_id,
                                     const fs::path& raw_exported_dir,
                                     const fs::path& output_dir)
     {
@@ -123,7 +124,6 @@ namespace vcpkg::Commands::Export
         const fs::path targets_redirect = paths.buildsystems / "tmp" / "vcpkg.export.nuget.targets";
         fs.write_contents(targets_redirect, targets_redirect_content);
 
-        const std::string nuget_id = raw_exported_dir.filename().string();
         const std::string nuspec_file_content =
             create_nuspec_file_contents(raw_exported_dir.string(), targets_redirect.string(), nuget_id, NUPKG_VERSION);
         const fs::path nuspec_file_path = paths.buildsystems / "tmp" / "vcpkg.export.nuspec";
@@ -334,9 +334,18 @@ namespace vcpkg::Commands::Export
         if (nuget)
         {
             System::println("Creating nuget package... ");
-            const fs::path output_path = do_nuget_export(paths, raw_exported_dir_path, export_to_path);
+
+            const std::string nuget_id = raw_exported_dir_path.filename().string();
+            const fs::path output_path = do_nuget_export(paths, nuget_id, raw_exported_dir_path, export_to_path);
             System::println(System::Color::success, "Creating nuget package... done");
             System::println(System::Color::success, "Nuget package exported at: %s", output_path.generic_string());
+
+            System::println(R"(
+With a project open, go to Tools->NuGet Package Manager->Package Manager Console and paste:
+    Install-Package %s -Source "%s"
+)",
+                            nuget_id,
+                            output_path.parent_path().u8string());
         }
 
         if (zip)
