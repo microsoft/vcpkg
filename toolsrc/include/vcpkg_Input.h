@@ -1,7 +1,5 @@
 #pragma once
 #include "PackageSpec.h"
-#include "VcpkgPaths.h"
-#include <vector>
 
 namespace vcpkg::Input
 {
