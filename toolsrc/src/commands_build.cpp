@@ -42,9 +42,17 @@ namespace vcpkg::Commands::BuildCommand
                            spec,
                            maybe_spgh.error_code().message());
         const SourceParagraph& spgh = *maybe_spgh.get();
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           spec.name() == spgh.name,
+                           "The Name: field inside the CONTROL does not match the port directory: '%s' != '%s'",
+                           spgh.name,
+                           spec.name());
 
         StatusParagraphs status_db = database_load_check(paths);
-        const auto result = Build::build_package(spgh, spec, paths, paths.port_dir(spec), status_db);
+        const Build::BuildPackageConfig build_config{
+            spgh, spec.triplet(), paths.port_dir(spec),
+        };
+        const auto result = Build::build_package(paths, build_config, status_db);
         if (result.code == BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES)
         {
             System::println(System::Color::error,

@@ -40,10 +40,20 @@ namespace vcpkg::Build
         std::vector<PackageSpec> unmet_dependencies;
     };
 
-    ExtendedBuildResult build_package(const SourceParagraph& source_paragraph,
-                                      const PackageSpec& spec,
-                                      const VcpkgPaths& paths,
-                                      const fs::path& port_dir,
+    struct BuildPackageConfig
+    {
+        BuildPackageConfig(const SourceParagraph& src, const Triplet& triplet, fs::path&& port_dir)
+            : src(src), triplet(triplet), port_dir(std::move(port_dir)), use_head_version(false), no_downloads(false)
+        {
+        }
+
+        const SourceParagraph& src;
+        const Triplet& triplet;
+        fs::path port_dir;
+    };
+
+    ExtendedBuildResult build_package(const VcpkgPaths& paths,
+                                      const BuildPackageConfig& config,
                                       const StatusParagraphs& status_db);
 
     struct BuildInfo

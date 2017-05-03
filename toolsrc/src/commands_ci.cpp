@@ -72,8 +72,10 @@ namespace vcpkg::Commands::CI
                     {
                         System::println("Building package %s... ", display_name);
                         auto&& source_paragraph = action.any_paragraph.source_paragraph.value_or_exit(VCPKG_LINE_INFO);
-                        const auto result_ex = Build::build_package(
-                            source_paragraph, action.spec, paths, paths.port_dir(action.spec), status_db);
+                        const Build::BuildPackageConfig build_config{
+                            source_paragraph, action.spec.triplet(), paths.port_dir(action.spec),
+                        };
+                        const auto result_ex = Build::build_package(paths, build_config, status_db);
                         const auto result = result_ex.code;
 
                         timing.back() = build_timer.to_string();

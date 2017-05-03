@@ -301,8 +301,7 @@ namespace vcpkg::Commands::Install
 
         if (has_non_user_requested_packages)
         {
-            System::println(System::Color::warning,
-                            "Additional packages (*) need to be installed to complete this operation.");
+            System::println("Additional packages (*) will be installed to complete this operation.");
         }
 
         if (dryRun)
@@ -325,12 +324,13 @@ namespace vcpkg::Commands::Install
                     case InstallPlanType::BUILD_AND_INSTALL:
                     {
                         System::println("Building package %s... ", display_name);
-                        const auto result =
-                            Build::build_package(action.any_paragraph.source_paragraph.value_or_exit(VCPKG_LINE_INFO),
-                                                 action.spec,
-                                                 paths,
-                                                 paths.port_dir(action.spec),
-                                                 status_db);
+                        Build::BuildPackageConfig build_config{
+                            action.any_paragraph.source_paragraph.value_or_exit(VCPKG_LINE_INFO),
+                            action.spec.triplet(),
+                            paths.port_dir(action.spec),
+                        };
+
+                        const auto result = Build::build_package(paths, build_config, status_db);
                         if (result.code != Build::BuildResult::SUCCEEDED)
                         {
                             System::println(System::Color::error,
@@ -338,7 +338,7 @@ namespace vcpkg::Commands::Install
                             System::println(Build::create_user_troubleshooting_message(action.spec));
                             Checks::exit_fail(VCPKG_LINE_INFO);
                         }
-                        System::println(System::Color::success, "Building package %s... done", display_name);
+                        System::println("Building package %s... done", display_name);
 
                         const BinaryParagraph bpgh =
                             Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO);

@@ -40,26 +40,25 @@ namespace vcpkg::Build
 
     static void create_binary_control_file(const VcpkgPaths& paths,
                                            const SourceParagraph& source_paragraph,
-                                           const Triplet& triplet)
+                                           const Triplet& triplet,
+                                           const BuildInfo& build_info)
     {
         const BinaryParagraph bpgh = BinaryParagraph(source_paragraph, triplet);
         const fs::path binary_control_file = paths.packages / bpgh.dir() / "CONTROL";
         paths.get_filesystem().write_contents(binary_control_file, Strings::serialize(bpgh));
     }
 
-    ExtendedBuildResult build_package(const SourceParagraph& source_paragraph,
-                                      const PackageSpec& spec,
-                                      const VcpkgPaths& paths,
-                                      const fs::path& port_dir,
+    ExtendedBuildResult build_package(const VcpkgPaths& paths,
+                                      const BuildPackageConfig& config,
                                       const StatusParagraphs& status_db)
     {
-        Checks::check_exit(
-            VCPKG_LINE_INFO, spec.name() == source_paragraph.name, "inconsistent arguments to build_package()");
+        const PackageSpec spec =
+            PackageSpec::from_name_and_triplet(config.src.name, config.triplet).value_or_exit(VCPKG_LINE_INFO);
 
-        const Triplet& triplet = spec.triplet();
+        const Triplet& triplet = config.triplet;
         {
             std::vector<PackageSpec> missing_specs;
-            for (auto&& dep : filter_dependencies(source_paragraph.depends, triplet))
+            for (auto&& dep : filter_dependencies(config.src.depends, triplet))
             {
                 if (status_db.find_installed(dep, triplet) == status_db.end())
                 {
@@ -81,14 +80,15 @@ namespace vcpkg::Build
         const Toolset& toolset = paths.get_toolset();
         const auto cmd_set_environment = make_build_env_cmd(triplet, toolset);
 
-        const std::wstring cmd_launch_cmake = make_cmake_cmd(cmake_exe_path,
-                                                             ports_cmake_script_path,
-                                                             {{L"CMD", L"BUILD"},
-                                                              {L"PORT", source_paragraph.name},
-                                                              {L"CURRENT_PORT_DIR", port_dir / "/."},
-                                                              {L"TARGET_TRIPLET", triplet.canonical_name()},
-                                                              {L"VCPKG_PLATFORM_TOOLSET", toolset.version},
-                                                              {L"GIT", git_exe_path}});
+        const std::wstring cmd_launch_cmake =
+            make_cmake_cmd(cmake_exe_path,
+                           ports_cmake_script_path,
+                           {{L"CMD", L"BUILD"},
+                            {L"PORT", config.src.name},
+                            {L"CURRENT_PORT_DIR", config.port_dir / "/."},
+                            {L"TARGET_TRIPLET", triplet.canonical_name()},
+                            {L"VCPKG_PLATFORM_TOOLSET", toolset.version},
+                            {L"GIT", git_exe_path}});
 
         const std::wstring command = Strings::wformat(LR"(%s && %s)", cmd_set_environment, cmd_launch_cmake);
 
@@ -96,12 +96,13 @@ namespace vcpkg::Build
 
         int return_code = System::cmd_execute_clean(command);
         auto buildtimeus = timer.microseconds();
-        Metrics::track_metric("buildtimeus-" + spec.to_string(), buildtimeus);
+        const auto spec_string = spec.to_string();
+        Metrics::track_metric("buildtimeus-" + spec_string, buildtimeus);
 
         if (return_code != 0)
         {
             Metrics::track_property("error", "build failed");
-            Metrics::track_property("build_error", spec.to_string());
+            Metrics::track_property("build_error", spec_string);
             return {BuildResult::BUILD_FAILED, {}};
         }
 
@@ -113,7 +114,7 @@ namespace vcpkg::Build
             return {BuildResult::POST_BUILD_CHECKS_FAILED, {}};
         }
 
-        create_binary_control_file(paths, source_paragraph, triplet);
+        create_binary_control_file(paths, config.src, triplet, build_info);
 
         // const fs::path port_buildtrees_dir = paths.buildtrees / spec.name;
         // delete_directory(port_buildtrees_dir);
