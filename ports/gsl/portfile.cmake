@@ -1,14 +1,15 @@
 #header-only library
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/gsl-fd5ad87bf25cb5e87104ee58106dee9bc809cd93)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/Microsoft/GSL/archive/fd5ad87bf25cb5e87104ee58106dee9bc809cd93.zip"
-    FILENAME "gsl-fd5ad87bf.zip"
-    SHA512 81887be57e12bfc4e67353713478e1638bf1bffb8f523cf7241acf5415c2e3fe82ea0c0128380dcb2008afb5f53ac0d4893660626a8cd1eb501da536e6af5692
-)
-vcpkg_extract_source_archive(${ARCHIVE})
 
-file(INSTALL ${SOURCE_PATH}/gsl DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN "*")
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO Microsoft/GSL
+    REF 8b320e3f5d016f953e55dfc7ec8694c1349d3fe4
+    SHA512 79d4ecc937cdce2acf79620f12c6d4592159f17aa23c0fd1e978cc571e84ee11d91bd9a45f975546447e1ba20878244312609396a52a76f18872b97ea024aa00
+    HEAD_REF master
+)
+
+file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN "*")
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/gsl)
