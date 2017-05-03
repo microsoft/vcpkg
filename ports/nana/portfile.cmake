@@ -1,13 +1,12 @@
-
 include(vcpkg_common_functions)
-set(VERSION 66be23c9204c5567d1c51e6f57ba23bffa517a7c)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/nana-${VERSION})
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/cnjinhao/nana/archive/${VERSION}.zip"
-    FILENAME "nana-${VERSION}.zip"
-    SHA512 07a611850ebdd3be29fcc5dd199511af859da9e6ad9365b41900ab669e2c1c506c9c264a13a35d60b2d7906b577c8412f2423d67595b75f4de6f6c65b1db1f37)
 
-vcpkg_extract_source_archive(${ARCHIVE})
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO cnjinhao/nana
+    REF 66be23c9204c5567d1c51e6f57ba23bffa517a7c
+    SHA512 4f87acb51cc4bb2760402b33c81b6bd15a794b026dd31876a0ccc24a86f2c501b873f7bf3a57098e261fddc49d4935c39d13ae1595cb85b67bce337ae2fd3a0d
+    HEAD_REF master
+)
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
