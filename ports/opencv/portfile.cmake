@@ -56,6 +56,9 @@ vcpkg_configure_cmake(
         -DOPENCV_OTHER_INSTALL_PATH=share/opencv
         -DINSTALL_LICENSE=OFF
         -DWITH_CUDA=OFF
+        -DWITH_CUBLAS=OFF
+        -DWITH_OPENCLAMDBLAS=OFF
+        -DWITH_LAPACK=OFF
         #-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules # uncomment the following 3 lines to build opencv_contrib modules
         #-DBUILD_PROTOBUF=OFF
         #-DUPDATE_PROTO_FILES=ON
