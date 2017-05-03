@@ -1,12 +1,12 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/azure-storage-cpp-3.0.0)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/Azure/azure-storage-cpp/archive/v3.0.0.tar.gz"
-    FILENAME "azure-storage-cpp/v3.0.0.tar.gz"
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO Azure/azure-storage-cpp
+    REF v3.0.0
     SHA512 45d0d7f8cc350a16cff0371cdd442e851912c89061acfec559482e8f79cebafffd8681b32a30b878e329235cd3aaad5d2ff797d1148302e3109cf5111df14b97
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}

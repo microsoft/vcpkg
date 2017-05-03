@@ -43,7 +43,11 @@ namespace vcpkg::Build
                                            const Triplet& triplet,
                                            const BuildInfo& build_info)
     {
-        const BinaryParagraph bpgh = BinaryParagraph(source_paragraph, triplet);
+        BinaryParagraph bpgh = BinaryParagraph(source_paragraph, triplet);
+        if (auto p_ver = build_info.version.get())
+        {
+            bpgh.version = *p_ver;
+        }
         const fs::path binary_control_file = paths.packages / bpgh.dir() / "CONTROL";
         paths.get_filesystem().write_contents(binary_control_file, Strings::serialize(bpgh));
     }
@@ -88,6 +92,8 @@ namespace vcpkg::Build
                             {L"CURRENT_PORT_DIR", config.port_dir / "/."},
                             {L"TARGET_TRIPLET", triplet.canonical_name()},
                             {L"VCPKG_PLATFORM_TOOLSET", toolset.version},
+                            {L"VCPKG_USE_HEAD_VERSION", config.use_head_version ? L"1" : L"0"},
+                            {L"_VCPKG_NO_DOWNLOADS", config.no_downloads ? L"1" : L"0"},
                             {L"GIT", git_exe_path}});
 
         const std::wstring command = Strings::wformat(LR"(%s && %s)", cmd_set_environment, cmd_launch_cmake);
@@ -176,6 +182,13 @@ namespace vcpkg::Build
                            build_info.library_linkage != LinkageTypeC::NULLVALUE,
                            "Invalid library linkage type: [%s]",
                            library_linkage_as_string);
+
+        auto it_version = pgh.find("Version");
+        if (it_version != pgh.end())
+        {
+            build_info.version = it_version->second;
+            pgh.erase(it_version);
+        }
 
         // The remaining entries are policies
         for (const std::unordered_map<std::string, std::string>::value_type& p : pgh)

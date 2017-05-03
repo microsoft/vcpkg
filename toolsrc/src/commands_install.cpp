@@ -265,6 +265,8 @@ namespace vcpkg::Commands::Install
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
         static const std::string OPTION_DRY_RUN = "--dry-run";
+        static const std::string OPTION_USE_HEAD_VERSION = "--head";
+        static const std::string OPTION_NO_DOWNLOADS = "--no-downloads";
 
         // input sanitization
         static const std::string example =
@@ -277,8 +279,11 @@ namespace vcpkg::Commands::Install
         for (auto&& spec : specs)
             Input::check_triplet(spec.triplet(), paths);
 
-        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_DRY_RUN});
+        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments(
+            {OPTION_DRY_RUN, OPTION_USE_HEAD_VERSION, OPTION_NO_DOWNLOADS});
         const bool dryRun = options.find(OPTION_DRY_RUN) != options.cend();
+        const bool use_head_version = options.find(OPTION_USE_HEAD_VERSION) != options.cend();
+        const bool no_downloads = options.find(OPTION_NO_DOWNLOADS) != options.cend();
 
         // create the plan
         StatusParagraphs status_db = database_load_check(paths);
@@ -319,16 +324,33 @@ namespace vcpkg::Commands::Install
                 switch (action.plan_type)
                 {
                     case InstallPlanType::ALREADY_INSTALLED:
-                        System::println(System::Color::success, "Package %s is already installed", display_name);
+                        if (use_head_version && action.request_type == RequestType::USER_REQUESTED)
+                        {
+                            System::println(System::Color::warning,
+                                            "Package %s is already installed -- not building from HEAD",
+                                            display_name);
+                        }
+                        else
+                        {
+                            System::println(System::Color::success, "Package %s is already installed", display_name);
+                        }
                         break;
                     case InstallPlanType::BUILD_AND_INSTALL:
                     {
-                        System::println("Building package %s... ", display_name);
                         Build::BuildPackageConfig build_config{
                             action.any_paragraph.source_paragraph.value_or_exit(VCPKG_LINE_INFO),
                             action.spec.triplet(),
                             paths.port_dir(action.spec),
                         };
+
+                        build_config.use_head_version =
+                            use_head_version && action.request_type == RequestType::USER_REQUESTED;
+                        build_config.no_downloads = no_downloads;
+
+                        if (build_config.use_head_version)
+                            System::println("Building package %s from HEAD... ", display_name);
+                        else
+                            System::println("Building package %s... ", display_name);
 
                         const auto result = Build::build_package(paths, build_config, status_db);
                         if (result.code != Build::BuildResult::SUCCEEDED)
@@ -348,6 +370,12 @@ namespace vcpkg::Commands::Install
                         break;
                     }
                     case InstallPlanType::INSTALL:
+                        if (use_head_version && action.request_type == RequestType::USER_REQUESTED)
+                        {
+                            System::println(System::Color::warning,
+                                            "Package %s is already built -- not building from HEAD",
+                                            display_name);
+                        }
                         System::println("Installing package %s... ", display_name);
                         install_package(
                             paths, action.any_paragraph.binary_paragraph.value_or_exit(VCPKG_LINE_INFO), &status_db);

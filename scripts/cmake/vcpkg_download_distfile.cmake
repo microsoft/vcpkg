@@ -23,6 +23,10 @@ function(vcpkg_download_distfile VAR)
         message(STATUS "Using cached ${downloaded_file_path}")
         test_hash("cached file" "Please delete the file and retry if this file should be downloaded again.")
     else()
+        if(_VCPKG_NO_DOWNLOADS)
+            message(FATAL_ERROR "Downloads are disabled, but '${downloaded_file_path}' does not exist.")
+        endif()
+
         # Tries to download the file.
         foreach(url IN LISTS vcpkg_download_distfile_URLS)
             message(STATUS "Downloading ${url}...")

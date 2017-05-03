@@ -6,6 +6,7 @@
 #include "StatusParagraphs.h"
 #include "VcpkgPaths.h"
 #include "vcpkg_Files.h"
+#include "vcpkg_optional.h"
 #include <map>
 #include <string>
 #include <unordered_map>
@@ -50,6 +51,9 @@ namespace vcpkg::Build
         const SourceParagraph& src;
         const Triplet& triplet;
         fs::path port_dir;
+
+        bool use_head_version;
+        bool no_downloads;
     };
 
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
@@ -62,6 +66,8 @@ namespace vcpkg::Build
 
         PostBuildLint::LinkageType crt_linkage;
         PostBuildLint::LinkageType library_linkage;
+
+        Optional<std::string> version;
 
         std::map<PostBuildLint::BuildPolicies, bool> policies;
     };
