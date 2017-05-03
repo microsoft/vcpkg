@@ -1,43 +1,30 @@
 include(vcpkg_common_functions)
 
-find_program(GIT git)
-
-set(GIT_URL "https://github.com/google/googletest.git")
-set(GIT_TAG "release-1.8.0")
-
-if(NOT EXISTS "${DOWNLOADS}/googletest.git")
-    message(STATUS "Cloning")
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} clone --bare ${GIT_URL} ${DOWNLOADS}/googletest.git
-        WORKING_DIRECTORY ${DOWNLOADS}
-        LOGNAME clone
-    )
+if (EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
+    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
 endif()
-message(STATUS "Cloning done")
 
-if(NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
-    message(STATUS "Adding worktree and patching")
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} worktree add -f --detach ${CURRENT_BUILDTREES_DIR}/src ${GIT_TAG}
-        WORKING_DIRECTORY ${DOWNLOADS}/googletest.git
-        LOGNAME worktree
-    )
-    message(STATUS "Patching")
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} am ${CMAKE_CURRENT_LIST_DIR}/0001-Enable-C-11-features-for-VS2015-fix-appveyor-fail.patch --ignore-whitespace --whitespace=fix
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src
-        LOGNAME patch
-    )
-endif()
-message(STATUS "Adding worktree and patching done")
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO google/googletest
+    REF release-1.8.0
+    SHA512 1dbece324473e53a83a60601b02c92c089f5d314761351974e097b2cf4d24af4296f9eb8653b6b03b1e363d9c5f793897acae1f0c7ac40149216035c4d395d9d
+    HEAD_REF master
+)
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-Enable-C-11-features-for-VS2015-fix-appveyor-fail.patch
+)
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src
+    SOURCE_PATH ${SOURCE_PATH}
 )
 
 vcpkg_install_cmake()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/googletest/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/gtest RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/googletest/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/gtest RENAME copyright)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin/)
