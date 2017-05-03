@@ -2,7 +2,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
   set(TOOLPATH ${DOWNLOADS}/tools/msys2)
 
   # detect host architecture
-  if(ENV{PROCESSOR_ARCHITEW6432})
+  if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
       set(_vam_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITEW6432})
   else()
       set(_vam_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITECTURE})

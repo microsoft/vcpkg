@@ -5,7 +5,7 @@ function(vcpkg_configure_cmake)
         message(FATAL_ERROR "Vcpkg has been updated with VS2017 support, however you need to rebuild vcpkg.exe by re-running bootstrap-vcpkg.bat\n")
     endif()
 
-    if(ENV{PROCESSOR_ARCHITEW6432})
+    if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
         set(_csc_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITEW6432})
     else()
         set(_csc_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITECTURE})
