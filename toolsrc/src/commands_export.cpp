@@ -325,10 +325,23 @@ namespace vcpkg::Commands::Export
             Checks::check_exit(VCPKG_LINE_INFO, !ec);
         }
 
+        auto print_next_step_info = [](const fs::path& prefix) {
+            const fs::path cmake_toolchain = prefix / "scripts" / "buildsystems" / "vcpkg.cmake";
+            const CMakeVariable cmake_variable =
+                CMakeVariable(L"CMAKE_TOOLCHAIN_FILE", cmake_toolchain.generic_string());
+            System::println("\n"
+                            "To use the exported libraries in CMake projects use:"
+                            "\n"
+                            "    %s"
+                            "\n",
+                            Strings::utf16_to_utf8(cmake_variable.s));
+        };
+
         if (raw)
         {
             System::println(
                 System::Color::success, R"(Files exported at: "%s")", raw_exported_dir_path.generic_string());
+            print_next_step_info(export_to_path);
         }
 
         if (nuget)
@@ -343,7 +356,8 @@ namespace vcpkg::Commands::Export
             System::println(R"(
 With a project open, go to Tools->NuGet Package Manager->Package Manager Console and paste:
     Install-Package %s -Source "%s"
-)",
+)"
+                            "\n",
                             nuget_id,
                             output_path.parent_path().u8string());
         }
@@ -355,6 +369,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
                 do_archive_export(paths, raw_exported_dir_path, export_to_path, ArchiveFormatC::ZIP);
             System::println(System::Color::success, "Creating zip archive... done");
             System::println(System::Color::success, "Zip archive exported at: %s", output_path.generic_string());
+            print_next_step_info("[...]");
         }
 
         if (_7zip)
@@ -364,6 +379,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
                 do_archive_export(paths, raw_exported_dir_path, export_to_path, ArchiveFormatC::_7ZIP);
             System::println(System::Color::success, "Creating 7zip archive... done");
             System::println(System::Color::success, "7zip archive exported at: %s", output_path.generic_string());
+            print_next_step_info("[...]");
         }
 
         if (!raw)
