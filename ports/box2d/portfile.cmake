@@ -8,33 +8,18 @@ elseif(TRIPLET_SYSTEM_ARCH MATCHES "arm")
 endif(TRIPLET_SYSTEM_ARCH MATCHES "x86")
 
 include(vcpkg_common_functions)
-find_program(GIT git)
 
-set(GIT_URL "https://github.com/erincatto/Box2D.git")
-set(GIT_REF "374664b")
+if(EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
+    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
+endif()
 
-if(NOT EXISTS "${DOWNLOADS}/box2d.git")
-    message(STATUS "Cloning")
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} clone --bare ${GIT_URL} ${DOWNLOADS}/box2d.git
-        WORKING_DIRECTORY ${DOWNLOADS}
-        LOGNAME clone
-    )
-endif(NOT EXISTS "${DOWNLOADS}/box2d.git")
-message(STATUS "Cloning done")
-
-if(NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
-    message(STATUS "Adding worktree")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR})
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} worktree add -f --detach ${CURRENT_BUILDTREES_DIR}/src ${GIT_REF}
-        WORKING_DIRECTORY ${DOWNLOADS}/box2d.git
-        LOGNAME worktree
-    )
-endif(NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
-message(STATUS "Adding worktree done")
-
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/)
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO erincatto/Box2D
+    REF 374664b2a4ce2e7c24fbad6e1ed34bebcc9ab6bc
+    SHA512 ae2bbee66644eea91d0e92156a4bece44053dfa8fd6b8630712a73b92210d4c75153df94e3386c64c49796b001af1ad7dee44868c16368b114567e1f6931d242
+    HEAD_REF master
+)
 
 # Put the licence and readme files where vcpkg expects it
 message(STATUS "Packaging license")
