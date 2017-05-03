@@ -8,11 +8,6 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-find_path(ATLMFC_PATH NAMES "atlbase.h")
-if(ATLMFC_PATH STREQUAL "ATLMFC_PATH-NOTFOUND")
-    message(FATAL_ERROR "Could not find ATL. Please ensure you have installed the \"Visual C++ ATL support\" optional feature underneath the Desktop C++ workload.")
-endif()
-
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
