@@ -1,16 +1,43 @@
-#header-only library
-include(vcpkg_common_functions)
+# Common Ambient Variables:
+#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
+#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
+#   CURRENT_PORT DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
+#   PORT                      = current port name (zlib, etc)
+#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
+#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
+#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
+#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
+#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
+#
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO Microsoft/GSL
-    REF 8b320e3f5d016f953e55dfc7ec8694c1349d3fe4
-    SHA512 79d4ecc937cdce2acf79620f12c6d4592159f17aa23c0fd1e978cc571e84ee11d91bd9a45f975546447e1ba20878244312609396a52a76f18872b97ea024aa00
-    HEAD_REF master
+include(vcpkg_common_functions)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/gsl-2.3)
+vcpkg_download_distfile(ARCHIVE
+    URLS "ftp://ftp.gnu.org/gnu/gsl/gsl-2.3.tar.gz"
+    FILENAME "gsl-2.3.tar.gz"
+    SHA512 ada622079f4ac667d95f74b38aa368726fc1b18fd34555bcefe90920d3da93a9289ebff966be43325af806107001bc8973daf9f8418e6c97b866be2296b566ff
+)
+vcpkg_extract_source_archive(${ARCHIVE})
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/0001-configure.patch
+        ${CMAKE_CURRENT_LIST_DIR}/0002-add-fp-control.patch
 )
 
-file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN "*")
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS_DEBUG -DINSTALL_HEADERS=OFF
+)
+
+vcpkg_install_cmake()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/gsl)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/gsl/LICENSE ${CURRENT_PACKAGES_DIR}/share/gsl/copyright)
+file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/gsl)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/gsl/COPYING ${CURRENT_PACKAGES_DIR}/share/gsl/copyright)
+
+vcpkg_copy_pdbs()
