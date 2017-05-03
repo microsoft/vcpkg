@@ -10,6 +10,7 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Util.h"
 
+using vcpkg::Build::PreBuildInfo;
 using vcpkg::Build::BuildInfo;
 
 namespace vcpkg::PostBuildLint
@@ -320,7 +321,7 @@ namespace vcpkg::PostBuildLint
                                             const std::vector<fs::path>& dlls,
                                             const fs::path dumpbin_exe)
     {
-        if (expected_system_name != "uwp")
+        if (expected_system_name != "WindowsStore")
         {
             return LintStatus::SUCCESS;
         }
@@ -719,6 +720,7 @@ namespace vcpkg::PostBuildLint
 
     static size_t perform_all_checks_and_return_error_count(const PackageSpec& spec,
                                                             const VcpkgPaths& paths,
+                                                            const PreBuildInfo& pre_build_info,
                                                             const BuildInfo& build_info)
     {
         const auto& fs = paths.get_filesystem();
@@ -763,7 +765,7 @@ namespace vcpkg::PostBuildLint
             libs.insert(libs.cend(), debug_libs.cbegin(), debug_libs.cend());
             libs.insert(libs.cend(), release_libs.cbegin(), release_libs.cend());
 
-            error_count += check_lib_architecture(spec.triplet().architecture(), libs);
+            error_count += check_lib_architecture(pre_build_info.target_architecture, libs);
         }
 
         switch (build_info.library_linkage)
@@ -787,8 +789,8 @@ namespace vcpkg::PostBuildLint
                 dlls.insert(dlls.cend(), release_dlls.cbegin(), release_dlls.cend());
 
                 error_count += check_exports_of_dlls(dlls, toolset.dumpbin);
-                error_count += check_uwp_bit_of_dlls(spec.triplet().system(), dlls, toolset.dumpbin);
-                error_count += check_dll_architecture(spec.triplet().architecture(), dlls);
+                error_count += check_uwp_bit_of_dlls(pre_build_info.cmake_system_name, dlls, toolset.dumpbin);
+                error_count += check_dll_architecture(pre_build_info.target_architecture, dlls);
 
                 error_count += check_outdated_crt_linkage_of_dlls(dlls, toolset.dumpbin);
                 break;
@@ -825,10 +827,13 @@ namespace vcpkg::PostBuildLint
         return error_count;
     }
 
-    size_t perform_all_checks(const PackageSpec& spec, const VcpkgPaths& paths, const BuildInfo& build_info)
+    size_t perform_all_checks(const PackageSpec& spec,
+                              const VcpkgPaths& paths,
+                              const PreBuildInfo& pre_build_info,
+                              const BuildInfo& build_info)
     {
         System::println("-- Performing post-build validation");
-        const size_t error_count = perform_all_checks_and_return_error_count(spec, paths, build_info);
+        const size_t error_count = perform_all_checks_and_return_error_count(spec, paths, pre_build_info, build_info);
 
         if (error_count != 0)
         {

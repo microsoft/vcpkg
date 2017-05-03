@@ -65,6 +65,18 @@ namespace vcpkg::System
 
     Optional<std::wstring> get_registry_string(HKEY base, const CWStringView subkey, const CWStringView valuename);
 
+    enum class CPUArchitecture
+    {
+        X86,
+        X64,
+        ARM,
+        ARM64,
+    };
+
+    Optional<CPUArchitecture> to_cpu_architecture(CStringView arch);
+
+    CPUArchitecture get_host_processor();
+
     const fs::path& get_ProgramFiles_32_bit();
 
     const fs::path& get_ProgramFiles_platform_bitness();

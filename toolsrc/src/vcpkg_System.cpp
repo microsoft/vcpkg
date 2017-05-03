@@ -23,6 +23,25 @@ namespace vcpkg::System
         return fs::path(buf, buf + bytes);
     }
 
+    Optional<CPUArchitecture> to_cpu_architecture(CStringView arch)
+    {
+        if (_stricmp(arch, "x86") == 0) return CPUArchitecture::X86;
+        if (_stricmp(arch, "x64") == 0) return CPUArchitecture::X64;
+        if (_stricmp(arch, "amd64") == 0) return CPUArchitecture::X64;
+        if (_stricmp(arch, "arm") == 0) return CPUArchitecture::ARM;
+        if (_stricmp(arch, "arm64") == 0) return CPUArchitecture::ARM64;
+        return nullopt;
+    }
+
+    CPUArchitecture get_host_processor()
+    {
+        auto w6432 = get_environment_variable(L"PROCESSOR_ARCHITEW6432");
+        if (auto p = w6432.get()) return to_cpu_architecture(Strings::to_utf8(*p)).value_or_exit(VCPKG_LINE_INFO);
+
+        auto procarch = get_environment_variable(L"PROCESSOR_ARCHITECTURE").value_or_exit(VCPKG_LINE_INFO);
+        return to_cpu_architecture(Strings::to_utf8(procarch)).value_or_exit(VCPKG_LINE_INFO);
+    }
+
     int cmd_execute_clean(const CWStringView cmd_line)
     {
         static const std::wstring system_root = get_environment_variable(L"SystemRoot").value_or_exit(VCPKG_LINE_INFO);

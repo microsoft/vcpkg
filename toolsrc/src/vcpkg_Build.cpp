@@ -26,7 +26,54 @@ namespace vcpkg::Build
         static const std::string LIBRARY_LINKAGE = "LibraryLinkage";
     }
 
-    std::wstring make_build_env_cmd(const Triplet& triplet, const Toolset& toolset)
+    CWStringView to_vcvarsall_target(const std::string& cmake_system_name)
+    {
+        if (cmake_system_name == "") return L"";
+        if (cmake_system_name == "Windows") return L"";
+        if (cmake_system_name == "WindowsStore") return L"store";
+
+        Checks::exit_with_message(VCPKG_LINE_INFO, "Unsupported vcvarsall target %s", cmake_system_name);
+    }
+
+    CWStringView to_vcvarsall_toolchain(const std::string& target_architecture)
+    {
+        using CPU = System::CPUArchitecture;
+
+        struct ArchOption
+        {
+            CWStringView name;
+            CPU host_arch;
+            CPU target_arch;
+        };
+
+        static constexpr ArchOption X86 = {L"x86", CPU::X86, CPU::X86};
+        static constexpr ArchOption X86_X64 = {L"x86_x64", CPU::X86, CPU::X64};
+        static constexpr ArchOption X86_ARM = {L"x86_arm", CPU::X86, CPU::ARM};
+        static constexpr ArchOption X86_ARM64 = {L"x86_arm64", CPU::X86, CPU::ARM64};
+
+        static constexpr ArchOption X64 = {L"x64", CPU::X64, CPU::X64};
+        static constexpr ArchOption X64_X86 = {L"x64_x86", CPU::X64, CPU::X86};
+        static constexpr ArchOption X64_ARM = {L"x64_arm", CPU::X64, CPU::ARM};
+        static constexpr ArchOption X64_ARM64 = {L"x64_arm64", CPU::X64, CPU::ARM64};
+
+        static constexpr std::array<ArchOption, 8> VALUES = {
+            X86, X86_X64, X86_ARM, X86_ARM64, X64, X64_X86, X64_ARM, X64_ARM64};
+
+        auto target_arch = System::to_cpu_architecture(target_architecture);
+        auto host_arch = System::get_host_processor();
+
+        for (auto&& value : VALUES)
+        {
+            if (target_arch == value.target_arch && host_arch == value.host_arch)
+            {
+                return value.name;
+            }
+        }
+
+        Checks::exit_with_message(VCPKG_LINE_INFO, "Unsupported toolchain combination %s", target_architecture);
+    }
+
+    std::wstring make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
     {
         const wchar_t* tonull = L" >nul";
         if (g_debugging)
@@ -34,8 +81,10 @@ namespace vcpkg::Build
             tonull = L"";
         }
 
-        return Strings::wformat(
-            LR"("%s" %s %s 2>&1)", toolset.vcvarsall.native(), Strings::to_utf16(triplet.architecture()), tonull);
+        auto arch = to_vcvarsall_toolchain(pre_build_info.target_architecture);
+        auto target = to_vcvarsall_target(pre_build_info.cmake_system_name);
+
+        return Strings::wformat(LR"("%s" %s %s %s 2>&1)", toolset.vcvarsall.native(), arch, target, tonull);
     }
 
     static void create_binary_control_file(const VcpkgPaths& paths,
@@ -82,7 +131,8 @@ namespace vcpkg::Build
 
         const fs::path ports_cmake_script_path = paths.ports_cmake;
         const Toolset& toolset = paths.get_toolset();
-        const auto cmd_set_environment = make_build_env_cmd(triplet, toolset);
+        auto pre_build_info = PreBuildInfo::from_triplet_file(paths, triplet);
+        const auto cmd_set_environment = make_build_env_cmd(pre_build_info, toolset);
 
         const std::wstring cmd_launch_cmake =
             make_cmake_cmd(cmake_exe_path,
@@ -113,7 +163,7 @@ namespace vcpkg::Build
         }
 
         auto build_info = read_build_info(paths.get_filesystem(), paths.build_info_file_path(spec));
-        const size_t error_count = PostBuildLint::perform_all_checks(spec, paths, build_info);
+        const size_t error_count = PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info);
 
         if (error_count != 0)
         {
@@ -213,5 +263,75 @@ namespace vcpkg::Build
             Paragraphs::get_single_paragraph(fs, filepath);
         Checks::check_exit(VCPKG_LINE_INFO, pghs.get() != nullptr, "Invalid BUILD_INFO file for package");
         return BuildInfo::create(*pghs.get());
+    }
+
+    PreBuildInfo PreBuildInfo::from_triplet_file(const VcpkgPaths& paths, const Triplet& triplet)
+    {
+        static constexpr CStringView FLAG_GUID = "c35112b6-d1ba-415b-aa5d-81de856ef8eb";
+
+        const fs::path& cmake_exe_path = paths.get_cmake_exe();
+        const fs::path ports_cmake_script_path = paths.scripts / "get_triplet_environment.cmake";
+        const fs::path triplet_file_path = paths.triplets / (triplet.canonical_name() + ".cmake");
+
+        const std::wstring cmd_launch_cmake = make_cmake_cmd(cmake_exe_path,
+                                                             ports_cmake_script_path,
+                                                             {
+                                                                 {L"CMAKE_TRIPLET_FILE", triplet_file_path},
+                                                             });
+
+        const std::wstring command = Strings::wformat(LR"(%s)", cmd_launch_cmake);
+        auto ec_data = System::cmd_execute_and_capture_output(command);
+        Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0);
+
+        const std::vector<std::string> lines = Strings::split(ec_data.output, "\n");
+
+        PreBuildInfo pre_build_info;
+
+        auto e = lines.cend();
+        auto cur = std::find(lines.cbegin(), e, FLAG_GUID);
+        if (cur != e) ++cur;
+
+        for (; cur != e; ++cur)
+        {
+            auto&& line = *cur;
+
+            const std::vector<std::string> s = Strings::split(line, "=");
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               s.size() == 1 || s.size() == 2,
+                               "Expected format is [VARIABLE_NAME=VARIABLE_VALUE], but was [%s]",
+                               line);
+
+            const bool variable_with_no_value = s.size() == 1;
+            const std::string variable_name = s.at(0);
+            const std::string variable_value = variable_with_no_value ? "" : s.at(1);
+
+            if (variable_name == "VCPKG_TARGET_ARCHITECTURE")
+            {
+                pre_build_info.target_architecture = variable_value;
+                continue;
+            }
+
+            if (variable_name == "VCPKG_CMAKE_SYSTEM_NAME")
+            {
+                pre_build_info.cmake_system_name = variable_value;
+                continue;
+            }
+
+            if (variable_name == "VCPKG_CMAKE_SYSTEM_VERSION")
+            {
+                pre_build_info.cmake_system_version = variable_value;
+                continue;
+            }
+
+            if (variable_name == "VCPKG_PLATFORM_TOOLSET")
+            {
+                pre_build_info.platform_toolset = variable_value;
+                continue;
+            }
+
+            Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown variable name %s", line);
+        }
+
+        return pre_build_info;
     }
 }
