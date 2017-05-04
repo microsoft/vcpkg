@@ -1,3 +1,48 @@
+vcpkg (0.0.81)
+--------------
+  * Add ports:
+    - atlmfc               0
+    - giflib               5.1.4
+    - graphicsmagick       1.3.25
+    - libmad               0.15.1
+    - libsndfile           libsndfile-1.0.29-6830c42
+    - ms-gsl               20170425-8b320e3f5d016f953e55dfc7ec8694c1349d3fe4 (**see below)
+    - taglib               1.11.1-1
+    - xalan-c              1.11-1
+  * Update ports:
+    - ace                  6.4.2 -> 6.4.3
+    - bond                 5.2.0 -> 5.3.1
+    - boost                1.63-4 -> 1.64-2
+    - cppzmq               0.0.0-1 -> 4.2.1
+    - gdal                 1.11.3-1 -> 1.11.3-3
+    - gdk-pixbuf           2.36.5 -> 2.36.6
+    - grpc                 1.1.2-1 -> 1.2.3
+    - gsl                  0-fd5ad87bf -> 2.3 (**see below)
+    - harfbuzz             1.3.4-2 -> 1.4.6
+    - icu                  58.2-1 -> 59.1-1
+    - libflac              1.3.2-1 -> 1.3.2-2
+    - libmodplug           0.8.8.5-bb25b05 -> 0.8.9.0
+    - pango                1.40.4 -> 1.40.5-1
+    - pcre                 8.38-1 -> 8.40
+    - poco                 1.7.6-4 -> 1.7.8
+    - qt5                  5.7.1-7 -> 5.8-1
+    - wt                   3.3.6-3 -> 3.3.7
+  * The Guidelines Support Library has been renamed from`gsl` to `ms-gsl`. The GNU Scientific Library has been added as `gsl`.
+  * Introducing `vcpkg export` command:
+    - Exports one or more installed packages along with their dependencies
+    - Options for target format: --nuget --7zip --zip --raw (can specify more than one)
+    - Option `--dry-run`: This will print out the export plan, but will not actually perform the export
+    - More information and examples [here](https://blogs.msdn.microsoft.com/vcblog/2017/05/03/vcpkg-introducing-export-command/).
+  * Add `--head` option for `vcpkg install`. It only applies to github-based project and allows you to use the latest master commit
+    - For example: `./vcpkg install cpprestsdk:x64-windows --head` will build cpprestsdk from the latest master commit instead of version 2.9.0 specified in the `CONTROL` file
+  * Bump auto-downloaded version of `cmake` to 3.8.0 (was 3.8.0rc1)
+  * `--options` are now case-insensitive
+  * `vcpkg` now uses `clang-format`
+  * Fixes and improvements in the `vcpkg` tool
+
+-- vcpkg team <vcpkg@microsoft.com>  WED, 03 May 2017 18:00:00 -0800
+
+
 vcpkg (0.0.80)
 --------------
   * Add ports:
