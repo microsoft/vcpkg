@@ -700,7 +700,8 @@ namespace vcpkg::PostBuildLint
         std::vector<fs::path> misplaced_files = fs.get_files_non_recursive(dir);
         Util::unstable_keep_if(misplaced_files, [&fs](const fs::path& path) {
             const std::string filename = path.filename().generic_string();
-            if (_stricmp(filename.c_str(), "CONTROL") == 0 || _stricmp(filename.c_str(), "BUILD_INFO") == 0)
+            if (Strings::case_insensitive_ascii_compare(filename.c_str(), "CONTROL") == 0 ||
+                Strings::case_insensitive_ascii_compare(filename.c_str(), "BUILD_INFO") == 0)
                 return false;
             return !fs.is_directory(path);
         });

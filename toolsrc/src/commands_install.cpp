@@ -69,7 +69,8 @@ namespace vcpkg::Commands::Install
 
             const std::string filename = file.filename().generic_string();
             if (fs::is_regular_file(status) &&
-                (_stricmp(filename.c_str(), "CONTROL") == 0 || _stricmp(filename.c_str(), "BUILD_INFO") == 0))
+                (Strings::case_insensitive_ascii_compare(filename.c_str(), "CONTROL") == 0 ||
+                 Strings::case_insensitive_ascii_compare(filename.c_str(), "BUILD_INFO") == 0))
             {
                 // Do not copy the control file
                 continue;

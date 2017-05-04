@@ -25,11 +25,11 @@ namespace vcpkg::System
 
     Optional<CPUArchitecture> to_cpu_architecture(CStringView arch)
     {
-        if (_stricmp(arch, "x86") == 0) return CPUArchitecture::X86;
-        if (_stricmp(arch, "x64") == 0) return CPUArchitecture::X64;
-        if (_stricmp(arch, "amd64") == 0) return CPUArchitecture::X64;
-        if (_stricmp(arch, "arm") == 0) return CPUArchitecture::ARM;
-        if (_stricmp(arch, "arm64") == 0) return CPUArchitecture::ARM64;
+        if (Strings::case_insensitive_ascii_compare(arch, "x86") == 0) return CPUArchitecture::X86;
+        if (Strings::case_insensitive_ascii_compare(arch, "x64") == 0) return CPUArchitecture::X64;
+        if (Strings::case_insensitive_ascii_compare(arch, "amd64") == 0) return CPUArchitecture::X64;
+        if (Strings::case_insensitive_ascii_compare(arch, "arm") == 0) return CPUArchitecture::ARM;
+        if (Strings::case_insensitive_ascii_compare(arch, "arm64") == 0) return CPUArchitecture::ARM64;
         return nullopt;
     }
 
