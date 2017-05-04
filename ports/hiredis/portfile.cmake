@@ -7,11 +7,11 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/intelight-hiredis-e8b31f431257)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/hiredis-74b348cbb24748d8874c97602284d36fc277dd0d)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://intelight.s3.amazonaws.com/vendor/intelight-hiredis-e8b31f431257.tar.bz2"
-    FILENAME "intelight-hiredis-e8b31f431257.tar.bz2"
-    SHA512 4eb95f5325250a97c6fc3f926f471bba3fac04b89d1faa7e11ab6c0b8f6ece89ebccd44e64a461f3317cdc41c5ce8e56b50dff5a555b269aaf034b7b88c31a04
+    URLS "https://github.com/Intelight/hiredis/archive/74b348cbb24748d8874c97602284d36fc277dd0d.zip"
+    FILENAME "hiredis-74b348cbb2.zip"
+    SHA512 932bbb2f256b12da96ad30742dfa2e6467858dbc83b5d2041157ce4e119a1913637d1a5b6ef4c9a5f96f19627bbdaa8d26897b6465153ba390eb7c2b18345fc9
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
