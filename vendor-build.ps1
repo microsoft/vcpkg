@@ -19,7 +19,6 @@ Invoke-VcpkgBuild "hiredis"
 Invoke-VcpkgBuild "json-c"
 Invoke-VcpkgBuild "libevent"
 Invoke-VcpkgBuild "luajit"
-Invoke-VcpkgBuild "lua-lsqlite3"
 Invoke-VcpkgBuild "lua-intf"
 Invoke-VcpkgBuild "rapidxml"
 Invoke-VcpkgBuild "snmp-pp"
@@ -27,4 +26,4 @@ Invoke-VcpkgBuild "pthread"
 Invoke-VcpkgBuild "websocketpp"
 
 # update the version anytime the installed package versions change
-Write-Output 5 > installed/version.txt
+Write-Output 6 > installed/version.txt
