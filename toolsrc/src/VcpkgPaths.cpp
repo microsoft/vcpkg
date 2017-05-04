@@ -256,7 +256,7 @@ namespace vcpkg
 
     static Optional<fs::path> get_VS2015_installation_instance()
     {
-        const Optional<std::wstring> vs2015_cmntools_optional = System::get_environmental_variable(L"VS140COMNTOOLS");
+        const Optional<std::wstring> vs2015_cmntools_optional = System::get_environment_variable(L"VS140COMNTOOLS");
         if (auto v = vs2015_cmntools_optional.get())
         {
             const fs::path vs2015_cmntools = fs::path(*v).parent_path(); // The call to parent_path() is needed because

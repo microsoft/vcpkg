@@ -25,8 +25,7 @@ namespace vcpkg::System
 
     int cmd_execute_clean(const CWStringView cmd_line)
     {
-        static const std::wstring system_root =
-            get_environmental_variable(L"SystemRoot").value_or_exit(VCPKG_LINE_INFO);
+        static const std::wstring system_root = get_environment_variable(L"SystemRoot").value_or_exit(VCPKG_LINE_INFO);
         static const std::wstring system_32 = system_root + LR"(\system32)";
         static const std::wstring new_PATH = Strings::wformat(
             LR"(Path=%s;%s;%s\Wbem;%s\WindowsPowerShell\v1.0\)", system_32, system_root, system_32, system_32);
@@ -83,7 +82,7 @@ namespace vcpkg::System
 
         for (auto&& env_wstring : env_wstrings)
         {
-            const Optional<std::wstring> value = System::get_environmental_variable(env_wstring);
+            const Optional<std::wstring> value = System::get_environment_variable(env_wstring);
             auto v = value.get();
             if (!v || v->empty()) continue;
 
@@ -177,7 +176,7 @@ namespace vcpkg::System
         putchar('\n');
     }
 
-    Optional<std::wstring> get_environmental_variable(const CWStringView varname) noexcept
+    Optional<std::wstring> get_environment_variable(const CWStringView varname) noexcept
     {
         auto sz = GetEnvironmentVariableW(varname, nullptr, 0);
         if (sz == 0) return nullopt;
@@ -221,14 +220,14 @@ namespace vcpkg::System
 
     static const fs::path& get_ProgramFiles()
     {
-        static const fs::path p = System::get_environmental_variable(L"PROGRAMFILES").value_or_exit(VCPKG_LINE_INFO);
+        static const fs::path p = System::get_environment_variable(L"PROGRAMFILES").value_or_exit(VCPKG_LINE_INFO);
         return p;
     }
 
     const fs::path& get_ProgramFiles_32_bit()
     {
         static const fs::path p = []() -> fs::path {
-            auto value = System::get_environmental_variable(L"ProgramFiles(x86)");
+            auto value = System::get_environment_variable(L"ProgramFiles(x86)");
             if (auto v = value.get())
             {
                 return std::move(*v);
@@ -241,7 +240,7 @@ namespace vcpkg::System
     const fs::path& get_ProgramFiles_platform_bitness()
     {
         static const fs::path p = []() -> fs::path {
-            auto value = System::get_environmental_variable(L"ProgramW6432");
+            auto value = System::get_environment_variable(L"ProgramW6432");
             if (auto v = value.get())
             {
                 return std::move(*v);
