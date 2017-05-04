@@ -18,9 +18,7 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0001-force-visual-studio-14-vcvarsall.patch
-        ${CMAKE_CURRENT_LIST_DIR}/0002-select-crt-runtime.patch
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-select-crt-runtime.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -40,6 +38,7 @@ file(COPY ${SOURCE_PATH}/src/jit DESTINATION ${CURRENT_PACKAGES_DIR}/lib/lua/)
 file(COPY ${SOURCE_PATH}/src/luajit.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/)
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(COPY ${SOURCE_PATH}/src/lua51.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin/)
+	file(COPY ${SOURCE_PATH}/src/lua51.dll DESTINATION ${CURRENT_PACKAGES_DIR}/tools/)
 endif()
 
 message(STATUS "Building Debug")

@@ -1,0 +1,53 @@
+From a28d3544e9f9a983521dbaf8a0f304fe375629fe Mon Sep 17 00:00:00 2001
+From: Doug Crawford <doug.crawford@intelight-its.com>
+Date: Tue, 2 May 2017 22:02:36 -0700
+Subject: [PATCH] select crt runtime
+
+---
+ src/msvcbuild.bat | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/src/msvcbuild.bat b/src/msvcbuild.bat
+index 4334bbd..60ddf97 100644
+--- a/src/msvcbuild.bat
++++ b/src/msvcbuild.bat
+@@ -13,6 +13,9 @@
+ 
+ @if not defined INCLUDE goto :FAIL
+ 
++set "VSCMD_START_DIR=%CD%"
++call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x86
++
+ @setlocal
+ @set LJCOMPILE=cl /nologo /c /O2 /W3 /D_CRT_SECURE_NO_DEPRECATE
+ @set LJLINK=link /nologo
+@@ -68,22 +71,23 @@ buildvm -m folddef -o lj_folddef.h lj_opt_fold.c
+ @shift
+ @set LJCOMPILE=%LJCOMPILE% /Zi
+ @set LJLINK=%LJLINK% /debug /opt:ref /opt:icf /incremental:no
++@set CRTSUFFIX=d
+ :NODEBUG
+ @if "%1"=="amalg" goto :AMALGDLL
+ @if "%1"=="static" goto :STATIC
+-%LJCOMPILE% /MD /DLUA_BUILD_AS_DLL lj_*.c lib_*.c
++%LJCOMPILE% /MD%CRTSUFFIX% /DLUA_BUILD_AS_DLL lj_*.c lib_*.c
+ @if errorlevel 1 goto :BAD
+ %LJLINK% /DLL /out:%LJDLLNAME% lj_*.obj lib_*.obj
+ @if errorlevel 1 goto :BAD
+ @goto :MTDLL
+ :STATIC
+-%LJCOMPILE% lj_*.c lib_*.c
++%LJCOMPILE% /MT%CRTSUFFIX% lj_*.c lib_*.c
+ @if errorlevel 1 goto :BAD
+ %LJLIB% /OUT:%LJLIBNAME% lj_*.obj lib_*.obj
+ @if errorlevel 1 goto :BAD
+ @goto :MTDLL
+ :AMALGDLL
+-%LJCOMPILE% /MD /DLUA_BUILD_AS_DLL ljamalg.c
++%LJCOMPILE% /MD%CRTSUFFIX% /DLUA_BUILD_AS_DLL ljamalg.c
+ @if errorlevel 1 goto :BAD
+ %LJLINK% /DLL /out:%LJDLLNAME% ljamalg.obj lj_vm.obj
+ @if errorlevel 1 goto :BAD
+-- 
+2.11.0.windows.3
+
