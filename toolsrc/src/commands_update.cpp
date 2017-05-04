@@ -63,8 +63,8 @@ namespace vcpkg::Commands::Update
             }
             System::println("\n"
                             "To update these packages, run\n"
-                            "    vcpkg remove --outdated\n"
-                            "    vcpkg install <pkgs>...");
+                            "    .\\vcpkg remove --outdated\n"
+                            "    .\\vcpkg install <pkgs>...");
         }
 
         auto version_file = paths.get_filesystem().read_contents(paths.root / "toolsrc" / "VERSION.txt");
