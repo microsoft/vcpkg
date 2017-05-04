@@ -297,7 +297,7 @@ namespace vcpkg::PostBuildLint
             Checks::check_exit(VCPKG_LINE_INFO,
                                ec_data.exit_code == 0,
                                "Running command:\n   %s\n failed",
-                               Strings::utf16_to_utf8(cmd_line));
+                               Strings::to_utf8(cmd_line));
 
             if (ec_data.output.find("ordinal hint RVA      name") == std::string::npos)
             {
@@ -334,7 +334,7 @@ namespace vcpkg::PostBuildLint
             Checks::check_exit(VCPKG_LINE_INFO,
                                ec_data.exit_code == 0,
                                "Running command:\n   %s\n failed",
-                               Strings::utf16_to_utf8(cmd_line));
+                               Strings::to_utf8(cmd_line));
 
             if (ec_data.output.find("App Container") == std::string::npos)
             {
@@ -610,7 +610,7 @@ namespace vcpkg::PostBuildLint
             Checks::check_exit(VCPKG_LINE_INFO,
                                ec_data.exit_code == 0,
                                "Running command:\n   %s\n failed",
-                               Strings::utf16_to_utf8(cmd_line));
+                               Strings::to_utf8(cmd_line));
 
             for (const BuildType& bad_build_type : bad_build_types)
             {
@@ -664,7 +664,7 @@ namespace vcpkg::PostBuildLint
             Checks::check_exit(VCPKG_LINE_INFO,
                                ec_data.exit_code == 0,
                                "Running command:\n   %s\n failed",
-                               Strings::utf16_to_utf8(cmd_line));
+                               Strings::to_utf8(cmd_line));
 
             for (const OutdatedDynamicCrt& outdated_crt : outdated_crts)
             {

@@ -114,7 +114,7 @@ namespace vcpkg::Commands::PortsDiff
         Checks::check_exit(VCPKG_LINE_INFO,
                            output.output == VALID_COMMIT_OUTPUT,
                            "Invalid commit id %s",
-                           Strings::utf16_to_utf8(git_commit_id));
+                           Strings::to_utf8(git_commit_id));
     }
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
@@ -128,9 +128,9 @@ namespace vcpkg::Commands::PortsDiff
 
         const fs::path& git_exe = paths.get_git_exe();
 
-        const std::wstring git_commit_id_for_previous_snapshot = Strings::utf8_to_utf16(args.command_arguments.at(0));
+        const std::wstring git_commit_id_for_previous_snapshot = Strings::to_utf16(args.command_arguments.at(0));
         const std::wstring git_commit_id_for_current_snapshot =
-            args.command_arguments.size() < 2 ? L"HEAD" : Strings::utf8_to_utf16(args.command_arguments.at(1));
+            args.command_arguments.size() < 2 ? L"HEAD" : Strings::to_utf16(args.command_arguments.at(1));
 
         check_commit_exists(git_exe, git_commit_id_for_current_snapshot);
         check_commit_exists(git_exe, git_commit_id_for_previous_snapshot);

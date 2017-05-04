@@ -353,13 +353,13 @@ namespace UnitTest1
 
         TEST_METHOD(utf8_to_utf16)
         {
-            auto str = vcpkg::Strings::utf8_to_utf16("abc");
+            auto str = vcpkg::Strings::to_utf16("abc");
             Assert::AreEqual(L"abc", str.c_str());
         }
 
         TEST_METHOD(utf8_to_utf16_with_whitespace)
         {
-            auto str = vcpkg::Strings::utf8_to_utf16("abc -x86-windows");
+            auto str = vcpkg::Strings::to_utf16("abc -x86-windows");
             Assert::AreEqual(L"abc -x86-windows", str.c_str());
         }
     };

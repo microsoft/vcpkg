@@ -46,13 +46,13 @@ namespace vcpkg::Strings::details
 
 namespace vcpkg::Strings
 {
-    std::wstring utf8_to_utf16(const CStringView s)
+    std::wstring to_utf16(const CStringView s)
     {
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> conversion;
         return conversion.from_bytes(s);
     }
 
-    std::string utf16_to_utf8(const CWStringView w)
+    std::string to_utf8(const CWStringView w)
     {
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> conversion;
         return conversion.to_bytes(w);

@@ -35,7 +35,7 @@ namespace vcpkg::Build
         }
 
         return Strings::wformat(
-            LR"("%s" %s %s 2>&1)", toolset.vcvarsall.native(), Strings::utf8_to_utf16(triplet.architecture()), tonull);
+            LR"("%s" %s %s 2>&1)", toolset.vcvarsall.native(), Strings::to_utf16(triplet.architecture()), tonull);
     }
 
     static void create_binary_control_file(const VcpkgPaths& paths,

@@ -10,10 +10,8 @@ namespace vcpkg::Commands::Hash
     {
         auto cmd_line = Strings::wformat(LR"(CertUtil.exe -hashfile "%s" %s)", path.c_str(), hashType);
         auto ec_data = System::cmd_execute_and_capture_output(cmd_line);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           ec_data.exit_code == 0,
-                           "Running command:\n   %s\n failed",
-                           Strings::utf16_to_utf8(cmd_line));
+        Checks::check_exit(
+            VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::to_utf8(cmd_line));
 
         std::string const& output = ec_data.output;
 
@@ -21,13 +19,13 @@ namespace vcpkg::Commands::Hash
         Checks::check_exit(VCPKG_LINE_INFO,
                            start != std::string::npos,
                            "Unexpected output format from command: %s",
-                           Strings::utf16_to_utf8(cmd_line));
+                           Strings::to_utf8(cmd_line));
 
         auto end = output.find_first_of("\r\n", start + 1);
         Checks::check_exit(VCPKG_LINE_INFO,
                            end != std::string::npos,
                            "Unexpected output format from command: %s",
-                           Strings::utf16_to_utf8(cmd_line));
+                           Strings::to_utf8(cmd_line));
 
         auto hash = output.substr(start, end - start);
         Util::erase_remove_if(hash, isspace);
@@ -49,7 +47,7 @@ namespace vcpkg::Commands::Hash
         }
         if (args.command_arguments.size() == 2)
         {
-            do_file_hash(args.command_arguments[0], Strings::utf8_to_utf16(args.command_arguments[1]));
+            do_file_hash(args.command_arguments[0], Strings::to_utf16(args.command_arguments[1]));
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);

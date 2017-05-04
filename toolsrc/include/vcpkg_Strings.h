@@ -48,9 +48,9 @@ namespace vcpkg::Strings
         return details::wformat_internal(fmtstr, to_wprintf_arg(to_wprintf_arg(args))...);
     }
 
-    std::wstring utf8_to_utf16(const CStringView s);
+    std::wstring to_utf16(const CStringView s);
 
-    std::string utf16_to_utf8(const CWStringView w);
+    std::string to_utf8(const CWStringView w);
 
     std::string::const_iterator case_insensitive_ascii_find(const std::string& s, const std::string& pattern);
 
