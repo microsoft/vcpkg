@@ -59,12 +59,13 @@ namespace vcpkg::Build
         static constexpr std::array<ArchOption, 8> VALUES = {
             X86, X86_X64, X86_ARM, X86_ARM64, X64, X64_X86, X64_ARM, X64_ARM64};
 
-        auto target_arch = System::to_cpu_architecture(target_architecture);
-        auto host_arch = System::get_host_processor();
+        // auto target_arch = System::to_cpu_architecture(target_architecture);
+        // auto host_arch = System::get_host_processor();
 
         for (auto&& value : VALUES)
         {
-            if (target_arch == value.target_arch && host_arch == value.host_arch)
+            // if (target_arch == value.target_arch && host_arch == value.host_arch)
+            if (target_architecture == Strings::to_utf8(value.name))
             {
                 return value.name;
             }
