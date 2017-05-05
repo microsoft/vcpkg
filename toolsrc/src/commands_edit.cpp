@@ -23,7 +23,7 @@ namespace vcpkg::Commands::Edit
 
         if (env_EDITOR.empty())
         {
-            const Optional<std::wstring> env_EDITOR_optional = System::get_environmental_variable(L"EDITOR");
+            const Optional<std::wstring> env_EDITOR_optional = System::get_environment_variable(L"EDITOR");
             if (auto e = env_EDITOR_optional.get())
             {
                 env_EDITOR = *e;

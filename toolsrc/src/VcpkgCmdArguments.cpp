@@ -48,7 +48,7 @@ namespace vcpkg
         std::vector<std::string> v;
         for (int i = 1; i < argc; ++i)
         {
-            v.push_back(Strings::utf16_to_utf8(argv[i]));
+            v.push_back(Strings::to_utf8(argv[i]));
         }
 
         return VcpkgCmdArguments::create_from_arg_sequence(v.data(), v.data() + v.size());

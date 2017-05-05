@@ -219,7 +219,7 @@ namespace vcpkg
     {
     }
     CMakeVariable::CMakeVariable(const CWStringView varname, const std::string& varvalue)
-        : CMakeVariable(varname, Strings::utf8_to_utf16(varvalue).c_str())
+        : CMakeVariable(varname, Strings::to_utf16(varvalue).c_str())
     {
     }
     CMakeVariable::CMakeVariable(const CWStringView varname, const std::wstring& varvalue)

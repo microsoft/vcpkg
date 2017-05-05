@@ -334,7 +334,7 @@ namespace vcpkg::Commands::Export
                             "\n"
                             "    %s"
                             "\n",
-                            Strings::utf16_to_utf8(cmake_variable.s));
+                            Strings::to_utf8(cmake_variable.s));
         };
 
         if (raw)

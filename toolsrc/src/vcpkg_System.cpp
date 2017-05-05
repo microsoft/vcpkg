@@ -23,10 +23,28 @@ namespace vcpkg::System
         return fs::path(buf, buf + bytes);
     }
 
+    Optional<CPUArchitecture> to_cpu_architecture(CStringView arch)
+    {
+        if (Strings::case_insensitive_ascii_compare(arch, "x86") == 0) return CPUArchitecture::X86;
+        if (Strings::case_insensitive_ascii_compare(arch, "x64") == 0) return CPUArchitecture::X64;
+        if (Strings::case_insensitive_ascii_compare(arch, "amd64") == 0) return CPUArchitecture::X64;
+        if (Strings::case_insensitive_ascii_compare(arch, "arm") == 0) return CPUArchitecture::ARM;
+        if (Strings::case_insensitive_ascii_compare(arch, "arm64") == 0) return CPUArchitecture::ARM64;
+        return nullopt;
+    }
+
+    CPUArchitecture get_host_processor()
+    {
+        auto w6432 = get_environment_variable(L"PROCESSOR_ARCHITEW6432");
+        if (auto p = w6432.get()) return to_cpu_architecture(Strings::to_utf8(*p)).value_or_exit(VCPKG_LINE_INFO);
+
+        auto procarch = get_environment_variable(L"PROCESSOR_ARCHITECTURE").value_or_exit(VCPKG_LINE_INFO);
+        return to_cpu_architecture(Strings::to_utf8(procarch)).value_or_exit(VCPKG_LINE_INFO);
+    }
+
     int cmd_execute_clean(const CWStringView cmd_line)
     {
-        static const std::wstring system_root =
-            get_environmental_variable(L"SystemRoot").value_or_exit(VCPKG_LINE_INFO);
+        static const std::wstring system_root = get_environment_variable(L"SystemRoot").value_or_exit(VCPKG_LINE_INFO);
         static const std::wstring system_32 = system_root + LR"(\system32)";
         static const std::wstring new_PATH = Strings::wformat(
             LR"(Path=%s;%s;%s\Wbem;%s\WindowsPowerShell\v1.0\)", system_32, system_root, system_32, system_32);
@@ -83,7 +101,7 @@ namespace vcpkg::System
 
         for (auto&& env_wstring : env_wstrings)
         {
-            const Optional<std::wstring> value = System::get_environmental_variable(env_wstring);
+            const Optional<std::wstring> value = System::get_environment_variable(env_wstring);
             auto v = value.get();
             if (!v || v->empty()) continue;
 
@@ -97,7 +115,7 @@ namespace vcpkg::System
 
         // Basically we are wrapping it in quotes
         const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
-        if (g_debugging) System::println("[DEBUG] _wspawnlpe(cmd.exe /c %s)", Strings::utf16_to_utf8(actual_cmd_line));
+        if (g_debugging) System::println("[DEBUG] _wspawnlpe(cmd.exe /c %s)", Strings::to_utf8(actual_cmd_line));
         auto exit_code =
             _wspawnlpe(_P_WAIT, L"cmd.exe", L"cmd.exe", L"/c", actual_cmd_line.c_str(), nullptr, env_cstr.data());
         if (g_debugging) System::println("[DEBUG] _wspawnlpe() returned %d", exit_code);
@@ -111,7 +129,7 @@ namespace vcpkg::System
 
         // Basically we are wrapping it in quotes
         const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
-        if (g_debugging) System::println("[DEBUG] _wsystem(%s)", Strings::utf16_to_utf8(actual_cmd_line));
+        if (g_debugging) System::println("[DEBUG] _wsystem(%s)", Strings::to_utf8(actual_cmd_line));
         int exit_code = _wsystem(actual_cmd_line.c_str());
         if (g_debugging) System::println("[DEBUG] _wsystem() returned %d", exit_code);
         return exit_code;
@@ -177,7 +195,7 @@ namespace vcpkg::System
         putchar('\n');
     }
 
-    Optional<std::wstring> get_environmental_variable(const CWStringView varname) noexcept
+    Optional<std::wstring> get_environment_variable(const CWStringView varname) noexcept
     {
         auto sz = GetEnvironmentVariableW(varname, nullptr, 0);
         if (sz == 0) return nullopt;
@@ -221,14 +239,14 @@ namespace vcpkg::System
 
     static const fs::path& get_ProgramFiles()
     {
-        static const fs::path p = System::get_environmental_variable(L"PROGRAMFILES").value_or_exit(VCPKG_LINE_INFO);
+        static const fs::path p = System::get_environment_variable(L"PROGRAMFILES").value_or_exit(VCPKG_LINE_INFO);
         return p;
     }
 
     const fs::path& get_ProgramFiles_32_bit()
     {
         static const fs::path p = []() -> fs::path {
-            auto value = System::get_environmental_variable(L"ProgramFiles(x86)");
+            auto value = System::get_environment_variable(L"ProgramFiles(x86)");
             if (auto v = value.get())
             {
                 return std::move(*v);
@@ -241,7 +259,7 @@ namespace vcpkg::System
     const fs::path& get_ProgramFiles_platform_bitness()
     {
         static const fs::path p = []() -> fs::path {
-            auto value = System::get_environmental_variable(L"ProgramW6432");
+            auto value = System::get_environment_variable(L"ProgramW6432");
             if (auto v = value.get())
             {
                 return std::move(*v);

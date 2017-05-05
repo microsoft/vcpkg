@@ -41,11 +41,11 @@ static void inner(const VcpkgCmdArguments& args)
     fs::path vcpkg_root_dir;
     if (args.vcpkg_root_dir != nullptr)
     {
-        vcpkg_root_dir = fs::stdfs::absolute(Strings::utf8_to_utf16(*args.vcpkg_root_dir));
+        vcpkg_root_dir = fs::stdfs::absolute(Strings::to_utf16(*args.vcpkg_root_dir));
     }
     else
     {
-        const Optional<std::wstring> vcpkg_root_dir_env = System::get_environmental_variable(L"VCPKG_ROOT");
+        const Optional<std::wstring> vcpkg_root_dir_env = System::get_environment_variable(L"VCPKG_ROOT");
         if (auto v = vcpkg_root_dir_env.get())
         {
             vcpkg_root_dir = fs::stdfs::absolute(*v);
@@ -82,10 +82,10 @@ static void inner(const VcpkgCmdArguments& args)
     else
     {
         const Optional<std::wstring> vcpkg_default_triplet_env =
-            System::get_environmental_variable(L"VCPKG_DEFAULT_TRIPLET");
+            System::get_environment_variable(L"VCPKG_DEFAULT_TRIPLET");
         if (auto v = vcpkg_default_triplet_env.get())
         {
-            default_triplet = Triplet::from_canonical_name(Strings::utf16_to_utf8(*v));
+            default_triplet = Triplet::from_canonical_name(Strings::to_utf8(*v));
         }
         else
         {
@@ -200,7 +200,7 @@ int wmain(const int argc, const wchar_t* const* const argv)
 
     Metrics::track_property("version", Commands::Version::version());
 
-    const std::string trimmed_command_line = trim_path_from_command_line(Strings::utf16_to_utf8(GetCommandLineW()));
+    const std::string trimmed_command_line = trim_path_from_command_line(Strings::to_utf8(GetCommandLineW()));
     Metrics::track_property("cmdline", trimmed_command_line);
     loadConfig();
     Metrics::track_property("sqmuser", Metrics::get_SQM_user());
@@ -247,6 +247,6 @@ int wmain(const int argc, const wchar_t* const* const argv)
                   exc_msg);
     fflush(stdout);
     for (int x = 0; x < argc; ++x)
-        System::println("%s|", Strings::utf16_to_utf8(argv[x]));
+        System::println("%s|", Strings::to_utf8(argv[x]));
     fflush(stdout);
 }

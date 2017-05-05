@@ -3,14 +3,11 @@
 #include "Paragraphs.h"
 #include "PostBuildLint.h"
 #include "StatusParagraphs.h"
-#include "metrics.h"
-#include "vcpkg_Chrono.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_Dependencies.h"
 #include "vcpkg_Enums.h"
 #include "vcpkg_Input.h"
 #include "vcpkg_System.h"
-#include "vcpkg_Util.h"
 #include "vcpkglib.h"
 
 using vcpkg::Build::BuildResult;
@@ -29,8 +26,9 @@ namespace vcpkg::Commands::BuildCommand
     {
         if (options.find(OPTION_CHECKS_ONLY) != options.end())
         {
+            auto pre_build_info = Build::PreBuildInfo::from_triplet_file(paths, spec.triplet());
             auto build_info = Build::read_build_info(paths.get_filesystem(), paths.build_info_file_path(spec));
-            const size_t error_count = PostBuildLint::perform_all_checks(spec, paths, build_info);
+            const size_t error_count = PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info);
             Checks::check_exit(VCPKG_LINE_INFO, error_count == 0);
             Checks::exit_success(VCPKG_LINE_INFO);
         }

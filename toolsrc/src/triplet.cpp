@@ -32,17 +32,5 @@ namespace vcpkg
 
     const std::string& Triplet::canonical_name() const { return this->m_canonical_name; }
 
-    std::string Triplet::architecture() const
-    {
-        auto it = std::find(this->m_canonical_name.cbegin(), this->m_canonical_name.cend(), '-');
-        return std::string(this->m_canonical_name.cbegin(), it);
-    }
-
-    std::string Triplet::system() const
-    {
-        auto it = std::find(this->m_canonical_name.cbegin(), this->m_canonical_name.cend(), '-');
-        return std::string(it + 1, this->m_canonical_name.cend());
-    }
-
     const std::string& Triplet::to_string() const { return this->m_canonical_name; }
 }

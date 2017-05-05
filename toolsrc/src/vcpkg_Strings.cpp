@@ -46,13 +46,13 @@ namespace vcpkg::Strings::details
 
 namespace vcpkg::Strings
 {
-    std::wstring utf8_to_utf16(const CStringView s)
+    std::wstring to_utf16(const CStringView s)
     {
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> conversion;
         return conversion.from_bytes(s);
     }
 
-    std::string utf16_to_utf8(const CWStringView w)
+    std::string to_utf8(const CWStringView w)
     {
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> conversion;
         return conversion.to_bytes(w);
@@ -66,6 +66,11 @@ namespace vcpkg::Strings
                       pattern_as_lower_case.begin(),
                       pattern_as_lower_case.end(),
                       [](const char a, const char b) { return details::tolower_char(a) == b; });
+    }
+
+    int case_insensitive_ascii_compare(const CStringView left, const CStringView right)
+    {
+        return _stricmp(left, right);
     }
 
     std::string ascii_to_lowercase(const std::string& input)

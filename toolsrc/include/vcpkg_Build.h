@@ -8,7 +8,6 @@
 #include "vcpkg_Files.h"
 #include "vcpkg_optional.h"
 #include <map>
-#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -33,7 +32,17 @@ namespace vcpkg::Build
     std::string create_error_message(const BuildResult build_result, const PackageSpec& spec);
     std::string create_user_troubleshooting_message(const PackageSpec& spec);
 
-    std::wstring make_build_env_cmd(const Triplet& triplet, const Toolset& toolset);
+    struct PreBuildInfo
+    {
+        static PreBuildInfo from_triplet_file(const VcpkgPaths& paths, const Triplet& triplet);
+
+        std::string target_architecture;
+        std::string cmake_system_name;
+        std::string cmake_system_version;
+        std::string platform_toolset;
+    };
+
+    std::wstring make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);
 
     struct ExtendedBuildResult
     {

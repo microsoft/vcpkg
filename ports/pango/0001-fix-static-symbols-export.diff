@@ -1,21 +1,12 @@
-From 9e7d3a6ea06e1fb661e0aa4b60c6efa9a5684d9d Mon Sep 17 00:00:00 2001
-From: Mikhail Paulyshka <me@mixaill.tk>
-Date: Sat, 29 Apr 2017 21:28:12 +0300
-Subject: [PATCH] do not use dllexport for static build
-
----
- config.h.win32 | 4 ++++
- 1 file changed, 4 insertions(+)
-
 diff --git a/config.h.win32 b/config.h.win32
-index 31b330f..e25b5d8 100644
+index 31b330f..e5ed86c 100644
 --- a/config.h.win32
 +++ b/config.h.win32
 @@ -147,7 +147,11 @@
  
  /* defines how to decorate public symbols while building */
  #ifdef _MSC_VER
-+#ifdef _WINDLL
++#ifdef PANGO_EXPORTS
  #define _PANGO_EXTERN __declspec(dllexport) extern
  #else
 +#define _PANGO_EXTERN extern
@@ -23,6 +14,3 @@ index 31b330f..e25b5d8 100644
 +#else
  #define _PANGO_EXTERN __attribute__((visibility("default"))) __declspec(dllexport) extern
  #endif
--- 
-2.11.0.windows.1
-
