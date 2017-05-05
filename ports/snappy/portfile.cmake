@@ -19,8 +19,8 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/snappy/SnappyTargets-debug.cmake  ${CURRENT_PACKAGES_DIR}/share/snappy/SnappyTargets-debug.cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/share/snappy/SnappyConfigVersion.cmake)
+vcpkg_fixup_cmake_targets()
 
 file(COPY ${CURRENT_BUILDTREES_DIR}/src/snappy-1.1.4/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/snappy)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/snappy/COPYING ${CURRENT_PACKAGES_DIR}/share/snappy/copyright)
