@@ -40,25 +40,25 @@ namespace vcpkg::System
     template<class Arg1, class... Args>
     void print(const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
     {
-        return print(Strings::format(messageTemplate, messageArg1, messageArgs...));
+        return System::print(Strings::format(messageTemplate, messageArg1, messageArgs...));
     }
 
     template<class Arg1, class... Args>
     void print(const Color c, const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
     {
-        return print(c, Strings::format(messageTemplate, messageArg1, messageArgs...));
+        return System::print(c, Strings::format(messageTemplate, messageArg1, messageArgs...));
     }
 
     template<class Arg1, class... Args>
     void println(const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
     {
-        return println(Strings::format(messageTemplate, messageArg1, messageArgs...));
+        return System::println(Strings::format(messageTemplate, messageArg1, messageArgs...));
     }
 
     template<class Arg1, class... Args>
     void println(const Color c, const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
     {
-        return println(c, Strings::format(messageTemplate, messageArg1, messageArgs...));
+        return System::println(c, Strings::format(messageTemplate, messageArg1, messageArgs...));
     }
 
     Optional<std::wstring> get_environment_variable(const CWStringView varname) noexcept;
@@ -80,4 +80,25 @@ namespace vcpkg::System
     const fs::path& get_ProgramFiles_32_bit();
 
     const fs::path& get_ProgramFiles_platform_bitness();
+}
+
+namespace vcpkg::Debug
+{
+    void println(const CStringView message);
+    void println(const System::Color c, const CStringView message);
+
+    template<class Arg1, class... Args>
+    void println(const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
+    {
+        return Debug::println(Strings::format(messageTemplate, messageArg1, messageArgs...));
+    }
+
+    template<class Arg1, class... Args>
+    void println(const System::Color c,
+                 const char* messageTemplate,
+                 const Arg1& messageArg1,
+                 const Args&... messageArgs)
+    {
+        return Debug::println(c, Strings::format(messageTemplate, messageArg1, messageArgs...));
+    }
 }
