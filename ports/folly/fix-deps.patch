@@ -1,0 +1,15 @@
+diff --git a/CMake/folly-deps.cmake b/CMake/folly-deps.cmake
+index 211c6fbf..801e9ba6 100755
+--- a/CMake/folly-deps.cmake
++++ b/CMake/folly-deps.cmake
+@@ -11,8 +11,8 @@ find_package(Boost 1.55.0 MODULE
+   REQUIRED
+ )
+ find_package(DoubleConversion MODULE REQUIRED)
+-find_package(GFlags MODULE REQUIRED)
+-find_package(GLog MODULE REQUIRED)
++find_package(gflags CONFIG REQUIRED)
++find_package(glog CONFIG REQUIRED)
+ find_package(LibEvent MODULE REQUIRED)
+ find_package(OpenSSL MODULE REQUIRED)
+ find_package(PThread MODULE)

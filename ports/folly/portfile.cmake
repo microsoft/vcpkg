@@ -20,6 +20,7 @@ vcpkg_from_github(
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-cmakelists.patch"
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-deps.patch"
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
@@ -30,6 +31,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DMSVC_USE_STATIC_RUNTIME=${MSVC_USE_STATIC_RUNTIME}
 )

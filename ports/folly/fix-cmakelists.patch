@@ -1,23 +1,8 @@
-diff --git a/CMake/folly-deps.cmake b/CMake/folly-deps.cmake
-index 211c6fbf..988225a2 100755
---- a/CMake/folly-deps.cmake
-+++ b/CMake/folly-deps.cmake
-@@ -11,8 +11,8 @@ find_package(Boost 1.55.0 MODULE
-   REQUIRED
- )
- find_package(DoubleConversion MODULE REQUIRED)
--find_package(GFlags MODULE REQUIRED)
--find_package(GLog MODULE REQUIRED)
-+find_package(gflags CONFIG REQUIRED)
-+find_package(glog CONFIG REQUIRED)
- find_package(LibEvent MODULE REQUIRED)
- find_package(OpenSSL MODULE REQUIRED)
- find_package(PThread MODULE)
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 38886d65..4c796eac 100755
+index 38886d65..00e5307c 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1,15 +1,8 @@
+@@ -1,15 +1,14 @@
  cmake_minimum_required(VERSION 3.4.0 FATAL_ERROR)
  
 -# Unfortunately, CMake doesn't easily provide us a way to merge static
@@ -25,14 +10,35 @@ index 38886d65..4c796eac 100755
 -# we do a bit of a workaround here to inject a property into the generated
 -# project files that will only get enabled for the folly target. Ugly, but
 -# the alternatives are far, far worse.
- if ("${CMAKE_GENERATOR}" MATCHES "Visual Studio 15( 2017)? Win64")
+-if ("${CMAKE_GENERATOR}" MATCHES "Visual Studio 15( 2017)? Win64")
 -  set(CMAKE_GENERATOR_TOOLSET "v141</PlatformToolset></PropertyGroup><ItemDefinitionGroup Condition=\"'$(ProjectName)'=='folly'\"><ProjectReference><LinkLibraryDependencies>true</LinkLibraryDependencies></ProjectReference></ItemDefinitionGroup><PropertyGroup><PlatformToolset>v141")
++project(${PACKAGE_NAME} CXX)
++
++if (NOT ${MSVC_CXX_ARCHITECTURE_ID} STREQUAL "x64")
++  message(FATAL_ERROR "This build script only supports building Folly on 64-bit Windows.")
++endif()
++
++if (MSVC_VERSION EQUAL 1910)
    set(MSVC_IS_2017 ON)
- elseif ("${CMAKE_GENERATOR}" STREQUAL "Visual Studio 14 2015 Win64")
+-elseif ("${CMAKE_GENERATOR}" STREQUAL "Visual Studio 14 2015 Win64")
 -  set(CMAKE_GENERATOR_TOOLSET "v140</PlatformToolset></PropertyGroup><ItemDefinitionGroup Condition=\"'$(ProjectName)'=='folly'\"><ProjectReference><LinkLibraryDependencies>true</LinkLibraryDependencies></ProjectReference></ItemDefinitionGroup><PropertyGroup><PlatformToolset>v140")
++elseif (MSVC_VERSION EQUAL 1900)
    set(MSVC_IS_2017 OFF)
  else()
    message(FATAL_ERROR "This build script only supports building Folly on 64-bit Windows with Visual Studio 2015 or Visual Studio 2017.")
+@@ -29,12 +28,6 @@ set(PACKAGE_BUGREPORT "https://github.com/facebook/folly/issues")
+ # 150+ tests in the root folder anyone? No? I didn't think so.
+ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+ 
+-project(${PACKAGE_NAME} CXX)
+-
+-# Check architecture OS
+-if (NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
+-  message(FATAL_ERROR "Folly requires a 64bit OS")
+-endif()
+ if(NOT "${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
+   message(FATAL_ERROR "You should only be using CMake to build Folly if you are on Windows!")
+ endif()
 @@ -122,7 +115,8 @@ add_library(folly_base STATIC
  )
  auto_source_group(folly ${FOLLY_DIR} ${files} ${hfiles})
