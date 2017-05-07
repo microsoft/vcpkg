@@ -11,6 +11,8 @@ $downloadPromptOverride_ALWAYS_PROMPT = 2
 
 Import-Module BitsTransfer -Verbose:$false
 
+Write-Verbose "Fetching dependency: $Dependency"
+
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 $vcpkgRootDir = & $scriptsDir\findFileRecursivelyUp.ps1 $scriptsDir .vcpkg-root
 
@@ -236,3 +238,5 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 }
 
 SelectProgram $Dependency
+
+Write-Verbose "Fetching dependency: $Dependency. Done."
