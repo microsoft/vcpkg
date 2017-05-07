@@ -12,12 +12,13 @@ if(EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
 endif()
 
-vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "https://github.com/grpc/grpc/archive/v${GRPC_VERSION}.zip"
-    FILENAME "grpc-v${GRPC_VERSION}.tar.gz"
-    SHA512 1468ace60ce9affb563b8145d43793778786626bfd568c79ba9c9792bf05adb86e99dfd13ff21c4b723909fbddae583148201be1a694bc0960fbe10200f52544
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO grpc/grpc
+    REF v1.2.3
+    SHA512 51e3c2f866fcac861ca007dd022373e63f82c63754001d1182ea14dd2eff2dfba325f8bc130ddf94e4ae35e23299ca337a6c5c6a9cee145f9e5c79e4c46af280
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
@@ -36,30 +37,19 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-# Update paths in gRPCTargets-release.cmake
-file(READ ${CURRENT_PACKAGES_DIR}/share/grpc/gRPCTargets-release.cmake _contents)
-string(REPLACE "\${_IMPORT_PREFIX}/bin/" "\${_IMPORT_PREFIX}/tools/" _contents "${_contents}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/grpc/gRPCTargets-release.cmake "${_contents}")
-
-# Update paths in gRPCTargets-debug.cmake
-file(READ ${CURRENT_PACKAGES_DIR}/debug/share/grpc/gRPCTargets-debug.cmake _contents)
-string(REPLACE "\${_IMPORT_PREFIX}/bin/" "\${_IMPORT_PREFIX}/tools/" _contents "${_contents}")
-string(REPLACE "\${_IMPORT_PREFIX}/lib/" "\${_IMPORT_PREFIX}/debug/lib/" _contents "${_contents}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/grpc/gRPCTargets-debug.cmake "${_contents}")
+vcpkg_fixup_cmake_targets()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/grpc RENAME copyright)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
 
 # Install tools and plugins
 file(GLOB TOOLS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.exe")
 if(TOOLS)
-    file(COPY ${TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/grpc)
+    file(COPY ${TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/grpc)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_pdbs()
