@@ -4,10 +4,6 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 include(vcpkg_common_functions)
 
-set(GRPC_VERSION 1.2.3)
-
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/grpc-${GRPC_VERSION})
-
 if(EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
 endif()
