@@ -12,18 +12,13 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/lzo-2.09)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/lzo-2.10)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.oberhumer.com/opensource/lzo/download/lzo-2.09.tar.gz"
-    FILENAME "lzo-2.09.tar.gz"
-    SHA512 7c64e5e7d2050d75ac8c59d613f6f7230b74746b1d207666755b07450053c8b73980f12f8a1ec59d2af0bada02beec126aaacb675b8088b5fe65e97ff7e6bfc7
+    URLS "http://www.oberhumer.com/opensource/lzo/download/lzo-2.10.tar.gz"
+    FILENAME "lzo-2.10.tar.gz"
+    SHA512 a3dae5e4a6b93b1f5bf7435e8ab114a9be57252e9efc5dd444947d7a2d031b0819f34bcaeb35f60b5629a01b1238d738735a64db8f672be9690d3c80094511a4
 )
 vcpkg_extract_source_archive(${ARCHIVE})
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/do-not-declare-setargv.patch"
-)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -40,5 +35,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/lzo-2.09/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/lzo)
+file(COPY ${CURRENT_BUILDTREES_DIR}/src/lzo-2.10/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/lzo)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/lzo/COPYING ${CURRENT_PACKAGES_DIR}/share/lzo/copyright)
