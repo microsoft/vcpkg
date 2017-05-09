@@ -86,11 +86,13 @@ namespace vcpkg
         }
 
         const fs::path actual_downloaded_path = Strings::trimmed(rc.output);
+        std::error_code ec;
+        auto eq = fs::stdfs::equivalent(expected_downloaded_path, actual_downloaded_path, ec);
         Checks::check_exit(VCPKG_LINE_INFO,
-                           expected_downloaded_path == actual_downloaded_path,
+                           eq && !ec,
                            "Expected dependency downloaded path to be %s, but was %s",
-                           expected_downloaded_path.generic_string(),
-                           actual_downloaded_path.generic_string());
+                           expected_downloaded_path.u8string(),
+                           actual_downloaded_path.u8string());
         return actual_downloaded_path;
     }
 
