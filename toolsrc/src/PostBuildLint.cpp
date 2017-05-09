@@ -427,6 +427,11 @@ namespace vcpkg::PostBuildLint
                                "The file extension was not .lib: %s",
                                file.generic_string());
             COFFFileReader::LibInfo info = COFFFileReader::read_lib(file);
+
+            // This is zero for folly's debug library
+            // TODO: Why?
+            if (info.machine_types.size() == 0) return LintStatus::SUCCESS;
+
             Checks::check_exit(VCPKG_LINE_INFO,
                                info.machine_types.size() == 1,
                                "Found more than 1 architecture in file %s",

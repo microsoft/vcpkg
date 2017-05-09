@@ -34,6 +34,10 @@ vcpkg_configure_cmake(
         -DMSVC_USE_STATIC_RUNTIME=${MSVC_USE_STATIC_RUNTIME}
 )
 
+# Folly runs built executables during the build, so they need access to the installed DLLs.
+# TODO: Confirm it's ok that we aren't adding the debug/bin folder.
+set(ENV{PATH} "$ENV{PATH};${CURRENT_INSTALLED_DIR}/bin")
+
 vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
