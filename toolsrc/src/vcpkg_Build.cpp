@@ -51,10 +51,10 @@ namespace vcpkg::Build
         static constexpr ArchOption X86_ARM = {L"x86_arm", CPU::X86, CPU::ARM};
         static constexpr ArchOption X86_ARM64 = {L"x86_arm64", CPU::X86, CPU::ARM64};
 
-        static constexpr ArchOption X64 = {L"x64", CPU::X64, CPU::X64};
-        static constexpr ArchOption X64_X86 = {L"x64_x86", CPU::X64, CPU::X86};
-        static constexpr ArchOption X64_ARM = {L"x64_arm", CPU::X64, CPU::ARM};
-        static constexpr ArchOption X64_ARM64 = {L"x64_arm64", CPU::X64, CPU::ARM64};
+        static constexpr ArchOption X64 = {L"amd64", CPU::X64, CPU::X64};
+        static constexpr ArchOption X64_X86 = {L"amd64_x86", CPU::X64, CPU::X86};
+        static constexpr ArchOption X64_ARM = {L"amd64_arm", CPU::X64, CPU::ARM};
+        static constexpr ArchOption X64_ARM64 = {L"amd64_arm64", CPU::X64, CPU::ARM64};
 
         static constexpr std::array<ArchOption, 8> VALUES = {
             X86, X86_X64, X86_ARM, X86_ARM64, X64, X64_X86, X64_ARM, X64_ARM64};
