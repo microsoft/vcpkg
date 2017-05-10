@@ -19,13 +19,14 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-  SOURCE_PATH ${SOURCE_PATH}
-  PATCHES
-    # Make sure cppunit static lib uses static CRT linkage
-    ${CMAKE_CURRENT_LIST_DIR}/0001-static-crt-linkage.patch
-)
-
+if (VCPKG_CRT_LINKAGE STREQUAL static)
+    vcpkg_apply_patches(
+        SOURCE_PATH ${SOURCE_PATH}
+        PATCHES
+            # Make sure cppunit static lib uses static CRT linkage
+            ${CMAKE_CURRENT_LIST_DIR}/0001-static-crt-linkage.patch
+    )
+endif()
 
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
     set(BUILD_ARCH "Win32")
