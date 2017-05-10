@@ -4,13 +4,12 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libepoxy-7d58fd3d47d2d69f2b1b9f08325302e4eeff9ebe)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/anholt/libepoxy/archive/7d58fd3d47d2d69f2b1b9f08325302e4eeff9ebe.zip"
-    FILENAME "libepoxy-7d58fd3d47d2d69f2b1b9f08325302e4eeff9ebe.zip"
-    SHA512 7e97a7832ea136565be92d6f6f0afead2fff9ac7b2999ef9e7865ac18dfbeab354e5a652b1a86e982a323dca9a1446df07821c26d315b7da4ca72b5be7345695)
-
-vcpkg_extract_source_archive(${ARCHIVE})
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO anholt/libepoxy
+    REF 1.4.2
+    SHA512 b94e1fe749c63a82f38369ff62b7d0d8cf1c55884159f030dc2919c17daf5811dd71cfd6a663edb38df66ff4ca53120a6a53501568cc8a582f08d4ae82fe9d89
+    HEAD_REF master)
 
 # ensure python is on path - not for meson but some source generation scripts
 vcpkg_find_acquire_program(PYTHON3)
