@@ -1,0 +1,36 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 06e83ef..17526b0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -57,6 +57,7 @@ option(enable-lazy-lock "Enable lazy locking (only lock when multi-threaded" OFF
+ option(force_lazy_lock "Forcing lazy-lock to avoid allocator/threading bootstrap issues" OFF)
+ # install_prefix - installation directory prefix
+ # with-xslroot=<path>  XSL stylesheet root path
++option(build-tests "Build tests" OFF)
+ 
+ set (PACKAGE_NAME "jemalloc")
+ project (${PACKAGE_NAME} C)
+@@ -825,6 +826,17 @@ if(C_UTIL_INTEGRATION_DEFS)
+         "${C_UTIL_INTEGRATION_DEFS}")
+ endif()
+ 
++install(FILES include/jemalloc/jemalloc${install_suffix}.h
++        DESTINATION include/jemalloc)
++
++install(TARGETS ${LIBJEMALLOCSO}
++        EXPORT JemallocTargets
++        RUNTIME DESTINATION bin
++        LIBRARY DESTINATION lib
++        ARCHIVE DESTINATION lib)
++install(EXPORT JemallocTargets NAMESPACE jemalloc:: DESTINATION share/jemalloc)
++
++if (build-tests)
+ ##################################################################
+ # Common source for Unit, Integration and stress test libraries
+ set(C_TESTLIB_SRCS
+@@ -1028,4 +1040,4 @@ foreach(sourcefile ${TESTS_INTEGRATION})
+   add_test(NAME ${exename} COMMAND ${exename})
+   add_dependencies(check ${exename})
+ endforeach(sourcefile ${TESTS_UNIT})
+-
++endif()
