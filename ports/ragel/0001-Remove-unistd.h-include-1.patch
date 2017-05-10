@@ -4,13 +4,13 @@ Date: Tue, 4 Oct 2016 17:54:22 +0200
 Subject: [PATCH 1/2] Remove unistd.h include 1
 
 ---
- ragel-6.9/ragel/main.cpp | 1 -
+ ragel-6.10/ragel/main.cpp | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/ragel-6.9/ragel/main.cpp b/ragel-6.9/ragel/main.cpp
+diff --git a/ragel-6.10/ragel/main.cpp b/ragel-6.10/ragel/main.cpp
 index f5fbd7b..e3bcc18 100644
---- a/ragel-6.9/ragel/main.cpp
-+++ b/ragel-6.9/ragel/main.cpp
+--- a/ragel-6.10/ragel/main.cpp
++++ b/ragel-6.10/ragel/main.cpp
 @@ -24,7 +24,6 @@
  #include <stdio.h>
  #include <iostream>
