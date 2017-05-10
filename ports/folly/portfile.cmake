@@ -9,6 +9,11 @@ endif()
 
 include(vcpkg_common_functions)
 
+# Required to run build/generate_escape_tables.py et al.
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
@@ -20,6 +25,7 @@ vcpkg_from_github(
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-cmakelists.patch"
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-generators.patch"
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
@@ -30,6 +36,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DMSVC_USE_STATIC_RUNTIME=${MSVC_USE_STATIC_RUNTIME}
 )
