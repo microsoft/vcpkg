@@ -168,7 +168,7 @@ set(B2_OPTIONS_DBG
     ${B2_OPTIONS}
     -sZLIB_BINARY=zlibd
     -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
-    -sBZIP2_BINARY=bz2
+    -sBZIP2_BINARY=bz2d
     -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
 )
 
