@@ -45,7 +45,7 @@ vcpkg_configure_cmake(
 # TODO: Confirm it's ok that we aren't adding the debug/bin folder.
 set(ENV{PATH} "$ENV{PATH};${CURRENT_INSTALLED_DIR}/bin")
 
-vcpkg_install_cmake()
+vcpkg_install_cmake(MSVC_64_TOOLSET)
 
 vcpkg_copy_pdbs()
 
