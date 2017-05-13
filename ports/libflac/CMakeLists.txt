@@ -20,6 +20,7 @@ include_directories(${PROJECT_SOURCE_DIR}/src/libFLAC/include)
 if(NOT LIBFLAC_ARCHITECTURE MATCHES arm)
     add_definitions(-DFLAC__SSE_OS)
     add_definitions(-DFLAC__HAS_X86INTRIN)
+    add_definitions(-DFLAC__NO_ASM)
 endif()
 
 if(LIBFLAC_ARCHITECTURE MATCHES x86)
