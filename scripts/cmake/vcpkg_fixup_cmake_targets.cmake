@@ -7,14 +7,57 @@
 #  Transform all references matching /bin/*.exe to /tools/<port>/*.exe
 #
 #  ::
-#  vcpkg_fixup_cmake_targets()
+#  vcpkg_fixup_cmake_targets([CONFIG_PATH <config_path>])
+#
+#  ``CONFIG_PATH``
+#    *.cmake files subdirectory (like "lib/cmake/${PORT}").
 #
 
 function(vcpkg_fixup_cmake_targets)
-    cmake_parse_arguments(_vfct "" "" "" ${ARGN})
+    cmake_parse_arguments(_vfct "" "CONFIG_PATH" "" ${ARGN})
 
     set(DEBUG_SHARE ${CURRENT_PACKAGES_DIR}/debug/share/${PORT})
     set(RELEASE_SHARE ${CURRENT_PACKAGES_DIR}/share/${PORT})
+
+    if(NOT ${_vfct_CONFIG_PATH} STREQUAL "")
+        set(DEBUG_CONFIG ${CURRENT_PACKAGES_DIR}/debug/${_vfct_CONFIG_PATH})
+        set(RELEASE_CONFIG ${CURRENT_PACKAGES_DIR}/${_vfct_CONFIG_PATH})
+
+        if(NOT EXISTS ${DEBUG_CONFIG})
+            message(FATAL_ERROR "'${DEBUG_CONFIG}' does not exist.")
+        endif()
+
+        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/share)
+        file(RENAME ${DEBUG_CONFIG} ${DEBUG_SHARE})
+        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
+        file(RENAME ${RELEASE_CONFIG} ${RELEASE_SHARE})
+
+        get_filename_component(DEBUG_CONFIG_DIR_NAME ${DEBUG_CONFIG} NAME)
+        string(TOLOWER "${DEBUG_CONFIG_DIR_NAME}" DEBUG_CONFIG_DIR_NAME)
+        if(${DEBUG_CONFIG_DIR_NAME} STREQUAL "cmake")
+            file(REMOVE_RECURSE ${DEBUG_CONFIG})
+        else()
+            get_filename_component(DEBUG_CONFIG_PARENT_DIR ${DEBUG_CONFIG} DIRECTORY)
+            get_filename_component(DEBUG_CONFIG_DIR_NAME ${DEBUG_CONFIG_PARENT_DIR} NAME)
+            string(TOLOWER "${DEBUG_CONFIG_DIR_NAME}" DEBUG_CONFIG_DIR_NAME)
+            if(${DEBUG_CONFIG_DIR_NAME} STREQUAL "cmake")
+                file(REMOVE_RECURSE ${DEBUG_CONFIG_PARENT_DIR})
+            endif()
+        endif()
+
+        get_filename_component(RELEASE_CONFIG_DIR_NAME ${RELEASE_CONFIG} NAME)
+        string(TOLOWER "${RELEASE_CONFIG_DIR_NAME}" RELEASE_CONFIG_DIR_NAME)
+        if(${RELEASE_CONFIG_DIR_NAME} STREQUAL "cmake")
+            file(REMOVE_RECURSE ${RELEASE_CONFIG})
+        else()
+            get_filename_component(RELEASE_CONFIG_PARENT_DIR ${RELEASE_CONFIG} DIRECTORY)
+            get_filename_component(RELEASE_CONFIG_DIR_NAME ${RELEASE_CONFIG_PARENT_DIR} NAME)
+            string(TOLOWER "${RELEASE_CONFIG_DIR_NAME}" RELEASE_CONFIG_DIR_NAME)
+            if(${RELEASE_CONFIG_DIR_NAME} STREQUAL "cmake")
+                file(REMOVE_RECURSE ${RELEASE_CONFIG_PARENT_DIR})
+            endif()
+        endif()
+    endif()
 
     if(NOT EXISTS ${DEBUG_SHARE})
         message(FATAL_ERROR "'${DEBUG_SHARE}' does not exist.")
