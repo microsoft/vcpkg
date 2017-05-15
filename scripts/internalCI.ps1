@@ -18,7 +18,7 @@ if (-not $?) { exit $? }
 ./vcpkg.exe install bond chakracore cryptopp zlib expat sdl2 curl sqlite3 libuv protobuf:x64-windows sfml opencv:x64-windows
 if (-not $?) { exit $? }
 
-./vcpkg.exe install opencv:x86-uwp
+./vcpkg.exe install opencv:x86-uwp boost:x86-uwp
 if (-not $?) { exit $? }
 
 ./vcpkg.exe install folly:x64-windows
