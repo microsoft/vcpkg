@@ -28,10 +28,15 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/c-ares")
 
-file(GLOB RELEASE_EXE_FILES "${CURRENT_PACKAGES_DIR}/bin/*.exe")
-file(REMOVE ${RELEASE_EXE_FILES})
-file(GLOB DEBUG_EXE_FILES "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
-file(REMOVE ${DEBUG_EXE_FILES})
+if(VCPKG_CRT_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+else()
+    file(GLOB RELEASE_EXE_FILES "${CURRENT_PACKAGES_DIR}/bin/*.exe")
+    file(REMOVE ${RELEASE_EXE_FILES})
+    file(GLOB DEBUG_EXE_FILES "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
+    file(REMOVE ${DEBUG_EXE_FILES})
+endif()
 
 vcpkg_copy_pdbs()
 
