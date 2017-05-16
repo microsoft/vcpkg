@@ -1,0 +1,56 @@
+--- a/CMakeLists.txt	Thu Jun 09 15:56:18 2016
++++ b/CMakeLists.txt	Wed Jan 04 18:27:54 2017
+@@ -1,6 +1,8 @@
+ cmake_minimum_required (VERSION 2.8.8)
+ project (hypre)
+ 
++include(GenerateExportHeader)
++
+ # The version number.
+ set (HYPRE_VERSION 2.11.1)
+ set (HYPRE_DATE    2016/06/09)
+@@ -616,6 +618,8 @@
+   struct_ls/sparse_msg_solve.c
+ )
+ 
++set_source_files_properties(struct_ls/pfmg3_setup_rap.c PROPERTIES LANGUAGE CXX)
++
+ # Headers and sources: sstruct_mv
+ list (APPEND HYPRE_HEADERS
+   sstruct_mv/HYPRE_sstruct_mv.h
+@@ -756,11 +760,11 @@
+   find_package (MPI)
+   if ((MPI_C_FOUND) AND (NOT CMAKE_C_COMPILER STREQUAL MPI_C_COMPILER))
+     include_directories (${MPI_C_INCLUDE_PATH})
+-    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${MPI_C_COMPILE_FLAGS}")
++    #set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${MPI_C_COMPILE_FLAGS}")
+   endif ()
+   if ((MPI_CXX_FOUND) AND (NOT CMAKE_CXX_COMPILER STREQUAL MPI_CXX_COMPILER))
+     include_directories (${MPI_CXX_INCLUDE_PATH})
+-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MPI_CXX_COMPILE_FLAGS}")
++    #set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MPI_CXX_COMPILE_FLAGS}")
+   endif ()
+ endif (NOT HYPRE_SEQUENTIAL)
+ 
+@@ -802,8 +806,19 @@
+ endif ()
+ 
+ add_library (HYPRE ${HYPRE_SOURCES} ${FEI_LIBS})
+-
+-install (TARGETS HYPRE DESTINATION lib)
++target_link_libraries(HYPRE ${MPI_C_LIBRARIES})
++if(WIN32 AND BUILD_SHARED_LIBS)
++  set_target_properties(HYPRE PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
++endif()
++
++generate_export_header(HYPRE EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/_hypre_export.h)
++list(APPEND HYPRE_HEADERS ${CMAKE_BINARY_DIR}/_hypre_export.h)
++
++install (TARGETS HYPRE 
++  RUNTIME DESTINATION bin
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib
++)
+ install (FILES ${HYPRE_HEADERS} DESTINATION include)
+ 
+ # add_subdirectory (test EXCLUDE_FROM_ALL)
