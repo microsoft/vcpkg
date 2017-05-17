@@ -11,14 +11,13 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/GDCM-2.6.8)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/malaterre/GDCM/archive/v2.6.8.zip"
-    FILENAME "GDCM-2.6.8.zip"
-    SHA512 52d3b0e8a3dab3077ee63e08f9ed727cb66fdc511935664b9d446e753905103543dabe9baa0b4c4264317b6f11deaf6869d0f9180df032589422de0dac7fc787
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO malaterre/GDCM
+    REF v2.6.8
+    SHA512 f3b571f7e00b42b444acd6d696ba1979b6ef83e84744ecddb05ad09d8d2443027145c50cb67c6bc25d6b8e009833b643e575ab988106cb981f529cf455a9b0bc
+    HEAD_REF master
 )
-
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
