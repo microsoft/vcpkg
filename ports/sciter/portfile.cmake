@@ -1,5 +1,10 @@
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(WARNING "Warning: Sciter requires sciter.dll to run. Download it manually or install dynamic package.")
+    message(STATUS "Warning: Sciter is only available under a free license as DLLs.")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
+endif()
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "Sciter only supports Windows Desktop")
 endif()
 
 include(vcpkg_common_functions)
@@ -10,7 +15,6 @@ set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 set(SCITER_VERSION 4.0.0.9)
 set(SCITER_REVISION 43565156c373f9635cc491551b870a948d4d6f37)
 set(SCITER_SHA 6c50822c46784a8b2114973dffa8ec4041c69f84303507fdcde425dbac8d698dd6241a209cdc0ae0663751ed0f78d92f7b0c26794417f374978bfb3e33bf004c)
-set(SCITER_SRC ${CURRENT_BUILDTREES_DIR}/src/sciter-sdk-${SCITER_REVISION})
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     set(SCITER_ARCH 64)
@@ -33,7 +37,7 @@ vcpkg_apply_patches(
 )
 
 # install include directory
-file(INSTALL ${SCITER_SRC}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/sciter
+file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/sciter
     FILES_MATCHING
     PATTERN "sciter-gtk-main.cpp" EXCLUDE
     PATTERN "sciter-osx-main.mm" EXCLUDE
@@ -46,30 +50,25 @@ set(SCITER_SHARE ${CURRENT_PACKAGES_DIR}/share/sciter)
 set(SCITER_TOOLS ${CURRENT_PACKAGES_DIR}/tools/sciter)
 
 # license
-file(COPY ${SCITER_SRC}/logfile.htm DESTINATION ${SCITER_SHARE})
-file(COPY ${SCITER_SRC}/license.htm DESTINATION ${SCITER_SHARE})
+file(COPY ${SOURCE_PATH}/logfile.htm DESTINATION ${SCITER_SHARE})
+file(COPY ${SOURCE_PATH}/license.htm DESTINATION ${SCITER_SHARE})
 file(RENAME ${SCITER_SHARE}/license.htm ${SCITER_SHARE}/copyright)
 
 # samples & widgets
-file(COPY ${SCITER_SRC}/samples DESTINATION ${SCITER_SHARE})
-file(COPY ${SCITER_SRC}/widgets DESTINATION ${SCITER_SHARE})
+file(COPY ${SOURCE_PATH}/samples DESTINATION ${SCITER_SHARE})
+file(COPY ${SOURCE_PATH}/widgets DESTINATION ${SCITER_SHARE})
 
 # tools
-file(INSTALL ${SCITER_SRC}/bin/packfolder.exe DESTINATION ${SCITER_TOOLS})
-file(INSTALL ${SCITER_SRC}/bin/tiscript.exe DESTINATION ${SCITER_TOOLS})
+file(INSTALL ${SOURCE_PATH}/bin/packfolder.exe DESTINATION ${SCITER_TOOLS})
+file(INSTALL ${SOURCE_PATH}/bin/tiscript.exe DESTINATION ${SCITER_TOOLS})
 
-file(INSTALL ${SCITER_SRC}/bin/${SCITER_ARCH}/sciter.exe DESTINATION ${SCITER_TOOLS})
-file(INSTALL ${SCITER_SRC}/bin/${SCITER_ARCH}/inspector.exe DESTINATION ${SCITER_TOOLS})
+file(INSTALL ${SOURCE_PATH}/bin/${SCITER_ARCH}/sciter.exe DESTINATION ${SCITER_TOOLS})
+file(INSTALL ${SOURCE_PATH}/bin/${SCITER_ARCH}/inspector.exe DESTINATION ${SCITER_TOOLS})
+file(INSTALL ${SOURCE_PATH}/bin/${SCITER_ARCH}/sciter.dll DESTINATION ${SCITER_TOOLS})
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    # DLLs should not be present in a static build
-    file(INSTALL ${SCITER_SRC}/bin/${SCITER_ARCH}/sciter.dll DESTINATION ${SCITER_TOOLS})
-endif()
+file(INSTALL ${SOURCE_PATH}/bin/${SCITER_ARCH}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+file(INSTALL ${SOURCE_PATH}/bin/${SCITER_ARCH}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+file(INSTALL ${SOURCE_PATH}/bin/${SCITER_ARCH}/tiscript-sqlite.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+file(INSTALL ${SOURCE_PATH}/bin/${SCITER_ARCH}/tiscript-sqlite.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 
-# bin
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-	file(INSTALL ${SCITER_SRC}/bin/${SCITER_ARCH}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-	file(INSTALL ${SCITER_SRC}/bin/${SCITER_ARCH}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-	file(INSTALL ${SCITER_SRC}/bin/${SCITER_ARCH}/tiscript-sqlite.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-	file(INSTALL ${SCITER_SRC}/bin/${SCITER_ARCH}/tiscript-sqlite.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
+message(STATUS "Warning: Sciter requires manual deployment of the correct DLL files.")
