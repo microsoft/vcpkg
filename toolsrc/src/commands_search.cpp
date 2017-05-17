@@ -9,6 +9,8 @@
 namespace vcpkg::Commands::Search
 {
     static const std::string OPTION_GRAPH = "--graph"; // TODO: This should find a better home, eventually
+    static const std::string OPTION_FULLDESC = "--full-desc"; // TODO: This should find a better home, eventually
+
 
     static std::string replace_dashes_with_underscore(const std::string& input)
     {
@@ -45,12 +47,22 @@ namespace vcpkg::Commands::Search
         return s;
     }
 
-    static void do_print(const SourceParagraph& source_paragraph)
+    static void do_print(const SourceParagraph& source_paragraph, bool FullDesc)
     {
-        System::println("%-20s %-16s %s",
-                        source_paragraph.name,
-                        source_paragraph.version,
-                        details::shorten_description(source_paragraph.description));
+        if (FullDesc)
+        {
+            System::println("%-20s %-16s %s", 
+                source_paragraph.name,
+                source_paragraph.version,
+                source_paragraph.description);
+        }
+        else
+        {
+            System::println("%-20s %-16s %s",
+                source_paragraph.name,
+                source_paragraph.version,
+                details::shorten_description(source_paragraph.description));
+        }
     }
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
@@ -59,7 +71,7 @@ namespace vcpkg::Commands::Search
             "The argument should be a substring to search for, or no argument to display all libraries.\n%s",
             Commands::Help::create_example_string("search png"));
         args.check_max_arg_count(1, example);
-        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_GRAPH});
+        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_GRAPH, OPTION_FULLDESC});
 
         const std::vector<SourceParagraph> source_paragraphs =
             Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
@@ -74,7 +86,7 @@ namespace vcpkg::Commands::Search
         {
             for (const SourceParagraph& source_paragraph : source_paragraphs)
             {
-                do_print(source_paragraph);
+                do_print(source_paragraph, options.find(OPTION_FULLDESC) != options.cend());
             }
         }
         else
@@ -88,7 +100,7 @@ namespace vcpkg::Commands::Search
                     continue;
                 }
 
-                do_print(source_paragraph);
+                do_print(source_paragraph, options.find(OPTION_FULLDESC) != options.cend());
             }
         }
 
