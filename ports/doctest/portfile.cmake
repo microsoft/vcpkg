@@ -1,10 +1,10 @@
 #header-only library
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/doctest-1.1.0)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/doctest-1.2.0)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/onqtam/doctest/archive/1.1.0.zip"
-    FILENAME "doctest-1.1.0.zip"
-    SHA512 3cbdbb82d2dceff5a34aaed45222832c5767f21b64b271c41c2da7bae1f9e364a60758a8b6ce64285999afc30dd76de980e287663fa3119d0bcc1d2b45514e0b
+    URLS "https://github.com/onqtam/doctest/archive/1.2.0.zip"
+    FILENAME "doctest-1.2.0.zip"
+    SHA512 7b7ee66458a9d6e43aab57cced6c5e565bec414664300d80d8d08f5a90e19ecb9685762b3462927b7ecd890bd9fb0dde53b2b034e29e559f484d328cc6403aa7
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
