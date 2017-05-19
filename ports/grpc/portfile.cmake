@@ -20,7 +20,9 @@ vcpkg_from_github(
 # Issue: https://github.com/grpc/grpc/issues/10759
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/revert-c019e05.patch
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/revert-c019e05.patch
+        ${CMAKE_CURRENT_LIST_DIR}/disable-csharp-ext.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
@@ -42,6 +44,7 @@ vcpkg_configure_cmake(
         -DgRPC_CARES_PROVIDER=package
         -DgRPC_GFLAGS_PROVIDER=none
         -DgRPC_BENCHMARK_PROVIDER=none
+        -DgRPC_INSTALL_CSHARP_EXT=OFF
         -DCMAKE_INSTALL_CMAKEDIR=share/grpc
 )
 
