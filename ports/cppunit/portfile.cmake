@@ -11,13 +11,16 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/cppunit-1.13.2)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}/cppunit-1.13.2)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://dev-www.libreoffice.org/src/cppunit-1.13.2.tar.gz"
     FILENAME "cppunit-1.13.2.tar.gz"
     SHA512 8f4be569f321d577cec31931f49f4df143bc94e283605509b6ea50c60690aa91a2aed940e7eebd4b2413a4218f9a6c3978d312d8e587eab040283c6563846ecd
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
+file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET})
+file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET})
+vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET})
 
 if (VCPKG_CRT_LINKAGE STREQUAL static)
     vcpkg_apply_patches(
