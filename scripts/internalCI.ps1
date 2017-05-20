@@ -21,5 +21,5 @@ if (-not $?) { throw $? }
 ./vcpkg.exe install opencv:x86-uwp boost:x86-uwp
 if (-not $?) { throw $? }
 
-./vcpkg.exe install folly:x64-windows
-if (-not $?) { throw $? }
+# ./vcpkg.exe install folly:x64-windows
+# if (-not $?) { throw $? }
