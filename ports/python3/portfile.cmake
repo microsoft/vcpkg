@@ -9,6 +9,13 @@
 #   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
 #   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
 #
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_CRT_LINKAGE STREQUAL static)
+    # Because the patches patch the same file, they have to be applied in the correct order
+    # In this scenario, only the second patch needs to be applied, which doesn't work
+    message(STATUS "Warning: Dynamic library with static CRT is not supported. Building static library.")
+    set(VCPKG_LIBRARY_LINKAGE static)
+endif()
+
 
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET})
@@ -20,7 +27,6 @@ vcpkg_from_github(
     HEAD_REF master
  )
 # We need per-triplet directories because we need to patch the project files differently based on the linkage
-file(REMOVE_RECURSE ${SOURCE_PATH})
 file(COPY ${TEMP_SOURCE_PATH} DESTINATION ${SOURCE_PATH})
 set(SOURCE_PATH ${SOURCE_PATH}/cpython-3.6.1)
 
@@ -63,6 +69,8 @@ endif()
 
 file(GLOB HEADERS ${SOURCE_PATH}/Include/*.h)
 file(COPY ${HEADERS} ${SOURCE_PATH}/PC/pyconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/python3.6)
+
+file(COPY ${SOURCE_PATH}/Lib DESTINATION ${CURRENT_PACKAGES_DIR}/share/python3)
 
 file(COPY ${SOURCE_PATH}/PCBuild/${OUT_DIR}/python36.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 file(COPY ${SOURCE_PATH}/PCBuild/${OUT_DIR}/python36_d.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
