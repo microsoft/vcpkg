@@ -28,22 +28,22 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/plibsys RENAME copyright)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-	set(PLIBSYS_FILENAME plibsys)
+    set(PLIBSYS_FILENAME plibsys)
 
-	# Put shared libraries into the proper directory
-	file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-	file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+    # Put shared libraries into the proper directory
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
 
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/plibsys.dll ${CURRENT_PACKAGES_DIR}/bin/plibsys.dll)
     file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/plibsys.dll ${CURRENT_PACKAGES_DIR}/debug/bin/plibsys.dll)
 else()
-	set(PLIBSYS_FILENAME plibsysstatic)
+    set(PLIBSYS_FILENAME plibsysstatic)
 
-	# For static build remove dynamic libraries
+    # For static build remove dynamic libraries
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/plibsys.lib)
-	file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/plibsys.dll)
-	file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/plibsys.lib)
-	file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/plibsys.dll)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/plibsys.dll)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/plibsys.lib)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/plibsys.dll)
 endif()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tmp)
