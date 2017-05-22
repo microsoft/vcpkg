@@ -19,7 +19,7 @@ function(vcpkg_fixup_cmake_targets)
     set(DEBUG_SHARE ${CURRENT_PACKAGES_DIR}/debug/share/${PORT})
     set(RELEASE_SHARE ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
-    if(NOT ${_vfct_CONFIG_PATH} STREQUAL "")
+    if(_vfct_CONFIG_PATH)
         set(DEBUG_CONFIG ${CURRENT_PACKAGES_DIR}/debug/${_vfct_CONFIG_PATH})
         set(RELEASE_CONFIG ${CURRENT_PACKAGES_DIR}/${_vfct_CONFIG_PATH})
 
@@ -34,26 +34,26 @@ function(vcpkg_fixup_cmake_targets)
 
         get_filename_component(DEBUG_CONFIG_DIR_NAME ${DEBUG_CONFIG} NAME)
         string(TOLOWER "${DEBUG_CONFIG_DIR_NAME}" DEBUG_CONFIG_DIR_NAME)
-        if(${DEBUG_CONFIG_DIR_NAME} STREQUAL "cmake")
+        if(DEBUG_CONFIG_DIR_NAME STREQUAL "cmake")
             file(REMOVE_RECURSE ${DEBUG_CONFIG})
         else()
             get_filename_component(DEBUG_CONFIG_PARENT_DIR ${DEBUG_CONFIG} DIRECTORY)
             get_filename_component(DEBUG_CONFIG_DIR_NAME ${DEBUG_CONFIG_PARENT_DIR} NAME)
             string(TOLOWER "${DEBUG_CONFIG_DIR_NAME}" DEBUG_CONFIG_DIR_NAME)
-            if(${DEBUG_CONFIG_DIR_NAME} STREQUAL "cmake")
+            if(DEBUG_CONFIG_DIR_NAME STREQUAL "cmake")
                 file(REMOVE_RECURSE ${DEBUG_CONFIG_PARENT_DIR})
             endif()
         endif()
 
         get_filename_component(RELEASE_CONFIG_DIR_NAME ${RELEASE_CONFIG} NAME)
         string(TOLOWER "${RELEASE_CONFIG_DIR_NAME}" RELEASE_CONFIG_DIR_NAME)
-        if(${RELEASE_CONFIG_DIR_NAME} STREQUAL "cmake")
+        if(RELEASE_CONFIG_DIR_NAME STREQUAL "cmake")
             file(REMOVE_RECURSE ${RELEASE_CONFIG})
         else()
             get_filename_component(RELEASE_CONFIG_PARENT_DIR ${RELEASE_CONFIG} DIRECTORY)
             get_filename_component(RELEASE_CONFIG_DIR_NAME ${RELEASE_CONFIG_PARENT_DIR} NAME)
             string(TOLOWER "${RELEASE_CONFIG_DIR_NAME}" RELEASE_CONFIG_DIR_NAME)
-            if(${RELEASE_CONFIG_DIR_NAME} STREQUAL "cmake")
+            if(RELEASE_CONFIG_DIR_NAME STREQUAL "cmake")
                 file(REMOVE_RECURSE ${RELEASE_CONFIG_PARENT_DIR})
             endif()
         endif()
@@ -63,10 +63,18 @@ function(vcpkg_fixup_cmake_targets)
         message(FATAL_ERROR "'${DEBUG_SHARE}' does not exist.")
     endif()
 
-    file(GLOB UNUSED_FILES "${DEBUG_SHARE}/*[Tt]argets.cmake" "${DEBUG_SHARE}/*[Cc]onfig.cmake" "${DEBUG_SHARE}/*[Cc]onfigVersion.cmake")
+    file(GLOB UNUSED_FILES
+        "${DEBUG_SHARE}/*[Tt]argets.cmake"
+        "${DEBUG_SHARE}/*[Cc]onfig.cmake"
+        "${DEBUG_SHARE}/*[Cc]onfigVersion.cmake"
+        "${DEBUG_SHARE}/*[Cc]onfig-version.cmake"
+    )
     file(REMOVE ${UNUSED_FILES})
 
-    file(GLOB RELEASE_TARGETS "${RELEASE_SHARE}/*[Tt]argets-release.cmake")
+    file(GLOB RELEASE_TARGETS
+        "${RELEASE_SHARE}/*[Tt]argets-release.cmake"
+        "${RELEASE_SHARE}/*[Cc]onfig-release.cmake"
+    )
     foreach(RELEASE_TARGET ${RELEASE_TARGETS})
         get_filename_component(RELEASE_TARGET_NAME ${RELEASE_TARGET} NAME)
 
@@ -75,7 +83,10 @@ function(vcpkg_fixup_cmake_targets)
         file(WRITE ${RELEASE_TARGET} "${_contents}")
     endforeach()
 
-    file(GLOB DEBUG_TARGETS "${DEBUG_SHARE}/*[Tt]argets-debug.cmake")
+    file(GLOB DEBUG_TARGETS
+        "${DEBUG_SHARE}/*[Tt]argets-debug.cmake"
+        "${DEBUG_SHARE}/*[Cc]onfig-debug.cmake"
+    )
     foreach(DEBUG_TARGET ${DEBUG_TARGETS})
         get_filename_component(DEBUG_TARGET_NAME ${DEBUG_TARGET} NAME)
 

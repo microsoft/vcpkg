@@ -1,0 +1,36 @@
+diff --git a/CMake/config.cmake b/CMake/config.cmake
+index 1d753b3..02fe814 100644
+--- a/CMake/config.cmake
++++ b/CMake/config.cmake
+@@ -124,7 +124,7 @@ install(
+   FILES
+     "${CMAKE_CURRENT_BINARY_DIR}/CMake/rttr-config-version.cmake"
+   DESTINATION
+-    cmake
++    share/rttr
+   COMPONENT
+     Devel
+ )
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d64ee41..e33e7bf 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -76,4 +76,4 @@ add_subdirectory(src)
+ add_subdirectory(doc) 
+ 
+ # here we specify the installation directory
+-set(CMAKE_INSTALL_PREFIX ${RTTR_INSTALL_DIR} CACHE PATH  "RTTR install prefix" FORCE)
++set(CMAKE_INSTALL_PREFIX ${RTTR_INSTALL_DIR} CACHE PATH  "RTTR install prefix")
+diff --git a/src/rttr/CMakeLists.txt b/src/rttr/CMakeLists.txt
+index 3dffa2c..405b377 100644
+--- a/src/rttr/CMakeLists.txt
++++ b/src/rttr/CMakeLists.txt
+@@ -47,7 +47,7 @@ install(TARGETS rttr_core EXPORT rttr_targets
+         ARCHIVE DESTINATION ${RTTR_LIB_INSTALL_DIR})
+         
+ install(EXPORT rttr_targets
+-        DESTINATION cmake
++        DESTINATION share/rttr
+         NAMESPACE RTTR::
+         FILE rttr-config.cmake)
+         
