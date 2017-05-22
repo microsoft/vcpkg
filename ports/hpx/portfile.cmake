@@ -21,6 +21,14 @@ vcpkg_download_distfile(DIFF
 )
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${DIFF})
 
+# apply hotfix to fix issues with building 32bit version
+vcpkg_download_distfile(DIFF
+    URLS "http://stellar-group.org/files/Fixing-32bit-MSVC-compilation.diff"
+    FILENAME "Fixing-32bit-MSVC-compilation.diff"
+    SHA512 31c904d317b4c24eddd819e4856f8326ff3850a5a196c7648c46a11dbb85f35e972e077957b3c4aec67c8b043816fe1cebc92cfe28ed815f682537dfc3421b8b
+)
+vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${DIFF})
+
 SET(BOOST_PATH "${CURRENT_INSTALLED_DIR}/share/boost")
 SET(HWLOC_PATH "${CURRENT_INSTALLED_DIR}/share/hwloc")
 
@@ -39,11 +47,13 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+# post build cleanup
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/hpx-1.0.0 ${CURRENT_PACKAGES_DIR}/share/hpx)
+
 file(INSTALL
     ${SOURCE_PATH}/LICENSE_1_0.txt
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/hpx RENAME copyright)
 
-# post build cleanup
 file(GLOB __hpx_cmakes ${CURRENT_PACKAGES_DIR}/lib/cmake/HPX/*.*)
 foreach(__hpx_cmake ${__hpx_cmakes})
   file(COPY ${__hpx_cmake} DESTINATION ${CURRENT_PACKAGES_DIR}/share/hpx/cmake)
