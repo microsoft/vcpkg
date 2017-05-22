@@ -85,7 +85,11 @@ namespace vcpkg::Commands::Search
                 if (Strings::case_insensitive_ascii_find(source_paragraph.name, args.command_arguments[0]) ==
                     source_paragraph.name.end())
                 {
-                    continue;
+                    if (Strings::case_insensitive_ascii_find(source_paragraph.description, args.command_arguments[0]) ==
+                        source_paragraph.description.end())
+                    {
+                        continue;
+                    }
                 }
 
                 do_print(source_paragraph);
