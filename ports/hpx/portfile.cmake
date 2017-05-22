@@ -1,8 +1,9 @@
 include(vcpkg_common_functions)
 
-if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(FATAL_ERROR "HPX can be built with dynamic linking only")
-endif()
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)                                          
+    message(STATUS "Warning: Static building of HPX not supported yet. Building dynamic.") 
+    set(VCPKG_LIBRARY_LINKAGE dynamic)                                              
+endif()                                                                             
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/hpx_1.0.0)
 
@@ -28,6 +29,15 @@ vcpkg_download_distfile(DIFF
     SHA512 31c904d317b4c24eddd819e4856f8326ff3850a5a196c7648c46a11dbb85f35e972e077957b3c4aec67c8b043816fe1cebc92cfe28ed815f682537dfc3421b8b
 )
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${DIFF})
+
+# apply hotfix to fix issues when building with UNICODE enabled
+vcpkg_download_distfile(DIFF
+    URLS "http://stellar-group.org/files/Making-sure-UNICODE-on-Windows-does-not-break-by-default.diff"
+    FILENAME "Making-sure-UNICODE-on-Windows-does-not-break-by-default.diff"
+    SHA512 8fcdb36307702d64b9d2b26920374a6c5a29a50d125305dc95926c4cbc91215cb0c72ede83b06d0fc007fe7b2283845e08351bd45f11f3677f0d3db4ac8f9424
+)
+vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${DIFF})
+
 
 SET(BOOST_PATH "${CURRENT_INSTALLED_DIR}/share/boost")
 SET(HWLOC_PATH "${CURRENT_INSTALLED_DIR}/share/hwloc")
