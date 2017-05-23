@@ -10,7 +10,7 @@ $downloadPromptOverride_DO_NOT_PROMPT = 1
 $downloadPromptOverride_ALWAYS_PROMPT = 2
 
 if ($PSVersionTable.PSEdition -eq "Desktop") {
-   Import-Module BitsTransfer -Verbose:$false 
+   Import-Module BitsTransfer -Verbose:$false
 }
 
 Write-Verbose "Fetching dependency: $Dependency"
@@ -197,8 +197,18 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     performDownload $Dependency $url $downloadsDir $downloadPath $downloadVersion $requiredVersion
 
     #calculating the hash
-    $downloadedFileHash = (Get-FileHash -Path $downloadPath -Algorithm SHA256).Hash
-    
+    if ($PSVersionTable.PSEdition -eq "Desktop")
+    {
+        $hashAlgorithm = [Security.Cryptography.HashAlgorithm]::Create("SHA256")
+        $fileAsByteArray = [io.File]::ReadAllBytes($downloadPath)
+        $hashByteArray = $hashAlgorithm.ComputeHash($fileAsByteArray)
+        $downloadedFileHash = -Join ($hashByteArray | ForEach {"{0:x2}" -f $_})
+    }
+    else
+    {
+        $downloadedFileHash = (Get-FileHash -Path $downloadPath -Algorithm SHA256).Hash
+    }
+
     if ($expectedDownloadedFileHash -ne $downloadedFileHash)
     {
         throw [System.IO.FileNotFoundException] ("Mismatching hash of the downloaded " + $Dependency)
