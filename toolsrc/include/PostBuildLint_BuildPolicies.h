@@ -13,7 +13,8 @@ namespace vcpkg::PostBuildLint
             EMPTY_PACKAGE,
             DLLS_WITHOUT_LIBS,
             ONLY_RELEASE_CRT,
-            EMPTY_INCLUDE_FOLDER
+            EMPTY_INCLUDE_FOLDER,
+            ALLOW_OBSOLETE_MSVCRT
         };
 
         static BuildPolicies parse(const std::string& s);
@@ -38,8 +39,9 @@ namespace vcpkg::PostBuildLint
         static constexpr BuildPolicies DLLS_WITHOUT_LIBS(BuildPolicies::BackingEnum::DLLS_WITHOUT_LIBS);
         static constexpr BuildPolicies ONLY_RELEASE_CRT(BuildPolicies::BackingEnum::ONLY_RELEASE_CRT);
         static constexpr BuildPolicies EMPTY_INCLUDE_FOLDER(BuildPolicies::BackingEnum::EMPTY_INCLUDE_FOLDER);
+        static constexpr BuildPolicies ALLOW_OBSOLETE_MSVCRT(BuildPolicies::BackingEnum::ALLOW_OBSOLETE_MSVCRT);
 
-        static constexpr std::array<BuildPolicies, 4> VALUES = {
-            EMPTY_PACKAGE, DLLS_WITHOUT_LIBS, ONLY_RELEASE_CRT, EMPTY_INCLUDE_FOLDER};
+        static constexpr std::array<BuildPolicies, 5> VALUES = {
+            EMPTY_PACKAGE, DLLS_WITHOUT_LIBS, ONLY_RELEASE_CRT, EMPTY_INCLUDE_FOLDER, ALLOW_OBSOLETE_MSVCRT};
     }
 }

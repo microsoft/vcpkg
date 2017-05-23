@@ -12,6 +12,7 @@ namespace vcpkg::PostBuildLint
     static const std::string NAME_DLLS_WITHOUT_LIBS = "PolicyDLLsWithoutLIBs";
     static const std::string NAME_ONLY_RELEASE_CRT = "PolicyOnlyReleaseCRT";
     static const std::string NAME_EMPTY_INCLUDE_FOLDER = "PolicyEmptyIncludeFolder";
+    static const std::string NAME_ALLOW_OBSOLETE_MSVCRT = "PolicyAllowObsoleteMsvcrt";
 
     BuildPolicies BuildPolicies::parse(const std::string& s)
     {
@@ -35,6 +36,11 @@ namespace vcpkg::PostBuildLint
             return BuildPoliciesC::EMPTY_INCLUDE_FOLDER;
         }
 
+        if (s == NAME_ALLOW_OBSOLETE_MSVCRT)
+        {
+            return BuildPoliciesC::ALLOW_OBSOLETE_MSVCRT;
+        }
+
         return BuildPoliciesC::NULLVALUE;
     }
 
@@ -46,6 +52,7 @@ namespace vcpkg::PostBuildLint
             case BuildPoliciesC::DLLS_WITHOUT_LIBS: return NAME_DLLS_WITHOUT_LIBS;
             case BuildPoliciesC::ONLY_RELEASE_CRT: return NAME_ONLY_RELEASE_CRT;
             case BuildPoliciesC::EMPTY_INCLUDE_FOLDER: return NAME_EMPTY_INCLUDE_FOLDER;
+            case BuildPoliciesC::ALLOW_OBSOLETE_MSVCRT: return NAME_ALLOW_OBSOLETE_MSVCRT;
             case BuildPoliciesC::NULLVALUE: return NULLVALUE_STRING;
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
@@ -57,6 +64,7 @@ namespace vcpkg::PostBuildLint
         static const std::string CMAKE_VARIABLE_DLLS_WITHOUT_LIBS = "VCPKG_POLICY_DLLS_WITHOUT_LIBS";
         static const std::string CMAKE_VARIABLE_ONLY_RELEASE_CRT = "VCPKG_POLICY_ONLY_RELEASE_CRT";
         static const std::string CMAKE_VARIABLE_EMPTY_INCLUDE_FOLDER = "VCPKG_POLICY_EMPTY_INCLUDE_FOLDER";
+        static const std::string CMAKE_VARIABLE_ALLOW_OBSOLETE_MSVCRT = "VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT";
 
         switch (this->backing_enum)
         {
@@ -64,6 +72,7 @@ namespace vcpkg::PostBuildLint
             case BuildPoliciesC::DLLS_WITHOUT_LIBS: return CMAKE_VARIABLE_DLLS_WITHOUT_LIBS;
             case BuildPoliciesC::ONLY_RELEASE_CRT: return CMAKE_VARIABLE_ONLY_RELEASE_CRT;
             case BuildPoliciesC::EMPTY_INCLUDE_FOLDER: return CMAKE_VARIABLE_EMPTY_INCLUDE_FOLDER;
+            case BuildPoliciesC::ALLOW_OBSOLETE_MSVCRT: return CMAKE_VARIABLE_ALLOW_OBSOLETE_MSVCRT;
             case BuildPoliciesC::NULLVALUE: Enums::nullvalue_used(VCPKG_LINE_INFO, BuildPoliciesC::ENUM_NAME);
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
