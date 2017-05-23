@@ -17,7 +17,7 @@ vcpkg_apply_patches(
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-Enable-C-11-features-for-VS2015-fix-appveyor-fail.patch
 )
 
-if (VCPKG_CRT_LINKAGE STREQUAL "dynamic" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if (VCPKG_CRT_LINKAGE STREQUAL "dynamic")
     set(gtest_force_shared_crt YES)
 else()
     set(gtest_force_shared_crt NO)
