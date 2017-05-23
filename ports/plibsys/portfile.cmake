@@ -1,13 +1,13 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/plibsys-0.0.3)
-vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "https://github.com/saprykin/plibsys/archive/0.0.3.tar.gz"
-    FILENAME "plibsys-0.0.3.tar.gz"
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO saprykin/plibsys
+    REF 0.0.3
     SHA512 e2393fecb3e5feae81a4d60cd03e2ca17bc58453efaa5598beacdc5acedbc7c90374f9f851301fee08ace8dace843a2dff8c1c449cd457302363c98dd24e0415
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
-if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     SET(PLIBSYS_STATIC OFF)
 else()
     SET(PLIBSYS_STATIC ON)
