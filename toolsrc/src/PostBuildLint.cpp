@@ -37,30 +37,6 @@ namespace vcpkg::PostBuildLint
         }
     };
 
-    const std::vector<OutdatedDynamicCrt>& get_outdated_dynamic_crts()
-    {
-        static const std::vector<OutdatedDynamicCrt> v = {{"msvcp100.dll", R"(msvcp100\.dll)"},
-                                                          {"msvcp100d.dll", R"(msvcp100d\.dll)"},
-                                                          {"msvcp110.dll", R"(msvcp110\.dll)"},
-                                                          {"msvcp110_win.dll", R"(msvcp110_win\.dll)"},
-                                                          {"msvcp120.dll", R"(msvcp120\.dll)"},
-                                                          {"msvcp120_clr0400.dll", R"(msvcp120_clr0400\.dll)"},
-                                                          {"msvcp60.dll", R"(msvcp60\.dll)"},
-                                                          {"msvcp60.dll", R"(msvcp60\.dll)"},
-
-                                                          {"msvcr100.dll", R"(msvcr100\.dll)"},
-                                                          {"msvcr100d.dll", R"(msvcr100d\.dll)"},
-                                                          {"msvcr100_clr0400.dll", R"(msvcr100_clr0400\.dll)"},
-                                                          {"msvcr110.dll", R"(msvcr110\.dll)"},
-                                                          {"msvcr120.dll", R"(msvcr120\.dll)"},
-                                                          {"msvcr120_clr0400.dll", R"(msvcr120_clr0400\.dll)"},
-                                                          {"msvcrt.dll", R"(msvcrt\.dll)"},
-                                                          {"msvcrt20.dll", R"(msvcrt20\.dll)"},
-                                                          {"msvcrt40.dll", R"(msvcrt40\.dll)"}};
-
-        return v;
-    }
-
     template<class T>
     static bool contains_and_enabled(const std::map<T, bool> map, const T& key)
     {
@@ -68,6 +44,34 @@ namespace vcpkg::PostBuildLint
         if (it != map.cend()) return it->second;
 
         return false;
+    }
+
+    const std::vector<OutdatedDynamicCrt>& get_outdated_dynamic_crts(const std::map<BuildPolicies, bool>& policies)
+    {
+        static std::vector<OutdatedDynamicCrt> v = {{"msvcp100.dll", R"(msvcp100\.dll)"},
+                                                    {"msvcp100d.dll", R"(msvcp100d\.dll)"},
+                                                    {"msvcp110.dll", R"(msvcp110\.dll)"},
+                                                    {"msvcp110_win.dll", R"(msvcp110_win\.dll)"},
+                                                    {"msvcp120.dll", R"(msvcp120\.dll)"},
+                                                    {"msvcp120_clr0400.dll", R"(msvcp120_clr0400\.dll)"},
+                                                    {"msvcp60.dll", R"(msvcp60\.dll)"},
+                                                    {"msvcp60.dll", R"(msvcp60\.dll)"},
+
+                                                    {"msvcr100.dll", R"(msvcr100\.dll)"},
+                                                    {"msvcr100d.dll", R"(msvcr100d\.dll)"},
+                                                    {"msvcr100_clr0400.dll", R"(msvcr100_clr0400\.dll)"},
+                                                    {"msvcr110.dll", R"(msvcr110\.dll)"},
+                                                    {"msvcr120.dll", R"(msvcr120\.dll)"},
+                                                    {"msvcr120_clr0400.dll", R"(msvcr120_clr0400\.dll)"},
+                                                    {"msvcrt20.dll", R"(msvcrt20\.dll)"},
+                                                    {"msvcrt40.dll", R"(msvcrt40\.dll)"}};
+
+        if (contains_and_enabled(policies, BuildPoliciesC::ALLOW_OBSOLETE_MSVCRT))
+        {
+            v.push_back(OutdatedDynamicCrt{"msvcrt.dll", R"(msvcrt\.dll)"});
+        }
+
+        return v;
     }
 
     static LintStatus check_for_files_in_include_directory(const Files::Filesystem& fs,
@@ -656,9 +660,11 @@ namespace vcpkg::PostBuildLint
         OutdatedDynamicCrt_and_file() = delete;
     };
 
-    static LintStatus check_outdated_crt_linkage_of_dlls(const std::vector<fs::path>& dlls, const fs::path dumpbin_exe)
+    static LintStatus check_outdated_crt_linkage_of_dlls(const std::vector<fs::path>& dlls,
+                                                         const fs::path dumpbin_exe,
+                                                         const BuildInfo& build_info)
     {
-        const std::vector<OutdatedDynamicCrt>& outdated_crts = get_outdated_dynamic_crts();
+        const std::vector<OutdatedDynamicCrt>& outdated_crts = get_outdated_dynamic_crts(build_info.policies);
 
         std::vector<OutdatedDynamicCrt_and_file> dlls_with_outdated_crt;
 
@@ -798,7 +804,7 @@ namespace vcpkg::PostBuildLint
                 error_count += check_uwp_bit_of_dlls(pre_build_info.cmake_system_name, dlls, toolset.dumpbin);
                 error_count += check_dll_architecture(pre_build_info.target_architecture, dlls);
 
-                error_count += check_outdated_crt_linkage_of_dlls(dlls, toolset.dumpbin);
+                error_count += check_outdated_crt_linkage_of_dlls(dlls, toolset.dumpbin, build_info);
                 break;
             }
             case LinkageType::BackingEnum::STATIC:
