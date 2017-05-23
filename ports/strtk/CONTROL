@@ -1,0 +1,4 @@
+Source: strtk
+Version: 2017.01.02-1e2960f
+Description: robust, optimized and portable string processing algorithms for the C++ language
+Build-Depends: boost
