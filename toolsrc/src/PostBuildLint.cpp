@@ -48,27 +48,34 @@ namespace vcpkg::PostBuildLint
 
     const std::vector<OutdatedDynamicCrt>& get_outdated_dynamic_crts(const std::map<BuildPolicies, bool>& policies)
     {
-        static std::vector<OutdatedDynamicCrt> v = {{"msvcp100.dll", R"(msvcp100\.dll)"},
-                                                    {"msvcp100d.dll", R"(msvcp100d\.dll)"},
-                                                    {"msvcp110.dll", R"(msvcp110\.dll)"},
-                                                    {"msvcp110_win.dll", R"(msvcp110_win\.dll)"},
-                                                    {"msvcp120.dll", R"(msvcp120\.dll)"},
-                                                    {"msvcp120_clr0400.dll", R"(msvcp120_clr0400\.dll)"},
-                                                    {"msvcp60.dll", R"(msvcp60\.dll)"},
-                                                    {"msvcp60.dll", R"(msvcp60\.dll)"},
+        static const std::vector<OutdatedDynamicCrt> v_no_msvcrt = {
+            {"msvcp100.dll", R"(msvcp100\.dll)"},
+            {"msvcp100d.dll", R"(msvcp100d\.dll)"},
+            {"msvcp110.dll", R"(msvcp110\.dll)"},
+            {"msvcp110_win.dll", R"(msvcp110_win\.dll)"},
+            {"msvcp120.dll", R"(msvcp120\.dll)"},
+            {"msvcp120_clr0400.dll", R"(msvcp120_clr0400\.dll)"},
+            {"msvcp60.dll", R"(msvcp60\.dll)"},
+            {"msvcp60.dll", R"(msvcp60\.dll)"},
 
-                                                    {"msvcr100.dll", R"(msvcr100\.dll)"},
-                                                    {"msvcr100d.dll", R"(msvcr100d\.dll)"},
-                                                    {"msvcr100_clr0400.dll", R"(msvcr100_clr0400\.dll)"},
-                                                    {"msvcr110.dll", R"(msvcr110\.dll)"},
-                                                    {"msvcr120.dll", R"(msvcr120\.dll)"},
-                                                    {"msvcr120_clr0400.dll", R"(msvcr120_clr0400\.dll)"},
-                                                    {"msvcrt20.dll", R"(msvcrt20\.dll)"},
-                                                    {"msvcrt40.dll", R"(msvcrt40\.dll)"}};
+            {"msvcr100.dll", R"(msvcr100\.dll)"},
+            {"msvcr100d.dll", R"(msvcr100d\.dll)"},
+            {"msvcr100_clr0400.dll", R"(msvcr100_clr0400\.dll)"},
+            {"msvcr110.dll", R"(msvcr110\.dll)"},
+            {"msvcr120.dll", R"(msvcr120\.dll)"},
+            {"msvcr120_clr0400.dll", R"(msvcr120_clr0400\.dll)"},
+            {"msvcrt20.dll", R"(msvcrt20\.dll)"},
+            {"msvcrt40.dll", R"(msvcrt40\.dll)"}};
+
+        static const std::vector<OutdatedDynamicCrt> v = [&]() {
+            auto ret = v_no_msvcrt;
+            ret.push_back(OutdatedDynamicCrt{"msvcrt.dll", R"(msvcrt\.dll)"});
+            return ret;
+        }();
 
         if (contains_and_enabled(policies, BuildPoliciesC::ALLOW_OBSOLETE_MSVCRT))
         {
-            v.push_back(OutdatedDynamicCrt{"msvcrt.dll", R"(msvcrt\.dll)"});
+            return v_no_msvcrt;
         }
 
         return v;
