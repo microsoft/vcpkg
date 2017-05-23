@@ -132,17 +132,17 @@ namespace vcpkg::Build
         const Toolset& toolset = paths.get_toolset(pre_build_info.platform_toolset);
         const auto cmd_set_environment = make_build_env_cmd(pre_build_info, toolset);
 
-        const std::wstring cmd_launch_cmake =
-            make_cmake_cmd(cmake_exe_path,
-                           ports_cmake_script_path,
-                           {{L"CMD", L"BUILD"},
-                            {L"PORT", config.src.name},
-                            {L"CURRENT_PORT_DIR", config.port_dir / "/."},
-                            {L"TARGET_TRIPLET", triplet.canonical_name()},
-                            {L"VCPKG_PLATFORM_TOOLSET", toolset.version},
-                            {L"VCPKG_USE_HEAD_VERSION", config.use_head_version ? L"1" : L"0"},
-                            {L"_VCPKG_NO_DOWNLOADS", config.no_downloads ? L"1" : L"0"},
-                            {L"GIT", git_exe_path}});
+        const std::wstring cmd_launch_cmake = make_cmake_cmd(
+            cmake_exe_path,
+            ports_cmake_script_path,
+            {{L"CMD", L"BUILD"},
+             {L"PORT", config.src.name},
+             {L"CURRENT_PORT_DIR", config.port_dir / "/."},
+             {L"TARGET_TRIPLET", triplet.canonical_name()},
+             {L"VCPKG_PLATFORM_TOOLSET", toolset.version},
+             {L"VCPKG_USE_HEAD_VERSION", to_bool(config.build_package_options.use_head_version) ? L"1" : L"0"},
+             {L"_VCPKG_NO_DOWNLOADS", !to_bool(config.build_package_options.allow_downloads) ? L"1" : L"0"},
+             {L"GIT", git_exe_path}});
 
         const std::wstring command = Strings::wformat(LR"(%s && %s)", cmd_set_environment, cmd_launch_cmake);
 

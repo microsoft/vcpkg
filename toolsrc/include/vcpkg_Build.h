@@ -14,6 +14,38 @@
 
 namespace vcpkg::Build
 {
+    enum class UseHeadVersion
+    {
+        NO = 0,
+        YES
+    };
+
+    inline UseHeadVersion to_use_head_version(const bool value)
+    {
+        return value ? UseHeadVersion::YES : UseHeadVersion::NO;
+    }
+
+    inline bool to_bool(const UseHeadVersion value) { return value == UseHeadVersion::YES; }
+
+    enum class AllowDownloads
+    {
+        NO = 0,
+        YES
+    };
+
+    inline AllowDownloads to_allow_downloads(const bool value)
+    {
+        return value ? AllowDownloads::YES : AllowDownloads::NO;
+    }
+
+    inline bool to_bool(const AllowDownloads value) { return value == AllowDownloads::YES; }
+
+    struct BuildPackageOptions
+    {
+        UseHeadVersion use_head_version;
+        AllowDownloads allow_downloads;
+    };
+
     enum class BuildResult
     {
         NULLVALUE = 0,
@@ -59,17 +91,18 @@ namespace vcpkg::Build
 
     struct BuildPackageConfig
     {
-        BuildPackageConfig(const SourceParagraph& src, const Triplet& triplet, fs::path&& port_dir)
-            : src(src), triplet(triplet), port_dir(std::move(port_dir)), use_head_version(false), no_downloads(false)
+        BuildPackageConfig(const SourceParagraph& src,
+                           const Triplet& triplet,
+                           fs::path&& port_dir,
+                           const BuildPackageOptions& build_package_options)
+            : src(src), triplet(triplet), port_dir(std::move(port_dir)), build_package_options(build_package_options)
         {
         }
 
         const SourceParagraph& src;
         const Triplet& triplet;
         fs::path port_dir;
-
-        bool use_head_version;
-        bool no_downloads;
+        const BuildPackageOptions& build_package_options;
     };
 
     ExtendedBuildResult build_package(const VcpkgPaths& paths,

@@ -50,9 +50,8 @@ namespace vcpkg::Commands::BuildCommand
                            spec.name());
 
         StatusParagraphs status_db = database_load_check(paths);
-        const Build::BuildPackageConfig build_config{
-            spgh, spec.triplet(), paths.port_dir(spec),
-        };
+        Build::BuildPackageOptions build_package_options{Build::UseHeadVersion::NO, Build::AllowDownloads::YES};
+        const Build::BuildPackageConfig build_config{spgh, spec.triplet(), paths.port_dir(spec), build_package_options};
         const auto result = Build::build_package(paths, build_config, status_db);
         if (result.code == BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES)
         {
