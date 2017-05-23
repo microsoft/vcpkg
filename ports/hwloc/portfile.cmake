@@ -1,25 +1,13 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 include(vcpkg_common_functions)
 
-if(TRIPLET_SYSTEM_ARCH MATCHES "x86") 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     vcpkg_download_distfile(ARCHIVE
         URLS "https://www.open-mpi.org/software/hwloc/v1.11/downloads/hwloc-win32-build-1.11.7.zip"
         FILENAME "hwloc-win32-build-1.11.7.zip"
         SHA512 c474f2400b207bbad3da94d201d03eb711df6a87aacb8429c489591ed47393eb499d99da5737a22d0745194296db11bf9e8ebbabd4bf2ecfd2d2878a773195d8
     )
     set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/hwloc-win32-build-1.11.7)
-elseif(TRIPLET_SYSTEM_ARCH MATCHES "x64") 
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     vcpkg_download_distfile(ARCHIVE
         URLS "https://www.open-mpi.org/software/hwloc/v1.11/downloads/hwloc-win64-build-1.11.7.zip"
         FILENAME "hwloc-win64-build-1.11.7.zip"
@@ -27,7 +15,7 @@ elseif(TRIPLET_SYSTEM_ARCH MATCHES "x64")
     )
     set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/hwloc-win64-build-1.11.7)
 else()
-    message(FATAL_ERROR " HWLOC is not available for download for the ARM platform")
+    message(FATAL_ERROR "HWLOC is not available for download for the platform: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 vcpkg_extract_source_archive(${ARCHIVE})
 
