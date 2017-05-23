@@ -40,11 +40,15 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/CMAKE
     ${CURRENT_PACKAGES_DIR}/debug/include
 )
+
+file(COPY ${CURRENT_PACKAGES_DIR}/bin/fluid.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fluid.exe)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fltk-config)
 
+file(COPY ${CURRENT_PACKAGES_DIR}/debug/bin/fluid.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/debug)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fluid.exe)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fltk-config)
+
 vcpkg_copy_pdbs()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
