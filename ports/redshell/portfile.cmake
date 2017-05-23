@@ -1,5 +1,13 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
+  message(FATAL_ERROR "Error: redshell does not support the ARM architecture.")
+endif()
+
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
+    message(FATAL_ERROR "Error: redshell does not support UWP builds.")
+endif()
+
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/redshell)
 
 vcpkg_from_github(
