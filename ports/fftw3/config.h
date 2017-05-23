@@ -1,13 +1,13 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* Define to compile in long-double precision. */
-#undef BENCHFFT_LDOUBLE
+/*#undef BENCHFFT_LDOUBLE*/
 
 /* Define to compile in quad precision. */
 #undef BENCHFFT_QUAD
 
 /* Define to compile in single precision. */
-#undef BENCHFFT_SINGLE
+/*#undef BENCHFFT_SINGLE*/
 
 /* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
    systems. This function is required for `alloca.c' support on those systems.
@@ -53,7 +53,7 @@
 #undef FFTW_ENABLE_ALLOCA
 
 /* Define to compile in long-double precision. */
-#undef FFTW_LDOUBLE
+/*#undef FFTW_LDOUBLE*/
 
 /* Define to compile in quad precision. */
 #undef FFTW_QUAD
@@ -62,7 +62,7 @@
 #undef FFTW_RANDOM_ESTIMATOR
 
 /* Define to compile in single precision. */
-#undef FFTW_SINGLE
+/*#undef FFTW_SINGLE*/
 
 /* Define to 1 if you have the `abort' function. */
 #define HAVE_ABORT 1
@@ -216,7 +216,7 @@
 #define HAVE_SQRT 1
 
 /* Define to enable SSE/SSE2 optimizations. */
-#define HAVE_SSE2 1
+/* #define HAVE_SSE2 1 */
 
 /* Define to 1 if you have the <stddef.h> header file. */
 #define HAVE_STDDEF_H 1

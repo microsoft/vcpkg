@@ -67,14 +67,12 @@ include_directories(
     simd-support
 )
 
-# Create a target for the library
-add_library(fftw3
+set(COMMON_SOURCES
     ${fftw_api_SOURCE}
     ${fftw_dft_SOURCE}
     ${fftw_dft_scalar_SOURCE}
     ${fftw_dft_scalar_codelets_SOURCE}
     ${fftw_dft_simd_SOURCE}
-    ${fftw_dft_simd_sse2_SOURCE}
     ${fftw_kernel_SOURCE}
     ${fftw_rdft_SOURCE}
     ${fftw_rdft_scalar_SOURCE}
@@ -84,13 +82,36 @@ add_library(fftw3
     ${fftw_rdft_scalar_r2r_SOURCE}
 
     ${fftw_rdft_simd_SOURCE}
-    ${fftw_rdft_simd_sse2_SOURCE}
     ${fftw_reodft_SOURCE}
     ${fftw_simd_support_SOURCE}
     ${fftw_threads_SOURCE}
 )
 
-install(TARGETS fftw3
+set(SSE2_SOURCES
+  ${fftw_dft_simd_sse2_SOURCE}
+  ${fftw_rdft_simd_sse2_SOURCE}
+)
+
+# Create default target for the library (double precision)
+add_library(fftw3 ${COMMON_SOURCES} ${SSE2_SOURCES})
+target_compile_definitions(fftw3 PRIVATE HAVE_SSE2)
+set(INSTALL_TARGETS fftw3)
+
+# Optionally add single precision
+if(BUILD_SINGLE)
+    add_library(fftw3f ${COMMON_SOURCES} ${SSE2_SOURCES})
+    target_compile_definitions(fftw3f PRIVATE FFTW_SINGLE BENCHFFT_SINGLE HAVE_SSE2)
+    set(INSTALL_TARGETS ${INSTALL_TARGETS} fftw3f)
+endif(BUILD_SINGLE)
+
+# Optionally add long-double precision (does not support SSE2)
+if(BUILD_LONG_DOUBLE)
+    add_library(fftw3l ${COMMON_SOURCES})
+    target_compile_definitions(fftw3l PRIVATE FFTW_LDOUBLE BENCHFFT_LDOUBLE)
+    set(INSTALL_TARGETS ${INSTALL_TARGETS} fftw3l)
+endif(BUILD_LONG_DOUBLE)
+
+install(TARGETS ${INSTALL_TARGETS}
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib)
