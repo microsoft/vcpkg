@@ -15,6 +15,9 @@ namespace vcpkg
 
     const std::string& to_string(const Dependency& dep);
 
+    /// <summary>
+    /// Port metadata (CONTROL file)
+    /// </summary>
     struct SourceParagraph
     {
         SourceParagraph();

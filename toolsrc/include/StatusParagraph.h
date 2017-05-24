@@ -23,6 +23,9 @@ namespace vcpkg
         PURGE
     };
 
+    /// <summary>
+    /// Installed package metadata
+    /// </summary>
     struct StatusParagraph
     {
         StatusParagraph();

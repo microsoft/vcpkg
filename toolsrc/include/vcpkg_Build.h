@@ -33,8 +33,14 @@ namespace vcpkg::Build
     std::string create_error_message(const BuildResult build_result, const PackageSpec& spec);
     std::string create_user_troubleshooting_message(const PackageSpec& spec);
 
+    /// <summary>
+    /// Settings from the triplet file which impact the build environment and post-build checks
+    /// </summary>
     struct PreBuildInfo
     {
+        /// <summary>
+        /// Runs the triplet file in a "capture" mode to create a PreBuildInfo
+        /// </summary>
         static PreBuildInfo from_triplet_file(const VcpkgPaths& paths, const Triplet& triplet);
 
         std::string target_architecture;
