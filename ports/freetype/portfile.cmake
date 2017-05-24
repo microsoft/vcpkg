@@ -1,9 +1,10 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/freetype-2.6.3)
+set(FT_VERSION 2.8)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/freetype-${FT_VERSION})
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://download.savannah.gnu.org/releases/freetype/freetype-2.6.3.tar.bz2"
-    FILENAME "freetype-2.6.3.tar.bz2"
-    SHA512 e1f9018835fc88beeb4479537b59f866c52393ae18d24a1e0710a464cf948ab02b35c2c6043bc20c1db3a04871ee4eb0bb1d210550c0ea2780c8b1aea98fbf0d
+    URLS "http://download.savannah.gnu.org/releases/freetype/freetype-${FT_VERSION}.tar.bz2"
+    FILENAME "freetype-${FT_VERSION}.tar.bz2"
+    SHA512 3842c34bf6100a8c9b78258146b2ff35e9bb4c993937d3ef09982c1e2552dfd15f8849ddd8a1e84edf08b5a5fb918b68cf7b1584545c5900e22a00bfa1c89ff5
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
@@ -16,6 +17,7 @@ vcpkg_apply_patches(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DCONFIG_INSTALL_PATH=share/freetype
         -DWITH_ZLIB=ON
