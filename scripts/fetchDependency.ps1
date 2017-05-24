@@ -9,7 +9,7 @@ $downloadPromptOverride_NO_OVERRIDE= 0
 $downloadPromptOverride_DO_NOT_PROMPT = 1
 $downloadPromptOverride_ALWAYS_PROMPT = 2
 
-if ($PSVersionTable.PSEdition -eq "Desktop") {
+if ($PSVersionTable.PSEdition -ne "Core") {
    Import-Module BitsTransfer -Verbose:$false
 }
 
@@ -82,7 +82,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
             New-Item -ItemType directory -Path $downloadDir | Out-Null
         }
 
-        if (($PSVersionTable.PSEdition -eq "Desktop") -and ($Dependency -ne "git")) # git fails with BITS
+        if (($PSVersionTable.PSEdition -ne "Core") -and ($Dependency -ne "git")) # git fails with BITS
         {
             try {
                 $WC = New-Object System.Net.WebClient
@@ -197,7 +197,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     performDownload $Dependency $url $downloadsDir $downloadPath $downloadVersion $requiredVersion
 
     #calculating the hash
-    if ($PSVersionTable.PSEdition -eq "Desktop")
+    if ($PSVersionTable.PSEdition -ne "Core")
     {
         $hashAlgorithm = [Security.Cryptography.HashAlgorithm]::Create("SHA256")
         $fileAsByteArray = [io.File]::ReadAllBytes($downloadPath)
