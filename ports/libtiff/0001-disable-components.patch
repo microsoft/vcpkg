@@ -1,0 +1,34 @@
+From d58ab4996598c585f36541f82ffa0542ffe29d56 Mon Sep 17 00:00:00 2001
+From: Mikhail Paulyshka <me@mixaill.tk>
+Date: Sun, 19 Mar 2017 22:20:36 +0300
+Subject: [PATCH] disable tools
+
+---
+ CMakeLists.txt | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1ee6fd4..b34a374 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -719,12 +719,12 @@ endif()
+ # Process subdirectories
+ add_subdirectory(port)
+ add_subdirectory(libtiff)
+-add_subdirectory(tools)
+-add_subdirectory(test)
++#add_subdirectory(tools)
++#add_subdirectory(test)
+ add_subdirectory(contrib)
+-add_subdirectory(build)
+-add_subdirectory(man)
+-add_subdirectory(html)
++#add_subdirectory(build)
++#add_subdirectory(man)
++#add_subdirectory(html)
+ 
+ #message(STATUS "EXTRA_DIST: ${EXTRA_DIST}")
+ 
+-- 
+2.11.0.windows.1
+
