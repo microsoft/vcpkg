@@ -80,7 +80,7 @@ namespace vcpkg::COFFFileReader
             return ret;
         }
 
-        MachineType machineType() const
+        MachineType machine_type() const
         {
             static const size_t MACHINE_TYPE_OFFSET = 0;
             static const size_t MACHINE_TYPE_SIZE = 2;
@@ -203,7 +203,7 @@ namespace vcpkg::COFFFileReader
             return ret;
         }
 
-        MachineType machineType() const
+        MachineType machine_type() const
         {
             static const size_t MACHINE_TYPE_OFFSET = 6;
             static const size_t MACHINE_TYPE_SIZE = 2;
@@ -236,7 +236,7 @@ namespace vcpkg::COFFFileReader
 
         read_and_verify_PE_signature(fs);
         CoffFileHeader header = CoffFileHeader::read(fs);
-        MachineType machine = header.machineType();
+        MachineType machine = header.machine_type();
         return {machine};
     }
 
@@ -299,7 +299,7 @@ namespace vcpkg::COFFFileReader
             const uint16_t first_two_bytes = peek_value_from_stream<uint16_t>(fs);
             const bool isImportHeader = to_machine_type(first_two_bytes) == MachineType::UNKNOWN;
             const MachineType machine =
-                isImportHeader ? ImportHeader::read(fs).machineType() : CoffFileHeader::read(fs).machineType();
+                isImportHeader ? ImportHeader::read(fs).machine_type() : CoffFileHeader::read(fs).machine_type();
             machine_types.insert(machine);
         }
 
