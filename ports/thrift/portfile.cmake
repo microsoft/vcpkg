@@ -1,7 +1,6 @@
 include(vcpkg_common_functions)
 
 set(WINFLEXBISON_PATH ${CURRENT_BUILDTREES_DIR}/flex)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -27,7 +26,6 @@ vcpkg_execute_required_process(
 )
 
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/thrift-0.10.0)
 set(FLEX_EXECUTABLE "${WINFLEXBISON_PATH}/win_flex.exe")
 set(BISON_EXECUTABLE "${WINFLEXBISON_PATH}/win_bison.exe")
 
@@ -35,20 +33,23 @@ set(BISON_EXECUTABLE "${WINFLEXBISON_PATH}/win_bison.exe")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS  -DCMAKE_BUILD_TYPE=RelWithDebInfo  -DWITH_SHARED_LIB=OFF -DWITH_STATIC_LIB=ON  -DBUILD_TESTING=off -DBUILD_JAVA=off -DBUILD_C_GLIB=off -DBUILD_PYTHON=off -DBUILD_CPP=on -DBUILD_HASKELL=off -DBUILD_TUTORIALS=off -DFLEX_EXECUTABLE=${FLEX_EXECUTABLE} -DBISON_EXECUTABLE=${BISON_EXECUTABLE}
+    OPTIONS   -DWITH_SHARED_LIB=OFF -DWITH_STATIC_LIB=ON  -DBUILD_TESTING=off -DBUILD_JAVA=off -DBUILD_C_GLIB=off -DBUILD_PYTHON=off -DBUILD_CPP=on -DBUILD_HASKELL=off -DBUILD_TUTORIALS=off -DFLEX_EXECUTABLE=${FLEX_EXECUTABLE} -DBISON_EXECUTABLE=${BISON_EXECUTABLE}
 )
-message(STATUS "Build ${TARGET_TRIPLET}-rel")
-vcpkg_execute_required_process(
-    COMMAND ${CMAKE_COMMAND} --build . --target INSTALL --config Release
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-    LOGNAME build-${TARGET_TRIPLET}-rel
-)
-message(STATUS "Build ${TARGET_TRIPLET}-rel done")
 
-message(STATUS "Build ${TARGET_TRIPLET}-dbg")
-vcpkg_execute_required_process(
-    COMMAND ${CMAKE_COMMAND} --build . --target INSTALL --config Debug
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-    LOGNAME build-${TARGET_TRIPLET}-dbg
-)
-message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
+vcpkg_install_cmake()
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/thrift RENAME copyright)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*.exe")
+file(GLOB DEBUG_EXES "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
+
+if(EXES)
+    file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+endif()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+vcpkg_copy_pdbs()
