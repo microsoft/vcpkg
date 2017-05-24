@@ -87,7 +87,7 @@ namespace vcpkg::COFFFileReader
 
             std::string machine_field_as_string = data.substr(MACHINE_TYPE_OFFSET, MACHINE_TYPE_SIZE);
             const uint16_t machine = reinterpret_bytes<uint16_t>(machine_field_as_string.c_str());
-            return getMachineType(machine);
+            return to_machine_type(machine);
         }
 
     private:
@@ -210,7 +210,7 @@ namespace vcpkg::COFFFileReader
 
             std::string machine_field_as_string = data.substr(MACHINE_TYPE_OFFSET, MACHINE_TYPE_SIZE);
             const uint16_t machine = reinterpret_bytes<uint16_t>(machine_field_as_string.c_str());
-            return getMachineType(machine);
+            return to_machine_type(machine);
         }
 
     private:
@@ -297,7 +297,7 @@ namespace vcpkg::COFFFileReader
             marker.set_to_offset(offset + ArchiveMemberHeader::HEADER_SIZE); // Skip the header, no need to read it.
             marker.seek_to_marker(fs);
             const uint16_t first_two_bytes = peek_value_from_stream<uint16_t>(fs);
-            const bool isImportHeader = getMachineType(first_two_bytes) == MachineType::UNKNOWN;
+            const bool isImportHeader = to_machine_type(first_two_bytes) == MachineType::UNKNOWN;
             const MachineType machine =
                 isImportHeader ? ImportHeader::read(fs).machineType() : CoffFileHeader::read(fs).machineType();
             machine_types.insert(machine);

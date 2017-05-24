@@ -32,5 +32,5 @@ namespace vcpkg
         WCEMIPSV2 = 0x169, // MIPS little-endian WCE v2
     };
 
-    MachineType getMachineType(const uint16_t value);
+    MachineType to_machine_type(const uint16_t value);
 }

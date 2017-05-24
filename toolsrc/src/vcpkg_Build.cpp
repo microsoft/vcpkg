@@ -13,8 +13,6 @@
 #include "vcpkglib.h"
 #include "vcpkglib_helpers.h"
 
-using vcpkg::PostBuildLint::BuildPolicies;
-namespace BuildPoliciesC = vcpkg::PostBuildLint::BuildPoliciesC;
 using vcpkg::PostBuildLint::LinkageType;
 namespace LinkageTypeC = vcpkg::PostBuildLint::LinkageTypeC;
 
@@ -214,7 +212,7 @@ namespace vcpkg::Build
                                Commands::Version::version());
     }
 
-    BuildInfo BuildInfo::create(std::unordered_map<std::string, std::string> pgh)
+    static BuildInfo inner_create_buildinfo(std::unordered_map<std::string, std::string> pgh)
     {
         BuildInfo build_info;
         const std::string crt_linkage_as_string =
@@ -240,19 +238,34 @@ namespace vcpkg::Build
             pgh.erase(it_version);
         }
 
+        std::map<BuildPolicy, bool> policies;
+
         // The remaining entries are policies
         for (const std::unordered_map<std::string, std::string>::value_type& p : pgh)
         {
-            const BuildPolicies policy = BuildPolicies::parse(p.first);
-            Checks::check_exit(
-                VCPKG_LINE_INFO, policy != BuildPoliciesC::NULLVALUE, "Unknown policy found: %s", p.first);
-            if (p.second == "enabled")
-                build_info.policies.emplace(policy, true);
-            else if (p.second == "disabled")
-                build_info.policies.emplace(policy, false);
+            auto maybe_policy = to_build_policy(p.first);
+            if (auto policy = maybe_policy.get())
+            {
+                Checks::check_exit(VCPKG_LINE_INFO,
+                                   policies.find(*policy) == policies.end(),
+                                   "Policy specified multiple times: %s",
+                                   p.first);
+
+                if (p.second == "enabled")
+                    policies.emplace(*policy, true);
+                else if (p.second == "disabled")
+                    policies.emplace(*policy, false);
+                else
+                    Checks::exit_with_message(
+                        VCPKG_LINE_INFO, "Unknown setting for policy '%s': %s", p.first, p.second);
+            }
             else
-                Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown setting for policy '%s': %s", p.first, p.second);
+            {
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown policy found: %s", p.first);
+            }
         }
+
+        build_info.policies = BuildPolicies(std::move(policies));
 
         return build_info;
     }
@@ -262,7 +275,7 @@ namespace vcpkg::Build
         const Expected<std::unordered_map<std::string, std::string>> pghs =
             Paragraphs::get_single_paragraph(fs, filepath);
         Checks::check_exit(VCPKG_LINE_INFO, pghs.get() != nullptr, "Invalid BUILD_INFO file for package");
-        return BuildInfo::create(*pghs.get());
+        return inner_create_buildinfo(*pghs.get());
     }
 
     PreBuildInfo PreBuildInfo::from_triplet_file(const VcpkgPaths& paths, const Triplet& triplet)

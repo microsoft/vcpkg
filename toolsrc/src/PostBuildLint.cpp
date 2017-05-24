@@ -12,6 +12,7 @@
 
 using vcpkg::Build::PreBuildInfo;
 using vcpkg::Build::BuildInfo;
+using vcpkg::Build::BuildPolicy;
 
 namespace vcpkg::PostBuildLint
 {
@@ -37,16 +38,7 @@ namespace vcpkg::PostBuildLint
         }
     };
 
-    template<class T>
-    static bool contains_and_enabled(const std::map<T, bool> map, const T& key)
-    {
-        auto it = map.find(key);
-        if (it != map.cend()) return it->second;
-
-        return false;
-    }
-
-    const std::vector<OutdatedDynamicCrt>& get_outdated_dynamic_crts(const std::map<BuildPolicies, bool>& policies)
+    const std::vector<OutdatedDynamicCrt>& get_outdated_dynamic_crts(const Build::BuildPolicies& policies)
     {
         static const std::vector<OutdatedDynamicCrt> v_no_msvcrt = {
             {"msvcp100.dll", R"(msvcp100\.dll)"},
@@ -73,7 +65,7 @@ namespace vcpkg::PostBuildLint
             return ret;
         }();
 
-        if (contains_and_enabled(policies, BuildPoliciesC::ALLOW_OBSOLETE_MSVCRT))
+        if (policies.is_enabled(BuildPolicy::ALLOW_OBSOLETE_MSVCRT))
         {
             return v_no_msvcrt;
         }
@@ -82,10 +74,10 @@ namespace vcpkg::PostBuildLint
     }
 
     static LintStatus check_for_files_in_include_directory(const Files::Filesystem& fs,
-                                                           const std::map<BuildPolicies, bool>& policies,
+                                                           const Build::BuildPolicies& policies,
                                                            const fs::path& package_dir)
     {
-        if (contains_and_enabled(policies, BuildPoliciesC::EMPTY_INCLUDE_FOLDER))
+        if (policies.is_enabled(BuildPolicy::EMPTY_INCLUDE_FOLDER))
         {
             return LintStatus::SUCCESS;
         }
@@ -511,16 +503,12 @@ namespace vcpkg::PostBuildLint
         return LintStatus::ERROR_DETECTED;
     }
 
-    static LintStatus check_lib_files_are_available_if_dlls_are_available(const std::map<BuildPolicies, bool>& policies,
+    static LintStatus check_lib_files_are_available_if_dlls_are_available(const Build::BuildPolicies& policies,
                                                                           const size_t lib_count,
                                                                           const size_t dll_count,
                                                                           const fs::path& lib_dir)
     {
-        auto it = policies.find(BuildPoliciesC::DLLS_WITHOUT_LIBS);
-        if (it != policies.cend() && it->second)
-        {
-            return LintStatus::SUCCESS;
-        }
+        if (policies.is_enabled(BuildPolicy::DLLS_WITHOUT_LIBS)) return LintStatus::SUCCESS;
 
         if (lib_count == 0 && dll_count != 0)
         {
@@ -528,7 +516,7 @@ namespace vcpkg::PostBuildLint
             System::println(System::Color::warning,
                             "If this is intended, add the following line in the portfile:\n"
                             "    SET(%s enabled)",
-                            BuildPoliciesC::DLLS_WITHOUT_LIBS.cmake_variable());
+                            to_cmake_variable(BuildPolicy::DLLS_WITHOUT_LIBS));
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -750,7 +738,7 @@ namespace vcpkg::PostBuildLint
 
         size_t error_count = 0;
 
-        if (contains_and_enabled(build_info.policies, BuildPoliciesC::EMPTY_PACKAGE))
+        if (build_info.policies.is_enabled(BuildPolicy::EMPTY_PACKAGE))
         {
             return error_count;
         }
@@ -822,7 +810,7 @@ namespace vcpkg::PostBuildLint
 
                 error_count += check_bin_folders_are_not_present_in_static_build(fs, package_dir);
 
-                if (!contains_and_enabled(build_info.policies, BuildPoliciesC::ONLY_RELEASE_CRT))
+                if (!build_info.policies.is_enabled(BuildPolicy::ONLY_RELEASE_CRT))
                 {
                     error_count += check_crt_linkage_of_libs(
                         BuildType::value_of(ConfigurationTypeC::DEBUG, build_info.crt_linkage),

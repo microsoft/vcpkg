@@ -1,12 +1,13 @@
 #pragma once
 
+#include "CStringView.h"
 #include "PackageSpec.h"
-#include "PostBuildLint_BuildPolicies.h"
 #include "PostBuildLint_LinkageType.h"
 #include "StatusParagraphs.h"
 #include "VcpkgPaths.h"
 #include "vcpkg_Files.h"
 #include "vcpkg_optional.h"
+
 #include <map>
 #include <unordered_map>
 #include <vector>
@@ -69,16 +70,46 @@ namespace vcpkg::Build
                                       const BuildPackageConfig& config,
                                       const StatusParagraphs& status_db);
 
+    enum class BuildPolicy
+    {
+        EMPTY_PACKAGE,
+        DLLS_WITHOUT_LIBS,
+        ONLY_RELEASE_CRT,
+        EMPTY_INCLUDE_FOLDER,
+        ALLOW_OBSOLETE_MSVCRT,
+        // Must be last
+        COUNT,
+    };
+
+    Optional<BuildPolicy> to_build_policy(const std::string& str);
+
+    const std::string& to_string(BuildPolicy policy);
+    CStringView to_cmake_variable(BuildPolicy policy);
+
+    struct BuildPolicies
+    {
+        BuildPolicies() {}
+        BuildPolicies(std::map<BuildPolicy, bool>&& map) : m_policies(std::move(map)) {}
+
+        inline bool is_enabled(BuildPolicy policy) const
+        {
+            auto it = m_policies.find(policy);
+            if (it != m_policies.cend()) return it->second;
+            return false;
+        }
+
+    private:
+        std::map<BuildPolicy, bool> m_policies;
+    };
+
     struct BuildInfo
     {
-        static BuildInfo create(std::unordered_map<std::string, std::string> pgh);
-
         PostBuildLint::LinkageType crt_linkage;
         PostBuildLint::LinkageType library_linkage;
 
         Optional<std::string> version;
 
-        std::map<PostBuildLint::BuildPolicies, bool> policies;
+        BuildPolicies policies;
     };
 
     BuildInfo read_build_info(const Files::Filesystem& fs, const fs::path& filepath);

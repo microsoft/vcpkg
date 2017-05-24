@@ -141,8 +141,8 @@
     <ClInclude Include="..\include\lazy.h" />
     <ClInclude Include="..\include\LineInfo.h" />
     <ClInclude Include="..\include\ParagraphParseResult.h" />
+    <ClInclude Include="..\include\PostBuildLint_BuildType.h" />
     <ClInclude Include="..\include\vcpkg_Build.h" />
-    <ClInclude Include="..\include\PostBuildLint_BuildPolicies.h" />
     <ClInclude Include="..\include\coff_file_reader.h" />
     <ClInclude Include="..\include\vcpkg_expected.h" />
     <ClInclude Include="..\include\filesystem_fs.h" />
@@ -154,7 +154,6 @@
     <ClInclude Include="..\include\Paragraphs.h" />
     <ClInclude Include="..\include\pch.h" />
     <ClInclude Include="..\include\PostBuildLint.h" />
-    <ClInclude Include="..\include\PostBuildLint_BuildType.h" />
     <ClInclude Include="..\include\PostBuildLint_ConfigurationType.h" />
     <ClInclude Include="..\include\PostBuildLint_LinkageType.h" />
     <ClInclude Include="..\include\SourceParagraph.h" />
@@ -189,7 +188,7 @@
     <ClCompile Include="..\src\LineInfo.cpp" />
     <ClCompile Include="..\src\ParagraphParseResult.cpp" />
     <ClCompile Include="..\src\vcpkg_Build.cpp" />
-    <ClCompile Include="..\src\PostBuildLint_BuildPolicies.cpp" />
+    <ClCompile Include="..\src\vcpkg_Build_BuildPolicy.cpp" />
     <ClCompile Include="..\src\coff_file_reader.cpp" />
     <ClCompile Include="..\src\commands_available_commands.cpp" />
     <ClCompile Include="..\src\commands_build.cpp" />
