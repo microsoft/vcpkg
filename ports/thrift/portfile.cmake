@@ -1,6 +1,11 @@
 include(vcpkg_common_functions)
 
-set(WINFLEXBISON_PATH ${CURRENT_BUILDTREES_DIR}/flex)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    message(STATUS "Warning: Dynamic building not supported. Building static.") # See note below
+    set(VCPKG_LIBRARY_LINKAGE static)
+endif()
+
+vcpkg_find_acquire_program(WINFLEXBISON)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -10,25 +15,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-message(STATUS "download win flex bison")
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://sourceforge.net/projects/winflexbison/files/win_flex_bison-latest.zip/download"
-    FILENAME "win_flex_bison-latest.zip"
-    SHA512 1a6c1fa3b7603df4db2efbb88c31b28ff1a641d4607afdb89e65e76aedf8da821979f1a9f5a1d291149a567c68346321dcbcffe0d517a836e7099b41dc6d9538
-)
-message(STATUS "done download")
-
-file(MAKE_DIRECTORY "${WINFLEXBISON_PATH}")
-vcpkg_execute_required_process(
-    COMMAND ${CMAKE_COMMAND} -E tar xfz ${ARCHIVE}
-    WORKING_DIRECTORY ${WINFLEXBISON_PATH}
-    LOGNAME extract-winflex
-)
-
-
-set(FLEX_EXECUTABLE "${WINFLEXBISON_PATH}/win_flex.exe")
-set(BISON_EXECUTABLE "${WINFLEXBISON_PATH}/win_bison.exe")
-
+set(FLEX_EXECUTABLE "${DOWNLOADS}/tools/winflexbison/win_flex.exe")
+set(BISON_EXECUTABLE "${DOWNLOADS}/tools/winflexbison/win_bison.exe")
 
 
 vcpkg_configure_cmake(
@@ -40,10 +28,7 @@ vcpkg_install_cmake()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/thrift RENAME copyright)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
 file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*.exe")
-file(GLOB DEBUG_EXES "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
 
 if(EXES)
     file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
