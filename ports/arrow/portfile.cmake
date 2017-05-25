@@ -1,5 +1,9 @@
 include(vcpkg_common_functions)
 
+if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+  message(FATAL_ERROR "Apache Arrow only supports x64")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow
