@@ -6,7 +6,7 @@ New-Item -type file downloads\AlwaysAllowDownloads -errorAction SilentlyContinue
 if (-not $?) { throw $? }
 
 # Clear out any intermediate files from the previous build
-Get-ChildItem buildtrees/*/* | ? Name -ne "src" | Remove-Item -Recurse -Force
+Get-ChildItem buildtrees/*/* | ? { $_.Name -ne "src" -and $_.Extension -ne ".log"} | Remove-Item -Recurse -Force
 
 # Purge any outdated packages
 ./vcpkg remove --outdated --recurse
