@@ -1,9 +1,9 @@
-## Example 3: Patching libpng to work for uwp-x86
+## Example 3: Patching libpng to work for x86-uwp
 
 ### Initial error logs
 First, try building:
 
-```
+```no-highlight
 PS D:\src\vcpkg> vcpkg install libpng:x86-uwp
 -- CURRENT_INSTALLED_DIR=D:/src/vcpkg/installed/x86-uwp
 -- DOWNLOADS=D:/src/vcpkg/downloads
@@ -39,7 +39,7 @@ Error: build command failed
 
 Next, looking at the above logs (build-...-out.log and build-...-err.log).
 
-```
+```no-highlight
 // build-x86-uwp-rel-out.log
 ...
 "D:\src\vcpkg\buildtrees\libpng\x86-uwp-rel\ALL_BUILD.vcxproj" (default target) (1) ->
@@ -76,7 +76,7 @@ Taking a look at [MSDN](https://msdn.microsoft.com/en-us/library/windows/desktop
 ```
 
 A recursive search for `PNG_ABORT` reveals the definition:
-```
+```no-highlight
 PS D:\src\vcpkg\buildtrees\libpng\src\libpng-1.6.24> findstr /snipl "PNG_ABORT" *
 CHANGES:701:  Added PNG_SETJMP_SUPPORTED, PNG_SETJMP_NOT_SUPPORTED, and PNG_ABORT() macros
 libpng-manual.txt:432:errors will result in a call to PNG_ABORT() which defaults to abort().
@@ -114,8 +114,8 @@ This already gives us some great clues, but the full definition tells the comple
 
 ### Patching the code to improve compatibility
 
-I recommend using git to create the patch file, since you'll already have it installed.
-```
+We recommend using git to create the patch file, since you'll already have it installed.
+```no-highlight
 PS D:\src\vcpkg\buildtrees\libpng\src\libpng-1.6.24> git init .
 Initialized empty Git repository in D:/src/vcpkg/buildtrees/libpng/src/libpng-1.6.24/.git/
 
@@ -139,7 +139,7 @@ Now we can modify `pngpriv.h` to use `abort()` everywhere.
 ```
 
 The output of `git diff` is already in patch format, so we just need to save the patch into the `ports/libpng` directory.
-```
+```no-highlight
 PS buildtrees\libpng\src\libpng-1.6.24> git diff | out-file -enc ascii ..\..\..\..\ports\libpng\use-abort-on-all-platforms.patch
 ```
 
@@ -162,14 +162,14 @@ vcpkg_configure_cmake(
 
 To be completely sure this works from scratch, we need to remove the package and rebuild it:
 
-```
+```no-highlight
 PS D:\src\vcpkg> vcpkg remove libpng:x86-uwp
 Package libpng:x86-uwp was successfully removed
 ```
-and delete the building directory: D:\src\vcpkg\buildtrees\libpng
+and complete delete the building directory: D:\src\vcpkg\buildtrees\libpng
 
 Now we try a fresh, from scratch install.
-```
+```no-highlight
 PS D:\src\vcpkg> vcpkg install libpng:x86-uwp
 -- CURRENT_INSTALLED_DIR=D:/src/vcpkg/installed/x86-uwp
 -- DOWNLOADS=D:/src/vcpkg/downloads
@@ -194,9 +194,9 @@ PS D:\src\vcpkg> vcpkg install libpng:x86-uwp
 Package libpng:x86-uwp is installed
 ```
 
-Finally, to fully commit and publish the changes, we need to bump the internal release number and add the patch file to source control.
+Finally, to fully commit and publish the changes, we need to bump the internal release number and add the patch file to source control, then make a Pull Request!
 
-```
+```no-highlight
 # ports\libpng\CONTROL
 Source: libpng
 Version: 1.6.24-1
