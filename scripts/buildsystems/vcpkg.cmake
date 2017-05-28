@@ -1,3 +1,6 @@
+# Mark variables as used so cmake doesn't complain about them
+set(CMAKE_TOOLCHAIN_FILE ${CMAKE_TOOLCHAIN_FILE})
+
 if(NOT VCPKG_TOOLCHAIN)
     if(CMAKE_GENERATOR_PLATFORM MATCHES "^[Ww][Ii][Nn]32$")
         set(_VCPKG_TARGET_TRIPLET_ARCH x86)
@@ -32,7 +35,7 @@ if(NOT VCPKG_TOOLCHAIN)
         endif()
     endif()
 
-    if(WINDOWS_STORE OR WINDOWS_PHONE)
+    if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsPhone")
         set(_VCPKG_TARGET_TRIPLET_PLAT uwp)
     else()
         set(_VCPKG_TARGET_TRIPLET_PLAT windows)
