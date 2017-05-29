@@ -70,7 +70,7 @@ function(vcpkg_find_acquire_program VAR)
     set(ARCHIVE "python-3.5.3-embed-win32.zip")
     set(HASH c8cfdc09d052dc27e4380e8e4bf0d32a4c0def7e03896c1fa6cabc26dde78bb74dbb04e3673cc36e3e307d65a1ef284d69174f0cc80008c83bc6178f192ac5cf)
   elseif(VAR MATCHES "PYTHON2")
-    find_program(PYTHON2 NAMES python2 python PATHS C:/python27 ENV PYTHON)
+    find_program(PYTHON2 NAMES python2 python PATHS C:/python27 c:/Python27amd64 ENV PYTHON)
     if(NOT PYTHON2 MATCHES "NOTFOUND")
         execute_process(
             COMMAND ${PYTHON2} --version
