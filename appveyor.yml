@@ -1,0 +1,37 @@
+environment:
+  matrix:
+    - TRIPLET: "x86-windows"
+    - TRIPLET: "x64-windows"
+
+build_script:
+  - powershell -exec bypass scripts\bootstrap.ps1
+  - .\vcpkg.exe install boost --triplet %TRIPLET%
+  - .\vcpkg.exe install cocos2d --triplet %TRIPLET%
+  - .\vcpkg.exe install cpprestsdk --triplet %TRIPLET%
+  - .\vcpkg.exe install curl --triplet %TRIPLET%
+  - .\vcpkg.exe install expat --triplet %TRIPLET%
+  - .\vcpkg.exe install freetype --triplet %TRIPLET%
+  - .\vcpkg.exe install glew --triplet %TRIPLET%
+  - .\vcpkg.exe install glfw3 --triplet %TRIPLET%
+  - .\vcpkg.exe install libjpeg-turbo --triplet %TRIPLET%
+  - .\vcpkg.exe install libpng --triplet %TRIPLET%
+  - .\vcpkg.exe install libuv --triplet %TRIPLET%
+  - .\vcpkg.exe install libwebsockets --triplet %TRIPLET%
+  - .\vcpkg.exe install mpg123 --triplet %TRIPLET%
+  - .\vcpkg.exe install openal-soft --triplet %TRIPLET%
+  - .\vcpkg.exe install opencv --triplet %TRIPLET%
+  - .\vcpkg.exe install opengl --triplet %TRIPLET%
+  - .\vcpkg.exe install openssl --triplet %TRIPLET%
+  - .\vcpkg.exe install range-v3 --triplet %TRIPLET%
+  - .\vcpkg.exe install rapidjson --triplet %TRIPLET%
+  - .\vcpkg.exe install sdl2 --triplet %TRIPLET%
+  - .\vcpkg.exe install sqlite3 --triplet %TRIPLET%
+  - .\vcpkg.exe install stb --triplet %TRIPLET%
+  - .\vcpkg.exe install tcl --triplet %TRIPLET%
+  - .\vcpkg.exe install tiff --triplet %TRIPLET%
+  - .\vcpkg.exe install tinyxml2 --triplet %TRIPLET%
+  - .\vcpkg.exe install tk --triplet %TRIPLET%
+  - .\vcpkg.exe install zlib --triplet %TRIPLET%
+
+matrix:
+  fast_finish: true
