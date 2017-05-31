@@ -6,16 +6,19 @@ endif()
 include(vcpkg_common_functions)
 set(OPENSSL_VERSION 1.0.2l)
 set(MASTER_COPY_SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-${OPENSSL_VERSION})
+
 vcpkg_find_acquire_program(PERL)
+vcpkg_find_acquire_program(NASM)
 find_program(NMAKE nmake)
 
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-set(ENV{PATH} "${PERL_EXE_PATH};$ENV{PATH}")
+get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
+set(ENV{PATH} "${PERL_EXE_PATH};${NASM_EXE_PATH};$ENV{PATH}")
 
 vcpkg_download_distfile(OPENSSL_SOURCE_ARCHIVE
     URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.0.2/openssl-${OPENSSL_VERSION}.tar.gz"
     FILENAME "openssl-${OPENSSL_VERSION}.tar.gz"
-	SHA512 047d964508ad6025c79caabd8965efd2416dc026a56183d0ef4de7a0a6769ce8e0b4608a3f8393d326f6d03b26a2b067e6e0c750f35b20be190e595e8290c0e3
+    SHA512 047d964508ad6025c79caabd8965efd2416dc026a56183d0ef4de7a0a6769ce8e0b4608a3f8393d326f6d03b26a2b067e6e0c750f35b20be190e595e8290c0e3
 )
 
 vcpkg_extract_source_archive(${OPENSSL_SOURCE_ARCHIVE})
@@ -29,21 +32,27 @@ vcpkg_apply_patches(
 set(CONFIGURE_COMMAND ${PERL} Configure
     enable-static-engine
     enable-capieng
-    no-asm
     no-ssl2
 )
 
 if(TARGET_TRIPLET MATCHES "x86-windows")
     set(OPENSSL_ARCH VC-WIN32)
-    set(OPENSSL_DO "ms\\do_ms.bat")
-elseif(TARGET_TRIPLET MATCHES "x64")
+    set(OPENSSL_DO "ms\\do_nasm.bat")
+elseif(TARGET_TRIPLET MATCHES "x64-windows")
     set(OPENSSL_ARCH VC-WIN64A)
     set(OPENSSL_DO "ms\\do_win64a.bat")
 else()
     message(FATAL_ERROR "Unsupported target triplet: ${TARGET_TRIPLET}")
 endif()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(OPENSSL_MAKEFILE "ms\\ntdll.mak")
+else()
+    set(OPENSSL_MAKEFILE "ms\\nt.mak")
+endif()
+
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+
 
 message(STATUS "Build ${TARGET_TRIPLET}-rel")
 file(COPY ${MASTER_COPY_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
@@ -60,19 +69,13 @@ vcpkg_execute_required_process(
     WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
     LOGNAME configure-do-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-rel
 )
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    vcpkg_execute_required_process(COMMAND ${NMAKE} -f ms\\ntdll.mak install
-                                   WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-                                   LOGNAME build-${TARGET_TRIPLET}-rel)
-else()
-    vcpkg_execute_required_process(COMMAND ${NMAKE} -f ms\\nt.mak install
-                                   WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-                                   LOGNAME build-${TARGET_TRIPLET}-rel)
-endif()
-
+vcpkg_execute_required_process(
+    COMMAND ${NMAKE} -f ${OPENSSL_MAKEFILE} install
+    WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+    LOGNAME build-${TARGET_TRIPLET}-rel)
 
 message(STATUS "Build ${TARGET_TRIPLET}-rel done")
+
 
 message(STATUS "Build ${TARGET_TRIPLET}-dbg")
 file(COPY ${MASTER_COPY_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
@@ -89,18 +92,13 @@ vcpkg_execute_required_process(
     WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
     LOGNAME configure-do-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-dbg
 )
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    vcpkg_execute_required_process(COMMAND ${NMAKE} -f ms\\ntdll.mak install
-                                   WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-                                   LOGNAME build-${TARGET_TRIPLET}-dbg)
-else()
-    vcpkg_execute_required_process(COMMAND ${NMAKE} -f ms\\nt.mak install
-                                   WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-                                   LOGNAME build-${TARGET_TRIPLET}-dbg)
-endif()
+vcpkg_execute_required_process(
+    COMMAND ${NMAKE} -f ${OPENSSL_MAKEFILE} install
+    WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
+    LOGNAME build-${TARGET_TRIPLET}-dbg)
 
 message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
+
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE
