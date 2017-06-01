@@ -49,6 +49,13 @@ DESTINATION
 ${CURRENT_PACKAGES_DIR}/include
 )
 
+file(COPY
+"${SOURCE_PATH}/src/cairo-pdf.h"
+"${SOURCE_PATH}/src/cairo-svg.h"
+DESTINATION
+${CURRENT_PACKAGES_DIR}/include/cairo
+)
+
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/cairo)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/cairo/COPYING ${CURRENT_PACKAGES_DIR}/share/cairo/copyright)
