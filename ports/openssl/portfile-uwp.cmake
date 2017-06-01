@@ -40,6 +40,13 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(${ARCHIVE})
 
+message(STATUS ${SOURCE_PATH})
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-uwp-pathlib.patch
+)
+
 file(REMOVE_RECURSE ${SOURCE_PATH}/tmp32dll)
 file(REMOVE_RECURSE ${SOURCE_PATH}/out32dll)
 file(REMOVE_RECURSE ${SOURCE_PATH}/inc32dll)
