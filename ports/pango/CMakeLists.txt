@@ -130,6 +130,10 @@ pango_add_module(pangocairo
     pango/pangocairo-font.c
     pango/pangocairo-fontmap.c
     pango/pangocairo-render.c)
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    target_compile_definitions(pangocairo PRIVATE CAIRO_WIN32_STATIC_BUILD=1)
+endif()
 target_link_libraries(pangocairo ${CAIRO_LIBRARIES} pango pangowin32 pangoft2 ${FONT_LIBRARIES})
 target_include_directories(pangocairo PRIVATE ${CAIRO_INCLUDE_DIR} ${FONT_INCLUDE_DIRS})
 
