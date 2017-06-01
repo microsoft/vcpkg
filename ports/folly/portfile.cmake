@@ -17,15 +17,9 @@ set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF v2017.05.08.00
-    SHA512 1f689ec288e2a5de28223bddd68fdbb37c26c46ed9d9b831cacc46580788b9bf8eed151a043a4905172e509c70ed3d845689bf2c0cd45ce05fbe76907e2049aa
+    REF v2017.07.17.01
+    SHA512 1529941ebcc9ee3502e4ab07463bb5bc6a397259cbbf1817ac64fd186fd4cd964ffe8b473fe6a432e80632ffa553106a0d3fe2962e860eb409e3391029ed5584
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-cmakelists.patch"
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-generators.patch"
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
@@ -42,14 +36,18 @@ vcpkg_configure_cmake(
 )
 
 # Folly runs built executables during the build, so they need access to the installed DLLs.
-# TODO: Confirm it's ok that we aren't adding the debug/bin folder.
-set(ENV{PATH} "$ENV{PATH};${CURRENT_INSTALLED_DIR}/bin")
+set(ENV{PATH} "$ENV{PATH};${CURRENT_INSTALLED_DIR}/bin;${CURRENT_INSTALLED_DIR}/debug/bin")
 
 vcpkg_install_cmake(MSVC_64_TOOLSET)
 
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets()
+
+# changes target search path
+file(READ ${CURRENT_PACKAGES_DIR}/share/folly/folly-targets.cmake FOLLY_MODULE)
+string(REPLACE "${CURRENT_INSTALLED_DIR}/lib/" "" FOLLY_MODULE "${FOLLY_MODULE}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/folly/folly-targets.cmake "${FOLLY_MODULE}")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
