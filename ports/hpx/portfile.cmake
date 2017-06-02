@@ -16,24 +16,24 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 # apply hotfix to enable building with vcpkg
 vcpkg_download_distfile(DIFF
-    URLS "http://stellar-group.org/files/build-system-changes-to-make-HPX-compile-when-built-with-vcpkg.diff"
-    FILENAME "build-system-changes-to-make-HPX-compile-when-built-with-vcpkg.diff"
-    SHA512 ceceb84b54bf564b7b9258063454084207538a2bd212f7f65503c6638914eb3c093076e4303369639ef9b34812a2c8ed363c08bbdf5a39cc5d49f720a376af75
+    URLS "http://stellar-group.org/files/hpx-Build-system-changes-to-make-HPX-compile-when-built-with-vcpkg.diff"
+    FILENAME "hpx-Build-system-changes-to-make-HPX-compile-when-built-with-vcpkg.diff"
+    SHA512 86df311a120686139955e1c0fdca55379594be3fa8d46d69ee59d83da351ce3bed487ab946c80f7127aab9699e470e24e545b112f92be9f971f41d95c429d01d
 )
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${DIFF})
 
 # apply hotfix to fix issues with building 32bit version
 vcpkg_download_distfile(DIFF
-    URLS "http://stellar-group.org/files/Fixing-32bit-MSVC-compilation.diff"
-    FILENAME "Fixing-32bit-MSVC-compilation.diff"
+    URLS "http://stellar-group.org/files/hpx-Fixing-32bit-MSVC-compilation.diff"
+    FILENAME "hpx-Fixing-32bit-MSVC-compilation.diff"
     SHA512 31c904d317b4c24eddd819e4856f8326ff3850a5a196c7648c46a11dbb85f35e972e077957b3c4aec67c8b043816fe1cebc92cfe28ed815f682537dfc3421b8b
 )
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${DIFF})
 
 # apply hotfix to fix issues when building with UNICODE enabled
 vcpkg_download_distfile(DIFF
-    URLS "http://stellar-group.org/files/Making-sure-UNICODE-on-Windows-does-not-break-by-default.diff"
-    FILENAME "Making-sure-UNICODE-on-Windows-does-not-break-by-default.diff"
+    URLS "http://stellar-group.org/files/hpx-Making-sure-UNICODE-on-Windows-does-not-break-by-default.diff"
+    FILENAME "hpx-Making-sure-UNICODE-on-Windows-does-not-break-by-default.diff"
     SHA512 8fcdb36307702d64b9d2b26920374a6c5a29a50d125305dc95926c4cbc91215cb0c72ede83b06d0fc007fe7b2283845e08351bd45f11f3677f0d3db4ac8f9424
 )
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${DIFF})

@@ -1,10 +1,11 @@
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fontconfig-2.12.1)
+set(FONTCONFIG_VERSION 2.12.3)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fontconfig-${FONTCONFIG_VERSION})
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.12.1.tar.gz"
-    FILENAME "fontconfig-2.12.1.tar.gz"
-    SHA512 0959a80522e09551e49ec7b2383b7dfb319d4e1c058ad0b55bb35d3f675acbb7ff08c9c30a8798b731070687f84dd3d2ff7e28aafac6ecfa9d3f85c5847c0955)
+    URLS "https://www.freedesktop.org/software/fontconfig/release/fontconfig-${FONTCONFIG_VERSION}.tar.gz"
+    FILENAME "fontconfig-${FONTCONFIG_VERSION}.tar.gz"
+    SHA512 b17725c028be1c5e6f76c136b0ed7db1be7694cbbf217310083512708e05cdc1a824427f89082e6ef259c10297900f26cbe899f7c5762e7662855739f3eff5ea)
 
 # Download single-header implementation of dirent API for Windows and it's license
 vcpkg_download_distfile(DIRENT_H
@@ -23,8 +24,8 @@ file(RENAME ${SOURCE_PATH}/fontconfig-dirent.h ${SOURCE_PATH}/dirent.h)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
-        -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
         -DFC_INCLUDE_DIR=${CMAKE_CURRENT_LIST_DIR}/include
     OPTIONS_DEBUG
         -DFC_SKIP_TOOLS=ON
@@ -32,6 +33,14 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    foreach(HEADER fcfreetype.h fontconfig.h)
+        file(READ ${CURRENT_PACKAGES_DIR}/include/fontconfig/${HEADER} FC_HEADER)
+        string(REPLACE "#define FcPublic" "#define FcPublic __declspec(dllimport)" FC_HEADER "${FC_HEADER}")
+        file(WRITE ${CURRENT_PACKAGES_DIR}/include/fontconfig/${HEADER} "${FC_HEADER}")
+    endforeach()
+endif()
 
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/fontconfig)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/fontconfig/COPYING ${CURRENT_PACKAGES_DIR}/share/fontconfig/copyright)
