@@ -91,6 +91,9 @@ namespace vcpkg::System
             L"HTTPS_PROXY",
             // Enables find_package(CUDA) in CMake
             L"CUDA_PATH",
+            // Enables detection of Intel Fortran in CMake
+            L"IFORT_COMPILER16",
+            L"ICPP_COMPILER16",
         };
 
         // Flush stdout before launching external process
