@@ -48,7 +48,10 @@ namespace vcpkg
         const fs::path& get_cmake_exe() const;
         const fs::path& get_git_exe() const;
         const fs::path& get_nuget_exe() const;
-        const Toolset& get_toolset() const;
+        const std::vector<Toolset>& get_toolsets() const;
+
+        const Toolset& get_latest_toolset() const;
+        const Toolset& get_toolset(const std::string& toolset_version) const;
 
         Files::Filesystem& get_filesystem() const;
 
@@ -56,6 +59,6 @@ namespace vcpkg
         Lazy<fs::path> cmake_exe;
         Lazy<fs::path> git_exe;
         Lazy<fs::path> nuget_exe;
-        Lazy<Toolset> toolset;
+        Lazy<std::vector<Toolset>> toolsets;
     };
 }

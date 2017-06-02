@@ -128,8 +128,8 @@ namespace vcpkg::Build
         const fs::path& git_exe_path = paths.get_git_exe();
 
         const fs::path ports_cmake_script_path = paths.ports_cmake;
-        const Toolset& toolset = paths.get_toolset();
         auto pre_build_info = PreBuildInfo::from_triplet_file(paths, triplet);
+        const Toolset& toolset = paths.get_toolset(pre_build_info.platform_toolset);
         const auto cmd_set_environment = make_build_env_cmd(pre_build_info, toolset);
 
         const std::wstring cmd_launch_cmake =

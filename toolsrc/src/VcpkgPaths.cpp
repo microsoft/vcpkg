@@ -269,7 +269,7 @@ namespace vcpkg
         return nullopt;
     }
 
-    static Toolset find_toolset_instance(const VcpkgPaths& paths)
+    static std::vector<Toolset> find_toolset_instances(const VcpkgPaths& paths)
     {
         const auto& fs = paths.get_filesystem();
 
@@ -277,7 +277,10 @@ namespace vcpkg
         // Note: this will contain a mix of vcvarsall.bat locations and dumpbin.exe locations.
         std::vector<fs::path> paths_examined;
 
+        std::vector<Toolset> found_toolsets;
+
         // VS2017
+        Optional<Toolset> vs2017_toolset;
         for (const fs::path& instance : vs2017_installation_instances)
         {
             const fs::path vc_dir = instance / "VC";
@@ -303,9 +306,15 @@ namespace vcpkg
                 paths_examined.push_back(dumpbin_path);
                 if (fs.exists(dumpbin_path))
                 {
-                    return {dumpbin_path, vcvarsall_bat, L"v141"};
+                    vs2017_toolset = Toolset{dumpbin_path, vcvarsall_bat, L"v141"};
+                    break;
                 }
             }
+            if(vs2017_toolset) break;
+        }
+        if(auto value = vs2017_toolset.get())
+        {
+            found_toolsets.push_back(*value);
         }
 
         // VS2015
@@ -321,23 +330,57 @@ namespace vcpkg
                 paths_examined.push_back(vs2015_dumpbin_exe);
                 if (fs.exists(vs2015_dumpbin_exe))
                 {
-                    return {vs2015_dumpbin_exe, vs2015_vcvarsall_bat, L"v140"};
+                    found_toolsets.push_back({vs2015_dumpbin_exe, vs2015_vcvarsall_bat, L"v140"});
                 }
             }
         }
 
-        System::println(System::Color::error, "Could not locate a complete toolset.");
-        System::println("The following paths were examined:");
-        for (const fs::path& path : paths_examined)
+        std::sort(found_toolsets.begin(),
+                  found_toolsets.end(),
+                  [](const Toolset& left, const Toolset& right) { return left.version > right.version; });
+
+        if(found_toolsets.empty())
         {
-            System::println("    %s", path.u8string());
+            System::println(System::Color::error, "Could not locate a complete toolset.");
+            System::println("The following paths were examined:");
+            for(const fs::path& path : paths_examined)
+            {
+                System::println("    %s", path.u8string());
+            }
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
-        Checks::exit_fail(VCPKG_LINE_INFO);
+
+        return found_toolsets;
     }
 
-    const Toolset& VcpkgPaths::get_toolset() const
+    const std::vector<Toolset>& VcpkgPaths::get_toolsets() const
     {
-        return this->toolset.get_lazy([this]() { return find_toolset_instance(*this); });
+        return this->toolsets.get_lazy([this]() { return find_toolset_instances(*this); });
     }
+
+    const Toolset& VcpkgPaths::get_latest_toolset() const
+    {
+        // Invariant: toolsets are non-empty and sorted
+        return get_toolsets().back();
+    }
+    const Toolset& VcpkgPaths::get_toolset(const std::string& toolset_version) const
+    {
+        if(toolset_version.empty())
+        {
+            return this->get_latest_toolset();
+        }
+        else
+        {
+            const auto& vs_toolsets = this->get_toolsets();
+
+            const auto toolset = Util::find_if(vs_toolsets, [&](const Toolset& toolset) { return toolset_version == Strings::to_utf8(toolset.version); });
+            if(toolset == vs_toolsets.end())
+            {
+                Checks::exit_with_message(VCPKG_LINE_INFO, Strings::format("Could not find toolset %s", toolset_version));
+            }
+            return *toolset;
+        }
+    }
+
     Files::Filesystem& VcpkgPaths::get_filesystem() const { return Files::get_real_filesystem(); }
 }
