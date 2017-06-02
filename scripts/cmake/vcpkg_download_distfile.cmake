@@ -54,7 +54,7 @@ function(vcpkg_download_distfile VAR)
         message(STATUS "Testing integrity of ${FILE_KIND}... OK")
     endfunction()
 
-    if(EXISTS ${downloaded_file_path})
+    if(EXISTS ${downloaded_file_path} AND DEFINED vcpkg_download_distfile_SHA512)
         message(STATUS "Using cached ${downloaded_file_path}")
         test_hash("cached file" "Please delete the file and retry if this file should be downloaded again.")
     else()
@@ -83,7 +83,7 @@ function(vcpkg_download_distfile VAR)
             "\n"
             "    Failed to download file.\n"
             "    Add mirrors or submit an issue at https://github.com/Microsoft/vcpkg/issues\n")
-        else()
+        elseif(DEFINED vcpkg_download_distfile_SHA512)
             test_hash("downloaded file" "The file may be corrupted.")
         endif()
     endif()
