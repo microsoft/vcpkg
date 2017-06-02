@@ -1,0 +1,55 @@
+From d133f50ff3f35a98e86911f0a5968f21be58e86b Mon Sep 17 00:00:00 2001
+From: Martin Kroeker <martin@ruby.chemie.uni-freiburg.de>
+Date: Wed, 22 Feb 2017 09:07:58 +0100
+Subject: [PATCH 3/3] Fix missing comma on continued line
+
+EXTERNAL declaration of subroutines missed a comma before the continuation line,
+causing a strange run-together name to appear in the object when compiled with ifort.
+---
+ SRC/ssbev_2stage.f | 2 +-
+ SRC/zhbev_2stage.f | 2 +-
+ SRC/ztrevc3.f      | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/SRC/ssbev_2stage.f b/SRC/ssbev_2stage.f
+index fc6360c..f77368a 100644
+--- a/SRC/ssbev_2stage.f
++++ b/SRC/ssbev_2stage.f
+@@ -239,7 +239,7 @@
+       EXTERNAL           LSAME, SLAMCH, SLANSB, ILAENV
+ *     ..
+ *     .. External Subroutines ..
+-      EXTERNAL           SLASCL, SSCAL, SSTEQR, SSTERF, XERBLA
++      EXTERNAL           SLASCL, SSCAL, SSTEQR, SSTERF, XERBLA,
+      $                   SSYTRD_SB2ST 
+ *     ..
+ *     .. Intrinsic Functions ..
+diff --git a/SRC/zhbev_2stage.f b/SRC/zhbev_2stage.f
+index e30162d..bb0faef 100644
+--- a/SRC/zhbev_2stage.f
++++ b/SRC/zhbev_2stage.f
+@@ -247,7 +247,7 @@
+       EXTERNAL           LSAME, DLAMCH, ZLANHB, ILAENV
+ *     ..
+ *     .. External Subroutines ..
+-      EXTERNAL           DSCAL, DSTERF, XERBLA, ZLASCL, ZSTEQR
++      EXTERNAL           DSCAL, DSTERF, XERBLA, ZLASCL, ZSTEQR,
+      $                   ZHETRD_2STAGE
+ *     ..
+ *     .. Intrinsic Functions ..
+diff --git a/SRC/ztrevc3.f b/SRC/ztrevc3.f
+index 9ab8b42..ef83311 100644
+--- a/SRC/ztrevc3.f
++++ b/SRC/ztrevc3.f
+@@ -287,7 +287,7 @@
+       EXTERNAL           LSAME, ILAENV, IZAMAX, DLAMCH, DZASUM
+ *     ..
+ *     .. External Subroutines ..
+-      EXTERNAL           XERBLA, ZCOPY, ZDSCAL, ZGEMV, ZLATRS
++      EXTERNAL           XERBLA, ZCOPY, ZDSCAL, ZGEMV, ZLATRS,
+      $                   ZGEMM, DLABAD, ZLASET
+ *     ..
+ *     .. Intrinsic Functions ..
+-- 
+2.8.1.windows.1
+

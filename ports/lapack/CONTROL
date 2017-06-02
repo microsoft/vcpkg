@@ -1,0 +1,3 @@
+Source: lapack
+Version: 3.7.0
+Description: LAPACK is a library of Fortran subroutines for solving the most commonly occurring problems in numerical linear algebra.

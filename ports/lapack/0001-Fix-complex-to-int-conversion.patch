@@ -1,0 +1,67 @@
+From b7c2416b4a2423502baeeb99a54b98dc812bec33 Mon Sep 17 00:00:00 2001
+From: Julien Schueller <schueller@phimeca.com>
+Date: Thu, 29 Dec 2016 19:05:43 +0100
+Subject: [PATCH] Fix complex to int conversion
+
+---
+ LAPACKE/src/lapacke_chetri_3.c | 2 +-
+ LAPACKE/src/lapacke_csytri_3.c | 2 +-
+ LAPACKE/src/lapacke_zhetri_3.c | 2 +-
+ LAPACKE/src/lapacke_zsytri_3.c | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/LAPACKE/src/lapacke_chetri_3.c b/LAPACKE/src/lapacke_chetri_3.c
+index a41146e..8ce3ad3 100644
+--- a/LAPACKE/src/lapacke_chetri_3.c
++++ b/LAPACKE/src/lapacke_chetri_3.c
+@@ -60,7 +60,7 @@ lapack_int LAPACKE_chetri_3( int matrix_layout, char uplo, lapack_int n,
+     if( info != 0 ) {
+         goto exit_level_0;
+     }
+-    lwork = (lapack_int)work_query;
++    lwork = LAPACK_C2INT( work_query );
+     /* Allocate memory for working array(s) */
+     work = (lapack_complex_float*)
+         LAPACKE_malloc( sizeof(lapack_complex_float) * lwork );
+diff --git a/LAPACKE/src/lapacke_csytri_3.c b/LAPACKE/src/lapacke_csytri_3.c
+index ee55054..543d408 100644
+--- a/LAPACKE/src/lapacke_csytri_3.c
++++ b/LAPACKE/src/lapacke_csytri_3.c
+@@ -60,7 +60,7 @@ lapack_int LAPACKE_csytri_3( int matrix_layout, char uplo, lapack_int n,
+     if( info != 0 ) {
+         goto exit_level_0;
+     }
+-    lwork = (lapack_int)work_query;
++    lwork = LAPACK_C2INT( work_query );
+     /* Allocate memory for working array(s) */
+     work = (lapack_complex_float*)
+         LAPACKE_malloc( sizeof(lapack_complex_float) * lwork );
+diff --git a/LAPACKE/src/lapacke_zhetri_3.c b/LAPACKE/src/lapacke_zhetri_3.c
+index b965160..33790c2 100644
+--- a/LAPACKE/src/lapacke_zhetri_3.c
++++ b/LAPACKE/src/lapacke_zhetri_3.c
+@@ -60,7 +60,7 @@ lapack_int LAPACKE_zhetri_3( int matrix_layout, char uplo, lapack_int n,
+     if( info != 0 ) {
+         goto exit_level_0;
+     }
+-    lwork = (lapack_int)work_query;
++    lwork = LAPACK_Z2INT( work_query );
+     /* Allocate memory for working array(s) */
+     work = (lapack_complex_double*)
+         LAPACKE_malloc( sizeof(lapack_complex_double) * lwork );
+diff --git a/LAPACKE/src/lapacke_zsytri_3.c b/LAPACKE/src/lapacke_zsytri_3.c
+index cb519b9..0902c57 100644
+--- a/LAPACKE/src/lapacke_zsytri_3.c
++++ b/LAPACKE/src/lapacke_zsytri_3.c
+@@ -60,7 +60,7 @@ lapack_int LAPACKE_zsytri_3( int matrix_layout, char uplo, lapack_int n,
+     if( info != 0 ) {
+         goto exit_level_0;
+     }
+-    lwork = (lapack_int)work_query;
++    lwork = LAPACK_Z2INT( work_query );
+    /* Allocate memory for working array(s) */
+     work = (lapack_complex_double*)
+         LAPACKE_malloc( sizeof(lapack_complex_double) * lwork );
+-- 
+2.8.1.windows.1
+
