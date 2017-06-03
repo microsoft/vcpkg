@@ -1,10 +1,22 @@
+# Common Ambient Variables:
+#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
+#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
+#   CURRENT_PORT DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
+#   PORT                      = current port name (zlib, etc)
+#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
+#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
+#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
+#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
+#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
+#
+
 include(vcpkg_common_functions)
 
-set(SUITESPARSE_VER SuiteSparse-4.5.4)
+set(SUITESPARSE_VER SuiteSparse-4.5.5)  #if you change the version, becarefull of changing the SHA512 checksum accordingly
 set(METIS_VER metis-5.1.0)
-set(SUITESPARSEWIN_PATH ${CURRENT_BUILDTREES_DIR}/src/suitesparse-metis-for-windows-1.3.1)
-set(SUITESPARSE_PATH ${SUITESPARSEWIN_PATH}/Suitesparse)
-set(METIS_PATH ${SUITESPARSEWIN_PATH}/metis)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/suitesparse-metis-for-windows-1.3.1)
+set(SUITESPARSE_PATH ${SOURCE_PATH}/Suitesparse)
+set(METIS_PATH ${SOURCE_PATH}/metis)
 
 
 
@@ -16,7 +28,7 @@ SHA512 f8b9377420432f1c0a05bf884fe9e72f1f4eaf7e05663c66a383b5d8ddbd4fbfaa7d43372
 vcpkg_download_distfile(SUITESPARSE
     URLS "http://faculty.cse.tamu.edu/davis/SuiteSparse/${SUITESPARSE_VER}.tar.gz"
     FILENAME "${SUITESPARSE_VER}.tar.gz"
-    SHA512 43d791065a69b8842acc3490fc8e2c24d32217864228cfc5106ece581f8867eb84cf9d7c03e01307366cb285c98dee37de13f8bbaf30466feeb56afed9002b9f
+    SHA512 4337c683027efca6c0800815587409db14db7d70df673451e307eb3ece5538815d06d90f3a831fa45071372f70b6f37eaa68fe951f69dbb52a5bfd84d2dc4913
 )
 vcpkg_download_distfile(METIS
     URLS "http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/${METIS_VER}.tar.gz"
@@ -27,19 +39,33 @@ vcpkg_download_distfile(METIS
 vcpkg_extract_source_archive(${SUITESPARSEWIN})
 
 #extract suitesparse and copy into suitesparse folder in suitesparse-metis-for-windows package
-vcpkg_extract_source_archive(${SUITESPARSE} ${SUITESPARSEWIN_PATH})
+vcpkg_extract_source_archive(${SUITESPARSE} ${SOURCE_PATH})
 
 #extract metis and copy into metis folder in suitesparse-metis-for-windows package
 vcpkg_extract_source_archive(${METIS})
 file(COPY ${CURRENT_BUILDTREES_DIR}/src/${METIS_VER} DESTINATION ${METIS_PATH})
+
 vcpkg_apply_patches(
     SOURCE_PATH ${METIS_PATH}
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/metis.patch"           
 )
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SUITESPARSEWIN_PATH}
-    OPTIONS   
-    OPTIONS_DEBUG   
+    SOURCE_PATH ${SOURCE_PATH}
+	#PREFER_NINJA # Disable this option if project cannot be built with Ninja
+     OPTIONS
+	-DBUILD_METIS=ON 
+    # OPTIONS_RELEASE -DOPTIMIZE=1
+    # OPTIONS_DEBUG -DDEBUGGABLE=1
+      
 )
-vcpkg_install_cmake()
+vcpkg_build_cmake()
+
+# Handle copyright
+file(COPY ${SUITESPARSE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/suitesparse)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/suitesparse/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/suitesparse/copyright)
+file(COPY ${METIS_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/suitesparse)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/suitesparse/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/suitesparse/copyright_metis)
+
+
+vcpkg_copy_pdbs()
