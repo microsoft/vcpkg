@@ -1,0 +1,6 @@
+Source: suitesparse
+Version: 4.5.4
+#Build-Depends: metis
+#Use the following line instead for optional features from OpenCV-contrib that require protobuf
+#Build-Depends: zlib, libpng, libjpeg-turbo, tiff, protobuf
+Description: computer vision library
