@@ -21,7 +21,8 @@ namespace vcpkg
 
         constexpr bool has_error() const { return m_err != PackageSpecParseResult::SUCCESS; }
 
-        PackageSpecParseResult error() const { return m_err; }
+        const PackageSpecParseResult& error() const { return m_err; }
+        PackageSpecParseResult& error() { return m_err; }
 
         CStringView to_string() const { return vcpkg::to_string(m_err); }
 
