@@ -50,6 +50,7 @@ namespace vcpkg
 
     void print_error_message(std::vector<ParseControlErrorInfo> error_info_list)
     {
+        if (error_info_list.size() == 0) return;
         for (ParseControlErrorInfo error_info : error_info_list)
         {
             System::println(
