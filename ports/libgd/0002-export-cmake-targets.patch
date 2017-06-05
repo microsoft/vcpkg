@@ -1,0 +1,36 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 42934d0..8e7de18 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -196,6 +196,7 @@ else (USE_EXT_GD)
+ 	option(BUILD_SHARED_LIBS "Build shared libs" ON)
+ 	option(BUILD_STATIC_LIBS "Build static libs" OFF)
+ 
++	set(GD_CMAKE_CONFIG libgd-config)
+ 	if (WIN32)
+ 		SET(GD_LIB libgd)
+ 		ADD_DEFINITIONS( -DWIN32 -D_WIN32 -DMSWIN32 -DBGDWIN32 -DWINVER=0x0500  -D_WIN32_WINNT=0x0500 -D_WIN32_IE=0x0600)
+@@ -284,3 +285,10 @@ set(CPACK_SOURCE_IGNORE_FILES
+ install(FILES ${top_level_DOCFILES} DESTINATION ${DOC_DIR})
+ INCLUDE(CPack)
+ 
++# Make project importable from the install directory
++## Generate and install *-config.cmake exporting targets from install tree.
++install(EXPORT ${GD_CMAKE_CONFIG} DESTINATION "share/${GD_LIB}")
++
++# Make project importable from the build directory
++## Generate file *-config.cmake exporting targets from build tree.
++export(TARGETS ${GD_LIB} FILE ${GD_CMAKE_CONFIG}.cmake)
+\ No newline at end of file
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 08fd699..c4561e0 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -158,6 +158,7 @@ if (BUILD_STATIC_LIBS)
+ endif()
+ 
+ install(TARGETS ${GD_INSTALL_TARGETS}
++        EXPORT ${GD_CMAKE_CONFIG} # associate installed target files with export
+         RUNTIME DESTINATION bin
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
