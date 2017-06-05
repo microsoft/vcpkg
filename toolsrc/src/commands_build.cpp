@@ -33,13 +33,16 @@ namespace vcpkg::Commands::BuildCommand
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        const Expected<SourceParagraph> maybe_spgh = Paragraphs::try_load_port(paths.get_filesystem(), port_dir);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           !maybe_spgh.error_code(),
-                           "Could not find package %s: %s",
-                           spec,
-                           maybe_spgh.error_code().message());
-        const SourceParagraph& spgh = *maybe_spgh.get();
+        const ExpectedT<SourceParagraph, ParseControlErrorInfo> maybe_spgh =
+            Paragraphs::try_load_port(paths.get_filesystem(), port_dir);
+        // why do we add a const here
+        if (!maybe_spgh)
+        {
+            print_error_message(maybe_spgh.error());
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+
+        const SourceParagraph& spgh = maybe_spgh.value_or_exit(VCPKG_LINE_INFO);
         Checks::check_exit(VCPKG_LINE_INFO,
                            spec.name() == spgh.name,
                            "The Name: field inside the CONTROL does not match the port directory: '%s' != '%s'",

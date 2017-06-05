@@ -5,6 +5,8 @@
 #include "vcpkg_Checks.h"
 #include "vcpkg_Maps.h"
 #include "vcpkg_System.h"
+#include "vcpkg_expected.h"
+
 #include "vcpkglib_helpers.h"
 
 namespace vcpkg
@@ -37,15 +39,41 @@ namespace vcpkg
 
     SourceParagraph::SourceParagraph() = default;
 
-    SourceParagraph::SourceParagraph(std::unordered_map<std::string, std::string> fields)
+    void print_error_message(const ParseControlErrorInfo& info)
     {
-        this->name = details::remove_required_field(&fields, SourceParagraphRequiredField::SOURCE);
-        this->version = details::remove_required_field(&fields, SourceParagraphRequiredField::VERSION);
-        this->description = details::remove_optional_field(&fields, SourceParagraphOptionalField::DESCRIPTION);
-        this->maintainer = details::remove_optional_field(&fields, SourceParagraphOptionalField::MAINTAINER);
+        System::println(
+            System::Color::error, "Error: There are invalid fields in the Source Paragraph of %s", info.name);
+        System::println("The following fields were not expected:\n\n    %s\n\n", info.remaining_fields_as_string);
+        System::println("This is the list of valid fields (case-sensitive): \n\n    %s\n", info.valid_fields_as_string);
+        System::println("Different source may be available for vcpkg. Use .\\bootstrap-vcpkg.bat to update.\n");
+    }
+
+    void print_error_message(std::vector<ParseControlErrorInfo> error_info_list)
+    {
+        for (ParseControlErrorInfo error_info : error_info_list)
+        {
+            System::println(
+                System::Color::error, "Error: There are invalid fields in the Source Paragraph of %s", error_info.name);
+            System::println("The following fields were not expected:\n\n    %s\n\n",
+                            error_info.remaining_fields_as_string);
+        }
+
+        System::println("This is the list of valid fields (case-sensitive): \n\n    %s\n",
+                        error_info_list.front().valid_fields_as_string);
+        System::println("Different source may be available for vcpkg. Use .\\bootstrap-vcpkg.bat to update.\n");
+    }
+
+    ExpectedT<SourceParagraph, ParseControlErrorInfo> SourceParagraph::parse_control_file(
+        std::unordered_map<std::string, std::string> fields)
+    {
+        SourceParagraph sparagraph;
+        sparagraph.name = details::remove_required_field(&fields, SourceParagraphRequiredField::SOURCE);
+        sparagraph.version = details::remove_required_field(&fields, SourceParagraphRequiredField::VERSION);
+        sparagraph.description = details::remove_optional_field(&fields, SourceParagraphOptionalField::DESCRIPTION);
+        sparagraph.maintainer = details::remove_optional_field(&fields, SourceParagraphOptionalField::MAINTAINER);
 
         std::string deps = details::remove_optional_field(&fields, SourceParagraphOptionalField::BUILD_DEPENDS);
-        this->depends = expand_qualified_dependencies(parse_depends(deps));
+        sparagraph.depends = expand_qualified_dependencies(parse_depends(deps));
 
         if (!fields.empty())
         {
@@ -55,12 +83,9 @@ namespace vcpkg
             const std::string remaining_fields_as_string = Strings::join("\n    ", remaining_fields);
             const std::string valid_fields_as_string = Strings::join("\n    ", valid_fields);
 
-            System::println(
-                System::Color::error, "Error: There are invalid fields in the Source Paragraph of %s", this->name);
-            System::println("The following fields were not expected:\n\n    %s\n\n", remaining_fields_as_string);
-            System::println("This is the list of valid fields (case-sensitive): \n\n    %s\n", valid_fields_as_string);
-            Checks::exit_fail(VCPKG_LINE_INFO);
+            return ParseControlErrorInfo{sparagraph.name, remaining_fields_as_string, valid_fields_as_string};
         }
+        return sparagraph;
     }
 
     std::vector<Dependency> vcpkg::expand_qualified_dependencies(const std::vector<std::string>& depends)

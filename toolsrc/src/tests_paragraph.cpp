@@ -25,7 +25,10 @@ namespace UnitTest1
     {
         TEST_METHOD(SourceParagraph_Construct_Minimum)
         {
-            vcpkg::SourceParagraph pgh({{"Source", "zlib"}, {"Version", "1.2.8"}});
+            auto m_pgh = vcpkg::SourceParagraph::parse_control_file({{"Source", "zlib"}, {"Version", "1.2.8"}});
+
+            Assert::IsTrue(m_pgh.has_value());
+            auto& pgh = *m_pgh.get();
 
             Assert::AreEqual("zlib", pgh.name.c_str());
             Assert::AreEqual("1.2.8", pgh.version.c_str());
@@ -36,11 +39,12 @@ namespace UnitTest1
 
         TEST_METHOD(SourceParagraph_Construct_Maximum)
         {
-            vcpkg::SourceParagraph pgh({{"Source", "s"},
-                                        {"Version", "v"},
-                                        {"Maintainer", "m"},
-                                        {"Description", "d"},
-                                        {"Build-Depends", "bd"}});
+            auto m_pgh = vcpkg::SourceParagraph::parse_control_file({
+                {"Source", "s"}, {"Version", "v"}, {"Maintainer", "m"}, {"Description", "d"}, {"Build-Depends", "bd"},
+            });
+            Assert::IsTrue(m_pgh.has_value());
+            auto& pgh = *m_pgh.get();
+
             Assert::AreEqual("s", pgh.name.c_str());
             Assert::AreEqual("v", pgh.version.c_str());
             Assert::AreEqual("m", pgh.maintainer.c_str());
@@ -51,7 +55,11 @@ namespace UnitTest1
 
         TEST_METHOD(SourceParagraph_Two_Depends)
         {
-            vcpkg::SourceParagraph pgh({{"Source", "zlib"}, {"Version", "1.2.8"}, {"Build-Depends", "z, openssl"}});
+            auto m_pgh = vcpkg::SourceParagraph::parse_control_file({
+                {"Source", "zlib"}, {"Version", "1.2.8"}, {"Build-Depends", "z, openssl"},
+            });
+            Assert::IsTrue(m_pgh.has_value());
+            auto& pgh = *m_pgh.get();
 
             Assert::AreEqual(size_t(2), pgh.depends.size());
             Assert::AreEqual("z", pgh.depends[0].name.c_str());
@@ -60,8 +68,11 @@ namespace UnitTest1
 
         TEST_METHOD(SourceParagraph_Three_Depends)
         {
-            vcpkg::SourceParagraph pgh(
-                {{"Source", "zlib"}, {"Version", "1.2.8"}, {"Build-Depends", "z, openssl, xyz"}});
+            auto m_pgh = vcpkg::SourceParagraph::parse_control_file({
+                {"Source", "zlib"}, {"Version", "1.2.8"}, {"Build-Depends", "z, openssl, xyz"},
+            });
+            Assert::IsTrue(m_pgh.has_value());
+            auto& pgh = *m_pgh.get();
 
             Assert::AreEqual(size_t(3), pgh.depends.size());
             Assert::AreEqual("z", pgh.depends[0].name.c_str());
@@ -71,8 +82,11 @@ namespace UnitTest1
 
         TEST_METHOD(SourceParagraph_Construct_Qualified_Depends)
         {
-            vcpkg::SourceParagraph pgh(
-                {{"Source", "zlib"}, {"Version", "1.2.8"}, {"Build-Depends", "libA [windows], libB [uwp]"}});
+            auto m_pgh = vcpkg::SourceParagraph::parse_control_file({
+                {"Source", "zlib"}, {"Version", "1.2.8"}, {"Build-Depends", "libA [windows], libB [uwp]"},
+            });
+            Assert::IsTrue(m_pgh.has_value());
+            auto& pgh = *m_pgh.get();
 
             Assert::AreEqual("zlib", pgh.name.c_str());
             Assert::AreEqual("1.2.8", pgh.version.c_str());
@@ -101,13 +115,15 @@ namespace UnitTest1
 
         TEST_METHOD(BinaryParagraph_Construct_Maximum)
         {
-            vcpkg::BinaryParagraph pgh({{"Package", "s"},
-                                        {"Version", "v"},
-                                        {"Architecture", "x86-windows"},
-                                        {"Multi-Arch", "same"},
-                                        {"Maintainer", "m"},
-                                        {"Description", "d"},
-                                        {"Depends", "bd"}});
+            vcpkg::BinaryParagraph pgh({
+                {"Package", "s"},
+                {"Version", "v"},
+                {"Architecture", "x86-windows"},
+                {"Multi-Arch", "same"},
+                {"Maintainer", "m"},
+                {"Description", "d"},
+                {"Depends", "bd"},
+            });
             Assert::AreEqual("s", pgh.spec.name().c_str());
             Assert::AreEqual("v", pgh.version.c_str());
             Assert::AreEqual("m", pgh.maintainer.c_str());
@@ -327,28 +343,26 @@ namespace UnitTest1
 
         TEST_METHOD(package_spec_parse)
         {
-            vcpkg::Expected<vcpkg::PackageSpec> spec =
+            vcpkg::ExpectedT<vcpkg::PackageSpec, vcpkg::PackageSpecParseResult> spec =
                 vcpkg::PackageSpec::from_string("zlib", vcpkg::Triplet::X86_WINDOWS);
-            Assert::AreEqual(vcpkg::PackageSpecParseResult::SUCCESS,
-                             vcpkg::to_package_spec_parse_result(spec.error_code()));
+            Assert::AreEqual(vcpkg::PackageSpecParseResult::SUCCESS, spec.error());
             Assert::AreEqual("zlib", spec.get()->name().c_str());
             Assert::AreEqual(vcpkg::Triplet::X86_WINDOWS.canonical_name(), spec.get()->triplet().canonical_name());
         }
 
         TEST_METHOD(package_spec_parse_with_arch)
         {
-            vcpkg::Expected<vcpkg::PackageSpec> spec =
+            vcpkg::ExpectedT<vcpkg::PackageSpec, vcpkg::PackageSpecParseResult> spec =
                 vcpkg::PackageSpec::from_string("zlib:x64-uwp", vcpkg::Triplet::X86_WINDOWS);
-            Assert::AreEqual(vcpkg::PackageSpecParseResult::SUCCESS,
-                             vcpkg::to_package_spec_parse_result(spec.error_code()));
+            Assert::AreEqual(vcpkg::PackageSpecParseResult::SUCCESS, spec.error());
             Assert::AreEqual("zlib", spec.get()->name().c_str());
             Assert::AreEqual(vcpkg::Triplet::X64_UWP.canonical_name(), spec.get()->triplet().canonical_name());
         }
 
         TEST_METHOD(package_spec_parse_with_multiple_colon)
         {
-            auto ec = vcpkg::PackageSpec::from_string("zlib:x86-uwp:", vcpkg::Triplet::X86_WINDOWS).error_code();
-            Assert::AreEqual(vcpkg::PackageSpecParseResult::TOO_MANY_COLONS, vcpkg::to_package_spec_parse_result(ec));
+            auto ec = vcpkg::PackageSpec::from_string("zlib:x86-uwp:", vcpkg::Triplet::X86_WINDOWS).error();
+            Assert::AreEqual(vcpkg::PackageSpecParseResult::TOO_MANY_COLONS, ec);
         }
 
         TEST_METHOD(utf8_to_utf16)

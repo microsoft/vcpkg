@@ -16,7 +16,8 @@ namespace vcpkg::Paragraphs
     Expected<ParagraphDataMap> parse_single_paragraph(const std::string& str);
     Expected<std::vector<ParagraphDataMap>> parse_paragraphs(const std::string& str);
 
-    Expected<SourceParagraph> try_load_port(const Files::Filesystem& fs, const fs::path& control_path);
+    ExpectedT<SourceParagraph, ParseControlErrorInfo> try_load_port(const Files::Filesystem& fs,
+                                                                    const fs::path& control_path);
 
     Expected<BinaryParagraph> try_load_cached_package(const VcpkgPaths& paths, const PackageSpec& spec);
 
