@@ -2,12 +2,12 @@
 
 #include "CStringView.h"
 #include "PackageSpec.h"
-#include "PostBuildLint_LinkageType.h"
 #include "StatusParagraphs.h"
 #include "VcpkgPaths.h"
 #include "vcpkg_Files.h"
 #include "vcpkg_optional.h"
 
+#include <array>
 #include <map>
 #include <unordered_map>
 #include <vector>
@@ -141,10 +141,18 @@ namespace vcpkg::Build
         std::map<BuildPolicy, bool> m_policies;
     };
 
+    enum class LinkageType : char
+    {
+        DYNAMIC,
+        STATIC,
+    };
+
+    Optional<LinkageType> to_linkage_type(const std::string& str);
+
     struct BuildInfo
     {
-        PostBuildLint::LinkageType crt_linkage;
-        PostBuildLint::LinkageType library_linkage;
+        LinkageType crt_linkage;
+        LinkageType library_linkage;
 
         Optional<std::string> version;
 

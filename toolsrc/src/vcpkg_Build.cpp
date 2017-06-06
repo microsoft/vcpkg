@@ -13,11 +13,15 @@
 #include "vcpkglib.h"
 #include "vcpkglib_helpers.h"
 
-using vcpkg::PostBuildLint::LinkageType;
-namespace LinkageTypeC = vcpkg::PostBuildLint::LinkageTypeC;
-
 namespace vcpkg::Build
 {
+    Optional<LinkageType> to_linkage_type(const std::string& str)
+    {
+        if (str == "dynamic") return LinkageType::DYNAMIC;
+        if (str == "static") return LinkageType::STATIC;
+        return nullopt;
+    }
+
     namespace BuildInfoRequiredField
     {
         static const std::string CRT_LINKAGE = "CRTLinkage";
@@ -217,19 +221,20 @@ namespace vcpkg::Build
         BuildInfo build_info;
         const std::string crt_linkage_as_string =
             details::remove_required_field(&pgh, BuildInfoRequiredField::CRT_LINKAGE);
-        build_info.crt_linkage = LinkageType::value_of(crt_linkage_as_string);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           build_info.crt_linkage != LinkageTypeC::NULLVALUE,
-                           "Invalid crt linkage type: [%s]",
-                           crt_linkage_as_string);
+
+        auto crtlinkage = to_linkage_type(crt_linkage_as_string);
+        if (auto p = crtlinkage.get())
+            build_info.crt_linkage = *p;
+        else
+            Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid crt linkage type: [%s]", crt_linkage_as_string);
 
         const std::string library_linkage_as_string =
             details::remove_required_field(&pgh, BuildInfoRequiredField::LIBRARY_LINKAGE);
-        build_info.library_linkage = LinkageType::value_of(library_linkage_as_string);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           build_info.library_linkage != LinkageTypeC::NULLVALUE,
-                           "Invalid library linkage type: [%s]",
-                           library_linkage_as_string);
+        auto liblinkage = to_linkage_type(library_linkage_as_string);
+        if (auto p = liblinkage.get())
+            build_info.library_linkage = *p;
+        else
+            Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid library linkage type: [%s]", library_linkage_as_string);
 
         auto it_version = pgh.find("Version");
         if (it_version != pgh.end())
