@@ -18,7 +18,8 @@ vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
         SOURCE_PATH ${SOURCE_PATH}
         PATCHES
-                ${CMAKE_CURRENT_LIST_DIR}/cmakelists-install.patch)
+                ${CMAKE_CURRENT_LIST_DIR}/cmakelists-install.patch
+                ${CMAKE_CURRENT_LIST_DIR}/find_dsound.patch)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
