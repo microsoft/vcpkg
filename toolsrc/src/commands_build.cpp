@@ -35,7 +35,7 @@ namespace vcpkg::Commands::BuildCommand
 
         const ExpectedT<SourceParagraph, ParseControlErrorInfo> maybe_spgh =
             Paragraphs::try_load_port(paths.get_filesystem(), port_dir);
-        // why do we add a const here
+
         if (!maybe_spgh)
         {
             print_error_message(maybe_spgh.error());

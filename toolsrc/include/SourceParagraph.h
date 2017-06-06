@@ -32,7 +32,7 @@ namespace vcpkg
         static ExpectedT<SourceParagraph, ParseControlErrorInfo> parse_control_file(
             std::unordered_map<std::string, std::string> fields);
 
-        SourceParagraph();
+        SourceParagraph() = default;
 
         std::string name;
         std::string version;

@@ -37,8 +37,6 @@ namespace vcpkg
         return valid_fields;
     }
 
-    SourceParagraph::SourceParagraph() = default;
-
     void print_error_message(const ParseControlErrorInfo& info)
     {
         System::println(
