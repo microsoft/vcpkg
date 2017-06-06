@@ -19,18 +19,26 @@ vcpkg_apply_patches(
         SOURCE_PATH ${SOURCE_PATH}
         PATCHES
                 ${CMAKE_CURRENT_LIST_DIR}/cmakelists-install.patch
-                ${CMAKE_CURRENT_LIST_DIR}/find_dsound.patch)
+                ${CMAKE_CURRENT_LIST_DIR}/find_dsound.patch
+                ${CMAKE_CURRENT_LIST_DIR}/crt_linkage_build_config.patch)
 
+# NOTE: the ASIO backend will be built automatically if the ASIO-SDK is provided
+# in a sibling folder of the portaudio source in vcpkg/buildtrees/portaudio/src
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DPA_USE_DS=ON
+        -DPA_USE_WASAPI=ON
+        -DPA_USE_WDMKS=ON
+        -DPA_USE_WMME=ON
 )
 
 vcpkg_install_cmake()
 
 # Remove static builds from dynamic builds and otherwise
 # Remove x86 and x64 from resulting files
-if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 	file (REMOVE ${CURRENT_PACKAGES_DIR}/lib/portaudio_static_${VCPKG_TARGET_ARCHITECTURE}.lib)
 	file (REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/portaudio_static_${VCPKG_TARGET_ARCHITECTURE}.lib)
 
