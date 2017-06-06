@@ -1,19 +1,16 @@
-diff --git "a/CMakeLists.txt" "b/CMakeLists.txt"
-index 679df4e..0a01d47 100644
---- "a/CMakeLists.txt"
-+++ "b/CMakeLists.txt"
-@@ -106,10 +106,10 @@ macro(install_suitesparse_project targetName headersList)
- 	set_target_properties(${targetName} PROPERTIES PUBLIC_HEADER "${headersList}")
- 	install(TARGETS	${targetName}
- 			EXPORT 	SuiteSparse
--			RUNTIME DESTINATION bin
--			LIBRARY DESTINATION lib${LIB_POSTFIX}
--			ARCHIVE DESTINATION lib${LIB_POSTFIX}
--			PUBLIC_HEADER DESTINATION include/suitesparse
-+			RUNTIME DESTINATION ${suitesparse_PKG_DIR}/$<$<CONFIG:Debug>:Debug/>bin
-+			LIBRARY DESTINATION ${suitesparse_PKG_DIR}/$<$<CONFIG:Debug>:Debug/>lib
-+			ARCHIVE DESTINATION ${suitesparse_PKG_DIR}/$<$<CONFIG:Debug>:Debug/>lib
-+			PUBLIC_HEADER DESTINATION ${suitesparse_PKG_DIR}/include/suitesparse
- 	)
- endmacro()
- 	
+diff --git "a/SuiteSparse/CMakeLists.txt" "b/SuiteSparse/CMakeLists.txt"
+index 7361363..8a48cf3 100644
+--- "a/SuiteSparse/CMakeLists.txt"
++++ "b/SuiteSparse/CMakeLists.txt"
+@@ -10,7 +10,11 @@ ENDIF(CMAKE_COMPILER_IS_GNUCXX AND NOT CMAKE_BUILD_TYPE MATCHES "Debug")
+ IF (BUILD_METIS)
+ 	INCLUDE_DIRECTORIES("${METIS_SOURCE_DIR}/include")
+ ELSE (BUILD_METIS)
++	IF(USE_VCPKG_METIS)
++	INCLUDE_DIRECTORIES("${METIS_SOURCE_DIR}/include")
++	ELSE (USE_VCPKG_METIS)	
+ 	ADD_DEFINITIONS(-DNPARTITION)
++	ENDIF(USE_VCPKG_METIS)
+ ENDIF ( BUILD_METIS)
+ 
+ # Disable COMPLEX numbers: disable it by default, since it causes problems in some platforms.
