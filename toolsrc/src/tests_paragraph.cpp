@@ -40,7 +40,12 @@ namespace UnitTest1
         TEST_METHOD(SourceParagraph_Construct_Maximum)
         {
             auto m_pgh = vcpkg::SourceParagraph::parse_control_file({
-                {"Source", "s"}, {"Version", "v"}, {"Maintainer", "m"}, {"Description", "d"}, {"Build-Depends", "bd"},
+                {"Source", "s"},
+                {"Version", "v"},
+                {"Maintainer", "m"},
+                {"Description", "d"},
+                {"Build-Depends", "bd"},
+                {"Supports", "x64"},
             });
             Assert::IsTrue(m_pgh.has_value());
             auto& pgh = *m_pgh.get();
@@ -51,6 +56,8 @@ namespace UnitTest1
             Assert::AreEqual("d", pgh.description.c_str());
             Assert::AreEqual(size_t(1), pgh.depends.size());
             Assert::AreEqual("bd", pgh.depends[0].name.c_str());
+            Assert::AreEqual(size_t(1), pgh.supports.size());
+            Assert::AreEqual("x64", pgh.supports[0].c_str());
         }
 
         TEST_METHOD(SourceParagraph_Two_Depends)
@@ -78,6 +85,20 @@ namespace UnitTest1
             Assert::AreEqual("z", pgh.depends[0].name.c_str());
             Assert::AreEqual("openssl", pgh.depends[1].name.c_str());
             Assert::AreEqual("xyz", pgh.depends[2].name.c_str());
+        }
+
+        TEST_METHOD(SourceParagraph_Three_Supports)
+        {
+            auto m_pgh = vcpkg::SourceParagraph::parse_control_file({
+                {"Source", "zlib"}, {"Version", "1.2.8"}, {"Supports", "x64, windows, uwp"},
+            });
+            Assert::IsTrue(m_pgh.has_value());
+            auto& pgh = *m_pgh.get();
+
+            Assert::AreEqual(size_t(3), pgh.supports.size());
+            Assert::AreEqual("x64", pgh.supports[0].c_str());
+            Assert::AreEqual("windows", pgh.supports[1].c_str());
+            Assert::AreEqual("uwp", pgh.supports[2].c_str());
         }
 
         TEST_METHOD(SourceParagraph_Construct_Qualified_Depends)

@@ -5,6 +5,7 @@
 #include "vcpkg_Checks.h"
 #include "vcpkg_Maps.h"
 #include "vcpkg_System.h"
+#include "vcpkg_Util.h"
 #include "vcpkg_expected.h"
 
 #include "vcpkglib_helpers.h"
@@ -23,6 +24,7 @@ namespace vcpkg
         static const std::string DESCRIPTION = "Description";
         static const std::string MAINTAINER = "Maintainer";
         static const std::string BUILD_DEPENDS = "Build-Depends";
+        static const std::string SUPPORTS = "Supports";
     }
 
     static const std::vector<std::string>& get_list_of_valid_fields()
@@ -32,7 +34,8 @@ namespace vcpkg
 
                                                               SourceParagraphOptionalField::DESCRIPTION,
                                                               SourceParagraphOptionalField::MAINTAINER,
-                                                              SourceParagraphOptionalField::BUILD_DEPENDS};
+                                                              SourceParagraphOptionalField::BUILD_DEPENDS,
+                                                              SourceParagraphOptionalField::SUPPORTS};
 
         return valid_fields;
     }
@@ -72,7 +75,10 @@ namespace vcpkg
         sparagraph.maintainer = details::remove_optional_field(&fields, SourceParagraphOptionalField::MAINTAINER);
 
         std::string deps = details::remove_optional_field(&fields, SourceParagraphOptionalField::BUILD_DEPENDS);
-        sparagraph.depends = expand_qualified_dependencies(parse_depends(deps));
+        sparagraph.depends = expand_qualified_dependencies(parse_comma_list(deps));
+
+        std::string sups = details::remove_optional_field(&fields, SourceParagraphOptionalField::SUPPORTS);
+        sparagraph.supports = parse_comma_list(sups);
 
         if (!fields.empty())
         {
@@ -89,7 +95,7 @@ namespace vcpkg
 
     std::vector<Dependency> vcpkg::expand_qualified_dependencies(const std::vector<std::string>& depends)
     {
-        auto convert = [&](const std::string& depend_string) -> Dependency {
+        return Util::fmap(depends, [&](const std::string& depend_string) -> Dependency {
             auto pos = depend_string.find(' ');
             if (pos == std::string::npos) return {depend_string, ""};
             // expect of the form "\w+ \[\w+\]"
@@ -102,21 +108,12 @@ namespace vcpkg
             }
             dep.qualifier = depend_string.substr(pos + 2, depend_string.size() - pos - 3);
             return dep;
-        };
-
-        std::vector<vcpkg::Dependency> ret;
-
-        for (auto&& depend_string : depends)
-        {
-            ret.push_back(convert(depend_string));
-        }
-
-        return ret;
+        });
     }
 
-    std::vector<std::string> parse_depends(const std::string& depends_string)
+    std::vector<std::string> parse_comma_list(const std::string& str)
     {
-        if (depends_string.empty())
+        if (str.empty())
         {
             return {};
         }
@@ -126,17 +123,17 @@ namespace vcpkg
         size_t cur = 0;
         do
         {
-            auto pos = depends_string.find(',', cur);
+            auto pos = str.find(',', cur);
             if (pos == std::string::npos)
             {
-                out.push_back(depends_string.substr(cur));
+                out.push_back(str.substr(cur));
                 break;
             }
-            out.push_back(depends_string.substr(cur, pos - cur));
+            out.push_back(str.substr(cur, pos - cur));
 
             // skip comma and space
             ++pos;
-            if (depends_string[pos] == ' ')
+            if (str[pos] == ' ')
             {
                 ++pos;
             }
@@ -161,4 +158,49 @@ namespace vcpkg
     }
 
     const std::string& to_string(const Dependency& dep) { return dep.name; }
+
+    ExpectedT<Supports, std::vector<std::string>> Supports::parse(const std::vector<std::string>& strs)
+    {
+        Supports ret;
+        std::vector<std::string> unrecognized;
+
+        for (auto&& str : strs)
+        {
+            if (str == "x64")
+                ret.architectures.push_back(Architecture::X64);
+            else if (str == "x86")
+                ret.architectures.push_back(Architecture::X86);
+            else if (str == "arm")
+                ret.architectures.push_back(Architecture::ARM);
+            else if (str == "windows")
+                ret.platforms.push_back(Platform::WINDOWS);
+            else if (str == "uwp")
+                ret.platforms.push_back(Platform::UWP);
+            else if (str == "v140")
+                ret.toolsets.push_back(ToolsetVersion::V140);
+            else if (str == "v141")
+                ret.toolsets.push_back(ToolsetVersion::V141);
+            else if (str == "crt-static")
+                ret.crt_linkages.push_back(Linkage::STATIC);
+            else if (str == "crt-dynamic")
+                ret.crt_linkages.push_back(Linkage::DYNAMIC);
+            else
+                unrecognized.push_back(str);
+        }
+
+        if (unrecognized.empty())
+            return std::move(ret);
+        else
+            return std::move(unrecognized);
+    }
+
+    bool Supports::supports(Architecture arch, Platform plat, Linkage crt, ToolsetVersion tools)
+    {
+        auto is_in_or_empty = [](auto v, auto&& c) -> bool { return c.empty() || c.end() != Util::find(c, v); };
+        if (!is_in_or_empty(arch, architectures)) return false;
+        if (!is_in_or_empty(plat, platforms)) return false;
+        if (!is_in_or_empty(crt, crt_linkages)) return false;
+        if (!is_in_or_empty(tools, toolsets)) return false;
+        return true;
+    }
 }
