@@ -48,9 +48,11 @@ namespace vcpkg
         const fs::path& get_cmake_exe() const;
         const fs::path& get_git_exe() const;
         const fs::path& get_nuget_exe() const;
-        const std::vector<Toolset>& get_toolsets() const;
 
-        const Toolset& get_latest_toolset() const;
+        /// <summary>Retrieve a toolset matching a VS version</summary>
+        /// <remarks>
+        ///   Valid version strings are "v140", "v141", and "". Empty string gets the latest.
+        /// </remarks>
         const Toolset& get_toolset(const std::string& toolset_version) const;
 
         Files::Filesystem& get_filesystem() const;
