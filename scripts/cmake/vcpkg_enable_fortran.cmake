@@ -9,10 +9,6 @@ function(_vcpkg_load_environment_from_batch)
         LOGNAME environment-initial
     )
     file(READ ${CURRENT_BUILDTREES_DIR}/environment-initial-out.log ENVIRONMENT_INITIAL)
-    
-    string(REPLACE "\\" "/"     ENVIRONMENT_INITIAL "${ENVIRONMENT_INITIAL}")
-    string(REPLACE ";"  "\\\\;" ENVIRONMENT_INITIAL "${ENVIRONMENT_INITIAL}")
-    string(REPLACE "\n" ";"     ENVIRONMENT_INITIAL "${ENVIRONMENT_INITIAL}")
 
     # Get modified envirnoment
     vcpkg_execute_required_process(
@@ -21,6 +17,11 @@ function(_vcpkg_load_environment_from_batch)
         LOGNAME environment-after
     )
     file(READ ${CURRENT_BUILDTREES_DIR}/environment-after-out.log ENVIRONMENT_AFTER)
+    
+    # Escape characters that have a special meaning in CMake strings.
+    string(REPLACE "\\" "/"     ENVIRONMENT_INITIAL "${ENVIRONMENT_INITIAL}")
+    string(REPLACE ";"  "\\\\;" ENVIRONMENT_INITIAL "${ENVIRONMENT_INITIAL}")
+    string(REPLACE "\n" ";"     ENVIRONMENT_INITIAL "${ENVIRONMENT_INITIAL}")
 
     string(REPLACE "\\" "/"     ENVIRONMENT_AFTER "${ENVIRONMENT_AFTER}")
     string(REPLACE ";"  "\\\\;" ENVIRONMENT_AFTER "${ENVIRONMENT_AFTER}")
@@ -43,6 +44,10 @@ function(_vcpkg_load_environment_from_batch)
                         if(NOT "${AFTER_VAR_VALUE}" STREQUAL "${INITIAL_VAR_VALUE}")
                             
                             # Variable has been modified
+                            # NOTE: we do not revert the escape changes that have previously been applied
+                            #       since the only change that should be visible in a single environment variable
+                            #       should be a conversion from `\` to `/` and this should not have any effect on
+                            #       windows paths.
                             set(ENV{${AFTER_VAR_NAME}} ${AFTER_VAR_VALUE})
                         endif()
                     endif()
@@ -160,7 +165,28 @@ function(_vcpkg_find_and_load_pgi_fortran_compiler)
     endif()
 endfunction()
 
-# Tries to load a fortran environment specified by VCPKG_FORTRAN_COMPILER
+## # vcpkg_enable_fortran
+##
+## Tries to detect a fortran compiler and pulls in the environment to use it.
+##
+## This functions reads the variable `VCPKG_FORTRAN_COMPILER` to determine which fortran compiler to use.
+## Usually this variable should be set in the triplet by the user.
+##
+## Supported values for `VCPKG_FORTRAN_COMPILER` are
+##
+##  - `Intel` = Intel Compiler (intel.com)
+##  - `PGI` = The Portland Group (pgroup.com)
+##
+## If the variable is not set an error will be raised.
+##
+## ## Usage:
+## ```cmake
+## vcpkg_enable_fortran()
+## ```
+##
+## ## Examples:
+##
+## * [lapack](https://github.com/Microsoft/vcpkg/blob/master/ports/lapack/portfile.cmake)
 function(vcpkg_enable_fortran)
     if(DEFINED VCPKG_FORTRAN_COMPILER)
         if(VCPKG_FORTRAN_COMPILER STREQUAL "Intel")
