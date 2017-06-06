@@ -62,6 +62,10 @@ configure_qt(
 )
 install_qt()
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${CURRENT_PACKAGES_DIR}/lib/cmake
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/add-private-header-paths.patch"
+)
 file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/share/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
