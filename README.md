@@ -31,6 +31,8 @@ For CMake projects, simply include our toolchain file. See our [using a package]
 ## Examples
 See the [documentation](docs/index.md) for specific walkthroughs, including [using a package](docs/examples/using-sqlite.md) and [adding a new package](docs/examples/packaging-zlib.md).
 
+Our docs are now also available online at ReadTheDocs: [https://vcpkg.readthedocs.io/]()!
+
 See a 4 minute [video demo](https://www.youtube.com/watch?v=y41WFKbQFTw).
 
 ## Contributing
