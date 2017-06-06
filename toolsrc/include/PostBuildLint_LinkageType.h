@@ -1,6 +1,7 @@
 #pragma once
 #include "CStringView.h"
 #include <string>
+#include <array>
 
 namespace vcpkg::PostBuildLint
 {
