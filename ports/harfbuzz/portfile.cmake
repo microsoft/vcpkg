@@ -12,12 +12,12 @@ vcpkg_apply_patches(
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-fix-uwp-build.patch"
 )
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     SET(HAVE_GLIB "OFF")
-	SET(BUILTIN_UCDN "ON")
+    SET(BUILTIN_UCDN "ON")
 else()
     SET(HAVE_GLIB "ON")
-	SET(BUILTIN_UCDN "OFF")
+    SET(BUILTIN_UCDN "OFF")
 endif()
 
 vcpkg_configure_cmake(
