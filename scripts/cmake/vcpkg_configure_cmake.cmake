@@ -111,19 +111,16 @@ function(vcpkg_configure_cmake)
 
     if((NOT DEFINED VCPKG_CXX_FLAGS_DEBUG AND NOT DEFINED VCPKG_C_FLAGS_DEBUG) OR
         (DEFINED VCPKG_CXX_FLAGS_DEBUG AND DEFINED VCPKG_C_FLAGS_DEBUG))
-        message(STATUS "Variables for VCPKG_CXX_FLAGS_DEBUG and VCPKG_C_FLAGS_DEBUG are set correctly")
     else()
         message(FATAL_ERROR "You must set both the VCPKG_CXX_FLAGS_DEBUG and VCPKG_C_FLAGS_DEBUG")
     endif()
     if((NOT DEFINED VCPKG_CXX_FLAGS_RELEASE AND NOT DEFINED VCPKG_C_FLAGS_RELEASE) OR
         (DEFINED VCPKG_CXX_FLAGS_RELEASE AND DEFINED VCPKG_C_FLAGS_RELEASE))
-        message(STATUS "Variables for VCPKG_CXX_FLAGS_RELEASE and VCPKG_C_FLAGS_RELEASE are set correctly")
     else()
         message(FATAL_ERROR "You must set both the VCPKG_CXX_FLAGS_RELEASE and VCPKG_C_FLAGS_RELEASE")
     endif()
     if((NOT DEFINED VCPKG_CXX_FLAGS AND NOT DEFINED VCPKG_C_FLAGS) OR
         (DEFINED VCPKG_CXX_FLAGS AND DEFINED VCPKG_C_FLAGS))
-        message(STATUS "Variables for VCPKG_CXX_FLAGS and VCPKG_C_FLAGS are set correctly")
     else()
         message(FATAL_ERROR "You must set both the VCPKG_CXX_FLAGS and VCPKG_C_FLAGS")
     endif()
