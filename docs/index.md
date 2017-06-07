@@ -13,6 +13,7 @@ Vcpkg helps you get C and C++ libraries on Windows. This tool and ecosystem are 
 ### User Help
 
 - [Integration with build systems](users/integration.md)
+- [Triplet files](users/triplets.md)
 
 ### Maintainer help
 
