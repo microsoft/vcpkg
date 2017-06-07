@@ -2,7 +2,10 @@
 
 #include "vcpkg_System.h"
 #include "vcpkg_expected.h"
+<<<<<<< HEAD
 
+=======
+>>>>>>> db9f1a7d... wip2
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -29,14 +32,23 @@ namespace vcpkg
         std::error_code error;
     };
 
+    struct FeatureParagraph
+    {
+        // static ExpectedT<SourceParagraph, ParseControlErrorInfo> parse_control_file(
+        //    std::unordered_map<std::string, std::string> fields);
+
+        FeatureParagraph() = default;
+
+        std::string name;
+        std::string description;
+        std::vector<Dependency> depends;
+    };
+
     /// <summary>
     /// Port metadata (CONTROL file)
     /// </summary>
     struct SourceParagraph
     {
-        static ExpectedT<SourceControlFile, ParseControlErrorInfo> parse_control_file(
-            std::vector<std::unordered_map<std::string, std::string>> control_paragraph_fields);
-
         SourceParagraph() = default;
 
         std::string name;
@@ -46,6 +58,27 @@ namespace vcpkg
         std::vector<std::string> supports;
         std::vector<Dependency> depends;
     };
+
+    struct SourceControlFile
+    {
+        SourceControlFile() = default;
+
+        static ExpectedT<SourceControlFile, ParseControlErrorInfo> parse_control_file(
+            std::vector<std::unordered_map<std::string, std::string>>&& control_paragraphs);
+
+        SourceParagraph core_paragraph;
+        std::vector<std::unique_ptr<FeatureParagraph>> feature_paragraphs;
+    };
+    namespace FeatureParagraphRequiredField
+    {
+        static const std::string FEATURE = "Feature";
+    }
+
+    namespace FeatureParagraphOptionalField
+    {
+        static const std::string DESCRIPTION = "Description";
+        static const std::string BUILD_DEPENDS = "Build-Depends";
+    }
 
     void print_error_message(const ParseControlErrorInfo& info);
     void print_error_message(std::vector<ParseControlErrorInfo> error_info_list);

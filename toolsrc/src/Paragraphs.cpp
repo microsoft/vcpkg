@@ -207,7 +207,7 @@ namespace vcpkg::Paragraphs
         Expected<std::vector<std::unordered_map<std::string, std::string>>> pghs = get_paragraphs(fs, path / "CONTROL");
         if (auto vector_pghs = pghs.get())
         {
-            return SourceParagraph::parse_control_file(*vector_pghs);
+            return SourceControlFile::parse_control_file(std::move(*vector_pghs));
         }
         error_info.error = pghs.error();
         return error_info;

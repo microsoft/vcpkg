@@ -777,7 +777,7 @@ namespace vcpkg::PostBuildLint
 
         switch (build_info.library_linkage)
         {
-            case LinkageType::BackingEnum::DYNAMIC:
+            case Build::LinkageType::DYNAMIC:
             {
                 std::vector<fs::path> debug_dlls = fs.get_files_recursive(debug_bin_dir);
                 Util::unstable_keep_if(debug_dlls, has_extension_pred(fs, ".dll"));
@@ -802,7 +802,7 @@ namespace vcpkg::PostBuildLint
                 error_count += check_outdated_crt_linkage_of_dlls(dlls, toolset.dumpbin, build_info);
                 break;
             }
-            case LinkageType::BackingEnum::STATIC:
+            case Build::LinkageType::STATIC:
             {
                 std::vector<fs::path> dlls = fs.get_files_recursive(package_dir);
                 Util::unstable_keep_if(dlls, has_extension_pred(fs, ".dll"));
@@ -812,18 +812,17 @@ namespace vcpkg::PostBuildLint
 
                 if (!build_info.policies.is_enabled(BuildPolicy::ONLY_RELEASE_CRT))
                 {
-                    error_count += check_crt_linkage_of_libs(
-                        BuildType::value_of(ConfigurationTypeC::DEBUG, build_info.crt_linkage),
-                        debug_libs,
-                        toolset.dumpbin);
+                    error_count +=
+                        check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::DEBUG, build_info.crt_linkage),
+                                                  debug_libs,
+                                                  toolset.dumpbin);
                 }
                 error_count +=
-                    check_crt_linkage_of_libs(BuildType::value_of(ConfigurationTypeC::RELEASE, build_info.crt_linkage),
+                    check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::RELEASE, build_info.crt_linkage),
                                               release_libs,
                                               toolset.dumpbin);
                 break;
             }
-            case LinkageType::BackingEnum::NULLVALUE:
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
 

@@ -35,24 +35,29 @@ namespace vcpkg::Commands::BuildCommand
 
         const ExpectedT<SourceControlFile, ParseControlErrorInfo> source_control_file =
             Paragraphs::try_load_port(paths.get_filesystem(), port_dir);
-        auto maybe_spgh = source_control_file.get()->core_paragraph;
+        auto maybe_scf = source_control_file.get();
 
-        if (!maybe_spgh)
+        if (!maybe_scf)
         {
-            print_error_message(maybe_spgh.error());
+            print_error_message(source_control_file.error());
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
-        const SourceParagraph& spgh = maybe_spgh.value_or_exit(VCPKG_LINE_INFO);
+        const SourceControlFile& scf = source_control_file.value_or_exit(VCPKG_LINE_INFO);
         Checks::check_exit(VCPKG_LINE_INFO,
-                           spec.name() == spgh.name,
+                           spec.name() == scf.core_paragraph.name,
                            "The Name: field inside the CONTROL does not match the port directory: '%s' != '%s'",
-                           spgh.name,
+                           scf.core_paragraph.name,
                            spec.name());
 
         StatusParagraphs status_db = database_load_check(paths);
         Build::BuildPackageOptions build_package_options{Build::UseHeadVersion::NO, Build::AllowDownloads::YES};
+<<<<<<< HEAD
         const Build::BuildPackageConfig build_config{spgh, spec.triplet(), paths.port_dir(spec), build_package_options};
+=======
+        const Build::BuildPackageConfig build_config{
+            scf.core_paragraph, spec.triplet(), paths.port_dir(spec), build_package_options};
+>>>>>>> db9f1a7d... wip2
         const auto result = Build::build_package(paths, build_config, status_db);
         if (result.code == BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES)
         {

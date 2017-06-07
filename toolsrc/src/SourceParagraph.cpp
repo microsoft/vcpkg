@@ -66,13 +66,18 @@ namespace vcpkg
                         error_info_list.front().valid_fields_as_string);
         System::println("Different source may be available for vcpkg. Use .\\bootstrap-vcpkg.bat to update.\n");
     }
+    // std::vector<SourceParagraph> getSourceParagraphs(const std::vector<SourceControlFile>& control_files);
+    //{
+    //    return Util::fmap(control_files, [](const SourceControlFile& x) { return x.core_paragraph; });
+    //}
 
-    ExpectedT<SourceControlFile, ParseControlErrorInfo> SourceParagraph::parse_control_file(
+    ExpectedT<SourceControlFile, ParseControlErrorInfo> SourceControlFile::parse_control_file(
         std::vector<std::unordered_map<std::string, std::string>>&& control_paragraphs)
     {
         // nonzero
-        Checks::check_exit(VCPKG_LINE_INFO, !control_paragraphs.empty());
-        std::unordered_map<std::string, std::string> fields& = control_paragraphs.front();
+        // Checks::check_exit(VCPKG_LINE_INFO, !control_paragraphs.empty()); // return ExpectedT instead
+        std::unordered_map<std::string, std::string> fields = control_paragraphs.front();
+
         SourceControlFile control_file;
         SourceParagraph& sparagraph = control_file.core_paragraph;
         sparagraph.name = details::remove_required_field(&fields, SourceParagraphRequiredField::SOURCE);
@@ -86,25 +91,25 @@ namespace vcpkg
         std::string sups = details::remove_optional_field(&fields, SourceParagraphOptionalField::SUPPORTS);
         sparagraph.supports = parse_comma_list(sups);
 
+        control_paragraphs.erase(control_paragraphs.begin());
+
         if (feature_packages)
         {
-            bool first = true;
             for (auto&& feature_pgh : control_paragraphs)
             {
-                if (first)
-                {
-                    first = false;
-                    continue;
-                }
-                control_file.feature_paragraphs.emplace_back(std::make_unique<FeatureParagraph>());
-                FeatureParagraph& fparagraph = *control_file.feature_paragraphs.back();
+                // unique ptr cannot be copied, so this calls the move constructor, or is this an initialization
+                std::unique_ptr<FeatureParagraph> fparagraph = std::make_unique<FeatureParagraph>();
 
-                fparagraph.name = details::remove_required_field(&feature_pgh, FeatureParagraphRequiredField::FEATURE);
-                fparagraph.description =
+                // FeatureParagraph& fparagraph = *control_file.feature_paragraphs.back();
+
+                fparagraph->name = details::remove_required_field(&feature_pgh, FeatureParagraphRequiredField::FEATURE);
+                fparagraph->description =
                     details::remove_required_field(&feature_pgh, FeatureParagraphOptionalField::DESCRIPTION);
-                std::string deps =
-                    details::remove_optional_field(&fields, FeatureParagraphOptionalField::BUILD_DEPENDS);
-                fparagraph.depends = expand_qualified_dependencies(parse_depends(deps));
+                std::string feature_deps =
+                    details::remove_optional_field(&feature_pgh, FeatureParagraphOptionalField::BUILD_DEPENDS);
+                fparagraph->depends = expand_qualified_dependencies(parse_depends(feature_deps));
+
+                control_file.feature_paragraphs.emplace_back(fparagraph);
             }
         }
 

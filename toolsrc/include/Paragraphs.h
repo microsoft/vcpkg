@@ -1,7 +1,6 @@
 #pragma once
 
 #include "BinaryParagraph.h"
-#include "FeatureParagraph.h"
 #include "VcpkgPaths.h"
 #include "VersionT.h"
 #include "filesystem_fs.h"
