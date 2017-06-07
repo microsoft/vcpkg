@@ -13,9 +13,16 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    set(BUILD_STATIC 1)
+else()
+    set(BUILD_STATIC 0)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    OPTIONS -DBUILD_STATIC=${BUILD_STATIC}
     # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
     # OPTIONS_RELEASE -DOPTIMIZE=1
     # OPTIONS_DEBUG -DDEBUGGABLE=1
@@ -37,6 +44,11 @@ file(GLOB_RECURSE TO_REMOVE
    ${CURRENT_PACKAGES_DIR}/bin/*.exe
    ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
 file(REMOVE ${TO_REMOVE})
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/corrade)
