@@ -1,0 +1,4 @@
+Source: magnum
+Version: jun2017
+Build-Depends: corrade, sdl2
+Description: C++11/C++14 and OpenGL graphics engine http://mosra.cz/blog/magnum.php
