@@ -62,7 +62,7 @@ namespace vcpkg::Commands::Search
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_GRAPH});
 
         const std::vector<SourceParagraph> source_paragraphs =
-            Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
+            getSourceParagraphs(Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports));
         if (options.find(OPTION_GRAPH) != options.cend())
         {
             const std::string graph_as_string = create_graph_as_string(source_paragraphs);

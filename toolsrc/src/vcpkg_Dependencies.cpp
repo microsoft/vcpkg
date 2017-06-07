@@ -174,8 +174,9 @@ namespace vcpkg::Dependencies
                 if (auto bpgh = maybe_bpgh.get())
                     return InstallPlanAction{spec, {nullopt, *bpgh, nullopt}, request_type};
 
-                ExpectedT<SourceParagraph, ParseControlErrorInfo> maybe_spgh =
+                ExpectedT<SourceControlFile, ParseControlErrorInfo> source_control_file =
                     Paragraphs::try_load_port(paths.get_filesystem(), paths.port_dir(spec));
+                auto maybe_spgh = (*source_control_file.get()).core_paragraph;
                 if (auto spgh = maybe_spgh.get())
                     return InstallPlanAction{spec, {nullopt, nullopt, *spgh}, request_type};
 
@@ -286,8 +287,9 @@ namespace vcpkg::Dependencies
                 if (auto bpgh = maybe_bpgh.get())
                     return ExportPlanAction{spec, {nullopt, *bpgh, nullopt}, request_type};
 
-                ExpectedT<SourceParagraph, ParseControlErrorInfo> maybe_spgh =
+                ExpectedT<SourceControlFile, ParseControlErrorInfo> source_control_file =
                     Paragraphs::try_load_port(paths.get_filesystem(), paths.port_dir(spec));
+                auto maybe_spgh = (*source_control_file.get()).core_paragraph;
                 if (auto spgh = maybe_spgh.get())
                     return ExportPlanAction{spec, {nullopt, nullopt, *spgh}, request_type};
 

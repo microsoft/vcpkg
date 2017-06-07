@@ -33,8 +33,9 @@ namespace vcpkg::Commands::BuildCommand
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        const ExpectedT<SourceParagraph, ParseControlErrorInfo> maybe_spgh =
+        const ExpectedT<SourceControlFile, ParseControlErrorInfo> source_control_file =
             Paragraphs::try_load_port(paths.get_filesystem(), port_dir);
+        auto maybe_spgh = source_control_file.get()->core_paragraph;
 
         if (!maybe_spgh)
         {

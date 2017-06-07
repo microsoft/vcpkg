@@ -9,6 +9,8 @@
 
 namespace vcpkg
 {
+    extern bool feature_packages;
+
     struct Triplet;
 
     struct Dependency
@@ -32,8 +34,8 @@ namespace vcpkg
     /// </summary>
     struct SourceParagraph
     {
-        static ExpectedT<SourceParagraph, ParseControlErrorInfo> parse_control_file(
-            std::unordered_map<std::string, std::string> fields);
+        static ExpectedT<SourceControlFile, ParseControlErrorInfo> parse_control_file(
+            std::vector<std::unordered_map<std::string, std::string>> control_paragraph_fields);
 
         SourceParagraph() = default;
 

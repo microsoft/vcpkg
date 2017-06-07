@@ -193,7 +193,7 @@ namespace vcpkg::Paragraphs
             return p.at(0);
         }
 
-        return std::error_code(ParagraphParseResult::EXPECTED_ONE_PARAGRAPH);
+        if (!feature_packages) return std::error_code(ParagraphParseResult::EXPECTED_ONE_PARAGRAPH);
     }
 
     Expected<std::vector<std::unordered_map<std::string, std::string>>> parse_paragraphs(const std::string& str)
@@ -201,13 +201,13 @@ namespace vcpkg::Paragraphs
         return Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
     }
 
-    ExpectedT<SourceParagraph, ParseControlErrorInfo> try_load_port(const Files::Filesystem& fs, const fs::path& path)
+    ExpectedT<SourceControlFile, ParseControlErrorInfo> try_load_port(const Files::Filesystem& fs, const fs::path& path)
     {
         ParseControlErrorInfo error_info;
-        Expected<std::unordered_map<std::string, std::string>> pghs = get_single_paragraph(fs, path / "CONTROL");
-        if (auto p = pghs.get())
+        Expected<std::vector<std::unordered_map<std::string, std::string>>> pghs = get_paragraphs(fs, path / "CONTROL");
+        if (auto vector_pghs = pghs.get())
         {
-            return SourceParagraph::parse_control_file(*p);
+            return SourceParagraph::parse_control_file(*vector_pghs);
         }
         error_info.error = pghs.error();
         return error_info;
@@ -226,13 +226,13 @@ namespace vcpkg::Paragraphs
         return pghs.error();
     }
 
-    std::vector<SourceParagraph> load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir)
+    std::vector<SourceControlFile> load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir)
     {
-        std::vector<SourceParagraph> output;
+        std::vector<SourceControlFile> output;
         std::vector<ParseControlErrorInfo> port_errors;
         for (auto&& path : fs.get_files_non_recursive(ports_dir))
         {
-            ExpectedT<SourceParagraph, ParseControlErrorInfo> source_paragraph = try_load_port(fs, path);
+            ExpectedT<SourceControlFile, ParseControlErrorInfo> source_paragraph = try_load_port(fs, path);
             if (auto srcpgh = source_paragraph.get())
             {
                 output.emplace_back(std::move(*srcpgh));

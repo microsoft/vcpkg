@@ -97,10 +97,10 @@ namespace vcpkg::Commands::PortsDiff
                              L".vcpkg-root",
                              git_exe.native());
         System::cmd_execute_clean(cmd);
-        const std::vector<SourceParagraph> source_paragraphs =
+        const std::vector<SourceControlFile> source_control_files =
             Paragraphs::load_all_ports(paths.get_filesystem(), temp_checkout_path / ports_dir_name_as_string);
         const std::map<std::string, VersionT> names_and_versions =
-            Paragraphs::extract_port_names_and_versions(source_paragraphs);
+            Paragraphs::extract_port_names_and_versions(getSourceParagraphs(source_control_files));
         fs.remove_all(temp_checkout_path, ec);
         return names_and_versions;
     }

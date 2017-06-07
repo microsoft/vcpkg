@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BinaryParagraph.h"
+#include "FeatureParagraph.h"
 #include "VcpkgPaths.h"
 #include "VersionT.h"
 #include "filesystem_fs.h"
@@ -16,12 +17,12 @@ namespace vcpkg::Paragraphs
     Expected<ParagraphDataMap> parse_single_paragraph(const std::string& str);
     Expected<std::vector<ParagraphDataMap>> parse_paragraphs(const std::string& str);
 
-    ExpectedT<SourceParagraph, ParseControlErrorInfo> try_load_port(const Files::Filesystem& fs,
-                                                                    const fs::path& control_path);
+    ExpectedT<SourceControlFile, ParseControlErrorInfo> try_load_port(const Files::Filesystem& fs,
+                                                                      const fs::path& control_path);
 
     Expected<BinaryParagraph> try_load_cached_package(const VcpkgPaths& paths, const PackageSpec& spec);
 
-    std::vector<SourceParagraph> load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir);
+    std::vector<SourceControlFile> load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir);
 
     std::map<std::string, VersionT> extract_port_names_and_versions(
         const std::vector<SourceParagraph>& source_paragraphs);
