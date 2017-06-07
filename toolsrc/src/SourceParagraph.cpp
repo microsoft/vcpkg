@@ -66,10 +66,10 @@ namespace vcpkg
                         error_info_list.front().valid_fields_as_string);
         System::println("Different source may be available for vcpkg. Use .\\bootstrap-vcpkg.bat to update.\n");
     }
-    // std::vector<SourceParagraph> getSourceParagraphs(const std::vector<SourceControlFile>& control_files);
-    //{
-    //    return Util::fmap(control_files, [](const SourceControlFile& x) { return x.core_paragraph; });
-    //}
+    std::vector<SourceParagraph> getSourceParagraphs(const std::vector<SourceControlFile>& control_files)
+    {
+        return Util::fmap(control_files, [](const SourceControlFile& x) { return x.core_paragraph; });
+    }
 
     ExpectedT<SourceControlFile, ParseControlErrorInfo> SourceControlFile::parse_control_file(
         std::vector<std::unordered_map<std::string, std::string>>&& control_paragraphs)
@@ -98,18 +98,21 @@ namespace vcpkg
             for (auto&& feature_pgh : control_paragraphs)
             {
                 // unique ptr cannot be copied, so this calls the move constructor, or is this an initialization
-                std::unique_ptr<FeatureParagraph> fparagraph = std::make_unique<FeatureParagraph>();
+                // std::unique_ptr<FeatureParagraph> fparagraph = std::make_unique<FeatureParagraph>();
 
-                // FeatureParagraph& fparagraph = *control_file.feature_paragraphs.back();
+                control_file.feature_paragraphs.emplace_back(std::make_unique<FeatureParagraph>());
 
-                fparagraph->name = details::remove_required_field(&feature_pgh, FeatureParagraphRequiredField::FEATURE);
-                fparagraph->description =
+                FeatureParagraph& fparagraph = *control_file.feature_paragraphs.back();
+
+                fparagraph.name = details::remove_required_field(&feature_pgh, FeatureParagraphRequiredField::FEATURE);
+                fparagraph.description =
                     details::remove_required_field(&feature_pgh, FeatureParagraphOptionalField::DESCRIPTION);
                 std::string feature_deps =
                     details::remove_optional_field(&feature_pgh, FeatureParagraphOptionalField::BUILD_DEPENDS);
-                fparagraph->depends = expand_qualified_dependencies(parse_depends(feature_deps));
+                fparagraph.depends = expand_qualified_dependencies(parse_comma_list(feature_deps));
 
-                control_file.feature_paragraphs.emplace_back(fparagraph);
+                // why do we need a std move here
+                // control_file.feature_paragraphs.emplace_back(std::move(fparagraph));
             }
         }
 

@@ -193,7 +193,7 @@ namespace vcpkg::Paragraphs
             return p.at(0);
         }
 
-        if (!feature_packages) return std::error_code(ParagraphParseResult::EXPECTED_ONE_PARAGRAPH);
+        return std::error_code(ParagraphParseResult::EXPECTED_ONE_PARAGRAPH);
     }
 
     Expected<std::vector<std::unordered_map<std::string, std::string>>> parse_paragraphs(const std::string& str)

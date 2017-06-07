@@ -2,10 +2,7 @@
 
 #include "vcpkg_System.h"
 #include "vcpkg_expected.h"
-<<<<<<< HEAD
 
-=======
->>>>>>> db9f1a7d... wip2
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -80,6 +77,7 @@ namespace vcpkg
         static const std::string BUILD_DEPENDS = "Build-Depends";
     }
 
+    std::vector<SourceParagraph> getSourceParagraphs(const std::vector<SourceControlFile>& control_files);
     void print_error_message(const ParseControlErrorInfo& info);
     void print_error_message(std::vector<ParseControlErrorInfo> error_info_list);
 

@@ -53,6 +53,24 @@ namespace vcpkg::Commands::Search
                         details::shorten_description(source_paragraph.description));
     }
 
+    static void do_print(const SourceControlFile& source_control_file)
+    {
+        System::println("%-20s %-16s %s",
+                        source_control_file.core_paragraph.name,
+                        source_control_file.core_paragraph.version,
+                        details::shorten_description(source_control_file.core_paragraph.description));
+        if (feature_packages)
+        {
+            for (auto&& feature : source_control_file.feature_paragraphs)
+            {
+                System::println("%s%-31s %s",
+                                source_control_file.core_paragraph.name,
+                                "[" + feature->name + "]",
+                                details::shorten_description(feature->description));
+            }
+        }
+    }
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         static const std::string example = Strings::format(
@@ -61,8 +79,9 @@ namespace vcpkg::Commands::Search
         args.check_max_arg_count(1, example);
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_GRAPH});
 
-        const std::vector<SourceParagraph> source_paragraphs =
-            getSourceParagraphs(Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports));
+        const std::vector<SourceControlFile> source_control_files =
+            Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
+        const std::vector<SourceParagraph> source_paragraphs = getSourceParagraphs(source_control_files);
         if (options.find(OPTION_GRAPH) != options.cend())
         {
             const std::string graph_as_string = create_graph_as_string(source_paragraphs);
@@ -72,27 +91,29 @@ namespace vcpkg::Commands::Search
 
         if (args.command_arguments.empty())
         {
-            for (const SourceParagraph& source_paragraph : source_paragraphs)
+            for (const SourceControlFile& source_control_file : source_control_files)
             {
-                do_print(source_paragraph);
+                do_print(source_control_file);
             }
         }
         else
         {
             // At this point there is 1 argument
-            for (const SourceParagraph& source_paragraph : source_paragraphs)
+            for (const SourceControlFile& source_control_file : source_control_files)
             {
-                if (Strings::case_insensitive_ascii_find(source_paragraph.name, args.command_arguments[0]) ==
-                    source_paragraph.name.end())
+                if (Strings::case_insensitive_ascii_find(source_control_file.core_paragraph.name,
+                                                         args.command_arguments[0]) ==
+                    source_control_file.core_paragraph.name.end())
                 {
-                    if (Strings::case_insensitive_ascii_find(source_paragraph.description, args.command_arguments[0]) ==
-                        source_paragraph.description.end())
+                    if (Strings::case_insensitive_ascii_find(source_control_file.core_paragraph.description,
+                                                             args.command_arguments[0]) ==
+                        source_control_file.core_paragraph.description.end())
                     {
                         continue;
                     }
                 }
 
-                do_print(source_paragraph);
+                do_print(source_control_file);
             }
         }
 

@@ -120,6 +120,7 @@ namespace vcpkg
                 if (arg == "--featurepackages")
                 {
                     feature_packages = true;
+                    continue;
                 }
 
                 args.optional_command_arguments.insert(arg);
