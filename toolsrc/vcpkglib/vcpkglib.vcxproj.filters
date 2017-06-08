@@ -299,5 +299,8 @@
     <ClInclude Include="..\include\PostBuildLint_BuildType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\Span.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Span.h"
 #include "vcpkg_System.h"
 #include "vcpkg_expected.h"
 
@@ -23,7 +24,6 @@ namespace vcpkg
     {
         std::string name;
         std::string remaining_fields_as_string;
-        std::string valid_fields_as_string;
         std::error_code error;
     };
 
@@ -45,8 +45,11 @@ namespace vcpkg
         std::vector<Dependency> depends;
     };
 
-    void print_error_message(const ParseControlErrorInfo& info);
-    void print_error_message(std::vector<ParseControlErrorInfo> error_info_list);
+    void print_error_message(span<const ParseControlErrorInfo> error_info_list);
+    inline void print_error_message(const ParseControlErrorInfo& error_info_list)
+    {
+        return print_error_message({&error_info_list, 1});
+    }
 
     std::vector<std::string> filter_dependencies(const std::vector<Dependency>& deps, const Triplet& t);
 

@@ -179,10 +179,8 @@ namespace vcpkg::Dependencies
                 if (auto spgh = maybe_spgh.get())
                     return InstallPlanAction{spec, {nullopt, nullopt, *spgh}, request_type};
 
-                else
-                    print_error_message(maybe_spgh.error());
-
-                Checks::exit_with_message(VCPKG_LINE_INFO, "Could not find package %s", spec);
+                print_error_message(maybe_spgh.error());
+                Checks::exit_fail(VCPKG_LINE_INFO);
             }
         };
 

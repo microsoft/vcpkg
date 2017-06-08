@@ -4,6 +4,7 @@
 #include "SourceParagraph.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
+#include "vcpkglib.h"
 #include "vcpkglib_helpers.h"
 
 namespace vcpkg::Commands::Search
@@ -61,8 +62,28 @@ namespace vcpkg::Commands::Search
         args.check_max_arg_count(1, example);
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_GRAPH});
 
-        const std::vector<SourceParagraph> source_paragraphs =
-            Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
+        auto sources_and_errors = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
+
+        if (!sources_and_errors.errors.empty())
+        {
+            if (vcpkg::g_debugging)
+            {
+                print_error_message(sources_and_errors.errors);
+            }
+            else
+            {
+                for (auto&& error : sources_and_errors.errors)
+                {
+                    System::println(
+                        System::Color::warning, "Warning: an error occurred while parsing '%s'\n", error.name);
+                }
+                System::println(System::Color::warning,
+                                "Use '--debug' to get more information about the parse failures.\n");
+            }
+        }
+
+        auto& source_paragraphs = sources_and_errors.paragraphs;
+
         if (options.find(OPTION_GRAPH) != options.cend())
         {
             const std::string graph_as_string = create_graph_as_string(source_paragraphs);

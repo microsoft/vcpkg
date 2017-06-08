@@ -20,9 +20,10 @@ namespace vcpkg::Commands::CI
                                                            const fs::path& ports_directory,
                                                            const Triplet& triplet)
     {
-        std::vector<SourceParagraph> ports = Paragraphs::load_all_ports(fs, ports_directory);
+        auto sources = Paragraphs::load_all_ports(fs, ports_directory);
+
         std::vector<PackageSpec> specs;
-        for (const SourceParagraph& p : ports)
+        for (const SourceParagraph& p : sources)
         {
             specs.push_back(PackageSpec::from_name_and_triplet(p.name, triplet).value_or_exit(VCPKG_LINE_INFO));
         }

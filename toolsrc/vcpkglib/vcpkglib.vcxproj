@@ -142,6 +142,7 @@
     <ClInclude Include="..\include\LineInfo.h" />
     <ClInclude Include="..\include\ParagraphParseResult.h" />
     <ClInclude Include="..\include\PostBuildLint_BuildType.h" />
+    <ClInclude Include="..\include\Span.h" />
     <ClInclude Include="..\include\vcpkg_Build.h" />
     <ClInclude Include="..\include\coff_file_reader.h" />
     <ClInclude Include="..\include\vcpkg_expected.h" />
