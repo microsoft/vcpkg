@@ -5,11 +5,14 @@ Vcpkg offers many ways to integrate into your build so you can do what's right f
 - [`integrate` command](#integrate)
 - [`export` command](#export)
 
+Each integration style has heuristics to deduce the correct [triplet][]. This can be overridden using [a common method](#triplet-selection) based on your buildsystem.
+
 <a name="integrate"></a>
 ### Integrate Command
 
 These link your project(s) to a specific copy of Vcpkg on your machine so any updates or new package installations will be instantly available for the next build of your project.
 
+<a name="user-wide-msbuild"></a>
 #### User-wide for MSBuild (Recommended for Open Source MSBuild projects)
 ```no-highlight
 vcpkg integrate install
@@ -83,3 +86,36 @@ Each of these have the same layout, which mimics the layout of a full vcpkg:
 Additionally, NuGet packages will contain a `build\native\vcpkg.targets` that integrates with MSBuild projects.
 
 Please also see our [blog post](https://blogs.msdn.microsoft.com/vcblog/2017/05/03/vcpkg-introducing-export-command/) for additional examples.
+
+<a name="triplet-selection"></a>
+### Triplet selection
+Every integration mechanism besides manually adding the folders will deduce a [triplet][] for your project as one of:
+- x86-windows
+- x64-windows
+- x86-uwp
+- x64-uwp
+- arm-uwp
+
+#### With MSBuild
+You can see the automatically deduced triplet by setting your MSBuild verbosity to Normal or higher:
+
+> *Shortcut: Ctrl+Q "build and run"*
+>
+> Tools -> Options -> Projects and Solutions -> Build and Run -> MSBuild project build output verbosity
+
+To override the automatically chosen [triplet][], you can specify the MSBuild property `VcpkgTriplet` in your `.vcxproj`. We recommend adding this to the `Globals` PropertyGroup.
+```xml
+<PropertyGroup Label="Globals">
+  <!-- .... -->
+  <VcpkgTriplet Condition="'$(Configuration)'=='Win32'">x86-windows-static</VcpkgTriplet>
+  <VcpkgTriplet Condition="'$(Configuration)'=='x64'">x64-windows-static</VcpkgTriplet>
+</PropertyGroup>
+```
+
+#### With CMake
+Simply set `VCPKG_TARGET_TRIPLET` on the configure line.
+```no-highlight
+cmake ../my/project -DVCPKG_TARGET_TRIPLET=x64-windows-static -DCMAKE_TOOLCHAIN_FILE=...
+```
+
+[triplet]: triplets.md

@@ -6,6 +6,8 @@ In Vcpkg, we use triplets to describe self-consistent builds of library sets. Th
 
 We currently provide many triplets by default (run `vcpkg help triplet`). However, you can easily add your own by creating a new file in the `triplets\` directory. The new triplet will immediately be available for use in commands, such as `vcpkg install boost:x86-windows-custom`.
 
+To change the triplet used by your project, such as to enable static linking, see our [Integration Document](integration.md#triplet-selection).
+
 ## Variables
 ### VCPKG_TARGET_ARCHITECTURE
 Specifies the target machine architecture.
