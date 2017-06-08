@@ -11,18 +11,16 @@
 #
 
 include(vcpkg_common_functions)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.0/wxWidgets-3.1.0.7z"
-    FILENAME "wxWidgets-3.1.0.7z"
-    SHA512 309cd3c11052ab7ea77816ffcb70e280c0984fb7770c7e9999b4437d1ef9bb91c3f0521ad9d3592abd542bbed1fa74f6c83fce029504cf1ac4cf25e96c920b0f
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO wxWidgets/wxWidgets
+    REF v3.1.0
+    SHA512 740f3c977526395f32c2da4ea7f5f2ddc9b9a4cfd8d2cd129f011ede8e427621461c551c648b5d7a8f9ce78477e30426b836b310cff09c427ca8f9b9a9532074
+    HEAD_REF master
 )
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src)
-
-vcpkg_extract_source_archive(${ARCHIVE})
-
 vcpkg_apply_patches(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src
+    SOURCE_PATH ${SOURCE_PATH}
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/use-installed-libs.patch"
 )
 
@@ -37,12 +35,15 @@ else ()
     set(LIB_SUB_PATH_PRE vc)
 endif()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND NMAKE_OPTIONS SHARED=1)
     set(LIB_SUB_PATH_TYP dll)
 else()
-    list(APPEND NMAKE_OPTIONS RUNTIME_LIBS=static)
     set(LIB_SUB_PATH_TYP lib)
+endif()
+
+if (VCPKG_CRT_LINKAGE STREQUAL "static")
+    list(APPEND NMAKE_OPTIONS RUNTIME_LIBS=static)
 endif()
 
 set(LIB_SUB_PATH ${LIB_SUB_PATH_PRE}_${LIB_SUB_PATH_TYP}${TARGET_TRIPLET})
@@ -50,25 +51,27 @@ set(LIB_SUB_PATH ${LIB_SUB_PATH_PRE}_${LIB_SUB_PATH_TYP}${TARGET_TRIPLET})
 list(APPEND NMAKE_OPTIONS VCPKG_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include)
 
 set(NMAKE_OPTIONS_REL
-    "${NMAKE_OPTIONS}"
+    ${NMAKE_OPTIONS}
     VCPKG_LIB_DIR=${CURRENT_INSTALLED_DIR}/lib
     BUILD=release
     CFG=${TARGET_TRIPLET}-rel
 )
 
 set(NMAKE_OPTIONS_DBG
-    "${NMAKE_OPTIONS}"
+    ${NMAKE_OPTIONS}
     VCPKG_LIB_DIR=${CURRENT_INSTALLED_DIR}/debug/lib
     CFG=${TARGET_TRIPLET}-dbg
 )
+
+file(REMOVE_RECURSE ${SOURCE_PATH}/lib/${LIB_SUB_PATH})
 
 ################
 # Release build
 ################
 message(STATUS "Building ${TARGET_TRIPLET}-rel")
+set(ENV{_LINK_} ${CURRENT_INSTALLED_DIR}/lib/expat.lib)
 vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f makefile.vc
-    "${NMAKE_OPTIONS_REL}"
+    COMMAND ${NMAKE} -f makefile.vc ${NMAKE_OPTIONS_REL}
     WORKING_DIRECTORY ${SOURCE_PATH}/build/msw
     LOGNAME nmake-build-${TARGET_TRIPLET}-release
 )
@@ -78,9 +81,9 @@ message(STATUS "Building ${TARGET_TRIPLET}-rel done")
 # Debug build
 ################
 message(STATUS "Building ${TARGET_TRIPLET}-dbg")
+set(ENV{_LINK_} ${CURRENT_INSTALLED_DIR}/debug/lib/expat.lib)
 vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f makefile.vc
-    "${NMAKE_OPTIONS_DBG}"
+    COMMAND ${NMAKE} -f makefile.vc ${NMAKE_OPTIONS_DBG}
     WORKING_DIRECTORY ${SOURCE_PATH}/build/msw
     LOGNAME nmake-build-${TARGET_TRIPLET}-debug
 )
@@ -92,7 +95,7 @@ file(INSTALL ${SOURCE_PATH}/include
 file(INSTALL ${SOURCE_PATH}/lib/${LIB_SUB_PATH}-rel/mswu/wx/setup.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/wx)
 file(INSTALL ${SOURCE_PATH}/lib/${LIB_SUB_PATH}-rel/mswu/wx/msw/rcdefs.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/wx/msw)
 file(INSTALL ${SOURCE_PATH}/lib/${LIB_SUB_PATH}-rel/
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib FILES_MATCHING PATTERN "*.lib")
+    DESTINATION ${CURRENT_PACKAGES_DIR}/lib FILES_MATCHING PATTERN "*.lib" PATTERN "*.pdb")
 file(INSTALL ${SOURCE_PATH}/lib/${LIB_SUB_PATH}-dbg/
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib FILES_MATCHING PATTERN "*.lib" PATTERN "*.pdb")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/mswu ${CURRENT_PACKAGES_DIR}/debug/lib/mswud)
