@@ -49,7 +49,7 @@ foreach(FILE
   file(COPY ${FILE} DESTINATION ${CURRENT_PACKAGES_DIR}/include/cairo)
 endforeach()
 
-foreach(FILE "${CURRENT_PACKAGES_DIR}/include/cairo.h")
+foreach(FILE "${CURRENT_PACKAGES_DIR}/include/cairo.h" "${CURRENT_PACKAGES_DIR}/include/cairo/cairo.h")
     file(READ ${FILE} CAIRO_H)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         string(REPLACE "defined (CAIRO_WIN32_STATIC_BUILD)" "1" CAIRO_H "${CAIRO_H}")
