@@ -53,16 +53,24 @@ namespace vcpkg::Commands::Search
                         details::shorten_description(source_paragraph.description));
     }
 
-    static void do_print(const SourceControlFile& source_control_file)
+    static void do_print(const SourceControlFile& source_control_file, const std::string& feature_name)
     {
-        System::println("%-20s %-16s %s",
-                        source_control_file.core_paragraph.name,
-                        source_control_file.core_paragraph.version,
-                        details::shorten_description(source_control_file.core_paragraph.description));
+        if (feature_name.empty())
+            System::println("%-20s %-16s %s",
+                            source_control_file.core_paragraph.name,
+                            source_control_file.core_paragraph.version,
+                            details::shorten_description(source_control_file.core_paragraph.description));
         if (feature_packages)
         {
             for (auto&& feature : source_control_file.feature_paragraphs)
             {
+                if (!feature_name.empty())
+                {
+                    if (feature_name.compare(feature->name) != 0)
+                    {
+                        continue;
+                    }
+                }
                 System::println("%s%-31s %s",
                                 source_control_file.core_paragraph.name,
                                 "[" + feature->name + "]",
@@ -93,7 +101,7 @@ namespace vcpkg::Commands::Search
         {
             for (const SourceControlFile& source_control_file : source_control_files)
             {
-                do_print(source_control_file);
+                do_print(source_control_file, "");
             }
         }
         else
@@ -109,11 +117,20 @@ namespace vcpkg::Commands::Search
                                                              args.command_arguments[0]) ==
                         source_control_file.core_paragraph.description.end())
                     {
+                        for (auto&& feature_paragraph : source_control_file.feature_paragraphs)
+                        {
+                            if (Strings::case_insensitive_ascii_find(feature_paragraph->name,
+                                                                     args.command_arguments[0]) !=
+                                feature_paragraph->name.end())
+                            {
+                                do_print(source_control_file, feature_paragraph->name);
+                            }
+                        }
                         continue;
                     }
                 }
 
-                do_print(source_control_file);
+                do_print(source_control_file, "");
             }
         }
 

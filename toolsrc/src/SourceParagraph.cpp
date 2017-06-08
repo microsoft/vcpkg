@@ -27,6 +27,7 @@ namespace vcpkg
         static const std::string MAINTAINER = "Maintainer";
         static const std::string BUILD_DEPENDS = "Build-Depends";
         static const std::string SUPPORTS = "Supports";
+        static const std::string DEFAULTFEATURES = "Default-Features";
     }
 
     static const std::vector<std::string>& get_list_of_valid_fields()
@@ -99,6 +100,9 @@ namespace vcpkg
             {
                 // unique ptr cannot be copied, so this calls the move constructor, or is this an initialization
                 // std::unique_ptr<FeatureParagraph> fparagraph = std::make_unique<FeatureParagraph>();
+
+                sparagraph.default_features =
+                    details::remove_optional_field(&fields, SourceParagraphOptionalField::DEFAULTFEATURES);
 
                 control_file.feature_paragraphs.emplace_back(std::make_unique<FeatureParagraph>());
 
