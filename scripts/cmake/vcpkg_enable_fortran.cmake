@@ -199,6 +199,6 @@ function(vcpkg_enable_fortran)
             message(FATAL_ERROR "Unknown fortran compiler \"${VCPKG_FORTRAN_COMPILER}\".")
         endif()
     else()
-        message(FATAL_ERROR "No fortran compiler configured. Please see [docs] for valid fortran settings.") # TODO: add correct reference to [docs]
+        message(FATAL_ERROR "No fortran compiler configured. Please see http://vcpkg.readthedocs.io/en/latest/users/triplets/ for valid fortran settings.")
     endif()
 endfunction()
