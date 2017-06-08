@@ -4,7 +4,3 @@ Build-Depends: zlib, libpng, libjpeg-turbo, tiff
 #Use the following line instead for optional features from OpenCV-contrib that require protobuf
 #Build-Depends: zlib, libpng, libjpeg-turbo, tiff, protobuf
 Description: computer vision library
-
-Feature: contrib
-Build-Depends: opencv[cuda]
-Description: library of OpenCV Extensions
