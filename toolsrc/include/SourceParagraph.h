@@ -78,7 +78,7 @@ namespace vcpkg
             V141,
         };
 
-        bool supports(Architecture arch, Platform plat, Linkage crt, ToolsetVersion tools);
+        bool is_supported(Architecture arch, Platform plat, Linkage crt, ToolsetVersion tools);
 
     private:
         std::vector<Architecture> architectures;

@@ -61,7 +61,7 @@ namespace vcpkg::Strings
     template<class Container, class Transformer, class CharType>
     std::basic_string<CharType> join(const CharType* delimiter, const Container& v, Transformer transformer)
     {
-        if (v.empty())
+        if (v.size() == 0)
         {
             return std::basic_string<CharType>();
         }

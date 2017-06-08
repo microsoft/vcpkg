@@ -202,7 +202,7 @@ namespace vcpkg
             return std::move(unrecognized);
     }
 
-    bool Supports::supports(Architecture arch, Platform plat, Linkage crt, ToolsetVersion tools)
+    bool Supports::is_supported(Architecture arch, Platform plat, Linkage crt, ToolsetVersion tools)
     {
         auto is_in_or_empty = [](auto v, auto&& c) -> bool { return c.empty() || c.end() != Util::find(c, v); };
         if (!is_in_or_empty(arch, architectures)) return false;
