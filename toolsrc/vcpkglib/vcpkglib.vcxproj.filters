@@ -129,12 +129,6 @@
     <ClCompile Include="..\src\PostBuildLint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\PostBuildLint_LinkageType.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\PostBuildLint_ConfigurationType.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\PostBuildLint_BuildType.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -255,12 +249,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\PostBuildLint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\PostBuildLint_LinkageType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\PostBuildLint_ConfigurationType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\vcpkg_Enums.h">
