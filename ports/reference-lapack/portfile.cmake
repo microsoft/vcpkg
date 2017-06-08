@@ -1,23 +1,26 @@
 include(vcpkg_common_functions)
+
 set(LAPACK_VERSION "3.7.0")
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/lapack-${LAPACK_VERSION})
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/Reference-LAPACK/lapack/archive/v${LAPACK_VERSION}.zip"
-    FILENAME "lapack-v${LAPACK_VERSION}.zip"
-    SHA512 7ea3f196f8ec9926072ef8242aabdc24c39065b99d66b71795c07866bf567c72583ccb77504fa0f12277c313d1c1e2c03c4c3cfd67e344bd176d0e36ed6b16e4
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO "Reference-LAPACK/lapack"
+    REF "v${LAPACK_VERSION}"
+    SHA512 f10fbe711ee021b5f21eca6e68c0b59d2c739794061ce353c8476333441a3a11f98e5bb7e42f2abc6e25c396eca5a8b7b5705eb6ed75d3191e8182dc7dd20b90
+    HEAD_REF "master"
 )
 
-vcpkg_extract_source_archive(${ARCHIVE})
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-missing-comma-on-continued-line.patch
-        ${CMAKE_CURRENT_LIST_DIR}/0002-Fix-missing-comma-on-continued-line.patch
-        ${CMAKE_CURRENT_LIST_DIR}/0003-Fix-missing-comma-on-continued-line.patch
-        ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-complex-to-int-conversion.patch
-        ${CMAKE_CURRENT_LIST_DIR}/0001-fixes-some-more-complex-to-int-conversion-in-the-LAP.patch
-)
+if(NOT VCPKG_USE_HEAD_VERSION)
+    vcpkg_apply_patches(
+        SOURCE_PATH ${SOURCE_PATH}
+        PATCHES
+            ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-missing-comma-on-continued-line.patch
+            ${CMAKE_CURRENT_LIST_DIR}/0002-Fix-missing-comma-on-continued-line.patch
+            ${CMAKE_CURRENT_LIST_DIR}/0003-Fix-missing-comma-on-continued-line.patch
+            ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-complex-to-int-conversion.patch
+            ${CMAKE_CURRENT_LIST_DIR}/0001-fixes-some-more-complex-to-int-conversion-in-the-LAP.patch
+    )
+endif()
 
 vcpkg_enable_fortran()
 
