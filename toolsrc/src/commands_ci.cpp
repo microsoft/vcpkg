@@ -50,6 +50,8 @@ namespace vcpkg::Commands::CI
         const ElapsedTime timer = ElapsedTime::create_started();
         size_t counter = 0;
         const size_t package_count = install_plan.size();
+        const Build::BuildPackageOptions install_plan_options = {Build::UseHeadVersion::NO, Build::AllowDownloads::YES};
+
         for (const InstallPlanAction& action : install_plan)
         {
             const ElapsedTime build_timer = ElapsedTime::create_started();
@@ -60,55 +62,10 @@ namespace vcpkg::Commands::CI
             timing.push_back("0");
             results.push_back(BuildResult::NULLVALUE);
 
-            try
-            {
-                switch (action.plan_type)
-                {
-                    case InstallPlanType::ALREADY_INSTALLED:
-                        results.back() = BuildResult::SUCCEEDED;
-                        System::println(System::Color::success, "Package %s is already installed", display_name);
-                        break;
-                    case InstallPlanType::BUILD_AND_INSTALL:
-                    {
-                        System::println("Building package %s... ", display_name);
-                        auto&& source_paragraph = action.any_paragraph.source_paragraph.value_or_exit(VCPKG_LINE_INFO);
-                        const Build::BuildPackageConfig build_config{
-                            source_paragraph, action.spec.triplet(), paths.port_dir(action.spec),
-                        };
-                        const auto result_ex = Build::build_package(paths, build_config, status_db);
-                        const auto result = result_ex.code;
-
-                        timing.back() = build_timer.to_string();
-                        results.back() = result;
-                        if (result != BuildResult::SUCCEEDED)
-                        {
-                            System::println(System::Color::error, Build::create_error_message(result, action.spec));
-                            continue;
-                        }
-                        System::println(System::Color::success, "Building package %s... done", display_name);
-
-                        const BinaryParagraph bpgh =
-                            Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO);
-                        System::println("Installing package %s... ", display_name);
-                        Install::install_package(paths, bpgh, &status_db);
-                        System::println(System::Color::success, "Installing package %s... done", display_name);
-                        break;
-                    }
-                    case InstallPlanType::INSTALL:
-                        results.back() = BuildResult::SUCCEEDED;
-                        System::println("Installing package %s... ", display_name);
-                        Install::install_package(
-                            paths, action.any_paragraph.binary_paragraph.value_or_exit(VCPKG_LINE_INFO), &status_db);
-                        System::println(System::Color::success, "Installing package %s... done", display_name);
-                        break;
-                    default: Checks::unreachable(VCPKG_LINE_INFO);
-                }
-            }
-            catch (const std::exception& e)
-            {
-                System::println(System::Color::error, "Error: Could not install package %s: %s", action.spec, e.what());
-                results.back() = BuildResult::NULLVALUE;
-            }
+            const BuildResult result =
+                Install::perform_install_plan_action(paths, action, install_plan_options, status_db);
+            timing.back() = build_timer.to_string();
+            results.back() = result;
             System::println("Elapsed time for package %s: %s", action.spec, build_timer.to_string());
         }
 

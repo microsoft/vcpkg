@@ -15,7 +15,7 @@ namespace vcpkg::Files
             std::fstream file_stream(file_path, std::ios_base::in | std::ios_base::binary);
             if (file_stream.fail())
             {
-                return std::errc::no_such_file_or_directory;
+                return std::make_error_code(std::errc::no_such_file_or_directory);
             }
 
             file_stream.seekg(0, file_stream.end);
@@ -24,7 +24,7 @@ namespace vcpkg::Files
 
             if (length > SIZE_MAX)
             {
-                return std::errc::file_too_large;
+                return std::make_error_code(std::errc::file_too_large);
             }
 
             std::string output;
@@ -39,7 +39,7 @@ namespace vcpkg::Files
             std::fstream file_stream(file_path, std::ios_base::in | std::ios_base::binary);
             if (file_stream.fail())
             {
-                return std::errc::no_such_file_or_directory;
+                return std::make_error_code(std::errc::no_such_file_or_directory);
             }
 
             std::vector<std::string> output;

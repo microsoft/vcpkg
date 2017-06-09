@@ -42,7 +42,7 @@ namespace vcpkg
         Checks::check_exit(VCPKG_LINE_INFO, multi_arch == "same", "Multi-Arch must be 'same' but was %s", multi_arch);
 
         std::string deps = details::remove_optional_field(&fields, BinaryParagraphOptionalField::DEPENDS);
-        this->depends = parse_depends(deps);
+        this->depends = parse_comma_list(deps);
     }
 
     BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh, const Triplet& triplet)
