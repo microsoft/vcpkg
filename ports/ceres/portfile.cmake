@@ -12,17 +12,16 @@
 
 include(vcpkg_common_functions)
 
-set (CERES_VER 1.12.0) #update SHA512 checksum w.r.t to verison
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ceres-solver-${CERES_VER})
+set(VCPKG_PLATFORM_TOOLSET "v140") # Force VS2015 because VS2017 compiler return internal error
+# eigen3\eigen\src\core\redux.h(237): fatal error C1001: An internal error has occurred in the compiler. [internal\ceres\ceres.vcxproj]
 
-vcpkg_download_distfile(ARCHIVE
-URLS  "https://github.com/ceres-solver/ceres-solver/archive/${CERES_VER}.zip"
-FILENAME "ceres-solver-${CERES_VER}.zip"
-SHA512 cbd476e4be89cad3c3366cd2396be46a49e8672932219d48fcd54f2eef8e86ee7fd9a824aa9743d13324b3ea9ba90501ede0297713a4d5844be75ce95418ecc1
+vcpkg_from_github(
+OUT_SOURCE_PATH SOURCE_PATH
+REPO ceres-solver/ceres-solver
+REF 1.12.0
+SHA512 4b4cba5627fbd80a626e8a31d9f561d6cee1c8345970304e4b5b163a9dcadc6d636257d1046ecede00781a11229ef671ee89c3e7e6baf15f49f63f36e6a2ebe1
+HEAD_REF master
 )
-
-vcpkg_extract_source_archive(${ARCHIVE})
-
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -65,7 +64,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/CMake)
 
 # Handle copyright of suitesparse and metis
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ceres-solver)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/ceres-solver/LICENSE ${CURRENT_PACKAGES_DIR}/share/ceres-solver/copyright)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ceres)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/ceres/LICENSE ${CURRENT_PACKAGES_DIR}/share/ceres/copyright)
 
 
