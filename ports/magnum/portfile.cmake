@@ -1,15 +1,11 @@
-###
-
-set(MAGNUM_HASH c8416ca4c3e9b68ba62acc9f73de235526cb3d6e)
-
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/magnum-${MAGNUM_HASH})
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/mosra/magnum/archive/${MAGNUM_HASH}.zip"
-    FILENAME "magnum-${MAGNUM_HASH}.zip"
-    SHA512 1248efaba22568a753396192624690a478c69946cdbbffe83e34cb85d54ec65756b693e025bf477fc192e6fecce56dc1b68631e1a763986267b83d6530af6ef4
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO mosra/magnum
+    REF c8416ca4c3e9b68ba62acc9f73de235526cb3d6e
+    SHA512 d595be48ae44d944d5747880e0108bdc445b92fcc306f0169699e2b80500919647063ac88ef67491b2d8e92ae1f0612cd8768fc63d8cc4ffe4c625988b63504d
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(BUILD_STATIC 1)
@@ -20,10 +16,11 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    OPTIONS -DWITH_SDL2APPLICATION=ON
-    OPTIONS -DWITH_AUDIO=ON
-    OPTIONS -DWITH_WAVAUDIOIMPORTER=ON
-    OPTIONS -DBUILD_STATIC=${BUILD_STATIC}
+    OPTIONS
+        -DWITH_SDL2APPLICATION=ON
+        -DWITH_AUDIO=ON
+        -DWITH_WAVAUDIOIMPORTER=ON
+        -DBUILD_STATIC=${BUILD_STATIC}
 )
 
 vcpkg_install_cmake()

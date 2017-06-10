@@ -1,17 +1,11 @@
-#
-
-set(CORRADE_HASH b87c50db3543367b6eb20dc72246c6687449b029)
-
 include(vcpkg_common_functions)
-
-
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/corrade-${CORRADE_HASH})
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/mosra/corrade/archive/${CORRADE_HASH}.zip"
-    FILENAME "corrade-${CORRADE_HASH}.zip"
-    SHA512 b15b544f996b8c95fbdf73ff9b76deea465fdcf06f431b09f4bbb9a786f4e864fdb4f8c5a2977cb366ee2398c54eac4c469da29c2ab7c67d3b8f7cbf7d2120dc
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO mosra/corrade
+    REF b87c50db3543367b6eb20dc72246c6687449b029
+    SHA512 882ccba210c6db7dc8a70e425e1cc119dd1c1a880b8b7d36b2c9478a2105294294680495e7bafb8c0bc7f667bd247dbd008e8ff133a8ea26b13df781a8896297
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(BUILD_STATIC 1)
@@ -31,11 +25,10 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Drop a copy of tools
-file(COPY ${CURRENT_PACKAGES_DIR}/bin/corrade-rc.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/)
+file(COPY ${CURRENT_PACKAGES_DIR}/bin/corrade-rc.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/corrade)
+
 # Tools require dlls
-file(GLOB TO_COPY
-   ${CURRENT_PACKAGES_DIR}/bin/*.dll)
-file(COPY ${TO_COPY} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/)
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/corrade)
 
 file(GLOB_RECURSE TO_REMOVE 
    ${CURRENT_PACKAGES_DIR}/bin/*.exe
