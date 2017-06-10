@@ -10,17 +10,21 @@
 #   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
 #
 
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
+    message(FATAL_ERROR "Ceres does not currently support static CRT linkage")
+endif()
+
 include(vcpkg_common_functions)
 
 set(VCPKG_PLATFORM_TOOLSET "v140") # Force VS2015 because VS2017 compiler return internal error
 # eigen3\eigen\src\core\redux.h(237): fatal error C1001: An internal error has occurred in the compiler. [internal\ceres\ceres.vcxproj]
 
 vcpkg_from_github(
-OUT_SOURCE_PATH SOURCE_PATH
-REPO ceres-solver/ceres-solver
-REF 1.12.0
-SHA512 4b4cba5627fbd80a626e8a31d9f561d6cee1c8345970304e4b5b163a9dcadc6d636257d1046ecede00781a11229ef671ee89c3e7e6baf15f49f63f36e6a2ebe1
-HEAD_REF master
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO ceres-solver/ceres-solver
+    REF 1.12.0
+    SHA512 4b4cba5627fbd80a626e8a31d9f561d6cee1c8345970304e4b5b163a9dcadc6d636257d1046ecede00781a11229ef671ee89c3e7e6baf15f49f63f36e6a2ebe1
+    HEAD_REF master
 )
 
 vcpkg_configure_cmake(

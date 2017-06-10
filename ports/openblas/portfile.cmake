@@ -18,7 +18,7 @@ if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message(WARNING "openblas only support dynamic link for msvc")
+    message("openblas currenly only supports dynamic library linkage")
     set(VCPKG_LIBRARY_LINKAGE "dynamic")
 endif()
 
