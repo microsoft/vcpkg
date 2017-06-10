@@ -16,6 +16,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 find_package(WEBP REQUIRED)
 find_package(JXR  REQUIRED)
 find_package(LibRaw REQUIRED)
+find_package(OpenEXR REQUIRED)
 
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 option(INSTALL_HEADERS "Install the development headers" ON)
@@ -24,35 +25,6 @@ set(REAL_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Source)
 
 # Add a debug postfix
 set(CMAKE_DEBUG_POSTFIX "d")
- 
-# For now the internal copy of OpenEXR is used (as a private always static library)
-file(GLOB OPENEXR_PRIVATE_HEADERS ${REAL_SOURCE_DIR}/OpenEXR/Half/*.h
-                                  ${REAL_SOURCE_DIR}/OpenEXR/Iex/*.h
-                                  ${REAL_SOURCE_DIR}/OpenEXR/IexMath/*.h
-                                  ${REAL_SOURCE_DIR}/OpenEXR/IlmImf/*.h
-                                  ${REAL_SOURCE_DIR}/OpenEXR/IlmThread/*.h
-                                  ${REAL_SOURCE_DIR}/OpenEXR/Imath/*.h
-                                  ${REAL_SOURCE_DIR}/OpenEXR/*.h)
-                                  
-file(GLOB OPENEXR_SRCS ${REAL_SOURCE_DIR}/OpenEXR/Half/*.cpp
-                       ${REAL_SOURCE_DIR}/OpenEXR/Iex/*.cpp
-                       ${REAL_SOURCE_DIR}/OpenEXR/IexMath/*.cpp
-                       ${REAL_SOURCE_DIR}/OpenEXR/IlmImf/*.cpp
-                       ${REAL_SOURCE_DIR}/OpenEXR/IlmThread/*.cpp
-                       ${REAL_SOURCE_DIR}/OpenEXR/Imath/*.cpp)
-                       
-add_library(FreeImage_Private_OpenEXR STATIC ${OPENEXR_PRIVATE_HEADERS} ${OPENEXR_SRCS})
-
-set(FreeImage_Private_OpenEXR_INCLUDE_DIRS ${REAL_SOURCE_DIR}/OpenEXR
-                                           ${REAL_SOURCE_DIR}/OpenEXR/Half
-                                           ${REAL_SOURCE_DIR}/OpenEXR/Iex
-                                           ${REAL_SOURCE_DIR}/OpenEXR/IexMath
-                                           ${REAL_SOURCE_DIR}/OpenEXR/IlmImf
-                                           ${REAL_SOURCE_DIR}/OpenEXR/IlmThread
-                                           ${REAL_SOURCE_DIR}/OpenEXR/Imath)
-
-target_include_directories(FreeImage_Private_OpenEXR PRIVATE ${FreeImage_Private_OpenEXR_INCLUDE_DIRS}
-                                                             ${ZLIB_INCLUDE_DIRS})
 
 # List the public header files
 set(PUBLIC_HEADERS ${REAL_SOURCE_DIR}/FreeImage.h)
@@ -124,7 +96,7 @@ target_include_directories(FreeImage PRIVATE ${REAL_SOURCE_DIR}
                                              ${WEBP_INCLUDE_DIRS}
                                              ${JXR_INCLUDE_DIRS}
                                              ${LibRaw_INCLUDE_DIRS}
-                                             ${FreeImage_Private_OpenEXR_INCLUDE_DIRS}
+                                             ${OpenEXR_INCLUDE_DIRS}
                                              ${CMAKE_CURRENT_BINARY_DIR})
 
 
@@ -136,7 +108,7 @@ target_link_libraries(FreeImage ${ZLIB_LIBRARIES}
                                 ${WEBP_LIBRARIES}
                                 ${JXR_LIBRARIES}
                                 ${LibRaw_LIBRARIES}
-                                FreeImage_Private_OpenEXR)
+                                ${OpenEXR_LIBRARIES})
 
 target_compile_definitions(FreeImage PRIVATE ${PNG_DEFINITIONS})
 
