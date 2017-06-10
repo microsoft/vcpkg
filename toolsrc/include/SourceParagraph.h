@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Span.h"
 #include "vcpkg_System.h"
 #include "vcpkg_expected.h"
 
@@ -25,7 +26,6 @@ namespace vcpkg
     {
         std::string name;
         std::string remaining_fields_as_string;
-        std::string valid_fields_as_string;
         std::error_code error;
     };
 
@@ -56,7 +56,6 @@ namespace vcpkg
         std::vector<Dependency> depends;
         std::string default_features;
     };
-
     struct SourceControlFile
     {
         SourceControlFile() = default;
@@ -66,7 +65,10 @@ namespace vcpkg
 
         SourceParagraph core_paragraph;
         std::vector<std::unique_ptr<FeatureParagraph>> feature_paragraphs;
+
+        std::vector<ParseControlErrorInfo> errors;
     };
+
     namespace FeatureParagraphRequiredField
     {
         static const std::string FEATURE = "Feature";
@@ -78,9 +80,15 @@ namespace vcpkg
         static const std::string BUILD_DEPENDS = "Build-Depends";
     }
 
+    //<<<<<<< HEAD
+
     std::vector<SourceParagraph> getSourceParagraphs(const std::vector<SourceControlFile>& control_files);
-    void print_error_message(const ParseControlErrorInfo& info);
-    void print_error_message(std::vector<ParseControlErrorInfo> error_info_list);
+
+    void print_error_message(span<const ParseControlErrorInfo> error_info_list);
+    inline void print_error_message(const ParseControlErrorInfo& error_info_list)
+    {
+        return print_error_message({&error_info_list, 1});
+    }
 
     std::vector<std::string> filter_dependencies(const std::vector<Dependency>& deps, const Triplet& t);
 
@@ -109,7 +117,7 @@ namespace vcpkg
             V141,
         };
 
-        bool supports(Architecture arch, Platform plat, Linkage crt, ToolsetVersion tools);
+        bool is_supported(Architecture arch, Platform plat, Linkage crt, ToolsetVersion tools);
 
     private:
         std::vector<Architecture> architectures;

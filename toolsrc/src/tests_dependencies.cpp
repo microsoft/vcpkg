@@ -45,14 +45,14 @@ namespace UnitTest1
             });
             Assert::AreNotEqual(uintptr_t(0), uintptr_t(v.get()));
 
-            Assert::IsTrue(v.get()->supports(System::CPUArchitecture::X64,
-                                             Supports::Platform::UWP,
-                                             Supports::Linkage::DYNAMIC,
-                                             Supports::ToolsetVersion::V140));
-            Assert::IsTrue(v.get()->supports(System::CPUArchitecture::ARM,
-                                             Supports::Platform::WINDOWS,
-                                             Supports::Linkage::STATIC,
-                                             Supports::ToolsetVersion::V141));
+            Assert::IsTrue(v.get()->is_supported(System::CPUArchitecture::X64,
+                                                 Supports::Platform::UWP,
+                                                 Supports::Linkage::DYNAMIC,
+                                                 Supports::ToolsetVersion::V140));
+            Assert::IsTrue(v.get()->is_supported(System::CPUArchitecture::ARM,
+                                                 Supports::Platform::WINDOWS,
+                                                 Supports::Linkage::STATIC,
+                                                 Supports::ToolsetVersion::V141));
         }
 
         TEST_METHOD(parse_supports_invalid)
@@ -78,22 +78,22 @@ namespace UnitTest1
             });
             Assert::AreNotEqual(uintptr_t(0), uintptr_t(v.get()));
 
-            Assert::IsTrue(v.get()->supports(System::CPUArchitecture::X64,
-                                             Supports::Platform::WINDOWS,
-                                             Supports::Linkage::DYNAMIC,
-                                             Supports::ToolsetVersion::V140));
-            Assert::IsFalse(v.get()->supports(System::CPUArchitecture::ARM,
-                                              Supports::Platform::WINDOWS,
-                                              Supports::Linkage::DYNAMIC,
-                                              Supports::ToolsetVersion::V140));
-            Assert::IsFalse(v.get()->supports(System::CPUArchitecture::X64,
-                                              Supports::Platform::UWP,
-                                              Supports::Linkage::DYNAMIC,
-                                              Supports::ToolsetVersion::V140));
-            Assert::IsTrue(v.get()->supports(System::CPUArchitecture::X64,
-                                             Supports::Platform::WINDOWS,
-                                             Supports::Linkage::STATIC,
-                                             Supports::ToolsetVersion::V141));
+            Assert::IsTrue(v.get()->is_supported(System::CPUArchitecture::X64,
+                                                 Supports::Platform::WINDOWS,
+                                                 Supports::Linkage::DYNAMIC,
+                                                 Supports::ToolsetVersion::V140));
+            Assert::IsFalse(v.get()->is_supported(System::CPUArchitecture::ARM,
+                                                  Supports::Platform::WINDOWS,
+                                                  Supports::Linkage::DYNAMIC,
+                                                  Supports::ToolsetVersion::V140));
+            Assert::IsFalse(v.get()->is_supported(System::CPUArchitecture::X64,
+                                                  Supports::Platform::UWP,
+                                                  Supports::Linkage::DYNAMIC,
+                                                  Supports::ToolsetVersion::V140));
+            Assert::IsTrue(v.get()->is_supported(System::CPUArchitecture::X64,
+                                                 Supports::Platform::WINDOWS,
+                                                 Supports::Linkage::STATIC,
+                                                 Supports::ToolsetVersion::V141));
         }
     };
 }

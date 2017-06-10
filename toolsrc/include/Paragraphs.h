@@ -21,6 +21,14 @@ namespace vcpkg::Paragraphs
 
     Expected<BinaryParagraph> try_load_cached_package(const VcpkgPaths& paths, const PackageSpec& spec);
 
+    struct LoadResults
+    {
+        std::vector<SourceControlFile> paragraphs;
+        std::vector<ParseControlErrorInfo> errors;
+    };
+
+    LoadResults try_load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir);
+
     std::vector<SourceControlFile> load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir);
 
     std::map<std::string, VersionT> extract_port_names_and_versions(

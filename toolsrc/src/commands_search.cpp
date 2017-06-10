@@ -4,6 +4,7 @@
 #include "SourceParagraph.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
+#include "vcpkglib.h"
 #include "vcpkglib_helpers.h"
 
 namespace vcpkg::Commands::Search
@@ -17,15 +18,16 @@ namespace vcpkg::Commands::Search
         return output;
     }
 
-    static std::string create_graph_as_string(const std::vector<SourceParagraph>& source_paragraphs)
+    static std::string create_graph_as_string(const std::vector<SourceControlFile>& source_control_files)
     {
         int empty_node_count = 0;
 
         std::string s;
         s.append("digraph G{ rankdir=LR; edge [minlen=3]; overlap=false;");
 
-        for (const SourceParagraph& source_paragraph : source_paragraphs)
+        for (const SourceControlFile& source_control_file : source_control_files)
         {
+            const SourceParagraph& source_paragraph = source_control_file.core_paragraph;
             if (source_paragraph.depends.empty())
             {
                 empty_node_count++;
@@ -87,11 +89,31 @@ namespace vcpkg::Commands::Search
         args.check_max_arg_count(1, example);
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_GRAPH});
 
-        const std::vector<SourceControlFile> source_control_files =
-            Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
-        const std::vector<SourceParagraph> source_paragraphs = getSourceParagraphs(source_control_files);
+        auto sources_and_errors = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
+
+        if (!sources_and_errors.errors.empty())
+        {
+            if (vcpkg::g_debugging)
+            {
+                print_error_message(sources_and_errors.errors);
+            }
+            else
+            {
+                for (auto&& error : sources_and_errors.errors)
+                {
+                    System::println(
+                        System::Color::warning, "Warning: an error occurred while parsing '%s'\n", error.name);
+                }
+                System::println(System::Color::warning,
+                                "Use '--debug' to get more information about the parse failures.\n");
+            }
+        }
+
+        auto& source_paragraphs = sources_and_errors.paragraphs;
+        // check above line?
         if (options.find(OPTION_GRAPH) != options.cend())
         {
+            // rename source_paragraphs
             const std::string graph_as_string = create_graph_as_string(source_paragraphs);
             System::println(graph_as_string);
             Checks::exit_success(VCPKG_LINE_INFO);
@@ -99,7 +121,7 @@ namespace vcpkg::Commands::Search
 
         if (args.command_arguments.empty())
         {
-            for (const SourceControlFile& source_control_file : source_control_files)
+            for (const SourceControlFile& source_control_file : source_paragraphs)
             {
                 do_print(source_control_file, "");
             }
@@ -107,7 +129,7 @@ namespace vcpkg::Commands::Search
         else
         {
             // At this point there is 1 argument
-            for (const SourceControlFile& source_control_file : source_control_files)
+            for (const SourceControlFile& source_control_file : source_paragraphs)
             {
                 if (Strings::case_insensitive_ascii_find(source_control_file.core_paragraph.name,
                                                          args.command_arguments[0]) ==

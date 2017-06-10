@@ -13,8 +13,7 @@ namespace vcpkg::Commands::DependInfo
         args.check_exact_arg_count(0, example);
         args.check_and_get_optional_command_arguments({});
 
-        const std::vector<SourceControlFile> source_control_files =
-            Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
+        const auto source_control_files = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
 
         for (const SourceControlFile& source_control_file : source_control_files)
         {

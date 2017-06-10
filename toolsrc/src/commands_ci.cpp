@@ -20,7 +20,7 @@ namespace vcpkg::Commands::CI
                                                            const fs::path& ports_directory,
                                                            const Triplet& triplet)
     {
-        std::vector<SourceControlFile> ports = Paragraphs::load_all_ports(fs, ports_directory);
+        auto ports = Paragraphs::load_all_ports(fs, ports_directory);
         std::vector<PackageSpec> specs;
         for (const SourceControlFile& control_file : ports)
         {

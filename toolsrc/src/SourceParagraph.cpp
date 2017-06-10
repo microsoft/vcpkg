@@ -30,42 +30,52 @@ namespace vcpkg
         static const std::string DEFAULTFEATURES = "Default-Features";
     }
 
-    static const std::vector<std::string>& get_list_of_valid_fields()
+    static span<const std::string> get_list_of_valid_fields()
     {
-        static const std::vector<std::string> valid_fields = {SourceParagraphRequiredField::SOURCE,
-                                                              SourceParagraphRequiredField::VERSION,
+        static const std::string valid_fields[] = {SourceParagraphRequiredField::SOURCE,
+                                                   SourceParagraphRequiredField::VERSION,
 
-                                                              SourceParagraphOptionalField::DESCRIPTION,
-                                                              SourceParagraphOptionalField::MAINTAINER,
-                                                              SourceParagraphOptionalField::BUILD_DEPENDS,
-                                                              SourceParagraphOptionalField::SUPPORTS};
+                                                   SourceParagraphOptionalField::DESCRIPTION,
+                                                   SourceParagraphOptionalField::MAINTAINER,
+                                                   SourceParagraphOptionalField::BUILD_DEPENDS,
+                                                   SourceParagraphOptionalField::SUPPORTS};
 
         return valid_fields;
     }
 
-    void print_error_message(const ParseControlErrorInfo& info)
+    void print_error_message(span<const ParseControlErrorInfo> error_info_list)
     {
-        System::println(
-            System::Color::error, "Error: There are invalid fields in the Source Paragraph of %s", info.name);
-        System::println("The following fields were not expected:\n\n    %s\n\n", info.remaining_fields_as_string);
-        System::println("This is the list of valid fields (case-sensitive): \n\n    %s\n", info.valid_fields_as_string);
-        System::println("Different source may be available for vcpkg. Use .\\bootstrap-vcpkg.bat to update.\n");
-    }
+        Checks::check_exit(VCPKG_LINE_INFO, error_info_list.size() > 0);
 
-    void print_error_message(std::vector<ParseControlErrorInfo> error_info_list)
-    {
-        if (error_info_list.size() == 0) return;
-        for (ParseControlErrorInfo error_info : error_info_list)
+        for (auto&& error_info : error_info_list)
         {
-            System::println(
-                System::Color::error, "Error: There are invalid fields in the Source Paragraph of %s", error_info.name);
-            System::println("The following fields were not expected:\n\n    %s\n\n",
-                            error_info.remaining_fields_as_string);
+            if (error_info.error)
+            {
+                System::println(
+                    System::Color::error, "Error: while loading %s: %s", error_info.name, error_info.error.message());
+            }
         }
 
-        System::println("This is the list of valid fields (case-sensitive): \n\n    %s\n",
-                        error_info_list.front().valid_fields_as_string);
-        System::println("Different source may be available for vcpkg. Use .\\bootstrap-vcpkg.bat to update.\n");
+        bool have_remaining_fields = false;
+        for (auto&& error_info : error_info_list)
+        {
+            if (!error_info.remaining_fields_as_string.empty())
+            {
+                System::println(System::Color::error,
+                                "Error: There are invalid fields in the Source Paragraph of %s",
+                                error_info.name);
+                System::println("The following fields were not expected:\n\n    %s\n\n",
+                                error_info.remaining_fields_as_string);
+                have_remaining_fields = true;
+            }
+        }
+
+        if (have_remaining_fields)
+        {
+            System::println("This is the list of valid fields (case-sensitive): \n\n    %s\n",
+                            Strings::join("\n    ", get_list_of_valid_fields()));
+            System::println("Different source may be available for vcpkg. Use .\\bootstrap-vcpkg.bat to update.\n");
+        }
     }
     std::vector<SourceParagraph> getSourceParagraphs(const std::vector<SourceControlFile>& control_files)
     {
@@ -123,12 +133,10 @@ namespace vcpkg
         if (!fields.empty())
         {
             const std::vector<std::string> remaining_fields = Maps::extract_keys(fields);
-            const std::vector<std::string>& valid_fields = get_list_of_valid_fields();
 
             const std::string remaining_fields_as_string = Strings::join("\n    ", remaining_fields);
-            const std::string valid_fields_as_string = Strings::join("\n    ", valid_fields);
 
-            return ParseControlErrorInfo{sparagraph.name, remaining_fields_as_string, valid_fields_as_string};
+            return ParseControlErrorInfo{sparagraph.name, remaining_fields_as_string};
         }
         return control_file;
     }
@@ -234,7 +242,7 @@ namespace vcpkg
             return std::move(unrecognized);
     }
 
-    bool Supports::supports(Architecture arch, Platform plat, Linkage crt, ToolsetVersion tools)
+    bool Supports::is_supported(Architecture arch, Platform plat, Linkage crt, ToolsetVersion tools)
     {
         auto is_in_or_empty = [](auto v, auto&& c) -> bool { return c.empty() || c.end() != Util::find(c, v); };
         if (!is_in_or_empty(arch, architectures)) return false;

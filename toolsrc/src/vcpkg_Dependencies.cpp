@@ -180,10 +180,8 @@ namespace vcpkg::Dependencies
                 if (auto scf = source_control_file.get())
                     return InstallPlanAction{spec, {nullopt, nullopt, (*scf).core_paragraph}, request_type};
 
-                else
-                    print_error_message(source_control_file.error());
-
-                Checks::exit_with_message(VCPKG_LINE_INFO, "Could not find package %s", spec);
+                print_error_message(source_control_file.error());
+                Checks::exit_fail(VCPKG_LINE_INFO);
             }
         };
 

@@ -209,6 +209,7 @@ namespace vcpkg::Paragraphs
         {
             return SourceControlFile::parse_control_file(std::move(*vector_pghs));
         }
+        error_info.name = path.filename().generic_u8string();
         error_info.error = pghs.error();
         return error_info;
     }
@@ -226,25 +227,33 @@ namespace vcpkg::Paragraphs
         return pghs.error();
     }
 
-    std::vector<SourceControlFile> load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir)
+    LoadResults try_load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir)
     {
-        std::vector<SourceControlFile> output;
-        std::vector<ParseControlErrorInfo> port_errors;
+        LoadResults ret;
         for (auto&& path : fs.get_files_non_recursive(ports_dir))
         {
             ExpectedT<SourceControlFile, ParseControlErrorInfo> source_paragraph = try_load_port(fs, path);
             if (auto srcpgh = source_paragraph.get())
             {
-                output.emplace_back(std::move(*srcpgh));
+                ret.paragraphs.emplace_back(std::move(*srcpgh));
             }
             else
             {
-                port_errors.emplace_back(source_paragraph.error());
+                ret.errors.emplace_back(source_paragraph.error());
             }
         }
-        print_error_message(port_errors);
+        return ret;
+    }
 
-        return output;
+    std::vector<SourceControlFile> load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir)
+    {
+        auto results = try_load_all_ports(fs, ports_dir);
+        if (!results.errors.empty())
+        {
+            print_error_message(results.errors);
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+        return std::move(results.paragraphs);
     }
 
     std::map<std::string, VersionT> extract_port_names_and_versions(
