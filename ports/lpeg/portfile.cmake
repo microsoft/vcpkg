@@ -17,6 +17,7 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/lpeg.def DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()
@@ -25,7 +26,7 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/lpeg)
+file(COPY ${SOURCE_PATH}/lpeg DESTINATION ${CURRENT_PACKAGES_DIR}/share/lpeg)
 
 # Allow empty include directory
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
