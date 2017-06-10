@@ -26,7 +26,7 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/lpeg DESTINATION ${CURRENT_PACKAGES_DIR}/share/lpeg)
+file(INSTALL ${SOURCE_PATH}/lpeg.html DESTINATION ${CURRENT_PACKAGES_DIR}/share/lpeg RENAME copyright)
 
 # Allow empty include directory
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
