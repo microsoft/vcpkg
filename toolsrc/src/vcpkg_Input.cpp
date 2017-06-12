@@ -51,8 +51,6 @@ namespace vcpkg::Input
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
-        // parse_comma_list();
-
         std::string package_spec_as_string = full_package_spec_as_string.substr(0, left_pos);
         const std::string as_lowercase = Strings::ascii_to_lowercase(package_spec_as_string);
         auto expected_spec = PackageSpec::from_string(as_lowercase, default_triplet);
