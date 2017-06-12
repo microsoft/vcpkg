@@ -26,6 +26,12 @@ namespace vcpkg
         Triplet m_triplet;
     };
 
+    struct FullPackageSpec
+    {
+        PackageSpec package_spec;
+        std::vector<std::string> features;
+    };
+
     bool operator==(const PackageSpec& left, const PackageSpec& right);
     bool operator!=(const PackageSpec& left, const PackageSpec& right);
 }

@@ -19,11 +19,12 @@ namespace vcpkg::Commands::BuildCommand
 
     static const std::string OPTION_CHECKS_ONLY = "--checks-only";
 
-    void perform_and_exit(const PackageSpec& spec,
+    void perform_and_exit(const FullPackageSpec& full_spec,
                           const fs::path& port_dir,
                           const std::unordered_set<std::string>& options,
                           const VcpkgPaths& paths)
     {
+        const PackageSpec& spec = full_spec.package_spec;
         if (options.find(OPTION_CHECKS_ONLY) != options.end())
         {
             auto pre_build_info = Build::PreBuildInfo::from_triplet_file(paths, spec.triplet());
@@ -43,6 +44,10 @@ namespace vcpkg::Commands::BuildCommand
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
+        for (std::string str : full_spec.features)
+        {
+            System::println("%s \n", str);
+        }
         const SourceControlFile& scf = source_control_file.value_or_exit(VCPKG_LINE_INFO);
         Checks::check_exit(VCPKG_LINE_INFO,
                            spec.name() == scf.core_paragraph.name,
@@ -86,11 +91,20 @@ namespace vcpkg::Commands::BuildCommand
         static const std::string example = Commands::Help::create_example_string("build zlib:x64-windows");
         args.check_exact_arg_count(
             1, example); // Build only takes a single package and all dependencies must already be installed
-        const PackageSpec spec =
-            Input::check_and_get_package_spec(args.command_arguments.at(0), default_triplet, example);
-        Input::check_triplet(spec.triplet(), paths);
+        std::string command_argument = args.command_arguments.at(0);
+        if (feature_packages)
+        {
+            const FullPackageSpec spec =
+                Input::check_and_get_full_package_spec(command_argument, default_triplet, example);
+            Input::check_triplet(spec.package_spec.triplet(), paths);
+            const std::unordered_set<std::string> options =
+                args.check_and_get_optional_command_arguments({OPTION_CHECKS_ONLY});
+            perform_and_exit(spec, paths.port_dir(spec.package_spec), options, paths);
+        }
+        const FullPackageSpec spec = Input::check_and_get_package_spec(command_argument, default_triplet, example);
+        Input::check_triplet(spec.package_spec.triplet(), paths);
         const std::unordered_set<std::string> options =
             args.check_and_get_optional_command_arguments({OPTION_CHECKS_ONLY});
-        perform_and_exit(spec, paths.port_dir(spec), options, paths);
+        perform_and_exit(spec, paths.port_dir(spec.package_spec), options, paths);
     }
 }
