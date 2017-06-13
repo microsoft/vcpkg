@@ -1,4 +1,8 @@
 
+if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+  message(FATAL_ERROR "PDCurses only supports dynamic CRT linkage")
+endif()
+
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET})
 find_program(NMAKE nmake)

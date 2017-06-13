@@ -56,15 +56,18 @@ namespace vcpkg::Commands::Update
         }
         else
         {
+            std::string install_line;
             System::println("The following packages differ from their port versions:");
             for (auto&& package : outdated_packages)
             {
+                install_line += package.spec.to_string();
+                install_line += " ";
                 System::println("    %-32s %s", package.spec, package.version_diff.to_string());
             }
             System::println("\n"
                             "To update these packages, run\n"
                             "    .\\vcpkg remove --outdated\n"
-                            "    .\\vcpkg install <pkgs>...");
+                            "    .\\vcpkg install " + install_line);
         }
 
         auto version_file = paths.get_filesystem().read_contents(paths.root / "toolsrc" / "VERSION.txt");

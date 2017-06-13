@@ -9,7 +9,8 @@
 
 namespace vcpkg::Commands::Search
 {
-    static const std::string OPTION_GRAPH = "--graph"; // TODO: This should find a better home, eventually
+    static const std::string OPTION_GRAPH = "--graph";          // TODO: This should find a better home, eventually
+    static const std::string OPTION_FULLDESC = "--x-full-desc"; // TODO: This should find a better home, eventually
 
     static std::string replace_dashes_with_underscore(const std::string& input)
     {
@@ -47,21 +48,26 @@ namespace vcpkg::Commands::Search
         return s;
     }
 
-    static void do_print(const SourceParagraph& source_paragraph)
-    {
-        System::println("%-20s %-16s %s",
-                        source_paragraph.name,
-                        source_paragraph.version,
-                        details::shorten_description(source_paragraph.description));
-    }
-
-    static void do_print(const SourceControlFile& source_control_file, const std::string& feature_name)
+    static void do_print(const SourceControlFile& source_control_file, const std::string& feature_name, bool full_desc)
     {
         if (feature_name.empty())
-            System::println("%-20s %-16s %s",
-                            source_control_file.core_paragraph.name,
-                            source_control_file.core_paragraph.version,
-                            details::shorten_description(source_control_file.core_paragraph.description));
+        {
+            if (full_desc)
+            {
+                System::println("%-20s %-16s %s",
+                                source_control_file.core_paragraph.name,
+                                source_control_file.core_paragraph.version,
+                                source_control_file.core_paragraph.description);
+            }
+            else
+            {
+                System::println("%-20s %-16s %s",
+                                source_control_file.core_paragraph.name,
+                                source_control_file.core_paragraph.version,
+                                details::shorten_description(source_control_file.core_paragraph.description));
+            }
+        }
+
         if (feature_packages)
         {
             for (auto&& feature : source_control_file.feature_paragraphs)
@@ -73,10 +79,20 @@ namespace vcpkg::Commands::Search
                         continue;
                     }
                 }
-                System::println("%s%-31s %s",
-                                source_control_file.core_paragraph.name,
-                                "[" + feature->name + "]",
-                                details::shorten_description(feature->description));
+                if (full_desc)
+                {
+                    System::println("%s%-31s %s",
+                                    source_control_file.core_paragraph.name,
+                                    "[" + feature->name + "]",
+                                    feature->description);
+                }
+                else
+                {
+                    System::println("%s%-31s %s",
+                                    source_control_file.core_paragraph.name,
+                                    "[" + feature->name + "]",
+                                    details::shorten_description(feature->description));
+                }
             }
         }
     }
@@ -87,7 +103,8 @@ namespace vcpkg::Commands::Search
             "The argument should be a substring to search for, or no argument to display all libraries.\n%s",
             Commands::Help::create_example_string("search png"));
         args.check_max_arg_count(1, example);
-        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_GRAPH});
+        const std::unordered_set<std::string> options =
+            args.check_and_get_optional_command_arguments({OPTION_GRAPH, OPTION_FULLDESC});
 
         auto sources_and_errors = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
 
@@ -123,7 +140,7 @@ namespace vcpkg::Commands::Search
         {
             for (const SourceControlFile& source_control_file : source_paragraphs)
             {
-                do_print(source_control_file, "");
+                do_print(source_control_file, "", options.find(OPTION_FULLDESC) != options.cend());
             }
         }
         else
@@ -145,14 +162,15 @@ namespace vcpkg::Commands::Search
                                                                      args.command_arguments[0]) !=
                                 feature_paragraph->name.end())
                             {
-                                do_print(source_control_file, feature_paragraph->name);
+                                do_print(source_control_file,
+                                         feature_paragraph->name,
+                                         options.find(OPTION_FULLDESC) != options.cend());
                             }
                         }
                         continue;
                     }
                 }
-
-                do_print(source_control_file, "");
+                do_print(source_control_file, "", options.find(OPTION_FULLDESC) != options.cend());
             }
         }
 
