@@ -9,7 +9,9 @@ vcpkg_from_github(
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/001-sdl-includes.patch 
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/001-sdl-includes.patch 
+        ${CMAKE_CURRENT_LIST_DIR}/002-magnum-defs.patch 
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -26,6 +28,8 @@ vcpkg_configure_cmake(
         -DWITH_AUDIO=ON
         -DWITH_WAVAUDIOIMPORTER=ON
         -DBUILD_STATIC=${BUILD_STATIC}
+        -DMAGNUM_PLUGINS_DEBUG_DIR=${CURRENT_INSTALLED_DIR}/debug/bin/magnum-d
+        -DMAGNUM_PLUGINS_RELEASE_DIR=${CURRENT_INSTALLED_DIR}/bin/magnum
 )
 
 vcpkg_install_cmake()
