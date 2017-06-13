@@ -7,6 +7,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/001-sdl-includes.patch 
+)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(BUILD_STATIC 1)
 else()
