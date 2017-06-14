@@ -168,7 +168,7 @@ namespace vcpkg::Paragraphs
             return parse_single_paragraph(*spgh);
         }
 
-        return contents.error_code();
+        return contents.error();
     }
 
     Expected<std::vector<std::unordered_map<std::string, std::string>>> get_paragraphs(const Files::Filesystem& fs,
@@ -180,7 +180,7 @@ namespace vcpkg::Paragraphs
             return parse_paragraphs(*spgh);
         }
 
-        return contents.error_code();
+        return contents.error();
     }
 
     Expected<std::unordered_map<std::string, std::string>> parse_single_paragraph(const std::string& str)
@@ -201,15 +201,17 @@ namespace vcpkg::Paragraphs
         return Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
     }
 
-    Expected<SourceParagraph> try_load_port(const Files::Filesystem& fs, const fs::path& path)
+    ExpectedT<SourceParagraph, ParseControlErrorInfo> try_load_port(const Files::Filesystem& fs, const fs::path& path)
     {
+        ParseControlErrorInfo error_info;
         Expected<std::unordered_map<std::string, std::string>> pghs = get_single_paragraph(fs, path / "CONTROL");
         if (auto p = pghs.get())
         {
-            return SourceParagraph(*p);
+            return SourceParagraph::parse_control_file(*p);
         }
-
-        return pghs.error_code();
+        error_info.name = path.filename().generic_u8string();
+        error_info.error = pghs.error();
+        return error_info;
     }
 
     Expected<BinaryParagraph> try_load_cached_package(const VcpkgPaths& paths, const PackageSpec& spec)
@@ -222,22 +224,36 @@ namespace vcpkg::Paragraphs
             return BinaryParagraph(*p);
         }
 
-        return pghs.error_code();
+        return pghs.error();
+    }
+
+    LoadResults try_load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir)
+    {
+        LoadResults ret;
+        for (auto&& path : fs.get_files_non_recursive(ports_dir))
+        {
+            ExpectedT<SourceParagraph, ParseControlErrorInfo> source_paragraph = try_load_port(fs, path);
+            if (auto srcpgh = source_paragraph.get())
+            {
+                ret.paragraphs.emplace_back(std::move(*srcpgh));
+            }
+            else
+            {
+                ret.errors.emplace_back(source_paragraph.error());
+            }
+        }
+        return ret;
     }
 
     std::vector<SourceParagraph> load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir)
     {
-        std::vector<SourceParagraph> output;
-        for (auto&& path : fs.get_files_non_recursive(ports_dir))
+        auto results = try_load_all_ports(fs, ports_dir);
+        if (!results.errors.empty())
         {
-            Expected<SourceParagraph> source_paragraph = try_load_port(fs, path);
-            if (auto srcpgh = source_paragraph.get())
-            {
-                output.emplace_back(std::move(*srcpgh));
-            }
+            print_error_message(results.errors);
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
-
-        return output;
+        return std::move(results.paragraphs);
     }
 
     std::map<std::string, VersionT> extract_port_names_and_versions(

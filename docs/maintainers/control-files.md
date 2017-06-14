@@ -1,16 +1,16 @@
-## `CONTROL` files
-Each port has some static metadata in the form of a `CONTROL` file. This file uses the same rough syntax as and a subset of the fields from [the Debian `control` format][debian].
+# CONTROL files
+Each port has some static metadata in the form of a `CONTROL` file. This file uses the same syntax and a subset of the fields from [the Debian `control` format][debian].
 
-Fields are case-sensitive.
+Field names are case-sensitive.
 
 [debian]: https://www.debian.org/doc/debian-policy/ch-controlfields.html
 
-### Recognized fields
+## Recognized fields
 
-#### Source
+### Source
 The name of the port.
 
-#### Version
+### Version
 The port version.
 
 This field should be an alphanumeric string which may also contain `.`, `_`, or `-`. No attempt at ordering versions is made; all versions are treated as bitstrings and are only evaluated for equality.
@@ -22,15 +22,15 @@ Example:
 Version: 1.0.5-2
 ```
 
-#### Description
+### Description
 A description of the library
 
 The first sentence of the description should concisely describe the purpose and contents of the library. Then, a larger description including the library's "proper name" should follow.
 
-#### Maintainer
+### Maintainer
 Reserved for future use.
 
-#### Build-Depends
+### Build-Depends
 The list of dependencies required to build and use this library.
 
 Example:

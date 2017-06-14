@@ -5,24 +5,24 @@
 
 namespace vcpkg::PostBuildLint
 {
-    BuildType BuildType::value_of(const ConfigurationType& config, const LinkageType& linkage)
+    BuildType BuildType::value_of(const ConfigurationType& config, const Build::LinkageType& linkage)
     {
-        if (config == ConfigurationTypeC::DEBUG && linkage == LinkageTypeC::STATIC)
+        if (config == ConfigurationType::DEBUG && linkage == Build::LinkageType::STATIC)
         {
             return BuildTypeC::DEBUG_STATIC;
         }
 
-        if (config == ConfigurationTypeC::DEBUG && linkage == LinkageTypeC::DYNAMIC)
+        if (config == ConfigurationType::DEBUG && linkage == Build::LinkageType::DYNAMIC)
         {
             return BuildTypeC::DEBUG_DYNAMIC;
         }
 
-        if (config == ConfigurationTypeC::RELEASE && linkage == LinkageTypeC::STATIC)
+        if (config == ConfigurationType::RELEASE && linkage == Build::LinkageType::STATIC)
         {
             return BuildTypeC::RELEASE_STATIC;
         }
 
-        if (config == ConfigurationTypeC::RELEASE && linkage == LinkageTypeC::DYNAMIC)
+        if (config == ConfigurationType::RELEASE && linkage == Build::LinkageType::DYNAMIC)
         {
             return BuildTypeC::RELEASE_DYNAMIC;
         }
@@ -32,7 +32,7 @@ namespace vcpkg::PostBuildLint
 
     const ConfigurationType& BuildType::config() const { return this->m_config; }
 
-    const LinkageType& BuildType::linkage() const { return this->m_linkage; }
+    const Build::LinkageType& BuildType::linkage() const { return this->m_linkage; }
 
     const std::regex& BuildType::crt_regex() const
     {

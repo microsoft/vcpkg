@@ -7,9 +7,11 @@ namespace vcpkg
 {
     struct PackageSpec
     {
-        static Expected<PackageSpec> from_string(const std::string& spec_as_string, const Triplet& default_triplet);
+        static ExpectedT<PackageSpec, PackageSpecParseResult> from_string(const std::string& spec_as_string,
+                                                                          const Triplet& default_triplet);
         static std::string to_string(const std::string& name, const Triplet& triplet);
-        static Expected<PackageSpec> from_name_and_triplet(const std::string& name, const Triplet& triplet);
+        static ExpectedT<PackageSpec, PackageSpecParseResult> from_name_and_triplet(const std::string& name,
+                                                                                    const Triplet& triplet);
 
         const std::string& name() const;
 

@@ -4,11 +4,13 @@
 #include "SourceParagraph.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
+#include "vcpkglib.h"
 #include "vcpkglib_helpers.h"
 
 namespace vcpkg::Commands::Search
 {
-    static const std::string OPTION_GRAPH = "--graph"; // TODO: This should find a better home, eventually
+    static const std::string OPTION_GRAPH = "--graph";          // TODO: This should find a better home, eventually
+    static const std::string OPTION_FULLDESC = "--x-full-desc"; // TODO: This should find a better home, eventually
 
     static std::string replace_dashes_with_underscore(const std::string& input)
     {
@@ -45,12 +47,20 @@ namespace vcpkg::Commands::Search
         return s;
     }
 
-    static void do_print(const SourceParagraph& source_paragraph)
+    static void do_print(const SourceParagraph& source_paragraph, bool FullDesc)
     {
-        System::println("%-20s %-16s %s",
-                        source_paragraph.name,
-                        source_paragraph.version,
-                        details::shorten_description(source_paragraph.description));
+        if (FullDesc)
+        {
+            System::println(
+                "%-20s %-16s %s", source_paragraph.name, source_paragraph.version, source_paragraph.description);
+        }
+        else
+        {
+            System::println("%-20s %-16s %s",
+                            source_paragraph.name,
+                            source_paragraph.version,
+                            details::shorten_description(source_paragraph.description));
+        }
     }
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
@@ -59,10 +69,31 @@ namespace vcpkg::Commands::Search
             "The argument should be a substring to search for, or no argument to display all libraries.\n%s",
             Commands::Help::create_example_string("search png"));
         args.check_max_arg_count(1, example);
-        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_GRAPH});
+        const std::unordered_set<std::string> options =
+            args.check_and_get_optional_command_arguments({OPTION_GRAPH, OPTION_FULLDESC});
 
-        const std::vector<SourceParagraph> source_paragraphs =
-            Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
+        auto sources_and_errors = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
+
+        if (!sources_and_errors.errors.empty())
+        {
+            if (vcpkg::g_debugging)
+            {
+                print_error_message(sources_and_errors.errors);
+            }
+            else
+            {
+                for (auto&& error : sources_and_errors.errors)
+                {
+                    System::println(
+                        System::Color::warning, "Warning: an error occurred while parsing '%s'\n", error.name);
+                }
+                System::println(System::Color::warning,
+                                "Use '--debug' to get more information about the parse failures.\n");
+            }
+        }
+
+        auto& source_paragraphs = sources_and_errors.paragraphs;
+
         if (options.find(OPTION_GRAPH) != options.cend())
         {
             const std::string graph_as_string = create_graph_as_string(source_paragraphs);
@@ -74,7 +105,7 @@ namespace vcpkg::Commands::Search
         {
             for (const SourceParagraph& source_paragraph : source_paragraphs)
             {
-                do_print(source_paragraph);
+                do_print(source_paragraph, options.find(OPTION_FULLDESC) != options.cend());
             }
         }
         else
@@ -92,7 +123,7 @@ namespace vcpkg::Commands::Search
                     }
                 }
 
-                do_print(source_paragraph);
+                do_print(source_paragraph, options.find(OPTION_FULLDESC) != options.cend());
             }
         }
 

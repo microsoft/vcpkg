@@ -13,7 +13,7 @@ namespace vcpkg::Commands::Env
         args.check_and_get_optional_command_arguments({});
 
         auto pre_build_info = Build::PreBuildInfo::from_triplet_file(paths, default_triplet);
-        System::cmd_execute_clean(Build::make_build_env_cmd(pre_build_info, paths.get_toolset()) + L" && cmd");
+        System::cmd_execute_clean(Build::make_build_env_cmd(pre_build_info, paths.get_toolset(pre_build_info.platform_toolset)) + L" && cmd");
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }

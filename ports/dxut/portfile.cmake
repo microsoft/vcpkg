@@ -2,6 +2,11 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     message(STATUS "Warning: Dynamic building not supported yet. Building static.")
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
+
+if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+  message(FATAL_ERROR "DXUT only supports dynamic CRT linkage")
+endif()
+
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/DXUT-sept2016)
 vcpkg_download_distfile(ARCHIVE_FILE

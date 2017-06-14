@@ -18,7 +18,7 @@ if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message(WARNING "openblas only support dynamic link for msvc")
+    message("openblas currenly only supports dynamic library linkage")
     set(VCPKG_LIBRARY_LINKAGE "dynamic")
 endif()
 
@@ -61,8 +61,8 @@ file(COPY ${SOURCE_PATH}/config.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 file(RENAME ${CURRENT_PACKAGES_DIR}/include/config.h ${CURRENT_PACKAGES_DIR}/include/openblas_config.h)
 
 file(READ ${SOURCE_PATH}/cblas.h CBLAS_H)
-string(REPLACE "#include \"common.h\"" "#include \"openblas_common.h\"" CBLAS_H ${CBLAS_H})
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/cblas.h ${CBLAS_H})
+string(REPLACE "#include \"common.h\"" "#include \"openblas_common.h\"" CBLAS_H "${CBLAS_H}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/cblas.h "${CBLAS_H}")
 
 # openblas is BSD
 file(COPY ${CURRENT_BUILDTREES_DIR}/src/OpenBLAS-0.2.19/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openblas)

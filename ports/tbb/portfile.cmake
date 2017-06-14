@@ -2,16 +2,19 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     message(STATUS "Warning: Static building not supported yet. Building dynamic.")
     set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
-if (VCPKG_CRT_LINKAGE STREQUAL static OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "Build settings not supported")
+if (VCPKG_CRT_LINKAGE STREQUAL static)
+    message(FATAL_ERROR "TBB does not currently support static crt linkage")
+endif()
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
+    message(FATAL_ERROR "TBB does not currently support UWP")
 endif()
 
 include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO 01org/tbb
-    REF 2017_U6
-    SHA512 76b49fd085d8407b68b0f17e6eebfbcb7d2e6f9116bb5f6a00c6b4d59a55b16f9de79a2b9c9c3ece497b01810c33df21d0657893fd886db8bed639091ba97060
+    REF 2017_U7
+    SHA512 77fdd381eece8fb2fba4115af55d168e9d433bbdae3c21a53c35e7d5ed3397645fe75998ad10593b718f6959daaac05112401480cdb4fd2054f50b5f6f1a0df6
     HEAD_REF tbb_2017)
 
 if(TRIPLET_SYSTEM_ARCH STREQUAL x86)
@@ -55,6 +58,33 @@ file(COPY
   DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 
 vcpkg_copy_pdbs()
+
+# Since 2017_U7 TBB provides a CMake script to generate config file
+include(${SOURCE_PATH}/cmake/TBBMakeConfig.cmake)
+tbb_make_config(TBB_ROOT ${CURRENT_PACKAGES_DIR}
+    CONFIG_DIR TBB_CONFIG_DIR # is set to ${CURRENT_PACKAGES_DIR}/cmake
+    SYSTEM_NAME "Windows"
+    CONFIG_FOR_SOURCE
+    TBB_RELEASE_DIR "\${_tbb_root}/bin"
+    TBB_DEBUG_DIR "\${_tbb_root}/debug/bin")
+
+file(COPY ${TBB_CONFIG_DIR}/TBBConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/tbb)
+file(COPY ${TBB_CONFIG_DIR}/TBBConfigVersion.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/tbb)
+file(REMOVE_RECURSE ${TBB_CONFIG_DIR})
+
+# make it work with our installation layout
+file(READ ${CURRENT_PACKAGES_DIR}/share/tbb/TBBConfig.cmake TBB_CONFIG_CMAKE)
+string(REPLACE
+"get_filename_component(_tbb_root \"\${_tbb_root}\" PATH)"
+"get_filename_component(_tbb_root \"\${_tbb_root}\" PATH)
+get_filename_component(_tbb_root \"\${_tbb_root}\" PATH)" TBB_CONFIG_CMAKE "${TBB_CONFIG_CMAKE}")
+string(REPLACE
+"\${_tbb_root}/bin/\${_tbb_component}.lib"
+"\${_tbb_root}/lib/\${_tbb_component}.lib" TBB_CONFIG_CMAKE "${TBB_CONFIG_CMAKE}")
+string(REPLACE
+"\${_tbb_root}/debug/bin/\${_tbb_component}_debug.lib"
+"\${_tbb_root}/debug/lib/\${_tbb_component}_debug.lib" TBB_CONFIG_CMAKE "${TBB_CONFIG_CMAKE}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/tbb/TBBConfig.cmake "${TBB_CONFIG_CMAKE}")
 
 message(STATUS "Installing done")
 
