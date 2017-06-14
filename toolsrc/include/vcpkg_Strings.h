@@ -58,10 +58,10 @@ namespace vcpkg::Strings
 
     std::string ascii_to_lowercase(const std::string& input);
 
-    template<class T, class Transformer, class CharType>
-    std::basic_string<CharType> join(const CharType* delimiter, const std::vector<T>& v, Transformer transformer)
+    template<class Container, class Transformer, class CharType>
+    std::basic_string<CharType> join(const CharType* delimiter, const Container& v, Transformer transformer)
     {
-        if (v.empty())
+        if (v.size() == 0)
         {
             return std::basic_string<CharType>();
         }
@@ -69,20 +69,21 @@ namespace vcpkg::Strings
         std::basic_string<CharType> output;
         size_t size = v.size();
 
-        output.append(transformer(v.at(0)));
+        output.append(transformer(v[0]));
 
         for (size_t i = 1; i < size; ++i)
         {
             output.append(delimiter);
-            output.append(transformer(v.at(i)));
+            output.append(transformer(v[i]));
         }
 
         return output;
     }
-    template<class T, class CharType>
-    std::basic_string<CharType> join(const CharType* delimiter, const std::vector<T>& v)
+    template<class Container, class CharType>
+    std::basic_string<CharType> join(const CharType* delimiter, const Container& v)
     {
-        return join(delimiter, v, [](const T& x) -> const T& { return x; });
+        using Element = decltype(v[0]);
+        return join(delimiter, v, [](const Element& x) -> const Element& { return x; });
     }
 
     void trim(std::string* s);

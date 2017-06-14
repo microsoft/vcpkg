@@ -17,6 +17,15 @@ set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION})
 set(TOOL_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION}-win32)
 
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
+
+# Patch to fix the missing export of fixed_address_empty_string,
+# see https://github.com/google/protobuf/pull/3216
+vcpkg_apply_patches(
+    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION}
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-fix-missing-export.patch"
+)
+
+
 vcpkg_extract_source_archive(${TOOL_ARCHIVE_FILE} ${TOOL_PATH})
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

@@ -13,10 +13,9 @@ namespace vcpkg::Commands::DependInfo
         args.check_exact_arg_count(0, example);
         args.check_and_get_optional_command_arguments({});
 
-        const std::vector<SourceParagraph> source_paragraphs =
-            Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
+        auto sources = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
 
-        for (const SourceParagraph& source_paragraph : source_paragraphs)
+        for (const SourceParagraph& source_paragraph : sources)
         {
             auto s = Strings::join(", ", source_paragraph.depends, [](const Dependency& d) { return d.name; });
             System::println("%s: %s", source_paragraph.name, s);

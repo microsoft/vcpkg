@@ -7,7 +7,8 @@
 #
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(FATAL_ERROR "Static building not supported yet")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
+    message("Static building not supported yet")
 endif()
 
 if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -29,8 +30,10 @@ include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-OpenSSL_1_0_2k_WinRT)
 
 vcpkg_find_acquire_program(PERL)
+vcpkg_find_acquire_program(JOM)
+get_filename_component(JOM_EXE_PATH ${JOM} DIRECTORY)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH}")
+set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH};${JOM_EXE_PATH}")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/Microsoft/openssl/archive/OpenSSL_1_0_2k_WinRT.zip"
@@ -39,6 +42,11 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-uwp-pathlib.patch
+)
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/tmp32dll)
 file(REMOVE_RECURSE ${SOURCE_PATH}/out32dll)

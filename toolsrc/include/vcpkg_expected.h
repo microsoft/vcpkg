@@ -5,27 +5,63 @@
 
 namespace vcpkg
 {
-    template<class T>
-    class Expected
+    template<class Err>
+    struct ErrorHolder
+    {
+        ErrorHolder() : m_is_error(false) {}
+        ErrorHolder(const Err& err) : m_is_error(true), m_err(err) {}
+        ErrorHolder(Err&& err) : m_is_error(true), m_err(std::move(err)) {}
+
+        constexpr bool has_error() const { return m_is_error; }
+
+        const Err& error() const { return m_err; }
+        Err& error() { return m_err; }
+
+        CStringView to_string() const { return "value was error"; }
+
+    private:
+        bool m_is_error;
+        Err m_err;
+    };
+
+    template<>
+    struct ErrorHolder<std::error_code>
+    {
+        ErrorHolder() = default;
+        ErrorHolder(const std::error_code& err) : m_err(err) {}
+
+        constexpr bool has_error() const { return bool(m_err); }
+
+        const std::error_code& error() const { return m_err; }
+        std::error_code& error() { return m_err; }
+
+        CStringView to_string() const { return "value was error"; }
+
+    private:
+        std::error_code m_err;
+    };
+
+    template<class T, class S>
+    class ExpectedT
     {
     public:
+        constexpr ExpectedT() = default;
+
         // Constructors are intentionally implicit
-        Expected(const std::error_code& ec) : m_error_code(ec), m_t() {}
 
-        Expected(std::errc ec) : Expected(std::make_error_code(ec)) {}
+        ExpectedT(const S& s) : m_s(s) {}
+        ExpectedT(S&& s) : m_s(std::move(s)) {}
 
-        Expected(const T& t) : m_error_code(), m_t(t) {}
+        ExpectedT(const T& t) : m_t(t) {}
+        ExpectedT(T&& t) : m_t(std::move(t)) {}
 
-        Expected(T&& t) : m_error_code(), m_t(std::move(t)) {}
+        ExpectedT(const ExpectedT&) = default;
+        ExpectedT(ExpectedT&&) = default;
+        ExpectedT& operator=(const ExpectedT&) = default;
+        ExpectedT& operator=(ExpectedT&&) = default;
 
-        Expected() : Expected(std::error_code(), T()) {}
-
-        Expected(const Expected&) = default;
-        Expected(Expected&&) = default;
-        Expected& operator=(const Expected&) = default;
-        Expected& operator=(Expected&&) = default;
-
-        std::error_code error_code() const { return this->m_error_code; }
+        explicit constexpr operator bool() const noexcept { return !m_s.has_error(); }
+        constexpr bool has_value() const noexcept { return !m_s.has_error(); }
 
         T&& value_or_exit(const LineInfo& line_info) &&
         {
@@ -39,9 +75,13 @@ namespace vcpkg
             return this->m_t;
         }
 
+        const S& error() const & { return this->m_s.error(); }
+
+        S&& error() && { return std::move(this->m_s.error()); }
+
         const T* get() const
         {
-            if (m_error_code)
+            if (!this->has_value())
             {
                 return nullptr;
             }
@@ -50,7 +90,7 @@ namespace vcpkg
 
         T* get()
         {
-            if (m_error_code)
+            if (!this->has_value())
             {
                 return nullptr;
             }
@@ -60,10 +100,13 @@ namespace vcpkg
     private:
         void exit_if_error(const LineInfo& line_info) const
         {
-            Checks::check_exit(line_info, !this->m_error_code, this->m_error_code.message());
+            Checks::check_exit(line_info, !m_s.has_error(), m_s.to_string());
         }
 
-        std::error_code m_error_code;
+        ErrorHolder<S> m_s;
         T m_t;
     };
+
+    template<class T>
+    using Expected = ExpectedT<T, std::error_code>;
 }

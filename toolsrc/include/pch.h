@@ -12,6 +12,7 @@
 #include <chrono>
 #include <codecvt>
 #include <cstdarg>
+#include <cstddef>
 #include <cstdint>
 #include <filesystem>
 #include <fstream>

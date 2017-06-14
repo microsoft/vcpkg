@@ -33,7 +33,7 @@ endif()
 vcpkg_install_cmake()
 
 # Copy the appropriate header files.
-file(COPY
+foreach(FILE
 "${SOURCE_PATH}/src/cairo.h"
 "${SOURCE_PATH}/src/cairo-deprecated.h"
 "${SOURCE_PATH}/src/cairo-features.h"
@@ -44,10 +44,20 @@ file(COPY
 "${SOURCE_PATH}/cairo-version.h"
 "${SOURCE_PATH}/src/cairo-win32.h"
 "${SOURCE_PATH}/util/cairo-gobject/cairo-gobject.h"
-"${SOURCE_PATH}/src/cairo-ft.h"
-DESTINATION
-${CURRENT_PACKAGES_DIR}/include
-)
+"${SOURCE_PATH}/src/cairo-ft.h")
+  file(COPY ${FILE} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+  file(COPY ${FILE} DESTINATION ${CURRENT_PACKAGES_DIR}/include/cairo)
+endforeach()
+
+foreach(FILE "${CURRENT_PACKAGES_DIR}/include/cairo.h" "${CURRENT_PACKAGES_DIR}/include/cairo/cairo.h")
+    file(READ ${FILE} CAIRO_H)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        string(REPLACE "defined (CAIRO_WIN32_STATIC_BUILD)" "1" CAIRO_H "${CAIRO_H}")
+    else()
+        string(REPLACE "defined (CAIRO_WIN32_STATIC_BUILD)" "0" CAIRO_H "${CAIRO_H}")
+    endif()
+    file(WRITE ${FILE} "${CAIRO_H}")
+endforeach()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/cairo)
