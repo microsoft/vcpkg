@@ -1,0 +1,36 @@
+From 8710ee9b6c3ef236a84450ab9fd1f8f167c87a56 Mon Sep 17 00:00:00 2001
+From: Tsukasa Sugiura <t.sugiura0204@gmail.com>
+Date: Thu, 16 Jun 2016 01:52:29 +0900
+Subject: [PATCH] Fix compile error C2440 of pcl_visualization on MSVC
+
+The pcl_visualization occur compile error C2440 on MSVC.
+This error occurs because that can not directly cast to enum type from
+double type in MSVC.
+It must explicitly cast to int type from double type before cast to enum
+type.
+---
+ visualization/src/pcl_visualizer.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/visualization/src/pcl_visualizer.cpp b/visualization/src/pcl_visualizer.cpp
+index b5fabde110..7c84b7543e 100644
+--- a/visualization/src/pcl_visualizer.cpp
++++ b/visualization/src/pcl_visualizer.cpp
+@@ -1492,7 +1492,7 @@ pcl::visualization::PCLVisualizer::setPointCloudRenderingProperties (
+       actor->GetMapper ()->ScalarVisibilityOn ();
+       actor->GetMapper ()->SetScalarRange (range[0], range[1]);
+       vtkSmartPointer<vtkLookupTable> table;
+-      if (!pcl::visualization::getColormapLUT (static_cast<LookUpTableRepresentationProperties>(value), table))
++      if (!pcl::visualization::getColormapLUT (static_cast<LookUpTableRepresentationProperties>(static_cast<int>(value)), table))
+         break;
+       table->SetRange (range[0], range[1]);
+       actor->GetMapper ()->SetLookupTable (table);
+@@ -1738,7 +1738,7 @@ pcl::visualization::PCLVisualizer::setShapeRenderingProperties (
+       actor->GetMapper ()->ScalarVisibilityOn ();
+       actor->GetMapper ()->SetScalarRange (range[0], range[1]);
+       vtkSmartPointer<vtkLookupTable> table = vtkSmartPointer<vtkLookupTable>::New ();
+-      getColormapLUT (static_cast<LookUpTableRepresentationProperties>(value), table);
++      getColormapLUT (static_cast<LookUpTableRepresentationProperties>(static_cast<int>(value)), table);
+       table->SetRange (range[0], range[1]);
+       actor->GetMapper ()->SetLookupTable (table);
+       style_->updateLookUpTableDisplay (false);

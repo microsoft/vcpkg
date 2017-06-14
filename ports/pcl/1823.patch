@@ -1,0 +1,22 @@
+From b89b32b5e812353e93a5c35203c70b878c8ae2b7 Mon Sep 17 00:00:00 2001
+From: Mourad Boufarguine <bouffa@gmail.com>
+Date: Mon, 20 Feb 2017 10:13:25 +0100
+Subject: [PATCH] Link to delayimp library for all MSVC versions
+
+---
+ cmake/pcl_targets.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmake/pcl_targets.cmake b/cmake/pcl_targets.cmake
+index 691ead0b7a..06df2791cd 100644
+--- a/cmake/pcl_targets.cmake
++++ b/cmake/pcl_targets.cmake
+@@ -196,7 +196,7 @@ macro(PCL_ADD_LIBRARY _name _component)
+       target_link_libraries(${_name} gomp)
+     endif()
+ 	
+-	if(MSVC90 OR MSVC10)
++	if(MSVC)
+ 	  target_link_libraries(${_name} delayimp.lib)  # because delay load is enabled for openmp.dll
+ 	endif()
+ 

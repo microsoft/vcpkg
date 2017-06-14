@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e5fd763e3..241fa5208 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -276,9 +276,9 @@ include_directories(SYSTEM ${EIGEN_INCLUDE_DIRS})
+ add_definitions(-DEIGEN_USE_NEW_STDVECTOR
+                 -DEIGEN_YES_I_KNOW_SPARSE_MODULE_IS_NOT_STABLE_YET)
+ # FLANN (required)
+-if(NOT PCL_SHARED_LIBS OR (WIN32 AND NOT MINGW))
++if(NOT PCL_SHARED_LIBS)
+   set(FLANN_USE_STATIC ON)
+-endif(NOT PCL_SHARED_LIBS OR (WIN32 AND NOT MINGW))
++endif(NOT PCL_SHARED_LIBS)
+ find_package(FLANN 1.7.0 REQUIRED)
+ include_directories(${FLANN_INCLUDE_DIRS})
+ 
+diff --git a/cmake/Modules/FindFLANN.cmake b/cmake/Modules/FindFLANN.cmake
+index b5739dc95..b5c22a3b0 100644
+--- a/cmake/Modules/FindFLANN.cmake
++++ b/cmake/Modules/FindFLANN.cmake
+@@ -10,11 +10,11 @@
+ # look for shared ones
+ 
+ if(FLANN_USE_STATIC)
+-  set(FLANN_RELEASE_NAME flann_cpp_s)
+-  set(FLANN_DEBUG_NAME flann_cpp_s-gd)
++  set(FLANN_RELEASE_NAME flann_cpp)
++  set(FLANN_DEBUG_NAME flann_cpp)
+ else(FLANN_USE_STATIC)
+   set(FLANN_RELEASE_NAME flann_cpp)
+-  set(FLANN_DEBUG_NAME flann_cpp-gd)
++  set(FLANN_DEBUG_NAME flann_cpp)
+ endif(FLANN_USE_STATIC)
+ 
+ find_package(PkgConfig QUIET)

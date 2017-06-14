@@ -1,0 +1,68 @@
+From b9022ebd8ad5f5300662069b5f79995d0c0e18be Mon Sep 17 00:00:00 2001
+From: Tsukasa Sugiura <t.sugiura0204@gmail.com>
+Date: Fri, 24 Feb 2017 23:52:40 +0900
+Subject: [PATCH] Remove MSVCdd variables
+
+Version check for MSVC with MSVC_VERSION variable instead of MSVCdd
+variables, because MSVCdd variables are legacy.
+(e.g. MSVCdd is not defined for Visual C++ 2017.)
+---
+ CMakeLists.txt        | 14 +++++++-------
+ cmake/pcl_cpack.cmake | 10 +++++-----
+ 2 files changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7c455e175d..a07a3af0a4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -248,18 +248,18 @@ if(OPENMP_FOUND)
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+   message (STATUS "Found OpenMP")
+   if(MSVC)
+-    if(MSVC90)
++    if(MSVC_VERSION EQUAL 1500)
+       set(OPENMP_DLL VCOMP90)
+-    elseif(MSVC10)
++    elseif(MSVC_VERSION EQUAL 1600)
+       set(OPENMP_DLL VCOMP100)
+-    elseif(MSVC11)
++    elseif(MSVC_VERSION EQUAL 1700)
+       set(OPENMP_DLL VCOMP110)
+-    elseif(MSVC12)
++    elseif(MSVC_VERSION EQUAL 1800)
+       set(OPENMP_DLL VCOMP120)
+-    elseif(MSVC14)
++    elseif(MSVC_VERSION EQUAL 1900)
++      set(OPENMP_DLL VCOMP140)
++    elseif(MSVC_VERSION EQUAL 1910)
+       set(OPENMP_DLL VCOMP140)
+-    elseif(MSVC15)
+-      set(OPENMP_DLL VCOMP150)
+     endif()
+     if(OPENMP_DLL)
+       set(CMAKE_SHARED_LINKER_FLAGS_DEBUG "${CMAKE_SHARED_LINKER_FLAGS_DEBUG} /DELAYLOAD:${OPENMP_DLL}D.dll")
+diff --git a/cmake/pcl_cpack.cmake b/cmake/pcl_cpack.cmake
+index a42d930d2c..eec2b1b1db 100644
+--- a/cmake/pcl_cpack.cmake
++++ b/cmake/pcl_cpack.cmake
+@@ -37,15 +37,15 @@ if(WIN32)
+   if(BUILD_all_in_one_installer)
+     set(CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME}-${PCL_VERSION}-AllInOne")
+   endif(BUILD_all_in_one_installer)
+-  if(MSVC10)
++  if(MSVC_VERSION EQUAL 1600)
+     set(CPACK_NSIS_PACKAGE_NAME "${CPACK_NSIS_PACKAGE_NAME}-msvc2010-${win_system_name}")
+-  elseif(MSVC11)
++  elseif(MSVC_VERSION EQUAL 1700)
+     set(CPACK_NSIS_PACKAGE_NAME "${CPACK_NSIS_PACKAGE_NAME}-msvc2012-${win_system_name}")
+-  elseif(MSVC12)
++  elseif(MSVC_VERSION EQUAL 1800)
+     set(CPACK_NSIS_PACKAGE_NAME "${CPACK_NSIS_PACKAGE_NAME}-msvc2013-${win_system_name}")
+-  elseif(MSVC14)
++  elseif(MSVC_VERSION EQUAL 1900)
+     set(CPACK_NSIS_PACKAGE_NAME "${CPACK_NSIS_PACKAGE_NAME}-msvc2015-${win_system_name}")
+-  elseif(MSVC15)
++  elseif(MSVC_VERSION EQUAL 1910)
+     set(CPACK_NSIS_PACKAGE_NAME "${CPACK_NSIS_PACKAGE_NAME}-msvc2017-${win_system_name}")
+   else()
+     set(CPACK_NSIS_PACKAGE_NAME "${CPACK_NSIS_PACKAGE_NAME}-${win_system_name}")
