@@ -15,6 +15,11 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/Initialize-mutexes-for-static-builds-for-win32.patch"
+)
+
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists_cairo.txt DESTINATION ${SOURCE_PATH}/src)
 file(RENAME ${SOURCE_PATH}/src/CMakeLists_cairo.txt ${SOURCE_PATH}/src/CMakeLists.txt)
