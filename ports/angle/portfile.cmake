@@ -1,16 +1,29 @@
 include(vcpkg_common_functions)
 
+string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
+if(BUILDTREES_PATH_LENGTH GREATER 27)
+    message(WARNING "Angle's buildsystem uses very long paths and may fail on your system.\n"
+        "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
+    )
+endif()
+
 find_program(GIT git)
 vcpkg_acquire_depot_tools(DEPOT_TOOLS)
 vcpkg_find_acquire_program(PYTHON2)
 vcpkg_find_acquire_program(NINJA)
 
 set(GIT_URL "https://chromium.googlesource.com/angle/angle.git")
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/angle.git)
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO google/angle
+    REF 8d471f907d8d4ec1d46bc9366493bd76c11c1870
+    SHA512 b9235d2a98330bc8533c3fe871129e7235c680420eac16610eae4ca7224c5284313ab6377f30ddfb8a2da39b69f3ef0d16023fe1e7cec3fc2198f4eb4bdccb26
+    HEAD_REF master
+)
+
 set(GCLIENT ${DEPOT_TOOLS}/gclient.bat)
 
-file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR})
-file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR})
 
 get_filename_component(PYTHON_DIRECTORY ${PYTHON2} DIRECTORY)
 get_filename_component(GIT_DIRECTORY ${GIT} DIRECTORY)
@@ -36,26 +49,6 @@ SET(ENV{GYP_GENERATORS} "ninja")
 if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
   SET(ENV{GYP_GENERATE_WINRT} "1")
 endif()
-
-if(NOT EXISTS "${DOWNLOADS}/angle.git")
-  message(STATUS "Cloning")
-  vcpkg_execute_required_process(
-    COMMAND ${GIT} clone ${GIT_URL} ${DOWNLOADS}/angle.git
-    WORKING_DIRECTORY ${DOWNLOADS}
-    LOGNAME git-clone
-  )
-else()
-  message(STATUS "Pulling")
-  vcpkg_execute_required_process(
-    COMMAND ${GIT} pull ${GIT_URL}
-    WORKING_DIRECTORY ${DOWNLOADS}/angle.git
-    LOGNAME git-pulling
-  )
-endif()
-
-
-
-file(COPY ${DOWNLOADS}/angle.git DESTINATION ${CURRENT_BUILDTREES_DIR})
 
 message(STATUS "gclient config")
 vcpkg_execute_required_process(
