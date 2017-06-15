@@ -12,6 +12,7 @@
 
 using vcpkg::Build::PreBuildInfo;
 using vcpkg::Build::BuildInfo;
+using vcpkg::Build::BuildPolicy;
 
 namespace vcpkg::PostBuildLint
 {
@@ -37,44 +38,46 @@ namespace vcpkg::PostBuildLint
         }
     };
 
-    const std::vector<OutdatedDynamicCrt>& get_outdated_dynamic_crts()
+    const std::vector<OutdatedDynamicCrt>& get_outdated_dynamic_crts(const Build::BuildPolicies& policies)
     {
-        static const std::vector<OutdatedDynamicCrt> v = {{"msvcp100.dll", R"(msvcp100\.dll)"},
-                                                          {"msvcp100d.dll", R"(msvcp100d\.dll)"},
-                                                          {"msvcp110.dll", R"(msvcp110\.dll)"},
-                                                          {"msvcp110_win.dll", R"(msvcp110_win\.dll)"},
-                                                          {"msvcp120.dll", R"(msvcp120\.dll)"},
-                                                          {"msvcp120_clr0400.dll", R"(msvcp120_clr0400\.dll)"},
-                                                          {"msvcp60.dll", R"(msvcp60\.dll)"},
-                                                          {"msvcp60.dll", R"(msvcp60\.dll)"},
+        static const std::vector<OutdatedDynamicCrt> v_no_msvcrt = {
+            {"msvcp100.dll", R"(msvcp100\.dll)"},
+            {"msvcp100d.dll", R"(msvcp100d\.dll)"},
+            {"msvcp110.dll", R"(msvcp110\.dll)"},
+            {"msvcp110_win.dll", R"(msvcp110_win\.dll)"},
+            {"msvcp120.dll", R"(msvcp120\.dll)"},
+            {"msvcp120_clr0400.dll", R"(msvcp120_clr0400\.dll)"},
+            {"msvcp60.dll", R"(msvcp60\.dll)"},
+            {"msvcp60.dll", R"(msvcp60\.dll)"},
 
-                                                          {"msvcr100.dll", R"(msvcr100\.dll)"},
-                                                          {"msvcr100d.dll", R"(msvcr100d\.dll)"},
-                                                          {"msvcr100_clr0400.dll", R"(msvcr100_clr0400\.dll)"},
-                                                          {"msvcr110.dll", R"(msvcr110\.dll)"},
-                                                          {"msvcr120.dll", R"(msvcr120\.dll)"},
-                                                          {"msvcr120_clr0400.dll", R"(msvcr120_clr0400\.dll)"},
-                                                          {"msvcrt.dll", R"(msvcrt\.dll)"},
-                                                          {"msvcrt20.dll", R"(msvcrt20\.dll)"},
-                                                          {"msvcrt40.dll", R"(msvcrt40\.dll)"}};
+            {"msvcr100.dll", R"(msvcr100\.dll)"},
+            {"msvcr100d.dll", R"(msvcr100d\.dll)"},
+            {"msvcr100_clr0400.dll", R"(msvcr100_clr0400\.dll)"},
+            {"msvcr110.dll", R"(msvcr110\.dll)"},
+            {"msvcr120.dll", R"(msvcr120\.dll)"},
+            {"msvcr120_clr0400.dll", R"(msvcr120_clr0400\.dll)"},
+            {"msvcrt20.dll", R"(msvcrt20\.dll)"},
+            {"msvcrt40.dll", R"(msvcrt40\.dll)"}};
+
+        static const std::vector<OutdatedDynamicCrt> v = [&]() {
+            auto ret = v_no_msvcrt;
+            ret.push_back(OutdatedDynamicCrt{"msvcrt.dll", R"(msvcrt\.dll)"});
+            return ret;
+        }();
+
+        if (policies.is_enabled(BuildPolicy::ALLOW_OBSOLETE_MSVCRT))
+        {
+            return v_no_msvcrt;
+        }
 
         return v;
     }
 
-    template<class T>
-    static bool contains_and_enabled(const std::map<T, bool> map, const T& key)
-    {
-        auto it = map.find(key);
-        if (it != map.cend()) return it->second;
-
-        return false;
-    }
-
     static LintStatus check_for_files_in_include_directory(const Files::Filesystem& fs,
-                                                           const std::map<BuildPolicies, bool>& policies,
+                                                           const Build::BuildPolicies& policies,
                                                            const fs::path& package_dir)
     {
-        if (contains_and_enabled(policies, BuildPoliciesC::EMPTY_INCLUDE_FOLDER))
+        if (policies.is_enabled(BuildPolicy::EMPTY_INCLUDE_FOLDER))
         {
             return LintStatus::SUCCESS;
         }
@@ -427,6 +430,11 @@ namespace vcpkg::PostBuildLint
                                "The file extension was not .lib: %s",
                                file.generic_string());
             COFFFileReader::LibInfo info = COFFFileReader::read_lib(file);
+
+            // This is zero for folly's debug library
+            // TODO: Why?
+            if (info.machine_types.size() == 0) return LintStatus::SUCCESS;
+
             Checks::check_exit(VCPKG_LINE_INFO,
                                info.machine_types.size() == 1,
                                "Found more than 1 architecture in file %s",
@@ -495,16 +503,12 @@ namespace vcpkg::PostBuildLint
         return LintStatus::ERROR_DETECTED;
     }
 
-    static LintStatus check_lib_files_are_available_if_dlls_are_available(const std::map<BuildPolicies, bool>& policies,
+    static LintStatus check_lib_files_are_available_if_dlls_are_available(const Build::BuildPolicies& policies,
                                                                           const size_t lib_count,
                                                                           const size_t dll_count,
                                                                           const fs::path& lib_dir)
     {
-        auto it = policies.find(BuildPoliciesC::DLLS_WITHOUT_LIBS);
-        if (it != policies.cend() && it->second)
-        {
-            return LintStatus::SUCCESS;
-        }
+        if (policies.is_enabled(BuildPolicy::DLLS_WITHOUT_LIBS)) return LintStatus::SUCCESS;
 
         if (lib_count == 0 && dll_count != 0)
         {
@@ -512,7 +516,7 @@ namespace vcpkg::PostBuildLint
             System::println(System::Color::warning,
                             "If this is intended, add the following line in the portfile:\n"
                             "    SET(%s enabled)",
-                            BuildPoliciesC::DLLS_WITHOUT_LIBS.cmake_variable());
+                            to_cmake_variable(BuildPolicy::DLLS_WITHOUT_LIBS));
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -651,9 +655,11 @@ namespace vcpkg::PostBuildLint
         OutdatedDynamicCrt_and_file() = delete;
     };
 
-    static LintStatus check_outdated_crt_linkage_of_dlls(const std::vector<fs::path>& dlls, const fs::path dumpbin_exe)
+    static LintStatus check_outdated_crt_linkage_of_dlls(const std::vector<fs::path>& dlls,
+                                                         const fs::path dumpbin_exe,
+                                                         const BuildInfo& build_info)
     {
-        const std::vector<OutdatedDynamicCrt>& outdated_crts = get_outdated_dynamic_crts();
+        const std::vector<OutdatedDynamicCrt>& outdated_crts = get_outdated_dynamic_crts(build_info.policies);
 
         std::vector<OutdatedDynamicCrt_and_file> dlls_with_outdated_crt;
 
@@ -727,12 +733,12 @@ namespace vcpkg::PostBuildLint
         const auto& fs = paths.get_filesystem();
 
         // for dumpbin
-        const Toolset& toolset = paths.get_toolset();
+        const Toolset& toolset = paths.get_toolset(pre_build_info.platform_toolset);
         const fs::path package_dir = paths.package_dir(spec);
 
         size_t error_count = 0;
 
-        if (contains_and_enabled(build_info.policies, BuildPoliciesC::EMPTY_PACKAGE))
+        if (build_info.policies.is_enabled(BuildPolicy::EMPTY_PACKAGE))
         {
             return error_count;
         }
@@ -771,7 +777,7 @@ namespace vcpkg::PostBuildLint
 
         switch (build_info.library_linkage)
         {
-            case LinkageType::BackingEnum::DYNAMIC:
+            case Build::LinkageType::DYNAMIC:
             {
                 std::vector<fs::path> debug_dlls = fs.get_files_recursive(debug_bin_dir);
                 Util::unstable_keep_if(debug_dlls, has_extension_pred(fs, ".dll"));
@@ -793,10 +799,10 @@ namespace vcpkg::PostBuildLint
                 error_count += check_uwp_bit_of_dlls(pre_build_info.cmake_system_name, dlls, toolset.dumpbin);
                 error_count += check_dll_architecture(pre_build_info.target_architecture, dlls);
 
-                error_count += check_outdated_crt_linkage_of_dlls(dlls, toolset.dumpbin);
+                error_count += check_outdated_crt_linkage_of_dlls(dlls, toolset.dumpbin, build_info);
                 break;
             }
-            case LinkageType::BackingEnum::STATIC:
+            case Build::LinkageType::STATIC:
             {
                 std::vector<fs::path> dlls = fs.get_files_recursive(package_dir);
                 Util::unstable_keep_if(dlls, has_extension_pred(fs, ".dll"));
@@ -804,20 +810,19 @@ namespace vcpkg::PostBuildLint
 
                 error_count += check_bin_folders_are_not_present_in_static_build(fs, package_dir);
 
-                if (!contains_and_enabled(build_info.policies, BuildPoliciesC::ONLY_RELEASE_CRT))
+                if (!build_info.policies.is_enabled(BuildPolicy::ONLY_RELEASE_CRT))
                 {
-                    error_count += check_crt_linkage_of_libs(
-                        BuildType::value_of(ConfigurationTypeC::DEBUG, build_info.crt_linkage),
-                        debug_libs,
-                        toolset.dumpbin);
+                    error_count +=
+                        check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::DEBUG, build_info.crt_linkage),
+                                                  debug_libs,
+                                                  toolset.dumpbin);
                 }
                 error_count +=
-                    check_crt_linkage_of_libs(BuildType::value_of(ConfigurationTypeC::RELEASE, build_info.crt_linkage),
+                    check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::RELEASE, build_info.crt_linkage),
                                               release_libs,
                                               toolset.dumpbin);
                 break;
             }
-            case LinkageType::BackingEnum::NULLVALUE:
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
 

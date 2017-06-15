@@ -1,18 +1,51 @@
 #pragma once
 
+#include "CStringView.h"
 #include "PackageSpec.h"
-#include "PostBuildLint_BuildPolicies.h"
-#include "PostBuildLint_LinkageType.h"
 #include "StatusParagraphs.h"
 #include "VcpkgPaths.h"
 #include "vcpkg_Files.h"
 #include "vcpkg_optional.h"
+
+#include <array>
 #include <map>
 #include <unordered_map>
 #include <vector>
 
 namespace vcpkg::Build
 {
+    enum class UseHeadVersion
+    {
+        NO = 0,
+        YES
+    };
+
+    inline UseHeadVersion to_use_head_version(const bool value)
+    {
+        return value ? UseHeadVersion::YES : UseHeadVersion::NO;
+    }
+
+    inline bool to_bool(const UseHeadVersion value) { return value == UseHeadVersion::YES; }
+
+    enum class AllowDownloads
+    {
+        NO = 0,
+        YES
+    };
+
+    inline AllowDownloads to_allow_downloads(const bool value)
+    {
+        return value ? AllowDownloads::YES : AllowDownloads::NO;
+    }
+
+    inline bool to_bool(const AllowDownloads value) { return value == AllowDownloads::YES; }
+
+    struct BuildPackageOptions
+    {
+        UseHeadVersion use_head_version;
+        AllowDownloads allow_downloads;
+    };
+
     enum class BuildResult
     {
         NULLVALUE = 0,
@@ -32,8 +65,14 @@ namespace vcpkg::Build
     std::string create_error_message(const BuildResult build_result, const PackageSpec& spec);
     std::string create_user_troubleshooting_message(const PackageSpec& spec);
 
+    /// <summary>
+    /// Settings from the triplet file which impact the build environment and post-build checks
+    /// </summary>
     struct PreBuildInfo
     {
+        /// <summary>
+        /// Runs the triplet file in a "capture" mode to create a PreBuildInfo
+        /// </summary>
         static PreBuildInfo from_triplet_file(const VcpkgPaths& paths, const Triplet& triplet);
 
         std::string target_architecture;
@@ -52,33 +91,72 @@ namespace vcpkg::Build
 
     struct BuildPackageConfig
     {
-        BuildPackageConfig(const SourceParagraph& src, const Triplet& triplet, fs::path&& port_dir)
-            : src(src), triplet(triplet), port_dir(std::move(port_dir)), use_head_version(false), no_downloads(false)
+        BuildPackageConfig(const SourceParagraph& src,
+                           const Triplet& triplet,
+                           fs::path&& port_dir,
+                           const BuildPackageOptions& build_package_options)
+            : src(src), triplet(triplet), port_dir(std::move(port_dir)), build_package_options(build_package_options)
         {
         }
 
         const SourceParagraph& src;
         const Triplet& triplet;
         fs::path port_dir;
-
-        bool use_head_version;
-        bool no_downloads;
+        const BuildPackageOptions& build_package_options;
     };
 
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
                                       const BuildPackageConfig& config,
                                       const StatusParagraphs& status_db);
 
+    enum class BuildPolicy
+    {
+        EMPTY_PACKAGE,
+        DLLS_WITHOUT_LIBS,
+        ONLY_RELEASE_CRT,
+        EMPTY_INCLUDE_FOLDER,
+        ALLOW_OBSOLETE_MSVCRT,
+        // Must be last
+        COUNT,
+    };
+
+    Optional<BuildPolicy> to_build_policy(const std::string& str);
+
+    const std::string& to_string(BuildPolicy policy);
+    CStringView to_cmake_variable(BuildPolicy policy);
+
+    struct BuildPolicies
+    {
+        BuildPolicies() {}
+        BuildPolicies(std::map<BuildPolicy, bool>&& map) : m_policies(std::move(map)) {}
+
+        inline bool is_enabled(BuildPolicy policy) const
+        {
+            auto it = m_policies.find(policy);
+            if (it != m_policies.cend()) return it->second;
+            return false;
+        }
+
+    private:
+        std::map<BuildPolicy, bool> m_policies;
+    };
+
+    enum class LinkageType : char
+    {
+        DYNAMIC,
+        STATIC,
+    };
+
+    Optional<LinkageType> to_linkage_type(const std::string& str);
+
     struct BuildInfo
     {
-        static BuildInfo create(std::unordered_map<std::string, std::string> pgh);
-
-        PostBuildLint::LinkageType crt_linkage;
-        PostBuildLint::LinkageType library_linkage;
+        LinkageType crt_linkage;
+        LinkageType library_linkage;
 
         Optional<std::string> version;
 
-        std::map<PostBuildLint::BuildPolicies, bool> policies;
+        BuildPolicies policies;
     };
 
     BuildInfo read_build_info(const Files::Filesystem& fs, const fs::path& filepath);

@@ -1,3 +1,49 @@
+## # vcpkg_configure_cmake
+##
+## Configure CMake for Debug and Release builds of a project.
+##
+## ## Usage
+## ```cmake
+## vcpkg_configure_cmake(
+##     SOURCE_PATH <${SOURCE_PATH}>
+##     [PREFER_NINJA]
+##     [GENERATOR <"NMake Makefiles">]
+##     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
+##     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
+##     [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
+## )
+## ```
+##
+## ## Parameters
+## ### SOURCE_PATH
+## Specifies the directory containing the `CMakeLists.txt`. By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
+##
+## ### PREFER_NINJA
+## Indicates that, when available, Vcpkg should use Ninja to perform the build. This should be specified unless the port is known to not work under Ninja.
+##
+## ### GENERATOR
+## Specifies the precise generator to use.
+##
+## This is useful if some project-specific buildsystem has been wrapped in a cmake script that won't perform an actual build. If used for this purpose, it should be set to "NMake Makefiles".
+##
+## ### OPTIONS
+## Additional options passed to CMake during the configuration.
+##
+## ### OPTIONS_RELEASE
+## Additional options passed to CMake during the Release configuration. These are in addition to `OPTIONS`.
+##
+## ### OPTIONS_DEBUG
+## Additional options passed to CMake during the Debug configuration. These are in addition to `OPTIONS`.
+##
+## ## Notes
+## This command supplies many common arguments to CMake. To see the full list, examine the source.
+##
+## ## Examples
+##
+## * [zlib](https://github.com/Microsoft/vcpkg/blob/master/ports/zlib/portfile.cmake)
+## * [cpprestsdk](https://github.com/Microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
+## * [poco](https://github.com/Microsoft/vcpkg/blob/master/ports/poco/portfile.cmake)
+## * [opencv](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv/portfile.cmake)
 function(vcpkg_configure_cmake)
     cmake_parse_arguments(_csc "PREFER_NINJA" "SOURCE_PATH;GENERATOR" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" ${ARGN})
 
@@ -63,11 +109,26 @@ function(vcpkg_configure_cmake)
         list(APPEND _csc_OPTIONS -DBUILD_SHARED_LIBS=OFF)
     endif()
 
+    if((NOT DEFINED VCPKG_CXX_FLAGS_DEBUG AND NOT DEFINED VCPKG_C_FLAGS_DEBUG) OR
+        (DEFINED VCPKG_CXX_FLAGS_DEBUG AND DEFINED VCPKG_C_FLAGS_DEBUG))
+    else()
+        message(FATAL_ERROR "You must set both the VCPKG_CXX_FLAGS_DEBUG and VCPKG_C_FLAGS_DEBUG")
+    endif()
+    if((NOT DEFINED VCPKG_CXX_FLAGS_RELEASE AND NOT DEFINED VCPKG_C_FLAGS_RELEASE) OR
+        (DEFINED VCPKG_CXX_FLAGS_RELEASE AND DEFINED VCPKG_C_FLAGS_RELEASE))
+    else()
+        message(FATAL_ERROR "You must set both the VCPKG_CXX_FLAGS_RELEASE and VCPKG_C_FLAGS_RELEASE")
+    endif()
+    if((NOT DEFINED VCPKG_CXX_FLAGS AND NOT DEFINED VCPKG_C_FLAGS) OR
+        (DEFINED VCPKG_CXX_FLAGS AND DEFINED VCPKG_C_FLAGS))
+    else()
+        message(FATAL_ERROR "You must set both the VCPKG_CXX_FLAGS and VCPKG_C_FLAGS")
+    endif()
 
     list(APPEND _csc_OPTIONS
         "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
-        "-DCMAKE_CXX_FLAGS= /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP"
-        "-DCMAKE_C_FLAGS= /DWIN32 /D_WINDOWS /W3 /utf-8 /MP"
+        "-DCMAKE_CXX_FLAGS= /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP ${VCPKG_CXX_FLAGS}"
+        "-DCMAKE_C_FLAGS= /DWIN32 /D_WINDOWS /W3 /utf-8 /MP ${VCPKG_C_FLAGS}"
         "-DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON"
         "-DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON"
         "-DCMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY=ON"
@@ -77,28 +138,31 @@ function(vcpkg_configure_cmake)
         "-DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/buildsystems/vcpkg.cmake"
         "-DCMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION=ON"
     )
+
     if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL dynamic)
         list(APPEND _csc_OPTIONS_DEBUG
-            "-DCMAKE_CXX_FLAGS_DEBUG=/D_DEBUG /MDd /Zi /Ob0 /Od /RTC1"
-            "-DCMAKE_C_FLAGS_DEBUG=/D_DEBUG /MDd /Zi /Ob0 /Od /RTC1"
+            "-DCMAKE_CXX_FLAGS_DEBUG=/D_DEBUG /MDd /Zi /Ob0 /Od /RTC1 ${VCPKG_CXX_FLAGS_DEBUG}"
+            "-DCMAKE_C_FLAGS_DEBUG=/D_DEBUG /MDd /Zi /Ob0 /Od /RTC1 ${VCPKG_C_FLAGS_DEBUG}"
         )
         list(APPEND _csc_OPTIONS_RELEASE
-            "-DCMAKE_CXX_FLAGS_RELEASE=/MD /O2 /Oi /Gy /DNDEBUG /Zi"
-            "-DCMAKE_C_FLAGS_RELEASE=/MD /O2 /Oi /Gy /DNDEBUG /Zi"
+            "-DCMAKE_CXX_FLAGS_RELEASE=/MD /O2 /Oi /Gy /DNDEBUG /Zi ${VCPKG_CXX_FLAGS_RELEASE}"
+            "-DCMAKE_C_FLAGS_RELEASE=/MD /O2 /Oi /Gy /DNDEBUG /Zi ${VCPKG_C_FLAGS_RELEASE}"
         )
+
     elseif(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL static)
         list(APPEND _csc_OPTIONS_DEBUG
-            "-DCMAKE_CXX_FLAGS_DEBUG=/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1"
-            "-DCMAKE_C_FLAGS_DEBUG=/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1"
+            "-DCMAKE_CXX_FLAGS_DEBUG=/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1 ${VCPKG_CXX_FLAGS_DEBUG}"
+            "-DCMAKE_C_FLAGS_DEBUG=/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1 ${VCPKG_C_FLAGS_DEBUG}"
         )
         list(APPEND _csc_OPTIONS_RELEASE
-            "-DCMAKE_CXX_FLAGS_RELEASE=/MT /O2 /Oi /Gy /DNDEBUG /Zi"
-            "-DCMAKE_C_FLAGS_RELEASE=/MT /O2 /Oi /Gy /DNDEBUG /Zi"
+            "-DCMAKE_CXX_FLAGS_RELEASE=/MT /O2 /Oi /Gy /DNDEBUG /Zi ${VCPKG_CXX_FLAGS_RELEASE}"
+            "-DCMAKE_C_FLAGS_RELEASE=/MT /O2 /Oi /Gy /DNDEBUG /Zi ${VCPKG_C_FLAGS_RELEASE}"
         )
     endif()
+
     list(APPEND _csc_OPTIONS_RELEASE
-        "-DCMAKE_SHARED_LINKER_FLAGS_RELEASE=/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF"
-        "-DCMAKE_EXE_LINKER_FLAGS_RELEASE=/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF"
+        "-DCMAKE_SHARED_LINKER_FLAGS_RELEASE=/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS}"
+        "-DCMAKE_EXE_LINKER_FLAGS_RELEASE=/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS}"
     )
 
     message(STATUS "Configuring ${TARGET_TRIPLET}-rel")

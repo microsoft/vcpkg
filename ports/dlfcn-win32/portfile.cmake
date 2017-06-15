@@ -11,11 +11,12 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/dlfcn-win32-1.1.0)
+set(SOURCE_VERSION 1.1.1)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/dlfcn-win32-${SOURCE_VERSION})
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/dlfcn-win32/dlfcn-win32/archive/v1.1.0.zip"
-    FILENAME "dlfcn-win32-v1.1.0.zip"
-    SHA512 7ce1d62a3ea927f8ab56c335e975172c5eb0f465b8ba92f1cf1548638ad431214a644da18e1f733e8b9631cb89c277f06ca4d08f87726d5c04c8aa21dee1510f
+    URLS "https://github.com/dlfcn-win32/dlfcn-win32/archive/v${SOURCE_VERSION}.zip"
+    FILENAME "dlfcn-win32-v${SOURCE_VERSION}.zip"
+    SHA512 581043784d8c1b1b43c88c0da302f79d70e1d33e95977a355d849b8f8c45194b55fdc28e36a3f3ed192eca8fee6b00cb8bf1d1d1fc08b94d53be6f73bea6e09a
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

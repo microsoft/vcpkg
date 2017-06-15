@@ -23,6 +23,13 @@ vcpkg_configure_cmake(
 	OPTIONS
 		-DDLIB_LINK_WITH_SQLITE3=ON
 		-DDLIB_USE_FFTW=ON
+		-DDLIB_PNG_SUPPORT=ON
+		-DDLIB_JPEG_SUPPORT=ON
+		-DDLIB_USE_BLAS=OFF
+		-DDLIB_USE_LAPACK=OFF
+		-DDLIB_USE_CUDA=OFF
+		-DDLIB_GIF_SUPPORT=OFF
+		-DDLIB_USE_MKL_FFT=OFF
 		#-DDLIB_USE_CUDA=ON
 	OPTIONS_DEBUG
 		-DDLIB_ENABLE_ASSERTS=ON
@@ -43,6 +50,12 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/test)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/travis) 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/external/libpng/arm)
+
+# Dlib encodes debug/release in its config.h. Patch it to respond to the NDEBUG macro instead.
+file(READ ${CURRENT_PACKAGES_DIR}/include/dlib/config.h _contents)
+string(REPLACE "/* #undef ENABLE_ASSERTS */" "#if !defined(NDEBUG)\n#define ENABLE_ASSERTS\n#endif" _contents ${_contents})
+string(REPLACE "#define DLIB_DISABLE_ASSERTS" "#if defined(NDEBUG)\n#define DLIB_DISABLE_ASSERTS\n#endif" _contents ${_contents})
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/dlib/config.h ${_contents})
 
 # Handle copyright
 file(COPY ${CURRENT_PACKAGES_DIR}/share/doc/dlib/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/dlib)

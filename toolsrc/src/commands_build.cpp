@@ -33,13 +33,16 @@ namespace vcpkg::Commands::BuildCommand
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        const Expected<SourceParagraph> maybe_spgh = Paragraphs::try_load_port(paths.get_filesystem(), port_dir);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           !maybe_spgh.error_code(),
-                           "Could not find package %s: %s",
-                           spec,
-                           maybe_spgh.error_code().message());
-        const SourceParagraph& spgh = *maybe_spgh.get();
+        const ExpectedT<SourceParagraph, ParseControlErrorInfo> maybe_spgh =
+            Paragraphs::try_load_port(paths.get_filesystem(), port_dir);
+
+        if (!maybe_spgh)
+        {
+            print_error_message(maybe_spgh.error());
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+
+        const SourceParagraph& spgh = maybe_spgh.value_or_exit(VCPKG_LINE_INFO);
         Checks::check_exit(VCPKG_LINE_INFO,
                            spec.name() == spgh.name,
                            "The Name: field inside the CONTROL does not match the port directory: '%s' != '%s'",
@@ -47,9 +50,8 @@ namespace vcpkg::Commands::BuildCommand
                            spec.name());
 
         StatusParagraphs status_db = database_load_check(paths);
-        const Build::BuildPackageConfig build_config{
-            spgh, spec.triplet(), paths.port_dir(spec),
-        };
+        Build::BuildPackageOptions build_package_options{Build::UseHeadVersion::NO, Build::AllowDownloads::YES};
+        const Build::BuildPackageConfig build_config{spgh, spec.triplet(), paths.port_dir(spec), build_package_options};
         const auto result = Build::build_package(paths, build_config, status_db);
         if (result.code == BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES)
         {

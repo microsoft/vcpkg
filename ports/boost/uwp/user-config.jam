@@ -1,11 +1,15 @@
 using msvc : 14.0 : cl.exe :
 <setup>echo
 <compileflags>"\"/AI@PLATFORM_WINMD_DIR@\""
-<linkflags>/nodefaultlibs
+<linkflags>kernel32.lib
+<linkflags>RuntimeObject.lib
+<linkflags>ole32.lib
 ;
 
 using msvc : 14.1 : cl.exe :
 <setup>echo
 <compileflags>"\"/AI@PLATFORM_WINMD_DIR@\""
-<linkflags>/nodefaultlibs
+<linkflags>kernel32.lib
+<linkflags>RuntimeObject.lib
+<linkflags>ole32.lib
 ;

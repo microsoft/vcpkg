@@ -17,8 +17,15 @@ vcpkg_apply_patches(
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-Enable-C-11-features-for-VS2015-fix-appveyor-fail.patch
 )
 
+if (VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+    set(gtest_force_shared_crt YES)
+else()
+    set(gtest_force_shared_crt NO)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS -Dgtest_force_shared_crt=${gtest_force_shared_crt}
 )
 
 vcpkg_install_cmake()

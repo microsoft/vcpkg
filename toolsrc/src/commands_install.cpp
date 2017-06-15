@@ -263,6 +263,77 @@ namespace vcpkg::Commands::Install
         status_db->insert(std::make_unique<StatusParagraph>(source_paragraph));
     }
 
+    using Build::BuildResult;
+
+    BuildResult perform_install_plan_action(const VcpkgPaths& paths,
+                                            const InstallPlanAction& action,
+                                            const Build::BuildPackageOptions& build_package_options,
+                                            StatusParagraphs& status_db)
+    {
+        const InstallPlanType& plan_type = action.plan_type;
+        const std::string display_name = action.spec.to_string();
+
+        const bool is_user_requested = action.request_type == RequestType::USER_REQUESTED;
+        const bool use_head_version = to_bool(build_package_options.use_head_version);
+
+        if (plan_type == InstallPlanType::ALREADY_INSTALLED)
+        {
+            if (use_head_version && is_user_requested)
+            {
+                System::println(
+                    System::Color::warning, "Package %s is already installed -- not building from HEAD", display_name);
+            }
+            else
+            {
+                System::println(System::Color::success, "Package %s is already installed", display_name);
+            }
+            return BuildResult::SUCCEEDED;
+        }
+
+        if (plan_type == InstallPlanType::BUILD_AND_INSTALL)
+        {
+            if (use_head_version)
+                System::println("Building package %s from HEAD... ", display_name);
+            else
+                System::println("Building package %s... ", display_name);
+
+            const Build::BuildPackageConfig build_config{
+                action.any_paragraph.source_paragraph.value_or_exit(VCPKG_LINE_INFO),
+                action.spec.triplet(),
+                paths.port_dir(action.spec),
+                build_package_options};
+            const auto result = Build::build_package(paths, build_config, status_db);
+            if (result.code != Build::BuildResult::SUCCEEDED)
+            {
+                System::println(System::Color::error, Build::create_error_message(result.code, action.spec));
+                return result.code;
+            }
+            System::println("Building package %s... done", display_name);
+
+            const BinaryParagraph bpgh =
+                Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO);
+            System::println("Installing package %s... ", display_name);
+            install_package(paths, bpgh, &status_db);
+            System::println(System::Color::success, "Installing package %s... done", display_name);
+            return BuildResult::SUCCEEDED;
+        }
+
+        if (plan_type == InstallPlanType::INSTALL)
+        {
+            if (use_head_version && is_user_requested)
+            {
+                System::println(
+                    System::Color::warning, "Package %s is already built -- not building from HEAD", display_name);
+            }
+            System::println("Installing package %s... ", display_name);
+            install_package(paths, action.any_paragraph.binary_paragraph.value_or_exit(VCPKG_LINE_INFO), &status_db);
+            System::println(System::Color::success, "Installing package %s... done", display_name);
+            return BuildResult::SUCCEEDED;
+        }
+
+        Checks::unreachable(VCPKG_LINE_INFO);
+    }
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
         static const std::string OPTION_DRY_RUN = "--dry-run";
@@ -315,80 +386,16 @@ namespace vcpkg::Commands::Install
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
+        const Build::BuildPackageOptions install_plan_options = {Build::to_use_head_version(use_head_version),
+                                                                 Build::to_allow_downloads(!no_downloads)};
+
         // execute the plan
         for (const InstallPlanAction& action : install_plan)
         {
-            const std::string display_name = action.spec.to_string();
-
-            try
+            const BuildResult result = perform_install_plan_action(paths, action, install_plan_options, status_db);
+            if (result != BuildResult::SUCCEEDED)
             {
-                switch (action.plan_type)
-                {
-                    case InstallPlanType::ALREADY_INSTALLED:
-                        if (use_head_version && action.request_type == RequestType::USER_REQUESTED)
-                        {
-                            System::println(System::Color::warning,
-                                            "Package %s is already installed -- not building from HEAD",
-                                            display_name);
-                        }
-                        else
-                        {
-                            System::println(System::Color::success, "Package %s is already installed", display_name);
-                        }
-                        break;
-                    case InstallPlanType::BUILD_AND_INSTALL:
-                    {
-                        Build::BuildPackageConfig build_config{
-                            action.any_paragraph.source_paragraph.value_or_exit(VCPKG_LINE_INFO),
-                            action.spec.triplet(),
-                            paths.port_dir(action.spec),
-                        };
-
-                        build_config.use_head_version =
-                            use_head_version && action.request_type == RequestType::USER_REQUESTED;
-                        build_config.no_downloads = no_downloads;
-
-                        if (build_config.use_head_version)
-                            System::println("Building package %s from HEAD... ", display_name);
-                        else
-                            System::println("Building package %s... ", display_name);
-
-                        const auto result = Build::build_package(paths, build_config, status_db);
-                        if (result.code != Build::BuildResult::SUCCEEDED)
-                        {
-                            System::println(System::Color::error,
-                                            Build::create_error_message(result.code, action.spec));
-                            System::println(Build::create_user_troubleshooting_message(action.spec));
-                            Checks::exit_fail(VCPKG_LINE_INFO);
-                        }
-                        System::println("Building package %s... done", display_name);
-
-                        const BinaryParagraph bpgh =
-                            Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO);
-                        System::println("Installing package %s... ", display_name);
-                        install_package(paths, bpgh, &status_db);
-                        System::println(System::Color::success, "Installing package %s... done", display_name);
-                        break;
-                    }
-                    case InstallPlanType::INSTALL:
-                        if (use_head_version && action.request_type == RequestType::USER_REQUESTED)
-                        {
-                            System::println(System::Color::warning,
-                                            "Package %s is already built -- not building from HEAD",
-                                            display_name);
-                        }
-                        System::println("Installing package %s... ", display_name);
-                        install_package(
-                            paths, action.any_paragraph.binary_paragraph.value_or_exit(VCPKG_LINE_INFO), &status_db);
-                        System::println(System::Color::success, "Installing package %s... done", display_name);
-                        break;
-                    case InstallPlanType::UNKNOWN:
-                    default: Checks::unreachable(VCPKG_LINE_INFO);
-                }
-            }
-            catch (const std::exception& e)
-            {
-                System::println(System::Color::error, "Error: Could not install package %s: %s", action.spec, e.what());
+                System::println(Build::create_user_troubleshooting_message(action.spec));
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
         }

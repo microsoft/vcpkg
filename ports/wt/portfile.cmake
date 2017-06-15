@@ -13,19 +13,32 @@ vcpkg_apply_patches(
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/add-disable-boost-autolink-option.patch
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(SHARED_LIBS ON)
+else()
+    set(SHARED_LIBS OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -DSHARED_LIBS=ON
-        -DENABLE_SSL=ON
+        -DSHARED_LIBS=${SHARED_LIBS}
+        -DBOOST_DYNAMIC=ON
+        -DDISABLE_BOOST_AUTOLINK=ON
         -DBUILD_EXAMPLES=OFF
-        -DENABLE_POSTGRES=OFF
+
+        -DENABLE_SSL=ON
+        -DENABLE_HARU=OFF
+        -DENABLE_PANGO=ON
+        -DENABLE_SQLITE=ON
+        -DENABLE_POSTGRES=ON
         -DENABLE_FIREBIRD=OFF
         -DENABLE_MYSQL=OFF
         -DENABLE_QT4=OFF
-        -DBOOST_DYNAMIC=ON
-        -DDISABLE_BOOST_AUTOLINK=ON
         -DENABLE_LIBWTTEST=OFF
+        -DENABLE_OPENGL=ON
+
+        -DUSE_SYSTEM_SQLITE3=ON
 )
 vcpkg_install_cmake()
 

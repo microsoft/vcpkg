@@ -168,7 +168,7 @@ set(B2_OPTIONS_DBG
     ${B2_OPTIONS}
     -sZLIB_BINARY=zlibd
     -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
-    -sBZIP2_BINARY=bz2
+    -sBZIP2_BINARY=bz2d
     -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
 )
 
@@ -221,6 +221,9 @@ file(
 file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp
 	"\n#define BOOST_ALL_NO_LIB\n"
 )
+file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp
+    "\n#undef BOOST_ALL_DYN_LINK\n"
+)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp
@@ -262,11 +265,13 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 file(GLOB RELEASE_LIBS ${CURRENT_PACKAGES_DIR}/lib/*.lib)
 boost_rename_libs(RELEASE_LIBS)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
-file(RENAME
-    ${CURRENT_PACKAGES_DIR}/lib/boost_test_exec_monitor-vc140-mt-${VERSION}.lib
-    ${CURRENT_PACKAGES_DIR}/lib/manual-link/boost_test_exec_monitor-vc140-mt-${VERSION}.lib
-)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/boost_test_exec_monitor-vc140-mt-${VERSION}.lib)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+    file(RENAME
+        ${CURRENT_PACKAGES_DIR}/lib/boost_test_exec_monitor-vc140-mt-${VERSION}.lib
+        ${CURRENT_PACKAGES_DIR}/lib/manual-link/boost_test_exec_monitor-vc140-mt-${VERSION}.lib
+    )
+endif()
 message(STATUS "Packaging ${TARGET_TRIPLET}-rel done")
 
 message(STATUS "Packaging ${TARGET_TRIPLET}-dbg")
@@ -280,11 +285,13 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 file(GLOB DEBUG_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/*.lib)
 boost_rename_libs(DEBUG_LIBS)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
-file(RENAME
-    ${CURRENT_PACKAGES_DIR}/debug/lib/boost_test_exec_monitor-vc140-mt-gd-${VERSION}.lib
-    ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/boost_test_exec_monitor-vc140-mt-gd-${VERSION}.lib
-)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/boost_test_exec_monitor-vc140-mt-gd-${VERSION}.lib)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+    file(RENAME
+        ${CURRENT_PACKAGES_DIR}/debug/lib/boost_test_exec_monitor-vc140-mt-gd-${VERSION}.lib
+        ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/boost_test_exec_monitor-vc140-mt-gd-${VERSION}.lib
+    )
+endif()
 message(STATUS "Packaging ${TARGET_TRIPLET}-dbg done")
 
 vcpkg_copy_pdbs()

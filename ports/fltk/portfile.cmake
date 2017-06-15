@@ -28,8 +28,12 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS 
+    PREFER_NINJA
+    OPTIONS
         -DOPTION_BUILD_EXAMPLES=OFF
+        -DOPTION_USE_SYSTEM_ZLIB=ON
+        -DOPTION_USE_SYSTEM_LIBPNG=ON
+        -DOPTION_USE_SYSTEM_LIBJPEG=ON
         -DOPTION_BUILD_SHARED_LIBS=${BUILD_SHARED}
 )
 
@@ -40,26 +44,43 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/CMAKE
     ${CURRENT_PACKAGES_DIR}/debug/include
 )
+
+file(COPY ${CURRENT_PACKAGES_DIR}/bin/fluid.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fltk)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fluid.exe)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fltk-config)
 
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fluid.exe)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fltk-config)
+
 vcpkg_copy_pdbs()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/fltk)
 
-	
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE
+        ${CURRENT_PACKAGES_DIR}/debug/bin
+        ${CURRENT_PACKAGES_DIR}/bin
+    )
 else()
-	file(REMOVE_RECURSE
-		${CURRENT_PACKAGES_DIR}/debug/bin
-		${CURRENT_PACKAGES_DIR}/bin
-	)
-
-   
+    file(GLOB SHARED_LIBS "${CURRENT_PACKAGES_DIR}/lib/*_SHARED.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/*_SHAREDd.lib")
+    file(GLOB STATIC_LIBS "${CURRENT_PACKAGES_DIR}/lib/*.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/*.lib")
+    list(FILTER STATIC_LIBS EXCLUDE REGEX "_SHAREDd?\\.lib\$")
+    file(REMOVE ${STATIC_LIBS})
+    foreach(SHARED_LIB ${SHARED_LIBS})
+        string(REGEX REPLACE "_SHARED(d?)\\.lib\$" "\\1.lib" NEWNAME ${SHARED_LIB})
+        file(RENAME ${SHARED_LIB} ${NEWNAME})
+    endforeach()
 endif()
 
-
+foreach(FILE Fl_Export.H fl_utf8.h)
+    file(READ ${CURRENT_PACKAGES_DIR}/include/FL/${FILE} FLTK_HEADER)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        string(REPLACE "defined(FL_DLL)" "0" FLTK_HEADER "${FLTK_HEADER}")
+    else()
+        string(REPLACE "defined(FL_DLL)" "1" FLTK_HEADER "${FLTK_HEADER}")
+    endif()
+    file(WRITE ${CURRENT_PACKAGES_DIR}/include/FL/${FILE} "${FLTK_HEADER}")
+endforeach()
 
 file(INSTALL
     ${SOURCE_PATH}/COPYING

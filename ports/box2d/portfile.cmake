@@ -7,6 +7,10 @@ elseif(TRIPLET_SYSTEM_ARCH MATCHES "arm")
     message(FATAL_ERROR "ARM not supported")
 endif(TRIPLET_SYSTEM_ARCH MATCHES "x86")
 
+if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+  message(FATAL_ERROR "Box2d only supports dynamic CRT linkage")
+endif()
+
 include(vcpkg_common_functions)
 
 if(EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")

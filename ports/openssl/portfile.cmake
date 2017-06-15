@@ -4,18 +4,22 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 endif()
 
 include(vcpkg_common_functions)
-set(OPENSSL_VERSION 1.0.2k)
+set(OPENSSL_VERSION 1.0.2l)
 set(MASTER_COPY_SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-${OPENSSL_VERSION})
+
 vcpkg_find_acquire_program(PERL)
+vcpkg_find_acquire_program(NASM)
 find_program(NMAKE nmake)
 
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-set(ENV{PATH} "${PERL_EXE_PATH};$ENV{PATH}")
+get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
+vcpkg_find_acquire_program(JOM)
+set(ENV{PATH} "${PERL_EXE_PATH};${NASM_EXE_PATH};$ENV{PATH}")
 
 vcpkg_download_distfile(OPENSSL_SOURCE_ARCHIVE
-    URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz"
+    URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.0.2/openssl-${OPENSSL_VERSION}.tar.gz"
     FILENAME "openssl-${OPENSSL_VERSION}.tar.gz"
-	SHA512 0d314b42352f4b1df2c40ca1094abc7e9ad684c5c35ea997efdd58204c70f22a1abcb17291820f0fff3769620a4e06906034203d31eb1a4d540df3e0db294016
+    SHA512 047d964508ad6025c79caabd8965efd2416dc026a56183d0ef4de7a0a6769ce8e0b4608a3f8393d326f6d03b26a2b067e6e0c750f35b20be190e595e8290c0e3
 )
 
 vcpkg_extract_source_archive(${OPENSSL_SOURCE_ARCHIVE})
@@ -29,21 +33,27 @@ vcpkg_apply_patches(
 set(CONFIGURE_COMMAND ${PERL} Configure
     enable-static-engine
     enable-capieng
-    no-asm
     no-ssl2
 )
 
 if(TARGET_TRIPLET MATCHES "x86-windows")
     set(OPENSSL_ARCH VC-WIN32)
-    set(OPENSSL_DO "ms\\do_ms.bat")
-elseif(TARGET_TRIPLET MATCHES "x64")
+    set(OPENSSL_DO "ms\\do_nasm.bat")
+elseif(TARGET_TRIPLET MATCHES "x64-windows")
     set(OPENSSL_ARCH VC-WIN64A)
     set(OPENSSL_DO "ms\\do_win64a.bat")
 else()
     message(FATAL_ERROR "Unsupported target triplet: ${TARGET_TRIPLET}")
 endif()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(OPENSSL_MAKEFILE "ms\\ntdll.mak")
+else()
+    set(OPENSSL_MAKEFILE "ms\\nt.mak")
+endif()
+
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+
 
 message(STATUS "Build ${TARGET_TRIPLET}-rel")
 file(COPY ${MASTER_COPY_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
@@ -51,7 +61,7 @@ set(SOURCE_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/openssl-
 set(OPENSSLDIR_RELEASE ${CURRENT_PACKAGES_DIR})
 
 vcpkg_execute_required_process(
-    COMMAND ${CONFIGURE_COMMAND} ${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_RELEASE}" "--openssldir=${OPENSSLDIR_RELEASE}"
+    COMMAND ${CONFIGURE_COMMAND} ${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_RELEASE}" "--openssldir=${OPENSSLDIR_RELEASE}" -FS
     WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
     LOGNAME configure-perl-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-rel
 )
@@ -60,19 +70,22 @@ vcpkg_execute_required_process(
     WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
     LOGNAME configure-do-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-rel
 )
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    vcpkg_execute_required_process(COMMAND ${NMAKE} -f ms\\ntdll.mak install
-                                   WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-                                   LOGNAME build-${TARGET_TRIPLET}-rel)
-else()
-    vcpkg_execute_required_process(COMMAND ${NMAKE} -f ms\\nt.mak install
-                                   WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-                                   LOGNAME build-${TARGET_TRIPLET}-rel)
-endif()
-
+# Openssl's buildsystem has a race condition which will cause JOM to fail at some point.
+# This is ok; we just do as much work as we can in parallel first, then follow up with a single-threaded build.
+make_directory(${SOURCE_PATH_RELEASE}/inc32/openssl)
+execute_process(
+    COMMAND ${JOM} -k -j $ENV{NUMBER_OF_PROCESSORS} -f ${OPENSSL_MAKEFILE}
+    WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+    OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-out.log
+    ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-err.log
+)
+vcpkg_execute_required_process(
+    COMMAND ${NMAKE} -f ${OPENSSL_MAKEFILE} install
+    WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+    LOGNAME build-${TARGET_TRIPLET}-rel-1)
 
 message(STATUS "Build ${TARGET_TRIPLET}-rel done")
+
 
 message(STATUS "Build ${TARGET_TRIPLET}-dbg")
 file(COPY ${MASTER_COPY_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
@@ -80,7 +93,7 @@ set(SOURCE_PATH_DEBUG ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/openssl-${
 set(OPENSSLDIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug)
 
 vcpkg_execute_required_process(
-    COMMAND ${CONFIGURE_COMMAND} debug-${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_DEBUG}" "--openssldir=${OPENSSLDIR_DEBUG}"
+    COMMAND ${CONFIGURE_COMMAND} debug-${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_DEBUG}" "--openssldir=${OPENSSLDIR_DEBUG}" -FS
     WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
     LOGNAME configure-perl-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-dbg
 )
@@ -89,18 +102,20 @@ vcpkg_execute_required_process(
     WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
     LOGNAME configure-do-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-dbg
 )
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    vcpkg_execute_required_process(COMMAND ${NMAKE} -f ms\\ntdll.mak install
-                                   WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-                                   LOGNAME build-${TARGET_TRIPLET}-dbg)
-else()
-    vcpkg_execute_required_process(COMMAND ${NMAKE} -f ms\\nt.mak install
-                                   WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-                                   LOGNAME build-${TARGET_TRIPLET}-dbg)
-endif()
+make_directory(${SOURCE_PATH_DEBUG}/inc32/openssl)
+execute_process(
+    COMMAND ${JOM} -k -j $ENV{NUMBER_OF_PROCESSORS} -f ${OPENSSL_MAKEFILE}
+    WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
+    OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-out.log
+    ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-err.log
+)
+vcpkg_execute_required_process(
+    COMMAND ${NMAKE} -f ${OPENSSL_MAKEFILE} install
+    WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
+    LOGNAME build-${TARGET_TRIPLET}-dbg-1)
 
 message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
+
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE

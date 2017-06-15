@@ -12,14 +12,14 @@ namespace vcpkg::Input
                                            CStringView example_text)
     {
         const std::string as_lowercase = Strings::ascii_to_lowercase(package_spec_as_string);
-        Expected<PackageSpec> expected_spec = PackageSpec::from_string(as_lowercase, default_triplet);
+        auto expected_spec = PackageSpec::from_string(as_lowercase, default_triplet);
         if (auto spec = expected_spec.get())
         {
             return *spec;
         }
 
         // Intentionally show the lowercased string
-        System::println(System::Color::error, "Error: %s: %s", expected_spec.error_code().message(), as_lowercase);
+        System::println(System::Color::error, "Error: %s: %s", vcpkg::to_string(expected_spec.error()), as_lowercase);
         System::print(example_text);
         Checks::exit_fail(VCPKG_LINE_INFO);
     }

@@ -1,6 +1,9 @@
 /* config.h.  Generated from config.h.in by configure.  */
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+/* Disable function deprecated warnings */
+#define _CRT_NONSTDC_NO_WARNINGS
+
 /* Define to the number of bits in type 'ptrdiff_t'. */
 #define BITSIZEOF_PTRDIFF_T sizeof(ptrdiff_t)
 

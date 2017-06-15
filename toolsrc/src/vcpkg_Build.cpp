@@ -13,13 +13,15 @@
 #include "vcpkglib.h"
 #include "vcpkglib_helpers.h"
 
-using vcpkg::PostBuildLint::BuildPolicies;
-namespace BuildPoliciesC = vcpkg::PostBuildLint::BuildPoliciesC;
-using vcpkg::PostBuildLint::LinkageType;
-namespace LinkageTypeC = vcpkg::PostBuildLint::LinkageTypeC;
-
 namespace vcpkg::Build
 {
+    Optional<LinkageType> to_linkage_type(const std::string& str)
+    {
+        if (str == "dynamic") return LinkageType::DYNAMIC;
+        if (str == "static") return LinkageType::STATIC;
+        return nullopt;
+    }
+
     namespace BuildInfoRequiredField
     {
         static const std::string CRT_LINKAGE = "CRTLinkage";
@@ -51,21 +53,20 @@ namespace vcpkg::Build
         static constexpr ArchOption X86_ARM = {L"x86_arm", CPU::X86, CPU::ARM};
         static constexpr ArchOption X86_ARM64 = {L"x86_arm64", CPU::X86, CPU::ARM64};
 
-        static constexpr ArchOption X64 = {L"x64", CPU::X64, CPU::X64};
-        static constexpr ArchOption X64_X86 = {L"x64_x86", CPU::X64, CPU::X86};
-        static constexpr ArchOption X64_ARM = {L"x64_arm", CPU::X64, CPU::ARM};
-        static constexpr ArchOption X64_ARM64 = {L"x64_arm64", CPU::X64, CPU::ARM64};
+        static constexpr ArchOption X64 = {L"amd64", CPU::X64, CPU::X64};
+        static constexpr ArchOption X64_X86 = {L"amd64_x86", CPU::X64, CPU::X86};
+        static constexpr ArchOption X64_ARM = {L"amd64_arm", CPU::X64, CPU::ARM};
+        static constexpr ArchOption X64_ARM64 = {L"amd64_arm64", CPU::X64, CPU::ARM64};
 
         static constexpr std::array<ArchOption, 8> VALUES = {
             X86, X86_X64, X86_ARM, X86_ARM64, X64, X64_X86, X64_ARM, X64_ARM64};
 
-        // auto target_arch = System::to_cpu_architecture(target_architecture);
-        // auto host_arch = System::get_host_processor();
+        auto target_arch = System::to_cpu_architecture(target_architecture);
+        auto host_arch = System::get_host_processor();
 
         for (auto&& value : VALUES)
         {
-            // if (target_arch == value.target_arch && host_arch == value.host_arch)
-            if (target_architecture == Strings::to_utf8(value.name))
+            if (target_arch == value.target_arch && host_arch == value.host_arch)
             {
                 return value.name;
             }
@@ -131,21 +132,21 @@ namespace vcpkg::Build
         const fs::path& git_exe_path = paths.get_git_exe();
 
         const fs::path ports_cmake_script_path = paths.ports_cmake;
-        const Toolset& toolset = paths.get_toolset();
         auto pre_build_info = PreBuildInfo::from_triplet_file(paths, triplet);
+        const Toolset& toolset = paths.get_toolset(pre_build_info.platform_toolset);
         const auto cmd_set_environment = make_build_env_cmd(pre_build_info, toolset);
 
-        const std::wstring cmd_launch_cmake =
-            make_cmake_cmd(cmake_exe_path,
-                           ports_cmake_script_path,
-                           {{L"CMD", L"BUILD"},
-                            {L"PORT", config.src.name},
-                            {L"CURRENT_PORT_DIR", config.port_dir / "/."},
-                            {L"TARGET_TRIPLET", triplet.canonical_name()},
-                            {L"VCPKG_PLATFORM_TOOLSET", toolset.version},
-                            {L"VCPKG_USE_HEAD_VERSION", config.use_head_version ? L"1" : L"0"},
-                            {L"_VCPKG_NO_DOWNLOADS", config.no_downloads ? L"1" : L"0"},
-                            {L"GIT", git_exe_path}});
+        const std::wstring cmd_launch_cmake = make_cmake_cmd(
+            cmake_exe_path,
+            ports_cmake_script_path,
+            {{L"CMD", L"BUILD"},
+             {L"PORT", config.src.name},
+             {L"CURRENT_PORT_DIR", config.port_dir / "/."},
+             {L"TARGET_TRIPLET", triplet.canonical_name()},
+             {L"VCPKG_PLATFORM_TOOLSET", toolset.version},
+             {L"VCPKG_USE_HEAD_VERSION", to_bool(config.build_package_options.use_head_version) ? L"1" : L"0"},
+             {L"_VCPKG_NO_DOWNLOADS", !to_bool(config.build_package_options.allow_downloads) ? L"1" : L"0"},
+             {L"GIT", git_exe_path}});
 
         const std::wstring command = Strings::wformat(LR"(%s && %s)", cmd_set_environment, cmd_launch_cmake);
 
@@ -215,24 +216,25 @@ namespace vcpkg::Build
                                Commands::Version::version());
     }
 
-    BuildInfo BuildInfo::create(std::unordered_map<std::string, std::string> pgh)
+    static BuildInfo inner_create_buildinfo(std::unordered_map<std::string, std::string> pgh)
     {
         BuildInfo build_info;
         const std::string crt_linkage_as_string =
             details::remove_required_field(&pgh, BuildInfoRequiredField::CRT_LINKAGE);
-        build_info.crt_linkage = LinkageType::value_of(crt_linkage_as_string);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           build_info.crt_linkage != LinkageTypeC::NULLVALUE,
-                           "Invalid crt linkage type: [%s]",
-                           crt_linkage_as_string);
+
+        auto crtlinkage = to_linkage_type(crt_linkage_as_string);
+        if (auto p = crtlinkage.get())
+            build_info.crt_linkage = *p;
+        else
+            Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid crt linkage type: [%s]", crt_linkage_as_string);
 
         const std::string library_linkage_as_string =
             details::remove_required_field(&pgh, BuildInfoRequiredField::LIBRARY_LINKAGE);
-        build_info.library_linkage = LinkageType::value_of(library_linkage_as_string);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           build_info.library_linkage != LinkageTypeC::NULLVALUE,
-                           "Invalid library linkage type: [%s]",
-                           library_linkage_as_string);
+        auto liblinkage = to_linkage_type(library_linkage_as_string);
+        if (auto p = liblinkage.get())
+            build_info.library_linkage = *p;
+        else
+            Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid library linkage type: [%s]", library_linkage_as_string);
 
         auto it_version = pgh.find("Version");
         if (it_version != pgh.end())
@@ -241,19 +243,34 @@ namespace vcpkg::Build
             pgh.erase(it_version);
         }
 
+        std::map<BuildPolicy, bool> policies;
+
         // The remaining entries are policies
         for (const std::unordered_map<std::string, std::string>::value_type& p : pgh)
         {
-            const BuildPolicies policy = BuildPolicies::parse(p.first);
-            Checks::check_exit(
-                VCPKG_LINE_INFO, policy != BuildPoliciesC::NULLVALUE, "Unknown policy found: %s", p.first);
-            if (p.second == "enabled")
-                build_info.policies.emplace(policy, true);
-            else if (p.second == "disabled")
-                build_info.policies.emplace(policy, false);
+            auto maybe_policy = to_build_policy(p.first);
+            if (auto policy = maybe_policy.get())
+            {
+                Checks::check_exit(VCPKG_LINE_INFO,
+                                   policies.find(*policy) == policies.end(),
+                                   "Policy specified multiple times: %s",
+                                   p.first);
+
+                if (p.second == "enabled")
+                    policies.emplace(*policy, true);
+                else if (p.second == "disabled")
+                    policies.emplace(*policy, false);
+                else
+                    Checks::exit_with_message(
+                        VCPKG_LINE_INFO, "Unknown setting for policy '%s': %s", p.first, p.second);
+            }
             else
-                Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown setting for policy '%s': %s", p.first, p.second);
+            {
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown policy found: %s", p.first);
+            }
         }
+
+        build_info.policies = BuildPolicies(std::move(policies));
 
         return build_info;
     }
@@ -263,7 +280,7 @@ namespace vcpkg::Build
         const Expected<std::unordered_map<std::string, std::string>> pghs =
             Paragraphs::get_single_paragraph(fs, filepath);
         Checks::check_exit(VCPKG_LINE_INFO, pghs.get() != nullptr, "Invalid BUILD_INFO file for package");
-        return BuildInfo::create(*pghs.get());
+        return inner_create_buildinfo(*pghs.get());
     }
 
     PreBuildInfo PreBuildInfo::from_triplet_file(const VcpkgPaths& paths, const Triplet& triplet)

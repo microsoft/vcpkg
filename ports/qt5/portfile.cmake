@@ -1,5 +1,11 @@
-include(${CMAKE_TRIPLET_FILE})
 include(vcpkg_common_functions)
+
+string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
+if(BUILDTREES_PATH_LENGTH GREATER 27)
+    message(WARNING "Qt5's buildsystem uses very long paths and may fail on your system.\n"
+        "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
+    )
+endif()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 include(configure_qt)
@@ -20,6 +26,9 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-qalgorithms-vs2017.patch" "${CMAKE_CURRENT_LIST_DIR}/fix-commandline-overrides.patch"
 )
+
+# This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
+set(ENV{_CL_} "/utf-8")
 
 configure_qt(
     SOURCE_PATH ${SOURCE_PATH}
@@ -53,6 +62,10 @@ configure_qt(
 )
 install_qt()
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${CURRENT_PACKAGES_DIR}/lib/cmake
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/add-private-header-paths.patch"
+)
 file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/share/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

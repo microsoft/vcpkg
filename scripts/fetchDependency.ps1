@@ -9,7 +9,11 @@ $downloadPromptOverride_NO_OVERRIDE= 0
 $downloadPromptOverride_DO_NOT_PROMPT = 1
 $downloadPromptOverride_ALWAYS_PROMPT = 2
 
-Import-Module BitsTransfer -Verbose:$false
+if ($PSVersionTable.PSEdition -ne "Core") {
+   Import-Module BitsTransfer -Verbose:$false
+}
+
+Write-Verbose "Fetching dependency: $Dependency"
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 $vcpkgRootDir = & $scriptsDir\findFileRecursivelyUp.ps1 $scriptsDir .vcpkg-root
@@ -78,7 +82,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
             New-Item -ItemType directory -Path $downloadDir | Out-Null
         }
 
-        if ($Dependency -ne "git") # git fails with BITS
+        if (($PSVersionTable.PSEdition -ne "Core") -and ($Dependency -ne "git")) # git fails with BITS
         {
             try {
                 $WC = New-Object System.Net.WebClient
@@ -193,10 +197,17 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     performDownload $Dependency $url $downloadsDir $downloadPath $downloadVersion $requiredVersion
 
     #calculating the hash
-    $hashAlgorithm = [Security.Cryptography.HashAlgorithm]::Create("SHA256")
-    $fileAsByteArray = [io.File]::ReadAllBytes($downloadPath)
-    $hashByteArray = $hashAlgorithm.ComputeHash($fileAsByteArray)
-    $downloadedFileHash = -Join ($hashByteArray | ForEach {"{0:x2}" -f $_})
+    if ($PSVersionTable.PSEdition -ne "Core")
+    {
+        $hashAlgorithm = [Security.Cryptography.HashAlgorithm]::Create("SHA256")
+        $fileAsByteArray = [io.File]::ReadAllBytes($downloadPath)
+        $hashByteArray = $hashAlgorithm.ComputeHash($fileAsByteArray)
+        $downloadedFileHash = -Join ($hashByteArray | ForEach {"{0:x2}" -f $_})
+    }
+    else
+    {
+        $downloadedFileHash = (Get-FileHash -Path $downloadPath -Algorithm SHA256).Hash
+    }
 
     if ($expectedDownloadedFileHash -ne $downloadedFileHash)
     {
@@ -236,3 +247,5 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 }
 
 SelectProgram $Dependency
+
+Write-Verbose "Fetching dependency: $Dependency. Done."

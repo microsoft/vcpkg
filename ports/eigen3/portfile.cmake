@@ -8,20 +8,19 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-file(GLOB_RECURSE GARBAGE ${SOURCE_PATH}/Eigen/CMakeLists.* ${SOURCE_PATH}/unsupported/Eigen/CMakeLists.*)
-if(GARBAGE)
-    file(REMOVE ${GARBAGE})
-endif()
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS_RELEASE
+        -DCMAKEPACKAGE_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/share/eigen3
+    OPTIONS_DEBUG
+        -DCMAKEPACKAGE_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/debug/share/eigen3
+)
+
+vcpkg_install_cmake()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 
 # Put the licence file where vcpkg expects it
 file(COPY ${SOURCE_PATH}/COPYING.README DESTINATION ${CURRENT_PACKAGES_DIR}/share/eigen3)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/eigen3/COPYING.README ${CURRENT_PACKAGES_DIR}/share/eigen3/copyright)
-
-# Copy the eigen header files
-file(COPY ${SOURCE_PATH}/Eigen ${SOURCE_PATH}/signature_of_eigen3_matrix_library
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(COPY ${SOURCE_PATH}/unsupported/Eigen
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include/unsupported)
-
-# Copy signature file so tools can locate the eigen headers
-file(COPY DESTINATION ${CURRENT_PACKAGES_DIR}/include)

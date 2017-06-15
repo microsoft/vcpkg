@@ -17,6 +17,7 @@ vcpkg_apply_patches(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS_DEBUG
         -DBZIP2_SKIP_HEADERS=ON
         -DBZIP2_SKIP_TOOLS=ON)
@@ -24,12 +25,14 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    vcpkg_apply_patches(
-        SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
-        PATCHES
-            ${CMAKE_CURRENT_LIST_DIR}/auto-define-import-macro.patch)
+file(READ ${CURRENT_PACKAGES_DIR}/include/bzlib.h BZLIB_H)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    string(REPLACE "defined(BZ_IMPORT)" "0" BZLIB_H "${BZLIB_H}")
+else()
+    string(REPLACE "defined(BZ_IMPORT)" "1" BZLIB_H "${BZLIB_H}")
 endif()
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/bzlib.h "${BZLIB_H}")
+
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/bzip2)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/bzip2/LICENSE ${CURRENT_PACKAGES_DIR}/share/bzip2/copyright)

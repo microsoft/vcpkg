@@ -115,10 +115,10 @@ namespace vcpkg::System
 
         // Basically we are wrapping it in quotes
         const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
-        if (g_debugging) System::println("[DEBUG] _wspawnlpe(cmd.exe /c %s)", Strings::to_utf8(actual_cmd_line));
+        Debug::println("_wspawnlpe(cmd.exe /c %s)", Strings::to_utf8(actual_cmd_line));
         auto exit_code =
             _wspawnlpe(_P_WAIT, L"cmd.exe", L"cmd.exe", L"/c", actual_cmd_line.c_str(), nullptr, env_cstr.data());
-        if (g_debugging) System::println("[DEBUG] _wspawnlpe() returned %d", exit_code);
+        Debug::println("_wspawnlpe() returned %d", exit_code);
         return static_cast<int>(exit_code);
     }
 
@@ -129,9 +129,9 @@ namespace vcpkg::System
 
         // Basically we are wrapping it in quotes
         const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
-        if (g_debugging) System::println("[DEBUG] _wsystem(%s)", Strings::to_utf8(actual_cmd_line));
+        Debug::println("_wsystem(%s)", Strings::to_utf8(actual_cmd_line));
         int exit_code = _wsystem(actual_cmd_line.c_str());
-        if (g_debugging) System::println("[DEBUG] _wsystem() returned %d", exit_code);
+        Debug::println("_wsystem() returned %d", exit_code);
         return exit_code;
     }
 
@@ -142,6 +142,7 @@ namespace vcpkg::System
 
         const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s 2>&1")###", cmd_line);
 
+        Debug::println("_wpopen(%s)", Strings::to_utf8(actual_cmd_line));
         std::string output;
         char buf[1024];
         auto pipe = _wpopen(actual_cmd_line.c_str(), L"r");
@@ -158,6 +159,7 @@ namespace vcpkg::System
             return {1, output};
         }
         auto ec = _pclose(pipe);
+        Debug::println("_wpopen() returned %d", ec);
         return {ec, output};
     }
 
@@ -267,5 +269,24 @@ namespace vcpkg::System
             return get_ProgramFiles();
         }();
         return p;
+    }
+}
+
+namespace vcpkg::Debug
+{
+    void println(const CStringView message)
+    {
+        if (g_debugging)
+        {
+            System::println("[DEBUG] %s", message);
+        }
+    }
+
+    void println(const System::Color c, const CStringView message)
+    {
+        if (g_debugging)
+        {
+            System::println(c, "[DEBUG] %s", message);
+        }
     }
 }
