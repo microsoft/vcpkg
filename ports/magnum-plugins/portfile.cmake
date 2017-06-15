@@ -2,14 +2,15 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/magnum-plugins
-    REF 645b50647d5164c5ec8f5bc83ba2578f6cfe7d80
-    SHA512 73c7fb7e9a5a9e2a4ee7314b5d41d98ada9cf1a50c1cd833c2ae19c5bdab66862f3696f142e987f9d2b551142e94f96a2d8ccad37625682c8391400091dcf879
+    REF 34a3bc34335ca05097e735db19fe1fae81dbfbb5
+    SHA512 918c3eeae246d1ac67e3595c50ff599872a0c1498e9a8a0386ad656f3d9d2209b048b53c25f198660e15201147795578c5c931b00116da46fd77d8e91c0826cb
     HEAD_REF master
 )
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/001-fix-include.patch
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/001-tools-path.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
