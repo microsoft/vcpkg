@@ -142,6 +142,7 @@ namespace vcpkg::System
 
         const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s 2>&1")###", cmd_line);
 
+        Debug::println("_wpopen(%s)", Strings::to_utf8(actual_cmd_line));
         std::string output;
         char buf[1024];
         auto pipe = _wpopen(actual_cmd_line.c_str(), L"r");
@@ -158,6 +159,7 @@ namespace vcpkg::System
             return {1, output};
         }
         auto ec = _pclose(pipe);
+        Debug::println("_wpopen() returned %d", ec);
         return {ec, output};
     }
 
