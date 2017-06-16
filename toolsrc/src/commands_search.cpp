@@ -47,53 +47,33 @@ namespace vcpkg::Commands::Search
         s.append(Strings::format("empty [label=\"%d singletons...\"]; }", empty_node_count));
         return s;
     }
-
-    static void do_print(const SourceControlFile& source_control_file, const std::string& feature_name, bool full_desc)
+    static void do_print(const SourceParagraph& source_paragraph, bool full_desc)
     {
-        if (feature_name.empty())
+        if (full_desc)
         {
-            if (full_desc)
-            {
-                System::println("%-20s %-16s %s",
-                                source_control_file.core_paragraph.name,
-                                source_control_file.core_paragraph.version,
-                                source_control_file.core_paragraph.description);
-            }
-            else
-            {
-                System::println("%-20s %-16s %s",
-                                source_control_file.core_paragraph.name,
-                                source_control_file.core_paragraph.version,
-                                details::shorten_description(source_control_file.core_paragraph.description));
-            }
+            System::println(
+                "%-20s %-16s %s", source_paragraph.name, source_paragraph.version, source_paragraph.description);
         }
-
-        if (feature_packages)
+        else
         {
-            for (auto&& feature : source_control_file.feature_paragraphs)
-            {
-                if (!feature_name.empty())
-                {
-                    if (feature_name.compare(feature->name) != 0)
-                    {
-                        continue;
-                    }
-                }
-                if (full_desc)
-                {
-                    System::println("%s%-31s %s",
-                                    source_control_file.core_paragraph.name,
-                                    "[" + feature->name + "]",
-                                    feature->description);
-                }
-                else
-                {
-                    System::println("%s%-31s %s",
-                                    source_control_file.core_paragraph.name,
-                                    "[" + feature->name + "]",
-                                    details::shorten_description(feature->description));
-                }
-            }
+            System::println("%-20s %-16s %s",
+                            source_paragraph.name,
+                            source_paragraph.version,
+                            details::shorten_description(source_paragraph.description));
+        }
+    }
+
+    static void do_print(const std::string& name, const FeatureParagraph& feature_paragraph, bool full_desc)
+    {
+        if (full_desc)
+        {
+            System::println("%-37s %s", name + "[" + feature_paragraph.name + "]", feature_paragraph.description);
+        }
+        else
+        {
+            System::println("%-37s %s",
+                            name + "[" + feature_paragraph.name + "]",
+                            details::shorten_description(feature_paragraph.description));
         }
     }
 
@@ -119,7 +99,7 @@ namespace vcpkg::Commands::Search
                 for (auto&& error : sources_and_errors.errors)
                 {
                     System::println(
-                        System::Color::warning, "Warning: an error occurred while parsing '%s'\n", error.name);
+                        System::Color::warning, "Warning: an error occurred while parsing '%s'", error.name);
                 }
                 System::println(System::Color::warning,
                                 "Use '--debug' to get more information about the parse failures.\n");
@@ -127,10 +107,8 @@ namespace vcpkg::Commands::Search
         }
 
         auto& source_paragraphs = sources_and_errors.paragraphs;
-        // check above line?
         if (options.find(OPTION_GRAPH) != options.cend())
         {
-            // rename source_paragraphs
             const std::string graph_as_string = create_graph_as_string(source_paragraphs);
             System::println(graph_as_string);
             Checks::exit_success(VCPKG_LINE_INFO);
@@ -140,37 +118,39 @@ namespace vcpkg::Commands::Search
         {
             for (const SourceControlFile& source_control_file : source_paragraphs)
             {
-                do_print(source_control_file, "", options.find(OPTION_FULLDESC) != options.cend());
+                do_print(source_control_file.core_paragraph, options.find(OPTION_FULLDESC) != options.cend());
+                for (auto&& feature_paragraph : source_control_file.feature_paragraphs)
+                {
+                    do_print(source_control_file.core_paragraph.name,
+                             *feature_paragraph,
+                             options.find(OPTION_FULLDESC) != options.cend());
+                }
             }
         }
         else
         {
+            const auto& icontains = Strings::case_insensitive_ascii_contains;
+
             // At this point there is 1 argument
+            auto&& args_zero = args.command_arguments[0];
             for (const SourceControlFile& source_control_file : source_paragraphs)
             {
-                if (Strings::case_insensitive_ascii_find(source_control_file.core_paragraph.name,
-                                                         args.command_arguments[0]) ==
-                    source_control_file.core_paragraph.name.end())
+                auto&& sp = source_control_file.core_paragraph;
+
+                bool contains_name = icontains(sp.name, args_zero);
+                if (contains_name || icontains(sp.description, args_zero))
                 {
-                    if (Strings::case_insensitive_ascii_find(source_control_file.core_paragraph.description,
-                                                             args.command_arguments[0]) ==
-                        source_control_file.core_paragraph.description.end())
+                    do_print(sp, options.find(OPTION_FULLDESC) != options.cend());
+                }
+
+                for (auto&& feature_paragraph : source_control_file.feature_paragraphs)
+                {
+                    if (contains_name || icontains(feature_paragraph->name, args_zero) ||
+                        icontains(feature_paragraph->description, args_zero))
                     {
-                        for (auto&& feature_paragraph : source_control_file.feature_paragraphs)
-                        {
-                            if (Strings::case_insensitive_ascii_find(feature_paragraph->name,
-                                                                     args.command_arguments[0]) !=
-                                feature_paragraph->name.end())
-                            {
-                                do_print(source_control_file,
-                                         feature_paragraph->name,
-                                         options.find(OPTION_FULLDESC) != options.cend());
-                            }
-                        }
-                        continue;
+                        do_print(sp.name, *feature_paragraph, options.find(OPTION_FULLDESC) != options.cend());
                     }
                 }
-                do_print(source_control_file, "", options.find(OPTION_FULLDESC) != options.cend());
             }
         }
 

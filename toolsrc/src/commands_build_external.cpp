@@ -12,7 +12,7 @@ namespace vcpkg::Commands::BuildExternal
             Commands::Help::create_example_string(R"(build_external zlib2 C:\path\to\dir\with\controlfile\)");
         args.check_exact_arg_count(2, example);
         const FullPackageSpec spec =
-            Input::check_and_get_package_spec(args.command_arguments.at(0), default_triplet, example);
+            Input::check_and_get_full_package_spec(args.command_arguments.at(0), default_triplet, example);
         Input::check_triplet(spec.package_spec.triplet(), paths);
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({});
 

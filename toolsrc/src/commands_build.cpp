@@ -36,9 +36,8 @@ namespace vcpkg::Commands::BuildCommand
 
         const ExpectedT<SourceControlFile, ParseControlErrorInfo> source_control_file =
             Paragraphs::try_load_port(paths.get_filesystem(), port_dir);
-        auto maybe_scf = source_control_file.get();
 
-        if (!maybe_scf)
+        if (!source_control_file.has_value())
         {
             print_error_message(source_control_file.error());
             Checks::exit_fail(VCPKG_LINE_INFO);
@@ -92,16 +91,7 @@ namespace vcpkg::Commands::BuildCommand
         args.check_exact_arg_count(
             1, example); // Build only takes a single package and all dependencies must already be installed
         std::string command_argument = args.command_arguments.at(0);
-        if (feature_packages)
-        {
-            const FullPackageSpec spec =
-                Input::check_and_get_full_package_spec(command_argument, default_triplet, example);
-            Input::check_triplet(spec.package_spec.triplet(), paths);
-            const std::unordered_set<std::string> options =
-                args.check_and_get_optional_command_arguments({OPTION_CHECKS_ONLY});
-            perform_and_exit(spec, paths.port_dir(spec.package_spec), options, paths);
-        }
-        const FullPackageSpec spec = Input::check_and_get_package_spec(command_argument, default_triplet, example);
+        const FullPackageSpec spec = Input::check_and_get_full_package_spec(command_argument, default_triplet, example);
         Input::check_triplet(spec.package_spec.triplet(), paths);
         const std::unordered_set<std::string> options =
             args.check_and_get_optional_command_arguments({OPTION_CHECKS_ONLY});

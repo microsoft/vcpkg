@@ -10,7 +10,7 @@
 
 namespace vcpkg
 {
-    extern bool feature_packages;
+    extern bool g_feature_packages;
 
     struct Triplet;
 
@@ -31,11 +31,6 @@ namespace vcpkg
 
     struct FeatureParagraph
     {
-        // static ExpectedT<SourceParagraph, ParseControlErrorInfo> parse_control_file(
-        //    std::unordered_map<std::string, std::string> fields);
-
-        FeatureParagraph() = default;
-
         std::string name;
         std::string description;
         std::vector<Dependency> depends;
@@ -46,8 +41,6 @@ namespace vcpkg
     /// </summary>
     struct SourceParagraph
     {
-        SourceParagraph() = default;
-
         std::string name;
         std::string version;
         std::string description;
@@ -58,8 +51,6 @@ namespace vcpkg
     };
     struct SourceControlFile
     {
-        SourceControlFile() = default;
-
         static ExpectedT<SourceControlFile, ParseControlErrorInfo> parse_control_file(
             std::vector<std::unordered_map<std::string, std::string>>&& control_paragraphs);
 
@@ -68,19 +59,6 @@ namespace vcpkg
 
         std::vector<ParseControlErrorInfo> errors;
     };
-
-    namespace FeatureParagraphRequiredField
-    {
-        static const std::string FEATURE = "Feature";
-    }
-
-    namespace FeatureParagraphOptionalField
-    {
-        static const std::string DESCRIPTION = "Description";
-        static const std::string BUILD_DEPENDS = "Build-Depends";
-    }
-
-    //<<<<<<< HEAD
 
     std::vector<SourceParagraph> getSourceParagraphs(const std::vector<SourceControlFile>& control_files);
 

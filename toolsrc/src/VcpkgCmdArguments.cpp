@@ -119,7 +119,7 @@ namespace vcpkg
                 }
                 if (arg == "--featurepackages")
                 {
-                    feature_packages = true;
+                    g_feature_packages = true;
                     continue;
                 }
 

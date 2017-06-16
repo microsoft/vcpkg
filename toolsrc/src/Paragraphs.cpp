@@ -207,7 +207,16 @@ namespace vcpkg::Paragraphs
         Expected<std::vector<std::unordered_map<std::string, std::string>>> pghs = get_paragraphs(fs, path / "CONTROL");
         if (auto vector_pghs = pghs.get())
         {
-            return SourceControlFile::parse_control_file(std::move(*vector_pghs));
+            auto csf = SourceControlFile::parse_control_file(std::move(*vector_pghs));
+            if (!g_feature_packages)
+            {
+                if (auto ptr = csf.get())
+                {
+                    ptr->core_paragraph.default_features.clear();
+                    ptr->feature_paragraphs.clear();
+                }
+            }
+            return csf;
         }
         error_info.name = path.filename().generic_u8string();
         error_info.error = pghs.error();

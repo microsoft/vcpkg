@@ -148,7 +148,7 @@ namespace vcpkg::Commands::Remove
         {
             args.check_min_arg_count(1, example);
             specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
-                return Input::check_and_get_package_spec(arg, default_triplet, example).package_spec;
+                return Input::check_and_get_package_spec(arg, default_triplet, example);
             });
 
             for (auto&& spec : specs)

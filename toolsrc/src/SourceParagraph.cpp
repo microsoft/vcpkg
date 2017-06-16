@@ -12,9 +12,7 @@
 
 namespace vcpkg
 {
-    // feature package feature is default to off
-    bool feature_packages = false;
-
+    bool g_feature_packages = false;
     namespace SourceParagraphRequiredField
     {
         static const std::string SOURCE = "Source";
@@ -41,6 +39,17 @@ namespace vcpkg
                                                    SourceParagraphOptionalField::SUPPORTS};
 
         return valid_fields;
+    }
+
+    namespace FeatureParagraphRequiredField
+    {
+        static const std::string FEATURE = "Feature";
+    }
+
+    namespace FeatureParagraphOptionalField
+    {
+        static const std::string DESCRIPTION = "Description";
+        static const std::string BUILD_DEPENDS = "Build-Depends";
     }
 
     void print_error_message(span<const ParseControlErrorInfo> error_info_list)
@@ -85,9 +94,11 @@ namespace vcpkg
     ExpectedT<SourceControlFile, ParseControlErrorInfo> SourceControlFile::parse_control_file(
         std::vector<std::unordered_map<std::string, std::string>>&& control_paragraphs)
     {
-        // nonzero
-        // Checks::check_exit(VCPKG_LINE_INFO, !control_paragraphs.empty()); // return ExpectedT instead
-        std::unordered_map<std::string, std::string> fields = control_paragraphs.front();
+        if (control_paragraphs.size() == 0)
+        {
+            return ExpectedT<SourceControlFile, ParseControlErrorInfo>();
+        }
+        auto&& fields = control_paragraphs.front();
 
         SourceControlFile control_file;
         SourceParagraph& sparagraph = control_file.core_paragraph;
@@ -102,33 +113,8 @@ namespace vcpkg
         std::string sups = details::remove_optional_field(&fields, SourceParagraphOptionalField::SUPPORTS);
         sparagraph.supports = parse_comma_list(sups);
 
-        control_paragraphs.erase(control_paragraphs.begin());
-
-        if (feature_packages)
-        {
-            for (auto&& feature_pgh : control_paragraphs)
-            {
-                // unique ptr cannot be copied, so this calls the move constructor, or is this an initialization
-                // std::unique_ptr<FeatureParagraph> fparagraph = std::make_unique<FeatureParagraph>();
-
-                sparagraph.default_features =
-                    details::remove_optional_field(&fields, SourceParagraphOptionalField::DEFAULTFEATURES);
-
-                control_file.feature_paragraphs.emplace_back(std::make_unique<FeatureParagraph>());
-
-                FeatureParagraph& fparagraph = *control_file.feature_paragraphs.back();
-
-                fparagraph.name = details::remove_required_field(&feature_pgh, FeatureParagraphRequiredField::FEATURE);
-                fparagraph.description =
-                    details::remove_required_field(&feature_pgh, FeatureParagraphOptionalField::DESCRIPTION);
-                std::string feature_deps =
-                    details::remove_optional_field(&feature_pgh, FeatureParagraphOptionalField::BUILD_DEPENDS);
-                fparagraph.depends = expand_qualified_dependencies(parse_comma_list(feature_deps));
-
-                // why do we need a std move here
-                // control_file.feature_paragraphs.emplace_back(std::move(fparagraph));
-            }
-        }
+        sparagraph.default_features =
+            details::remove_optional_field(&fields, SourceParagraphOptionalField::DEFAULTFEATURES);
 
         if (!fields.empty())
         {
@@ -138,6 +124,32 @@ namespace vcpkg
 
             return ParseControlErrorInfo{sparagraph.name, remaining_fields_as_string};
         }
+
+        control_paragraphs.erase(control_paragraphs.begin());
+
+        for (auto&& feature_pgh : control_paragraphs)
+        {
+            control_file.feature_paragraphs.emplace_back(std::make_unique<FeatureParagraph>());
+
+            FeatureParagraph& fparagraph = *control_file.feature_paragraphs.back();
+
+            fparagraph.name = details::remove_required_field(&feature_pgh, FeatureParagraphRequiredField::FEATURE);
+            fparagraph.description =
+                details::remove_required_field(&feature_pgh, FeatureParagraphOptionalField::DESCRIPTION);
+            std::string feature_deps =
+                details::remove_optional_field(&feature_pgh, FeatureParagraphOptionalField::BUILD_DEPENDS);
+            fparagraph.depends = expand_qualified_dependencies(parse_comma_list(feature_deps));
+
+            if (!feature_pgh.empty())
+            {
+                const std::vector<std::string> remaining_fields = Maps::extract_keys(feature_pgh);
+
+                const std::string remaining_fields_as_string = Strings::join("\n    ", remaining_fields);
+
+                return ParseControlErrorInfo{sparagraph.name, remaining_fields_as_string};
+            }
+        }
+
         return control_file;
     }
 

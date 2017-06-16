@@ -100,9 +100,6 @@ namespace vcpkg::Dependencies
     std::vector<InstallPlanAction> create_install_plan(const VcpkgPaths& paths,
                                                        const std::vector<PackageSpec>& specs,
                                                        const StatusParagraphs& status_db);
-    std::vector<InstallPlanAction> create_install_plan(const VcpkgPaths& paths,
-                                                       const std::vector<FullPackageSpec>& specs,
-                                                       const StatusParagraphs& status_db);
 
     std::vector<RemovePlanAction> create_remove_plan(const std::vector<PackageSpec>& specs,
                                                      const StatusParagraphs& status_db);

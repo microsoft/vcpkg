@@ -7,15 +7,15 @@
 
 namespace vcpkg::Input
 {
-    FullPackageSpec check_and_get_package_spec(const std::string& package_spec_as_string,
-                                               const Triplet& default_triplet,
-                                               CStringView example_text)
+    PackageSpec check_and_get_package_spec(const std::string& package_spec_as_string,
+                                           const Triplet& default_triplet,
+                                           CStringView example_text)
     {
         const std::string as_lowercase = Strings::ascii_to_lowercase(package_spec_as_string);
         auto expected_spec = PackageSpec::from_string(as_lowercase, default_triplet);
         if (auto spec = expected_spec.get())
         {
-            return FullPackageSpec{*spec};
+            return PackageSpec{*spec};
         }
 
         // Intentionally show the lowercased string
@@ -42,7 +42,8 @@ namespace vcpkg::Input
         int left_pos = (int)full_package_spec_as_string.find('[');
         if (left_pos == std::string::npos)
         {
-            return check_and_get_package_spec(full_package_spec_as_string, default_triplet, example_text);
+            return FullPackageSpec{
+                check_and_get_package_spec(full_package_spec_as_string, default_triplet, example_text)};
         }
         int right_pos = (int)full_package_spec_as_string.find(']');
         if (left_pos >= right_pos)
