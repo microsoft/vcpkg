@@ -19,10 +19,19 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/export-all-symbols-of-flann-cpp.patch"
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    OPTIONS -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON -DBUILD_EXAMPLES=OFF -DBUILD_DOC=OFF -DBUILD_PYTHON_BINDINGS=OFF -DBUILD_MATLAB_BINDINGS=OFF
+    OPTIONS
+        -DBUILD_EXAMPLES=OFF
+        -DBUILD_DOC=OFF
+        -DBUILD_PYTHON_BINDINGS=OFF
+        -DBUILD_MATLAB_BINDINGS=OFF
 )
 
 vcpkg_install_cmake()
