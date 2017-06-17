@@ -1,15 +1,3 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
@@ -17,6 +5,7 @@ vcpkg_from_github(
     REPO mariusmuja/flann
     REF  1.9.1
     SHA512 0da78bb14111013318160dd3dee1f93eb6ed077b18439fd6496017b62a8a6070cc859cfb3e08dad4c614e48d9dc1da5f7c4a21726ee45896d360506da074a6f7
+    HEAD_REF master
 )
 
 vcpkg_apply_patches(
@@ -29,7 +18,7 @@ vcpkg_apply_patches(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    PREFER_NINJA
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DBUILD_DOC=OFF
@@ -45,6 +34,11 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/flann.lib ${CURRENT_PACKAGES_DIR}/debug/lib/flann.lib)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/flann_cpp.lib ${CURRENT_PACKAGES_DIR}/debug/lib/flann_cpp.lib)
+    # Rename static libs to appear dynamic
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/flann_s.lib ${CURRENT_PACKAGES_DIR}/lib/flann.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/flann_s.lib ${CURRENT_PACKAGES_DIR}/debug/lib/flann.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/flann_cpp_s.lib ${CURRENT_PACKAGES_DIR}/lib/flann_cpp.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/flann_cpp_s.lib ${CURRENT_PACKAGES_DIR}/debug/lib/flann_cpp.lib)
 elseif(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/flann_s.lib ${CURRENT_PACKAGES_DIR}/debug/lib/flann_s.lib)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/flann_cpp_s.lib ${CURRENT_PACKAGES_DIR}/debug/lib/flann_cpp_s.lib)
