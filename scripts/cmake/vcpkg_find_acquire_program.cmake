@@ -16,6 +16,7 @@
 ## - 7Z
 ## - BISON
 ## - FLEX
+## - GASPREPROCESSOR
 ## - PERL
 ## - PYTHON2
 ## - PYTHON3
@@ -142,6 +143,15 @@ function(vcpkg_find_acquire_program VAR)
     set(URL "https://sourceforge.net/projects/gnuwin32/files/gperf/3.0.1/gperf-3.0.1-bin.zip/download")
     set(ARCHIVE "gperf-3.0.1-bin.zip")
     set(HASH 3f2d3418304390ecd729b85f65240a9e4d204b218345f82ea466ca3d7467789f43d0d2129fcffc18eaad3513f49963e79775b10cc223979540fa2e502fe7d4d9)
+  elseif(VAR MATCHES "GASPREPROCESSOR")
+    set(NOEXTRACT true)
+    set(PROGNAME gas-preprocessor)
+    set(REQUIRED_INTERPRETER PERL)
+    set(SCRIPTNAME "gas-preprocessor.pl")
+    set(PATHS ${DOWNLOADS}/tools/gas-preprocessor)
+    set(URL "https://raw.githubusercontent.com/FFmpeg/gas-preprocessor/36bacb4cba27003c572e5bf7a9c4dfe3c9a8d40d/gas-preprocessor.pl")
+    set(ARCHIVE "gas-preprocessor.pl")
+    set(HASH a25caadccd1457a0fd2abb5a0da9aca1713b2c351d76daf87a4141e52021f51aa09e95a62942c6f0764f79cc1fa65bf71584955b09e62ee7da067b5c82baf6b3)
   else()
     message(FATAL "unknown tool ${VAR} -- unable to acquire.")
   endif()
@@ -151,8 +161,8 @@ function(vcpkg_find_acquire_program VAR)
       find_program(${VAR} ${PROGNAME} PATHS ${PATHS})
     else()
       vcpkg_find_acquire_program(${REQUIRED_INTERPRETER})
-      find_file(SCIRPT ${SCRIPTNAME} PATHS ${PATHS})
-      set(${VAR} ${${REQUIRED_INTERPRETER}} ${SCIRPT})
+      find_file(SCRIPT ${SCRIPTNAME} PATHS ${PATHS})
+      set(${VAR} ${${REQUIRED_INTERPRETER}} ${SCRIPT})
     endif()
   endmacro()
 
