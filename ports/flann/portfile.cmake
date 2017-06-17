@@ -11,13 +11,13 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/flann-1.9.1)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/mariusmuja/flann/archive/1.9.1.zip"
-    FILENAME "flann-1.9.1.zip"
-    SHA512 d2f5c13535a179800602dc8a94ee91da23b01f71bc893facdf91ab18a73c5738604cda9870f38c3797af75ded47c808b1d95d3bde707af814e1eb1388b56bb95
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO mariusmuja/flann
+    REF  1.9.1
+    SHA512 0da78bb14111013318160dd3dee1f93eb6ed077b18439fd6496017b62a8a6070cc859cfb3e08dad4c614e48d9dc1da5f7c4a21726ee45896d360506da074a6f7
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
@@ -45,5 +45,5 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 # Handle copyright
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/flann-1.9.1/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/flann)
+file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/flann)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/flann/COPYING ${CURRENT_PACKAGES_DIR}/share/flann/copyright)
