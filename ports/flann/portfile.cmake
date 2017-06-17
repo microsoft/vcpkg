@@ -45,6 +45,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/flann.lib ${CURRENT_PACKAGES_DIR}/debug/lib/flann.lib)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/flann_cpp.lib ${CURRENT_PACKAGES_DIR}/debug/lib/flann_cpp.lib)
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/flann_s.lib ${CURRENT_PACKAGES_DIR}/debug/lib/flann_s.lib)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/flann_cpp_s.lib ${CURRENT_PACKAGES_DIR}/debug/lib/flann_cpp_s.lib)
 endif()
 
 # Handle copyright
