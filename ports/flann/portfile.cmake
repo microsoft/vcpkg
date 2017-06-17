@@ -21,7 +21,10 @@ vcpkg_from_github(
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/export-all-symbols-of-flann-cpp.patch"
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/fix-install-flann.patch
+        ${CMAKE_CURRENT_LIST_DIR}/Revert-fix-install-flann.patch
+        ${CMAKE_CURRENT_LIST_DIR}/export-all-symbols-of-flann-cpp.patch
 )
 
 vcpkg_configure_cmake(
