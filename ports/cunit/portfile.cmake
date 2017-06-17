@@ -8,51 +8,16 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_execute_required_process(COMMAND ${CMAKE_COMMAND}  -E copy ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt  ${SOURCE_PATH}/CMakeLists.txt WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR})
-
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
+  PREFER_NINJA
+  OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
 )
 
-vcpkg_build_cmake()
+vcpkg_install_cmake()
 
-file(GLOB HEADERS  "${SOURCE_PATH}/CUnit/Headers/*.h")
-file(INSTALL ${HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include/cunit)
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/cunit RENAME copyright)
 
-
-file(GLOB DLLS
-  "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.dll"
-  "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/*.dll"
-  "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/Release/*.dll"
-)
-file(GLOB LIBS
-  "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.lib"
-  "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/*.lib"
-  "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/Release/*.lib"
-)
-file(GLOB DEBUG_DLLS
-  "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.dll"
-  "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Debug/*.dll"
-  "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*/Debug/*.dll"
-)
-file(GLOB DEBUG_LIBS
-  "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.lib"
-  "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Debug/*.lib"
-  "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*/Debug/*.lib"
-)
-
-if(DLLS)
-  file(INSTALL ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-endif()
-file(INSTALL ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-if(DEBUG_DLLS)
-  file(INSTALL ${DEBUG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
-file(INSTALL ${DEBUG_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
 vcpkg_copy_pdbs()
