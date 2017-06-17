@@ -18,7 +18,6 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/cmake DESTINATION ${SOURCE_PATH})
 
 # This is not strictly necessary, but to make sure 
 # that no "internal" libraries are used by removing them
-# Note that the only "internal" dependency used is OpenEXR
 file(REMOVE_RECURSE ${SOURCE_PATH}/Source/LibJPEG)
 file(REMOVE_RECURSE ${SOURCE_PATH}/Source/LibPNG)
 file(REMOVE_RECURSE ${SOURCE_PATH}/Source/LibTIFF4)
@@ -27,6 +26,7 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/Source/LibOpenJPEG)
 file(REMOVE_RECURSE ${SOURCE_PATH}/Source/LibJXR)
 file(REMOVE_RECURSE ${SOURCE_PATH}/Source/LibWebP)
 file(REMOVE_RECURSE ${SOURCE_PATH}/Source/LibRawLite)
+file(REMOVE_RECURSE ${SOURCE_PATH}/Source/OpenEXR)
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
@@ -38,6 +38,7 @@ vcpkg_apply_patches(
             "${CMAKE_CURRENT_LIST_DIR}/use-external-png-zlib.patch"
             "${CMAKE_CURRENT_LIST_DIR}/use-external-rawlib.patch"
             "${CMAKE_CURRENT_LIST_DIR}/use-external-webp.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/use-external-openexr.patch"
             "${CMAKE_CURRENT_LIST_DIR}/use-freeimage-config-include.patch"
 )
 
