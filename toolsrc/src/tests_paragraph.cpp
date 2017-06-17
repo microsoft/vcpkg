@@ -33,11 +33,11 @@ namespace UnitTest1
             Assert::IsTrue(m_pgh.has_value());
             auto& pgh = *m_pgh.get();
 
-            Assert::AreEqual("zlib", pgh.core_paragraph.name.c_str());
-            Assert::AreEqual("1.2.8", pgh.core_paragraph.version.c_str());
-            Assert::AreEqual("", pgh.core_paragraph.maintainer.c_str());
-            Assert::AreEqual("", pgh.core_paragraph.description.c_str());
-            Assert::AreEqual(size_t(0), pgh.core_paragraph.depends.size());
+            Assert::AreEqual("zlib", pgh->core_paragraph->name.c_str());
+            Assert::AreEqual("1.2.8", pgh->core_paragraph->version.c_str());
+            Assert::AreEqual("", pgh->core_paragraph->maintainer.c_str());
+            Assert::AreEqual("", pgh->core_paragraph->description.c_str());
+            Assert::AreEqual(size_t(0), pgh->core_paragraph->depends.size());
         }
 
         TEST_METHOD(SourceParagraph_Construct_Maximum)
@@ -54,14 +54,14 @@ namespace UnitTest1
             Assert::IsTrue(m_pgh.has_value());
             auto& pgh = *m_pgh.get();
 
-            Assert::AreEqual("s", pgh.core_paragraph.name.c_str());
-            Assert::AreEqual("v", pgh.core_paragraph.version.c_str());
-            Assert::AreEqual("m", pgh.core_paragraph.maintainer.c_str());
-            Assert::AreEqual("d", pgh.core_paragraph.description.c_str());
-            Assert::AreEqual(size_t(1), pgh.core_paragraph.depends.size());
-            Assert::AreEqual("bd", pgh.core_paragraph.depends[0].name.c_str());
-            Assert::AreEqual(size_t(1), pgh.core_paragraph.supports.size());
-            Assert::AreEqual("x64", pgh.core_paragraph.supports[0].c_str());
+            Assert::AreEqual("s", pgh->core_paragraph->name.c_str());
+            Assert::AreEqual("v", pgh->core_paragraph->version.c_str());
+            Assert::AreEqual("m", pgh->core_paragraph->maintainer.c_str());
+            Assert::AreEqual("d", pgh->core_paragraph->description.c_str());
+            Assert::AreEqual(size_t(1), pgh->core_paragraph->depends.size());
+            Assert::AreEqual("bd", pgh->core_paragraph->depends[0].name.c_str());
+            Assert::AreEqual(size_t(1), pgh->core_paragraph->supports.size());
+            Assert::AreEqual("x64", pgh->core_paragraph->supports[0].c_str());
         }
 
         TEST_METHOD(SourceParagraph_Two_Depends)
@@ -73,9 +73,9 @@ namespace UnitTest1
             Assert::IsTrue(m_pgh.has_value());
             auto& pgh = *m_pgh.get();
 
-            Assert::AreEqual(size_t(2), pgh.core_paragraph.depends.size());
-            Assert::AreEqual("z", pgh.core_paragraph.depends[0].name.c_str());
-            Assert::AreEqual("openssl", pgh.core_paragraph.depends[1].name.c_str());
+            Assert::AreEqual(size_t(2), pgh->core_paragraph->depends.size());
+            Assert::AreEqual("z", pgh->core_paragraph->depends[0].name.c_str());
+            Assert::AreEqual("openssl", pgh->core_paragraph->depends[1].name.c_str());
         }
 
         TEST_METHOD(SourceParagraph_Three_Depends)
@@ -87,10 +87,10 @@ namespace UnitTest1
             Assert::IsTrue(m_pgh.has_value());
             auto& pgh = *m_pgh.get();
 
-            Assert::AreEqual(size_t(3), pgh.core_paragraph.depends.size());
-            Assert::AreEqual("z", pgh.core_paragraph.depends[0].name.c_str());
-            Assert::AreEqual("openssl", pgh.core_paragraph.depends[1].name.c_str());
-            Assert::AreEqual("xyz", pgh.core_paragraph.depends[2].name.c_str());
+            Assert::AreEqual(size_t(3), pgh->core_paragraph->depends.size());
+            Assert::AreEqual("z", pgh->core_paragraph->depends[0].name.c_str());
+            Assert::AreEqual("openssl", pgh->core_paragraph->depends[1].name.c_str());
+            Assert::AreEqual("xyz", pgh->core_paragraph->depends[2].name.c_str());
         }
 
         TEST_METHOD(SourceParagraph_Three_Supports)
@@ -102,10 +102,10 @@ namespace UnitTest1
             Assert::IsTrue(m_pgh.has_value());
             auto& pgh = *m_pgh.get();
 
-            Assert::AreEqual(size_t(3), pgh.core_paragraph.supports.size());
-            Assert::AreEqual("x64", pgh.core_paragraph.supports[0].c_str());
-            Assert::AreEqual("windows", pgh.core_paragraph.supports[1].c_str());
-            Assert::AreEqual("uwp", pgh.core_paragraph.supports[2].c_str());
+            Assert::AreEqual(size_t(3), pgh->core_paragraph->supports.size());
+            Assert::AreEqual("x64", pgh->core_paragraph->supports[0].c_str());
+            Assert::AreEqual("windows", pgh->core_paragraph->supports[1].c_str());
+            Assert::AreEqual("uwp", pgh->core_paragraph->supports[2].c_str());
         }
 
         TEST_METHOD(SourceParagraph_Construct_Qualified_Depends)
@@ -117,15 +117,15 @@ namespace UnitTest1
             Assert::IsTrue(m_pgh.has_value());
             auto& pgh = *m_pgh.get();
 
-            Assert::AreEqual("zlib", pgh.core_paragraph.name.c_str());
-            Assert::AreEqual("1.2.8", pgh.core_paragraph.version.c_str());
-            Assert::AreEqual("", pgh.core_paragraph.maintainer.c_str());
-            Assert::AreEqual("", pgh.core_paragraph.description.c_str());
-            Assert::AreEqual(size_t(2), pgh.core_paragraph.depends.size());
-            Assert::AreEqual("libA", pgh.core_paragraph.depends[0].name.c_str());
-            Assert::AreEqual("windows", pgh.core_paragraph.depends[0].qualifier.c_str());
-            Assert::AreEqual("libB", pgh.core_paragraph.depends[1].name.c_str());
-            Assert::AreEqual("uwp", pgh.core_paragraph.depends[1].qualifier.c_str());
+            Assert::AreEqual("zlib", pgh->core_paragraph->name.c_str());
+            Assert::AreEqual("1.2.8", pgh->core_paragraph->version.c_str());
+            Assert::AreEqual("", pgh->core_paragraph->maintainer.c_str());
+            Assert::AreEqual("", pgh->core_paragraph->description.c_str());
+            Assert::AreEqual(size_t(2), pgh->core_paragraph->depends.size());
+            Assert::AreEqual("libA", pgh->core_paragraph->depends[0].name.c_str());
+            Assert::AreEqual("windows", pgh->core_paragraph->depends[0].qualifier.c_str());
+            Assert::AreEqual("libB", pgh->core_paragraph->depends[1].name.c_str());
+            Assert::AreEqual("uwp", pgh->core_paragraph->depends[1].qualifier.c_str());
         }
 
         TEST_METHOD(BinaryParagraph_Construct_Minimum)

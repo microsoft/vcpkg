@@ -4,6 +4,8 @@
 #include "Paragraphs.h"
 #include "vcpkg_Files.h"
 
+using namespace vcpkg::Parse;
+
 namespace vcpkg::Paragraphs
 {
     struct Parser
@@ -201,9 +203,8 @@ namespace vcpkg::Paragraphs
         return Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
     }
 
-    ExpectedT<SourceControlFile, ParseControlErrorInfo> try_load_port(const Files::Filesystem& fs, const fs::path& path)
+    ParseExpected<SourceControlFile> try_load_port(const Files::Filesystem& fs, const fs::path& path)
     {
-        ParseControlErrorInfo error_info;
         Expected<std::vector<std::unordered_map<std::string, std::string>>> pghs = get_paragraphs(fs, path / "CONTROL");
         if (auto vector_pghs = pghs.get())
         {
@@ -212,14 +213,16 @@ namespace vcpkg::Paragraphs
             {
                 if (auto ptr = csf.get())
                 {
-                    ptr->core_paragraph.default_features.clear();
-                    ptr->feature_paragraphs.clear();
+                    Checks::check_exit(VCPKG_LINE_INFO, ptr->get() != nullptr);
+                    ptr->get()->core_paragraph->default_features.clear();
+                    ptr->get()->feature_paragraphs.clear();
                 }
             }
             return csf;
         }
-        error_info.name = path.filename().generic_u8string();
-        error_info.error = pghs.error();
+        auto error_info = std::make_unique<ParseControlErrorInfo>();
+        error_info->name = path.filename().generic_u8string();
+        error_info->error = pghs.error();
         return error_info;
     }
 
@@ -241,20 +244,21 @@ namespace vcpkg::Paragraphs
         LoadResults ret;
         for (auto&& path : fs.get_files_non_recursive(ports_dir))
         {
-            ExpectedT<SourceControlFile, ParseControlErrorInfo> source_paragraph = try_load_port(fs, path);
-            if (auto srcpgh = source_paragraph.get())
+            auto maybe_spgh = try_load_port(fs, path);
+            if (auto spgh = maybe_spgh.get())
             {
-                ret.paragraphs.emplace_back(std::move(*srcpgh));
+                ret.paragraphs.emplace_back(std::move(*spgh));
             }
             else
             {
-                ret.errors.emplace_back(source_paragraph.error());
+                ret.errors.emplace_back(std::move(maybe_spgh).error());
             }
         }
         return ret;
     }
 
-    std::vector<SourceControlFile> load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir)
+    std::vector<std::unique_ptr<SourceControlFile>> load_all_ports(const Files::Filesystem& fs,
+                                                                   const fs::path& ports_dir)
     {
         auto results = try_load_all_ports(fs, ports_dir);
         if (!results.errors.empty())
@@ -265,14 +269,14 @@ namespace vcpkg::Paragraphs
         return std::move(results.paragraphs);
     }
 
-    std::map<std::string, VersionT> extract_port_names_and_versions(
-        const std::vector<SourceParagraph>& source_paragraphs)
+    std::map<std::string, VersionT> load_all_port_names_and_versions(const Files::Filesystem& fs,
+                                                                     const fs::path& ports_dir)
     {
+        auto all_ports = load_all_ports(fs, ports_dir);
+
         std::map<std::string, VersionT> names_and_versions;
-        for (const SourceParagraph& port : source_paragraphs)
-        {
-            names_and_versions.emplace(port.name, port.version);
-        }
+        for (auto&& port : all_ports)
+            names_and_versions.emplace(port->core_paragraph->name, port->core_paragraph->version);
 
         return names_and_versions;
     }

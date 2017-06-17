@@ -11,7 +11,6 @@
 #include "vcpkg_System.h"
 #include "vcpkg_optional.h"
 #include "vcpkglib.h"
-#include "vcpkglib_helpers.h"
 
 namespace vcpkg::Build
 {
@@ -218,56 +217,52 @@ namespace vcpkg::Build
 
     static BuildInfo inner_create_buildinfo(std::unordered_map<std::string, std::string> pgh)
     {
+        Parse::ParagraphParser parser(std::move(pgh));
+
         BuildInfo build_info;
-        const std::string crt_linkage_as_string =
-            details::remove_required_field(&pgh, BuildInfoRequiredField::CRT_LINKAGE);
 
-        auto crtlinkage = to_linkage_type(crt_linkage_as_string);
-        if (auto p = crtlinkage.get())
-            build_info.crt_linkage = *p;
-        else
-            Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid crt linkage type: [%s]", crt_linkage_as_string);
-
-        const std::string library_linkage_as_string =
-            details::remove_required_field(&pgh, BuildInfoRequiredField::LIBRARY_LINKAGE);
-        auto liblinkage = to_linkage_type(library_linkage_as_string);
-        if (auto p = liblinkage.get())
-            build_info.library_linkage = *p;
-        else
-            Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid library linkage type: [%s]", library_linkage_as_string);
-
-        auto it_version = pgh.find("Version");
-        if (it_version != pgh.end())
         {
-            build_info.version = it_version->second;
-            pgh.erase(it_version);
+            std::string crt_linkage_as_string;
+            parser.required_field(BuildInfoRequiredField::CRT_LINKAGE, crt_linkage_as_string);
+
+            auto crtlinkage = to_linkage_type(crt_linkage_as_string);
+            if (auto p = crtlinkage.get())
+                build_info.crt_linkage = *p;
+            else
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid crt linkage type: [%s]", crt_linkage_as_string);
         }
 
-        std::map<BuildPolicy, bool> policies;
-
-        // The remaining entries are policies
-        for (const std::unordered_map<std::string, std::string>::value_type& p : pgh)
         {
-            auto maybe_policy = to_build_policy(p.first);
-            if (auto policy = maybe_policy.get())
-            {
-                Checks::check_exit(VCPKG_LINE_INFO,
-                                   policies.find(*policy) == policies.end(),
-                                   "Policy specified multiple times: %s",
-                                   p.first);
-
-                if (p.second == "enabled")
-                    policies.emplace(*policy, true);
-                else if (p.second == "disabled")
-                    policies.emplace(*policy, false);
-                else
-                    Checks::exit_with_message(
-                        VCPKG_LINE_INFO, "Unknown setting for policy '%s': %s", p.first, p.second);
-            }
+            std::string library_linkage_as_string;
+            parser.required_field(BuildInfoRequiredField::LIBRARY_LINKAGE, library_linkage_as_string);
+            auto liblinkage = to_linkage_type(library_linkage_as_string);
+            if (auto p = liblinkage.get())
+                build_info.library_linkage = *p;
             else
-            {
-                Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown policy found: %s", p.first);
-            }
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO, "Invalid library linkage type: [%s]", library_linkage_as_string);
+        }
+        build_info.version = parser.optional_field("Version");
+
+        std::map<BuildPolicy, bool> policies;
+        for (auto policy : g_all_policies)
+        {
+            const auto setting = parser.optional_field(to_string(policy));
+            if (setting.empty())
+                continue;
+            else if (setting == "enabled")
+                policies.emplace(policy, true);
+            else if (setting == "disabled")
+                policies.emplace(policy, false);
+            else
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO, "Unknown setting for policy '%s': %s", to_string(policy), setting);
+        }
+
+        if (auto err = parser.error_info("PostBuildInformation"))
+        {
+            print_error_message(err);
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
         build_info.policies = BuildPolicies(std::move(policies));

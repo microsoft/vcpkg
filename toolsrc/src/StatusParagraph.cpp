@@ -1,9 +1,8 @@
 #include "pch.h"
 
 #include "StatusParagraph.h"
-#include "vcpkglib_helpers.h"
 
-using namespace vcpkg::details;
+using namespace vcpkg::Parse;
 
 namespace vcpkg
 {
@@ -24,9 +23,14 @@ namespace vcpkg
             .push_back('\n');
     }
 
-    StatusParagraph::StatusParagraph(const std::unordered_map<std::string, std::string>& fields) : package(fields)
+    StatusParagraph::StatusParagraph(std::unordered_map<std::string, std::string>&& fields)
     {
-        std::string status_field = required_field(fields, BinaryParagraphRequiredField::STATUS);
+        auto status_it = fields.find(BinaryParagraphRequiredField::STATUS);
+        Checks::check_exit(VCPKG_LINE_INFO, status_it != fields.end(), "Expected 'Status' field in status paragraph");
+        std::string status_field = std::move(status_it->second);
+        fields.erase(status_it);
+
+        this->package = BinaryParagraph(std::move(fields));
 
         auto b = status_field.begin();
         auto mark = b;

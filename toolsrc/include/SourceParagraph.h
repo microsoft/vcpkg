@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Span.h"
+#include "vcpkg_Parse.h"
 #include "vcpkg_System.h"
 #include "vcpkg_expected.h"
 
@@ -22,13 +23,6 @@ namespace vcpkg
 
     const std::string& to_string(const Dependency& dep);
 
-    struct ParseControlErrorInfo
-    {
-        std::string name;
-        std::string remaining_fields_as_string;
-        std::error_code error;
-    };
-
     struct FeatureParagraph
     {
         std::string name;
@@ -47,23 +41,19 @@ namespace vcpkg
         std::string maintainer;
         std::vector<std::string> supports;
         std::vector<Dependency> depends;
-        std::string default_features;
+        std::vector<std::string> default_features;
     };
     struct SourceControlFile
     {
-        static ExpectedT<SourceControlFile, ParseControlErrorInfo> parse_control_file(
-            std::vector<std::unordered_map<std::string, std::string>>&& control_paragraphs);
+        static Parse::ParseExpected<SourceControlFile> parse_control_file(
+            std::vector<Parse::RawParagraph>&& control_paragraphs);
 
-        SourceParagraph core_paragraph;
+        std::unique_ptr<SourceParagraph> core_paragraph;
         std::vector<std::unique_ptr<FeatureParagraph>> feature_paragraphs;
-
-        std::vector<ParseControlErrorInfo> errors;
     };
 
-    std::vector<SourceParagraph> getSourceParagraphs(const std::vector<SourceControlFile>& control_files);
-
-    void print_error_message(span<const ParseControlErrorInfo> error_info_list);
-    inline void print_error_message(const ParseControlErrorInfo& error_info_list)
+    void print_error_message(span<const std::unique_ptr<Parse::ParseControlErrorInfo>> error_info_list);
+    inline void print_error_message(const std::unique_ptr<Parse::ParseControlErrorInfo>& error_info_list)
     {
         return print_error_message({&error_info_list, 1});
     }

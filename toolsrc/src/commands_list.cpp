@@ -3,7 +3,6 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
 #include "vcpkglib.h"
-#include "vcpkglib_helpers.h"
 
 namespace vcpkg::Commands::List
 {
@@ -20,7 +19,7 @@ namespace vcpkg::Commands::List
             System::println("%-27s %-16s %s",
                             pgh.package.displayname(),
                             pgh.package.version,
-                            details::shorten_description(pgh.package.description));
+                            vcpkg::shorten_description(pgh.package.description));
         }
     }
 

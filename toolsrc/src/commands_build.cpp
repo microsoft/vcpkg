@@ -11,6 +11,8 @@
 #include "vcpkglib.h"
 
 using vcpkg::Build::BuildResult;
+using vcpkg::Parse::ParseControlErrorInfo;
+using vcpkg::Parse::ParseExpected;
 
 namespace vcpkg::Commands::BuildCommand
 {
@@ -34,7 +36,7 @@ namespace vcpkg::Commands::BuildCommand
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        const ExpectedT<SourceControlFile, ParseControlErrorInfo> source_control_file =
+        const ParseExpected<SourceControlFile> source_control_file =
             Paragraphs::try_load_port(paths.get_filesystem(), port_dir);
 
         if (!source_control_file.has_value())
@@ -47,18 +49,18 @@ namespace vcpkg::Commands::BuildCommand
         {
             System::println("%s \n", str);
         }
-        const SourceControlFile& scf = source_control_file.value_or_exit(VCPKG_LINE_INFO);
+        const auto& scf = source_control_file.value_or_exit(VCPKG_LINE_INFO);
         Checks::check_exit(VCPKG_LINE_INFO,
-                           spec.name() == scf.core_paragraph.name,
+                           spec.name() == scf->core_paragraph->name,
                            "The Name: field inside the CONTROL does not match the port directory: '%s' != '%s'",
-                           scf.core_paragraph.name,
+                           scf->core_paragraph->name,
                            spec.name());
 
         StatusParagraphs status_db = database_load_check(paths);
         Build::BuildPackageOptions build_package_options{Build::UseHeadVersion::NO, Build::AllowDownloads::YES};
 
         const Build::BuildPackageConfig build_config{
-            scf.core_paragraph, spec.triplet(), paths.port_dir(spec), build_package_options};
+            *scf->core_paragraph, spec.triplet(), paths.port_dir(spec), build_package_options};
 
         const auto result = Build::build_package(paths, build_config, status_db);
         if (result.code == BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES)

@@ -8,6 +8,7 @@
 #include "vcpkg_Files.h"
 #include "vcpkg_Input.h"
 #include "vcpkg_System.h"
+#include "vcpkg_Util.h"
 #include "vcpkglib.h"
 
 namespace vcpkg::Commands::CI
@@ -21,14 +22,10 @@ namespace vcpkg::Commands::CI
                                                            const Triplet& triplet)
     {
         auto ports = Paragraphs::load_all_ports(fs, ports_directory);
-        std::vector<PackageSpec> specs;
-        for (const SourceControlFile& control_file : ports)
-        {
-            const SourceParagraph& p = control_file.core_paragraph;
-            specs.push_back(PackageSpec::from_name_and_triplet(p.name, triplet).value_or_exit(VCPKG_LINE_INFO));
-        }
-
-        return specs;
+        return Util::fmap(ports, [&](auto&& control_file) -> PackageSpec {
+            return PackageSpec::from_name_and_triplet(control_file->core_paragraph->name, triplet)
+                .value_or_exit(VCPKG_LINE_INFO);
+        });
     }
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)

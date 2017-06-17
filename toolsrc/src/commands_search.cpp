@@ -5,7 +5,6 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
 #include "vcpkglib.h"
-#include "vcpkglib_helpers.h"
 
 namespace vcpkg::Commands::Search
 {
@@ -19,16 +18,17 @@ namespace vcpkg::Commands::Search
         return output;
     }
 
-    static std::string create_graph_as_string(const std::vector<SourceControlFile>& source_control_files)
+    static std::string create_graph_as_string(
+        const std::vector<std::unique_ptr<SourceControlFile>>& source_control_files)
     {
         int empty_node_count = 0;
 
         std::string s;
         s.append("digraph G{ rankdir=LR; edge [minlen=3]; overlap=false;");
 
-        for (const SourceControlFile& source_control_file : source_control_files)
+        for (const auto& source_control_file : source_control_files)
         {
-            const SourceParagraph& source_paragraph = source_control_file.core_paragraph;
+            const SourceParagraph& source_paragraph = *source_control_file->core_paragraph;
             if (source_paragraph.depends.empty())
             {
                 empty_node_count++;
@@ -59,7 +59,7 @@ namespace vcpkg::Commands::Search
             System::println("%-20s %-16s %s",
                             source_paragraph.name,
                             source_paragraph.version,
-                            details::shorten_description(source_paragraph.description));
+                            vcpkg::shorten_description(source_paragraph.description));
         }
     }
 
@@ -73,7 +73,7 @@ namespace vcpkg::Commands::Search
         {
             System::println("%-37s %s",
                             name + "[" + feature_paragraph.name + "]",
-                            details::shorten_description(feature_paragraph.description));
+                            vcpkg::shorten_description(feature_paragraph.description));
         }
     }
 
@@ -99,7 +99,7 @@ namespace vcpkg::Commands::Search
                 for (auto&& error : sources_and_errors.errors)
                 {
                     System::println(
-                        System::Color::warning, "Warning: an error occurred while parsing '%s'", error.name);
+                        System::Color::warning, "Warning: an error occurred while parsing '%s'", error->name);
                 }
                 System::println(System::Color::warning,
                                 "Use '--debug' to get more information about the parse failures.\n");
@@ -116,12 +116,12 @@ namespace vcpkg::Commands::Search
 
         if (args.command_arguments.empty())
         {
-            for (const SourceControlFile& source_control_file : source_paragraphs)
+            for (const auto& source_control_file : source_paragraphs)
             {
-                do_print(source_control_file.core_paragraph, options.find(OPTION_FULLDESC) != options.cend());
-                for (auto&& feature_paragraph : source_control_file.feature_paragraphs)
+                do_print(*source_control_file->core_paragraph, options.find(OPTION_FULLDESC) != options.cend());
+                for (auto&& feature_paragraph : source_control_file->feature_paragraphs)
                 {
-                    do_print(source_control_file.core_paragraph.name,
+                    do_print(source_control_file->core_paragraph->name,
                              *feature_paragraph,
                              options.find(OPTION_FULLDESC) != options.cend());
                 }
@@ -133,9 +133,9 @@ namespace vcpkg::Commands::Search
 
             // At this point there is 1 argument
             auto&& args_zero = args.command_arguments[0];
-            for (const SourceControlFile& source_control_file : source_paragraphs)
+            for (const auto& source_control_file : source_paragraphs)
             {
-                auto&& sp = source_control_file.core_paragraph;
+                auto&& sp = *source_control_file->core_paragraph;
 
                 bool contains_name = icontains(sp.name, args_zero);
                 if (contains_name || icontains(sp.description, args_zero))
@@ -143,7 +143,7 @@ namespace vcpkg::Commands::Search
                     do_print(sp, options.find(OPTION_FULLDESC) != options.cend());
                 }
 
-                for (auto&& feature_paragraph : source_control_file.feature_paragraphs)
+                for (auto&& feature_paragraph : source_control_file->feature_paragraphs)
                 {
                     if (contains_name || icontains(feature_paragraph->name, args_zero) ||
                         icontains(feature_paragraph->description, args_zero))
