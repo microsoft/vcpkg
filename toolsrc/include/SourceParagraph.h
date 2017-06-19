@@ -10,6 +10,8 @@
 
 namespace vcpkg
 {
+    extern bool g_feature_packages;
+
     struct Triplet;
 
     struct Dependency
@@ -27,23 +29,38 @@ namespace vcpkg
         std::error_code error;
     };
 
+    struct FeatureParagraph
+    {
+        std::string name;
+        std::string description;
+        std::vector<Dependency> depends;
+    };
+
     /// <summary>
     /// Port metadata (CONTROL file)
     /// </summary>
     struct SourceParagraph
     {
-        static ExpectedT<SourceParagraph, ParseControlErrorInfo> parse_control_file(
-            std::unordered_map<std::string, std::string> fields);
-
-        SourceParagraph() = default;
-
         std::string name;
         std::string version;
         std::string description;
         std::string maintainer;
         std::vector<std::string> supports;
         std::vector<Dependency> depends;
+        std::string default_features;
     };
+    struct SourceControlFile
+    {
+        static ExpectedT<SourceControlFile, ParseControlErrorInfo> parse_control_file(
+            std::vector<std::unordered_map<std::string, std::string>>&& control_paragraphs);
+
+        SourceParagraph core_paragraph;
+        std::vector<std::unique_ptr<FeatureParagraph>> feature_paragraphs;
+
+        std::vector<ParseControlErrorInfo> errors;
+    };
+
+    std::vector<SourceParagraph> getSourceParagraphs(const std::vector<SourceControlFile>& control_files);
 
     void print_error_message(span<const ParseControlErrorInfo> error_info_list);
     inline void print_error_message(const ParseControlErrorInfo& error_info_list)

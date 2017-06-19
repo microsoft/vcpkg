@@ -15,8 +15,8 @@ namespace vcpkg::Commands::Update
 
     std::vector<OutdatedPackage> find_outdated_packages(const VcpkgPaths& paths, const StatusParagraphs& status_db)
     {
-        const std::vector<SourceParagraph> source_paragraphs =
-            Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
+        auto source_control_files = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
+        const std::vector<SourceParagraph> source_paragraphs = getSourceParagraphs(source_control_files);
         const std::map<std::string, VersionT> src_names_to_versions =
             Paragraphs::extract_port_names_and_versions(source_paragraphs);
         const std::vector<StatusParagraph*> installed_packages = get_installed_ports(status_db);
