@@ -1,0 +1,37 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -139,11 +139,20 @@ set (PC_PREFIX ${CMAKE_INSTALL_PREFIX})
+ set (PC_EXEC_PREFIX "\$\{prefix\}")
+ set (PC_LIBDIR "\$\{prefix\}/${CMAKE_INSTALL_LIBDIR}")
+ set (PC_INCLUDEDIR "\$\{prefix\}/${CMAKE_INSTALL_INCLUDEDIR}")
++set (PC_REQUIRES "ogg, flac, vorbis, vorbisenc")
+ set (PC_VERSION ${PROJECT_VERSION})
+ if (EXTERNAL_XIPH_LIBS)
+-	set (PC_PRIVATE_LIBS "-lFLAC  -lvorbisenc")
++	set (PC_PRIVATE_LIBS "-logg -lFLAC  -lvorbis -lvorbisenc")
+ endif ()
+ 
++# VCPKG/MSVC-specific hack for pkg-config
++if(MSVC AND BUILD_SHARED_LIBS AND NOT BUILD_STATIC_LIBS)
++	set (PC_SNDFILE_LIBNAME "libsndfile-1")
++elseif(MSVC AND BUILD_STATIC_LIBS AND NOT BUILD_SHARED_LIBS)
++	set (PC_SNDFILE_LIBNAME "libsndfile")
++else()
++	set (PC_SNDFILE_LIBNAME "sndfile")
++endif()
+ 
+ file(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/sndfile.pc")
+ configure_file (sndfile.pc.cmake.in sndfile.pc @ONLY)
+--- a/sndfile.pc.cmake.in
++++ b/sndfile.pc.cmake.in
+@@ -5,8 +5,8 @@ includedir=@PC_INCLUDEDIR@
+ 
+ Name: sndfile
+ Description: A library for reading and writing audio files
+-Requires: 
++Requires: @PC_REQUIRES@
+ Version: @PC_VERSION@
+-Libs: -L${libdir} -lsndfile
++Libs: -L${libdir} -l@PC_SNDFILE_LIBNAME@
+ Libs.private: @PC_PRIVATE_LIBS@
+ Cflags: -I${includedir} 

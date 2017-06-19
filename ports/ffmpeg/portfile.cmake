@@ -12,6 +12,12 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+# Generate native patch syntax for pkg-config prefix
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/native_pkgconfig_prefix.patch
+)
+
 vcpkg_find_acquire_program(YASM)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
