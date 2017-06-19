@@ -18,7 +18,7 @@ namespace vcpkg::Commands
 
     namespace BuildCommand
     {
-        void perform_and_exit(const PackageSpec& spec,
+        void perform_and_exit(const FullPackageSpec& full_spec,
                               const fs::path& port_dir,
                               const std::unordered_set<std::string>& options,
                               const VcpkgPaths& paths);

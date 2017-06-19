@@ -210,7 +210,6 @@ int wmain(const int argc, const wchar_t* const* const argv)
     if (auto p = args.printmetrics.get()) Metrics::set_print_metrics(*p);
     if (auto p = args.sendmetrics.get()) Metrics::set_send_metrics(*p);
     if (auto p = args.debug.get()) g_debugging = *p;
-
     if (g_debugging)
     {
         inner(args);

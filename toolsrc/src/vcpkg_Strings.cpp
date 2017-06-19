@@ -68,6 +68,11 @@ namespace vcpkg::Strings
                       [](const char a, const char b) { return details::tolower_char(a) == b; });
     }
 
+    bool case_insensitive_ascii_contains(const std::string& s, const std::string& pattern)
+    {
+        return case_insensitive_ascii_find(s, pattern) != s.end();
+    }
+
     int case_insensitive_ascii_compare(const CStringView left, const CStringView right)
     {
         return _stricmp(left, right);

@@ -117,6 +117,11 @@ namespace vcpkg
                     parse_switch(false, "printmetrics", args.printmetrics);
                     continue;
                 }
+                if (arg == "--featurepackages")
+                {
+                    g_feature_packages = true;
+                    continue;
+                }
 
                 args.optional_command_arguments.insert(arg);
                 continue;

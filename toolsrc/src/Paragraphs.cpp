@@ -201,13 +201,22 @@ namespace vcpkg::Paragraphs
         return Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
     }
 
-    ExpectedT<SourceParagraph, ParseControlErrorInfo> try_load_port(const Files::Filesystem& fs, const fs::path& path)
+    ExpectedT<SourceControlFile, ParseControlErrorInfo> try_load_port(const Files::Filesystem& fs, const fs::path& path)
     {
         ParseControlErrorInfo error_info;
-        Expected<std::unordered_map<std::string, std::string>> pghs = get_single_paragraph(fs, path / "CONTROL");
-        if (auto p = pghs.get())
+        Expected<std::vector<std::unordered_map<std::string, std::string>>> pghs = get_paragraphs(fs, path / "CONTROL");
+        if (auto vector_pghs = pghs.get())
         {
-            return SourceParagraph::parse_control_file(*p);
+            auto csf = SourceControlFile::parse_control_file(std::move(*vector_pghs));
+            if (!g_feature_packages)
+            {
+                if (auto ptr = csf.get())
+                {
+                    ptr->core_paragraph.default_features.clear();
+                    ptr->feature_paragraphs.clear();
+                }
+            }
+            return csf;
         }
         error_info.name = path.filename().generic_u8string();
         error_info.error = pghs.error();
@@ -232,7 +241,7 @@ namespace vcpkg::Paragraphs
         LoadResults ret;
         for (auto&& path : fs.get_files_non_recursive(ports_dir))
         {
-            ExpectedT<SourceParagraph, ParseControlErrorInfo> source_paragraph = try_load_port(fs, path);
+            ExpectedT<SourceControlFile, ParseControlErrorInfo> source_paragraph = try_load_port(fs, path);
             if (auto srcpgh = source_paragraph.get())
             {
                 ret.paragraphs.emplace_back(std::move(*srcpgh));
@@ -245,7 +254,7 @@ namespace vcpkg::Paragraphs
         return ret;
     }
 
-    std::vector<SourceParagraph> load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir)
+    std::vector<SourceControlFile> load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir)
     {
         auto results = try_load_all_ports(fs, ports_dir);
         if (!results.errors.empty())
