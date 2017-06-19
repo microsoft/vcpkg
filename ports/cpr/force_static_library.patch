@@ -1,0 +1,13 @@
+diff --git a/cpr/CMakeLists.txt b/cpr/CMakeLists.txt
+index a6db5bd..9df92a6 100644
+--- a/cpr/CMakeLists.txt
++++ b/cpr/CMakeLists.txt
+@@ -3,7 +3,7 @@ include_directories(
+     ${CPR_INCLUDE_DIRS}
+     ${CURL_INCLUDE_DIRS})
+ 
+-add_library(${CPR_LIBRARIES}
++add_library(${CPR_LIBRARIES} STATIC
+ 
+     # Source files
+     auth.cpp
