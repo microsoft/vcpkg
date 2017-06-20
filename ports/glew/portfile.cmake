@@ -74,7 +74,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 else()
 	file(INSTALL
 		${SOURCE_PATH}/lib/Debug/${BUILD_ARCH}/glew32sd.lib
-		DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+		DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib RENAME glew32d.lib
 	)
 	file(INSTALL
 		${SOURCE_PATH}/lib/Release/${BUILD_ARCH}/glew32s.lib
