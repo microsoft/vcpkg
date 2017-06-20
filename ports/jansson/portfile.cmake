@@ -8,7 +8,7 @@ vcpkg_from_github(
   HEAD_REF master
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if(VCPKG_CRT_LINKAGE STREQUAL static)
   set(JANSSON_STATIC_CRT  ON)
 else()
   set(JANSSON_STATIC_CRT  OFF)
