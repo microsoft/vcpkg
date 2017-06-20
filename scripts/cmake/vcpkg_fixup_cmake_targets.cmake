@@ -76,8 +76,6 @@ function(vcpkg_fixup_cmake_targets)
         "${RELEASE_SHARE}/*[Cc]onfig-release.cmake"
     )
     foreach(RELEASE_TARGET ${RELEASE_TARGETS})
-        get_filename_component(RELEASE_TARGET_NAME ${RELEASE_TARGET} NAME)
-
         file(READ ${RELEASE_TARGET} _contents)
         string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \"]+\\.exe)" "\${_IMPORT_PREFIX}/tools/${PORT}/\\1" _contents "${_contents}")
         file(WRITE ${RELEASE_TARGET} "${_contents}")
@@ -97,6 +95,26 @@ function(vcpkg_fixup_cmake_targets)
         file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/${DEBUG_TARGET_NAME} "${_contents}")
 
         file(REMOVE ${DEBUG_TARGET})
+    endforeach()
+
+    file(GLOB MAIN_TARGETS "${RELEASE_SHARE}/*[Tt]argets.cmake")
+    foreach(MAIN_TARGET ${MAIN_TARGETS})
+        file(READ ${MAIN_TARGET} _contents)
+        string(REGEX REPLACE
+            "get_filename_component\\(_IMPORT_PREFIX \"\\\${CMAKE_CURRENT_LIST_FILE}\" PATH\\)(\nget_filename_component\\(_IMPORT_PREFIX \"\\\${_IMPORT_PREFIX}\" PATH\\))*"
+            "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
+            _contents "${_contents}")
+        file(WRITE ${MAIN_TARGET} "${_contents}")
+    endforeach()
+
+    file(GLOB MAIN_CONFIGS "${RELEASE_SHARE}/*[Cc]onfig.cmake")
+    foreach(MAIN_CONFIG ${MAIN_CONFIGS})
+        file(READ ${MAIN_CONFIG} _contents)
+        string(REGEX REPLACE
+            "get_filename_component\\(PACKAGE_PREFIX_DIR \"\\\${CMAKE_CURRENT_LIST_DIR}/\\.\\./(\\.\\./)*\" ABSOLUTE\\)"
+            "get_filename_component(PACKAGE_PREFIX_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../\" ABSOLUTE)"
+            _contents "${_contents}")
+        file(WRITE ${MAIN_CONFIG} "${_contents}")
     endforeach()
 
     # Remove /debug/share/<port>/ if it's empty.
