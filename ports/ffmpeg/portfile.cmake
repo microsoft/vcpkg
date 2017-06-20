@@ -27,12 +27,10 @@ set(OPTIONS "--disable-ffmpeg --disable-ffprobe --disable-doc --enable-debug")
 set(OPTIONS "${OPTIONS} --enable-runtime-cpudetect")
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    SET(UWP TRUE)
     set(OPTIONS "${OPTIONS} --disable-programs --enable-cross-compile --target-os=win32 --arch=${VCPKG_TARGET_ARCHITECTURE}")
     set(OPTIONS "${OPTIONS} --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00")
 
     if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-        set(UWP_PLATFORM  "arm")
         vcpkg_find_acquire_program(GASPREPROCESSOR)
         foreach(GAS_PATH ${GASPREPROCESSOR})
             get_filename_component(GAS_ITEM_PATH ${GAS_PATH} DIRECTORY)
@@ -40,40 +38,34 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         endforeach(GAS_PATH)
 
         ## Get Perl and GCC for MSYS2
-        execute_process(
+        vcpkg_execute_required_process(
             COMMAND ${BASH} --noprofile --norc -c "PATH=/usr/bin:\$PATH;pacman -Sy --noconfirm --needed perl gcc"
+            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
+            LOGNAME msys-${TARGET_TRIPLET}
         )
-
     elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        set(UWP_PLATFORM  "x64")
     elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-        set(UWP_PLATFORM  "Win32")
-    else ()
+    else()
         message(FATAL_ERROR "Unsupported architecture")
     endif()
 endif()
 
 set(OPTIONS_DEBUG "") # Note: --disable-optimizations can't be used due to http://ffmpeg.org/pipermail/libav-user/2013-March/003945.html
+set(OPTIONS_RELEASE "")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(OPTIONS "${OPTIONS} --disable-static --enable-shared")
-    if (UWP)
+    if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         set(OPTIONS "${OPTIONS} --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib")
     endif()
 endif()
 
 if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
     set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-cflags=-MDd --extra-cxxflags=-MDd")
-    if (NOT UWP)
-        set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-ldflags=-NODEFAULTLIB:libcmt")
-    endif()
-    set(OPTIONS "${OPTIONS} --extra-cflags=-MD --extra-cxxflags=-MD")
+    set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-cflags=-MD --extra-cxxflags=-MD")
 else()
     set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-cflags=-MTd --extra-cxxflags=-MTd")
-    if (NOT UWP)
-        set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-ldflags=-NODEFAULTLIB:libcmt")
-    endif()
-    set(OPTIONS "${OPTIONS} --extra-cflags=-MT --extra-cxxflags=-MT")
+    set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-cflags=-MT --extra-cxxflags=-MT")
 endif()
 
 message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
@@ -83,7 +75,7 @@ vcpkg_execute_required_process(
         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" # BUILD DIR
         "${SOURCE_PATH}" # SOURCE DIR
         "${CURRENT_PACKAGES_DIR}" # PACKAGE DIR
-        "${OPTIONS}"
+        "${OPTIONS} ${OPTIONS_RELEASE}"
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
     LOGNAME build-${TARGET_TRIPLET}-rel
 )
