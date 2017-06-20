@@ -16,6 +16,10 @@
 function(vcpkg_fixup_cmake_targets)
     cmake_parse_arguments(_vfct "" "CONFIG_PATH" "" ${ARGN})
 
+    if(_vfct_UNPARSED_ARGUMENTS)
+        message(FATAL_ERROR "vcpkg_fixup_cmake_targets was passed extra arguments: ${_vfct_UNPARSED_ARGUMENTS}")
+    endif()
+
     set(DEBUG_SHARE ${CURRENT_PACKAGES_DIR}/debug/share/${PORT})
     set(RELEASE_SHARE ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
