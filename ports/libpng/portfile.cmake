@@ -23,6 +23,13 @@ else()
     set(PNG_SHARED_LIBS OFF)
 endif()
 
+# Libpng's cmake uses if(${CMAKE_SYSTEM_PROCESSOR} ....) which performs double-evaluation and breaks if the variable is not defined.
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+    set(CMAKE_SYSTEM_PROCESSOR AMD64)
+else()
+    set(CMAKE_SYSTEM_PROCESSOR ${VCPKG_TARGET_ARCHITECTURE})
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
@@ -32,6 +39,7 @@ vcpkg_configure_cmake(
         -DSKIP_INSTALL_PROGRAMS=ON
         -DSKIP_INSTALL_EXECUTABLES=ON
         -DSKIP_INSTALL_FILES=ON
+        -DCMAKE_SYSTEM_PROCESSOR=${CMAKE_SYSTEM_PROCESSOR}
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
 )
