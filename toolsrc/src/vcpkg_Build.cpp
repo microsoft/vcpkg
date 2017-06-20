@@ -242,7 +242,8 @@ namespace vcpkg::Build
                 Checks::exit_with_message(
                     VCPKG_LINE_INFO, "Invalid library linkage type: [%s]", library_linkage_as_string);
         }
-        build_info.version = parser.optional_field("Version");
+        std::string version = parser.optional_field("Version");
+        if (!version.empty()) build_info.version = std::move(version);
 
         std::map<BuildPolicy, bool> policies;
         for (auto policy : g_all_policies)
