@@ -1,15 +1,3 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
@@ -21,24 +9,23 @@ vcpkg_from_github(
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/force_static_library.patch
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/enable-install.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    PREFER_NINJA
     OPTIONS 
-		-DBUILD_CPR_TESTS=OFF 
-		-DUSE_SYSTEM_CURL=ON
+        -DBUILD_CPR_TESTS=OFF
+        -DUSE_SYSTEM_CURL=ON
+        -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
+    OPTIONS_DEBUG
+        -DDISABLE_INSTALL_HEADERS=ON
 )
 
-vcpkg_build_cmake()
+vcpkg_install_cmake()
 
-file(COPY ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR})
-file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/cpr.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/cpr/CMakeFiles/cpr.dir/cpr.pdb DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/cpr.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/cpr/CMakeFiles/cpr.dir/cpr.pdb DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+vcpkg_copy_pdbs()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cpr)
