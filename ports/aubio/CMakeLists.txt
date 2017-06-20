@@ -17,6 +17,8 @@ add_definitions(
     -DHAVE_SWRESAMPLE=1
 )
 
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
 find_path(LIBSNDFILE_H sndfile.h)
 find_library(LIBSNDFILE_LIB NAMES libsndfile-1 libsndfile)
 find_library(AVCODEC_LIB avcodec)
@@ -29,7 +31,7 @@ find_library(SWRESAMPLE_LIB swresample)
 include_directories(src ${LIBSNDFILE_H})
 link_libraries(${LIBSNDFILE_LIB} ${AVCODEC_LIB} ${AVUTIL_LIB} ${AVDEVICE_LIB} ${AVFILTER_LIB} ${AVFORMAT_LIB} ${SWRESAMPLE_LIB} ws2_32.lib)
 
-file(GLOB_RECURSE SOURCES src/*.c aubio-5.def)
+file(GLOB_RECURSE SOURCES src/*.c)
 set_source_files_properties(src/io/sink_wavwrite.c PROPERTIES COMPILE_FLAGS /FIWinsock2.h)
 add_library(aubio ${SOURCES})
 

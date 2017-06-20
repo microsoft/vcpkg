@@ -7,7 +7,7 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/aubio-5.def ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
@@ -17,12 +17,12 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Handle copyright and credentials
-file(COPY 
-    ${SOURCE_PATH}/COPYING 
-    ${SOURCE_PATH}/AUTHORS 
-    ${SOURCE_PATH}/ChangeLog 
-    ${SOURCE_PATH}/README.md 
-  DESTINATION 
+file(COPY
+    ${SOURCE_PATH}/COPYING
+    ${SOURCE_PATH}/AUTHORS
+    ${SOURCE_PATH}/ChangeLog
+    ${SOURCE_PATH}/README.md
+  DESTINATION
     ${CURRENT_PACKAGES_DIR}/share/aubio)
 
 vcpkg_copy_pdbs()
