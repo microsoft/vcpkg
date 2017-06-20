@@ -30,17 +30,10 @@ vcpkg_configure_cmake(
   -DJANSSON_BUILD_SHARED_LIBS=${JANSSON_BUILD_SHARED_LIBS}
 )
 
-
 vcpkg_install_cmake(DISABLE_PARALLEL)
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/jansson RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake)
-
-if(VCPKG_CRT_LINKAGE STREQUAL static)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
-
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/jansson RENAME copyright)
 
 vcpkg_copy_pdbs()
