@@ -6,6 +6,9 @@ if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
   message(FATAL_ERROR "Rocksdb only supports x64")
 endif()
 
+set(VCPKG_PLATFORM_TOOLSET v140)
+set(MSVS_VERSION 2015)
+
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
@@ -68,18 +71,16 @@ endforeach()
 file(WRITE "${SOURCE_PATH}/thirdparty.inc" "${THIRDY_PARTY}")
 
 
+vcpkg_configure_cmake(
+  SOURCE_PATH ${SOURCE_PATH}
+  OPTIONS
+  -DGIT_EXECUTABLE=${GIT}
+  -DGFLAGS=1
+  -DSNAPPY=1
+  -DLZ4=1
+  -DZLIB=1
+  -DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}
+)
 
 
-# 
-# vcpkg_configure_cmake(
-#   SOURCE_PATH ${SOURCE_PATH}
-#   OPTIONS
-#   -DGIT_EXECUTABLE=${GIT}
-#   -DGFLAGS=1
-#   -DSNAPPY=1
-#   -DLZ4=1
-#   -DZLIB=1
-# )
-#
-#
-# vcpkg_build_cmake()
+vcpkg_build_cmake()
