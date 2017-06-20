@@ -2,8 +2,7 @@ diff --git a/Samples/ClosestPointViewer/ClosestPointViewer.vcxproj b/Samples/Clo
 index fe63dbf..6050e8f 100644
 --- a/Samples/ClosestPointViewer/ClosestPointViewer.vcxproj
 +++ b/Samples/ClosestPointViewer/ClosestPointViewer.vcxproj
-@@ -1,5 +1,5 @@
- ・ｿ<?xml version="1.0" encoding="utf-8"?>
+@@ -2,4 +2,4 @@
 -<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 +<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <ItemGroup Label="ProjectConfigurations">
@@ -85,8 +84,7 @@ diff --git a/Samples/EventBasedRead/EventBasedRead.vcxproj b/Samples/EventBasedR
 index f67db7a..ffe19ac 100644
 --- a/Samples/EventBasedRead/EventBasedRead.vcxproj
 +++ b/Samples/EventBasedRead/EventBasedRead.vcxproj
-@@ -1,5 +1,5 @@
- ・ｿ<?xml version="1.0" encoding="utf-8"?>
+@@ -2,4 +2,4 @@
 -<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 +<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <ItemGroup Label="ProjectConfigurations">
@@ -160,8 +158,7 @@ diff --git a/Samples/MWClosestPoint/MWClosestPoint.vcxproj b/Samples/MWClosestPo
 index 74cafe7..5844506 100644
 --- a/Samples/MWClosestPoint/MWClosestPoint.vcxproj
 +++ b/Samples/MWClosestPoint/MWClosestPoint.vcxproj
-@@ -1,5 +1,5 @@
- ・ｿ<?xml version="1.0" encoding="utf-8"?>
+@@ -2,4 +2,4 @@
 -<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 +<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <ItemGroup Label="ProjectConfigurations">
@@ -235,8 +232,7 @@ diff --git a/Samples/MWClosestPointApp/MWClosestPointApp.vcxproj b/Samples/MWClo
 index 063ec37..deb7c17 100644
 --- a/Samples/MWClosestPointApp/MWClosestPointApp.vcxproj
 +++ b/Samples/MWClosestPointApp/MWClosestPointApp.vcxproj
-@@ -1,5 +1,5 @@
- ・ｿ<?xml version="1.0" encoding="utf-8"?>
+@@ -2,4 +2,4 @@
 -<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 +<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <ItemGroup Label="ProjectConfigurations">
@@ -310,8 +306,7 @@ diff --git a/Samples/MultiDepthViewer/MultiDepthViewer.vcxproj b/Samples/MultiDe
 index d021c0d..85a0d4f 100644
 --- a/Samples/MultiDepthViewer/MultiDepthViewer.vcxproj
 +++ b/Samples/MultiDepthViewer/MultiDepthViewer.vcxproj
-@@ -1,5 +1,5 @@
- ・ｿ<?xml version="1.0" encoding="utf-8"?>
+@@ -2,4 +2,4 @@
 -<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 +<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <ItemGroup Label="ProjectConfigurations">
@@ -393,8 +388,7 @@ diff --git a/Samples/MultipleStreamRead/MultipleStreamRead.vcxproj b/Samples/Mul
 index 15887ec..5fa8202 100644
 --- a/Samples/MultipleStreamRead/MultipleStreamRead.vcxproj
 +++ b/Samples/MultipleStreamRead/MultipleStreamRead.vcxproj
-@@ -1,5 +1,5 @@
- ・ｿ<?xml version="1.0" encoding="utf-8"?>
+@@ -2,4 +2,4 @@
 -<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 +<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <ItemGroup Label="ProjectConfigurations">
@@ -468,8 +462,7 @@ diff --git a/Samples/SimpleRead/SimpleRead.vcxproj b/Samples/SimpleRead/SimpleRe
 index de3942f..6ce41e3 100644
 --- a/Samples/SimpleRead/SimpleRead.vcxproj
 +++ b/Samples/SimpleRead/SimpleRead.vcxproj
-@@ -1,5 +1,5 @@
- ・ｿ<?xml version="1.0" encoding="utf-8"?>
+@@ -2,4 +2,4 @@
 -<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 +<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <ItemGroup Label="ProjectConfigurations">
@@ -543,8 +536,7 @@ diff --git a/Samples/SimpleViewer/SimpleViewer.vcxproj b/Samples/SimpleViewer/Si
 index d693a1d..40621e1 100644
 --- a/Samples/SimpleViewer/SimpleViewer.vcxproj
 +++ b/Samples/SimpleViewer/SimpleViewer.vcxproj
-@@ -1,5 +1,5 @@
- ・ｿ<?xml version="1.0" encoding="utf-8"?>
+@@ -2,4 +2,4 @@
 -<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 +<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <ItemGroup Label="ProjectConfigurations">
@@ -626,8 +618,7 @@ diff --git a/Source/Core/OpenNI.vcxproj b/Source/Core/OpenNI.vcxproj
 index 12189de..f176682 100644
 --- a/Source/Core/OpenNI.vcxproj
 +++ b/Source/Core/OpenNI.vcxproj
-@@ -1,5 +1,5 @@
- ・ｿ<?xml version="1.0" encoding="utf-8"?>
+@@ -2,4 +2,4 @@
 -<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 +<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <ItemGroup Label="ProjectConfigurations">
@@ -701,8 +692,7 @@ diff --git a/Source/DepthUtils/DepthUtils.vcxproj b/Source/DepthUtils/DepthUtils
 index dcab0b7..e474661 100644
 --- a/Source/DepthUtils/DepthUtils.vcxproj
 +++ b/Source/DepthUtils/DepthUtils.vcxproj
-@@ -1,5 +1,5 @@
- ・ｿ<?xml version="1.0" encoding="utf-8"?>
+@@ -2,4 +2,4 @@
 -<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 +<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <ItemGroup Label="ProjectConfigurations">
@@ -776,8 +766,7 @@ diff --git a/Source/Drivers/DummyDevice/DummyDevice.vcxproj b/Source/Drivers/Dum
 index 56c5944..0401f3d 100644
 --- a/Source/Drivers/DummyDevice/DummyDevice.vcxproj
 +++ b/Source/Drivers/DummyDevice/DummyDevice.vcxproj
-@@ -1,5 +1,5 @@
- ・ｿ<?xml version="1.0" encoding="utf-8"?>
+@@ -2,4 +2,4 @@
 -<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 +<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <ItemGroup Label="ProjectConfigurations">
@@ -851,8 +840,7 @@ diff --git a/Source/Drivers/Kinect/Kinect.vcxproj b/Source/Drivers/Kinect/Kinect
 index f54e8b2..7f54d04 100644
 --- a/Source/Drivers/Kinect/Kinect.vcxproj
 +++ b/Source/Drivers/Kinect/Kinect.vcxproj
-@@ -1,5 +1,5 @@
- ・ｿ<?xml version="1.0" encoding="utf-8"?>
+@@ -2,4 +2,4 @@
 -<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 +<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <ItemGroup Label="ProjectConfigurations">
@@ -929,8 +917,7 @@ diff --git a/Source/Drivers/OniFile/OniFile.vcxproj b/Source/Drivers/OniFile/Oni
 index 9b173f7..e2f4391 100644
 --- a/Source/Drivers/OniFile/OniFile.vcxproj
 +++ b/Source/Drivers/OniFile/OniFile.vcxproj
-@@ -1,5 +1,5 @@
- ・ｿ<?xml version="1.0" encoding="utf-8"?>
+@@ -2,4 +2,4 @@
 -<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 +<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <ItemGroup Label="ProjectConfigurations">
@@ -1004,8 +991,7 @@ diff --git a/Source/Drivers/PS1080/PS1080.vcxproj b/Source/Drivers/PS1080/PS1080
 index 2a1154d..8495c28 100644
 --- a/Source/Drivers/PS1080/PS1080.vcxproj
 +++ b/Source/Drivers/PS1080/PS1080.vcxproj
-@@ -1,5 +1,5 @@
- ・ｿ<?xml version="1.0" encoding="utf-8"?>
+@@ -2,4 +2,4 @@
 -<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 +<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <ItemGroup Label="ProjectConfigurations">
@@ -1079,8 +1065,7 @@ diff --git a/Source/Drivers/PS1080/PS1080Console/PS1080Console.vcxproj b/Source/
 index b9adfea..7446d5a 100644
 --- a/Source/Drivers/PS1080/PS1080Console/PS1080Console.vcxproj
 +++ b/Source/Drivers/PS1080/PS1080Console/PS1080Console.vcxproj
-@@ -1,5 +1,5 @@
- ・ｿ<?xml version="1.0" encoding="utf-8"?>
+@@ -2,4 +2,4 @@
 -<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 +<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <ItemGroup Label="ProjectConfigurations">
@@ -1159,8 +1144,7 @@ diff --git a/Source/Drivers/PSLink/PSLink.vcxproj b/Source/Drivers/PSLink/PSLink
 index 8915163..68a7e96 100644
 --- a/Source/Drivers/PSLink/PSLink.vcxproj
 +++ b/Source/Drivers/PSLink/PSLink.vcxproj
-@@ -1,5 +1,5 @@
- ・ｿ<?xml version="1.0" encoding="utf-8"?>
+@@ -2,4 +2,4 @@
 -<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 +<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <ItemGroup Label="ProjectConfigurations">
@@ -1239,8 +1223,7 @@ diff --git a/Source/Drivers/PSLink/PSLinkConsole/PSLinkConsole.vcxproj b/Source/
 index e6c7c8c..26ff9c8 100644
 --- a/Source/Drivers/PSLink/PSLinkConsole/PSLinkConsole.vcxproj
 +++ b/Source/Drivers/PSLink/PSLinkConsole/PSLinkConsole.vcxproj
-@@ -1,5 +1,5 @@
- ・ｿ<?xml version="1.0" encoding="utf-8"?>
+@@ -2,4 +2,4 @@
 -<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 +<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <ItemGroup Label="ProjectConfigurations">
@@ -1319,8 +1302,7 @@ diff --git a/Source/Drivers/TestDevice/TestDevice.vcxproj b/Source/Drivers/TestD
 index e20a074..3777b2e 100644
 --- a/Source/Drivers/TestDevice/TestDevice.vcxproj
 +++ b/Source/Drivers/TestDevice/TestDevice.vcxproj
-@@ -1,5 +1,5 @@
- ・ｿ<?xml version="1.0" encoding="utf-8"?>
+@@ -2,4 +2,4 @@
 -<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 +<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <ItemGroup Label="ProjectConfigurations">
@@ -1394,8 +1376,7 @@ diff --git a/Source/Tools/NiViewer/NiViewer.vcxproj b/Source/Tools/NiViewer/NiVi
 index 0a4c392..e331009 100644
 --- a/Source/Tools/NiViewer/NiViewer.vcxproj
 +++ b/Source/Tools/NiViewer/NiViewer.vcxproj
-@@ -1,5 +1,5 @@
- ・ｿ<?xml version="1.0" encoding="utf-8"?>
+@@ -2,4 +2,4 @@
 -<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 +<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <ItemGroup Label="ProjectConfigurations">
@@ -1477,8 +1458,7 @@ diff --git a/ThirdParty/PSCommon/XnLib/Source/XnLib.vcxproj b/ThirdParty/PSCommo
 index 2761222..f2094b3 100644
 --- a/ThirdParty/PSCommon/XnLib/Source/XnLib.vcxproj
 +++ b/ThirdParty/PSCommon/XnLib/Source/XnLib.vcxproj
-@@ -1,5 +1,5 @@
- ・ｿ<?xml version="1.0" encoding="utf-8"?>
+@@ -2,4 +2,4 @@
 -<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 +<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <ItemGroup Label="ProjectConfigurations">
@@ -1552,8 +1532,7 @@ diff --git a/Wrappers/java/OpenNI.jni/OpenNI.jni.vcxproj b/Wrappers/java/OpenNI.
 index b95c484..bfd0503 100644
 --- a/Wrappers/java/OpenNI.jni/OpenNI.jni.vcxproj
 +++ b/Wrappers/java/OpenNI.jni/OpenNI.jni.vcxproj
-@@ -1,5 +1,5 @@
- ・ｿ<?xml version="1.0" encoding="utf-8"?>
+@@ -2,4 +2,4 @@
 -<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 +<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <ItemGroup Label="ProjectConfigurations">

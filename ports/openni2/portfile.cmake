@@ -21,6 +21,11 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(VCPKG_LIBRARY_LINKAGE "dynamic")
 endif()
 
+# Static CRT linkage not supported
+if (VCPKG_CRT_LINKAGE STREQUAL "static")
+    message(FATAL_ERROR "Warning: Static CRT linkage is not supported.")
+endif()
+
 # Download Source Code
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/OpenNI2-2.2-beta2)
@@ -31,23 +36,11 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-# Apply Patches
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/upgrade_projects.patch"
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/disable_kinect.patch"
 )
-
-set(KINECTSDK10_INSTALLED FALSE)
-if(EXISTS "$ENV{KINECTSDK10_DIR}/inc/NuiApi.h")
-    set(KINECTSDK10_INSTALLED TRUE)
-endif()
-
-if(NOT ${KINECTSDK10_INSTALLED})
-    vcpkg_apply_patches(
-        SOURCE_PATH ${SOURCE_PATH}
-        PATCHES "${CMAKE_CURRENT_LIST_DIR}/disable_kinect.patch"
-    )
-endif()
 
 # Build OpenNI2
 vcpkg_build_msbuild(
@@ -71,7 +64,7 @@ file(
     INSTALL
         "${SOURCE_INCLUDE_PATH}/Android-Arm/OniPlatformAndroid-Arm.h"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include/Android-Arm
+        ${CURRENT_PACKAGES_DIR}/include/openni2/Android-Arm
 )
 
 file(
@@ -79,35 +72,35 @@ file(
         "${SOURCE_INCLUDE_PATH}/Driver/OniDriverAPI.h"
         "${SOURCE_INCLUDE_PATH}/Driver/OniDriverTypes.h"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include/Driver
+        ${CURRENT_PACKAGES_DIR}/include/openni2/Driver
 )
 
 file(
     INSTALL
         "${SOURCE_INCLUDE_PATH}/Linux-Arm/OniPlatformLinux-Arm.h"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include/Linux-Arm
+        ${CURRENT_PACKAGES_DIR}/include/openni2/Linux-Arm
 )
 
 file(
     INSTALL
         "${SOURCE_INCLUDE_PATH}/Linux-x86/OniPlatformLinux-x86.h"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include/Linux-x86
+        ${CURRENT_PACKAGES_DIR}/include/openni2/Linux-x86
 )
 
 file(
     INSTALL
         "${SOURCE_INCLUDE_PATH}/MacOSX/OniPlatformMacOSX.h"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include/MacOSX
+        ${CURRENT_PACKAGES_DIR}/include/openni2/MacOSX
 )
 
 file(
     INSTALL
         "${SOURCE_INCLUDE_PATH}/Win32/OniPlatformWin32.h"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include/Win32
+        ${CURRENT_PACKAGES_DIR}/include/openni2/Win32
 )
 
 file(
@@ -125,7 +118,7 @@ file(
         "${SOURCE_INCLUDE_PATH}/PS1080.h"
         "${SOURCE_INCLUDE_PATH}/PSLink.h"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include
+        ${CURRENT_PACKAGES_DIR}/include/openni2
 )
 
 file(
@@ -153,15 +146,6 @@ file(
         ${CURRENT_PACKAGES_DIR}/bin/OpenNI2/Drivers
 )
 
-if(${KINECTSDK10_INSTALLED})
-    file(
-        INSTALL
-            "${SOURCE_BIN_PATH_RELEASE}/OpenNI2/Drivers/Kinect.dll"
-        DESTINATION
-            ${CURRENT_PACKAGES_DIR}/bin/OpenNI2/Drivers
-    )
-endif()
-
 file(
     INSTALL
         "${SOURCE_CONFIG_PATH}/OpenNI.ini"
@@ -181,15 +165,6 @@ file(
         ${CURRENT_PACKAGES_DIR}/debug/bin/OpenNI2/Drivers
 )
 
-if(${KINECTSDK10_INSTALLED})
-    file(
-        INSTALL
-            "${SOURCE_BIN_PATH_DEBUG}/OpenNI2/Drivers/Kinect.dll"
-        DESTINATION
-            ${CURRENT_PACKAGES_DIR}/debug/bin/OpenNI2/Drivers
-    )
-endif()
-
 file(
     INSTALL
         "${SOURCE_CONFIG_PATH}/OpenNI.ini"
@@ -208,15 +183,6 @@ file(
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/tools/openni2/OpenNI2/Drivers
 )
-
-if(${KINECTSDK10_INSTALLED})
-    file(
-        INSTALL
-            "${SOURCE_BIN_PATH_RELEASE}/OpenNI2/Drivers/Kinect.dll"
-        DESTINATION
-            ${CURRENT_PACKAGES_DIR}/tools/openni2/OpenNI2/Drivers
-    )
-endif()
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(NUMBEROFBIT 32)
