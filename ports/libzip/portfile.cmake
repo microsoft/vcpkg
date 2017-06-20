@@ -27,11 +27,9 @@ endif()
 
 vcpkg_install_cmake()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin/zip.dll ${CURRENT_PACKAGES_DIR}/debug/bin/zipd.dll)
-else()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/zipstatic.lib ${CURRENT_PACKAGES_DIR}/lib/zip.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/zipstatic.lib ${CURRENT_PACKAGES_DIR}/debug/lib/zipd.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/zipstatic.lib ${CURRENT_PACKAGES_DIR}/debug/lib/zip.lib)
 endif()
 
 # Move zipconf.h to include and remove include directories from lib
