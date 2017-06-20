@@ -57,4 +57,5 @@ install(
 
 if(NOT DISABLE_INSTALL_HEADERS)
   install(DIRECTORY "${HEADERS_DIR}/" DESTINATION include/cunit FILES_MATCHING PATTERN "*.h")
+  install(FILES "${PROJECT_BINARY_DIR}/CUnit.h" DESTINATION include/cunit)
 endif()
