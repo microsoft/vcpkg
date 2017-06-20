@@ -18,7 +18,7 @@ add_definitions(
 )
 
 find_path(LIBSNDFILE_H sndfile.h)
-find_library(LIBSNDFILE_LIB libsndfile-1)
+find_library(LIBSNDFILE_LIB NAMES libsndfile-1 libsndfile)
 find_library(AVCODEC_LIB avcodec)
 find_library(AVUTIL_LIB avutil)
 find_library(AVDEVICE_LIB avdevice)
