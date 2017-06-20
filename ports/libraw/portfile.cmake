@@ -1,9 +1,10 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/LibRaw-0.18.0)
+set(LIBRAW_VERSION 0.18.2)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/LibRaw-${LIBRAW_VERSION})
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.libraw.org/data/LibRaw-0.18.0.zip"
-    FILENAME "LibRaw-0.18.0.zip"
-    SHA512 c66ae2331caffe18c2835d76d6106052125fab2f549a6f06687b4c1fedaae1c46ee0e4ae4c23b0480976870d76e8cfdbb91dd3cf11e3433ccc070bf03c538bb1
+    URLS "http://www.libraw.org/data/LibRaw-${LIBRAW_VERSION}.zip"
+    FILENAME "LibRaw-${LIBRAW_VERSION}.zip"
+    SHA512 e557dc47e8c2f79cdb55fafe7e668b823ecd7afe2537c8b7cd6e3f299110efa4ba1696ce8aa01bdba06a5570eec53a4a04f1af32974f98a1521ab5cd174effd3
 )
 set(LIBRAW_CMAKE_COMMIT "a71f3b83ee3dccd7be32f9a2f410df4d9bdbde0a")
 set(LIBRAW_CMAKE_SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/LibRaw-cmake-${LIBRAW_CMAKE_COMMIT})
@@ -26,6 +27,7 @@ vcpkg_configure_cmake(
         -DINSTALL_CMAKE_MODULE_PATH=${CURRENT_PACKAGES_DIR}/share/libraw
 )
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 # Rename thread-safe version to be "raw.lib". This is unfortunately needed
