@@ -1,11 +1,26 @@
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
+    message(FATAL_ERROR "UWP builds not supported")
+endif()
+
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/opus-1.1.4)
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://downloads.xiph.org/releases/opus/opus-1.1.4.tar.gz"
-    FILENAME "opus-1.1.4.tar.gz"
-    SHA512 57f14b9e8037eaa02a4d86535d3bbcceca249310fbc9ef1a452cc19dd442d4cf338d5db241d20605c236e22549df2c8266b7486c5f1666b80c532afd52cb3585
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO xiph/opus
+    REF v1.2
+    SHA512 4fef70e3b439613f85ede30cc401b84c77f1828f56908d04cb76061b8116c083cc035b50eaec4205110481e9d8b794b9c05f6778d8428cc68f6d57bd3db721ca
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
+# Ensure proper crt linkage
+file(READ ${SOURCE_PATH}/win32/VS2015/common.props OPUS_PROPS)
+if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
+    string(REPLACE ">MultiThreaded<" ">MultiThreadedDLL<" OPUS_PROPS "${OPUS_PROPS}")
+    string(REPLACE ">MultiThreadedDebug<" ">MultiThreadedDebugDLL<" OPUS_PROPS "${OPUS_PROPS}")
+else()
+    string(REPLACE ">MultiThreadedDLL<" ">MultiThreaded<" OPUS_PROPS "${OPUS_PROPS}")
+    string(REPLACE ">MultiThreadedDebugDLL<" ">MultiThreadedDebug<" OPUS_PROPS "${OPUS_PROPS}")
+endif()
+file(WRITE ${SOURCE_PATH}/win32/VS2015/common.props "${OPUS_PROPS}")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(RELEASE_CONFIGURATION "Release")
@@ -20,44 +35,21 @@ if(TARGET_TRIPLET MATCHES "x86")
 elseif(TARGET_TRIPLET MATCHES "x64")
     set(ARCH_DIR "x64")
 else()
-    message("Architecture not supported")
+    message(FATAL_ERROR "Architecture not supported")
 endif()
 
-function(build_project PROJECT_PATH)
-    vcpkg_build_msbuild(
-        PROJECT_PATH ${PROJECT_PATH}
-        RELEASE_CONFIGURATION ${RELEASE_CONFIGURATION}
-        DEBUG_CONFIGURATION ${DEBUG_CONFIGURATION}
-    )
-endfunction(build_project)
-
-
-build_project(${SOURCE_PATH}/win32/VS2015/celt.vcxproj)
-build_project(${SOURCE_PATH}/win32/VS2015/silk_common.vcxproj)
-build_project(${SOURCE_PATH}/win32/VS2015/silk_float.vcxproj)
-build_project(${SOURCE_PATH}/win32/VS2015/silk_fixed.vcxproj)
-build_project(${SOURCE_PATH}/win32/VS2015/opus.vcxproj)
-
+vcpkg_build_msbuild(
+    PROJECT_PATH ${SOURCE_PATH}/win32/VS2015/opus.vcxproj
+    RELEASE_CONFIGURATION ${RELEASE_CONFIGURATION}
+    DEBUG_CONFIGURATION ${DEBUG_CONFIGURATION}
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     # Install release build
     file(INSTALL ${SOURCE_PATH}/win32/VS2015/${ARCH_DIR}/${RELEASE_CONFIGURATION}/opus.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
-    file(INSTALL ${SOURCE_PATH}/win32/VS2015/${ARCH_DIR}/${RELEASE_CONFIGURATION}/celt.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
-    file(INSTALL ${SOURCE_PATH}/win32/VS2015/${ARCH_DIR}/${RELEASE_CONFIGURATION}/silk_common.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
-    file(INSTALL ${SOURCE_PATH}/win32/VS2015/${ARCH_DIR}/${RELEASE_CONFIGURATION}/silk_fixed.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
-    file(INSTALL ${SOURCE_PATH}/win32/VS2015/${ARCH_DIR}/${RELEASE_CONFIGURATION}/silk_float.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
 
     # Install debug build
     file(INSTALL ${SOURCE_PATH}/win32/VS2015/${ARCH_DIR}/${DEBUG_CONFIGURATION}/opus.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
-    file(INSTALL ${SOURCE_PATH}/win32/VS2015/${ARCH_DIR}/${DEBUG_CONFIGURATION}/opus.pdb DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
-    file(INSTALL ${SOURCE_PATH}/win32/VS2015/${ARCH_DIR}/${DEBUG_CONFIGURATION}/celt.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
-    file(INSTALL ${SOURCE_PATH}/win32/VS2015/${ARCH_DIR}/${DEBUG_CONFIGURATION}/celt.pdb DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
-    file(INSTALL ${SOURCE_PATH}/win32/VS2015/${ARCH_DIR}/${DEBUG_CONFIGURATION}/silk_common.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
-    file(INSTALL ${SOURCE_PATH}/win32/VS2015/${ARCH_DIR}/${DEBUG_CONFIGURATION}/silk_common.pdb DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
-    file(INSTALL ${SOURCE_PATH}/win32/VS2015/${ARCH_DIR}/${DEBUG_CONFIGURATION}/silk_fixed.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
-    file(INSTALL ${SOURCE_PATH}/win32/VS2015/${ARCH_DIR}/${DEBUG_CONFIGURATION}/silk_fixed.pdb DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
-    file(INSTALL ${SOURCE_PATH}/win32/VS2015/${ARCH_DIR}/${DEBUG_CONFIGURATION}/silk_float.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
-    file(INSTALL ${SOURCE_PATH}/win32/VS2015/${ARCH_DIR}/${DEBUG_CONFIGURATION}/silk_float.pdb DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
 else()
     # Install release build
     file(INSTALL ${SOURCE_PATH}/win32/VS2015/${ARCH_DIR}/${RELEASE_CONFIGURATION}/opus.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
@@ -66,11 +58,18 @@ else()
     # Install debug build
     file(INSTALL ${SOURCE_PATH}/win32/VS2015/${ARCH_DIR}/${DEBUG_CONFIGURATION}/opus.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
     file(INSTALL ${SOURCE_PATH}/win32/VS2015/${ARCH_DIR}/${DEBUG_CONFIGURATION}/opus.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/)
-    file(INSTALL ${SOURCE_PATH}/win32/VS2015/${ARCH_DIR}/${DEBUG_CONFIGURATION}/opus.pdb DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/)
 endif()
+
+vcpkg_copy_pdbs()
 
 # Install headers
 file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR}/include RENAME opus)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    file(READ ${CURRENT_PACKAGES_DIR}/include/opus/opus_defines.h OPUS_DEFINES)
+    string(REPLACE "define OPUS_EXPORT" "define OPUS_EXPORT __declspec(dllimport)" OPUS_DEFINES "${OPUS_DEFINES}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/include/opus/opus_defines.h "${OPUS_DEFINES}")
+endif()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/opus RENAME copyright)
