@@ -39,10 +39,11 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 
         ## Get Perl and GCC for MSYS2
         vcpkg_execute_required_process(
-            COMMAND ${BASH} --noprofile --norc -c "PATH=/usr/bin:\$PATH;pacman -Sy --noconfirm --needed perl gcc"
+            COMMAND ${BASH} --noprofile --norc -c 'PATH=/usr/bin:\$PATH;pacman -Sy --noconfirm --needed perl gcc'
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
             LOGNAME msys-${TARGET_TRIPLET}
         )
+
     elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     else()
