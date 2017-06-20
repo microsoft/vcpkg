@@ -22,7 +22,8 @@ vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_find_acquire_program(PYTHON3)
 
 # Add python3 to path
-SET(ENV{PATH} "${DOWNLOADS}/tools/python;$ENV{PATH}")
+get_filename_component(PYTHON_PATH ${PYTHON} DIRECTORY)
+SET(ENV{PATH} "${PYTHON_PATH};$ENV{PATH}")
 
 vcpkg_configure_qmake(
     SOURCE_PATH "${SOURCE_PATH}/Qt4Qt5"
