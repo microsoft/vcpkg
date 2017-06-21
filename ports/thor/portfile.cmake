@@ -11,6 +11,8 @@ vcpkg_from_github(ARCHIVE
   HEAD_REF master
 )
 
+file(COPY ${CURRENT_INSTALLED_DIR}/include/Aurora DESTINATION ${SOURCE_PATH}/extlibs/aurora/include)
+
 
 set(ENV{SFML_ROOT} ${CURRENT_INSTALLED_DIR})
 
