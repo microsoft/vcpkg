@@ -4,8 +4,13 @@
 
 namespace vcpkg
 {
+    struct TripletInstance;
+
     struct Triplet
     {
+    public:
+        constexpr Triplet() : m_instance(&default_instance) {}
+
         static Triplet from_canonical_name(const std::string& triplet_as_string);
 
         static const Triplet X86_WINDOWS;
@@ -16,28 +21,23 @@ namespace vcpkg
 
         const std::string& canonical_name() const;
         const std::string& to_string() const;
+        size_t hash_code() const;
+
+        bool operator==(const Triplet& other) const;
 
     private:
-        std::string m_canonical_name;
-    };
+        static const TripletInstance default_instance;
 
-    bool operator==(const Triplet& left, const Triplet& right);
+        constexpr Triplet(const TripletInstance* ptr) : m_instance(ptr) {}
+
+        const TripletInstance* m_instance;
+    };
 
     bool operator!=(const Triplet& left, const Triplet& right);
 }
 
-namespace std
+template<>
+struct std::hash<vcpkg::Triplet>
 {
-    template<>
-    struct hash<vcpkg::Triplet>
-    {
-        size_t operator()(const vcpkg::Triplet& t) const
-        {
-            std::hash<std::string> hasher;
-            size_t hash = 17;
-            hash = hash * 31 + hasher(t.canonical_name());
-            return hash;
-        }
-    };
-
-} // namespace std
+    size_t operator()(const vcpkg::Triplet& t) const { return t.hash_code(); }
+};
