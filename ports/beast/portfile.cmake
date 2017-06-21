@@ -4,8 +4,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vinniefalco/Beast
-    REF 4e4bcf8b1114229713eec0cf5fd392e5bdd76717
-    SHA512 514b93dccd483b1b847d9274f8a6fe9f4c32fdae6e1c45410abd3bb3554fa901aac8d6fc666a76420e1c4fa729e2ce7f95afa459faf01614de41995040eeb7bb
+    REF f68dc343e7c077caee8a95b2a59a2ccb9f979567
+    SHA512 d1c4ce5ee4d4b7cb20084c96af87ce106a4474631754a54a7cc19343e0767ed7a14cdb00f27bb1958e35f411b99c90444efd578e8c77e98d7e416703ea6f28bd
     HEAD_REF master
 )
 
