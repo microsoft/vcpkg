@@ -46,7 +46,6 @@ vcpkg_configure_cmake(
     #PREFER_NINJA
     OPTIONS
         # BUILD
-        -DBUILD_2d=OFF # The pcl-2d import library is not generated.
         -DBUILD_surface_on_nurbs=ON
         -DBUILD_tools=OFF
         # PCL
@@ -65,6 +64,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/pcl_2d_release.dll ${CURRENT_PACKAGES_DIR}/debug/bin/pcl_2d_debug.dll)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/pcl)
