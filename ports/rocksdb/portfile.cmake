@@ -33,7 +33,7 @@ LIST(APPEND ENV_REPLACE_LIST
   "set(LZ4_LIB_RELEASE \${LZ4_HOME}/lib/lz4.lib)"
   "set(ZLIB_HOME \${CURRENT_INSTALLED_DIR})"
   "set(ZLIB_INCLUDE \${ZLIB_HOME}/include)"
-  "set(ZLIB_LIB_DEBUG \${ZLIB_HOME}/debug/lib/zlib.lib)"
+  "set(ZLIB_LIB_DEBUG \${ZLIB_HOME}/debug/lib/zlibd.lib)"
   "set(ZLIB_LIB_RELEASE \${ZLIB_HOME}/lib/zlib.lib)"
 )
 LIST(APPEND ENV_FIND_LIST
