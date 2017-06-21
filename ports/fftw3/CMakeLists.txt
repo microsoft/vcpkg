@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.0)
-project (fftw3)
+project (fftw3 VERSION 3.3.6)
 
 # From: http://stackoverflow.com/questions/10252336/fftw-in-visual-studio-2010
 
@@ -92,16 +92,32 @@ set(SSE2_SOURCES
   ${fftw_rdft_simd_sse2_SOURCE}
 )
 
+# pkgconfig
+set(prefix ${CMAKE_INSTALL_PREFIX})
+set(exec_prefix ${CMAKE_INSTALL_PREFIX})
+set(libdir  "${CMAKE_INSTALL_PREFIX}/lib")
+set(includedir " ${CMAKE_INSTALL_PREFIX}/include")
+set(VERSION ${PROJECT_VERSION})
+set(INSTALL_PKGCONFIG_DIR "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" CACHE PATH "Installation directory for pkgconfig (.pc) files")
+
 # Create default target for the library (double precision)
 add_library(fftw3 ${COMMON_SOURCES} ${SSE2_SOURCES})
 target_compile_definitions(fftw3 PRIVATE HAVE_SSE2)
 set(INSTALL_TARGETS fftw3)
+set(PREC_SUFFIX "")
+configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/fftw.pc.in
+    ${CMAKE_CURRENT_BINARY_DIR}/fftw3.pc @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/fftw3.pc" DESTINATION "${INSTALL_PKGCONFIG_DIR}")
 
 # Optionally add single precision
 if(BUILD_SINGLE)
     add_library(fftw3f ${COMMON_SOURCES} ${SSE2_SOURCES})
     target_compile_definitions(fftw3f PRIVATE FFTW_SINGLE BENCHFFT_SINGLE HAVE_SSE2)
     set(INSTALL_TARGETS ${INSTALL_TARGETS} fftw3f)
+    set(PREC_SUFFIX "f")
+    configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/fftw.pc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/fftw3f.pc @ONLY)
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/fftw3f.pc" DESTINATION "${INSTALL_PKGCONFIG_DIR}")
 endif(BUILD_SINGLE)
 
 # Optionally add long-double precision (does not support SSE2)
@@ -109,7 +125,12 @@ if(BUILD_LONG_DOUBLE)
     add_library(fftw3l ${COMMON_SOURCES})
     target_compile_definitions(fftw3l PRIVATE FFTW_LDOUBLE BENCHFFT_LDOUBLE)
     set(INSTALL_TARGETS ${INSTALL_TARGETS} fftw3l)
+    set(PREC_SUFFIX "l")
+    configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/fftw.pc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/fftw3l.pc @ONLY)
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/fftw3l.pc" DESTINATION "${INSTALL_PKGCONFIG_DIR}")
 endif(BUILD_LONG_DOUBLE)
+
 
 install(TARGETS ${INSTALL_TARGETS}
     RUNTIME DESTINATION bin

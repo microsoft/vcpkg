@@ -1,0 +1,13 @@
+diff --git a/configure b/configure
+index a1818dc..ad95593 100644
+--- a/configure
++++ b/configure
+@@ -6801,7 +6801,7 @@ pkgconfig_generate(){
+     enabled ${name#lib} || return 0
+     mkdir -p $name
+     cat <<EOF > $name/$name${build_suffix}.pc
+-prefix=$prefix
++prefix=$(cygpath -m "$prefix")
+ exec_prefix=\${prefix}
+ libdir=$libdir
+ includedir=$incdir

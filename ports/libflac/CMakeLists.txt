@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 2.6)
 cmake_policy(SET CMP0005 NEW) # do not escape preprocessor defines
+cmake_policy(SET CMP0048 NEW) # allow version string in project declaration
 
-project(libflac)
+project(libflac VERSION 1.3.2)
 
 if(NOT DEFINED LIBFLAC_ARCHITECTURE)
     message(FATAL_ERROR "Target architecture not specified")
@@ -80,3 +81,18 @@ if(NOT DEFINED LIBFLAC_SKIP_HEADERS)
         DESTINATION include/FLAC++
         FILES_MATCHING PATTERN "*.h")
 endif()
+
+# pkgconfig
+set(prefix ${CMAKE_INSTALL_PREFIX})
+set(exec_prefix ${CMAKE_INSTALL_PREFIX})
+set(libdir  "${CMAKE_INSTALL_PREFIX}/lib")
+set(includedir " ${CMAKE_INSTALL_PREFIX}/include")
+set(OGG_PACKAGE "ogg")
+set(VERSION ${PROJECT_VERSION})
+set(INSTALL_PKGCONFIG_DIR "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" CACHE PATH "Installation directory for pkgconfig (.pc) files")
+configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/src/libFLAC/flac.pc.in
+    ${CMAKE_CURRENT_BINARY_DIR}/flac.pc @ONLY)
+configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/src/libFLAC++/flac++.pc.in
+    ${CMAKE_CURRENT_BINARY_DIR}/flac++.pc @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/flac.pc" DESTINATION "${INSTALL_PKGCONFIG_DIR}")
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/flac++.pc" DESTINATION "${INSTALL_PKGCONFIG_DIR}")
