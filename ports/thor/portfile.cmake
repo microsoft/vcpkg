@@ -35,37 +35,34 @@ vcpkg_configure_cmake(
   -DTHOR_STATIC_STD_LIBS=${THOR_STATIC_STD_LIBS}
 )
 
-vcpkg_build_cmake()
+vcpkg_install_cmake()
 
-file(GLOB DLLS
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.dll"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/*.dll"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/src/*.dll"
+
+set(CONFIG_FILE "${CURRENT_PACKAGES_DIR}/include/Thor/Config.hpp")
+
+file(READ ${CONFIG_FILE} CONFIG_H)
+   if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+       string(REPLACE "defined(SFML_STATIC)" "1" CONFIG_H "${CONFIG_H}")
+   else()
+       string(REPLACE "defined(SFML_STATIC)" "0" CONFIG_H "${CONFIG_H}")
+   endif()
+
+file(WRITE ${CONFIG_FILE} "${CONFIG_H}")
+
+file(GLOB LICENSE
+  "${CURRENT_PACKAGES_DIR}/debug/LicenseThor.txt"
+  "${CURRENT_PACKAGES_DIR}/debug/LicenseAurora.txt"
+  "${CURRENT_PACKAGES_DIR}/LicenseThor.txt"
+  "${CURRENT_PACKAGES_DIR}/LicenseAurora.txt"
 )
-file(GLOB LIBS
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/src/*.lib"
-)
-file(GLOB DEBUG_DLLS
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.dll"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/*.dll"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*/src/*.dll"
-)
-file(GLOB DEBUG_LIBS
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*/src/*.lib"
-)
-if(DLLS)
-    file(INSTALL ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-endif()
-file(INSTALL ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-if(DEBUG_DLLS)
-    file(INSTALL ${DEBUG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+
+if(LICENSE)
+  file(REMOVE ${LICENSE})
 endif()
 
-file(INSTALL ${DEBUG_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/Aurora)
 
-file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR})
 file(INSTALL ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/thor RENAME copyright)
+
+vcpkg_copy_pdbs()
