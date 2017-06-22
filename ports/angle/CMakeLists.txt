@@ -91,7 +91,6 @@ file(GLOB_RECURSE LIBANGLE_D3D_SOURCES "src/libANGLE/renderer/d3d/*.h" "src/libA
 list(FILTER LIBANGLE_SOURCES EXCLUDE REGEX "_unittest")
 list(FILTER LIBANGLE_D3D_SOURCES EXCLUDE REGEX "_unittest|winrt")
 add_library(libANGLE STATIC ${LIBANGLE_SOURCES} ${LIBANGLE_D3D_SOURCES})
-# kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;d3d9.lib;dxguid.lib
 find_library(D3D9_LIB NAMES d3d9)
 find_library(DXGUID_LIB NAMES dxguid)
 target_link_libraries(libANGLE PRIVATE angle_common angle_image_util translator ${D3D9_LIB} ${DXGUID_LIB} preprocessor)

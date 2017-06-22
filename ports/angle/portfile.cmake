@@ -1,5 +1,10 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(STATUS "ANGLE currently only supports being built as a dynamic library")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/angle
