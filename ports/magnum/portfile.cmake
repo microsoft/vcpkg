@@ -16,8 +16,10 @@ vcpkg_apply_patches(
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(BUILD_STATIC 1)
+    set(BUILD_PLUGINS_STATIC 1)
 else()
     set(BUILD_STATIC 0)
+    set(BUILD_PLUGINS_STATIC 0)
 endif()
 
 vcpkg_configure_cmake(
@@ -38,6 +40,7 @@ vcpkg_configure_cmake(
         -DWITH_FONTCONVERTER=ON
         -DWITH_TGAIMAGECONVERTER=ON
         -DBUILD_STATIC=${BUILD_STATIC}
+        -DBUILD_PLUGINS_STATIC=${BUILD_PLUGINS_STATIC}
         -DMAGNUM_PLUGINS_DEBUG_DIR=${CURRENT_INSTALLED_DIR}/debug/bin/magnum-d
         -DMAGNUM_PLUGINS_RELEASE_DIR=${CURRENT_INSTALLED_DIR}/bin/magnum
         --trace
@@ -64,6 +67,18 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+   # move plugin libs to conventional place
+   file(GLOB_RECURSE LIB_TO_MOVE ${CURRENT_PACKAGES_DIR}/lib/magnum/*)
+   file(COPY ${LIB_TO_MOVE} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/magnum)
+   file(GLOB_RECURSE LIB_TO_MOVE_DBG ${CURRENT_PACKAGES_DIR}/debug/lib/magnum/*)
+   file(COPY ${LIB_TO_MOVE_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum)
+else()
+   # remove headers and libs for plugins
+   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/MagnumPlugins)
+   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/magnum)
+   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d)
 endif()
 
 # Handle copyright
