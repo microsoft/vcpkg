@@ -11,18 +11,18 @@ file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/include/id/commit.h" "#define ANGLE_COMM
 include_directories(include src ${CMAKE_CURRENT_BINARY_DIR}/include)
 
 ##########
-# numerics
-add_library(numerics INTERFACE)
-file(GLOB_RECURSE NUMERICS_SOURCES "src/common/third_party/numerics/*.h")
-target_sources(numerics INTERFACE ${NUMERICS_SOURCES})
-target_include_directories(numerics INTERFACE src/common/third_party/numerics)
+# anglebase
+add_library(anglebase INTERFACE)
+file(GLOB_RECURSE anglebase_SOURCES "src/common/third_party/base/*.h")
+target_sources(anglebase INTERFACE ${anglebase_SOURCES})
+target_include_directories(anglebase INTERFACE src/common/third_party/base)
 
 ##########
 # angle_common
 file(GLOB ANGLE_COMMON_SOURCES "src/common/*.h" "src/common/*.inl" "src/common/*.cpp")
 list(FILTER ANGLE_COMMON_SOURCES EXCLUDE REGEX "_unittest|event_tracer|_linux|_mac")
-add_library(angle_common STATIC ${ANGLE_COMMON_SOURCES} ${NUMERICS_SOURCES})
-target_link_libraries(angle_common PUBLIC numerics)
+add_library(angle_common STATIC ${ANGLE_COMMON_SOURCES})
+target_link_libraries(angle_common PUBLIC anglebase)
 
 ##########
 # angle_image_util
@@ -60,7 +60,7 @@ target_link_libraries(preprocessor PRIVATE angle_common)
 # libANGLE
 file(GLOB LIBANGLE_SOURCES
     "src/third_party/systeminfo/SystemInfo.cpp"
-    "src/third_party/murmurhash/MurmurHash3.cpp"
+    "src/common/third_party/murmurhash/MurmurHash3.cpp"
     "src/common/event_tracer.cpp"
 
     "src/libANGLE/*.cpp"
@@ -79,9 +79,9 @@ file(GLOB LIBANGLE_SOURCES
     "src/libANGLE/renderer/gl/wgl/*.inl"
     "src/libANGLE/renderer/gl/wgl/*.h"
 
-    "src/libANGLE/renderer/vulkan/*.cpp"
-    "src/libANGLE/renderer/vulkan/*.inl"
-    "src/libANGLE/renderer/vulkan/*.h"
+    # "src/libANGLE/renderer/vulkan/*.cpp"
+    # "src/libANGLE/renderer/vulkan/*.inl"
+    # "src/libANGLE/renderer/vulkan/*.h"
 
     "src/libANGLE/renderer/null/*.cpp"
     "src/libANGLE/renderer/null/*.inl"
@@ -99,7 +99,7 @@ target_compile_definitions(libANGLE PUBLIC
     -DANGLE_ENABLE_D3D9
     -DANGLE_ENABLE_D3D11
     -DANGLE_ENABLE_OPENGL
-    -DANGLE_ENABLE_VULKAN
+    # -DANGLE_ENABLE_VULKAN
     -DANGLE_ENABLE_NULL
 )
 target_compile_definitions(libANGLE PRIVATE -DLIBANGLE_IMPLEMENTATION)
