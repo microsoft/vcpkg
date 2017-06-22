@@ -122,6 +122,10 @@ namespace vcpkg::Commands::Export
         const std::string targets_redirect_content =
             create_targets_redirect("../../scripts/buildsystems/msbuild/vcpkg.targets");
         const fs::path targets_redirect = paths.buildsystems / "tmp" / "vcpkg.export.nuget.targets";
+
+        std::error_code ec;
+        fs.create_directories(paths.buildsystems / "tmp", ec);
+
         fs.write_contents(targets_redirect, targets_redirect_content);
 
         const std::string nuspec_file_content =
