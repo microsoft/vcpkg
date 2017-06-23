@@ -12,6 +12,13 @@ set(RTMIDI_HEADERS
 
 include_directories(${RTMIDI_HEADERS})
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+  set(BUILD_SHARED_LIBS ON)
+else()
+  set(BUILD_SHARED_LIBS OFF)
+endif()
+
+
 if(BUILD_SHARED_LIBS)
   add_library(rtmidi SHARED ${RTMIDI_SOURCES})
   target_compile_definitions(rtmidi PRIVATE -DRTMIDI_EXPORT)
