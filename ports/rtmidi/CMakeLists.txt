@@ -12,7 +12,7 @@ set(RTMIDI_HEADERS
 
 include_directories(${RTMIDI_HEADERS})
 
-if(BUILD_SHARED)
+if(BUILD_SHARED_LIBS)
   add_library(rtmidi SHARED ${RTMIDI_SOURCES})
   target_compile_definitions(rtmidi PRIVATE -DRTMIDI_EXPORT)
 else()
