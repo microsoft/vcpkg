@@ -13,7 +13,16 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+if(NOT TARGET_TRIPLET MATCHES "uwp")
+	file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+else()
+	file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeListsUwp.txt DESTINATION ${SOURCE_PATH})
+	file(RENAME ${SOURCE_PATH}/CMakeListsUwp.txt ${SOURCE_PATH}/CMakeLists.txt)
+	vcpkg_apply_patches(
+		SOURCE_PATH ${SOURCE_PATH}
+		PATCHES ${CMAKE_CURRENT_LIST_DIR}/001-fix-uwp.patch
+		)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
