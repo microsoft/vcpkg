@@ -21,7 +21,7 @@ endif()
 
 
 file(READ "${PROJECT_SOURCE_DIR}/rtmidi_c.h" RTMIDI_EXPORT)
-if (BUILD_SHARED)
+if (BUILD_SHARED_LIBS)
   string(REPLACE "if defined(RTMIDI_EXPORT)" "if 1" RTMIDI_EXPORT "${RTMIDI_EXPORT}")
 else()
   string(REPLACE "if defined(RTMIDI_EXPORT)" "if 0" RTMIDI_EXPORT "${RTMIDI_EXPORT}")
