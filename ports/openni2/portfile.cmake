@@ -39,8 +39,22 @@ vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/upgrade_projects.patch"
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/disable_kinect.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/inherit_from_parent_or_project_defaults.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/replace_environment_variable.patch"
 )
+
+get_filename_component(KINECTSDK10_DIR "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Kinect;SDKInstallPath]" ABSOLUTE CACHE)
+set(KINECTSDK10_INSTALLED FALSE)
+if(EXISTS "${KINECTSDK10_DIR}")
+    set(KINECTSDK10_INSTALLED TRUE)
+endif()
+
+if(NOT ${KINECTSDK10_INSTALLED})
+    vcpkg_apply_patches(
+        SOURCE_PATH ${SOURCE_PATH}
+        PATCHES "${CMAKE_CURRENT_LIST_DIR}/disable_kinect.patch"
+    )
+endif()
 
 # Build OpenNI2
 vcpkg_build_msbuild(
@@ -146,6 +160,15 @@ file(
         ${CURRENT_PACKAGES_DIR}/bin/OpenNI2/Drivers
 )
 
+if(${KINECTSDK10_INSTALLED})
+    file(
+        INSTALL
+            "${SOURCE_BIN_PATH_RELEASE}/OpenNI2/Drivers/Kinect.dll"
+        DESTINATION
+            ${CURRENT_PACKAGES_DIR}/bin/OpenNI2/Drivers
+    )
+endif()
+
 file(
     INSTALL
         "${SOURCE_CONFIG_PATH}/OpenNI.ini"
@@ -165,6 +188,15 @@ file(
         ${CURRENT_PACKAGES_DIR}/debug/bin/OpenNI2/Drivers
 )
 
+if(${KINECTSDK10_INSTALLED})
+    file(
+        INSTALL
+            "${SOURCE_BIN_PATH_DEBUG}/OpenNI2/Drivers/Kinect.dll"
+        DESTINATION
+            ${CURRENT_PACKAGES_DIR}/debug/bin/OpenNI2/Drivers
+    )
+endif()
+
 file(
     INSTALL
         "${SOURCE_CONFIG_PATH}/OpenNI.ini"
@@ -183,6 +215,15 @@ file(
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/tools/openni2/OpenNI2/Drivers
 )
+
+if(${KINECTSDK10_INSTALLED})
+    file(
+        INSTALL
+            "${SOURCE_BIN_PATH_RELEASE}/OpenNI2/Drivers/Kinect.dll"
+        DESTINATION
+            ${CURRENT_PACKAGES_DIR}/tools/openni2/OpenNI2/Drivers
+    )
+endif()
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(NUMBEROFBIT 32)
