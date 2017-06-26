@@ -139,9 +139,86 @@ namespace vcpkg::Dependencies
         return left->spec.name() < right->spec.name();
     }
 
-    std::vector<InstallPlanAction> create_install_plan(const VcpkgPaths& paths,
+    MapPortFile::MapPortFile(const std::unordered_map<PackageSpec, SourceControlFile>& map) : ports(map){};
+    const SourceControlFile* MapPortFile::get_control_file(const PackageSpec& spec) const
+    {
+        auto scf = ports.find(spec);
+        if (scf == ports.end())
+        {
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+        return &scf->second;
+    }
+
+    PathsPortFile::PathsPortFile(const VcpkgPaths& paths) : ports(paths){};
+    const SourceControlFile* PathsPortFile::get_control_file(const PackageSpec& spec) const
+    {
+        std::unordered_map<PackageSpec, SourceControlFile>::iterator cache_it = cache.find(spec);
+        if (cache_it != cache.end())
+        {
+            return &cache_it->second;
+        }
+        ExpectedT<SourceControlFile, ParseControlErrorInfo> source_control_file =
+            Paragraphs::try_load_port(ports.get_filesystem(), ports.port_dir(spec));
+
+        if (auto scf = source_control_file.get())
+        {
+            auto it = cache.emplace(spec, std::move(*scf));
+            return &it.first->second;
+        }
+
+        Checks::exit_fail(VCPKG_LINE_INFO);
+    }
+
+    std::vector<InstallPlanAction> create_install_plan(const PortFileProvider& port_file_provider,
                                                        const std::vector<PackageSpec>& specs,
                                                        const StatusParagraphs& status_db)
+    {
+        struct InstallAdjacencyProvider final : Graphs::AdjacencyProvider<PackageSpec, InstallPlanAction>
+        {
+            const PortFileProvider& port_file_provider;
+            const StatusParagraphs& status_db;
+            const std::unordered_set<PackageSpec>& specs_as_set;
+
+            InstallAdjacencyProvider(const PortFileProvider& port_file_provider,
+                                     const StatusParagraphs& s,
+                                     const std::unordered_set<PackageSpec>& specs_as_set)
+                : port_file_provider(port_file_provider), status_db(s), specs_as_set(specs_as_set)
+            {
+            }
+
+            std::vector<PackageSpec> adjacency_list(const InstallPlanAction& plan) const override
+            {
+                if (plan.any_paragraph.status_paragraph.get()) return std::vector<PackageSpec>{};
+                return plan.any_paragraph.dependencies(plan.spec.triplet());
+            }
+
+            InstallPlanAction load_vertex_data(const PackageSpec& spec) const override
+            {
+                const RequestType request_type = specs_as_set.find(spec) != specs_as_set.end()
+                                                     ? RequestType::USER_REQUESTED
+                                                     : RequestType::AUTO_SELECTED;
+                auto it = status_db.find_installed(spec);
+                if (it != status_db.end()) return InstallPlanAction{spec, {*it->get(), nullopt, nullopt}, request_type};
+                return InstallPlanAction{
+                    spec, {nullopt, nullopt, port_file_provider.get_control_file(spec)->core_paragraph}, request_type};
+            }
+        };
+
+        const std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
+        std::vector<InstallPlanAction> toposort =
+            Graphs::topological_sort(specs, InstallAdjacencyProvider{port_file_provider, status_db, specs_as_set});
+        Util::erase_remove_if(toposort, [](const InstallPlanAction& plan) {
+            return plan.request_type == RequestType::AUTO_SELECTED &&
+                   plan.plan_type == InstallPlanType::ALREADY_INSTALLED;
+        });
+
+        return toposort;
+    }
+
+    std::vector<InstallPlanAction> create_full_install_plan(const VcpkgPaths& paths,
+                                                            const std::vector<PackageSpec>& specs,
+                                                            const StatusParagraphs& status_db)
     {
         struct InstallAdjacencyProvider final : Graphs::AdjacencyProvider<PackageSpec, InstallPlanAction>
         {

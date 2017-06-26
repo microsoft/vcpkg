@@ -24,5 +24,8 @@
     <ClCompile Include="..\src\tests_arguments.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\test_install_plan.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -40,7 +40,8 @@ namespace vcpkg::Commands::CI
         const std::vector<PackageSpec> specs = load_all_package_specs(paths.get_filesystem(), paths.ports, triplet);
 
         StatusParagraphs status_db = database_load_check(paths);
-        const std::vector<InstallPlanAction> install_plan = Dependencies::create_install_plan(paths, specs, status_db);
+        const std::vector<InstallPlanAction> install_plan /* =
+            Dependencies::create_install_plan(Dependencies::PathsPortFile(paths), specs, status_db)*/;
         Checks::check_exit(VCPKG_LINE_INFO, !install_plan.empty(), "Install plan cannot be empty");
 
         std::vector<BuildResult> results;
