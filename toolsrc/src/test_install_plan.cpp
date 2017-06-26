@@ -19,9 +19,9 @@ namespace UnitTest1
                 Assert::IsTrue(m_pgh.has_value());
                 auto& scf = *m_pgh.get();
 
-                auto spec = PackageSpec::from_name_and_triplet(scf.core_paragraph.name, Triplet::X86_WINDOWS);
+                auto spec = PackageSpec::from_name_and_triplet(scf->core_paragraph->name, Triplet::X86_WINDOWS);
                 Assert::IsTrue(spec.has_value());
-                map.emplace(*spec.get(), std::move(*m_pgh.get()));
+                map.emplace(*spec.get(), std::move(*scf.get()));
                 return PackageSpec{*spec.get()};
             };
 
@@ -49,9 +49,9 @@ namespace UnitTest1
                 Assert::IsTrue(m_pgh.has_value());
                 auto& scf = *m_pgh.get();
 
-                auto spec = PackageSpec::from_name_and_triplet(scf.core_paragraph.name, Triplet::X86_WINDOWS);
+                auto spec = PackageSpec::from_name_and_triplet(scf->core_paragraph->name, Triplet::X86_WINDOWS);
                 Assert::IsTrue(spec.has_value());
-                map.emplace(*spec.get(), std::move(*m_pgh.get()));
+                map.emplace(*spec.get(), std::move(*scf.get()));
                 return PackageSpec{*spec.get()};
             };
 
@@ -103,13 +103,13 @@ namespace UnitTest1
                                                                               {"Version", "1.2.8"},
                                                                               {"Architecture", "x86-windows"},
                                                                               {"Multi-Arch", "same"},
-                                                                              {"Build-Depends", "k"},
+                                                                              {"Depends", "k"},
                                                                               {"Status", "install ok installed"}}));
             status_paragraphs.push_back(std::make_unique<StatusParagraph>(Pgh{{"Package", "k"},
                                                                               {"Version", "1.2.8"},
                                                                               {"Architecture", "x86-windows"},
                                                                               {"Multi-Arch", "same"},
-                                                                              {"Build-Depends", ""},
+                                                                              {"Depends", ""},
                                                                               {"Status", "install ok installed"}}));
 
             std::unordered_map<PackageSpec, SourceControlFile> map;
@@ -118,9 +118,9 @@ namespace UnitTest1
                 Assert::IsTrue(m_pgh.has_value());
                 auto& scf = *m_pgh.get();
 
-                auto spec = PackageSpec::from_name_and_triplet(scf.core_paragraph.name, Triplet::X86_WINDOWS);
+                auto spec = PackageSpec::from_name_and_triplet(scf->core_paragraph->name, Triplet::X86_WINDOWS);
                 Assert::IsTrue(spec.has_value());
-                map.emplace(*spec.get(), std::move(*m_pgh.get()));
+                map.emplace(*spec.get(), std::move(*scf.get()));
                 return PackageSpec{*spec.get()};
             };
 

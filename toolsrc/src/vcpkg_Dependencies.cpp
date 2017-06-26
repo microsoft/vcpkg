@@ -158,12 +158,12 @@ namespace vcpkg::Dependencies
         {
             return &cache_it->second;
         }
-        ExpectedT<SourceControlFile, ParseControlErrorInfo> source_control_file =
+        Parse::ParseExpected<SourceControlFile> source_control_file =
             Paragraphs::try_load_port(ports.get_filesystem(), ports.port_dir(spec));
 
         if (auto scf = source_control_file.get())
         {
-            auto it = cache.emplace(spec, std::move(*scf));
+            auto it = cache.emplace(spec, std::move(*scf->get()));
             return &it.first->second;
         }
 
@@ -201,68 +201,13 @@ namespace vcpkg::Dependencies
                 auto it = status_db.find_installed(spec);
                 if (it != status_db.end()) return InstallPlanAction{spec, {*it->get(), nullopt, nullopt}, request_type};
                 return InstallPlanAction{
-                    spec, {nullopt, nullopt, port_file_provider.get_control_file(spec)->core_paragraph}, request_type};
+                    spec, {nullopt, nullopt, *port_file_provider.get_control_file(spec)->core_paragraph}, request_type};
             }
         };
 
         const std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
         std::vector<InstallPlanAction> toposort =
             Graphs::topological_sort(specs, InstallAdjacencyProvider{port_file_provider, status_db, specs_as_set});
-        Util::erase_remove_if(toposort, [](const InstallPlanAction& plan) {
-            return plan.request_type == RequestType::AUTO_SELECTED &&
-                   plan.plan_type == InstallPlanType::ALREADY_INSTALLED;
-        });
-
-        return toposort;
-    }
-
-    std::vector<InstallPlanAction> create_full_install_plan(const VcpkgPaths& paths,
-                                                            const std::vector<PackageSpec>& specs,
-                                                            const StatusParagraphs& status_db)
-    {
-        struct InstallAdjacencyProvider final : Graphs::AdjacencyProvider<PackageSpec, InstallPlanAction>
-        {
-            const VcpkgPaths& paths;
-            const StatusParagraphs& status_db;
-            const std::unordered_set<PackageSpec>& specs_as_set;
-
-            InstallAdjacencyProvider(const VcpkgPaths& p,
-                                     const StatusParagraphs& s,
-                                     const std::unordered_set<PackageSpec>& specs_as_set)
-                : paths(p), status_db(s), specs_as_set(specs_as_set)
-            {
-            }
-
-            std::vector<PackageSpec> adjacency_list(const InstallPlanAction& plan) const override
-            {
-                if (plan.any_paragraph.status_paragraph.get()) return std::vector<PackageSpec>{};
-                return plan.any_paragraph.dependencies(plan.spec.triplet());
-            }
-
-            InstallPlanAction load_vertex_data(const PackageSpec& spec) const override
-            {
-                const RequestType request_type = specs_as_set.find(spec) != specs_as_set.end()
-                                                     ? RequestType::USER_REQUESTED
-                                                     : RequestType::AUTO_SELECTED;
-                auto it = status_db.find_installed(spec);
-                if (it != status_db.end()) return InstallPlanAction{spec, {*it->get(), nullopt, nullopt}, request_type};
-
-                Expected<BinaryParagraph> maybe_bpgh = Paragraphs::try_load_cached_package(paths, spec);
-                if (auto bpgh = maybe_bpgh.get())
-                    return InstallPlanAction{spec, {nullopt, *bpgh, nullopt}, request_type};
-
-                auto maybe_scf = Paragraphs::try_load_port(paths.get_filesystem(), paths.port_dir(spec));
-                if (auto scf = maybe_scf.get())
-                    return InstallPlanAction{spec, {nullopt, nullopt, *scf->get()->core_paragraph}, request_type};
-
-                print_error_message(maybe_scf.error());
-                Checks::exit_fail(VCPKG_LINE_INFO);
-            }
-        };
-
-        const std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
-        std::vector<InstallPlanAction> toposort =
-            Graphs::topological_sort(specs, InstallAdjacencyProvider{paths, status_db, specs_as_set});
         Util::erase_remove_if(toposort, [](const InstallPlanAction& plan) {
             return plan.request_type == RequestType::AUTO_SELECTED &&
                    plan.plan_type == InstallPlanType::ALREADY_INSTALLED;
