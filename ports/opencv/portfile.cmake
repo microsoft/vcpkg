@@ -31,6 +31,7 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty/libjpeg ${SOURCE_PATH}/3rdparty/libp
 #vcpkg_apply_patches(
 #    SOURCE_PATH ${CONTRIB_SOURCE_PATH}
 #    PATCHES "${CMAKE_CURRENT_LIST_DIR}/open_contrib-remove-waldboost.patch"
+#    PATCHES "${CMAKE_CURRENT_LIST_DIR}/open_contrib-fix-dnn-link-error.patch"
 #)
 
 vcpkg_configure_cmake(
