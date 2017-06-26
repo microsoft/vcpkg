@@ -6,8 +6,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiph/opus
-    REF v1.2
-    SHA512 4fef70e3b439613f85ede30cc401b84c77f1828f56908d04cb76061b8116c083cc035b50eaec4205110481e9d8b794b9c05f6778d8428cc68f6d57bd3db721ca
+    REF v1.2.1
+    SHA512 fdc64b43875dd07dc9eb1c37e9a61d1c10e3095de62ed9597d51b93445136958c9f5fee78c33ae7f90c72a20200083cdc727d8e79f2f9e580ad4e2f8c50cccb4
     HEAD_REF master
 )
 
