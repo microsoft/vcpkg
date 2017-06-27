@@ -73,7 +73,9 @@ function(vcpkg_fixup_cmake_targets)
         "${DEBUG_SHARE}/*[Cc]onfigVersion.cmake"
         "${DEBUG_SHARE}/*[Cc]onfig-version.cmake"
     )
-    file(REMOVE ${UNUSED_FILES})
+    if(UNUSED_FILES)
+        file(REMOVE ${UNUSED_FILES})
+    endif()
 
     file(GLOB RELEASE_TARGETS
         "${RELEASE_SHARE}/*[Tt]argets-release.cmake"
