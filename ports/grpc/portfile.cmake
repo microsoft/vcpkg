@@ -12,8 +12,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF v1.3.1
-    SHA512 1c9f35e84995158b75bb8694bb9d8c5ddafccf347c4827213290b221f9fc3ab9071c9f79a10a563e9cdfabae3f4b83d6148907f106066f54093242f818038438
+    REF v1.4.0
+    SHA512 183254e62604bae0ef8b97c3cda9718ec7ac03a1f29e29ecc582adf670d07ee177ae1ad92ffc042f8b12715f3afa8a0e4db34f88b826fe307249fd6eb7efd249
     HEAD_REF master
 )
 
@@ -21,7 +21,6 @@ vcpkg_from_github(
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/revert-c019e05.patch
         ${CMAKE_CURRENT_LIST_DIR}/disable-csharp-ext.patch
 )
 
