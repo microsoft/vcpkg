@@ -140,23 +140,23 @@ namespace vcpkg::Dependencies
     }
 
     MapPortFile::MapPortFile(const std::unordered_map<PackageSpec, SourceControlFile>& map) : ports(map){};
-    const SourceControlFile* MapPortFile::get_control_file(const PackageSpec& spec) const
+    const SourceControlFile& MapPortFile::get_control_file(const PackageSpec& spec) const
     {
         auto scf = ports.find(spec);
         if (scf == ports.end())
         {
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
-        return &scf->second;
+        return scf->second;
     }
 
     PathsPortFile::PathsPortFile(const VcpkgPaths& paths) : ports(paths){};
-    const SourceControlFile* PathsPortFile::get_control_file(const PackageSpec& spec) const
+    const SourceControlFile& PathsPortFile::get_control_file(const PackageSpec& spec) const
     {
         std::unordered_map<PackageSpec, SourceControlFile>::iterator cache_it = cache.find(spec);
         if (cache_it != cache.end())
         {
-            return &cache_it->second;
+            return cache_it->second;
         }
         Parse::ParseExpected<SourceControlFile> source_control_file =
             Paragraphs::try_load_port(ports.get_filesystem(), ports.port_dir(spec));
@@ -164,9 +164,9 @@ namespace vcpkg::Dependencies
         if (auto scf = source_control_file.get())
         {
             auto it = cache.emplace(spec, std::move(*scf->get()));
-            return &it.first->second;
+            return it.first->second;
         }
-
+        print_error_message(source_control_file.error());
         Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
@@ -201,7 +201,7 @@ namespace vcpkg::Dependencies
                 auto it = status_db.find_installed(spec);
                 if (it != status_db.end()) return InstallPlanAction{spec, {*it->get(), nullopt, nullopt}, request_type};
                 return InstallPlanAction{
-                    spec, {nullopt, nullopt, *port_file_provider.get_control_file(spec)->core_paragraph}, request_type};
+                    spec, {nullopt, nullopt, *port_file_provider.get_control_file(spec).core_paragraph}, request_type};
             }
         };
 

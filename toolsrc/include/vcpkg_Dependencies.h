@@ -97,13 +97,13 @@ namespace vcpkg::Dependencies
         RequestType request_type;
     };
 
-    __interface PortFileProvider { virtual const SourceControlFile* get_control_file(const PackageSpec& spec) const; };
+    __interface PortFileProvider { virtual const SourceControlFile& get_control_file(const PackageSpec& spec) const; };
 
     struct MapPortFile : PortFileProvider
     {
         const std::unordered_map<PackageSpec, SourceControlFile>& ports;
         explicit MapPortFile(const std::unordered_map<PackageSpec, SourceControlFile>& map);
-        const SourceControlFile* get_control_file(const PackageSpec& spec) const override;
+        const SourceControlFile& get_control_file(const PackageSpec& spec) const override;
     };
 
     struct PathsPortFile : PortFileProvider
@@ -111,7 +111,7 @@ namespace vcpkg::Dependencies
         const VcpkgPaths& ports;
         mutable std::unordered_map<PackageSpec, SourceControlFile> cache;
         explicit PathsPortFile(const VcpkgPaths& paths);
-        const SourceControlFile* get_control_file(const PackageSpec& spec) const override;
+        const SourceControlFile& get_control_file(const PackageSpec& spec) const override;
     };
 
     std::vector<InstallPlanAction> create_install_plan(const PortFileProvider& port_file_provider,

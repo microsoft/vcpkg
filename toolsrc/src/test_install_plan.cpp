@@ -9,12 +9,11 @@ namespace UnitTest1
 {
     class InstallPlanTests : public TestClass<InstallPlanTests>
     {
-        TEST_METHOD(basic_install_scheme)
+        struct PackageSpecMap
         {
-            std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
-
             std::unordered_map<PackageSpec, SourceControlFile> map;
-            auto add_scf = [&](std::vector<std::unordered_map<std::string, std::string>>&& fields) -> PackageSpec {
+            PackageSpec get_package_spec(std::vector<std::unordered_map<std::string, std::string>>&& fields)
+            {
                 auto m_pgh = vcpkg::SourceControlFile::parse_control_file(std::move(fields));
                 Assert::IsTrue(m_pgh.has_value());
                 auto& scf = *m_pgh.get();
@@ -23,13 +22,19 @@ namespace UnitTest1
                 Assert::IsTrue(spec.has_value());
                 map.emplace(*spec.get(), std::move(*scf.get()));
                 return PackageSpec{*spec.get()};
-            };
+            }
+        };
+        TEST_METHOD(basic_install_scheme)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
-            auto spec_a = add_scf({{{"Source", "a"}, {"Version", "1.2.8"}, {"Build-Depends", "b"}}});
-            auto spec_b = add_scf({{{"Source", "b"}, {"Version", "1.3"}, {"Build-Depends", "c"}}});
-            auto spec_c = add_scf({{{"Source", "c"}, {"Version", "2.5.3"}, {"Build-Depends", ""}}});
+            PackageSpecMap spec_map;
 
-            auto map_port = Dependencies::MapPortFile(map);
+            auto spec_a = spec_map.get_package_spec({{{"Source", "a"}, {"Version", "1.2.8"}, {"Build-Depends", "b"}}});
+            auto spec_b = spec_map.get_package_spec({{{"Source", "b"}, {"Version", "1.3"}, {"Build-Depends", "c"}}});
+            auto spec_c = spec_map.get_package_spec({{{"Source", "c"}, {"Version", "2.5.3"}, {"Build-Depends", ""}}});
+
+            auto map_port = Dependencies::MapPortFile(spec_map.map);
             auto install_plan =
                 Dependencies::create_install_plan(map_port, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
 
@@ -43,43 +48,30 @@ namespace UnitTest1
         {
             std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
-            std::unordered_map<PackageSpec, SourceControlFile> map;
-            auto add_scf = [&](std::vector<std::unordered_map<std::string, std::string>>&& fields) -> PackageSpec {
-                auto m_pgh = vcpkg::SourceControlFile::parse_control_file(std::move(fields));
-                Assert::IsTrue(m_pgh.has_value());
-                auto& scf = *m_pgh.get();
+            PackageSpecMap spec_map;
 
-                auto spec = PackageSpec::from_name_and_triplet(scf->core_paragraph->name, Triplet::X86_WINDOWS);
-                Assert::IsTrue(spec.has_value());
-                map.emplace(*spec.get(), std::move(*scf.get()));
-                return PackageSpec{*spec.get()};
-            };
+            auto spec_a = spec_map.get_package_spec({{{"Source", "a"}, {"Version", "1.2.8"}, {"Build-Depends", "d"}}});
+            auto spec_b = spec_map.get_package_spec({{{"Source", "b"}, {"Version", "1.3"}, {"Build-Depends", "d, e"}}});
+            auto spec_c =
+                spec_map.get_package_spec({{{"Source", "c"}, {"Version", "2.5.3"}, {"Build-Depends", "e, h"}}});
+            auto spec_d =
+                spec_map.get_package_spec({{{"Source", "d"}, {"Version", "4.0"}, {"Build-Depends", "f, g, h"}}});
+            auto spec_e = spec_map.get_package_spec({{{"Source", "e"}, {"Version", "1.0"}, {"Build-Depends", "g"}}});
+            auto spec_f = spec_map.get_package_spec({{{"Source", "f"}, {"Version", "1.0"}, {"Build-Depends", ""}}});
+            auto spec_g = spec_map.get_package_spec({{{"Source", "g"}, {"Version", "1.0"}, {"Build-Depends", ""}}});
+            auto spec_h = spec_map.get_package_spec({{{"Source", "h"}, {"Version", "1.0"}, {"Build-Depends", ""}}});
 
-            auto spec_a = add_scf({{{"Source", "a"}, {"Version", "1.2.8"}, {"Build-Depends", "d"}}});
-            auto spec_b = add_scf({{{"Source", "b"}, {"Version", "1.3"}, {"Build-Depends", "d, e"}}});
-            auto spec_c = add_scf({{{"Source", "c"}, {"Version", "2.5.3"}, {"Build-Depends", "e, h"}}});
-            auto spec_d = add_scf({{{"Source", "d"}, {"Version", "4.0"}, {"Build-Depends", "f, g, h"}}});
-            auto spec_e = add_scf({{{"Source", "e"}, {"Version", "1.0"}, {"Build-Depends", "g"}}});
-            auto spec_f = add_scf({{{"Source", "f"}, {"Version", "1.0"}, {"Build-Depends", ""}}});
-            auto spec_g = add_scf({{{"Source", "g"}, {"Version", "1.0"}, {"Build-Depends", ""}}});
-            auto spec_h = add_scf({{{"Source", "h"}, {"Version", "1.0"}, {"Build-Depends", ""}}});
-
-            auto map_port = Dependencies::MapPortFile(map);
+            auto map_port = Dependencies::MapPortFile(spec_map.map);
             auto install_plan = Dependencies::create_install_plan(
                 map_port, {spec_a, spec_b, spec_c}, StatusParagraphs(std::move(status_paragraphs)));
 
             auto iterator_pos = [&](const PackageSpec& spec) -> int {
-                int counter = 0;
-                for (auto&& install_p : install_plan)
-                {
-                    if (install_p.spec == spec)
-                    {
-                        return counter;
-                    }
-                    counter++;
-                }
-                return -1;
+                auto it = std::find_if(
+                    install_plan.begin(), install_plan.end(), [&](auto& action) { return action.spec == spec; });
+                Assert::IsTrue(it != install_plan.end());
+                return (int)(it - install_plan.begin());
             };
+
             int a_pos = iterator_pos(spec_a), b_pos = iterator_pos(spec_b), c_pos = iterator_pos(spec_c),
                 d_pos = iterator_pos(spec_d), e_pos = iterator_pos(spec_e), f_pos = iterator_pos(spec_f),
                 g_pos = iterator_pos(spec_g), h_pos = iterator_pos(spec_h);
@@ -112,32 +104,28 @@ namespace UnitTest1
                                                                               {"Depends", ""},
                                                                               {"Status", "install ok installed"}}));
 
-            std::unordered_map<PackageSpec, SourceControlFile> map;
-            auto add_scf = [&](std::vector<std::unordered_map<std::string, std::string>>&& fields) -> PackageSpec {
-                auto m_pgh = vcpkg::SourceControlFile::parse_control_file(std::move(fields));
-                Assert::IsTrue(m_pgh.has_value());
-                auto& scf = *m_pgh.get();
+            PackageSpecMap spec_map;
 
-                auto spec = PackageSpec::from_name_and_triplet(scf->core_paragraph->name, Triplet::X86_WINDOWS);
-                Assert::IsTrue(spec.has_value());
-                map.emplace(*spec.get(), std::move(*scf.get()));
-                return PackageSpec{*spec.get()};
-            };
+            auto spec_h =
+                spec_map.get_package_spec({{{"Source", "h"}, {"Version", "1.2.8"}, {"Build-Depends", "j, k"}}});
+            auto spec_c = spec_map.get_package_spec(
+                {{{"Source", "c"}, {"Version", "1.2.8"}, {"Build-Depends", "d, e, f, g, h, j, k"}}});
+            auto spec_k = spec_map.get_package_spec({{{"Source", "k"}, {"Version", "1.2.8"}, {"Build-Depends", ""}}});
+            auto spec_b = spec_map.get_package_spec(
+                {{{"Source", "b"}, {"Version", "1.2.8"}, {"Build-Depends", "c, d, e, f, g, h, j, k"}}});
+            auto spec_d = spec_map.get_package_spec(
+                {{{"Source", "d"}, {"Version", "1.2.8"}, {"Build-Depends", "e, f, g, h, j, k"}}});
+            auto spec_j = spec_map.get_package_spec({{{"Source", "j"}, {"Version", "1.2.8"}, {"Build-Depends", "k"}}});
+            auto spec_f =
+                spec_map.get_package_spec({{{"Source", "f"}, {"Version", "1.2.8"}, {"Build-Depends", "g, h, j, k"}}});
+            auto spec_e = spec_map.get_package_spec(
+                {{{"Source", "e"}, {"Version", "1.2.8"}, {"Build-Depends", "f, g, h, j, k"}}});
+            auto spec_a = spec_map.get_package_spec(
+                {{{"Source", "a"}, {"Version", "1.2.8"}, {"Build-Depends", "b, c, d, e, f, g, h, j, k"}}});
+            auto spec_g =
+                spec_map.get_package_spec({{{"Source", "g"}, {"Version", "1.2.8"}, {"Build-Depends", "h, j, k"}}});
 
-            auto spec_h = add_scf({{{"Source", "h"}, {"Version", "1.2.8"}, {"Build-Depends", "j, k"}}});
-            auto spec_c = add_scf({{{"Source", "c"}, {"Version", "1.2.8"}, {"Build-Depends", "d, e, f, g, h, j, k"}}});
-            auto spec_k = add_scf({{{"Source", "k"}, {"Version", "1.2.8"}, {"Build-Depends", ""}}});
-            auto spec_b =
-                add_scf({{{"Source", "b"}, {"Version", "1.2.8"}, {"Build-Depends", "c, d, e, f, g, h, j, k"}}});
-            auto spec_d = add_scf({{{"Source", "d"}, {"Version", "1.2.8"}, {"Build-Depends", "e, f, g, h, j, k"}}});
-            auto spec_j = add_scf({{{"Source", "j"}, {"Version", "1.2.8"}, {"Build-Depends", "k"}}});
-            auto spec_f = add_scf({{{"Source", "f"}, {"Version", "1.2.8"}, {"Build-Depends", "g, h, j, k"}}});
-            auto spec_e = add_scf({{{"Source", "e"}, {"Version", "1.2.8"}, {"Build-Depends", "f, g, h, j, k"}}});
-            auto spec_a =
-                add_scf({{{"Source", "a"}, {"Version", "1.2.8"}, {"Build-Depends", "b, c, d, e, f, g, h, j, k"}}});
-            auto spec_g = add_scf({{{"Source", "g"}, {"Version", "1.2.8"}, {"Build-Depends", "h, j, k"}}});
-
-            auto map_port = Dependencies::MapPortFile(map);
+            auto map_port = Dependencies::MapPortFile(spec_map.map);
             auto install_plan =
                 Dependencies::create_install_plan(map_port, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
 
