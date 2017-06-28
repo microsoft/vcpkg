@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic )
-    message(STATUS "Speex support visibility on Win32 ye. Building static.")
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    message(STATUS "Speex doesn't support visibility on Win32 yet. Building static.")
     message(STATUS "See https://github.com/xiph/speex/blob/master/win32/config.h for more")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
+    set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 
 vcpkg_from_github(
@@ -18,6 +18,7 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
+  PREFER_NINJA
   OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
 )
 
