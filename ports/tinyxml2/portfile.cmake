@@ -3,13 +3,21 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO leethomason/tinyxml2
-    REF 5.0.0
-    SHA512 ef310a466d0aec9dd0d25063c68f5312cd063366ee57499d8e462e25a556ea510617b66cdec1a368e8867dc082e0297e27fe09f16eb915392235be34206881e4
+    REF 5.0.1
+    SHA512 a51ec5843774df0482620c549fb6c61d30a6db5025be26ff6d25b3c53533a27a57f00b026bd9fbca78e9e30084b3f5f6fbff9dba315d078419da084b57f518ba
     HEAD_REF master
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+  set(BUILD_STATIC_LIBS 1)
+else()
+  set(BUILD_STATIC_LIBS 0)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+      -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
 )
 
 vcpkg_install_cmake()
