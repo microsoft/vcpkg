@@ -1,11 +1,5 @@
 include(vcpkg_common_functions)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Speex doesn't support visibility on Win32 yet. Building static.")
-    message(STATUS "See https://github.com/xiph/speex/blob/master/win32/config.h for more")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO xiph/speex

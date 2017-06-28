@@ -1,10 +1,6 @@
 cmake_minimum_required (VERSION 3.8.0)
 project (libspeex C)
 
-if(BUILD_SHARED_LIBS)
-  message(FATAL_ERROR "This CMake buildsystem only supports static builds")
-endif()
-
 set(COMMON_INCLUDES ${PROJECT_BINARY_DIR}/include)
 
 option(USE_SSE  "USE_SSE  used Note: USE_SSE and FIXED_POINT are mutually exclusive." ON)
@@ -56,6 +52,7 @@ set(SRC
   "libspeex/vbr.c"
   "libspeex/vq.c"
   "libspeex/window.c"
+  "win32/libspeex.def"
 )
 
 add_library(libspeex ${SRC})
