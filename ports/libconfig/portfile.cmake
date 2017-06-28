@@ -8,6 +8,13 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+    "${CMAKE_CURRENT_LIST_DIR}/fix-scanner-source-msvc-patch.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/fix-scanner-header-msvc-patch.patch"
+)
+
 set(DIRENT_HOME ${VCPKG_ROOT_DIR}/packages/dirent_${TARGET_TRIPLET})
 set(MIINTTYPES_HOME ${VCPKG_ROOT_DIR}/packages/msinttypes_${TARGET_TRIPLET})
 set(WIN_SRC ${SOURCE_PATH}/lib/win32)
@@ -24,11 +31,11 @@ else()
   set(BUILD_SHARED_LIBRARY OFF)
 endif()
 
-
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   OPTIONS -DBUILD_SHARED=${BUILD_SHARED_LIBRARY}
   OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
 )
+vcpkg_install_cmake()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libconfig RENAME copyright)
