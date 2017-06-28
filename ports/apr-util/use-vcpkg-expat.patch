@@ -1,0 +1,102 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 43fdf49..057e5e1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -27,8 +27,13 @@ OPTION(APR_HAS_LDAP         "LDAP support"                              ON)
+ OPTION(INSTALL_PDB          "Install .pdb files (if generated)"         ON)
+ OPTION(APR_BUILD_TESTAPR    "Build the test suite"                      OFF)
+ OPTION(TEST_STATIC_LIBS     "Test programs use APR static libraries instead of shared libraries?" OFF)
+-SET(APR_INCLUDE_DIR         "${CMAKE_INSTALL_PREFIX}/include"           CACHE STRING "Directory with APR include files")
+-SET(APR_LIBRARIES           "${CMAKE_INSTALL_PREFIX}/lib/libapr-1.lib"  CACHE STRING "APR library to link with")
++SET(APR_INCLUDE_DIR         "${APR_HOME}/include"           CACHE STRING "Directory with APR include files")
++
++if(BUILD_SHARED_LIBRARY)
++  SET(APR_LIBRARIES           "${APR_HOME}/lib/libapr-1.lib"  CACHE STRING "APR library to link with")
++else()
++  SET(APR_LIBRARIES           "${APR_HOME}/lib/apr-1.lib"  CACHE STRING "APR library to link with")
++endif()
+ 
+ IF(NOT EXISTS "${APR_INCLUDE_DIR}/apr.h")
+   MESSAGE(FATAL_ERROR "APR include directory ${APR_INCLUDE_DIR} is not correct.")
+@@ -75,8 +80,8 @@ CONFIGURE_FILE(include/apu_want.hw
+                COPYONLY)
+ 
+ # TBD:
+-# SET(XMLLIB_INCLUDE_DIR   ${CMAKE_CURRENT_SOURCE_DIR}/xml/expat/lib)
+-SET(XMLLIB_LIBRARIES     libexpat)
++SET(XMLLIB_INCLUDE_DIR   ${EXPAT_HOME}/include)
++SET(XMLLIB_LIBRARIES     ${EXPAT_LIB})
+ 
+ SET(LDAP_LIBRARIES)
+ IF(APR_HAS_LDAP)
+@@ -217,11 +222,11 @@ SET(APR_TEST_SOURCES
+   test/testxml.c
+ )
+ 
+-SET(EXPAT_SOURCES
+-  xml/expat/lib/xmlrole.c
+-  xml/expat/lib/xmltok.c
+-  xml/expat/lib/xmlparse.c
+-)
++# SET(EXPAT_SOURCES
++#   xml/expat/lib/xmlrole.c
++#   xml/expat/lib/xmltok.c
++#   xml/expat/lib/xmlparse.c
++# )
+ 
+ SET(install_targets)
+ SET(install_bin_pdb)
+@@ -230,8 +235,8 @@ SET(dbd_drivers)
+ # Note: The WINNT definition on some targets is used only by libaprutil.rc.
+ 
+ # static expat (not installed)
+-ADD_LIBRARY(libexpat STATIC ${EXPAT_SOURCES})
+-SET_TARGET_PROPERTIES(libexpat PROPERTIES COMPILE_DEFINITIONS "XML_STATIC;COMPILED_FROM_DSP")
++# ADD_LIBRARY(libexpat STATIC ${EXPAT_SOURCES})
++# SET_TARGET_PROPERTIES(libexpat PROPERTIES COMPILE_DEFINITIONS "XML_STATIC;COMPILED_FROM_DSP")
+ 
+ # libaprutil-1 is shared, aprutil-1 is static
+ ADD_LIBRARY(libaprutil-1 SHARED ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED} libaprutil.rc)
+@@ -270,7 +275,7 @@ IF(APU_HAVE_ODBC)
+ ENDIF()
+ 
+ IF(APR_HAS_LDAP)
+-  ADD_LIBRARY(apr_ldap-1 SHARED ldap/apr_ldap_init.c ldap/apr_ldap_option.c 
++  ADD_LIBRARY(apr_ldap-1 SHARED ldap/apr_ldap_init.c ldap/apr_ldap_option.c
+               ldap/apr_ldap_rebind.c libaprutil.rc)
+   SET(install_targets ${install_targets} apr_ldap-1)
+   SET(install_bin_pdb ${install_bin_pdb} ${PROJECT_BINARY_DIR}/apr_ldap-1.pdb)
+@@ -288,9 +293,9 @@ IF(APR_BUILD_TESTAPR)
+   ADD_CUSTOM_TARGET(check COMMAND ${CMAKE_CTEST_COMMAND} --verbose)
+ 
+   # copy data files to build directory so that we can run programs from there
+-  EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E make_directory 
++  EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E make_directory
+                   ${PROJECT_BINARY_DIR}/data)
+-  EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy_if_different 
++  EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                   ${PROJECT_SOURCE_DIR}/test/data/billion-laughs.xml
+                   ${PROJECT_BINARY_DIR}/data/billion-laughs.xml)
+ 
+@@ -330,13 +335,15 @@ INSTALL(TARGETS ${install_targets}
+         ARCHIVE DESTINATION lib
+        )
+ 
+-IF(INSTALL_PDB)
+-  INSTALL(FILES ${install_bin_pdb}
+-          DESTINATION bin
+-          CONFIGURATIONS RelWithDebInfo Debug)
+-ENDIF()
++# IF(INSTALL_PDB)
++#   INSTALL(FILES ${install_bin_pdb}
++#           DESTINATION bin
++#           CONFIGURATIONS RelWithDebInfo Debug)
++# ENDIF()
+ 
+-INSTALL(FILES ${APR_PUBLIC_HEADERS_STATIC} ${APR_PUBLIC_HEADERS_GENERATED} DESTINATION include)
++if(NOT DISABLE_INSTALL_HEADERS)
++  INSTALL(FILES ${APR_PUBLIC_HEADERS_STATIC} ${APR_PUBLIC_HEADERS_GENERATED} DESTINATION include)
++endif()
+ 
+ STRING(TOUPPER "${CMAKE_BUILD_TYPE}" buildtype)
+ MESSAGE(STATUS "")
