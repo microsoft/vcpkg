@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.5.1)
 project(libctemplate C CXX)
 
 # find_package(PythonInterp)
+if(NOT PYTHON_EXECUTABLE)
+  message(FATAL_ERROR "PYTHON_EXECUTABLE must be set")
+endif()
 
 if(MSVC)
   add_compile_options(/W3 /wd4005 /wd4996 /wd4018 -D_CRT_SECURE_NO_WARNINGS)
@@ -73,14 +76,10 @@ execute_process(
 file(WRITE "${COMMON_INCLUDES}/htmlparser/htmlparser_fsm.h" "${HTMLPARSER_CONFIG_H}")
 file(WRITE "${COMMON_INCLUDES}/htmlparser/jsparser_fsm.h" "${JSPASPER_CONFIG_H}")
 
-option(BUILD_SHARED_LIBRARY "Building shared library" ON)
-
 include_directories(${COMMON_INCLUDES})
 
-if(BUILD_SHARED_LIBRARY)
-  add_library(libctemplate SHARED ${SRC_FILES})
-else()
-  add_library(libctemplate STATIC ${SRC_FILES} )
+add_library(libctemplate ${SRC_FILES})
+if(NOT BUILD_SHARED_LIBS)
   # Note: CTEMPLATE_DLL_DECL should be empty to build static file
   target_compile_definitions(libctemplate PRIVATE -DCTEMPLATE_DLL_DECL=)
 endif()
