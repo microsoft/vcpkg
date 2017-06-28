@@ -1,0 +1,4 @@
+Source: libconfig
+Version: 1.6.0
+Description: Library for collision detection between two convex shapes
+Build-Depends: msinttypes, dirent
