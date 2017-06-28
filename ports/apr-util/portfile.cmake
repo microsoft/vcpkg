@@ -13,7 +13,7 @@ set(EXPAT_HOME ${VCPKG_ROOT_DIR}/packages/expat_${TARGET_TRIPLET})
 set(EXPAT_LIB ${EXPAT_HOME}/lib/expat.lib)
 set(EXPAT_LIB_DEBUG ${EXPAT_HOME}/debug/lib/expat.lib)
 
-if(VCPG_LIBRARY_LINKAGE STREQUAL dynamic)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
   set(BUILD_SHARED_LIBRARY ON)
 else()
   set(BUILD_SHARED_LIBRARY OFF)
