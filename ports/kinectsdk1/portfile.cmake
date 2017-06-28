@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 
 get_filename_component(KINECTSDK10_DIR "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Kinect;SDKInstallPath]" ABSOLUTE CACHE)
 if(NOT EXISTS "${KINECTSDK10_DIR}")
-    message(FATAL_ERROR "Error: Could not find Kinect for Windows SDK v1.x.")
+    message(FATAL_ERROR "Error: Could not find Kinect for Windows SDK v1.x. It can be downloaded from https://www.microsoft.com/en-us/download/details.aspx?id=40278.")
 endif()
 
 file(
