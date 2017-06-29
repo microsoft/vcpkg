@@ -15,12 +15,8 @@ vcpkg_apply_patches(
     "${CMAKE_CURRENT_LIST_DIR}/fix-scanner-header-msvc-patch.patch"
 )
 
-set(WIN_SRC ${SOURCE_PATH}/lib/win32)
-
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/scandir.c DESTINATION ${WIN_SRC})
-file(COPY ${CURRENT_INSTALLED_DIR}/include/dirent.h DESTINATION ${WIN_SRC})
-file(COPY ${CURRENT_INSTALLED_DIR}/include/stdint.h DESTINATION ${WIN_SRC})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/scandir.c DESTINATION ${SOURCE_PATH}/lib/win32)
 
 
 vcpkg_configure_cmake(

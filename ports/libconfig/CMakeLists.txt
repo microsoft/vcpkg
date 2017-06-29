@@ -20,7 +20,12 @@ set(CPP_SOURCES
 )
 
 include_directories(lib)
-include_directories(lib/win32)
+
+find_path(DIRENT_H dirent.h)
+find_path(STDINT_H stdint.h)
+
+include_directories(${DIRENT_H})
+include_directories(${STDINT_H})
 
 add_library(libconfig  ${C_SOURCES})
 add_library(libconfig++ ${C_SOURCES} ${CPP_SOURCES})
