@@ -24,7 +24,7 @@ index cbbde8e..cb19649 100644
  
 -add_library(${ROCKSDB_STATIC_LIB} STATIC ${SOURCES})
 -target_link_libraries(${ROCKSDB_STATIC_LIB}
-+if(BUILD_STATIC_LIBRARY)
++if(NOT BUILD_SHARED_LIBS)
 +  add_library(${ROCKSDB_STATIC_LIB} STATIC ${SOURCES})
 +  target_link_libraries(${ROCKSDB_STATIC_LIB}
    ${THIRDPARTY_LIBS} ${SYSTEM_LIBS})
