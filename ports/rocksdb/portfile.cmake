@@ -47,3 +47,5 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake(DISABLE_PARALLEL)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/rocksdb RENAME copyright)
+
+vcpkg_copy_pdbs()
