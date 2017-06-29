@@ -36,6 +36,16 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
+# patch SO_5_STATIC_LIB in headers with actual value
+set(DECLSPEC_FILE ${CURRENT_PACKAGES_DIR}/include/so_5/h/declspec.hpp)
+file(READ ${DECLSPEC_FILE} DECLSPEC_H)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    string(REPLACE "defined( SO_5_STATIC_LIB )" "1" DECLSPEC_H "${DECLSPEC_H}")
+else()
+    string(REPLACE "defined( SO_5_STATIC_LIB )" "0" DECLSPEC_H "${DECLSPEC_H}")
+endif()
+file(WRITE ${DECLSPEC_FILE} "${DECLSPEC_H}")
+
 # Handle copyright
 file(COPY ${SOURCE_PATH}/../LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/sobjectizer)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/sobjectizer/LICENSE ${CURRENT_PACKAGES_DIR}/share/sobjectizer/copyright)
