@@ -64,6 +64,10 @@ if(BUILD_TOOLS)
         target_link_libraries(${EXAMPLE_EXEC} PRIVATE aubio)
         target_compile_definitions(${EXAMPLE_EXEC} PRIVATE -DHAVE_WIN_HACKS=1)
     endforeach()
+    # Create and add fake config.h to avoid build errors (file is generated for 
+    # cross-platform requirements in waf build-system)
+    file(WRITE "${CMAKE_BINARY_DIR}/config.h" "")
+    include_directories(${CMAKE_BINARY_DIR})
 
     install(
         TARGETS ${EXAMPLE_EXECS}
