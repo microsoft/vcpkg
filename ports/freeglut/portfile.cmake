@@ -7,6 +7,12 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+# disable debug suffix, because FindGLUT.cmake from CMake 3.8 doesn't support it
+file(READ ${SOURCE_PATH}/CMakeLists.txt FREEGLUT_CMAKELISTS)
+string(REPLACE "SET( CMAKE_DEBUG_POSTFIX \"d\" )"
+               "\#SET( CMAKE_DEBUG_POSTFIX \"d\" )" FREEGLUT_CMAKELISTS "${FREEGLUT_CMAKELISTS}")
+file(WRITE ${SOURCE_PATH}/CMakeLists.txt "${FREEGLUT_CMAKELISTS}")
+
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(FREEGLUT_STATIC OFF)
     set(FREEGLUT_DYNAMIC ON)
@@ -26,6 +32,15 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+# Patch header
+file(READ ${CURRENT_PACKAGES_DIR}/include/GL/freeglut_std.h FREEGLUT_STDH)
+string(REPLACE "pragma comment (lib, \"freeglut_staticd.lib\")"
+               "pragma comment (lib, \"freeglut_static.lib\")" FREEGLUT_STDH "${FREEGLUT_STDH}")
+string(REPLACE "pragma comment (lib, \"freeglutd.lib\")"
+               "pragma comment (lib, \"freeglut.lib\")" FREEGLUT_STDH "${FREEGLUT_STDH}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/GL/freeglut_std.h "${FREEGLUT_STDH}")
+
+# Clean
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
