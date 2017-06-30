@@ -2,13 +2,11 @@
 
 #include "BinaryParagraph.h"
 #include "vcpkg_Checks.h"
-#include "vcpkglib_helpers.h"
-
-using namespace vcpkg::details;
+#include "vcpkg_Parse.h"
 
 namespace vcpkg
 {
-    namespace BinaryParagraphRequiredField
+    namespace Fields
     {
         static const std::string PACKAGE = "Package";
         static const std::string VERSION = "Version";
@@ -16,7 +14,7 @@ namespace vcpkg
         static const std::string MULTI_ARCH = "Multi-Arch";
     }
 
-    namespace BinaryParagraphOptionalField
+    namespace Fields
     {
         static const std::string DESCRIPTION = "Description";
         static const std::string MAINTAINER = "Maintainer";
@@ -27,22 +25,36 @@ namespace vcpkg
 
     BinaryParagraph::BinaryParagraph(std::unordered_map<std::string, std::string> fields)
     {
-        const std::string name = details::remove_required_field(&fields, BinaryParagraphRequiredField::PACKAGE);
-        const std::string architecture =
-            details::remove_required_field(&fields, BinaryParagraphRequiredField::ARCHITECTURE);
-        const Triplet triplet = Triplet::from_canonical_name(architecture);
+        using namespace vcpkg::Parse;
 
-        this->spec = PackageSpec::from_name_and_triplet(name, triplet).value_or_exit(VCPKG_LINE_INFO);
-        this->version = details::remove_required_field(&fields, BinaryParagraphRequiredField::VERSION);
+        ParagraphParser parser(std::move(fields));
 
-        this->description = details::remove_optional_field(&fields, BinaryParagraphOptionalField::DESCRIPTION);
-        this->maintainer = details::remove_optional_field(&fields, BinaryParagraphOptionalField::MAINTAINER);
+        {
+            std::string name;
+            parser.required_field(Fields::PACKAGE, name);
+            std::string architecture;
+            parser.required_field(Fields::ARCHITECTURE, architecture);
+            this->spec = PackageSpec::from_name_and_triplet(name, Triplet::from_canonical_name(architecture))
+                             .value_or_exit(VCPKG_LINE_INFO);
+        }
 
-        std::string multi_arch = details::remove_required_field(&fields, BinaryParagraphRequiredField::MULTI_ARCH);
+        parser.required_field(Fields::VERSION, this->version);
+        this->description = parser.optional_field(Fields::DESCRIPTION);
+        this->maintainer = parser.optional_field(Fields::MAINTAINER);
+
+        std::string multi_arch;
+        parser.required_field(Fields::MULTI_ARCH, multi_arch);
+
+        this->depends = parse_comma_list(parser.optional_field(Fields::DEPENDS));
+
+        if (auto err = parser.error_info(this->spec.name()))
+        {
+            print_error_message(err);
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+
+        // prefer failing above when possible because it gives better information
         Checks::check_exit(VCPKG_LINE_INFO, multi_arch == "same", "Multi-Arch must be 'same' but was %s", multi_arch);
-
-        std::string deps = details::remove_optional_field(&fields, BinaryParagraphOptionalField::DEPENDS);
-        this->depends = parse_comma_list(deps);
     }
 
     BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh, const Triplet& triplet)

@@ -1,10 +1,11 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libpng-1.6.28)
+set(LIBPNG_VERSION 1.6.29)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libpng-${LIBPNG_VERSION})
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://downloads.sourceforge.net/project/libpng/libpng16/1.6.28/libpng-1.6.28.tar.xz"
-    FILENAME "libpng-1.6.28.tar.xz"
-    SHA512 3541139062a1c6cded7abe378ae73519835ec68561006ba33b3fe34f65676e4f91f2561b11d890ac20255dbf2e691e0b3d4fbf11db77b47b67979ba45b8af655
+    URLS "https://downloads.sourceforge.net/project/libpng/libpng16/${LIBPNG_VERSION}/libpng-${LIBPNG_VERSION}.tar.xz"
+    FILENAME "libpng-${LIBPNG_VERSION}.tar.xz"
+    SHA512 070393423ec11f19e3264a0200959ae09238aa005615571586987253028b4ffb7e6b7c734a132f65180252b0259f79add03896d79fdc7dcfd8773b82c82a5ffc
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
@@ -22,6 +23,13 @@ else()
     set(PNG_SHARED_LIBS OFF)
 endif()
 
+# Libpng's cmake uses if(${CMAKE_SYSTEM_PROCESSOR} ....) which performs double-evaluation and breaks if the variable is not defined.
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+    set(CMAKE_SYSTEM_PROCESSOR AMD64)
+else()
+    set(CMAKE_SYSTEM_PROCESSOR ${VCPKG_TARGET_ARCHITECTURE})
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
@@ -31,10 +39,12 @@ vcpkg_configure_cmake(
         -DSKIP_INSTALL_PROGRAMS=ON
         -DSKIP_INSTALL_EXECUTABLES=ON
         -DSKIP_INSTALL_FILES=ON
+        -DCMAKE_SYSTEM_PROCESSOR=${CMAKE_SYSTEM_PROCESSOR}
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
 )
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)

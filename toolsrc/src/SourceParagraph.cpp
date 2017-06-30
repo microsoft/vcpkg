@@ -8,61 +8,56 @@
 #include "vcpkg_Util.h"
 #include "vcpkg_expected.h"
 
-#include "vcpkglib_helpers.h"
-
 namespace vcpkg
 {
-    //
-    namespace SourceParagraphRequiredField
-    {
-        static const std::string SOURCE = "Source";
-        static const std::string VERSION = "Version";
-    }
+    using namespace vcpkg::Parse;
 
-    namespace SourceParagraphOptionalField
+    bool g_feature_packages = false;
+    namespace Fields
     {
-        static const std::string DESCRIPTION = "Description";
-        static const std::string MAINTAINER = "Maintainer";
         static const std::string BUILD_DEPENDS = "Build-Depends";
+        static const std::string DEFAULTFEATURES = "Default-Features";
+        static const std::string DESCRIPTION = "Description";
+        static const std::string FEATURE = "Feature";
+        static const std::string MAINTAINER = "Maintainer";
+        static const std::string SOURCE = "Source";
         static const std::string SUPPORTS = "Supports";
+        static const std::string VERSION = "Version";
     }
 
     static span<const std::string> get_list_of_valid_fields()
     {
-        static const std::string valid_fields[] = {SourceParagraphRequiredField::SOURCE,
-                                                   SourceParagraphRequiredField::VERSION,
-
-                                                   SourceParagraphOptionalField::DESCRIPTION,
-                                                   SourceParagraphOptionalField::MAINTAINER,
-                                                   SourceParagraphOptionalField::BUILD_DEPENDS,
-                                                   SourceParagraphOptionalField::SUPPORTS};
+        static const std::string valid_fields[] = {
+            Fields::SOURCE, Fields::VERSION, Fields::DESCRIPTION, Fields::MAINTAINER, Fields::BUILD_DEPENDS,
+        };
 
         return valid_fields;
     }
 
-    void print_error_message(span<const ParseControlErrorInfo> error_info_list)
+    void print_error_message(span<const std::unique_ptr<Parse::ParseControlErrorInfo>> error_info_list)
     {
         Checks::check_exit(VCPKG_LINE_INFO, error_info_list.size() > 0);
 
         for (auto&& error_info : error_info_list)
         {
-            if (error_info.error)
+            Checks::check_exit(VCPKG_LINE_INFO, error_info != nullptr);
+            if (error_info->error)
             {
                 System::println(
-                    System::Color::error, "Error: while loading %s: %s", error_info.name, error_info.error.message());
+                    System::Color::error, "Error: while loading %s: %s", error_info->name, error_info->error.message());
             }
         }
 
         bool have_remaining_fields = false;
         for (auto&& error_info : error_info_list)
         {
-            if (!error_info.remaining_fields_as_string.empty())
+            if (!error_info->extra_fields.empty())
             {
                 System::println(System::Color::error,
                                 "Error: There are invalid fields in the Source Paragraph of %s",
-                                error_info.name);
-                System::println("The following fields were not expected:\n\n    %s\n\n",
-                                error_info.remaining_fields_as_string);
+                                error_info->name);
+                System::println("The following fields were not expected:\n\n    %s\n",
+                                Strings::join("\n    ", error_info->extra_fields));
                 have_remaining_fields = true;
             }
         }
@@ -73,32 +68,88 @@ namespace vcpkg
                             Strings::join("\n    ", get_list_of_valid_fields()));
             System::println("Different source may be available for vcpkg. Use .\\bootstrap-vcpkg.bat to update.\n");
         }
+
+        for (auto&& error_info : error_info_list)
+        {
+            if (!error_info->missing_fields.empty())
+            {
+                System::println(System::Color::error,
+                                "Error: There are missing fields in the Source Paragraphs of %s",
+                                error_info->name);
+                System::println("The following fields were missing:\n\n    %s\n",
+                                Strings::join("\n    ", error_info->missing_fields));
+            }
+        }
     }
 
-    ExpectedT<SourceParagraph, ParseControlErrorInfo> SourceParagraph::parse_control_file(
-        std::unordered_map<std::string, std::string> fields)
+    static ParseExpected<SourceParagraph> parse_source_paragraph(RawParagraph&& fields)
     {
-        SourceParagraph sparagraph;
-        sparagraph.name = details::remove_required_field(&fields, SourceParagraphRequiredField::SOURCE);
-        sparagraph.version = details::remove_required_field(&fields, SourceParagraphRequiredField::VERSION);
-        sparagraph.description = details::remove_optional_field(&fields, SourceParagraphOptionalField::DESCRIPTION);
-        sparagraph.maintainer = details::remove_optional_field(&fields, SourceParagraphOptionalField::MAINTAINER);
+        ParagraphParser parser(std::move(fields));
 
-        std::string deps = details::remove_optional_field(&fields, SourceParagraphOptionalField::BUILD_DEPENDS);
-        sparagraph.depends = expand_qualified_dependencies(parse_comma_list(deps));
+        auto spgh = std::make_unique<SourceParagraph>();
 
-        std::string sups = details::remove_optional_field(&fields, SourceParagraphOptionalField::SUPPORTS);
-        sparagraph.supports = parse_comma_list(sups);
+        parser.required_field(Fields::SOURCE, spgh->name);
+        parser.required_field(Fields::VERSION, spgh->version);
 
-        if (!fields.empty())
+        spgh->description = parser.optional_field(Fields::DESCRIPTION);
+        spgh->maintainer = parser.optional_field(Fields::MAINTAINER);
+        spgh->depends = expand_qualified_dependencies(parse_comma_list(parser.optional_field(Fields::BUILD_DEPENDS)));
+        spgh->supports = parse_comma_list(parser.optional_field(Fields::SUPPORTS));
+        spgh->default_features = parse_comma_list(parser.optional_field(Fields::DEFAULTFEATURES));
+
+        auto err = parser.error_info(spgh->name);
+        if (err)
+            return std::move(err);
+        else
+            return std::move(spgh);
+    }
+
+    static ParseExpected<FeatureParagraph> parse_feature_paragraph(RawParagraph&& fields)
+    {
+        ParagraphParser parser(std::move(fields));
+
+        auto fpgh = std::make_unique<FeatureParagraph>();
+
+        parser.required_field(Fields::FEATURE, fpgh->name);
+        parser.required_field(Fields::DESCRIPTION, fpgh->description);
+
+        fpgh->depends = expand_qualified_dependencies(parse_comma_list(parser.optional_field(Fields::BUILD_DEPENDS)));
+
+        auto err = parser.error_info(fpgh->name);
+        if (err)
+            return std::move(err);
+        else
+            return std::move(fpgh);
+    }
+
+    ParseExpected<SourceControlFile> SourceControlFile::parse_control_file(
+        std::vector<std::unordered_map<std::string, std::string>>&& control_paragraphs)
+    {
+        if (control_paragraphs.size() == 0)
         {
-            const std::vector<std::string> remaining_fields = Maps::extract_keys(fields);
-
-            const std::string remaining_fields_as_string = Strings::join("\n    ", remaining_fields);
-
-            return ParseControlErrorInfo{sparagraph.name, remaining_fields_as_string};
+            return std::make_unique<Parse::ParseControlErrorInfo>();
         }
-        return sparagraph;
+
+        auto control_file = std::make_unique<SourceControlFile>();
+
+        auto maybe_source = parse_source_paragraph(std::move(control_paragraphs.front()));
+        if (auto source = maybe_source.get())
+            control_file->core_paragraph = std::move(*source);
+        else
+            return std::move(maybe_source).error();
+
+        control_paragraphs.erase(control_paragraphs.begin());
+
+        for (auto&& feature_pgh : control_paragraphs)
+        {
+            auto maybe_feature = parse_feature_paragraph(std::move(feature_pgh));
+            if (auto feature = maybe_feature.get())
+                control_file->feature_paragraphs.emplace_back(std::move(*feature));
+            else
+                return std::move(maybe_feature).error();
+        }
+
+        return std::move(control_file);
     }
 
     std::vector<Dependency> vcpkg::expand_qualified_dependencies(const std::vector<std::string>& depends)

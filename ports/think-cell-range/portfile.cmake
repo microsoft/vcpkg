@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/range-e2d3018c3a797e7328dea005e72b34cace8b1fc6)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/range-498839d41519d38bb81089f7d0f517026bd042cc)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/think-cell/range/archive/e2d3018c3a797e7328dea005e72b34cace8b1fc6.zip"
-    FILENAME "think-cell_range-e2d3018.zip"
-    SHA512 13c74aba4950a84fdf446c976564030b18a740c5ce42b7650116a0559ba9e9a59471ff0f80132c626bc442402b3717805d3615b9ea70751e2dd1e648fd9f7916
+    URLS "https://github.com/think-cell/range/archive/498839d41519d38bb81089f7d0f517026bd042cc.zip"
+    FILENAME "think-cell_range-498839d.zip"
+    SHA512 801e987c828c954cb50f9a6f9f2feee2ce05f7232d531ecce7394800ecc5a750992795da173fb72b6efcabd6978015a650730682b7db3f874fb8aaac28869711
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

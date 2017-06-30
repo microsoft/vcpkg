@@ -29,7 +29,7 @@ namespace vcpkg
     struct StatusParagraph
     {
         StatusParagraph();
-        explicit StatusParagraph(const std::unordered_map<std::string, std::string>& fields);
+        explicit StatusParagraph(std::unordered_map<std::string, std::string>&& fields);
 
         BinaryParagraph package;
         Want want;

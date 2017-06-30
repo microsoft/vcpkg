@@ -1,91 +1,46 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glew-2.0.0)
+
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/20170423/glew-2.0.0)
+
 vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "https://sourceforge.net/projects/glew/files/glew/2.0.0/glew-2.0.0.tgz"
-    FILENAME "glew-2.0.0.tgz"
-    SHA512 e9bcd5f19a4495ce6511dfd76e64b4e4d958603c513ee9063eb9fe24fc6e0413f168620661230f1baef558f2f907cef7fe7ab2bdf957a6f7bda5fe96e9319c6a
+    URLS "https://sourceforge.net/projects/glew/files/glew/snapshots/glew-20170423.tgz"
+    FILENAME "glew-20170423.tgz"
+    SHA512 2d4651196e01b4db7b210fc60505bf50ac9e37b49c8eee9c9bbfeadb4cb6f87f4c907e60e708a7371ff4b7596bee51ed35a76fba76f9a13a1f32f123121f1350
 )
-vcpkg_extract_source_archive(${ARCHIVE_FILE})
+vcpkg_extract_source_archive(${ARCHIVE_FILE} ${CURRENT_BUILDTREES_DIR}/src/20170423)
 
-IF (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-	SET(BUILD_ARCH "Win32")
-ELSEIF(TRIPLET_SYSTEM_ARCH MATCHES "arm")
-	MESSAGE(FATAL_ERROR " ARM is currently not supported.")
-ELSE()
-	SET(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
-ENDIF()
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}/build/cmake
+)
 
-# TODO: Maybe switch to glews' cmake build system in the future
-FOREACH(LINKAGE shared static)
-	if(NOT EXISTS ${SOURCE_PATH}/build/vc12/glew_${LINKAGE}14.vcxproj)
-		message(STATUS "Upgrading " ${LINKAGE} " project")
-		file(READ ${SOURCE_PATH}/build/vc12/glew_${LINKAGE}.vcxproj PROJ)
-		string(REPLACE
-			"<PlatformToolset>v120</PlatformToolset>"
-			"<PlatformToolset>v140</PlatformToolset>"
-			PROJ ${PROJ})
-		string(REPLACE
-			"opengl32.lib%"
-			"opengl32.lib\;%"
-			PROJ ${PROJ})
-			
-		if (LINKAGE STREQUAL "static")
-			string(REPLACE
-				"MultiThreadedDebugDLL"
-				"MultiThreadedDebug"
-				PROJ ${PROJ}
-			)
-		endif()
-		file(WRITE ${SOURCE_PATH}/build/vc12/glew_${LINKAGE}14.vcxproj ${PROJ})
-	endif()
-ENDFOREACH(LINKAGE)
-message(STATUS "Upgrading projects done")
+vcpkg_install_cmake()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-	vcpkg_build_msbuild(
-		PROJECT_PATH ${SOURCE_PATH}/build/vc12/glew_static14.vcxproj
-	)
-else()
-	vcpkg_build_msbuild(
-		PROJECT_PATH ${SOURCE_PATH}/build/vc12/glew_shared14.vcxproj
-	)
+vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/glew")
+
+foreach(FILE ${CURRENT_PACKAGES_DIR}/share/glew/glew-targets-debug.cmake ${CURRENT_PACKAGES_DIR}/share/glew/glew-targets-release.cmake)
+    file(READ ${FILE} _contents)
+    string(REPLACE "libglew32" "glew32" _contents "${_contents}")
+    file(WRITE ${FILE} "${_contents}")
+endforeach()
+
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/libglew32.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libglew32.lib ${CURRENT_PACKAGES_DIR}/lib/glew32.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libglew32d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/glew32d.lib)
 endif()
 
+file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/glewinfo.exe)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/visualinfo.exe)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/glewinfo.exe)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/visualinfo.exe)
 
-message(STATUS "Installing")
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-	file(INSTALL
-		${SOURCE_PATH}/bin/Debug/${BUILD_ARCH}/glew32d.dll
-		DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-	)
-	file(INSTALL
-		${SOURCE_PATH}/bin/Release/${BUILD_ARCH}/glew32.dll
-		DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-	)
-	file(INSTALL
-		${SOURCE_PATH}/lib/Debug/${BUILD_ARCH}/glew32d.lib
-		DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib RENAME glew32.lib
-	)
-	file(INSTALL
-		${SOURCE_PATH}/lib/Release/${BUILD_ARCH}/glew32.lib
-		DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-	)
-else()
-	file(INSTALL
-		${SOURCE_PATH}/lib/Debug/${BUILD_ARCH}/glew32sd.lib
-		DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib RENAME glew32.lib
-	)
-	file(INSTALL
-		${SOURCE_PATH}/lib/Release/${BUILD_ARCH}/glew32s.lib
-		DESTINATION ${CURRENT_PACKAGES_DIR}/lib RENAME glew32.lib
-	)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
-file(INSTALL
-    ${SOURCE_PATH}/include/GL
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
-)
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/glew RENAME copyright)
 vcpkg_copy_pdbs()
-message(STATUS "Installing done")
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/glew RENAME copyright)

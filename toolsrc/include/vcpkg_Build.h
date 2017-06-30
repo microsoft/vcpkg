@@ -120,14 +120,20 @@ namespace vcpkg::Build
         COUNT,
     };
 
-    Optional<BuildPolicy> to_build_policy(const std::string& str);
+    constexpr std::array<BuildPolicy, size_t(BuildPolicy::COUNT)> g_all_policies = {
+        BuildPolicy::EMPTY_PACKAGE,
+        BuildPolicy::DLLS_WITHOUT_LIBS,
+        BuildPolicy::ONLY_RELEASE_CRT,
+        BuildPolicy::EMPTY_INCLUDE_FOLDER,
+        BuildPolicy::ALLOW_OBSOLETE_MSVCRT,
+    };
 
     const std::string& to_string(BuildPolicy policy);
     CStringView to_cmake_variable(BuildPolicy policy);
 
     struct BuildPolicies
     {
-        BuildPolicies() {}
+        BuildPolicies() = default;
         BuildPolicies(std::map<BuildPolicy, bool>&& map) : m_policies(std::move(map)) {}
 
         inline bool is_enabled(BuildPolicy policy) const
