@@ -22,7 +22,7 @@ vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_find_acquire_program(PYTHON3)
 
 # Add python3 to path
-get_filename_component(PYTHON_PATH ${PYTHON} DIRECTORY)
+get_filename_component(PYTHON_PATH ${PYTHON3} DIRECTORY)
 SET(ENV{PATH} "${PYTHON_PATH};$ENV{PATH}")
 
 vcpkg_configure_qmake(
