@@ -27,6 +27,9 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+# Ninja crash compiler with error:
+# "fatal error C1001: An internal error has occurred in the compiler. (compiler file 'f:\dd\vctools\compiler\utc\src\p2\main.c', line 255)"
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
@@ -36,22 +39,28 @@ vcpkg_configure_cmake(
         -DCXSPARSE=ON
         -DEIGENSPARSE=ON
         -DSUITESPARSE=ON
-        -DBLAS_LIBRARIES=${CURRENT_INSTALLED_DIR}/lib/openblas.lib
         -DCXSPARSE_INCLUDE_DIR=${SUITESPARSE_INCLUDE_DIR}
-        -DCXSPARSE_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/libcxsparse.lib
         -DEIGEN_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/eigen3
         -DGFLAGS_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
-        -DGFLAGS_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/gflags.lib
         -DGLOG_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
-        -DGLOG_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/glog.lib
-        -DLAPACK_LIBRARIES=${CURRENT_INSTALLED_DIR}/lib/lapack.lib
-        -DMETIS_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/metis.lib
         -DSUITESPARSE_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include/suitesparse
     OPTIONS_RELEASE
         -DSUITESPARSE_LIBRARY_DIR_HINTS=${CURRENT_INSTALLED_DIR}/lib
+        -DBLAS_LIBRARIES=${CURRENT_INSTALLED_DIR}/lib/openblas.lib
+        -DCXSPARSE_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/libcxsparse.lib
+        -DGFLAGS_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/gflags.lib
+        -DGLOG_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/glog.lib
+        -DLAPACK_LIBRARIES=${CURRENT_INSTALLED_DIR}/lib/lapack.lib
+        -DMETIS_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/metis.lib
     OPTIONS_DEBUG
         -DSUITESPARSEQR_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/libspqrd.lib
         -DSUITESPARSE_LIBRARY_DIR_HINTS=${CURRENT_INSTALLED_DIR}/debug/lib
+        -DBLAS_LIBRARIES=${CURRENT_INSTALLED_DIR}/debug/lib/openblas.lib
+        -DCXSPARSE_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/libcxsparse.lib
+        -DGFLAGS_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/gflags.lib
+        -DGLOG_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/glog.lib
+        -DLAPACK_LIBRARIES=${CURRENT_INSTALLED_DIR}/debug/lib/lapack.lib
+        -DMETIS_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/metis.lib
 )
 
 vcpkg_install_cmake()
@@ -59,6 +68,12 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
 
 vcpkg_copy_pdbs()
+
+# changes target search path
+file(READ ${CURRENT_PACKAGES_DIR}/share/ceres/CeresConfig.cmake CERES_TARGETS)
+string(REPLACE "get_filename_component(CURRENT_ROOT_INSTALL_DIR\n    \${CERES_CURRENT_CONFIG_DIR}/../"
+               "get_filename_component(CURRENT_ROOT_INSTALL_DIR\n    \${CERES_CURRENT_CONFIG_DIR}/../../" CERES_TARGETS "${CERES_TARGETS}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/ceres/CeresConfig.cmake "${CERES_TARGETS}")
 
 #clean
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
