@@ -22,6 +22,7 @@
 // Emulation of posix scandir() call
 // This source file is #include'd by scandir.c
 // THIS IS A C FILE! DO NOT CHANGE TO C++!!!
+// See @http://www.fltk.org/strfiles/1779/scandir.c
 
 #include <string.h>
 #include <windows.h>
