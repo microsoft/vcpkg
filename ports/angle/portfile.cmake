@@ -5,6 +5,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
 
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "ANGLE currently only supports being built for desktop")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/angle
@@ -12,8 +16,13 @@ vcpkg_from_github(
     SHA512 b9235d2a98330bc8533c3fe871129e7235c680420eac16610eae4ca7224c5284313ab6377f30ddfb8a2da39b69f3ef0d16023fe1e7cec3fc2198f4eb4bdccb26
     HEAD_REF master
 )
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/001-fix-uwp.patch
+)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/commit.h DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
