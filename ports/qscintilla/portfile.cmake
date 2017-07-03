@@ -25,41 +25,61 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON_PATH ${PYTHON3} DIRECTORY)
 SET(ENV{PATH} "${PYTHON_PATH};$ENV{PATH}")
 
+set(BUILD_OPTIONS
+    "${SOURCE_PATH}/Qt4Qt5/qscintilla.pro"
+    CONFIG+=build_all
+    CONFIG-=hide_symbols
+)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    set(BUILD_OPTIONS
+        ${BUILD_OPTIONS}
+        CONFIG+=staticlib
+    )
+endif()
+
 vcpkg_configure_qmake(
     SOURCE_PATH "${SOURCE_PATH}/Qt4Qt5"
     OPTIONS
-        CONFIG+=build_all
-        CONFIG-=hide_symbols
+        ${BUILD_OPTIONS}
 )
 
 vcpkg_build_qmake()
 
-# Install following vcpkg conventions (following qwt portfile)
 set(BUILD_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 
-file(GLOB HEADER_FILES ${SOURCE_PATH}/include/*)
-file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/qscintilla)
+file(GLOB HEADER_FILES ${SOURCE_PATH}/Qt4Qt5/Qsci/*)
+file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/Qsci)
 
 file(INSTALL
     ${BUILD_DIR}/release/qscintilla2_qt5.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib
+    RENAME qscintilla2.lib
 )
 
 file(INSTALL
     ${BUILD_DIR}/debug/qscintilla2_qt5.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+    RENAME qscintilla2.lib
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    file(INSTALL
-        ${BUILD_DIR}/release/qscintilla2_qt5.dll
-        DESTINATION ${CURRENT_PACKAGES_DIR}/bin
+   file(INSTALL
+       ${BUILD_DIR}/release/qscintilla2_qt5.dll
+       DESTINATION ${CURRENT_PACKAGES_DIR}/bin
+       RENAME qscintilla2.dll
     )
 
     file(INSTALL
         ${BUILD_DIR}/debug/qscintilla2_qt5.dll
+        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
+        RENAME qscintilla2.dll
+    )
+
+    file(INSTALL
         ${BUILD_DIR}/debug/qscintilla2_qt5.pdb
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
+        RENAME qscintilla2.pdb
     )
 endif()
 
