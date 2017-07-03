@@ -25,17 +25,29 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    OPTIONS -DLLVM_BUILD_TOOLS=OFF
-    # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
+    PREFER_NINJA
+    OPTIONS
+        -DLLVM_BUILD_TOOLS=OFF
+        -DLLVM_BUILD_UTILS=OFF
+        -DLLVM_TARGETS_TO_BUILD=X86
 )
 
 vcpkg_install_cmake()
 
+# Move cmake modules to correct vcpkg location and remove extra copy
+file(COPY ${CURRENT_PACKAGES_DIR}/lib/cmake/llvm DESTINATION ${CURRENT_PACKAGES_DIR}/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
+
 # Remove extra copies of include files in debug directory
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+# Remove bin directories
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+
+# Remove one empty include subdirectory
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/llvm/MC/MCAnalysis)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/llvm)
