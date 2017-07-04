@@ -27,9 +27,10 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        -DLLVM_TARGETS_TO_BUILD=X86
         -DLLVM_BUILD_TOOLS=OFF
         -DLLVM_BUILD_UTILS=OFF
-        -DLLVM_TARGETS_TO_BUILD=X86
+        -DLLVM_ABI_BREAKING_CHECKS=FORCE_OFF
 )
 
 vcpkg_install_cmake()
