@@ -59,8 +59,8 @@ else()
   string(REPLACE "defined(LIBCONFIG_STATIC)" "1" LIBCONFIG_H "${LIBCONFIG_H}")
 endif()
 
-file(WRITE ${PROJECT_BINARY_DIR}/libconfig.h++ ${LIBCONFIGXX_H})
-file(WRITE ${PROJECT_BINARY_DIR}/libconfig.h ${LIBCONFIG_H})
+file(WRITE ${PROJECT_BINARY_DIR}/libconfig.h++ "${LIBCONFIGXX_H}")
+file(WRITE ${PROJECT_BINARY_DIR}/libconfig.h "${LIBCONFIG_H}")
 
 if(NOT DISABLE_INSTALL_HEADERS)
   install(FILES   ${PROJECT_BINARY_DIR}/libconfig.h++ ${PROJECT_BINARY_DIR}/libconfig.h DESTINATION include)
