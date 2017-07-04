@@ -8,6 +8,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(INSTALL ${SOURCE_PATH}/inttypes.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SOURCE_PATH}/stdint.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${SOURCE_PATH}/inttypes.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/msinttypes)
+file(INSTALL ${SOURCE_PATH}/stdint.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/msinttypes)
 file(INSTALL ${SOURCE_PATH}/stdint.h DESTINATION ${CURRENT_PACKAGES_DIR}/share/msinttypes RENAME copyright)
