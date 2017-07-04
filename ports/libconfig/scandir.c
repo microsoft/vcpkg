@@ -44,7 +44,7 @@ extern "C" {
  * A pointer to the array of directory entries is stored in the location
  * referenced by namelist.
  */
-int scandir(const char *dirname, struct dirent ***namelist,
+int libconfig_scandir(const char *dirname, struct dirent ***namelist,
     int (*select)(struct dirent *),
     int (*compar)(struct dirent **, struct dirent **)) {
   char *d;

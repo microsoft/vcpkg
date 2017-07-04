@@ -4,6 +4,7 @@ project(libconfig C CXX)
 
 if(MSVC)
   add_compile_options(/W3 /wd4005 /wd4996 /wd4018 -D_CRT_SECURE_NO_WARNINGS)
+  add_definitions(-Dscandir=libconfig_scandir)
 endif()
 
 set(C_SOURCES
@@ -28,7 +29,9 @@ include_directories(${DIRENT_H})
 include_directories(${STDINT_H})
 
 add_library(libconfig  ${C_SOURCES})
-add_library(libconfig++ ${C_SOURCES} ${CPP_SOURCES})
+add_library(libconfig++ ${CPP_SOURCES})
+
+target_link_libraries(libconfig++ libconfig)
 
 if(BUILD_SHARED_LIBS)
   target_compile_definitions(libconfig PRIVATE  -DLIBCONFIG_EXPORTS -DYY_NO_UNISTD_H -DYY_USE_CONST)
