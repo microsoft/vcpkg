@@ -48,6 +48,20 @@ install(
   ARCHIVE DESTINATION lib
 )
 
+file(READ   lib/libconfig.h++ LIBCONFIGXX_H)
+file(READ   lib/libconfig.h LIBCONFIG_H)
+
+if(BUILD_SHARED_LIBS)
+  string(REPLACE "defined(LIBCONFIGXX_EXPORTS)" "1" LIBCONFIGXX_H "${LIBCONFIGXX_H}")
+  string(REPLACE "defined(LIBCONFIG_EXPORTS)" "1" LIBCONFIG_H "${LIBCONFIGXX_H}")
+else()
+  string(REPLACE "defined(LIBCONFIGXX_STATIC)" "1" LIBCONFIGXX_H "${LIBCONFIGXX_H}")
+  string(REPLACE "defined(LIBCONFIG_STATIC)" "1" LIBCONFIG_H "${LIBCONFIG_H}")
+endif()
+
+file(WRITE ${PROJECT_BINARY_DIR}/libconfig.h++ ${LIBCONFIGXX_H})
+file(WRITE ${PROJECT_BINARY_DIR}/libconfig.h ${LIBCONFIG_H})
+
 if(NOT DISABLE_INSTALL_HEADERS)
-  install(FILES   lib/libconfig.h++ lib/libconfig.h DESTINATION include)
+  install(FILES   ${PROJECT_BINARY_DIR}/libconfig.h++ ${PROJECT_BINARY_DIR}/libconfig.h DESTINATION include)
 endif()
