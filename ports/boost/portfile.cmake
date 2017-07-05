@@ -234,16 +234,11 @@ endif()
 file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/boost RENAME copyright)
 message(STATUS "Packaging headers done")
 
-# This function makes the static build lib names match the dynamic build lib names which FindBoost.cmake is looking for by default.
-# It also renames a couple of "libboost" lib files in the dynamic build (for example libboost_exception-vc140-mt-1_63.lib).
 function(boost_rename_libs LIBS)
     foreach(LIB ${${LIBS}})
         get_filename_component(OLD_FILENAME ${LIB} NAME)
         get_filename_component(DIRECTORY_OF_LIB_FILE ${LIB} DIRECTORY)
-        string(REPLACE "libboost_" "boost_" NEW_FILENAME ${OLD_FILENAME})
-        string(REPLACE "-s-" "-" NEW_FILENAME ${NEW_FILENAME}) # For Release libs
-        string(REPLACE "-vc141-" "-vc140-" NEW_FILENAME ${NEW_FILENAME}) # To merge VS2017 and VS2015 binaries
-        string(REPLACE "-sgd-" "-gd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
+        string(REPLACE "-vc141-" "-vc140-" NEW_FILENAME ${OLD_FILENAME}) # To merge VS2017 and VS2015 binaries
         if ("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
             # nothing to do
         elseif (EXISTS ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
@@ -251,6 +246,15 @@ function(boost_rename_libs LIBS)
         else()
             file(RENAME ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME} ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
         endif()
+    endforeach()
+endfunction()
+
+function (boost_move_manual_link LIBS)
+    foreach(LIB ${${LIBS}})
+        get_filename_component(MANUAL_LINK_LIB_FILENAME ${LIB} NAME)
+        get_filename_component(DIRECTORY_OF_LIB_FILE ${LIB} DIRECTORY)
+        file(MAKE_DIRECTORY ${DIRECTORY_OF_LIB_FILE}/manual-link)
+        file(RENAME ${DIRECTORY_OF_LIB_FILE}/${MANUAL_LINK_LIB_FILENAME} ${DIRECTORY_OF_LIB_FILE}/manual-link/${MANUAL_LINK_LIB_FILENAME})
     endforeach()
 endfunction()
 
@@ -265,12 +269,9 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 file(GLOB RELEASE_LIBS ${CURRENT_PACKAGES_DIR}/lib/*.lib)
 boost_rename_libs(RELEASE_LIBS)
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/boost_test_exec_monitor-vc140-mt-${VERSION}.lib)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
-    file(RENAME
-        ${CURRENT_PACKAGES_DIR}/lib/boost_test_exec_monitor-vc140-mt-${VERSION}.lib
-        ${CURRENT_PACKAGES_DIR}/lib/manual-link/boost_test_exec_monitor-vc140-mt-${VERSION}.lib
-    )
+file(GLOB RELEASE_MANUAL_LINK_LIBS ${CURRENT_PACKAGES_DIR}/lib/libboost*.lib)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    boost_move_manual_link(RELEASE_MANUAL_LINK_LIBS)
 endif()
 message(STATUS "Packaging ${TARGET_TRIPLET}-rel done")
 
@@ -285,12 +286,9 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 file(GLOB DEBUG_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/*.lib)
 boost_rename_libs(DEBUG_LIBS)
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/boost_test_exec_monitor-vc140-mt-gd-${VERSION}.lib)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
-    file(RENAME
-        ${CURRENT_PACKAGES_DIR}/debug/lib/boost_test_exec_monitor-vc140-mt-gd-${VERSION}.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/boost_test_exec_monitor-vc140-mt-gd-${VERSION}.lib
-    )
+file(GLOB DEBUG_MANUAL_LINK_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/libboost*.lib)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    boost_move_manual_link(DEBUG_MANUAL_LINK_LIBS)
 endif()
 message(STATUS "Packaging ${TARGET_TRIPLET}-dbg done")
 
