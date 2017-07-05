@@ -1,8 +1,8 @@
 diff --git a/cmake/pcl_utils.cmake b/cmake/pcl_utils.cmake
-index 55b0820f2..034fbc227 100644
+index 69f1e76a4..ad0579200 100644
 --- a/cmake/pcl_utils.cmake
 +++ b/cmake/pcl_utils.cmake
-@@ -109,7 +109,7 @@ macro(SET_INSTALL_DIRS)
+@@ -114,7 +114,7 @@ macro(SET_INSTALL_DIRS)
      set(BIN_INSTALL_DIR "bin")
      set(PKGCFG_INSTALL_DIR "${LIB_INSTALL_DIR}/pkgconfig")
      if(WIN32 AND NOT MINGW)
