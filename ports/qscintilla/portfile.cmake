@@ -67,20 +67,15 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
    file(INSTALL
        ${BUILD_DIR}/release/qscintilla2_qt5.dll
        DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-       RENAME qscintilla2.dll
     )
 
     file(INSTALL
         ${BUILD_DIR}/debug/qscintilla2_qt5.dll
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-        RENAME qscintilla2.dll
     )
 
-    file(INSTALL
-        ${BUILD_DIR}/debug/qscintilla2_qt5.pdb
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-        RENAME qscintilla2.pdb
-    )
+vcpkg_copy_pdbs()
+
 endif()
 
 # Handle copyright
