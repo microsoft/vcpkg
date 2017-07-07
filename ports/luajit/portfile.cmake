@@ -21,46 +21,59 @@ else()
 	set (LJIT_STATIC "static")
 endif()
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES 
+        ${CMAKE_CURRENT_LIST_DIR}/001-fixStaticBuild.patch
+)
+
 message(STATUS "Building ${TARGET_TRIPLET}-dbg")
 
-file(REMOVE "${SOURCE_PATH}/src/*.dll")
-file(REMOVE "${SOURCE_PATH}/src/*.exe")
+file(REMOVE "${SRC}/*.dll")
+file(REMOVE "${SRC}/*.exe")
+file(REMOVE "${SRC}/*.lib")
+
 vcpkg_execute_required_process_repeat(
     COUNT 1
-    COMMAND "${SOURCE_PATH}/src/msvcbuild.bat" "debug" ${LJIT_STATIC}
+    COMMAND "${SOURCE_PATH}/src/msvcbuild.bat" debug ${LJIT_STATIC}
     WORKING_DIRECTORY "${SOURCE_PATH}/src/"
     LOGNAME build-${TARGET_TRIPLET}-dbg
 )
 
-
-file(INSTALL ${SRC}/lua51.lib 			DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 file(INSTALL ${SRC}/luajit.exe 			DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools)
+file(INSTALL ${SRC}/lua51.lib 		    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 	file(INSTALL ${SRC}/lua51.dll 		DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
+file(REMOVE "${SRC}/*.dll")
+file(REMOVE "${SRC}/*.exe")
+file(REMOVE "${SRC}/*.lib")
+
 message(STATUS "Building ${TARGET_TRIPLET}-rel")
 
-file(REMOVE "${SOURCE_PATH}/src/*.dll")
-file(REMOVE "${SOURCE_PATH}/src/*.exe")
-vcpkg_execute_required_process_repeat(
+vcpkg_execute_required_process_repeat(d8un
     COUNT 1
     COMMAND "${SOURCE_PATH}/src/msvcbuild.bat" ${LJIT_STATIC}
     WORKING_DIRECTORY "${SOURCE_PATH}/src/"
     LOGNAME build-${TARGET_TRIPLET}-rel
 )
 
-file(INSTALL ${SRC}/lua51.lib 		DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-file(INSTALL ${SRC}/luajit.exe 		DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+file(INSTALL ${SRC}/luajit.exe 		    DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+file(INSTALL ${SRC}/lua51.lib 		    DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-	file(INSTALL ${SRC}/lua51.dll 	DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+	file(INSTALL ${SRC}/lua51.dll   	DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
-file(INSTALL ${SRC}/lua.h 			DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SRC}/luajit.h 		DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SRC}/luaconf.h 		DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SRC}/lualib.h 		DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SRC}/lauxlib.h 		DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SRC}/lua.hpp 		DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${SRC}/lua.h 			    DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${SRC}/luajit.h 	    	DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${SRC}/luaconf.h 		    DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${SRC}/lualib.h 		    DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${SRC}/lauxlib.h 		    DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${SRC}/lua.hpp 		    DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+
+file(REMOVE "${SRC}/*.dll")
+file(REMOVE "${SRC}/*.exe")
+file(REMOVE "${SRC}/*.lib")
