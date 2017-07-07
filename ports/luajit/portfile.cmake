@@ -46,6 +46,7 @@ file(INSTALL ${SRC}/lua51.lib 		    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/li
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 	file(INSTALL ${SRC}/lua51.dll 		DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
+vcpkg_copy_pdbs()
 
 file(REMOVE "${SRC}/*.dll")
 file(REMOVE "${SRC}/*.exe")
@@ -66,6 +67,7 @@ file(INSTALL ${SRC}/lua51.lib 		    DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 	file(INSTALL ${SRC}/lua51.dll   	DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
 endif()
+vcpkg_copy_pdbs()
 
 file(INSTALL ${SRC}/lua.h 			    DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 file(INSTALL ${SRC}/luajit.h 	    	DESTINATION ${CURRENT_PACKAGES_DIR}/include)
