@@ -20,8 +20,6 @@ include_directories(src visual_studio)
 
 add_library(libmatio  ${SRC})
 
-include_directories(${COMMON_INCLUDES})
-
 add_definitions(
   -DH5_NO_DEPRECATED_SYMBOLS
   -DMAT73=1 -DREPLACE_GETOPT
