@@ -16,29 +16,11 @@ set(SRC
   src/snprintf.c
 )
 
-set(
-  HEADERS
-  src/mat4.h
-  src/mat5.h
-  src/mat73.h
-  src/matio.h
-  src/matio_private.h
-  visual_studio/matio_pubconf.h
-  visual_studio/matioConfig.h
-)
-
+include_directories(src visual_studio)
 
 add_library(libmatio  ${SRC})
 
-
-set(COMMON_INCLUDES  ${PROJECT_BINARY_DIR}/includes)
-
-file(COPY ${HEADERS} DESTINATION ${COMMON_INCLUDES})
-
-#fixes issues with relative directories
 include_directories(${COMMON_INCLUDES})
-
-option(BUILD_SHARED_LIBRARY ON)
 
 add_definitions(
   -DH5_NO_DEPRECATED_SYMBOLS
@@ -47,30 +29,23 @@ add_definitions(
   -DMATIO_HAVE_STDINT_H=1
 )
 
-if(BUILD_SHARED_LIBRARY)
-  add_definitions(-DH5_BUILT_AS_DYNAMIC_LIB)
-  set(HDF5_USE_STATIC_LIBRARIES OFF)
+if(BUILD_SHARED_LIBS)
+  add_definitions (-DH5_BUILT_AS_DYNAMIC_LIB)
 else()
-  set(HDF5_USE_STATIC_LIBRARIES ON)
+  add_definitions(-DH5_BUILT_AS_STATIC_LIB)
 endif()
 
-find_package( ZLIB REQUIRED )
+find_package(ZLIB REQUIRED)
 
-if (ZLIB_FOUND)
-  include_directories( ${ZLIB_INCLUDE_DIRS} )
-  target_link_libraries(libmatio ${ZLIB_LIBRARIES})
-  add_definitions(-DHAVE_ZLIB=1)
-endif( ZLIB_FOUND )
+include_directories( ${ZLIB_INCLUDE_DIRS} )
+target_link_libraries(libmatio ${ZLIB_LIBRARIES})
+add_definitions(-DHAVE_ZLIB=1)
 
-find_package( HDF5 REQUIRED)
+find_package(HDF5 REQUIRED)
 
-if(HDF5_FOUND)
-  include_directories( ${HDF5_INCLUDE_DIRS} )
-  target_link_libraries(libmatio ${HDF5_C_LIBRARIES})
-  add_definitions(-DHAVE_HDF5=1)
-endif()
-
-message(STATUS ${HDF5_C_LIBRARIES})
+include_directories( ${HDF5_INCLUDE_DIRS} )
+target_link_libraries(libmatio ${HDF5_C_LIBRARIES})
+add_definitions(-DHAVE_HDF5=1)
 
 install(
   TARGETS libmatio
@@ -83,7 +58,6 @@ if(NOT DISABLE_INSTALL_HEADERS)
   install(FILES
     src/matio.h
     visual_studio/matio_pubconf.h
-    visual_studio/matioConfig.h
     DESTINATION include
   )
 endif()
