@@ -1,5 +1,9 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "LuaJIT currently only supports being built for desktop")
+endif()
+
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/LuaJIT-2.0.5)
 
 vcpkg_from_github(
