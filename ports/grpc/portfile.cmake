@@ -60,6 +60,7 @@ file(GLOB TOOLS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.exe")
 if(TOOLS)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/grpc)
     file(COPY ${TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/grpc)
+    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/grpc)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
