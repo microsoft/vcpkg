@@ -16,34 +16,28 @@ set(SRC
   src/snprintf.c
 )
 
-include_directories(src visual_studio)
-
-add_library(libmatio  ${SRC})
-
-add_definitions(
+add_library(libmatio ${SRC})
+target_include_directories(libmatio PRIVATE src visual_studio)
+target_compile_definitions(libmatio PRIVATE
   -DH5_NO_DEPRECATED_SYMBOLS
-  -DMAT73=1 -DREPLACE_GETOPT
+  -DMAT73=1
+  -DREPLACE_GETOPT
   -DMATIO_HAVE_INTTYPES_H=1
   -DMATIO_HAVE_STDINT_H=1
 )
 
-if(BUILD_SHARED_LIBS)
-  add_definitions (-DH5_BUILT_AS_DYNAMIC_LIB)
-else()
-  add_definitions(-DH5_BUILT_AS_STATIC_LIB)
-endif()
-
 find_package(ZLIB REQUIRED)
-
-include_directories( ${ZLIB_INCLUDE_DIRS} )
-target_link_libraries(libmatio ${ZLIB_LIBRARIES})
-add_definitions(-DHAVE_ZLIB=1)
+target_link_libraries(libmatio PRIVATE ZLIB::ZLIB)
+target_compile_definitions(libmatio PRIVATE -DHAVE_ZLIB=1)
 
 find_package(HDF5 REQUIRED)
-
-include_directories( ${HDF5_INCLUDE_DIRS} )
-target_link_libraries(libmatio ${HDF5_C_LIBRARIES})
-add_definitions(-DHAVE_HDF5=1)
+target_include_directories(libmatio PRIVATE ${HDF5_INCLUDE_DIRS} )
+target_link_libraries(libmatio PRIVATE ${HDF5_C_LIBRARIES})
+if(BUILD_SHARED_LIBS)
+  target_compile_definitions(libmatio PRIVATE -DHAVE_HDF5=1 -DH5_BUILT_AS_DYNAMIC_LIB)
+else()
+  target_compile_definitions(libmatio PRIVATE -DHAVE_HDF5=1 -DH5_BUILT_AS_STATIC_LIB)
+endif()
 
 install(
   TARGETS libmatio
