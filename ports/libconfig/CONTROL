@@ -1,4 +1,4 @@
 Source: libconfig
 Version: 1.6.0
 Description: C/C++ library for processing configuration files
-Build-Depends: msinttypes, dirent
+Build-Depends: dirent
