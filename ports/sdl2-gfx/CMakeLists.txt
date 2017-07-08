@@ -5,9 +5,10 @@ find_path(SDL_INCLUDE_DIR SDL2/SDL.h)
 find_library(SDL_LIBRARY SDL2)
 
 # builtin formats
-set(SDL_GFX_DEFINES 
-    WIN32
-    DLL_EXPORT)
+set(SDL_GFX_DEFINES WIN32)
+if(BUILD_SHARED_LIBS)
+    list(APPEND SDL_GFX_DEFINES DLL_EXPORT)
+endif()
 
 add_library(SDL2_gfx 
     SDL2_framerate.c
@@ -17,7 +18,7 @@ add_library(SDL2_gfx
 
 target_compile_definitions(SDL2_gfx PRIVATE ${SDL_GFX_DEFINES})
 target_include_directories(SDL2_gfx PRIVATE ${SDL_INCLUDE_DIR}/SDL2)
-target_link_libraries(SDL2_gfx ${SDL_LIBRARY})
+target_link_libraries(SDL2_gfx PRIVATE ${SDL_LIBRARY})
 
 install(TARGETS SDL2_gfx
     RUNTIME DESTINATION bin
@@ -27,6 +28,3 @@ install(TARGETS SDL2_gfx
 if(NOT SDL_GFX_SKIP_HEADERS)
     install(FILES SDL2_framerate.h SDL2_gfxPrimitives.h SDL2_imageFilter.h SDL2_rotozoom.h SDL2_gfxPrimitives_font.h DESTINATION include/SDL2)
 endif()
-
-message(STATUS "Link-time dependencies:")
-message(STATUS "  " ${SDL_LIBRARY})
