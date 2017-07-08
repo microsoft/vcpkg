@@ -36,9 +36,8 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Move cmake modules to correct vcpkg location and remove extra copy
-file(COPY ${CURRENT_PACKAGES_DIR}/lib/cmake/llvm DESTINATION ${CURRENT_PACKAGES_DIR}/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/llvm)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Remove extra copies of include files in debug directory
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -47,9 +46,11 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 
-# Remove one empty include subdirectory
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/llvm/MC/MCAnalysis)
+# Remove one empty include subdirectory if it is indeed empty
+file(GLOB MCANALYSISFILES ${CURRENT_PACKAGES_DIR}/include/llvm/MC/MCAnalysis/*)
+if(NOT MCANALYSISFILES)
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/llvm/MC/MCAnalysis)
+endif()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/llvm)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/llvm/LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/llvm/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/llvm RENAME copyright)
