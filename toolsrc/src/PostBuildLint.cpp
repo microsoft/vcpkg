@@ -775,15 +775,15 @@ namespace vcpkg::PostBuildLint
             error_count += check_lib_architecture(pre_build_info.target_architecture, libs);
         }
 
+        std::vector<fs::path> debug_dlls = fs.get_files_recursive(debug_bin_dir);
+        Util::unstable_keep_if(debug_dlls, has_extension_pred(fs, ".dll"));
+        std::vector<fs::path> release_dlls = fs.get_files_recursive(release_bin_dir);
+        Util::unstable_keep_if(release_dlls, has_extension_pred(fs, ".dll"));
+
         switch (build_info.library_linkage)
         {
             case Build::LinkageType::DYNAMIC:
             {
-                std::vector<fs::path> debug_dlls = fs.get_files_recursive(debug_bin_dir);
-                Util::unstable_keep_if(debug_dlls, has_extension_pred(fs, ".dll"));
-                std::vector<fs::path> release_dlls = fs.get_files_recursive(release_bin_dir);
-                Util::unstable_keep_if(release_dlls, has_extension_pred(fs, ".dll"));
-
                 error_count += check_matching_debug_and_release_binaries(debug_dlls, release_dlls);
 
                 error_count += check_lib_files_are_available_if_dlls_are_available(
@@ -804,8 +804,8 @@ namespace vcpkg::PostBuildLint
             }
             case Build::LinkageType::STATIC:
             {
-                std::vector<fs::path> dlls = fs.get_files_recursive(package_dir);
-                Util::unstable_keep_if(dlls, has_extension_pred(fs, ".dll"));
+                auto dlls = release_dlls;
+                dlls.insert(dlls.end(), debug_dlls.begin(), debug_dlls.end());
                 error_count += check_no_dlls_present(dlls);
 
                 error_count += check_bin_folders_are_not_present_in_static_build(fs, package_dir);
