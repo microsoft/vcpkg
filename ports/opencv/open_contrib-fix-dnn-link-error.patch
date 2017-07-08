@@ -1,0 +1,14 @@
+diff --git a/modules/dnn/CMakeLists.txt b/modules/dnn/CMakeLists.txt
+index 7e7a471..7c4b9d4 100644
+--- a/modules/dnn/CMakeLists.txt
++++ b/modules/dnn/CMakeLists.txt
+@@ -16,6 +16,9 @@ ocv_warnings_disable(CMAKE_CXX_FLAGS -Wno-shadow -Wno-parentheses -Wmaybe-uninit
+ ocv_warnings_disable(CMAKE_CXX_FLAGS /wd4701 /wd4100)
+ 
+ if(MSVC)
++  if(BUILD_SHARED_LIBS)
++    add_definitions(-DPROTOBUF_USE_DLLS)
++  endif()
+   add_definitions( -D_CRT_SECURE_NO_WARNINGS=1 )
+   ocv_warnings_disable(CMAKE_CXX_FLAGS /wd4244 /wd4267 /wd4018 /wd4355 /wd4800 /wd4251 /wd4996 /wd4146
+                                        /wd4305 /wd4127 /wd4100 /wd4512 /wd4125 /wd4389 /wd4510 /wd4610
