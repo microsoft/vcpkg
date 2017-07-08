@@ -92,7 +92,7 @@ foreach(FILE ${CURRENT_PACKAGES_DIR}/include/google/protobuf/arena.h ${CURRENT_P
     else()
         string(REPLACE "defined(PROTOBUF_USE_DLLS)" "0" _contents "${_contents}")
     endif()
-    file(WRITE ${FILE} ${_contents})
+    file(WRITE ${FILE} "${_contents}")
 endforeach()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/protobuf RENAME copyright)
