@@ -24,16 +24,20 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/add-datetime-to-boost-libs.patch
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/add-dbghelp-to-win32-libs.patch
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/vcpkg-boost-madness.patch
 )
 
-if (NOT VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(FATAL_ERROR "Only dynamic linking supported.")
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(LIBTORRENT_SHARED ON)
+else()
+    set(LIBTORRENT_SHARED OFF)
 endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
+        -Dshared=${LIBTORRENT_SHARED}
         -Ddeprecated-functions=off
 )
 
@@ -46,8 +50,11 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/torrent-rasterbar.dll ${CURRENT_PACKAGES_DIR}/bin/torrent-rasterbar.dll)
     file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/torrent-rasterbar.dll ${CURRENT_PACKAGES_DIR}/debug/bin/torrent-rasterbar.dll)
-else()
 
+    # Defines for shared lib
+    file(READ ${CURRENT_PACKAGES_DIR}/include/libtorrent/export.hpp EXPORT_H)
+    string(REPLACE "defined TORRENT_BUILDING_SHARED" "1" EXPORT_H "${EXPORT_H}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/include/libtorrent/export.hpp "${EXPORT_H}")
 endif()
 
 # Handle copyright
