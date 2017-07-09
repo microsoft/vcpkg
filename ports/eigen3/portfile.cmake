@@ -10,7 +10,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 # check if required file exists
 if((NOT EXISTS ${SOURCE_PATH}/Eigen/CMakeLists.txt) OR (NOT EXISTS ${SOURCE_PATH}/unsupported/Eigen/CMakeLists.txt))
-    message(STATUS "Missing CMakeLists.txt in cache, remove ${CURRENT_BUILDTREES_DIR} and try again.")
+    message(STATUS "Missing CMakeLists.txt in cache, re-extracting.")
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}) 
     vcpkg_extract_source_archive(${ARCHIVE})
 endif()
@@ -32,12 +32,9 @@ file(READ "${CURRENT_PACKAGES_DIR}/share/eigen3/Eigen3Targets.cmake" EIGEN_TARGE
 string(REPLACE "set(_IMPORT_PREFIX " "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_DIR}/../..\" ABSOLUTE) #" EIGEN_TARGETS "${EIGEN_TARGETS}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/eigen3/Eigen3Targets.cmake" "${EIGEN_TARGETS}")
 
+file(GLOB INCLUDES ${CURRENT_PACKAGES_DIR}/include/eigen3/*)
 # Copy the eigen header files to conventional location for user-wide MSBuild integration
-file(COPY ${SOURCE_PATH}/Eigen DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-# and no need to leave CMakeLists.txt there
-if(EXISTS ${CURRENT_PACKAGES_DIR}/include/Eigen/CMakeLists.txt)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/include/Eigen/CMakeLists.txt)
-endif()
+file(COPY ${INCLUDES} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 # Put the licence file where vcpkg expects it
 file(COPY ${SOURCE_PATH}/COPYING.README DESTINATION ${CURRENT_PACKAGES_DIR}/share/eigen3)
