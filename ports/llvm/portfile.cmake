@@ -1,15 +1,3 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 # LLVM documentation recommends always using static library linkage when
 #   building with Microsoft toolchain; it's also the default on other platforms
 set(VCPKG_LIBRARY_LINKAGE static)
@@ -23,28 +11,29 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/install-cmake-modules-to-share.patch
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DLLVM_TARGETS_TO_BUILD=X86
-        -DLLVM_BUILD_TOOLS=OFF
-        -DLLVM_BUILD_UTILS=OFF
+        -DLLVM_INCLUDE_TOOLS=OFF
+        -DLLVM_INCLUDE_UTILS=OFF
+        -DLLVM_INCLUDE_EXAMPLES=OFF
+        -DLLVM_INCLUDE_TESTS=OFF
         -DLLVM_ABI_BREAKING_CHECKS=FORCE_OFF
+        -DLLVM_TOOLS_INSTALL_DIR=tools
 )
 
 vcpkg_install_cmake()
 
-# Move cmake modules to correct vcpkg location and remove extra copy
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/llvm)
+# Remove extra copy of cmake modules and include files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-
-# Remove extra copies of include files in debug directory
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-# Remove bin directories
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 
 # Remove one empty include subdirectory if it is indeed empty
 file(GLOB MCANALYSISFILES ${CURRENT_PACKAGES_DIR}/include/llvm/MC/MCAnalysis/*)
