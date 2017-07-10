@@ -1,0 +1,3 @@
+Source: msinttypes
+Version: 2017-06-26-f9e7c5758ed9e3b9f4b2394de1881c704dd79de0
+Description: msinttypes is a package to provide missing  ISO C9x  compliant headers for Microsoft Visual Studio
