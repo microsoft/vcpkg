@@ -1,35 +1,31 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 43fdf49..8040552 100644
+index 43fdf49..56424c3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -27,8 +27,13 @@ OPTION(APR_HAS_LDAP         "LDAP support"                              ON)
+@@ -27,8 +27,9 @@ OPTION(APR_HAS_LDAP         "LDAP support"                              ON)
  OPTION(INSTALL_PDB          "Install .pdb files (if generated)"         ON)
  OPTION(APR_BUILD_TESTAPR    "Build the test suite"                      OFF)
  OPTION(TEST_STATIC_LIBS     "Test programs use APR static libraries instead of shared libraries?" OFF)
 -SET(APR_INCLUDE_DIR         "${CMAKE_INSTALL_PREFIX}/include"           CACHE STRING "Directory with APR include files")
 -SET(APR_LIBRARIES           "${CMAKE_INSTALL_PREFIX}/lib/libapr-1.lib"  CACHE STRING "APR library to link with")
-+SET(APR_INCLUDE_DIR         "${APR_HOME}/include"           CACHE STRING "Directory with APR include files")
 +
-+if(BUILD_SHARED_LIBRARY)
-+  SET(APR_LIBRARIES           "${APR_HOME}/lib/libapr-1.lib"  CACHE STRING "APR library to link with")
-+else()
-+  SET(APR_LIBRARIES           "${APR_HOME}/lib/apr-1.lib"  CACHE STRING "APR library to link with")
-+endif()
++find_path(APR_INCLUDE_DIR apr.h)
++find_library(APR_LIBRARIES NAMES libapr-1 apr-1)
  
  IF(NOT EXISTS "${APR_INCLUDE_DIR}/apr.h")
    MESSAGE(FATAL_ERROR "APR include directory ${APR_INCLUDE_DIR} is not correct.")
-@@ -75,8 +80,8 @@ CONFIGURE_FILE(include/apu_want.hw
+@@ -75,8 +76,8 @@ CONFIGURE_FILE(include/apu_want.hw
                 COPYONLY)
  
  # TBD:
 -# SET(XMLLIB_INCLUDE_DIR   ${CMAKE_CURRENT_SOURCE_DIR}/xml/expat/lib)
 -SET(XMLLIB_LIBRARIES     libexpat)
-+SET(XMLLIB_INCLUDE_DIR   ${EXPAT_HOME}/include)
-+SET(XMLLIB_LIBRARIES     ${EXPAT_LIB})
++find_path(XMLLIB_INCLUDE_DIR expat.h)
++find_library(XMLLIB_LIBRARIES NAMES expat)
  
  SET(LDAP_LIBRARIES)
  IF(APR_HAS_LDAP)
-@@ -217,11 +222,11 @@ SET(APR_TEST_SOURCES
+@@ -217,11 +218,11 @@ SET(APR_TEST_SOURCES
    test/testxml.c
  )
  
@@ -46,7 +42,7 @@ index 43fdf49..8040552 100644
  
  SET(install_targets)
  SET(install_bin_pdb)
-@@ -230,21 +235,25 @@ SET(dbd_drivers)
+@@ -230,21 +231,25 @@ SET(dbd_drivers)
  # Note: The WINNT definition on some targets is used only by libaprutil.rc.
  
  # static expat (not installed)
@@ -56,7 +52,7 @@ index 43fdf49..8040552 100644
 +# SET_TARGET_PROPERTIES(libexpat PROPERTIES COMPILE_DEFINITIONS "XML_STATIC;COMPILED_FROM_DSP")
  
  # libaprutil-1 is shared, aprutil-1 is static
-+if(BUILD_SHARED_LIBRARY)
++if(BUILD_SHARED_LIBS)
  ADD_LIBRARY(libaprutil-1 SHARED ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED} libaprutil.rc)
  SET(install_targets ${install_targets} libaprutil-1)
  SET(install_bin_pdb ${install_bin_pdb} ${PROJECT_BINARY_DIR}/libaprutil-1.pdb)
@@ -70,11 +66,11 @@ index 43fdf49..8040552 100644
  SET_TARGET_PROPERTIES(aprutil-1 PROPERTIES COMPILE_DEFINITIONS "APU_DECLARE_STATIC;APR_DECLARE_STATIC;APU_DSO_MODULE_BUILD;XML_STATIC")
 +endif()
  
-+if(BUILD_SHARED_LIBRARY)
++if(BUILD_SHARED_LIBS)
  IF(APU_HAVE_CRYPTO)
    IF(NOT OPENSSL_FOUND)
      MESSAGE(FATAL_ERROR "Only OpenSSL-based crypto is currently implemented in the cmake build")
-@@ -270,7 +279,7 @@ IF(APU_HAVE_ODBC)
+@@ -270,7 +275,7 @@ IF(APU_HAVE_ODBC)
  ENDIF()
  
  IF(APR_HAS_LDAP)
@@ -83,7 +79,7 @@ index 43fdf49..8040552 100644
                ldap/apr_ldap_rebind.c libaprutil.rc)
    SET(install_targets ${install_targets} apr_ldap-1)
    SET(install_bin_pdb ${install_bin_pdb} ${PROJECT_BINARY_DIR}/apr_ldap-1.pdb)
-@@ -281,6 +290,7 @@ IF(APR_HAS_LDAP)
+@@ -281,6 +286,7 @@ IF(APR_HAS_LDAP)
  ELSE()
    SET(apr_ldap_libraries)
  ENDIF()
@@ -91,7 +87,7 @@ index 43fdf49..8040552 100644
  
  IF(APR_BUILD_TESTAPR)
    ENABLE_TESTING()
-@@ -288,13 +298,13 @@ IF(APR_BUILD_TESTAPR)
+@@ -288,13 +294,13 @@ IF(APR_BUILD_TESTAPR)
    ADD_CUSTOM_TARGET(check COMMAND ${CMAKE_CTEST_COMMAND} --verbose)
  
    # copy data files to build directory so that we can run programs from there
@@ -104,11 +100,11 @@ index 43fdf49..8040552 100644
                    ${PROJECT_BINARY_DIR}/data/billion-laughs.xml)
  
 -  IF(TEST_STATIC_LIBS)
-+  IF(NOT BUILD_SHARED_LIBRARY)
++  IF(NOT BUILD_SHARED_LIBS)
      SET(whichapr    aprutil-1)
      SET(apiflag     "-DAPR_DECLARE_STATIC -DAPU_DECLARE_STATIC")
    ELSE()
-@@ -330,13 +340,15 @@ INSTALL(TARGETS ${install_targets}
+@@ -330,13 +336,15 @@ INSTALL(TARGETS ${install_targets}
          ARCHIVE DESTINATION lib
         )
  
