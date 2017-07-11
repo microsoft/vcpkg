@@ -1,5 +1,10 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(STATUS "Alembic does not support static linkage. Building dynamically.")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alembic/alembic
