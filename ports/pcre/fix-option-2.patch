@@ -17,7 +17,7 @@ index 858a34bd..d1a64570 100644
 -  OPTION(PCRE_STATIC_RUNTIME
 -	"ON=Compile against the static runtime (/MT)."
 -	OFF)
-+  add_definitions(/wd4703)
++  add_definitions(/wd4703 /wd4146 /wd4308)
 +  OPTION(PCRE_STATIC_RUNTIME "ON=Compile against the static runtime (/MT)." OFF)
    OPTION(INSTALL_MSVC_PDB
           "ON=Install .pdb files built by MSVC, if generated"
