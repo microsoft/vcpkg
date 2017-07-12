@@ -1,16 +1,12 @@
 include(vcpkg_common_functions)
-
-set(LIBJPEGTURBO_VERSION 1.5.1)
-set(LIBJPEGTURBO_HASH "7b89f3c707daa98b0ed19ec417aab5273a1248ce7f98722a671ea80558a8eb0e73b136ce7be7c059f9f42262e682743abcab64e325f82cd4bd1531e0a4035209")
-
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libjpeg-turbo-${LIBJPEGTURBO_VERSION})
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/libjpeg-turbo/libjpeg-turbo/archive/${LIBJPEGTURBO_VERSION}.zip"
-    FILENAME "libjpeg-turbo-${LIBJPEGTURBO_VERSION}.zip"
-    SHA512 ${LIBJPEGTURBO_HASH}
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO libjpeg-turbo/libjpeg-turbo
+    REF 1.5.2
+    SHA512 43f0c3e8c87bef4f0010827fd3c245df2467c0a6c714d2984284d3a64f933d06bbffc9fb893c8f3f2cd7f8fce2702cf39074c34e5bf370d90d1ca0d03c803590
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/add-options-for-exes-docs-headers.patch"
@@ -45,7 +41,6 @@ vcpkg_configure_cmake(
     OPTIONS_DEBUG -DINSTALL_HEADERS=OFF
 )
 
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 # Rename libraries for static builds
