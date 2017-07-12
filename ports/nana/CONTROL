@@ -1,4 +1,4 @@
 Source: nana
-Version: 1.5.1-hotfix-42f8985
+Version: 1.5.3
 Description: Cross-platform library for GUI programming in modern C++ style.
 Build-Depends: libpng, libjpeg-turbo
