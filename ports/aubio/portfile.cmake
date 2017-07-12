@@ -13,8 +13,8 @@ vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
   OPTIONS_RELEASE
-    #-DTOOLS_INSTALLDIR=tools/aubio
-    -DBUILD_TOOLS=OFF
+    -DTOOLS_INSTALLDIR=tools/aubio
+    -DBUILD_TOOLS=ON
   OPTIONS_DEBUG
     -DDISABLE_INSTALL_HEADERS=1
     -DBUILD_TOOLS=OFF
@@ -31,4 +31,5 @@ file(COPY
     ${CURRENT_PACKAGES_DIR}/share/aubio)
 
 vcpkg_copy_pdbs()
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/aubio)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/aubio/COPYING ${CURRENT_PACKAGES_DIR}/share/aubio/copyright)
