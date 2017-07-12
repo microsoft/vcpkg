@@ -7,8 +7,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cnjinhao/nana
-    REF 42f89854fd6795d9b2113d011a87404dcc9ba37e
-    SHA512 89b75ccb95e5c4a2075a59064de0b0ff2fca90f90e9b391c2def7f74cc7484930b7139e314f33250bfaa148bfc5a5c9cf78ae3cac2336e0f32a9651670c36685
+    REF v1.5.3
+    SHA512 92f2a5023da180616420c411d4ebe0abf5043493688ada82aa5fa15a9331a8842f7def219a1d9edf476b40d311caac1354a5042c87b377af88117fdfae2daced
     HEAD_REF develop
 )
 
