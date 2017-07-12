@@ -1,5 +1,14 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(STATUS "cppcms doesn't support static linkage. Building dynamic instead.")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
+endif()
+
+if(VCPKG_CRT_LINKAGE STREQUAL static)
+    message("cppcms doesn't support static CRT linkage.")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO artyom-beilis/cppcms
