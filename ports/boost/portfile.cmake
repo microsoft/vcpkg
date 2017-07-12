@@ -32,7 +32,8 @@ FILE(READ "${DIFF}" content)
 STRING(REGEX REPLACE "include/" "" content "${content}")
 set(DIFF2 ${CURRENT_BUILDTREES_DIR}/src/boost-range-has_range_iterator-hotfix_e7ebe14707130cda7b72e0ae5e93b17157fdb6a2.diff.fixed)
 FILE(WRITE ${DIFF2} "${content}")
-vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${DIFF2})
+vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${DIFF2}
+                                                       ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-boost-ICU-support.patch)
 
 ######################
 # Cleanup previous builds
@@ -83,6 +84,7 @@ message(STATUS "Bootstrapping done")
 set(B2_OPTIONS
     -sZLIB_INCLUDE="${CURRENT_INSTALLED_DIR}\\include"
     -sBZIP2_INCLUDE="${CURRENT_INSTALLED_DIR}\\include"
+    -sICU_PATH="${CURRENT_INSTALLED_DIR}"
     -j$ENV{NUMBER_OF_PROCESSORS}
     --debug-configuration
     --hash
@@ -92,10 +94,12 @@ set(B2_OPTIONS
     threading=multi
 )
 
+set(LIB_RUNTIME_LINK "shared")
 if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
     list(APPEND B2_OPTIONS runtime-link=shared)
 else()
     list(APPEND B2_OPTIONS runtime-link=static)
+    set(LIB_RUNTIME_LINK "static")
 endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
