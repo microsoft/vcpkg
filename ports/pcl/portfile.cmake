@@ -53,7 +53,7 @@ vcpkg_configure_cmake(
         -DWITH_PCAP=OFF
         -DWITH_PNG=OFF
         -DWITH_QHULL=ON
-        -DWITH_QT=OFF
+        -DWITH_QT=ON
         -DWITH_VTK=ON
 )
 
