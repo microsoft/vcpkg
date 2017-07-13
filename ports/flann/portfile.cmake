@@ -24,6 +24,7 @@ vcpkg_configure_cmake(
         -DBUILD_DOC=OFF
         -DBUILD_PYTHON_BINDINGS=OFF
         -DBUILD_MATLAB_BINDINGS=OFF
+        -DCMAKE_DEBUG_POSTFIX=-gd
 )
 
 vcpkg_install_cmake()
@@ -32,16 +33,11 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/flann.lib ${CURRENT_PACKAGES_DIR}/debug/lib/flann.lib)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/flann_cpp.lib ${CURRENT_PACKAGES_DIR}/debug/lib/flann_cpp.lib)
-    # Rename static libs to appear dynamic
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/flann_s.lib ${CURRENT_PACKAGES_DIR}/lib/flann.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/flann_s.lib ${CURRENT_PACKAGES_DIR}/debug/lib/flann.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/flann_cpp_s.lib ${CURRENT_PACKAGES_DIR}/lib/flann_cpp.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/flann_cpp_s.lib ${CURRENT_PACKAGES_DIR}/debug/lib/flann_cpp.lib)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/flann.lib ${CURRENT_PACKAGES_DIR}/debug/lib/flann-gd.lib)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/flann_cpp.lib ${CURRENT_PACKAGES_DIR}/debug/lib/flann_cpp-gd.lib)
 elseif(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/flann_s.lib ${CURRENT_PACKAGES_DIR}/debug/lib/flann_s.lib)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/flann_cpp_s.lib ${CURRENT_PACKAGES_DIR}/debug/lib/flann_cpp_s.lib)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/flann_s.lib ${CURRENT_PACKAGES_DIR}/debug/lib/flann_s-gd.lib)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/flann_cpp_s.lib ${CURRENT_PACKAGES_DIR}/debug/lib/flann_cpp_s-gd.lib)
 endif()
 
 # Handle copyright
