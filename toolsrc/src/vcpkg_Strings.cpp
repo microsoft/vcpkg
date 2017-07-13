@@ -19,26 +19,36 @@ namespace vcpkg::Strings::details
 
     std::string format_internal(const char* fmtstr, ...)
     {
-        va_list lst;
-        va_start(lst, fmtstr);
+        va_list args;
+        va_start(args, fmtstr);
 
-        const int sz = _vscprintf_l(fmtstr, c_locale(), lst);
-        std::string output(sz, '\0');
-        _vsnprintf_s_l(&output[0], output.size() + 1, output.size() + 1, fmtstr, c_locale(), lst);
-        va_end(lst);
+        int sz = vsnprintf(nullptr, 0, fmtstr, args) + 1;
+
+        char* buffer = new char[sz];
+
+        vsnprintf(buffer, sz, fmtstr, args);
+        va_end(args);
+
+        std::string output(buffer);
+        delete[] buffer;
 
         return output;
     }
 
     std::wstring wformat_internal(const wchar_t* fmtstr, ...)
     {
-        va_list lst;
-        va_start(lst, fmtstr);
+        va_list args;
+        va_start(args, fmtstr);
 
-        const int sz = _vscwprintf_l(fmtstr, c_locale(), lst);
-        std::wstring output(sz, '\0');
-        _vsnwprintf_s_l(&output[0], output.size() + 1, output.size() + 1, fmtstr, c_locale(), lst);
-        va_end(lst);
+        int sz = vswprintf(nullptr, 0, fmtstr, args) + 1;
+
+        wchar_t* buffer = new wchar_t[sz];
+
+        vswprintf(buffer, sz, fmtstr, args);
+        va_end(args);
+
+        std::wstring output(buffer);
+        delete[] buffer;
 
         return output;
     }
