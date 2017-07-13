@@ -2,6 +2,7 @@
 #include "PackageSpec.h"
 #include "StatusParagraphs.h"
 #include "VcpkgPaths.h"
+#include "vcpkg_Graphs.h"
 #include "vcpkg_optional.h"
 #include <vector>
 
@@ -23,6 +24,45 @@ namespace vcpkg::Dependencies
         Optional<StatusParagraph> status_paragraph;
         Optional<BinaryParagraph> binary_paragraph;
         Optional<SourceParagraph> source_paragraph;
+        Optional<const SourceControlFile*> source_control_file;
+    };
+
+    struct ClusterNode
+    {
+        std::vector<StatusParagraph> status_paragraphs;
+        Optional<const SourceControlFile*> source_paragraph;
+    };
+}
+
+namespace vcpkg::Dependencies
+{
+    struct FeatureSpec
+    {
+        PackageSpec spec;
+        std::string feature_name;
+    };
+
+    struct FeatureNodeEdges
+    {
+        std::vector<FeatureSpec> dotted;
+        std::vector<FeatureSpec> dashed;
+        bool plus = false;
+    };
+    std::vector<FeatureSpec> to_feature_specs(const std::vector<std::string> depends,
+                                              const std::unordered_map<std::string, PackageSpec> str_to_spec);
+    struct Cluster
+    {
+        ClusterNode cluster_node;
+        std::unordered_map<std::string, FeatureNodeEdges> edges;
+        std::unordered_set<std::string> tracked_nodes;
+        std::unordered_set<std::string> original_nodes;
+        bool minus = false;
+        bool zero = true;
+        Cluster() = default;
+
+    private:
+        Cluster(const Cluster&) = delete;
+        Cluster& operator=(const Cluster&) = delete;
     };
 
     enum class InstallPlanType
@@ -39,6 +79,10 @@ namespace vcpkg::Dependencies
 
         InstallPlanAction();
         InstallPlanAction(const PackageSpec& spec, const AnyParagraph& any_paragraph, const RequestType& request_type);
+        InstallPlanAction(const PackageSpec& spec,
+                          const SourceControlFile& any_paragraph,
+                          std::unordered_set<std::string> features,
+                          const RequestType& request_type);
         InstallPlanAction(const InstallPlanAction&) = delete;
         InstallPlanAction(InstallPlanAction&&) = default;
         InstallPlanAction& operator=(const InstallPlanAction&) = delete;
@@ -48,6 +92,7 @@ namespace vcpkg::Dependencies
         AnyParagraph any_paragraph;
         InstallPlanType plan_type;
         RequestType request_type;
+        std::unordered_set<std::string> feature_list;
     };
 
     enum class RemovePlanType
@@ -71,6 +116,12 @@ namespace vcpkg::Dependencies
         PackageSpec spec;
         RemovePlanType plan_type;
         RequestType request_type;
+    };
+
+    struct AnyAction
+    {
+        Optional<InstallPlanAction> install_plan;
+        Optional<RemovePlanAction> remove_plan;
     };
 
     enum class ExportPlanType
@@ -124,4 +175,42 @@ namespace vcpkg::Dependencies
     std::vector<ExportPlanAction> create_export_plan(const VcpkgPaths& paths,
                                                      const std::vector<PackageSpec>& specs,
                                                      const StatusParagraphs& status_db);
+}
+
+template<>
+struct std::hash<vcpkg::Dependencies::Cluster>
+{
+    size_t operator()(const vcpkg::Dependencies::Cluster& value) const
+    {
+        size_t hash = 17;
+        if (auto source = value.cluster_node.source_paragraph.get())
+        {
+            hash = hash * 31 + std::hash<std::string>()((*source)->core_paragraph->name);
+        }
+        else if (!value.cluster_node.status_paragraphs.empty())
+        {
+            auto start = *value.cluster_node.status_paragraphs.begin();
+            hash = hash * 31 + std::hash<std::string>()(start.package.displayname());
+        }
+
+        return hash;
+    }
+};
+
+namespace vcpkg::Dependencies
+{
+    struct GraphPlan
+    {
+        Graphs::Graph<Cluster*> remove_graph;
+        Graphs::Graph<Cluster*> install_graph;
+    };
+    bool mark_plus(const std::string& feature,
+                   Cluster& cluster,
+                   std::unordered_map<PackageSpec, Cluster>& pkg_to_cluster,
+                   GraphPlan& graph_plan);
+    void mark_minus(Cluster& cluster, std::unordered_map<PackageSpec, Cluster>& pkg_to_cluster, GraphPlan& graph_plan);
+
+    std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<PackageSpec, SourceControlFile>& map,
+                                                       const std::vector<FullPackageSpec>& specs,
+                                                       const StatusParagraphs& status_db);
 }

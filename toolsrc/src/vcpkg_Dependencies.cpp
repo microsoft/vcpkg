@@ -55,6 +55,20 @@ namespace vcpkg::Dependencies
     }
 
     InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
+                                         const SourceControlFile& any_paragraph,
+                                         std::unordered_set<std::string> features,
+                                         const RequestType& request_type)
+        : InstallPlanAction()
+    {
+        this->spec = spec;
+        this->request_type = request_type;
+
+        this->plan_type = InstallPlanType::BUILD_AND_INSTALL;
+        this->any_paragraph.source_control_file = &any_paragraph;
+        this->feature_list = features;
+    }
+
+    InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
                                          const AnyParagraph& any_paragraph,
                                          const RequestType& request_type)
         : InstallPlanAction()
@@ -319,5 +333,235 @@ namespace vcpkg::Dependencies
         std::vector<ExportPlanAction> toposort =
             Graphs::topological_sort(specs, ExportAdjacencyProvider{paths, status_db, specs_as_set});
         return toposort;
+    }
+
+    std::vector<FeatureSpec> to_feature_specs(const std::vector<std::string> depends,
+                                              const std::unordered_map<std::string, PackageSpec> str_to_spec)
+    {
+        std::vector<FeatureSpec> f_specs;
+        for (auto&& depend : depends)
+        {
+            int end = (int)depend.find(']');
+            if (end != std::string::npos)
+            {
+                int start = (int)depend.find('[');
+
+                auto feature_name = depend.substr(start + 1, end - start - 1);
+                auto package_name = depend.substr(0, start);
+                auto p_spec = str_to_spec.find(package_name);
+                if (p_spec != str_to_spec.end())
+                {
+                    auto feature_spec = FeatureSpec{p_spec->second, feature_name};
+                    f_specs.emplace_back(std::move(feature_spec));
+                }
+            }
+            else
+            {
+                auto p_spec = str_to_spec.find(depend);
+                if (p_spec != str_to_spec.end())
+                {
+                    auto feature_spec = FeatureSpec{p_spec->second, ""};
+                    f_specs.emplace_back(std::move(feature_spec));
+                }
+            }
+        }
+        return f_specs;
+    }
+
+    bool mark_plus(const std::string& feature,
+                   Cluster& cluster,
+                   std::unordered_map<PackageSpec, Cluster>& pkg_to_cluster,
+                   GraphPlan& graph_plan)
+    {
+        auto it = cluster.edges.find(feature);
+        std::string updated_feature = feature;
+        if (updated_feature == "")
+        {
+            updated_feature = "core";
+            it = cluster.edges.find("core");
+        }
+        if (it == cluster.edges.end())
+        {
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+
+        if (cluster.edges[updated_feature].plus) return true;
+
+        if (cluster.original_nodes.find(updated_feature) == cluster.original_nodes.end())
+        {
+            cluster.zero = true;
+        }
+
+        if (!cluster.zero)
+        {
+            return false;
+        }
+        cluster.edges[updated_feature].plus = true;
+
+        if (!cluster.original_nodes.empty())
+        {
+            mark_minus(cluster, pkg_to_cluster, graph_plan);
+        }
+
+        graph_plan.install_graph.add_vertex(&cluster);
+        auto& tracked = cluster.tracked_nodes;
+        tracked.insert(updated_feature);
+        if (tracked.find("core") == tracked.end() && tracked.find("") == tracked.end())
+        {
+            cluster.tracked_nodes.insert("core");
+            for (auto&& depend : cluster.edges["core"].dashed)
+            {
+                auto& depend_cluster = pkg_to_cluster[depend.spec];
+                mark_plus(depend.feature_name, depend_cluster, pkg_to_cluster, graph_plan);
+                graph_plan.install_graph.add_edge(&cluster, &depend_cluster);
+            }
+        }
+
+        for (auto&& depend : cluster.edges[updated_feature].dashed)
+        {
+            auto& depend_cluster = pkg_to_cluster[depend.spec];
+            mark_plus(depend.feature_name, depend_cluster, pkg_to_cluster, graph_plan);
+            if (&depend_cluster == &cluster) continue;
+            graph_plan.install_graph.add_edge(&cluster, &depend_cluster);
+        }
+        return true;
+    }
+
+    void mark_minus(Cluster& cluster, std::unordered_map<PackageSpec, Cluster>& pkg_to_cluster, GraphPlan& graph_plan)
+    {
+        if (cluster.minus) return;
+        cluster.minus = true;
+
+        graph_plan.remove_graph.add_vertex(&cluster);
+        for (auto&& pair : cluster.edges)
+        {
+            auto& dotted_edges = pair.second.dotted;
+            for (auto&& depend : dotted_edges)
+            {
+                auto& depend_cluster = pkg_to_cluster[depend.spec];
+                graph_plan.remove_graph.add_edge(&cluster, &depend_cluster);
+                depend_cluster.zero = true;
+                mark_minus(depend_cluster, pkg_to_cluster, graph_plan);
+            }
+        }
+        for (auto&& original_feature : cluster.original_nodes)
+        {
+            cluster.zero = true;
+            mark_plus(original_feature, cluster, pkg_to_cluster, graph_plan);
+        }
+    }
+
+    std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<PackageSpec, SourceControlFile>& map,
+                                                       const std::vector<FullPackageSpec>& specs,
+                                                       const StatusParagraphs& status_db)
+    {
+        const auto triplet = Triplet::X86_WINDOWS;
+        std::unordered_map<PackageSpec, Cluster> pkg_spec_to_package_node;
+        std::unordered_map<std::string, PackageSpec> str_to_spec;
+
+        for (const auto& it : map)
+        {
+            str_to_spec.emplace(it.first.name(), it.first);
+        }
+
+        for (const auto& it : map)
+        {
+            Cluster& node = pkg_spec_to_package_node[it.first];
+            FeatureNodeEdges core_dependencies;
+            core_dependencies.dashed =
+                to_feature_specs(filter_dependencies(it.second.core_paragraph->depends, triplet), str_to_spec);
+            node.edges["core"] = std::move(core_dependencies);
+
+            for (const auto& feature : it.second.feature_paragraphs)
+            {
+                FeatureNodeEdges added_edges;
+                added_edges.dashed = to_feature_specs(filter_dependencies(feature->depends, triplet), str_to_spec);
+                node.edges.emplace(feature->name, std::move(added_edges));
+            }
+            node.cluster_node.source_paragraph = &it.second;
+        }
+
+        for (auto&& status_paragraph : status_db)
+        {
+            auto& spec = status_paragraph->package.spec;
+            auto& status_paragraph_feature = status_paragraph->package.feature;
+            Cluster& cluster = pkg_spec_to_package_node[spec];
+
+            cluster.zero = false;
+            auto reverse_edges = to_feature_specs(status_paragraph->package.depends, str_to_spec);
+
+            for (auto&& dependency : reverse_edges)
+            {
+                auto pkg_node = pkg_spec_to_package_node.find(dependency.spec);
+                auto depends_name = dependency.feature_name;
+                if (depends_name == "")
+                {
+                    for (auto&& default_feature : status_paragraph->package.default_features)
+                    {
+                        auto& target_node = pkg_node->second.edges[default_feature];
+                        target_node.dotted.emplace_back(FeatureSpec{spec, status_paragraph_feature});
+                    }
+                    depends_name = "core";
+                }
+                auto& target_node = pkg_node->second.edges[depends_name];
+                target_node.dotted.emplace_back(FeatureSpec{spec, status_paragraph_feature});
+            }
+            cluster.cluster_node.status_paragraphs.emplace_back(*status_paragraph);
+            if (status_paragraph_feature == "")
+            {
+                cluster.original_nodes.insert("core");
+            }
+            else
+            {
+                cluster.original_nodes.insert(status_paragraph_feature);
+            }
+        }
+
+        GraphPlan graph_plan;
+        for (auto&& spec : specs)
+        {
+            Cluster& spec_cluster = pkg_spec_to_package_node[spec.package_spec];
+            for (auto&& feature : spec.features)
+            {
+                mark_plus(feature, spec_cluster, pkg_spec_to_package_node, graph_plan);
+            }
+        }
+
+        Graphs::GraphAdjacencyProvider<Cluster*> adjacency_remove_graph(graph_plan.remove_graph.adjacency_list());
+        auto remove_vertex_list = graph_plan.remove_graph.vertex_list();
+        auto remove_toposort = Graphs::topological_sort(remove_vertex_list, adjacency_remove_graph);
+
+        Graphs::GraphAdjacencyProvider<Cluster*> adjacency_install_graph(graph_plan.install_graph.adjacency_list());
+        auto insert_vertex_list = graph_plan.install_graph.vertex_list();
+        auto insert_toposort = Graphs::topological_sort(insert_vertex_list, adjacency_install_graph);
+
+        std::vector<AnyAction> install_plan;
+
+        for (auto&& cluster : remove_toposort)
+        {
+            auto scf = *cluster->cluster_node.source_paragraph.get();
+
+            AnyAction any_plan;
+            any_plan.remove_plan = RemovePlanAction{
+                str_to_spec[scf->core_paragraph->name], RemovePlanType::REMOVE, RequestType::AUTO_SELECTED};
+
+            install_plan.emplace_back(std::move(any_plan));
+        }
+
+        for (auto&& cluster : insert_toposort)
+        {
+            if (!cluster->zero) continue;
+
+            auto scf = *cluster->cluster_node.source_paragraph.get();
+            auto& pkg_spec = str_to_spec[scf->core_paragraph->name];
+            auto action = InstallPlanAction{
+                pkg_spec, map.find(pkg_spec)->second, cluster->tracked_nodes, RequestType::AUTO_SELECTED};
+
+            AnyAction any_plan;
+            any_plan.install_plan = std::move(action);
+            install_plan.emplace_back(std::move(any_plan));
+        }
+
+        return install_plan;
     }
 }

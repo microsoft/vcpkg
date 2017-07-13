@@ -16,9 +16,11 @@ namespace vcpkg
 
     namespace Fields
     {
+        static const std::string FEATURE = "Feature";
         static const std::string DESCRIPTION = "Description";
         static const std::string MAINTAINER = "Maintainer";
         static const std::string DEPENDS = "Depends";
+        static const std::string DEFAULTFEATURES = "Default-Features";
     }
 
     BinaryParagraph::BinaryParagraph() = default;
@@ -38,7 +40,10 @@ namespace vcpkg
                              .value_or_exit(VCPKG_LINE_INFO);
         }
 
-        parser.required_field(Fields::VERSION, this->version);
+        // one or the other
+        this->version = parser.optional_field(Fields::VERSION);
+        this->feature = parser.optional_field(Fields::FEATURE);
+
         this->description = parser.optional_field(Fields::DESCRIPTION);
         this->maintainer = parser.optional_field(Fields::MAINTAINER);
 
@@ -46,6 +51,10 @@ namespace vcpkg
         parser.required_field(Fields::MULTI_ARCH, multi_arch);
 
         this->depends = parse_comma_list(parser.optional_field(Fields::DEPENDS));
+        if (this->feature.empty())
+        {
+            this->default_features = parse_comma_list(parser.optional_field(Fields::DEFAULTFEATURES));
+        }
 
         if (auto err = parser.error_info(this->spec.name()))
         {
