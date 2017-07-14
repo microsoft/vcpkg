@@ -4,24 +4,24 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/bond-5.3.1)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/bond-6.0.0)
 
 vcpkg_download_distfile(ARCHIVE
-  URLS "https://github.com/Microsoft/bond/archive/5.3.1.zip"
-  FILENAME "bond-5.3.1.zip"
-  SHA512 aa1b3b6cbbbfbdb450306b59d0216c4b63b25ce2f5852387b42cb5c098e8fb6f90d8d1f688344fa4375244510009767d7d46a6a0b5f49c725b22cf3e9d73d1e5
+  URLS "https://github.com/Microsoft/bond/archive/6.0.0.zip"
+  FILENAME "bond-6.0.0.zip"
+  SHA512 d585debabb7b74c1e85313278456bd6b63a388dbf64515c550b1d9739114b0963ffb1982d145fa4d3717747e8eba82e79ed2744a6c9e3cb1615d9a78b75b42bb
 )
 vcpkg_download_distfile(GBC_ARCHIVE
-  URLS "https://github.com/Microsoft/bond/releases/download/5.3.1/gbc-5.3.1-amd64.exe.zip"
-  FILENAME "gbc-5.3.1-amd64.zip"
-  SHA512 fb1eff0b7bd34cba26fa6a0ffeba7789cff55976e95a695aa2cf6ae60b5c4e8b0dd15f0d7968599bd5b17c9b8b325aa29e3e13aca4854ec38ed50253d67038e4
+  URLS "https://github.com/Microsoft/bond/releases/download/6.0.0/gbc-6.0.0-amd64.exe.zip"
+  FILENAME "gbc-6.0.0-amd64.zip"
+  SHA512 2aa4b5add478b952cb7733dcbf5c35634cde66812f1f1920d5fb1e2a52681a101ac6157bdba535a59316c4590fa37c74889b734106ca3e202a7a5ec0bcb1847f
 )
 
 vcpkg_extract_source_archive(${ARCHIVE})
 
 # Extract the precompiled gbc
 vcpkg_extract_source_archive(${GBC_ARCHIVE} ${CURRENT_BUILDTREES_DIR}/tools/)
-set(FETCHED_GBC_PATH ${CURRENT_BUILDTREES_DIR}/tools/gbc-5.3.1-amd64.exe)
+set(FETCHED_GBC_PATH ${CURRENT_BUILDTREES_DIR}/tools/gbc-6.0.0-amd64.exe)
 
 if (NOT EXISTS ${FETCHED_GBC_PATH})
     message(FATAL_ERROR "Fetching GBC failed. Expected '${FETCHED_GBC_PATH}' to exists, but it doesn't.")
@@ -43,6 +43,8 @@ vcpkg_configure_cmake(
   OPTIONS
     -DBOND_LIBRARIES_ONLY=TRUE
     -DBOND_GBC_PATH=${FETCHED_GBC_PATH}
+    -DBOND_ENABLE_COMM=FALSE
+    -DBOND_ENABLE_GRPC=FALSE
 )
 
 vcpkg_install_cmake()
