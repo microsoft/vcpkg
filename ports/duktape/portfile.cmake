@@ -14,17 +14,10 @@ vcpkg_apply_patches(
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/duk_config.h.patch"
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    vcpkg_configure_cmake(
-        SOURCE_PATH ${CMAKE_PATH}
-        OPTIONS -DENABLE_STATIC=OFF -DSOURCE_PATH=${SOURCE_PATH}
-    )
-else()
-    vcpkg_configure_cmake(
-        SOURCE_PATH ${CMAKE_PATH}
-        OPTIONS -DENABLE_STATIC=ON -DSOURCE_PATH=${SOURCE_PATH}
-    )
-endif()
+vcpkg_configure_cmake(
+    SOURCE_PATH ${CMAKE_PATH}
+    OPTIONS -DSOURCE_PATH=${SOURCE_PATH}
+)
 
 vcpkg_install_cmake()
 
