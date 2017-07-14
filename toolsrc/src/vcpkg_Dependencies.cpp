@@ -139,20 +139,51 @@ namespace vcpkg::Dependencies
         return left->spec.name() < right->spec.name();
     }
 
-    std::vector<InstallPlanAction> create_install_plan(const VcpkgPaths& paths,
+    MapPortFile::MapPortFile(const std::unordered_map<PackageSpec, SourceControlFile>& map) : ports(map){};
+    const SourceControlFile& MapPortFile::get_control_file(const PackageSpec& spec) const
+    {
+        auto scf = ports.find(spec);
+        if (scf == ports.end())
+        {
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+        return scf->second;
+    }
+
+    PathsPortFile::PathsPortFile(const VcpkgPaths& paths) : ports(paths){};
+    const SourceControlFile& PathsPortFile::get_control_file(const PackageSpec& spec) const
+    {
+        std::unordered_map<PackageSpec, SourceControlFile>::iterator cache_it = cache.find(spec);
+        if (cache_it != cache.end())
+        {
+            return cache_it->second;
+        }
+        Parse::ParseExpected<SourceControlFile> source_control_file =
+            Paragraphs::try_load_port(ports.get_filesystem(), ports.port_dir(spec));
+
+        if (auto scf = source_control_file.get())
+        {
+            auto it = cache.emplace(spec, std::move(*scf->get()));
+            return it.first->second;
+        }
+        print_error_message(source_control_file.error());
+        Checks::exit_fail(VCPKG_LINE_INFO);
+    }
+
+    std::vector<InstallPlanAction> create_install_plan(const PortFileProvider& port_file_provider,
                                                        const std::vector<PackageSpec>& specs,
                                                        const StatusParagraphs& status_db)
     {
         struct InstallAdjacencyProvider final : Graphs::AdjacencyProvider<PackageSpec, InstallPlanAction>
         {
-            const VcpkgPaths& paths;
+            const PortFileProvider& port_file_provider;
             const StatusParagraphs& status_db;
             const std::unordered_set<PackageSpec>& specs_as_set;
 
-            InstallAdjacencyProvider(const VcpkgPaths& p,
+            InstallAdjacencyProvider(const PortFileProvider& port_file_provider,
                                      const StatusParagraphs& s,
                                      const std::unordered_set<PackageSpec>& specs_as_set)
-                : paths(p), status_db(s), specs_as_set(specs_as_set)
+                : port_file_provider(port_file_provider), status_db(s), specs_as_set(specs_as_set)
             {
             }
 
@@ -169,23 +200,14 @@ namespace vcpkg::Dependencies
                                                      : RequestType::AUTO_SELECTED;
                 auto it = status_db.find_installed(spec);
                 if (it != status_db.end()) return InstallPlanAction{spec, {*it->get(), nullopt, nullopt}, request_type};
-
-                Expected<BinaryParagraph> maybe_bpgh = Paragraphs::try_load_cached_package(paths, spec);
-                if (auto bpgh = maybe_bpgh.get())
-                    return InstallPlanAction{spec, {nullopt, *bpgh, nullopt}, request_type};
-
-                auto maybe_scf = Paragraphs::try_load_port(paths.get_filesystem(), paths.port_dir(spec));
-                if (auto scf = maybe_scf.get())
-                    return InstallPlanAction{spec, {nullopt, nullopt, *scf->get()->core_paragraph}, request_type};
-
-                print_error_message(maybe_scf.error());
-                Checks::exit_fail(VCPKG_LINE_INFO);
+                return InstallPlanAction{
+                    spec, {nullopt, nullopt, *port_file_provider.get_control_file(spec).core_paragraph}, request_type};
             }
         };
 
         const std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
         std::vector<InstallPlanAction> toposort =
-            Graphs::topological_sort(specs, InstallAdjacencyProvider{paths, status_db, specs_as_set});
+            Graphs::topological_sort(specs, InstallAdjacencyProvider{port_file_provider, status_db, specs_as_set});
         Util::erase_remove_if(toposort, [](const InstallPlanAction& plan) {
             return plan.request_type == RequestType::AUTO_SELECTED &&
                    plan.plan_type == InstallPlanType::ALREADY_INSTALLED;
