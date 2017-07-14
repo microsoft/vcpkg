@@ -1,18 +1,17 @@
 include(vcpkg_common_functions)
-set(LIBPNG_VERSION 1.6.29)
+set(LIBPNG_VERSION 1.6.30)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libpng-${LIBPNG_VERSION})
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://downloads.sourceforge.net/project/libpng/libpng16/${LIBPNG_VERSION}/libpng-${LIBPNG_VERSION}.tar.xz"
     FILENAME "libpng-${LIBPNG_VERSION}.tar.xz"
-    SHA512 070393423ec11f19e3264a0200959ae09238aa005615571586987253028b4ffb7e6b7c734a132f65180252b0259f79add03896d79fdc7dcfd8773b82c82a5ffc
+    SHA512 8c58f0f8523d7c7e8e641134c9a0e7fb6b60cddd6b4689afaafde0c99cff74652c6fb800a45149910aa2d8f06695ba4774f6a4d64810f2419a714d4188d72f82
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/use-abort-on-all-platforms.patch
-        ${CMAKE_CURRENT_LIST_DIR}/dont-double-eval-CMAKE_SYSTEM_PROCESSOR.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -32,6 +31,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DPNG_STATIC=${PNG_STATIC_LIBS}
         -DPNG_SHARED=${PNG_SHARED_LIBS}
@@ -44,7 +44,6 @@ vcpkg_configure_cmake(
         -DSKIP_INSTALL_HEADERS=ON
 )
 
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -52,11 +51,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libpng16_staticd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libpng16d.lib)
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libpng ${CURRENT_PACKAGES_DIR}/share/libpng)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libpng/libpng16-debug.cmake ${CURRENT_PACKAGES_DIR}/share/libpng/libpng16-debug.cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/libpng)
+# Remove CMake config files as they are incorrectly generated and everyone uses built-in FindPNG anyway.
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/libpng ${CURRENT_PACKAGES_DIR}/debug/lib/libpng)
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libpng)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libpng/LICENSE ${CURRENT_PACKAGES_DIR}/share/libpng/copyright)
 

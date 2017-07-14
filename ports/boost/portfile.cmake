@@ -15,8 +15,8 @@ vcpkg_extract_source_archive(${ARCHIVE_FILE})
 # apply boost range hotfix
 vcpkg_download_distfile(DIFF
     URLS "https://github.com/boostorg/range/commit/e7ebe14707130cda7b72e0ae5e93b17157fdb6a2.diff"
-    FILENAME "boost-range-has_range_iterator-hotfix_e7ebe14707130cda7b72e0ae5e93b17157fdb6a2.diff"
-    SHA512 77dad42bfd9bbab2bbddf361d5b7ad3dd6f812f4294c6dd1a677bb4d0191a4fff43bca32fdd4fce05d428562abb6e38afd0fd33ca6a8b5f28481d70cd2f3dd67
+    FILENAME "boost-range-has_range_iterator-hotfix_e7ebe14707130cda7b72e0ae5e93b17157fdb6a2-2.diff"
+    SHA512 88392fcf092d07ee2de66d937634688eef1d7491a4e2fb0fce064b4e631813a0814455a329f9eed8b968ff205883751d51a86edecc8e355790fc8a35d6742483
 )
 
 FILE(READ "${DIFF}" content)

@@ -12,8 +12,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF v1.3.1
-    SHA512 1c9f35e84995158b75bb8694bb9d8c5ddafccf347c4827213290b221f9fc3ab9071c9f79a10a563e9cdfabae3f4b83d6148907f106066f54093242f818038438
+    REF v1.4.1
+    SHA512 5028e4f881a41e4c4ddf770bd824d1d5de825f86d68dbbfab22e2a34ec0e46b27754b0f5b40cfc02b0d22a756b08056b100837b590745b5fdbdce9a803e59f8d
     HEAD_REF master
 )
 
@@ -61,6 +61,7 @@ file(GLOB TOOLS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.exe")
 if(TOOLS)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/grpc)
     file(COPY ${TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/grpc)
+    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/grpc)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
