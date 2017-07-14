@@ -93,6 +93,21 @@ set(B2_OPTIONS
     threading=multi
 )
 
+# Add build type specific options
+set(B2_OPTIONS_DBG
+    -sZLIB_BINARY=zlibd
+    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
+    -sBZIP2_BINARY=bz2d
+    -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
+)
+
+set(B2_OPTIONS_REL
+    -sZLIB_BINARY=zlib
+    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+    -sBZIP2_BINARY=bz2
+    -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+)
+
 set(LIB_RUNTIME_LINK "shared")
 if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
     list(APPEND B2_OPTIONS runtime-link=shared)
@@ -172,6 +187,8 @@ else()
     string(REGEX REPLACE ".*python([0-9\.]+)$" "\\1" PYTHON_VERSION ${PYTHON_INCLUDE_PATH})
     configure_file(${CMAKE_CURRENT_LIST_DIR}/desktop/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/user-config.jam @ONLY)
     configure_file(${CMAKE_CURRENT_LIST_DIR}/desktop/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/user-config.jam @ONLY)
+    list(APPEND B2_OPTIONS_DBG
+         python-debugging=on)
 endif()
 
 if(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
@@ -182,21 +199,14 @@ else()
     message(FATAL_ERROR "Unsupported value for VCPKG_PLATFORM_TOOLSET: '${VCPKG_PLATFORM_TOOLSET}'")
 endif()
 
-# Add build type specific options
 set(B2_OPTIONS_DBG
     ${B2_OPTIONS}
-    -sZLIB_BINARY=zlibd
-    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
-    -sBZIP2_BINARY=bz2d
-    -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
+    ${B2_OPTIONS_DBG}
 )
 
 set(B2_OPTIONS_REL
     ${B2_OPTIONS}
-    -sZLIB_BINARY=zlib
-    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
-    -sBZIP2_BINARY=bz2
-    -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+    ${B2_OPTIONS_REL}
 )
 
 ######################
