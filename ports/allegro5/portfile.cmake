@@ -49,7 +49,7 @@ vcpkg_configure_cmake(
         -DWANT_OPENAL=ON
         -DWANT_OPENGL=ON
         -DWANT_OPENSL=OFF # Not yet available on vcpkg
-        -DWANT_OPUS=ON
+        -DWANT_OPUS=OFF # opus is available on vcpkg, but opusfile isn't
         -DWANT_PHYSFS=ON
         -DWANT_POPUP_EXAMPLES=OFF
         -DWANT_PRIMITIVES=ON
@@ -61,7 +61,6 @@ vcpkg_configure_cmake(
         -DWANT_VIDEO=ON
         -DWANT_VORBIS=ON
         -DOPENAL_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/AL
-        -DOPUS_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
         -DZLIB_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
     OPTIONS_RELEASE -DWANT_ALLOW_SSE=ON
     OPTIONS_DEBUG -DWANT_ALLOW_SSE=OFF
