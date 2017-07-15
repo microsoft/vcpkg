@@ -32,7 +32,7 @@ vcpkg_configure_cmake(
         -DWANT_AUDIO=ON
         -DWANT_COLOR=ON
         -DWANT_D3D=ON
-        -DWANT_D3D9EX=ON
+        -DWANT_D3D9EX=OFF # Not available on vcpkg
         -DWANT_DSOUND=ON
         -DWANT_FLAC=ON
         -DWANT_FONT=ON
