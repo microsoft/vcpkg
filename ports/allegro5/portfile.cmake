@@ -42,7 +42,7 @@ vcpkg_configure_cmake(
         -DWANT_IMAGE_JPG=ON
         -DWANT_IMAGE_PNG=ON
         -DWANT_MEMFILE=ON
-        -DWANT_MODAUDIO=ON
+        -DWANT_MODAUDIO=OFF # Not available on vcpkg right now
         -DWANT_NATIVE_DIALOG=ON
         -DWANT_NATIVE_IMAGE_LOADER=ON
         -DWANT_OGG_VIDEO=ON
