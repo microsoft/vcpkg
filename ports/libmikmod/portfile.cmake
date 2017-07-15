@@ -22,7 +22,19 @@ vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    OPTIONS -DENABLE_DOC=OFF -DENABLE_THREADS=ON
+    OPTIONS
+        -DENABLE_DOC=OFF
+        -DENABLE_THREADS=ON
+        -DDISABLE_HQMIXER=OFF
+        -DENABLE_AF=ON
+        -DENABLE_AIFF=ON
+        -DENABLE_NAS=ON
+        -DENABLE_OPENAL=ON
+        -DENABLE_PIPE=ON
+        -DENABLE_RAW=ON
+        -DENABLE_STDOUT=ON
+        -DENABLE_WAV=ON
+        -DOPENAL_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
     OPTIONS_RELEASE -DENABLE_SIMD=ON
     OPTIONS_DEBUG -DENABLE_SIMD=OFF
 )
