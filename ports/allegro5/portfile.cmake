@@ -48,6 +48,7 @@ vcpkg_configure_cmake(
         -DWANT_OGG_VIDEO=ON
         -DWANT_OPENAL=ON
         -DWANT_OPENGL=ON
+        -DWANT_OPENSL=OFF # Not yet available on vcpkg
         -DWANT_OPUS=ON
         -DWANT_PHYSFS=ON
         -DWANT_POPUP_EXAMPLES=OFF
@@ -55,7 +56,7 @@ vcpkg_configure_cmake(
         -DWANT_RELEASE_LOGGING=OFF
         -DWANT_SHADERS_D3D=ON
         -DWANT_SHADERS_GL=ON
-        -DWANT_TREMOR=ON
+        -DWANT_TREMOR=OFF # Not yet available on vcpkg
         -DWANT_TTF=ON
         -DWANT_VIDEO=ON
         -DWANT_VORBIS=ON
