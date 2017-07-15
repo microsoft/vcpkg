@@ -73,3 +73,5 @@ file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/a
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/allegro5/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/allegro5/copyright)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+vcpkg_copy_pdbs()
