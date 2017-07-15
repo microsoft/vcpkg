@@ -19,6 +19,11 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(ALLEGRO_USE_STATIC -DSHARED=ON)
+else()
+    set(ALLEGRO_USE_STATIC -DSHARED=OFF)
+endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
@@ -26,6 +31,7 @@ vcpkg_configure_cmake(
         -DWANT_DOCS=OFF
         -DALLEGRO_SDL=OFF
         -DWANT_DEMO=OFF
+        ${ALLEGRO_USE_STATIC}
         -DWANT_EXAMPLES=OFF
         -DWANT_CURL_EXAMPLE=OFF
         -DWANT_TESTS=OFF
