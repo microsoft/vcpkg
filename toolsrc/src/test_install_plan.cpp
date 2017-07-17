@@ -24,6 +24,10 @@ namespace UnitTest1
                 map.emplace(*spec.get(), std::move(*scf.get()));
                 return PackageSpec{*spec.get()};
             }
+            PackageSpec set_package_map(std::string source, std::string version, std::string build_depends)
+            {
+                return get_package_spec({{{"Source", source}, {"Version", version}, {"Build-Depends", build_depends}}});
+            }
         };
 
         static void features_check(Dependencies::AnyAction* install_action,
@@ -59,10 +63,9 @@ namespace UnitTest1
             std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
             PackageSpecMap spec_map;
-
-            auto spec_a = spec_map.get_package_spec({{{"Source", "a"}, {"Version", "1.2.8"}, {"Build-Depends", "b"}}});
-            auto spec_b = spec_map.get_package_spec({{{"Source", "b"}, {"Version", "1.3"}, {"Build-Depends", "c"}}});
-            auto spec_c = spec_map.get_package_spec({{{"Source", "c"}, {"Version", "2.5.3"}, {"Build-Depends", ""}}});
+            auto spec_a = spec_map.set_package_map("a", "1.2.8", "b");
+            auto spec_b = spec_map.set_package_map("b", "1.3", "c");
+            auto spec_c = spec_map.set_package_map("c", "2.5.3", "");
 
             auto map_port = Dependencies::MapPortFile(spec_map.map);
             auto install_plan =
@@ -79,17 +82,14 @@ namespace UnitTest1
             std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
             PackageSpecMap spec_map;
-
-            auto spec_a = spec_map.get_package_spec({{{"Source", "a"}, {"Version", "1.2.8"}, {"Build-Depends", "d"}}});
-            auto spec_b = spec_map.get_package_spec({{{"Source", "b"}, {"Version", "1.3"}, {"Build-Depends", "d, e"}}});
-            auto spec_c =
-                spec_map.get_package_spec({{{"Source", "c"}, {"Version", "2.5.3"}, {"Build-Depends", "e, h"}}});
-            auto spec_d =
-                spec_map.get_package_spec({{{"Source", "d"}, {"Version", "4.0"}, {"Build-Depends", "f, g, h"}}});
-            auto spec_e = spec_map.get_package_spec({{{"Source", "e"}, {"Version", "1.0"}, {"Build-Depends", "g"}}});
-            auto spec_f = spec_map.get_package_spec({{{"Source", "f"}, {"Version", "1.0"}, {"Build-Depends", ""}}});
-            auto spec_g = spec_map.get_package_spec({{{"Source", "g"}, {"Version", "1.0"}, {"Build-Depends", ""}}});
-            auto spec_h = spec_map.get_package_spec({{{"Source", "h"}, {"Version", "1.0"}, {"Build-Depends", ""}}});
+            auto spec_a = spec_map.set_package_map("a", "1.2.8", "d");
+            auto spec_b = spec_map.set_package_map("b", "1.3", "d, e");
+            auto spec_c = spec_map.set_package_map("c", "2.5.3", "e, h");
+            auto spec_d = spec_map.set_package_map("d", "4.0", "f, g, h");
+            auto spec_e = spec_map.set_package_map("e", "1.0", "g");
+            auto spec_f = spec_map.set_package_map("f", "1.0", "");
+            auto spec_g = spec_map.set_package_map("g", "1.0", "");
+            auto spec_h = spec_map.set_package_map("h", "1.0", "");
 
             auto map_port = Dependencies::MapPortFile(spec_map.map);
             auto install_plan = Dependencies::create_install_plan(
@@ -136,24 +136,16 @@ namespace UnitTest1
 
             PackageSpecMap spec_map;
 
-            auto spec_h =
-                spec_map.get_package_spec({{{"Source", "h"}, {"Version", "1.2.8"}, {"Build-Depends", "j, k"}}});
-            auto spec_c = spec_map.get_package_spec(
-                {{{"Source", "c"}, {"Version", "1.2.8"}, {"Build-Depends", "d, e, f, g, h, j, k"}}});
-            auto spec_k = spec_map.get_package_spec({{{"Source", "k"}, {"Version", "1.2.8"}, {"Build-Depends", ""}}});
-            auto spec_b = spec_map.get_package_spec(
-                {{{"Source", "b"}, {"Version", "1.2.8"}, {"Build-Depends", "c, d, e, f, g, h, j, k"}}});
-            auto spec_d = spec_map.get_package_spec(
-                {{{"Source", "d"}, {"Version", "1.2.8"}, {"Build-Depends", "e, f, g, h, j, k"}}});
-            auto spec_j = spec_map.get_package_spec({{{"Source", "j"}, {"Version", "1.2.8"}, {"Build-Depends", "k"}}});
-            auto spec_f =
-                spec_map.get_package_spec({{{"Source", "f"}, {"Version", "1.2.8"}, {"Build-Depends", "g, h, j, k"}}});
-            auto spec_e = spec_map.get_package_spec(
-                {{{"Source", "e"}, {"Version", "1.2.8"}, {"Build-Depends", "f, g, h, j, k"}}});
-            auto spec_a = spec_map.get_package_spec(
-                {{{"Source", "a"}, {"Version", "1.2.8"}, {"Build-Depends", "b, c, d, e, f, g, h, j, k"}}});
-            auto spec_g =
-                spec_map.get_package_spec({{{"Source", "g"}, {"Version", "1.2.8"}, {"Build-Depends", "h, j, k"}}});
+            auto spec_a = spec_map.set_package_map("a", "1.2.8", "b, c, d, e, f, g, h, j, k");
+            auto spec_b = spec_map.set_package_map("b", "1.2.8", "c, d, e, f, g, h, j, k");
+            auto spec_c = spec_map.set_package_map("c", "1.2.8", "d, e, f, g, h, j, k");
+            auto spec_d = spec_map.set_package_map("d", "1.2.8", "e, f, g, h, j, k");
+            auto spec_e = spec_map.set_package_map("e", "1.2.8", "f, g, h, j, k");
+            auto spec_f = spec_map.set_package_map("f", "1.2.8", "g, h, j, k");
+            auto spec_g = spec_map.set_package_map("g", "1.2.8", "h, j, k");
+            auto spec_h = spec_map.set_package_map("h", "1.2.8", "j, k");
+            auto spec_j = spec_map.set_package_map("j", "1.2.8", "k");
+            auto spec_k = spec_map.set_package_map("k", "1.2.8", "");
 
             auto map_port = Dependencies::MapPortFile(spec_map.map);
             auto install_plan =
@@ -197,23 +189,20 @@ namespace UnitTest1
                                                                               {"Status", "install ok installed"}}));
 
             PackageSpecMap spec_map;
-
             auto spec_a =
-                FullPackageSpec{spec_map.get_package_spec(
-                                    {{{"Source", "a"}, {"Version", "1.3.8"}, {"Build-Depends", "b, b[beefeatureone]"}},
-                                     {{"Feature", "featureone"},
-                                      {"Description", "the first feature for a"},
-                                      {"Build-Depends", "b[beefeaturetwo]"}}
-
-                                    }),
+                FullPackageSpec{spec_map.get_package_spec({
+                                    {{"Source", "a"}, {"Version", "1.3.8"}, {"Build-Depends", "b, b[beefeatureone]"}},
+                                    {{"Feature", "featureone"},
+                                     {"Description", "the first feature for a"},
+                                     {"Build-Depends", "b[beefeaturetwo]"}},
+                                }),
                                 {"featureone"}};
-            auto spec_b = FullPackageSpec{spec_map.get_package_spec(
-                {{{"Source", "b"}, {"Version", "1.3"}, {"Build-Depends", ""}},
-                 {{"Feature", "beefeatureone"}, {"Description", "the first feature for b"}, {"Build-Depends", ""}},
-                 {{"Feature", "beefeaturetwo"}, {"Description", "the second feature for b"}, {"Build-Depends", ""}},
-                 {{"Feature", "beefeaturethree"}, {"Description", "the third feature for b"}, {"Build-Depends", ""}}
-
-                })};
+            auto spec_b = FullPackageSpec{spec_map.get_package_spec({
+                {{"Source", "b"}, {"Version", "1.3"}, {"Build-Depends", ""}},
+                {{"Feature", "beefeatureone"}, {"Description", "the first feature for b"}, {"Build-Depends", ""}},
+                {{"Feature", "beefeaturetwo"}, {"Description", "the second feature for b"}, {"Build-Depends", ""}},
+                {{"Feature", "beefeaturethree"}, {"Description", "the third feature for b"}, {"Build-Depends", ""}},
+            })};
 
             auto install_plan = Dependencies::create_feature_install_plan(
                 spec_map.map, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
@@ -242,13 +231,12 @@ namespace UnitTest1
 
                                     }),
                                 {"featureone"}};
-            auto spec_b = FullPackageSpec{spec_map.get_package_spec(
-                {{{"Source", "b"}, {"Version", "1.3"}, {"Build-Depends", ""}},
-                 {{"Feature", "beefeatureone"}, {"Description", "the first feature for b"}, {"Build-Depends", ""}},
-                 {{"Feature", "beefeaturetwo"}, {"Description", "the second feature for b"}, {"Build-Depends", ""}},
-                 {{"Feature", "beefeaturethree"}, {"Description", "the third feature for b"}, {"Build-Depends", ""}}
-
-                })};
+            auto spec_b = FullPackageSpec{spec_map.get_package_spec({
+                {{"Source", "b"}, {"Version", "1.3"}, {"Build-Depends", ""}},
+                {{"Feature", "beefeatureone"}, {"Description", "the first feature for b"}, {"Build-Depends", ""}},
+                {{"Feature", "beefeaturetwo"}, {"Description", "the second feature for b"}, {"Build-Depends", ""}},
+                {{"Feature", "beefeaturethree"}, {"Description", "the third feature for b"}, {"Build-Depends", ""}},
+            })};
 
             auto install_plan = Dependencies::create_feature_install_plan(
                 spec_map.map, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
