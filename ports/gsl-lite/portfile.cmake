@@ -9,9 +9,9 @@ vcpkg_download_distfile(HEADER
 )
 
 vcpkg_download_distfile(LICENSE
-    URLS https://github.com/martinmoene/gsl-lite/raw/${GSL_LITE_VERSION}/LICENSE.txt"
+    URLS "https://github.com/martinmoene/gsl-lite/raw/${GSL_LITE_VERSION}/LICENSE"
     FILENAME "gsl-lite-LICENSE-${GSL_LITE_VERSION}.txt"
-    SHA512 8c43bac30bd7dd1911e29739be50735e013a15b6d1553d4ac64c76b8597d9a896491d9d5be277f22296439570a34813ed89deec6c80483dd2a9754a141febe15
+    SHA512 1feff12bda27a5ec52440a7624de54d841faf3e254fff04ab169b7f312e685f4bfe71236de8b8ef759111ae95bdb69e05f2e8318773b0aff4ba24ea9568749bb
 )
 
 file(INSTALL ${HEADER} DESTINATION ${CURRENT_PACKAGES_DIR}/include RENAME gsl-lite.h)
