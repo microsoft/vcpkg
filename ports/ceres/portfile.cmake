@@ -55,17 +55,20 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
 vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
+
+file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/CeresConfig.cmake CERES_MODULE)
+string(REPLACE "\${CERES_CURRENT_CONFIG_DIR}/../" "\${CERES_CURRENT_CONFIG_DIR}/../../" CERES_MODULE "${CERES_MODULE}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/CeresConfig.cmake "${CERES_MODULE}")
 
 vcpkg_copy_pdbs()
 
 #clean
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/share/ceres/FindEigen.cmake)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/share/ceres/FindGflags.cmake)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/share/ceres/FindGlog.cmake)
+# file(REMOVE ${CURRENT_PACKAGES_DIR}/share/ceres/FindEigen.cmake)
+# file(REMOVE ${CURRENT_PACKAGES_DIR}/share/ceres/FindGflags.cmake)
+# file(REMOVE ${CURRENT_PACKAGES_DIR}/share/ceres/FindGlog.cmake)
 
 # Handle copyright of suitesparse and metis
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ceres)
