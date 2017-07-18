@@ -42,6 +42,7 @@ vcpkg_extract_source_archive(${SUITESPARSE} ${SUITESPARSEWIN_PATH})
 vcpkg_apply_patches(
     SOURCE_PATH ${SUITESPARSEWIN_PATH}
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-install-suitesparse.patch"
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/remove-debug-postfix.patch"
 )
 
 vcpkg_configure_cmake(
@@ -63,11 +64,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/suitesparse/)
-
-file(RENAME ${CURRENT_PACKAGES_DIR}/cmake/SuiteSparse-config.cmake ${CURRENT_PACKAGES_DIR}/share/suitesparse/SuiteSparse-config.cmake)
-file(RENAME ${CURRENT_PACKAGES_DIR}/cmake/SuiteSparse-config-release.cmake ${CURRENT_PACKAGES_DIR}/share/suitesparse/SuiteSparse-config-release.cmake)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/cmake/SuiteSparse-config-debug.cmake ${CURRENT_PACKAGES_DIR}/share/suitesparse/SuiteSparse-config-debug.cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake")
 
 file(RENAME ${CURRENT_PACKAGES_DIR}/UseSuiteSparse.cmake ${CURRENT_PACKAGES_DIR}/share/suitesparse/UseSuiteSparse.cmake)
 file(RENAME ${CURRENT_PACKAGES_DIR}/SuiteSparseConfig.cmake ${CURRENT_PACKAGES_DIR}/share/suitesparse/SuiteSparseConfig.cmake)
@@ -77,24 +74,9 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/SuiteSparseConfig.cmake)
 # Update paths in SuiteSparseConfig.cmake
 file(READ ${CURRENT_PACKAGES_DIR}/share/suitesparse/SuiteSparseConfig.cmake _contents)
 string(REPLACE "set(SuiteSparse_LIB_POSTFIX \"64\")" "set(SuiteSparse_LIB_POSTFIX \"\")" _contents "${_contents}")
-string(REPLACE "\#\# do nothing, it's OK" "include(${USE_SuiteSparse})" _contents "${_contents}")
-
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/suitesparse/SuiteSparseConfig.cmake "${_contents}")
 
-# Update paths in SuiteSparse-config.cmake
-file(READ ${CURRENT_PACKAGES_DIR}/share/suitesparse/SuiteSparse-config.cmake _contents)
-string(REPLACE "get_filename_component(_IMPORT_PREFIX \"${_IMPORT_PREFIX}\" PATH)"
-    "get_filename_component(_IMPORT_PREFIX \"${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"${_IMPORT_PREFIX}\" PATH)" _contents "${_contents}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/suitesparse/SuiteSparse-config.cmake "${_contents}")
-
-# Update paths in SuiteSparse-config-debug.cmake
-file(READ ${CURRENT_PACKAGES_DIR}/share/suitesparse/SuiteSparse-config-debug.cmake _contents)
-string(REPLACE "\${_IMPORT_PREFIX}/lib/" "\${_IMPORT_PREFIX}/debug/lib/" _contents "${_contents}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/suitesparse/SuiteSparse-config-debug.cmake "${_contents}")
-
 #clean folders
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright of suitesparse and suitesparse-metis-for-windows
