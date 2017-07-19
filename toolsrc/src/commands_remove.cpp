@@ -14,7 +14,7 @@ namespace vcpkg::Commands::Remove
     using Dependencies::RequestType;
     using Update::OutdatedPackage;
 
-    static void remove_package(const VcpkgPaths& paths, const PackageSpec& spec, StatusParagraphs* status_db)
+    void remove_package(const VcpkgPaths& paths, const PackageSpec& spec, StatusParagraphs* status_db)
     {
         auto& fs = paths.get_filesystem();
         StatusParagraph& pkg = **status_db->find(spec.name(), spec.triplet());

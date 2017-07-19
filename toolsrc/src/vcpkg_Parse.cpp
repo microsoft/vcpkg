@@ -6,18 +6,6 @@
 
 namespace vcpkg::Parse
 {
-    static Optional<std::string> get_field(const std::unordered_map<std::string, std::string>& fields,
-                                           const std::string& fieldname)
-    {
-        auto it = fields.find(fieldname);
-        if (it == fields.end())
-        {
-            return nullopt;
-        }
-
-        return it->second;
-    }
-
     static Optional<std::string> remove_field(std::unordered_map<std::string, std::string>* fields,
                                               const std::string& fieldname)
     {

@@ -75,6 +75,16 @@ namespace vcpkg
         this->depends = filter_dependencies(spgh.depends, triplet);
     }
 
+    BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh, const FeatureParagraph& fpgh, const Triplet& triplet)
+    {
+        this->spec = PackageSpec::from_name_and_triplet(spgh.name, triplet).value_or_exit(VCPKG_LINE_INFO);
+        this->version = "";
+        this->feature = fpgh.name;
+        this->description = fpgh.description;
+        this->maintainer = "";
+        this->depends = filter_dependencies(fpgh.depends, triplet);
+    }
+
     std::string BinaryParagraph::displayname() const { return this->spec.to_string(); }
 
     std::string BinaryParagraph::dir() const { return this->spec.dir(); }
@@ -87,7 +97,10 @@ namespace vcpkg
     void serialize(const BinaryParagraph& pgh, std::string& out_str)
     {
         out_str.append("Package: ").append(pgh.spec.name()).push_back('\n');
-        out_str.append("Version: ").append(pgh.version).push_back('\n');
+        if (!pgh.version.empty())
+            out_str.append("Version: ").append(pgh.version).push_back('\n');
+        else if (!pgh.feature.empty())
+            out_str.append("Feature: ").append(pgh.feature).push_back('\n');
         if (!pgh.depends.empty())
         {
             out_str.append("Depends: ");

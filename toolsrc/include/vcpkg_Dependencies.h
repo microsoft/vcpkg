@@ -26,12 +26,6 @@ namespace vcpkg::Dependencies
         Optional<SourceParagraph> source_paragraph;
         Optional<const SourceControlFile*> source_control_file;
     };
-
-    struct ClusterNode
-    {
-        std::vector<StatusParagraph> status_paragraphs;
-        Optional<const SourceControlFile*> source_paragraph;
-    };
 }
 
 namespace vcpkg::Dependencies
@@ -48,11 +42,13 @@ namespace vcpkg::Dependencies
         std::vector<FeatureSpec> build_edges;
         bool plus = false;
     };
-    std::vector<FeatureSpec> to_feature_specs(const std::vector<std::string> depends,
-                                              const std::unordered_map<std::string, PackageSpec> str_to_spec);
+    std::vector<FeatureSpec> to_feature_specs(const std::vector<std::string>& depends, const Triplet& t);
+
     struct Cluster
     {
-        ClusterNode cluster_data;
+        std::vector<StatusParagraph> status_paragraphs;
+        Optional<const SourceControlFile*> source_control_file;
+        PackageSpec spec;
         std::unordered_map<std::string, FeatureNodeEdges> edges;
         std::unordered_set<std::string> to_install_features;
         std::unordered_set<std::string> original_features;
@@ -64,6 +60,13 @@ namespace vcpkg::Dependencies
         Cluster(const Cluster&) = delete;
         Cluster& operator=(const Cluster&) = delete;
     };
+
+    struct ClusterPtr
+    {
+        Cluster* ptr;
+    };
+
+    bool operator==(const ClusterPtr& l, const ClusterPtr& r);
 
     enum class InstallPlanType
     {
@@ -181,12 +184,21 @@ namespace vcpkg::Dependencies
                                                      const StatusParagraphs& status_db);
 }
 
+template<>
+struct std::hash<vcpkg::Dependencies::ClusterPtr>
+{
+    size_t operator()(const vcpkg::Dependencies::ClusterPtr& value) const
+    {
+        return std::hash<vcpkg::PackageSpec>()(value.ptr->spec);
+    }
+};
+
 namespace vcpkg::Dependencies
 {
     struct GraphPlan
     {
-        Graphs::Graph<Cluster*> remove_graph;
-        Graphs::Graph<Cluster*> install_graph;
+        Graphs::Graph<ClusterPtr> remove_graph;
+        Graphs::Graph<ClusterPtr> install_graph;
     };
     bool mark_plus(const std::string& feature,
                    Cluster& cluster,

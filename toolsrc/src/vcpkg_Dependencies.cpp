@@ -12,6 +12,8 @@
 
 namespace vcpkg::Dependencies
 {
+    bool operator==(const ClusterPtr& l, const ClusterPtr& r) { return l.ptr == r.ptr; }
+
     std::vector<PackageSpec> AnyParagraph::dependencies(const Triplet& triplet) const
     {
         auto to_package_specs = [&](const std::vector<std::string>& dependencies_as_string) {
@@ -337,8 +339,7 @@ namespace vcpkg::Dependencies
         return toposort;
     }
 
-    std::vector<FeatureSpec> to_feature_specs(const std::vector<std::string> depends,
-                                              const std::unordered_map<std::string, PackageSpec> str_to_spec)
+    std::vector<FeatureSpec> to_feature_specs(const std::vector<std::string>& depends, const Triplet& triplet)
     {
         std::vector<FeatureSpec> f_specs;
         for (auto&& depend : depends)
@@ -350,21 +351,16 @@ namespace vcpkg::Dependencies
 
                 auto feature_name = depend.substr(start + 1, end - start - 1);
                 auto package_name = depend.substr(0, start);
-                auto p_spec = str_to_spec.find(package_name);
-                if (p_spec != str_to_spec.end())
-                {
-                    auto feature_spec = FeatureSpec{p_spec->second, feature_name};
-                    f_specs.emplace_back(std::move(feature_spec));
-                }
+                auto p_spec = PackageSpec::from_name_and_triplet(package_name, triplet).value_or_exit(VCPKG_LINE_INFO);
+                auto feature_spec = FeatureSpec{p_spec, feature_name};
+                f_specs.emplace_back(std::move(feature_spec));
             }
             else
             {
-                auto p_spec = str_to_spec.find(depend);
-                if (p_spec != str_to_spec.end())
-                {
-                    auto feature_spec = FeatureSpec{p_spec->second, ""};
-                    f_specs.emplace_back(std::move(feature_spec));
-                }
+                auto p_spec = PackageSpec::from_name_and_triplet(depend, triplet).value_or_exit(VCPKG_LINE_INFO);
+
+                auto feature_spec = FeatureSpec{p_spec, ""};
+                f_specs.emplace_back(std::move(feature_spec));
             }
         }
         return f_specs;
@@ -405,7 +401,7 @@ namespace vcpkg::Dependencies
             mark_minus(cluster, pkg_to_cluster, graph_plan);
         }
 
-        graph_plan.install_graph.add_vertex(&cluster);
+        graph_plan.install_graph.add_vertex({&cluster});
         auto& tracked = cluster.to_install_features;
         tracked.insert(updated_feature);
         if (tracked.find("core") == tracked.end() && tracked.find("") == tracked.end())
@@ -415,7 +411,7 @@ namespace vcpkg::Dependencies
             {
                 auto& depend_cluster = pkg_to_cluster[depend.spec];
                 mark_plus(depend.feature_name, depend_cluster, pkg_to_cluster, graph_plan);
-                graph_plan.install_graph.add_edge(&cluster, &depend_cluster);
+                graph_plan.install_graph.add_edge({&cluster}, {&depend_cluster});
             }
         }
 
@@ -424,7 +420,7 @@ namespace vcpkg::Dependencies
             auto& depend_cluster = pkg_to_cluster[depend.spec];
             mark_plus(depend.feature_name, depend_cluster, pkg_to_cluster, graph_plan);
             if (&depend_cluster == &cluster) continue;
-            graph_plan.install_graph.add_edge(&cluster, &depend_cluster);
+            graph_plan.install_graph.add_edge({&cluster}, {&depend_cluster});
         }
         return true;
     }
@@ -434,14 +430,14 @@ namespace vcpkg::Dependencies
         if (cluster.will_remove) return;
         cluster.will_remove = true;
 
-        graph_plan.remove_graph.add_vertex(&cluster);
+        graph_plan.remove_graph.add_vertex({&cluster});
         for (auto&& pair : cluster.edges)
         {
             auto& remove_edges_edges = pair.second.remove_edges;
             for (auto&& depend : remove_edges_edges)
             {
                 auto& depend_cluster = pkg_to_cluster[depend.spec];
-                graph_plan.remove_graph.add_edge(&cluster, &depend_cluster);
+                graph_plan.remove_graph.add_edge({&cluster}, {&depend_cluster});
                 depend_cluster.transient_uninstalled = true;
                 mark_minus(depend_cluster, pkg_to_cluster, graph_plan);
             }
@@ -456,40 +452,37 @@ namespace vcpkg::Dependencies
                                                        const std::vector<FullPackageSpec>& specs,
                                                        const StatusParagraphs& status_db)
     {
-        const auto triplet = Triplet::X86_WINDOWS;
         std::unordered_map<PackageSpec, Cluster> pkg_spec_to_package_node;
-        std::unordered_map<std::string, PackageSpec> str_to_spec;
-
-        for (const auto& it : map)
-        {
-            str_to_spec.emplace(it.first.name(), it.first);
-        }
 
         for (const auto& it : map)
         {
             Cluster& node = pkg_spec_to_package_node[it.first];
+
+            node.spec = it.first;
             FeatureNodeEdges core_dependencies;
-            core_dependencies.build_edges =
-                to_feature_specs(filter_dependencies(it.second.core_paragraph->depends, triplet), str_to_spec);
+            auto core_depends = filter_dependencies(it.second.core_paragraph->depends, node.spec.triplet());
+            core_dependencies.build_edges = to_feature_specs(core_depends, node.spec.triplet());
             node.edges["core"] = std::move(core_dependencies);
 
             for (const auto& feature : it.second.feature_paragraphs)
             {
                 FeatureNodeEdges added_edges;
-                added_edges.build_edges = to_feature_specs(filter_dependencies(feature->depends, triplet), str_to_spec);
+                auto depends = filter_dependencies(feature->depends, node.spec.triplet());
+                added_edges.build_edges = to_feature_specs(depends, node.spec.triplet());
                 node.edges.emplace(feature->name, std::move(added_edges));
             }
-            node.cluster_data.source_paragraph = &it.second;
+            node.source_control_file = &it.second;
         }
 
-        for (auto&& status_paragraph : status_db)
+        for (auto&& status_paragraph : get_installed_ports(status_db))
         {
             auto& spec = status_paragraph->package.spec;
             auto& status_paragraph_feature = status_paragraph->package.feature;
             Cluster& cluster = pkg_spec_to_package_node[spec];
 
             cluster.transient_uninstalled = false;
-            auto reverse_edges = to_feature_specs(status_paragraph->package.depends, str_to_spec);
+            auto reverse_edges =
+                to_feature_specs(status_paragraph->package.depends, status_paragraph->package.spec.triplet());
 
             for (auto&& dependency : reverse_edges)
             {
@@ -507,7 +500,7 @@ namespace vcpkg::Dependencies
                 auto& target_node = pkg_node->second.edges[depends_name];
                 target_node.remove_edges.emplace_back(FeatureSpec{spec, status_paragraph_feature});
             }
-            cluster.cluster_data.status_paragraphs.emplace_back(*status_paragraph);
+            cluster.status_paragraphs.emplace_back(*status_paragraph);
             if (status_paragraph_feature == "")
             {
                 cluster.original_features.insert("core");
@@ -528,35 +521,40 @@ namespace vcpkg::Dependencies
             }
         }
 
-        Graphs::GraphAdjacencyProvider<Cluster*> adjacency_remove_graph(graph_plan.remove_graph.adjacency_list());
+        Graphs::GraphAdjacencyProvider<ClusterPtr> adjacency_remove_graph(graph_plan.remove_graph.adjacency_list());
         auto remove_vertex_list = graph_plan.remove_graph.vertex_list();
         auto remove_toposort = Graphs::topological_sort(remove_vertex_list, adjacency_remove_graph);
 
-        Graphs::GraphAdjacencyProvider<Cluster*> adjacency_install_graph(graph_plan.install_graph.adjacency_list());
+        Graphs::GraphAdjacencyProvider<ClusterPtr> adjacency_install_graph(graph_plan.install_graph.adjacency_list());
         auto insert_vertex_list = graph_plan.install_graph.vertex_list();
         auto insert_toposort = Graphs::topological_sort(insert_vertex_list, adjacency_install_graph);
 
         std::vector<AnyAction> install_plan;
 
-        for (auto&& cluster : remove_toposort)
+        for (auto&& like_cluster : remove_toposort)
         {
-            auto scf = *cluster->cluster_data.source_paragraph.get();
+            auto scf = *like_cluster.ptr->source_control_file.get();
 
             AnyAction any_plan;
             any_plan.remove_plan = RemovePlanAction{
-                str_to_spec[scf->core_paragraph->name], RemovePlanType::REMOVE, RequestType::AUTO_SELECTED};
+                PackageSpec::from_name_and_triplet(scf->core_paragraph->name, like_cluster.ptr->spec.triplet())
+                    .value_or_exit(VCPKG_LINE_INFO),
+                RemovePlanType::REMOVE,
+                RequestType::AUTO_SELECTED};
 
             install_plan.emplace_back(std::move(any_plan));
         }
 
-        for (auto&& cluster : insert_toposort)
+        for (auto&& like_cluster : insert_toposort)
         {
-            if (!cluster->transient_uninstalled) continue;
+            if (!like_cluster.ptr->transient_uninstalled) continue;
 
-            auto scf = *cluster->cluster_data.source_paragraph.get();
-            auto& pkg_spec = str_to_spec[scf->core_paragraph->name];
-            auto action = InstallPlanAction{
-                pkg_spec, map.find(pkg_spec)->second, cluster->to_install_features, RequestType::AUTO_SELECTED};
+            auto scf = *like_cluster.ptr->source_control_file.get();
+            auto pkg_spec =
+                PackageSpec::from_name_and_triplet(scf->core_paragraph->name, like_cluster.ptr->spec.triplet())
+                    .value_or_exit(VCPKG_LINE_INFO);
+            auto action =
+                InstallPlanAction{pkg_spec, *scf, like_cluster.ptr->to_install_features, RequestType::AUTO_SELECTED};
 
             AnyAction any_plan;
             any_plan.install_plan = std::move(action);

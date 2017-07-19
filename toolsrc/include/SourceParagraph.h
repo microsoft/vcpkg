@@ -60,6 +60,7 @@ namespace vcpkg
 
     std::vector<std::string> filter_dependencies(const std::vector<Dependency>& deps, const Triplet& t);
 
+    // zlib[uwp] becomes Dependency{"zlib", "uwp"}
     std::vector<Dependency> expand_qualified_dependencies(const std::vector<std::string>& depends);
     std::vector<std::string> parse_comma_list(const std::string& str);
 
