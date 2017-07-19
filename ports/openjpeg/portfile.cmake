@@ -18,11 +18,16 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# Handle debug cmake config files (see https://github.com/Microsoft/vcpkg/issues/77)
-file(READ ${CURRENT_PACKAGES_DIR}/debug/share/openjpeg/OpenJPEGTargets-debug.cmake OPENJPEG_DEBUG_MODULE)
-string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" OPENJPEG_DEBUG_MODULE "${OPENJPEG_DEBUG_MODULE}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/openjpeg/OpenJPEGTargets-debug.cmake  "${OPENJPEG_DEBUG_MODULE}")
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+vcpkg_fixup_cmake_targets()
+
+file(READ ${CURRENT_PACKAGES_DIR}/include/openjpeg-2.1/openjpeg.h OPENJPEG_H)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    string(REPLACE "defined(OPJ_STATIC)" "1" OPENJPEG_H "${OPENJPEG_H}")
+else()
+    string(REPLACE "defined(OPJ_STATIC)" "0" OPENJPEG_H "${OPENJPEG_H}")
+endif()
+string(REPLACE "defined(DLL_EXPORT)" "0" OPENJPEG_H "${OPENJPEG_H}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/openjpeg-2.1/openjpeg.h "${OPENJPEG_H}")
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openjpeg)
