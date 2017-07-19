@@ -11,15 +11,14 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 
-
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/flatbuffers-1.6.0)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/google/flatbuffers/archive/v1.6.0.zip"
-    FILENAME "flatbuffers-1.6.0.zip"
-    SHA512 c23043a54d7055f4e0a0164fdafd3f1d60292e57d62d20d30f641c9da90935d14da847f86239a19f777e68b707cfb25452da9192607a3a399ab25ce06b31c282
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO google/flatbuffers
+    REF v1.7.1
+    SHA512 57732fc352c216c4be6d3237f93b872abf9dd2b62361d7d2856f99804a178760e4665ead2e33d5acdd00984ad03a746f581c9784ece583e1b2df1a10776f967a
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 set(OPTIONS)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -37,7 +36,6 @@ vcpkg_configure_cmake(
     # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
 
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin)
