@@ -44,20 +44,20 @@ namespace vcpkg::Dependencies
 
     struct FeatureNodeEdges
     {
-        std::vector<FeatureSpec> dotted;
-        std::vector<FeatureSpec> dashed;
+        std::vector<FeatureSpec> remove_edges;
+        std::vector<FeatureSpec> build_edges;
         bool plus = false;
     };
     std::vector<FeatureSpec> to_feature_specs(const std::vector<std::string> depends,
                                               const std::unordered_map<std::string, PackageSpec> str_to_spec);
     struct Cluster
     {
-        ClusterNode cluster_node;
+        ClusterNode cluster_data;
         std::unordered_map<std::string, FeatureNodeEdges> edges;
-        std::unordered_set<std::string> tracked_nodes;
-        std::unordered_set<std::string> original_nodes;
-        bool minus = false;
-        bool zero = true;
+        std::unordered_set<std::string> to_install_features;
+        std::unordered_set<std::string> original_features;
+        bool will_remove = false;
+        bool transient_uninstalled = true;
         Cluster() = default;
 
     private:
@@ -81,7 +81,7 @@ namespace vcpkg::Dependencies
         InstallPlanAction(const PackageSpec& spec, const AnyParagraph& any_paragraph, const RequestType& request_type);
         InstallPlanAction(const PackageSpec& spec,
                           const SourceControlFile& any_paragraph,
-                          std::unordered_set<std::string> features,
+                          const std::unordered_set<std::string>& features,
                           const RequestType& request_type);
         InstallPlanAction(const InstallPlanAction&) = delete;
         InstallPlanAction(InstallPlanAction&&) = default;
@@ -163,6 +163,10 @@ namespace vcpkg::Dependencies
         mutable std::unordered_map<PackageSpec, SourceControlFile> cache;
         explicit PathsPortFile(const VcpkgPaths& paths);
         const SourceControlFile& get_control_file(const PackageSpec& spec) const override;
+
+    private:
+        PathsPortFile(const PathsPortFile&) = delete;
+        PathsPortFile& operator=(const PathsPortFile&) = delete;
     };
 
     std::vector<InstallPlanAction> create_install_plan(const PortFileProvider& port_file_provider,
@@ -176,26 +180,6 @@ namespace vcpkg::Dependencies
                                                      const std::vector<PackageSpec>& specs,
                                                      const StatusParagraphs& status_db);
 }
-
-template<>
-struct std::hash<vcpkg::Dependencies::Cluster>
-{
-    size_t operator()(const vcpkg::Dependencies::Cluster& value) const
-    {
-        size_t hash = 17;
-        if (auto source = value.cluster_node.source_paragraph.get())
-        {
-            hash = hash * 31 + std::hash<std::string>()((*source)->core_paragraph->name);
-        }
-        else if (!value.cluster_node.status_paragraphs.empty())
-        {
-            auto start = *value.cluster_node.status_paragraphs.begin();
-            hash = hash * 31 + std::hash<std::string>()(start.package.displayname());
-        }
-
-        return hash;
-    }
-};
 
 namespace vcpkg::Dependencies
 {

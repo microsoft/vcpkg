@@ -430,7 +430,7 @@ namespace UnitTest1
             remove_plan_check(&install_plan[0], "x");
             remove_plan_check(&install_plan[1], "b");
 
-            // order here may change but A < X, and B anywhere
+            // TODO: order here may change but A < X, and B anywhere
             features_check(&install_plan[2], "a", {"core"});
             features_check(&install_plan[3], "x", {"core"});
             features_check(&install_plan[4], "b", {"core", "1"});
