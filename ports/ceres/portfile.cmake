@@ -52,10 +52,6 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
 
-file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/CeresConfig.cmake CERES_MODULE)
-string(REPLACE "\${CERES_CURRENT_CONFIG_DIR}/../" "\${CERES_CURRENT_CONFIG_DIR}/../../" CERES_MODULE "${CERES_MODULE}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/CeresConfig.cmake "${CERES_MODULE}")
-
 vcpkg_copy_pdbs()
 
 # Changes target search path
