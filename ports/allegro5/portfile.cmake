@@ -11,7 +11,7 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/allegro5-7d8892a)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/allegro5-7d8892a9278c57f2d8bb1e555f9ec59cf9ed4f73)
 vcpkg_from_github(
     OUT_SOURCE_PATH ${SOURCE_PATH}
     REPO liballeg/allegro5
