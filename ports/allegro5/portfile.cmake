@@ -25,6 +25,13 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 else()
     set(ALLEGRO_USE_STATIC -DSHARED=OFF)
 endif()
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/fix-pdb-install.patch
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
