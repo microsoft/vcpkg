@@ -73,6 +73,7 @@ vcpkg_configure_cmake(
     OPTIONS_DEBUG
         -DWANT_ALLOW_SSE=OFF
         -DCMAKE_CXX_FLAGS_DEBUG="/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1"
+        -DCMAKE_C_FLAGS_DEBUG="/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1"
 )
 
 vcpkg_install_cmake()
