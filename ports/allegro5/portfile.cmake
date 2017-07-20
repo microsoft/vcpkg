@@ -16,7 +16,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH ${SOURCE_PATH}
     REPO liballeg/allegro5
     REF 7d8892a
-    SHA512 1
+    SHA512 b1531fa2f22023ecd4e053d03d1c54bf0b94aa3af004a3a06245c4d8278fea64e9d354467873ebd665301903d954795fed88e2467c88441f39c273e7e0d87d6e
     HEAD_REF master
 )
 vcpkg_extract_source_archive(${ARCHIVE})
