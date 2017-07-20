@@ -19,7 +19,6 @@ vcpkg_from_github(
     SHA512 b1531fa2f22023ecd4e053d03d1c54bf0b94aa3af004a3a06245c4d8278fea64e9d354467873ebd665301903d954795fed88e2467c88441f39c273e7e0d87d6e
     HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(ALLEGRO_USE_STATIC -DSHARED=ON)
