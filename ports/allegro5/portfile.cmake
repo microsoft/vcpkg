@@ -11,11 +11,12 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/allegro5-5.2.1.0)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/liballeg/allegro5/archive/5.2.1.0.zip"
-    FILENAME "allegro5-5.2.1.0.zip"
-    SHA512 3271483714699e10d6ec0c0d94491d20d227b5a767d5134b592418bd0838c64d3a6448ba8448d568aeb846a6b50004656507deabb2d82dfe748f4ccc83ba1a53
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/allegro5-5.2.3.0)
+vcpkg_from_github(
+    OUT_SOURCE_PATH ${SOURCE_PATH}
+    REPO liballeg/allegro5
+    REF 7d8892a
+    HEAD_REF master
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
