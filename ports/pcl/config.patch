@@ -1,5 +1,5 @@
 diff --git a/PCLConfig.cmake.in b/PCLConfig.cmake.in
-index f3089dfec..67ba5297c 100644
+index f4ef6a0ff..63c01c6d2 100644
 --- a/PCLConfig.cmake.in
 +++ b/PCLConfig.cmake.in
 @@ -155,7 +155,7 @@ macro(find_qhull)
@@ -27,7 +27,7 @@ index f3089dfec..67ba5297c 100644
 +  get_filename_component(PCL_ROOT "${PCL_ROOT}" PATH)
  else(WIN32 AND NOT MINGW)
  # PCLConfig.cmake is installed to PCL_ROOT/share/pcl-x.y
-   set(PCL_ROOT "@CMAKE_INSTALL_PREFIX@")
+   get_filename_component(PCL_ROOT "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
 @@ -725,7 +726,7 @@ if(EXISTS "${PCL_ROOT}/include/pcl-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}/pcl
    # Found a PCL installation
    # pcl_message("Found a PCL installation")

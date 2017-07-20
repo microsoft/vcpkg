@@ -15,8 +15,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
-    REF pcl-1.8.1rc1
-    SHA512 c719f7ff8cc5be3cfb5f01c89727e94858ed0cf5d50e2b884599e4a5b289564b4e2843979406b62adee1f2cee7332195dcd6219e99accef5700f3119758eb53f
+    REF pcl-1.8.1rc2
+    SHA512 e5bf069f0eacfaf068b37cb0d17bed65a83dddc30c0eaa2ef70bbc534ab1cfc690e581913cd39df6246ba73b5f76fb229d90e0c5b4971744f341f7d2abb57229
     HEAD_REF master
 )
 
@@ -43,8 +43,8 @@ vcpkg_configure_cmake(
         -DBUILD_surface_on_nurbs=ON
         -DBUILD_tools=OFF
         # PCL
-        -DPCL_BUILD_WITH_BOOST_DYNAMIC_LINKING_WIN32=ON
-        -DPCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32=ON
+        -DPCL_BUILD_WITH_BOOST_DYNAMIC_LINKING_WIN32=${CRT_LINKAGE}
+        -DPCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32=${CRT_LINKAGE}
         -DPCL_SHARED_LIBS=${CRT_LINKAGE}
         # WITH
         -DWITH_CUDA=OFF
