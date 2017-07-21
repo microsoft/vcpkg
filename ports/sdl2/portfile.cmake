@@ -11,6 +11,7 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/dont-ignore-default-libs.patch
+        ${CMAKE_CURRENT_LIST_DIR}/export-symbols-only-in-shared-build.patch
 )
 
 if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
