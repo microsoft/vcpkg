@@ -1,0 +1,18 @@
+diff --git a/event.h b/event.h
+index aa81928..1fb2242 100644
+--- a/event.h
++++ b/event.h
+@@ -66,6 +66,13 @@ extern "C" {
+ # include <sys/time.h>
+ #endif
+ 
++#if defined(WIN32)
++struct timeval {
++    long tv_sec;
++    long tv_usec;
++};
++#endif
++
+ struct event_base;
+ 
+ #define EVLIST_TIMEOUT  0x01

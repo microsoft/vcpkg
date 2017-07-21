@@ -1,0 +1,13 @@
+diff --git a/ev.c b/ev.c
+index cf55835..5d01861 100644
+--- a/ev.c
++++ b/ev.c
+@@ -1942,7 +1942,7 @@ array_nextsize (int elem, int cur, int cnt)
+   return ncur;
+ }
+ 
+-static void * noinline ecb_cold
++static noinline void * ecb_cold
+ array_realloc (int elem, void *base, int *cur, int cnt)
+ {
+   *cur = array_nextsize (elem, *cur, cnt);
