@@ -1,5 +1,9 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
+    message(FATAL_ERROR "libevent does not currently support UWP")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libevent/libevent
