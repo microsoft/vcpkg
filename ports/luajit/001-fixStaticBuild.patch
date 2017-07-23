@@ -1,8 +1,8 @@
 diff --git a/src/msvcbuild.bat b/src/msvcbuild.bat
-index bd0c4c5..1210fd2 100644
+index bd0c4c5..95e1cf4 100644
 --- a/src/msvcbuild.bat
 +++ b/src/msvcbuild.bat
-@@ -67,6 +67,7 @@ buildvm -m folddef -o lj_folddef.h lj_opt_fold.c
+@@ -67,15 +67,20 @@ buildvm -m folddef -o lj_folddef.h lj_opt_fold.c
  @shift
  @set LJCOMPILE=%LJCOMPILE% /Zi
  @set LJLINK=%LJLINK% /debug
