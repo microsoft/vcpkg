@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(minizip C CXX)
+project(minizip C)
 
 if(MSVC)
   add_compile_options(/W3 /wd4005 /wd4996 /wd4018 -D_CRT_SECURE_NO_WARNINGS)
@@ -18,12 +18,15 @@ set(SRC
   ${MIN_SRC}/iowin32.c
   ${MIN_SRC}/unzip.c
   ${MIN_SRC}/zip.c
+  ${MIN_SRC}/mz.c
+  ${MIN_SRC}/mztools.c
 )
 set(HEADERS
   ${MIN_SRC}/ioapi.h
   ${MIN_SRC}/iowin32.h
   ${MIN_SRC}/unzip.h
   ${MIN_SRC}/zip.h
+  ${MIN_SRC}/mztools.h
 )
 if(BUILD_SHARED_LIBS)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
