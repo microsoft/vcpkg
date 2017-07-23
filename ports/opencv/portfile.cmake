@@ -42,7 +42,6 @@ vcpkg_configure_cmake(
         -DBUILD_PNG=OFF
         -DBUILD_opencv_python2=OFF
         -DBUILD_opencv_python3=OFF
-        -DBUILD_opencv_flann=OFF
         -DBUILD_opencv_apps=OFF
         -DBUILD_DOCS=OFF
         -DBUILD_EXAMPLES=OFF
