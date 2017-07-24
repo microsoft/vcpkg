@@ -1,0 +1,16 @@
+diff --git a/include/begin_code.h b/include/begin_code.h
+index 04e78c6..16464f5 100644
+--- a/include/begin_code.h
++++ b/include/begin_code.h
+@@ -58,8 +58,10 @@
+ #   else
+ #    define DECLSPEC    __declspec(dllimport)
+ #   endif
+-#  else
++#  elif defined(SDL2_EXPORTS)
+ #   define DECLSPEC __declspec(dllexport)
++#  else
++#   define DECLSPEC
+ #  endif
+ # else
+ #  if defined(__GNUC__) && __GNUC__ >= 4
