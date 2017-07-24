@@ -1,0 +1,195 @@
+diff --git a/common/cmake/FindTBB.cmake b/common/cmake/FindTBB.cmake
+index 49732d0..8e8223d 100644
+--- a/common/cmake/FindTBB.cmake
++++ b/common/cmake/FindTBB.cmake
+@@ -1,110 +1,94 @@
+-## ======================================================================== ##
+-## Copyright 2009-2017 Intel Corporation                                    ##
+-##                                                                          ##
+-## Licensed under the Apache License, Version 2.0 (the "License");          ##
+-## you may not use this file except in compliance with the License.         ##
+-## You may obtain a copy of the License at                                  ##
+-##                                                                          ##
+-##     http://www.apache.org/licenses/LICENSE-2.0                           ##
+-##                                                                          ##
+-## Unless required by applicable law or agreed to in writing, software      ##
+-## distributed under the License is distributed on an "AS IS" BASIS,        ##
+-## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. ##
+-## See the License for the specific language governing permissions and      ##
+-## limitations under the License.                                           ##
+-## ======================================================================== ##
++# Copyright (c) 2017 Intel Corporation
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++#
++#
++#
++#
+ 
+-IF (WIN32)
+-  FIND_PATH(EMBREE_TBB_ROOT include/tbb/tbb.h
+-    DOC "Root of TBB installation"
+-    PATHS ${PROJECT_SOURCE_DIR}/tbb "C:/Program Files (x86)/Intel/Composer XE/tbb"
+-    NO_DEFAULT_PATH
+-  )
+-  FIND_PATH(EMBREE_TBB_ROOT include/tbb/tbb.h)
++# TBB_FOUND should not be set explicitly. It is defined automatically by CMake.
++# Handling of TBB_VERSION is in TBBConfigVersion.cmake.
+ 
+-  IF (CMAKE_SIZEOF_VOID_P EQUAL 8)
+-    SET(TBB_ARCH intel64)
+-  ELSE()
+-    SET(TBB_ARCH ia32)
+-  ENDIF()
++if (NOT TBB_FIND_COMPONENTS)
++    set(TBB_FIND_COMPONENTS "tbb;tbbmalloc;tbbmalloc_proxy")
++    foreach (_tbb_component ${TBB_FIND_COMPONENTS})
++        set(TBB_FIND_REQUIRED_${_tbb_component} 1)
++    endforeach()
++endif()
+ 
+-  IF (MSVC10)
+-    SET(TBB_VCVER vc10)
+-  ELSEIF (MSVC11)
+-    SET(TBB_VCVER vc11)
+-  ELSE()
+-    SET(TBB_VCVER vc12)
+-  ENDIF()
++# Add components with internal dependencies: tbbmalloc_proxy -> tbbmalloc
++list(FIND TBB_FIND_COMPONENTS tbbmalloc_proxy _tbbmalloc_proxy_ix)
++if (NOT _tbbmalloc_proxy_ix EQUAL -1)
++    list(FIND TBB_FIND_COMPONENTS tbbmalloc _tbbmalloc_ix)
++    if (_tbbmalloc_ix EQUAL -1)
++        list(APPEND TBB_FIND_COMPONENTS tbbmalloc)
++        set(TBB_FIND_REQUIRED_tbbmalloc ${TBB_FIND_REQUIRED_tbbmalloc_proxy})
++    endif()
++endif()
+ 
+-  SET(TBB_LIBDIR ${EMBREE_TBB_ROOT}/lib/${TBB_ARCH}/${TBB_VCVER})
+-  SET(TBB_BINDIR ${EMBREE_TBB_ROOT}/bin/${TBB_ARCH}/${TBB_VCVER})
++set(TBB_INTERFACE_VERSION 9107)
+ 
+-  IF (EMBREE_TBB_ROOT STREQUAL "")
+-    FIND_PATH(TBB_INCLUDE_DIR tbb/task_scheduler_init.h)
+-    FIND_LIBRARY(TBB_LIBRARY tbb)
+-    FIND_LIBRARY(TBB_LIBRARY_MALLOC tbbmalloc)
+-  ELSE()
+-    SET(TBB_INCLUDE_DIR TBB_INCLUDE_DIR-NOTFOUND)
+-    SET(TBB_LIBRARY TBB_LIBRARY-NOTFOUND)
+-    SET(TBB_LIBRARY_MALLOC TBB_LIBRARY_MALLOC-NOTFOUND)
+-    FIND_PATH(TBB_INCLUDE_DIR tbb/task_scheduler_init.h PATHS ${EMBREE_TBB_ROOT}/include NO_DEFAULT_PATH)
+-    FIND_LIBRARY(TBB_LIBRARY tbb PATHS ${TBB_LIBDIR} NO_DEFAULT_PATH)
+-    FIND_LIBRARY(TBB_LIBRARY_MALLOC tbbmalloc PATHS ${TBB_LIBDIR} NO_DEFAULT_PATH)
+-  ENDIF()
++# get_filename_component(_tbb_root "${CMAKE_CURRENT_LIST_FILE}" PATH)
++# get_filename_component(_tbb_root "${_tbb_root}" PATH)
++# get_filename_component(_tbb_root "${_tbb_root}" PATH)
++message(STATUS "TBB: ${CURRENT_INSTALLED_DIR}")
++set(_tbb_root ${CURRENT_INSTALLED_DIR})
+ 
+-ELSE ()
++foreach (_tbb_component ${TBB_FIND_COMPONENTS})
++    set(_tbb_release_lib "${_tbb_root}/bin/${_tbb_component}.dll")
++    set(_tbb_debug_lib "${_tbb_root}/debug/bin/${_tbb_component}_debug.dll")
+ 
+-  FIND_PATH(EMBREE_TBB_ROOT include/tbb/tbb.h
+-    DOC "Root of TBB installation"
+-    PATHS ${PROJECT_SOURCE_DIR}/tbb /opt/intel/tbb
+-    NO_DEFAULT_PATH
+-  )
+-  FIND_PATH(EMBREE_TBB_ROOT include/tbb/tbb.h)
++    if (EXISTS "${_tbb_release_lib}" OR EXISTS "${_tbb_debug_lib}")
++        add_library(TBB::${_tbb_component} SHARED IMPORTED)
++        set_target_properties(TBB::${_tbb_component} PROPERTIES
++                              INTERFACE_INCLUDE_DIRECTORIES "${_tbb_root}/include"
++                              INTERFACE_COMPILE_DEFINITIONS "__TBB_NO_IMPLICIT_LINKAGE=1")
+ 
+-  IF (EMBREE_TBB_ROOT STREQUAL "")
+-    FIND_PATH(TBB_INCLUDE_DIR tbb/task_scheduler_init.h)
+-    FIND_LIBRARY(TBB_LIBRARY tbb)
+-    FIND_LIBRARY(TBB_LIBRARY_MALLOC tbbmalloc)
+-  ELSE()
+-    SET(TBB_INCLUDE_DIR TBB_INCLUDE_DIR-NOTFOUND)
+-    SET(TBB_LIBRARY TBB_LIBRARY-NOTFOUND)
+-    SET(TBB_LIBRARY_MALLOC TBB_LIBRARY_MALLOC-NOTFOUND)
+-    IF (APPLE)
+-      FIND_PATH(TBB_INCLUDE_DIR tbb/task_scheduler_init.h PATHS ${EMBREE_TBB_ROOT}/include NO_DEFAULT_PATH)
+-      FIND_LIBRARY(TBB_LIBRARY tbb PATHS ${EMBREE_TBB_ROOT}/lib NO_DEFAULT_PATH)
+-      FIND_LIBRARY(TBB_LIBRARY_MALLOC tbbmalloc PATHS ${EMBREE_TBB_ROOT}/lib NO_DEFAULT_PATH)
+-    ELSE()
+-      FIND_PATH(TBB_INCLUDE_DIR tbb/task_scheduler_init.h PATHS ${EMBREE_TBB_ROOT}/include NO_DEFAULT_PATH)
+-      FIND_LIBRARY(TBB_LIBRARY tbb PATHS ${EMBREE_TBB_ROOT}/lib/intel64/gcc4.4 ${EMBREE_TBB_ROOT}/lib ${EMBREE_TBB_ROOT}/lib64  /usr/libx86_64-linux-gnu/ NO_DEFAULT_PATH)
+-      FIND_LIBRARY(TBB_LIBRARY_MALLOC tbbmalloc PATHS ${EMBREE_TBB_ROOT}/lib/intel64/gcc4.4 ${EMBREE_TBB_ROOT}/lib ${EMBREE_TBB_ROOT}/lib64  /usr/libx86_64-linux-gnu/ NO_DEFAULT_PATH)
+-    ENDIF()
+-  ENDIF()
+ 
+-ENDIF()
++        if (EXISTS "${_tbb_release_lib}")
++            set_target_properties(TBB::${_tbb_component} PROPERTIES
++                                  IMPORTED_LOCATION_RELEASE "${_tbb_release_lib}"
++IMPORTED_IMPLIB_RELEASE "${_tbb_root}/lib/${_tbb_component}.lib")
++            set_property(TARGET TBB::${_tbb_component} APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
++        endif()
+ 
+-INCLUDE(FindPackageHandleStandardArgs)
+-FIND_PACKAGE_HANDLE_STANDARD_ARGS(TBB DEFAULT_MSG TBB_INCLUDE_DIR TBB_LIBRARY TBB_LIBRARY_MALLOC)
++        if (EXISTS "${_tbb_debug_lib}")
++            set_target_properties(TBB::${_tbb_component} PROPERTIES
++                                  IMPORTED_LOCATION_DEBUG "${_tbb_debug_lib}"
++IMPORTED_IMPLIB_DEBUG "${_tbb_root}/debug/lib/${_tbb_component}_debug.lib")
++            set_property(TARGET TBB::${_tbb_component} APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
++        endif()
+ 
+-IF (TBB_FOUND)
+-  SET(TBB_INCLUDE_DIRS ${TBB_INCLUDE_DIR})
+-  SET(TBB_LIBRARIES ${TBB_LIBRARY} ${TBB_LIBRARY_MALLOC})
+-ENDIF()
++        # Add internal dependencies for imported targets: TBB::tbbmalloc_proxy -> TBB::tbbmalloc
++        if (_tbb_component STREQUAL tbbmalloc_proxy)
++            set_target_properties(TBB::tbbmalloc_proxy PROPERTIES INTERFACE_LINK_LIBRARIES TBB::tbbmalloc)
++        endif()
+ 
+-MARK_AS_ADVANCED(TBB_INCLUDE_DIR)
+-MARK_AS_ADVANCED(TBB_LIBRARY)
+-MARK_AS_ADVANCED(TBB_LIBRARY_MALLOC)
++        list(APPEND TBB_IMPORTED_TARGETS TBB::${_tbb_component})
++        set(TBB_${_tbb_component}_FOUND 1)
++    elseif (TBB_FIND_REQUIRED AND TBB_FIND_REQUIRED_${_tbb_component})
++        message(FATAL_ERROR "Missed required Intel TBB component: ${_tbb_component}")
++    endif()
++endforeach()
+ 
+-##############################################################
+-# Install TBB
+-##############################################################
++unset(_tbbmalloc_proxy_ix)
++unset(_tbbmalloc_ix)
++unset(_tbb_lib_path)
++unset(_tbb_release_lib)
++unset(_tbb_debug_lib)
+ 
+-IF (WIN32)
+-  INSTALL(PROGRAMS ${TBB_BINDIR}/tbb.dll ${TBB_BINDIR}/tbbmalloc.dll DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT examples)
+-  INSTALL(PROGRAMS ${TBB_BINDIR}/tbb.dll ${TBB_BINDIR}/tbbmalloc.dll DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT lib)
+-ELSEIF (EMBREE_ZIP_MODE)
+-  IF (APPLE)
+-    INSTALL(PROGRAMS ${EMBREE_TBB_ROOT}/lib/libtbb.dylib ${EMBREE_TBB_ROOT}/lib/libtbbmalloc.dylib DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT lib)
+-  ELSE()
+-    INSTALL(PROGRAMS ${EMBREE_TBB_ROOT}/lib/intel64/gcc4.4/libtbb.so.2 ${EMBREE_TBB_ROOT}/lib/intel64/gcc4.4/libtbbmalloc.so.2 DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT lib)
+-  ENDIF()
+-ENDIF()
++set(TBB_INCLUDE_DIRS ${CURRENT_INSTALLED_DIR}/include)
++set(TBB_LIBRARIES "")
++foreach (_tbb_component ${TBB_FIND_COMPONENTS})
++  list(APPEND TBB_LIBRARIES "TBB::${_tbb_component}")  
++endforeach()
