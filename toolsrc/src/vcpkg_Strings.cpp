@@ -11,34 +11,63 @@ namespace vcpkg::Strings::details
     // Avoids C4244 warnings because of char<->int conversion that occur when using std::tolower()
     static char tolower_char(const char c) { return static_cast<char>(std::tolower(c)); }
 
+#if defined(_WIN32)
     static _locale_t& c_locale()
     {
         static _locale_t c_locale_impl = _create_locale(LC_ALL, "C");
         return c_locale_impl;
     }
+    static int plat_vsnprintf(_Out_writes_z_(bufsz) char* const buffer,
+                              _In_ size_t const bufsz,
+                              _In_z_ _Printf_format_string_params_(1) char const* const fmtstr,
+                              va_list args)
+    {
+        return _vsnprintf_s_l(buffer, bufsz, bufsz, fmtstr, c_locale(), args);
+    }
+    static int plat_vswprintf(_Out_writes_z_(bufsz) wchar_t* const buffer,
+                              _In_ size_t const bufsz,
+                              _In_z_ _Printf_format_string_params_(1) wchar_t const* const fmtstr,
+                              va_list args)
+    {
+        return _vsnwprintf_s_l(buffer, bufsz, bufsz, fmtstr, c_locale(), args);
+    }
+#else
+    static int plat_vsnprintf(char* buffer, size_t bufsz, const char* fmtstr, va_list args)
+    {
+        return vsnprintf(buffer, bufsz, fmtstr, args);
+    }
+    static int plat_vswprintf(char* buffer, size_t bufsz, const char* fmtstr, va_list args)
+    {
+        return vswprintf(buffer, bufsz, fmtstr, args);
+    }
+#endif
 
     std::string format_internal(const char* fmtstr, ...)
     {
-        va_list lst;
-        va_start(lst, fmtstr);
+        va_list args;
+        va_start(args, fmtstr);
 
-        const int sz = _vscprintf_l(fmtstr, c_locale(), lst);
+        int sz = plat_vsnprintf(nullptr, 0, fmtstr, args);
+
         std::string output(sz, '\0');
-        _vsnprintf_s_l(&output[0], output.size() + 1, output.size() + 1, fmtstr, c_locale(), lst);
-        va_end(lst);
+
+        plat_vsnprintf(&output.at(0), output.size() + 1, fmtstr, args);
+        va_end(args);
 
         return output;
     }
 
     std::wstring wformat_internal(const wchar_t* fmtstr, ...)
     {
-        va_list lst;
-        va_start(lst, fmtstr);
+        va_list args;
+        va_start(args, fmtstr);
 
-        const int sz = _vscwprintf_l(fmtstr, c_locale(), lst);
-        std::wstring output(sz, '\0');
-        _vsnwprintf_s_l(&output[0], output.size() + 1, output.size() + 1, fmtstr, c_locale(), lst);
-        va_end(lst);
+        int sz = plat_vswprintf(nullptr, 0, fmtstr, args);
+
+        std::wstring output(sz, L'\0');
+
+        plat_vswprintf(&output.at(0), output.size() + 1, fmtstr, args);
+        va_end(args);
 
         return output;
     }
