@@ -100,7 +100,7 @@ namespace vcpkg::Strings
 
     int case_insensitive_ascii_compare(const CStringView left, const CStringView right)
     {
-        return _stricmp(left, right);
+        return strcasecmp(left, right);
     }
 
     std::string ascii_to_lowercase(const std::string& input)
