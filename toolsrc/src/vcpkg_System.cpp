@@ -17,8 +17,13 @@ namespace vcpkg::System
 
     fs::path get_exe_path_of_current_process()
     {
+#ifdef _WIN32
         wchar_t buf[_MAX_PATH];
         int bytes = GetModuleFileNameW(nullptr, buf, _MAX_PATH);
+#elif __linux__
+        char buf[_MAX_PATH];
+        int bytes = readlink("/proc/self/exe", buf, _MAX_PATH);
+#endif
         if (bytes == 0) std::abort();
         return fs::path(buf, buf + bytes);
     }
