@@ -54,7 +54,7 @@ namespace vcpkg::System
         {
             return to_cpu_architecture("").value_or_exit(VCPKG_LINE_INFO);
         }
-        //TODO Add linux architecture to `to_cpu_architecture` options
+        // TODO Add linux architecture to `to_cpu_architecture` options
         return to_cpu_architecture(info.machine).value_or_exit()
 #endif
     }
@@ -347,6 +347,28 @@ namespace vcpkg::System
             }
             return get_ProgramFiles();
         }();
+        return p;
+    }
+#endif
+#ifdef __linux__
+    const fs::path& get_bin()
+    {
+        static const fs::path p = "/bin";
+        return p;
+    }
+    const fs::path& get_sbin()
+    {
+        static const fs::path p = "/sbin";
+        return p;
+    }
+    const fs::path& get_usr_bin()
+    {
+        static const fs::path p = "/usr/bin";
+        return p;
+    }
+    const fs::path& get_usr_sbin()
+    {
+        static const fs::path p = "/usr/sbin";
         return p;
     }
 #endif
