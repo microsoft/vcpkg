@@ -204,6 +204,7 @@ namespace vcpkg::System
         putchar('\n');
     }
 
+#ifdef _WIN32
     Optional<std::wstring> get_environment_variable(const CWStringView varname) noexcept
     {
         auto sz = GetEnvironmentVariableW(varname, nullptr, 0);
@@ -217,6 +218,15 @@ namespace vcpkg::System
         ret.pop_back();
         return ret;
     }
+#endif
+
+#ifdef __linux__
+    Optional<std::string> get_environment_variable(const CStringView varname) noexcept
+    {
+        const char* env = getenv(varname);
+        return env == nullptr ? nullopt : std::string(env);
+    }
+#endif
 
     static bool is_string_keytype(DWORD hkey_type)
     {
