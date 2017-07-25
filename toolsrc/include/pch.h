@@ -3,7 +3,22 @@
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 
+#ifdef _WIN32
 #include <windows.h>
+#include <process.h>
+#include <shellapi.h>
+#include <shlobj.h>
+#include <winhttp.h>
+#endif
+
+#ifdef __linux__
+#include <limits.h>
+#include <pwd.h>
+#include <string.h> //for strcasecmp
+#include <sys/types.h>
+#include <sys/utsname.h> //utsname
+#include <unistd.h>
+#endif
 
 #include <algorithm>
 #include <array>
@@ -22,11 +37,8 @@
 #include <iterator>
 #include <map>
 #include <memory>
-#include <process.h>
 #include <regex>
 #include <set>
-#include <shellapi.h>
-#include <shlobj.h>
 #include <stdexcept>
 #include <string>
 #include <sys/timeb.h>
@@ -37,4 +49,3 @@
 #include <unordered_set>
 #include <utility>
 #include <vector>
-#include <winhttp.h>
