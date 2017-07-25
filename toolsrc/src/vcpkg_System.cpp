@@ -94,7 +94,7 @@ namespace vcpkg::System
         };
 
         // Flush stdout before launching external process
-        fflush(nullptr); 
+        fflush(nullptr);
 
         std::vector<const wchar_t*> env_cstr;
         env_cstr.reserve(env_wstrings.size() + 2);
@@ -125,7 +125,7 @@ namespace vcpkg::System
     int cmd_execute(const CWStringView cmd_line)
     {
         // Flush stdout before launching external process
-        fflush(nullptr); 
+        fflush(nullptr);
 
         // Basically we are wrapping it in quotes
         const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
@@ -180,6 +180,7 @@ namespace vcpkg::System
 
     void print(const Color c, const CStringView message)
     {
+#ifdef _WIN32
         HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
         CONSOLE_SCREEN_BUFFER_INFO consoleScreenBufferInfo{};
@@ -189,6 +190,12 @@ namespace vcpkg::System
         SetConsoleTextAttribute(hConsole, static_cast<WORD>(c) | (original_color & 0xF0));
         print(message);
         SetConsoleTextAttribute(hConsole, original_color);
+#elif __linux__
+        const std::string& colored_message = Strings.format("\033[%dm%s", static_cast<int>(c), message);
+        const std::string& original_color = Strings.format("\033[%dm", static_cast<int>(Color::original_color));
+        println(colored_message);
+        print(original_color);
+#endif
     }
 
     void println(const Color c, const CStringView message)
