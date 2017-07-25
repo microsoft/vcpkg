@@ -228,6 +228,7 @@ namespace vcpkg::System
     }
 #endif
 
+#ifdef _WIN32
     static bool is_string_keytype(DWORD hkey_type)
     {
         return hkey_type == REG_SZ || hkey_type == REG_MULTI_SZ || hkey_type == REG_EXPAND_SZ;
@@ -287,6 +288,7 @@ namespace vcpkg::System
         }();
         return p;
     }
+#endif
 }
 
 namespace vcpkg::Debug
