@@ -50,6 +50,9 @@ function resolve([string]$targetBinary) {
             deployBinary $targetBinaryDir $installedDir "$_"
             if (Test-Path function:\deployPluginsIfQt) { deployPluginsIfQt $targetBinaryDir "$g_install_root\plugins" "$_" }
             resolve "$targetBinaryDir\$_"
+        } elseif (Test-Path "$targetBinaryDir\$_") {
+            Write-Verbose "  ${_}: $_ not found in vcpkg; locally deployed"
+            resolve "$targetBinaryDir\$_"
         } else {
             Write-Verbose "  ${_}: $installedDir\$_ not found"
         }

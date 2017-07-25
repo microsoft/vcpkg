@@ -48,6 +48,10 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/gsl_types.h "${GSLTYPES_H}")
 file(GLOB_RECURSE PUBLIC_HEADERS gsl*.h)
 list(APPEND PUBLIC_HEADERS ${CMAKE_CURRENT_BINARY_DIR}/gsl_types.h)
 
+# The debug libraries have a "d" postfix so that CMake's FindGSL.cmake 
+# module can distinguish between Release and Debug libraries
+set(CMAKE_DEBUG_POSTFIX "d")
+
 add_library(gslcblas ${CBLAS_SOURCES})
 set_target_properties(gslcblas PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
 

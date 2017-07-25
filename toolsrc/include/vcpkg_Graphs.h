@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <unordered_set>
 
 namespace vcpkg::Graphs
 {
@@ -63,4 +64,96 @@ namespace vcpkg::Graphs
 
         return sorted;
     }
+
+    template<class V>
+    struct GraphAdjacencyProvider final : AdjacencyProvider<V, V>
+    {
+        const std::unordered_map<V, std::unordered_set<V>>& vertices;
+
+        GraphAdjacencyProvider(const std::unordered_map<V, std::unordered_set<V>>& vertices) : vertices(vertices) {}
+
+        std::vector<V> adjacency_list(const V& vertex) const override
+        {
+            const std::unordered_set<V>& as_set = this->vertices.at(vertex);
+            return std::vector<V>(as_set.cbegin(), as_set.cend()); // TODO: Avoid redundant copy
+        }
+
+        V load_vertex_data(const V& vertex) const override { return vertex; }
+    };
+
+    template<class V>
+    struct Graph
+    {
+    public:
+        void add_vertex(V v) { this->vertices[v]; }
+
+        // TODO: Change with iterators
+        void add_vertices(const std::vector<V>& vs)
+        {
+            for (const V& v : vs)
+            {
+                this->vertices[v];
+            }
+        }
+
+        void add_edge(V u, V v)
+        {
+            this->vertices[v];
+            this->vertices[u].insert(v);
+        }
+
+        std::vector<V> topological_sort() const
+        {
+            GraphAdjacencyProvider<V> adjacency_provider{this->vertices};
+            std::unordered_map<V, int> indegrees = count_indegrees();
+
+            std::vector<V> sorted;
+            sorted.reserve(indegrees.size());
+
+            std::unordered_map<V, ExplorationStatus> exploration_status;
+            exploration_status.reserve(indegrees.size());
+
+            for (auto& pair : indegrees)
+            {
+                if (pair.second == 0) // Starting from vertices with indegree == 0. Not required.
+                {
+                    V vertex = pair.first;
+                    topological_sort_internal(vertex, adjacency_provider, exploration_status, sorted);
+                }
+            }
+
+            return sorted;
+        }
+
+        std::unordered_map<V, int> count_indegrees() const
+        {
+            std::unordered_map<V, int> indegrees;
+
+            for (auto& pair : this->vertices)
+            {
+                indegrees[pair.first];
+                for (V neighbour : pair.second)
+                {
+                    ++indegrees[neighbour];
+                }
+            }
+
+            return indegrees;
+        }
+
+        const std::unordered_map<V, std::unordered_set<V>>& adjacency_list() const { return this->vertices; }
+        std::vector<V> vertex_list() const
+        {
+            // why no &? it returns 0
+            std::vector<V> vertex_list;
+            for (const auto& vertex : this->vertices)
+            {
+                vertex_list.emplace_back(vertex.first);
+            }
+            return vertex_list;
+        }
+
+    private:
+        std::unordered_map<V, std::unordered_set<V>> vertices;
+    };
 }

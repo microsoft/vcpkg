@@ -1,5 +1,6 @@
 #include "pch.h"
 
+#include "vcpkg_Checks.h"
 #include "vcpkg_Strings.h"
 #include "vcpkg_Util.h"
 
@@ -11,34 +12,58 @@ namespace vcpkg::Strings::details
     // Avoids C4244 warnings because of char<->int conversion that occur when using std::tolower()
     static char tolower_char(const char c) { return static_cast<char>(std::tolower(c)); }
 
+#if defined(_WIN32)
     static _locale_t& c_locale()
     {
         static _locale_t c_locale_impl = _create_locale(LC_ALL, "C");
         return c_locale_impl;
     }
+#endif
 
     std::string format_internal(const char* fmtstr, ...)
     {
-        va_list lst;
-        va_start(lst, fmtstr);
+        va_list args;
+        va_start(args, fmtstr);
 
-        const int sz = _vscprintf_l(fmtstr, c_locale(), lst);
+#if defined(_WIN32)
+        const int sz = _vscprintf_l(fmtstr, c_locale(), args);
+#else
+        const int sz = vsnprintf(nullptr, 0, fmtstr, args);
+#endif
+        Checks::check_exit(VCPKG_LINE_INFO, sz > 0);
+
         std::string output(sz, '\0');
-        _vsnprintf_s_l(&output[0], output.size() + 1, output.size() + 1, fmtstr, c_locale(), lst);
-        va_end(lst);
+
+#if defined(_WIN32)
+        _vsnprintf_s_l(&output.at(0), output.size() + 1, output.size(), fmtstr, c_locale(), args);
+#else
+        vsnprintf(&output.at(0), output.size() + 1, fmtstr, args);
+#endif
+        va_end(args);
 
         return output;
     }
 
     std::wstring wformat_internal(const wchar_t* fmtstr, ...)
     {
-        va_list lst;
-        va_start(lst, fmtstr);
+        va_list args;
+        va_start(args, fmtstr);
 
-        const int sz = _vscwprintf_l(fmtstr, c_locale(), lst);
-        std::wstring output(sz, '\0');
-        _vsnwprintf_s_l(&output[0], output.size() + 1, output.size() + 1, fmtstr, c_locale(), lst);
-        va_end(lst);
+#if defined(_WIN32)
+        const int sz = _vscwprintf_l(fmtstr, c_locale(), args);
+#else
+        const int sz = vswprintf(nullptr, 0, fmtstr, args);
+#endif
+        Checks::check_exit(VCPKG_LINE_INFO, sz > 0);
+
+        std::wstring output(sz, L'\0');
+
+#if defined(_WIN32)
+        _vsnwprintf_s_l(&output.at(0), output.size() + 1, output.size(), fmtstr, c_locale(), args);
+#else
+        vswprintf(&output.at(0), output.size() + 1, fmtstr, args);
+#endif
+        va_end(args);
 
         return output;
     }

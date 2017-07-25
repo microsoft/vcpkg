@@ -102,6 +102,17 @@ namespace vcpkg::Build
         paths.get_filesystem().write_contents(binary_control_file, Strings::serialize(bpgh));
     }
 
+    static void create_binary_feature_control_file(const VcpkgPaths& paths,
+                                                   const SourceParagraph& source_paragraph,
+                                                   const FeatureParagraph& feature_paragraph,
+                                                   const Triplet& triplet,
+                                                   const BuildInfo& build_info)
+    {
+        BinaryParagraph bpgh = BinaryParagraph(source_paragraph, feature_paragraph, triplet);
+        const fs::path binary_control_file = paths.packages / bpgh.dir() / "CONTROL";
+        paths.get_filesystem().write_contents(binary_control_file, Strings::serialize(bpgh));
+    }
+
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
                                       const BuildPackageConfig& config,
                                       const StatusParagraphs& status_db)
@@ -135,17 +146,36 @@ namespace vcpkg::Build
         const Toolset& toolset = paths.get_toolset(pre_build_info.platform_toolset);
         const auto cmd_set_environment = make_build_env_cmd(pre_build_info, toolset);
 
+        std::string features;
+        if (g_feature_packages)
+        {
+            if (config.feature_list)
+            {
+                for (auto&& feature : *config.feature_list)
+                {
+                    features.append(feature + ";");
+                }
+                if (features.size() > 0)
+                {
+                    features.pop_back();
+                }
+            }
+        }
+
         const std::wstring cmd_launch_cmake = make_cmake_cmd(
             cmake_exe_path,
             ports_cmake_script_path,
-            {{L"CMD", L"BUILD"},
-             {L"PORT", config.src.name},
-             {L"CURRENT_PORT_DIR", config.port_dir / "/."},
-             {L"TARGET_TRIPLET", triplet.canonical_name()},
-             {L"VCPKG_PLATFORM_TOOLSET", toolset.version},
-             {L"VCPKG_USE_HEAD_VERSION", to_bool(config.build_package_options.use_head_version) ? L"1" : L"0"},
-             {L"_VCPKG_NO_DOWNLOADS", !to_bool(config.build_package_options.allow_downloads) ? L"1" : L"0"},
-             {L"GIT", git_exe_path}});
+            {
+                {L"CMD", L"BUILD"},
+                {L"PORT", config.src.name},
+                {L"CURRENT_PORT_DIR", config.port_dir / "/."},
+                {L"TARGET_TRIPLET", triplet.canonical_name()},
+                {L"VCPKG_PLATFORM_TOOLSET", toolset.version},
+                {L"VCPKG_USE_HEAD_VERSION", to_bool(config.build_package_options.use_head_version) ? L"1" : L"0"},
+                {L"_VCPKG_NO_DOWNLOADS", !to_bool(config.build_package_options.allow_downloads) ? L"1" : L"0"},
+                {L"GIT", git_exe_path},
+                {L"FEATURES", features},
+            });
 
         const std::wstring command = Strings::wformat(LR"(%s && %s)", cmd_set_environment, cmd_launch_cmake);
 
@@ -170,7 +200,21 @@ namespace vcpkg::Build
         {
             return {BuildResult::POST_BUILD_CHECKS_FAILED, {}};
         }
-
+        if (g_feature_packages)
+        {
+            if (config.feature_list)
+            {
+                for (auto&& feature : *config.feature_list)
+                {
+                    for (auto&& f_pgh : config.scf->feature_paragraphs)
+                    {
+                        if (f_pgh->name == feature)
+                            create_binary_feature_control_file(
+                                paths, *config.scf->core_paragraph, *f_pgh, triplet, build_info);
+                    }
+                }
+            }
+        }
         create_binary_control_file(paths, config.src, triplet, build_info);
 
         // const fs::path port_buildtrees_dir = paths.buildtrees / spec.name;

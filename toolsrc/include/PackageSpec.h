@@ -1,5 +1,6 @@
 #pragma once
 #include "PackageSpecParseResult.h"
+#include "SourceParagraph.h"
 #include "Triplet.h"
 #include "vcpkg_expected.h"
 
@@ -7,8 +8,6 @@ namespace vcpkg
 {
     struct PackageSpec
     {
-        static ExpectedT<PackageSpec, PackageSpecParseResult> from_string(const std::string& spec_as_string,
-                                                                          const Triplet& default_triplet);
         static std::string to_string(const std::string& name, const Triplet& triplet);
         static ExpectedT<PackageSpec, PackageSpecParseResult> from_name_and_triplet(const std::string& name,
                                                                                     const Triplet& triplet);
@@ -30,6 +29,9 @@ namespace vcpkg
     {
         PackageSpec package_spec;
         std::vector<std::string> features;
+
+        static ExpectedT<FullPackageSpec, PackageSpecParseResult> from_string(const std::string& spec_as_string,
+                                                                              const Triplet& default_triplet);
     };
 
     bool operator==(const PackageSpec& left, const PackageSpec& right);

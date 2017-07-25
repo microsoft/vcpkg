@@ -38,7 +38,7 @@ namespace vcpkg::PostBuildLint
         }
     };
 
-    const std::vector<OutdatedDynamicCrt>& get_outdated_dynamic_crts(const Build::BuildPolicies& policies)
+    const std::vector<OutdatedDynamicCrt>& get_outdated_dynamic_crts()
     {
         static const std::vector<OutdatedDynamicCrt> v_no_msvcrt = {
             {"msvcp100.dll", R"(msvcp100\.dll)"},
@@ -59,18 +59,7 @@ namespace vcpkg::PostBuildLint
             {"msvcrt20.dll", R"(msvcrt20\.dll)"},
             {"msvcrt40.dll", R"(msvcrt40\.dll)"}};
 
-        static const std::vector<OutdatedDynamicCrt> v = [&]() {
-            auto ret = v_no_msvcrt;
-            ret.push_back(OutdatedDynamicCrt{"msvcrt.dll", R"(msvcrt\.dll)"});
-            return ret;
-        }();
-
-        if (policies.is_enabled(BuildPolicy::ALLOW_OBSOLETE_MSVCRT))
-        {
-            return v_no_msvcrt;
-        }
-
-        return v;
+        return v_no_msvcrt;
     }
 
     static LintStatus check_for_files_in_include_directory(const Files::Filesystem& fs,
@@ -659,7 +648,7 @@ namespace vcpkg::PostBuildLint
                                                          const fs::path dumpbin_exe,
                                                          const BuildInfo& build_info)
     {
-        const std::vector<OutdatedDynamicCrt>& outdated_crts = get_outdated_dynamic_crts(build_info.policies);
+        if (build_info.policies.is_enabled(BuildPolicy::ALLOW_OBSOLETE_MSVCRT)) return LintStatus::SUCCESS;
 
         std::vector<OutdatedDynamicCrt_and_file> dlls_with_outdated_crt;
 
@@ -673,7 +662,7 @@ namespace vcpkg::PostBuildLint
                                "Running command:\n   %s\n failed",
                                Strings::to_utf8(cmd_line));
 
-            for (const OutdatedDynamicCrt& outdated_crt : outdated_crts)
+            for (const OutdatedDynamicCrt& outdated_crt : get_outdated_dynamic_crts())
             {
                 if (std::regex_search(ec_data.output.cbegin(), ec_data.output.cend(), outdated_crt.regex))
                 {

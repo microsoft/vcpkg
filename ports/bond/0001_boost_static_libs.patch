@@ -1,17 +1,17 @@
 diff --git a/cmake/Config.cmake b/cmake/Config.cmake
-index c6e2b40d..d8b4d689 100644
+index d5125c70..a2eb536c 100644
 --- a/cmake/Config.cmake
 +++ b/cmake/Config.cmake
-@@ -35,7 +35,7 @@ if (MSVC)
-     # Bond with MSVC CRT-specific code too much. More details at
-     # https://msdn.microsoft.com/en-us/library/ms175759.aspx
-     add_definitions (-D_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES=1 -D_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES_COUNT=1)
+@@ -46,7 +46,7 @@ if (MSVC)
+       add_compile_options (/permissive-)
+     endif()
+ 
 -    set (Boost_USE_STATIC_LIBS ON)
 +    set (Boost_USE_STATIC_LIBS OFF)
  endif (MSVC)
  
  if (WIN32)
-@@ -106,9 +106,6 @@ if (DEFINED ENV{APPVEYOR} AND ("$ENV{BOND_BUILD}" STREQUAL "C++"))
+@@ -131,9 +131,6 @@ if (DEFINED ENV{APPVEYOR} AND ("$ENV{BOND_BUILD}" STREQUAL "C++"))
      endif()
  endif()
  

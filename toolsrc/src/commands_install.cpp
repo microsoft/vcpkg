@@ -16,6 +16,8 @@ namespace vcpkg::Commands::Install
     using Dependencies::InstallPlanAction;
     using Dependencies::RequestType;
     using Dependencies::InstallPlanType;
+    using Dependencies::RemovePlanAction;
+    using Dependencies::RemovePlanType;
 
     InstallDir InstallDir::from_destination_root(const fs::path& destination_root,
                                                  const std::string& destination_subdirectory,
@@ -290,7 +292,7 @@ namespace vcpkg::Commands::Install
             return BuildResult::SUCCEEDED;
         }
 
-        if (plan_type == InstallPlanType::BUILD_AND_INSTALL)
+        if (plan_type == InstallPlanType::BUILD_AND_INSTALL && !g_feature_packages)
         {
             if (use_head_version)
                 System::println("Building package %s from HEAD... ", display_name);
@@ -318,7 +320,36 @@ namespace vcpkg::Commands::Install
             return BuildResult::SUCCEEDED;
         }
 
-        if (plan_type == InstallPlanType::INSTALL)
+        if (plan_type == InstallPlanType::BUILD_AND_INSTALL && g_feature_packages)
+        {
+            if (use_head_version)
+                System::println("Building package %s from HEAD... ", display_name);
+            else
+                System::println("Building package %s... ", display_name);
+
+            const Build::BuildPackageConfig build_config{
+                *action.any_paragraph.source_control_file.value_or_exit(VCPKG_LINE_INFO),
+                action.spec.triplet(),
+                paths.port_dir(action.spec),
+                build_package_options,
+                action.feature_list};
+            const auto result = Build::build_package(paths, build_config, status_db);
+            if (result.code != Build::BuildResult::SUCCEEDED)
+            {
+                System::println(System::Color::error, Build::create_error_message(result.code, action.spec));
+                return result.code;
+            }
+            System::println("Building package %s... done", display_name);
+
+            const BinaryParagraph bpgh =
+                Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO);
+            System::println("Installing package %s... ", display_name);
+            install_package(paths, bpgh, &status_db);
+            System::println(System::Color::success, "Installing package %s... done", display_name);
+            return BuildResult::SUCCEEDED;
+        }
+
+        if (plan_type == InstallPlanType::INSTALL && !g_feature_packages)
         {
             if (use_head_version && is_user_requested)
             {
@@ -359,7 +390,10 @@ namespace vcpkg::Commands::Install
 
         // create the plan
         StatusParagraphs status_db = database_load_check(paths);
-        std::vector<InstallPlanAction> install_plan = Dependencies::create_install_plan(paths, specs, status_db);
+
+        Dependencies::PathsPortFile paths_port_file(paths);
+        std::vector<InstallPlanAction> install_plan =
+            Dependencies::create_install_plan(paths_port_file, specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !install_plan.empty(), "Install plan cannot be empty");
 
         // log the plan
