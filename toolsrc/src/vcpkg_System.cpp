@@ -54,10 +54,12 @@ namespace vcpkg::System
         {
             return to_cpu_architecture("").value_or_exit(VCPKG_LINE_INFO);
         }
+        //TODO Add linux architecture to `to_cpu_architecture` options
         return to_cpu_architecture(info.machine).value_or_exit()
 #endif
     }
 
+#ifdef _WIN32
     int cmd_execute_clean(const CWStringView cmd_line)
     {
         static const std::wstring system_root = get_environment_variable(L"SystemRoot").value_or_exit(VCPKG_LINE_INFO);
@@ -137,7 +139,9 @@ namespace vcpkg::System
         Debug::println("_wspawnlpe() returned %d", exit_code);
         return static_cast<int>(exit_code);
     }
+#endif
 
+#ifdef _WIN32
     int cmd_execute(const CWStringView cmd_line)
     {
         // Flush stdout before launching external process
@@ -150,7 +154,19 @@ namespace vcpkg::System
         Debug::println("_wsystem() returned %d", exit_code);
         return exit_code;
     }
+#else
+    int cmd_execute(const CStringView cmd_line)
+    {
+        fflush(nullptr);
+        const std::string actual_cmd_line = Strings::format(R"(%s 2>&1)", cmd_line);
+        Debug::println("system(%s)", actual_cmd_line);
+        int exit_code = system(actual_cmd_line.c_str());
+        Debug::println("system() returned %d", exit_code);
+        return exit_code;
+    }
+#endif
 
+#ifdef _WIN32
     ExitCodeAndOutput cmd_execute_and_capture_output(const CWStringView cmd_line)
     {
         // Flush stdout before launching external process
@@ -178,6 +194,35 @@ namespace vcpkg::System
         Debug::println("_wpopen() returned %d", ec);
         return {ec, output};
     }
+#else
+    ExitCodeAndOutput cmd_execute_and_capture_output(const CStringView cmd_line)
+    {
+        // Flush stdout before launching external process
+        fflush(stdout);
+
+        const std::string& actual_cmd_line = Strings::format(R"(%s 2>&1)", cmd_line);
+        Debug::println("popen(%s)", actual_cmd_line);
+
+        std::string output;
+        char buf[1024];
+        auto pipe = popen(actual_cmd_line.c_str(), "r");
+        if (pipe == nullptr)
+        {
+            return {1, output};
+        }
+        while (fgets(buf, 1024, pipe))
+        {
+            output.append(buf);
+        }
+        if (!feof(pipe))
+        {
+            return {1, output};
+        }
+        auto ec = pclose(pipe);
+        Debug::println("popen() returned %d", ec);
+        return {ec, output};
+    }
+#endif
 
     std::wstring create_powershell_script_cmd(const fs::path& script_path, const CWStringView args)
     {
