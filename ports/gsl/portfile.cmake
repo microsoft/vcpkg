@@ -1,21 +1,11 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/gsl-2.3)
+set(GSL_VERSION 2.4)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/gsl-${GSL_VERSION})
+
 vcpkg_download_distfile(ARCHIVE
-    URLS "ftp://ftp.gnu.org/gnu/gsl/gsl-2.3.tar.gz"
-    FILENAME "gsl-2.3.tar.gz"
-    SHA512 ada622079f4ac667d95f74b38aa368726fc1b18fd34555bcefe90920d3da93a9289ebff966be43325af806107001bc8973daf9f8418e6c97b866be2296b566ff
+    URLS "ftp://ftp.gnu.org/gnu/gsl/gsl-${GSL_VERSION}.tar.gz"
+    FILENAME "gsl-${GSL_VERSION}.tar.gz"
+    SHA512 12442b023dd959e8b22a9c486646b5cedec7fdba0daf2604cda365cf96d10d99aefdec2b42e59c536cc071da1525373454e5ed6f4b15293b305ca9b1dc6db130
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
