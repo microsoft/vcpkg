@@ -40,11 +40,22 @@ namespace vcpkg::System
 
     CPUArchitecture get_host_processor()
     {
+#ifdef _WIN32
         auto w6432 = get_environment_variable(L"PROCESSOR_ARCHITEW6432");
         if (auto p = w6432.get()) return to_cpu_architecture(Strings::to_utf8(*p)).value_or_exit(VCPKG_LINE_INFO);
 
         auto procarch = get_environment_variable(L"PROCESSOR_ARCHITECTURE").value_or_exit(VCPKG_LINE_INFO);
         return to_cpu_architecture(Strings::to_utf8(procarch)).value_or_exit(VCPKG_LINE_INFO);
+#endif
+#ifdef __linux__
+        struct utsname info;
+
+        if (uname(&info) == -1)
+        {
+            return to_cpu_architecture("").value_or_exit(VCPKG_LINE_INFO);
+        }
+        return to_cpu_architecture(info.machine).value_or_exit()
+#endif
     }
 
     int cmd_execute_clean(const CWStringView cmd_line)
