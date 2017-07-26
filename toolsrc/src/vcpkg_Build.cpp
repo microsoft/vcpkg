@@ -88,29 +88,37 @@ namespace vcpkg::Build
         return Strings::wformat(LR"("%s" %s %s %s 2>&1)", toolset.vcvarsall.native(), arch, target, tonull);
     }
 
-    static void create_binary_control_file(const VcpkgPaths& paths,
-                                           const SourceParagraph& source_paragraph,
-                                           const Triplet& triplet,
-                                           const BuildInfo& build_info)
+    static void create_binary_feature_control_file(const SourceParagraph& source_paragraph,
+                                                   const FeatureParagraph& feature_paragraph,
+                                                   const Triplet& triplet,
+                                                   BinaryControlFile& bcf)
     {
-        BinaryParagraph bpgh = BinaryParagraph(source_paragraph, triplet);
+        BinaryParagraph bpgh(source_paragraph, feature_paragraph, triplet);
+        bcf.features.emplace_back(std::move(bpgh));
+    }
+
+    static void create_binary_control_file(const SourceParagraph& source_paragraph,
+                                           const Triplet& triplet,
+                                           const BuildInfo& build_info,
+                                           BinaryControlFile& bcf)
+    {
+        BinaryParagraph bpgh(source_paragraph, triplet);
         if (auto p_ver = build_info.version.get())
         {
             bpgh.version = *p_ver;
         }
-        const fs::path binary_control_file = paths.packages / bpgh.dir() / "CONTROL";
-        paths.get_filesystem().write_contents(binary_control_file, Strings::serialize(bpgh));
+        bcf.core_paragraph = std::move(bpgh);
     }
 
-    static void create_binary_feature_control_file(const VcpkgPaths& paths,
-                                                   const SourceParagraph& source_paragraph,
-                                                   const FeatureParagraph& feature_paragraph,
-                                                   const Triplet& triplet,
-                                                   const BuildInfo& build_info)
+    static void write_binary_control_file(const VcpkgPaths& paths, BinaryControlFile bcf)
     {
-        BinaryParagraph bpgh = BinaryParagraph(source_paragraph, feature_paragraph, triplet);
-        const fs::path binary_control_file = paths.packages / bpgh.dir() / "CONTROL";
-        paths.get_filesystem().write_contents(binary_control_file, Strings::serialize(bpgh));
+        std::string start = Strings::serialize(bcf.core_paragraph);
+        for (auto&& feature : bcf.features)
+        {
+            start += "\n" + Strings::serialize(feature);
+        }
+        const fs::path binary_control_file = paths.packages / bcf.core_paragraph.dir() / "CONTROL";
+        paths.get_filesystem().write_contents(binary_control_file, start);
     }
 
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
@@ -196,6 +204,10 @@ namespace vcpkg::Build
         auto build_info = read_build_info(paths.get_filesystem(), paths.build_info_file_path(spec));
         const size_t error_count = PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info);
 
+        BinaryControlFile bcf;
+
+        create_binary_control_file(config.src, triplet, build_info, bcf);
+
         if (error_count != 0)
         {
             return {BuildResult::POST_BUILD_CHECKS_FAILED, {}};
@@ -209,13 +221,13 @@ namespace vcpkg::Build
                     for (auto&& f_pgh : config.scf->feature_paragraphs)
                     {
                         if (f_pgh->name == feature)
-                            create_binary_feature_control_file(
-                                paths, *config.scf->core_paragraph, *f_pgh, triplet, build_info);
+                            create_binary_feature_control_file(*config.scf->core_paragraph, *f_pgh, triplet, bcf);
                     }
                 }
             }
         }
-        create_binary_control_file(paths, config.src, triplet, build_info);
+
+        write_binary_control_file(paths, bcf);
 
         // const fs::path port_buildtrees_dir = paths.buildtrees / spec.name;
         // delete_directory(port_buildtrees_dir);

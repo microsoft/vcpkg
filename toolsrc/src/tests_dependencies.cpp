@@ -17,7 +17,7 @@ namespace UnitTest1
         {
             auto v = expand_qualified_dependencies(parse_comma_list("libA (windows)"));
             Assert::AreEqual(size_t(1), v.size());
-            Assert::AreEqual("libA", v[0].name.c_str());
+            Assert::AreEqual("libA", v[0].depend.name.c_str());
             Assert::AreEqual("windows", v[0].qualifier.c_str());
         }
 

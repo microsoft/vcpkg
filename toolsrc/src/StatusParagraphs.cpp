@@ -27,6 +27,30 @@ namespace vcpkg
         });
     }
 
+    std::vector<std::unique_ptr<StatusParagraph>*> StatusParagraphs::find_all(const std::string& name,
+                                                                              const Triplet& triplet)
+    {
+        std::vector<std::unique_ptr<StatusParagraph>*> spghs;
+        for (auto&& p : *this)
+        {
+            if (p->package.spec.name() == name && p->package.spec.triplet() == triplet)
+            {
+                spghs.emplace_back(&p);
+            }
+        }
+        return spghs;
+    }
+
+    StatusParagraphs::iterator StatusParagraphs::find(const std::string& name,
+                                                      const Triplet& triplet,
+                                                      const std::string& feature)
+    {
+        return std::find_if(begin(), end(), [&](const std::unique_ptr<StatusParagraph>& pgh) {
+            const PackageSpec& spec = pgh->package.spec;
+            return spec.name() == name && spec.triplet() == triplet && pgh->package.feature == feature;
+        });
+    }
+
     StatusParagraphs::const_iterator StatusParagraphs::find_installed(const std::string& name,
                                                                       const Triplet& triplet) const
     {
@@ -43,7 +67,7 @@ namespace vcpkg
     {
         Checks::check_exit(VCPKG_LINE_INFO, pgh != nullptr, "Inserted null paragraph");
         const PackageSpec& spec = pgh->package.spec;
-        auto ptr = find(spec.name(), spec.triplet());
+        auto ptr = find(spec.name(), spec.triplet(), pgh->package.feature);
         if (ptr == end())
         {
             paragraphs.push_back(std::move(pgh));

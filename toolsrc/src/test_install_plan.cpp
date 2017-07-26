@@ -347,13 +347,13 @@ namespace UnitTest1
                 spec_map.get_package_spec(
                     {{{"Source", "a"}, {"Version", "1.3"}, {"Build-Depends", ""}},
                      {{"Feature", "1"}, {"Description", "the first feature for a"}, {"Build-Depends", "b[1]"}},
-                     {{"Feature", "2"}, {"Description", "the first feature for a"}, {"Build-Depends", "b[2]"}},
-                     {{"Feature", "3"}, {"Description", "the first feature for a"}, {"Build-Depends", "a[2]"}}}),
+                     {{"Feature", "2"}, {"Description", "the second feature for a"}, {"Build-Depends", "b[2]"}},
+                     {{"Feature", "3"}, {"Description", "the third feature for a"}, {"Build-Depends", "a[2]"}}}),
                 {"3"}};
             auto spec_b = FullPackageSpec{spec_map.get_package_spec({
                 {{"Source", "b"}, {"Version", "1.3"}, {"Build-Depends", ""}},
-                {{"Feature", "1"}, {"Description", "the first feature for a"}, {"Build-Depends", ""}},
-                {{"Feature", "2"}, {"Description", "the first feature for a"}, {"Build-Depends", ""}},
+                {{"Feature", "1"}, {"Description", "the first feature for b"}, {"Build-Depends", ""}},
+                {{"Feature", "2"}, {"Description", "the second feature for b"}, {"Build-Depends", ""}},
             })};
 
             auto install_plan = Dependencies::create_feature_install_plan(
@@ -434,7 +434,7 @@ namespace UnitTest1
                 {"1"}};
 
             auto install_plan = Dependencies::create_feature_install_plan(
-                spec_map.map, {spec_b, spec_x}, StatusParagraphs(std::move(status_paragraphs)));
+                spec_map.map, {spec_b}, StatusParagraphs(std::move(status_paragraphs)));
 
             Assert::AreEqual(size_t(5), install_plan.size());
             remove_plan_check(&install_plan[0], "x");
@@ -522,6 +522,46 @@ namespace UnitTest1
             features_check(&install_plan[5], "b", {"core"});
             features_check(&install_plan[6], "a", {"one", "core"});
             features_check(&install_plan[7], "c", {"core"});
+        }
+
+        TEST_METHOD(default_features_test)
+        {
+            using Pgh = std::unordered_map<std::string, std::string>;
+
+            std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+
+            PackageSpecMap spec_map(Triplet::X86_WINDOWS);
+
+            auto spec_a = FullPackageSpec{
+                spec_map.get_package_spec(
+                    {{{"Source", "a"}, {"Version", "1.3"}, {"Default-Features", "1, 2"}, {"Build-Depends", ""}},
+                     {{"Feature", "1"}, {"Description", "the first feature for a"}, {"Build-Depends", "b[2]"}},
+                     {{"Feature", "2"}, {"Description", "the second feature for a"}, {"Build-Depends", ""}},
+                     {{"Feature", "3"}, {"Description", "the third feature for a"}, {"Build-Depends", ""}}}),
+                {""}};
+            auto spec_b = FullPackageSpec{
+                spec_map.get_package_spec({
+                    {{"Source", "b"}, {"Version", "1.3"}, {"Default-Features", "1, 2"}, {"Build-Depends", ""}},
+                    {{"Feature", "1"}, {"Description", "the first feature for b"}, {"Build-Depends", "c[1]"}},
+                    {{"Feature", "2"}, {"Description", "the second feature for b"}, {"Build-Depends", ""}},
+                }),
+                {""}};
+
+            auto spec_c = FullPackageSpec{
+                spec_map.get_package_spec({
+                    {{"Source", "c"}, {"Version", "1.3"}, {"Default-Features", "2"}, {"Build-Depends", ""}},
+                    {{"Feature", "1"}, {"Description", "the first feature for c"}, {"Build-Depends", ""}},
+                    {{"Feature", "2"}, {"Description", "the second feature for c"}, {"Build-Depends", ""}},
+                }),
+                {""}};
+
+            auto install_plan = Dependencies::create_feature_install_plan(
+                spec_map.map, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
+
+            Assert::AreEqual(size_t(3), install_plan.size());
+            features_check(&install_plan[0], "c", {"core", "1", "2"});
+            features_check(&install_plan[1], "b", {"core", "1", "2"});
+            features_check(&install_plan[2], "a", {"core", "1", "2"});
         }
     };
 }

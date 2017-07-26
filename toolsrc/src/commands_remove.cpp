@@ -17,13 +17,19 @@ namespace vcpkg::Commands::Remove
     void remove_package(const VcpkgPaths& paths, const PackageSpec& spec, StatusParagraphs* status_db)
     {
         auto& fs = paths.get_filesystem();
-        StatusParagraph& pkg = **status_db->find(spec.name(), spec.triplet());
+        auto spghs = status_db->find_all(spec.name(), spec.triplet());
+        auto core_pkg = **status_db->find(spec.name(), spec.triplet(), "");
 
-        pkg.want = Want::PURGE;
-        pkg.state = InstallState::HALF_INSTALLED;
-        write_update(paths, pkg);
+        for (auto&& spgh : spghs)
+        {
+            StatusParagraph& pkg = **spgh;
+            if (pkg.state != InstallState::INSTALLED) continue;
+            pkg.want = Want::PURGE;
+            pkg.state = InstallState::HALF_INSTALLED;
+            write_update(paths, pkg);
+        }
 
-        auto maybe_lines = fs.read_lines(paths.listfile_path(pkg.package));
+        auto maybe_lines = fs.read_lines(paths.listfile_path(core_pkg.package));
 
         if (auto lines = maybe_lines.get())
         {
@@ -80,11 +86,16 @@ namespace vcpkg::Commands::Remove
                 }
             }
 
-            fs.remove(paths.listfile_path(pkg.package));
+            fs.remove(paths.listfile_path(core_pkg.package));
         }
 
-        pkg.state = InstallState::NOT_INSTALLED;
-        write_update(paths, pkg);
+        for (auto&& spgh : spghs)
+        {
+            StatusParagraph& pkg = **spgh;
+            if (pkg.state != InstallState::HALF_INSTALLED) continue;
+            pkg.state = InstallState::NOT_INSTALLED;
+            write_update(paths, pkg);
+        }
     }
 
     static void print_plan(const std::map<RemovePlanType, std::vector<const RemovePlanAction*>>& group_by_plan_type)

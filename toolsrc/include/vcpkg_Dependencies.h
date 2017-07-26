@@ -90,6 +90,7 @@ namespace vcpkg::Dependencies
         InstallPlanAction(InstallPlanAction&&) = default;
         InstallPlanAction& operator=(const InstallPlanAction&) = delete;
         InstallPlanAction& operator=(InstallPlanAction&&) = default;
+        std::string displayname() const;
 
         PackageSpec spec;
         AnyParagraph any_paragraph;
@@ -205,7 +206,9 @@ namespace vcpkg::Dependencies
                    std::unordered_map<PackageSpec, Cluster>& pkg_to_cluster,
                    GraphPlan& graph_plan);
     void mark_minus(Cluster& cluster, std::unordered_map<PackageSpec, Cluster>& pkg_to_cluster, GraphPlan& graph_plan);
-
+    void mark_plus_default(Cluster& cluster,
+                           std::unordered_map<PackageSpec, Cluster>& pkg_to_cluster,
+                           GraphPlan& graph_plan);
     std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<PackageSpec, SourceControlFile>& map,
                                                        const std::vector<FullPackageSpec>& specs,
                                                        const StatusParagraphs& status_db);

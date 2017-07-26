@@ -15,13 +15,24 @@ namespace vcpkg
 
     struct Triplet;
 
-    struct Dependency
+    struct Features
     {
         std::string name;
-        std::string qualifier;
+        std::vector<std::string> features;
     };
 
-    const std::string& to_string(const Dependency& dep);
+    Features parse_feature_list(const std::string& name);
+
+    struct Dependency
+    {
+        Features depend;
+        std::string qualifier;
+
+        std::string name() const;
+        static Dependency parse_dependency(std::string name, std::string qualifier);
+    };
+
+    const std::string to_string(const Dependency& dep);
 
     struct FeatureParagraph
     {

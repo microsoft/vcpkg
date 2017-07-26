@@ -101,6 +101,25 @@ namespace vcpkg::Dependencies
         this->plan_type = InstallPlanType::UNKNOWN;
     }
 
+    std::string InstallPlanAction::displayname() const
+    {
+        if (this->feature_list.empty())
+        {
+            return this->spec.to_string();
+        }
+        else
+        {
+            std::string features;
+            for (auto&& feature : this->feature_list)
+            {
+                features += feature + ",";
+            }
+            features.pop_back();
+
+            return this->spec.name() + "[" + features + "]:" + this->spec.triplet().to_string();
+        }
+    }
+
     bool InstallPlanAction::compare_by_name(const InstallPlanAction* left, const InstallPlanAction* right)
     {
         return left->spec.name() < right->spec.name();
@@ -319,9 +338,9 @@ namespace vcpkg::Dependencies
                                                      ? RequestType::USER_REQUESTED
                                                      : RequestType::AUTO_SELECTED;
 
-                Expected<BinaryParagraph> maybe_bpgh = Paragraphs::try_load_cached_package(paths, spec);
-                if (auto bpgh = maybe_bpgh.get())
-                    return ExportPlanAction{spec, {nullopt, *bpgh, nullopt}, request_type};
+                Expected<BinaryControlFile> maybe_bpgh = Paragraphs::try_load_cached_control_package(paths, spec);
+                if (auto bcf = maybe_bpgh.get())
+                    return ExportPlanAction{spec, {nullopt, bcf->core_paragraph, nullopt}, request_type};
 
                 auto maybe_scf = Paragraphs::try_load_port(paths.get_filesystem(), paths.port_dir(spec));
                 if (auto scf = maybe_scf.get())
@@ -366,6 +385,20 @@ namespace vcpkg::Dependencies
         return f_specs;
     }
 
+    void mark_plus_default(Cluster& cluster,
+                           std::unordered_map<PackageSpec, Cluster>& pkg_to_cluster,
+                           GraphPlan& graph_plan)
+    {
+        mark_plus("core", cluster, pkg_to_cluster, graph_plan);
+        if (auto scf = cluster.source_control_file.get())
+        {
+            for (auto&& default_feature : (*scf)->core_paragraph->default_features)
+            {
+                mark_plus(default_feature, cluster, pkg_to_cluster, graph_plan);
+            }
+        }
+    }
+
     bool mark_plus(const std::string& feature,
                    Cluster& cluster,
                    std::unordered_map<PackageSpec, Cluster>& pkg_to_cluster,
@@ -404,21 +437,12 @@ namespace vcpkg::Dependencies
         graph_plan.install_graph.add_vertex({&cluster});
         auto& tracked = cluster.to_install_features;
         tracked.insert(updated_feature);
-        if (tracked.find("core") == tracked.end() && tracked.find("") == tracked.end())
-        {
-            cluster.to_install_features.insert("core");
-            for (auto&& depend : cluster.edges["core"].build_edges)
-            {
-                auto& depend_cluster = pkg_to_cluster[depend.spec];
-                mark_plus(depend.feature_name, depend_cluster, pkg_to_cluster, graph_plan);
-                graph_plan.install_graph.add_edge({&cluster}, {&depend_cluster});
-            }
-        }
 
         for (auto&& depend : cluster.edges[updated_feature].build_edges)
         {
             auto& depend_cluster = pkg_to_cluster[depend.spec];
             mark_plus(depend.feature_name, depend_cluster, pkg_to_cluster, graph_plan);
+            mark_plus_default(depend_cluster, pkg_to_cluster, graph_plan);
             if (&depend_cluster == &cluster) continue;
             graph_plan.install_graph.add_edge({&cluster}, {&depend_cluster});
         }
@@ -448,6 +472,7 @@ namespace vcpkg::Dependencies
             mark_plus(original_feature, cluster, pkg_to_cluster, graph_plan);
         }
     }
+
     std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<PackageSpec, SourceControlFile>& map,
                                                        const std::vector<FullPackageSpec>& specs,
                                                        const StatusParagraphs& status_db)
@@ -515,6 +540,7 @@ namespace vcpkg::Dependencies
         for (auto&& spec : specs)
         {
             Cluster& spec_cluster = pkg_spec_to_package_node[spec.package_spec];
+            mark_plus_default(spec_cluster, pkg_spec_to_package_node, graph_plan);
             for (auto&& feature : spec.features)
             {
                 mark_plus(feature, spec_cluster, pkg_spec_to_package_node, graph_plan);

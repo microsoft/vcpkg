@@ -152,18 +152,61 @@ namespace vcpkg
         return std::move(control_file);
     }
 
+    Features parse_feature_list(const std::string& name)
+    {
+        Features f;
+        int end = (int)name.find(']');
+        if (end != std::string::npos)
+        {
+            int start = (int)name.find('[');
+
+            auto feature_name_list = name.substr(start + 1, end - start - 1);
+            f.name = name.substr(0, start);
+            f.features = parse_comma_list(feature_name_list);
+        }
+        else
+        {
+            f.name = name;
+        }
+        return f;
+    }
+
+    Dependency Dependency::parse_dependency(std::string name, std::string qualifier)
+    {
+        Dependency dep;
+        dep.qualifier = qualifier;
+        dep.depend = parse_feature_list(name);
+        return dep;
+    }
+
+    std::string Dependency::name() const
+    {
+        std::string str = this->depend.name;
+        if (this->depend.features.empty()) return str;
+
+        str += "[";
+        for (auto&& s : this->depend.features)
+        {
+            str += s + ",";
+        }
+        str.pop_back();
+        str += "]";
+        return str;
+    }
+
     std::vector<Dependency> vcpkg::expand_qualified_dependencies(const std::vector<std::string>& depends)
     {
         return Util::fmap(depends, [&](const std::string& depend_string) -> Dependency {
             auto pos = depend_string.find(' ');
-            if (pos == std::string::npos) return {depend_string, ""};
+            if (pos == std::string::npos) return Dependency::parse_dependency(depend_string, "");
             // expect of the form "\w+ \[\w+\]"
             Dependency dep;
-            dep.name = depend_string.substr(0, pos);
+
+            dep.depend.name = depend_string.substr(0, pos);
             if (depend_string.c_str()[pos + 1] != '(' || depend_string[depend_string.size() - 1] != ')')
             {
                 // Error, but for now just slurp the entire string.
-                return {depend_string, ""};
+                return Dependency::parse_dependency(depend_string, "");
             }
             dep.qualifier = depend_string.substr(pos + 2, depend_string.size() - pos - 3);
             return dep;
@@ -210,13 +253,17 @@ namespace vcpkg
         {
             if (dep.qualifier.empty() || t.canonical_name().find(dep.qualifier) != std::string::npos)
             {
-                ret.push_back(dep.name);
+                ret.emplace_back(dep.name());
             }
         }
         return ret;
     }
 
-    const std::string& to_string(const Dependency& dep) { return dep.name; }
+    const std::string to_string(const Dependency& dep)
+    {
+        std::string name = dep.name();
+        return name;
+    }
 
     ExpectedT<Supports, std::vector<std::string>> Supports::parse(const std::vector<std::string>& strs)
     {

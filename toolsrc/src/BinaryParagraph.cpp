@@ -87,7 +87,17 @@ namespace vcpkg
         this->depends = filter_dependencies(fpgh.depends, triplet);
     }
 
-    std::string BinaryParagraph::displayname() const { return this->spec.to_string(); }
+    std::string BinaryParagraph::displayname() const
+    {
+        if (this->feature == "")
+        {
+            return this->spec.name() + "[core]:" + this->spec.triplet().to_string();
+        }
+        else
+        {
+            return this->spec.name() + "[" + this->feature + "]:" + this->spec.triplet().to_string();
+        }
+    }
 
     std::string BinaryParagraph::dir() const { return this->spec.dir(); }
 
