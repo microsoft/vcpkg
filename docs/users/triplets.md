@@ -53,4 +53,6 @@ For an example in a real project, see https://github.com/Intelight/vcpkg/blob/ma
 ## Additional Remarks
 The default triplet when running any vcpkg command is `%VCPKG_DEFAULT_TRIPLET%` or `x86-windows` if that environment variable is undefined.
 
+While the format is not enforced, to make sure all libraries are installed correctly, the first part of a triplet name must be composed of the name of the architecture (e.g. `x86`, `x64`, or `arm`), followed by a minus (i.e. `-`) followed by a name of your choice. For example `x64-windows` or `x86-mytriplet`.
+
 We recommend using a systematic naming scheme when creating new triplets. The Android toolchain naming scheme is a good source of inspiration: https://developer.android.com/ndk/guides/standalone_toolchain.html.
