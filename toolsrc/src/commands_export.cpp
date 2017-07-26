@@ -246,9 +246,12 @@ namespace vcpkg::Commands::Export
         const bool zip = options.switches.find(OPTION_ZIP) != options.switches.cend();
         const bool _7zip = options.switches.find(OPTION_7ZIP) != options.switches.cend();
 
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           raw || nuget || zip || _7zip,
-                           "Must provide at least one of the following options: --raw --nuget --zip --7zip");
+        if (!raw && !nuget && !zip && !_7zip && !dryRun)
+        {
+            System::println(System::Color::error, "Must provide at least one export type: --raw --nuget --zip --7zip");
+            System::print(example);
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
 
         auto maybe_nuget_id = maybe_lookup(options.settings, OPTION_NUGET_ID);
         auto maybe_nuget_version = maybe_lookup(options.settings, OPTION_NUGET_VERSION);
