@@ -12,6 +12,8 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cxxopts RENAME copyright)
-
 vcpkg_copy_pdbs()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libkml RENAME copyright)
