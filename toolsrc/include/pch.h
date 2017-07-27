@@ -6,10 +6,10 @@
 #include <windows.h>
 
 #ifdef _WIN32
-#include <windows.h>
 #include <process.h>
 #include <shellapi.h>
 #include <shlobj.h>
+#include <windows.h>
 #include <winhttp.h>
 #endif
 
@@ -22,12 +22,12 @@
 #include <unistd.h>
 #endif
 
-#ifndef _MAX_PATH
-#define _MAX_PATH PATH_MAX
-#endif
-
-#ifdef _WIN32
-#define strcasecmp _stricmp
+#if defined(_WIN32)
+#define VCPKG_STRCASECMP _stricmp
+#define VCPKG_MAX_PATH _MAX_PATH
+#else
+#define VCPKG_STRCASECMP strcasecmp
+#define VCPKG_MAX_PATH PATH_MAX
 #endif
 
 #include <algorithm>
