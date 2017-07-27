@@ -22,6 +22,7 @@ set(SRC
   ${MIN_SRC}/mztools.c
 )
 set(HEADERS
+  ${MIN_SRC}/crypt.h
   ${MIN_SRC}/ioapi.h
   ${MIN_SRC}/iowin32.h
   ${MIN_SRC}/unzip.h

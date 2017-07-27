@@ -5,6 +5,14 @@
 
 namespace vcpkg::Commands::Help
 {
+    void help_topics()
+    {
+        System::println("Available help topics:\n"
+                        "  triplet\n"
+                        "  integrate\n"
+                        "  export");
+    }
+
     void help_topic_valid_triplet(const VcpkgPaths& paths)
     {
         System::println("Available architecture triplets:");
@@ -12,6 +20,21 @@ namespace vcpkg::Commands::Help
         {
             System::println("  %s", path.stem().filename().string());
         }
+    }
+
+    void help_topic_export()
+    {
+        System::println("Summary:\n"
+                        "  vcpkg export [options] <pkgs>...\n"
+                        "\n"
+                        "Options:\n"
+                        "  --7zip                          Export to a 7zip (.7z) file\n"
+                        "  --dry-run                       Do not actually export\n"
+                        "  --nuget                         Export a NuGet package\n"
+                        "  --nuget-id=<id>                 Specify the id for the exported NuGet package\n"
+                        "  --nuget-version=<ver>           Specify the version for the exported NuGet package\n"
+                        "  --raw                           Export to an uncompressed directory\n"
+                        "  --zip                           Export to a zip file");
     }
 
     void print_usage()
@@ -25,6 +48,8 @@ namespace vcpkg::Commands::Help
             "  vcpkg list                      List installed packages\n"
             "  vcpkg update                    Display list of packages for updating\n"
             "  vcpkg hash <file> [alg]         Hash a file by specific algorithm, default SHA512\n"
+            "  vcpkg help topics               Display the list of help topics\n"
+            "  vcpkg help <topic>              Display help for a specific topic\n"
             "\n"
             "%s" // Integration help
             "\n"
@@ -77,14 +102,28 @@ namespace vcpkg::Commands::Help
             Checks::exit_success(VCPKG_LINE_INFO);
         }
         const auto& topic = args.command_arguments[0];
-        if (topic == "triplet")
+        if (topic == "triplet" || topic == "triplets" || topic == "triple")
         {
             help_topic_valid_triplet(paths);
+        }
+        else if (topic == "export")
+        {
+            help_topic_export();
+        }
+        else if (topic == "integrate")
+        {
+            System::print("Commands:\n"
+                          "%s",
+                          Integrate::INTEGRATE_COMMAND_HELPSTRING);
+        }
+        else if (topic == "topics")
+        {
+            help_topics();
         }
         else
         {
             System::println(System::Color::error, "Error: unknown topic %s", topic);
-            print_usage();
+            help_topics();
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
         Checks::exit_success(VCPKG_LINE_INFO);
