@@ -1,5 +1,5 @@
 Source: opencv
-Version: 3.2.0-2
+Version: 3.2.0-3
 Build-Depends: zlib, libpng, libjpeg-turbo, tiff
 #Use the following line instead for optional features from OpenCV-contrib that require protobuf
 #Build-Depends: zlib, libpng, libjpeg-turbo, tiff, protobuf
