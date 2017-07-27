@@ -134,6 +134,7 @@ index 5789cd2..e4262e3 100644
  
  include_directories(${GEOGRAM_SOURCE_DIR}/src/lib/third_party/numerics/INCLUDE)
  
++set(LAPACK_lapack_WORKS TRUE)
 +find_package(BLAS REQUIRED)
 +find_package(LAPACK REQUIRED)
  aux_source_directories(SOURCES "Source Files" .)
