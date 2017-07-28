@@ -138,6 +138,13 @@ if(NOT VCPKG_TOOLCHAIN)
         endif()
     endfunction()
 
+    function(find_package name)
+        if(name STREQUAL "Boost")
+            unset(Boost_USE_STATIC_LIBS)
+        endif()
+        _find_package(${ARGV})
+    endfunction()
+
     set(VCPKG_TOOLCHAIN ON)
 endif()
 
