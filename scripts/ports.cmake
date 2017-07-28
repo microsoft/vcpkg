@@ -32,8 +32,6 @@ endif()
 
 
 if(CMD MATCHES "^BUILD$")
-    string(REGEX REPLACE "([^-]*)-([^-]*)" "\\1" TRIPLET_SYSTEM_ARCH ${TARGET_TRIPLET})
-
     set(CMAKE_TRIPLET_FILE ${VCPKG_ROOT_DIR}/triplets/${TARGET_TRIPLET}.cmake)
     if(NOT EXISTS ${CMAKE_TRIPLET_FILE})
         message(FATAL_ERROR "Unsupported target triplet. Triplet file does not exist: ${CMAKE_TRIPLET_FILE}")
@@ -70,6 +68,7 @@ if(CMD MATCHES "^BUILD$")
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR} ${CURRENT_PACKAGES_DIR})
 
     include(${CMAKE_TRIPLET_FILE})
+    set(TRIPLET_SYSTEM_ARCH ${VCPKG_TARGET_ARCHITECTURE})
     include(${CURRENT_PORT_DIR}/portfile.cmake)
 
     set(BUILD_INFO_FILE_PATH ${CURRENT_PACKAGES_DIR}/BUILD_INFO)
