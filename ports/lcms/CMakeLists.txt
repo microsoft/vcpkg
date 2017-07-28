@@ -40,7 +40,7 @@ include_directories(
 "./include"
 )
 
-add_library(lcms ${SRCS})
+add_library(lcms2 ${SRCS})
 
 if(NOT SKIP_INSTALL_HEADERS )
 
@@ -52,7 +52,7 @@ if(NOT SKIP_INSTALL_HEADERS )
 
 endif(NOT SKIP_INSTALL_HEADERS )
 
-install(TARGETS lcms EXPORT lcms_EXPORT    
+install(TARGETS lcms2 EXPORT lcms_EXPORT    
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
