@@ -17,19 +17,14 @@ $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 
 $validInstances = New-Object System.Collections.ArrayList
 
-$CandidateProgramFiles = $(& $scriptsDir\getProgramFiles32bit.ps1), $(& $scriptsDir\getProgramFilesPlatformBitness.ps1)
-Write-Verbose "Program Files Candidate locations: $([system.String]::Join(',', $CandidateProgramFiles))"
-
 # Windows 10 SDK
-Write-Verbose "`n"
-Write-Verbose "Looking for Windows 10 SDK"
-foreach ($ProgramFiles in $CandidateProgramFiles)
+function CheckWindows10SDK($path)
 {
-    $folder = "$ProgramFiles\Windows Kits\10\Include"
+    $folder = "$path\Include"
     if (!(Test-Path $folder))
     {
         Write-Verbose "$folder - Not Found"
-        continue
+        return
     }
 
     Write-Verbose "$folder - Found"
@@ -42,7 +37,7 @@ foreach ($ProgramFiles in $CandidateProgramFiles)
         if (!(Test-Path $windowsheader))
         {
             Write-Verbose "$windowsheader - Not Found"
-            continue
+            return
         }
         Write-Verbose "$windowsheader - Found"
 
@@ -50,7 +45,7 @@ foreach ($ProgramFiles in $CandidateProgramFiles)
         if (!(Test-Path $ddkheader))
         {
             Write-Verbose "$ddkheader - Not Found"
-            continue
+            return
         }
 
         Write-Verbose "$ddkheader - Found"
@@ -60,16 +55,21 @@ foreach ($ProgramFiles in $CandidateProgramFiles)
     }
 }
 
-# Windows 8.1 SDK
 Write-Verbose "`n"
-Write-Verbose "Looking for Windows 8.1 SDK"
-foreach ($ProgramFiles in $CandidateProgramFiles)
+Write-Verbose "Looking for Windows 10 SDK"
+CheckWindows10SDK((Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows Kits\Installed Roots\' -Name 'KitsRoot10' -ErrorAction SilentlyContinue).KitsRoot10)
+CheckWindows10SDK((Get-ItemProperty -Path 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows Kits\Installed Roots\' -Name 'KitsRoot10' -ErrorAction SilentlyContinue).KitsRoot10)
+CheckWindows10SDK("$env:ProgramFiles\Windows Kits\10")
+CheckWindows10SDK("${env:ProgramFiles(x86)}\Windows Kits\10")
+
+# Windows 8.1 SDK
+function CheckWindows81SDK($path)
 {
-    $folder = "$ProgramFiles\Windows Kits\8.1\Include"
+    $folder = "$path\Include"
     if (!(Test-Path $folder))
     {
         Write-Verbose "$folder - Not Found"
-        continue
+        return
     }
 
     Write-Verbose "$folder - Found"
@@ -77,6 +77,13 @@ foreach ($ProgramFiles in $CandidateProgramFiles)
     Write-Verbose "Found $win81sdkVersionString"
     $validInstances.Add($win81sdkVersionString) > $null
 }
+
+Write-Verbose "`n"
+Write-Verbose "Looking for Windows 8.1 SDK"
+CheckWindows81SDK((Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows Kits\Installed Roots\' -Name 'KitsRoot81' -ErrorAction SilentlyContinue).KitsRoot81)
+CheckWindows81SDK((Get-ItemProperty -Path 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows Kits\Installed Roots\' -Name 'KitsRoot81' -ErrorAction SilentlyContinue).KitsRoot81)
+CheckWindows81SDK("$env:ProgramFiles\Windows Kits\8.1")
+CheckWindows81SDK("${env:ProgramFiles(x86)}\Windows Kits\8.1")
 
 Write-Verbose "`n`n`n"
 Write-Verbose "The following Windows SDKs were found:"
