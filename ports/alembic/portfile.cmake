@@ -18,9 +18,15 @@ vcpkg_apply_patches(
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-hdf5link.patch
 )
 
+SET(VCPKG_INSTALLED ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET})
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS -DUSE_HDF5=ON
+# work around for cmake-3.9 FindHDF5.cmake issue
+# https://gitlab.kitware.com/cmake/cmake/issues/17039
+    -DHDF5_FOUND=1
+    -DHDF5_INCLUDE_DIRS=${VCPKG_INSTALLED}/include
+    -DHDF5_LIBRARIES=${VCPKG_INSTALLED}/lib/hdf5.lib
 )
 
 vcpkg_install_cmake()
