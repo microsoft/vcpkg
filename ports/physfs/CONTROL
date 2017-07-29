@@ -1,3 +1,4 @@
 Source: physfs
-Version: 2.0.3
+Version: 2.0.3-1
 Description: a library to provide abstract access to various archives
+Build-Depends: zlib
