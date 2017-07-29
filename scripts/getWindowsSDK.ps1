@@ -59,7 +59,8 @@ Write-Verbose "`n"
 Write-Verbose "Looking for Windows 10 SDK"
 CheckWindows10SDK((Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows Kits\Installed Roots\' -Name 'KitsRoot10' -ErrorAction SilentlyContinue).KitsRoot10)
 CheckWindows10SDK((Get-ItemProperty -Path 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows Kits\Installed Roots\' -Name 'KitsRoot10' -ErrorAction SilentlyContinue).KitsRoot10)
-
+CheckWindows10SDK("$env:ProgramFiles\Windows Kits\10")
+CheckWindows10SDK("${env:ProgramFiles(x86)}\Windows Kits\10")
 
 # Windows 8.1 SDK
 function CheckWindows81SDK($path)
@@ -81,6 +82,8 @@ Write-Verbose "`n"
 Write-Verbose "Looking for Windows 8.1 SDK"
 CheckWindows81SDK((Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows Kits\Installed Roots\' -Name 'KitsRoot81' -ErrorAction SilentlyContinue).KitsRoot81)
 CheckWindows81SDK((Get-ItemProperty -Path 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows Kits\Installed Roots\' -Name 'KitsRoot81' -ErrorAction SilentlyContinue).KitsRoot81)
+CheckWindows81SDK("$env:ProgramFiles\Windows Kits\8.1")
+CheckWindows81SDK("${env:ProgramFiles(x86)}\Windows Kits\8.1")
 
 Write-Verbose "`n`n`n"
 Write-Verbose "The following Windows SDKs were found:"
