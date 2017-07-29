@@ -1,0 +1,23 @@
+diff --git a/CMake/vtkModuleMacros.cmake b/CMake/vtkModuleMacros.cmake
+index fdd83ed8fc..4986582a5b 100644
+--- a/CMake/vtkModuleMacros.cmake
++++ b/CMake/vtkModuleMacros.cmake
+@@ -885,18 +885,6 @@ macro(vtk_module_third_party _pkg)
+       set(vtk${_lower}_DEFINITIONS ${${_upper}_DEFINITIONS})
+     endif()
+ 
+-    #a workaround for bad FindHDF5 behavior in which deb or opt can
+-    #end up empty. cmake >= 2.8.12.2 makes this uneccessary
+-    string(REGEX MATCH "debug;.*optimized;.*"
+-           _remove_deb_opt "${vtk${_lower}_LIBRARIES}")
+-    if (_remove_deb_opt)
+-      set(_tmp ${vtk${_lower}_LIBRARIES})
+-      list(REMOVE_ITEM _tmp "debug")
+-      list(REMOVE_ITEM _tmp "optimized")
+-      list(REMOVE_DUPLICATES _tmp)
+-      set(vtk${_lower}_LIBRARIES ${_tmp})
+-    endif()
+-
+     set(vtk${_lower}_INCLUDE_DIRS "")
+   else()
+     if(_nolibs)

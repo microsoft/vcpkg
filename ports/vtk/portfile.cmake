@@ -15,6 +15,7 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/netcdf-use-hdf5-definitions.patch
         ${CMAKE_CURRENT_LIST_DIR}/dont-define-ssize_t.patch
         ${CMAKE_CURRENT_LIST_DIR}/fix-findhdf5-shared.patch
+        ${CMAKE_CURRENT_LIST_DIR}/disable-workaround-findhdf5.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
