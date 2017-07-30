@@ -15,17 +15,16 @@ vcpkg_from_github(
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-hdf5link.patch
+    PATCHES
+    ${CMAKE_CURRENT_LIST_DIR}/fix-hdf5link.patch
+    ${CMAKE_CURRENT_LIST_DIR}/bypass-findhdf5.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DUSE_HDF5=ON
-# work around for cmake-3.9 FindHDF5.cmake issue
-# https://gitlab.kitware.com/cmake/cmake/issues/17039
-    -DHDF5_FOUND=1
-    -DHDF5_INCLUDE_DIRS=${CURRENT_INSTALLED_DIR}/include
-    -DHDF5_LIBRARIES=${CURRENT_INSTALLED_DIR}/lib/hdf5.lib
+    OPTIONS
+    -DUSE_HDF5=ON
+    -DHDF5_ROOT=${CURRENT_INSTALLED_DIR}
 )
 
 vcpkg_install_cmake()
