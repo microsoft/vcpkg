@@ -7,14 +7,24 @@ include(vcpkg_common_functions)
 set(OPENSSL_VERSION 1.0.2l)
 set(MASTER_COPY_SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-${OPENSSL_VERSION})
 
-vcpkg_find_acquire_program(PERL)
 vcpkg_find_acquire_program(NASM)
 find_program(NMAKE nmake)
+
+vcpkg_acquire_msys(MSYS_ROOT)
+set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+
+vcpkg_execute_required_process(
+    COMMAND ${BASH} --noprofile --norc -c "PATH=/usr/bin:\$PATH;pacman -Sy --noconfirm --needed perl"
+    WORKING_DIRECTORY ${MSYS_ROOT}
+    LOGNAME pacman-${TARGET_TRIPLET}
+)
+
+set(PERL ${MSYS_ROOT}/usr/bin/perl.exe)
 
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
 vcpkg_find_acquire_program(JOM)
-set(ENV{PATH} "${PERL_EXE_PATH};${NASM_EXE_PATH};$ENV{PATH}")
+set(ENV{PATH} "${NASM_EXE_PATH};$ENV{PATH};${PERL_EXE_PATH}")
 
 vcpkg_download_distfile(OPENSSL_SOURCE_ARCHIVE
     URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.0.2/openssl-${OPENSSL_VERSION}.tar.gz"
