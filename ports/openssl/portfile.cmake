@@ -14,7 +14,7 @@ vcpkg_acquire_msys(MSYS_ROOT)
 set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 
 vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc -c "PATH=/usr/bin:\$PATH;pacman -Sy --noconfirm --needed perl"
+    COMMAND ${BASH} --noprofile --norc -c 'PATH=/usr/bin:\$PATH pacman -Sy --noconfirm --needed perl'
     WORKING_DIRECTORY ${MSYS_ROOT}
     LOGNAME pacman-${TARGET_TRIPLET}
 )
