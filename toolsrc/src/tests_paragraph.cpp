@@ -112,7 +112,7 @@ namespace UnitTest1
         {
             auto m_pgh =
                 vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-                    {"Source", "zlib"}, {"Version", "1.2.8"}, {"Build-Depends", "libA [windows], libB [uwp]"},
+                    {"Source", "zlib"}, {"Version", "1.2.8"}, {"Build-Depends", "libA (windows), libB (uwp)"},
                 }});
             Assert::IsTrue(m_pgh.has_value());
             auto& pgh = *m_pgh.get();
