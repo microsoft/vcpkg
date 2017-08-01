@@ -6,8 +6,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kcat/openal-soft
-    REF openal-soft-1.18.0
-    SHA512 b3f1ac7eaaef38ef960cdfaf7bd475c32258f752718e762333188837ab33eb6e3f9a39776138a52a434dec42157ffba10f0592ef8d3ec3b023a5261e05832a69
+    REF openal-soft-1.18.1
+    SHA512 6e9d65dafbd77ca5d7badb1999b08a104e9c7e6c6637fb9ccca946de5bdfc6266de9d316ce06a979c94309ac9e0e5c1fac27b2673297f9062ef67f0e8a54e39c
     HEAD_REF master
 )
 
