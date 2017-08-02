@@ -33,7 +33,6 @@
 ## * [ffmpeg](https://github.com/Microsoft/vcpkg/blob/master/ports/ffmpeg/portfile.cmake)
 ## * [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
 ## * [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
-include(vcpkg_acquire_msys)
 function(vcpkg_find_acquire_program VAR)
   if(${VAR} AND NOT ${VAR} MATCHES "-NOTFOUND")
     return()
@@ -47,14 +46,11 @@ function(vcpkg_find_acquire_program VAR)
   vcpkg_get_program_files_32_bit(PROGRAM_FILES_32_BIT)
 
   if(VAR MATCHES "PERL")
-    vcpkg_acquire_msys(MSYS_ROOT)
-    vcpkg_execute_required_process(
-        COMMAND ${MSYS_ROOT}/usr/bin/bash.exe --noprofile --norc -c 'PATH=/usr/bin:\$PATH pacman -Sy --noconfirm --needed perl'
-        WORKING_DIRECTORY ${MSYS_ROOT}
-        LOGNAME acquire-perl-${TARGET_TRIPLET}
-    )
-    set(PERL "${MSYS_ROOT}/usr/bin/perl.exe" PARENT_SCOPE)
-    return()
+    set(PROGNAME perl)
+    set(PATHS ${DOWNLOADS}/tools/perl/perl/bin)
+    set(URL "http://strawberryperl.com/download/5.24.1.1/strawberry-perl-5.24.1.1-32bit-portable.zip")
+    set(ARCHIVE "strawberry-perl-5.24.1.1-32bit-portable.zip")
+    set(HASH a6e685ea24376f50db5f06c5b46075f1d3be25168fa1f27fa9b02e2ac017826cee62a2b43562f9b6c989337a231ba914416c110075457764de2d11f99d5e0f26)
   elseif(VAR MATCHES "NASM")
     set(PROGNAME nasm)
     set(PATHS ${DOWNLOADS}/tools/nasm/nasm-2.12.02)
