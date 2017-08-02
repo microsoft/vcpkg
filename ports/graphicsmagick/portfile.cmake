@@ -1,12 +1,12 @@
 include(vcpkg_common_functions)
 
-set(GM_VERSION 1.3.25)
+set(GM_VERSION 1.3.26)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/graphicsmagick-${GM_VERSION})
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://downloads.sourceforge.net/project/graphicsmagick/graphicsmagick/1.3.25/GraphicsMagick-${GM_VERSION}.tar.bz2"
     FILENAME "GraphicsMagick-${GM_VERSION}.tar.bz2"
-    SHA512 718802f675988ae36122e8a5f88c74754fa610ec2b4d4630772db7d8898c2e48117ea85fd6741c0b6f256f6f4d68abb642cdeddfb3d330ae1ab2951920cdc1a3
+    SHA512 c8791ec0e42527e90c602713c52826d1b8e8bbce7861f8cb48083d0f32465399c4f9a86f44342c5670f2fe54e6c5da878241ddf314c67d7fa98542b912ff61ba
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
