@@ -29,20 +29,9 @@ include(vcpkg_common_functions)
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-OpenSSL_1_0_2l_WinRT)
 
+vcpkg_find_acquire_program(PERL)
 vcpkg_find_acquire_program(JOM)
 get_filename_component(JOM_EXE_PATH ${JOM} DIRECTORY)
-
-vcpkg_acquire_msys(MSYS_ROOT)
-set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
-
-vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc -c 'PATH=/usr/bin:\$PATH pacman -Sy --noconfirm --needed perl'
-    WORKING_DIRECTORY ${MSYS_ROOT}
-    LOGNAME pacman-${TARGET_TRIPLET}
-)
-
-set(PERL ${MSYS_ROOT}/usr/bin/perl.exe)
-
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH};${JOM_EXE_PATH}")
 

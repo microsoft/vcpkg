@@ -38,7 +38,7 @@ vcpkg_apply_patches(
 # openblas require perl to generate .def for exports
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-set(ENV{PATH} "${PERL_EXE_PATH};$ENV{PATH}")
+set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
