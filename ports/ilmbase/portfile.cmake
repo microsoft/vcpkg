@@ -9,7 +9,7 @@ include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ilmbase-${ILM_VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.savannah.nongnu.org/releases/openexr/ilmbase-${ILM_VERSION}.tar.gz"
-    FILENAME "ilmbase-${ILM_VERSION}.zip"
+    FILENAME "ilmbase-${ILM_VERSION}.tar.gz"
     SHA512 ${ILM_HASH})
 
 vcpkg_extract_source_archive(${ARCHIVE})
