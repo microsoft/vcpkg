@@ -87,6 +87,8 @@ vcpkg_execute_required_process(
     LOGNAME fix-cmake
 )
 
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+
 file(INSTALL ${SOURCE_PATH}/LICENSE.LGPLv3 DESTINATION  ${CURRENT_PACKAGES_DIR}/share/qt5 RENAME copyright)
 if(EXISTS ${CURRENT_PACKAGES_DIR}/plugins)
     file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/qtdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/plugins)
