@@ -6,8 +6,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiph/opusfile
-    REF v0.8
-    SHA512 82fcb09c0b77bffb5877c660a268e0c166a1ac314b270799fe5cb4e0fa2cd10fd909b380761031f7dfb60d8b7561e5fe54d93b74d37bb0e6f629bdf9a6384ae1
+    REF v0.9
+    SHA512 8bada67cf12511fd914813fe782a5bf40a5d1ecadbe77e2e8d7bf40bf09bf0e6af3dfbc9b7987496dea813d3b120897cb9117f06521eeb098105e1a795ab702b
     HEAD_REF master)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
