@@ -65,6 +65,12 @@ namespace vcpkg
         T m_t;
     };
 
+    template<class U>
+    Optional<std::decay_t<U>> make_optional(U&& u)
+    {
+        return Optional<std::decay_t<U>>(std::forward<U>(u));
+    }
+
     template<class T>
     bool operator==(const Optional<T>& o, const T& t)
     {

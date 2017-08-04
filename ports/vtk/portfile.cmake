@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/VTK-7.1.0)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/VTK-7.1.1)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.vtk.org/files/release/7.1/VTK-7.1.0.tar.gz"
-    FILENAME "VTK-7.1.0.tar.gz"
-    SHA512 83f0c9291cd2bc517a4bc449ad28a1d77e7ece169e846c7beab0b1140b9ef4b7bad30e3fa6e5a59826a707df78e2e336e07fa8bd30cf7498096ee80feef16534
+    URLS "http://www.vtk.org/files/release/7.1/VTK-7.1.1.tar.gz"
+    FILENAME "VTK-7.1.1.tar.gz"
+    SHA512 34a068801fe45f98325e5334d2569fc9b15ed38620386f1b5b860c9735e5fb8510953b50a3340d3ef9795e22fecf798c25bf750215b2ff1ff1eb7a1ecd87b623
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
@@ -14,6 +14,8 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/transfer-hdf5-definitions.patch
         ${CMAKE_CURRENT_LIST_DIR}/netcdf-use-hdf5-definitions.patch
         ${CMAKE_CURRENT_LIST_DIR}/dont-define-ssize_t.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix-findhdf5-shared.patch
+        ${CMAKE_CURRENT_LIST_DIR}/disable-workaround-findhdf5.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

@@ -4,6 +4,8 @@
 #include "Paragraphs.h"
 #include "vcpkg_Files.h"
 
+using namespace vcpkg::Parse;
+
 namespace vcpkg::Paragraphs
 {
     struct Parser
@@ -201,15 +203,26 @@ namespace vcpkg::Paragraphs
         return Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
     }
 
-    ExpectedT<SourceParagraph, ParseControlErrorInfo> try_load_port(const Files::Filesystem& fs, const fs::path& path)
+    ParseExpected<SourceControlFile> try_load_port(const Files::Filesystem& fs, const fs::path& path)
     {
-        ParseControlErrorInfo error_info;
-        Expected<std::unordered_map<std::string, std::string>> pghs = get_single_paragraph(fs, path / "CONTROL");
-        if (auto p = pghs.get())
+        Expected<std::vector<std::unordered_map<std::string, std::string>>> pghs = get_paragraphs(fs, path / "CONTROL");
+        if (auto vector_pghs = pghs.get())
         {
-            return SourceParagraph::parse_control_file(*p);
+            auto csf = SourceControlFile::parse_control_file(std::move(*vector_pghs));
+            if (!g_feature_packages)
+            {
+                if (auto ptr = csf.get())
+                {
+                    Checks::check_exit(VCPKG_LINE_INFO, ptr->get() != nullptr);
+                    ptr->get()->core_paragraph->default_features.clear();
+                    ptr->get()->feature_paragraphs.clear();
+                }
+            }
+            return csf;
         }
-        error_info.error = pghs.error();
+        auto error_info = std::make_unique<ParseControlErrorInfo>();
+        error_info->name = path.filename().generic_u8string();
+        error_info->error = pghs.error();
         return error_info;
     }
 
@@ -226,35 +239,44 @@ namespace vcpkg::Paragraphs
         return pghs.error();
     }
 
-    std::vector<SourceParagraph> load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir)
+    LoadResults try_load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir)
     {
-        std::vector<SourceParagraph> output;
-        std::vector<ParseControlErrorInfo> port_errors;
+        LoadResults ret;
         for (auto&& path : fs.get_files_non_recursive(ports_dir))
         {
-            ExpectedT<SourceParagraph, ParseControlErrorInfo> source_paragraph = try_load_port(fs, path);
-            if (auto srcpgh = source_paragraph.get())
+            auto maybe_spgh = try_load_port(fs, path);
+            if (auto spgh = maybe_spgh.get())
             {
-                output.emplace_back(std::move(*srcpgh));
+                ret.paragraphs.emplace_back(std::move(*spgh));
             }
             else
             {
-                port_errors.emplace_back(source_paragraph.error());
+                ret.errors.emplace_back(std::move(maybe_spgh).error());
             }
         }
-        print_error_message(port_errors);
-
-        return output;
+        return ret;
     }
 
-    std::map<std::string, VersionT> extract_port_names_and_versions(
-        const std::vector<SourceParagraph>& source_paragraphs)
+    std::vector<std::unique_ptr<SourceControlFile>> load_all_ports(const Files::Filesystem& fs,
+                                                                   const fs::path& ports_dir)
     {
-        std::map<std::string, VersionT> names_and_versions;
-        for (const SourceParagraph& port : source_paragraphs)
+        auto results = try_load_all_ports(fs, ports_dir);
+        if (!results.errors.empty())
         {
-            names_and_versions.emplace(port.name, port.version);
+            print_error_message(results.errors);
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
+        return std::move(results.paragraphs);
+    }
+
+    std::map<std::string, VersionT> load_all_port_names_and_versions(const Files::Filesystem& fs,
+                                                                     const fs::path& ports_dir)
+    {
+        auto all_ports = load_all_ports(fs, ports_dir);
+
+        std::map<std::string, VersionT> names_and_versions;
+        for (auto&& port : all_ports)
+            names_and_versions.emplace(port->core_paragraph->name, port->core_paragraph->version);
 
         return names_and_versions;
     }

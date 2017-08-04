@@ -9,8 +9,10 @@ namespace vcpkg
     struct ErrorHolder
     {
         ErrorHolder() : m_is_error(false) {}
-        ErrorHolder(const Err& err) : m_is_error(true), m_err(err) {}
-        ErrorHolder(Err&& err) : m_is_error(true), m_err(std::move(err)) {}
+        template<class U>
+        ErrorHolder(U&& err) : m_is_error(true), m_err(std::forward<U>(err))
+        {
+        }
 
         constexpr bool has_error() const { return m_is_error; }
 

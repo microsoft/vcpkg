@@ -31,7 +31,7 @@ namespace vcpkg
         std::vector<std::unique_ptr<StatusParagraph>> status_pghs;
         for (auto&& p : pghs)
         {
-            status_pghs.push_back(std::make_unique<StatusParagraph>(p));
+            status_pghs.push_back(std::make_unique<StatusParagraph>(std::move(p)));
         }
 
         return StatusParagraphs(std::move(status_pghs));
@@ -69,7 +69,7 @@ namespace vcpkg
             auto pghs = Paragraphs::get_paragraphs(fs, file).value_or_exit(VCPKG_LINE_INFO);
             for (auto&& p : pghs)
             {
-                current_status_db.insert(std::make_unique<StatusParagraph>(p));
+                current_status_db.insert(std::make_unique<StatusParagraph>(std::move(p)));
             }
         }
 
@@ -238,5 +238,11 @@ namespace vcpkg
         std::wstring cmd_cmake_pass_variables = Strings::join(L" ", pass_variables, [](auto&& v) { return v.s; });
         return Strings::wformat(
             LR"("%s" %s -P "%s")", cmake_exe.native(), cmd_cmake_pass_variables, cmake_script.generic_wstring());
+    }
+
+    std::string shorten_description(const std::string& desc)
+    {
+        auto simple_desc = std::regex_replace(desc, std::regex("\\s+"), " ");
+        return simple_desc.size() <= 52 ? simple_desc : simple_desc.substr(0, 49) + "...";
     }
 }

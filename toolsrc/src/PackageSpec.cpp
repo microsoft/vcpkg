@@ -5,15 +5,52 @@
 
 namespace vcpkg
 {
-    static bool is_valid_package_spec_char(char c) { return (c == '-') || isdigit(c) || (isalpha(c) && islower(c)); }
+    static bool is_valid_package_spec_char(char c)
+    {
+        return (c == '-') || isdigit(c) || (isalpha(c) && islower(c)) || (c == '[') || (c == ']');
+    }
 
-    ExpectedT<PackageSpec, PackageSpecParseResult> PackageSpec::from_string(const std::string& spec_as_string,
-                                                                            const Triplet& default_triplet)
+    ExpectedT<FullPackageSpec, PackageSpecParseResult> FullPackageSpec::from_string(const std::string& spec_as_string,
+                                                                                    const Triplet& default_triplet)
     {
         auto pos = spec_as_string.find(':');
-        if (pos == std::string::npos)
+        auto pos_l_bracket = spec_as_string.find('[');
+        auto pos_r_bracket = spec_as_string.find(']');
+
+        FullPackageSpec f;
+        if (pos == std::string::npos && pos_l_bracket == std::string::npos)
         {
-            return from_name_and_triplet(spec_as_string, default_triplet);
+            f.package_spec =
+                PackageSpec::from_name_and_triplet(spec_as_string, default_triplet).value_or_exit(VCPKG_LINE_INFO);
+            return f;
+        }
+        else if (pos == std::string::npos)
+        {
+            if (pos_r_bracket == std::string::npos || pos_l_bracket >= pos_r_bracket)
+            {
+                return PackageSpecParseResult::INVALID_CHARACTERS;
+            }
+            const std::string name = spec_as_string.substr(0, pos_l_bracket);
+            f.package_spec = PackageSpec::from_name_and_triplet(name, default_triplet).value_or_exit(VCPKG_LINE_INFO);
+            f.features = parse_comma_list(spec_as_string.substr(pos_l_bracket + 1, pos_r_bracket - pos_l_bracket - 1));
+            return f;
+        }
+        else if (pos_l_bracket == std::string::npos && pos_r_bracket == std::string::npos)
+        {
+            const std::string name = spec_as_string.substr(0, pos);
+            const Triplet triplet = Triplet::from_canonical_name(spec_as_string.substr(pos + 1));
+            f.package_spec = PackageSpec::from_name_and_triplet(name, triplet).value_or_exit(VCPKG_LINE_INFO);
+        }
+        else
+        {
+            if (pos_r_bracket == std::string::npos || pos_l_bracket >= pos_r_bracket)
+            {
+                return PackageSpecParseResult::INVALID_CHARACTERS;
+            }
+            const std::string name = spec_as_string.substr(0, pos_l_bracket);
+            f.features = parse_comma_list(spec_as_string.substr(pos_l_bracket + 1, pos_r_bracket - pos_l_bracket - 1));
+            const Triplet triplet = Triplet::from_canonical_name(spec_as_string.substr(pos + 1));
+            f.package_spec = PackageSpec::from_name_and_triplet(name, triplet).value_or_exit(VCPKG_LINE_INFO);
         }
 
         auto pos2 = spec_as_string.find(':', pos + 1);
@@ -21,10 +58,7 @@ namespace vcpkg
         {
             return PackageSpecParseResult::TOO_MANY_COLONS;
         }
-
-        const std::string name = spec_as_string.substr(0, pos);
-        const Triplet triplet = Triplet::from_canonical_name(spec_as_string.substr(pos + 1));
-        return from_name_and_triplet(name, triplet);
+        return f;
     }
 
     ExpectedT<PackageSpec, PackageSpecParseResult> PackageSpec::from_name_and_triplet(const std::string& name,

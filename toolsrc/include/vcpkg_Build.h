@@ -95,14 +95,35 @@ namespace vcpkg::Build
                            const Triplet& triplet,
                            fs::path&& port_dir,
                            const BuildPackageOptions& build_package_options)
-            : src(src), triplet(triplet), port_dir(std::move(port_dir)), build_package_options(build_package_options)
+            : src(src)
+            , scf(nullptr)
+            , triplet(triplet)
+            , port_dir(std::move(port_dir))
+            , build_package_options(build_package_options)
+            , feature_list(nullptr)
+        {
+        }
+
+        BuildPackageConfig(const SourceControlFile& src,
+                           const Triplet& triplet,
+                           fs::path&& port_dir,
+                           const BuildPackageOptions& build_package_options,
+                           const std::unordered_set<std::string>& feature_list)
+            : src(*src.core_paragraph)
+            , scf(&src)
+            , triplet(triplet)
+            , port_dir(std::move(port_dir))
+            , build_package_options(build_package_options)
+            , feature_list(&feature_list)
         {
         }
 
         const SourceParagraph& src;
+        const SourceControlFile* scf;
         const Triplet& triplet;
         fs::path port_dir;
         const BuildPackageOptions& build_package_options;
+        const std::unordered_set<std::string>* feature_list;
     };
 
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
@@ -120,14 +141,20 @@ namespace vcpkg::Build
         COUNT,
     };
 
-    Optional<BuildPolicy> to_build_policy(const std::string& str);
+    constexpr std::array<BuildPolicy, size_t(BuildPolicy::COUNT)> g_all_policies = {
+        BuildPolicy::EMPTY_PACKAGE,
+        BuildPolicy::DLLS_WITHOUT_LIBS,
+        BuildPolicy::ONLY_RELEASE_CRT,
+        BuildPolicy::EMPTY_INCLUDE_FOLDER,
+        BuildPolicy::ALLOW_OBSOLETE_MSVCRT,
+    };
 
     const std::string& to_string(BuildPolicy policy);
     CStringView to_cmake_variable(BuildPolicy policy);
 
     struct BuildPolicies
     {
-        BuildPolicies() {}
+        BuildPolicies() = default;
         BuildPolicies(std::map<BuildPolicy, bool>&& map) : m_policies(std::move(map)) {}
 
         inline bool is_enabled(BuildPolicy policy) const

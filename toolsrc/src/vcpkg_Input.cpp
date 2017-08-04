@@ -12,10 +12,10 @@ namespace vcpkg::Input
                                            CStringView example_text)
     {
         const std::string as_lowercase = Strings::ascii_to_lowercase(package_spec_as_string);
-        auto expected_spec = PackageSpec::from_string(as_lowercase, default_triplet);
+        auto expected_spec = FullPackageSpec::from_string(as_lowercase, default_triplet);
         if (auto spec = expected_spec.get())
         {
-            return *spec;
+            return PackageSpec{spec->package_spec};
         }
 
         // Intentionally show the lowercased string
@@ -33,5 +33,22 @@ namespace vcpkg::Input
             Commands::Help::help_topic_valid_triplet(paths);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
+    }
+
+    FullPackageSpec check_and_get_full_package_spec(const std::string& full_package_spec_as_string,
+                                                    const Triplet& default_triplet,
+                                                    CStringView example_text)
+    {
+        const std::string as_lowercase = Strings::ascii_to_lowercase(full_package_spec_as_string);
+        auto expected_spec = FullPackageSpec::from_string(as_lowercase, default_triplet);
+        if (auto spec = expected_spec.get())
+        {
+            return *spec;
+        }
+
+        // Intentionally show the lowercased string
+        System::println(System::Color::error, "Error: %s: %s", vcpkg::to_string(expected_spec.error()), as_lowercase);
+        System::print(example_text);
+        Checks::exit_fail(VCPKG_LINE_INFO);
     }
 }

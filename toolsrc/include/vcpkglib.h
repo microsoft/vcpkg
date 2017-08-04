@@ -36,4 +36,5 @@ namespace vcpkg
                                 const fs::path& cmake_script,
                                 const std::vector<CMakeVariable>& pass_variables);
 
+    std::string shorten_description(const std::string& desc);
 } // namespace vcpkg

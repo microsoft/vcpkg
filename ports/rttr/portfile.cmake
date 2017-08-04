@@ -1,3 +1,8 @@
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  message("Rttr only supports dynamic library linkage")
+  set(VCPKG_LIBRARY_LINKAGE "dynamic")
+endif()
+
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/rttr-0.9.5-src)
 vcpkg_download_distfile(ARCHIVE

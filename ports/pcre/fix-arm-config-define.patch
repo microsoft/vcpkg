@@ -28,27 +28,33 @@ index 4dc452f..5a9827d 100644
  
  #endif
  
-diff --git "a/sljit/sljitNativeARM_32.c" "b/sljit/sljitNativeARM_32.c"
-index a756f82..86bdcbb 100644
---- "a/sljit/sljitNativeARM_32.c"
-+++ "b/sljit/sljitNativeARM_32.c"
-@@ -1798,7 +1798,8 @@ extern "C" {
+diff --git a/sljit/sljitNativeARM_32.c b/sljit/sljitNativeARM_32.c
+index 745da99..83942b0 100644
+--- a/sljit/sljitNativeARM_32.c
++++ b/sljit/sljitNativeARM_32.c
+@@ -1573,12 +1573,8 @@ static sljit_s32 emit_op(struct sljit_compiler *compiler, sljit_s32 op, sljit_s3
+ extern "C" {
+ #endif
+ 
+-#if defined(__GNUC__)
  extern unsigned int __aeabi_uidivmod(unsigned int numerator, unsigned int denominator);
  extern int __aeabi_idivmod(int numerator, int denominator);
- #else
+-#else
 -#error "Software divmod functions are needed"
-+extern unsigned int __aeabi_uidivmod(unsigned int numerator, unsigned int denominator);
-+extern int __aeabi_idivmod(int numerator, int denominator);
- #endif
+-#endif
  
  #ifdef __cplusplus
-@@ -1852,7 +1853,8 @@ SLJIT_API_FUNC_ATTRIBUTE sljit_s32 sljit_emit_op0(struct sljit_compiler *compile
+ }
+@@ -1635,12 +1631,8 @@ SLJIT_API_FUNC_ATTRIBUTE sljit_s32 sljit_emit_op0(struct sljit_compiler *compile
+ 			}
+ 		}
+ 
+-#if defined(__GNUC__)
  		FAIL_IF(sljit_emit_ijump(compiler, SLJIT_FAST_CALL, SLJIT_IMM,
  			((op | 0x2) == SLJIT_DIV_UW ? SLJIT_FUNC_OFFSET(__aeabi_uidivmod) : SLJIT_FUNC_OFFSET(__aeabi_idivmod))));
- #else
+-#else
 -#error "Software divmod functions are needed"
-+		FAIL_IF(sljit_emit_ijump(compiler, SLJIT_FAST_CALL, SLJIT_IMM,
-+			((op | 0x2) == SLJIT_DIV_UW ? SLJIT_FUNC_OFFSET(__aeabi_uidivmod) : SLJIT_FUNC_OFFSET(__aeabi_idivmod))));
- #endif
+-#endif
  
- 		if ((op >= SLJIT_DIV_UW) && (compiler->scratches >= 3)) {
+ 		if (saved_reg_count > 0) {
+ 			if (saved_reg_count >= 3) {

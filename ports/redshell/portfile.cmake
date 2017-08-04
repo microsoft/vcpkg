@@ -8,6 +8,15 @@ if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     message(FATAL_ERROR "Error: redshell does not support UWP builds.")
 endif()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  message("Redshell only supports dynamic library linkage")
+  set(VCPKG_LIBRARY_LINKAGE "dynamic")
+endif()
+
+if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+  message(FATAL_ERROR "Redshell only supports dynamic CRT linkage")
+endif()
+
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/redshell)
 
 vcpkg_from_github(

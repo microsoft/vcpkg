@@ -4,11 +4,12 @@
 #include "SourceParagraph.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
-#include "vcpkglib_helpers.h"
+#include "vcpkglib.h"
 
 namespace vcpkg::Commands::Search
 {
-    static const std::string OPTION_GRAPH = "--graph"; // TODO: This should find a better home, eventually
+    static const std::string OPTION_GRAPH = "--graph";          // TODO: This should find a better home, eventually
+    static const std::string OPTION_FULLDESC = "--x-full-desc"; // TODO: This should find a better home, eventually
 
     static std::string replace_dashes_with_underscore(const std::string& input)
     {
@@ -17,15 +18,17 @@ namespace vcpkg::Commands::Search
         return output;
     }
 
-    static std::string create_graph_as_string(const std::vector<SourceParagraph>& source_paragraphs)
+    static std::string create_graph_as_string(
+        const std::vector<std::unique_ptr<SourceControlFile>>& source_control_files)
     {
         int empty_node_count = 0;
 
         std::string s;
         s.append("digraph G{ rankdir=LR; edge [minlen=3]; overlap=false;");
 
-        for (const SourceParagraph& source_paragraph : source_paragraphs)
+        for (const auto& source_control_file : source_control_files)
         {
+            const SourceParagraph& source_paragraph = *source_control_file->core_paragraph;
             if (source_paragraph.depends.empty())
             {
                 empty_node_count++;
@@ -44,13 +47,34 @@ namespace vcpkg::Commands::Search
         s.append(Strings::format("empty [label=\"%d singletons...\"]; }", empty_node_count));
         return s;
     }
-
-    static void do_print(const SourceParagraph& source_paragraph)
+    static void do_print(const SourceParagraph& source_paragraph, bool full_desc)
     {
-        System::println("%-20s %-16s %s",
-                        source_paragraph.name,
-                        source_paragraph.version,
-                        details::shorten_description(source_paragraph.description));
+        if (full_desc)
+        {
+            System::println(
+                "%-20s %-16s %s", source_paragraph.name, source_paragraph.version, source_paragraph.description);
+        }
+        else
+        {
+            System::println("%-20s %-16s %s",
+                            source_paragraph.name,
+                            source_paragraph.version,
+                            vcpkg::shorten_description(source_paragraph.description));
+        }
+    }
+
+    static void do_print(const std::string& name, const FeatureParagraph& feature_paragraph, bool full_desc)
+    {
+        if (full_desc)
+        {
+            System::println("%-37s %s", name + "[" + feature_paragraph.name + "]", feature_paragraph.description);
+        }
+        else
+        {
+            System::println("%-37s %s",
+                            name + "[" + feature_paragraph.name + "]",
+                            vcpkg::shorten_description(feature_paragraph.description));
+        }
     }
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
@@ -59,10 +83,30 @@ namespace vcpkg::Commands::Search
             "The argument should be a substring to search for, or no argument to display all libraries.\n%s",
             Commands::Help::create_example_string("search png"));
         args.check_max_arg_count(1, example);
-        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({OPTION_GRAPH});
+        const std::unordered_set<std::string> options =
+            args.check_and_get_optional_command_arguments({OPTION_GRAPH, OPTION_FULLDESC});
 
-        const std::vector<SourceParagraph> source_paragraphs =
-            Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
+        auto sources_and_errors = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
+
+        if (!sources_and_errors.errors.empty())
+        {
+            if (vcpkg::g_debugging)
+            {
+                print_error_message(sources_and_errors.errors);
+            }
+            else
+            {
+                for (auto&& error : sources_and_errors.errors)
+                {
+                    System::println(
+                        System::Color::warning, "Warning: an error occurred while parsing '%s'", error->name);
+                }
+                System::println(System::Color::warning,
+                                "Use '--debug' to get more information about the parse failures.\n");
+            }
+        }
+
+        auto& source_paragraphs = sources_and_errors.paragraphs;
         if (options.find(OPTION_GRAPH) != options.cend())
         {
             const std::string graph_as_string = create_graph_as_string(source_paragraphs);
@@ -72,27 +116,41 @@ namespace vcpkg::Commands::Search
 
         if (args.command_arguments.empty())
         {
-            for (const SourceParagraph& source_paragraph : source_paragraphs)
+            for (const auto& source_control_file : source_paragraphs)
             {
-                do_print(source_paragraph);
+                do_print(*source_control_file->core_paragraph, options.find(OPTION_FULLDESC) != options.cend());
+                for (auto&& feature_paragraph : source_control_file->feature_paragraphs)
+                {
+                    do_print(source_control_file->core_paragraph->name,
+                             *feature_paragraph,
+                             options.find(OPTION_FULLDESC) != options.cend());
+                }
             }
         }
         else
         {
+            const auto& icontains = Strings::case_insensitive_ascii_contains;
+
             // At this point there is 1 argument
-            for (const SourceParagraph& source_paragraph : source_paragraphs)
+            auto&& args_zero = args.command_arguments[0];
+            for (const auto& source_control_file : source_paragraphs)
             {
-                if (Strings::case_insensitive_ascii_find(source_paragraph.name, args.command_arguments[0]) ==
-                    source_paragraph.name.end())
+                auto&& sp = *source_control_file->core_paragraph;
+
+                bool contains_name = icontains(sp.name, args_zero);
+                if (contains_name || icontains(sp.description, args_zero))
                 {
-                    if (Strings::case_insensitive_ascii_find(source_paragraph.description, args.command_arguments[0]) ==
-                        source_paragraph.description.end())
-                    {
-                        continue;
-                    }
+                    do_print(sp, options.find(OPTION_FULLDESC) != options.cend());
                 }
 
-                do_print(source_paragraph);
+                for (auto&& feature_paragraph : source_control_file->feature_paragraphs)
+                {
+                    if (contains_name || icontains(feature_paragraph->name, args_zero) ||
+                        icontains(feature_paragraph->description, args_zero))
+                    {
+                        do_print(sp.name, *feature_paragraph, options.find(OPTION_FULLDESC) != options.cend());
+                    }
+                }
             }
         }
 

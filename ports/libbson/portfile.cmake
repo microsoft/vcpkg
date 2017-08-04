@@ -53,6 +53,8 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
         PATCHES
             ${CMAKE_CURRENT_LIST_DIR}/static.patch
     )
+
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libbson RENAME copyright)

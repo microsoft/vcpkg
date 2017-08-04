@@ -107,8 +107,8 @@ To override the automatically chosen [triplet][], you can specify the MSBuild pr
 ```xml
 <PropertyGroup Label="Globals">
   <!-- .... -->
-  <VcpkgTriplet Condition="'$(Configuration)'=='Win32'">x86-windows-static</VcpkgTriplet>
-  <VcpkgTriplet Condition="'$(Configuration)'=='x64'">x64-windows-static</VcpkgTriplet>
+  <VcpkgTriplet Condition="'$(Platform)'=='Win32'">x86-windows-static</VcpkgTriplet>
+  <VcpkgTriplet Condition="'$(Platform)'=='x64'">x64-windows-static</VcpkgTriplet>
 </PropertyGroup>
 ```
 

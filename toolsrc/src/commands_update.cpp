@@ -15,10 +15,8 @@ namespace vcpkg::Commands::Update
 
     std::vector<OutdatedPackage> find_outdated_packages(const VcpkgPaths& paths, const StatusParagraphs& status_db)
     {
-        const std::vector<SourceParagraph> source_paragraphs =
-            Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
         const std::map<std::string, VersionT> src_names_to_versions =
-            Paragraphs::extract_port_names_and_versions(source_paragraphs);
+            Paragraphs::load_all_port_names_and_versions(paths.get_filesystem(), paths.ports);
         const std::vector<StatusParagraph*> installed_packages = get_installed_ports(status_db);
 
         std::vector<OutdatedPackage> output;
@@ -56,15 +54,19 @@ namespace vcpkg::Commands::Update
         }
         else
         {
+            std::string install_line;
             System::println("The following packages differ from their port versions:");
             for (auto&& package : outdated_packages)
             {
+                install_line += package.spec.to_string();
+                install_line += " ";
                 System::println("    %-32s %s", package.spec, package.version_diff.to_string());
             }
             System::println("\n"
                             "To update these packages, run\n"
                             "    .\\vcpkg remove --outdated\n"
-                            "    .\\vcpkg install <pkgs>...");
+                            "    .\\vcpkg install " +
+                            install_line);
         }
 
         auto version_file = paths.get_filesystem().read_contents(paths.root / "toolsrc" / "VERSION.txt");

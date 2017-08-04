@@ -17,7 +17,25 @@ set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION})
 set(TOOL_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION}-win32)
 
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
+
+# Patch to fix the missing export of fixed_address_empty_string,
+# see https://github.com/google/protobuf/pull/3216
+# Add a flag that can be set to disable the protobuf compiler
+vcpkg_apply_patches(
+    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION}
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-fix-missing-export.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/001-add-compiler-flag.patch"
+)
+
+
 vcpkg_extract_source_archive(${TOOL_ARCHIVE_FILE} ${TOOL_PATH})
+
+# Disable the protobuf compiler when targeting UWP
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
+  set(protobuf_BUILD_COMPILER OFF)
+else()
+  set(protobuf_BUILD_COMPILER ON)
+endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(protobuf_BUILD_SHARED_LIBS ON)
@@ -38,6 +56,7 @@ vcpkg_configure_cmake(
         -Dprotobuf_MSVC_STATIC_RUNTIME=${protobuf_MSVC_STATIC_RUNTIME}
         -Dprotobuf_WITH_ZLIB=ON
         -Dprotobuf_BUILD_TESTS=OFF
+        -Dprotobuf_BUILD_COMPILER=${protobuf_BUILD_COMPILER}
         -DCMAKE_INSTALL_CMAKEDIR=share/protobuf
 )
 
@@ -75,6 +94,16 @@ else()
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin/protoc.exe)
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/bin/protoc.exe)
 endif()
+
+foreach(FILE ${CURRENT_PACKAGES_DIR}/include/google/protobuf/arena.h ${CURRENT_PACKAGES_DIR}/include/google/protobuf/stubs/port.h)
+    file(READ ${FILE} _contents)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        string(REPLACE "defined(PROTOBUF_USE_DLLS)" "1" _contents "${_contents}")
+    else()
+        string(REPLACE "defined(PROTOBUF_USE_DLLS)" "0" _contents "${_contents}")
+    endif()
+    file(WRITE ${FILE} "${_contents}")
+endforeach()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/protobuf RENAME copyright)
 file(INSTALL ${TOOL_PATH}/bin/protoc.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools)

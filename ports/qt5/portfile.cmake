@@ -7,6 +7,10 @@ if(BUILDTREES_PATH_LENGTH GREATER 27)
     )
 endif()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(FATAL_ERROR "Qt5 doesn't currently support static builds. Please use a dynamic triplet instead.")
+endif()
+
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 include(configure_qt)
 include(install_qt)
@@ -82,6 +86,8 @@ vcpkg_execute_required_process(
     WORKING_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/cmake
     LOGNAME fix-cmake
 )
+
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.LGPLv3 DESTINATION  ${CURRENT_PACKAGES_DIR}/share/qt5 RENAME copyright)
 if(EXISTS ${CURRENT_PACKAGES_DIR}/plugins)

@@ -1,15 +1,11 @@
-#if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-#    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-#    set(VCPKG_LIBRARY_LINKAGE static)
-#endif()
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fmt-3.0.1)
-vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "https://github.com/fmtlib/fmt/archive/3.0.1.tar.gz"
-    FILENAME "fmt-3.0.1.tar.gz"
-    SHA512 daf5dfb2fe63eb611983fa248bd2182c6202cf1c4f0fc236f357040fce8e87ad531cdf59090306bb313ea333d546e516f467b385e05094e696d0ca091310aad6
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO fmtlib/fmt
+    REF 4.0.0
+    SHA512 8b9f7ce4720c3caef6de4a75b8d4b0fd7db4f1638edca98d5ea95f4a5157aef8faefbac68438236691bd373111ca089b4d3864f7352f3fba1fe44392e9644f8b
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -18,9 +14,7 @@ vcpkg_configure_cmake(
         -DFMT_CMAKE_DIR=share/fmt
         -DFMT_TEST=OFF
         -DFMT_DOC=OFF
-        -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
 )
-
 
 vcpkg_install_cmake()
 file(INSTALL ${SOURCE_PATH}/LICENSE.rst DESTINATION ${CURRENT_PACKAGES_DIR}/share/fmt RENAME copyright)
@@ -36,12 +30,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(WRITE ${CURRENT_PACKAGES_DIR}/include/fmt/format.h "${FMT_FORMAT_H}")
 endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-#file(REMOVE ${CURRENT_PACKAGES_DIR}/include/fmt/format.cc)
-#file(REMOVE ${CURRENT_PACKAGES_DIR}/include/fmt/ostream.cc)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/fmt/fmt-targets-debug.cmake ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-debug.cmake)
-file(READ ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-debug.cmake FMT_DEBUG_MODULE)
-string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" FMT_DEBUG_MODULE "${FMT_DEBUG_MODULE}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-debug.cmake "${FMT_DEBUG_MODULE}")
+
+vcpkg_fixup_cmake_targets()
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-debug.cmake FMT_DEBUG_MODULE)
 string(REPLACE "lib/fmt.dll" "bin/fmt.dll" FMT_DEBUG_MODULE ${FMT_DEBUG_MODULE})

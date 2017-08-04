@@ -6,20 +6,19 @@
 #   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
 #
 
-set(PCRE_VERSION 8.40)
+set(PCRE_VERSION 8.41)
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/pcre-${PCRE_VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-${PCRE_VERSION}.zip" 
          "https://downloads.sourceforge.net/project/pcre/pcre/${PCRE_VERSION}/pcre-${PCRE_VERSION}.zip"
     FILENAME "pcre-${PCRE_VERSION}.zip"
-    SHA512 121c0389a739a2a1d7d5d87e5f15167601739ddfab9eed66a1f55b5bbadadb58730208430f5ad069f9342c9a84ee1817dfa07efc802c29c84f86147714ee8eff
+    SHA512 a3fd57090a5d9ce9d608aeecd59f42f04deea5b86a5c5899bdb25b18d8ec3a89b2b52b62e325c6485a87411eb65f1421604f80c3eaa653bd7dbab05ad22795ea
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-option.patch
-            ${CMAKE_CURRENT_LIST_DIR}/fix-option-2.patch
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-option-2.patch
             ${CMAKE_CURRENT_LIST_DIR}/fix-arm-config-define.patch)
 
 vcpkg_configure_cmake(

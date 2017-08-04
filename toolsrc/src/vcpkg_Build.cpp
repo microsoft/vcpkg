@@ -11,7 +11,6 @@
 #include "vcpkg_System.h"
 #include "vcpkg_optional.h"
 #include "vcpkglib.h"
-#include "vcpkglib_helpers.h"
 
 namespace vcpkg::Build
 {
@@ -103,6 +102,17 @@ namespace vcpkg::Build
         paths.get_filesystem().write_contents(binary_control_file, Strings::serialize(bpgh));
     }
 
+    static void create_binary_feature_control_file(const VcpkgPaths& paths,
+                                                   const SourceParagraph& source_paragraph,
+                                                   const FeatureParagraph& feature_paragraph,
+                                                   const Triplet& triplet,
+                                                   const BuildInfo& build_info)
+    {
+        BinaryParagraph bpgh = BinaryParagraph(source_paragraph, feature_paragraph, triplet);
+        const fs::path binary_control_file = paths.packages / bpgh.dir() / "CONTROL";
+        paths.get_filesystem().write_contents(binary_control_file, Strings::serialize(bpgh));
+    }
+
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
                                       const BuildPackageConfig& config,
                                       const StatusParagraphs& status_db)
@@ -136,17 +146,36 @@ namespace vcpkg::Build
         const Toolset& toolset = paths.get_toolset(pre_build_info.platform_toolset);
         const auto cmd_set_environment = make_build_env_cmd(pre_build_info, toolset);
 
+        std::string features;
+        if (g_feature_packages)
+        {
+            if (config.feature_list)
+            {
+                for (auto&& feature : *config.feature_list)
+                {
+                    features.append(feature + ";");
+                }
+                if (features.size() > 0)
+                {
+                    features.pop_back();
+                }
+            }
+        }
+
         const std::wstring cmd_launch_cmake = make_cmake_cmd(
             cmake_exe_path,
             ports_cmake_script_path,
-            {{L"CMD", L"BUILD"},
-             {L"PORT", config.src.name},
-             {L"CURRENT_PORT_DIR", config.port_dir / "/."},
-             {L"TARGET_TRIPLET", triplet.canonical_name()},
-             {L"VCPKG_PLATFORM_TOOLSET", toolset.version},
-             {L"VCPKG_USE_HEAD_VERSION", to_bool(config.build_package_options.use_head_version) ? L"1" : L"0"},
-             {L"_VCPKG_NO_DOWNLOADS", !to_bool(config.build_package_options.allow_downloads) ? L"1" : L"0"},
-             {L"GIT", git_exe_path}});
+            {
+                {L"CMD", L"BUILD"},
+                {L"PORT", config.src.name},
+                {L"CURRENT_PORT_DIR", config.port_dir / "/."},
+                {L"TARGET_TRIPLET", triplet.canonical_name()},
+                {L"VCPKG_PLATFORM_TOOLSET", toolset.version},
+                {L"VCPKG_USE_HEAD_VERSION", to_bool(config.build_package_options.use_head_version) ? L"1" : L"0"},
+                {L"_VCPKG_NO_DOWNLOADS", !to_bool(config.build_package_options.allow_downloads) ? L"1" : L"0"},
+                {L"GIT", git_exe_path},
+                {L"FEATURES", features},
+            });
 
         const std::wstring command = Strings::wformat(LR"(%s && %s)", cmd_set_environment, cmd_launch_cmake);
 
@@ -171,7 +200,21 @@ namespace vcpkg::Build
         {
             return {BuildResult::POST_BUILD_CHECKS_FAILED, {}};
         }
-
+        if (g_feature_packages)
+        {
+            if (config.feature_list)
+            {
+                for (auto&& feature : *config.feature_list)
+                {
+                    for (auto&& f_pgh : config.scf->feature_paragraphs)
+                    {
+                        if (f_pgh->name == feature)
+                            create_binary_feature_control_file(
+                                paths, *config.scf->core_paragraph, *f_pgh, triplet, build_info);
+                    }
+                }
+            }
+        }
         create_binary_control_file(paths, config.src, triplet, build_info);
 
         // const fs::path port_buildtrees_dir = paths.buildtrees / spec.name;
@@ -218,56 +261,53 @@ namespace vcpkg::Build
 
     static BuildInfo inner_create_buildinfo(std::unordered_map<std::string, std::string> pgh)
     {
+        Parse::ParagraphParser parser(std::move(pgh));
+
         BuildInfo build_info;
-        const std::string crt_linkage_as_string =
-            details::remove_required_field(&pgh, BuildInfoRequiredField::CRT_LINKAGE);
 
-        auto crtlinkage = to_linkage_type(crt_linkage_as_string);
-        if (auto p = crtlinkage.get())
-            build_info.crt_linkage = *p;
-        else
-            Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid crt linkage type: [%s]", crt_linkage_as_string);
-
-        const std::string library_linkage_as_string =
-            details::remove_required_field(&pgh, BuildInfoRequiredField::LIBRARY_LINKAGE);
-        auto liblinkage = to_linkage_type(library_linkage_as_string);
-        if (auto p = liblinkage.get())
-            build_info.library_linkage = *p;
-        else
-            Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid library linkage type: [%s]", library_linkage_as_string);
-
-        auto it_version = pgh.find("Version");
-        if (it_version != pgh.end())
         {
-            build_info.version = it_version->second;
-            pgh.erase(it_version);
+            std::string crt_linkage_as_string;
+            parser.required_field(BuildInfoRequiredField::CRT_LINKAGE, crt_linkage_as_string);
+
+            auto crtlinkage = to_linkage_type(crt_linkage_as_string);
+            if (auto p = crtlinkage.get())
+                build_info.crt_linkage = *p;
+            else
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid crt linkage type: [%s]", crt_linkage_as_string);
         }
 
-        std::map<BuildPolicy, bool> policies;
-
-        // The remaining entries are policies
-        for (const std::unordered_map<std::string, std::string>::value_type& p : pgh)
         {
-            auto maybe_policy = to_build_policy(p.first);
-            if (auto policy = maybe_policy.get())
-            {
-                Checks::check_exit(VCPKG_LINE_INFO,
-                                   policies.find(*policy) == policies.end(),
-                                   "Policy specified multiple times: %s",
-                                   p.first);
-
-                if (p.second == "enabled")
-                    policies.emplace(*policy, true);
-                else if (p.second == "disabled")
-                    policies.emplace(*policy, false);
-                else
-                    Checks::exit_with_message(
-                        VCPKG_LINE_INFO, "Unknown setting for policy '%s': %s", p.first, p.second);
-            }
+            std::string library_linkage_as_string;
+            parser.required_field(BuildInfoRequiredField::LIBRARY_LINKAGE, library_linkage_as_string);
+            auto liblinkage = to_linkage_type(library_linkage_as_string);
+            if (auto p = liblinkage.get())
+                build_info.library_linkage = *p;
             else
-            {
-                Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown policy found: %s", p.first);
-            }
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO, "Invalid library linkage type: [%s]", library_linkage_as_string);
+        }
+        std::string version = parser.optional_field("Version");
+        if (!version.empty()) build_info.version = std::move(version);
+
+        std::map<BuildPolicy, bool> policies;
+        for (auto policy : g_all_policies)
+        {
+            const auto setting = parser.optional_field(to_string(policy));
+            if (setting.empty())
+                continue;
+            else if (setting == "enabled")
+                policies.emplace(policy, true);
+            else if (setting == "disabled")
+                policies.emplace(policy, false);
+            else
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO, "Unknown setting for policy '%s': %s", to_string(policy), setting);
+        }
+
+        if (auto err = parser.error_info("PostBuildInformation"))
+        {
+            print_error_message(err);
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
         build_info.policies = BuildPolicies(std::move(policies));

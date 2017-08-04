@@ -28,6 +28,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DOPTION_BUILD_EXAMPLES=OFF
         -DOPTION_USE_SYSTEM_ZLIB=ON
@@ -70,6 +71,16 @@ else()
         file(RENAME ${SHARED_LIB} ${NEWNAME})
     endforeach()
 endif()
+
+foreach(FILE Fl_Export.H fl_utf8.h)
+    file(READ ${CURRENT_PACKAGES_DIR}/include/FL/${FILE} FLTK_HEADER)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        string(REPLACE "defined(FL_DLL)" "0" FLTK_HEADER "${FLTK_HEADER}")
+    else()
+        string(REPLACE "defined(FL_DLL)" "1" FLTK_HEADER "${FLTK_HEADER}")
+    endif()
+    file(WRITE ${CURRENT_PACKAGES_DIR}/include/FL/${FILE} "${FLTK_HEADER}")
+endforeach()
 
 file(INSTALL
     ${SOURCE_PATH}/COPYING

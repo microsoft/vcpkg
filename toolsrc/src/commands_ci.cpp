@@ -8,6 +8,7 @@
 #include "vcpkg_Files.h"
 #include "vcpkg_Input.h"
 #include "vcpkg_System.h"
+#include "vcpkg_Util.h"
 #include "vcpkglib.h"
 
 namespace vcpkg::Commands::CI
@@ -20,14 +21,11 @@ namespace vcpkg::Commands::CI
                                                            const fs::path& ports_directory,
                                                            const Triplet& triplet)
     {
-        std::vector<SourceParagraph> ports = Paragraphs::load_all_ports(fs, ports_directory);
-        std::vector<PackageSpec> specs;
-        for (const SourceParagraph& p : ports)
-        {
-            specs.push_back(PackageSpec::from_name_and_triplet(p.name, triplet).value_or_exit(VCPKG_LINE_INFO));
-        }
-
-        return specs;
+        auto ports = Paragraphs::load_all_ports(fs, ports_directory);
+        return Util::fmap(ports, [&](auto&& control_file) -> PackageSpec {
+            return PackageSpec::from_name_and_triplet(control_file->core_paragraph->name, triplet)
+                .value_or_exit(VCPKG_LINE_INFO);
+        });
     }
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
@@ -42,7 +40,9 @@ namespace vcpkg::Commands::CI
         const std::vector<PackageSpec> specs = load_all_package_specs(paths.get_filesystem(), paths.ports, triplet);
 
         StatusParagraphs status_db = database_load_check(paths);
-        const std::vector<InstallPlanAction> install_plan = Dependencies::create_install_plan(paths, specs, status_db);
+        const auto& paths_port_file = Dependencies::PathsPortFile(paths);
+        const std::vector<InstallPlanAction> install_plan =
+            Dependencies::create_install_plan(paths_port_file, specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !install_plan.empty(), "Install plan cannot be empty");
 
         std::vector<BuildResult> results;

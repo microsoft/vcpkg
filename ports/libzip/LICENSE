@@ -1,0 +1,66 @@
+Copyright (C) 1999-2016 Dieter Baron and Thomas Klausner
+
+The authors can be contacted at <libzip@nih.at>
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+  notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+  notice, this list of conditions and the following disclaimer in
+  the documentation and/or other materials provided with the
+  distribution.
+
+3. The names of the authors may not be used to endorse or promote
+  products derived from this software without specific prior
+  written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
+OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+
+For AES encryption support, files under the following license are used:
+
+---------------------------------------------------------------------------
+Copyright (c) 2002, Dr Brian Gladman <                 >, Worcester, UK.
+All rights reserved.
+
+LICENSE TERMS
+
+The free distribution and use of this software in both source and binary
+form is allowed (with or without changes) provided that:
+
+  1. distributions of this source code include the above copyright
+     notice, this list of conditions and the following disclaimer;
+
+  2. distributions in binary form include the above copyright
+     notice, this list of conditions and the following disclaimer
+     in the documentation and/or other associated materials;
+
+  3. the copyright holder's name is not used to endorse products
+     built using this software without specific written permission.
+
+ALTERNATIVELY, provided that this notice is retained in full, this product
+may be distributed under the terms of the GNU General Public License (GPL),
+in which case the provisions of the GPL apply INSTEAD OF those given above.
+
+DISCLAIMER
+
+This software is provided 'as is' with no explicit or implied warranties
+in respect of its properties, including, but not limited to, correctness
+and/or fitness for purpose.
+---------------------------------------------------------------------------
+Issue Date: 18th November 2008

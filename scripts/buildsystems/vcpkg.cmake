@@ -1,6 +1,5 @@
 # Mark variables as used so cmake doesn't complain about them
 set(CMAKE_TOOLCHAIN_FILE ${CMAKE_TOOLCHAIN_FILE})
-
 if(NOT VCPKG_TOOLCHAIN)
     if(CMAKE_GENERATOR_PLATFORM MATCHES "^[Ww][Ii][Nn]32$")
         set(_VCPKG_TARGET_TRIPLET_ARCH x86)
@@ -55,7 +54,6 @@ if(NOT VCPKG_TOOLCHAIN)
         endif()
     endwhile()
     set(_VCPKG_ROOT_DIR ${_VCPKG_ROOT_DIR_CANDIDATE})
-
     set(_VCPKG_INSTALLED_DIR ${_VCPKG_ROOT_DIR}/installed)
 
     if(CMAKE_BUILD_TYPE MATCHES "^Debug$" OR NOT DEFINED CMAKE_BUILD_TYPE)
@@ -103,6 +101,12 @@ if(NOT VCPKG_TOOLCHAIN)
     )
 
     set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools)
+    file(GLOB _VCPKG_TOOLS_DIRS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/*)
+    foreach(_VCPKG_TOOLS_DIR ${_VCPKG_TOOLS_DIRS})
+        if(IS_DIRECTORY ${_VCPKG_TOOLS_DIR})
+            set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${_VCPKG_TOOLS_DIR})
+        endif()
+    endforeach()
 
     option(VCPKG_APPLOCAL_DEPS "Automatically copy dependencies into the output directory for executables." ON)
     function(add_executable name)
@@ -134,5 +138,19 @@ if(NOT VCPKG_TOOLCHAIN)
         endif()
     endfunction()
 
+    macro(find_package name)
+        if(name STREQUAL "Boost")
+            unset(Boost_USE_STATIC_LIBS)
+        endif()
+        _find_package(${ARGV})
+    endmacro()
+
     set(VCPKG_TOOLCHAIN ON)
 endif()
+
+set(_UNUSED ${CMAKE_TOOLCHAIN_FILE})
+set(_UNUSED ${CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION})
+set(_UNUSED ${CMAKE_EXPORT_NO_PACKAGE_REGISTRY})
+set(_UNUSED ${CMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY})
+set(_UNUSED ${CMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY})
+set(_UNUSED ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP})

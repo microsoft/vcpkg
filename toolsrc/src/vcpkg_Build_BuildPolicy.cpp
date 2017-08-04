@@ -12,17 +12,6 @@ namespace vcpkg::Build
     static const std::string NAME_EMPTY_INCLUDE_FOLDER = "PolicyEmptyIncludeFolder";
     static const std::string NAME_ALLOW_OBSOLETE_MSVCRT = "PolicyAllowObsoleteMsvcrt";
 
-    Optional<BuildPolicy> to_build_policy(const std::string& s)
-    {
-        if (s == NAME_EMPTY_PACKAGE) return BuildPolicy::EMPTY_PACKAGE;
-        if (s == NAME_DLLS_WITHOUT_LIBS) return BuildPolicy::DLLS_WITHOUT_LIBS;
-        if (s == NAME_ONLY_RELEASE_CRT) return BuildPolicy::ONLY_RELEASE_CRT;
-        if (s == NAME_EMPTY_INCLUDE_FOLDER) return BuildPolicy::EMPTY_INCLUDE_FOLDER;
-        if (s == NAME_ALLOW_OBSOLETE_MSVCRT) return BuildPolicy::ALLOW_OBSOLETE_MSVCRT;
-
-        return nullopt;
-    }
-
     const std::string& to_string(BuildPolicy policy)
     {
         switch (policy)

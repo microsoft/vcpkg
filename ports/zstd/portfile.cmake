@@ -2,12 +2,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/zstd
-    REF v1.2.0
-    SHA512 b21910c6bdcfad3199c07b9f70f7c049062ebd1cce9249dd33c36153e29f24dd9e796ddbc2f37846b9f508c14b0d0f67651fd8d2bdce558128f20bdfff50a7df
+    REF v1.3.0
+    SHA512 5eb9e001e14d3342e76eb57b672c636fd56839ba8fc0ba9a751484ea93389c72c494ad2125dc2f9be1f72481f3af34568477123f7e9d3c7504e061e4c083cb30
     HEAD_REF dev)
-
-vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
-     PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-buildsystem.diff)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(ZSTD_STATIC 1)
@@ -33,7 +30,7 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    foreach(HEADER zdict.h zstd.h)
+    foreach(HEADER zdict.h zstd.h zstd_errors.h)
         file(READ ${CURRENT_PACKAGES_DIR}/include/${HEADER} HEADER_CONTENTS)
         string(REPLACE "defined(ZSTD_DLL_IMPORT) && (ZSTD_DLL_IMPORT==1)" "1" HEADER_CONTENTS "${HEADER_CONTENTS}")
         file(WRITE ${CURRENT_PACKAGES_DIR}/include/${HEADER} "${HEADER_CONTENTS}")

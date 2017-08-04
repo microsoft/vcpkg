@@ -25,99 +25,107 @@ namespace UnitTest1
     {
         TEST_METHOD(SourceParagraph_Construct_Minimum)
         {
-            auto m_pgh = vcpkg::SourceParagraph::parse_control_file({{"Source", "zlib"}, {"Version", "1.2.8"}});
+            auto m_pgh =
+                vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
+                    {"Source", "zlib"}, {"Version", "1.2.8"},
+                }});
 
             Assert::IsTrue(m_pgh.has_value());
             auto& pgh = *m_pgh.get();
 
-            Assert::AreEqual("zlib", pgh.name.c_str());
-            Assert::AreEqual("1.2.8", pgh.version.c_str());
-            Assert::AreEqual("", pgh.maintainer.c_str());
-            Assert::AreEqual("", pgh.description.c_str());
-            Assert::AreEqual(size_t(0), pgh.depends.size());
+            Assert::AreEqual("zlib", pgh->core_paragraph->name.c_str());
+            Assert::AreEqual("1.2.8", pgh->core_paragraph->version.c_str());
+            Assert::AreEqual("", pgh->core_paragraph->maintainer.c_str());
+            Assert::AreEqual("", pgh->core_paragraph->description.c_str());
+            Assert::AreEqual(size_t(0), pgh->core_paragraph->depends.size());
         }
 
         TEST_METHOD(SourceParagraph_Construct_Maximum)
         {
-            auto m_pgh = vcpkg::SourceParagraph::parse_control_file({
-                {"Source", "s"},
-                {"Version", "v"},
-                {"Maintainer", "m"},
-                {"Description", "d"},
-                {"Build-Depends", "bd"},
-                {"Supports", "x64"},
-            });
+            auto m_pgh =
+                vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
+                    {"Source", "s"},
+                    {"Version", "v"},
+                    {"Maintainer", "m"},
+                    {"Description", "d"},
+                    {"Build-Depends", "bd"},
+                    {"Supports", "x64"},
+                }});
             Assert::IsTrue(m_pgh.has_value());
             auto& pgh = *m_pgh.get();
 
-            Assert::AreEqual("s", pgh.name.c_str());
-            Assert::AreEqual("v", pgh.version.c_str());
-            Assert::AreEqual("m", pgh.maintainer.c_str());
-            Assert::AreEqual("d", pgh.description.c_str());
-            Assert::AreEqual(size_t(1), pgh.depends.size());
-            Assert::AreEqual("bd", pgh.depends[0].name.c_str());
-            Assert::AreEqual(size_t(1), pgh.supports.size());
-            Assert::AreEqual("x64", pgh.supports[0].c_str());
+            Assert::AreEqual("s", pgh->core_paragraph->name.c_str());
+            Assert::AreEqual("v", pgh->core_paragraph->version.c_str());
+            Assert::AreEqual("m", pgh->core_paragraph->maintainer.c_str());
+            Assert::AreEqual("d", pgh->core_paragraph->description.c_str());
+            Assert::AreEqual(size_t(1), pgh->core_paragraph->depends.size());
+            Assert::AreEqual("bd", pgh->core_paragraph->depends[0].name.c_str());
+            Assert::AreEqual(size_t(1), pgh->core_paragraph->supports.size());
+            Assert::AreEqual("x64", pgh->core_paragraph->supports[0].c_str());
         }
 
         TEST_METHOD(SourceParagraph_Two_Depends)
         {
-            auto m_pgh = vcpkg::SourceParagraph::parse_control_file({
-                {"Source", "zlib"}, {"Version", "1.2.8"}, {"Build-Depends", "z, openssl"},
-            });
+            auto m_pgh =
+                vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
+                    {"Source", "zlib"}, {"Version", "1.2.8"}, {"Build-Depends", "z, openssl"},
+                }});
             Assert::IsTrue(m_pgh.has_value());
             auto& pgh = *m_pgh.get();
 
-            Assert::AreEqual(size_t(2), pgh.depends.size());
-            Assert::AreEqual("z", pgh.depends[0].name.c_str());
-            Assert::AreEqual("openssl", pgh.depends[1].name.c_str());
+            Assert::AreEqual(size_t(2), pgh->core_paragraph->depends.size());
+            Assert::AreEqual("z", pgh->core_paragraph->depends[0].name.c_str());
+            Assert::AreEqual("openssl", pgh->core_paragraph->depends[1].name.c_str());
         }
 
         TEST_METHOD(SourceParagraph_Three_Depends)
         {
-            auto m_pgh = vcpkg::SourceParagraph::parse_control_file({
-                {"Source", "zlib"}, {"Version", "1.2.8"}, {"Build-Depends", "z, openssl, xyz"},
-            });
+            auto m_pgh =
+                vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
+                    {"Source", "zlib"}, {"Version", "1.2.8"}, {"Build-Depends", "z, openssl, xyz"},
+                }});
             Assert::IsTrue(m_pgh.has_value());
             auto& pgh = *m_pgh.get();
 
-            Assert::AreEqual(size_t(3), pgh.depends.size());
-            Assert::AreEqual("z", pgh.depends[0].name.c_str());
-            Assert::AreEqual("openssl", pgh.depends[1].name.c_str());
-            Assert::AreEqual("xyz", pgh.depends[2].name.c_str());
+            Assert::AreEqual(size_t(3), pgh->core_paragraph->depends.size());
+            Assert::AreEqual("z", pgh->core_paragraph->depends[0].name.c_str());
+            Assert::AreEqual("openssl", pgh->core_paragraph->depends[1].name.c_str());
+            Assert::AreEqual("xyz", pgh->core_paragraph->depends[2].name.c_str());
         }
 
         TEST_METHOD(SourceParagraph_Three_Supports)
         {
-            auto m_pgh = vcpkg::SourceParagraph::parse_control_file({
-                {"Source", "zlib"}, {"Version", "1.2.8"}, {"Supports", "x64, windows, uwp"},
-            });
+            auto m_pgh =
+                vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
+                    {"Source", "zlib"}, {"Version", "1.2.8"}, {"Supports", "x64, windows, uwp"},
+                }});
             Assert::IsTrue(m_pgh.has_value());
             auto& pgh = *m_pgh.get();
 
-            Assert::AreEqual(size_t(3), pgh.supports.size());
-            Assert::AreEqual("x64", pgh.supports[0].c_str());
-            Assert::AreEqual("windows", pgh.supports[1].c_str());
-            Assert::AreEqual("uwp", pgh.supports[2].c_str());
+            Assert::AreEqual(size_t(3), pgh->core_paragraph->supports.size());
+            Assert::AreEqual("x64", pgh->core_paragraph->supports[0].c_str());
+            Assert::AreEqual("windows", pgh->core_paragraph->supports[1].c_str());
+            Assert::AreEqual("uwp", pgh->core_paragraph->supports[2].c_str());
         }
 
         TEST_METHOD(SourceParagraph_Construct_Qualified_Depends)
         {
-            auto m_pgh = vcpkg::SourceParagraph::parse_control_file({
-                {"Source", "zlib"}, {"Version", "1.2.8"}, {"Build-Depends", "libA [windows], libB [uwp]"},
-            });
+            auto m_pgh =
+                vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
+                    {"Source", "zlib"}, {"Version", "1.2.8"}, {"Build-Depends", "libA [windows], libB [uwp]"},
+                }});
             Assert::IsTrue(m_pgh.has_value());
             auto& pgh = *m_pgh.get();
 
-            Assert::AreEqual("zlib", pgh.name.c_str());
-            Assert::AreEqual("1.2.8", pgh.version.c_str());
-            Assert::AreEqual("", pgh.maintainer.c_str());
-            Assert::AreEqual("", pgh.description.c_str());
-            Assert::AreEqual(size_t(2), pgh.depends.size());
-            Assert::AreEqual("libA", pgh.depends[0].name.c_str());
-            Assert::AreEqual("windows", pgh.depends[0].qualifier.c_str());
-            Assert::AreEqual("libB", pgh.depends[1].name.c_str());
-            Assert::AreEqual("uwp", pgh.depends[1].qualifier.c_str());
+            Assert::AreEqual("zlib", pgh->core_paragraph->name.c_str());
+            Assert::AreEqual("1.2.8", pgh->core_paragraph->version.c_str());
+            Assert::AreEqual("", pgh->core_paragraph->maintainer.c_str());
+            Assert::AreEqual("", pgh->core_paragraph->description.c_str());
+            Assert::AreEqual(size_t(2), pgh->core_paragraph->depends.size());
+            Assert::AreEqual("libA", pgh->core_paragraph->depends[0].name.c_str());
+            Assert::AreEqual("windows", pgh->core_paragraph->depends[0].qualifier.c_str());
+            Assert::AreEqual("libB", pgh->core_paragraph->depends[1].name.c_str());
+            Assert::AreEqual("uwp", pgh->core_paragraph->depends[1].qualifier.c_str());
         }
 
         TEST_METHOD(BinaryParagraph_Construct_Minimum)
@@ -364,25 +372,27 @@ namespace UnitTest1
 
         TEST_METHOD(package_spec_parse)
         {
-            vcpkg::ExpectedT<vcpkg::PackageSpec, vcpkg::PackageSpecParseResult> spec =
-                vcpkg::PackageSpec::from_string("zlib", vcpkg::Triplet::X86_WINDOWS);
+            vcpkg::ExpectedT<vcpkg::FullPackageSpec, vcpkg::PackageSpecParseResult> spec =
+                vcpkg::FullPackageSpec::from_string("zlib", vcpkg::Triplet::X86_WINDOWS);
             Assert::AreEqual(vcpkg::PackageSpecParseResult::SUCCESS, spec.error());
-            Assert::AreEqual("zlib", spec.get()->name().c_str());
-            Assert::AreEqual(vcpkg::Triplet::X86_WINDOWS.canonical_name(), spec.get()->triplet().canonical_name());
+            Assert::AreEqual("zlib", spec.get()->package_spec.name().c_str());
+            Assert::AreEqual(vcpkg::Triplet::X86_WINDOWS.canonical_name(),
+                             spec.get()->package_spec.triplet().canonical_name());
         }
 
         TEST_METHOD(package_spec_parse_with_arch)
         {
-            vcpkg::ExpectedT<vcpkg::PackageSpec, vcpkg::PackageSpecParseResult> spec =
-                vcpkg::PackageSpec::from_string("zlib:x64-uwp", vcpkg::Triplet::X86_WINDOWS);
+            vcpkg::ExpectedT<vcpkg::FullPackageSpec, vcpkg::PackageSpecParseResult> spec =
+                vcpkg::FullPackageSpec::from_string("zlib:x64-uwp", vcpkg::Triplet::X86_WINDOWS);
             Assert::AreEqual(vcpkg::PackageSpecParseResult::SUCCESS, spec.error());
-            Assert::AreEqual("zlib", spec.get()->name().c_str());
-            Assert::AreEqual(vcpkg::Triplet::X64_UWP.canonical_name(), spec.get()->triplet().canonical_name());
+            Assert::AreEqual("zlib", spec.get()->package_spec.name().c_str());
+            Assert::AreEqual(vcpkg::Triplet::X64_UWP.canonical_name(),
+                             spec.get()->package_spec.triplet().canonical_name());
         }
 
         TEST_METHOD(package_spec_parse_with_multiple_colon)
         {
-            auto ec = vcpkg::PackageSpec::from_string("zlib:x86-uwp:", vcpkg::Triplet::X86_WINDOWS).error();
+            auto ec = vcpkg::FullPackageSpec::from_string("zlib:x86-uwp:", vcpkg::Triplet::X86_WINDOWS).error();
             Assert::AreEqual(vcpkg::PackageSpecParseResult::TOO_MANY_COLONS, ec);
         }
 

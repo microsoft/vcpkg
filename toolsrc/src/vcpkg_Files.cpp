@@ -164,7 +164,8 @@ namespace vcpkg::Files
         {
             FILE* f = nullptr;
             auto ec = _wfopen_s(&f, file_path.native().c_str(), L"wb");
-            Checks::check_exit(VCPKG_LINE_INFO, ec == 0);
+            Checks::check_exit(
+                VCPKG_LINE_INFO, ec == 0, "Error: Could not open file for writing: %s", file_path.u8string().c_str());
             auto count = fwrite(data.data(), sizeof(data[0]), data.size(), f);
             fclose(f);
 

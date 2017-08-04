@@ -142,6 +142,7 @@
     <ClInclude Include="..\include\LineInfo.h" />
     <ClInclude Include="..\include\ParagraphParseResult.h" />
     <ClInclude Include="..\include\PostBuildLint_BuildType.h" />
+    <ClInclude Include="..\include\Span.h" />
     <ClInclude Include="..\include\vcpkg_Build.h" />
     <ClInclude Include="..\include\coff_file_reader.h" />
     <ClInclude Include="..\include\vcpkg_expected.h" />
@@ -160,7 +161,7 @@
     <ClInclude Include="..\include\vcpkg_Chrono.h" />
     <ClInclude Include="..\include\triplet.h" />
     <ClInclude Include="..\include\vcpkglib.h" />
-    <ClInclude Include="..\include\vcpkglib_helpers.h" />
+    <ClInclude Include="..\include\vcpkg_Parse.h" />
     <ClInclude Include="..\include\vcpkg_Checks.h" />
     <ClInclude Include="..\include\VcpkgCmdArguments.h" />
     <ClInclude Include="..\include\vcpkg_Commands.h" />
@@ -226,7 +227,7 @@
     <ClCompile Include="..\src\StatusParagraph.cpp" />
     <ClCompile Include="..\src\StatusParagraphs.cpp" />
     <ClCompile Include="..\src\triplet.cpp" />
-    <ClCompile Include="..\src\vcpkglib_helpers.cpp" />
+    <ClCompile Include="..\src\vcpkg_Parse.cpp" />
     <ClCompile Include="..\src\vcpkg_Checks.cpp" />
     <ClCompile Include="..\src\VcpkgCmdArguments.cpp" />
     <ClCompile Include="..\src\vcpkg_Dependencies.cpp" />
