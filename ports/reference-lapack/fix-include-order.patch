@@ -1,0 +1,11 @@
+--- a/LAPACKE/CMakeLists.txt	Sun Jun 18 00:46:53 2017
++++ b/LAPACKE/CMakeLists.txt	Sat Aug 05 12:15:57 2017
+@@ -23,7 +23,7 @@
+ 
+ get_directory_property(DirDefs COMPILE_DEFINITIONS)
+ 
+-include_directories(include ${LAPACK_BINARY_DIR}/include)
++include_directories(BEFORE include ${LAPACK_BINARY_DIR}/include)
+ add_subdirectory(include)
+ add_subdirectory(src)
+ add_subdirectory(utils)
