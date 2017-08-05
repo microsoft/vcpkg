@@ -11,8 +11,10 @@ function(_vcpkg_load_environment_from_batch)
     file(READ ${CURRENT_BUILDTREES_DIR}/environment-initial-out.log ENVIRONMENT_INITIAL)
 
     # Get modified envirnoment
+    string (REPLACE ";" " " SPACE_SEPARATED_ARGUMENTS "${_lefb_ARGUMENTS}")
+    file(WRITE ${CURRENT_BUILDTREES_DIR}/get-modified-environment.bat "call \"${_lefb_BATCH_FILE_PATH}\" ${SPACE_SEPARATED_ARGUMENTS}\n\"${CMAKE_COMMAND}\" -E environment")
     vcpkg_execute_required_process(
-        COMMAND "cmd" "/c" "${_lefb_BATCH_FILE_PATH}" ${_lefb_ARGUMENTS} "&" "${CMAKE_COMMAND}" "-E" "environment"
+        COMMAND "cmd" "/c" "${CURRENT_BUILDTREES_DIR}/get-modified-environment.bat"
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
         LOGNAME environment-after
     )
