@@ -92,8 +92,10 @@ namespace vcpkg::System
             // Enables find_package(CUDA) in CMake
             L"CUDA_PATH",
             // Enables detection of Intel Fortran in CMake
+            L"IFORT_COMPILER15",
             L"IFORT_COMPILER16",
-            L"ICPP_COMPILER16",
+            L"IFORT_COMPILER17",
+            L"IFORT_COMPILER18"
         };
 
         // Flush stdout before launching external process
