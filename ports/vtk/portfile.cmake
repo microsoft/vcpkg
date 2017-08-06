@@ -1,29 +1,15 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/VTK-7.1.1)
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.vtk.org/files/release/7.1/VTK-7.1.1.tar.gz"
-    FILENAME "VTK-7.1.1.tar.gz"
-    SHA512 34a068801fe45f98325e5334d2569fc9b15ed38620386f1b5b860c9735e5fb8510953b50a3340d3ef9795e22fecf798c25bf750215b2ff1ff1eb7a1ecd87b623
-)
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/transfer-3rd-party-module-definitions.patch
-        ${CMAKE_CURRENT_LIST_DIR}/transfer-hdf5-definitions.patch
-        ${CMAKE_CURRENT_LIST_DIR}/netcdf-use-hdf5-definitions.patch
-        ${CMAKE_CURRENT_LIST_DIR}/dont-define-ssize_t.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-findhdf5-shared.patch
-        ${CMAKE_CURRENT_LIST_DIR}/disable-workaround-findhdf5.patch
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO "Kitware/VTK"
+    REF "v8.0.0"
+    SHA512 1a328f24df0b1c40c623ae80c9d49f8b27570144b10af02aeed41b90b50b8d4e0dd83d1341961f6818cde36e2cd793c578ebc95a46950cebfc518f486f249791
+    HEAD_REF "master"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    # HACK: The FindHDF5.cmake script does not seem to detect the HDF5_DEFINITIONS correctly
-    #       if HDF5 has been built without the tools (which is the case in the HDF5 port),
-    #       so we set the BUILT_AS_DYNAMIC_LIB=1 flag here explicitly because we know HDF5
-    #       has been build as dynamic library in the current case.
-    list(APPEND ADDITIONAL_OPTIONS "-DHDF5_DEFINITIONS=-DH5_BUILT_AS_DYNAMIC_LIB=1")
+    list(APPEND ADDITIONAL_OPTIONS "-DVTK_EXTERNAL_HDF5_IS_SHARED=ON")
 endif()
 
 vcpkg_configure_cmake(
@@ -68,6 +54,8 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
+# Remove tools from the bin directory.
+# We make sure no references to the deleted files are left in the CMake config files.
 file(READ ${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-release.cmake VTK_TARGETS_RELEASE_MODULE)
 string(REPLACE "list\(APPEND _IMPORT_CHECK_FILES_FOR_vtkEncodeString" "#list(APPEND _IMPORT_CHECK_FILES_FOR_vtkEncodeString" VTK_TARGETS_RELEASE_MODULE "${VTK_TARGETS_RELEASE_MODULE}")
 string(REPLACE "list\(APPEND _IMPORT_CHECK_FILES_FOR_vtkHashSource" "#list(APPEND _IMPORT_CHECK_FILES_FOR_vtkHashSource" VTK_TARGETS_RELEASE_MODULE "${VTK_TARGETS_RELEASE_MODULE}")
@@ -82,10 +70,16 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-debug.cmake "${VTK_TARGE
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/vtkEncodeString-7.1.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/vtkHashSource-7.1.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/vtkEncodeString-7.1.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/vtkHashSource-7.1.exe)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/vtkEncodeString-8.0.exe)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/vtkHashSource-8.0.exe)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/vtkEncodeString-8.0.exe)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/vtkHashSource-8.0.exe)
+else()
+    # On static builds there should be no bin directory at all
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)
