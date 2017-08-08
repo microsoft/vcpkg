@@ -15,8 +15,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
-    REF pcl-1.8.1rc2
-    SHA512 e5bf069f0eacfaf068b37cb0d17bed65a83dddc30c0eaa2ef70bbc534ab1cfc690e581913cd39df6246ba73b5f76fb229d90e0c5b4971744f341f7d2abb57229
+    REF pcl-1.8.1
+    SHA512 9e7c87fb750a176712f08d215a906012c9e8174b687bbc8c08fa65de083b4468951bd8017b10409015d5eff0fc343885d2aae5c340346118b1a251af7bdd5cd7
     HEAD_REF master
 )
 
@@ -29,23 +29,23 @@ vcpkg_apply_patches(
             "${CMAKE_CURRENT_LIST_DIR}/find_openni2.patch"
 )
 
-if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-    set(CRT_LINKAGE ON)
-elseif(VCPKG_CRT_LINKAGE STREQUAL "static")
-    set(CRT_LINKAGE OFF)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(LIBRARY_LINKAGE ON)
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(LIBRARY_LINKAGE OFF)
 endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    #PREFER_NINJA
+    PREFER_NINJA
     OPTIONS
         # BUILD
         -DBUILD_surface_on_nurbs=ON
         -DBUILD_tools=OFF
         # PCL
-        -DPCL_BUILD_WITH_BOOST_DYNAMIC_LINKING_WIN32=${CRT_LINKAGE}
-        -DPCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32=${CRT_LINKAGE}
-        -DPCL_SHARED_LIBS=${CRT_LINKAGE}
+        -DPCL_BUILD_WITH_BOOST_DYNAMIC_LINKING_WIN32=${LIBRARY_LINKAGE}
+        -DPCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32=${LIBRARY_LINKAGE}
+        -DPCL_SHARED_LIBS=${LIBRARY_LINKAGE}
         # WITH
         -DWITH_CUDA=OFF
         -DWITH_LIBUSB=OFF
