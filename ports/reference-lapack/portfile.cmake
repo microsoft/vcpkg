@@ -14,6 +14,7 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/fix-include-order.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix-try-compile-fortran-flags.patch
 )
 
 vcpkg_enable_fortran()

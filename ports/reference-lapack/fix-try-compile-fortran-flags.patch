@@ -1,0 +1,10 @@
+--- a/CMAKE/CheckTimeFunction.cmake	Sun Jun 18 00:46:53 2017
++++ b/CMAKE/CheckTimeFunction.cmake	Mon Aug 07 16:55:26 2017
+@@ -11,6 +11,7 @@
+     ${PROJECT_BINARY_DIR}/INSTALL
+     ${PROJECT_SOURCE_DIR}/INSTALL
+     TIMING secondtst_${FUNCTION}
++    CMAKE_FLAGS "-DCMAKE_Fortran_FLAGS=${CMAKE_Fortran_FLAGS}"
+     OUTPUT_VARIABLE OUTPUT)
+ 
+     if(RES)
