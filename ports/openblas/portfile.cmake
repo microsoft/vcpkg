@@ -45,8 +45,6 @@ vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH};${SED_EXE_PATH}")
 
-message(STATUS "woo: ${TARGET_TRIPLET} ${VCPKG_CMAKE_SYSTEM_NAME}")
-
 # for UWP version, must build non uwp first for helper
 # binaries.
 if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
