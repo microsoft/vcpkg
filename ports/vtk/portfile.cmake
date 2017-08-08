@@ -8,6 +8,12 @@ vcpkg_from_github(
     HEAD_REF "master"
 )
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/disable-workaround-findhdf5.patch
+)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     list(APPEND ADDITIONAL_OPTIONS "-DVTK_EXTERNAL_HDF5_IS_SHARED=ON")
 endif()
