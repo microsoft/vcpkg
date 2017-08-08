@@ -125,6 +125,22 @@ function(vcpkg_configure_cmake)
         message(FATAL_ERROR "You must set both the VCPKG_CXX_FLAGS and VCPKG_C_FLAGS")
     endif()
 
+    if(DEFINED VCPKG_FORTRAN_COMPILER AND VCPKG_FORTRAN_COMPILER STREQUAL Intel)
+        # Make sure the name mangling of Intel Fortran generated symbols is all lowercase with underscore suffix
+        # because this is assumed by many libraries (that e.g. consume BLAS/LAPACK)
+        set(ENV{FFLAGS} "$ENV{FFLAGS} /names:lowercase /assume:underscore")
+
+        # When using the Intel and VS2017 command line environments together there is a bug when
+        # using cl and some standard headers are included (e.g. stdint.h). This is because Intel does
+        # not handle the changed directory structure of the runtime headers between VS2015 and VS2017 correctly.
+        # The following code works around those issues. This is true as of Intel 2017.4 and VS2017.3.
+        if(VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
+            string(REGEX REPLACE "\\\\$" "" VCToolsInstallDir "$ENV{VCToolsInstallDir}")
+            string(APPEND VCPKG_CXX_FLAGS " /D__MS_VC_INSTALL_PATH=\"${VCToolsInstallDir}\"")
+            string(APPEND VCPKG_C_FLAGS " /D__MS_VC_INSTALL_PATH=\"${VCToolsInstallDir}\"")
+        endif()
+    endif()
+
     list(APPEND _csc_OPTIONS
         "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
         "-DCMAKE_CXX_FLAGS= /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP ${VCPKG_CXX_FLAGS}"
