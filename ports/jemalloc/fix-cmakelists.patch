@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 06e83ef..17526b0 100644
+index 06e83ef..229e17a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -57,6 +57,7 @@ option(enable-lazy-lock "Enable lazy locking (only lock when multi-threaded" OFF
@@ -10,7 +10,41 @@ index 06e83ef..17526b0 100644
  
  set (PACKAGE_NAME "jemalloc")
  project (${PACKAGE_NAME} C)
-@@ -825,6 +826,17 @@ if(C_UTIL_INTEGRATION_DEFS)
+@@ -711,12 +712,8 @@ endif()
+ 
+ # The original library, delivery product
+ set(LIBJEMALLOCLIB jemalloc${install_suffix})
+-add_library(${LIBJEMALLOCLIB} STATIC ${C_SRCS})
+-
+-# Now add shared library. Needed for integration tests
+-# and a benchmark
+-set(LIBJEMALLOCSO jemallocso${install_suffix})
+-add_library(${LIBJEMALLOCSO} SHARED ${C_SRCS})
++set(LIBJEMALLOCSO ${LIBJEMALLOCLIB})
++add_library(${LIBJEMALLOCLIB} ${C_SRCS})
+ 
+ if(WIN32)
+   # May want to replace  /d2Zi+ to /Zo
+@@ -745,8 +745,6 @@ if(WIN32)
+   # either impport or export which is both wrong for a static library
+   set_target_properties(${LIBJEMALLOCLIB}
+            PROPERTIES
+-           COMPILE_DEFINITIONS
+-           "JEMALLOC_EXPORT="
+            CMAKE_COMPILE_PDB_OUTPUT_DIRECTORY_DEBUG
+            ${PROJECT_BINARY_DIR}/Debug
+            CMAKE_COMPILE_PDB_OUTPUT_DIRECTORY_RELEASE
+@@ -754,6 +752,9 @@ if(WIN32)
+            COMPILE_PDB_NAME
+            ${LIBJEMALLOCLIB}
+   )
++  if(NOT BUILD_SHARED_LIBS)
++    target_compile_definitions(${LIBJEMALLOCLIB} "JEMALLOC_EXPORT=")
++  endif()
+
+ endif()
+ 
+@@ -825,6 +822,14 @@ if(C_UTIL_INTEGRATION_DEFS)
          "${C_UTIL_INTEGRATION_DEFS}")
  endif()
  
@@ -18,17 +52,14 @@ index 06e83ef..17526b0 100644
 +        DESTINATION include/jemalloc)
 +
 +install(TARGETS ${LIBJEMALLOCSO}
-+        EXPORT JemallocTargets
 +        RUNTIME DESTINATION bin
 +        LIBRARY DESTINATION lib
 +        ARCHIVE DESTINATION lib)
-+install(EXPORT JemallocTargets NAMESPACE jemalloc:: DESTINATION share/jemalloc)
-+
 +if (build-tests)
  ##################################################################
  # Common source for Unit, Integration and stress test libraries
  set(C_TESTLIB_SRCS
-@@ -1028,4 +1040,4 @@ foreach(sourcefile ${TESTS_INTEGRATION})
+@@ -1028,4 +1033,4 @@ foreach(sourcefile ${TESTS_INTEGRATION})
    add_test(NAME ${exename} COMMAND ${exename})
    add_dependencies(check ${exename})
  endforeach(sourcefile ${TESTS_UNIT})
