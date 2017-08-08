@@ -1,4 +1,4 @@
 Source: hypre
-Version: 2.11.1
+Version: 2.11.2
 Description: SCALABLE LINEAR SOLVERS AND MULTIGRID METHODS
 Build-Depends: msmpi
