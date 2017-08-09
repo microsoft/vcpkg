@@ -56,8 +56,10 @@ namespace vcpkg
             this->default_features = parse_comma_list(parser.optional_field(Fields::DEFAULTFEATURES));
         }
 
-        if (auto err = parser.error_info(this->spec.name()))
+        if (auto err = parser.error_info(this->spec.to_string()))
         {
+            System::println(
+                System::Color::error, "Error: while parsing the Binary Paragraph for %s", this->spec.to_string());
             print_error_message(err);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }

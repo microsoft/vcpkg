@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/hypre-2.11.1/src)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/hypre-2.11.2/src)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://computation.llnl.gov/projects/hypre-scalable-linear-solvers-multigrid-methods/download/hypre-2.11.1.tar.gz"
-    FILENAME "hypre-2.11.1.tar.gz"
-    SHA512 4266c1b5225bcc97781246475100382f4929d7c918c854570a36b90602e8f111a4893cd1c93b95c68305c851898b970dd92ac173efe9211be5bb914d3c3c5d83
+    URLS "http://computation.llnl.gov/projects/hypre-scalable-linear-solvers-multigrid-methods/download/hypre-2.11.2.tar.gz"
+    FILENAME "hypre-2.11.2.tar.gz"
+    SHA512 a06321028121e5420fa944ce4fae5f9b96e6021ec2802e68ec3c349f19a20543ed7eff774a4735666c5807ce124eb571b3f86757c67e91faa1c683c3f657469f
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

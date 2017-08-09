@@ -32,7 +32,7 @@
 ## vcpkg_execute_required_process(
 ##     COMMAND
 ##         ${BASH} --noprofile --norc -c
-##             "pacman -Sy --noconfirm --needed make"
+##             'PATH=/usr/bin:\$PATH pacman -Sy --noconfirm --needed make'
 ##     WORKING_DIRECTORY ${MSYS_ROOT}
 ##     LOGNAME pacman-${TARGET_TRIPLET})
 ## ```

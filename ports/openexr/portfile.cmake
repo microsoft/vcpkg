@@ -5,7 +5,7 @@ include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openexr-${OPENEXR_VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.savannah.nongnu.org/releases/openexr/openexr-${OPENEXR_VERSION}.tar.gz"
-    FILENAME "openexr-${OPENEXR_VERSION}.zip"
+    FILENAME "openexr-${OPENEXR_VERSION}.tar.gz"
     SHA512 ${OPENEXR_HASH})
 
 vcpkg_extract_source_archive(${ARCHIVE})

@@ -1,3 +1,207 @@
+vcpkg (0.0.82)
+--------------
+  * Add ports:
+    - alembic              1.7.1-3
+    - allegro5             5.2.1.0
+    - angle                2017-06-14-8d471f-1
+    - apr-util             1.6.0
+    - arrow                apache-arrow-0.4.0-1
+    - aubio                0.46~alpha-2
+    - aurora               2017-06-21-c75699d2a8caa726260c29b6d7a0fd35f8f28933
+    - benchmark            1.1.0
+    - blaze                3.1
+    - brotli               0.6.0
+    - c-ares               1.12.1-dev-40eb41f-1
+    - ceres                1.12.0-4
+    - clara                2017-07-20-9661f2b4a50895d52ebb4c59382785a2b416c310
+    - corrade              jun2017-2
+    - cpp-redis            3.5.2
+    - cppcms               1.1.0
+    - cppunit              1.13.2
+    - cpr                  1.3.0
+    - ctemplate            2017-06-23-44b7c5b918a08ad561c63e9d28beecb40c10ebca
+    - cunit                2.1.3-1
+    - cxxopts              1.3.0
+    - dirent               2017-06-23-5c7194c2fe2c68c1a8212712c0b4b6195382d27d
+    - draco                0.10.0
+    - duktape              2.0.3-3
+    - embree               2.16.4-1
+    - evpp                 0.6.1
+    - flann                1.9.1-4
+    - folly                v2017.07.17.01
+    - g2o                  20170730_git-1
+    - geogram              1.4.9
+    - gsl-lite             0.24.0
+    - hpx                  1.0.0-4
+    - hunspell             1.6.1-1
+    - hwloc                1.11.7-1
+    - hypre                2.11.1
+    - ilmbase              2.2.0
+    - jansson              v2.10
+    - jasper               2.0.13
+    - kinectsdk1           1.8-1
+    - libconfig            1.6.0
+    - libmikmod            3.3.11.1
+    - libopusenc           0.1
+    - libssh               0.7.5
+    - libtorrent           1.1.4
+    - libusb               1.0.21-fc99620
+    - libusb-win32         1.2.6.0
+    - libzip               1.2.0-1
+    - live555              2017.06.04
+    - llvm                 4.0.0
+    - lpeg                 1.0.1-2
+    - luafilesystem        1.6.3
+    - luajit               2.0.5
+    - magnum               jun2017-5
+    - magnum-plugins       jun2017-4
+    - matio                1.5.10-1
+    - minizip              1.2.11
+    - msinttypes           2017-06-26-f9e7c5758ed9e3b9f4b2394de1881c704dd79de0
+    - nuklear              2017-06-15-5c7194c2fe2c68c1a8212712c0b4b6195382d27d
+    - ode                  0.15.1
+    - openexr              2.2.0
+    - openimageio          1.7.15
+    - openni2              2.2.0.33
+    - opusfile             0.9
+    - osg                  3.5.6
+    - paho-mqtt            Version 1.1.0 (Paho 1.2)
+    - plibsys              0.0.3
+    - podofo               0.9.5
+    - ptex                 2.1.28
+    - pystring             1.1.3
+    - python3              3.6.1
+    - qhull                2015.2
+    - qscintilla           2.10-1
+    - redshell             1.0.0
+    - rocksdb              2017-06-28-18c63af6ef2b9f014c404b88488ae52e6fead03c
+    - rtmidi               2.1.1-1
+    - rttr                 0.9.5
+    - sciter               4.0.2-1
+    - sdl2-gfx             1.0.3-1
+    - snappy               1.1.6-be6dc3d
+    - sobjectizer          5.5.19.2
+    - speex                1.2.0
+    - strtk                2017.01.02-1e2960f
+    - suitesparse          4.5.5-2
+    - sundials             2.7.0
+    - tacopie              2.4.1-1
+    - theia                0.7-d15154a
+    - thor                 v2.0
+    - thrift               20172805-72ca60debae1d9fb35d9f0085118873669006d7f
+    - uriparser            0.8.4
+    - utf8proc             2.1.0
+    - utfz                 1.2
+    - wxwidgets            3.1.0-1
+  * Update ports:
+    - apr                  1.5.2 -> 1.6.2
+    - assimp               3.3.1 -> 4.0.0
+    - beast                1.0.0-b30 -> v84-1
+    - bond                 5.3.1 -> 6.0.0
+    - boost                1.64-2 -> 1.64-5
+    - bzip2                1.0.6 -> 1.0.6-1
+    - cairo                1.15.4 -> 1.15.6
+    - catch                1.9.1 -> 1.9.6
+    - cereal               1.2.1 -> 1.2.2
+    - chakracore           1.4.0 -> 1.4.3
+    - dimcli               1.0.3 -> 2.0.0
+    - dlfcn-win32          1.1.0 -> 1.1.1
+    - dlib                 19.4-1 -> 19.4-4
+    - doctest              1.1.0 -> 1.2.0
+    - double-conversion    2.0.1 -> 3.0.0
+    - eigen3               3.3.3 -> 3.3.4
+    - expat                2.1.1 -> 2.1.1-1
+    - ffmpeg               3.2.4-2 -> 3.2.4-3
+    - fftw3                3.3.6-p11 -> 3.3.6-p12
+    - flatbuffers          1.6.0 -> 1.7.1
+    - fltk                 1.3.4-2 -> 1.3.4-4
+    - fmt                  3.0.1-4 -> 4.0.0
+    - fontconfig           2.12.1 -> 2.12.4
+    - freeglut             3.0.0 -> 3.0.0-1
+    - freeimage            3.17.0-1 -> 3.17.0-2
+    - freerdp              2.0.0-beta1+android11 -> 2.0.0-rc0~vcpkg1
+    - freetype             2.6.3-5 -> 2.8
+    - gdcm2                2.6.7 -> 2.6.8
+    - gettext              0.19 -> 0.19-1
+    - gflags               2.2.0-2 -> 2.2.0-4
+    - glew                 2.0.0-1 -> 2.0.0-2
+    - gli                  0.8.2 -> 0.8.2-1
+    - glib                 2.52.1 -> 2.52.2
+    - glm                  0.9.8.1 -> 0.9.8.4
+    - glog                 0.3.4-0472b91-1 -> 0.3.5
+    - glslang              1c573fbcfba6b3d631008b1babc838501ca925d3-1 -> 1c573fbcfba6b3d631008b1babc838501ca925d3-2
+    - graphicsmagick       1.3.25 -> 1.3.26
+    - grpc                 1.2.3 -> 1.4.1
+    - gsl                  2.3 -> 2.4-1
+    - gtk                  3.22.11 -> 3.22.15
+    - harfbuzz             1.4.6 -> 1.4.6-1
+    - lcms                 2.8 -> 2.8-1
+    - libarchive           3.3.1 -> 3.3.2
+    - libbson              1.6.2 -> 1.6.2-1
+    - libepoxy             1.4.1-7d58fd3 -> 1.4.3
+    - libevent             2.1.8-1 -> 2.1.8-2
+    - libgd                2.2.4-1 -> 2.2.4-2
+    - libjpeg-turbo        1.5.1-1 -> 1.5.2
+    - libogg               1.3.2 -> 2017-07-27-cab46b19847
+    - libpng               1.6.28-1 -> 1.6.31
+    - libraw               0.18.0-1 -> 0.18.2-2
+    - libuv                1.10.1-2 -> 1.13.1
+    - log4cplus            1.1.3-RC7 -> REL_1_2_1-RC2
+    - lzo                  2.09 -> 2.10-1
+    - msgpack              2.1.1 -> 2.1.5
+    - msmpi                8.0-1 -> 8.1
+    - nana                 1.4.1-66be23c9204c5567d1c51e6f57ba23bffa517a7c -> 1.5.4
+    - openal-soft          1.17.2 -> 1.18.1
+    - openblas             v0.2.19-1 -> v0.2.19-2
+    - opencv               3.2.0-1 -> 3.2.0-3
+    - openjpeg             2.1.2-1 -> 2.1.2-2
+    - openssl              1.0.2k-2 -> 1.0.2l-1
+    - openvr               1.0.5 -> 1.0.9
+    - opus                 1.1.4 -> 1.2.1
+    - pango                1.40.5-1 -> 1.40.6
+    - pcre                 8.40 -> 8.41
+    - pdcurses             3.4 -> 3.4-1
+    - portaudio            19.0.6.00 -> 19.0.6.00-1
+    - protobuf             3.2.0 -> 3.3.0-3
+    - pybind11             2.1.0 -> 2.1.0-1
+    - qt5                  5.8-1 -> 5.8-4
+    - qwt                  6.1.3-1 -> 6.1.3-2
+    - ragel                6.9 -> 6.10
+    - range-v3             20150729-vcpkg3 -> 20151130-vcpkg4
+    - rxcpp                3.0.0 -> 4.0.0-1
+    - sdl2                 2.0.5-2 -> 2.0.5-3
+    - sdl2-image           2.0.1 -> 2.0.1-1
+    - sdl2-mixer           2.0.1 -> 2.0.1-1
+    - sdl2-net             2.0.1 -> 2.0.1-1
+    - sdl2-ttf             2.0.14 -> 2.0.14-1
+    - smpeg2               2.0.0 -> 2.0.0-1
+    - spdlog               0.12.0 -> 0.13.0
+    - sqlite3              3.18.0-1 -> 3.19.1-1
+    - taglib               1.11.1-1 -> 1.11.1-3
+    - tbb                  20160916 -> 2017_U7
+    - think-cell-range     e2d3018 -> 498839d
+    - tiff                 4.0.7-1 -> 4.0.8
+    - tinyxml2             3.0.0 -> 5.0.1
+    - utfcpp               2.3.4 -> 2.3.5
+    - uwebsockets          0.14.2 -> 0.14.3
+    - vtk                  7.1.0 -> 7.1.1-1
+    - wt                   3.3.7 -> 3.3.7-1
+    - zstd                 1.1.1 -> 1.3.0
+  * `vcpkg` has exceeded 300 libraries!
+  * Add the following options to `vcpkg export` command: `--nuget-id`, `--nuget-version`
+  * Improve `vcpkg help`:
+    - Improve clarity
+    - Add `vcpkg help <topic>` option (example: `vcpkg help export`)
+    - Add `vcpkg help topics` option
+  * `vcpkg search` now also searches in the description of ports
+  * Documentation has been reworked and is now also available in ReadTheDocs: https://vcpkg.readthedocs.io/
+  * Bump required version & auto-downloaded version of `cmake` to 3.9.0 (was 3.8.0)
+  * Bump required version & auto-downloaded version of `nuget` to 4.1.0 (was 3.5.0)
+  * Huge number of fixes and improvements in the `vcpkg` tool
+
+-- vcpkg team <vcpkg@microsoft.com>  MON, 07 Aug 2017 16:00:00 -0800
+
+
 vcpkg (0.0.81)
 --------------
   * Add ports:

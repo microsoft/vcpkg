@@ -22,8 +22,8 @@ set(VCPKG_PLATFORM_TOOLSET "v140") # Force VS2015 because VS2017 compiler return
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ceres-solver/ceres-solver
-    REF 1.12.0
-    SHA512 4b4cba5627fbd80a626e8a31d9f561d6cee1c8345970304e4b5b163a9dcadc6d636257d1046ecede00781a11229ef671ee89c3e7e6baf15f49f63f36e6a2ebe1
+    REF 1.13.0
+    SHA512 b548a303d1d4eeb75545551c381624879e363a2eba13cdd998fb3bea9bd51f6b9215b579d59d6133117b70d8bf35e18b983400c3d6200403210c18fcb1886ebb
     HEAD_REF master
 )
 

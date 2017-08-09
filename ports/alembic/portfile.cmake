@@ -13,8 +13,18 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+    ${CMAKE_CURRENT_LIST_DIR}/fix-hdf5link.patch
+    ${CMAKE_CURRENT_LIST_DIR}/bypass-findhdf5.patch
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+    -DUSE_HDF5=ON
+    -DHDF5_ROOT=${CURRENT_INSTALLED_DIR}
 )
 
 vcpkg_install_cmake()

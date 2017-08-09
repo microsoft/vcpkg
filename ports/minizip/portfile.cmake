@@ -24,5 +24,11 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/minizip)
+file(GLOB HEADERS "${CURRENT_PACKAGES_DIR}/include/minizip/*.h")
+foreach(HEADER ${HEADERS})
+  file(READ "${HEADER}" _contents)
+  string(REPLACE "#ifdef HAVE_BZIP2" "#if 1" _contents "${_contents}")
+  file(WRITE "${HEADER}" "${_contents}")
+endforeach()
 
 file(INSTALL ${SOURCE_PATH}/contrib/minizip/MiniZip64_info.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/minizip RENAME copyright)

@@ -1,20 +1,26 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/log4cplus-REL_1_1_3-RC7)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/log4cplus/log4cplus/archive/REL_1_1_3-RC7.zip"
-    FILENAME "REL_1_1_3-RC7.zip"
-    SHA512 06320cb2ab6e18e91c6d79a943c9fdcd82b984e8e908e232f0e0e8eca69496f1f3845913107218bc2be356473315f8dfb822a5993bab8efcadfc4819532da823
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO log4cplus/log4cplus
+    REF REL_1_2_1-RC2
+    SHA512  480a2a61b01e988253c1bf2bb26088030541a63811c8ffbb9e90581d556b717df5220e3ff72eedd27ea704af35218f71f20ceadf4d6d94984b4f56d273b4d3a3
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS -DLOG4CPLUS_BUILD_TESTING=OFF -DLOG4CPLUS_BUILD_LOGGINGSERVER=OFF -DWITH_UNIT_TESTS=OFF
 )
 
 vcpkg_install_cmake()
 
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+
+vcpkg_copy_pdbs()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/log4cplus)

@@ -1,0 +1,78 @@
+From 9f33c841afe51be517eaea318d46985c596c94ff Mon Sep 17 00:00:00 2001
+From: Mikhail Paulyshka <me@mixaill.tk>
+Date: Tue, 25 Jul 2017 01:58:39 +0300
+Subject: [PATCH] tools/hzip: fix build with MSVC
+
+---
+ src/tools/hzip.cxx | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/tools/hzip.cxx b/src/tools/hzip.cxx
+index ef1864f..d284c64 100644
+--- a/src/tools/hzip.cxx
++++ b/src/tools/hzip.cxx
+@@ -41,7 +41,9 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif /* HAVE_UNISTD_H */
+ #include <string>
+ #include <sys/stat.h>
+ 
+-- 
+2.12.2.windows.2
+
+From 840f920bcd370668b9e788b3c8272eca1f20ce3a Mon Sep 17 00:00:00 2001
+From: Mikhail Paulyshka <me@mixaill.tk>
+Date: Tue, 25 Jul 2017 01:55:13 +0300
+Subject: [PATCH]  tools/unmunch: fix build with MSVC
+
+---
+ src/tools/unmunch.cxx | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/tools/unmunch.cxx b/src/tools/unmunch.cxx
+index 44b4cb1..2144370 100644
+--- a/src/tools/unmunch.cxx
++++ b/src/tools/unmunch.cxx
+@@ -42,7 +42,9 @@
+ #include <ctype.h>
+ #include <string.h>
+ #include <string>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif /* HAVE_UNISTD_H */
+ #include <stdlib.h>
+ #include <stdint.h>
+ #include <stdio.h>
+-- 
+2.12.2.windows.2
+
+From 1c231aa84624082a0fa52d59be8c449bfe1fadd1 Mon Sep 17 00:00:00 2001
+From: Mikhail Paulyshka <me@mixaill.tk>
+Date: Tue, 25 Jul 2017 01:50:21 +0300
+Subject: [PATCH] tools/munch: fix build with MSVC
+
+Include <unistd.h> only if exists
+---
+ src/tools/munch.cxx | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/tools/munch.cxx b/src/tools/munch.cxx
+index 17fc6fd..8503abe 100644
+--- a/src/tools/munch.cxx
++++ b/src/tools/munch.cxx
+@@ -40,7 +40,9 @@
+ #include <ctype.h>
+ #include <string.h>
+ #include <string>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif /* HAVE_UNISTD_H */
+ #include <stdlib.h>
+ #include <stdint.h>
+ #include <stdio.h>
+-- 
+2.12.2.windows.2

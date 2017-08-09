@@ -14,7 +14,7 @@ find_program(NMAKE nmake)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
 vcpkg_find_acquire_program(JOM)
-set(ENV{PATH} "${PERL_EXE_PATH};${NASM_EXE_PATH};$ENV{PATH}")
+set(ENV{PATH} "${NASM_EXE_PATH};$ENV{PATH};${PERL_EXE_PATH}")
 
 vcpkg_download_distfile(OPENSSL_SOURCE_ARCHIVE
     URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.0.2/openssl-${OPENSSL_VERSION}.tar.gz"
@@ -55,11 +55,11 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 
 
-message(STATUS "Build ${TARGET_TRIPLET}-rel")
 file(COPY ${MASTER_COPY_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
 set(SOURCE_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/openssl-${OPENSSL_VERSION})
 set(OPENSSLDIR_RELEASE ${CURRENT_PACKAGES_DIR})
 
+message(STATUS "Configure ${TARGET_TRIPLET}-rel")
 vcpkg_execute_required_process(
     COMMAND ${CONFIGURE_COMMAND} ${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_RELEASE}" "--openssldir=${OPENSSLDIR_RELEASE}" -FS
     WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
@@ -70,6 +70,9 @@ vcpkg_execute_required_process(
     WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
     LOGNAME configure-do-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-rel
 )
+message(STATUS "Configure ${TARGET_TRIPLET}-rel done")
+
+message(STATUS "Build ${TARGET_TRIPLET}-rel")
 # Openssl's buildsystem has a race condition which will cause JOM to fail at some point.
 # This is ok; we just do as much work as we can in parallel first, then follow up with a single-threaded build.
 make_directory(${SOURCE_PATH_RELEASE}/inc32/openssl)
@@ -87,7 +90,7 @@ vcpkg_execute_required_process(
 message(STATUS "Build ${TARGET_TRIPLET}-rel done")
 
 
-message(STATUS "Build ${TARGET_TRIPLET}-dbg")
+message(STATUS "Configure ${TARGET_TRIPLET}-dbg")
 file(COPY ${MASTER_COPY_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 set(SOURCE_PATH_DEBUG ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/openssl-${OPENSSL_VERSION})
 set(OPENSSLDIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug)
@@ -102,6 +105,9 @@ vcpkg_execute_required_process(
     WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
     LOGNAME configure-do-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-dbg
 )
+message(STATUS "Configure ${TARGET_TRIPLET}-dbg done")
+
+message(STATUS "Build ${TARGET_TRIPLET}-dbg")
 make_directory(${SOURCE_PATH_DEBUG}/inc32/openssl)
 execute_process(
     COMMAND ${JOM} -k -j $ENV{NUMBER_OF_PROCESSORS} -f ${OPENSSL_MAKEFILE}

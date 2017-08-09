@@ -110,11 +110,10 @@ namespace vcpkg::Commands::Export
 
     static fs::path do_nuget_export(const VcpkgPaths& paths,
                                     const std::string& nuget_id,
+                                    const std::string& nuget_version,
                                     const fs::path& raw_exported_dir,
                                     const fs::path& output_dir)
     {
-        static const std::string NUPKG_VERSION = "1.0.0";
-
         Files::Filesystem& fs = paths.get_filesystem();
         const fs::path& nuget_exe = paths.get_nuget_exe();
 
@@ -129,7 +128,7 @@ namespace vcpkg::Commands::Export
         fs.write_contents(targets_redirect, targets_redirect_content);
 
         const std::string nuspec_file_content =
-            create_nuspec_file_contents(raw_exported_dir.string(), targets_redirect.string(), nuget_id, NUPKG_VERSION);
+            create_nuspec_file_contents(raw_exported_dir.string(), targets_redirect.string(), nuget_id, nuget_version);
         const fs::path nuspec_file_path = paths.buildsystems / "tmp" / "vcpkg.export.nuspec";
         fs.write_contents(nuspec_file_path, nuspec_file_content);
 
@@ -203,6 +202,16 @@ namespace vcpkg::Commands::Export
         return exported_archive_path;
     }
 
+    static Optional<std::string> maybe_lookup(std::unordered_map<std::string, std::string> const& m,
+                                              std::string const& key)
+    {
+        auto it = m.find(key);
+        if (it != m.end())
+            return it->second;
+        else
+            return nullopt;
+    }
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
         static const std::string OPTION_DRY_RUN = "--dry-run";
@@ -210,6 +219,8 @@ namespace vcpkg::Commands::Export
         static const std::string OPTION_NUGET = "--nuget";
         static const std::string OPTION_ZIP = "--zip";
         static const std::string OPTION_7ZIP = "--7zip";
+        static const std::string OPTION_NUGET_ID = "--nuget-id";
+        static const std::string OPTION_NUGET_VERSION = "--nuget-version";
 
         // input sanitization
         static const std::string example =
@@ -222,17 +233,32 @@ namespace vcpkg::Commands::Export
         for (auto&& spec : specs)
             Input::check_triplet(spec.triplet(), paths);
 
-        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments(
-            {OPTION_DRY_RUN, OPTION_RAW, OPTION_NUGET, OPTION_ZIP, OPTION_7ZIP});
-        const bool dryRun = options.find(OPTION_DRY_RUN) != options.cend();
-        const bool raw = options.find(OPTION_RAW) != options.cend();
-        const bool nuget = options.find(OPTION_NUGET) != options.cend();
-        const bool zip = options.find(OPTION_ZIP) != options.cend();
-        const bool _7zip = options.find(OPTION_7ZIP) != options.cend();
+        const auto options = args.check_and_get_optional_command_arguments(
+            {
+                OPTION_DRY_RUN, OPTION_RAW, OPTION_NUGET, OPTION_ZIP, OPTION_7ZIP,
+            },
+            {
+                OPTION_NUGET_ID, OPTION_NUGET_VERSION,
+            });
+        const bool dryRun = options.switches.find(OPTION_DRY_RUN) != options.switches.cend();
+        const bool raw = options.switches.find(OPTION_RAW) != options.switches.cend();
+        const bool nuget = options.switches.find(OPTION_NUGET) != options.switches.cend();
+        const bool zip = options.switches.find(OPTION_ZIP) != options.switches.cend();
+        const bool _7zip = options.switches.find(OPTION_7ZIP) != options.switches.cend();
 
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           raw || nuget || zip || _7zip,
-                           "Must provide at least one of the following options: --raw --nuget --zip --7zip");
+        if (!raw && !nuget && !zip && !_7zip && !dryRun)
+        {
+            System::println(System::Color::error, "Must provide at least one export type: --raw --nuget --zip --7zip");
+            System::print(example);
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+
+        auto maybe_nuget_id = maybe_lookup(options.settings, OPTION_NUGET_ID);
+        auto maybe_nuget_version = maybe_lookup(options.settings, OPTION_NUGET_VERSION);
+
+        Checks::check_exit(VCPKG_LINE_INFO, !maybe_nuget_id || nuget, "--nuget-id is only valid with --nuget");
+        Checks::check_exit(
+            VCPKG_LINE_INFO, !maybe_nuget_version || nuget, "--nuget-version is only valid with --nuget");
 
         // create the plan
         StatusParagraphs status_db = database_load_check(paths);
@@ -352,8 +378,10 @@ namespace vcpkg::Commands::Export
         {
             System::println("Creating nuget package... ");
 
-            const std::string nuget_id = raw_exported_dir_path.filename().string();
-            const fs::path output_path = do_nuget_export(paths, nuget_id, raw_exported_dir_path, export_to_path);
+            const std::string nuget_id = maybe_nuget_id.value_or(raw_exported_dir_path.filename().string());
+            const std::string nuget_version = maybe_nuget_version.value_or("1.0.0");
+            const fs::path output_path =
+                do_nuget_export(paths, nuget_id, nuget_version, raw_exported_dir_path, export_to_path);
             System::println(System::Color::success, "Creating nuget package... done");
             System::println(System::Color::success, "NuGet package exported at: %s", output_path.generic_string());
 
