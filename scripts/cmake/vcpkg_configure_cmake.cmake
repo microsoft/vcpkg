@@ -135,7 +135,7 @@ function(vcpkg_configure_cmake)
         # not handle the changed directory structure of the runtime headers between VS2015 and VS2017 correctly.
         # The following code works around those issues. This is true as of Intel 2017.4 and VS2017.3.
         if(VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
-            string(REGEX REPLACE "\\\\$" "" VCToolsInstallDir "$ENV{VCToolsInstallDir}")
+            file(TO_CMAKE_PATH "$ENV{VCToolsInstallDir}" VCToolsInstallDir)
             string(APPEND VCPKG_CXX_FLAGS " /D__MS_VC_INSTALL_PATH=\"${VCToolsInstallDir}\"")
             string(APPEND VCPKG_C_FLAGS " /D__MS_VC_INSTALL_PATH=\"${VCToolsInstallDir}\"")
         endif()
