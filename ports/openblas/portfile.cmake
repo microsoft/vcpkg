@@ -105,7 +105,7 @@ string(REPLACE "#include \"common.h\"" "#include \"openblas_common.h\"" CBLAS_H 
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/cblas.h "${CBLAS_H}")
 
 # openblas is BSD
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/OpenBLAS-0.2.20/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openblas)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openblas)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/openblas/LICENSE ${CURRENT_PACKAGES_DIR}/share/openblas/copyright)
 
 vcpkg_copy_pdbs()
