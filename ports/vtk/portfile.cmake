@@ -26,6 +26,8 @@ vcpkg_apply_patches(
         # We disable a workaround in the VTK CMake scripts that can lead to the fact that a dependency
         # will link to both, the debug and the release library.
         ${CMAKE_CURRENT_LIST_DIR}/disable-workaround-findhdf5.patch
+
+        ${CMAKE_CURRENT_LIST_DIR}/fix-find-libproj4.patch
 )
 
 # Remove the FindGLEW.cmake that is distributed with VTK, since it does not
@@ -52,13 +54,16 @@ vcpkg_configure_cmake(
         -DVTK_USE_SYSTEM_EXPAT=ON
         -DVTK_USE_SYSTEM_FREETYPE=ON
         # -DVTK_USE_SYSTEM_GL2PS=ON
+        # -DVTK_USE_SYSTEM_LIBHARU=ON
+        -DVTK_USE_SYSTEM_JPEG=ON
         -DVTK_USE_SYSTEM_GLEW=ON
         -DVTK_USE_SYSTEM_HDF5=ON
         -DVTK_USE_SYSTEM_JSONCPP=ON
-        # -DVTK_USE_SYSTEM_LIBPROJ4=ON
-        # -DVTK_USE_SYSTEM_LIBRARIES=ON
+        -DVTK_USE_SYSTEM_LIBPROJ4=ON
         -DVTK_USE_SYSTEM_LIBXML2=ON
+        -DVTK_USE_SYSTEM_LZ4=ON
         # -DVTK_USE_SYSTEM_NETCDF=ON
+        # -DVTK_USE_SYSTEM_NETCDFCPP=ON
         # -DVTK_USE_SYSTEM_OGGTHEORA=ON
         -DVTK_USE_SYSTEM_PNG=ON
         -DVTK_USE_SYSTEM_TIFF=ON
@@ -141,10 +146,13 @@ endfunction()
 set(SYSTEM_THIRD_PARTY_MODULES
     vtkexpat
     vtkfreetype
+    vtkjpeg
     vtkglew
     vtkhdf5
     vtkjsoncpp
+    vtklibproj4
     vtklibxml2
+    vtklz4
     vtkpng
     vtktiff
     vtkzlib
