@@ -91,7 +91,7 @@ vcpkg_fixup_cmake_targets()
 # 
 # The following code merges the libraries from both release and debug:
 
-include(${CMAKE_CURRENT_LIST_DIR}/CleanLibraryList.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/SplitLibraryConfigurations.cmake)
 
 function(_vtk_combine_third_party_libraries MODULE_NAME)
     set(MODULE_LIBRARIES_REGEX "set\\(${MODULE_NAME}_LIBRARIES \"([^\"]*)\"\\)")
@@ -100,7 +100,6 @@ function(_vtk_combine_third_party_libraries MODULE_NAME)
     file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/${MODULE_NAME}.cmake" RELEASE_MODULE_CONTENT)
     if("${RELEASE_MODULE_CONTENT}" MATCHES "${MODULE_LIBRARIES_REGEX}")
         set(RELEASE_LIBRARY_LIST "${CMAKE_MATCH_1}")
-        clean_library_list(RELEASE_LIBRARY_LIST "optimized")
     else()
         message(FATAL_ERROR "Could not extract module libraries for ${MODULE_NAME}")
     endif()
@@ -109,14 +108,20 @@ function(_vtk_combine_third_party_libraries MODULE_NAME)
     file(READ "${CURRENT_PACKAGES_DIR}/debug/share/vtk/Modules/${MODULE_NAME}.cmake" DEBUG_MODULE_CONTENT)
     if("${DEBUG_MODULE_CONTENT}" MATCHES "${MODULE_LIBRARIES_REGEX}")
         set(DEBUG_LIBRARY_LIST "${CMAKE_MATCH_1}")
-        clean_library_list(DEBUG_LIBRARY_LIST "debug")
     else()
         message(FATAL_ERROR "Could not extract module libraries for ${MODULE_NAME}")
     endif()
+    
+    split_library_configurations("${RELEASE_LIBRARY_LIST}" OPTIMIZED_RELEASE_LIBRARIES DEBUG_RELEASE_LIBRARIES GENERAL_RELEASE_LIBRARIES)
+    split_library_configurations("${DEBUG_LIBRARY_LIST}" OPTIMIZED_DEBUG_LIBRARIES DEBUG_DEBUG_LIBRARIES GENERAL_DEBUG_LIBRARIES)
 
-    # Combine libraries
-    set(LIBRARY_LIST ${RELEASE_LIBRARY_LIST} ${DEBUG_LIBRARY_LIST})
-    clean_library_list(LIBRARY_LIST "general")
+    # Combine libraries and wrap them in generator expressions
+    foreach(LIBRARY ${OPTIMIZED_RELEASE_LIBRARIES} ${GENERAL_RELEASE_LIBRARIES})
+        list(APPEND LIBRARY_LIST "$<$<NOT:$<CONFIG:Debug>>:${LIBRARY}>")
+    endforeach()
+    foreach(LIBRARY ${DEBUG_DEBUG_LIBRARIES} ${GENERAL_DEBUG_LIBRARIES})
+        list(APPEND LIBRARY_LIST "$<$<CONFIG:Debug>:${LIBRARY}>")
+    endforeach()
 
     # Write combined libraries back
     string(REGEX REPLACE "${MODULE_LIBRARIES_REGEX}"
