@@ -1,20 +1,20 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ed3f38a..d6480b7 100644
+index 0caf3dc..de9fcdb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1010,7 +1010,9 @@ include(CMake/OtherTests.cmake)
- add_definitions(-DHAVE_CONFIG_H)
+@@ -941,7 +941,9 @@ check_symbol_exists(ioctl          "${CURL_INCLUDES}" HAVE_IOCTL)
+ check_symbol_exists(setsockopt     "${CURL_INCLUDES}" HAVE_SETSOCKOPT)
  
- # For windows, do not allow the compiler to use default target (Vista).
+ # symbol exists in win32, but function does not.
 -if(WIN32)
 +if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 +  add_definitions(-D_WIN32_WINNT=0x0A00 -DHAVE_STRUCT_POLLFD -D_WINSOCK_DEPRECATED_NO_WARNINGS)
 +elseif(WIN32)
-   add_definitions(-D_WIN32_WINNT=0x0501)
- endif(WIN32)
- 
+   if(ENABLE_INET_PTON)
+     check_function_exists(inet_pton HAVE_INET_PTON)
+     # _WIN32_WINNT_VISTA (0x0600)
 diff --git a/lib/curl_gethostname.c b/lib/curl_gethostname.c
-index 2591fd8..cef38ac 100644
+index 8337c72..41867b2 100644
 --- a/lib/curl_gethostname.c
 +++ b/lib/curl_gethostname.c
 @@ -21,6 +21,7 @@
@@ -25,7 +25,7 @@ index 2591fd8..cef38ac 100644
  
  #include "curl_gethostname.h"
  
-@@ -64,9 +65,10 @@ int Curl_gethostname(char *name, GETHOSTNAME_TYPE_ARG2 namelen) {
+@@ -64,9 +65,10 @@ int Curl_gethostname(char *name, GETHOSTNAME_TYPE_ARG2 namelen)
  #ifdef DEBUGBUILD
  
    /* Override host name when environment variable CURL_GETHOSTNAME is set */
@@ -38,10 +38,10 @@ index 2591fd8..cef38ac 100644
    }
    else {
 diff --git a/lib/curl_ntlm_core.c b/lib/curl_ntlm_core.c
-index 812a073..02c8416 100644
+index aea5452..c1f59f2 100644
 --- a/lib/curl_ntlm_core.c
 +++ b/lib/curl_ntlm_core.c
-@@ -696,9 +696,12 @@ CURLcode Curl_ntlm_core_mk_ntlmv2_resp(unsigned char *ntlmv2hash,
+@@ -700,9 +700,12 @@ CURLcode Curl_ntlm_core_mk_ntlmv2_resp(unsigned char *ntlmv2hash,
  
    /* Calculate the timestamp */
  #ifdef DEBUGBUILD
@@ -57,40 +57,23 @@ index 812a073..02c8416 100644
  #endif
      tw = ((curl_off_t)time(NULL) + CURL_OFF_T_C(11644473600)) * 10000000;
 diff --git a/lib/ftp.c b/lib/ftp.c
-index b231731..d50779f 100644
+index 6e86e53..a96fe1a 100644
 --- a/lib/ftp.c
 +++ b/lib/ftp.c
-@@ -3250,7 +3250,7 @@ static CURLcode ftp_done(struct connectdata *conn, CURLcode status,
-   ssize_t nread;
-   int ftpcode;
-   CURLcode result = CURLE_OK;
--  char *path;
-+  char *path = NULL;
-   const char *path_to_use = data->state.path;
- 
-   if(!ftp)
-diff --git a/lib/smb.c b/lib/smb.c
-index 7cb0c96..2f43d3c 100644
---- a/lib/smb.c
-+++ b/lib/smb.c
-@@ -32,8 +32,12 @@
- 
- #ifdef HAVE_PROCESS_H
- #include <process.h>
-+#if defined(CURL_WINDOWS_APP)
-+#define getpid GetCurrentProcessId
-+#else
- #define getpid _getpid
- #endif
-+#endif
- 
- #include "smb.h"
- #include "urldata.h"
-diff --git a/lib/vtls/vtls.c b/lib/vtls/vtls.c
-index 56a8823..5a895ed 100644
---- a/lib/vtls/vtls.c
-+++ b/lib/vtls/vtls.c
-@@ -197,7 +197,7 @@ unsigned int Curl_rand(struct Curl_easy *data)
+@@ -4292,7 +4292,7 @@ CURLcode ftp_parse_url_path(struct connectdata *conn)
+     /* prevpath is "raw" so we convert the input path before we compare the
+        strings */
+     size_t dlen;
+-    char *path;
++    char *path = NULL;
+     CURLcode result =
+       Curl_urldecode(conn->data, data->state.path, 0, &path, &dlen, FALSE);
+     if(result) {
+diff --git a/lib/rand.c b/lib/rand.c
+index 2713a0a..7da6e00 100644
+--- a/lib/rand.c
++++ b/lib/rand.c
+@@ -44,7 +44,7 @@ static CURLcode randit(struct Curl_easy *data, unsigned int *rnd)
    static bool seeded = FALSE;
  
  #ifdef CURLDEBUG
@@ -98,12 +81,12 @@ index 56a8823..5a895ed 100644
 +  char *force_entropy = curl_getenv("CURL_ENTROPY");
    if(force_entropy) {
      if(!seeded) {
-       size_t elen = strlen(force_entropy);
-@@ -208,6 +208,7 @@ unsigned int Curl_rand(struct Curl_easy *data)
-     }
+       unsigned int seed = 0;
+@@ -58,6 +58,7 @@ static CURLcode randit(struct Curl_easy *data, unsigned int *rnd)
      else
        randseed++;
+     *rnd = randseed;
 +    free(force_entropy);
-     return randseed;
+     return CURLE_OK;
    }
  #endif
