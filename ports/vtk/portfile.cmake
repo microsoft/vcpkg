@@ -11,6 +11,20 @@ vcpkg_from_github(
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
+        # Disable ssize_t because this can conflict with ssize_t that is defined on windows.
+        ${CMAKE_CURRENT_LIST_DIR}/dont-define-ssize_t.patch
+
+        # We force CMake to use it's own version of the FindHDF5 module since newer versions
+        # shipped with CMake behave differently. E.g. the one shipped with CMake 3.9 always
+        # only finds the release libraries, but not the debug libraries.
+        # The file shipped with CMake allows us to set the libraries explicitly as it is done below.
+        # Maybe in the future we can disable the patch and use the new version shipped with CMake
+        # together with the hdf5-config.cmake that is written by HDF5 itself, but currently VTK
+        # disables taking the config into account explicitly.
+        ${CMAKE_CURRENT_LIST_DIR}/use-fixed-find-hdf5.patch
+
+        # We disable a workaround in the VTK CMake scripts that can lead to the fact that a dependency
+        # will link to both, the debug and the release library.
         ${CMAKE_CURRENT_LIST_DIR}/disable-workaround-findhdf5.patch
 )
 
@@ -60,25 +74,82 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-# Remove tools from the bin directory.
-# We make sure no references to the deleted files are left in the CMake config files.
-file(READ ${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-release.cmake VTK_TARGETS_RELEASE_MODULE)
-string(REPLACE "list\(APPEND _IMPORT_CHECK_FILES_FOR_vtkEncodeString" "#list(APPEND _IMPORT_CHECK_FILES_FOR_vtkEncodeString" VTK_TARGETS_RELEASE_MODULE "${VTK_TARGETS_RELEASE_MODULE}")
-string(REPLACE "list\(APPEND _IMPORT_CHECK_FILES_FOR_vtkHashSource" "#list(APPEND _IMPORT_CHECK_FILES_FOR_vtkHashSource" VTK_TARGETS_RELEASE_MODULE "${VTK_TARGETS_RELEASE_MODULE}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-release.cmake "${VTK_TARGETS_RELEASE_MODULE}")
+vcpkg_fixup_cmake_targets()
 
-file(READ ${CURRENT_PACKAGES_DIR}/debug/share/vtk/VTKTargets-debug.cmake VTK_TARGETS_DEBUG_MODULE)
-string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" VTK_TARGETS_DEBUG_MODULE "${VTK_TARGETS_DEBUG_MODULE}")
-string(REPLACE "list\(APPEND _IMPORT_CHECK_FILES_FOR_vtkEncodeString" "#list(APPEND _IMPORT_CHECK_FILES_FOR_vtkEncodeString" VTK_TARGETS_DEBUG_MODULE "${VTK_TARGETS_DEBUG_MODULE}")
-string(REPLACE "list\(APPEND _IMPORT_CHECK_FILES_FOR_vtkHashSource" "#list(APPEND _IMPORT_CHECK_FILES_FOR_vtkHashSource" VTK_TARGETS_DEBUG_MODULE "${VTK_TARGETS_DEBUG_MODULE}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-debug.cmake "${VTK_TARGETS_DEBUG_MODULE}")
+# For VTK vcpkg_fixup_cmake_targets is not enough:
+# Files for system third party dependencies are written to modules that
+# are located in the paths `share/vtk/Modules` and `debug/share/vtk/Modules`.
+# In the release folder, only the release libraries are referenced (e.g. "C:/vcpkg/installed/x64-windows/lib/zlib.lib").
+# But in the debug folder both libraries (e.g. "optimized;C:/vcpkg/installed/x64-windows/lib/zlib.lib;debug;C:/vcpkg/installed/x64-windows/debug/lib/zlibd.lib")
+# or only the debug library (e.g. "C:/vcpkg/installed/x64-windows/debug/lib/hdf5_D.lib") is referenced.
+# This is because VCPKG appends only the release library prefix (.../x64-windows/lib)
+# when configuring release but both (.../x64-windows/lib and .../x64-windows/debug/lib)
+# when configuring debug.
+# Now if we delete the debug/share/Modules folder and just leave share/Modules, a library
+# that links to VTK will always use the release third party dependencies, even if
+# debug VTK is used.
+# 
+# The following code merges the libraries from both release and debug:
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+include(${CMAKE_CURRENT_LIST_DIR}/CleanLibraryList.cmake)
+
+function(_vtk_combine_third_party_libraries MODULE_NAME)
+    set(MODULE_LIBRARIES_REGEX "set\\(${MODULE_NAME}_LIBRARIES \"([^\"]*)\"\\)")
+
+    # Read release libraries
+    file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/${MODULE_NAME}.cmake" RELEASE_MODULE_CONTENT)
+    if("${RELEASE_MODULE_CONTENT}" MATCHES "${MODULE_LIBRARIES_REGEX}")
+        set(RELEASE_LIBRARY_LIST "${CMAKE_MATCH_1}")
+        clean_library_list(RELEASE_LIBRARY_LIST "optimized")
+    else()
+        message(FATAL_ERROR "Could not extract module libraries for ${MODULE_NAME}")
+    endif()
+
+    # Read debug libraries
+    file(READ "${CURRENT_PACKAGES_DIR}/debug/share/vtk/Modules/${MODULE_NAME}.cmake" DEBUG_MODULE_CONTENT)
+    if("${DEBUG_MODULE_CONTENT}" MATCHES "${MODULE_LIBRARIES_REGEX}")
+        set(DEBUG_LIBRARY_LIST "${CMAKE_MATCH_1}")
+        clean_library_list(DEBUG_LIBRARY_LIST "debug")
+    else()
+        message(FATAL_ERROR "Could not extract module libraries for ${MODULE_NAME}")
+    endif()
+
+    # Combine libraries
+    set(LIBRARY_LIST ${RELEASE_LIBRARY_LIST} ${DEBUG_LIBRARY_LIST})
+    clean_library_list(LIBRARY_LIST "general")
+
+    # Write combined libraries back
+    string(REGEX REPLACE "${MODULE_LIBRARIES_REGEX}"
+        "set(${MODULE_NAME}_LIBRARIES \"${LIBRARY_LIST}\")"
+        RELEASE_MODULE_CONTENT
+        "${RELEASE_MODULE_CONTENT}"
+    )
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/${MODULE_NAME}.cmake" "${RELEASE_MODULE_CONTENT}")
+endfunction()
+
+# IMPORTANT: Please make sure to extend this list whenever a new library is marked `USE_SYSTEM` in the configure step above!
+set(SYSTEM_THIRD_PARTY_MODULES
+    vtkexpat
+    vtkfreetype
+    vtkglew
+    vtkhdf5
+    vtkjsoncpp
+    vtklibxml2
+    vtkpng
+    vtktiff
+    vtkzlib
+)
+
+foreach(MODULE IN LISTS SYSTEM_THIRD_PARTY_MODULES)
+    _vtk_combine_third_party_libraries("${MODULE}")
+endforeach()
+
+
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/vtkEncodeString-8.0.exe ${CURRENT_PACKAGES_DIR}/tools/vtkEncodeString-8.0.exe)
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/vtkHashSource-8.0.exe ${CURRENT_PACKAGES_DIR}/tools/vtkHashSource-8.0.exe)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/vtkEncodeString-8.0.exe)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/vtkHashSource-8.0.exe)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/vtkEncodeString-8.0.exe)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/vtkHashSource-8.0.exe)
 else()
@@ -86,6 +157,9 @@ else()
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk)
