@@ -149,7 +149,15 @@ foreach(MODULE IN LISTS SYSTEM_THIRD_PARTY_MODULES)
     _vtk_combine_third_party_libraries("${MODULE}")
 endforeach()
 
+# Remove all explicit references to vcpkg system libraries in the general VTKTargets.cmake file
+# since these references always point to the release libraries, even in the debug case.
+# The dependencies should be handled by the explicit modules we fixed above, so removing
+# them here shouldn't cause any problems.
+file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets.cmake" VTK_TARGETS_CONTENT)
+string(REGEX REPLACE "${CURRENT_INSTALLED_DIR}/lib/[^\\.]*\\.lib" "" VTK_TARGETS_CONTENT "${VTK_TARGETS_CONTENT}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets.cmake" "${VTK_TARGETS_CONTENT}")
 
+# Move executable to tools directory
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/vtk)
 file(RENAME ${CURRENT_PACKAGES_DIR}/bin/vtkEncodeString-8.0.exe ${CURRENT_PACKAGES_DIR}/tools/vtk/vtkEncodeString-8.0.exe)
 file(RENAME ${CURRENT_PACKAGES_DIR}/bin/vtkHashSource-8.0.exe ${CURRENT_PACKAGES_DIR}/tools/vtk/vtkHashSource-8.0.exe)
