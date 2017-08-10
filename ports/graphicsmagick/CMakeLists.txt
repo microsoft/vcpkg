@@ -8,7 +8,7 @@ find_package(PNG REQUIRED)
 find_package(TIFF REQUIRED)
 find_package(Freetype REQUIRED)
 
-add_definitions(-D_MAGICKLIB_ -DMAGICK_IMPLEMENTATION)
+add_definitions(-D_MAGICKLIB_ -D_WANDLIB_ -DMAGICK_IMPLEMENTATION -D_VISUALC_)
 
 if (BUILD_SHARED_LIBS)
     add_definitions(-D_DLL -DDLL)
@@ -79,7 +79,7 @@ add_library(graphicsmagick coders/art.c coders/avs.c
 		coders/uyvy.c coders/vicar.c coders/vid.c coders/viff.c
 		coders/wbmp.c coders/webp.c coders/wmf.c coders/wpg.c
 		coders/x.c coders/xbm.c coders/xc.c coders/xcf.c
-		coders/xpm.c coders/xwd.c coders/yuv.c
+		coders/xpm.c coders/xtrn.c coders/xwd.c coders/yuv.c
 		filters/analyze.c
 		magick/analyze.c magick/animate.c magick/annotate.c magick/attribute.c
 		magick/average.c magick/bit_stream.c magick/blob.c magick/cdl.c
