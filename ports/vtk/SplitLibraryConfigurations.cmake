@@ -8,12 +8,9 @@ function(split_library_configurations LIBRARIES OPTIMIZED_OUT_VAR DEBUG_OUT_VAR 
 
   set(CURRENT_TYPE)
   foreach(LIBRARY ${LIBRARIES})
-    message(STATUS "LIB ${LIBRARY}:")
     if("${LIBRARY}" STREQUAL "optimized" OR "${LIBRARY}" STREQUAL "debug" OR "${LIBRARY}" STREQUAL "general")
       set(CURRENT_TYPE "${LIBRARY}")
-      message(STATUS "SET CURRENT_TYPE: ${CURRENT_TYPE}")
     else()
-      message(STATUS "ADD TO ${CURRENT_TYPE}")
       if("${CURRENT_TYPE}" STREQUAL "optimized")
         list(APPEND OPTIMIZED_LIBRARIES "${LIBRARY}")
       elseif("${CURRENT_TYPE}" STREQUAL "debug")
