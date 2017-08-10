@@ -125,7 +125,7 @@ function(vcpkg_configure_cmake)
         message(FATAL_ERROR "You must set both the VCPKG_CXX_FLAGS and VCPKG_C_FLAGS")
     endif()
 
-    if(DEFINED VCPKG_FORTRAN_COMPILER AND VCPKG_FORTRAN_COMPILER STREQUAL Intel)
+    if(DEFINED VCPKG_FORTRAN_COMPILER AND VCPKG_FORTRAN_COMPILER STREQUAL Intel AND VCPKG_FORTRAN_ENABLED)
         # Make sure the name mangling of Intel Fortran generated symbols is all lowercase with underscore suffix
         # because this is assumed by many libraries (that e.g. consume BLAS/LAPACK)
         set(ENV{FFLAGS} "$ENV{FFLAGS} /names:lowercase /assume:underscore")
