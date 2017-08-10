@@ -43,6 +43,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        -DVTK_INSTALL_INCLUDE_DIR=include
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
         -DVTK_Group_MPI=ON
