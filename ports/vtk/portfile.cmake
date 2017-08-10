@@ -145,9 +145,9 @@ foreach(MODULE IN LISTS SYSTEM_THIRD_PARTY_MODULES)
 endforeach()
 
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/vtkEncodeString-8.0.exe ${CURRENT_PACKAGES_DIR}/tools/vtkEncodeString-8.0.exe)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/vtkHashSource-8.0.exe ${CURRENT_PACKAGES_DIR}/tools/vtkHashSource-8.0.exe)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/vtk)
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/vtkEncodeString-8.0.exe ${CURRENT_PACKAGES_DIR}/tools/vtk/vtkEncodeString-8.0.exe)
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/vtkHashSource-8.0.exe ${CURRENT_PACKAGES_DIR}/tools/vtk/vtkHashSource-8.0.exe)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/vtkEncodeString-8.0.exe)
