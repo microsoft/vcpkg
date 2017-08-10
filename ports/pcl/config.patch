@@ -1,5 +1,5 @@
 diff --git a/PCLConfig.cmake.in b/PCLConfig.cmake.in
-index f4ef6a0ff..63c01c6d2 100644
+index f4ef6a0ff..3a2c259dc 100644
 --- a/PCLConfig.cmake.in
 +++ b/PCLConfig.cmake.in
 @@ -155,7 +155,7 @@ macro(find_qhull)
@@ -20,7 +20,7 @@ index f4ef6a0ff..63c01c6d2 100644
  
    find_package_handle_standard_args(Flann DEFAULT_MSG FLANN_LIBRARY FLANN_INCLUDE_DIRS)
    if(FLANN_FOUND)
-@@ -715,6 +715,7 @@ file(TO_CMAKE_PATH "${PCL_DIR}" PCL_DIR)
+@@ -715,25 +715,18 @@ file(TO_CMAKE_PATH "${PCL_DIR}" PCL_DIR)
  if(WIN32 AND NOT MINGW)
  # PCLConfig.cmake is installed to PCL_ROOT/cmake
    get_filename_component(PCL_ROOT "${PCL_DIR}" PATH)
@@ -28,12 +28,36 @@ index f4ef6a0ff..63c01c6d2 100644
  else(WIN32 AND NOT MINGW)
  # PCLConfig.cmake is installed to PCL_ROOT/share/pcl-x.y
    get_filename_component(PCL_ROOT "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
-@@ -725,7 +726,7 @@ if(EXISTS "${PCL_ROOT}/include/pcl-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}/pcl
+ endif(WIN32 AND NOT MINGW)
+ 
+ # check whether PCLConfig.cmake is found into a PCL installation or in a build tree
+-if(EXISTS "${PCL_ROOT}/include/pcl-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}/pcl/pcl_config.h")
++if(EXISTS "${PCL_ROOT}/include/pcl/pcl_config.h")
    # Found a PCL installation
    # pcl_message("Found a PCL installation")
-   set(PCL_INCLUDE_DIRS "${PCL_ROOT}/include/pcl-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}")
+-  set(PCL_INCLUDE_DIRS "${PCL_ROOT}/include/pcl-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}")
 -  set(PCL_LIBRARY_DIRS "${PCL_ROOT}/@LIB_INSTALL_DIR@")
+-  if(EXISTS "${PCL_ROOT}/3rdParty")
+-    set(PCL_ALL_IN_ONE_INSTALLER ON)
+-  endif(EXISTS "${PCL_ROOT}/3rdParty")
+-elseif(EXISTS "${PCL_ROOT}/include/pcl/pcl_config.h")
+-  # Found a non-standard (likely ANDROID) PCL installation
+-  # pcl_message("Found a PCL installation")
+   set(PCL_INCLUDE_DIRS "${PCL_ROOT}/include")
+-  set(PCL_LIBRARY_DIRS "${PCL_ROOT}/lib")
 +  set(PCL_LIBRARY_DIRS "${PCL_ROOT}/@LIB_INSTALL_DIR@" "${PCL_ROOT}/debug/@LIB_INSTALL_DIR@")
    if(EXISTS "${PCL_ROOT}/3rdParty")
      set(PCL_ALL_IN_ONE_INSTALLER ON)
    endif(EXISTS "${PCL_ROOT}/3rdParty")
+@@ -743,9 +736,9 @@ elseif(EXISTS "${PCL_DIR}/include/pcl/pcl_config.h")
+   set(PCL_INCLUDE_DIRS "${PCL_DIR}/include") # for pcl_config.h
+   set(PCL_LIBRARY_DIRS "${PCL_DIR}/@LIB_INSTALL_DIR@")
+   set(PCL_SOURCES_TREE "@CMAKE_SOURCE_DIR@")
+-else(EXISTS "${PCL_ROOT}/include/pcl-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}/pcl/pcl_config.h")
++else(EXISTS "${PCL_ROOT}/include/pcl/pcl_config.h")
+   pcl_report_not_found("PCL can not be found on this machine")  
+-endif(EXISTS "${PCL_ROOT}/include/pcl-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}/pcl/pcl_config.h")
++endif(EXISTS "${PCL_ROOT}/include/pcl/pcl_config.h")
+ 
+ #set a suffix for debug libraries
+ set(PCL_DEBUG_SUFFIX "@CMAKE_DEBUG_POSTFIX@")
