@@ -28,6 +28,11 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/disable-workaround-findhdf5.patch
 )
 
+# Remove the FindGLEW.cmake that is distributed with VTK, since it does not
+# detect the debug libraries correctly.
+# The default file distributed with CMake should be superior by all means.
+file(REMOVE ${SOURCE_PATH}/CMake/FindGLEW.cmake)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     list(APPEND ADDITIONAL_OPTIONS "-DVTK_EXTERNAL_HDF5_IS_SHARED=ON")
 endif()
