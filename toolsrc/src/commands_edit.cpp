@@ -18,6 +18,7 @@ namespace vcpkg::Commands::Edit
         const fs::path portpath = paths.ports / port_name;
         Checks::check_exit(VCPKG_LINE_INFO, fs.is_directory(portpath), R"(Could not find port named "%s")", port_name);
 
+#ifdef _WIN32
         // Find the user's selected editor
         std::wstring env_EDITOR;
 
@@ -77,6 +78,60 @@ namespace vcpkg::Commands::Edit
 
         std::wstring cmdLine = Strings::wformat(
             LR"("%s" "%s" "%s" -n)", env_EDITOR, portpath.native(), (portpath / "portfile.cmake").native());
+#endif
+
+#ifdef __linux__
+        std::string env_EDITOR;
+        if (env_EDITOR.empty())
+        {
+            const Optional<std::string> env_EDITOR_optional = System::get_environment_variable("EDITOR");
+            if (auto e = env_EDITOR_optional.get())
+            {
+                env_EDITOR = *e;
+            }
+        }
+
+        if (env_EDITOR.empty())
+        {
+            const fs::path CODE_PATH = System::get_bin() / "code";
+            if (fs.exists(CODE_PATH))
+            {
+                env_EDITOR = CODE_PATH;
+            }
+        }
+        if (env_EDITOR.empty())
+        {
+            const fs::path CODE_PATH = System::get_sbin() / "code";
+            if (fs.exists(CODE_PATH))
+            {
+                env_EDITOR = CODE_PATH;
+            }
+        }
+        if (env_EDITOR.empty())
+        {
+            const fs::path CODE_PATH = System::get_usr_bin() / "code";
+            if (fs.exists(CODE_PATH))
+            {
+                env_EDITOR = CODE_PATH;
+            }
+        }
+        if (env_EDITOR.empty())
+        {
+            const fs::path CODE_PATH = System::get_usr_sbin() / "code";
+            if (fs.exists(CODE_PATH))
+            {
+                env_EDITOR = CODE_PATH;
+            }
+        }
+        if (env_EDITOR.empty())
+        {
+            Checks::exit_with_message(
+                VCPKG_LINE_INFO, "Visual Studio Code was not found and the environment variable EDITOR is not set");
+        }
+
+        std::string cmdLine = Strings::format(
+            R"("%s" "%s" "%s" -n)", env_EDITOR, portpath.native(), (portpath / "portfile.cmake").native());
+#endif
         Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute(cmdLine));
     }
 }

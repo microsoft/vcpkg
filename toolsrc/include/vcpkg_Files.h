@@ -5,7 +5,7 @@
 
 namespace vcpkg::Files
 {
-    __interface Filesystem
+    struct Filesystem
     {
         virtual Expected<std::string> read_contents(const fs::path& file_path) const = 0;
         virtual Expected<std::vector<std::string>> read_lines(const fs::path& file_path) const = 0;

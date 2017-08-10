@@ -18,11 +18,11 @@ namespace vcpkg::Graphs
     };
 
     template<class V, class U>
-    __interface AdjacencyProvider
+    struct AdjacencyProvider
     {
-        std::vector<V> adjacency_list(const U& vertex) const;
+        virtual std::vector<V> adjacency_list(const U& vertex) const =0;
 
-        U load_vertex_data(const V& vertex) const;
+        virtual U load_vertex_data(const V& vertex) const =0;
     };
 
     template<class V, class U>

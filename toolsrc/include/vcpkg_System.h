@@ -25,13 +25,24 @@ namespace vcpkg::System
 
     std::wstring create_powershell_script_cmd(const fs::path& script_path, const CWStringView args = L"");
 
+#ifdef _WIN32
     enum class Color
     {
         success = 10,
         error = 12,
         warning = 14,
     };
+#endif
 
+#ifdef __linux__
+    enum class Color
+    {
+        success = 92,
+        error = 91,
+        warning = 93,
+        original_color = 39
+    };
+#endif
     void print(const CStringView message);
     void println(const CStringView message);
     void print(const Color c, const CStringView message);

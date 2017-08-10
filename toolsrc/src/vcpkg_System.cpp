@@ -17,8 +17,13 @@ namespace vcpkg::System
 
     fs::path get_exe_path_of_current_process()
     {
-        wchar_t buf[_MAX_PATH];
-        int bytes = GetModuleFileNameW(nullptr, buf, _MAX_PATH);
+#ifdef _WIN32
+        wchar_t buf[VCPKG_MAX_PATH];
+        int bytes = GetModuleFileNameW(nullptr, buf, VCPKG_MAX_PATH);
+#elif __linux__
+        char buf[VCPKG_MAX_PATH];
+        int bytes = readlink("/proc/self/exe", buf, VCPKG_MAX_PATH);
+#endif
         if (bytes == 0) std::abort();
         return fs::path(buf, buf + bytes);
     }
@@ -35,13 +40,26 @@ namespace vcpkg::System
 
     CPUArchitecture get_host_processor()
     {
+#ifdef _WIN32
         auto w6432 = get_environment_variable(L"PROCESSOR_ARCHITEW6432");
         if (auto p = w6432.get()) return to_cpu_architecture(Strings::to_utf8(*p)).value_or_exit(VCPKG_LINE_INFO);
 
         auto procarch = get_environment_variable(L"PROCESSOR_ARCHITECTURE").value_or_exit(VCPKG_LINE_INFO);
         return to_cpu_architecture(Strings::to_utf8(procarch)).value_or_exit(VCPKG_LINE_INFO);
+#endif
+#ifdef __linux__
+        struct utsname info;
+
+        if (uname(&info) == -1)
+        {
+            return to_cpu_architecture("").value_or_exit(VCPKG_LINE_INFO);
+        }
+        // TODO Add linux architecture to `to_cpu_architecture` options
+        return to_cpu_architecture(info.machine).value_or_exit()
+#endif
     }
 
+#ifdef _WIN32
     int cmd_execute_clean(const CWStringView cmd_line)
     {
         static const std::wstring system_root = get_environment_variable(L"SystemRoot").value_or_exit(VCPKG_LINE_INFO);
@@ -94,7 +112,7 @@ namespace vcpkg::System
         };
 
         // Flush stdout before launching external process
-        fflush(nullptr); 
+        fflush(nullptr);
 
         std::vector<const wchar_t*> env_cstr;
         env_cstr.reserve(env_wstrings.size() + 2);
@@ -121,11 +139,13 @@ namespace vcpkg::System
         Debug::println("_wspawnlpe() returned %d", exit_code);
         return static_cast<int>(exit_code);
     }
+#endif
 
+#ifdef _WIN32
     int cmd_execute(const CWStringView cmd_line)
     {
         // Flush stdout before launching external process
-        fflush(nullptr); 
+        fflush(nullptr);
 
         // Basically we are wrapping it in quotes
         const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
@@ -134,7 +154,19 @@ namespace vcpkg::System
         Debug::println("_wsystem() returned %d", exit_code);
         return exit_code;
     }
+#else
+    int cmd_execute(const CStringView cmd_line)
+    {
+        fflush(nullptr);
+        const std::string actual_cmd_line = Strings::format(R"(%s 2>&1)", cmd_line);
+        Debug::println("system(%s)", actual_cmd_line);
+        int exit_code = system(actual_cmd_line.c_str());
+        Debug::println("system() returned %d", exit_code);
+        return exit_code;
+    }
+#endif
 
+#ifdef _WIN32
     ExitCodeAndOutput cmd_execute_and_capture_output(const CWStringView cmd_line)
     {
         // Flush stdout before launching external process
@@ -162,6 +194,35 @@ namespace vcpkg::System
         Debug::println("_wpopen() returned %d", ec);
         return {ec, output};
     }
+#else
+    ExitCodeAndOutput cmd_execute_and_capture_output(const CStringView cmd_line)
+    {
+        // Flush stdout before launching external process
+        fflush(stdout);
+
+        const std::string& actual_cmd_line = Strings::format(R"(%s 2>&1)", cmd_line);
+        Debug::println("popen(%s)", actual_cmd_line);
+
+        std::string output;
+        char buf[1024];
+        auto pipe = popen(actual_cmd_line.c_str(), "r");
+        if (pipe == nullptr)
+        {
+            return {1, output};
+        }
+        while (fgets(buf, 1024, pipe))
+        {
+            output.append(buf);
+        }
+        if (!feof(pipe))
+        {
+            return {1, output};
+        }
+        auto ec = pclose(pipe);
+        Debug::println("popen() returned %d", ec);
+        return {ec, output};
+    }
+#endif
 
     std::wstring create_powershell_script_cmd(const fs::path& script_path, const CWStringView args)
     {
@@ -180,6 +241,7 @@ namespace vcpkg::System
 
     void print(const Color c, const CStringView message)
     {
+#ifdef _WIN32
         HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
         CONSOLE_SCREEN_BUFFER_INFO consoleScreenBufferInfo{};
@@ -189,6 +251,12 @@ namespace vcpkg::System
         SetConsoleTextAttribute(hConsole, static_cast<WORD>(c) | (original_color & 0xF0));
         print(message);
         SetConsoleTextAttribute(hConsole, original_color);
+#elif __linux__
+        const std::string& colored_message = Strings.format("\033[%dm%s", static_cast<int>(c), message);
+        const std::string& original_color = Strings.format("\033[%dm", static_cast<int>(Color::original_color));
+        println(colored_message);
+        print(original_color);
+#endif
     }
 
     void println(const Color c, const CStringView message)
@@ -197,6 +265,7 @@ namespace vcpkg::System
         putchar('\n');
     }
 
+#ifdef _WIN32
     Optional<std::wstring> get_environment_variable(const CWStringView varname) noexcept
     {
         auto sz = GetEnvironmentVariableW(varname, nullptr, 0);
@@ -210,7 +279,17 @@ namespace vcpkg::System
         ret.pop_back();
         return ret;
     }
+#endif
 
+#ifdef __linux__
+    Optional<std::string> get_environment_variable(const CStringView varname) noexcept
+    {
+        const char* env = getenv(varname);
+        return env == nullptr ? nullopt : std::string(env);
+    }
+#endif
+
+#ifdef _WIN32
     static bool is_string_keytype(DWORD hkey_type)
     {
         return hkey_type == REG_SZ || hkey_type == REG_MULTI_SZ || hkey_type == REG_EXPAND_SZ;
@@ -270,6 +349,29 @@ namespace vcpkg::System
         }();
         return p;
     }
+#endif
+#ifdef __linux__
+    const fs::path& get_bin()
+    {
+        static const fs::path p = "/bin";
+        return p;
+    }
+    const fs::path& get_sbin()
+    {
+        static const fs::path p = "/sbin";
+        return p;
+    }
+    const fs::path& get_usr_bin()
+    {
+        static const fs::path p = "/usr/bin";
+        return p;
+    }
+    const fs::path& get_usr_sbin()
+    {
+        static const fs::path p = "/usr/sbin";
+        return p;
+    }
+#endif
 }
 
 namespace vcpkg::Debug
