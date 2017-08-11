@@ -72,14 +72,21 @@ namespace vcpkg
 
     static fs::path fetch_dependency(const fs::path scripts_folder,
                                      const std::wstring& tool_name,
-                                     const fs::path& expected_downloaded_path)
+                                     const fs::path& expected_downloaded_path,
+                                     const std::array<int, 3>& version)
     {
         const fs::path script = scripts_folder / "fetchDependency.ps1";
         auto install_cmd = System::create_powershell_script_cmd(script, Strings::wformat(L"-Dependency %s", tool_name));
         System::ExitCodeAndOutput rc = System::cmd_execute_and_capture_output(install_cmd);
         if (rc.exit_code)
         {
-            System::println(System::Color::error, "Launching powershell failed or was denied");
+            const std::string version_as_string = Strings::format("%d.%d.%d", version[0], version[1], version[2]);
+
+            System::println(System::Color::error,
+                            "Launching powershell failed or was denied when trying to fetch %s version %s.\n"
+                            "(No sufficient installed version was found)",
+                            Strings::to_utf8(tool_name),
+                            version_as_string);
             Metrics::track_property("error", "powershell install failed");
             Metrics::track_property("installcmd", install_cmd);
             Checks::exit_with_code(VCPKG_LINE_INFO, rc.exit_code);
@@ -117,7 +124,7 @@ namespace vcpkg
             return *p;
         }
 
-        return fetch_dependency(scripts_folder, L"cmake", downloaded_copy);
+        return fetch_dependency(scripts_folder, L"cmake", downloaded_copy, expected_version);
     }
 
     fs::path get_nuget_path(const fs::path& downloads_folder, const fs::path scripts_folder)
@@ -138,7 +145,7 @@ namespace vcpkg
             return *p;
         }
 
-        return fetch_dependency(scripts_folder, L"nuget", downloaded_copy);
+        return fetch_dependency(scripts_folder, L"nuget", downloaded_copy, expected_version);
     }
 
     fs::path get_git_path(const fs::path& downloads_folder, const fs::path scripts_folder)
@@ -162,7 +169,7 @@ namespace vcpkg
             return *p;
         }
 
-        return fetch_dependency(scripts_folder, L"git", downloaded_copy);
+        return fetch_dependency(scripts_folder, L"git", downloaded_copy, expected_version);
     }
 
     Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir)
