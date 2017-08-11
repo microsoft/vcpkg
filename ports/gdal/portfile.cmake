@@ -23,6 +23,7 @@ foreach(BUILD_TYPE debug release)
         ${CMAKE_CURRENT_LIST_DIR}/0001-Add-support-for-MSVC1900-backported-from-GDAL2.patch
         ${CMAKE_CURRENT_LIST_DIR}/0002-Add-variable-CXX_CRT_FLAGS-to-allow-for-selection-of.patch
         ${CMAKE_CURRENT_LIST_DIR}/0003-Ensures-inclusion-of-PDB-in-release-dll-if-so-reques.patch
+        ${CMAKE_CURRENT_LIST_DIR}/0004-Fix-openjpeg-include.patch
     )
 endforeach()
 
