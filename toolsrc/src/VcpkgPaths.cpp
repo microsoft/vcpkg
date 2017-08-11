@@ -70,7 +70,7 @@ namespace vcpkg
         return Util::fmap(Strings::split(out.output, "\n"), [](auto&& s) { return fs::path(s); });
     }
 
-    static fs::path fetch_dependency(const fs::path scripts_folder,
+    static fs::path fetch_dependency(const fs::path& scripts_folder,
                                      const std::wstring& tool_name,
                                      const fs::path& expected_downloaded_path,
                                      const std::array<int, 3>& version)
@@ -103,7 +103,7 @@ namespace vcpkg
         return actual_downloaded_path;
     }
 
-    static fs::path get_cmake_path(const fs::path& downloads_folder, const fs::path scripts_folder)
+    static fs::path get_cmake_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
     {
         static constexpr std::array<int, 3> expected_version = {3, 9, 1};
         static const std::wstring version_check_arguments = L"--version";
@@ -127,7 +127,7 @@ namespace vcpkg
         return fetch_dependency(scripts_folder, L"cmake", downloaded_copy, expected_version);
     }
 
-    fs::path get_nuget_path(const fs::path& downloads_folder, const fs::path scripts_folder)
+    fs::path get_nuget_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
     {
         static constexpr std::array<int, 3> expected_version = {4, 1, 0};
         static const std::wstring version_check_arguments = L"";
@@ -148,7 +148,7 @@ namespace vcpkg
         return fetch_dependency(scripts_folder, L"nuget", downloaded_copy, expected_version);
     }
 
-    fs::path get_git_path(const fs::path& downloads_folder, const fs::path scripts_folder)
+    fs::path get_git_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
     {
         static constexpr std::array<int, 3> expected_version = {2, 14, 1};
         static const std::wstring version_check_arguments = L"--version";
