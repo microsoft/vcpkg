@@ -143,10 +143,10 @@ namespace vcpkg
 
     fs::path get_git_path(const fs::path& downloads_folder, const fs::path scripts_folder)
     {
-        static constexpr std::array<int, 3> expected_version = {2, 0, 0};
+        static constexpr std::array<int, 3> expected_version = {2, 14, 1};
         static const std::wstring version_check_arguments = L"--version";
 
-        const fs::path downloaded_copy = downloads_folder / "MinGit-2.11.1-32-bit" / "cmd" / "git.exe";
+        const fs::path downloaded_copy = downloads_folder / "MinGit-2.14.1-32-bit" / "cmd" / "git.exe";
         const std::vector<fs::path> from_path = find_from_PATH(L"git");
 
         std::vector<fs::path> candidate_paths;
