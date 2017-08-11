@@ -43,7 +43,6 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DVTK_INSTALL_INCLUDE_DIR=include
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
         -DVTK_Group_MPI=ON
@@ -65,10 +64,11 @@ vcpkg_configure_cmake(
         -DVTK_USE_SYSTEM_LZ4=ON
         # -DVTK_USE_SYSTEM_NETCDF=ON
         # -DVTK_USE_SYSTEM_NETCDFCPP=ON
-        # -DVTK_USE_SYSTEM_OGGTHEORA=ON
+        -DVTK_USE_SYSTEM_OGGTHEORA=ON
         -DVTK_USE_SYSTEM_PNG=ON
         -DVTK_USE_SYSTEM_TIFF=ON
         -DVTK_USE_SYSTEM_ZLIB=ON
+        -DVTK_INSTALL_INCLUDE_DIR=include
         -DVTK_INSTALL_DATA_DIR=share/vtk/data
         -DVTK_INSTALL_DOC_DIR=share/vtk/doc
         -DVTK_INSTALL_PACKAGE_DIR=share/vtk
@@ -154,6 +154,7 @@ set(SYSTEM_THIRD_PARTY_MODULES
     vtklibproj4
     vtklibxml2
     vtklz4
+    vtkoggtheora
     vtkpng
     vtktiff
     vtkzlib
