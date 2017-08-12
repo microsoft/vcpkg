@@ -1,4 +1,4 @@
 Source: libraw
-Version: 0.18.2-2
-Build-Depends: lcms, libjpeg-turbo
+Version: 0.18.2-3
+Build-Depends: lcms, jasper
 Description: raw image decoder library
