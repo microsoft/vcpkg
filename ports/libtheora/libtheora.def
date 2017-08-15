@@ -1,0 +1,61 @@
+EXPORTS
+; Old alpha API
+	theora_version_string
+	theora_version_number
+	theora_decode_header
+	theora_decode_init
+	theora_decode_packetin
+	theora_decode_YUVout
+	theora_control
+	theora_packet_isheader
+	theora_packet_iskeyframe
+	theora_granule_shift
+	theora_granule_frame
+	theora_granule_time
+	theora_info_init
+	theora_info_clear
+	theora_clear
+	theora_comment_init
+	theora_comment_add
+	theora_comment_add_tag
+	theora_comment_query
+	theora_comment_query_count
+	theora_comment_clear
+; New theora-exp API
+	th_version_string
+	th_version_number
+	th_decode_headerin
+	th_decode_alloc
+	th_setup_free
+	th_decode_ctl
+	th_decode_packetin
+	th_decode_ycbcr_out
+	th_decode_free
+	th_packet_isheader
+	th_packet_iskeyframe
+	th_granule_frame
+	th_granule_time
+	th_info_init
+	th_info_clear
+	th_comment_init
+	th_comment_add
+	th_comment_add_tag
+	th_comment_query
+	th_comment_query_count
+	th_comment_clear
+; Old alpha API
+	theora_encode_init
+	theora_encode_YUVin
+	theora_encode_packetout
+	theora_encode_header
+	theora_encode_comment
+	theora_encode_tables
+; New theora-exp API
+	th_encode_alloc
+	th_encode_ctl
+	th_encode_flushheader
+	th_encode_ycbcr_in
+	th_encode_packetout
+	th_encode_free
+	TH_VP31_QUANT_INFO
+	TH_VP31_HUFF_CODES

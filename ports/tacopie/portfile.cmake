@@ -1,5 +1,9 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    message(STATUS "cpp-redis only supports static library linkage.")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Cylix/tacopie
@@ -8,44 +12,26 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
+    set(MSVC_RUNTIME_LIBRARY_CONFIG "/MD")
+else()
+    set(MSVC_RUNTIME_LIBRARY_CONFIG "/MT")
+endif()
+
+# tacopie forcibly removes "/RTC1" in its cmake file. Because this is an ABI-sensitive flag, we need to re-add it in a form that won't be detected.
+set(VCPKG_CXX_FLAGS_DEBUG "${VCPKG_CXX_FLAGS_DEBUG} -RTC1")
+set(VCPKG_C_FLAGS_DEBUG "${VCPKG_C_FLAGS_DEBUG} -RTC1")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DMSVC_RUNTIME_LIBRARY_CONFIG=${MSVC_RUNTIME_LIBRARY_CONFIG}
 )
 
-vcpkg_build_cmake()
+vcpkg_install_cmake()
 
-file(GLOB DLLS
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.dll"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/*.dll"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/Release/*.dll"
-)
-file(GLOB LIBS
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/lib/*.lib"
-)
-file(GLOB DEBUG_DLLS
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.dll"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Debug/*.dll"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*/Debug/*.dll"
-)
-file(GLOB DEBUG_LIBS
-"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*/lib/*.lib"
-)
-file(GLOB HEADERS "${SOURCE_PATH}/includes/tacopie/*.hpp" "${SOURCE_PATH}/includes/tacopie/*.hpp")
-if(DLLS)
-    file(INSTALL ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-endif()
-file(INSTALL ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-if(DEBUG_DLLS)
-    file(INSTALL ${DEBUG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
-file(INSTALL ${DEBUG_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-file(INSTALL ${HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include/tacopie)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tacopie RENAME copyright)
 

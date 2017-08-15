@@ -1,52 +1,46 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    message(STATUS "cpp-redis only supports static library linkage.")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Cylix/cpp_redis
-    REF 3.5.1
-    SHA512  2c50cf777d5955f7bcb94a55514fac444d0dcacc2df343dd89969889be7653a793620dbaac9d6dd0f444eee7f0664c4eb96a1d83477d207143660764afeea129
+    REF 3.5.2
+    SHA512  d19445c93fad9fba39c7aed07b2d196ec0c96366324a2a2ee856c930683b5428fe8b5bc46de4b2b23112aae83f8229a4703c2355d1c74831602ec3a7f8dac315
     HEAD_REF master
 )
 
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/tacopie/CMakeLists.txt DESTINATION ${SOURCE_PATH}/tacopie)
+
+if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
+    set(MSVC_RUNTIME_LIBRARY_CONFIG "/MD")
+else()
+    set(MSVC_RUNTIME_LIBRARY_CONFIG "/MT")
+endif()
+
+# cpp-redis forcibly removes "/RTC1" in its cmake file. Because this is an ABI-sensitive flag, we need to re-add it in a form that won't be detected.
+set(VCPKG_CXX_FLAGS_DEBUG "${VCPKG_CXX_FLAGS_DEBUG} -RTC1")
+set(VCPKG_C_FLAGS_DEBUG "${VCPKG_C_FLAGS_DEBUG} -RTC1")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DUSE_CUSTOM_TCP_CLIENT=TRUE
+    OPTIONS
+        -DMSVC_RUNTIME_LIBRARY_CONFIG=${MSVC_RUNTIME_LIBRARY_CONFIG}
 )
 
-vcpkg_build_cmake()
+vcpkg_install_cmake()
 
-file(GLOB DLLS
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.dll"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/*.dll"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/Release/*.dll"
-)
-file(GLOB LIBS
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/lib/*.lib"
-)
-file(GLOB DEBUG_DLLS
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.dll"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Debug/*.dll"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*/Debug/*.dll"
-)
-file(GLOB DEBUG_LIBS
-"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*/lib/*.lib"
-)
-file(GLOB HEADERS "${SOURCE_PATH}/includes/cpp_redis/*.hpp" "${SOURCE_PATH}/includes/cpp_redis/*.hpp")
-if(DLLS)
-    file(INSTALL ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-endif()
-file(INSTALL ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-if(DEBUG_DLLS)
-    file(INSTALL ${DEBUG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
-file(INSTALL ${DEBUG_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-file(INSTALL ${HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include/cpp_redis)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/debug/include)
+
+file(GLOB_RECURSE FILES "${CURRENT_PACKAGES_DIR}/include/*")
+foreach(file ${FILES})
+    file(READ ${file} _contents)
+    string(REPLACE "ifndef __CPP_REDIS_USE_CUSTOM_TCP_CLIENT" "if 1" _contents "${_contents}")
+    file(WRITE ${file} "${_contents}")
+endforeach()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cpp-redis RENAME copyright)
 

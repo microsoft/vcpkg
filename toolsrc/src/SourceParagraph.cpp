@@ -54,7 +54,7 @@ namespace vcpkg
             if (!error_info->extra_fields.empty())
             {
                 System::println(System::Color::error,
-                                "Error: There are invalid fields in the Source Paragraph of %s",
+                                "Error: There are invalid fields in the control file of %s",
                                 error_info->name);
                 System::println("The following fields were not expected:\n\n    %s\n",
                                 Strings::join("\n    ", error_info->extra_fields));
@@ -74,7 +74,7 @@ namespace vcpkg
             if (!error_info->missing_fields.empty())
             {
                 System::println(System::Color::error,
-                                "Error: There are missing fields in the Source Paragraphs of %s",
+                                "Error: There are missing fields in the control file of %s",
                                 error_info->name);
                 System::println("The following fields were missing:\n\n    %s\n",
                                 Strings::join("\n    ", error_info->missing_fields));

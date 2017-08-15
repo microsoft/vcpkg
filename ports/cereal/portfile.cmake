@@ -7,7 +7,7 @@ vcpkg_from_github(
     REPO USCiLab/cereal
     REF v1.2.2
     SHA512 9567b2e19add9446b24f8afd122eea09ba6ecd1a090335cf0ab31fdc8f64c6c97daa3d9eaf0801c36a770737488e0eebf81d96d7b7a65deed30da6130f2d47eb
-    HEAD_REF master
+    HEAD_REF develop
 )
 
 vcpkg_configure_cmake(
