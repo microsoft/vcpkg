@@ -28,6 +28,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
             return
         }
 
+        # Can't print because vcpkg captures the output and expects only the path that is returned at the end of this script file
         # Write-Host "A suitable version of $Dependency was not found (required v$requiredVersion). Downloading portable $Dependency v$downloadVersion..."
 
         if (!(Test-Path $downloadDir))
