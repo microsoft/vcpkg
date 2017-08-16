@@ -1,9 +1,10 @@
+set(PCRE2_VERSION 10.30)
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/pcre2-10.23)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/pcre2-${PCRE2_VERSION})
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://sourceforge.net/projects/pcre/files/pcre2/10.23/pcre2-10.23.zip/download"
-    FILENAME "pcre2-10.23.zip"
-    SHA512 0f0638ce28ce17e18425d499cc516a30dabbfa868180ea320361ffeaa26d4f6f6975f12bc20024f7457fe3c6eed686976a9e5c66c2785d1ea63bee38131ea0d2)
+    URLS "https://sourceforge.net/projects/pcre/files/pcre2/${PCRE2_VERSION}/pcre2-${PCRE2_VERSION}.zip/download"
+    FILENAME "pcre2-${PCRE2_VERSION}.zip"
+    SHA512 03e570b946ac29498a114b27e715a0fcf25702bfc9623f9fc085ee8a3214ab3c303baccb9c0af55da6916e8ce40d931d97f1ee9628690563041a943f0aa2bc54)
 
 vcpkg_extract_source_archive(${ARCHIVE})
 
