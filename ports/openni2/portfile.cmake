@@ -36,18 +36,21 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+get_filename_component(KINECTSDK10_DIR "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Kinect;SDKInstallPath]" ABSOLUTE CACHE)
+set(KINECTSDK10_INSTALLED FALSE)
+if(EXISTS "${KINECTSDK10_DIR}")
+    set(KINECTSDK10_INSTALLED TRUE)
+endif()
+
+file(TO_NATIVE_PATH ${KINECTSDK10_DIR} KINECTSDK10_DIR)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/replace_environment_variable.patch.in" "${CMAKE_CURRENT_LIST_DIR}/replace_environment_variable.patch" @ONLY)
+
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/upgrade_projects.patch"
             "${CMAKE_CURRENT_LIST_DIR}/inherit_from_parent_or_project_defaults.patch"
             "${CMAKE_CURRENT_LIST_DIR}/replace_environment_variable.patch"
 )
-
-get_filename_component(KINECTSDK10_DIR "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Kinect;SDKInstallPath]" ABSOLUTE CACHE)
-set(KINECTSDK10_INSTALLED FALSE)
-if(EXISTS "${KINECTSDK10_DIR}")
-    set(KINECTSDK10_INSTALLED TRUE)
-endif()
 
 if(NOT ${KINECTSDK10_INSTALLED})
     vcpkg_apply_patches(
@@ -240,7 +243,7 @@ file(
         "${SOURCE_BIN_PATH_RELEASE}/PS1080Console.exe"
         "${SOURCE_BIN_PATH_RELEASE}/PSLinkConsole.exe"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/tools/openni2/
+        ${CURRENT_PACKAGES_DIR}/tools/openni2
 )
 
 # Handle copyright
