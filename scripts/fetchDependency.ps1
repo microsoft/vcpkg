@@ -28,7 +28,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
             return
         }
 
-        Write-Host "A suitable version of $Dependency was not found (required v$requiredVersion). Downloading portable $Dependency v$downloadVersion..."
+        # Write-Host "A suitable version of $Dependency was not found (required v$requiredVersion). Downloading portable $Dependency v$downloadVersion..."
 
         if (!(Test-Path $downloadDir))
         {
