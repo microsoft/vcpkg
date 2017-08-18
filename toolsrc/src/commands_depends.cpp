@@ -33,7 +33,7 @@ namespace vcpkg::Commands::DependInfo
 
                                       for (const Dependency& dependency : source_paragraph.depends)
                                       {
-                                          if (Strings::case_insensitive_ascii_contains(dependency.name, filter))
+                                          if (Strings::case_insensitive_ascii_contains(dependency.name(), filter))
                                           {
                                               return false;
                                           }
