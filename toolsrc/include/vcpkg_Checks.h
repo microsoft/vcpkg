@@ -5,18 +5,23 @@
 
 namespace vcpkg::Checks
 {
+    // Indicate that an internal error has occurred and exit the tool. This should be used when invariants have been
+    // broken.
     [[noreturn]] void unreachable(const LineInfo& line_info);
 
     [[noreturn]] void exit_with_code(const LineInfo& line_info, const int exit_code);
 
+    // Exit the tool without an error message.
     [[noreturn]] inline void exit_fail(const LineInfo& line_info) { exit_with_code(line_info, EXIT_FAILURE); }
 
+    // Exit the tool successfully.
     [[noreturn]] inline void exit_success(const LineInfo& line_info) { exit_with_code(line_info, EXIT_SUCCESS); }
 
-    // Part of the reason these exist is to not include extra headers in this one to avoid circular #includes.
+    // Display an error message to the user and exit the tool.
     [[noreturn]] void exit_with_message(const LineInfo& line_info, const CStringView errorMessage);
 
     template<class Arg1, class... Args>
+    // Display an error message to the user and exit the tool.
     [[noreturn]] void exit_with_message(const LineInfo& line_info,
                                         const char* errorMessageTemplate,
                                         const Arg1 errorMessageArg1,

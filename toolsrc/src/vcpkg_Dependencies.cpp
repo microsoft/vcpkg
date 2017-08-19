@@ -363,23 +363,25 @@ namespace vcpkg::Dependencies
         std::vector<FeatureSpec> f_specs;
         for (auto&& depend : depends)
         {
-            int end = (int)depend.find(']');
-            if (end != std::string::npos)
+            auto maybe_spec = ParsedSpecifier::from_string(depend);
+            if (auto spec = maybe_spec.get())
             {
-                int start = (int)depend.find('[');
+                Checks::check_exit(VCPKG_LINE_INFO,
+                                   spec->triplet.empty(),
+                                   "error: triplets cannot currently be specified in this context: %s",
+                                   depend);
+                PackageSpec pspec =
+                    PackageSpec::from_name_and_triplet(spec->name, triplet).value_or_exit(VCPKG_LINE_INFO);
 
-                auto feature_name = depend.substr(start + 1, end - start - 1);
-                auto package_name = depend.substr(0, start);
-                auto p_spec = PackageSpec::from_name_and_triplet(package_name, triplet).value_or_exit(VCPKG_LINE_INFO);
-                auto feature_spec = FeatureSpec{p_spec, feature_name};
-                f_specs.emplace_back(std::move(feature_spec));
+                for (auto&& feature : spec->features)
+                    f_specs.push_back(FeatureSpec{pspec, feature});
+
+                if (spec->features.empty()) f_specs.push_back(FeatureSpec{pspec, ""});
             }
             else
             {
-                auto p_spec = PackageSpec::from_name_and_triplet(depend, triplet).value_or_exit(VCPKG_LINE_INFO);
-
-                auto feature_spec = FeatureSpec{p_spec, ""};
-                f_specs.emplace_back(std::move(feature_spec));
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO, "error while parsing feature list: %s: %s", to_string(maybe_spec.error()), depend);
             }
         }
         return f_specs;

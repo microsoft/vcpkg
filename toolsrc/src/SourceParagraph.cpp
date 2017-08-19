@@ -1,5 +1,6 @@
 #include "pch.h"
 
+#include "PackageSpec.h"
 #include "SourceParagraph.h"
 #include "Triplet.h"
 #include "vcpkg_Checks.h"
@@ -28,7 +29,11 @@ namespace vcpkg
     static span<const std::string> get_list_of_valid_fields()
     {
         static const std::string valid_fields[] = {
-            Fields::SOURCE, Fields::VERSION, Fields::DESCRIPTION, Fields::MAINTAINER, Fields::BUILD_DEPENDS,
+            Fields::SOURCE,
+            Fields::VERSION,
+            Fields::DESCRIPTION,
+            Fields::MAINTAINER,
+            Fields::BUILD_DEPENDS,
         };
 
         return valid_fields;
@@ -154,21 +159,20 @@ namespace vcpkg
 
     Features parse_feature_list(const std::string& name)
     {
-        Features f;
-        int end = (int)name.find(']');
-        if (end != std::string::npos)
+        auto maybe_spec = ParsedSpecifier::from_string(name);
+        if (auto spec = maybe_spec.get())
         {
-            int start = (int)name.find('[');
+            Checks::check_exit(
+                VCPKG_LINE_INFO, spec->triplet.empty(), "error: triplet not allowed in specifier: %s", name);
 
-            auto feature_name_list = name.substr(start + 1, end - start - 1);
-            f.name = name.substr(0, start);
-            f.features = parse_comma_list(feature_name_list);
+            Features f;
+            f.name = spec->name;
+            f.features = spec->features;
+            return f;
         }
-        else
-        {
-            f.name = name;
-        }
-        return f;
+
+        Checks::exit_with_message(
+            VCPKG_LINE_INFO, "error while parsing feature list: %s: %s", to_string(maybe_spec.error()), name);
     }
 
     Dependency Dependency::parse_dependency(std::string name, std::string qualifier)

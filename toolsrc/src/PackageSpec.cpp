@@ -13,52 +13,16 @@ namespace vcpkg
     ExpectedT<FullPackageSpec, PackageSpecParseResult> FullPackageSpec::from_string(const std::string& spec_as_string,
                                                                                     const Triplet& default_triplet)
     {
-        auto pos = spec_as_string.find(':');
-        auto pos_l_bracket = spec_as_string.find('[');
-        auto pos_r_bracket = spec_as_string.find(']');
-
-        FullPackageSpec f;
-        if (pos == std::string::npos && pos_l_bracket == std::string::npos)
+        auto res = ParsedSpecifier::from_string(spec_as_string);
+        if (auto p = res.get())
         {
-            f.package_spec =
-                PackageSpec::from_name_and_triplet(spec_as_string, default_triplet).value_or_exit(VCPKG_LINE_INFO);
-            return f;
+            FullPackageSpec fspec;
+            Triplet t = p->triplet.empty() ? default_triplet : Triplet::from_canonical_name(p->triplet);
+            fspec.package_spec = PackageSpec::from_name_and_triplet(p->name, t).value_or_exit(VCPKG_LINE_INFO);
+            fspec.features = std::move(p->features);
+            return fspec;
         }
-        else if (pos == std::string::npos)
-        {
-            if (pos_r_bracket == std::string::npos || pos_l_bracket >= pos_r_bracket)
-            {
-                return PackageSpecParseResult::INVALID_CHARACTERS;
-            }
-            const std::string name = spec_as_string.substr(0, pos_l_bracket);
-            f.package_spec = PackageSpec::from_name_and_triplet(name, default_triplet).value_or_exit(VCPKG_LINE_INFO);
-            f.features = parse_comma_list(spec_as_string.substr(pos_l_bracket + 1, pos_r_bracket - pos_l_bracket - 1));
-            return f;
-        }
-        else if (pos_l_bracket == std::string::npos && pos_r_bracket == std::string::npos)
-        {
-            const std::string name = spec_as_string.substr(0, pos);
-            const Triplet triplet = Triplet::from_canonical_name(spec_as_string.substr(pos + 1));
-            f.package_spec = PackageSpec::from_name_and_triplet(name, triplet).value_or_exit(VCPKG_LINE_INFO);
-        }
-        else
-        {
-            if (pos_r_bracket == std::string::npos || pos_l_bracket >= pos_r_bracket)
-            {
-                return PackageSpecParseResult::INVALID_CHARACTERS;
-            }
-            const std::string name = spec_as_string.substr(0, pos_l_bracket);
-            f.features = parse_comma_list(spec_as_string.substr(pos_l_bracket + 1, pos_r_bracket - pos_l_bracket - 1));
-            const Triplet triplet = Triplet::from_canonical_name(spec_as_string.substr(pos + 1));
-            f.package_spec = PackageSpec::from_name_and_triplet(name, triplet).value_or_exit(VCPKG_LINE_INFO);
-        }
-
-        auto pos2 = spec_as_string.find(':', pos + 1);
-        if (pos2 != std::string::npos)
-        {
-            return PackageSpecParseResult::TOO_MANY_COLONS;
-        }
-        return f;
+        return res.error();
     }
 
     ExpectedT<PackageSpec, PackageSpecParseResult> PackageSpec::from_name_and_triplet(const std::string& name,
@@ -93,4 +57,53 @@ namespace vcpkg
     }
 
     bool operator!=(const PackageSpec& left, const PackageSpec& right) { return !(left == right); }
+
+    ExpectedT<ParsedSpecifier, PackageSpecParseResult> ParsedSpecifier::from_string(const std::string& input)
+    {
+        auto pos = input.find(':');
+        auto pos_l_bracket = input.find('[');
+        auto pos_r_bracket = input.find(']');
+
+        ParsedSpecifier f;
+        if (pos == std::string::npos && pos_l_bracket == std::string::npos)
+        {
+            f.name = input;
+            return f;
+        }
+        else if (pos == std::string::npos)
+        {
+            if (pos_r_bracket == std::string::npos || pos_l_bracket >= pos_r_bracket)
+            {
+                return PackageSpecParseResult::INVALID_CHARACTERS;
+            }
+            const std::string name = input.substr(0, pos_l_bracket);
+            f.name = name;
+            f.features = parse_comma_list(input.substr(pos_l_bracket + 1, pos_r_bracket - pos_l_bracket - 1));
+            return f;
+        }
+        else if (pos_l_bracket == std::string::npos && pos_r_bracket == std::string::npos)
+        {
+            const std::string name = input.substr(0, pos);
+            f.triplet = input.substr(pos + 1);
+            f.name = name;
+        }
+        else
+        {
+            if (pos_r_bracket == std::string::npos || pos_l_bracket >= pos_r_bracket)
+            {
+                return PackageSpecParseResult::INVALID_CHARACTERS;
+            }
+            const std::string name = input.substr(0, pos_l_bracket);
+            f.features = parse_comma_list(input.substr(pos_l_bracket + 1, pos_r_bracket - pos_l_bracket - 1));
+            f.triplet = input.substr(pos + 1);
+            f.name = name;
+        }
+
+        auto pos2 = input.find(':', pos + 1);
+        if (pos2 != std::string::npos)
+        {
+            return PackageSpecParseResult::TOO_MANY_COLONS;
+        }
+        return f;
+    }
 }

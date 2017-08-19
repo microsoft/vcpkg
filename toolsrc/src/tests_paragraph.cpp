@@ -385,42 +385,53 @@ namespace UnitTest1
             Assert::AreEqual("a, b, c", pghs[0]["Depends"].c_str());
         }
 
-        TEST_METHOD(package_spec_parse)
+        TEST_METHOD(parsed_specifier_from_string)
         {
-            vcpkg::ExpectedT<vcpkg::FullPackageSpec, vcpkg::PackageSpecParseResult> spec =
-                vcpkg::FullPackageSpec::from_string("zlib", vcpkg::Triplet::X86_WINDOWS);
-            Assert::AreEqual(vcpkg::PackageSpecParseResult::SUCCESS, spec.error());
-            Assert::AreEqual("zlib", spec.get()->package_spec.name().c_str());
-            Assert::AreEqual(vcpkg::Triplet::X86_WINDOWS.canonical_name(),
-                             spec.get()->package_spec.triplet().canonical_name());
+            auto maybe_spec = vcpkg::ParsedSpecifier::from_string("zlib");
+            Assert::AreEqual(vcpkg::PackageSpecParseResult::SUCCESS, maybe_spec.error());
+            auto spec = maybe_spec.get();
+            Assert::AreEqual("zlib", spec->name.c_str());
+            Assert::AreEqual(size_t(0), spec->features.size());
+            Assert::AreEqual("", spec->triplet.c_str());
         }
 
-        TEST_METHOD(package_spec_parse_with_arch)
+        TEST_METHOD(parsed_specifier_from_string_with_triplet)
         {
-            vcpkg::ExpectedT<vcpkg::FullPackageSpec, vcpkg::PackageSpecParseResult> spec =
-                vcpkg::FullPackageSpec::from_string("zlib:x64-uwp", vcpkg::Triplet::X86_WINDOWS);
-            Assert::AreEqual(vcpkg::PackageSpecParseResult::SUCCESS, spec.error());
-            Assert::AreEqual("zlib", spec.get()->package_spec.name().c_str());
-            Assert::AreEqual(vcpkg::Triplet::X64_UWP.canonical_name(),
-                             spec.get()->package_spec.triplet().canonical_name());
+            auto maybe_spec = vcpkg::ParsedSpecifier::from_string("zlib:x64-uwp");
+            Assert::AreEqual(vcpkg::PackageSpecParseResult::SUCCESS, maybe_spec.error());
+            auto spec = maybe_spec.get();
+            Assert::AreEqual("zlib", spec->name.c_str());
+            Assert::AreEqual("x64-uwp", spec->triplet.c_str());
         }
 
-        TEST_METHOD(package_spec_parse_with_multiple_colon)
+        TEST_METHOD(parsed_specifier_from_string_with_colons)
         {
-            auto ec = vcpkg::FullPackageSpec::from_string("zlib:x86-uwp:", vcpkg::Triplet::X86_WINDOWS).error();
+            auto ec = vcpkg::ParsedSpecifier::from_string("zlib:x86-uwp:").error();
             Assert::AreEqual(vcpkg::PackageSpecParseResult::TOO_MANY_COLONS, ec);
         }
 
-        TEST_METHOD(package_spec_feature_parse_with_arch)
+        TEST_METHOD(parsed_specifier_from_string_with_feature)
         {
-            vcpkg::ExpectedT<vcpkg::FullPackageSpec, vcpkg::PackageSpecParseResult> spec =
-                vcpkg::FullPackageSpec::from_string("zlib[feature]:x64-uwp", vcpkg::Triplet::X86_WINDOWS);
-            Assert::AreEqual(vcpkg::PackageSpecParseResult::SUCCESS, spec.error());
-            Assert::AreEqual("zlib", spec.get()->package_spec.name().c_str());
-            Assert::IsTrue(spec.get()->features.size() == 1);
-            Assert::AreEqual("feature", spec.get()->features.front().c_str());
-            Assert::AreEqual(vcpkg::Triplet::X64_UWP.canonical_name(),
-                             spec.get()->package_spec.triplet().canonical_name());
+            auto maybe_spec = vcpkg::ParsedSpecifier::from_string("zlib[feature]:x64-uwp");
+            Assert::AreEqual(vcpkg::PackageSpecParseResult::SUCCESS, maybe_spec.error());
+            auto spec = maybe_spec.get();
+            Assert::AreEqual("zlib", spec->name.c_str());
+            Assert::IsTrue(spec->features.size() == 1);
+            Assert::AreEqual("feature", spec->features.front().c_str());
+            Assert::AreEqual("x64-uwp", spec->triplet.c_str());
+        }
+
+        TEST_METHOD(parsed_specifier_from_string_with_many_features)
+        {
+            auto maybe_spec = vcpkg::ParsedSpecifier::from_string("zlib[0, 1,2]");
+            Assert::AreEqual(vcpkg::PackageSpecParseResult::SUCCESS, maybe_spec.error());
+            auto spec = maybe_spec.get();
+            Assert::AreEqual("zlib", spec->name.c_str());
+            Assert::IsTrue(spec->features.size() == 3);
+            Assert::AreEqual("0", spec->features[0].c_str());
+            Assert::AreEqual("1", spec->features[1].c_str());
+            Assert::AreEqual("2", spec->features[2].c_str());
+            Assert::AreEqual("", spec->triplet.c_str());
         }
 
         TEST_METHOD(utf8_to_utf16)

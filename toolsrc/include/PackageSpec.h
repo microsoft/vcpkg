@@ -6,6 +6,15 @@
 
 namespace vcpkg
 {
+    struct ParsedSpecifier
+    {
+        std::string name;
+        std::vector<std::string> features;
+        std::string triplet;
+
+        static ExpectedT<ParsedSpecifier, PackageSpecParseResult> from_string(const std::string& input);
+    };
+
     struct PackageSpec
     {
         static std::string to_string(const std::string& name, const Triplet& triplet);
