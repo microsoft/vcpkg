@@ -157,29 +157,15 @@ namespace vcpkg
         return std::move(control_file);
     }
 
-    Features parse_feature_list(const std::string& name)
-    {
-        auto maybe_spec = ParsedSpecifier::from_string(name);
-        if (auto spec = maybe_spec.get())
-        {
-            Checks::check_exit(
-                VCPKG_LINE_INFO, spec->triplet.empty(), "error: triplet not allowed in specifier: %s", name);
-
-            Features f;
-            f.name = spec->name;
-            f.features = spec->features;
-            return f;
-        }
-
-        Checks::exit_with_message(
-            VCPKG_LINE_INFO, "error while parsing feature list: %s: %s", to_string(maybe_spec.error()), name);
-    }
-
     Dependency Dependency::parse_dependency(std::string name, std::string qualifier)
     {
         Dependency dep;
         dep.qualifier = qualifier;
-        dep.depend = parse_feature_list(name);
+        if (auto maybe_features = Features::from_string(name))
+            dep.depend = *maybe_features.get();
+        else
+            Checks::exit_with_message(
+                VCPKG_LINE_INFO, "error while parsing dependency: %s: %s", to_string(maybe_features.error()), name);
         return dep;
     }
 
@@ -215,39 +201,6 @@ namespace vcpkg
             dep.qualifier = depend_string.substr(pos + 2, depend_string.size() - pos - 3);
             return dep;
         });
-    }
-
-    std::vector<std::string> parse_comma_list(const std::string& str)
-    {
-        if (str.empty())
-        {
-            return {};
-        }
-
-        std::vector<std::string> out;
-
-        size_t cur = 0;
-        do
-        {
-            auto pos = str.find(',', cur);
-            if (pos == std::string::npos)
-            {
-                out.push_back(str.substr(cur));
-                break;
-            }
-            out.push_back(str.substr(cur, pos - cur));
-
-            // skip comma and space
-            ++pos;
-            if (str[pos] == ' ')
-            {
-                ++pos;
-            }
-
-            cur = pos;
-        } while (cur != std::string::npos);
-
-        return out;
     }
 
     std::vector<std::string> filter_dependencies(const std::vector<vcpkg::Dependency>& deps, const Triplet& t)

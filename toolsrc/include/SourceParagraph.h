@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PackageSpec.h"
 #include "Span.h"
 #include "vcpkg_Parse.h"
 #include "vcpkg_System.h"
@@ -12,16 +13,6 @@
 namespace vcpkg
 {
     extern bool g_feature_packages;
-
-    struct Triplet;
-
-    struct Features
-    {
-        std::string name;
-        std::vector<std::string> features;
-    };
-
-    Features parse_feature_list(const std::string& name);
 
     struct Dependency
     {
@@ -73,7 +64,6 @@ namespace vcpkg
 
     // zlib[uwp] becomes Dependency{"zlib", "uwp"}
     std::vector<Dependency> expand_qualified_dependencies(const std::vector<std::string>& depends);
-    std::vector<std::string> parse_comma_list(const std::string& str);
 
     struct Supports
     {

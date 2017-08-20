@@ -1,7 +1,10 @@
 #include "pch.h"
 
 #include "PackageSpec.h"
+#include "vcpkg_Parse.h"
 #include "vcpkg_Util.h"
+
+using vcpkg::Parse::parse_comma_list;
 
 namespace vcpkg
 {
@@ -45,11 +48,7 @@ namespace vcpkg
 
     std::string PackageSpec::dir() const { return Strings::format("%s_%s", this->m_name, this->m_triplet); }
 
-    std::string PackageSpec::to_string(const std::string& name, const Triplet& triplet)
-    {
-        return Strings::format("%s:%s", name, triplet);
-    }
-    std::string PackageSpec::to_string() const { return to_string(this->name(), this->triplet()); }
+    std::string PackageSpec::to_string() const { return Strings::format("%s:%s", this->name(), this->triplet()); }
 
     bool operator==(const PackageSpec& left, const PackageSpec& right)
     {
@@ -105,5 +104,22 @@ namespace vcpkg
             return PackageSpecParseResult::TOO_MANY_COLONS;
         }
         return f;
+    }
+
+    ExpectedT<Features, PackageSpecParseResult> Features::from_string(const std::string& name)
+    {
+        auto maybe_spec = ParsedSpecifier::from_string(name);
+        if (auto spec = maybe_spec.get())
+        {
+            Checks::check_exit(
+                VCPKG_LINE_INFO, spec->triplet.empty(), "error: triplet not allowed in specifier: %s", name);
+
+            Features f;
+            f.name = spec->name;
+            f.features = spec->features;
+            return f;
+        }
+
+        return maybe_spec.error();
     }
 }
