@@ -1,4 +1,4 @@
 Source: opencv
 Version: 3.3.0
-Build-Depends: zlib, libpng, libjpeg-turbo, tiff, vtk, protobuf, ceres
+Build-Depends: zlib, libpng, libjpeg-turbo, tiff, vtk, protobuf, ceres, ffmpeg
 Description: computer vision library
