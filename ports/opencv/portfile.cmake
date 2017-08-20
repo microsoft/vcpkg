@@ -3,13 +3,14 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/opencv-3.3.0)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/opencv/opencv/archive/3.3.0.zip"
-    FILENAME "opencv-3.3.0.zip"
-    SHA512 14430c6225926e5118daccb57c7276d9f9160c90a034b2c73a09b73ac90ba7ebd3ae78cccffb4a10b58bb0e5e16ebd03bf617030fa74cc67d9d18366bf6b4951
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO opencv/opencv
+    REF 3.3.0
+    SHA512 b69923c9809d5533764b5db73db4f0be17f72b6d53643ee773824cfe8a98261d7dc5b4033895693bfd1454bc474c7f6152a5d0023a6f495324dd2b4b4a058e0d
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
@@ -19,15 +20,14 @@ vcpkg_apply_patches(
 )
 file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty/libjpeg ${SOURCE_PATH}/3rdparty/libpng ${SOURCE_PATH}/3rdparty/zlib ${SOURCE_PATH}/3rdparty/libtiff)
 
-# Uncomment the following lines and the lines under OPTIONS to build opencv_contrib
-# Important: after uncommenting you've add protobuf dependency within CONTROL file
-SET(CONTRIB_SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/opencv_contrib-3.3.0)
-vcpkg_download_distfile(CONTRIB_ARCHIVE
-   URLS "https://github.com/opencv/opencv_contrib/archive/3.3.0.zip"
-   FILENAME "opencv_contrib-3.3.0.zip"
-   SHA512 1c76d49689459708117acfbd0893cbfb915fbd0defff95702fb388a29d12b50fb53fbf246e64e68aa3adb347aa45ff478df5e2e8c6d9cfa57a628744bbb1bd04
+vcpkg_from_github(
+    OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
+    REPO opencv/opencv_contrib
+    REF 3.3.0
+    SHA512 ebe3dbe6c754c6fbaabbf6b0d2a4209964e625fd68e593f30ce043792740c8c1d4440d7870949b5b33f488fd7e2e05f3752287b7f50dd24c29202e268776520e
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${CONTRIB_ARCHIVE})
+
 vcpkg_apply_patches(
    SOURCE_PATH ${CONTRIB_SOURCE_PATH}
    PATCHES "${CMAKE_CURRENT_LIST_DIR}/open_contrib-remove-waldboost.patch"
@@ -61,8 +61,6 @@ vcpkg_configure_cmake(
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_LAPACK=OFF
         -DBUILD_opencv_dnn=OFF
-
-        # uncomment the following 3 lines to build opencv_contrib modules
         -DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules
         -DBUILD_PROTOBUF=OFF
         -DUPDATE_PROTO_FILES=ON

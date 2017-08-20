@@ -1,6 +1,4 @@
 Source: opencv
 Version: 3.3.0
 Build-Depends: zlib, libpng, libjpeg-turbo, tiff, vtk, protobuf, ceres
-# Uncomment the following line if building without opencv_contrib is desired
-# Build-Depends: zlib, libpng, libjpeg-turbo, tiff, vtk
 Description: computer vision library
