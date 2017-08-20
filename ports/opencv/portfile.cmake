@@ -60,10 +60,11 @@ vcpkg_configure_cmake(
         -DWITH_CUBLAS=OFF
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_LAPACK=OFF
-        -DBUILD_opencv_dnn=OFF
+        -DBUILD_opencv_dnn=ON
         -DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules
         -DBUILD_PROTOBUF=OFF
         -DUPDATE_PROTO_FILES=ON
+        -DPROTOBUF_UPDATE_FILES=ON
     OPTIONS_DEBUG
         -DINSTALL_HEADERS=OFF
         -DINSTALL_OTHER=OFF
