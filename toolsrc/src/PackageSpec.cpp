@@ -13,6 +13,48 @@ namespace vcpkg
         return (c == '-') || isdigit(c) || (isalpha(c) && islower(c)) || (c == '[') || (c == ']');
     }
 
+    std::vector<FeatureSpec> FeatureSpec::from_strings_and_triplet(const std::vector<std::string>& depends,
+                                                                   const Triplet& triplet)
+    {
+        std::vector<FeatureSpec> f_specs;
+        for (auto&& depend : depends)
+        {
+            auto maybe_spec = ParsedSpecifier::from_string(depend);
+            if (auto spec = maybe_spec.get())
+            {
+                Checks::check_exit(VCPKG_LINE_INFO,
+                                   spec->triplet.empty(),
+                                   "error: triplets cannot currently be specified in this context: %s",
+                                   depend);
+                PackageSpec pspec =
+                    PackageSpec::from_name_and_triplet(spec->name, triplet).value_or_exit(VCPKG_LINE_INFO);
+
+                for (auto&& feature : spec->features)
+                    f_specs.push_back(FeatureSpec{pspec, feature});
+
+                if (spec->features.empty()) f_specs.push_back(FeatureSpec{pspec, ""});
+            }
+            else
+            {
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO, "error while parsing feature list: %s: %s", to_string(maybe_spec.error()), depend);
+            }
+        }
+        return f_specs;
+    }
+
+    std::vector<FeatureSpec> FullPackageSpec::to_feature_specs(const std::vector<FullPackageSpec>& specs)
+    {
+        std::vector<FeatureSpec> ret;
+        for (auto&& spec : specs)
+        {
+            ret.emplace_back(spec.package_spec, "");
+            for (auto&& feature : spec.features)
+                ret.emplace_back(spec.package_spec, feature);
+        }
+        return ret;
+    }
+
     ExpectedT<FullPackageSpec, PackageSpecParseResult> FullPackageSpec::from_string(const std::string& spec_as_string,
                                                                                     const Triplet& default_triplet)
     {

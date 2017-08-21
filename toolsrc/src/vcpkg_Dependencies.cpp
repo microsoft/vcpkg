@@ -358,35 +358,6 @@ namespace vcpkg::Dependencies
         return toposort;
     }
 
-    std::vector<FeatureSpec> to_feature_specs(const std::vector<std::string>& depends, const Triplet& triplet)
-    {
-        std::vector<FeatureSpec> f_specs;
-        for (auto&& depend : depends)
-        {
-            auto maybe_spec = ParsedSpecifier::from_string(depend);
-            if (auto spec = maybe_spec.get())
-            {
-                Checks::check_exit(VCPKG_LINE_INFO,
-                                   spec->triplet.empty(),
-                                   "error: triplets cannot currently be specified in this context: %s",
-                                   depend);
-                PackageSpec pspec =
-                    PackageSpec::from_name_and_triplet(spec->name, triplet).value_or_exit(VCPKG_LINE_INFO);
-
-                for (auto&& feature : spec->features)
-                    f_specs.push_back(FeatureSpec{pspec, feature});
-
-                if (spec->features.empty()) f_specs.push_back(FeatureSpec{pspec, ""});
-            }
-            else
-            {
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "error while parsing feature list: %s: %s", to_string(maybe_spec.error()), depend);
-            }
-        }
-        return f_specs;
-    }
-
     void mark_plus_default(Cluster& cluster,
                            std::unordered_map<PackageSpec, Cluster>& pkg_to_cluster,
                            GraphPlan& graph_plan)
@@ -442,8 +413,8 @@ namespace vcpkg::Dependencies
 
         for (auto&& depend : cluster.edges[updated_feature].build_edges)
         {
-            auto& depend_cluster = pkg_to_cluster[depend.spec];
-            mark_plus(depend.feature_name, depend_cluster, pkg_to_cluster, graph_plan);
+            auto& depend_cluster = pkg_to_cluster[depend.spec()];
+            mark_plus(depend.feature(), depend_cluster, pkg_to_cluster, graph_plan);
             mark_plus_default(depend_cluster, pkg_to_cluster, graph_plan);
             if (&depend_cluster == &cluster) continue;
             graph_plan.install_graph.add_edge({&cluster}, {&depend_cluster});
@@ -462,7 +433,7 @@ namespace vcpkg::Dependencies
             auto& remove_edges_edges = pair.second.remove_edges;
             for (auto&& depend : remove_edges_edges)
             {
-                auto& depend_cluster = pkg_to_cluster[depend.spec];
+                auto& depend_cluster = pkg_to_cluster[depend.spec()];
                 graph_plan.remove_graph.add_edge({&cluster}, {&depend_cluster});
                 depend_cluster.transient_uninstalled = true;
                 mark_minus(depend_cluster, pkg_to_cluster, graph_plan);
@@ -476,7 +447,7 @@ namespace vcpkg::Dependencies
     }
 
     std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<PackageSpec, SourceControlFile>& map,
-                                                       const std::vector<FullPackageSpec>& specs,
+                                                       const std::vector<FeatureSpec>& specs,
                                                        const StatusParagraphs& status_db)
     {
         std::unordered_map<PackageSpec, Cluster> pkg_spec_to_package_node;
@@ -488,14 +459,14 @@ namespace vcpkg::Dependencies
             node.spec = it.first;
             FeatureNodeEdges core_dependencies;
             auto core_depends = filter_dependencies(it.second.core_paragraph->depends, node.spec.triplet());
-            core_dependencies.build_edges = to_feature_specs(core_depends, node.spec.triplet());
+            core_dependencies.build_edges = FeatureSpec::from_strings_and_triplet(core_depends, node.spec.triplet());
             node.edges["core"] = std::move(core_dependencies);
 
             for (const auto& feature : it.second.feature_paragraphs)
             {
                 FeatureNodeEdges added_edges;
                 auto depends = filter_dependencies(feature->depends, node.spec.triplet());
-                added_edges.build_edges = to_feature_specs(depends, node.spec.triplet());
+                added_edges.build_edges = FeatureSpec::from_strings_and_triplet(depends, node.spec.triplet());
                 node.edges.emplace(feature->name, std::move(added_edges));
             }
             node.source_control_file = &it.second;
@@ -508,13 +479,13 @@ namespace vcpkg::Dependencies
             Cluster& cluster = pkg_spec_to_package_node[spec];
 
             cluster.transient_uninstalled = false;
-            auto reverse_edges =
-                to_feature_specs(status_paragraph->package.depends, status_paragraph->package.spec.triplet());
+            auto reverse_edges = FeatureSpec::from_strings_and_triplet(status_paragraph->package.depends,
+                                                                       status_paragraph->package.spec.triplet());
 
             for (auto&& dependency : reverse_edges)
             {
-                auto pkg_node = pkg_spec_to_package_node.find(dependency.spec);
-                auto depends_name = dependency.feature_name;
+                auto pkg_node = pkg_spec_to_package_node.find(dependency.spec());
+                auto depends_name = dependency.feature();
                 if (depends_name == "")
                 {
                     for (auto&& default_feature : status_paragraph->package.default_features)
@@ -541,12 +512,9 @@ namespace vcpkg::Dependencies
         GraphPlan graph_plan;
         for (auto&& spec : specs)
         {
-            Cluster& spec_cluster = pkg_spec_to_package_node[spec.package_spec];
+            Cluster& spec_cluster = pkg_spec_to_package_node[spec.spec()];
             mark_plus_default(spec_cluster, pkg_spec_to_package_node, graph_plan);
-            for (auto&& feature : spec.features)
-            {
-                mark_plus(feature, spec_cluster, pkg_spec_to_package_node, graph_plan);
-            }
+            mark_plus(spec.feature(), spec_cluster, pkg_spec_to_package_node, graph_plan);
         }
 
         Graphs::GraphAdjacencyProvider<ClusterPtr> adjacency_remove_graph(graph_plan.remove_graph.adjacency_list());

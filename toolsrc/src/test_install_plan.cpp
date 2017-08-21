@@ -214,8 +214,10 @@ namespace UnitTest1
                 {{"Feature", "beefeaturethree"}, {"Description", "the third feature for b"}, {"Build-Depends", ""}},
             })};
 
-            auto install_plan = Dependencies::create_feature_install_plan(
-                spec_map.map, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
+            auto install_plan =
+                Dependencies::create_feature_install_plan(spec_map.map,
+                                                          FullPackageSpec::to_feature_specs({spec_a}),
+                                                          StatusParagraphs(std::move(status_paragraphs)));
 
             Assert::AreEqual(size_t(4), install_plan.size());
             remove_plan_check(&install_plan[0], "a");
@@ -248,8 +250,10 @@ namespace UnitTest1
                 {{"Feature", "beefeaturethree"}, {"Description", "the third feature for b"}, {"Build-Depends", ""}},
             })};
 
-            auto install_plan = Dependencies::create_feature_install_plan(
-                spec_map.map, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
+            auto install_plan =
+                Dependencies::create_feature_install_plan(spec_map.map,
+                                                          FullPackageSpec::to_feature_specs({spec_a}),
+                                                          StatusParagraphs(std::move(status_paragraphs)));
 
             Assert::AreEqual(size_t(2), install_plan.size());
             features_check(&install_plan[0], "b", {"beefeatureone", "beefeaturetwo", "core"});
@@ -284,8 +288,10 @@ namespace UnitTest1
                                           }),
                                           {"core"}};
 
-            auto install_plan = Dependencies::create_feature_install_plan(
-                spec_map.map, {spec_c, spec_a}, StatusParagraphs(std::move(status_paragraphs)));
+            auto install_plan =
+                Dependencies::create_feature_install_plan(spec_map.map,
+                                                          FullPackageSpec::to_feature_specs({spec_c, spec_a}),
+                                                          StatusParagraphs(std::move(status_paragraphs)));
 
             Assert::AreEqual(size_t(4), install_plan.size());
             remove_plan_check(&install_plan[0], "a");
@@ -328,8 +334,10 @@ namespace UnitTest1
                                           }),
                                           {"core"}};
 
-            auto install_plan = Dependencies::create_feature_install_plan(
-                spec_map.map, {spec_c}, StatusParagraphs(std::move(status_paragraphs)));
+            auto install_plan =
+                Dependencies::create_feature_install_plan(spec_map.map,
+                                                          FullPackageSpec::to_feature_specs({spec_c}),
+                                                          StatusParagraphs(std::move(status_paragraphs)));
 
             Assert::AreEqual(size_t(1), install_plan.size());
             features_check(&install_plan[0], "c", {"core"});
@@ -356,8 +364,10 @@ namespace UnitTest1
                 {{"Feature", "2"}, {"Description", "the second feature for b"}, {"Build-Depends", ""}},
             })};
 
-            auto install_plan = Dependencies::create_feature_install_plan(
-                spec_map.map, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
+            auto install_plan =
+                Dependencies::create_feature_install_plan(spec_map.map,
+                                                          FullPackageSpec::to_feature_specs({spec_a}),
+                                                          StatusParagraphs(std::move(status_paragraphs)));
 
             Assert::AreEqual(size_t(2), install_plan.size());
             features_check(&install_plan[0], "b", {"core", "2"});
@@ -389,8 +399,10 @@ namespace UnitTest1
                 }),
                 {"1"}};
 
-            auto install_plan = Dependencies::create_feature_install_plan(
-                spec_map.map, {spec_a, spec_b}, StatusParagraphs(std::move(status_paragraphs)));
+            auto install_plan =
+                Dependencies::create_feature_install_plan(spec_map.map,
+                                                          FullPackageSpec::to_feature_specs({spec_a, spec_b}),
+                                                          StatusParagraphs(std::move(status_paragraphs)));
 
             Assert::AreEqual(size_t(3), install_plan.size());
             remove_plan_check(&install_plan[0], "b");
@@ -433,8 +445,10 @@ namespace UnitTest1
                 }),
                 {"1"}};
 
-            auto install_plan = Dependencies::create_feature_install_plan(
-                spec_map.map, {spec_b}, StatusParagraphs(std::move(status_paragraphs)));
+            auto install_plan =
+                Dependencies::create_feature_install_plan(spec_map.map,
+                                                          FullPackageSpec::to_feature_specs({spec_b}),
+                                                          StatusParagraphs(std::move(status_paragraphs)));
 
             Assert::AreEqual(size_t(5), install_plan.size());
             remove_plan_check(&install_plan[0], "x");
@@ -495,10 +509,10 @@ namespace UnitTest1
                                              }),
                                              {"core"}};
 
-            auto install_plan =
-                Dependencies::create_feature_install_plan(spec_map.map,
-                                                          {spec_c_64, spec_a_86, spec_a_64, spec_c_86},
-                                                          StatusParagraphs(std::move(status_paragraphs)));
+            auto install_plan = Dependencies::create_feature_install_plan(
+                spec_map.map,
+                FullPackageSpec::to_feature_specs({spec_c_64, spec_a_86, spec_a_64, spec_c_86}),
+                StatusParagraphs(std::move(status_paragraphs)));
 
             /*Assert::AreEqual(size_t(8), install_plan.size());
             auto iterator_pos = [&](const PackageSpec& spec, size_t start) -> int {
@@ -555,8 +569,10 @@ namespace UnitTest1
                 }),
                 {""}};
 
-            auto install_plan = Dependencies::create_feature_install_plan(
-                spec_map.map, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
+            auto install_plan =
+                Dependencies::create_feature_install_plan(spec_map.map,
+                                                          FullPackageSpec::to_feature_specs({spec_a}),
+                                                          StatusParagraphs(std::move(status_paragraphs)));
 
             Assert::AreEqual(size_t(3), install_plan.size());
             features_check(&install_plan[0], "c", {"core", "1", "2"});

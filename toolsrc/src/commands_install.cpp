@@ -14,10 +14,10 @@
 namespace vcpkg::Commands::Install
 {
     using Dependencies::InstallPlanAction;
-    using Dependencies::RequestType;
     using Dependencies::InstallPlanType;
     using Dependencies::RemovePlanAction;
     using Dependencies::RemovePlanType;
+    using Dependencies::RequestType;
 
     InstallDir InstallDir::from_destination_root(const fs::path& destination_root,
                                                  const std::string& destination_subdirectory,
@@ -440,8 +440,8 @@ namespace vcpkg::Commands::Install
                                     .value_or_exit(VCPKG_LINE_INFO);
                 scf_map[pkg_spec] = std::move(*port);
             }
-            std::vector<Dependencies::AnyAction> action_plan =
-                Dependencies::create_feature_install_plan(scf_map, full_specs, status_db);
+            std::vector<Dependencies::AnyAction> action_plan = Dependencies::create_feature_install_plan(
+                scf_map, FullPackageSpec::to_feature_specs(full_specs), status_db);
             // install plan will be empty if it is already installed - need to change this at status paragraph part
             Checks::check_exit(
                 VCPKG_LINE_INFO, !action_plan.empty(), "Install plan cannot be empty for feature packages");

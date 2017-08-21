@@ -30,19 +30,12 @@ namespace vcpkg::Dependencies
 
 namespace vcpkg::Dependencies
 {
-    struct FeatureSpec
-    {
-        PackageSpec spec;
-        std::string feature_name;
-    };
-
     struct FeatureNodeEdges
     {
         std::vector<FeatureSpec> remove_edges;
         std::vector<FeatureSpec> build_edges;
         bool plus = false;
     };
-    std::vector<FeatureSpec> to_feature_specs(const std::vector<std::string>& depends, const Triplet& t);
 
     struct Cluster
     {
@@ -210,6 +203,6 @@ namespace vcpkg::Dependencies
                            std::unordered_map<PackageSpec, Cluster>& pkg_to_cluster,
                            GraphPlan& graph_plan);
     std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<PackageSpec, SourceControlFile>& map,
-                                                       const std::vector<FullPackageSpec>& specs,
+                                                       const std::vector<FeatureSpec>& specs,
                                                        const StatusParagraphs& status_db);
 }
