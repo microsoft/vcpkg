@@ -3,7 +3,7 @@ set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download-codeplex.sec.s-msft.com/Download/SourceControlFileDownload.ashx?ProjectName=jxrlib&changeSetId=e922fa50cdf9a58f40cad07553bcaa2883d3c5bf"
     FILENAME "jxrlib_1_1.zip"
-    SHA512 6e8b579108444e9bea8d01f57e2ac3b63963c084adb8e265cfd82bb1199b8bd168b8aa41319cf34b87e97db1d72d0f3cc2d3dac881fcd1a6f398fe808d55772d
+    SHA512 c4f42c690a2543b00ef9fe6e4f479b582e966b27c13e8b0efad39fa85d70b4edb60eac91a856c371a4e875e7a2769e0aba31b508ee61f7314150c6eb34a19c0b
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
