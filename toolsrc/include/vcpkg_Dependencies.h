@@ -30,37 +30,6 @@ namespace vcpkg::Dependencies
 
 namespace vcpkg::Dependencies
 {
-    struct FeatureNodeEdges
-    {
-        std::vector<FeatureSpec> remove_edges;
-        std::vector<FeatureSpec> build_edges;
-        bool plus = false;
-    };
-
-    struct Cluster
-    {
-        std::vector<StatusParagraph> status_paragraphs;
-        Optional<const SourceControlFile*> source_control_file;
-        PackageSpec spec;
-        std::unordered_map<std::string, FeatureNodeEdges> edges;
-        std::unordered_set<std::string> to_install_features;
-        std::unordered_set<std::string> original_features;
-        bool will_remove = false;
-        bool transient_uninstalled = true;
-        Cluster() = default;
-
-    private:
-        Cluster(const Cluster&) = delete;
-        Cluster& operator=(const Cluster&) = delete;
-    };
-
-    struct ClusterPtr
-    {
-        Cluster* ptr;
-    };
-
-    bool operator==(const ClusterPtr& l, const ClusterPtr& r);
-
     enum class InstallPlanType
     {
         UNKNOWN,
@@ -176,24 +145,7 @@ namespace vcpkg::Dependencies
     std::vector<ExportPlanAction> create_export_plan(const VcpkgPaths& paths,
                                                      const std::vector<PackageSpec>& specs,
                                                      const StatusParagraphs& status_db);
-}
 
-template<>
-struct std::hash<vcpkg::Dependencies::ClusterPtr>
-{
-    size_t operator()(const vcpkg::Dependencies::ClusterPtr& value) const
-    {
-        return std::hash<vcpkg::PackageSpec>()(value.ptr->spec);
-    }
-};
-
-namespace vcpkg::Dependencies
-{
-    struct GraphPlan
-    {
-        Graphs::Graph<ClusterPtr> remove_graph;
-        Graphs::Graph<ClusterPtr> install_graph;
-    };
     std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<PackageSpec, SourceControlFile>& map,
                                                        const std::vector<FeatureSpec>& specs,
                                                        const StatusParagraphs& status_db);
