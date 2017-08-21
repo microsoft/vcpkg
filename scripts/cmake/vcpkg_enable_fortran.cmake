@@ -178,6 +178,66 @@ function(_vcpkg_find_and_load_pgi_fortran_compiler)
     endif()
 endfunction()
 
+function(_vcpkg_find_and_load_gnu_fortran_compiler)
+  set(MINGW_VERSION "7.1.0")
+
+  if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x86")
+    set(URL "https://kent.dl.sourceforge.net/project/mingw-w64/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/${MINGW_VERSION}/threads-win32/dwarf/i686-${MINGW_VERSION}-release-win32-dwarf-rt_v5-rev2.7z")
+    set(ARCHIVE "i686-${MINGW_VERSION}-release-win32-dwarf-rt_v5-rev2.7z")
+    set(HASH "a6ec2b0e2a22f6fed6c4d7ad2420726d78afea64f1d5698363e3f7b910ef94cc10898c88130368cbf4b2146eb05d4ae756f330f2605beeef9583448dbb6fe6d6")
+    set(MINGW_DIRECTORY_NAME "mingw32")
+  elseif(TRIPLET_SYSTEM_ARCH MATCHES "x64")
+    set(URL "https://netix.dl.sourceforge.net/project/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/${MINGW_VERSION}/threads-win32/seh/x86_64-${MINGW_VERSION}-release-win32-seh-rt_v5-rev2.7z")
+    set(ARCHIVE "x86_64-${MINGW_VERSION}-release-win32-seh-rt_v5-rev2.7z")
+    set(HASH "19df45d9f1caf2013bd73110548344f6e6e78ecfe37a086d880116e527d385d8f166e9f9be866033e7037fdee9f662ee227f346103f07e488452c37962f7924a")
+    set(MINGW_DIRECTORY_NAME "mingw64")
+  else()
+    message(FATAL "Mingw download not supported for arch ${VCPKG_TARGET_ARCHITECTURE}.")
+  endif()
+
+  set(MINGW_PATH "${DOWNLOADS}/tools/mingw/${MINGW_VERSION}")
+  set(MINGW_BIN_PATH "${MINGW_PATH}/${MINGW_DIRECTORY_NAME}/bin")
+
+  # Download and extract MinGW if this has not been done yet
+  if(NOT EXISTS "${MINGW_BIN_PATH}/gfortran.exe")
+    set(ARCHIVE_PATH "${DOWNLOADS}/${ARCHIVE}")
+
+    file(DOWNLOAD "${URL}" "${ARCHIVE_PATH}"
+      EXPECTED_HASH SHA512=${HASH}
+      SHOW_PROGRESS
+    )
+
+    file(MAKE_DIRECTORY "${MINGW_PATH}")
+
+    execute_process(
+      COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
+      WORKING_DIRECTORY ${MINGW_PATH}
+    )
+    
+    if(NOT EXISTS "${MINGW_BIN_PATH}/gfortran.exe")
+      message(FATAL_ERROR
+        "Error while trying to get MinGW GNU Fortran. Could not find:\n"
+        "  ${MINGW_BIN_PATH}/gfortran.exe"
+      )
+    endif()
+  endif()
+
+  # Append the MinGW directory to PATH
+  if(WIN32)
+    set(ENVIRONMENT_SEPERATOR "\\;")
+  else()
+    set(ENVIRONMENT_SEPERATOR ":")
+  endif()
+
+  set(ENV{PATH} "$ENV{PATH}${ENVIRONMENT_SEPERATOR}${MINGW_BIN_PATH}")
+
+  # MinGW does not yet support linking against the UCRT, so all binaries compiled by
+  # gfortran will link against an old msvcrt.
+  # This will disable the post-installation test for the correct runtime-library
+  # for all ports that enable the fortran compiler.
+  set(VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT enabled)
+endfunction()
+
 ## # vcpkg_enable_fortran
 ##
 ## Tries to detect a fortran compiler and pulls in the environment to use it.
@@ -189,6 +249,7 @@ endfunction()
 ##
 ##  - `Intel` = Intel Compiler (intel.com)
 ##  - `PGI` = The Portland Group (pgroup.com)
+##  - `GNU` = GNU Compiler Collection (gcc.gnu.org)
 ##
 ## If the variable is not set an error will be raised.
 ##
@@ -206,8 +267,8 @@ function(vcpkg_enable_fortran)
             _vcpkg_find_and_load_intel_fortran_compiler()
         elseif(VCPKG_FORTRAN_COMPILER STREQUAL "PGI")
             _vcpkg_find_and_load_pgi_fortran_compiler()
-        # elseif(VCPKG_FORTRAN_COMPILER STREQUAL "GNU")
-        #     _vcpkg_find_and_load_gnu_fortran_compiler()
+        elseif(VCPKG_FORTRAN_COMPILER STREQUAL "GNU")
+            _vcpkg_find_and_load_gnu_fortran_compiler()
         else()
             message(FATAL_ERROR "Unknown fortran compiler \"${VCPKG_FORTRAN_COMPILER}\".")
         endif()
