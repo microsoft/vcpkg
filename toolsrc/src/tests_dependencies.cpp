@@ -15,7 +15,7 @@ namespace UnitTest1
     {
         TEST_METHOD(parse_depends_one)
         {
-            auto v = expand_qualified_dependencies(parse_comma_list("libA [windows]"));
+            auto v = expand_qualified_dependencies(parse_comma_list("libA (windows)"));
             Assert::AreEqual(size_t(1), v.size());
             Assert::AreEqual("libA", v[0].name.c_str());
             Assert::AreEqual("windows", v[0].qualifier.c_str());
@@ -23,7 +23,7 @@ namespace UnitTest1
 
         TEST_METHOD(filter_depends)
         {
-            auto deps = expand_qualified_dependencies(parse_comma_list("libA [windows], libB, libC [uwp]"));
+            auto deps = expand_qualified_dependencies(parse_comma_list("libA (windows), libB, libC (uwp)"));
             auto v = filter_dependencies(deps, Triplet::X64_WINDOWS);
             Assert::AreEqual(size_t(2), v.size());
             Assert::AreEqual("libA", v[0].c_str());

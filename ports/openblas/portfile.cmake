@@ -12,7 +12,6 @@
 
 include(vcpkg_common_functions)
 
-
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     message(FATAL_ERROR "openblas can only be built for x64 currently")
 endif()
@@ -22,11 +21,11 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(VCPKG_LIBRARY_LINKAGE "dynamic")
 endif()
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openblas-0.2.19)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openblas-0.2.20)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://codeload.github.com/xianyi/OpenBLAS/zip/v0.2.19"
-    FILENAME "openblas-v0.2.19.zip"
-    SHA512 d95dcd1ca5b3bdc5355969d10c22486f7e32f7dfc3a418b5d0a979d030e9f2ed242d2d78267a5896aa83d27b6041e13ee4c6694f9a589765535011eb22dad9e2
+    URLS "https://codeload.github.com/xianyi/OpenBLAS/zip/v0.2.20"
+    FILENAME "openblas-v0.2.20.zip"
+    SHA512 c9cd7397bb026e3bb06c9407ad5ac26bf936258da81ac22132ceceb53c0235677e18a6046f1db8a75c8a92a614b2d156a3da89d684421a24bd283430ce55db7d
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
@@ -35,19 +34,60 @@ vcpkg_apply_patches(
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/install-openblas.patch"
 )
 
+find_program(GIT NAMES git git.cmd)
+
+# sed and awk are installed with git but in a different directory
+get_filename_component(GIT_EXE_PATH ${GIT} DIRECTORY)
+set(SED_EXE_PATH "${GIT_EXE_PATH}/../usr/bin")
+
 # openblas require perl to generate .def for exports
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH}")
+set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH};${SED_EXE_PATH}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DTARGET=NEHALEM -DBUILD_WITHOUT_LAPACK=ON
-    # PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
+# for UWP version, must build non uwp first for helper
+# binaries.
+if(VCPKG_CMAKE_SYSTEM_NAME  STREQUAL "WindowsStore")
+    message(STATUS "Building Windows helper files")
+    set(TEMP_CMAKE_SYSTEM_NAME "${VCPKG_CMAKE_SYSTEM_NAME}")
+    set(TEMP_CMAKE_SYSTEM_VERSION "${VCPKG_CMAKE_SYSTEM_VERSION}")
+    set(TEMP_TARGET_TRIPLET "${TARGET_TRIPLET}")
+    unset(VCPKG_CMAKE_SYSTEM_NAME)
+    unset(VCPKG_CMAKE_SYSTEM_VERSION)
+    set(TARGET_TRIPLET "x64-windows")
+
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        OPTIONS -DTARGET=NEHALEM -DBUILD_WITHOUT_LAPACK=ON
+    )
+
+    # add just built path to environment for gen_config_h.exe,
+    # getarch.exe and getarch_2nd.exe
+    set(ENV{PATH} "$ENV{PATH};${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+
+    # restore target build information
+    set(VCPKG_CMAKE_SYSTEM_NAME "${TEMP_CMAKE_SYSTEM_NAME}")
+    set(VCPKG_CMAKE_SYSTEM_VERSION "${TEMP_CMAKE_SYSTEM_VERSION}")
+    set(TARGET_TRIPLET "${TEMP_TARGET_TRIPLET}")
+
+    message(STATUS "Finished building Windows helper files")
+
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        OPTIONS -DCMAKE_SYSTEM_PROCESSOR=AMD64 -DVS_WINRT_COMPONENT=TRUE -DBUILD_WITHOUT_LAPACK=ON 
+        "-DBLASHELPER_BINARY_DIR=${CURRENT_BUILDTREES_DIR}/x64-windows-rel")
+
+else()
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        OPTIONS -DTARGET=NEHALEM -DBUILD_WITHOUT_LAPACK=ON
+        # PREFER_NINJA # Disable this option if project cannot be built with Ninja
+        # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
+        # OPTIONS_RELEASE -DOPTIMIZE=1
+        # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
+
+endif()
 
 
 vcpkg_install_cmake()
@@ -65,7 +105,9 @@ string(REPLACE "#include \"common.h\"" "#include \"openblas_common.h\"" CBLAS_H 
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/cblas.h "${CBLAS_H}")
 
 # openblas is BSD
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/OpenBLAS-0.2.19/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openblas)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openblas)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/openblas/LICENSE ${CURRENT_PACKAGES_DIR}/share/openblas/copyright)
 
 vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

@@ -25,6 +25,7 @@ vcpkg_configure_cmake(
         -DBUILD_PYTHON_BINDINGS=OFF
         -DBUILD_MATLAB_BINDINGS=OFF
         -DCMAKE_DEBUG_POSTFIX=-gd
+        -DHDF5_NO_FIND_PACKAGE_CONFIG_FILE=ON
 )
 
 vcpkg_install_cmake()

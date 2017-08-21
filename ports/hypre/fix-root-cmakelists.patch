@@ -1,5 +1,5 @@
---- a/CMakeLists.txt	Thu Jun 09 15:56:18 2016
-+++ b/CMakeLists.txt	Wed Jan 04 18:27:54 2017
+--- a/CMakeLists.txt	Mon Mar 13 21:37:24 2017
++++ b/CMakeLists.txt	Sun Aug 06 19:34:00 2017
 @@ -1,6 +1,8 @@
  cmake_minimum_required (VERSION 2.8.8)
  project (hypre)
@@ -7,9 +7,9 @@
 +include(GenerateExportHeader)
 +
  # The version number.
- set (HYPRE_VERSION 2.11.1)
- set (HYPRE_DATE    2016/06/09)
-@@ -616,6 +618,8 @@
+ set (HYPRE_VERSION 2.11.2)
+ set (HYPRE_DATE    2017/03/13)
+@@ -618,6 +620,8 @@
    struct_ls/sparse_msg_solve.c
  )
  
@@ -18,7 +18,7 @@
  # Headers and sources: sstruct_mv
  list (APPEND HYPRE_HEADERS
    sstruct_mv/HYPRE_sstruct_mv.h
-@@ -756,11 +760,11 @@
+@@ -758,11 +762,11 @@
    find_package (MPI)
    if ((MPI_C_FOUND) AND (NOT CMAKE_C_COMPILER STREQUAL MPI_C_COMPILER))
      include_directories (${MPI_C_INCLUDE_PATH})
@@ -32,14 +32,16 @@
    endif ()
  endif (NOT HYPRE_SEQUENTIAL)
  
-@@ -802,8 +806,19 @@
- endif ()
+@@ -807,7 +811,23 @@
  
  add_library (HYPRE ${HYPRE_SOURCES} ${FEI_LIBS})
--
+ 
 -install (TARGETS HYPRE DESTINATION lib)
-+target_link_libraries(HYPRE ${MPI_C_LIBRARIES})
-+if(WIN32 AND BUILD_SHARED_LIBS)
++if (NOT HYPRE_SEQUENTIAL)
++  target_link_libraries(HYPRE ${MPI_C_LIBRARIES})
++endif()
++
++if (WIN32 AND BUILD_SHARED_LIBS)
 +  set_target_properties(HYPRE PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
 +endif()
 +
@@ -51,6 +53,7 @@
 +  LIBRARY DESTINATION lib
 +  ARCHIVE DESTINATION lib
 +)
++
  install (FILES ${HYPRE_HEADERS} DESTINATION include)
  
  # add_subdirectory (test EXCLUDE_FROM_ALL)

@@ -1,18 +1,26 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/msmpi-8.0)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/msmpi-8.1)
 
 vcpkg_download_distfile(SDK_ARCHIVE
-    URLS "https://download.microsoft.com/download/B/2/E/B2EB83FE-98C2-4156-834A-E1711E6884FB/msmpisdk.msi"
-    FILENAME "msmpisdk-8.0.msi"
-    SHA512 49c762873ba777ccb3c959a1d2ca1392e4c3c8d366e604ad707184ea432302e6649894ec6599162d0d40f3e6ebc0dada1eb9ca0da1cde0f6ba7a9b1847dac8c0
+    URLS "https://download.microsoft.com/download/D/B/B/DBB64BA1-7B51-43DB-8BF1-D1FB45EACF7A/msmpisdk.msi"
+    FILENAME "msmpisdk-8.1.msi"
+    SHA512 a0cfb713865257b812c19644286fc0d02ec57ce2a0bea066fead4e0ff18b545a0787065ab748f8dd335bb2fa486911aab54c1b842993b7b685c5832c014a63bf
 )
+
+macro(download_msmpi_redistributable_package)
+    vcpkg_download_distfile(REDIST_ARCHIVE
+        URLS "https://download.microsoft.com/download/D/B/B/DBB64BA1-7B51-43DB-8BF1-D1FB45EACF7A/MSMpiSetup.exe"
+        FILENAME "MSMpiSetup-8.1.exe"
+        SHA512 92ae65f3d52e786e39dffedabdf48255b4985a075993e626f5f59674e9ffaedbf33a4725e8f142b21468e24cd6d3e49f3d91da0fbda1867784cc93300c12c96b
+    )
+endmacro()
 
 ### Check for correct version of installed redistributable package
 
 # We always want the ProgramFiles folder even on a 64-bit machine (not the ProgramFilesx86 folder)
 vcpkg_get_program_files_platform_bitness(PROGRAM_FILES_PLATFORM_BITNESS)
 set(SYSTEM_MPIEXEC_FILEPATH "${PROGRAM_FILES_PLATFORM_BITNESS}/Microsoft MPI/Bin/mpiexec.exe")
-set(MSMPI_EXPECTED_FULL_VERSION "8.0.12438.0")
+set(MSMPI_EXPECTED_FULL_VERSION "8.1.12438.1084")
 
 if(EXISTS ${SYSTEM_MPIEXEC_FILEPATH})
     set(MPIEXEC_VERSION_LOGNAME "mpiexec-version")
@@ -25,10 +33,15 @@ if(EXISTS ${SYSTEM_MPIEXEC_FILEPATH})
 
     if(${MPIEXEC_OUTPUT} MATCHES "\\[Version ([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)\\]")
         if(NOT ${CMAKE_MATCH_1} STREQUAL ${MSMPI_EXPECTED_FULL_VERSION})
+            download_msmpi_redistributable_package()
+
             message(FATAL_ERROR
                 "  The version of the installed MSMPI redistributable packages does not match the version to be installed\n"
-                "  Expected version: ${MSMPI_EXPECTED_FULL_VERSION}\n"
-                "  Found version: ${CMAKE_MATCH_1}\n")
+                "    Expected version: ${MSMPI_EXPECTED_FULL_VERSION}\n"
+                "    Found version: ${CMAKE_MATCH_1}\n"
+                "  Please upgrade the installed version on your system.\n"
+                "  The appropriate installer for the expected version has been downloaded to:\n"
+                "    ${REDIST_ARCHIVE}\n")
         endif()
     else()
         message(FATAL_ERROR
@@ -38,11 +51,7 @@ if(EXISTS ${SYSTEM_MPIEXEC_FILEPATH})
             "    ${CURRENT_BUILDTREES_DIR}\\${MPIEXEC_VERSION_LOGNAME}-err.log\n")
     endif()
 else()
-    vcpkg_download_distfile(REDIST_ARCHIVE
-        URLS "https://download.microsoft.com/download/B/2/E/B2EB83FE-98C2-4156-834A-E1711E6884FB/MSMpiSetup.exe"
-        FILENAME "MSMpiSetup-8.0.exe"
-        SHA512 f5271255817f5417de8e432cd21e5ff3c617911a30b7777560c0ceb6f4031ace5fa88fc7675759ae0964bcf4e2076fe367a06c129f3a9ad06871a08bf95ed68b
-    )
+    download_msmpi_redistributable_package()
 
     message(FATAL_ERROR
         "  Could not find:\n"
@@ -56,8 +65,15 @@ file(TO_NATIVE_PATH "${SDK_ARCHIVE}" SDK_ARCHIVE)
 file(TO_NATIVE_PATH "${SOURCE_PATH}/sdk" SDK_SOURCE_DIR)
 file(TO_NATIVE_PATH "${CURRENT_BUILDTREES_DIR}/msiexec-${TARGET_TRIPLET}.log" MSIEXEC_LOG_PATH)
 
+set(PARAM_MSI "/a \"${SDK_ARCHIVE}\"")
+set(PARAM_LOG "/log \"${MSIEXEC_LOG_PATH}\"")
+set(PARAM_TARGET_DIR "TARGETDIR=\"${SDK_SOURCE_DIR}\"")
+set(SCRIPT_FILE ${CURRENT_BUILDTREES_DIR}/msiextract-msmpi.bat)
+# Write the command out to a script file and run that to avoid weird escaping behavior when spaces are present
+file(WRITE ${SCRIPT_FILE} "msiexec ${PARAM_MSI} /qn ${PARAM_LOG} ${PARAM_TARGET_DIR}")
+
 vcpkg_execute_required_process(
-    COMMAND msiexec /a ${SDK_ARCHIVE} /qn TARGETDIR=${SDK_SOURCE_DIR} /log "${MSIEXEC_LOG_PATH}"
+    COMMAND ${SCRIPT_FILE}
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
     LOGNAME extract-sdk
 )

@@ -1,4 +1,4 @@
 Source: qt5
-Version: 5.8-3
+Version: 5.8-4
 Description: Qt5 application framework main components. Webengine, examples and tests not included.
 Build-Depends: zlib, libjpeg-turbo, libpng, freetype, pcre, harfbuzz, sqlite3, libpq, double-conversion

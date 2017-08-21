@@ -1,7 +1,6 @@
 $ErrorActionPreference = "Stop"
 
 New-Item -type directory downloads -errorAction SilentlyContinue | Out-Null
-New-Item -type file downloads\AlwaysAllowDownloads -errorAction SilentlyContinue | Out-Null
 ./scripts/bootstrap.ps1
 if (-not $?) { throw $? }
 
