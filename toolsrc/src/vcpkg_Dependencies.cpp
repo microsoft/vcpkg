@@ -12,6 +12,10 @@
 
 namespace vcpkg::Dependencies
 {
+    struct ClusterGraph;
+    void mark_plus(const std::string& feature, Cluster& cluster, ClusterGraph& pkg_to_cluster, GraphPlan& graph_plan);
+    void mark_minus(Cluster& cluster, ClusterGraph& pkg_to_cluster, GraphPlan& graph_plan);
+
     bool operator==(const ClusterPtr& l, const ClusterPtr& r) { return l.ptr == r.ptr; }
 
     std::vector<PackageSpec> AnyParagraph::dependencies(const Triplet& triplet) const
@@ -358,71 +362,74 @@ namespace vcpkg::Dependencies
         return toposort;
     }
 
-    void mark_plus_default(Cluster& cluster,
-                           std::unordered_map<PackageSpec, Cluster>& pkg_to_cluster,
-                           GraphPlan& graph_plan)
+    struct ClusterGraph
     {
-        mark_plus("core", cluster, pkg_to_cluster, graph_plan);
-        if (auto scf = cluster.source_control_file.get())
-        {
-            for (auto&& default_feature : (*scf)->core_paragraph->default_features)
-            {
-                mark_plus(default_feature, cluster, pkg_to_cluster, graph_plan);
-            }
-        }
-    }
+        explicit ClusterGraph(std::unordered_map<PackageSpec, Cluster>&& graph) : m_graph(std::move(graph)) {}
+        ClusterGraph(ClusterGraph&&) = default;
 
-    bool mark_plus(const std::string& feature,
-                   Cluster& cluster,
-                   std::unordered_map<PackageSpec, Cluster>& pkg_to_cluster,
-                   GraphPlan& graph_plan)
-    {
-        auto it = cluster.edges.find(feature);
-        std::string updated_feature = feature;
-        if (updated_feature == "")
+        Cluster& get(const PackageSpec& spec)
         {
-            updated_feature = "core";
-            it = cluster.edges.find("core");
+            auto it = m_graph.find(spec);
+            if (it == m_graph.end()) Checks::unreachable(VCPKG_LINE_INFO);
+            return it->second;
         }
+
+    private:
+        ClusterGraph(const ClusterGraph&) = delete;
+        std::unordered_map<PackageSpec, Cluster> m_graph;
+    };
+
+    void mark_plus(const std::string& feature, Cluster& cluster, ClusterGraph& graph, GraphPlan& graph_plan)
+    {
+        if (feature == "")
+        {
+            // Indicates that core was not specified in the reference
+            return mark_plus("core", cluster, graph, graph_plan);
+        }
+        auto it = cluster.edges.find(feature);
         if (it == cluster.edges.end())
         {
             Checks::unreachable(VCPKG_LINE_INFO);
         }
 
-        if (cluster.edges[updated_feature].plus) return true;
+        if (cluster.edges[feature].plus) return;
 
-        if (cluster.original_features.find(updated_feature) == cluster.original_features.end())
+        if (cluster.original_features.find(feature) == cluster.original_features.end())
         {
             cluster.transient_uninstalled = true;
         }
 
         if (!cluster.transient_uninstalled)
         {
-            return false;
+            return;
         }
-        cluster.edges[updated_feature].plus = true;
+        cluster.edges[feature].plus = true;
 
         if (!cluster.original_features.empty())
         {
-            mark_minus(cluster, pkg_to_cluster, graph_plan);
+            mark_minus(cluster, graph, graph_plan);
         }
 
         graph_plan.install_graph.add_vertex({&cluster});
         auto& tracked = cluster.to_install_features;
-        tracked.insert(updated_feature);
+        tracked.insert(feature);
 
-        for (auto&& depend : cluster.edges[updated_feature].build_edges)
+        if (feature != "core")
         {
-            auto& depend_cluster = pkg_to_cluster[depend.spec()];
-            mark_plus(depend.feature(), depend_cluster, pkg_to_cluster, graph_plan);
-            mark_plus_default(depend_cluster, pkg_to_cluster, graph_plan);
+            // All features implicitly depend on core
+            mark_plus("core", cluster, graph, graph_plan);
+        }
+
+        for (auto&& depend : cluster.edges[feature].build_edges)
+        {
+            auto& depend_cluster = graph.get(depend.spec());
+            mark_plus(depend.feature(), depend_cluster, graph, graph_plan);
             if (&depend_cluster == &cluster) continue;
             graph_plan.install_graph.add_edge({&cluster}, {&depend_cluster});
         }
-        return true;
     }
 
-    void mark_minus(Cluster& cluster, std::unordered_map<PackageSpec, Cluster>& pkg_to_cluster, GraphPlan& graph_plan)
+    void mark_minus(Cluster& cluster, ClusterGraph& graph, GraphPlan& graph_plan)
     {
         if (cluster.will_remove) return;
         cluster.will_remove = true;
@@ -433,40 +440,38 @@ namespace vcpkg::Dependencies
             auto& remove_edges_edges = pair.second.remove_edges;
             for (auto&& depend : remove_edges_edges)
             {
-                auto& depend_cluster = pkg_to_cluster[depend.spec()];
+                auto& depend_cluster = graph.get(depend.spec());
                 graph_plan.remove_graph.add_edge({&cluster}, {&depend_cluster});
-                depend_cluster.transient_uninstalled = true;
-                mark_minus(depend_cluster, pkg_to_cluster, graph_plan);
+                mark_minus(depend_cluster, graph, graph_plan);
             }
         }
+
+        cluster.transient_uninstalled = true;
         for (auto&& original_feature : cluster.original_features)
         {
-            cluster.transient_uninstalled = true;
-            mark_plus(original_feature, cluster, pkg_to_cluster, graph_plan);
+            mark_plus(original_feature, cluster, graph, graph_plan);
         }
     }
 
-    std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<PackageSpec, SourceControlFile>& map,
-                                                       const std::vector<FeatureSpec>& specs,
-                                                       const StatusParagraphs& status_db)
+    static ClusterGraph create_feature_install_graph(const std::unordered_map<PackageSpec, SourceControlFile>& map,
+                                                     const StatusParagraphs& status_db)
     {
-        std::unordered_map<PackageSpec, Cluster> pkg_spec_to_package_node;
+        std::unordered_map<PackageSpec, Cluster> graph;
 
         for (const auto& it : map)
         {
-            Cluster& node = pkg_spec_to_package_node[it.first];
+            Cluster& node = graph[it.first];
 
             node.spec = it.first;
             FeatureNodeEdges core_dependencies;
-            auto core_depends = filter_dependencies(it.second.core_paragraph->depends, node.spec.triplet());
-            core_dependencies.build_edges = FeatureSpec::from_strings_and_triplet(core_depends, node.spec.triplet());
-            node.edges["core"] = std::move(core_dependencies);
+            core_dependencies.build_edges =
+                filter_dependencies_to_specs(it.second.core_paragraph->depends, node.spec.triplet());
+            node.edges.emplace("core", std::move(core_dependencies));
 
             for (const auto& feature : it.second.feature_paragraphs)
             {
                 FeatureNodeEdges added_edges;
-                auto depends = filter_dependencies(feature->depends, node.spec.triplet());
-                added_edges.build_edges = FeatureSpec::from_strings_and_triplet(depends, node.spec.triplet());
+                added_edges.build_edges = filter_dependencies_to_specs(feature->depends, node.spec.triplet());
                 node.edges.emplace(feature->name, std::move(added_edges));
             }
             node.source_control_file = &it.second;
@@ -476,7 +481,7 @@ namespace vcpkg::Dependencies
         {
             auto& spec = status_paragraph->package.spec;
             auto& status_paragraph_feature = status_paragraph->package.feature;
-            Cluster& cluster = pkg_spec_to_package_node[spec];
+            Cluster& cluster = graph[spec];
 
             cluster.transient_uninstalled = false;
             auto reverse_edges = FeatureSpec::from_strings_and_triplet(status_paragraph->package.depends,
@@ -484,7 +489,7 @@ namespace vcpkg::Dependencies
 
             for (auto&& dependency : reverse_edges)
             {
-                auto pkg_node = pkg_spec_to_package_node.find(dependency.spec());
+                auto pkg_node = graph.find(dependency.spec());
                 auto depends_name = dependency.feature();
                 if (depends_name == "")
                 {
@@ -508,13 +513,20 @@ namespace vcpkg::Dependencies
                 cluster.original_features.insert(status_paragraph_feature);
             }
         }
+        return ClusterGraph(std::move(graph));
+    }
+
+    std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<PackageSpec, SourceControlFile>& map,
+                                                       const std::vector<FeatureSpec>& specs,
+                                                       const StatusParagraphs& status_db)
+    {
+        ClusterGraph graph = create_feature_install_graph(map, status_db);
 
         GraphPlan graph_plan;
         for (auto&& spec : specs)
         {
-            Cluster& spec_cluster = pkg_spec_to_package_node[spec.spec()];
-            mark_plus_default(spec_cluster, pkg_spec_to_package_node, graph_plan);
-            mark_plus(spec.feature(), spec_cluster, pkg_spec_to_package_node, graph_plan);
+            Cluster& spec_cluster = graph.get(spec.spec());
+            mark_plus(spec.feature(), spec_cluster, graph, graph_plan);
         }
 
         Graphs::GraphAdjacencyProvider<ClusterPtr> adjacency_remove_graph(graph_plan.remove_graph.adjacency_list());

@@ -194,14 +194,6 @@ namespace vcpkg::Dependencies
         Graphs::Graph<ClusterPtr> remove_graph;
         Graphs::Graph<ClusterPtr> install_graph;
     };
-    bool mark_plus(const std::string& feature,
-                   Cluster& cluster,
-                   std::unordered_map<PackageSpec, Cluster>& pkg_to_cluster,
-                   GraphPlan& graph_plan);
-    void mark_minus(Cluster& cluster, std::unordered_map<PackageSpec, Cluster>& pkg_to_cluster, GraphPlan& graph_plan);
-    void mark_plus_default(Cluster& cluster,
-                           std::unordered_map<PackageSpec, Cluster>& pkg_to_cluster,
-                           GraphPlan& graph_plan);
     std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<PackageSpec, SourceControlFile>& map,
                                                        const std::vector<FeatureSpec>& specs,
                                                        const StatusParagraphs& status_db);

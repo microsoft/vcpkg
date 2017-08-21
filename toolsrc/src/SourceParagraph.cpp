@@ -216,6 +216,11 @@ namespace vcpkg
         return ret;
     }
 
+    std::vector<FeatureSpec> filter_dependencies_to_specs(const std::vector<Dependency>& deps, const Triplet& t)
+    {
+        return FeatureSpec::from_strings_and_triplet(filter_dependencies(deps, t), t);
+    }
+
     const std::string to_string(const Dependency& dep)
     {
         std::string name = dep.name();

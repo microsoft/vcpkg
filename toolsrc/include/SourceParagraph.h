@@ -23,6 +23,12 @@ namespace vcpkg
         static Dependency parse_dependency(std::string name, std::string qualifier);
     };
 
+    std::vector<std::string> filter_dependencies(const std::vector<Dependency>& deps, const Triplet& t);
+    std::vector<FeatureSpec> filter_dependencies_to_specs(const std::vector<Dependency>& deps, const Triplet& t);
+
+    // zlib[uwp] becomes Dependency{"zlib", "uwp"}
+    std::vector<Dependency> expand_qualified_dependencies(const std::vector<std::string>& depends);
+
     const std::string to_string(const Dependency& dep);
 
     struct FeatureParagraph
@@ -59,11 +65,6 @@ namespace vcpkg
     {
         return print_error_message({&error_info_list, 1});
     }
-
-    std::vector<std::string> filter_dependencies(const std::vector<Dependency>& deps, const Triplet& t);
-
-    // zlib[uwp] becomes Dependency{"zlib", "uwp"}
-    std::vector<Dependency> expand_qualified_dependencies(const std::vector<std::string>& depends);
 
     struct Supports
     {
