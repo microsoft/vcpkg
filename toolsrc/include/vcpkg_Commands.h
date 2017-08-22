@@ -59,7 +59,7 @@ namespace vcpkg::Commands
                                               const fs::path& source_dir,
                                               const InstallDir& dirs);
         void install_package(const VcpkgPaths& paths,
-                             const BinaryParagraph& binary_paragraph,
+                             const BinaryControlFile& binary_paragraph,
                              StatusParagraphs* status_db);
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
     }

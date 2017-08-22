@@ -8,6 +8,7 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 using namespace vcpkg;
+using Parse::parse_comma_list;
 
 namespace UnitTest1
 {
@@ -17,7 +18,7 @@ namespace UnitTest1
         {
             auto v = expand_qualified_dependencies(parse_comma_list("libA (windows)"));
             Assert::AreEqual(size_t(1), v.size());
-            Assert::AreEqual("libA", v[0].name.c_str());
+            Assert::AreEqual("libA", v[0].depend.name.c_str());
             Assert::AreEqual("windows", v[0].qualifier.c_str());
         }
 
@@ -41,7 +42,15 @@ namespace UnitTest1
         TEST_METHOD(parse_supports_all)
         {
             auto v = Supports::parse({
-                "x64", "x86", "arm", "windows", "uwp", "v140", "v141", "crt-static", "crt-dynamic",
+                "x64",
+                "x86",
+                "arm",
+                "windows",
+                "uwp",
+                "v140",
+                "v141",
+                "crt-static",
+                "crt-dynamic",
             });
             Assert::AreNotEqual(uintptr_t(0), uintptr_t(v.get()));
 
@@ -74,7 +83,9 @@ namespace UnitTest1
         TEST_METHOD(parse_supports_some)
         {
             auto v = Supports::parse({
-                "x64", "x86", "windows",
+                "x64",
+                "x86",
+                "windows",
             });
             Assert::AreNotEqual(uintptr_t(0), uintptr_t(v.get()));
 

@@ -191,7 +191,7 @@ namespace vcpkg
 
         for (const std::unique_ptr<StatusParagraph>& pgh : status_db)
         {
-            if (pgh->state != InstallState::INSTALLED)
+            if (pgh->state != InstallState::INSTALLED || pgh->package.feature != "")
             {
                 continue;
             }

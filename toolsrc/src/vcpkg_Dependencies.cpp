@@ -12,7 +12,99 @@
 
 namespace vcpkg::Dependencies
 {
+    struct FeatureNodeEdges
+    {
+        std::vector<FeatureSpec> remove_edges;
+        std::vector<FeatureSpec> build_edges;
+        bool plus = false;
+    };
+
+    struct Cluster : Util::MoveOnlyBase
+    {
+        std::vector<StatusParagraph*> status_paragraphs;
+        Optional<const SourceControlFile*> source_control_file;
+        PackageSpec spec;
+        std::unordered_map<std::string, FeatureNodeEdges> edges;
+        std::unordered_set<std::string> to_install_features;
+        std::unordered_set<std::string> original_features;
+        bool will_remove = false;
+        bool transient_uninstalled = true;
+        RequestType request_type = RequestType::AUTO_SELECTED;
+    };
+
+    struct ClusterPtr
+    {
+        Cluster* ptr;
+
+        Cluster* operator->() { return ptr; }
+    };
+
     bool operator==(const ClusterPtr& l, const ClusterPtr& r) { return l.ptr == r.ptr; }
+}
+
+template<>
+struct std::hash<vcpkg::Dependencies::ClusterPtr>
+{
+    size_t operator()(const vcpkg::Dependencies::ClusterPtr& value) const
+    {
+        return std::hash<vcpkg::PackageSpec>()(value.ptr->spec);
+    }
+};
+
+namespace vcpkg::Dependencies
+{
+    struct GraphPlan
+    {
+        Graphs::Graph<ClusterPtr> remove_graph;
+        Graphs::Graph<ClusterPtr> install_graph;
+    };
+
+    struct ClusterGraph : Util::MoveOnlyBase
+    {
+        explicit ClusterGraph(std::unordered_map<std::string, const SourceControlFile*>&& ports)
+            : m_ports(std::move(ports))
+        {
+        }
+
+        Cluster& get(const PackageSpec& spec)
+        {
+            auto it = m_graph.find(spec);
+            if (it == m_graph.end())
+            {
+                // Load on-demand from m_ports
+                auto it_ports = m_ports.find(spec.name());
+                if (it_ports != m_ports.end())
+                {
+                    auto& clust = m_graph[spec];
+                    clust.spec = spec;
+                    cluster_from_scf(*it_ports->second, clust);
+                    return clust;
+                }
+                return m_graph[spec];
+            }
+            return it->second;
+        }
+
+    private:
+        void cluster_from_scf(const SourceControlFile& scf, Cluster& out_cluster)
+        {
+            FeatureNodeEdges core_dependencies;
+            core_dependencies.build_edges =
+                filter_dependencies_to_specs(scf.core_paragraph->depends, out_cluster.spec.triplet());
+            out_cluster.edges.emplace("core", std::move(core_dependencies));
+
+            for (const auto& feature : scf.feature_paragraphs)
+            {
+                FeatureNodeEdges added_edges;
+                added_edges.build_edges = filter_dependencies_to_specs(feature->depends, out_cluster.spec.triplet());
+                out_cluster.edges.emplace(feature->name, std::move(added_edges));
+            }
+            out_cluster.source_control_file = &scf;
+        }
+
+        std::unordered_map<PackageSpec, Cluster> m_graph;
+        std::unordered_map<std::string, const SourceControlFile*> m_ports;
+    };
 
     std::vector<PackageSpec> AnyParagraph::dependencies(const Triplet& triplet) const
     {
@@ -51,54 +143,67 @@ namespace vcpkg::Dependencies
         }
     }
 
-    InstallPlanAction::InstallPlanAction()
-        : spec(), any_paragraph(), plan_type(InstallPlanType::UNKNOWN), request_type(RequestType::UNKNOWN)
-    {
-    }
+    InstallPlanAction::InstallPlanAction() : plan_type(InstallPlanType::UNKNOWN), request_type(RequestType::UNKNOWN) {}
 
     InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
                                          const SourceControlFile& any_paragraph,
                                          const std::unordered_set<std::string>& features,
                                          const RequestType& request_type)
-        : InstallPlanAction()
+        : spec(spec), plan_type(InstallPlanType::BUILD_AND_INSTALL), request_type(request_type), feature_list(features)
     {
-        this->spec = spec;
-        this->request_type = request_type;
-
-        this->plan_type = InstallPlanType::BUILD_AND_INSTALL;
         this->any_paragraph.source_control_file = &any_paragraph;
-        this->feature_list = features;
+    }
+
+    InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
+                                         const std::unordered_set<std::string>& features,
+                                         const RequestType& request_type)
+        : spec(spec), plan_type(InstallPlanType::ALREADY_INSTALLED), request_type(request_type), feature_list(features)
+    {
     }
 
     InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
                                          const AnyParagraph& any_paragraph,
                                          const RequestType& request_type)
-        : InstallPlanAction()
+        : spec(spec), request_type(request_type), any_paragraph(any_paragraph)
     {
-        this->spec = spec;
-        this->request_type = request_type;
         if (auto p = any_paragraph.status_paragraph.get())
         {
             this->plan_type = InstallPlanType::ALREADY_INSTALLED;
-            this->any_paragraph.status_paragraph = *p;
             return;
         }
 
         if (auto p = any_paragraph.binary_paragraph.get())
         {
             this->plan_type = InstallPlanType::INSTALL;
-            this->any_paragraph.binary_paragraph = *p;
             return;
         }
 
         if (auto p = any_paragraph.source_paragraph.get())
         {
             this->plan_type = InstallPlanType::BUILD_AND_INSTALL;
-            this->any_paragraph.source_paragraph = *p;
             return;
         }
 
         this->plan_type = InstallPlanType::UNKNOWN;
+    }
+
+    std::string InstallPlanAction::displayname() const
+    {
+        if (this->feature_list.empty())
+        {
+            return this->spec.to_string();
+        }
+        else
+        {
+            std::string features;
+            for (auto&& feature : this->feature_list)
+            {
+                features += feature + ",";
+            }
+            features.pop_back();
+
+            return this->spec.name() + "[" + features + "]:" + this->spec.triplet().to_string();
+        }
     }
 
     bool InstallPlanAction::compare_by_name(const InstallPlanAction* left, const InstallPlanAction* right)
@@ -155,9 +260,9 @@ namespace vcpkg::Dependencies
         return left->spec.name() < right->spec.name();
     }
 
-    MapPortFile::MapPortFile(const std::unordered_map<PackageSpec, SourceControlFile>& map) : ports(map) {}
+    MapPortFile::MapPortFile(const std::unordered_map<std::string, SourceControlFile>& map) : ports(map) {}
 
-    const SourceControlFile& MapPortFile::get_control_file(const PackageSpec& spec) const
+    const SourceControlFile& MapPortFile::get_control_file(const std::string& spec) const
     {
         auto scf = ports.find(spec);
         if (scf == ports.end())
@@ -169,9 +274,9 @@ namespace vcpkg::Dependencies
 
     PathsPortFile::PathsPortFile(const VcpkgPaths& paths) : ports(paths) {}
 
-    const SourceControlFile& PathsPortFile::get_control_file(const PackageSpec& spec) const
+    const SourceControlFile& PathsPortFile::get_control_file(const std::string& spec) const
     {
-        std::unordered_map<PackageSpec, SourceControlFile>::iterator cache_it = cache.find(spec);
+        auto cache_it = cache.find(spec);
         if (cache_it != cache.end())
         {
             return cache_it->second;
@@ -219,7 +324,9 @@ namespace vcpkg::Dependencies
                 auto it = status_db.find_installed(spec);
                 if (it != status_db.end()) return InstallPlanAction{spec, {*it->get(), nullopt, nullopt}, request_type};
                 return InstallPlanAction{
-                    spec, {nullopt, nullopt, *port_file_provider.get_control_file(spec).core_paragraph}, request_type};
+                    spec,
+                    {nullopt, nullopt, *port_file_provider.get_control_file(spec.name()).core_paragraph},
+                    request_type};
             }
         };
 
@@ -319,9 +426,9 @@ namespace vcpkg::Dependencies
                                                      ? RequestType::USER_REQUESTED
                                                      : RequestType::AUTO_SELECTED;
 
-                Expected<BinaryParagraph> maybe_bpgh = Paragraphs::try_load_cached_package(paths, spec);
-                if (auto bpgh = maybe_bpgh.get())
-                    return ExportPlanAction{spec, {nullopt, *bpgh, nullopt}, request_type};
+                Expected<BinaryControlFile> maybe_bpgh = Paragraphs::try_load_cached_control_package(paths, spec);
+                if (auto bcf = maybe_bpgh.get())
+                    return ExportPlanAction{spec, {nullopt, bcf->core_paragraph, nullopt}, request_type};
 
                 auto maybe_scf = Paragraphs::try_load_port(paths.get_filesystem(), paths.port_dir(spec));
                 if (auto scf = maybe_scf.get())
@@ -339,93 +446,79 @@ namespace vcpkg::Dependencies
         return toposort;
     }
 
-    std::vector<FeatureSpec> to_feature_specs(const std::vector<std::string>& depends, const Triplet& triplet)
+    enum class MarkPlusResult
     {
-        std::vector<FeatureSpec> f_specs;
-        for (auto&& depend : depends)
+        FEATURE_NOT_FOUND,
+        SUCCESS,
+    };
+
+    MarkPlusResult mark_plus(const std::string& feature,
+                             Cluster& cluster,
+                             ClusterGraph& pkg_to_cluster,
+                             GraphPlan& graph_plan);
+    void mark_minus(Cluster& cluster, ClusterGraph& pkg_to_cluster, GraphPlan& graph_plan);
+
+    MarkPlusResult mark_plus(const std::string& feature, Cluster& cluster, ClusterGraph& graph, GraphPlan& graph_plan)
+    {
+        if (feature == "")
         {
-            int end = (int)depend.find(']');
-            if (end != std::string::npos)
-            {
-                int start = (int)depend.find('[');
-
-                auto feature_name = depend.substr(start + 1, end - start - 1);
-                auto package_name = depend.substr(0, start);
-                auto p_spec = PackageSpec::from_name_and_triplet(package_name, triplet).value_or_exit(VCPKG_LINE_INFO);
-                auto feature_spec = FeatureSpec{p_spec, feature_name};
-                f_specs.emplace_back(std::move(feature_spec));
-            }
-            else
-            {
-                auto p_spec = PackageSpec::from_name_and_triplet(depend, triplet).value_or_exit(VCPKG_LINE_INFO);
-
-                auto feature_spec = FeatureSpec{p_spec, ""};
-                f_specs.emplace_back(std::move(feature_spec));
-            }
+            // Indicates that core was not specified in the reference
+            return mark_plus("core", cluster, graph, graph_plan);
         }
-        return f_specs;
-    }
 
-    bool mark_plus(const std::string& feature,
-                   Cluster& cluster,
-                   std::unordered_map<PackageSpec, Cluster>& pkg_to_cluster,
-                   GraphPlan& graph_plan)
-    {
         auto it = cluster.edges.find(feature);
-        std::string updated_feature = feature;
-        if (updated_feature == "")
-        {
-            updated_feature = "core";
-            it = cluster.edges.find("core");
-        }
-        if (it == cluster.edges.end())
-        {
-            Checks::unreachable(VCPKG_LINE_INFO);
-        }
+        if (it == cluster.edges.end()) return MarkPlusResult::FEATURE_NOT_FOUND;
 
-        if (cluster.edges[updated_feature].plus) return true;
+        if (cluster.edges[feature].plus) return MarkPlusResult::SUCCESS;
 
-        if (cluster.original_features.find(updated_feature) == cluster.original_features.end())
+        if (cluster.original_features.find(feature) == cluster.original_features.end())
         {
             cluster.transient_uninstalled = true;
         }
 
         if (!cluster.transient_uninstalled)
         {
-            return false;
+            return MarkPlusResult::SUCCESS;
         }
-        cluster.edges[updated_feature].plus = true;
+        cluster.edges[feature].plus = true;
 
         if (!cluster.original_features.empty())
         {
-            mark_minus(cluster, pkg_to_cluster, graph_plan);
+            mark_minus(cluster, graph, graph_plan);
         }
 
         graph_plan.install_graph.add_vertex({&cluster});
         auto& tracked = cluster.to_install_features;
-        tracked.insert(updated_feature);
-        if (tracked.find("core") == tracked.end() && tracked.find("") == tracked.end())
+        tracked.insert(feature);
+
+        if (feature != "core")
         {
-            cluster.to_install_features.insert("core");
-            for (auto&& depend : cluster.edges["core"].build_edges)
-            {
-                auto& depend_cluster = pkg_to_cluster[depend.spec];
-                mark_plus(depend.feature_name, depend_cluster, pkg_to_cluster, graph_plan);
-                graph_plan.install_graph.add_edge({&cluster}, {&depend_cluster});
-            }
+            // All features implicitly depend on core
+            auto res = mark_plus("core", cluster, graph, graph_plan);
+
+            // Should be impossible for "core" to not exist
+            Checks::check_exit(VCPKG_LINE_INFO, res == MarkPlusResult::SUCCESS);
         }
 
-        for (auto&& depend : cluster.edges[updated_feature].build_edges)
+        for (auto&& depend : cluster.edges[feature].build_edges)
         {
-            auto& depend_cluster = pkg_to_cluster[depend.spec];
-            mark_plus(depend.feature_name, depend_cluster, pkg_to_cluster, graph_plan);
+            auto& depend_cluster = graph.get(depend.spec());
+            auto res = mark_plus(depend.feature(), depend_cluster, graph, graph_plan);
+
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               res == MarkPlusResult::SUCCESS,
+                               "Error: Unable to satisfy dependency %s of %s",
+                               depend,
+                               FeatureSpec(cluster.spec, feature));
+
             if (&depend_cluster == &cluster) continue;
             graph_plan.install_graph.add_edge({&cluster}, {&depend_cluster});
         }
-        return true;
+
+        return MarkPlusResult::SUCCESS;
     }
 
-    void mark_minus(Cluster& cluster, std::unordered_map<PackageSpec, Cluster>& pkg_to_cluster, GraphPlan& graph_plan)
+    void mark_minus(Cluster& cluster, ClusterGraph& graph, GraphPlan& graph_plan)
     {
         if (cluster.will_remove) return;
         cluster.will_remove = true;
@@ -436,71 +529,45 @@ namespace vcpkg::Dependencies
             auto& remove_edges_edges = pair.second.remove_edges;
             for (auto&& depend : remove_edges_edges)
             {
-                auto& depend_cluster = pkg_to_cluster[depend.spec];
+                auto& depend_cluster = graph.get(depend.spec());
                 graph_plan.remove_graph.add_edge({&cluster}, {&depend_cluster});
-                depend_cluster.transient_uninstalled = true;
-                mark_minus(depend_cluster, pkg_to_cluster, graph_plan);
+                mark_minus(depend_cluster, graph, graph_plan);
             }
         }
+
+        cluster.transient_uninstalled = true;
         for (auto&& original_feature : cluster.original_features)
         {
-            cluster.transient_uninstalled = true;
-            mark_plus(original_feature, cluster, pkg_to_cluster, graph_plan);
+            auto res = mark_plus(original_feature, cluster, graph, graph_plan);
+            if (res != MarkPlusResult::SUCCESS)
+            {
+                System::println(System::Color::warning,
+                                "Warning: could not reinstall feature %s",
+                                FeatureSpec{cluster.spec, original_feature});
+            }
         }
     }
-    std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<PackageSpec, SourceControlFile>& map,
-                                                       const std::vector<FullPackageSpec>& specs,
-                                                       const StatusParagraphs& status_db)
+
+    static ClusterGraph create_feature_install_graph(const std::unordered_map<std::string, SourceControlFile>& map,
+                                                     const StatusParagraphs& status_db)
     {
-        std::unordered_map<PackageSpec, Cluster> pkg_spec_to_package_node;
+        std::unordered_map<std::string, const SourceControlFile*> ptr_map;
+        for (auto&& p : map)
+            ptr_map.emplace(p.first, &p.second);
+        ClusterGraph graph(std::move(ptr_map));
 
-        for (const auto& it : map)
+        auto installed_ports = get_installed_ports(status_db);
+
+        for (auto&& status_paragraph : installed_ports)
         {
-            Cluster& node = pkg_spec_to_package_node[it.first];
-
-            node.spec = it.first;
-            FeatureNodeEdges core_dependencies;
-            auto core_depends = filter_dependencies(it.second.core_paragraph->depends, node.spec.triplet());
-            core_dependencies.build_edges = to_feature_specs(core_depends, node.spec.triplet());
-            node.edges["core"] = std::move(core_dependencies);
-
-            for (const auto& feature : it.second.feature_paragraphs)
-            {
-                FeatureNodeEdges added_edges;
-                auto depends = filter_dependencies(feature->depends, node.spec.triplet());
-                added_edges.build_edges = to_feature_specs(depends, node.spec.triplet());
-                node.edges.emplace(feature->name, std::move(added_edges));
-            }
-            node.source_control_file = &it.second;
-        }
-
-        for (auto&& status_paragraph : get_installed_ports(status_db))
-        {
-            auto& spec = status_paragraph->package.spec;
-            auto& status_paragraph_feature = status_paragraph->package.feature;
-            Cluster& cluster = pkg_spec_to_package_node[spec];
+            Cluster& cluster = graph.get(status_paragraph->package.spec);
 
             cluster.transient_uninstalled = false;
-            auto reverse_edges =
-                to_feature_specs(status_paragraph->package.depends, status_paragraph->package.spec.triplet());
 
-            for (auto&& dependency : reverse_edges)
-            {
-                auto pkg_node = pkg_spec_to_package_node.find(dependency.spec);
-                auto depends_name = dependency.feature_name;
-                if (depends_name == "")
-                {
-                    for (auto&& default_feature : status_paragraph->package.default_features)
-                    {
-                        auto& target_node = pkg_node->second.edges[default_feature];
-                        target_node.remove_edges.emplace_back(FeatureSpec{spec, status_paragraph_feature});
-                    }
-                    depends_name = "core";
-                }
-                auto& target_node = pkg_node->second.edges[depends_name];
-                target_node.remove_edges.emplace_back(FeatureSpec{spec, status_paragraph_feature});
-            }
-            cluster.status_paragraphs.emplace_back(*status_paragraph);
+            cluster.status_paragraphs.emplace_back(status_paragraph);
+
+            auto& status_paragraph_feature = status_paragraph->package.feature;
+            // In this case, empty string indicates the "core" paragraph for a package.
             if (status_paragraph_feature == "")
             {
                 cluster.original_features.insert("core");
@@ -511,14 +578,44 @@ namespace vcpkg::Dependencies
             }
         }
 
+        for (auto&& status_paragraph : installed_ports)
+        {
+            auto& spec = status_paragraph->package.spec;
+            auto& status_paragraph_feature = status_paragraph->package.feature;
+            auto reverse_edges = FeatureSpec::from_strings_and_triplet(status_paragraph->package.depends,
+                                                                       status_paragraph->package.spec.triplet());
+
+            for (auto&& dependency : reverse_edges)
+            {
+                auto& dep_cluster = graph.get(dependency.spec());
+
+                auto depends_name = dependency.feature();
+                if (depends_name == "") depends_name = "core";
+
+                auto& target_node = dep_cluster.edges[depends_name];
+                target_node.remove_edges.emplace_back(FeatureSpec{spec, status_paragraph_feature});
+            }
+        }
+        return graph;
+    }
+
+    std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<std::string, SourceControlFile>& map,
+                                                       const std::vector<FeatureSpec>& specs,
+                                                       const StatusParagraphs& status_db)
+    {
+        ClusterGraph graph = create_feature_install_graph(map, status_db);
+
         GraphPlan graph_plan;
         for (auto&& spec : specs)
         {
-            Cluster& spec_cluster = pkg_spec_to_package_node[spec.package_spec];
-            for (auto&& feature : spec.features)
-            {
-                mark_plus(feature, spec_cluster, pkg_spec_to_package_node, graph_plan);
-            }
+            Cluster& spec_cluster = graph.get(spec.spec());
+            spec_cluster.request_type = RequestType::USER_REQUESTED;
+            auto res = mark_plus(spec.feature(), spec_cluster, graph, graph_plan);
+
+            Checks::check_exit(
+                VCPKG_LINE_INFO, res == MarkPlusResult::SUCCESS, "Error: Unable to locate feature %s", spec);
+
+            graph_plan.install_graph.add_vertex(ClusterPtr{&spec_cluster});
         }
 
         Graphs::GraphAdjacencyProvider<ClusterPtr> adjacency_remove_graph(graph_plan.remove_graph.adjacency_list());
@@ -529,38 +626,46 @@ namespace vcpkg::Dependencies
         auto insert_vertex_list = graph_plan.install_graph.vertex_list();
         auto insert_toposort = Graphs::topological_sort(insert_vertex_list, adjacency_install_graph);
 
-        std::vector<AnyAction> install_plan;
+        std::vector<AnyAction> plan;
 
-        for (auto&& like_cluster : remove_toposort)
+        for (auto&& p_cluster : remove_toposort)
         {
-            auto scf = *like_cluster.ptr->source_control_file.get();
-
-            AnyAction any_plan;
-            any_plan.remove_plan = RemovePlanAction{
-                PackageSpec::from_name_and_triplet(scf->core_paragraph->name, like_cluster.ptr->spec.triplet())
-                    .value_or_exit(VCPKG_LINE_INFO),
+            auto scf = *p_cluster->source_control_file.get();
+            auto spec = PackageSpec::from_name_and_triplet(scf->core_paragraph->name, p_cluster->spec.triplet())
+                            .value_or_exit(VCPKG_LINE_INFO);
+            plan.emplace_back(RemovePlanAction{
+                std::move(spec),
                 RemovePlanType::REMOVE,
-                RequestType::AUTO_SELECTED};
-
-            install_plan.emplace_back(std::move(any_plan));
+                p_cluster->request_type,
+            });
         }
 
-        for (auto&& like_cluster : insert_toposort)
+        for (auto&& p_cluster : insert_toposort)
         {
-            if (!like_cluster.ptr->transient_uninstalled) continue;
-
-            auto scf = *like_cluster.ptr->source_control_file.get();
-            auto pkg_spec =
-                PackageSpec::from_name_and_triplet(scf->core_paragraph->name, like_cluster.ptr->spec.triplet())
-                    .value_or_exit(VCPKG_LINE_INFO);
-            auto action =
-                InstallPlanAction{pkg_spec, *scf, like_cluster.ptr->to_install_features, RequestType::AUTO_SELECTED};
-
-            AnyAction any_plan;
-            any_plan.install_plan = std::move(action);
-            install_plan.emplace_back(std::move(any_plan));
+            if (p_cluster->transient_uninstalled)
+            {
+                // If it will be transiently uninstalled, we need to issue a full installation command
+                auto pscf = p_cluster->source_control_file.value_or_exit(VCPKG_LINE_INFO);
+                Checks::check_exit(VCPKG_LINE_INFO, pscf != nullptr);
+                plan.emplace_back(InstallPlanAction{
+                    p_cluster->spec,
+                    *pscf,
+                    p_cluster->to_install_features,
+                    p_cluster->request_type,
+                });
+            }
+            else
+            {
+                // If the package isn't transitively installed, still include it if the user explicitly requested it
+                if (p_cluster->request_type != RequestType::USER_REQUESTED) continue;
+                plan.emplace_back(InstallPlanAction{
+                    p_cluster->spec,
+                    p_cluster->original_features,
+                    p_cluster->request_type,
+                });
+            }
         }
 
-        return install_plan;
+        return plan;
     }
 }

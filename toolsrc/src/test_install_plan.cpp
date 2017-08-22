@@ -6,32 +6,62 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 using namespace vcpkg;
 
+namespace Microsoft::VisualStudio::CppUnitTestFramework
+{
+    template<>
+    inline std::wstring ToString<vcpkg::Dependencies::InstallPlanType>(const vcpkg::Dependencies::InstallPlanType& t)
+    {
+        switch (t)
+        {
+            case Dependencies::InstallPlanType::ALREADY_INSTALLED: return L"ALREADY_INSTALLED";
+            case Dependencies::InstallPlanType::BUILD_AND_INSTALL: return L"BUILD_AND_INSTALL";
+            case Dependencies::InstallPlanType::INSTALL: return L"INSTALL";
+            case Dependencies::InstallPlanType::UNKNOWN: return L"UNKNOWN";
+            default: return ToString((int)t);
+        }
+    }
+
+    template<>
+    inline std::wstring ToString<vcpkg::Dependencies::RequestType>(const vcpkg::Dependencies::RequestType& t)
+    {
+        switch (t)
+        {
+            case Dependencies::RequestType::AUTO_SELECTED: return L"AUTO_SELECTED";
+            case Dependencies::RequestType::USER_REQUESTED: return L"USER_REQUESTED";
+            case Dependencies::RequestType::UNKNOWN: return L"UNKNOWN";
+            default: return ToString((int)t);
+        }
+    }
+}
+
 namespace UnitTest1
 {
     class InstallPlanTests : public TestClass<InstallPlanTests>
     {
-        struct PackageSpecMap
+        static std::unique_ptr<SourceControlFile> make_control_file(
+            const char* name,
+            const char* depends,
+            const std::vector<std::pair<const char*, const char*>>& features = {})
         {
-            std::unordered_map<PackageSpec, SourceControlFile> map;
-            Triplet triplet;
-            PackageSpecMap(const Triplet& t) { triplet = t; }
-
-            PackageSpec get_package_spec(std::vector<std::unordered_map<std::string, std::string>>&& fields)
+            using Pgh = std::unordered_map<std::string, std::string>;
+            std::vector<Pgh> scf_pghs;
+            scf_pghs.push_back(Pgh{
+                {"Source", name},
+                {"Version", "0"},
+                {"Build-Depends", depends},
+            });
+            for (auto&& feature : features)
             {
-                auto m_pgh = vcpkg::SourceControlFile::parse_control_file(std::move(fields));
-                Assert::IsTrue(m_pgh.has_value());
-                auto& scf = *m_pgh.get();
-
-                auto spec = PackageSpec::from_name_and_triplet(scf->core_paragraph->name, triplet);
-                Assert::IsTrue(spec.has_value());
-                map.emplace(*spec.get(), std::move(*scf.get()));
-                return PackageSpec{*spec.get()};
+                scf_pghs.push_back(Pgh{
+                    {"Feature", feature.first},
+                    {"Description", "feature"},
+                    {"Build-Depends", feature.second},
+                });
             }
-            PackageSpec set_package_map(std::string source, std::string version, std::string build_depends)
-            {
-                return get_package_spec({{{"Source", source}, {"Version", version}, {"Build-Depends", build_depends}}});
-            }
-        };
+            auto m_pgh = vcpkg::SourceControlFile::parse_control_file(std::move(scf_pghs));
+            Assert::IsTrue(m_pgh.has_value());
+            return std::move(*m_pgh.get());
+        }
 
         static void features_check(Dependencies::AnyAction* install_action,
                                    std::string pkg_name,
@@ -68,16 +98,60 @@ namespace UnitTest1
             Assert::AreEqual(pkg_name.c_str(), plan.spec.name().c_str());
         }
 
+        static std::unique_ptr<StatusParagraph> make_status_pgh(const char* name, const char* depends = "")
+        {
+            using Pgh = std::unordered_map<std::string, std::string>;
+            return std::make_unique<StatusParagraph>(Pgh{{"Package", name},
+                                                         {"Version", "1"},
+                                                         {"Architecture", "x86-windows"},
+                                                         {"Multi-Arch", "same"},
+                                                         {"Depends", depends},
+                                                         {"Status", "install ok installed"}});
+        }
+        static std::unique_ptr<StatusParagraph> make_status_feature_pgh(const char* name,
+                                                                        const char* feature,
+                                                                        const char* depends = "")
+        {
+            using Pgh = std::unordered_map<std::string, std::string>;
+            return std::make_unique<StatusParagraph>(Pgh{{"Package", name},
+                                                         {"Version", "1"},
+                                                         {"Feature", feature},
+                                                         {"Architecture", "x86-windows"},
+                                                         {"Multi-Arch", "same"},
+                                                         {"Depends", depends},
+                                                         {"Status", "install ok installed"}});
+        }
+        struct PackageSpecMap
+        {
+            std::unordered_map<std::string, SourceControlFile> map;
+            Triplet triplet;
+            PackageSpecMap(const Triplet& t) { triplet = t; }
+
+            PackageSpec emplace(const char* name,
+                                const char* depends = "",
+                                const std::vector<std::pair<const char*, const char*>>& features = {})
+            {
+                return emplace(std::move(*make_control_file(name, depends, features)));
+            }
+            PackageSpec emplace(vcpkg::SourceControlFile&& scf)
+            {
+                auto spec = PackageSpec::from_name_and_triplet(scf.core_paragraph->name, triplet);
+                Assert::IsTrue(spec.has_value());
+                map.emplace(scf.core_paragraph->name, std::move(scf));
+                return PackageSpec{*spec.get()};
+            }
+        };
+
         TEST_METHOD(basic_install_scheme)
         {
             std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
             PackageSpecMap spec_map(Triplet::X86_WINDOWS);
-            auto spec_a = spec_map.set_package_map("a", "1.2.8", "b");
-            auto spec_b = spec_map.set_package_map("b", "1.3", "c");
-            auto spec_c = spec_map.set_package_map("c", "2.5.3", "");
+            auto spec_a = spec_map.emplace("a", "b");
+            auto spec_b = spec_map.emplace("b", "c");
+            auto spec_c = spec_map.emplace("c");
 
-            auto map_port = Dependencies::MapPortFile(spec_map.map);
+            Dependencies::MapPortFile map_port(spec_map.map);
             auto install_plan =
                 Dependencies::create_install_plan(map_port, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
 
@@ -92,16 +166,16 @@ namespace UnitTest1
             std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
             PackageSpecMap spec_map(Triplet::X86_WINDOWS);
-            auto spec_a = spec_map.set_package_map("a", "1.2.8", "d");
-            auto spec_b = spec_map.set_package_map("b", "1.3", "d, e");
-            auto spec_c = spec_map.set_package_map("c", "2.5.3", "e, h");
-            auto spec_d = spec_map.set_package_map("d", "4.0", "f, g, h");
-            auto spec_e = spec_map.set_package_map("e", "1.0", "g");
-            auto spec_f = spec_map.set_package_map("f", "1.0", "");
-            auto spec_g = spec_map.set_package_map("g", "1.0", "");
-            auto spec_h = spec_map.set_package_map("h", "1.0", "");
+            auto spec_a = spec_map.emplace("a", "d");
+            auto spec_b = spec_map.emplace("b", "d, e");
+            auto spec_c = spec_map.emplace("c", "e, h");
+            auto spec_d = spec_map.emplace("d", "f, g, h");
+            auto spec_e = spec_map.emplace("e", "g");
+            auto spec_f = spec_map.emplace("f");
+            auto spec_g = spec_map.emplace("g");
+            auto spec_h = spec_map.emplace("h");
 
-            auto map_port = Dependencies::MapPortFile(spec_map.map);
+            Dependencies::MapPortFile map_port(spec_map.map);
             auto install_plan = Dependencies::create_install_plan(
                 map_port, {spec_a, spec_b, spec_c}, StatusParagraphs(std::move(status_paragraphs)));
 
@@ -127,37 +201,74 @@ namespace UnitTest1
             Assert::IsTrue(e_pos > g_pos);
         }
 
+        TEST_METHOD(existing_package_scheme)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+            status_paragraphs.push_back(make_status_pgh("a"));
+
+            PackageSpecMap spec_map(Triplet::X86_WINDOWS);
+            auto spec_a = FullPackageSpec{spec_map.emplace("a")};
+
+            auto install_plan =
+                Dependencies::create_feature_install_plan(spec_map.map,
+                                                          FullPackageSpec::to_feature_specs({spec_a}),
+                                                          StatusParagraphs(std::move(status_paragraphs)));
+
+            Assert::AreEqual(size_t(1), install_plan.size());
+            auto p = install_plan[0].install_plan.get();
+            Assert::IsNotNull(p);
+            Assert::AreEqual("a", p->spec.name().c_str());
+            Assert::AreEqual(Dependencies::InstallPlanType::ALREADY_INSTALLED, p->plan_type);
+            Assert::AreEqual(Dependencies::RequestType::USER_REQUESTED, p->request_type);
+        }
+
+        TEST_METHOD(user_requested_package_scheme)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+
+            PackageSpecMap spec_map(Triplet::X86_WINDOWS);
+            auto spec_a = FullPackageSpec{spec_map.emplace("a", "b")};
+            auto spec_b = FullPackageSpec{spec_map.emplace("b")};
+
+            auto install_plan =
+                Dependencies::create_feature_install_plan(spec_map.map,
+                                                          FullPackageSpec::to_feature_specs({spec_a}),
+                                                          StatusParagraphs(std::move(status_paragraphs)));
+
+            Assert::AreEqual(size_t(2), install_plan.size());
+            auto p = install_plan[0].install_plan.get();
+            Assert::IsNotNull(p);
+            Assert::AreEqual("b", p->spec.name().c_str());
+            Assert::AreEqual(Dependencies::InstallPlanType::BUILD_AND_INSTALL, p->plan_type);
+            Assert::AreEqual(Dependencies::RequestType::AUTO_SELECTED, p->request_type);
+
+            auto p2 = install_plan[1].install_plan.get();
+            Assert::IsNotNull(p2);
+            Assert::AreEqual("a", p2->spec.name().c_str());
+            Assert::AreEqual(Dependencies::InstallPlanType::BUILD_AND_INSTALL, p2->plan_type);
+            Assert::AreEqual(Dependencies::RequestType::USER_REQUESTED, p2->request_type);
+        }
+
         TEST_METHOD(long_install_scheme)
         {
-            using Pgh = std::unordered_map<std::string, std::string>;
             std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
-            status_paragraphs.push_back(std::make_unique<StatusParagraph>(Pgh{{"Package", "j"},
-                                                                              {"Version", "1.2.8"},
-                                                                              {"Architecture", "x86-windows"},
-                                                                              {"Multi-Arch", "same"},
-                                                                              {"Depends", "k"},
-                                                                              {"Status", "install ok installed"}}));
-            status_paragraphs.push_back(std::make_unique<StatusParagraph>(Pgh{{"Package", "k"},
-                                                                              {"Version", "1.2.8"},
-                                                                              {"Architecture", "x86-windows"},
-                                                                              {"Multi-Arch", "same"},
-                                                                              {"Depends", ""},
-                                                                              {"Status", "install ok installed"}}));
+            status_paragraphs.push_back(make_status_pgh("j", "k"));
+            status_paragraphs.push_back(make_status_pgh("k"));
 
             PackageSpecMap spec_map(Triplet::X86_WINDOWS);
 
-            auto spec_a = spec_map.set_package_map("a", "1.2.8", "b, c, d, e, f, g, h, j, k");
-            auto spec_b = spec_map.set_package_map("b", "1.2.8", "c, d, e, f, g, h, j, k");
-            auto spec_c = spec_map.set_package_map("c", "1.2.8", "d, e, f, g, h, j, k");
-            auto spec_d = spec_map.set_package_map("d", "1.2.8", "e, f, g, h, j, k");
-            auto spec_e = spec_map.set_package_map("e", "1.2.8", "f, g, h, j, k");
-            auto spec_f = spec_map.set_package_map("f", "1.2.8", "g, h, j, k");
-            auto spec_g = spec_map.set_package_map("g", "1.2.8", "h, j, k");
-            auto spec_h = spec_map.set_package_map("h", "1.2.8", "j, k");
-            auto spec_j = spec_map.set_package_map("j", "1.2.8", "k");
-            auto spec_k = spec_map.set_package_map("k", "1.2.8", "");
+            auto spec_a = spec_map.emplace("a", "b, c, d, e, f, g, h, j, k");
+            auto spec_b = spec_map.emplace("b", "c, d, e, f, g, h, j, k");
+            auto spec_c = spec_map.emplace("c", "d, e, f, g, h, j, k");
+            auto spec_d = spec_map.emplace("d", "e, f, g, h, j, k");
+            auto spec_e = spec_map.emplace("e", "f, g, h, j, k");
+            auto spec_f = spec_map.emplace("f", "g, h, j, k");
+            auto spec_g = spec_map.emplace("g", "h, j, k");
+            auto spec_h = spec_map.emplace("h", "j, k");
+            auto spec_j = spec_map.emplace("j", "k");
+            auto spec_k = spec_map.emplace("k");
 
-            auto map_port = Dependencies::MapPortFile(spec_map.map);
+            Dependencies::MapPortFile map_port(spec_map.map);
             auto install_plan =
                 Dependencies::create_install_plan(map_port, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
 
@@ -174,162 +285,85 @@ namespace UnitTest1
 
         TEST_METHOD(basic_feature_test_1)
         {
-            using Pgh = std::unordered_map<std::string, std::string>;
-
             std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
-            status_paragraphs.push_back(std::make_unique<StatusParagraph>(Pgh{{"Package", "a"},
-                                                                              {"Default-Features", ""},
-                                                                              {"Version", "1.3.8"},
-                                                                              {"Architecture", "x86-windows"},
-                                                                              {"Multi-Arch", "same"},
-                                                                              {"Depends", "b, b[beefeatureone]"},
-                                                                              {"Status", "install ok installed"}}));
-            status_paragraphs.push_back(std::make_unique<StatusParagraph>(Pgh{{"Package", "b"},
-                                                                              {"Feature", "beefeatureone"},
-                                                                              {"Architecture", "x86-windows"},
-                                                                              {"Multi-Arch", "same"},
-                                                                              {"Depends", ""},
-                                                                              {"Status", "install ok installed"}}));
-            status_paragraphs.push_back(std::make_unique<StatusParagraph>(Pgh{{"Package", "b"},
-                                                                              {"Default-Features", "beefeatureone"},
-                                                                              {"Version", "1.3"},
-                                                                              {"Architecture", "x86-windows"},
-                                                                              {"Multi-Arch", "same"},
-                                                                              {"Depends", ""},
-                                                                              {"Status", "install ok installed"}}));
+            status_paragraphs.push_back(make_status_pgh("a", "b, b[b1]"));
+            status_paragraphs.push_back(make_status_pgh("b"));
+            status_paragraphs.push_back(make_status_feature_pgh("b", "b1"));
 
             PackageSpecMap spec_map(Triplet::X86_WINDOWS);
-            auto spec_a =
-                FullPackageSpec{spec_map.get_package_spec({
-                                    {{"Source", "a"}, {"Version", "1.3.8"}, {"Build-Depends", "b, b[beefeatureone]"}},
-                                    {{"Feature", "featureone"},
-                                     {"Description", "the first feature for a"},
-                                     {"Build-Depends", "b[beefeaturetwo]"}},
-                                }),
-                                {"featureone"}};
-            auto spec_b = FullPackageSpec{spec_map.get_package_spec({
-                {{"Source", "b"}, {"Version", "1.3"}, {"Build-Depends", ""}},
-                {{"Feature", "beefeatureone"}, {"Description", "the first feature for b"}, {"Build-Depends", ""}},
-                {{"Feature", "beefeaturetwo"}, {"Description", "the second feature for b"}, {"Build-Depends", ""}},
-                {{"Feature", "beefeaturethree"}, {"Description", "the third feature for b"}, {"Build-Depends", ""}},
-            })};
+            auto spec_a = FullPackageSpec{spec_map.emplace("a", "b, b[b1]", {{"a1", "b[b2]"}}), {"a1"}};
+            auto spec_b = FullPackageSpec{spec_map.emplace("b", "", {{"b1", ""}, {"b2", ""}, {"b3", ""}})};
 
-            auto install_plan = Dependencies::create_feature_install_plan(
-                spec_map.map, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
+            auto install_plan =
+                Dependencies::create_feature_install_plan(spec_map.map,
+                                                          FullPackageSpec::to_feature_specs({spec_a}),
+                                                          StatusParagraphs(std::move(status_paragraphs)));
 
             Assert::AreEqual(size_t(4), install_plan.size());
             remove_plan_check(&install_plan[0], "a");
             remove_plan_check(&install_plan[1], "b");
-            features_check(&install_plan[2], "b", {"beefeatureone", "core", "beefeatureone"});
-            features_check(&install_plan[3], "a", {"featureone", "core"});
+            features_check(&install_plan[2], "b", {"b1", "core", "b1"});
+            features_check(&install_plan[3], "a", {"a1", "core"});
         }
 
         TEST_METHOD(basic_feature_test_2)
         {
-            using Pgh = std::unordered_map<std::string, std::string>;
-
             std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
             PackageSpecMap spec_map(Triplet::X86_WINDOWS);
 
-            auto spec_a =
-                FullPackageSpec{spec_map.get_package_spec(
-                                    {{{"Source", "a"}, {"Version", "1.3.8"}, {"Build-Depends", "b[beefeatureone]"}},
-                                     {{"Feature", "featureone"},
-                                      {"Description", "the first feature for a"},
-                                      {"Build-Depends", "b[beefeaturetwo]"}}
+            auto spec_a = FullPackageSpec{spec_map.emplace("a", "b[b1]", {{"a1", "b[b2]"}}), {"a1"}};
+            auto spec_b = FullPackageSpec{spec_map.emplace("b", "", {{"b1", ""}, {"b2", ""}, {"b3", ""}})};
 
-                                    }),
-                                {"featureone"}};
-            auto spec_b = FullPackageSpec{spec_map.get_package_spec({
-                {{"Source", "b"}, {"Version", "1.3"}, {"Build-Depends", ""}},
-                {{"Feature", "beefeatureone"}, {"Description", "the first feature for b"}, {"Build-Depends", ""}},
-                {{"Feature", "beefeaturetwo"}, {"Description", "the second feature for b"}, {"Build-Depends", ""}},
-                {{"Feature", "beefeaturethree"}, {"Description", "the third feature for b"}, {"Build-Depends", ""}},
-            })};
-
-            auto install_plan = Dependencies::create_feature_install_plan(
-                spec_map.map, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
+            auto install_plan =
+                Dependencies::create_feature_install_plan(spec_map.map,
+                                                          FullPackageSpec::to_feature_specs({spec_a}),
+                                                          StatusParagraphs(std::move(status_paragraphs)));
 
             Assert::AreEqual(size_t(2), install_plan.size());
-            features_check(&install_plan[0], "b", {"beefeatureone", "beefeaturetwo", "core"});
-            features_check(&install_plan[1], "a", {"featureone", "core"});
+            features_check(&install_plan[0], "b", {"b1", "b2", "core"});
+            features_check(&install_plan[1], "a", {"a1", "core"});
         }
 
         TEST_METHOD(basic_feature_test_3)
         {
-            using Pgh = std::unordered_map<std::string, std::string>;
-
             std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
-            status_paragraphs.push_back(std::make_unique<StatusParagraph>(Pgh{{"Package", "a"},
-                                                                              {"Default-Features", ""},
-                                                                              {"Version", "1.3"},
-                                                                              {"Architecture", "x86-windows"},
-                                                                              {"Multi-Arch", "same"},
-                                                                              {"Depends", ""},
-                                                                              {"Status", "install ok installed"}}));
+            status_paragraphs.push_back(make_status_pgh("a"));
 
             PackageSpecMap spec_map(Triplet::X86_WINDOWS);
 
-            auto spec_a = FullPackageSpec{
-                spec_map.get_package_spec(
-                    {{{"Source", "a"}, {"Version", "1.3"}, {"Build-Depends", "b"}},
-                     {{"Feature", "one"}, {"Description", "the first feature for a"}, {"Build-Depends", ""}}}),
-                {"core"}};
-            auto spec_b = FullPackageSpec{spec_map.get_package_spec({
-                {{"Source", "b"}, {"Version", "1.3"}, {"Build-Depends", ""}},
-            })};
-            auto spec_c = FullPackageSpec{spec_map.get_package_spec({
-                                              {{"Source", "c"}, {"Version", "1.3"}, {"Build-Depends", "a[one]"}},
-                                          }),
-                                          {"core"}};
+            auto spec_a = FullPackageSpec{spec_map.emplace("a", "b", {{"a1", ""}}), {"core"}};
+            auto spec_b = FullPackageSpec{spec_map.emplace("b")};
+            auto spec_c = FullPackageSpec{spec_map.emplace("c", "a[a1]"), {"core"}};
 
-            auto install_plan = Dependencies::create_feature_install_plan(
-                spec_map.map, {spec_c, spec_a}, StatusParagraphs(std::move(status_paragraphs)));
+            auto install_plan =
+                Dependencies::create_feature_install_plan(spec_map.map,
+                                                          FullPackageSpec::to_feature_specs({spec_c, spec_a}),
+                                                          StatusParagraphs(std::move(status_paragraphs)));
 
             Assert::AreEqual(size_t(4), install_plan.size());
             remove_plan_check(&install_plan[0], "a");
             features_check(&install_plan[1], "b", {"core"});
-            features_check(&install_plan[2], "a", {"one", "core"});
+            features_check(&install_plan[2], "a", {"a1", "core"});
             features_check(&install_plan[3], "c", {"core"});
         }
 
         TEST_METHOD(basic_feature_test_4)
         {
-            using Pgh = std::unordered_map<std::string, std::string>;
-
             std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
-            status_paragraphs.push_back(std::make_unique<StatusParagraph>(Pgh{{"Package", "a"},
-                                                                              {"Default-Features", ""},
-                                                                              {"Version", "1.3"},
-                                                                              {"Architecture", "x86-windows"},
-                                                                              {"Multi-Arch", "same"},
-                                                                              {"Depends", ""},
-                                                                              {"Status", "install ok installed"}}));
-            status_paragraphs.push_back(std::make_unique<StatusParagraph>(Pgh{{"Package", "a"},
-                                                                              {"Feature", "one"},
-                                                                              {"Architecture", "x86-windows"},
-                                                                              {"Multi-Arch", "same"},
-                                                                              {"Depends", ""},
-                                                                              {"Status", "install ok installed"}}));
+            status_paragraphs.push_back(make_status_pgh("a"));
+            status_paragraphs.push_back(make_status_feature_pgh("a", "a1", ""));
 
             PackageSpecMap spec_map(Triplet::X86_WINDOWS);
 
-            auto spec_a = FullPackageSpec{
-                spec_map.get_package_spec(
-                    {{{"Source", "a"}, {"Version", "1.3"}, {"Build-Depends", "b"}},
-                     {{"Feature", "one"}, {"Description", "the first feature for a"}, {"Build-Depends", ""}}}),
-            };
-            auto spec_b = FullPackageSpec{spec_map.get_package_spec({
-                {{"Source", "b"}, {"Version", "1.3"}, {"Build-Depends", ""}},
-            })};
-            auto spec_c = FullPackageSpec{spec_map.get_package_spec({
-                                              {{"Source", "c"}, {"Version", "1.3"}, {"Build-Depends", "a[one]"}},
-                                          }),
-                                          {"core"}};
+            auto spec_a = FullPackageSpec{spec_map.emplace("a", "b", {{"a1", ""}})};
+            auto spec_b = FullPackageSpec{spec_map.emplace("b")};
+            auto spec_c = FullPackageSpec{spec_map.emplace("c", "a[a1]"), {"core"}};
 
-            auto install_plan = Dependencies::create_feature_install_plan(
-                spec_map.map, {spec_c}, StatusParagraphs(std::move(status_paragraphs)));
+            auto install_plan =
+                Dependencies::create_feature_install_plan(spec_map.map,
+                                                          FullPackageSpec::to_feature_specs({spec_c}),
+                                                          StatusParagraphs(std::move(status_paragraphs)));
 
             Assert::AreEqual(size_t(1), install_plan.size());
             features_check(&install_plan[0], "c", {"core"});
@@ -337,168 +371,93 @@ namespace UnitTest1
 
         TEST_METHOD(basic_feature_test_5)
         {
-            using Pgh = std::unordered_map<std::string, std::string>;
-
             std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
             PackageSpecMap spec_map(Triplet::X86_WINDOWS);
 
-            auto spec_a = FullPackageSpec{
-                spec_map.get_package_spec(
-                    {{{"Source", "a"}, {"Version", "1.3"}, {"Build-Depends", ""}},
-                     {{"Feature", "1"}, {"Description", "the first feature for a"}, {"Build-Depends", "b[1]"}},
-                     {{"Feature", "2"}, {"Description", "the first feature for a"}, {"Build-Depends", "b[2]"}},
-                     {{"Feature", "3"}, {"Description", "the first feature for a"}, {"Build-Depends", "a[2]"}}}),
-                {"3"}};
-            auto spec_b = FullPackageSpec{spec_map.get_package_spec({
-                {{"Source", "b"}, {"Version", "1.3"}, {"Build-Depends", ""}},
-                {{"Feature", "1"}, {"Description", "the first feature for a"}, {"Build-Depends", ""}},
-                {{"Feature", "2"}, {"Description", "the first feature for a"}, {"Build-Depends", ""}},
-            })};
+            auto spec_a =
+                FullPackageSpec{spec_map.emplace("a", "", {{"a1", "b[b1]"}, {"a2", "b[b2]"}, {"a3", "a[a2]"}}), {"a3"}};
+            auto spec_b = FullPackageSpec{spec_map.emplace("b", "", {{"b1", ""}, {"b2", ""}})};
 
-            auto install_plan = Dependencies::create_feature_install_plan(
-                spec_map.map, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
+            auto install_plan =
+                Dependencies::create_feature_install_plan(spec_map.map,
+                                                          FullPackageSpec::to_feature_specs({spec_a}),
+                                                          StatusParagraphs(std::move(status_paragraphs)));
 
             Assert::AreEqual(size_t(2), install_plan.size());
-            features_check(&install_plan[0], "b", {"core", "2"});
-            features_check(&install_plan[1], "a", {"core", "3", "2"});
+            features_check(&install_plan[0], "b", {"core", "b2"});
+            features_check(&install_plan[1], "a", {"core", "a3", "a2"});
         }
 
         TEST_METHOD(basic_feature_test_6)
         {
-            using Pgh = std::unordered_map<std::string, std::string>;
-
             std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
-            status_paragraphs.push_back(std::make_unique<StatusParagraph>(Pgh{{"Package", "b"},
-                                                                              {"Default-Features", ""},
-                                                                              {"Version", "1.3"},
-                                                                              {"Architecture", "x86-windows"},
-                                                                              {"Multi-Arch", "same"},
-                                                                              {"Depends", ""},
-                                                                              {"Status", "install ok installed"}}));
+            status_paragraphs.push_back(make_status_pgh("b"));
+
             PackageSpecMap spec_map(Triplet::X86_WINDOWS);
+            auto spec_a = FullPackageSpec{spec_map.emplace("a", "b[core]"), {"core"}};
+            auto spec_b = FullPackageSpec{spec_map.emplace("b", "", {{"b1", ""}}), {"b1"}};
 
-            auto spec_a = FullPackageSpec{spec_map.get_package_spec({
-                                              {{"Source", "a"}, {"Version", "1.3"}, {"Build-Depends", "b[core]"}},
-                                          }),
-                                          {"core"}};
-            auto spec_b = FullPackageSpec{
-                spec_map.get_package_spec({
-                    {{"Source", "b"}, {"Version", "1.3"}, {"Build-Depends", ""}},
-                    {{"Feature", "1"}, {"Description", "the first feature for a"}, {"Build-Depends", ""}},
-                }),
-                {"1"}};
-
-            auto install_plan = Dependencies::create_feature_install_plan(
-                spec_map.map, {spec_a, spec_b}, StatusParagraphs(std::move(status_paragraphs)));
+            auto install_plan =
+                Dependencies::create_feature_install_plan(spec_map.map,
+                                                          FullPackageSpec::to_feature_specs({spec_a, spec_b}),
+                                                          StatusParagraphs(std::move(status_paragraphs)));
 
             Assert::AreEqual(size_t(3), install_plan.size());
             remove_plan_check(&install_plan[0], "b");
-            features_check(&install_plan[1], "b", {"core", "1"});
+            features_check(&install_plan[1], "b", {"core", "b1"});
             features_check(&install_plan[2], "a", {"core"});
         }
 
         TEST_METHOD(basic_feature_test_7)
         {
-            using Pgh = std::unordered_map<std::string, std::string>;
-
             std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
-            status_paragraphs.push_back(std::make_unique<StatusParagraph>(Pgh{{"Package", "x"},
-                                                                              {"Default-Features", ""},
-                                                                              {"Version", "1.3"},
-                                                                              {"Architecture", "x86-windows"},
-                                                                              {"Multi-Arch", "same"},
-                                                                              {"Depends", "b"},
-                                                                              {"Status", "install ok installed"}}));
-            status_paragraphs.push_back(std::make_unique<StatusParagraph>(Pgh{{"Package", "b"},
-                                                                              {"Default-Features", ""},
-                                                                              {"Version", "1.3"},
-                                                                              {"Architecture", "x86-windows"},
-                                                                              {"Multi-Arch", "same"},
-                                                                              {"Depends", ""},
-                                                                              {"Status", "install ok installed"}}));
+            status_paragraphs.push_back(make_status_pgh("x", "b"));
+            status_paragraphs.push_back(make_status_pgh("b"));
+
             PackageSpecMap spec_map(Triplet::X86_WINDOWS);
 
-            auto spec_a = FullPackageSpec{spec_map.get_package_spec({
-                {{"Source", "a"}, {"Version", "1.3"}, {"Build-Depends", ""}},
-            })};
-            auto spec_x = FullPackageSpec{spec_map.get_package_spec({
-                                              {{"Source", "x"}, {"Version", "1.3"}, {"Build-Depends", "a"}},
-                                          }),
-                                          {"core"}};
-            auto spec_b = FullPackageSpec{
-                spec_map.get_package_spec({
-                    {{"Source", "b"}, {"Version", "1.3"}, {"Build-Depends", ""}, {"Default-Features", ""}},
-                    {{"Feature", "1"}, {"Description", "the first feature for a"}, {"Build-Depends", ""}},
-                }),
-                {"1"}};
+            auto spec_a = FullPackageSpec{spec_map.emplace("a")};
+            auto spec_x = FullPackageSpec{spec_map.emplace("x", "a"), {"core"}};
+            auto spec_b = FullPackageSpec{spec_map.emplace("b", "", {{"b1", ""}}), {"b1"}};
 
-            auto install_plan = Dependencies::create_feature_install_plan(
-                spec_map.map, {spec_b, spec_x}, StatusParagraphs(std::move(status_paragraphs)));
+            auto install_plan =
+                Dependencies::create_feature_install_plan(spec_map.map,
+                                                          FullPackageSpec::to_feature_specs({spec_b}),
+                                                          StatusParagraphs(std::move(status_paragraphs)));
 
             Assert::AreEqual(size_t(5), install_plan.size());
             remove_plan_check(&install_plan[0], "x");
             remove_plan_check(&install_plan[1], "b");
 
             // TODO: order here may change but A < X, and B anywhere
-            features_check(&install_plan[2], "a", {"core"});
-            features_check(&install_plan[3], "x", {"core"});
-            features_check(&install_plan[4], "b", {"core", "1"});
+            features_check(&install_plan[2], "b", {"core", "b1"});
+            features_check(&install_plan[3], "a", {"core"});
+            features_check(&install_plan[4], "x", {"core"});
         }
 
         TEST_METHOD(basic_feature_test_8)
         {
-            using Pgh = std::unordered_map<std::string, std::string>;
-
             std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
-            status_paragraphs.push_back(std::make_unique<StatusParagraph>(Pgh{{"Package", "a"},
-                                                                              {"Default-Features", ""},
-                                                                              {"Version", "1.3"},
-                                                                              {"Architecture", "x64-windows"},
-                                                                              {"Multi-Arch", "same"},
-                                                                              {"Depends", ""},
-                                                                              {"Status", "install ok installed"}}));
-            status_paragraphs.push_back(std::make_unique<StatusParagraph>(Pgh{{"Package", "a"},
-                                                                              {"Default-Features", ""},
-                                                                              {"Version", "1.3"},
-                                                                              {"Architecture", "x86-windows"},
-                                                                              {"Multi-Arch", "same"},
-                                                                              {"Depends", ""},
-                                                                              {"Status", "install ok installed"}}));
+            status_paragraphs.push_back(make_status_pgh("a"));
+            status_paragraphs.push_back(make_status_pgh("a"));
+            status_paragraphs.back()->package.spec =
+                PackageSpec::from_name_and_triplet("a", Triplet::X64_WINDOWS).value_or_exit(VCPKG_LINE_INFO);
 
             PackageSpecMap spec_map(Triplet::X64_WINDOWS);
-
-            auto spec_a_64 = FullPackageSpec{
-                spec_map.get_package_spec(
-                    {{{"Source", "a"}, {"Version", "1.3"}, {"Build-Depends", "b"}},
-                     {{"Feature", "one"}, {"Description", "the first feature for a"}, {"Build-Depends", ""}}}),
-                {"core"}};
-            auto spec_b_64 = FullPackageSpec{spec_map.get_package_spec({
-                {{"Source", "b"}, {"Version", "1.3"}, {"Build-Depends", ""}},
-            })};
-            auto spec_c_64 = FullPackageSpec{spec_map.get_package_spec({
-                                                 {{"Source", "c"}, {"Version", "1.3"}, {"Build-Depends", "a[one]"}},
-                                             }),
-                                             {"core"}};
+            auto spec_a_64 = FullPackageSpec{spec_map.emplace("a", "b", {{"a1", ""}}), {"core"}};
+            auto spec_b_64 = FullPackageSpec{spec_map.emplace("b")};
+            auto spec_c_64 = FullPackageSpec{spec_map.emplace("c", "a[a1]"), {"core"}};
 
             spec_map.triplet = Triplet::X86_WINDOWS;
-            auto spec_a_86 = FullPackageSpec{
-                spec_map.get_package_spec(
-                    {{{"Source", "a"}, {"Version", "1.3"}, {"Build-Depends", "b"}},
-                     {{"Feature", "one"}, {"Description", "the first feature for a"}, {"Build-Depends", ""}}}),
-                {"core"}};
-            auto spec_b_86 = FullPackageSpec{spec_map.get_package_spec({
-                {{"Source", "b"}, {"Version", "1.3"}, {"Build-Depends", ""}},
-            })};
-            auto spec_c_86 = FullPackageSpec{spec_map.get_package_spec({
-                                                 {{"Source", "c"}, {"Version", "1.3"}, {"Build-Depends", "a[one]"}},
-                                             }),
-                                             {"core"}};
+            auto spec_a_86 = FullPackageSpec{spec_map.emplace("a", "b", {{"a1", ""}}), {"core"}};
+            auto spec_b_86 = FullPackageSpec{spec_map.emplace("b")};
+            auto spec_c_86 = FullPackageSpec{spec_map.emplace("c", "a[a1]"), {"core"}};
 
-            auto install_plan =
-                Dependencies::create_feature_install_plan(spec_map.map,
-                                                          {spec_c_64, spec_a_86, spec_a_64, spec_c_86},
-                                                          StatusParagraphs(std::move(status_paragraphs)));
+            auto install_plan = Dependencies::create_feature_install_plan(
+                spec_map.map,
+                FullPackageSpec::to_feature_specs({spec_c_64, spec_a_86, spec_a_64, spec_c_86}),
+                StatusParagraphs(std::move(status_paragraphs)));
 
             /*Assert::AreEqual(size_t(8), install_plan.size());
             auto iterator_pos = [&](const PackageSpec& spec, size_t start) -> int {
@@ -517,10 +476,10 @@ namespace UnitTest1
             remove_plan_check(&install_plan[0], "a", Triplet::X64_WINDOWS);
             remove_plan_check(&install_plan[1], "a");
             features_check(&install_plan[2], "b", {"core"}, Triplet::X64_WINDOWS);
-            features_check(&install_plan[3], "a", {"one", "core"}, Triplet::X64_WINDOWS);
+            features_check(&install_plan[3], "a", {"a1", "core"}, Triplet::X64_WINDOWS);
             features_check(&install_plan[4], "c", {"core"}, Triplet::X64_WINDOWS);
             features_check(&install_plan[5], "b", {"core"});
-            features_check(&install_plan[6], "a", {"one", "core"});
+            features_check(&install_plan[6], "a", {"a1", "core"});
             features_check(&install_plan[7], "c", {"core"});
         }
     };

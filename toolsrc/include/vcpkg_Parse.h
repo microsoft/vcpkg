@@ -33,4 +33,6 @@ namespace vcpkg::Parse
         RawParagraph&& fields;
         std::vector<std::string> missing_fields;
     };
+
+    std::vector<std::string> parse_comma_list(const std::string& str);
 }

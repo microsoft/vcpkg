@@ -33,7 +33,7 @@ namespace vcpkg::Commands::DependInfo
 
                                       for (const Dependency& dependency : source_paragraph.depends)
                                       {
-                                          if (Strings::case_insensitive_ascii_contains(dependency.name, filter))
+                                          if (Strings::case_insensitive_ascii_contains(dependency.name(), filter))
                                           {
                                               return false;
                                           }
@@ -46,7 +46,7 @@ namespace vcpkg::Commands::DependInfo
         for (auto&& source_control_file : source_control_files)
         {
             const SourceParagraph& source_paragraph = *source_control_file->core_paragraph;
-            auto s = Strings::join(", ", source_paragraph.depends, [](const Dependency& d) { return d.name; });
+            auto s = Strings::join(", ", source_paragraph.depends, [](const Dependency& d) { return d.name(); });
             System::println("%s: %s", source_paragraph.name, s);
         }
 
