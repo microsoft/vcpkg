@@ -3,13 +3,14 @@ cmake_minimum_required(VERSION 3.0)
 
 set(SOURCES "Sources/ClBaical.cpp"
             "Sources/ClFile.cpp"
-            "Sources/ClText.cpp"
             "Sources/Client.cpp"
             "Sources/ClNull.cpp"
+            "Sources/ClText.cpp"
             "Sources/CRC32.cpp"
             "Sources/Proxy.cpp"
             "Sources/Telemetry.cpp"
-            "Sources/Trace.cpp")
+            "Sources/Trace.cpp"
+)
 
 if(WIN32)
   set(RESOURCES "Sources/P7Client.rc")
