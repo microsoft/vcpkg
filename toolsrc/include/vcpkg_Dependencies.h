@@ -3,6 +3,7 @@
 #include "StatusParagraphs.h"
 #include "VcpkgPaths.h"
 #include "vcpkg_Graphs.h"
+#include "vcpkg_Util.h"
 #include "vcpkg_optional.h"
 #include <vector>
 
@@ -38,20 +39,21 @@ namespace vcpkg::Dependencies
         ALREADY_INSTALLED
     };
 
-    struct InstallPlanAction
+    struct InstallPlanAction : Util::MoveOnlyBase
     {
         static bool compare_by_name(const InstallPlanAction* left, const InstallPlanAction* right);
 
         InstallPlanAction();
+
+        InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
+                                             const std::unordered_set<std::string>& features,
+                                             const RequestType& request_type);
         InstallPlanAction(const PackageSpec& spec, const AnyParagraph& any_paragraph, const RequestType& request_type);
         InstallPlanAction(const PackageSpec& spec,
                           const SourceControlFile& any_paragraph,
                           const std::unordered_set<std::string>& features,
                           const RequestType& request_type);
-        InstallPlanAction(const InstallPlanAction&) = delete;
-        InstallPlanAction(InstallPlanAction&&) = default;
-        InstallPlanAction& operator=(const InstallPlanAction&) = delete;
-        InstallPlanAction& operator=(InstallPlanAction&&) = default;
+
         std::string displayname() const;
 
         PackageSpec spec;

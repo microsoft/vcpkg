@@ -62,4 +62,14 @@ namespace vcpkg::Util
             (*output)[key].push_back(&element);
         }
     }
+
+    struct MoveOnlyBase
+    {
+        MoveOnlyBase() = default;
+        MoveOnlyBase(const MoveOnlyBase&) = delete;
+        MoveOnlyBase(MoveOnlyBase&&) = default;
+
+        MoveOnlyBase& operator=(const MoveOnlyBase&) = delete;
+        MoveOnlyBase& operator=(MoveOnlyBase&&) = default;
+    };
 }

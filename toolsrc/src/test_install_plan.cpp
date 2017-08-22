@@ -6,6 +6,34 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 using namespace vcpkg;
 
+namespace Microsoft::VisualStudio::CppUnitTestFramework
+{
+    template<>
+    inline std::wstring ToString<vcpkg::Dependencies::InstallPlanType>(const vcpkg::Dependencies::InstallPlanType& t)
+    {
+        switch (t)
+        {
+            case Dependencies::InstallPlanType::ALREADY_INSTALLED: return L"ALREADY_INSTALLED";
+            case Dependencies::InstallPlanType::BUILD_AND_INSTALL: return L"BUILD_AND_INSTALL";
+            case Dependencies::InstallPlanType::INSTALL: return L"INSTALL";
+            case Dependencies::InstallPlanType::UNKNOWN: return L"UNKNOWN";
+            default: return ToString((int)t);
+        }
+    }
+
+    template<>
+    inline std::wstring ToString<vcpkg::Dependencies::RequestType>(const vcpkg::Dependencies::RequestType& t)
+    {
+        switch (t)
+        {
+            case Dependencies::RequestType::AUTO_SELECTED: return L"AUTO_SELECTED";
+            case Dependencies::RequestType::USER_REQUESTED: return L"USER_REQUESTED";
+            case Dependencies::RequestType::UNKNOWN: return L"UNKNOWN";
+            default: return ToString((int)t);
+        }
+    }
+}
+
 namespace UnitTest1
 {
     class InstallPlanTests : public TestClass<InstallPlanTests>
@@ -125,6 +153,60 @@ namespace UnitTest1
             Assert::IsTrue(d_pos > g_pos);
             Assert::IsTrue(d_pos > h_pos);
             Assert::IsTrue(e_pos > g_pos);
+        }
+
+        TEST_METHOD(existing_package_scheme)
+        {
+            using Pgh = std::unordered_map<std::string, std::string>;
+            std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+            status_paragraphs.push_back(std::make_unique<StatusParagraph>(Pgh{{"Package", "a"},
+                                                                              {"Version", "1"},
+                                                                              {"Architecture", "x86-windows"},
+                                                                              {"Multi-Arch", "same"},
+                                                                              {"Status", "install ok installed"}}));
+
+            PackageSpecMap spec_map(Triplet::X86_WINDOWS);
+            auto spec_a = FullPackageSpec{spec_map.set_package_map("a", "1", ""), {""}};
+
+            auto install_plan =
+                Dependencies::create_feature_install_plan(spec_map.map,
+                                                          FullPackageSpec::to_feature_specs({spec_a}),
+                                                          StatusParagraphs(std::move(status_paragraphs)));
+
+            Assert::AreEqual(size_t(1), install_plan.size());
+            auto p = install_plan[0].install_plan.get();
+            Assert::IsNotNull(p);
+            Assert::AreEqual("a", p->spec.name().c_str());
+            Assert::AreEqual(Dependencies::InstallPlanType::ALREADY_INSTALLED, p->plan_type);
+            Assert::AreEqual(Dependencies::RequestType::USER_REQUESTED, p->request_type);
+        }
+
+        TEST_METHOD(user_requested_package_scheme)
+        {
+            using Pgh = std::unordered_map<std::string, std::string>;
+            std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+
+            PackageSpecMap spec_map(Triplet::X86_WINDOWS);
+            auto spec_a = FullPackageSpec{spec_map.set_package_map("a", "1", "b"), {""}};
+            auto spec_b = FullPackageSpec{spec_map.set_package_map("b", "1", ""), {""}};
+
+            auto install_plan =
+                Dependencies::create_feature_install_plan(spec_map.map,
+                                                          FullPackageSpec::to_feature_specs({spec_a}),
+                                                          StatusParagraphs(std::move(status_paragraphs)));
+
+            Assert::AreEqual(size_t(2), install_plan.size());
+            auto p = install_plan[0].install_plan.get();
+            Assert::IsNotNull(p);
+            Assert::AreEqual("b", p->spec.name().c_str());
+            Assert::AreEqual(Dependencies::InstallPlanType::BUILD_AND_INSTALL, p->plan_type);
+            Assert::AreEqual(Dependencies::RequestType::AUTO_SELECTED, p->request_type);
+
+            auto p2 = install_plan[1].install_plan.get();
+            Assert::IsNotNull(p2);
+            Assert::AreEqual("a", p2->spec.name().c_str());
+            Assert::AreEqual(Dependencies::InstallPlanType::BUILD_AND_INSTALL, p2->plan_type);
+            Assert::AreEqual(Dependencies::RequestType::USER_REQUESTED, p2->request_type);
         }
 
         TEST_METHOD(long_install_scheme)

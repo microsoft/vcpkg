@@ -29,6 +29,7 @@ namespace vcpkg::Dependencies
         std::unordered_set<std::string> original_features;
         bool will_remove = false;
         bool transient_uninstalled = true;
+        RequestType request_type = RequestType::AUTO_SELECTED;
         Cluster() = default;
 
     private:
@@ -39,6 +40,8 @@ namespace vcpkg::Dependencies
     struct ClusterPtr
     {
         Cluster* ptr;
+
+        Cluster* operator->() { return ptr; }
     };
 
     bool operator==(const ClusterPtr& l, const ClusterPtr& r) { return l.ptr == r.ptr; }
@@ -147,50 +150,44 @@ namespace vcpkg::Dependencies
         }
     }
 
-    InstallPlanAction::InstallPlanAction()
-        : spec(), any_paragraph(), plan_type(InstallPlanType::UNKNOWN), request_type(RequestType::UNKNOWN)
-    {
-    }
+    InstallPlanAction::InstallPlanAction() : plan_type(InstallPlanType::UNKNOWN), request_type(RequestType::UNKNOWN) {}
 
     InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
                                          const SourceControlFile& any_paragraph,
                                          const std::unordered_set<std::string>& features,
                                          const RequestType& request_type)
-        : InstallPlanAction()
+        : spec(spec), plan_type(InstallPlanType::BUILD_AND_INSTALL), request_type(request_type), feature_list(features)
     {
-        this->spec = spec;
-        this->request_type = request_type;
-
-        this->plan_type = InstallPlanType::BUILD_AND_INSTALL;
         this->any_paragraph.source_control_file = &any_paragraph;
-        this->feature_list = features;
+    }
+
+    InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
+                                         const std::unordered_set<std::string>& features,
+                                         const RequestType& request_type)
+        : spec(spec), plan_type(InstallPlanType::ALREADY_INSTALLED), request_type(request_type), feature_list(features)
+    {
     }
 
     InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
                                          const AnyParagraph& any_paragraph,
                                          const RequestType& request_type)
-        : InstallPlanAction()
+        : spec(spec), request_type(request_type), any_paragraph(any_paragraph)
     {
-        this->spec = spec;
-        this->request_type = request_type;
         if (auto p = any_paragraph.status_paragraph.get())
         {
             this->plan_type = InstallPlanType::ALREADY_INSTALLED;
-            this->any_paragraph.status_paragraph = *p;
             return;
         }
 
         if (auto p = any_paragraph.binary_paragraph.get())
         {
             this->plan_type = InstallPlanType::INSTALL;
-            this->any_paragraph.binary_paragraph = *p;
             return;
         }
 
         if (auto p = any_paragraph.source_paragraph.get())
         {
             this->plan_type = InstallPlanType::BUILD_AND_INSTALL;
-            this->any_paragraph.source_paragraph = *p;
             return;
         }
 
@@ -594,7 +591,9 @@ namespace vcpkg::Dependencies
         for (auto&& spec : specs)
         {
             Cluster& spec_cluster = graph.get(spec.spec());
+            spec_cluster.request_type = RequestType::USER_REQUESTED;
             mark_plus(spec.feature(), spec_cluster, graph, graph_plan);
+            graph_plan.install_graph.add_vertex(ClusterPtr{&spec_cluster});
         }
 
         Graphs::GraphAdjacencyProvider<ClusterPtr> adjacency_remove_graph(graph_plan.remove_graph.adjacency_list());
@@ -605,36 +604,46 @@ namespace vcpkg::Dependencies
         auto insert_vertex_list = graph_plan.install_graph.vertex_list();
         auto insert_toposort = Graphs::topological_sort(insert_vertex_list, adjacency_install_graph);
 
-        std::vector<AnyAction> install_plan;
+        std::vector<AnyAction> plan;
 
-        for (auto&& like_cluster : remove_toposort)
+        for (auto&& p_cluster : remove_toposort)
         {
-            auto scf = *like_cluster.ptr->source_control_file.get();
-            auto spec = PackageSpec::from_name_and_triplet(scf->core_paragraph->name, like_cluster.ptr->spec.triplet())
+            auto scf = *p_cluster->source_control_file.get();
+            auto spec = PackageSpec::from_name_and_triplet(scf->core_paragraph->name, p_cluster->spec.triplet())
                             .value_or_exit(VCPKG_LINE_INFO);
-            install_plan.emplace_back(RemovePlanAction{
+            plan.emplace_back(RemovePlanAction{
                 std::move(spec),
                 RemovePlanType::REMOVE,
-                RequestType::AUTO_SELECTED,
+                p_cluster->request_type,
             });
         }
 
-        for (auto&& like_cluster : insert_toposort)
+        for (auto&& p_cluster : insert_toposort)
         {
-            if (!like_cluster.ptr->transient_uninstalled) continue;
-
-            auto scf = *like_cluster.ptr->source_control_file.get();
-            auto pkg_spec =
-                PackageSpec::from_name_and_triplet(scf->core_paragraph->name, like_cluster.ptr->spec.triplet())
-                    .value_or_exit(VCPKG_LINE_INFO);
-            install_plan.emplace_back(InstallPlanAction{
-                pkg_spec,
-                *scf,
-                like_cluster.ptr->to_install_features,
-                RequestType::AUTO_SELECTED,
-            });
+            if (p_cluster->transient_uninstalled)
+            {
+                // If it will be transiently uninstalled, we need to issue a full installation command
+                auto pscf = p_cluster->source_control_file.value_or_exit(VCPKG_LINE_INFO);
+                Checks::check_exit(VCPKG_LINE_INFO, pscf != nullptr);
+                plan.emplace_back(InstallPlanAction{
+                    p_cluster->spec,
+                    *pscf,
+                    p_cluster->to_install_features,
+                    p_cluster->request_type,
+                });
+            }
+            else
+            {
+                // If the package isn't transitively installed, still include it if the user explicitly requested it
+                if (p_cluster->request_type != RequestType::USER_REQUESTED) continue;
+                plan.emplace_back(InstallPlanAction{
+                    p_cluster->spec,
+                    p_cluster->original_features,
+                    p_cluster->request_type,
+                });
+            }
         }
 
-        return install_plan;
+        return plan;
     }
 }
