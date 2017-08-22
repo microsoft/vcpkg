@@ -160,7 +160,7 @@ namespace vcpkg
             // expect of the form "\w+ \[\w+\]"
             Dependency dep;
             dep.name = depend_string.substr(0, pos);
-            if (depend_string.c_str()[pos + 1] != '[' || depend_string[depend_string.size() - 1] != ']')
+            if (depend_string.c_str()[pos + 1] != '(' || depend_string[depend_string.size() - 1] != ')')
             {
                 // Error, but for now just slurp the entire string.
                 return {depend_string, ""};

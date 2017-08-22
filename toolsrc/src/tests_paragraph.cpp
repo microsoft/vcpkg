@@ -27,7 +27,8 @@ namespace UnitTest1
         {
             auto m_pgh =
                 vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-                    {"Source", "zlib"}, {"Version", "1.2.8"},
+                    {"Source", "zlib"},
+                    {"Version", "1.2.8"},
                 }});
 
             Assert::IsTrue(m_pgh.has_value());
@@ -68,7 +69,9 @@ namespace UnitTest1
         {
             auto m_pgh =
                 vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-                    {"Source", "zlib"}, {"Version", "1.2.8"}, {"Build-Depends", "z, openssl"},
+                    {"Source", "zlib"},
+                    {"Version", "1.2.8"},
+                    {"Build-Depends", "z, openssl"},
                 }});
             Assert::IsTrue(m_pgh.has_value());
             auto& pgh = *m_pgh.get();
@@ -82,7 +85,9 @@ namespace UnitTest1
         {
             auto m_pgh =
                 vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-                    {"Source", "zlib"}, {"Version", "1.2.8"}, {"Build-Depends", "z, openssl, xyz"},
+                    {"Source", "zlib"},
+                    {"Version", "1.2.8"},
+                    {"Build-Depends", "z, openssl, xyz"},
                 }});
             Assert::IsTrue(m_pgh.has_value());
             auto& pgh = *m_pgh.get();
@@ -97,7 +102,9 @@ namespace UnitTest1
         {
             auto m_pgh =
                 vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-                    {"Source", "zlib"}, {"Version", "1.2.8"}, {"Supports", "x64, windows, uwp"},
+                    {"Source", "zlib"},
+                    {"Version", "1.2.8"},
+                    {"Supports", "x64, windows, uwp"},
                 }});
             Assert::IsTrue(m_pgh.has_value());
             auto& pgh = *m_pgh.get();
@@ -112,7 +119,9 @@ namespace UnitTest1
         {
             auto m_pgh =
                 vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
-                    {"Source", "zlib"}, {"Version", "1.2.8"}, {"Build-Depends", "libA [windows], libB [uwp]"},
+                    {"Source", "zlib"},
+                    {"Version", "1.2.8"},
+                    {"Build-Depends", "libA (windows), libB (uwp)"},
                 }});
             Assert::IsTrue(m_pgh.has_value());
             auto& pgh = *m_pgh.get();
@@ -131,7 +140,10 @@ namespace UnitTest1
         TEST_METHOD(BinaryParagraph_Construct_Minimum)
         {
             vcpkg::BinaryParagraph pgh({
-                {"Package", "zlib"}, {"Version", "1.2.8"}, {"Architecture", "x86-windows"}, {"Multi-Arch", "same"},
+                {"Package", "zlib"},
+                {"Version", "1.2.8"},
+                {"Architecture", "x86-windows"},
+                {"Multi-Arch", "same"},
             });
 
             Assert::AreEqual("zlib", pgh.spec.name().c_str());
@@ -320,7 +332,10 @@ namespace UnitTest1
         TEST_METHOD(BinaryParagraph_serialize_min)
         {
             vcpkg::BinaryParagraph pgh({
-                {"Package", "zlib"}, {"Version", "1.2.8"}, {"Architecture", "x86-windows"}, {"Multi-Arch", "same"},
+                {"Package", "zlib"},
+                {"Version", "1.2.8"},
+                {"Architecture", "x86-windows"},
+                {"Multi-Arch", "same"},
             });
             std::string ss = Strings::serialize(pgh);
             auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);

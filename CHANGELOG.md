@@ -1,3 +1,33 @@
+vcpkg (0.0.83)
+--------------
+  * Add ports:
+    - fuzzylite            6.0
+    - jemalloc             4.3.1-1
+    - libkml               1.3.0
+    - pcl                  1.8.1
+    - plog                 1.1.3
+  * Update ports:
+    - catch                1.9.6 -> 1.9.7
+    - ceres                1.12.0-4 -> 1.13.0
+    - cpp-redis            3.5.2 -> 3.5.2-1
+    - gdal                 1.11.3-3 -> 1.11.3-4
+    - graphicsmagick       1.3.26 -> 1.3.26-1
+    - hypre                2.11.1 -> 2.11.2
+    - libtheora            1.1.1 -> 1.2.0alpha1-20170719~vcpkg1
+    - minizip              1.2.11 -> 1.2.11-1
+    - openblas             v0.2.19-2 -> v0.2.20
+    - openjpeg             2.1.2-2 -> 2.2.0
+    - physfs               2.0.3 -> 2.0.3-1
+    - stb                  1.0 -> 20170724-9d9f75e
+    - uwebsockets          0.14.3 -> 0.14.4
+    - vtk                  7.1.1-1 -> 8.0.0-1
+    - yaml-cpp             0.5.4 candidate -> 0.5.4-rc-1
+  * Bump required version & auto-downloaded version of `cmake` to 3.9.1 (was 3.9.0)
+  * Fixes and improvements in the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  FRI, 11 Aug 2017 12:00:00 -0800
+
+
 vcpkg (0.0.82)
 --------------
   * Add ports:

@@ -11,19 +11,19 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/allegro5-7d8892a9278c57f2d8bb1e555f9ec59cf9ed4f73)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/allegro5-e8b209bc20a60224859eb8a0cae082bd20d32ed1)
 vcpkg_from_github(
     OUT_SOURCE_PATH ${SOURCE_PATH}
     REPO liballeg/allegro5
-    REF 7d8892a9278c57f2d8bb1e555f9ec59cf9ed4f73
-    SHA512 b1531fa2f22023ecd4e053d03d1c54bf0b94aa3af004a3a06245c4d8278fea64e9d354467873ebd665301903d954795fed88e2467c88441f39c273e7e0d87d6e
+    REF e8b209bc20a60224859eb8a0cae082bd20d32ed1
+    SHA512 50b30d4b539bd4a2488d2b33e9fbfc6fdfd340039d9086993a5719bab3cb020ee6fe7f6d3578755a52c8aab9816d25cd74710ce93b0b374a2f97620b6138419d
     HEAD_REF master
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(ALLEGRO_USE_STATIC -DSHARED=ON)
+    set(ALLEGRO_USE_STATIC ON)
 else()
-    set(ALLEGRO_USE_STATIC -DSHARED=OFF)
+    set(ALLEGRO_USE_STATIC OFF)
 endif()
 
 vcpkg_apply_patches(
@@ -39,7 +39,7 @@ vcpkg_configure_cmake(
         -DWANT_DOCS=OFF
         -DALLEGRO_SDL=OFF
         -DWANT_DEMO=OFF
-        ${ALLEGRO_USE_STATIC}
+        -DSHARED=${ALLEGRO_USE_STATIC}
         -DWANT_EXAMPLES=OFF
         -DWANT_CURL_EXAMPLE=OFF
         -DWANT_TESTS=OFF
@@ -63,7 +63,7 @@ vcpkg_configure_cmake(
         -DWANT_OPENAL=ON
         -DWANT_OPENGL=ON
         -DWANT_OPENSL=OFF # Not yet available on vcpkg
-        -DWANT_OPUS=OFF # opus is available on vcpkg, but opusfile isn't
+        -DWANT_OPUS=ON
         -DWANT_PHYSFS=ON
         -DWANT_POPUP_EXAMPLES=OFF
         -DWANT_PRIMITIVES=ON
