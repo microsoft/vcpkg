@@ -32,6 +32,15 @@ namespace vcpkg::Commands::Edit
 
         if (env_EDITOR.empty())
         {
+            const fs::path CODE_EXE_PATH = System::get_ProgramFiles_platform_bitness() / "Microsoft VS Code/Code.exe";
+            if (fs.exists(CODE_EXE_PATH))
+            {
+                env_EDITOR = CODE_EXE_PATH;
+            }
+        }
+
+        if (env_EDITOR.empty())
+        {
             const fs::path CODE_EXE_PATH = System::get_ProgramFiles_32_bit() / "Microsoft VS Code/Code.exe";
             if (fs.exists(CODE_EXE_PATH))
             {
