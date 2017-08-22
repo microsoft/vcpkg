@@ -13,6 +13,12 @@ namespace vcpkg
         return (c == '-') || isdigit(c) || (isalpha(c) && islower(c)) || (c == '[') || (c == ']');
     }
 
+    std::string FeatureSpec::to_string() const
+    {
+        if (feature().empty()) return spec().to_string();
+        return Strings::format("%s[%s]:%s", name(), feature(), triplet());
+    }
+
     std::vector<FeatureSpec> FeatureSpec::from_strings_and_triplet(const std::vector<std::string>& depends,
                                                                    const Triplet& triplet)
     {
@@ -36,8 +42,10 @@ namespace vcpkg
             }
             else
             {
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "error while parsing feature list: %s: %s", to_string(maybe_spec.error()), depend);
+                Checks::exit_with_message(VCPKG_LINE_INFO,
+                                          "error while parsing feature list: %s: %s",
+                                          vcpkg::to_string(maybe_spec.error()),
+                                          depend);
             }
         }
         return f_specs;

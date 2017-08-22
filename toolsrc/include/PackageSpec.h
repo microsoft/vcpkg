@@ -43,6 +43,8 @@ namespace vcpkg
 
         const PackageSpec& spec() const { return m_spec; }
 
+        std::string to_string() const;
+
         static std::vector<FeatureSpec> from_strings_and_triplet(const std::vector<std::string>& depends,
                                                                  const Triplet& t);
 

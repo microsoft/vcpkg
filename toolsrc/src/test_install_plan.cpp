@@ -537,9 +537,9 @@ namespace UnitTest1
             remove_plan_check(&install_plan[1], "b");
 
             // TODO: order here may change but A < X, and B anywhere
-            features_check(&install_plan[2], "a", {"core"});
-            features_check(&install_plan[3], "x", {"core"});
-            features_check(&install_plan[4], "b", {"core", "1"});
+            features_check(&install_plan[2], "b", {"core", "1"});
+            features_check(&install_plan[3], "a", {"core"});
+            features_check(&install_plan[4], "x", {"core"});
         }
 
         TEST_METHOD(basic_feature_test_8)

@@ -453,23 +453,30 @@ namespace vcpkg::Dependencies
         return toposort;
     }
 
-    void mark_plus(const std::string& feature, Cluster& cluster, ClusterGraph& pkg_to_cluster, GraphPlan& graph_plan);
+    enum class MarkPlusResult
+    {
+        FEATURE_NOT_FOUND,
+        SUCCESS,
+    };
+
+    MarkPlusResult mark_plus(const std::string& feature,
+                             Cluster& cluster,
+                             ClusterGraph& pkg_to_cluster,
+                             GraphPlan& graph_plan);
     void mark_minus(Cluster& cluster, ClusterGraph& pkg_to_cluster, GraphPlan& graph_plan);
 
-    void mark_plus(const std::string& feature, Cluster& cluster, ClusterGraph& graph, GraphPlan& graph_plan)
+    MarkPlusResult mark_plus(const std::string& feature, Cluster& cluster, ClusterGraph& graph, GraphPlan& graph_plan)
     {
         if (feature == "")
         {
             // Indicates that core was not specified in the reference
             return mark_plus("core", cluster, graph, graph_plan);
         }
-        auto it = cluster.edges.find(feature);
-        if (it == cluster.edges.end())
-        {
-            Checks::unreachable(VCPKG_LINE_INFO);
-        }
 
-        if (cluster.edges[feature].plus) return;
+        auto it = cluster.edges.find(feature);
+        if (it == cluster.edges.end()) return MarkPlusResult::FEATURE_NOT_FOUND;
+
+        if (cluster.edges[feature].plus) return MarkPlusResult::SUCCESS;
 
         if (cluster.original_features.find(feature) == cluster.original_features.end())
         {
@@ -478,7 +485,7 @@ namespace vcpkg::Dependencies
 
         if (!cluster.transient_uninstalled)
         {
-            return;
+            return MarkPlusResult::SUCCESS;
         }
         cluster.edges[feature].plus = true;
 
@@ -494,16 +501,28 @@ namespace vcpkg::Dependencies
         if (feature != "core")
         {
             // All features implicitly depend on core
-            mark_plus("core", cluster, graph, graph_plan);
+            auto res = mark_plus("core", cluster, graph, graph_plan);
+
+            // Should be impossible for "core" to not exist
+            Checks::check_exit(VCPKG_LINE_INFO, res == MarkPlusResult::SUCCESS);
         }
 
         for (auto&& depend : cluster.edges[feature].build_edges)
         {
             auto& depend_cluster = graph.get(depend.spec());
-            mark_plus(depend.feature(), depend_cluster, graph, graph_plan);
+            auto res = mark_plus(depend.feature(), depend_cluster, graph, graph_plan);
+
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               res == MarkPlusResult::SUCCESS,
+                               "Error: Unable to satisfy dependency %s of %s",
+                               depend,
+                               FeatureSpec(cluster.spec, feature));
+
             if (&depend_cluster == &cluster) continue;
             graph_plan.install_graph.add_edge({&cluster}, {&depend_cluster});
         }
+
+        return MarkPlusResult::SUCCESS;
     }
 
     void mark_minus(Cluster& cluster, ClusterGraph& graph, GraphPlan& graph_plan)
@@ -526,7 +545,13 @@ namespace vcpkg::Dependencies
         cluster.transient_uninstalled = true;
         for (auto&& original_feature : cluster.original_features)
         {
-            mark_plus(original_feature, cluster, graph, graph_plan);
+            auto res = mark_plus(original_feature, cluster, graph, graph_plan);
+            if (res != MarkPlusResult::SUCCESS)
+            {
+                System::println(System::Color::warning,
+                                "Warning: could not reinstall feature %s",
+                                FeatureSpec{cluster.spec, original_feature});
+            }
         }
     }
 
@@ -592,7 +617,11 @@ namespace vcpkg::Dependencies
         {
             Cluster& spec_cluster = graph.get(spec.spec());
             spec_cluster.request_type = RequestType::USER_REQUESTED;
-            mark_plus(spec.feature(), spec_cluster, graph, graph_plan);
+            auto res = mark_plus(spec.feature(), spec_cluster, graph, graph_plan);
+
+            Checks::check_exit(
+                VCPKG_LINE_INFO, res == MarkPlusResult::SUCCESS, "Error: Unable to locate feature %s", spec);
+
             graph_plan.install_graph.add_vertex(ClusterPtr{&spec_cluster});
         }
 
