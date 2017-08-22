@@ -70,16 +70,12 @@ namespace vcpkg::Dependencies
         REMOVE
     };
 
-    struct RemovePlanAction
+    struct RemovePlanAction : Util::MoveOnlyBase
     {
         static bool compare_by_name(const RemovePlanAction* left, const RemovePlanAction* right);
 
         RemovePlanAction();
         RemovePlanAction(const PackageSpec& spec, const RemovePlanType& plan_type, const RequestType& request_type);
-        RemovePlanAction(const RemovePlanAction&) = delete;
-        RemovePlanAction(RemovePlanAction&&) = default;
-        RemovePlanAction& operator=(const RemovePlanAction&) = delete;
-        RemovePlanAction& operator=(RemovePlanAction&&) = default;
 
         PackageSpec spec;
         RemovePlanType plan_type;
@@ -102,16 +98,12 @@ namespace vcpkg::Dependencies
         ALREADY_BUILT
     };
 
-    struct ExportPlanAction
+    struct ExportPlanAction : Util::MoveOnlyBase
     {
         static bool compare_by_name(const ExportPlanAction* left, const ExportPlanAction* right);
 
         ExportPlanAction();
         ExportPlanAction(const PackageSpec& spec, const AnyParagraph& any_paragraph, const RequestType& request_type);
-        ExportPlanAction(const ExportPlanAction&) = delete;
-        ExportPlanAction(ExportPlanAction&&) = default;
-        ExportPlanAction& operator=(const ExportPlanAction&) = delete;
-        ExportPlanAction& operator=(ExportPlanAction&&) = default;
 
         PackageSpec spec;
         AnyParagraph any_paragraph;
@@ -121,23 +113,19 @@ namespace vcpkg::Dependencies
 
     __interface PortFileProvider { virtual const SourceControlFile& get_control_file(const std::string& spec) const; };
 
-    struct MapPortFile : PortFileProvider
+    struct MapPortFile : Util::ResourceBase, PortFileProvider
     {
         const std::unordered_map<std::string, SourceControlFile>& ports;
         explicit MapPortFile(const std::unordered_map<std::string, SourceControlFile>& map);
         const SourceControlFile& get_control_file(const std::string& spec) const override;
     };
 
-    struct PathsPortFile : PortFileProvider
+    struct PathsPortFile : Util::ResourceBase, PortFileProvider
     {
         const VcpkgPaths& ports;
         mutable std::unordered_map<std::string, SourceControlFile> cache;
         explicit PathsPortFile(const VcpkgPaths& paths);
         const SourceControlFile& get_control_file(const std::string& spec) const override;
-
-    private:
-        PathsPortFile(const PathsPortFile&) = delete;
-        PathsPortFile& operator=(const PathsPortFile&) = delete;
     };
 
     std::vector<InstallPlanAction> create_install_plan(const PortFileProvider& port_file_provider,

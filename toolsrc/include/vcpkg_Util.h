@@ -72,4 +72,14 @@ namespace vcpkg::Util
         MoveOnlyBase& operator=(const MoveOnlyBase&) = delete;
         MoveOnlyBase& operator=(MoveOnlyBase&&) = default;
     };
+
+    struct ResourceBase
+    {
+        ResourceBase() = default;
+        ResourceBase(const ResourceBase&) = delete;
+        ResourceBase(ResourceBase&&) = delete;
+
+        ResourceBase& operator=(const ResourceBase&) = delete;
+        ResourceBase& operator=(ResourceBase&&) = delete;
+    };
 }

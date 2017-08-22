@@ -151,7 +151,7 @@ namespace UnitTest1
             auto spec_b = spec_map.emplace("b", "c");
             auto spec_c = spec_map.emplace("c");
 
-            auto map_port = Dependencies::MapPortFile(spec_map.map);
+            Dependencies::MapPortFile map_port(spec_map.map);
             auto install_plan =
                 Dependencies::create_install_plan(map_port, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
 
@@ -175,7 +175,7 @@ namespace UnitTest1
             auto spec_g = spec_map.emplace("g");
             auto spec_h = spec_map.emplace("h");
 
-            auto map_port = Dependencies::MapPortFile(spec_map.map);
+            Dependencies::MapPortFile map_port(spec_map.map);
             auto install_plan = Dependencies::create_install_plan(
                 map_port, {spec_a, spec_b, spec_c}, StatusParagraphs(std::move(status_paragraphs)));
 
@@ -268,7 +268,7 @@ namespace UnitTest1
             auto spec_j = spec_map.emplace("j", "k");
             auto spec_k = spec_map.emplace("k");
 
-            auto map_port = Dependencies::MapPortFile(spec_map.map);
+            Dependencies::MapPortFile map_port(spec_map.map);
             auto install_plan =
                 Dependencies::create_install_plan(map_port, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
 

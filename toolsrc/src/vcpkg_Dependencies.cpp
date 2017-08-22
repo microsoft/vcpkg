@@ -19,7 +19,7 @@ namespace vcpkg::Dependencies
         bool plus = false;
     };
 
-    struct Cluster
+    struct Cluster : Util::MoveOnlyBase
     {
         std::vector<StatusParagraph*> status_paragraphs;
         Optional<const SourceControlFile*> source_control_file;
@@ -30,11 +30,6 @@ namespace vcpkg::Dependencies
         bool will_remove = false;
         bool transient_uninstalled = true;
         RequestType request_type = RequestType::AUTO_SELECTED;
-        Cluster() = default;
-
-    private:
-        Cluster(const Cluster&) = delete;
-        Cluster& operator=(const Cluster&) = delete;
     };
 
     struct ClusterPtr
@@ -64,13 +59,12 @@ namespace vcpkg::Dependencies
         Graphs::Graph<ClusterPtr> install_graph;
     };
 
-    struct ClusterGraph
+    struct ClusterGraph : Util::MoveOnlyBase
     {
         explicit ClusterGraph(std::unordered_map<std::string, const SourceControlFile*>&& ports)
             : m_ports(std::move(ports))
         {
         }
-        ClusterGraph(ClusterGraph&&) = default;
 
         Cluster& get(const PackageSpec& spec)
         {
@@ -108,7 +102,6 @@ namespace vcpkg::Dependencies
             out_cluster.source_control_file = &scf;
         }
 
-        ClusterGraph(const ClusterGraph&) = delete;
         std::unordered_map<PackageSpec, Cluster> m_graph;
         std::unordered_map<std::string, const SourceControlFile*> m_ports;
     };
