@@ -1,3 +1,36 @@
+vcpkg (0.0.84)
+--------------
+  * Add ports:
+    - cfitsio              3.410
+    - chmlib               0.40
+    - gl2ps                OpenGL to PostScript Printing Library
+    - libharu              2017-08-15-d84867ebf9f-1
+    - mpfr                 3.1.5
+    - sophus               1.0.0
+  * Update ports:
+    - allegro5             5.2.1.0 -> 5.2.2.0
+    - blaze                3.1 -> 3.2
+    - boost                1.64-5 -> 1.65
+    - curl                 7.51.0-3 -> 7.55.0
+    - flann                1.9.1-4 -> 1.9.1-5
+    - gdal                 1.11.3-4 -> 1.11.3-5
+    - glew                 2.0.0-2 -> 2.1.0
+    - lcms                 2.8-1 -> 2.8-2
+    - libogg               2017-07-27-cab46b19847 -> 1.3.2-cab46b1-2
+    - libuv                1.13.1 -> 1.14.0
+    - lz4                  1.7.5 -> 1.8.0
+    - pcre2                10.23 -> 10.30
+    - spdlog               0.13.0 -> 0.14.0
+    - zstd                 1.3.0 -> 1.3.1
+  * Bump required version & auto-downloaded version of `git` to 2.14.1 (due to a security vulnerability)
+  * Show more information when there are issues acquiring `vcpkg` tool dependencies (`git`, `cmake`, `nuget`)
+  * Remove download prompts for cmake/git. The prompts were causing a lot of issues for users and especially CI builds
+  * `vcpkg edit`: Fix detection of 64-bit VSCode
+  * Fixes and improvements in the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  TUE, 22 Aug 2017 13:00:00 -0800
+
+
 vcpkg (0.0.83)
 --------------
   * Add ports:

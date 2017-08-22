@@ -9,7 +9,6 @@ vcpkg_from_github(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS_DEBUG -DLIBHPDF_DEBUG=ON
 )
 
 vcpkg_build_cmake()
@@ -34,7 +33,7 @@ file(GLOB DEBUG_LIBS
     "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Debug/*.lib"
     "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*/Debug/*.lib"
 )
-file(GLOB HEADERS "${SOURCE_PATH}/include/*.h" "${CMAKE_BINARY_DIR}/include/*.h")
+file(GLOB HEADERS "${SOURCE_PATH}/include/*.h" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/include/*.h")
 
 if(DLLS)
     file(INSTALL ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
