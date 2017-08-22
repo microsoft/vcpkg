@@ -13,11 +13,7 @@
 
 namespace vcpkg::Commands::Install
 {
-    using Dependencies::InstallPlanAction;
-    using Dependencies::InstallPlanType;
-    using Dependencies::RemovePlanAction;
-    using Dependencies::RemovePlanType;
-    using Dependencies::RequestType;
+    using namespace Dependencies;
 
     InstallDir InstallDir::from_destination_root(const fs::path& destination_root,
                                                  const std::string& destination_subdirectory,
@@ -174,41 +170,6 @@ namespace vcpkg::Commands::Install
         remove_first_n_chars(&installed_files, installed_remove_char_count);
 
         return SortedVector<std::string>(std::move(installed_files));
-    }
-
-    static void print_plan(const std::map<InstallPlanType, std::vector<const InstallPlanAction*>>& group_by_plan_type)
-    {
-        static constexpr std::array<InstallPlanType, 3> order = {
-            InstallPlanType::ALREADY_INSTALLED, InstallPlanType::BUILD_AND_INSTALL, InstallPlanType::INSTALL};
-
-        for (const InstallPlanType plan_type : order)
-        {
-            auto it = group_by_plan_type.find(plan_type);
-            if (it == group_by_plan_type.cend())
-            {
-                continue;
-            }
-
-            std::vector<const InstallPlanAction*> cont = it->second;
-            std::sort(cont.begin(), cont.end(), &InstallPlanAction::compare_by_name);
-            const std::string as_string = Strings::join("\n", cont, [](const InstallPlanAction* p) {
-                return Dependencies::to_output_string(p->request_type, p->spec.to_string());
-            });
-
-            switch (plan_type)
-            {
-                case InstallPlanType::ALREADY_INSTALLED:
-                    System::println("The following packages are already installed:\n%s", as_string);
-                    continue;
-                case InstallPlanType::BUILD_AND_INSTALL:
-                    System::println("The following packages will be built and installed:\n%s", as_string);
-                    continue;
-                case InstallPlanType::INSTALL:
-                    System::println("The following packages will be installed:\n%s", as_string);
-                    continue;
-                default: Checks::unreachable(VCPKG_LINE_INFO);
-            }
-        }
     }
 
     void install_package(const VcpkgPaths& paths, const BinaryControlFile& bcf, StatusParagraphs* status_db)
@@ -383,19 +344,78 @@ namespace vcpkg::Commands::Install
         Checks::unreachable(VCPKG_LINE_INFO);
     }
 
-    static void print_plan(const std::vector<const InstallPlanAction*> rebuilt_plans,
-                           const std::vector<const InstallPlanAction*> new_plans)
+    static void print_plan(const std::vector<AnyAction>& action_plan, bool is_recursive)
     {
+        std::vector<const RemovePlanAction*> remove_plans;
+        std::vector<const InstallPlanAction*> rebuilt_plans;
+        std::vector<const InstallPlanAction*> only_install_plans;
+        std::vector<const InstallPlanAction*> new_plans;
+
+        const bool has_non_user_requested_packages = Util::find_if(action_plan, [](const AnyAction& package) -> bool {
+                                                         if (auto iplan = package.install_plan.get())
+                                                             return iplan->request_type != RequestType::USER_REQUESTED;
+                                                         else
+                                                             return false;
+                                                     }) != action_plan.cend();
+
+        for (auto&& action : action_plan)
+        {
+            if (auto install_action = action.install_plan.get())
+            {
+                // remove plans are guaranteed to come before install plans, so we know the plan will be contained if at
+                // all.
+                auto it = Util::find_if(
+                    remove_plans, [&](const RemovePlanAction* plan) { return plan->spec == install_action->spec; });
+                if (it != remove_plans.end())
+                {
+                    rebuilt_plans.emplace_back(install_action);
+                }
+                else
+                {
+                    if (install_action->plan_type == InstallPlanType::INSTALL)
+                        only_install_plans.emplace_back(install_action);
+                    else
+                        new_plans.emplace_back(install_action);
+                }
+            }
+            else if (auto remove_action = action.remove_plan.get())
+            {
+                remove_plans.emplace_back(remove_action);
+            }
+        }
+
+        std::sort(remove_plans.begin(), remove_plans.end(), &RemovePlanAction::compare_by_name);
+        std::sort(rebuilt_plans.begin(), rebuilt_plans.end(), &InstallPlanAction::compare_by_name);
+        std::sort(only_install_plans.begin(), only_install_plans.end(), &InstallPlanAction::compare_by_name);
+        std::sort(new_plans.begin(), new_plans.end(), &InstallPlanAction::compare_by_name);
+
         const std::string rebuilt_string = Strings::join("\n", rebuilt_plans, [](const InstallPlanAction* p) {
-            return Dependencies::to_output_string(p->request_type, p->displayname());
+            return to_output_string(p->request_type, p->displayname());
         });
+        if (rebuilt_plans.size() > 0) System::println("The following packages will be rebuilt:\n%s", rebuilt_string);
 
         const std::string new_string = Strings::join("\n", new_plans, [](const InstallPlanAction* p) {
-            return Dependencies::to_output_string(p->request_type, p->displayname());
+            return to_output_string(p->request_type, p->displayname());
         });
+        if (new_plans.size() > 0)
+            System::println("The following packages will be built and installed:\n%s", new_string);
 
-        if (rebuilt_plans.size() > 0) System::println("The following packages will be rebuilt:\n%s", rebuilt_string);
-        if (new_plans.size() > 0) System::println("The following packages will be installed:\n%s", new_string);
+        const std::string only_install_string = Strings::join("\n", only_install_plans, [](const InstallPlanAction* p) {
+            return to_output_string(p->request_type, p->displayname());
+        });
+        if (only_install_plans.size() > 0)
+            System::println("The following packages will be directly installed:\n%s", only_install_string);
+
+        if (has_non_user_requested_packages)
+            System::println("Additional packages (*) will be installed to complete this operation.");
+
+        if (remove_plans.size() > 0 && !is_recursive)
+        {
+            System::println(System::Color::warning,
+                            "If you are sure you want to rebuild the above packages, run the command with the "
+                            "--recurse option");
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
     }
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
@@ -410,86 +430,81 @@ namespace vcpkg::Commands::Install
             Commands::Help::create_example_string("install zlib zlib:x64-windows curl boost");
         args.check_min_arg_count(1, example);
 
-        const std::vector<PackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
-            return Input::check_and_get_package_spec(arg, default_triplet, example);
+        const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
+            return Input::check_and_get_full_package_spec(arg, default_triplet, example);
         });
+
         for (auto&& spec : specs)
-            Input::check_triplet(spec.triplet(), paths);
+        {
+            Input::check_triplet(spec.package_spec.triplet(), paths);
+            if (!spec.features.empty() && !g_feature_packages)
+            {
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO, "Feature packages are experimentally available under the --featurepackages flag.");
+            }
+        }
 
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments(
             {OPTION_DRY_RUN, OPTION_USE_HEAD_VERSION, OPTION_NO_DOWNLOADS, OPTION_RECURSE});
         const bool dryRun = options.find(OPTION_DRY_RUN) != options.cend();
         const bool use_head_version = options.find(OPTION_USE_HEAD_VERSION) != options.cend();
         const bool no_downloads = options.find(OPTION_NO_DOWNLOADS) != options.cend();
-        const bool isRecursive = options.find(OPTION_RECURSE) != options.cend();
+        const bool is_recursive = options.find(OPTION_RECURSE) != options.cend();
 
         // create the plan
         StatusParagraphs status_db = database_load_check(paths);
 
+        const Build::BuildPackageOptions install_plan_options = {Build::to_use_head_version(use_head_version),
+                                                                 Build::to_allow_downloads(!no_downloads)};
+
+        std::vector<AnyAction> action_plan;
+
         if (g_feature_packages)
         {
-            const std::vector<FullPackageSpec> full_specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
-                return Input::check_and_get_full_package_spec(arg, default_triplet, example);
-            });
-
-            std::unordered_map<PackageSpec, SourceControlFile> scf_map;
+            std::unordered_map<std::string, SourceControlFile> scf_map;
             auto all_ports = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
             for (auto&& port : all_ports.paragraphs)
             {
-                auto pkg_spec = PackageSpec::from_name_and_triplet(port->core_paragraph->name, default_triplet)
-                                    .value_or_exit(VCPKG_LINE_INFO);
-                scf_map[pkg_spec] = std::move(*port);
+                scf_map[port->core_paragraph->name] = std::move(*port);
             }
-            std::vector<Dependencies::AnyAction> action_plan = Dependencies::create_feature_install_plan(
-                scf_map, FullPackageSpec::to_feature_specs(full_specs), status_db);
-            // install plan will be empty if it is already installed - need to change this at status paragraph part
-            Checks::check_exit(
-                VCPKG_LINE_INFO, !action_plan.empty(), "Install plan cannot be empty for feature packages");
+            action_plan = create_feature_install_plan(scf_map, FullPackageSpec::to_feature_specs(specs), status_db);
+        }
+        else
+        {
+            Dependencies::PathsPortFile paths_port_file(paths);
+            auto install_plan = Dependencies::create_install_plan(
+                paths_port_file, Util::fmap(specs, [](auto&& spec) { return spec.package_spec; }), status_db);
 
-            const Build::BuildPackageOptions install_plan_options = {Build::to_use_head_version(use_head_version),
-                                                                     Build::to_allow_downloads(!no_downloads)};
+            action_plan = Util::fmap(
+                install_plan, [](InstallPlanAction& install_action) { return AnyAction(std::move(install_action)); });
+        }
 
-            std::vector<const RemovePlanAction*> remove_plans;
+        // install plan will be empty if it is already installed - need to change this at status paragraph part
+        Checks::check_exit(VCPKG_LINE_INFO, !action_plan.empty(), "Install plan cannot be empty");
 
-            std::vector<const InstallPlanAction*> rebuilt_plans;
-            std::vector<const InstallPlanAction*> new_plans;
+        // log the plan
+        const std::string specs_string = Strings::join(",", action_plan, [](const AnyAction& action) {
+            if (auto iaction = action.install_plan.get())
+                return iaction->spec.to_string();
+            else if (auto raction = action.remove_plan.get())
+                return "R$" + raction->spec.to_string();
+            Checks::unreachable(VCPKG_LINE_INFO);
+        });
+        Metrics::track_property("installplan", specs_string);
 
-            // removal will happen before install
-            for (auto&& action : action_plan)
+        print_plan(action_plan, is_recursive);
+
+        if (dryRun)
+        {
+            Checks::exit_success(VCPKG_LINE_INFO);
+        }
+
+        // execute the plan
+        if (g_feature_packages)
+        {
+            for (const auto& action : action_plan)
             {
                 if (auto install_action = action.install_plan.get())
-                {
-                    auto it = Util::find_if(
-                        remove_plans, [&](const RemovePlanAction* plan) { return plan->spec == install_action->spec; });
-                    if (it != remove_plans.end())
-                    {
-                        rebuilt_plans.emplace_back(install_action);
-                    }
-                    else
-                    {
-                        new_plans.emplace_back(install_action);
-                    }
-                }
-                else if (auto remove_action = action.remove_plan.get())
-                {
-                    remove_plans.emplace_back(remove_action);
-                }
-            }
-
-            print_plan(rebuilt_plans, new_plans);
-
-            if (remove_plans.size() > 0 && !isRecursive)
-            {
-                System::println(System::Color::warning,
-                                "If you are sure you want to rebuild the above packages, run the command with the "
-                                "--recurse option");
-                Checks::exit_fail(VCPKG_LINE_INFO);
-            }
-
-            // execute the plan
-            for (const Dependencies::AnyAction& any_action : action_plan)
-            {
-                if (auto install_action = any_action.install_plan.get())
                 {
                     const BuildResult result =
                         perform_install_plan_action(paths, *install_action, install_plan_options, status_db);
@@ -499,7 +514,7 @@ namespace vcpkg::Commands::Install
                         Checks::exit_fail(VCPKG_LINE_INFO);
                     }
                 }
-                else if (auto remove_action = any_action.remove_plan.get())
+                else if (auto remove_action = action.remove_plan.get())
                 {
                     static const std::string OPTION_PURGE = "--purge";
                     static const std::string OPTION_NO_PURGE = "--no-purge";
@@ -537,50 +552,18 @@ namespace vcpkg::Commands::Install
                     }
                 }
             }
-
-            Checks::exit_success(VCPKG_LINE_INFO);
         }
-
-        Dependencies::PathsPortFile paths_port_file(paths);
-        std::vector<InstallPlanAction> install_plan =
-            Dependencies::create_install_plan(paths_port_file, specs, status_db);
-        Checks::check_exit(VCPKG_LINE_INFO, !install_plan.empty(), "Install plan cannot be empty");
-
-        // log the plan
-        const std::string specs_string =
-            Strings::join(",", install_plan, [](const InstallPlanAction& plan) { return plan.spec.to_string(); });
-        Metrics::track_property("installplan", specs_string);
-
-        std::map<InstallPlanType, std::vector<const InstallPlanAction*>> group_by_plan_type;
-        Util::group_by(install_plan, &group_by_plan_type, [](const InstallPlanAction& p) { return p.plan_type; });
-        print_plan(group_by_plan_type);
-
-        const bool has_non_user_requested_packages =
-            Util::find_if(install_plan, [](const InstallPlanAction& package) -> bool {
-                return package.request_type != RequestType::USER_REQUESTED;
-            }) != install_plan.cend();
-
-        if (has_non_user_requested_packages)
+        else
         {
-            System::println("Additional packages (*) will be installed to complete this operation.");
-        }
-
-        if (dryRun)
-        {
-            Checks::exit_success(VCPKG_LINE_INFO);
-        }
-
-        const Build::BuildPackageOptions install_plan_options = {Build::to_use_head_version(use_head_version),
-                                                                 Build::to_allow_downloads(!no_downloads)};
-
-        // execute the plan
-        for (const InstallPlanAction& action : install_plan)
-        {
-            const BuildResult result = perform_install_plan_action(paths, action, install_plan_options, status_db);
-            if (result != BuildResult::SUCCEEDED)
+            for (const auto& action : action_plan)
             {
-                System::println(Build::create_user_troubleshooting_message(action.spec));
-                Checks::exit_fail(VCPKG_LINE_INFO);
+                const auto& iaction = action.install_plan.value_or_exit(VCPKG_LINE_INFO);
+                const BuildResult result = perform_install_plan_action(paths, iaction, install_plan_options, status_db);
+                if (result != BuildResult::SUCCEEDED)
+                {
+                    System::println(Build::create_user_troubleshooting_message(iaction.spec));
+                    Checks::exit_fail(VCPKG_LINE_INFO);
+                }
             }
         }
 

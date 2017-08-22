@@ -12,7 +12,7 @@ namespace UnitTest1
     {
         struct PackageSpecMap
         {
-            std::unordered_map<PackageSpec, SourceControlFile> map;
+            std::unordered_map<std::string, SourceControlFile> map;
             Triplet triplet;
             PackageSpecMap(const Triplet& t) { triplet = t; }
 
@@ -24,7 +24,7 @@ namespace UnitTest1
 
                 auto spec = PackageSpec::from_name_and_triplet(scf->core_paragraph->name, triplet);
                 Assert::IsTrue(spec.has_value());
-                map.emplace(*spec.get(), std::move(*scf.get()));
+                map.emplace(scf->core_paragraph->name, std::move(*scf.get()));
                 return PackageSpec{*spec.get()};
             }
             PackageSpec set_package_map(std::string source, std::string version, std::string build_depends)

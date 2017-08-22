@@ -86,6 +86,9 @@ namespace vcpkg::Dependencies
 
     struct AnyAction
     {
+        AnyAction(InstallPlanAction&& iplan) : install_plan(std::move(iplan)) {}
+        AnyAction(RemovePlanAction&& rplan) : remove_plan(std::move(rplan)) {}
+
         Optional<InstallPlanAction> install_plan;
         Optional<RemovePlanAction> remove_plan;
     };
@@ -114,21 +117,21 @@ namespace vcpkg::Dependencies
         RequestType request_type;
     };
 
-    __interface PortFileProvider { virtual const SourceControlFile& get_control_file(const PackageSpec& spec) const; };
+    __interface PortFileProvider { virtual const SourceControlFile& get_control_file(const std::string& spec) const; };
 
     struct MapPortFile : PortFileProvider
     {
-        const std::unordered_map<PackageSpec, SourceControlFile>& ports;
-        explicit MapPortFile(const std::unordered_map<PackageSpec, SourceControlFile>& map);
-        const SourceControlFile& get_control_file(const PackageSpec& spec) const override;
+        const std::unordered_map<std::string, SourceControlFile>& ports;
+        explicit MapPortFile(const std::unordered_map<std::string, SourceControlFile>& map);
+        const SourceControlFile& get_control_file(const std::string& spec) const override;
     };
 
     struct PathsPortFile : PortFileProvider
     {
         const VcpkgPaths& ports;
-        mutable std::unordered_map<PackageSpec, SourceControlFile> cache;
+        mutable std::unordered_map<std::string, SourceControlFile> cache;
         explicit PathsPortFile(const VcpkgPaths& paths);
-        const SourceControlFile& get_control_file(const PackageSpec& spec) const override;
+        const SourceControlFile& get_control_file(const std::string& spec) const override;
 
     private:
         PathsPortFile(const PathsPortFile&) = delete;
@@ -146,7 +149,7 @@ namespace vcpkg::Dependencies
                                                      const std::vector<PackageSpec>& specs,
                                                      const StatusParagraphs& status_db);
 
-    std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<PackageSpec, SourceControlFile>& map,
+    std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<std::string, SourceControlFile>& map,
                                                        const std::vector<FeatureSpec>& specs,
                                                        const StatusParagraphs& status_db);
 }

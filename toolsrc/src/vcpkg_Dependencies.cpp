@@ -63,24 +63,51 @@ namespace vcpkg::Dependencies
 
     struct ClusterGraph
     {
-        explicit ClusterGraph(std::unordered_map<PackageSpec, Cluster>&& graph) : m_graph(std::move(graph)) {}
+        explicit ClusterGraph(std::unordered_map<std::string, const SourceControlFile*>&& ports)
+            : m_ports(std::move(ports))
+        {
+        }
         ClusterGraph(ClusterGraph&&) = default;
 
         Cluster& get(const PackageSpec& spec)
         {
-            if (auto p = try_get(spec)) return *p;
-            Checks::exit_with_message(VCPKG_LINE_INFO, "error: reference to missing package: %s", spec);
-        }
-        Cluster* try_get(const PackageSpec& spec)
-        {
             auto it = m_graph.find(spec);
-            if (it == m_graph.end()) return nullptr;
-            return &it->second;
+            if (it == m_graph.end())
+            {
+                // Load on-demand from m_ports
+                auto it_ports = m_ports.find(spec.name());
+                if (it_ports != m_ports.end())
+                {
+                    auto& clust = m_graph[spec];
+                    clust.spec = spec;
+                    cluster_from_scf(*it_ports->second, clust);
+                    return clust;
+                }
+                return m_graph[spec];
+            }
+            return it->second;
         }
 
     private:
+        void cluster_from_scf(const SourceControlFile& scf, Cluster& out_cluster)
+        {
+            FeatureNodeEdges core_dependencies;
+            core_dependencies.build_edges =
+                filter_dependencies_to_specs(scf.core_paragraph->depends, out_cluster.spec.triplet());
+            out_cluster.edges.emplace("core", std::move(core_dependencies));
+
+            for (const auto& feature : scf.feature_paragraphs)
+            {
+                FeatureNodeEdges added_edges;
+                added_edges.build_edges = filter_dependencies_to_specs(feature->depends, out_cluster.spec.triplet());
+                out_cluster.edges.emplace(feature->name, std::move(added_edges));
+            }
+            out_cluster.source_control_file = &scf;
+        }
+
         ClusterGraph(const ClusterGraph&) = delete;
         std::unordered_map<PackageSpec, Cluster> m_graph;
+        std::unordered_map<std::string, const SourceControlFile*> m_ports;
     };
 
     std::vector<PackageSpec> AnyParagraph::dependencies(const Triplet& triplet) const
@@ -243,9 +270,9 @@ namespace vcpkg::Dependencies
         return left->spec.name() < right->spec.name();
     }
 
-    MapPortFile::MapPortFile(const std::unordered_map<PackageSpec, SourceControlFile>& map) : ports(map) {}
+    MapPortFile::MapPortFile(const std::unordered_map<std::string, SourceControlFile>& map) : ports(map) {}
 
-    const SourceControlFile& MapPortFile::get_control_file(const PackageSpec& spec) const
+    const SourceControlFile& MapPortFile::get_control_file(const std::string& spec) const
     {
         auto scf = ports.find(spec);
         if (scf == ports.end())
@@ -257,9 +284,9 @@ namespace vcpkg::Dependencies
 
     PathsPortFile::PathsPortFile(const VcpkgPaths& paths) : ports(paths) {}
 
-    const SourceControlFile& PathsPortFile::get_control_file(const PackageSpec& spec) const
+    const SourceControlFile& PathsPortFile::get_control_file(const std::string& spec) const
     {
-        std::unordered_map<PackageSpec, SourceControlFile>::iterator cache_it = cache.find(spec);
+        auto cache_it = cache.find(spec);
         if (cache_it != cache.end())
         {
             return cache_it->second;
@@ -307,7 +334,9 @@ namespace vcpkg::Dependencies
                 auto it = status_db.find_installed(spec);
                 if (it != status_db.end()) return InstallPlanAction{spec, {*it->get(), nullopt, nullopt}, request_type};
                 return InstallPlanAction{
-                    spec, {nullopt, nullopt, *port_file_provider.get_control_file(spec).core_paragraph}, request_type};
+                    spec,
+                    {nullopt, nullopt, *port_file_provider.get_control_file(spec.name()).core_paragraph},
+                    request_type};
             }
         };
 
@@ -504,35 +533,19 @@ namespace vcpkg::Dependencies
         }
     }
 
-    static ClusterGraph create_feature_install_graph(const std::unordered_map<PackageSpec, SourceControlFile>& map,
+    static ClusterGraph create_feature_install_graph(const std::unordered_map<std::string, SourceControlFile>& map,
                                                      const StatusParagraphs& status_db)
     {
-        std::unordered_map<PackageSpec, Cluster> graph;
-
-        for (const auto& it : map)
-        {
-            Cluster& node = graph[it.first];
-
-            node.spec = it.first;
-            FeatureNodeEdges core_dependencies;
-            core_dependencies.build_edges =
-                filter_dependencies_to_specs(it.second.core_paragraph->depends, node.spec.triplet());
-            node.edges.emplace("core", std::move(core_dependencies));
-
-            for (const auto& feature : it.second.feature_paragraphs)
-            {
-                FeatureNodeEdges added_edges;
-                added_edges.build_edges = filter_dependencies_to_specs(feature->depends, node.spec.triplet());
-                node.edges.emplace(feature->name, std::move(added_edges));
-            }
-            node.source_control_file = &it.second;
-        }
+        std::unordered_map<std::string, const SourceControlFile*> ptr_map;
+        for (auto&& p : map)
+            ptr_map.emplace(p.first, &p.second);
+        ClusterGraph graph(std::move(ptr_map));
 
         auto installed_ports = get_installed_ports(status_db);
 
         for (auto&& status_paragraph : installed_ports)
         {
-            Cluster& cluster = graph[status_paragraph->package.spec];
+            Cluster& cluster = graph.get(status_paragraph->package.spec);
 
             cluster.transient_uninstalled = false;
 
@@ -559,20 +572,19 @@ namespace vcpkg::Dependencies
 
             for (auto&& dependency : reverse_edges)
             {
-                auto dep_cluster = graph.find(dependency.spec());
-                if (dep_cluster == graph.end()) Checks::unreachable(VCPKG_LINE_INFO);
+                auto& dep_cluster = graph.get(dependency.spec());
 
                 auto depends_name = dependency.feature();
                 if (depends_name == "") depends_name = "core";
 
-                auto& target_node = dep_cluster->second.edges[depends_name];
+                auto& target_node = dep_cluster.edges[depends_name];
                 target_node.remove_edges.emplace_back(FeatureSpec{spec, status_paragraph_feature});
             }
         }
-        return ClusterGraph(std::move(graph));
+        return graph;
     }
 
-    std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<PackageSpec, SourceControlFile>& map,
+    std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<std::string, SourceControlFile>& map,
                                                        const std::vector<FeatureSpec>& specs,
                                                        const StatusParagraphs& status_db)
     {
@@ -598,15 +610,13 @@ namespace vcpkg::Dependencies
         for (auto&& like_cluster : remove_toposort)
         {
             auto scf = *like_cluster.ptr->source_control_file.get();
-
-            AnyAction any_plan;
-            any_plan.remove_plan = RemovePlanAction{
-                PackageSpec::from_name_and_triplet(scf->core_paragraph->name, like_cluster.ptr->spec.triplet())
-                    .value_or_exit(VCPKG_LINE_INFO),
+            auto spec = PackageSpec::from_name_and_triplet(scf->core_paragraph->name, like_cluster.ptr->spec.triplet())
+                            .value_or_exit(VCPKG_LINE_INFO);
+            install_plan.emplace_back(RemovePlanAction{
+                std::move(spec),
                 RemovePlanType::REMOVE,
-                RequestType::AUTO_SELECTED};
-
-            install_plan.emplace_back(std::move(any_plan));
+                RequestType::AUTO_SELECTED,
+            });
         }
 
         for (auto&& like_cluster : insert_toposort)
@@ -617,12 +627,12 @@ namespace vcpkg::Dependencies
             auto pkg_spec =
                 PackageSpec::from_name_and_triplet(scf->core_paragraph->name, like_cluster.ptr->spec.triplet())
                     .value_or_exit(VCPKG_LINE_INFO);
-            auto action =
-                InstallPlanAction{pkg_spec, *scf, like_cluster.ptr->to_install_features, RequestType::AUTO_SELECTED};
-
-            AnyAction any_plan;
-            any_plan.install_plan = std::move(action);
-            install_plan.emplace_back(std::move(any_plan));
+            install_plan.emplace_back(InstallPlanAction{
+                pkg_spec,
+                *scf,
+                like_cluster.ptr->to_install_features,
+                RequestType::AUTO_SELECTED,
+            });
         }
 
         return install_plan;
