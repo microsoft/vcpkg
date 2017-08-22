@@ -18,6 +18,30 @@
 
 using namespace vcpkg;
 
+UINT console_cp_input;
+UINT console_cp_output;
+
+void console_cp_set()
+{
+    console_cp_input = GetConsoleCP();
+    console_cp_output = GetConsoleOutputCP();
+
+    SetConsoleCP(CP_UTF8);
+    SetConsoleOutputCP(CP_UTF8);
+}
+
+void console_cp_reset()
+{
+    SetConsoleCP(console_cp_input);
+    SetConsoleOutputCP(console_cp_output);
+}
+
+BOOL console_ctrl_handler(DWORD fdwCtrlType)
+{
+    console_cp_reset();
+    return TRUE;
+}
+
 void invalid_command(const std::string& cmd)
 {
     System::println(System::Color::error, "invalid command: %s", cmd);
@@ -191,6 +215,10 @@ static std::string trim_path_from_command_line(const std::string& full_command_l
 int wmain(const int argc, const wchar_t* const* const argv)
 {
     if (argc == 0) std::abort();
+
+    console_cp_set();
+    SetConsoleCtrlHandler(PHANDLER_ROUTINE(console_ctrl_handler), TRUE);
+    atexit(console_cp_reset);
 
     *GlobalState::timer.lock() = ElapsedTime::create_started();
 
