@@ -39,7 +39,7 @@ namespace vcpkg::Commands::Search
             s.append(Strings::format("%s;", name));
             for (const Dependency& d : source_paragraph.depends)
             {
-                const std::string dependency_name = replace_dashes_with_underscore(d.name);
+                const std::string dependency_name = replace_dashes_with_underscore(d.name());
                 s.append(Strings::format("%s -> %s;", name, dependency_name));
             }
         }
@@ -57,9 +57,9 @@ namespace vcpkg::Commands::Search
         else
         {
             System::println("%-20s %-16s %s",
-                            source_paragraph.name,
-                            source_paragraph.version,
-                            vcpkg::shorten_description(source_paragraph.description));
+                            vcpkg::shorten_text(source_paragraph.name, 20),
+                            vcpkg::shorten_text(source_paragraph.version, 16),
+                            vcpkg::shorten_text(source_paragraph.description, 81));
         }
     }
 
@@ -72,8 +72,8 @@ namespace vcpkg::Commands::Search
         else
         {
             System::println("%-37s %s",
-                            name + "[" + feature_paragraph.name + "]",
-                            vcpkg::shorten_description(feature_paragraph.description));
+                            vcpkg::shorten_text(name + "[" + feature_paragraph.name + "]", 37),
+                            vcpkg::shorten_text(feature_paragraph.description, 81));
         }
     }
 

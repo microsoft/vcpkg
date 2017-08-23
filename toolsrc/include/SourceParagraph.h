@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PackageSpec.h"
 #include "Span.h"
 #include "vcpkg_Parse.h"
 #include "vcpkg_System.h"
@@ -13,15 +14,22 @@ namespace vcpkg
 {
     extern bool g_feature_packages;
 
-    struct Triplet;
-
     struct Dependency
     {
-        std::string name;
+        Features depend;
         std::string qualifier;
+
+        std::string name() const;
+        static Dependency parse_dependency(std::string name, std::string qualifier);
     };
 
-    const std::string& to_string(const Dependency& dep);
+    std::vector<std::string> filter_dependencies(const std::vector<Dependency>& deps, const Triplet& t);
+    std::vector<FeatureSpec> filter_dependencies_to_specs(const std::vector<Dependency>& deps, const Triplet& t);
+
+    // zlib[uwp] becomes Dependency{"zlib", "uwp"}
+    std::vector<Dependency> expand_qualified_dependencies(const std::vector<std::string>& depends);
+
+    const std::string to_string(const Dependency& dep);
 
     struct FeatureParagraph
     {
@@ -57,12 +65,6 @@ namespace vcpkg
     {
         return print_error_message({&error_info_list, 1});
     }
-
-    std::vector<std::string> filter_dependencies(const std::vector<Dependency>& deps, const Triplet& t);
-
-    // zlib[uwp] becomes Dependency{"zlib", "uwp"}
-    std::vector<Dependency> expand_qualified_dependencies(const std::vector<std::string>& depends);
-    std::vector<std::string> parse_comma_list(const std::string& str);
 
     struct Supports
     {

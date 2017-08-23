@@ -191,7 +191,7 @@ namespace vcpkg
 
         for (const std::unique_ptr<StatusParagraph>& pgh : status_db)
         {
-            if (pgh->state != InstallState::INSTALLED)
+            if (pgh->state != InstallState::INSTALLED || pgh->package.feature != "")
             {
                 continue;
             }
@@ -240,9 +240,10 @@ namespace vcpkg
             LR"("%s" %s -P "%s")", cmake_exe.native(), cmd_cmake_pass_variables, cmake_script.generic_wstring());
     }
 
-    std::string shorten_description(const std::string& desc)
+    std::string shorten_text(const std::string& desc, size_t length)
     {
+        Checks::check_exit(VCPKG_LINE_INFO, length >= 3);
         auto simple_desc = std::regex_replace(desc, std::regex("\\s+"), " ");
-        return simple_desc.size() <= 52 ? simple_desc : simple_desc.substr(0, 49) + "...";
+        return simple_desc.size() <= length ? simple_desc : simple_desc.substr(0, length - 3) + "...";
     }
 }

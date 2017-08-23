@@ -214,6 +214,7 @@ namespace vcpkg
     fs::path VcpkgPaths::package_dir(const PackageSpec& spec) const { return this->packages / spec.dir(); }
 
     fs::path VcpkgPaths::port_dir(const PackageSpec& spec) const { return this->ports / spec.name(); }
+    fs::path VcpkgPaths::port_dir(const std::string& name) const { return this->ports / name; }
 
     fs::path VcpkgPaths::build_info_file_path(const PackageSpec& spec) const
     {

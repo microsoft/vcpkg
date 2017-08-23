@@ -1,7 +1,10 @@
 #include "pch.h"
 
 #include "PackageSpec.h"
+#include "vcpkg_Parse.h"
 #include "vcpkg_Util.h"
+
+using vcpkg::Parse::parse_comma_list;
 
 namespace vcpkg
 {
@@ -10,55 +13,69 @@ namespace vcpkg
         return (c == '-') || isdigit(c) || (isalpha(c) && islower(c)) || (c == '[') || (c == ']');
     }
 
+    std::string FeatureSpec::to_string() const
+    {
+        if (feature().empty()) return spec().to_string();
+        return Strings::format("%s[%s]:%s", name(), feature(), triplet());
+    }
+
+    std::vector<FeatureSpec> FeatureSpec::from_strings_and_triplet(const std::vector<std::string>& depends,
+                                                                   const Triplet& triplet)
+    {
+        std::vector<FeatureSpec> f_specs;
+        for (auto&& depend : depends)
+        {
+            auto maybe_spec = ParsedSpecifier::from_string(depend);
+            if (auto spec = maybe_spec.get())
+            {
+                Checks::check_exit(VCPKG_LINE_INFO,
+                                   spec->triplet.empty(),
+                                   "error: triplets cannot currently be specified in this context: %s",
+                                   depend);
+                PackageSpec pspec =
+                    PackageSpec::from_name_and_triplet(spec->name, triplet).value_or_exit(VCPKG_LINE_INFO);
+
+                for (auto&& feature : spec->features)
+                    f_specs.push_back(FeatureSpec{pspec, feature});
+
+                if (spec->features.empty()) f_specs.push_back(FeatureSpec{pspec, ""});
+            }
+            else
+            {
+                Checks::exit_with_message(VCPKG_LINE_INFO,
+                                          "error while parsing feature list: %s: %s",
+                                          vcpkg::to_string(maybe_spec.error()),
+                                          depend);
+            }
+        }
+        return f_specs;
+    }
+
+    std::vector<FeatureSpec> FullPackageSpec::to_feature_specs(const std::vector<FullPackageSpec>& specs)
+    {
+        std::vector<FeatureSpec> ret;
+        for (auto&& spec : specs)
+        {
+            ret.emplace_back(spec.package_spec, "");
+            for (auto&& feature : spec.features)
+                ret.emplace_back(spec.package_spec, feature);
+        }
+        return ret;
+    }
+
     ExpectedT<FullPackageSpec, PackageSpecParseResult> FullPackageSpec::from_string(const std::string& spec_as_string,
                                                                                     const Triplet& default_triplet)
     {
-        auto pos = spec_as_string.find(':');
-        auto pos_l_bracket = spec_as_string.find('[');
-        auto pos_r_bracket = spec_as_string.find(']');
-
-        FullPackageSpec f;
-        if (pos == std::string::npos && pos_l_bracket == std::string::npos)
+        auto res = ParsedSpecifier::from_string(spec_as_string);
+        if (auto p = res.get())
         {
-            f.package_spec =
-                PackageSpec::from_name_and_triplet(spec_as_string, default_triplet).value_or_exit(VCPKG_LINE_INFO);
-            return f;
+            FullPackageSpec fspec;
+            Triplet t = p->triplet.empty() ? default_triplet : Triplet::from_canonical_name(p->triplet);
+            fspec.package_spec = PackageSpec::from_name_and_triplet(p->name, t).value_or_exit(VCPKG_LINE_INFO);
+            fspec.features = std::move(p->features);
+            return fspec;
         }
-        else if (pos == std::string::npos)
-        {
-            if (pos_r_bracket == std::string::npos || pos_l_bracket >= pos_r_bracket)
-            {
-                return PackageSpecParseResult::INVALID_CHARACTERS;
-            }
-            const std::string name = spec_as_string.substr(0, pos_l_bracket);
-            f.package_spec = PackageSpec::from_name_and_triplet(name, default_triplet).value_or_exit(VCPKG_LINE_INFO);
-            f.features = parse_comma_list(spec_as_string.substr(pos_l_bracket + 1, pos_r_bracket - pos_l_bracket - 1));
-            return f;
-        }
-        else if (pos_l_bracket == std::string::npos && pos_r_bracket == std::string::npos)
-        {
-            const std::string name = spec_as_string.substr(0, pos);
-            const Triplet triplet = Triplet::from_canonical_name(spec_as_string.substr(pos + 1));
-            f.package_spec = PackageSpec::from_name_and_triplet(name, triplet).value_or_exit(VCPKG_LINE_INFO);
-        }
-        else
-        {
-            if (pos_r_bracket == std::string::npos || pos_l_bracket >= pos_r_bracket)
-            {
-                return PackageSpecParseResult::INVALID_CHARACTERS;
-            }
-            const std::string name = spec_as_string.substr(0, pos_l_bracket);
-            f.features = parse_comma_list(spec_as_string.substr(pos_l_bracket + 1, pos_r_bracket - pos_l_bracket - 1));
-            const Triplet triplet = Triplet::from_canonical_name(spec_as_string.substr(pos + 1));
-            f.package_spec = PackageSpec::from_name_and_triplet(name, triplet).value_or_exit(VCPKG_LINE_INFO);
-        }
-
-        auto pos2 = spec_as_string.find(':', pos + 1);
-        if (pos2 != std::string::npos)
-        {
-            return PackageSpecParseResult::TOO_MANY_COLONS;
-        }
-        return f;
+        return res.error();
     }
 
     ExpectedT<PackageSpec, PackageSpecParseResult> PackageSpec::from_name_and_triplet(const std::string& name,
@@ -81,11 +98,7 @@ namespace vcpkg
 
     std::string PackageSpec::dir() const { return Strings::format("%s_%s", this->m_name, this->m_triplet); }
 
-    std::string PackageSpec::to_string(const std::string& name, const Triplet& triplet)
-    {
-        return Strings::format("%s:%s", name, triplet);
-    }
-    std::string PackageSpec::to_string() const { return to_string(this->name(), this->triplet()); }
+    std::string PackageSpec::to_string() const { return Strings::format("%s:%s", this->name(), this->triplet()); }
 
     bool operator==(const PackageSpec& left, const PackageSpec& right)
     {
@@ -93,4 +106,70 @@ namespace vcpkg
     }
 
     bool operator!=(const PackageSpec& left, const PackageSpec& right) { return !(left == right); }
+
+    ExpectedT<ParsedSpecifier, PackageSpecParseResult> ParsedSpecifier::from_string(const std::string& input)
+    {
+        auto pos = input.find(':');
+        auto pos_l_bracket = input.find('[');
+        auto pos_r_bracket = input.find(']');
+
+        ParsedSpecifier f;
+        if (pos == std::string::npos && pos_l_bracket == std::string::npos)
+        {
+            f.name = input;
+            return f;
+        }
+        else if (pos == std::string::npos)
+        {
+            if (pos_r_bracket == std::string::npos || pos_l_bracket >= pos_r_bracket)
+            {
+                return PackageSpecParseResult::INVALID_CHARACTERS;
+            }
+            const std::string name = input.substr(0, pos_l_bracket);
+            f.name = name;
+            f.features = parse_comma_list(input.substr(pos_l_bracket + 1, pos_r_bracket - pos_l_bracket - 1));
+            return f;
+        }
+        else if (pos_l_bracket == std::string::npos && pos_r_bracket == std::string::npos)
+        {
+            const std::string name = input.substr(0, pos);
+            f.triplet = input.substr(pos + 1);
+            f.name = name;
+        }
+        else
+        {
+            if (pos_r_bracket == std::string::npos || pos_l_bracket >= pos_r_bracket)
+            {
+                return PackageSpecParseResult::INVALID_CHARACTERS;
+            }
+            const std::string name = input.substr(0, pos_l_bracket);
+            f.features = parse_comma_list(input.substr(pos_l_bracket + 1, pos_r_bracket - pos_l_bracket - 1));
+            f.triplet = input.substr(pos + 1);
+            f.name = name;
+        }
+
+        auto pos2 = input.find(':', pos + 1);
+        if (pos2 != std::string::npos)
+        {
+            return PackageSpecParseResult::TOO_MANY_COLONS;
+        }
+        return f;
+    }
+
+    ExpectedT<Features, PackageSpecParseResult> Features::from_string(const std::string& name)
+    {
+        auto maybe_spec = ParsedSpecifier::from_string(name);
+        if (auto spec = maybe_spec.get())
+        {
+            Checks::check_exit(
+                VCPKG_LINE_INFO, spec->triplet.empty(), "error: triplet not allowed in specifier: %s", name);
+
+            Features f;
+            f.name = spec->name;
+            f.features = spec->features;
+            return f;
+        }
+
+        return maybe_spec.error();
+    }
 }

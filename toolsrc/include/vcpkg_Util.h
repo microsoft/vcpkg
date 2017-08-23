@@ -7,12 +7,12 @@
 namespace vcpkg::Util
 {
     template<class Cont, class Func>
-    using FmapOut = decltype(std::declval<Func>()(std::declval<Cont>()[0]));
+    using FmapOut = decltype(std::declval<Func>()(*begin(std::declval<Cont>())));
 
     template<class Cont, class Func, class Out = FmapOut<Cont, Func>>
-    std::vector<Out> fmap(const Cont& xs, Func&& f)
+    std::vector<Out> fmap(Cont&& xs, Func&& f)
     {
-        using O = decltype(f(xs[0]));
+        using O = decltype(f(*begin(xs)));
 
         std::vector<O> ret;
         ret.reserve(xs.size());
@@ -62,4 +62,24 @@ namespace vcpkg::Util
             (*output)[key].push_back(&element);
         }
     }
+
+    struct MoveOnlyBase
+    {
+        MoveOnlyBase() = default;
+        MoveOnlyBase(const MoveOnlyBase&) = delete;
+        MoveOnlyBase(MoveOnlyBase&&) = default;
+
+        MoveOnlyBase& operator=(const MoveOnlyBase&) = delete;
+        MoveOnlyBase& operator=(MoveOnlyBase&&) = default;
+    };
+
+    struct ResourceBase
+    {
+        ResourceBase() = default;
+        ResourceBase(const ResourceBase&) = delete;
+        ResourceBase(ResourceBase&&) = delete;
+
+        ResourceBase& operator=(const ResourceBase&) = delete;
+        ResourceBase& operator=(ResourceBase&&) = delete;
+    };
 }

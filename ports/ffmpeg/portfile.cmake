@@ -8,7 +8,7 @@ set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ffmpeg-3.3.3)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://ffmpeg.org/releases/ffmpeg-3.3.3.tar.bz2"
     FILENAME "ffmpeg-3.3.3.tar.bz2"
-    SHA512 1cc63bf73356f4e618c0d3572a216bdf5689f10deff56b4262f6d740b0bee5a4b3eac234f45fca3d4d2da77903a507b4fba725b76d2d2070f31b6dae9e7a2dab
+    SHA512  1cc63bf73356f4e618c0d3572a216bdf5689f10deff56b4262f6d740b0bee5a4b3eac234f45fca3d4d2da77903a507b4fba725b76d2d2070f31b6dae9e7a2dab
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
