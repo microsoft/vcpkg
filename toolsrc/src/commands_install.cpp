@@ -347,6 +347,7 @@ namespace vcpkg::Commands::Install
         std::vector<const InstallPlanAction*> rebuilt_plans;
         std::vector<const InstallPlanAction*> only_install_plans;
         std::vector<const InstallPlanAction*> new_plans;
+        std::vector<const InstallPlanAction*> already_installed_plans;
 
         const bool has_non_user_requested_packages = Util::find_if(action_plan, [](const AnyAction& package) -> bool {
                                                          if (auto iplan = package.install_plan.get())
@@ -369,10 +370,16 @@ namespace vcpkg::Commands::Install
                 }
                 else
                 {
-                    if (install_action->plan_type == InstallPlanType::INSTALL)
-                        only_install_plans.emplace_back(install_action);
-                    else
-                        new_plans.emplace_back(install_action);
+                    switch (install_action->plan_type)
+                    {
+                        case InstallPlanType::INSTALL: only_install_plans.emplace_back(install_action); break;
+                        case InstallPlanType::ALREADY_INSTALLED:
+                            if (install_action->request_type == RequestType::USER_REQUESTED)
+                                already_installed_plans.emplace_back(install_action);
+                            break;
+                        case InstallPlanType::BUILD_AND_INSTALL: new_plans.emplace_back(install_action); break;
+                        default: Checks::unreachable(VCPKG_LINE_INFO);
+                    }
                 }
             }
             else if (auto remove_action = action.remove_plan.get())
@@ -385,23 +392,41 @@ namespace vcpkg::Commands::Install
         std::sort(rebuilt_plans.begin(), rebuilt_plans.end(), &InstallPlanAction::compare_by_name);
         std::sort(only_install_plans.begin(), only_install_plans.end(), &InstallPlanAction::compare_by_name);
         std::sort(new_plans.begin(), new_plans.end(), &InstallPlanAction::compare_by_name);
+        std::sort(already_installed_plans.begin(), already_installed_plans.end(), &InstallPlanAction::compare_by_name);
 
-        const std::string rebuilt_string = Strings::join("\n", rebuilt_plans, [](const InstallPlanAction* p) {
-            return to_output_string(p->request_type, p->displayname());
-        });
-        if (rebuilt_plans.size() > 0) System::println("The following packages will be rebuilt:\n%s", rebuilt_string);
+        if (already_installed_plans.size() > 0)
+        {
+            const std::string already_string =
+                Strings::join("\n", already_installed_plans, [](const InstallPlanAction* p) {
+                    return to_output_string(p->request_type, p->displayname());
+                });
+            System::println("The following packages are already installed:\n%s", already_string);
+        }
 
-        const std::string new_string = Strings::join("\n", new_plans, [](const InstallPlanAction* p) {
-            return to_output_string(p->request_type, p->displayname());
-        });
+        if (rebuilt_plans.size() > 0)
+        {
+            const std::string rebuilt_string = Strings::join("\n", rebuilt_plans, [](const InstallPlanAction* p) {
+                return to_output_string(p->request_type, p->displayname());
+            });
+            System::println("The following packages will be rebuilt:\n%s", rebuilt_string);
+        }
+
         if (new_plans.size() > 0)
+        {
+            const std::string new_string = Strings::join("\n", new_plans, [](const InstallPlanAction* p) {
+                return to_output_string(p->request_type, p->displayname());
+            });
             System::println("The following packages will be built and installed:\n%s", new_string);
+        }
 
-        const std::string only_install_string = Strings::join("\n", only_install_plans, [](const InstallPlanAction* p) {
-            return to_output_string(p->request_type, p->displayname());
-        });
         if (only_install_plans.size() > 0)
+        {
+            const std::string only_install_string =
+                Strings::join("\n", only_install_plans, [](const InstallPlanAction* p) {
+                    return to_output_string(p->request_type, p->displayname());
+                });
             System::println("The following packages will be directly installed:\n%s", only_install_string);
+        }
 
         if (has_non_user_requested_packages)
             System::println("Additional packages (*) will be installed to complete this operation.");
