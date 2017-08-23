@@ -55,12 +55,18 @@ namespace vcpkg::Commands
                                                        const Build::BuildPackageOptions& install_plan_options,
                                                        StatusParagraphs& status_db);
 
+        enum class InstallResult
+        {
+            FILE_CONFLICTS,
+            SUCCESS,
+        };
+
         void install_files_and_write_listfile(Files::Filesystem& fs,
                                               const fs::path& source_dir,
                                               const InstallDir& dirs);
-        void install_package(const VcpkgPaths& paths,
-                             const BinaryControlFile& binary_paragraph,
-                             StatusParagraphs* status_db);
+        InstallResult install_package(const VcpkgPaths& paths,
+                                      const BinaryControlFile& binary_paragraph,
+                                      StatusParagraphs* status_db);
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
     }
 

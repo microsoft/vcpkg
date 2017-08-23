@@ -119,9 +119,11 @@ namespace vcpkg::Dependencies
             return to_package_specs(p->package.depends);
         }
 
-        if (auto p = this->binary_paragraph.get())
+        if (auto p = this->binary_control_file.get())
         {
-            return to_package_specs(p->depends);
+            auto deps = Util::fmap_flatten(p->features, [](const BinaryParagraph& pgh) { return pgh.depends; });
+            deps.insert(deps.end(), p->core_paragraph.depends.begin(), p->core_paragraph.depends.end());
+            return to_package_specs(deps);
         }
 
         if (auto p = this->source_paragraph.get())
@@ -164,7 +166,7 @@ namespace vcpkg::Dependencies
     InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
                                          const AnyParagraph& any_paragraph,
                                          const RequestType& request_type)
-        : spec(spec), request_type(request_type), any_paragraph(any_paragraph)
+        : spec(spec), request_type(request_type), plan_type(InstallPlanType::UNKNOWN), any_paragraph(any_paragraph)
     {
         if (auto p = any_paragraph.status_paragraph.get())
         {
@@ -172,7 +174,7 @@ namespace vcpkg::Dependencies
             return;
         }
 
-        if (auto p = any_paragraph.binary_paragraph.get())
+        if (auto p = any_paragraph.binary_control_file.get())
         {
             this->plan_type = InstallPlanType::INSTALL;
             return;
@@ -183,8 +185,6 @@ namespace vcpkg::Dependencies
             this->plan_type = InstallPlanType::BUILD_AND_INSTALL;
             return;
         }
-
-        this->plan_type = InstallPlanType::UNKNOWN;
     }
 
     std::string InstallPlanAction::displayname() const
@@ -225,34 +225,24 @@ namespace vcpkg::Dependencies
         return left->spec.name() < right->spec.name();
     }
 
-    ExportPlanAction::ExportPlanAction()
-        : spec(), any_paragraph(), plan_type(ExportPlanType::UNKNOWN), request_type(RequestType::UNKNOWN)
-    {
-    }
+    ExportPlanAction::ExportPlanAction() : plan_type(ExportPlanType::UNKNOWN), request_type(RequestType::UNKNOWN) {}
 
     ExportPlanAction::ExportPlanAction(const PackageSpec& spec,
                                        const AnyParagraph& any_paragraph,
                                        const RequestType& request_type)
-        : ExportPlanAction()
+        : spec(spec), any_paragraph(any_paragraph), plan_type(ExportPlanType::UNKNOWN), request_type(request_type)
     {
-        this->spec = spec;
-        this->request_type = request_type;
-
-        if (auto p = any_paragraph.binary_paragraph.get())
+        if (auto p = any_paragraph.binary_control_file.get())
         {
             this->plan_type = ExportPlanType::ALREADY_BUILT;
-            this->any_paragraph.binary_paragraph = *p;
             return;
         }
 
         if (auto p = any_paragraph.source_paragraph.get())
         {
             this->plan_type = ExportPlanType::PORT_AVAILABLE_BUT_NOT_BUILT;
-            this->any_paragraph.source_paragraph = *p;
             return;
         }
-
-        this->plan_type = ExportPlanType::UNKNOWN;
     }
 
     bool RemovePlanAction::compare_by_name(const RemovePlanAction* left, const RemovePlanAction* right)
@@ -428,7 +418,7 @@ namespace vcpkg::Dependencies
 
                 Expected<BinaryControlFile> maybe_bpgh = Paragraphs::try_load_cached_control_package(paths, spec);
                 if (auto bcf = maybe_bpgh.get())
-                    return ExportPlanAction{spec, {nullopt, bcf->core_paragraph, nullopt}, request_type};
+                    return ExportPlanAction{spec, AnyParagraph{nullopt, std::move(*bcf), nullopt}, request_type};
 
                 auto maybe_scf = Paragraphs::try_load_port(paths.get_filesystem(), paths.port_dir(spec));
                 if (auto scf = maybe_scf.get())

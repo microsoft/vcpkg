@@ -23,7 +23,7 @@ namespace vcpkg::Dependencies
         std::vector<PackageSpec> dependencies(const Triplet& triplet) const;
 
         Optional<StatusParagraph> status_paragraph;
-        Optional<BinaryParagraph> binary_paragraph;
+        Optional<BinaryControlFile> binary_control_file;
         Optional<SourceParagraph> source_paragraph;
         Optional<const SourceControlFile*> source_control_file;
     };

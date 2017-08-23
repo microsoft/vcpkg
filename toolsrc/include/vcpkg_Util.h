@@ -12,13 +12,26 @@ namespace vcpkg::Util
     template<class Cont, class Func, class Out = FmapOut<Cont, Func>>
     std::vector<Out> fmap(Cont&& xs, Func&& f)
     {
-        using O = decltype(f(*begin(xs)));
-
-        std::vector<O> ret;
+        std::vector<Out> ret;
         ret.reserve(xs.size());
 
         for (auto&& x : xs)
             ret.push_back(f(x));
+
+        return ret;
+    }
+
+    template<class Cont, class Func>
+    using FmapFlattenOut = std::decay_t<decltype(*begin(std::declval<Func>()(*begin(std::declval<Cont>()))))>;
+
+    template<class Cont, class Func, class Out = FmapFlattenOut<Cont, Func>>
+    std::vector<Out> fmap_flatten(Cont&& xs, Func&& f)
+    {
+        std::vector<Out> ret;
+
+        for (auto&& x : xs)
+            for (auto&& y : f(x))
+                ret.push_back(std::move(y));
 
         return ret;
     }

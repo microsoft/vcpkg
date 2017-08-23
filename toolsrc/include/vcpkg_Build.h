@@ -52,6 +52,7 @@ namespace vcpkg::Build
         SUCCEEDED,
         BUILD_FAILED,
         POST_BUILD_CHECKS_FAILED,
+        FILE_CONFLICTS,
         CASCADED_DUE_TO_MISSING_DEPENDENCIES
     };
 

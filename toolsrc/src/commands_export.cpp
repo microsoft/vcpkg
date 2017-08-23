@@ -11,10 +11,10 @@
 
 namespace vcpkg::Commands::Export
 {
-    using Install::InstallDir;
     using Dependencies::ExportPlanAction;
-    using Dependencies::RequestType;
     using Dependencies::ExportPlanType;
+    using Dependencies::RequestType;
+    using Install::InstallDir;
 
     static std::string create_nuspec_file_contents(const std::string& raw_exported_dir,
                                                    const std::string& targets_redirect_path,
@@ -235,10 +235,15 @@ namespace vcpkg::Commands::Export
 
         const auto options = args.check_and_get_optional_command_arguments(
             {
-                OPTION_DRY_RUN, OPTION_RAW, OPTION_NUGET, OPTION_ZIP, OPTION_7ZIP,
+                OPTION_DRY_RUN,
+                OPTION_RAW,
+                OPTION_NUGET,
+                OPTION_ZIP,
+                OPTION_7ZIP,
             },
             {
-                OPTION_NUGET_ID, OPTION_NUGET_VERSION,
+                OPTION_NUGET_ID,
+                OPTION_NUGET_VERSION,
             });
         const bool dryRun = options.switches.find(OPTION_DRY_RUN) != options.switches.cend();
         const bool raw = options.switches.find(OPTION_RAW) != options.switches.cend();
@@ -323,7 +328,7 @@ namespace vcpkg::Commands::Export
             System::println("Exporting package %s... ", display_name);
 
             const BinaryParagraph& binary_paragraph =
-                action.any_paragraph.binary_paragraph.value_or_exit(VCPKG_LINE_INFO);
+                action.any_paragraph.binary_control_file.value_or_exit(VCPKG_LINE_INFO).core_paragraph;
             const InstallDir dirs = InstallDir::from_destination_root(
                 raw_exported_dir_path / "installed",
                 action.spec.triplet().to_string(),
