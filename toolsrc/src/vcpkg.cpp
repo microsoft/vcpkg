@@ -191,12 +191,7 @@ int wmain(const int argc, const wchar_t* const* const argv)
 
     GlobalState::timer = ElapsedTime::create_started();
 
-    atexit([]() {
-        auto elapsed_us = GlobalState::timer.microseconds();
-        Metrics::track_metric("elapsed_us", elapsed_us);
-        GlobalState::debugging = false;
-        Metrics::flush();
-    });
+    // Checks::register_console_ctrl_handler();
 
     Metrics::track_property("version", Commands::Version::version());
 
