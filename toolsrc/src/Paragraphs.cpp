@@ -3,6 +3,7 @@
 #include "ParagraphParseResult.h"
 #include "Paragraphs.h"
 #include "vcpkg_Files.h"
+#include "vcpkg_GlobalState.h"
 #include "vcpkg_Util.h"
 
 using namespace vcpkg::Parse;
@@ -210,7 +211,7 @@ namespace vcpkg::Paragraphs
         if (auto vector_pghs = pghs.get())
         {
             auto csf = SourceControlFile::parse_control_file(std::move(*vector_pghs));
-            if (!g_feature_packages)
+            if (!GlobalState::feature_packages)
             {
                 if (auto ptr = csf.get())
                 {

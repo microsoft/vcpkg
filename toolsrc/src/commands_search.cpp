@@ -3,6 +3,7 @@
 #include "Paragraphs.h"
 #include "SourceParagraph.h"
 #include "vcpkg_Commands.h"
+#include "vcpkg_GlobalState.h"
 #include "vcpkg_System.h"
 #include "vcpkglib.h"
 
@@ -90,7 +91,7 @@ namespace vcpkg::Commands::Search
 
         if (!sources_and_errors.errors.empty())
         {
-            if (vcpkg::g_debugging)
+            if (GlobalState::debugging)
             {
                 print_error_message(sources_and_errors.errors);
             }

@@ -13,7 +13,6 @@ namespace vcpkg
 {
     using namespace vcpkg::Parse;
 
-    bool g_feature_packages = false;
     namespace Fields
     {
         static const std::string BUILD_DEPENDS = "Build-Depends";

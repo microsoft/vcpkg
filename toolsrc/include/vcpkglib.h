@@ -6,8 +6,6 @@
 
 namespace vcpkg
 {
-    extern bool g_debugging;
-
     StatusParagraphs database_load_check(const VcpkgPaths& paths);
 
     void write_update(const VcpkgPaths& paths, const StatusParagraph& p);

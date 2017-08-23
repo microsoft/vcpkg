@@ -8,6 +8,7 @@
 #include "vcpkg_Chrono.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_Enums.h"
+#include "vcpkg_GlobalState.h"
 #include "vcpkg_System.h"
 #include "vcpkg_optional.h"
 #include "vcpkglib.h"
@@ -77,7 +78,7 @@ namespace vcpkg::Build
     std::wstring make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
     {
         const wchar_t* tonull = L" >nul";
-        if (g_debugging)
+        if (GlobalState::debugging)
         {
             tonull = L"";
         }
@@ -155,7 +156,7 @@ namespace vcpkg::Build
         const auto cmd_set_environment = make_build_env_cmd(pre_build_info, toolset);
 
         std::string features;
-        if (g_feature_packages)
+        if (GlobalState::feature_packages)
         {
             if (config.feature_list)
             {
@@ -212,7 +213,7 @@ namespace vcpkg::Build
         {
             return {BuildResult::POST_BUILD_CHECKS_FAILED, {}};
         }
-        if (g_feature_packages)
+        if (GlobalState::feature_packages)
         {
             if (config.feature_list)
             {

@@ -12,8 +12,6 @@
 
 namespace vcpkg
 {
-    extern bool g_feature_packages;
-
     struct Dependency
     {
         Features depend;

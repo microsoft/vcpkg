@@ -6,6 +6,7 @@
 #include "vcpkg_Chrono.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_Files.h"
+#include "vcpkg_GlobalState.h"
 #include "vcpkg_Input.h"
 #include "vcpkg_Strings.h"
 #include "vcpkg_System.h"
@@ -184,17 +185,16 @@ static std::string trim_path_from_command_line(const std::string& full_command_l
     return std::string(it, full_command_line.cend());
 }
 
-static ElapsedTime g_timer;
-
 int wmain(const int argc, const wchar_t* const* const argv)
 {
     if (argc == 0) std::abort();
 
-    g_timer = ElapsedTime::create_started();
+    GlobalState::timer = ElapsedTime::create_started();
+
     atexit([]() {
-        auto elapsed_us = g_timer.microseconds();
+        auto elapsed_us = GlobalState::timer.microseconds();
         Metrics::track_metric("elapsed_us", elapsed_us);
-        g_debugging = false;
+        GlobalState::debugging = false;
         Metrics::flush();
     });
 
@@ -209,9 +209,9 @@ int wmain(const int argc, const wchar_t* const* const argv)
 
     if (auto p = args.printmetrics.get()) Metrics::set_print_metrics(*p);
     if (auto p = args.sendmetrics.get()) Metrics::set_send_metrics(*p);
-    if (auto p = args.debug.get()) g_debugging = *p;
+    if (auto p = args.debug.get()) GlobalState::debugging = *p;
 
-    if (g_debugging)
+    if (GlobalState::debugging)
     {
         inner(args);
         Checks::exit_fail(VCPKG_LINE_INFO);

@@ -3,6 +3,7 @@
 #include "VcpkgCmdArguments.h"
 #include "metrics.h"
 #include "vcpkg_Commands.h"
+#include "vcpkg_GlobalState.h"
 #include "vcpkg_System.h"
 
 namespace vcpkg
@@ -119,7 +120,7 @@ namespace vcpkg
                 }
                 if (arg == "--featurepackages")
                 {
-                    g_feature_packages = true;
+                    GlobalState::feature_packages = true;
                     continue;
                 }
 

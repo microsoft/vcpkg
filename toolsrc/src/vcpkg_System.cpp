@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "vcpkg_Checks.h"
+#include "vcpkg_GlobalState.h"
 #include "vcpkg_System.h"
 #include "vcpkglib.h"
 
@@ -94,7 +95,7 @@ namespace vcpkg::System
         };
 
         // Flush stdout before launching external process
-        fflush(nullptr); 
+        fflush(nullptr);
 
         std::wstring env_cstr;
 
@@ -151,7 +152,7 @@ namespace vcpkg::System
     int cmd_execute(const CWStringView cmd_line)
     {
         // Flush stdout before launching external process
-        fflush(nullptr); 
+        fflush(nullptr);
 
         // Basically we are wrapping it in quotes
         const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
@@ -302,7 +303,7 @@ namespace vcpkg::Debug
 {
     void println(const CStringView message)
     {
-        if (g_debugging)
+        if (GlobalState::debugging)
         {
             System::println("[DEBUG] %s", message);
         }
@@ -310,7 +311,7 @@ namespace vcpkg::Debug
 
     void println(const System::Color c, const CStringView message)
     {
-        if (g_debugging)
+        if (GlobalState::debugging)
         {
             System::println(c, "[DEBUG] %s", message);
         }
