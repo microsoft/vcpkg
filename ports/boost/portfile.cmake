@@ -109,7 +109,6 @@ if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
         # --without-date_time
         # --without-exception
         # --without-serialization
-        # --without-fiber
         # --without-context
         # --without-graph_parallel
         # --without-signals
@@ -130,6 +129,8 @@ if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
         --without-program_options # libs\program_options\src\parsers.cpp(194): error C2065: 'environ': undeclared identifier
 
         --without-test
+        --without-fiber
+        --without-stacktrace
         --without-filesystem # libs\filesystem\src\operations.cpp(178): error C2039: 'GetEnvironmentVariableW': is not a member of '`global namespace''
         --without-thread
         --without-iostreams
