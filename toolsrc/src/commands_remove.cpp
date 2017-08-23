@@ -151,7 +151,7 @@ namespace vcpkg::Commands::Remove
 
             if (specs.empty())
             {
-                System::println(System::Color::success, "There are no oudated packages.");
+                System::println(System::Color::success, "There are no outdated packages.");
                 Checks::exit_success(VCPKG_LINE_INFO);
             }
         }
