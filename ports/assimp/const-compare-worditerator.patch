@@ -1,0 +1,15 @@
+diff --git a/code/X3DImporter.cpp b/code/X3DImporter.cpp
+index 1117735..669f46f 100644
+--- a/code/X3DImporter.cpp
++++ b/code/X3DImporter.cpp
+@@ -95,8 +95,8 @@ struct WordIterator: public std::iterator<std::input_iterator_tag, const char*>
+         end_ = other.end_;
+         return *this;
+     }
+-    bool operator==(WordIterator &other) const { return start_ == other.start_; }
+-    bool operator!=(WordIterator &other) const { return start_ != other.start_; }
++    bool operator==(const WordIterator &other) const { return start_ == other.start_; }
++    bool operator!=(const WordIterator &other) const { return start_ != other.start_; }
+     WordIterator &operator++() {
+         start_ += strcspn(start_, whitespace);
+         start_ += strspn(start_, whitespace);
