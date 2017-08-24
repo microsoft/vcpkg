@@ -51,7 +51,7 @@ namespace vcpkg::Build
         static constexpr ToolsetArchOption X64_ARM64 = {L"amd64_arm64", CPU::X64, CPU::ARM64};
 
         static constexpr std::array<ToolsetArchOption, 8> VALUES = {
-            X86, X86_X64, X86_ARM, X86_ARM64, X64, X64_X86, X64_ARM, X64_ARM64};
+            X64, X64_X86, X64_ARM, X64_ARM64, X86, X86_X64, X86_ARM, X86_ARM64};
 
         auto target_arch = System::to_cpu_architecture(target_architecture);
         auto host_architectures = System::get_supported_host_architectures();
