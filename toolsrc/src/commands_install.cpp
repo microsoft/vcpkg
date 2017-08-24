@@ -6,6 +6,7 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg_Dependencies.h"
 #include "vcpkg_Files.h"
+#include "vcpkg_GlobalState.h"
 #include "vcpkg_Input.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Util.h"
@@ -252,7 +253,8 @@ namespace vcpkg::Commands::Install
     {
         const InstallPlanType& plan_type = action.plan_type;
         const std::string display_name = action.spec.to_string();
-        const std::string display_name_with_features = g_feature_packages ? action.displayname() : display_name;
+        const std::string display_name_with_features =
+            GlobalState::feature_packages ? action.displayname() : display_name;
 
         const bool is_user_requested = action.request_type == RequestType::USER_REQUESTED;
         const bool use_head_version = to_bool(build_package_options.use_head_version);
@@ -275,7 +277,7 @@ namespace vcpkg::Commands::Install
                 System::println("Building package %s... ", display_name_with_features);
 
             const auto result = [&]() -> Build::ExtendedBuildResult {
-                if (g_feature_packages)
+                if (GlobalState::feature_packages)
                 {
                     const Build::BuildPackageConfig build_config{
                         *action.any_paragraph.source_control_file.value_or_exit(VCPKG_LINE_INFO),
@@ -459,7 +461,7 @@ namespace vcpkg::Commands::Install
         for (auto&& spec : specs)
         {
             Input::check_triplet(spec.package_spec.triplet(), paths);
-            if (!spec.features.empty() && !g_feature_packages)
+            if (!spec.features.empty() && !GlobalState::feature_packages)
             {
                 Checks::exit_with_message(
                     VCPKG_LINE_INFO, "Feature packages are experimentally available under the --featurepackages flag.");
@@ -481,7 +483,7 @@ namespace vcpkg::Commands::Install
 
         std::vector<AnyAction> action_plan;
 
-        if (g_feature_packages)
+        if (GlobalState::feature_packages)
         {
             std::unordered_map<std::string, SourceControlFile> scf_map;
             auto all_ports = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
@@ -522,7 +524,7 @@ namespace vcpkg::Commands::Install
         }
 
         // execute the plan
-        if (g_feature_packages)
+        if (GlobalState::feature_packages)
         {
             for (const auto& action : action_plan)
             {
