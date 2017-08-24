@@ -19,9 +19,11 @@ namespace vcpkg::Strings::details
 
     inline long long to_printf_arg(const long long s) { return s; }
 
-    inline double to_printf_arg(const double s) { return s; }
+    inline unsigned long to_printf_arg(const unsigned long s) { return s; }
 
     inline size_t to_printf_arg(const size_t s) { return s; }
+
+    inline double to_printf_arg(const double s) { return s; }
 
     std::string format_internal(const char* fmtstr, ...);
 

@@ -96,8 +96,7 @@ namespace vcpkg::System
         // Flush stdout before launching external process
         fflush(nullptr); 
 
-        std::vector<const wchar_t*> env_cstr;
-        env_cstr.reserve(env_wstrings.size() + 2);
+        std::wstring env_cstr;
 
         for (auto&& env_wstring : env_wstrings)
         {
@@ -105,20 +104,47 @@ namespace vcpkg::System
             auto v = value.get();
             if (!v || v->empty()) continue;
 
-            env_wstring.push_back(L'=');
-            env_wstring.append(*v);
-            env_cstr.push_back(env_wstring.c_str());
+            env_cstr.append(env_wstring);
+            env_cstr.push_back(L'=');
+            env_cstr.append(*v);
+            env_cstr.push_back(L'\0');
         }
 
-        env_cstr.push_back(new_PATH.c_str());
-        env_cstr.push_back(nullptr);
+        env_cstr.append(new_PATH);
+        env_cstr.push_back(L'\0');
+
+        STARTUPINFOW startup_info;
+        memset(&startup_info, 0, sizeof(STARTUPINFOW));
+        startup_info.cb = sizeof(STARTUPINFOW);
+
+        PROCESS_INFORMATION process_info;
+        memset(&process_info, 0, sizeof(PROCESS_INFORMATION));
 
         // Basically we are wrapping it in quotes
-        const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
-        Debug::println("_wspawnlpe(cmd.exe /c %s)", Strings::to_utf8(actual_cmd_line));
-        auto exit_code =
-            _wspawnlpe(_P_WAIT, L"cmd.exe", L"cmd.exe", L"/c", actual_cmd_line.c_str(), nullptr, env_cstr.data());
-        Debug::println("_wspawnlpe() returned %d", exit_code);
+        std::wstring actual_cmd_line = Strings::wformat(LR"###(cmd.exe /c "%s")###", cmd_line);
+        Debug::println("CreateProcessW(%s)", Strings::to_utf8(actual_cmd_line));
+        bool succeeded = TRUE == CreateProcessW(nullptr,
+                                                actual_cmd_line.data(),
+                                                nullptr,
+                                                nullptr,
+                                                FALSE,
+                                                BELOW_NORMAL_PRIORITY_CLASS | CREATE_UNICODE_ENVIRONMENT,
+                                                env_cstr.data(),
+                                                nullptr,
+                                                &startup_info,
+                                                &process_info);
+
+        Checks::check_exit(VCPKG_LINE_INFO, succeeded, "Process creation failed with error code: %lu", GetLastError());
+
+        CloseHandle(process_info.hThread);
+
+        DWORD result = WaitForSingleObject(process_info.hProcess, INFINITE);
+        Checks::check_exit(VCPKG_LINE_INFO, result != WAIT_FAILED, "WaitForSingleObject failed");
+
+        DWORD exit_code = 0;
+        GetExitCodeProcess(process_info.hProcess, &exit_code);
+
+        Debug::println("CreateProcessW() returned %lu", exit_code);
         return static_cast<int>(exit_code);
     }
 
