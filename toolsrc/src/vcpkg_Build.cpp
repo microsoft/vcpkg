@@ -36,39 +36,35 @@ namespace vcpkg::Build
         Checks::exit_with_message(VCPKG_LINE_INFO, "Unsupported vcvarsall target %s", cmake_system_name);
     }
 
-    CWStringView to_vcvarsall_toolchain(const std::string& target_architecture)
+    CWStringView to_vcvarsall_toolchain(const std::string& target_architecture, const Toolset& toolset)
     {
         using CPU = System::CPUArchitecture;
 
-        struct ArchOption
-        {
-            CWStringView name;
-            CPU host_arch;
-            CPU target_arch;
-        };
+        static constexpr ToolsetArchOption X86 = {L"x86", CPU::X86, CPU::X86};
+        static constexpr ToolsetArchOption X86_X64 = {L"x86_x64", CPU::X86, CPU::X64};
+        static constexpr ToolsetArchOption X86_ARM = {L"x86_arm", CPU::X86, CPU::ARM};
+        static constexpr ToolsetArchOption X86_ARM64 = {L"x86_arm64", CPU::X86, CPU::ARM64};
 
-        static constexpr ArchOption X86 = {L"x86", CPU::X86, CPU::X86};
-        static constexpr ArchOption X86_X64 = {L"x86_x64", CPU::X86, CPU::X64};
-        static constexpr ArchOption X86_ARM = {L"x86_arm", CPU::X86, CPU::ARM};
-        static constexpr ArchOption X86_ARM64 = {L"x86_arm64", CPU::X86, CPU::ARM64};
+        static constexpr ToolsetArchOption X64 = {L"amd64", CPU::X64, CPU::X64};
+        static constexpr ToolsetArchOption X64_X86 = {L"amd64_x86", CPU::X64, CPU::X86};
+        static constexpr ToolsetArchOption X64_ARM = {L"amd64_arm", CPU::X64, CPU::ARM};
+        static constexpr ToolsetArchOption X64_ARM64 = {L"amd64_arm64", CPU::X64, CPU::ARM64};
 
-        static constexpr ArchOption X64 = {L"amd64", CPU::X64, CPU::X64};
-        static constexpr ArchOption X64_X86 = {L"amd64_x86", CPU::X64, CPU::X86};
-        static constexpr ArchOption X64_ARM = {L"amd64_arm", CPU::X64, CPU::ARM};
-        static constexpr ArchOption X64_ARM64 = {L"amd64_arm64", CPU::X64, CPU::ARM64};
-
-        static constexpr std::array<ArchOption, 8> VALUES = {
+        static constexpr std::array<ToolsetArchOption, 8> VALUES = {
             X86, X86_X64, X86_ARM, X86_ARM64, X64, X64_X86, X64_ARM, X64_ARM64};
 
         auto target_arch = System::to_cpu_architecture(target_architecture);
-        auto host_arch = System::get_host_processor();
+        auto host_architectures = System::get_supported_host_architectures();
 
         for (auto&& value : VALUES)
         {
-            if (target_arch == value.target_arch && host_arch == value.host_arch)
-            {
-                return value.name;
-            }
+            if (target_arch != value.target_arch ||
+                std::find(host_architectures.begin(), host_architectures.end(), value.host_arch) == host_architectures.end() ||
+                std::find(toolset.supported_architectures.begin(), toolset.supported_architectures.end(), value) == toolset.supported_architectures.end()
+            )
+                continue;
+
+            return value.name;
         }
 
         Checks::exit_with_message(VCPKG_LINE_INFO, "Unsupported toolchain combination %s", target_architecture);
@@ -82,7 +78,7 @@ namespace vcpkg::Build
             tonull = L"";
         }
 
-        auto arch = to_vcvarsall_toolchain(pre_build_info.target_architecture);
+        auto arch = to_vcvarsall_toolchain(pre_build_info.target_architecture, toolset);
         auto target = to_vcvarsall_target(pre_build_info.cmake_system_name);
 
         return Strings::wformat(LR"("%s" %s %s %s 2>&1)", toolset.vcvarsall.native(), arch, target, tonull);
