@@ -81,7 +81,7 @@ message(STATUS "Building ${TARGET_TRIPLET}-rel done")
 # Debug build
 ################
 message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-set(ENV{_LINK_} ${CURRENT_INSTALLED_DIR}/debug/lib/expat.lib)
+set(ENV{_LINK_} ${CURRENT_INSTALLED_DIR}/debug/lib/expatd.lib)
 vcpkg_execute_required_process(
     COMMAND ${NMAKE} -f makefile.vc ${NMAKE_OPTIONS_DBG}
     WORKING_DIRECTORY ${SOURCE_PATH}/build/msw
