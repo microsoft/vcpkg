@@ -18,30 +18,6 @@
 
 using namespace vcpkg;
 
-UINT console_cp_input;
-UINT console_cp_output;
-
-void console_cp_set()
-{
-    console_cp_input = GetConsoleCP();
-    console_cp_output = GetConsoleOutputCP();
-
-    SetConsoleCP(CP_UTF8);
-    SetConsoleOutputCP(CP_UTF8);
-}
-
-void console_cp_reset()
-{
-    SetConsoleCP(console_cp_input);
-    SetConsoleOutputCP(console_cp_output);
-}
-
-BOOL console_ctrl_handler(DWORD fdwCtrlType)
-{
-    console_cp_reset();
-    return TRUE;
-}
-
 void invalid_command(const std::string& cmd)
 {
     System::println(System::Color::error, "invalid command: %s", cmd);
@@ -216,13 +192,13 @@ int wmain(const int argc, const wchar_t* const* const argv)
 {
     if (argc == 0) std::abort();
 
-    console_cp_set();
-    SetConsoleCtrlHandler(PHANDLER_ROUTINE(console_ctrl_handler), TRUE);
-    atexit(console_cp_reset);
+    GlobalState::g_init_console_cp = GetConsoleCP();
+    GlobalState::g_init_console_output_cp = GetConsoleOutputCP();
+
+    SetConsoleCP(65001);
+    SetConsoleOutputCP(65001);
 
     *GlobalState::timer.lock() = ElapsedTime::create_started();
-
-    // Checks::register_console_ctrl_handler();
 
     const std::string trimmed_command_line = trim_path_from_command_line(Strings::to_utf8(GetCommandLineW()));
 
@@ -240,7 +216,7 @@ int wmain(const int argc, const wchar_t* const* const argv)
     if (auto p = args.sendmetrics.get()) Metrics::g_metrics.lock()->set_send_metrics(*p);
     if (auto p = args.debug.get()) GlobalState::debugging = *p;
 
-    vcpkg::Checks::register_console_ctrl_handler();
+    Checks::register_console_ctrl_handler();
 
     if (GlobalState::debugging)
     {

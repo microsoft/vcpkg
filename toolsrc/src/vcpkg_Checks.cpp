@@ -17,6 +17,9 @@ namespace vcpkg::Checks
         GlobalState::debugging = false;
         metrics->flush();
 
+        SetConsoleCP(GlobalState::g_init_console_cp);
+        SetConsoleOutputCP(GlobalState::g_init_console_output_cp);
+
         ::exit(exit_code);
     }
 
