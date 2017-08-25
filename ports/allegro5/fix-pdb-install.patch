@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 72348fe..ffb3484 100644
+index 72348fe..a51e50b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1010,14 +1010,9 @@ else()
@@ -19,17 +19,12 @@ index 72348fe..ffb3484 100644
  
  if(INSTALL_PKG_CONFIG_FILES)
      append_lib_type_suffix(lib_type)
-@@ -1030,11 +1025,11 @@ if(INSTALL_PKG_CONFIG_FILES)
-     foreach(versuffix 5)
-         foreach(name ${PKG_CONFIG_FILES})
-             if (SHARED)
--                set(outname ${name}${lib_type}-${versuffix}.pc)
-+                set(outname ${name}${lib_type}.pc)
+@@ -1034,7 +1029,7 @@ if(INSTALL_PKG_CONFIG_FILES)
              else (SHARED)
                  # For static linking: get extra libraries to link with.
                  get_target_property(link_with ${name} static_link_with)
 -                set(outname ${name}${lib_type}-static-${versuffix}.pc)
-+                set(outname ${name}${lib_type}.pc)
++                set(outname ${name}${lib_type}-${versuffix}.pc)
              endif (SHARED)
              configure_file(
                  misc/${name}.pc.in
