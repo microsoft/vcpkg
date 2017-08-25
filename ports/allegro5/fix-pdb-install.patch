@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 72348fe..c6fbecb 100644
+index 72348fe..ffb3484 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1010,14 +1010,9 @@ else()
@@ -19,10 +19,44 @@ index 72348fe..c6fbecb 100644
  
  if(INSTALL_PKG_CONFIG_FILES)
      append_lib_type_suffix(lib_type)
+@@ -1030,11 +1025,11 @@ if(INSTALL_PKG_CONFIG_FILES)
+     foreach(versuffix 5)
+         foreach(name ${PKG_CONFIG_FILES})
+             if (SHARED)
+-                set(outname ${name}${lib_type}-${versuffix}.pc)
++                set(outname ${name}${lib_type}.pc)
+             else (SHARED)
+                 # For static linking: get extra libraries to link with.
+                 get_target_property(link_with ${name} static_link_with)
+-                set(outname ${name}${lib_type}-static-${versuffix}.pc)
++                set(outname ${name}${lib_type}.pc)
+             endif (SHARED)
+             configure_file(
+                 misc/${name}.pc.in
 diff --git a/cmake/Common.cmake b/cmake/Common.cmake
-index 782196f..de29535 100644
+index 782196f..f784501 100644
 --- a/cmake/Common.cmake
 +++ b/cmake/Common.cmake
+@@ -41,16 +41,16 @@ endfunction(run_cxx_compile_test)
+ function(append_lib_type_suffix var)
+     string(TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_TOLOWER)
+     if(CMAKE_BUILD_TYPE_TOLOWER STREQUAL "debug")
+-        set(${var} "${${var}}-debug" PARENT_SCOPE)
++        set(${var} "${${var}}" PARENT_SCOPE)
+     endif(CMAKE_BUILD_TYPE_TOLOWER STREQUAL "debug")
+     if(CMAKE_BUILD_TYPE_TOLOWER MATCHES "profile")
+-        set(${var} "${${var}}-profile" PARENT_SCOPE)
++        set(${var} "${${var}}" PARENT_SCOPE)
+     endif(CMAKE_BUILD_TYPE_TOLOWER MATCHES "profile")
+ endfunction(append_lib_type_suffix)
+ 
+ function(append_lib_linkage_suffix var)
+     if(NOT BUILD_SHARED_LIBS)
+-        set(${var} "${${var}}-static" PARENT_SCOPE)
++        set(${var} "${${var}}" PARENT_SCOPE)
+     endif(NOT BUILD_SHARED_LIBS)
+ endfunction(append_lib_linkage_suffix)
+ 
 @@ -223,7 +223,7 @@ function(install_our_library target filename)
              # PUBLIC_HEADER DESTINATION "include"
              )
