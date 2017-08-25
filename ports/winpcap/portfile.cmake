@@ -11,42 +11,111 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/WpdPack)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/winpcap)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.winpcap.org/install/bin/WpdPack_4_1_2.zip"
-    FILENAME "WpdPack_4_1_2.zip"
-    SHA512 7a319dfcda779eb881eca43c83c5570c0e359da30464f981010d31615222b84f758c3a8ea96605e02dc3f0a294c4c36be447d22beb1e58cd40a73deb1ad128f0
+    URLS "https://www.winpcap.org/install/bin/WpcapSrc_4_1_3.zip"
+    FILENAME "WpcapSrc_4_1_3.zip"
+    SHA512 89a5109ed17f8069f7a43497f6fec817c58620dbc5fa506e52069b9113c5bc13f69c307affe611281cb727cfa0f8529d07044d41427e350b24468ccc89a87f33
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/packetNtx.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/wpcap.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/create_lib.patch"
+)
+
+file(
+    COPY
+        "${CURRENT_PORT_DIR}/create_bin.bat"
+    DESTINATION
+        ${SOURCE_PATH}
+)
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(PLATFORM Win32)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    set(PLATFORM x64)
+endif()
+
+vcpkg_execute_required_process(
+    COMMAND "devenv.exe"
+            "Packet.sln"
+            /Upgrade
+    WORKING_DIRECTORY ${SOURCE_PATH}/packetNtx/Dll/Project
+    LOGNAME upgrade-Packet-${TARGET_TRIPLET}
+)
+
+vcpkg_build_msbuild(
+    PROJECT_PATH "${SOURCE_PATH}/packetNtx/Dll/Project/Packet.sln"
+    PLATFORM ${PLATFORM}
+)
+
+vcpkg_find_acquire_program(BISON)
+vcpkg_find_acquire_program(FLEX)
+
+vcpkg_execute_required_process(
+    COMMAND ${SOURCE_PATH}/wpcap/PRJ/build_scanner_parser.bat
+    WORKING_DIRECTORY ${SOURCE_PATH}
+    LOGNAME build_scanner_parser-${TARGET_TRIPLET}
+)
+
+vcpkg_execute_required_process(
+    COMMAND "devenv.exe"
+            "wpcap.sln"
+            /Upgrade
+    WORKING_DIRECTORY ${SOURCE_PATH}/wpcap/PRJ
+    LOGNAME upgrade-wpcap-${TARGET_TRIPLET}
+)
+
+vcpkg_build_msbuild(
+    PROJECT_PATH "${SOURCE_PATH}/wpcap/PRJ/wpcap.sln"
+    RELEASE_CONFIGURATION "Release - No AirPcap"
+    DEBUG_CONFIGURATION "Debug - No AirPcap"
+    PLATFORM ${PLATFORM}
+)
+
+vcpkg_execute_required_process(
+    COMMAND ${SOURCE_PATH}/create_include.bat
+    WORKING_DIRECTORY ${SOURCE_PATH}
+    LOGNAME create_include-${TARGET_TRIPLET}
+)
+
 file(
     INSTALL
-        "${SOURCE_PATH}/Include/bittypes.h"
-        "${SOURCE_PATH}/Include/ip6_misc.h"
-        "${SOURCE_PATH}/Include/Packet32.h"
-        "${SOURCE_PATH}/Include/pcap.h"
-        "${SOURCE_PATH}/Include/pcap-bpf.h"
-        "${SOURCE_PATH}/Include/pcap-namedb.h"
-        "${SOURCE_PATH}/Include/remote-ext.h"
-        "${SOURCE_PATH}/Include/Win32-Extensions.h"
+        "${SOURCE_PATH}/WpdPack/Include/bittypes.h"
+        "${SOURCE_PATH}/WpdPack/Include/ip6_misc.h"
+        "${SOURCE_PATH}/WpdPack/Include/Packet32.h"
+        "${SOURCE_PATH}/WpdPack/Include/pcap.h"
+        "${SOURCE_PATH}/WpdPack/Include/pcap-bpf.h"
+        "${SOURCE_PATH}/WpdPack/Include/pcap-namedb.h"
+        "${SOURCE_PATH}/WpdPack/Include/remote-ext.h"
+        "${SOURCE_PATH}/WpdPack/Include/Win32-Extensions.h"
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/include
 )
 
 file(
     INSTALL
-        "${SOURCE_PATH}/Include/pcap/bluetooth.h"
-        "${SOURCE_PATH}/Include/pcap/bpf.h"
-        "${SOURCE_PATH}/Include/pcap/namedb.h"
-        "${SOURCE_PATH}/Include/pcap/pcap.h"
-        "${SOURCE_PATH}/Include/pcap/sll.h"
-        "${SOURCE_PATH}/Include/pcap/usb.h"
-        "${SOURCE_PATH}/Include/pcap/vlan.h"
+        "${SOURCE_PATH}/WpdPack/Include/pcap/bluetooth.h"
+        "${SOURCE_PATH}/WpdPack/Include/pcap/bpf.h"
+        "${SOURCE_PATH}/WpdPack/Include/pcap/namedb.h"
+        "${SOURCE_PATH}/WpdPack/Include/pcap/pcap.h"
+        "${SOURCE_PATH}/WpdPack/Include/pcap/sll.h"
+        "${SOURCE_PATH}/WpdPack/Include/pcap/usb.h"
+        "${SOURCE_PATH}/WpdPack/Include/pcap/vlan.h"
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/include/pcap
 )
 
-set(PCAP_LIBRARY_PATH "${SOURCE_PATH}/Lib")
+vcpkg_execute_required_process(
+    COMMAND ${SOURCE_PATH}/create_lib.bat
+    WORKING_DIRECTORY ${SOURCE_PATH}
+    LOGNAME create_lib-${TARGET_TRIPLET}
+)
+
+set(PCAP_LIBRARY_PATH "${SOURCE_PATH}/WpdPack/Lib")
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(PCAP_LIBRARY_PATH "${PCAP_LIBRARY_PATH}/x64")
 endif()
@@ -65,6 +134,33 @@ file(
         "${PCAP_LIBRARY_PATH}/wpcap.lib"
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/debug/lib
+)
+
+vcpkg_execute_required_process(
+    COMMAND ${SOURCE_PATH}/create_bin.bat
+    WORKING_DIRECTORY ${SOURCE_PATH}
+    LOGNAME create_bin-${TARGET_TRIPLET}
+)
+
+set(PCAP_BINARY_PATH "${SOURCE_PATH}/WpdPack/Bin")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    set(PCAP_BINARY_PATH "${PCAP_BINARY_PATH}/x64")
+endif()
+
+file(
+    INSTALL
+        "${PCAP_BINARY_PATH}/Packet.dll"
+        "${PCAP_BINARY_PATH}/wpcap.dll"
+    DESTINATION
+        ${CURRENT_PACKAGES_DIR}/bin
+)
+
+file(
+    INSTALL
+        "${PCAP_BINARY_PATH}/Packet.dll"
+        "${PCAP_BINARY_PATH}/wpcap.dll"
+    DESTINATION
+        ${CURRENT_PACKAGES_DIR}/debug/bin
 )
 
 # Handle copyright
