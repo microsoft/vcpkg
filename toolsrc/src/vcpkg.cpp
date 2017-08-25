@@ -27,7 +27,7 @@ void invalid_command(const std::string& cmd)
 
 static void inner(const VcpkgCmdArguments& args)
 {
-    Metrics::track_property("command", args.command);
+    Metrics::g_metrics.lock()->track_property("command", args.command);
     if (args.command.empty())
     {
         Commands::Help::print_usage();
@@ -135,7 +135,7 @@ static void loadConfig()
             auto user_time = keys["User-Since"];
             if (!user_id.empty() && !user_time.empty())
             {
-                Metrics::set_user_information(user_id, user_time);
+                Metrics::g_metrics.lock()->set_user_information(user_id, user_time);
                 return;
             }
         }
@@ -146,8 +146,11 @@ static void loadConfig()
 
     // config file not found, could not be read, or invalid
     std::string user_id, user_time;
-    Metrics::init_user_information(user_id, user_time);
-    Metrics::set_user_information(user_id, user_time);
+    {
+        auto locked_metrics = Metrics::g_metrics.lock();
+        locked_metrics->init_user_information(user_id, user_time);
+        locked_metrics->set_user_information(user_id, user_time);
+    }
     try
     {
         std::error_code ec;
@@ -189,22 +192,27 @@ int wmain(const int argc, const wchar_t* const* const argv)
 {
     if (argc == 0) std::abort();
 
-    GlobalState::timer = ElapsedTime::create_started();
+    *GlobalState::timer.lock() = ElapsedTime::create_started();
 
     // Checks::register_console_ctrl_handler();
 
-    Metrics::track_property("version", Commands::Version::version());
-
     const std::string trimmed_command_line = trim_path_from_command_line(Strings::to_utf8(GetCommandLineW()));
-    Metrics::track_property("cmdline", trimmed_command_line);
+
+    {
+        auto locked_metrics = Metrics::g_metrics.lock();
+        locked_metrics->track_property("version", Commands::Version::version());
+        locked_metrics->track_property("cmdline", trimmed_command_line);
+    }
     loadConfig();
-    Metrics::track_property("sqmuser", Metrics::get_SQM_user());
+    Metrics::g_metrics.lock()->track_property("sqmuser", Metrics::get_SQM_user());
 
     const VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(argc, argv);
 
-    if (auto p = args.printmetrics.get()) Metrics::set_print_metrics(*p);
-    if (auto p = args.sendmetrics.get()) Metrics::set_send_metrics(*p);
+    if (auto p = args.printmetrics.get()) Metrics::g_metrics.lock()->set_print_metrics(*p);
+    if (auto p = args.sendmetrics.get()) Metrics::g_metrics.lock()->set_send_metrics(*p);
     if (auto p = args.debug.get()) GlobalState::debugging = *p;
+
+    vcpkg::Checks::register_console_ctrl_handler();
 
     if (GlobalState::debugging)
     {
@@ -226,7 +234,7 @@ int wmain(const int argc, const wchar_t* const* const argv)
     {
         exc_msg = "unknown error(...)";
     }
-    Metrics::track_property("error", exc_msg);
+    Metrics::g_metrics.lock()->track_property("error", exc_msg);
 
     fflush(stdout);
     System::print("vcpkg.exe has crashed.\n"

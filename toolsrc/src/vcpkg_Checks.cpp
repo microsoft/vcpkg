@@ -10,17 +10,23 @@ namespace vcpkg::Checks
 {
     [[noreturn]] static void cleanup_and_exit(const int exit_code)
     {
-        auto elapsed_us = GlobalState::timer.microseconds();
-        Metrics::track_metric("elapsed_us", elapsed_us);
+        auto elapsed_us = GlobalState::timer.lock()->microseconds();
+
+        auto metrics = Metrics::g_metrics.lock();
+        metrics->track_metric("elapsed_us", elapsed_us);
         GlobalState::debugging = false;
-        Metrics::flush();
+        metrics->flush();
 
         ::exit(exit_code);
     }
 
     static BOOL CtrlHandler(DWORD fdwCtrlType)
     {
-        Metrics::track_metric("SignalCaptured", fdwCtrlType);
+        {
+            auto locked_metrics = Metrics::g_metrics.lock();
+            locked_metrics->track_property("CtrlHandler", std::to_string(fdwCtrlType));
+            locked_metrics->track_property("error", "CtrlHandler was fired.");
+        }
         cleanup_and_exit(EXIT_FAILURE);
     }
 

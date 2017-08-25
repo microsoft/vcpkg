@@ -1,13 +1,16 @@
 #pragma once
 
-#include <vcpkg_Chrono.h>
+#include <atomic>
+
+#include "vcpkg_Chrono.h"
+#include "vcpkg_Util.h"
 
 namespace vcpkg
 {
     struct GlobalState
     {
-        static ElapsedTime timer;
-        static bool debugging;
-        static bool feature_packages;
+        static Util::LockGuarded<ElapsedTime> timer;
+        static std::atomic<bool> debugging;
+        static std::atomic<bool> feature_packages;
     };
 }

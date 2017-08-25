@@ -193,13 +193,16 @@ namespace vcpkg::Build
         int return_code = System::cmd_execute_clean(command);
         auto buildtimeus = timer.microseconds();
         const auto spec_string = spec.to_string();
-        Metrics::track_metric("buildtimeus-" + spec_string, buildtimeus);
 
-        if (return_code != 0)
         {
-            Metrics::track_property("error", "build failed");
-            Metrics::track_property("build_error", spec_string);
-            return {BuildResult::BUILD_FAILED, {}};
+            auto locked_metrics = Metrics::g_metrics.lock();
+            locked_metrics->track_metric("buildtimeus-" + spec_string, buildtimeus);
+            if (return_code != 0)
+            {
+                locked_metrics->track_property("error", "build failed");
+                locked_metrics->track_property("build_error", spec_string);
+                return {BuildResult::BUILD_FAILED, {}};
+            }
         }
 
         auto build_info = read_build_info(paths.get_filesystem(), paths.build_info_file_path(spec));

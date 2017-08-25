@@ -514,7 +514,8 @@ namespace vcpkg::Commands::Install
                 return "R$" + raction->spec.to_string();
             Checks::unreachable(VCPKG_LINE_INFO);
         });
-        Metrics::track_property("installplan", specs_string);
+
+        Metrics::g_metrics.lock()->track_property("installplan", specs_string);
 
         print_plan(action_plan, is_recursive);
 

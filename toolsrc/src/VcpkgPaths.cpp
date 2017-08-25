@@ -87,8 +87,11 @@ namespace vcpkg
                             "(No sufficient installed version was found)",
                             Strings::to_utf8(tool_name),
                             version_as_string);
-            Metrics::track_property("error", "powershell install failed");
-            Metrics::track_property("installcmd", install_cmd);
+            {
+                auto locked_metrics = Metrics::g_metrics.lock();
+                locked_metrics->track_property("error", "powershell install failed");
+                locked_metrics->track_property("installcmd", install_cmd);
+            }
             Checks::exit_with_code(VCPKG_LINE_INFO, rc.exit_code);
         }
 
@@ -186,7 +189,7 @@ namespace vcpkg
 
         if (paths.root.empty())
         {
-            Metrics::track_property("error", "Invalid vcpkg root directory");
+            Metrics::g_metrics.lock()->track_property("error", "Invalid vcpkg root directory");
             Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid vcpkg root directory: %s", paths.root.string());
         }
 

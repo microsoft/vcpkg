@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <array>
+#include <atomic>
 #include <cassert>
 #include <cctype>
 #include <chrono>
@@ -22,6 +23,7 @@
 #include <iterator>
 #include <map>
 #include <memory>
+#include <mutex>
 #include <process.h>
 #include <regex>
 #include <set>
