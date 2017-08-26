@@ -6,15 +6,21 @@ param(
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 $vcpkgRootDir = & $scriptsDir\findFileRecursivelyUp.ps1 $scriptsDir .vcpkg-root
+Write-Verbose("vcpkg Path " + $vcpkgRootDir)
+
+$env:path += ";$vcpkgRootDir\downloads\MinGit-2.14.1-32-bit\cmd"
 
 $gitHash = "unknownhash"
 if (Get-Command "git" -ErrorAction SilentlyContinue)
 {
-    $gitHash = git rev-parse HEAD
+    $gitHash = git log HEAD -n 1 --format="%cd-%H" --date=short
+    if ($LASTEXITCODE -ne 0)
+    {
+        $gitHash = "unknownhash"
+    }
 }
-Write-Verbose("Git hash is " + $gitHash)
+Write-Verbose("Git repo version string is " + $gitHash)
 $vcpkgSourcesPath = "$vcpkgRootDir\toolsrc"
-Write-Verbose("vcpkg Path " + $vcpkgSourcesPath)
 
 if (!(Test-Path $vcpkgSourcesPath))
 {
