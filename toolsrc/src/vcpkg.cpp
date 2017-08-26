@@ -192,9 +192,13 @@ int wmain(const int argc, const wchar_t* const* const argv)
 {
     if (argc == 0) std::abort();
 
-    *GlobalState::timer.lock() = ElapsedTime::create_started();
+    GlobalState::g_init_console_cp = GetConsoleCP();
+    GlobalState::g_init_console_output_cp = GetConsoleOutputCP();
 
-    // Checks::register_console_ctrl_handler();
+    SetConsoleCP(65001);
+    SetConsoleOutputCP(65001);
+
+    *GlobalState::timer.lock() = ElapsedTime::create_started();
 
     const std::string trimmed_command_line = trim_path_from_command_line(Strings::to_utf8(GetCommandLineW()));
 
@@ -212,7 +216,7 @@ int wmain(const int argc, const wchar_t* const* const argv)
     if (auto p = args.sendmetrics.get()) Metrics::g_metrics.lock()->set_send_metrics(*p);
     if (auto p = args.debug.get()) GlobalState::debugging = *p;
 
-    vcpkg::Checks::register_console_ctrl_handler();
+    Checks::register_console_ctrl_handler();
 
     if (GlobalState::debugging)
     {

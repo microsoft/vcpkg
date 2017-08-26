@@ -12,5 +12,8 @@ namespace vcpkg
         static Util::LockGuarded<ElapsedTime> timer;
         static std::atomic<bool> debugging;
         static std::atomic<bool> feature_packages;
+
+        static std::atomic<int> g_init_console_cp;
+        static std::atomic<int> g_init_console_output_cp;
     };
 }
