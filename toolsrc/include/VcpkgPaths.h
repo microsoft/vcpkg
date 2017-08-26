@@ -13,11 +13,6 @@ namespace vcpkg
         CWStringView name;
         System::CPUArchitecture host_arch;
         System::CPUArchitecture target_arch;
-
-        bool operator==(const ToolsetArchOption& a) const
-        {
-            return (name == a.name && host_arch == a.host_arch && target_arch == a.target_arch);
-        }
     };
 
     struct Toolset

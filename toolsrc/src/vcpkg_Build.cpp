@@ -38,33 +38,18 @@ namespace vcpkg::Build
 
     CWStringView to_vcvarsall_toolchain(const std::string& target_architecture, const Toolset& toolset)
     {
-        using CPU = System::CPUArchitecture;
-
-        static constexpr ToolsetArchOption X86 = {L"x86", CPU::X86, CPU::X86};
-        static constexpr ToolsetArchOption X86_X64 = {L"x86_x64", CPU::X86, CPU::X64};
-        static constexpr ToolsetArchOption X86_ARM = {L"x86_arm", CPU::X86, CPU::ARM};
-        static constexpr ToolsetArchOption X86_ARM64 = {L"x86_arm64", CPU::X86, CPU::ARM64};
-
-        static constexpr ToolsetArchOption X64 = {L"amd64", CPU::X64, CPU::X64};
-        static constexpr ToolsetArchOption X64_X86 = {L"amd64_x86", CPU::X64, CPU::X86};
-        static constexpr ToolsetArchOption X64_ARM = {L"amd64_arm", CPU::X64, CPU::ARM};
-        static constexpr ToolsetArchOption X64_ARM64 = {L"amd64_arm64", CPU::X64, CPU::ARM64};
-
-        static constexpr std::array<ToolsetArchOption, 8> VALUES = {
-            X64, X64_X86, X64_ARM, X64_ARM64, X86, X86_X64, X86_ARM, X86_ARM64};
-
-        auto target_arch = System::to_cpu_architecture(target_architecture);
+        auto maybe_target_arch = System::to_cpu_architecture(target_architecture);
+        Checks::check_exit(
+            VCPKG_LINE_INFO, maybe_target_arch.has_value(), "Invalid architecture string: %s", target_architecture);
+        auto target_arch = maybe_target_arch.value_or_exit(VCPKG_LINE_INFO);
         auto host_architectures = System::get_supported_host_architectures();
 
-        for (auto&& value : VALUES)
+        for (auto&& host : host_architectures)
         {
-            if (target_arch != value.target_arch ||
-                std::find(host_architectures.begin(), host_architectures.end(), value.host_arch) == host_architectures.end() ||
-                std::find(toolset.supported_architectures.begin(), toolset.supported_architectures.end(), value) == toolset.supported_architectures.end()
-            )
-                continue;
-
-            return value.name;
+            auto it = Util::find_if(toolset.supported_architectures, [&](const ToolsetArchOption& opt) {
+                return host == opt.host_arch && target_arch == opt.target_arch;
+            });
+            if (it != toolset.supported_architectures.end()) return it->name;
         }
 
         Checks::exit_with_message(VCPKG_LINE_INFO, "Unsupported toolchain combination %s", target_architecture);
