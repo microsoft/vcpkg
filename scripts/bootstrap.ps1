@@ -8,16 +8,24 @@ $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 $vcpkgRootDir = & $scriptsDir\findFileRecursivelyUp.ps1 $scriptsDir .vcpkg-root
 Write-Verbose("vcpkg Path " + $vcpkgRootDir)
 
-$env:path += ";$vcpkgRootDir\downloads\MinGit-2.14.1-32-bit\cmd"
 
 $gitHash = "unknownhash"
-if (Get-Command "git" -ErrorAction SilentlyContinue)
+$oldpath = $env:path
+try
 {
-    $gitHash = git log HEAD -n 1 --format="%cd-%H" --date=short
-    if ($LASTEXITCODE -ne 0)
+    $env:path += ";$vcpkgRootDir\downloads\MinGit-2.14.1-32-bit\cmd"
+    if (Get-Command "git" -ListImported -ErrorAction SilentlyContinue)
     {
-        $gitHash = "unknownhash"
+        $gitHash = git log HEAD -n 1 --format="%cd-%H" --date=short
+        if ($LASTEXITCODE -ne 0)
+        {
+            $gitHash = "unknownhash"
+        }
     }
+}
+finally
+{
+    $env:path = $oldpath
 }
 Write-Verbose("Git repo version string is " + $gitHash)
 $vcpkgSourcesPath = "$vcpkgRootDir\toolsrc"
@@ -27,7 +35,8 @@ if (!(Test-Path $vcpkgSourcesPath))
     New-Item -ItemType directory -Path $vcpkgSourcesPath -force | Out-Null
 }
 
-try{
+try
+{
     pushd $vcpkgSourcesPath
     $msbuildExeWithPlatformToolset = & $scriptsDir\findAnyMSBuildWithCppPlatformToolset.ps1
     $msbuildExe = $msbuildExeWithPlatformToolset[0]
@@ -40,6 +49,7 @@ try{
     Copy-Item $vcpkgSourcesPath\Release\vcpkg.exe $vcpkgRootDir\vcpkg.exe | Out-Null
     Copy-Item $vcpkgSourcesPath\Release\vcpkgmetricsuploader.exe $vcpkgRootDir\scripts\vcpkgmetricsuploader.exe | Out-Null
 }
-finally{
+finally
+{
     popd
 }
