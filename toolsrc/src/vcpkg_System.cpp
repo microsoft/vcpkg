@@ -170,24 +170,24 @@ namespace vcpkg::System
         const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s 2>&1")###", cmd_line);
 
         Debug::println("_wpopen(%s)", Strings::to_utf8(actual_cmd_line));
-        std::string output;
-        char buf[1024];
+        std::wstring output;
+        wchar_t buf[1024];
         auto pipe = _wpopen(actual_cmd_line.c_str(), L"r");
         if (pipe == nullptr)
         {
-            return {1, output};
+            return {1, Strings::to_utf8(output)};
         }
-        while (fgets(buf, 1024, pipe))
+        while (fgetws(buf, 1024, pipe))
         {
             output.append(buf);
         }
         if (!feof(pipe))
         {
-            return {1, output};
+            return {1, Strings::to_utf8(output)};
         }
         auto ec = _pclose(pipe);
-        Debug::println("_wpopen() returned %d", ec);
-        return {ec, output};
+        Debug::println("_pclose() returned %d", ec);
+        return {ec, Strings::to_utf8(output)};
     }
 
     std::wstring create_powershell_script_cmd(const fs::path& script_path, const CWStringView args)
