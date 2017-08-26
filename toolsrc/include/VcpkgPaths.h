@@ -8,11 +8,19 @@
 
 namespace vcpkg
 {
+    struct ToolsetArchOption
+    {
+        CWStringView name;
+        System::CPUArchitecture host_arch;
+        System::CPUArchitecture target_arch;
+    };
+
     struct Toolset
     {
         fs::path dumpbin;
         fs::path vcvarsall;
         CWStringView version;
+        std::vector<ToolsetArchOption> supported_architectures;
     };
 
     struct VcpkgPaths

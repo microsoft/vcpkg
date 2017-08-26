@@ -77,6 +77,8 @@ namespace vcpkg::System
 
     CPUArchitecture get_host_processor();
 
+    std::vector<CPUArchitecture> get_supported_host_architectures();
+
     const fs::path& get_ProgramFiles_32_bit();
 
     const fs::path& get_ProgramFiles_platform_bitness();

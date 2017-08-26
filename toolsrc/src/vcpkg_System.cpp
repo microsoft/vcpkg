@@ -43,6 +43,20 @@ namespace vcpkg::System
         return to_cpu_architecture(Strings::to_utf8(procarch)).value_or_exit(VCPKG_LINE_INFO);
     }
 
+    std::vector<CPUArchitecture> get_supported_host_architectures()
+    {
+        std::vector<CPUArchitecture> supported_architectures;
+        supported_architectures.push_back(get_host_processor());
+
+        //AMD64 machines support to run x86 applications
+        if(supported_architectures.back()==CPUArchitecture::X64)
+        {
+            supported_architectures.push_back(CPUArchitecture::X86);
+        }
+
+        return supported_architectures;
+    }
+
     int cmd_execute_clean(const CWStringView cmd_line)
     {
         static const std::wstring system_root = get_environment_variable(L"SystemRoot").value_or_exit(VCPKG_LINE_INFO);

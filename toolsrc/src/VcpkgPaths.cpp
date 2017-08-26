@@ -282,6 +282,8 @@ namespace vcpkg
 
     static std::vector<Toolset> find_toolset_instances(const VcpkgPaths& paths)
     {
+        using CPU = System::CPUArchitecture;
+
         const auto& fs = paths.get_filesystem();
 
         const std::vector<std::string> vs2017_installation_instances = get_VS2017_installation_instances(paths);
@@ -301,9 +303,26 @@ namespace vcpkg
             {
                 const fs::path vs2015_dumpbin_exe = *v / "VC" / "bin" / "dumpbin.exe";
                 paths_examined.push_back(vs2015_dumpbin_exe);
+
+                const fs::path vs2015_bin_dir = vs2015_vcvarsall_bat.parent_path() / "bin";
+                std::vector<ToolsetArchOption> supported_architectures;
+                if (fs.exists(vs2015_bin_dir / "vcvars32.bat"))
+                    supported_architectures.push_back({L"x86", CPU::X86, CPU::X86});
+                if (fs.exists(vs2015_bin_dir / "amd64\\vcvars64.bat"))
+                    supported_architectures.push_back({L"x64", CPU::X64, CPU::X64});
+                if (fs.exists(vs2015_bin_dir / "x86_amd64\\vcvarsx86_amd64.bat"))
+                    supported_architectures.push_back({L"x86_amd64", CPU::X86, CPU::X64});
+                if (fs.exists(vs2015_bin_dir / "x86_arm\\vcvarsx86_arm.bat"))
+                    supported_architectures.push_back({L"x86_arm", CPU::X86, CPU::ARM});
+                if (fs.exists(vs2015_bin_dir / "amd64_x86\\vcvarsamd64_x86.bat"))
+                    supported_architectures.push_back({L"amd64_x86", CPU::X64, CPU::X86});
+                if (fs.exists(vs2015_bin_dir / "amd64_arm\\vcvarsamd64_arm.bat"))
+                    supported_architectures.push_back({L"amd64_arm", CPU::X64, CPU::ARM});
+
                 if (fs.exists(vs2015_dumpbin_exe))
                 {
-                    found_toolsets.push_back({vs2015_dumpbin_exe, vs2015_vcvarsall_bat, L"v140"});
+                    found_toolsets.push_back(
+                        {vs2015_dumpbin_exe, vs2015_vcvarsall_bat, L"v140", supported_architectures});
                 }
             }
         }
@@ -315,9 +334,25 @@ namespace vcpkg
             const fs::path vc_dir = instance / "VC";
 
             // Skip any instances that do not have vcvarsall.
-            const fs::path vcvarsall_bat = vc_dir / "Auxiliary" / "Build" / "vcvarsall.bat";
+            const fs::path vcvarsall_dir = vc_dir / "Auxiliary" / "Build";
+            const fs::path vcvarsall_bat = vcvarsall_dir / "vcvarsall.bat";
             paths_examined.push_back(vcvarsall_bat);
             if (!fs.exists(vcvarsall_bat)) continue;
+
+            // Get all supported architectures
+            std::vector<ToolsetArchOption> supported_architectures;
+            if (fs.exists(vcvarsall_dir / "vcvars32.bat"))
+                supported_architectures.push_back({L"x86", CPU::X86, CPU::X86});
+            if (fs.exists(vcvarsall_dir / "vcvars64.bat"))
+                supported_architectures.push_back({L"amd64", CPU::X64, CPU::X64});
+            if (fs.exists(vcvarsall_dir / "vcvarsx86_amd64.bat"))
+                supported_architectures.push_back({L"x86_amd64", CPU::X86, CPU::X64});
+            if (fs.exists(vcvarsall_dir / "vcvarsx86_arm.bat"))
+                supported_architectures.push_back({L"x86_arm", CPU::X86, CPU::ARM});
+            if (fs.exists(vcvarsall_dir / "vcvarsamd64_x86.bat"))
+                supported_architectures.push_back({L"amd64_x86", CPU::X64, CPU::X86});
+            if (fs.exists(vcvarsall_dir / "vcvarsamd64_arm.bat"))
+                supported_architectures.push_back({L"amd64_arm", CPU::X64, CPU::ARM});
 
             // Locate the "best" MSVC toolchain version
             const fs::path msvc_path = vc_dir / "Tools" / "MSVC";
@@ -335,7 +370,7 @@ namespace vcpkg
                 paths_examined.push_back(dumpbin_path);
                 if (fs.exists(dumpbin_path))
                 {
-                    vs2017_toolset = Toolset{dumpbin_path, vcvarsall_bat, L"v141"};
+                    vs2017_toolset = Toolset{dumpbin_path, vcvarsall_bat, L"v141", supported_architectures};
                     break;
                 }
             }
