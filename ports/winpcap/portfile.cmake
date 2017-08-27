@@ -19,6 +19,21 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
+    set(CRT_LINKAGE "MT")
+elseif(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+    set(CRT_LINKAGE "MD")
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+set(LIBRARY_LINKAGE "4")
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+set(LIBRARY_LINKAGE "2")
+endif()
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/packetNtx.patch.in" "${CMAKE_CURRENT_LIST_DIR}/packetNtx.patch" @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/wpcap.patch.in" "${CMAKE_CURRENT_LIST_DIR}/wpcap.patch" @ONLY)
+
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/packetNtx.patch"
@@ -136,32 +151,34 @@ file(
         ${CURRENT_PACKAGES_DIR}/debug/lib
 )
 
-vcpkg_execute_required_process(
-    COMMAND ${SOURCE_PATH}/create_bin.bat
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME create_bin-${TARGET_TRIPLET}
-)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_execute_required_process(
+        COMMAND ${SOURCE_PATH}/create_bin.bat
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME create_bin-${TARGET_TRIPLET}
+    )
 
-set(PCAP_BINARY_PATH "${SOURCE_PATH}/WpdPack/Bin")
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(PCAP_BINARY_PATH "${PCAP_BINARY_PATH}/x64")
+    set(PCAP_BINARY_PATH "${SOURCE_PATH}/WpdPack/Bin")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(PCAP_BINARY_PATH "${PCAP_BINARY_PATH}/x64")
+    endif()
+
+    file(
+        INSTALL
+            "${PCAP_BINARY_PATH}/Packet.dll"
+            "${PCAP_BINARY_PATH}/wpcap.dll"
+        DESTINATION
+            ${CURRENT_PACKAGES_DIR}/bin
+    )
+
+    file(
+        INSTALL
+            "${PCAP_BINARY_PATH}/Packet.dll"
+            "${PCAP_BINARY_PATH}/wpcap.dll"
+        DESTINATION
+            ${CURRENT_PACKAGES_DIR}/debug/bin
+    )
 endif()
-
-file(
-    INSTALL
-        "${PCAP_BINARY_PATH}/Packet.dll"
-        "${PCAP_BINARY_PATH}/wpcap.dll"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/bin
-)
-
-file(
-    INSTALL
-        "${PCAP_BINARY_PATH}/Packet.dll"
-        "${PCAP_BINARY_PATH}/wpcap.dll"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/debug/bin
-)
 
 # Handle copyright
 file(DOWNLOAD "https://www.winpcap.org/misc/copyright.htm" ${SOURCE_PATH}/copyright.htm)
