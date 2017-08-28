@@ -45,9 +45,9 @@ namespace vcpkg::Dependencies
 
         InstallPlanAction();
 
-        InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
-                                             const std::unordered_set<std::string>& features,
-                                             const RequestType& request_type);
+        InstallPlanAction(const PackageSpec& spec,
+                          const std::unordered_set<std::string>& features,
+                          const RequestType& request_type);
         InstallPlanAction(const PackageSpec& spec, const AnyParagraph& any_paragraph, const RequestType& request_type);
         InstallPlanAction(const PackageSpec& spec,
                           const SourceControlFile& any_paragraph,
