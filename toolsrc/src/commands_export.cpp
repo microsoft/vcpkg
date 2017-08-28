@@ -67,7 +67,7 @@ namespace vcpkg::Commands::Export
 
         for (const ExportPlanType plan_type : order)
         {
-            auto it = group_by_plan_type.find(plan_type);
+            const auto it = group_by_plan_type.find(plan_type);
             if (it == group_by_plan_type.cend())
             {
                 continue;
@@ -205,11 +205,9 @@ namespace vcpkg::Commands::Export
     static Optional<std::string> maybe_lookup(std::unordered_map<std::string, std::string> const& m,
                                               std::string const& key)
     {
-        auto it = m.find(key);
-        if (it != m.end())
-            return it->second;
-        else
-            return nullopt;
+        const auto it = m.find(key);
+        if (it != m.end()) return it->second;
+        return nullopt;
     }
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
@@ -266,7 +264,7 @@ namespace vcpkg::Commands::Export
             VCPKG_LINE_INFO, !maybe_nuget_version || nuget, "--nuget-version is only valid with --nuget");
 
         // create the plan
-        StatusParagraphs status_db = database_load_check(paths);
+        const StatusParagraphs status_db = database_load_check(paths);
         std::vector<ExportPlanAction> export_plan = Dependencies::create_export_plan(paths, specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !export_plan.empty(), "Export plan cannot be empty");
 
@@ -285,7 +283,7 @@ namespace vcpkg::Commands::Export
                             "Additional packages (*) need to be exported to complete this operation.");
         }
 
-        auto it = group_by_plan_type.find(ExportPlanType::PORT_AVAILABLE_BUT_NOT_BUILT);
+        const auto it = group_by_plan_type.find(ExportPlanType::PORT_AVAILABLE_BUT_NOT_BUILT);
         if (it != group_by_plan_type.cend() && !it->second.empty())
         {
             System::println(System::Color::error, "There are packages that have not been built.");
@@ -295,7 +293,7 @@ namespace vcpkg::Commands::Export
             Util::erase_remove_if(
                 unbuilt, [](const ExportPlanAction* a) { return a->request_type != RequestType::USER_REQUESTED; });
 
-            auto s = Strings::join(" ", unbuilt, [](const ExportPlanAction* a) { return a->spec.to_string(); });
+            const auto s = Strings::join(" ", unbuilt, [](const ExportPlanAction* a) { return a->spec.to_string(); });
             System::println("To build them, run:\n"
                             "    vcpkg install %s",
                             s);
@@ -360,7 +358,7 @@ namespace vcpkg::Commands::Export
             Checks::check_exit(VCPKG_LINE_INFO, !ec);
         }
 
-        auto print_next_step_info = [](const fs::path& prefix) {
+        const auto print_next_step_info = [](const fs::path& prefix) {
             const fs::path cmake_toolchain = prefix / "scripts" / "buildsystems" / "vcpkg.cmake";
             const CMakeVariable cmake_variable =
                 CMakeVariable(L"CMAKE_TOOLCHAIN_FILE", cmake_toolchain.generic_string());

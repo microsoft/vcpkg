@@ -34,7 +34,7 @@ static void inner(const VcpkgCmdArguments& args)
         Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
-    if (auto command_function = Commands::find(args.command, Commands::get_available_commands_type_c()))
+    if (const auto command_function = Commands::find(args.command, Commands::get_available_commands_type_c()))
     {
         return command_function(args);
     }
@@ -47,7 +47,7 @@ static void inner(const VcpkgCmdArguments& args)
     else
     {
         const Optional<std::wstring> vcpkg_root_dir_env = System::get_environment_variable(L"VCPKG_ROOT");
-        if (auto v = vcpkg_root_dir_env.get())
+        if (const auto v = vcpkg_root_dir_env.get())
         {
             vcpkg_root_dir = fs::stdfs::absolute(*v);
         }
@@ -67,10 +67,10 @@ static void inner(const VcpkgCmdArguments& args)
                        vcpkg_root_dir.string(),
                        expected_paths.error().message());
     const VcpkgPaths paths = expected_paths.value_or_exit(VCPKG_LINE_INFO);
-    int exit_code = _wchdir(paths.root.c_str());
+    const int exit_code = _wchdir(paths.root.c_str());
     Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Changing the working dir failed");
 
-    if (auto command_function = Commands::find(args.command, Commands::get_available_commands_type_b()))
+    if (const auto command_function = Commands::find(args.command, Commands::get_available_commands_type_b()))
     {
         return command_function(args, paths);
     }
@@ -84,7 +84,7 @@ static void inner(const VcpkgCmdArguments& args)
     {
         const Optional<std::wstring> vcpkg_default_triplet_env =
             System::get_environment_variable(L"VCPKG_DEFAULT_TRIPLET");
-        if (auto v = vcpkg_default_triplet_env.get())
+        if (const auto v = vcpkg_default_triplet_env.get())
         {
             default_triplet = Triplet::from_canonical_name(Strings::to_utf8(*v));
         }
@@ -96,7 +96,7 @@ static void inner(const VcpkgCmdArguments& args)
 
     Input::check_triplet(default_triplet, paths);
 
-    if (auto command_function = Commands::find(args.command, Commands::get_available_commands_type_a()))
+    if (const auto command_function = Commands::find(args.command, Commands::get_available_commands_type_a()))
     {
         return command_function(args, paths, default_triplet);
     }
@@ -118,7 +118,7 @@ static void loadConfig()
     try
     {
         auto maybe_pghs = Paragraphs::get_paragraphs(Files::get_real_filesystem(), localappdata / "vcpkg" / "config");
-        if (auto p_pghs = maybe_pghs.get())
+        if (const auto p_pghs = maybe_pghs.get())
         {
             const auto& pghs = *p_pghs;
 
@@ -212,9 +212,9 @@ int wmain(const int argc, const wchar_t* const* const argv)
 
     const VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(argc, argv);
 
-    if (auto p = args.printmetrics.get()) Metrics::g_metrics.lock()->set_print_metrics(*p);
-    if (auto p = args.sendmetrics.get()) Metrics::g_metrics.lock()->set_send_metrics(*p);
-    if (auto p = args.debug.get()) GlobalState::debugging = *p;
+    if (const auto p = args.printmetrics.get()) Metrics::g_metrics.lock()->set_print_metrics(*p);
+    if (const auto p = args.sendmetrics.get()) Metrics::g_metrics.lock()->set_send_metrics(*p);
+    if (const auto p = args.debug.get()) GlobalState::debugging = *p;
 
     Checks::register_console_ctrl_handler();
 
