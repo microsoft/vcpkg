@@ -1,3 +1,36 @@
+vcpkg (0.0.85)
+--------------
+  * Add ports:
+    - ccfits               2.5
+    - highfive             1.3
+    - lzfse                1.0
+    - pangolin             0.5
+    - rhash                1.3.5
+    - speexdsp             1.2rc3-1
+    - unrar                5.5.8
+  * Update ports:
+    - assimp               4.0.0 -> 4.0.0-1
+    - catch                1.9.7 -> 1.10.0
+    - ctemplate            2017-06-23-44b7c5b918a08ad561c63e9d28beecb40c10ebca -> 2017-06-23-44b7c5-2
+    - curl                 7.55.0 -> 7.55.1
+    - ecm                  5.32.0 -> 5.37.0
+    - expat                2.1.1-1 -> 2.2.4-1
+    - ffmpeg               3.2.4-3 -> 3.3.3
+    - gl2ps                OpenGL to PostScript Printing Library -> 1.4.0
+    - jsoncpp              1.7.7 -> 1.8.1
+    - libp7-baical         4.1 -> 4.4-1
+    - libpng               1.6.31 -> 1.6.32
+    - libraw               0.18.2-2 -> 0.18.2-3
+    - libsigcpp            2.10 -> 2.99
+    - snappy               1.1.6-be6dc3d -> 1.1.7
+  * `vcpkg edit`: Add new option `--builtrees`; opens editor in buildtrees directory for examining build issues
+  * Improve Windows SDK support (contract version detection)
+  * Improve handling for non-ascii environments
+  * Fixes and improvements in the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  SUN, 27 Aug 2017 22:00:00 -0800
+
+
 vcpkg (0.0.84)
 --------------
   * Add ports:
