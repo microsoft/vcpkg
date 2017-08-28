@@ -2,6 +2,7 @@
 
 #include "Paragraphs.h"
 #include "vcpkg_Commands.h"
+#include "vcpkg_Commands_Export_IFW.h"
 #include "vcpkg_Dependencies.h"
 #include "vcpkg_Input.h"
 #include "vcpkg_System.h"
@@ -215,10 +216,12 @@ namespace vcpkg::Commands::Export
         static const std::string OPTION_DRY_RUN = "--dry-run";
         static const std::string OPTION_RAW = "--raw";
         static const std::string OPTION_NUGET = "--nuget";
+        static const std::string OPTION_IFW = "--ifw";
         static const std::string OPTION_ZIP = "--zip";
         static const std::string OPTION_SEVEN_ZIP = "--7zip";
         static const std::string OPTION_NUGET_ID = "--nuget-id";
         static const std::string OPTION_NUGET_VERSION = "--nuget-version";
+        static const std::string OPTION_IFW_REPOSITORY_URL = "--ifw-repository-url";
 
         // input sanitization
         static const std::string EXAMPLE =
@@ -236,22 +239,25 @@ namespace vcpkg::Commands::Export
                 OPTION_DRY_RUN,
                 OPTION_RAW,
                 OPTION_NUGET,
+                OPTION_IFW,
                 OPTION_ZIP,
                 OPTION_SEVEN_ZIP,
             },
             {
                 OPTION_NUGET_ID,
                 OPTION_NUGET_VERSION,
+                OPTION_IFW_REPOSITORY_URL,
             });
         const bool dry_run = options.switches.find(OPTION_DRY_RUN) != options.switches.cend();
         const bool raw = options.switches.find(OPTION_RAW) != options.switches.cend();
         const bool nuget = options.switches.find(OPTION_NUGET) != options.switches.cend();
+        const bool ifw = options.switches.find(OPTION_IFW) != options.switches.cend();
         const bool zip = options.switches.find(OPTION_ZIP) != options.switches.cend();
         const bool seven_zip = options.switches.find(OPTION_SEVEN_ZIP) != options.switches.cend();
 
-        if (!raw && !nuget && !zip && !seven_zip && !dry_run)
+        if (!raw && !nuget && !ifw && !zip && !seven_zip && !dry_run)
         {
-            System::println(System::Color::error, "Must provide at least one export type: --raw --nuget --zip --7zip");
+            System::println(System::Color::error, "Must provide at least one export type: --raw --nuget --ifw --zip --7zip");
             System::print(EXAMPLE);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
@@ -262,6 +268,10 @@ namespace vcpkg::Commands::Export
         Checks::check_exit(VCPKG_LINE_INFO, !maybe_nuget_id || nuget, "--nuget-id is only valid with --nuget");
         Checks::check_exit(
             VCPKG_LINE_INFO, !maybe_nuget_version || nuget, "--nuget-version is only valid with --nuget");
+
+        auto maybe_ifw_repository_url = maybe_lookup(options.settings, OPTION_IFW_REPOSITORY_URL);
+
+        Checks::check_exit(VCPKG_LINE_INFO, !maybe_ifw_repository_url || ifw, "--ifw-repository-url is only valid with --ifw");
 
         // create the plan
         const StatusParagraphs status_db = database_load_check(paths);
@@ -305,7 +315,11 @@ namespace vcpkg::Commands::Export
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        const std::string export_id = create_export_id();
+        std::string export_id = create_export_id();
+        if (ifw)
+        {
+            export_id = "vcpkg-export"; // TODO: Remove after debugging
+        }
 
         Files::Filesystem& fs = paths.get_filesystem();
         const fs::path export_to_path = paths.root;
@@ -315,6 +329,8 @@ namespace vcpkg::Commands::Export
         fs.create_directory(raw_exported_dir_path, ec);
 
         // execute the plan
+        std::map<std::string, const ExportPlanAction*> unique_packages;
+        std::set<std::string> unique_triplets;
         for (const ExportPlanAction& action : export_plan)
         {
             if (action.plan_type != ExportPlanType::ALREADY_BUILT)
@@ -327,10 +343,21 @@ namespace vcpkg::Commands::Export
 
             const BinaryParagraph& binary_paragraph =
                 action.any_paragraph.binary_control_file.value_or_exit(VCPKG_LINE_INFO).core_paragraph;
+
+            unique_packages[action.spec.name()] = &action;
+            unique_triplets.insert(action.spec.triplet().canonical_name());
+
+            fs::path spec_exported_dir_path = raw_exported_dir_path / "installed";
+            if (ifw)
+            {
+                // Export real package and return data dir for installation
+                spec_exported_dir_path = IFW::export_real_package(raw_exported_dir_path, action, fs);
+            }
+
             const InstallDir dirs = InstallDir::from_destination_root(
-                raw_exported_dir_path / "installed",
+                spec_exported_dir_path,
                 action.spec.triplet().to_string(),
-                raw_exported_dir_path / "installed" / "vcpkg" / "info" / (binary_paragraph.fullstem() + ".list"));
+                spec_exported_dir_path / "vcpkg" / "info" / (binary_paragraph.fullstem() + ".list"));
 
             Install::install_files_and_write_listfile(paths.get_filesystem(), paths.package_dir(action.spec), dirs);
             System::println(System::Color::success, "Exporting package %s... done", display_name);
@@ -351,11 +378,27 @@ namespace vcpkg::Commands::Export
         for (const fs::path& file : integration_files_relative_to_root)
         {
             const fs::path source = paths.root / file;
-            const fs::path destination = raw_exported_dir_path / file;
+            fs::path destination = raw_exported_dir_path / file;
+            if (ifw)
+            {
+                destination = raw_exported_dir_path / "integration" / "data" / file;
+            }
             fs.create_directories(destination.parent_path(), ec);
             Checks::check_exit(VCPKG_LINE_INFO, !ec);
             fs.copy_file(source, destination, fs::copy_options::overwrite_existing, ec);
             Checks::check_exit(VCPKG_LINE_INFO, !ec);
+        }
+
+        if (ifw)
+        {
+            // Unigue packages
+            IFW::export_unique_packages(raw_exported_dir_path, unique_packages, fs);
+            // Unigue triplets
+            IFW::export_unique_triplets(raw_exported_dir_path, unique_triplets, fs);
+            // Integration
+            IFW::export_integration(raw_exported_dir_path, fs);
+            // Configuration
+            IFW::export_config(raw_exported_dir_path, maybe_ifw_repository_url.value_or(""), fs);
         }
 
         const auto print_next_step_info = [](const fs::path& prefix) {
@@ -417,7 +460,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
             print_next_step_info("[...]");
         }
 
-        if (!raw)
+        if (!raw && !ifw)
         {
             fs.remove_all(raw_exported_dir_path, ec);
         }
