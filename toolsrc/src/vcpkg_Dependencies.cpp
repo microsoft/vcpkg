@@ -166,7 +166,7 @@ namespace vcpkg::Dependencies
     InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
                                          const AnyParagraph& any_paragraph,
                                          const RequestType& request_type)
-        : spec(spec), request_type(request_type), plan_type(InstallPlanType::UNKNOWN), any_paragraph(any_paragraph)
+        : spec(spec), any_paragraph(any_paragraph), plan_type(InstallPlanType::UNKNOWN), request_type(request_type)
     {
         if (auto p = any_paragraph.status_paragraph.get())
         {
