@@ -71,7 +71,7 @@ namespace vcpkg::Strings
         }
 
         std::basic_string<CharType> output;
-        size_t size = v.size();
+        const size_t size = v.size();
 
         output.append(transformer(v[0]));
 

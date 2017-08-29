@@ -161,7 +161,7 @@ namespace vcpkg::Build
 
         inline bool is_enabled(BuildPolicy policy) const
         {
-            auto it = m_policies.find(policy);
+            const auto it = m_policies.find(policy);
             if (it != m_policies.cend()) return it->second;
             return false;
         }

@@ -24,7 +24,7 @@ namespace vcpkg::COFFFileReader
     template<class T>
     static T peek_value_from_stream(fstream& fs)
     {
-        fpos_t original_pos = fs.tellg().seekpos();
+        const fpos_t original_pos = fs.tellg().seekpos();
         T data;
         fs.read(reinterpret_cast<char*>(&data), sizeof data);
         fs.seekg(original_pos);
@@ -236,7 +236,7 @@ namespace vcpkg::COFFFileReader
 
         read_and_verify_PE_signature(fs);
         CoffFileHeader header = CoffFileHeader::read(fs);
-        MachineType machine = header.machine_type();
+        const MachineType machine = header.machine_type();
         return {machine};
     }
 
@@ -282,7 +282,7 @@ namespace vcpkg::COFFFileReader
         marker.advance_by(ArchiveMemberHeader::HEADER_SIZE + second_linker_member_header.member_size());
         marker.seek_to_marker(fs);
 
-        bool hasLongnameMemberHeader = peek_value_from_stream<uint16_t>(fs) == 0x2F2F;
+        const bool hasLongnameMemberHeader = peek_value_from_stream<uint16_t>(fs) == 0x2F2F;
         if (hasLongnameMemberHeader)
         {
             const ArchiveMemberHeader longnames_member_header = ArchiveMemberHeader::read(fs);
