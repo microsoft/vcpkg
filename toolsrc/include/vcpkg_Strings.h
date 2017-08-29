@@ -36,6 +36,9 @@ namespace vcpkg::Strings::details
 
 namespace vcpkg::Strings
 {
+    static constexpr const CStringView EMPTY = "";
+    static constexpr const CWStringView WEMPTY = L"";
+
     template<class... Args>
     std::string format(const char* fmtstr, const Args&... args)
     {
