@@ -264,7 +264,14 @@ namespace vcpkg
         const std::wstring cmd = System::create_powershell_script_cmd(script);
         System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd);
         Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Could not run script to detect VS 2017 instances");
-        return Strings::split(ec_data.output, "\n");
+        return Util::fmap(Strings::split(ec_data.output, "\n"), [](const std::string& line) {
+            auto colon_pos = line.find(':');
+            if (colon_pos != std::string::npos && colon_pos > 0)
+            {
+                return line.substr(colon_pos - 1);
+            }
+            return line;
+        });
     }
 
     static Optional<fs::path> get_VS2015_installation_instance()
