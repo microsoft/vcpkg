@@ -39,6 +39,9 @@ namespace vcpkg::Strings
     static constexpr const CStringView EMPTY = "";
     static constexpr const CWStringView WEMPTY = L"";
 
+    bool is_empty(const CStringView s);
+    bool is_empty(const CWStringView s);
+
     template<class... Args>
     std::string format(const char* fmtstr, const Args&... args)
     {

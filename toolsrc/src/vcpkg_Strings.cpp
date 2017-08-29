@@ -71,6 +71,9 @@ namespace vcpkg::Strings::details
 
 namespace vcpkg::Strings
 {
+    bool is_empty(const CStringView s) { return s == EMPTY; }
+    bool is_empty(const CWStringView s) { return s == WEMPTY; }
+
     std::wstring to_utf16(const CStringView s)
     {
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> conversion;
