@@ -193,17 +193,15 @@ namespace vcpkg::Dependencies
         {
             return this->spec.to_string();
         }
-        else
-        {
-            std::string features;
-            for (auto&& feature : this->feature_list)
-            {
-                features += feature + ",";
-            }
-            features.pop_back();
 
-            return this->spec.name() + "[" + features + "]:" + this->spec.triplet().to_string();
+        std::string features;
+        for (auto&& feature : this->feature_list)
+        {
+            features += feature + ",";
         }
+        features.pop_back();
+
+        return this->spec.name() + "[" + features + "]:" + this->spec.triplet().to_string();
     }
 
     bool InstallPlanAction::compare_by_name(const InstallPlanAction* left, const InstallPlanAction* right)
