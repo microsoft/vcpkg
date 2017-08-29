@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.9.0)
 project(pthreads)
 
 set(PTHREAD_PUBLIC_HEADERS pthread.h sched.h semaphore.h)
-set(PTHREAD_PRIVATE_HEADERS config.h implement.h need_errno.h)
 
 set(PTHREAD_SHARED_SOURCES
   autostatic.c
@@ -171,7 +170,7 @@ set(PTHREAD_STATIC_SOURCES
 
 
 option(PTW32_ARCH  "x32")
-add_definitions(-DPTW32_ARCH=${PTW32_ARCH} -DDPTW32_RC_MSC -DHAVE_PTW32_CONFIG_H -D_TIMESPEC_DEFINED)
+add_definitions(-DPTW32_ARCH=${PTW32_ARCH} -DPTW32_RC_MSC -DHAVE_PTW32_CONFIG_H -D_TIMESPEC_DEFINED)
 
 if(BUILD_SHARED_LIBS)
   set(PTHREAD_SOURCES  ${PTHREAD_SHARED_SOURCES})
@@ -188,6 +187,7 @@ if(PTHREADS_BUILD_CPP)
 elseif(PTHREADS_BUILD_SEH)
   set(PTHREADS_EXCEPTION_SCHEME SE)
   add_definitions(/__CLEANUP_SEH)
+else()
   set(PTHREADS_EXCEPTION_SCHEME C)
 endif()
 
