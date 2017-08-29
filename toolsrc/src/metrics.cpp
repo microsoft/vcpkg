@@ -25,7 +25,7 @@ namespace vcpkg::Metrics
         errno_t err = gmtime_s(&newtime, &now);
         if (err)
         {
-            return "";
+            return Strings::EMPTY;
         }
 
         strftime(&date[0], date.size(), "%Y-%m-%dT%H:%M:%S", &newtime);
@@ -125,16 +125,16 @@ namespace vcpkg::Metrics
         path += L"\\kernel32.dll";
 
         auto versz = GetFileVersionInfoSizeW(path.c_str(), nullptr);
-        if (versz == 0) return "";
+        if (versz == 0) return Strings::EMPTY;
 
         std::vector<char> verbuf;
         verbuf.resize(versz);
 
-        if (!GetFileVersionInfoW(path.c_str(), 0, static_cast<DWORD>(verbuf.size()), &verbuf[0])) return "";
+        if (!GetFileVersionInfoW(path.c_str(), 0, static_cast<DWORD>(verbuf.size()), &verbuf[0])) return Strings::EMPTY;
 
         void* rootblock;
         UINT rootblocksize;
-        if (!VerQueryValueW(&verbuf[0], L"\\", &rootblock, &rootblocksize)) return "";
+        if (!VerQueryValueW(&verbuf[0], L"\\", &rootblock, &rootblocksize)) return Strings::EMPTY;
 
         auto rootblock_ffi = static_cast<VS_FIXEDFILEINFO*>(rootblock);
 
@@ -377,7 +377,7 @@ namespace vcpkg::Metrics
                 path = vcpkgdir / "scripts" / "vcpkgmetricsuploader.exe";
                 if (fs.exists(path)) return path;
 
-                return L"";
+                return Strings::WEMPTY;
             }();
 
             std::error_code ec;
