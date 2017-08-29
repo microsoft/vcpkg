@@ -133,7 +133,7 @@ namespace vcpkg
     fs::path get_nuget_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
     {
         static constexpr std::array<int, 3> expected_version = {4, 1, 0};
-        static const std::wstring version_check_arguments = L"";
+        static const std::wstring version_check_arguments = Strings::WEMPTY;
 
         const fs::path downloaded_copy = downloads_folder / "nuget-4.1.0" / "nuget.exe";
         const std::vector<fs::path> from_path = find_from_PATH(L"nuget");

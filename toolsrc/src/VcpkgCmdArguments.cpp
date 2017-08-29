@@ -222,17 +222,17 @@ namespace vcpkg
 
     void VcpkgCmdArguments::check_max_arg_count(const size_t expected_arg_count) const
     {
-        return check_max_arg_count(expected_arg_count, "");
+        return check_max_arg_count(expected_arg_count, Strings::EMPTY);
     }
 
     void VcpkgCmdArguments::check_min_arg_count(const size_t expected_arg_count) const
     {
-        return check_min_arg_count(expected_arg_count, "");
+        return check_min_arg_count(expected_arg_count, Strings::EMPTY);
     }
 
     void VcpkgCmdArguments::check_exact_arg_count(const size_t expected_arg_count) const
     {
-        return check_exact_arg_count(expected_arg_count, "");
+        return check_exact_arg_count(expected_arg_count, Strings::EMPTY);
     }
 
     void VcpkgCmdArguments::check_max_arg_count(const size_t expected_arg_count, const std::string& example_text) const

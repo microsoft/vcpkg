@@ -30,7 +30,7 @@ namespace vcpkg::Parse
     }
     std::string ParagraphParser::optional_field(const std::string& fieldname)
     {
-        return remove_field(&fields, fieldname).value_or("");
+        return remove_field(&fields, fieldname).value_or(Strings::EMPTY);
     }
     std::unique_ptr<ParseControlErrorInfo> ParagraphParser::error_info(const std::string& name) const
     {

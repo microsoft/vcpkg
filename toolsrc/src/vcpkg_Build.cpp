@@ -30,8 +30,8 @@ namespace vcpkg::Build
 
     CWStringView to_vcvarsall_target(const std::string& cmake_system_name)
     {
-        if (cmake_system_name == "") return L"";
-        if (cmake_system_name == "Windows") return L"";
+        if (cmake_system_name == Strings::EMPTY) return Strings::WEMPTY;
+        if (cmake_system_name == "Windows") return Strings::WEMPTY;
         if (cmake_system_name == "WindowsStore") return L"store";
 
         Checks::exit_with_message(VCPKG_LINE_INFO, "Unsupported vcvarsall target %s", cmake_system_name);
@@ -61,7 +61,7 @@ namespace vcpkg::Build
         const wchar_t* tonull = L" >nul";
         if (GlobalState::debugging)
         {
-            tonull = L"";
+            tonull = Strings::WEMPTY;
         }
 
         const auto arch = to_vcvarsall_toolchain(pre_build_info.target_architecture, toolset);
@@ -359,7 +359,7 @@ namespace vcpkg::Build
 
             const bool variable_with_no_value = s.size() == 1;
             const std::string variable_name = s.at(0);
-            const std::string variable_value = variable_with_no_value ? "" : s.at(1);
+            const std::string variable_value = variable_with_no_value ? Strings::EMPTY : s.at(1);
 
             if (variable_name == "VCPKG_TARGET_ARCHITECTURE")
             {

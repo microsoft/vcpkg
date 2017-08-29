@@ -62,7 +62,7 @@ namespace vcpkg::Checks
     {
         if (!expression)
         {
-            exit_with_message(line_info, "");
+            exit_with_message(line_info, Strings::EMPTY);
         }
     }
 
