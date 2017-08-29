@@ -15,7 +15,7 @@ vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
 # apply boost combined hotfix
 vcpkg_download_distfile(HOTFIX_PATCH
-    URLS "https://raw.githubusercontent.com/boostorg/website/master/patches/1_65_0/boost_1_65_0.patch"
+    URLS "https://raw.githubusercontent.com/boostorg/website/6c3b630f2c621b78d983e882cefae7ffdf8383b8/patches/1_65_0/boost_1_65_0.patch"
     FILENAME "boost_1_65_0.patch"
     SHA512 8f9e654d0ee4d30b38b62b99ebfbbdeccd156c168656e1256b846bd21a3cb36d675396bd48d3f7a18d6cffba80932d40590d12e7ca1a4b51db343b3a0a39a3fd
 )
