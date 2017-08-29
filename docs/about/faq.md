@@ -60,6 +60,14 @@ For example, you can add support for your "MyRelease" configuration by adding in
 ```
 Of course, this will only produce viable binaries if your custom configuration is compatible with the target configuration (e.g. they should both link with the same runtime library).
 
+## I can't use user-wide integration. Can I use a per-project integration?
+
+Yes. The Visual Studio integration is actually enabled by the `<vcpkg_root>\scripts\buildsystems\msbuild\vcpkg.targets` file. So all you need is to import it in your .vcxproj file, replacing `<vcpkg_root>` with the path where you installed vcpkg:
+
+```
+<Import Project="<vcpkg_root>\scripts\buildsystems\msbuild\vcpkg.targets" />
+```
+
 ## How is CMake used internally by Vcpkg?
 Vcpkg uses CMake internally as a build scripting language. This is because CMake is already an extremely common build system for cross-platform open source libraries and is becoming very popular for C++ projects in general. It is easy to acquire on Windows, does not require system-wide installation, and legible for unfamiliar users.
 
