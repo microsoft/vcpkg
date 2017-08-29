@@ -27,7 +27,7 @@ namespace vcpkg::Commands::Edit
         if (env_EDITOR.empty())
         {
             const Optional<std::wstring> env_EDITOR_optional = System::get_environment_variable(L"EDITOR");
-            if (auto e = env_EDITOR_optional.get())
+            if (const auto e = env_EDITOR_optional.get())
             {
                 env_EDITOR = *e;
             }
@@ -63,7 +63,7 @@ namespace vcpkg::Commands::Edit
             {
                 const Optional<std::wstring> code_installpath =
                     System::get_registry_string(HKEY_LOCAL_MACHINE, keypath, L"InstallLocation");
-                if (auto c = code_installpath.get())
+                if (const auto c = code_installpath.get())
                 {
                     auto p = fs::path(*c) / "Code.exe";
                     if (fs.exists(p))
@@ -91,11 +91,12 @@ namespace vcpkg::Commands::Edit
         {
             const auto buildtrees_current_dir = paths.buildtrees / port_name;
 
-            std::wstring cmdLine = Strings::wformat(LR"("%s" "%s" -n)", env_EDITOR, buildtrees_current_dir.native());
+            const std::wstring cmdLine =
+                Strings::wformat(LR"("%s" "%s" -n)", env_EDITOR, buildtrees_current_dir.native());
             Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute(cmdLine));
         }
 
-        std::wstring cmdLine = Strings::wformat(
+        const std::wstring cmdLine = Strings::wformat(
             LR"("%s" "%s" "%s" -n)", env_EDITOR, portpath.native(), (portpath / "portfile.cmake").native());
         Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute(cmdLine));
     }

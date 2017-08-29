@@ -15,7 +15,7 @@ namespace vcpkg::Commands::Cache
         {
             const Expected<std::unordered_map<std::string, std::string>> pghs =
                 Paragraphs::get_single_paragraph(paths.get_filesystem(), path / "CONTROL");
-            if (auto p = pghs.get())
+            if (const auto p = pghs.get())
             {
                 const BinaryParagraph binary_paragraph = BinaryParagraph(*p);
                 output.push_back(binary_paragraph);
