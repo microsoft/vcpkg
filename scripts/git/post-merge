@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+if [ "$(expr substr $(uname -s) 1 7)" == "MSYS_NT" ]
+   [ "$(expr substr $(uname -s) 1 5)" == "MINGW"   ] ||
+   [ "$(expr substr $(uname -s) 1 6)" == "CYGWIN"  ]; then
+
+   cmd //c bootstrap-vcpkg.bat
+fi

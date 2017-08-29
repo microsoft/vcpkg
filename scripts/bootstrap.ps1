@@ -59,3 +59,10 @@ finally
 {
     popd
 }
+
+#Install git post-merge hook to rebuild vcpkg after pull
+if((Test-Path -Path "$vcpkgRootDir\.git\") -and (Test-Path -Path "$vcpkgRootDir\bootstrap-vcpkg.bat"))
+{
+    New-Item -ItemType Directory -Path "$vcpkgRootDir\.git\hooks\" -ErrorAction SilentlyContinue | Out-Null
+    Copy-Item -Path "$scriptsDir\git\post-merge" -Destination "$vcpkgRootDir\.git\hooks\" -Force -ErrorAction SilentlyContinue | Out-Null
+}
