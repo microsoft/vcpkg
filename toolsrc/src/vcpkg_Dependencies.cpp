@@ -37,7 +37,7 @@ namespace vcpkg::Dependencies
     {
         Cluster* ptr;
 
-        Cluster* operator->() { return ptr; }
+        Cluster* operator->() const { return ptr; }
     };
 
     bool operator==(const ClusterPtr& l, const ClusterPtr& r) { return l.ptr == r.ptr; }
@@ -87,7 +87,7 @@ namespace vcpkg::Dependencies
         }
 
     private:
-        void cluster_from_scf(const SourceControlFile& scf, Cluster& out_cluster)
+        void cluster_from_scf(const SourceControlFile& scf, Cluster& out_cluster) const
         {
             FeatureNodeEdges core_dependencies;
             core_dependencies.build_edges =
