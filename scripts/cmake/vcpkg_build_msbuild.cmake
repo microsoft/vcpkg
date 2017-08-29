@@ -58,24 +58,49 @@
 function(vcpkg_build_msbuild)
     cmake_parse_arguments(_csc "" "PROJECT_PATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;PLATFORM_TOOLSET;TARGET_PLATFORM_VERSION;TARGET" "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG" ${ARGN})
 
+    #Configurations
     if(NOT DEFINED _csc_RELEASE_CONFIGURATION)
         set(_csc_RELEASE_CONFIGURATION Release)
     endif()
     if(NOT DEFINED _csc_DEBUG_CONFIGURATION)
         set(_csc_DEBUG_CONFIGURATION Debug)
     endif()
+
+    #Platform
     if(NOT DEFINED _csc_PLATFORM)
         set(_csc_PLATFORM ${TRIPLET_SYSTEM_ARCH})
     endif()
+    
+    #Platform toolset
     if(NOT DEFINED _csc_PLATFORM_TOOLSET)
         set(_csc_PLATFORM_TOOLSET ${VCPKG_PLATFORM_TOOLSET})
     endif()
+        
+    #Platform version
     if(NOT DEFINED _csc_TARGET_PLATFORM_VERSION)
         vcpkg_get_windows_sdk(_csc_TARGET_PLATFORM_VERSION)
     endif()
+    
+    #Target
     if(NOT DEFINED _csc_TARGET)
         set(_csc_TARGET Rebuild)
     endif()
+
+    #initialize subsystem with "Console" if subsystem version defined
+    if(NOT DEFINED VCPKG_LINKER_SUBSYSTEM AND DEFINED VCPKG_LINKER_SUBSYSTEM_MIN_VERSION)
+        set(VCPKG_LINKER_SUBSYSTEM "Console")
+    endif()
+
+    #Format force import file
+    set(_csc_FORCEIMPORT_FILE "${CURRENT_BUILDTREES_DIR}/vcpkg.props")
+    file(WRITE "${_csc_FORCEIMPORT_FILE}" "<?xml version='1.0' encoding='utf-8'?><Project xmlns='http://schemas.microsoft.com/developer/msbuild/2003'><ItemDefinitionGroup><Link>")
+    if(DEFINED VCPKG_LINKER_SUBSYSTEM)
+        file(APPEND "${_csc_FORCEIMPORT_FILE}" "<SubSystem>${VCPKG_LINKER_SUBSYSTEM}</SubSystem>")
+    endif() 
+    if(DEFINED VCPKG_LINKER_SUBSYSTEM_MIN_VERSION)
+        file(APPEND "${_csc_FORCEIMPORT_FILE}" "<MinimumRequiredVersion>${VCPKG_LINKER_SUBSYSTEM_MIN_VERSION}</MinimumRequiredVersion>")
+    endif() 
+    file(APPEND "${_csc_FORCEIMPORT_FILE}" "</Link></ItemDefinitionGroup></Project>")
 
     list(APPEND _csc_OPTIONS
         /t:${_csc_TARGET}
@@ -84,6 +109,7 @@ function(vcpkg_build_msbuild)
         /p:VCPkgLocalAppDataDisabled=true
         /p:UseIntelMKL=No
         /p:WindowsTargetPlatformVersion=${_csc_TARGET_PLATFORM_VERSION}
+        /p:ForceImportBeforeCppTargets=${_csc_FORCEIMPORT_FILE}
         /m
     )
 
