@@ -48,8 +48,8 @@ namespace vcpkg::System
         std::vector<CPUArchitecture> supported_architectures;
         supported_architectures.push_back(get_host_processor());
 
-        //AMD64 machines support to run x86 applications
-        if(supported_architectures.back()==CPUArchitecture::X64)
+        // AMD64 machines support to run x86 applications
+        if (supported_architectures.back() == CPUArchitecture::X64)
         {
             supported_architectures.push_back(CPUArchitecture::X86);
         }
@@ -210,6 +210,8 @@ namespace vcpkg::System
         return Strings::wformat(
             LR"(powershell -NoProfile -ExecutionPolicy Bypass -Command "& {& '%s' %s}")", script_path.native(), args);
     }
+
+    void println() { println(Strings::EMPTY); }
 
     void print(const CStringView message) { fputs(message, stdout); }
 

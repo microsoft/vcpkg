@@ -32,6 +32,7 @@ namespace vcpkg::System
         warning = 14,
     };
 
+    void println();
     void print(const CStringView message);
     void println(const CStringView message);
     void print(const Color c, const CStringView message);
