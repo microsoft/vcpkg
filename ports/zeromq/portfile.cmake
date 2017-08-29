@@ -23,6 +23,16 @@ else()
   set(MSVS_VERSION 2015)
 endif()
 
+if(DEFINED VCPKG_TRIPLET_PLATFORM_TOOLSET)
+  set(ZEROMQ_TOOLSET ${VCPKG_TRIPLET_PLATFORM_TOOLSET})
+else()
+  set(ZEROMQ_TOOLSET ${VCPKG_PLATFORM_TOOLSET})
+endif()
+
+if(DEFINED VCPKG_TRIPLET_PLATFORM_TOOLSET_SUFFIX)
+  string(CONCAT ZEROMQ_TOOLSET "${ZEROMQ_TOOLSET}" "_" "${VCPKG_TRIPLET_PLATFORM_TOOLSET_SUFFIX}")
+endif()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     vcpkg_build_msbuild(
         PROJECT_PATH ${SOURCE_PATH}/builds/msvc/vs${MSVS_VERSION}/libzmq/libzmq.vcxproj
@@ -30,19 +40,19 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         DEBUG_CONFIGURATION DebugDLL
     )
     file(INSTALL
-        ${SOURCE_PATH}/bin/${MSBUILD_PLATFORM}/Debug/${VCPKG_PLATFORM_TOOLSET}/dynamic/libzmq.dll
+        ${SOURCE_PATH}/bin/${MSBUILD_PLATFORM}/Debug/${ZEROMQ_TOOLSET}/dynamic/libzmq.dll
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
     )
     file(INSTALL
-        ${SOURCE_PATH}/bin/${MSBUILD_PLATFORM}/Release/${VCPKG_PLATFORM_TOOLSET}/dynamic/libzmq.dll
+        ${SOURCE_PATH}/bin/${MSBUILD_PLATFORM}/Release/${ZEROMQ_TOOLSET}/dynamic/libzmq.dll
         DESTINATION ${CURRENT_PACKAGES_DIR}/bin
     )
     file(INSTALL
-        ${SOURCE_PATH}/bin/${MSBUILD_PLATFORM}/Debug/${VCPKG_PLATFORM_TOOLSET}/dynamic/libzmq.lib
+        ${SOURCE_PATH}/bin/${MSBUILD_PLATFORM}/Debug/${ZEROMQ_TOOLSET}/dynamic/libzmq.lib
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
     )
     file(INSTALL
-        ${SOURCE_PATH}/bin/${MSBUILD_PLATFORM}/Release/${VCPKG_PLATFORM_TOOLSET}/dynamic/libzmq.lib
+        ${SOURCE_PATH}/bin/${MSBUILD_PLATFORM}/Release/${ZEROMQ_TOOLSET}/dynamic/libzmq.lib
         DESTINATION ${CURRENT_PACKAGES_DIR}/lib
     )
     vcpkg_copy_pdbs()
@@ -54,11 +64,11 @@ else()
         DEBUG_CONFIGURATION DebugLIB
     )
     file(INSTALL
-        ${SOURCE_PATH}/bin/${MSBUILD_PLATFORM}/Debug/${VCPKG_PLATFORM_TOOLSET}/static/libzmq.lib
+        ${SOURCE_PATH}/bin/${MSBUILD_PLATFORM}/Debug/${ZEROMQ_TOOLSET}/static/libzmq.lib
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
     )
     file(INSTALL
-        ${SOURCE_PATH}/bin/${MSBUILD_PLATFORM}/Release/${VCPKG_PLATFORM_TOOLSET}/static/libzmq.lib
+        ${SOURCE_PATH}/bin/${MSBUILD_PLATFORM}/Release/${ZEROMQ_TOOLSET}/static/libzmq.lib
         DESTINATION ${CURRENT_PACKAGES_DIR}/lib
     )
 endif()
