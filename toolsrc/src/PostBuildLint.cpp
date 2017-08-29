@@ -10,9 +10,9 @@
 #include "vcpkg_System.h"
 #include "vcpkg_Util.h"
 
-using vcpkg::Build::PreBuildInfo;
 using vcpkg::Build::BuildInfo;
 using vcpkg::Build::BuildPolicy;
+using vcpkg::Build::PreBuildInfo;
 
 namespace vcpkg::PostBuildLint
 {
@@ -369,12 +369,12 @@ namespace vcpkg::PostBuildLint
                                                  std::vector<FileAndArch> binaries_with_invalid_architecture)
     {
         System::println(System::Color::warning, "The following files were built for an incorrect architecture:");
-        System::println("");
+        System::println();
         for (const FileAndArch& b : binaries_with_invalid_architecture)
         {
             System::println("    %s", b.file.generic_string());
             System::println("Expected %s, but was: %s", expected_architecture, b.actual_arch);
-            System::println("");
+            System::println();
         }
     }
 
@@ -487,7 +487,7 @@ namespace vcpkg::PostBuildLint
             System::println(System::Color::warning, "Release binaries were not found");
         }
 
-        System::println("");
+        System::println();
 
         return LintStatus::ERROR_DETECTED;
     }
@@ -621,12 +621,12 @@ namespace vcpkg::PostBuildLint
             System::println(System::Color::warning,
                             "Expected %s crt linkage, but the following libs had invalid crt linkage:",
                             expected_build_type.to_string());
-            System::println("");
+            System::println();
             for (const BuildType_and_file btf : libs_with_invalid_crt)
             {
                 System::println("    %s: %s", btf.file.generic_string(), btf.build_type.to_string());
             }
-            System::println("");
+            System::println();
 
             System::println(System::Color::warning,
                             "To inspect the lib files, use:\n    dumpbin.exe /directives mylibfile.lib");
@@ -675,12 +675,12 @@ namespace vcpkg::PostBuildLint
         if (!dlls_with_outdated_crt.empty())
         {
             System::println(System::Color::warning, "Detected outdated dynamic CRT in the following files:");
-            System::println("");
+            System::println();
             for (const OutdatedDynamicCrt_and_file btf : dlls_with_outdated_crt)
             {
                 System::println("    %s: %s", btf.file.generic_string(), btf.outdated_crt.name);
             }
-            System::println("");
+            System::println();
 
             System::println(System::Color::warning,
                             "To inspect the dll files, use:\n    dumpbin.exe /dependents mydllfile.dll");

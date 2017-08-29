@@ -186,11 +186,11 @@ namespace vcpkg::Files
 
     void print_paths(const std::vector<fs::path>& paths)
     {
-        System::println("");
+        System::println();
         for (const fs::path& p : paths)
         {
             System::println("    %s", p.generic_string());
         }
-        System::println("");
+        System::println();
     }
 }

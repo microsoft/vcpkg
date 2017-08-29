@@ -68,12 +68,12 @@ namespace vcpkg::Commands::BuildCommand
             System::println(System::Color::error,
                             "The build command requires all dependencies to be already installed.");
             System::println("The following dependencies are missing:");
-            System::println(Strings::EMPTY);
+            System::println();
             for (const auto& p : result.unmet_dependencies)
             {
                 System::println("    %s", p);
             }
-            System::println(Strings::EMPTY);
+            System::println();
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 

@@ -199,7 +199,7 @@ namespace vcpkg::Commands::Install
                             bcf.core_paragraph.spec);
             System::print("\n    ");
             System::println(Strings::join("\n    ", intersection));
-            System::println(Strings::EMPTY);
+            System::println();
             return InstallResult::FILE_CONFLICTS;
         }
 
