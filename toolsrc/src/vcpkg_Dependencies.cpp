@@ -443,7 +443,7 @@ namespace vcpkg::Dependencies
 
     MarkPlusResult mark_plus(const std::string& feature, Cluster& cluster, ClusterGraph& graph, GraphPlan& graph_plan)
     {
-        if (feature == "")
+        if (feature.empty())
         {
             // Indicates that core was not specified in the reference
             return mark_plus("core", cluster, graph, graph_plan);
@@ -551,7 +551,7 @@ namespace vcpkg::Dependencies
 
             auto& status_paragraph_feature = status_paragraph->package.feature;
             // In this case, empty string indicates the "core" paragraph for a package.
-            if (status_paragraph_feature == "")
+            if (status_paragraph_feature.empty())
             {
                 cluster.original_features.insert("core");
             }
@@ -573,7 +573,7 @@ namespace vcpkg::Dependencies
                 auto& dep_cluster = graph.get(dependency.spec());
 
                 auto depends_name = dependency.feature();
-                if (depends_name == "") depends_name = "core";
+                if (depends_name.empty()) depends_name = "core";
 
                 auto& target_node = dep_cluster.edges[depends_name];
                 target_node.remove_edges.emplace_back(FeatureSpec{spec, status_paragraph_feature});
