@@ -87,6 +87,16 @@ function(vcpkg_configure_cmake)
     elseif(TRIPLET_SYSTEM_ARCH MATCHES "arm" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
         set(GENERATOR "Visual Studio 15 2017 ARM")
     endif()
+
+    if(DEFINED VCPKG_TRIPLET_PLATFORM_TOOLSET)
+        set(TOOLSET "${VCPKG_TRIPLET_PLATFORM_TOOLSET}")
+    else()
+        set(TOOLSET "${VCPKG_PLATFORM_TOOLSET}")
+    endif()
+
+    if(DEFINED VCPKG_TRIPLET_PLATFORM_TOOLSET_SUFFIX)
+        string(CONCAT TOOLSET "${TOOLSET}" "_" "${VCPKG_TRIPLET_PLATFORM_TOOLSET_SUFFIX}")
+    endif()
     
     # If we use Ninja, make sure it's on PATH
     if(GENERATOR STREQUAL "Ninja")
@@ -170,6 +180,7 @@ function(vcpkg_configure_cmake)
     vcpkg_execute_required_process(
         COMMAND ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}
             -G ${GENERATOR}
+            -T ${TOOLSET}
             -DCMAKE_BUILD_TYPE=Release
             -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
