@@ -36,8 +36,8 @@ namespace vcpkg::Strings::details
 
 namespace vcpkg::Strings
 {
-    static constexpr const CStringView EMPTY = "";
-    static constexpr const CWStringView WEMPTY = L"";
+    static constexpr const char* EMPTY = "";
+    static constexpr const wchar_t* WEMPTY = L"";
 
     bool is_empty(const CStringView s);
     bool is_empty(const CWStringView s);
