@@ -13,6 +13,14 @@ vcpkg_download_distfile(ARCHIVE_FILE
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
+# apply boost combined hotfix
+vcpkg_download_distfile(HOTFIX_PATCH
+    URLS "https://raw.githubusercontent.com/boostorg/website/master/patches/1_65_0/boost_1_65_0.patch"
+    FILENAME "boost_1_65_0.patch"
+    SHA512 8f9e654d0ee4d30b38b62b99ebfbbdeccd156c168656e1256b846bd21a3cb36d675396bd48d3f7a18d6cffba80932d40590d12e7ca1a4b51db343b3a0a39a3fd
+)
+vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${HOTFIX_PATCH})
+
 # apply boost range hotfix
 vcpkg_download_distfile(DIFF
     URLS "https://github.com/boostorg/range/commit/e7ebe14707130cda7b72e0ae5e93b17157fdb6a2.diff"
