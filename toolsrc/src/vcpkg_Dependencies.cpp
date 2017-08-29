@@ -7,6 +7,7 @@
 #include "vcpkg_Dependencies.h"
 #include "vcpkg_Files.h"
 #include "vcpkg_Graphs.h"
+#include "vcpkg_Strings.h"
 #include "vcpkg_Util.h"
 #include "vcpkglib.h"
 
@@ -194,14 +195,8 @@ namespace vcpkg::Dependencies
             return this->spec.to_string();
         }
 
-        std::string features;
-        for (auto&& feature : this->feature_list)
-        {
-            features += feature + ",";
-        }
-        features.pop_back();
-
-        return this->spec.name() + "[" + features + "]:" + this->spec.triplet().to_string();
+        const std::string features = Strings::join(",", this->feature_list);
+        return Strings::format("%s[%s]:%s", this->spec.name(), features, this->spec.triplet());
     }
 
     bool InstallPlanAction::compare_by_name(const InstallPlanAction* left, const InstallPlanAction* right)
