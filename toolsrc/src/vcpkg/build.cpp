@@ -590,6 +590,18 @@ namespace vcpkg::Build
                 continue;
             }
 
+            if (variable_name == "VCPKG_LINKER_SUBSYSTEM")
+            {
+                pre_build_info.linker_subsystem = variable_value;
+                continue;
+            }
+     
+            if (variable_name == "VCPKG_LINKER_SUBSYSTEM_MINIMUM_VERSION")
+            {
+                pre_build_info.linker_subsystem_minver = variable_value;
+                continue;
+            }
+
             Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown variable name %s", line);
         }
 
