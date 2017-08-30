@@ -19,12 +19,13 @@ endif()
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/xerces-c-Xerces-C_3_1_4)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/apache/xerces-c/archive/Xerces-C_3_1_4.zip"
-    FILENAME "Xerces-C_3_1_4.zip"
-    SHA512 3471134dacc4b2a25dece3c6eeab1d8143ca090f3652998c3a12c581e0351593bc0905334dd09c13864465c05952ca78f212a63d1c6c78bcd322d7aec23733cd
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO apache/xerces-c
+    REF Xerces-C_3_1_4
+    SHA512 6dc3e4bb68bc32a0e8ec6dcc7ec67e21239a79c909d08ccc16c96dc5de4e73800993d1c09f589606925507baf0b2a9bf6037d28c84dae826935bf1f7a151071e
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
     set(BUILD_ARCH "Win32")
