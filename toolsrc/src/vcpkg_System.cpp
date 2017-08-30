@@ -19,7 +19,7 @@ namespace vcpkg::System
     fs::path get_exe_path_of_current_process()
     {
         wchar_t buf[_MAX_PATH];
-        int bytes = GetModuleFileNameW(nullptr, buf, _MAX_PATH);
+        const int bytes = GetModuleFileNameW(nullptr, buf, _MAX_PATH);
         if (bytes == 0) std::abort();
         return fs::path(buf, buf + bytes);
     }
@@ -37,9 +37,9 @@ namespace vcpkg::System
     CPUArchitecture get_host_processor()
     {
         auto w6432 = get_environment_variable(L"PROCESSOR_ARCHITEW6432");
-        if (auto p = w6432.get()) return to_cpu_architecture(Strings::to_utf8(*p)).value_or_exit(VCPKG_LINE_INFO);
+        if (const auto p = w6432.get()) return to_cpu_architecture(Strings::to_utf8(*p)).value_or_exit(VCPKG_LINE_INFO);
 
-        auto procarch = get_environment_variable(L"PROCESSOR_ARCHITECTURE").value_or_exit(VCPKG_LINE_INFO);
+        const auto procarch = get_environment_variable(L"PROCESSOR_ARCHITECTURE").value_or_exit(VCPKG_LINE_INFO);
         return to_cpu_architecture(Strings::to_utf8(procarch)).value_or_exit(VCPKG_LINE_INFO);
     }
 
@@ -59,10 +59,10 @@ namespace vcpkg::System
 
     int cmd_execute_clean(const CWStringView cmd_line)
     {
-        static const std::wstring system_root = get_environment_variable(L"SystemRoot").value_or_exit(VCPKG_LINE_INFO);
-        static const std::wstring system_32 = system_root + LR"(\system32)";
-        static const std::wstring new_PATH = Strings::wformat(
-            LR"(Path=%s;%s;%s\Wbem;%s\WindowsPowerShell\v1.0\)", system_32, system_root, system_32, system_32);
+        static const std::wstring SYSTEM_ROOT = get_environment_variable(L"SystemRoot").value_or_exit(VCPKG_LINE_INFO);
+        static const std::wstring SYSTEM_32 = SYSTEM_ROOT + LR"(\system32)";
+        static const std::wstring NEW_PATH = Strings::wformat(
+            LR"(Path=%s;%s;%s\Wbem;%s\WindowsPowerShell\v1.0\)", SYSTEM_32, SYSTEM_ROOT, SYSTEM_32, SYSTEM_32);
 
         std::vector<std::wstring> env_wstrings = {
             L"ALLUSERSPROFILE",
@@ -116,7 +116,7 @@ namespace vcpkg::System
         for (auto&& env_wstring : env_wstrings)
         {
             const Optional<std::wstring> value = System::get_environment_variable(env_wstring);
-            auto v = value.get();
+            const auto v = value.get();
             if (!v || v->empty()) continue;
 
             env_cstr.append(env_wstring);
@@ -125,7 +125,7 @@ namespace vcpkg::System
             env_cstr.push_back(L'\0');
         }
 
-        env_cstr.append(new_PATH);
+        env_cstr.append(NEW_PATH);
         env_cstr.push_back(L'\0');
 
         STARTUPINFOW startup_info;
@@ -153,7 +153,7 @@ namespace vcpkg::System
 
         CloseHandle(process_info.hThread);
 
-        DWORD result = WaitForSingleObject(process_info.hProcess, INFINITE);
+        const DWORD result = WaitForSingleObject(process_info.hProcess, INFINITE);
         Checks::check_exit(VCPKG_LINE_INFO, result != WAIT_FAILED, "WaitForSingleObject failed");
 
         DWORD exit_code = 0;
@@ -171,7 +171,7 @@ namespace vcpkg::System
         // Basically we are wrapping it in quotes
         const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
         Debug::println("_wsystem(%s)", Strings::to_utf8(actual_cmd_line));
-        int exit_code = _wsystem(actual_cmd_line.c_str());
+        const int exit_code = _wsystem(actual_cmd_line.c_str());
         Debug::println("_wsystem() returned %d", exit_code);
         return exit_code;
     }
@@ -186,7 +186,7 @@ namespace vcpkg::System
         Debug::println("_wpopen(%s)", Strings::to_utf8(actual_cmd_line));
         std::wstring output;
         wchar_t buf[1024];
-        auto pipe = _wpopen(actual_cmd_line.c_str(), L"r");
+        const auto pipe = _wpopen(actual_cmd_line.c_str(), L"r");
         if (pipe == nullptr)
         {
             return {1, Strings::to_utf8(output)};
@@ -199,7 +199,8 @@ namespace vcpkg::System
         {
             return {1, Strings::to_utf8(output)};
         }
-        auto ec = _pclose(pipe);
+
+        const auto ec = _pclose(pipe);
         Debug::println("_pclose() returned %d", ec);
         return {ec, Strings::to_utf8(output)};
     }
@@ -223,11 +224,11 @@ namespace vcpkg::System
 
     void print(const Color c, const CStringView message)
     {
-        HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        const HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
         CONSOLE_SCREEN_BUFFER_INFO consoleScreenBufferInfo{};
         GetConsoleScreenBufferInfo(hConsole, &consoleScreenBufferInfo);
-        auto original_color = consoleScreenBufferInfo.wAttributes;
+        const auto original_color = consoleScreenBufferInfo.wAttributes;
 
         SetConsoleTextAttribute(hConsole, static_cast<WORD>(c) | (original_color & 0xF0));
         print(message);
@@ -242,13 +243,13 @@ namespace vcpkg::System
 
     Optional<std::wstring> get_environment_variable(const CWStringView varname) noexcept
     {
-        auto sz = GetEnvironmentVariableW(varname, nullptr, 0);
+        const auto sz = GetEnvironmentVariableW(varname, nullptr, 0);
         if (sz == 0) return nullopt;
 
         std::wstring ret(sz, L'\0');
 
         Checks::check_exit(VCPKG_LINE_INFO, MAXDWORD >= ret.size());
-        auto sz2 = GetEnvironmentVariableW(varname, ret.data(), static_cast<DWORD>(ret.size()));
+        const auto sz2 = GetEnvironmentVariableW(varname, ret.data(), static_cast<DWORD>(ret.size()));
         Checks::check_exit(VCPKG_LINE_INFO, sz2 + 1 == sz);
         ret.pop_back();
         return ret;
@@ -262,7 +263,7 @@ namespace vcpkg::System
     Optional<std::wstring> get_registry_string(HKEY base, const CWStringView subKey, const CWStringView valuename)
     {
         HKEY k = nullptr;
-        LSTATUS ec = RegOpenKeyExW(base, subKey, NULL, KEY_READ, &k);
+        const LSTATUS ec = RegOpenKeyExW(base, subKey, NULL, KEY_READ, &k);
         if (ec != ERROR_SUCCESS) return nullopt;
 
         DWORD dwBufferSize = 0;
