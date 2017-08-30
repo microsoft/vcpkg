@@ -90,7 +90,7 @@ namespace vcpkg
             {
                 auto locked_metrics = Metrics::g_metrics.lock();
                 locked_metrics->track_property("error", "powershell install failed");
-                locked_metrics->track_property("installcmd", install_cmd);
+                locked_metrics->track_property("dependency", tool_name);
             }
             Checks::exit_with_code(VCPKG_LINE_INFO, rc.exit_code);
         }
