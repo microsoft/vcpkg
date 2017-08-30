@@ -224,15 +224,15 @@ namespace vcpkg::System
 
     void print(const Color c, const CStringView message)
     {
-        const HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        const HANDLE console_handle = GetStdHandle(STD_OUTPUT_HANDLE);
 
-        CONSOLE_SCREEN_BUFFER_INFO consoleScreenBufferInfo{};
-        GetConsoleScreenBufferInfo(hConsole, &consoleScreenBufferInfo);
-        const auto original_color = consoleScreenBufferInfo.wAttributes;
+        CONSOLE_SCREEN_BUFFER_INFO console_screen_buffer_info{};
+        GetConsoleScreenBufferInfo(console_handle, &console_screen_buffer_info);
+        const auto original_color = console_screen_buffer_info.wAttributes;
 
-        SetConsoleTextAttribute(hConsole, static_cast<WORD>(c) | (original_color & 0xF0));
+        SetConsoleTextAttribute(console_handle, static_cast<WORD>(c) | (original_color & 0xF0));
         print(message);
-        SetConsoleTextAttribute(hConsole, original_color);
+        SetConsoleTextAttribute(console_handle, original_color);
     }
 
     void println(const Color c, const CStringView message)
@@ -260,23 +260,23 @@ namespace vcpkg::System
         return hkey_type == REG_SZ || hkey_type == REG_MULTI_SZ || hkey_type == REG_EXPAND_SZ;
     }
 
-    Optional<std::wstring> get_registry_string(HKEY base, const CWStringView subKey, const CWStringView valuename)
+    Optional<std::wstring> get_registry_string(HKEY base, const CWStringView sub_key, const CWStringView valuename)
     {
         HKEY k = nullptr;
-        const LSTATUS ec = RegOpenKeyExW(base, subKey, NULL, KEY_READ, &k);
+        const LSTATUS ec = RegOpenKeyExW(base, sub_key, NULL, KEY_READ, &k);
         if (ec != ERROR_SUCCESS) return nullopt;
 
-        DWORD dwBufferSize = 0;
-        DWORD dwType = 0;
-        auto rc = RegQueryValueExW(k, valuename, nullptr, &dwType, nullptr, &dwBufferSize);
-        if (rc != ERROR_SUCCESS || !is_string_keytype(dwType) || dwBufferSize == 0 ||
-            dwBufferSize % sizeof(wchar_t) != 0)
+        DWORD dw_buffer_size = 0;
+        DWORD dw_type = 0;
+        auto rc = RegQueryValueExW(k, valuename, nullptr, &dw_type, nullptr, &dw_buffer_size);
+        if (rc != ERROR_SUCCESS || !is_string_keytype(dw_type) || dw_buffer_size == 0 ||
+            dw_buffer_size % sizeof(wchar_t) != 0)
             return nullopt;
         std::wstring ret;
-        ret.resize(dwBufferSize / sizeof(wchar_t));
+        ret.resize(dw_buffer_size / sizeof(wchar_t));
 
-        rc = RegQueryValueExW(k, valuename, nullptr, &dwType, reinterpret_cast<LPBYTE>(ret.data()), &dwBufferSize);
-        if (rc != ERROR_SUCCESS || !is_string_keytype(dwType) || dwBufferSize != sizeof(wchar_t) * ret.size())
+        rc = RegQueryValueExW(k, valuename, nullptr, &dw_type, reinterpret_cast<LPBYTE>(ret.data()), &dw_buffer_size);
+        if (rc != ERROR_SUCCESS || !is_string_keytype(dw_type) || dw_buffer_size != sizeof(wchar_t) * ret.size())
             return nullopt;
 
         ret.pop_back(); // remove extra trailing null byte
