@@ -17,12 +17,12 @@ if (VCPKG_CRT_LINKAGE STREQUAL "static")
 endif()
 
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/xerces-c-3.1.4)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/xerces-c-Xerces-C_3_1_4)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www-us.apache.org/dist//xerces/c/3/sources/xerces-c-3.1.4.zip"
-    FILENAME "xerces-c-3.1.4.zip"
-    SHA512 3ba1bf38875bda8a294990dba73143cfd6dbfa158b17f4db1fd0ee9a08a078af969103200eaf8957756f8363c8a661983cc95124b4978eb2162dc0344a85fff8
+    URLS "https://github.com/apache/xerces-c/archive/Xerces-C_3_1_4.zip"
+    FILENAME "Xerces-C_3_1_4.zip"
+    SHA512 3471134dacc4b2a25dece3c6eeab1d8143ca090f3652998c3a12c581e0351593bc0905334dd09c13864465c05952ca78f212a63d1c6c78bcd322d7aec23733cd
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
