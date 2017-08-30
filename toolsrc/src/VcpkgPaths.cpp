@@ -10,6 +10,16 @@
 
 namespace vcpkg
 {
+    static std::string WORKAROUND_ISSUE_1712(const std::string& line)
+    {
+        auto colon_pos = line.find(':');
+        if (colon_pos != std::string::npos && colon_pos > 0)
+        {
+            return line.substr(colon_pos - 1);
+        }
+        return line;
+    }
+
     static bool exists_and_has_equal_or_greater_version(const std::wstring& version_cmd,
                                                         const std::array<int, 3>& expected_version)
     {
@@ -95,7 +105,7 @@ namespace vcpkg
             Checks::exit_with_code(VCPKG_LINE_INFO, rc.exit_code);
         }
 
-        const fs::path actual_downloaded_path = Strings::trimmed(rc.output);
+        const fs::path actual_downloaded_path = WORKAROUND_ISSUE_1712(Strings::trimmed(rc.output));
         std::error_code ec;
         auto eq = fs::stdfs::equivalent(expected_downloaded_path, actual_downloaded_path, ec);
         Checks::check_exit(VCPKG_LINE_INFO,
@@ -264,14 +274,7 @@ namespace vcpkg
         const std::wstring cmd = System::create_powershell_script_cmd(script);
         System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd);
         Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Could not run script to detect VS 2017 instances");
-        return Util::fmap(Strings::split(ec_data.output, "\n"), [](const std::string& line) {
-            auto colon_pos = line.find(':');
-            if (colon_pos != std::string::npos && colon_pos > 0)
-            {
-                return line.substr(colon_pos - 1);
-            }
-            return line;
-        });
+        return Util::fmap(Strings::split(ec_data.output, "\n"), WORKAROUND_ISSUE_1712);
     }
 
     static Optional<fs::path> get_VS2015_installation_instance()
