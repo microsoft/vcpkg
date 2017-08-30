@@ -16,9 +16,6 @@ if (VCPKG_CRT_LINKAGE STREQUAL "static")
     set(VCPKG_CRT_LINKAGE "dynamic")
 endif()
 
-
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/xerces-c-Xerces-C_3_1_4)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/xerces-c
