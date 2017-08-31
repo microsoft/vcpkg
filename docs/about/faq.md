@@ -62,7 +62,9 @@ Of course, this will only produce viable binaries if your custom configuration i
 
 ## I can't use user-wide integration. Can I use a per-project integration?
 
-Yes. The Visual Studio integration is actually enabled by the `<vcpkg_root>\scripts\buildsystems\msbuild\vcpkg.targets` file. So all you need is to import it in your .vcxproj file, replacing `<vcpkg_root>` with the path where you installed vcpkg:
+Yes. A NuGet package suitable for per-project use can be generated via either the `vcpkg integrate project` command (lightweight linking) or the `vcpkg export --nuget` command (shrinkwrapped).
+
+A lower level mechanism to achieve the same as the `vcpkg integrate project` NuGet package is via the `<vcpkg_root>\scripts\buildsystems\msbuild\vcpkg.targets` file. All you need is to import it in your .vcxproj file, replacing `<vcpkg_root>` with the path where you installed vcpkg:
 
 ```
 <Import Project="<vcpkg_root>\scripts\buildsystems\msbuild\vcpkg.targets" />
