@@ -2,6 +2,7 @@
 
 #include "vcpkg_Files.h"
 #include "vcpkg_System.h"
+#include "vcpkg_Util.h"
 #include <thread>
 
 namespace vcpkg::Files
@@ -192,5 +193,17 @@ namespace vcpkg::Files
             System::println("    %s", p.generic_string());
         }
         System::println();
+    }
+
+    std::vector<fs::path> find_from_PATH(const std::wstring& name)
+    {
+        const std::wstring cmd = Strings::wformat(L"where.exe %s", name);
+        auto out = System::cmd_execute_and_capture_output(cmd);
+        if (out.exit_code != 0)
+        {
+            return {};
+        }
+
+        return Util::fmap(Strings::split(out.output, "\n"), [](auto&& s) { return fs::path(s); });
     }
 }

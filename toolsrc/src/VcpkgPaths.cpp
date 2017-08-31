@@ -13,7 +13,7 @@ namespace vcpkg
     static std::string WORKAROUND_ISSUE_1712(const std::string& line)
     {
         auto colon_pos = line.find(':');
-        if (colon_pos != std::string::npos && colon_pos > 0)
+        if (colon_pos != std::string::npos && colon_pos > 1)
         {
             return line.substr(colon_pos - 1);
         }
@@ -68,18 +68,6 @@ namespace vcpkg
         return nullopt;
     }
 
-    static std::vector<fs::path> find_from_PATH(const std::wstring& name)
-    {
-        const std::wstring cmd = Strings::wformat(L"where.exe %s", name);
-        auto out = System::cmd_execute_and_capture_output(cmd);
-        if (out.exit_code != 0)
-        {
-            return {};
-        }
-
-        return Util::fmap(Strings::split(out.output, "\n"), [](auto&& s) { return fs::path(s); });
-    }
-
     static fs::path fetch_dependency(const fs::path& scripts_folder,
                                      const std::wstring& tool_name,
                                      const fs::path& expected_downloaded_path,
@@ -122,7 +110,7 @@ namespace vcpkg
         static const std::wstring version_check_arguments = L"--version";
 
         const fs::path downloaded_copy = downloads_folder / "cmake-3.9.1-win32-x86" / "bin" / "cmake.exe";
-        const std::vector<fs::path> from_path = find_from_PATH(L"cmake");
+        const std::vector<fs::path> from_path = Files::find_from_PATH(L"cmake");
 
         std::vector<fs::path> candidate_paths;
         candidate_paths.push_back(downloaded_copy);
@@ -146,7 +134,7 @@ namespace vcpkg
         static const std::wstring version_check_arguments = Strings::WEMPTY;
 
         const fs::path downloaded_copy = downloads_folder / "nuget-4.1.0" / "nuget.exe";
-        const std::vector<fs::path> from_path = find_from_PATH(L"nuget");
+        const std::vector<fs::path> from_path = Files::find_from_PATH(L"nuget");
 
         std::vector<fs::path> candidate_paths;
         candidate_paths.push_back(downloaded_copy);
@@ -167,7 +155,7 @@ namespace vcpkg
         static const std::wstring version_check_arguments = L"--version";
 
         const fs::path downloaded_copy = downloads_folder / "MinGit-2.14.1-32-bit" / "cmd" / "git.exe";
-        const std::vector<fs::path> from_path = find_from_PATH(L"git");
+        const std::vector<fs::path> from_path = Files::find_from_PATH(L"git");
 
         std::vector<fs::path> candidate_paths;
         candidate_paths.push_back(downloaded_copy);
