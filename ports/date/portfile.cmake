@@ -1,22 +1,38 @@
 include(vcpkg_common_functions)
 
+message(WARNING
+  "You will need to also install http://unicode.org/repos/cldr/trunk/common/supplemental/windowsZones.xml into your install location"
+  "See https://howardhinnant.github.io/date/tz.html"
+)
+
 vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO HowardHinnant/date
-    REF v2.2
-    SHA512  6889152acf1d0cc551d572eccaabd9f00ebecdb5723356949db2f1bd5f4b13e1ffad889082451cfb28254968a576b983116bc1a77e060426c9f33ca7774822cb
-    HEAD_REF master
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO HowardHinnant/date
+  REF 272d487b3d490126e520b67fe76bbb2e67226c07
+  SHA512   59e8ff642d3eb82cb6116a77d4c5e14bbc2ae6bd4019e64a49609b6e46d679c2cb4ccae74807b72223aed18ae015596193919cdb58b011bfb774ff3e29a1d43b
+  HEAD_REF master
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
+  SOURCE_PATH ${SOURCE_PATH}
+  PREFER_NINJA
+  OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
 )
 
 vcpkg_install_cmake()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/date RENAME copyright)
+vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+set(HEADER "${CURRENT_PACKAGES_DIR}/include/tz.h")
+file(READ "${HEADER}" _contents)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+  string(REPLACE "DATE_BUILD_DLL" "1" _contents "${_contents}")
+else()
+  string(REPLACE "DATE_BUILD_LIB" "1" _contents "${_contents}")
+endif()
+file(WRITE "${HEADER}" "${_contents}")
+
+
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/date RENAME copyright)

@@ -5,13 +5,18 @@ if(MSVC)
   add_compile_options(/W3 /wd4005 /wd4996 /wd4018 -D_CRT_SECURE_NO_WARNINGS)
 endif()
 
-if(BUILD_SHARED_LIBS)
-  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif()
+add_definitions(-DNOMINMAX)
 
-include_directories(${PROJECT_SRC_DIR})
+
+include_directories(".")
 
 add_library(tz tz.cpp)
+
+if(BUILD_SHARED_LIBS)
+  target_compile_definitions(tz PRIVATE -DDATE_BUILD_DLL)
+else()
+  target_compile_definitions(tz PRIVATE -DDATE_BUILD_LIB)
+endif()
 
 install(
   TARGETS tz
