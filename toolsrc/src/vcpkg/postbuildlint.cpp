@@ -359,6 +359,7 @@ namespace vcpkg::PostBuildLint
     {
         fs::path file;
         std::string actual_arch;
+        CoffFileReader::PESubsystem subsystem;
     };
 
     static std::string get_actual_architecture(const MachineType& machine_type)
@@ -411,6 +412,72 @@ namespace vcpkg::PostBuildLint
         if (!binaries_with_invalid_architecture.empty())
         {
             print_invalid_architecture_files(expected_architecture, binaries_with_invalid_architecture);
+            return LintStatus::ERROR_DETECTED;
+        }
+
+        return LintStatus::SUCCESS;
+    }
+
+    struct FileAndSubsystem
+    {
+        fs::path file;
+        CoffFileReader::PESubsystem subsystem;
+    };
+
+    static void print_invalid_subsystem_version_files(CoffFileReader::PESubsystem& expected_subsystem,
+                                              std::vector<FileAndSubsystem>& binaries_with_invalid_subsystem)
+    {
+        System::println(System::Color::warning, "The following files were built for an incorrect minimum subsystem version:");
+        System::println();
+        for (FileAndSubsystem& b : binaries_with_invalid_subsystem)
+        {
+            System::println("    %s", b.file.generic_string());
+            System::println("Expected %s, but was: %s", expected_subsystem.to_string(), b.subsystem.to_string());
+            System::println();
+        }
+    }
+
+    static LintStatus check_dll_subsystem_version(const std::string& expected_subsystem_version,
+                                                  const std::vector<fs::path>& files)
+    {
+        if(expected_subsystem_version.empty())
+        {
+            return LintStatus::SUCCESS;
+        }
+
+        std::vector<FileAndSubsystem> binaries_with_invalid_subsystem;
+
+        CoffFileReader::PESubsystem expected_subsystem;
+
+        std::vector<std::string> tokens = Strings::split(expected_subsystem_version, ".");
+        if (tokens.size()>1)
+        {
+            expected_subsystem.subsystem_minor_version = stoi(tokens[1]);
+        }
+        
+        if (tokens.size()>0)
+        {
+            expected_subsystem.subsystem_major_version = stoi(tokens[0]);
+        }
+
+        for (const fs::path& file : files)
+        {
+            Checks::check_exit(VCPKG_LINE_INFO,
+                file.extension() == ".dll",
+                "The file extension was not .dll: %s",
+                file.generic_string());
+            CoffFileReader::DllInfo info = CoffFileReader::read_dll(file);
+
+
+            if (!expected_subsystem.compare_version(info.subsystem))
+            {
+                binaries_with_invalid_subsystem.push_back({ file, info.subsystem });
+            }
+        }
+
+        if (!binaries_with_invalid_subsystem.empty())
+        {
+            print_invalid_subsystem_version_files(expected_subsystem, binaries_with_invalid_subsystem);
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -793,6 +860,7 @@ namespace vcpkg::PostBuildLint
                 error_count += check_exports_of_dlls(dlls, toolset.dumpbin);
                 error_count += check_uwp_bit_of_dlls(pre_build_info.cmake_system_name, dlls, toolset.dumpbin);
                 error_count += check_dll_architecture(pre_build_info.target_architecture, dlls);
+                error_count += check_dll_subsystem_version(pre_build_info.linker_subsystem_minver, dlls);
 
                 error_count += check_outdated_crt_linkage_of_dlls(dlls, toolset.dumpbin, build_info, pre_build_info);
                 break;
