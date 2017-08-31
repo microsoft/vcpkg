@@ -95,6 +95,71 @@ namespace vcpkg::CoffFileReader
         std::string data;
     };
 
+    struct CoffOptionalFileHeader
+    {
+        #define COFF_MAGIC_SIZE 2
+        enum magic_number
+        {
+            COFF_MAGIC_PE32  = 0x10b,
+            COFF_MAGIC_PE32p = 0x20b,
+        };
+
+        enum struct_size
+        {
+            COFF_SIZE_PE32  = 96,
+            COFF_SIZE_PE32p = 112,
+        };
+
+        static const size_t COFF_REQUIRED_HEADER_SIZE = 20;
+
+        static CoffOptionalFileHeader read(fstream& fs)
+        {
+            CoffOptionalFileHeader ret;
+            ret.data.resize(COFF_MAGIC_SIZE);
+            fs.read(&ret.data[0], COFF_MAGIC_SIZE);
+
+            if(ret.magic_number()== COFF_MAGIC_PE32)
+            {
+                ret.data.resize(COFF_SIZE_PE32);
+                fs.read(&ret.data[COFF_MAGIC_SIZE], COFF_SIZE_PE32 - COFF_MAGIC_SIZE);
+            }
+            else if (ret.magic_number() == COFF_MAGIC_PE32p)
+            {
+                ret.data.resize(COFF_SIZE_PE32p);
+                fs.read(&ret.data[COFF_MAGIC_SIZE], COFF_SIZE_PE32p - COFF_MAGIC_SIZE);
+            }
+
+            return ret;
+        }
+
+        uint16_t magic_number() const
+        {
+            static const size_t OFFSET = 0;
+            static const size_t SIZE = COFF_MAGIC_SIZE;
+
+            std::string machine_field_as_string = data.substr(OFFSET, SIZE);
+            return reinterpret_bytes<uint16_t>(machine_field_as_string.c_str());
+        }
+
+        PESubsystem subsystem() const
+        {
+            PESubsystem subsystem;
+
+            static const size_t SUBSYSTEM = 68;
+            static const size_t SUBSYSTEM_MAJOR_VERSION = 48;
+            static const size_t SUBSYSTEM_MINOR_VERSION = 50;
+
+            subsystem.subsystem = reinterpret_bytes<uint16_t>(data.substr(SUBSYSTEM, sizeof(uint16_t)).c_str());
+            subsystem.subsystem_major_version = reinterpret_bytes<uint16_t>(data.substr(SUBSYSTEM_MAJOR_VERSION, sizeof(uint16_t)).c_str());
+            subsystem.subsystem_minor_version = reinterpret_bytes<uint16_t>(data.substr(SUBSYSTEM_MINOR_VERSION, sizeof(uint16_t)).c_str());
+
+            return subsystem;
+        }
+
+    private:
+        std::string data;
+    };
+
     struct ArchiveMemberHeader
     {
         static const size_t HEADER_SIZE = 60;
@@ -237,8 +302,12 @@ namespace vcpkg::CoffFileReader
 
         read_and_verify_PE_signature(fs);
         CoffFileHeader header = CoffFileHeader::read(fs);
-        const MachineType machine = header.machine_type();
-        return {machine};
+        CoffOptionalFileHeader header_optional = CoffOptionalFileHeader::read(fs);
+
+        DllInfo info;
+        info.machine_type = header.machine_type();
+        info.subsystem = header_optional.subsystem();
+        return info;
     }
 
     struct Marker
