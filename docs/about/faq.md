@@ -46,6 +46,30 @@ Yes. In the current preview, there is not yet a standardized global way to chang
 
 By saving the changes to the portfile (and checking them in), you'll get the same results even if you're rebuilding from scratch in the future and forgot what exact settings you used.
 
+## Can I get Vcpkg integration for custom configurations?
+
+Yes. While Vcpkg will only produce the standard "Release" and "Debug" configurations when building a library, you can get integration support for your projects' custom configurations, in addition to your project's standard configurations.
+
+The MSBuild $(VcpkgConfiguration) macro, if not set in your project, will identify either the "Release" or the "Debug" configuration. You only need to override this macro in your project file (.vcxproj) to declare the compatibility between your configuration, and the target standard configuration.
+
+For example, you can add support for your "MyRelease" configuration by adding in your project file:
+```
+<PropertyGroup>
+  <VcpkgConfiguration Condition="'$(Configuration)' == 'MyRelease'">Release</VcpkgConfiguration>
+</PropertyGroup>
+```
+Of course, this will only produce viable binaries if your custom configuration is compatible with the target configuration (e.g. they should both link with the same runtime library).
+
+## I can't use user-wide integration. Can I use a per-project integration?
+
+Yes. A NuGet package suitable for per-project use can be generated via either the `vcpkg integrate project` command (lightweight linking) or the `vcpkg export --nuget` command (shrinkwrapped).
+
+A lower level mechanism to achieve the same as the `vcpkg integrate project` NuGet package is via the `<vcpkg_root>\scripts\buildsystems\msbuild\vcpkg.targets` file. All you need is to import it in your .vcxproj file, replacing `<vcpkg_root>` with the path where you installed vcpkg:
+
+```
+<Import Project="<vcpkg_root>\scripts\buildsystems\msbuild\vcpkg.targets" />
+```
+
 ## How is CMake used internally by Vcpkg?
 Vcpkg uses CMake internally as a build scripting language. This is because CMake is already an extremely common build system for cross-platform open source libraries and is becoming very popular for C++ projects in general. It is easy to acquire on Windows, does not require system-wide installation, and legible for unfamiliar users.
 
