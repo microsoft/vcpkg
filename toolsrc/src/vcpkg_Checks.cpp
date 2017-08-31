@@ -20,7 +20,9 @@ namespace vcpkg::Checks
         SetConsoleCP(GlobalState::g_init_console_cp);
         SetConsoleOutputCP(GlobalState::g_init_console_output_cp);
 
-        ::exit(exit_code);
+        fflush(nullptr);
+
+        ::TerminateProcess(::GetCurrentProcess(), exit_code);
     }
 
     static BOOL CtrlHandler(DWORD fdwCtrlType)
