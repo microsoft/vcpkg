@@ -318,9 +318,9 @@ namespace vcpkg
 
         // VS2017
         Optional<Toolset> vs2017_toolset;
-        for (const fs::path& instance : vs2017_installation_instances)
+        for (const std::string& instance : vs2017_installation_instances)
         {
-            const fs::path vc_dir = instance / "VC";
+            const fs::path vc_dir = fs::path{instance} / "VC";
 
             // Skip any instances that do not have vcvarsall.
             const fs::path vcvarsall_dir = vc_dir / "Auxiliary" / "Build";
