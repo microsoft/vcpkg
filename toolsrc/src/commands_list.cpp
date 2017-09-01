@@ -8,9 +8,9 @@ namespace vcpkg::Commands::List
 {
     static const std::string OPTION_FULLDESC = "--x-full-desc"; // TODO: This should find a better home, eventually
 
-    static void do_print(const StatusParagraph& pgh, bool FullDesc)
+    static void do_print(const StatusParagraph& pgh, bool full_desc)
     {
-        if (FullDesc)
+        if (full_desc)
         {
             System::println("%-30s %-16s %s", pgh.package.displayname(), pgh.package.version, pgh.package.description);
         }
