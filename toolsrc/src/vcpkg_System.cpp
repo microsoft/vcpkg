@@ -176,6 +176,17 @@ namespace vcpkg::System
         return exit_code;
     }
 
+    // On Win7, output from powershell calls contain a byte order mark, so we strip it out if it is present
+    static void remove_byte_order_mark(std::wstring* s)
+    {
+        const wchar_t* a = s->c_str();
+        // This is the UTF-8 byte-order mark
+        if (a[0] == 0xEF && a[1] == 0xBB && a[2] == 0xBF)
+        {
+            s->erase(0, 3);
+        }
+    }
+
     ExitCodeAndOutput cmd_execute_and_capture_output(const CWStringView cmd_line)
     {
         // Flush stdout before launching external process
@@ -202,6 +213,7 @@ namespace vcpkg::System
 
         const auto ec = _pclose(pipe);
         Debug::println("_pclose() returned %d", ec);
+        remove_byte_order_mark(&output);
         return {ec, Strings::to_utf8(output)};
     }
 
