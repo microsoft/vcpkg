@@ -5,7 +5,7 @@
 
 using namespace std;
 
-namespace vcpkg::COFFFileReader
+namespace vcpkg::CoffFileReader
 {
     template<class T>
     static T reinterpret_bytes(const char* data)
