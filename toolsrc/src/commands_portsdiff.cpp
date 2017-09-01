@@ -2,7 +2,6 @@
 
 #include "Paragraphs.h"
 #include "SortedVector.h"
-#include "SourceParagraph.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_Maps.h"
 #include "vcpkg_System.h"
@@ -139,8 +138,8 @@ namespace vcpkg::Commands::PortsDiff
             read_ports_from_commit(paths, git_commit_id_for_previous_snapshot);
 
         // Already sorted, so set_difference can work on std::vector too
-        std::vector<std::string> current_ports = Maps::extract_keys(current_names_and_versions);
-        std::vector<std::string> previous_ports = Maps::extract_keys(previous_names_and_versions);
+        const std::vector<std::string> current_ports = Maps::extract_keys(current_names_and_versions);
+        const std::vector<std::string> previous_ports = Maps::extract_keys(previous_names_and_versions);
 
         const SetElementPresence<std::string> setp =
             SetElementPresence<std::string>::create(current_ports, previous_ports);
