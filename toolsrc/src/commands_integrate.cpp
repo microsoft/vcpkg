@@ -156,7 +156,7 @@ namespace vcpkg::Commands::Integrate
             {
                 const std::string param =
                     Strings::format(R"(/c DEL "%s" /Q > nul)", old_system_wide_targets_file.string());
-                ElevationPromptChoice user_choice = elevated_cmd_execute(param);
+                const ElevationPromptChoice user_choice = elevated_cmd_execute(param);
                 switch (user_choice)
                 {
                     case ElevationPromptChoice::YES: break;
@@ -175,14 +175,14 @@ namespace vcpkg::Commands::Integrate
 
         bool should_install_system = true;
         const Expected<std::string> system_wide_file_contents = fs.read_contents(SYSTEM_WIDE_TARGETS_FILE);
-        if (auto contents_data = system_wide_file_contents.get())
+        static const std::regex RE(R"###(<!-- version (\d+) -->)###");
+        if (const auto contents_data = system_wide_file_contents.get())
         {
-            std::regex re(R"###(<!-- version (\d+) -->)###");
             std::match_results<std::string::const_iterator> match;
-            auto found = std::regex_search(*contents_data, match, re);
+            const auto found = std::regex_search(*contents_data, match, RE);
             if (found)
             {
-                int ver = atoi(match[1].str().c_str());
+                const int ver = atoi(match[1].str().c_str());
                 if (ver >= 1) should_install_system = false;
             }
         }
@@ -196,7 +196,7 @@ namespace vcpkg::Commands::Integrate
                                                       SYSTEM_WIDE_TARGETS_FILE.parent_path().string(),
                                                       sys_src_path.string(),
                                                       SYSTEM_WIDE_TARGETS_FILE.string());
-            ElevationPromptChoice user_choice = elevated_cmd_execute(param);
+            const ElevationPromptChoice user_choice = elevated_cmd_execute(param);
             switch (user_choice)
             {
                 case ElevationPromptChoice::YES: break;
@@ -217,7 +217,7 @@ namespace vcpkg::Commands::Integrate
                           create_appdata_targets_shortcut(paths.buildsystems_msbuild_targets.string()));
         auto appdata_dst_path = get_appdata_targets_path();
 
-        auto rc = fs.copy_file(appdata_src_path, appdata_dst_path, fs::copy_options::overwrite_existing, ec);
+        const auto rc = fs.copy_file(appdata_src_path, appdata_dst_path, fs::copy_options::overwrite_existing, ec);
 
         if (!rc || ec)
         {
@@ -245,7 +245,7 @@ namespace vcpkg::Commands::Integrate
         const fs::path path = get_appdata_targets_path();
 
         std::error_code ec;
-        bool was_deleted = fs.remove(path, ec);
+        const bool was_deleted = fs.remove(path, ec);
 
         Checks::check_exit(VCPKG_LINE_INFO, !ec, "Error: Unable to remove user-wide integration: %d", ec.message());
 
