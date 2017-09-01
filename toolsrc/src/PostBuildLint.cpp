@@ -40,7 +40,7 @@ namespace vcpkg::PostBuildLint
 
     const std::vector<OutdatedDynamicCrt>& get_outdated_dynamic_crts()
     {
-        static const std::vector<OutdatedDynamicCrt> v_no_msvcrt = {
+        static const std::vector<OutdatedDynamicCrt> V_NO_MSVCRT = {
             {"msvcp100.dll", R"(msvcp100\.dll)"},
             {"msvcp100d.dll", R"(msvcp100d\.dll)"},
             {"msvcp110.dll", R"(msvcp110\.dll)"},
@@ -59,7 +59,7 @@ namespace vcpkg::PostBuildLint
             {"msvcrt20.dll", R"(msvcrt20\.dll)"},
             {"msvcrt40.dll", R"(msvcrt40\.dll)"}};
 
-        return v_no_msvcrt;
+        return V_NO_MSVCRT;
     }
 
     static LintStatus check_for_files_in_include_directory(const Files::Filesystem& fs,
@@ -580,7 +580,7 @@ namespace vcpkg::PostBuildLint
         return LintStatus::SUCCESS;
     }
 
-    struct BuildType_and_file
+    struct BuildTypeAndFile
     {
         fs::path file;
         BuildType build_type;
@@ -594,7 +594,7 @@ namespace vcpkg::PostBuildLint
         bad_build_types.erase(std::remove(bad_build_types.begin(), bad_build_types.end(), expected_build_type),
                               bad_build_types.end());
 
-        std::vector<BuildType_and_file> libs_with_invalid_crt;
+        std::vector<BuildTypeAndFile> libs_with_invalid_crt;
 
         for (const fs::path& lib : libs)
         {
@@ -622,7 +622,7 @@ namespace vcpkg::PostBuildLint
                             "Expected %s crt linkage, but the following libs had invalid crt linkage:",
                             expected_build_type.to_string());
             System::println();
-            for (const BuildType_and_file btf : libs_with_invalid_crt)
+            for (const BuildTypeAndFile btf : libs_with_invalid_crt)
             {
                 System::println("    %s: %s", btf.file.generic_string(), btf.build_type.to_string());
             }
@@ -636,12 +636,12 @@ namespace vcpkg::PostBuildLint
         return LintStatus::SUCCESS;
     }
 
-    struct OutdatedDynamicCrt_and_file
+    struct OutdatedDynamicCrtAndFile
     {
         fs::path file;
         OutdatedDynamicCrt outdated_crt;
 
-        OutdatedDynamicCrt_and_file() = delete;
+        OutdatedDynamicCrtAndFile() = delete;
     };
 
     static LintStatus check_outdated_crt_linkage_of_dlls(const std::vector<fs::path>& dlls,
@@ -650,7 +650,7 @@ namespace vcpkg::PostBuildLint
     {
         if (build_info.policies.is_enabled(BuildPolicy::ALLOW_OBSOLETE_MSVCRT)) return LintStatus::SUCCESS;
 
-        std::vector<OutdatedDynamicCrt_and_file> dlls_with_outdated_crt;
+        std::vector<OutdatedDynamicCrtAndFile> dlls_with_outdated_crt;
 
         for (const fs::path& dll : dlls)
         {
@@ -676,7 +676,7 @@ namespace vcpkg::PostBuildLint
         {
             System::println(System::Color::warning, "Detected outdated dynamic CRT in the following files:");
             System::println();
-            for (const OutdatedDynamicCrt_and_file btf : dlls_with_outdated_crt)
+            for (const OutdatedDynamicCrtAndFile btf : dlls_with_outdated_crt)
             {
                 System::println("    %s: %s", btf.file.generic_string(), btf.outdated_crt.name);
             }
