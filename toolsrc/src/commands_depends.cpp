@@ -10,8 +10,8 @@ namespace vcpkg::Commands::DependInfo
 {
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const std::string example = Commands::Help::create_example_string(R"###(depend-info [pat])###");
-        args.check_max_arg_count(1, example);
+        static const std::string EXAMPLE = Commands::Help::create_example_string(R"###(depend-info [pat])###");
+        args.check_max_arg_count(1, EXAMPLE);
         args.check_and_get_optional_command_arguments({});
 
         std::vector<std::unique_ptr<SourceControlFile>> source_control_files =

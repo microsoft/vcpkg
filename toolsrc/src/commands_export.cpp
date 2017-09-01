@@ -221,12 +221,12 @@ namespace vcpkg::Commands::Export
         static const std::string OPTION_NUGET_VERSION = "--nuget-version";
 
         // input sanitization
-        static const std::string example =
+        static const std::string EXAMPLE =
             Commands::Help::create_example_string("export zlib zlib:x64-windows boost --nuget");
-        args.check_min_arg_count(1, example);
+        args.check_min_arg_count(1, EXAMPLE);
 
         const std::vector<PackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
-            return Input::check_and_get_package_spec(arg, default_triplet, example);
+            return Input::check_and_get_package_spec(arg, default_triplet, EXAMPLE);
         });
         for (auto&& spec : specs)
             Input::check_triplet(spec.triplet(), paths);
@@ -252,7 +252,7 @@ namespace vcpkg::Commands::Export
         if (!raw && !nuget && !zip && !_7zip && !dryRun)
         {
             System::println(System::Color::error, "Must provide at least one export type: --raw --nuget --zip --7zip");
-            System::print(example);
+            System::print(EXAMPLE);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 

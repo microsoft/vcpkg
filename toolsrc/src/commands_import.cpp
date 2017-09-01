@@ -93,9 +93,9 @@ namespace vcpkg::Commands::Import
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const std::string example = Commands::Help::create_example_string(
+        static const std::string EXAMPLE = Commands::Help::create_example_string(
             R"(import C:\path\to\CONTROLfile C:\path\to\includedir C:\path\to\projectdir)");
-        args.check_exact_arg_count(3, example);
+        args.check_exact_arg_count(3, EXAMPLE);
         args.check_and_get_optional_command_arguments({});
 
         const fs::path control_file_path(args.command_arguments[0]);

@@ -89,11 +89,11 @@ namespace vcpkg::Commands::BuildCommand
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
-        static const std::string example = Commands::Help::create_example_string("build zlib:x64-windows");
-        args.check_exact_arg_count(
-            1, example); // Build only takes a single package and all dependencies must already be installed
+        static const std::string EXAMPLE = Commands::Help::create_example_string("build zlib:x64-windows");
+        // Build only takes a single package and all dependencies must already be installed
+        args.check_exact_arg_count(1, EXAMPLE);
         const std::string command_argument = args.command_arguments.at(0);
-        const FullPackageSpec spec = Input::check_and_get_full_package_spec(command_argument, default_triplet, example);
+        const FullPackageSpec spec = Input::check_and_get_full_package_spec(command_argument, default_triplet, EXAMPLE);
         Input::check_triplet(spec.package_spec.triplet(), paths);
         const std::unordered_set<std::string> options =
             args.check_and_get_optional_command_arguments({OPTION_CHECKS_ONLY});

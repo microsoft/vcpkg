@@ -136,7 +136,7 @@ namespace vcpkg::Commands::Remove
         static const std::string OPTION_RECURSE = "--recurse";
         static const std::string OPTION_DRY_RUN = "--dry-run";
         static const std::string OPTION_OUTDATED = "--outdated";
-        static const std::string example =
+        static const std::string EXAMPLE =
             Commands::Help::create_example_string("remove zlib zlib:x64-windows curl boost");
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments(
             {OPTION_PURGE, OPTION_NO_PURGE, OPTION_RECURSE, OPTION_DRY_RUN, OPTION_OUTDATED});
@@ -145,7 +145,7 @@ namespace vcpkg::Commands::Remove
         std::vector<PackageSpec> specs;
         if (options.find(OPTION_OUTDATED) != options.cend())
         {
-            args.check_exact_arg_count(0, example);
+            args.check_exact_arg_count(0, EXAMPLE);
             specs = Util::fmap(Update::find_outdated_packages(paths, status_db),
                                [](auto&& outdated) { return outdated.spec; });
 
@@ -157,9 +157,9 @@ namespace vcpkg::Commands::Remove
         }
         else
         {
-            args.check_min_arg_count(1, example);
+            args.check_min_arg_count(1, EXAMPLE);
             specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
-                return Input::check_and_get_package_spec(arg, default_triplet, example);
+                return Input::check_and_get_package_spec(arg, default_triplet, EXAMPLE);
             });
 
             for (auto&& spec : specs)
@@ -171,7 +171,7 @@ namespace vcpkg::Commands::Remove
         {
             // User specified --purge and --no-purge
             System::println(System::Color::error, "Error: cannot specify both --no-purge and --purge.");
-            System::print(example);
+            System::print(EXAMPLE);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
         const bool isRecursive = options.find(OPTION_RECURSE) != options.cend();

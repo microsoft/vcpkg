@@ -25,10 +25,10 @@ namespace vcpkg::Commands::List
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const std::string example = Strings::format(
+        static const std::string EXAMPLE = Strings::format(
             "The argument should be a substring to search for, or no argument to display all installed libraries.\n%s",
             Commands::Help::create_example_string("list png"));
-        args.check_max_arg_count(1, example);
+        args.check_max_arg_count(1, EXAMPLE);
         const std::unordered_set<std::string> options =
             args.check_and_get_optional_command_arguments({OPTION_FULLDESC});
 

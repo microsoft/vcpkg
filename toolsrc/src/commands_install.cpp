@@ -450,12 +450,12 @@ namespace vcpkg::Commands::Install
         static const std::string OPTION_RECURSE = "--recurse";
 
         // input sanitization
-        static const std::string example =
+        static const std::string EXAMPLE =
             Commands::Help::create_example_string("install zlib zlib:x64-windows curl boost");
-        args.check_min_arg_count(1, example);
+        args.check_min_arg_count(1, EXAMPLE);
 
         const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
-            return Input::check_and_get_full_package_spec(arg, default_triplet, example);
+            return Input::check_and_get_full_package_spec(arg, default_triplet, EXAMPLE);
         });
 
         for (auto&& spec : specs)
@@ -549,7 +549,7 @@ namespace vcpkg::Commands::Install
                     {
                         // User specified --purge and --no-purge
                         System::println(System::Color::error, "Error: cannot specify both --no-purge and --purge.");
-                        System::print(example);
+                        System::print(EXAMPLE);
                         Checks::exit_fail(VCPKG_LINE_INFO);
                     }
                     const std::string display_name = remove_action->spec.to_string();

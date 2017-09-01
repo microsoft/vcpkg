@@ -317,10 +317,10 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const std::string example = Strings::format("Commands:\n"
+        static const std::string EXAMPLE = Strings::format("Commands:\n"
                                                            "%s",
                                                            INTEGRATE_COMMAND_HELPSTRING);
-        args.check_exact_arg_count(1, example);
+        args.check_exact_arg_count(1, EXAMPLE);
         args.check_and_get_optional_command_arguments({});
 
         if (args.command_arguments[0] == "install")

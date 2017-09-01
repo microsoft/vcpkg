@@ -27,10 +27,10 @@ namespace vcpkg::Commands::Cache
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const std::string example = Strings::format(
+        static const std::string EXAMPLE = Strings::format(
             "The argument should be a substring to search for, or no argument to display all cached libraries.\n%s",
             Commands::Help::create_example_string("cache png"));
-        args.check_max_arg_count(1, example);
+        args.check_max_arg_count(1, EXAMPLE);
         args.check_and_get_optional_command_arguments({});
 
         const std::vector<BinaryParagraph> binary_paragraphs = read_all_binary_paragraphs(paths);

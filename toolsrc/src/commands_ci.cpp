@@ -13,9 +13,9 @@
 
 namespace vcpkg::Commands::CI
 {
+    using Build::BuildResult;
     using Dependencies::InstallPlanAction;
     using Dependencies::InstallPlanType;
-    using Build::BuildResult;
 
     static std::vector<PackageSpec> load_all_package_specs(Files::Filesystem& fs,
                                                            const fs::path& ports_directory,
@@ -30,8 +30,8 @@ namespace vcpkg::Commands::CI
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
-        static const std::string example = Commands::Help::create_example_string("ci x64-windows");
-        args.check_max_arg_count(1, example);
+        static const std::string EXAMPLE = Commands::Help::create_example_string("ci x64-windows");
+        args.check_max_arg_count(1, EXAMPLE);
         const Triplet triplet = args.command_arguments.size() == 1
                                     ? Triplet::from_canonical_name(args.command_arguments.at(0))
                                     : default_triplet;
