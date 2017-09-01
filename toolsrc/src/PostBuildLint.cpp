@@ -389,7 +389,7 @@ namespace vcpkg::PostBuildLint
                                file.extension() == ".dll",
                                "The file extension was not .dll: %s",
                                file.generic_string());
-            CoffFileReader::DllInfo info = CoffFileReader::read_dll(file);
+            const CoffFileReader::DllInfo info = CoffFileReader::read_dll(file);
             const std::string actual_architecture = get_actual_architecture(info.machine_type);
 
             if (expected_architecture != actual_architecture)
