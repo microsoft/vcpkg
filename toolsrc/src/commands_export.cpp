@@ -21,7 +21,7 @@ namespace vcpkg::Commands::Export
                                                    const std::string& nuget_id,
                                                    const std::string& nupkg_version)
     {
-        static constexpr auto content_template = R"(
+        static constexpr auto CONTENT_TEMPLATE = R"(
 <package>
     <metadata>
         <id>@NUGET_ID@</id>
@@ -40,7 +40,7 @@ namespace vcpkg::Commands::Export
 </package>
 )";
 
-        std::string nuspec_file_content = std::regex_replace(content_template, std::regex("@NUGET_ID@"), nuget_id);
+        std::string nuspec_file_content = std::regex_replace(CONTENT_TEMPLATE, std::regex("@NUGET_ID@"), nuget_id);
         nuspec_file_content = std::regex_replace(nuspec_file_content, std::regex("@VERSION@"), nupkg_version);
         nuspec_file_content =
             std::regex_replace(nuspec_file_content, std::regex("@RAW_EXPORTED_DIR@"), raw_exported_dir);
@@ -62,10 +62,10 @@ namespace vcpkg::Commands::Export
 
     static void print_plan(const std::map<ExportPlanType, std::vector<const ExportPlanAction*>>& group_by_plan_type)
     {
-        static constexpr std::array<ExportPlanType, 2> order = {ExportPlanType::ALREADY_BUILT,
+        static constexpr std::array<ExportPlanType, 2> ORDER = {ExportPlanType::ALREADY_BUILT,
                                                                 ExportPlanType::PORT_AVAILABLE_BUT_NOT_BUILT};
 
-        for (const ExportPlanType plan_type : order)
+        for (const ExportPlanType plan_type : ORDER)
         {
             const auto it = group_by_plan_type.find(plan_type);
             if (it == group_by_plan_type.cend())
@@ -151,7 +151,7 @@ namespace vcpkg::Commands::Export
         enum class BackingEnum
         {
             ZIP = 1,
-            _7ZIP,
+            SEVEN_ZIP,
         };
 
         constexpr ArchiveFormat() = delete;
@@ -174,7 +174,7 @@ namespace vcpkg::Commands::Export
     namespace ArchiveFormatC
     {
         constexpr const ArchiveFormat ZIP(ArchiveFormat::BackingEnum::ZIP, L"zip", L"zip");
-        constexpr const ArchiveFormat _7ZIP(ArchiveFormat::BackingEnum::_7ZIP, L"7z", L"7zip");
+        constexpr const ArchiveFormat SEVEN_ZIP(ArchiveFormat::BackingEnum::SEVEN_ZIP, L"7z", L"7zip");
     }
 
     static fs::path do_archive_export(const VcpkgPaths& paths,
@@ -216,7 +216,7 @@ namespace vcpkg::Commands::Export
         static const std::string OPTION_RAW = "--raw";
         static const std::string OPTION_NUGET = "--nuget";
         static const std::string OPTION_ZIP = "--zip";
-        static const std::string OPTION_7ZIP = "--7zip";
+        static const std::string OPTION_SEVEN_ZIP = "--7zip";
         static const std::string OPTION_NUGET_ID = "--nuget-id";
         static const std::string OPTION_NUGET_VERSION = "--nuget-version";
 
@@ -237,19 +237,19 @@ namespace vcpkg::Commands::Export
                 OPTION_RAW,
                 OPTION_NUGET,
                 OPTION_ZIP,
-                OPTION_7ZIP,
+                OPTION_SEVEN_ZIP,
             },
             {
                 OPTION_NUGET_ID,
                 OPTION_NUGET_VERSION,
             });
-        const bool dryRun = options.switches.find(OPTION_DRY_RUN) != options.switches.cend();
+        const bool dry_run = options.switches.find(OPTION_DRY_RUN) != options.switches.cend();
         const bool raw = options.switches.find(OPTION_RAW) != options.switches.cend();
         const bool nuget = options.switches.find(OPTION_NUGET) != options.switches.cend();
         const bool zip = options.switches.find(OPTION_ZIP) != options.switches.cend();
-        const bool _7zip = options.switches.find(OPTION_7ZIP) != options.switches.cend();
+        const bool seven_zip = options.switches.find(OPTION_SEVEN_ZIP) != options.switches.cend();
 
-        if (!raw && !nuget && !zip && !_7zip && !dryRun)
+        if (!raw && !nuget && !zip && !seven_zip && !dry_run)
         {
             System::println(System::Color::error, "Must provide at least one export type: --raw --nuget --zip --7zip");
             System::print(EXAMPLE);
@@ -300,7 +300,7 @@ namespace vcpkg::Commands::Export
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
-        if (dryRun)
+        if (dry_run)
         {
             Checks::exit_success(VCPKG_LINE_INFO);
         }
@@ -407,11 +407,11 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
             print_next_step_info("[...]");
         }
 
-        if (_7zip)
+        if (seven_zip)
         {
             System::println("Creating 7zip archive... ");
             const fs::path output_path =
-                do_archive_export(paths, raw_exported_dir_path, export_to_path, ArchiveFormatC::_7ZIP);
+                do_archive_export(paths, raw_exported_dir_path, export_to_path, ArchiveFormatC::SEVEN_ZIP);
             System::println(System::Color::success, "Creating 7zip archive... done");
             System::println(System::Color::success, "7zip archive exported at: %s", output_path.generic_string());
             print_next_step_info("[...]");
