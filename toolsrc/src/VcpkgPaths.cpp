@@ -393,15 +393,12 @@ namespace vcpkg
         {
             return vs_toolsets.back();
         }
-        else
-        {
-            const auto toolset = Util::find_if(vs_toolsets, [&](const Toolset& toolset) {
-                return toolset_version == Strings::to_utf8(toolset.version);
-            });
-            Checks::check_exit(
-                VCPKG_LINE_INFO, toolset != vs_toolsets.end(), "Could not find toolset '%s'", toolset_version);
-            return *toolset;
-        }
+
+        const auto toolset = Util::find_if(
+            vs_toolsets, [&](const Toolset& t) { return toolset_version == Strings::to_utf8(t.version); });
+        Checks::check_exit(
+            VCPKG_LINE_INFO, toolset != vs_toolsets.end(), "Could not find toolset '%s'", toolset_version);
+        return *toolset;
     }
 
     Files::Filesystem& VcpkgPaths::get_filesystem() const { return Files::get_real_filesystem(); }
