@@ -283,36 +283,36 @@ namespace vcpkg::System
         return ret;
     }
 
-    static const fs::path& get_ProgramFiles()
+    static const fs::path& get_program_files()
     {
-        static const fs::path p = System::get_environment_variable(L"PROGRAMFILES").value_or_exit(VCPKG_LINE_INFO);
-        return p;
+        static const fs::path PATH = System::get_environment_variable(L"PROGRAMFILES").value_or_exit(VCPKG_LINE_INFO);
+        return PATH;
     }
 
     const fs::path& get_ProgramFiles_32_bit()
     {
-        static const fs::path p = []() -> fs::path {
+        static const fs::path PATH = []() -> fs::path {
             auto value = System::get_environment_variable(L"ProgramFiles(x86)");
             if (auto v = value.get())
             {
                 return std::move(*v);
             }
-            return get_ProgramFiles();
+            return get_program_files();
         }();
-        return p;
+        return PATH;
     }
 
     const fs::path& get_ProgramFiles_platform_bitness()
     {
-        static const fs::path p = []() -> fs::path {
+        static const fs::path PATH = []() -> fs::path {
             auto value = System::get_environment_variable(L"ProgramW6432");
             if (auto v = value.get())
             {
                 return std::move(*v);
             }
-            return get_ProgramFiles();
+            return get_program_files();
         }();
-        return p;
+        return PATH;
     }
 }
 
