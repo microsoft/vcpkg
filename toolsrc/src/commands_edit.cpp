@@ -48,7 +48,7 @@ namespace vcpkg::Commands::Edit
         std::vector<fs::path> candidate_paths;
         const std::vector<fs::path> from_path = Files::find_from_PATH(L"EDITOR");
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
-        candidate_paths.push_back(System::get_ProgramFiles_platform_bitness() / "Microsoft VS Code" / "Code.exe");
+        candidate_paths.push_back(System::get_program_files_platform_bitness() / "Microsoft VS Code" / "Code.exe");
         candidate_paths.push_back(System::get_program_files_32_bit() / "Microsoft VS Code" / "Code.exe");
 
         const std::vector<fs::path> from_registry = find_from_registry();

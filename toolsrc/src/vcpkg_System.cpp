@@ -302,7 +302,7 @@ namespace vcpkg::System
         return PATH;
     }
 
-    const fs::path& get_ProgramFiles_platform_bitness()
+    const fs::path& get_program_files_platform_bitness()
     {
         static const fs::path PATH = []() -> fs::path {
             auto value = System::get_environment_variable(L"ProgramW6432");

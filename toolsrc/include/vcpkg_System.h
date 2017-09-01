@@ -82,7 +82,7 @@ namespace vcpkg::System
 
     const fs::path& get_program_files_32_bit();
 
-    const fs::path& get_ProgramFiles_platform_bitness();
+    const fs::path& get_program_files_platform_bitness();
 }
 
 namespace vcpkg::Debug
