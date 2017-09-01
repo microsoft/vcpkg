@@ -80,7 +80,7 @@ namespace vcpkg::System
 
     std::vector<CPUArchitecture> get_supported_host_architectures();
 
-    const fs::path& get_ProgramFiles_32_bit();
+    const fs::path& get_program_files_32_bit();
 
     const fs::path& get_ProgramFiles_platform_bitness();
 }

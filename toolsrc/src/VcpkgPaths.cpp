@@ -116,7 +116,7 @@ namespace vcpkg
         candidate_paths.push_back(downloaded_copy);
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
         candidate_paths.push_back(System::get_ProgramFiles_platform_bitness() / "CMake" / "bin" / "cmake.exe");
-        candidate_paths.push_back(System::get_ProgramFiles_32_bit() / "CMake" / "bin");
+        candidate_paths.push_back(System::get_program_files_32_bit() / "CMake" / "bin");
 
         const Optional<fs::path> path =
             find_if_has_equal_or_greater_version(candidate_paths, version_check_arguments, expected_version);
@@ -161,7 +161,7 @@ namespace vcpkg
         candidate_paths.push_back(downloaded_copy);
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
         candidate_paths.push_back(System::get_ProgramFiles_platform_bitness() / "git" / "cmd" / "git.exe");
-        candidate_paths.push_back(System::get_ProgramFiles_32_bit() / "git" / "cmd" / "git.exe");
+        candidate_paths.push_back(System::get_program_files_32_bit() / "git" / "cmd" / "git.exe");
 
         const Optional<fs::path> path =
             find_if_has_equal_or_greater_version(candidate_paths, version_check_arguments, expected_version);

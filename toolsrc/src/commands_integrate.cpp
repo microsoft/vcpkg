@@ -9,10 +9,10 @@
 namespace vcpkg::Commands::Integrate
 {
     static const std::array<fs::path, 2> old_system_target_files = {
-        System::get_ProgramFiles_32_bit() / "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.nuget.targets",
-        System::get_ProgramFiles_32_bit() / "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.system.targets"};
+        System::get_program_files_32_bit() / "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.nuget.targets",
+        System::get_program_files_32_bit() / "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.system.targets"};
     static const fs::path system_wide_targets_file =
-        System::get_ProgramFiles_32_bit() / "MSBuild/Microsoft.Cpp/v4.0/V140/ImportBefore/Default/vcpkg.system.props";
+        System::get_program_files_32_bit() / "MSBuild/Microsoft.Cpp/v4.0/V140/ImportBefore/Default/vcpkg.system.props";
 
     static std::string create_appdata_targets_shortcut(const std::string& target_path) noexcept
     {

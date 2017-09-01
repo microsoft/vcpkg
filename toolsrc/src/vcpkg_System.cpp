@@ -289,7 +289,7 @@ namespace vcpkg::System
         return PATH;
     }
 
-    const fs::path& get_ProgramFiles_32_bit()
+    const fs::path& get_program_files_32_bit()
     {
         static const fs::path PATH = []() -> fs::path {
             auto value = System::get_environment_variable(L"ProgramFiles(x86)");
