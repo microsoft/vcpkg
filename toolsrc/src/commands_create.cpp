@@ -2,7 +2,6 @@
 
 #include "vcpkg_Commands.h"
 #include "vcpkg_Files.h"
-#include "vcpkg_Input.h"
 #include "vcpkg_System.h"
 #include "vcpkglib.h"
 
