@@ -9,7 +9,7 @@ namespace vcpkg
     struct Triplet
     {
     public:
-        constexpr Triplet() : m_instance(&default_instance) {}
+        constexpr Triplet() : m_instance(&DEFAULT_INSTANCE) {}
 
         static Triplet from_canonical_name(const std::string& triplet_as_string);
 
@@ -26,7 +26,7 @@ namespace vcpkg
         bool operator==(const Triplet& other) const;
 
     private:
-        static const TripletInstance default_instance;
+        static const TripletInstance DEFAULT_INSTANCE;
 
         constexpr Triplet(const TripletInstance* ptr) : m_instance(ptr) {}
 
