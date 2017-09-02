@@ -4,12 +4,15 @@ param(
     [switch]$DisableVS2017 = $False,
 
     [Parameter(Mandatory=$False)]
-    [switch]$DisableVS2015 = $False
+    [switch]$DisableVS2015 = $False,
+
+    [Parameter(Mandatory=$False)]
+    [switch]$DisableVS2013 = $False
 )
 
-if ($DisableVS2017 -and $DisableVS2015)
+if ($DisableVS2017 -and $DisableVS2015 -and $DisableVS2013)
 {
-    throw "Both VS2015 and VS2017 were disabled."
+    throw "VS013, VS2015 and VS2017 were disabled."
 }
 
 function New-MSBuildInstance()
@@ -23,7 +26,7 @@ function New-MSBuildInstance()
     return $instance
 }
 
-Write-Verbose "Executing $($MyInvocation.MyCommand.Name) with DisableVS2017=$DisableVS2017, DisableVS2015=$DisableVS2015"
+Write-Verbose "Executing $($MyInvocation.MyCommand.Name) with DisableVS2017=$DisableVS2017, DisableVS2015=$DisableVS2015, DisableVS2013=$DisableVS2013"
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 
 $validInstances = New-Object System.Collections.ArrayList
@@ -139,6 +142,27 @@ foreach ($pair in $registryPairs)
     $validInstances.Add($instance) > $null
 }
 
+# VS2013 - in Program Files
+Write-Verbose "`n`n"
+Write-Verbose "Checking for MSBuild from VS2013 in Program Files..."
+$CandidateProgramFiles = $(& $scriptsDir\getProgramFiles32bit.ps1), $(& $scriptsDir\getProgramFilesPlatformBitness.ps1)
+Write-Verbose "Program Files Candidate locations: $([system.String]::Join(',', $CandidateProgramFiles))"
+foreach ($ProgramFiles in $CandidateProgramFiles)
+{
+    $clExe= "$ProgramFiles\Microsoft Visual Studio 12.0\VC\bin\cl.exe"
+
+    if (!(Test-Path $clExe))
+    {
+        Write-Verbose "$clExe - Not Found"
+        continue
+    }
+
+    Write-Verbose "$clExe - Found"
+    $instance = New-MSBuildInstance "$ProgramFiles\MSBuild\12.0\Bin\MSBuild.exe" "v120"
+    Write-Verbose "Found $instance"
+    $validInstances.Add($instance) > $null
+}
+
 Write-Verbose "`n`n`n"
 Write-Verbose "The following MSBuild instances were found:"
 foreach ($instance in $validInstances)
@@ -158,7 +182,12 @@ foreach ($instance in $validInstances)
     {
         return $instance.msbuildExePath, $instance.toolsetVersion
     }
+
+    if (!$DisableVS2013 -and $instance.toolsetVersion -eq "v120")
+    {
+        return $instance.msbuildExePath, $instance.toolsetVersion
+    }
 }
 
 
-throw "Could not find MSBuild version with C++ support. VS2015 or VS2017 (with C++) needs to be installed."
+throw "Could not find MSBuild version with C++ support. VS2013, VS2015 or VS2017 (with C++) needs to be installed."

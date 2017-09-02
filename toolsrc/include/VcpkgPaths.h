@@ -60,7 +60,7 @@ namespace vcpkg
 
         /// <summary>Retrieve a toolset matching a VS version</summary>
         /// <remarks>
-        ///   Valid version strings are "v140", "v141", and "". Empty string gets the latest.
+        ///   Valid version strings are "v120", "v140", "v141", and "". Empty string gets the latest.
         /// </remarks>
         const Toolset& get_toolset(const std::string& toolset_version) const;
 

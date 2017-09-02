@@ -45,8 +45,8 @@ namespace vcpkg::PostBuildLint
             {"msvcp100d.dll", R"(msvcp100d\.dll)"},
             {"msvcp110.dll", R"(msvcp110\.dll)"},
             {"msvcp110_win.dll", R"(msvcp110_win\.dll)"},
-            {"msvcp120.dll", R"(msvcp120\.dll)"},
-            {"msvcp120_clr0400.dll", R"(msvcp120_clr0400\.dll)"},
+            //{"msvcp120.dll", R"(msvcp120\.dll)"},
+            //{"msvcp120_clr0400.dll", R"(msvcp120_clr0400\.dll)"},
             {"msvcp60.dll", R"(msvcp60\.dll)"},
             {"msvcp60.dll", R"(msvcp60\.dll)"},
 
@@ -54,8 +54,8 @@ namespace vcpkg::PostBuildLint
             {"msvcr100d.dll", R"(msvcr100d\.dll)"},
             {"msvcr100_clr0400.dll", R"(msvcr100_clr0400\.dll)"},
             {"msvcr110.dll", R"(msvcr110\.dll)"},
-            {"msvcr120.dll", R"(msvcr120\.dll)"},
-            {"msvcr120_clr0400.dll", R"(msvcr120_clr0400\.dll)"},
+            //{"msvcr120.dll", R"(msvcr120\.dll)"},
+            //{"msvcr120_clr0400.dll", R"(msvcr120_clr0400\.dll)"},
             {"msvcrt20.dll", R"(msvcrt20\.dll)"},
             {"msvcrt40.dll", R"(msvcrt40\.dll)"}};
 
