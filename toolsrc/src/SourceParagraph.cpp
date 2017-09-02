@@ -170,17 +170,10 @@ namespace vcpkg
 
     std::string Dependency::name() const
     {
-        std::string str = this->depend.name;
-        if (this->depend.features.empty()) return str;
+        if (this->depend.features.empty()) return this->depend.name;
 
-        str += "[";
-        for (auto&& s : this->depend.features)
-        {
-            str += s + ",";
-        }
-        str.pop_back();
-        str += "]";
-        return str;
+        const std::string features = Strings::join(",", this->depend.features);
+        return Strings::format("%s[%s]", this->depend.name, features);
     }
 
     std::vector<Dependency> vcpkg::expand_qualified_dependencies(const std::vector<std::string>& depends)
