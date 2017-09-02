@@ -13,7 +13,7 @@ namespace vcpkg::Input
     {
         const std::string as_lowercase = Strings::ascii_to_lowercase(package_spec_as_string);
         auto expected_spec = FullPackageSpec::from_string(as_lowercase, default_triplet);
-        if (auto spec = expected_spec.get())
+        if (const auto spec = expected_spec.get())
         {
             return PackageSpec{spec->package_spec};
         }
@@ -41,7 +41,7 @@ namespace vcpkg::Input
     {
         const std::string as_lowercase = Strings::ascii_to_lowercase(full_package_spec_as_string);
         auto expected_spec = FullPackageSpec::from_string(as_lowercase, default_triplet);
-        if (auto spec = expected_spec.get())
+        if (const auto spec = expected_spec.get())
         {
             return *spec;
         }
