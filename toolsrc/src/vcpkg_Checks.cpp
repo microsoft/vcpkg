@@ -10,7 +10,7 @@ namespace vcpkg::Checks
 {
     [[noreturn]] static void cleanup_and_exit(const int exit_code)
     {
-        auto elapsed_us = GlobalState::timer.lock()->microseconds();
+        const auto elapsed_us = GlobalState::timer.lock()->microseconds();
 
         auto metrics = Metrics::g_metrics.lock();
         metrics->track_metric("elapsed_us", elapsed_us);
@@ -25,17 +25,20 @@ namespace vcpkg::Checks
         ::TerminateProcess(::GetCurrentProcess(), exit_code);
     }
 
-    static BOOL CtrlHandler(DWORD fdwCtrlType)
+    static BOOL ctrl_handler(DWORD fdw_ctrl_type)
     {
         {
             auto locked_metrics = Metrics::g_metrics.lock();
-            locked_metrics->track_property("CtrlHandler", std::to_string(fdwCtrlType));
+            locked_metrics->track_property("CtrlHandler", std::to_string(fdw_ctrl_type));
             locked_metrics->track_property("error", "CtrlHandler was fired.");
         }
         cleanup_and_exit(EXIT_FAILURE);
     }
 
-    void register_console_ctrl_handler() { SetConsoleCtrlHandler((PHANDLER_ROUTINE)CtrlHandler, TRUE); }
+    void register_console_ctrl_handler()
+    {
+        SetConsoleCtrlHandler(reinterpret_cast<PHANDLER_ROUTINE>(ctrl_handler), TRUE);
+    }
 
     [[noreturn]] void unreachable(const LineInfo& line_info)
     {
@@ -54,9 +57,9 @@ namespace vcpkg::Checks
         cleanup_and_exit(exit_code);
     }
 
-    [[noreturn]] void exit_with_message(const LineInfo& line_info, const CStringView errorMessage)
+    [[noreturn]] void exit_with_message(const LineInfo& line_info, const CStringView error_message)
     {
-        System::println(System::Color::error, errorMessage);
+        System::println(System::Color::error, error_message);
         exit_fail(line_info);
     }
 
@@ -68,11 +71,11 @@ namespace vcpkg::Checks
         }
     }
 
-    void check_exit(const LineInfo& line_info, bool expression, const CStringView errorMessage)
+    void check_exit(const LineInfo& line_info, bool expression, const CStringView error_message)
     {
         if (!expression)
         {
-            exit_with_message(line_info, errorMessage);
+            exit_with_message(line_info, error_message);
         }
     }
 }
