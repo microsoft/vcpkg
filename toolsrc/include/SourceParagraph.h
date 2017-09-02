@@ -7,7 +7,6 @@
 #include "vcpkg_expected.h"
 
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 namespace vcpkg
