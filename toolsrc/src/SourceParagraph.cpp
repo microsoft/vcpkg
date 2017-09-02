@@ -220,11 +220,7 @@ namespace vcpkg
         return FeatureSpec::from_strings_and_triplet(filter_dependencies(deps, t), t);
     }
 
-    const std::string to_string(const Dependency& dep)
-    {
-        std::string name = dep.name();
-        return name;
-    }
+    std::string to_string(const Dependency& dep) { return dep.name(); }
 
     ExpectedT<Supports, std::vector<std::string>> Supports::parse(const std::vector<std::string>& strs)
     {

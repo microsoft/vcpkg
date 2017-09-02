@@ -27,7 +27,7 @@ namespace vcpkg
     // zlib[uwp] becomes Dependency{"zlib", "uwp"}
     std::vector<Dependency> expand_qualified_dependencies(const std::vector<std::string>& depends);
 
-    const std::string to_string(const Dependency& dep);
+    std::string to_string(const Dependency& dep);
 
     struct FeatureParagraph
     {
