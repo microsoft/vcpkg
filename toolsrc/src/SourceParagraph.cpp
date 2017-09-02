@@ -137,7 +137,7 @@ namespace vcpkg
         auto control_file = std::make_unique<SourceControlFile>();
 
         auto maybe_source = parse_source_paragraph(std::move(control_paragraphs.front()));
-        if (auto source = maybe_source.get())
+        if (const auto source = maybe_source.get())
             control_file->core_paragraph = std::move(*source);
         else
             return std::move(maybe_source).error();
@@ -147,7 +147,7 @@ namespace vcpkg
         for (auto&& feature_pgh : control_paragraphs)
         {
             auto maybe_feature = parse_feature_paragraph(std::move(feature_pgh));
-            if (auto feature = maybe_feature.get())
+            if (const auto feature = maybe_feature.get())
                 control_file->feature_paragraphs.emplace_back(std::move(*feature));
             else
                 return std::move(maybe_feature).error();
@@ -263,7 +263,7 @@ namespace vcpkg
 
     bool Supports::is_supported(Architecture arch, Platform plat, Linkage crt, ToolsetVersion tools)
     {
-        auto is_in_or_empty = [](auto v, auto&& c) -> bool { return c.empty() || c.end() != Util::find(c, v); };
+        const auto is_in_or_empty = [](auto v, auto&& c) -> bool { return c.empty() || c.end() != Util::find(c, v); };
         if (!is_in_or_empty(arch, architectures)) return false;
         if (!is_in_or_empty(plat, platforms)) return false;
         if (!is_in_or_empty(crt, crt_linkages)) return false;
