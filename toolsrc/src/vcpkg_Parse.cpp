@@ -23,12 +23,12 @@ namespace vcpkg::Parse
     void ParagraphParser::required_field(const std::string& fieldname, std::string& out)
     {
         auto maybe_field = remove_field(&fields, fieldname);
-        if (auto field = maybe_field.get())
+        if (const auto field = maybe_field.get())
             out = std::move(*field);
         else
             missing_fields.push_back(fieldname);
     }
-    std::string ParagraphParser::optional_field(const std::string& fieldname)
+    std::string ParagraphParser::optional_field(const std::string& fieldname) const
     {
         return remove_field(&fields, fieldname).value_or(Strings::EMPTY);
     }
