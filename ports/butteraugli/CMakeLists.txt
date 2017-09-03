@@ -39,5 +39,5 @@ if(NOT DISABLE_INSTALL_TOOLS)
 endif()
 
 if(NOT DISABLE_INSTALL_HEADERS)
-  install(FILES butteraugli/butteraugli.h  DESTINATION include)
+  install(FILES butteraugli/butteraugli.h  DESTINATION include/butteraugli)
 endif()
