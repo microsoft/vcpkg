@@ -28,5 +28,5 @@ install(
   ARCHIVE DESTINATION lib
 )
 if(NOT DISABLE_INSTALL_HEADERS)
-  install(FILES  src/gumbo.h DESTINATION include)
+  install(FILES  src/gumbo.h src/tag_enum.h DESTINATION include)
 endif()
