@@ -18,8 +18,6 @@ set(TOOL_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION}-win32)
 
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
-# Patch to fix the missing export of fixed_address_empty_string,
-# see https://github.com/google/protobuf/pull/3216
 # Add a flag that can be set to disable the protobuf compiler
 vcpkg_apply_patches(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION}
