@@ -31,7 +31,7 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/install-openblas.patch"
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/install-openblas.patch" "${CMAKE_CURRENT_LIST_DIR}/whitespace.patch"
 )
 
 find_program(GIT NAMES git git.cmd)
