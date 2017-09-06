@@ -136,6 +136,11 @@ namespace vcpkg::Strings
     std::vector<std::string> split(const std::string& s, const std::string& delimiter)
     {
         std::vector<std::string> output;
+        
+        if(delimiter.empty()){
+            output.push_back(s);
+            return output;
+        }
 
         size_t i = 0;
         for (size_t pos = s.find(delimiter); pos != std::string::npos; pos = s.find(delimiter, pos))
