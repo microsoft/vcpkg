@@ -246,6 +246,7 @@ message(STATUS "Packaging headers done")
 
 # This function makes the static build lib names match the dynamic build lib names which FindBoost.cmake is looking for by default.
 # It also renames a couple of "libboost" lib files in the dynamic build (for example libboost_exception-vc140-mt-1_63.lib).
+# And this is wrong and complete nonsense. It breaks the compatibility wof findBoost on Windows and must be removed
 function(boost_rename_libs LIBS)
     foreach(LIB ${${LIBS}})
         get_filename_component(OLD_FILENAME ${LIB} NAME)
@@ -274,7 +275,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         FILES_MATCHING PATTERN "*.dll")
 endif()
 file(GLOB RELEASE_LIBS ${CURRENT_PACKAGES_DIR}/lib/*.lib)
-boost_rename_libs(RELEASE_LIBS)
+#boost_rename_libs(RELEASE_LIBS)
 if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/boost_test_exec_monitor-vc140-mt-${VERSION}.lib)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
     file(RENAME
@@ -294,7 +295,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         FILES_MATCHING PATTERN "*.dll")
 endif()
 file(GLOB DEBUG_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/*.lib)
-boost_rename_libs(DEBUG_LIBS)
+#boost_rename_libs(DEBUG_LIBS)
 if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/boost_test_exec_monitor-vc140-mt-gd-${VERSION}.lib)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
     file(RENAME

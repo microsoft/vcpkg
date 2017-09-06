@@ -51,6 +51,7 @@ configure_qt(
         -sql-psql
         -nomake examples -nomake tests
         -skip webengine
+		-skip speech
         -opengl desktop # other options are "-no-opengl" and "-opengl angle"
         -mp
         LIBJPEG_LIBS="-ljpeg"
