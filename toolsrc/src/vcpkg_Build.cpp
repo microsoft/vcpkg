@@ -289,7 +289,7 @@ namespace vcpkg::Build
         if (!version.empty()) build_info.version = std::move(version);
 
         std::map<BuildPolicy, bool> policies;
-        for (auto policy : g_all_policies)
+        for (auto policy : G_ALL_POLICIES)
         {
             const auto setting = parser.optional_field(to_string(policy));
             if (setting.empty()) continue;

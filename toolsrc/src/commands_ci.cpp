@@ -77,7 +77,7 @@ namespace vcpkg::Commands::CI
         }
 
         std::map<BuildResult, int> summary;
-        for (const BuildResult& v : Build::BuildResult_values)
+        for (const BuildResult& v : Build::BUILD_RESULT_VALUES)
         {
             summary[v] = 0;
         }
