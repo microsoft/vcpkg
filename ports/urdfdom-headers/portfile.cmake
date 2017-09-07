@@ -19,4 +19,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/urdfdom_headers RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/urdfdom-headers RENAME copyright)
