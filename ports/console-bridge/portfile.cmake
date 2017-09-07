@@ -17,6 +17,7 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/console-bridge ${CURRENT_PACKAGES_DIR}/share/console_bridge)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
