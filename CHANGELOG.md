@@ -1,3 +1,49 @@
+vcpkg (0.0.86)
+--------------
+  * Add ports:
+    - bigint               2010.04.30
+    - butteraugli          2017-09-02-8c60a2aefa19adb
+    - ccd                  2.0.0-1 (Renamed from libccd)
+    - fadbad               2.1.0
+    - fcl                  0.5.0-1
+    - guetzli              2017-09-02-cb5e4a86f69628
+    - gumbo                0.10.1
+    - libmicrohttpd        0.9.55
+    - libstemmer           2017-9-02
+    - libunibreak          4.0
+    - lodepng              2017-09-01-8a0f16afe74a6a
+    - meschach
+    - nlopt                2.4.2-c43afa08d~vcpkg1
+    - picosha2             2017-09-01-c5ff159b6
+    - piex                 2017-09-01-473434f2dd974978b
+    - pthreads             2.9.1
+    - tinythread           1.1
+    - tinyxml              2.6.2-1
+  * Removed ports:
+    - libccd               2.0.0 (Renamed to ccd)
+  * Update ports:
+    - ace                  6.4.3 -> 6.4.4
+    - boost                1.65 -> 1.65-1
+    - cairo                1.15.6 -> 1.15.8
+    - gdk-pixbuf           2.36.6 -> 2.36.9
+    - glib                 2.52.2 -> 2.52.3
+    - gtk                  3.22.15 -> 3.22.19
+    - jxrlib               1.1-2 -> 1.1-3
+    - paho-mqtt            Version 1.1.0 (Paho 1.2) -> 1.2.0
+    - pango                1.40.6 -> 1.40.11
+    - shaderc              2df47b51d83ad83cbc2e7f8ff2b56776293e8958 -> 2df47b51d83ad83cbc2e7f8ff2b56776293e8958-1
+  * Fix warnings in bootstrap-vcpkg.ps1
+  * Fix codepage related issues with ninja/cmake
+  * Improve handling for non-ascii environments
+  * Configurations names are now more tolerant:
+    - If a configuration name is prefixed with "Release", then it is compatible with "Release"
+    - If a configuration name is prefixed with "Debug", then it is compatible with "Debug"
+  * `vcpkg edit`: Improve detection of VSCode and add better messages when no path is found
+  * Fixes and improvements in the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  MON, 04 Sep 2017 02:00:00 -0800
+
+
 vcpkg (0.0.85)
 --------------
   * Add ports:
