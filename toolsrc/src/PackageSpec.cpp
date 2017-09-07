@@ -10,7 +10,7 @@ namespace vcpkg
 {
     static bool is_valid_package_spec_char(char c)
     {
-        return (c == '-') || (c == '_')  || isdigit(c) || (isalpha(c) && islower(c)) || (c == '[') || (c == ']');
+        return (c == '-') || isdigit(c) || (isalpha(c) && islower(c)) || (c == '[') || (c == ']');
     }
 
     std::string FeatureSpec::to_string() const

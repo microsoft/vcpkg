@@ -12,8 +12,8 @@ namespace vcpkg
             case PackageSpecParseResult::SUCCESS: return "OK";
             case PackageSpecParseResult::TOO_MANY_COLONS: return "Too many colons";
             case PackageSpecParseResult::INVALID_CHARACTERS:
-                return "Contains invalid characters. Only alphanumeric lowercase ASCII characters, dashes and"
-                       "underscores are allowed";
+                return "Contains invalid characters. Only alphanumeric lowercase ASCII characters and dashes are "
+                       "allowed";
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
