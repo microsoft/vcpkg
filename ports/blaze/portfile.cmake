@@ -1,13 +1,13 @@
 #header-only library
 include(vcpkg_common_functions)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/blaze-3.2)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://bitbucket.org/blaze-lib/blaze/downloads/blaze-3.2.tar.gz"
-    FILENAME "blaze-3.2.tar.gz"
-    SHA512 33d2bb0a49a33e71c88a45ab9e8418160c09b877b3ebe5ff7aa48ec0973e28e8a282374604d56f1b5cf2722946e4ca84aa2b401a341240a2ab9debd72505148e
+vcpkg_from_bitbucket(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO blaze-lib/blaze
+    REF v3.2
+    SHA512 f9a50c454125fe194f0d1fb259c5440c82068d41880a228fbd15fe383b6ef4198557daa406a08809065eedf223fc0c55d2309cc00ef549a3fc1a2a89e6d4b445
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 # Copy the blaze header files
 file(COPY "${SOURCE_PATH}/blaze"
