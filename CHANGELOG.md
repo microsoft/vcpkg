@@ -1,3 +1,11 @@
+vcpkg (0.0.88)
+--------------
+   * `vcpkg_configure_cmake` has been modified to embed debug symbols within static libraries (using the /Z7 option). Most of the libraries in `vcpkg` had their versions bumped due to this.
+   * `vcpkg_configure_meson` has been modified in the same manner.
+
+-- vcpkg team <vcpkg@microsoft.com>  SAT, 09 Sep 2017 00:30:00 -0800
+
+
 vcpkg (0.0.87)
 --------------
   * Add ports:
