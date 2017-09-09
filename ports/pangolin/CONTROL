@@ -1,4 +1,4 @@
 Source: pangolin
-Version: 0.5
+Version: 0.5-1
 Build-Depends: eigen3
 Description: Lightweight GUI Library
