@@ -1,3 +1,31 @@
+vcpkg (0.0.87)
+--------------
+  * Add ports:
+    - console-bridge       0.3.2-1
+    - leptonica            1.74.4
+    - tesseract            3.05.01
+    - urdfdom              1.0.0-1
+    - urdfdom-headers      1.0.0-1
+  * Update ports:
+    - ace                  6.4.4 -> 6.4.5
+    - c-ares               1.12.1-dev-40eb41f-1 -> 1.13.0
+    - glslang              1c573fbcfba6b3d631008b1babc838501ca925d3-2 -> 3a21c880500eac21cdf79bef5b80f970a55ac6af
+    - grpc                 1.4.1 -> 1.6.0
+    - libuv                1.14.0 -> 1.14.1
+    - meschach              -> 1.2b
+    - openblas             v0.2.20 -> v0.2.20-1
+    - openssl              1.0.2l-1 -> 1.0.2l-2
+    - protobuf             3.3.0-3 -> 3.4.0-1
+    - qt5                  5.8-4 -> 5.8-5
+    - shaderc              2df47b51d83ad83cbc2e7f8ff2b56776293e8958-1 -> 12fb656ab20ea9aa06e7084a74e5ff832b7ce2da
+    - spirv-tools          1.1-f72189c249ba143c6a89a4cf1e7d53337b2ddd40 -> v2017.1-dev-7e2d26c77b606b21af839b37fd21381c4a669f23
+    - xxhash               0.6.2 -> 0.6.3
+    - zeromq               4.2.2 -> 20170908-18498f620f0f6d4076981ea16eb5760fe4d28dc2
+  * Add new function `vcpkg_from_bitbucket` which the Bitbucket equivalent of `vcpkg_from_github`
+
+-- vcpkg team <vcpkg@microsoft.com>  FRI, 08 Sep 2017 22:00:00 -0800
+
+
 vcpkg (0.0.86)
 --------------
   * Add ports:
