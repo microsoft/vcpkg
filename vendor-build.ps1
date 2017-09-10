@@ -27,4 +27,4 @@ Invoke-VcpkgBuild "websocketpp"
 Invoke-VcpkgBuild "curl"
 
 # update the version anytime the installed package versions change
-Write-Output 7 > installed/version.txt
+Write-Output 8 > installed/version.txt
