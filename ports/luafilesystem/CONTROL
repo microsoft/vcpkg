@@ -1,4 +1,4 @@
 Source: luafilesystem
-Version: 1.6.3
+Version: 1.6.3-1
 Description: LuaFileSystem is a Lua library developed to complement the set of functions related to file systems offered by the standard Lua distribution.
 Build-Depends: lua

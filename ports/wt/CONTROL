@@ -1,4 +1,4 @@
 Source: wt
-Version: 3.3.7-1
+Version: 3.3.7-2
 Description: Wt is a C++ library for developing web applications
 Build-Depends: boost, openssl, sqlite3, libpq, pango
