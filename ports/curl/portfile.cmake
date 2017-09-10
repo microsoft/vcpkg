@@ -40,6 +40,8 @@ else()
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
+			-DHTTP_ONLY=ON
+			-DCMAKE_USE_LIBSSH2=OFF
             -DBUILD_TESTING=OFF
             -DBUILD_CURL_EXE=OFF
             -DENABLE_MANUAL=OFF
