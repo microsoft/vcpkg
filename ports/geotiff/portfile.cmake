@@ -42,6 +42,9 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
 
+# Remove doc directory
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
 
 # Move executables
 file(GLOB BINARY_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*.exe")
