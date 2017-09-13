@@ -59,7 +59,7 @@ namespace vcpkg::Commands::Install
         auto files = fs.get_files_recursive(source_dir);
         for (auto&& file : files)
         {
-            auto status = fs.status(file, ec);
+            const auto status = fs.status(file, ec);
             if (ec)
             {
                 System::println(System::Color::error, "failed: %s: %s", file.u8string(), ec.message());
@@ -309,7 +309,7 @@ namespace vcpkg::Commands::Install
             const BinaryControlFile bcf =
                 Paragraphs::try_load_cached_control_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO);
             System::println("Installing package %s... ", display_name_with_features);
-            auto install_result = install_package(paths, bcf, &status_db);
+            const auto install_result = install_package(paths, bcf, &status_db);
             switch (install_result)
             {
                 case InstallResult::SUCCESS:
@@ -328,7 +328,7 @@ namespace vcpkg::Commands::Install
                     System::Color::warning, "Package %s is already built -- not building from HEAD", display_name);
             }
             System::println("Installing package %s... ", display_name);
-            auto install_result = install_package(
+            const auto install_result = install_package(
                 paths, action.any_paragraph.binary_control_file.value_or_exit(VCPKG_LINE_INFO), &status_db);
             switch (install_result)
             {
@@ -470,7 +470,7 @@ namespace vcpkg::Commands::Install
 
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments(
             {OPTION_DRY_RUN, OPTION_USE_HEAD_VERSION, OPTION_NO_DOWNLOADS, OPTION_RECURSE});
-        const bool dryRun = options.find(OPTION_DRY_RUN) != options.cend();
+        const bool dry_run = options.find(OPTION_DRY_RUN) != options.cend();
         const bool use_head_version = options.find(OPTION_USE_HEAD_VERSION) != options.cend();
         const bool no_downloads = options.find(OPTION_NO_DOWNLOADS) != options.cend();
         const bool is_recursive = options.find(OPTION_RECURSE) != options.cend();
@@ -519,14 +519,14 @@ namespace vcpkg::Commands::Install
 
         print_plan(action_plan, is_recursive);
 
-        if (dryRun)
+        if (dry_run)
         {
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
         for (const auto& action : action_plan)
         {
-            if (auto install_action = action.install_plan.get())
+            if (const auto install_action = action.install_plan.get())
             {
                 const BuildResult result =
                     perform_install_plan_action(paths, *install_action, install_plan_options, status_db);
@@ -536,7 +536,7 @@ namespace vcpkg::Commands::Install
                     Checks::exit_fail(VCPKG_LINE_INFO);
                 }
             }
-            else if (auto remove_action = action.remove_plan.get())
+            else if (const auto remove_action = action.remove_plan.get())
             {
                 Checks::check_exit(VCPKG_LINE_INFO, GlobalState::feature_packages);
                 Remove::perform_remove_plan_action(paths, *remove_action, Remove::Purge::YES, status_db);
