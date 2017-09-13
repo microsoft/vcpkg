@@ -129,6 +129,37 @@ namespace vcpkg::Commands::Remove
         }
     }
 
+    void perform_remove_plan_action(const VcpkgPaths& paths,
+                                    const RemovePlanAction& action,
+                                    const Purge purge,
+                                    StatusParagraphs& status_db)
+    {
+        const std::string display_name = action.spec.to_string();
+
+        switch (action.plan_type)
+        {
+            case RemovePlanType::NOT_INSTALLED:
+                System::println(System::Color::success, "Package %s is not installed", display_name);
+                break;
+            case RemovePlanType::REMOVE:
+                System::println("Removing package %s... ", display_name);
+                remove_package(paths, action.spec, &status_db);
+                System::println(System::Color::success, "Removing package %s... done", display_name);
+                break;
+            case RemovePlanType::UNKNOWN:
+            default: Checks::unreachable(VCPKG_LINE_INFO);
+        }
+
+        if (purge == Purge::YES)
+        {
+            System::println("Purging package %s... ", display_name);
+            Files::Filesystem& fs = paths.get_filesystem();
+            std::error_code ec;
+            fs.remove_all(paths.packages / action.spec.dir(), ec);
+            System::println(System::Color::success, "Purging package %s... done", display_name);
+        }
+    }
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
         static const std::string OPTION_PURGE = "--purge";
@@ -166,14 +197,15 @@ namespace vcpkg::Commands::Remove
                 Input::check_triplet(spec.triplet(), paths);
         }
 
-        const bool alsoRemoveFolderFromPackages = options.find(OPTION_NO_PURGE) == options.end();
-        if (options.find(OPTION_PURGE) != options.end() && !alsoRemoveFolderFromPackages)
+        const bool no_purge_was_passed = options.find(OPTION_NO_PURGE) != options.end();
+        const bool purge_was_passed = options.find(OPTION_PURGE) != options.end();
+        if (purge_was_passed && no_purge_was_passed)
         {
-            // User specified --purge and --no-purge
             System::println(System::Color::error, "Error: cannot specify both --no-purge and --purge.");
             System::print(EXAMPLE);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
+        const Purge purge = to_purge(purge_was_passed || !no_purge_was_passed);
         const bool isRecursive = options.find(OPTION_RECURSE) != options.cend();
         const bool dryRun = options.find(OPTION_DRY_RUN) != options.cend();
 
@@ -209,30 +241,7 @@ namespace vcpkg::Commands::Remove
 
         for (const RemovePlanAction& action : remove_plan)
         {
-            const std::string display_name = action.spec.to_string();
-
-            switch (action.plan_type)
-            {
-                case RemovePlanType::NOT_INSTALLED:
-                    System::println(System::Color::success, "Package %s is not installed", display_name);
-                    break;
-                case RemovePlanType::REMOVE:
-                    System::println("Removing package %s... ", display_name);
-                    remove_package(paths, action.spec, &status_db);
-                    System::println(System::Color::success, "Removing package %s... done", display_name);
-                    break;
-                case RemovePlanType::UNKNOWN:
-                default: Checks::unreachable(VCPKG_LINE_INFO);
-            }
-
-            if (alsoRemoveFolderFromPackages)
-            {
-                System::println("Purging package %s... ", display_name);
-                Files::Filesystem& fs = paths.get_filesystem();
-                std::error_code ec;
-                fs.remove_all(paths.packages / action.spec.dir(), ec);
-                System::println(System::Color::success, "Purging package %s... done", display_name);
-            }
+            perform_remove_plan_action(paths, action, purge, status_db);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);

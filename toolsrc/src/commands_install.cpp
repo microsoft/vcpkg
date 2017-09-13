@@ -524,71 +524,26 @@ namespace vcpkg::Commands::Install
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        // execute the plan
-        if (GlobalState::feature_packages)
+        for (const auto& action : action_plan)
         {
-            for (const auto& action : action_plan)
+            if (auto install_action = action.install_plan.get())
             {
-                if (auto install_action = action.install_plan.get())
-                {
-                    const BuildResult result =
-                        perform_install_plan_action(paths, *install_action, install_plan_options, status_db);
-                    if (result != BuildResult::SUCCEEDED)
-                    {
-                        System::println(Build::create_user_troubleshooting_message(install_action->spec));
-                        Checks::exit_fail(VCPKG_LINE_INFO);
-                    }
-                }
-                else if (auto remove_action = action.remove_plan.get())
-                {
-                    static const std::string OPTION_PURGE = "--purge";
-                    static const std::string OPTION_NO_PURGE = "--no-purge";
-
-                    const bool alsoRemoveFolderFromPackages = options.find(OPTION_NO_PURGE) == options.end();
-                    if (options.find(OPTION_PURGE) != options.end() && !alsoRemoveFolderFromPackages)
-                    {
-                        // User specified --purge and --no-purge
-                        System::println(System::Color::error, "Error: cannot specify both --no-purge and --purge.");
-                        System::print(EXAMPLE);
-                        Checks::exit_fail(VCPKG_LINE_INFO);
-                    }
-                    const std::string display_name = remove_action->spec.to_string();
-                    switch (remove_action->plan_type)
-                    {
-                        case RemovePlanType::NOT_INSTALLED:
-                            System::println(System::Color::success, "Package %s is not installed", display_name);
-                            break;
-                        case RemovePlanType::REMOVE:
-                            System::println("Removing package %s... ", display_name);
-                            Commands::Remove::remove_package(paths, remove_action->spec, &status_db);
-                            System::println(System::Color::success, "Removing package %s... done", display_name);
-                            break;
-                        case RemovePlanType::UNKNOWN:
-                        default: Checks::unreachable(VCPKG_LINE_INFO);
-                    }
-
-                    if (alsoRemoveFolderFromPackages)
-                    {
-                        System::println("Purging package %s... ", display_name);
-                        Files::Filesystem& fs = paths.get_filesystem();
-                        std::error_code ec;
-                        fs.remove_all(paths.packages / remove_action->spec.dir(), ec);
-                        System::println(System::Color::success, "Purging package %s... done", display_name);
-                    }
-                }
-            }
-        }
-        else
-        {
-            for (const auto& action : action_plan)
-            {
-                const auto& iaction = action.install_plan.value_or_exit(VCPKG_LINE_INFO);
-                const BuildResult result = perform_install_plan_action(paths, iaction, install_plan_options, status_db);
+                const BuildResult result =
+                    perform_install_plan_action(paths, *install_action, install_plan_options, status_db);
                 if (result != BuildResult::SUCCEEDED)
                 {
-                    System::println(Build::create_user_troubleshooting_message(iaction.spec));
+                    System::println(Build::create_user_troubleshooting_message(install_action->spec));
                     Checks::exit_fail(VCPKG_LINE_INFO);
                 }
+            }
+            else if (auto remove_action = action.remove_plan.get())
+            {
+                Checks::check_exit(VCPKG_LINE_INFO, GlobalState::feature_packages);
+                Remove::perform_remove_plan_action(paths, *remove_action, Remove::Purge::YES, status_db);
+            }
+            else
+            {
+                Checks::unreachable(VCPKG_LINE_INFO);
             }
         }
 
