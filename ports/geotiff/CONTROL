@@ -1,0 +1,4 @@
+Source: geotiff
+Version: 1.4.2
+Description: Library for georeferenced raster imagery based on TIFF
+Build-Depends: tiff, proj
