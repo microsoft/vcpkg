@@ -1,0 +1,23 @@
+From ed34e06c18a718a18d20edbd4e590c1c33107352 Mon Sep 17 00:00:00 2001
+From: Raynor Vliegendhart <ShinNoNoir@gmail.com>
+Date: Wed, 13 Sep 2017 11:56:59 +0200
+Subject: [PATCH] Disable BuildOSGeo4W
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2a27069..4c41012 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -155,5 +155,5 @@ include(CPack)
+ add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
+ 
+ if (WIN32)
+-    include(BuildOSGeo4W)
++#    include(BuildOSGeo4W) # Don't build this
+ endif(WIN32)
+-- 
+2.13.3.windows.1
+

@@ -1,0 +1,88 @@
+From cd83bb98badbcb931d0589785411e3b08d6edab2 Mon Sep 17 00:00:00 2001
+From: Raynor Vliegendhart <SHinNoNoir@gmail.com>
+Date: Wed, 27 Sep 2017 09:42:17 +0200
+Subject: [PATCH] Export targets
+
+---
+ CMakeLists.txt           | 16 ++++++++++++++++
+ cmake/laszipConfig.cmake |  1 +
+ src/CMakeLists.txt       | 26 +++++++++++++++++++++++++-
+ 3 files changed, 42 insertions(+), 1 deletion(-)
+ create mode 100644 cmake/laszipConfig.cmake
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4c41012..d445d52 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -157,3 +157,19 @@ add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
+ if (WIN32)
+ #    include(BuildOSGeo4W) # Don't build this
+ endif(WIN32)
++
++
++
++###############################################################################
++# Create *Config*.cmake files:
++
++include(CMakePackageConfigHelpers)
++write_basic_package_version_file( ${CMAKE_CURRENT_BINARY_DIR}/share/laszip/laszipConfigVersion.cmake
++                                  VERSION ${VERSION}
++                                  COMPATIBILITY SameMajorVersion )
++
++configure_file(cmake/laszipConfig.cmake
++  "${CMAKE_CURRENT_BINARY_DIR}/share/laszipConfig.cmake"
++  COPYONLY
++)
++
+diff --git a/cmake/laszipConfig.cmake b/cmake/laszipConfig.cmake
+new file mode 100644
+index 0000000..3777860
+--- /dev/null
++++ b/cmake/laszipConfig.cmake
+@@ -0,0 +1 @@
++include("${CMAKE_CURRENT_LIST_DIR}/laszipTargets.cmake")
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 922b553..780f9d4 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -94,7 +94,7 @@ if (APPLE)
+     INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+ endif()
+ 
+-install(TARGETS ${LASZIP_LIB_NAME} 
++install(TARGETS ${LASZIP_LIB_NAME} EXPORT laszipTargets
+   RUNTIME DESTINATION ${LASZIP_BIN_DIR}
+   LIBRARY DESTINATION ${LASZIP_LIB_DIR}
+   ARCHIVE DESTINATION ${LASZIP_LIB_DIR})
+@@ -102,3 +102,27 @@ install(TARGETS ${LASZIP_LIB_NAME}
+ install(DIRECTORY ${LASZIP_HEADERS_DIR}
+   DESTINATION ${LASZIP_INCLUDE_DIR}
+   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp")
++
++
++###############################################################################
++# Export targets file:
++export(EXPORT laszipTargets
++  FILE "${CMAKE_CURRENT_BINARY_DIR}/../share/laszip/laszipTargets.cmake"
++)
++
++set(ConfigPackageLocation share/laszip)
++
++install(
++  FILES
++    ../cmake/laszipConfig.cmake
++    "${CMAKE_CURRENT_BINARY_DIR}/../share/laszip/laszipConfigVersion.cmake"
++  DESTINATION
++    ${ConfigPackageLocation}
++)
++
++install(EXPORT laszipTargets
++  FILE
++    laszipTargets.cmake
++  DESTINATION
++    ${ConfigPackageLocation}
++)
+\ No newline at end of file
+-- 
+2.13.3.windows.1
+
