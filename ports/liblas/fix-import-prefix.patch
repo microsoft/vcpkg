@@ -1,0 +1,25 @@
+From f242c69ccc798800ab7c4932fc52e69bd5812221 Mon Sep 17 00:00:00 2001
+From: Raynor Vliegendhart <ShinNoNoir@gmail.com>
+Date: Wed, 27 Sep 2017 13:42:46 +0200
+Subject: [PATCH] Fix _IMPORT_PREFIX
+
+---
+ liblas-depends.cmake | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/liblas-depends.cmake b/liblas-depends.cmake
+index 8f64175..455d150 100644
+--- a/liblas-depends.cmake
++++ b/liblas-depends.cmake
+@@ -44,6 +44,8 @@ unset(_expectedTargets)
+ # Compute the installation prefix relative to this file.
+ get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
++get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
++get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+ if(_IMPORT_PREFIX STREQUAL "/")
+   set(_IMPORT_PREFIX "")
+ endif()
+-- 
+2.13.3.windows.1
+

@@ -1,0 +1,4 @@
+Source: liblas
+Version: 1.8.1
+Description: A library for reading and writing the ASPRS LAS format
+Build-Depends: boost, geotiff, laszip

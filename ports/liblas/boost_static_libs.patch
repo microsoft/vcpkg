@@ -1,0 +1,25 @@
+From 28db8d7c0d0059aa7e3abed1a0979f789dd2aa5b Mon Sep 17 00:00:00 2001
+From: Raynor Vliegendhart <ShinNoNoir@gmail.com>
+Date: Wed, 13 Sep 2017 14:48:04 +0200
+Subject: [PATCH] Turn off Boost_USE_STATIC_LIBS
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d246a88..fd32b39 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -184,7 +184,7 @@ message(STATUS "Searching for Boost 1.38+ - done")
+ # on windows in the compilation documentation.
+ if(WIN32)
+   if (MSVC)
+-    set(Boost_USE_STATIC_LIBS   ON)
++    set(Boost_USE_STATIC_LIBS   OFF)
+     set(Boost_USE_MULTITHREADED ON)
+   endif(MSVC)
+ endif(WIN32)
+-- 
+2.13.3.windows.1
+
