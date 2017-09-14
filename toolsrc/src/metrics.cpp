@@ -124,7 +124,7 @@ namespace vcpkg::Metrics
         path.resize(n);
         path += L"\\kernel32.dll";
 
-        auto versz = GetFileVersionInfoSizeW(path.c_str(), nullptr);
+        const auto versz = GetFileVersionInfoSizeW(path.c_str(), nullptr);
         if (versz == 0) return Strings::EMPTY;
 
         std::vector<char> verbuf;
@@ -152,7 +152,7 @@ namespace vcpkg::Metrics
         std::string properties;
         std::string measurements;
 
-        void TrackProperty(const std::string& name, const std::string& value)
+        void track_property(const std::string& name, const std::string& value)
         {
             if (properties.size() != 0) properties.push_back(',');
             properties.append(to_json_string(name));
@@ -160,7 +160,7 @@ namespace vcpkg::Metrics
             properties.append(to_json_string(value));
         }
 
-        void TrackMetric(const std::string& name, double value)
+        void track_metric(const std::string& name, double value)
         {
             if (measurements.size() != 0) measurements.push_back(',');
             measurements.append(to_json_string(name));
@@ -241,7 +241,7 @@ namespace vcpkg::Metrics
 
     void Metrics::set_print_metrics(bool should_print_metrics) { g_should_print_metrics = should_print_metrics; }
 
-    void Metrics::track_metric(const std::string& name, double value) { g_metricmessage.TrackMetric(name, value); }
+    void Metrics::track_metric(const std::string& name, double value) { g_metricmessage.track_metric(name, value); }
 
     void Metrics::track_property(const std::string& name, const std::wstring& value)
     {
@@ -251,75 +251,74 @@ namespace vcpkg::Metrics
         std::transform(
             value.begin(), value.end(), converted_value.begin(), [](wchar_t ch) { return static_cast<char>(ch); });
 
-        g_metricmessage.TrackProperty(name, converted_value);
+        g_metricmessage.track_property(name, converted_value);
     }
 
     void Metrics::track_property(const std::string& name, const std::string& value)
     {
-        g_metricmessage.TrackProperty(name, value);
+        g_metricmessage.track_property(name, value);
     }
 
     void Metrics::upload(const std::string& payload)
     {
-        HINTERNET hSession = nullptr, hConnect = nullptr, hRequest = nullptr;
-        BOOL bResults = FALSE;
+        HINTERNET connect = nullptr, request = nullptr;
+        BOOL results = FALSE;
 
-        hSession = WinHttpOpen(
+        const HINTERNET session = WinHttpOpen(
             L"vcpkg/1.0", WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
-        if (hSession)
-            hConnect = WinHttpConnect(hSession, L"dc.services.visualstudio.com", INTERNET_DEFAULT_HTTPS_PORT, 0);
+        if (session) connect = WinHttpConnect(session, L"dc.services.visualstudio.com", INTERNET_DEFAULT_HTTPS_PORT, 0);
 
-        if (hConnect)
-            hRequest = WinHttpOpenRequest(hConnect,
-                                          L"POST",
-                                          L"/v2/track",
-                                          nullptr,
-                                          WINHTTP_NO_REFERER,
-                                          WINHTTP_DEFAULT_ACCEPT_TYPES,
-                                          WINHTTP_FLAG_SECURE);
+        if (connect)
+            request = WinHttpOpenRequest(connect,
+                                         L"POST",
+                                         L"/v2/track",
+                                         nullptr,
+                                         WINHTTP_NO_REFERER,
+                                         WINHTTP_DEFAULT_ACCEPT_TYPES,
+                                         WINHTTP_FLAG_SECURE);
 
-        if (hRequest)
+        if (request)
         {
             if (MAXDWORD <= payload.size()) abort();
             std::wstring hdrs = L"Content-Type: application/json\r\n";
             std::string& p = const_cast<std::string&>(payload);
-            bResults = WinHttpSendRequest(hRequest,
-                                          hdrs.c_str(),
-                                          static_cast<DWORD>(hdrs.size()),
-                                          static_cast<void*>(&p[0]),
-                                          static_cast<DWORD>(payload.size()),
-                                          static_cast<DWORD>(payload.size()),
-                                          0);
+            results = WinHttpSendRequest(request,
+                                         hdrs.c_str(),
+                                         static_cast<DWORD>(hdrs.size()),
+                                         static_cast<void*>(&p[0]),
+                                         static_cast<DWORD>(payload.size()),
+                                         static_cast<DWORD>(payload.size()),
+                                         0);
         }
 
-        if (bResults)
+        if (results)
         {
-            bResults = WinHttpReceiveResponse(hRequest, nullptr);
+            results = WinHttpReceiveResponse(request, nullptr);
         }
 
         DWORD http_code = 0, junk = sizeof(DWORD);
 
-        if (bResults)
+        if (results)
         {
-            bResults = WinHttpQueryHeaders(hRequest,
-                                           WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
-                                           nullptr,
-                                           &http_code,
-                                           &junk,
-                                           WINHTTP_NO_HEADER_INDEX);
+            results = WinHttpQueryHeaders(request,
+                                          WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
+                                          nullptr,
+                                          &http_code,
+                                          &junk,
+                                          WINHTTP_NO_HEADER_INDEX);
         }
 
         std::vector<char> response_buffer;
-        if (bResults)
+        if (results)
         {
             DWORD available_data = 0, read_data = 0, total_data = 0;
-            while ((bResults = WinHttpQueryDataAvailable(hRequest, &available_data)) == TRUE && available_data > 0)
+            while ((results = WinHttpQueryDataAvailable(request, &available_data)) == TRUE && available_data > 0)
             {
                 response_buffer.resize(response_buffer.size() + available_data);
 
-                bResults = WinHttpReadData(hRequest, &response_buffer.data()[total_data], available_data, &read_data);
+                results = WinHttpReadData(request, &response_buffer.data()[total_data], available_data, &read_data);
 
-                if (!bResults)
+                if (!results)
                 {
                     break;
                 }
@@ -330,7 +329,7 @@ namespace vcpkg::Metrics
             }
         }
 
-        if (!bResults)
+        if (!results)
         {
 #ifndef NDEBUG
             __debugbreak();
@@ -339,22 +338,22 @@ namespace vcpkg::Metrics
 #endif
         }
 
-        if (hRequest) WinHttpCloseHandle(hRequest);
-        if (hConnect) WinHttpCloseHandle(hConnect);
-        if (hSession) WinHttpCloseHandle(hSession);
+        if (request) WinHttpCloseHandle(request);
+        if (connect) WinHttpCloseHandle(connect);
+        if (session) WinHttpCloseHandle(session);
     }
 
     static fs::path get_bindir()
     {
         wchar_t buf[_MAX_PATH];
-        int bytes = GetModuleFileNameW(nullptr, buf, _MAX_PATH);
+        const int bytes = GetModuleFileNameW(nullptr, buf, _MAX_PATH);
         if (bytes == 0) std::abort();
         return fs::path(buf, buf + bytes);
     }
 
     void Metrics::flush()
     {
-        std::string payload = g_metricmessage.format_event_data_template();
+        const std::string payload = g_metricmessage.format_event_data_template();
         if (g_should_print_metrics) std::cerr << payload << "\n";
         if (!g_should_send_metrics) return;
 
