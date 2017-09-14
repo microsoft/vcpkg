@@ -20,9 +20,9 @@ namespace vcpkg::Metrics
 
         _ftime_s(&timebuffer);
         time_t now = timebuffer.time;
-        int milli = timebuffer.millitm;
+        const int milli = timebuffer.millitm;
 
-        errno_t err = gmtime_s(&newtime, &now);
+        const errno_t err = gmtime_s(&newtime, &now);
         if (err)
         {
             return Strings::EMPTY;
@@ -34,7 +34,7 @@ namespace vcpkg::Metrics
 
     static std::string generate_random_UUID()
     {
-        int partSizes[] = {8, 4, 4, 4, 12};
+        int part_sizes[] = {8, 4, 4, 4, 12};
         char uuid[37];
         memset(uuid, 0, sizeof(uuid));
         int num;
@@ -50,7 +50,7 @@ namespace vcpkg::Metrics
 
             // Generating UUID format version 4
             // http://en.wikipedia.org/wiki/Universally_unique_identifier
-            for (int i = 0; i < partSizes[part]; i++, index++)
+            for (int i = 0; i < part_sizes[part]; i++, index++)
             {
                 if (part == 2 && i == 0)
                 {
@@ -81,8 +81,8 @@ namespace vcpkg::Metrics
 
     static const std::string& get_session_id()
     {
-        static const std::string id = generate_random_UUID();
-        return id;
+        static const std::string ID = generate_random_UUID();
+        return ID;
     }
 
     static std::string to_json_string(const std::string& str)
@@ -101,11 +101,11 @@ namespace vcpkg::Metrics
             else if (ch < 0x20 || ch >= 0x80)
             {
                 // Note: this treats incoming Strings as Latin-1
-                static constexpr const char hex[16] = {
+                static constexpr const char HEX[16] = {
                     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
                 encoded.append("\\u00");
-                encoded.push_back(hex[ch / 16]);
-                encoded.push_back(hex[ch % 16]);
+                encoded.push_back(HEX[ch / 16]);
+                encoded.push_back(HEX[ch % 16]);
             }
             else
             {
@@ -120,7 +120,7 @@ namespace vcpkg::Metrics
     {
         std::wstring path;
         path.resize(MAX_PATH);
-        auto n = GetSystemDirectoryW(&path[0], static_cast<UINT>(path.size()));
+        const auto n = GetSystemDirectoryW(&path[0], static_cast<UINT>(path.size()));
         path.resize(n);
         path += L"\\kernel32.dll";
 
@@ -282,10 +282,11 @@ namespace vcpkg::Metrics
         {
             if (MAXDWORD <= payload.size()) abort();
             std::wstring hdrs = L"Content-Type: application/json\r\n";
+            std::string& p = const_cast<std::string&>(payload);
             bResults = WinHttpSendRequest(hRequest,
                                           hdrs.c_str(),
                                           static_cast<DWORD>(hdrs.size()),
-                                          (void*)&payload[0],
+                                          static_cast<void*>(&p[0]),
                                           static_cast<DWORD>(payload.size()),
                                           static_cast<DWORD>(payload.size()),
                                           0);
@@ -308,24 +309,24 @@ namespace vcpkg::Metrics
                                            WINHTTP_NO_HEADER_INDEX);
         }
 
-        std::vector<char> responseBuffer;
+        std::vector<char> response_buffer;
         if (bResults)
         {
-            DWORD availableData = 0, readData = 0, totalData = 0;
-            while ((bResults = WinHttpQueryDataAvailable(hRequest, &availableData)) == TRUE && availableData > 0)
+            DWORD available_data = 0, read_data = 0, total_data = 0;
+            while ((bResults = WinHttpQueryDataAvailable(hRequest, &available_data)) == TRUE && available_data > 0)
             {
-                responseBuffer.resize(responseBuffer.size() + availableData);
+                response_buffer.resize(response_buffer.size() + available_data);
 
-                bResults = WinHttpReadData(hRequest, &responseBuffer.data()[totalData], availableData, &readData);
+                bResults = WinHttpReadData(hRequest, &response_buffer.data()[total_data], available_data, &read_data);
 
                 if (!bResults)
                 {
                     break;
                 }
 
-                totalData += readData;
+                total_data += read_data;
 
-                responseBuffer.resize(totalData);
+                response_buffer.resize(total_data);
             }
         }
 
@@ -388,8 +389,8 @@ namespace vcpkg::Metrics
         const fs::path vcpkg_metrics_txt_path = temp_folder_path / ("vcpkg" + generate_random_UUID() + ".txt");
         fs.write_contents(vcpkg_metrics_txt_path, payload);
 
-        const std::wstring cmdLine =
+        const std::wstring cmd_line =
             Strings::wformat(L"start %s %s", temp_folder_path_exe.native(), vcpkg_metrics_txt_path.native());
-        System::cmd_execute_clean(cmdLine);
+        System::cmd_execute_clean(cmd_line);
     }
 }
