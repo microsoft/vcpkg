@@ -104,7 +104,7 @@ static void inner(const VcpkgCmdArguments& args)
     return invalid_command(args.command);
 }
 
-static void loadConfig()
+static void load_config()
 {
     fs::path localappdata;
     {
@@ -207,7 +207,7 @@ int wmain(const int argc, const wchar_t* const* const argv)
         locked_metrics->track_property("version", Commands::Version::version());
         locked_metrics->track_property("cmdline", trimmed_command_line);
     }
-    loadConfig();
+    load_config();
     Metrics::g_metrics.lock()->track_property("sqmuser", Metrics::get_SQM_user());
 
     const VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(argc, argv);
