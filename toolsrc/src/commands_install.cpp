@@ -460,11 +460,6 @@ namespace vcpkg::Commands::Install
             const ElapsedTime build_timer = ElapsedTime::create_started();
             counter++;
 
-            if (counter > 2)
-            {
-                // break;
-            }
-
             const std::string display_name = action.spec().to_string();
             System::println("Starting package %d/%d: %s", counter, package_count, display_name);
 
