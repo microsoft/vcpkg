@@ -39,7 +39,8 @@ namespace vcpkg::Commands::Version
             {
                 if (maj1 != maj2 || min1 != min2 || rev1 != rev2)
                 {
-                    System::println("Different source is available for vcpkg (%d.%d.%d -> %d.%d.%d). Use "
+                    System::println(System::Color::warning,
+                                    "Warning: Different source is available for vcpkg (%d.%d.%d -> %d.%d.%d). Use "
                                     ".\\bootstrap-vcpkg.bat to update.",
                                     maj2,
                                     min2,
