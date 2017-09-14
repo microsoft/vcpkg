@@ -462,7 +462,7 @@ namespace vcpkg::Commands::Install
 
             if (counter > 2)
             {
-                break;
+                // break;
             }
 
             const std::string display_name = action.spec().to_string();
