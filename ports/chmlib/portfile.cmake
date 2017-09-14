@@ -1,5 +1,6 @@
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     message(STATUS "Warning: Dynamic building not supported. Building static.")
+    set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 
 set(CHMLIB_VERSION chmlib-0.40)
