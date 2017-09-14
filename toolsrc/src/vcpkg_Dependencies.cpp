@@ -213,6 +213,21 @@ namespace vcpkg::Dependencies
     {
     }
 
+    const PackageSpec& AnyAction::spec() const
+    {
+        if (const auto p = install_plan.get())
+        {
+            return p->spec;
+        }
+
+        if (const auto p = remove_plan.get())
+        {
+            return p->spec;
+        }
+
+        Checks::exit_with_message(VCPKG_LINE_INFO, "Null action");
+    }
+
     bool ExportPlanAction::compare_by_name(const ExportPlanAction* left, const ExportPlanAction* right)
     {
         return left->spec.name() < right->spec.name();

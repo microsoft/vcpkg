@@ -33,6 +33,22 @@ namespace vcpkg::Commands
 
     namespace Install
     {
+        enum class KeepGoing
+        {
+            NO = 0,
+            YES
+        };
+
+        inline KeepGoing to_keep_going(const bool value) { return value ? KeepGoing::YES : KeepGoing::NO; }
+
+        enum class PrintSummary
+        {
+            NO = 0,
+            YES
+        };
+
+        inline PrintSummary to_print_summary(const bool value) { return value ? PrintSummary::YES : PrintSummary::NO; }
+
         struct InstallDir
         {
             static InstallDir from_destination_root(const fs::path& destination_root,
@@ -67,6 +83,14 @@ namespace vcpkg::Commands
         InstallResult install_package(const VcpkgPaths& paths,
                                       const BinaryControlFile& binary_paragraph,
                                       StatusParagraphs* status_db);
+
+        void perform_and_exit(const std::vector<Dependencies::AnyAction>& action_plan,
+                              const Build::BuildPackageOptions& install_plan_options,
+                              const KeepGoing keep_going,
+                              const PrintSummary print_summary,
+                              const VcpkgPaths& paths,
+                              StatusParagraphs& status_db);
+
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
     }
 

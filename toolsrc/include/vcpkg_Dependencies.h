@@ -89,6 +89,8 @@ namespace vcpkg::Dependencies
 
         Optional<InstallPlanAction> install_plan;
         Optional<RemovePlanAction> remove_plan;
+
+        const PackageSpec& spec() const;
     };
 
     enum class ExportPlanType
