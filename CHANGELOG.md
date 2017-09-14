@@ -1,3 +1,22 @@
+vcpkg (0.0.89)
+--------------
+  * Update ports:
+    - boost                1.65-1 -> 1.65.1
+    - chmlib               0.40 -> 0.40-1
+    - pybind11             2.1.0-2 -> 2.2.0
+    - sciter               4.0.2-1 -> 4.0.3
+    - sqlite3              3.19.1-2 -> 3.20.1
+  * `vcpkg` now warns if the built version of the `vcpkg.exe` itself is outdated
+  * Update to latest python 3.5
+  * `vcpkg install` improvements:
+    - Add `--keep-going` option to keep going if a package fails to install
+    - Add elapsed time to each invidial package as well as total time
+    - Add a counter to the install (e.g. Starting package 3/12: <name>)
+  * `vcpkg edit` now checks more location for VSCode Insiders
+
+-- vcpkg team <vcpkg@microsoft.com>  SAT, 09 Sep 2017 00:30:00 -0800
+
+
 vcpkg (0.0.88)
 --------------
    * `vcpkg_configure_cmake` has been modified to embed debug symbols within static libraries (using the /Z7 option). Most of the libraries in `vcpkg` had their versions bumped due to this.
