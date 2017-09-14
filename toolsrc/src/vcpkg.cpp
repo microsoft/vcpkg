@@ -69,6 +69,7 @@ static void inner(const VcpkgCmdArguments& args)
     const VcpkgPaths paths = expected_paths.value_or_exit(VCPKG_LINE_INFO);
     const int exit_code = _wchdir(paths.root.c_str());
     Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Changing the working dir failed");
+    Commands::Version::warn_if_vcpkg_version_mismatch(paths);
 
     if (const auto command_function = Commands::find(args.command, Commands::get_available_commands_type_b()))
     {

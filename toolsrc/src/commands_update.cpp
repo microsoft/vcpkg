@@ -68,8 +68,6 @@ namespace vcpkg::Commands::Update
                             install_line);
         }
 
-        Version::warn_if_vcpkg_version_mismatch(paths);
-
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 }
