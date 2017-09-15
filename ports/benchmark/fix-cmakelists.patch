@@ -10,3 +10,4 @@ index 244484b..903dea4 100644
 +set(config_install_dir "share/${PROJECT_NAME}/cmake/")
 
  set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
+
