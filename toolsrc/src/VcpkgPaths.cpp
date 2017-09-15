@@ -97,10 +97,10 @@ namespace vcpkg
 
     static fs::path get_cmake_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
     {
-        static constexpr std::array<int, 3> EXPECTED_VERSION = {3, 9, 1};
+        static constexpr std::array<int, 3> EXPECTED_VERSION = {3, 9, 2};
         static const std::wstring VERSION_CHECK_ARGUMENTS = L"--version";
 
-        const fs::path downloaded_copy = downloads_folder / "cmake-3.9.1-win32-x86" / "bin" / "cmake.exe";
+        const fs::path downloaded_copy = downloads_folder / "cmake-3.9.2-win32-x86" / "bin" / "cmake.exe";
         const std::vector<fs::path> from_path = Files::find_from_PATH(L"cmake");
 
         std::vector<fs::path> candidate_paths;
