@@ -1,27 +1,12 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 4038875..94d2aea 100644
+index 244484b..903dea4 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -28,17 +28,20 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
- endif()
- 
- # Expose public API
--target_include_directories(benchmark PUBLIC ${PROJECT_SOURCE_DIR}/include)
-+target_include_directories(benchmark PRIVATE ${PROJECT_SOURCE_DIR}/include)
- 
- # Install target (will install the library to specified CMAKE_INSTALL_PREFIX variable)
- install(
-   TARGETS benchmark
-+  EXPORT benchmarkTargets
-   ARCHIVE DESTINATION lib
-   LIBRARY DESTINATION lib
-   RUNTIME DESTINATION bin
--  COMPONENT library)
-+  INCLUDES DESTINATION include)
- 
- install(
-   DIRECTORY "${PROJECT_SOURCE_DIR}/include/benchmark"
-   DESTINATION include
-   FILES_MATCHING PATTERN "*.*h")
-+
-+install(EXPORT benchmarkTargets NAMESPACE benchmark:: DESTINATION share/benchmark)
+@@ -37,7 +37,7 @@ endif()
+ set(include_install_dir "include")
+ set(lib_install_dir "lib/")
+ set(bin_install_dir "bin/")
+-set(config_install_dir "lib/cmake/${PROJECT_NAME}")
++set(config_install_dir "share/${PROJECT_NAME}/cmake/")
+
+ set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
