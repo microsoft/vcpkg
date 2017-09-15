@@ -14,7 +14,7 @@ vcpkg (0.0.89)
     - Add a counter to the install (e.g. Starting package 3/12: <name>)
   * `vcpkg edit` now checks more location for VSCode Insiders
 
--- vcpkg team <vcpkg@microsoft.com>  SAT, 09 Sep 2017 00:30:00 -0800
+-- vcpkg team <vcpkg@microsoft.com>  WED, 14 Sep 2017 16:00:00 -0800
 
 
 vcpkg (0.0.88)
