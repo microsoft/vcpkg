@@ -1,0 +1,27 @@
+From c1e05c1d8f378b35c3902fb6ec5b647683ad2b62 Mon Sep 17 00:00:00 2001
+From: Raynor Vliegendhart <ShinNoNoir@gmail.com>
+Date: Mon, 18 Sep 2017 11:17:25 +0200
+Subject: [PATCH] Fix project root dir
+
+---
+ CMakeLists.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 47a2b00..704bbb3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -11,7 +11,9 @@ if (NOT WIN32)
+   set (PROJECT_ROOT_DIR "../../..")
+ else ()
+   set (INSTALL_CMAKE_DIR "cmake")
+-  set (PROJECT_ROOT_DIR "..")
++  # this file will be moved to $vcpkg/installed/$triplet/share/geotiff
++  # change ".." to "../.."
++  set (PROJECT_ROOT_DIR "../..")
+ endif ()
+ 
+ configure_file (project-config.cmake.in project-config.cmake @ONLY)
+-- 
+2.13.3.windows.1
+

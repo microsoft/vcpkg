@@ -19,6 +19,12 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+# Fix generation of geotiff-config.cmake file:
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}/cmake
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-config-cmake.patch
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
@@ -29,6 +35,25 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+# Move and fix cmake files
+file(GLOB RELEASE_CMAKE_FILES "${CURRENT_PACKAGES_DIR}/cmake/*.cmake")
+file(INSTALL ${RELEASE_CMAKE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
+vcpkg_apply_patches(
+    SOURCE_PATH ${CURRENT_PACKAGES_DIR}/share/geotiff
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-import-prefix.patch
+)
+file(GLOB DEBUG_CMAKE_FILES "${CURRENT_PACKAGES_DIR}/debug/cmake/*-depends-debug.cmake")
+foreach(DEBUG_CMAKE_FILE ${DEBUG_CMAKE_FILES})
+    file(READ ${DEBUG_CMAKE_FILE} CONTENTS)
+    string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" CONTENTS "${CONTENTS}")
+    file(WRITE ${DEBUG_CMAKE_FILE} "${CONTENTS}")
+endforeach()
+file(INSTALL ${DEBUG_CMAKE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake)
+
+
+
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff RENAME copyright)
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff RENAME COPYING)
@@ -38,9 +63,6 @@ file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ge
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-# Remove cmake directory
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
 
 # Remove doc directory
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc)

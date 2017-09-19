@@ -1,0 +1,24 @@
+From 0d2614e8e8046e02585753a9cb67eb881f97add8 Mon Sep 17 00:00:00 2001
+From: Raynor Vliegendhart <ShinNoNoir@gmail.com>
+Date: Mon, 18 Sep 2017 13:43:23 +0200
+Subject: [PATCH] Fix _IMPORT_PREFIX
+
+---
+ geotiff-depends.cmake | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/geotiff-depends.cmake b/geotiff-depends.cmake
+index f3cabdb..389329e 100644
+--- a/geotiff-depends.cmake
++++ b/geotiff-depends.cmake
+@@ -44,6 +44,7 @@ unset(_expectedTargets)
+ # Compute the installation prefix relative to this file.
+ get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
++get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+ if(_IMPORT_PREFIX STREQUAL "/")
+   set(_IMPORT_PREFIX "")
+ endif()
+-- 
+2.13.3.windows.1
+
