@@ -15,14 +15,14 @@ vcpkg_extract_source_archive(${ARCHIVE_FILE})
 vcpkg_download_distfile(DIFF
     URLS "https://github.com/boostorg/range/commit/e7ebe14707130cda7b72e0ae5e93b17157fdb6a2.diff"
     FILENAME "boost-range-has_range_iterator-hotfix_e7ebe14707130cda7b72e0ae5e93b17157fdb6a2.diff"
-    SHA512 77dad42bfd9bbab2bbddf361d5b7ad3dd6f812f4294c6dd1a677bb4d0191a4fff43bca32fdd4fce05d428562abb6e38afd0fd33ca6a8b5f28481d70cd2f3dd67
+    SHA512 88392fcf092d07ee2de66d937634688eef1d7491a4e2fb0fce064b4e631813a0814455a329f9eed8b968ff205883751d51a86edecc8e355790fc8a35d6742483
 )
 
 # apply boost TLS fix for VS2017
 vcpkg_download_distfile(TLS_DIFF
     URLS "https://github.com/boostorg/thread/commit/bd0379af57fa294df310221492da618844182658.diff"
     FILENAME "boost-thread-on_tls_callback-bd0379af57fa294df310221492da618844182658.diff"
-    SHA512 29501de9da5d101c762c9617eb74f072ec47eb9ef0021f036545bc883cbeb09c24b2ba7f78c24fb1a5d6b1fb3d7ae1def05a75be8634fc32bde0dface571c0a8
+    SHA512 b4ffa199fad43041cc0144d7a6f0c4ced600f2ad77f0b244d40d77c81fca9dfb843ebba33a48ad80e6c96a7f932f16fe421565a7fc8bb251ed57264fed813d88
 )
 
 FILE(READ "${DIFF}" content)
