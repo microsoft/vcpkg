@@ -34,7 +34,7 @@ namespace vcpkg::Commands::Edit
         static const std::string OPTION_BUILDTREES = "--buildtrees";
 
         static const fs::path VS_CODE_INSIDERS = fs::path{"Microsoft VS Code Insiders"} / "Code - Insiders.exe";
-        static const fs::path VS_CODE = fs::path{"Microsoft VS Code Insiders"} / "Code - Insiders.exe";
+        static const fs::path VS_CODE = fs::path{"Microsoft VS Code"} / "Code.exe";
 
         auto& fs = paths.get_filesystem();
 
