@@ -50,7 +50,9 @@ By saving the changes to the portfile (and checking them in), you'll get the sam
 
 Yes. While Vcpkg will only produce the standard "Release" and "Debug" configurations when building a library, you can get integration support for your projects' custom configurations, in addition to your project's standard configurations.
 
-The MSBuild $(VcpkgConfiguration) macro, if not set in your project, will identify either the "Release" or the "Debug" configuration. You only need to override this macro in your project file (.vcxproj) to declare the compatibility between your configuration, and the target standard configuration.
+First of all, Vcpkg will automatically assume any custom configuration starting with "Release" (resp. "Debug") as a configuration that is compatible with the standard "Release" (resp. "Debug") configuration and will act accordingly.
+
+For other configurations, you only need to override the MSBuild `$(VcpkgConfiguration)` macro in your project file (.vcxproj) to declare the compatibility between your configuration, and the target standard configuration.
 
 For example, you can add support for your "MyRelease" configuration by adding in your project file:
 ```
