@@ -257,7 +257,8 @@ namespace vcpkg::Commands::Export
 
         if (!raw && !nuget && !ifw && !zip && !seven_zip && !dry_run)
         {
-            System::println(System::Color::error, "Must provide at least one export type: --raw --nuget --ifw --zip --7zip");
+            System::println(System::Color::error,
+                            "Must provide at least one export type: --raw --nuget --ifw --zip --7zip");
             System::print(EXAMPLE);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
@@ -271,7 +272,8 @@ namespace vcpkg::Commands::Export
 
         auto maybe_ifw_repository_url = maybe_lookup(options.settings, OPTION_IFW_REPOSITORY_URL);
 
-        Checks::check_exit(VCPKG_LINE_INFO, !maybe_ifw_repository_url || ifw, "--ifw-repository-url is only valid with --ifw");
+        Checks::check_exit(
+            VCPKG_LINE_INFO, !maybe_ifw_repository_url || ifw, "--ifw-repository-url is only valid with --ifw");
 
         // create the plan
         const StatusParagraphs status_db = database_load_check(paths);
@@ -354,10 +356,10 @@ namespace vcpkg::Commands::Export
                 spec_exported_dir_path = IFW::export_real_package(raw_exported_dir_path, action, fs);
             }
 
-            const InstallDir dirs = InstallDir::from_destination_root(
-                spec_exported_dir_path,
-                action.spec.triplet().to_string(),
-                spec_exported_dir_path / "vcpkg" / "info" / (binary_paragraph.fullstem() + ".list"));
+            const InstallDir dirs = InstallDir::from_destination_root(spec_exported_dir_path,
+                                                                      action.spec.triplet().to_string(),
+                                                                      spec_exported_dir_path / "vcpkg" / "info" /
+                                                                          (binary_paragraph.fullstem() + ".list"));
 
             Install::install_files_and_write_listfile(paths.get_filesystem(), paths.package_dir(action.spec), dirs);
             System::println(System::Color::success, "Exporting package %s... done", display_name);
@@ -391,9 +393,9 @@ namespace vcpkg::Commands::Export
 
         if (ifw)
         {
-            // Unigue packages
+            // Unique packages
             IFW::export_unique_packages(raw_exported_dir_path, unique_packages, fs);
-            // Unigue triplets
+            // Unique triplets
             IFW::export_unique_triplets(raw_exported_dir_path, unique_triplets, fs);
             // Integration
             IFW::export_integration(raw_exported_dir_path, fs);
