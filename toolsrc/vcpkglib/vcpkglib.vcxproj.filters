@@ -221,6 +221,9 @@
     <ClInclude Include="..\include\vcpkg_Commands.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\vcpkg_Commands_Export.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\include\vcpkg_Commands_Export_IFW.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -5,9 +5,12 @@
 
 namespace vcpkg::Commands::Export::IFW
 {
-    fs::path export_real_package(const fs::path &raw_exported_dir_path, const Dependencies::ExportPlanAction& action, Files::Filesystem& fs);
-    void export_unique_packages(const fs::path &raw_exported_dir_path, std::map<std::string, const Dependencies::ExportPlanAction*> unique_packages, Files::Filesystem& fs);
-    void export_unique_triplets(const fs::path &raw_exported_dir_path, std::set<std::string> unique_triplets, Files::Filesystem& fs);
-    void export_integration(const fs::path &raw_exported_dir_path, Files::Filesystem& fs);
-    void export_config(const fs::path &raw_exported_dir_path, const std::string ifw_repository_url, Files::Filesystem& fs);
+    struct Options
+    {
+        Optional<std::string> maybe_repository_url;
+        Optional<std::string> maybe_packages_dir_path;
+        Optional<std::string> maybe_config_file_path;
+    };
+
+    void do_export(const std::vector<Dependencies::ExportPlanAction> &export_plan, const std::string &export_id, const Options &ifw_options, const VcpkgPaths& paths);
 }
