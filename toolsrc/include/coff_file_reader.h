@@ -3,7 +3,7 @@
 #include "filesystem_fs.h"
 #include <vector>
 
-namespace vcpkg::COFFFileReader
+namespace vcpkg::CoffFileReader
 {
     struct DllInfo
     {

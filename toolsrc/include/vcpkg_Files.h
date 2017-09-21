@@ -38,4 +38,6 @@ namespace vcpkg::Files
     bool has_invalid_chars_for_filesystem(const std::string& s);
 
     void print_paths(const std::vector<fs::path>& paths);
+
+    std::vector<fs::path> find_from_PATH(const std::wstring& name);
 }

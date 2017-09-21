@@ -67,7 +67,7 @@ namespace vcpkg
     {
         Checks::check_exit(VCPKG_LINE_INFO, pgh != nullptr, "Inserted null paragraph");
         const PackageSpec& spec = pgh->package.spec;
-        auto ptr = find(spec.name(), spec.triplet(), pgh->package.feature);
+        const auto ptr = find(spec.name(), spec.triplet(), pgh->package.feature);
         if (ptr == end())
         {
             paragraphs.push_back(std::move(pgh));

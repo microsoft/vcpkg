@@ -33,8 +33,8 @@ namespace vcpkg
         this->package = BinaryParagraph(std::move(fields));
 
         auto b = status_field.begin();
-        auto mark = b;
-        auto e = status_field.end();
+        const auto mark = b;
+        const auto e = status_field.end();
 
         // Todo: improve error handling
         while (b != e && *b != ' ')

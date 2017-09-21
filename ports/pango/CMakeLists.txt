@@ -81,6 +81,7 @@ pango_add_module(pango
     pango/pango-color.c
     pango/pango-context.c
     pango/pango-coverage.c
+    pango/pango-emoji.c
     pango/pango-engine.c
     pango/pango-fontmap.c
     pango/pango-fontset.c

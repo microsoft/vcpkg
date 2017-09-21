@@ -1,4 +1,4 @@
 Source: gdk-pixbuf
-Version: 2.36.6
+Version: 2.36.9-1
 Description: Image loading library.
 Build-Depends: gettext, zlib, libpng, glib

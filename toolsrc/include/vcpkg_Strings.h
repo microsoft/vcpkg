@@ -36,6 +36,9 @@ namespace vcpkg::Strings::details
 
 namespace vcpkg::Strings
 {
+    static constexpr const char* EMPTY = "";
+    static constexpr const wchar_t* WEMPTY = L"";
+
     template<class... Args>
     std::string format(const char* fmtstr, const Args&... args)
     {
@@ -65,20 +68,20 @@ namespace vcpkg::Strings
     template<class Container, class Transformer, class CharType>
     std::basic_string<CharType> join(const CharType* delimiter, const Container& v, Transformer transformer)
     {
-        if (v.size() == 0)
+        const auto begin = v.begin();
+        const auto end = v.end();
+
+        if (begin == end)
         {
             return std::basic_string<CharType>();
         }
 
         std::basic_string<CharType> output;
-        size_t size = v.size();
-
-        output.append(transformer(v[0]));
-
-        for (size_t i = 1; i < size; ++i)
+        output.append(transformer(*begin));
+        for (auto it = std::next(begin); it != end; ++it)
         {
             output.append(delimiter);
-            output.append(transformer(v[i]));
+            output.append(transformer(*it));
         }
 
         return output;
@@ -86,7 +89,7 @@ namespace vcpkg::Strings
     template<class Container, class CharType>
     std::basic_string<CharType> join(const CharType* delimiter, const Container& v)
     {
-        using Element = decltype(v[0]);
+        using Element = decltype(*v.begin());
         return join(delimiter, v, [](const Element& x) -> const Element& { return x; });
     }
 

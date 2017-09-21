@@ -8,11 +8,11 @@
 
 namespace vcpkg::Commands::Integrate
 {
-    static const std::array<fs::path, 2> old_system_target_files = {
-        System::get_ProgramFiles_32_bit() / "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.nuget.targets",
-        System::get_ProgramFiles_32_bit() / "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.system.targets"};
-    static const fs::path system_wide_targets_file =
-        System::get_ProgramFiles_32_bit() / "MSBuild/Microsoft.Cpp/v4.0/V140/ImportBefore/Default/vcpkg.system.props";
+    static const std::array<fs::path, 2> OLD_SYSTEM_TARGET_FILES = {
+        System::get_program_files_32_bit() / "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.nuget.targets",
+        System::get_program_files_32_bit() / "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.system.targets"};
+    static const fs::path SYSTEM_WIDE_TARGETS_FILE =
+        System::get_program_files_32_bit() / "MSBuild/Microsoft.Cpp/v4.0/V140/ImportBefore/Default/vcpkg.system.props";
 
     static std::string create_appdata_targets_shortcut(const std::string& target_path) noexcept
     {
@@ -82,7 +82,7 @@ namespace vcpkg::Commands::Integrate
                                                    const std::string& nuget_id,
                                                    const std::string& nupkg_version)
     {
-        static constexpr auto content_template = R"(
+        static constexpr auto CONTENT_TEMPLATE = R"(
 <package>
     <metadata>
         <id>@NUGET_ID@</id>
@@ -99,7 +99,7 @@ namespace vcpkg::Commands::Integrate
 </package>
 )";
 
-        std::string content = std::regex_replace(content_template, std::regex("@NUGET_ID@"), nuget_id);
+        std::string content = std::regex_replace(CONTENT_TEMPLATE, std::regex("@NUGET_ID@"), nuget_id);
         content = std::regex_replace(content, std::regex("@VCPKG_DIR@"), vcpkg_root_dir.string());
         content = std::regex_replace(content, std::regex("@VERSION@"), nupkg_version);
         return content;
@@ -113,36 +113,36 @@ namespace vcpkg::Commands::Integrate
 
     static ElevationPromptChoice elevated_cmd_execute(const std::string& param)
     {
-        SHELLEXECUTEINFO shExInfo = {0};
-        shExInfo.cbSize = sizeof(shExInfo);
-        shExInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
-        shExInfo.hwnd = nullptr;
-        shExInfo.lpVerb = "runas";
-        shExInfo.lpFile = "cmd"; // Application to start
+        SHELLEXECUTEINFO sh_ex_info = {0};
+        sh_ex_info.cbSize = sizeof(sh_ex_info);
+        sh_ex_info.fMask = SEE_MASK_NOCLOSEPROCESS;
+        sh_ex_info.hwnd = nullptr;
+        sh_ex_info.lpVerb = "runas";
+        sh_ex_info.lpFile = "cmd"; // Application to start
 
-        shExInfo.lpParameters = param.c_str(); // Additional parameters
-        shExInfo.lpDirectory = nullptr;
-        shExInfo.nShow = SW_HIDE;
-        shExInfo.hInstApp = nullptr;
+        sh_ex_info.lpParameters = param.c_str(); // Additional parameters
+        sh_ex_info.lpDirectory = nullptr;
+        sh_ex_info.nShow = SW_HIDE;
+        sh_ex_info.hInstApp = nullptr;
 
-        if (!ShellExecuteExA(&shExInfo))
+        if (!ShellExecuteExA(&sh_ex_info))
         {
             return ElevationPromptChoice::NO;
         }
-        if (shExInfo.hProcess == nullptr)
+        if (sh_ex_info.hProcess == nullptr)
         {
             return ElevationPromptChoice::NO;
         }
-        WaitForSingleObject(shExInfo.hProcess, INFINITE);
-        CloseHandle(shExInfo.hProcess);
+        WaitForSingleObject(sh_ex_info.hProcess, INFINITE);
+        CloseHandle(sh_ex_info.hProcess);
         return ElevationPromptChoice::YES;
     }
 
     static fs::path get_appdata_targets_path()
     {
-        static const fs::path local_app_data =
+        static const fs::path LOCAL_APP_DATA =
             fs::path(System::get_environment_variable(L"LOCALAPPDATA").value_or_exit(VCPKG_LINE_INFO));
-        return local_app_data / "vcpkg" / "vcpkg.user.targets";
+        return LOCAL_APP_DATA / "vcpkg" / "vcpkg.user.targets";
     }
 
     static void integrate_install(const VcpkgPaths& paths)
@@ -150,13 +150,13 @@ namespace vcpkg::Commands::Integrate
         auto& fs = paths.get_filesystem();
 
         // TODO: This block of code should eventually be removed
-        for (auto&& old_system_wide_targets_file : old_system_target_files)
+        for (auto&& old_system_wide_targets_file : OLD_SYSTEM_TARGET_FILES)
         {
             if (fs.exists(old_system_wide_targets_file))
             {
                 const std::string param =
                     Strings::format(R"(/c DEL "%s" /Q > nul)", old_system_wide_targets_file.string());
-                ElevationPromptChoice user_choice = elevated_cmd_execute(param);
+                const ElevationPromptChoice user_choice = elevated_cmd_execute(param);
                 switch (user_choice)
                 {
                     case ElevationPromptChoice::YES: break;
@@ -174,15 +174,15 @@ namespace vcpkg::Commands::Integrate
         fs.create_directory(tmp_dir, ec);
 
         bool should_install_system = true;
-        const Expected<std::string> system_wide_file_contents = fs.read_contents(system_wide_targets_file);
-        if (auto contents_data = system_wide_file_contents.get())
+        const Expected<std::string> system_wide_file_contents = fs.read_contents(SYSTEM_WIDE_TARGETS_FILE);
+        static const std::regex RE(R"###(<!-- version (\d+) -->)###");
+        if (const auto contents_data = system_wide_file_contents.get())
         {
-            std::regex re(R"###(<!-- version (\d+) -->)###");
             std::match_results<std::string::const_iterator> match;
-            auto found = std::regex_search(*contents_data, match, re);
+            const auto found = std::regex_search(*contents_data, match, RE);
             if (found)
             {
-                int ver = atoi(match[1].str().c_str());
+                const int ver = atoi(match[1].str().c_str());
                 if (ver >= 1) should_install_system = false;
             }
         }
@@ -193,10 +193,10 @@ namespace vcpkg::Commands::Integrate
             fs.write_contents(sys_src_path, create_system_targets_shortcut());
 
             const std::string param = Strings::format(R"(/c mkdir "%s" & copy "%s" "%s" /Y > nul)",
-                                                      system_wide_targets_file.parent_path().string(),
+                                                      SYSTEM_WIDE_TARGETS_FILE.parent_path().string(),
                                                       sys_src_path.string(),
-                                                      system_wide_targets_file.string());
-            ElevationPromptChoice user_choice = elevated_cmd_execute(param);
+                                                      SYSTEM_WIDE_TARGETS_FILE.string());
+            const ElevationPromptChoice user_choice = elevated_cmd_execute(param);
             switch (user_choice)
             {
                 case ElevationPromptChoice::YES: break;
@@ -207,9 +207,9 @@ namespace vcpkg::Commands::Integrate
             }
 
             Checks::check_exit(VCPKG_LINE_INFO,
-                               fs.exists(system_wide_targets_file),
+                               fs.exists(SYSTEM_WIDE_TARGETS_FILE),
                                "Error: failed to copy targets file to %s",
-                               system_wide_targets_file.string());
+                               SYSTEM_WIDE_TARGETS_FILE.string());
         }
 
         const fs::path appdata_src_path = tmp_dir / "vcpkg.user.targets";
@@ -217,7 +217,7 @@ namespace vcpkg::Commands::Integrate
                           create_appdata_targets_shortcut(paths.buildsystems_msbuild_targets.string()));
         auto appdata_dst_path = get_appdata_targets_path();
 
-        auto rc = fs.copy_file(appdata_src_path, appdata_dst_path, fs::copy_options::overwrite_existing, ec);
+        const auto rc = fs.copy_file(appdata_src_path, appdata_dst_path, fs::copy_options::overwrite_existing, ec);
 
         if (!rc || ec)
         {
@@ -245,7 +245,7 @@ namespace vcpkg::Commands::Integrate
         const fs::path path = get_appdata_targets_path();
 
         std::error_code ec;
-        bool was_deleted = fs.remove(path, ec);
+        const bool was_deleted = fs.remove(path, ec);
 
         Checks::check_exit(VCPKG_LINE_INFO, !ec, "Error: Unable to remove user-wide integration: %d", ec.message());
 
@@ -317,10 +317,10 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const std::string example = Strings::format("Commands:\n"
+        static const std::string EXAMPLE = Strings::format("Commands:\n"
                                                            "%s",
                                                            INTEGRATE_COMMAND_HELPSTRING);
-        args.check_exact_arg_count(1, example);
+        args.check_exact_arg_count(1, EXAMPLE);
         args.check_and_get_optional_command_arguments({});
 
         if (args.command_arguments[0] == "install")

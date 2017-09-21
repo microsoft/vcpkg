@@ -28,6 +28,7 @@ vcpkg_apply_patches(
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/PerlScriptSpaceInPathFixes.patch
             ${CMAKE_CURRENT_LIST_DIR}/ConfigureIncludeQuotesFix.patch
             ${CMAKE_CURRENT_LIST_DIR}/STRINGIFYPatch.patch
+            ${CMAKE_CURRENT_LIST_DIR}/EmbedSymbolsInStaticLibsZ7.patch
 )
 
 set(CONFIGURE_COMMAND ${PERL} Configure

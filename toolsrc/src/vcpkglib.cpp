@@ -39,7 +39,7 @@ namespace vcpkg
     {
         auto& fs = paths.get_filesystem();
 
-        auto updates_dir = paths.vcpkg_dir_updates;
+        const auto updates_dir = paths.vcpkg_dir_updates;
 
         std::error_code ec;
         fs.create_directory(paths.installed, ec);
@@ -90,9 +90,9 @@ namespace vcpkg
         static int update_id = 0;
         auto& fs = paths.get_filesystem();
 
-        auto my_update_id = update_id++;
-        auto tmp_update_filename = paths.vcpkg_dir_updates / "incomplete";
-        auto update_filename = paths.vcpkg_dir_updates / std::to_string(my_update_id);
+        const auto my_update_id = update_id++;
+        const auto tmp_update_filename = paths.vcpkg_dir_updates / "incomplete";
+        const auto update_filename = paths.vcpkg_dir_updates / std::to_string(my_update_id);
 
         fs.write_contents(tmp_update_filename, Strings::serialize(p));
         fs.rename(tmp_update_filename, update_filename);
@@ -189,7 +189,7 @@ namespace vcpkg
 
         for (const std::unique_ptr<StatusParagraph>& pgh : status_db)
         {
-            if (pgh->state != InstallState::INSTALLED || pgh->package.feature != "")
+            if (pgh->state != InstallState::INSTALLED || !pgh->package.feature.empty())
             {
                 continue;
             }
@@ -233,7 +233,7 @@ namespace vcpkg
                                 const fs::path& cmake_script,
                                 const std::vector<CMakeVariable>& pass_variables)
     {
-        std::wstring cmd_cmake_pass_variables = Strings::join(L" ", pass_variables, [](auto&& v) { return v.s; });
+        const std::wstring cmd_cmake_pass_variables = Strings::join(L" ", pass_variables, [](auto&& v) { return v.s; });
         return Strings::wformat(
             LR"("%s" %s -P "%s")", cmake_exe.native(), cmd_cmake_pass_variables, cmake_script.generic_wstring());
     }

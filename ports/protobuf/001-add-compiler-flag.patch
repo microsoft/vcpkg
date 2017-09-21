@@ -1,14 +1,13 @@
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index 7618ba21..bd92b09d 100644
+index 7618ba2..d282a60 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
-@@ -165,8 +165,11 @@ endif (protobuf_UNICODE)
+@@ -165,8 +165,10 @@ endif (protobuf_UNICODE)
  
  include(libprotobuf-lite.cmake)
  include(libprotobuf.cmake)
 -include(libprotoc.cmake)
 -include(protoc.cmake)
-+
 +if(protobuf_BUILD_COMPILER)
 +  include(libprotoc.cmake)
 +  include(protoc.cmake)
@@ -16,18 +15,26 @@ index 7618ba21..bd92b09d 100644
  
  if (protobuf_BUILD_TESTS)
    include(tests.cmake)
+
 diff --git a/cmake/install.cmake b/cmake/install.cmake
-index 28dc90dc..52c1f721 100644
+index 441bf55..4158820 100644
 --- a/cmake/install.cmake
 +++ b/cmake/install.cmake
-@@ -1,9 +1,12 @@
+@@ -1,14 +1,17 @@
  include(GNUInstallDirs)
  
+-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/protobuf.pc.cmake
 +set(LIBRARIES_TO_SET_DEST libprotobuf-lite libprotobuf)
 +if(protobuf_BUILD_COMPILER)
 +  list(APPEND LIBRARIES_TO_SET_DEST libprotoc)
 +endif()
 +
++configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libprotobuf.cmake
+                ${CMAKE_CURRENT_BINARY_DIR}/protobuf.pc @ONLY)
+-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/protobuf-lite.pc.cmake
++configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libprotobuf-lite.cmake
+                ${CMAKE_CURRENT_BINARY_DIR}/protobuf-lite.pc @ONLY)
+ 
  foreach(_library
 -  libprotobuf-lite
 -  libprotobuf
@@ -36,7 +43,7 @@ index 28dc90dc..52c1f721 100644
    set_property(TARGET ${_library}
      PROPERTY INTERFACE_INCLUDE_DIRECTORIES
      $<BUILD_INTERFACE:${protobuf_source_dir}/src>
-@@ -14,8 +17,10 @@ foreach(_library
+@@ -19,8 +22,10 @@ foreach(_library
      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT ${_library})
  endforeach()
  
@@ -47,9 +54,9 @@ index 28dc90dc..52c1f721 100644
 +    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT protoc)
 +endif()
  
- file(STRINGS extract_includes.bat.in _extract_strings
-   REGEX "^copy")
-@@ -94,7 +99,12 @@ configure_file(protobuf-options.cmake
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/protobuf.pc ${CMAKE_CURRENT_BINARY_DIR}/protobuf-lite.pc DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+ 
+@@ -101,7 +106,12 @@ configure_file(protobuf-options.cmake
    ${CMAKE_INSTALL_CMAKEDIR}/protobuf-options.cmake @ONLY)
  
  # Allows the build directory to be used as a find directory.

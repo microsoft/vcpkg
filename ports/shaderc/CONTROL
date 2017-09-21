@@ -1,4 +1,4 @@
 Source: shaderc
-Version: 2df47b51d83ad83cbc2e7f8ff2b56776293e8958
+Version: 12fb656ab20ea9aa06e7084a74e5ff832b7ce2da-1
 Description: A collection of tools, libraries and tests for shader compilation.
 Build-Depends: glslang, spirv-tools

@@ -7,6 +7,7 @@
 #include "vcpkg_Dependencies.h"
 #include "vcpkg_Files.h"
 #include "vcpkg_Graphs.h"
+#include "vcpkg_Strings.h"
 #include "vcpkg_Util.h"
 #include "vcpkglib.h"
 
@@ -36,7 +37,7 @@ namespace vcpkg::Dependencies
     {
         Cluster* ptr;
 
-        Cluster* operator->() { return ptr; }
+        Cluster* operator->() const { return ptr; }
     };
 
     bool operator==(const ClusterPtr& l, const ClusterPtr& r) { return l.ptr == r.ptr; }
@@ -86,7 +87,7 @@ namespace vcpkg::Dependencies
         }
 
     private:
-        void cluster_from_scf(const SourceControlFile& scf, Cluster& out_cluster)
+        void cluster_from_scf(const SourceControlFile& scf, Cluster& out_cluster) const
         {
             FeatureNodeEdges core_dependencies;
             core_dependencies.build_edges =
@@ -166,7 +167,7 @@ namespace vcpkg::Dependencies
     InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
                                          const AnyParagraph& any_paragraph,
                                          const RequestType& request_type)
-        : spec(spec), request_type(request_type), plan_type(InstallPlanType::UNKNOWN), any_paragraph(any_paragraph)
+        : spec(spec), any_paragraph(any_paragraph), plan_type(InstallPlanType::UNKNOWN), request_type(request_type)
     {
         if (auto p = any_paragraph.status_paragraph.get())
         {
@@ -193,17 +194,9 @@ namespace vcpkg::Dependencies
         {
             return this->spec.to_string();
         }
-        else
-        {
-            std::string features;
-            for (auto&& feature : this->feature_list)
-            {
-                features += feature + ",";
-            }
-            features.pop_back();
 
-            return this->spec.name() + "[" + features + "]:" + this->spec.triplet().to_string();
-        }
+        const std::string features = Strings::join(",", this->feature_list);
+        return Strings::format("%s[%s]:%s", this->spec.name(), features, this->spec.triplet());
     }
 
     bool InstallPlanAction::compare_by_name(const InstallPlanAction* left, const InstallPlanAction* right)
@@ -218,6 +211,21 @@ namespace vcpkg::Dependencies
                                        const RequestType& request_type)
         : spec(spec), plan_type(plan_type), request_type(request_type)
     {
+    }
+
+    const PackageSpec& AnyAction::spec() const
+    {
+        if (const auto p = install_plan.get())
+        {
+            return p->spec;
+        }
+
+        if (const auto p = remove_plan.get())
+        {
+            return p->spec;
+        }
+
+        Checks::exit_with_message(VCPKG_LINE_INFO, "Null action");
     }
 
     bool ExportPlanAction::compare_by_name(const ExportPlanAction* left, const ExportPlanAction* right)
@@ -450,7 +458,7 @@ namespace vcpkg::Dependencies
 
     MarkPlusResult mark_plus(const std::string& feature, Cluster& cluster, ClusterGraph& graph, GraphPlan& graph_plan)
     {
-        if (feature == "")
+        if (feature.empty())
         {
             // Indicates that core was not specified in the reference
             return mark_plus("core", cluster, graph, graph_plan);
@@ -558,7 +566,7 @@ namespace vcpkg::Dependencies
 
             auto& status_paragraph_feature = status_paragraph->package.feature;
             // In this case, empty string indicates the "core" paragraph for a package.
-            if (status_paragraph_feature == "")
+            if (status_paragraph_feature.empty())
             {
                 cluster.original_features.insert("core");
             }
@@ -580,7 +588,7 @@ namespace vcpkg::Dependencies
                 auto& dep_cluster = graph.get(dependency.spec());
 
                 auto depends_name = dependency.feature();
-                if (depends_name == "") depends_name = "core";
+                if (depends_name.empty()) depends_name = "core";
 
                 auto& target_node = dep_cluster.edges[depends_name];
                 target_node.remove_edges.emplace_back(FeatureSpec{spec, status_paragraph_feature});
