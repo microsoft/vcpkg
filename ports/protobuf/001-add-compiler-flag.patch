@@ -17,22 +17,20 @@ index 7618ba2..d282a60 100644
    include(tests.cmake)
 
 diff --git a/cmake/install.cmake b/cmake/install.cmake
-index 441bf55..4158820 100644
+index 441bf55..20b3aa0 100644
 --- a/cmake/install.cmake
 +++ b/cmake/install.cmake
 @@ -1,14 +1,17 @@
  include(GNUInstallDirs)
  
--configure_file(${CMAKE_CURRENT_SOURCE_DIR}/protobuf.pc.cmake
 +set(LIBRARIES_TO_SET_DEST libprotobuf-lite libprotobuf)
 +if(protobuf_BUILD_COMPILER)
 +  list(APPEND LIBRARIES_TO_SET_DEST libprotoc)
 +endif()
 +
-+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libprotobuf.cmake
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/protobuf.pc.cmake
                 ${CMAKE_CURRENT_BINARY_DIR}/protobuf.pc @ONLY)
--configure_file(${CMAKE_CURRENT_SOURCE_DIR}/protobuf-lite.pc.cmake
-+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libprotobuf-lite.cmake
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/protobuf-lite.pc.cmake
                 ${CMAKE_CURRENT_BINARY_DIR}/protobuf-lite.pc @ONLY)
  
  foreach(_library

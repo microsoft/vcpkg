@@ -1,15 +1,16 @@
 include(vcpkg_common_functions)
 
-set(PROTOBUF_VERSION 3.4.0)
+set(PROTOBUF_VERSION 3.4.1)
+set(PROTOC_VERSION 3.4.0)
 
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "https://github.com/google/protobuf/releases/download/v${PROTOBUF_VERSION}/protobuf-cpp-${PROTOBUF_VERSION}.tar.gz"
     FILENAME "protobuf-cpp-${PROTOBUF_VERSION}.tar.gz"
-    SHA512 ce9bd9bc818c4a8e8b08c83e8a4eba6fca008a64a5ad9d322b19683b1de2b5fa622ed99093323f3c9d0820ef23430f7ee07f6930f7f877d334e5d36df9b0be0e
+    SHA512 6189e23c7e381f62e971bd0e35ad9c3ed8effe584755357013887c6a582cb5a9a654c39affa2a073b658854138f31bfb70f89fa1df494e9386f1d64fd73d07d2
 )
 vcpkg_download_distfile(TOOL_ARCHIVE_FILE
-    URLS "https://github.com/google/protobuf/releases/download/v${PROTOBUF_VERSION}/protoc-${PROTOBUF_VERSION}-win32.zip"
-    FILENAME "protoc-${PROTOBUF_VERSION}-win32.zip"
+    URLS "https://github.com/google/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-win32.zip"
+    FILENAME "protoc-${PROTOC_VERSION}-win32.zip"
     SHA512 b874c3f47b39ac78f5675e05220318683004a365c248bf47ba50d8c66c8ed7763432451bab30524e131e1185a2bdaa6e6071b389eb61ad58b1b95974cf39d41b
 )
 
