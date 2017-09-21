@@ -166,6 +166,7 @@
     <ClInclude Include="..\include\vcpkg_Checks.h" />
     <ClInclude Include="..\include\VcpkgCmdArguments.h" />
     <ClInclude Include="..\include\vcpkg_Commands.h" />
+    <ClInclude Include="..\include\vcpkg_Commands_Export.h" />
     <ClInclude Include="..\include\vcpkg_Commands_Export_IFW.h" />
     <ClInclude Include="..\include\vcpkg_Dependencies.h" />
     <ClInclude Include="..\include\vcpkg_Enums.h" />
