@@ -21,6 +21,7 @@ vcpkg_apply_patches(
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
+  PREFER_NINJA
   OPTIONS -DPAHO_WITH_SSL=TRUE -DPAHO_BUILD_STATIC=${PAHO_BUILD_STATIC}
 )
 
@@ -28,22 +29,22 @@ vcpkg_configure_cmake(
 vcpkg_build_cmake()
 
 file(GLOB DLLS
-  "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.dll"
+  "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/*.dll"
   "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/*.dll"
   "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/Release/*.dll"
 )
 file(GLOB LIBS
-  "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.lib"
+  "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/*.lib"
   "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/*.lib"
   "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/Release/*.lib"
 )
 file(GLOB DEBUG_DLLS
-  "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.dll"
+  "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/*.dll"
   "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Debug/*.dll"
   "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*/Debug/*.dll"
 )
 file(GLOB DEBUG_LIBS
-  "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.lib"
+  "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/*.lib"
   "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Debug/*.lib"
   "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*/Debug/*.lib"
 )
@@ -58,8 +59,6 @@ endif()
 file(INSTALL ${DEBUG_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 file(INSTALL ${HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-vcpkg_copy_pdbs()
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
   foreach(libname paho-mqtt3as-static paho-mqtt3cs-static paho-mqtt3a-static paho-mqtt3c-static)
@@ -70,5 +69,15 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
   endforeach()
 endif()
 
+foreach(libname paho-mqtt3a paho-mqtt3c)
+  foreach(root "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}/debug")
+    file(REMOVE
+      ${root}/lib/${libname}.lib
+      ${root}/bin/${libname}.dll
+    )
+  endforeach()
+endforeach()
+
+vcpkg_copy_pdbs()
 
 file(INSTALL ${SOURCE_PATH}/about.html DESTINATION ${CURRENT_PACKAGES_DIR}/share/paho-mqtt RENAME copyright)
