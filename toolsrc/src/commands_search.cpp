@@ -3,6 +3,7 @@
 #include "Paragraphs.h"
 #include "SourceParagraph.h"
 #include "vcpkg_Commands.h"
+#include "vcpkg_GlobalState.h"
 #include "vcpkg_System.h"
 #include "vcpkglib.h"
 
@@ -39,7 +40,7 @@ namespace vcpkg::Commands::Search
             s.append(Strings::format("%s;", name));
             for (const Dependency& d : source_paragraph.depends)
             {
-                const std::string dependency_name = replace_dashes_with_underscore(d.name);
+                const std::string dependency_name = replace_dashes_with_underscore(d.name());
                 s.append(Strings::format("%s -> %s;", name, dependency_name));
             }
         }
@@ -57,9 +58,9 @@ namespace vcpkg::Commands::Search
         else
         {
             System::println("%-20s %-16s %s",
-                            source_paragraph.name,
-                            source_paragraph.version,
-                            vcpkg::shorten_description(source_paragraph.description));
+                            vcpkg::shorten_text(source_paragraph.name, 20),
+                            vcpkg::shorten_text(source_paragraph.version, 16),
+                            vcpkg::shorten_text(source_paragraph.description, 81));
         }
     }
 
@@ -72,17 +73,17 @@ namespace vcpkg::Commands::Search
         else
         {
             System::println("%-37s %s",
-                            name + "[" + feature_paragraph.name + "]",
-                            vcpkg::shorten_description(feature_paragraph.description));
+                            vcpkg::shorten_text(name + "[" + feature_paragraph.name + "]", 37),
+                            vcpkg::shorten_text(feature_paragraph.description, 81));
         }
     }
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const std::string example = Strings::format(
+        static const std::string EXAMPLE = Strings::format(
             "The argument should be a substring to search for, or no argument to display all libraries.\n%s",
             Commands::Help::create_example_string("search png"));
-        args.check_max_arg_count(1, example);
+        args.check_max_arg_count(1, EXAMPLE);
         const std::unordered_set<std::string> options =
             args.check_and_get_optional_command_arguments({OPTION_GRAPH, OPTION_FULLDESC});
 
@@ -90,7 +91,7 @@ namespace vcpkg::Commands::Search
 
         if (!sources_and_errors.errors.empty())
         {
-            if (vcpkg::g_debugging)
+            if (GlobalState::debugging)
             {
                 print_error_message(sources_and_errors.errors);
             }

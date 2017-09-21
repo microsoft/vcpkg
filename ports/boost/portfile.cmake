@@ -1,14 +1,16 @@
 include(vcpkg_common_functions)
-set(VERSION 1_64)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/boost_${VERSION}_0)
+set(VERSION 1_65)
+set(VERSION_FULL 1_65_1)
+set(VERSION2 1.65.1)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/boost_${VERSION_FULL})
 
 ######################
 # Acquire and arrange sources
 ######################
 vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "https://sourceforge.net/projects/boost/files/boost/1.64.0/boost_${VERSION}_0.tar.bz2"
-    FILENAME "boost_${VERSION}_0.tar.bz2"
-    SHA512 68477f148f61be617552ef48559c5c2cb90d42264cabd6d5e87215d0d5024b48fca27c4afcfc1f77e490c6220d44fb1abdf0a53703867a2e4132c2857f69fedf
+    URLS "https://sourceforge.net/projects/boost/files/boost/${VERSION2}/boost_${VERSION_FULL}.7z" "http://dl.bintray.com/boostorg/release/${VERSION2}/source/boost_${VERSION_FULL}.7z"
+    FILENAME "boost_${VERSION_FULL}.7z"
+    SHA512 b1d9264ec74dd75c68176f5a2d2da33a2c1e3162842cc61a07ac8ed1ebb953855cece4faf72ce99b490b665e813b839e35c7fc8026f2f9cb31b106fb8bab2a9c
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
@@ -61,7 +63,7 @@ file(MAKE_DIRECTORY
 if(NOT EXISTS ${SOURCE_PATH}/b2.exe)
     message(STATUS "Bootstrapping")
     vcpkg_execute_required_process(
-        COMMAND "${SOURCE_PATH}/bootstrap.bat"
+        COMMAND "${SOURCE_PATH}/bootstrap.bat" msvc
         WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME bootstrap
     )
@@ -108,7 +110,6 @@ if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
         # --without-date_time
         # --without-exception
         # --without-serialization
-        # --without-fiber
         # --without-context
         # --without-graph_parallel
         # --without-signals
@@ -129,6 +130,8 @@ if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
         --without-program_options # libs\program_options\src\parsers.cpp(194): error C2065: 'environ': undeclared identifier
 
         --without-test
+        --without-fiber
+        --without-stacktrace
         --without-filesystem # libs\filesystem\src\operations.cpp(178): error C2039: 'GetEnvironmentVariableW': is not a member of '`global namespace''
         --without-thread
         --without-iostreams

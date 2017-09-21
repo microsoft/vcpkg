@@ -6,6 +6,7 @@
 #include "vcpkg_Chrono.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_Files.h"
+#include "vcpkg_GlobalState.h"
 #include "vcpkg_Input.h"
 #include "vcpkg_Strings.h"
 #include "vcpkg_System.h"
@@ -26,14 +27,14 @@ void invalid_command(const std::string& cmd)
 
 static void inner(const VcpkgCmdArguments& args)
 {
-    Metrics::track_property("command", args.command);
+    Metrics::g_metrics.lock()->track_property("command", args.command);
     if (args.command.empty())
     {
         Commands::Help::print_usage();
         Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
-    if (auto command_function = Commands::find(args.command, Commands::get_available_commands_type_c()))
+    if (const auto command_function = Commands::find(args.command, Commands::get_available_commands_type_c()))
     {
         return command_function(args);
     }
@@ -46,7 +47,7 @@ static void inner(const VcpkgCmdArguments& args)
     else
     {
         const Optional<std::wstring> vcpkg_root_dir_env = System::get_environment_variable(L"VCPKG_ROOT");
-        if (auto v = vcpkg_root_dir_env.get())
+        if (const auto v = vcpkg_root_dir_env.get())
         {
             vcpkg_root_dir = fs::stdfs::absolute(*v);
         }
@@ -66,10 +67,11 @@ static void inner(const VcpkgCmdArguments& args)
                        vcpkg_root_dir.string(),
                        expected_paths.error().message());
     const VcpkgPaths paths = expected_paths.value_or_exit(VCPKG_LINE_INFO);
-    int exit_code = _wchdir(paths.root.c_str());
+    const int exit_code = _wchdir(paths.root.c_str());
     Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Changing the working dir failed");
+    Commands::Version::warn_if_vcpkg_version_mismatch(paths);
 
-    if (auto command_function = Commands::find(args.command, Commands::get_available_commands_type_b()))
+    if (const auto command_function = Commands::find(args.command, Commands::get_available_commands_type_b()))
     {
         return command_function(args, paths);
     }
@@ -83,7 +85,7 @@ static void inner(const VcpkgCmdArguments& args)
     {
         const Optional<std::wstring> vcpkg_default_triplet_env =
             System::get_environment_variable(L"VCPKG_DEFAULT_TRIPLET");
-        if (auto v = vcpkg_default_triplet_env.get())
+        if (const auto v = vcpkg_default_triplet_env.get())
         {
             default_triplet = Triplet::from_canonical_name(Strings::to_utf8(*v));
         }
@@ -95,7 +97,7 @@ static void inner(const VcpkgCmdArguments& args)
 
     Input::check_triplet(default_triplet, paths);
 
-    if (auto command_function = Commands::find(args.command, Commands::get_available_commands_type_a()))
+    if (const auto command_function = Commands::find(args.command, Commands::get_available_commands_type_a()))
     {
         return command_function(args, paths, default_triplet);
     }
@@ -103,7 +105,7 @@ static void inner(const VcpkgCmdArguments& args)
     return invalid_command(args.command);
 }
 
-static void loadConfig()
+static void load_config()
 {
     fs::path localappdata;
     {
@@ -117,7 +119,7 @@ static void loadConfig()
     try
     {
         auto maybe_pghs = Paragraphs::get_paragraphs(Files::get_real_filesystem(), localappdata / "vcpkg" / "config");
-        if (auto p_pghs = maybe_pghs.get())
+        if (const auto p_pghs = maybe_pghs.get())
         {
             const auto& pghs = *p_pghs;
 
@@ -134,7 +136,7 @@ static void loadConfig()
             auto user_time = keys["User-Since"];
             if (!user_id.empty() && !user_time.empty())
             {
-                Metrics::set_user_information(user_id, user_time);
+                Metrics::g_metrics.lock()->set_user_information(user_id, user_time);
                 return;
             }
         }
@@ -145,8 +147,11 @@ static void loadConfig()
 
     // config file not found, could not be read, or invalid
     std::string user_id, user_time;
-    Metrics::init_user_information(user_id, user_time);
-    Metrics::set_user_information(user_id, user_time);
+    {
+        auto locked_metrics = Metrics::g_metrics.lock();
+        locked_metrics->init_user_information(user_id, user_time);
+        locked_metrics->set_user_information(user_id, user_time);
+    }
     try
     {
         std::error_code ec;
@@ -184,34 +189,37 @@ static std::string trim_path_from_command_line(const std::string& full_command_l
     return std::string(it, full_command_line.cend());
 }
 
-static ElapsedTime g_timer;
-
 int wmain(const int argc, const wchar_t* const* const argv)
 {
     if (argc == 0) std::abort();
 
-    g_timer = ElapsedTime::create_started();
-    atexit([]() {
-        auto elapsed_us = g_timer.microseconds();
-        Metrics::track_metric("elapsed_us", elapsed_us);
-        g_debugging = false;
-        Metrics::flush();
-    });
+    GlobalState::g_init_console_cp = GetConsoleCP();
+    GlobalState::g_init_console_output_cp = GetConsoleOutputCP();
 
-    Metrics::track_property("version", Commands::Version::version());
+    SetConsoleCP(65001);
+    SetConsoleOutputCP(65001);
+
+    *GlobalState::timer.lock() = ElapsedTime::create_started();
 
     const std::string trimmed_command_line = trim_path_from_command_line(Strings::to_utf8(GetCommandLineW()));
-    Metrics::track_property("cmdline", trimmed_command_line);
-    loadConfig();
-    Metrics::track_property("sqmuser", Metrics::get_SQM_user());
+
+    {
+        auto locked_metrics = Metrics::g_metrics.lock();
+        locked_metrics->track_property("version", Commands::Version::version());
+        locked_metrics->track_property("cmdline", trimmed_command_line);
+    }
+    load_config();
+    Metrics::g_metrics.lock()->track_property("sqmuser", Metrics::get_SQM_user());
 
     const VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(argc, argv);
 
-    if (auto p = args.printmetrics.get()) Metrics::set_print_metrics(*p);
-    if (auto p = args.sendmetrics.get()) Metrics::set_send_metrics(*p);
-    if (auto p = args.debug.get()) g_debugging = *p;
+    if (const auto p = args.printmetrics.get()) Metrics::g_metrics.lock()->set_print_metrics(*p);
+    if (const auto p = args.sendmetrics.get()) Metrics::g_metrics.lock()->set_send_metrics(*p);
+    if (const auto p = args.debug.get()) GlobalState::debugging = *p;
 
-    if (g_debugging)
+    Checks::register_console_ctrl_handler();
+
+    if (GlobalState::debugging)
     {
         inner(args);
         Checks::exit_fail(VCPKG_LINE_INFO);
@@ -231,7 +239,7 @@ int wmain(const int argc, const wchar_t* const* const argv)
     {
         exc_msg = "unknown error(...)";
     }
-    Metrics::track_property("error", exc_msg);
+    Metrics::g_metrics.lock()->track_property("error", exc_msg);
 
     fflush(stdout);
     System::print("vcpkg.exe has crashed.\n"

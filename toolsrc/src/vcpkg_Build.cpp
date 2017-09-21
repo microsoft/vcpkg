@@ -8,6 +8,7 @@
 #include "vcpkg_Chrono.h"
 #include "vcpkg_Commands.h"
 #include "vcpkg_Enums.h"
+#include "vcpkg_GlobalState.h"
 #include "vcpkg_System.h"
 #include "vcpkg_optional.h"
 #include "vcpkglib.h"
@@ -29,46 +30,27 @@ namespace vcpkg::Build
 
     CWStringView to_vcvarsall_target(const std::string& cmake_system_name)
     {
-        if (cmake_system_name == "") return L"";
-        if (cmake_system_name == "Windows") return L"";
+        if (cmake_system_name == Strings::EMPTY) return Strings::WEMPTY;
+        if (cmake_system_name == "Windows") return Strings::WEMPTY;
         if (cmake_system_name == "WindowsStore") return L"store";
 
         Checks::exit_with_message(VCPKG_LINE_INFO, "Unsupported vcvarsall target %s", cmake_system_name);
     }
 
-    CWStringView to_vcvarsall_toolchain(const std::string& target_architecture)
+    CWStringView to_vcvarsall_toolchain(const std::string& target_architecture, const Toolset& toolset)
     {
-        using CPU = System::CPUArchitecture;
+        auto maybe_target_arch = System::to_cpu_architecture(target_architecture);
+        Checks::check_exit(
+            VCPKG_LINE_INFO, maybe_target_arch.has_value(), "Invalid architecture string: %s", target_architecture);
+        auto target_arch = maybe_target_arch.value_or_exit(VCPKG_LINE_INFO);
+        auto host_architectures = System::get_supported_host_architectures();
 
-        struct ArchOption
+        for (auto&& host : host_architectures)
         {
-            CWStringView name;
-            CPU host_arch;
-            CPU target_arch;
-        };
-
-        static constexpr ArchOption X86 = {L"x86", CPU::X86, CPU::X86};
-        static constexpr ArchOption X86_X64 = {L"x86_x64", CPU::X86, CPU::X64};
-        static constexpr ArchOption X86_ARM = {L"x86_arm", CPU::X86, CPU::ARM};
-        static constexpr ArchOption X86_ARM64 = {L"x86_arm64", CPU::X86, CPU::ARM64};
-
-        static constexpr ArchOption X64 = {L"amd64", CPU::X64, CPU::X64};
-        static constexpr ArchOption X64_X86 = {L"amd64_x86", CPU::X64, CPU::X86};
-        static constexpr ArchOption X64_ARM = {L"amd64_arm", CPU::X64, CPU::ARM};
-        static constexpr ArchOption X64_ARM64 = {L"amd64_arm64", CPU::X64, CPU::ARM64};
-
-        static constexpr std::array<ArchOption, 8> VALUES = {
-            X86, X86_X64, X86_ARM, X86_ARM64, X64, X64_X86, X64_ARM, X64_ARM64};
-
-        auto target_arch = System::to_cpu_architecture(target_architecture);
-        auto host_arch = System::get_host_processor();
-
-        for (auto&& value : VALUES)
-        {
-            if (target_arch == value.target_arch && host_arch == value.host_arch)
-            {
-                return value.name;
-            }
+            auto it = Util::find_if(toolset.supported_architectures, [&](const ToolsetArchOption& opt) {
+                return host == opt.host_arch && target_arch == opt.target_arch;
+            });
+            if (it != toolset.supported_architectures.end()) return it->name;
         }
 
         Checks::exit_with_message(VCPKG_LINE_INFO, "Unsupported toolchain combination %s", target_architecture);
@@ -77,40 +59,48 @@ namespace vcpkg::Build
     std::wstring make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
     {
         const wchar_t* tonull = L" >nul";
-        if (g_debugging)
+        if (GlobalState::debugging)
         {
-            tonull = L"";
+            tonull = Strings::WEMPTY;
         }
 
-        auto arch = to_vcvarsall_toolchain(pre_build_info.target_architecture);
-        auto target = to_vcvarsall_target(pre_build_info.cmake_system_name);
+        const auto arch = to_vcvarsall_toolchain(pre_build_info.target_architecture, toolset);
+        const auto target = to_vcvarsall_target(pre_build_info.cmake_system_name);
 
         return Strings::wformat(LR"("%s" %s %s %s 2>&1)", toolset.vcvarsall.native(), arch, target, tonull);
     }
 
-    static void create_binary_control_file(const VcpkgPaths& paths,
-                                           const SourceParagraph& source_paragraph,
-                                           const Triplet& triplet,
-                                           const BuildInfo& build_info)
+    static void create_binary_feature_control_file(const SourceParagraph& source_paragraph,
+                                                   const FeatureParagraph& feature_paragraph,
+                                                   const Triplet& triplet,
+                                                   BinaryControlFile& bcf)
     {
-        BinaryParagraph bpgh = BinaryParagraph(source_paragraph, triplet);
-        if (auto p_ver = build_info.version.get())
+        BinaryParagraph bpgh(source_paragraph, feature_paragraph, triplet);
+        bcf.features.emplace_back(std::move(bpgh));
+    }
+
+    static void create_binary_control_file(const SourceParagraph& source_paragraph,
+                                           const Triplet& triplet,
+                                           const BuildInfo& build_info,
+                                           BinaryControlFile& bcf)
+    {
+        BinaryParagraph bpgh(source_paragraph, triplet);
+        if (const auto p_ver = build_info.version.get())
         {
             bpgh.version = *p_ver;
         }
-        const fs::path binary_control_file = paths.packages / bpgh.dir() / "CONTROL";
-        paths.get_filesystem().write_contents(binary_control_file, Strings::serialize(bpgh));
+        bcf.core_paragraph = std::move(bpgh);
     }
 
-    static void create_binary_feature_control_file(const VcpkgPaths& paths,
-                                                   const SourceParagraph& source_paragraph,
-                                                   const FeatureParagraph& feature_paragraph,
-                                                   const Triplet& triplet,
-                                                   const BuildInfo& build_info)
+    static void write_binary_control_file(const VcpkgPaths& paths, BinaryControlFile bcf)
     {
-        BinaryParagraph bpgh = BinaryParagraph(source_paragraph, feature_paragraph, triplet);
-        const fs::path binary_control_file = paths.packages / bpgh.dir() / "CONTROL";
-        paths.get_filesystem().write_contents(binary_control_file, Strings::serialize(bpgh));
+        std::string start = Strings::serialize(bcf.core_paragraph);
+        for (auto&& feature : bcf.features)
+        {
+            start += "\n" + Strings::serialize(feature);
+        }
+        const fs::path binary_control_file = paths.packages / bcf.core_paragraph.dir() / "CONTROL";
+        paths.get_filesystem().write_contents(binary_control_file, start);
     }
 
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
@@ -142,12 +132,12 @@ namespace vcpkg::Build
         const fs::path& git_exe_path = paths.get_git_exe();
 
         const fs::path ports_cmake_script_path = paths.ports_cmake;
-        auto pre_build_info = PreBuildInfo::from_triplet_file(paths, triplet);
+        const auto pre_build_info = PreBuildInfo::from_triplet_file(paths, triplet);
         const Toolset& toolset = paths.get_toolset(pre_build_info.platform_toolset);
         const auto cmd_set_environment = make_build_env_cmd(pre_build_info, toolset);
 
         std::string features;
-        if (g_feature_packages)
+        if (GlobalState::feature_packages)
         {
             if (config.feature_list)
             {
@@ -181,26 +171,33 @@ namespace vcpkg::Build
 
         const ElapsedTime timer = ElapsedTime::create_started();
 
-        int return_code = System::cmd_execute_clean(command);
-        auto buildtimeus = timer.microseconds();
+        const int return_code = System::cmd_execute_clean(command);
+        const auto buildtimeus = timer.microseconds();
         const auto spec_string = spec.to_string();
-        Metrics::track_metric("buildtimeus-" + spec_string, buildtimeus);
 
-        if (return_code != 0)
         {
-            Metrics::track_property("error", "build failed");
-            Metrics::track_property("build_error", spec_string);
-            return {BuildResult::BUILD_FAILED, {}};
+            auto locked_metrics = Metrics::g_metrics.lock();
+            locked_metrics->track_metric("buildtimeus-" + spec_string, buildtimeus);
+            if (return_code != 0)
+            {
+                locked_metrics->track_property("error", "build failed");
+                locked_metrics->track_property("build_error", spec_string);
+                return {BuildResult::BUILD_FAILED, {}};
+            }
         }
 
-        auto build_info = read_build_info(paths.get_filesystem(), paths.build_info_file_path(spec));
+        const BuildInfo build_info = read_build_info(paths.get_filesystem(), paths.build_info_file_path(spec));
         const size_t error_count = PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info);
+
+        BinaryControlFile bcf;
+
+        create_binary_control_file(config.src, triplet, build_info, bcf);
 
         if (error_count != 0)
         {
             return {BuildResult::POST_BUILD_CHECKS_FAILED, {}};
         }
-        if (g_feature_packages)
+        if (GlobalState::feature_packages)
         {
             if (config.feature_list)
             {
@@ -209,13 +206,13 @@ namespace vcpkg::Build
                     for (auto&& f_pgh : config.scf->feature_paragraphs)
                     {
                         if (f_pgh->name == feature)
-                            create_binary_feature_control_file(
-                                paths, *config.scf->core_paragraph, *f_pgh, triplet, build_info);
+                            create_binary_feature_control_file(*config.scf->core_paragraph, *f_pgh, triplet, bcf);
                     }
                 }
             }
         }
-        create_binary_control_file(paths, config.src, triplet, build_info);
+
+        write_binary_control_file(paths, bcf);
 
         // const fs::path port_buildtrees_dir = paths.buildtrees / spec.name;
         // delete_directory(port_buildtrees_dir);
@@ -228,6 +225,7 @@ namespace vcpkg::Build
         static const std::string NULLVALUE_STRING = Enums::nullvalue_to_string("vcpkg::Commands::Build::BuildResult");
         static const std::string SUCCEEDED_STRING = "SUCCEEDED";
         static const std::string BUILD_FAILED_STRING = "BUILD_FAILED";
+        static const std::string FILE_CONFLICTS_STRING = "FILE_CONFLICTS";
         static const std::string POST_BUILD_CHECKS_FAILED_STRING = "POST_BUILD_CHECKS_FAILED";
         static const std::string CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING = "CASCADED_DUE_TO_MISSING_DEPENDENCIES";
 
@@ -238,6 +236,7 @@ namespace vcpkg::Build
             case BuildResult::BUILD_FAILED: return BUILD_FAILED_STRING;
             case BuildResult::POST_BUILD_CHECKS_FAILED: return POST_BUILD_CHECKS_FAILED_STRING;
             case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES: return CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING;
+            case BuildResult::FILE_CONFLICTS: return FILE_CONFLICTS_STRING;
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
@@ -270,7 +269,7 @@ namespace vcpkg::Build
             parser.required_field(BuildInfoRequiredField::CRT_LINKAGE, crt_linkage_as_string);
 
             auto crtlinkage = to_linkage_type(crt_linkage_as_string);
-            if (auto p = crtlinkage.get())
+            if (const auto p = crtlinkage.get())
                 build_info.crt_linkage = *p;
             else
                 Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid crt linkage type: [%s]", crt_linkage_as_string);
@@ -280,7 +279,7 @@ namespace vcpkg::Build
             std::string library_linkage_as_string;
             parser.required_field(BuildInfoRequiredField::LIBRARY_LINKAGE, library_linkage_as_string);
             auto liblinkage = to_linkage_type(library_linkage_as_string);
-            if (auto p = liblinkage.get())
+            if (const auto p = liblinkage.get())
                 build_info.library_linkage = *p;
             else
                 Checks::exit_with_message(
@@ -290,12 +289,11 @@ namespace vcpkg::Build
         if (!version.empty()) build_info.version = std::move(version);
 
         std::map<BuildPolicy, bool> policies;
-        for (auto policy : g_all_policies)
+        for (auto policy : G_ALL_POLICIES)
         {
             const auto setting = parser.optional_field(to_string(policy));
-            if (setting.empty())
-                continue;
-            else if (setting == "enabled")
+            if (setting.empty()) continue;
+            if (setting == "enabled")
                 policies.emplace(policy, true);
             else if (setting == "disabled")
                 policies.emplace(policy, false);
@@ -304,7 +302,7 @@ namespace vcpkg::Build
                     VCPKG_LINE_INFO, "Unknown setting for policy '%s': %s", to_string(policy), setting);
         }
 
-        if (auto err = parser.error_info("PostBuildInformation"))
+        if (const auto err = parser.error_info("PostBuildInformation"))
         {
             print_error_message(err);
             Checks::exit_fail(VCPKG_LINE_INFO);
@@ -338,14 +336,14 @@ namespace vcpkg::Build
                                                              });
 
         const std::wstring command = Strings::wformat(LR"(%s)", cmd_launch_cmake);
-        auto ec_data = System::cmd_execute_and_capture_output(command);
+        const auto ec_data = System::cmd_execute_and_capture_output(command);
         Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0);
 
         const std::vector<std::string> lines = Strings::split(ec_data.output, "\n");
 
         PreBuildInfo pre_build_info;
 
-        auto e = lines.cend();
+        const auto e = lines.cend();
         auto cur = std::find(lines.cbegin(), e, FLAG_GUID);
         if (cur != e) ++cur;
 
@@ -361,7 +359,7 @@ namespace vcpkg::Build
 
             const bool variable_with_no_value = s.size() == 1;
             const std::string variable_name = s.at(0);
-            const std::string variable_value = variable_with_no_value ? "" : s.at(1);
+            const std::string variable_value = variable_with_no_value ? Strings::EMPTY : s.at(1);
 
             if (variable_name == "VCPKG_TARGET_ARCHITECTURE")
             {

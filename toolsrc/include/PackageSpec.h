@@ -1,14 +1,22 @@
 #pragma once
+
 #include "PackageSpecParseResult.h"
-#include "SourceParagraph.h"
 #include "Triplet.h"
 #include "vcpkg_expected.h"
 
 namespace vcpkg
 {
+    struct ParsedSpecifier
+    {
+        std::string name;
+        std::vector<std::string> features;
+        std::string triplet;
+
+        static ExpectedT<ParsedSpecifier, PackageSpecParseResult> from_string(const std::string& input);
+    };
+
     struct PackageSpec
     {
-        static std::string to_string(const std::string& name, const Triplet& triplet);
         static ExpectedT<PackageSpec, PackageSpecParseResult> from_name_and_triplet(const std::string& name,
                                                                                     const Triplet& triplet);
 
@@ -25,13 +33,43 @@ namespace vcpkg
         Triplet m_triplet;
     };
 
+    struct FeatureSpec
+    {
+        FeatureSpec(const PackageSpec& spec, const std::string& feature) : m_spec(spec), m_feature(feature) {}
+
+        const std::string& name() const { return m_spec.name(); }
+        const std::string& feature() const { return m_feature; }
+        const Triplet& triplet() const { return m_spec.triplet(); }
+
+        const PackageSpec& spec() const { return m_spec; }
+
+        std::string to_string() const;
+
+        static std::vector<FeatureSpec> from_strings_and_triplet(const std::vector<std::string>& depends,
+                                                                 const Triplet& t);
+
+    private:
+        PackageSpec m_spec;
+        std::string m_feature;
+    };
+
     struct FullPackageSpec
     {
         PackageSpec package_spec;
         std::vector<std::string> features;
 
+        static std::vector<FeatureSpec> to_feature_specs(const std::vector<FullPackageSpec>& specs);
+
         static ExpectedT<FullPackageSpec, PackageSpecParseResult> from_string(const std::string& spec_as_string,
                                                                               const Triplet& default_triplet);
+    };
+
+    struct Features
+    {
+        std::string name;
+        std::vector<std::string> features;
+
+        static ExpectedT<Features, PackageSpecParseResult> from_string(const std::string& input);
     };
 
     bool operator==(const PackageSpec& left, const PackageSpec& right);

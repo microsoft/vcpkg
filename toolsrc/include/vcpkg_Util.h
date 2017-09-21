@@ -1,24 +1,38 @@
 #pragma once
 
 #include <map>
+#include <mutex>
 #include <utility>
 #include <vector>
 
 namespace vcpkg::Util
 {
     template<class Cont, class Func>
-    using FmapOut = decltype(std::declval<Func>()(std::declval<Cont>()[0]));
+    using FmapOut = decltype(std::declval<Func>()(*begin(std::declval<Cont>())));
 
     template<class Cont, class Func, class Out = FmapOut<Cont, Func>>
-    std::vector<Out> fmap(const Cont& xs, Func&& f)
+    std::vector<Out> fmap(Cont&& xs, Func&& f)
     {
-        using O = decltype(f(xs[0]));
-
-        std::vector<O> ret;
+        std::vector<Out> ret;
         ret.reserve(xs.size());
 
         for (auto&& x : xs)
             ret.push_back(f(x));
+
+        return ret;
+    }
+
+    template<class Cont, class Func>
+    using FmapFlattenOut = std::decay_t<decltype(*begin(std::declval<Func>()(*begin(std::declval<Cont>()))))>;
+
+    template<class Cont, class Func, class Out = FmapFlattenOut<Cont, Func>>
+    std::vector<Out> fmap_flatten(Cont&& xs, Func&& f)
+    {
+        std::vector<Out> ret;
+
+        for (auto&& x : xs)
+            for (auto&& y : f(x))
+                ret.push_back(std::move(y));
 
         return ret;
     }
@@ -62,4 +76,54 @@ namespace vcpkg::Util
             (*output)[key].push_back(&element);
         }
     }
+
+    struct MoveOnlyBase
+    {
+        MoveOnlyBase() = default;
+        MoveOnlyBase(const MoveOnlyBase&) = delete;
+        MoveOnlyBase(MoveOnlyBase&&) = default;
+
+        MoveOnlyBase& operator=(const MoveOnlyBase&) = delete;
+        MoveOnlyBase& operator=(MoveOnlyBase&&) = default;
+    };
+
+    struct ResourceBase
+    {
+        ResourceBase() = default;
+        ResourceBase(const ResourceBase&) = delete;
+        ResourceBase(ResourceBase&&) = delete;
+
+        ResourceBase& operator=(const ResourceBase&) = delete;
+        ResourceBase& operator=(ResourceBase&&) = delete;
+    };
+
+    template<class T>
+    struct LockGuardPtr;
+
+    template<class T>
+    struct LockGuarded
+    {
+        friend struct LockGuardPtr<T>;
+
+        LockGuardPtr<T> lock() { return *this; }
+
+    private:
+        std::mutex m_mutex;
+        T m_t;
+    };
+
+    template<class T>
+    struct LockGuardPtr
+    {
+        T& operator*() { return m_ptr; }
+        T* operator->() { return &m_ptr; }
+
+        T* get() { return &m_ptr; }
+
+        LockGuardPtr(LockGuarded<T>& sync) : m_lock(sync.m_mutex), m_ptr(sync.m_t) {}
+
+    private:
+        std::unique_lock<std::mutex> m_lock;
+        T& m_ptr;
+    };
 }

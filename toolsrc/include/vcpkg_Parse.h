@@ -26,11 +26,13 @@ namespace vcpkg::Parse
         ParagraphParser(RawParagraph&& fields) : fields(std::move(fields)) {}
 
         void required_field(const std::string& fieldname, std::string& out);
-        std::string optional_field(const std::string& fieldname);
+        std::string optional_field(const std::string& fieldname) const;
         std::unique_ptr<ParseControlErrorInfo> error_info(const std::string& name) const;
 
     private:
         RawParagraph&& fields;
         std::vector<std::string> missing_fields;
     };
+
+    std::vector<std::string> parse_comma_list(const std::string& str);
 }

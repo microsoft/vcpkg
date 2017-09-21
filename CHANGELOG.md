@@ -1,3 +1,200 @@
+vcpkg (0.0.89)
+--------------
+  * Update ports:
+    - boost                1.65-1 -> 1.65.1
+    - chmlib               0.40 -> 0.40-1
+    - pybind11             2.1.0-2 -> 2.2.0
+    - sciter               4.0.2-1 -> 4.0.3
+    - sqlite3              3.19.1-2 -> 3.20.1
+  * `vcpkg` now warns if the built version of the `vcpkg.exe` itself is outdated
+  * Update to latest python 3.5
+  * `vcpkg install` improvements:
+    - Add `--keep-going` option to keep going if a package fails to install
+    - Add elapsed time to each invidial package as well as total time
+    - Add a counter to the install (e.g. Starting package 3/12: <name>)
+  * `vcpkg edit` now checks more location for VSCode Insiders
+
+-- vcpkg team <vcpkg@microsoft.com>  WED, 14 Sep 2017 16:00:00 -0800
+
+
+vcpkg (0.0.88)
+--------------
+   * `vcpkg_configure_cmake` has been modified to embed debug symbols within static libraries (using the /Z7 option). Most of the libraries in `vcpkg` had their versions bumped due to this.
+   * `vcpkg_configure_meson` has been modified in the same manner.
+
+-- vcpkg team <vcpkg@microsoft.com>  SAT, 09 Sep 2017 00:30:00 -0800
+
+
+vcpkg (0.0.87)
+--------------
+  * Add ports:
+    - console-bridge       0.3.2-1
+    - leptonica            1.74.4
+    - tesseract            3.05.01
+    - urdfdom              1.0.0-1
+    - urdfdom-headers      1.0.0-1
+  * Update ports:
+    - ace                  6.4.4 -> 6.4.5
+    - c-ares               1.12.1-dev-40eb41f-1 -> 1.13.0
+    - glslang              1c573fbcfba6b3d631008b1babc838501ca925d3-2 -> 3a21c880500eac21cdf79bef5b80f970a55ac6af
+    - grpc                 1.4.1 -> 1.6.0
+    - libuv                1.14.0 -> 1.14.1
+    - meschach              -> 1.2b
+    - openblas             v0.2.20 -> v0.2.20-1
+    - openssl              1.0.2l-1 -> 1.0.2l-2
+    - protobuf             3.3.0-3 -> 3.4.0-1
+    - qt5                  5.8-4 -> 5.8-5
+    - shaderc              2df47b51d83ad83cbc2e7f8ff2b56776293e8958-1 -> 12fb656ab20ea9aa06e7084a74e5ff832b7ce2da
+    - spirv-tools          1.1-f72189c249ba143c6a89a4cf1e7d53337b2ddd40 -> v2017.1-dev-7e2d26c77b606b21af839b37fd21381c4a669f23
+    - xxhash               0.6.2 -> 0.6.3
+    - zeromq               4.2.2 -> 20170908-18498f620f0f6d4076981ea16eb5760fe4d28dc2
+  * Add new function `vcpkg_from_bitbucket` which the Bitbucket equivalent of `vcpkg_from_github`
+
+-- vcpkg team <vcpkg@microsoft.com>  FRI, 08 Sep 2017 22:00:00 -0800
+
+
+vcpkg (0.0.86)
+--------------
+  * Add ports:
+    - bigint               2010.04.30
+    - butteraugli          2017-09-02-8c60a2aefa19adb
+    - ccd                  2.0.0-1 (Renamed from libccd)
+    - fadbad               2.1.0
+    - fcl                  0.5.0-1
+    - guetzli              2017-09-02-cb5e4a86f69628
+    - gumbo                0.10.1
+    - libmicrohttpd        0.9.55
+    - libstemmer           2017-9-02
+    - libunibreak          4.0
+    - lodepng              2017-09-01-8a0f16afe74a6a
+    - meschach
+    - nlopt                2.4.2-c43afa08d~vcpkg1
+    - picosha2             2017-09-01-c5ff159b6
+    - piex                 2017-09-01-473434f2dd974978b
+    - pthreads             2.9.1
+    - tinythread           1.1
+    - tinyxml              2.6.2-1
+  * Removed ports:
+    - libccd               2.0.0 (Renamed to ccd)
+  * Update ports:
+    - ace                  6.4.3 -> 6.4.4
+    - boost                1.65 -> 1.65-1
+    - cairo                1.15.6 -> 1.15.8
+    - gdk-pixbuf           2.36.6 -> 2.36.9
+    - glib                 2.52.2 -> 2.52.3
+    - gtk                  3.22.15 -> 3.22.19
+    - jxrlib               1.1-2 -> 1.1-3
+    - paho-mqtt            Version 1.1.0 (Paho 1.2) -> 1.2.0
+    - pango                1.40.6 -> 1.40.11
+    - shaderc              2df47b51d83ad83cbc2e7f8ff2b56776293e8958 -> 2df47b51d83ad83cbc2e7f8ff2b56776293e8958-1
+  * Fix warnings in bootstrap-vcpkg.ps1
+  * Fix codepage related issues with ninja/cmake
+  * Improve handling for non-ascii environments
+  * Configurations names are now more tolerant:
+    - If a configuration name is prefixed with "Release", then it is compatible with "Release"
+    - If a configuration name is prefixed with "Debug", then it is compatible with "Debug"
+  * `vcpkg edit`: Improve detection of VSCode and add better messages when no path is found
+  * Fixes and improvements in the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  MON, 04 Sep 2017 02:00:00 -0800
+
+
+vcpkg (0.0.85)
+--------------
+  * Add ports:
+    - ccfits               2.5
+    - highfive             1.3
+    - lzfse                1.0
+    - pangolin             0.5
+    - rhash                1.3.5
+    - speexdsp             1.2rc3-1
+    - unrar                5.5.8
+  * Update ports:
+    - assimp               4.0.0 -> 4.0.0-1
+    - catch                1.9.7 -> 1.10.0
+    - ctemplate            2017-06-23-44b7c5b918a08ad561c63e9d28beecb40c10ebca -> 2017-06-23-44b7c5-2
+    - curl                 7.55.0 -> 7.55.1
+    - ecm                  5.32.0 -> 5.37.0
+    - expat                2.1.1-1 -> 2.2.4-1
+    - ffmpeg               3.2.4-3 -> 3.3.3
+    - gl2ps                OpenGL to PostScript Printing Library -> 1.4.0
+    - jsoncpp              1.7.7 -> 1.8.1
+    - libp7-baical         4.1 -> 4.4-1
+    - libpng               1.6.31 -> 1.6.32
+    - libraw               0.18.2-2 -> 0.18.2-3
+    - libsigcpp            2.10 -> 2.99
+    - snappy               1.1.6-be6dc3d -> 1.1.7
+  * `vcpkg edit`: Add new option `--builtrees`; opens editor in buildtrees directory for examining build issues
+  * Improve Windows SDK support (contract version detection)
+  * Improve handling for non-ascii environments
+  * Fixes and improvements in the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  SUN, 27 Aug 2017 22:00:00 -0800
+
+
+vcpkg (0.0.84)
+--------------
+  * Add ports:
+    - cfitsio              3.410
+    - chmlib               0.40
+    - gl2ps                OpenGL to PostScript Printing Library
+    - libharu              2017-08-15-d84867ebf9f-1
+    - mpfr                 3.1.5
+    - sophus               1.0.0
+  * Update ports:
+    - allegro5             5.2.1.0 -> 5.2.2.0
+    - blaze                3.1 -> 3.2
+    - boost                1.64-5 -> 1.65
+    - curl                 7.51.0-3 -> 7.55.0
+    - flann                1.9.1-4 -> 1.9.1-5
+    - gdal                 1.11.3-4 -> 1.11.3-5
+    - glew                 2.0.0-2 -> 2.1.0
+    - lcms                 2.8-1 -> 2.8-2
+    - libogg               2017-07-27-cab46b19847 -> 1.3.2-cab46b1-2
+    - libuv                1.13.1 -> 1.14.0
+    - lz4                  1.7.5 -> 1.8.0
+    - pcre2                10.23 -> 10.30
+    - spdlog               0.13.0 -> 0.14.0
+    - zstd                 1.3.0 -> 1.3.1
+  * Bump required version & auto-downloaded version of `git` to 2.14.1 (due to a security vulnerability)
+  * Show more information when there are issues acquiring `vcpkg` tool dependencies (`git`, `cmake`, `nuget`)
+  * Remove download prompts for cmake/git. The prompts were causing a lot of issues for users and especially CI builds
+  * `vcpkg edit`: Fix detection of 64-bit VSCode
+  * Fixes and improvements in the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  TUE, 22 Aug 2017 13:00:00 -0800
+
+
+vcpkg (0.0.83)
+--------------
+  * Add ports:
+    - fuzzylite            6.0
+    - jemalloc             4.3.1-1
+    - libkml               1.3.0
+    - pcl                  1.8.1
+    - plog                 1.1.3
+  * Update ports:
+    - catch                1.9.6 -> 1.9.7
+    - ceres                1.12.0-4 -> 1.13.0
+    - cpp-redis            3.5.2 -> 3.5.2-1
+    - gdal                 1.11.3-3 -> 1.11.3-4
+    - graphicsmagick       1.3.26 -> 1.3.26-1
+    - hypre                2.11.1 -> 2.11.2
+    - libtheora            1.1.1 -> 1.2.0alpha1-20170719~vcpkg1
+    - minizip              1.2.11 -> 1.2.11-1
+    - openblas             v0.2.19-2 -> v0.2.20
+    - openjpeg             2.1.2-2 -> 2.2.0
+    - physfs               2.0.3 -> 2.0.3-1
+    - stb                  1.0 -> 20170724-9d9f75e
+    - uwebsockets          0.14.3 -> 0.14.4
+    - vtk                  7.1.1-1 -> 8.0.0-1
+    - yaml-cpp             0.5.4 candidate -> 0.5.4-rc-1
+  * Bump required version & auto-downloaded version of `cmake` to 3.9.1 (was 3.9.0)
+  * Fixes and improvements in the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  FRI, 11 Aug 2017 12:00:00 -0800
+
+
 vcpkg (0.0.82)
 --------------
   * Add ports:

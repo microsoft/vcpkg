@@ -6,8 +6,6 @@
 
 namespace vcpkg
 {
-    extern bool g_debugging;
-
     StatusParagraphs database_load_check(const VcpkgPaths& paths);
 
     void write_update(const VcpkgPaths& paths, const StatusParagraph& p);
@@ -36,5 +34,5 @@ namespace vcpkg
                                 const fs::path& cmake_script,
                                 const std::vector<CMakeVariable>& pass_variables);
 
-    std::string shorten_description(const std::string& desc);
+    std::string shorten_text(const std::string& desc, size_t length);
 } // namespace vcpkg

@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/zstd
-    REF v1.3.0
-    SHA512 5eb9e001e14d3342e76eb57b672c636fd56839ba8fc0ba9a751484ea93389c72c494ad2125dc2f9be1f72481f3af34568477123f7e9d3c7504e061e4c083cb30
+    REF v1.3.1
+    SHA512 cc2ace7b2dd19a2bbf4c43a89d64a7ce121309f712bfb4940ccfd6f9353f1466612ef7096adcd852f54eaea8663d884acf681c83ae5b274b24c9b85f21367b7c
     HEAD_REF dev)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -13,6 +13,11 @@ else()
     set(ZSTD_STATIC 0)
     set(ZSTD_SHARED 1)
 endif()
+
+# Enable multithreaded mode. CMake build doesn't provide a multithreaded
+# library target, but it is the default in Makefile and VS projects.
+set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} /DZSTD_MULTITHREAD")
+set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/build/cmake
@@ -38,4 +43,5 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/zstd)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/zstd/LICENSE ${CURRENT_PACKAGES_DIR}/share/zstd/copyright)
+file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/zstd)
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/zstd/copyright "ZSTD is dual licensed - see LICENSE and COPYING files\n")

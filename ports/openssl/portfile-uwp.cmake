@@ -43,75 +43,50 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-uwp-pathlib.patch
-)
-
 file(REMOVE_RECURSE ${SOURCE_PATH}/tmp32dll)
 file(REMOVE_RECURSE ${SOURCE_PATH}/out32dll)
 file(REMOVE_RECURSE ${SOURCE_PATH}/inc32dll)
 
-file(COPY
-${CMAKE_CURRENT_LIST_DIR}/make-openssl.bat
-DESTINATION ${SOURCE_PATH})
+file(
+    COPY ${CMAKE_CURRENT_LIST_DIR}/make-openssl.bat
+    DESTINATION ${SOURCE_PATH}
+)
 
 message(STATUS "Build ${TARGET_TRIPLET}")
-
 vcpkg_execute_required_process(
-	COMMAND ${SOURCE_PATH}/make-openssl.bat ${UWP_PLATFORM}
+    COMMAND ${SOURCE_PATH}/make-openssl.bat ${UWP_PLATFORM}
     WORKING_DIRECTORY ${SOURCE_PATH}
     LOGNAME make-openssl-${TARGET_TRIPLET}
 )
-
-
 message(STATUS "Build ${TARGET_TRIPLET} done")
-
-
 
 file(
     COPY ${SOURCE_PATH}/inc32/openssl
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
 
-file(INSTALL ${SOURCE_PATH}/out32dll/libeay32.dll
+file(INSTALL
+    ${SOURCE_PATH}/out32dll/libeay32.dll
+    ${SOURCE_PATH}/out32dll/libeay32.pdb
+    ${SOURCE_PATH}/out32dll/ssleay32.dll
+    ${SOURCE_PATH}/out32dll/ssleay32.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
 
-file(INSTALL ${SOURCE_PATH}/out32dll/libeay32.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-
-file(INSTALL ${SOURCE_PATH}/out32dll/libeay32.lib
+file(INSTALL
+    ${SOURCE_PATH}/out32dll/libeay32.lib
+    ${SOURCE_PATH}/out32dll/ssleay32.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
-file(INSTALL ${SOURCE_PATH}/out32dll/ssleay32.dll
-    DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-
-file(INSTALL ${SOURCE_PATH}/out32dll/ssleay32.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-
-file(INSTALL ${SOURCE_PATH}/out32dll/ssleay32.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-
-
-
-file(INSTALL ${SOURCE_PATH}/out32dll/libeay32.dll
+file(INSTALL
+    ${SOURCE_PATH}/out32dll/libeay32.dll
+    ${SOURCE_PATH}/out32dll/libeay32.pdb
+    ${SOURCE_PATH}/out32dll/ssleay32.dll
+    ${SOURCE_PATH}/out32dll/ssleay32.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 
-file(INSTALL ${SOURCE_PATH}/out32dll/libeay32.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-
-file(INSTALL ${SOURCE_PATH}/out32dll/libeay32.lib
+file(INSTALL
+    ${SOURCE_PATH}/out32dll/libeay32.lib
+    ${SOURCE_PATH}/out32dll/ssleay32.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-
-file(INSTALL ${SOURCE_PATH}/out32dll/ssleay32.dll
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-
-file(INSTALL ${SOURCE_PATH}/out32dll/ssleay32.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-
-file(INSTALL ${SOURCE_PATH}/out32dll/ssleay32.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-
-
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openssl RENAME copyright)

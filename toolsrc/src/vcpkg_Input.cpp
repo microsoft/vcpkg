@@ -13,7 +13,7 @@ namespace vcpkg::Input
     {
         const std::string as_lowercase = Strings::ascii_to_lowercase(package_spec_as_string);
         auto expected_spec = FullPackageSpec::from_string(as_lowercase, default_triplet);
-        if (auto spec = expected_spec.get())
+        if (const auto spec = expected_spec.get())
         {
             return PackageSpec{spec->package_spec};
         }
@@ -29,7 +29,7 @@ namespace vcpkg::Input
         if (!paths.is_valid_triplet(t))
         {
             System::println(System::Color::error, "Error: invalid triplet: %s", t);
-            Metrics::track_property("error", "invalid triplet: " + t.to_string());
+            Metrics::g_metrics.lock()->track_property("error", "invalid triplet: " + t.to_string());
             Commands::Help::help_topic_valid_triplet(paths);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
@@ -41,7 +41,7 @@ namespace vcpkg::Input
     {
         const std::string as_lowercase = Strings::ascii_to_lowercase(full_package_spec_as_string);
         auto expected_spec = FullPackageSpec::from_string(as_lowercase, default_triplet);
-        if (auto spec = expected_spec.get())
+        if (const auto spec = expected_spec.get())
         {
             return *spec;
         }

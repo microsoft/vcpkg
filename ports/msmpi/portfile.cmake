@@ -34,7 +34,7 @@ if(EXISTS ${SYSTEM_MPIEXEC_FILEPATH})
     if(${MPIEXEC_OUTPUT} MATCHES "\\[Version ([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)\\]")
         if(NOT ${CMAKE_MATCH_1} STREQUAL ${MSMPI_EXPECTED_FULL_VERSION})
             download_msmpi_redistributable_package()
-            
+
             message(FATAL_ERROR
                 "  The version of the installed MSMPI redistributable packages does not match the version to be installed\n"
                 "    Expected version: ${MSMPI_EXPECTED_FULL_VERSION}\n"
@@ -65,8 +65,15 @@ file(TO_NATIVE_PATH "${SDK_ARCHIVE}" SDK_ARCHIVE)
 file(TO_NATIVE_PATH "${SOURCE_PATH}/sdk" SDK_SOURCE_DIR)
 file(TO_NATIVE_PATH "${CURRENT_BUILDTREES_DIR}/msiexec-${TARGET_TRIPLET}.log" MSIEXEC_LOG_PATH)
 
+set(PARAM_MSI "/a \"${SDK_ARCHIVE}\"")
+set(PARAM_LOG "/log \"${MSIEXEC_LOG_PATH}\"")
+set(PARAM_TARGET_DIR "TARGETDIR=\"${SDK_SOURCE_DIR}\"")
+set(SCRIPT_FILE ${CURRENT_BUILDTREES_DIR}/msiextract-msmpi.bat)
+# Write the command out to a script file and run that to avoid weird escaping behavior when spaces are present
+file(WRITE ${SCRIPT_FILE} "msiexec ${PARAM_MSI} /qn ${PARAM_LOG} ${PARAM_TARGET_DIR}")
+
 vcpkg_execute_required_process(
-    COMMAND msiexec /a ${SDK_ARCHIVE} /qn TARGETDIR=${SDK_SOURCE_DIR} /log "${MSIEXEC_LOG_PATH}"
+    COMMAND ${SCRIPT_FILE}
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
     LOGNAME extract-sdk
 )

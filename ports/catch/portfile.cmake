@@ -1,11 +1,11 @@
 include(vcpkg_common_functions)
 
-set(CATCH_VERSION v1.9.6)
+set(CATCH_VERSION v1.10.0)
 
 vcpkg_download_distfile(HEADER
     URLS "https://github.com/philsquared/Catch/releases/download/${CATCH_VERSION}/catch.hpp"
     FILENAME "catch-${CATCH_VERSION}.hpp"
-    SHA512 a0e4d568a5d90e72cef6ae9e741a66909235498c2901e96623892e5b323cb3bc51d55617ee6a42b30938a0cf2564323c621bd201d94eb67ba9c4fe5de65c10ee
+    SHA512 275ab5b5d778cc8a91b5f3e8f241a37b680c81d1b8945ff64ad16a9708c98e6535b389746bf8cacbed07f874629f456b56bafbf1879c5a6f84fa87675c1361b6
 )
 
 vcpkg_download_distfile(LICENSE

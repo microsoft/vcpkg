@@ -23,14 +23,14 @@ namespace vcpkg::Parse
     void ParagraphParser::required_field(const std::string& fieldname, std::string& out)
     {
         auto maybe_field = remove_field(&fields, fieldname);
-        if (auto field = maybe_field.get())
+        if (const auto field = maybe_field.get())
             out = std::move(*field);
         else
             missing_fields.push_back(fieldname);
     }
-    std::string ParagraphParser::optional_field(const std::string& fieldname)
+    std::string ParagraphParser::optional_field(const std::string& fieldname) const
     {
-        return remove_field(&fields, fieldname).value_or("");
+        return remove_field(&fields, fieldname).value_or(Strings::EMPTY);
     }
     std::unique_ptr<ParseControlErrorInfo> ParagraphParser::error_info(const std::string& name) const
     {
@@ -43,5 +43,38 @@ namespace vcpkg::Parse
             return err;
         }
         return nullptr;
+    }
+
+    std::vector<std::string> parse_comma_list(const std::string& str)
+    {
+        if (str.empty())
+        {
+            return {};
+        }
+
+        std::vector<std::string> out;
+
+        size_t cur = 0;
+        do
+        {
+            auto pos = str.find(',', cur);
+            if (pos == std::string::npos)
+            {
+                out.push_back(str.substr(cur));
+                break;
+            }
+            out.push_back(str.substr(cur, pos - cur));
+
+            // skip comma and space
+            ++pos;
+            if (str[pos] == ' ')
+            {
+                ++pos;
+            }
+
+            cur = pos;
+        } while (cur != std::string::npos);
+
+        return out;
     }
 }
