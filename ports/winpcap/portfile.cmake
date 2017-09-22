@@ -105,6 +105,7 @@ file(
         "${SOURCE_PATH}/WpdPack/Include/pcap.h"
         "${SOURCE_PATH}/WpdPack/Include/pcap-bpf.h"
         "${SOURCE_PATH}/WpdPack/Include/pcap-namedb.h"
+        "${SOURCE_PATH}/WpdPack/Include/pcap-stdinc.h"
         "${SOURCE_PATH}/WpdPack/Include/remote-ext.h"
         "${SOURCE_PATH}/WpdPack/Include/Win32-Extensions.h"
     DESTINATION
