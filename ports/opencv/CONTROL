@@ -1,5 +1,5 @@
 Source: opencv
-Version: 3.3.0
+Version: 3.3.0-1
 # Optional: Add in vtk to build with VTK and cuda to build with CUDA
-Build-Depends: zlib, libpng, libjpeg-turbo, tiff, protobuf, ceres, ffmpeg
+Build-Depends: zlib, libpng, libjpeg-turbo, tiff, protobuf, ffmpeg
 Description: computer vision library
