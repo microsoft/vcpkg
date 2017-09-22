@@ -151,12 +151,12 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 
     if($Dependency -eq "cmake")
     {
-        $requiredVersion = "3.9.0"
-        $downloadVersion = "3.9.0"
-        $url = "https://cmake.org/files/v3.9/cmake-3.9.0-win32-x86.zip"
-        $downloadPath = "$downloadsDir\cmake-3.9.0-win32-x86.zip"
-        $expectedDownloadedFileHash = "9d593839f64b94718a1b75b8519b56ecb959e4d37d406bf2a087e2c1f7a6b89c"
-        $executableFromDownload = "$downloadsDir\cmake-3.9.0-win32-x86\bin\cmake.exe"
+        $requiredVersion = "3.9.1"
+        $downloadVersion = "3.9.1"
+        $url = "https://cmake.org/files/v3.9/cmake-3.9.1-win32-x86.zip"
+        $downloadPath = "$downloadsDir\cmake-3.9.1-win32-x86.zip"
+        $expectedDownloadedFileHash = "e0d9501bd34e3100e925dcb2e07f5f0ce8980bdbe5fce0ae950b21368d54c1a1"
+        $executableFromDownload = "$downloadsDir\cmake-3.9.1-win32-x86\bin\cmake.exe"
         $extractionType = $ExtractionType_ZIP
         $extractionFolder = $downloadsDir
     }
@@ -172,16 +172,16 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     }
     elseif($Dependency -eq "git")
     {
-        $requiredVersion = "2.0.0"
-        $downloadVersion = "2.11.1"
-        $url = "https://github.com/git-for-windows/git/releases/download/v2.11.1.windows.1/MinGit-2.11.1-32-bit.zip" # We choose the 32-bit version
-        $downloadPath = "$downloadsDir\MinGit-2.11.1-32-bit.zip"
-        $expectedDownloadedFileHash = "6ca79af09015625f350ef4ad74a75cfb001b340aec095b6963be9d45becb3bba"
+        $requiredVersion = "2.14.1"
+        $downloadVersion = "2.14.1"
+        $url = "https://github.com/git-for-windows/git/releases/download/v2.14.1.windows.1/MinGit-2.14.1-32-bit.zip" # We choose the 32-bit version
+        $downloadPath = "$downloadsDir\MinGit-2.14.1-32-bit.zip"
+        $expectedDownloadedFileHash = "77b468e0ead1e7da4cb3a1cf35dabab5210bf10457b4142f5e9430318217cdef"
         # There is another copy of git.exe in MinGit\bin. However, an installed version of git add the cmd dir to the PATH.
         # Therefore, choosing the cmd dir here as well.
-        $executableFromDownload = "$downloadsDir\MinGit-2.11.1-32-bit\cmd\git.exe"
+        $executableFromDownload = "$downloadsDir\MinGit-2.14.1-32-bit\cmd\git.exe"
         $extractionType = $ExtractionType_ZIP
-        $extractionFolder = "$downloadsDir\MinGit-2.11.1-32-bit"
+        $extractionFolder = "$downloadsDir\MinGit-2.14.1-32-bit"
     }
     else
     {
