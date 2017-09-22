@@ -161,6 +161,7 @@
     <ClInclude Include="..\include\vcpkg_Chrono.h" />
     <ClInclude Include="..\include\triplet.h" />
     <ClInclude Include="..\include\vcpkglib.h" />
+    <ClInclude Include="..\include\vcpkg_GlobalState.h" />
     <ClInclude Include="..\include\vcpkg_Parse.h" />
     <ClInclude Include="..\include\vcpkg_Checks.h" />
     <ClInclude Include="..\include\VcpkgCmdArguments.h" />
@@ -227,6 +228,7 @@
     <ClCompile Include="..\src\StatusParagraph.cpp" />
     <ClCompile Include="..\src\StatusParagraphs.cpp" />
     <ClCompile Include="..\src\triplet.cpp" />
+    <ClCompile Include="..\src\vcpkg_GlobalState.cpp" />
     <ClCompile Include="..\src\vcpkg_Parse.cpp" />
     <ClCompile Include="..\src\vcpkg_Checks.cpp" />
     <ClCompile Include="..\src\VcpkgCmdArguments.cpp" />

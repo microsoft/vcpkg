@@ -3,6 +3,7 @@
 #include "VcpkgCmdArguments.h"
 #include "metrics.h"
 #include "vcpkg_Commands.h"
+#include "vcpkg_GlobalState.h"
 #include "vcpkg_System.h"
 
 namespace vcpkg
@@ -15,7 +16,7 @@ namespace vcpkg
         if (arg_begin == arg_end)
         {
             System::println(System::Color::error, "Error: expected value after %s", option_name);
-            Metrics::track_property("error", "error option name");
+            Metrics::g_metrics.lock()->track_property("error", "error option name");
             Commands::Help::print_usage();
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
@@ -23,7 +24,7 @@ namespace vcpkg
         if (option_field != nullptr)
         {
             System::println(System::Color::error, "Error: %s specified multiple times", option_name);
-            Metrics::track_property("error", "error option specified multiple times");
+            Metrics::g_metrics.lock()->track_property("error", "error option specified multiple times");
             Commands::Help::print_usage();
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
@@ -36,7 +37,7 @@ namespace vcpkg
         if (option_field && option_field != new_setting)
         {
             System::println(System::Color::error, "Error: conflicting values specified for --%s", option_name);
-            Metrics::track_property("error", "error conflicting switches");
+            Metrics::g_metrics.lock()->track_property("error", "error conflicting switches");
             Commands::Help::print_usage();
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
@@ -70,7 +71,7 @@ namespace vcpkg
 
             if (arg[0] == '-' && arg[1] != '-')
             {
-                Metrics::track_property("error", "error short options are not supported");
+                Metrics::g_metrics.lock()->track_property("error", "error short options are not supported");
                 Checks::exit_with_message(VCPKG_LINE_INFO, "Error: short options are not supported: %s", arg);
             }
 
@@ -119,11 +120,11 @@ namespace vcpkg
                 }
                 if (arg == "--featurepackages")
                 {
-                    g_feature_packages = true;
+                    GlobalState::feature_packages = true;
                     continue;
                 }
 
-                auto eq_pos = arg.find('=');
+                const auto eq_pos = arg.find('=');
                 if (eq_pos != std::string::npos)
                 {
                     args.optional_command_arguments.emplace(arg.substr(0, eq_pos), arg.substr(eq_pos + 1));
@@ -157,7 +158,7 @@ namespace vcpkg
         auto options_copy = this->optional_command_arguments;
         for (const std::string& option : valid_switches)
         {
-            auto it = options_copy.find(option);
+            const auto it = options_copy.find(option);
             if (it != options_copy.end())
             {
                 if (it->second.has_value())
@@ -176,7 +177,7 @@ namespace vcpkg
 
         for (const std::string& option : valid_settings)
         {
-            auto it = options_copy.find(option);
+            const auto it = options_copy.find(option);
             if (it != options_copy.end())
             {
                 if (!it->second.has_value())
@@ -221,17 +222,17 @@ namespace vcpkg
 
     void VcpkgCmdArguments::check_max_arg_count(const size_t expected_arg_count) const
     {
-        return check_max_arg_count(expected_arg_count, "");
+        return check_max_arg_count(expected_arg_count, Strings::EMPTY);
     }
 
     void VcpkgCmdArguments::check_min_arg_count(const size_t expected_arg_count) const
     {
-        return check_min_arg_count(expected_arg_count, "");
+        return check_min_arg_count(expected_arg_count, Strings::EMPTY);
     }
 
     void VcpkgCmdArguments::check_exact_arg_count(const size_t expected_arg_count) const
     {
-        return check_exact_arg_count(expected_arg_count, "");
+        return check_exact_arg_count(expected_arg_count, Strings::EMPTY);
     }
 
     void VcpkgCmdArguments::check_max_arg_count(const size_t expected_arg_count, const std::string& example_text) const

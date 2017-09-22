@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(lz4)
+project(lz4 C)
 
 if(BUILD_SHARED_LIBS)
     add_definitions(-DLZ4_DLL_EXPORT)

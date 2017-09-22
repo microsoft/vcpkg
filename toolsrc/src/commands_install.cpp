@@ -6,6 +6,7 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg_Dependencies.h"
 #include "vcpkg_Files.h"
+#include "vcpkg_GlobalState.h"
 #include "vcpkg_Input.h"
 #include "vcpkg_System.h"
 #include "vcpkg_Util.h"
@@ -13,11 +14,7 @@
 
 namespace vcpkg::Commands::Install
 {
-    using Dependencies::InstallPlanAction;
-    using Dependencies::RequestType;
-    using Dependencies::InstallPlanType;
-    using Dependencies::RemovePlanAction;
-    using Dependencies::RemovePlanType;
+    using namespace Dependencies;
 
     InstallDir InstallDir::from_destination_root(const fs::path& destination_root,
                                                  const std::string& destination_subdirectory,
@@ -62,7 +59,7 @@ namespace vcpkg::Commands::Install
         auto files = fs.get_files_recursive(source_dir);
         for (auto&& file : files)
         {
-            auto status = fs.status(file, ec);
+            const auto status = fs.status(file, ec);
             if (ec)
             {
                 System::println(System::Color::error, "failed: %s: %s", file.u8string(), ec.message());
@@ -176,45 +173,10 @@ namespace vcpkg::Commands::Install
         return SortedVector<std::string>(std::move(installed_files));
     }
 
-    static void print_plan(const std::map<InstallPlanType, std::vector<const InstallPlanAction*>>& group_by_plan_type)
+    InstallResult install_package(const VcpkgPaths& paths, const BinaryControlFile& bcf, StatusParagraphs* status_db)
     {
-        static constexpr std::array<InstallPlanType, 3> order = {
-            InstallPlanType::ALREADY_INSTALLED, InstallPlanType::BUILD_AND_INSTALL, InstallPlanType::INSTALL};
-
-        for (const InstallPlanType plan_type : order)
-        {
-            auto it = group_by_plan_type.find(plan_type);
-            if (it == group_by_plan_type.cend())
-            {
-                continue;
-            }
-
-            std::vector<const InstallPlanAction*> cont = it->second;
-            std::sort(cont.begin(), cont.end(), &InstallPlanAction::compare_by_name);
-            const std::string as_string = Strings::join("\n", cont, [](const InstallPlanAction* p) {
-                return Dependencies::to_output_string(p->request_type, p->spec.to_string());
-            });
-
-            switch (plan_type)
-            {
-                case InstallPlanType::ALREADY_INSTALLED:
-                    System::println("The following packages are already installed:\n%s", as_string);
-                    continue;
-                case InstallPlanType::BUILD_AND_INSTALL:
-                    System::println("The following packages will be built and installed:\n%s", as_string);
-                    continue;
-                case InstallPlanType::INSTALL:
-                    System::println("The following packages will be installed:\n%s", as_string);
-                    continue;
-                default: Checks::unreachable(VCPKG_LINE_INFO);
-            }
-        }
-    }
-
-    void install_package(const VcpkgPaths& paths, const BinaryParagraph& binary_paragraph, StatusParagraphs* status_db)
-    {
-        const fs::path package_dir = paths.package_dir(binary_paragraph.spec);
-        const Triplet& triplet = binary_paragraph.spec.triplet();
+        const fs::path package_dir = paths.package_dir(bcf.core_paragraph.spec);
+        const Triplet& triplet = bcf.core_paragraph.spec.triplet();
         const std::vector<StatusParagraphAndAssociatedFiles> pgh_and_files = get_installed_files(paths, *status_db);
 
         const SortedVector<std::string> package_files =
@@ -234,35 +196,52 @@ namespace vcpkg::Commands::Install
             System::println(System::Color::error,
                             "The following files are already installed in %s and are in conflict with %s",
                             triplet_install_path.generic_string(),
-                            binary_paragraph.spec);
+                            bcf.core_paragraph.spec);
             System::print("\n    ");
             System::println(Strings::join("\n    ", intersection));
-            System::println("");
-            Checks::exit_fail(VCPKG_LINE_INFO);
+            System::println();
+            return InstallResult::FILE_CONFLICTS;
         }
 
         StatusParagraph source_paragraph;
-        source_paragraph.package = binary_paragraph;
+        source_paragraph.package = bcf.core_paragraph;
         source_paragraph.want = Want::INSTALL;
         source_paragraph.state = InstallState::HALF_INSTALLED;
-        for (auto&& dep : source_paragraph.package.depends)
-        {
-            if (status_db->find_installed(dep, source_paragraph.package.spec.triplet()) == status_db->end())
-            {
-                Checks::unreachable(VCPKG_LINE_INFO);
-            }
-        }
+
         write_update(paths, source_paragraph);
         status_db->insert(std::make_unique<StatusParagraph>(source_paragraph));
 
+        std::vector<StatusParagraph> features_spghs;
+        for (auto&& feature : bcf.features)
+        {
+            features_spghs.emplace_back();
+
+            StatusParagraph& feature_paragraph = features_spghs.back();
+            feature_paragraph.package = feature;
+            feature_paragraph.want = Want::INSTALL;
+            feature_paragraph.state = InstallState::HALF_INSTALLED;
+
+            write_update(paths, feature_paragraph);
+            status_db->insert(std::make_unique<StatusParagraph>(feature_paragraph));
+        }
+
         const InstallDir install_dir = InstallDir::from_destination_root(
-            paths.installed, triplet.to_string(), paths.listfile_path(binary_paragraph));
+            paths.installed, triplet.to_string(), paths.listfile_path(bcf.core_paragraph));
 
         install_files_and_write_listfile(paths.get_filesystem(), package_dir, install_dir);
 
         source_paragraph.state = InstallState::INSTALLED;
         write_update(paths, source_paragraph);
         status_db->insert(std::make_unique<StatusParagraph>(source_paragraph));
+
+        for (auto&& feature_paragraph : features_spghs)
+        {
+            feature_paragraph.state = InstallState::INSTALLED;
+            write_update(paths, feature_paragraph);
+            status_db->insert(std::make_unique<StatusParagraph>(feature_paragraph));
+        }
+
+        return InstallResult::SUCCESS;
     }
 
     using Build::BuildResult;
@@ -274,6 +253,8 @@ namespace vcpkg::Commands::Install
     {
         const InstallPlanType& plan_type = action.plan_type;
         const std::string display_name = action.spec.to_string();
+        const std::string display_name_with_features =
+            GlobalState::feature_packages ? action.displayname() : display_name;
 
         const bool is_user_requested = action.request_type == RequestType::USER_REQUESTED;
         const bool use_head_version = to_bool(build_package_options.use_head_version);
@@ -281,75 +262,65 @@ namespace vcpkg::Commands::Install
         if (plan_type == InstallPlanType::ALREADY_INSTALLED)
         {
             if (use_head_version && is_user_requested)
-            {
                 System::println(
                     System::Color::warning, "Package %s is already installed -- not building from HEAD", display_name);
-            }
             else
-            {
                 System::println(System::Color::success, "Package %s is already installed", display_name);
-            }
             return BuildResult::SUCCEEDED;
         }
 
-        if (plan_type == InstallPlanType::BUILD_AND_INSTALL && !g_feature_packages)
+        if (plan_type == InstallPlanType::BUILD_AND_INSTALL)
         {
             if (use_head_version)
-                System::println("Building package %s from HEAD... ", display_name);
+                System::println("Building package %s from HEAD... ", display_name_with_features);
             else
-                System::println("Building package %s... ", display_name);
+                System::println("Building package %s... ", display_name_with_features);
 
-            const Build::BuildPackageConfig build_config{
-                action.any_paragraph.source_paragraph.value_or_exit(VCPKG_LINE_INFO),
-                action.spec.triplet(),
-                paths.port_dir(action.spec),
-                build_package_options};
-            const auto result = Build::build_package(paths, build_config, status_db);
+            const auto result = [&]() -> Build::ExtendedBuildResult {
+                if (GlobalState::feature_packages)
+                {
+                    const Build::BuildPackageConfig build_config{
+                        *action.any_paragraph.source_control_file.value_or_exit(VCPKG_LINE_INFO),
+                        action.spec.triplet(),
+                        paths.port_dir(action.spec),
+                        build_package_options,
+                        action.feature_list};
+                    return Build::build_package(paths, build_config, status_db);
+                }
+                else
+                {
+                    const Build::BuildPackageConfig build_config{
+                        action.any_paragraph.source_paragraph.value_or_exit(VCPKG_LINE_INFO),
+                        action.spec.triplet(),
+                        paths.port_dir(action.spec),
+                        build_package_options};
+                    return Build::build_package(paths, build_config, status_db);
+                }
+            }();
+
             if (result.code != Build::BuildResult::SUCCEEDED)
             {
                 System::println(System::Color::error, Build::create_error_message(result.code, action.spec));
                 return result.code;
             }
-            System::println("Building package %s... done", display_name);
 
-            const BinaryParagraph bpgh =
-                Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO);
-            System::println("Installing package %s... ", display_name);
-            install_package(paths, bpgh, &status_db);
-            System::println(System::Color::success, "Installing package %s... done", display_name);
-            return BuildResult::SUCCEEDED;
-        }
+            System::println("Building package %s... done", display_name_with_features);
 
-        if (plan_type == InstallPlanType::BUILD_AND_INSTALL && g_feature_packages)
-        {
-            if (use_head_version)
-                System::println("Building package %s from HEAD... ", display_name);
-            else
-                System::println("Building package %s... ", display_name);
-
-            const Build::BuildPackageConfig build_config{
-                *action.any_paragraph.source_control_file.value_or_exit(VCPKG_LINE_INFO),
-                action.spec.triplet(),
-                paths.port_dir(action.spec),
-                build_package_options,
-                action.feature_list};
-            const auto result = Build::build_package(paths, build_config, status_db);
-            if (result.code != Build::BuildResult::SUCCEEDED)
+            const BinaryControlFile bcf =
+                Paragraphs::try_load_cached_control_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO);
+            System::println("Installing package %s... ", display_name_with_features);
+            const auto install_result = install_package(paths, bcf, &status_db);
+            switch (install_result)
             {
-                System::println(System::Color::error, Build::create_error_message(result.code, action.spec));
-                return result.code;
+                case InstallResult::SUCCESS:
+                    System::println(System::Color::success, "Installing package %s... done", display_name);
+                    return BuildResult::SUCCEEDED;
+                case InstallResult::FILE_CONFLICTS: return BuildResult::FILE_CONFLICTS;
+                default: Checks::unreachable(VCPKG_LINE_INFO);
             }
-            System::println("Building package %s... done", display_name);
-
-            const BinaryParagraph bpgh =
-                Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO);
-            System::println("Installing package %s... ", display_name);
-            install_package(paths, bpgh, &status_db);
-            System::println(System::Color::success, "Installing package %s... done", display_name);
-            return BuildResult::SUCCEEDED;
         }
 
-        if (plan_type == InstallPlanType::INSTALL && !g_feature_packages)
+        if (plan_type == InstallPlanType::INSTALL)
         {
             if (use_head_version && is_user_requested)
             {
@@ -357,12 +328,198 @@ namespace vcpkg::Commands::Install
                     System::Color::warning, "Package %s is already built -- not building from HEAD", display_name);
             }
             System::println("Installing package %s... ", display_name);
-            install_package(paths, action.any_paragraph.binary_paragraph.value_or_exit(VCPKG_LINE_INFO), &status_db);
-            System::println(System::Color::success, "Installing package %s... done", display_name);
-            return BuildResult::SUCCEEDED;
+            const auto install_result = install_package(
+                paths, action.any_paragraph.binary_control_file.value_or_exit(VCPKG_LINE_INFO), &status_db);
+            switch (install_result)
+            {
+                case InstallResult::SUCCESS:
+                    System::println(System::Color::success, "Installing package %s... done", display_name);
+                    return BuildResult::SUCCEEDED;
+                case InstallResult::FILE_CONFLICTS: return BuildResult::FILE_CONFLICTS;
+                default: Checks::unreachable(VCPKG_LINE_INFO);
+            }
         }
 
         Checks::unreachable(VCPKG_LINE_INFO);
+    }
+
+    static void print_plan(const std::vector<AnyAction>& action_plan, bool is_recursive)
+    {
+        std::vector<const RemovePlanAction*> remove_plans;
+        std::vector<const InstallPlanAction*> rebuilt_plans;
+        std::vector<const InstallPlanAction*> only_install_plans;
+        std::vector<const InstallPlanAction*> new_plans;
+        std::vector<const InstallPlanAction*> already_installed_plans;
+
+        const bool has_non_user_requested_packages = Util::find_if(action_plan, [](const AnyAction& package) -> bool {
+                                                         if (auto iplan = package.install_plan.get())
+                                                             return iplan->request_type != RequestType::USER_REQUESTED;
+                                                         else
+                                                             return false;
+                                                     }) != action_plan.cend();
+
+        for (auto&& action : action_plan)
+        {
+            if (auto install_action = action.install_plan.get())
+            {
+                // remove plans are guaranteed to come before install plans, so we know the plan will be contained if at
+                // all.
+                auto it = Util::find_if(
+                    remove_plans, [&](const RemovePlanAction* plan) { return plan->spec == install_action->spec; });
+                if (it != remove_plans.end())
+                {
+                    rebuilt_plans.emplace_back(install_action);
+                }
+                else
+                {
+                    switch (install_action->plan_type)
+                    {
+                        case InstallPlanType::INSTALL: only_install_plans.emplace_back(install_action); break;
+                        case InstallPlanType::ALREADY_INSTALLED:
+                            if (install_action->request_type == RequestType::USER_REQUESTED)
+                                already_installed_plans.emplace_back(install_action);
+                            break;
+                        case InstallPlanType::BUILD_AND_INSTALL: new_plans.emplace_back(install_action); break;
+                        default: Checks::unreachable(VCPKG_LINE_INFO);
+                    }
+                }
+            }
+            else if (auto remove_action = action.remove_plan.get())
+            {
+                remove_plans.emplace_back(remove_action);
+            }
+        }
+
+        std::sort(remove_plans.begin(), remove_plans.end(), &RemovePlanAction::compare_by_name);
+        std::sort(rebuilt_plans.begin(), rebuilt_plans.end(), &InstallPlanAction::compare_by_name);
+        std::sort(only_install_plans.begin(), only_install_plans.end(), &InstallPlanAction::compare_by_name);
+        std::sort(new_plans.begin(), new_plans.end(), &InstallPlanAction::compare_by_name);
+        std::sort(already_installed_plans.begin(), already_installed_plans.end(), &InstallPlanAction::compare_by_name);
+
+        if (already_installed_plans.size() > 0)
+        {
+            const std::string already_string =
+                Strings::join("\n", already_installed_plans, [](const InstallPlanAction* p) {
+                    return to_output_string(p->request_type, p->displayname());
+                });
+            System::println("The following packages are already installed:\n%s", already_string);
+        }
+
+        if (rebuilt_plans.size() > 0)
+        {
+            const std::string rebuilt_string = Strings::join("\n", rebuilt_plans, [](const InstallPlanAction* p) {
+                return to_output_string(p->request_type, p->displayname());
+            });
+            System::println("The following packages will be rebuilt:\n%s", rebuilt_string);
+        }
+
+        if (new_plans.size() > 0)
+        {
+            const std::string new_string = Strings::join("\n", new_plans, [](const InstallPlanAction* p) {
+                return to_output_string(p->request_type, p->displayname());
+            });
+            System::println("The following packages will be built and installed:\n%s", new_string);
+        }
+
+        if (only_install_plans.size() > 0)
+        {
+            const std::string only_install_string =
+                Strings::join("\n", only_install_plans, [](const InstallPlanAction* p) {
+                    return to_output_string(p->request_type, p->displayname());
+                });
+            System::println("The following packages will be directly installed:\n%s", only_install_string);
+        }
+
+        if (has_non_user_requested_packages)
+            System::println("Additional packages (*) will be installed to complete this operation.");
+
+        if (remove_plans.size() > 0 && !is_recursive)
+        {
+            System::println(System::Color::warning,
+                            "If you are sure you want to rebuild the above packages, run the command with the "
+                            "--recurse option");
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+    }
+
+    void perform_and_exit(const std::vector<AnyAction>& action_plan,
+                          const Build::BuildPackageOptions& install_plan_options,
+                          const KeepGoing keep_going,
+                          const PrintSummary print_summary,
+                          const VcpkgPaths& paths,
+                          StatusParagraphs& status_db)
+    {
+        std::vector<BuildResult> results;
+        std::vector<std::string> timing;
+        const ElapsedTime timer = ElapsedTime::create_started();
+        size_t counter = 0;
+        const size_t package_count = action_plan.size();
+
+        for (const auto& action : action_plan)
+        {
+            const ElapsedTime build_timer = ElapsedTime::create_started();
+            counter++;
+
+            const std::string display_name = action.spec().to_string();
+            System::println("Starting package %d/%d: %s", counter, package_count, display_name);
+
+            timing.push_back("0");
+            results.push_back(BuildResult::NULLVALUE);
+
+            if (const auto install_action = action.install_plan.get())
+            {
+                const BuildResult result =
+                    perform_install_plan_action(paths, *install_action, install_plan_options, status_db);
+                if (result != BuildResult::SUCCEEDED && keep_going == KeepGoing::NO)
+                {
+                    System::println(Build::create_user_troubleshooting_message(install_action->spec));
+                    Checks::exit_fail(VCPKG_LINE_INFO);
+                }
+
+                results.back() = result;
+            }
+            else if (const auto remove_action = action.remove_plan.get())
+            {
+                Checks::check_exit(VCPKG_LINE_INFO, GlobalState::feature_packages);
+                Remove::perform_remove_plan_action(paths, *remove_action, Remove::Purge::YES, status_db);
+            }
+            else
+            {
+                Checks::unreachable(VCPKG_LINE_INFO);
+            }
+
+            timing.back() = build_timer.to_string();
+            System::println("Elapsed time for package %s: %s", display_name, build_timer.to_string());
+        }
+
+        System::println("Total time taken: %s", timer.to_string());
+
+        if (print_summary == PrintSummary::YES)
+        {
+            for (size_t i = 0; i < results.size(); i++)
+            {
+                System::println("%s: %s: %s", action_plan[i].spec(), Build::to_string(results[i]), timing[i]);
+            }
+
+            std::map<BuildResult, int> summary;
+            for (const BuildResult& v : Build::BUILD_RESULT_VALUES)
+            {
+                summary[v] = 0;
+            }
+
+            for (const BuildResult& r : results)
+            {
+                summary[r]++;
+            }
+
+            System::println("\n\nSUMMARY");
+            for (const std::pair<const BuildResult, int>& entry : summary)
+            {
+                System::println("    %s: %d", Build::to_string(entry.first), entry.second);
+            }
+        }
+
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
@@ -370,69 +527,86 @@ namespace vcpkg::Commands::Install
         static const std::string OPTION_DRY_RUN = "--dry-run";
         static const std::string OPTION_USE_HEAD_VERSION = "--head";
         static const std::string OPTION_NO_DOWNLOADS = "--no-downloads";
+        static const std::string OPTION_RECURSE = "--recurse";
+        static const std::string OPTION_KEEP_GOING = "--keep-going";
 
         // input sanitization
-        static const std::string example =
+        static const std::string EXAMPLE =
             Commands::Help::create_example_string("install zlib zlib:x64-windows curl boost");
-        args.check_min_arg_count(1, example);
+        args.check_min_arg_count(1, EXAMPLE);
 
-        const std::vector<PackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
-            return Input::check_and_get_package_spec(arg, default_triplet, example);
+        const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
+            return Input::check_and_get_full_package_spec(arg, default_triplet, EXAMPLE);
         });
+
         for (auto&& spec : specs)
-            Input::check_triplet(spec.triplet(), paths);
+        {
+            Input::check_triplet(spec.package_spec.triplet(), paths);
+            if (!spec.features.empty() && !GlobalState::feature_packages)
+            {
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO, "Feature packages are experimentally available under the --featurepackages flag.");
+            }
+        }
 
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments(
-            {OPTION_DRY_RUN, OPTION_USE_HEAD_VERSION, OPTION_NO_DOWNLOADS});
-        const bool dryRun = options.find(OPTION_DRY_RUN) != options.cend();
+            {OPTION_DRY_RUN, OPTION_USE_HEAD_VERSION, OPTION_NO_DOWNLOADS, OPTION_RECURSE, OPTION_KEEP_GOING});
+        const bool dry_run = options.find(OPTION_DRY_RUN) != options.cend();
         const bool use_head_version = options.find(OPTION_USE_HEAD_VERSION) != options.cend();
         const bool no_downloads = options.find(OPTION_NO_DOWNLOADS) != options.cend();
+        const bool is_recursive = options.find(OPTION_RECURSE) != options.cend();
+        const KeepGoing keep_going = to_keep_going(options.find(OPTION_KEEP_GOING) != options.cend());
 
         // create the plan
         StatusParagraphs status_db = database_load_check(paths);
 
-        Dependencies::PathsPortFile paths_port_file(paths);
-        std::vector<InstallPlanAction> install_plan =
-            Dependencies::create_install_plan(paths_port_file, specs, status_db);
-        Checks::check_exit(VCPKG_LINE_INFO, !install_plan.empty(), "Install plan cannot be empty");
+        const Build::BuildPackageOptions install_plan_options = {Build::to_use_head_version(use_head_version),
+                                                                 Build::to_allow_downloads(!no_downloads)};
 
-        // log the plan
-        const std::string specs_string =
-            Strings::join(",", install_plan, [](const InstallPlanAction& plan) { return plan.spec.to_string(); });
-        Metrics::track_property("installplan", specs_string);
+        std::vector<AnyAction> action_plan;
 
-        std::map<InstallPlanType, std::vector<const InstallPlanAction*>> group_by_plan_type;
-        Util::group_by(install_plan, &group_by_plan_type, [](const InstallPlanAction& p) { return p.plan_type; });
-        print_plan(group_by_plan_type);
-
-        const bool has_non_user_requested_packages =
-            Util::find_if(install_plan, [](const InstallPlanAction& package) -> bool {
-                return package.request_type != RequestType::USER_REQUESTED;
-            }) != install_plan.cend();
-
-        if (has_non_user_requested_packages)
+        if (GlobalState::feature_packages)
         {
-            System::println("Additional packages (*) will be installed to complete this operation.");
+            std::unordered_map<std::string, SourceControlFile> scf_map;
+            auto all_ports = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
+            for (auto&& port : all_ports.paragraphs)
+            {
+                scf_map[port->core_paragraph->name] = std::move(*port);
+            }
+            action_plan = create_feature_install_plan(scf_map, FullPackageSpec::to_feature_specs(specs), status_db);
+        }
+        else
+        {
+            Dependencies::PathsPortFile paths_port_file(paths);
+            auto install_plan = Dependencies::create_install_plan(
+                paths_port_file, Util::fmap(specs, [](auto&& spec) { return spec.package_spec; }), status_db);
+
+            action_plan = Util::fmap(
+                install_plan, [](InstallPlanAction& install_action) { return AnyAction(std::move(install_action)); });
         }
 
-        if (dryRun)
+        // install plan will be empty if it is already installed - need to change this at status paragraph part
+        Checks::check_exit(VCPKG_LINE_INFO, !action_plan.empty(), "Install plan cannot be empty");
+
+        // log the plan
+        const std::string specs_string = Strings::join(",", action_plan, [](const AnyAction& action) {
+            if (auto iaction = action.install_plan.get())
+                return iaction->spec.to_string();
+            else if (auto raction = action.remove_plan.get())
+                return "R$" + raction->spec.to_string();
+            Checks::unreachable(VCPKG_LINE_INFO);
+        });
+
+        Metrics::g_metrics.lock()->track_property("installplan", specs_string);
+
+        print_plan(action_plan, is_recursive);
+
+        if (dry_run)
         {
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        const Build::BuildPackageOptions install_plan_options = {Build::to_use_head_version(use_head_version),
-                                                                 Build::to_allow_downloads(!no_downloads)};
-
-        // execute the plan
-        for (const InstallPlanAction& action : install_plan)
-        {
-            const BuildResult result = perform_install_plan_action(paths, action, install_plan_options, status_db);
-            if (result != BuildResult::SUCCEEDED)
-            {
-                System::println(Build::create_user_troubleshooting_message(action.spec));
-                Checks::exit_fail(VCPKG_LINE_INFO);
-            }
-        }
+        perform_and_exit(action_plan, install_plan_options, keep_going, PrintSummary::NO, paths, status_db);
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }

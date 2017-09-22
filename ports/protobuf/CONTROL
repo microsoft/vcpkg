@@ -1,4 +1,4 @@
 Source: protobuf
-Version: 3.3.0-3
+Version: 3.4.0-2
 Build-Depends: zlib
 Description: Protocol Buffers - Google's data interchange format

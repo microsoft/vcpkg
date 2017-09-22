@@ -1,22 +1,18 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/lcms2-2.8)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://sourceforge.net/projects/lcms/files/lcms/2.8/lcms2-2.8.tar.gz/download"
-    FILENAME "lcms2-2.8.tar.gz"
-    SHA512 a9478885b4892c79314a2ef9ab560e6655ac8f2d17abae0805e8b871138bb190e21f0e5c805398449f9dad528dc50baaf9e3cce8b8158eb8ff74179be5733f8f
-)
-vcpkg_extract_source_archive(${ARCHIVE})
-message(STATUS ${SOURCE_PATH})
+vcpkg_from_github( 
+    OUT_SOURCE_PATH SOURCE_PATH 
+    REPO mm2/Little-CMS
+    REF lcms2.8
+    SHA512 22ee94aa3333db4248607d8aa84343d324e04b30c154c46672c6f668e14a369b9b72f2557b8465218b6e9a2676cf8fa37d617b4aa13a013dc2337197a599e63a
+    HEAD_REF master 
+) 
+
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
-set(USE_SHARED_LIBRARY OFF)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  set(USE_SHARED_LIBRARY ON)
-endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
 	OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
 )
@@ -32,4 +28,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
   vcpkg_apply_patches(
     SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/shared.patch")
-endif(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+endif()

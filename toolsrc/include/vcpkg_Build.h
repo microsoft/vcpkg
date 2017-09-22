@@ -9,7 +9,6 @@
 
 #include <array>
 #include <map>
-#include <unordered_map>
 #include <vector>
 
 namespace vcpkg::Build
@@ -52,13 +51,15 @@ namespace vcpkg::Build
         SUCCEEDED,
         BUILD_FAILED,
         POST_BUILD_CHECKS_FAILED,
+        FILE_CONFLICTS,
         CASCADED_DUE_TO_MISSING_DEPENDENCIES
     };
 
-    static constexpr std::array<BuildResult, 4> BuildResult_values = {
+    static constexpr std::array<BuildResult, 5> BUILD_RESULT_VALUES = {
         BuildResult::SUCCEEDED,
         BuildResult::BUILD_FAILED,
         BuildResult::POST_BUILD_CHECKS_FAILED,
+        BuildResult::FILE_CONFLICTS,
         BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES};
 
     const std::string& to_string(const BuildResult build_result);
@@ -141,7 +142,7 @@ namespace vcpkg::Build
         COUNT,
     };
 
-    constexpr std::array<BuildPolicy, size_t(BuildPolicy::COUNT)> g_all_policies = {
+    constexpr std::array<BuildPolicy, size_t(BuildPolicy::COUNT)> G_ALL_POLICIES = {
         BuildPolicy::EMPTY_PACKAGE,
         BuildPolicy::DLLS_WITHOUT_LIBS,
         BuildPolicy::ONLY_RELEASE_CRT,
@@ -157,9 +158,9 @@ namespace vcpkg::Build
         BuildPolicies() = default;
         BuildPolicies(std::map<BuildPolicy, bool>&& map) : m_policies(std::move(map)) {}
 
-        inline bool is_enabled(BuildPolicy policy) const
+        bool is_enabled(BuildPolicy policy) const
         {
-            auto it = m_policies.find(policy);
+            const auto it = m_policies.find(policy);
             if (it != m_policies.cend()) return it->second;
             return false;
         }

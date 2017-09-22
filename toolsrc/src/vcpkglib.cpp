@@ -9,8 +9,6 @@
 
 namespace vcpkg
 {
-    bool g_debugging = false;
-
     static StatusParagraphs load_current_database(Files::Filesystem& fs,
                                                   const fs::path& vcpkg_dir_status_file,
                                                   const fs::path& vcpkg_dir_status_file_old)
@@ -41,7 +39,7 @@ namespace vcpkg
     {
         auto& fs = paths.get_filesystem();
 
-        auto updates_dir = paths.vcpkg_dir_updates;
+        const auto updates_dir = paths.vcpkg_dir_updates;
 
         std::error_code ec;
         fs.create_directory(paths.installed, ec);
@@ -92,9 +90,9 @@ namespace vcpkg
         static int update_id = 0;
         auto& fs = paths.get_filesystem();
 
-        auto my_update_id = update_id++;
-        auto tmp_update_filename = paths.vcpkg_dir_updates / "incomplete";
-        auto update_filename = paths.vcpkg_dir_updates / std::to_string(my_update_id);
+        const auto my_update_id = update_id++;
+        const auto tmp_update_filename = paths.vcpkg_dir_updates / "incomplete";
+        const auto update_filename = paths.vcpkg_dir_updates / std::to_string(my_update_id);
 
         fs.write_contents(tmp_update_filename, Strings::serialize(p));
         fs.rename(tmp_update_filename, update_filename);
@@ -119,7 +117,7 @@ namespace vcpkg
         if (!was_tracked)
         {
             was_tracked = true;
-            Metrics::track_property("listfile", "update to new format");
+            Metrics::g_metrics.lock()->track_property("listfile", "update to new format");
         }
 
         // The files are sorted such that directories are placed just before the files they contain
@@ -191,7 +189,7 @@ namespace vcpkg
 
         for (const std::unique_ptr<StatusParagraph>& pgh : status_db)
         {
-            if (pgh->state != InstallState::INSTALLED)
+            if (pgh->state != InstallState::INSTALLED || !pgh->package.feature.empty())
             {
                 continue;
             }
@@ -235,14 +233,15 @@ namespace vcpkg
                                 const fs::path& cmake_script,
                                 const std::vector<CMakeVariable>& pass_variables)
     {
-        std::wstring cmd_cmake_pass_variables = Strings::join(L" ", pass_variables, [](auto&& v) { return v.s; });
+        const std::wstring cmd_cmake_pass_variables = Strings::join(L" ", pass_variables, [](auto&& v) { return v.s; });
         return Strings::wformat(
             LR"("%s" %s -P "%s")", cmake_exe.native(), cmd_cmake_pass_variables, cmake_script.generic_wstring());
     }
 
-    std::string shorten_description(const std::string& desc)
+    std::string shorten_text(const std::string& desc, size_t length)
     {
+        Checks::check_exit(VCPKG_LINE_INFO, length >= 3);
         auto simple_desc = std::regex_replace(desc, std::regex("\\s+"), " ");
-        return simple_desc.size() <= 52 ? simple_desc : simple_desc.substr(0, 49) + "...";
+        return simple_desc.size() <= length ? simple_desc : simple_desc.substr(0, length - 3) + "...";
     }
 }

@@ -29,8 +29,8 @@ namespace vcpkg::Commands::BuildCommand
         const PackageSpec& spec = full_spec.package_spec;
         if (options.find(OPTION_CHECKS_ONLY) != options.end())
         {
-            auto pre_build_info = Build::PreBuildInfo::from_triplet_file(paths, spec.triplet());
-            auto build_info = Build::read_build_info(paths.get_filesystem(), paths.build_info_file_path(spec));
+            const auto pre_build_info = Build::PreBuildInfo::from_triplet_file(paths, spec.triplet());
+            const auto build_info = Build::read_build_info(paths.get_filesystem(), paths.build_info_file_path(spec));
             const size_t error_count = PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info);
             Checks::check_exit(VCPKG_LINE_INFO, error_count == 0);
             Checks::exit_success(VCPKG_LINE_INFO);
@@ -45,7 +45,7 @@ namespace vcpkg::Commands::BuildCommand
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
-        for (std::string str : full_spec.features)
+        for (const std::string& str : full_spec.features)
         {
             System::println("%s \n", str);
         }
@@ -56,8 +56,8 @@ namespace vcpkg::Commands::BuildCommand
                            scf->core_paragraph->name,
                            spec.name());
 
-        StatusParagraphs status_db = database_load_check(paths);
-        Build::BuildPackageOptions build_package_options{Build::UseHeadVersion::NO, Build::AllowDownloads::YES};
+        const StatusParagraphs status_db = database_load_check(paths);
+        const Build::BuildPackageOptions build_package_options{Build::UseHeadVersion::NO, Build::AllowDownloads::YES};
 
         const Build::BuildPackageConfig build_config{
             *scf->core_paragraph, spec.triplet(), paths.port_dir(spec), build_package_options};
@@ -68,12 +68,12 @@ namespace vcpkg::Commands::BuildCommand
             System::println(System::Color::error,
                             "The build command requires all dependencies to be already installed.");
             System::println("The following dependencies are missing:");
-            System::println("");
+            System::println();
             for (const auto& p : result.unmet_dependencies)
             {
                 System::println("    %s", p);
             }
-            System::println("");
+            System::println();
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
@@ -89,11 +89,11 @@ namespace vcpkg::Commands::BuildCommand
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
-        static const std::string example = Commands::Help::create_example_string("build zlib:x64-windows");
-        args.check_exact_arg_count(
-            1, example); // Build only takes a single package and all dependencies must already be installed
-        std::string command_argument = args.command_arguments.at(0);
-        const FullPackageSpec spec = Input::check_and_get_full_package_spec(command_argument, default_triplet, example);
+        static const std::string EXAMPLE = Commands::Help::create_example_string("build zlib:x64-windows");
+        // Build only takes a single package and all dependencies must already be installed
+        args.check_exact_arg_count(1, EXAMPLE);
+        const std::string command_argument = args.command_arguments.at(0);
+        const FullPackageSpec spec = Input::check_and_get_full_package_spec(command_argument, default_triplet, EXAMPLE);
         Input::check_triplet(spec.package_spec.triplet(), paths);
         const std::unordered_set<std::string> options =
             args.check_and_get_optional_command_arguments({OPTION_CHECKS_ONLY});

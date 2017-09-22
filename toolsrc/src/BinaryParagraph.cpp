@@ -56,7 +56,7 @@ namespace vcpkg
             this->default_features = parse_comma_list(parser.optional_field(Fields::DEFAULTFEATURES));
         }
 
-        if (auto err = parser.error_info(this->spec.to_string()))
+        if (const auto err = parser.error_info(this->spec.to_string()))
         {
             System::println(
                 System::Color::error, "Error: while parsing the Binary Paragraph for %s", this->spec.to_string());
@@ -80,14 +80,18 @@ namespace vcpkg
     BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh, const FeatureParagraph& fpgh, const Triplet& triplet)
     {
         this->spec = PackageSpec::from_name_and_triplet(spgh.name, triplet).value_or_exit(VCPKG_LINE_INFO);
-        this->version = "";
+        this->version = Strings::EMPTY;
         this->feature = fpgh.name;
         this->description = fpgh.description;
-        this->maintainer = "";
+        this->maintainer = Strings::EMPTY;
         this->depends = filter_dependencies(fpgh.depends, triplet);
     }
 
-    std::string BinaryParagraph::displayname() const { return this->spec.to_string(); }
+    std::string BinaryParagraph::displayname() const
+    {
+        const auto f = this->feature.empty() ? "core" : this->feature;
+        return Strings::format("%s[%s]:%s", this->spec.name(), f, this->spec.triplet());
+    }
 
     std::string BinaryParagraph::dir() const { return this->spec.dir(); }
 

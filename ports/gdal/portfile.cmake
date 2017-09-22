@@ -55,8 +55,8 @@ file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/expat.lib" EXPAT_LIBRARY
 
 # Setup curl libraries + include path
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" CURL_INCLUDE_DIR)
-file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libcurl_imp.lib" CURL_LIBRARY_REL)
-file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libcurl_imp.lib" CURL_LIBRARY_DBG)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libcurl.lib" CURL_LIBRARY_REL)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libcurl.lib" CURL_LIBRARY_DBG)
 
 # Setup sqlite3 libraries + include path
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" SQLITE_INCLUDE_DIR)

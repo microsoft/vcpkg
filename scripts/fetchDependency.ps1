@@ -1,13 +1,7 @@
 [CmdletBinding()]
 param(
-    [string]$Dependency,
-    [ValidateNotNullOrEmpty()]
-    [string]$downloadPromptOverride = "0"
+    [string]$Dependency
 )
-
-$downloadPromptOverride_NO_OVERRIDE= 0
-$downloadPromptOverride_DO_NOT_PROMPT = 1
-$downloadPromptOverride_ALWAYS_PROMPT = 2
 
 if ($PSVersionTable.PSEdition -ne "Core") {
    Import-Module BitsTransfer -Verbose:$false
@@ -22,38 +16,6 @@ $downloadsDir = "$vcpkgRootDir\downloads"
 
 function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 {
-    function promptForDownload([string]$title, [string]$message, [string]$yesDescription, [string]$noDescription, [string]$downloadPromptOverride)
-    {
-        $do_not_prompt =    ($downloadPromptOverride -eq $downloadPromptOverride_DO_NOT_PROMPT) -Or
-                            (Test-Path "$downloadsDir\AlwaysAllowEverything") -Or
-                            (Test-Path "$downloadsDir\AlwaysAllowDownloads")
-
-        if (($downloadPromptOverride -ne $downloadPromptOverride_ALWAYS_PROMPT) -And $do_not_prompt)
-        {
-            return $true
-        }
-
-        $yes = New-Object System.Management.Automation.Host.ChoiceDescription "&Yes", $yesDescription
-        $no = New-Object System.Management.Automation.Host.ChoiceDescription "&No", $noDescription
-        $AlwaysAllowDownloads = New-Object System.Management.Automation.Host.ChoiceDescription "&Always Allow Downloads", ($yesDescription + "(Future download prompts will not be displayed)")
-
-        $options = [System.Management.Automation.Host.ChoiceDescription[]]($yes, $no, $AlwaysAllowDownloads)
-        $result = $host.ui.PromptForChoice($title, $message, $options, 0)
-
-        switch ($result)
-            {
-                0 {return $true}
-                1 {return $false}
-                2 {
-                    New-Item "$downloadsDir\AlwaysAllowDownloads" -type file -force | Out-Null
-                    return $true
-                }
-            }
-
-        throw "Unexpected result"
-    }
-
-
     function performDownload(	[Parameter(Mandatory=$true)][string]$Dependency,
                                 [Parameter(Mandatory=$true)][string]$url,
                                 [Parameter(Mandatory=$true)][string]$downloadDir,
@@ -66,16 +28,8 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
             return
         }
 
-        $title = "Download " + $Dependency
-        $message = ("No suitable version of " + $Dependency  + " was found (requires $requiredVersion or higher). Download portable version?")
-        $yesDescription = "Downloads " + $Dependency + " v" + $downloadVersion +" app-locally."
-        $noDescription = "Does not download " + $Dependency + "."
-
-        $userAllowedDownload = promptForDownload $title $message $yesDescription $noDescription $downloadPromptOverride
-        if (!$userAllowedDownload)
-        {
-            throw [System.IO.FileNotFoundException] ("Could not detect suitable version of " + $Dependency + " and download not allowed")
-        }
+        # Can't print because vcpkg captures the output and expects only the path that is returned at the end of this script file
+        # Write-Host "A suitable version of $Dependency was not found (required v$requiredVersion). Downloading portable $Dependency v$downloadVersion..."
 
         if (!(Test-Path $downloadDir))
         {
@@ -151,12 +105,12 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 
     if($Dependency -eq "cmake")
     {
-        $requiredVersion = "3.9.1"
-        $downloadVersion = "3.9.1"
-        $url = "https://cmake.org/files/v3.9/cmake-3.9.1-win32-x86.zip"
-        $downloadPath = "$downloadsDir\cmake-3.9.1-win32-x86.zip"
-        $expectedDownloadedFileHash = "e0d9501bd34e3100e925dcb2e07f5f0ce8980bdbe5fce0ae950b21368d54c1a1"
-        $executableFromDownload = "$downloadsDir\cmake-3.9.1-win32-x86\bin\cmake.exe"
+        $requiredVersion = "3.9.2"
+        $downloadVersion = "3.9.2"
+        $url = "https://cmake.org/files/v3.9/cmake-3.9.2-win32-x86.zip"
+        $downloadPath = "$downloadsDir\cmake-3.9.2-win32-x86.zip"
+        $expectedDownloadedFileHash = "9fe68d50f065666cb2861f53751390f15c6363c440e86a07677689378bb8329f"
+        $executableFromDownload = "$downloadsDir\cmake-3.9.2-win32-x86\bin\cmake.exe"
         $extractionType = $ExtractionType_ZIP
         $extractionFolder = $downloadsDir
     }
@@ -202,7 +156,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         $hashAlgorithm = [Security.Cryptography.HashAlgorithm]::Create("SHA256")
         $fileAsByteArray = [io.File]::ReadAllBytes($downloadPath)
         $hashByteArray = $hashAlgorithm.ComputeHash($fileAsByteArray)
-        $downloadedFileHash = -Join ($hashByteArray | ForEach {"{0:x2}" -f $_})
+        $downloadedFileHash = -Join ($hashByteArray | ForEach-Object {"{0:x2}" -f $_})
     }
     else
     {

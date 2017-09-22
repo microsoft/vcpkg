@@ -56,6 +56,7 @@ vcpkg_configure_cmake(
         -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
         -DOPENCV_OTHER_INSTALL_PATH=share/opencv
         -DINSTALL_LICENSE=OFF
+        # Optional: change to ON to build with CUDA
         -DWITH_CUDA=OFF
         -DWITH_CUBLAS=OFF
         -DWITH_OPENCLAMDBLAS=OFF
@@ -65,6 +66,8 @@ vcpkg_configure_cmake(
         -DBUILD_PROTOBUF=OFF
         -DUPDATE_PROTO_FILES=ON
         -DPROTOBUF_UPDATE_FILES=ON
+        # Optional: change to ON to build with VTK
+        -DWITH_VTK=OFF
     OPTIONS_DEBUG
         -DINSTALL_HEADERS=OFF
         -DINSTALL_OTHER=OFF

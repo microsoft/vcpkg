@@ -3,6 +3,8 @@
 #include "ParagraphParseResult.h"
 #include "Paragraphs.h"
 #include "vcpkg_Files.h"
+#include "vcpkg_GlobalState.h"
+#include "vcpkg_Util.h"
 
 using namespace vcpkg::Parse;
 
@@ -209,7 +211,7 @@ namespace vcpkg::Paragraphs
         if (auto vector_pghs = pghs.get())
         {
             auto csf = SourceControlFile::parse_control_file(std::move(*vector_pghs));
-            if (!g_feature_packages)
+            if (!GlobalState::feature_packages)
             {
                 if (auto ptr = csf.get())
                 {
@@ -226,14 +228,21 @@ namespace vcpkg::Paragraphs
         return error_info;
     }
 
-    Expected<BinaryParagraph> try_load_cached_package(const VcpkgPaths& paths, const PackageSpec& spec)
+    Expected<BinaryControlFile> try_load_cached_control_package(const VcpkgPaths& paths, const PackageSpec& spec)
     {
-        Expected<std::unordered_map<std::string, std::string>> pghs =
-            get_single_paragraph(paths.get_filesystem(), paths.package_dir(spec) / "CONTROL");
+        Expected<std::vector<std::unordered_map<std::string, std::string>>> pghs =
+            get_paragraphs(paths.get_filesystem(), paths.package_dir(spec) / "CONTROL");
 
         if (auto p = pghs.get())
         {
-            return BinaryParagraph(*p);
+            BinaryControlFile bcf;
+            bcf.core_paragraph = BinaryParagraph(p->front());
+            p->erase(p->begin());
+
+            bcf.features =
+                Util::fmap(*p, [&](auto&& raw_feature) -> BinaryParagraph { return BinaryParagraph(raw_feature); });
+
+            return bcf;
         }
 
         return pghs.error();
