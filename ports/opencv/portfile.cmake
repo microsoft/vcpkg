@@ -1,7 +1,3 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
@@ -38,6 +34,7 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        "-DOPENCV_DOWNLOAD_PATH=${DOWNLOADS}/opencv-cache"
         -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
         -DBUILD_ZLIB=OFF
         -DBUILD_TIFF=OFF
@@ -103,11 +100,13 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/${OpenCV_ARCH})
 
 file(GLOB STATICLIB ${CURRENT_PACKAGES_DIR}/staticlib/*)
 if(STATICLIB)
+  file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib)
   file(COPY ${STATICLIB} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/staticlib)
 endif()
 file(GLOB STATICLIB ${CURRENT_PACKAGES_DIR}/debug/staticlib/*)
 if(STATICLIB)
+  file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib)
   file(COPY ${STATICLIB} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/staticlib)
 endif()
@@ -119,6 +118,9 @@ string(REPLACE " vc14"
                " ${OpenCV_RUNTIME}" OPENCV_CONFIG "${OPENCV_CONFIG}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVConfig.cmake "${OPENCV_CONFIG}")
 
+if(EXISTS "${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/staticlib")
+  file(RENAME ${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/staticlib ${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/lib)
+endif()
 file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/lib/OpenCVModules-release.cmake OPENCV_CONFIG_LIB)
 string(REPLACE "/staticlib/"
                "/lib/" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
@@ -128,6 +130,9 @@ string(REPLACE "${CURRENT_INSTALLED_DIR}"
                "\${_IMPORT_PREFIX}" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/lib/OpenCVModules-release.cmake "${OPENCV_CONFIG_LIB}")
 
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/staticlib")
+  file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/staticlib ${CURRENT_PACKAGES_DIR}/debug/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/lib)
+endif()
 file(READ ${CURRENT_PACKAGES_DIR}/debug/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/lib/OpenCVModules-debug.cmake OPENCV_CONFIG_LIB)
 string(REPLACE "/staticlib/"
                "/lib/" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
@@ -145,3 +150,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_pdbs()
+
+set(VCPKG_LIBRARY_LINKAGE "dynamic")
