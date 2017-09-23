@@ -9,6 +9,7 @@ vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DSKIP_INSTALL_FILES=ON
     OPTIONS_DEBUG
