@@ -370,10 +370,14 @@ namespace vcpkg
                     supported_architectures.push_back({L"x86_amd64", CPU::X86, CPU::X64});
                 if (fs.exists(vcvarsall_dir / "vcvarsx86_arm.bat"))
                     supported_architectures.push_back({L"x86_arm", CPU::X86, CPU::ARM});
+                if (fs.exists(vcvarsall_dir / "vcvarsx86_arm64.bat"))
+                    supported_architectures.push_back({L"x86_arm64", CPU::X86, CPU::ARM64});
                 if (fs.exists(vcvarsall_dir / "vcvarsamd64_x86.bat"))
                     supported_architectures.push_back({L"amd64_x86", CPU::X64, CPU::X86});
                 if (fs.exists(vcvarsall_dir / "vcvarsamd64_arm.bat"))
                     supported_architectures.push_back({L"amd64_arm", CPU::X64, CPU::ARM});
+                if (fs.exists(vcvarsall_dir / "vcvarsamd64_arm64.bat"))
+                    supported_architectures.push_back({L"amd64_arm64", CPU::X64, CPU::ARM64});
 
                 // Locate the "best" MSVC toolchain version
                 const fs::path msvc_path = vc_dir / "Tools" / "MSVC";
