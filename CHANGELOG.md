@@ -1,3 +1,33 @@
+vcpkg (0.0.90)
+--------------
+  * Add ports:
+    - caffe2         0.8.1
+    - date           2.2
+    - jsonnet        2017-09-02-11cf9fa9f2fe8acbb14b096316006082564ca580
+    - kf5plotting    5.37.0
+    - units          2.3.0
+    - winpcap        4.1.3-1
+  * Update ports:
+    - arrow          apache-arrow-0.4.0-2 -> 0.6.0
+    - benchmark      1.1.0-1 -> 1.2.0
+    - cppwinrt       feb2017_refresh-14393 -> spring_2017_creators_update_for_vs_15.3
+    - llvm           4.0.0-1 -> 5.0.0-1
+    - luafilesystem  1.6.3-1 -> 1.7.0.2
+    - opencv         3.2.0-4 -> 3.3.0-4
+    - paho-mqtt      1.2.0-1 -> 1.2.0-2
+    - protobuf       3.4.0-2 -> 3.4.1-1
+    - qt5            5.8-5 -> 5.8-6
+    - sfml           2.4.2-1 -> 2.4.2-2
+    - xlnt           0.9.4-1 -> 1.1.0-1
+    - zlib           1.2.11-1 -> 1.2.11-2
+  * Bump required version & auto-downloaded version of `cmake` to 3.9.3 (was 3.9.1). Noteable changes:
+    - Fix codepage issues
+    - FindBoost: Add support for Boost 1.65.0 and 1.65.1
+  * `vcpkg edit`: Fix inspected locations for VSCode
+
+-- vcpkg team <vcpkg@microsoft.com>  SUN, 24 Sep 2017 03:30:00 -0800
+
+
 vcpkg (0.0.89)
 --------------
   * Update ports:
