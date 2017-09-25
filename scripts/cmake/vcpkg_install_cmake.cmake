@@ -9,7 +9,7 @@
 ##
 ## ## Parameters:
 ## ### MSVC_64_TOOLSET
-## This adds the `/p:PreferredToolArchitecture=x64` switch if the underlying buildsystem is MSBuild. Some large projects can run out of memory when linking if they use the 32-bit hosted tools.
+## This adds the `/p:PreferredToolArchitecture=x64` switch to the underlying buildsystem parameters. Some large projects can run out of memory when linking if they use the 32-bit hosted tools.
 ##
 ## ## Notes:
 ## This command should be preceeded by a call to [`vcpkg_configure_cmake()`](vcpkg_configure_cmake.md).
@@ -41,7 +41,9 @@ function(vcpkg_install_cmake)
     
     if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/build.ninja)
         set(BUILD_ARGS -v) # verbose output
-    else()
+	endif()
+	
+    if(_bc_MSVC_64_TOOLSET)
         set(BUILD_ARGS ${MSVC_EXTRA_ARGS})
     endif()
 

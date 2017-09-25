@@ -1,3 +1,29 @@
+## # vcpkg_build_cmake
+##
+## Build a cmake project.
+##
+## ## Usage:
+## ```cmake
+## vcpkg_build_cmake([MSVC_64_TOOLSET] [DISABLE_PARALLEL])
+## ```
+##
+## ## Parameters:
+## ### MSVC_64_TOOLSET
+## This adds the `/p:PreferredToolArchitecture=x64` switch to the underlying buildsystem parameters. Some large projects can run out of memory when linking if they use the 32-bit hosted tools.
+##
+## ### DISABLE_PARALLEL
+## The /m parameter will not be added to the underlying buildsystem parameters
+##
+## ## Notes:
+## This command should be preceeded by a call to [`vcpkg_configure_cmake()`](vcpkg_configure_cmake.md).
+## Use [`vcpkg_install_cmake()`](vcpkg_configure_cmake.md) function if your CMake script supports the "install" target
+##
+## ## Examples:
+##
+## * [zlib](https://github.com/Microsoft/vcpkg/blob/master/ports/zlib/portfile.cmake)
+## * [cpprestsdk](https://github.com/Microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
+## * [poco](https://github.com/Microsoft/vcpkg/blob/master/ports/poco/portfile.cmake)
+## * [opencv](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv/portfile.cmake)
 function(vcpkg_build_cmake)
     cmake_parse_arguments(_bc "MSVC_64_TOOLSET;DISABLE_PARALLEL" "" "" ${ARGN})
 
@@ -19,7 +45,9 @@ function(vcpkg_build_cmake)
 
     if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/build.ninja)
         set(BUILD_ARGS -v) # verbose output
-    else()
+	endif()
+	
+    if(_bc_MSVC_64_TOOLSET)
         set(BUILD_ARGS ${MSVC_EXTRA_ARGS})
     endif()
 
