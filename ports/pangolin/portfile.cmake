@@ -24,21 +24,23 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/Pangolin")
 
 vcpkg_copy_pdbs()
 
-file(GLOB EXE ${CURRENT_PACKAGES_DIR}/lib/*.dll)
-file(COPY ${EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-file(REMOVE ${EXE})
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    file(GLOB EXE ${CURRENT_PACKAGES_DIR}/lib/*.dll)
+    file(COPY ${EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+    file(REMOVE ${EXE})
 
-file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
-file(COPY ${DEBUG_EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-file(REMOVE ${DEBUG_EXE})
+    file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
+    file(COPY ${DEBUG_EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE ${DEBUG_EXE})
 
-file(READ ${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-debug.cmake PANGOLIN_TARGETS)
-string(REPLACE "lib/pangolin.dll" "bin/pangolin.dll" PANGOLIN_TARGETS "${PANGOLIN_TARGETS}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-debug.cmake "${PANGOLIN_TARGETS}")
+    file(READ ${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-debug.cmake PANGOLIN_TARGETS)
+    string(REPLACE "lib/pangolin.dll" "bin/pangolin.dll" PANGOLIN_TARGETS "${PANGOLIN_TARGETS}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-debug.cmake "${PANGOLIN_TARGETS}")
 
-file(READ ${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-release.cmake PANGOLIN_TARGETS)
-string(REPLACE "lib/pangolin.dll" "bin/pangolin.dll" PANGOLIN_TARGETS "${PANGOLIN_TARGETS}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-release.cmake "${PANGOLIN_TARGETS}")
+    file(READ ${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-release.cmake PANGOLIN_TARGETS)
+    string(REPLACE "lib/pangolin.dll" "bin/pangolin.dll" PANGOLIN_TARGETS "${PANGOLIN_TARGETS}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-release.cmake "${PANGOLIN_TARGETS}")
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
