@@ -36,6 +36,10 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Move and fix cmake files
+file(APPEND ${CURRENT_PACKAGES_DIR}/cmake/geotiff-config.cmake "\n# PROJ4 is not correctly found without this call:\n")
+file(APPEND ${CURRENT_PACKAGES_DIR}/cmake/geotiff-config.cmake "find_package(PROJ4)")
+file(APPEND ${CURRENT_PACKAGES_DIR}/cmake/geotiff-config.cmake "\n# (Feels like a hack, should be automatically resolved by CMake...?)\n")
+
 file(GLOB RELEASE_CMAKE_FILES "${CURRENT_PACKAGES_DIR}/cmake/*.cmake")
 file(INSTALL ${RELEASE_CMAKE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share/geotiff)
 vcpkg_apply_patches(
