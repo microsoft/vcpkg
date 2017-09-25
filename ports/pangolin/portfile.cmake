@@ -13,6 +13,9 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
+        -DBUILD_EXTERN_GLEW=OFF
+        -DBUILD_EXTERN_LIBPNG=OFF
+        -DBUILD_EXTERN_LIBJPEG=OFF
 )
 
 vcpkg_install_cmake()
@@ -38,6 +41,9 @@ string(REPLACE "lib/pangolin.dll" "bin/pangolin.dll" PANGOLIN_TARGETS "${PANGOLI
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-release.cmake "${PANGOLIN_TARGETS}")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+# Copy missing header file
+file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/include/pangolin/pangolin_export.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/pangolin)
 
 # Put the license file where vcpkg expects it
 file(COPY ${SOURCE_PATH}/LICENCE DESTINATION ${CURRENT_PACKAGES_DIR}/share/Pangolin/)
