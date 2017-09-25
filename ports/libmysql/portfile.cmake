@@ -8,7 +8,7 @@ set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mysql-server-mysql-5.7.17)
 vcpkg_download_distfile(ARCHIVE
 	URLS "https://github.com/mysql/mysql-server/archive/mysql-5.7.17.tar.gz"
 	FILENAME "mysql-server-mysql-5.7.17.tar.gz"
-	SHA512 511027f28f0705f59a08ec369b1ebe5d9a77eb839d545898631f1ebbcb6b4b800f5b88511d3ae5d231c04e09a2d7b2b2d178264d36aeb2bc602cc1b0b248cfba
+	SHA512 31488972e08a6b83f88e6e3f7923aca91e01eac702f4942fdae92e13f66d92ac86c24dfe7a65a001db836c900147d1c3871b36af8cbb281a0e6c555617cac12c
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
