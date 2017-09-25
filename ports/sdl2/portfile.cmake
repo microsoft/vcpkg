@@ -1,16 +1,19 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/SDL2-2.0.5)
+
+set(SDL2_VERSION 2.0.6)
+set(SDL2_HASH ad4dad5663834ee0ffbdca1b531d753449b260c9256df2c48da7261aacd9795d91eef1286525cf914f6b92ba5985de7798f041557574b5d978b8224f10041830)
+
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/SDL2-${SDL2_VERSION})
 vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "http://libsdl.org/release/SDL2-2.0.5.tar.gz"
-    FILENAME "SDL2-2.0.5.tar.gz"
-    SHA512 6401f5df08c08316c09bc6ac5b28345c5184bb25770baa5c94c0a582ae130ddf73bb736e44bb31f4e427c1ddbbeec4755a6a5f530b6b4c3d0f13ebc78ddc1750
+    URLS "http://libsdl.org/release/SDL2-${SDL2_VERSION}.tar.gz"
+    FILENAME "SDL2-${SDL2_VERSION}.tar.gz"
+    SHA512 ${SDL2_HASH}
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/dont-ignore-default-libs.patch
         ${CMAKE_CURRENT_LIST_DIR}/export-symbols-only-in-shared-build.patch
 )
 
@@ -58,14 +61,11 @@ else()
     )
 
     vcpkg_install_cmake()
-
+       
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-endif()
 
-file(COPY ${CURRENT_PACKAGES_DIR}/lib/SDL2main.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/manual-link)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/SDL2main.lib)
-file(COPY ${CURRENT_PACKAGES_DIR}/debug/lib/SDL2main.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/SDL2main.lib)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake")
+endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/sdl2 RENAME copyright)
 vcpkg_copy_pdbs()
