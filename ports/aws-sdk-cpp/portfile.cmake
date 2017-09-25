@@ -3,7 +3,7 @@ set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/aws-sdk-cpp-1.0.61)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/aws/aws-sdk-cpp/archive/1.0.61.tar.gz"
     FILENAME "aws-sdk-cpp-1.0.61.tar.gz"
-    SHA512 aef0a85a32db24dc4fba0fc49c2533074580f3df628e787ff0808f03deea5dac42e19b1edc966706784e98cfed17a350c3eff4f222df7cc756065be56d1fc6a6
+    SHA512 75f3570d8e8c08624b69d8254e156829030a36a7c4aa4b783d895e7c209b2a46b6b9ce822e6d9e9f649b171cf64988f0ad18ce0a55eb39c50d68a7880568078a
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
