@@ -249,7 +249,9 @@ namespace vcpkg::Commands::Export
         static const std::string OPTION_NUGET_VERSION = "--nuget-version";
         static const std::string OPTION_IFW_REPOSITORY_URL = "--ifw-repository-url";
         static const std::string OPTION_IFW_PACKAGES_DIR_PATH = "--ifw-packages-directory-path";
+        static const std::string OPTION_IFW_REPOSITORY_DIR_PATH = "--ifw-repository-directory-path";
         static const std::string OPTION_IFW_CONFIG_FILE_PATH = "--ifw-configuration-file-path";
+        static const std::string OPTION_IFW_INSTALLER_FILE_PATH = "--ifw-installer-file-path";
 
         // input sanitization
         static const std::string EXAMPLE =
@@ -276,7 +278,9 @@ namespace vcpkg::Commands::Export
                 OPTION_NUGET_VERSION,
                 OPTION_IFW_REPOSITORY_URL,
                 OPTION_IFW_PACKAGES_DIR_PATH,
-                OPTION_IFW_CONFIG_FILE_PATH
+                OPTION_IFW_REPOSITORY_DIR_PATH,
+                OPTION_IFW_CONFIG_FILE_PATH,
+                OPTION_IFW_INSTALLER_FILE_PATH
             });
         const bool dry_run = options.switches.find(OPTION_DRY_RUN) != options.switches.cend();
         const bool raw = options.switches.find(OPTION_RAW) != options.switches.cend();
@@ -310,9 +314,17 @@ namespace vcpkg::Commands::Export
         Checks::check_exit(
             VCPKG_LINE_INFO, !ifw_options.maybe_packages_dir_path || ifw, "--ifw-packages-directory-path is only valid with --ifw");
 
+        ifw_options.maybe_repository_dir_path = maybe_lookup(options.settings, OPTION_IFW_REPOSITORY_DIR_PATH);
+        Checks::check_exit(
+            VCPKG_LINE_INFO, !ifw_options.maybe_repository_dir_path || ifw, "--ifw-repository-directory-path is only valid with --ifw");
+
         ifw_options.maybe_config_file_path = maybe_lookup(options.settings, OPTION_IFW_CONFIG_FILE_PATH);
         Checks::check_exit(
             VCPKG_LINE_INFO, !ifw_options.maybe_config_file_path || ifw, "--ifw-configuration-file-path is only valid with --ifw");
+
+        ifw_options.maybe_installer_file_path = maybe_lookup(options.settings, OPTION_IFW_INSTALLER_FILE_PATH);
+        Checks::check_exit(
+            VCPKG_LINE_INFO, !ifw_options.maybe_installer_file_path || ifw, "--ifw-installer-file-path is only valid with --ifw");
 
         // create the plan
         const StatusParagraphs status_db = database_load_check(paths);
@@ -464,10 +476,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         {
             IFW::do_export(export_plan, export_id, ifw_options, paths);
 
-            // TODO: Download corrected QtIFW tools and automate installer creation
-            System::println("Use corrected QtIFW tools (for more info see: https://codereview.qt-project.org/#/c/203958) to create installer...");
-
-            print_next_step_info("[...]");
+            print_next_step_info("@RootDir@/src/vcpkg");
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
