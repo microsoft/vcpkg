@@ -57,6 +57,9 @@ namespace vcpkg
         const fs::path& get_cmake_exe() const;
         const fs::path& get_git_exe() const;
         const fs::path& get_nuget_exe() const;
+        const fs::path& get_ifw_installerbase_exe() const;
+        const fs::path& get_ifw_binarycreator_exe() const;
+        const fs::path& get_ifw_repogen_exe() const;
 
         /// <summary>Retrieve a toolset matching a VS version</summary>
         /// <remarks>
@@ -70,6 +73,9 @@ namespace vcpkg
         Lazy<fs::path> cmake_exe;
         Lazy<fs::path> git_exe;
         Lazy<fs::path> nuget_exe;
+        Lazy<fs::path> ifw_installerbase_exe;
+        Lazy<fs::path> ifw_binarycreator_exe;
+        Lazy<fs::path> ifw_repogen_exe;
         Lazy<std::vector<Toolset>> toolsets;
     };
 }
