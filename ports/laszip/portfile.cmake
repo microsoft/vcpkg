@@ -25,6 +25,7 @@ vcpkg_apply_patches(
     PATCHES 
       ${CMAKE_CURRENT_LIST_DIR}/disable_buildosgeo4w.patch
       ${CMAKE_CURRENT_LIST_DIR}/export_targets.patch
+      ${CMAKE_CURRENT_LIST_DIR}/define_config_vars.patch
 )
 
 vcpkg_configure_cmake(
@@ -47,6 +48,7 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/share/laszip/laszipTargets-targets-debug.cmak
 # Remove include and share directory from debug folder
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
 
 
 # Move executables

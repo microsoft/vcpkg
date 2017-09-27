@@ -1,0 +1,46 @@
+From 9bdb26ed4df115698495e9c7883de1dfe654c75f Mon Sep 17 00:00:00 2001
+From: Raynor Vliegendhart <ShinNoNoir@gmail.com>
+Date: Wed, 27 Sep 2017 15:09:41 +0200
+Subject: [PATCH] Define config vars
+
+---
+ cmake/laszipConfig.cmake | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+diff --git a/cmake/laszipConfig.cmake b/cmake/laszipConfig.cmake
+index 3777860..25dc25e 100644
+--- a/cmake/laszipConfig.cmake
++++ b/cmake/laszipConfig.cmake
+@@ -1 +1,29 @@
++# Configure laszip package
++#
++# It defines the following variables:
++#  laszip_FOUND        - TRUE
++#  laszip_VERSION      - laszip library version
++#
++# It defines the following variables for libLAS:
++#  LASZIP_INCLUDE_DIR  - include directories for laszip
++#  LASZIP_LIBRARY      - the library (as targets)
++#  LASZIP_FOUND        - TRUE
++
++
+ include("${CMAKE_CURRENT_LIST_DIR}/laszipTargets.cmake")
++
++# Add variables that libLAS expect:
++message (STATUS "Reading ${CMAKE_CURRENT_LIST_FILE}")
++# libLAS_VERSION is set by version file
++message (STATUS "laszip configuration, version " ${libLAS_VERSION})
++
++get_filename_component (_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
++get_filename_component (PROJECT_ROOT_DIR "${_DIR}/../.." ABSOLUTE)
++set (LASZIP_INCLUDE_DIR "${PROJECT_ROOT_DIR}/include")
++
++
++set(LASZIP_LIBRARY laszip)
++set(LASZIP_FOUND TRUE)
++
++
++
+-- 
+2.13.3.windows.1
+
