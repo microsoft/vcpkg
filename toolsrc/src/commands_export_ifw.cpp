@@ -35,7 +35,7 @@ namespace vcpkg::Commands::Export::IFW
 
     fs::path get_repository_dir_path(const std::string &export_id, const Options &ifw_options, const VcpkgPaths& paths)
     {
-        return ifw_options.maybe_packages_dir_path.has_value() ?
+        return ifw_options.maybe_repository_dir_path.has_value() ?
             fs::path(ifw_options.maybe_repository_dir_path.value_or_exit(VCPKG_LINE_INFO))
             : paths.root / (export_id + "-ifw-repository");
     }
@@ -49,7 +49,7 @@ namespace vcpkg::Commands::Export::IFW
 
     fs::path get_installer_file_path(const std::string &export_id, const Options &ifw_options, const VcpkgPaths& paths)
     {
-        return ifw_options.maybe_config_file_path.has_value() ?
+        return ifw_options.maybe_installer_file_path.has_value() ?
             fs::path(ifw_options.maybe_installer_file_path.value_or_exit(VCPKG_LINE_INFO))
             : paths.root / (export_id + "-ifw-installer.exe");
     }
@@ -278,6 +278,15 @@ R"###(<?xml version="1.0"?>
         const fs::path repository_dir = get_repository_dir_path(export_id, ifw_options, paths);
 
         System::println("Generating repository %s...", repository_dir.generic_string());
+
+        std::error_code ec;
+        Files::Filesystem& fs = paths.get_filesystem();
+
+        fs.remove_all(repository_dir, ec);
+        Checks::check_exit(VCPKG_LINE_INFO,
+            !ec,
+            "Could not remove outdated repository directory %s",
+            repository_dir.generic_string());
 
         const std::wstring cmd_line =
             Strings::wformat(LR"("%s" --packages "%s" "%s" > nul)",
