@@ -35,6 +35,7 @@ vcpkg_configure_cmake(
         -DDLIB_USE_CUDA=OFF
         -DDLIB_GIF_SUPPORT=OFF
         -DDLIB_USE_MKL_FFT=OFF
+        -DCMAKE_DEBUG_POSTFIX=d
         #-DDLIB_USE_CUDA=ON
     OPTIONS_DEBUG
         -DDLIB_ENABLE_ASSERTS=ON
