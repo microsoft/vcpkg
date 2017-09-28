@@ -294,7 +294,6 @@ namespace vcpkg
     {
         const auto& fs = paths.get_filesystem();
 
-        const std::vector<std::string> vs2017_installation_instances = get_vs2017_installation_instances(paths);
         // Note: this will contain a mix of vcvarsall.bat locations and dumpbin.exe locations.
         std::vector<fs::path> paths_examined;
 
@@ -323,6 +322,8 @@ namespace vcpkg
                 }
             }
         }
+
+        const std::vector<std::string> vs2017_installation_instances = get_vs2017_installation_instances(paths);
 
         // VS2017
         Optional<Toolset> vs2017_toolset;
