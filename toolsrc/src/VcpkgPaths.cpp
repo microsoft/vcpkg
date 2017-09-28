@@ -10,6 +10,10 @@
 
 namespace vcpkg
 {
+    // Intentionally wstring so we can easily use operator== with CWStringView.
+    static const std::wstring V_140 = L"v140";
+    static const std::wstring V_141 = L"v141";
+
     static bool exists_and_has_equal_or_greater_version(const std::wstring& version_cmd,
                                                         const std::array<int, 3>& expected_version)
     {
@@ -318,7 +322,7 @@ namespace vcpkg
                 if (fs.exists(vs2015_dumpbin_exe))
                 {
                     found_toolsets.push_back(
-                        {vs2015_dumpbin_exe, vs2015_vcvarsall_bat, L"v140", supported_architectures});
+                        {vs2015_dumpbin_exe, vs2015_vcvarsall_bat, {}, V_140, supported_architectures});
                 }
             }
         }
@@ -357,7 +361,7 @@ namespace vcpkg
                 paths_examined.push_back(dumpbin_path);
                 if (fs.exists(dumpbin_path))
                 {
-                    vs2017_toolset = Toolset{dumpbin_path, vcvarsall_bat, L"v141", supported_architectures};
+                    vs2017_toolset = Toolset{dumpbin_path, vcvarsall_bat, {}, V_141, supported_architectures};
                     break;
                 }
             }
@@ -381,20 +385,63 @@ namespace vcpkg
         return found_toolsets;
     }
 
+    static std::vector<Toolset> create_vs2017_v140_toolset_instances(const std::vector<Toolset>& vs_toolsets)
+    {
+        std::vector<Toolset> vs2017_v140_toolsets;
+
+        // In constrast to v141 and above, there can only be a single instance of v140 (VS2017 vs VS2015).
+        const auto it = Util::find_if(vs_toolsets, [&](const Toolset& t) { return t.version == V_140; });
+
+        // If v140 is not available, then VS2017 cant use them. Return empty.
+        if (it == vs_toolsets.cend())
+        {
+            return vs2017_v140_toolsets;
+        }
+
+        // If it does exist, then create a matching v140 toolset for each v141 toolset
+        const Toolset v140_toolset = *it;
+        for (const Toolset& toolset : vs_toolsets)
+        {
+            if (toolset.version != V_141)
+            {
+                continue;
+            }
+
+            Toolset t = Toolset{
+                toolset.dumpbin, toolset.vcvarsall, {L"-vcvars_ver=14.0"}, V_140, toolset.supported_architectures};
+            vs2017_v140_toolsets.push_back(std::move(t));
+        }
+
+        return vs2017_v140_toolsets;
+    }
+
     const Toolset& VcpkgPaths::get_toolset(const std::string& toolset_version) const
     {
-        // Invariant: toolsets are non-empty and sorted with newest at back()
-        const auto& vs_toolsets = this->toolsets.get_lazy([this]() { return find_toolset_instances(*this); });
+        const std::wstring& w_toolset_version = Strings::to_utf16(toolset_version);
 
-        if (toolset_version.empty())
+        // Invariant: toolsets are non-empty and sorted with newest at back()
+        const std::vector<Toolset>& vs_toolsets =
+            this->toolsets.get_lazy([this]() { return find_toolset_instances(*this); });
+
+        if (w_toolset_version.empty())
         {
             return vs_toolsets.back();
         }
 
-        const auto toolset = Util::find_if(
-            vs_toolsets, [&](const Toolset& t) { return toolset_version == Strings::to_utf8(t.version); });
+        const auto toolset =
+            Util::find_if(vs_toolsets, [&](const Toolset& t) { return w_toolset_version == t.version; });
         Checks::check_exit(
             VCPKG_LINE_INFO, toolset != vs_toolsets.end(), "Could not find toolset '%s'", toolset_version);
+
+        // If v140 is the selected toolset and VS2017 is available, then use VS2017's vcvarsall with the
+        // -vcvars_ver=14.0 option
+        const std::vector<Toolset>& vs2017_v140_toolsets = this->toolsets_vs2017_v140.get_lazy(
+            [&vs_toolsets]() { return create_vs2017_v140_toolset_instances(vs_toolsets); });
+        if (w_toolset_version == V_140 && !vs2017_v140_toolsets.empty())
+        {
+            return vs2017_v140_toolsets.back();
+        }
+
         return *toolset;
     }
 
