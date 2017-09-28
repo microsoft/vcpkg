@@ -4,7 +4,8 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "Abseil currently only supports being built for desktop")
 endif()
 
-message("NOTE: THIS PORT IS USING AN UNOFFICIAL BUILDSYSTEM AND THE EXACT BINARY LAYOUT WILL CHANGE IN THE FUTURE.")
+message("NOTE: THIS PORT IS USING AN UNOFFICIAL BUILDSYSTEM. THE BINARY LAYOUT AND CMAKE INTEGRATION WILL CHANGE IN THE FUTURE.")
+message("To use from cmake:\n  find_package(unofficial-abseil REQUIRED)\n  link_libraries(unofficial::abseil::strings)")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
