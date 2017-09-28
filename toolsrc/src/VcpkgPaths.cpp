@@ -364,7 +364,6 @@ namespace vcpkg
             if (const auto value = vs2017_toolset.get())
             {
                 found_toolsets.push_back(*value);
-                break;
             }
         }
 
