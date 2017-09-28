@@ -67,7 +67,12 @@ namespace vcpkg::Build
         const auto arch = to_vcvarsall_toolchain(pre_build_info.target_architecture, toolset);
         const auto target = to_vcvarsall_target(pre_build_info.cmake_system_name);
 
-        return Strings::wformat(LR"("%s" %s %s %s 2>&1)", toolset.vcvarsall.native(), arch, target, tonull);
+        return Strings::wformat(LR"("%s" %s %s %s %s 2>&1)",
+                                toolset.vcvarsall.native(),
+                                Strings::join(L" ", toolset.vcvarsall_options),
+                                arch,
+                                target,
+                                tonull);
     }
 
     static void create_binary_feature_control_file(const SourceParagraph& source_paragraph,
