@@ -51,7 +51,7 @@ vcpkg_configure_cmake(
         -DBUILD_TESTS=OFF
         -DBUILD_WITH_DEBUG_INFO=ON
         -DOpenCV_DISABLE_ARCH_PATH=ON
-        -DWITH_FFMPEG=ON
+        -DWITH_FFMPEG=OFF
         -DINSTALL_FORCE_UNIX_PATHS=ON
         -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
         -DOPENCV_OTHER_INSTALL_PATH=share/opencv
