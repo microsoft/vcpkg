@@ -1,11 +1,12 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/aws-sdk-cpp-1.0.61)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/aws/aws-sdk-cpp/archive/1.0.61.tar.gz"
-    FILENAME "aws-sdk-cpp-1.0.61.tar.gz"
-    SHA512 75f3570d8e8c08624b69d8254e156829030a36a7c4aa4b783d895e7c209b2a46b6b9ce822e6d9e9f649b171cf64988f0ad18ce0a55eb39c50d68a7880568078a
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO aws/aws-sdk-cpp
+    REF 1.2.4
+    SHA512 dc96e40fe72e4b115607245f536cd13414e33a8f754153fd137f1391af14b9793fc8a07f9f984490e0783e385c2c7b9a421878b63ea793012f53fefe7ec4d368
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
@@ -29,6 +30,34 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+file(GLOB CMAKE_FILES ${CURRENT_PACKAGES_DIR}/lib/cmake/*)
+
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
+
+file(COPY ${CMAKE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share)
+
+vcpkg_copy_pdbs()
+
+file(GLOB AWS_TARGETS "${CURRENT_PACKAGES_DIR}/share/aws-cpp-sdk-*/aws-cpp-sdk-*targets.cmake")
+foreach(AWS_TARGETS ${AWS_TARGETS})
+    file(READ ${AWS_TARGETS} _contents)
+    string(REGEX REPLACE
+        "get_filename_component\\(_IMPORT_PREFIX \"\\\${CMAKE_CURRENT_LIST_FILE}\" PATH\\)(\nget_filename_component\\(_IMPORT_PREFIX \"\\\${_IMPORT_PREFIX}\" PATH\\))*"
+        "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
+        _contents "${_contents}")
+    file(WRITE ${AWS_TARGETS} "${_contents}")
+endforeach()
+
+file(GLOB AWS_TARGETS_RELEASE "${CURRENT_PACKAGES_DIR}/share/aws-cpp-sdk-*/aws-cpp-sdk-*targets-release.cmake")
+foreach(AWS_TARGETS_RELEASE ${AWS_TARGETS_RELEASE})
+    file(READ ${AWS_TARGETS_RELEASE} _contents)
+    string(REGEX REPLACE
+        "bin\\/([A-Za-z0-9_.-]+lib)"
+        "lib/\\1"
+        _contents "${_contents}")
+    file(WRITE ${AWS_TARGETS_RELEASE} "${_contents}")
+endforeach()
 
 file(REMOVE_RECURSE 
 	${CURRENT_PACKAGES_DIR}/debug/include
