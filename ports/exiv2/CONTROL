@@ -1,0 +1,4 @@
+Source: exiv2
+Version: 327b3f6c4de4ffda82818367fc870640d2ae8820
+Build-Depends:zlib
+Description: Image metadata library and tools http://www.exiv2.org
