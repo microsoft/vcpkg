@@ -42,10 +42,10 @@ Unlike dpkg, Vcpkg does not distinguish between build-only dependencies and runt
 
 *For example: websocketpp is a header only library, and thus does not require any dependencies at install time. However, downstream users need boost and openssl to make use of the library. Therefore, websocketpp lists boost and openssl as dependencies*
 
-Dependencies can be filtered based on the target triplet to support different requirements on Windows Desktop versus the Universal Windows Platform. Currently, the string inside brackets is substring-compared against the triplet name. __This will change in a future version to not depend on the triplet name.__
+Dependencies can be filtered based on the target triplet to support different requirements on Windows Desktop versus the Universal Windows Platform. Currently, the string inside parentheses is substring-compared against the triplet name. __This will change in a future version to not depend on the triplet name.__
 
 Example:
 ```no-highlight
-Build-Depends: zlib [windows], openssl [windows], boost [windows], websocketpp [windows]
+Build-Depends: zlib (windows), openssl (windows), boost (windows), websocketpp (windows)
 ```
 
