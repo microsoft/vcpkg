@@ -43,7 +43,7 @@ namespace UnitTest1
             std::array<const char*, 6> features = {"", "0", "1", "", "2", "3"};
             std::array<PackageSpec*, 6> specs = {&a_spec, &a_spec, &a_spec, &b_spec, &b_spec, &b_spec};
 
-            for (int i = 0; i < features.size(); ++i)
+            for (size_t i = 0; i < features.size(); ++i)
             {
                 Assert::AreEqual(features[i], fspecs[i].feature().c_str());
                 Assert::AreEqual(*specs[i], fspecs[i].spec());
