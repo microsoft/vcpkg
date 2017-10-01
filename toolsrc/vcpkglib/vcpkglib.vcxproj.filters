@@ -183,6 +183,9 @@
     <ClCompile Include="..\src\vcpkg_GlobalState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\commands_autocomplete.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\SourceParagraph.h">

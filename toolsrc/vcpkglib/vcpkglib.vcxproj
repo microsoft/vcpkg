@@ -183,6 +183,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\BinaryParagraph.cpp" />
+    <ClCompile Include="..\src\commands_autocomplete.cpp" />
     <ClCompile Include="..\src\commands_ci.cpp" />
     <ClCompile Include="..\src\commands_depends.cpp" />
     <ClCompile Include="..\src\commands_env.cpp" />

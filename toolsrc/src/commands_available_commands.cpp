@@ -34,7 +34,7 @@ namespace vcpkg::Commands
             {"import", &Import::perform_and_exit},
             {"cache", &Cache::perform_and_exit},
             {"portsdiff", &PortsDiff::perform_and_exit},
-        };
+            {"autocomplete", &Autocomplete::perform_and_exit}};
         return t;
     }
 
