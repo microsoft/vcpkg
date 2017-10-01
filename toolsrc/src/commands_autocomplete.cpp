@@ -8,6 +8,23 @@
 
 namespace vcpkg::Commands::Autocomplete
 {
+    std::vector<std::string> autocomplete_install(
+        const std::vector<std::unique_ptr<SourceControlFile>>& source_paragraphs, const std::string& start_with)
+    {
+        std::vector<std::string> results;
+        const auto& istartswith = Strings::case_insensitive_ascii_starts_with;
+
+        for (const auto& source_control_file : source_paragraphs)
+        {
+            auto&& sp = *source_control_file->core_paragraph;
+
+            if (istartswith(sp.name, start_with))
+            {
+                results.push_back(sp.name);
+            }
+        }
+        return results;
+    }
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         static const std::string EXAMPLE =
@@ -21,27 +38,15 @@ namespace vcpkg::Commands::Autocomplete
         const std::string requested_command = args.command_arguments.at(0);
         const std::string start_with =
             args.command_arguments.size() > 1 ? args.command_arguments.at(1) : Strings::EMPTY;
-
-        auto sources_and_errors = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
-        auto& source_paragraphs = sources_and_errors.paragraphs;
-
-        const auto& istartswith = Strings::case_insensitive_ascii_starts_with;
-
         std::vector<std::string> results;
-        for (const auto& source_control_file : source_paragraphs)
+        if (requested_command == "install")
         {
-            auto&& sp = *source_control_file->core_paragraph;
+            auto sources_and_errors = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
+            auto& source_paragraphs = sources_and_errors.paragraphs;
 
-            if (istartswith(sp.name, start_with))
-            {
-                results.push_back(sp.name);
-            }
+            results = autocomplete_install(source_paragraphs, start_with);
         }
-
         System::println(Strings::join(" ", results));
-
-        auto all_ports = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
-
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 }
