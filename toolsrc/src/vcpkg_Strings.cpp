@@ -110,6 +110,11 @@ namespace vcpkg::Strings
         return output;
     }
 
+    bool case_insensitive_ascii_starts_with(const std::string& s, const std::string& pattern)
+    {
+        return _strnicmp(s.c_str(), pattern.c_str(), pattern.size()) == 0;
+    }
+
     void trim(std::string* s)
     {
         s->erase(std::find_if_not(s->rbegin(), s->rend(), details::isspace).base(), s->end());
@@ -136,8 +141,9 @@ namespace vcpkg::Strings
     std::vector<std::string> split(const std::string& s, const std::string& delimiter)
     {
         std::vector<std::string> output;
-        
-        if(delimiter.empty()){
+
+        if (delimiter.empty())
+        {
             output.push_back(s);
             return output;
         }

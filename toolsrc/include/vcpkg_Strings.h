@@ -65,6 +65,8 @@ namespace vcpkg::Strings
 
     std::string ascii_to_lowercase(const std::string& input);
 
+    bool case_insensitive_ascii_starts_with(const std::string& s, const std::string& pattern);
+
     template<class Container, class Transformer, class CharType>
     std::basic_string<CharType> join(const CharType* delimiter, const Container& v, Transformer transformer)
     {
