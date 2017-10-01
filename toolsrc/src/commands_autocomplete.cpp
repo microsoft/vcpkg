@@ -5,6 +5,7 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg_Maps.h"
 #include "vcpkg_System.h"
+#include "vcpkglib.h"
 
 namespace vcpkg::Commands::Autocomplete
 {
@@ -25,6 +26,25 @@ namespace vcpkg::Commands::Autocomplete
         }
         return results;
     }
+
+    std::vector<std::string> autocomplete_remove(std::vector<StatusParagraph*> installed_packages,
+                                                 const std::string& start_with)
+    {
+        std::vector<std::string> results;
+        const auto& istartswith = Strings::case_insensitive_ascii_starts_with;
+
+        for (const auto& installed_package : installed_packages)
+        {
+            auto sp = installed_package->package.displayname();
+
+            if (istartswith(sp, start_with))
+            {
+                results.push_back(sp);
+            }
+        }
+        return results;
+    }
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         static const std::string EXAMPLE =
@@ -46,6 +66,13 @@ namespace vcpkg::Commands::Autocomplete
 
             results = autocomplete_install(source_paragraphs, start_with);
         }
+        else if (requested_command == "remove")
+        {
+            const StatusParagraphs status_db = database_load_check(paths);
+            std::vector<StatusParagraph*> installed_packages = get_installed_ports(status_db);
+            results = autocomplete_remove(installed_packages, start_with);
+        }
+
         System::println(Strings::join(" ", results));
         Checks::exit_success(VCPKG_LINE_INFO);
     }
