@@ -67,11 +67,12 @@ namespace vcpkg
                                      const fs::path& expected_downloaded_path,
                                      const std::array<int, 3>& version)
     {
+        const std::string tool_name_utf8 = Strings::to_utf8(tool_name);
         const std::string version_as_string = Strings::format("%d.%d.%d", version[0], version[1], version[2]);
         System::println("A suitable version of %s was not found (required v%s). Downloading portable %s v%s...",
-                        Strings::to_utf8(tool_name),
+                        tool_name_utf8,
                         version_as_string,
-                        Strings::to_utf8(tool_name),
+                        tool_name_utf8,
                         version_as_string);
         const fs::path script = scripts_folder / "fetchDependency.ps1";
         const auto install_cmd =
@@ -82,7 +83,7 @@ namespace vcpkg
             System::println(System::Color::error,
                             "Launching powershell failed or was denied when trying to fetch %s version %s.\n"
                             "(No sufficient installed version was found)",
-                            Strings::to_utf8(tool_name),
+                            tool_name_utf8,
                             version_as_string);
             {
                 auto locked_metrics = Metrics::g_metrics.lock();
