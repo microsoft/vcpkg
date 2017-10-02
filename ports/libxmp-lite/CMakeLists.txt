@@ -33,6 +33,11 @@ set(SOURCES src/virtual.c
 include_directories(include/libxmp-lite src)
 
 option(BUILD_SHARED_LIBS "Build shared libs" OFF)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    option(INSTALL_HEADERS "Install header files" OFF)
+else()
+    option(INSTALL_HEADERS "Install header files" ON)
+endif()
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
@@ -55,4 +60,6 @@ install(
     RUNTIME DESTINATION bin
 )
 
-install(FILES ${HEADERS} DESTINATION include)
+if(INSTALL_HEADERS)
+    install(FILES ${HEADERS} DESTINATION include)
+endif()
