@@ -11,7 +11,10 @@
 #include "vcpkg_Strings.h"
 #include "vcpkg_System.h"
 #include "vcpkglib.h"
+#pragma warning(push)
+#pragma warning(disable : 4768)
 #include <Shlobj.h>
+#pragma warning(pop)
 #include <cassert>
 #include <fstream>
 #include <memory>
