@@ -73,14 +73,20 @@ namespace vcpkg::Strings
 {
     std::wstring to_utf16(const CStringView s)
     {
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> conversion;
-        return conversion.from_bytes(s);
+        const size_t size = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
+        std::wstring output;
+        output.resize(size - 1);
+        MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, output.data(), size - 1);
+        return output;
     }
 
     std::string to_utf8(const CWStringView w)
     {
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> conversion;
-        return conversion.to_bytes(w);
+        const size_t size = WideCharToMultiByte(CP_UTF8, 0, w.c_str(), -1, nullptr, 0, nullptr, nullptr);
+        std::string output;
+        output.resize(size - 1);
+        WideCharToMultiByte(CP_UTF8, 0, w.c_str(), -1, output.data(), size - 1, nullptr, nullptr);
+        return output;
     }
 
     std::string::const_iterator case_insensitive_ascii_find(const std::string& s, const std::string& pattern)
