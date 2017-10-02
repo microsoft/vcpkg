@@ -87,27 +87,8 @@ namespace vcpkg::Commands::Search
         const std::unordered_set<std::string> options =
             args.check_and_get_optional_command_arguments({OPTION_GRAPH, OPTION_FULLDESC});
 
-        auto sources_and_errors = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
+        auto source_paragraphs = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
 
-        if (!sources_and_errors.errors.empty())
-        {
-            if (GlobalState::debugging)
-            {
-                print_error_message(sources_and_errors.errors);
-            }
-            else
-            {
-                for (auto&& error : sources_and_errors.errors)
-                {
-                    System::println(
-                        System::Color::warning, "Warning: an error occurred while parsing '%s'", error->name);
-                }
-                System::println(System::Color::warning,
-                                "Use '--debug' to get more information about the parse failures.\n");
-            }
-        }
-
-        auto& source_paragraphs = sources_and_errors.paragraphs;
         if (options.find(OPTION_GRAPH) != options.cend())
         {
             const std::string graph_as_string = create_graph_as_string(source_paragraphs);

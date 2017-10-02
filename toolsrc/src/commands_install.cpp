@@ -568,8 +568,8 @@ namespace vcpkg::Commands::Install
         if (GlobalState::feature_packages)
         {
             std::unordered_map<std::string, SourceControlFile> scf_map;
-            auto all_ports = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
-            for (auto&& port : all_ports.paragraphs)
+            auto all_ports = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
+            for (auto&& port : all_ports)
             {
                 scf_map[port->core_paragraph->name] = std::move(*port);
             }
