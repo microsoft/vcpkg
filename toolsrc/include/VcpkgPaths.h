@@ -73,5 +73,6 @@ namespace vcpkg
         Lazy<fs::path> nuget_exe;
         Lazy<std::vector<Toolset>> toolsets;
         Lazy<std::vector<Toolset>> toolsets_vs2017_v140;
+        Lazy<std::vector<Toolset>> toolsets_vs2013;
     };
 }

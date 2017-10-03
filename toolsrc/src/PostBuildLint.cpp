@@ -40,26 +40,36 @@ namespace vcpkg::PostBuildLint
 
     Span<const OutdatedDynamicCrt> get_outdated_dynamic_crts(CStringView toolset)
     {
-        static const std::vector<OutdatedDynamicCrt> V_NO_MSVCRT = {
+        static const std::vector<OutdatedDynamicCrt> V_NO_120 = {
             {"msvcp100.dll", R"(msvcp100\.dll)"},
             {"msvcp100d.dll", R"(msvcp100d\.dll)"},
             {"msvcp110.dll", R"(msvcp110\.dll)"},
             {"msvcp110_win.dll", R"(msvcp110_win\.dll)"},
-            //{"msvcp120.dll", R"(msvcp120\.dll)"},
-            //{"msvcp120_clr0400.dll", R"(msvcp120_clr0400\.dll)"},
             {"msvcp60.dll", R"(msvcp60\.dll)"},
             {"msvcp60.dll", R"(msvcp60\.dll)"},
 
+            {"msvcrt.dll", R"(msvcrt\.dll)"},
             {"msvcr100.dll", R"(msvcr100\.dll)"},
             {"msvcr100d.dll", R"(msvcr100d\.dll)"},
             {"msvcr100_clr0400.dll", R"(msvcr100_clr0400\.dll)"},
             {"msvcr110.dll", R"(msvcr110\.dll)"},
-            //{"msvcr120.dll", R"(msvcr120\.dll)"},
-            //{"msvcr120_clr0400.dll", R"(msvcr120_clr0400\.dll)"},
             {"msvcrt20.dll", R"(msvcrt20\.dll)"},
-            {"msvcrt40.dll", R"(msvcrt40\.dll)"}};
+            {"msvcrt40.dll", R"(msvcrt40\.dll)"},
+        };
 
-        return V_NO_MSVCRT;
+        static const std::vector<OutdatedDynamicCrt> V = [&]() {
+            auto ret = V_NO_120;
+            ret.push_back({"msvcp120.dll", R"(msvcp120\.dll)"});
+            ret.push_back({"msvcp120_clr0400.dll", R"(msvcp120_clr0400\.dll)"});
+            ret.push_back({"msvcr120.dll", R"(msvcr120\.dll)"});
+            ret.push_back({"msvcr120_clr0400.dll", R"(msvcr120_clr0400\.dll)"});
+            return ret;
+        }();
+
+        if (toolset == "v120")
+            return V_NO_120;
+        else
+            return V;
     }
 
     static LintStatus check_for_files_in_include_directory(const Files::Filesystem& fs,
@@ -646,7 +656,8 @@ namespace vcpkg::PostBuildLint
 
     static LintStatus check_outdated_crt_linkage_of_dlls(const std::vector<fs::path>& dlls,
                                                          const fs::path dumpbin_exe,
-                                                         const BuildInfo& build_info)
+                                                         const BuildInfo& build_info,
+                                                         const PreBuildInfo& pre_build_info)
     {
         if (build_info.policies.is_enabled(BuildPolicy::ALLOW_OBSOLETE_MSVCRT)) return LintStatus::SUCCESS;
 
@@ -662,7 +673,7 @@ namespace vcpkg::PostBuildLint
                                "Running command:\n   %s\n failed",
                                Strings::to_utf8(cmd_line));
 
-            for (const OutdatedDynamicCrt& outdated_crt : get_outdated_dynamic_crts("v141"))
+            for (const OutdatedDynamicCrt& outdated_crt : get_outdated_dynamic_crts(pre_build_info.platform_toolset))
             {
                 if (std::regex_search(ec_data.output.cbegin(), ec_data.output.cend(), outdated_crt.regex))
                 {
@@ -788,7 +799,7 @@ namespace vcpkg::PostBuildLint
                 error_count += check_uwp_bit_of_dlls(pre_build_info.cmake_system_name, dlls, toolset.dumpbin);
                 error_count += check_dll_architecture(pre_build_info.target_architecture, dlls);
 
-                error_count += check_outdated_crt_linkage_of_dlls(dlls, toolset.dumpbin, build_info);
+                error_count += check_outdated_crt_linkage_of_dlls(dlls, toolset.dumpbin, build_info, pre_build_info);
                 break;
             }
             case Build::LinkageType::STATIC:

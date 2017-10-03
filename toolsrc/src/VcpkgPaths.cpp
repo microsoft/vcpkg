@@ -277,25 +277,10 @@ namespace vcpkg
 
         return nullopt;
     }
-    
-    static Optional<fs::path> get_vs2013_installation_instance()
-    {
-        const Optional<std::wstring> vs2013_cmntools_optional = System::get_environment_variable(L"VS120COMNTOOLS");
-        if (const auto v = vs2013_cmntools_optional.get())
-        {
-            const fs::path vs2013_cmntools = fs::path(*v).parent_path(); // The call to parent_path() is needed because
-                                                                         // the env variable has a trailing backslash
-            return vs2013_cmntools.parent_path().parent_path();
-        }
 
-        return nullopt;
-    }
-
-    static std::vector<Toolset> find_toolset_instances(const VcpkgPaths& paths)
+    static std::vector<Toolset> find_v120_toolset_instances(const Files::Filesystem& fs)
     {
         using CPU = System::CPUArchitecture;
-
-        const auto& fs = paths.get_filesystem();
 
         // Note: this will contain a mix of vcvarsall.bat locations and dumpbin.exe locations.
         std::vector<fs::path> paths_examined;
@@ -303,22 +288,27 @@ namespace vcpkg
         std::vector<Toolset> found_toolsets;
 
         // VS2013
-        const Optional<fs::path> vs_2013_installation_instance = get_vs2013_installation_instance();
-        if (const auto v = vs_2013_installation_instance.get())
+        const Optional<std::wstring> vs2013_cmntools_optional = System::get_environment_variable(L"VS120COMNTOOLS");
+        if (const auto vs120comntools = vs2013_cmntools_optional.get())
         {
-            const fs::path vs2013_vcvarsall_bat = *v / "VC" / "vcvarsall.bat";
+            const fs::path vs2013_cmntools =
+                fs::path(*vs120comntools).parent_path(); // The call to parent_path() is needed because
+                                                         // the env variable has a trailing backslash
+            auto v = vs2013_cmntools.parent_path().parent_path();
+
+            const fs::path vs2013_vcvarsall_bat = v / "VC" / "vcvarsall.bat";
 
             paths_examined.push_back(vs2013_vcvarsall_bat);
             if (fs.exists(vs2013_vcvarsall_bat))
             {
-                const fs::path vs2013_dumpbin_exe = *v / "VC" / "bin" / "dumpbin.exe";
+                const fs::path vs2013_dumpbin_exe = v / "VC" / "bin" / "dumpbin.exe";
                 paths_examined.push_back(vs2013_dumpbin_exe);
 
                 const fs::path vs2013_bin_dir = vs2013_vcvarsall_bat.parent_path() / "bin";
                 std::vector<ToolsetArchOption> supported_architectures;
                 if (fs.exists(vs2013_bin_dir / "vcvars32.bat"))
                     supported_architectures.push_back({L"x86", CPU::X86, CPU::X86});
-                if (fs.exists(3 / "amd64\\vcvars64.bat"))
+                if (fs.exists(vs2013_bin_dir / "amd64\\vcvars64.bat"))
                     supported_architectures.push_back({L"x64", CPU::X64, CPU::X64});
                 if (fs.exists(vs2013_bin_dir / "x86_amd64\\vcvarsx86_amd64.bat"))
                     supported_architectures.push_back({L"x86_amd64", CPU::X86, CPU::X64});
@@ -332,11 +322,36 @@ namespace vcpkg
                 if (fs.exists(vs2013_dumpbin_exe))
                 {
                     found_toolsets.push_back(
-                        {vs2013_dumpbin_exe, vs2013_vcvarsall_bat, L"v120", supported_architectures});
+                        {vs2013_dumpbin_exe, vs2013_vcvarsall_bat, {}, V_120, supported_architectures});
                 }
             }
         }
-        
+
+        if (found_toolsets.empty())
+        {
+            System::println(System::Color::error, "Could not locate a complete toolset.");
+            System::println("The following paths were examined:");
+            for (const fs::path& path : paths_examined)
+            {
+                System::println("    %s", path.u8string());
+            }
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+
+        return found_toolsets;
+    }
+
+    static std::vector<Toolset> find_toolset_instances(const VcpkgPaths& paths)
+    {
+        using CPU = System::CPUArchitecture;
+
+        const auto& fs = paths.get_filesystem();
+
+        // Note: this will contain a mix of vcvarsall.bat locations and dumpbin.exe locations.
+        std::vector<fs::path> paths_examined;
+
+        std::vector<Toolset> found_toolsets;
+
         // VS2015
         const Optional<fs::path> vs_2015_installation_instance = get_vs2015_installation_instance();
         if (const auto v = vs_2015_installation_instance.get())
@@ -371,8 +386,6 @@ namespace vcpkg
                 }
             }
         }
-
-        const std::vector<std::string> vs2017_installation_instances = get_vs2017_installation_instances(paths);
 
         // VS2017
         Optional<Toolset> vs2017_toolset;
@@ -475,6 +488,14 @@ namespace vcpkg
     const Toolset& VcpkgPaths::get_toolset(const std::string& toolset_version) const
     {
         const std::wstring& w_toolset_version = Strings::to_utf16(toolset_version);
+
+        if (w_toolset_version == V_120)
+        {
+            const auto& v120_toolsets = this->toolsets_vs2013.get_lazy(
+                [this]() { return find_v120_toolset_instances(this->get_filesystem()); });
+            Checks::check_exit(VCPKG_LINE_INFO, v120_toolsets.size() > 0);
+            return v120_toolsets.back();
+        }
 
         // Invariant: toolsets are non-empty and sorted with newest at back()
         const std::vector<Toolset>& vs_toolsets =
