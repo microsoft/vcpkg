@@ -254,7 +254,7 @@ namespace vcpkg::Paragraphs
         for (auto&& path : fs.get_files_non_recursive(ports_dir))
         {
             auto maybe_spgh = try_load_port(fs, path);
-            if (auto spgh = maybe_spgh.get())
+            if (const auto spgh = maybe_spgh.get())
             {
                 ret.paragraphs.emplace_back(std::move(*spgh));
             }
@@ -272,8 +272,20 @@ namespace vcpkg::Paragraphs
         auto results = try_load_all_ports(fs, ports_dir);
         if (!results.errors.empty())
         {
-            print_error_message(results.errors);
-            Checks::exit_fail(VCPKG_LINE_INFO);
+            if (GlobalState::debugging)
+            {
+                print_error_message(results.errors);
+            }
+            else
+            {
+                for (auto&& error : results.errors)
+                {
+                    System::println(
+                        System::Color::warning, "Warning: an error occurred while parsing '%s'", error->name);
+                }
+                System::println(System::Color::warning,
+                                "Use '--debug' to get more information about the parse failures.\n");
+            }
         }
         return std::move(results.paragraphs);
     }

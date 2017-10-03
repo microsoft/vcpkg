@@ -1,4 +1,4 @@
 Source: fontconfig
-Version: 2.12.4
+Version: 2.12.4-1
 Description: Library for configuring and customizing font access.
 Build-Depends: freetype, expat, libiconv, dirent

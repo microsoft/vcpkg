@@ -8,11 +8,10 @@ namespace vcpkg::Commands::Edit
 {
     static std::vector<fs::path> find_from_registry()
     {
-        static const std::array<const wchar_t*, 4> REGKEYS = {
+        static const std::array<const wchar_t*, 3> REGKEYS = {
             LR"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{C26E74D1-022E-4238-8B9D-1E7564A36CC9}_is1)",
-            LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{C26E74D1-022E-4238-8B9D-1E7564A36CC9}_is1)",
+            LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{1287CAD5-7C8D-410D-88B9-0D1EE4A83FF2}_is1)",
             LR"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{F8A2A208-72B3-4D61-95FC-8A65D340689B}_is1)",
-            LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{F8A2A208-72B3-4D61-95FC-8A65D340689B}_is1)",
         };
 
         std::vector<fs::path> output;
@@ -23,8 +22,8 @@ namespace vcpkg::Commands::Edit
             if (const auto c = code_installpath.get())
             {
                 const fs::path install_path = fs::path(*c);
-                output.push_back(install_path / "Code.exe");
                 output.push_back(install_path / "Code - Insiders.exe");
+                output.push_back(install_path / "Code.exe");
             }
         }
         return output;
@@ -33,6 +32,9 @@ namespace vcpkg::Commands::Edit
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         static const std::string OPTION_BUILDTREES = "--buildtrees";
+
+        static const fs::path VS_CODE_INSIDERS = fs::path{"Microsoft VS Code Insiders"} / "Code - Insiders.exe";
+        static const fs::path VS_CODE = fs::path{"Microsoft VS Code"} / "Code.exe";
 
         auto& fs = paths.get_filesystem();
 
@@ -48,8 +50,10 @@ namespace vcpkg::Commands::Edit
         std::vector<fs::path> candidate_paths;
         const std::vector<fs::path> from_path = Files::find_from_PATH(L"EDITOR");
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
-        candidate_paths.push_back(System::get_program_files_platform_bitness() / "Microsoft VS Code" / "Code.exe");
-        candidate_paths.push_back(System::get_program_files_32_bit() / "Microsoft VS Code" / "Code.exe");
+        candidate_paths.push_back(System::get_program_files_platform_bitness() / VS_CODE_INSIDERS);
+        candidate_paths.push_back(System::get_program_files_32_bit() / VS_CODE_INSIDERS);
+        candidate_paths.push_back(System::get_program_files_platform_bitness() / VS_CODE);
+        candidate_paths.push_back(System::get_program_files_32_bit() / VS_CODE);
 
         const std::vector<fs::path> from_registry = find_from_registry();
         candidate_paths.insert(candidate_paths.end(), from_registry.cbegin(), from_registry.cend());

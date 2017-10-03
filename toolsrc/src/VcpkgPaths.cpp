@@ -10,6 +10,10 @@
 
 namespace vcpkg
 {
+    static constexpr CWStringView V_120 = L"v120";
+    static constexpr CWStringView V_140 = L"v140";
+    static constexpr CWStringView V_141 = L"v141";
+
     static bool exists_and_has_equal_or_greater_version(const std::wstring& version_cmd,
                                                         const std::array<int, 3>& expected_version)
     {
@@ -63,18 +67,23 @@ namespace vcpkg
                                      const fs::path& expected_downloaded_path,
                                      const std::array<int, 3>& version)
     {
+        const std::string tool_name_utf8 = Strings::to_utf8(tool_name);
+        const std::string version_as_string = Strings::format("%d.%d.%d", version[0], version[1], version[2]);
+        System::println("A suitable version of %s was not found (required v%s). Downloading portable %s v%s...",
+                        tool_name_utf8,
+                        version_as_string,
+                        tool_name_utf8,
+                        version_as_string);
         const fs::path script = scripts_folder / "fetchDependency.ps1";
         const auto install_cmd =
             System::create_powershell_script_cmd(script, Strings::wformat(L"-Dependency %s", tool_name));
         const System::ExitCodeAndOutput rc = System::cmd_execute_and_capture_output(install_cmd);
         if (rc.exit_code)
         {
-            const std::string version_as_string = Strings::format("%d.%d.%d", version[0], version[1], version[2]);
-
             System::println(System::Color::error,
                             "Launching powershell failed or was denied when trying to fetch %s version %s.\n"
                             "(No sufficient installed version was found)",
-                            Strings::to_utf8(tool_name),
+                            tool_name_utf8,
                             version_as_string);
             {
                 auto locked_metrics = Metrics::g_metrics.lock();
@@ -97,10 +106,10 @@ namespace vcpkg
 
     static fs::path get_cmake_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
     {
-        static constexpr std::array<int, 3> EXPECTED_VERSION = {3, 9, 1};
+        static constexpr std::array<int, 3> EXPECTED_VERSION = {3, 9, 3};
         static const std::wstring VERSION_CHECK_ARGUMENTS = L"--version";
 
-        const fs::path downloaded_copy = downloads_folder / "cmake-3.9.1-win32-x86" / "bin" / "cmake.exe";
+        const fs::path downloaded_copy = downloads_folder / "cmake-3.9.3-win32-x86" / "bin" / "cmake.exe";
         const std::vector<fs::path> from_path = Files::find_from_PATH(L"cmake");
 
         std::vector<fs::path> candidate_paths;
@@ -358,10 +367,12 @@ namespace vcpkg
                 if (fs.exists(vs2015_dumpbin_exe))
                 {
                     found_toolsets.push_back(
-                        {vs2015_dumpbin_exe, vs2015_vcvarsall_bat, L"v140", supported_architectures});
+                        {vs2015_dumpbin_exe, vs2015_vcvarsall_bat, {}, V_140, supported_architectures});
                 }
             }
         }
+
+        const std::vector<std::string> vs2017_installation_instances = get_vs2017_installation_instances(paths);
 
         // VS2017
         Optional<Toolset> vs2017_toolset;
@@ -407,14 +418,13 @@ namespace vcpkg
                 paths_examined.push_back(dumpbin_path);
                 if (fs.exists(dumpbin_path))
                 {
-                    vs2017_toolset = Toolset{dumpbin_path, vcvarsall_bat, L"v141", supported_architectures};
+                    vs2017_toolset = Toolset{dumpbin_path, vcvarsall_bat, {}, V_141, supported_architectures};
                     break;
                 }
             }
             if (const auto value = vs2017_toolset.get())
             {
                 found_toolsets.push_back(*value);
-                break;
             }
         }
 
@@ -432,20 +442,63 @@ namespace vcpkg
         return found_toolsets;
     }
 
+    static std::vector<Toolset> create_vs2017_v140_toolset_instances(const std::vector<Toolset>& vs_toolsets)
+    {
+        std::vector<Toolset> vs2017_v140_toolsets;
+
+        // In constrast to v141 and above, there can only be a single instance of v140 (VS2017 vs VS2015).
+        const auto it = Util::find_if(vs_toolsets, [&](const Toolset& t) { return t.version == V_140; });
+
+        // If v140 is not available, then VS2017 cant use them. Return empty.
+        if (it == vs_toolsets.cend())
+        {
+            return vs2017_v140_toolsets;
+        }
+
+        // If it does exist, then create a matching v140 toolset for each v141 toolset
+        const Toolset v140_toolset = *it;
+        for (const Toolset& toolset : vs_toolsets)
+        {
+            if (toolset.version != V_141)
+            {
+                continue;
+            }
+
+            Toolset t = Toolset{
+                toolset.dumpbin, toolset.vcvarsall, {L"-vcvars_ver=14.0"}, V_140, toolset.supported_architectures};
+            vs2017_v140_toolsets.push_back(std::move(t));
+        }
+
+        return vs2017_v140_toolsets;
+    }
+
     const Toolset& VcpkgPaths::get_toolset(const std::string& toolset_version) const
     {
-        // Invariant: toolsets are non-empty and sorted with newest at back()
-        const auto& vs_toolsets = this->toolsets.get_lazy([this]() { return find_toolset_instances(*this); });
+        const std::wstring& w_toolset_version = Strings::to_utf16(toolset_version);
 
-        if (toolset_version.empty())
+        // Invariant: toolsets are non-empty and sorted with newest at back()
+        const std::vector<Toolset>& vs_toolsets =
+            this->toolsets.get_lazy([this]() { return find_toolset_instances(*this); });
+
+        if (w_toolset_version.empty())
         {
             return vs_toolsets.back();
         }
 
-        const auto toolset = Util::find_if(
-            vs_toolsets, [&](const Toolset& t) { return toolset_version == Strings::to_utf8(t.version); });
+        const auto toolset =
+            Util::find_if(vs_toolsets, [&](const Toolset& t) { return w_toolset_version == t.version; });
         Checks::check_exit(
             VCPKG_LINE_INFO, toolset != vs_toolsets.end(), "Could not find toolset '%s'", toolset_version);
+
+        // If v140 is the selected toolset and VS2017 is available, then use VS2017's vcvarsall with the
+        // -vcvars_ver=14.0 option
+        const std::vector<Toolset>& vs2017_v140_toolsets = this->toolsets_vs2017_v140.get_lazy(
+            [&vs_toolsets]() { return create_vs2017_v140_toolset_instances(vs_toolsets); });
+        if (w_toolset_version == V_140 && !vs2017_v140_toolsets.empty())
+        {
+            return vs2017_v140_toolsets.back();
+        }
+
         return *toolset;
     }
 

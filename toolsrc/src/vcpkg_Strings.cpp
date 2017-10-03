@@ -73,14 +73,20 @@ namespace vcpkg::Strings
 {
     std::wstring to_utf16(const CStringView s)
     {
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> conversion;
-        return conversion.from_bytes(s);
+        const int size = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
+        std::wstring output;
+        output.resize(size - 1);
+        MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, output.data(), size - 1);
+        return output;
     }
 
     std::string to_utf8(const CWStringView w)
     {
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> conversion;
-        return conversion.to_bytes(w);
+        const int size = WideCharToMultiByte(CP_UTF8, 0, w.c_str(), -1, nullptr, 0, nullptr, nullptr);
+        std::string output;
+        output.resize(size - 1);
+        WideCharToMultiByte(CP_UTF8, 0, w.c_str(), -1, output.data(), size - 1, nullptr, nullptr);
+        return output;
     }
 
     std::string::const_iterator case_insensitive_ascii_find(const std::string& s, const std::string& pattern)
@@ -100,7 +106,7 @@ namespace vcpkg::Strings
 
     int case_insensitive_ascii_compare(const CStringView left, const CStringView right)
     {
-        return _stricmp(left, right);
+        return _stricmp(left.c_str(), right.c_str());
     }
 
     std::string ascii_to_lowercase(const std::string& input)
@@ -108,6 +114,11 @@ namespace vcpkg::Strings
         std::string output(input);
         std::transform(output.begin(), output.end(), output.begin(), &details::tolower_char);
         return output;
+    }
+
+    bool case_insensitive_ascii_starts_with(const std::string& s, const std::string& pattern)
+    {
+        return _strnicmp(s.c_str(), pattern.c_str(), pattern.size()) == 0;
     }
 
     void trim(std::string* s)
@@ -136,6 +147,12 @@ namespace vcpkg::Strings
     std::vector<std::string> split(const std::string& s, const std::string& delimiter)
     {
         std::vector<std::string> output;
+
+        if (delimiter.empty())
+        {
+            output.push_back(s);
+            return output;
+        }
 
         size_t i = 0;
         for (size_t pos = s.find(delimiter); pos != std::string::npos; pos = s.find(delimiter, pos))

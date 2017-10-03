@@ -19,6 +19,7 @@ namespace vcpkg
     {
         fs::path dumpbin;
         fs::path vcvarsall;
+        std::vector<std::wstring> vcvarsall_options;
         CWStringView version;
         std::vector<ToolsetArchOption> supported_architectures;
     };
@@ -71,5 +72,6 @@ namespace vcpkg
         Lazy<fs::path> git_exe;
         Lazy<fs::path> nuget_exe;
         Lazy<std::vector<Toolset>> toolsets;
+        Lazy<std::vector<Toolset>> toolsets_vs2017_v140;
     };
 }

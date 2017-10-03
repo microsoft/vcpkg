@@ -57,7 +57,7 @@ namespace vcpkg
         std::vector<std::unique_ptr<FeatureParagraph>> feature_paragraphs;
     };
 
-    void print_error_message(span<const std::unique_ptr<Parse::ParseControlErrorInfo>> error_info_list);
+    void print_error_message(Span<const std::unique_ptr<Parse::ParseControlErrorInfo>> error_info_list);
     inline void print_error_message(const std::unique_ptr<Parse::ParseControlErrorInfo>& error_info_list)
     {
         return print_error_message({&error_info_list, 1});

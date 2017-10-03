@@ -1,3 +1,134 @@
+vcpkg (0.0.90)
+--------------
+  * Add ports:
+    - caffe2         0.8.1
+    - date           2.2
+    - jsonnet        2017-09-02-11cf9fa9f2fe8acbb14b096316006082564ca580
+    - kf5plotting    5.37.0
+    - units          2.3.0
+    - winpcap        4.1.3-1
+  * Update ports:
+    - arrow          apache-arrow-0.4.0-2 -> 0.6.0
+    - benchmark      1.1.0-1 -> 1.2.0
+    - cppwinrt       feb2017_refresh-14393 -> spring_2017_creators_update_for_vs_15.3
+    - llvm           4.0.0-1 -> 5.0.0-1
+    - luafilesystem  1.6.3-1 -> 1.7.0.2
+    - opencv         3.2.0-4 -> 3.3.0-4
+    - paho-mqtt      1.2.0-1 -> 1.2.0-2
+    - protobuf       3.4.0-2 -> 3.4.1-1
+    - qt5            5.8-5 -> 5.8-6
+    - sfml           2.4.2-1 -> 2.4.2-2
+    - xlnt           0.9.4-1 -> 1.1.0-1
+    - zlib           1.2.11-1 -> 1.2.11-2
+  * Bump required version & auto-downloaded version of `cmake` to 3.9.3 (was 3.9.1). Noteable changes:
+    - Fix codepage issues
+    - FindBoost: Add support for Boost 1.65.0 and 1.65.1
+  * `vcpkg edit`: Fix inspected locations for VSCode
+
+-- vcpkg team <vcpkg@microsoft.com>  SUN, 24 Sep 2017 03:30:00 -0800
+
+
+vcpkg (0.0.89)
+--------------
+  * Update ports:
+    - boost                1.65-1 -> 1.65.1
+    - chmlib               0.40 -> 0.40-1
+    - pybind11             2.1.0-2 -> 2.2.0
+    - sciter               4.0.2-1 -> 4.0.3
+    - sqlite3              3.19.1-2 -> 3.20.1
+  * `vcpkg` now warns if the built version of the `vcpkg.exe` itself is outdated
+  * Update to latest python 3.5
+  * `vcpkg install` improvements:
+    - Add `--keep-going` option to keep going if a package fails to install
+    - Add elapsed time to each invidial package as well as total time
+    - Add a counter to the install (e.g. Starting package 3/12: <name>)
+  * `vcpkg edit` now checks more location for VSCode Insiders
+
+-- vcpkg team <vcpkg@microsoft.com>  WED, 14 Sep 2017 16:00:00 -0800
+
+
+vcpkg (0.0.88)
+--------------
+   * `vcpkg_configure_cmake` has been modified to embed debug symbols within static libraries (using the /Z7 option). Most of the libraries in `vcpkg` had their versions bumped due to this.
+   * `vcpkg_configure_meson` has been modified in the same manner.
+
+-- vcpkg team <vcpkg@microsoft.com>  SAT, 09 Sep 2017 00:30:00 -0800
+
+
+vcpkg (0.0.87)
+--------------
+  * Add ports:
+    - console-bridge       0.3.2-1
+    - leptonica            1.74.4
+    - tesseract            3.05.01
+    - urdfdom              1.0.0-1
+    - urdfdom-headers      1.0.0-1
+  * Update ports:
+    - ace                  6.4.4 -> 6.4.5
+    - c-ares               1.12.1-dev-40eb41f-1 -> 1.13.0
+    - glslang              1c573fbcfba6b3d631008b1babc838501ca925d3-2 -> 3a21c880500eac21cdf79bef5b80f970a55ac6af
+    - grpc                 1.4.1 -> 1.6.0
+    - libuv                1.14.0 -> 1.14.1
+    - meschach              -> 1.2b
+    - openblas             v0.2.20 -> v0.2.20-1
+    - openssl              1.0.2l-1 -> 1.0.2l-2
+    - protobuf             3.3.0-3 -> 3.4.0-1
+    - qt5                  5.8-4 -> 5.8-5
+    - shaderc              2df47b51d83ad83cbc2e7f8ff2b56776293e8958-1 -> 12fb656ab20ea9aa06e7084a74e5ff832b7ce2da
+    - spirv-tools          1.1-f72189c249ba143c6a89a4cf1e7d53337b2ddd40 -> v2017.1-dev-7e2d26c77b606b21af839b37fd21381c4a669f23
+    - xxhash               0.6.2 -> 0.6.3
+    - zeromq               4.2.2 -> 20170908-18498f620f0f6d4076981ea16eb5760fe4d28dc2
+  * Add new function `vcpkg_from_bitbucket` which the Bitbucket equivalent of `vcpkg_from_github`
+
+-- vcpkg team <vcpkg@microsoft.com>  FRI, 08 Sep 2017 22:00:00 -0800
+
+
+vcpkg (0.0.86)
+--------------
+  * Add ports:
+    - bigint               2010.04.30
+    - butteraugli          2017-09-02-8c60a2aefa19adb
+    - ccd                  2.0.0-1 (Renamed from libccd)
+    - fadbad               2.1.0
+    - fcl                  0.5.0-1
+    - guetzli              2017-09-02-cb5e4a86f69628
+    - gumbo                0.10.1
+    - libmicrohttpd        0.9.55
+    - libstemmer           2017-9-02
+    - libunibreak          4.0
+    - lodepng              2017-09-01-8a0f16afe74a6a
+    - meschach
+    - nlopt                2.4.2-c43afa08d~vcpkg1
+    - picosha2             2017-09-01-c5ff159b6
+    - piex                 2017-09-01-473434f2dd974978b
+    - pthreads             2.9.1
+    - tinythread           1.1
+    - tinyxml              2.6.2-1
+  * Removed ports:
+    - libccd               2.0.0 (Renamed to ccd)
+  * Update ports:
+    - ace                  6.4.3 -> 6.4.4
+    - boost                1.65 -> 1.65-1
+    - cairo                1.15.6 -> 1.15.8
+    - gdk-pixbuf           2.36.6 -> 2.36.9
+    - glib                 2.52.2 -> 2.52.3
+    - gtk                  3.22.15 -> 3.22.19
+    - jxrlib               1.1-2 -> 1.1-3
+    - paho-mqtt            Version 1.1.0 (Paho 1.2) -> 1.2.0
+    - pango                1.40.6 -> 1.40.11
+    - shaderc              2df47b51d83ad83cbc2e7f8ff2b56776293e8958 -> 2df47b51d83ad83cbc2e7f8ff2b56776293e8958-1
+  * Fix warnings in bootstrap-vcpkg.ps1
+  * Fix codepage related issues with ninja/cmake
+  * Improve handling for non-ascii environments
+  * Configurations names are now more tolerant:
+    - If a configuration name is prefixed with "Release", then it is compatible with "Release"
+    - If a configuration name is prefixed with "Debug", then it is compatible with "Debug"
+  * `vcpkg edit`: Improve detection of VSCode and add better messages when no path is found
+  * Fixes and improvements in the `vcpkg` tool itself
+
+-- vcpkg team <vcpkg@microsoft.com>  MON, 04 Sep 2017 02:00:00 -0800
+
+
 vcpkg (0.0.85)
 --------------
   * Add ports:

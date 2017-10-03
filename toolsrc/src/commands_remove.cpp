@@ -18,7 +18,7 @@ namespace vcpkg::Commands::Remove
     {
         auto& fs = paths.get_filesystem();
         auto spghs = status_db->find_all(spec.name(), spec.triplet());
-        auto core_pkg = **status_db->find(spec.name(), spec.triplet(), Strings::EMPTY);
+        const auto core_pkg = **status_db->find(spec.name(), spec.triplet(), Strings::EMPTY);
 
         for (auto&& spgh : spghs)
         {
@@ -31,7 +31,7 @@ namespace vcpkg::Commands::Remove
 
         auto maybe_lines = fs.read_lines(paths.listfile_path(core_pkg.package));
 
-        if (auto lines = maybe_lines.get())
+        if (const auto lines = maybe_lines.get())
         {
             std::vector<fs::path> dirs_touched;
             for (auto&& suffix : *lines)
@@ -42,7 +42,7 @@ namespace vcpkg::Commands::Remove
 
                 auto target = paths.installed / suffix;
 
-                auto status = fs.status(target, ec);
+                const auto status = fs.status(target, ec);
                 if (ec)
                 {
                     System::println(System::Color::error, "failed: %s", ec.message());
@@ -72,7 +72,7 @@ namespace vcpkg::Commands::Remove
             }
 
             auto b = dirs_touched.rbegin();
-            auto e = dirs_touched.rend();
+            const auto e = dirs_touched.rend();
             for (; b != e; ++b)
             {
                 if (fs.is_empty(*b))
@@ -100,11 +100,11 @@ namespace vcpkg::Commands::Remove
 
     static void print_plan(const std::map<RemovePlanType, std::vector<const RemovePlanAction*>>& group_by_plan_type)
     {
-        static constexpr std::array<RemovePlanType, 2> order = {RemovePlanType::NOT_INSTALLED, RemovePlanType::REMOVE};
+        static constexpr std::array<RemovePlanType, 2> ORDER = {RemovePlanType::NOT_INSTALLED, RemovePlanType::REMOVE};
 
-        for (const RemovePlanType plan_type : order)
+        for (const RemovePlanType plan_type : ORDER)
         {
-            auto it = group_by_plan_type.find(plan_type);
+            const auto it = group_by_plan_type.find(plan_type);
             if (it == group_by_plan_type.cend())
             {
                 continue;
@@ -126,6 +126,37 @@ namespace vcpkg::Commands::Remove
                     continue;
                 default: Checks::unreachable(VCPKG_LINE_INFO);
             }
+        }
+    }
+
+    void perform_remove_plan_action(const VcpkgPaths& paths,
+                                    const RemovePlanAction& action,
+                                    const Purge purge,
+                                    StatusParagraphs& status_db)
+    {
+        const std::string display_name = action.spec.to_string();
+
+        switch (action.plan_type)
+        {
+            case RemovePlanType::NOT_INSTALLED:
+                System::println(System::Color::success, "Package %s is not installed", display_name);
+                break;
+            case RemovePlanType::REMOVE:
+                System::println("Removing package %s... ", display_name);
+                remove_package(paths, action.spec, &status_db);
+                System::println(System::Color::success, "Removing package %s... done", display_name);
+                break;
+            case RemovePlanType::UNKNOWN:
+            default: Checks::unreachable(VCPKG_LINE_INFO);
+        }
+
+        if (purge == Purge::YES)
+        {
+            System::println("Purging package %s... ", display_name);
+            Files::Filesystem& fs = paths.get_filesystem();
+            std::error_code ec;
+            fs.remove_all(paths.packages / action.spec.dir(), ec);
+            System::println(System::Color::success, "Purging package %s... done", display_name);
         }
     }
 
@@ -166,16 +197,17 @@ namespace vcpkg::Commands::Remove
                 Input::check_triplet(spec.triplet(), paths);
         }
 
-        const bool alsoRemoveFolderFromPackages = options.find(OPTION_NO_PURGE) == options.end();
-        if (options.find(OPTION_PURGE) != options.end() && !alsoRemoveFolderFromPackages)
+        const bool no_purge_was_passed = options.find(OPTION_NO_PURGE) != options.end();
+        const bool purge_was_passed = options.find(OPTION_PURGE) != options.end();
+        if (purge_was_passed && no_purge_was_passed)
         {
-            // User specified --purge and --no-purge
             System::println(System::Color::error, "Error: cannot specify both --no-purge and --purge.");
             System::print(EXAMPLE);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
-        const bool isRecursive = options.find(OPTION_RECURSE) != options.cend();
-        const bool dryRun = options.find(OPTION_DRY_RUN) != options.cend();
+        const Purge purge = to_purge(purge_was_passed || !no_purge_was_passed);
+        const bool is_recursive = options.find(OPTION_RECURSE) != options.cend();
+        const bool dry_run = options.find(OPTION_DRY_RUN) != options.cend();
 
         const std::vector<RemovePlanAction> remove_plan = Dependencies::create_remove_plan(specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !remove_plan.empty(), "Remove plan cannot be empty");
@@ -194,7 +226,7 @@ namespace vcpkg::Commands::Remove
             System::println(System::Color::warning,
                             "Additional packages (*) need to be removed to complete this operation.");
 
-            if (!isRecursive)
+            if (!is_recursive)
             {
                 System::println(System::Color::warning,
                                 "If you are sure you want to remove them, run the command with the --recurse option");
@@ -202,37 +234,14 @@ namespace vcpkg::Commands::Remove
             }
         }
 
-        if (dryRun)
+        if (dry_run)
         {
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
         for (const RemovePlanAction& action : remove_plan)
         {
-            const std::string display_name = action.spec.to_string();
-
-            switch (action.plan_type)
-            {
-                case RemovePlanType::NOT_INSTALLED:
-                    System::println(System::Color::success, "Package %s is not installed", display_name);
-                    break;
-                case RemovePlanType::REMOVE:
-                    System::println("Removing package %s... ", display_name);
-                    remove_package(paths, action.spec, &status_db);
-                    System::println(System::Color::success, "Removing package %s... done", display_name);
-                    break;
-                case RemovePlanType::UNKNOWN:
-                default: Checks::unreachable(VCPKG_LINE_INFO);
-            }
-
-            if (alsoRemoveFolderFromPackages)
-            {
-                System::println("Purging package %s... ", display_name);
-                Files::Filesystem& fs = paths.get_filesystem();
-                std::error_code ec;
-                fs.remove_all(paths.packages / action.spec.dir(), ec);
-                System::println(System::Color::success, "Purging package %s... done", display_name);
-            }
+            perform_remove_plan_action(paths, action, purge, status_db);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);

@@ -113,19 +113,20 @@ namespace vcpkg::Commands::Integrate
 
     static ElevationPromptChoice elevated_cmd_execute(const std::string& param)
     {
-        SHELLEXECUTEINFO sh_ex_info = {0};
+        SHELLEXECUTEINFOW sh_ex_info = {0};
         sh_ex_info.cbSize = sizeof(sh_ex_info);
         sh_ex_info.fMask = SEE_MASK_NOCLOSEPROCESS;
         sh_ex_info.hwnd = nullptr;
-        sh_ex_info.lpVerb = "runas";
-        sh_ex_info.lpFile = "cmd"; // Application to start
+        sh_ex_info.lpVerb = L"runas";
+        sh_ex_info.lpFile = L"cmd"; // Application to start
 
-        sh_ex_info.lpParameters = param.c_str(); // Additional parameters
+        auto wparam = Strings::to_utf16(param);
+        sh_ex_info.lpParameters = wparam.c_str(); // Additional parameters
         sh_ex_info.lpDirectory = nullptr;
         sh_ex_info.nShow = SW_HIDE;
         sh_ex_info.hInstApp = nullptr;
 
-        if (!ShellExecuteExA(&sh_ex_info))
+        if (!ShellExecuteExW(&sh_ex_info))
         {
             return ElevationPromptChoice::NO;
         }

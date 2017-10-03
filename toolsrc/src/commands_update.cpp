@@ -2,7 +2,6 @@
 
 #include "Paragraphs.h"
 #include "vcpkg_Commands.h"
-#include "vcpkg_Files.h"
 #include "vcpkg_System.h"
 #include "vcpkglib.h"
 
@@ -22,7 +21,7 @@ namespace vcpkg::Commands::Update
         std::vector<OutdatedPackage> output;
         for (const StatusParagraph* pgh : installed_packages)
         {
-            auto it = src_names_to_versions.find(pgh->package.spec.name());
+            const auto it = src_names_to_versions.find(pgh->package.spec.name());
             if (it == src_names_to_versions.end())
             {
                 // Package was not installed from portfile
@@ -67,31 +66,6 @@ namespace vcpkg::Commands::Update
                             "    .\\vcpkg remove --outdated\n"
                             "    .\\vcpkg install " +
                             install_line);
-        }
-
-        auto version_file = paths.get_filesystem().read_contents(paths.root / "toolsrc" / "VERSION.txt");
-        if (auto version_contents = version_file.get())
-        {
-            int maj1, min1, rev1;
-            auto num1 = sscanf_s(version_contents->c_str(), "\"%d.%d.%d\"", &maj1, &min1, &rev1);
-
-            int maj2, min2, rev2;
-            auto num2 = sscanf_s(Version::version().c_str(), "%d.%d.%d-", &maj2, &min2, &rev2);
-
-            if (num1 == 3 && num2 == 3)
-            {
-                if (maj1 != maj2 || min1 != min2 || rev1 != rev2)
-                {
-                    System::println("Different source is available for vcpkg (%d.%d.%d -> %d.%d.%d). Use "
-                                    ".\\bootstrap-vcpkg.bat to update.",
-                                    maj2,
-                                    min2,
-                                    rev2,
-                                    maj1,
-                                    min1,
-                                    rev1);
-                }
-            }
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);

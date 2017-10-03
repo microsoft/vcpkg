@@ -67,7 +67,12 @@ namespace vcpkg::Build
         const auto arch = to_vcvarsall_toolchain(pre_build_info.target_architecture, toolset);
         const auto target = to_vcvarsall_target(pre_build_info.cmake_system_name);
 
-        return Strings::wformat(LR"("%s" %s %s %s 2>&1)", toolset.vcvarsall.native(), arch, target, tonull);
+        return Strings::wformat(LR"("%s" %s %s %s %s 2>&1)",
+                                toolset.vcvarsall.native(),
+                                Strings::join(L" ", toolset.vcvarsall_options),
+                                arch,
+                                target,
+                                tonull);
     }
 
     static void create_binary_feature_control_file(const SourceParagraph& source_paragraph,
@@ -160,7 +165,7 @@ namespace vcpkg::Build
                 {L"PORT", config.src.name},
                 {L"CURRENT_PORT_DIR", config.port_dir / "/."},
                 {L"TARGET_TRIPLET", triplet.canonical_name()},
-                {L"VCPKG_PLATFORM_TOOLSET", toolset.version},
+                {L"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
                 {L"VCPKG_USE_HEAD_VERSION", to_bool(config.build_package_options.use_head_version) ? L"1" : L"0"},
                 {L"_VCPKG_NO_DOWNLOADS", !to_bool(config.build_package_options.allow_downloads) ? L"1" : L"0"},
                 {L"GIT", git_exe_path},
@@ -289,7 +294,7 @@ namespace vcpkg::Build
         if (!version.empty()) build_info.version = std::move(version);
 
         std::map<BuildPolicy, bool> policies;
-        for (auto policy : g_all_policies)
+        for (auto policy : G_ALL_POLICIES)
         {
             const auto setting = parser.optional_field(to_string(policy));
             if (setting.empty()) continue;

@@ -1,0 +1,3 @@
+Source: units
+Version: 2.3.0
+Description: A compile-time, header-only, dimensional analysis and unit conversion library built on c++14 with no dependencies. 

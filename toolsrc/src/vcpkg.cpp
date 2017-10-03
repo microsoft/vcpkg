@@ -11,7 +11,10 @@
 #include "vcpkg_Strings.h"
 #include "vcpkg_System.h"
 #include "vcpkglib.h"
+#pragma warning(push)
+#pragma warning(disable : 4768)
 #include <Shlobj.h>
+#pragma warning(pop)
 #include <cassert>
 #include <fstream>
 #include <memory>
@@ -69,6 +72,7 @@ static void inner(const VcpkgCmdArguments& args)
     const VcpkgPaths paths = expected_paths.value_or_exit(VCPKG_LINE_INFO);
     const int exit_code = _wchdir(paths.root.c_str());
     Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Changing the working dir failed");
+    Commands::Version::warn_if_vcpkg_version_mismatch(paths);
 
     if (const auto command_function = Commands::find(args.command, Commands::get_available_commands_type_b()))
     {
@@ -104,7 +108,7 @@ static void inner(const VcpkgCmdArguments& args)
     return invalid_command(args.command);
 }
 
-static void loadConfig()
+static void load_config()
 {
     fs::path localappdata;
     {
@@ -207,7 +211,7 @@ int wmain(const int argc, const wchar_t* const* const argv)
         locked_metrics->track_property("version", Commands::Version::version());
         locked_metrics->track_property("cmdline", trimmed_command_line);
     }
-    loadConfig();
+    load_config();
     Metrics::g_metrics.lock()->track_property("sqmuser", Metrics::get_SQM_user());
 
     const VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(argc, argv);

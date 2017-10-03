@@ -226,7 +226,7 @@ namespace vcpkg::System
 
     void println() { println(Strings::EMPTY); }
 
-    void print(const CStringView message) { fputs(message, stdout); }
+    void print(const CStringView message) { fputs(message.c_str(), stdout); }
 
     void println(const CStringView message)
     {
@@ -255,13 +255,13 @@ namespace vcpkg::System
 
     Optional<std::wstring> get_environment_variable(const CWStringView varname) noexcept
     {
-        const auto sz = GetEnvironmentVariableW(varname, nullptr, 0);
+        const auto sz = GetEnvironmentVariableW(varname.c_str(), nullptr, 0);
         if (sz == 0) return nullopt;
 
         std::wstring ret(sz, L'\0');
 
         Checks::check_exit(VCPKG_LINE_INFO, MAXDWORD >= ret.size());
-        const auto sz2 = GetEnvironmentVariableW(varname, ret.data(), static_cast<DWORD>(ret.size()));
+        const auto sz2 = GetEnvironmentVariableW(varname.c_str(), ret.data(), static_cast<DWORD>(ret.size()));
         Checks::check_exit(VCPKG_LINE_INFO, sz2 + 1 == sz);
         ret.pop_back();
         return ret;
@@ -275,19 +275,20 @@ namespace vcpkg::System
     Optional<std::wstring> get_registry_string(HKEY base, const CWStringView sub_key, const CWStringView valuename)
     {
         HKEY k = nullptr;
-        const LSTATUS ec = RegOpenKeyExW(base, sub_key, NULL, KEY_READ, &k);
+        const LSTATUS ec = RegOpenKeyExW(base, sub_key.c_str(), NULL, KEY_READ, &k);
         if (ec != ERROR_SUCCESS) return nullopt;
 
         DWORD dw_buffer_size = 0;
         DWORD dw_type = 0;
-        auto rc = RegQueryValueExW(k, valuename, nullptr, &dw_type, nullptr, &dw_buffer_size);
+        auto rc = RegQueryValueExW(k, valuename.c_str(), nullptr, &dw_type, nullptr, &dw_buffer_size);
         if (rc != ERROR_SUCCESS || !is_string_keytype(dw_type) || dw_buffer_size == 0 ||
             dw_buffer_size % sizeof(wchar_t) != 0)
             return nullopt;
         std::wstring ret;
         ret.resize(dw_buffer_size / sizeof(wchar_t));
 
-        rc = RegQueryValueExW(k, valuename, nullptr, &dw_type, reinterpret_cast<LPBYTE>(ret.data()), &dw_buffer_size);
+        rc = RegQueryValueExW(
+            k, valuename.c_str(), nullptr, &dw_type, reinterpret_cast<LPBYTE>(ret.data()), &dw_buffer_size);
         if (rc != ERROR_SUCCESS || !is_string_keytype(dw_type) || dw_buffer_size != sizeof(wchar_t) * ret.size())
             return nullopt;
 
