@@ -10,9 +10,9 @@
 
 namespace vcpkg
 {
-    // Intentionally wstring so we can easily use operator== with CWStringView.
-    static const std::wstring V_140 = L"v140";
-    static const std::wstring V_141 = L"v141";
+    static constexpr CWStringView V_120 = L"v120";
+    static constexpr CWStringView V_140 = L"v140";
+    static constexpr CWStringView V_141 = L"v141";
 
     static bool exists_and_has_equal_or_greater_version(const std::wstring& version_cmd,
                                                         const std::array<int, 3>& expected_version)
