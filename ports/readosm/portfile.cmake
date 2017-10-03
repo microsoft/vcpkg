@@ -16,8 +16,8 @@ vcpkg_apply_patches(
 
 find_program(NMAKE nmake)
 
-set(LIBS_ALL_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/expat.lib ${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib")
-set(LIBS_ALL_REL "${CURRENT_INSTALLED_DIR}/lib/expat.lib ${CURRENT_INSTALLED_DIR}/lib/zlib.lib")
+set(LIBS_ALL_DBG "\"${CURRENT_INSTALLED_DIR}/debug/lib/expat.lib\" \"${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib\"")
+set(LIBS_ALL_REL "\"${CURRENT_INSTALLED_DIR}/lib/expat.lib\" \"${CURRENT_INSTALLED_DIR}/lib/zlib.lib\"")
 
 if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
 	set(CL_FLAGS_DBG "/MDd /Zi")
@@ -36,7 +36,7 @@ file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/debug" INST_DIR_DBG)
 
 vcpkg_execute_required_process(
     COMMAND ${NMAKE} -f makefile.vc clean install
-    INST_DIR=${INST_DIR_DBG} INSTALLED_ROOT=${CURRENT_INSTALLED_DIR} "LINK_FLAGS=/debug" "CL_FLAGS=${CL_FLAGS_DBG}"
+    INST_DIR="${INST_DIR_DBG}" INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}" "LINK_FLAGS=/debug" "CL_FLAGS=${CL_FLAGS_DBG}"
     "LIBS_ALL=${LIBS_ALL_DBG}"
     WORKING_DIRECTORY ${SOURCE_PATH}
     LOGNAME nmake-build-${TARGET_TRIPLET}-debug
@@ -52,7 +52,7 @@ message(STATUS "Building ${TARGET_TRIPLET}-rel")
 file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR_REL)
 vcpkg_execute_required_process(
     COMMAND ${NMAKE} -f makefile.vc clean install
-    INST_DIR=${INST_DIR_REL} INSTALLED_ROOT=${CURRENT_INSTALLED_DIR} "LINK_FLAGS=" "CL_FLAGS=${CL_FLAGS_REL}"
+    INST_DIR="${INST_DIR_REL}" INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}" "LINK_FLAGS=" "CL_FLAGS=${CL_FLAGS_REL}"
     "LIBS_ALL=${LIBS_ALL_REL}"
     WORKING_DIRECTORY ${SOURCE_PATH}
     LOGNAME nmake-build-${TARGET_TRIPLET}-release
