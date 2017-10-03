@@ -1,7 +1,3 @@
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "Error: UWP builds are currently not supported.")
-endif()
-
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/icu-59.1/icu)
 set(ICU_VERSION 59)
@@ -48,13 +44,34 @@ else()
     set(ICU_RUNTIME "-MD")
 endif()
 
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
+    # UWP builds do a cross-compilation and require native ICU tools installed
+    find_path(ICU_CROSS_BUILD NAMES "icudefs.mk"
+        PATHS
+            ${CURRENT_BUILDTREES_DIR}
+        PATH_SUFFIXES
+            x86-windows-rel
+            x86-windows-static-rel
+            x64-windows-rel
+            x64-windows-static-rel
+        NO_DEFAULT_PATH
+    )
+    if(NOT ICU_CROSS_BUILD)
+        message(FATAL_ERROR "${TARGET_TRIPLET} requires ICU for x86-windows or x64-windows")
+    endif()
+    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --with-cross-build=${ICU_CROSS_BUILD}")
+    set(ENV{CPPFLAGS} "-DU_PLATFORM_HAS_WINUWP_API -D_ARM_WINAPI_PARTITION_DESKTOP_SDK_AVAILABLE")
+    # Set UWP bit, fix linker errors in conftest
+    set(UWP_LDFLAGS "-APPCONTAINER kernel32.lib runtimeobject.lib")
+endif()
+
 # Configure release
 message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
 set(ENV{CFLAGS} "${ICU_RUNTIME} -O2 -Oi -Zi")
 set(ENV{CXXFLAGS} "${ICU_RUNTIME} -O2 -Oi -Zi")
-set(ENV{LDFLAGS} "-DEBUG -INCREMENTAL:NO -OPT:REF -OPT:ICF")
+set(ENV{LDFLAGS} "-DEBUG -INCREMENTAL:NO -OPT:REF -OPT:ICF ${UWP_LDFLAGS}")
 vcpkg_execute_required_process(
     COMMAND ${BASH} --noprofile --norc -c 
         "${SOURCE_PATH}/source/runConfigureICU MSYS/MSVC ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_RELASE}"
@@ -68,7 +85,7 @@ file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 set(ENV{CFLAGS} "${ICU_RUNTIME}d -Od -Zi -RTC1")
 set(ENV{CXXFLAGS} "${ICU_RUNTIME}d -Od -Zi -RTC1")
-set(ENV{LDFLAGS} "-DEBUG")
+set(ENV{LDFLAGS} "-DEBUG ${UWP_LDFLAGS}")
 vcpkg_execute_required_process(
     COMMAND ${BASH} --noprofile --norc -c 
         "${SOURCE_PATH}/source/runConfigureICU MSYS/MSVC ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_DEBUG}"
