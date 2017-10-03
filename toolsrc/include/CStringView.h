@@ -11,12 +11,35 @@ namespace vcpkg
         constexpr BasicCStringView(const BasicCStringView&) = default;
         BasicCStringView(const std::basic_string<CharType>& str) : cstr(str.c_str()) {}
 
-        constexpr operator const CharType*() const { return cstr; }
         constexpr const CharType* c_str() const { return cstr; }
 
     private:
         const CharType* cstr;
     };
+
+    namespace details
+    {
+        inline bool vcpkg_strcmp(const char* l, const char* r) { return strcmp(l, r) == 0; }
+        inline bool vcpkg_strcmp(const wchar_t* l, const wchar_t* r) { return wcscmp(l, r) == 0; }
+    }
+
+    template<class CharType>
+    bool operator==(const BasicCStringView<CharType>& l, const BasicCStringView<CharType>& r)
+    {
+        return details::vcpkg_strcmp(l.c_str(), r.c_str());
+    }
+
+    template<class CharType>
+    bool operator==(const CharType* l, const BasicCStringView<CharType>& r)
+    {
+        return details::vcpkg_strcmp(l, r.c_str());
+    }
+
+    template<class CharType>
+    bool operator==(const BasicCStringView<CharType>& r, const CharType* l)
+    {
+        return details::vcpkg_strcmp(l, r.c_str());
+    }
 
     template<class CharType>
     bool operator==(const std::basic_string<CharType>& l, const BasicCStringView<CharType>& r)
@@ -28,6 +51,25 @@ namespace vcpkg
     bool operator==(const BasicCStringView<CharType>& r, const std::basic_string<CharType>& l)
     {
         return l == r.c_str();
+    }
+
+    // notequals
+    template<class CharType>
+    bool operator!=(const BasicCStringView<CharType>& l, const BasicCStringView<CharType>& r)
+    {
+        return !details::vcpkg_strcmp(l.c_str(), r.c_str());
+    }
+
+    template<class CharType>
+    bool operator!=(const CharType* l, const BasicCStringView<CharType>& r)
+    {
+        return !details::vcpkg_strcmp(l, r.c_str());
+    }
+
+    template<class CharType>
+    bool operator!=(const BasicCStringView<CharType>& r, const CharType* l)
+    {
+        return !details::vcpkg_strcmp(l, r.c_str());
     }
 
     template<class CharType>

@@ -25,7 +25,7 @@ namespace vcpkg
         static const std::string VERSION = "Version";
     }
 
-    static span<const std::string> get_list_of_valid_fields()
+    static Span<const std::string> get_list_of_valid_fields()
     {
         static const std::string valid_fields[] = {
             Fields::SOURCE,
@@ -38,7 +38,7 @@ namespace vcpkg
         return valid_fields;
     }
 
-    void print_error_message(span<const std::unique_ptr<Parse::ParseControlErrorInfo>> error_info_list)
+    void print_error_message(Span<const std::unique_ptr<Parse::ParseControlErrorInfo>> error_info_list)
     {
         Checks::check_exit(VCPKG_LINE_INFO, error_info_list.size() > 0);
 

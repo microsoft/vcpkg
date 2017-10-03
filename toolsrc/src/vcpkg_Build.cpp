@@ -165,7 +165,7 @@ namespace vcpkg::Build
                 {L"PORT", config.src.name},
                 {L"CURRENT_PORT_DIR", config.port_dir / "/."},
                 {L"TARGET_TRIPLET", triplet.canonical_name()},
-                {L"VCPKG_PLATFORM_TOOLSET", toolset.version},
+                {L"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
                 {L"VCPKG_USE_HEAD_VERSION", to_bool(config.build_package_options.use_head_version) ? L"1" : L"0"},
                 {L"_VCPKG_NO_DOWNLOADS", !to_bool(config.build_package_options.allow_downloads) ? L"1" : L"0"},
                 {L"GIT", git_exe_path},
