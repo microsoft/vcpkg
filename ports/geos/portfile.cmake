@@ -15,6 +15,11 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 515d8700b8a28282678e481faee355e3a43d7b70160472a63335b8d7225d9ba10437be782378f18f31a15288118126d411a2d862f01ce35d27c96f6bc0a73016
 )
 vcpkg_extract_source_archive(${ARCHIVE})
+vcpkg_apply_patches(
+
+SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/geos_c-static-support.patch
+)
 
 # NOTE: GEOS provides CMake as optional build configuration, it might not be actively
 # maintained, so CMake build issues may happen between releases.
