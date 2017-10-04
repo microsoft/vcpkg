@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cstddef>
+#include <initializer_list>
 #include <vector>
 
 template<class T>
@@ -17,6 +18,7 @@ public:
     constexpr Span(std::nullptr_t) noexcept : Span() {}
     constexpr Span(T* ptr, size_t count) noexcept : m_ptr(ptr), m_count(count) {}
     constexpr Span(T* ptr_begin, T* ptr_end) noexcept : m_ptr(ptr_begin), m_count(ptr_end - ptr_begin) {}
+    constexpr Span(std::initializer_list<T> l) noexcept : m_ptr(l.begin()), m_count(l.size()) {}
 
     template<size_t N>
     constexpr Span(T (&arr)[N]) noexcept : Span(arr, N)
