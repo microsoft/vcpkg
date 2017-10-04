@@ -38,6 +38,12 @@ namespace vcpkg::Util
     }
 
     template<class Container, class Pred>
+    void stable_keep_if(Container& cont, Pred pred)
+    {
+        cont.erase(std::stable_partition(cont.begin(), cont.end(), pred), cont.end());
+    }
+
+    template<class Container, class Pred>
     void unstable_keep_if(Container& cont, Pred pred)
     {
         cont.erase(std::partition(cont.begin(), cont.end(), pred), cont.end());
