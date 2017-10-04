@@ -1,7 +1,11 @@
 #pragma once
 
-#include "vcpkg_Files.h"
+#include "VcpkgPaths.h"
 #include "vcpkg_Dependencies.h"
+#include "vcpkg_Files.h"
+
+#include <string>
+#include <vector>
 
 namespace vcpkg::Commands::Export::IFW
 {
@@ -14,5 +18,8 @@ namespace vcpkg::Commands::Export::IFW
         Optional<std::string> maybe_installer_file_path;
     };
 
-    void do_export(const std::vector<Dependencies::ExportPlanAction> &export_plan, const std::string &export_id, const Options &ifw_options, const VcpkgPaths& paths);
+    void do_export(const std::vector<Dependencies::ExportPlanAction>& export_plan,
+                   const std::string& export_id,
+                   const Options& ifw_options,
+                   const VcpkgPaths& paths);
 }
