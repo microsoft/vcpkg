@@ -137,6 +137,17 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         $extractionType = $ExtractionType_ZIP
         $extractionFolder = "$downloadsDir\MinGit-2.14.1-32-bit"
     }
+    elseif($Dependency -eq "installerbase")
+    {
+        $requiredVersion = "3.1.81"
+        $downloadVersion = "3.1.81"
+        $url = "https://github.com/podsvirov/installer-framework/releases/download/cr203958-9/QtInstallerFramework-win-x86.zip"
+        $downloadPath = "$downloadsDir\QtInstallerFramework-win-x86.zip"
+        $expectedDownloadedFileHash = "f2ce23cf5cf9fc7ce409bdca49328e09a070c0026d3c8a04e4dfde7b05b83fe8"
+        $executableFromDownload = "$downloadsDir\QtInstallerFramework-win-x86\bin\installerbase.exe"
+        $extractionType = $ExtractionType_ZIP
+        $extractionFolder = $downloadsDir
+    }
     else
     {
         throw "Unknown program requested"
