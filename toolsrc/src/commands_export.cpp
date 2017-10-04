@@ -314,37 +314,45 @@ namespace vcpkg::Commands::Export
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
-        ret.maybe_nuget_id = maybe_lookup(options.settings, OPTION_NUGET_ID);
-        ret.maybe_nuget_version = maybe_lookup(options.settings, OPTION_NUGET_VERSION);
+        struct OptionPair
+        {
+            const std::string& name;
+            Optional<std::string>& out_opt;
+        };
+        const auto options_implies =
+            [&](const std::string& main_opt_name, bool main_opt, Span<const OptionPair> implying_opts) {
+                if (main_opt)
+                {
+                    for (auto&& opt : implying_opts)
+                        opt.out_opt = maybe_lookup(options.settings, opt.name);
+                }
+                else
+                {
+                    for (auto&& opt : implying_opts)
+                        Checks::check_exit(VCPKG_LINE_INFO,
+                                           !maybe_lookup(options.settings, opt.name),
+                                           "%s is only valid with %s",
+                                           opt.name,
+                                           main_opt_name);
+                }
+            };
 
-        Checks::check_exit(VCPKG_LINE_INFO, !ret.maybe_nuget_id || ret.nuget, "--nuget-id is only valid with --nuget");
-        Checks::check_exit(
-            VCPKG_LINE_INFO, !ret.maybe_nuget_version || ret.nuget, "--nuget-version is only valid with --nuget");
+        options_implies(OPTION_NUGET,
+                        ret.nuget,
+                        {
+                            {OPTION_NUGET_ID, ret.maybe_nuget_id},
+                            {OPTION_NUGET_VERSION, ret.maybe_nuget_version},
+                        });
 
-        ret.ifw_options.maybe_repository_url = maybe_lookup(options.settings, OPTION_IFW_REPOSITORY_URL);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           !ret.ifw_options.maybe_repository_url || ret.ifw,
-                           "--ifw-repository-url is only valid with --ifw");
-
-        ret.ifw_options.maybe_packages_dir_path = maybe_lookup(options.settings, OPTION_IFW_PACKAGES_DIR_PATH);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           !ret.ifw_options.maybe_packages_dir_path || ret.ifw,
-                           "--ifw-packages-directory-path is only valid with --ifw");
-
-        ret.ifw_options.maybe_repository_dir_path = maybe_lookup(options.settings, OPTION_IFW_REPOSITORY_DIR_PATH);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           !ret.ifw_options.maybe_repository_dir_path || ret.ifw,
-                           "--ifw-repository-directory-path is only valid with --ifw");
-
-        ret.ifw_options.maybe_config_file_path = maybe_lookup(options.settings, OPTION_IFW_CONFIG_FILE_PATH);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           !ret.ifw_options.maybe_config_file_path || ret.ifw,
-                           "--ifw-configuration-file-path is only valid with --ifw");
-
-        ret.ifw_options.maybe_installer_file_path = maybe_lookup(options.settings, OPTION_IFW_INSTALLER_FILE_PATH);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           !ret.ifw_options.maybe_installer_file_path || ret.ifw,
-                           "--ifw-installer-file-path is only valid with --ifw");
+        options_implies(OPTION_IFW,
+                        ret.ifw,
+                        {
+                            {OPTION_IFW_REPOSITORY_URL, ret.ifw_options.maybe_repository_url},
+                            {OPTION_IFW_PACKAGES_DIR_PATH, ret.ifw_options.maybe_packages_dir_path},
+                            {OPTION_IFW_REPOSITORY_DIR_PATH, ret.ifw_options.maybe_repository_dir_path},
+                            {OPTION_IFW_CONFIG_FILE_PATH, ret.ifw_options.maybe_config_file_path},
+                            {OPTION_IFW_INSTALLER_FILE_PATH, ret.ifw_options.maybe_installer_file_path},
+                        });
         return ret;
     }
 
