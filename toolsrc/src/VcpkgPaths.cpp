@@ -175,18 +175,21 @@ namespace vcpkg
 
     static fs::path get_ifw_installerbase_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
     {
-        static constexpr std::array<int, 3> EXPECTED_VERSION = { 3, 1, 81 };
+        static constexpr std::array<int, 3> EXPECTED_VERSION = {3, 1, 81};
         static const std::wstring VERSION_CHECK_ARGUMENTS = L"--framework-version";
 
-        const fs::path downloaded_copy = downloads_folder / "QtInstallerFramework-win-x86" / "bin" / "installerbase.exe";
+        const fs::path downloaded_copy =
+            downloads_folder / "QtInstallerFramework-win-x86" / "bin" / "installerbase.exe";
 
         std::vector<fs::path> candidate_paths;
         candidate_paths.push_back(downloaded_copy);
         // TODO: Uncomment later
-        //const std::vector<fs::path> from_path = Files::find_from_PATH(L"installerbase");
-        //candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());        
-        //candidate_paths.push_back(fs::path(System::get_environment_variable(L"HOMEDRIVE").value_or("C:")) / "Qt" / "Tools" / "QtInstallerFramework" / "3.1" / "bin" / "installerbase.exe");
-        //candidate_paths.push_back(fs::path(System::get_environment_variable(L"HOMEDRIVE").value_or("C:")) / "Qt" / "QtIFW-3.1.0" / "bin" / "installerbase.exe");
+        // const std::vector<fs::path> from_path = Files::find_from_PATH(L"installerbase");
+        // candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
+        // candidate_paths.push_back(fs::path(System::get_environment_variable(L"HOMEDRIVE").value_or("C:")) / "Qt" /
+        // "Tools" / "QtInstallerFramework" / "3.1" / "bin" / "installerbase.exe");
+        // candidate_paths.push_back(fs::path(System::get_environment_variable(L"HOMEDRIVE").value_or("C:")) / "Qt" /
+        // "QtIFW-3.1.0" / "bin" / "installerbase.exe");
 
         const Optional<fs::path> path =
             find_if_has_equal_or_greater_version(candidate_paths, VERSION_CHECK_ARGUMENTS, EXPECTED_VERSION);
@@ -283,17 +286,20 @@ namespace vcpkg
 
     const fs::path& VcpkgPaths::get_ifw_installerbase_exe() const
     {
-        return this->ifw_installerbase_exe.get_lazy([this]() { return get_ifw_installerbase_path(this->downloads, this->scripts); });
+        return this->ifw_installerbase_exe.get_lazy(
+            [this]() { return get_ifw_installerbase_path(this->downloads, this->scripts); });
     }
 
     const fs::path& VcpkgPaths::get_ifw_binarycreator_exe() const
     {
-        return this->ifw_binarycreator_exe.get_lazy([this]() { return get_ifw_installerbase_exe().parent_path() / "binarycreator.exe"; });
+        return this->ifw_binarycreator_exe.get_lazy(
+            [this]() { return get_ifw_installerbase_exe().parent_path() / "binarycreator.exe"; });
     }
 
     const fs::path& VcpkgPaths::get_ifw_repogen_exe() const
     {
-        return this->ifw_repogen_exe.get_lazy([this]() { return get_ifw_installerbase_exe().parent_path() / "repogen.exe"; });
+        return this->ifw_repogen_exe.get_lazy(
+            [this]() { return get_ifw_installerbase_exe().parent_path() / "repogen.exe"; });
     }
 
     static std::vector<std::string> get_vs2017_installation_instances(const VcpkgPaths& paths)
