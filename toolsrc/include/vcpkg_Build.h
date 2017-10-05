@@ -79,7 +79,8 @@ namespace vcpkg::Build
         std::string target_architecture;
         std::string cmake_system_name;
         std::string cmake_system_version;
-        std::string platform_toolset;
+        Optional<std::string> platform_toolset;
+        Optional<fs::path> visual_studio_path;
     };
 
     std::wstring make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);

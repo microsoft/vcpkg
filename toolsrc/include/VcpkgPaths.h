@@ -17,6 +17,7 @@ namespace vcpkg
 
     struct Toolset
     {
+        fs::path visual_studio_root_path;
         fs::path dumpbin;
         fs::path vcvarsall;
         std::vector<std::wstring> vcvarsall_options;
@@ -66,7 +67,8 @@ namespace vcpkg
         /// <remarks>
         ///   Valid version strings are "v140", "v141", and "". Empty string gets the latest.
         /// </remarks>
-        const Toolset& get_toolset(const std::string& toolset_version) const;
+        const Toolset& VcpkgPaths::get_toolset(const Optional<std::string>& toolset_version,
+                                               const Optional<fs::path>& visual_studio_path) const;
 
         Files::Filesystem& get_filesystem() const;
 
@@ -78,6 +80,5 @@ namespace vcpkg
         Lazy<fs::path> ifw_binarycreator_exe;
         Lazy<fs::path> ifw_repogen_exe;
         Lazy<std::vector<Toolset>> toolsets;
-        Lazy<std::vector<Toolset>> toolsets_vs2017_v140;
     };
 }
