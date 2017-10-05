@@ -119,8 +119,18 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         $requiredVersion = "4.1.0"
         $downloadVersion = "4.1.0"
         $url = "https://dist.nuget.org/win-x86-commandline/v4.1.0/nuget.exe"
-        $downloadPath = "$downloadsDir\nuget-4.1.0\nuget.exe"
+        $downloadPath = "$downloadsDir\nuget-$downloadVersion\nuget.exe"
         $expectedDownloadedFileHash = "4c1de9b026e0c4ab087302ff75240885742c0faa62bd2554f913bbe1f6cb63a0"
+        $executableFromDownload = $downloadPath
+        $extractionType = $ExtractionType_NO_EXTRACTION_REQUIRED
+    }
+    elseif($Dependency -eq "vswhere")
+    {
+        $requiredVersion = "2.1.4"
+        $downloadVersion = "2.1.4"
+        $url = "https://github.com/Microsoft/vswhere/releases/download/2.1.4/vswhere.exe"
+        $downloadPath = "$downloadsDir\vswhere-$downloadVersion\vswhere.exe"
+        $expectedDownloadedFileHash = "548fb9dfeed59bc4ddcce739a5729e9c8dd5932cd60ff6f74727ee069e7da458"
         $executableFromDownload = $downloadPath
         $extractionType = $ExtractionType_NO_EXTRACTION_REQUIRED
     }
