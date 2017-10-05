@@ -138,7 +138,7 @@ namespace vcpkg::Build
 
         const fs::path ports_cmake_script_path = paths.ports_cmake;
         const auto pre_build_info = PreBuildInfo::from_triplet_file(paths, triplet);
-        const Toolset& toolset = paths.get_toolset(pre_build_info.platform_toolset);
+        const Toolset& toolset = paths.get_toolset(pre_build_info.platform_toolset, pre_build_info.visual_studio_path);
         const auto cmd_set_environment = make_build_env_cmd(pre_build_info, toolset);
 
         std::string features;
@@ -386,7 +386,15 @@ namespace vcpkg::Build
 
             if (variable_name == "VCPKG_PLATFORM_TOOLSET")
             {
-                pre_build_info.platform_toolset = variable_value;
+                pre_build_info.platform_toolset =
+                    variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
+                continue;
+            }
+
+            if (variable_name == "VCPKG_VISUAL_STUDIO_PATH")
+            {
+                pre_build_info.visual_studio_path =
+                    variable_value.empty() ? nullopt : Optional<fs::path>{variable_value};
                 continue;
             }
 

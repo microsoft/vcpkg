@@ -67,6 +67,21 @@ namespace vcpkg::Util
         return std::find_if(cont.cbegin(), cont.cend(), pred);
     }
 
+    template<class Container>
+    using ToVectorOfConstPointersT = std::decay_t<decltype(*std::begin(std::declval<Container>()))>;
+
+    template<class Container, class T = ToVectorOfConstPointersT<Container>>
+    std::vector<const T*> to_vector_of_const_pointers(const Container& cont)
+    {
+        std::vector<const T*> output;
+        for (auto i = cont.cbegin(), cend = cont.end(); i != cend; ++i)
+        {
+            output.push_back(&(*i));
+        }
+
+        return output;
+    }
+
     template<class Container, class Pred>
     auto find_if_not(const Container& cont, Pred pred)
     {

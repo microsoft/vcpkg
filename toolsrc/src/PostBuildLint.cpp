@@ -722,7 +722,7 @@ namespace vcpkg::PostBuildLint
         const auto& fs = paths.get_filesystem();
 
         // for dumpbin
-        const Toolset& toolset = paths.get_toolset(pre_build_info.platform_toolset);
+        const Toolset& toolset = paths.get_toolset(pre_build_info.platform_toolset, pre_build_info.visual_studio_path);
         const fs::path package_dir = paths.package_dir(spec);
 
         size_t error_count = 0;
