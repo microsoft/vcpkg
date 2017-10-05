@@ -270,10 +270,64 @@ namespace vcpkg::Commands::Export::IFW
 <Installer>
     <Name>vcpkg</Name>
     <Version>1.0.0</Version>
+    <StartMenuDir>vcpkg</StartMenuDir>
     <TargetDir>@RootDir@/src/vcpkg</TargetDir>%s
 </Installer>
 )###",
                               formatted_repo_url));
+    }
+
+    void export_maintenance_tool(const fs::path& ifw_packages_dir_path, const VcpkgPaths& paths)
+    {
+        System::println("Exporting maintenance tool... ");
+
+        std::error_code ec;
+        Files::Filesystem& fs = paths.get_filesystem();
+
+        const fs::path& installerbase_exe = paths.get_ifw_installerbase_exe();
+        fs::path tempmaintenancetool = ifw_packages_dir_path / "maintenance" / "data" / "tempmaintenancetool.exe";
+        fs.create_directories(tempmaintenancetool.parent_path(), ec);
+        Checks::check_exit(VCPKG_LINE_INFO,
+            !ec,
+            "Could not create directory for package file %s",
+            tempmaintenancetool.generic_string());
+        fs.copy_file(installerbase_exe, tempmaintenancetool, fs::copy_options::overwrite_existing, ec);
+        Checks::check_exit(VCPKG_LINE_INFO,
+            !ec,
+            "Could not write package file %s",
+            tempmaintenancetool.generic_string());
+
+        fs::path package_xml_file_path = ifw_packages_dir_path / "maintenance" / "meta" / "package.xml";
+        fs::path package_xml_dir_path = package_xml_file_path.parent_path();
+        fs.create_directories(package_xml_dir_path, ec);
+        Checks::check_exit(VCPKG_LINE_INFO,
+            !ec,
+            "Could not create directory for package file %s",
+            package_xml_file_path.generic_string());
+        fs.write_contents(package_xml_file_path,
+            Strings::format(
+                R"###(<?xml version="1.0"?>
+<Package>
+    <DisplayName>Maintenance Tool</DisplayName>
+    <Description>Maintenance Tool</Description>
+    <Version>1.0.0</Version>
+    <ReleaseDate>%s</ReleaseDate>
+    <Script>maintenance.qs</Script>
+    <Essential>true</Essential>
+    <Virtual>true</Virtual>
+    <ForcedInstallation>true</ForcedInstallation>
+</Package>
+)###",
+create_release_date()));
+        const fs::path script_source = paths.root / "scripts" / "ifw" / "maintenance.qs";
+        const fs::path script_destination = ifw_packages_dir_path / "maintenance" / "meta" / "maintenance.qs";
+        fs.copy_file(script_source, script_destination, fs::copy_options::overwrite_existing, ec);
+        Checks::check_exit(VCPKG_LINE_INFO,
+            !ec,
+            "Could not write package file %s",
+            script_destination.generic_string());
+
+        System::println("Exporting maintenance tool... done");
     }
 
     void do_repository(const std::string& export_id, const Options& ifw_options, const VcpkgPaths& paths)
@@ -343,13 +397,11 @@ namespace vcpkg::Commands::Export::IFW
                    const Options& ifw_options,
                    const VcpkgPaths& paths)
     {
-        const fs::path ifw_packages_dir_path = get_packages_dir_path(export_id, ifw_options, paths);
-        const fs::path config_file = get_config_file_path(export_id, ifw_options, paths);
-
-        System::println("Exporting packages %s... ", ifw_packages_dir_path.generic_string());
-
         std::error_code ec;
         Files::Filesystem& fs = paths.get_filesystem();
+
+        // Prepare packages directory
+        const fs::path ifw_packages_dir_path = get_packages_dir_path(export_id, ifw_options, paths);
 
         fs.remove_all(ifw_packages_dir_path, ec);
         Checks::check_exit(VCPKG_LINE_INFO,
@@ -360,6 +412,11 @@ namespace vcpkg::Commands::Export::IFW
         fs.create_directory(ifw_packages_dir_path, ec);
         Checks::check_exit(
             VCPKG_LINE_INFO, !ec, "Could not create packages directory %s", ifw_packages_dir_path.generic_string());
+
+        // Export maintenance tool
+        export_maintenance_tool(ifw_packages_dir_path, paths);
+
+        System::println("Exporting packages %s... ", ifw_packages_dir_path.generic_string());
 
         // execute the plan
         std::map<std::string, const ExportPlanAction*> unique_packages;
@@ -394,6 +451,8 @@ namespace vcpkg::Commands::Export::IFW
         }
 
         System::println("Exporting packages %s... done", ifw_packages_dir_path.generic_string());
+
+        const fs::path config_file = get_config_file_path(export_id, ifw_options, paths);
 
         System::println("Generating configuration %s...", config_file.generic_string());
 
