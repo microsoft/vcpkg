@@ -30,8 +30,8 @@ vcpkg_configure_cmake(
         -DDLIB_USE_FFTW=ON
         -DDLIB_PNG_SUPPORT=ON
         -DDLIB_JPEG_SUPPORT=ON
-        -DDLIB_USE_BLAS=OFF
-        -DDLIB_USE_LAPACK=OFF
+        -DDLIB_USE_BLAS=ON
+        -DDLIB_USE_LAPACK=ON
         -DDLIB_USE_CUDA=OFF
         -DDLIB_GIF_SUPPORT=OFF
         -DDLIB_USE_MKL_FFT=OFF
