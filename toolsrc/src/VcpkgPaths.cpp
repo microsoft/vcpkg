@@ -452,8 +452,6 @@ namespace vcpkg
 
                 continue;
             }
-
-            Checks::exit_with_message(VCPKG_LINE_INFO, "Expected major version 14 or 15 but got: %s", major_version);
         }
 
         if (found_toolsets.empty())
