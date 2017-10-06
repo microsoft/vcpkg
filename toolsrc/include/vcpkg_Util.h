@@ -68,18 +68,12 @@ namespace vcpkg::Util
     }
 
     template<class Container>
-    using ToVectorOfConstPointersT = std::decay_t<decltype(*std::begin(std::declval<Container>()))>;
+    using ElementT = std::remove_reference_t<decltype(*begin(std::declval<Container>()))>;
 
-    template<class Container, class T = ToVectorOfConstPointersT<Container>>
-    std::vector<const T*> to_vector_of_const_pointers(const Container& cont)
+    template<class Container, class T = ElementT<Container>>
+    std::vector<T*> element_pointers(Container&& cont)
     {
-        std::vector<const T*> output;
-        for (auto i = cont.cbegin(), cend = cont.end(); i != cend; ++i)
-        {
-            output.push_back(&(*i));
-        }
-
-        return output;
+        return fmap(cont, [](auto&& x) { return &x; });
     }
 
     template<class Container, class Pred>
