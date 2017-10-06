@@ -1,10 +1,11 @@
-# vcpkg_from_github
+# vcpkg_from_bitbucket
 
-Download and extract a project from GitHub. Enables support for `install --head`.
+Download and extract a project from Bitbucket.
+Enables support for installing HEAD `vcpkg.exe install --head <port>`.
 
 ## Usage:
 ```cmake
-vcpkg_from_github(
+vcpkg_from_bitbucket(
     OUT_SOURCE_PATH <SOURCE_PATH>
     REPO <Microsoft/cpprestsdk>
     [REF <v2.0.0>]
@@ -30,7 +31,7 @@ For repositories without official releases, this can be set to the full commit i
 If `REF` is specified, `SHA512` must also be specified.
 
 ### SHA512
-The SHA512 hash that should match the archive (https://github.com/${REPO}/archive/${REF}.tar.gz).
+The SHA512 hash that should match the archive (https://bitbucket.com/${REPO}/get/${REF}.tar.gz).
 
 This is most easily determined by first setting it to `1`, then trying to build the port. The error message will contain the full hash, which can be copied back into the portfile.
 
@@ -46,9 +47,7 @@ This exports the `VCPKG_HEAD_VERSION` variable during head builds.
 
 ## Examples:
 
-* [cpprestsdk](https://github.com/Microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
-* [ms-gsl](https://github.com/Microsoft/vcpkg/blob/master/ports/ms-gsl/portfile.cmake)
-* [beast](https://github.com/Microsoft/vcpkg/blob/master/ports/beast/portfile.cmake)
+* [blaze](https://github.com/Microsoft/vcpkg/blob/master/ports/blaze/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_from_github.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_from_github.cmake)
+[scripts/cmake/vcpkg_from_bitbucket.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_from_bitbucket.cmake)
