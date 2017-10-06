@@ -1,3 +1,45 @@
+vcpkg (0.0.91)
+--------------
+  * Add ports:
+    - abseil         2017-09-28
+    - enet           1.3.13
+    - exiv2          4f4add2cdcbe73af7098122a509dff0739d15908
+    - freexl         1.0.4
+    - gts            0.7.6
+    - kinectsdk2     2.0
+    - libexif        0.6.21-1
+    - libfreenect2   0.2.0
+    - librtmp        2.3
+    - libspatialite  4.3.0a
+    - libxmp-lite    4.4.1
+    - proj4          4.9.3-1
+    - readosm        1.1.0
+    - spirit-po      1.1.2
+    - telnetpp       1.2.4
+    - wildmidi       0.4.1
+  * Update ports:
+    - anax           2.1.0-2 -> 2.1.0-3
+    - aws-sdk-cpp    1.0.61-1 -> 1.2.4
+    - geos           3.5.0-1 -> 3.6.2-2
+    - kinectsdk1     1.8-1 -> 1.8-2
+    - lua            5.3.4-1 -> 5.3.4-2
+    - openni2        2.2.0.33 -> 2.2.0.33-2
+    - openssl        1.0.2l-2 -> 1.0.2l-3
+    - pangolin       0.5-1 -> 0.5-2
+    - proj           4.9.3-1 -> 0
+    - sdl2           2.0.5-4 -> 2.0.6-1
+    - zlib           1.2.11-2 -> 1.2.11-3
+  * `vcpkg export`: Add new option `--ifw` which creates a standalone GUI installer for the exported packages. More information and screenshots [here](https://github.com/Microsoft/vcpkg/pull/1734)
+  * Complete rework of Visual Studio detection & selection:
+    - Use [`vswhere.exe`](https://github.com/Microsoft/vswhere) to detect Visual Studio installation instances
+    - Add the ability to specify the Visual Studio instance to use in the triplet file with the `VCPKG_VISUAL_STUDIO_PATH` variable
+    - Automatic selection now picks instances in order: stable, prerelease, legacy. Within each group, newer versions are preferred over old versions
+    - Fix issue where v140 toolset would not work if VS2017 (with v140) was installed but VS2015 was not installed
+  * Add message when downloading a `vcpkg` dependency (e.g. `cmake`)
+
+-- vcpkg team <vcpkg@microsoft.com>  THU, 05 Oct 2017 19:00:00 -0800
+
+
 vcpkg (0.0.90)
 --------------
   * Add ports:
