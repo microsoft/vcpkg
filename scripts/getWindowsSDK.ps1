@@ -13,7 +13,6 @@ if ($DisableWin10SDK -and $DisableWin81SDK)
 }
 
 Write-Verbose "Executing $($MyInvocation.MyCommand.Name)"
-$scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 
 $validInstances = New-Object System.Collections.ArrayList
 
