@@ -302,26 +302,33 @@ namespace vcpkg
             [this]() { return get_ifw_installerbase_exe().parent_path() / "repogen.exe"; });
     }
 
-    static std::vector<std::string> get_vs2017_installation_instances(const VcpkgPaths& paths)
+    struct VisualStudioInstance
+    {
+        fs::path root_path;
+        std::string version;
+        std::string release_type;
+        std::string preference_weight; // Mostly unused, just for verification that order is as intended
+
+        std::string major_version() const { return version.substr(0, 2); }
+    };
+
+    static std::vector<VisualStudioInstance> get_visual_studio_instances(const VcpkgPaths& paths)
     {
         const fs::path script = paths.scripts / "findVisualStudioInstallationInstances.ps1";
         const std::wstring cmd = System::create_powershell_script_cmd(script);
         const System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd);
-        Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Could not run script to detect VS 2017 instances");
-        return Strings::split(ec_data.output, "\n");
-    }
+        Checks::check_exit(
+            VCPKG_LINE_INFO, ec_data.exit_code == 0, "Could not run script to detect Visual Studio instances");
 
-    static Optional<fs::path> get_vs2015_installation_instance()
-    {
-        const Optional<std::wstring> vs2015_cmntools_optional = System::get_environment_variable(L"VS140COMNTOOLS");
-        if (const auto v = vs2015_cmntools_optional.get())
+        const std::vector<std::string> instances_as_strings = Strings::split(ec_data.output, "\n");
+        std::vector<VisualStudioInstance> output;
+        for (const std::string& instance_as_string : instances_as_strings)
         {
-            const fs::path vs2015_cmntools = fs::path(*v).parent_path(); // The call to parent_path() is needed because
-                                                                         // the env variable has a trailing backslash
-            return vs2015_cmntools.parent_path().parent_path();
+            const std::vector<std::string> split = Strings::split(instance_as_string, "::");
+            output.push_back({split.at(3), split.at(2), split.at(1), split.at(0)});
         }
 
-        return nullopt;
+        return output;
     }
 
     static std::vector<Toolset> find_toolset_instances(const VcpkgPaths& paths)
@@ -335,108 +342,118 @@ namespace vcpkg
 
         std::vector<Toolset> found_toolsets;
 
-        // VS2015
-        const Optional<fs::path> vs_2015_installation_instance = get_vs2015_installation_instance();
-        if (const auto vs_2015_root_path = vs_2015_installation_instance.get())
-        {
-            const fs::path vs2015_vcvarsall_bat = *vs_2015_root_path / "VC" / "vcvarsall.bat";
-
-            paths_examined.push_back(vs2015_vcvarsall_bat);
-            if (fs.exists(vs2015_vcvarsall_bat))
-            {
-                const fs::path vs2015_dumpbin_exe = *vs_2015_root_path / "VC" / "bin" / "dumpbin.exe";
-                paths_examined.push_back(vs2015_dumpbin_exe);
-
-                const fs::path vs2015_bin_dir = vs2015_vcvarsall_bat.parent_path() / "bin";
-                std::vector<ToolsetArchOption> supported_architectures;
-                if (fs.exists(vs2015_bin_dir / "vcvars32.bat"))
-                    supported_architectures.push_back({L"x86", CPU::X86, CPU::X86});
-                if (fs.exists(vs2015_bin_dir / "amd64\\vcvars64.bat"))
-                    supported_architectures.push_back({L"x64", CPU::X64, CPU::X64});
-                if (fs.exists(vs2015_bin_dir / "x86_amd64\\vcvarsx86_amd64.bat"))
-                    supported_architectures.push_back({L"x86_amd64", CPU::X86, CPU::X64});
-                if (fs.exists(vs2015_bin_dir / "x86_arm\\vcvarsx86_arm.bat"))
-                    supported_architectures.push_back({L"x86_arm", CPU::X86, CPU::ARM});
-                if (fs.exists(vs2015_bin_dir / "amd64_x86\\vcvarsamd64_x86.bat"))
-                    supported_architectures.push_back({L"amd64_x86", CPU::X64, CPU::X86});
-                if (fs.exists(vs2015_bin_dir / "amd64_arm\\vcvarsamd64_arm.bat"))
-                    supported_architectures.push_back({L"amd64_arm", CPU::X64, CPU::ARM});
-
-                if (fs.exists(vs2015_dumpbin_exe))
-                {
-                    found_toolsets.push_back({*vs_2015_root_path,
-                                              vs2015_dumpbin_exe,
-                                              vs2015_vcvarsall_bat,
-                                              {},
-                                              V_140,
-                                              supported_architectures});
-                }
-            }
-        }
-
-        const bool v140_is_available = !found_toolsets.empty();
-
-        const std::vector<std::string> vs2017_installation_instances = get_vs2017_installation_instances(paths);
+        const std::vector<VisualStudioInstance> vs_instances = get_visual_studio_instances(paths);
+        const bool v140_is_available = Util::find_if(vs_instances, [&](const VisualStudioInstance& vs_instance) {
+                                           return vs_instance.major_version() == "14";
+                                       }) != vs_instances.cend();
 
         // VS2017
-        for (const std::string& instance : vs2017_installation_instances)
+        for (const VisualStudioInstance& vs_instance : vs_instances)
         {
-            const fs::path vs_root_path = fs::path{instance};
-            const fs::path vc_dir = vs_root_path / "VC";
-
-            // Skip any instances that do not have vcvarsall.
-            const fs::path vcvarsall_dir = vc_dir / "Auxiliary" / "Build";
-            const fs::path vcvarsall_bat = vcvarsall_dir / "vcvarsall.bat";
-            paths_examined.push_back(vcvarsall_bat);
-            if (!fs.exists(vcvarsall_bat)) continue;
-
-            // Get all supported architectures
-            std::vector<ToolsetArchOption> supported_architectures;
-            if (fs.exists(vcvarsall_dir / "vcvars32.bat"))
-                supported_architectures.push_back({L"x86", CPU::X86, CPU::X86});
-            if (fs.exists(vcvarsall_dir / "vcvars64.bat"))
-                supported_architectures.push_back({L"amd64", CPU::X64, CPU::X64});
-            if (fs.exists(vcvarsall_dir / "vcvarsx86_amd64.bat"))
-                supported_architectures.push_back({L"x86_amd64", CPU::X86, CPU::X64});
-            if (fs.exists(vcvarsall_dir / "vcvarsx86_arm.bat"))
-                supported_architectures.push_back({L"x86_arm", CPU::X86, CPU::ARM});
-            if (fs.exists(vcvarsall_dir / "vcvarsamd64_x86.bat"))
-                supported_architectures.push_back({L"amd64_x86", CPU::X64, CPU::X86});
-            if (fs.exists(vcvarsall_dir / "vcvarsamd64_arm.bat"))
-                supported_architectures.push_back({L"amd64_arm", CPU::X64, CPU::ARM});
-
-            // Locate the "best" MSVC toolchain version
-            const fs::path msvc_path = vc_dir / "Tools" / "MSVC";
-            std::vector<fs::path> msvc_subdirectories = fs.get_files_non_recursive(msvc_path);
-            Util::unstable_keep_if(msvc_subdirectories, [&fs](const fs::path& path) { return fs.is_directory(path); });
-
-            // Sort them so that latest comes first
-            std::sort(msvc_subdirectories.begin(),
-                      msvc_subdirectories.end(),
-                      [](const fs::path& left, const fs::path& right) { return left.filename() > right.filename(); });
-
-            for (const fs::path& subdir : msvc_subdirectories)
+            const std::string major_version = vs_instance.major_version();
+            if (major_version == "15")
             {
-                const fs::path dumpbin_path = subdir / "bin" / "HostX86" / "x86" / "dumpbin.exe";
-                paths_examined.push_back(dumpbin_path);
-                if (fs.exists(dumpbin_path))
+                const fs::path vc_dir = vs_instance.root_path / "VC";
+
+                // Skip any instances that do not have vcvarsall.
+                const fs::path vcvarsall_dir = vc_dir / "Auxiliary" / "Build";
+                const fs::path vcvarsall_bat = vcvarsall_dir / "vcvarsall.bat";
+                paths_examined.push_back(vcvarsall_bat);
+                if (!fs.exists(vcvarsall_bat)) continue;
+
+                // Get all supported architectures
+                std::vector<ToolsetArchOption> supported_architectures;
+                if (fs.exists(vcvarsall_dir / "vcvars32.bat"))
+                    supported_architectures.push_back({L"x86", CPU::X86, CPU::X86});
+                if (fs.exists(vcvarsall_dir / "vcvars64.bat"))
+                    supported_architectures.push_back({L"amd64", CPU::X64, CPU::X64});
+                if (fs.exists(vcvarsall_dir / "vcvarsx86_amd64.bat"))
+                    supported_architectures.push_back({L"x86_amd64", CPU::X86, CPU::X64});
+                if (fs.exists(vcvarsall_dir / "vcvarsx86_arm.bat"))
+                    supported_architectures.push_back({L"x86_arm", CPU::X86, CPU::ARM});
+                if (fs.exists(vcvarsall_dir / "vcvarsamd64_x86.bat"))
+                    supported_architectures.push_back({L"amd64_x86", CPU::X64, CPU::X86});
+                if (fs.exists(vcvarsall_dir / "vcvarsamd64_arm.bat"))
+                    supported_architectures.push_back({L"amd64_arm", CPU::X64, CPU::ARM});
+
+                // Locate the "best" MSVC toolchain version
+                const fs::path msvc_path = vc_dir / "Tools" / "MSVC";
+                std::vector<fs::path> msvc_subdirectories = fs.get_files_non_recursive(msvc_path);
+                Util::unstable_keep_if(msvc_subdirectories,
+                                       [&fs](const fs::path& path) { return fs.is_directory(path); });
+
+                // Sort them so that latest comes first
+                std::sort(
+                    msvc_subdirectories.begin(),
+                    msvc_subdirectories.end(),
+                    [](const fs::path& left, const fs::path& right) { return left.filename() > right.filename(); });
+
+                for (const fs::path& subdir : msvc_subdirectories)
                 {
-                    found_toolsets.push_back(
-                        Toolset{vs_root_path, dumpbin_path, vcvarsall_bat, {}, V_141, supported_architectures});
-
-                    if (v140_is_available)
+                    const fs::path dumpbin_path = subdir / "bin" / "HostX86" / "x86" / "dumpbin.exe";
+                    paths_examined.push_back(dumpbin_path);
+                    if (fs.exists(dumpbin_path))
                     {
-                        found_toolsets.push_back(Toolset{vs_root_path,
-                                                         dumpbin_path,
-                                                         vcvarsall_bat,
-                                                         {L"-vcvars_ver=14.0"},
-                                                         V_140,
-                                                         supported_architectures});
-                    }
+                        found_toolsets.push_back(Toolset{
+                            vs_instance.root_path, dumpbin_path, vcvarsall_bat, {}, V_141, supported_architectures});
 
-                    break;
+                        if (v140_is_available)
+                        {
+                            found_toolsets.push_back(Toolset{vs_instance.root_path,
+                                                             dumpbin_path,
+                                                             vcvarsall_bat,
+                                                             {L"-vcvars_ver=14.0"},
+                                                             V_140,
+                                                             supported_architectures});
+                        }
+
+                        break;
+                    }
                 }
+
+                continue;
             }
+
+            if (major_version == "14")
+            {
+                const fs::path vcvarsall_bat = vs_instance.root_path / "VC" / "vcvarsall.bat";
+
+                paths_examined.push_back(vcvarsall_bat);
+                if (fs.exists(vcvarsall_bat))
+                {
+                    const fs::path vs2015_dumpbin_exe = vs_instance.root_path / "VC" / "bin" / "dumpbin.exe";
+                    paths_examined.push_back(vs2015_dumpbin_exe);
+
+                    const fs::path vs2015_bin_dir = vcvarsall_bat.parent_path() / "bin";
+                    std::vector<ToolsetArchOption> supported_architectures;
+                    if (fs.exists(vs2015_bin_dir / "vcvars32.bat"))
+                        supported_architectures.push_back({L"x86", CPU::X86, CPU::X86});
+                    if (fs.exists(vs2015_bin_dir / "amd64\\vcvars64.bat"))
+                        supported_architectures.push_back({L"x64", CPU::X64, CPU::X64});
+                    if (fs.exists(vs2015_bin_dir / "x86_amd64\\vcvarsx86_amd64.bat"))
+                        supported_architectures.push_back({L"x86_amd64", CPU::X86, CPU::X64});
+                    if (fs.exists(vs2015_bin_dir / "x86_arm\\vcvarsx86_arm.bat"))
+                        supported_architectures.push_back({L"x86_arm", CPU::X86, CPU::ARM});
+                    if (fs.exists(vs2015_bin_dir / "amd64_x86\\vcvarsamd64_x86.bat"))
+                        supported_architectures.push_back({L"amd64_x86", CPU::X64, CPU::X86});
+                    if (fs.exists(vs2015_bin_dir / "amd64_arm\\vcvarsamd64_arm.bat"))
+                        supported_architectures.push_back({L"amd64_arm", CPU::X64, CPU::ARM});
+
+                    if (fs.exists(vs2015_dumpbin_exe))
+                    {
+                        found_toolsets.push_back({vs_instance.root_path,
+                                                  vs2015_dumpbin_exe,
+                                                  vcvarsall_bat,
+                                                  {},
+                                                  V_140,
+                                                  supported_architectures});
+                    }
+                }
+
+                continue;
+            }
+
+            Checks::exit_with_message(VCPKG_LINE_INFO, "Expected major version 14 or 15 but got: %s", major_version);
         }
 
         if (found_toolsets.empty())
@@ -460,7 +477,7 @@ namespace vcpkg
         const std::vector<Toolset>& vs_toolsets =
             this->toolsets.get_lazy([this]() { return find_toolset_instances(*this); });
 
-        std::vector<const Toolset*> candidates = Util::to_vector_of_const_pointers(vs_toolsets);
+        std::vector<const Toolset*> candidates = Util::element_pointers(vs_toolsets);
         const auto tsv = toolset_version.get();
         const auto vsp = visual_studio_path.get();
 
@@ -500,7 +517,7 @@ namespace vcpkg
                                vs_root_path.generic_string());
         }
 
-        return *candidates.back();
+        return *candidates.front();
     }
 
     Files::Filesystem& VcpkgPaths::get_filesystem() const { return Files::get_real_filesystem(); }

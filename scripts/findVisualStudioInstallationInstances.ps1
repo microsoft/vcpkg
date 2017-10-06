@@ -4,32 +4,35 @@ param(
 )
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
-$vcpkgRootDir = & $scriptsDir\findFileRecursivelyUp.ps1 $scriptsDir .vcpkg-root
+$vswhereExe = & $scriptsDir\fetchDependency.ps1 "vswhere"
 
-$downloadsDir = "$vcpkgRootDir\downloads"
+$output = & $vswhereExe -prerelease -legacy -format xml
+[xml]$asXml = $output
 
-$nugetexe = & $scriptsDir\fetchDependency.ps1 "nuget"
-$nugetPackageDir = "$downloadsDir\nuget-packages"
-
-$SetupAPIVersion = "1.8.24"
-Write-Verbose "Fetching Microsoft.VisualStudio.Setup.Configuration.Native@$SetupAPIVersion from NuGet."
-$nugetOutput = & $nugetexe install Microsoft.VisualStudio.Setup.Configuration.Native -Version $SetupAPIVersion -OutputDirectory $nugetPackageDir -Source "https://api.nuget.org/v3/index.json" -nocache 2>&1
-Write-Verbose "Fetching Microsoft.VisualStudio.Setup.Configuration.Native@$SetupAPIVersion from NuGet. Done."
-
-$SetupConsoleExe = "$nugetPackageDir\Microsoft.VisualStudio.Setup.Configuration.Native.$SetupAPIVersion\tools\x86\Microsoft.VisualStudio.Setup.Configuration.Console.exe"
-
-if (!(Test-Path $SetupConsoleExe))
+$results = New-Object System.Collections.ArrayList
+foreach ($instance in $asXml.instances.instance)
 {
-    throw $nugetOutput
+    $installationPath = $instance.InstallationPath -replace "\\$" # Remove potential trailing backslash
+    $installationVersion = $instance.InstallationVersion
+    $isPrerelease = $instance.IsPrerelease
+    if ($isPrerelease -eq 0)
+    {
+        $releaseType = "PreferenceWeight3::StableRelease"
+    }
+    elseif ($isPrerelease -eq 1)
+    {
+        $releaseType = "PreferenceWeight2::PreRelease"
+    }
+    else
+    {
+        $releaseType = "PreferenceWeight1::Legacy"
+    }
+
+    # Placed like that for easy sorting according to preference
+    $results.Add("${releaseType}::${installationVersion}::${installationPath}") > $null
 }
 
-$instances = & $SetupConsoleExe -nologo -value InstallationPath 2>&1
-$instanceCount = $instances.Length
+$results.Sort()
+$results.Reverse()
 
-# The last item can be empty
-if ($instanceCount -gt 0 -and $instances[$instanceCount - 1] -eq "")
-{
-    $instances = $instances[0..($instanceCount - 2)]
-}
-
-return $instances
+return $results
