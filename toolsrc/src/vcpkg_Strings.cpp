@@ -154,11 +154,13 @@ namespace vcpkg::Strings
             return output;
         }
 
+        const size_t delimiter_length = delimiter.length();
         size_t i = 0;
         for (size_t pos = s.find(delimiter); pos != std::string::npos; pos = s.find(delimiter, pos))
         {
             output.push_back(s.substr(i, pos - i));
-            i = ++pos;
+            pos += delimiter_length;
+            i = pos;
         }
 
         // Add the rest of the string after the last delimiter, unless there is nothing after it
