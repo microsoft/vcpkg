@@ -20,20 +20,9 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 
 # Disable building of the examples
-set(CELEROExperiment_celeroDemoDoNotOptizeAway OFF)
-set(CELEROExperiment_celeroDemoFileWrite OFF)
-set(CELEROExperiment_celeroDemoMultithread OFF)
-set(CELEROExperiment_celeroDemoSimple OFF)
-set(CELEROExperiment_celeroDemoSimpleJUnit OFF)
-set(CELEROExperiment_celeroDemoSleep OFF)
-set(CELEROExperiment_celeroDemoToString OFF)
-set(CELEROExperiment_celeroDemoTransform OFF)
-set(CELEROExperiment_celeroExperimentCompressBools OFF)
-set(CELEROExperiment_celeroExperimentCostOfPimpl OFF)
-set(CELEROExperiment_celeroExperimentParameterPassing OFF)
-set(CELEROExperiment_celeroExperimentParticles OFF)
-set(CELEROExperiment_celeroExperimentSimpleComparison OFF)
-set(CELEROExperiment_celeroExperimentSortingRandomInts OFF)
+set(CELERO_ENABLE_EXPERIMENTS OFF)
+set(CELERO_ENABLE_TESTS OFF)
+set(CELERO_RUN_EXAMPLE_ON_BUILD OFF)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
