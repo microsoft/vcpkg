@@ -448,8 +448,6 @@ namespace vcpkg
                                                   supported_architectures});
                     }
                 }
-
-                continue;
             }
         }
 
