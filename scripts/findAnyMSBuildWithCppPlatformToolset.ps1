@@ -41,7 +41,7 @@ foreach ($instanceCandidate in $VisualStudioInstallationInstances)
         if (Test-Path $clExe)
         {
             Write-Verbose "Picking: $instanceCandidate"
-            $programFilesPath = split-path -parent $path
+            $programFilesPath = & $scriptsDir\getProgramFiles32bit.ps1
             return "$programFilesPath\MSBuild\14.0\Bin\MSBuild.exe", "v140"
         }
     }
