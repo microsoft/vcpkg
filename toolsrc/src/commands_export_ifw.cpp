@@ -288,25 +288,23 @@ namespace vcpkg::Commands::Export::IFW
         fs::path tempmaintenancetool = ifw_packages_dir_path / "maintenance" / "data" / "tempmaintenancetool.exe";
         fs.create_directories(tempmaintenancetool.parent_path(), ec);
         Checks::check_exit(VCPKG_LINE_INFO,
-            !ec,
-            "Could not create directory for package file %s",
-            tempmaintenancetool.generic_string());
+                           !ec,
+                           "Could not create directory for package file %s",
+                           tempmaintenancetool.generic_string());
         fs.copy_file(installerbase_exe, tempmaintenancetool, fs::copy_options::overwrite_existing, ec);
-        Checks::check_exit(VCPKG_LINE_INFO,
-            !ec,
-            "Could not write package file %s",
-            tempmaintenancetool.generic_string());
+        Checks::check_exit(
+            VCPKG_LINE_INFO, !ec, "Could not write package file %s", tempmaintenancetool.generic_string());
 
         fs::path package_xml_file_path = ifw_packages_dir_path / "maintenance" / "meta" / "package.xml";
         fs::path package_xml_dir_path = package_xml_file_path.parent_path();
         fs.create_directories(package_xml_dir_path, ec);
         Checks::check_exit(VCPKG_LINE_INFO,
-            !ec,
-            "Could not create directory for package file %s",
-            package_xml_file_path.generic_string());
+                           !ec,
+                           "Could not create directory for package file %s",
+                           package_xml_file_path.generic_string());
         fs.write_contents(package_xml_file_path,
-            Strings::format(
-                R"###(<?xml version="1.0"?>
+                          Strings::format(
+                              R"###(<?xml version="1.0"?>
 <Package>
     <DisplayName>Maintenance Tool</DisplayName>
     <Description>Maintenance Tool</Description>
@@ -318,14 +316,12 @@ namespace vcpkg::Commands::Export::IFW
     <ForcedInstallation>true</ForcedInstallation>
 </Package>
 )###",
-create_release_date()));
+                              create_release_date()));
         const fs::path script_source = paths.root / "scripts" / "ifw" / "maintenance.qs";
         const fs::path script_destination = ifw_packages_dir_path / "maintenance" / "meta" / "maintenance.qs";
         fs.copy_file(script_source, script_destination, fs::copy_options::overwrite_existing, ec);
-        Checks::check_exit(VCPKG_LINE_INFO,
-            !ec,
-            "Could not write package file %s",
-            script_destination.generic_string());
+        Checks::check_exit(
+            VCPKG_LINE_INFO, !ec, "Could not write package file %s", script_destination.generic_string());
 
         System::println("Exporting maintenance tool... done");
     }
