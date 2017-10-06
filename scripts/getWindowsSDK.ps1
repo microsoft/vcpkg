@@ -20,7 +20,7 @@ $validInstances = New-Object System.Collections.ArrayList
 # Windows 10 SDK
 function CheckWindows10SDK($path)
 {
-    $folder = "$path\Include"
+    $folder = (Join-Path $path "Include")
     if (!(Test-Path $folder))
     {
         Write-Verbose "$folder - Not Found"
@@ -37,7 +37,7 @@ function CheckWindows10SDK($path)
         if (!(Test-Path $windowsheader))
         {
             Write-Verbose "$windowsheader - Not Found"
-            return
+            continue
         }
         Write-Verbose "$windowsheader - Found"
 
@@ -45,7 +45,7 @@ function CheckWindows10SDK($path)
         if (!(Test-Path $ddkheader))
         {
             Write-Verbose "$ddkheader - Not Found"
-            return
+            continue
         }
 
         Write-Verbose "$ddkheader - Found"
