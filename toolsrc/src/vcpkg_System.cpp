@@ -177,12 +177,11 @@ namespace vcpkg::System
     }
 
     // On Win7, output from powershell calls contain a byte order mark, so we strip it out if it is present
-    static void remove_byte_order_mark(std::wstring* s)
+    static void remove_byte_order_marks(std::wstring* s)
     {
-        if (s->size() < 3) return;
         const wchar_t* a = s->c_str();
         // This is the UTF-8 byte-order mark
-        if (a[0] == 0xEF && a[1] == 0xBB && a[2] == 0xBF)
+        while (s->size() >= 3 && a[0] == 0xEF && a[1] == 0xBB && a[2] == 0xBF)
         {
             s->erase(0, 3);
         }
@@ -214,7 +213,7 @@ namespace vcpkg::System
 
         const auto ec = _pclose(pipe);
         Debug::println("_pclose() returned %d", ec);
-        remove_byte_order_mark(&output);
+        remove_byte_order_marks(&output);
         return {ec, Strings::to_utf8(output)};
     }
 
