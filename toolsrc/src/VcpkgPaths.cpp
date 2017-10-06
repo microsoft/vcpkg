@@ -347,7 +347,6 @@ namespace vcpkg
                                            return vs_instance.major_version() == "14";
                                        }) != vs_instances.cend();
 
-        // VS2017
         for (const VisualStudioInstance& vs_instance : vs_instances)
         {
             const std::string major_version = vs_instance.major_version();
