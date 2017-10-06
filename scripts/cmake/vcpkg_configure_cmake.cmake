@@ -188,4 +188,6 @@ function(vcpkg_configure_cmake)
         LOGNAME config-${TARGET_TRIPLET}-dbg
     )
     message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
+
+    set(_VCPKG_CMAKE_GENERATOR "${GENERATOR}" PARENT_SCOPE)
 endfunction()

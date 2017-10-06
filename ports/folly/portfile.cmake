@@ -38,7 +38,7 @@ vcpkg_configure_cmake(
 # Folly runs built executables during the build, so they need access to the installed DLLs.
 set(ENV{PATH} "$ENV{PATH};${CURRENT_INSTALLED_DIR}/bin;${CURRENT_INSTALLED_DIR}/debug/bin")
 
-vcpkg_install_cmake(MSVC_64_TOOLSET)
+vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
