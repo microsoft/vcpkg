@@ -13,6 +13,7 @@ if(NOT VCPKG_USE_HEAD_VERSION)
         PATCHES
             ${CMAKE_CURRENT_LIST_DIR}/0001_cmake.patch
             ${CMAKE_CURRENT_LIST_DIR}/0002_no_websocketpp_in_uwp.patch
+            ${CMAKE_CURRENT_LIST_DIR}/0003_openssl_110.patch
     )
 endif()
 
