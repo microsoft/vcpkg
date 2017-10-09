@@ -70,14 +70,6 @@ vcpkg_execute_required_process(
 )
 message(STATUS "Configure ${TARGET_TRIPLET}-rel done")
 
-message(STATUS "Build ${TARGET_TRIPLET}-rel")
-vcpkg_execute_required_process(COMMAND ${NMAKE} install
-                               WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-                               LOGNAME build-${TARGET_TRIPLET}-rel)
-
-message(STATUS "Build ${TARGET_TRIPLET}-rel done")
-
-
 message(STATUS "Configure ${TARGET_TRIPLET}-dbg")
 file(COPY ${MASTER_COPY_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 set(SOURCE_PATH_DEBUG ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/openssl-${OPENSSL_VERSION})
@@ -90,13 +82,19 @@ vcpkg_execute_required_process(
 )
 message(STATUS "Configure ${TARGET_TRIPLET}-dbg done")
 
+message(STATUS "Build ${TARGET_TRIPLET}-rel")
+vcpkg_execute_required_process(COMMAND ${NMAKE} install
+                               WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+                               LOGNAME build-${TARGET_TRIPLET}-rel)
+
+message(STATUS "Build ${TARGET_TRIPLET}-rel done")
+
 message(STATUS "Build ${TARGET_TRIPLET}-dbg")
 vcpkg_execute_required_process(COMMAND ${NMAKE} install
                                WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
                                LOGNAME build-${TARGET_TRIPLET}-dbg)
 
 message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
-
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE
