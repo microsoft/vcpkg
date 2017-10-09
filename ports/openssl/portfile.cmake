@@ -101,7 +101,6 @@ message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE
     ${CURRENT_PACKAGES_DIR}/debug/bin/openssl.exe
-    ${CURRENT_PACKAGES_DIR}/bin/openssl.exe
     ${CURRENT_PACKAGES_DIR}/debug/bin/openssl.pdb
     ${CURRENT_PACKAGES_DIR}/bin/openssl.pdb
     ${CURRENT_PACKAGES_DIR}/debug/bin/ossl_static.pdb
@@ -111,6 +110,11 @@ file(REMOVE
     ${CURRENT_PACKAGES_DIR}/debug/openssl.cnf
     ${CURRENT_PACKAGES_DIR}/openssl.cnf
 )
+
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT}/)
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/openssl.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/openssl.exe)
+
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/certs)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/html)
@@ -126,7 +130,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/misc)
 file(INSTALL ${MASTER_COPY_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openssl RENAME copyright)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    # They should be empty, only the exes deleted above were in these directories
+    # They should be empty, only the exes deleted/moved above were in these directories
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/)
 endif()
