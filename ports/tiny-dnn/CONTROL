@@ -1,0 +1,3 @@
+Source: tiny-dnn
+Version: 1.10.8
+Description:a C++14 implementation of deep learning. It is suitable for deep learning on limited computational resource.
