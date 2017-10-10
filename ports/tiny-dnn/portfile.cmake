@@ -1,14 +1,13 @@
 #header-only library
 include(vcpkg_common_functions)
-SET(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/tiny-dnn-dd906fed8c8aff8dc837657c42f9d55f8b793b0e)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/tiny-dnn/tiny-dnn/archive/dd906fed8c8aff8dc837657c42f9d55f8b793b0e.zip"
-    FILENAME "tiny-dnn-1.zip"
-    SHA512 9881d5a10215e3e2e5fe0e3df6b061ebf4e5c064883bdcff5578f1b635c6a41e8f03bfbcf7e07922f3c477c3bdfb5dea85d616e2cd9d42f07d7ae78e601ffded
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO tiny-dnn/tiny-dnn
+    REF dd906fed8c8aff8dc837657c42f9d55f8b793b0e
+    SHA512 d853db7f49af1bece55337b93631c41191f3abd8287969f230330662fecc612e4e53ab789535fc6f9770ae0c8623d8e020e6036c2c804783d08f176a08c05d1b
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
-# Copy the asio header files
 file(INSTALL ${SOURCE_PATH}/tiny_dnn DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 
