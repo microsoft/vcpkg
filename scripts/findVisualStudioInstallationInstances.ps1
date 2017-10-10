@@ -6,7 +6,7 @@ param(
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 $vswhereExe = & $scriptsDir\fetchDependency.ps1 "vswhere"
 
-$output = & $vswhereExe -prerelease -legacy -format xml
+$output = & $vswhereExe -prerelease -legacy -products * -format xml
 [xml]$asXml = $output
 
 $results = New-Object System.Collections.ArrayList
