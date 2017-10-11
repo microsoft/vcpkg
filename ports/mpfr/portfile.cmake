@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mpfr-3.1.5)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mpfr-3.1.6)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.mpfr.org/mpfr-current/mpfr-3.1.5.tar.xz"
-    FILENAME "mpfr-3.1.5.tar.xz"
-    SHA512 3643469b9099b31e41d6ec9158196cd1c30894030c8864ee5b1b1e91b488bccbf7c263c951b03fe9f4ae6f9d29279e157a7dfed0885467d875f107a3d964f032
+    URLS "http://www.mpfr.org/mpfr-current/mpfr-3.1.6.tar.xz"
+    FILENAME "mpfr-3.1.6.tar.xz"
+    SHA512 746ee74d5026f267f74ab352d850ed30ff627d530aa840c71b24793e44875f8503946bd7399905dea2b2dd5744326254d7889337fe94cfe58d03c4066e9d8054
 )
 
 vcpkg_extract_source_archive(${ARCHIVE})
