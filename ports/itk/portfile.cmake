@@ -1,14 +1,16 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/dzenanz/ITK/releases/download/v4.12rc02/ITK_VCPKG.zip"
-    FILENAME "ITK-Test.zip"
-    SHA512 6283381b2a615ca40ddd05fa4e45a3dbc32ed6dd6bc02e0bb9462ef07762507970d4b56f0fdf8098d23361e52af9afec670a41acd33adb44a7b3cb7d6501bc65
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO InsightSoftwareConsortium/ITK
+    REF fc374c8431a8aec740e4db3a398c6e95294f34a2
+    SHA512 d4a313cfba78ab309e387c213a2dd568c4d8bb628210dcb519712bbed23380b870d7224634119fad08ff157451b75f1c7fbae93841a00091b0e403315cde2943
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 # directory path length needs to be shorter than 50 characters
-# file(RENAME ${CURRENT_BUILDTREES_DIR}/src/InsightToolkit-4.12.0 ${SOURCE_PATH})
+file(RENAME ${SOURCE_PATH} ${CURRENT_BUILDTREES_DIR}/ITK)
+set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/ITK")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
