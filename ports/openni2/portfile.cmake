@@ -1,15 +1,3 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 # UWP Not Support
 if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "Error: UWP builds are currently not supported.")
@@ -28,16 +16,13 @@ endif()
 
 # Download Source Code
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/OpenNI2-2.2-beta2)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/OpenNI/OpenNI2/archive/2.2-beta2.zip"
-    FILENAME "OpenNI2-2.2-beta.zip"
-    SHA512 9779161493114265745c9eb8b15db95a3ed2322cd75504931d0fb7b6214d7abc8a9eb2ea5f35e309bc4d2748f015eee27ada4974a2e9568b5ecb9d98099c84e9
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO OpenNI/OpenNI2
+    REF 2.2-beta2
+    SHA512 60a3a3043679f3069aea869e92dc5881328ce4393d4140ea8d089027321ac501ae27d283657214e2834d216d0d49bf4f29a4b3d3e43df27a6ed21f889cd0083f
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
-
-file(TO_NATIVE_PATH ${VCPKG_ROOT_DIR} NATIVE_VCPKG_ROOT_DIR)
-configure_file("${CMAKE_CURRENT_LIST_DIR}/replace_environment_variable.patch.in" "${CMAKE_CURRENT_LIST_DIR}/replace_environment_variable.patch" @ONLY)
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
@@ -45,6 +30,17 @@ vcpkg_apply_patches(
             "${CMAKE_CURRENT_LIST_DIR}/inherit_from_parent_or_project_defaults.patch"
             "${CMAKE_CURRENT_LIST_DIR}/replace_environment_variable.patch"
 )
+
+file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
+file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
+file(COPY ${SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
+get_filename_component(SOURCE_DIR_NAME "${SOURCE_PATH}" NAME)
+
+# Use fresh copy of sources for building and modification
+set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${SOURCE_DIR_NAME}")
+
+file(TO_NATIVE_PATH ${CURRENT_INSTALLED_DIR} NATIVE_INSTALLED_DIR)
+configure_file("${SOURCE_PATH}/Source/Drivers/Kinect/Kinect.vcxproj" "${SOURCE_PATH}/Source/Drivers/Kinect/Kinect.vcxproj" @ONLY)
 
 # Build OpenNI2
 vcpkg_build_msbuild(
