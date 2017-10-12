@@ -55,7 +55,7 @@ set(SRCS zzip/dir.c
 
 add_library(zziplib ${SRCS} ${HEADERS})
 
-if(${BUILD_SHARED_LIBS})
+if(BUILD_SHARED_LIBS)
     target_compile_definitions(zziplib PRIVATE -DZZIPLIB_EXPORTS)
 endif()
 
