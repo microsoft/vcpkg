@@ -38,6 +38,12 @@ namespace vcpkg::Util
     }
 
     template<class Container, class Pred>
+    void stable_keep_if(Container& cont, Pred pred)
+    {
+        cont.erase(std::stable_partition(cont.begin(), cont.end(), pred), cont.end());
+    }
+
+    template<class Container, class Pred>
     void unstable_keep_if(Container& cont, Pred pred)
     {
         cont.erase(std::partition(cont.begin(), cont.end(), pred), cont.end());
@@ -59,6 +65,15 @@ namespace vcpkg::Util
     auto find_if(const Container& cont, Pred pred)
     {
         return std::find_if(cont.cbegin(), cont.cend(), pred);
+    }
+
+    template<class Container>
+    using ElementT = std::remove_reference_t<decltype(*begin(std::declval<Container>()))>;
+
+    template<class Container, class T = ElementT<Container>>
+    std::vector<T*> element_pointers(Container&& cont)
+    {
+        return fmap(cont, [](auto&& x) { return &x; });
     }
 
     template<class Container, class Pred>

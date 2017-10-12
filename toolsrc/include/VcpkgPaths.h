@@ -17,8 +17,10 @@ namespace vcpkg
 
     struct Toolset
     {
+        fs::path visual_studio_root_path;
         fs::path dumpbin;
         fs::path vcvarsall;
+        std::vector<std::wstring> vcvarsall_options;
         CWStringView version;
         std::vector<ToolsetArchOption> supported_architectures;
     };
@@ -57,12 +59,16 @@ namespace vcpkg
         const fs::path& get_cmake_exe() const;
         const fs::path& get_git_exe() const;
         const fs::path& get_nuget_exe() const;
+        const fs::path& get_ifw_installerbase_exe() const;
+        const fs::path& get_ifw_binarycreator_exe() const;
+        const fs::path& get_ifw_repogen_exe() const;
 
         /// <summary>Retrieve a toolset matching a VS version</summary>
         /// <remarks>
         ///   Valid version strings are "v140", "v141", and "". Empty string gets the latest.
         /// </remarks>
-        const Toolset& get_toolset(const std::string& toolset_version) const;
+        const Toolset& VcpkgPaths::get_toolset(const Optional<std::string>& toolset_version,
+                                               const Optional<fs::path>& visual_studio_path) const;
 
         Files::Filesystem& get_filesystem() const;
 
@@ -70,6 +76,9 @@ namespace vcpkg
         Lazy<fs::path> cmake_exe;
         Lazy<fs::path> git_exe;
         Lazy<fs::path> nuget_exe;
+        Lazy<fs::path> ifw_installerbase_exe;
+        Lazy<fs::path> ifw_binarycreator_exe;
+        Lazy<fs::path> ifw_repogen_exe;
         Lazy<std::vector<Toolset>> toolsets;
     };
 }

@@ -2,7 +2,7 @@
 
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
-
+#pragma warning(suppress : 4768)
 #include <windows.h>
 
 #include <algorithm>
@@ -28,7 +28,10 @@
 #include <regex>
 #include <set>
 #include <shellapi.h>
-#include <shlobj.h>
+#pragma warning(push)
+#pragma warning(disable : 4768)
+#include <Shlobj.h>
+#pragma warning(pop)
 #include <stdexcept>
 #include <string>
 #include <sys/timeb.h>

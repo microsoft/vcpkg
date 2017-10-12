@@ -4,7 +4,7 @@ set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/SignalR-Client-Cpp-1.0.0-beta1)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/aspnet/SignalR-Client-Cpp/archive/1.0.0-beta1.tar.gz"
     FILENAME "SignalR-Client-Cpp-1.0.0-beta1.tar.gz"
-    SHA512 e0090415aa724087dbe2a317a4642d6359b134e00e836ea70c71bc9186dc8d6bba097666711ab18d9b0a390e1e5f59be2f55279b6859ac20d558b901bf5fe2f2
+    SHA512 b38f6f946f1499080071949cbcf574405118f9acfb469441e5b5b0df3e5f0d277a83b30e0d613dc5e54732b9071e3273dac1ee65129f994d5a60eef0e45bdf6c
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

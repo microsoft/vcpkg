@@ -1,4 +1,4 @@
 Source: libtorrent
-Version: 1.1.4
+Version: 1.1.4-1
 Description: An efficient feature complete C++ BitTorrent implementation 
 Build-Depends: boost, openssl

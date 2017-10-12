@@ -15,7 +15,7 @@ namespace vcpkg
 
         bool operator==(const TripletInstance& o) const { return o.value == value; }
     };
-    const TripletInstance Triplet::default_instance({});
+    const TripletInstance Triplet::DEFAULT_INSTANCE({});
 }
 
 template<>
@@ -41,10 +41,10 @@ namespace vcpkg
     Triplet Triplet::from_canonical_name(const std::string& triplet_as_string)
     {
         std::string s(Strings::ascii_to_lowercase(triplet_as_string));
-        auto it = std::find(s.cbegin(), s.cend(), '-');
+        const auto it = std::find(s.cbegin(), s.cend(), '-');
         Checks::check_exit(VCPKG_LINE_INFO, it != s.cend(), "Invalid triplet: %s", triplet_as_string);
 
-        auto p = g_triplet_instances.emplace(std::move(s));
+        const auto p = g_triplet_instances.emplace(std::move(s));
         return &*p.first;
     }
 

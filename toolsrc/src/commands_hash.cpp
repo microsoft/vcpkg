@@ -6,22 +6,22 @@
 
 namespace vcpkg::Commands::Hash
 {
-    static void do_file_hash(fs::path const& path, std::wstring const& hashType)
+    static void do_file_hash(fs::path const& path, std::wstring const& hash_type)
     {
-        auto cmd_line = Strings::wformat(LR"(CertUtil.exe -hashfile "%s" %s)", path.c_str(), hashType);
-        auto ec_data = System::cmd_execute_and_capture_output(cmd_line);
+        const auto cmd_line = Strings::wformat(LR"(CertUtil.exe -hashfile "%s" %s)", path.c_str(), hash_type);
+        const auto ec_data = System::cmd_execute_and_capture_output(cmd_line);
         Checks::check_exit(
             VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", Strings::to_utf8(cmd_line));
 
         std::string const& output = ec_data.output;
 
-        auto start = output.find_first_of("\r\n");
+        const auto start = output.find_first_of("\r\n");
         Checks::check_exit(VCPKG_LINE_INFO,
                            start != std::string::npos,
                            "Unexpected output format from command: %s",
                            Strings::to_utf8(cmd_line));
 
-        auto end = output.find_first_of("\r\n", start + 1);
+        const auto end = output.find_first_of("\r\n", start + 1);
         Checks::check_exit(VCPKG_LINE_INFO,
                            end != std::string::npos,
                            "Unexpected output format from command: %s",
@@ -34,11 +34,11 @@ namespace vcpkg::Commands::Hash
 
     void perform_and_exit(const VcpkgCmdArguments& args)
     {
-        static const std::string example =
+        static const std::string EXAMPLE =
             Strings::format("The argument should be a file path\n%s",
                             Commands::Help::create_example_string("hash boost_1_62_0.tar.bz2"));
-        args.check_min_arg_count(1, example);
-        args.check_max_arg_count(2, example);
+        args.check_min_arg_count(1, EXAMPLE);
+        args.check_max_arg_count(2, EXAMPLE);
         args.check_and_get_optional_command_arguments({});
 
         if (args.command_arguments.size() == 1)

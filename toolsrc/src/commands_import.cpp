@@ -28,7 +28,7 @@ namespace vcpkg::Commands::Import
         for (auto&& file : files)
         {
             if (fs.is_directory(file)) continue;
-            auto ext = file.extension();
+            const auto ext = file.extension();
             if (ext == ".dll")
                 binaries.dlls.push_back(std::move(file));
             else if (ext == ".lib")
@@ -46,7 +46,7 @@ namespace vcpkg::Commands::Import
 
         for (auto const& src_path : files)
         {
-            fs::path dest_path = destination_folder / src_path.filename();
+            const fs::path dest_path = destination_folder / src_path.filename();
             fs.copy(src_path, dest_path, fs::copy_options::overwrite_existing);
         }
     }
@@ -59,10 +59,10 @@ namespace vcpkg::Commands::Import
         check_is_directory(VCPKG_LINE_INFO, fs, include_directory);
         check_is_directory(VCPKG_LINE_INFO, fs, project_directory);
         check_is_directory(VCPKG_LINE_INFO, fs, destination_path);
-        Binaries debug_binaries = find_binaries_in_dir(fs, project_directory / "Debug");
-        Binaries release_binaries = find_binaries_in_dir(fs, project_directory / "Release");
+        const Binaries debug_binaries = find_binaries_in_dir(fs, project_directory / "Debug");
+        const Binaries release_binaries = find_binaries_in_dir(fs, project_directory / "Release");
 
-        fs::path destination_include_directory = destination_path / "include";
+        const fs::path destination_include_directory = destination_path / "include";
         fs.copy(include_directory,
                 destination_include_directory,
                 fs::copy_options::recursive | fs::copy_options::overwrite_existing);
@@ -82,20 +82,20 @@ namespace vcpkg::Commands::Import
                           const BinaryParagraph& control_file_data)
     {
         auto& fs = paths.get_filesystem();
-        fs::path library_destination_path = paths.package_dir(control_file_data.spec);
+        const fs::path library_destination_path = paths.package_dir(control_file_data.spec);
         std::error_code ec;
         fs.create_directory(library_destination_path, ec);
         place_library_files_in(paths.get_filesystem(), include_directory, project_directory, library_destination_path);
 
-        fs::path control_file_path = library_destination_path / "CONTROL";
+        const fs::path control_file_path = library_destination_path / "CONTROL";
         fs.write_contents(control_file_path, Strings::serialize(control_file_data));
     }
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const std::string example = Commands::Help::create_example_string(
+        static const std::string EXAMPLE = Commands::Help::create_example_string(
             R"(import C:\path\to\CONTROLfile C:\path\to\includedir C:\path\to\projectdir)");
-        args.check_exact_arg_count(3, example);
+        args.check_exact_arg_count(3, EXAMPLE);
         args.check_and_get_optional_command_arguments({});
 
         const fs::path control_file_path(args.command_arguments[0]);

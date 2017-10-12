@@ -23,7 +23,7 @@ namespace vcpkg::System
 
     ExitCodeAndOutput cmd_execute_and_capture_output(const CWStringView cmd_line);
 
-    std::wstring create_powershell_script_cmd(const fs::path& script_path, const CWStringView args = L"");
+    std::wstring create_powershell_script_cmd(const fs::path& script_path, const CWStringView args = Strings::WEMPTY);
 
     enum class Color
     {
@@ -32,6 +32,7 @@ namespace vcpkg::System
         warning = 14,
     };
 
+    void println();
     void print(const CStringView message);
     void println(const CStringView message);
     void print(const Color c, const CStringView message);
@@ -79,9 +80,9 @@ namespace vcpkg::System
 
     std::vector<CPUArchitecture> get_supported_host_architectures();
 
-    const fs::path& get_ProgramFiles_32_bit();
+    const fs::path& get_program_files_32_bit();
 
-    const fs::path& get_ProgramFiles_platform_bitness();
+    const fs::path& get_program_files_platform_bitness();
 }
 
 namespace vcpkg::Debug

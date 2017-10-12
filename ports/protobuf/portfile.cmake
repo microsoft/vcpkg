@@ -1,16 +1,17 @@
 include(vcpkg_common_functions)
 
-set(PROTOBUF_VERSION 3.3.0)
+set(PROTOBUF_VERSION 3.4.1)
+set(PROTOC_VERSION 3.4.0)
 
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "https://github.com/google/protobuf/releases/download/v${PROTOBUF_VERSION}/protobuf-cpp-${PROTOBUF_VERSION}.tar.gz"
     FILENAME "protobuf-cpp-${PROTOBUF_VERSION}.tar.gz"
-    SHA512 ef01300bdda4a1a33a6056aea1d55e9d66ab1ca644aa2d9d5633cfc0bccfe4c24fdfa1015889b2c1c568e89ad053c701de1aca45196a6439130b7bb8f461595f
+    SHA512 6189e23c7e381f62e971bd0e35ad9c3ed8effe584755357013887c6a582cb5a9a654c39affa2a073b658854138f31bfb70f89fa1df494e9386f1d64fd73d07d2
 )
 vcpkg_download_distfile(TOOL_ARCHIVE_FILE
-    URLS "https://github.com/google/protobuf/releases/download/v${PROTOBUF_VERSION}/protoc-${PROTOBUF_VERSION}-win32.zip"
-    FILENAME "protoc-${PROTOBUF_VERSION}-win32.zip"
-    SHA512 9b4902b3187fb978a8153aaf050314a3ca9ca161b0712a3672ccdfabb7f5a57035e71c2dfde9a0b99f9417e159dcbdedaf9a2b1917d712dc3d9d554bba0d4ee8
+    URLS "https://github.com/google/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-win32.zip"
+    FILENAME "protoc-${PROTOC_VERSION}-win32.zip"
+    SHA512 b874c3f47b39ac78f5675e05220318683004a365c248bf47ba50d8c66c8ed7763432451bab30524e131e1185a2bdaa6e6071b389eb61ad58b1b95974cf39d41b
 )
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION})
@@ -18,13 +19,10 @@ set(TOOL_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION}-win32)
 
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
-# Patch to fix the missing export of fixed_address_empty_string,
-# see https://github.com/google/protobuf/pull/3216
 # Add a flag that can be set to disable the protobuf compiler
 vcpkg_apply_patches(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-fix-missing-export.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/001-add-compiler-flag.patch"
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/001-add-compiler-flag.patch"
 )
 
 
@@ -60,8 +58,7 @@ vcpkg_configure_cmake(
         -DCMAKE_INSTALL_CMAKEDIR=share/protobuf
 )
 
-# Using 64-bit toolset to avoid occassional Linker Out-of-Memory issues.
-vcpkg_install_cmake(MSVC_64_TOOLSET)
+vcpkg_install_cmake()
 
 # It appears that at this point the build hasn't actually finished. There is probably
 # a process spawned by the build, therefore we need to wait a bit.
@@ -95,15 +92,11 @@ else()
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/bin/protoc.exe)
 endif()
 
-foreach(FILE ${CURRENT_PACKAGES_DIR}/include/google/protobuf/arena.h ${CURRENT_PACKAGES_DIR}/include/google/protobuf/stubs/port.h)
-    file(READ ${FILE} _contents)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        string(REPLACE "defined(PROTOBUF_USE_DLLS)" "1" _contents "${_contents}")
-    else()
-        string(REPLACE "defined(PROTOBUF_USE_DLLS)" "0" _contents "${_contents}")
-    endif()
-    file(WRITE ${FILE} "${_contents}")
-endforeach()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    file(READ ${CURRENT_PACKAGES_DIR}/include/google/protobuf/stubs/platform_macros.h _contents)
+    string(REPLACE "\#endif  // GOOGLE_PROTOBUF_PLATFORM_MACROS_H_" "\#define PROTOBUF_USE_DLLS\n\#endif  // GOOGLE_PROTOBUF_PLATFORM_MACROS_H_" _contents "${_contents}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/include/google/protobuf/stubs/platform_macros.h "${_contents}")
+endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/protobuf RENAME copyright)
 file(INSTALL ${TOOL_PATH}/bin/protoc.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools)

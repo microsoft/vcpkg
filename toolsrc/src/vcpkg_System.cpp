@@ -19,7 +19,7 @@ namespace vcpkg::System
     fs::path get_exe_path_of_current_process()
     {
         wchar_t buf[_MAX_PATH];
-        int bytes = GetModuleFileNameW(nullptr, buf, _MAX_PATH);
+        const int bytes = GetModuleFileNameW(nullptr, buf, _MAX_PATH);
         if (bytes == 0) std::abort();
         return fs::path(buf, buf + bytes);
     }
@@ -37,9 +37,9 @@ namespace vcpkg::System
     CPUArchitecture get_host_processor()
     {
         auto w6432 = get_environment_variable(L"PROCESSOR_ARCHITEW6432");
-        if (auto p = w6432.get()) return to_cpu_architecture(Strings::to_utf8(*p)).value_or_exit(VCPKG_LINE_INFO);
+        if (const auto p = w6432.get()) return to_cpu_architecture(Strings::to_utf8(*p)).value_or_exit(VCPKG_LINE_INFO);
 
-        auto procarch = get_environment_variable(L"PROCESSOR_ARCHITECTURE").value_or_exit(VCPKG_LINE_INFO);
+        const auto procarch = get_environment_variable(L"PROCESSOR_ARCHITECTURE").value_or_exit(VCPKG_LINE_INFO);
         return to_cpu_architecture(Strings::to_utf8(procarch)).value_or_exit(VCPKG_LINE_INFO);
     }
 
@@ -48,8 +48,8 @@ namespace vcpkg::System
         std::vector<CPUArchitecture> supported_architectures;
         supported_architectures.push_back(get_host_processor());
 
-        //AMD64 machines support to run x86 applications
-        if(supported_architectures.back()==CPUArchitecture::X64)
+        // AMD64 machines support to run x86 applications
+        if (supported_architectures.back() == CPUArchitecture::X64)
         {
             supported_architectures.push_back(CPUArchitecture::X86);
         }
@@ -59,10 +59,10 @@ namespace vcpkg::System
 
     int cmd_execute_clean(const CWStringView cmd_line)
     {
-        static const std::wstring system_root = get_environment_variable(L"SystemRoot").value_or_exit(VCPKG_LINE_INFO);
-        static const std::wstring system_32 = system_root + LR"(\system32)";
-        static const std::wstring new_PATH = Strings::wformat(
-            LR"(Path=%s;%s;%s\Wbem;%s\WindowsPowerShell\v1.0\)", system_32, system_root, system_32, system_32);
+        static const std::wstring SYSTEM_ROOT = get_environment_variable(L"SystemRoot").value_or_exit(VCPKG_LINE_INFO);
+        static const std::wstring SYSTEM_32 = SYSTEM_ROOT + LR"(\system32)";
+        static const std::wstring NEW_PATH = Strings::wformat(
+            LR"(Path=%s;%s;%s\Wbem;%s\WindowsPowerShell\v1.0\)", SYSTEM_32, SYSTEM_ROOT, SYSTEM_32, SYSTEM_32);
 
         std::vector<std::wstring> env_wstrings = {
             L"ALLUSERSPROFILE",
@@ -106,6 +106,8 @@ namespace vcpkg::System
             L"HTTPS_PROXY",
             // Enables find_package(CUDA) in CMake
             L"CUDA_PATH",
+            // Environmental variable generated automatically by CUDA after installation
+            L"NVCUDASAMPLES_ROOT",
         };
 
         // Flush stdout before launching external process
@@ -116,7 +118,7 @@ namespace vcpkg::System
         for (auto&& env_wstring : env_wstrings)
         {
             const Optional<std::wstring> value = System::get_environment_variable(env_wstring);
-            auto v = value.get();
+            const auto v = value.get();
             if (!v || v->empty()) continue;
 
             env_cstr.append(env_wstring);
@@ -125,7 +127,7 @@ namespace vcpkg::System
             env_cstr.push_back(L'\0');
         }
 
-        env_cstr.append(new_PATH);
+        env_cstr.append(NEW_PATH);
         env_cstr.push_back(L'\0');
 
         STARTUPINFOW startup_info;
@@ -153,7 +155,7 @@ namespace vcpkg::System
 
         CloseHandle(process_info.hThread);
 
-        DWORD result = WaitForSingleObject(process_info.hProcess, INFINITE);
+        const DWORD result = WaitForSingleObject(process_info.hProcess, INFINITE);
         Checks::check_exit(VCPKG_LINE_INFO, result != WAIT_FAILED, "WaitForSingleObject failed");
 
         DWORD exit_code = 0;
@@ -171,9 +173,20 @@ namespace vcpkg::System
         // Basically we are wrapping it in quotes
         const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s")###", cmd_line);
         Debug::println("_wsystem(%s)", Strings::to_utf8(actual_cmd_line));
-        int exit_code = _wsystem(actual_cmd_line.c_str());
+        const int exit_code = _wsystem(actual_cmd_line.c_str());
         Debug::println("_wsystem() returned %d", exit_code);
         return exit_code;
+    }
+
+    // On Win7, output from powershell calls contain a byte order mark, so we strip it out if it is present
+    static void remove_byte_order_marks(std::wstring* s)
+    {
+        const wchar_t* a = s->c_str();
+        // This is the UTF-8 byte-order mark
+        while (s->size() >= 3 && a[0] == 0xEF && a[1] == 0xBB && a[2] == 0xBF)
+        {
+            s->erase(0, 3);
+        }
     }
 
     ExitCodeAndOutput cmd_execute_and_capture_output(const CWStringView cmd_line)
@@ -184,24 +197,26 @@ namespace vcpkg::System
         const std::wstring& actual_cmd_line = Strings::wformat(LR"###("%s 2>&1")###", cmd_line);
 
         Debug::println("_wpopen(%s)", Strings::to_utf8(actual_cmd_line));
-        std::string output;
-        char buf[1024];
-        auto pipe = _wpopen(actual_cmd_line.c_str(), L"r");
+        std::wstring output;
+        wchar_t buf[1024];
+        const auto pipe = _wpopen(actual_cmd_line.c_str(), L"r");
         if (pipe == nullptr)
         {
-            return {1, output};
+            return {1, Strings::to_utf8(output)};
         }
-        while (fgets(buf, 1024, pipe))
+        while (fgetws(buf, 1024, pipe))
         {
             output.append(buf);
         }
         if (!feof(pipe))
         {
-            return {1, output};
+            return {1, Strings::to_utf8(output)};
         }
-        auto ec = _pclose(pipe);
-        Debug::println("_wpopen() returned %d", ec);
-        return {ec, output};
+
+        const auto ec = _pclose(pipe);
+        Debug::println("_pclose() returned %d", ec);
+        remove_byte_order_marks(&output);
+        return {ec, Strings::to_utf8(output)};
     }
 
     std::wstring create_powershell_script_cmd(const fs::path& script_path, const CWStringView args)
@@ -211,7 +226,9 @@ namespace vcpkg::System
             LR"(powershell -NoProfile -ExecutionPolicy Bypass -Command "& {& '%s' %s}")", script_path.native(), args);
     }
 
-    void print(const CStringView message) { fputs(message, stdout); }
+    void println() { println(Strings::EMPTY); }
+
+    void print(const CStringView message) { fputs(message.c_str(), stdout); }
 
     void println(const CStringView message)
     {
@@ -221,15 +238,15 @@ namespace vcpkg::System
 
     void print(const Color c, const CStringView message)
     {
-        HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        const HANDLE console_handle = GetStdHandle(STD_OUTPUT_HANDLE);
 
-        CONSOLE_SCREEN_BUFFER_INFO consoleScreenBufferInfo{};
-        GetConsoleScreenBufferInfo(hConsole, &consoleScreenBufferInfo);
-        auto original_color = consoleScreenBufferInfo.wAttributes;
+        CONSOLE_SCREEN_BUFFER_INFO console_screen_buffer_info{};
+        GetConsoleScreenBufferInfo(console_handle, &console_screen_buffer_info);
+        const auto original_color = console_screen_buffer_info.wAttributes;
 
-        SetConsoleTextAttribute(hConsole, static_cast<WORD>(c) | (original_color & 0xF0));
+        SetConsoleTextAttribute(console_handle, static_cast<WORD>(c) | (original_color & 0xF0));
         print(message);
-        SetConsoleTextAttribute(hConsole, original_color);
+        SetConsoleTextAttribute(console_handle, original_color);
     }
 
     void println(const Color c, const CStringView message)
@@ -240,13 +257,13 @@ namespace vcpkg::System
 
     Optional<std::wstring> get_environment_variable(const CWStringView varname) noexcept
     {
-        auto sz = GetEnvironmentVariableW(varname, nullptr, 0);
+        const auto sz = GetEnvironmentVariableW(varname.c_str(), nullptr, 0);
         if (sz == 0) return nullopt;
 
         std::wstring ret(sz, L'\0');
 
         Checks::check_exit(VCPKG_LINE_INFO, MAXDWORD >= ret.size());
-        auto sz2 = GetEnvironmentVariableW(varname, ret.data(), static_cast<DWORD>(ret.size()));
+        const auto sz2 = GetEnvironmentVariableW(varname.c_str(), ret.data(), static_cast<DWORD>(ret.size()));
         Checks::check_exit(VCPKG_LINE_INFO, sz2 + 1 == sz);
         ret.pop_back();
         return ret;
@@ -257,59 +274,60 @@ namespace vcpkg::System
         return hkey_type == REG_SZ || hkey_type == REG_MULTI_SZ || hkey_type == REG_EXPAND_SZ;
     }
 
-    Optional<std::wstring> get_registry_string(HKEY base, const CWStringView subKey, const CWStringView valuename)
+    Optional<std::wstring> get_registry_string(HKEY base, const CWStringView sub_key, const CWStringView valuename)
     {
         HKEY k = nullptr;
-        LSTATUS ec = RegOpenKeyExW(base, subKey, NULL, KEY_READ, &k);
+        const LSTATUS ec = RegOpenKeyExW(base, sub_key.c_str(), NULL, KEY_READ, &k);
         if (ec != ERROR_SUCCESS) return nullopt;
 
-        DWORD dwBufferSize = 0;
-        DWORD dwType = 0;
-        auto rc = RegQueryValueExW(k, valuename, nullptr, &dwType, nullptr, &dwBufferSize);
-        if (rc != ERROR_SUCCESS || !is_string_keytype(dwType) || dwBufferSize == 0 ||
-            dwBufferSize % sizeof(wchar_t) != 0)
+        DWORD dw_buffer_size = 0;
+        DWORD dw_type = 0;
+        auto rc = RegQueryValueExW(k, valuename.c_str(), nullptr, &dw_type, nullptr, &dw_buffer_size);
+        if (rc != ERROR_SUCCESS || !is_string_keytype(dw_type) || dw_buffer_size == 0 ||
+            dw_buffer_size % sizeof(wchar_t) != 0)
             return nullopt;
         std::wstring ret;
-        ret.resize(dwBufferSize / sizeof(wchar_t));
+        ret.resize(dw_buffer_size / sizeof(wchar_t));
 
-        rc = RegQueryValueExW(k, valuename, nullptr, &dwType, reinterpret_cast<LPBYTE>(ret.data()), &dwBufferSize);
-        if (rc != ERROR_SUCCESS || !is_string_keytype(dwType) || dwBufferSize != sizeof(wchar_t) * ret.size())
+        rc = RegQueryValueExW(
+            k, valuename.c_str(), nullptr, &dw_type, reinterpret_cast<LPBYTE>(ret.data()), &dw_buffer_size);
+        if (rc != ERROR_SUCCESS || !is_string_keytype(dw_type) || dw_buffer_size != sizeof(wchar_t) * ret.size())
             return nullopt;
 
         ret.pop_back(); // remove extra trailing null byte
         return ret;
     }
 
-    static const fs::path& get_ProgramFiles()
+    static const fs::path& get_program_files()
     {
-        static const fs::path p = System::get_environment_variable(L"PROGRAMFILES").value_or_exit(VCPKG_LINE_INFO);
-        return p;
+        static const fs::path PATH = System::get_environment_variable(L"PROGRAMFILES").value_or_exit(VCPKG_LINE_INFO);
+        return PATH;
     }
 
-    const fs::path& get_ProgramFiles_32_bit()
+    const fs::path& get_program_files_32_bit()
     {
-        static const fs::path p = []() -> fs::path {
+        static const fs::path PATH = []() -> fs::path {
             auto value = System::get_environment_variable(L"ProgramFiles(x86)");
             if (auto v = value.get())
             {
                 return std::move(*v);
             }
-            return get_ProgramFiles();
+            return get_program_files();
         }();
-        return p;
+        return PATH;
     }
 
-    const fs::path& get_ProgramFiles_platform_bitness()
+    const fs::path& get_program_files_platform_bitness()
     {
-        static const fs::path p = []() -> fs::path {
+        static const fs::path PATH = []() -> fs::path {
             auto value = System::get_environment_variable(L"ProgramW6432");
             if (auto v = value.get())
             {
                 return std::move(*v);
             }
-            return get_ProgramFiles();
+            return get_program_files();
         }();
-        return p;
+        return PATH;
     }
 }
 

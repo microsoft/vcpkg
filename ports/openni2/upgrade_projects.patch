@@ -837,7 +837,7 @@ index 56c5944..0401f3d 100644
        <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
        <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
 diff --git a/Source/Drivers/Kinect/Kinect.vcxproj b/Source/Drivers/Kinect/Kinect.vcxproj
-index f54e8b2..7f54d04 100644
+index f54e8b2..6ea2656 100644
 --- a/Source/Drivers/Kinect/Kinect.vcxproj
 +++ b/Source/Drivers/Kinect/Kinect.vcxproj
 @@ -2,4 +2,4 @@
@@ -895,6 +895,15 @@ index f54e8b2..7f54d04 100644
      </ClCompile>
      <Link>
        <GenerateDebugInformation>true</GenerateDebugInformation>
+@@ -125,7 +129,7 @@
+       </IgnoreSpecificDefaultLibraries>
+       <IgnoreAllDefaultLibraries>
+       </IgnoreAllDefaultLibraries>
+-      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
++      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
 @@ -135,7 +139,7 @@
        <FunctionLevelLinking>true</FunctionLevelLinking>
        <IntrinsicFunctions>true</IntrinsicFunctions>

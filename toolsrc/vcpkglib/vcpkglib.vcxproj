@@ -166,6 +166,8 @@
     <ClInclude Include="..\include\vcpkg_Checks.h" />
     <ClInclude Include="..\include\VcpkgCmdArguments.h" />
     <ClInclude Include="..\include\vcpkg_Commands.h" />
+    <ClInclude Include="..\include\vcpkg_Commands_Export.h" />
+    <ClInclude Include="..\include\vcpkg_Commands_Export_IFW.h" />
     <ClInclude Include="..\include\vcpkg_Dependencies.h" />
     <ClInclude Include="..\include\vcpkg_Enums.h" />
     <ClInclude Include="..\include\vcpkg_Files.h" />
@@ -181,10 +183,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\BinaryParagraph.cpp" />
+    <ClCompile Include="..\src\commands_autocomplete.cpp" />
     <ClCompile Include="..\src\commands_ci.cpp" />
     <ClCompile Include="..\src\commands_depends.cpp" />
     <ClCompile Include="..\src\commands_env.cpp" />
     <ClCompile Include="..\src\commands_export.cpp" />
+    <ClCompile Include="..\src\commands_export_ifw.cpp" />
     <ClCompile Include="..\src\LineInfo.cpp" />
     <ClCompile Include="..\src\ParagraphParseResult.cpp" />
     <ClCompile Include="..\src\vcpkg_Build.cpp" />
