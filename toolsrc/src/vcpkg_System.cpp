@@ -106,6 +106,8 @@ namespace vcpkg::System
             L"HTTPS_PROXY",
             // Enables find_package(CUDA) in CMake
             L"CUDA_PATH",
+            // Environmental variable generated automatically by CUDA after installation
+            L"NVCUDASAMPLES_ROOT",
         };
 
         // Flush stdout before launching external process
