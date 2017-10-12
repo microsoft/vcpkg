@@ -83,6 +83,14 @@ vcpkg_execute_required_process(
 message(STATUS "Configure ${TARGET_TRIPLET}-dbg done")
 
 message(STATUS "Build ${TARGET_TRIPLET}-rel")
+# Openssl's buildsystem has a race condition which will cause JOM to fail at some point. 
+ # This is ok; we just do as much work as we can in parallel first, then follow up with a single-threaded build. 
+ make_directory(${SOURCE_PATH_RELEASE}/inc32/openssl) 
+ execute_process(COMMAND ${JOM} -k -j $ENV{NUMBER_OF_PROCESSORS} -f ${OPENSSL_MAKEFILE} 
+	WORKING_DIRECTORY ${SOURCE_PATH_RELEASE} 
+	OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-out.log 
+	ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-err.log 
+) 
 vcpkg_execute_required_process(COMMAND ${NMAKE} install
                                WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
                                LOGNAME build-${TARGET_TRIPLET}-rel)
@@ -90,6 +98,13 @@ vcpkg_execute_required_process(COMMAND ${NMAKE} install
 message(STATUS "Build ${TARGET_TRIPLET}-rel done")
 
 message(STATUS "Build ${TARGET_TRIPLET}-dbg")
+make_directory(${SOURCE_PATH_DEBUG}/inc32/openssl) 
+execute_process(COMMAND ${JOM} -k -j $ENV{NUMBER_OF_PROCESSORS} -f ${OPENSSL_MAKEFILE} 
+	WORKING_DIRECTORY ${SOURCE_PATH_DEBUG} 
+	OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-out.log 
+	ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-err.log 
+) 
+
 vcpkg_execute_required_process(COMMAND ${NMAKE} install
                                WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
                                LOGNAME build-${TARGET_TRIPLET}-dbg)
