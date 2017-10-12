@@ -4,10 +4,6 @@ param(
     [string]$disableMetrics = "0"
 )
 
-$webclient=New-Object System.Net.WebClient
-$creds=Get-Credential
-$webclient.Proxy.Credentials=$creds
-
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 $vcpkgRootDir = & $scriptsDir\findFileRecursivelyUp.ps1 $scriptsDir .vcpkg-root
 
