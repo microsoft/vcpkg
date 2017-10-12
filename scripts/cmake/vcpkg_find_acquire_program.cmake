@@ -34,7 +34,8 @@
 ## * [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
 ## * [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
 function(vcpkg_find_acquire_program VAR)
-  if(${VAR} AND NOT ${VAR} MATCHES "-NOTFOUND")
+  set(EXPANDED_VAR ${${VAR}})
+  if(EXPANDED_VAR)
     return()
   endif()
 
@@ -153,7 +154,8 @@ function(vcpkg_find_acquire_program VAR)
 
   macro(do_find)
     if(NOT DEFINED REQUIRED_INTERPRETER)
-      find_program(${VAR} ${PROGNAME} PATHS ${PATHS})
+      find_program(FOUND_PROG ${PROGNAME} PATHS ${PATHS})
+      set(${VAR} ${FOUND_PROG})
     else()
       vcpkg_find_acquire_program(${REQUIRED_INTERPRETER})
       find_file(SCRIPT ${SCRIPTNAME} PATHS ${PATHS})
@@ -162,7 +164,8 @@ function(vcpkg_find_acquire_program VAR)
   endmacro()
 
   do_find()
-  if(${VAR} MATCHES "-NOTFOUND")
+  set(FOUND_PROG ${${VAR}})
+  if(FOUND_PROG MATCHES "-NOTFOUND")
     file(DOWNLOAD ${URL} ${DOWNLOADS}/${ARCHIVE}
       EXPECTED_HASH SHA512=${HASH}
       SHOW_PROGRESS
@@ -173,7 +176,7 @@ function(vcpkg_find_acquire_program VAR)
     else()
       get_filename_component(ARCHIVE_EXTENSION ${ARCHIVE} EXT)
       string(TOLOWER "${ARCHIVE_EXTENSION}" ARCHIVE_EXTENSION)
-      if(${ARCHIVE_EXTENSION} STREQUAL ".msi")
+      if(ARCHIVE_EXTENSION STREQUAL ".msi")
         file(TO_NATIVE_PATH "${DOWNLOADS}/${ARCHIVE}" ARCHIVE_NATIVE_PATH)
         file(TO_NATIVE_PATH "${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR}" DESTINATION_NATIVE_PATH)
         execute_process(
