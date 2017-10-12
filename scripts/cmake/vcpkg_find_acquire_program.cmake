@@ -154,8 +154,7 @@ function(vcpkg_find_acquire_program VAR)
 
   macro(do_find)
     if(NOT DEFINED REQUIRED_INTERPRETER)
-      find_program(FOUND_PROG ${PROGNAME} PATHS ${PATHS})
-      set(${VAR} ${FOUND_PROG})
+      find_program(${VAR} ${PROGNAME} PATHS ${PATHS})
     else()
       vcpkg_find_acquire_program(${REQUIRED_INTERPRETER})
       find_file(SCRIPT ${SCRIPTNAME} PATHS ${PATHS})
@@ -164,8 +163,7 @@ function(vcpkg_find_acquire_program VAR)
   endmacro()
 
   do_find()
-  set(FOUND_PROG ${${VAR}})
-  if(FOUND_PROG MATCHES "-NOTFOUND")
+  if("${${VAR}}" MATCHES "-NOTFOUND")
     file(DOWNLOAD ${URL} ${DOWNLOADS}/${ARCHIVE}
       EXPECTED_HASH SHA512=${HASH}
       SHOW_PROGRESS
@@ -194,5 +192,5 @@ function(vcpkg_find_acquire_program VAR)
     do_find()
   endif()
 
-  set(${VAR} ${${VAR}} PARENT_SCOPE)
+  set(${VAR} "${${VAR}}" PARENT_SCOPE)
 endfunction()
