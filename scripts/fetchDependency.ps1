@@ -36,17 +36,19 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
             New-Item -ItemType directory -Path $downloadDir | Out-Null
         }
 
+        $WC = New-Object System.Net.WebClient
+        $ProxyAuth = !$WC.Proxy.IsBypassed($url)
+        if ($ProxyAuth)
+        {
+            $ProxyCred = Get-Credential -Message "Enter credentials for Proxy Authentication"
+            $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyAuthentication","Basic")
+            $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyCredential",$ProxyCred)
+            $WC.Proxy.Credentials=$ProxyCred
+        }
+
         if (($PSVersionTable.PSEdition -ne "Core") -and ($Dependency -ne "git")) # git fails with BITS
         {
             try {
-                $WC = New-Object System.Net.WebClient
-                $ProxyAuth = !$WC.Proxy.IsBypassed($url)
-                If($ProxyAuth){
-                    $ProxyCred = Get-Credential -Message "Enter credentials for Proxy Authentication"
-                    $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyAuthentication","Basic")
-                    $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyCredential",$ProxyCred)
-                }
-
                 Start-BitsTransfer -Source $url -Destination $downloadPath -ErrorAction Stop
             }
             catch [System.Exception] {
@@ -60,7 +62,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         if (!(Test-Path $downloadPath))
         {
             Write-Verbose("Downloading $Dependency...")
-            (New-Object System.Net.WebClient).DownloadFile($url, $downloadPath)
+            $WC.DownloadFile($url, $downloadPath)
         }
     }
 
