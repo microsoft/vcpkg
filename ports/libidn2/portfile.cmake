@@ -33,16 +33,8 @@ simple_copy_template_header(${SOURCE_PATH}/unistring unistr)
 simple_copy_template_header(${SOURCE_PATH}/unistring unitypes)
 simple_copy_template_header(${SOURCE_PATH}/unistring alloca)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  set(IDN2_BUILD_SHARED_LIBS ON)
-else()
-  set(IDN2_BUILD_SHARED_LIBS OFF)
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS
-        -DBUILD_SHARED_LIBS=${IDN2_BUILD_SHARED_LIBS}
 )
 
 vcpkg_install_cmake()
