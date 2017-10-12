@@ -16,6 +16,7 @@ namespace vcpkg::Commands::Export::IFW
         Optional<std::string> maybe_repository_dir_path;
         Optional<std::string> maybe_config_file_path;
         Optional<std::string> maybe_installer_file_path;
+        Optional<std::string> maybe_layout;
     };
 
     void do_export(const std::vector<Dependencies::ExportPlanAction>& export_plan,

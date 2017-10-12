@@ -50,10 +50,14 @@ namespace vcpkg::Commands::Install
         fs.create_directories(destination, ec);
         Checks::check_exit(
             VCPKG_LINE_INFO, !ec, "Could not create destination directory %s", destination.generic_string());
-        const fs::path listfile_parent = listfile.parent_path();
-        fs.create_directories(listfile_parent, ec);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, !ec, "Could not create directory for listfile %s", listfile.generic_string());
+
+        if (!listfile.empty())
+        {
+            const fs::path listfile_parent = listfile.parent_path();
+            fs.create_directories(listfile_parent, ec);
+            Checks::check_exit(
+                VCPKG_LINE_INFO, !ec, "Could not create directory for listfile %s", listfile.generic_string());
+        }
 
         output.push_back(Strings::format(R"(%s/)", destination_subdirectory));
         auto files = fs.get_files_recursive(source_dir);
@@ -67,7 +71,7 @@ namespace vcpkg::Commands::Install
             }
 
             const std::string filename = file.filename().generic_string();
-            if (fs::is_regular_file(status) &&
+            if (fs::is_regular_file(status) && !listfile.empty() &&
                 (Strings::case_insensitive_ascii_compare(filename.c_str(), "CONTROL") == 0 ||
                  Strings::case_insensitive_ascii_compare(filename.c_str(), "BUILD_INFO") == 0))
             {
@@ -118,9 +122,12 @@ namespace vcpkg::Commands::Install
             System::println(System::Color::error, "failed: %s: cannot handle file type", file.u8string());
         }
 
-        std::sort(output.begin(), output.end());
+        if (!listfile.empty())
+        {
+            std::sort(output.begin(), output.end());
 
-        fs.write_lines(listfile, output);
+            fs.write_lines(listfile, output);
+        }
     }
 
     static void remove_first_n_chars(std::vector<std::string>* strings, const size_t n)

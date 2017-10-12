@@ -271,6 +271,7 @@ namespace vcpkg::Commands::Export
         static const std::string OPTION_IFW_REPOSITORY_DIR_PATH = "--ifw-repository-directory-path";
         static const std::string OPTION_IFW_CONFIG_FILE_PATH = "--ifw-configuration-file-path";
         static const std::string OPTION_IFW_INSTALLER_FILE_PATH = "--ifw-installer-file-path";
+        static const std::string OPTION_IFW_LAYOUT = "--ifw-layout";
 
         // input sanitization
         static const std::string EXAMPLE =
@@ -298,6 +299,7 @@ namespace vcpkg::Commands::Export
                 OPTION_IFW_REPOSITORY_DIR_PATH,
                 OPTION_IFW_CONFIG_FILE_PATH,
                 OPTION_IFW_INSTALLER_FILE_PATH,
+                OPTION_IFW_LAYOUT,
             });
         ret.dry_run = options.switches.find(OPTION_DRY_RUN) != options.switches.cend();
         ret.raw = options.switches.find(OPTION_RAW) != options.switches.cend();
@@ -352,6 +354,7 @@ namespace vcpkg::Commands::Export
                             {OPTION_IFW_REPOSITORY_DIR_PATH, ret.ifw_options.maybe_repository_dir_path},
                             {OPTION_IFW_CONFIG_FILE_PATH, ret.ifw_options.maybe_config_file_path},
                             {OPTION_IFW_INSTALLER_FILE_PATH, ret.ifw_options.maybe_installer_file_path},
+                            {OPTION_IFW_LAYOUT, ret.ifw_options.maybe_layout},
                         });
         return ret;
     }

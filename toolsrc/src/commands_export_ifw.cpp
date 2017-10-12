@@ -54,8 +54,25 @@ namespace vcpkg::Commands::Export::IFW
                    : paths.root / (export_id + "-ifw-installer.exe");
     }
 
+    bool is_layout_development(const Options& ifw_options)
+    {
+        // Default layout
+        return Strings::case_insensitive_ascii_compare(ifw_options.maybe_layout.value_or("DEVELOPMENT"), "DEVELOPMENT") == 0;
+    }
+
+    bool is_layout_maintenance(const Options& ifw_options)
+    {
+        return Strings::case_insensitive_ascii_compare(ifw_options.maybe_layout.value_or(""), "MAINTENANCE") == 0;
+    }
+
+    bool is_layout_production(const Options& ifw_options)
+    {
+        return Strings::case_insensitive_ascii_compare(ifw_options.maybe_layout.value_or(""), "PRODUCTION") == 0;
+    }
+
     fs::path export_real_package(const fs::path& ifw_packages_dir_path,
                                  const ExportPlanAction& action,
+                                 const Options& ifw_options,
                                  Files::Filesystem& fs)
     {
         std::error_code ec;
@@ -101,7 +118,7 @@ namespace vcpkg::Commands::Export::IFW
         // Return dir path for export package data
         return ifw_packages_dir_path /
                Strings::format("packages.%s.%s", action.spec.name(), action.spec.triplet().canonical_name()) / "data" /
-               "installed";
+               (is_layout_maintenance(ifw_options) ? "packages" : "installed");
     }
 
     void export_unique_packages(const fs::path& raw_exported_dir_path,
@@ -434,13 +451,20 @@ namespace vcpkg::Commands::Export::IFW
             unique_triplets.insert(action.spec.triplet().canonical_name());
 
             // Export real package and return data dir for installation
-            fs::path ifw_package_dir_path = export_real_package(ifw_packages_dir_path, action, fs);
+            fs::path ifw_package_dir_path = export_real_package(ifw_packages_dir_path, action, ifw_options, fs);
+
+            std::string subdirectory = action.spec.triplet().to_string();
+            fs::path listfile = ifw_package_dir_path / "vcpkg" / "info" / (binary_paragraph.fullstem() + ".list");
+            if (is_layout_maintenance(ifw_options))
+            {
+                subdirectory = action.spec.dir();
+                listfile.clear();
+            }
 
             // Copy package data
             const InstallDir dirs = InstallDir::from_destination_root(ifw_package_dir_path,
-                                                                      action.spec.triplet().to_string(),
-                                                                      ifw_package_dir_path / "vcpkg" / "info" /
-                                                                          (binary_paragraph.fullstem() + ".list"));
+                                                                      subdirectory,
+                                                                      listfile);
 
             Install::install_files_and_write_listfile(paths.get_filesystem(), paths.package_dir(action.spec), dirs);
             System::println("Exporting package %s... done", display_name);
@@ -458,10 +482,13 @@ namespace vcpkg::Commands::Export::IFW
         // Unique triplets
         export_unique_triplets(ifw_packages_dir_path, unique_triplets, fs);
 
-        // Copy files needed for integration
-        export_integration_files(ifw_packages_dir_path / "integration" / "data", paths);
-        // Integration
-        export_integration(ifw_packages_dir_path, fs);
+        if (!is_layout_maintenance(ifw_options))
+        {
+            // Copy files needed for integration
+            export_integration_files(ifw_packages_dir_path / "integration" / "data", paths);
+            // Integration
+            export_integration(ifw_packages_dir_path, fs);
+        }
 
         // Configuration
         export_config(export_id, ifw_options, paths);
