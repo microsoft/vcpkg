@@ -67,8 +67,8 @@ namespace vcpkg
         /// <remarks>
         ///   Valid version strings are "v140", "v141", and "". Empty string gets the latest.
         /// </remarks>
-        const Toolset& VcpkgPaths::get_toolset(const Optional<std::string>& toolset_version,
-                                               const Optional<fs::path>& visual_studio_path) const;
+        const Toolset& get_toolset(const Optional<std::string>& toolset_version,
+                                   const Optional<fs::path>& visual_studio_path) const;
 
         Files::Filesystem& get_filesystem() const;
 
