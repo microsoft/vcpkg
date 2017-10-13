@@ -5,6 +5,7 @@
 #include "vcpkg_Commands.h"
 #include "vcpkg_System.h"
 #include "vcpkglib.h"
+#include <regex>
 
 namespace vcpkg::Commands::Autocomplete
 {
@@ -44,20 +45,26 @@ namespace vcpkg::Commands::Autocomplete
         return results;
     }
 
+    [[noreturn]] static void output_sorted_results_and_exit(const LineInfo& line_info,
+                                                            std::vector<std::string>&& results)
+    {
+        const SortedVector<std::string> sorted_results(results);
+        System::println(Strings::join("\n", sorted_results));
+        Checks::exit_success(line_info);
+    }
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         Metrics::g_metrics.lock()->set_send_metrics(false);
-
-        if (args.command_arguments.size() != 1)
-        {
-            Checks::exit_success(VCPKG_LINE_INFO);
-        }
-
-        const std::string to_autocomplete = args.command_arguments.at(0);
+        const std::string to_autocomplete = Strings::join(" ", args.command_arguments);
         const std::vector<std::string> tokens = Strings::split(to_autocomplete, " ");
-        if (tokens.size() == 1)
+
+        std::smatch match;
+
+        // Handles vcpkg <command>
+        if (std::regex_match(to_autocomplete, match, std::regex{R"###(^(\S*)$)###"}))
         {
-            const std::string requested_command = tokens[0];
+            const std::string requested_command = match[1].str();
 
             std::vector<std::string> valid_commands = {"install",
                                                        "search",
@@ -79,38 +86,25 @@ namespace vcpkg::Commands::Autocomplete
                 return Strings::case_insensitive_ascii_starts_with(s, requested_command);
             });
 
-            if (valid_commands.size() == 1)
-            {
-                System::println(valid_commands[0] + " ");
-            }
-            else
-            {
-                System::println(Strings::join("\n", valid_commands));
-            }
-
-            Checks::exit_success(VCPKG_LINE_INFO);
+            output_sorted_results_and_exit(VCPKG_LINE_INFO, std::move(valid_commands));
         }
 
-        if (tokens.size() == 2)
+        // Handles vcpkg install <package>
+        if (std::regex_match(to_autocomplete, match, std::regex{R"###(^install.* (\S*)$)###"}))
         {
-            const std::string requested_command = tokens[0];
-            const std::string start_with = tokens[1];
-            std::vector<std::string> results;
-            if (requested_command == "install")
-            {
-                auto sources_and_errors = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
-                auto& source_paragraphs = sources_and_errors.paragraphs;
+            const std::string start_with = match[1].str();
+            auto sources_and_errors = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
+            auto& source_paragraphs = sources_and_errors.paragraphs;
+            output_sorted_results_and_exit(VCPKG_LINE_INFO, autocomplete_install(source_paragraphs, start_with));
+        }
 
-                results = autocomplete_install(source_paragraphs, start_with);
-            }
-            else if (requested_command == "remove")
-            {
-                const StatusParagraphs status_db = database_load_check(paths);
-                const std::vector<StatusParagraph*> installed_packages = get_installed_ports(status_db);
-                results = autocomplete_remove(installed_packages, start_with);
-            }
-
-            System::println(Strings::join("\n", results));
+        // Handles vcpkg remove <package>
+        if (std::regex_match(to_autocomplete, match, std::regex{R"###(^remove.* (\S*)$)###"}))
+        {
+            const std::string start_with = match[1].str();
+            const StatusParagraphs status_db = database_load_check(paths);
+            const std::vector<StatusParagraph*> installed_packages = get_installed_ports(status_db);
+            output_sorted_results_and_exit(VCPKG_LINE_INFO, autocomplete_remove(installed_packages, start_with));
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
