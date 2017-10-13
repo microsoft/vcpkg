@@ -13,13 +13,12 @@ namespace vcpkg::Commands::Autocomplete
         const std::vector<std::unique_ptr<SourceControlFile>>& source_paragraphs, const std::string& start_with)
     {
         std::vector<std::string> results;
-        const auto& istartswith = Strings::case_insensitive_ascii_starts_with;
 
         for (const auto& source_control_file : source_paragraphs)
         {
             auto&& sp = *source_control_file->core_paragraph;
 
-            if (istartswith(sp.name, start_with))
+            if (Strings::case_insensitive_ascii_starts_with(sp.name, start_with))
             {
                 results.push_back(sp.name);
             }
@@ -31,13 +30,12 @@ namespace vcpkg::Commands::Autocomplete
                                                  const std::string& start_with)
     {
         std::vector<std::string> results;
-        const auto& istartswith = Strings::case_insensitive_ascii_starts_with;
 
         for (const auto& installed_package : installed_packages)
         {
             const auto sp = installed_package->package.displayname();
 
-            if (istartswith(sp, start_with))
+            if (Strings::case_insensitive_ascii_starts_with(sp, start_with))
             {
                 results.push_back(sp);
             }
