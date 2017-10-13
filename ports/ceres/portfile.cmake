@@ -1,23 +1,8 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
     message(FATAL_ERROR "Ceres does not currently support static CRT linkage")
 endif()
 
 include(vcpkg_common_functions)
-
-set(VCPKG_PLATFORM_TOOLSET "v140") # Force VS2015 because VS2017 compiler return internal error
-# eigen3\eigen\src\core\redux.h(237): fatal error C1001: An internal error has occurred in the compiler. [internal\ceres\ceres.vcxproj]
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
