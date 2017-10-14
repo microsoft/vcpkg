@@ -1,6 +1,8 @@
 #pragma once
 
+#include <vcpkg/base/cstringview.h>
 #include <vcpkg/base/optional.h>
+#include <vcpkg/base/span.h>
 
 #include <memory>
 #include <unordered_map>
@@ -46,5 +48,20 @@ namespace vcpkg
 
     private:
         std::unordered_map<std::string, Optional<std::string>> optional_command_arguments;
+    };
+
+    struct VcpkgPaths;
+
+    struct CommandStructure
+    {
+        CStringView example_text;
+
+        size_t minimum_arity;
+        size_t maximum_arity;
+
+        Span<const std::string> switches;
+        Span<const std::string> settings;
+
+        std::vector<std::string> (*valid_arguments)(const VcpkgPaths& paths);
     };
 }

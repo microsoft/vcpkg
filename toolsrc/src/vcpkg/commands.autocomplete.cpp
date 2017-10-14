@@ -2,8 +2,10 @@
 
 #include <vcpkg/base/system.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/install.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/paragraphs.h>
+#include <vcpkg/remove.h>
 #include <vcpkg/vcpkglib.h>
 
 namespace vcpkg::Commands::Autocomplete
@@ -47,6 +49,7 @@ namespace vcpkg::Commands::Autocomplete
     {
         const SortedVector<std::string> sorted_results(results);
         System::println(Strings::join("\n", sorted_results));
+
         Checks::exit_success(line_info);
     }
 
@@ -63,21 +66,23 @@ namespace vcpkg::Commands::Autocomplete
         {
             const std::string requested_command = match[1].str();
 
-            std::vector<std::string> valid_commands = {"install",
-                                                       "search",
-                                                       "remove",
-                                                       "list",
-                                                       "update",
-                                                       "hash",
-                                                       "help",
-                                                       "integrate",
-                                                       "export",
-                                                       "edit",
-                                                       "create",
-                                                       "owns",
-                                                       "cache",
-                                                       "version",
-                                                       "contact"};
+            std::vector<std::string> valid_commands = {
+                "install",
+                "search",
+                "remove",
+                "list",
+                "update",
+                "hash",
+                "help",
+                "integrate",
+                "export",
+                "edit",
+                "create",
+                "owns",
+                "cache",
+                "version",
+                "contact",
+            };
 
             Util::unstable_keep_if(valid_commands, [&](const std::string& s) {
                 return Strings::case_insensitive_ascii_starts_with(s, requested_command);
@@ -86,22 +91,36 @@ namespace vcpkg::Commands::Autocomplete
             output_sorted_results_and_exit(VCPKG_LINE_INFO, std::move(valid_commands));
         }
 
-        // Handles vcpkg install <package>
-        if (std::regex_match(to_autocomplete, match, std::regex{R"###(^install.* (\S*)$)###"}))
+        struct CommandEntry
         {
-            const std::string start_with = match[1].str();
-            auto sources_and_errors = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
-            auto& source_paragraphs = sources_and_errors.paragraphs;
-            output_sorted_results_and_exit(VCPKG_LINE_INFO, autocomplete_install(source_paragraphs, start_with));
-        }
+            CStringView regex;
+            const CommandStructure& structure;
+        };
+        static constexpr CommandEntry commands[] = {
+            {R"###(^install\s(.*\s|)(\S*)$)###", Install::INSTALL_COMMAND_STRUCTURE},
+            {R"###(^remove\s(.*\s|)(\S*)$)###", Remove::REMOVE_COMMAND_STRUCTURE},
+        };
 
-        // Handles vcpkg remove <package>
-        if (std::regex_match(to_autocomplete, match, std::regex{R"###(^remove.* (\S*)$)###"}))
+        for (auto&& command : commands)
         {
-            const std::string start_with = match[1].str();
-            const StatusParagraphs status_db = database_load_check(paths);
-            const std::vector<StatusParagraph*> installed_packages = get_installed_ports(status_db);
-            output_sorted_results_and_exit(VCPKG_LINE_INFO, autocomplete_remove(installed_packages, start_with));
+            if (std::regex_match(to_autocomplete, match, std::regex{command.regex.c_str()}))
+            {
+                auto prefix = match[2].str();
+                std::vector<std::string> v;
+                if (Strings::case_insensitive_ascii_starts_with(prefix, "-"))
+                {
+                    v = Util::fmap(command.structure.switches, [](auto&& s) -> std::string { return s; });
+                }
+                else
+                {
+                    v = command.structure.valid_arguments(paths);
+                }
+
+                Util::unstable_keep_if(
+                    v, [&](const std::string& s) { return Strings::case_insensitive_ascii_starts_with(s, prefix); });
+
+                output_sorted_results_and_exit(VCPKG_LINE_INFO, std::move(v));
+            }
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);

@@ -525,14 +525,40 @@ namespace vcpkg::Install
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 
+    static const std::string OPTION_DRY_RUN = "--dry-run";
+    static const std::string OPTION_USE_HEAD_VERSION = "--head";
+    static const std::string OPTION_NO_DOWNLOADS = "--no-downloads";
+    static const std::string OPTION_RECURSE = "--recurse";
+    static const std::string OPTION_KEEP_GOING = "--keep-going";
+
+    static const std::array<std::string, 5> INSTALL_SWITCHES = {
+        OPTION_DRY_RUN,
+        OPTION_USE_HEAD_VERSION,
+        OPTION_NO_DOWNLOADS,
+        OPTION_RECURSE,
+        OPTION_KEEP_GOING,
+    };
+    static const std::array<std::string, 0> INSTALL_SETTINGS;
+
+    static std::vector<std::string> valid_arguments(const VcpkgPaths& paths)
+    {
+        auto sources_and_errors = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
+
+        return Util::fmap(sources_and_errors.paragraphs,
+                          [](auto&& pgh) -> std::string { return pgh->core_paragraph->name; });
+    }
+
+    const CommandStructure INSTALL_COMMAND_STRUCTURE = {
+        "install zlib zlib:x64-windows curl boost",
+        1,
+        SIZE_MAX,
+        INSTALL_SWITCHES,
+        INSTALL_SETTINGS,
+        &valid_arguments,
+    };
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
-        static const std::string OPTION_DRY_RUN = "--dry-run";
-        static const std::string OPTION_USE_HEAD_VERSION = "--head";
-        static const std::string OPTION_NO_DOWNLOADS = "--no-downloads";
-        static const std::string OPTION_RECURSE = "--recurse";
-        static const std::string OPTION_KEEP_GOING = "--keep-going";
-
         // input sanitization
         static const std::string EXAMPLE = Help::create_example_string("install zlib zlib:x64-windows curl boost");
         args.check_min_arg_count(1, EXAMPLE);

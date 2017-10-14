@@ -163,13 +163,40 @@ namespace vcpkg::Remove
         }
     }
 
+    static const std::string OPTION_PURGE = "--purge";
+    static const std::string OPTION_NO_PURGE = "--no-purge";
+    static const std::string OPTION_RECURSE = "--recurse";
+    static const std::string OPTION_DRY_RUN = "--dry-run";
+    static const std::string OPTION_OUTDATED = "--outdated";
+
+    static const std::array<std::string, 5> REMOVE_SWITCHES = {
+        OPTION_PURGE,
+        OPTION_NO_PURGE,
+        OPTION_RECURSE,
+        OPTION_DRY_RUN,
+        OPTION_OUTDATED,
+    };
+    static const std::array<std::string, 0> REMOVE_SETTINGS;
+
+    static std::vector<std::string> valid_arguments(const VcpkgPaths& paths)
+    {
+        const StatusParagraphs status_db = database_load_check(paths);
+        const std::vector<StatusParagraph*> installed_packages = get_installed_ports(status_db);
+
+        return Util::fmap(installed_packages, [](auto&& pgh) -> std::string { return pgh->package.spec.to_string(); });
+    }
+
+    const CommandStructure REMOVE_COMMAND_STRUCTURE = {
+        "remove zlib zlib:x64-windows curl boost",
+        1,
+        SIZE_MAX,
+        REMOVE_SWITCHES,
+        REMOVE_SETTINGS,
+        &valid_arguments,
+    };
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
-        static const std::string OPTION_PURGE = "--purge";
-        static const std::string OPTION_NO_PURGE = "--no-purge";
-        static const std::string OPTION_RECURSE = "--recurse";
-        static const std::string OPTION_DRY_RUN = "--dry-run";
-        static const std::string OPTION_OUTDATED = "--outdated";
         static const std::string EXAMPLE = Help::create_example_string("remove zlib zlib:x64-windows curl boost");
         const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments(
             {OPTION_PURGE, OPTION_NO_PURGE, OPTION_RECURSE, OPTION_DRY_RUN, OPTION_OUTDATED});
