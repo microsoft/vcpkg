@@ -74,8 +74,14 @@ static void inner(const VcpkgCmdArguments& args)
         }
         else
         {
-            vcpkg_root_dir = Files::get_real_filesystem().find_file_recursively_up(
-                fs::stdfs::absolute(System::get_exe_path_of_current_process()), ".vcpkg-root");
+            const fs::path current_path = fs::stdfs::current_path();
+            vcpkg_root_dir = Files::get_real_filesystem().find_file_recursively_up(current_path, ".vcpkg-root");
+
+            if (vcpkg_root_dir.empty())
+            {
+                vcpkg_root_dir = Files::get_real_filesystem().find_file_recursively_up(
+                    fs::stdfs::absolute(System::get_exe_path_of_current_process()), ".vcpkg-root");
+            }
         }
     }
 
@@ -88,6 +94,7 @@ static void inner(const VcpkgCmdArguments& args)
                        vcpkg_root_dir.string(),
                        expected_paths.error().message());
     const VcpkgPaths paths = expected_paths.value_or_exit(VCPKG_LINE_INFO);
+
     const int exit_code = _wchdir(paths.root.c_str());
     Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Changing the working dir failed");
     Commands::Version::warn_if_vcpkg_version_mismatch(paths);
