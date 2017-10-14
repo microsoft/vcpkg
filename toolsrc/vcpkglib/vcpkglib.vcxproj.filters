@@ -13,312 +13,324 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\vcpkg">
+      <UniqueIdentifier>{69f6b6e6-5ac4-4419-a256-b8a6b0392720}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\vcpkg\base">
+      <UniqueIdentifier>{4a229410-0d09-4dab-953b-f434d6483f96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\vcpkg">
+      <UniqueIdentifier>{75592043-ab63-4905-beee-568a6ab8bf93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\vcpkg\base">
+      <UniqueIdentifier>{fa1f10e7-58d2-4f7c-ac26-a979baa70061}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\SourceParagraph.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\BinaryParagraph.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\StatusParagraph.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\StatusParagraphs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\triplet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Paragraphs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\metrics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\vcpkg_Input.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\coff_file_reader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\commands_available_commands.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\commands_build.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\commands_build_external.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\commands_cache.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\commands_contact.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\commands_create.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\commands_edit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\commands_hash.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\commands_help.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\commands_import.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\commands_install.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\commands_integrate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\commands_list.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\commands_owns.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\commands_portsdiff.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\commands_remove.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\commands_search.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\commands_update.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\commands_version.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\MachineType.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\vcpkg_Dependencies.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\vcpkglib.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\vcpkg_System.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\vcpkg_Checks.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\vcpkg_Files.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\vcpkg_Strings.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\PostBuildLint.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\vcpkg\binaryparagraph.cpp">
+      <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\PostBuildLint_BuildType.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\vcpkg\build.cpp">
+      <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg_Enums.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\vcpkg\commands.autocomplete.cpp">
+      <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\commands_ci.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\vcpkg\commands.buildexternal.cpp">
+      <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg_Chrono.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\vcpkg\commands.cache.cpp">
+      <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\LineInfo.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\vcpkg\commands.ci.cpp">
+      <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\commands_env.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\vcpkg\commands.contact.cpp">
+      <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\PackageSpec.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\vcpkg\commands.cpp">
+      <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\PackageSpecParseResult.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\vcpkg\commands.create.cpp">
+      <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\ParagraphParseResult.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\vcpkg\commands.dependinfo.cpp">
+      <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\VcpkgCmdArguments.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\vcpkg\commands.edit.cpp">
+      <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\VcpkgPaths.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\vcpkg\commands.env.cpp">
+      <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\commands_depends.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\vcpkg\commands.exportifw.cpp">
+      <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\commands_export.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\vcpkg\commands.hash.cpp">
+      <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\commands_export_ifw.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\vcpkg\commands.import.cpp">
+      <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\VersionT.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\vcpkg\commands.integrate.cpp">
+      <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg_Build.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\vcpkg\commands.list.cpp">
+      <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg_Build_BuildPolicy.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\vcpkg\commands.owns.cpp">
+      <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg_Parse.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\vcpkg\commands.portsdiff.cpp">
+      <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg_GlobalState.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\vcpkg\commands.search.cpp">
+      <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\commands_autocomplete.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\vcpkg\commands.version.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\dependencies.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\export.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\globalstate.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\help.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\input.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\install.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\metrics.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\packagespec.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\packagespecparseresult.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\paragraphparseresult.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\paragraphs.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\parse.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\postbuildlint.buildtype.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\postbuildlint.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\remove.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\sourceparagraph.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\statusparagraph.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\statusparagraphs.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\triplet.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\update.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\vcpkgcmdarguments.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\vcpkglib.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\vcpkgpaths.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\versiont.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\base\checks.cpp">
+      <Filter>Source Files\vcpkg\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\base\chrono.cpp">
+      <Filter>Source Files\vcpkg\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\base\cofffilereader.cpp">
+      <Filter>Source Files\vcpkg\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\base\enums.cpp">
+      <Filter>Source Files\vcpkg\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\base\files.cpp">
+      <Filter>Source Files\vcpkg\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\base\lineinfo.cpp">
+      <Filter>Source Files\vcpkg\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\base\machinetype.cpp">
+      <Filter>Source Files\vcpkg\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\base\strings.cpp">
+      <Filter>Source Files\vcpkg\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\base\system.cpp">
+      <Filter>Source Files\vcpkg\base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\SourceParagraph.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\BinaryParagraph.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\StatusParagraph.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\StatusParagraphs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\triplet.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\Paragraphs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\metrics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\vcpkg_Input.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\coff_file_reader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\filesystem_fs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\MachineType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\vcpkg_Commands.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\vcpkg_Commands_Export.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\vcpkg_Commands_Export_IFW.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\vcpkg_Dependencies.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\vcpkglib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\vcpkg_Checks.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\vcpkg_Files.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\vcpkg_Graphs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\vcpkg_Maps.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\vcpkg_Strings.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\vcpkg_System.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\vcpkg_optional.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\vcpkg\base\files.h">
+      <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\PostBuildLint.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\vcpkg\base\checks.h">
+      <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\vcpkg_Enums.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\vcpkg\base\chrono.h">
+      <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\vcpkg_Chrono.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\vcpkg\base\cofffilereader.h">
+      <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\lazy.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\vcpkg\base\cstringview.h">
+      <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\LineInfo.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\vcpkg\base\enums.h">
+      <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\vcpkg_expected.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\vcpkg\base\expected.h">
+      <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\vcpkg_Util.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\vcpkg\base\graphs.h">
+      <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\SortedVector.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\vcpkg\base\lazy.h">
+      <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\CStringView.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\vcpkg\base\lineinfo.h">
+      <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\PackageSpec.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\vcpkg\base\machinetype.h">
+      <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\PackageSpecParseResult.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\vcpkg\base\optional.h">
+      <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\ParagraphParseResult.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\vcpkg\base\sortedvector.h">
+      <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\VcpkgCmdArguments.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\vcpkg\base\span.h">
+      <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\VersionT.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\vcpkg\base\strings.h">
+      <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\VcpkgPaths.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\vcpkg\base\system.h">
+      <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\vcpkg_Build.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\vcpkg\base\util.h">
+      <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\PostBuildLint_BuildType.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\vcpkg\binaryparagraph.h">
+      <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Span.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\vcpkg\build.h">
+      <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\vcpkg_Parse.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\vcpkg\commands.h">
+      <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\vcpkg_GlobalState.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\vcpkg\dependencies.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\export.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\globalstate.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\help.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\input.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\install.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\metrics.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\packagespec.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\packagespecparseresult.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\paragraphparseresult.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\paragraphs.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\parse.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\postbuildlint.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\remove.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\sourceparagraph.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\statusparagraph.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\statusparagraphs.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\triplet.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\update.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\vcpkgcmdarguments.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\vcpkglib.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\vcpkgpaths.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\versiont.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\postbuildlint.buildtype.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\export.ifw.h">
+      <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
