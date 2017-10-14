@@ -558,6 +558,7 @@ namespace vcpkg::Install
         const bool no_downloads = options.find(OPTION_NO_DOWNLOADS) != options.cend();
         const bool is_recursive = options.find(OPTION_RECURSE) != options.cend();
         const KeepGoing keep_going = to_keep_going(options.find(OPTION_KEEP_GOING) != options.cend());
+        const PrintSummary print_summary = to_print_summary(keep_going == KeepGoing::YES);
 
         // create the plan
         StatusParagraphs status_db = database_load_check(paths);
@@ -608,7 +609,7 @@ namespace vcpkg::Install
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        perform_and_exit_ex(action_plan, install_plan_options, keep_going, PrintSummary::NO, paths, status_db);
+        perform_and_exit_ex(action_plan, install_plan_options, keep_going, print_summary, paths, status_db);
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }

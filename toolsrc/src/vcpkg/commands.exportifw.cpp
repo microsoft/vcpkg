@@ -27,6 +27,14 @@ namespace vcpkg::Export::IFW
         return date_time_as_string;
     }
 
+    std::string safe_rich_from_plain_text(const std::string& text)
+    {
+        // match standalone ampersand, no HTML number or name
+        std::regex standalone_ampersand(R"###(&(?!(#[0-9]+|\w+);))###");
+
+        return std::regex_replace(text, standalone_ampersand, "&amp;");
+    }
+
     fs::path get_packages_dir_path(const std::string& export_id, const Options& ifw_options, const VcpkgPaths& paths)
     {
         return ifw_options.maybe_packages_dir_path.has_value()
@@ -157,7 +165,7 @@ namespace vcpkg::Export::IFW
 </Package>
 )###",
                                   action.spec.name(),
-                                  binary_paragraph.description,
+                                  safe_rich_from_plain_text(binary_paragraph.description),
                                   binary_paragraph.version,
                                   create_release_date()));
         }
