@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\vcpkg_metrics_uploader.cpp">
+    <ClCompile Include="..\src\vcpkgmetricsuploader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
