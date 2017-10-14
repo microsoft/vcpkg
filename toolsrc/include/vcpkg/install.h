@@ -65,7 +65,7 @@ namespace vcpkg::Install
                              const VcpkgPaths& paths,
                              StatusParagraphs& status_db);
 
-    extern const CommandStructure INSTALL_COMMAND_STRUCTURE;
+    extern const CommandStructure COMMAND_STRUCTURE;
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
 }

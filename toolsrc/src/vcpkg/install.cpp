@@ -548,7 +548,7 @@ namespace vcpkg::Install
                           [](auto&& pgh) -> std::string { return pgh->core_paragraph->name; });
     }
 
-    const CommandStructure INSTALL_COMMAND_STRUCTURE = {
+    const CommandStructure COMMAND_STRUCTURE = {
         "install zlib zlib:x64-windows curl boost",
         1,
         SIZE_MAX,

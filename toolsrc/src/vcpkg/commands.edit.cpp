@@ -4,6 +4,7 @@
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
+#include <vcpkg/paragraphs.h>
 
 namespace vcpkg::Commands::Edit
 {
@@ -30,10 +31,32 @@ namespace vcpkg::Commands::Edit
         return output;
     }
 
+    static const std::string OPTION_BUILDTREES = "--buildtrees";
+
+    static const std::array<std::string, 1> SWITCHES = {
+        OPTION_BUILDTREES,
+    };
+    static const std::array<std::string, 0> SETTINGS;
+
+    static std::vector<std::string> valid_arguments(const VcpkgPaths& paths)
+    {
+        auto sources_and_errors = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
+
+        return Util::fmap(sources_and_errors.paragraphs,
+                          [](auto&& pgh) -> std::string { return pgh->core_paragraph->name; });
+    }
+
+    const CommandStructure COMMAND_STRUCTURE = {
+        "edit zlib",
+        1,
+        1,
+        SWITCHES,
+        SETTINGS,
+        &valid_arguments,
+    };
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const std::string OPTION_BUILDTREES = "--buildtrees";
-
         static const fs::path VS_CODE_INSIDERS = fs::path{"Microsoft VS Code Insiders"} / "Code - Insiders.exe";
         static const fs::path VS_CODE = fs::path{"Microsoft VS Code"} / "Code.exe";
 

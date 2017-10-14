@@ -186,7 +186,7 @@ namespace vcpkg::Remove
         return Util::fmap(installed_packages, [](auto&& pgh) -> std::string { return pgh->package.spec.to_string(); });
     }
 
-    const CommandStructure REMOVE_COMMAND_STRUCTURE = {
+    const CommandStructure COMMAND_STRUCTURE = {
         "remove zlib zlib:x64-windows curl boost",
         1,
         SIZE_MAX,

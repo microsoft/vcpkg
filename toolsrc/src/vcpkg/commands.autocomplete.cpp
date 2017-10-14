@@ -97,8 +97,9 @@ namespace vcpkg::Commands::Autocomplete
             const CommandStructure& structure;
         };
         static constexpr CommandEntry commands[] = {
-            {R"###(^install\s(.*\s|)(\S*)$)###", Install::INSTALL_COMMAND_STRUCTURE},
-            {R"###(^remove\s(.*\s|)(\S*)$)###", Remove::REMOVE_COMMAND_STRUCTURE},
+            {R"###(^install\s(.*\s|)(\S*)$)###", Install::COMMAND_STRUCTURE},
+            {R"###(^edit\s(.*\s|)(\S*)$)###", Edit::COMMAND_STRUCTURE},
+            {R"###(^remove\s(.*\s|)(\S*)$)###", Remove::COMMAND_STRUCTURE},
         };
 
         for (auto&& command : commands)
