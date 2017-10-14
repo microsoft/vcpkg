@@ -15,19 +15,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\tests_paragraph.cpp">
+    <ClCompile Include="..\src\tests.installplan.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\tests_dependencies.cpp">
+    <ClCompile Include="..\src\tests.arguments.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\tests_arguments.cpp">
+    <ClCompile Include="..\src\tests.dependencies.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\test_install_plan.cpp">
+    <ClCompile Include="..\src\tests.packagespec.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\tests_package_spec.cpp">
+    <ClCompile Include="..\src\tests.paragraph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
