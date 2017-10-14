@@ -80,6 +80,7 @@ function(vcpkg_from_github)
         else()
             # Sometimes GitHub strips a leading 'v' off the REF.
             string(REGEX REPLACE "^v" "" REF ${BASEREF})
+            string(REPLACE "/" "-" REF ${REF})
             set(SOURCE_PATH "${BASE}/${REPO_NAME}-${REF}")
             if(EXISTS ${SOURCE_PATH})
                 set(${_vdud_OUT_SOURCE_PATH} "${SOURCE_PATH}" PARENT_SCOPE)
