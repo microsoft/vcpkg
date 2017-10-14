@@ -230,13 +230,14 @@ namespace vcpkg::Commands::Integrate
         }
         System::println(System::Color::success, "Applied user-wide integration for this vcpkg root.");
         const fs::path cmake_toolchain = paths.buildsystems / "vcpkg.cmake";
-        System::println("\n"
-                        "All MSBuild C++ projects can now #include any installed libraries.\n"
-                        "Linking will be handled automatically.\n"
-                        "Installing new libraries will make them instantly available.\n"
-                        "\n"
-                        "CMake projects should use -DCMAKE_TOOLCHAIN_FILE=%s",
-                        cmake_toolchain.generic_string());
+        System::println(
+            R"(
+All MSBuild C++ projects can now #include any installed libraries.
+Linking will be handled automatically.
+Installing new libraries will make them instantly available.
+
+CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s")",
+            cmake_toolchain.generic_string());
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
