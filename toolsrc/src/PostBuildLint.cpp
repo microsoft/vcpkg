@@ -57,7 +57,7 @@ namespace vcpkg::PostBuildLint
             {"msvcrt40.dll", R"(msvcrt40\.dll)"},
         };
 
-        static const std::vector<OutdatedDynamicCrt> V = [&]() {
+        static const std::vector<OutdatedDynamicCrt> V_NO_MSVCRT = [&]() {
             auto ret = V_NO_120;
             ret.push_back({"msvcp120.dll", R"(msvcp120\.dll)"});
             ret.push_back({"msvcp120_clr0400.dll", R"(msvcp120_clr0400\.dll)"});
@@ -69,7 +69,7 @@ namespace vcpkg::PostBuildLint
         if (toolset == "v120")
             return V_NO_120;
         else
-            return V;
+            return V_NO_MSVCRT;
     }
 
     static LintStatus check_for_files_in_include_directory(const Files::Filesystem& fs,
