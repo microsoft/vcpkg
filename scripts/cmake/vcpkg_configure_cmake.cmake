@@ -86,14 +86,20 @@ function(vcpkg_configure_cmake)
         set(GENERATOR "Visual Studio 15 2017")
     elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND TRIPLET_SYSTEM_ARCH MATCHES "x64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
         set(GENERATOR "Visual Studio 15 2017 Win64")
-    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND TRIPLET_SYSTEM_ARCH MATCHES "arm" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND TRIPLET_SYSTEM_ARCH STREQUAL "arm" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
         set(GENERATOR "Visual Studio 15 2017 ARM")
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND TRIPLET_SYSTEM_ARCH STREQUAL "arm64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+        set(GENERATOR "Visual Studio 15 2017")    
+        set(ARCH "ARM64")
     elseif(TRIPLET_SYSTEM_ARCH MATCHES "x86" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
         set(GENERATOR "Visual Studio 15 2017")
     elseif(TRIPLET_SYSTEM_ARCH MATCHES "x64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
         set(GENERATOR "Visual Studio 15 2017 Win64")
-    elseif(TRIPLET_SYSTEM_ARCH MATCHES "arm" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+    elseif(TRIPLET_SYSTEM_ARCH STREQUAL "arm" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
         set(GENERATOR "Visual Studio 15 2017 ARM")
+    elseif(TRIPLET_SYSTEM_ARCH STREQUAL "arm64" AND VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+        set(GENERATOR "Visual Studio 15 2017")
+        set(ARCH "ARM64")
     endif()
     
     # If we use Ninja, make sure it's on PATH
@@ -147,6 +153,12 @@ function(vcpkg_configure_cmake)
         "-DCMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION=ON"
     )
 
+    if(DEFINED ARCH)
+        list(APPEND _csc_OPTIONS
+            "-A${ARCH}"
+        )
+    endif()
+
     if(DEFINED VCPKG_CRT_LINKAGE AND VCPKG_CRT_LINKAGE STREQUAL dynamic)
         list(APPEND _csc_OPTIONS_DEBUG
             "-DCMAKE_CXX_FLAGS_DEBUG=/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 ${VCPKG_CXX_FLAGS_DEBUG}"
@@ -196,4 +208,6 @@ function(vcpkg_configure_cmake)
         LOGNAME config-${TARGET_TRIPLET}-dbg
     )
     message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
+
+    set(_VCPKG_CMAKE_GENERATOR "${GENERATOR}" PARENT_SCOPE)
 endfunction()

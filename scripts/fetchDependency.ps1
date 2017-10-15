@@ -36,17 +36,19 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
             New-Item -ItemType directory -Path $downloadDir | Out-Null
         }
 
+        $WC = New-Object System.Net.WebClient
+        $ProxyAuth = !$WC.Proxy.IsBypassed($url)
+        if ($ProxyAuth)
+        {
+            $ProxyCred = Get-Credential -Message "Enter credentials for Proxy Authentication"
+            $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyAuthentication","Basic")
+            $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyCredential",$ProxyCred)
+            $WC.Proxy.Credentials=$ProxyCred
+        }
+
         if (($PSVersionTable.PSEdition -ne "Core") -and ($Dependency -ne "git")) # git fails with BITS
         {
             try {
-                $WC = New-Object System.Net.WebClient
-                $ProxyAuth = !$WC.Proxy.IsBypassed($url)
-                If($ProxyAuth){
-                    $ProxyCred = Get-Credential -Message "Enter credentials for Proxy Authentication"
-                    $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyAuthentication","Basic")
-                    $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyCredential",$ProxyCred)
-                }
-
                 Start-BitsTransfer -Source $url -Destination $downloadPath -ErrorAction Stop
             }
             catch [System.Exception] {
@@ -60,7 +62,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         if (!(Test-Path $downloadPath))
         {
             Write-Verbose("Downloading $Dependency...")
-            (New-Object System.Net.WebClient).DownloadFile($url, $downloadPath)
+            $WC.DownloadFile($url, $downloadPath)
         }
     }
 
@@ -116,11 +118,21 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     }
     elseif($Dependency -eq "nuget")
     {
-        $requiredVersion = "4.1.0"
-        $downloadVersion = "4.1.0"
-        $url = "https://dist.nuget.org/win-x86-commandline/v4.1.0/nuget.exe"
-        $downloadPath = "$downloadsDir\nuget-4.1.0\nuget.exe"
-        $expectedDownloadedFileHash = "4c1de9b026e0c4ab087302ff75240885742c0faa62bd2554f913bbe1f6cb63a0"
+        $requiredVersion = "4.3.0"
+        $downloadVersion = "4.3.0"
+        $url = "https://dist.nuget.org/win-x86-commandline/v4.3.0/nuget.exe"
+        $downloadPath = "$downloadsDir\nuget-$downloadVersion\nuget.exe"
+        $expectedDownloadedFileHash = "386da77a8cf2b63d1260b7020feeedabfe3b65ab31d20e6a313a530865972f3a"
+        $executableFromDownload = $downloadPath
+        $extractionType = $ExtractionType_NO_EXTRACTION_REQUIRED
+    }
+    elseif($Dependency -eq "vswhere")
+    {
+        $requiredVersion = "2.2.3"
+        $downloadVersion = "2.2.3"
+        $url = "https://github.com/Microsoft/vswhere/releases/download/2.2.3/vswhere.exe"
+        $downloadPath = "$downloadsDir\vswhere-$downloadVersion\vswhere.exe"
+        $expectedDownloadedFileHash = "5f19066ac91635ad17d33fe0f79fc63c672a46f98c0358589a90163bcb2733e8"
         $executableFromDownload = $downloadPath
         $extractionType = $ExtractionType_NO_EXTRACTION_REQUIRED
     }
@@ -136,6 +148,17 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         $executableFromDownload = "$downloadsDir\MinGit-2.14.1-32-bit\cmd\git.exe"
         $extractionType = $ExtractionType_ZIP
         $extractionFolder = "$downloadsDir\MinGit-2.14.1-32-bit"
+    }
+    elseif($Dependency -eq "installerbase")
+    {
+        $requiredVersion = "3.1.81"
+        $downloadVersion = "3.1.81"
+        $url = "https://github.com/podsvirov/installer-framework/releases/download/cr203958-9/QtInstallerFramework-win-x86.zip"
+        $downloadPath = "$downloadsDir\QtInstallerFramework-win-x86.zip"
+        $expectedDownloadedFileHash = "f2ce23cf5cf9fc7ce409bdca49328e09a070c0026d3c8a04e4dfde7b05b83fe8"
+        $executableFromDownload = "$downloadsDir\QtInstallerFramework-win-x86\bin\installerbase.exe"
+        $extractionType = $ExtractionType_ZIP
+        $extractionFolder = $downloadsDir
     }
     else
     {

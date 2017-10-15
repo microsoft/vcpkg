@@ -66,7 +66,7 @@ if(USE_X86)
   add_definitions(-DOC_X86_ASM)
 endif()
 
-if (${BUILD_SHARED_LIBS})
+if (BUILD_SHARED_LIBS)
   add_definitions(-DLIBTHEORA_EXPORTS)
 endif()
 

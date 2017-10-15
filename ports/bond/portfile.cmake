@@ -1,4 +1,4 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     message(STATUS "Warning: Dynamic building not supported yet. Building static.")
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
@@ -23,7 +23,7 @@ vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_extract_source_archive(${GBC_ARCHIVE} ${CURRENT_BUILDTREES_DIR}/tools/)
 set(FETCHED_GBC_PATH ${CURRENT_BUILDTREES_DIR}/tools/gbc-6.0.0-amd64.exe)
 
-if (NOT EXISTS ${FETCHED_GBC_PATH})
+if (NOT EXISTS "${FETCHED_GBC_PATH}")
     message(FATAL_ERROR "Fetching GBC failed. Expected '${FETCHED_GBC_PATH}' to exists, but it doesn't.")
 endif()
 

@@ -33,8 +33,6 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS -DGEOS_ENABLE_TESTS=False
 )
-
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 # Handle copyright
