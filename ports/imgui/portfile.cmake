@@ -1,13 +1,23 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/imgui-1.51)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/ocornut/imgui/archive/v1.51.zip"
-    FILENAME "imgui-1.51.zip"
-    SHA512 a3c77887396991f8371c0cf5b42d781d758877cdb194a7c6ea8b34939f4b300f55f176d601dd0e167ea2a20bd8a47b958ad1bca16864a19c1cc9b2c7a889ab29
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
+    set(VCPKG_LIBRARY_LINKAGE static)
+endif()
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO ocornut/imgui
+    REF v1.51
+    SHA512 33aea46d0ab8419fcd4af765c9f1a88dfb1b80ad466276b655a67f40ffedabe399db6b0d76a2ece74e551928bd6f842ae3fa42998e0b1a2206157a3852e002d6
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(GLOB STB_HEADERS ${SOURCE_PATH}/stb_*.h)
+if(STB_HEADERS)
+    file(REMOVE ${STB_HEADERS})
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
