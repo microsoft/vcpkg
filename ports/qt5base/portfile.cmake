@@ -15,7 +15,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 include(configure_qt)
 include(install_qt)
 
-set(SRCDIR_NAME "qt-5.9.2")
+set(SRCDIR_NAME "qtbase-5.9.2")
 set(ARCHIVE_NAME "qtbase-opensource-src-5.9.2")
 set(ARCHIVE_EXTENSION ".tar.xz")
 
