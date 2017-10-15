@@ -448,7 +448,7 @@ namespace vcpkg
                                                   vs_dumpbin_exe,
                                                   vcvarsall_bat,
                                                   {},
-							                      major_version == "14" ? V_140 : V_120,
+                                                  major_version == "14" ? V_140 : V_120,
                                                   supported_architectures});
                     }
                 }

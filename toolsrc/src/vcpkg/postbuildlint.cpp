@@ -66,14 +66,14 @@ namespace vcpkg::PostBuildLint
             return ret;
         }();
 
-		const auto tsv = toolset_version.get();
-		if (tsv && (*tsv) == "v120")
-		{
-			return V_NO_120;
-		}
+        const auto tsv = toolset_version.get();
+        if (tsv && (*tsv) == "v120")
+        {
+            return V_NO_120;
+        }
 
-		// Default case for all version >= VS 2015.
-		return V_NO_MSVCRT;
+        // Default case for all version >= VS 2015.
+        return V_NO_MSVCRT;
     }
 
     static LintStatus check_for_files_in_include_directory(const Files::Filesystem& fs,
