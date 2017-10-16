@@ -79,71 +79,71 @@ namespace vcpkg::System
         static const std::string NEW_PATH = Strings::format(
             R"(Path=%s;%s;%s\Wbem;%s\WindowsPowerShell\v1.0\)", SYSTEM_32, SYSTEM_ROOT, SYSTEM_32, SYSTEM_32);
 
-        std::vector<std::string> env_wstrings = {
-            "ALLUSERSPROFILE",
-            "APPDATA",
-            "CommonProgramFiles",
-            "CommonProgramFiles(x86)",
-            "CommonProgramW6432",
-            "COMPUTERNAME",
-            "ComSpec",
-            "HOMEDRIVE",
-            "HOMEPATH",
-            "LOCALAPPDATA",
-            "LOGONSERVER",
-            "NUMBER_OF_PROCESSORS",
-            "OS",
-            "PATHEXT",
-            "PROCESSOR_ARCHITECTURE",
-            "PROCESSOR_ARCHITEW6432",
-            "PROCESSOR_IDENTIFIER",
-            "PROCESSOR_LEVEL",
-            "PROCESSOR_REVISION",
-            "ProgramData",
-            "ProgramFiles",
-            "ProgramFiles(x86)",
-            "ProgramW6432",
-            "PROMPT",
-            "PSModulePath",
-            "PUBLIC",
-            "SystemDrive",
-            "SystemRoot",
-            "TEMP",
-            "TMP",
-            "USERDNSDOMAIN",
-            "USERDOMAIN",
-            "USERDOMAIN_ROAMINGPROFILE",
-            "USERNAME",
-            "USERPROFILE",
-            "windir",
+        std::vector<std::wstring> env_wstrings = {
+            L"ALLUSERSPROFILE",
+            L"APPDATA",
+            L"CommonProgramFiles",
+            L"CommonProgramFiles(x86)",
+            L"CommonProgramW6432",
+            L"COMPUTERNAME",
+            L"ComSpec",
+            L"HOMEDRIVE",
+            L"HOMEPATH",
+            L"LOCALAPPDATA",
+            L"LOGONSERVER",
+            L"NUMBER_OF_PROCESSORS",
+            L"OS",
+            L"PATHEXT",
+            L"PROCESSOR_ARCHITECTURE",
+            L"PROCESSOR_ARCHITEW6432",
+            L"PROCESSOR_IDENTIFIER",
+            L"PROCESSOR_LEVEL",
+            L"PROCESSOR_REVISION",
+            L"ProgramData",
+            L"ProgramFiles",
+            L"ProgramFiles(x86)",
+            L"ProgramW6432",
+            L"PROMPT",
+            L"PSModulePath",
+            L"PUBLIC",
+            L"SystemDrive",
+            L"SystemRoot",
+            L"TEMP",
+            L"TMP",
+            L"USERDNSDOMAIN",
+            L"USERDOMAIN",
+            L"USERDOMAIN_ROAMINGPROFILE",
+            L"USERNAME",
+            L"USERPROFILE",
+            L"windir",
             // Enables proxy information to be passed to Curl, the underlying download library in cmake.exe
-            "HTTP_PROXY",
-            "HTTPS_PROXY",
+            L"HTTP_PROXY",
+            L"HTTPS_PROXY",
             // Enables find_package(CUDA) in CMake
-            "CUDA_PATH",
+            L"CUDA_PATH",
             // Environmental variable generated automatically by CUDA after installation
-            "NVCUDASAMPLES_ROOT",
+            L"NVCUDASAMPLES_ROOT",
         };
 
         // Flush stdout before launching external process
         fflush(nullptr);
 
-        std::string env_cstr;
+        std::wstring env_cstr;
 
         for (auto&& env_wstring : env_wstrings)
         {
-            const Optional<std::string> value = System::get_environment_variable(env_wstring);
+            const Optional<std::string> value = System::get_environment_variable(Strings::to_utf8(env_wstring));
             const auto v = value.get();
             if (!v || v->empty()) continue;
 
             env_cstr.append(env_wstring);
-            env_cstr.push_back('=');
-            env_cstr.append(*v);
-            env_cstr.push_back('\0');
+            env_cstr.push_back(L'=');
+            env_cstr.append(Strings::to_utf16(*v));
+            env_cstr.push_back(L'\0');
         }
 
-        env_cstr.append(NEW_PATH);
-        env_cstr.push_back('\0');
+        env_cstr.append(Strings::to_utf16(NEW_PATH));
+        env_cstr.push_back(L'\0');
 
         STARTUPINFOW startup_info;
         memset(&startup_info, 0, sizeof(STARTUPINFOW));
@@ -161,7 +161,7 @@ namespace vcpkg::System
                                                 nullptr,
                                                 FALSE,
                                                 BELOW_NORMAL_PRIORITY_CLASS | CREATE_UNICODE_ENVIRONMENT,
-                                                Strings::to_utf16(env_cstr).data(),
+                                                env_cstr.data(),
                                                 nullptr,
                                                 &startup_info,
                                                 &process_info);
@@ -366,7 +366,9 @@ namespace vcpkg::System
         return Strings::to_utf8(ret);
     }
 #else
-    Optional<std::string> get_registry_string(void* base_hkey, const CStringView sub_key, const CStringView valuename)
+    Optional<std::wstring> get_registry_string(void* base_hkey,
+                                               const CWStringView sub_key,
+                                               const CWStringView valuename)
     {
         return nullopt;
     }
