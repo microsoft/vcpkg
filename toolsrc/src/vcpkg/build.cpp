@@ -69,7 +69,10 @@ namespace vcpkg::Build::Command
         const Build::BuildPackageConfig build_config{
             *scf->core_paragraph, spec.triplet(), paths.port_dir(spec), build_package_options};
 
+        const auto build_timer = Chrono::ElapsedTime::create_started();
         const auto result = Build::build_package(paths, build_config, status_db);
+        System::println("Elapsed time for package %s: %s", spec.to_string(), build_timer.to_string());
+
         if (result.code == BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES)
         {
             System::println(System::Color::error,
