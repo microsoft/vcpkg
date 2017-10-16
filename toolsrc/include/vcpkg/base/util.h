@@ -7,6 +7,18 @@
 
 namespace vcpkg::Util
 {
+    template<class Container>
+    using ElementT = std::remove_reference_t<decltype(*begin(std::declval<Container>()))>;
+
+    namespace Vectors
+    {
+        template<class Container, class T = ElementT<Container>>
+        void concatenate(std::vector<T>* augend, const Container& addend)
+        {
+            augend->insert(augend->end(), addend.begin(), addend.end());
+        }
+    }
+
     template<class Cont, class Func>
     using FmapOut = decltype(std::declval<Func>()(*begin(std::declval<Cont>())));
 
@@ -70,9 +82,6 @@ namespace vcpkg::Util
         using std::end;
         return std::find_if(begin(cont), end(cont), pred);
     }
-
-    template<class Container>
-    using ElementT = std::remove_reference_t<decltype(*begin(std::declval<Container>()))>;
 
     template<class Container, class T = ElementT<Container>>
     std::vector<T*> element_pointers(Container&& cont)

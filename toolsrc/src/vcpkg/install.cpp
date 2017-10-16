@@ -145,7 +145,7 @@ namespace vcpkg::Install
                 continue;
             }
 
-            output.insert(output.end(), t.files.begin(), t.files.end());
+            Util::Vectors::concatenate(&output, t.files);
         }
 
         std::sort(output.begin(), output.end());
