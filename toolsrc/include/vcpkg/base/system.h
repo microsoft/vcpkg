@@ -4,7 +4,6 @@
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/strings.h>
 
-
 namespace vcpkg::System
 {
     tm get_current_date_time();
@@ -64,9 +63,7 @@ namespace vcpkg::System
 
     Optional<std::string> get_environment_variable(const CStringView varname) noexcept;
 
-    Optional<std::wstring> get_registry_string(void* base_hkey,
-                                               const CWStringView subkey,
-                                               const CWStringView valuename);
+    Optional<std::string> get_registry_string(void* base_hkey, const CStringView subkey, const CStringView valuename);
 
     enum class CPUArchitecture
     {
@@ -76,7 +73,7 @@ namespace vcpkg::System
         ARM64,
     };
 
-    Optional<CPUArchitecture> to_cpu_architecture(CStringView arch);
+    Optional<CPUArchitecture> to_cpu_architecture(const CStringView& arch);
 
     CPUArchitecture get_host_processor();
 

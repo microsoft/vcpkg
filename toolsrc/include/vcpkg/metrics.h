@@ -23,6 +23,6 @@ namespace vcpkg::Metrics
 
     extern Util::LockGuarded<Metrics> g_metrics;
 
-    std::wstring get_SQM_user();
+    std::string get_SQM_user();
     bool get_compiled_metrics_enabled();
 }

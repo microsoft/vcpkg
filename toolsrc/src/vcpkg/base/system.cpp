@@ -38,7 +38,7 @@ namespace vcpkg::System
 #endif
     }
 
-    Optional<CPUArchitecture> to_cpu_architecture(CStringView arch)
+    Optional<CPUArchitecture> to_cpu_architecture(const CStringView& arch)
     {
         if (Strings::case_insensitive_ascii_equals(arch, "x86")) return CPUArchitecture::X86;
         if (Strings::case_insensitive_ascii_equals(arch, "x64")) return CPUArchitecture::X64;
@@ -153,7 +153,7 @@ namespace vcpkg::System
         memset(&process_info, 0, sizeof(PROCESS_INFORMATION));
 
         // Basically we are wrapping it in quotes
-        std::string actual_cmd_line = Strings::format(R"###(cmd.exe /c "%s")###", cmd_line);
+        const std::string actual_cmd_line = Strings::format(R"###(cmd.exe /c "%s")###", cmd_line);
         Debug::println("CreateProcessW(%s)", actual_cmd_line);
         bool succeeded = TRUE == CreateProcessW(nullptr,
                                                 Strings::to_utf16(actual_cmd_line).data(),
@@ -331,35 +331,39 @@ namespace vcpkg::System
     }
 
 #if defined(_WIN32)
-    static bool is_string_keytype(DWORD hkey_type)
+    static bool is_string_keytype(const DWORD hkey_type)
     {
         return hkey_type == REG_SZ || hkey_type == REG_MULTI_SZ || hkey_type == REG_EXPAND_SZ;
     }
 
-    Optional<std::wstring> get_registry_string(void* base_hkey,
-                                               const CWStringView sub_key,
-                                               const CWStringView valuename)
+    Optional<std::string> get_registry_string(void* base_hkey, const CStringView sub_key, const CStringView valuename)
     {
         HKEY k = nullptr;
-        const LSTATUS ec = RegOpenKeyExW(reinterpret_cast<HKEY>(base_hkey), sub_key.c_str(), NULL, KEY_READ, &k);
+        const LSTATUS ec =
+            RegOpenKeyExW(reinterpret_cast<HKEY>(base_hkey), Strings::to_utf16(sub_key).c_str(), NULL, KEY_READ, &k);
         if (ec != ERROR_SUCCESS) return nullopt;
 
         DWORD dw_buffer_size = 0;
         DWORD dw_type = 0;
-        auto rc = RegQueryValueExW(k, valuename.c_str(), nullptr, &dw_type, nullptr, &dw_buffer_size);
+        auto rc =
+            RegQueryValueExW(k, Strings::to_utf16(valuename).c_str(), nullptr, &dw_type, nullptr, &dw_buffer_size);
         if (rc != ERROR_SUCCESS || !is_string_keytype(dw_type) || dw_buffer_size == 0 ||
             dw_buffer_size % sizeof(wchar_t) != 0)
             return nullopt;
         std::wstring ret;
         ret.resize(dw_buffer_size / sizeof(wchar_t));
 
-        rc = RegQueryValueExW(
-            k, valuename.c_str(), nullptr, &dw_type, reinterpret_cast<LPBYTE>(ret.data()), &dw_buffer_size);
+        rc = RegQueryValueExW(k,
+                              Strings::to_utf16(valuename).c_str(),
+                              nullptr,
+                              &dw_type,
+                              reinterpret_cast<LPBYTE>(ret.data()),
+                              &dw_buffer_size);
         if (rc != ERROR_SUCCESS || !is_string_keytype(dw_type) || dw_buffer_size != sizeof(wchar_t) * ret.size())
             return nullopt;
 
         ret.pop_back(); // remove extra trailing null byte
-        return ret;
+        return Strings::to_utf8(ret);
     }
 #else
     Optional<std::wstring> get_registry_string(void* base_hkey,

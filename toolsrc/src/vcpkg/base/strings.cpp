@@ -72,7 +72,7 @@ namespace vcpkg::Strings::details
 
 namespace vcpkg::Strings
 {
-    std::wstring to_utf16(const CStringView s)
+    std::wstring to_utf16(const CStringView& s)
     {
 #if defined(_WIN32)
         const int size = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
@@ -85,7 +85,7 @@ namespace vcpkg::Strings
 #endif
     }
 
-    std::string to_utf8(const CWStringView w)
+    std::string to_utf8(const CWStringView& w)
     {
 #if defined(_WIN32)
         const int size = WideCharToMultiByte(CP_UTF8, 0, w.c_str(), -1, nullptr, 0, nullptr, nullptr);

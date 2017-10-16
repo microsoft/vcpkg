@@ -3,25 +3,24 @@
 #include <vcpkg/base/system.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
-#include <vcpkg/input.h>
 #include <vcpkg/paragraphs.h>
 
 namespace vcpkg::Commands::Edit
 {
     static std::vector<fs::path> find_from_registry()
     {
-        static const std::array<const wchar_t*, 3> REGKEYS = {
-            LR"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{C26E74D1-022E-4238-8B9D-1E7564A36CC9}_is1)",
-            LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{1287CAD5-7C8D-410D-88B9-0D1EE4A83FF2}_is1)",
-            LR"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{F8A2A208-72B3-4D61-95FC-8A65D340689B}_is1)",
+        static const std::array<const char*, 3> REGKEYS = {
+            R"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{C26E74D1-022E-4238-8B9D-1E7564A36CC9}_is1)",
+            R"(SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{1287CAD5-7C8D-410D-88B9-0D1EE4A83FF2}_is1)",
+            R"(SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{F8A2A208-72B3-4D61-95FC-8A65D340689B}_is1)",
         };
 
         std::vector<fs::path> output;
 #if defined(_WIN32)
         for (auto&& keypath : REGKEYS)
         {
-            const Optional<std::wstring> code_installpath =
-                System::get_registry_string(HKEY_LOCAL_MACHINE, keypath, L"InstallLocation");
+            const Optional<std::string> code_installpath =
+                System::get_registry_string(HKEY_LOCAL_MACHINE, keypath, "InstallLocation");
             if (const auto c = code_installpath.get())
             {
                 const fs::path install_path = fs::path(*c);

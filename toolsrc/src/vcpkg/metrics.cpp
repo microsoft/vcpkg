@@ -233,14 +233,14 @@ namespace vcpkg::Metrics
 
     bool get_compiled_metrics_enabled() { return DISABLE_METRICS == 0; }
 
-    std::wstring get_SQM_user()
+    std::string get_SQM_user()
     {
 #if defined(_WIN32)
         auto hkcu_sqmclient =
-            System::get_registry_string(HKEY_CURRENT_USER, LR"(Software\Microsoft\SQMClient)", L"UserId");
-        return hkcu_sqmclient.value_or(L"{}");
+            System::get_registry_string(HKEY_CURRENT_USER, R"(Software\Microsoft\SQMClient)", "UserId");
+        return hkcu_sqmclient.value_or("{}");
 #else
-        return L"{}";
+        return "{}";
 #endif
     }
 
