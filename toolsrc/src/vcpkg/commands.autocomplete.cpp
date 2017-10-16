@@ -10,40 +10,6 @@
 
 namespace vcpkg::Commands::Autocomplete
 {
-    std::vector<std::string> autocomplete_install(
-        const std::vector<std::unique_ptr<SourceControlFile>>& source_paragraphs, const std::string& start_with)
-    {
-        std::vector<std::string> results;
-
-        for (const auto& source_control_file : source_paragraphs)
-        {
-            auto&& sp = *source_control_file->core_paragraph;
-
-            if (Strings::case_insensitive_ascii_starts_with(sp.name, start_with))
-            {
-                results.push_back(sp.name);
-            }
-        }
-        return results;
-    }
-
-    std::vector<std::string> autocomplete_remove(std::vector<StatusParagraph*> installed_packages,
-                                                 const std::string& start_with)
-    {
-        std::vector<std::string> results;
-
-        for (const auto& installed_package : installed_packages)
-        {
-            const auto sp = installed_package->package.displayname();
-
-            if (Strings::case_insensitive_ascii_starts_with(sp, start_with))
-            {
-                results.push_back(sp);
-            }
-        }
-        return results;
-    }
-
     [[noreturn]] static void output_sorted_results_and_exit(const LineInfo& line_info,
                                                             std::vector<std::string>&& results)
     {
