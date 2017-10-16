@@ -17,18 +17,12 @@ namespace vcpkg::Strings::details
     inline const char* to_printf_arg(const char* s) { return s; }
 
     template<class T, class = std::enable_if_t<std::is_arithmetic<T>::value>>
-    inline T to_printf_arg(T s)
+    T to_printf_arg(T s)
     {
         return s;
     }
 
     std::string format_internal(const char* fmtstr, ...);
-
-    inline const wchar_t* to_wprintf_arg(const std::wstring& s) { return s.c_str(); }
-
-    inline const wchar_t* to_wprintf_arg(const wchar_t* s) { return s; }
-
-    std::wstring wformat_internal(const wchar_t* fmtstr, ...);
 }
 
 namespace vcpkg::Strings
@@ -38,13 +32,6 @@ namespace vcpkg::Strings
     {
         using vcpkg::Strings::details::to_printf_arg;
         return details::format_internal(fmtstr, to_printf_arg(to_printf_arg(args))...);
-    }
-
-    template<class... Args>
-    std::wstring wformat(const wchar_t* fmtstr, const Args&... args)
-    {
-        using vcpkg::Strings::details::to_wprintf_arg;
-        return details::wformat_internal(fmtstr, to_wprintf_arg(to_wprintf_arg(args))...);
     }
 
     std::wstring to_utf16(const CStringView& s);
