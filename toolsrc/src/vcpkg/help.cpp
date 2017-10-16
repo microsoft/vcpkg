@@ -16,9 +16,9 @@ namespace vcpkg::Help
     void help_topic_valid_triplet(const VcpkgPaths& paths)
     {
         System::println("Available architecture triplets:");
-        for (auto&& path : paths.get_filesystem().get_files_non_recursive(paths.triplets))
+        for (auto&& triplet : paths.get_available_triplets())
         {
-            System::println("  %s", path.stem().filename().string());
+            System::println("  %s", triplet);
         }
     }
 

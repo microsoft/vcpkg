@@ -36,6 +36,7 @@ namespace vcpkg
         fs::path build_info_file_path(const PackageSpec& spec) const;
         fs::path listfile_path(const BinaryParagraph& pgh) const;
 
+        const std::vector<std::string>& get_available_triplets() const;
         bool is_valid_triplet(const Triplet& t) const;
 
         fs::path root;
@@ -74,6 +75,7 @@ namespace vcpkg
         Files::Filesystem& get_filesystem() const;
 
     private:
+        Lazy<std::vector<std::string>> available_triplets;
         Lazy<fs::path> cmake_exe;
         Lazy<fs::path> git_exe;
         Lazy<fs::path> nuget_exe;

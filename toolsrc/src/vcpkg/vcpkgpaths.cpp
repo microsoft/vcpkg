@@ -255,18 +255,25 @@ namespace vcpkg
         return this->vcpkg_dir_info / (pgh.fullstem() + ".list");
     }
 
+    const std::vector<std::string>& VcpkgPaths::get_available_triplets() const
+    {
+        return this->available_triplets.get_lazy([this]() -> std::vector<std::string> {
+
+            std::vector<std::string> output;
+            for (auto&& path : this->get_filesystem().get_files_non_recursive(this->triplets))
+            {
+                output.push_back(path.stem().filename().string());
+            }
+
+            return output;
+        });
+    }
+
     bool VcpkgPaths::is_valid_triplet(const Triplet& t) const
     {
-        for (auto&& path : get_filesystem().get_files_non_recursive(this->triplets))
-        {
-            const std::string triplet_file_name = path.stem().generic_u8string();
-            if (t.canonical_name() == triplet_file_name) // TODO: fuzzy compare
-            {
-                // t.value = triplet_file_name; // NOTE: uncomment when implementing fuzzy compare
-                return true;
-            }
-        }
-        return false;
+        auto it = Util::find_if(this->get_available_triplets(),
+                                [&](auto&& available_triplet) { return t.canonical_name() == available_triplet; });
+        return it != this->get_available_triplets().cend();
     }
 
     const fs::path& VcpkgPaths::get_cmake_exe() const
