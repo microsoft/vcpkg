@@ -1,6 +1,6 @@
 vcpkg (0.0.91)
 --------------
-  * Add ports:
+  * Add ports: 
     - abseil         2017-09-28
     - enet           1.3.13
     - exiv2          4f4add2cdcbe73af7098122a509dff0739d15908
