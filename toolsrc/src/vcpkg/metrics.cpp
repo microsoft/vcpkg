@@ -19,6 +19,7 @@ namespace vcpkg::Metrics
         std::array<char, 80> date;
         date.fill(0);
 
+#if defined(_WIN32)
         struct _timeb timebuffer;
 
         _ftime_s(&timebuffer);
@@ -26,10 +27,17 @@ namespace vcpkg::Metrics
         const int milli = timebuffer.millitm;
 
         const errno_t err = gmtime_s(&newtime, &now);
+
         if (err)
         {
-            return Strings::EMPTY;
+            return "";
         }
+#else
+        time_t now;
+        time(&now);
+        gmtime_r(&now, &newtime);
+        const int milli = 0;
+#endif
 
         strftime(&date[0], date.size(), "%Y-%m-%dT%H:%M:%S", &newtime);
         return std::string(&date[0]) + "." + std::to_string(milli) + "Z";
@@ -121,6 +129,7 @@ namespace vcpkg::Metrics
 
     static std::string get_os_version_string()
     {
+#if defined(_WIN32)
         std::wstring path;
         path.resize(MAX_PATH);
         const auto n = GetSystemDirectoryW(&path[0], static_cast<UINT>(path.size()));
@@ -128,16 +137,16 @@ namespace vcpkg::Metrics
         path += L"\\kernel32.dll";
 
         const auto versz = GetFileVersionInfoSizeW(path.c_str(), nullptr);
-        if (versz == 0) return Strings::EMPTY;
+        if (versz == 0) return "";
 
         std::vector<char> verbuf;
         verbuf.resize(versz);
 
-        if (!GetFileVersionInfoW(path.c_str(), 0, static_cast<DWORD>(verbuf.size()), &verbuf[0])) return Strings::EMPTY;
+        if (!GetFileVersionInfoW(path.c_str(), 0, static_cast<DWORD>(verbuf.size()), &verbuf[0])) return "";
 
         void* rootblock;
         UINT rootblocksize;
-        if (!VerQueryValueW(&verbuf[0], L"\\", &rootblock, &rootblocksize)) return Strings::EMPTY;
+        if (!VerQueryValueW(&verbuf[0], L"\\", &rootblock, &rootblocksize)) return "";
 
         auto rootblock_ffi = static_cast<VS_FIXEDFILEINFO*>(rootblock);
 
@@ -145,6 +154,9 @@ namespace vcpkg::Metrics
                                static_cast<int>(HIWORD(rootblock_ffi->dwProductVersionMS)),
                                static_cast<int>(LOWORD(rootblock_ffi->dwProductVersionMS)),
                                static_cast<int>(HIWORD(rootblock_ffi->dwProductVersionLS)));
+#else
+        return "unknown";
+#endif
     }
 
     struct MetricMessage
@@ -223,9 +235,13 @@ namespace vcpkg::Metrics
 
     std::wstring get_SQM_user()
     {
+#if defined(_WIN32)
         auto hkcu_sqmclient =
             System::get_registry_string(HKEY_CURRENT_USER, LR"(Software\Microsoft\SQMClient)", L"UserId");
         return hkcu_sqmclient.value_or(L"{}");
+#else
+        return L"{}";
+#endif
     }
 
     void Metrics::set_user_information(const std::string& user_id, const std::string& first_use_time)
@@ -264,6 +280,7 @@ namespace vcpkg::Metrics
 
     void Metrics::upload(const std::string& payload)
     {
+#if defined(_WIN32)
         HINTERNET connect = nullptr, request = nullptr;
         BOOL results = FALSE;
 
@@ -344,18 +361,12 @@ namespace vcpkg::Metrics
         if (request) WinHttpCloseHandle(request);
         if (connect) WinHttpCloseHandle(connect);
         if (session) WinHttpCloseHandle(session);
-    }
-
-    static fs::path get_bindir()
-    {
-        wchar_t buf[_MAX_PATH];
-        const int bytes = GetModuleFileNameW(nullptr, buf, _MAX_PATH);
-        if (bytes == 0) std::abort();
-        return fs::path(buf, buf + bytes);
+#endif
     }
 
     void Metrics::flush()
     {
+#if defined(_WIN32)
         const std::string payload = g_metricmessage.format_event_data_template();
         if (g_should_print_metrics) std::cerr << payload << "\n";
         if (!g_should_send_metrics) return;
@@ -373,14 +384,14 @@ namespace vcpkg::Metrics
         if (true)
         {
             const fs::path exe_path = [&fs]() -> fs::path {
-                auto vcpkgdir = get_bindir().parent_path();
+                auto vcpkgdir = System::get_exe_path_of_current_process().parent_path();
                 auto path = vcpkgdir / "vcpkgmetricsuploader.exe";
                 if (fs.exists(path)) return path;
 
                 path = vcpkgdir / "scripts" / "vcpkgmetricsuploader.exe";
                 if (fs.exists(path)) return path;
 
-                return Strings::WEMPTY;
+                return "";
             }();
 
             std::error_code ec;
@@ -391,8 +402,9 @@ namespace vcpkg::Metrics
         const fs::path vcpkg_metrics_txt_path = temp_folder_path / ("vcpkg" + generate_random_UUID() + ".txt");
         fs.write_contents(vcpkg_metrics_txt_path, payload);
 
-        const std::wstring cmd_line =
-            Strings::wformat(L"start %s %s", temp_folder_path_exe.native(), vcpkg_metrics_txt_path.native());
+        const std::string cmd_line =
+            Strings::format("start %s %s", temp_folder_path_exe.u8string(), vcpkg_metrics_txt_path.u8string());
         System::cmd_execute_clean(cmd_line);
+#endif
     }
 }

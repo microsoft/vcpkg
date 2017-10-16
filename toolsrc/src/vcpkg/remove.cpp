@@ -21,7 +21,7 @@ namespace vcpkg::Remove
     {
         auto& fs = paths.get_filesystem();
         auto spghs = status_db->find_all(spec.name(), spec.triplet());
-        const auto core_pkg = **status_db->find(spec.name(), spec.triplet(), Strings::EMPTY);
+        const auto core_pkg = **status_db->find(spec.name(), spec.triplet(), "");
 
         for (auto&& spgh : spghs)
         {

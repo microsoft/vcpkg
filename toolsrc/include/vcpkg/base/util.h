@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <map>
 #include <mutex>
 #include <utility>
@@ -98,7 +99,7 @@ namespace vcpkg::Util
     }
 
     template<class K, class V, class Container, class Func>
-    void group_by(const Container& cont, _Inout_ std::map<K, std::vector<const V*>>* output, Func&& f)
+    void group_by(const Container& cont, std::map<K, std::vector<const V*>>* output, Func&& f)
     {
         for (const V& element : cont)
         {

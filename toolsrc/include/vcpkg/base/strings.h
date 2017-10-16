@@ -16,15 +16,11 @@ namespace vcpkg::Strings::details
 
     inline const char* to_printf_arg(const char* s) { return s; }
 
-    inline int to_printf_arg(const int s) { return s; }
-
-    inline long long to_printf_arg(const long long s) { return s; }
-
-    inline unsigned long to_printf_arg(const unsigned long s) { return s; }
-
-    inline size_t to_printf_arg(const size_t s) { return s; }
-
-    inline double to_printf_arg(const double s) { return s; }
+    template<class T, class = std::enable_if_t<std::is_arithmetic<T>::value>>
+    inline T to_printf_arg(T s)
+    {
+        return s;
+    }
 
     std::string format_internal(const char* fmtstr, ...);
 
@@ -37,9 +33,6 @@ namespace vcpkg::Strings::details
 
 namespace vcpkg::Strings
 {
-    static constexpr const char* EMPTY = "";
-    static constexpr const wchar_t* WEMPTY = L"";
-
     template<class... Args>
     std::string format(const char* fmtstr, const Args&... args)
     {
@@ -62,7 +55,7 @@ namespace vcpkg::Strings
 
     bool case_insensitive_ascii_contains(const std::string& s, const std::string& pattern);
 
-    bool case_insensitive_ascii_compare(const CStringView left, const CStringView right);
+    bool case_insensitive_ascii_equals(const CStringView left, const CStringView right);
 
     std::string ascii_to_lowercase(const std::string& input);
 

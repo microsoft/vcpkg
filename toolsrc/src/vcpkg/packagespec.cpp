@@ -38,7 +38,7 @@ namespace vcpkg
                 for (auto&& feature : spec->features)
                     f_specs.push_back(FeatureSpec{pspec, feature});
 
-                if (spec->features.empty()) f_specs.push_back(FeatureSpec{pspec, Strings::EMPTY});
+                if (spec->features.empty()) f_specs.push_back(FeatureSpec{pspec, ""});
             }
             else
             {
@@ -56,7 +56,7 @@ namespace vcpkg
         std::vector<FeatureSpec> ret;
         for (auto&& spec : specs)
         {
-            ret.emplace_back(spec.package_spec, Strings::EMPTY);
+            ret.emplace_back(spec.package_spec, "");
             for (auto&& feature : spec.features)
                 ret.emplace_back(spec.package_spec, feature);
         }

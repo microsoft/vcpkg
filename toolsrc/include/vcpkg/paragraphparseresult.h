@@ -26,8 +26,11 @@ namespace vcpkg
     ParagraphParseResult to_paragraph_parse_result(std::error_code ec);
 }
 
-// Enable implicit conversion to std::error_code
-template<>
-struct std::is_error_code_enum<vcpkg::ParagraphParseResult> : ::std::true_type
+namespace std
 {
-};
+    // Enable implicit conversion to std::error_code
+    template<>
+    struct is_error_code_enum<vcpkg::ParagraphParseResult> : ::std::true_type
+    {
+    };
+}

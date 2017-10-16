@@ -7,6 +7,7 @@ using namespace std;
 
 namespace vcpkg::CoffFileReader
 {
+#if defined(_WIN32)
     template<class T>
     static T reinterpret_bytes(const char* data)
     {
@@ -24,7 +25,7 @@ namespace vcpkg::CoffFileReader
     template<class T>
     static T peek_value_from_stream(fstream& fs)
     {
-        const fpos_t original_pos = fs.tellg().seekpos();
+        const std::streampos original_pos = fs.tellg();
         T data;
         fs.read(reinterpret_cast<char*>(&data), sizeof data);
         fs.seekg(original_pos);
@@ -305,4 +306,8 @@ namespace vcpkg::CoffFileReader
 
         return {std::vector<MachineType>(machine_types.cbegin(), machine_types.cend())};
     }
+#else
+    DllInfo read_dll(const fs::path& path) { exit(-1); }
+    LibInfo read_lib(const fs::path& path) { exit(-1); }
+#endif
 }

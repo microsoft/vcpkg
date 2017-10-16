@@ -17,6 +17,7 @@ namespace vcpkg::Commands::Edit
         };
 
         std::vector<fs::path> output;
+#if defined(_WIN32)
         for (auto&& keypath : REGKEYS)
         {
             const Optional<std::wstring> code_installpath =
@@ -28,6 +29,7 @@ namespace vcpkg::Commands::Edit
                 output.push_back(install_path / "Code.exe");
             }
         }
+#endif
         return output;
     }
 
@@ -72,7 +74,7 @@ namespace vcpkg::Commands::Edit
         Checks::check_exit(VCPKG_LINE_INFO, fs.is_directory(portpath), R"(Could not find port named "%s")", port_name);
 
         std::vector<fs::path> candidate_paths;
-        const std::vector<fs::path> from_path = Files::find_from_PATH(L"EDITOR");
+        const std::vector<fs::path> from_path = Files::find_from_PATH("EDITOR");
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
         candidate_paths.push_back(System::get_program_files_platform_bitness() / VS_CODE_INSIDERS);
         candidate_paths.push_back(System::get_program_files_32_bit() / VS_CODE_INSIDERS);
@@ -98,13 +100,16 @@ namespace vcpkg::Commands::Edit
         {
             const auto buildtrees_current_dir = paths.buildtrees / port_name;
 
-            const std::wstring cmd_line =
-                Strings::wformat(LR"("%s" "%s" -n)", env_editor, buildtrees_current_dir.native());
+            const auto cmd_line =
+                Strings::format(R"("%s" "%s" -n)", env_editor.u8string(), buildtrees_current_dir.u8string());
             Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute(cmd_line));
         }
 
-        const std::wstring cmd_line = Strings::wformat(
-            LR"("%s" "%s" "%s" -n)", env_editor, portpath.native(), (portpath / "portfile.cmake").native());
+        const auto cmd_line = Strings::format(
+            R"("%s" "%s" "%s" -n)",
+            env_editor.u8string(),
+            portpath.u8string(),
+            (portpath / "portfile.cmake").u8string());
         Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute(cmd_line));
     }
 }

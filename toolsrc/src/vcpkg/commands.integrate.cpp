@@ -8,12 +8,6 @@
 
 namespace vcpkg::Commands::Integrate
 {
-    static const std::array<fs::path, 2> OLD_SYSTEM_TARGET_FILES = {
-        System::get_program_files_32_bit() / "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.nuget.targets",
-        System::get_program_files_32_bit() / "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.system.targets"};
-    static const fs::path SYSTEM_WIDE_TARGETS_FILE =
-        System::get_program_files_32_bit() / "MSBuild/Microsoft.Cpp/v4.0/V140/ImportBefore/Default/vcpkg.system.props";
-
     static std::string create_appdata_targets_shortcut(const std::string& target_path) noexcept
     {
         return Strings::format(R"###(
@@ -111,6 +105,7 @@ namespace vcpkg::Commands::Integrate
         NO
     };
 
+#if defined(_WIN32)
     static ElevationPromptChoice elevated_cmd_execute(const std::string& param)
     {
         SHELLEXECUTEINFOW sh_ex_info = {0};
@@ -138,16 +133,29 @@ namespace vcpkg::Commands::Integrate
         CloseHandle(sh_ex_info.hProcess);
         return ElevationPromptChoice::YES;
     }
+#endif
 
+#if defined(_WIN32)
     static fs::path get_appdata_targets_path()
     {
         static const fs::path LOCAL_APP_DATA =
-            fs::path(System::get_environment_variable(L"LOCALAPPDATA").value_or_exit(VCPKG_LINE_INFO));
+            fs::path(System::get_environment_variable("LOCALAPPDATA").value_or_exit(VCPKG_LINE_INFO));
         return LOCAL_APP_DATA / "vcpkg" / "vcpkg.user.targets";
     }
+#endif
 
+#if defined(_WIN32)
     static void integrate_install(const VcpkgPaths& paths)
     {
+        static const std::array<fs::path, 2> OLD_SYSTEM_TARGET_FILES = {
+            System::get_program_files_32_bit() /
+                "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.nuget.targets",
+            System::get_program_files_32_bit() /
+                "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.system.targets"};
+        static const fs::path SYSTEM_WIDE_TARGETS_FILE =
+            System::get_program_files_32_bit() /
+            "MSBuild/Microsoft.Cpp/v4.0/V140/ImportBefore/Default/vcpkg.system.props";
+
         auto& fs = paths.get_filesystem();
 
         // TODO: This block of code should eventually be removed
@@ -262,6 +270,7 @@ CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s")",
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
+#endif
 
     static void integrate_project(const VcpkgPaths& paths)
     {
@@ -286,10 +295,10 @@ CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s")",
         fs.write_contents(nuspec_file_path, create_nuspec_file_contents(paths.root, nuget_id, nupkg_version));
 
         // Using all forward slashes for the command line
-        const std::wstring cmd_line = Strings::wformat(LR"("%s" pack -OutputDirectory "%s" "%s" > nul)",
-                                                       nuget_exe.native(),
-                                                       buildsystems_dir.native(),
-                                                       nuspec_file_path.native());
+        const std::string cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s" > nul)",
+                                                     nuget_exe.u8string(),
+                                                     buildsystems_dir.u8string(),
+                                                     nuspec_file_path.u8string());
 
         const int exit_code = System::cmd_execute_clean(cmd_line);
 
@@ -325,6 +334,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         args.check_exact_arg_count(1, EXAMPLE);
         args.check_and_get_optional_command_arguments({});
 
+#if defined(_WIN32)
         if (args.command_arguments[0] == "install")
         {
             return integrate_install(paths);
@@ -337,6 +347,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         {
             return integrate_project(paths);
         }
+#endif
 
         Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown parameter %s for integrate", args.command_arguments[0]);
     }

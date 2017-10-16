@@ -284,13 +284,10 @@ namespace vcpkg::PostBuildLint
         std::vector<fs::path> dlls_with_no_exports;
         for (const fs::path& dll : dlls)
         {
-            const std::wstring cmd_line =
-                Strings::wformat(LR"("%s" /exports "%s")", dumpbin_exe.native(), dll.native());
+            const std::string cmd_line =
+                Strings::format(R"("%s" /exports "%s")", dumpbin_exe.u8string(), dll.u8string());
             System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
-            Checks::check_exit(VCPKG_LINE_INFO,
-                               ec_data.exit_code == 0,
-                               "Running command:\n   %s\n failed",
-                               Strings::to_utf8(cmd_line));
+            Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line);
 
             if (ec_data.output.find("ordinal hint RVA      name") == std::string::npos)
             {
@@ -321,13 +318,10 @@ namespace vcpkg::PostBuildLint
         std::vector<fs::path> dlls_with_improper_uwp_bit;
         for (const fs::path& dll : dlls)
         {
-            const std::wstring cmd_line =
-                Strings::wformat(LR"("%s" /headers "%s")", dumpbin_exe.native(), dll.native());
+            const std::string cmd_line =
+                Strings::format(R"("%s" /headers "%s")", dumpbin_exe.u8string(), dll.u8string());
             System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
-            Checks::check_exit(VCPKG_LINE_INFO,
-                               ec_data.exit_code == 0,
-                               "Running command:\n   %s\n failed",
-                               Strings::to_utf8(cmd_line));
+            Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line);
 
             if (ec_data.output.find("App Container") == std::string::npos)
             {
@@ -599,13 +593,10 @@ namespace vcpkg::PostBuildLint
 
         for (const fs::path& lib : libs)
         {
-            const std::wstring cmd_line =
-                Strings::wformat(LR"("%s" /directives "%s")", dumpbin_exe.native(), lib.native());
+            const std::string cmd_line =
+                Strings::format(R"("%s" /directives "%s")", dumpbin_exe.u8string(), lib.u8string());
             System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
-            Checks::check_exit(VCPKG_LINE_INFO,
-                               ec_data.exit_code == 0,
-                               "Running command:\n   %s\n failed",
-                               Strings::to_utf8(cmd_line));
+            Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line);
 
             for (const BuildType& bad_build_type : bad_build_types)
             {
@@ -655,13 +646,9 @@ namespace vcpkg::PostBuildLint
 
         for (const fs::path& dll : dlls)
         {
-            const std::wstring cmd_line =
-                Strings::wformat(LR"("%s" /dependents "%s")", dumpbin_exe.native(), dll.native());
+            const auto cmd_line = Strings::format(R"("%s" /dependents "%s")", dumpbin_exe.u8string(), dll.u8string());
             System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
-            Checks::check_exit(VCPKG_LINE_INFO,
-                               ec_data.exit_code == 0,
-                               "Running command:\n   %s\n failed",
-                               Strings::to_utf8(cmd_line));
+            Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line);
 
             for (const OutdatedDynamicCrt& outdated_crt : get_outdated_dynamic_crts("v141"))
             {
@@ -696,8 +683,8 @@ namespace vcpkg::PostBuildLint
         std::vector<fs::path> misplaced_files = fs.get_files_non_recursive(dir);
         Util::unstable_keep_if(misplaced_files, [&fs](const fs::path& path) {
             const std::string filename = path.filename().generic_string();
-            if (Strings::case_insensitive_ascii_compare(filename.c_str(), "CONTROL") ||
-                Strings::case_insensitive_ascii_compare(filename.c_str(), "BUILD_INFO"))
+            if (Strings::case_insensitive_ascii_equals(filename.c_str(), "CONTROL") ||
+                Strings::case_insensitive_ascii_equals(filename.c_str(), "BUILD_INFO"))
                 return false;
             return !fs.is_directory(path);
         });

@@ -43,14 +43,17 @@ namespace vcpkg::Dependencies
     bool operator==(const ClusterPtr& l, const ClusterPtr& r) { return l.ptr == r.ptr; }
 }
 
-template<>
-struct std::hash<vcpkg::Dependencies::ClusterPtr>
+namespace std
 {
-    size_t operator()(const vcpkg::Dependencies::ClusterPtr& value) const
+    template<>
+    struct hash<vcpkg::Dependencies::ClusterPtr>
     {
-        return std::hash<vcpkg::PackageSpec>()(value.ptr->spec);
-    }
-};
+        size_t operator()(const vcpkg::Dependencies::ClusterPtr& value) const
+        {
+            return std::hash<vcpkg::PackageSpec>()(value.ptr->spec);
+        }
+    };
+}
 
 namespace vcpkg::Dependencies
 {

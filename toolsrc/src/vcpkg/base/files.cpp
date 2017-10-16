@@ -163,7 +163,12 @@ namespace vcpkg::Files
         virtual void write_contents(const fs::path& file_path, const std::string& data) override
         {
             FILE* f = nullptr;
+#if defined(_WIN32)
             auto ec = _wfopen_s(&f, file_path.native().c_str(), L"wb");
+#else
+            f = fopen(file_path.native().c_str(), "wb");
+            int ec = f != nullptr ? 0 : 1;
+#endif
             Checks::check_exit(
                 VCPKG_LINE_INFO, ec == 0, "Error: Could not open file for writing: %s", file_path.u8string().c_str());
             auto count = fwrite(data.data(), sizeof(data[0]), data.size(), f);
@@ -194,9 +199,13 @@ namespace vcpkg::Files
         System::println();
     }
 
-    std::vector<fs::path> find_from_PATH(const std::wstring& name)
+    std::vector<fs::path> find_from_PATH(const std::string& name)
     {
-        const std::wstring cmd = Strings::wformat(L"where.exe %s", name);
+#if defined(_WIN32)
+        const std::string cmd = Strings::format("where.exe %s", name);
+#else
+        const std::string cmd = Strings::format("which %s", name);
+#endif
         auto out = System::cmd_execute_and_capture_output(cmd);
         if (out.exit_code != 0)
         {

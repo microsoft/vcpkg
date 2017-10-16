@@ -20,8 +20,17 @@ namespace vcpkg::Commands::Version
 #ifndef NDEBUG
             + std::string("-debug")
 #endif
-            + std::string(Metrics::get_compiled_metrics_enabled() ? Strings::EMPTY : "-external");
+            + std::string(Metrics::get_compiled_metrics_enabled() ? "" : "-external");
         return S_VERSION;
+    }
+
+    static int scan3(const char* input, const char* pattern, int* a, int* b, int* c)
+    {
+#if defined(_WIN32)
+        return sscanf_s(input, pattern, a, b, c);
+#else
+        return sscanf(input, pattern, a, b, c);
+#endif
     }
 
     void warn_if_vcpkg_version_mismatch(const VcpkgPaths& paths)
@@ -30,10 +39,10 @@ namespace vcpkg::Commands::Version
         if (const auto version_contents = version_file.get())
         {
             int maj1, min1, rev1;
-            const auto num1 = sscanf_s(version_contents->c_str(), "\"%d.%d.%d\"", &maj1, &min1, &rev1);
+            const auto num1 = scan3(version_contents->c_str(), "\"%d.%d.%d\"", &maj1, &min1, &rev1);
 
             int maj2, min2, rev2;
-            const auto num2 = sscanf_s(Version::version().c_str(), "%d.%d.%d-", &maj2, &min2, &rev2);
+            const auto num2 = scan3(Version::version().c_str(), "%d.%d.%d-", &maj2, &min2, &rev2);
 
             if (num1 == 3 && num2 == 3)
             {

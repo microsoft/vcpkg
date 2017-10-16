@@ -4,7 +4,6 @@
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/strings.h>
 
-#include <Windows.h>
 
 namespace vcpkg::System
 {
@@ -18,13 +17,13 @@ namespace vcpkg::System
         std::string output;
     };
 
-    int cmd_execute_clean(const CWStringView cmd_line);
+    int cmd_execute_clean(const CStringView cmd_line);
 
-    int cmd_execute(const CWStringView cmd_line);
+    int cmd_execute(const CStringView cmd_line);
 
-    ExitCodeAndOutput cmd_execute_and_capture_output(const CWStringView cmd_line);
+    ExitCodeAndOutput cmd_execute_and_capture_output(const CStringView cmd_line);
 
-    std::wstring create_powershell_script_cmd(const fs::path& script_path, const CWStringView args = Strings::WEMPTY);
+    std::string create_powershell_script_cmd(const fs::path& script_path, const CStringView args = "");
 
     enum class Color
     {
@@ -63,9 +62,11 @@ namespace vcpkg::System
         return System::println(c, Strings::format(messageTemplate, messageArg1, messageArgs...));
     }
 
-    Optional<std::wstring> get_environment_variable(const CWStringView varname) noexcept;
+    Optional<std::string> get_environment_variable(const CStringView varname) noexcept;
 
-    Optional<std::wstring> get_registry_string(HKEY base, const CWStringView subkey, const CWStringView valuename);
+    Optional<std::wstring> get_registry_string(void* base_hkey,
+                                               const CWStringView subkey,
+                                               const CWStringView valuename);
 
     enum class CPUArchitecture
     {

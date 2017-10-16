@@ -115,7 +115,10 @@ namespace vcpkg::Dependencies
         RequestType request_type;
     };
 
-    __interface PortFileProvider { virtual const SourceControlFile& get_control_file(const std::string& spec) const; };
+    struct PortFileProvider
+    {
+        virtual const SourceControlFile& get_control_file(const std::string& spec) const = 0;
+    };
 
     struct MapPortFile : Util::ResourceBase, PortFileProvider
     {
