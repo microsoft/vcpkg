@@ -44,30 +44,6 @@ namespace vcpkg::Strings::details
 
         return output;
     }
-
-    std::wstring wformat_internal(const wchar_t* fmtstr, ...)
-    {
-        va_list args;
-        va_start(args, fmtstr);
-
-#if defined(_WIN32)
-        const int sz = _vscwprintf_l(fmtstr, c_locale(), args);
-#else
-        const int sz = vswprintf(nullptr, 0, fmtstr, args);
-#endif
-        Checks::check_exit(VCPKG_LINE_INFO, sz > 0);
-
-        std::wstring output(sz, L'\0');
-
-#if defined(_WIN32)
-        _vsnwprintf_s_l(&output.at(0), output.size() + 1, output.size(), fmtstr, c_locale(), args);
-#else
-        vswprintf(&output.at(0), output.size() + 1, fmtstr, args);
-#endif
-        va_end(args);
-
-        return output;
-    }
 }
 
 namespace vcpkg::Strings
