@@ -48,18 +48,18 @@ namespace vcpkg::Strings
 
     bool case_insensitive_ascii_starts_with(const std::string& s, const std::string& pattern);
 
-    template<class Container, class Transformer, class CharType>
-    std::basic_string<CharType> join(const CharType* delimiter, const Container& v, Transformer transformer)
+    template<class Container, class Transformer>
+    std::string join(const char* delimiter, const Container& v, Transformer transformer)
     {
         const auto begin = v.begin();
         const auto end = v.end();
 
         if (begin == end)
         {
-            return std::basic_string<CharType>();
+            return std::string();
         }
 
-        std::basic_string<CharType> output;
+        std::string output;
         output.append(transformer(*begin));
         for (auto it = std::next(begin); it != end; ++it)
         {
@@ -69,8 +69,8 @@ namespace vcpkg::Strings
 
         return output;
     }
-    template<class Container, class CharType>
-    std::basic_string<CharType> join(const CharType* delimiter, const Container& v)
+    template<class Container>
+    std::string join(const char* delimiter, const Container& v)
     {
         using Element = decltype(*v.begin());
         return join(delimiter, v, [](const Element& x) -> const Element& { return x; });
