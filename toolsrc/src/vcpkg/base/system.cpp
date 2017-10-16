@@ -366,9 +366,7 @@ namespace vcpkg::System
         return Strings::to_utf8(ret);
     }
 #else
-    Optional<std::wstring> get_registry_string(void* base_hkey,
-                                               const CWStringView sub_key,
-                                               const CWStringView valuename)
+    Optional<std::string> get_registry_string(void* base_hkey, const CStringView sub_key, const CStringView valuename)
     {
         return nullopt;
     }
