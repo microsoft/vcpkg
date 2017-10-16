@@ -93,16 +93,21 @@ namespace vcpkg::Commands::Autocomplete
 
         struct CommandEntry
         {
+            constexpr CommandEntry(const CStringView& regex, const CommandStructure& structure)
+                : regex(regex), structure(structure)
+            {
+            }
+
             CStringView regex;
             const CommandStructure& structure;
         };
-        static constexpr CommandEntry commands[] = {
-            {R"###(^install\s(.*\s|)(\S*)$)###", Install::COMMAND_STRUCTURE},
-            {R"###(^edit\s(.*\s|)(\S*)$)###", Edit::COMMAND_STRUCTURE},
-            {R"###(^remove\s(.*\s|)(\S*)$)###", Remove::COMMAND_STRUCTURE},
+        static constexpr CommandEntry COMMANDS[] = {
+            CommandEntry{R"###(^install\s(.*\s|)(\S*)$)###", Install::COMMAND_STRUCTURE},
+            CommandEntry{R"###(^edit\s(.*\s|)(\S*)$)###", Edit::COMMAND_STRUCTURE},
+            CommandEntry{R"###(^remove\s(.*\s|)(\S*)$)###", Remove::COMMAND_STRUCTURE},
         };
 
-        for (auto&& command : commands)
+        for (auto&& command : COMMANDS)
         {
             if (std::regex_match(to_autocomplete, match, std::regex{command.regex.c_str()}))
             {
