@@ -70,16 +70,22 @@ configure_qt(
 
 install_qt()
 
+#vcpkg_apply_patches(
+#    SOURCE_PATH ${CURRENT_PACKAGES_DIR}/share/qt5
+#    PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-debug-qmakespecs.patch"
+#)
+
 file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/share/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+#file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+#file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(GLOB BINARY_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*.exe")
 file(INSTALL ${BINARY_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qt5)
 file(REMOVE ${BINARY_TOOLS})
 file(GLOB BINARY_TOOLS "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
+file(INSTALL ${BINARY_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/qt5)
 file(REMOVE ${BINARY_TOOLS})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 vcpkg_execute_required_process(
     COMMAND ${PYTHON3} ${CMAKE_CURRENT_LIST_DIR}/fixcmake.py
@@ -88,22 +94,5 @@ vcpkg_execute_required_process(
 )
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-
-#---------------------------------------------------------------------------
-# Qt5Bootstrap: a release-only dependency
-#---------------------------------------------------------------------------
-# Remove release-only Qt5Bootstrap.lib from debug folders:
-#file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.lib)
-#file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.prl)
-# Above approach does not work: 
-#   check_matching_debug_and_release_binaries(dbg_libs, rel_libs)
-# requires the two sets to be of equal size!
-# Alt. approach, create dummy folder instead:
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/dont-use)
-file(COPY ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/dont-use)
-file(COPY ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.prl DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/dont-use)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.lib)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.prl)
-#---------------------------------------------------------------------------
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.LGPLv3 DESTINATION  ${CURRENT_PACKAGES_DIR}/share/qt5base RENAME copyright)

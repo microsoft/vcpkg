@@ -1,0 +1,4 @@
+Source: qt5doc
+Version: 5.9.2-0
+Description: Qt5 Document Creation Module
+Build-Depends: qt5base

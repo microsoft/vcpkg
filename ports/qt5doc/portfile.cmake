@@ -13,15 +13,15 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 
-set(SRCDIR_NAME "qttools-5.9.2")
-set(ARCHIVE_NAME "qttools-opensource-src-5.9.2")
+set(SRCDIR_NAME "qtdoc-5.9.2")
+set(ARCHIVE_NAME "qtdoc-opensource-src-5.9.2")
 set(ARCHIVE_EXTENSION ".tar.xz")
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${SRCDIR_NAME})
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "http://download.qt.io/official_releases/qt/5.9/5.9.2/submodules/${ARCHIVE_NAME}${ARCHIVE_EXTENSION}"
     FILENAME ${SRCDIR_NAME}${ARCHIVE_EXTENSION}
-    SHA512 afce063e167de96dfa264cfd27dc8d80c23ef091a30f4f8119575cae83f39716c3b332427630b340f518b82d6396cca1893f28e00f3c667ba201d7e4fc2aefe1
+    SHA512 9352856d5ef48afa28771f05cbf5bc7b3a49181b4696bd018a8294cbfc3a6d25de6625830f0ba776689deb098d7eb549dd19b362cbb5ecfda1b2d6d2e15ef43f
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 if (EXISTS ${CURRENT_BUILDTREES_DIR}/src/${ARCHIVE_NAME})
@@ -32,25 +32,13 @@ endif()
 set(ENV{_CL_} "/utf-8")
 
 vcpkg_configure_qmake_debug(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${SRCDIR_NAME} 
+    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${SRCDIR_NAME}
 )
 
 vcpkg_build_qmake_debug()
 
 vcpkg_configure_qmake_release(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${SRCDIR_NAME} 
+    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${SRCDIR_NAME}
 )
 
 vcpkg_build_qmake_release()
-
-file(GLOB BINARY_TOOLS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/*.exe")
-file(INSTALL ${BINARY_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qt5)
-file(REMOVE ${BINARY_TOOLS})
-file(GLOB BINARY_TOOLS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/*.exe")
-file(INSTALL ${BINARY_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/qt5)
-file(REMOVE ${BINARY_TOOLS})
-
-file(INSTALL ${SOURCE_PATH}/LICENSE.LGPL3 DESTINATION  ${CURRENT_PACKAGES_DIR}/share/qt5tools RENAME copyright)
-
-#touch an empty include file - qt tools does not create any and this is an error in vcpkg
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/.empty)

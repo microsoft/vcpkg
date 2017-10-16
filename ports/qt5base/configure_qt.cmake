@@ -29,10 +29,11 @@ function(configure_qt)
             -debug
             -prefix ${CURRENT_PACKAGES_DIR}/debug
             -hostbindir ${CURRENT_PACKAGES_DIR}/debug/tools/qt5
-            -archdatadir ${CURRENT_PACKAGES_DIR}/debug/share/qt5
-            -datadir ${CURRENT_PACKAGES_DIR}/debug/share/qt5
+            -archdatadir ${CURRENT_PACKAGES_DIR}/share/qt5/debug
+            -datadir ${CURRENT_PACKAGES_DIR}/share/qt5/debug
             -plugindir ${CURRENT_PACKAGES_DIR}/debug/plugins
             -qmldir ${CURRENT_PACKAGES_DIR}/debug/qml
+            -headerdir ${CURRENT_PACKAGES_DIR}/share/qt5/debug/include
             -I ${CURRENT_INSTALLED_DIR}/include
             -L ${CURRENT_INSTALLED_DIR}/debug/lib
             -platform ${PLATFORM}

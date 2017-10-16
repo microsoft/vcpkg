@@ -1,0 +1,62 @@
+diff --git a/mkspecs/modules/qt_lib_gui_private.pri b/mkspecs/modules/qt_lib_gui_private.pri
+index 5473e78..c5e7448 100644
+--- a/mkspecs/modules/qt_lib_gui_private.pri
++++ b/mkspecs/modules/qt_lib_gui_private.pri
+@@ -11,4 +11,9 @@ QT.gui_private.enabled_features = direct2d directwrite directwrite2 freetype gif
+ QT.gui_private.disabled_features = xcb accessibility-atspi-bridge angle_d3d11_qdtd directfb egl egl_x11 eglfs eglfs_brcm eglfs_egldevice eglfs_gbm eglfs_mali eglfs_viv eglfs_viv_wl evdev fontconfig integrityfb integrityhid kms libinput libinput-axis-api linuxfb mirclient mtdev system-freetype system-xcb tslib vnc xkbcommon-evdev xlib
+ QMAKE_LIBS_HARFBUZZ = -lharfbuzz
+ QMAKE_LIBS_LIBJPEG = -ljpeg
+-QMAKE_LIBS_LIBPNG = -llibpng16
++CONFIG(release, debug|release) {
++  QMAKE_LIBS_LIBPNG = -llibpng16
++}
++CONFIG(debug, debug|release) {
++  QMAKE_LIBS_LIBPNG = -llibpng16d
++}
+diff --git a/mkspecs/qconfig.pri b/mkspecs/qconfig.pri
+index 2af37df..646b8e5 100644
+--- a/mkspecs/qconfig.pri
++++ b/mkspecs/qconfig.pri
+@@ -2,8 +2,14 @@ QT_ARCH = x86_64
+ QT_BUILDABI = x86_64-little_endian-lp64
+ QT.global.enabled_features = shared c++11 concurrent
+ QT.global.disabled_features = cross_compile framework rpath appstore-compliant debug_and_release simulator_and_device build_all c++14 c++1z pkg-config force_asserts separate_debug_info static
+-QT_CONFIG += shared release c++11 concurrent dbus no-pkg-config stl
+-CONFIG += shared release no_plugin_manifest
++CONFIG(release, debug|release) {
++  QT_CONFIG += shared release c++11 concurrent dbus no-pkg-config stl
++  CONFIG += shared release no_plugin_manifest
++}
++CONFIG(debug, debug|release) {
++  QT_CONFIG += shared debug c++11 concurrent dbus no-pkg-config release_tools stl
++  CONFIG += shared debug no_plugin_manifest
++}
+ QT_VERSION = 5.9.2
+ QT_MAJOR_VERSION = 5
+ QT_MINOR_VERSION = 9
+diff --git a/mkspecs/qmodule.pri b/mkspecs/qmodule.pri
+index 3e213d4..00a37ca 100644
+--- a/mkspecs/qmodule.pri
++++ b/mkspecs/qmodule.pri
+@@ -1,10 +1,17 @@
+ EXTRA_INCLUDEPATH += C:/vcpkg/installed/x64-windows/include
+-EXTRA_LIBDIR += C:/vcpkg/installed/x64-windows/lib
++CONFIG(release, debug|release) {
++  EXTRA_LIBDIR += C:/vcpkg/installed/x64-windows/lib
++  QT.global_private.enabled_features = alloca_malloc_h alloca sse2 dbus gui network qml-debug sql system-zlib testlib widgets xml
++  QT.global_private.disabled_features = alloca_h android-style-assets private_tests dbus-linked libudev posix_fallocate reduce_exports reduce_relocations release_tools stack-protector-strong
++  QMAKE_LIBS_ZLIB = -lzlib
++}
++CONFIG(debug, debug|release) {
++  QT.global_private.enabled_features = alloca_malloc_h alloca sse2 dbus gui network qml-debug release_tools sql system-zlib testlib widgets xml
++  QT.global_private.disabled_features = alloca_h android-style-assets private_tests dbus-linked libudev posix_fallocate reduce_exports reduce_relocations stack-protector-strong
++  QMAKE_LIBS_ZLIB = -lzlibd
++}
+ QT_CPU_FEATURES.x86_64 = sse sse2
+-QT.global_private.enabled_features = alloca_malloc_h alloca sse2 dbus gui network qml-debug sql system-zlib testlib widgets xml
+-QT.global_private.disabled_features = alloca_h android-style-assets private_tests dbus-linked libudev posix_fallocate reduce_exports reduce_relocations release_tools stack-protector-strong
+ QT_COORD_TYPE = double
+-QMAKE_LIBS_ZLIB = -lzlib
+ CONFIG += sse2 sse3 ssse3 sse4_1 sse4_2 avx avx2 compile_examples f16c largefile msvc_mp precompile_header
+ QT_BUILD_PARTS += libs tools
+ QT_HOST_CFLAGS_DBUS += 
