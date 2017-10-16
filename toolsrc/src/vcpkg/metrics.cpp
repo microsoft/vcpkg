@@ -262,17 +262,6 @@ namespace vcpkg::Metrics
 
     void Metrics::track_metric(const std::string& name, double value) { g_metricmessage.track_metric(name, value); }
 
-    void Metrics::track_property(const std::string& name, const std::wstring& value)
-    {
-        // Note: this is not valid UTF-16 -> UTF-8, it just yields a close enough approximation for our purposes.
-        std::string converted_value;
-        converted_value.resize(value.size());
-        std::transform(
-            value.begin(), value.end(), converted_value.begin(), [](wchar_t ch) { return static_cast<char>(ch); });
-
-        g_metricmessage.track_property(name, converted_value);
-    }
-
     void Metrics::track_property(const std::string& name, const std::string& value)
     {
         g_metricmessage.track_property(name, value);

@@ -15,7 +15,6 @@ namespace vcpkg::Metrics
 
         void track_metric(const std::string& name, double value);
         void track_property(const std::string& name, const std::string& value);
-        void track_property(const std::string& name, const std::wstring& value);
 
         void upload(const std::string& payload);
         void flush();
