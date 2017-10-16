@@ -70,15 +70,8 @@ configure_qt(
 
 install_qt()
 
-#vcpkg_apply_patches(
-#    SOURCE_PATH ${CURRENT_PACKAGES_DIR}/share/qt5
-#    PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-debug-qmakespecs.patch"
-#)
-
 file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/share/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
-#file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-#file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(GLOB BINARY_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*.exe")
 file(INSTALL ${BINARY_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qt5)

@@ -38,4 +38,7 @@ function(vcpkg_configure_qmake_debug)
         LOGNAME config-${TARGET_TRIPLET}-dbg
     )
     message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
+    unset(QMAKE_COMMAND)
+    unset(QMAKE_COMMAND PARENT_SCOPE)
+    unset(QMAKE_COMMAND CACHE)
 endfunction()

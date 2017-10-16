@@ -10,7 +10,6 @@ function(install_qt)
     vcpkg_find_acquire_program(JOM)
     vcpkg_find_acquire_program(PYTHON3)
     get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
-
     set(ENV{PATH} "${PYTHON3_EXE_PATH};$ENV{PATH}")
     set(_path "$ENV{PATH}")
 

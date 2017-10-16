@@ -38,6 +38,7 @@ function(vcpkg_configure_qmake_release)
         LOGNAME config-${TARGET_TRIPLET}-rel
     )
     message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
+    unset(QMAKE_COMMAND)
     unset(QMAKE_COMMAND PARENT_SCOPE)
     unset(QMAKE_COMMAND CACHE)
 endfunction()
