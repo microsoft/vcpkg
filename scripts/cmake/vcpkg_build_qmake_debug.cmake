@@ -10,6 +10,7 @@
 # [1] : http://doc.qt.io/qt-5/qmake-variable-reference.html
 
 function(vcpkg_build_qmake_debug)
+    cmake_parse_arguments(_csc "" "" "TARGETS" ${ARGN})
     vcpkg_find_acquire_program(JOM)
 
     # Make sure that the linker finds the libraries used 
@@ -18,7 +19,7 @@ function(vcpkg_build_qmake_debug)
     
     message(STATUS "Package ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_required_process(
-        COMMAND ${JOM}
+        COMMAND ${JOM} ${_csc_TARGETS}
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
         LOGNAME package-${TARGET_TRIPLET}-dbg
     )

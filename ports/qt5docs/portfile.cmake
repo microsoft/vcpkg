@@ -31,14 +31,10 @@ endif()
 # This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
 set(ENV{_CL_} "/utf-8")
 
-vcpkg_configure_qmake_debug(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${SRCDIR_NAME}
-)
-
-vcpkg_build_qmake_debug()
-
 vcpkg_configure_qmake_release(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${SRCDIR_NAME}
 )
 
-vcpkg_build_qmake_release()
+vcpkg_build_qmake_release(
+    TARGETS docs
+)
