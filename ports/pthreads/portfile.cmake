@@ -32,7 +32,7 @@ foreach(HEADER ${HEADERS})
 endforeach()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/pthreads RENAME copyright)
-file(COPY 
+file(INSTALL 
     ${CURRENT_PACKAGES_DIR}/lib/pthreadsVC2.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib
     RENAME pthreads.lib
