@@ -13,7 +13,8 @@ function Test-Module($moduleName)
     return [bool](Get-Module -ListAvailable -Name $moduleName)
 }
 
-if ($PSVersionTable.PSEdition -ne "Core") {
+if (Test-Module -moduleName 'BitsTransfer')
+{
    Import-Module BitsTransfer -Verbose:$false
 }
 
