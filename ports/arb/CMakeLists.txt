@@ -8,7 +8,7 @@ if (BUILD_SHARED_LIBS)
     target_compile_definitions(arb PUBLIC MSC_USE_DLL)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS yes)
 else ()
-    target_compile_definitions(arb PUBLIC PTW32_STATIC_LIB")
+    target_compile_definitions(arb PUBLIC PTW32_STATIC_LIB)
 endif()
 
 set (DEPS mpir mpfr pthreads flint2)
