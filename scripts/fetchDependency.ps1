@@ -194,16 +194,16 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     performDownload $Dependency $url $downloadsDir $downloadPath $downloadVersion $requiredVersion
 
     #calculating the hash
-    if ($PSVersionTable.PSEdition -ne "Core")
+    if (Test-Command -commandName 'Get-FileHash')
+    {
+        $downloadedFileHash = (Get-FileHash -Path $downloadPath -Algorithm SHA256).Hash
+    }
+    else
     {
         $hashAlgorithm = [Security.Cryptography.HashAlgorithm]::Create("SHA256")
         $fileAsByteArray = [io.File]::ReadAllBytes($downloadPath)
         $hashByteArray = $hashAlgorithm.ComputeHash($fileAsByteArray)
         $downloadedFileHash = -Join ($hashByteArray | ForEach-Object {"{0:x2}" -f $_})
-    }
-    else
-    {
-        $downloadedFileHash = (Get-FileHash -Path $downloadPath -Algorithm SHA256).Hash
     }
 
     if ($expectedDownloadedFileHash -ne $downloadedFileHash)
