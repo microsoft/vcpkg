@@ -57,12 +57,16 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
             $WC.Proxy.Credentials=$ProxyCred
         }
 
-        if (($PSVersionTable.PSEdition -ne "Core") -and ($Dependency -ne "git")) # git fails with BITS
+         # git and installerbase fail with Start-BitsTransfer
+        if ((Test-Command -commandName 'Start-BitsTransfer') -and ($Dependency -ne "git")-and ($Dependency -ne "installerbase"))
         {
-            try {
+            try
+            {
                 Start-BitsTransfer -Source $url -Destination $downloadPath -ErrorAction Stop
+                return
             }
-            catch [System.Exception] {
+            catch [System.Exception]
+            {
                 # If BITS fails for any reason, delete any potentially partially downloaded files and continue
                 if (Test-Path $downloadPath)
                 {
@@ -70,11 +74,9 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
                 }
             }
         }
-        if (!(Test-Path $downloadPath))
-        {
-            Write-Verbose("Downloading $Dependency...")
-            $WC.DownloadFile($url, $downloadPath)
-        }
+
+        Write-Verbose("Downloading $Dependency...")
+        $WC.DownloadFile($url, $downloadPath)
     }
 
     # Enums (without resorting to C#) are only available on powershell 5+.
