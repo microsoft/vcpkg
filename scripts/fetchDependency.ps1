@@ -158,16 +158,16 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     }
     elseif($Dependency -eq "git")
     {
-        $requiredVersion = "2.14.1"
-        $downloadVersion = "2.14.1"
-        $url = "https://github.com/git-for-windows/git/releases/download/v2.14.1.windows.1/MinGit-2.14.1-32-bit.zip" # We choose the 32-bit version
-        $downloadPath = "$downloadsDir\MinGit-2.14.1-32-bit.zip"
-        $expectedDownloadedFileHash = "77b468e0ead1e7da4cb3a1cf35dabab5210bf10457b4142f5e9430318217cdef"
+        $requiredVersion = "2.14.2"
+        $downloadVersion = "2.14.2"
+        $url = "https://github.com/git-for-windows/git/releases/download/v2.14.2.windows.3/MinGit-2.14.2.3-32-bit.zip" # We choose the 32-bit version
+        $downloadPath = "$downloadsDir\MinGit-2.14.2.3-32-bit.zip"
+        $expectedDownloadedFileHash = "7cc1f27e1cfe79381e1a504a5fc7bc33951ac9031cd14c3bf478769d21a26cce"
         # There is another copy of git.exe in MinGit\bin. However, an installed version of git add the cmd dir to the PATH.
         # Therefore, choosing the cmd dir here as well.
-        $executableFromDownload = "$downloadsDir\MinGit-2.14.1-32-bit\cmd\git.exe"
+        $executableFromDownload = "$downloadsDir\MinGit-2.14.2.3-32-bit\cmd\git.exe"
         $extractionType = $ExtractionType_ZIP
-        $extractionFolder = "$downloadsDir\MinGit-2.14.1-32-bit"
+        $extractionFolder = "$downloadsDir\MinGit-2.14.2.3-32-bit"
     }
     elseif($Dependency -eq "installerbase")
     {
