@@ -3,6 +3,16 @@ param(
     [string]$Dependency
 )
 
+function Test-Command($commandName)
+{
+    return [bool](Get-Command -Name $commandName -ErrorAction SilentlyContinue)
+}
+
+function Test-Module($moduleName)
+{
+    return [bool](Get-Module -ListAvailable -Name $moduleName)
+}
+
 if ($PSVersionTable.PSEdition -ne "Core") {
    Import-Module BitsTransfer -Verbose:$false
 }
@@ -13,11 +23,6 @@ $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 $vcpkgRootDir = & $scriptsDir\findFileRecursivelyUp.ps1 $scriptsDir .vcpkg-root
 
 $downloadsDir = "$vcpkgRootDir\downloads"
-
-function Test-Command($commandName)
-{
-    return [bool](Get-Command -Name $commandName -ErrorAction SilentlyContinue)
-}
 
 function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 {
