@@ -37,14 +37,14 @@ set(CONFIGURE_COMMAND ${PERL} Configure
     no-ssl2
 )
 
-if(TARGET_TRIPLET MATCHES "x86-windows")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(OPENSSL_ARCH VC-WIN32)
     set(OPENSSL_DO "ms\\do_nasm.bat")
-elseif(TARGET_TRIPLET MATCHES "x64-windows")
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(OPENSSL_ARCH VC-WIN64A)
     set(OPENSSL_DO "ms\\do_win64a.bat")
 else()
-    message(FATAL_ERROR "Unsupported target triplet: ${TARGET_TRIPLET}")
+    message(FATAL_ERROR "Unsupported target architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
