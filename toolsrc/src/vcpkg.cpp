@@ -106,7 +106,11 @@ static void inner(const VcpkgCmdArguments& args)
     const int exit_code = chdir(paths.root.c_str());
 #endif
     Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Changing the working dir failed");
-    Commands::Version::warn_if_vcpkg_version_mismatch(paths);
+
+    if (args.command != "autocomplete")
+    {
+        Commands::Version::warn_if_vcpkg_version_mismatch(paths);
+    }
 
     if (const auto command_function = find_command(Commands::get_available_commands_type_b()))
     {
