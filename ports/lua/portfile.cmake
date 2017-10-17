@@ -33,8 +33,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(READ ${CURRENT_PACKAGES_DIR}/include/luaconf.h LUA_CONF_H)
     string(REPLACE "defined(LUA_BUILD_AS_DLL)" "1" LUA_CONF_H "${LUA_CONF_H}")
     file(WRITE ${CURRENT_PACKAGES_DIR}/include/luaconf.h "${LUA_CONF_H}")
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools)
 endif()
+
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/lua)
 
 # Handle copyright
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/lua)
