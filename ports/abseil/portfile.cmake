@@ -10,14 +10,9 @@ message("To use from cmake:\n  find_package(unofficial-abseil REQUIRED)\n  link_
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO abseil/abseil-cpp
-    REF cdf20caa491f59c0a35a8d8fbec0d948e4bc7e4c
-    SHA512 04889e7804b644821d0bf5d1b13f15a072e748bf0465442c64528e014c71f415544e9146c9518f9fe7bb14a295b18f293c3f7b672f6a51dba9909f3b74667fae
+    REF 1a9ba5e2e5a14413704f0c913fac53359576d3b6
+    SHA512 756e494c30324c937ca655d91afdee9acb923c7ee837a7c685441305bea2d54a75b3b21be7355abe416660984ba51ace9d234d70168fb029c601b7442397e8ff
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-intrin.patch"
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -25,7 +20,6 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS_DEBUG -DINSTALL_HEADERS=OFF
 )
 
 vcpkg_install_cmake()

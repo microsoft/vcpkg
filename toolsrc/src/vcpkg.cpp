@@ -1,30 +1,40 @@
+#if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-#include "Paragraphs.h"
-#include "metrics.h"
-#include "vcpkg_Chrono.h"
-#include "vcpkg_Commands.h"
-#include "vcpkg_Files.h"
-#include "vcpkg_GlobalState.h"
-#include "vcpkg_Input.h"
-#include "vcpkg_Strings.h"
-#include "vcpkg_System.h"
-#include "vcpkglib.h"
 #pragma warning(push)
 #pragma warning(disable : 4768)
 #include <Shlobj.h>
 #pragma warning(pop)
+#else
+#include <unistd.h>
+#endif
+
+#include <vcpkg/base/chrono.h>
+#include <vcpkg/base/files.h>
+#include <vcpkg/base/strings.h>
+#include <vcpkg/base/system.h>
+#include <vcpkg/commands.h>
+#include <vcpkg/globalstate.h>
+#include <vcpkg/help.h>
+#include <vcpkg/input.h>
+#include <vcpkg/metrics.h>
+#include <vcpkg/paragraphs.h>
+#include <vcpkg/vcpkglib.h>
+
 #include <cassert>
 #include <fstream>
 #include <memory>
+
+#pragma comment(lib, "ole32")
+#pragma comment(lib, "shell32")
 
 using namespace vcpkg;
 
 void invalid_command(const std::string& cmd)
 {
     System::println(System::Color::error, "invalid command: %s", cmd);
-    Commands::Help::print_usage();
+    Help::print_usage();
     Checks::exit_fail(VCPKG_LINE_INFO);
 }
 
@@ -33,13 +43,26 @@ static void inner(const VcpkgCmdArguments& args)
     Metrics::g_metrics.lock()->track_property("command", args.command);
     if (args.command.empty())
     {
-        Commands::Help::print_usage();
+        Help::print_usage();
         Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
-    if (const auto command_function = Commands::find(args.command, Commands::get_available_commands_type_c()))
+    static const auto find_command = [&](auto&& commands) {
+        auto it = Util::find_if(commands, [&](auto&& commandc) {
+            return Strings::case_insensitive_ascii_equals(commandc.name, args.command);
+        });
+        using std::end;
+        if (it != end(commands))
+        {
+            return &*it;
+        }
+        else
+            return static_cast<decltype(&*it)>(nullptr);
+    };
+
+    if (const auto command_function = find_command(Commands::get_available_commands_type_c()))
     {
-        return command_function(args);
+        return command_function->function(args);
     }
 
     fs::path vcpkg_root_dir;
@@ -49,15 +72,21 @@ static void inner(const VcpkgCmdArguments& args)
     }
     else
     {
-        const Optional<std::wstring> vcpkg_root_dir_env = System::get_environment_variable(L"VCPKG_ROOT");
+        const auto vcpkg_root_dir_env = System::get_environment_variable("VCPKG_ROOT");
         if (const auto v = vcpkg_root_dir_env.get())
         {
             vcpkg_root_dir = fs::stdfs::absolute(*v);
         }
         else
         {
-            vcpkg_root_dir = Files::get_real_filesystem().find_file_recursively_up(
-                fs::stdfs::absolute(System::get_exe_path_of_current_process()), ".vcpkg-root");
+            const fs::path current_path = fs::stdfs::current_path();
+            vcpkg_root_dir = Files::get_real_filesystem().find_file_recursively_up(current_path, ".vcpkg-root");
+
+            if (vcpkg_root_dir.empty())
+            {
+                vcpkg_root_dir = Files::get_real_filesystem().find_file_recursively_up(
+                    fs::stdfs::absolute(System::get_exe_path_of_current_process()), ".vcpkg-root");
+            }
         }
     }
 
@@ -70,13 +99,22 @@ static void inner(const VcpkgCmdArguments& args)
                        vcpkg_root_dir.string(),
                        expected_paths.error().message());
     const VcpkgPaths paths = expected_paths.value_or_exit(VCPKG_LINE_INFO);
-    const int exit_code = _wchdir(paths.root.c_str());
-    Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Changing the working dir failed");
-    Commands::Version::warn_if_vcpkg_version_mismatch(paths);
 
-    if (const auto command_function = Commands::find(args.command, Commands::get_available_commands_type_b()))
+#if defined(_WIN32)
+    const int exit_code = _wchdir(paths.root.c_str());
+#else
+    const int exit_code = chdir(paths.root.c_str());
+#endif
+    Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Changing the working dir failed");
+
+    if (args.command != "autocomplete")
     {
-        return command_function(args, paths);
+        Commands::Version::warn_if_vcpkg_version_mismatch(paths);
+    }
+
+    if (const auto command_function = find_command(Commands::get_available_commands_type_b()))
+    {
+        return command_function->function(args, paths);
     }
 
     Triplet default_triplet;
@@ -86,11 +124,10 @@ static void inner(const VcpkgCmdArguments& args)
     }
     else
     {
-        const Optional<std::wstring> vcpkg_default_triplet_env =
-            System::get_environment_variable(L"VCPKG_DEFAULT_TRIPLET");
+        const auto vcpkg_default_triplet_env = System::get_environment_variable("VCPKG_DEFAULT_TRIPLET");
         if (const auto v = vcpkg_default_triplet_env.get())
         {
-            default_triplet = Triplet::from_canonical_name(Strings::to_utf8(*v));
+            default_triplet = Triplet::from_canonical_name(*v);
         }
         else
         {
@@ -100,9 +137,9 @@ static void inner(const VcpkgCmdArguments& args)
 
     Input::check_triplet(default_triplet, paths);
 
-    if (const auto command_function = Commands::find(args.command, Commands::get_available_commands_type_a()))
+    if (const auto command_function = find_command(Commands::get_available_commands_type_a()))
     {
-        return command_function(args, paths, default_triplet);
+        return command_function->function(args, paths, default_triplet);
     }
 
     return invalid_command(args.command);
@@ -110,6 +147,7 @@ static void inner(const VcpkgCmdArguments& args)
 
 static void load_config()
 {
+#if defined(_WIN32)
     fs::path localappdata;
     {
         // Config path in AppDataLocal
@@ -169,6 +207,7 @@ static void load_config()
     catch (...)
     {
     }
+#endif
 }
 
 static std::string trim_path_from_command_line(const std::string& full_command_line)
@@ -192,24 +231,32 @@ static std::string trim_path_from_command_line(const std::string& full_command_l
     return std::string(it, full_command_line.cend());
 }
 
+#if defined(_WIN32)
 int wmain(const int argc, const wchar_t* const* const argv)
+#else
+int main(const int argc, const char* const* const argv)
+#endif
 {
     if (argc == 0) std::abort();
 
+    *GlobalState::timer.lock() = Chrono::ElapsedTime::create_started();
+
+#if defined(_WIN32)
     GlobalState::g_init_console_cp = GetConsoleCP();
     GlobalState::g_init_console_output_cp = GetConsoleOutputCP();
 
     SetConsoleCP(65001);
     SetConsoleOutputCP(65001);
 
-    *GlobalState::timer.lock() = ElapsedTime::create_started();
-
     const std::string trimmed_command_line = trim_path_from_command_line(Strings::to_utf8(GetCommandLineW()));
+#endif
 
     {
         auto locked_metrics = Metrics::g_metrics.lock();
         locked_metrics->track_property("version", Commands::Version::version());
+#if defined(_WIN32)
         locked_metrics->track_property("cmdline", trimmed_command_line);
+#endif
     }
     load_config();
     Metrics::g_metrics.lock()->track_property("sqmuser", Metrics::get_SQM_user());
@@ -258,6 +305,12 @@ int wmain(const int argc, const wchar_t* const* const argv)
                   exc_msg);
     fflush(stdout);
     for (int x = 0; x < argc; ++x)
+    {
+#if defined(_WIN32)
         System::println("%s|", Strings::to_utf8(argv[x]));
+#else
+        System::println("%s|", argv[x]);
+#endif
+    }
     fflush(stdout);
 }

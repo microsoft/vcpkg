@@ -1,5 +1,5 @@
 option(SUFFIX_D "Add d Suffix to lib" ${SUFFIX_D})
-if(NOT ${SUFFIX_D})
+if(NOT SUFFIX_D)
     find_library(SPIRVTOOLSOPT spirv-tools-opt)
     find_library(SPIRVTOOLS spirv-tools)
 ELSE()
