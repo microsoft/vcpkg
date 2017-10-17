@@ -1,4 +1,0 @@
-Source: qt5docs
-Version: 5.9.2-0
-Description: Qt5 Documentation
-Build-Depends: qt5base, qt5tools

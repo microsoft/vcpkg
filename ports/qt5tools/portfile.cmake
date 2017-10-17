@@ -83,6 +83,3 @@ file(GLOB DEBUG_DLLS "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll")
 file(REMOVE ${RELEASE_DLLS} ${DEBUG_DLLS})
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.LGPL3 DESTINATION  ${CURRENT_PACKAGES_DIR}/share/qt5tools RENAME copyright)
-
-#touch an empty include file - qt tools does not create any and this is an error in vcpkg
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/.empty)

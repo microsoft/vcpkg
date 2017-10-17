@@ -80,6 +80,11 @@ file(GLOB BINARY_TOOLS "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
 file(INSTALL ${BINARY_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/qt5)
 file(REMOVE ${BINARY_TOOLS})
 
+set(QT_DEBUG_PREFIX_PATH ${CURRENT_INSTALLED_DIR})
+set(QT_RELEASE_PREFIX_PATH ${CURRENT_INSTALLED_DIR})
+configure_file(${CMAKE_CURRENT_LIST_DIR}/qt_debug.conf ${CURRENT_PACKAGES_DIR}/debug/tools/qt5/qt.conf)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/qt_release.conf ${CURRENT_PACKAGES_DIR}/tools/qt5/qt.conf)
+
 vcpkg_execute_required_process(
     COMMAND ${PYTHON3} ${CMAKE_CURRENT_LIST_DIR}/fixcmake.py
     WORKING_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/cmake

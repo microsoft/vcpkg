@@ -22,7 +22,6 @@ function(vcpkg_configure_qmake_release)
     
     # Find qmake exectuable 
     find_program(QMAKE_COMMAND NAMES qmake.exe PATHS ${CURRENT_INSTALLED_DIR}/tools/qt5)
-    
     if(NOT QMAKE_COMMAND)
         message(FATAL_ERROR "vcpkg_configure_qmake: unable to find qmake.")
     endif()
