@@ -37,3 +37,8 @@ file(INSTALL
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib
     RENAME pthreads.lib
 )
+file(INSTALL 
+    ${CURRENT_PACKAGES_DIR}/debug/lib/pthreadsVC2d.lib
+    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+    RENAME pthreads.lib
+)
