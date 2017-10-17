@@ -2,15 +2,6 @@ cmake_minimum_required(VERSION 2.8.12)
 
 project(arb C)
 
-
-target_compile_definitions(arb PUBLIC HAVE_TLS=1 FLINT_REENTRANT=0)
-if (BUILD_SHARED_LIBS)
-    target_compile_definitions(arb PUBLIC MSC_USE_DLL)
-    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS yes)
-else ()
-    target_compile_definitions(arb PUBLIC PTW32_STATIC_LIB)
-endif()
-
 set (DEPS mpir mpfr pthreads flint2)
 set (mpir_lib gmp mpir)
 set (mpfr_lib mpfr)
@@ -60,8 +51,17 @@ include_directories(BEFORE ${arb_SOURCE_DIR})
 include_directories(BEFORE ${DEP_INCLUDE_DIRS})
 
 add_library(arb ${SRC})
-target_link_libraries(arb ${DEPS})
+
+target_compile_definitions(arb PRIVATE HAVE_TLS=1 FLINT_REENTRANT=0)
+if (BUILD_SHARED_LIBS)
+    target_compile_definitions(arb PRIVATE MSC_USE_DLL)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS yes)
+else ()
+    target_compile_definitions(arb PRIVATE PTW32_STATIC_LIB)
+endif()
 target_compile_definitions(arb PRIVATE "ARB_BUILD_DLL")
+
+target_link_libraries(arb ${DEPS})
 
 install(TARGETS arb
             RUNTIME DESTINATION bin
