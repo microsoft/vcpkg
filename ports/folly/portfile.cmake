@@ -2,10 +2,6 @@ if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
   message(FATAL_ERROR "Folly only supports the x64 architecture.")
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  message(FATAL_ERROR "Folly can't link with static libraries.")
-endif()
-
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     message(STATUS "Warning: Dynamic building not supported yet. Building static.")
     set(VCPKG_LIBRARY_LINKAGE static)
@@ -30,6 +26,7 @@ vcpkg_apply_patches(
     SOURCE_PATH
         ${SOURCE_PATH}
     PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/fix-static-linking.diff
         ${CMAKE_CURRENT_LIST_DIR}/fix-malloc.diff
         ${CMAKE_CURRENT_LIST_DIR}/fix-MSG_ERRQUEUE.diff
         ${CMAKE_CURRENT_LIST_DIR}/fix-histogram.diff
