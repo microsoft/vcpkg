@@ -24,16 +24,3 @@ index c8242dd..97edd14 100644
      # removing APPCONTAINER from modules to run from console
      # in case of usual starting of WinRT test apps output is missing
      # so starting of console version w/o APPCONTAINER is required to get test results
-diff --git a/modules/highgui/src/window.cpp b/modules/highgui/src/window.cpp
-index 9306f8e..69a814e 100644
---- a/modules/highgui/src/window.cpp
-+++ b/modules/highgui/src/window.cpp
-@@ -209,7 +209,7 @@ int cv::waitKeyEx(int delay)
- int cv::waitKey(int delay)
- {
-     int code = waitKeyEx(delay);
--#ifndef HAVE_WINRT
-+#ifndef WINRT
-     static int use_legacy = -1;
-     if (use_legacy < 0)
-     {

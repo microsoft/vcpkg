@@ -5,25 +5,24 @@ endif()
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://download.osgeo.org/gdal/1.11.3/gdal1113.zip"
-    FILENAME "gdal1113.zip"
-    SHA512 42feb98a54019d3b6ac54f598f299a57e117db500c662d39faa9d5f5090f03c1b8d7680242e1abd8035738edc4fc3197ae118a0ce50733691a76a5cf377bcd46
-)
+    URLS "http://download.osgeo.org/gdal/2.2.2/gdal222.zip"
+    FILENAME "gdal222.zip"
+    SHA512 b886238a7915c97f4acec5920dabe959d1ab15a8be0bc31ba0d05ad69d1d7d96f864faf0aa82921fa1a1b40b733744202b86f2f45ff63d6518cd18a53f3544a8
+    )
 
 # Extract source into archictecture specific directory, because GDALs' nmake based build currently does not
 # support out of source builds.
-set(SOURCE_PATH_DEBUG   ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-debug/gdal-1.11.3)
-set(SOURCE_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-release/gdal-1.11.3)
+set(SOURCE_PATH_DEBUG   ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-debug/gdal-2.2.2)
+set(SOURCE_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-release/gdal-2.2.2)
 
 foreach(BUILD_TYPE debug release)
     vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE})
     vcpkg_apply_patches(
-        SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-1.11.3
+        SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-2.2.2
         PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0001-Add-support-for-MSVC1900-backported-from-GDAL2.patch
-        ${CMAKE_CURRENT_LIST_DIR}/0002-Add-variable-CXX_CRT_FLAGS-to-allow-for-selection-of.patch
-        ${CMAKE_CURRENT_LIST_DIR}/0003-Ensures-inclusion-of-PDB-in-release-dll-if-so-reques.patch
-        ${CMAKE_CURRENT_LIST_DIR}/0004-Fix-openjpeg-include.patch
+        ${CMAKE_CURRENT_LIST_DIR}/0001-Add-variable-CXX_CRT_FLAGS-to-allow-for-selection-of.patch
+        ${CMAKE_CURRENT_LIST_DIR}/0002-Ensures-inclusion-of-PDB-in-release-dll-if-so-reques.patch
+        ${CMAKE_CURRENT_LIST_DIR}/0003-Fix-openjpeg-include.patch
     )
 endforeach()
 
@@ -211,7 +210,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 else()
   file(GLOB EXE_FILES ${CURRENT_PACKAGES_DIR}/bin/*.exe)
   file(REMOVE ${EXE_FILES} ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)
-  file(COPY ${SOURCE_PATH_DEBUG}/gdal111.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+  file(COPY ${SOURCE_PATH_DEBUG}/gdal202.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
   file(COPY ${SOURCE_PATH_DEBUG}/gdal_i.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
   file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gdal_i.lib ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)
   file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdal_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gdald.lib)

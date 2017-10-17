@@ -3,11 +3,11 @@
 set(VCPKG_LIBRARY_LINKAGE static)
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/llvm-4.0.0.src)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/llvm-5.0.0.src)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://releases.llvm.org/4.0.0/llvm-4.0.0.src.tar.xz"
-    FILENAME "llvm-4.0.0.src.tar.xz"
-    SHA512 cf681f0626ef6d568d951cdc3e143471a1d7715a0ba11e52aa273cf5d8d421e1357ef2645cc85879eaefcd577e99e74d07b01566825b3d0461171ef2cbfc7704
+    URLS "http://releases.llvm.org/5.0.0/llvm-5.0.0.src.tar.xz"
+    FILENAME "llvm-5.0.0.src.tar.xz"
+    SHA512 e6d8fdcb5bf27bded814d02f39f69c6171bc3a512d5957c03e5ac2e231f903b7de87634b059bd5c5da670f7c3a8f7a538f6299225799f15f921857f1452f6b3a
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

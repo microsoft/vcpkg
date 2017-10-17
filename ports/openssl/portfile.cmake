@@ -28,6 +28,7 @@ vcpkg_apply_patches(
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/PerlScriptSpaceInPathFixes.patch
             ${CMAKE_CURRENT_LIST_DIR}/ConfigureIncludeQuotesFix.patch
             ${CMAKE_CURRENT_LIST_DIR}/STRINGIFYPatch.patch
+            ${CMAKE_CURRENT_LIST_DIR}/EmbedSymbolsInStaticLibsZ7.patch
 )
 
 set(CONFIGURE_COMMAND ${PERL} Configure
@@ -126,10 +127,14 @@ message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE
     ${CURRENT_PACKAGES_DIR}/debug/bin/openssl.exe
-    ${CURRENT_PACKAGES_DIR}/bin/openssl.exe
     ${CURRENT_PACKAGES_DIR}/debug/openssl.cnf
     ${CURRENT_PACKAGES_DIR}/openssl.cnf
 )
+
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT}/)
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/openssl.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/openssl.exe)
+
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openssl RENAME copyright)
 

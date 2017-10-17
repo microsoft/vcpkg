@@ -14,7 +14,7 @@ if (-not $?) { throw $? }
 ./vcpkg.exe install azure-storage-cpp cpprestsdk:x64-windows-static cpprestsdk:x86-uwp
 if (-not $?) { throw $? }
 
-./vcpkg.exe install bond chakracore cryptopp zlib expat sdl2 curl sqlite3 libuv protobuf:x64-windows sfml opencv:x64-windows uwebsockets uwebsockets:x64-windows-static
+./vcpkg.exe install bond cryptopp zlib expat sdl2 curl sqlite3 libuv protobuf:x64-windows sfml opencv:x64-windows uwebsockets uwebsockets:x64-windows-static
 if (-not $?) { throw $? }
 
 ./vcpkg.exe install opencv:x86-uwp boost:x86-uwp

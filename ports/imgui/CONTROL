@@ -1,0 +1,4 @@
+Source: imgui
+Version: 1.51-1
+Build-Depends: stb
+Description: Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.
