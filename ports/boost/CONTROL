@@ -1,8 +1,16 @@
 Source: boost
-<<<<<<< HEAD
-Version: 1.65-2
-=======
-Version: 1.65.1
->>>>>>> master
+Version: 1.65.1-1
 Description: Peer-reviewed portable C++ source libraries
-Build-Depends: zlib, bzip2, icu [windows], python3 [windows]
+Build-Depends: zlib, bzip2
+
+Feature: locale-icu
+Description: ICU backend for Boost.Locale
+Build-Depends: icu
+
+Feature: regex-icu
+Description: ICU support for Boost.Regex
+Build-Depends: icu
+
+Feature: python
+Description: a C++ library which enables seamless interoperability between C++ and the Python programming language.
+Build-Depends: python3
