@@ -14,6 +14,11 @@ $vcpkgRootDir = & $scriptsDir\findFileRecursivelyUp.ps1 $scriptsDir .vcpkg-root
 
 $downloadsDir = "$vcpkgRootDir\downloads"
 
+function Test-Command($commandName)
+{
+    return [bool](Get-Command -Name $commandName -ErrorAction SilentlyContinue)
+}
+
 function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 {
     function performDownload(	[Parameter(Mandatory=$true)][string]$Dependency,
