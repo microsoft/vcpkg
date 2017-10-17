@@ -124,6 +124,7 @@ namespace vcpkg::Commands::Autocomplete
             CommandEntry{"install", R"###(^install\s(.*\s|)(\S*)$)###", Install::COMMAND_STRUCTURE},
             CommandEntry{"edit", R"###(^edit\s(.*\s|)(\S*)$)###", Edit::COMMAND_STRUCTURE},
             CommandEntry{"remove", R"###(^remove\s(.*\s|)(\S*)$)###", Remove::COMMAND_STRUCTURE},
+            CommandEntry{"integrate", R"###(^integrate(\s+)(\S*)$)###", Integrate::COMMAND_STRUCTURE},
         };
 
         for (auto&& command : COMMANDS)

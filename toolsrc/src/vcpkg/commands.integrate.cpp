@@ -326,6 +326,33 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         "  vcpkg integrate remove          Remove user-wide integration\n"
         "  vcpkg integrate project         Generate a referencing nuget package for individual VS project use\n";
 
+    namespace Subcommand
+    {
+        static const std::string INSTALL = "install";
+        static const std::string REMOVE = "remove";
+        static const std::string PROJECT = "project";
+    }
+
+    static const std::array<std::string, 0> INSTALL_SWITCHES;
+
+    static const std::array<std::string, 0> INSTALL_SETTINGS;
+
+    static std::vector<std::string> valid_arguments(const VcpkgPaths&)
+    {
+        return {Subcommand::INSTALL, Subcommand::REMOVE, Subcommand::PROJECT};
+    }
+
+    const CommandStructure COMMAND_STRUCTURE = {
+        Strings::format("Commands:\n"
+                        "%s",
+                        INTEGRATE_COMMAND_HELPSTRING),
+        1,
+        1,
+        INSTALL_SWITCHES,
+        INSTALL_SETTINGS,
+        &valid_arguments,
+    };
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         static const std::string EXAMPLE = Strings::format("Commands:\n"
@@ -335,15 +362,15 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         args.check_and_get_optional_command_arguments({});
 
 #if defined(_WIN32)
-        if (args.command_arguments[0] == "install")
+        if (args.command_arguments[0] == Subcommand::INSTALL)
         {
             return integrate_install(paths);
         }
-        if (args.command_arguments[0] == "remove")
+        if (args.command_arguments[0] == Subcommand::REMOVE)
         {
             return integrate_remove(paths.get_filesystem());
         }
-        if (args.command_arguments[0] == "project")
+        if (args.command_arguments[0] == Subcommand::PROJECT)
         {
             return integrate_project(paths);
         }
