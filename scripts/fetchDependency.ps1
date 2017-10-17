@@ -101,12 +101,19 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
             New-Item -ItemType Directory -Path $destination | Out-Null
         }
 
-        $shell = new-object -com shell.application
-        $zip = $shell.NameSpace($file)
-        foreach($item in $zip.items())
+        if (Test-Command -commandName 'Expand-Archive')
         {
-            # Piping to Out-Null is used to block until finished
-            $shell.Namespace($destination).copyhere($item) | Out-Null
+            Expand-Archive -path $file -destinationpath $destination
+        }
+        else
+        {
+            $shell = new-object -com shell.application
+            $zip = $shell.NameSpace($file)
+            foreach($item in $zip.items())
+            {
+                # Piping to Out-Null is used to block until finished
+                $shell.Namespace($destination).copyhere($item) | Out-Null
+            }
         }
     }
 
