@@ -3,46 +3,15 @@ cmake_minimum_required(VERSION 2.8.12)
 project(arb C)
 
 
-if ("${CMAKE_SIZEOF_VOID_P}" STREQUAL "8")
-    set (PLATFORM "x64")
-else ()
-    set (PLATFORM "Win32")
-endif()
-
+target_compile_definitions(arb PUBLIC HAVE_TLS=1 FLINT_REENTRANT=0)
 if (BUILD_SHARED_LIBS)
-    set (LIBRARY_TYPE dll)
+    target_compile_definitions(arb PUBLIC MSC_USE_DLL)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS yes)
 else ()
-    set (LIBRARY_TYPE lib)
-endif()
-
-set (MSVC_USE_MT yes CACHE BOOL "Use MT flags when compiling in MSVC")
-set (MSVC_WARNING_LEVEL 1 CACHE STRING "MSVC warning level")
-
-if (MSVC)
-    if (MSVC_USE_MT)
-        foreach(CompilerFlag CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE)
-          string(REPLACE "/MD" "/MT" ${CompilerFlag} "${${CompilerFlag}}")
-        endforeach()
-    endif()
-    foreach(CompilerFlag CMAKE_C_FLAGS)
-      set(${CompilerFlag} "${${CompilerFlag}} /W${MSVC_WARNING_LEVEL} /DHAVE_TLS=1 /DFLINT_REENTRANT=0")
-    endforeach()
-
-    foreach(CompilerFlag CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE)
-        if (BUILD_SHARED_LIBS)
-            set(${CompilerFlag} "${${CompilerFlag}} /DMSC_USE_DLL")
-        else ()
-            set(${CompilerFlag} "${${CompilerFlag}} /DPTW32_STATIC_LIB")
-        endif()
-    endforeach()
-
-    if ("${LIBRARY_TYPE}" STREQUAL "dll")
-        set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS yes)
-    endif()
+    target_compile_definitions(arb PUBLIC PTW32_STATIC_LIB")
 endif()
 
 set (DEPS mpir mpfr pthreads flint2)
-
 set (mpir_lib gmp mpir)
 set (mpfr_lib mpfr)
 set (pthreads_lib pthreads pthread)
@@ -93,10 +62,6 @@ include_directories(BEFORE ${DEP_INCLUDE_DIRS})
 add_library(arb ${SRC})
 target_link_libraries(arb ${DEPS})
 target_compile_definitions(arb PRIVATE "ARB_BUILD_DLL")
-
-if(NOT MSVC)
-    target_link_libraries(arb m)
-endif()
 
 install(TARGETS arb
             RUNTIME DESTINATION bin
