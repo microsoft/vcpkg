@@ -169,14 +169,14 @@ namespace vcpkg::Remove
     static const std::string OPTION_DRY_RUN = "--dry-run";
     static const std::string OPTION_OUTDATED = "--outdated";
 
-    static const std::array<std::string, 5> REMOVE_SWITCHES = {
+    static const std::array<std::string, 5> SWITCHES = {
         OPTION_PURGE,
         OPTION_NO_PURGE,
         OPTION_RECURSE,
         OPTION_DRY_RUN,
         OPTION_OUTDATED,
     };
-    static const std::array<std::string, 0> REMOVE_SETTINGS;
+    static const std::array<std::string, 0> SETTINGS;
 
     static std::vector<std::string> valid_arguments(const VcpkgPaths& paths)
     {
@@ -190,8 +190,8 @@ namespace vcpkg::Remove
         "remove zlib zlib:x64-windows curl boost",
         1,
         SIZE_MAX,
-        REMOVE_SWITCHES,
-        REMOVE_SETTINGS,
+        SWITCHES,
+        SETTINGS,
         &valid_arguments,
     };
 
