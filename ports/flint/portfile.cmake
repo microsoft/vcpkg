@@ -95,12 +95,12 @@ else()
 		DESTINATION ${CURRENT_PACKAGES_DIR}/include/flint
 	)
 	file(INSTALL
-		${SOURCE_PATH}/build.vc${MSVC_VERSION}/lib_flint/${BUILD_ARCH}/Release/dll_flint.lib
+		${SOURCE_PATH}/build.vc${MSVC_VERSION}/lib_flint/${BUILD_ARCH}/Release/lib_flint.lib
 		DESTINATION ${CURRENT_PACKAGES_DIR}/lib
 		RENAME flint.lib
 	)
 	file(INSTALL
-		${SOURCE_PATH}/build.vc${MSVC_VERSION}/lib_flint/${BUILD_ARCH}/Debug/dll_flint.lib
+		${SOURCE_PATH}/build.vc${MSVC_VERSION}/lib_flint/${BUILD_ARCH}/Debug/lib_flint.lib
 		DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
 		RENAME flint.lib
 	)
