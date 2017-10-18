@@ -1,13 +1,14 @@
 # LLVM documentation recommends always using static library linkage when
 #   building with Microsoft toolchain; it's also the default on other platforms
 set(VCPKG_LIBRARY_LINKAGE static)
+set(CLANG_VERSION b11539abc46cbd19189c5719d1e30539de3a93b9)
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/clang-flang-50.src)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/clang-${CLANG_VERSION})
 
 vcpkg_from_github(
     OUT_SOURCE_PATH ${SOURCE_PATH}
     REPO flang-compiler/clang
-    REF b11539abc46cbd19189c5719d1e30539de3a93b9
+    REF ${CLANG_VERSION}
     SHA512 86985473a8d9e183954f60b1c7f5d3721761f4319609c014e9cec0d26c72ca4361732f05a89b38a031ecf45ff81d33b228c0ce4f6ffc09249b733f9a51e22c10
     HEAD_REF master
 )
