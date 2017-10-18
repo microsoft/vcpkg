@@ -1,4 +1,4 @@
 Source: clang-flang
 Version: 50
 Description: A modified clang for building flang
-Build-Depends: 
+Build-Depends: llvm
