@@ -96,7 +96,7 @@ namespace vcpkg::Build
         Optional<fs::path> visual_studio_path;
     };
 
-    std::wstring make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);
+    std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);
 
     struct ExtendedBuildResult
     {

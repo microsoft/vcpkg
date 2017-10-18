@@ -13,3 +13,11 @@ using msvc : 14.1 : cl.exe :
 <linkflags>RuntimeObject.lib
 <linkflags>ole32.lib
 ;
+
+project user-config ;
+              
+lib icuuc : : <name>dummy_lib_that_doesnt_exist ;
+                            
+lib icuin : : <name>dummy_lib_that_doesnt_exist ;
+              
+lib icudt : : <name>dummy_lib_that_doesnt_exist ;

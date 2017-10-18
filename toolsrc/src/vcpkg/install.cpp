@@ -70,9 +70,8 @@ namespace vcpkg::Install
             }
 
             const std::string filename = file.filename().generic_string();
-            if (fs::is_regular_file(status) &&
-                (Strings::case_insensitive_ascii_compare(filename.c_str(), "CONTROL") ||
-                 Strings::case_insensitive_ascii_compare(filename.c_str(), "BUILD_INFO")))
+            if (fs::is_regular_file(status) && (Strings::case_insensitive_ascii_equals(filename.c_str(), "CONTROL") ||
+                                                Strings::case_insensitive_ascii_equals(filename.c_str(), "BUILD_INFO")))
             {
                 // Do not copy the control file
                 continue;
@@ -592,11 +591,12 @@ namespace vcpkg::Install
         const Build::BuildPackageOptions install_plan_options = {Build::to_use_head_version(use_head_version),
                                                                  Build::to_allow_downloads(!no_downloads)};
 
+        // Note: action_plan will hold raw pointers to SourceControlFiles from this map
+        std::unordered_map<std::string, SourceControlFile> scf_map;
         std::vector<AnyAction> action_plan;
 
         if (GlobalState::feature_packages)
         {
-            std::unordered_map<std::string, SourceControlFile> scf_map;
             auto all_ports = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
             for (auto&& port : all_ports)
             {

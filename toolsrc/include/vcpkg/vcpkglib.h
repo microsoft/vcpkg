@@ -22,17 +22,16 @@ namespace vcpkg
 
     struct CMakeVariable
     {
-        CMakeVariable(const CWStringView varname, const wchar_t* varvalue);
-        CMakeVariable(const CWStringView varname, const std::string& varvalue);
-        CMakeVariable(const CWStringView varname, const std::wstring& varvalue);
-        CMakeVariable(const CWStringView varname, const fs::path& path);
+        CMakeVariable(const CStringView varname, const char* varvalue);
+        CMakeVariable(const CStringView varname, const std::string& varvalue);
+        CMakeVariable(const CStringView varname, const fs::path& path);
 
-        std::wstring s;
+        std::string s;
     };
 
-    std::wstring make_cmake_cmd(const fs::path& cmake_exe,
-                                const fs::path& cmake_script,
-                                const std::vector<CMakeVariable>& pass_variables);
+    std::string make_cmake_cmd(const fs::path& cmake_exe,
+                               const fs::path& cmake_script,
+                               const std::vector<CMakeVariable>& pass_variables);
 
     std::string shorten_text(const std::string& desc, size_t length);
 } // namespace vcpkg

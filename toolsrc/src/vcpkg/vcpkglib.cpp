@@ -212,30 +212,26 @@ namespace vcpkg
         return installed_files;
     }
 
-    CMakeVariable::CMakeVariable(const CWStringView varname, const wchar_t* varvalue)
-        : s(Strings::wformat(LR"("-D%s=%s")", varname, varvalue))
+    CMakeVariable::CMakeVariable(const CStringView varname, const char* varvalue)
+        : s(Strings::format(R"("-D%s=%s")", varname, varvalue))
     {
     }
-    CMakeVariable::CMakeVariable(const CWStringView varname, const std::string& varvalue)
-        : CMakeVariable(varname, Strings::to_utf16(varvalue).c_str())
-    {
-    }
-    CMakeVariable::CMakeVariable(const CWStringView varname, const std::wstring& varvalue)
+    CMakeVariable::CMakeVariable(const CStringView varname, const std::string& varvalue)
         : CMakeVariable(varname, varvalue.c_str())
     {
     }
-    CMakeVariable::CMakeVariable(const CWStringView varname, const fs::path& path)
-        : CMakeVariable(varname, path.generic_wstring())
+    CMakeVariable::CMakeVariable(const CStringView varname, const fs::path& path)
+        : CMakeVariable(varname, path.generic_u8string())
     {
     }
 
-    std::wstring make_cmake_cmd(const fs::path& cmake_exe,
-                                const fs::path& cmake_script,
-                                const std::vector<CMakeVariable>& pass_variables)
+    std::string make_cmake_cmd(const fs::path& cmake_exe,
+                               const fs::path& cmake_script,
+                               const std::vector<CMakeVariable>& pass_variables)
     {
-        const std::wstring cmd_cmake_pass_variables = Strings::join(L" ", pass_variables, [](auto&& v) { return v.s; });
-        return Strings::wformat(
-            LR"("%s" %s -P "%s")", cmake_exe.native(), cmd_cmake_pass_variables, cmake_script.generic_wstring());
+        const std::string cmd_cmake_pass_variables = Strings::join(" ", pass_variables, [](auto&& v) { return v.s; });
+        return Strings::format(
+            R"("%s" %s -P "%s")", cmake_exe.u8string(), cmd_cmake_pass_variables, cmake_script.generic_u8string());
     }
 
     std::string shorten_text(const std::string& desc, size_t length)

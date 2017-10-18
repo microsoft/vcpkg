@@ -18,11 +18,14 @@ namespace vcpkg
     const TripletInstance Triplet::DEFAULT_INSTANCE({});
 }
 
-template<>
-struct std::hash<vcpkg::TripletInstance>
+namespace std
 {
-    size_t operator()(const vcpkg::TripletInstance& t) const { return t.hash; }
-};
+    template<>
+    struct hash<vcpkg::TripletInstance>
+    {
+        size_t operator()(const vcpkg::TripletInstance& t) const { return t.hash; }
+    };
+}
 
 namespace vcpkg
 {

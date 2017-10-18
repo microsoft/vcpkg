@@ -1,5 +1,14 @@
+#if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+
+#pragma warning(push)
+#pragma warning(disable : 4768)
+#include <Shlobj.h>
+#pragma warning(pop)
+#else
+#include <unistd.h>
+#endif
 
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/files.h>
@@ -13,10 +22,6 @@
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/vcpkglib.h>
 
-#pragma warning(push)
-#pragma warning(disable : 4768)
-#include <Shlobj.h>
-#pragma warning(pop)
 #include <cassert>
 #include <fstream>
 #include <memory>
@@ -44,7 +49,7 @@ static void inner(const VcpkgCmdArguments& args)
 
     static const auto find_command = [&](auto&& commands) {
         auto it = Util::find_if(commands, [&](auto&& commandc) {
-            return Strings::case_insensitive_ascii_compare(commandc.name, args.command);
+            return Strings::case_insensitive_ascii_equals(commandc.name, args.command);
         });
         using std::end;
         if (it != end(commands))
@@ -67,7 +72,7 @@ static void inner(const VcpkgCmdArguments& args)
     }
     else
     {
-        const Optional<std::wstring> vcpkg_root_dir_env = System::get_environment_variable(L"VCPKG_ROOT");
+        const auto vcpkg_root_dir_env = System::get_environment_variable("VCPKG_ROOT");
         if (const auto v = vcpkg_root_dir_env.get())
         {
             vcpkg_root_dir = fs::stdfs::absolute(*v);
@@ -95,9 +100,17 @@ static void inner(const VcpkgCmdArguments& args)
                        expected_paths.error().message());
     const VcpkgPaths paths = expected_paths.value_or_exit(VCPKG_LINE_INFO);
 
+#if defined(_WIN32)
     const int exit_code = _wchdir(paths.root.c_str());
+#else
+    const int exit_code = chdir(paths.root.c_str());
+#endif
     Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Changing the working dir failed");
-    Commands::Version::warn_if_vcpkg_version_mismatch(paths);
+
+    if (args.command != "autocomplete")
+    {
+        Commands::Version::warn_if_vcpkg_version_mismatch(paths);
+    }
 
     if (const auto command_function = find_command(Commands::get_available_commands_type_b()))
     {
@@ -111,11 +124,10 @@ static void inner(const VcpkgCmdArguments& args)
     }
     else
     {
-        const Optional<std::wstring> vcpkg_default_triplet_env =
-            System::get_environment_variable(L"VCPKG_DEFAULT_TRIPLET");
+        const auto vcpkg_default_triplet_env = System::get_environment_variable("VCPKG_DEFAULT_TRIPLET");
         if (const auto v = vcpkg_default_triplet_env.get())
         {
-            default_triplet = Triplet::from_canonical_name(Strings::to_utf8(*v));
+            default_triplet = Triplet::from_canonical_name(*v);
         }
         else
         {
@@ -135,6 +147,7 @@ static void inner(const VcpkgCmdArguments& args)
 
 static void load_config()
 {
+#if defined(_WIN32)
     fs::path localappdata;
     {
         // Config path in AppDataLocal
@@ -194,6 +207,7 @@ static void load_config()
     catch (...)
     {
     }
+#endif
 }
 
 static std::string trim_path_from_command_line(const std::string& full_command_line)
@@ -217,24 +231,32 @@ static std::string trim_path_from_command_line(const std::string& full_command_l
     return std::string(it, full_command_line.cend());
 }
 
+#if defined(_WIN32)
 int wmain(const int argc, const wchar_t* const* const argv)
+#else
+int main(const int argc, const char* const* const argv)
+#endif
 {
     if (argc == 0) std::abort();
 
+    *GlobalState::timer.lock() = Chrono::ElapsedTime::create_started();
+
+#if defined(_WIN32)
     GlobalState::g_init_console_cp = GetConsoleCP();
     GlobalState::g_init_console_output_cp = GetConsoleOutputCP();
 
     SetConsoleCP(65001);
     SetConsoleOutputCP(65001);
 
-    *GlobalState::timer.lock() = Chrono::ElapsedTime::create_started();
-
     const std::string trimmed_command_line = trim_path_from_command_line(Strings::to_utf8(GetCommandLineW()));
+#endif
 
     {
         auto locked_metrics = Metrics::g_metrics.lock();
         locked_metrics->track_property("version", Commands::Version::version());
+#if defined(_WIN32)
         locked_metrics->track_property("cmdline", trimmed_command_line);
+#endif
     }
     load_config();
     Metrics::g_metrics.lock()->track_property("sqmuser", Metrics::get_SQM_user());
@@ -283,6 +305,12 @@ int wmain(const int argc, const wchar_t* const* const argv)
                   exc_msg);
     fflush(stdout);
     for (int x = 0; x < argc; ++x)
+    {
+#if defined(_WIN32)
         System::println("%s|", Strings::to_utf8(argv[x]));
+#else
+        System::println("%s|", argv[x]);
+#endif
+    }
     fflush(stdout);
 }

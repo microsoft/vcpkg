@@ -80,10 +80,10 @@ namespace vcpkg
     BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh, const FeatureParagraph& fpgh, const Triplet& triplet)
     {
         this->spec = PackageSpec::from_name_and_triplet(spgh.name, triplet).value_or_exit(VCPKG_LINE_INFO);
-        this->version = Strings::EMPTY;
+        this->version = "";
         this->feature = fpgh.name;
         this->description = fpgh.description;
-        this->maintainer = Strings::EMPTY;
+        this->maintainer = "";
         this->depends = filter_dependencies(fpgh.depends, triplet);
     }
 

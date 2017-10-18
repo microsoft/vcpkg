@@ -10,16 +10,16 @@
 
 namespace vcpkg
 {
-    static constexpr CWStringView V_120 = L"v120";
-    static constexpr CWStringView V_140 = L"v140";
-    static constexpr CWStringView V_141 = L"v141";
+    static constexpr CStringView V_120 = "v120";
+    static constexpr CStringView V_140 = "v140";
+    static constexpr CStringView V_141 = "v141";
 
-    static bool exists_and_has_equal_or_greater_version(const std::wstring& version_cmd,
+    static bool exists_and_has_equal_or_greater_version(const std::string& version_cmd,
                                                         const std::array<int, 3>& expected_version)
     {
         static const std::regex RE(R"###((\d+)\.(\d+)\.(\d+))###");
 
-        const auto rc = System::cmd_execute_and_capture_output(Strings::wformat(LR"(%s)", version_cmd));
+        const auto rc = System::cmd_execute_and_capture_output(Strings::format(R"(%s)", version_cmd));
         if (rc.exit_code != 0)
         {
             return false;
@@ -46,11 +46,11 @@ namespace vcpkg
     }
 
     static Optional<fs::path> find_if_has_equal_or_greater_version(const std::vector<fs::path>& candidate_paths,
-                                                                   const std::wstring& version_check_arguments,
+                                                                   const std::string& version_check_arguments,
                                                                    const std::array<int, 3>& expected_version)
     {
         auto it = Util::find_if(candidate_paths, [&](const fs::path& p) {
-            const std::wstring cmd = Strings::wformat(LR"("%s" %s)", p.native(), version_check_arguments);
+            const std::string cmd = Strings::format(R"("%s" %s)", p.u8string(), version_check_arguments);
             return exists_and_has_equal_or_greater_version(cmd, expected_version);
         });
 
@@ -63,27 +63,26 @@ namespace vcpkg
     }
 
     static fs::path fetch_dependency(const fs::path& scripts_folder,
-                                     const std::wstring& tool_name,
+                                     const std::string& tool_name,
                                      const fs::path& expected_downloaded_path,
                                      const std::array<int, 3>& version)
     {
-        const std::string tool_name_utf8 = Strings::to_utf8(tool_name);
         const std::string version_as_string = Strings::format("%d.%d.%d", version[0], version[1], version[2]);
         System::println("A suitable version of %s was not found (required v%s). Downloading portable %s v%s...",
-                        tool_name_utf8,
+                        tool_name,
                         version_as_string,
-                        tool_name_utf8,
+                        tool_name,
                         version_as_string);
         const fs::path script = scripts_folder / "fetchDependency.ps1";
         const auto install_cmd =
-            System::create_powershell_script_cmd(script, Strings::wformat(L"-Dependency %s", tool_name));
+            System::create_powershell_script_cmd(script, Strings::format("-Dependency %s", tool_name));
         const System::ExitCodeAndOutput rc = System::cmd_execute_and_capture_output(install_cmd);
         if (rc.exit_code)
         {
             System::println(System::Color::error,
                             "Launching powershell failed or was denied when trying to fetch %s version %s.\n"
                             "(No sufficient installed version was found)",
-                            tool_name_utf8,
+                            tool_name,
                             version_as_string);
             {
                 auto locked_metrics = Metrics::g_metrics.lock();
@@ -106,17 +105,19 @@ namespace vcpkg
 
     static fs::path get_cmake_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
     {
-        static constexpr std::array<int, 3> EXPECTED_VERSION = {3, 9, 3};
-        static const std::wstring VERSION_CHECK_ARGUMENTS = L"--version";
+        static constexpr std::array<int, 3> EXPECTED_VERSION = {3, 9, 4};
+        static const std::string VERSION_CHECK_ARGUMENTS = "--version";
 
-        const fs::path downloaded_copy = downloads_folder / "cmake-3.9.3-win32-x86" / "bin" / "cmake.exe";
-        const std::vector<fs::path> from_path = Files::find_from_PATH(L"cmake");
+        const fs::path downloaded_copy = downloads_folder / "cmake-3.9.4-win32-x86" / "bin" / "cmake.exe";
+        const std::vector<fs::path> from_path = Files::find_from_PATH("cmake");
 
         std::vector<fs::path> candidate_paths;
         candidate_paths.push_back(downloaded_copy);
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
+#if defined(_WIN32)
         candidate_paths.push_back(System::get_program_files_platform_bitness() / "CMake" / "bin" / "cmake.exe");
         candidate_paths.push_back(System::get_program_files_32_bit() / "CMake" / "bin");
+#endif
 
         const Optional<fs::path> path =
             find_if_has_equal_or_greater_version(candidate_paths, VERSION_CHECK_ARGUMENTS, EXPECTED_VERSION);
@@ -125,43 +126,44 @@ namespace vcpkg
             return *p;
         }
 
-        return fetch_dependency(scripts_folder, L"cmake", downloaded_copy, EXPECTED_VERSION);
+        return fetch_dependency(scripts_folder, "cmake", downloaded_copy, EXPECTED_VERSION);
     }
 
     fs::path get_nuget_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
     {
-        static constexpr std::array<int, 3> EXPECTED_VERSION = {4, 3, 0};
-        static const std::wstring VERSION_CHECK_ARGUMENTS = Strings::WEMPTY;
+        static constexpr std::array<int, 3> EXPECTED_VERSION = {4, 4, 0};
 
-        const fs::path downloaded_copy = downloads_folder / "nuget-4.3.0" / "nuget.exe";
-        const std::vector<fs::path> from_path = Files::find_from_PATH(L"nuget");
+        const fs::path downloaded_copy = downloads_folder / "nuget-4.4.0" / "nuget.exe";
+        const std::vector<fs::path> from_path = Files::find_from_PATH("nuget");
 
         std::vector<fs::path> candidate_paths;
         candidate_paths.push_back(downloaded_copy);
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
 
-        auto path = find_if_has_equal_or_greater_version(candidate_paths, VERSION_CHECK_ARGUMENTS, EXPECTED_VERSION);
+        auto path = find_if_has_equal_or_greater_version(candidate_paths, "", EXPECTED_VERSION);
         if (const auto p = path.get())
         {
             return *p;
         }
 
-        return fetch_dependency(scripts_folder, L"nuget", downloaded_copy, EXPECTED_VERSION);
+        return fetch_dependency(scripts_folder, "nuget", downloaded_copy, EXPECTED_VERSION);
     }
 
     fs::path get_git_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
     {
-        static constexpr std::array<int, 3> EXPECTED_VERSION = {2, 14, 1};
-        static const std::wstring VERSION_CHECK_ARGUMENTS = L"--version";
+        static constexpr std::array<int, 3> EXPECTED_VERSION = {2, 14, 2};
+        static const std::string VERSION_CHECK_ARGUMENTS = "--version";
 
-        const fs::path downloaded_copy = downloads_folder / "MinGit-2.14.1-32-bit" / "cmd" / "git.exe";
-        const std::vector<fs::path> from_path = Files::find_from_PATH(L"git");
+        const fs::path downloaded_copy = downloads_folder / "MinGit-2.14.2.3-32-bit" / "cmd" / "git.exe";
+        const std::vector<fs::path> from_path = Files::find_from_PATH("git");
 
         std::vector<fs::path> candidate_paths;
         candidate_paths.push_back(downloaded_copy);
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
+#if defined(_WIN32)
         candidate_paths.push_back(System::get_program_files_platform_bitness() / "git" / "cmd" / "git.exe");
         candidate_paths.push_back(System::get_program_files_32_bit() / "git" / "cmd" / "git.exe");
+#endif
 
         const Optional<fs::path> path =
             find_if_has_equal_or_greater_version(candidate_paths, VERSION_CHECK_ARGUMENTS, EXPECTED_VERSION);
@@ -170,13 +172,13 @@ namespace vcpkg
             return *p;
         }
 
-        return fetch_dependency(scripts_folder, L"git", downloaded_copy, EXPECTED_VERSION);
+        return fetch_dependency(scripts_folder, "git", downloaded_copy, EXPECTED_VERSION);
     }
 
     static fs::path get_ifw_installerbase_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
     {
         static constexpr std::array<int, 3> EXPECTED_VERSION = {3, 1, 81};
-        static const std::wstring VERSION_CHECK_ARGUMENTS = L"--framework-version";
+        static const std::string VERSION_CHECK_ARGUMENTS = "--framework-version";
 
         const fs::path downloaded_copy =
             downloads_folder / "QtInstallerFramework-win-x86" / "bin" / "installerbase.exe";
@@ -184,11 +186,11 @@ namespace vcpkg
         std::vector<fs::path> candidate_paths;
         candidate_paths.push_back(downloaded_copy);
         // TODO: Uncomment later
-        // const std::vector<fs::path> from_path = Files::find_from_PATH(L"installerbase");
+        // const std::vector<fs::path> from_path = Files::find_from_PATH("installerbase");
         // candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
-        // candidate_paths.push_back(fs::path(System::get_environment_variable(L"HOMEDRIVE").value_or("C:")) / "Qt" /
+        // candidate_paths.push_back(fs::path(System::get_environment_variable("HOMEDRIVE").value_or("C:")) / "Qt" /
         // "Tools" / "QtInstallerFramework" / "3.1" / "bin" / "installerbase.exe");
-        // candidate_paths.push_back(fs::path(System::get_environment_variable(L"HOMEDRIVE").value_or("C:")) / "Qt" /
+        // candidate_paths.push_back(fs::path(System::get_environment_variable("HOMEDRIVE").value_or("C:")) / "Qt" /
         // "QtIFW-3.1.0" / "bin" / "installerbase.exe");
 
         const Optional<fs::path> path =
@@ -198,7 +200,7 @@ namespace vcpkg
             return *p;
         }
 
-        return fetch_dependency(scripts_folder, L"installerbase", downloaded_copy, EXPECTED_VERSION);
+        return fetch_dependency(scripts_folder, "installerbase", downloaded_copy, EXPECTED_VERSION);
     }
 
     Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir)
@@ -322,7 +324,7 @@ namespace vcpkg
     static std::vector<VisualStudioInstance> get_visual_studio_instances(const VcpkgPaths& paths)
     {
         const fs::path script = paths.scripts / "findVisualStudioInstallationInstances.ps1";
-        const std::wstring cmd = System::create_powershell_script_cmd(script);
+        const std::string cmd = System::create_powershell_script_cmd(script);
         const System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd);
         Checks::check_exit(
             VCPKG_LINE_INFO, ec_data.exit_code == 0, "Could not run script to detect Visual Studio instances");
@@ -370,21 +372,21 @@ namespace vcpkg
                 // Get all supported architectures
                 std::vector<ToolsetArchOption> supported_architectures;
                 if (fs.exists(vcvarsall_dir / "vcvars32.bat"))
-                    supported_architectures.push_back({L"x86", CPU::X86, CPU::X86});
+                    supported_architectures.push_back({"x86", CPU::X86, CPU::X86});
                 if (fs.exists(vcvarsall_dir / "vcvars64.bat"))
-                    supported_architectures.push_back({L"amd64", CPU::X64, CPU::X64});
+                    supported_architectures.push_back({"amd64", CPU::X64, CPU::X64});
                 if (fs.exists(vcvarsall_dir / "vcvarsx86_amd64.bat"))
-                    supported_architectures.push_back({L"x86_amd64", CPU::X86, CPU::X64});
+                    supported_architectures.push_back({"x86_amd64", CPU::X86, CPU::X64});
                 if (fs.exists(vcvarsall_dir / "vcvarsx86_arm.bat"))
-                    supported_architectures.push_back({L"x86_arm", CPU::X86, CPU::ARM});
+                    supported_architectures.push_back({"x86_arm", CPU::X86, CPU::ARM});
                 if (fs.exists(vcvarsall_dir / "vcvarsx86_arm64.bat"))
-                    supported_architectures.push_back({L"x86_arm64", CPU::X86, CPU::ARM64});
+                    supported_architectures.push_back({"x86_arm64", CPU::X86, CPU::ARM64});
                 if (fs.exists(vcvarsall_dir / "vcvarsamd64_x86.bat"))
-                    supported_architectures.push_back({L"amd64_x86", CPU::X64, CPU::X86});
+                    supported_architectures.push_back({"amd64_x86", CPU::X64, CPU::X86});
                 if (fs.exists(vcvarsall_dir / "vcvarsamd64_arm.bat"))
-                    supported_architectures.push_back({L"amd64_arm", CPU::X64, CPU::ARM});
+                    supported_architectures.push_back({"amd64_arm", CPU::X64, CPU::ARM});
                 if (fs.exists(vcvarsall_dir / "vcvarsamd64_arm64.bat"))
-                    supported_architectures.push_back({L"amd64_arm64", CPU::X64, CPU::ARM64});
+                    supported_architectures.push_back({"amd64_arm64", CPU::X64, CPU::ARM64});
 
                 // Locate the "best" MSVC toolchain version
                 const fs::path msvc_path = vc_dir / "Tools" / "MSVC";
@@ -412,7 +414,7 @@ namespace vcpkg
                             found_toolsets.push_back(Toolset{vs_instance.root_path,
                                                              dumpbin_path,
                                                              vcvarsall_bat,
-                                                             {L"-vcvars_ver=14.0"},
+                                                             {"-vcvars_ver=14.0"},
                                                              V_140,
                                                              supported_architectures});
                         }
@@ -437,17 +439,17 @@ namespace vcpkg
                     const fs::path vs2015_bin_dir = vcvarsall_bat.parent_path() / "bin";
                     std::vector<ToolsetArchOption> supported_architectures;
                     if (fs.exists(vs2015_bin_dir / "vcvars32.bat"))
-                        supported_architectures.push_back({L"x86", CPU::X86, CPU::X86});
+                        supported_architectures.push_back({"x86", CPU::X86, CPU::X86});
                     if (fs.exists(vs2015_bin_dir / "amd64\\vcvars64.bat"))
-                        supported_architectures.push_back({L"x64", CPU::X64, CPU::X64});
+                        supported_architectures.push_back({"x64", CPU::X64, CPU::X64});
                     if (fs.exists(vs2015_bin_dir / "x86_amd64\\vcvarsx86_amd64.bat"))
-                        supported_architectures.push_back({L"x86_amd64", CPU::X86, CPU::X64});
+                        supported_architectures.push_back({"x86_amd64", CPU::X86, CPU::X64});
                     if (fs.exists(vs2015_bin_dir / "x86_arm\\vcvarsx86_arm.bat"))
-                        supported_architectures.push_back({L"x86_arm", CPU::X86, CPU::ARM});
+                        supported_architectures.push_back({"x86_arm", CPU::X86, CPU::ARM});
                     if (fs.exists(vs2015_bin_dir / "amd64_x86\\vcvarsamd64_x86.bat"))
-                        supported_architectures.push_back({L"amd64_x86", CPU::X64, CPU::X86});
+                        supported_architectures.push_back({"amd64_x86", CPU::X64, CPU::X86});
                     if (fs.exists(vs2015_bin_dir / "amd64_arm\\vcvarsamd64_arm.bat"))
-                        supported_architectures.push_back({L"amd64_arm", CPU::X64, CPU::ARM});
+                        supported_architectures.push_back({"amd64_arm", CPU::X64, CPU::ARM});
 
                     if (fs.exists(vs2015_dumpbin_exe))
                     {
@@ -489,15 +491,12 @@ namespace vcpkg
 
         if (tsv && vsp)
         {
-            const std::wstring w_toolset_version = Strings::to_utf16(*tsv);
-            const fs::path vs_root_path = *vsp;
-            Util::stable_keep_if(candidates, [&](const Toolset* t) {
-                return w_toolset_version == t->version && vs_root_path == t->visual_studio_root_path;
-            });
+            Util::stable_keep_if(
+                candidates, [&](const Toolset* t) { return *tsv == t->version && *vsp == t->visual_studio_root_path; });
             Checks::check_exit(VCPKG_LINE_INFO,
                                !candidates.empty(),
                                "Could not find Visual Studio instace at %s with %s toolset.",
-                               vs_root_path.generic_string(),
+                               vsp->u8string(),
                                *tsv);
 
             Checks::check_exit(VCPKG_LINE_INFO, candidates.size() == 1);
@@ -506,8 +505,7 @@ namespace vcpkg
 
         if (tsv)
         {
-            const std::wstring w_toolset_version = Strings::to_utf16(*tsv);
-            Util::stable_keep_if(candidates, [&](const Toolset* t) { return w_toolset_version == t->version; });
+            Util::stable_keep_if(candidates, [&](const Toolset* t) { return *tsv == t->version; });
             Checks::check_exit(
                 VCPKG_LINE_INFO, !candidates.empty(), "Could not find Visual Studio instace with %s toolset.", *tsv);
         }

@@ -3,8 +3,8 @@
 #include <vcpkg/packagespec.h>
 #include <vcpkg/parse.h>
 
-#include <vcpkg/base/Span.h>
 #include <vcpkg/base/expected.h>
+#include <vcpkg/base/span.h>
 #include <vcpkg/base/system.h>
 
 #include <string>

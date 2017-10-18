@@ -137,11 +137,10 @@ namespace vcpkg::Export
         fs.write_contents(nuspec_file_path, nuspec_file_content);
 
         // -NoDefaultExcludes is needed for ".vcpkg-root"
-        const std::wstring cmd_line =
-            Strings::wformat(LR"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes > nul)",
-                             nuget_exe.native(),
-                             output_dir.native(),
-                             nuspec_file_path.native());
+        const auto cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes > nul)",
+                                              nuget_exe.u8string(),
+                                              output_dir.u8string(),
+                                              nuspec_file_path.u8string());
 
         const int exit_code = System::cmd_execute_clean(cmd_line);
         Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: NuGet package creation failed");
@@ -160,25 +159,25 @@ namespace vcpkg::Export
 
         constexpr ArchiveFormat() = delete;
 
-        constexpr ArchiveFormat(BackingEnum backing_enum, const wchar_t* extension, const wchar_t* cmake_option)
+        constexpr ArchiveFormat(BackingEnum backing_enum, const char* extension, const char* cmake_option)
             : backing_enum(backing_enum), m_extension(extension), m_cmake_option(cmake_option)
         {
         }
 
         constexpr operator BackingEnum() const { return backing_enum; }
-        constexpr CWStringView extension() const { return this->m_extension; }
-        constexpr CWStringView cmake_option() const { return this->m_cmake_option; }
+        constexpr CStringView extension() const { return this->m_extension; }
+        constexpr CStringView cmake_option() const { return this->m_cmake_option; }
 
     private:
         BackingEnum backing_enum;
-        const wchar_t* m_extension;
-        const wchar_t* m_cmake_option;
+        const char* m_extension;
+        const char* m_cmake_option;
     };
 
     namespace ArchiveFormatC
     {
-        constexpr const ArchiveFormat ZIP(ArchiveFormat::BackingEnum::ZIP, L"zip", L"zip");
-        constexpr const ArchiveFormat SEVEN_ZIP(ArchiveFormat::BackingEnum::SEVEN_ZIP, L"7z", L"7zip");
+        constexpr const ArchiveFormat ZIP(ArchiveFormat::BackingEnum::ZIP, "zip", "zip");
+        constexpr const ArchiveFormat SEVEN_ZIP(ArchiveFormat::BackingEnum::SEVEN_ZIP, "7z", "7zip");
     }
 
     static fs::path do_archive_export(const VcpkgPaths& paths,
@@ -188,17 +187,17 @@ namespace vcpkg::Export
     {
         const fs::path& cmake_exe = paths.get_cmake_exe();
 
-        const std::wstring exported_dir_filename = raw_exported_dir.filename().native();
-        const std::wstring exported_archive_filename =
-            Strings::wformat(L"%s.%s", exported_dir_filename, format.extension());
+        const std::string exported_dir_filename = raw_exported_dir.filename().u8string();
+        const std::string exported_archive_filename =
+            Strings::format("%s.%s", exported_dir_filename, format.extension());
         const fs::path exported_archive_path = (output_dir / exported_archive_filename);
 
         // -NoDefaultExcludes is needed for ".vcpkg-root"
-        const std::wstring cmd_line = Strings::wformat(LR"("%s" -E tar "cf" "%s" --format=%s -- "%s")",
-                                                       cmake_exe.native(),
-                                                       exported_archive_path.native(),
-                                                       format.cmake_option(),
-                                                       raw_exported_dir.native());
+        const auto cmd_line = Strings::format(R"("%s" -E tar "cf" "%s" --format=%s -- "%s")",
+                                              cmake_exe.u8string(),
+                                              exported_archive_path.u8string(),
+                                              format.cmake_option(),
+                                              raw_exported_dir.u8string());
 
         const int exit_code = System::cmd_execute_clean(cmd_line);
         Checks::check_exit(
@@ -361,13 +360,13 @@ namespace vcpkg::Export
     static void print_next_step_info(const fs::path& prefix)
     {
         const fs::path cmake_toolchain = prefix / "scripts" / "buildsystems" / "vcpkg.cmake";
-        const CMakeVariable cmake_variable = CMakeVariable(L"CMAKE_TOOLCHAIN_FILE", cmake_toolchain.generic_string());
+        const CMakeVariable cmake_variable = CMakeVariable("CMAKE_TOOLCHAIN_FILE", cmake_toolchain.generic_string());
         System::println("\n"
                         "To use the exported libraries in CMake projects use:"
                         "\n"
                         "    %s"
                         "\n",
-                        Strings::to_utf8(cmake_variable.s));
+                        cmake_variable.s);
     };
 
     static void handle_raw_based_export(Span<const ExportPlanAction> export_plan,

@@ -39,7 +39,8 @@ namespace vcpkg::Commands::Autocomplete
         {
             const std::string requested_command = match[1].str();
 
-            std::vector<std::string> valid_commands = {
+            // First try public commands
+            std::vector<std::string> public_commands = {
                 "install",
                 "search",
                 "remove",
@@ -57,11 +58,31 @@ namespace vcpkg::Commands::Autocomplete
                 "contact",
             };
 
-            Util::unstable_keep_if(valid_commands, [&](const std::string& s) {
+            Util::unstable_keep_if(public_commands, [&](const std::string& s) {
                 return Strings::case_insensitive_ascii_starts_with(s, requested_command);
             });
 
-            output_sorted_results_and_exit(VCPKG_LINE_INFO, std::move(valid_commands));
+            if (!public_commands.empty())
+            {
+                output_sorted_results_and_exit(VCPKG_LINE_INFO, std::move(public_commands));
+            }
+
+            // If no public commands match, try private commands
+            std::vector<std::string> private_commands = {
+                "build",
+                "buildexternal",
+                "ci",
+                "depend-info",
+                "env",
+                "import",
+                "portsdiff",
+            };
+
+            Util::unstable_keep_if(private_commands, [&](const std::string& s) {
+                return Strings::case_insensitive_ascii_starts_with(s, requested_command);
+            });
+
+            output_sorted_results_and_exit(VCPKG_LINE_INFO, std::move(private_commands));
         }
 
         // Handles vcpkg install package:<triplet>
@@ -103,6 +124,7 @@ namespace vcpkg::Commands::Autocomplete
             CommandEntry{"install", R"###(^install\s(.*\s|)(\S*)$)###", Install::COMMAND_STRUCTURE},
             CommandEntry{"edit", R"###(^edit\s(.*\s|)(\S*)$)###", Edit::COMMAND_STRUCTURE},
             CommandEntry{"remove", R"###(^remove\s(.*\s|)(\S*)$)###", Remove::COMMAND_STRUCTURE},
+            CommandEntry{"integrate", R"###(^integrate(\s+)(\S*)$)###", Integrate::COMMAND_STRUCTURE},
         };
 
         for (auto&& command : COMMANDS)

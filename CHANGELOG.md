@@ -1,3 +1,47 @@
+vcpkg (0.0.92)
+--------------
+  * Add ports:
+    - cctz           v2.1
+    - celero         2.1.0-1
+    - eastl          3.05.08
+    - imgui          1.51-1
+    - libidn2        2.0.4
+    - mozjpeg        3.2-1
+    - spatialite-tools 4.3.0
+    - string-theory  1.6
+    - tiny-dnn       2017-10-09-dd906fed8c8aff8dc837657c42f9d55f8b793b0e
+    - wincrypt       0.0
+    - winsock2       0.0
+  * Update ports:
+    - abseil         2017-09-28 -> 2017-10-14
+    - boost          1.65.1 -> 1.65.1-1
+    - cpprestsdk     2.9.0-3 -> 2.9.0-4
+    - gdal           1.11.3-5 -> 2.2.2
+    - jansson        v2.10-1 -> 2.10-1
+    - lua            5.3.4-2 -> 5.3.4-4
+    - mpfr           3.1.5-1 -> 3.1.6
+    - ogre           1.9.0 -1 -> 1.9.0-1
+    - openni2        2.2.0.33-2 -> 2.2.0.33-4
+    - pcl            1.8.1-1 -> 1.8.1-2
+    - sciter         4.0.3 -> 4.0.4
+    - vtk            8.0.0-2 -> 8.0.0-3
+    - websocketpp    0.7.0 -> 0.7.0-1
+  * Initial support for autocomplete/tab-completion for powershell (still experimental)
+  * Add `VCPKG_CHAINLOAD_TOOLCHAIN_FILE variable`. As the name suggests, you can chainload your own toolchain file along with the `vcpkg` toolchain file.
+  * Fix issues with the new Visual Studio detection ([`vswhere.exe`](https://github.com/Microsoft/vswhere)). Notably:
+    - Detect VS2015 BuildTools, VS2017 BuildTools and VS Express Edition
+  * Fix issues with Windows SDK detection
+  * Rework acquisition of `vcpkg` dependencies (e.g. `cmake`, `git`). It is now more robust and should be faster on modern Operating Systems while still having fallback functions for older ones.
+  * Bump required version & auto-downloaded version of `cmake` to 3.9.4
+  * Bump required version & auto-downloaded version of `nuget` to 4.4.0
+  * Bump required version & auto-downloaded version of `vswhere` to 2.2.7
+  * Bump required version & auto-downloaded version of `git` to 2.4.2(.3)
+  * Bump ninja to version 1.8.0
+
+
+-- vcpkg team <vcpkg@microsoft.com>  TUE, 17 Oct 2017 16:00:00 -0800
+
+
 vcpkg (0.0.91)
 --------------
   * Add ports:
