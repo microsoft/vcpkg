@@ -10,8 +10,15 @@ for f in files:
     dllpattern = re.compile("_install_prefix}/bin/Qt5.*d.dll")
     libpattern = re.compile("_install_prefix}/lib/Qt5.*d.lib")
     exepattern = re.compile("_install_prefix}/bin/[a-z]+.exe")
+    tooldllpattern = re.compile("_install_prefix}/tools/qt5/Qt5.*d.dll")
     for line in openedfile:
-        if "_install_prefix}/bin/${LIB_LOCATION}" in line:
+        if "_install_prefix}/tools/qt5/${LIB_LOCATION}" in line:
+            builder += "    if (${Configuration} STREQUAL \"RELEASE\")"
+            builder += "\n    " + line.replace("/tools/qt5/", "/bin/")
+            builder += "    else()"
+            builder += "\n    " + line.replace("/tools/qt5/", "/debug/bin/")
+            builder += "    endif()\n"
+        elif "_install_prefix}/bin/${LIB_LOCATION}" in line:
             builder += "    if (${Configuration} STREQUAL \"RELEASE\")"
             builder += "\n    " + line
             builder += "    else()"
@@ -39,6 +46,8 @@ for f in files:
             builder += line.replace("/bin/", "/debug/bin/")
         elif libpattern.search(line) != None:
             builder += line.replace("/lib/", "/debug/lib/")
+        elif tooldllpattern.search(line) != None:
+            builder += line.replace("/tools/qt5/", "/debug/bin/")
         elif exepattern.search(line) != None:
             builder += line.replace("/bin/", "/tools/qt5/")
         else:
