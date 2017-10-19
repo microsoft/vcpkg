@@ -444,15 +444,41 @@ namespace vcpkg::Install
         }
     }
 
-    void perform_and_exit_ex(const std::vector<AnyAction>& action_plan,
-                             const Build::BuildPackageOptions& install_plan_options,
-                             const KeepGoing keep_going,
-                             const PrintSummary print_summary,
-                             const VcpkgPaths& paths,
-                             StatusParagraphs& status_db)
+    void InstallSummary::print() const
     {
-        std::vector<BuildResult> results;
-        std::vector<std::string> timing;
+        System::println("RESULTS");
+
+        for (const SpecSummary& result : this->results)
+        {
+            System::println("    %s: %s: %s", result.spec, Build::to_string(result.result), result.timing);
+        }
+
+        std::map<BuildResult, int> summary;
+        for (const BuildResult& v : Build::BUILD_RESULT_VALUES)
+        {
+            summary[v] = 0;
+        }
+
+        for (const SpecSummary& r : this->results)
+        {
+            summary[r.result]++;
+        }
+
+        System::println("\nSUMMARY");
+        for (const std::pair<const BuildResult, int>& entry : summary)
+        {
+            System::println("    %s: %d", Build::to_string(entry.first), entry.second);
+        }
+    }
+
+    InstallSummary perform(const std::vector<AnyAction>& action_plan,
+                           const Build::BuildPackageOptions& install_plan_options,
+                           const KeepGoing keep_going,
+                           const VcpkgPaths& paths,
+                           StatusParagraphs& status_db)
+    {
+        std::vector<SpecSummary> results;
+
         const auto timer = Chrono::ElapsedTime::create_started();
         size_t counter = 0;
         const size_t package_count = action_plan.size();
@@ -462,11 +488,11 @@ namespace vcpkg::Install
             const auto build_timer = Chrono::ElapsedTime::create_started();
             counter++;
 
-            const std::string display_name = action.spec().to_string();
+            const PackageSpec& spec = action.spec();
+            const std::string display_name = spec.to_string();
             System::println("Starting package %d/%d: %s", counter, package_count, display_name);
 
-            timing.push_back("0");
-            results.push_back(BuildResult::NULLVALUE);
+            results.push_back(SpecSummary{spec});
 
             if (const auto install_action = action.install_plan.get())
             {
@@ -478,7 +504,7 @@ namespace vcpkg::Install
                     Checks::exit_fail(VCPKG_LINE_INFO);
                 }
 
-                results.back() = result;
+                results.back().result = result;
             }
             else if (const auto remove_action = action.remove_plan.get())
             {
@@ -490,38 +516,11 @@ namespace vcpkg::Install
                 Checks::unreachable(VCPKG_LINE_INFO);
             }
 
-            timing.back() = build_timer.to_string();
+            results.back().timing = build_timer.to_string();
             System::println("Elapsed time for package %s: %s", display_name, build_timer.to_string());
         }
 
-        System::println("Total time taken: %s", timer.to_string());
-
-        if (print_summary == PrintSummary::YES)
-        {
-            for (size_t i = 0; i < results.size(); i++)
-            {
-                System::println("%s: %s: %s", action_plan[i].spec(), Build::to_string(results[i]), timing[i]);
-            }
-
-            std::map<BuildResult, int> summary;
-            for (const BuildResult& v : Build::BUILD_RESULT_VALUES)
-            {
-                summary[v] = 0;
-            }
-
-            for (const BuildResult& r : results)
-            {
-                summary[r]++;
-            }
-
-            System::println("\n\nSUMMARY");
-            for (const std::pair<const BuildResult, int>& entry : summary)
-            {
-                System::println("    %s: %d", Build::to_string(entry.first), entry.second);
-            }
-        }
-
-        Checks::exit_success(VCPKG_LINE_INFO);
+        return InstallSummary{results, timer.to_string()};
     }
 
     static const std::string OPTION_DRY_RUN = "--dry-run";
@@ -583,7 +582,6 @@ namespace vcpkg::Install
         const bool no_downloads = options.find(OPTION_NO_DOWNLOADS) != options.cend();
         const bool is_recursive = options.find(OPTION_RECURSE) != options.cend();
         const KeepGoing keep_going = to_keep_going(options.find(OPTION_KEEP_GOING) != options.cend());
-        const PrintSummary print_summary = to_print_summary(keep_going == KeepGoing::YES);
 
         // create the plan
         StatusParagraphs status_db = database_load_check(paths);
@@ -635,8 +633,17 @@ namespace vcpkg::Install
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        perform_and_exit_ex(action_plan, install_plan_options, keep_going, print_summary, paths, status_db);
+        const InstallSummary summary = perform(action_plan, install_plan_options, keep_going, paths, status_db);
+
+        System::println("\nTotal elapsed time: %s", summary.total_elapsed_time);
+
+        if (keep_going == KeepGoing::YES)
+        {
+            summary.print();
+        }
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
+
+    SpecSummary::SpecSummary(const PackageSpec& spec) : spec(spec), result(BuildResult::NULLVALUE), timing("0") {}
 }
