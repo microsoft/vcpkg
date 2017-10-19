@@ -9,18 +9,12 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-#message("CURRENT_PORT_DIR=${CURRENT_PORT_DIR}")
-
-message(STATUS "Building")
-
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS_DEBUG
-		-DINSTALL_HEADERS=OFF
-	OPTIONS_DEBUG
+    OPTIONS_DEBUG -DINSTALL_HEADERS=OFF
 )
 
 vcpkg_install_cmake()
