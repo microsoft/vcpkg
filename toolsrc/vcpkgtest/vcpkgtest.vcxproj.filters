@@ -30,8 +30,5 @@
     <ClCompile Include="..\src\tests.paragraph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\tests_package_spec.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>
