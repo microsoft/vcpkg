@@ -131,7 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\vcpkg_metrics_uploader.cpp" />
+    <ClCompile Include="..\src\vcpkgmetricsuploader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\vcpkglib\vcpkglib.vcxproj">

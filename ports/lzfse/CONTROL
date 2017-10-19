@@ -1,0 +1,3 @@
+Source: lzfse
+Version: 1.0-1
+Description: Lempel-Ziv style data compressor using Finite State Entropy coding.

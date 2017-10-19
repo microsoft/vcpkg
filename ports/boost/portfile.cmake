@@ -1,15 +1,16 @@
 include(vcpkg_common_functions)
 set(VERSION 1_65)
-set(VERSION2 1.65.0)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/boost_${VERSION}_0)
+set(VERSION_FULL 1_65_1)
+set(VERSION2 1.65.1)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/boost_${VERSION_FULL})
 
 ######################
 # Acquire and arrange sources
 ######################
 vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "https://sourceforge.net/projects/boost/files/boost/${VERSION2}/boost_${VERSION}_0.7z" "http://dl.bintray.com/boostorg/release/${VERSION2}/source/boost_${VERSION}_0.7z"
-    FILENAME "boost_${VERSION}_0.7z"
-    SHA512 41909136371b3aac53fc06ae92404bd52adde4cbda9337886433d197059105208b67331abf6ca8dc45e4d28679733b5c01fc701cba17516c7134c97785cc5f7e
+    URLS "https://sourceforge.net/projects/boost/files/boost/${VERSION2}/boost_${VERSION_FULL}.7z" "http://dl.bintray.com/boostorg/release/${VERSION2}/source/boost_${VERSION_FULL}.7z"
+    FILENAME "boost_${VERSION_FULL}.7z"
+    SHA512 b1d9264ec74dd75c68176f5a2d2da33a2c1e3162842cc61a07ac8ed1ebb953855cece4faf72ce99b490b665e813b839e35c7fc8026f2f9cb31b106fb8bab2a9c
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
@@ -24,7 +25,8 @@ FILE(READ "${DIFF}" content)
 STRING(REGEX REPLACE "include/" "" content "${content}")
 set(DIFF2 ${CURRENT_BUILDTREES_DIR}/src/boost-range-has_range_iterator-hotfix_e7ebe14707130cda7b72e0ae5e93b17157fdb6a2.diff.fixed)
 FILE(WRITE ${DIFF2} "${content}")
-vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${DIFF2})
+vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${DIFF2}
+                                                       ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-boost-ICU-support.patch)
 
 ######################
 # Cleanup previous builds
@@ -75,19 +77,36 @@ message(STATUS "Bootstrapping done")
 set(B2_OPTIONS
     -sZLIB_INCLUDE="${CURRENT_INSTALLED_DIR}\\include"
     -sBZIP2_INCLUDE="${CURRENT_INSTALLED_DIR}\\include"
+    -sICU_PATH="${CURRENT_INSTALLED_DIR}"
     -j$ENV{NUMBER_OF_PROCESSORS}
     --debug-configuration
     --hash
     -q
 
-    --without-python
     threading=multi
 )
 
+# Add build type specific options
+set(B2_OPTIONS_DBG
+    -sZLIB_BINARY=zlibd
+    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
+    -sBZIP2_BINARY=bz2d
+    -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
+)
+
+set(B2_OPTIONS_REL
+    -sZLIB_BINARY=zlib
+    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+    -sBZIP2_BINARY=bz2
+    -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+)
+
+set(LIB_RUNTIME_LINK "shared")
 if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
     list(APPEND B2_OPTIONS runtime-link=shared)
 else()
     list(APPEND B2_OPTIONS runtime-link=static)
+    set(LIB_RUNTIME_LINK "static")
 endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -100,6 +119,30 @@ if(TRIPLET_SYSTEM_ARCH MATCHES "x64")
     list(APPEND B2_OPTIONS address-model=64)
 endif()
 
+if("python" IN_LIST FEATURES)
+    # Find Python. Can't use find_package here, but we already know where everything is
+    file(GLOB PYTHON_INCLUDE_PATH "${CURRENT_INSTALLED_DIR}/include/python[0-9.]*")
+    set(PYTHONLIBS_RELEASE "${CURRENT_INSTALLED_DIR}/lib")
+    set(PYTHONLIBS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib")
+    string(REGEX REPLACE ".*python([0-9\.]+)$" "\\1" PYTHON_VERSION ${PYTHON_INCLUDE_PATH})
+    list(APPEND B2_OPTIONS_DBG python-debugging=on)
+else()
+    list(APPEND B2_OPTIONS --without-python)
+endif()
+
+if("locale-icu" IN_LIST FEATURES)
+    list(APPEND B2_OPTIONS boost.locale.icu=on)
+else()
+    list(APPEND B2_OPTIONS boost.locale.icu=off)
+endif()
+
+if("regex-icu" IN_LIST FEATURES)
+    list(APPEND B2_OPTIONS --enable-icu)
+else()
+    list(APPEND B2_OPTIONS --disable-icu)
+endif()
+
+
 if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
     list(APPEND B2_OPTIONS
         windows-api=store
@@ -109,7 +152,6 @@ if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
         # --without-date_time
         # --without-exception
         # --without-serialization
-        # --without-fiber
         # --without-context
         # --without-graph_parallel
         # --without-signals
@@ -130,10 +172,13 @@ if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
         --without-program_options # libs\program_options\src\parsers.cpp(194): error C2065: 'environ': undeclared identifier
 
         --without-test
+        --without-fiber
+        --without-stacktrace
         --without-filesystem # libs\filesystem\src\operations.cpp(178): error C2039: 'GetEnvironmentVariableW': is not a member of '`global namespace''
         --without-thread
         --without-iostreams
         --without-container
+        --without-python
     )
     if(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
         find_path(PATH_TO_CL cl.exe)
@@ -164,21 +209,14 @@ else()
     message(FATAL_ERROR "Unsupported value for VCPKG_PLATFORM_TOOLSET: '${VCPKG_PLATFORM_TOOLSET}'")
 endif()
 
-# Add build type specific options
 set(B2_OPTIONS_DBG
     ${B2_OPTIONS}
-    -sZLIB_BINARY=zlibd
-    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
-    -sBZIP2_BINARY=bz2d
-    -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
+    ${B2_OPTIONS_DBG}
 )
 
 set(B2_OPTIONS_REL
     ${B2_OPTIONS}
-    -sZLIB_BINARY=zlib
-    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
-    -sBZIP2_BINARY=bz2
-    -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+    ${B2_OPTIONS_REL}
 )
 
 ######################

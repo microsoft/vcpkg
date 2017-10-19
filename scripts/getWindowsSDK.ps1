@@ -13,14 +13,18 @@ if ($DisableWin10SDK -and $DisableWin81SDK)
 }
 
 Write-Verbose "Executing $($MyInvocation.MyCommand.Name)"
-$scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 
 $validInstances = New-Object System.Collections.ArrayList
 
 # Windows 10 SDK
 function CheckWindows10SDK($path)
 {
-    $folder = "$path\Include"
+    if ($path -eq $null)
+    {
+        return
+    }
+
+    $folder = (Join-Path $path "Include")
     if (!(Test-Path $folder))
     {
         Write-Verbose "$folder - Not Found"
@@ -37,7 +41,7 @@ function CheckWindows10SDK($path)
         if (!(Test-Path $windowsheader))
         {
             Write-Verbose "$windowsheader - Not Found"
-            return
+            continue
         }
         Write-Verbose "$windowsheader - Found"
 
@@ -45,7 +49,7 @@ function CheckWindows10SDK($path)
         if (!(Test-Path $ddkheader))
         {
             Write-Verbose "$ddkheader - Not Found"
-            return
+            continue
         }
 
         Write-Verbose "$ddkheader - Found"
@@ -65,6 +69,11 @@ CheckWindows10SDK("${env:ProgramFiles(x86)}\Windows Kits\10")
 # Windows 8.1 SDK
 function CheckWindows81SDK($path)
 {
+    if ($path -eq $null)
+    {
+        return
+    }
+
     $folder = "$path\Include"
     if (!(Test-Path $folder))
     {

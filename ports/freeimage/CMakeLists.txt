@@ -72,7 +72,7 @@ set(SRCS ${DEPRECATION_SRCS}
 # define (to nothing instead of _declspec(dllimport) ) the DLL_API macro.
 # For this purpouse we include (depending on the BUILD_SHARED_LIBS )
 # the appropriate FreeImageConfig.h .
-if(${BUILD_SHARED_LIBS})
+if(BUILD_SHARED_LIBS)
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/FreeImageConfig-dynamic.h ${CMAKE_CURRENT_BINARY_DIR}/FreeImageConfig.h)
 else()
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/FreeImageConfig-static.h ${CMAKE_CURRENT_BINARY_DIR}/FreeImageConfig.h)
@@ -81,7 +81,7 @@ list(APPEND PUBLIC_HEADERS ${CMAKE_CURRENT_BINARY_DIR}/FreeImageConfig.h)
 
 add_library(FreeImage ${SRCS} ${PRIVATE_HEADERS} ${PUBLIC_HEADERS})
 
-if(${BUILD_SHARED_LIBS})
+if(BUILD_SHARED_LIBS)
     target_compile_definitions(FreeImage PRIVATE -DFREEIMAGE_EXPORTS)
 else()
     target_compile_definitions(FreeImage PRIVATE -DFREEIMAGE_LIB)
@@ -119,7 +119,7 @@ add_library(FreeImagePlus
     ${CMAKE_CURRENT_SOURCE_DIR}/Wrapper/FreeImagePlus/FreeImagePlus.h
     ${CMAKE_CURRENT_SOURCE_DIR}/Wrapper/FreeImagePlus/FreeImagePlus.rc)
 
-if(${BUILD_SHARED_LIBS})
+if(BUILD_SHARED_LIBS)
     target_compile_definitions(FreeImagePlus PRIVATE -DFIP_EXPORTS)
 else()
     target_compile_definitions(FreeImagePlus PRIVATE -DFREEIMAGE_LIB)

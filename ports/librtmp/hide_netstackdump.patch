@@ -1,0 +1,22 @@
+diff --git a/librtmp/rtmp.c b/librtmp/rtmp.c
+index f152648..0bf3f7d 100644
+--- a/librtmp/rtmp.c
++++ b/librtmp/rtmp.c
+@@ -1316,7 +1316,7 @@ ReadN(RTMP *r, char *buffer, int n)
+ 	    SendBytesReceived(r);
+ 	}
+       /*RTMP_Log(RTMP_LOGDEBUG, "%s: %d bytes\n", __FUNCTION__, nBytes); */
+-#ifdef _DEBUG
++#if defined(_DEBUG) && !defined(LIBRTMP_ONLY)
+       fwrite(ptr, 1, nBytes, netstackdump_read);
+ #endif
+ 
+@@ -3527,7 +3527,7 @@ RTMPSockBuf_Send(RTMPSockBuf *sb, const char *buf, int len)
+ {
+   int rc;
+ 
+-#ifdef _DEBUG
++#if defined(_DEBUG) && !defined(LIBRTMP_ONLY)
+   fwrite(buf, 1, len, netstackdump);
+ #endif
+ 

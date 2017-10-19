@@ -23,7 +23,9 @@ This should be set to `SOURCE_PATH` by convention.
 The organization or user and repository on GitHub.
 
 ### REF
-A stable git commit-ish (ideally a tag) that will not change contents.
+A stable git commit-ish (ideally a tag) that will not change contents. **This should not be a branch.**
+
+For repositories without official releases, this can be set to the full commit id of the current latest master.
 
 If `REF` is specified, `SHA512` must also be specified.
 
@@ -38,7 +40,7 @@ The unstable git commit-ish (ideally a branch) to pull for `--head` builds.
 For most projects, this should be `master`. The chosen branch should be one that is expected to be always buildable on all supported platforms.
 
 ## Notes:
-At least one of `REF` and `HEAD_REF` must be specified.
+At least one of `REF` and `HEAD_REF` must be specified, however it is preferable for both to be present.
 
 This exports the `VCPKG_HEAD_VERSION` variable during head builds.
 
