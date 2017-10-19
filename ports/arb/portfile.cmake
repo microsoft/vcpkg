@@ -1,5 +1,9 @@
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/arb-2.11.1)
+
+# Library linkage currently requires static (dynamic has bugs)
+set(VCPKG_LIBRARY_LINKAGE static)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH ${SOURCE_PATH}
     REPO fredrik-johansson/arb
