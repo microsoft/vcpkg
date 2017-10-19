@@ -330,10 +330,19 @@ namespace vcpkg
             VCPKG_LINE_INFO, ec_data.exit_code == 0, "Could not run script to detect Visual Studio instances");
 
         const std::vector<std::string> instances_as_strings = Strings::split(ec_data.output, "\n");
+        Checks::check_exit(
+            VCPKG_LINE_INFO, !instances_as_strings.empty(), "Could not detect any Visual Studio instances");
+
         std::vector<VisualStudioInstance> output;
         for (const std::string& instance_as_string : instances_as_strings)
         {
             const std::vector<std::string> split = Strings::split(instance_as_string, "::");
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               split.size() == 4,
+                               "Invalid Visual Studio instance format.\n"
+                               "Expected: PreferenceWeight::ReleaseType::Version::PathToVisualStudio\n"
+                               "Actual  : %s",
+                               instance_as_string);
             output.push_back({split.at(3), split.at(2), split.at(1), split.at(0)});
         }
 
