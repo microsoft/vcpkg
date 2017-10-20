@@ -4,17 +4,21 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/include/mysql/mysql.h")
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mariadb-connector-c-2.3.2)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mariadb-connector-c-3.0.2)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/MariaDB/mariadb-connector-c/archive/v2.3.2.tar.gz"
-    FILENAME "mariadb-connector-c-2.3.2.tar.gz"
-    SHA512 f5574756ffce69e3dd15b7f7c14cfd0b4d69e3203ae4b383f05a110918916279ba7c0b9149d0dcb9ec93bbfc0927dfaf88bb40979ba1de710ce148d1fbe033af
+    URLS "https://github.com/MariaDB/mariadb-connector-c/archive/v3.0.2.tar.gz"
+    FILENAME "mariadb-connector-c-3.0.2.tar.gz"
+    SHA512 a5086ff149b1ca0e1b652013475c5f3793824416a60ec35018b6dcd502bd38b50fa040271ff8d308520dadecc9601671fccf67046fcda2425f1d7c59e1c6c52f
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+	OPTIONS
+		-DWITH_UNITTEST=OFF
+		-DWITH_SSL=OFF
+		-DWITH_CURL=OFF
 )
 
 vcpkg_install_cmake()
