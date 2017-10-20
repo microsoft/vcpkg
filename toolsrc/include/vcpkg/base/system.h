@@ -38,27 +38,27 @@ namespace vcpkg::System
     void println(const Color c, const CStringView message);
 
     template<class Arg1, class... Args>
-    void print(const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
+    void print(const char* message_template, const Arg1& message_arg1, const Args&... message_args)
     {
-        return System::print(Strings::format(messageTemplate, messageArg1, messageArgs...));
+        return System::print(Strings::format(message_template, message_arg1, message_args...));
     }
 
     template<class Arg1, class... Args>
-    void print(const Color c, const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
+    void print(const Color c, const char* message_template, const Arg1& message_arg1, const Args&... message_args)
     {
-        return System::print(c, Strings::format(messageTemplate, messageArg1, messageArgs...));
+        return System::print(c, Strings::format(message_template, message_arg1, message_args...));
     }
 
     template<class Arg1, class... Args>
-    void println(const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
+    void println(const char* message_template, const Arg1& message_arg1, const Args&... message_args)
     {
-        return System::println(Strings::format(messageTemplate, messageArg1, messageArgs...));
+        return System::println(Strings::format(message_template, message_arg1, message_args...));
     }
 
     template<class Arg1, class... Args>
-    void println(const Color c, const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
+    void println(const Color c, const char* message_template, const Arg1& message_arg1, const Args&... message_args)
     {
-        return System::println(c, Strings::format(messageTemplate, messageArg1, messageArgs...));
+        return System::println(c, Strings::format(message_template, message_arg1, message_args...));
     }
 
     Optional<std::string> get_environment_variable(const CStringView varname) noexcept;
@@ -90,17 +90,17 @@ namespace vcpkg::Debug
     void println(const System::Color c, const CStringView message);
 
     template<class Arg1, class... Args>
-    void println(const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
+    void println(const char* message_template, const Arg1& message_arg1, const Args&... message_args)
     {
-        return Debug::println(Strings::format(messageTemplate, messageArg1, messageArgs...));
+        return Debug::println(Strings::format(message_template, message_arg1, message_args...));
     }
 
     template<class Arg1, class... Args>
     void println(const System::Color c,
-                 const char* messageTemplate,
-                 const Arg1& messageArg1,
-                 const Args&... messageArgs)
+                 const char* message_template,
+                 const Arg1& message_arg1,
+                 const Args&... message_args)
     {
-        return Debug::println(c, Strings::format(messageTemplate, messageArg1, messageArgs...));
+        return Debug::println(c, Strings::format(message_template, message_arg1, message_args...));
     }
 }
