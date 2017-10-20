@@ -1,3 +1,31 @@
+vcpkg (0.0.93)
+--------------
+  * Add ports:
+    - berkeleydb     4.8.30
+    - libsodium      1.0.15
+    - secp256k1      2017-19-10-0b7024185045a49a1a6a4c5615bf31c94f63d9c4
+  * Update ports:
+    - assimp         4.0.0-2 -> 4.0.1
+    - azure-storage-cpp 3.0.0-3 -> 3.0.0-4
+    - cctz           v2.1 -> 2.1
+    - folly          v2017.07.17.01-1 -> 2017.10.02.00
+    - grpc           1.6.0-1 -> 1.6.0-2
+    - openblas       v0.2.20-2 -> 0.2.20-2
+    - pthreads       2.9.1-1 -> 2.9.1-2
+    - sdl2-gfx       1.0.3-2 -> 1.0.3-3
+    - sdl2-image     2.0.1-2 -> 2.0.1-3
+    - sdl2-mixer     2.0.1-2 -> 2.0.1-3
+    - sdl2-net       2.0.1-2 -> 2.0.1-3
+    - sdl2-ttf       2.0.14-2 -> 2.0.14-3
+    - spirv-tools    v2017.1-dev-7e2d26c77b606b21af839b37fd21381c4a669f23-1 -> 2017.1-dev-7e2d26c77b606b21af839b37fd21381c4a669f23-1
+    - thor           v2.0-1 -> 2.0-1
+    - tinyexr        v0.9.5-d16ea6 -> 0.9.5-d16ea6
+  * Fix issue where `vcpkg` was getting output from powershell scripts. Powershell adds newlines when the console width is reached; the extra newlines was causing `vcpkg`'s parsing to fail.
+  * Improve autocomplete/tab-completion for powershell (still experimental)
+
+
+-- vcpkg team <vcpkg@microsoft.com>  THU, 19 Oct 2017 21:30:00 -0800
+
 vcpkg (0.0.92)
 --------------
   * Add ports:
