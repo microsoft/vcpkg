@@ -78,9 +78,7 @@ namespace vcpkg::Strings
 
     std::string replace_all(std::string&& s, const std::string& search, const std::string& rep);
 
-    void trim(std::string* s);
-
-    std::string trimmed(const std::string& s);
+    std::string trim(std::string&& s);
 
     void trim_all_and_remove_whitespace_strings(std::vector<std::string>* strings);
 

@@ -91,7 +91,7 @@ namespace vcpkg
             Checks::exit_with_code(VCPKG_LINE_INFO, rc.exit_code);
         }
 
-        const fs::path actual_downloaded_path = Strings::trimmed(rc.output);
+        const fs::path actual_downloaded_path = Strings::trim(std::string{rc.output});
         std::error_code ec;
         const auto eq = fs::stdfs::equivalent(expected_downloaded_path, actual_downloaded_path, ec);
         Checks::check_exit(VCPKG_LINE_INFO,
