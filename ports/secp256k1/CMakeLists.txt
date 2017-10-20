@@ -4,9 +4,9 @@ project(secp256k1 C)
 option(INSTALL_HEADERS "Install header files" ON)
 
 add_definitions(
-	-DENABLE_MODULE_ECDH
-	-DENABLE_MODULE_RECOVERY
-	-DHAVE_CONFIG_H
+    -DENABLE_MODULE_ECDH
+    -DENABLE_MODULE_RECOVERY
+    -DHAVE_CONFIG_H
 )
 
 file(GLOB SOURCES src/secp256k1.c)
@@ -21,6 +21,6 @@ install(TARGETS secp256k1
 )
 
 if(INSTALL_HEADERS)
-	file(GLOB HEADERS include/*.h)
-	install(FILES ${HEADERS} DESTINATION include)
+    file(GLOB HEADERS include/secp256k1.h)
+    install(FILES ${HEADERS} DESTINATION include)
 endif()
