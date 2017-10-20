@@ -16,7 +16,9 @@ vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
 	OPTIONS
-        -DWITH_UNITTEST=OFF
+		-DWITH_UNITTEST=OFF
+		-DWITH_SSL=OFF
+		-DWITH_CURL=OFF
 )
 
 vcpkg_install_cmake()
