@@ -134,7 +134,8 @@ namespace vcpkg::Commands::Autocomplete
                 const auto prefix = match[2].str();
                 std::vector<std::string> results;
 
-                if (Strings::case_insensitive_ascii_starts_with(prefix, "-"))
+                const bool is_option = Strings::case_insensitive_ascii_starts_with(prefix, "-");
+                if (is_option)
                 {
                     results = Util::fmap(command.structure.switches, [](auto&& s) -> std::string { return s; });
                 }
@@ -147,7 +148,7 @@ namespace vcpkg::Commands::Autocomplete
                     return Strings::case_insensitive_ascii_starts_with(s, prefix);
                 });
 
-                if (command.name == "install" && results.size() == 1)
+                if (command.name == "install" && results.size() == 1 && !is_option)
                 {
                     const auto port_at_each_triplet =
                         combine_port_with_triplets(results[0], paths.get_available_triplets());

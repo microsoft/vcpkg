@@ -30,15 +30,10 @@ namespace vcpkg::Commands::CI
         });
     }
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
+    static Install::InstallSummary run_ci_on_triplet(const Triplet& triplet, const VcpkgPaths& paths)
     {
-        static const std::string EXAMPLE = Help::create_example_string("ci x64-windows");
-        args.check_max_arg_count(1, EXAMPLE);
-        const Triplet triplet = args.command_arguments.size() == 1
-                                    ? Triplet::from_canonical_name(args.command_arguments.at(0))
-                                    : default_triplet;
         Input::check_triplet(triplet, paths);
-        args.check_and_get_optional_command_arguments({});
+
         const std::vector<PackageSpec> specs = load_all_package_specs(paths.get_filesystem(), paths.ports, triplet);
 
         StatusParagraphs status_db = database_load_check(paths);
@@ -54,8 +49,44 @@ namespace vcpkg::Commands::CI
                 return Dependencies::AnyAction(std::move(install_action));
             });
 
-        Install::perform_and_exit_ex(
-            action_plan, install_plan_options, Install::KeepGoing::YES, Install::PrintSummary::YES, paths, status_db);
+        return Install::perform(action_plan, install_plan_options, Install::KeepGoing::YES, paths, status_db);
+    }
+
+    struct TripletAndSummary
+    {
+        Triplet triplet;
+        Install::InstallSummary summary;
+    };
+
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
+    {
+        static const std::string EXAMPLE = Help::create_example_string("ci x64-windows");
+        args.check_and_get_optional_command_arguments({});
+
+        std::vector<Triplet> triplets;
+        for (const std::string& triplet : args.command_arguments)
+        {
+            triplets.push_back(Triplet::from_canonical_name(triplet));
+        }
+
+        if (triplets.empty())
+        {
+            triplets.push_back(default_triplet);
+        }
+
+        std::vector<TripletAndSummary> results;
+        for (const Triplet& triplet : triplets)
+        {
+            Install::InstallSummary summary = run_ci_on_triplet(triplet, paths);
+            results.push_back({triplet, std::move(summary)});
+        }
+
+        for (auto&& result : results)
+        {
+            System::println("\nTriplet: %s", result.triplet);
+            System::println("Total elapsed time: %s", result.summary.total_elapsed_time);
+            result.summary.print();
+        }
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }

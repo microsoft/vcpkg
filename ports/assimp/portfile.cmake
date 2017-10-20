@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO assimp/assimp
-    REF v4.0.0
-    SHA512 ab2b376c6323fc8579fe3a4b3dbe92c44d753747464a14d6e2be70d2a855c208df882ad84487a7b96f364afb175938b5f6a1111d767450b01e0b8b7f0f36ba62
+    REF v4.0.1
+    SHA512 260b4c7e738f857d8364c4878ea4e789ca676180821943f6d9bff8f56e5f9377ea29660dca4e130c681a8aa12fc32f155adb1d78ca260ba242e68b8afa6cc1bb
     HEAD_REF master
 )
 
@@ -19,6 +19,7 @@ vcpkg_configure_cmake(
             -DASSIMP_BUILD_ASSIMP_VIEW=False
             -DASSIMP_BUILD_ZLIB=False
             -DASSIMP_BUILD_ASSIMP_TOOLS=False
+            -DASSIMP_INSTALL_PDB=False
 )
 
 vcpkg_install_cmake()
