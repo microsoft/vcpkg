@@ -22,7 +22,7 @@ namespace vcpkg::System
 
     ExitCodeAndOutput cmd_execute_and_capture_output(const CStringView cmd_line);
 
-    std::string create_powershell_script_cmd(const fs::path& script_path, const CStringView args = "");
+    ExitCodeAndOutput powershell_execute_and_capture_output(const fs::path& script_path, const CStringView args = "");
 
     enum class Color
     {
