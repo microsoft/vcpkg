@@ -4,8 +4,10 @@ set(FLINT_VERSION 2.5.2)
 set(FLINT_HASH "8606b369af505d5fcedd05d95fcd04afac2a916fc5291501c56785891cfdb2f9bc98700b2d05afd1d9482fb96df2a8c8bf1cd0e5696df46775df9fa743eb900b")
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/flint-${FLINT_VERSION})
 
-# Library linkage currently requires static (dynamic has bugs)
-set(VCPKG_LIBRARY_LINKAGE static)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
+    set(VCPKG_LIBRARY_LINKAGE static)
+endif()
 
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "http://www.flintlib.org/flint-${FLINT_VERSION}.zip"
