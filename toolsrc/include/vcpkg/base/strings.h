@@ -76,6 +76,8 @@ namespace vcpkg::Strings
         return join(delimiter, v, [](const Element& x) -> const Element& { return x; });
     }
 
+    std::string replace_all(std::string&& s, const std::string& search, const std::string& rep);
+
     void trim(std::string* s);
 
     std::string trimmed(const std::string& s);

@@ -114,6 +114,17 @@ namespace vcpkg::Strings
 #endif
     }
 
+    std::string replace_all(std::string&& s, const std::string& search, const std::string& rep)
+    {
+        size_t pos = 0;
+        while ((pos = s.find(search, pos)) != std::string::npos)
+        {
+            s.replace(pos, search.size(), rep);
+            pos += rep.size();
+        }
+        return std::move(s);
+    }
+
     void trim(std::string* s)
     {
         s->erase(std::find_if_not(s->rbegin(), s->rend(), details::isspace).base(), s->end());
