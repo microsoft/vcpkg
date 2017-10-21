@@ -1,12 +1,12 @@
-#header-only library
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/eigen-eigen-5a0156e40feb)
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://bitbucket.org/eigen/eigen/get/3.3.4.tar.bz2"
-    FILENAME "eigen-3.3.4.tar.bz2"
-    SHA512 d67a3fd8f7ce811af65fc1d43ec347dadf9c643a49135f7e455fc303773bad09e80a125282c7dfca7a1993b79e1f66576ac92418119fbb0fa50c1a581b957c0d
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO RLovelett/eigen
+    REF 3.3.4
+    SHA512 b9f6bc74d79aaa7c4cb0c97739ba08c9b0570386f87c4225c06326e734fc27b9a7347a257079cae7954b6dbf599acb47d65037863b01ef5b1ff4ef7a09e3e674
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
