@@ -1,10 +1,10 @@
 include(vcpkg_common_functions)
 
-vcpkg_from_github(
+vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO RLovelett/eigen
+    REPO eigen/eigen
     REF 3.3.4
-    SHA512 b9f6bc74d79aaa7c4cb0c97739ba08c9b0570386f87c4225c06326e734fc27b9a7347a257079cae7954b6dbf599acb47d65037863b01ef5b1ff4ef7a09e3e674
+    SHA512 4077a5c3b95e3573774ccd3fe6c7233cb4b83db2358c19b43ea796925bd0201451d8632bddc5d68b1b57bbf67c5473a8908926eed065a745689a2acec9711d5c
     HEAD_REF master
 )
 
