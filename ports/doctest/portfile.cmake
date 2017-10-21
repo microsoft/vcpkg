@@ -1,12 +1,12 @@
 #header-only library
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/doctest-1.1.0)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/onqtam/doctest/archive/1.1.0.zip"
-    FILENAME "doctest-1.1.0.zip"
-    SHA512 3cbdbb82d2dceff5a34aaed45222832c5767f21b64b271c41c2da7bae1f9e364a60758a8b6ce64285999afc30dd76de980e287663fa3119d0bcc1d2b45514e0b
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO onqtam/doctest
+    REF 1.2.0
+    SHA512 7e01e4b817e2200fcd7216342b184ddb60723180bb0a69e24d8c54b7b7d5d983bbd7a2fb0c629e87c95127f4213cca11beb95d079880313d2445703e289c23b5
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/doctest RENAME copyright)

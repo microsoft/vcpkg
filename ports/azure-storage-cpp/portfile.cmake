@@ -1,23 +1,19 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/azure-storage-cpp-3.0.0)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/Azure/azure-storage-cpp/archive/v3.0.0.tar.gz"
-    FILENAME "azure-storage-cpp/v3.0.0.tar.gz"
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO Azure/azure-storage-cpp
+    REF v3.0.0
     SHA512 45d0d7f8cc350a16cff0371cdd442e851912c89061acfec559482e8f79cebafffd8681b32a30b878e329235cd3aaad5d2ff797d1148302e3109cf5111df14b97
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
-
-find_path(ATLMFC_PATH NAMES "atlbase.h")
-if(ATLMFC_PATH STREQUAL "ATLMFC_PATH-NOTFOUND")
-    message(FATAL_ERROR "Could not find ATL. Please ensure you have installed the \"Visual C++ ATL support\" optional feature underneath the Desktop C++ workload.")
-endif()
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/cmake.patch
         ${CMAKE_CURRENT_LIST_DIR}/static-builds.patch
+        ${CMAKE_CURRENT_LIST_DIR}/support-cpprest-findpackage.patch
 )
 
 vcpkg_configure_cmake(

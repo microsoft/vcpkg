@@ -26,6 +26,7 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h DESTINATION ${SOURCE_PATH}/gettext-
 vcpkg_apply_patches(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-Fix-macro-definitions.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/0002-Fix-uwp-build.patch"
 )
 
 vcpkg_configure_cmake(

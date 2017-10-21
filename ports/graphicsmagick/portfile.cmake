@@ -1,16 +1,17 @@
 include(vcpkg_common_functions)
 
-set(GM_VERSION 1.3.25)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/graphicsmagick-${GM_VERSION})
+set(GM_VERSION 1.3.26)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/graphicsmagick-${GM_VERSION}-windows-source)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://downloads.sourceforge.net/project/graphicsmagick/graphicsmagick/1.3.25/GraphicsMagick-${GM_VERSION}.tar.bz2"
-    FILENAME "GraphicsMagick-${GM_VERSION}.tar.bz2"
-    SHA512 718802f675988ae36122e8a5f88c74754fa610ec2b4d4630772db7d8898c2e48117ea85fd6741c0b6f256f6f4d68abb642cdeddfb3d330ae1ab2951920cdc1a3
-)
+    URLS "https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/${GM_VERSION}/GraphicsMagick-${GM_VERSION}-windows-source.7z"
+    FILENAME "GraphicsMagick-${GM_VERSION}-windows-source.7z"
+    SHA512 c45a054d082d9a7a2889a2235dd5b96bd564acf55bd581426ecd32c426f9797d7d56d6e5f25a5a7da8ebd26bf0d962372b5d48d86532dc6c57522d27c0d18ec8
+    )
 vcpkg_extract_source_archive(${ARCHIVE})
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/magick_types.h DESTINATION ${SOURCE_PATH}/magick)
 
 # GM always requires a dynamic BZIP2. This patch makes this dependent if _DLL is defined
 vcpkg_apply_patches(

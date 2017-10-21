@@ -7,7 +7,8 @@
 #
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(FATAL_ERROR "Static building not supported yet")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
+    message("Static building not supported yet")
 endif()
 
 if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -26,16 +27,18 @@ endif()
 
 include(vcpkg_common_functions)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-OpenSSL_1_0_2k_WinRT)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-OpenSSL_1_0_2l_WinRT)
 
 vcpkg_find_acquire_program(PERL)
+vcpkg_find_acquire_program(JOM)
+get_filename_component(JOM_EXE_PATH ${JOM} DIRECTORY)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH}")
+set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH};${JOM_EXE_PATH}")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/Microsoft/openssl/archive/OpenSSL_1_0_2k_WinRT.zip"
-    FILENAME "openssl-microsoft-1.0.2k_WinRT.zip"
-    SHA512 afb434ef69c399f690f7ce723fabb228f77a12428f19062c5df3b8b841a2a7881c01150fdcfd2fab23867e3963292874a08ad227b37d168907b507fb1d7fede7
+    URLS "https://github.com/Microsoft/openssl/archive/OpenSSL_1_0_2l_WinRT.zip"
+    FILENAME "openssl-microsoft-1.0.2l_WinRT.zip"
+    SHA512 238b3daad7f1a2486e09d47e6d1bd4b0aa8e8a896358c6dfe11a77c2654da1b29d3c7612f9d200d5be5a020f33d96fe39cd75b99aa35aa4129feb756f7f98ee8
 )
 
 vcpkg_extract_source_archive(${ARCHIVE})
@@ -44,66 +47,46 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/tmp32dll)
 file(REMOVE_RECURSE ${SOURCE_PATH}/out32dll)
 file(REMOVE_RECURSE ${SOURCE_PATH}/inc32dll)
 
-file(COPY
-${CMAKE_CURRENT_LIST_DIR}/make-openssl.bat
-DESTINATION ${SOURCE_PATH})
+file(
+    COPY ${CMAKE_CURRENT_LIST_DIR}/make-openssl.bat
+    DESTINATION ${SOURCE_PATH}
+)
 
 message(STATUS "Build ${TARGET_TRIPLET}")
-
 vcpkg_execute_required_process(
-	COMMAND ${SOURCE_PATH}/make-openssl.bat ${UWP_PLATFORM}
+    COMMAND ${SOURCE_PATH}/make-openssl.bat ${UWP_PLATFORM}
     WORKING_DIRECTORY ${SOURCE_PATH}
     LOGNAME make-openssl-${TARGET_TRIPLET}
 )
-
-
 message(STATUS "Build ${TARGET_TRIPLET} done")
-
-
 
 file(
     COPY ${SOURCE_PATH}/inc32/openssl
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
 
-file(INSTALL ${SOURCE_PATH}/out32dll/libeay32.dll
+file(INSTALL
+    ${SOURCE_PATH}/out32dll/libeay32.dll
+    ${SOURCE_PATH}/out32dll/libeay32.pdb
+    ${SOURCE_PATH}/out32dll/ssleay32.dll
+    ${SOURCE_PATH}/out32dll/ssleay32.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
 
-file(INSTALL ${SOURCE_PATH}/out32dll/libeay32.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-
-file(INSTALL ${SOURCE_PATH}/out32dll/libeay32.lib
+file(INSTALL
+    ${SOURCE_PATH}/out32dll/libeay32.lib
+    ${SOURCE_PATH}/out32dll/ssleay32.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
-file(INSTALL ${SOURCE_PATH}/out32dll/ssleay32.dll
-    DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-
-file(INSTALL ${SOURCE_PATH}/out32dll/ssleay32.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-
-file(INSTALL ${SOURCE_PATH}/out32dll/ssleay32.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-
-
-
-file(INSTALL ${SOURCE_PATH}/out32dll/libeay32.dll
+file(INSTALL
+    ${SOURCE_PATH}/out32dll/libeay32.dll
+    ${SOURCE_PATH}/out32dll/libeay32.pdb
+    ${SOURCE_PATH}/out32dll/ssleay32.dll
+    ${SOURCE_PATH}/out32dll/ssleay32.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 
-file(INSTALL ${SOURCE_PATH}/out32dll/libeay32.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-
-file(INSTALL ${SOURCE_PATH}/out32dll/libeay32.lib
+file(INSTALL
+    ${SOURCE_PATH}/out32dll/libeay32.lib
+    ${SOURCE_PATH}/out32dll/ssleay32.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-
-file(INSTALL ${SOURCE_PATH}/out32dll/ssleay32.dll
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-
-file(INSTALL ${SOURCE_PATH}/out32dll/ssleay32.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-
-file(INSTALL ${SOURCE_PATH}/out32dll/ssleay32.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-
-
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openssl RENAME copyright)

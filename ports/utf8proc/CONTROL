@@ -1,0 +1,3 @@
+Source: utf8proc
+Version: 2.1.0-1
+Description: Clean C library for processing UTF-8 Unicode data.

@@ -7,11 +7,11 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/apr-1.5.2)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/apr-1.6.2)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.apache.org/dist/apr/apr-1.5.2.tar.bz2"
-    FILENAME "apr-1.5.2.tar.bz2"
-    SHA512 d1156ad16abf07887797777b56c2147c890f16d8445829b3e3b4917950d24c5fd2f8febd439992467a5ea0511da562c0fb4a7cfd8a235ab55882388bfa2b919d
+    URLS "https://www.apache.org/dist/apr/apr-1.6.2.tar.bz2"
+    FILENAME "apr-1.6.2.tar.bz2"
+    SHA512 20f449fde522f186b919b64ce6f90073b267557e17438607d31af917eca7941222dd7a7379d66f1430ff68f7e28fbccd140d24f3ca7aae8a876a550b19de284a
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

@@ -4,23 +4,22 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libepoxy-7d58fd3d47d2d69f2b1b9f08325302e4eeff9ebe)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/anholt/libepoxy/archive/7d58fd3d47d2d69f2b1b9f08325302e4eeff9ebe.zip"
-    FILENAME "libepoxy-7d58fd3d47d2d69f2b1b9f08325302e4eeff9ebe.zip"
-    SHA512 7e97a7832ea136565be92d6f6f0afead2fff9ac7b2999ef9e7865ac18dfbeab354e5a652b1a86e982a323dca9a1446df07821c26d315b7da4ca72b5be7345695)
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO anholt/libepoxy
+    REF 1.4.3
+    SHA512 41c7a4eea66c89346b0ec71407b2d22bf645ed0ef81ebad560370903f138ed48abb6bc6bcc88c75a3a05497acc6720397db828d61301599c05040263a9f4f7f0
+    HEAD_REF master)
 
-vcpkg_extract_source_archive(${ARCHIVE})
-
-# ensure python is on path - not for meson but some source generation scripts
-vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_PATH ${PYTHON3} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PYTHON3_PATH}")
-
-vcpkg_configure_meson(SOURCE_PATH ${SOURCE_PATH})
+vcpkg_configure_meson(SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS 
+        -Denable-glx=no 
+        -Denable-egl=no)
 vcpkg_install_meson()
-
 vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/pkgconfig)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig)
 
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libepoxy)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libepoxy/COPYING ${CURRENT_PACKAGES_DIR}/share/libepoxy/copyright)

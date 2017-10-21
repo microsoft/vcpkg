@@ -2,11 +2,12 @@ cmake_minimum_required(VERSION 3.0)
 project(SDL2_TTF C)
 
 find_path(SDL_INCLUDE_DIR SDL2/SDL.h)
-find_library(SDL_LIBRARY SDL2)
+find_library(SDL_LIBRARY NAMES SDL2d SDL2)
 find_package(FreeType REQUIRED)
 
 add_library(SDL2_ttf SDL_ttf.c)
 
+set_target_properties(SDL2_ttf PROPERTIES DEFINE_SYMBOL SDL2_EXPORTS)
 target_include_directories(SDL2_ttf PRIVATE ${SDL_INCLUDE_DIR}/SDL2 ${FREETYPE_INCLUDE_DIR_ft2build})
 target_link_libraries(SDL2_ttf ${SDL_LIBRARY} ${FREETYPE_LIBRARY})
 

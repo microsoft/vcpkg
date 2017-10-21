@@ -1,0 +1,3 @@
+Source: utfz
+Version: 1.2-1
+Description: A tiny C++ library for parsing and encoding utf-8

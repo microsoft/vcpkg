@@ -7,17 +7,22 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/pugixmlapi.patch
-)
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-	OPTIONS
-        -DBUILD_DEFINES="PUGIXML_API=__declspec\(dllexport\)"
-)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+	vcpkg_configure_cmake(
+		SOURCE_PATH ${SOURCE_PATH}
+	)
+else()
+	vcpkg_apply_patches(
+		SOURCE_PATH ${SOURCE_PATH}
+		PATCHES
+			${CMAKE_CURRENT_LIST_DIR}/pugixmlapi.patch
+	)
+	vcpkg_configure_cmake(
+		SOURCE_PATH ${SOURCE_PATH}
+		OPTIONS
+			-DBUILD_DEFINES="PUGIXML_API=__declspec\(dllexport\)"
+	)
+endif()
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()

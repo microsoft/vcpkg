@@ -1,12 +1,12 @@
 #header-only library
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/spdlog-0.12.0)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/gabime/spdlog/archive/v0.12.0.zip"
-    FILENAME "v0.12.0.zip"
-    SHA512 2ef251bf4496b3a17ca055f8ee087864b95eb1eb50d43cbe675bdb6f7cb2e5386460c222f4ed9b95d0f21fdb811f43e3b6a1cfaa45523760ff6125a329d8a02a
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO gabime/spdlog
+    REF v0.14.0
+    SHA512 f49b7f26f4fde57fe16f32ab89082f0c590645c627f5b4646f633a16f3eec2926b3465e742bc4899cb802e7b974978c547638205065e9955ed9696fbcaf0b444
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -17,20 +17,18 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(MAKE_DIRECTORY
-    ${CURRENT_PACKAGES_DIR}/share
-)
+# Move cmake files, ensuring they will be 3 directories up the import prefix
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/spdlog)
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/spdlog/ ${CURRENT_PACKAGES_DIR}/share/spdlog/cmake)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/spdlog/ ${CURRENT_PACKAGES_DIR}/share/spdlog/)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
 
 # use vcpkg-provided fmt library
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/spdlog/fmt/bundled)
 file(READ ${CURRENT_PACKAGES_DIR}/include/spdlog/tweakme.h SPDLOG_TWEAKME_CONTENTS)
-string(REPLACE "// #define SPDLOG_FMT_EXTERNAL" "#define SPDLOG_FMT_EXTERNAL" SPDLOG_TWEAKME_CONTENTS ${SPDLOG_TWEAKME_CONTENTS})
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/spdlog/tweakme.h ${SPDLOG_TWEAKME_CONTENTS})
+string(REPLACE "// #define SPDLOG_FMT_EXTERNAL" "#define SPDLOG_FMT_EXTERNAL" SPDLOG_TWEAKME_CONTENTS "${SPDLOG_TWEAKME_CONTENTS}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/spdlog/tweakme.h "${SPDLOG_TWEAKME_CONTENTS}")
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/spdlog)

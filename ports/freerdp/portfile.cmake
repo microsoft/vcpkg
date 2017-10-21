@@ -1,21 +1,25 @@
 include(vcpkg_common_functions)
 
-set(FREERDP_VERSION 2.0.0-beta1+android11)
-set(FREERDP_HASH c6682f0e555cac51c1d5ddaa910e507043e067af2bb19db626389ae648cbbfe1ab156e14caf3803f98fc1d574a0491629a76282080b3d9c9d382f2f662d2e06c)
+set(FREERDP_VERSION 2.0.0-rc0)
+set(FREERDP_REVISION 2.0.0-rc0)
+set(FREERDP_HASH d3eb0d5d23aa2a4d0277414f13a984d40aba051102c5af1e5ade975cdb469ef3549b145cd4339415fc33f056044929cfac71884512ea77a1e718d70d5b21b9dd)
 
 string(REGEX REPLACE "\\+" "-" FREERDP_VERSION_ESCAPED ${FREERDP_VERSION})
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/FreeRDP-${FREERDP_VERSION_ESCAPED})
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/FreeRDP/FreeRDP/archive/${FREERDP_VERSION}.tar.gz"
-    FILENAME "freerdp-${FREERDP_VERSION}.tar.gz"
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO FreeRDP/FreeRDP
+    REF ${FREERDP_REVISION}
     SHA512 ${FREERDP_HASH}
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/DontInstallSystemRuntimeLibs.patch
+            ${CMAKE_CURRENT_LIST_DIR}/FixGitRevisionDetection.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
@@ -25,7 +29,8 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -WITH_DEBUG_SYMBOLS=ON ${FREERDP_CRT_LINKAGE})
+    OPTIONS -DGIT_REVISION=${FREERDP_VERSION}
+            ${FREERDP_CRT_LINKAGE})
 
 vcpkg_build_cmake()
 vcpkg_install_cmake()
@@ -44,16 +49,20 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 
 if(NOT TARGET_TRIPLET MATCHES "uwp")
-    make_directory("${CURRENT_PACKAGES_DIR}/tools")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/winpr-hash.exe"     "${CURRENT_PACKAGES_DIR}/tools/winpr-hash.exe")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/winpr-makecert.exe" "${CURRENT_PACKAGES_DIR}/tools/winpr-makecert.exe")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/wfreerdp.exe"       "${CURRENT_PACKAGES_DIR}/tools/wfreerdp.exe")
+    file(GLOB_RECURSE TOOLS_RELEASE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
+    file(GLOB_RECURSE TOOLS_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
 
-    make_directory("${CURRENT_PACKAGES_DIR}/debug/tools")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/winpr-hash.exe"     "${CURRENT_PACKAGES_DIR}/debug/tools/winpr-hash.exe")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/winpr-makecert.exe" "${CURRENT_PACKAGES_DIR}/debug/tools/winpr-makecert.exe")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/wfreerdp.exe"       "${CURRENT_PACKAGES_DIR}/debug/tools/wfreerdp.exe")
+    file(COPY ${TOOLS_RELEASE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+
+    file(REMOVE ${TOOLS_RELEASE} ${TOOLS_DEBUG})
 endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
+
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/freerdp)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/freerdp/LICENSE ${CURRENT_PACKAGES_DIR}/share/freerdp/copyright)
@@ -61,6 +70,7 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/freerdp/LICENSE ${CURRENT_PACKAGES_DIR
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)

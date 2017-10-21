@@ -1,12 +1,10 @@
-
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/lz4-1.7.5)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/lz4/lz4/archive/v1.7.5.zip"
-    FILENAME "lz4-1.7.5.zip"
-    SHA512 09968b67a5cd8555f6e1d95b99971a82d228c6d8d9f9dd9e9a33c9633bed9bcf1e370c2ff44e58c6ca72d103c149585b3e83061c690f3e857eb5f53d586f86a4)
-
-vcpkg_extract_source_archive(${ARCHIVE})
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO lz4/lz4
+    REF v1.8.0
+    SHA512 aea46d4a900a3ede7dd7b498ee938ecd98397d3277c5b3a85b4236a44777cba85cd68a2f32c993b872afda96c5dafe0cb3dd391101fe8181e17c9f48884c1535
+    HEAD_REF dev)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
@@ -19,12 +17,15 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    vcpkg_apply_patches(
-        SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
-        PATCHES
-            ${CMAKE_CURRENT_LIST_DIR}/auto-define-import-macro.patch)
-endif()
+foreach(FILE lz4.h lz4frame.h)
+    file(READ ${CURRENT_PACKAGES_DIR}/include/${FILE} LZ4_HEADER)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        string(REPLACE "defined(LZ4_DLL_IMPORT) && (LZ4_DLL_IMPORT==1)" "1" LZ4_HEADER "${LZ4_HEADER}")
+    else()
+        string(REPLACE "defined(LZ4_DLL_IMPORT) && (LZ4_DLL_IMPORT==1)" "0" LZ4_HEADER "${LZ4_HEADER}")
+    endif()
+    file(WRITE ${CURRENT_PACKAGES_DIR}/include/${FILE} "${LZ4_HEADER}")
+endforeach()
 
 file(COPY ${SOURCE_PATH}/lib/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/lz4)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/lz4/LICENSE ${CURRENT_PACKAGES_DIR}/share/lz4/copyright)

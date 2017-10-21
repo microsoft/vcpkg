@@ -25,7 +25,10 @@ find_path(CAIRO_INCLUDE_DIR cairo.h)
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
     set(CAIRO_SUFFIX d)
 endif()
-find_library(CAIRO_LIBRARY cairo${CAIRO_SUFFIX})
+find_library(CAIRO_LIBRARY 
+    NAMES
+        cairo${CAIRO_SUFFIX}
+        cairo-static${CAIRO_SUFFIX})
 find_library(CAIRO_GOBJECT_LIBRARY cairo-gobject${CAIRO_SUFFIX})
 set(CAIRO_LIBRARIES ${CAIRO_LIBRARY} ${CAIRO_GOBJECT_LIBRARY})
 
@@ -55,7 +58,8 @@ macro(pango_add_module MODULE_NAME)
         G_LOG_DOMAIN="Pango" PANGO_ENABLE_BACKEND PANGO_ENABLE_ENGINE 
         G_DISABLE_SINGLE_INCLUDES SYSCONFDIR="/dummy/etc" LIBDIR="/dummy/lib")
     target_compile_definitions(${MODULE_NAME} PRIVATE HAVE_CAIRO_FREETYPE=1)
-    set_target_properties(${MODULE_NAME} PROPERTIES 
+    set_target_properties(${MODULE_NAME} PROPERTIES
+        DEFINE_SYMBOL PANGO_EXPORTS
         OUTPUT_NAME ${MODULE_NAME}-${PANGO_DLL_SUFFIX}
         ARCHIVE_OUTPUT_NAME ${MODULE_NAME}-${PANGO_LIB_SUFFIX})
     install(TARGETS ${MODULE_NAME} RUNTIME DESTINATION bin ARCHIVE DESTINATION lib LIBRARY DESTINATION lib)
@@ -77,6 +81,7 @@ pango_add_module(pango
     pango/pango-color.c
     pango/pango-context.c
     pango/pango-coverage.c
+    pango/pango-emoji.c
     pango/pango-engine.c
     pango/pango-fontmap.c
     pango/pango-fontset.c

@@ -21,6 +21,9 @@ else()
     )
 endif()
 
+# The qwt build requires zlib1.dll
+SET(ENV{PATH} "$ENV{PATH};${CURRENT_INSTALLED_DIR}/bin;${CURRENT_INSTALLED_DIR}/debug/bin")
+
 vcpkg_configure_qmake(
     SOURCE_PATH ${SOURCE_PATH}
 )

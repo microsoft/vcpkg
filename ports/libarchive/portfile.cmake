@@ -4,18 +4,18 @@ if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
 endif()
 
 include(vcpkg_common_functions)
-set(ARCHIVE_VERSION 3.3.1)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libarchive-${ARCHIVE_VERSION})
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/libarchive/libarchive/archive/v${ARCHIVE_VERSION}.zip"
-    FILENAME "libarchive-${ARCHIVE_VERSION}.zip"
-    SHA512 a54fe3c5c24c83df244f3f2346212a6aa8d8945cf4ddc407e54c891ebbf8c98b93492e5652c9813a6d5dc654a32479e08a40bb0d2af7400a29ac027028e986f5)
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO libarchive/libarchive
+    REF v3.3.2
+    SHA512 7bc17d6f742080278e35f86b0233d70045df0ca1578cd427126e0acce183709bf33ecca689db65e2e67bdfaf687c04d36cae1202a926beeebc88076648aa40bc
+    HEAD_REF master)
 
-vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/fix-buildsystem.patch)
+        ${CMAKE_CURRENT_LIST_DIR}/fix-buildsystem.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix-dependencies.patch)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

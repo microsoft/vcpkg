@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(SDL2_MIXER C)
 
 find_path(SDL_INCLUDE_DIR SDL.h PATH_SUFFIXES SDL2)
-find_library(SDL_LIBRARY SDL2)
+find_library(SDL_LIBRARY NAMES SDL2d SDL2)
 set(SDL_MIXER_INCLUDES ${SDL_INCLUDE_DIR})
 set(SDL_MIXER_LIBRARIES ${SDL_LIBRARY})
 
@@ -76,6 +76,7 @@ add_library(SDL2_mixer
     native_midi/native_midi_common.c
     native_midi/native_midi_win32.c)
 
+set_target_properties(SDL2_mixer PROPERTIES DEFINE_SYMBOL SDL2_EXPORTS)
 target_compile_definitions(SDL2_mixer PRIVATE ${SDL_MIXER_DEFINES})
 target_include_directories(SDL2_mixer PRIVATE ${SDL_MIXER_INCLUDES} ./native_midi)
 target_link_libraries(SDL2_mixer ${SDL_MIXER_LIBRARIES} Winmm)

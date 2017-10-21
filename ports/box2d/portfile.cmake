@@ -7,34 +7,23 @@ elseif(TRIPLET_SYSTEM_ARCH MATCHES "arm")
     message(FATAL_ERROR "ARM not supported")
 endif(TRIPLET_SYSTEM_ARCH MATCHES "x86")
 
+if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+  message(FATAL_ERROR "Box2d only supports dynamic CRT linkage")
+endif()
+
 include(vcpkg_common_functions)
-find_program(GIT git)
 
-set(GIT_URL "https://github.com/erincatto/Box2D.git")
-set(GIT_REF "374664b")
+if(EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
+    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
+endif()
 
-if(NOT EXISTS "${DOWNLOADS}/box2d.git")
-    message(STATUS "Cloning")
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} clone --bare ${GIT_URL} ${DOWNLOADS}/box2d.git
-        WORKING_DIRECTORY ${DOWNLOADS}
-        LOGNAME clone
-    )
-endif(NOT EXISTS "${DOWNLOADS}/box2d.git")
-message(STATUS "Cloning done")
-
-if(NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
-    message(STATUS "Adding worktree")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR})
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} worktree add -f --detach ${CURRENT_BUILDTREES_DIR}/src ${GIT_REF}
-        WORKING_DIRECTORY ${DOWNLOADS}/box2d.git
-        LOGNAME worktree
-    )
-endif(NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
-message(STATUS "Adding worktree done")
-
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/)
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO erincatto/Box2D
+    REF 374664b2a4ce2e7c24fbad6e1ed34bebcc9ab6bc
+    SHA512 39074bab01b36104aa685bfe39b40eb903d9dfb54cc3ba8098125db5291f55a8a9e578fc59563b2e8743abbbb26f419be7ae1524e235e7bd759257f99ff96bda
+    HEAD_REF master
+)
 
 # Put the licence and readme files where vcpkg expects it
 message(STATUS "Packaging license")

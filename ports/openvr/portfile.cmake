@@ -7,11 +7,11 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openvr-1.0.5)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openvr-1.0.9)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/ValveSoftware/openvr/archive/v1.0.5.zip"
-    FILENAME "openvr-v1.0.5.zip"
-    SHA512 18c2e3f7a8754d0e9389c953d0af70788c77adf43f51d25b6664beaeb407dc8d2daa755396c45ce2b4be1b08d333b378810dbebdf3c9bb5f5a03a9d372dc97b0
+    URLS "https://github.com/ValveSoftware/openvr/archive/v1.0.9.zip"
+    FILENAME "openvr-v1.0.9.zip"
+    SHA512 969cf6bf94802553bb4f1e5d6a2348566847b3d60efee9d8f83233d1d85e44a870e388028be956950d4f8ecb79f8e0bcf0a6b987b0ab3083060ece5ea48b8fa7
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

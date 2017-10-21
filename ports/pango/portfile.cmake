@@ -1,19 +1,18 @@
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
-
 include(vcpkg_common_functions)
-set(PANGO_VERSION 1.40.4)
+set(PANGO_VERSION 1.40.11)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/pango-${PANGO_VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "http://ftp.gnome.org/pub/GNOME/sources/pango/1.40/pango-${PANGO_VERSION}.tar.xz"
     FILENAME "pango-${PANGO_VERSION}.tar.xz"
-    SHA512 8c7413f6712eaf9fd4bd92a9260a85e7e4bd5e1a03c4c89db139e1704e8681e9834f8b98394b9f4b87babd45155a15b6cffd583ad8f89a48a4849305d43aa613)
+    SHA512 e4ac40f8da9c326e1e4dfaf4b1d2070601b17f88f5a12991a9a8bbc58bb08640404e2a794a5c68c5ebb2e7e80d9c186d4b26cd417bb63a23f024ef8a38bb152a)
 
 vcpkg_extract_source_archive(${ARCHIVE})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/0001-fix-static-symbols-export.diff)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

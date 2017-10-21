@@ -1,12 +1,12 @@
 #header-only library
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/stb-e713a69f1ea6ee1e0d55725ed0731520045a5993)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/nothings/stb/archive/e713a69f1ea6ee1e0d55725ed0731520045a5993.zip"
-    FILENAME "stb-e713a69f1ea6ee1e0d55725ed0731520045a5993.zip"
-    SHA512 28d73905e626bf286bc42e30bc50e8449912a9db5e421e09bfbd17790de1909fe9df19c96d6ad3125a6ae0947d45b11b83ee5965dab68d1eadd0c332e391400e
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO nothings/stb
+    REF 9d9f75eb682dd98b34de08bb5c489c6c561c9fa6
+    SHA512 e710385b1de9b07108c1a0628e74832e163729d95d529a6fe333156cc8e518af47e480761c2f9acd69cffbc14e477952d7e5b208708ffbd3870949dccf315b4f
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 # Put the licence file where vcpkg expects it
 file(COPY ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/stb/README.md)

@@ -1,0 +1,3 @@
+Source: rtmidi
+Version: 2.1.1-2
+Description: A set of C++ classes that provide a common API for realtime MIDI input/output across Linux (ALSA & JACK), Macintosh OS X (CoreMidi & JACK) and Windows (Multimedia)

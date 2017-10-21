@@ -1,23 +1,35 @@
-#.rst:
-# .. command:: vcpkg_apply_patches
-#
-#  Apply a set of patches to a source tree.
-#
-#  ::
-#  vcpkg_apply_patches(SOURCE_PATH <source_path>
-#                      PATCHES patch1 [patch ...]
-#                      )
-#
-#  ``SOURCE_PATH``
-#    The source path in which apply the patches.
-#  ``PATCHES``
-#    A list of patches that are applied to the source tree
-#  ``QUIET``
-#    If this option is passed, the warning message when applyng
-#    a patch fails is not printed. This is convenient for patches
-#    that are known to fail even on a clean source tree, and for
-#    which the standard warning message would be confusing for the user.
-#
+## # vcpkg_apply_patches
+##
+## Apply a set of patches to a source tree.
+##
+## ## Usage
+## ```cmake
+## vcpkg_apply_patches(
+##     SOURCE_PATH <${SOURCE_PATH}>
+##     [QUIET]
+##     PATCHES <patch1.patch>...
+## )
+## ```
+##
+## ## Parameters
+## ### SOURCE_PATH
+## The source path in which apply the patches. By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
+##
+## ### PATCHES
+## A list of patches that are applied to the source tree.
+##
+## Generally, these take the form of `${CMAKE_CURRENT_LIST_DIR}/some.patch` to select patches in the `port\<port>\` directory.
+##
+## ### QUIET
+## Disables the warning message upon failure.
+##
+## This should only be used for edge cases, such as patches that are known to fail even on a clean source tree.
+##
+## ## Examples
+##
+## * [boost](https://github.com/Microsoft/vcpkg/blob/master/ports/boost/portfile.cmake)
+## * [freetype](https://github.com/Microsoft/vcpkg/blob/master/ports/freetype/portfile.cmake)
+## * [libpng](https://github.com/Microsoft/vcpkg/blob/master/ports/libpng/portfile.cmake)
 
 function(vcpkg_apply_patches)
     cmake_parse_arguments(_ap "QUIET" "SOURCE_PATH" "PATCHES" ${ARGN})

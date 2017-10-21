@@ -1,6 +1,10 @@
 
+if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+  message(FATAL_ERROR "PDCurses only supports dynamic CRT linkage")
+endif()
+
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET})
 find_program(NMAKE nmake)
 
 vcpkg_download_distfile(ARCHIVE
@@ -8,16 +12,30 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "pdcurs34.zip"
     SHA512 0b916bfe37517abb80df7313608cc4e1ed7659a41ce82763000dfdfa5b8311ffd439193c74fc84a591f343147212bf1caf89e7db71f1f7e4fa70f534834cb039
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
-set(PDC_NMAKE_CMD ${NMAKE} /A -f vcpkg.mak WIDE=Y UTF8=Y)
+if(EXISTS ${CURRENT_BUILDTREES_DIR}/src)
+    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
+endif()
+
+vcpkg_extract_source_archive(${ARCHIVE} ${SOURCE_PATH})
+
+file(READ ${SOURCE_PATH}/win32/vcwin32.mak PDC_MAK_ORIG)
+string(REPLACE " -pdb:none" "" PDC_MAK_ORIG ${PDC_MAK_ORIG})
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    string(REPLACE "/MACHINE:IX86 " "/MACHINE:X64 " PDC_MAK_X64 ${PDC_MAK_ORIG})
+    file(WRITE ${SOURCE_PATH}/win32/vcpkg_x64.mak ${PDC_MAK_X64})
+    set(PDC_NMAKE_CMD ${NMAKE} /A -f vcpkg_x64.mak WIDE=Y UTF8=Y)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    string(REPLACE "/MACHINE:IX86 " "/MACHINE:X86 " PDC_MAK_X86 ${PDC_MAK_ORIG})
+    file(WRITE ${SOURCE_PATH}/win32/vcpkg_x86.mak ${PDC_MAK_X86})
+    set(PDC_NMAKE_CMD ${NMAKE} /A -f vcpkg_x86.mak WIDE=Y UTF8=Y)
+else()
+    message(FATAL_ERROR "Unsupported target architecture: ${VCPKG_TARGET_ARCHITECTURE}")
+endif()
+
 set(PDC_NMAKE_CWD ${SOURCE_PATH}/win32)
 set(PDC_PDCLIB ${SOURCE_PATH}/win32/pdcurses)
-
-file(READ ${SOURCE_PATH}/win32/vcwin32.mak PDC_MAK)
-string(REPLACE " -pdb:none" "" PDC_MAK ${PDC_MAK})
-string(REPLACE "/MACHINE:IX86 " "" PDC_MAK ${PDC_MAK})
-file(WRITE ${SOURCE_PATH}/win32/vcpkg.mak ${PDC_MAK})
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(PDC_NMAKE_CMD ${PDC_NMAKE_CMD} DLL=Y)
