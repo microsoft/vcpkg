@@ -25,7 +25,8 @@ FILE(READ "${DIFF}" content)
 STRING(REGEX REPLACE "include/" "" content "${content}")
 set(DIFF2 ${CURRENT_BUILDTREES_DIR}/src/boost-range-has_range_iterator-hotfix_e7ebe14707130cda7b72e0ae5e93b17157fdb6a2.diff.fixed)
 FILE(WRITE ${DIFF2} "${content}")
-vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${DIFF2})
+vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${DIFF2}
+                                                       ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-boost-ICU-support.patch)
 
 ######################
 # Cleanup previous builds
@@ -76,19 +77,36 @@ message(STATUS "Bootstrapping done")
 set(B2_OPTIONS
     -sZLIB_INCLUDE="${CURRENT_INSTALLED_DIR}\\include"
     -sBZIP2_INCLUDE="${CURRENT_INSTALLED_DIR}\\include"
+    -sICU_PATH="${CURRENT_INSTALLED_DIR}"
     -j$ENV{NUMBER_OF_PROCESSORS}
     --debug-configuration
     --hash
     -q
 
-    --without-python
     threading=multi
 )
 
+# Add build type specific options
+set(B2_OPTIONS_DBG
+    -sZLIB_BINARY=zlibd
+    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
+    -sBZIP2_BINARY=bz2d
+    -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
+)
+
+set(B2_OPTIONS_REL
+    -sZLIB_BINARY=zlib
+    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+    -sBZIP2_BINARY=bz2
+    -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+)
+
+set(LIB_RUNTIME_LINK "shared")
 if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
     list(APPEND B2_OPTIONS runtime-link=shared)
 else()
     list(APPEND B2_OPTIONS runtime-link=static)
+    set(LIB_RUNTIME_LINK "static")
 endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -100,6 +118,30 @@ endif()
 if(TRIPLET_SYSTEM_ARCH MATCHES "x64")
     list(APPEND B2_OPTIONS address-model=64)
 endif()
+
+if("python" IN_LIST FEATURES)
+    # Find Python. Can't use find_package here, but we already know where everything is
+    file(GLOB PYTHON_INCLUDE_PATH "${CURRENT_INSTALLED_DIR}/include/python[0-9.]*")
+    set(PYTHONLIBS_RELEASE "${CURRENT_INSTALLED_DIR}/lib")
+    set(PYTHONLIBS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib")
+    string(REGEX REPLACE ".*python([0-9\.]+)$" "\\1" PYTHON_VERSION ${PYTHON_INCLUDE_PATH})
+    list(APPEND B2_OPTIONS_DBG python-debugging=on)
+else()
+    list(APPEND B2_OPTIONS --without-python)
+endif()
+
+if("locale-icu" IN_LIST FEATURES)
+    list(APPEND B2_OPTIONS boost.locale.icu=on)
+else()
+    list(APPEND B2_OPTIONS boost.locale.icu=off)
+endif()
+
+if("regex-icu" IN_LIST FEATURES)
+    list(APPEND B2_OPTIONS --enable-icu)
+else()
+    list(APPEND B2_OPTIONS --disable-icu)
+endif()
+
 
 if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
     list(APPEND B2_OPTIONS
@@ -136,6 +178,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
         --without-thread
         --without-iostreams
         --without-container
+        --without-python
     )
     if(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
         find_path(PATH_TO_CL cl.exe)
@@ -166,21 +209,14 @@ else()
     message(FATAL_ERROR "Unsupported value for VCPKG_PLATFORM_TOOLSET: '${VCPKG_PLATFORM_TOOLSET}'")
 endif()
 
-# Add build type specific options
 set(B2_OPTIONS_DBG
     ${B2_OPTIONS}
-    -sZLIB_BINARY=zlibd
-    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
-    -sBZIP2_BINARY=bz2d
-    -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
+    ${B2_OPTIONS_DBG}
 )
 
 set(B2_OPTIONS_REL
     ${B2_OPTIONS}
-    -sZLIB_BINARY=zlib
-    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
-    -sBZIP2_BINARY=bz2
-    -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+    ${B2_OPTIONS_REL}
 )
 
 ######################

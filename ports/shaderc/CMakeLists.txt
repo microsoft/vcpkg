@@ -1,5 +1,5 @@
 option(SUFFIX_D "Add d Suffix to lib" ${SUFFIX_D})
-if(NOT ${SUFFIX_D})
+if(NOT SUFFIX_D)
     find_library(GLSLANG glslang)
     find_library(OSDEPENDENT OSDependent)
     find_library(OGLCOMPILER OGLCompiler)

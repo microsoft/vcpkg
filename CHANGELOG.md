@@ -1,3 +1,117 @@
+vcpkg (0.0.93)
+--------------
+  * Add ports:
+    - berkeleydb     4.8.30
+    - libsodium      1.0.15
+    - secp256k1      2017-19-10-0b7024185045a49a1a6a4c5615bf31c94f63d9c4
+  * Update ports:
+    - assimp         4.0.0-2 -> 4.0.1
+    - azure-storage-cpp 3.0.0-3 -> 3.0.0-4
+    - cctz           v2.1 -> 2.1
+    - folly          v2017.07.17.01-1 -> 2017.10.02.00
+    - grpc           1.6.0-1 -> 1.6.0-2
+    - openblas       v0.2.20-2 -> 0.2.20-2
+    - pthreads       2.9.1-1 -> 2.9.1-2
+    - sdl2-gfx       1.0.3-2 -> 1.0.3-3
+    - sdl2-image     2.0.1-2 -> 2.0.1-3
+    - sdl2-mixer     2.0.1-2 -> 2.0.1-3
+    - sdl2-net       2.0.1-2 -> 2.0.1-3
+    - sdl2-ttf       2.0.14-2 -> 2.0.14-3
+    - spirv-tools    v2017.1-dev-7e2d26c77b606b21af839b37fd21381c4a669f23-1 -> 2017.1-dev-7e2d26c77b606b21af839b37fd21381c4a669f23-1
+    - thor           v2.0-1 -> 2.0-1
+    - tinyexr        v0.9.5-d16ea6 -> 0.9.5-d16ea6
+  * Fix issue where `vcpkg` was getting output from powershell scripts. Powershell adds newlines when the console width is reached; the extra newlines was causing `vcpkg`'s parsing to fail.
+  * Improve autocomplete/tab-completion for powershell (still experimental)
+
+
+-- vcpkg team <vcpkg@microsoft.com>  THU, 19 Oct 2017 21:30:00 -0800
+
+vcpkg (0.0.92)
+--------------
+  * Add ports:
+    - cctz           v2.1
+    - celero         2.1.0-1
+    - eastl          3.05.08
+    - imgui          1.51-1
+    - libidn2        2.0.4
+    - mozjpeg        3.2-1
+    - spatialite-tools 4.3.0
+    - string-theory  1.6
+    - tiny-dnn       2017-10-09-dd906fed8c8aff8dc837657c42f9d55f8b793b0e
+    - wincrypt       0.0
+    - winsock2       0.0
+  * Update ports:
+    - abseil         2017-09-28 -> 2017-10-14
+    - boost          1.65.1 -> 1.65.1-1
+    - cpprestsdk     2.9.0-3 -> 2.9.0-4
+    - gdal           1.11.3-5 -> 2.2.2
+    - jansson        v2.10-1 -> 2.10-1
+    - lua            5.3.4-2 -> 5.3.4-4
+    - mpfr           3.1.5-1 -> 3.1.6
+    - ogre           1.9.0 -1 -> 1.9.0-1
+    - openni2        2.2.0.33-2 -> 2.2.0.33-4
+    - pcl            1.8.1-1 -> 1.8.1-2
+    - sciter         4.0.3 -> 4.0.4
+    - vtk            8.0.0-2 -> 8.0.0-3
+    - websocketpp    0.7.0 -> 0.7.0-1
+  * Initial support for autocomplete/tab-completion for powershell (still experimental)
+  * Add `VCPKG_CHAINLOAD_TOOLCHAIN_FILE variable`. As the name suggests, you can chainload your own toolchain file along with the `vcpkg` toolchain file.
+  * Fix issues with the new Visual Studio detection ([`vswhere.exe`](https://github.com/Microsoft/vswhere)). Notably:
+    - Detect VS2015 BuildTools, VS2017 BuildTools and VS Express Edition
+  * Fix issues with Windows SDK detection
+  * Rework acquisition of `vcpkg` dependencies (e.g. `cmake`, `git`). It is now more robust and should be faster on modern Operating Systems while still having fallback functions for older ones.
+  * Bump required version & auto-downloaded version of `cmake` to 3.9.4
+  * Bump required version & auto-downloaded version of `nuget` to 4.4.0
+  * Bump required version & auto-downloaded version of `vswhere` to 2.2.7
+  * Bump required version & auto-downloaded version of `git` to 2.4.2(.3)
+  * Bump ninja to version 1.8.0
+
+
+-- vcpkg team <vcpkg@microsoft.com>  TUE, 17 Oct 2017 16:00:00 -0800
+
+
+vcpkg (0.0.91)
+--------------
+  * Add ports:
+    - abseil         2017-09-28
+    - enet           1.3.13
+    - exiv2          4f4add2cdcbe73af7098122a509dff0739d15908
+    - freexl         1.0.4
+    - gts            0.7.6
+    - kinectsdk2     2.0
+    - libexif        0.6.21-1
+    - libfreenect2   0.2.0
+    - librtmp        2.3
+    - libspatialite  4.3.0a
+    - libxmp-lite    4.4.1
+    - proj4          4.9.3-1
+    - readosm        1.1.0
+    - spirit-po      1.1.2
+    - telnetpp       1.2.4
+    - wildmidi       0.4.1
+  * Update ports:
+    - anax           2.1.0-2 -> 2.1.0-3
+    - aws-sdk-cpp    1.0.61-1 -> 1.2.4
+    - geos           3.5.0-1 -> 3.6.2-2
+    - kinectsdk1     1.8-1 -> 1.8-2
+    - lua            5.3.4-1 -> 5.3.4-2
+    - openni2        2.2.0.33 -> 2.2.0.33-2
+    - openssl        1.0.2l-2 -> 1.0.2l-3
+    - pangolin       0.5-1 -> 0.5-2
+    - proj           4.9.3-1 -> 0
+    - sdl2           2.0.5-4 -> 2.0.6-1
+    - zlib           1.2.11-2 -> 1.2.11-3
+  * `vcpkg export`: Add new option `--ifw` which creates a standalone GUI installer for the exported packages. More information and screenshots [here](https://github.com/Microsoft/vcpkg/pull/1734)
+  * Complete rework of Visual Studio detection & selection:
+    - Use [`vswhere.exe`](https://github.com/Microsoft/vswhere) to detect Visual Studio installation instances
+    - Add the ability to specify the Visual Studio instance to use in the triplet file with the `VCPKG_VISUAL_STUDIO_PATH` variable
+    - Automatic selection now picks instances in order: stable, prerelease, legacy. Within each group, newer versions are preferred over old versions
+    - Fix issue where v140 toolset would not work if VS2017 (with v140) was installed but VS2015 was not installed
+  * Add message when downloading a `vcpkg` dependency (e.g. `cmake`)
+
+-- vcpkg team <vcpkg@microsoft.com>  THU, 05 Oct 2017 19:00:00 -0800
+
+
 vcpkg (0.0.90)
 --------------
   * Add ports:

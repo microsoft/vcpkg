@@ -1,0 +1,14 @@
+diff --git a/nmake.opt b/nmake.opt
+index bd5719c2d1..c0ca442cbe 100644
+--- a/nmake.opt
++++ b/nmake.opt
+@@ -195,6 +205,9 @@ SOFTWARNFLAGS= /wd4244 /wd4702 /wd4701 /wd4013 /wd4706 /wd4057 /wd4210 /wd4305
+ # Linker debug options
+ !IFDEF DEBUG
+ LDEBUG= /debug
++!ELSEIFDEF WITH_PDB
++# Ensures that PDB is included in release DLL if so requested
++LDEBUG= /debug /opt:ref /opt:icf
+ !ENDIF
+ 
+ # Uncomment the following if you are building for 64-bit windows

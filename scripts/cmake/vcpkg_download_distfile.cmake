@@ -78,7 +78,7 @@ function(vcpkg_download_distfile VAR)
             endif()
         endforeach(url)
 
-        if (NOT ${download_success})
+        if (NOT download_success)
             message(FATAL_ERROR
             "\n"
             "    Failed to download file.\n"

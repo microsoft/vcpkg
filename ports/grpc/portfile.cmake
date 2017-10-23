@@ -52,14 +52,17 @@ vcpkg_configure_cmake(
         -DgRPC_GFLAGS_PROVIDER=none
         -DgRPC_BENCHMARK_PROVIDER=none
         -DgRPC_INSTALL_CSHARP_EXT=OFF
-        -DCMAKE_INSTALL_CMAKEDIR=share/grpc
+        -DgRPC_INSTALL_BINDIR:STRING=bin
+        -DgRPC_INSTALL_LIBDIR:STRING=lib
+        -DgRPC_INSTALL_INCLUDEDIR:STRING=include
+        -DgRPC_INSTALL_CMAKEDIR:STRING=share/grpc
 )
 
 # gRPC runs built executables during the build, so they need access to the installed DLLs.
 set(ENV{PATH} "$ENV{PATH};${CURRENT_INSTALLED_DIR}/bin;${CURRENT_INSTALLED_DIR}/debug/bin")
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/grpc")
+vcpkg_fixup_cmake_targets(CONFIG_PATH "share/grpc")
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/grpc RENAME copyright)
 
