@@ -1,13 +1,12 @@
 include(vcpkg_common_functions)
-find_program(GIT git)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/cppwinrt-fall_2017_creators_update_for_vs_15.3)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/Microsoft/cppwinrt/archive/fall_2017_creators_update_for_vs_15.3.tar.gz"
-    FILENAME "fall_2017_creators_update_for_vs_15.3.tar.gz"
-    SHA512  e3f987ed3f3dce019b8bf9f5451e53b42357473a003b8c14f9009e1848ee0463286bd46fdc3c739c8f7c2d232707e8018f5c087ffae784c745d51a8143f9a294
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO Microsoft/cppwinrt
+    REF fall_2017_creators_update_for_vs_15.3
+    SHA512 e3f987ed3f3dce019b8bf9f5451e53b42357473a003b8c14f9009e1848ee0463286bd46fdc3c739c8f7c2d232707e8018f5c087ffae784c745d51a8143f9a294
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 # Put the licence file where vcpkg expects it
 file(COPY ${SOURCE_PATH}/license DESTINATION ${CURRENT_PACKAGES_DIR}/share/cppwinrt/license.txt)
