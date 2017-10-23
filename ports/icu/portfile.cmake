@@ -59,7 +59,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     if(NOT ICU_CROSS_BUILD)
         message(FATAL_ERROR "${TARGET_TRIPLET} requires ICU for x86-windows or x64-windows")
     endif()
-    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --with-cross-build=${ICU_CROSS_BUILD}")
+    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} \"--with-cross-build=${ICU_CROSS_BUILD}\"")
     set(ENV{CPPFLAGS} "-DU_PLATFORM_HAS_WINUWP_API -D_ARM_WINAPI_PARTITION_DESKTOP_SDK_AVAILABLE")
     # Set UWP bit, fix linker errors in conftest
     set(UWP_LDFLAGS "-APPCONTAINER kernel32.lib runtimeobject.lib")
