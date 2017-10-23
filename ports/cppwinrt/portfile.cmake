@@ -9,9 +9,13 @@ vcpkg_from_github(
 )
 
 # Put the licence file where vcpkg expects it
-file(COPY ${SOURCE_PATH}/license DESTINATION ${CURRENT_PACKAGES_DIR}/share/cppwinrt/license.txt)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/cppwinrt/license.txt ${CURRENT_PACKAGES_DIR}/share/cppwinrt/copyright)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cppwinrt)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/cppwinrt/LICENSE ${CURRENT_PACKAGES_DIR}/share/cppwinrt/copyright)
 
 # Copy the cppwinrt header files
 file(GLOB HEADER_FILES ${SOURCE_PATH}/10.0.16299.0/winrt/*)
-file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/winrt)
+file(
+    COPY ${HEADER_FILES}
+    DESTINATION ${CURRENT_PACKAGES_DIR}/include/winrt
+    REGEX "\.(gitattributes|gitignore)$" EXCLUDE
+)
