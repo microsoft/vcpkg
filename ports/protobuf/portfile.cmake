@@ -58,8 +58,7 @@ vcpkg_configure_cmake(
         -DCMAKE_INSTALL_CMAKEDIR=share/protobuf
 )
 
-# Using 64-bit toolset to avoid occassional Linker Out-of-Memory issues.
-vcpkg_install_cmake(MSVC_64_TOOLSET)
+vcpkg_install_cmake()
 
 # It appears that at this point the build hasn't actually finished. There is probably
 # a process spawned by the build, therefore we need to wait a bit.

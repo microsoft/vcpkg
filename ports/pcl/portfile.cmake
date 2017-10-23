@@ -50,7 +50,7 @@ vcpkg_configure_cmake(
         -DWITH_CUDA=OFF
         -DWITH_LIBUSB=OFF
         -DWITH_OPENNI2=ON
-        -DWITH_PCAP=OFF
+        -DWITH_PCAP=ON
         -DWITH_PNG=OFF
         -DWITH_QHULL=ON
         -DWITH_QT=ON
