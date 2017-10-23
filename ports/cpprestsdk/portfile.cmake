@@ -3,19 +3,10 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/cpprestsdk
-    REF v2.9.0
-    SHA512 7f6af05e2aaf49fb5ba24f4fac43b7787345d46913831504925cefc60d1b62e38457e1d628d5de8b0db891b59716d2bfe63a494ca0b337d67fc9ca5447a5ba9b
+    REF v2.10.0
+    SHA512 78e7a38c21db5b563d08cb082bfa96360ac44c66f2189a614d3d2bb71655fd82d931f138590d2dba2d6a4c0884ae37a5be34ea3b753c3517bd68ce490daf60b4
     HEAD_REF master
 )
-if(NOT VCPKG_USE_HEAD_VERSION)
-    vcpkg_apply_patches(
-        SOURCE_PATH ${SOURCE_PATH}
-        PATCHES
-            ${CMAKE_CURRENT_LIST_DIR}/0001_cmake.patch
-            ${CMAKE_CURRENT_LIST_DIR}/0002_no_websocketpp_in_uwp.patch
-            ${CMAKE_CURRENT_LIST_DIR}/0003_openssl_110.patch
-    )
-endif()
 
 set(OPTIONS)
 if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -35,15 +26,12 @@ vcpkg_configure_cmake(
         -DCPPREST_EXCLUDE_WEBSOCKETS=OFF
         -DCPPREST_EXPORT_DIR=share/cpprestsdk
     OPTIONS_DEBUG
-        -DCASA_INSTALL_HEADERS=OFF
         -DCPPREST_INSTALL_HEADERS=OFF
 )
 
 vcpkg_install_cmake()
 
-if(VCPKG_USE_HEAD_VERSION)
-    vcpkg_fixup_cmake_targets()
-endif()
+vcpkg_fixup_cmake_targets()
 
 file(INSTALL
     ${SOURCE_PATH}/license.txt
