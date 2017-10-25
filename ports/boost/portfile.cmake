@@ -303,14 +303,8 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         FILES_MATCHING PATTERN "*.dll")
 endif()
 file(GLOB RELEASE_LIBS ${CURRENT_PACKAGES_DIR}/lib/*.lib)
+
 boost_rename_libs(RELEASE_LIBS)
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/boost_test_exec_monitor-vc140-mt-${VERSION}.lib)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
-    file(RENAME
-        ${CURRENT_PACKAGES_DIR}/lib/boost_test_exec_monitor-vc140-mt-${VERSION}.lib
-        ${CURRENT_PACKAGES_DIR}/lib/manual-link/boost_test_exec_monitor-vc140-mt-${VERSION}.lib
-    )
-endif()
 message(STATUS "Packaging ${TARGET_TRIPLET}-rel done")
 
 message(STATUS "Packaging ${TARGET_TRIPLET}-dbg")
@@ -324,13 +318,26 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 file(GLOB DEBUG_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/*.lib)
 boost_rename_libs(DEBUG_LIBS)
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/boost_test_exec_monitor-vc140-mt-gd-${VERSION}.lib)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
-    file(RENAME
-        ${CURRENT_PACKAGES_DIR}/debug/lib/boost_test_exec_monitor-vc140-mt-gd-${VERSION}.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/boost_test_exec_monitor-vc140-mt-gd-${VERSION}.lib
-    )
-endif()
 message(STATUS "Packaging ${TARGET_TRIPLET}-dbg done")
+
+macro(move_to_manual_link LIBNAME)
+    if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/${LIBNAME}-vc140-mt-${VERSION_FULL}.lib)
+        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+        file(RENAME
+            ${CURRENT_PACKAGES_DIR}/lib/${LIBNAME}-vc140-mt-${VERSION_FULL}.lib
+            ${CURRENT_PACKAGES_DIR}/lib/manual-link/${LIBNAME}-vc140-mt-${VERSION_FULL}.lib
+        )
+    endif()
+    if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/${LIBNAME}-vc140-mt-gd-${VERSION_FULL}.lib)
+        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+        file(RENAME
+            ${CURRENT_PACKAGES_DIR}/debug/lib/${LIBNAME}-vc140-mt-gd-${VERSION_FULL}.lib
+            ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/${LIBNAME}-vc140-mt-gd-${VERSION_FULL}.lib
+        )
+    endif()
+endmacro()
+
+move_to_manual_link(boost_test_exec_monitor)
+move_to_manual_link(boost_prg_exec_monitor)
 
 vcpkg_copy_pdbs()
