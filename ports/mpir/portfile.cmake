@@ -4,8 +4,10 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "MPIR currently can only be built for desktop")
 endif()
 
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "MPIR currently can only be built using the dynamic CRT")
+if(VCPKG_CRT_LINKAGE STREQUAL "static" AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    message(FATAL_ERROR "MPIR currently can only be built using the dynamic CRT when building DLLs")
+elseif(VCPKG_CRT_LINKAGE STREQUAL "dynamic" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    message(FATAL_ERROR "MPIR currently can only be built using the static CRT when building LIBs")
 endif()
 
 set(MPIR_VERSION 3.0.0)
