@@ -5,7 +5,10 @@ New-Item -type directory downloads -errorAction SilentlyContinue | Out-Null
 if (-not $?) { throw $? }
 
 # Clear out any intermediate files from the previous build
-Get-ChildItem buildtrees/*/* | ? { $_.Name -ne "src" -and $_.Extension -ne ".log"} | Remove-Item -Recurse -Force
+if (Test-Path buildtrees)
+{
+    Get-ChildItem buildtrees/*/* | ? { $_.Name -ne "src" -and $_.Extension -ne ".log"} | Remove-Item -Recurse -Force
+}
 
 # Purge any outdated packages
 ./vcpkg remove --outdated --recurse
