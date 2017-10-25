@@ -24,6 +24,7 @@ configure_file(${CMAKE_CURRENT_LIST_DIR}/gmime.def ${SOURCE_PATH} COPYONLY)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()
