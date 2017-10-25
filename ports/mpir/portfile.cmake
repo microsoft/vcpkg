@@ -6,8 +6,6 @@ endif()
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static" AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     message(FATAL_ERROR "MPIR currently can only be built using the dynamic CRT when building DLLs")
-elseif(VCPKG_CRT_LINKAGE STREQUAL "dynamic" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "MPIR currently can only be built using the static CRT when building LIBs")
 endif()
 
 set(MPIR_VERSION 3.0.0)
@@ -21,6 +19,11 @@ vcpkg_download_distfile(ARCHIVE_FILE
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/enable-runtimelibrary-toggle.patch"
+)
+
 if(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
     set(MSVC_VERSION 15)
 else()
@@ -32,8 +35,15 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         PROJECT_PATH ${SOURCE_PATH}/build.vc${MSVC_VERSION}/dll_mpir_gc/dll_mpir_gc.vcxproj
     )
 else()
+    if(VCPKG_CRT_LINKAGE STREQUAL "static")
+        set(RuntimeLibraryExt "")
+    else()
+        set(RuntimeLibraryExt "DLL")
+    endif()
     vcpkg_build_msbuild(
         PROJECT_PATH ${SOURCE_PATH}/build.vc${MSVC_VERSION}/lib_mpir_gc/lib_mpir_gc.vcxproj
+        OPTIONS_DEBUG "/p:RuntimeLibrary=MultiThreadedDebug${RuntimeLibraryExt}"
+        OPTIONS_RELEASE "/p:RuntimeLibrary=MultiThreaded${RuntimeLibraryExt}"
     )
 endif()
 
