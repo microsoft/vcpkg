@@ -1,7 +1,7 @@
-diff --git "a/harfbuzz-1.4.6/src/hb-ft.cc" "b/harfbuzz-1.4.6/src/hb-ft.cc"
+diff --git "a/harfbuzz-1.6.3/src/hb-ft.cc" "b/harfbuzz-1.6.3/src/hb-ft.cc"
 index 48d6a0ef..f4ce6608 100644
---- "a/harfbuzz-1.4.6/src/hb-ft.cc"
-+++ "b/harfbuzz-1.4.6/src/hb-ft.cc"
+--- "a/harfbuzz-1.6.3/src/hb-ft.cc"
++++ "b/harfbuzz-1.6.3/src/hb-ft.cc"
 @@ -31,6 +31,10 @@
  
  #include "hb-ft.h"
