@@ -8,6 +8,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+file(REMOVE ${SOURCE_PATH}/CMakeModules/FindGLEW.cmake)
+
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" MSVC_USE_STATIC_CRT)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -16,6 +20,7 @@ vcpkg_configure_cmake(
         -DBUILD_EXTERN_GLEW=OFF
         -DBUILD_EXTERN_LIBPNG=OFF
         -DBUILD_EXTERN_LIBJPEG=OFF
+        -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT}
 )
 
 vcpkg_install_cmake()
