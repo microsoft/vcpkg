@@ -1,5 +1,7 @@
 include(vcpkg_common_functions)
 
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/gettimeofday)
+
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
   message(STATUS "Warning: Dynamic building not supported yet. Building static.")
   set(VCPKG_LIBRARY_LINKAGE static)
