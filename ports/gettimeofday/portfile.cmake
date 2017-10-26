@@ -1,5 +1,10 @@
 include(vcpkg_common_functions)
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+  message(STATUS "Warning: Dynamic building not supported yet. Building static.")
+  set(VCPKG_LIBRARY_LINKAGE static)
+endif()
+
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/gettimeofday.c DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/gettimeofday.h DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
