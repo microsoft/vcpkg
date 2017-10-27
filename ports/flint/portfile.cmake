@@ -1,5 +1,6 @@
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     message(STATUS "Warning: Dynamic building not supported yet. Building static.")
+    set(VCPKG_CRT_LINKAGE static)
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 
