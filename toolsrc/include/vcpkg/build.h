@@ -65,15 +65,17 @@ namespace vcpkg::Build
         BUILD_FAILED,
         POST_BUILD_CHECKS_FAILED,
         FILE_CONFLICTS,
-        CASCADED_DUE_TO_MISSING_DEPENDENCIES
+        CASCADED_DUE_TO_MISSING_DEPENDENCIES,
+        EXCLUDED,
     };
 
-    static constexpr std::array<BuildResult, 5> BUILD_RESULT_VALUES = {
+    static constexpr std::array<BuildResult, 6> BUILD_RESULT_VALUES = {
         BuildResult::SUCCEEDED,
         BuildResult::BUILD_FAILED,
         BuildResult::POST_BUILD_CHECKS_FAILED,
         BuildResult::FILE_CONFLICTS,
-        BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES};
+        BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES,
+        BuildResult::EXCLUDED};
 
     const std::string& to_string(const BuildResult build_result);
     std::string create_error_message(const BuildResult build_result, const PackageSpec& spec);

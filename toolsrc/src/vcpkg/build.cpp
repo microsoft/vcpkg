@@ -87,6 +87,8 @@ namespace vcpkg::Build::Command
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
+        Checks::check_exit(VCPKG_LINE_INFO, result.code != BuildResult::EXCLUDED);
+
         if (result.code != BuildResult::SUCCEEDED)
         {
             System::println(System::Color::error, Build::create_error_message(result.code, spec));
@@ -365,6 +367,7 @@ namespace vcpkg::Build
         static const std::string FILE_CONFLICTS_STRING = "FILE_CONFLICTS";
         static const std::string POST_BUILD_CHECKS_FAILED_STRING = "POST_BUILD_CHECKS_FAILED";
         static const std::string CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING = "CASCADED_DUE_TO_MISSING_DEPENDENCIES";
+        static const std::string EXCLUDED_STRING = "EXCLUDED";
 
         switch (build_result)
         {
@@ -372,8 +375,9 @@ namespace vcpkg::Build
             case BuildResult::SUCCEEDED: return SUCCEEDED_STRING;
             case BuildResult::BUILD_FAILED: return BUILD_FAILED_STRING;
             case BuildResult::POST_BUILD_CHECKS_FAILED: return POST_BUILD_CHECKS_FAILED_STRING;
-            case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES: return CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING;
             case BuildResult::FILE_CONFLICTS: return FILE_CONFLICTS_STRING;
+            case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES: return CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING;
+            case BuildResult::EXCLUDED: return EXCLUDED_STRING;
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }

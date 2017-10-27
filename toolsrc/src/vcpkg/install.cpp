@@ -342,6 +342,12 @@ namespace vcpkg::Install
             }
         }
 
+        if (plan_type == InstallPlanType::EXCLUDED)
+        {
+            System::println(System::Color::warning, "Package %s is excluded", display_name);
+            return BuildResult::EXCLUDED;
+        }
+
         Checks::unreachable(VCPKG_LINE_INFO);
     }
 
@@ -352,6 +358,7 @@ namespace vcpkg::Install
         std::vector<const InstallPlanAction*> only_install_plans;
         std::vector<const InstallPlanAction*> new_plans;
         std::vector<const InstallPlanAction*> already_installed_plans;
+        std::vector<const InstallPlanAction*> excluded;
 
         const bool has_non_user_requested_packages = Util::find_if(action_plan, [](const AnyAction& package) -> bool {
                                                          if (auto iplan = package.install_plan.get())
@@ -382,6 +389,7 @@ namespace vcpkg::Install
                                 already_installed_plans.emplace_back(install_action);
                             break;
                         case InstallPlanType::BUILD_AND_INSTALL: new_plans.emplace_back(install_action); break;
+                        case InstallPlanType::EXCLUDED: excluded.emplace_back(install_action); break;
                         default: Checks::unreachable(VCPKG_LINE_INFO);
                     }
                 }
@@ -397,6 +405,15 @@ namespace vcpkg::Install
         std::sort(only_install_plans.begin(), only_install_plans.end(), &InstallPlanAction::compare_by_name);
         std::sort(new_plans.begin(), new_plans.end(), &InstallPlanAction::compare_by_name);
         std::sort(already_installed_plans.begin(), already_installed_plans.end(), &InstallPlanAction::compare_by_name);
+        std::sort(excluded.begin(), excluded.end(), &InstallPlanAction::compare_by_name);
+
+        if (excluded.size() > 0)
+        {
+            const std::string excluded_string = Strings::join("\n", excluded, [](const InstallPlanAction* p) {
+                return to_output_string(p->request_type, p->displayname());
+            });
+            System::println("The following packages are excluded:\n%s", excluded_string);
+        }
 
         if (already_installed_plans.size() > 0)
         {
@@ -538,7 +555,7 @@ namespace vcpkg::Install
     };
     static const std::array<std::string, 0> INSTALL_SETTINGS;
 
-    static std::vector<std::string> valid_arguments(const VcpkgPaths& paths)
+    std::vector<std::string> get_all_port_names(const VcpkgPaths& paths)
     {
         auto sources_and_errors = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
 
@@ -552,7 +569,7 @@ namespace vcpkg::Install
         SIZE_MAX,
         INSTALL_SWITCHES,
         INSTALL_SETTINGS,
-        &valid_arguments,
+        &get_all_port_names,
     };
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
