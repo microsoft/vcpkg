@@ -351,7 +351,7 @@ namespace vcpkg::Install
         Checks::unreachable(VCPKG_LINE_INFO);
     }
 
-    static void print_plan(const std::vector<AnyAction>& action_plan, bool is_recursive)
+    static void print_plan(const std::vector<AnyAction>& action_plan, const bool is_recursive)
     {
         std::vector<const RemovePlanAction*> remove_plans;
         std::vector<const InstallPlanAction*> rebuilt_plans;
@@ -592,13 +592,13 @@ namespace vcpkg::Install
             }
         }
 
-        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments(
-            {OPTION_DRY_RUN, OPTION_USE_HEAD_VERSION, OPTION_NO_DOWNLOADS, OPTION_RECURSE, OPTION_KEEP_GOING});
-        const bool dry_run = options.find(OPTION_DRY_RUN) != options.cend();
-        const bool use_head_version = options.find(OPTION_USE_HEAD_VERSION) != options.cend();
-        const bool no_downloads = options.find(OPTION_NO_DOWNLOADS) != options.cend();
-        const bool is_recursive = options.find(OPTION_RECURSE) != options.cend();
-        const KeepGoing keep_going = to_keep_going(options.find(OPTION_KEEP_GOING) != options.cend());
+        const ParsedArguments options = args.check_and_get_optional_command_arguments(
+            {OPTION_DRY_RUN, OPTION_USE_HEAD_VERSION, OPTION_NO_DOWNLOADS, OPTION_RECURSE, OPTION_KEEP_GOING}, {});
+        const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
+        const bool use_head_version = Util::Sets::contains(options.switches, (OPTION_USE_HEAD_VERSION));
+        const bool no_downloads = Util::Sets::contains(options.switches, (OPTION_NO_DOWNLOADS));
+        const bool is_recursive = Util::Sets::contains(options.switches, (OPTION_RECURSE));
+        const KeepGoing keep_going = to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING));
 
         // create the plan
         StatusParagraphs status_db = database_load_check(paths);

@@ -30,11 +30,11 @@ namespace vcpkg::Build::Command
 
     void perform_and_exit(const FullPackageSpec& full_spec,
                           const fs::path& port_dir,
-                          const std::unordered_set<std::string>& options,
+                          const ParsedArguments& options,
                           const VcpkgPaths& paths)
     {
         const PackageSpec& spec = full_spec.package_spec;
-        if (options.find(OPTION_CHECKS_ONLY) != options.end())
+        if (Util::Sets::contains(options.switches, OPTION_CHECKS_ONLY))
         {
             const auto pre_build_info = Build::PreBuildInfo::from_triplet_file(paths, spec.triplet());
             const auto build_info = Build::read_build_info(paths.get_filesystem(), paths.build_info_file_path(spec));
@@ -107,8 +107,7 @@ namespace vcpkg::Build::Command
         const std::string command_argument = args.command_arguments.at(0);
         const FullPackageSpec spec = Input::check_and_get_full_package_spec(command_argument, default_triplet, EXAMPLE);
         Input::check_triplet(spec.package_spec.triplet(), paths);
-        const std::unordered_set<std::string> options =
-            args.check_and_get_optional_command_arguments({OPTION_CHECKS_ONLY});
+        const ParsedArguments options = args.check_and_get_optional_command_arguments({OPTION_CHECKS_ONLY}, {});
         perform_and_exit(spec, paths.port_dir(spec.package_spec), options, paths);
     }
 }

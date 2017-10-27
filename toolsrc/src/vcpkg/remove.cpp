@@ -198,12 +198,12 @@ namespace vcpkg::Remove
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
         static const std::string EXAMPLE = Help::create_example_string("remove zlib zlib:x64-windows curl boost");
-        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments(
-            {OPTION_PURGE, OPTION_NO_PURGE, OPTION_RECURSE, OPTION_DRY_RUN, OPTION_OUTDATED});
+        const ParsedArguments options = args.check_and_get_optional_command_arguments(
+            {OPTION_PURGE, OPTION_NO_PURGE, OPTION_RECURSE, OPTION_DRY_RUN, OPTION_OUTDATED}, {});
 
         StatusParagraphs status_db = database_load_check(paths);
         std::vector<PackageSpec> specs;
-        if (options.find(OPTION_OUTDATED) != options.cend())
+        if (Util::Sets::contains(options.switches, OPTION_OUTDATED))
         {
             args.check_exact_arg_count(0, EXAMPLE);
             specs = Util::fmap(Update::find_outdated_packages(paths, status_db),
@@ -226,8 +226,8 @@ namespace vcpkg::Remove
                 Input::check_triplet(spec.triplet(), paths);
         }
 
-        const bool no_purge_was_passed = options.find(OPTION_NO_PURGE) != options.end();
-        const bool purge_was_passed = options.find(OPTION_PURGE) != options.end();
+        const bool no_purge_was_passed = Util::Sets::contains(options.switches, OPTION_NO_PURGE);
+        const bool purge_was_passed = Util::Sets::contains(options.switches, OPTION_PURGE);
         if (purge_was_passed && no_purge_was_passed)
         {
             System::println(System::Color::error, "Error: cannot specify both --no-purge and --purge.");
@@ -235,8 +235,8 @@ namespace vcpkg::Remove
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
         const Purge purge = to_purge(purge_was_passed || !no_purge_was_passed);
-        const bool is_recursive = options.find(OPTION_RECURSE) != options.cend();
-        const bool dry_run = options.find(OPTION_DRY_RUN) != options.cend();
+        const bool is_recursive = Util::Sets::contains(options.switches, OPTION_RECURSE);
+        const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
 
         const std::vector<RemovePlanAction> remove_plan = Dependencies::create_remove_plan(specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !remove_plan.empty(), "Remove plan cannot be empty");

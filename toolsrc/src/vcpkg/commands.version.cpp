@@ -65,7 +65,7 @@ namespace vcpkg::Commands::Version
     void perform_and_exit(const VcpkgCmdArguments& args)
     {
         args.check_exact_arg_count(0);
-        args.check_and_get_optional_command_arguments({});
+        args.check_and_get_optional_command_arguments({}, {});
 
         System::println("Vcpkg package management program version %s\n"
                         "\n"

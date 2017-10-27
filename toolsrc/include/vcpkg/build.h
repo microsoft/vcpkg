@@ -20,7 +20,7 @@ namespace vcpkg::Build
     {
         void perform_and_exit(const FullPackageSpec& full_spec,
                               const fs::path& port_dir,
-                              const std::unordered_set<std::string>& options,
+                              const ParsedArguments& options,
                               const VcpkgPaths& paths);
 
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);

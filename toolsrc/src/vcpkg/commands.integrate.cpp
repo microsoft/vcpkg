@@ -359,7 +359,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
                                                            "%s",
                                                            INTEGRATE_COMMAND_HELPSTRING);
         args.check_exact_arg_count(1, EXAMPLE);
-        args.check_and_get_optional_command_arguments({});
+        args.check_and_get_optional_command_arguments({}, {});
 
 #if defined(_WIN32)
         if (args.command_arguments[0] == Subcommand::INSTALL)
