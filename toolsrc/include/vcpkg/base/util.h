@@ -20,6 +20,15 @@ namespace vcpkg::Util
         }
     }
 
+    namespace Sets
+    {
+        template<class Container, class T = ElementT<Container>>
+        bool contains(const Container& container, const T& item)
+        {
+            return container.find(item) != container.cend();
+        }
+    }
+
     template<class Cont, class Func>
     using FmapOut = decltype(std::declval<Func>()(*begin(std::declval<Cont>())));
 

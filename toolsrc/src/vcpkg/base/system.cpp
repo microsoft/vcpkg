@@ -269,11 +269,23 @@ namespace vcpkg::System
 #endif
     }
 
-    std::string create_powershell_script_cmd(const fs::path& script_path, const CStringView args)
+    ExitCodeAndOutput powershell_execute_and_capture_output(const fs::path& script_path, const CStringView args)
     {
         // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
-        return Strings::format(
+        const std::string cmd = Strings::format(
             R"(powershell -NoProfile -ExecutionPolicy Bypass -Command "& {& '%s' %s}")", script_path.u8string(), args);
+
+        auto rc = System::cmd_execute_and_capture_output(cmd);
+
+        // Remove newline from all output.
+        // Powershell returns newlines when it hits the column count of the console.
+        // For example, this is 80 in cmd on Windows 7. If the expected output is longer than 80 lines, we get
+        // newlines in-between the data.
+        // To solve this, we design our interaction with powershell to not depend on newlines,
+        // and then strip all newlines here.
+        rc.output = Strings::replace_all(std::move(rc.output), "\n", "");
+
+        return rc;
     }
 
     void println() { putchar('\n'); }

@@ -65,8 +65,7 @@ namespace vcpkg::Commands::Edit
 
         static const std::string EXAMPLE = Help::create_example_string("edit zlib");
         args.check_exact_arg_count(1, EXAMPLE);
-        const std::unordered_set<std::string> options =
-            args.check_and_get_optional_command_arguments({OPTION_BUILDTREES});
+        const ParsedArguments options = args.check_and_get_optional_command_arguments({OPTION_BUILDTREES}, {});
         const std::string port_name = args.command_arguments.at(0);
 
         const fs::path portpath = paths.ports / port_name;
@@ -95,7 +94,7 @@ namespace vcpkg::Commands::Edit
         }
 
         const fs::path env_editor = *it;
-        if (options.find(OPTION_BUILDTREES) != options.cend())
+        if (Util::Sets::contains(options.switches, OPTION_BUILDTREES))
         {
             const auto buildtrees_current_dir = paths.buildtrees / port_name;
 

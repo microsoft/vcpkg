@@ -51,7 +51,7 @@ endforeach(FORMAT)
 
 # SDL
 find_path(SDL_INCLUDE_DIR SDL2/SDL.h)
-find_library(SDL_LIBRARY SDL2)
+find_library(SDL_LIBRARY NAMES SDL2d SDL2)
 
 include_directories(${SDL_INCLUDE_DIR})
 include_directories(${SDL_INCLUDE_DIR}/SDL2)

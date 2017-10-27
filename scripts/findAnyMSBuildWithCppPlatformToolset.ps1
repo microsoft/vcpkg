@@ -9,8 +9,9 @@ $explicitlyRequestedVSPath = $explicitlyRequestedVSPath -replace "\\$" # Remove 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 $VisualStudioInstallationInstances = & $scriptsDir\findVisualStudioInstallationInstances.ps1
 Write-Verbose "VS Candidates:`n`r$([system.String]::Join([Environment]::NewLine, $VisualStudioInstallationInstances))"
-foreach ($instanceCandidate in $VisualStudioInstallationInstances)
+foreach ($instanceCandidateWithEOL in $VisualStudioInstallationInstances)
 {
+    $instanceCandidate = $instanceCandidateWithEOL -replace "::<eol>"
     Write-Verbose "Inspecting: $instanceCandidate"
     $split = $instanceCandidate -split "::"
     # $preferenceWeight = $split[0]

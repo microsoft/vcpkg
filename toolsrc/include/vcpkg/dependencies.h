@@ -38,7 +38,8 @@ namespace vcpkg::Dependencies
         UNKNOWN,
         BUILD_AND_INSTALL,
         INSTALL,
-        ALREADY_INSTALLED
+        ALREADY_INSTALLED,
+        EXCLUDED
     };
 
     struct InstallPlanAction : Util::MoveOnlyBase
