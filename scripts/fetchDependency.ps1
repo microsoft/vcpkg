@@ -8,6 +8,11 @@ function Test-Command($commandName)
     return [bool](Get-Command -Name $commandName -ErrorAction SilentlyContinue)
 }
 
+function Test-CommandParameter($commandName, $parameterName)
+{
+    return (Get-Command $commandName).Parameters.Keys -contains $parameterName
+}
+
 function Test-Module($moduleName)
 {
     return [bool](Get-Module -ListAvailable -Name $moduleName)
@@ -51,7 +56,16 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         $ProxyAuth = !$WC.Proxy.IsBypassed($url)
         if ($ProxyAuth)
         {
-            $ProxyCred = Get-Credential -Message "Enter credentials for Proxy Authentication"
+            if (Test-CommandParameter -commandName 'Get-Credential' -parameterName 'Message')
+            {
+                $ProxyCred = Get-Credential -Message "Enter credentials for Proxy Authentication"
+            }
+            else
+            {
+                "Enter credentials for Proxy Authentication"
+                $ProxyCred = Get-Credential
+            }
+
             $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyAuthentication","Basic")
             $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyCredential",$ProxyCred)
             $WC.Proxy.Credentials=$ProxyCred
