@@ -4,12 +4,9 @@
 #ifdef _MSC_VER
 
 #include <winsock2.h>
-int gettimeofday(struct timeval * tp, struct timezone * tzp);
+#include <time.h>
 
-struct timespec {
-    time_t tv_sec;
-    time_t tv_nsec;
-};
+int gettimeofday(struct timeval * tp, struct timezone * tzp);
 
 #endif /* _MSC_VER */
 
