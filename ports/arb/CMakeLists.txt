@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.12)
 
 project(arb C)
 
-set (DEPS mpir mpfr pthreads flint2 gettimeofday)
+set (DEPS mpir mpfr pthreads flint2)
 set (mpir_lib gmp mpir)
 set (mpfr_lib mpfr)
 set (pthreads_lib pthreads pthread)
