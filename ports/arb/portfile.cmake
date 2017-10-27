@@ -1,10 +1,10 @@
-include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/arb-2.11.1)
-
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     message(STATUS "Warning: Dynamic building not supported yet. Building static.")
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
+
+include(vcpkg_common_functions)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/arb-2.11.1)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH ${SOURCE_PATH}
