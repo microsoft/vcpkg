@@ -3,7 +3,18 @@ param(
     [string]$Dependency
 )
 
-if ($PSVersionTable.PSEdition -ne "Core") {
+function Test-Command($commandName)
+{
+    return [bool](Get-Command -Name $commandName -ErrorAction SilentlyContinue)
+}
+
+function Test-Module($moduleName)
+{
+    return [bool](Get-Module -ListAvailable -Name $moduleName)
+}
+
+if (Test-Module -moduleName 'BitsTransfer')
+{
    Import-Module BitsTransfer -Verbose:$false
 }
 
@@ -46,12 +57,16 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
             $WC.Proxy.Credentials=$ProxyCred
         }
 
-        if (($PSVersionTable.PSEdition -ne "Core") -and ($Dependency -ne "git")) # git fails with BITS
+         # git and installerbase fail with Start-BitsTransfer
+        if ((Test-Command -commandName 'Start-BitsTransfer') -and ($Dependency -ne "git")-and ($Dependency -ne "installerbase"))
         {
-            try {
+            try
+            {
                 Start-BitsTransfer -Source $url -Destination $downloadPath -ErrorAction Stop
+                return
             }
-            catch [System.Exception] {
+            catch [System.Exception]
+            {
                 # If BITS fails for any reason, delete any potentially partially downloaded files and continue
                 if (Test-Path $downloadPath)
                 {
@@ -59,11 +74,9 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
                 }
             }
         }
-        if (!(Test-Path $downloadPath))
-        {
-            Write-Verbose("Downloading $Dependency...")
-            $WC.DownloadFile($url, $downloadPath)
-        }
+
+        Write-Verbose("Downloading $Dependency...")
+        $WC.DownloadFile($url, $downloadPath)
     }
 
     # Enums (without resorting to C#) are only available on powershell 5+.
@@ -96,58 +109,65 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
             New-Item -ItemType Directory -Path $destination | Out-Null
         }
 
-        $shell = new-object -com shell.application
-        $zip = $shell.NameSpace($file)
-        foreach($item in $zip.items())
+        if (Test-Command -commandName 'Expand-Archive')
         {
-            # Piping to Out-Null is used to block until finished
-            $shell.Namespace($destination).copyhere($item) | Out-Null
+            Expand-Archive -path $file -destinationpath $destination
+        }
+        else
+        {
+            $shell = new-object -com shell.application
+            $zip = $shell.NameSpace($file)
+            foreach($item in $zip.items())
+            {
+                # Piping to Out-Null is used to block until finished
+                $shell.Namespace($destination).copyhere($item) | Out-Null
+            }
         }
     }
 
     if($Dependency -eq "cmake")
     {
-        $requiredVersion = "3.9.3"
-        $downloadVersion = "3.9.3"
-        $url = "https://cmake.org/files/v3.9/cmake-3.9.3-win32-x86.zip"
-        $downloadPath = "$downloadsDir\cmake-3.9.3-win32-x86.zip"
-        $expectedDownloadedFileHash = "47870e3d4c9a5aa019e71020cd85cc60b6f2d2569fb239eaec204cd991e512f1"
-        $executableFromDownload = "$downloadsDir\cmake-3.9.3-win32-x86\bin\cmake.exe"
+        $requiredVersion = "3.9.4"
+        $downloadVersion = "3.9.4"
+        $url = "https://cmake.org/files/v3.9/cmake-3.9.4-win32-x86.zip"
+        $downloadPath = "$downloadsDir\cmake-3.9.4-win32-x86.zip"
+        $expectedDownloadedFileHash = "8214df1ff51f9a6a1f0e27f9bd18f402b1749c5b645fbf6e401bcb00047171cd"
+        $executableFromDownload = "$downloadsDir\cmake-3.9.4-win32-x86\bin\cmake.exe"
         $extractionType = $ExtractionType_ZIP
         $extractionFolder = $downloadsDir
     }
     elseif($Dependency -eq "nuget")
     {
-        $requiredVersion = "4.3.0"
-        $downloadVersion = "4.3.0"
-        $url = "https://dist.nuget.org/win-x86-commandline/v4.3.0/nuget.exe"
+        $requiredVersion = "4.4.0"
+        $downloadVersion = "4.4.0"
+        $url = "https://dist.nuget.org/win-x86-commandline/v4.4.0/nuget.exe"
         $downloadPath = "$downloadsDir\nuget-$downloadVersion\nuget.exe"
-        $expectedDownloadedFileHash = "386da77a8cf2b63d1260b7020feeedabfe3b65ab31d20e6a313a530865972f3a"
+        $expectedDownloadedFileHash = "2cf9b118937eef825464e548f0c44f7f64090047746de295d75ac3dcffa3e1f6"
         $executableFromDownload = $downloadPath
         $extractionType = $ExtractionType_NO_EXTRACTION_REQUIRED
     }
     elseif($Dependency -eq "vswhere")
     {
-        $requiredVersion = "2.2.3"
-        $downloadVersion = "2.2.3"
-        $url = "https://github.com/Microsoft/vswhere/releases/download/2.2.3/vswhere.exe"
+        $requiredVersion = "2.2.7"
+        $downloadVersion = "2.2.7"
+        $url = "https://github.com/Microsoft/vswhere/releases/download/2.2.7/vswhere.exe"
         $downloadPath = "$downloadsDir\vswhere-$downloadVersion\vswhere.exe"
-        $expectedDownloadedFileHash = "5f19066ac91635ad17d33fe0f79fc63c672a46f98c0358589a90163bcb2733e8"
+        $expectedDownloadedFileHash = "f50303881da706132516d9decfd5314d524a0044daf49c0cfd21dc39c1261ec3"
         $executableFromDownload = $downloadPath
         $extractionType = $ExtractionType_NO_EXTRACTION_REQUIRED
     }
     elseif($Dependency -eq "git")
     {
-        $requiredVersion = "2.14.1"
-        $downloadVersion = "2.14.1"
-        $url = "https://github.com/git-for-windows/git/releases/download/v2.14.1.windows.1/MinGit-2.14.1-32-bit.zip" # We choose the 32-bit version
-        $downloadPath = "$downloadsDir\MinGit-2.14.1-32-bit.zip"
-        $expectedDownloadedFileHash = "77b468e0ead1e7da4cb3a1cf35dabab5210bf10457b4142f5e9430318217cdef"
+        $requiredVersion = "2.14.2"
+        $downloadVersion = "2.14.2"
+        $url = "https://github.com/git-for-windows/git/releases/download/v2.14.2.windows.3/MinGit-2.14.2.3-32-bit.zip" # We choose the 32-bit version
+        $downloadPath = "$downloadsDir\MinGit-2.14.2.3-32-bit.zip"
+        $expectedDownloadedFileHash = "7cc1f27e1cfe79381e1a504a5fc7bc33951ac9031cd14c3bf478769d21a26cce"
         # There is another copy of git.exe in MinGit\bin. However, an installed version of git add the cmd dir to the PATH.
         # Therefore, choosing the cmd dir here as well.
-        $executableFromDownload = "$downloadsDir\MinGit-2.14.1-32-bit\cmd\git.exe"
+        $executableFromDownload = "$downloadsDir\MinGit-2.14.2.3-32-bit\cmd\git.exe"
         $extractionType = $ExtractionType_ZIP
-        $extractionFolder = "$downloadsDir\MinGit-2.14.1-32-bit"
+        $extractionFolder = "$downloadsDir\MinGit-2.14.2.3-32-bit"
     }
     elseif($Dependency -eq "installerbase")
     {
@@ -174,16 +194,16 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     performDownload $Dependency $url $downloadsDir $downloadPath $downloadVersion $requiredVersion
 
     #calculating the hash
-    if ($PSVersionTable.PSEdition -ne "Core")
+    if (Test-Command -commandName 'Get-FileHash')
+    {
+        $downloadedFileHash = (Get-FileHash -Path $downloadPath -Algorithm SHA256).Hash
+    }
+    else
     {
         $hashAlgorithm = [Security.Cryptography.HashAlgorithm]::Create("SHA256")
         $fileAsByteArray = [io.File]::ReadAllBytes($downloadPath)
         $hashByteArray = $hashAlgorithm.ComputeHash($fileAsByteArray)
         $downloadedFileHash = -Join ($hashByteArray | ForEach-Object {"{0:x2}" -f $_})
-    }
-    else
-    {
-        $downloadedFileHash = (Get-FileHash -Path $downloadPath -Algorithm SHA256).Hash
     }
 
     if ($expectedDownloadedFileHash -ne $downloadedFileHash)

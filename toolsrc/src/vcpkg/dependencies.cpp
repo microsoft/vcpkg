@@ -43,14 +43,17 @@ namespace vcpkg::Dependencies
     bool operator==(const ClusterPtr& l, const ClusterPtr& r) { return l.ptr == r.ptr; }
 }
 
-template<>
-struct std::hash<vcpkg::Dependencies::ClusterPtr>
+namespace std
 {
-    size_t operator()(const vcpkg::Dependencies::ClusterPtr& value) const
+    template<>
+    struct hash<vcpkg::Dependencies::ClusterPtr>
     {
-        return std::hash<vcpkg::PackageSpec>()(value.ptr->spec);
-    }
-};
+        size_t operator()(const vcpkg::Dependencies::ClusterPtr& value) const
+        {
+            return std::hash<vcpkg::PackageSpec>()(value.ptr->spec);
+        }
+    };
+}
 
 namespace vcpkg::Dependencies
 {
@@ -109,27 +112,21 @@ namespace vcpkg::Dependencies
 
     std::vector<PackageSpec> AnyParagraph::dependencies(const Triplet& triplet) const
     {
-        auto to_package_specs = [&](const std::vector<std::string>& dependencies_as_string) {
-            return Util::fmap(dependencies_as_string, [&](const std::string s) {
-                return PackageSpec::from_name_and_triplet(s, triplet).value_or_exit(VCPKG_LINE_INFO);
-            });
-        };
-
-        if (auto p = this->status_paragraph.get())
+        if (const auto p = this->status_paragraph.get())
         {
-            return to_package_specs(p->package.depends);
+            return PackageSpec::to_package_specs(p->package.depends, triplet);
         }
 
-        if (auto p = this->binary_control_file.get())
+        if (const auto p = this->binary_control_file.get())
         {
             auto deps = Util::fmap_flatten(p->features, [](const BinaryParagraph& pgh) { return pgh.depends; });
-            deps.insert(deps.end(), p->core_paragraph.depends.begin(), p->core_paragraph.depends.end());
-            return to_package_specs(deps);
+            deps.insert(deps.end(), p->core_paragraph.depends.cbegin(), p->core_paragraph.depends.cend());
+            return PackageSpec::to_package_specs(deps, triplet);
         }
 
-        if (auto p = this->source_paragraph.get())
+        if (const auto p = this->source_paragraph.get())
         {
-            return to_package_specs(filter_dependencies(p->depends, triplet));
+            return PackageSpec::to_package_specs(filter_dependencies(p->depends, triplet), triplet);
         }
 
         Checks::exit_with_message(VCPKG_LINE_INFO,
@@ -160,7 +157,7 @@ namespace vcpkg::Dependencies
     InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
                                          const std::unordered_set<std::string>& features,
                                          const RequestType& request_type)
-        : spec(spec), plan_type(InstallPlanType::ALREADY_INSTALLED), request_type(request_type), feature_list(features)
+        : spec(spec), plan_type(InstallPlanType::UNKNOWN), request_type(request_type), feature_list(features)
     {
     }
 

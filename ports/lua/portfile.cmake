@@ -35,6 +35,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(WRITE ${CURRENT_PACKAGES_DIR}/include/luaconf.h "${LUA_CONF_H}")
 endif()
 
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/lua)
+
 # Handle copyright
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/lua)
 vcpkg_copy_pdbs()

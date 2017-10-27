@@ -2,7 +2,11 @@
 
 #include <vcpkg/base/expected.h>
 
+#if defined(_WIN32)
 #include <filesystem>
+#else
+#include <experimental/filesystem>
+#endif
 
 namespace fs
 {
@@ -19,7 +23,7 @@ namespace fs
 
 namespace vcpkg::Files
 {
-    __interface Filesystem
+    struct Filesystem
     {
         virtual Expected<std::string> read_contents(const fs::path& file_path) const = 0;
         virtual Expected<std::vector<std::string>> read_lines(const fs::path& file_path) const = 0;
@@ -40,8 +44,10 @@ namespace vcpkg::Files
         virtual bool create_directory(const fs::path& path, std::error_code& ec) = 0;
         virtual bool create_directories(const fs::path& path, std::error_code& ec) = 0;
         virtual void copy(const fs::path& oldpath, const fs::path& newpath, fs::copy_options opts) = 0;
-        virtual bool copy_file(
-            const fs::path& oldpath, const fs::path& newpath, fs::copy_options opts, std::error_code& ec) = 0;
+        virtual bool copy_file(const fs::path& oldpath,
+                               const fs::path& newpath,
+                               fs::copy_options opts,
+                               std::error_code& ec) = 0;
         virtual fs::file_status status(const fs::path& path, std::error_code& ec) const = 0;
     };
 
@@ -53,5 +59,5 @@ namespace vcpkg::Files
 
     void print_paths(const std::vector<fs::path>& paths);
 
-    std::vector<fs::path> find_from_PATH(const std::wstring& name);
+    std::vector<fs::path> find_from_PATH(const std::string& name);
 }

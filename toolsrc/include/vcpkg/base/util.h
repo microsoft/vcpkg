@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <map>
 #include <mutex>
 #include <utility>
@@ -16,6 +17,15 @@ namespace vcpkg::Util
         void concatenate(std::vector<T>* augend, const Container& addend)
         {
             augend->insert(augend->end(), addend.begin(), addend.end());
+        }
+    }
+
+    namespace Sets
+    {
+        template<class Container, class T = ElementT<Container>>
+        bool contains(const Container& container, const T& item)
+        {
+            return container.find(item) != container.cend();
         }
     }
 
@@ -98,7 +108,7 @@ namespace vcpkg::Util
     }
 
     template<class K, class V, class Container, class Func>
-    void group_by(const Container& cont, _Inout_ std::map<K, std::vector<const V*>>* output, Func&& f)
+    void group_by(const Container& cont, std::map<K, std::vector<const V*>>* output, Func&& f)
     {
         for (const V& element : cont)
         {

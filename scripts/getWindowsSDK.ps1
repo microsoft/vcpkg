@@ -19,6 +19,11 @@ $validInstances = New-Object System.Collections.ArrayList
 # Windows 10 SDK
 function CheckWindows10SDK($path)
 {
+    if ($path -eq $null)
+    {
+        return
+    }
+
     $folder = (Join-Path $path "Include")
     if (!(Test-Path $folder))
     {
@@ -64,6 +69,11 @@ CheckWindows10SDK("${env:ProgramFiles(x86)}\Windows Kits\10")
 # Windows 8.1 SDK
 function CheckWindows81SDK($path)
 {
+    if ($path -eq $null)
+    {
+        return
+    }
+
     $folder = "$path\Include"
     if (!(Test-Path $folder))
     {

@@ -36,8 +36,11 @@ namespace vcpkg
     bool operator!=(const Triplet& left, const Triplet& right);
 }
 
-template<>
-struct std::hash<vcpkg::Triplet>
+namespace std
 {
-    size_t operator()(const vcpkg::Triplet& t) const { return t.hash_code(); }
-};
+    template<>
+    struct hash<vcpkg::Triplet>
+    {
+        size_t operator()(const vcpkg::Triplet& t) const { return t.hash_code(); }
+    };
+}

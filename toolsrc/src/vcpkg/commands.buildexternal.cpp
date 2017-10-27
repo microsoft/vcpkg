@@ -15,7 +15,7 @@ namespace vcpkg::Commands::BuildExternal
         const FullPackageSpec spec =
             Input::check_and_get_full_package_spec(args.command_arguments.at(0), default_triplet, EXAMPLE);
         Input::check_triplet(spec.package_spec.triplet(), paths);
-        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments({});
+        const ParsedArguments options = args.check_and_get_optional_command_arguments({}, {});
 
         const fs::path port_dir = args.command_arguments.at(1);
         Build::Command::perform_and_exit(spec, port_dir, options, paths);

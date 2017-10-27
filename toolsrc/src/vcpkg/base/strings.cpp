@@ -37,31 +37,8 @@ namespace vcpkg::Strings::details
 #if defined(_WIN32)
         _vsnprintf_s_l(&output.at(0), output.size() + 1, output.size(), fmtstr, c_locale(), args);
 #else
-        vsnprintf(&output.at(0), output.size() + 1, fmtstr, args);
-#endif
-        va_end(args);
-
-        return output;
-    }
-
-    std::wstring wformat_internal(const wchar_t* fmtstr, ...)
-    {
-        va_list args;
         va_start(args, fmtstr);
-
-#if defined(_WIN32)
-        const int sz = _vscwprintf_l(fmtstr, c_locale(), args);
-#else
-        const int sz = vswprintf(nullptr, 0, fmtstr, args);
-#endif
-        Checks::check_exit(VCPKG_LINE_INFO, sz > 0);
-
-        std::wstring output(sz, L'\0');
-
-#if defined(_WIN32)
-        _vsnwprintf_s_l(&output.at(0), output.size() + 1, output.size(), fmtstr, c_locale(), args);
-#else
-        vswprintf(&output.at(0), output.size() + 1, fmtstr, args);
+        auto res = vsnprintf(&output.at(0), output.size() + 1, fmtstr, args);
 #endif
         va_end(args);
 
@@ -71,22 +48,30 @@ namespace vcpkg::Strings::details
 
 namespace vcpkg::Strings
 {
-    std::wstring to_utf16(const CStringView s)
+    std::wstring to_utf16(const CStringView& s)
     {
+#if defined(_WIN32)
         const int size = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
         std::wstring output;
         output.resize(size - 1);
         MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, output.data(), size - 1);
         return output;
+#else
+        Checks::unreachable(VCPKG_LINE_INFO);
+#endif
     }
 
-    std::string to_utf8(const CWStringView w)
+    std::string to_utf8(const CWStringView& w)
     {
+#if defined(_WIN32)
         const int size = WideCharToMultiByte(CP_UTF8, 0, w.c_str(), -1, nullptr, 0, nullptr, nullptr);
         std::string output;
         output.resize(size - 1);
         WideCharToMultiByte(CP_UTF8, 0, w.c_str(), -1, output.data(), size - 1, nullptr, nullptr);
         return output;
+#else
+        Checks::unreachable(VCPKG_LINE_INFO);
+#endif
     }
 
     std::string::const_iterator case_insensitive_ascii_find(const std::string& s, const std::string& pattern)
@@ -104,9 +89,13 @@ namespace vcpkg::Strings
         return case_insensitive_ascii_find(s, pattern) != s.end();
     }
 
-    bool case_insensitive_ascii_compare(const CStringView left, const CStringView right)
+    bool case_insensitive_ascii_equals(const CStringView left, const CStringView right)
     {
+#if defined(_WIN32)
         return _stricmp(left.c_str(), right.c_str()) == 0;
+#else
+        return strcasecmp(left.c_str(), right.c_str()) == 0;
+#endif
     }
 
     std::string ascii_to_lowercase(const std::string& input)
@@ -118,27 +107,36 @@ namespace vcpkg::Strings
 
     bool case_insensitive_ascii_starts_with(const std::string& s, const std::string& pattern)
     {
+#if defined(_WIN32)
         return _strnicmp(s.c_str(), pattern.c_str(), pattern.size()) == 0;
+#else
+        return strncasecmp(s.c_str(), pattern.c_str(), pattern.size()) == 0;
+#endif
     }
 
-    void trim(std::string* s)
+    std::string replace_all(std::string&& s, const std::string& search, const std::string& rep)
     {
-        s->erase(std::find_if_not(s->rbegin(), s->rend(), details::isspace).base(), s->end());
-        s->erase(s->begin(), std::find_if_not(s->begin(), s->end(), details::isspace));
+        size_t pos = 0;
+        while ((pos = s.find(search, pos)) != std::string::npos)
+        {
+            s.replace(pos, search.size(), rep);
+            pos += rep.size();
+        }
+        return std::move(s);
     }
 
-    std::string trimmed(const std::string& s)
+    std::string trim(std::string&& s)
     {
-        auto whitespace_back = std::find_if_not(s.rbegin(), s.rend(), details::isspace).base();
-        auto whitespace_front = std::find_if_not(s.begin(), whitespace_back, details::isspace);
-        return std::string(whitespace_front, whitespace_back);
+        s.erase(std::find_if_not(s.rbegin(), s.rend(), details::isspace).base(), s.end());
+        s.erase(s.begin(), std::find_if_not(s.begin(), s.end(), details::isspace));
+        return std::move(s);
     }
 
     void trim_all_and_remove_whitespace_strings(std::vector<std::string>* strings)
     {
         for (std::string& s : *strings)
         {
-            trim(&s);
+            s = trim(std::move(s));
         }
 
         Util::erase_remove_if(*strings, [](const std::string& s) { return s.empty(); });

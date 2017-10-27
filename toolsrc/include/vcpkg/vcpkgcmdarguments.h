@@ -19,7 +19,11 @@ namespace vcpkg
 
     struct VcpkgCmdArguments
     {
+#if defined(_WIN32)
         static VcpkgCmdArguments create_from_command_line(const int argc, const wchar_t* const* const argv);
+#else
+        static VcpkgCmdArguments create_from_command_line(const int argc, const char* const* const argv);
+#endif
         static VcpkgCmdArguments create_from_arg_sequence(const std::string* arg_begin, const std::string* arg_end);
 
         std::unique_ptr<std::string> vcpkg_root_dir;
@@ -30,11 +34,6 @@ namespace vcpkg
 
         std::string command;
         std::vector<std::string> command_arguments;
-        std::unordered_set<std::string> check_and_get_optional_command_arguments(
-            const std::vector<std::string>& valid_options) const
-        {
-            return std::move(check_and_get_optional_command_arguments(valid_options, {}).switches);
-        }
 
         ParsedArguments check_and_get_optional_command_arguments(const std::vector<std::string>& valid_switches,
                                                                  const std::vector<std::string>& valid_settings) const;

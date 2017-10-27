@@ -38,7 +38,8 @@ namespace vcpkg::Dependencies
         UNKNOWN,
         BUILD_AND_INSTALL,
         INSTALL,
-        ALREADY_INSTALLED
+        ALREADY_INSTALLED,
+        EXCLUDED
     };
 
     struct InstallPlanAction : Util::MoveOnlyBase
@@ -115,7 +116,10 @@ namespace vcpkg::Dependencies
         RequestType request_type;
     };
 
-    __interface PortFileProvider { virtual const SourceControlFile& get_control_file(const std::string& spec) const; };
+    struct PortFileProvider
+    {
+        virtual const SourceControlFile& get_control_file(const std::string& spec) const = 0;
+    };
 
     struct MapPortFile : Util::ResourceBase, PortFileProvider
     {

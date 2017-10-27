@@ -20,7 +20,7 @@ namespace vcpkg
         ErrorHolder() : m_err(PackageSpecParseResult::SUCCESS) {}
         ErrorHolder(PackageSpecParseResult err) : m_err(err) {}
 
-        constexpr bool has_error() const { return m_err != PackageSpecParseResult::SUCCESS; }
+        bool has_error() const { return m_err != PackageSpecParseResult::SUCCESS; }
 
         const PackageSpecParseResult& error() const { return m_err; }
         PackageSpecParseResult& error() { return m_err; }

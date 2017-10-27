@@ -15,7 +15,6 @@ namespace vcpkg::Metrics
 
         void track_metric(const std::string& name, double value);
         void track_property(const std::string& name, const std::string& value);
-        void track_property(const std::string& name, const std::wstring& value);
 
         void upload(const std::string& payload);
         void flush();
@@ -23,6 +22,6 @@ namespace vcpkg::Metrics
 
     extern Util::LockGuarded<Metrics> g_metrics;
 
-    std::wstring get_SQM_user();
+    std::string get_SQM_user();
     bool get_compiled_metrics_enabled();
 }

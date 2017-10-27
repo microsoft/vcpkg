@@ -1,0 +1,32 @@
+diff --git a/Microsoft.WindowsAzure.Storage/CMakeLists.txt b/Microsoft.WindowsAzure.Storage/CMakeLists.txt
+index 3b4d1c0..d8818ac 100644
+--- a/Microsoft.WindowsAzure.Storage/CMakeLists.txt
++++ b/Microsoft.WindowsAzure.Storage/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ set(CMAKE_LEGACY_CYGWIN_WIN32 0)
+-cmake_minimum_required(VERSION 2.6)
++cmake_minimum_required(VERSION 3.8)
+ project(azurestorage)
+ 
+ enable_testing()
+diff --git a/Microsoft.WindowsAzure.Storage/cmake/Modules/FindCasablanca.cmake b/Microsoft.WindowsAzure.Storage/cmake/Modules/FindCasablanca.cmake
+index da66eb4..40e1767 100644
+--- a/Microsoft.WindowsAzure.Storage/cmake/Modules/FindCasablanca.cmake
++++ b/Microsoft.WindowsAzure.Storage/cmake/Modules/FindCasablanca.cmake
+@@ -23,6 +23,16 @@ find_path(CASABLANCA_INCLUDE_DIR
+     include
+ )
+ 
++find_package(cpprestsdk)
++
++if(cpprestsdk_FOUND)
++  set(CASABLANCA_LIBRARY cpprestsdk::cpprest)
++  set(CASABLANCA_PROCESS_LIBS CASABLANCA_LIBRARY)
++  set(CASABLANCA_PROCESS_INCLUDES CASABLANCA_INCLUDE_DIR)
++  libfind_process(CASABLANCA)
++  return()
++endif()
++
+ # Library
+ find_library(CASABLANCA_LIBRARY
+   NAMES 

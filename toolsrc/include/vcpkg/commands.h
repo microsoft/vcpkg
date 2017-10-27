@@ -75,6 +75,7 @@ namespace vcpkg::Commands
     namespace Integrate
     {
         extern const char* const INTEGRATE_COMMAND_HELPSTRING;
+        extern const CommandStructure COMMAND_STRUCTURE;
 
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }

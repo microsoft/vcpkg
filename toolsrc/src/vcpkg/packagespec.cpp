@@ -38,7 +38,7 @@ namespace vcpkg
                 for (auto&& feature : spec->features)
                     f_specs.push_back(FeatureSpec{pspec, feature});
 
-                if (spec->features.empty()) f_specs.push_back(FeatureSpec{pspec, Strings::EMPTY});
+                if (spec->features.empty()) f_specs.push_back(FeatureSpec{pspec, ""});
             }
             else
             {
@@ -56,7 +56,7 @@ namespace vcpkg
         std::vector<FeatureSpec> ret;
         for (auto&& spec : specs)
         {
-            ret.emplace_back(spec.package_spec, Strings::EMPTY);
+            ret.emplace_back(spec.package_spec, "");
             for (auto&& feature : spec.features)
                 ret.emplace_back(spec.package_spec, feature);
         }
@@ -90,6 +90,14 @@ namespace vcpkg
         p.m_name = name;
         p.m_triplet = triplet;
         return p;
+    }
+
+    std::vector<PackageSpec> PackageSpec::to_package_specs(const std::vector<std::string>& ports,
+                                                           const Triplet& triplet)
+    {
+        return Util::fmap(ports, [&](const std::string s) {
+            return PackageSpec::from_name_and_triplet(s, triplet).value_or_exit(VCPKG_LINE_INFO);
+        });
     }
 
     const std::string& PackageSpec::name() const { return this->m_name; }

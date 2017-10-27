@@ -30,11 +30,11 @@ namespace vcpkg::Build::Command
 
     void perform_and_exit(const FullPackageSpec& full_spec,
                           const fs::path& port_dir,
-                          const std::unordered_set<std::string>& options,
+                          const ParsedArguments& options,
                           const VcpkgPaths& paths)
     {
         const PackageSpec& spec = full_spec.package_spec;
-        if (options.find(OPTION_CHECKS_ONLY) != options.end())
+        if (Util::Sets::contains(options.switches, OPTION_CHECKS_ONLY))
         {
             const auto pre_build_info = Build::PreBuildInfo::from_triplet_file(paths, spec.triplet());
             const auto build_info = Build::read_build_info(paths.get_filesystem(), paths.build_info_file_path(spec));
@@ -69,7 +69,10 @@ namespace vcpkg::Build::Command
         const Build::BuildPackageConfig build_config{
             *scf->core_paragraph, spec.triplet(), paths.port_dir(spec), build_package_options};
 
+        const auto build_timer = Chrono::ElapsedTime::create_started();
         const auto result = Build::build_package(paths, build_config, status_db);
+        System::println("Elapsed time for package %s: %s", spec.to_string(), build_timer.to_string());
+
         if (result.code == BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES)
         {
             System::println(System::Color::error,
@@ -83,6 +86,8 @@ namespace vcpkg::Build::Command
             System::println();
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
+
+        Checks::check_exit(VCPKG_LINE_INFO, result.code != BuildResult::EXCLUDED);
 
         if (result.code != BuildResult::SUCCEEDED)
         {
@@ -102,8 +107,7 @@ namespace vcpkg::Build::Command
         const std::string command_argument = args.command_arguments.at(0);
         const FullPackageSpec spec = Input::check_and_get_full_package_spec(command_argument, default_triplet, EXAMPLE);
         Input::check_triplet(spec.package_spec.triplet(), paths);
-        const std::unordered_set<std::string> options =
-            args.check_and_get_optional_command_arguments({OPTION_CHECKS_ONLY});
+        const ParsedArguments options = args.check_and_get_optional_command_arguments({OPTION_CHECKS_ONLY}, {});
         perform_and_exit(spec, paths.port_dir(spec.package_spec), options, paths);
     }
 }
@@ -155,16 +159,16 @@ namespace vcpkg::Build
         static const std::string LIBRARY_LINKAGE = "LibraryLinkage";
     }
 
-    CWStringView to_vcvarsall_target(const std::string& cmake_system_name)
+    CStringView to_vcvarsall_target(const std::string& cmake_system_name)
     {
-        if (cmake_system_name == Strings::EMPTY) return Strings::WEMPTY;
-        if (cmake_system_name == "Windows") return Strings::WEMPTY;
-        if (cmake_system_name == "WindowsStore") return L"store";
+        if (cmake_system_name.empty()) return "";
+        if (cmake_system_name == "Windows") return "";
+        if (cmake_system_name == "WindowsStore") return "store";
 
         Checks::exit_with_message(VCPKG_LINE_INFO, "Unsupported vcvarsall target %s", cmake_system_name);
     }
 
-    CWStringView to_vcvarsall_toolchain(const std::string& target_architecture, const Toolset& toolset)
+    CStringView to_vcvarsall_toolchain(const std::string& target_architecture, const Toolset& toolset)
     {
         auto maybe_target_arch = System::to_cpu_architecture(target_architecture);
         Checks::check_exit(
@@ -183,23 +187,23 @@ namespace vcpkg::Build
         Checks::exit_with_message(VCPKG_LINE_INFO, "Unsupported toolchain combination %s", target_architecture);
     }
 
-    std::wstring make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
+    std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
     {
-        const wchar_t* tonull = L" >nul";
+        const char* tonull = " >nul";
         if (GlobalState::debugging)
         {
-            tonull = Strings::WEMPTY;
+            tonull = "";
         }
 
         const auto arch = to_vcvarsall_toolchain(pre_build_info.target_architecture, toolset);
         const auto target = to_vcvarsall_target(pre_build_info.cmake_system_name);
 
-        return Strings::wformat(LR"("%s" %s %s %s %s 2>&1)",
-                                toolset.vcvarsall.native(),
-                                Strings::join(L" ", toolset.vcvarsall_options),
-                                arch,
-                                target,
-                                tonull);
+        return Strings::format(R"("%s" %s %s %s %s 2>&1)",
+                               toolset.vcvarsall.u8string(),
+                               Strings::join(" ", toolset.vcvarsall_options),
+                               arch,
+                               target,
+                               tonull);
     }
 
     static void create_binary_feature_control_file(const SourceParagraph& source_paragraph,
@@ -265,8 +269,6 @@ namespace vcpkg::Build
 
         const fs::path ports_cmake_script_path = paths.ports_cmake;
         const auto pre_build_info = PreBuildInfo::from_triplet_file(paths, triplet);
-        const Toolset& toolset = paths.get_toolset(pre_build_info.platform_toolset, pre_build_info.visual_studio_path);
-        const auto cmd_set_environment = make_build_env_cmd(pre_build_info, toolset);
 
         std::string features;
         if (GlobalState::feature_packages)
@@ -284,22 +286,26 @@ namespace vcpkg::Build
             }
         }
 
-        const std::wstring cmd_launch_cmake = make_cmake_cmd(
+        const Toolset& toolset = paths.get_toolset(pre_build_info.platform_toolset, pre_build_info.visual_studio_path);
+
+        const std::string cmd_launch_cmake = make_cmake_cmd(
             cmake_exe_path,
             ports_cmake_script_path,
             {
-                {L"CMD", L"BUILD"},
-                {L"PORT", config.src.name},
-                {L"CURRENT_PORT_DIR", config.port_dir / "/."},
-                {L"TARGET_TRIPLET", triplet.canonical_name()},
-                {L"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
-                {L"VCPKG_USE_HEAD_VERSION", to_bool(config.build_package_options.use_head_version) ? L"1" : L"0"},
-                {L"_VCPKG_NO_DOWNLOADS", !to_bool(config.build_package_options.allow_downloads) ? L"1" : L"0"},
-                {L"GIT", git_exe_path},
-                {L"FEATURES", features},
+                {"CMD", "BUILD"},
+                {"PORT", config.src.name},
+                {"CURRENT_PORT_DIR", config.port_dir / "/."},
+                {"TARGET_TRIPLET", triplet.canonical_name()},
+                {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
+                {"VCPKG_USE_HEAD_VERSION", to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
+                {"_VCPKG_NO_DOWNLOADS", !to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
+                {"GIT", git_exe_path},
+                {"FEATURES", features},
             });
 
-        const std::wstring command = Strings::wformat(LR"(%s && %s)", cmd_set_environment, cmd_launch_cmake);
+        std::string command;
+        const auto cmd_set_environment = make_build_env_cmd(pre_build_info, toolset);
+        command = Strings::format(R"(%s && %s)", cmd_set_environment, cmd_launch_cmake);
 
         const auto timer = Chrono::ElapsedTime::create_started();
 
@@ -360,6 +366,7 @@ namespace vcpkg::Build
         static const std::string FILE_CONFLICTS_STRING = "FILE_CONFLICTS";
         static const std::string POST_BUILD_CHECKS_FAILED_STRING = "POST_BUILD_CHECKS_FAILED";
         static const std::string CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING = "CASCADED_DUE_TO_MISSING_DEPENDENCIES";
+        static const std::string EXCLUDED_STRING = "EXCLUDED";
 
         switch (build_result)
         {
@@ -367,8 +374,9 @@ namespace vcpkg::Build
             case BuildResult::SUCCEEDED: return SUCCEEDED_STRING;
             case BuildResult::BUILD_FAILED: return BUILD_FAILED_STRING;
             case BuildResult::POST_BUILD_CHECKS_FAILED: return POST_BUILD_CHECKS_FAILED_STRING;
-            case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES: return CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING;
             case BuildResult::FILE_CONFLICTS: return FILE_CONFLICTS_STRING;
+            case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES: return CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING;
+            case BuildResult::EXCLUDED: return EXCLUDED_STRING;
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
@@ -461,14 +469,12 @@ namespace vcpkg::Build
         const fs::path ports_cmake_script_path = paths.scripts / "get_triplet_environment.cmake";
         const fs::path triplet_file_path = paths.triplets / (triplet.canonical_name() + ".cmake");
 
-        const std::wstring cmd_launch_cmake = make_cmake_cmd(cmake_exe_path,
-                                                             ports_cmake_script_path,
-                                                             {
-                                                                 {L"CMAKE_TRIPLET_FILE", triplet_file_path},
-                                                             });
-
-        const std::wstring command = Strings::wformat(LR"(%s)", cmd_launch_cmake);
-        const auto ec_data = System::cmd_execute_and_capture_output(command);
+        const auto cmd_launch_cmake = make_cmake_cmd(cmake_exe_path,
+                                                     ports_cmake_script_path,
+                                                     {
+                                                         {"CMAKE_TRIPLET_FILE", triplet_file_path},
+                                                     });
+        const auto ec_data = System::cmd_execute_and_capture_output(cmd_launch_cmake);
         Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0);
 
         const std::vector<std::string> lines = Strings::split(ec_data.output, "\n");
@@ -491,7 +497,7 @@ namespace vcpkg::Build
 
             const bool variable_with_no_value = s.size() == 1;
             const std::string variable_name = s.at(0);
-            const std::string variable_value = variable_with_no_value ? Strings::EMPTY : s.at(1);
+            const std::string variable_value = variable_with_no_value ? "" : s.at(1);
 
             if (variable_name == "VCPKG_TARGET_ARCHITECTURE")
             {
