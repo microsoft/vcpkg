@@ -23,7 +23,7 @@ function(vcpkg_fixup_cmake_targets)
     set(DEBUG_SHARE ${CURRENT_PACKAGES_DIR}/debug/share/${PORT})
     set(RELEASE_SHARE ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
-    if(_vfct_CONFIG_PATH)
+    if(_vfct_CONFIG_PATH AND NOT RELEASE_SHARE STREQUAL "${CURRENT_PACKAGES_DIR}/${_vfct_CONFIG_PATH}")
         set(DEBUG_CONFIG ${CURRENT_PACKAGES_DIR}/debug/${_vfct_CONFIG_PATH})
         set(RELEASE_CONFIG ${CURRENT_PACKAGES_DIR}/${_vfct_CONFIG_PATH})
 
@@ -31,10 +31,14 @@ function(vcpkg_fixup_cmake_targets)
             message(FATAL_ERROR "'${DEBUG_CONFIG}' does not exist.")
         endif()
 
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/share)
-        file(RENAME ${DEBUG_CONFIG} ${DEBUG_SHARE})
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
-        file(RENAME ${RELEASE_CONFIG} ${RELEASE_SHARE})
+        file(MAKE_DIRECTORY ${DEBUG_SHARE})
+        file(GLOB FILES ${DEBUG_CONFIG}/*)
+        file(COPY ${FILES} DESTINATION ${DEBUG_SHARE})
+        file(REMOVE_RECURSE ${DEBUG_CONFIG})
+
+        file(GLOB FILES ${RELEASE_CONFIG}/*)
+        file(COPY ${FILES} DESTINATION ${RELEASE_SHARE})
+        file(REMOVE_RECURSE ${RELEASE_CONFIG})
 
         get_filename_component(DEBUG_CONFIG_DIR_NAME ${DEBUG_CONFIG} NAME)
         string(TOLOWER "${DEBUG_CONFIG_DIR_NAME}" DEBUG_CONFIG_DIR_NAME)
