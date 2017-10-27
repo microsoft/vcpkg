@@ -2,16 +2,17 @@ cmake_minimum_required(VERSION 2.8.12)
 
 project(arb C)
 
-set (DEPS mpir mpfr pthreads flint2)
+set (DEPS mpir mpfr pthreads flint2 gettimeofday)
 set (mpir_lib gmp mpir)
 set (mpfr_lib mpfr)
 set (pthreads_lib pthreads pthread)
 set (flint2_lib ${LIBRARY_TYPE}_flint flint)
+set (gettimeofday_lib gettimeofday)
 
 set (mpir_header gmp.h)
 set (mpfr_header mpfr.h)
 set (pthreads_header pthread.h)
-set (flint2_header flint/flint.h)
+set (gettimeofday_header gettimeofday.h)
 
 foreach (LIB ${DEPS})
     string (TOUPPER ${LIB} LIB_UPPER)
