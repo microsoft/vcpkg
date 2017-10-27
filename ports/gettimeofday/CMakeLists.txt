@@ -1,18 +1,14 @@
-file(GLOB SRC
-    "*.c"
-)
+cmake_minimum_required(VERSION 3.8)
+project(gettimeofday C)
 
-file(GLOB HEADERS
-    "*.h"
-)
-
-add_library(gettimeofday ${SRC})
-target_link_libraries(gettimeofday)
+add_library(gettimeofday gettimeofday.c gettimeofday.def)
 
 install(TARGETS gettimeofday
-            RUNTIME DESTINATION bin
-            ARCHIVE DESTINATION lib
-            LIBRARY DESTINATION lib
-        )
+    RUNTIME DESTINATION bin
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+)
 
-install(FILES ${HEADERS} DESTINATION include)
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    install(FILES gettimeofday.h DESTINATION include)
+endif()
