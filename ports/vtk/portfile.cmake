@@ -100,7 +100,7 @@ endif()
 
 if(VTK_WITH_OPENVR)
     list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_Group_OpenVR
+        -DModule_vtkRenderingOpenVR=ON
     )
 endif()
 
