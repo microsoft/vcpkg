@@ -31,7 +31,11 @@ file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg ${CURRENT_BU
 
 set(OPTIONS "--disable-ffmpeg --disable-ffprobe --disable-doc --enable-debug")
 set(OPTIONS "${OPTIONS} --enable-runtime-cpudetect")
-set(OPTIONS "${OPTIONS} --enable-openssl")
+if("openssl" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-openssl")
+else()
+    set(OPTIONS "${OPTIONS} --disable-openssl")
+endif()
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
