@@ -1,8 +1,20 @@
 Source: vtk
 Version: 8.0.0-3
 Description: Software system for 3D computer graphics, image processing, and visualization
-Build-Depends: zlib, libpng, tiff, libxml2, jsoncpp, glew, freetype, expat, hdf5, qt5, msmpi, libjpeg-turbo, proj4, lz4, libtheora, libharu
+Build-Depends: zlib, libpng, tiff, libxml2, jsoncpp, glew, freetype, expat, hdf5, libjpeg-turbo, proj4, lz4, libtheora, libharu
 
 Feature: OpenVR
 Description: OpenVR functionality for VTK
 Build-Depends: SDL2, OpenVR
+
+Feature: Qt
+Description: Qt functionality for VTK
+Build-Depends Qt5
+
+Feature: MPI
+Description: MPI functionality for VTK
+Build-Depends msmpi
+
+Feature: Python
+Description: Python functionality for VTK
+Build-Depends python3
