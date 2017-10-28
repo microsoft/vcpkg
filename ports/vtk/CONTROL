@@ -5,7 +5,7 @@ Build-Depends: zlib, libpng, tiff, libxml2, jsoncpp, glew, freetype, expat, hdf5
 
 Feature: openvr
 Description: OpenVR functionality for VTK
-Build-Depends: SDL2, OpenVR
+Build-Depends: sdl2, openvr
 
 Feature: qt
 Description: Qt functionality for VTK
