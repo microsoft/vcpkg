@@ -18,6 +18,7 @@ set(VTK_WITH_MPI                         ON ) # IMPORTANT: if ON make sure `mpi`
 set(VTK_WITH_PYTHON                      OFF) # IMPORTANT: if ON make sure `python3` is listed as dependency in the CONTROL file
 set(VTK_WITH_ALL_MODULES                 OFF) # IMPORTANT: if ON make sure `qt5`, `mpi`, `python3`, `ffmpeg`, `gdal`, `fontconfig`,
                                               #            `libmysql` and `atlmfc` are  listed as dependency in the CONTROL file
+set(VTK_WITH_OPENVR                      OFF)
 
 # =============================================================================
 # Apply patches to the source code
@@ -75,6 +76,12 @@ if(VTK_WITH_PYTHON)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_WRAP_PYTHON=ON
         -DVTK_PYTHON_VERSION=3
+    )
+endif()
+
+if(VTK_WITH_OPENVR)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_Group_OpenVR
     )
 endif()
 
