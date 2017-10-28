@@ -9,12 +9,12 @@ Build-Depends: SDL2, OpenVR
 
 Feature: Qt
 Description: Qt functionality for VTK
-Build-Depends Qt5
+Build-Depends: Qt5
 
 Feature: MPI
 Description: MPI functionality for VTK
-Build-Depends msmpi
+Build-Depends: msmpi
 
 Feature: Python
 Description: Python functionality for VTK
-Build-Depends python3
+Build-Depends: python3
