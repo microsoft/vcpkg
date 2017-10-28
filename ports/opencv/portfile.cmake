@@ -13,6 +13,7 @@ vcpkg_apply_patches(
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/opencv-installation-options.patch"
             "${CMAKE_CURRENT_LIST_DIR}/001-fix-uwp.patch"
             "${CMAKE_CURRENT_LIST_DIR}/002-fix-uwp.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/no-double-expand-enable-pylint.patch"
 )
 file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty/libjpeg ${SOURCE_PATH}/3rdparty/libpng ${SOURCE_PATH}/3rdparty/zlib ${SOURCE_PATH}/3rdparty/libtiff)
 
@@ -40,12 +41,14 @@ vcpkg_configure_cmake(
         -DBUILD_TIFF=OFF
         -DBUILD_JPEG=OFF
         -DBUILD_PNG=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
         -DBUILD_opencv_python2=OFF
         -DBUILD_opencv_python3=OFF
         -DBUILD_opencv_flann=ON
         -DBUILD_opencv_apps=OFF
         -DBUILD_DOCS=OFF
         -DBUILD_EXAMPLES=OFF
+        -DENABLE_PYLINT=OFF
         -DBUILD_PACKAGE=OFF
         -DBUILD_PERF_TESTS=OFF
         -DBUILD_TESTS=OFF
