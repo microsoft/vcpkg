@@ -80,6 +80,7 @@ set(B2_OPTIONS
     -sICU_PATH="${CURRENT_INSTALLED_DIR}"
     -j$ENV{NUMBER_OF_PROCESSORS}
     --debug-configuration
+    --ignore-site-config
     --hash
     -q
 
