@@ -1,3 +1,67 @@
+vcpkg (0.0.94)
+--------------
+  * Add ports:
+    - capstone       3.0.5-rc3
+    - cgal           4.11
+    - gettimeofday   2017-10-14-2
+    - gmime          3.0.2
+    - leveldb        2017-10-25-8b1cd3753b184341e837b30383832645135d3d73
+    - rpclib         2.2.0
+  * Update ports:
+    - alembic        1.7.1-4 -> 1.7.4
+    - blaze          3.2 -> 3.2-1
+    - boost          1.65.1-1 -> 1.65.1-2
+    - ceres          1.13.0-1 -> 1.13.0-2
+    - cpprestsdk     2.9.0-4 -> 2.10.0
+    - cppwinrt       spring_2017_creators_update_for_vs_15.3 -> fall_2017_creators_update_for_vs_15.3-2
+    - cppzmq         4.2.1 -> 4.2.2
+    - eigen3         3.3.4-1 -> 3.3.4-2
+    - gdcm2          2.6.8-1 -> 2.8.3
+    - harfbuzz       1.4.6-2 -> 1.6.3-1
+    - libjpeg-turbo  1.5.2-1 -> 1.5.2-2
+    - libmariadb     2.3.2-1 -> 3.0.2
+    - libmysql       5.7.17-2 -> 5.7.17-3
+    - live555        2017.06.04-1 -> 2017.09.12
+    - mpir           3.0.0-2 -> 3.0.0-3
+    - opencv         3.3.0-4 -> 3.3.1
+    - pangolin       0.5-2 -> 0.5-3
+    - pugixml        1.8.1-1 -> 1.8.1-2
+    - secp256k1      2017-19-10-0b7024185045a49a1a6a4c5615bf31c94f63d9c4 -> 2017-19-10-0b7024185045a49a1a6a4c5615bf31c94f63d9c4-1
+    - smpeg2         2.0.0-2 -> 2.0.0-3
+    - sqlite3        3.20.1 -> 3.21.0
+  * Bump required version & auto-downloaded version of `git` to 2.4.3
+
+-- vcpkg team <vcpkg@microsoft.com>  FRI, 27 Oct 2017 19:30:00 -0800
+
+
+vcpkg (0.0.93)
+--------------
+  * Add ports:
+    - berkeleydb     4.8.30
+    - libsodium      1.0.15
+    - secp256k1      2017-19-10-0b7024185045a49a1a6a4c5615bf31c94f63d9c4
+  * Update ports:
+    - assimp         4.0.0-2 -> 4.0.1
+    - azure-storage-cpp 3.0.0-3 -> 3.0.0-4
+    - cctz           v2.1 -> 2.1
+    - folly          v2017.07.17.01-1 -> 2017.10.02.00
+    - grpc           1.6.0-1 -> 1.6.0-2
+    - openblas       v0.2.20-2 -> 0.2.20-2
+    - pthreads       2.9.1-1 -> 2.9.1-2
+    - sdl2-gfx       1.0.3-2 -> 1.0.3-3
+    - sdl2-image     2.0.1-2 -> 2.0.1-3
+    - sdl2-mixer     2.0.1-2 -> 2.0.1-3
+    - sdl2-net       2.0.1-2 -> 2.0.1-3
+    - sdl2-ttf       2.0.14-2 -> 2.0.14-3
+    - spirv-tools    v2017.1-dev-7e2d26c77b606b21af839b37fd21381c4a669f23-1 -> 2017.1-dev-7e2d26c77b606b21af839b37fd21381c4a669f23-1
+    - thor           v2.0-1 -> 2.0-1
+    - tinyexr        v0.9.5-d16ea6 -> 0.9.5-d16ea6
+  * Fix issue where `vcpkg` was getting output from powershell scripts. Powershell adds newlines when the console width is reached; the extra newlines was causing `vcpkg`'s parsing to fail.
+  * Improve autocomplete/tab-completion for powershell (still experimental)
+
+-- vcpkg team <vcpkg@microsoft.com>  THU, 19 Oct 2017 21:30:00 -0800
+
+
 vcpkg (0.0.92)
 --------------
   * Add ports:
@@ -37,7 +101,6 @@ vcpkg (0.0.92)
   * Bump required version & auto-downloaded version of `vswhere` to 2.2.7
   * Bump required version & auto-downloaded version of `git` to 2.4.2(.3)
   * Bump ninja to version 1.8.0
-
 
 -- vcpkg team <vcpkg@microsoft.com>  TUE, 17 Oct 2017 16:00:00 -0800
 

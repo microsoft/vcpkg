@@ -1,7 +1,7 @@
-diff --git "a/harfbuzz-1.4.6/src/hb-ft.cc" "b/harfbuzz-1.4.6/src/hb-ft.cc"
-index 48d6a0ef..f4ce6608 100644
---- "a/harfbuzz-1.4.6/src/hb-ft.cc"
-+++ "b/harfbuzz-1.4.6/src/hb-ft.cc"
+diff --git a/src/hb-ft.cc b/src/hb-ft.cc
+index f578e9d..f224c07 100644
+--- a/src/hb-ft.cc
++++ b/src/hb-ft.cc
 @@ -31,6 +31,10 @@
  
  #include "hb-ft.h"
@@ -12,4 +12,4 @@ index 48d6a0ef..f4ce6608 100644
 +
  #include "hb-font-private.hh"
  
- #include "hb-cache-private.hh" // Maybe use in the future?
+ #include FT_ADVANCES_H

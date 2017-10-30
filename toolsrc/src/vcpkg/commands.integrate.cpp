@@ -93,9 +93,9 @@ namespace vcpkg::Commands::Integrate
 </package>
 )";
 
-        std::string content = std::regex_replace(CONTENT_TEMPLATE, std::regex("@NUGET_ID@"), nuget_id);
-        content = std::regex_replace(content, std::regex("@VCPKG_DIR@"), vcpkg_root_dir.string());
-        content = std::regex_replace(content, std::regex("@VERSION@"), nupkg_version);
+        std::string content = Strings::replace_all(CONTENT_TEMPLATE, "@NUGET_ID@", nuget_id);
+        content = Strings::replace_all(std::move(content), "@VCPKG_DIR@", vcpkg_root_dir.string());
+        content = Strings::replace_all(std::move(content), "@VERSION@", nupkg_version);
         return content;
     }
 
@@ -308,7 +308,7 @@ CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s")",
         System::println(System::Color::success, "Created nupkg: %s", nuget_package.string());
 
         auto source_path = buildsystems_dir.u8string();
-        source_path = std::regex_replace(source_path, std::regex("`"), "``");
+        source_path = Strings::replace_all(std::move(source_path), "`", "``");
 
         System::println(R"(
 With a project open, go to Tools->NuGet Package Manager->Package Manager Console and paste:
@@ -359,7 +359,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
                                                            "%s",
                                                            INTEGRATE_COMMAND_HELPSTRING);
         args.check_exact_arg_count(1, EXAMPLE);
-        args.check_and_get_optional_command_arguments({});
+        args.check_and_get_optional_command_arguments({}, {});
 
 #if defined(_WIN32)
         if (args.command_arguments[0] == Subcommand::INSTALL)

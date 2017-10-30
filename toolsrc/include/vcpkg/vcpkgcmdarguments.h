@@ -34,11 +34,6 @@ namespace vcpkg
 
         std::string command;
         std::vector<std::string> command_arguments;
-        std::unordered_set<std::string> check_and_get_optional_command_arguments(
-            const std::vector<std::string>& valid_options) const
-        {
-            return std::move(check_and_get_optional_command_arguments(valid_options, {}).switches);
-        }
 
         ParsedArguments check_and_get_optional_command_arguments(const std::vector<std::string>& valid_switches,
                                                                  const std::vector<std::string>& valid_settings) const;

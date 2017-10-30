@@ -13,7 +13,7 @@ namespace vcpkg::Commands::DependInfo
     {
         static const std::string EXAMPLE = Help::create_example_string(R"###(depend-info [pat])###");
         args.check_max_arg_count(1, EXAMPLE);
-        args.check_and_get_optional_command_arguments({});
+        args.check_and_get_optional_command_arguments({}, {});
 
         std::vector<std::unique_ptr<SourceControlFile>> source_control_files =
             Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);

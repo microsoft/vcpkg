@@ -74,9 +74,8 @@ namespace vcpkg
                         tool_name,
                         version_as_string);
         const fs::path script = scripts_folder / "fetchDependency.ps1";
-        const auto install_cmd =
-            System::create_powershell_script_cmd(script, Strings::format("-Dependency %s", tool_name));
-        const System::ExitCodeAndOutput rc = System::cmd_execute_and_capture_output(install_cmd);
+        const System::ExitCodeAndOutput rc =
+            System::powershell_execute_and_capture_output(script, Strings::format("-Dependency %s", tool_name));
         if (rc.exit_code)
         {
             System::println(System::Color::error,
@@ -92,7 +91,7 @@ namespace vcpkg
             Checks::exit_with_code(VCPKG_LINE_INFO, rc.exit_code);
         }
 
-        const fs::path actual_downloaded_path = Strings::trimmed(rc.output);
+        const fs::path actual_downloaded_path = Strings::trim(std::string{rc.output});
         std::error_code ec;
         const auto eq = fs::stdfs::equivalent(expected_downloaded_path, actual_downloaded_path, ec);
         Checks::check_exit(VCPKG_LINE_INFO,
@@ -151,10 +150,10 @@ namespace vcpkg
 
     fs::path get_git_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
     {
-        static constexpr std::array<int, 3> EXPECTED_VERSION = {2, 14, 2};
+        static constexpr std::array<int, 3> EXPECTED_VERSION = {2, 14, 3};
         static const std::string VERSION_CHECK_ARGUMENTS = "--version";
 
-        const fs::path downloaded_copy = downloads_folder / "MinGit-2.14.2.3-32-bit" / "cmd" / "git.exe";
+        const fs::path downloaded_copy = downloads_folder / "MinGit-2.14.3-32-bit" / "cmd" / "git.exe";
         const std::vector<fs::path> from_path = Files::find_from_PATH("git");
 
         std::vector<fs::path> candidate_paths;
@@ -324,14 +323,13 @@ namespace vcpkg
     static std::vector<VisualStudioInstance> get_visual_studio_instances(const VcpkgPaths& paths)
     {
         const fs::path script = paths.scripts / "findVisualStudioInstallationInstances.ps1";
-        const std::string cmd = System::create_powershell_script_cmd(script);
-        const System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd);
+        const System::ExitCodeAndOutput ec_data = System::powershell_execute_and_capture_output(script);
         Checks::check_exit(
             VCPKG_LINE_INFO, ec_data.exit_code == 0, "Could not run script to detect Visual Studio instances");
 
-        const std::vector<std::string> instances_as_strings = Strings::split(ec_data.output, "\n");
+        const std::vector<std::string> instances_as_strings = Strings::split(ec_data.output, "::<eol>");
         Checks::check_exit(
-            VCPKG_LINE_INFO, !instances_as_strings.empty(), "Could not detect any Visual Studio instances");
+            VCPKG_LINE_INFO, !instances_as_strings.empty(), "Could not detect any Visual Studio instances.\n");
 
         std::vector<VisualStudioInstance> output;
         for (const std::string& instance_as_string : instances_as_strings)
@@ -341,7 +339,7 @@ namespace vcpkg
                                split.size() == 4,
                                "Invalid Visual Studio instance format.\n"
                                "Expected: PreferenceWeight::ReleaseType::Version::PathToVisualStudio\n"
-                               "Actual  : %s",
+                               "Actual  : %s\n",
                                instance_as_string);
             output.push_back({split.at(3), split.at(2), split.at(1), split.at(0)});
         }

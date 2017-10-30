@@ -30,8 +30,7 @@ namespace vcpkg::Commands::List
             "The argument should be a substring to search for, or no argument to display all installed libraries.\n%s",
             Help::create_example_string("list png"));
         args.check_max_arg_count(1, EXAMPLE);
-        const std::unordered_set<std::string> options =
-            args.check_and_get_optional_command_arguments({OPTION_FULLDESC});
+        const ParsedArguments options = args.check_and_get_optional_command_arguments({OPTION_FULLDESC}, {});
 
         const StatusParagraphs status_paragraphs = database_load_check(paths);
         std::vector<StatusParagraph*> installed_packages = get_installed_ports(status_paragraphs);
@@ -52,7 +51,7 @@ namespace vcpkg::Commands::List
         {
             for (const StatusParagraph* status_paragraph : installed_packages)
             {
-                do_print(*status_paragraph, options.find(OPTION_FULLDESC) != options.cend());
+                do_print(*status_paragraph, Util::Sets::contains(options.switches, OPTION_FULLDESC));
             }
         }
         else
@@ -66,7 +65,7 @@ namespace vcpkg::Commands::List
                     continue;
                 }
 
-                do_print(*status_paragraph, options.find(OPTION_FULLDESC) != options.cend());
+                do_print(*status_paragraph, Util::Sets::contains(options.switches, OPTION_FULLDESC));
             }
         }
 

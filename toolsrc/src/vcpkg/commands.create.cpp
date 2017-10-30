@@ -14,7 +14,7 @@ namespace vcpkg::Commands::Create
             R"###(create zlib2 http://zlib.net/zlib1211.zip "zlib1211-2.zip")###");
         args.check_max_arg_count(3, EXAMPLE);
         args.check_min_arg_count(2, EXAMPLE);
-        args.check_and_get_optional_command_arguments({});
+        args.check_and_get_optional_command_arguments({}, {});
         const std::string port_name = args.command_arguments.at(0);
         const std::string url = args.command_arguments.at(1);
 

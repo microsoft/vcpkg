@@ -8,6 +8,11 @@ function Test-Command($commandName)
     return [bool](Get-Command -Name $commandName -ErrorAction SilentlyContinue)
 }
 
+function Test-CommandParameter($commandName, $parameterName)
+{
+    return (Get-Command $commandName).Parameters.Keys -contains $parameterName
+}
+
 function Test-Module($moduleName)
 {
     return [bool](Get-Module -ListAvailable -Name $moduleName)
@@ -51,7 +56,16 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         $ProxyAuth = !$WC.Proxy.IsBypassed($url)
         if ($ProxyAuth)
         {
-            $ProxyCred = Get-Credential -Message "Enter credentials for Proxy Authentication"
+            if (Test-CommandParameter -commandName 'Get-Credential' -parameterName 'Message')
+            {
+                $ProxyCred = Get-Credential -Message "Enter credentials for Proxy Authentication"
+            }
+            else
+            {
+                "Enter credentials for Proxy Authentication"
+                $ProxyCred = Get-Credential
+            }
+
             $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyAuthentication","Basic")
             $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyCredential",$ProxyCred)
             $WC.Proxy.Credentials=$ProxyCred
@@ -158,16 +172,16 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     }
     elseif($Dependency -eq "git")
     {
-        $requiredVersion = "2.14.2"
-        $downloadVersion = "2.14.2"
-        $url = "https://github.com/git-for-windows/git/releases/download/v2.14.2.windows.3/MinGit-2.14.2.3-32-bit.zip" # We choose the 32-bit version
-        $downloadPath = "$downloadsDir\MinGit-2.14.2.3-32-bit.zip"
-        $expectedDownloadedFileHash = "7cc1f27e1cfe79381e1a504a5fc7bc33951ac9031cd14c3bf478769d21a26cce"
+        $requiredVersion = "2.14.3"
+        $downloadVersion = "2.14.3"
+        $url = "https://github.com/git-for-windows/git/releases/download/v2.14.3.windows.1/MinGit-2.14.3-32-bit.zip"
+        $downloadPath = "$downloadsDir\MinGit-2.14.3-32-bit.zip"
+        $expectedDownloadedFileHash = "a91385acb1da220612790807c41d0f304b41093c474b9d7342230ec194a3398e"
         # There is another copy of git.exe in MinGit\bin. However, an installed version of git add the cmd dir to the PATH.
         # Therefore, choosing the cmd dir here as well.
-        $executableFromDownload = "$downloadsDir\MinGit-2.14.2.3-32-bit\cmd\git.exe"
+        $executableFromDownload = "$downloadsDir\MinGit-2.14.3-32-bit\cmd\git.exe"
         $extractionType = $ExtractionType_ZIP
-        $extractionFolder = "$downloadsDir\MinGit-2.14.2.3-32-bit"
+        $extractionFolder = "$downloadsDir\MinGit-2.14.3-32-bit"
     }
     elseif($Dependency -eq "installerbase")
     {

@@ -20,6 +20,8 @@ namespace vcpkg
         static ExpectedT<PackageSpec, PackageSpecParseResult> from_name_and_triplet(const std::string& name,
                                                                                     const Triplet& triplet);
 
+        static std::vector<PackageSpec> to_package_specs(const std::vector<std::string>& ports, const Triplet& triplet);
+
         const std::string& name() const;
 
         const Triplet& triplet() const;

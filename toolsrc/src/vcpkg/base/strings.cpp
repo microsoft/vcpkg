@@ -114,24 +114,29 @@ namespace vcpkg::Strings
 #endif
     }
 
-    void trim(std::string* s)
+    std::string replace_all(std::string&& s, const std::string& search, const std::string& rep)
     {
-        s->erase(std::find_if_not(s->rbegin(), s->rend(), details::isspace).base(), s->end());
-        s->erase(s->begin(), std::find_if_not(s->begin(), s->end(), details::isspace));
+        size_t pos = 0;
+        while ((pos = s.find(search, pos)) != std::string::npos)
+        {
+            s.replace(pos, search.size(), rep);
+            pos += rep.size();
+        }
+        return std::move(s);
     }
 
-    std::string trimmed(const std::string& s)
+    std::string trim(std::string&& s)
     {
-        auto whitespace_back = std::find_if_not(s.rbegin(), s.rend(), details::isspace).base();
-        auto whitespace_front = std::find_if_not(s.begin(), whitespace_back, details::isspace);
-        return std::string(whitespace_front, whitespace_back);
+        s.erase(std::find_if_not(s.rbegin(), s.rend(), details::isspace).base(), s.end());
+        s.erase(s.begin(), std::find_if_not(s.begin(), s.end(), details::isspace));
+        return std::move(s);
     }
 
     void trim_all_and_remove_whitespace_strings(std::vector<std::string>* strings)
     {
         for (std::string& s : *strings)
         {
-            trim(&s);
+            s = trim(std::move(s));
         }
 
         Util::erase_remove_if(*strings, [](const std::string& s) { return s.empty(); });

@@ -13,6 +13,7 @@ vcpkg_apply_patches(
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/cmake.patch
         ${CMAKE_CURRENT_LIST_DIR}/static-builds.patch
+        ${CMAKE_CURRENT_LIST_DIR}/support-cpprest-findpackage.patch
 )
 
 vcpkg_configure_cmake(

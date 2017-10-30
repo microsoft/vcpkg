@@ -14,7 +14,9 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/rttr-0.9.5-src
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-directory-output.patch"
+    PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/fix-directory-output.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/disable-unit-tests.patch"
 )
 
 vcpkg_configure_cmake(
