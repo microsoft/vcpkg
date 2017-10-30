@@ -35,6 +35,16 @@ elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(LIBRARY_LINKAGE OFF)
 endif()
 
+set(WITH_QT OFF)
+if("qt" IN_LIST FEATURES)
+    set(WITH_QT ON)
+endif()
+
+set(WITH_PCAP OFF)
+if("pcap" IN_LIST FEATURES)
+    set(WITH_PCAP ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -50,10 +60,10 @@ vcpkg_configure_cmake(
         -DWITH_CUDA=OFF
         -DWITH_LIBUSB=OFF
         -DWITH_OPENNI2=ON
-        -DWITH_PCAP=ON
+        -DWITH_PCAP=${WITH_PCAP}
         -DWITH_PNG=OFF
         -DWITH_QHULL=ON
-        -DWITH_QT=ON
+        -DWITH_QT=${WITH_QT}
         -DWITH_VTK=ON
 )
 
