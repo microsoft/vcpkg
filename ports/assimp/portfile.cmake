@@ -20,6 +20,7 @@ vcpkg_configure_cmake(
             -DASSIMP_BUILD_ZLIB=False
             -DASSIMP_BUILD_ASSIMP_TOOLS=False
             -DASSIMP_INSTALL_PDB=False
+            -DZLIB_HOME=${CURRENT_INSTALLED_DIR}
 )
 
 vcpkg_install_cmake()
