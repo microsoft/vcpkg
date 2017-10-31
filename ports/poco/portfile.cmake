@@ -22,6 +22,13 @@ else()
     set(POCO_STATIC OFF)
 endif()
 
+file(GLOB MYSQL_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include/mysql")
+if(EXISTS ${MYSQL_INCLUDE_DIR})
+    # enabling MySQL support
+    set(MYSQL_LIB "${CURRENT_INSTALLED_DIR}/lib/libmysql.lib")
+    set(MYSQL_LIB_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/libmysql.lib")
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -30,6 +37,11 @@ vcpkg_configure_cmake(
         -DENABLE_SEVENZIP=ON
         -DENABLE_TESTS=OFF
         -DPOCO_UNBUNDLED=ON # OFF means: using internal copy of sqlite, libz, pcre, expat, ...
+        -DMYSQL_INCLUDE_DIR=${MYSQL_INCLUDE_DIR}
+    OPTIONS_RELEASE
+        -DMYSQL_LIB=${MYSQL_LIB}
+    OPTIONS_DEBUG
+        -DMYSQL_LIB=${MYSQL_LIB_DEBUG}
 )
 
 vcpkg_install_cmake()
