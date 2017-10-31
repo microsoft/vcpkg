@@ -133,6 +133,20 @@ namespace vcpkg::Dependencies
                                   "Cannot get dependencies because there was none of: source/binary/status paragraphs");
     }
 
+    std::string to_output_string(RequestType request_type,
+                                 const CStringView s,
+                                 const Build::BuildPackageOptions& options)
+    {
+        const char* const from_head = options.use_head_version == Build::UseHeadVersion::YES ? " (from HEAD)" : "";
+
+        switch (request_type)
+        {
+            case RequestType::AUTO_SELECTED: return Strings::format("  * %s%s", s, from_head);
+            case RequestType::USER_REQUESTED: return Strings::format("    %s%s", s, from_head);
+            default: Checks::unreachable(VCPKG_LINE_INFO);
+        }
+    }
+
     std::string to_output_string(RequestType request_type, const CStringView s)
     {
         switch (request_type)

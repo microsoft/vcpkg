@@ -68,6 +68,8 @@ namespace vcpkg::Export
     {
         static constexpr std::array<ExportPlanType, 2> ORDER = {ExportPlanType::ALREADY_BUILT,
                                                                 ExportPlanType::PORT_AVAILABLE_BUT_NOT_BUILT};
+        static constexpr Build::BuildPackageOptions build_options = {Build::UseHeadVersion::NO,
+                                                                     Build::AllowDownloads::YES};
 
         for (const ExportPlanType plan_type : ORDER)
         {
@@ -80,7 +82,7 @@ namespace vcpkg::Export
             std::vector<const ExportPlanAction*> cont = it->second;
             std::sort(cont.begin(), cont.end(), &ExportPlanAction::compare_by_name);
             const std::string as_string = Strings::join("\n", cont, [](const ExportPlanAction* p) {
-                return Dependencies::to_output_string(p->request_type, p->spec.to_string());
+                return Dependencies::to_output_string(p->request_type, p->spec.to_string(), build_options);
             });
 
             switch (plan_type)
