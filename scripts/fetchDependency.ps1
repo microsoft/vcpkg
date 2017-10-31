@@ -18,6 +18,19 @@ function Test-Module($moduleName)
     return [bool](Get-Module -ListAvailable -Name $moduleName)
 }
 
+function Get-Credential-Backwards-Compatible()
+{
+    if (Test-CommandParameter -commandName 'Get-Credential' -parameterName 'Message')
+    {
+        return Get-Credential -Message "Enter credentials for Proxy Authentication"
+    }
+    else
+    {
+        Write-Host "Enter credentials for Proxy Authentication"
+        return Get-Credential
+    }
+}
+
 if (Test-Module -moduleName 'BitsTransfer')
 {
    Import-Module BitsTransfer -Verbose:$false
@@ -54,28 +67,18 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 
         $WC = New-Object System.Net.WebClient
         $ProxyAuth = !$WC.Proxy.IsBypassed($url)
-        if ($ProxyAuth)
-        {
-            if (Test-CommandParameter -commandName 'Get-Credential' -parameterName 'Message')
-            {
-                $ProxyCred = Get-Credential -Message "Enter credentials for Proxy Authentication"
-            }
-            else
-            {
-                "Enter credentials for Proxy Authentication"
-                $ProxyCred = Get-Credential
-            }
-
-            $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyAuthentication","Basic")
-            $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyCredential",$ProxyCred)
-            $WC.Proxy.Credentials=$ProxyCred
-        }
 
          # git and installerbase fail with Start-BitsTransfer
         if ((Test-Command -commandName 'Start-BitsTransfer') -and ($Dependency -ne "git")-and ($Dependency -ne "installerbase"))
         {
             try
             {
+                if ($ProxyAuth)
+                {
+                    $ProxyCred = Get-Credential-Backwards-Compatible
+                    $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyAuthentication","Basic")
+                    $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyCredential", $ProxyCred)
+                }
                 Start-BitsTransfer -Source $url -Destination $downloadPath -ErrorAction Stop
                 return
             }
@@ -87,6 +90,11 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
                     Remove-Item $downloadPath
                 }
             }
+        }
+
+        if ($ProxyAuth)
+        {
+            $WC.Proxy.Credentials = Get-Credential-Backwards-Compatible
         }
 
         Write-Verbose("Downloading $Dependency...")
