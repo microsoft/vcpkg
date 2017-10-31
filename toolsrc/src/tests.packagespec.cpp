@@ -3,6 +3,7 @@
 #include <vcpkg/paragraphs.h>
 
 #include <vcpkg/base/strings.h>
+#include <vcpkg/base/util.h>
 
 #pragma comment(lib, "version")
 #pragma comment(lib, "winhttp")
@@ -101,6 +102,39 @@ namespace UnitTest1
             Assert::AreEqual("1", spec->features[1].c_str());
             Assert::AreEqual("2", spec->features[2].c_str());
             Assert::AreEqual("", spec->triplet.c_str());
+        }
+
+        TEST_METHOD(parsed_specifier_wildcard_feature)
+        {
+            auto maybe_spec = vcpkg::ParsedSpecifier::from_string("zlib[*]");
+            Assert::AreEqual(vcpkg::PackageSpecParseResult::SUCCESS, maybe_spec.error());
+            auto spec = maybe_spec.get();
+            Assert::AreEqual("zlib", spec->name.c_str());
+            Assert::IsTrue(spec->features.size() == 1);
+            Assert::AreEqual("*", spec->features[0].c_str());
+            Assert::AreEqual("", spec->triplet.c_str());
+        }
+
+        TEST_METHOD(expand_wildcards)
+        {
+            auto zlib =
+                vcpkg::FullPackageSpec::from_string("zlib[0,1]", Triplet::X86_UWP).value_or_exit(VCPKG_LINE_INFO);
+            auto openssl =
+                vcpkg::FullPackageSpec::from_string("openssl[*]", Triplet::X86_UWP).value_or_exit(VCPKG_LINE_INFO);
+            auto specs = FullPackageSpec::to_feature_specs({zlib, openssl});
+            Util::sort(specs);
+            auto spectargets = FeatureSpec::from_strings_and_triplet(
+                {
+                    "openssl",
+                    "zlib",
+                    "openssl[*]",
+                    "zlib[0]",
+                    "zlib[1]",
+                },
+                Triplet::X86_UWP);
+            Util::sort(spectargets);
+            Assert::IsTrue(specs.size() == spectargets.size());
+            Assert::IsTrue(Util::all_equal(specs, spectargets));
         }
 
         TEST_METHOD(utf8_to_utf16)

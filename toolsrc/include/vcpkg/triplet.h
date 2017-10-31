@@ -24,6 +24,7 @@ namespace vcpkg
         size_t hash_code() const;
 
         bool operator==(const Triplet& other) const;
+        bool operator<(const Triplet& other) const { return canonical_name() < other.canonical_name(); }
 
     private:
         static const TripletInstance DEFAULT_INSTANCE;

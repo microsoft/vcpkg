@@ -157,7 +157,7 @@ namespace vcpkg::Dependencies
     InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
                                          const std::unordered_set<std::string>& features,
                                          const RequestType& request_type)
-        : spec(spec), plan_type(InstallPlanType::UNKNOWN), request_type(request_type), feature_list(features)
+        : spec(spec), plan_type(InstallPlanType::ALREADY_INSTALLED), request_type(request_type), feature_list(features)
     {
     }
 
@@ -605,10 +605,38 @@ namespace vcpkg::Dependencies
         {
             Cluster& spec_cluster = graph.get(spec.spec());
             spec_cluster.request_type = RequestType::USER_REQUESTED;
-            auto res = mark_plus(spec.feature(), spec_cluster, graph, graph_plan);
+            if (spec.feature() == "*")
+            {
+                if (auto p_scf = spec_cluster.source_control_file.value_or(nullptr))
+                {
+                    for (auto&& feature : p_scf->feature_paragraphs)
+                    {
+                        auto res = mark_plus(feature->name, spec_cluster, graph, graph_plan);
 
-            Checks::check_exit(
-                VCPKG_LINE_INFO, res == MarkPlusResult::SUCCESS, "Error: Unable to locate feature %s", spec);
+                        Checks::check_exit(VCPKG_LINE_INFO,
+                                           res == MarkPlusResult::SUCCESS,
+                                           "Error: Unable to locate feature %s",
+                                           spec);
+                    }
+
+                    auto res = mark_plus("core", spec_cluster, graph, graph_plan);
+
+                    Checks::check_exit(
+                        VCPKG_LINE_INFO, res == MarkPlusResult::SUCCESS, "Error: Unable to locate feature %s", spec);
+                }
+                else
+                {
+                    Checks::exit_with_message(
+                        VCPKG_LINE_INFO, "Error: Unable to handle '*' because can't find CONTROL for %s", spec.spec());
+                }
+            }
+            else
+            {
+                auto res = mark_plus(spec.feature(), spec_cluster, graph, graph_plan);
+
+                Checks::check_exit(
+                    VCPKG_LINE_INFO, res == MarkPlusResult::SUCCESS, "Error: Unable to locate feature %s", spec);
+            }
 
             graph_plan.install_graph.add_vertex(ClusterPtr{&spec_cluster});
         }

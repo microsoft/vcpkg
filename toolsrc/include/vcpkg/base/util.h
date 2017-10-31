@@ -117,6 +117,22 @@ namespace vcpkg::Util
         }
     }
 
+    template<class Range>
+    void sort(Range& cont)
+    {
+        using std::begin;
+        using std::end;
+        std::sort(begin(cont), end(cont));
+    }
+
+    template<class Range1, class Range2>
+    bool all_equal(const Range1& r1, const Range2& r2)
+    {
+        using std::begin;
+        using std::end;
+        return std::equal(begin(r1), end(r1), begin(r2), end(r2));
+    }
+
     template<class AssocContainer, class K = std::decay_t<decltype(begin(std::declval<AssocContainer>())->first)>>
     std::vector<K> extract_keys(AssocContainer&& input_map)
     {
