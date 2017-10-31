@@ -190,6 +190,20 @@ namespace UnitTest1
             Assert::AreEqual("c", pgh.depends[2].c_str());
         }
 
+        TEST_METHOD(BinaryParagraph_Abi)
+        {
+            vcpkg::BinaryParagraph pgh({
+                {"Package", "zlib"},
+                {"Version", "1.2.8"},
+                {"Architecture", "x86-windows"},
+                {"Multi-Arch", "same"},
+                {"Abi", "abcd123"},
+            });
+
+            Assert::AreEqual(size_t(0), pgh.depends.size());
+            Assert::IsTrue(pgh.abi == "abcd123");
+        }
+
         TEST_METHOD(parse_paragraphs_empty)
         {
             const char* str = "";
@@ -384,6 +398,22 @@ namespace UnitTest1
             auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);
             Assert::AreEqual(size_t(1), pghs.size());
             Assert::AreEqual("a, b, c", pghs[0]["Depends"].c_str());
+        }
+
+        TEST_METHOD(BinaryParagraph_serialize_abi)
+        {
+            vcpkg::BinaryParagraph pgh({
+                {"Package", "zlib"},
+                {"Version", "1.2.8"},
+                {"Architecture", "x86-windows"},
+                {"Multi-Arch", "same"},
+                {"Depends", "a, b, c"},
+                {"Abi", "123abc"},
+            });
+            std::string ss = Strings::serialize(pgh);
+            auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);
+            Assert::AreEqual(size_t(1), pghs.size());
+            Assert::AreEqual("123abc", pghs[0]["Abi"].c_str());
         }
     };
 }
