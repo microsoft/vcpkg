@@ -62,6 +62,23 @@ namespace vcpkg
         return nullopt;
     }
 
+    static std::vector<std::string> keep_data_lines(const std::string& data_blob)
+    {
+        static const std::regex DATA_LINE_REGEX(R"(<sol>::(.+?)(?=::<eol>))");
+
+        std::vector<std::string> data_lines;
+
+        const std::sregex_iterator it(data_blob.cbegin(), data_blob.cend(), DATA_LINE_REGEX);
+        const std::sregex_iterator end;
+        for (std::sregex_iterator i = it; i != end; ++i)
+        {
+            const std::smatch match = *i;
+            data_lines.push_back(match[1].str());
+        }
+
+        return data_lines;
+    }
+
     static fs::path fetch_dependency(const fs::path& scripts_folder,
                                      const std::string& tool_name,
                                      const fs::path& expected_downloaded_path,
@@ -91,7 +108,11 @@ namespace vcpkg
             Checks::exit_with_code(VCPKG_LINE_INFO, rc.exit_code);
         }
 
-        const fs::path actual_downloaded_path = Strings::trim(std::string{rc.output});
+        const std::vector<std::string> dependency_path = keep_data_lines(rc.output);
+        Checks::check_exit(
+            VCPKG_LINE_INFO, dependency_path.size() == 1, "Expected dependency path, but got %s", rc.output);
+
+        const fs::path actual_downloaded_path = Strings::trim(std::string{dependency_path.at(0)});
         std::error_code ec;
         const auto eq = fs::stdfs::equivalent(expected_downloaded_path, actual_downloaded_path, ec);
         Checks::check_exit(VCPKG_LINE_INFO,
@@ -319,23 +340,6 @@ namespace vcpkg
 
         std::string major_version() const { return version.substr(0, 2); }
     };
-
-    static std::vector<std::string> keep_data_lines(const std::string& data_blob)
-    {
-        static const std::regex DATA_LINE_REGEX(R"(<sol>::(.+?)(?=::<eol>))");
-
-        std::vector<std::string> data_lines;
-
-        const std::sregex_iterator it(data_blob.cbegin(), data_blob.cend(), DATA_LINE_REGEX);
-        const std::sregex_iterator end;
-        for (std::sregex_iterator i = it; i != end; ++i)
-        {
-            const std::smatch match = *i;
-            data_lines.push_back(match[1].str());
-        }
-
-        return data_lines;
-    }
 
     static std::vector<VisualStudioInstance> get_visual_studio_instances(const VcpkgPaths& paths)
     {

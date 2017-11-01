@@ -265,6 +265,6 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     return $executableFromDownload
 }
 
-SelectProgram $Dependency
-
+$path = SelectProgram $Dependency
 Write-Verbose "Fetching dependency: $Dependency. Done."
+return "<sol>::$path::<eol>"
