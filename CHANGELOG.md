@@ -1,3 +1,26 @@
+vcpkg (0.0.95)
+--------------
+  * Update ports:
+    - assimp         4.0.1 -> 4.0.1-2
+    - blaze          3.2-1 -> 3.2-2
+    - boost          1.65.1-2 -> 1.65.1-3
+    - catch          1.10.0 -> 1.11.0
+    - libharu        2017-08-15-d84867ebf9f-2 -> 2017-08-15-d84867ebf9f-4
+    - libsndfile     libsndfile-1.0.29-6830c42-1 -> 1.0.29-6830c42-1
+    - opencv         3.3.1 -> 3.3.1-4
+    - pcl            1.8.1-2 -> 1.8.1-3
+    - poco           1.7.8-1 -> 1.7.8-2
+    - signalrclient  1.0.0-beta1-1 -> 1.0.0-beta1-2
+    - vtk            8.0.0-3 -> 8.0.1-1
+    - xlnt           1.1.0-1 -> 1.2.0-1
+  * Various improvements in `vcpkg` when obtaining data from `PowerShell` scripts. It should now be more robust
+  * Fix Windows 7 (i.e. `PowerShell 2.0`) issues in `PowerShell` scripts
+  * Fix an issue with `feature packages` where an installed package would appear to be uninstalled if a feature of the package was installed and then uninstalled
+  * Bump required version & auto-downloaded version of `git` to 2.5.0
+
+-- vcpkg team <vcpkg@microsoft.com>  FRI, 27 Oct 2017 19:30:00 -0800
+
+
 vcpkg (0.0.94)
 --------------
   * Add ports:
