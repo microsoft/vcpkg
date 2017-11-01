@@ -320,6 +320,23 @@ namespace vcpkg
         std::string major_version() const { return version.substr(0, 2); }
     };
 
+    static std::vector<std::string> keep_data_lines(const std::string& data_blob)
+    {
+        static const std::regex DATA_LINE_REGEX(R"(<sol>::(.+?)(?=::<eol>))");
+
+        std::vector<std::string> data_lines;
+
+        const std::sregex_iterator it(data_blob.cbegin(), data_blob.cend(), DATA_LINE_REGEX);
+        const std::sregex_iterator end;
+        for (std::sregex_iterator i = it; i != end; ++i)
+        {
+            const std::smatch match = *i;
+            data_lines.push_back(match[1].str());
+        }
+
+        return data_lines;
+    }
+
     static std::vector<VisualStudioInstance> get_visual_studio_instances(const VcpkgPaths& paths)
     {
         const fs::path script = paths.scripts / "findVisualStudioInstallationInstances.ps1";
@@ -327,9 +344,11 @@ namespace vcpkg
         Checks::check_exit(
             VCPKG_LINE_INFO, ec_data.exit_code == 0, "Could not run script to detect Visual Studio instances");
 
-        const std::vector<std::string> instances_as_strings = Strings::split(ec_data.output, "::<eol>");
-        Checks::check_exit(
-            VCPKG_LINE_INFO, !instances_as_strings.empty(), "Could not detect any Visual Studio instances.\n");
+        const std::vector<std::string> instances_as_strings = keep_data_lines(ec_data.output);
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           !instances_as_strings.empty(),
+                           "Could not detect any Visual Studio instances. Powershell returned: %s\n",
+                           ec_data.output);
 
         std::vector<VisualStudioInstance> output;
         for (const std::string& instance_as_string : instances_as_strings)
