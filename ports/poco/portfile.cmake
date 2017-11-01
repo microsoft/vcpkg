@@ -16,15 +16,11 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/foundation-public-include-pcre.patch
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(POCO_STATIC ON)
-else()
-    set(POCO_STATIC OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" POCO_STATIC)
 
-file(GLOB MYSQL_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include/mysql")
-if(EXISTS ${MYSQL_INCLUDE_DIR})
+if("mysql" IN_LIST FEATURES)
     # enabling MySQL support
+    set(MYSQL_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include/mysql")
     set(MYSQL_LIB "${CURRENT_INSTALLED_DIR}/lib/libmysql.lib")
     set(MYSQL_LIB_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/libmysql.lib")
 endif()
@@ -65,8 +61,7 @@ else()
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/poco)
 
 # copy license
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/poco)
