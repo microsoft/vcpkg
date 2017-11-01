@@ -91,6 +91,7 @@ vcpkg_configure_cmake(
 
         -DWITH_FFMPEG=${WITH_FFMPEG}
         -DWITH_CUDA=${WITH_CUDA}
+        -DWITH_OPENGL=ON
         -DWITH_VTK=${WITH_VTK}
     OPTIONS_DEBUG
         -DINSTALL_HEADERS=OFF
