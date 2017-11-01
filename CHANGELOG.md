@@ -18,7 +18,7 @@ vcpkg (0.0.95)
   * Fix an issue with `feature packages` where an installed package would appear to be uninstalled if a feature of the package was installed and then uninstalled
   * Bump required version & auto-downloaded version of `git` to 2.5.0
 
--- vcpkg team <vcpkg@microsoft.com>  FRI, 27 Oct 2017 19:30:00 -0800
+-- vcpkg team <vcpkg@microsoft.com>  WED, 01 Nov 2017 15:30:00 -0800
 
 
 vcpkg (0.0.94)
