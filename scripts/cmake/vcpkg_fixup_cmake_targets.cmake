@@ -116,6 +116,9 @@ function(vcpkg_fixup_cmake_targets)
             "get_filename_component\\(_IMPORT_PREFIX \"\\\${CMAKE_CURRENT_LIST_FILE}\" PATH\\)(\nget_filename_component\\(_IMPORT_PREFIX \"\\\${_IMPORT_PREFIX}\" PATH\\))*"
             "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
             _contents "${_contents}")
+        string(REPLACE "${CURRENT_INSTALLED_DIR}" "_INVALID_ROOT_" _contents "${_contents}")
+        string(REGEX REPLACE ";_INVALID_ROOT_/[^\";]*" "" _contents "${_contents}")
+        string(REGEX REPLACE "_INVALID_ROOT_/[^\";]*;" "" _contents "${_contents}")
         file(WRITE ${MAIN_TARGET} "${_contents}")
     endforeach()
 
