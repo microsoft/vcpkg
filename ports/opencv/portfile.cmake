@@ -32,14 +32,19 @@ vcpkg_apply_patches(
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
-set(WITH_FFMPEG OFF)
-if("ffmpeg" IN_LIST FEATURES)
-  set(WITH_FFMPEG ON)
+set(BUILD_opencv_sfm OFF)
+if("sfm" IN_LIST FEATURES)
+  set(BUILD_opencv_sfm ON)
 endif()
 
 set(WITH_CUDA OFF)
 if("cuda" IN_LIST FEATURES)
   set(WITH_CUDA ON)
+endif()
+
+set(WITH_FFMPEG OFF)
+if("ffmpeg" IN_LIST FEATURES)
+  set(WITH_FFMPEG ON)
 endif()
 
 set(WITH_QT OFF)
@@ -52,50 +57,50 @@ if("vtk" IN_LIST FEATURES)
   set(WITH_VTK ON)
 endif()
 
-set(BUILD_opencv_sfm OFF)
-if("sfm" IN_LIST FEATURES)
-  set(BUILD_opencv_sfm ON)
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        "-DOPENCV_DOWNLOAD_PATH=${DOWNLOADS}/opencv-cache"
-        -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
-        -DBUILD_ZLIB=OFF
-        -DBUILD_TIFF=OFF
-        -DBUILD_JPEG=OFF
-        -DBUILD_PNG=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
+        # Ungrouped Entries
+        -DOpenCV_DISABLE_ARCH_PATH=ON
+        -DPROTOBUF_UPDATE_FILES=ON
+        -DUPDATE_PROTO_FILES=ON
+        # BUILD
         -DBUILD_DOCS=OFF
         -DBUILD_EXAMPLES=OFF
-        -DENABLE_PYLINT=OFF
+        -DBUILD_JPEG=OFF
         -DBUILD_PACKAGE=OFF
         -DBUILD_PERF_TESTS=OFF
-        -DBUILD_TESTS=OFF
-        -DBUILD_WITH_DEBUG_INFO=ON
-        -DOpenCV_DISABLE_ARCH_PATH=ON
-        -DINSTALL_FORCE_UNIX_PATHS=ON
-        -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
-        -DOPENCV_OTHER_INSTALL_PATH=share/opencv
-        -DINSTALL_LICENSE=OFF
-        -DWITH_CUBLAS=OFF
-        -DWITH_OPENCLAMDBLAS=OFF
-        -DWITH_LAPACK=OFF
-        -DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules
+        -DBUILD_PNG=OFF
         -DBUILD_PROTOBUF=OFF
-        -DUPDATE_PROTO_FILES=ON
-        -DPROTOBUF_UPDATE_FILES=ON
-
+        -DBUILD_TESTS=OFF
+        -DBUILD_TIFF=OFF
+        -DBUILD_WITH_DEBUG_INFO=ON
+        -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
+        -DBUILD_ZLIB=OFF
+        -DBUILD_opencv_apps=OFF
         -DBUILD_opencv_dnn=ON
+        -DBUILD_opencv_flann=ON
         -DBUILD_opencv_python2=OFF
         -DBUILD_opencv_python3=OFF
-        -DBUILD_opencv_flann=ON
-        -DBUILD_opencv_apps=OFF
         -DBUILD_opencv_sfm=${BUILD_opencv_sfm}
-
-        -DWITH_FFMPEG=${WITH_FFMPEG}
+        # CMAKE
+        -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
+        # ENABLE
+        -DENABLE_PYLINT=OFF
+        # INSTALL
+        -DINSTALL_FORCE_UNIX_PATHS=ON
+        -DINSTALL_LICENSE=OFF
+        # OPENCV
+        -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
+        "-DOPENCV_DOWNLOAD_PATH=${DOWNLOADS}/opencv-cache"
+        -DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules
+        -DOPENCV_OTHER_INSTALL_PATH=share/opencv
+        # WITH
+        -DWITH_CUBLAS=OFF
         -DWITH_CUDA=${WITH_CUDA}
+        -DWITH_FFMPEG=${WITH_FFMPEG}
+        -DWITH_LAPACK=OFF
+        -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_OPENGL=ON
         -DWITH_QT=${WITH_QT}
         -DWITH_VTK=${WITH_VTK}
