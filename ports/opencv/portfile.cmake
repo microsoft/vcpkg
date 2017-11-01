@@ -32,6 +32,26 @@ vcpkg_apply_patches(
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
+set(WITH_FFMPEG OFF)
+if("ffmpeg" IN_LIST FEATURES)
+  set(WITH_FFMPEG ON)
+endif()
+
+set(WITH_CUDA OFF)
+if("cuda" IN_LIST FEATURES)
+  set(WITH_CUDA ON)
+endif()
+
+set(WITH_VTK OFF)
+if("vtk" IN_LIST FEATURES)
+  set(WITH_VTK ON)
+endif()
+
+set(BUILD_opencv_sfm OFF)
+if("sfm" IN_LIST FEATURES)
+  set(BUILD_opencv_sfm ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
@@ -42,10 +62,6 @@ vcpkg_configure_cmake(
         -DBUILD_JPEG=OFF
         -DBUILD_PNG=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
-        -DBUILD_opencv_python2=OFF
-        -DBUILD_opencv_python3=OFF
-        -DBUILD_opencv_flann=ON
-        -DBUILD_opencv_apps=OFF
         -DBUILD_DOCS=OFF
         -DBUILD_EXAMPLES=OFF
         -DENABLE_PYLINT=OFF
@@ -54,23 +70,28 @@ vcpkg_configure_cmake(
         -DBUILD_TESTS=OFF
         -DBUILD_WITH_DEBUG_INFO=ON
         -DOpenCV_DISABLE_ARCH_PATH=ON
-        -DWITH_FFMPEG=ON
         -DINSTALL_FORCE_UNIX_PATHS=ON
         -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
         -DOPENCV_OTHER_INSTALL_PATH=share/opencv
         -DINSTALL_LICENSE=OFF
-        # Optional: change to ON to build with CUDA
-        -DWITH_CUDA=OFF
         -DWITH_CUBLAS=OFF
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_LAPACK=OFF
-        -DBUILD_opencv_dnn=ON
         -DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules
         -DBUILD_PROTOBUF=OFF
         -DUPDATE_PROTO_FILES=ON
         -DPROTOBUF_UPDATE_FILES=ON
-        # Optional: change to ON to build with VTK
-        -DWITH_VTK=OFF
+
+        -DBUILD_opencv_dnn=ON
+        -DBUILD_opencv_python2=OFF
+        -DBUILD_opencv_python3=OFF
+        -DBUILD_opencv_flann=ON
+        -DBUILD_opencv_apps=OFF
+        -DBUILD_opencv_sfm=${BUILD_opencv_sfm}
+
+        -DWITH_FFMPEG=${WITH_FFMPEG}
+        -DWITH_CUDA=${WITH_CUDA}
+        -DWITH_VTK=${WITH_VTK}
     OPTIONS_DEBUG
         -DINSTALL_HEADERS=OFF
         -DINSTALL_OTHER=OFF
