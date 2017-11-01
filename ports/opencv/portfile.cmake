@@ -42,6 +42,11 @@ if("cuda" IN_LIST FEATURES)
   set(WITH_CUDA ON)
 endif()
 
+set(WITH_QT OFF)
+if("qt" IN_LIST FEATURES)
+  set(WITH_QT ON)
+endif()
+
 set(WITH_VTK OFF)
 if("vtk" IN_LIST FEATURES)
   set(WITH_VTK ON)
@@ -92,6 +97,7 @@ vcpkg_configure_cmake(
         -DWITH_FFMPEG=${WITH_FFMPEG}
         -DWITH_CUDA=${WITH_CUDA}
         -DWITH_OPENGL=ON
+        -DWITH_QT=${WITH_QT}
         -DWITH_VTK=${WITH_VTK}
     OPTIONS_DEBUG
         -DINSTALL_HEADERS=OFF
