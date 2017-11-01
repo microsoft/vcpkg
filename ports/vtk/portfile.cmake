@@ -13,12 +13,32 @@ vcpkg_from_github(
 
 # =============================================================================
 # Options: These should be set by feature-packages when they become available
-set(VTK_WITH_QT                          ON ) # IMPORTANT: if ON make sure `qt5` is listed as dependency in the CONTROL file
-set(VTK_WITH_MPI                         ON ) # IMPORTANT: if ON make sure `mpi` is listed as dependency in the CONTROL file
-set(VTK_WITH_PYTHON                      OFF) # IMPORTANT: if ON make sure `python3` is listed as dependency in the CONTROL file
+
+if ("qt" IN_LIST FEATURES)
+    set(VTK_WITH_QT                      ON ) # IMPORTANT: if ON make sure `qt5` is listed as dependency in the CONTROL file
+else()
+    set(VTK_WITH_QT                      OFF ) # IMPORTANT: if ON make sure `qt5` is listed as dependency in the CONTROL file
+endif()
+
+if ("mpi" IN_LIST FEATURES)
+    set(VTK_WITH_MPI                     ON ) # IMPORTANT: if ON make sure `mpi` is listed as dependency in the CONTROL file
+else()
+    set(VTK_WITH_MPI                     OFF ) # IMPORTANT: if ON make sure `mpi` is listed as dependency in the CONTROL file
+endif()
+
+if ("python" IN_LIST FEATURES)
+    set(VTK_WITH_PYTHON                  ON) # IMPORTANT: if ON make sure `python3` is listed as dependency in the CONTROL file
+else()
+    set(VTK_WITH_PYTHON                  OFF) # IMPORTANT: if ON make sure `python3` is listed as dependency in the CONTROL file
+endif()
+if("openvr" IN_LIST FEATURES)
+    set(VTK_WITH_OPENVR                  ON) # IMPORTANT: if ON make sure `OpenVR` is listed as dependency in the CONTROL file
+else()
+    set(VTK_WITH_OPENVR                  OFF)
+endif()
+
 set(VTK_WITH_ALL_MODULES                 OFF) # IMPORTANT: if ON make sure `qt5`, `mpi`, `python3`, `ffmpeg`, `gdal`, `fontconfig`,
                                               #            `libmysql` and `atlmfc` are  listed as dependency in the CONTROL file
-
 # =============================================================================
 # Apply patches to the source code
 vcpkg_apply_patches(
@@ -75,6 +95,12 @@ if(VTK_WITH_PYTHON)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_WRAP_PYTHON=ON
         -DVTK_PYTHON_VERSION=3
+    )
+endif()
+
+if(VTK_WITH_OPENVR)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DModule_vtkRenderingOpenVR=ON
     )
 endif()
 
