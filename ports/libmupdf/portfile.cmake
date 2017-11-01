@@ -1,11 +1,10 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     message(STATUS "Warning: Dynamic building not supported. Building static.")
     set(VCPKG_LIBRARY_LINKAGE static)
-    set(VCPKG_CRT_LINKAGE static)
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mupdf-1.11-source)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://mupdf.com/downloads/mupdf-1.11-source.tar.gz"
     FILENAME "mupdf.tar.gz"
@@ -13,23 +12,19 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-file(COPY ${CURRENT_PORT_DIR}/libmupdf.vcxproj
-    DESTINATION ${SOURCE_PATH}/mupdf-1.11-source/platform/win32)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/mupdf-1.11-source/platform/win32/libmupdf.vcxproj
-    OPTIONS 
-        /ignoreprojectextensions:.vcproj,.sln 
-    OPTIONS_RELEASE /p:OutDir=${CURRENT_PACKAGES_DIR}/lib
-    OPTIONS_DEBUG /p:OutDir=${CURRENT_PACKAGES_DIR}/debug/lib
+vcpkg_configure_cmake(
+    SOURCE_PATH "${SOURCE_PATH}"
+    PREFER_NINJA
 )
 
-#copy include files to package
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
-set(CMD cmake -E copy_directory ${SOURCE_PATH}/mupdf-1.11-source/include/mupdf ${CURRENT_PACKAGES_DIR}/include)
-execute_process(COMMAND ${CMD})
+vcpkg_install_cmake()
+
+file(COPY ${SOURCE_PATH}/include/mupdf DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+
+vcpkg_copy_pdbs()
 
 #copyright
-file(COPY ${SOURCE_PATH}/mupdf-1.11-source/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/COPYRIGHT)
-vcpkg_copy_pdbs()
