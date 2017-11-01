@@ -119,6 +119,7 @@ function(vcpkg_fixup_cmake_targets)
         string(REPLACE "${CURRENT_INSTALLED_DIR}" "_INVALID_ROOT_" _contents "${_contents}")
         string(REGEX REPLACE ";_INVALID_ROOT_/[^\";]*" "" _contents "${_contents}")
         string(REGEX REPLACE "_INVALID_ROOT_/[^\";]*;" "" _contents "${_contents}")
+        string(REGEX REPLACE "\"_INVALID_ROOT_/[^\";]*\"" "\"\"" _contents "${_contents}")
         file(WRITE ${MAIN_TARGET} "${_contents}")
     endforeach()
 
