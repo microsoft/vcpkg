@@ -11,7 +11,7 @@ $VisualStudioInstallationInstances = & $scriptsDir\findVisualStudioInstallationI
 Write-Verbose "VS Candidates:`n`r$([system.String]::Join([Environment]::NewLine, $VisualStudioInstallationInstances))"
 foreach ($instanceCandidateWithEOL in $VisualStudioInstallationInstances)
 {
-    $instanceCandidate = $instanceCandidateWithEOL -replace "::<eol>"
+    $instanceCandidate = $instanceCandidateWithEOL -replace "<sol>::" -replace "::<eol>"
     Write-Verbose "Inspecting: $instanceCandidate"
     $split = $instanceCandidate -split "::"
     # $preferenceWeight = $split[0]

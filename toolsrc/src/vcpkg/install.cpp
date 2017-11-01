@@ -250,7 +250,6 @@ namespace vcpkg::Install
 
     BuildResult perform_install_plan_action(const VcpkgPaths& paths,
                                             const InstallPlanAction& action,
-                                            const Build::BuildPackageOptions& build_package_options,
                                             StatusParagraphs& status_db)
     {
         const InstallPlanType& plan_type = action.plan_type;
@@ -259,7 +258,7 @@ namespace vcpkg::Install
             GlobalState::feature_packages ? action.displayname() : display_name;
 
         const bool is_user_requested = action.request_type == RequestType::USER_REQUESTED;
-        const bool use_head_version = to_bool(build_package_options.use_head_version);
+        const bool use_head_version = to_bool(action.build_options.use_head_version);
 
         if (plan_type == InstallPlanType::ALREADY_INSTALLED)
         {
@@ -285,7 +284,7 @@ namespace vcpkg::Install
                         *action.any_paragraph.source_control_file.value_or_exit(VCPKG_LINE_INFO),
                         action.spec.triplet(),
                         paths.port_dir(action.spec),
-                        build_package_options,
+                        action.build_options,
                         action.feature_list};
                     return Build::build_package(paths, build_config, status_db);
                 }
@@ -295,7 +294,7 @@ namespace vcpkg::Install
                         action.any_paragraph.source_paragraph.value_or_exit(VCPKG_LINE_INFO),
                         action.spec.triplet(),
                         paths.port_dir(action.spec),
-                        build_package_options};
+                        action.build_options};
                     return Build::build_package(paths, build_config, status_db);
                 }
             }();
@@ -407,46 +406,38 @@ namespace vcpkg::Install
         std::sort(already_installed_plans.begin(), already_installed_plans.end(), &InstallPlanAction::compare_by_name);
         std::sort(excluded.begin(), excluded.end(), &InstallPlanAction::compare_by_name);
 
+        static auto actions_to_output_string = [](const std::vector<const InstallPlanAction*>& v) {
+            return Strings::join("\n", v, [](const InstallPlanAction* p) {
+                return to_output_string(p->request_type, p->displayname(), p->build_options);
+            });
+        };
+
         if (excluded.size() > 0)
         {
-            const std::string excluded_string = Strings::join("\n", excluded, [](const InstallPlanAction* p) {
-                return to_output_string(p->request_type, p->displayname());
-            });
-            System::println("The following packages are excluded:\n%s", excluded_string);
+            System::println("The following packages are excluded:\n%s", actions_to_output_string(excluded));
         }
 
         if (already_installed_plans.size() > 0)
         {
-            const std::string already_string =
-                Strings::join("\n", already_installed_plans, [](const InstallPlanAction* p) {
-                    return to_output_string(p->request_type, p->displayname());
-                });
-            System::println("The following packages are already installed:\n%s", already_string);
+            System::println("The following packages are already installed:\n%s",
+                            actions_to_output_string(already_installed_plans));
         }
 
         if (rebuilt_plans.size() > 0)
         {
-            const std::string rebuilt_string = Strings::join("\n", rebuilt_plans, [](const InstallPlanAction* p) {
-                return to_output_string(p->request_type, p->displayname());
-            });
-            System::println("The following packages will be rebuilt:\n%s", rebuilt_string);
+            System::println("The following packages will be rebuilt:\n%s", actions_to_output_string(rebuilt_plans));
         }
 
         if (new_plans.size() > 0)
         {
-            const std::string new_string = Strings::join("\n", new_plans, [](const InstallPlanAction* p) {
-                return to_output_string(p->request_type, p->displayname());
-            });
-            System::println("The following packages will be built and installed:\n%s", new_string);
+            System::println("The following packages will be built and installed:\n%s",
+                            actions_to_output_string(new_plans));
         }
 
         if (only_install_plans.size() > 0)
         {
-            const std::string only_install_string =
-                Strings::join("\n", only_install_plans, [](const InstallPlanAction* p) {
-                    return to_output_string(p->request_type, p->displayname());
-                });
-            System::println("The following packages will be directly installed:\n%s", only_install_string);
+            System::println("The following packages will be directly installed:\n%s",
+                            actions_to_output_string(only_install_plans));
         }
 
         if (has_non_user_requested_packages)
@@ -489,7 +480,6 @@ namespace vcpkg::Install
     }
 
     InstallSummary perform(const std::vector<AnyAction>& action_plan,
-                           const Build::BuildPackageOptions& install_plan_options,
                            const KeepGoing keep_going,
                            const VcpkgPaths& paths,
                            StatusParagraphs& status_db)
@@ -513,8 +503,7 @@ namespace vcpkg::Install
 
             if (const auto install_action = action.install_plan.get())
             {
-                const BuildResult result =
-                    perform_install_plan_action(paths, *install_action, install_plan_options, status_db);
+                const BuildResult result = perform_install_plan_action(paths, *install_action, status_db);
                 if (result != BuildResult::SUCCEEDED && keep_going == KeepGoing::NO)
                 {
                     System::println(Build::create_user_troubleshooting_message(install_action->spec));
@@ -629,6 +618,16 @@ namespace vcpkg::Install
                 install_plan, [](InstallPlanAction& install_action) { return AnyAction(std::move(install_action)); });
         }
 
+        for (auto&& action : action_plan)
+        {
+            if (auto p_install = action.install_plan.get())
+            {
+                p_install->build_options = install_plan_options;
+                if (p_install->request_type != RequestType::USER_REQUESTED)
+                    p_install->build_options.use_head_version = Build::UseHeadVersion::NO;
+            }
+        }
+
         // install plan will be empty if it is already installed - need to change this at status paragraph part
         Checks::check_exit(VCPKG_LINE_INFO, !action_plan.empty(), "Install plan cannot be empty");
 
@@ -650,7 +649,7 @@ namespace vcpkg::Install
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        const InstallSummary summary = perform(action_plan, install_plan_options, keep_going, paths, status_db);
+        const InstallSummary summary = perform(action_plan, keep_going, paths, status_db);
 
         System::println("\nTotal elapsed time: %s", summary.total_elapsed_time);
 
