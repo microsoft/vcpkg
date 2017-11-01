@@ -52,22 +52,20 @@ namespace vcpkg::Build::Command
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
-        for (const std::string& str : full_spec.features)
-        {
-            System::println("%s \n", str);
-        }
         const auto& scf = source_control_file.value_or_exit(VCPKG_LINE_INFO);
         Checks::check_exit(VCPKG_LINE_INFO,
                            spec.name() == scf->core_paragraph->name,
-                           "The Name: field inside the CONTROL does not match the port directory: '%s' != '%s'",
+                           "The Source field inside the CONTROL file does not match the port directory: '%s' != '%s'",
                            scf->core_paragraph->name,
                            spec.name());
 
         const StatusParagraphs status_db = database_load_check(paths);
         const Build::BuildPackageOptions build_package_options{Build::UseHeadVersion::NO, Build::AllowDownloads::YES};
 
+        const std::unordered_set<std::string> features_as_set(full_spec.features.begin(), full_spec.features.end());
+
         const Build::BuildPackageConfig build_config{
-            *scf->core_paragraph, spec.triplet(), paths.port_dir(spec), build_package_options};
+            *scf, spec.triplet(), fs::path{port_dir}, build_package_options, features_as_set};
 
         const auto build_timer = Chrono::ElapsedTime::create_started();
         const auto result = Build::build_package(paths, build_config, status_db);
@@ -107,6 +105,11 @@ namespace vcpkg::Build::Command
         const std::string command_argument = args.command_arguments.at(0);
         const FullPackageSpec spec = Input::check_and_get_full_package_spec(command_argument, default_triplet, EXAMPLE);
         Input::check_triplet(spec.package_spec.triplet(), paths);
+        if (!spec.features.empty() && !GlobalState::feature_packages)
+        {
+            Checks::exit_with_message(
+                VCPKG_LINE_INFO, "Feature packages are experimentally available under the --featurepackages flag.");
+        }
         const ParsedArguments options = args.check_and_get_optional_command_arguments({OPTION_CHECKS_ONLY}, {});
         perform_and_exit(spec, paths.port_dir(spec.package_spec), options, paths);
     }
