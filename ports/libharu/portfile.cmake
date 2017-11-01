@@ -37,17 +37,17 @@ file(REMOVE_RECURSE
 
 file(READ "${CURRENT_PACKAGES_DIR}/include/hpdf.h" _contents)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    string(REPLACE "#ifdef HPDF_DLL" "#if 1" _contents "${_contents}")
+    string(REPLACE "#ifdef HPDF_DLL\n" "#if 1\n" _contents "${_contents}")
 else()
-    string(REPLACE "#ifdef HPDF_DLL" "#if 0" _contents "${_contents}")
+    string(REPLACE "#ifdef HPDF_DLL\n" "#if 0\n" _contents "${_contents}")
 endif()
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/hpdf.h" "${_contents}")
 
 file(READ "${CURRENT_PACKAGES_DIR}/include/hpdf_types.h" _contents)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    string(REPLACE "#ifdef HPDF_DLL" "#if 1" _contents "${_contents}")
+    string(REPLACE "#ifdef HPDF_DLL\n" "#if 1\n" _contents "${_contents}")
 else()
-    string(REPLACE "#ifdef HPDF_DLL" "#if 0" _contents "${_contents}")
+    string(REPLACE "#ifdef HPDF_DLL\n" "#if 0\n" _contents "${_contents}")
 endif()
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/hpdf_types.h" "${_contents}")
 
