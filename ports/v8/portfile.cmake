@@ -24,7 +24,7 @@ vcpkg_from_googlesource(
     "build/gyp"
     "external/gyp"
     "4ec6c4e3a94bd04a6da2858163d40b2429b8aad1"
-    "e16d27fa863f928e79daf7bae82c04ca4f0a1234e78371ae1a7df6dd7a49065c3e40215af5889a2e635415036d8b97b5ab69e4d1d6b6bf77176b96ef420d2c0b"
+    "f3b851b32967c01e5ccc7eb3d7194a8cae46e5fbf7ccc0bae4711f9cb74797851096e62a9231707d64a68de0d4ba7d8bf0bd75f0002f4107b82255ea415a5db4"
 )
  
 vcpkg_from_googlesource(
