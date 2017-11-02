@@ -86,6 +86,7 @@ vcpkg_configure_cmake(
         # CMAKE
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
         # ENABLE
+        -DENABLE_CXX11=ON
         -DENABLE_PYLINT=OFF
         # INSTALL
         -DINSTALL_FORCE_UNIX_PATHS=ON
