@@ -13,7 +13,6 @@ function(vcpkg_download_no_checksum URL FILENAME)
     else()
         message(STATUS "Downloading ${URL}... OK")
         set(download_success 1)
-        break()
     endif()
 endfunction()
 
