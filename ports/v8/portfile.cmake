@@ -17,7 +17,7 @@ function(vcpkg_download_no_checksum URL FILENAME)
 endfunction()
 
 function(vcpkg_from_googlesource OUT_SOURCE_PATH REPO REF)
-    set(FILENAME "${REPO}-${REF}.tar.gz")    
+    set(FILENAME "${REF}.tar.gz")    
     vcpkg_download_no_checksum(
         "https://chromium.googlesource.com/${REPO}/+archive/${REF}.tar.gz"
         ${FILENAME}
