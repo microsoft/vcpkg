@@ -2,6 +2,15 @@ include(vcpkg_common_functions)
 set(VERSION 6.4.190)
 set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src/v8-${VERSION}")
 
+file(COPY
+    "${CMAKE_CURRENT_LIST_DIR}/68b6ac7c644184ae383a6631b8090acd8df7e905"
+    ${SOURCE_PATH}
+)
+file(RENAME
+    "${SOURCE_PATH}/68b6ac7c644184ae383a6631b8090acd8df7e905"
+    "${SOURCE_PATH}/gn.exe"
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO v8/v8
@@ -82,15 +91,6 @@ vcpkg_from_googlesource(
     "chromium/src/tools/clang"
     "faee82e064e04e5cbf60cc7327e7a81d2a4557ad"
 )  
-
-file(COPY
-    "${CMAKE_CURRENT_LIST_DIR}/68b6ac7c644184ae383a6631b8090acd8df7e905"
-    ${SOURCE_PATH}
-)
-file(RENAME
-    "${SOURCE_PATH}/68b6ac7c644184ae383a6631b8090acd8df7e905"
-    "${SOURCE_PATH}/gn.exe"
-)
 
 execute_process(
     "gn.exe" "--help"
