@@ -1,0 +1,16 @@
+diff --git a/librtmp/rtmp_sys.h b/librtmp/rtmp_sys.h
+index 0874cbe..b43d587 100644
+--- a/librtmp/rtmp_sys.h
++++ b/librtmp/rtmp_sys.h
+@@ -37,6 +37,11 @@
+ #include <ws2tcpip.h>
+ #endif
+ 
++#ifdef _MSC_VER
++#define strncasecmp _strnicmp
++#define strcasecmp _stricmp
++#endif
++
+ #define GetSockError()	WSAGetLastError()
+ #define SetSockError(e)	WSASetLastError(e)
+ #define setsockopt(a,b,c,d,e)	(setsockopt)(a,b,c,(const char *)d,(int)e)

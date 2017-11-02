@@ -1,0 +1,3 @@
+Source: date
+Version: 2.2
+Description: A date and time library based on the C++11/14/17 <chrono> header

@@ -4,15 +4,15 @@ Build and install a cmake project.
 
 ## Usage:
 ```cmake
-vcpkg_install_cmake([MSVC_64_TOOLSET])
+vcpkg_install_cmake(...)
 ```
 
 ## Parameters:
-### MSVC_64_TOOLSET
-This adds the `/p:PreferredToolArchitecture=x64` switch if the underlying buildsystem is MSBuild. Some large projects can run out of memory when linking if they use the 32-bit hosted tools.
+See [`vcpkg_build_cmake()`](vcpkg_build_cmake.md).
 
 ## Notes:
-This command should be preceeded by a call to [`vcpkg_configure_cmake()`](vcpkg_configure_cmake.md).
+This command transparently forwards to [`vcpkg_build_cmake()`](vcpkg_build_cmake.md), adding a `TARGET install`
+parameter.
 
 ## Examples:
 

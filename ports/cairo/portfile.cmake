@@ -7,19 +7,18 @@
 #
 
 include(vcpkg_common_functions)
-set(CAIRO_VERSION 1.15.6)
+set(CAIRO_VERSION 1.15.8)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/cairo-${CAIRO_VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "http://cairographics.org/snapshots/cairo-${CAIRO_VERSION}.tar.xz"
     FILENAME "cairo-${CAIRO_VERSION}.tar.xz"
-    SHA512 e4eccba745a03545001ebd6f1a7b87bee4b932f80a2d877a764500ad5c18011a5bac585f31eec6d0b65ccaa818de0df2b3b99f0792111363bd3554cfa7f688b6
+    SHA512 5af1eebf432201dae0efaa5b6766b151d8273ea00dae48e104d56477005b4d423d64b5d11c512736a4cb076632fb2a572ec35becd922825a68d933bb5ff96ca1
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/Initialize-mutexes-for-static-builds-for-win32.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/export-only-in-shared-build.patch"
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/export-only-in-shared-build.patch"
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/src)

@@ -21,17 +21,17 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(VCPKG_LIBRARY_LINKAGE "dynamic")
 endif()
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openblas-0.2.20)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://codeload.github.com/xianyi/OpenBLAS/zip/v0.2.20"
-    FILENAME "openblas-v0.2.20.zip"
-    SHA512 c9cd7397bb026e3bb06c9407ad5ac26bf936258da81ac22132ceceb53c0235677e18a6046f1db8a75c8a92a614b2d156a3da89d684421a24bd283430ce55db7d
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO xianyi/OpenBLAS
+    REF v0.2.20
+    SHA512 8dfc8e8c8d456b834d2e9544c8eadd9f4770e30db8b8dd76af601ec0735fd86c9cf63dd6a03ccd23fc02ec2e05069a09875b9073dfe29f99aadab3a958ae2634
+    HEAD_REF develop
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/install-openblas.patch"
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/install-openblas.patch" "${CMAKE_CURRENT_LIST_DIR}/whitespace.patch"
 )
 
 find_program(GIT NAMES git git.cmd)

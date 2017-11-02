@@ -1,4 +1,4 @@
 Source: libconfig
-Version: 1.6.0
+Version: 1.6.0-1
 Description: C/C++ library for processing configuration files
 Build-Depends: dirent

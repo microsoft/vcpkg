@@ -1,0 +1,12 @@
+--- a/folly/Malloc.h	Mon Oct 09 04:35:09 2017
++++ b/folly/Malloc.h	Fri Oct 13 15:31:36 2017
+@@ -189,9 +189,6 @@
+       return false;
+     }
+ 
+-    /* Avoid optimizing away the malloc.  */
+-    asm volatile("" ::"m"(ptr) : "memory");
+-
+     return (origAllocated != *counter);
+   }();
+ 

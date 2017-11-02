@@ -1,4 +1,4 @@
 Source: c-ares
-Version: 1.12.1-dev-40eb41f-1
+Version: 1.13.0-1
 Description: A C library for asynchronous DNS requests
 Build-Depends:

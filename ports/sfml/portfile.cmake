@@ -1,12 +1,11 @@
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/SFML-2.4.2)
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.sfml-dev.org/files/SFML-2.4.2-sources.zip"
-    FILENAME "SFML-2.4.2-sources.zip"
-    SHA512 14f2b9f244bbff681d1992581f20012f3073456e4baed0fb2bf2cf82538e9c5ddd8ce01b0cfb3874af47091ec19654aa23c426df04fe1ffcfa209623dc362f85)
+vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
+    REPO "sfml/sfml"
+    REF "2.4.2"
+    HEAD_REF master
+    SHA512 8acfdf320939c953a9a3413398f82d02d68a56a337f1366c2677c14ce032baa8ba059113ac3c91bb6e6fc22eef119369a265be7ef6894526e6a97a01f37e1972)
 
-vcpkg_extract_source_archive(${ARCHIVE})
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/extlibs)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -30,5 +29,9 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/sfml-main.lib)
 file(COPY ${CURRENT_PACKAGES_DIR}/debug/lib/sfml-main-d.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/sfml-main-d.lib)
 
-file(COPY ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/sfml)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/sfml/license.txt ${CURRENT_PACKAGES_DIR}/share/sfml/copyright)
+# At the time of writing, HEAD has license.md instead of license.txt
+if (VCPKG_HEAD_VERSION)
+    file(INSTALL ${SOURCE_PATH}/license.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/sfml RENAME copyright)
+else()
+    file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/sfml RENAME copyright)
+endif()

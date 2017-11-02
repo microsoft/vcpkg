@@ -4,8 +4,12 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
     message(FATAL_ERROR "libP7 does not support ARM")
 endif()
 
-set(LIBP7_VERSION 4.1)
-set(LIBP7_HASH 6259416378f1fe60ad6097faf9facd2de1a3ea13e8015a5727d6a179caa88a7f6707b47273afceebc16b39883da4768f29feac199f7d6c354b744b643c2044ab)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "libP7 does not support UWP")
+endif()
+
+set(LIBP7_VERSION 4.4)
+set(LIBP7_HASH ce33db9a0c731e4dff95646703fe5fd96015f1c528377aa5dbe2e533529b0e8c45a4b74ee2b4616a811a7f9038c12edf106b08b3c21cec9cb6bdf85ad6e1d64f)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libP7_v${LIBP7_VERSION})
 
 vcpkg_download_distfile(ARCHIVE

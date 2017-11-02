@@ -22,7 +22,7 @@ vcpkg_get_program_files_platform_bitness(PROGRAM_FILES_PLATFORM_BITNESS)
 set(SYSTEM_MPIEXEC_FILEPATH "${PROGRAM_FILES_PLATFORM_BITNESS}/Microsoft MPI/Bin/mpiexec.exe")
 set(MSMPI_EXPECTED_FULL_VERSION "8.1.12438.1084")
 
-if(EXISTS ${SYSTEM_MPIEXEC_FILEPATH})
+if(EXISTS "${SYSTEM_MPIEXEC_FILEPATH}")
     set(MPIEXEC_VERSION_LOGNAME "mpiexec-version")
     vcpkg_execute_required_process(
         COMMAND ${SYSTEM_MPIEXEC_FILEPATH}
@@ -31,8 +31,8 @@ if(EXISTS ${SYSTEM_MPIEXEC_FILEPATH})
     )
     file(READ ${CURRENT_BUILDTREES_DIR}/${MPIEXEC_VERSION_LOGNAME}-out.log MPIEXEC_OUTPUT)
 
-    if(${MPIEXEC_OUTPUT} MATCHES "\\[Version ([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)\\]")
-        if(NOT ${CMAKE_MATCH_1} STREQUAL ${MSMPI_EXPECTED_FULL_VERSION})
+    if(MPIEXEC_OUTPUT MATCHES "\\[Version ([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)\\]")
+        if(NOT CMAKE_MATCH_1 STREQUAL MSMPI_EXPECTED_FULL_VERSION)
             download_msmpi_redistributable_package()
 
             message(FATAL_ERROR
@@ -102,7 +102,7 @@ file(INSTALL
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/lib
 )
-if(${TRIPLET_SYSTEM_ARCH} STREQUAL "x86")
+if(TRIPLET_SYSTEM_ARCH STREQUAL "x86")
     file(INSTALL
             "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifes.lib"
             "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifms.lib"
@@ -121,7 +121,7 @@ file(INSTALL
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/debug/lib
 )
-if(${TRIPLET_SYSTEM_ARCH} STREQUAL "x86")
+if(TRIPLET_SYSTEM_ARCH STREQUAL "x86")
     file(INSTALL
             "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifes.lib"
             "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifms.lib"

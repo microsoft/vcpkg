@@ -69,22 +69,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <!--Overriden at build time.-->
     <OutDir>..\..\..\x86-windows-static-dbg\</OutDir>
-    <IntDir>..\..\..\x86-windows-static-dbg\</IntDir>
+    <IntDir>..\..\..\x86-windows-static-dbg\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <!--Overriden at build time.-->
     <OutDir>..\..\..\x86-windows-static-rel\</OutDir>
-    <IntDir>..\..\..\x86-windows-static-rel\</IntDir>
+    <IntDir>..\..\..\x86-windows-static-rel\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <!--Overriden at build time.-->
     <OutDir>..\..\..\x64-windows-static-dbg\</OutDir>
-    <IntDir>..\..\..\x64-windows-static-dbg\</IntDir>
+    <IntDir>..\..\..\x64-windows-static-dbg\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <!--Overriden at build time.-->
     <OutDir>..\..\..\x64-windows-static-rel\</OutDir>
-    <IntDir>..\..\..\x64-windows-static-rel\</IntDir>
+    <IntDir>..\..\..\x64-windows-static-rel\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -98,6 +98,7 @@
       <CompileAs>CompileAsC</CompileAs>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <MinimalRebuild>false</MinimalRebuild>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <AdditionalDependencies>
@@ -112,6 +113,7 @@
       <SubSystem>Windows</SubSystem>
       <Verbose>true</Verbose>
       <IgnoreSpecificDefaultLibraries>libc.lib, libcmt.lib, msvcrt.lib, libcd.lib, msvcrtd.lib</IgnoreSpecificDefaultLibraries>
+      <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -126,6 +128,7 @@
       <CompileAs>CompileAsC</CompileAs>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <MinimalRebuild>false</MinimalRebuild>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <AdditionalDependencies>
@@ -138,6 +141,7 @@
       <SubSystem>Windows</SubSystem>
       <Verbose>true</Verbose>
       <IgnoreSpecificDefaultLibraries>libc.lib, libcmt.lib, msvcrt.lib, libcd.lib, msvcrtd.lib</IgnoreSpecificDefaultLibraries>
+      <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -150,6 +154,7 @@
       <DisableSpecificWarnings>4018;4057;4127;4189;4244;4267;4295;4324;4458;4477;4701;4706;4800;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <CompileAs>CompileAsC</CompileAs>
+      <Optimization>Full</Optimization>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -176,6 +181,7 @@
       <DisableSpecificWarnings>4018;4057;4127;4189;4244;4267;4295;4324;4458;4477;4701;4706;4800;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <CompileAs>CompileAsC</CompileAs>
+      <Optimization>Full</Optimization>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

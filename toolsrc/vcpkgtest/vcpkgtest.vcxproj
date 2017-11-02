@@ -19,10 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\tests_arguments.cpp" />
-    <ClCompile Include="..\src\tests_dependencies.cpp" />
-    <ClCompile Include="..\src\tests_paragraph.cpp" />
-    <ClCompile Include="..\src\test_install_plan.cpp" />
+    <ClCompile Include="..\src\tests.arguments.cpp" />
+    <ClCompile Include="..\src\tests.dependencies.cpp" />
+    <ClCompile Include="..\src\tests.packagespec.cpp" />
+    <ClCompile Include="..\src\tests.paragraph.cpp" />
+    <ClCompile Include="..\src\tests.installplan.cpp" />
+    <ClCompile Include="..\src\tests.statusparagraphs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\vcpkglib\vcpkglib.vcxproj">

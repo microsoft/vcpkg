@@ -1,10 +1,10 @@
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libsigc++-2.10.0)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libsigc++-2.99.9)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://ftp.gnome.org/pub/GNOME/sources/libsigc++/2.10/libsigc++-2.10.0.tar.xz"
-    FILENAME "libsigc++-2.10.0.tar.xz"
-    SHA512 5b96df21d6bd6ba41520c7219e77695a86aabc60b7259262c7a9f4b8475ce0e2fd8dc37bcf7c17e24e818ff28c262d682b964c83e215b51bdbe000f3f58794ae)
+    URLS "http://ftp.gnome.org/pub/GNOME/sources/libsigc++/2.99/libsigc++-2.99.9.tar.xz"
+    FILENAME "libsigc++-2.99.9.tar.xz"
+    SHA512 3e8f8176a4618938a16b2367466415aff8ec10d83ef84de8973373a63fc0b9708d14115ad5c039c81b570385b205944651849a68e618c37c171cd748dd5b2403)
 
 vcpkg_extract_source_archive(${ARCHIVE})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})

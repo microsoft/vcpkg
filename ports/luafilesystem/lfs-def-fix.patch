@@ -1,21 +1,20 @@
-From 644c9c32ca9053ced3d37ff76fc1fbc0389ddf53 Mon Sep 17 00:00:00 2001
-From: Alex <null@null.null>
-Date: Mon, 16 Feb 2015 08:15:41 +0300
-Subject: [PATCH] DEF file fixes (DESCRIPTION is deprecated; VERSION must
- contain one or two numers)
+From 92527d96199912f79b8046ddb32ff83a16771cb4 Mon Sep 17 00:00:00 2001
+From: "Stephen E. Baker" <baker.stephen.e@gmail.com>
+Date: Fri, 15 Sep 2017 21:18:58 -0400
+Subject: [PATCH] Update version in lfs.def
 
+Version number of current release is 1.7
 ---
- src/lfs.def | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ src/lfs.def | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/lfs.def b/src/lfs.def
-index 7aa7a35..8a36d41 100644
+index 8a36d41..4055ff0 100644
 --- a/src/lfs.def
 +++ b/src/lfs.def
-@@ -1,5 +1,4 @@
+@@ -1,4 +1,4 @@
  LIBRARY lfs.dll
--DESCRIPTION "LuaFileSystem"
--VERSION 1.5.0
-+VERSION 1.6
+-VERSION 1.6
++VERSION 1.7
  EXPORTS
  luaopen_lfs

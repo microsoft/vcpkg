@@ -4,18 +4,18 @@ vcpkg_get_program_files_32_bit(PROGRAM_FILES_32_BIT)
 vcpkg_get_windows_sdk(WINDOWS_SDK)
 
 if (WINDOWS_SDK MATCHES "10.")
-    set(OPENGLPATH "${PROGRAM_FILES_32_BIT}\\Windows Kits\\10\\Lib\\${WINDOWS_SDK}\\um\\${TRIPLET_SYSTEM_ARCH}\\OpenGL32.Lib")
+    set(LIBFILEPATH "${PROGRAM_FILES_32_BIT}\\Windows Kits\\10\\Lib\\${WINDOWS_SDK}\\um\\${TRIPLET_SYSTEM_ARCH}\\OpenGL32.Lib")
     set(LICENSEPATH "${PROGRAM_FILES_32_BIT}\\Windows Kits\\10\\Licenses\\${WINDOWS_SDK}\\sdk_license.rtf")
     set(HEADERSPATH "${PROGRAM_FILES_32_BIT}\\Windows Kits\\10\\Include\\${WINDOWS_SDK}\\um")
 elseif(WINDOWS_SDK MATCHES "8.")
-    set(OPENGLPATH "${PROGRAM_FILES_32_BIT}\\Windows Kits\\8.1\\Lib\\winv6.3\\um\\${TRIPLET_SYSTEM_ARCH}\\OpenGL32.Lib")
+    set(LIBFILEPATH "${PROGRAM_FILES_32_BIT}\\Windows Kits\\8.1\\Lib\\winv6.3\\um\\${TRIPLET_SYSTEM_ARCH}\\OpenGL32.Lib")
     set(HEADERSPATH "${PROGRAM_FILES_32_BIT}\\Windows Kits\\8.1\\Include\\um")
 else()
     message(FATAL_ERROR "Portfile not yet configured for Windows SDK with version: ${WINDOWS_SDK}")
 endif()
 
-if (NOT EXISTS "${OPENGLPATH}")
-    message(FATAL_ERROR "Cannot find Windows ${WINDOWS_SDK} SDK. File does not exist: ${OPENGLPATH}")
+if (NOT EXISTS "${LIBFILEPATH}")
+    message(FATAL_ERROR "Cannot find Windows ${WINDOWS_SDK} SDK. File does not exist: ${LIBFILEPATH}")
 endif()
 
 file(MAKE_DIRECTORY
@@ -30,8 +30,8 @@ file(COPY
     "${HEADERSPATH}\\gl\\GLU.h"
     DESTINATION ${CURRENT_PACKAGES_DIR}/include/gl
     )
-file(COPY ${OPENGLPATH} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-file(COPY ${OPENGLPATH} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+file(COPY ${LIBFILEPATH} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+file(COPY ${LIBFILEPATH} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 
 if (DEFINED LICENSEPATH)
     file(COPY ${LICENSEPATH} DESTINATION ${CURRENT_PACKAGES_DIR}/share/opengl)

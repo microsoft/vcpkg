@@ -1,0 +1,3 @@
+Source: tinythread
+Version: 1.1-1
+Description: Implements a fairly compatible subset of the C++11 thread management classes

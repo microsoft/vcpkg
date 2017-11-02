@@ -1,0 +1,27 @@
+From 5ca492fee93015411a0f10e0b2f1d3503bf962a1 Mon Sep 17 00:00:00 2001
+From: Mikhail Paulyshka <me@mixaill.tk>
+Date: Sun, 3 Sep 2017 21:43:36 +0300
+Subject: [PATCH] enforce STL usage
+
+---
+ tinyxml.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/tinyxml.h b/tinyxml.h
+index a3589e5..7195033 100644
+--- a/tinyxml.h
++++ b/tinyxml.h
+@@ -43,6 +43,10 @@ distribution.
+ #define DEBUG
+ #endif
+ 
++#ifndef TIXML_USE_STL
++#define TIXML_USE_STL
++#endif
++
+ #ifdef TIXML_USE_STL
+ 	#include <string>
+  	#include <iostream>
+-- 
+2.12.2.windows.2
+

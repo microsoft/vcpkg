@@ -53,5 +53,5 @@ install(
 
 install(
     FILES mad.h
-    DESTINATION include/mad
+    DESTINATION include
 )

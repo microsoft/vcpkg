@@ -28,6 +28,8 @@ vcpkg_configure_cmake(
     OPTIONS -Dgtest_force_shared_crt=${gtest_force_shared_crt}
 )
 
+set(ENV{_CL_} "/D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING")
+
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

@@ -16,15 +16,13 @@ if (VCPKG_CRT_LINKAGE STREQUAL "static")
     set(VCPKG_CRT_LINKAGE "dynamic")
 endif()
 
-
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/xerces-c-3.1.4)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://www-us.apache.org/dist//xerces/c/3/sources/xerces-c-3.1.4.zip"
-    FILENAME "xerces-c-3.1.4.zip"
-    SHA512 3ba1bf38875bda8a294990dba73143cfd6dbfa158b17f4db1fd0ee9a08a078af969103200eaf8957756f8363c8a661983cc95124b4978eb2162dc0344a85fff8
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO apache/xerces-c
+    REF Xerces-C_3_1_4
+    SHA512 6dc3e4bb68bc32a0e8ec6dcc7ec67e21239a79c909d08ccc16c96dc5de4e73800993d1c09f589606925507baf0b2a9bf6037d28c84dae826935bf1f7a151071e
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
     set(BUILD_ARCH "Win32")

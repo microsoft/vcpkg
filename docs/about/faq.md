@@ -46,13 +46,39 @@ Yes. In the current preview, there is not yet a standardized global way to chang
 
 By saving the changes to the portfile (and checking them in), you'll get the same results even if you're rebuilding from scratch in the future and forgot what exact settings you used.
 
+## Can I get Vcpkg integration for custom configurations?
+
+Yes. While Vcpkg will only produce the standard "Release" and "Debug" configurations when building a library, you can get integration support for your projects' custom configurations, in addition to your project's standard configurations.
+
+First of all, Vcpkg will automatically assume any custom configuration starting with "Release" (resp. "Debug") as a configuration that is compatible with the standard "Release" (resp. "Debug") configuration and will act accordingly.
+
+For other configurations, you only need to override the MSBuild `$(VcpkgConfiguration)` macro in your project file (.vcxproj) to declare the compatibility between your configuration, and the target standard configuration.
+
+For example, you can add support for your "MyRelease" configuration by adding in your project file:
+```
+<PropertyGroup>
+  <VcpkgConfiguration Condition="'$(Configuration)' == 'MyRelease'">Release</VcpkgConfiguration>
+</PropertyGroup>
+```
+Of course, this will only produce viable binaries if your custom configuration is compatible with the target configuration (e.g. they should both link with the same runtime library).
+
+## I can't use user-wide integration. Can I use a per-project integration?
+
+Yes. A NuGet package suitable for per-project use can be generated via either the `vcpkg integrate project` command (lightweight linking) or the `vcpkg export --nuget` command (shrinkwrapped).
+
+A lower level mechanism to achieve the same as the `vcpkg integrate project` NuGet package is via the `<vcpkg_root>\scripts\buildsystems\msbuild\vcpkg.targets` file. All you need is to import it in your .vcxproj file, replacing `<vcpkg_root>` with the path where you installed vcpkg:
+
+```
+<Import Project="<vcpkg_root>\scripts\buildsystems\msbuild\vcpkg.targets" />
+```
+
 ## How is CMake used internally by Vcpkg?
 Vcpkg uses CMake internally as a build scripting language. This is because CMake is already an extremely common build system for cross-platform open source libraries and is becoming very popular for C++ projects in general. It is easy to acquire on Windows, does not require system-wide installation, and legible for unfamiliar users.
 
 ## Will Vcpkg support downloading compiled binaries from a public or private server?
 We would like to eventually support downloading precompiled binaries, similar to other system package managers.
 
-In a corporate scenario, we currently recommend building the libraries once and distributing the entire vcpkg root directory to everyone else on the project through some raw file transport such as a network share or HTTP host. See [the `export` command](../users/integration.md#export).
+In a corporate scenario, we currently recommend building the libraries once and distributing the entire vcpkg root directory to everyone else on the project through some raw file transport such as a network share or HTTP host. See the [`export`](../users/integration.md#export) command.
 
 ## What Visual C++ toolsets are supported?
 We support Visual Studio 2015 Update 3 and above.

@@ -7,28 +7,32 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/3.5)
-#downloading 3.5 from their SVN repo and not the release tarball
-#because the 3.5 release did not build on windows, and fixes were backported
-#without generating a new release tarball (I don't think very many GIS people use win)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/geos-3.6.2)
+
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://trac.osgeo.org/geos/browser/branches/3.5?rev=4261&format=zip"
-    FILENAME "geos-3.5.0.zip"
-    SHA512 3b91e8992f60b99a3f01069d955b71bce425ae5e5c599252fa26a337494e1a5a8ea796be124766d054710d6c03806f56dc1c63539b4660e2bb894d7ef779d4b9
+    URLS "http://download.osgeo.org/geos/geos-3.6.2.tar.bz2"
+    FILENAME "geos-3.6.2.tar.bz2"
+    SHA512 515d8700b8a28282678e481faee355e3a43d7b70160472a63335b8d7225d9ba10437be782378f18f31a15288118126d411a2d862f01ce35d27c96f6bc0a73016
 )
 vcpkg_extract_source_archive(${ARCHIVE})
+vcpkg_apply_patches(
 
-#we need to do this because GEOS deploy process is totally broken for cmake
-#file(DOWNLOAD http://svn.osgeo.org/geos/tags/3.5.0/cmake/modules/GenerateSourceGroups.cmake
-#    ${SOURCE_PATH}/cmake/modules/GenerateSourceGroups.cmake)
-file(WRITE ${SOURCE_PATH}/geos_svn_revision.h "#define GEOS_SVN_REVISION 4261")
+SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/geos_c-static-support.patch
+)
+
+# NOTE: GEOS provides CMake as optional build configuration, it might not be actively
+# maintained, so CMake build issues may happen between releases.
+
+# Pull modules referred in the main CMakeLists.txt but missing from the released package.
+# TODO: GEOS 3.6.3 or later will include the missing script in release package.
+file(DOWNLOAD http://svn.osgeo.org/geos/branches/3.6/cmake/modules/GenerateSourceGroups.cmake
+    ${SOURCE_PATH}/cmake/modules/GenerateSourceGroups.cmake)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS -DGEOS_ENABLE_TESTS=False
-            -DBUILD_TESTING=False
 )
-
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 # Handle copyright

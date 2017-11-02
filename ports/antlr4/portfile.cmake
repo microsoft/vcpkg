@@ -24,7 +24,7 @@ vcpkg_apply_patches(
                 ${CMAKE_CURRENT_LIST_DIR}/Fix-building-in-Visual-Studio-2017.patch
 )
 
-if (${VCPKG_LIBRARY_LINKAGE} STREQUAL static)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(DEBUG_CONFIG   "Debug Static")
     set(RELEASE_CONFIG "Release Static")
 else()
@@ -53,7 +53,7 @@ file(COPY       ${SOURCE_PATH}/bin/vs-2015/${TRIPLET_SYSTEM_ARCH}/${DEBUG_CONFIG
 file(COPY       ${SOURCE_PATH}/bin/vs-2015/${TRIPLET_SYSTEM_ARCH}/${RELEASE_CONFIG}/antlr4-runtime.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
-if (${VCPKG_LIBRARY_LINKAGE} STREQUAL static)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_apply_patches(
         SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
         PATCHES     ${CMAKE_CURRENT_LIST_DIR}/static.patch

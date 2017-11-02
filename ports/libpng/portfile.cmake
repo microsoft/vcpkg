@@ -1,11 +1,11 @@
 include(vcpkg_common_functions)
-set(LIBPNG_VERSION 1.6.31)
+set(LIBPNG_VERSION 1.6.32)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libpng-${LIBPNG_VERSION})
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://downloads.sourceforge.net/project/libpng/libpng16/${LIBPNG_VERSION}/libpng-${LIBPNG_VERSION}.tar.xz"
     FILENAME "libpng-${LIBPNG_VERSION}.tar.xz"
-    SHA512 714da63e19d32eadeeb44edf7f2afeaf6ac59f2756e0951015313a98c0f3c1216296886301c5704958b56f4c96b00725791ba2efe9f26b4a92cd743410cc36a9
+    SHA512 24cf4d38dc08d1db7721fc580d8bf6cee9a105afcea32f1245b7bb3727c8a8645ad733a24534782ef5dfb0d4315a5fd6b0eee9e7f0704e0c635350f80c19a708
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(

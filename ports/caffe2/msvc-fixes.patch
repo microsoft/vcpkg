@@ -1,0 +1,396 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8054d98..35934f5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -56,6 +56,14 @@ option(USE_ROCKSDB "Use RocksDB" ON)
+ option(USE_SNPE "Use Qualcomm's SNPE library" OFF)
+ option(USE_THREADS "Use Threads" ON)
+ option(USE_ZMQ "Use ZMQ" OFF)
++if(MSVC)
++  if(BUILD_BUILD_SHARED_LIBS)
++    set(USE_STATIC_RUNTIME_DEFAULT OFF)
++  else()
++    set(USE_STATIC_RUNTIME_DEFAULT ON)
++  endif()
++  option(USE_STATIC_RUNTIME "Link to the static runtime (/MT) instead of dynamic (/MD)" ${USE_STATIC_RUNTIME_DEFAULT})
++endif()
+ 
+ # External projects
+ include(ExternalProject)
+@@ -99,7 +107,7 @@ else()
+   foreach(flag_var
+       CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+       CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+-    if (NOT ${BUILD_SHARED_LIBS})
++    if (USE_STATIC_RUNTIME)
+       if(${flag_var} MATCHES "/MD")
+         string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+       endif(${flag_var} MATCHES "/MD")
+diff --git a/caffe2/core/logging.cc b/caffe2/core/logging.cc
+index 1b4468e..1379f3a 100644
+--- a/caffe2/core/logging.cc
++++ b/caffe2/core/logging.cc
+@@ -117,7 +117,7 @@ using fLB::FLAGS_logtostderr;
+ 
+ #endif // CAFFE2_USE_GFLAGS
+ 
+-CAFFE2_DEFINE_int(caffe2_log_level, google::ERROR,
++CAFFE2_DEFINE_int(caffe2_log_level, google::GLOG_ERROR,
+                   "The minimum log level that caffe2 will output.");
+ 
+ // Google glog's api does not have an external function that allows one to check
+@@ -134,15 +134,23 @@ bool IsGoogleLoggingInitialized();
+ namespace caffe2 {
+ bool InitCaffeLogging(int* argc, char** argv) {
+   if (*argc == 0) return true;
+-  if (!::google::glog_internal_namespace_::IsGoogleLoggingInitialized()) {
++#if !(defined(_MSC_VER) && defined(GLOG_IS_A_DLL))
++  // IsGoogleLoggingInitialized is not exported from the glog DLL
++  // so we can't call it. If our program calls InitGoogleLogging twice glog will
++  // abort it.
++  if (!::google::glog_internal_namespace_::IsGoogleLoggingInitialized())
++#endif
++  {
+     ::google::InitGoogleLogging(argv[0]);
++#if !defined(_MSC_VER)
+     ::google::InstallFailureSignalHandler();
++#endif
+   }
+   // If caffe2_log_level is set and is lower than the min log level by glog,
+   // we will transfer the caffe2_log_level setting to glog to override that.
+   FLAGS_minloglevel = std::min(FLAGS_caffe2_log_level, FLAGS_minloglevel);
+   // If caffe2_log_level is explicitly set, let's also turn on logtostderr.
+-  if (FLAGS_caffe2_log_level < google::ERROR) {
++  if (FLAGS_caffe2_log_level < google::GLOG_ERROR) {
+     FLAGS_logtostderr = 1;
+   }
+   // Also, transfer the caffe2_log_level verbose setting to glog.
+@@ -154,7 +162,7 @@ bool InitCaffeLogging(int* argc, char** argv) {
+ 
+ void ShowLogInfoToStderr() {
+   FLAGS_logtostderr = 1;
+-  FLAGS_minloglevel = std::min(FLAGS_minloglevel, google::INFO);
++  FLAGS_minloglevel = std::min(FLAGS_minloglevel, google::GLOG_INFO);
+ }
+ }  // namespace caffe2
+ 
+diff --git a/caffe2/core/logging_is_google_glog.h b/caffe2/core/logging_is_google_glog.h
+index 7dd2b4f..2df4435 100644
+--- a/caffe2/core/logging_is_google_glog.h
++++ b/caffe2/core/logging_is_google_glog.h
+@@ -8,7 +8,7 @@
+ // it. Some mobile platforms do not like stl_logging, so we add an
+ // overload in that case as well.
+ 
+-#if !defined(__CUDACC__) && !defined(CAFFE2_USE_MINIMAL_GOOGLE_GLOG)
++#if !defined(__CUDARCH__) && !defined(CAFFE2_USE_MINIMAL_GOOGLE_GLOG)
+ #include <glog/stl_logging.h>
+ #else // !defined(__CUDACC__) && !!defined(CAFFE2_USE_MINIMAL_GOOGLE_GLOG)
+ 
+diff --git a/caffe2/image/image_input_op.h b/caffe2/image/image_input_op.h
+index 9604e98..7d90014 100644
+--- a/caffe2/image/image_input_op.h
++++ b/caffe2/image/image_input_op.h
+@@ -214,13 +214,13 @@ ImageInputOp<Context>::ImageInputOp(
+ 
+   // hard-coded PCA eigenvectors and eigenvalues, based on RBG channel order
+   color_lighting_eigvecs_.push_back(
+-    std::vector<float>{-144.7125, 183.396, 102.2295});
++    std::vector<float>{-144.7125f, 183.396f, 102.2295f});
+   color_lighting_eigvecs_.push_back(
+-    std::vector<float>{-148.104, -1.1475, -207.57});
++    std::vector<float>{-148.104f, -1.1475f, -207.57f});
+   color_lighting_eigvecs_.push_back(
+-    std::vector<float>{-148.818, -177.174, 107.1765});
++    std::vector<float>{-148.818f, -177.174f, 107.1765f});
+ 
+-  color_lighting_eigvals_ = std::vector<float>{0.2175, 0.0188, 0.0045};
++  color_lighting_eigvals_ = std::vector<float>{0.2175f, 0.0188f, 0.0045f};
+ 
+   CAFFE_ENFORCE_GT(batch_size_, 0, "Batch size should be nonnegative.");
+   if (use_caffe_datum_) {
+diff --git a/caffe2/operators/batch_matmul_op.cc b/caffe2/operators/batch_matmul_op.cc
+index c2e578d..28cf030 100644
+--- a/caffe2/operators/batch_matmul_op.cc
++++ b/caffe2/operators/batch_matmul_op.cc
+@@ -34,7 +34,7 @@ size (C x K x N) where C is the batch size and i ranges from 0 to C-1.
+         b_dim1 = in[1].dims(2);
+       }
+       return vector<TensorShape> {
+-          CreateTensorShape(vector<int> {
++          CreateTensorShape(vector<TIndex> {
+               in[0].dims(0), a_dim0, b_dim1},
+               in[0].data_type())
+       };
+diff --git a/caffe2/operators/layer_norm_op.cu b/caffe2/operators/layer_norm_op.cu
+index df13fc3..68bbc97 100644
+--- a/caffe2/operators/layer_norm_op.cu
++++ b/caffe2/operators/layer_norm_op.cu
+@@ -252,8 +252,8 @@ bool LayerNormGradientOp<CUDAContext>::DoRunWithType<float>() {
+   auto* ginput = Output(0);
+ 
+   const auto canonical_axis = norm_inputs.canonical_axis_index(axis_);
+-  const int left = norm_inputs.size_to_dim(canonical_axis);
+-  const int right = norm_inputs.size_from_dim(canonical_axis);
++  const TIndex left = norm_inputs.size_to_dim(canonical_axis);
++  const TIndex right = norm_inputs.size_from_dim(canonical_axis);
+ 
+   ginput->ResizeLike(norm_inputs);
+   std::vector<TIndex> stats_dims(
+@@ -261,7 +261,7 @@ bool LayerNormGradientOp<CUDAContext>::DoRunWithType<float>() {
+   stats_dims.push_back(1);
+   dmean_.Resize(stats_dims);
+   dstdev_.Resize(stats_dims);
+-  gscratch_.Resize(std::vector<size_t>{left, right});
++  gscratch_.Resize(std::vector<TIndex>{left, right});
+ 
+   std::vector<int> segs(left + 1);
+   std::iota(segs.begin(), segs.end(), 0);
+@@ -291,7 +291,7 @@ bool LayerNormGradientOp<CUDAContext>::DoRunWithType<float>() {
+       dout.data<float>(),
+       gscratch_.mutable_data<float>());
+ 
+-  dstdev_.Resize(vector<size_t>{left, 1});
++  dstdev_.Resize(vector<TIndex>{left, 1});
+   // dstdev = reduce(temp1)
+   allocScratchAndReduce(
+       gscratch_.data<float>(),
+diff --git a/caffe2/operators/lengths_top_k_op.cc b/caffe2/operators/lengths_top_k_op.cc
+index c871d53..bad741a 100644
+--- a/caffe2/operators/lengths_top_k_op.cc
++++ b/caffe2/operators/lengths_top_k_op.cc
+@@ -14,7 +14,7 @@ bool LengthsTopKOp<T, Context>::RunOnDevice() {
+ 
+   output_topk_values->Resize(N * k_);
+   output_topk_indices->Resize(N * k_);
+-  std::vector<int> output_dims = std::vector<int>({N, k_});
++  std::vector<TIndex> output_dims = std::vector<TIndex>({N, k_});
+   output_topk_values->Reshape(output_dims);
+   output_topk_indices->Reshape(output_dims);
+   T* output_topk_values_data = output_topk_values->template mutable_data<T>();
+diff --git a/caffe2/operators/pool_op_cudnn.cu b/caffe2/operators/pool_op_cudnn.cu
+index a380d8d..b0cd326 100644
+--- a/caffe2/operators/pool_op_cudnn.cu
++++ b/caffe2/operators/pool_op_cudnn.cu
+@@ -467,6 +467,15 @@ class CuDNNPoolGradientOp : public ConvPoolOpBase<CUDAContext> {
+   cudnnPoolingDescriptor_t pooling_desc_;
+   cudnnPoolingMode_t mode_;
+ 
++// MSVC defines IN and OUT in minwindef.h
++#ifdef IN
++#undef IN
++#endif
++
++#ifdef OUT
++#undef OUT
++#endif
++
+   // Input: X, Y, dY
+   // Output: dX
+   INPUT_TAGS(IN, OUT, OUT_GRAD);
+diff --git a/caffe2/operators/recurrent_op_cudnn.cc b/caffe2/operators/recurrent_op_cudnn.cc
+index 7777813..58bc8c3 100644
+--- a/caffe2/operators/recurrent_op_cudnn.cc
++++ b/caffe2/operators/recurrent_op_cudnn.cc
+@@ -115,10 +115,11 @@ void RecurrentBaseOp<T>::initialize(
+ 
+   // RNN setup
+   {
+-    CUDNN_ENFORCE(cudnnSetRNNDescriptor(
++// Do not use #if condition inside CUDNN_ENFORCE
++// to avoid macro expansion errors.
+ #if CUDNN_MAJOR >= 7
++CUDNN_ENFORCE(cudnnSetRNNDescriptor(
+         cudnn_wrapper_.inline_cudnn_handle(),
+-#endif
+         rnnDesc_,
+         hiddenSize,
+         numLayers,
+@@ -126,10 +127,19 @@ void RecurrentBaseOp<T>::initialize(
+         rnnInput,
+         rnnDirection,
+         rnnMode,
+-#if CUDNN_MAJOR >= 7
+         CUDNN_RNN_ALGO_STANDARD, // TODO: verify correctness / efficiency.
+-#endif
+         cudnnTypeWrapper<T>::type));
++#else
++    CUDNN_ENFORCE(cudnnSetRNNDescriptor(
++        rnnDesc_,
++        hiddenSize,
++        numLayers,
++        dropoutDesc_,
++        rnnInput,
++        rnnDirection,
++        rnnMode,
++        cudnnTypeWrapper<T>::type));
++#endif  // CUDNN_MAJOR >= 7
+   }
+   // X setup
+   {
+diff --git a/caffe2/utils/CMakeLists.txt b/caffe2/utils/CMakeLists.txt
+index f90af5a..919a638 100644
+--- a/caffe2/utils/CMakeLists.txt
++++ b/caffe2/utils/CMakeLists.txt
+@@ -27,6 +27,10 @@ exclude(Caffe2_CPU_SRCS "${Caffe2_CPU_SRCS}" ${Caffe2_GPU_SRCS})
+ # will directly link nnpack pthreadpool.
+ file(GLOB_RECURSE tmp pthreadpool*)
+ exclude(Caffe2_CPU_SRCS "${Caffe2_CPU_SRCS}" ${tmp})
++if(MSVC)
++  file(GLOB_RECURSE tmp *ThreadPool.cc)
++  exclude(Caffe2_CPU_SRCS "${Caffe2_CPU_SRCS}" ${tmp})
++endif()
+ 
+ # ---[ GPU test files
+ file(GLOB_RECURSE tmp *_gpu_test.cc)
+diff --git a/caffe2/utils/GpuBitonicSort.cuh b/caffe2/utils/GpuBitonicSort.cuh
+index f52bb50..a199bcb 100644
+--- a/caffe2/utils/GpuBitonicSort.cuh
++++ b/caffe2/utils/GpuBitonicSort.cuh
+@@ -39,9 +39,11 @@ __device__ inline void bitonicSort(K* keys,
+   // Assume the sort is taking place in shared memory
+   // static_assert(Power2SortSize * (sizeof(K) + sizeof(V)) < 32768,
+   //               "sort data too large (>32768 bytes)");
+-  static_assert(math::integerIsPowerOf2(Power2SortSize),
++  static_assert(math::integerIsPowerOf2(
++                std::integral_constant<int, Power2SortSize>::value),
+                 "sort size must be power of 2");
+-  static_assert(math::integerIsPowerOf2(ThreadsPerBlock),
++  static_assert(math::integerIsPowerOf2(
++                std::integral_constant<int, ThreadsPerBlock>::value),
+                 "threads in block must be power of 2");
+ 
+   // If what we are sorting is too small, then not all threads
+@@ -107,7 +109,8 @@ __device__ inline void warpBitonicSort(K* keys,
+   // Smaller sorts should use a warp shuffle sort
+   static_assert(Power2SortSize > kWarpSize,
+                 "sort not large enough");
+-  static_assert(math::integerIsPowerOf2(Power2SortSize),
++  static_assert(math::integerIsPowerOf2(
++                std::integral_constant<int, Power2SortSize>::value),
+                 "sort size must be power of 2");
+   static_assert(Power2SortSize <= kMaxBitonicSortSize,
+                 "sort size <= 4096 only supported");
+diff --git a/caffe2/utils/math.h b/caffe2/utils/math.h
+index 6c352dc..a1eda9d 100644
+--- a/caffe2/utils/math.h
++++ b/caffe2/utils/math.h
+@@ -426,18 +426,10 @@ constexpr T roundUp(T a, T b) {
+   return divUp<T>(a, b) * b;
+ }
+ 
+-// Returns true if the given integer type is a power-of-2 (positive only)
+-// Note(jiayq): windows reported an error per
+-//     https://github.com/caffe2/caffe2/issues/997
+-// and as a result will make it a macro.
+-#ifdef _MSC_VER
+-#define integerIsPowerOf2(v) ((v) && !((v) & ((v) - 1)))
+-#else // _MSC_VER
+ template <typename T>
+ constexpr bool integerIsPowerOf2(T v) {
+   return (v && !(v & (v - 1)));
+ }
+-#endif // _MSC_VER
+ 
+ // Returns log2(n) for a positive integer type
+ template <typename T>
+diff --git a/cmake/Cuda.cmake b/cmake/Cuda.cmake
+index df70e2f..ca1b123 100644
+--- a/cmake/Cuda.cmake
++++ b/cmake/Cuda.cmake
+@@ -37,6 +37,10 @@ function(caffe2_detect_installed_gpus out_variable)
+                     ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
+ 
+     if(__nvcc_res EQUAL 0)
++      # nvcc outputs text containing line breaks when building with MSVC.
++      # The line below prevents CMake from inserting a variable with line
++      # breaks in the cache
++      string(REGEX MATCH "([1-9].[0-9])" __nvcc_out "${__nvcc_out}")
+       string(REPLACE "2.1" "2.1(2.0)" __nvcc_out "${__nvcc_out}")
+       set(CUDA_gpu_detect_output ${__nvcc_out} CACHE INTERNAL "Returned GPU architetures from caffe_detect_gpus tool" FORCE)
+     endif()
+@@ -249,7 +253,7 @@ endif()
+ # Debug and Release symbol support
+ if (MSVC)
+   if (${CMAKE_BUILD_TYPE} MATCHES "Release")
+-    if (${BUILD_SHARED_LIBS})
++    if (NOT USE_STATIC_RUNTIME)
+       list(APPEND CUDA_NVCC_FLAGS "-Xcompiler -MD")
+     else()
+       list(APPEND CUDA_NVCC_FLAGS "-Xcompiler -MT")
+@@ -259,7 +263,7 @@ if (MSVC)
+             "Caffe2 currently does not support the combination of MSVC, Cuda "
+             "and Debug mode. Either set USE_CUDA=OFF or set the build type "
+             "to Release")
+-    if (${BUILD_SHARED_LIBS})
++    if (NOT USE_STATIC_RUNTIME)
+       list(APPEND CUDA_NVCC_FLAGS "-Xcompiler -MDd")
+     else()
+       list(APPEND CUDA_NVCC_FLAGS "-Xcompiler -MTd")
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index afb6b68..bdad8b6 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -182,6 +182,15 @@ if(USE_OPENCV)
+     message(WARNING "Not compiling with OpenCV. Suppress this warning with -DUSE_OPENCV=OFF")
+     set(USE_OPENCV OFF)
+   endif()
++  if(USE_OPENCV AND VCPKG_TARGET_TRIPLET MATCHES static)
++    find_package(LibLZMA QUIET)
++    if(LIBLZMA_FOUND)
++      list(APPEND Caffe2_DEPENDENCY_LIBS ${LIBLZMA_LIBRARIES})
++    else()
++      message(WARNING "Not compiling with OpenCV. Could not find liblzma. Suppress this warning with -DUSE_OPENCV=OFF")
++      set(USE_OPENCV OFF)
++    endif()
++  endif()
+ endif()
+ 
+ # ---[ FFMPEG
+diff --git a/cmake/Modules/FindGlog.cmake b/cmake/Modules/FindGlog.cmake
+index 1167532..9780ba5 100644
+--- a/cmake/Modules/FindGlog.cmake
++++ b/cmake/Modules/FindGlog.cmake
+@@ -27,6 +27,10 @@ if(MSVC)
+     endif()
+     if(TARGET ${GLOG_LIBRARY})
+       get_target_property(GLOG_INCLUDE_DIR ${GLOG_LIBRARY} INTERFACE_INCLUDE_DIRECTORIES)
++      get_target_property(GLOG_TYPE ${GLOG_LIBRARY} TYPE)
++      if("${GLOG_TYPE}" STREQUAL "SHARED_LIBRARY")
++        add_definitions(-DGLOG_IS_A_DLL=1)
++      endif()
+     endif()
+ else()
+     find_library(GLOG_LIBRARY glog
+diff --git a/cmake/ProtoBuf.cmake b/cmake/ProtoBuf.cmake
+index 89975c8..e37d6da 100644
+--- a/cmake/ProtoBuf.cmake
++++ b/cmake/ProtoBuf.cmake
+@@ -13,6 +13,9 @@ function(custom_protobuf_find)
+     # so we turn it off here.
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations" PARENT_SCOPE)
+   endif()
++  if(MSVC)
++    set(protobuf_MSVC_STATIC_RUNTIME ${USE_STATIC_RUNTIME})
++  endif()
+   add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/protobuf/cmake)
+   caffe2_include_directories(${PROJECT_SOURCE_DIR}/third_party/protobuf/src)
+   list(APPEND Caffe2_DEPENDENCY_LIBS libprotobuf)
+diff --git a/cmake/Summary.cmake b/cmake/Summary.cmake
+index b7423a6..2996484 100644
+--- a/cmake/Summary.cmake
++++ b/cmake/Summary.cmake
+@@ -19,6 +19,13 @@ function (Caffe2_print_configuration_summary)
+   message(STATUS "  System                : ${CMAKE_SYSTEM_NAME}")
+   message(STATUS "  C++ compiler          : ${CMAKE_CXX_COMPILER}")
+   message(STATUS "  C++ compiler version  : ${CMAKE_CXX_COMPILER_VERSION}")
++  if(MSVC)
++    if(USE_STATIC_RUNTIME)
++      message(STATUS "  Runtime               : static (/MT)")
++    else()
++      message(STATUS "  Runtime               : dynamic (/MD)")
++    endif()
++  endif()
+   message(STATUS "  Protobuf compiler     : ${PROTOBUF_PROTOC_EXECUTABLE}")
+   message(STATUS "  CXX flags             : ${CMAKE_CXX_FLAGS}")
+   message(STATUS "  Build type            : ${CMAKE_BUILD_TYPE}")

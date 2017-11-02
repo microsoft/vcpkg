@@ -119,7 +119,7 @@ RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib)
 
-if (${CMAKE_BUILD_TYPE} STREQUAL "Release")
+if (CMAKE_BUILD_TYPE STREQUAL "Release")
 install(FILES agent/address.h DESTINATION include/nice)
 install(FILES agent/agent.h DESTINATION include/nice)
 install(FILES agent/candidate.h DESTINATION include/nice)

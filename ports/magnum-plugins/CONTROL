@@ -1,4 +1,4 @@
 Source: magnum-plugins
-Version: jun2017-4
+Version: jun2017-5
 Build-Depends: stb, magnum
 Description: Plugins for C++11/C++14 and OpenGL graphics engine http://mosra.cz/blog/magnum.php

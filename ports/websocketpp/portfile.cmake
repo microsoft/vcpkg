@@ -9,6 +9,12 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+    ${CMAKE_CURRENT_LIST_DIR}/openssl_110.patch
+)
+
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
 
 # Put the license file where vcpkg expects it

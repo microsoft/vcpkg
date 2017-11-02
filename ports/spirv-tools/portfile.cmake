@@ -1,68 +1,34 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:\path\to\current\vcpkg>
-#   TARGET_TRIPLET is the current triplet (x86-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#
-
 include(vcpkg_common_functions)
-find_program(GIT git)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src)
-
-set(GIT_URL "https://github.com/KhronosGroup/SPIRV-Tools.git")
-set(GIT_REF "f72189c249ba143c6a89a4cf1e7d53337b2ddd40")
-
-if(NOT EXISTS "${DOWNLOADS}/spirv-tools.git")
-    message(STATUS "Cloning")
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} clone --bare ${GIT_URL} ${DOWNLOADS}/spirv-tools.git
-        WORKING_DIRECTORY ${DOWNLOADS}
-        LOGNAME clone
-    )
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    message(WARNING "Dynamic not supported. Building static")
+    set(VCPKG_LIBRARY_LINKAGE "static")
 endif()
 
-if(NOT EXISTS "${SOURCE_PATH}/.git")
-    message(STATUS "Adding worktree and patching")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR})
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} worktree add -f --detach ${SOURCE_PATH} ${GIT_REF}
-        WORKING_DIRECTORY ${DOWNLOADS}/spirv-tools.git
-        LOGNAME worktree
-    )
-    message(STATUS "Patching")
-endif()
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO KhronosGroup/SPIRV-Tools
+    REF 7e2d26c77b606b21af839b37fd21381c4a669f23
+    SHA512 67e8fcdcb9748df1e7c86bb50358a89b656f80a96534bc5771afc4ce22e9ebcc8ca382f784fab7b856324d487f810c21abaaab2facee7453c0343a9b51d7e60b
+    HEAD_REF master
+)
 
-set(SPIRVHEADERS_GIT_URL "https://github.com/KhronosGroup/SPIRV-Headers.git")
-set(SPIRVHEADERS_GIT_REF "bd47a9abaefac00be692eae677daed1b977e625c")
+vcpkg_from_github(
+    OUT_SOURCE_PATH SPIRV_HEADERS_PATH
+    REPO KhronosGroup/SPIRV-Headers
+    REF 2bb92e6fe2c6aa410152fc6c63443f452acb1a65
+    SHA512 cdd1437a67c7e31e2062e5d0f25c767b99a3fadd64b91d00c3b07404e535bb4bfd78a43878ebbcd45e013a7153f1a2c969da99d50a99cc39efab940d0aab7cfd
+    HEAD_REF master
+)
 
-if(NOT EXISTS "${DOWNLOADS}/SPIRV-Headers.git")
-    message(STATUS "Cloning")
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} clone --bare ${SPIRVHEADERS_GIT_URL} ${DOWNLOADS}/SPIRV-Headers.git
-        WORKING_DIRECTORY ${DOWNLOADS}
-        LOGNAME clone
-    )
-endif()
-
-if(NOT EXISTS "${SOURCE_PATH}/external/spirv-headers/.git")
-    message(STATUS "Adding worktree and patching")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR})
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} worktree add -f --detach ${SOURCE_PATH}/external/spirv-headers ${SPIRVHEADERS_GIT_REF}
-        WORKING_DIRECTORY ${DOWNLOADS}/SPIRV-Headers.git
-        LOGNAME worktree
-    )
-endif()
-
-set(VCPKG_LIBRARY_LINKAGE "static")
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
 
 vcpkg_configure_cmake(
-    SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src"
-    # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS -DSPIRV-Headers_SOURCE_DIR=${SPIRV_HEADERS_PATH}
 )
 
 vcpkg_install_cmake()

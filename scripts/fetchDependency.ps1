@@ -3,7 +3,36 @@ param(
     [string]$Dependency
 )
 
-if ($PSVersionTable.PSEdition -ne "Core") {
+function Test-Command($commandName)
+{
+    return [bool](Get-Command -Name $commandName -ErrorAction SilentlyContinue)
+}
+
+function Test-CommandParameter($commandName, $parameterName)
+{
+    return (Get-Command $commandName).Parameters.Keys -contains $parameterName
+}
+
+function Test-Module($moduleName)
+{
+    return [bool](Get-Module -ListAvailable -Name $moduleName)
+}
+
+function Get-Credential-Backwards-Compatible()
+{
+    if (Test-CommandParameter -commandName 'Get-Credential' -parameterName 'Message')
+    {
+        return Get-Credential -Message "Enter credentials for Proxy Authentication"
+    }
+    else
+    {
+        Write-Host "Enter credentials for Proxy Authentication"
+        return Get-Credential
+    }
+}
+
+if (Test-Module -moduleName 'BitsTransfer')
+{
    Import-Module BitsTransfer -Verbose:$false
 }
 
@@ -36,20 +65,25 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
             New-Item -ItemType directory -Path $downloadDir | Out-Null
         }
 
-        if (($PSVersionTable.PSEdition -ne "Core") -and ($Dependency -ne "git")) # git fails with BITS
-        {
-            try {
-                $WC = New-Object System.Net.WebClient
-                $ProxyAuth = !$WC.Proxy.IsBypassed($url)
-                If($ProxyAuth){
-                    $ProxyCred = Get-Credential -Message "Enter credentials for Proxy Authentication"
-                    $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyAuthentication","Basic")
-                    $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyCredential",$ProxyCred)
-                }
+        $WC = New-Object System.Net.WebClient
+        $ProxyAuth = !$WC.Proxy.IsBypassed($url)
 
+         # git and installerbase fail with Start-BitsTransfer
+        if ((Test-Command -commandName 'Start-BitsTransfer') -and ($Dependency -ne "git")-and ($Dependency -ne "installerbase"))
+        {
+            try
+            {
+                if ($ProxyAuth)
+                {
+                    $ProxyCred = Get-Credential-Backwards-Compatible
+                    $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyAuthentication","Basic")
+                    $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyCredential", $ProxyCred)
+                }
                 Start-BitsTransfer -Source $url -Destination $downloadPath -ErrorAction Stop
+                return
             }
-            catch [System.Exception] {
+            catch [System.Exception]
+            {
                 # If BITS fails for any reason, delete any potentially partially downloaded files and continue
                 if (Test-Path $downloadPath)
                 {
@@ -57,11 +91,14 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
                 }
             }
         }
-        if (!(Test-Path $downloadPath))
+
+        if ($ProxyAuth)
         {
-            Write-Verbose("Downloading $Dependency...")
-            (New-Object System.Net.WebClient).DownloadFile($url, $downloadPath)
+            $WC.Proxy.Credentials = Get-Credential-Backwards-Compatible
         }
+
+        Write-Verbose("Downloading $Dependency...")
+        $WC.DownloadFile($url, $downloadPath)
     }
 
     # Enums (without resorting to C#) are only available on powershell 5+.
@@ -94,48 +131,76 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
             New-Item -ItemType Directory -Path $destination | Out-Null
         }
 
-        $shell = new-object -com shell.application
-        $zip = $shell.NameSpace($file)
-        foreach($item in $zip.items())
+        if (Test-Command -commandName 'Expand-Archive')
         {
-            # Piping to Out-Null is used to block until finished
-            $shell.Namespace($destination).copyhere($item) | Out-Null
+            Expand-Archive -path $file -destinationpath $destination
+        }
+        else
+        {
+            $shell = new-object -com shell.application
+            $zip = $shell.NameSpace($file)
+            foreach($item in $zip.items())
+            {
+                # Piping to Out-Null is used to block until finished
+                $shell.Namespace($destination).copyhere($item) | Out-Null
+            }
         }
     }
 
     if($Dependency -eq "cmake")
     {
-        $requiredVersion = "3.9.1"
-        $downloadVersion = "3.9.1"
-        $url = "https://cmake.org/files/v3.9/cmake-3.9.1-win32-x86.zip"
-        $downloadPath = "$downloadsDir\cmake-3.9.1-win32-x86.zip"
-        $expectedDownloadedFileHash = "e0d9501bd34e3100e925dcb2e07f5f0ce8980bdbe5fce0ae950b21368d54c1a1"
-        $executableFromDownload = "$downloadsDir\cmake-3.9.1-win32-x86\bin\cmake.exe"
+        $requiredVersion = "3.9.4"
+        $downloadVersion = "3.9.4"
+        $url = "https://cmake.org/files/v3.9/cmake-3.9.4-win32-x86.zip"
+        $downloadPath = "$downloadsDir\cmake-3.9.4-win32-x86.zip"
+        $expectedDownloadedFileHash = "8214df1ff51f9a6a1f0e27f9bd18f402b1749c5b645fbf6e401bcb00047171cd"
+        $executableFromDownload = "$downloadsDir\cmake-3.9.4-win32-x86\bin\cmake.exe"
         $extractionType = $ExtractionType_ZIP
         $extractionFolder = $downloadsDir
     }
     elseif($Dependency -eq "nuget")
     {
-        $requiredVersion = "4.1.0"
-        $downloadVersion = "4.1.0"
-        $url = "https://dist.nuget.org/win-x86-commandline/v4.1.0/nuget.exe"
-        $downloadPath = "$downloadsDir\nuget-4.1.0\nuget.exe"
-        $expectedDownloadedFileHash = "4c1de9b026e0c4ab087302ff75240885742c0faa62bd2554f913bbe1f6cb63a0"
+        $requiredVersion = "4.4.0"
+        $downloadVersion = "4.4.0"
+        $url = "https://dist.nuget.org/win-x86-commandline/v4.4.0/nuget.exe"
+        $downloadPath = "$downloadsDir\nuget-$downloadVersion\nuget.exe"
+        $expectedDownloadedFileHash = "2cf9b118937eef825464e548f0c44f7f64090047746de295d75ac3dcffa3e1f6"
+        $executableFromDownload = $downloadPath
+        $extractionType = $ExtractionType_NO_EXTRACTION_REQUIRED
+    }
+    elseif($Dependency -eq "vswhere")
+    {
+        $requiredVersion = "2.2.7"
+        $downloadVersion = "2.2.7"
+        $url = "https://github.com/Microsoft/vswhere/releases/download/2.2.7/vswhere.exe"
+        $downloadPath = "$downloadsDir\vswhere-$downloadVersion\vswhere.exe"
+        $expectedDownloadedFileHash = "f50303881da706132516d9decfd5314d524a0044daf49c0cfd21dc39c1261ec3"
         $executableFromDownload = $downloadPath
         $extractionType = $ExtractionType_NO_EXTRACTION_REQUIRED
     }
     elseif($Dependency -eq "git")
     {
-        $requiredVersion = "2.14.1"
-        $downloadVersion = "2.14.1"
-        $url = "https://github.com/git-for-windows/git/releases/download/v2.14.1.windows.1/MinGit-2.14.1-32-bit.zip" # We choose the 32-bit version
-        $downloadPath = "$downloadsDir\MinGit-2.14.1-32-bit.zip"
-        $expectedDownloadedFileHash = "77b468e0ead1e7da4cb3a1cf35dabab5210bf10457b4142f5e9430318217cdef"
+        $requiredVersion = "2.15.0"
+        $downloadVersion = "2.15.0"
+        $url = "https://github.com/git-for-windows/git/releases/download/v2.15.0.windows.1/MinGit-2.15.0-32-bit.zip"
+        $downloadPath = "$downloadsDir\MinGit-2.15.0-32-bit.zip"
+        $expectedDownloadedFileHash = "69c035ab7b75c42ce5dd99e8927d2624ab618fab73c5ad84c9412bd74c343537"
         # There is another copy of git.exe in MinGit\bin. However, an installed version of git add the cmd dir to the PATH.
         # Therefore, choosing the cmd dir here as well.
-        $executableFromDownload = "$downloadsDir\MinGit-2.14.1-32-bit\cmd\git.exe"
+        $executableFromDownload = "$downloadsDir\MinGit-2.15.0-32-bit\cmd\git.exe"
         $extractionType = $ExtractionType_ZIP
-        $extractionFolder = "$downloadsDir\MinGit-2.14.1-32-bit"
+        $extractionFolder = "$downloadsDir\MinGit-2.15.0-32-bit"
+    }
+    elseif($Dependency -eq "installerbase")
+    {
+        $requiredVersion = "3.1.81"
+        $downloadVersion = "3.1.81"
+        $url = "https://github.com/podsvirov/installer-framework/releases/download/cr203958-9/QtInstallerFramework-win-x86.zip"
+        $downloadPath = "$downloadsDir\QtInstallerFramework-win-x86.zip"
+        $expectedDownloadedFileHash = "f2ce23cf5cf9fc7ce409bdca49328e09a070c0026d3c8a04e4dfde7b05b83fe8"
+        $executableFromDownload = "$downloadsDir\QtInstallerFramework-win-x86\bin\installerbase.exe"
+        $extractionType = $ExtractionType_ZIP
+        $extractionFolder = $downloadsDir
     }
     else
     {
@@ -151,16 +216,16 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     performDownload $Dependency $url $downloadsDir $downloadPath $downloadVersion $requiredVersion
 
     #calculating the hash
-    if ($PSVersionTable.PSEdition -ne "Core")
+    if (Test-Command -commandName 'Get-FileHash')
+    {
+        $downloadedFileHash = (Get-FileHash -Path $downloadPath -Algorithm SHA256).Hash
+    }
+    else
     {
         $hashAlgorithm = [Security.Cryptography.HashAlgorithm]::Create("SHA256")
         $fileAsByteArray = [io.File]::ReadAllBytes($downloadPath)
         $hashByteArray = $hashAlgorithm.ComputeHash($fileAsByteArray)
         $downloadedFileHash = -Join ($hashByteArray | ForEach-Object {"{0:x2}" -f $_})
-    }
-    else
-    {
-        $downloadedFileHash = (Get-FileHash -Path $downloadPath -Algorithm SHA256).Hash
     }
 
     if ($expectedDownloadedFileHash -ne $downloadedFileHash)
@@ -200,6 +265,6 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     return $executableFromDownload
 }
 
-SelectProgram $Dependency
-
+$path = SelectProgram $Dependency
 Write-Verbose "Fetching dependency: $Dependency. Done."
+return "<sol>::$path::<eol>"

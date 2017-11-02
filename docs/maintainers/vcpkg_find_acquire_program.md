@@ -16,6 +16,7 @@ The current list of programs includes:
 - 7Z
 - BISON
 - FLEX
+- GASPREPROCESSOR
 - PERL
 - PYTHON2
 - PYTHON3
@@ -24,7 +25,6 @@ The current list of programs includes:
 - NASM
 - NINJA
 - YASM
-- GASPREPROCESSOR
 
 Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_acquire_msys.md).
 

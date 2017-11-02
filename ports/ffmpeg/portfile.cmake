@@ -4,11 +4,11 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ffmpeg-3.2.4)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ffmpeg-3.3.3)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://ffmpeg.org/releases/ffmpeg-3.2.4.tar.bz2"
-    FILENAME "ffmpeg-3.2.4.tar.bz2"
-    SHA512 ba5004d0f2659faa139c7dbf2f0fc6bab1d4e017d919f4ac271a5d2e8e4a3478909176e3a4d1ad33ddf2f62ab28dd9e00ce9be1399efb7cb3276dde79134cdaa
+    URLS "http://ffmpeg.org/releases/ffmpeg-3.3.3.tar.bz2"
+    FILENAME "ffmpeg-3.3.3.tar.bz2"
+    SHA512  1cc63bf73356f4e618c0d3572a216bdf5689f10deff56b4262f6d740b0bee5a4b3eac234f45fca3d4d2da77903a507b4fba725b76d2d2070f31b6dae9e7a2dab
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

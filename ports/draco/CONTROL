@@ -1,4 +1,4 @@
 Source: draco
-Version: 0.10.0
+Version: 0.10.0-1
 Description: A library for compressing and decompressing 3D geometric meshes and point clouds. It is intended to improve the storage and transmission of 3D graphics.
 Build-Depends:
