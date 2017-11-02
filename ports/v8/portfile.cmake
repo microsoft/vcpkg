@@ -1,3 +1,5 @@
+include(vcpkg_common_functions)
+
 function(vcpkg_from_googlesource OUT_SOURCE_PATH REPO REF SHA512)
     set(FILENAME "${REPO}-${REF}.tar.gz")    
     vcpkg_download_distfile(ARCHIVE
