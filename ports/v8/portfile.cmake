@@ -1,5 +1,5 @@
 include(vcpkg_common_functions)
-set(VERSION 5.1.281.4)
+set(VERSION 6.4.190)
 set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src/v8-${VERSION}")
 
 vcpkg_from_github(
@@ -36,11 +36,11 @@ function(vcpkg_from_googlesource OUT_SOURCE_PATH REPO REF)
 endfunction()
 
 vcpkg_from_googlesource(
-    "build/gyp"
-    "external/gyp"
-    "4ec6c4e3a94bd04a6da2858163d40b2429b8aad1"
+    "build/gn"
+    "chromium/src/tools/gn"
+    "93afc7c91e802e43df62c7ac2711238bc689e766"
 )
- 
+
 vcpkg_from_googlesource(
     "third_party/icu"
     "chromium/deps/icu"
