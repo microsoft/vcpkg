@@ -101,6 +101,7 @@ vcpkg_configure_cmake(
         -DWITH_CUDA=${WITH_CUDA}
         -DWITH_FFMPEG=${WITH_FFMPEG}
         -DWITH_LAPACK=OFF
+        -DWITH_MSMF=ON
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_OPENGL=ON
         -DWITH_QT=${WITH_QT}
