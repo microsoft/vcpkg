@@ -4,6 +4,7 @@ set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src/v8-git-mirror-${VERSION}")
 
 function(vcpkg_download_no_checksum URL FILENAME)
     message(STATUS "Downloading ${URL}...")
+    file(REMOVE ${FILENAME})
     file(DOWNLOAD ${URL} ${FILENAME} STATUS download_status)
     list(GET download_status 0 status_code)
     if (NOT "${status_code}" STREQUAL "0")
@@ -17,12 +18,12 @@ function(vcpkg_download_no_checksum URL FILENAME)
 endfunction()
 
 function(vcpkg_from_googlesource OUT_SOURCE_PATH REPO REF)
-    set(FILENAME "downloads/${REF}.tar.gz")    
+    set(FILENAME "downloads/${REPO}/${REF}.tar.gz")    
     vcpkg_download_no_checksum(
         "https://chromium.googlesource.com/${REPO}/+archive/${REF}.tar.gz"
         ${FILENAME}
     )
-    vcpkg_extract_source_archive(${FILENAME})
+    vcpkg_extract_source_archive(${FILENAME} ${OUT_SOURCE_PATH})
 endfunction()
 
 # vcpkg_from_github(
