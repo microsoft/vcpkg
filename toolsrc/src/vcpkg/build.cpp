@@ -478,7 +478,7 @@ namespace vcpkg::Build
                                                          {"CMAKE_TRIPLET_FILE", triplet_file_path},
                                                      });
         const auto ec_data = System::cmd_execute_and_capture_output(cmd_launch_cmake);
-        Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0);
+        Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, ec_data.output);
 
         const std::vector<std::string> lines = Strings::split(ec_data.output, "\n");
 
