@@ -18,10 +18,10 @@ namespace vcpkg::Build
 {
     namespace Command
     {
-        void perform_and_exit(const FullPackageSpec& full_spec,
-                              const fs::path& port_dir,
-                              const ParsedArguments& options,
-                              const VcpkgPaths& paths);
+        void perform_and_exit_ex(const FullPackageSpec& full_spec,
+                                 const fs::path& port_dir,
+                                 const ParsedArguments& options,
+                                 const VcpkgPaths& paths);
 
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
     }

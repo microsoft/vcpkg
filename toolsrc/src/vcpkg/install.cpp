@@ -535,13 +535,13 @@ namespace vcpkg::Install
     static const std::string OPTION_RECURSE = "--recurse";
     static const std::string OPTION_KEEP_GOING = "--keep-going";
 
-    static const std::array<std::string, 5> INSTALL_SWITCHES = {
-        OPTION_DRY_RUN,
-        OPTION_USE_HEAD_VERSION,
-        OPTION_NO_DOWNLOADS,
-        OPTION_RECURSE,
-        OPTION_KEEP_GOING,
-    };
+    static const std::array<CommandSwitch, 5> INSTALL_SWITCHES = {{
+        {OPTION_DRY_RUN, "Do not actually build or install"},
+        {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
+        {OPTION_NO_DOWNLOADS, "Do not download new sources"},
+        {OPTION_RECURSE, "Allow removal of packages as part of installation"},
+        {OPTION_KEEP_GOING, "Continue installing packages on failure"},
+    }};
     static const std::array<std::string, 0> INSTALL_SETTINGS;
 
     std::vector<std::string> get_all_port_names(const VcpkgPaths& paths)
@@ -553,22 +553,20 @@ namespace vcpkg::Install
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
-        "install zlib zlib:x64-windows curl boost",
+        Help::create_example_string("install zlib zlib:x64-windows curl boost"),
         1,
         SIZE_MAX,
-        INSTALL_SWITCHES,
-        INSTALL_SETTINGS,
+        {INSTALL_SWITCHES, {}},
         &get_all_port_names,
     };
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
         // input sanitization
-        static const std::string EXAMPLE = Help::create_example_string("install zlib zlib:x64-windows curl boost");
-        args.check_min_arg_count(1, EXAMPLE);
+        const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
         const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
-            return Input::check_and_get_full_package_spec(arg, default_triplet, EXAMPLE);
+            return Input::check_and_get_full_package_spec(arg, default_triplet, COMMAND_STRUCTURE.example_text);
         });
 
         for (auto&& spec : specs)
@@ -581,8 +579,6 @@ namespace vcpkg::Install
             }
         }
 
-        const ParsedArguments options = args.check_and_get_optional_command_arguments(
-            {OPTION_DRY_RUN, OPTION_USE_HEAD_VERSION, OPTION_NO_DOWNLOADS, OPTION_RECURSE, OPTION_KEEP_GOING}, {});
         const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
         const bool use_head_version = Util::Sets::contains(options.switches, (OPTION_USE_HEAD_VERSION));
         const bool no_downloads = Util::Sets::contains(options.switches, (OPTION_NO_DOWNLOADS));

@@ -79,14 +79,24 @@ namespace vcpkg::Commands::Search
         }
     }
 
+    static std::array<CommandSwitch, 2> SEARCH_SWITCHES = {{
+        {OPTION_GRAPH, "Open editor into the port-specific buildtree subfolder"},
+        {OPTION_FULLDESC, "Do not truncate long text"},
+    }};
+
+    const CommandStructure COMMAND_STRUCTURE = {
+        Strings::format(
+            "The argument should be a substring to search for, or no argument to display all libraries.\n%s",
+            Help::create_example_string("search png")),
+        0,
+        1,
+        {SEARCH_SWITCHES, {}},
+        nullptr,
+    };
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const std::string EXAMPLE = Strings::format(
-            "The argument should be a substring to search for, or no argument to display all libraries.\n%s",
-            Help::create_example_string("search png"));
-        args.check_max_arg_count(1, EXAMPLE);
-        const ParsedArguments options =
-            args.check_and_get_optional_command_arguments({OPTION_GRAPH, OPTION_FULLDESC}, {});
+        const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
         const bool full_description = Util::Sets::contains(options.switches, OPTION_FULLDESC);
 
         auto source_paragraphs = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);

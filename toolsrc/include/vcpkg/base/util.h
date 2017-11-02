@@ -30,7 +30,7 @@ namespace vcpkg::Util
     }
 
     template<class Cont, class Func>
-    using FmapOut = decltype(std::declval<Func>()(*begin(std::declval<Cont>())));
+    using FmapOut = decltype(std::declval<Func&>()(*begin(std::declval<Cont&>())));
 
     template<class Cont, class Func, class Out = FmapOut<Cont, Func>>
     std::vector<Out> fmap(Cont&& xs, Func&& f)

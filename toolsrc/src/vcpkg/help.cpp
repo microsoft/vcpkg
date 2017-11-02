@@ -91,10 +91,17 @@ namespace vcpkg::Help
         System::println(create_example_string(command_and_arguments));
     }
 
+    const CommandStructure COMMAND_STRUCTURE = {
+        Help::create_example_string("help"),
+        0,
+        1,
+        {},
+        nullptr,
+    };
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        args.check_max_arg_count(1);
-        args.check_and_get_optional_command_arguments({}, {});
+        args.parse_arguments(COMMAND_STRUCTURE);
 
         if (args.command_arguments.empty())
         {
