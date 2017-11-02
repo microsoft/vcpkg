@@ -12,13 +12,13 @@ function(vcpkg_from_googlesource OUT_SOURCE_PATH REPO REF SHA512)
     vcpkg_extract_source_archive(${FILENAME})
 endfunction()
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO v8/v8-git-mirror
-    REF ${VERSION}
-    SHA512  d80035a8b35e78ee05df510a56e4ce5880e40b156f6db726daa8b9288df2db1dea14e74487ca476d06ef7d3a9d4f018ace335bc5d6c3d75a6a4437f521663d69
-    HEAD_REF master
-)
+# vcpkg_from_github(
+#     OUT_SOURCE_PATH SOURCE_PATH
+#    REPO v8/v8-git-mirror
+#    REF ${VERSION}
+#    SHA512  d80035a8b35e78ee05df510a56e4ce5880e40b156f6db726daa8b9288df2db1dea14e74487ca476d06ef7d3a9d4f018ace335bc5d6c3d75a6a4437f521663d69
+#    HEAD_REF master
+#)
   
 vcpkg_from_googlesource(
     "build/gyp"
