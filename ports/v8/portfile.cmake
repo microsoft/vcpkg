@@ -1,4 +1,6 @@
 include(vcpkg_common_functions)
+set(VERSION 5.1.281.4)
+set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src/v8-${VERSION}")
 
 function(vcpkg_from_googlesource OUT_SOURCE_PATH REPO REF SHA512)
     set(FILENAME "${REPO}-${REF}.tar.gz")    
@@ -13,7 +15,7 @@ endfunction()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO v8/v8-git-mirror
-    REF 5.1.281.47
+    REF ${VERSION}
     SHA512  b4ffe20f3e54856fcff2f946dc01fd8663c9e83364e809c2fd422e22a778daab312cfb29be336c7747603ec18f3f119caa88b1eecc2198633db68b470d12278b
     HEAD_REF master
 )
