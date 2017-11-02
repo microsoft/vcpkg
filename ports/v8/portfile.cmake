@@ -45,9 +45,9 @@ function(vcpkg_from_googlesource OUT_SOURCE_PATH REPO REF)
 endfunction()
 
 vcpkg_from_googlesource(
-    "build/gn"
-    "chromium/src/tools/gn"
-    "93afc7c91e802e43df62c7ac2711238bc689e766"
+    "build"
+    "chromium/src/build"
+    "00764a82f63ad8f5bade586e39ef5f9a324b0c42"
 )
 
 vcpkg_from_googlesource(
