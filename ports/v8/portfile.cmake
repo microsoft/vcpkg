@@ -31,7 +31,7 @@ function(vcpkg_from_googlesource OUT_SOURCE_PATH REPO REF)
         "https://chromium.googlesource.com/${REPO}/+archive/${REF}.tar.gz"
         ${FILENAME}
     )
-    message(STATUS "Extracting to "${SOURCE_PATH}/${OUT_SOURCE_PATH}")
+    message(STATUS "Extracting to ${SOURCE_PATH}/${OUT_SOURCE_PATH}")
     vcpkg_extract_source_archive(${FILENAME} "${SOURCE_PATH}/${OUT_SOURCE_PATH}")
 endfunction()
 
