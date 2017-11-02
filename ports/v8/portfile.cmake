@@ -83,8 +83,17 @@ vcpkg_from_googlesource(
     "faee82e064e04e5cbf60cc7327e7a81d2a4557ad"
 )  
 
+file(COPY
+    "${CMAKE_CURRENT_LIST_DIR}/68b6ac7c644184ae383a6631b8090acd8df7e905"
+    ${SOURCE_PATH}
+)
+file(RENAME
+    "${SOURCE_PATH}/68b6ac7c644184ae383a6631b8090acd8df7e905"
+    "${SOURCE_PATH}/gn.exe"
+)
+
 execute_process(
-    COMMAND "python" "tools/dev/v8gen.py" "x64.release"
+    "gn.exe" "--help"
 )
 
 
