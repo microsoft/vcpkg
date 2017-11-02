@@ -82,3 +82,9 @@ vcpkg_from_googlesource(
     "chromium/src/tools/clang"
     "faee82e064e04e5cbf60cc7327e7a81d2a4557ad"
 )  
+
+execute_process(
+    COMMAND "python" "tools/dev/v8gen.py" "x64.release"
+)
+
+
