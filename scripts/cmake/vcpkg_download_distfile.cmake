@@ -46,6 +46,10 @@ function(vcpkg_download_distfile VAR)
     file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
 
     function(test_hash FILE_KIND CUSTOM_ERROR_ADVICE)
+        if (_VCPKG_INTERNAL_NO_HASH_CHECK)
+            return()
+        endif()
+
         message(STATUS "Testing integrity of ${FILE_KIND}...")
         file(SHA512 ${downloaded_file_path} FILE_HASH)
         if(NOT "${FILE_HASH}" STREQUAL "${vcpkg_download_distfile_SHA512}")
