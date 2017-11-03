@@ -57,6 +57,11 @@ if("vtk" IN_LIST FEATURES)
   set(WITH_VTK ON)
 endif()
 
+set(WITH_MSMF ON)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+  set(WITH_MSMF OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
@@ -101,7 +106,7 @@ vcpkg_configure_cmake(
         -DWITH_CUDA=${WITH_CUDA}
         -DWITH_FFMPEG=${WITH_FFMPEG}
         -DWITH_LAPACK=OFF
-        -DWITH_MSMF=ON
+        -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_OPENGL=ON
         -DWITH_QT=${WITH_QT}
