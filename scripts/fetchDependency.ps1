@@ -65,6 +65,18 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
             New-Item -ItemType directory -Path $downloadDir | Out-Null
         }
 
+        $downloadsTemp = "$downloadDir/temp"
+        if (Test-Path $downloadsTemp) # Delete temp dir if it exists
+        {
+            Remove-Item $downloadsTemp -Recurse -Force
+        }
+        if (!(Test-Path $downloadsTemp)) # Recreate temp dir. It may still be there the dir was in use
+        {
+            New-Item -ItemType directory -Path $downloadsTemp | Out-Null
+        }
+
+        $tempDownloadName = "$downloadsTemp/$Dependency-$downloadVersion.temp"
+
         $WC = New-Object System.Net.WebClient
         $ProxyAuth = !$WC.Proxy.IsBypassed($url)
 
@@ -79,15 +91,16 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
                     $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyAuthentication","Basic")
                     $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyCredential", $ProxyCred)
                 }
-                Start-BitsTransfer -Source $url -Destination $downloadPath -ErrorAction Stop
+                Start-BitsTransfer -Source $url -Destination $tempDownloadName -ErrorAction Stop
+                Move-Item -Path $tempDownloadName -Destination $downloadPath
                 return
             }
             catch [System.Exception]
             {
                 # If BITS fails for any reason, delete any potentially partially downloaded files and continue
-                if (Test-Path $downloadPath)
+                if (Test-Path $tempDownloadName)
                 {
-                    Remove-Item $downloadPath
+                    Remove-Item $tempDownloadName
                 }
             }
         }
@@ -98,7 +111,8 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         }
 
         Write-Verbose("Downloading $Dependency...")
-        $WC.DownloadFile($url, $downloadPath)
+        $WC.DownloadFile($url, $tempDownloadName)
+        Move-Item -Path $tempDownloadName -Destination $downloadPath
     }
 
     # Enums (without resorting to C#) are only available on powershell 5+.
