@@ -70,7 +70,7 @@ function(vcpkg_download_distfile VAR)
         # Tries to download the file.
         foreach(url IN LISTS vcpkg_download_distfile_URLS)
             message(STATUS "Downloading ${url}...")
-            file(DOWNLOAD ${url} "${download_file_path_part}" STATUS download_status SHOW_PROGRESS)
+            file(DOWNLOAD ${url} "${download_file_path_part}" STATUS download_status)
             list(GET download_status 0 status_code)
             if (NOT "${status_code}" STREQUAL "0")
                 message(STATUS "Downloading ${url}... Failed. Status: ${download_status}")
