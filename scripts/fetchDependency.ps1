@@ -239,9 +239,14 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         $downloadedFileHash = -Join ($hashByteArray | ForEach-Object {"{0:x2}" -f $_})
     }
 
+    $downloadedFileHash = $downloadedFileHash.ToLower()
     if ($expectedDownloadedFileHash -ne $downloadedFileHash)
     {
-        throw [System.IO.FileNotFoundException] ("Mismatching hash of the downloaded " + $Dependency)
+        Write-Host ("`nFile does not have expected hash:`n" +
+        "        File path: [ $downloadPath ]`n" +
+        "    Expected hash: [ $expectedDownloadedFileHash ]`n" +
+        "      Actual hash: [ $downloadedFileHash ]`n")
+        throw "Invalid Hash"
     }
 
     if ($extractionType -eq $ExtractionType_NO_EXTRACTION_REQUIRED)
@@ -270,7 +275,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 
     if (-not (Test-Path $executableFromDownload))
     {
-        throw [System.IO.FileNotFoundException] ("Could not detect or download " + $Dependency)
+        throw ("Could not detect or download " + $Dependency)
     }
 
     return $executableFromDownload
