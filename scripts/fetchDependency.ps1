@@ -181,11 +181,11 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     }
     elseif($Dependency -eq "vswhere")
     {
-        $requiredVersion = "2.2.7"
-        $downloadVersion = "2.2.7"
-        $url = "https://github.com/Microsoft/vswhere/releases/download/2.2.7/vswhere.exe"
+        $requiredVersion = "2.2.11"
+        $downloadVersion = "2.2.11"
+        $url = "https://github.com/Microsoft/vswhere/releases/download/2.2.11/vswhere.exe"
         $downloadPath = "$downloadsDir\vswhere-$downloadVersion\vswhere.exe"
-        $expectedDownloadedFileHash = "f50303881da706132516d9decfd5314d524a0044daf49c0cfd21dc39c1261ec3"
+        $expectedDownloadedFileHash = "0235c2cb6341978abdf32e27fcf1d7af5cb5514c035e529c4cd9283e6f1a261f"
         $executableFromDownload = $downloadPath
         $extractionType = $ExtractionType_NO_EXTRACTION_REQUIRED
     }
