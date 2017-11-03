@@ -283,11 +283,11 @@ namespace vcpkg::Export
     static const std::array<CommandSetting, 7> EXPORT_SETTINGS = {{
         {OPTION_NUGET_ID, "Specify the id for the exported NuGet package"},
         {OPTION_NUGET_VERSION, "Specify the version for the exported NuGet package"},
-        {OPTION_IFW_REPOSITORY_URL, ""},
-        {OPTION_IFW_PACKAGES_DIR_PATH, ""},
-        {OPTION_IFW_REPOSITORY_DIR_PATH, ""},
-        {OPTION_IFW_CONFIG_FILE_PATH, ""},
-        {OPTION_IFW_INSTALLER_FILE_PATH, ""},
+        {OPTION_IFW_REPOSITORY_URL, "Specify the remote repository URL for the online installer"},
+        {OPTION_IFW_PACKAGES_DIR_PATH, "Specify the temporary directory path for the repacked packages"},
+        {OPTION_IFW_REPOSITORY_DIR_PATH, "Specify the directory path for the exported repository"},
+        {OPTION_IFW_CONFIG_FILE_PATH, "Specify the temporary file path for the installer configuration"},
+        {OPTION_IFW_INSTALLER_FILE_PATH, "Specify the file path for the exported installer"},
     }};
 
     const CommandStructure vcpkg::Export::COMMAND_STRUCTURE = {
