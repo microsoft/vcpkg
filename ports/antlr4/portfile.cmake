@@ -1,12 +1,12 @@
 include(vcpkg_common_functions)
 
-set(VERSION 4.6)
+set(VERSION 4.7)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/runtime)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.antlr.org/download/antlr4-cpp-runtime-4.6-source.zip"
+    URLS "http://www.antlr.org/download/antlr4-cpp-runtime-4.7-source.zip"
     FILENAME "antlr4-cpp-runtime-${VERSION}-source.zip"
-    SHA512 e123c2227e41ce80da5a3758725a018690ed70a4e10c23da26c966259e6bdafa192f4363f5a7e1181ef9a47bf3cc50d6b0ca7b26c8dd2b19222a7edf54de8de2
+    SHA512 a14fd3320537075a8d4c1cfa81d416bad6257d238608e2428f4930495072cce984c707126e3777ffd3849dd6b6cdf1bf43624bd6d318b1fa5dd6749a7304f808
 )
 
 # license not exist in antlr folder.

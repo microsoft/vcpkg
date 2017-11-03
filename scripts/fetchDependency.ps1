@@ -8,9 +8,27 @@ function Test-Command($commandName)
     return [bool](Get-Command -Name $commandName -ErrorAction SilentlyContinue)
 }
 
+function Test-CommandParameter($commandName, $parameterName)
+{
+    return (Get-Command $commandName).Parameters.Keys -contains $parameterName
+}
+
 function Test-Module($moduleName)
 {
     return [bool](Get-Module -ListAvailable -Name $moduleName)
+}
+
+function Get-Credential-Backwards-Compatible()
+{
+    if (Test-CommandParameter -commandName 'Get-Credential' -parameterName 'Message')
+    {
+        return Get-Credential -Message "Enter credentials for Proxy Authentication"
+    }
+    else
+    {
+        Write-Host "Enter credentials for Proxy Authentication"
+        return Get-Credential
+    }
 }
 
 if (Test-Module -moduleName 'BitsTransfer')
@@ -39,44 +57,59 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
             return
         }
 
-        # Can't print because vcpkg captures the output and expects only the path that is returned at the end of this script file
-        # Write-Host "A suitable version of $Dependency was not found (required v$requiredVersion). Downloading portable $Dependency v$downloadVersion..."
-
         if (!(Test-Path $downloadDir))
         {
             New-Item -ItemType directory -Path $downloadDir | Out-Null
         }
 
+        $downloadsTemp = "$downloadDir/temp"
+        if (Test-Path $downloadsTemp) # Delete temp dir if it exists
+        {
+            Remove-Item $downloadsTemp -Recurse -Force
+        }
+        if (!(Test-Path $downloadsTemp)) # Recreate temp dir. It may still be there the dir was in use
+        {
+            New-Item -ItemType directory -Path $downloadsTemp | Out-Null
+        }
+
+        $tempDownloadName = "$downloadsTemp/$Dependency-$downloadVersion.temp"
+
         $WC = New-Object System.Net.WebClient
         $ProxyAuth = !$WC.Proxy.IsBypassed($url)
-        if ($ProxyAuth)
-        {
-            $ProxyCred = Get-Credential -Message "Enter credentials for Proxy Authentication"
-            $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyAuthentication","Basic")
-            $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyCredential",$ProxyCred)
-            $WC.Proxy.Credentials=$ProxyCred
-        }
 
          # git and installerbase fail with Start-BitsTransfer
         if ((Test-Command -commandName 'Start-BitsTransfer') -and ($Dependency -ne "git")-and ($Dependency -ne "installerbase"))
         {
             try
             {
-                Start-BitsTransfer -Source $url -Destination $downloadPath -ErrorAction Stop
+                if ($ProxyAuth)
+                {
+                    $ProxyCred = Get-Credential-Backwards-Compatible
+                    $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyAuthentication","Basic")
+                    $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyCredential", $ProxyCred)
+                }
+                Start-BitsTransfer -Source $url -Destination $tempDownloadName -ErrorAction Stop
+                Move-Item -Path $tempDownloadName -Destination $downloadPath
                 return
             }
             catch [System.Exception]
             {
                 # If BITS fails for any reason, delete any potentially partially downloaded files and continue
-                if (Test-Path $downloadPath)
+                if (Test-Path $tempDownloadName)
                 {
-                    Remove-Item $downloadPath
+                    Remove-Item $tempDownloadName
                 }
             }
         }
 
+        if ($ProxyAuth)
+        {
+            $WC.Proxy.Credentials = Get-Credential-Backwards-Compatible
+        }
+
         Write-Verbose("Downloading $Dependency...")
-        $WC.DownloadFile($url, $downloadPath)
+        $WC.DownloadFile($url, $tempDownloadName)
+        Move-Item -Path $tempDownloadName -Destination $downloadPath
     }
 
     # Enums (without resorting to C#) are only available on powershell 5+.
@@ -148,26 +181,26 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     }
     elseif($Dependency -eq "vswhere")
     {
-        $requiredVersion = "2.2.7"
-        $downloadVersion = "2.2.7"
-        $url = "https://github.com/Microsoft/vswhere/releases/download/2.2.7/vswhere.exe"
+        $requiredVersion = "2.2.11"
+        $downloadVersion = "2.2.11"
+        $url = "https://github.com/Microsoft/vswhere/releases/download/2.2.11/vswhere.exe"
         $downloadPath = "$downloadsDir\vswhere-$downloadVersion\vswhere.exe"
-        $expectedDownloadedFileHash = "f50303881da706132516d9decfd5314d524a0044daf49c0cfd21dc39c1261ec3"
+        $expectedDownloadedFileHash = "0235c2cb6341978abdf32e27fcf1d7af5cb5514c035e529c4cd9283e6f1a261f"
         $executableFromDownload = $downloadPath
         $extractionType = $ExtractionType_NO_EXTRACTION_REQUIRED
     }
     elseif($Dependency -eq "git")
     {
-        $requiredVersion = "2.14.2"
-        $downloadVersion = "2.14.2"
-        $url = "https://github.com/git-for-windows/git/releases/download/v2.14.2.windows.3/MinGit-2.14.2.3-32-bit.zip" # We choose the 32-bit version
-        $downloadPath = "$downloadsDir\MinGit-2.14.2.3-32-bit.zip"
-        $expectedDownloadedFileHash = "7cc1f27e1cfe79381e1a504a5fc7bc33951ac9031cd14c3bf478769d21a26cce"
+        $requiredVersion = "2.15.0"
+        $downloadVersion = "2.15.0"
+        $url = "https://github.com/git-for-windows/git/releases/download/v2.15.0.windows.1/MinGit-2.15.0-32-bit.zip"
+        $downloadPath = "$downloadsDir\MinGit-2.15.0-32-bit.zip"
+        $expectedDownloadedFileHash = "69c035ab7b75c42ce5dd99e8927d2624ab618fab73c5ad84c9412bd74c343537"
         # There is another copy of git.exe in MinGit\bin. However, an installed version of git add the cmd dir to the PATH.
         # Therefore, choosing the cmd dir here as well.
-        $executableFromDownload = "$downloadsDir\MinGit-2.14.2.3-32-bit\cmd\git.exe"
+        $executableFromDownload = "$downloadsDir\MinGit-2.15.0-32-bit\cmd\git.exe"
         $extractionType = $ExtractionType_ZIP
-        $extractionFolder = "$downloadsDir\MinGit-2.14.2.3-32-bit"
+        $extractionFolder = "$downloadsDir\MinGit-2.15.0-32-bit"
     }
     elseif($Dependency -eq "installerbase")
     {
@@ -206,9 +239,14 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         $downloadedFileHash = -Join ($hashByteArray | ForEach-Object {"{0:x2}" -f $_})
     }
 
+    $downloadedFileHash = $downloadedFileHash.ToLower()
     if ($expectedDownloadedFileHash -ne $downloadedFileHash)
     {
-        throw [System.IO.FileNotFoundException] ("Mismatching hash of the downloaded " + $Dependency)
+        Write-Host ("`nFile does not have expected hash:`n" +
+        "        File path: [ $downloadPath ]`n" +
+        "    Expected hash: [ $expectedDownloadedFileHash ]`n" +
+        "      Actual hash: [ $downloadedFileHash ]`n")
+        throw "Invalid Hash"
     }
 
     if ($extractionType -eq $ExtractionType_NO_EXTRACTION_REQUIRED)
@@ -237,12 +275,12 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 
     if (-not (Test-Path $executableFromDownload))
     {
-        throw [System.IO.FileNotFoundException] ("Could not detect or download " + $Dependency)
+        throw ("Could not detect or download " + $Dependency)
     }
 
     return $executableFromDownload
 }
 
-SelectProgram $Dependency
-
+$path = SelectProgram $Dependency
 Write-Verbose "Fetching dependency: $Dependency. Done."
+return "<sol>::$path::<eol>"

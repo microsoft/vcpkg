@@ -23,16 +23,19 @@ namespace vcpkg::Commands
 
     namespace CI
     {
+        extern const CommandStructure COMMAND_STRUCTURE;
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
     }
 
     namespace Env
     {
+        extern const CommandStructure COMMAND_STRUCTURE;
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
     }
 
     namespace Create
     {
+        extern const CommandStructure COMMAND_STRUCTURE;
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
@@ -49,16 +52,19 @@ namespace vcpkg::Commands
 
     namespace Search
     {
+        extern const CommandStructure COMMAND_STRUCTURE;
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
     namespace List
     {
+        extern const CommandStructure COMMAND_STRUCTURE;
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
     namespace Owns
     {
+        extern const CommandStructure COMMAND_STRUCTURE;
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
@@ -99,6 +105,7 @@ namespace vcpkg::Commands
 
     namespace Contact
     {
+        extern const CommandStructure COMMAND_STRUCTURE;
         const std::string& email();
         void perform_and_exit(const VcpkgCmdArguments& args);
     }

@@ -1,4 +1,4 @@
 Source: uwebsockets
 Version: 0.14.4-1
-Build-Depends: libuv, openssl, zlib, boost
+Build-Depends: libuv, openssl, zlib
 Description: Highly scalable cross-platform WebSocket & HTTP library for C++11 and Node.js

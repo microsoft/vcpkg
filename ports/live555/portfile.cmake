@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/live)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.live555.com/liveMedia/public/live.2017.06.04.tar.gz"
-    FILENAME "live.2017.06.04.tar.gz"
-    SHA512 89eb3854c2ef7d0a1f443b4ca46c66040dfcc586ffd1e3e08c1b9e831eae6ade1c16e628c0ed0e7804c4e7430993f662e3fe8df2f09903024153d188276c3088
+    URLS "http://www.live555.com/liveMedia/public/live.2017.09.12.tar.gz"
+    FILENAME "live.2017.09.12.tar.gz"
+    SHA512 09b18b5f5dce28519b6c7cd8d52eb3448711939df051f84c8d6dce0b88d05c982711059f2ce13efccd326b2dbfeb93b88c4e03fe4a88bbd8fcefcb25e51d107d
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
