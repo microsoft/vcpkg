@@ -49,6 +49,8 @@ namespace vcpkg
         std::vector<std::string> (*valid_arguments)(const VcpkgPaths& paths);
     };
 
+    void display_usage(const CommandStructure& command_structure);
+
 #if defined(_WIN32)
     using CommandLineCharType = wchar_t;
 #else

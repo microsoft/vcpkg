@@ -63,6 +63,8 @@ namespace vcpkg
 
     inline bool operator!=(const std::string& l, const CStringView& r) { return l != r.c_str(); }
 
+    inline std::string operator+(std::string&& l, const CStringView& r) { return std::move(l) + r.c_str(); }
+
     inline const char* to_printf_arg(const CStringView string_view) { return string_view.c_str(); }
 
     static_assert(sizeof(CStringView) == sizeof(void*), "CStringView must be a simple wrapper around char*");

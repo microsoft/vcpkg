@@ -4,6 +4,7 @@
 #include <vcpkg/base/util.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
+#include <vcpkg/export.h>
 #include <vcpkg/export.ifw.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
@@ -289,7 +290,7 @@ namespace vcpkg::Export
         {OPTION_IFW_INSTALLER_FILE_PATH, ""},
     }};
 
-    const CommandStructure COMMAND_STRUCTURE = {
+    const CommandStructure vcpkg::Export::COMMAND_STRUCTURE = {
         Help::create_example_string("export zlib zlib:x64-windows boost --nuget"),
         0,
         SIZE_MAX,

@@ -250,26 +250,32 @@ namespace vcpkg
 
         if (failed)
         {
-            if (!command_structure.example_text.empty())
-            {
-                System::println("%s", command_structure.example_text);
-            }
-
-            System::println("Options:", this->command);
-            for (auto&& option : command_structure.options.switches)
-            {
-                System::println("    %-40s %s", option.name, option.short_help_text);
-            }
-            for (auto&& option : command_structure.options.settings)
-            {
-                System::println("    %-40s %s", (option.name + "=..."), option.short_help_text);
-            }
-            System::println("    --triplet <t>");
-            System::println("    --vcpkg-root <path>");
-
+            display_usage(command_structure);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
         return output;
+    }
+
+    void display_usage(const CommandStructure& command_structure)
+    {
+        if (!command_structure.example_text.empty())
+        {
+            System::println("%s", command_structure.example_text);
+        }
+
+        System::println("Options:");
+        for (auto&& option : command_structure.options.switches)
+        {
+            System::println("    %-40s %s", option.name, option.short_help_text);
+        }
+        for (auto&& option : command_structure.options.settings)
+        {
+            System::println("    %-40s %s", (option.name + "=..."), option.short_help_text);
+        }
+        System::println("    %-40s %s", "--triplet <t>", "Set the default triplet for unqualified packages");
+        System::println("    %-40s %s",
+                        "--vcpkg-root <path>",
+                        "Specify the vcpkg directory to use instead of current directory or tool directory");
     }
 }
