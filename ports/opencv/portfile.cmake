@@ -86,6 +86,7 @@ vcpkg_configure_cmake(
         # CMAKE
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
         # ENABLE
+        -DENABLE_CXX11=ON
         -DENABLE_PYLINT=OFF
         # INSTALL
         -DINSTALL_FORCE_UNIX_PATHS=ON
@@ -100,6 +101,7 @@ vcpkg_configure_cmake(
         -DWITH_CUDA=${WITH_CUDA}
         -DWITH_FFMPEG=${WITH_FFMPEG}
         -DWITH_LAPACK=OFF
+        -DWITH_MSMF=ON
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_OPENGL=ON
         -DWITH_QT=${WITH_QT}
