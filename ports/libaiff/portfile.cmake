@@ -12,6 +12,7 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
     "${CMAKE_CURRENT_LIST_DIR}/allow_utf_16_filename.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/buffer_uninitialized.patch"
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
