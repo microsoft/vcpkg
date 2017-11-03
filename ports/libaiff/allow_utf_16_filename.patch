@@ -208,7 +208,7 @@ index 56fc77f..e1940a5 100644
  
  /* == Function prototypes == */
  AIFF_Ref AIFF_OpenFile(const char *, int) ;
-+AIFF_Ref AIFF_OpenFile(const wchar_t *, int) ;
++AIFF_Ref AIFF_OpenFileW(const wchar_t *, int) ;
  int AIFF_CloseFile(AIFF_Ref) ;
  char* AIFF_GetAttribute(AIFF_Ref,IFFType) ;
  int AIFF_GetInstrumentData(AIFF_Ref,Instrument*) ;
