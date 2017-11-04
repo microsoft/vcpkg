@@ -38,7 +38,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/dlib)
 
 # There is no way to suppress installation of the headers and resource files in debug build.
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -48,7 +48,10 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/all)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/test)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/travis) 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_neon)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_cudnn)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_cuda)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_cpp11)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/external/libpng/arm)
 
 # Dlib encodes debug/release in its config.h. Patch it to respond to the NDEBUG macro instead.
@@ -56,6 +59,13 @@ file(READ ${CURRENT_PACKAGES_DIR}/include/dlib/config.h _contents)
 string(REPLACE "/* #undef ENABLE_ASSERTS */" "#if !defined(NDEBUG)\n#define ENABLE_ASSERTS\n#endif" _contents ${_contents})
 string(REPLACE "#define DLIB_DISABLE_ASSERTS" "#if defined(NDEBUG)\n#define DLIB_DISABLE_ASSERTS\n#endif" _contents ${_contents})
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/dlib/config.h ${_contents})
+
+file(READ ${CURRENT_PACKAGES_DIR}/share/dlib/dlib.cmake _contents)
+string(REPLACE
+    "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
+    "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)"
+    _contents "${_contents}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/dlib/dlib.cmake "${_contents}")
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/dlib/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/dlib)
