@@ -113,7 +113,8 @@ function(vcpkg_from_github)
 
     # The following is for --head scenarios
     set(URL "https://github.com/${ORG_NAME}/${REPO_NAME}/archive/${_vdud_HEAD_REF}.tar.gz")
-    set(downloaded_file_path "${DOWNLOADS}/${ORG_NAME}-${REPO_NAME}-${_vdud_HEAD_REF}.tar.gz")
+    set(downloaded_file_name "${ORG_NAME}-${REPO_NAME}-${_vdud_HEAD_REF}.tar.gz")
+    set(downloaded_file_path "${DOWNLOADS}/${downloaded_file_name}")
 
     if(_VCPKG_NO_DOWNLOADS)
         if(NOT EXISTS ${downloaded_file_path} OR NOT EXISTS ${downloaded_file_path}.version)
@@ -133,35 +134,27 @@ function(vcpkg_from_github)
         endif()
 
         # Try to download the file and version information from github.
-        message(STATUS "Downloading ${URL}...")
-        file(DOWNLOAD "https://api.github.com/repos/${ORG_NAME}/${REPO_NAME}/git/refs/heads/${_vdud_HEAD_REF}"
-            ${downloaded_file_path}.version
-            STATUS download_status
+        set(_VCPKG_INTERNAL_NO_HASH_CHECK "TRUE")
+        vcpkg_download_distfile(ARCHIVE_VERSION
+            URLS "https://api.github.com/repos/${ORG_NAME}/${REPO_NAME}/git/refs/heads/${_vdud_HEAD_REF}"
+            FILENAME ${downloaded_file_name}.version
         )
-        list(GET download_status 0 status_code)
-        if (NOT "${status_code}" STREQUAL "0")
-            file(REMOVE ${downloaded_file_path}.version)
-            message(FATAL_ERROR "Downloading version info for ${URL}... Failed. Status: ${download_status}")
-        endif()
 
-        file(DOWNLOAD ${URL} ${downloaded_file_path} STATUS download_status)
-        list(GET download_status 0 status_code)
-        if (NOT "${status_code}" STREQUAL "0")
-            file(REMOVE ${downloaded_file_path})
-            message(FATAL_ERROR "Downloading ${URL}... Failed. Status: ${download_status}")
-        else()
-            message(STATUS "Downloading ${URL}... OK")
-        endif()
+        vcpkg_download_distfile(ARCHIVE
+            URLS ${URL}
+            FILENAME ${downloaded_file_name}
+        )
+        set(_VCPKG_INTERNAL_NO_HASH_CHECK "FALSE")
     endif()
 
     vcpkg_extract_source_archive_ex(
-        ARCHIVE "${downloaded_file_path}"
+        ARCHIVE "${ARCHIVE}"
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/head"
     )
 
     # Parse the github refs response with regex.
     # TODO: use some JSON swiss-army-knife utility instead.
-    file(READ "${downloaded_file_path}.version" _contents)
+    file(READ "${ARCHIVE_VERSION}" _contents)
     string(REGEX MATCH "\"sha\": \"[a-f0-9]+\"" x "${_contents}")
     string(REGEX REPLACE "\"sha\": \"([a-f0-9]+)\"" "\\1" _version ${x})
 

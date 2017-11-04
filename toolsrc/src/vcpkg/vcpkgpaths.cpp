@@ -62,6 +62,23 @@ namespace vcpkg
         return nullopt;
     }
 
+    static std::vector<std::string> keep_data_lines(const std::string& data_blob)
+    {
+        static const std::regex DATA_LINE_REGEX(R"(<sol>::(.+?)(?=::<eol>))");
+
+        std::vector<std::string> data_lines;
+
+        const std::sregex_iterator it(data_blob.cbegin(), data_blob.cend(), DATA_LINE_REGEX);
+        const std::sregex_iterator end;
+        for (std::sregex_iterator i = it; i != end; ++i)
+        {
+            const std::smatch match = *i;
+            data_lines.push_back(match[1].str());
+        }
+
+        return data_lines;
+    }
+
     static fs::path fetch_dependency(const fs::path& scripts_folder,
                                      const std::string& tool_name,
                                      const fs::path& expected_downloaded_path,
@@ -91,7 +108,11 @@ namespace vcpkg
             Checks::exit_with_code(VCPKG_LINE_INFO, rc.exit_code);
         }
 
-        const fs::path actual_downloaded_path = Strings::trim(std::string{rc.output});
+        const std::vector<std::string> dependency_path = keep_data_lines(rc.output);
+        Checks::check_exit(
+            VCPKG_LINE_INFO, dependency_path.size() == 1, "Expected dependency path, but got %s", rc.output);
+
+        const fs::path actual_downloaded_path = Strings::trim(std::string{dependency_path.at(0)});
         std::error_code ec;
         const auto eq = fs::stdfs::equivalent(expected_downloaded_path, actual_downloaded_path, ec);
         Checks::check_exit(VCPKG_LINE_INFO,
@@ -104,10 +125,10 @@ namespace vcpkg
 
     static fs::path get_cmake_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
     {
-        static constexpr std::array<int, 3> EXPECTED_VERSION = {3, 9, 4};
+        static constexpr std::array<int, 3> EXPECTED_VERSION = {3, 9, 5};
         static const std::string VERSION_CHECK_ARGUMENTS = "--version";
 
-        const fs::path downloaded_copy = downloads_folder / "cmake-3.9.4-win32-x86" / "bin" / "cmake.exe";
+        const fs::path downloaded_copy = downloads_folder / "cmake-3.9.5-win32-x86" / "bin" / "cmake.exe";
         const std::vector<fs::path> from_path = Files::find_from_PATH("cmake");
 
         std::vector<fs::path> candidate_paths;
@@ -150,10 +171,10 @@ namespace vcpkg
 
     fs::path get_git_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
     {
-        static constexpr std::array<int, 3> EXPECTED_VERSION = {2, 14, 2};
+        static constexpr std::array<int, 3> EXPECTED_VERSION = {2, 15, 0};
         static const std::string VERSION_CHECK_ARGUMENTS = "--version";
 
-        const fs::path downloaded_copy = downloads_folder / "MinGit-2.14.2.3-32-bit" / "cmd" / "git.exe";
+        const fs::path downloaded_copy = downloads_folder / "MinGit-2.15.0-32-bit" / "cmd" / "git.exe";
         const std::vector<fs::path> from_path = Files::find_from_PATH("git");
 
         std::vector<fs::path> candidate_paths;
@@ -327,9 +348,11 @@ namespace vcpkg
         Checks::check_exit(
             VCPKG_LINE_INFO, ec_data.exit_code == 0, "Could not run script to detect Visual Studio instances");
 
-        const std::vector<std::string> instances_as_strings = Strings::split(ec_data.output, "::<eol>");
-        Checks::check_exit(
-            VCPKG_LINE_INFO, !instances_as_strings.empty(), "Could not detect any Visual Studio instances.\n");
+        const std::vector<std::string> instances_as_strings = keep_data_lines(ec_data.output);
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           !instances_as_strings.empty(),
+                           "Could not detect any Visual Studio instances. Powershell returned: %s\n",
+                           ec_data.output);
 
         std::vector<VisualStudioInstance> output;
         for (const std::string& instance_as_string : instances_as_strings)

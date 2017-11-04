@@ -10,22 +10,6 @@ namespace vcpkg
     StatusParagraphs::StatusParagraphs(std::vector<std::unique_ptr<StatusParagraph>>&& ps)
         : paragraphs(std::move(ps)){};
 
-    StatusParagraphs::const_iterator StatusParagraphs::find(const std::string& name, const Triplet& triplet) const
-    {
-        return std::find_if(begin(), end(), [&](const std::unique_ptr<StatusParagraph>& pgh) {
-            const PackageSpec& spec = pgh->package.spec;
-            return spec.name() == name && spec.triplet() == triplet;
-        });
-    }
-
-    StatusParagraphs::iterator StatusParagraphs::find(const std::string& name, const Triplet& triplet)
-    {
-        return std::find_if(begin(), end(), [&](const std::unique_ptr<StatusParagraph>& pgh) {
-            const PackageSpec& spec = pgh->package.spec;
-            return spec.name() == name && spec.triplet() == triplet;
-        });
-    }
-
     std::vector<std::unique_ptr<StatusParagraph>*> StatusParagraphs::find_all(const std::string& name,
                                                                               const Triplet& triplet)
     {
@@ -43,6 +27,16 @@ namespace vcpkg
     StatusParagraphs::iterator StatusParagraphs::find(const std::string& name,
                                                       const Triplet& triplet,
                                                       const std::string& feature)
+    {
+        return std::find_if(begin(), end(), [&](const std::unique_ptr<StatusParagraph>& pgh) {
+            const PackageSpec& spec = pgh->package.spec;
+            return spec.name() == name && spec.triplet() == triplet && pgh->package.feature == feature;
+        });
+    }
+
+    StatusParagraphs::const_iterator StatusParagraphs::find(const std::string& name,
+                                                            const Triplet& triplet,
+                                                            const std::string& feature) const
     {
         return std::find_if(begin(), end(), [&](const std::unique_ptr<StatusParagraph>& pgh) {
             const PackageSpec& spec = pgh->package.spec;

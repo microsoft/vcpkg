@@ -80,6 +80,7 @@ set(B2_OPTIONS
     -sICU_PATH="${CURRENT_INSTALLED_DIR}"
     -j$ENV{NUMBER_OF_PROCESSORS}
     --debug-configuration
+    --ignore-site-config
     --hash
     -q
 
@@ -258,7 +259,7 @@ file(
 
 # Disable Boost auto-link.
 file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp
-	"\n#define BOOST_ALL_NO_LIB\n"
+    "\n#ifndef BOOST_ALL_NO_LIB\n#define BOOST_ALL_NO_LIB\n#endif\n"
 )
 file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp
     "\n#undef BOOST_ALL_DYN_LINK\n"

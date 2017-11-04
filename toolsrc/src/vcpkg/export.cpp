@@ -4,6 +4,7 @@
 #include <vcpkg/base/util.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
+#include <vcpkg/export.h>
 #include <vcpkg/export.ifw.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
@@ -68,6 +69,8 @@ namespace vcpkg::Export
     {
         static constexpr std::array<ExportPlanType, 2> ORDER = {ExportPlanType::ALREADY_BUILT,
                                                                 ExportPlanType::PORT_AVAILABLE_BUT_NOT_BUILT};
+        static constexpr Build::BuildPackageOptions build_options = {Build::UseHeadVersion::NO,
+                                                                     Build::AllowDownloads::YES};
 
         for (const ExportPlanType plan_type : ORDER)
         {
@@ -80,7 +83,7 @@ namespace vcpkg::Export
             std::vector<const ExportPlanAction*> cont = it->second;
             std::sort(cont.begin(), cont.end(), &ExportPlanAction::compare_by_name);
             const std::string as_string = Strings::join("\n", cont, [](const ExportPlanAction* p) {
-                return Dependencies::to_output_string(p->request_type, p->spec.to_string());
+                return Dependencies::to_output_string(p->request_type, p->spec.to_string(), build_options);
             });
 
             switch (plan_type)
@@ -255,51 +258,57 @@ namespace vcpkg::Export
         std::vector<PackageSpec> specs;
     };
 
+    static const std::string OPTION_DRY_RUN = "--dry-run";
+    static const std::string OPTION_RAW = "--raw";
+    static const std::string OPTION_NUGET = "--nuget";
+    static const std::string OPTION_IFW = "--ifw";
+    static const std::string OPTION_ZIP = "--zip";
+    static const std::string OPTION_SEVEN_ZIP = "--7zip";
+    static const std::string OPTION_NUGET_ID = "--nuget-id";
+    static const std::string OPTION_NUGET_VERSION = "--nuget-version";
+    static const std::string OPTION_IFW_REPOSITORY_URL = "--ifw-repository-url";
+    static const std::string OPTION_IFW_PACKAGES_DIR_PATH = "--ifw-packages-directory-path";
+    static const std::string OPTION_IFW_REPOSITORY_DIR_PATH = "--ifw-repository-directory-path";
+    static const std::string OPTION_IFW_CONFIG_FILE_PATH = "--ifw-configuration-file-path";
+    static const std::string OPTION_IFW_INSTALLER_FILE_PATH = "--ifw-installer-file-path";
+
+    static const std::array<CommandSwitch, 6> EXPORT_SWITCHES = {{
+        {OPTION_DRY_RUN, "Do not actually export"},
+        {OPTION_RAW, "Export to an uncompressed directory"},
+        {OPTION_NUGET, "Export a NuGet package"},
+        {OPTION_IFW, "Export to an IFW-based installer"},
+        {OPTION_ZIP, "Export to a zip file"},
+        {OPTION_SEVEN_ZIP, "Export to a 7zip (.7z) file"},
+    }};
+    static const std::array<CommandSetting, 7> EXPORT_SETTINGS = {{
+        {OPTION_NUGET_ID, "Specify the id for the exported NuGet package"},
+        {OPTION_NUGET_VERSION, "Specify the version for the exported NuGet package"},
+        {OPTION_IFW_REPOSITORY_URL, "Specify the remote repository URL for the online installer"},
+        {OPTION_IFW_PACKAGES_DIR_PATH, "Specify the temporary directory path for the repacked packages"},
+        {OPTION_IFW_REPOSITORY_DIR_PATH, "Specify the directory path for the exported repository"},
+        {OPTION_IFW_CONFIG_FILE_PATH, "Specify the temporary file path for the installer configuration"},
+        {OPTION_IFW_INSTALLER_FILE_PATH, "Specify the file path for the exported installer"},
+    }};
+
+    const CommandStructure vcpkg::Export::COMMAND_STRUCTURE = {
+        Help::create_example_string("export zlib zlib:x64-windows boost --nuget"),
+        0,
+        SIZE_MAX,
+        {EXPORT_SWITCHES, EXPORT_SETTINGS},
+        nullptr,
+    };
+
     static ExportArguments handle_export_command_arguments(const VcpkgCmdArguments& args,
                                                            const Triplet& default_triplet)
     {
         ExportArguments ret;
 
-        static const std::string OPTION_DRY_RUN = "--dry-run";
-        static const std::string OPTION_RAW = "--raw";
-        static const std::string OPTION_NUGET = "--nuget";
-        static const std::string OPTION_IFW = "--ifw";
-        static const std::string OPTION_ZIP = "--zip";
-        static const std::string OPTION_SEVEN_ZIP = "--7zip";
-        static const std::string OPTION_NUGET_ID = "--nuget-id";
-        static const std::string OPTION_NUGET_VERSION = "--nuget-version";
-        static const std::string OPTION_IFW_REPOSITORY_URL = "--ifw-repository-url";
-        static const std::string OPTION_IFW_PACKAGES_DIR_PATH = "--ifw-packages-directory-path";
-        static const std::string OPTION_IFW_REPOSITORY_DIR_PATH = "--ifw-repository-directory-path";
-        static const std::string OPTION_IFW_CONFIG_FILE_PATH = "--ifw-configuration-file-path";
-        static const std::string OPTION_IFW_INSTALLER_FILE_PATH = "--ifw-installer-file-path";
+        const auto options = args.parse_arguments(COMMAND_STRUCTURE);
 
         // input sanitization
-        static const std::string EXAMPLE = Help::create_example_string("export zlib zlib:x64-windows boost --nuget");
-        args.check_min_arg_count(1, EXAMPLE);
-
         ret.specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
-            return Input::check_and_get_package_spec(arg, default_triplet, EXAMPLE);
+            return Input::check_and_get_package_spec(arg, default_triplet, COMMAND_STRUCTURE.example_text);
         });
-
-        const auto options = args.check_and_get_optional_command_arguments(
-            {
-                OPTION_DRY_RUN,
-                OPTION_RAW,
-                OPTION_NUGET,
-                OPTION_IFW,
-                OPTION_ZIP,
-                OPTION_SEVEN_ZIP,
-            },
-            {
-                OPTION_NUGET_ID,
-                OPTION_NUGET_VERSION,
-                OPTION_IFW_REPOSITORY_URL,
-                OPTION_IFW_PACKAGES_DIR_PATH,
-                OPTION_IFW_REPOSITORY_DIR_PATH,
-                OPTION_IFW_CONFIG_FILE_PATH,
-                OPTION_IFW_INSTALLER_FILE_PATH,
-            });
         ret.dry_run = options.switches.find(OPTION_DRY_RUN) != options.switches.cend();
         ret.raw = options.switches.find(OPTION_RAW) != options.switches.cend();
         ret.nuget = options.switches.find(OPTION_NUGET) != options.switches.cend();
@@ -311,7 +320,7 @@ namespace vcpkg::Export
         {
             System::println(System::Color::error,
                             "Must provide at least one export type: --raw --nuget --ifw --zip --7zip");
-            System::print(EXAMPLE);
+            System::print(COMMAND_STRUCTURE.example_text);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 

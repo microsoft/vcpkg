@@ -50,6 +50,22 @@ namespace vcpkg
         static std::vector<FeatureSpec> from_strings_and_triplet(const std::vector<std::string>& depends,
                                                                  const Triplet& t);
 
+        bool operator<(const FeatureSpec& other) const
+        {
+            if (name() < other.name()) return true;
+            if (name() > other.name()) return false;
+            if (feature() < other.feature()) return true;
+            if (feature() > other.feature()) return false;
+            return triplet() < other.triplet();
+        }
+
+        bool operator==(const FeatureSpec& other) const
+        {
+            return triplet() == other.triplet() && name() == other.name() && feature() == other.feature();
+        }
+
+        bool operator!=(const FeatureSpec& other) const { return !(*this == other); }
+
     private:
         PackageSpec m_spec;
         std::string m_feature;

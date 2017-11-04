@@ -34,9 +34,12 @@ namespace UnitTest1
 
         TEST_METHOD(create_from_arg_sequence_valued_options)
         {
+            std::array<CommandSetting, 1> settings = { {{"--a", ""}} };
+            CommandStructure cmdstruct = { "", 0, SIZE_MAX, {{}, settings }, nullptr };
+
             std::vector<std::string> t = {"--a=b", "command", "argument"};
             auto v = VcpkgCmdArguments::create_from_arg_sequence(t.data(), t.data() + t.size());
-            auto opts = v.check_and_get_optional_command_arguments({}, {"--a"});
+            auto opts = v.parse_arguments(cmdstruct);
             Assert::AreEqual("b", opts.settings["--a"].c_str());
             Assert::AreEqual(size_t{1}, v.command_arguments.size());
             Assert::AreEqual("argument", v.command_arguments[0].c_str());
@@ -45,9 +48,13 @@ namespace UnitTest1
 
         TEST_METHOD(create_from_arg_sequence_valued_options2)
         {
+            std::array<CommandSwitch, 2> switches = { {{"--a", ""}, {"--c", ""}} };
+            std::array<CommandSetting, 2> settings = { { {"--b", ""}, {"--d", ""}} };
+            CommandStructure cmdstruct = {"", 0, SIZE_MAX, {switches, settings}, nullptr};
+
             std::vector<std::string> t = {"--a", "--b=c"};
             auto v = VcpkgCmdArguments::create_from_arg_sequence(t.data(), t.data() + t.size());
-            auto opts = v.check_and_get_optional_command_arguments({"--a", "--c"}, {"--b", "--d"});
+            auto opts = v.parse_arguments(cmdstruct);
             Assert::AreEqual("c", opts.settings["--b"].c_str());
             Assert::IsTrue(opts.settings.find("--d") == opts.settings.end());
             Assert::IsTrue(opts.switches.find("--a") != opts.switches.end());
