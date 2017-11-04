@@ -1,17 +1,9 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:\path\to\current\vcpkg>
-#   TARGET_TRIPLET is the current triplet (x86-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#
-
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fftw-3.3.6-pl2)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fftw-3.3.7)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.fftw.org/fftw-3.3.6-pl2.tar.gz"
-    FILENAME "fftw-3.3.6-pl2.tar.gz"
-    SHA512 e130309856752a1555b6d151c4d0ce9eb4b2c208fff7e3e89282ca8ef6104718f865cbb5e9c4af4367b3615b69b0d50fd001a26d74fd5324ff2faabe14fe3472
+    URLS "http://www.fftw.org/fftw-3.3.7.tar.gz"
+    FILENAME "fftw-3.3.7.tar.gz"
+    SHA512 a5db54293a6d711408bed5894766437eee920be015ad27023c7a91d4581e2ff5b96e3db0201e6eaccf7b064c4d32db1a2a8fab3e6813e524b4743ddd6216ba77
 )
 
 vcpkg_extract_source_archive(${ARCHIVE})
