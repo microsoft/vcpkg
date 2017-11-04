@@ -10,9 +10,21 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        OPTIONS
+            -DCOOLPROP_SHARED_LIBRARY=ON
+            -DCOOLPROP_STATIC_LIBRARY=OFF
+    )
+else()
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        OPTIONS
+            -DCOOLPROP_SHARED_LIBRARY=OFF
+            -DCOOLPROP_STATIC_LIBRARY=ON
+    )
+endif()
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
