@@ -41,6 +41,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 else()
     string(REPLACE "#ifdef HPDF_DLL\n" "#if 0\n" _contents "${_contents}")
 endif()
+string(CONCAT _contents "#include \"hpdf_objects.h\"\n" ${_contents})
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/hpdf.h" "${_contents}")
 
 file(READ "${CURRENT_PACKAGES_DIR}/include/hpdf_types.h" _contents)
