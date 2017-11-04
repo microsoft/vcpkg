@@ -17,6 +17,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DIF97_BUILD_TARGETS=ON
+        -DIF97_FLAG=ON
 )
 
 vcpkg_install_cmake()
