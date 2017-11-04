@@ -16,6 +16,11 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         OPTIONS
             -DCOOLPROP_SHARED_LIBRARY=ON
             -DCOOLPROP_STATIC_LIBRARY=OFF
+            -DCOOLPROP_MSVC_DYNAMIC=ON
+        OPTIONS_RELEASE
+            -DCOOLPROP_RELEASE=ON
+        OPTIONS_DEBUG
+            -DCOOLPROP_DEBUG=ON
     )
 else()
     vcpkg_configure_cmake(
@@ -23,6 +28,11 @@ else()
         OPTIONS
             -DCOOLPROP_SHARED_LIBRARY=OFF
             -DCOOLPROP_STATIC_LIBRARY=ON
+            -DCOOLPROP_MSVC_STATIC=ON
+        OPTIONS_RELEASE
+            -DCOOLPROP_RELEASE=ON
+        OPTIONS_DEBUG
+            -DCOOLPROP_DEBUG=ON
     )
 endif()
 
