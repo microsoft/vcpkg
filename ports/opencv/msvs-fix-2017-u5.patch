@@ -1,0 +1,39 @@
+From 62737c777c9314ee2e4b4e595daa830ba12765e2 Mon Sep 17 00:00:00 2001
+From: Mikhail Paulyshka <me@mixaill.tk>
+Date: Sat, 4 Nov 2017 23:52:37 +0300
+Subject: [PATCH] cmake: add support for MSVS 2017 update 5
+
+---
+ cmake/OpenCVDetectCXXCompiler.cmake              | 2 +-
+ cmake/templates/OpenCVConfig.root-WIN32.cmake.in | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/cmake/OpenCVDetectCXXCompiler.cmake b/cmake/OpenCVDetectCXXCompiler.cmake
+index cfb613b..3874467 100644
+--- a/cmake/OpenCVDetectCXXCompiler.cmake
++++ b/cmake/OpenCVDetectCXXCompiler.cmake
+@@ -114,7 +114,7 @@ if(MSVC)
+     set(OpenCV_RUNTIME vc12)
+   elseif(MSVC_VERSION EQUAL 1900)
+     set(OpenCV_RUNTIME vc14)
+-  elseif(MSVC_VERSION EQUAL 1910 OR MSVC_VERSION EQUAL 1911)
++  elseif(MSVC_VERSION EQUAL 1910 OR MSVC_VERSION EQUAL 1911 OR MSVC_VERSION EQUAL 1912)
+     set(OpenCV_RUNTIME vc15)
+   else()
+     message(WARNING "OpenCV does not recognize MSVC_VERSION \"${MSVC_VERSION}\". Cannot set OpenCV_RUNTIME")
+diff --git a/cmake/templates/OpenCVConfig.root-WIN32.cmake.in b/cmake/templates/OpenCVConfig.root-WIN32.cmake.in
+index 7dc6666..846c400 100644
+--- a/cmake/templates/OpenCVConfig.root-WIN32.cmake.in
++++ b/cmake/templates/OpenCVConfig.root-WIN32.cmake.in
+@@ -78,7 +78,7 @@ if(MSVC)
+     set(OpenCV_RUNTIME vc12)
+   elseif(MSVC_VERSION EQUAL 1900)
+     set(OpenCV_RUNTIME vc14)
+-  elseif(MSVC_VERSION EQUAL 1910 OR MSVC_VERSION EQUAL 1911)
++  elseif(MSVC_VERSION EQUAL 1910 OR MSVC_VERSION EQUAL 1911 OR MSVC_VERSION EQUAL 1912)
+     set(OpenCV_RUNTIME vc15)
+   endif()
+ elseif(MINGW)
+-- 
+2.14.1.windows.1
+
