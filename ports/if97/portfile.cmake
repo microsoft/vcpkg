@@ -13,6 +13,10 @@ vcpkg_from_github(
 file(REMOVE ${SOURCE_PATH}/CMakeLists.txt)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
+file(READ ${SOURCE_PATH}/IF97.h _header_contents)
+string(CONCAT _header_contents "#include <algorithm>\n" ${_header_contents})
+file(WRITE ${SOURCE_PATH}/IF97.h _header_contents)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
