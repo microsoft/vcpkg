@@ -15,6 +15,8 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -DIF97_BUILD_TARGETS
 )
 
 vcpkg_install_cmake()
