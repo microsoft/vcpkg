@@ -1,17 +1,9 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
+    set(VCPKG_LIBRARY_LINKAGE static)
+endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/freetype-gl)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -34,28 +26,38 @@ file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindGLEW.cmake)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    #PREFER_NINJA
-    # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
+    PREFER_NINJA
     OPTIONS
         -Dfreetype-gl_BUILD_APIDOC=OFF
         -Dfreetype-gl_BUILD_DEMOS=OFF
         -Dfreetype-gl_BUILD_TESTS=OFF
+        -Dfreetype-gl_BUILD_MAKEFONT=OFF
 )
 
 # We may soon install using a modified cmake process with install target
-#vcpkg_install_cmake()
+
+# Although FreeType-GL uses CMake as its build system, the implementation
+# (*.cmake,CMakeLists.txt) doesn't provide for any type of installation.
+# Presumably, it has been used as-is, in-tree, without ever needing to install
+# itself within a larger system.
 vcpkg_build_cmake(LOGFILE_ROOT install)
 
 file(GLOB HEADER_FILES "${SOURCE_PATH}/*.h")
 file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/freetype-gl)
 
-# DLL & LIB
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/freetype-gl.lib  DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Debug/freetype-gl.lib  DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-#file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/makefont.exe  DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-#file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Debug/makefont.exe  DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+# LIB
+file(GLOB LIBS
+    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.lib"
+    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/*.lib"
+    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/Release/*.lib"
+)
+file(GLOB DEBUG_LIBS
+    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.lib"
+    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Debug/*.lib"
+    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*/Debug/*.lib"
+)
+file(INSTALL ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+file(INSTALL ${DEBUG_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 
 vcpkg_copy_pdbs()
 
