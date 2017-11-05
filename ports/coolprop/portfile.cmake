@@ -10,14 +10,14 @@ vcpkg_from_github(
 )
 
 # Patch up the file locations
-file(COPY 
+file(INSTALL 
     ${CURRENT_INSTALLED_DIR}/include/catch.hpp 
     DESTINATION ${SOURCE_PATH}/externals/Catch/single_include
 )
 
-file(COPY 
-    ${CURRENT_INSTALLED_DIR}/include/fmt/format.h
-    DESTINATION ${SOURCE_PATH}/fmt
+file(INSTALL
+    ${CURRENT_INSTALLED_DIR}/include
+    DESTINATION ${SOURCE_PATH}/externals/msgpack-c
 )
 
 file(REMOVE ${SOURCE_PATH}/CMakeLists.txt)
