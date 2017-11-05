@@ -11,7 +11,7 @@ vcpkg_from_github(
 
 # Patch up the file locations
 file(COPY 
-    ${CURRENT_PACKAGES_DIR}/include/catch.hpp 
+    ${CURRENT_INSTALLED_DIR}/include/catch.hpp 
     DESTINATION ${SOURCE_PATH}/externals/Catch/single_include
 )
 
