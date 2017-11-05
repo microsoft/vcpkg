@@ -101,19 +101,19 @@ function(vcpkg_find_acquire_program VAR)
     set(HASH 556f95f7566fe23704d136239e4cf5e2a26f939ab43b44145c91b70d031a088d553e5c21301f1242a2295dcde3143b356211f0108c68e65eef8572407618326d)
   elseif(VAR MATCHES "NINJA")
     set(PROGNAME ninja)
-    set(SUBDIR "ninja-1.7.2")
+    set(SUBDIR "ninja-1.8.2")
     set(PATHS ${DOWNLOADS}/tools/ninja/${SUBDIR})
-    set(URL "https://github.com/ninja-build/ninja/releases/download/v1.7.2/ninja-win.zip")
-    set(ARCHIVE "ninja-win.zip")
-    set(HASH cccab9281b274c564f9ad77a2115be1f19be67d7b2ee14a55d1db1b27f3b68db8e76076e4f804b61eb8e573e26a8ecc9985675a8dcf03fd7a77b7f57234f1393)
+    set(URL "https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip")
+    set(ARCHIVE "ninja-1.8.2-win.zip")
+    set(HASH 9b9ce248240665fcd6404b989f3b3c27ed9682838225e6dc9b67b551774f251e4ff8a207504f941e7c811e7a8be1945e7bcb94472a335ef15e23a0200a32e6d5)
   elseif(VAR MATCHES "MESON")
     set(PROGNAME meson)
     set(REQUIRED_INTERPRETER PYTHON3)
     set(SCRIPTNAME meson.py)
-    set(PATHS ${DOWNLOADS}/tools/meson/meson-0.40.1)
-    set(URL "https://github.com/mesonbuild/meson/archive/0.40.1.zip")
-    set(ARCHIVE "meson-0.40.1.zip")
-    set(HASH 4c1d07f32d527859f762c34de74d31d569573fc833335ab9652ed38d1f9e64b49869e826527c28a6a07cb8e594fd5c647b34aa95e626236a2707f75df0a2d435)
+    set(PATHS ${DOWNLOADS}/tools/meson/meson-0.43.0)
+    set(URL "https://github.com/mesonbuild/meson/archive/0.43.0.zip")
+    set(ARCHIVE "meson-0.43.0.zip")
+    set(HASH dde4de72eff37046731224f32aa5f4618d45bdf148cec2d1af6e25e7522ebc2b04aedc9eceed483dfa93823a0ea7ea472d0c0c9380061bf3ee2f16b87dd1425e)
   elseif(VAR MATCHES "FLEX")
     set(PROGNAME win_flex)
     set(PATHS ${DOWNLOADS}/tools/win_flex)
@@ -164,18 +164,20 @@ function(vcpkg_find_acquire_program VAR)
 
   do_find()
   if("${${VAR}}" MATCHES "-NOTFOUND")
-    file(DOWNLOAD ${URL} ${DOWNLOADS}/${ARCHIVE}
-      EXPECTED_HASH SHA512=${HASH}
-      SHOW_PROGRESS
+    vcpkg_download_distfile(ARCHIVE_PATH
+        URLS ${URL}
+        SHA512 ${HASH}
+        FILENAME ${ARCHIVE}
     )
+
     file(MAKE_DIRECTORY ${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR})
     if(DEFINED NOEXTRACT)
-      file(COPY ${DOWNLOADS}/${ARCHIVE} DESTINATION ${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR})
+      file(COPY ${ARCHIVE_PATH} DESTINATION ${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR})
     else()
       get_filename_component(ARCHIVE_EXTENSION ${ARCHIVE} EXT)
       string(TOLOWER "${ARCHIVE_EXTENSION}" ARCHIVE_EXTENSION)
       if(ARCHIVE_EXTENSION STREQUAL ".msi")
-        file(TO_NATIVE_PATH "${DOWNLOADS}/${ARCHIVE}" ARCHIVE_NATIVE_PATH)
+        file(TO_NATIVE_PATH "${ARCHIVE_PATH}" ARCHIVE_NATIVE_PATH)
         file(TO_NATIVE_PATH "${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR}" DESTINATION_NATIVE_PATH)
         execute_process(
           COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
@@ -183,7 +185,7 @@ function(vcpkg_find_acquire_program VAR)
         )
       else()
         execute_process(
-          COMMAND ${CMAKE_COMMAND} -E tar xzf ${DOWNLOADS}/${ARCHIVE}
+          COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
           WORKING_DIRECTORY ${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR}
         )
       endif()

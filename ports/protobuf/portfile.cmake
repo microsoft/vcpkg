@@ -47,12 +47,18 @@ else()
     set(protobuf_MSVC_STATIC_RUNTIME OFF)
 endif()
 
+if("zlib" IN_LIST FEATURES)
+    set(protobuf_WITH_ZLIB ON)
+else()
+    set(protobuf_WITH_ZLIB OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/cmake
     OPTIONS
         -Dprotobuf_BUILD_SHARED_LIBS=${protobuf_BUILD_SHARED_LIBS}
         -Dprotobuf_MSVC_STATIC_RUNTIME=${protobuf_MSVC_STATIC_RUNTIME}
-        -Dprotobuf_WITH_ZLIB=ON
+        -Dprotobuf_WITH_ZLIB=${protobuf_WITH_ZLIB}
         -Dprotobuf_BUILD_TESTS=OFF
         -Dprotobuf_BUILD_COMPILER=${protobuf_BUILD_COMPILER}
         -DCMAKE_INSTALL_CMAKEDIR=share/protobuf

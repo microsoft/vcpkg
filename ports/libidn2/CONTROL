@@ -1,0 +1,4 @@
+Source: libidn2
+Version: 2.0.4
+Build-Depends: libiconv
+Description: GNU Libidn is an implementation of the Stringprep, Punycode and IDNA 2003 specifications. Libidn's purpose is to encode and decode internationalized domain names.

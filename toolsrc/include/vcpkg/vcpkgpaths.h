@@ -3,15 +3,15 @@
 #include <vcpkg/binaryparagraph.h>
 #include <vcpkg/packagespec.h>
 
-#include <vcpkg/base/Lazy.h>
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/lazy.h>
 
 namespace vcpkg
 {
     struct ToolsetArchOption
     {
-        CWStringView name;
+        CStringView name;
         System::CPUArchitecture host_arch;
         System::CPUArchitecture target_arch;
     };
@@ -21,8 +21,8 @@ namespace vcpkg
         fs::path visual_studio_root_path;
         fs::path dumpbin;
         fs::path vcvarsall;
-        std::vector<std::wstring> vcvarsall_options;
-        CWStringView version;
+        std::vector<std::string> vcvarsall_options;
+        CStringView version;
         std::vector<ToolsetArchOption> supported_architectures;
     };
 
@@ -36,6 +36,7 @@ namespace vcpkg
         fs::path build_info_file_path(const PackageSpec& spec) const;
         fs::path listfile_path(const BinaryParagraph& pgh) const;
 
+        const std::vector<std::string>& get_available_triplets() const;
         bool is_valid_triplet(const Triplet& t) const;
 
         fs::path root;
@@ -74,6 +75,7 @@ namespace vcpkg
         Files::Filesystem& get_filesystem() const;
 
     private:
+        Lazy<std::vector<std::string>> available_triplets;
         Lazy<fs::path> cmake_exe;
         Lazy<fs::path> git_exe;
         Lazy<fs::path> nuget_exe;

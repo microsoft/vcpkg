@@ -17,13 +17,22 @@ namespace vcpkg::Install
 
     inline KeepGoing to_keep_going(const bool value) { return value ? KeepGoing::YES : KeepGoing::NO; }
 
-    enum class PrintSummary
+    struct SpecSummary
     {
-        NO = 0,
-        YES
+        explicit SpecSummary(const PackageSpec& spec);
+
+        PackageSpec spec;
+        Build::BuildResult result;
+        std::string timing;
     };
 
-    inline PrintSummary to_print_summary(const bool value) { return value ? PrintSummary::YES : PrintSummary::NO; }
+    struct InstallSummary
+    {
+        std::vector<SpecSummary> results;
+        std::string total_elapsed_time;
+
+        void print() const;
+    };
 
     struct InstallDir
     {
@@ -44,7 +53,6 @@ namespace vcpkg::Install
 
     Build::BuildResult perform_install_plan_action(const VcpkgPaths& paths,
                                                    const Dependencies::InstallPlanAction& action,
-                                                   const Build::BuildPackageOptions& install_plan_options,
                                                    StatusParagraphs& status_db);
 
     enum class InstallResult
@@ -53,17 +61,17 @@ namespace vcpkg::Install
         SUCCESS,
     };
 
+    std::vector<std::string> get_all_port_names(const VcpkgPaths& paths);
+
     void install_files_and_write_listfile(Files::Filesystem& fs, const fs::path& source_dir, const InstallDir& dirs);
     InstallResult install_package(const VcpkgPaths& paths,
                                   const BinaryControlFile& binary_paragraph,
                                   StatusParagraphs* status_db);
 
-    void perform_and_exit_ex(const std::vector<Dependencies::AnyAction>& action_plan,
-                             const Build::BuildPackageOptions& install_plan_options,
-                             const KeepGoing keep_going,
-                             const PrintSummary print_summary,
-                             const VcpkgPaths& paths,
-                             StatusParagraphs& status_db);
+    InstallSummary perform(const std::vector<Dependencies::AnyAction>& action_plan,
+                           const KeepGoing keep_going,
+                           const VcpkgPaths& paths,
+                           StatusParagraphs& status_db);
 
     extern const CommandStructure COMMAND_STRUCTURE;
 

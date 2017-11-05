@@ -4,8 +4,6 @@
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/strings.h>
 
-#include <Windows.h>
-
 namespace vcpkg::System
 {
     tm get_current_date_time();
@@ -18,13 +16,15 @@ namespace vcpkg::System
         std::string output;
     };
 
-    int cmd_execute_clean(const CWStringView cmd_line);
+    int cmd_execute_clean(const CStringView cmd_line);
 
-    int cmd_execute(const CWStringView cmd_line);
+    int cmd_execute(const CStringView cmd_line);
 
-    ExitCodeAndOutput cmd_execute_and_capture_output(const CWStringView cmd_line);
+    ExitCodeAndOutput cmd_execute_and_capture_output(const CStringView cmd_line);
 
-    std::wstring create_powershell_script_cmd(const fs::path& script_path, const CWStringView args = Strings::WEMPTY);
+    std::string powershell_execute_and_capture_output(const std::string& title,
+                                                      const fs::path& script_path,
+                                                      const CStringView args = "");
 
     enum class Color
     {
@@ -40,32 +40,32 @@ namespace vcpkg::System
     void println(const Color c, const CStringView message);
 
     template<class Arg1, class... Args>
-    void print(const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
+    void print(const char* message_template, const Arg1& message_arg1, const Args&... message_args)
     {
-        return System::print(Strings::format(messageTemplate, messageArg1, messageArgs...));
+        return System::print(Strings::format(message_template, message_arg1, message_args...));
     }
 
     template<class Arg1, class... Args>
-    void print(const Color c, const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
+    void print(const Color c, const char* message_template, const Arg1& message_arg1, const Args&... message_args)
     {
-        return System::print(c, Strings::format(messageTemplate, messageArg1, messageArgs...));
+        return System::print(c, Strings::format(message_template, message_arg1, message_args...));
     }
 
     template<class Arg1, class... Args>
-    void println(const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
+    void println(const char* message_template, const Arg1& message_arg1, const Args&... message_args)
     {
-        return System::println(Strings::format(messageTemplate, messageArg1, messageArgs...));
+        return System::println(Strings::format(message_template, message_arg1, message_args...));
     }
 
     template<class Arg1, class... Args>
-    void println(const Color c, const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
+    void println(const Color c, const char* message_template, const Arg1& message_arg1, const Args&... message_args)
     {
-        return System::println(c, Strings::format(messageTemplate, messageArg1, messageArgs...));
+        return System::println(c, Strings::format(message_template, message_arg1, message_args...));
     }
 
-    Optional<std::wstring> get_environment_variable(const CWStringView varname) noexcept;
+    Optional<std::string> get_environment_variable(const CStringView varname) noexcept;
 
-    Optional<std::wstring> get_registry_string(HKEY base, const CWStringView subkey, const CWStringView valuename);
+    Optional<std::string> get_registry_string(void* base_hkey, const CStringView subkey, const CStringView valuename);
 
     enum class CPUArchitecture
     {
@@ -75,7 +75,7 @@ namespace vcpkg::System
         ARM64,
     };
 
-    Optional<CPUArchitecture> to_cpu_architecture(CStringView arch);
+    Optional<CPUArchitecture> to_cpu_architecture(const CStringView& arch);
 
     CPUArchitecture get_host_processor();
 
@@ -92,17 +92,17 @@ namespace vcpkg::Debug
     void println(const System::Color c, const CStringView message);
 
     template<class Arg1, class... Args>
-    void println(const char* messageTemplate, const Arg1& messageArg1, const Args&... messageArgs)
+    void println(const char* message_template, const Arg1& message_arg1, const Args&... message_args)
     {
-        return Debug::println(Strings::format(messageTemplate, messageArg1, messageArgs...));
+        return Debug::println(Strings::format(message_template, message_arg1, message_args...));
     }
 
     template<class Arg1, class... Args>
     void println(const System::Color c,
-                 const char* messageTemplate,
-                 const Arg1& messageArg1,
-                 const Args&... messageArgs)
+                 const char* message_template,
+                 const Arg1& message_arg1,
+                 const Args&... message_args)
     {
-        return Debug::println(c, Strings::format(messageTemplate, messageArg1, messageArgs...));
+        return Debug::println(c, Strings::format(message_template, message_arg1, message_args...));
     }
 }

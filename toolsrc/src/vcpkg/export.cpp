@@ -4,6 +4,7 @@
 #include <vcpkg/base/util.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
+#include <vcpkg/export.h>
 #include <vcpkg/export.ifw.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
@@ -44,12 +45,12 @@ namespace vcpkg::Export
 </package>
 )";
 
-        std::string nuspec_file_content = std::regex_replace(CONTENT_TEMPLATE, std::regex("@NUGET_ID@"), nuget_id);
-        nuspec_file_content = std::regex_replace(nuspec_file_content, std::regex("@VERSION@"), nupkg_version);
+        std::string nuspec_file_content = Strings::replace_all(CONTENT_TEMPLATE, "@NUGET_ID@", nuget_id);
+        nuspec_file_content = Strings::replace_all(std::move(nuspec_file_content), "@VERSION@", nupkg_version);
         nuspec_file_content =
-            std::regex_replace(nuspec_file_content, std::regex("@RAW_EXPORTED_DIR@"), raw_exported_dir);
+            Strings::replace_all(std::move(nuspec_file_content), "@RAW_EXPORTED_DIR@", raw_exported_dir);
         nuspec_file_content =
-            std::regex_replace(nuspec_file_content, std::regex("@TARGETS_REDIRECT_PATH@"), targets_redirect_path);
+            Strings::replace_all(std::move(nuspec_file_content), "@TARGETS_REDIRECT_PATH@", targets_redirect_path);
         return nuspec_file_content;
     }
 
@@ -68,6 +69,8 @@ namespace vcpkg::Export
     {
         static constexpr std::array<ExportPlanType, 2> ORDER = {ExportPlanType::ALREADY_BUILT,
                                                                 ExportPlanType::PORT_AVAILABLE_BUT_NOT_BUILT};
+        static constexpr Build::BuildPackageOptions build_options = {Build::UseHeadVersion::NO,
+                                                                     Build::AllowDownloads::YES};
 
         for (const ExportPlanType plan_type : ORDER)
         {
@@ -80,7 +83,7 @@ namespace vcpkg::Export
             std::vector<const ExportPlanAction*> cont = it->second;
             std::sort(cont.begin(), cont.end(), &ExportPlanAction::compare_by_name);
             const std::string as_string = Strings::join("\n", cont, [](const ExportPlanAction* p) {
-                return Dependencies::to_output_string(p->request_type, p->spec.to_string());
+                return Dependencies::to_output_string(p->request_type, p->spec.to_string(), build_options);
             });
 
             switch (plan_type)
@@ -137,11 +140,10 @@ namespace vcpkg::Export
         fs.write_contents(nuspec_file_path, nuspec_file_content);
 
         // -NoDefaultExcludes is needed for ".vcpkg-root"
-        const std::wstring cmd_line =
-            Strings::wformat(LR"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes > nul)",
-                             nuget_exe.native(),
-                             output_dir.native(),
-                             nuspec_file_path.native());
+        const auto cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes > nul)",
+                                              nuget_exe.u8string(),
+                                              output_dir.u8string(),
+                                              nuspec_file_path.u8string());
 
         const int exit_code = System::cmd_execute_clean(cmd_line);
         Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: NuGet package creation failed");
@@ -160,25 +162,25 @@ namespace vcpkg::Export
 
         constexpr ArchiveFormat() = delete;
 
-        constexpr ArchiveFormat(BackingEnum backing_enum, const wchar_t* extension, const wchar_t* cmake_option)
+        constexpr ArchiveFormat(BackingEnum backing_enum, const char* extension, const char* cmake_option)
             : backing_enum(backing_enum), m_extension(extension), m_cmake_option(cmake_option)
         {
         }
 
         constexpr operator BackingEnum() const { return backing_enum; }
-        constexpr CWStringView extension() const { return this->m_extension; }
-        constexpr CWStringView cmake_option() const { return this->m_cmake_option; }
+        constexpr CStringView extension() const { return this->m_extension; }
+        constexpr CStringView cmake_option() const { return this->m_cmake_option; }
 
     private:
         BackingEnum backing_enum;
-        const wchar_t* m_extension;
-        const wchar_t* m_cmake_option;
+        const char* m_extension;
+        const char* m_cmake_option;
     };
 
     namespace ArchiveFormatC
     {
-        constexpr const ArchiveFormat ZIP(ArchiveFormat::BackingEnum::ZIP, L"zip", L"zip");
-        constexpr const ArchiveFormat SEVEN_ZIP(ArchiveFormat::BackingEnum::SEVEN_ZIP, L"7z", L"7zip");
+        constexpr const ArchiveFormat ZIP(ArchiveFormat::BackingEnum::ZIP, "zip", "zip");
+        constexpr const ArchiveFormat SEVEN_ZIP(ArchiveFormat::BackingEnum::SEVEN_ZIP, "7z", "7zip");
     }
 
     static fs::path do_archive_export(const VcpkgPaths& paths,
@@ -188,17 +190,17 @@ namespace vcpkg::Export
     {
         const fs::path& cmake_exe = paths.get_cmake_exe();
 
-        const std::wstring exported_dir_filename = raw_exported_dir.filename().native();
-        const std::wstring exported_archive_filename =
-            Strings::wformat(L"%s.%s", exported_dir_filename, format.extension());
+        const std::string exported_dir_filename = raw_exported_dir.filename().u8string();
+        const std::string exported_archive_filename =
+            Strings::format("%s.%s", exported_dir_filename, format.extension());
         const fs::path exported_archive_path = (output_dir / exported_archive_filename);
 
         // -NoDefaultExcludes is needed for ".vcpkg-root"
-        const std::wstring cmd_line = Strings::wformat(LR"("%s" -E tar "cf" "%s" --format=%s -- "%s")",
-                                                       cmake_exe.native(),
-                                                       exported_archive_path.native(),
-                                                       format.cmake_option(),
-                                                       raw_exported_dir.native());
+        const auto cmd_line = Strings::format(R"("%s" -E tar "cf" "%s" --format=%s -- "%s")",
+                                              cmake_exe.u8string(),
+                                              exported_archive_path.u8string(),
+                                              format.cmake_option(),
+                                              raw_exported_dir.u8string());
 
         const int exit_code = System::cmd_execute_clean(cmd_line);
         Checks::check_exit(
@@ -256,51 +258,57 @@ namespace vcpkg::Export
         std::vector<PackageSpec> specs;
     };
 
+    static const std::string OPTION_DRY_RUN = "--dry-run";
+    static const std::string OPTION_RAW = "--raw";
+    static const std::string OPTION_NUGET = "--nuget";
+    static const std::string OPTION_IFW = "--ifw";
+    static const std::string OPTION_ZIP = "--zip";
+    static const std::string OPTION_SEVEN_ZIP = "--7zip";
+    static const std::string OPTION_NUGET_ID = "--nuget-id";
+    static const std::string OPTION_NUGET_VERSION = "--nuget-version";
+    static const std::string OPTION_IFW_REPOSITORY_URL = "--ifw-repository-url";
+    static const std::string OPTION_IFW_PACKAGES_DIR_PATH = "--ifw-packages-directory-path";
+    static const std::string OPTION_IFW_REPOSITORY_DIR_PATH = "--ifw-repository-directory-path";
+    static const std::string OPTION_IFW_CONFIG_FILE_PATH = "--ifw-configuration-file-path";
+    static const std::string OPTION_IFW_INSTALLER_FILE_PATH = "--ifw-installer-file-path";
+
+    static const std::array<CommandSwitch, 6> EXPORT_SWITCHES = {{
+        {OPTION_DRY_RUN, "Do not actually export"},
+        {OPTION_RAW, "Export to an uncompressed directory"},
+        {OPTION_NUGET, "Export a NuGet package"},
+        {OPTION_IFW, "Export to an IFW-based installer"},
+        {OPTION_ZIP, "Export to a zip file"},
+        {OPTION_SEVEN_ZIP, "Export to a 7zip (.7z) file"},
+    }};
+    static const std::array<CommandSetting, 7> EXPORT_SETTINGS = {{
+        {OPTION_NUGET_ID, "Specify the id for the exported NuGet package"},
+        {OPTION_NUGET_VERSION, "Specify the version for the exported NuGet package"},
+        {OPTION_IFW_REPOSITORY_URL, "Specify the remote repository URL for the online installer"},
+        {OPTION_IFW_PACKAGES_DIR_PATH, "Specify the temporary directory path for the repacked packages"},
+        {OPTION_IFW_REPOSITORY_DIR_PATH, "Specify the directory path for the exported repository"},
+        {OPTION_IFW_CONFIG_FILE_PATH, "Specify the temporary file path for the installer configuration"},
+        {OPTION_IFW_INSTALLER_FILE_PATH, "Specify the file path for the exported installer"},
+    }};
+
+    const CommandStructure vcpkg::Export::COMMAND_STRUCTURE = {
+        Help::create_example_string("export zlib zlib:x64-windows boost --nuget"),
+        0,
+        SIZE_MAX,
+        {EXPORT_SWITCHES, EXPORT_SETTINGS},
+        nullptr,
+    };
+
     static ExportArguments handle_export_command_arguments(const VcpkgCmdArguments& args,
                                                            const Triplet& default_triplet)
     {
         ExportArguments ret;
 
-        static const std::string OPTION_DRY_RUN = "--dry-run";
-        static const std::string OPTION_RAW = "--raw";
-        static const std::string OPTION_NUGET = "--nuget";
-        static const std::string OPTION_IFW = "--ifw";
-        static const std::string OPTION_ZIP = "--zip";
-        static const std::string OPTION_SEVEN_ZIP = "--7zip";
-        static const std::string OPTION_NUGET_ID = "--nuget-id";
-        static const std::string OPTION_NUGET_VERSION = "--nuget-version";
-        static const std::string OPTION_IFW_REPOSITORY_URL = "--ifw-repository-url";
-        static const std::string OPTION_IFW_PACKAGES_DIR_PATH = "--ifw-packages-directory-path";
-        static const std::string OPTION_IFW_REPOSITORY_DIR_PATH = "--ifw-repository-directory-path";
-        static const std::string OPTION_IFW_CONFIG_FILE_PATH = "--ifw-configuration-file-path";
-        static const std::string OPTION_IFW_INSTALLER_FILE_PATH = "--ifw-installer-file-path";
+        const auto options = args.parse_arguments(COMMAND_STRUCTURE);
 
         // input sanitization
-        static const std::string EXAMPLE = Help::create_example_string("export zlib zlib:x64-windows boost --nuget");
-        args.check_min_arg_count(1, EXAMPLE);
-
         ret.specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
-            return Input::check_and_get_package_spec(arg, default_triplet, EXAMPLE);
+            return Input::check_and_get_package_spec(arg, default_triplet, COMMAND_STRUCTURE.example_text);
         });
-
-        const auto options = args.check_and_get_optional_command_arguments(
-            {
-                OPTION_DRY_RUN,
-                OPTION_RAW,
-                OPTION_NUGET,
-                OPTION_IFW,
-                OPTION_ZIP,
-                OPTION_SEVEN_ZIP,
-            },
-            {
-                OPTION_NUGET_ID,
-                OPTION_NUGET_VERSION,
-                OPTION_IFW_REPOSITORY_URL,
-                OPTION_IFW_PACKAGES_DIR_PATH,
-                OPTION_IFW_REPOSITORY_DIR_PATH,
-                OPTION_IFW_CONFIG_FILE_PATH,
-                OPTION_IFW_INSTALLER_FILE_PATH,
-            });
         ret.dry_run = options.switches.find(OPTION_DRY_RUN) != options.switches.cend();
         ret.raw = options.switches.find(OPTION_RAW) != options.switches.cend();
         ret.nuget = options.switches.find(OPTION_NUGET) != options.switches.cend();
@@ -312,7 +320,7 @@ namespace vcpkg::Export
         {
             System::println(System::Color::error,
                             "Must provide at least one export type: --raw --nuget --ifw --zip --7zip");
-            System::print(EXAMPLE);
+            System::print(COMMAND_STRUCTURE.example_text);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
@@ -361,13 +369,13 @@ namespace vcpkg::Export
     static void print_next_step_info(const fs::path& prefix)
     {
         const fs::path cmake_toolchain = prefix / "scripts" / "buildsystems" / "vcpkg.cmake";
-        const CMakeVariable cmake_variable = CMakeVariable(L"CMAKE_TOOLCHAIN_FILE", cmake_toolchain.generic_string());
+        const CMakeVariable cmake_variable = CMakeVariable("CMAKE_TOOLCHAIN_FILE", cmake_toolchain.generic_string());
         System::println("\n"
                         "To use the exported libraries in CMake projects use:"
                         "\n"
                         "    %s"
                         "\n",
-                        Strings::to_utf8(cmake_variable.s));
+                        cmake_variable.s);
     };
 
     static void handle_raw_based_export(Span<const ExportPlanAction> export_plan,

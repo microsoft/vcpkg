@@ -1,5 +1,23 @@
 Source: opencv
-Version: 3.3.0-4
-# Optional: Add in vtk to build with VTK and cuda to build with CUDA
-Build-Depends: zlib, libpng, libjpeg-turbo, tiff, protobuf (windows), ffmpeg
+Version: 3.3.1-7
+Build-Depends: zlib, libpng, libjpeg-turbo, tiff, protobuf (windows)
 Description: computer vision library
+
+Feature: sfm
+Build-Depends: eigen3, glog, gflags
+Description: opencv_sfm module
+
+Feature: cuda
+Build-Depends: cuda
+Description: CUDA support for opencv
+
+Feature: ffmpeg
+Description: prebuilt ffmpeg support for opencv
+
+Feature: qt
+Build-Depends: qt5
+Description: Qt GUI support for opencv
+
+Feature: vtk
+Build-Depends: vtk
+Description: vtk support for opencv

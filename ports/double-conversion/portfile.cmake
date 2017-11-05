@@ -23,28 +23,31 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Rename exported target files into something vcpkg_fixup_cmake_targets expects
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/CMake/double-conversionLibraryDepends-debug.cmake
-            ${CURRENT_PACKAGES_DIR}/debug/CMake/double-conversionTargets-debug.cmake)
-file(RENAME ${CURRENT_PACKAGES_DIR}/CMake/double-conversionLibraryDepends-release.cmake
-            ${CURRENT_PACKAGES_DIR}/CMake/double-conversionTargets-release.cmake)
-file(RENAME ${CURRENT_PACKAGES_DIR}/CMake/double-conversionLibraryDepends.cmake
-            ${CURRENT_PACKAGES_DIR}/CMake/double-conversionTargets.cmake)
+if(NOT VCPKG_USE_HEAD_VERSION)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/CMake/double-conversionLibraryDepends-debug.cmake
+                ${CURRENT_PACKAGES_DIR}/debug/CMake/double-conversionTargets-debug.cmake)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/CMake/double-conversionLibraryDepends-release.cmake
+                ${CURRENT_PACKAGES_DIR}/CMake/double-conversionTargets-release.cmake)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/CMake/double-conversionLibraryDepends.cmake
+                ${CURRENT_PACKAGES_DIR}/CMake/double-conversionTargets.cmake)
 
-file(READ ${CURRENT_PACKAGES_DIR}/CMake/double-conversionTargets.cmake TARGETS_FILE)
-string(REPLACE "double-conversionLibraryDepends" "double-conversionTargets" TARGETS_FILE "${TARGETS_FILE}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/CMake/double-conversionTargets.cmake "${TARGETS_FILE}")
+    file(READ ${CURRENT_PACKAGES_DIR}/CMake/double-conversionTargets.cmake TARGETS_FILE)
+    string(REPLACE "double-conversionLibraryDepends" "double-conversionTargets" TARGETS_FILE "${TARGETS_FILE}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/CMake/double-conversionTargets.cmake "${TARGETS_FILE}")
 
-# Remove hardcoded paths from config file
-file(READ ${CURRENT_PACKAGES_DIR}/CMake/double-conversionConfig.cmake CONFIG_FILE)
-string(REPLACE "${CURRENT_PACKAGES_DIR}/lib/cmake/double-conversion/double-conversionLibraryDepends.cmake"
-               "\${double-conversion_CMAKE_DIR}/double-conversionTargets.cmake" CONFIG_FILE "${CONFIG_FILE}")
-string(REPLACE "${CURRENT_PACKAGES_DIR}"
-               "\${double-conversion_CMAKE_DIR}/../.." CONFIG_FILE "${CONFIG_FILE}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/CMake/double-conversionConfig.cmake "${CONFIG_FILE}")
+    # Remove hardcoded paths from config file
+    file(READ ${CURRENT_PACKAGES_DIR}/CMake/double-conversionConfig.cmake CONFIG_FILE)
+    string(REPLACE "${CURRENT_PACKAGES_DIR}/lib/cmake/double-conversion/double-conversionLibraryDepends.cmake"
+                "\${double-conversion_CMAKE_DIR}/double-conversionTargets.cmake" CONFIG_FILE "${CONFIG_FILE}")
+    string(REPLACE "${CURRENT_PACKAGES_DIR}"
+                "\${double-conversion_CMAKE_DIR}/../.." CONFIG_FILE "${CONFIG_FILE}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/CMake/double-conversionConfig.cmake "${CONFIG_FILE}")
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+else()
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/double-conversion)
+endif()
 
 vcpkg_copy_pdbs()
 

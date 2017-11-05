@@ -1,18 +1,13 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:\path\to\current\vcpkg>
-#   TARGET_TRIPLET is the current triplet (x86-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/dlib-19.4)
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://dlib.net/files/dlib-19.4.tar.bz2"
-    FILENAME "dlib-19.4.tar.bz2"
-    SHA512 c5ae22c507b57a13d880d79e9671730829114d0276508b0a41b373d3abae9057d960fce84fafe1be468d943910853baaa70c88f2516e20a0c41f3895bf217f7b
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO davisking/dlib
+    REF v19.7
+    SHA512 a3877066e04a411d96e910f4229c60a86971a9290e840aa4a5b2f0b102e9b8c37bfede259b80b71ba066d21eb0aa2565808e51d0eab6397ff5fd2bac60dcedd5
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
 file(REMOVE_RECURSE ${SOURCE_PATH}/dlib/external/libjpeg)
 file(REMOVE_RECURSE ${SOURCE_PATH}/dlib/external/libpng)
 file(REMOVE_RECURSE ${SOURCE_PATH}/dlib/external/zlib)
@@ -43,7 +38,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/dlib)
 
 # There is no way to suppress installation of the headers and resource files in debug build.
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -53,7 +48,10 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/all)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/test)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/travis) 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_neon)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_cudnn)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_cuda)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_cpp11)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/external/libpng/arm)
 
 # Dlib encodes debug/release in its config.h. Patch it to respond to the NDEBUG macro instead.
@@ -62,7 +60,14 @@ string(REPLACE "/* #undef ENABLE_ASSERTS */" "#if !defined(NDEBUG)\n#define ENAB
 string(REPLACE "#define DLIB_DISABLE_ASSERTS" "#if defined(NDEBUG)\n#define DLIB_DISABLE_ASSERTS\n#endif" _contents ${_contents})
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/dlib/config.h ${_contents})
 
+file(READ ${CURRENT_PACKAGES_DIR}/share/dlib/dlib.cmake _contents)
+string(REPLACE
+    "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
+    "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)"
+    _contents "${_contents}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/dlib/dlib.cmake "${_contents}")
+
 # Handle copyright
-file(COPY ${CURRENT_PACKAGES_DIR}/share/doc/dlib/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/dlib)
+file(COPY ${SOURCE_PATH}/dlib/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/dlib)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/dlib/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/dlib/COPYRIGHT)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)

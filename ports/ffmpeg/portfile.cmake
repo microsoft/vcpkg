@@ -11,6 +11,10 @@ vcpkg_download_distfile(ARCHIVE
     SHA512  1cc63bf73356f4e618c0d3572a216bdf5689f10deff56b4262f6d740b0bee5a4b3eac234f45fca3d4d2da77903a507b4fba725b76d2d2070f31b6dae9e7a2dab
 )
 vcpkg_extract_source_archive(${ARCHIVE})
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/detect-openssl.patch
+)
 
 vcpkg_find_acquire_program(YASM)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
@@ -18,6 +22,8 @@ set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
 
 vcpkg_acquire_msys(MSYS_ROOT)
 set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
+set(ENV{LIB} "${CURRENT_INSTALLED_DIR}/lib;$ENV{LIB}")
 
 set(_csc_PROJECT_PATH ffmpeg)
 
@@ -25,8 +31,14 @@ file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg ${CURRENT_BU
 
 set(OPTIONS "--disable-ffmpeg --disable-ffprobe --disable-doc --enable-debug")
 set(OPTIONS "${OPTIONS} --enable-runtime-cpudetect")
+if("openssl" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-openssl")
+else()
+    set(OPTIONS "${OPTIONS} --disable-openssl")
+endif()
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
     set(OPTIONS "${OPTIONS} --disable-programs --enable-cross-compile --target-os=win32 --arch=${VCPKG_TARGET_ARCHITECTURE}")
     set(OPTIONS "${OPTIONS} --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00")
 
@@ -53,6 +65,8 @@ endif()
 
 set(OPTIONS_DEBUG "") # Note: --disable-optimizations can't be used due to http://ffmpeg.org/pipermail/libav-user/2013-March/003945.html
 set(OPTIONS_RELEASE "")
+
+set(OPTIONS "${OPTIONS} --extra-cflags=-DHAVE_UNISTD_H=0")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(OPTIONS "${OPTIONS} --disable-static --enable-shared")

@@ -10,40 +10,6 @@
 
 namespace vcpkg::Commands::Autocomplete
 {
-    std::vector<std::string> autocomplete_install(
-        const std::vector<std::unique_ptr<SourceControlFile>>& source_paragraphs, const std::string& start_with)
-    {
-        std::vector<std::string> results;
-
-        for (const auto& source_control_file : source_paragraphs)
-        {
-            auto&& sp = *source_control_file->core_paragraph;
-
-            if (Strings::case_insensitive_ascii_starts_with(sp.name, start_with))
-            {
-                results.push_back(sp.name);
-            }
-        }
-        return results;
-    }
-
-    std::vector<std::string> autocomplete_remove(std::vector<StatusParagraph*> installed_packages,
-                                                 const std::string& start_with)
-    {
-        std::vector<std::string> results;
-
-        for (const auto& installed_package : installed_packages)
-        {
-            const auto sp = installed_package->package.displayname();
-
-            if (Strings::case_insensitive_ascii_starts_with(sp, start_with))
-            {
-                results.push_back(sp);
-            }
-        }
-        return results;
-    }
-
     [[noreturn]] static void output_sorted_results_and_exit(const LineInfo& line_info,
                                                             std::vector<std::string>&& results)
     {
@@ -51,6 +17,13 @@ namespace vcpkg::Commands::Autocomplete
         System::println(Strings::join("\n", sorted_results));
 
         Checks::exit_success(line_info);
+    }
+
+    std::vector<std::string> combine_port_with_triplets(const std::string& port,
+                                                        const std::vector<std::string>& triplets)
+    {
+        return Util::fmap(triplets,
+                          [&](const std::string& triplet) { return Strings::format("%s:%s", port, triplet); });
     }
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
@@ -66,7 +39,8 @@ namespace vcpkg::Commands::Autocomplete
         {
             const std::string requested_command = match[1].str();
 
-            std::vector<std::string> valid_commands = {
+            // First try public commands
+            std::vector<std::string> public_commands = {
                 "install",
                 "search",
                 "remove",
@@ -84,43 +58,108 @@ namespace vcpkg::Commands::Autocomplete
                 "contact",
             };
 
-            Util::unstable_keep_if(valid_commands, [&](const std::string& s) {
+            Util::unstable_keep_if(public_commands, [&](const std::string& s) {
                 return Strings::case_insensitive_ascii_starts_with(s, requested_command);
             });
 
-            output_sorted_results_and_exit(VCPKG_LINE_INFO, std::move(valid_commands));
+            if (!public_commands.empty())
+            {
+                output_sorted_results_and_exit(VCPKG_LINE_INFO, std::move(public_commands));
+            }
+
+            // If no public commands match, try private commands
+            std::vector<std::string> private_commands = {
+                "build",
+                "buildexternal",
+                "ci",
+                "depend-info",
+                "env",
+                "import",
+                "portsdiff",
+            };
+
+            Util::unstable_keep_if(private_commands, [&](const std::string& s) {
+                return Strings::case_insensitive_ascii_starts_with(s, requested_command);
+            });
+
+            output_sorted_results_and_exit(VCPKG_LINE_INFO, std::move(private_commands));
+        }
+
+        // Handles vcpkg install package:<triplet>
+        if (std::regex_match(to_autocomplete, match, std::regex{R"###(^install(.*|)\s([^:]+):(\S*)$)###"}))
+        {
+            const auto port_name = match[2].str();
+            const auto triplet_prefix = match[3].str();
+
+            auto maybe_port = Paragraphs::try_load_port(paths.get_filesystem(), paths.port_dir(port_name));
+            if (maybe_port.error())
+            {
+                Checks::exit_success(VCPKG_LINE_INFO);
+            }
+
+            std::vector<std::string> triplets = paths.get_available_triplets();
+            Util::unstable_keep_if(triplets, [&](const std::string& s) {
+                return Strings::case_insensitive_ascii_starts_with(s, triplet_prefix);
+            });
+
+            auto result = combine_port_with_triplets(port_name, triplets);
+
+            output_sorted_results_and_exit(VCPKG_LINE_INFO, std::move(result));
         }
 
         struct CommandEntry
         {
+            constexpr CommandEntry(const CStringView& name, const CStringView& regex, const CommandStructure& structure)
+                : name(name), regex(regex), structure(structure)
+            {
+            }
+
+            CStringView name;
             CStringView regex;
             const CommandStructure& structure;
         };
-        static constexpr CommandEntry commands[] = {
-            {R"###(^install\s(.*\s|)(\S*)$)###", Install::COMMAND_STRUCTURE},
-            {R"###(^edit\s(.*\s|)(\S*)$)###", Edit::COMMAND_STRUCTURE},
-            {R"###(^remove\s(.*\s|)(\S*)$)###", Remove::COMMAND_STRUCTURE},
+
+        static constexpr CommandEntry COMMANDS[] = {
+            CommandEntry{"install", R"###(^install\s(.*\s|)(\S*)$)###", Install::COMMAND_STRUCTURE},
+            CommandEntry{"edit", R"###(^edit\s(.*\s|)(\S*)$)###", Edit::COMMAND_STRUCTURE},
+            CommandEntry{"remove", R"###(^remove\s(.*\s|)(\S*)$)###", Remove::COMMAND_STRUCTURE},
+            CommandEntry{"integrate", R"###(^integrate(\s+)(\S*)$)###", Integrate::COMMAND_STRUCTURE},
         };
 
-        for (auto&& command : commands)
+        for (auto&& command : COMMANDS)
         {
             if (std::regex_match(to_autocomplete, match, std::regex{command.regex.c_str()}))
             {
-                auto prefix = match[2].str();
-                std::vector<std::string> v;
-                if (Strings::case_insensitive_ascii_starts_with(prefix, "-"))
+                const auto prefix = match[2].str();
+                std::vector<std::string> results;
+
+                const bool is_option = Strings::case_insensitive_ascii_starts_with(prefix, "-");
+                if (is_option)
                 {
-                    v = Util::fmap(command.structure.switches, [](auto&& s) -> std::string { return s; });
+                    results =
+                        Util::fmap(command.structure.options.switches, [](const CommandSwitch& s) { return s.name; });
+
+                    auto settings = Util::fmap(command.structure.options.settings, [](auto&& s) { return s.name; });
+                    results.insert(results.end(), settings.begin(), settings.end());
                 }
                 else
                 {
-                    v = command.structure.valid_arguments(paths);
+                    if (command.structure.valid_arguments != nullptr)
+                        results = command.structure.valid_arguments(paths);
                 }
 
-                Util::unstable_keep_if(
-                    v, [&](const std::string& s) { return Strings::case_insensitive_ascii_starts_with(s, prefix); });
+                Util::unstable_keep_if(results, [&](const std::string& s) {
+                    return Strings::case_insensitive_ascii_starts_with(s, prefix);
+                });
 
-                output_sorted_results_and_exit(VCPKG_LINE_INFO, std::move(v));
+                if (command.name == "install" && results.size() == 1 && !is_option)
+                {
+                    const auto port_at_each_triplet =
+                        combine_port_with_triplets(results[0], paths.get_available_triplets());
+                    Util::Vectors::concatenate(&results, port_at_each_triplet);
+                }
+
+                output_sorted_results_and_exit(VCPKG_LINE_INFO, std::move(results));
             }
         }
 

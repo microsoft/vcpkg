@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <map>
 #include <mutex>
 #include <utility>
@@ -7,8 +8,29 @@
 
 namespace vcpkg::Util
 {
+    template<class Container>
+    using ElementT = std::remove_reference_t<decltype(*begin(std::declval<Container>()))>;
+
+    namespace Vectors
+    {
+        template<class Container, class T = ElementT<Container>>
+        void concatenate(std::vector<T>* augend, const Container& addend)
+        {
+            augend->insert(augend->end(), addend.begin(), addend.end());
+        }
+    }
+
+    namespace Sets
+    {
+        template<class Container, class T = ElementT<Container>>
+        bool contains(const Container& container, const T& item)
+        {
+            return container.find(item) != container.cend();
+        }
+    }
+
     template<class Cont, class Func>
-    using FmapOut = decltype(std::declval<Func>()(*begin(std::declval<Cont>())));
+    using FmapOut = decltype(std::declval<Func&>()(*begin(std::declval<Cont&>())));
 
     template<class Cont, class Func, class Out = FmapOut<Cont, Func>>
     std::vector<Out> fmap(Cont&& xs, Func&& f)
@@ -71,9 +93,6 @@ namespace vcpkg::Util
         return std::find_if(begin(cont), end(cont), pred);
     }
 
-    template<class Container>
-    using ElementT = std::remove_reference_t<decltype(*begin(std::declval<Container>()))>;
-
     template<class Container, class T = ElementT<Container>>
     std::vector<T*> element_pointers(Container&& cont)
     {
@@ -89,13 +108,29 @@ namespace vcpkg::Util
     }
 
     template<class K, class V, class Container, class Func>
-    void group_by(const Container& cont, _Inout_ std::map<K, std::vector<const V*>>* output, Func&& f)
+    void group_by(const Container& cont, std::map<K, std::vector<const V*>>* output, Func&& f)
     {
         for (const V& element : cont)
         {
             K key = f(element);
             (*output)[key].push_back(&element);
         }
+    }
+
+    template<class Range>
+    void sort(Range& cont)
+    {
+        using std::begin;
+        using std::end;
+        std::sort(begin(cont), end(cont));
+    }
+
+    template<class Range1, class Range2>
+    bool all_equal(const Range1& r1, const Range2& r2)
+    {
+        using std::begin;
+        using std::end;
+        return std::equal(begin(r1), end(r1), begin(r2), end(r2));
     }
 
     template<class AssocContainer, class K = std::decay_t<decltype(begin(std::declval<AssocContainer>())->first)>>

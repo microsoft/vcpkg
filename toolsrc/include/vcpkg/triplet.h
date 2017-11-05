@@ -24,6 +24,7 @@ namespace vcpkg
         size_t hash_code() const;
 
         bool operator==(const Triplet& other) const;
+        bool operator<(const Triplet& other) const { return canonical_name() < other.canonical_name(); }
 
     private:
         static const TripletInstance DEFAULT_INSTANCE;
@@ -36,8 +37,11 @@ namespace vcpkg
     bool operator!=(const Triplet& left, const Triplet& right);
 }
 
-template<>
-struct std::hash<vcpkg::Triplet>
+namespace std
 {
-    size_t operator()(const vcpkg::Triplet& t) const { return t.hash_code(); }
-};
+    template<>
+    struct hash<vcpkg::Triplet>
+    {
+        size_t operator()(const vcpkg::Triplet& t) const { return t.hash_code(); }
+    };
+}

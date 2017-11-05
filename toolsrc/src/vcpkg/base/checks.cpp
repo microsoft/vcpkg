@@ -17,14 +17,21 @@ namespace vcpkg::Checks
         GlobalState::debugging = false;
         metrics->flush();
 
+#if defined(_WIN32)
         SetConsoleCP(GlobalState::g_init_console_cp);
         SetConsoleOutputCP(GlobalState::g_init_console_output_cp);
+#endif
 
         fflush(nullptr);
 
+#if defined(_WIN32)
         ::TerminateProcess(::GetCurrentProcess(), exit_code);
+#else
+        ::exit(exit_code);
+#endif
     }
 
+#if defined(_WIN32)
     static BOOL ctrl_handler(DWORD fdw_ctrl_type)
     {
         {
@@ -39,6 +46,9 @@ namespace vcpkg::Checks
     {
         SetConsoleCtrlHandler(reinterpret_cast<PHANDLER_ROUTINE>(ctrl_handler), TRUE);
     }
+#else
+    void register_console_ctrl_handler() {}
+#endif
 
     [[noreturn]] void unreachable(const LineInfo& line_info)
     {
@@ -67,7 +77,7 @@ namespace vcpkg::Checks
     {
         if (!expression)
         {
-            exit_with_message(line_info, Strings::EMPTY);
+            exit_with_message(line_info, "");
         }
     }
 

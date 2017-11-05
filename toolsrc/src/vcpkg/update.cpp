@@ -38,10 +38,17 @@ namespace vcpkg::Update
         return output;
     }
 
+    const CommandStructure COMMAND_STRUCTURE = {
+        Help::create_example_string("update"),
+        0,
+        0,
+        {},
+        nullptr,
+    };
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        args.check_exact_arg_count(0);
-        args.check_and_get_optional_command_arguments({});
+        args.parse_arguments(COMMAND_STRUCTURE);
         System::println("Using local portfile versions. To update the local portfiles, use `git pull`.");
 
         const StatusParagraphs status_db = database_load_check(paths);

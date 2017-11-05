@@ -18,11 +18,14 @@ namespace vcpkg
     const TripletInstance Triplet::DEFAULT_INSTANCE({});
 }
 
-template<>
-struct std::hash<vcpkg::TripletInstance>
+namespace std
 {
-    size_t operator()(const vcpkg::TripletInstance& t) const { return t.hash; }
-};
+    template<>
+    struct hash<vcpkg::TripletInstance>
+    {
+        size_t operator()(const vcpkg::TripletInstance& t) const { return t.hash; }
+    };
+}
 
 namespace vcpkg
 {
@@ -41,9 +44,6 @@ namespace vcpkg
     Triplet Triplet::from_canonical_name(const std::string& triplet_as_string)
     {
         std::string s(Strings::ascii_to_lowercase(triplet_as_string));
-        const auto it = std::find(s.cbegin(), s.cend(), '-');
-        Checks::check_exit(VCPKG_LINE_INFO, it != s.cend(), "Invalid triplet: %s", triplet_as_string);
-
         const auto p = g_triplet_instances.emplace(std::move(s));
         return &*p.first;
     }

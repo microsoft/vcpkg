@@ -1,3 +1,156 @@
+vcpkg (0.0.96)
+--------------
+  * Add ports:
+    - arb            2.11.1
+    - fdk-aac        2017-11-02-1e351
+    - flint          2.5.2
+    - itk            4.11.0
+    - libaiff        5.0
+  * Update ports:
+    - antlr4         4.6-1 -> 4.7
+    - apr            1.6.2-1 -> 1.6.3
+    - double-conversion 3.0.0-1 -> 3.0.0-2
+    - flann          1.9.1-6 -> 1.9.1-7
+    - opencv         3.3.1-4 -> 3.3.1-6
+    - protobuf       3.4.1-1 -> 3.4.1-2
+  * `vcpkg help`: Add help topics for commands. For example `vcpkg help install`
+  * `vcpkg` now downloads in a temp directory; after the download is complete, the file is moved to the destination. This avoids issues with hash mismatch on partially downloaded files.
+  * Update required version & auto-downloaded version of `cmake` to 3.9.5
+  * Update required version & auto-downloaded version of `vswhere` to 2.2.11
+
+-- vcpkg team <vcpkg@microsoft.com>  WED, 03 Nov 2017 18:45:00 -0800
+
+
+vcpkg (0.0.95)
+--------------
+  * Update ports:
+    - assimp         4.0.1 -> 4.0.1-2
+    - blaze          3.2-1 -> 3.2-2
+    - boost          1.65.1-2 -> 1.65.1-3
+    - catch          1.10.0 -> 1.11.0
+    - libharu        2017-08-15-d84867ebf9f-2 -> 2017-08-15-d84867ebf9f-4
+    - libsndfile     libsndfile-1.0.29-6830c42-1 -> 1.0.29-6830c42-1
+    - opencv         3.3.1 -> 3.3.1-4
+    - pcl            1.8.1-2 -> 1.8.1-3
+    - poco           1.7.8-1 -> 1.7.8-2
+    - signalrclient  1.0.0-beta1-1 -> 1.0.0-beta1-2
+    - vtk            8.0.0-3 -> 8.0.1-1
+    - xlnt           1.1.0-1 -> 1.2.0-1
+  * Various improvements in `vcpkg` when obtaining data from `PowerShell` scripts. It should now be more robust
+  * Fix Windows 7 (i.e. `PowerShell 2.0`) issues in `PowerShell` scripts
+  * Fix an issue with `feature packages` where an installed package would appear to be uninstalled if a feature of the package was installed and then uninstalled
+  * Bump required version & auto-downloaded version of `git` to 2.5.0
+
+-- vcpkg team <vcpkg@microsoft.com>  WED, 01 Nov 2017 15:30:00 -0800
+
+
+vcpkg (0.0.94)
+--------------
+  * Add ports:
+    - capstone       3.0.5-rc3
+    - cgal           4.11
+    - gettimeofday   2017-10-14-2
+    - gmime          3.0.2
+    - leveldb        2017-10-25-8b1cd3753b184341e837b30383832645135d3d73
+    - rpclib         2.2.0
+  * Update ports:
+    - alembic        1.7.1-4 -> 1.7.4
+    - blaze          3.2 -> 3.2-1
+    - boost          1.65.1-1 -> 1.65.1-2
+    - ceres          1.13.0-1 -> 1.13.0-2
+    - cpprestsdk     2.9.0-4 -> 2.10.0
+    - cppwinrt       spring_2017_creators_update_for_vs_15.3 -> fall_2017_creators_update_for_vs_15.3-2
+    - cppzmq         4.2.1 -> 4.2.2
+    - eigen3         3.3.4-1 -> 3.3.4-2
+    - gdcm2          2.6.8-1 -> 2.8.3
+    - harfbuzz       1.4.6-2 -> 1.6.3-1
+    - libjpeg-turbo  1.5.2-1 -> 1.5.2-2
+    - libmariadb     2.3.2-1 -> 3.0.2
+    - libmysql       5.7.17-2 -> 5.7.17-3
+    - live555        2017.06.04-1 -> 2017.09.12
+    - mpir           3.0.0-2 -> 3.0.0-3
+    - opencv         3.3.0-4 -> 3.3.1
+    - pangolin       0.5-2 -> 0.5-3
+    - pugixml        1.8.1-1 -> 1.8.1-2
+    - secp256k1      2017-19-10-0b7024185045a49a1a6a4c5615bf31c94f63d9c4 -> 2017-19-10-0b7024185045a49a1a6a4c5615bf31c94f63d9c4-1
+    - smpeg2         2.0.0-2 -> 2.0.0-3
+    - sqlite3        3.20.1 -> 3.21.0
+  * Bump required version & auto-downloaded version of `git` to 2.4.3
+
+-- vcpkg team <vcpkg@microsoft.com>  FRI, 27 Oct 2017 19:30:00 -0800
+
+
+vcpkg (0.0.93)
+--------------
+  * Add ports:
+    - berkeleydb     4.8.30
+    - libsodium      1.0.15
+    - secp256k1      2017-19-10-0b7024185045a49a1a6a4c5615bf31c94f63d9c4
+  * Update ports:
+    - assimp         4.0.0-2 -> 4.0.1
+    - azure-storage-cpp 3.0.0-3 -> 3.0.0-4
+    - cctz           v2.1 -> 2.1
+    - folly          v2017.07.17.01-1 -> 2017.10.02.00
+    - grpc           1.6.0-1 -> 1.6.0-2
+    - openblas       v0.2.20-2 -> 0.2.20-2
+    - pthreads       2.9.1-1 -> 2.9.1-2
+    - sdl2-gfx       1.0.3-2 -> 1.0.3-3
+    - sdl2-image     2.0.1-2 -> 2.0.1-3
+    - sdl2-mixer     2.0.1-2 -> 2.0.1-3
+    - sdl2-net       2.0.1-2 -> 2.0.1-3
+    - sdl2-ttf       2.0.14-2 -> 2.0.14-3
+    - spirv-tools    v2017.1-dev-7e2d26c77b606b21af839b37fd21381c4a669f23-1 -> 2017.1-dev-7e2d26c77b606b21af839b37fd21381c4a669f23-1
+    - thor           v2.0-1 -> 2.0-1
+    - tinyexr        v0.9.5-d16ea6 -> 0.9.5-d16ea6
+  * Fix issue where `vcpkg` was getting output from powershell scripts. Powershell adds newlines when the console width is reached; the extra newlines was causing `vcpkg`'s parsing to fail.
+  * Improve autocomplete/tab-completion for powershell (still experimental)
+
+-- vcpkg team <vcpkg@microsoft.com>  THU, 19 Oct 2017 21:30:00 -0800
+
+
+vcpkg (0.0.92)
+--------------
+  * Add ports:
+    - cctz           v2.1
+    - celero         2.1.0-1
+    - eastl          3.05.08
+    - imgui          1.51-1
+    - libidn2        2.0.4
+    - mozjpeg        3.2-1
+    - spatialite-tools 4.3.0
+    - string-theory  1.6
+    - tiny-dnn       2017-10-09-dd906fed8c8aff8dc837657c42f9d55f8b793b0e
+    - wincrypt       0.0
+    - winsock2       0.0
+  * Update ports:
+    - abseil         2017-09-28 -> 2017-10-14
+    - boost          1.65.1 -> 1.65.1-1
+    - cpprestsdk     2.9.0-3 -> 2.9.0-4
+    - gdal           1.11.3-5 -> 2.2.2
+    - jansson        v2.10-1 -> 2.10-1
+    - lua            5.3.4-2 -> 5.3.4-4
+    - mpfr           3.1.5-1 -> 3.1.6
+    - ogre           1.9.0 -1 -> 1.9.0-1
+    - openni2        2.2.0.33-2 -> 2.2.0.33-4
+    - pcl            1.8.1-1 -> 1.8.1-2
+    - sciter         4.0.3 -> 4.0.4
+    - vtk            8.0.0-2 -> 8.0.0-3
+    - websocketpp    0.7.0 -> 0.7.0-1
+  * Initial support for autocomplete/tab-completion for powershell (still experimental)
+  * Add `VCPKG_CHAINLOAD_TOOLCHAIN_FILE variable`. As the name suggests, you can chainload your own toolchain file along with the `vcpkg` toolchain file.
+  * Fix issues with the new Visual Studio detection ([`vswhere.exe`](https://github.com/Microsoft/vswhere)). Notably:
+    - Detect VS2015 BuildTools, VS2017 BuildTools and VS Express Edition
+  * Fix issues with Windows SDK detection
+  * Rework acquisition of `vcpkg` dependencies (e.g. `cmake`, `git`). It is now more robust and should be faster on modern Operating Systems while still having fallback functions for older ones.
+  * Bump required version & auto-downloaded version of `cmake` to 3.9.4
+  * Bump required version & auto-downloaded version of `nuget` to 4.4.0
+  * Bump required version & auto-downloaded version of `vswhere` to 2.2.7
+  * Bump required version & auto-downloaded version of `git` to 2.4.2(.3)
+  * Bump ninja to version 1.8.0
+
+-- vcpkg team <vcpkg@microsoft.com>  TUE, 17 Oct 2017 16:00:00 -0800
+
+
 vcpkg (0.0.91)
 --------------
   * Add ports:

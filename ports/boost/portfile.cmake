@@ -25,7 +25,8 @@ FILE(READ "${DIFF}" content)
 STRING(REGEX REPLACE "include/" "" content "${content}")
 set(DIFF2 ${CURRENT_BUILDTREES_DIR}/src/boost-range-has_range_iterator-hotfix_e7ebe14707130cda7b72e0ae5e93b17157fdb6a2.diff.fixed)
 FILE(WRITE ${DIFF2} "${content}")
-vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${DIFF2})
+vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${DIFF2}
+                                                       ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-boost-ICU-support.patch)
 
 ######################
 # Cleanup previous builds
@@ -76,19 +77,37 @@ message(STATUS "Bootstrapping done")
 set(B2_OPTIONS
     -sZLIB_INCLUDE="${CURRENT_INSTALLED_DIR}\\include"
     -sBZIP2_INCLUDE="${CURRENT_INSTALLED_DIR}\\include"
+    -sICU_PATH="${CURRENT_INSTALLED_DIR}"
     -j$ENV{NUMBER_OF_PROCESSORS}
     --debug-configuration
+    --ignore-site-config
     --hash
     -q
 
-    --without-python
     threading=multi
 )
 
+# Add build type specific options
+set(B2_OPTIONS_DBG
+    -sZLIB_BINARY=zlibd
+    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
+    -sBZIP2_BINARY=bz2d
+    -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
+)
+
+set(B2_OPTIONS_REL
+    -sZLIB_BINARY=zlib
+    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+    -sBZIP2_BINARY=bz2
+    -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+)
+
+set(LIB_RUNTIME_LINK "shared")
 if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
     list(APPEND B2_OPTIONS runtime-link=shared)
 else()
     list(APPEND B2_OPTIONS runtime-link=static)
+    set(LIB_RUNTIME_LINK "static")
 endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -100,6 +119,30 @@ endif()
 if(TRIPLET_SYSTEM_ARCH MATCHES "x64")
     list(APPEND B2_OPTIONS address-model=64)
 endif()
+
+if("python" IN_LIST FEATURES)
+    # Find Python. Can't use find_package here, but we already know where everything is
+    file(GLOB PYTHON_INCLUDE_PATH "${CURRENT_INSTALLED_DIR}/include/python[0-9.]*")
+    set(PYTHONLIBS_RELEASE "${CURRENT_INSTALLED_DIR}/lib")
+    set(PYTHONLIBS_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib")
+    string(REGEX REPLACE ".*python([0-9\.]+)$" "\\1" PYTHON_VERSION ${PYTHON_INCLUDE_PATH})
+    list(APPEND B2_OPTIONS_DBG python-debugging=on)
+else()
+    list(APPEND B2_OPTIONS --without-python)
+endif()
+
+if("locale-icu" IN_LIST FEATURES)
+    list(APPEND B2_OPTIONS boost.locale.icu=on)
+else()
+    list(APPEND B2_OPTIONS boost.locale.icu=off)
+endif()
+
+if("regex-icu" IN_LIST FEATURES)
+    list(APPEND B2_OPTIONS --enable-icu)
+else()
+    list(APPEND B2_OPTIONS --disable-icu)
+endif()
+
 
 if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
     list(APPEND B2_OPTIONS
@@ -136,6 +179,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
         --without-thread
         --without-iostreams
         --without-container
+        --without-python
     )
     if(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
         find_path(PATH_TO_CL cl.exe)
@@ -166,21 +210,14 @@ else()
     message(FATAL_ERROR "Unsupported value for VCPKG_PLATFORM_TOOLSET: '${VCPKG_PLATFORM_TOOLSET}'")
 endif()
 
-# Add build type specific options
 set(B2_OPTIONS_DBG
     ${B2_OPTIONS}
-    -sZLIB_BINARY=zlibd
-    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
-    -sBZIP2_BINARY=bz2d
-    -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
+    ${B2_OPTIONS_DBG}
 )
 
 set(B2_OPTIONS_REL
     ${B2_OPTIONS}
-    -sZLIB_BINARY=zlib
-    -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
-    -sBZIP2_BINARY=bz2
-    -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+    ${B2_OPTIONS_REL}
 )
 
 ######################
@@ -222,7 +259,7 @@ file(
 
 # Disable Boost auto-link.
 file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp
-	"\n#define BOOST_ALL_NO_LIB\n"
+    "\n#ifndef BOOST_ALL_NO_LIB\n#define BOOST_ALL_NO_LIB\n#endif\n"
 )
 file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp
     "\n#undef BOOST_ALL_DYN_LINK\n"
@@ -267,14 +304,8 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         FILES_MATCHING PATTERN "*.dll")
 endif()
 file(GLOB RELEASE_LIBS ${CURRENT_PACKAGES_DIR}/lib/*.lib)
+
 boost_rename_libs(RELEASE_LIBS)
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/boost_test_exec_monitor-vc140-mt-${VERSION}.lib)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
-    file(RENAME
-        ${CURRENT_PACKAGES_DIR}/lib/boost_test_exec_monitor-vc140-mt-${VERSION}.lib
-        ${CURRENT_PACKAGES_DIR}/lib/manual-link/boost_test_exec_monitor-vc140-mt-${VERSION}.lib
-    )
-endif()
 message(STATUS "Packaging ${TARGET_TRIPLET}-rel done")
 
 message(STATUS "Packaging ${TARGET_TRIPLET}-dbg")
@@ -288,13 +319,26 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 file(GLOB DEBUG_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/*.lib)
 boost_rename_libs(DEBUG_LIBS)
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/boost_test_exec_monitor-vc140-mt-gd-${VERSION}.lib)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
-    file(RENAME
-        ${CURRENT_PACKAGES_DIR}/debug/lib/boost_test_exec_monitor-vc140-mt-gd-${VERSION}.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/boost_test_exec_monitor-vc140-mt-gd-${VERSION}.lib
-    )
-endif()
 message(STATUS "Packaging ${TARGET_TRIPLET}-dbg done")
+
+macro(move_to_manual_link LIBNAME)
+    if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/${LIBNAME}-vc140-mt-${VERSION_FULL}.lib)
+        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+        file(RENAME
+            ${CURRENT_PACKAGES_DIR}/lib/${LIBNAME}-vc140-mt-${VERSION_FULL}.lib
+            ${CURRENT_PACKAGES_DIR}/lib/manual-link/${LIBNAME}-vc140-mt-${VERSION_FULL}.lib
+        )
+    endif()
+    if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/${LIBNAME}-vc140-mt-gd-${VERSION_FULL}.lib)
+        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+        file(RENAME
+            ${CURRENT_PACKAGES_DIR}/debug/lib/${LIBNAME}-vc140-mt-gd-${VERSION_FULL}.lib
+            ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/${LIBNAME}-vc140-mt-gd-${VERSION_FULL}.lib
+        )
+    endif()
+endmacro()
+
+move_to_manual_link(boost_test_exec_monitor)
+move_to_manual_link(boost_prg_exec_monitor)
 
 vcpkg_copy_pdbs()

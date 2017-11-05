@@ -350,10 +350,10 @@ namespace vcpkg::Export::IFW
         Checks::check_exit(
             VCPKG_LINE_INFO, !ec, "Could not remove outdated repository directory %s", repository_dir.generic_string());
 
-        const std::wstring cmd_line = Strings::wformat(LR"("%s" --packages "%s" "%s" > nul)",
-                                                       repogen_exe.native(),
-                                                       packages_dir.native(),
-                                                       repository_dir.native());
+        const auto cmd_line = Strings::format(R"("%s" --packages "%s" "%s" > nul)",
+                                              repogen_exe.u8string(),
+                                              packages_dir.u8string(),
+                                              repository_dir.u8string());
 
         const int exit_code = System::cmd_execute_clean(cmd_line);
         Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: IFW repository generating failed");
@@ -371,24 +371,24 @@ namespace vcpkg::Export::IFW
 
         System::println("Generating installer %s...", installer_file.generic_string());
 
-        std::wstring cmd_line;
+        std::string cmd_line;
 
         std::string ifw_repo_url = ifw_options.maybe_repository_url.value_or("");
         if (!ifw_repo_url.empty())
         {
-            cmd_line = Strings::wformat(LR"("%s" --online-only --config "%s" --repository "%s" "%s" > nul)",
-                                        binarycreator_exe.native(),
-                                        config_file.native(),
-                                        repository_dir.native(),
-                                        installer_file.native());
+            cmd_line = Strings::format(R"("%s" --online-only --config "%s" --repository "%s" "%s" > nul)",
+                                       binarycreator_exe.u8string(),
+                                       config_file.u8string(),
+                                       repository_dir.u8string(),
+                                       installer_file.u8string());
         }
         else
         {
-            cmd_line = Strings::wformat(LR"("%s" --config "%s" --packages "%s" "%s" > nul)",
-                                        binarycreator_exe.native(),
-                                        config_file.native(),
-                                        packages_dir.native(),
-                                        installer_file.native());
+            cmd_line = Strings::format(R"("%s" --config "%s" --packages "%s" "%s" > nul)",
+                                       binarycreator_exe.u8string(),
+                                       config_file.u8string(),
+                                       packages_dir.u8string(),
+                                       installer_file.u8string());
         }
 
         const int exit_code = System::cmd_execute_clean(cmd_line);

@@ -33,7 +33,7 @@ namespace vcpkg
         ErrorHolder() = default;
         ErrorHolder(const std::error_code& err) : m_err(err) {}
 
-        constexpr bool has_error() const { return bool(m_err); }
+        bool has_error() const { return bool(m_err); }
 
         const std::error_code& error() const { return m_err; }
         std::error_code& error() { return m_err; }
