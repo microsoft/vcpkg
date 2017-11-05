@@ -15,6 +15,11 @@ file(COPY
     DESTINATION ${SOURCE_PATH}/externals/Catch/single_include
 )
 
+file(COPY 
+    ${CURRENT_INSTALLED_DIR}/include/rapidjson/rapidjson.h
+    DESTINATION ${SOURCE_PATH}/externals/rapidjson/include/rapidjson
+)
+
 file(COPY
     ${CURRENT_INSTALLED_DIR}/include
     DESTINATION ${SOURCE_PATH}/externals/msgpack-c
