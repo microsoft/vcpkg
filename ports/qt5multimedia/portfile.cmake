@@ -13,15 +13,15 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 
-set(SRCDIR_NAME "qtsvg-5.9.2")
-set(ARCHIVE_NAME "qtsvg-opensource-src-5.9.2")
+set(SRCDIR_NAME "qtmultimedia-5.9.2")
+set(ARCHIVE_NAME "qtmultimedia-opensource-src-5.9.2")
 set(ARCHIVE_EXTENSION ".tar.xz")
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${SRCDIR_NAME})
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "http://download.qt.io/official_releases/qt/5.9/5.9.2/submodules/${ARCHIVE_NAME}${ARCHIVE_EXTENSION}"
     FILENAME ${SRCDIR_NAME}${ARCHIVE_EXTENSION}
-    SHA512 c21c5a12fa10ff9f91deda88c99c995ee2138bdffa21c793b0c42f25155f01f87ede5206624b9d82713649f8cf1cfdb95f1d5b7e792de62f3848d3a9ec665fdd
+    SHA512 b9fab874706440e97185475bfd0ad769c23d5ddbff5086cc0da9783777e81ed8140fb06fa0e7536ebfb67f2c9db39e1b9f3c2241834e74a9e1fb6ffd5cb7af11
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 if (EXISTS ${CURRENT_BUILDTREES_DIR}/src/${ARCHIVE_NAME})
@@ -78,4 +78,4 @@ file(GLOB RELEASE_DLLS "${CURRENT_PACKAGES_DIR}/lib/*.dll")
 file(GLOB DEBUG_DLLS "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll")
 file(REMOVE ${RELEASE_DLLS} ${DEBUG_DLLS})
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.LGPLv3 DESTINATION ${CURRENT_PACKAGES_DIR}/share/qt5svg RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.LGPL3 DESTINATION ${CURRENT_PACKAGES_DIR}/share/qt5multimedia RENAME copyright)

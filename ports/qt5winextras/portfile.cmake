@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
 string(LENGTH "${CURRENT_BUILDTREES_DIR}" BUILDTREES_PATH_LENGTH)
-if(BUILDTREES_PATH_LENGTH GREATER 27)
+if(BUILDTREES_PATH_LENGTH GREATER 37)
     message(WARNING "Qt5's buildsystem uses very long paths and may fail on your system.\n"
         "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
     )
