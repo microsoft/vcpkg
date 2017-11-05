@@ -485,6 +485,7 @@ if (COOLPROP_IOS_TARGET)
   set(CMAKE_XCODE_EFFECTIVE_PLATFORMS "-iphoneos;-iphonesimulator")
 
   include_directories(
+    BEFORE
     ${CMAKE_CURRENT_SOURCE_DIR}
   )
 endif()
