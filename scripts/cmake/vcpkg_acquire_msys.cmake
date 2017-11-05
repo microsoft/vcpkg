@@ -70,14 +70,18 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
   set(PATH_TO_ROOT ${TOOLPATH}/${TOOLSUBPATH})
 
   if(NOT EXISTS "${TOOLPATH}/${STAMP}")
+
     message(STATUS "Acquiring MSYS2...")
-    file(DOWNLOAD ${URL} ${DOWNLOADS}/${ARCHIVE}
-      EXPECTED_HASH SHA512=${HASH}
+    vcpkg_download_distfile(ARCHIVE_PATH
+        URLS ${URL}
+        FILENAME ${ARCHIVE}
+        SHA512 ${HASH}
     )
+
     file(REMOVE_RECURSE ${TOOLPATH}/${TOOLSUBPATH})
     file(MAKE_DIRECTORY ${TOOLPATH})
     execute_process(
-      COMMAND ${CMAKE_COMMAND} -E tar xzf ${DOWNLOADS}/${ARCHIVE}
+      COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
       WORKING_DIRECTORY ${TOOLPATH}
     )
     execute_process(

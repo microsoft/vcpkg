@@ -92,12 +92,18 @@ namespace vcpkg::Commands::Import
         fs.write_contents(control_file_path, Strings::serialize(control_file_data));
     }
 
+    const CommandStructure COMMAND_STRUCTURE = {
+        Help::create_example_string(
+            R"(import C:\path\to\CONTROLfile C:\path\to\includedir C:\path\to\projectdir)"),
+        3,
+        3,
+        {},
+        nullptr,
+    };
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const std::string EXAMPLE = Help::create_example_string(
-            R"(import C:\path\to\CONTROLfile C:\path\to\includedir C:\path\to\projectdir)");
-        args.check_exact_arg_count(3, EXAMPLE);
-        args.check_and_get_optional_command_arguments({});
+        args.parse_arguments(COMMAND_STRUCTURE);
 
         const fs::path control_file_path(args.command_arguments[0]);
         const fs::path include_directory(args.command_arguments[1]);

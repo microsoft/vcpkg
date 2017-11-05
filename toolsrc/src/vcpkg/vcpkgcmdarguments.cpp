@@ -45,11 +45,8 @@ namespace vcpkg
         option_field = new_setting;
     }
 
-#if defined(_WIN32)
-    VcpkgCmdArguments VcpkgCmdArguments::create_from_command_line(const int argc, const wchar_t* const* const argv)
-#else
-    VcpkgCmdArguments VcpkgCmdArguments::create_from_command_line(const int argc, const char* const* const argv)
-#endif
+    VcpkgCmdArguments VcpkgCmdArguments::create_from_command_line(const int argc,
+                                                                  const CommandLineCharType* const* const argv)
     {
         std::vector<std::string> v;
         for (int i = 1; i < argc; ++i)
@@ -158,46 +155,83 @@ namespace vcpkg
         return args;
     }
 
-    ParsedArguments VcpkgCmdArguments::check_and_get_optional_command_arguments(
-        const std::vector<std::string>& valid_switches, const std::vector<std::string>& valid_settings) const
+    ParsedArguments VcpkgCmdArguments::parse_arguments(const CommandStructure& command_structure) const
     {
         bool failed = false;
         ParsedArguments output;
 
-        auto options_copy = this->optional_command_arguments;
-        for (const std::string& option : valid_switches)
+        const size_t actual_arg_count = command_arguments.size();
+
+        if (command_structure.minimum_arity == command_structure.maximum_arity)
         {
-            const auto it = options_copy.find(option);
+            if (actual_arg_count != command_structure.minimum_arity)
+            {
+                System::println(System::Color::error,
+                                "Error: '%s' requires %u arguments, but %u were provided.",
+                                this->command,
+                                command_structure.minimum_arity,
+                                actual_arg_count);
+                failed = true;
+            }
+        }
+        else
+        {
+            if (actual_arg_count < command_structure.minimum_arity)
+            {
+                System::println(System::Color::error,
+                                "Error: '%s' requires at least %u arguments, but %u were provided",
+                                this->command,
+                                command_structure.minimum_arity,
+                                actual_arg_count);
+                failed = true;
+            }
+            if (actual_arg_count > command_structure.maximum_arity)
+            {
+                System::println(System::Color::error,
+                                "Error: '%s' requires at most %u arguments, but %u were provided",
+                                this->command,
+                                command_structure.maximum_arity,
+                                actual_arg_count);
+                failed = true;
+            }
+        }
+
+        auto options_copy = this->optional_command_arguments;
+        for (auto&& option : command_structure.options.switches)
+        {
+            const auto it = options_copy.find(option.name);
             if (it != options_copy.end())
             {
                 if (it->second.has_value())
                 {
                     // Having a string value indicates it was passed like '--a=xyz'
-                    System::println(System::Color::error, "The option '%s' does not accept an argument.", option);
+                    System::println(
+                        System::Color::error, "Error: The option '%s' does not accept an argument.", option.name);
                     failed = true;
                 }
                 else
                 {
-                    output.switches.insert(option);
+                    output.switches.insert(option.name);
                     options_copy.erase(it);
                 }
             }
         }
 
-        for (const std::string& option : valid_settings)
+        for (auto&& option : command_structure.options.settings)
         {
-            const auto it = options_copy.find(option);
+            const auto it = options_copy.find(option.name);
             if (it != options_copy.end())
             {
                 if (!it->second.has_value())
                 {
                     // Not having a string value indicates it was passed like '--a'
-                    System::println(System::Color::error, "The option '%s' must be passed an argument.", option);
+                    System::println(
+                        System::Color::error, "Error: The option '%s' must be passed an argument.", option.name);
                     failed = true;
                 }
                 else
                 {
-                    output.settings.emplace(option, it->second.value_or_exit(VCPKG_LINE_INFO));
+                    output.settings.emplace(option.name, it->second.value_or_exit(VCPKG_LINE_INFO));
                     options_copy.erase(it);
                 }
             }
@@ -210,83 +244,38 @@ namespace vcpkg
             {
                 System::println("    %s", option.first);
             }
-            System::println("\nValid options are:", this->command);
-            for (auto&& option : valid_switches)
-            {
-                System::println("    %s", option);
-            }
-            for (auto&& option : valid_settings)
-            {
-                System::println("    %s=...", option);
-            }
-            System::println("    --triplet <t>");
-            System::println("    --vcpkg-root <path>");
+            System::println();
+            failed = true;
+        }
 
+        if (failed)
+        {
+            display_usage(command_structure);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
-        if (failed) Checks::exit_fail(VCPKG_LINE_INFO);
 
         return output;
     }
 
-    void VcpkgCmdArguments::check_max_arg_count(const size_t expected_arg_count) const
+    void display_usage(const CommandStructure& command_structure)
     {
-        return check_max_arg_count(expected_arg_count, "");
-    }
-
-    void VcpkgCmdArguments::check_min_arg_count(const size_t expected_arg_count) const
-    {
-        return check_min_arg_count(expected_arg_count, "");
-    }
-
-    void VcpkgCmdArguments::check_exact_arg_count(const size_t expected_arg_count) const
-    {
-        return check_exact_arg_count(expected_arg_count, "");
-    }
-
-    void VcpkgCmdArguments::check_max_arg_count(const size_t expected_arg_count, const std::string& example_text) const
-    {
-        const size_t actual_arg_count = command_arguments.size();
-        if (actual_arg_count > expected_arg_count)
+        if (!command_structure.example_text.empty())
         {
-            System::println(System::Color::error,
-                            "Error: `%s` requires at most %u arguments, but %u were provided",
-                            this->command,
-                            expected_arg_count,
-                            actual_arg_count);
-            System::print(example_text);
-            Checks::exit_fail(VCPKG_LINE_INFO);
+            System::println("%s", command_structure.example_text);
         }
-    }
 
-    void VcpkgCmdArguments::check_min_arg_count(const size_t expected_arg_count, const std::string& example_text) const
-    {
-        const size_t actual_arg_count = command_arguments.size();
-        if (actual_arg_count < expected_arg_count)
+        System::println("Options:");
+        for (auto&& option : command_structure.options.switches)
         {
-            System::println(System::Color::error,
-                            "Error: `%s` requires at least %u arguments, but %u were provided",
-                            this->command,
-                            expected_arg_count,
-                            actual_arg_count);
-            System::print(example_text);
-            Checks::exit_fail(VCPKG_LINE_INFO);
+            System::println("    %-40s %s", option.name, option.short_help_text);
         }
-    }
-
-    void VcpkgCmdArguments::check_exact_arg_count(const size_t expected_arg_count,
-                                                  const std::string& example_text) const
-    {
-        const size_t actual_arg_count = command_arguments.size();
-        if (actual_arg_count != expected_arg_count)
+        for (auto&& option : command_structure.options.settings)
         {
-            System::println(System::Color::error,
-                            "Error: `%s` requires %u arguments, but %u were provided",
-                            this->command,
-                            expected_arg_count,
-                            actual_arg_count);
-            System::print(example_text);
-            Checks::exit_fail(VCPKG_LINE_INFO);
+            System::println("    %-40s %s", (option.name + "=..."), option.short_help_text);
         }
+        System::println("    %-40s %s", "--triplet <t>", "Set the default triplet for unqualified packages");
+        System::println("    %-40s %s",
+                        "--vcpkg-root <path>",
+                        "Specify the vcpkg directory to use instead of current directory or tool directory");
     }
 }

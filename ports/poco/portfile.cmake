@@ -16,10 +16,13 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/foundation-public-include-pcre.patch
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(POCO_STATIC ON)
-else()
-    set(POCO_STATIC OFF)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" POCO_STATIC)
+
+if("mysql" IN_LIST FEATURES)
+    # enabling MySQL support
+    set(MYSQL_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include/mysql")
+    set(MYSQL_LIB "${CURRENT_INSTALLED_DIR}/lib/libmysql.lib")
+    set(MYSQL_LIB_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/libmysql.lib")
 endif()
 
 vcpkg_configure_cmake(
@@ -30,6 +33,11 @@ vcpkg_configure_cmake(
         -DENABLE_SEVENZIP=ON
         -DENABLE_TESTS=OFF
         -DPOCO_UNBUNDLED=ON # OFF means: using internal copy of sqlite, libz, pcre, expat, ...
+        -DMYSQL_INCLUDE_DIR=${MYSQL_INCLUDE_DIR}
+    OPTIONS_RELEASE
+        -DMYSQL_LIB=${MYSQL_LIB}
+    OPTIONS_DEBUG
+        -DMYSQL_LIB=${MYSQL_LIB_DEBUG}
 )
 
 vcpkg_install_cmake()
@@ -53,8 +61,7 @@ else()
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/poco)
 
 # copy license
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/poco)

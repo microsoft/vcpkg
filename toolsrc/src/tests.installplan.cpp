@@ -17,8 +17,9 @@ namespace Microsoft::VisualStudio::CppUnitTestFramework
             case Dependencies::InstallPlanType::ALREADY_INSTALLED: return L"ALREADY_INSTALLED";
             case Dependencies::InstallPlanType::BUILD_AND_INSTALL: return L"BUILD_AND_INSTALL";
             case Dependencies::InstallPlanType::INSTALL: return L"INSTALL";
+            case Dependencies::InstallPlanType::EXCLUDED: return L"EXCLUDED";
             case Dependencies::InstallPlanType::UNKNOWN: return L"UNKNOWN";
-            default: return ToString((int)t);
+            default: return ToString(static_cast<int>(t));
         }
     }
 
@@ -30,7 +31,7 @@ namespace Microsoft::VisualStudio::CppUnitTestFramework
             case Dependencies::RequestType::AUTO_SELECTED: return L"AUTO_SELECTED";
             case Dependencies::RequestType::USER_REQUESTED: return L"USER_REQUESTED";
             case Dependencies::RequestType::UNKNOWN: return L"UNKNOWN";
-            default: return ToString((int)t);
+            default: return ToString(static_cast<int>(t));
         }
     }
 }
@@ -460,20 +461,6 @@ namespace UnitTest1
                 FullPackageSpec::to_feature_specs({spec_c_64, spec_a_86, spec_a_64, spec_c_86}),
                 StatusParagraphs(std::move(status_paragraphs)));
 
-            /*Assert::AreEqual(size_t(8), install_plan.size());
-            auto iterator_pos = [&](const PackageSpec& spec, size_t start) -> int {
-                auto it = std::find_if(install_plan.begin() + start, install_plan.end(), [&](auto& action) {
-                    return action.spec == spec;
-                });
-                Assert::IsTrue(it != install_plan.end());
-                return (int)(it - install_plan.begin());
-            };
-            int a_64_1 = iterator_pos(spec_a_64.package_spec, 0), a_86_1 = iterator_pos(spec_a_86.package_spec, 0),
-                b_64 = iterator_pos(spec_b_64.package_spec, 0), b_86 = iterator_pos(spec_b_86.package_spec, 0),
-                c_64 = iterator_pos(spec_c_64.package_spec, 0), c_86 = iterator_pos(spec_c_86.package_spec, 0),
-                a_64_2 = iterator_pos(spec_a_64.package_spec, a_64_1 + 1),
-                a_86_2 = iterator_pos(spec_a_86.package_spec, a_86_1 + 1);*/
-
             remove_plan_check(&install_plan[0], "a", Triplet::X64_WINDOWS);
             remove_plan_check(&install_plan[1], "a");
             features_check(&install_plan[2], "b", {"core"}, Triplet::X64_WINDOWS);
@@ -482,6 +469,25 @@ namespace UnitTest1
             features_check(&install_plan[5], "b", {"core"});
             features_check(&install_plan[6], "a", {"a1", "core"});
             features_check(&install_plan[7], "c", {"core"});
+        }
+
+        TEST_METHOD(install_all_features_test)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+
+            PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+            auto spec_a_64 = FullPackageSpec{spec_map.emplace("a", "", {{"0", ""}, {"1", ""}}), {"core"}};
+
+            auto install_specs = FullPackageSpec::from_string("a[*]", Triplet::X64_WINDOWS);
+            Assert::IsTrue(install_specs.has_value());
+            if (!install_specs.has_value()) return;
+            auto install_plan = Dependencies::create_feature_install_plan(
+                spec_map.map,
+                FullPackageSpec::to_feature_specs({install_specs.value_or_exit(VCPKG_LINE_INFO)}),
+                StatusParagraphs(std::move(status_paragraphs)));
+
+            Assert::IsTrue(install_plan.size() == 1);
+            features_check(&install_plan[0], "a", {"0", "1", "core"}, Triplet::X64_WINDOWS);
         }
     };
 }

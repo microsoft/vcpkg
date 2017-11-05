@@ -24,6 +24,7 @@
     <ClCompile Include="..\src\tests.packagespec.cpp" />
     <ClCompile Include="..\src\tests.paragraph.cpp" />
     <ClCompile Include="..\src\tests.installplan.cpp" />
+    <ClCompile Include="..\src\tests.statusparagraphs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\vcpkglib\vcpkglib.vcxproj">

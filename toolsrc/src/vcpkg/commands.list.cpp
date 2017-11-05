@@ -24,14 +24,23 @@ namespace vcpkg::Commands::List
         }
     }
 
+    static const std::array<CommandSwitch, 1> LIST_SWITCHES = {{
+        {OPTION_FULLDESC, "Do not truncate long text"},
+    }};
+
+    const CommandStructure COMMAND_STRUCTURE = {
+        Strings::format(
+            "The argument should be a substring to search for, or no argument to display all installed libraries.\n%s",
+            Help::create_example_string("list png")),
+        0,
+        1,
+        {LIST_SWITCHES, {}},
+        nullptr,
+    };
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const std::string EXAMPLE = Strings::format(
-            "The argument should be a substring to search for, or no argument to display all installed libraries.\n%s",
-            Help::create_example_string("list png"));
-        args.check_max_arg_count(1, EXAMPLE);
-        const std::unordered_set<std::string> options =
-            args.check_and_get_optional_command_arguments({OPTION_FULLDESC});
+        const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
         const StatusParagraphs status_paragraphs = database_load_check(paths);
         std::vector<StatusParagraph*> installed_packages = get_installed_ports(status_paragraphs);
@@ -52,7 +61,7 @@ namespace vcpkg::Commands::List
         {
             for (const StatusParagraph* status_paragraph : installed_packages)
             {
-                do_print(*status_paragraph, options.find(OPTION_FULLDESC) != options.cend());
+                do_print(*status_paragraph, Util::Sets::contains(options.switches, OPTION_FULLDESC));
             }
         }
         else
@@ -66,7 +75,7 @@ namespace vcpkg::Commands::List
                     continue;
                 }
 
-                do_print(*status_paragraph, options.find(OPTION_FULLDESC) != options.cend());
+                do_print(*status_paragraph, Util::Sets::contains(options.switches, OPTION_FULLDESC));
             }
         }
 

@@ -28,13 +28,13 @@ namespace vcpkg::Build::Command
 
     static const std::string OPTION_CHECKS_ONLY = "--checks-only";
 
-    void perform_and_exit(const FullPackageSpec& full_spec,
-                          const fs::path& port_dir,
-                          const std::unordered_set<std::string>& options,
-                          const VcpkgPaths& paths)
+    void perform_and_exit_ex(const FullPackageSpec& full_spec,
+                             const fs::path& port_dir,
+                             const ParsedArguments& options,
+                             const VcpkgPaths& paths)
     {
         const PackageSpec& spec = full_spec.package_spec;
-        if (options.find(OPTION_CHECKS_ONLY) != options.end())
+        if (Util::Sets::contains(options.switches, OPTION_CHECKS_ONLY))
         {
             const auto pre_build_info = Build::PreBuildInfo::from_triplet_file(paths, spec.triplet());
             const auto build_info = Build::read_build_info(paths.get_filesystem(), paths.build_info_file_path(spec));
@@ -52,22 +52,20 @@ namespace vcpkg::Build::Command
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
-        for (const std::string& str : full_spec.features)
-        {
-            System::println("%s \n", str);
-        }
         const auto& scf = source_control_file.value_or_exit(VCPKG_LINE_INFO);
         Checks::check_exit(VCPKG_LINE_INFO,
                            spec.name() == scf->core_paragraph->name,
-                           "The Name: field inside the CONTROL does not match the port directory: '%s' != '%s'",
+                           "The Source field inside the CONTROL file does not match the port directory: '%s' != '%s'",
                            scf->core_paragraph->name,
                            spec.name());
 
         const StatusParagraphs status_db = database_load_check(paths);
         const Build::BuildPackageOptions build_package_options{Build::UseHeadVersion::NO, Build::AllowDownloads::YES};
 
+        const std::unordered_set<std::string> features_as_set(full_spec.features.begin(), full_spec.features.end());
+
         const Build::BuildPackageConfig build_config{
-            *scf->core_paragraph, spec.triplet(), paths.port_dir(spec), build_package_options};
+            *scf, spec.triplet(), fs::path{port_dir}, build_package_options, features_as_set};
 
         const auto build_timer = Chrono::ElapsedTime::create_started();
         const auto result = Build::build_package(paths, build_config, status_db);
@@ -87,6 +85,8 @@ namespace vcpkg::Build::Command
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
+        Checks::check_exit(VCPKG_LINE_INFO, result.code != BuildResult::EXCLUDED);
+
         if (result.code != BuildResult::SUCCEEDED)
         {
             System::println(System::Color::error, Build::create_error_message(result.code, spec));
@@ -97,17 +97,32 @@ namespace vcpkg::Build::Command
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 
+    static const std::array<CommandSwitch, 1> BUILD_SWITCHES = {{
+        {OPTION_CHECKS_ONLY, "Only run checks, do not rebuild package"},
+    }};
+
+    const CommandStructure COMMAND_STRUCTURE = {
+        Help::create_example_string("build zlib:x64-windows"),
+        1,
+        1,
+        {BUILD_SWITCHES, {}},
+        nullptr,
+    };
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
-        static const std::string EXAMPLE = Help::create_example_string("build zlib:x64-windows");
         // Build only takes a single package and all dependencies must already be installed
-        args.check_exact_arg_count(1, EXAMPLE);
+        const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
         const std::string command_argument = args.command_arguments.at(0);
-        const FullPackageSpec spec = Input::check_and_get_full_package_spec(command_argument, default_triplet, EXAMPLE);
+        const FullPackageSpec spec =
+            Input::check_and_get_full_package_spec(command_argument, default_triplet, COMMAND_STRUCTURE.example_text);
         Input::check_triplet(spec.package_spec.triplet(), paths);
-        const std::unordered_set<std::string> options =
-            args.check_and_get_optional_command_arguments({OPTION_CHECKS_ONLY});
-        perform_and_exit(spec, paths.port_dir(spec.package_spec), options, paths);
+        if (!spec.features.empty() && !GlobalState::feature_packages)
+        {
+            Checks::exit_with_message(
+                VCPKG_LINE_INFO, "Feature packages are experimentally available under the --featurepackages flag.");
+        }
+        perform_and_exit_ex(spec, paths.port_dir(spec.package_spec), options, paths);
     }
 }
 
@@ -365,6 +380,7 @@ namespace vcpkg::Build
         static const std::string FILE_CONFLICTS_STRING = "FILE_CONFLICTS";
         static const std::string POST_BUILD_CHECKS_FAILED_STRING = "POST_BUILD_CHECKS_FAILED";
         static const std::string CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING = "CASCADED_DUE_TO_MISSING_DEPENDENCIES";
+        static const std::string EXCLUDED_STRING = "EXCLUDED";
 
         switch (build_result)
         {
@@ -372,8 +388,9 @@ namespace vcpkg::Build
             case BuildResult::SUCCEEDED: return SUCCEEDED_STRING;
             case BuildResult::BUILD_FAILED: return BUILD_FAILED_STRING;
             case BuildResult::POST_BUILD_CHECKS_FAILED: return POST_BUILD_CHECKS_FAILED_STRING;
-            case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES: return CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING;
             case BuildResult::FILE_CONFLICTS: return FILE_CONFLICTS_STRING;
+            case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES: return CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING;
+            case BuildResult::EXCLUDED: return EXCLUDED_STRING;
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
@@ -472,7 +489,7 @@ namespace vcpkg::Build
                                                          {"CMAKE_TRIPLET_FILE", triplet_file_path},
                                                      });
         const auto ec_data = System::cmd_execute_and_capture_output(cmd_launch_cmake);
-        Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0);
+        Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, ec_data.output);
 
         const std::vector<std::string> lines = Strings::split(ec_data.output, "\n");
 

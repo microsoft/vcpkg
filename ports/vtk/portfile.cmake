@@ -1,24 +1,44 @@
 include(vcpkg_common_functions)
 
 set(VTK_SHORT_VERSION "8.0")
-set(VTK_LONG_VERSION "${VTK_SHORT_VERSION}.0")
+set(VTK_LONG_VERSION "${VTK_SHORT_VERSION}.1")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "Kitware/VTK"
     REF "v${VTK_LONG_VERSION}"
-    SHA512 1a328f24df0b1c40c623ae80c9d49f8b27570144b10af02aeed41b90b50b8d4e0dd83d1341961f6818cde36e2cd793c578ebc95a46950cebfc518f486f249791
+    SHA512 3a70fa704d791d21a1e2421e6799ccc8238da5bc1fc0ab1925fb7956ccaebb7748c452faba1e7f4a2eafbc8612ed644f46f84b0cb3fe16ce539a823165feb29f
     HEAD_REF "master"
 )
 
 # =============================================================================
 # Options: These should be set by feature-packages when they become available
-set(VTK_WITH_QT                          ON ) # IMPORTANT: if ON make sure `qt5` is listed as dependency in the CONTROL file
-set(VTK_WITH_MPI                         ON ) # IMPORTANT: if ON make sure `mpi` is listed as dependency in the CONTROL file
-set(VTK_WITH_PYTHON                      OFF) # IMPORTANT: if ON make sure `python3` is listed as dependency in the CONTROL file
+
+if ("qt" IN_LIST FEATURES)
+    set(VTK_WITH_QT                      ON ) # IMPORTANT: if ON make sure `qt5` is listed as dependency in the CONTROL file
+else()
+    set(VTK_WITH_QT                      OFF ) # IMPORTANT: if ON make sure `qt5` is listed as dependency in the CONTROL file
+endif()
+
+if ("mpi" IN_LIST FEATURES)
+    set(VTK_WITH_MPI                     ON ) # IMPORTANT: if ON make sure `mpi` is listed as dependency in the CONTROL file
+else()
+    set(VTK_WITH_MPI                     OFF ) # IMPORTANT: if ON make sure `mpi` is listed as dependency in the CONTROL file
+endif()
+
+if ("python" IN_LIST FEATURES)
+    set(VTK_WITH_PYTHON                  ON) # IMPORTANT: if ON make sure `python3` is listed as dependency in the CONTROL file
+else()
+    set(VTK_WITH_PYTHON                  OFF) # IMPORTANT: if ON make sure `python3` is listed as dependency in the CONTROL file
+endif()
+if("openvr" IN_LIST FEATURES)
+    set(VTK_WITH_OPENVR                  ON) # IMPORTANT: if ON make sure `OpenVR` is listed as dependency in the CONTROL file
+else()
+    set(VTK_WITH_OPENVR                  OFF)
+endif()
+
 set(VTK_WITH_ALL_MODULES                 OFF) # IMPORTANT: if ON make sure `qt5`, `mpi`, `python3`, `ffmpeg`, `gdal`, `fontconfig`,
                                               #            `libmysql` and `atlmfc` are  listed as dependency in the CONTROL file
-
 # =============================================================================
 # Apply patches to the source code
 vcpkg_apply_patches(
@@ -75,6 +95,12 @@ if(VTK_WITH_PYTHON)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_WRAP_PYTHON=ON
         -DVTK_PYTHON_VERSION=3
+    )
+endif()
+
+if(VTK_WITH_OPENVR)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DModule_vtkRenderingOpenVR=ON
     )
 endif()
 

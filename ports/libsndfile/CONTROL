@@ -1,4 +1,4 @@
 Source: libsndfile
-Version: libsndfile-1.0.29-6830c42-1
+Version: 1.0.29-6830c42-1
 Description: Library to read, write and manipulate many soundfile types. Authored by Eric de Castro Lopo
 Build-Depends: libogg, libflac, libvorbis

@@ -2,6 +2,7 @@
 
 #include <vcpkg/base/system.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/help.h>
 #include <vcpkg/metrics.h>
 
 #define STRINGIFY(...) #__VA_ARGS__
@@ -61,11 +62,17 @@ namespace vcpkg::Commands::Version
             }
         }
     }
+    const CommandStructure COMMAND_STRUCTURE = {
+        Help::create_example_string("version"),
+        0,
+        0,
+        {},
+        nullptr,
+    };
 
     void perform_and_exit(const VcpkgCmdArguments& args)
     {
-        args.check_exact_arg_count(0);
-        args.check_and_get_optional_command_arguments({});
+        args.parse_arguments(COMMAND_STRUCTURE);
 
         System::println("Vcpkg package management program version %s\n"
                         "\n"

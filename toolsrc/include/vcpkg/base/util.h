@@ -20,8 +20,17 @@ namespace vcpkg::Util
         }
     }
 
+    namespace Sets
+    {
+        template<class Container, class T = ElementT<Container>>
+        bool contains(const Container& container, const T& item)
+        {
+            return container.find(item) != container.cend();
+        }
+    }
+
     template<class Cont, class Func>
-    using FmapOut = decltype(std::declval<Func>()(*begin(std::declval<Cont>())));
+    using FmapOut = decltype(std::declval<Func&>()(*begin(std::declval<Cont&>())));
 
     template<class Cont, class Func, class Out = FmapOut<Cont, Func>>
     std::vector<Out> fmap(Cont&& xs, Func&& f)
@@ -106,6 +115,22 @@ namespace vcpkg::Util
             K key = f(element);
             (*output)[key].push_back(&element);
         }
+    }
+
+    template<class Range>
+    void sort(Range& cont)
+    {
+        using std::begin;
+        using std::end;
+        std::sort(begin(cont), end(cont));
+    }
+
+    template<class Range1, class Range2>
+    bool all_equal(const Range1& r1, const Range2& r2)
+    {
+        using std::begin;
+        using std::end;
+        return std::equal(begin(r1), end(r1), begin(r2), end(r2));
     }
 
     template<class AssocContainer, class K = std::decay_t<decltype(begin(std::declval<AssocContainer>())->first)>>

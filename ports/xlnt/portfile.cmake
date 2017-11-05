@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
-set(XLNT_VERSION 1.1.0)
-set(XLNT_HASH f0c59a2b241c6b219fbd8bb39705847e2b31332e413bc4aff7e0a8d4d4b9ef6750c03ecc49a196f647fdf60c3bec9f06c800bdb53b56648d2ba9fab359623f95)
+set(XLNT_VERSION 1.2.0)
+set(XLNT_HASH 359ff1e99531513d7b1228ff07f137531be99d7a95bbc5b399168a6c609f56dba2e030464f8203db92db137ab80dbe10f71de71a62b0bcb96eaafc0f09256339)
 set(XLNT_SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/xlnt-${XLNT_VERSION})
 
 vcpkg_download_distfile(ARCHIVE
@@ -26,6 +26,8 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/man)
 file(INSTALL ${XLNT_SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/xlnt RENAME copyright)
 
 vcpkg_copy_pdbs()

@@ -4,7 +4,7 @@ project(SDL2_NET C)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4244 /wd4996")
 
 find_path(SDL_INCLUDE_DIR SDL2/SDL.h)
-find_library(SDL_LIBRARY SDL2)
+find_library(SDL_LIBRARY NAMES SDL2d SDL2)
 
 add_library(SDL2_net SDLnet.c SDLnetselect.c SDLnetTCP.c SDLnetUDP.c)
 

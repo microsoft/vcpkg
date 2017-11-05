@@ -3,6 +3,7 @@
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/globalstate.h>
+#include <vcpkg/metrics.h>
 
 #include <time.h>
 
@@ -269,11 +270,46 @@ namespace vcpkg::System
 #endif
     }
 
-    std::string create_powershell_script_cmd(const fs::path& script_path, const CStringView args)
+    std::string powershell_execute_and_capture_output(const std::string& title,
+                                                      const fs::path& script_path,
+                                                      const CStringView args)
     {
         // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
-        return Strings::format(
+        const std::string cmd = Strings::format(
             R"(powershell -NoProfile -ExecutionPolicy Bypass -Command "& {& '%s' %s}")", script_path.u8string(), args);
+
+        auto rc = System::cmd_execute_and_capture_output(cmd);
+
+        if (rc.exit_code)
+        {
+            System::println(Color::error,
+                            "%s\n"
+                            "Could not run:\n"
+                            "    '%s'\n"
+                            "Error message was:\n"
+                            "    %s",
+                            title,
+                            script_path.generic_string(),
+                            rc.output);
+
+            {
+                auto locked_metrics = Metrics::g_metrics.lock();
+                locked_metrics->track_property("error", "powershell script failed");
+                locked_metrics->track_property("title", title);
+            }
+
+            Checks::exit_with_code(VCPKG_LINE_INFO, rc.exit_code);
+        }
+
+        // Remove newline from all output.
+        // Powershell returns newlines when it hits the column count of the console.
+        // For example, this is 80 in cmd on Windows 7. If the expected output is longer than 80 lines, we get
+        // newlines in-between the data.
+        // To solve this, we design our interaction with powershell to not depend on newlines,
+        // and then strip all newlines here.
+        rc.output = Strings::replace_all(std::move(rc.output), "\n", "");
+
+        return rc.output;
     }
 
     void println() { putchar('\n'); }

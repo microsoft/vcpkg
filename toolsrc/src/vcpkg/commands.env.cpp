@@ -7,11 +7,17 @@
 
 namespace vcpkg::Commands::Env
 {
+    const CommandStructure COMMAND_STRUCTURE = {
+        Help::create_example_string("env --triplet x64-windows"),
+        0,
+        0,
+        {},
+        nullptr,
+    };
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
-        static const std::string EXAMPLE = Help::create_example_string(R"(env --triplet x64-windows)");
-        args.check_exact_arg_count(0, EXAMPLE);
-        args.check_and_get_optional_command_arguments({});
+        args.parse_arguments(COMMAND_STRUCTURE);
 
         const auto pre_build_info = Build::PreBuildInfo::from_triplet_file(paths, default_triplet);
         const Toolset& toolset = paths.get_toolset(pre_build_info.platform_toolset, pre_build_info.visual_studio_path);

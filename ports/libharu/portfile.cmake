@@ -7,52 +7,50 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LIBHPDF_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "shared" LIBHPDF_SHARED)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DLIBHPDF_STATIC=${LIBHPDF_STATIC}
+        -DLIBHPDF_SHARED=${LIBHPDF_SHARED}
 )
 
-vcpkg_build_cmake()
-
-file(GLOB DLLS
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.dll"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/*.dll"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/Release/*.dll"
-)
-file(GLOB LIBS
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*/Release/*.lib"
-)
-file(GLOB DEBUG_DLLS
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.dll"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Debug/*.dll"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*/Debug/*.dll"
-)
-file(GLOB DEBUG_LIBS
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Debug/*.lib"
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*/Debug/*.lib"
-)
-file(GLOB HEADERS "${SOURCE_PATH}/include/*.h" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/include/*.h")
-
-if(DLLS)
-    file(INSTALL ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-endif()
-file(INSTALL ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-
-if(DEBUG_DLLS)
-    file(INSTALL ${DEBUG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
-file(INSTALL ${DEBUG_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-
-file(INSTALL ${HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-
-file(INSTALL ${SOURCE_PATH}/LICENCE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libharu RENAME copyright)
+vcpkg_install_cmake()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-       file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libhpdfs.lib ${CURRENT_PACKAGES_DIR}/lib/libhpdf.lib)
        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libhpdfsd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libhpdfd.lib)
 endif()
+
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/debug/include
+    ${CURRENT_PACKAGES_DIR}/debug/README
+    ${CURRENT_PACKAGES_DIR}/debug/CHANGES
+    ${CURRENT_PACKAGES_DIR}/debug/INSTALL
+    ${CURRENT_PACKAGES_DIR}/README
+    ${CURRENT_PACKAGES_DIR}/CHANGES
+    ${CURRENT_PACKAGES_DIR}/INSTALL
+)
+
+file(READ "${CURRENT_PACKAGES_DIR}/include/hpdf.h" _contents)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    string(REPLACE "#ifdef HPDF_DLL\n" "#if 1\n" _contents "${_contents}")
+else()
+    string(REPLACE "#ifdef HPDF_DLL\n" "#if 0\n" _contents "${_contents}")
+endif()
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/hpdf.h" "${_contents}")
+
+file(READ "${CURRENT_PACKAGES_DIR}/include/hpdf_types.h" _contents)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    string(REPLACE "#ifdef HPDF_DLL\n" "#if 1\n" _contents "${_contents}")
+else()
+    string(REPLACE "#ifdef HPDF_DLL\n" "#if 0\n" _contents "${_contents}")
+endif()
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/hpdf_types.h" "${_contents}")
+
+file(INSTALL ${SOURCE_PATH}/LICENCE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libharu RENAME copyright)
 
 vcpkg_copy_pdbs()
