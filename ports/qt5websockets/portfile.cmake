@@ -13,15 +13,15 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 
-set(SRCDIR_NAME "qtimageformats-5.9.2")
-set(ARCHIVE_NAME "qtimageformats-opensource-src-5.9.2")
+set(SRCDIR_NAME "qtwebsockets-5.9.2")
+set(ARCHIVE_NAME "qtwebsockets-opensource-src-5.9.2")
 set(ARCHIVE_EXTENSION ".tar.xz")
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${SRCDIR_NAME})
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "http://download.qt.io/official_releases/qt/5.9/5.9.2/submodules/${ARCHIVE_NAME}${ARCHIVE_EXTENSION}"
     FILENAME ${SRCDIR_NAME}${ARCHIVE_EXTENSION}
-    SHA512 5f1b93c0e5fffa4c2c063d14c12ad97114a452b16814ca9ac45f00ec36308a09770b3b4d137cb5d19bd3aa3a6f576724084df5d0dad75236d49868af9243c9d2
+    SHA512 9330d6806251bc77d4c2a497a31b1b0e42a1e6bfe3ea7c00cee123052e9e1f9080e33cf4dfcd6ee6e4732c62f41257a77ec25ad607528f4e8ebe61ccaee3e159
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 if (EXISTS ${CURRENT_BUILDTREES_DIR}/src/${ARCHIVE_NAME})
@@ -59,15 +59,21 @@ vcpkg_execute_required_process(
 
 set(ENV{PATH} "${_path}")
 
-file(INSTALL ${DEBUG_DIR}/plugins DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
+file(INSTALL ${DEBUG_DIR}/bin DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
+file(INSTALL ${DEBUG_DIR}/lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
+file(INSTALL ${DEBUG_DIR}/include DESTINATION ${CURRENT_PACKAGES_DIR}/share/qt5/debug)
 file(INSTALL ${DEBUG_DIR}/mkspecs DESTINATION ${CURRENT_PACKAGES_DIR}/share/qt5/debug)
 
-file(INSTALL ${RELEASE_DIR}/plugins DESTINATION ${CURRENT_PACKAGES_DIR})
+file(INSTALL ${RELEASE_DIR}/bin DESTINATION ${CURRENT_PACKAGES_DIR})
+file(INSTALL ${RELEASE_DIR}/lib DESTINATION ${CURRENT_PACKAGES_DIR})
+file(INSTALL ${RELEASE_DIR}/include DESTINATION ${CURRENT_PACKAGES_DIR})
 file(INSTALL ${RELEASE_DIR}/mkspecs DESTINATION ${CURRENT_PACKAGES_DIR}/share/qt5)
 
-file(INSTALL ${RELEASE_DIR}/lib/cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share)
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/share/cmake)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 
-#Create an empty include file so that vcpkg doesn't complain
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/.empty_qt5imageformats "")
+file(GLOB RELEASE_DLLS "${CURRENT_PACKAGES_DIR}/lib/*.dll")
+file(GLOB DEBUG_DLLS "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll")
+file(REMOVE ${RELEASE_DLLS} ${DEBUG_DLLS})
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.LGPLv3 DESTINATION ${CURRENT_PACKAGES_DIR}/share/qt5imageformats RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.LGPL3 DESTINATION ${CURRENT_PACKAGES_DIR}/share/qt5websockets RENAME copyright)
