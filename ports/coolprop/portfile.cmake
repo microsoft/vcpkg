@@ -9,11 +9,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# Patch up the file locations
-file(COPY 
-    ${CURRENT_INSTALLED_DIR}/include/catch.hpp 
-    DESTINATION ${SOURCE_PATH}/externals/Catch/single_include
-)
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" COOLPROP_SHARED_LIBRARY)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" COOLPROP_STATIC_LIBRARY)
@@ -28,7 +23,6 @@ vcpkg_configure_cmake(
         -DCOOLPROP_STATIC_LIBRARY=${COOLPROP_STATIC_LIBRARY}
         -DCOOLPROP_MSVC_DYNAMIC=${COOLPROP_MSVC_DYNAMIC}
         -DCOOLPROP_MSVC_STATIC=${COOLPROP_MSVC_STATIC}
-        -DCMAKE_CXX_FLAGS="-I${CURRENT_INSTALLED_DIR}/include"
     OPTIONS_RELEASE
         -DCOOLPROP_RELEASE=ON
     OPTIONS_DEBUG
