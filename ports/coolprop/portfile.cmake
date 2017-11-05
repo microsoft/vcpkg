@@ -9,6 +9,12 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+# Patch up the file locations
+file(COPY 
+    ${CURRENT_INSTALLED_DIR}/include/catch.hpp 
+    DESTINATION ${SOURCE_PATH}/externals/Catch/single_include
+)
+
 file(REMOVE ${SOURCE_PATH}/CMakeLists.txt)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
