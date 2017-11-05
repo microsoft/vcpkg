@@ -20,6 +20,11 @@ file(COPY
     DESTINATION ${SOURCE_PATH}/externals/rapidjson/include
 )
 
+file(COPY 
+    ${CURRENT_INSTALLED_DIR}/include/IF97.h
+    DESTINATION ${SOURCE_PATH}/externals/IF97
+)
+
 file(COPY
     ${CURRENT_INSTALLED_DIR}/include
     DESTINATION ${SOURCE_PATH}/externals/msgpack-c
