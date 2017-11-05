@@ -9,6 +9,12 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+# Patch up the file locations
+file(COPY 
+    ${CURRENT_PACKAGES_DIR}/include/catch.hpp 
+    DESTINATION ${SOURCE_PATH}/externals/Catch/single_include
+)
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" COOLPROP_SHARED_LIBRARY)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" COOLPROP_STATIC_LIBRARY)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" COOLPROP_MSVC_DYNAMIC)
