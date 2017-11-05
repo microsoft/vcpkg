@@ -16,8 +16,8 @@ file(COPY
 )
 
 file(COPY 
-    ${CURRENT_INSTALLED_DIR}/include/rapidjson/rapidjson.h
-    DESTINATION ${SOURCE_PATH}/externals/rapidjson/include/rapidjson
+    ${CURRENT_INSTALLED_DIR}/include/rapidjson
+    DESTINATION ${SOURCE_PATH}/externals/rapidjson/include
 )
 
 file(COPY
