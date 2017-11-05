@@ -329,7 +329,7 @@ IF ( COOLPROP_OBJECT_LIBRARY OR COOLPROP_STATIC_LIBRARY OR COOLPROP_SHARED_LIBRA
   	  # Add postfix for debugging
   	  SET_PROPERTY(TARGET ${LIB_NAME} PROPERTY DEBUG_POSTFIX d)
   	  SET_PROPERTY(TARGET ${LIB_NAME} PROPERTY RELEASE_POSTFIX )
-      modify_msvc_flags("/MD") # Note that the default is not used if ${COOLPROP_MSVC_REL} or ${COOLPROP_MSVC_DBG} is set
+      # modify_msvc_flags("/MD") # Note that the default is not used if ${COOLPROP_MSVC_REL} or ${COOLPROP_MSVC_DBG} is set
   	ENDIF (MSVC)
     INSTALL(TARGETS ${LIB_NAME} DESTINATION static_library/${CMAKE_SYSTEM_NAME}/${BITNESS}bit_${CMAKE_CXX_COMPILER_ID}_${CMAKE_CXX_COMPILER_VERSION} )
     INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/${COOLPROP_LIBRARY_HEADER} DESTINATION static_library)
@@ -346,7 +346,7 @@ IF ( COOLPROP_OBJECT_LIBRARY OR COOLPROP_STATIC_LIBRARY OR COOLPROP_SHARED_LIBRA
   	  SET_PROPERTY(TARGET ${LIB_NAME} PROPERTY RELEASE_POSTFIX )
       # No lib prefix for the shared library
       SET_PROPERTY(TARGET ${LIB_NAME} PROPERTY PREFIX "")
-      modify_msvc_flags("/MT") # Note that the default is not used if ${COOLPROP_MSVC_REL} or ${COOLPROP_MSVC_DBG} is set
+      # modify_msvc_flags("/MT") # Note that the default is not used if ${COOLPROP_MSVC_REL} or ${COOLPROP_MSVC_DBG} is set
       ADD_CUSTOM_COMMAND(TARGET ${LIB_NAME} POST_BUILD
         COMMAND dumpbin /EXPORTS $<TARGET_FILE:${LIB_NAME}> > ${CMAKE_CURRENT_BINARY_DIR}/exports.txt)
       INSTALL (FILES ${CMAKE_CURRENT_BINARY_DIR}/exports.txt
@@ -841,7 +841,7 @@ if (COOLPROP_CSHARP_MODULE)
   if (WIN32)
     set_target_properties(CoolProp PROPERTIES PREFIX "")
     if (MSVC)
-      modify_msvc_flags("/MT") # Note that the default is not used if ${COOLPROP_MSVC_REL} or ${COOLPROP_MSVC_DBG} is set
+      # modify_msvc_flags("/MT") # Note that the default is not used if ${COOLPROP_MSVC_REL} or ${COOLPROP_MSVC_DBG} is set
     endif()
   endif()
 
@@ -967,7 +967,7 @@ if (COOLPROP_JAVA_MODULE)
   if (WIN32)
     set_target_properties(CoolProp PROPERTIES PREFIX "")
     if (MSVC)
-      modify_msvc_flags("/MT") # Note that the default is not used if ${COOLPROP_MSVC_REL} or ${COOLPROP_MSVC_DBG} is set
+      # modify_msvc_flags("/MT") # Note that the default is not used if ${COOLPROP_MSVC_REL} or ${COOLPROP_MSVC_DBG} is set
     endif()
   endif()
 
