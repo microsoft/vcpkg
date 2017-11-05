@@ -10,18 +10,15 @@ vcpkg_from_github(
 )
 
 # Patch up the file locations
-file(INSTALL 
+file(COPY 
     ${CURRENT_INSTALLED_DIR}/include/catch.hpp 
     DESTINATION ${SOURCE_PATH}/externals/Catch/single_include
 )
 
-file(INSTALL
+file(COPY
     ${CURRENT_INSTALLED_DIR}/include
     DESTINATION ${SOURCE_PATH}/externals/msgpack-c
 )
-
-file(REMOVE ${SOURCE_PATH}/CMakeLists.txt)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" COOLPROP_SHARED_LIBRARY)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" COOLPROP_STATIC_LIBRARY)
