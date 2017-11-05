@@ -203,39 +203,6 @@ if(CMAKE_DL_LIBS)
     find_package (${CMAKE_DL_LIBS} REQUIRED)
 endif()
 
-# include(FlagFunctions) # Is found since it is in the module path.
-macro(modify_msvc_flag_release flag_new) # Use a macro to avoid a new scope
-  foreach (flag_old IN LISTS COOLPROP_MSVC_ALL)
-    remove_compiler_flag_release("${flag_old} ") # add a space
-    remove_compiler_flag_release(" ${flag_old}") # add a space
-  endforeach()
-  add_compiler_flag_release("${flag_new}")
-endmacro()
-macro(modify_msvc_flag_debug flag_new) # Use a macro to avoid a new scope
-  foreach (flag_old IN LISTS COOLPROP_MSVC_ALL)
-    remove_compiler_flag_debug("${flag_old} ") # add a space
-    remove_compiler_flag_debug(" ${flag_old}") # add a space
-  endforeach()
-  add_compiler_flag_debug("${flag_new}")
-endmacro()
-macro(modify_msvc_flags flag_default) # Use a macro to avoid a new scope
-  if(NOT "${COOLPROP_MSVC_REL}" STREQUAL "IGNORE")
-    modify_msvc_flag_release("${COOLPROP_MSVC_REL}")
-  else()
-    modify_msvc_flag_release("${flag_default}")
-  endif()
-  if(NOT "${COOLPROP_MSVC_DBG}" STREQUAL "IGNORE")
-    modify_msvc_flag_debug("${COOLPROP_MSVC_DBG}")
-  else()
-    modify_msvc_flag_debug("${flag_default}d")
-  endif()
-endmacro()
-
-#if(MSVC)
-#  add_compiler_flag_release("/EHsc")
-#  add_compiler_flag_debug("/EHsc")
-#endif()
-
 #######################################
 #                 BITNESS             #
 #-------------------------------------#
