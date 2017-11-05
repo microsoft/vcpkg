@@ -20,6 +20,12 @@ file(COPY
     DESTINATION ${SOURCE_PATH}/externals/msgpack-c
 )
 
+# Use a nasty hack to include the correct header
+file(APPEND
+    ${SOURCE_PATH}/externals/msgpack-c/include/fmt/format.h
+    "#include \"fmt/printf.h\""
+)
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" COOLPROP_SHARED_LIBRARY)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" COOLPROP_STATIC_LIBRARY)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" COOLPROP_MSVC_DYNAMIC)
