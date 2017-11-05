@@ -43,7 +43,7 @@ else()
 endif()
 string(CONCAT _contents "#include \"hpdf_objects.h\"\n" ${_contents})
 
-string(REPLACE "typedef void *HPDF_HANDLE" "typedef void *HPDF_HANDLE;" _contents "${_contents}")
+string(REPLACE "typedef void         *HPDF_HANDLE" "typedef void         *HPDF_HANDLE;" _contents "${_contents}")
 string(REPLACE "typedef HPDF_HANDLE   HPDF_Pages" "" _contents "${_contents}")
 string(REPLACE "typedef HPDF_HANDLE   HPDF_Page" "" _contents "${_contents}")
 string(REPLACE "typedef HPDF_HANDLE   HPDF_Stream" "" _contents "${_contents}")
