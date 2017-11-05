@@ -203,7 +203,7 @@ if(CMAKE_DL_LIBS)
     find_package (${CMAKE_DL_LIBS} REQUIRED)
 endif()
 
-include(FlagFunctions) # Is found since it is in the module path.
+# include(FlagFunctions) # Is found since it is in the module path.
 macro(modify_msvc_flag_release flag_new) # Use a macro to avoid a new scope
   foreach (flag_old IN LISTS COOLPROP_MSVC_ALL)
     remove_compiler_flag_release("${flag_old} ") # add a space
