@@ -15,6 +15,11 @@ file(COPY
     DESTINATION ${SOURCE_PATH}/externals/Catch/single_include
 )
 
+file(COPY 
+    ${CURRENT_INSTALLED_DIR}/include/fmt/format.h
+    DESTINATION ${SOURCE_PATH}/fmt
+)
+
 file(REMOVE ${SOURCE_PATH}/CMakeLists.txt)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
