@@ -142,12 +142,19 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
             New-Item -ItemType Directory -Path $destination | Out-Null
         }
 
-        if (Test-Command -commandName 'Expand-Archive')
+        if (Test-Command -commandName 'Microsoft.PowerShell.Archive\Expand-Archive')
         {
-            Expand-Archive -path $file -destinationpath $destination
+            Write-Verbose("Extracting with Microsoft.PowerShell.Archive\Expand-Archive")
+            Microsoft.PowerShell.Archive\Expand-Archive -path $file -destinationpath $destination
+        }
+        elseif (Test-Command -commandName 'Pscx\Expand-Archive')
+        {
+            Write-Verbose("Extracting with Pscx\Expand-Archive")
+            Pscx\Expand-Archive -path $file -OutputPath $destination
         }
         else
         {
+            Write-Verbose("Extracting via shell")
             $shell = new-object -com shell.application
             $zip = $shell.NameSpace($file)
             foreach($item in $zip.items())
@@ -257,7 +264,6 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     {
         if (-not (Test-Path $executableFromDownload)) # consider renaming the extraction folder to make sure the extraction finished
         {
-            # Expand-Archive $downloadPath -dest "$extractionFolder" -Force # Requires powershell 5+
             Expand-ZIPFile -File $downloadPath -Destination $extractionFolder
         }
     }
