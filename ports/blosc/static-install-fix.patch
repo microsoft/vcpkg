@@ -1,0 +1,15 @@
+diff --git a/blosc/CMakeLists.txt b/blosc/CMakeLists.txt
+index cd163f4..8cb1bdb 100644
+--- a/blosc/CMakeLists.txt
++++ b/blosc/CMakeLists.txt
+@@ -211,7 +211,9 @@ endif(BUILD_STATIC)
+ # install
+ if(BLOSC_INSTALL)
+     install(FILES blosc.h blosc-export.h DESTINATION include COMPONENT DEV)
+-    install(TARGETS blosc_shared DESTINATION ${lib_dir} COMPONENT LIB)
++    if(BUILD_SHARED)
++        install(TARGETS blosc_shared DESTINATION ${lib_dir} COMPONENT LIB)
++    endif(BUILD_SHARED)
+     if(BUILD_STATIC)
+         install(TARGETS blosc_static DESTINATION ${lib_dir} COMPONENT DEV)
+     endif(BUILD_STATIC)
