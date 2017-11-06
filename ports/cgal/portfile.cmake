@@ -1,5 +1,7 @@
 include(vcpkg_common_functions)
 
+file(MAKE_DIRECTORY ${DOWNLOADS}/CGAL-cgal-releases)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CGAL/cgal
