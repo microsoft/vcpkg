@@ -31,6 +31,30 @@ function Get-Credential-Backwards-Compatible()
     }
 }
 
+function Get-Hash-SHA265()
+{
+    if (Test-Command -commandName 'Microsoft.PowerShell.Utility\Get-FileHash')
+    {
+        Write-Verbose("Hashing with Microsoft.PowerShell.Utility\Get-FileHash")
+        $downloadedFileHash =  (Get-FileHash -Path $downloadPath -Algorithm SHA256).Hash
+    }
+    elseif(Test-Command -commandName 'Pscx\Get-Hash')
+    {
+        Write-Verbose("Hashing with Pscx\Get-Hash")
+        $downloadedFileHash =  (Get-Hash -Path $downloadPath -Algorithm SHA256).HashString
+    }
+    else
+    {
+        Write-Verbose("Hashing with .NET")
+        $hashAlgorithm = [Security.Cryptography.HashAlgorithm]::Create("SHA256")
+        $fileAsByteArray = [io.File]::ReadAllBytes($downloadPath)
+        $hashByteArray = $hashAlgorithm.ComputeHash($fileAsByteArray)
+        $downloadedFileHash = -Join ($hashByteArray | ForEach-Object {"{0:x2}" -f $_})
+    }
+
+    return $downloadedFileHash.ToLower()
+}
+
 if (Test-Module -moduleName 'BitsTransfer')
 {
    Import-Module BitsTransfer -Verbose:$false
@@ -233,20 +257,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 
     performDownload $Dependency $url $downloadsDir $downloadPath $downloadVersion $requiredVersion
 
-    #calculating the hash
-    if (Test-Command -commandName 'Get-FileHash')
-    {
-        $downloadedFileHash = (Get-FileHash -Path $downloadPath -Algorithm SHA256).Hash
-    }
-    else
-    {
-        $hashAlgorithm = [Security.Cryptography.HashAlgorithm]::Create("SHA256")
-        $fileAsByteArray = [io.File]::ReadAllBytes($downloadPath)
-        $hashByteArray = $hashAlgorithm.ComputeHash($fileAsByteArray)
-        $downloadedFileHash = -Join ($hashByteArray | ForEach-Object {"{0:x2}" -f $_})
-    }
-
-    $downloadedFileHash = $downloadedFileHash.ToLower()
+    $downloadedFileHash = Get-Hash-SHA265 $downloadPath
     if ($expectedDownloadedFileHash -ne $downloadedFileHash)
     {
         Write-Host ("`nFile does not have expected hash:`n" +
