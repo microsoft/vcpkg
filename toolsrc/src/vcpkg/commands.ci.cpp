@@ -58,13 +58,23 @@ namespace vcpkg::Commands::CI
         Install::InstallSummary summary;
     };
 
+    static const std::string OPTION_EXCLUDE = "--exclude";
+
+    static const std::array<CommandSetting, 1> CI_SETTINGS = {{
+        {OPTION_EXCLUDE, "Comma separated list of ports to skip"},
+    }};
+
+    const CommandStructure COMMAND_STRUCTURE = {
+        Help::create_example_string("ci x64-windows"),
+        0,
+        SIZE_MAX,
+        {{}, CI_SETTINGS},
+        nullptr,
+    };
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
-        static const std::string OPTION_EXCLUDE = "--exclude";
-
-        static const std::string EXAMPLE = Help::create_example_string("ci x64-windows");
-
-        const ParsedArguments options = args.check_and_get_optional_command_arguments({}, {OPTION_EXCLUDE});
+        const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
         const std::vector<std::string> exclusions = Strings::split(options.settings.at(OPTION_EXCLUDE), ",");
         const std::set<std::string> exclusions_set(exclusions.cbegin(), exclusions.cend());
 

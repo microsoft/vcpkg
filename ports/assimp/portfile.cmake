@@ -16,6 +16,8 @@ vcpkg_apply_patches(
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake-modules/FindZLIB.cmake)
+set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
+set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

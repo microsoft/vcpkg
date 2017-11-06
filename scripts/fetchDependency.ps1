@@ -31,6 +31,30 @@ function Get-Credential-Backwards-Compatible()
     }
 }
 
+function Get-Hash-SHA265()
+{
+    if (Test-Command -commandName 'Microsoft.PowerShell.Utility\Get-FileHash')
+    {
+        Write-Verbose("Hashing with Microsoft.PowerShell.Utility\Get-FileHash")
+        $downloadedFileHash =  (Get-FileHash -Path $downloadPath -Algorithm SHA256).Hash
+    }
+    elseif(Test-Command -commandName 'Pscx\Get-Hash')
+    {
+        Write-Verbose("Hashing with Pscx\Get-Hash")
+        $downloadedFileHash =  (Get-Hash -Path $downloadPath -Algorithm SHA256).HashString
+    }
+    else
+    {
+        Write-Verbose("Hashing with .NET")
+        $hashAlgorithm = [Security.Cryptography.HashAlgorithm]::Create("SHA256")
+        $fileAsByteArray = [io.File]::ReadAllBytes($downloadPath)
+        $hashByteArray = $hashAlgorithm.ComputeHash($fileAsByteArray)
+        $downloadedFileHash = -Join ($hashByteArray | ForEach-Object {"{0:x2}" -f $_})
+    }
+
+    return $downloadedFileHash.ToLower()
+}
+
 if (Test-Module -moduleName 'BitsTransfer')
 {
    Import-Module BitsTransfer -Verbose:$false
@@ -57,13 +81,22 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
             return
         }
 
-        # Can't print because vcpkg captures the output and expects only the path that is returned at the end of this script file
-        # Write-Host "A suitable version of $Dependency was not found (required v$requiredVersion). Downloading portable $Dependency v$downloadVersion..."
-
         if (!(Test-Path $downloadDir))
         {
             New-Item -ItemType directory -Path $downloadDir | Out-Null
         }
+
+        $downloadsTemp = "$downloadDir/temp"
+        if (Test-Path $downloadsTemp) # Delete temp dir if it exists
+        {
+            Remove-Item $downloadsTemp -Recurse -Force
+        }
+        if (!(Test-Path $downloadsTemp)) # Recreate temp dir. It may still be there the dir was in use
+        {
+            New-Item -ItemType directory -Path $downloadsTemp | Out-Null
+        }
+
+        $tempDownloadName = "$downloadsTemp/$Dependency-$downloadVersion.temp"
 
         $WC = New-Object System.Net.WebClient
         $ProxyAuth = !$WC.Proxy.IsBypassed($url)
@@ -79,15 +112,16 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
                     $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyAuthentication","Basic")
                     $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyCredential", $ProxyCred)
                 }
-                Start-BitsTransfer -Source $url -Destination $downloadPath -ErrorAction Stop
+                Start-BitsTransfer -Source $url -Destination $tempDownloadName -ErrorAction Stop
+                Move-Item -Path $tempDownloadName -Destination $downloadPath
                 return
             }
             catch [System.Exception]
             {
                 # If BITS fails for any reason, delete any potentially partially downloaded files and continue
-                if (Test-Path $downloadPath)
+                if (Test-Path $tempDownloadName)
                 {
-                    Remove-Item $downloadPath
+                    Remove-Item $tempDownloadName
                 }
             }
         }
@@ -98,7 +132,8 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         }
 
         Write-Verbose("Downloading $Dependency...")
-        $WC.DownloadFile($url, $downloadPath)
+        $WC.DownloadFile($url, $tempDownloadName)
+        Move-Item -Path $tempDownloadName -Destination $downloadPath
     }
 
     # Enums (without resorting to C#) are only available on powershell 5+.
@@ -131,12 +166,19 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
             New-Item -ItemType Directory -Path $destination | Out-Null
         }
 
-        if (Test-Command -commandName 'Expand-Archive')
+        if (Test-Command -commandName 'Microsoft.PowerShell.Archive\Expand-Archive')
         {
-            Expand-Archive -path $file -destinationpath $destination
+            Write-Verbose("Extracting with Microsoft.PowerShell.Archive\Expand-Archive")
+            Microsoft.PowerShell.Archive\Expand-Archive -path $file -destinationpath $destination
+        }
+        elseif (Test-Command -commandName 'Pscx\Expand-Archive')
+        {
+            Write-Verbose("Extracting with Pscx\Expand-Archive")
+            Pscx\Expand-Archive -path $file -OutputPath $destination
         }
         else
         {
+            Write-Verbose("Extracting via shell")
             $shell = new-object -com shell.application
             $zip = $shell.NameSpace($file)
             foreach($item in $zip.items())
@@ -149,12 +191,12 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 
     if($Dependency -eq "cmake")
     {
-        $requiredVersion = "3.9.4"
-        $downloadVersion = "3.9.4"
-        $url = "https://cmake.org/files/v3.9/cmake-3.9.4-win32-x86.zip"
-        $downloadPath = "$downloadsDir\cmake-3.9.4-win32-x86.zip"
-        $expectedDownloadedFileHash = "8214df1ff51f9a6a1f0e27f9bd18f402b1749c5b645fbf6e401bcb00047171cd"
-        $executableFromDownload = "$downloadsDir\cmake-3.9.4-win32-x86\bin\cmake.exe"
+        $requiredVersion = "3.9.5"
+        $downloadVersion = "3.9.5"
+        $url = "https://cmake.org/files/v3.9/cmake-3.9.5-win32-x86.zip"
+        $downloadPath = "$downloadsDir\cmake-3.9.5-win32-x86.zip"
+        $expectedDownloadedFileHash = "dd3e183254c12f7c338d3edfa642f1ac84a763b8b9a2feabb4ad5fccece5dff9"
+        $executableFromDownload = "$downloadsDir\cmake-3.9.5-win32-x86\bin\cmake.exe"
         $extractionType = $ExtractionType_ZIP
         $extractionFolder = $downloadsDir
     }
@@ -170,11 +212,11 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     }
     elseif($Dependency -eq "vswhere")
     {
-        $requiredVersion = "2.2.7"
-        $downloadVersion = "2.2.7"
-        $url = "https://github.com/Microsoft/vswhere/releases/download/2.2.7/vswhere.exe"
+        $requiredVersion = "2.2.11"
+        $downloadVersion = "2.2.11"
+        $url = "https://github.com/Microsoft/vswhere/releases/download/2.2.11/vswhere.exe"
         $downloadPath = "$downloadsDir\vswhere-$downloadVersion\vswhere.exe"
-        $expectedDownloadedFileHash = "f50303881da706132516d9decfd5314d524a0044daf49c0cfd21dc39c1261ec3"
+        $expectedDownloadedFileHash = "0235c2cb6341978abdf32e27fcf1d7af5cb5514c035e529c4cd9283e6f1a261f"
         $executableFromDownload = $downloadPath
         $extractionType = $ExtractionType_NO_EXTRACTION_REQUIRED
     }
@@ -215,22 +257,14 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 
     performDownload $Dependency $url $downloadsDir $downloadPath $downloadVersion $requiredVersion
 
-    #calculating the hash
-    if (Test-Command -commandName 'Get-FileHash')
-    {
-        $downloadedFileHash = (Get-FileHash -Path $downloadPath -Algorithm SHA256).Hash
-    }
-    else
-    {
-        $hashAlgorithm = [Security.Cryptography.HashAlgorithm]::Create("SHA256")
-        $fileAsByteArray = [io.File]::ReadAllBytes($downloadPath)
-        $hashByteArray = $hashAlgorithm.ComputeHash($fileAsByteArray)
-        $downloadedFileHash = -Join ($hashByteArray | ForEach-Object {"{0:x2}" -f $_})
-    }
-
+    $downloadedFileHash = Get-Hash-SHA265 $downloadPath
     if ($expectedDownloadedFileHash -ne $downloadedFileHash)
     {
-        throw [System.IO.FileNotFoundException] ("Mismatching hash of the downloaded " + $Dependency)
+        Write-Host ("`nFile does not have expected hash:`n" +
+        "        File path: [ $downloadPath ]`n" +
+        "    Expected hash: [ $expectedDownloadedFileHash ]`n" +
+        "      Actual hash: [ $downloadedFileHash ]`n")
+        throw "Invalid Hash"
     }
 
     if ($extractionType -eq $ExtractionType_NO_EXTRACTION_REQUIRED)
@@ -241,7 +275,6 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     {
         if (-not (Test-Path $executableFromDownload)) # consider renaming the extraction folder to make sure the extraction finished
         {
-            # Expand-Archive $downloadPath -dest "$extractionFolder" -Force # Requires powershell 5+
             Expand-ZIPFile -File $downloadPath -Destination $extractionFolder
         }
     }
@@ -259,7 +292,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 
     if (-not (Test-Path $executableFromDownload))
     {
-        throw [System.IO.FileNotFoundException] ("Could not detect or download " + $Dependency)
+        throw ("Could not detect or download " + $Dependency)
     }
 
     return $executableFromDownload

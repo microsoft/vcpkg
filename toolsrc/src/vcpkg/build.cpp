@@ -28,10 +28,10 @@ namespace vcpkg::Build::Command
 
     static const std::string OPTION_CHECKS_ONLY = "--checks-only";
 
-    void perform_and_exit(const FullPackageSpec& full_spec,
-                          const fs::path& port_dir,
-                          const ParsedArguments& options,
-                          const VcpkgPaths& paths)
+    void perform_and_exit_ex(const FullPackageSpec& full_spec,
+                             const fs::path& port_dir,
+                             const ParsedArguments& options,
+                             const VcpkgPaths& paths)
     {
         const PackageSpec& spec = full_spec.package_spec;
         if (Util::Sets::contains(options.switches, OPTION_CHECKS_ONLY))
@@ -97,21 +97,32 @@ namespace vcpkg::Build::Command
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 
+    static const std::array<CommandSwitch, 1> BUILD_SWITCHES = {{
+        {OPTION_CHECKS_ONLY, "Only run checks, do not rebuild package"},
+    }};
+
+    const CommandStructure COMMAND_STRUCTURE = {
+        Help::create_example_string("build zlib:x64-windows"),
+        1,
+        1,
+        {BUILD_SWITCHES, {}},
+        nullptr,
+    };
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
-        static const std::string EXAMPLE = Help::create_example_string("build zlib:x64-windows");
         // Build only takes a single package and all dependencies must already be installed
-        args.check_exact_arg_count(1, EXAMPLE);
+        const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
         const std::string command_argument = args.command_arguments.at(0);
-        const FullPackageSpec spec = Input::check_and_get_full_package_spec(command_argument, default_triplet, EXAMPLE);
+        const FullPackageSpec spec =
+            Input::check_and_get_full_package_spec(command_argument, default_triplet, COMMAND_STRUCTURE.example_text);
         Input::check_triplet(spec.package_spec.triplet(), paths);
         if (!spec.features.empty() && !GlobalState::feature_packages)
         {
             Checks::exit_with_message(
                 VCPKG_LINE_INFO, "Feature packages are experimentally available under the --featurepackages flag.");
         }
-        const ParsedArguments options = args.check_and_get_optional_command_arguments({OPTION_CHECKS_ONLY}, {});
-        perform_and_exit(spec, paths.port_dir(spec.package_spec), options, paths);
+        perform_and_exit_ex(spec, paths.port_dir(spec.package_spec), options, paths);
     }
 }
 
@@ -478,7 +489,7 @@ namespace vcpkg::Build
                                                          {"CMAKE_TRIPLET_FILE", triplet_file_path},
                                                      });
         const auto ec_data = System::cmd_execute_and_capture_output(cmd_launch_cmake);
-        Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0);
+        Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, ec_data.output);
 
         const std::vector<std::string> lines = Strings::split(ec_data.output, "\n");
 

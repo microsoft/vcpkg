@@ -14,6 +14,7 @@ vcpkg_apply_patches(
             "${CMAKE_CURRENT_LIST_DIR}/001-fix-uwp.patch"
             "${CMAKE_CURRENT_LIST_DIR}/002-fix-uwp.patch"
             "${CMAKE_CURRENT_LIST_DIR}/no-double-expand-enable-pylint.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/msvs-fix-2017-u5.patch"
 )
 file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty/libjpeg ${SOURCE_PATH}/3rdparty/libpng ${SOURCE_PATH}/3rdparty/zlib ${SOURCE_PATH}/3rdparty/libtiff)
 
@@ -57,6 +58,11 @@ if("vtk" IN_LIST FEATURES)
   set(WITH_VTK ON)
 endif()
 
+set(WITH_MSMF ON)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+  set(WITH_MSMF OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
@@ -86,6 +92,7 @@ vcpkg_configure_cmake(
         # CMAKE
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
         # ENABLE
+        -DENABLE_CXX11=ON
         -DENABLE_PYLINT=OFF
         # INSTALL
         -DINSTALL_FORCE_UNIX_PATHS=ON
@@ -100,6 +107,7 @@ vcpkg_configure_cmake(
         -DWITH_CUDA=${WITH_CUDA}
         -DWITH_FFMPEG=${WITH_FFMPEG}
         -DWITH_LAPACK=OFF
+        -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_OPENGL=ON
         -DWITH_QT=${WITH_QT}

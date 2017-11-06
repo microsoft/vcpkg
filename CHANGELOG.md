@@ -1,3 +1,26 @@
+vcpkg (0.0.96)
+--------------
+  * Add ports:
+    - arb            2.11.1
+    - fdk-aac        2017-11-02-1e351
+    - flint          2.5.2
+    - itk            4.11.0
+    - libaiff        5.0
+  * Update ports:
+    - antlr4         4.6-1 -> 4.7
+    - apr            1.6.2-1 -> 1.6.3
+    - double-conversion 3.0.0-1 -> 3.0.0-2
+    - flann          1.9.1-6 -> 1.9.1-7
+    - opencv         3.3.1-4 -> 3.3.1-6
+    - protobuf       3.4.1-1 -> 3.4.1-2
+  * `vcpkg help`: Add help topics for commands. For example `vcpkg help install`
+  * `vcpkg` now downloads in a temp directory; after the download is complete, the file is moved to the destination. This avoids issues with hash mismatch on partially downloaded files.
+  * Update required version & auto-downloaded version of `cmake` to 3.9.5
+  * Update required version & auto-downloaded version of `vswhere` to 2.2.11
+
+-- vcpkg team <vcpkg@microsoft.com>  WED, 03 Nov 2017 18:45:00 -0800
+
+
 vcpkg (0.0.95)
 --------------
   * Update ports:

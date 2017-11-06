@@ -1,12 +1,12 @@
 diff --git a/antlr4-common.h b/antlr4-common.h
-index 197fd6d..34a62c8 100644
+index ce45e9e..3162795 100644
 --- a/antlr4-common.h
 +++ b/antlr4-common.h
-@@ -34,6 +34,7 @@
- #include <bitset>
- #include <condition_variable>
+@@ -48,6 +48,7 @@
+   #endif
  
-+#define ANTLR4CPP_STATIC
- // Defines for the Guid class and other platform dependent stuff.
- #ifdef _WIN32
-   #pragma warning (disable: 4250) // Class inherits by dominance.
+   #define GUID_WINDOWS
++  #define ANTLR4CPP_STATIC
+ 
+   #ifdef _WIN64
+     typedef __int64 ssize_t;

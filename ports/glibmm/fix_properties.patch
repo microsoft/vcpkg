@@ -1,0 +1,1721 @@
+diff --git a/MSVC_Net2013/gendef.vcxproj b/MSVC_Net2013/gendef.vcxproj
+index 62dbcc8..7da2fbd 100644
+--- a/MSVC_Net2013/gendef.vcxproj
++++ b/MSVC_Net2013/gendef.vcxproj
+@@ -91,6 +91,7 @@
+       <DataExecutionPrevention>
+       </DataExecutionPrevention>
+       <TargetMachine>MachineX86</TargetMachine>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+@@ -109,6 +110,7 @@
+       <DataExecutionPrevention>
+       </DataExecutionPrevention>
+       <TargetMachine>MachineX86</TargetMachine>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+@@ -132,6 +134,7 @@
+       <DataExecutionPrevention>
+       </DataExecutionPrevention>
+       <TargetMachine>MachineX64</TargetMachine>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+@@ -153,6 +156,7 @@
+       <DataExecutionPrevention>
+       </DataExecutionPrevention>
+       <TargetMachine>MachineX64</TargetMachine>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+@@ -161,4 +165,4 @@
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+   <ImportGroup Label="ExtensionTargets">
+   </ImportGroup>
+-</Project>
++</Project>
+\ No newline at end of file
+diff --git a/MSVC_Net2013/giomm.vcxproj b/MSVC_Net2013/giomm.vcxproj
+index bc4fc3d..078fcb2 100644
+--- a/MSVC_Net2013/giomm.vcxproj
++++ b/MSVC_Net2013/giomm.vcxproj
+@@ -69,7 +69,7 @@
+     <ClCompile>
+       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+       <Optimization>Disabled</Optimization>
+-      <AdditionalIncludeDirectories>.\giomm;..\gio;$(GlibEtcInstallRoot)\include\gio-win32-2.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>.\giomm;..\gio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>_DEBUG;$(GioMMBuildDefs);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <MinimalRebuild>true</MinimalRebuild>
+       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+@@ -82,7 +82,7 @@
+       <Command>$(OutDir)\gendef.exe $(DefDir)\$(ProjectName).def $(ProjectName)$(DebugDllSuffix).dll $(IntDir)*.obj</Command>
+     </PreLinkEvent>
+     <Link>
+-      <AdditionalDependencies>gio-2.0.lib;$(CPPDepLibsDebug);%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <OutputFile>$(OutDir)\$(ProjectName)$(DebugDllSuffix).dll</OutputFile>
+       <ImportLibrary>$(TargetDir)$(ProjectName)$(DebugDllSuffix).lib</ImportLibrary>
+@@ -100,7 +100,7 @@
+     <ClCompile>
+       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+       <Optimization>Disabled</Optimization>
+-      <AdditionalIncludeDirectories>.;../..;../../glib;../../gio;$(SolutionDir)\glibmm;..\..\..\vs10\x64\include\gio-win32-2.0;..\..\..\vs10\x64\include\glib-2.0;..\..\..\vs10\x64\lib\glib-2.0\include;..\..\..\vs10\x64\include\sigc++-2.0;..\..\..\vs10\x64\lib\sigc++-2.0\include;..\..\..\vs10\x64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>.\giomm;..\gio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>_DEBUG;$(GioMMBuildDefs);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <MinimalRebuild>true</MinimalRebuild>
+       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+@@ -113,7 +113,7 @@
+       <Command>$(OutDir)\gendef.exe $(DefDir)\$(ProjectName).def $(ProjectName)$(DebugDllSuffix).dll $(IntDir)*.obj</Command>
+     </PreLinkEvent>
+     <Link>
+-      <AdditionalDependencies>gio-2.0.lib;$(CPPDepLibsDebug);%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <OutputFile>$(OutDir)\$(ProjectName)$(DebugDllSuffix).dll</OutputFile>
+       <ImportLibrary>$(TargetDir)$(ProjectName)$(DebugDllSuffix).lib</ImportLibrary>
+@@ -128,7 +128,7 @@
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+     <ClCompile>
+       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+-      <AdditionalIncludeDirectories>.\giomm;..\gio;$(GlibEtcInstallRoot)\include\gio-win32-2.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>.\giomm;..\gio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>$(GioMMBuildDefs);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+       <WarningLevel>Level3</WarningLevel>
+@@ -139,7 +139,7 @@
+       <Command>$(OutDir)\gendef.exe $(DefDir)\$(ProjectName).def $(ProjectName)$(ReleaseDllSuffix).dll $(IntDir)*.obj</Command>
+     </PreLinkEvent>
+     <Link>
+-      <AdditionalDependencies>gio-2.0.lib;$(CPPDepLibsRelease);%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <OutputFile>$(OutDir)\$(ProjectName)$(ReleaseDllSuffix).dll</OutputFile>
+       <ImportLibrary>$(TargetDir)$(ProjectName)$(ReleaseDllSuffix).lib</ImportLibrary>
+@@ -158,7 +158,7 @@
+     </Midl>
+     <ClCompile>
+       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+-      <AdditionalIncludeDirectories>.\giomm;..\gio;$(GlibEtcInstallRoot)\include\gio-win32-2.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>.\giomm;..\gio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>$(GioMMBuildDefs);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+       <WarningLevel>Level3</WarningLevel>
+@@ -169,7 +169,7 @@
+       <Command>$(OutDir)\gendef.exe $(DefDir)\$(ProjectName).def $(ProjectName)$(ReleaseDllSuffix).dll $(IntDir)*.obj</Command>
+     </PreLinkEvent>
+     <Link>
+-      <AdditionalDependencies>gio-2.0.lib;$(CPPDepLibsRelease);%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <OutputFile>$(OutDir)\$(ProjectName)$(ReleaseDllSuffix).dll</OutputFile>
+       <ImportLibrary>$(TargetDir)$(ProjectName)$(ReleaseDllSuffix).lib</ImportLibrary>
+@@ -455,4 +455,4 @@
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+   <ImportGroup Label="ExtensionTargets">
+   </ImportGroup>
+-</Project>
++</Project>
+\ No newline at end of file
+diff --git a/MSVC_Net2013/giomm.vcxproj.filters b/MSVC_Net2013/giomm.vcxproj.filters
+index 4f01b13..934eddc 100644
+--- a/MSVC_Net2013/giomm.vcxproj.filters
++++ b/MSVC_Net2013/giomm.vcxproj.filters
+@@ -15,266 +15,780 @@
+     </Filter>
+   </ItemGroup>
+   <ItemGroup>
+-    <ClCompile Include="..\gio\giomm\action.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\actiongroup.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\actionmap.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\appinfo.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\applaunchcontext.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\application.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\applicationcommandline.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\asyncinitable.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\asyncresult.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\bufferedinputstream.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\bufferedoutputstream.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\cancellable.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\charsetconverter.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\contenttype.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\converter.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\converterinputstream.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\converteroutputstream.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\credentials.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\datainputstream.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\dataoutputstream.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\dbusactiongroup.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\dbusaddress.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\dbusauthobserver.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\dbusconnection.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\dbuserror.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\dbuserrorutils.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\dbusinterface.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\dbusinterfaceskeleton.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\dbusinterfacevtable.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\dbusintrospection.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\dbusmenumodel.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\dbusmessage.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\dbusmethodinvocation.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\dbusobject.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\dbusownname.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\dbusproxy.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\dbusserver.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\dbussubtreevtable.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\dbusutils.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\dbuswatchname.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\drive.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\emblem.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\emblemedicon.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\enums.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\error.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\file.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\fileattributeinfo.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\fileattributeinfolist.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\fileenumerator.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\fileicon.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\fileinfo.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\fileinputstream.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\fileiostream.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\filemonitor.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\filenamecompleter.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\fileoutputstream.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\filterinputstream.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\filteroutputstream.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\icon.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\inetaddress.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\inetsocketaddress.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\init.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\initable.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\inputstream.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\iostream.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\listmodel.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\liststore.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\loadableicon.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\memoryinputstream.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\memoryoutputstream.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\menu.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\menuattributeiter.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\menuitem.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\menulinkiter.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\menumodel.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\mount.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\mountoperation.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\networkaddress.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\networkmonitor.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\networkservice.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\notification.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\outputstream.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\permission.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\pollableinputstream.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\pollableoutputstream.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\proxy.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\proxyaddress.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\proxyresolver.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\remoteactiongroup.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\resolver.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\resource.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\seekable.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\settings.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\settingsschema.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\settingsschemakey.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\settingsschemasource.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\simpleaction.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\simpleactiongroup.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\simpleiostream.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\simplepermission.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\slot_async.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\socket.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\socketaddress.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\socketaddressenumerator.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\socketclient.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\socketconnectable.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\socketconnection.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\socketcontrolmessage.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\socketlistener.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\socketservice.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\socketsource.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\srvtarget.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\tcpconnection.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\tcpwrapperconnection.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\themedicon.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\tlscertificate.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\tlsclientconnection.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\tlsconnection.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\tlsdatabase.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\tlsinteraction.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\tlspassword.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\tlsserverconnection.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\volume.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\volumemonitor.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\wrap_init.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\zlibcompressor.cc"><Filter>Source Files</Filter></ClCompile>
+-    <ClCompile Include="..\gio\giomm\zlibdecompressor.cc"><Filter>Source Files</Filter></ClCompile>
++    <ClCompile Include="..\gio\giomm\action.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\actiongroup.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\actionmap.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\appinfo.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\applaunchcontext.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\application.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\applicationcommandline.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\asyncinitable.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\asyncresult.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\bufferedinputstream.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\bufferedoutputstream.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\cancellable.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\charsetconverter.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\contenttype.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\converter.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\converterinputstream.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\converteroutputstream.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\credentials.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\datainputstream.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\dataoutputstream.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\dbusactiongroup.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\dbusaddress.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\dbusauthobserver.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\dbusconnection.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\dbuserror.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\dbuserrorutils.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\dbusinterface.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\dbusinterfaceskeleton.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\dbusinterfacevtable.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\dbusintrospection.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\dbusmenumodel.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\dbusmessage.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\dbusmethodinvocation.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\dbusobject.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\dbusownname.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\dbusproxy.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\dbusserver.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\dbussubtreevtable.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\dbusutils.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\dbuswatchname.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\drive.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\emblem.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\emblemedicon.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\enums.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\error.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\file.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\fileattributeinfo.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\fileattributeinfolist.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\fileenumerator.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\fileicon.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\fileinfo.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\fileinputstream.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\fileiostream.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\filemonitor.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\filenamecompleter.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\fileoutputstream.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\filterinputstream.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\filteroutputstream.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\icon.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\inetaddress.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\inetsocketaddress.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\init.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\initable.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\inputstream.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\iostream.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\listmodel.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\liststore.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\loadableicon.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\memoryinputstream.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\memoryoutputstream.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\menu.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\menuattributeiter.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\menuitem.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\menulinkiter.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\menumodel.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\mount.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\mountoperation.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\networkaddress.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\networkmonitor.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\networkservice.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\notification.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\outputstream.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\permission.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\pollableinputstream.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\pollableoutputstream.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\proxy.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\proxyaddress.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\proxyresolver.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\remoteactiongroup.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\resolver.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\resource.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\seekable.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\settings.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\settingsschema.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\settingsschemakey.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\settingsschemasource.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\simpleaction.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\simpleactiongroup.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\simpleiostream.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\simplepermission.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\slot_async.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\socket.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\socketaddress.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\socketaddressenumerator.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\socketclient.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\socketconnectable.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\socketconnection.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\socketcontrolmessage.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\socketlistener.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\socketservice.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\socketsource.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\srvtarget.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\tcpconnection.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\tcpwrapperconnection.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\themedicon.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\tlscertificate.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\tlsclientconnection.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\tlsconnection.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\tlsdatabase.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\tlsinteraction.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\tlspassword.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\tlsserverconnection.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\volume.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\volumemonitor.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\wrap_init.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\zlibcompressor.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\zlibdecompressor.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
++    <ClCompile Include="..\gio\giomm\threadedsocketservice.cc">
++      <Filter>Source Files</Filter>
++    </ClCompile>
+   </ItemGroup>
+   <ItemGroup>
+-    <ClInclude Include="..\gio\giomm\action.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\actiongroup.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\actionmap.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\appinfo.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\applaunchcontext.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\application.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\applicationcommandline.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\asyncinitable.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\asyncresult.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\bufferedinputstream.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\bufferedoutputstream.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\cancellable.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\charsetconverter.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\contenttype.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\converter.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\converterinputstream.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\converteroutputstream.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\credentials.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\datainputstream.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\dataoutputstream.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\dbusactiongroup.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\dbusaddress.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\dbusauthobserver.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\dbusconnection.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\dbuserror.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\dbuserrorutils.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\dbusinterface.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\dbusinterfaceskeleton.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\dbusinterfacevtable.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\dbusintrospection.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\dbusmenumodel.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\dbusmessage.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\dbusmethodinvocation.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\dbusobject.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\dbusownname.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\dbusproxy.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\dbusserver.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\dbussubtreevtable.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\dbusutils.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\dbuswatchname.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\drive.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\emblem.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\emblemedicon.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\enums.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\error.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\file.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\fileattributeinfo.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\fileattributeinfolist.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\fileenumerator.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\fileicon.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\fileinfo.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\fileinputstream.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\fileiostream.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\filemonitor.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\filenamecompleter.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\fileoutputstream.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\filterinputstream.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\filteroutputstream.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\icon.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\inetaddress.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\inetsocketaddress.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\init.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\initable.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\inputstream.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\iostream.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\listmodel.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\liststore.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\loadableicon.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\memoryinputstream.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\memoryoutputstream.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\menu.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\menuattributeiter.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\menuitem.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\menulinkiter.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\menumodel.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\mount.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\mountoperation.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\networkaddress.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\networkmonitor.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\networkservice.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\notification.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\outputstream.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\permission.h"><Filter>Source Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\pollableinputstream.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\pollableoutputstream.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\proxy.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\proxyaddress.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\proxyresolver.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\remoteactiongroup.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\resolver.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\resource.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\seekable.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\settings.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\settingsschema.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\settingsschemakey.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\settingsschemasource.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\simpleaction.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\simpleactiongroup.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\simpleiostream.h"><Filter>Source Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\simplepermission.h"><Filter>Source Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\slot_async.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\socket.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\socketaddress.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\socketaddressenumerator.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\socketclient.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\socketconnectable.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\socketconnection.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\socketcontrolmessage.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\socketlistener.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\socketservice.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\socketsource.h"><Filter>Source Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\srvtarget.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\tcpconnection.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\tcpwrapperconnection.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\themedicon.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\threadedsocketservice.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\tlscertificate.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\tlsclientconnection.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\tlsconnection.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\tlsdatabase.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\tlsinteraction.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\tlspassword.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\tlsserverconnection.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\volume.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\volumemonitor.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\wrap_init.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\zlibcompressor.h"><Filter>Header Files</Filter></ClInclude>
+-    <ClInclude Include="..\gio\giomm\zlibdecompressor.h"><Filter>Header Files</Filter></ClInclude>
++    <ClInclude Include="..\gio\giomm\action.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\actiongroup.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\actionmap.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\appinfo.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\applaunchcontext.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\application.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\applicationcommandline.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\asyncinitable.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\asyncresult.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\bufferedinputstream.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\bufferedoutputstream.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\cancellable.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\charsetconverter.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\contenttype.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\converter.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\converterinputstream.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\converteroutputstream.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\credentials.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\datainputstream.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\dataoutputstream.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\dbusactiongroup.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\dbusaddress.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\dbusauthobserver.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\dbusconnection.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\dbuserror.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\dbuserrorutils.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\dbusinterface.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\dbusinterfaceskeleton.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\dbusinterfacevtable.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\dbusintrospection.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\dbusmenumodel.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\dbusmessage.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\dbusmethodinvocation.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\dbusobject.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\dbusownname.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\dbusproxy.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\dbusserver.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\dbussubtreevtable.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\dbusutils.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\dbuswatchname.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\drive.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\emblem.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\emblemedicon.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\enums.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\error.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\file.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\fileattributeinfo.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\fileattributeinfolist.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\fileenumerator.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\fileicon.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\fileinfo.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\fileinputstream.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\fileiostream.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\filemonitor.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\filenamecompleter.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\fileoutputstream.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\filterinputstream.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\filteroutputstream.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\icon.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\inetaddress.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\inetsocketaddress.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\init.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\initable.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\inputstream.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\iostream.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\listmodel.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\liststore.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\loadableicon.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\memoryinputstream.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\memoryoutputstream.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\menu.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\menuattributeiter.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\menuitem.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\menulinkiter.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\menumodel.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\mount.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\mountoperation.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\networkaddress.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\networkmonitor.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\networkservice.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\notification.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\outputstream.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\permission.h">
++      <Filter>Source Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\pollableinputstream.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\pollableoutputstream.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\proxy.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\proxyaddress.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\proxyresolver.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\remoteactiongroup.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\resolver.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\resource.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\seekable.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\settings.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\settingsschema.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\settingsschemakey.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\settingsschemasource.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\simpleaction.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\simpleactiongroup.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\simpleiostream.h">
++      <Filter>Source Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\simplepermission.h">
++      <Filter>Source Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\slot_async.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\socket.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\socketaddress.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\socketaddressenumerator.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\socketclient.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\socketconnectable.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\socketconnection.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\socketcontrolmessage.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\socketlistener.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\socketservice.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\socketsource.h">
++      <Filter>Source Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\srvtarget.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\tcpconnection.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\tcpwrapperconnection.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\themedicon.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\threadedsocketservice.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\tlscertificate.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\tlsclientconnection.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\tlsconnection.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\tlsdatabase.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\tlsinteraction.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\tlspassword.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\tlsserverconnection.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\volume.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\volumemonitor.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\wrap_init.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\zlibcompressor.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
++    <ClInclude Include="..\gio\giomm\zlibdecompressor.h">
++      <Filter>Header Files</Filter>
++    </ClInclude>
+   </ItemGroup>
+   <ItemGroup>
+-    <ResourceCompile Include=".\giomm\giomm.rc"><Filter>Resource Files</Filter>
++    <ResourceCompile Include=".\giomm\giomm.rc">
++      <Filter>Resource Files</Filter>
+     </ResourceCompile>
+   </ItemGroup>
+-</Project>
++</Project>
+\ No newline at end of file
+diff --git a/MSVC_Net2013/glibmm-build-defines.props b/MSVC_Net2013/glibmm-build-defines.props
+index 5cbde3c..9a027c5 100644
+--- a/MSVC_Net2013/glibmm-build-defines.props
++++ b/MSVC_Net2013/glibmm-build-defines.props
+@@ -6,8 +6,8 @@
+   <PropertyGroup Label="UserMacros">
+     <GLibMMBuildDefs>SIZEOF_WCHAR_T=2;GLIBMM_BUILD</GLibMMBuildDefs>
+     <GioMMBuildDefs>GIOMM_BUILD</GioMMBuildDefs>
+-    <CPPDepLibsRelease>sigc-vc$(VSVer)0-2_0.lib</CPPDepLibsRelease>
+-    <CPPDepLibsDebug>sigc-vc$(VSVer)0-d-2_0.lib</CPPDepLibsDebug>
++    <CPPDepLibsRelease>sigc-2_0.lib</CPPDepLibsRelease>
++    <CPPDepLibsDebug>sigc-2_0.lib</CPPDepLibsDebug>
+   </PropertyGroup>
+   <PropertyGroup>
+     <_PropertySheetDisplayName>glibmmbuilddefinesprops</_PropertySheetDisplayName>
+@@ -16,28 +16,10 @@
+   </PropertyGroup>
+   <ItemDefinitionGroup>
+     <ClCompile>
+-      <AdditionalIncludeDirectories>.\glibmm;..;..\glib;$(GlibEtcInstallRoot)\include\sigc++-2.0;$(GlibEtcInstallRoot)\lib\sigc++-2.0\include;$(GlibEtcInstallRoot)\include\gio-win32-2.0;$(GlibEtcInstallRoot)\include\glib-2.0;$(GlibEtcInstallRoot)\lib\glib-2.0\include;$(GlibEtcInstallRoot)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>.\glibmm;..;.;..\glib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <ForcedIncludeFiles>msvc_recommended_pragmas.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+       <AdditionalOptions>/d2Zi+ %(AdditionalOptions)</AdditionalOptions>
+     </ClCompile>
+-    <Link>
+-      <AdditionalDependencies>glib-2.0.lib;gobject-2.0.lib;gmodule-2.0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+-      <AdditionalLibraryDirectories>$(GlibEtcInstallRoot)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-    </Link>
+   </ItemDefinitionGroup>
+-  <ItemGroup>
+-    <BuildMacro Include="GLibMMBuildDefs">
+-      <Value>$(GLibMMBuildDefs)</Value>
+-    </BuildMacro>
+-    <BuildMacro Include="GioMMBuildDefs">
+-      <Value>$(GioMMBuildDefs)</Value>
+-    </BuildMacro>
+-    <BuildMacro Include="CPPDepLibsRelease">
+-      <Value>$(CPPDepLibsRelease)</Value>
+-    </BuildMacro>
+-    <BuildMacro Include="CPPDepLibsDebug">
+-      <Value>$(CPPDepLibsDebug)</Value>
+-    </BuildMacro>
+-  </ItemGroup>
+-</Project>
++</Project>
+\ No newline at end of file
+diff --git a/MSVC_Net2013/glibmm-install.props b/MSVC_Net2013/glibmm-install.props
+index f28a0c8..9283a7b 100644
+--- a/MSVC_Net2013/glibmm-install.props
++++ b/MSVC_Net2013/glibmm-install.props
+@@ -3,410 +3,4 @@
+   <ImportGroup Label="PropertySheets">
+     <Import Project="glibmm-build-defines.props" />
+   </ImportGroup>
+-  <PropertyGroup Label="UserMacros">
+-    <BinDir>$(SolutionDir)$(Configuration)\$(Platform)\bin</BinDir>
+-    <InstalledReleaseDlls>$(BinDir)\glibmm$(ReleaseDllSuffix).dll;$(BinDir)\giomm$(ReleaseDllSuffix).dll</InstalledReleaseDlls>
+-    <InstalledDebugDlls>$(BinDir)\glibmm$(DebugDllSuffix).dll;$(BinDir)\giomm$(DebugDllSuffix).dll</InstalledDebugDlls>
+-    <GLibmmDoInstall>
+-mkdir $(CopyDir)
+-mkdir $(CopyDir)\bin
+-copy $(BinDir)\glibmm-vc$(VSVer)0-$(ApiMajorVersion)_$(ApiMinorVersion).dll $(CopyDir)\bin
+-copy $(BinDir)\glibmm-vc$(VSVer)0-$(ApiMajorVersion)_$(ApiMinorVersion).pdb $(CopyDir)\bin
+-copy $(BinDir)\giomm-vc$(VSVer)0-$(ApiMajorVersion)_$(ApiMinorVersion).dll $(CopyDir)\bin
+-copy $(BinDir)\giomm-vc$(VSVer)0-$(ApiMajorVersion)_$(ApiMinorVersion).pdb $(CopyDir)\bin
+-
+-mkdir $(CopyDir)\lib\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\include
+-mkdir $(CopyDir)\lib\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\include
+-copy $(BinDir)\glibmm-vc$(VSVer)0-$(ApiMajorVersion)_$(ApiMinorVersion).lib $(CopyDir)\lib
+-copy $(BinDir)\giomm-vc$(VSVer)0-$(ApiMajorVersion)_$(ApiMinorVersion).lib $(CopyDir)\lib
+-
+-mkdir $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-mkdir $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\glib\glibmm.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)
+-copy ..\gio\giomm.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)
+-
+-copy ..\glib\glibmm\arrayhandle.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\balancedtree.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\base64.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\binding.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\bytes.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\bytearray.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\checksum.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\class.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\containerhandle_shared.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\containers.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\convert.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\date.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\datetime.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\debug.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\enums.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\dispatcher.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\error.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\exception.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\exceptionhandler.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\fileutils.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\helperlist.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\i18n-lib.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\i18n.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\init.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\interface.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\iochannel.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\keyfile.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\listhandle.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\main.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\markup.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\miscutils.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\module.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\nodetree.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\object.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\objectbase.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\optioncontext.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\optionentry.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\optiongroup.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\pattern.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\priorities.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\property.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\propertyproxy.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\propertyproxy_base.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\quark.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\random.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\refptr.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\regex.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\sarray.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\shell.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\signalproxy.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\signalproxy_connectionnode.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\slisthandle.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\spawn.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\streamiochannel.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\stringutils.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\threadpool.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\threads.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\timer.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\timeval.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\timezone.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\unicode.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\uriutils.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\ustring.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\utility.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\variant.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\variantdict.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\variantiter.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\varianttype.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\variant_basictypes.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\thread.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\value.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\valuearray.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\value_basictypes.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\value_custom.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\vectorutils.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\weakref.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\wrap.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-copy ..\glib\glibmm\wrap_init.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm
+-
+-copy ..\glib\glibmm\private\balancedtree_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\binding_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\bytes_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\bytearray_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\checksum_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\convert_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\date_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\datetime_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\enums_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\fileutils_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\interface_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\iochannel_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\keyfile_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\markup_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\miscutils_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\module_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\nodetree_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\object_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\optioncontext_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\optionentry_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\optiongroup_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\regex_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\shell_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\spawn_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\threads_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\timezone_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\unicode_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\uriutils_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\variant_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\variantdict_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\variantiter_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\varianttype_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\thread_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-copy ..\glib\glibmm\private\valuearray_p.h $(CopyDir)\include\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\glibmm\private
+-
+-copy ..\gio\giomm\action.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\actiongroup.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\actionmap.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\applaunchcontext.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\appinfo.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\application.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\applicationcommandline.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\asyncinitable.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\asyncresult.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\bufferedinputstream.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\bufferedoutputstream.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\cancellable.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\charsetconverter.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\contenttype.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\converter.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\converterinputstream.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\converteroutputstream.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\credentials.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\datainputstream.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\dataoutputstream.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\dbusactiongroup.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\dbusaddress.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\dbusauthobserver.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\dbusconnection.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\dbuserror.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\dbuserrorutils.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\dbusinterface.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\dbusinterfaceskeleton.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\dbusinterfacevtable.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\dbusintrospection.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\dbusmenumodel.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\dbusmessage.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\dbusmethodinvocation.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\dbusobject.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\dbusownname.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\dbusproxy.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\dbusserver.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\dbussubtreevtable.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\dbusutils.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\dbuswatchname.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\drive.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\emblem.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\emblemedicon.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\enums.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\error.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\file.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\fileattributeinfo.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\fileattributeinfolist.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\fileenumerator.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\fileicon.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\fileinfo.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\fileinputstream.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\fileiostream.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\filemonitor.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\filenamecompleter.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\fileoutputstream.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\filterinputstream.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\filteroutputstream.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\icon.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\inetaddress.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\inetsocketaddress.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\init.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\initable.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\inputstream.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\iostream.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\listmodel.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\liststore.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\loadableicon.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\memoryinputstream.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\memoryoutputstream.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\menuattributeiter.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\menulinkiter.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\menu.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\menuitem.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\menumodel.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\mount.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\mountoperation.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\networkaddress.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\networkmonitor.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\networkservice.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\notification.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\outputstream.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\permission.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\pollableinputstream.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\pollableoutputstream.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\proxy.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\proxyaddress.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\proxyresolver.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\remoteactiongroup.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\resolver.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\resource.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\seekable.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\settings.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\settingsschema.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\settingsschemakey.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\settingsschemasource.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\simpleaction.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\simpleactiongroup.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\simpleiostream.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\simplepermission.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\socket.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\socketaddress.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\socketaddressenumerator.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\socketclient.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\socketconnectable.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\socketconnection.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\socketcontrolmessage.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\socketlistener.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\socketservice.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\socketsource.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\srvtarget.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\tcpconnection.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\tcpwrapperconnection.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\threadedsocketservice.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\themedicon.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\tlscertificate.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\tlsclientconnection.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\tlsconnection.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\tlsdatabase.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\tlsinteraction.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\tlspassword.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\tlsserverconnection.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\volume.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\volumemonitor.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\wrap_init.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\zlibdecompressor.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-copy ..\gio\giomm\zlibcompressor.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm
+-
+-copy ..\gio\giomm\private\action_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\actiongroup_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\actionmap_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\appinfo_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\applaunchcontext_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\application_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\applicationcommandline_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\asyncinitable_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\asyncresult_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\bufferedinputstream_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\bufferedoutputstream_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\cancellable_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\charsetconverter_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\converter_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\converterinputstream_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\converteroutputstream_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\credentials_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\datainputstream_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\dataoutputstream_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\dbusactiongroup_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\dbusaddress_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\dbusauthobserver_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\dbusconnection_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\dbuserror_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\dbuserrorutils_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\dbusinterface_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\dbusinterfaceskeleton_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\dbusinterfacevtable_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\dbusintrospection_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\dbusmenumodel_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\dbusmessage_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\dbusmethodinvocation_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\dbusobject_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\dbusownname_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\dbusproxy_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\dbusserver_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\dbussubtreevtable_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\dbusutils_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\dbuswatchname_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\drive_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\emblem_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\emblemedicon_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\enums_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\error_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\file_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\fileattributeinfo_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\fileattributeinfolist_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\fileenumerator_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\fileicon_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\fileinfo_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\fileinputstream_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\fileiostream_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\filemonitor_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\filenamecompleter_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\fileoutputstream_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\filterinputstream_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\filteroutputstream_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\icon_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\inetaddress_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\inetsocketaddress_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\initable_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\inputstream_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\iostream_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\listmodel_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\liststore_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\loadableicon_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\memoryinputstream_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\memoryoutputstream_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\menu_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\menuattributeiter_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\menuitem_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\menulinkiter_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\menumodel_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\mount_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\mountoperation_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\networkaddress_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\networkmonitor_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\networkservice_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\notification_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\outputstream_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\pollableinputstream_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\pollableoutputstream_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\proxy_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\proxyaddress_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\proxyresolver_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\remoteactiongroup_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\resolver_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\resource_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\seekable_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\settings_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\settingsschema_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\settingsschemakey_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\settingsschemasource_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\simpleaction_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\simpleactiongroup_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\simpleiostream_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\socket_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\socketaddress_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\socketaddressenumerator_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\socketclient_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\socketconnectable_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\socketconnection_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\socketcontrolmessage_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\socketlistener_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\socketservice_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\srvtarget_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\tcpconnection_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\tcpwrapperconnection_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\themedicon_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\threadedsocketservice_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\tlscertificate_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\tlsclientconnection_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\tlsconnection_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\tlsdatabase_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\tlsinteraction_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\tlspassword_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\tlsserverconnection_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\volume_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\volumemonitor_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\zlibcompressor_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy ..\gio\giomm\private\zlibdecompressor_p.h $(CopyDir)\include\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\giomm\private
+-copy .\glibmm\glibmmconfig.h $(CopyDir)\lib\glibmm-$(ApiMajorVersion).$(ApiMinorVersion)\include
+-copy .\giomm\giommconfig.h $(CopyDir)\lib\giomm-$(ApiMajorVersion).$(ApiMinorVersion)\include
+-</GLibmmDoInstall>
+-  </PropertyGroup>
+-  <PropertyGroup>
+-    <_PropertySheetDisplayName>glibmminstallprops</_PropertySheetDisplayName>
+-  </PropertyGroup>
+-  <ItemGroup>
+-    <BuildMacro Include="BinDir">
+-      <Value>$(BinDir)</Value>
+-    </BuildMacro>
+-    <BuildMacro Include="InstalledReleaseDlls">
+-      <Value>$(InstalledReleaseDlls)</Value>
+-    </BuildMacro>
+-    <BuildMacro Include="InstalledDebugDlls">
+-      <Value>$(InstalledDebugDlls)</Value>
+-    </BuildMacro>
+-    <BuildMacro Include="GLibmmDoInstall">
+-      <Value>$(GLibmmDoInstall)</Value>
+-    </BuildMacro>
+-  </ItemGroup>
+ </Project>
+diff --git a/MSVC_Net2013/glibmm-version-paths.props b/MSVC_Net2013/glibmm-version-paths.props
+index 216731b..e5f0f6a 100644
+--- a/MSVC_Net2013/glibmm-version-paths.props
++++ b/MSVC_Net2013/glibmm-version-paths.props
+@@ -2,13 +2,9 @@
+ <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup Label="UserMacros">
+     <VSVer>12</VSVer>
+-    <GlibEtcInstallRoot>$(SolutionDir)\..\..\vs$(VSVer)\$(Platform)</GlibEtcInstallRoot>
+-    <CopyDir>$(GlibEtcInstallRoot)</CopyDir>
+     <DefDir>$(SolutionDir)$(Configuration)\$(Platform)\obj\$(ProjectName)\</DefDir>
+     <ApiMajorVersion>2</ApiMajorVersion>
+     <ApiMinorVersion>4</ApiMinorVersion>
+-    <ReleaseDllSuffix>-vc$(VSVer)0-$(ApiMajorVersion)_$(ApiMinorVersion)</ReleaseDllSuffix>
+-    <DebugDllSuffix>-vc$(VSVer)0-d-$(ApiMajorVersion)_$(ApiMinorVersion)</DebugDllSuffix>
+   </PropertyGroup>
+   <PropertyGroup>
+     <_PropertySheetDisplayName>glibmmversionpathsprops</_PropertySheetDisplayName>
+@@ -17,12 +13,6 @@
+     <BuildMacro Include="VSVer">
+       <Value>$(VSVer)</Value>
+     </BuildMacro>
+-    <BuildMacro Include="GlibEtcInstallRoot">
+-      <Value>$(GlibEtcInstallRoot)</Value>
+-    </BuildMacro>
+-    <BuildMacro Include="CopyDir">
+-      <Value>$(CopyDir)</Value>
+-    </BuildMacro>
+     <BuildMacro Include="DefDir">
+       <Value>$(DefDir)</Value>
+     </BuildMacro>
+@@ -32,11 +22,5 @@
+     <BuildMacro Include="ApiMinorVersion">
+       <Value>$(ApiMinorVersion)</Value>
+     </BuildMacro>
+-    <BuildMacro Include="ReleaseDllSuffix">
+-      <Value>$(ReleaseDllSuffix)</Value>
+-    </BuildMacro>
+-    <BuildMacro Include="DebugDllSuffix">
+-      <Value>$(DebugDllSuffix)</Value>
+-    </BuildMacro>
+   </ItemGroup>
+ </Project>
+diff --git a/MSVC_Net2013/glibmm.vcxproj b/MSVC_Net2013/glibmm.vcxproj
+index 6594edc..c611561 100644
+--- a/MSVC_Net2013/glibmm.vcxproj
++++ b/MSVC_Net2013/glibmm.vcxproj
+@@ -93,7 +93,7 @@
+       <Command>$(OutDir)\gendef.exe $(DefDir)\$(ProjectName).def $(ProjectName)$(DebugDllSuffix).dll $(IntDir)*.obj</Command>
+     </PreLinkEvent>
+     <Link>
+-      <AdditionalDependencies>$(CPPDepLibsDebug);%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <OutputFile>$(OutDir)\$(ProjectName)$(DebugDllSuffix).dll</OutputFile>
+       <ImportLibrary>$(TargetDir)$(ProjectName)$(DebugDllSuffix).lib</ImportLibrary>
+@@ -125,7 +125,7 @@
+       <Command>$(OutDir)\gendef.exe $(DefDir)\$(ProjectName).def $(ProjectName)$(DebugDllSuffix).dll $(IntDir)*.obj</Command>
+     </PreLinkEvent>
+     <Link>
+-      <AdditionalDependencies>$(CPPDepLibsDebug);%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <OutputFile>$(OutDir)\$(ProjectName)$(DebugDllSuffix).dll</OutputFile>
+       <ImportLibrary>$(TargetDir)$(ProjectName)$(DebugDllSuffix).lib</ImportLibrary>
+@@ -152,7 +152,7 @@
+       <Command>$(OutDir)\gendef.exe $(DefDir)\$(ProjectName).def $(ProjectName)$(ReleaseDllSuffix).dll $(IntDir)*.obj</Command>
+     </PreLinkEvent>
+     <Link>
+-      <AdditionalDependencies>$(CPPDepLibsRelease);%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <OutputFile>$(OutDir)\$(ProjectName)$(ReleaseDllSuffix).dll</OutputFile>
+       <ImportLibrary>$(TargetDir)$(ProjectName)$(ReleaseDllSuffix).lib</ImportLibrary>
+@@ -183,7 +183,7 @@
+       <Command>$(OutDir)\gendef.exe $(DefDir)\$(ProjectName).def $(ProjectName)$(ReleaseDllSuffix).dll $(IntDir)*.obj</Command>
+     </PreLinkEvent>
+     <Link>
+-      <AdditionalDependencies>$(CPPDepLibsRelease);%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <OutputFile>$(OutDir)\$(ProjectName)$(ReleaseDllSuffix).dll</OutputFile>
+       <ImportLibrary>$(TargetDir)$(ProjectName)$(ReleaseDllSuffix).lib</ImportLibrary>
+@@ -359,4 +359,4 @@
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+   <ImportGroup Label="ExtensionTargets">
+   </ImportGroup>
+-</Project>
++</Project>
+\ No newline at end of file

@@ -44,6 +44,7 @@ if(NOT VCPKG_USE_HEAD_VERSION)
     file(WRITE ${CURRENT_PACKAGES_DIR}/CMake/double-conversionConfig.cmake "${CONFIG_FILE}")
 
     vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 else()
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/double-conversion)
 endif()
