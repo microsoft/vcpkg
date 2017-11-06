@@ -37,6 +37,12 @@ else()
     set(VTK_WITH_OPENVR                  OFF)
 endif()
 
+if("libharu" IN_LIST FEATURES)
+    set(VTK_WITH_LIBHARU                  ON)
+else()
+    set(VTK_WITH_LIBHARU                  OFF)
+endif()
+
 set(VTK_WITH_ALL_MODULES                 OFF) # IMPORTANT: if ON make sure `qt5`, `mpi`, `python3`, `ffmpeg`, `gdal`, `fontconfig`,
                                               #            `libmysql` and `atlmfc` are  listed as dependency in the CONTROL file
 # =============================================================================
@@ -104,6 +110,12 @@ if(VTK_WITH_OPENVR)
     )
 endif()
 
+if(VTK_WITH_LIBHARU)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_USE_SYSTEM_LIBHARU=ON
+    )
+endif()
+
 if(VTK_WITH_ALL_MODULES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_BUILD_ALL_MODULES=ON
@@ -138,7 +150,6 @@ vcpkg_configure_cmake(
         -DVTK_USE_SYSTEM_EXPAT=ON
         -DVTK_USE_SYSTEM_FREETYPE=ON
         # -DVTK_USE_SYSTEM_GL2PS=ON
-        -DVTK_USE_SYSTEM_LIBHARU=ON
         -DVTK_USE_SYSTEM_JPEG=ON
         -DVTK_USE_SYSTEM_GLEW=ON
         -DVTK_USE_SYSTEM_HDF5=ON
