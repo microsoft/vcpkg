@@ -38,9 +38,9 @@ This can be set to `v141`, `v140`, or left blank. If left blank, we select the l
 ### VCPKG_FORTRAN_COMPILER
 Specifies the Fortran compiler to use.
 
-This can be set to `GNU`, `Intel`, `PGI` or left blank. If left blank, ports that need a Fortran compiler will fail with an error message.
+This can be set to `Flang`, `GNU`, `Intel`, `PGI` or left blank. If left blank, ports that need a Fortran compiler will fail with an error message.
 
-The `Intel` and `PGI` Fortran compilers have to be installed by the user manually. If `GNU` is selected a copy of the MinGW toolchain will be downloaded by vcpkg automatically.
+The `Intel` and `PGI` Fortran compilers have to be installed by the user manually. If `Flang` or `GNU` is selected a copy of the fortran compiler toolchain will be downloaded by vcpkg automatically.
 
 ## Per-port customization
 The CMake Macro `PORT` will be set when interpreting the triplet file and can be used to change settings (such as `VCPKG_LIBRARY_LINKAGE`) on a per-port basis.

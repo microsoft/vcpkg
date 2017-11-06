@@ -59,6 +59,9 @@ function(vcpkg_configure_cmake)
 
     if(_csc_GENERATOR)
         set(GENERATOR ${_csc_GENERATOR})
+    elseif(VCPKG_FORTRAN_ENABLED AND DEFINED VCPKG_FORTRAN_COMPILER AND VCPKG_FORTRAN_COMPILER STREQUAL Flang)
+        # Flang is not supported by Ninja, nor Visual Studio so we use NMake here
+        set(GENERATOR "NMake Makefiles")
     elseif(_csc_PREFER_NINJA AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND NOT _csc_HOST_ARCHITECTURE STREQUAL "x86")
         set(GENERATOR "Ninja")
     elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND VCPKG_TARGET_ARCHITECTURE MATCHES "x86" AND VCPKG_PLATFORM_TOOLSET MATCHES "v140")
@@ -154,7 +157,19 @@ function(vcpkg_configure_cmake)
                 string(APPEND VCPKG_C_FLAGS " /D__MS_VC_INSTALL_PATH=\"${VCToolsInstallDir}\"")
             endif()
         endif()
+        
+        if(VCPKG_FORTRAN_ENABLED AND DEFINED VCPKG_FORTRAN_COMPILER AND VCPKG_FORTRAN_COMPILER STREQUAL Flang)
+            # Make sure that CMake uses the correct compilers:
+            # while we want to use flang as Fortran compiler we want to keep cl for C and C++
+            list(APPEND _csc_OPTIONS
+                "-DCMAKE_Fortran_COMPILER=flang"
+                "-DCMAKE_C_COMPILER=cl"
+                "-DCMAKE_CXX_COMPILER=cl"
+            )
+        endif()
 
+        # When using GNU gfortran as Fortran compiler CMake requires to use gcc and g++ as C and C++ compilers
+        # so we should not set all the other C and C++ compiler flags
         if(VCPKG_FORTRAN_ENABLED AND DEFINED VCPKG_FORTRAN_COMPILER AND VCPKG_FORTRAN_COMPILER STREQUAL GNU)
             list(APPEND _csc_OPTIONS
                 "-DCMAKE_GNUtoMS=ON"

@@ -238,6 +238,92 @@ function(_vcpkg_find_and_load_gnu_fortran_compiler VERSION_OUT_VAR)
   # This will disable the post-installation test for the correct runtime-library
   # for all ports that enable the fortran compiler.
   set(VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT enabled)
+  set(${VERSION_OUT_VAR} "${MINGW_VERSION}" PARENT_SCOPE)
+endfunction()
+
+function(_vcpkg_find_and_load_flang_fortran_compiler VERSION_OUT_VAR)
+  set(FLANG_VERSION "4.0.0")
+  set(FLANG_CLANG_GIT_HASH "f08d7ef")
+  set(FLANG_FLANG_GIT_HASH "8b5f9f8")
+
+  if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x64")
+    set(URLS
+        "https://conda.anaconda.org/conda-forge/win-64/zlib-1.2.11-vc14_0.tar.bz2"
+        "https://conda.anaconda.org/conda-forge/win-64/libxml2-2.9.5-vc14_0.tar.bz2"
+        "https://conda.anaconda.org/conda-forge/win-64/libiconv-1.14-vc14_4.tar.bz2"
+        "https://conda.anaconda.org/conda-forge/win-64/openmp-${FLANG_VERSION}-vc14_0.tar.bz2"
+        "https://conda.anaconda.org/conda-forge/win-64/llvmdev-${FLANG_VERSION}-default_0.tar.bz2"
+        "https://conda.anaconda.org/isuruf/label/flang/win-64/flangdev-${FLANG_VERSION}.git.${FLANG_FLANG_GIT_HASH}-vc14_0.tar.bz2"
+        "https://conda.anaconda.org/isuruf/label/flang/win-64/clangdev-${FLANG_VERSION}-flang_git_${FLANG_CLANG_GIT_HASH}_0.tar.bz2"
+    )
+    set(ARCHIVES
+        "zlib-1.2.11-vc14_0.tar.bz2"
+        "libxml2-2.9.5-vc14_0.tar.bz2"
+        "libiconv-1.14-vc14_4.tar.bz2"
+        "openmp-${FLANG_VERSION}-vc14_0.tar.bz2"
+        "llvmdev-${FLANG_VERSION}-default_0.tar.bz2"
+        "flangdev-${FLANG_VERSION}.git.${FLANG_FLANG_GIT_HASH}-vc14_0.tar.bz2"
+        "clangdev-${FLANG_VERSION}-flang_git_${FLANG_CLANG_GIT_HASH}_0.tar.bz2"
+    )
+    set(HASHS
+        "d454c0ea8f755baadae5d1e79498049414ea419909a0d18903f9a43310b9cf8c14a20eb294d3620547e1c661baa9015eb72dc3da8c2fd0662ad1b03d24a3c9b9"
+        "80790e0960b9f676f22eb6e54d6bf8a510a147832656f743b817ade5c891ebab2f7ccb7e5db4ef27fcbcc8c2ef62098d3017d3fbd843e47d36429d65f274585b"
+        "0349f3e9ef8f0a23418a502eed3272783cede901d131afd734675701cccb3d28c3a3fa64c5ddabc7ea18f7fafa1533293806905f610c74e601d3b403872b89a6"
+        "47a7f2cb8de205ae632c7110ac499ad46e4c818e1f5bbc991128d93a5ee368c93cccf4a63278bafdd28fe215d0051af9483e8fe991af45e8442f12cf5b9feb51"
+        "dc4f442dad4af6179535241fa507be43234dbc3f8ab874bd5e4ca16e7fcb541d3ae27923b894fbfd732ccd5b0b186cdf832a0f31cd5496fad024e946a52fa8fc"
+        "679ae6b9989ea3a7097e0a2f1e3eb9b820d10e347534c3fe694b0c50f02d729f3184210bcbfeb228faf09a116863c1a0e39117618dd17bf3ab5d10eb8bdaf227"
+        "98f8af0b56f707a2ad02c674ac7a58c4b19a7fb885a405714ce5953360f8708d794a6241ec6665208626ed321933245302f1fcc0a1d0cd3af71c3333e3a61ebe"
+    )
+    list(LENGTH URLS PACKAGE_COUNT)
+  else()
+    message(FATAL "Flang not supported for target architecture ${VCPKG_TARGET_ARCHITECTURE}.")
+  endif()
+
+  set(FLANG_PATH "${DOWNLOADS}/tools/flang/${FLANG_VERSION}-${FLANG_CLANG_GIT_HASH}-${FLANG_FLANG_GIT_HASH}")
+  set(FLANG_BIN_PATH "${FLANG_PATH}/Library/bin")
+  set(FLANG_LIB_PATH "${FLANG_PATH}/Library/lib")
+
+  # Download and extract all packages required for Flang if this has not been done yet
+  if(NOT EXISTS "${FLANG_BIN_PATH}/flang.exe")
+    file(MAKE_DIRECTORY "${FLANG_PATH}")
+
+    math(EXPR PACKAGE_RANGE_END "${PACKAGE_COUNT} - 1")
+    foreach(PACKAGE_I RANGE ${PACKAGE_RANGE_END})
+        list(GET URLS ${PACKAGE_I} URL)
+        list(GET ARCHIVES ${PACKAGE_I} ARCHIVE)
+        list(GET HASHS ${PACKAGE_I} HASH)
+        
+        set(ARCHIVE_PATH "${DOWNLOADS}/${ARCHIVE}")
+    
+        file(DOWNLOAD "${URL}" "${ARCHIVE_PATH}"
+          EXPECTED_HASH SHA512=${HASH}
+          SHOW_PROGRESS
+        )
+    
+        execute_process(
+          COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
+          WORKING_DIRECTORY ${FLANG_PATH}
+        )
+    endforeach()
+
+    if(NOT EXISTS "${FLANG_BIN_PATH}/flang.exe")
+      message(FATAL_ERROR
+        "Error while trying to get Flang. Could not find:\n"
+        "  ${FLANG_BIN_PATH}/flang.exe"
+      )
+    endif()
+  endif()
+
+  # Append the Flang directory to PATH
+  if(WIN32)
+    set(ENVIRONMENT_SEPERATOR "\\;")
+  else()
+    set(ENVIRONMENT_SEPERATOR ":")
+  endif()
+
+  set(ENV{PATH} "$ENV{PATH}${ENVIRONMENT_SEPERATOR}${FLANG_BIN_PATH}")
+  set(ENV{LIB}  "$ENV{LIB}${ENVIRONMENT_SEPERATOR}${FLANG_LIB_PATH}")
+  set(${VERSION_OUT_VAR} "${FLANG_VERSION}" PARENT_SCOPE)
 endfunction()
 
 ## # vcpkg_enable_fortran
@@ -252,6 +338,7 @@ endfunction()
 ##  - `Intel` = Intel Compiler (intel.com)
 ##  - `PGI` = The Portland Group (pgroup.com)
 ##  - `GNU` = GNU Compiler Collection (gcc.gnu.org)
+##  - `Flang` = Flang Fortran Compiler
 ##
 ## If the variable is not set an error will be raised.
 ##
@@ -271,11 +358,20 @@ function(vcpkg_enable_fortran)
             _vcpkg_find_and_load_pgi_fortran_compiler(VCPKG_FORTRAN_TOOLSET_VERSION)
         elseif(VCPKG_FORTRAN_COMPILER STREQUAL "GNU")
             _vcpkg_find_and_load_gnu_fortran_compiler(VCPKG_FORTRAN_TOOLSET_VERSION)
+        elseif(VCPKG_FORTRAN_COMPILER STREQUAL "Flang")
+            _vcpkg_find_and_load_flang_fortran_compiler(VCPKG_FORTRAN_TOOLSET_VERSION)
         else()
-            message(FATAL_ERROR "Unknown fortran compiler \"${VCPKG_FORTRAN_COMPILER}\".")
+            message(FATAL_ERROR
+                "Unknown fortran compiler \"${VCPKG_FORTRAN_COMPILER}\". Currently only the following are supported:\n"
+                "  Intel, PGI, GNU and Flang"
+            )
         endif()
     else()
-        message(FATAL_ERROR "No fortran compiler configured. Please see http://vcpkg.readthedocs.io/en/latest/users/triplets/ for valid fortran settings.")
+        message(FATAL_ERROR
+            "No fortran compiler configured. Please set VCPKG_FORTRAN_COMPILER in your triplet file.\n"
+            "Additional information can be found at:\n"
+            "  http://vcpkg.readthedocs.io/en/latest/users/triplets/"
+        )
     endif()
     set(VCPKG_FORTRAN_ENABLED ON PARENT_SCOPE)
     set(VCPKG_FORTRAN_TOOLSET_VERSION "${VCPKG_FORTRAN_TOOLSET_VERSION}" PARENT_SCOPE)
