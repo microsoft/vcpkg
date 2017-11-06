@@ -38,7 +38,7 @@ else()
 endif()
 
 if("libharu" IN_LIST FEATURES)
-    set(VTK_WITH_LIBHARU                  ON) # IMPORTANT: if ON make sure `OpenVR` is listed as dependency in the CONTROL file
+    set(VTK_WITH_LIBHARU                  ON)
 else()
     set(VTK_WITH_LIBHARU                  OFF)
 endif()
