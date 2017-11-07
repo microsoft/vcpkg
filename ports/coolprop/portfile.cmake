@@ -30,6 +30,11 @@ file(COPY
     DESTINATION ${SOURCE_PATH}/externals/msgpack-c
 )
 
+file(COPY
+    ${CURRENT_INSTALLED_DIR}/REFPROP_lib.h
+    DESTINATION ${SOURCE_PATH}/externals/REFPROP-headers/
+)
+
 # Use a nasty hack to include the correct header
 file(APPEND
     ${SOURCE_PATH}/externals/msgpack-c/include/fmt/format.h
