@@ -41,11 +41,6 @@ file(APPEND
     "#include \"fmt/printf.h\""
 )
 
-file(READ "${SOURCE_PATH}/CMakeLists.txt" _contents)
-string(REPLACE "Tabular" "" _contents "${_contents}")
-file(WRITE "${SOURCE_PATH}/CMakeLists.txt" "${_contents}")
-
-
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" COOLPROP_SHARED_LIBRARY)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" COOLPROP_STATIC_LIBRARY)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" COOLPROP_MSVC_DYNAMIC)
