@@ -69,11 +69,12 @@ else()
     set(TARGET_FOLDER "static_library")
 endif()
 
-set(TARGET_FOLDER ${TARGET_FOLDER}/Windows)
-
+# Install the headers
 file(GLOB COOLPROP_HEADERS "${SOURCE_PATH}/install_root/${TARGET_FOLDER}/*.h")
 file(INSTALL ${COOLPROP_HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
+# Install the libs
+set(TARGET_FOLDER ${TARGET_FOLDER}/Windows)
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(BITS 32bit)
 else()
@@ -87,7 +88,7 @@ file(INSTALL
 
 file(INSTALL 
     "${SOURCE_PATH}/install_root/${TARGET_FOLDER}/${BITS}/CoolPropd.lib"
-    DESTINATION ${COOLPROP_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib/debug
+    DESTINATION ${COOLPROP_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
 )
 
 file(INSTALL 
@@ -97,7 +98,7 @@ file(INSTALL
 
 file(INSTALL 
     "${SOURCE_PATH}/install_root/${TARGET_FOLDER}/${BITS}/CoolPropd.dll"
-    DESTINATION ${COOLPROP_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin/debug
+    DESTINATION ${COOLPROP_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
 )
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
