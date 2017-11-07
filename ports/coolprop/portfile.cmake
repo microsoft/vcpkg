@@ -31,7 +31,7 @@ file(COPY
 )
 
 file(COPY
-    ${CURRENT_INSTALLED_DIR}/REFPROP_lib.h
+    ${CURRENT_INSTALLED_DIR}/include/REFPROP_lib.h
     DESTINATION ${SOURCE_PATH}/externals/REFPROP-headers/
 )
 
