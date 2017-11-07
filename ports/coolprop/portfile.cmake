@@ -63,6 +63,19 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
+if(COOLPROP_MSVC_DYNAMIC)
+    set(TARGET_FOLDER "shared_library")
+else()
+    set(TARGET_FOLDER "static_library")
+endif()
+
+file(GLOB COOLPROP_HEADERS ${CURRENT_PACKAGES_DIR}/${TARGET_FOLDER}/*.h)
+file(INSTALL ${COOLPROP_HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+
+file(GLOB_RECURSE COOLPROP_LIBS ${CURRENT_PACKAGES_DIR}/${TARGET_FOLDER}/*.lib))
+file(INSTALL ${COOLPROP_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+
+file(REMOVE_RECURSE ${TARGET_FOLDER})
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
