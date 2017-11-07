@@ -4,7 +4,7 @@ set(PORT_VERSION 6.1.0)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CoolProp/CoolProp
-    REF v${PORT_VERSION}
+    REF 0e934e842e9ce83eea64fda1d4ab8e59adf9d8cd
     SHA512 012b994db829ee1c4e0702a964bd7d3402f378bd88d5c38b874178a3402cf39fa656b1a9e4645ad257c7184fd0bf8652e3435af7f8d41fa13aa200cd7ee7f534
     HEAD_REF master
 )
