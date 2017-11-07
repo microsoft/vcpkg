@@ -63,7 +63,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-if(COOLPROP_MSVC_DYNAMIC)
+if(${VCPKG_LIBRARY_LINKAGE} STREQUAL "dynamic")
     set(TARGET_FOLDER "shared_library")
 else()
     set(TARGET_FOLDER "static_library")
