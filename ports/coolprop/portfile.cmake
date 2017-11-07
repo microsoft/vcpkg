@@ -69,6 +69,8 @@ else()
     set(TARGET_FOLDER "static_library")
 endif()
 
+set(TARGET_FOLDER ${TARGET_FOLDER}/Windows)
+
 file(GLOB COOLPROP_HEADERS "${SOURCE_PATH}/install_root/${TARGET_FOLDER}/*.h")
 file(INSTALL ${COOLPROP_HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
