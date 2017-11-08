@@ -91,26 +91,13 @@ namespace vcpkg
                         tool_name,
                         version_as_string);
         const fs::path script = scripts_folder / "fetchDependency.ps1";
-        const System::ExitCodeAndOutput rc =
-            System::powershell_execute_and_capture_output(script, Strings::format("-Dependency %s", tool_name));
-        if (rc.exit_code)
-        {
-            System::println(System::Color::error,
-                            "Launching powershell failed or was denied when trying to fetch %s version %s.\n"
-                            "(No sufficient installed version was found)",
-                            tool_name,
-                            version_as_string);
-            {
-                auto locked_metrics = Metrics::g_metrics.lock();
-                locked_metrics->track_property("error", "powershell install failed");
-                locked_metrics->track_property("dependency", tool_name);
-            }
-            Checks::exit_with_code(VCPKG_LINE_INFO, rc.exit_code);
-        }
+        const std::string title = "Fetching %s version %s (No sufficient installed version was found)";
+        const std::string output =
+            System::powershell_execute_and_capture_output(title, script, Strings::format("-Dependency %s", tool_name));
 
-        const std::vector<std::string> dependency_path = keep_data_lines(rc.output);
+        const std::vector<std::string> dependency_path = keep_data_lines(output);
         Checks::check_exit(
-            VCPKG_LINE_INFO, dependency_path.size() == 1, "Expected dependency path, but got %s", rc.output);
+            VCPKG_LINE_INFO, dependency_path.size() == 1, "Expected dependency path, but got %s", output);
 
         const fs::path actual_downloaded_path = Strings::trim(std::string{dependency_path.at(0)});
         std::error_code ec;
@@ -344,17 +331,21 @@ namespace vcpkg
     static std::vector<VisualStudioInstance> get_visual_studio_instances(const VcpkgPaths& paths)
     {
         const fs::path script = paths.scripts / "findVisualStudioInstallationInstances.ps1";
-        const System::ExitCodeAndOutput ec_data = System::powershell_execute_and_capture_output(script);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, ec_data.exit_code == 0, "Could not run script to detect Visual Studio instances");
+        const std::string output =
+            System::powershell_execute_and_capture_output("Detecting Visual Studio instances", script);
 
-        const std::vector<std::string> instances_as_strings = keep_data_lines(ec_data.output);
+        const std::vector<std::string> instances_as_strings = keep_data_lines(output);
         Checks::check_exit(VCPKG_LINE_INFO,
                            !instances_as_strings.empty(),
-                           "Could not detect any Visual Studio instances. Powershell returned: %s\n",
-                           ec_data.output);
+                           "Could not detect any Visual Studio instances.\n"
+                           "Powershell script:\n"
+                           "    %s\n"
+                           "returned:\n"
+                           "%s",
+                           script.generic_string(),
+                           output);
 
-        std::vector<VisualStudioInstance> output;
+        std::vector<VisualStudioInstance> instances;
         for (const std::string& instance_as_string : instances_as_strings)
         {
             const std::vector<std::string> split = Strings::split(instance_as_string, "::");
@@ -364,10 +355,10 @@ namespace vcpkg
                                "Expected: PreferenceWeight::ReleaseType::Version::PathToVisualStudio\n"
                                "Actual  : %s\n",
                                instance_as_string);
-            output.push_back({split.at(3), split.at(2), split.at(1), split.at(0)});
+            instances.push_back({split.at(3), split.at(2), split.at(1), split.at(0)});
         }
 
-        return output;
+        return instances;
     }
 
     static std::vector<Toolset> find_toolset_instances(const VcpkgPaths& paths)

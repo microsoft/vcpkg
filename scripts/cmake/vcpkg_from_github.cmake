@@ -101,19 +101,22 @@ function(vcpkg_from_github)
             message(FATAL_ERROR "Package does not specify REF. It must built using --head.")
         endif()
 
+        string(REPLACE "/" "-" SANITIZED_REF "${_vdud_REF}")
+
         vcpkg_download_distfile(ARCHIVE
             URLS "https://github.com/${ORG_NAME}/${REPO_NAME}/archive/${_vdud_REF}.tar.gz"
             SHA512 "${_vdud_SHA512}"
-            FILENAME "${ORG_NAME}-${REPO_NAME}-${_vdud_REF}.tar.gz"
+            FILENAME "${ORG_NAME}-${REPO_NAME}-${SANITIZED_REF}.tar.gz"
         )
         vcpkg_extract_source_archive_ex(ARCHIVE "${ARCHIVE}")
-        set_SOURCE_PATH(${CURRENT_BUILDTREES_DIR}/src ${_vdud_REF})
+        set_SOURCE_PATH(${CURRENT_BUILDTREES_DIR}/src ${SANITIZED_REF})
         return()
     endif()
 
     # The following is for --head scenarios
     set(URL "https://github.com/${ORG_NAME}/${REPO_NAME}/archive/${_vdud_HEAD_REF}.tar.gz")
-    set(downloaded_file_name "${ORG_NAME}-${REPO_NAME}-${_vdud_HEAD_REF}.tar.gz")
+    string(REPLACE "/" "-" SANITIZED_HEAD_REF "${_vdud_HEAD_REF}")
+    set(downloaded_file_name "${ORG_NAME}-${REPO_NAME}-${SANITIZED_HEAD_REF}.tar.gz")
     set(downloaded_file_path "${DOWNLOADS}/${downloaded_file_name}")
 
     if(_VCPKG_NO_DOWNLOADS)
@@ -161,5 +164,5 @@ function(vcpkg_from_github)
     # exports VCPKG_HEAD_VERSION to the caller. This will get picked up by ports.cmake after the build.
     set(VCPKG_HEAD_VERSION ${_version} PARENT_SCOPE)
 
-    set_SOURCE_PATH(${CURRENT_BUILDTREES_DIR}/src/head ${_vdud_HEAD_REF})
+    set_SOURCE_PATH(${CURRENT_BUILDTREES_DIR}/src/head ${SANITIZED_HEAD_REF})
 endfunction()

@@ -1,6 +1,5 @@
 include(vcpkg_common_functions)
 set(PORT_VERSION 2.1.0)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/if97-${PORT_VERSION})
 
 vcpkg_from_github(
     OUT_SOURCE_PATH ${SOURCE_PATH}
@@ -11,7 +10,6 @@ vcpkg_from_github(
 )
 
 file(INSTALL ${SOURCE_PATH}/IF97.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-
 
 # Handle copyright
 file(

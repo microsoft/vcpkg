@@ -31,6 +31,30 @@ function Get-Credential-Backwards-Compatible()
     }
 }
 
+function Get-Hash-SHA265()
+{
+    if (Test-Command -commandName 'Microsoft.PowerShell.Utility\Get-FileHash')
+    {
+        Write-Verbose("Hashing with Microsoft.PowerShell.Utility\Get-FileHash")
+        $downloadedFileHash =  (Get-FileHash -Path $downloadPath -Algorithm SHA256).Hash
+    }
+    elseif(Test-Command -commandName 'Pscx\Get-Hash')
+    {
+        Write-Verbose("Hashing with Pscx\Get-Hash")
+        $downloadedFileHash =  (Get-Hash -Path $downloadPath -Algorithm SHA256).HashString
+    }
+    else
+    {
+        Write-Verbose("Hashing with .NET")
+        $hashAlgorithm = [Security.Cryptography.HashAlgorithm]::Create("SHA256")
+        $fileAsByteArray = [io.File]::ReadAllBytes($downloadPath)
+        $hashByteArray = $hashAlgorithm.ComputeHash($fileAsByteArray)
+        $downloadedFileHash = -Join ($hashByteArray | ForEach-Object {"{0:x2}" -f $_})
+    }
+
+    return $downloadedFileHash.ToLower()
+}
+
 if (Test-Module -moduleName 'BitsTransfer')
 {
    Import-Module BitsTransfer -Verbose:$false
@@ -142,12 +166,19 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
             New-Item -ItemType Directory -Path $destination | Out-Null
         }
 
-        if (Test-Command -commandName 'Expand-Archive')
+        if (Test-Command -commandName 'Microsoft.PowerShell.Archive\Expand-Archive')
         {
-            Expand-Archive -path $file -destinationpath $destination
+            Write-Verbose("Extracting with Microsoft.PowerShell.Archive\Expand-Archive")
+            Microsoft.PowerShell.Archive\Expand-Archive -path $file -destinationpath $destination
+        }
+        elseif (Test-Command -commandName 'Pscx\Expand-Archive')
+        {
+            Write-Verbose("Extracting with Pscx\Expand-Archive")
+            Pscx\Expand-Archive -path $file -OutputPath $destination
         }
         else
         {
+            Write-Verbose("Extracting via shell")
             $shell = new-object -com shell.application
             $zip = $shell.NameSpace($file)
             foreach($item in $zip.items())
@@ -226,20 +257,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 
     performDownload $Dependency $url $downloadsDir $downloadPath $downloadVersion $requiredVersion
 
-    #calculating the hash
-    if (Test-Command -commandName 'Get-FileHash')
-    {
-        $downloadedFileHash = (Get-FileHash -Path $downloadPath -Algorithm SHA256).Hash
-    }
-    else
-    {
-        $hashAlgorithm = [Security.Cryptography.HashAlgorithm]::Create("SHA256")
-        $fileAsByteArray = [io.File]::ReadAllBytes($downloadPath)
-        $hashByteArray = $hashAlgorithm.ComputeHash($fileAsByteArray)
-        $downloadedFileHash = -Join ($hashByteArray | ForEach-Object {"{0:x2}" -f $_})
-    }
-
-    $downloadedFileHash = $downloadedFileHash.ToLower()
+    $downloadedFileHash = Get-Hash-SHA265 $downloadPath
     if ($expectedDownloadedFileHash -ne $downloadedFileHash)
     {
         Write-Host ("`nFile does not have expected hash:`n" +
@@ -257,7 +275,6 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     {
         if (-not (Test-Path $executableFromDownload)) # consider renaming the extraction folder to make sure the extraction finished
         {
-            # Expand-Archive $downloadPath -dest "$extractionFolder" -Force # Requires powershell 5+
             Expand-ZIPFile -File $downloadPath -Destination $extractionFolder
         }
     }

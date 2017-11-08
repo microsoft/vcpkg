@@ -1,7 +1,5 @@
 include(vcpkg_common_functions)
-set(PORT_VERSION 11-7-2017)
 set(PORT_COMMIT 882aec454b2bc3d5323b8691736ff09c288f4ed6)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/refprop-headers-${PORT_COMMIT})
 
 vcpkg_from_github(
     OUT_SOURCE_PATH ${SOURCE_PATH}
