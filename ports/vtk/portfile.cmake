@@ -31,6 +31,7 @@ if ("python" IN_LIST FEATURES)
 else()
     set(VTK_WITH_PYTHON                  OFF) # IMPORTANT: if ON make sure `python3` is listed as dependency in the CONTROL file
 endif()
+
 if("openvr" IN_LIST FEATURES)
     set(VTK_WITH_OPENVR                  ON) # IMPORTANT: if ON make sure `OpenVR` is listed as dependency in the CONTROL file
 else()
@@ -80,6 +81,7 @@ vcpkg_apply_patches(
 file(REMOVE ${SOURCE_PATH}/CMake/FindGLEW.cmake)
 file(REMOVE ${SOURCE_PATH}/CMake/FindPythonLibs.cmake)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindGDAL.cmake DESTINATION ${SOURCE_PATH}/CMake)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindHDF5.cmake DESTINATION ${SOURCE_PATH}/CMake/NewCMake)
 
 # =============================================================================
 # Collect CMake options for optional components
@@ -133,10 +135,6 @@ if(VTK_WITH_ALL_MODULES)
     )
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    list(APPEND ADDITIONAL_OPTIONS "-DVTK_EXTERNAL_HDF5_IS_SHARED=ON")
-endif()
-
 # =============================================================================
 # Configure & Install
 vcpkg_configure_cmake(
@@ -169,12 +167,6 @@ vcpkg_configure_cmake(
         -DVTK_INSTALL_PACKAGE_DIR=share/vtk
         -DVTK_FORBID_DOWNLOADS=ON
         ${ADDITIONAL_OPTIONS}
-    OPTIONS_RELEASE
-        -DHDF5_C_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/hdf5.lib
-        -DHDF5_C_HL_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/hdf5_hl.lib
-    OPTIONS_DEBUG
-        -DHDF5_C_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/hdf5_D.lib
-        -DHDF5_C_HL_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/hdf5_hl_D.lib
 )
 
 vcpkg_install_cmake()
