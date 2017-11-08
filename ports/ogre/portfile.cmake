@@ -1,14 +1,20 @@
 include(vcpkg_common_functions)
 
-set(OGRE_VERSION 1.10.8)
+set(OGRE_VERSION 1.10.9)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ogre-${OGRE_VERSION})
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/OGRECave/ogre/archive/v1.10.8.zip"
-    FILENAME "ogre-1.10.8.zip"
-    SHA512 c7d962fe7fb8c46a4e15bb6e2bb68c67f0cc2a0d04a8f53e03fb9572c76df3679dcd117137c6624f2f56a8eda108723817dbaa616ecb7dc4cfd6a644a6bc4356
+    URLS "https://github.com/OGRECave/ogre/archive/v${OGRE_VERSION}.zip"
+    FILENAME "ogre-${OGRE_VERSION}.zip"
+    SHA512 2e68b30da6dc2e1df6575970623a14057675b069536ed0ac87faeefc8e295965ff7427c99385f29ab803b02bd5294f6886293aabdd17ec8c92f80baf53587457
 )
 vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/001-cmake-install-dir.patch"
+)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(OGRE_STATIC ON)
@@ -66,18 +72,17 @@ vcpkg_configure_cmake(
         -DOGRE_BUILD_COMPONENT_JAVA=${WITH_JAVA}
         -DOGRE_BUILD_COMPONENT_PYTHON=${WITH_PYTHON}
         -DOGRE_BUILD_RENDERSYSTEM_D3D9=${WITH_D3D9}
+# vcpkg specific stuff
+        -DOGRE_CMAKE_DIR=share/ogre
 )
 
 vcpkg_install_cmake()
 
 # Remove unwanted files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/CMake)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ogre RENAME copyright)
-
-# Move installed CMake scripts to share folder
-file(RENAME ${CURRENT_PACKAGES_DIR}/CMake ${CURRENT_PACKAGES_DIR}/share/ogre/CMake)
 
 vcpkg_copy_pdbs()
