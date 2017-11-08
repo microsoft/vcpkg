@@ -1,0 +1,19 @@
+--- a/CMakeLists.txt	2017-11-07 14:30:02.270145100 +0800
++++ b/CMakeLists.txt	2017-11-07 14:26:42.306208800 +0800
+@@ -402,16 +402,6 @@
+     source_group("Header Files\\Processing Blocks" FILES
+         src/colorizer.h
+         )
+-
+-    foreach(flag_var
+-            CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+-            CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO
+-            CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
+-            CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO)
+-        if(${flag_var} MATCHES "/MD")
+-            string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+-        endif(${flag_var} MATCHES "/MD")
+-    endforeach(flag_var)
+ else()
+ 
+ endif()
