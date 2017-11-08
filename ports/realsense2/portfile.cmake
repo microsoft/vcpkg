@@ -14,11 +14,7 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/crt-linkage-restriction.patch
 )
 
-if(${VCPKG_LIBRARY_LINKAGE} STREQUAL static)
-    set(BUILD_SHARED off)
-else()
-    set(BUILD_SHARED on)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -40,8 +36,8 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/realsense2)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/librealsense2)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/librealsense2/COPYING ${CURRENT_PACKAGES_DIR}/share/librealsense2/copyright)
+file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/realsense2)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/realsense2/COPYING ${CURRENT_PACKAGES_DIR}/share/realsense2/copyright)
 
 vcpkg_copy_pdbs()
 
