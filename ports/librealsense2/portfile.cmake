@@ -28,7 +28,7 @@ vcpkg_configure_cmake(
         -DBUILD_GRAPHICAL_EXAMPLES=off
         -DBUILD_PYTHON_BINDINGS=off
         -DBUILD_UNIT_TESTS=off
-        -DBUILD_WITH_OPENMP=off
+        -DBUILD_WITH_OPENMP=off  # keep OpenMP off until librealsense issue #744 is patched
         -DBUILD_SHARED_LIBS=${BUILD_SHARED}
     OPTIONS_DEBUG
         "-DCMAKE_PDB_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
