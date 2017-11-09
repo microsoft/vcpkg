@@ -14,7 +14,12 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 66b21853a4f4760b7b22cafd5211958769c513e83be999018fe79cf56a9271e0e28566caaa2286393f54ac2154d564a68d12159598d03c965adf6756f3753f11
 )
 vcpkg_extract_source_archive(${ARCHIVE})
-vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH})
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -DOPTION_BUILD_TESTS=OFF
+        -DOPTION_BUILD_GPU_TESTS=OFF
+) 
 #vcpkg_build_cmake()
 vcpkg_install_cmake()
 
