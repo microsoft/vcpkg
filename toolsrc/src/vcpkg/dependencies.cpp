@@ -112,31 +112,39 @@ namespace vcpkg::Dependencies
 
     std::vector<PackageSpec> AnyParagraph::dependencies(const Triplet& triplet) const
     {
-        auto to_package_specs = [&](const std::vector<std::string>& dependencies_as_string) {
-            return Util::fmap(dependencies_as_string, [&](const std::string s) {
-                return PackageSpec::from_name_and_triplet(s, triplet).value_or_exit(VCPKG_LINE_INFO);
-            });
-        };
-
-        if (auto p = this->status_paragraph.get())
+        if (const auto p = this->status_paragraph.get())
         {
-            return to_package_specs(p->package.depends);
+            return PackageSpec::to_package_specs(p->package.depends, triplet);
         }
 
-        if (auto p = this->binary_control_file.get())
+        if (const auto p = this->binary_control_file.get())
         {
             auto deps = Util::fmap_flatten(p->features, [](const BinaryParagraph& pgh) { return pgh.depends; });
-            deps.insert(deps.end(), p->core_paragraph.depends.begin(), p->core_paragraph.depends.end());
-            return to_package_specs(deps);
+            deps.insert(deps.end(), p->core_paragraph.depends.cbegin(), p->core_paragraph.depends.cend());
+            return PackageSpec::to_package_specs(deps, triplet);
         }
 
-        if (auto p = this->source_paragraph.get())
+        if (const auto p = this->source_paragraph.get())
         {
-            return to_package_specs(filter_dependencies(p->depends, triplet));
+            return PackageSpec::to_package_specs(filter_dependencies(p->depends, triplet), triplet);
         }
 
         Checks::exit_with_message(VCPKG_LINE_INFO,
                                   "Cannot get dependencies because there was none of: source/binary/status paragraphs");
+    }
+
+    std::string to_output_string(RequestType request_type,
+                                 const CStringView s,
+                                 const Build::BuildPackageOptions& options)
+    {
+        const char* const from_head = options.use_head_version == Build::UseHeadVersion::YES ? " (from HEAD)" : "";
+
+        switch (request_type)
+        {
+            case RequestType::AUTO_SELECTED: return Strings::format("  * %s%s", s, from_head);
+            case RequestType::USER_REQUESTED: return Strings::format("    %s%s", s, from_head);
+            default: Checks::unreachable(VCPKG_LINE_INFO);
+        }
     }
 
     std::string to_output_string(RequestType request_type, const CStringView s)
@@ -611,10 +619,38 @@ namespace vcpkg::Dependencies
         {
             Cluster& spec_cluster = graph.get(spec.spec());
             spec_cluster.request_type = RequestType::USER_REQUESTED;
-            auto res = mark_plus(spec.feature(), spec_cluster, graph, graph_plan);
+            if (spec.feature() == "*")
+            {
+                if (auto p_scf = spec_cluster.source_control_file.value_or(nullptr))
+                {
+                    for (auto&& feature : p_scf->feature_paragraphs)
+                    {
+                        auto res = mark_plus(feature->name, spec_cluster, graph, graph_plan);
 
-            Checks::check_exit(
-                VCPKG_LINE_INFO, res == MarkPlusResult::SUCCESS, "Error: Unable to locate feature %s", spec);
+                        Checks::check_exit(VCPKG_LINE_INFO,
+                                           res == MarkPlusResult::SUCCESS,
+                                           "Error: Unable to locate feature %s",
+                                           spec);
+                    }
+
+                    auto res = mark_plus("core", spec_cluster, graph, graph_plan);
+
+                    Checks::check_exit(
+                        VCPKG_LINE_INFO, res == MarkPlusResult::SUCCESS, "Error: Unable to locate feature %s", spec);
+                }
+                else
+                {
+                    Checks::exit_with_message(
+                        VCPKG_LINE_INFO, "Error: Unable to handle '*' because can't find CONTROL for %s", spec.spec());
+                }
+            }
+            else
+            {
+                auto res = mark_plus(spec.feature(), spec_cluster, graph, graph_plan);
+
+                Checks::check_exit(
+                    VCPKG_LINE_INFO, res == MarkPlusResult::SUCCESS, "Error: Unable to locate feature %s", spec);
+            }
 
             graph_plan.install_graph.add_vertex(ClusterPtr{&spec_cluster});
         }

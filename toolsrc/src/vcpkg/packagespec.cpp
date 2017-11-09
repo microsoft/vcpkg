@@ -92,6 +92,14 @@ namespace vcpkg
         return p;
     }
 
+    std::vector<PackageSpec> PackageSpec::to_package_specs(const std::vector<std::string>& ports,
+                                                           const Triplet& triplet)
+    {
+        return Util::fmap(ports, [&](const std::string s) {
+            return PackageSpec::from_name_and_triplet(s, triplet).value_or_exit(VCPKG_LINE_INFO);
+        });
+    }
+
     const std::string& PackageSpec::name() const { return this->m_name; }
 
     const Triplet& PackageSpec::triplet() const { return this->m_triplet; }

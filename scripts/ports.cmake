@@ -108,10 +108,12 @@ elseif(CMD MATCHES "^CREATE$")
         message(STATUS "If this is not desired, delete the file and ${NATIVE_VCPKG_ROOT_DIR}\\ports\\${PORT}")
     else()
         include(vcpkg_download_distfile)
-        file(DOWNLOAD ${URL} ${DOWNLOADS}/${FILENAME} STATUS error_code)
-        if(NOT error_code MATCHES "0;")
-            message(FATAL_ERROR "Error downloading file: ${error_code}")
-        endif()
+        set(_VCPKG_INTERNAL_NO_HASH_CHECK "TRUE")
+        vcpkg_download_distfile(ARCHIVE
+            URLS ${URL}
+            FILENAME ${FILENAME}
+        )
+        set(_VCPKG_INTERNAL_NO_HASH_CHECK "FALSE")
     endif()
     file(SHA512 ${DOWNLOADS}/${FILENAME} SHA512)
 

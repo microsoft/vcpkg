@@ -92,13 +92,13 @@ function(vcpkg_from_bitbucket)
         message(STATUS "Package does not specify HEAD_REF. Falling back to non-HEAD version.")
         set(VCPKG_USE_HEAD_VERSION OFF)
     endif()
-    
+
     # Handle --no-head scenarios
     if(NOT VCPKG_USE_HEAD_VERSION)
         if(NOT _vdud_REF)
             message(FATAL_ERROR "Package does not specify REF. It must built using --head.")
         endif()
-        
+
         set(URL "https://bitbucket.com/${ORG_NAME}/${REPO_NAME}/get/${_vdud_REF}.tar.gz")
         set(downloaded_file_path "${DOWNLOADS}/${ORG_NAME}-${REPO_NAME}-${_vdud_REF}.tar.gz")
 
@@ -117,7 +117,7 @@ function(vcpkg_from_bitbucket)
         else()
             set(_version ${_vdud_REF})
         endif()
-        
+
         vcpkg_download_distfile(ARCHIVE
             URLS "https://bitbucket.com/${ORG_NAME}/${REPO_NAME}/get/${_vdud_REF}.tar.gz"
             SHA512 "${_vdud_SHA512}"
@@ -150,39 +150,31 @@ function(vcpkg_from_bitbucket)
         endif()
 
         # Try to download the file and version information from bitbucket.
-        message(STATUS "Downloading ${URL}...")
-        file(DOWNLOAD "https://api.bitbucket.com/2.0/repositories/${ORG_NAME}/${REPO_NAME}/refs/branches/${_vdud_HEAD_REF}"
-            ${downloaded_file_path}.version
-            STATUS download_status
+        set(_VCPKG_INTERNAL_NO_HASH_CHECK "TRUE")
+        vcpkg_download_distfile(ARCHIVE_VERSION
+            URLS "https://api.bitbucket.com/2.0/repositories/${ORG_NAME}/${REPO_NAME}/refs/branches/${_vdud_HEAD_REF}"
+            FILENAME ${downloaded_file_name}.version
         )
-        list(GET download_status 0 status_code)
-        if (NOT "${status_code}" STREQUAL "0")
-            file(REMOVE ${downloaded_file_path}.version)
-            message(FATAL_ERROR "Downloading version info for ${URL}... Failed. Status: ${download_status}")
-        endif()
 
-        file(DOWNLOAD ${URL} ${downloaded_file_path} STATUS download_status)
-        list(GET download_status 0 status_code)
-        if (NOT "${status_code}" STREQUAL "0")
-            file(REMOVE ${downloaded_file_path})
-            message(FATAL_ERROR "Downloading ${URL}... Failed. Status: ${download_status}")
-        else()
-            message(STATUS "Downloading ${URL}... OK")
-        endif()
+        vcpkg_download_distfile(ARCHIVE
+            URLS ${URL}
+            FILENAME ${downloaded_file_name}
+        )
+        set(_VCPKG_INTERNAL_NO_HASH_CHECK "FALSE")
     endif()
 
     vcpkg_extract_source_archive_ex(
-        ARCHIVE "${downloaded_file_path}"
+        ARCHIVE "${ARCHIVE}"
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/head"
     )
 
     # Parse the github refs response with regex.
     # TODO: use some JSON swiss-army-knife utility instead.
-    file(READ "${downloaded_file_path}.version" _contents)
+    file(READ "${ARCHIVE_VERSION}" _contents)
     string(REGEX MATCH "\"hash\": \"[a-f0-9]+\"" x "${_contents}")
     string(REGEX REPLACE "\"hash\": \"([a-f0-9]+)\"" "\\1" _version ${x})
     string(SUBSTRING ${_version} 0 12 _vdud_HEAD_REF) # Get the 12 first numbers from commit hash
-    
+
     # exports VCPKG_HEAD_VERSION to the caller. This will get picked up by ports.cmake after the build.
     set(VCPKG_HEAD_VERSION ${_version} PARENT_SCOPE)
 

@@ -2,15 +2,68 @@
 
 #include <vcpkg/base/system.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/export.h>
+#include <vcpkg/help.h>
+#include <vcpkg/install.h>
+#include <vcpkg/remove.h>
 
 namespace vcpkg::Help
 {
-    void help_topics()
+    struct Topic
+    {
+        using topic_function = void (*)(const VcpkgPaths& paths);
+
+        constexpr Topic(CStringView n, topic_function fn) : name(n), print(fn) {}
+
+        CStringView name;
+        topic_function print;
+    };
+
+    template<const CommandStructure& S>
+    static void command_topic_fn(const VcpkgPaths&)
+    {
+        display_usage(S);
+    }
+
+    static void integrate_topic_fn(const VcpkgPaths&)
+    {
+        System::print("Commands:\n"
+                      "%s",
+                      Commands::Integrate::INTEGRATE_COMMAND_HELPSTRING);
+    }
+
+    static void help_topics(const VcpkgPaths&);
+
+    const CommandStructure COMMAND_STRUCTURE = {
+        Help::create_example_string("help"),
+        0,
+        1,
+        {},
+        nullptr,
+    };
+
+    static constexpr std::array<Topic, 12> topics = {{
+        {"create", command_topic_fn<Commands::Create::COMMAND_STRUCTURE>},
+        {"edit", command_topic_fn<Commands::Edit::COMMAND_STRUCTURE>},
+        {"env", command_topic_fn<Commands::Env::COMMAND_STRUCTURE>},
+        {"export", command_topic_fn<Export::COMMAND_STRUCTURE>},
+        {"help", command_topic_fn<Help::COMMAND_STRUCTURE>},
+        {"install", command_topic_fn<Install::COMMAND_STRUCTURE>},
+        {"integrate", integrate_topic_fn},
+        {"list", command_topic_fn<Commands::List::COMMAND_STRUCTURE>},
+        {"owns", command_topic_fn<Commands::Owns::COMMAND_STRUCTURE>},
+        {"remove", command_topic_fn<Remove::COMMAND_STRUCTURE>},
+        {"search", command_topic_fn<Commands::Search::COMMAND_STRUCTURE>},
+        {"topics", help_topics},
+    }};
+
+    static void help_topics(const VcpkgPaths&)
     {
         System::println("Available help topics:\n"
                         "  triplet\n"
-                        "  integrate\n"
-                        "  export");
+                        "  integrate"
+                        "%s",
+                        Strings::join("", topics, [](const Topic& topic) { return std::string("\n  ") + topic.name; }));
     }
 
     void help_topic_valid_triplet(const VcpkgPaths& paths)
@@ -20,21 +73,6 @@ namespace vcpkg::Help
         {
             System::println("  %s", triplet);
         }
-    }
-
-    void help_topic_export()
-    {
-        System::println("Summary:\n"
-                        "  vcpkg export [options] <pkgs>...\n"
-                        "\n"
-                        "Options:\n"
-                        "  --7zip                          Export to a 7zip (.7z) file\n"
-                        "  --dry-run                       Do not actually export\n"
-                        "  --nuget                         Export a NuGet package\n"
-                        "  --nuget-id=<id>                 Specify the id for the exported NuGet package\n"
-                        "  --nuget-version=<ver>           Specify the version for the exported NuGet package\n"
-                        "  --raw                           Export to an uncompressed directory\n"
-                        "  --zip                           Export to a zip file");
     }
 
     void print_usage()
@@ -86,15 +124,9 @@ namespace vcpkg::Help
         return cs;
     }
 
-    void print_example(const std::string& command_and_arguments)
-    {
-        System::println(create_example_string(command_and_arguments));
-    }
-
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        args.check_max_arg_count(1);
-        args.check_and_get_optional_command_arguments({});
+        args.parse_arguments(COMMAND_STRUCTURE);
 
         if (args.command_arguments.empty())
         {
@@ -105,27 +137,18 @@ namespace vcpkg::Help
         if (topic == "triplet" || topic == "triplets" || topic == "triple")
         {
             help_topic_valid_triplet(paths);
+            Checks::exit_success(VCPKG_LINE_INFO);
         }
-        else if (topic == "export")
+
+        auto it_topic = Util::find_if(topics, [&](const Topic& t) { return t.name == topic; });
+        if (it_topic != topics.end())
         {
-            help_topic_export();
+            it_topic->print(paths);
+            Checks::exit_success(VCPKG_LINE_INFO);
         }
-        else if (topic == "integrate")
-        {
-            System::print("Commands:\n"
-                          "%s",
-                          Commands::Integrate::INTEGRATE_COMMAND_HELPSTRING);
-        }
-        else if (topic == "topics")
-        {
-            help_topics();
-        }
-        else
-        {
-            System::println(System::Color::error, "Error: unknown topic %s", topic);
-            help_topics();
-            Checks::exit_fail(VCPKG_LINE_INFO);
-        }
-        Checks::exit_success(VCPKG_LINE_INFO);
+
+        System::println(System::Color::error, "Error: unknown topic %s", topic);
+        help_topics(paths);
+        Checks::exit_fail(VCPKG_LINE_INFO);
     }
 }

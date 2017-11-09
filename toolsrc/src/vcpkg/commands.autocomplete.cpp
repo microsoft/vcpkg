@@ -121,7 +121,6 @@ namespace vcpkg::Commands::Autocomplete
 
         static constexpr CommandEntry COMMANDS[] = {
             CommandEntry{"install", R"###(^install\s(.*\s|)(\S*)$)###", Install::COMMAND_STRUCTURE},
-            CommandEntry{"install", R"###(^install\s(.*\s|)(\S*)$)###", Install::COMMAND_STRUCTURE},
             CommandEntry{"edit", R"###(^edit\s(.*\s|)(\S*)$)###", Edit::COMMAND_STRUCTURE},
             CommandEntry{"remove", R"###(^remove\s(.*\s|)(\S*)$)###", Remove::COMMAND_STRUCTURE},
             CommandEntry{"integrate", R"###(^integrate(\s+)(\S*)$)###", Integrate::COMMAND_STRUCTURE},
@@ -137,11 +136,16 @@ namespace vcpkg::Commands::Autocomplete
                 const bool is_option = Strings::case_insensitive_ascii_starts_with(prefix, "-");
                 if (is_option)
                 {
-                    results = Util::fmap(command.structure.switches, [](auto&& s) -> std::string { return s; });
+                    results =
+                        Util::fmap(command.structure.options.switches, [](const CommandSwitch& s) { return s.name; });
+
+                    auto settings = Util::fmap(command.structure.options.settings, [](auto&& s) { return s.name; });
+                    results.insert(results.end(), settings.begin(), settings.end());
                 }
                 else
                 {
-                    results = command.structure.valid_arguments(paths);
+                    if (command.structure.valid_arguments != nullptr)
+                        results = command.structure.valid_arguments(paths);
                 }
 
                 Util::unstable_keep_if(results, [&](const std::string& s) {

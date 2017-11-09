@@ -20,6 +20,8 @@ namespace vcpkg
         static ExpectedT<PackageSpec, PackageSpecParseResult> from_name_and_triplet(const std::string& name,
                                                                                     const Triplet& triplet);
 
+        static std::vector<PackageSpec> to_package_specs(const std::vector<std::string>& ports, const Triplet& triplet);
+
         const std::string& name() const;
 
         const Triplet& triplet() const;
@@ -47,6 +49,22 @@ namespace vcpkg
 
         static std::vector<FeatureSpec> from_strings_and_triplet(const std::vector<std::string>& depends,
                                                                  const Triplet& t);
+
+        bool operator<(const FeatureSpec& other) const
+        {
+            if (name() < other.name()) return true;
+            if (name() > other.name()) return false;
+            if (feature() < other.feature()) return true;
+            if (feature() > other.feature()) return false;
+            return triplet() < other.triplet();
+        }
+
+        bool operator==(const FeatureSpec& other) const
+        {
+            return triplet() == other.triplet() && name() == other.name() && feature() == other.feature();
+        }
+
+        bool operator!=(const FeatureSpec& other) const { return !(*this == other); }
 
     private:
         PackageSpec m_spec;

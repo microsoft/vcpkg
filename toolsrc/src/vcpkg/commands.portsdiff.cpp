@@ -114,13 +114,18 @@ namespace vcpkg::Commands::PortsDiff
             VCPKG_LINE_INFO, output.output == VALID_COMMIT_OUTPUT, "Invalid commit id %s", git_commit_id);
     }
 
+    const CommandStructure COMMAND_STRUCTURE = {
+        Strings::format("The argument should be a branch/tag/hash to checkout.\n%s",
+                        Help::create_example_string("portsdiff mybranchname")),
+        1,
+        2,
+        {},
+        nullptr,
+    };
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const std::string EXAMPLE = Strings::format("The argument should be a branch/tag/hash to checkout.\n%s",
-                                                           Help::create_example_string("portsdiff mybranchname"));
-        args.check_min_arg_count(1, EXAMPLE);
-        args.check_max_arg_count(2, EXAMPLE);
-        args.check_and_get_optional_command_arguments({});
+        args.parse_arguments(COMMAND_STRUCTURE);
 
         const fs::path& git_exe = paths.get_git_exe();
 

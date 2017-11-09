@@ -53,7 +53,6 @@ namespace vcpkg::Install
 
     Build::BuildResult perform_install_plan_action(const VcpkgPaths& paths,
                                                    const Dependencies::InstallPlanAction& action,
-                                                   const Build::BuildPackageOptions& install_plan_options,
                                                    StatusParagraphs& status_db);
 
     enum class InstallResult
@@ -62,13 +61,14 @@ namespace vcpkg::Install
         SUCCESS,
     };
 
+    std::vector<std::string> get_all_port_names(const VcpkgPaths& paths);
+
     void install_files_and_write_listfile(Files::Filesystem& fs, const fs::path& source_dir, const InstallDir& dirs);
     InstallResult install_package(const VcpkgPaths& paths,
                                   const BinaryControlFile& binary_paragraph,
                                   StatusParagraphs* status_db);
 
     InstallSummary perform(const std::vector<Dependencies::AnyAction>& action_plan,
-                           const Build::BuildPackageOptions& install_plan_options,
                            const KeepGoing keep_going,
                            const VcpkgPaths& paths,
                            StatusParagraphs& status_db);

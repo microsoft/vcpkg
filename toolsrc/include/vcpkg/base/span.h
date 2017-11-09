@@ -57,4 +57,16 @@ namespace vcpkg
     {
         return {v.data(), v.size()};
     }
+
+    template<class T>
+    constexpr T* begin(Span<T> sp)
+    {
+        return sp.begin();
+    }
+
+    template<class T>
+    constexpr T* end(Span<T> sp)
+    {
+        return sp.end();
+    }
 }

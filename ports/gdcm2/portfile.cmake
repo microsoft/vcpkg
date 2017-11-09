@@ -14,15 +14,14 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO malaterre/GDCM
-    REF v2.6.8
-    SHA512 f3b571f7e00b42b444acd6d696ba1979b6ef83e84744ecddb05ad09d8d2443027145c50cb67c6bc25d6b8e009833b643e575ab988106cb981f529cf455a9b0bc
-    HEAD_REF master
+    REF v2.8.3
+    SHA512 f8c3d600f067c9b60a32ff5fb7e751c06088e1e4a8e8d0f5e25d9fc7d49e8fab1f0242b10433f522d2043777cddace78c5a9c2cb25bac75a8e84fee554370f62
 )
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/gdcmSystem.patch
+        ${CMAKE_CURRENT_LIST_DIR}/socketxx.patch
 )
 
 

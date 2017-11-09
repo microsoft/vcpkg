@@ -9,11 +9,17 @@
 
 namespace vcpkg::Commands::DependInfo
 {
+    const CommandStructure COMMAND_STRUCTURE = {
+        Help::create_example_string(R"###(depend-info [pat])###"),
+        0,
+        1,
+        {},
+        nullptr,
+    };
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const std::string EXAMPLE = Help::create_example_string(R"###(depend-info [pat])###");
-        args.check_max_arg_count(1, EXAMPLE);
-        args.check_and_get_optional_command_arguments({});
+        args.parse_arguments(COMMAND_STRUCTURE);
 
         std::vector<std::unique_ptr<SourceControlFile>> source_control_files =
             Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);

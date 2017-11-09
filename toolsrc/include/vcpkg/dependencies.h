@@ -3,6 +3,7 @@
 #include <vcpkg/base/graphs.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/util.h>
+#include <vcpkg/build.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/vcpkgpaths.h>
@@ -18,6 +19,9 @@ namespace vcpkg::Dependencies
         AUTO_SELECTED
     };
 
+    std::string to_output_string(RequestType request_type,
+                                 const CStringView s,
+                                 const Build::BuildPackageOptions& options);
     std::string to_output_string(RequestType request_type, const CStringView s);
 
     struct AnyParagraph
@@ -38,7 +42,8 @@ namespace vcpkg::Dependencies
         UNKNOWN,
         BUILD_AND_INSTALL,
         INSTALL,
-        ALREADY_INSTALLED
+        ALREADY_INSTALLED,
+        EXCLUDED
     };
 
     struct InstallPlanAction : Util::MoveOnlyBase
@@ -62,6 +67,7 @@ namespace vcpkg::Dependencies
         AnyParagraph any_paragraph;
         InstallPlanType plan_type;
         RequestType request_type;
+        Build::BuildPackageOptions build_options;
         std::unordered_set<std::string> feature_list;
     };
 

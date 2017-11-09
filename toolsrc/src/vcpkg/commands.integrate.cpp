@@ -333,10 +333,6 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         static const std::string PROJECT = "project";
     }
 
-    static const std::array<std::string, 0> INSTALL_SWITCHES;
-
-    static const std::array<std::string, 0> INSTALL_SETTINGS;
-
     static std::vector<std::string> valid_arguments(const VcpkgPaths&)
     {
         return {Subcommand::INSTALL, Subcommand::REMOVE, Subcommand::PROJECT};
@@ -348,18 +344,13 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
                         INTEGRATE_COMMAND_HELPSTRING),
         1,
         1,
-        INSTALL_SWITCHES,
-        INSTALL_SETTINGS,
+        {},
         &valid_arguments,
     };
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const std::string EXAMPLE = Strings::format("Commands:\n"
-                                                           "%s",
-                                                           INTEGRATE_COMMAND_HELPSTRING);
-        args.check_exact_arg_count(1, EXAMPLE);
-        args.check_and_get_optional_command_arguments({});
+        args.parse_arguments(COMMAND_STRUCTURE);
 
 #if defined(_WIN32)
         if (args.command_arguments[0] == Subcommand::INSTALL)

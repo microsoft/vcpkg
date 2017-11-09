@@ -28,13 +28,18 @@ namespace vcpkg::Commands::Hash
         System::println(hash);
     }
 
+    const CommandStructure COMMAND_STRUCTURE = {
+        Strings::format("The argument should be a file path\n%s",
+                        Help::create_example_string("hash boost_1_62_0.tar.bz2")),
+        1,
+        2,
+        {},
+        nullptr,
+    };
+
     void perform_and_exit(const VcpkgCmdArguments& args)
     {
-        static const std::string EXAMPLE = Strings::format("The argument should be a file path\n%s",
-                                                           Help::create_example_string("hash boost_1_62_0.tar.bz2"));
-        args.check_min_arg_count(1, EXAMPLE);
-        args.check_max_arg_count(2, EXAMPLE);
-        args.check_and_get_optional_command_arguments({});
+        args.parse_arguments(COMMAND_STRUCTURE);
 
         if (args.command_arguments.size() == 1)
         {

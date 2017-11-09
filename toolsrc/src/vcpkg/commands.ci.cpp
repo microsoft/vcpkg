@@ -1,6 +1,5 @@
 #include "pch.h"
 
-#include <vcpkg/base/chrono.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
@@ -10,7 +9,6 @@
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
-#include <vcpkg/paragraphs.h>
 #include <vcpkg/vcpkglib.h>
 
 namespace vcpkg::Commands::CI
@@ -19,37 +17,39 @@ namespace vcpkg::Commands::CI
     using Dependencies::InstallPlanAction;
     using Dependencies::InstallPlanType;
 
-    static std::vector<PackageSpec> load_all_package_specs(Files::Filesystem& fs,
-                                                           const fs::path& ports_directory,
-                                                           const Triplet& triplet)
-    {
-        auto ports = Paragraphs::load_all_ports(fs, ports_directory);
-        return Util::fmap(ports, [&](auto&& control_file) -> PackageSpec {
-            return PackageSpec::from_name_and_triplet(control_file->core_paragraph->name, triplet)
-                .value_or_exit(VCPKG_LINE_INFO);
-        });
-    }
-
-    static Install::InstallSummary run_ci_on_triplet(const Triplet& triplet, const VcpkgPaths& paths)
+    static Install::InstallSummary run_ci_on_triplet(const Triplet& triplet,
+                                                     const VcpkgPaths& paths,
+                                                     const std::vector<std::string>& ports,
+                                                     const std::set<std::string>& exclusions_set)
     {
         Input::check_triplet(triplet, paths);
 
-        const std::vector<PackageSpec> specs = load_all_package_specs(paths.get_filesystem(), paths.ports, triplet);
+        const std::vector<PackageSpec> specs = PackageSpec::to_package_specs(ports, triplet);
 
         StatusParagraphs status_db = database_load_check(paths);
         const auto& paths_port_file = Dependencies::PathsPortFile(paths);
         std::vector<InstallPlanAction> install_plan =
             Dependencies::create_install_plan(paths_port_file, specs, status_db);
+
+        for (InstallPlanAction& plan : install_plan)
+        {
+            if (Util::Sets::contains(exclusions_set, plan.spec.name()))
+            {
+                plan.plan_type = InstallPlanType::EXCLUDED;
+            }
+        }
+
         Checks::check_exit(VCPKG_LINE_INFO, !install_plan.empty(), "Install plan cannot be empty");
 
         const Build::BuildPackageOptions install_plan_options = {Build::UseHeadVersion::NO, Build::AllowDownloads::YES};
 
         const std::vector<Dependencies::AnyAction> action_plan =
-            Util::fmap(install_plan, [](InstallPlanAction& install_action) {
+            Util::fmap(install_plan, [&install_plan_options](InstallPlanAction& install_action) {
+                install_action.build_options = install_plan_options;
                 return Dependencies::AnyAction(std::move(install_action));
             });
 
-        return Install::perform(action_plan, install_plan_options, Install::KeepGoing::YES, paths, status_db);
+        return Install::perform(action_plan, Install::KeepGoing::YES, paths, status_db);
     }
 
     struct TripletAndSummary
@@ -58,10 +58,25 @@ namespace vcpkg::Commands::CI
         Install::InstallSummary summary;
     };
 
+    static const std::string OPTION_EXCLUDE = "--exclude";
+
+    static const std::array<CommandSetting, 1> CI_SETTINGS = {{
+        {OPTION_EXCLUDE, "Comma separated list of ports to skip"},
+    }};
+
+    const CommandStructure COMMAND_STRUCTURE = {
+        Help::create_example_string("ci x64-windows"),
+        0,
+        SIZE_MAX,
+        {{}, CI_SETTINGS},
+        nullptr,
+    };
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
-        static const std::string EXAMPLE = Help::create_example_string("ci x64-windows");
-        args.check_and_get_optional_command_arguments({});
+        const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
+        const std::vector<std::string> exclusions = Strings::split(options.settings.at(OPTION_EXCLUDE), ",");
+        const std::set<std::string> exclusions_set(exclusions.cbegin(), exclusions.cend());
 
         std::vector<Triplet> triplets;
         for (const std::string& triplet : args.command_arguments)
@@ -74,10 +89,11 @@ namespace vcpkg::Commands::CI
             triplets.push_back(default_triplet);
         }
 
+        const std::vector<std::string> ports = Install::get_all_port_names(paths);
         std::vector<TripletAndSummary> results;
         for (const Triplet& triplet : triplets)
         {
-            Install::InstallSummary summary = run_ci_on_triplet(triplet, paths);
+            Install::InstallSummary summary = run_ci_on_triplet(triplet, paths, ports, exclusions_set);
             results.push_back({triplet, std::move(summary)});
         }
 

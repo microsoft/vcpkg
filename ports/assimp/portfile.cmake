@@ -10,16 +10,22 @@ vcpkg_from_github(
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/const-compare-worditerator.patch
+    PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/const-compare-worditerator.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/dont-overwrite-prefix-path.patch"
 )
+
+file(REMOVE ${SOURCE_PATH}/cmake-modules/FindZLIB.cmake)
+set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
+set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DASSIMP_BUILD_TESTS=False
-            -DASSIMP_BUILD_ASSIMP_VIEW=False
-            -DASSIMP_BUILD_ZLIB=False
-            -DASSIMP_BUILD_ASSIMP_TOOLS=False
-            -DASSIMP_INSTALL_PDB=False
+    OPTIONS -DASSIMP_BUILD_TESTS=OFF
+            -DASSIMP_BUILD_ASSIMP_VIEW=OFF
+            -DASSIMP_BUILD_ZLIB=OFF
+            -DASSIMP_BUILD_ASSIMP_TOOLS=OFF
+            -DASSIMP_INSTALL_PDB=OFF
 )
 
 vcpkg_install_cmake()
@@ -29,8 +35,6 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/assimp-4.0")
 vcpkg_copy_pdbs()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/assimp/assimp-config.cmake ASSIMP_CONFIG)

@@ -13,7 +13,7 @@ $gitHash = "unknownhash"
 $oldpath = $env:path
 try
 {
-    $env:path += ";$vcpkgRootDir\downloads\MinGit-2.14.1-32-bit\cmd"
+    $env:path += ";$vcpkgRootDir\downloads\MinGit-2.15.0-32-bit\cmd"
     if (Get-Command "git" -ErrorAction SilentlyContinue)
     {
         $gitHash = git log HEAD -n 1 --format="%cd-%H" --date=short
@@ -32,7 +32,8 @@ $vcpkgSourcesPath = "$vcpkgRootDir\toolsrc"
 
 if (!(Test-Path $vcpkgSourcesPath))
 {
-    New-Item -ItemType directory -Path $vcpkgSourcesPath -force | Out-Null
+    Write-Error "Unable to determine vcpkg sources directory. '$vcpkgSourcesPath' does not exist."
+    return
 }
 
 try
@@ -43,6 +44,11 @@ try
     $platformToolset = $msbuildExeWithPlatformToolset[1]
     $windowsSDK = & $scriptsDir\getWindowsSDK.ps1
     & $msbuildExe "/p:VCPKG_VERSION=-$gitHash" "/p:DISABLE_METRICS=$disableMetrics" /p:Configuration=Release /p:Platform=x86 /p:PlatformToolset=$platformToolset /p:TargetPlatformVersion=$windowsSDK /m dirs.proj
+    if ($LASTEXITCODE -ne 0)
+    {
+        Write-Error "Building vcpkg.exe failed. Please ensure you have installed the Desktop C++ workload and the Windows SDK for Desktop C++."
+        return
+    }
 
     Write-Verbose("Placing vcpkg.exe in the correct location")
 
