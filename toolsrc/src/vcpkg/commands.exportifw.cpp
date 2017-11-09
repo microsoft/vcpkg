@@ -468,7 +468,7 @@ namespace vcpkg::Export::IFW
         export_unique_triplets(ifw_packages_dir_path, unique_triplets, fs);
 
         // Copy files needed for integration
-        export_integration_files(ifw_packages_dir_path / "integration" / "data", paths);
+        export_integration_files(ifw_packages_dir_path / "integration" / "data", paths, export_id);
         // Integration
         export_integration(ifw_packages_dir_path, fs);
 

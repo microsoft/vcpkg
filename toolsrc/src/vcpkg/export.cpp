@@ -216,7 +216,7 @@ namespace vcpkg::Export
         return nullopt;
     }
 
-    void export_integration_files(const fs::path& raw_exported_dir_path, const VcpkgPaths& paths)
+    void export_integration_files(const fs::path& raw_exported_dir_path, const VcpkgPaths& paths, std::string const& export_id)
     {
         const std::vector<fs::path> integration_files_relative_to_root = {
             {".vcpkg-root"},
@@ -237,7 +237,19 @@ namespace vcpkg::Export
             std::error_code ec;
             fs.create_directories(destination.parent_path(), ec);
             Checks::check_exit(VCPKG_LINE_INFO, !ec);
-            fs.copy_file(source, destination, fs::copy_options::overwrite_existing, ec);
+            auto contents = fs.read_contents(source);
+
+            if (contents.has_value())
+            {
+                auto data = std::move(*contents.get());
+                data = Strings::replace_all(std::move(data), "@PACKAGEID@", export_id);
+
+                fs.write_contents(destination, data);
+            }
+            else
+            {
+                fs.copy_file(source, destination, fs::copy_options::overwrite_existing, ec);
+            }
             Checks::check_exit(VCPKG_LINE_INFO, !ec);
         }
     }
@@ -415,7 +427,7 @@ namespace vcpkg::Export
         }
 
         // Copy files needed for integration
-        export_integration_files(raw_exported_dir_path, paths);
+        export_integration_files(raw_exported_dir_path, paths, export_id);
 
         if (opts.raw)
         {

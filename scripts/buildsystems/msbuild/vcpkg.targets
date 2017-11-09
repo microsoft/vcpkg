@@ -1,100 +1,100 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'Win32||'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x86-windows</VcpkgTriplet>
+    <@PACKAGEID@VcpkgEnabled Condition="'$(@PACKAGEID@VcpkgEnabled)' == ''">true</@PACKAGEID@VcpkgEnabled>
+    <@PACKAGEID@VcpkgTriplet Condition="'$(@PACKAGEID@VcpkgTriplet)' == ''">x86-windows</@PACKAGEID@VcpkgTriplet>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'Win32|Windows Store|10.0'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x86-uwp</VcpkgTriplet>
+    <@PACKAGEID@VcpkgEnabled Condition="'$(@PACKAGEID@VcpkgEnabled)' == ''">true</@PACKAGEID@VcpkgEnabled>
+    <@PACKAGEID@VcpkgTriplet Condition="'$(@PACKAGEID@VcpkgTriplet)' == ''">x86-uwp</@PACKAGEID@VcpkgTriplet>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == '||'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x86-windows</VcpkgTriplet>
+    <@PACKAGEID@VcpkgEnabled Condition="'$(@PACKAGEID@VcpkgEnabled)' == ''">true</@PACKAGEID@VcpkgEnabled>
+    <@PACKAGEID@VcpkgTriplet Condition="'$(@PACKAGEID@VcpkgTriplet)' == ''">x86-windows</@PACKAGEID@VcpkgTriplet>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == '|Windows Store|10.0'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x86-uwp</VcpkgTriplet>
+    <@PACKAGEID@VcpkgEnabled Condition="'$(@PACKAGEID@VcpkgEnabled)' == ''">true</@PACKAGEID@VcpkgEnabled>
+    <@PACKAGEID@VcpkgTriplet Condition="'$(@PACKAGEID@VcpkgTriplet)' == ''">x86-uwp</@PACKAGEID@VcpkgTriplet>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'x64||'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x64-windows</VcpkgTriplet>
+    <@PACKAGEID@VcpkgEnabled Condition="'$(@PACKAGEID@VcpkgEnabled)' == ''">true</@PACKAGEID@VcpkgEnabled>
+    <@PACKAGEID@VcpkgTriplet Condition="'$(@PACKAGEID@VcpkgTriplet)' == ''">x64-windows</@PACKAGEID@VcpkgTriplet>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'arm||'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">arm-windows</VcpkgTriplet>
+    <@PACKAGEID@VcpkgEnabled Condition="'$(@PACKAGEID@VcpkgEnabled)' == ''">true</@PACKAGEID@VcpkgEnabled>
+    <@PACKAGEID@VcpkgTriplet Condition="'$(@PACKAGEID@VcpkgTriplet)' == ''">arm-windows</@PACKAGEID@VcpkgTriplet>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'arm64||'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">arm64-windows</VcpkgTriplet>
+    <@PACKAGEID@VcpkgEnabled Condition="'$(@PACKAGEID@VcpkgEnabled)' == ''">true</@PACKAGEID@VcpkgEnabled>
+    <@PACKAGEID@VcpkgTriplet Condition="'$(@PACKAGEID@VcpkgTriplet)' == ''">arm64-windows</@PACKAGEID@VcpkgTriplet>
   </PropertyGroup>  
 
   <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'x64|Windows Store|10.0'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x64-uwp</VcpkgTriplet>
+    <@PACKAGEID@VcpkgEnabled Condition="'$(@PACKAGEID@VcpkgEnabled)' == ''">true</@PACKAGEID@VcpkgEnabled>
+    <@PACKAGEID@VcpkgTriplet Condition="'$(@PACKAGEID@VcpkgTriplet)' == ''">x64-uwp</@PACKAGEID@VcpkgTriplet>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'arm|Windows Store|10.0'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">arm-uwp</VcpkgTriplet>
+    <@PACKAGEID@VcpkgEnabled Condition="'$(@PACKAGEID@VcpkgEnabled)' == ''">true</@PACKAGEID@VcpkgEnabled>
+    <@PACKAGEID@VcpkgTriplet Condition="'$(@PACKAGEID@VcpkgTriplet)' == ''">arm-uwp</@PACKAGEID@VcpkgTriplet>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'arm64|Windows Store|10.0'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">arm64-uwp</VcpkgTriplet>
+    <@PACKAGEID@VcpkgEnabled Condition="'$(@PACKAGEID@VcpkgEnabled)' == ''">true</@PACKAGEID@VcpkgEnabled>
+    <@PACKAGEID@VcpkgTriplet Condition="'$(@PACKAGEID@VcpkgTriplet)' == ''">arm64-uwp</@PACKAGEID@VcpkgTriplet>
   </PropertyGroup>  
 
-  <PropertyGroup Condition="'$(VcpkgEnabled)' == 'true'">
-    <VcpkgConfiguration Condition="'$(VcpkgConfiguration)' == ''">$(Configuration)</VcpkgConfiguration>
-    <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Debug'))">Debug</VcpkgNormalizedConfiguration>
-    <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Release')) or '$(VcpkgConfiguration)' == 'RelWithDebInfo' or '$(VcpkgConfiguration)' == 'MinSizeRel'">Release</VcpkgNormalizedConfiguration>
-    <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))\installed\$(VcpkgTriplet)\</VcpkgRoot>
+  <PropertyGroup Condition="'$(@PACKAGEID@VcpkgEnabled)' == 'true'">
+    <@PACKAGEID@VcpkgConfiguration Condition="'$(@PACKAGEID@VcpkgConfiguration)' == ''">$(Configuration)</@PACKAGEID@VcpkgConfiguration>
+    <@PACKAGEID@VcpkgNormalizedConfiguration Condition="$(@PACKAGEID@VcpkgConfiguration.StartsWith('Debug'))">Debug</@PACKAGEID@VcpkgNormalizedConfiguration>
+    <@PACKAGEID@VcpkgNormalizedConfiguration Condition="$(@PACKAGEID@VcpkgConfiguration.StartsWith('Release')) or '$(@PACKAGEID@VcpkgConfiguration)' == 'RelWithDebInfo' or '$(@PACKAGEID@VcpkgConfiguration)' == 'MinSizeRel'">Release</@PACKAGEID@VcpkgNormalizedConfiguration>
+    <@PACKAGEID@VcpkgRoot Condition="'$(@PACKAGEID@VcpkgRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))\installed\$(@PACKAGEID@VcpkgTriplet)\</@PACKAGEID@VcpkgRoot>
   </PropertyGroup>
 
-  <ItemDefinitionGroup Condition="'$(VcpkgEnabled)' == 'true'">
+  <ItemDefinitionGroup Condition="'$(@PACKAGEID@VcpkgEnabled)' == 'true'">
     <Link>
-      <AdditionalDependencies Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug' and '$(VcpkgAutoLink)' != 'false'">%(AdditionalDependencies);$(VcpkgRoot)debug\lib\*.lib</AdditionalDependencies>
-      <AdditionalDependencies Condition="'$(VcpkgNormalizedConfiguration)' == 'Release' and '$(VcpkgAutoLink)' != 'false'">%(AdditionalDependencies);$(VcpkgRoot)lib\*.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories Condition="'$(VcpkgNormalizedConfiguration)' == 'Release'">%(AdditionalLibraryDirectories);$(VcpkgRoot)lib;$(VcpkgRoot)lib\manual-link</AdditionalLibraryDirectories>
-      <AdditionalLibraryDirectories Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug'">%(AdditionalLibraryDirectories);$(VcpkgRoot)debug\lib;$(VcpkgRoot)debug\lib\manual-link</AdditionalLibraryDirectories>
+      <AdditionalDependencies Condition="'$(@PACKAGEID@VcpkgNormalizedConfiguration)' == 'Debug' and '$(VcpkgAutoLink)' != 'false'">%(AdditionalDependencies);$(@PACKAGEID@VcpkgRoot)debug\lib\*.lib</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(@PACKAGEID@VcpkgNormalizedConfiguration)' == 'Release' and '$(VcpkgAutoLink)' != 'false'">%(AdditionalDependencies);$(@PACKAGEID@VcpkgRoot)lib\*.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories Condition="'$(@PACKAGEID@VcpkgNormalizedConfiguration)' == 'Release'">%(AdditionalLibraryDirectories);$(@PACKAGEID@VcpkgRoot)lib;$(@PACKAGEID@VcpkgRoot)lib\manual-link</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories Condition="'$(@PACKAGEID@VcpkgNormalizedConfiguration)' == 'Debug'">%(AdditionalLibraryDirectories);$(@PACKAGEID@VcpkgRoot)debug\lib;$(@PACKAGEID@VcpkgRoot)debug\lib\manual-link</AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(VcpkgRoot)include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(@PACKAGEID@VcpkgRoot)include</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(VcpkgRoot)include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(@PACKAGEID@VcpkgRoot)include</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
 
-  <Target Name="VcpkgTripletSelection" BeforeTargets="ClCompile">
-    <Message Text="Using triplet &quot;$(VcpkgTriplet)&quot; from &quot;$(VcpkgRoot)&quot;" Importance="Normal" Condition="'$(VcpkgEnabled)' == 'true'"/>
-    <Message Text="Not using Vcpkg because VcpkgEnabled is &quot;$(VcpkgEnabled)&quot;" Importance="Normal" Condition="'$(VcpkgEnabled)' != 'true'"/>
-    <Message Text="Vcpkg is unable to link because we cannot decide between Release and Debug libraries. Please define the property VcpkgConfiguration to be 'Release' or 'Debug' (currently '$(VcpkgConfiguration)')." Importance="High" Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgNormalizedConfiguration)' == ''"/>
+  <Target Name="@PACKAGEID@VcpkgTripletSelection" BeforeTargets="ClCompile">
+    <Message Text="Using triplet &quot;$(@PACKAGEID@VcpkgTriplet)&quot; from &quot;$(@PACKAGEID@VcpkgRoot)&quot;" Importance="Normal" Condition="'$(@PACKAGEID@VcpkgEnabled)' == 'true'"/>
+    <Message Text="Not using Vcpkg because @PACKAGEID@VcpkgEnabled is &quot;$(@PACKAGEID@VcpkgEnabled)&quot;" Importance="Normal" Condition="'$(@PACKAGEID@VcpkgEnabled)' != 'true'"/>
+    <Message Text="Vcpkg is unable to link because we cannot decide between Release and Debug libraries. Please define the property @PACKAGEID@VcpkgConfiguration to be 'Release' or 'Debug' (currently '$(@PACKAGEID@VcpkgConfiguration)')." Importance="High" Condition="'$(@PACKAGEID@VcpkgEnabled)' == 'true' and '$(@PACKAGEID@VcpkgNormalizedConfiguration)' == ''"/>
   </Target>
 
-  <Target Name="AppLocalFromInstalled" AfterTargets="CopyFilesToOutputDirectory" BeforeTargets="CopyLocalFilesOutputGroup;RegisterOutput" Condition="'$(VcpkgEnabled)' == 'true'">
+  <Target Name="@PACKAGEID@AppLocalFromInstalled" AfterTargets="CopyFilesToOutputDirectory" BeforeTargets="CopyLocalFilesOutputGroup;RegisterOutput" Condition="'$(@PACKAGEID@VcpkgEnabled)' == 'true'">
     <WriteLinesToFile
     File="$(TLogLocation)$(ProjectName).write.1u.tlog"
     Lines="^$(TargetPath);$([System.IO.Path]::Combine($(ProjectDir),$(IntDir)))vcpkg.applocal.log" Encoding="Unicode"/>
-    <Exec Condition="$(VcpkgConfiguration.StartsWith('Debug'))"
-      Command="$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypass -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(TargetPath)%22 %22$(VcpkgRoot)debug\bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22 %22$(IntDir)vcpkg.applocal.log%22"
+    <Exec Condition="$(@PACKAGEID@VcpkgConfiguration.StartsWith('Debug'))"
+      Command="$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypass -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(TargetPath)%22 %22$(@PACKAGEID@VcpkgRoot)debug\bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22 %22$(IntDir)vcpkg.applocal.log%22"
       StandardOutputImportance="Normal">
     </Exec>
-    <Exec Condition="$(VcpkgConfiguration.StartsWith('Release'))"
-      Command="$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypass -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(TargetPath)%22 %22$(VcpkgRoot)bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22 %22$(IntDir)vcpkg.applocal.log%22"
+    <Exec Condition="$(@PACKAGEID@VcpkgConfiguration.StartsWith('Release'))"
+      Command="$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypass -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(TargetPath)%22 %22$(@PACKAGEID@VcpkgRoot)bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22 %22$(IntDir)vcpkg.applocal.log%22"
       StandardOutputImportance="Normal">
     </Exec>
     <ReadLinesFromFile File="$(IntDir)vcpkg.applocal.log">
-      <Output TaskParameter="Lines" ItemName="VcpkgAppLocalDLLs" />
+      <Output TaskParameter="Lines" ItemName="@PACKAGEID@VcpkgAppLocalDLLs" />
     </ReadLinesFromFile>
-    <Message Text="@(VcpkgAppLocalDLLs,'%0A')" Importance="Normal" />
+    <Message Text="@(@PACKAGEID@VcpkgAppLocalDLLs,'%0A')" Importance="Normal" />
     <ItemGroup>
-      <ReferenceCopyLocalPaths Include="@(VcpkgAppLocalDLLs)" />
+      <ReferenceCopyLocalPaths Include="@(@PACKAGEID@VcpkgAppLocalDLLs)" />
     </ItemGroup>
   </Target>
 </Project>
