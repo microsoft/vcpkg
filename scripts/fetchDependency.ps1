@@ -145,9 +145,9 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     # Using this to wait for the execution to finish
     function Invoke-Command()
     {
-        param ( [string]$program = $(throw "Please specify a program" ),
-                [string]$argumentString = "",
-                [switch]$waitForExit )
+        param ( [Parameter(Mandatory=$true)][string]$program,
+                                            [string]$argumentString = "",
+                                            [switch]$waitForExit = $false )
 
         $psi = new-object "Diagnostics.ProcessStartInfo"
         $psi.FileName = $program
