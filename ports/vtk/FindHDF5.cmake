@@ -20,7 +20,7 @@ else()
     message(FATAL_ERROR "could not find target hdf5_hl-*")
 endif()
 
-set(HDF5_LIBRARIES "$<BUILD_INTERFACE:$<$<NOT:$<STREQUAL:\${UNUSED_VARIABLE_NAME_GOES_HERE_VTK},>>:vtk::hdf5::hdf5>>" "$<BUILD_INTERFACE:$<$<NOT:$<STREQUAL:\${UNUSED_VARIABLE_NAME_GOES_HERE_VTK},>>:vtk::hdf5::hdf5_hl>>")
+set(HDF5_LIBRARIES "$<BUILD_INTERFACE:vtk::hdf5::hdf5>" "$<BUILD_INTERFACE:vtk::hdf5::hdf5_hl>")
 
 find_package_handle_standard_args(HDF5
     REQUIRED_VARS HDF5_INCLUDE_DIRS HDF5_LIBRARIES
