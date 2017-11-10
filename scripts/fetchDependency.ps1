@@ -31,7 +31,7 @@ function Get-Credential-Backwards-Compatible()
     }
 }
 
-function Get-Hash-SHA265()
+function Get-Hash-SHA256()
 {
     if (Test-Command -commandName 'Microsoft.PowerShell.Utility\Get-FileHash')
     {
@@ -257,7 +257,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 
     performDownload $Dependency $url $downloadsDir $downloadPath $downloadVersion $requiredVersion
 
-    $downloadedFileHash = Get-Hash-SHA265 $downloadPath
+    $downloadedFileHash = Get-Hash-SHA256 $downloadPath
     if ($expectedDownloadedFileHash -ne $downloadedFileHash)
     {
         Write-Host ("`nFile does not have expected hash:`n" +
