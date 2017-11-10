@@ -1,15 +1,3 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
@@ -27,13 +15,10 @@ vcpkg_apply_patches(
             "${CMAKE_CURRENT_LIST_DIR}/find_flann.patch"
             "${CMAKE_CURRENT_LIST_DIR}/find_qhull.patch"
             "${CMAKE_CURRENT_LIST_DIR}/find_openni2.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/vs2017-15.4-workaround.patch"
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(LIBRARY_LINKAGE ON)
-elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(LIBRARY_LINKAGE OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
 
 set(WITH_QT OFF)
 if("qt" IN_LIST FEATURES)
@@ -53,9 +38,9 @@ vcpkg_configure_cmake(
         -DBUILD_surface_on_nurbs=ON
         -DBUILD_tools=OFF
         # PCL
-        -DPCL_BUILD_WITH_BOOST_DYNAMIC_LINKING_WIN32=${LIBRARY_LINKAGE}
-        -DPCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32=${LIBRARY_LINKAGE}
-        -DPCL_SHARED_LIBS=${LIBRARY_LINKAGE}
+        -DPCL_BUILD_WITH_BOOST_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
+        -DPCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
+        -DPCL_SHARED_LIBS=${PCL_SHARED_LIBS}
         # WITH
         -DWITH_CUDA=OFF
         -DWITH_LIBUSB=OFF
@@ -68,8 +53,10 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/pcl)
+vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
 file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/pcl)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/pcl/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/pcl/copyright)
