@@ -38,7 +38,7 @@ if (!(Test-Path $vcpkgSourcesPath))
 
 try
 {
-    pushd $vcpkgSourcesPath
+    Push-Location $vcpkgSourcesPath
     $msbuildExeWithPlatformToolset = & $scriptsDir\findAnyMSBuildWithCppPlatformToolset.ps1 $withVSPath
     $msbuildExe = $msbuildExeWithPlatformToolset[0]
     $platformToolset = $msbuildExeWithPlatformToolset[1]
@@ -57,5 +57,5 @@ try
 }
 finally
 {
-    popd
+    Pop-Location
 }
