@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
-    [ValidateNotNullOrEmpty()]
-    [string]$disableMetrics = "0"
+    [ValidateNotNullOrEmpty()][string]$disableMetrics = "0",
+    [Parameter(Mandatory=$False)][string]$explicitlyRequestedVSPath = ""
 )
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
@@ -39,7 +39,7 @@ if (!(Test-Path $vcpkgSourcesPath))
 try
 {
     pushd $vcpkgSourcesPath
-    $msbuildExeWithPlatformToolset = & $scriptsDir\findAnyMSBuildWithCppPlatformToolset.ps1
+    $msbuildExeWithPlatformToolset = & $scriptsDir\findAnyMSBuildWithCppPlatformToolset.ps1 $explicitlyRequestedVSPath
     $msbuildExe = $msbuildExeWithPlatformToolset[0]
     $platformToolset = $msbuildExeWithPlatformToolset[1]
     $windowsSDK = & $scriptsDir\getWindowsSDK.ps1
