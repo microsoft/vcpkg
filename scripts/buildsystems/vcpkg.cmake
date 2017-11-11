@@ -153,7 +153,7 @@ function(add_library name)
 endfunction()
 
 macro(find_package name)
-    if(name STREQUAL "Boost")
+    if("${name}" STREQUAL "Boost")
         unset(Boost_USE_STATIC_LIBS)
         unset(Boost_USE_MULTITHREADED)
         unset(Boost_USE_STATIC_RUNTIME)
