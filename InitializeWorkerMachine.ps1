@@ -117,3 +117,5 @@ Recipe "C:\vsts\_work" {
     popd
 
 }
+
+Restart-Computer
