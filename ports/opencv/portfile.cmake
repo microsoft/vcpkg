@@ -58,6 +58,11 @@ if("vtk" IN_LIST FEATURES)
   set(WITH_VTK ON)
 endif()
 
+set(WITH_GDCM OFF)
+if("gdcm" IN_LIST FEATURES)
+  set(WITH_GDCM ON)
+endif()
+
 set(WITH_MSMF ON)
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   set(WITH_MSMF OFF)
@@ -112,6 +117,7 @@ vcpkg_configure_cmake(
         -DWITH_OPENGL=ON
         -DWITH_QT=${WITH_QT}
         -DWITH_VTK=${WITH_VTK}
+        -DWITH_GDCM=${WITH_GDCM}
     OPTIONS_DEBUG
         -DINSTALL_HEADERS=OFF
         -DINSTALL_OTHER=OFF
