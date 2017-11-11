@@ -35,7 +35,7 @@ if (!(Test-Path $filename))
 }
 
 Write-Host "Updating VS Installer"
-Invoke-Executable ".\$filename" "--update --quiet --wait" -wait:$true
+Invoke-Executable ".\$filename" "--update --quiet --wait --norestart" -wait:$true
 
 Write-Host "Installing Visual Studio"
 $arguments = ("--installPath $installPath",
@@ -53,6 +53,7 @@ $arguments = ("--installPath $installPath",
 "--add Microsoft.Component.VC.Runtime.OSSupport",
 "--nickname $nickname",
 "--quiet",
-"--wait") -join " "
+"--wait",
+"--norestart") -join " "
 
 Invoke-Executable ".\$filename" "$arguments" -wait:$true
