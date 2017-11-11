@@ -4,6 +4,10 @@ param(
     [Parameter(Mandatory=$true)][string]$nickname
 )
 
+# References
+# https://docs.microsoft.com/en-us/visualstudio/install/use-command-line-parameters-to-install-visual-studio
+# https://docs.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-community#desktop-development-with-c
+
 $url = "https://aka.ms/vs/15/release/vs_community.exe"
 $filename = "vs_Community.exe"
 
