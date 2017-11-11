@@ -1,0 +1,13 @@
+diff --git a/cmake/pcl_find_boost.cmake b/cmake/pcl_find_boost.cmake
+index 68920ccd4..ed486f687 100644
+--- a/cmake/pcl_find_boost.cmake
++++ b/cmake/pcl_find_boost.cmake
+@@ -8,7 +8,7 @@ if(PCL_BUILD_WITH_BOOST_DYNAMIC_LINKING_WIN32 AND WIN32)
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_ALL_DYN_LINK -DBOOST_ALL_NO_LIB")
+ else(PCL_BUILD_WITH_BOOST_DYNAMIC_LINKING_WIN32 AND WIN32)
+   if(NOT PCL_SHARED_LIBS OR WIN32)
+-    set(Boost_USE_STATIC_LIBS ON)
++    set(Boost_USE_STATIC_LIBS OFF)
+     set(Boost_USE_STATIC ON)
+   endif(NOT PCL_SHARED_LIBS OR WIN32)
+ endif(PCL_BUILD_WITH_BOOST_DYNAMIC_LINKING_WIN32 AND WIN32)
