@@ -39,7 +39,7 @@ MyCopyItem  "$from\binaries.amd64ret\lib\amd64" "$to\lib\x64"
 
 # a = archive
 # -t7z = type is 7z
-# -mx3 = Fast compression mode. Chosen (instead of for example -mx9 = ultra) because of compressed space/compression time ratio
+# -mx3 = Fast compression mode. Chosen (instead of, for example, -mx9 = ultra) because of [compressed space]/[compression time] ratio
 # -mmt = Enable multithreading
 # -y = Yes to everything
 Write-Host "Create 7z..."
