@@ -31,22 +31,6 @@ namespace vcpkg::Util
         }
     }
 
-    namespace Maps
-    {
-        template<class PairType>
-        using FirstT = std::remove_reference_t<decltype(std::declval<PairType>().first)>;
-
-        template<class Container, class K, class T = FirstT<ElementT<Container>>>
-        Optional<T&> maybe_find(Container&& assoc_container, const K& key)
-        {
-            auto it = assoc_container.find(key);
-            if (it == assoc_container.end())
-                return nullopt;
-            else
-                return it->second;
-        }
-    }
-
     template<class Cont, class Func>
     using FmapOut = decltype(std::declval<Func&>()(*begin(std::declval<Cont&>())));
 

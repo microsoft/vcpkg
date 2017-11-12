@@ -77,10 +77,10 @@ namespace vcpkg::Commands::CI
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
         std::set<std::string> exclusions_set;
-        auto maybe_exclusions = Util::Maps::maybe_find(options.settings, OPTION_EXCLUDE);
-        if (auto p_exclusions = maybe_exclusions.get())
+        auto it_exclusions = options.settings.find(OPTION_EXCLUDE);
+        if (it_exclusions != options.settings.end())
         {
-            auto exclusions = Strings::split(*p_exclusions, ",");
+            auto exclusions = Strings::split(it_exclusions->second, ",");
             exclusions_set.insert(exclusions.begin(), exclusions.end());
         }
 
