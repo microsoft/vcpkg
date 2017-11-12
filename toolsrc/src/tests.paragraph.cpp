@@ -1,8 +1,4 @@
-#include <CppUnitTest.h>
-#include <vcpkg/binaryparagraph.h>
-#include <vcpkg/paragraphs.h>
-
-#include <vcpkg/base/strings.h>
+#include "tests.pch.h"
 
 #pragma comment(lib, "version")
 #pragma comment(lib, "winhttp")

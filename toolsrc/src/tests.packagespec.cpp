@@ -1,31 +1,11 @@
-#include <CppUnitTest.h>
-#include <vcpkg/binaryparagraph.h>
-#include <vcpkg/paragraphs.h>
+#include "tests.pch.h"
 
-#include <vcpkg/base/strings.h>
-#include <vcpkg/base/util.h>
+#include <tests.utils.h>
 
 #pragma comment(lib, "version")
 #pragma comment(lib, "winhttp")
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-
-namespace Microsoft::VisualStudio::CppUnitTestFramework
-{
-    template<>
-    inline std::wstring ToString<vcpkg::PackageSpecParseResult>(const vcpkg::PackageSpecParseResult& t)
-    {
-        return ToString(static_cast<uint32_t>(t));
-    }
-
-    template<>
-    inline std::wstring ToString<vcpkg::PackageSpec>(const vcpkg::PackageSpec& t)
-    {
-        return ToString(t.to_string());
-    }
-}
-
-namespace Strings = vcpkg::Strings;
 
 namespace UnitTest1
 {

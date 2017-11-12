@@ -6,6 +6,7 @@
 #include <vcpkg/dependencies.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
+#include <vcpkg/paragraphs.h>
 #include <vcpkg/remove.h>
 #include <vcpkg/update.h>
 #include <vcpkg/vcpkglib.h>
@@ -206,8 +207,10 @@ namespace vcpkg::Remove
                 System::println(System::Color::error, "Error: 'remove' accepts either libraries or '--outdated'");
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
-            specs = Util::fmap(Update::find_outdated_packages(paths, status_db),
-                               [](auto&& outdated) { return outdated.spec; });
+            specs = Util::fmap(
+                Update::find_outdated_packages(
+                    Paragraphs::load_all_port_names_and_versions(paths.get_filesystem(), paths.ports), status_db),
+                [](auto&& outdated) { return outdated.spec; });
 
             if (specs.empty())
             {
