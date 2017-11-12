@@ -6,6 +6,8 @@
 #include <utility>
 #include <vector>
 
+#include <vcpkg/base/optional.h>
+
 namespace vcpkg::Util
 {
     template<class Container>
@@ -26,6 +28,22 @@ namespace vcpkg::Util
         bool contains(const Container& container, const T& item)
         {
             return container.find(item) != container.cend();
+        }
+    }
+
+    namespace Maps
+    {
+        template<class PairType>
+        using FirstT = std::remove_reference_t<decltype(std::declval<PairType>().first)>;
+
+        template<class Container, class K, class T = FirstT<ElementT<Container>>>
+        Optional<T&> maybe_find(Container&& assoc_container, const K& key)
+        {
+            auto it = assoc_container.find(key);
+            if (it == assoc_container.end())
+                return nullopt;
+            else
+                return it->second;
         }
     }
 
