@@ -33,6 +33,8 @@ set(SRCS
 "src/cmssm.c"
 )
 
+set(CMAKE_DEBUG_POSTFIX d)
+
 add_definitions(-DUNICODE -D_UNICODE)
 
 if(BUILD_SHARED_LIBS)
