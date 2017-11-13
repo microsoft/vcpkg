@@ -242,44 +242,33 @@ function(_vcpkg_find_and_load_gnu_fortran_compiler VERSION_OUT_VAR)
 endfunction()
 
 function(_vcpkg_find_and_load_flang_fortran_compiler VERSION_OUT_VAR)
-  set(FLANG_VERSION "4.0.0")
-  set(FLANG_CLANG_GIT_HASH "f08d7ef")
-  set(FLANG_FLANG_GIT_HASH "8b5f9f8")
+  set(FLANG_VERSION "5.0.0")
 
   if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x64")
     set(URLS
-        "https://conda.anaconda.org/conda-forge/win-64/zlib-1.2.11-vc14_0.tar.bz2"
-        "https://conda.anaconda.org/conda-forge/win-64/libxml2-2.9.5-vc14_0.tar.bz2"
-        "https://conda.anaconda.org/conda-forge/win-64/libiconv-1.14-vc14_4.tar.bz2"
+        "https://conda.anaconda.org/conda-forge/win-64/clangdev-${FLANG_VERSION}-flang_1.tar.bz2"
+        "https://conda.anaconda.org/conda-forge/win-64/libflang-${FLANG_VERSION}-vc14_1.tar.bz2"
         "https://conda.anaconda.org/conda-forge/win-64/openmp-${FLANG_VERSION}-vc14_0.tar.bz2"
-        "https://conda.anaconda.org/conda-forge/win-64/llvmdev-${FLANG_VERSION}-default_0.tar.bz2"
-        "https://conda.anaconda.org/isuruf/label/flang/win-64/flangdev-${FLANG_VERSION}.git.${FLANG_FLANG_GIT_HASH}-vc14_0.tar.bz2"
-        "https://conda.anaconda.org/isuruf/label/flang/win-64/clangdev-${FLANG_VERSION}-flang_git_${FLANG_CLANG_GIT_HASH}_0.tar.bz2"
+        "https://conda.anaconda.org/conda-forge/win-64/flang-${FLANG_VERSION}-vc14_1.tar.bz2"
     )
     set(ARCHIVES
-        "zlib-1.2.11-vc14_0.tar.bz2"
-        "libxml2-2.9.5-vc14_0.tar.bz2"
-        "libiconv-1.14-vc14_4.tar.bz2"
+        "clangdev-${FLANG_VERSION}-flang_1.tar.bz2"
+        "libflang-${FLANG_VERSION}-vc14_1.tar.bz2"
         "openmp-${FLANG_VERSION}-vc14_0.tar.bz2"
-        "llvmdev-${FLANG_VERSION}-default_0.tar.bz2"
-        "flangdev-${FLANG_VERSION}.git.${FLANG_FLANG_GIT_HASH}-vc14_0.tar.bz2"
-        "clangdev-${FLANG_VERSION}-flang_git_${FLANG_CLANG_GIT_HASH}_0.tar.bz2"
+        "flang-${FLANG_VERSION}-vc14_1.tar.bz2"
     )
     set(HASHS
-        "d454c0ea8f755baadae5d1e79498049414ea419909a0d18903f9a43310b9cf8c14a20eb294d3620547e1c661baa9015eb72dc3da8c2fd0662ad1b03d24a3c9b9"
-        "80790e0960b9f676f22eb6e54d6bf8a510a147832656f743b817ade5c891ebab2f7ccb7e5db4ef27fcbcc8c2ef62098d3017d3fbd843e47d36429d65f274585b"
-        "0349f3e9ef8f0a23418a502eed3272783cede901d131afd734675701cccb3d28c3a3fa64c5ddabc7ea18f7fafa1533293806905f610c74e601d3b403872b89a6"
-        "47a7f2cb8de205ae632c7110ac499ad46e4c818e1f5bbc991128d93a5ee368c93cccf4a63278bafdd28fe215d0051af9483e8fe991af45e8442f12cf5b9feb51"
-        "dc4f442dad4af6179535241fa507be43234dbc3f8ab874bd5e4ca16e7fcb541d3ae27923b894fbfd732ccd5b0b186cdf832a0f31cd5496fad024e946a52fa8fc"
-        "679ae6b9989ea3a7097e0a2f1e3eb9b820d10e347534c3fe694b0c50f02d729f3184210bcbfeb228faf09a116863c1a0e39117618dd17bf3ab5d10eb8bdaf227"
-        "98f8af0b56f707a2ad02c674ac7a58c4b19a7fb885a405714ce5953360f8708d794a6241ec6665208626ed321933245302f1fcc0a1d0cd3af71c3333e3a61ebe"
+        "5329c6cd5199dc4b9242eefad99cfce161a91af431272d483e9fa31747bb730bfaef841a88e6e83b9f069a7b677bdad779122455abc486b6d889ca0464151b07"
+        "e8584b8f19697adef9275845e9ab5c506083cac0bcc726ecf5b836e0380bbcb4c94798cb33ba5816fbea5744992c0cee6e92201b1a14d199c15552183b042b78"
+        "8ddd52a7158ccaa4ad28f702442e849404d931235c53438e7f2b04a09ae1e5e710296cac4a1d83746b1e223d9060cc240f587238c1ca612a70cf437579a14f41"
+        "cbb75c5624e063d028a4dc129f0a5c7f3daa166efb5a930801c22da4a1965858936be23669a90ae3846e424db04c41e8532a0fe06616604b33a72b8fcbcd2b8f"
     )
     list(LENGTH URLS PACKAGE_COUNT)
   else()
     message(FATAL "Flang not supported for target architecture ${VCPKG_TARGET_ARCHITECTURE}.")
   endif()
 
-  set(FLANG_PATH "${DOWNLOADS}/tools/flang/${FLANG_VERSION}-${FLANG_CLANG_GIT_HASH}-${FLANG_FLANG_GIT_HASH}")
+  set(FLANG_PATH "${DOWNLOADS}/tools/flang/${FLANG_VERSION}")
   set(FLANG_BIN_PATH "${FLANG_PATH}/Library/bin")
   set(FLANG_LIB_PATH "${FLANG_PATH}/Library/lib")
 
