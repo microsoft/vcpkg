@@ -11,10 +11,10 @@ function MyCopyItem
         [string]$toPath
     )
 
-    Write-Host "Copying from $fromPath to $toPath..."
+    Write-Host "    Copying $fromPath to $toPath..."
     $time = Measure-Command {Copy-Item $fromPath $toPath -Recurse}
     $totalSeconds = $time.TotalSeconds
-    Write-Host "Copying done. Time Taken: $totalSeconds seconds"
+    Write-Host "    Copying done. Time Taken: $totalSeconds seconds"
 }
 
 $from = "\\vcfs\Builds\VS\feature_WinC\$buildnumber"
@@ -42,5 +42,7 @@ MyCopyItem  "$from\binaries.amd64ret\lib\amd64" "$to\lib\x64"
 # -mx3 = Fast compression mode. Chosen (instead of, for example, -mx9 = ultra) because of [compressed space]/[compression time] ratio
 # -mmt = Enable multithreading
 # -y = Yes to everything
-Write-Host "Create 7z..."
-& .\7za.exe a -t7z "$buildNumber.7z" $to\* -mx3 -mmt -y
+Write-Host "Creating 7z..."
+$time7z = Measure-Command {& .\7za.exe a -t7z "$buildNumber.7z" $to\* -mx3 -mmt -y}
+$totalSeconds7z = $time7z.TotalSeconds
+Write-Host "Creating 7z... done. Time Taken: $totalSeconds7z seconds"
