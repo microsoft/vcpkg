@@ -52,8 +52,8 @@ Additional options passed to msbuild for Debug builds. These are in addition to 
 
 ## Examples
 
-* [libuv](https://github.com/Microsoft/vcpkg/blob/master/ports/libuv/portfile.cmake)
-* [zeromq](https://github.com/Microsoft/vcpkg/blob/master/ports/zeromq/portfile.cmake)
+* [chakracore](https://github.com/Microsoft/vcpkg/blob/master/ports/chakracore/portfile.cmake)
+* [cppunit](https://github.com/Microsoft/vcpkg/blob/master/ports/cppunit/portfile.cmake)
 
 ## Source
 [scripts/cmake/vcpkg_build_msbuild.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_build_msbuild.cmake)

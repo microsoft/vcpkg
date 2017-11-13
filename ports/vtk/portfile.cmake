@@ -31,10 +31,17 @@ if ("python" IN_LIST FEATURES)
 else()
     set(VTK_WITH_PYTHON                  OFF) # IMPORTANT: if ON make sure `python3` is listed as dependency in the CONTROL file
 endif()
+
 if("openvr" IN_LIST FEATURES)
     set(VTK_WITH_OPENVR                  ON) # IMPORTANT: if ON make sure `OpenVR` is listed as dependency in the CONTROL file
 else()
     set(VTK_WITH_OPENVR                  OFF)
+endif()
+
+if("libharu" IN_LIST FEATURES)
+    set(VTK_WITH_LIBHARU                  ON)
+else()
+    set(VTK_WITH_LIBHARU                  OFF)
 endif()
 
 set(VTK_WITH_ALL_MODULES                 OFF) # IMPORTANT: if ON make sure `qt5`, `mpi`, `python3`, `ffmpeg`, `gdal`, `fontconfig`,
@@ -74,6 +81,7 @@ vcpkg_apply_patches(
 file(REMOVE ${SOURCE_PATH}/CMake/FindGLEW.cmake)
 file(REMOVE ${SOURCE_PATH}/CMake/FindPythonLibs.cmake)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindGDAL.cmake DESTINATION ${SOURCE_PATH}/CMake)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindHDF5.cmake DESTINATION ${SOURCE_PATH}/CMake/NewCMake)
 
 # =============================================================================
 # Collect CMake options for optional components
@@ -104,6 +112,12 @@ if(VTK_WITH_OPENVR)
     )
 endif()
 
+if(VTK_WITH_LIBHARU)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_USE_SYSTEM_LIBHARU=ON
+    )
+endif()
+
 if(VTK_WITH_ALL_MODULES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_BUILD_ALL_MODULES=ON
@@ -121,10 +135,6 @@ if(VTK_WITH_ALL_MODULES)
     )
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    list(APPEND ADDITIONAL_OPTIONS "-DVTK_EXTERNAL_HDF5_IS_SHARED=ON")
-endif()
-
 # =============================================================================
 # Configure & Install
 vcpkg_configure_cmake(
@@ -138,7 +148,6 @@ vcpkg_configure_cmake(
         -DVTK_USE_SYSTEM_EXPAT=ON
         -DVTK_USE_SYSTEM_FREETYPE=ON
         # -DVTK_USE_SYSTEM_GL2PS=ON
-        -DVTK_USE_SYSTEM_LIBHARU=ON
         -DVTK_USE_SYSTEM_JPEG=ON
         -DVTK_USE_SYSTEM_GLEW=ON
         -DVTK_USE_SYSTEM_HDF5=ON
@@ -158,12 +167,6 @@ vcpkg_configure_cmake(
         -DVTK_INSTALL_PACKAGE_DIR=share/vtk
         -DVTK_FORBID_DOWNLOADS=ON
         ${ADDITIONAL_OPTIONS}
-    OPTIONS_RELEASE
-        -DHDF5_C_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/hdf5.lib
-        -DHDF5_C_HL_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/hdf5_hl.lib
-    OPTIONS_DEBUG
-        -DHDF5_C_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/hdf5_D.lib
-        -DHDF5_C_HL_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/hdf5_hl_D.lib
 )
 
 vcpkg_install_cmake()
@@ -316,6 +319,11 @@ set(VTK_TOOLS
     vtkpython
     pvtkpython
 )
+
+file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkhdf5.cmake" _contents)
+string(REPLACE "vtk::hdf5::hdf5_hl" "" _contents "${_contents}")
+string(REPLACE "vtk::hdf5::hdf5" "" _contents "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkhdf5.cmake" "${_contents}")
 
 foreach(TOOL_NAME IN LISTS VTK_TOOLS)
     _vtk_move_tool("${TOOL_NAME}")

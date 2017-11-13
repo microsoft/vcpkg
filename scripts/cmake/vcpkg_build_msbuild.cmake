@@ -52,8 +52,8 @@
 ##
 ## ## Examples
 ##
-## * [libuv](https://github.com/Microsoft/vcpkg/blob/master/ports/libuv/portfile.cmake)
-## * [zeromq](https://github.com/Microsoft/vcpkg/blob/master/ports/zeromq/portfile.cmake)
+## * [chakracore](https://github.com/Microsoft/vcpkg/blob/master/ports/chakracore/portfile.cmake)
+## * [cppunit](https://github.com/Microsoft/vcpkg/blob/master/ports/cppunit/portfile.cmake)
 
 function(vcpkg_build_msbuild)
     cmake_parse_arguments(_csc "" "PROJECT_PATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;PLATFORM_TOOLSET;TARGET_PLATFORM_VERSION;TARGET" "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG" ${ARGN})

@@ -1,149 +1,94 @@
-#include <CppUnitTest.h>
-#include <vcpkg/dependencies.h>
+#include "tests.pch.h"
 
-#include <vcpkg/base/util.h>
+#include <tests.utils.h>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 using namespace vcpkg;
 
-namespace Microsoft::VisualStudio::CppUnitTestFramework
-{
-    template<>
-    inline std::wstring ToString<vcpkg::Dependencies::InstallPlanType>(const vcpkg::Dependencies::InstallPlanType& t)
-    {
-        switch (t)
-        {
-            case Dependencies::InstallPlanType::ALREADY_INSTALLED: return L"ALREADY_INSTALLED";
-            case Dependencies::InstallPlanType::BUILD_AND_INSTALL: return L"BUILD_AND_INSTALL";
-            case Dependencies::InstallPlanType::INSTALL: return L"INSTALL";
-            case Dependencies::InstallPlanType::EXCLUDED: return L"EXCLUDED";
-            case Dependencies::InstallPlanType::UNKNOWN: return L"UNKNOWN";
-            default: return ToString(static_cast<int>(t));
-        }
-    }
-
-    template<>
-    inline std::wstring ToString<vcpkg::Dependencies::RequestType>(const vcpkg::Dependencies::RequestType& t)
-    {
-        switch (t)
-        {
-            case Dependencies::RequestType::AUTO_SELECTED: return L"AUTO_SELECTED";
-            case Dependencies::RequestType::USER_REQUESTED: return L"USER_REQUESTED";
-            case Dependencies::RequestType::UNKNOWN: return L"UNKNOWN";
-            default: return ToString(static_cast<int>(t));
-        }
-    }
-}
-
 namespace UnitTest1
 {
+    static std::unique_ptr<SourceControlFile> make_control_file(
+        const char* name, const char* depends, const std::vector<std::pair<const char*, const char*>>& features = {})
+    {
+        using Pgh = std::unordered_map<std::string, std::string>;
+        std::vector<Pgh> scf_pghs;
+        scf_pghs.push_back(Pgh{
+            {"Source", name},
+            {"Version", "0"},
+            {"Build-Depends", depends},
+        });
+        for (auto&& feature : features)
+        {
+            scf_pghs.push_back(Pgh{
+                {"Feature", feature.first},
+                {"Description", "feature"},
+                {"Build-Depends", feature.second},
+            });
+        }
+        auto m_pgh = vcpkg::SourceControlFile::parse_control_file(std::move(scf_pghs));
+        Assert::IsTrue(m_pgh.has_value());
+        return std::move(*m_pgh.get());
+    }
+
+    static void features_check(Dependencies::AnyAction* install_action,
+                               std::string pkg_name,
+                               std::vector<std::string> vec,
+                               const Triplet& triplet = Triplet::X86_WINDOWS)
+    {
+        const auto& plan = install_action->install_plan.value_or_exit(VCPKG_LINE_INFO);
+        const auto& feature_list = plan.feature_list;
+
+        Assert::AreEqual(plan.spec.triplet().to_string().c_str(), triplet.to_string().c_str());
+
+        Assert::AreEqual(pkg_name.c_str(),
+                         (*plan.any_paragraph.source_control_file.get())->core_paragraph->name.c_str());
+        Assert::AreEqual(size_t(vec.size()), feature_list.size());
+
+        for (auto&& feature_name : vec)
+        {
+            if (feature_name == "core" || feature_name == "")
+            {
+                Assert::IsTrue(Util::find(feature_list, "core") != feature_list.end() ||
+                               Util::find(feature_list, "") != feature_list.end());
+                continue;
+            }
+            Assert::IsTrue(Util::find(feature_list, feature_name) != feature_list.end());
+        }
+    }
+
+    static void remove_plan_check(Dependencies::AnyAction* remove_action,
+                                  std::string pkg_name,
+                                  const Triplet& triplet = Triplet::X86_WINDOWS)
+    {
+        const auto& plan = remove_action->remove_plan.value_or_exit(VCPKG_LINE_INFO);
+        Assert::AreEqual(plan.spec.triplet().to_string().c_str(), triplet.to_string().c_str());
+        Assert::AreEqual(pkg_name.c_str(), plan.spec.name().c_str());
+    }
+
+    struct PackageSpecMap
+    {
+        std::unordered_map<std::string, SourceControlFile> map;
+        Triplet triplet;
+        PackageSpecMap(const Triplet& t) { triplet = t; }
+
+        PackageSpec emplace(const char* name,
+                            const char* depends = "",
+                            const std::vector<std::pair<const char*, const char*>>& features = {})
+        {
+            return emplace(std::move(*make_control_file(name, depends, features)));
+        }
+        PackageSpec emplace(vcpkg::SourceControlFile&& scf)
+        {
+            auto spec = PackageSpec::from_name_and_triplet(scf.core_paragraph->name, triplet);
+            Assert::IsTrue(spec.has_value());
+            map.emplace(scf.core_paragraph->name, std::move(scf));
+            return PackageSpec{*spec.get()};
+        }
+    };
+
     class InstallPlanTests : public TestClass<InstallPlanTests>
     {
-        static std::unique_ptr<SourceControlFile> make_control_file(
-            const char* name,
-            const char* depends,
-            const std::vector<std::pair<const char*, const char*>>& features = {})
-        {
-            using Pgh = std::unordered_map<std::string, std::string>;
-            std::vector<Pgh> scf_pghs;
-            scf_pghs.push_back(Pgh{
-                {"Source", name},
-                {"Version", "0"},
-                {"Build-Depends", depends},
-            });
-            for (auto&& feature : features)
-            {
-                scf_pghs.push_back(Pgh{
-                    {"Feature", feature.first},
-                    {"Description", "feature"},
-                    {"Build-Depends", feature.second},
-                });
-            }
-            auto m_pgh = vcpkg::SourceControlFile::parse_control_file(std::move(scf_pghs));
-            Assert::IsTrue(m_pgh.has_value());
-            return std::move(*m_pgh.get());
-        }
-
-        static void features_check(Dependencies::AnyAction* install_action,
-                                   std::string pkg_name,
-                                   std::vector<std::string> vec,
-                                   const Triplet& triplet = Triplet::X86_WINDOWS)
-        {
-            const auto& plan = install_action->install_plan.value_or_exit(VCPKG_LINE_INFO);
-            const auto& feature_list = plan.feature_list;
-
-            Assert::AreEqual(plan.spec.triplet().to_string().c_str(), triplet.to_string().c_str());
-
-            Assert::AreEqual(pkg_name.c_str(),
-                             (*plan.any_paragraph.source_control_file.get())->core_paragraph->name.c_str());
-            Assert::AreEqual(size_t(vec.size()), feature_list.size());
-
-            for (auto&& feature_name : vec)
-            {
-                if (feature_name == "core" || feature_name == "")
-                {
-                    Assert::IsTrue(Util::find(feature_list, "core") != feature_list.end() ||
-                                   Util::find(feature_list, "") != feature_list.end());
-                    continue;
-                }
-                Assert::IsTrue(Util::find(feature_list, feature_name) != feature_list.end());
-            }
-        }
-
-        static void remove_plan_check(Dependencies::AnyAction* remove_action,
-                                      std::string pkg_name,
-                                      const Triplet& triplet = Triplet::X86_WINDOWS)
-        {
-            const auto& plan = remove_action->remove_plan.value_or_exit(VCPKG_LINE_INFO);
-            Assert::AreEqual(plan.spec.triplet().to_string().c_str(), triplet.to_string().c_str());
-            Assert::AreEqual(pkg_name.c_str(), plan.spec.name().c_str());
-        }
-
-        static std::unique_ptr<StatusParagraph> make_status_pgh(const char* name, const char* depends = "")
-        {
-            using Pgh = std::unordered_map<std::string, std::string>;
-            return std::make_unique<StatusParagraph>(Pgh{{"Package", name},
-                                                         {"Version", "1"},
-                                                         {"Architecture", "x86-windows"},
-                                                         {"Multi-Arch", "same"},
-                                                         {"Depends", depends},
-                                                         {"Status", "install ok installed"}});
-        }
-        static std::unique_ptr<StatusParagraph> make_status_feature_pgh(const char* name,
-                                                                        const char* feature,
-                                                                        const char* depends = "")
-        {
-            using Pgh = std::unordered_map<std::string, std::string>;
-            return std::make_unique<StatusParagraph>(Pgh{{"Package", name},
-                                                         {"Version", "1"},
-                                                         {"Feature", feature},
-                                                         {"Architecture", "x86-windows"},
-                                                         {"Multi-Arch", "same"},
-                                                         {"Depends", depends},
-                                                         {"Status", "install ok installed"}});
-        }
-        struct PackageSpecMap
-        {
-            std::unordered_map<std::string, SourceControlFile> map;
-            Triplet triplet;
-            PackageSpecMap(const Triplet& t) { triplet = t; }
-
-            PackageSpec emplace(const char* name,
-                                const char* depends = "",
-                                const std::vector<std::pair<const char*, const char*>>& features = {})
-            {
-                return emplace(std::move(*make_control_file(name, depends, features)));
-            }
-            PackageSpec emplace(vcpkg::SourceControlFile&& scf)
-            {
-                auto spec = PackageSpec::from_name_and_triplet(scf.core_paragraph->name, triplet);
-                Assert::IsTrue(spec.has_value());
-                map.emplace(scf.core_paragraph->name, std::move(scf));
-                return PackageSpec{*spec.get()};
-            }
-        };
-
         TEST_METHOD(basic_install_scheme)
         {
             std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
@@ -488,6 +433,92 @@ namespace UnitTest1
 
             Assert::IsTrue(install_plan.size() == 1);
             features_check(&install_plan[0], "a", {"0", "1", "core"}, Triplet::X64_WINDOWS);
+        }
+    };
+
+    static PackageSpec unsafe_pspec(std::string name, Triplet t = Triplet::X86_WINDOWS)
+    {
+        auto m_ret = PackageSpec::from_name_and_triplet(name, t);
+        Assert::IsTrue(m_ret.has_value());
+        return m_ret.value_or_exit(VCPKG_LINE_INFO);
+    }
+
+    class RemovePlanTests : public TestClass<RemovePlanTests>
+    {
+        TEST_METHOD(basic_remove_scheme)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> pghs;
+            pghs.push_back(make_status_pgh("a"));
+            StatusParagraphs status_db(std::move(pghs));
+
+            auto remove_plan = Dependencies::create_remove_plan({unsafe_pspec("a")}, status_db);
+
+            Assert::AreEqual(size_t(1), remove_plan.size());
+            Assert::AreEqual("a", remove_plan[0].spec.name().c_str());
+        }
+
+        TEST_METHOD(recurse_remove_scheme)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> pghs;
+            pghs.push_back(make_status_pgh("a"));
+            pghs.push_back(make_status_pgh("b", "a"));
+            StatusParagraphs status_db(std::move(pghs));
+
+            auto remove_plan = Dependencies::create_remove_plan({unsafe_pspec("a")}, status_db);
+
+            Assert::AreEqual(size_t(2), remove_plan.size());
+            Assert::AreEqual("b", remove_plan[0].spec.name().c_str());
+            Assert::AreEqual("a", remove_plan[1].spec.name().c_str());
+        }
+
+        TEST_METHOD(features_depend_remove_scheme)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> pghs;
+            pghs.push_back(make_status_pgh("a"));
+            pghs.push_back(make_status_pgh("b"));
+            pghs.push_back(make_status_feature_pgh("b", "0", "a"));
+            StatusParagraphs status_db(std::move(pghs));
+
+            auto remove_plan = Dependencies::create_remove_plan({unsafe_pspec("a")}, status_db);
+
+            Assert::AreEqual(size_t(2), remove_plan.size());
+            Assert::AreEqual("b", remove_plan[0].spec.name().c_str());
+            Assert::AreEqual("a", remove_plan[1].spec.name().c_str());
+        }
+
+        TEST_METHOD(features_depend_remove_scheme_once_removed)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> pghs;
+            pghs.push_back(make_status_pgh("expat"));
+            pghs.push_back(make_status_pgh("vtk", "expat"));
+            pghs.push_back(make_status_pgh("opencv"));
+            pghs.push_back(make_status_feature_pgh("opencv", "vtk", "vtk"));
+            StatusParagraphs status_db(std::move(pghs));
+
+            auto remove_plan = Dependencies::create_remove_plan({unsafe_pspec("expat")}, status_db);
+
+            Assert::AreEqual(size_t(3), remove_plan.size());
+            Assert::AreEqual("opencv", remove_plan[0].spec.name().c_str());
+            Assert::AreEqual("vtk", remove_plan[1].spec.name().c_str());
+            Assert::AreEqual("expat", remove_plan[2].spec.name().c_str());
+        }
+
+        TEST_METHOD(features_depend_remove_scheme_once_removed_x64)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> pghs;
+            pghs.push_back(make_status_pgh("expat", "", "x64"));
+            pghs.push_back(make_status_pgh("vtk", "expat", "x64"));
+            pghs.push_back(make_status_pgh("opencv", "", "x64"));
+            pghs.push_back(make_status_feature_pgh("opencv", "vtk", "vtk", "x64"));
+            StatusParagraphs status_db(std::move(pghs));
+
+            auto remove_plan = Dependencies::create_remove_plan(
+                {unsafe_pspec("expat", Triplet::from_canonical_name("x64"))}, status_db);
+
+            Assert::AreEqual(size_t(3), remove_plan.size());
+            Assert::AreEqual("opencv", remove_plan[0].spec.name().c_str());
+            Assert::AreEqual("vtk", remove_plan[1].spec.name().c_str());
+            Assert::AreEqual("expat", remove_plan[2].spec.name().c_str());
         }
     };
 }

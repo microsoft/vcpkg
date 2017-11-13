@@ -11,59 +11,98 @@ namespace vcpkg
 
     const static constexpr NullOpt nullopt{0};
 
-    template<class T>
-    class Optional
+    namespace details
     {
-    public:
-        constexpr Optional() : m_is_present(false), m_t() {}
+        template<class T>
+        struct OptionalStorage
+        {
+            constexpr OptionalStorage() : m_is_present(false), m_t() {}
+            constexpr OptionalStorage(const T& t) : m_is_present(true), m_t(t) {}
+            constexpr OptionalStorage(T&& t) : m_is_present(true), m_t(std::move(t)) {}
+
+            constexpr bool has_value() const { return m_is_present; }
+
+            const T& value() const { return this->m_t; }
+            T& value() { return this->m_t; }
+
+        private:
+            bool m_is_present;
+            T m_t;
+        };
+
+        template<class T>
+        struct OptionalStorage<T&>
+        {
+            constexpr OptionalStorage() : m_t(nullptr) {}
+            constexpr OptionalStorage(T& t) : m_t(&t) {}
+
+            constexpr bool has_value() const { return m_t != nullptr; }
+
+            T& value() const { return *this->m_t; }
+
+        private:
+            T* m_t;
+        };
+    }
+
+    template<class T>
+    struct Optional
+    {
+        constexpr Optional() {}
 
         // Constructors are intentionally implicit
-        constexpr Optional(NullOpt) : m_is_present(false), m_t() {}
+        constexpr Optional(NullOpt) {}
 
-        Optional(const T& t) : m_is_present(true), m_t(t) {}
+        Optional(const T& t) : m_base(t) {}
 
-        Optional(T&& t) : m_is_present(true), m_t(std::move(t)) {}
+        template<class = std::enable_if_t<!std::is_reference<T>::value>>
+        Optional(T&& t) : m_base(std::move(t))
+        {
+        }
 
         T&& value_or_exit(const LineInfo& line_info) &&
         {
             this->exit_if_null(line_info);
-            return std::move(this->m_t);
+            return std::move(this->m_base.value());
         }
 
         const T& value_or_exit(const LineInfo& line_info) const&
         {
             this->exit_if_null(line_info);
-            return this->m_t;
+            return this->m_base.value();
         }
 
-        constexpr explicit operator bool() const { return this->m_is_present; }
+        constexpr explicit operator bool() const { return this->m_base.has_value(); }
 
-        constexpr bool has_value() const { return m_is_present; }
+        constexpr bool has_value() const { return this->m_base.has_value(); }
 
         template<class U>
         T value_or(U&& default_value) const&
         {
-            return bool(*this) ? this->m_t : static_cast<T>(std::forward<U>(default_value));
+            return this->m_base.has_value() ? this->m_base.value() : static_cast<T>(std::forward<U>(default_value));
         }
 
         template<class U>
         T value_or(U&& default_value) &&
         {
-            return bool(*this) ? std::move(this->m_t) : static_cast<T>(std::forward<U>(default_value));
+            return this->m_base.has_value() ? std::move(this->m_base.value())
+                                            : static_cast<T>(std::forward<U>(default_value));
         }
 
-        const T* get() const { return bool(*this) ? &this->m_t : nullptr; }
+        typename std::add_pointer<const T>::type get() const
+        {
+            return this->m_base.has_value() ? &this->m_base.value() : nullptr;
+        }
 
-        T* get() { return bool(*this) ? &this->m_t : nullptr; }
+        typename std::add_pointer<T>::type get() { return this->m_base.has_value() ? &this->m_base.value() : nullptr; }
 
     private:
         void exit_if_null(const LineInfo& line_info) const
         {
-            Checks::check_exit(line_info, this->m_is_present, "Value was null");
+            Checks::check_exit(line_info, this->m_base.has_value(), "Value was null");
         }
 
-        bool m_is_present;
-        T m_t;
+        details::OptionalStorage<T> m_base;
     };
 
     template<class U>

@@ -317,9 +317,8 @@ namespace vcpkg::Build
                 {"FEATURES", features},
             });
 
-        std::string command;
         const auto cmd_set_environment = make_build_env_cmd(pre_build_info, toolset);
-        command = Strings::format(R"(%s && %s)", cmd_set_environment, cmd_launch_cmake);
+        const std::string command = Strings::format(R"(%s && %s)", cmd_set_environment, cmd_launch_cmake);
 
         const auto timer = Chrono::ElapsedTime::create_started();
 

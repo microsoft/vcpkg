@@ -6,6 +6,8 @@
 #include <utility>
 #include <vector>
 
+#include <vcpkg/base/optional.h>
+
 namespace vcpkg::Util
 {
     template<class Container>

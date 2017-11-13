@@ -16,6 +16,7 @@ namespace vcpkg::Update
         VersionDiff version_diff;
     };
 
-    std::vector<OutdatedPackage> find_outdated_packages(const VcpkgPaths& paths, const StatusParagraphs& status_db);
+    std::vector<OutdatedPackage> find_outdated_packages(const std::map<std::string, VersionT>& src_names_to_versions,
+                                                        const StatusParagraphs& status_db);
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
 }
