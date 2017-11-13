@@ -43,6 +43,7 @@ MyCopyItem  "$from\binaries.amd64ret\lib\amd64" "$to\lib\x64"
 # -mmt = Enable multithreading
 # -y = Yes to everything
 Write-Host "Creating 7z..."
+Remove-Item "$buildNumber.7z" -Force -ErrorAction SilentlyContinue
 $time7z = Measure-Command {& .\7za.exe a -t7z "$buildNumber.7z" $to\* -mx3 -mmt -y}
 $totalSeconds7z = $time7z.TotalSeconds
 Write-Host "Creating 7z... done. Time Taken: $totalSeconds7z seconds"
