@@ -1,10 +1,10 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$False)]
-    [string]$explicitlyRequestedVSPath = ""
+    [string]$withVSPath = ""
 )
 
-$explicitlyRequestedVSPath = $explicitlyRequestedVSPath -replace "\\$" # Remove potential trailing backslash
+$withVSPath = $withVSPath -replace "\\$" # Remove potential trailing backslash
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 $VisualStudioInstallationInstances = & $scriptsDir\findVisualStudioInstallationInstances.ps1
@@ -19,7 +19,7 @@ foreach ($instanceCandidateWithEOL in $VisualStudioInstallationInstances)
     $version = $split[2]
     $path = $split[3]
 
-    if ($explicitlyRequestedVSPath -ne "" -and $explicitlyRequestedVSPath -ne $path)
+    if ($withVSPath -ne "" -and $withVSPath -ne $path)
     {
         Write-Verbose "Skipping: $instanceCandidate"
         continue

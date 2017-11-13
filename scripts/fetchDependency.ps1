@@ -31,7 +31,7 @@ function Get-Credential-Backwards-Compatible()
     }
 }
 
-function Get-Hash-SHA265()
+function Get-Hash-SHA256()
 {
     if (Test-Command -commandName 'Microsoft.PowerShell.Utility\Get-FileHash')
     {
@@ -145,9 +145,9 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     # Using this to wait for the execution to finish
     function Invoke-Command()
     {
-        param ( [string]$program = $(throw "Please specify a program" ),
-                [string]$argumentString = "",
-                [switch]$waitForExit )
+        param ( [Parameter(Mandatory=$true)][string]$program,
+                                            [string]$argumentString = "",
+                                            [switch]$waitForExit = $false )
 
         $psi = new-object "Diagnostics.ProcessStartInfo"
         $psi.FileName = $program
@@ -257,7 +257,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 
     performDownload $Dependency $url $downloadsDir $downloadPath $downloadVersion $requiredVersion
 
-    $downloadedFileHash = Get-Hash-SHA265 $downloadPath
+    $downloadedFileHash = Get-Hash-SHA256 $downloadPath
     if ($expectedDownloadedFileHash -ne $downloadedFileHash)
     {
         Write-Host ("`nFile does not have expected hash:`n" +
