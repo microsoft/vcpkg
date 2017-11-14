@@ -49,7 +49,7 @@ namespace vcpkg::Commands::CI
                 return Dependencies::AnyAction(std::move(install_action));
             });
 
-        return Install::perform(action_plan, Install::KeepGoing::YES, paths, status_db);
+        return Install::perform(action_plan, Install::KeepGoing::YES, Install::CleanBuildtrees::YES, paths, status_db);
     }
 
     struct TripletAndSummary

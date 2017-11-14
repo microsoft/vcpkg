@@ -481,6 +481,7 @@ namespace vcpkg::Install
 
     InstallSummary perform(const std::vector<AnyAction>& action_plan,
                            const KeepGoing keep_going,
+                           const CleanBuildtrees clean_buildtrees,
                            const VcpkgPaths& paths,
                            StatusParagraphs& status_db)
     {
@@ -504,6 +505,21 @@ namespace vcpkg::Install
             if (const auto install_action = action.install_plan.get())
             {
                 const BuildResult result = perform_install_plan_action(paths, *install_action, status_db);
+                if (clean_buildtrees == CleanBuildtrees::YES)
+                {
+                    auto& fs = paths.get_filesystem();
+                    auto buildtrees_dir = paths.buildtrees / install_action->spec.name();
+                    auto buildtree_files = fs.get_files_non_recursive(buildtrees_dir);
+                    for (auto&& file : buildtree_files)
+                    {
+                        if (fs.is_directory(file) && file.filename() != "src")
+                        {
+                            std::error_code ec;
+                            fs.remove_all(file, ec);
+                        }
+                    }
+                }
+
                 if (result != BuildResult::SUCCEEDED && keep_going == KeepGoing::NO)
                 {
                     System::println(Build::create_user_troubleshooting_message(install_action->spec));
@@ -645,7 +661,7 @@ namespace vcpkg::Install
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        const InstallSummary summary = perform(action_plan, keep_going, paths, status_db);
+        const InstallSummary summary = perform(action_plan, keep_going, Install::CleanBuildtrees::NO, paths, status_db);
 
         System::println("\nTotal elapsed time: %s", summary.total_elapsed_time);
 

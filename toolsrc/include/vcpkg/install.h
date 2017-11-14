@@ -17,6 +17,17 @@ namespace vcpkg::Install
 
     inline KeepGoing to_keep_going(const bool value) { return value ? KeepGoing::YES : KeepGoing::NO; }
 
+    enum class CleanBuildtrees
+    {
+        NO = 0,
+        YES
+    };
+
+    inline CleanBuildtrees to_clean_buildtrees(const bool value)
+    {
+        return value ? CleanBuildtrees::YES : CleanBuildtrees::NO;
+    }
+
     struct SpecSummary
     {
         explicit SpecSummary(const PackageSpec& spec);
@@ -70,6 +81,7 @@ namespace vcpkg::Install
 
     InstallSummary perform(const std::vector<Dependencies::AnyAction>& action_plan,
                            const KeepGoing keep_going,
+                           const CleanBuildtrees clean_buildtrees,
                            const VcpkgPaths& paths,
                            StatusParagraphs& status_db);
 
