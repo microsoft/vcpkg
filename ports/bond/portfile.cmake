@@ -30,9 +30,6 @@ endif()
 vcpkg_apply_patches(
   SOURCE_PATH ${SOURCE_PATH}
   PATCHES
-    # Change Boost_USE_STATIC_LIBS to be compatible with vcpkg's treatment
-    # of Boost
-    ${CMAKE_CURRENT_LIST_DIR}/0001_boost_static_libs.patch
     # Don't install rapidjson from the (empty) submodule. With vcpkg, we get
     # rapidjson from vcpkg
     ${CMAKE_CURRENT_LIST_DIR}/0002_omit_rapidjson.patch
