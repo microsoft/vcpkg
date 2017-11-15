@@ -4,7 +4,9 @@ param
     [Parameter(Mandatory=$true)]
     [String]$PAT,
     [Parameter(Mandatory=$true)]
-    [String]$adminPass
+    [String]$username,
+    [Parameter(Mandatory=$true)]
+    [String]$pass
 )
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
@@ -152,8 +154,8 @@ Recipe $vstsWorkPath {
     "--acceptTeeEula",
     "--replace",
     "--runAsService",
-    "--windowsLogonAccount Administrator",
-    "--windowsLogonPassword $adminPass",
+    "--windowsLogonAccount $username",
+    "--windowsLogonPassword $pass",
     "--work $vstsWorkPath") -join " "
 
     Invoke-Executable "$vstsPath\config.cmd" "$configCmdArguments" -wait:$true
