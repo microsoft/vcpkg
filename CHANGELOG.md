@@ -1,3 +1,59 @@
+vcpkg (0.0.97)
+--------------
+  * Add ports:
+    - alac           2017-11-03-c38887c5
+    - atkmm          2.24.2
+    - blosc          1.12.1
+    - coolprop       6.1.0-2
+    - discord-rpc    2.0.1
+    - freetype-gl    2017-10-9-82fb152a74f01b1483ac80d15935fbdfaf3ed836
+    - glibmm         2.52.1
+    - gtkmm          3.22.2
+    - if97           2.1.0
+    - luasocket      2017.05.25.5a17f79b0301f0a1b4c7f1c73388757a7e2ed309
+    - pangomm        2.40.1
+    - realsense2     2.8.1
+    - refprop-headers 2017-11-7-882aec454b2bc3d5323b8691736ff09c288f4ed6
+    - sfgui          0.3.2-1
+    - tidy-html5     5.4.0-1
+  * Update ports:
+    - abseil         2017-10-14 -> 2017-11-10
+    - assimp         4.0.1-2 -> 4.0.1-3
+    - bond           6.0.0-1 -> 7.0.2
+    - catch          1.11.0 -> 2.0.1-1
+    - dimcli         2.0.0-1 -> 3.1.1-1
+    - dlib           19.4-5 -> 19.7
+    - ffmpeg         3.3.3 -> 3.3.3-1
+    - fftw3          3.3.6-p12-1 -> 3.3.7
+    - freeglut       3.0.0-2 -> 3.0.0-3
+    - freetype       2.8-1 -> 2.8.1-1
+    - glbinding      2.1.1-2 -> 2.1.1-3
+    - glm            0.9.8.4-1 -> 0.9.8.5
+    - grpc           1.6.0-2 -> 1.7.0
+    - jasper         2.0.13-1 -> 2.0.14-1
+    - libpng         1.6.32-1 -> 1.6.34-2
+    - libraw         0.18.2-4 -> 0.18.2-5
+    - libsigcpp      2.99-1 -> 2.10
+    - libuv          1.14.1-1 -> 1.16.1
+    - libwebsockets  2.0.0-2 -> 2.0.0-4
+    - ms-gsl         20170425-8b320e3f5d016f953e55dfc7ec8694c1349d3fe4 -> 20171104-d10ebc6555b627c9d1196076a78467e7be505987
+    - openal-soft    1.18.1-1 -> 1.18.2-1
+    - opencv         3.3.1-6 -> 3.3.1-7
+    - openssl        1.0.2l-3 -> 1.0.2m
+    - pcl            1.8.1-3 -> 1.8.1-4
+    - sdl2           2.0.6-1 -> 2.0.7-1
+    - sdl2-mixer     2.0.1-3 -> 2.0.2-1
+    - sqlite-modern-cpp 2.4 -> 3.2
+    - vtk            8.0.1-1 -> 8.0.1-5
+    - wincrypt       0.0 -> 0.0-1
+    - winsock2       0.0 -> 0.0-1
+  * MSBuild integration now outputs a warning when configuration is not determinable.
+  * Fix Powershell execution failures for users of PSCX. PSCX has an `Expand-Archive` cmdlet that has different parameter names than the same-named cmdlet in Powershell 5.
+  * `vcpkg_from_github()`: Handle '/' in REFs
+
+-- vcpkg team <vcpkg@microsoft.com>  TUE, 14 Nov 2017 16:00:00 -0800
+
+
 vcpkg (0.0.96)
 --------------
   * Add ports:
