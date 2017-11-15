@@ -47,7 +47,7 @@ function Invoke-Executable()
     }
 }
 
-function Download-File([Parameter(Mandatory=$true)][string]$url, [Parameter(Mandatory=$true)][string]$filename)
+function DownloadFile([Parameter(Mandatory=$true)][string]$url, [Parameter(Mandatory=$true)][string]$filename)
 {
     Remove-Item "$filename.part" -Recurse -Force -ErrorAction SilentlyContinue
     Start-BitsTransfer -Source $url -Destination "$filename.part" -ErrorAction Stop
@@ -67,7 +67,7 @@ function UnattendedVSinstall
 
     $filename = "vs_Community.exe"
     Recipe "$scriptsDir\$filename" {
-        Download-File "https://aka.ms/vs/15/release/vs_community.exe" $filename
+        DownloadFile "https://aka.ms/vs/15/release/vs_community.exe" $filename
     }
 
     Write-Host "Updating VS Installer"
@@ -111,7 +111,7 @@ Recipe "C:/Program Files/Microsoft MPI/Bin/mpiexec.exe"
 {
     $msmpiSetupFilename = "$scriptsDir\msmpisetup.exe"
     Recipe $msmpiSetupFilename {
-        Download-File "https://download.microsoft.com/download/D/B/B/DBB64BA1-7B51-43DB-8BF1-D1FB45EACF7A/MSMpiSetup.exe" $msmpiSetupFilename
+        DownloadFile "https://download.microsoft.com/download/D/B/B/DBB64BA1-7B51-43DB-8BF1-D1FB45EACF7A/MSMpiSetup.exe" $msmpiSetupFilename
     }
     Invoke-Executable "$scriptsDir\$msmpiSetupFilename" "-force -unattend" -wait:$true
 }
