@@ -1,0 +1,13 @@
+diff --git a/src/share/win_utf8_io/win_utf8_io.c b/src/share/win_utf8_io/win_utf8_io.c
+index 5b0e8f0..c536874 100644
+--- a/src/share/win_utf8_io/win_utf8_io.c
++++ b/src/share/win_utf8_io/win_utf8_io.c
+@@ -110,7 +110,7 @@ int get_utf8_argv(int *argc, char ***argv)
+ 	char **utf8argv;
+ 	int ret, i;
+ 
+-	if ((handle = LoadLibrary("msvcrt.dll")) == NULL) return 1;
++	if ((handle = LoadPackagedLibrary("msvcrt.dll", 0)) == NULL) return 1;
+ 	if ((wgetmainargs = (wgetmainargs_t)GetProcAddress(handle, "__wgetmainargs")) == NULL) {
+ 		FreeLibrary(handle);
+ 		return 1;
