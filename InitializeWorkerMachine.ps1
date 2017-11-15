@@ -159,6 +159,6 @@ Recipe "C:\vsts\_work" {
 }
 
 # Exclude working drive from Windows Defender
-Add-MpPreference -ExclusionPath ("C:\")
+Add-MpPreference -ExclusionPath "C:\"
 
 Restart-Computer
