@@ -92,7 +92,7 @@ function UnattendedVSinstall
     "--wait",
     "--norestart") -join " "
 
-    Invoke-Executable ".\$filename" "$arguments" -wait:$true
+    Invoke-Executable "$scriptsDir\$filename" "$arguments" -wait:$true
 }
 
 powercfg /SETACVALUEINDEX SCHEME_BALANCED SUB_SLEEP STANDBYIDLE 0
@@ -109,13 +109,12 @@ Recipe $stablePath {
 
 Recipe "C:/Program Files/Microsoft MPI/Bin/mpiexec.exe"
 {
-    $msmpiSetupFilename = "msmpisetup.exe"
+    $msmpiSetupFilename = "$scriptsDir\msmpisetup.exe"
     Recipe $msmpiSetupFilename {
         Download-File "https://download.microsoft.com/download/D/B/B/DBB64BA1-7B51-43DB-8BF1-D1FB45EACF7A/MSMpiSetup.exe" $msmpiSetupFilename
     }
-    Invoke-Executable ".\$msmpiSetupFilename" "-force -unattend" -wait:$true
+    Invoke-Executable "$scriptsDir\$msmpiSetupFilename" "-force -unattend" -wait:$true
 }
-
 
 Recipe "C:\vsts\_work" {
 
