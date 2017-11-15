@@ -156,7 +156,7 @@ Recipe $vstsWorkPath {
     "--windowsLogonPassword $adminPass",
     "--work $vstsWorkPath") -join " "
 
-    Invoke-Executable ".\config.cmd" "$configCmdArguments" -wait:$true
+    Invoke-Executable "$vstsPath\config.cmd" "$configCmdArguments" -wait:$true
 
     Pop-Location
 }
