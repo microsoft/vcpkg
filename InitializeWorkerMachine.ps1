@@ -121,9 +121,12 @@ Recipe "C:/Program Files/Microsoft MPI/Bin/mpiexec.exe"
     Invoke-Executable "$scriptsDir\$msmpiSetupFilename" "-force -unattend" -wait:$true
 }
 
-Recipe "C:\vsts\_work" {
+$vstsPath = "C:\vsts"
+$vstsWorkPath = "$vstsPath\_work"
 
-    Recipe "C:\vsts" {
+Recipe $vstsWorkPath {
+
+    Recipe $vstsPath {
 
         $file = "$scriptsDir\vsts-agent-win7-x64-2.124.0.zip"
 
@@ -135,27 +138,27 @@ Recipe "C:\vsts\_work" {
             Move-Item $tmp "$scriptsDir\vsts-agent-win7-x64-2.124.0.zip"
         }
 
-        Microsoft.PowerShell.Archive\Expand-Archive -path $file -destinationpath "C:\vsts" -ErrorAction Stop
+        Microsoft.PowerShell.Archive\Expand-Archive -path $file -destinationpath $vstsPath -ErrorAction Stop
 
     }
 
-    Push-Location "C:\vsts"
+    Push-Location $vstsPath
+    $devDivUrl = "https://devdiv.visualstudio.com"
+    $configCmdArguments = ( "--unattended",
+    "--url $devDivUrl",
+    "--auth pat",
+    "--token $PAT",
+    "--pool VCLSPool",
+    "--acceptTeeEula",
+    "--replace",
+    "--runAsService",
+    "--windowsLogonAccount Administrator",
+    "--windowsLogonPassword $adminPass",
+    "--work $vstsWorkPath") -join " "
 
-    & ".\config.cmd" `
-    --unattended `
-    --url "https://devdiv.visualstudio.com" `
-    --auth pat `
-    --token $PAT `
-    --pool VCLSPool `
-    --acceptTeeEula `
-    --replace `
-    --runAsService `
-    --windowsLogonAccount Administrator `
-    --windowsLogonPassword $adminPass `
-    --work "C:\vsts\_work"
+    Invoke-Executable ".\config.cmd" "$configCmdArguments" -wait:$true
 
     Pop-Location
-
 }
 
 # Exclude working drive from Windows Defender
