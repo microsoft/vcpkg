@@ -47,6 +47,13 @@ function Invoke-Executable()
     }
 }
 
+function Download-File([Parameter(Mandatory=$true)][string]$url, [Parameter(Mandatory=$true)][string]$filename)
+{
+    Remove-Item "$filename.part" -Recurse -Force -ErrorAction SilentlyContinue
+    Start-BitsTransfer -Source $url -Destination "$filename.part" -ErrorAction Stop
+    Move-Item -Path "$filename.part" -Destination $filename -ErrorAction Stop
+}
+
 function UnattendedVSinstall
 {
     param(
@@ -58,15 +65,9 @@ function UnattendedVSinstall
     # https://docs.microsoft.com/en-us/visualstudio/install/use-command-line-parameters-to-install-visual-studio
     # https://docs.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-community#desktop-development-with-c
 
-    $url = "https://aka.ms/vs/15/release/vs_community.exe"
     $filename = "vs_Community.exe"
-
     Recipe "$scriptsDir\$filename" {
-        $url = "https://aka.ms/vs/15/release/vs_community.exe"
-
-        Remove-Item "$filename.part" -Recurse -Force -ErrorAction SilentlyContinue
-        Start-BitsTransfer -Source $url -Destination "$filename.part" -ErrorAction Stop
-        Move-Item -Path "$filename.part" -Destination $filename -ErrorAction Stop
+        Download-File "https://aka.ms/vs/15/release/vs_community.exe" $filename
     }
 
     Write-Host "Updating VS Installer"
@@ -96,18 +97,25 @@ function UnattendedVSinstall
 
 powercfg /SETACVALUEINDEX SCHEME_BALANCED SUB_SLEEP STANDBYIDLE 0
 
-$filename = "vs_Community.exe"
-
 $unstablePath = "C:\VS2017\Unstable"
-$stablePath = "C:\VS2017\Stable"
-
 Recipe $unstablePath {
     UnattendedVSinstall -installPath $unstablePath -nickname "Unstable"
 }
 
+$stablePath = "C:\VS2017\Stable"
 Recipe $stablePath {
     UnattendedVSinstall -installPath $stablePath -nickname "Stable"
 }
+
+Recipe "C:/Program Files/Microsoft MPI/Bin/mpiexec.exe"
+{
+    $msmpiSetupFilename = "msmpisetup.exe"
+    Recipe $msmpiSetupFilename {
+        Download-File "https://download.microsoft.com/download/D/B/B/DBB64BA1-7B51-43DB-8BF1-D1FB45EACF7A/MSMpiSetup.exe" $msmpiSetupFilename
+    }
+    Invoke-Executable ".\$msmpiSetupFilename" "-force -unattend" -wait:$true
+}
+
 
 Recipe "C:\vsts\_work" {
 
