@@ -16,7 +16,7 @@ index f4ef6a0ff..3a2c259dc 100644
      PATHS "$ENV{PROGRAMFILES}/flann 1.6.9" "$ENV{PROGRAMW6432}/flann 1.6.9" 
            "$ENV{PROGRAMFILES}/flann" "$ENV{PROGRAMW6432}/flann"
 -    PATH_SUFFIXES lib)
-+    PATH_SUFFIXES debug/lib)
++    PATH_SUFFIXES lib debug/lib)
  
    find_package_handle_standard_args(Flann DEFAULT_MSG FLANN_LIBRARY FLANN_INCLUDE_DIRS)
    if(FLANN_FOUND)
