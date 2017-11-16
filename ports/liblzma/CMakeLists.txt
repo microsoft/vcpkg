@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 project(liblzma)
 
+set(CMAKE_DEBUG_POSTFIX d)
+
 add_definitions(-DHAVE_CONFIG_H)
 if(BUILD_SHARED_LIBS)
     add_definitions(-DLIBLZMADLL_EXPORTS)
