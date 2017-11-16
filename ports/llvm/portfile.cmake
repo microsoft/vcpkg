@@ -30,14 +30,19 @@ vcpkg_configure_cmake(
         -DLLVM_INCLUDE_EXAMPLES=OFF
         -DLLVM_INCLUDE_TESTS=OFF
         -DLLVM_ABI_BREAKING_CHECKS=FORCE_OFF
-        -DLLVM_TOOLS_INSTALL_DIR=tools
+        -DLLVM_TOOLS_INSTALL_DIR=tools/llvm
 )
 
 vcpkg_install_cmake()
 
-# Remove extra copy of cmake modules and include files
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/llvm)
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/llvm)
+
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/debug/include
+    ${CURRENT_PACKAGES_DIR}/debug/tools
+    ${CURRENT_PACKAGES_DIR}/debug/share
+)
 
 # Remove one empty include subdirectory if it is indeed empty
 file(GLOB MCANALYSISFILES ${CURRENT_PACKAGES_DIR}/include/llvm/MC/MCAnalysis/*)
