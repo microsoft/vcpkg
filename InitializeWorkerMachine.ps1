@@ -16,8 +16,8 @@ function Recipe
     [CmdletBinding()]
     param
     (
-        [String]$filepath,
-        [ScriptBlock]$Action
+        [Parameter(Mandatory=$true)][String]$filepath,
+        [Parameter(Mandatory=$true)][ScriptBlock]$Action
     )
 
     Write-Verbose "Starting recipe for $filepath"
