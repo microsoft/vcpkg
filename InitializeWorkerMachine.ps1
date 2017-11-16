@@ -110,8 +110,7 @@ Recipe $stablePath {
     UnattendedVSinstall -installPath $stablePath -nickname "Stable"
 }
 
-Recipe "C:/Program Files/Microsoft MPI/Bin/mpiexec.exe"
-{
+Recipe "C:/Program Files/Microsoft MPI/Bin/mpiexec.exe" {
     Write-Host "Installing MSMPI"
     $msmpiSetupFilename = "$scriptsDir\msmpisetup.exe"
     Recipe $msmpiSetupFilename {
@@ -130,11 +129,7 @@ Recipe $vstsWorkPath {
         $file = "$scriptsDir\vsts-agent-win7-x64-2.124.0.zip"
 
         Recipe $file {
-            $tmp = "$scriptsDir\vsts-agent-win7-x64-2.124.0.zip.tmp"
-            $WC = New-Object System.Net.WebClient
-            Remove-Item $tmp
-            $WC.DownloadFile("https://github.com/Microsoft/vsts-agent/releases/download/v2.124.0/vsts-agent-win7-x64-2.124.0.zip", $tmp)
-            Move-Item $tmp "$scriptsDir\vsts-agent-win7-x64-2.124.0.zip"
+            DownloadFile "https://github.com/Microsoft/vsts-agent/releases/download/v2.124.0/vsts-agent-win7-x64-2.124.0.zip" $file
         }
 
         Microsoft.PowerShell.Archive\Expand-Archive -path $file -destinationpath $vstsPath -ErrorAction Stop
