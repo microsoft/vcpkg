@@ -1,0 +1,46 @@
+diff --git a/src/file_io.c b/src/file_io.c
+index ce15578..43b32d9 100644
+--- a/src/file_io.c
++++ b/src/file_io.c
+@@ -1092,17 +1092,33 @@ psf_is_pipe (SF_PRIVATE *psf)
+ /* USE_WINDOWS_API */ sf_count_t
+ psf_get_filelen_handle (HANDLE handle)
+ {	sf_count_t filelen ;
+-	DWORD dwFileSizeLow, dwFileSizeHigh, dwError = NO_ERROR ;
+-
+-	dwFileSizeLow = GetFileSize (handle, &dwFileSizeHigh) ;
++	sf_count_t failed = (sf_count_t) -1;
++	ULONG infoSize;
++	PFILE_STREAM_INFO info;
++
++	infoSize = sizeof(FILE_STREAM_INFO) + (sizeof(WCHAR) * MAX_PATH);
++retry:
++	info = (PFILE_STREAM_INFO)LocalAlloc(LMEM_ZEROINIT, infoSize);
++
++	if (info == NULL)
++		return failed;
++
++	if (!GetFileInformationByHandleEx(handle, FileStreamInfo, info, infoSize))
++	{
++		if (GetLastError() == ERROR_MORE_DATA)
++		{
++			LocalFree(info);
++			infoSize *= 2;
++			goto retry;
++		}
+ 
+-	if (dwFileSizeLow == 0xFFFFFFFF)
+-		dwError = GetLastError () ;
++		LocalFree(info);
++		return failed;
++	}
+ 
+-	if (dwError != NO_ERROR)
+-		return (sf_count_t) -1 ;
++	LocalFree(info);
+ 
+-	filelen = dwFileSizeLow + ((__int64) dwFileSizeHigh << 32) ;
++	filelen = (sf_count_t)info->StreamSize.QuadPart;
+ 
+ 	return filelen ;
+ } /* psf_get_filelen_handle */

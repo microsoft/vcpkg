@@ -1,0 +1,16 @@
+diff --git a/src/share/win_utf8_io/win_utf8_io.c b/src/share/win_utf8_io/win_utf8_io.c
+index c61d27f..5b0e8f0 100644
+--- a/src/share/win_utf8_io/win_utf8_io.c
++++ b/src/share/win_utf8_io/win_utf8_io.c
+@@ -164,11 +164,6 @@ size_t strlen_utf8(const char *str)
+ int win_get_console_width(void)
+ {
+ 	int width = 80;
+-	CONSOLE_SCREEN_BUFFER_INFO csbi;
+-	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+-	if(hOut != INVALID_HANDLE_VALUE && hOut != NULL)
+-		if (GetConsoleScreenBufferInfo(hOut, &csbi) != 0)
+-			width = csbi.dwSize.X;
+ 	return width;
+ }
+ 
