@@ -7,7 +7,11 @@ vcpkg_from_github(
     SHA512 5bc99b6dfc2ab43d2812ee47dfbbeeb68106da39b2349799ab924f009270166ebb5508f87a37e634fbfa5495dd263697a582404650eedc5393722761c5ce2028
     HEAD_REF master
 )
-
+vcpkg_apply_patches(
+    SOURCE_PATH  ${SOURCE_PATH}
+    PATCHES 
+		${CMAKE_CURRENT_LIST_DIR}/disableTests.patch	
+)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(ST_BUILD_STATIC ON)
 else()
