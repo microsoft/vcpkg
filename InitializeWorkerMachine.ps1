@@ -51,7 +51,7 @@ function UnattendedVSinstall
     }
 
     Write-Host "Updating VS Installer"
-    vcpkgInvokeCommand ".\$filename" "--update --quiet --wait --norestart" -wait:$true
+    vcpkgInvokeCommand "$scriptsDir\$filename" "--update --quiet --wait --norestart" -wait:$true
 
     Write-Host "Installing Visual Studio"
     $arguments = ("--installPath $installPath",
