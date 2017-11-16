@@ -89,7 +89,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     }
     elseif($extractionType -eq $ExtractionType_ZIP)
     {
-        if (-not (Test-Path $executableFromDownload)) # consider renaming the extraction folder to make sure the extraction finished
+        if (-not (Test-Path $executableFromDownload))
         {
             vcpkgExtractFile -File $downloadPath -Destination $extractionFolder
         }

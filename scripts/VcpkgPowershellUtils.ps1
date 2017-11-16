@@ -144,16 +144,20 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
                             [Parameter(Mandatory=$true)][string]$destination)
 {
     vcpkgCreateDirectory $destination
+    $baseName = (Get-ChildItem .\downloads\cmake-3.9.5-win32-x86.zip).BaseName
+    $destinationPartial = "$destination\$baseName-partially_extracted"
+    vcpkgRemoveDirectory $destinationPartial
+    vcpkgCreateDirectory $destinationPartial
 
     if (vcpkgHasCommand -commandName 'Microsoft.PowerShell.Archive\Expand-Archive')
     {
         Write-Verbose("Extracting with Microsoft.PowerShell.Archive\Expand-Archive")
-        Microsoft.PowerShell.Archive\Expand-Archive -path $file -destinationpath $destination
+        Microsoft.PowerShell.Archive\Expand-Archive -path $file -destinationpath $destinationPartial
     }
     elseif (vcpkgHasCommand -commandName 'Pscx\Expand-Archive')
     {
         Write-Verbose("Extracting with Pscx\Expand-Archive")
-        Pscx\Expand-Archive -path $file -OutputPath $destination
+        Pscx\Expand-Archive -path $file -OutputPath $destinationPartial
     }
     else
     {
@@ -163,9 +167,12 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
         foreach($item in $zip.items())
         {
             # Piping to Out-Null is used to block until finished
-            $shell.Namespace($destination).copyhere($item) | Out-Null
+            $shell.Namespace($destinationPartial).copyhere($item) | Out-Null
         }
     }
+
+    Move-Item -Path "$destinationPartial\*" -Destination $destination
+    vcpkgRemoveDirectory $destinationPartial
 }
 
 function vcpkgInvokeCommand()
