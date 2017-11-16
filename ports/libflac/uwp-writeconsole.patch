@@ -1,0 +1,39 @@
+diff --git a/src/share/win_utf8_io/win_utf8_io.c b/src/share/win_utf8_io/win_utf8_io.c
+index 15a76d4..bfcc9db 100644
+--- a/src/share/win_utf8_io/win_utf8_io.c
++++ b/src/share/win_utf8_io/win_utf8_io.c
+@@ -171,31 +171,13 @@ int win_get_console_width(void)
+ 
+ static int wprint_console(FILE *stream, const wchar_t *text, size_t len)
+ {
+-	DWORD out;
+-	int ret;
++	// disabled for UWP (https://docs.microsoft.com/en-us/uwp/win32-and-com/alternatives-to-windows-apis-uwp)
+ 
+-	do {
+-		if (stream == stdout) {
+-			HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+-			if (hOut == INVALID_HANDLE_VALUE || hOut == NULL || GetFileType(hOut) != FILE_TYPE_CHAR)
+-				break;
+-			if (WriteConsoleW(hOut, text, len, &out, NULL) == 0)
+-				return -1;
+-			return out;
+-		}
+-		if (stream == stderr) {
+-			HANDLE hErr = GetStdHandle(STD_ERROR_HANDLE);
+-			if (hErr == INVALID_HANDLE_VALUE || hErr == NULL || GetFileType(hErr) != FILE_TYPE_CHAR)
+-				break;
+-			if (WriteConsoleW(hErr, text, len, &out, NULL) == 0)
+-				return -1;
+-			return out;
+-		}
+-	} while(0);
++	int ret = fputws(text, stream);
+ 
+-	ret = fputws(text, stream);
+ 	if (ret < 0)
+ 		return ret;
++
+ 	return len;
+ }
+ 

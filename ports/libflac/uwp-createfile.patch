@@ -1,0 +1,38 @@
+diff --git a/src/libFLAC/windows_unicode_filenames.c b/src/libFLAC/windows_unicode_filenames.c
+index 2404e31..6d8bc74 100644
+--- a/src/libFLAC/windows_unicode_filenames.c
++++ b/src/libFLAC/windows_unicode_filenames.c
+@@ -185,17 +185,23 @@ int flac_internal_rename_utf8(const char *oldname, const char *newname)
+ 
+ HANDLE WINAPI flac_internal_CreateFile_utf8(const char *lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile)
+ {
+-	if (!utf8_filenames) {
+-		return CreateFileA(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+-	} else {
+-		wchar_t *wname;
+-		HANDLE handle = INVALID_HANDLE_VALUE;
+-
+-		if ((wname = wchar_from_utf8(lpFileName)) != NULL) {
+-			handle = CreateFileW(wname, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+-			free(wname);
+-		}
++	HANDLE handle = INVALID_HANDLE_VALUE;
+ 
++	if (!utf8_filenames)
+ 		return handle;
++
++	wchar_t *wname;
++
++	if ((wname = wchar_from_utf8(lpFileName)) != NULL)
++	{
++		CREATEFILE2_EXTENDED_PARAMETERS cfParams = {0};
++		cfParams.dwSize = sizeof(CREATEFILE2_EXTENDED_PARAMETERS);
++		cfParams.dwFileAttributes = dwFlagsAndAttributes & FILE_ATTRIBUTE_NORMAL;
++		cfParams.lpSecurityAttributes = lpSecurityAttributes;
++		cfParams.hTemplateFile = hTemplateFile;
++		handle = CreateFile2(wname, dwDesiredAccess, dwShareMode, dwCreationDisposition, &cfParams);
++		free(wname);
+ 	}
++
++	return handle;
+ }
