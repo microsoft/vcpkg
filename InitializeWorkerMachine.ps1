@@ -29,7 +29,7 @@ function Recipe
     }
     if(!(Test-Path $filepath))
     {
-        throw "failed"
+        throw "failed $filepath"
     }
 }
 
@@ -112,6 +112,7 @@ Recipe $stablePath {
 
 Recipe "C:/Program Files/Microsoft MPI/Bin/mpiexec.exe"
 {
+    Write-Host "Installing MSMPI"
     $msmpiSetupFilename = "$scriptsDir\msmpisetup.exe"
     Recipe $msmpiSetupFilename {
         DownloadFile "https://download.microsoft.com/download/D/B/B/DBB64BA1-7B51-43DB-8BF1-D1FB45EACF7A/MSMpiSetup.exe" $msmpiSetupFilename
