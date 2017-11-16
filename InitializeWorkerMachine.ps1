@@ -47,7 +47,7 @@ function UnattendedVSinstall
 
     $filename = "vs_Community.exe"
     Recipe "$scriptsDir\$filename" {
-        vcpkgDownloadFile "https://aka.ms/vs/15/release/vs_community.exe" $filename
+        vcpkgDownloadFile "https://aka.ms/vs/15/release/vs_community.exe" $scriptsDir\$filename
     }
 
     Write-Host "Updating VS Installer"
