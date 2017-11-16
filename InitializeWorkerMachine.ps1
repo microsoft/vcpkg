@@ -10,6 +10,7 @@ param
 )
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
+. "$scriptsDir\VcpkgPowershellUtils.ps1"
 
 function Recipe
 {
@@ -33,29 +34,6 @@ function Recipe
     }
 }
 
-function Invoke-Executable()
-{
-    param ( [Parameter(Mandatory=$true)][string]$executable,
-                                        [string]$arguments = "",
-                                        [switch]$wait)
-
-    Write-Verbose "Executing: ${executable} ${arguments}"
-    $process = Start-Process -FilePath $executable -ArgumentList $arguments -PassThru
-    if ($wait)
-    {
-        Wait-Process -InputObject $process
-        $ec = $process.ExitCode
-        Write-Verbose "Execution terminated with exit code $ec."
-    }
-}
-
-function DownloadFile([Parameter(Mandatory=$true)][string]$url, [Parameter(Mandatory=$true)][string]$filename)
-{
-    Remove-Item "$filename.part" -Recurse -Force -ErrorAction SilentlyContinue
-    Start-BitsTransfer -Source $url -Destination "$filename.part" -ErrorAction Stop
-    Move-Item -Path "$filename.part" -Destination $filename -ErrorAction Stop
-}
-
 function UnattendedVSinstall
 {
     param(
@@ -69,11 +47,11 @@ function UnattendedVSinstall
 
     $filename = "vs_Community.exe"
     Recipe "$scriptsDir\$filename" {
-        DownloadFile "https://aka.ms/vs/15/release/vs_community.exe" $filename
+        vcpkgDownloadFile "https://aka.ms/vs/15/release/vs_community.exe" $filename
     }
 
     Write-Host "Updating VS Installer"
-    Invoke-Executable ".\$filename" "--update --quiet --wait --norestart" -wait:$true
+    vcpkgInvokeCommand ".\$filename" "--update --quiet --wait --norestart" -wait:$true
 
     Write-Host "Installing Visual Studio"
     $arguments = ("--installPath $installPath",
@@ -94,7 +72,7 @@ function UnattendedVSinstall
     "--wait",
     "--norestart") -join " "
 
-    Invoke-Executable "$scriptsDir\$filename" "$arguments" -wait:$true
+    vcpkgInvokeCommand "$scriptsDir\$filename" "$arguments" -wait:$true
 }
 
 # Power Settings (so machine does not go to sleep)
@@ -114,9 +92,9 @@ Recipe "C:/Program Files/Microsoft MPI/Bin/mpiexec.exe" {
     Write-Host "Installing MSMPI"
     $msmpiSetupFilename = "$scriptsDir\msmpisetup.exe"
     Recipe $msmpiSetupFilename {
-        DownloadFile "https://download.microsoft.com/download/D/B/B/DBB64BA1-7B51-43DB-8BF1-D1FB45EACF7A/MSMpiSetup.exe" $msmpiSetupFilename
+        vcpkgDownloadFile "https://download.microsoft.com/download/D/B/B/DBB64BA1-7B51-43DB-8BF1-D1FB45EACF7A/MSMpiSetup.exe" $msmpiSetupFilename
     }
-    Invoke-Executable "$scriptsDir\$msmpiSetupFilename" "-force -unattend" -wait:$true
+    vcpkgInvokeCommand "$scriptsDir\$msmpiSetupFilename" "-force -unattend" -wait:$true
 }
 
 $vstsPath = "C:\vsts"
@@ -129,7 +107,7 @@ Recipe $vstsWorkPath {
         $file = "$scriptsDir\vsts-agent-win7-x64-2.124.0.zip"
 
         Recipe $file {
-            DownloadFile "https://github.com/Microsoft/vsts-agent/releases/download/v2.124.0/vsts-agent-win7-x64-2.124.0.zip" $file
+            vcpkgDownloadFile "https://github.com/Microsoft/vsts-agent/releases/download/v2.124.0/vsts-agent-win7-x64-2.124.0.zip" $file
         }
 
         Microsoft.PowerShell.Archive\Expand-Archive -path $file -destinationpath $vstsPath -ErrorAction Stop
@@ -150,7 +128,7 @@ Recipe $vstsWorkPath {
     "--windowsLogonPassword $pass",
     "--work $vstsWorkPath") -join " "
 
-    Invoke-Executable "$vstsPath\config.cmd" "$configCmdArguments" -wait:$true
+    vcpkgInvokeCommand "$vstsPath\config.cmd" "$configCmdArguments" -wait:$true
 
     Pop-Location
 }
