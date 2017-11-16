@@ -100,10 +100,6 @@ function UnattendedVSinstall
 # Power Settings (so machine does not go to sleep)
 powercfg /SETACVALUEINDEX SCHEME_BALANCED SUB_SLEEP STANDBYIDLE 0
 
-# Enable Remote Desktop Connection
-Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Value 0
-Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
-
 $unstablePath = "C:\VS2017\Unstable"
 Recipe $unstablePath {
     UnattendedVSinstall -installPath $unstablePath -nickname "Unstable"
