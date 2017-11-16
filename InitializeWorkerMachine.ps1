@@ -94,7 +94,7 @@ Recipe "C:/Program Files/Microsoft MPI/Bin/mpiexec.exe" {
     Recipe $msmpiSetupFilename {
         vcpkgDownloadFile "https://download.microsoft.com/download/D/B/B/DBB64BA1-7B51-43DB-8BF1-D1FB45EACF7A/MSMpiSetup.exe" $msmpiSetupFilename
     }
-    vcpkgInvokeCommand "$scriptsDir\$msmpiSetupFilename" "-force -unattend" -wait:$true
+    vcpkgInvokeCommand "$msmpiSetupFilename" "-force -unattend" -wait:$true
 }
 
 $vstsPath = "C:\vsts"
