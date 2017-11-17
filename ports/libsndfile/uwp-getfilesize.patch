@@ -1,0 +1,29 @@
+diff --git a/src/file_io.c b/src/file_io.c
+index a47ce6b..4b38455 100644
+--- a/src/file_io.c
++++ b/src/file_io.c
+@@ -1093,19 +1093,16 @@ psf_is_pipe (SF_PRIVATE *psf)
+ /* USE_WINDOWS_API */ sf_count_t
+ psf_get_filelen_handle (HANDLE handle)
+ {	sf_count_t filelen ;
+-	DWORD dwFileSizeLow, dwFileSizeHigh, dwError = NO_ERROR ;
++	DWORD dwError = NO_ERROR ;
++	LARGE_INTEGER size;
+ 
+-	dwFileSizeLow = GetFileSize (handle, &dwFileSizeHigh) ;
+-
+-	if (dwFileSizeLow == 0xFFFFFFFF)
+-		dwError = GetLastError () ;
++	if (!GetFileSizeEx(handle, &size))
++		dwError = GetLastError();
+ 
+ 	if (dwError != NO_ERROR)
+ 		return (sf_count_t) -1 ;
+ 
+-	filelen = dwFileSizeLow + ((__int64) dwFileSizeHigh << 32) ;
+-
+-	return filelen ;
++	return size.QuadPart;
+ } /* psf_get_filelen_handle */
+ 
+ /* USE_WINDOWS_API */ void
