@@ -69,6 +69,12 @@ namespace vcpkg::Build
         EXCLUDED,
     };
 
+    struct BuildResults
+    {
+        BuildResult result_code;
+        std::unique_ptr<BinaryControlFile> binary_control_file;
+    };
+
     static constexpr std::array<BuildResult, 6> BUILD_RESULT_VALUES = {
         BuildResult::SUCCEEDED,
         BuildResult::BUILD_FAILED,

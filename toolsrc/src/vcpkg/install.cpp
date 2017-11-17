@@ -247,10 +247,11 @@ namespace vcpkg::Install
     }
 
     using Build::BuildResult;
+    using Build::BuildResults;
 
-    BuildResult perform_install_plan_action(const VcpkgPaths& paths,
-                                            const InstallPlanAction& action,
-                                            StatusParagraphs& status_db)
+    BuildResults perform_install_plan_action(const VcpkgPaths& paths,
+                                             const InstallPlanAction& action,
+                                             StatusParagraphs& status_db)
     {
         const InstallPlanType& plan_type = action.plan_type;
         const std::string display_name = action.spec.to_string();
@@ -267,7 +268,7 @@ namespace vcpkg::Install
                     System::Color::warning, "Package %s is already installed -- not building from HEAD", display_name);
             else
                 System::println(System::Color::success, "Package %s is already installed", display_name);
-            return BuildResult::SUCCEEDED;
+            return {BuildResult::SUCCEEDED, nullptr};
         }
 
         if (plan_type == InstallPlanType::BUILD_AND_INSTALL)
@@ -302,21 +303,21 @@ namespace vcpkg::Install
             if (result.code != Build::BuildResult::SUCCEEDED)
             {
                 System::println(System::Color::error, Build::create_error_message(result.code, action.spec));
-                return result.code;
+                return {result.code, nullptr};
             }
 
             System::println("Building package %s... done", display_name_with_features);
 
-            const BinaryControlFile bcf =
-                Paragraphs::try_load_cached_control_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO);
+            auto bcf = std::make_unique<BinaryControlFile>(
+                Paragraphs::try_load_cached_control_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO));
             System::println("Installing package %s... ", display_name_with_features);
-            const auto install_result = install_package(paths, bcf, &status_db);
+            const auto install_result = install_package(paths, *bcf, &status_db);
             switch (install_result)
             {
                 case InstallResult::SUCCESS:
                     System::println(System::Color::success, "Installing package %s... done", display_name);
-                    return BuildResult::SUCCEEDED;
-                case InstallResult::FILE_CONFLICTS: return BuildResult::FILE_CONFLICTS;
+                    return {BuildResult::SUCCEEDED, std::move(bcf)};
+                case InstallResult::FILE_CONFLICTS: return {BuildResult::FILE_CONFLICTS, nullptr};
                 default: Checks::unreachable(VCPKG_LINE_INFO);
             }
         }
@@ -335,8 +336,8 @@ namespace vcpkg::Install
             {
                 case InstallResult::SUCCESS:
                     System::println(System::Color::success, "Installing package %s... done", display_name);
-                    return BuildResult::SUCCEEDED;
-                case InstallResult::FILE_CONFLICTS: return BuildResult::FILE_CONFLICTS;
+                    return {BuildResult::SUCCEEDED, nullptr};
+                case InstallResult::FILE_CONFLICTS: return {BuildResult::FILE_CONFLICTS, nullptr};
                 default: Checks::unreachable(VCPKG_LINE_INFO);
             }
         }
@@ -344,7 +345,7 @@ namespace vcpkg::Install
         if (plan_type == InstallPlanType::EXCLUDED)
         {
             System::println(System::Color::warning, "Package %s is excluded", display_name);
-            return BuildResult::EXCLUDED;
+            return {BuildResult::EXCLUDED, nullptr};
         }
 
         Checks::unreachable(VCPKG_LINE_INFO);
@@ -458,7 +459,8 @@ namespace vcpkg::Install
 
         for (const SpecSummary& result : this->results)
         {
-            System::println("    %s: %s: %s", result.spec, Build::to_string(result.result), result.timing);
+            System::println(
+                "    %s: %s: %s", result.spec, Build::to_string(result.build_result.result_code), result.timing);
         }
 
         std::map<BuildResult, int> summary;
@@ -469,7 +471,7 @@ namespace vcpkg::Install
 
         for (const SpecSummary& r : this->results)
         {
-            summary[r.result]++;
+            summary[r.build_result.result_code]++;
         }
 
         System::println("\nSUMMARY");
@@ -500,11 +502,11 @@ namespace vcpkg::Install
             const std::string display_name = spec.to_string();
             System::println("Starting package %d/%d: %s", counter, package_count, display_name);
 
-            results.push_back(SpecSummary{spec});
+            results.emplace_back(spec, &action);
 
             if (const auto install_action = action.install_plan.get())
             {
-                const BuildResult result = perform_install_plan_action(paths, *install_action, status_db);
+                Build::BuildResults result = perform_install_plan_action(paths, *install_action, status_db);
                 if (clean_buildtrees == CleanBuildtrees::YES)
                 {
                     auto& fs = paths.get_filesystem();
@@ -520,13 +522,13 @@ namespace vcpkg::Install
                     }
                 }
 
-                if (result != BuildResult::SUCCEEDED && keep_going == KeepGoing::NO)
+                if (result.result_code != BuildResult::SUCCEEDED && keep_going == KeepGoing::NO)
                 {
                     System::println(Build::create_user_troubleshooting_message(install_action->spec));
                     Checks::exit_fail(VCPKG_LINE_INFO);
                 }
 
-                results.back().result = result;
+                results.back().build_result = std::move(result);
             }
             else if (const auto remove_action = action.remove_plan.get())
             {
@@ -542,7 +544,7 @@ namespace vcpkg::Install
             System::println("Elapsed time for package %s: %s", display_name, build_timer.to_string());
         }
 
-        return InstallSummary{results, timer.to_string()};
+        return InstallSummary{std::move(results), timer.to_string()};
     }
 
     static const std::string OPTION_DRY_RUN = "--dry-run";
@@ -575,6 +577,69 @@ namespace vcpkg::Install
         {INSTALL_SWITCHES, {}},
         &get_all_port_names,
     };
+
+    static void print_cmake_information(const BinaryParagraph& bpgh, const VcpkgPaths& paths)
+    {
+        static const std::regex cmake_library_regex("^add_library\\(([^\\s\\$\\)]+)\\s");
+
+        auto& fs = paths.get_filesystem();
+
+        auto files = fs.read_lines(paths.listfile_path(bpgh));
+        if (auto p_lines = files.get())
+        {
+            for (auto&& suffix : *p_lines)
+            {
+                if (Strings::case_insensitive_ascii_find(suffix, "/share/") != suffix.end())
+                {
+                    std::vector<std::string> library_targets;
+
+                    // File is inside the share folder
+                    auto path = paths.installed / suffix;
+                    auto maybe_contents = fs.read_contents(path);
+                    if (auto p_contents = maybe_contents.get())
+                    {
+                        std::sregex_iterator next(p_contents->begin(), p_contents->end(), cmake_library_regex);
+                        std::sregex_iterator last;
+
+                        while (next != last)
+                        {
+                            auto match = *next;
+                            library_targets.push_back(match[1]);
+                            ++next;
+                        }
+                    }
+
+                    if (library_targets.empty())
+                    {
+                    }
+                    else if (library_targets.size() <= 4)
+                    {
+                        System::println("\nThe package %s provides CMake targets:\n"
+                                        "\n"
+                                        "    find_package(%s REQUIRED)\n"
+                                        "    target_link_libraries(main PRIVATE %s)",
+                                        bpgh.spec,
+                                        path.parent_path().filename().u8string(),
+                                        Strings::join(" ", library_targets));
+                    }
+                    else
+                    {
+                        auto omitted = library_targets.size() - 4;
+                        library_targets.erase(library_targets.begin() + 4, library_targets.end());
+                        System::println("\nThe package %s provides CMake targets:\n"
+                                        "\n"
+                                        "    find_package(%s REQUIRED)\n"
+                                        "    # Note: %d targets were omitted\n"
+                                        "    target_link_libraries(main PRIVATE %s)",
+                                        bpgh.spec,
+                                        path.parent_path().filename().u8string(),
+                                        omitted,
+                                        Strings::join(" ", library_targets));
+                    }
+                }
+            }
+        }
+    }
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
@@ -670,8 +735,41 @@ namespace vcpkg::Install
             summary.print();
         }
 
+        auto& fs = paths.get_filesystem();
+
+        for (auto&& result : summary.results)
+        {
+            if (!result.action) continue;
+            if (auto p_install_action = result.action->install_plan.get())
+            {
+                if (p_install_action->request_type != RequestType::USER_REQUESTED) continue;
+                auto bpgh = result.get_binary_paragraph();
+                if (!bpgh) continue;
+                print_cmake_information(*bpgh, paths);
+            }
+        }
+
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 
-    SpecSummary::SpecSummary(const PackageSpec& spec) : spec(spec), result(BuildResult::NULLVALUE), timing("0") {}
+    SpecSummary::SpecSummary(const PackageSpec& spec, const Dependencies::AnyAction* action)
+        : spec(spec), build_result{BuildResult::NULLVALUE, nullptr}, timing("0"), action(action)
+    {
+    }
+
+    const BinaryParagraph* SpecSummary::get_binary_paragraph() const
+    {
+        if (build_result.binary_control_file) return &build_result.binary_control_file->core_paragraph;
+        if (action)
+            if (auto p_install_plan = action->install_plan.get())
+            {
+                if (auto p_bcf = p_install_plan->any_paragraph.binary_control_file.get())
+                    return &p_bcf->core_paragraph;
+                else if (auto p_status = p_install_plan->any_paragraph.status_paragraph.get())
+                {
+                    return &p_status->package;
+                }
+            }
+        return nullptr;
+    }
 }
