@@ -565,6 +565,17 @@ namespace vcpkg::Install
 
         auto& fs = paths.get_filesystem();
 
+        auto usage_file = paths.installed / bpgh.spec.triplet().canonical_name() / "share" / bpgh.spec.name() / "usage";
+        if (fs.exists(usage_file))
+        {
+            auto maybe_contents = fs.read_contents(usage_file);
+            if (auto p_contents = maybe_contents.get())
+            {
+                System::println(*p_contents);
+            }
+            return;
+        }
+
         auto files = fs.read_lines(paths.listfile_path(bpgh));
         if (auto p_lines = files.get())
         {
@@ -595,10 +606,10 @@ namespace vcpkg::Install
                     }
                     else if (library_targets.size() <= 4)
                     {
-                        System::println("\nThe package %s provides CMake targets:\n"
+                        System::println("The package %s provides CMake targets:\n"
                                         "\n"
                                         "    find_package(%s REQUIRED)\n"
-                                        "    target_link_libraries(main PRIVATE %s)",
+                                        "    target_link_libraries(main PRIVATE %s)\n",
                                         bpgh.spec,
                                         path.parent_path().filename().u8string(),
                                         Strings::join(" ", library_targets));
@@ -607,11 +618,11 @@ namespace vcpkg::Install
                     {
                         auto omitted = library_targets.size() - 4;
                         library_targets.erase(library_targets.begin() + 4, library_targets.end());
-                        System::println("\nThe package %s provides CMake targets:\n"
+                        System::println("The package %s provides CMake targets:\n"
                                         "\n"
                                         "    find_package(%s REQUIRED)\n"
                                         "    # Note: %d targets were omitted\n"
-                                        "    target_link_libraries(main PRIVATE %s)",
+                                        "    target_link_libraries(main PRIVATE %s)\n",
                                         bpgh.spec,
                                         path.parent_path().filename().u8string(),
                                         omitted,
@@ -712,7 +723,7 @@ namespace vcpkg::Install
 
         const InstallSummary summary = perform(action_plan, keep_going, paths, status_db);
 
-        System::println("\nTotal elapsed time: %s", summary.total_elapsed_time);
+        System::println("\nTotal elapsed time: %s\n", summary.total_elapsed_time);
 
         if (keep_going == KeepGoing::YES)
         {
