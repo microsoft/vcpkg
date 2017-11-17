@@ -1,5 +1,9 @@
+set(MSVC_USE_STATIC_CRT_VALUE OFF)
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "Ceres does not currently support static CRT linkage")
+	if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+	    message(FATAL_ERROR "Ceres does not currently support mixing static CRT and dynamic library linkage")
+	endif()
+	set(MSVC_USE_STATIC_CRT_VALUE ON)
 endif()
 
 include(vcpkg_common_functions)
@@ -32,6 +36,7 @@ vcpkg_configure_cmake(
         -DSUITESPARSE=ON
         -DGFLAGS_PREFER_EXPORTED_GFLAGS_CMAKE_CONFIGURATION=OFF # TheiaSfm doesn't work well with this
         -DGLOG_PREFER_EXPORTED_GLOG_CMAKE_CONFIGURATION=OFF # TheiaSfm doesn't work well with this
+        -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT_VALUE}
 )
 
 vcpkg_install_cmake()
