@@ -247,11 +247,11 @@ namespace vcpkg::Install
     }
 
     using Build::BuildResult;
-    using Build::BuildResults;
+    using Build::ExtendedBuildResult;
 
-    BuildResults perform_install_plan_action(const VcpkgPaths& paths,
-                                             const InstallPlanAction& action,
-                                             StatusParagraphs& status_db)
+    ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
+                                                    const InstallPlanAction& action,
+                                                    StatusParagraphs& status_db)
     {
         const InstallPlanType& plan_type = action.plan_type;
         const std::string display_name = action.spec.to_string();
@@ -259,7 +259,7 @@ namespace vcpkg::Install
             GlobalState::feature_packages ? action.displayname() : display_name;
 
         const bool is_user_requested = action.request_type == RequestType::USER_REQUESTED;
-        const bool use_head_version = to_bool(action.build_options.use_head_version);
+        const bool use_head_version = Util::Enum::to_bool(action.build_options.use_head_version);
 
         if (plan_type == InstallPlanType::ALREADY_INSTALLED)
         {
@@ -268,8 +268,21 @@ namespace vcpkg::Install
                     System::Color::warning, "Package %s is already installed -- not building from HEAD", display_name);
             else
                 System::println(System::Color::success, "Package %s is already installed", display_name);
-            return {BuildResult::SUCCEEDED, nullptr};
+            return BuildResult::SUCCEEDED;
         }
+
+        auto aux_install = [&](const std::string& name, const BinaryControlFile& bcf) -> BuildResult {
+            System::println("Installing package %s... ", name);
+            const auto install_result = install_package(paths, bcf, &status_db);
+            switch (install_result)
+            {
+                case InstallResult::SUCCESS:
+                    System::println(System::Color::success, "Installing package %s... done", name);
+                    return BuildResult::SUCCEEDED;
+                case InstallResult::FILE_CONFLICTS: return BuildResult::FILE_CONFLICTS;
+                default: Checks::unreachable(VCPKG_LINE_INFO);
+            }
+        };
 
         if (plan_type == InstallPlanType::BUILD_AND_INSTALL)
         {
@@ -278,7 +291,7 @@ namespace vcpkg::Install
             else
                 System::println("Building package %s... ", display_name_with_features);
 
-            const auto result = [&]() -> Build::ExtendedBuildResult {
+            auto result = [&]() -> Build::ExtendedBuildResult {
                 if (GlobalState::feature_packages)
                 {
                     const Build::BuildPackageConfig build_config{
@@ -303,23 +316,15 @@ namespace vcpkg::Install
             if (result.code != Build::BuildResult::SUCCEEDED)
             {
                 System::println(System::Color::error, Build::create_error_message(result.code, action.spec));
-                return {result.code, nullptr};
+                return result;
             }
 
             System::println("Building package %s... done", display_name_with_features);
 
             auto bcf = std::make_unique<BinaryControlFile>(
                 Paragraphs::try_load_cached_control_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO));
-            System::println("Installing package %s... ", display_name_with_features);
-            const auto install_result = install_package(paths, *bcf, &status_db);
-            switch (install_result)
-            {
-                case InstallResult::SUCCESS:
-                    System::println(System::Color::success, "Installing package %s... done", display_name);
-                    return {BuildResult::SUCCEEDED, std::move(bcf)};
-                case InstallResult::FILE_CONFLICTS: return {BuildResult::FILE_CONFLICTS, nullptr};
-                default: Checks::unreachable(VCPKG_LINE_INFO);
-            }
+            auto code = aux_install(display_name_with_features, *bcf);
+            return {code, std::move(bcf)};
         }
 
         if (plan_type == InstallPlanType::INSTALL)
@@ -329,23 +334,15 @@ namespace vcpkg::Install
                 System::println(
                     System::Color::warning, "Package %s is already built -- not building from HEAD", display_name);
             }
-            System::println("Installing package %s... ", display_name);
-            const auto install_result = install_package(
-                paths, action.any_paragraph.binary_control_file.value_or_exit(VCPKG_LINE_INFO), &status_db);
-            switch (install_result)
-            {
-                case InstallResult::SUCCESS:
-                    System::println(System::Color::success, "Installing package %s... done", display_name);
-                    return {BuildResult::SUCCEEDED, nullptr};
-                case InstallResult::FILE_CONFLICTS: return {BuildResult::FILE_CONFLICTS, nullptr};
-                default: Checks::unreachable(VCPKG_LINE_INFO);
-            }
+            auto code = aux_install(display_name_with_features,
+                                    action.any_paragraph.binary_control_file.value_or_exit(VCPKG_LINE_INFO));
+            return code;
         }
 
         if (plan_type == InstallPlanType::EXCLUDED)
         {
             System::println(System::Color::warning, "Package %s is excluded", display_name);
-            return {BuildResult::EXCLUDED, nullptr};
+            return BuildResult::EXCLUDED;
         }
 
         Checks::unreachable(VCPKG_LINE_INFO);
@@ -459,8 +456,7 @@ namespace vcpkg::Install
 
         for (const SpecSummary& result : this->results)
         {
-            System::println(
-                "    %s: %s: %s", result.spec, Build::to_string(result.build_result.result_code), result.timing);
+            System::println("    %s: %s: %s", result.spec, Build::to_string(result.build_result.code), result.timing);
         }
 
         std::map<BuildResult, int> summary;
@@ -471,7 +467,7 @@ namespace vcpkg::Install
 
         for (const SpecSummary& r : this->results)
         {
-            summary[r.build_result.result_code]++;
+            summary[r.build_result.code]++;
         }
 
         System::println("\nSUMMARY");
@@ -483,7 +479,6 @@ namespace vcpkg::Install
 
     InstallSummary perform(const std::vector<AnyAction>& action_plan,
                            const KeepGoing keep_going,
-                           const CleanBuildtrees clean_buildtrees,
                            const VcpkgPaths& paths,
                            StatusParagraphs& status_db)
     {
@@ -506,23 +501,9 @@ namespace vcpkg::Install
 
             if (const auto install_action = action.install_plan.get())
             {
-                Build::BuildResults result = perform_install_plan_action(paths, *install_action, status_db);
-                if (clean_buildtrees == CleanBuildtrees::YES)
-                {
-                    auto& fs = paths.get_filesystem();
-                    auto buildtrees_dir = paths.buildtrees / install_action->spec.name();
-                    auto buildtree_files = fs.get_files_non_recursive(buildtrees_dir);
-                    for (auto&& file : buildtree_files)
-                    {
-                        if (fs.is_directory(file) && file.filename() != "src")
-                        {
-                            std::error_code ec;
-                            fs.remove_all(file, ec);
-                        }
-                    }
-                }
+                auto result = perform_install_plan_action(paths, *install_action, status_db);
 
-                if (result.result_code != BuildResult::SUCCEEDED && keep_going == KeepGoing::NO)
+                if (result.code != BuildResult::SUCCEEDED && keep_going == KeepGoing::NO)
                 {
                     System::println(Build::create_user_troubleshooting_message(install_action->spec));
                     Checks::exit_fail(VCPKG_LINE_INFO);
@@ -669,8 +650,11 @@ namespace vcpkg::Install
         // create the plan
         StatusParagraphs status_db = database_load_check(paths);
 
-        const Build::BuildPackageOptions install_plan_options = {Build::to_use_head_version(use_head_version),
-                                                                 Build::to_allow_downloads(!no_downloads)};
+        const Build::BuildPackageOptions install_plan_options = {
+            Util::Enum::to_enum<Build::UseHeadVersion>(use_head_version),
+            Util::Enum::to_enum<Build::AllowDownloads>(!no_downloads),
+            Build::CleanBuildtrees::NO,
+        };
 
         // Note: action_plan will hold raw pointers to SourceControlFiles from this map
         std::unordered_map<std::string, SourceControlFile> scf_map;
@@ -726,7 +710,7 @@ namespace vcpkg::Install
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        const InstallSummary summary = perform(action_plan, keep_going, Install::CleanBuildtrees::NO, paths, status_db);
+        const InstallSummary summary = perform(action_plan, keep_going, paths, status_db);
 
         System::println("\nTotal elapsed time: %s", summary.total_elapsed_time);
 

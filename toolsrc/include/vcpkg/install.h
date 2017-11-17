@@ -17,17 +17,6 @@ namespace vcpkg::Install
 
     inline KeepGoing to_keep_going(const bool value) { return value ? KeepGoing::YES : KeepGoing::NO; }
 
-    enum class CleanBuildtrees
-    {
-        NO = 0,
-        YES
-    };
-
-    inline CleanBuildtrees to_clean_buildtrees(const bool value)
-    {
-        return value ? CleanBuildtrees::YES : CleanBuildtrees::NO;
-    }
-
     struct SpecSummary
     {
         SpecSummary(const PackageSpec& spec, const Dependencies::AnyAction* action);
@@ -35,7 +24,7 @@ namespace vcpkg::Install
         const BinaryParagraph* get_binary_paragraph() const;
 
         PackageSpec spec;
-        Build::BuildResults build_result;
+        Build::ExtendedBuildResult build_result;
         std::string timing;
 
         const Dependencies::AnyAction* action;
@@ -66,9 +55,9 @@ namespace vcpkg::Install
         const fs::path& listfile() const;
     };
 
-    Build::BuildResults perform_install_plan_action(const VcpkgPaths& paths,
-                                                    const Dependencies::InstallPlanAction& action,
-                                                    StatusParagraphs& status_db);
+    Build::ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
+                                                           const Dependencies::InstallPlanAction& action,
+                                                           StatusParagraphs& status_db);
 
     enum class InstallResult
     {
@@ -85,7 +74,6 @@ namespace vcpkg::Install
 
     InstallSummary perform(const std::vector<Dependencies::AnyAction>& action_plan,
                            const KeepGoing keep_going,
-                           const CleanBuildtrees clean_buildtrees,
                            const VcpkgPaths& paths,
                            StatusParagraphs& status_db);
 

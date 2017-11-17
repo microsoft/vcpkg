@@ -32,30 +32,23 @@ namespace vcpkg::Build
         YES
     };
 
-    inline UseHeadVersion to_use_head_version(const bool value)
-    {
-        return value ? UseHeadVersion::YES : UseHeadVersion::NO;
-    }
-
-    inline bool to_bool(const UseHeadVersion value) { return value == UseHeadVersion::YES; }
-
     enum class AllowDownloads
     {
         NO = 0,
         YES
     };
 
-    inline AllowDownloads to_allow_downloads(const bool value)
+    enum class CleanBuildtrees
     {
-        return value ? AllowDownloads::YES : AllowDownloads::NO;
-    }
-
-    inline bool to_bool(const AllowDownloads value) { return value == AllowDownloads::YES; }
+        NO = 0,
+        YES
+    };
 
     struct BuildPackageOptions
     {
         UseHeadVersion use_head_version;
         AllowDownloads allow_downloads;
+        CleanBuildtrees clean_buildtrees;
     };
 
     enum class BuildResult
@@ -67,12 +60,6 @@ namespace vcpkg::Build
         FILE_CONFLICTS,
         CASCADED_DUE_TO_MISSING_DEPENDENCIES,
         EXCLUDED,
-    };
-
-    struct BuildResults
-    {
-        BuildResult result_code;
-        std::unique_ptr<BinaryControlFile> binary_control_file;
     };
 
     static constexpr std::array<BuildResult, 6> BUILD_RESULT_VALUES = {
@@ -108,8 +95,13 @@ namespace vcpkg::Build
 
     struct ExtendedBuildResult
     {
+        ExtendedBuildResult(BuildResult code);
+        ExtendedBuildResult(BuildResult code, std::vector<PackageSpec>&& unmet_deps);
+        ExtendedBuildResult(BuildResult code, std::unique_ptr<BinaryControlFile>&& bcf);
+
         BuildResult code;
         std::vector<PackageSpec> unmet_dependencies;
+        std::unique_ptr<BinaryControlFile> binary_control_file;
     };
 
     struct BuildPackageConfig

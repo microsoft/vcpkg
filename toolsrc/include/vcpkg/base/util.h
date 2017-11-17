@@ -190,4 +190,19 @@ namespace vcpkg::Util
         std::unique_lock<std::mutex> m_lock;
         T& m_ptr;
     };
+
+    namespace Enum
+    {
+        template<class E>
+        E to_enum(bool b)
+        {
+            return b ? E::YES : E::NO;
+        }
+
+        template<class E>
+        bool to_bool(E e)
+        {
+            return e == E::YES;
+        }
+    }
 }

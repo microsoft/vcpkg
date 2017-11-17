@@ -41,7 +41,11 @@ namespace vcpkg::Commands::CI
 
         Checks::check_exit(VCPKG_LINE_INFO, !install_plan.empty(), "Install plan cannot be empty");
 
-        const Build::BuildPackageOptions install_plan_options = {Build::UseHeadVersion::NO, Build::AllowDownloads::YES};
+        const Build::BuildPackageOptions install_plan_options = {
+            Build::UseHeadVersion::NO,
+            Build::AllowDownloads::YES,
+            Build::CleanBuildtrees::YES,
+        };
 
         const std::vector<Dependencies::AnyAction> action_plan =
             Util::fmap(install_plan, [&install_plan_options](InstallPlanAction& install_action) {
@@ -49,7 +53,7 @@ namespace vcpkg::Commands::CI
                 return Dependencies::AnyAction(std::move(install_action));
             });
 
-        return Install::perform(action_plan, Install::KeepGoing::YES, Install::CleanBuildtrees::YES, paths, status_db);
+        return Install::perform(action_plan, Install::KeepGoing::YES, paths, status_db);
     }
 
     struct TripletAndSummary
