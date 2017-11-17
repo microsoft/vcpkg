@@ -15,18 +15,17 @@ function(vcpkg_build_qmake)
     vcpkg_find_acquire_program(JOM)
 
     # Make sure that the linker finds the libraries used 
-    set(ENV_LIB_BACKUP ENV{LIB})
-    set(ENV{LIB} "${CURRENT_INSTALLED_DIR}/lib;${CURRENT_INSTALLED_DIR}/debug/lib;$ENV{LIB}")
+    set(ENV_PATH_BACKUP "$ENV{PATH}")
+    set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/lib;${CURRENT_INSTALLED_DIR}/debug/lib;${CURRENT_INSTALLED_DIR}/bin;${CURRENT_INSTALLED_DIR}/debug/bin;${CURRENT_INSTALLED_DIR}/tools/qt5;$ENV{PATH}")
     
     message(STATUS "Package ${TARGET_TRIPLET}")
-    vcpkg_execute_required_process_repeat(
-        COUNT 2
+    vcpkg_execute_required_process(
         COMMAND ${JOM}
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}
         LOGNAME package-${TARGET_TRIPLET}
     )
     message(STATUS "Package ${TARGET_TRIPLET} done")
     
-    # Restore the original value of ENV{LIB}
-    set(ENV{LIB} ENV_LIB_BACKUP)
+    # Restore the original value of ENV{PATH}
+    set(ENV{PATH} "${ENV_PATH_BACKUP}")
 endfunction()

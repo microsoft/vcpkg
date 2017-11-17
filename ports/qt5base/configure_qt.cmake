@@ -22,6 +22,26 @@ function(configure_qt)
         )
     endif()
 
+    message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
+    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+    vcpkg_execute_required_process(
+        COMMAND "${_csc_SOURCE_PATH}/configure.bat" ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}
+            -debug
+            -prefix ${CURRENT_PACKAGES_DIR}/debug
+            -hostbindir ${CURRENT_PACKAGES_DIR}/debug/tools/qt5
+            -archdatadir ${CURRENT_PACKAGES_DIR}/share/qt5/debug
+            -datadir ${CURRENT_PACKAGES_DIR}/share/qt5/debug
+            -plugindir ${CURRENT_PACKAGES_DIR}/debug/plugins
+            -qmldir ${CURRENT_PACKAGES_DIR}/debug/qml
+            -headerdir ${CURRENT_PACKAGES_DIR}/share/qt5/debug/include
+            -I ${CURRENT_INSTALLED_DIR}/include
+            -L ${CURRENT_INSTALLED_DIR}/debug/lib
+            -platform ${PLATFORM}
+        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
+        LOGNAME config-${TARGET_TRIPLET}-dbg
+    )
+    message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
+    
     message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
     vcpkg_execute_required_process(
@@ -41,22 +61,4 @@ function(configure_qt)
     )
     message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
 
-    message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-    vcpkg_execute_required_process(
-        COMMAND "${_csc_SOURCE_PATH}/configure.bat" ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}
-            -debug
-            -prefix ${CURRENT_PACKAGES_DIR}/debug
-            -hostbindir ${CURRENT_PACKAGES_DIR}/debug/tools/qt5
-            -archdatadir ${CURRENT_PACKAGES_DIR}/debug/share/qt5
-            -datadir ${CURRENT_PACKAGES_DIR}/debug/share/qt5
-            -plugindir ${CURRENT_PACKAGES_DIR}/debug/plugins
-            -qmldir ${CURRENT_PACKAGES_DIR}/debug/qml
-            -I ${CURRENT_INSTALLED_DIR}/include
-            -L ${CURRENT_INSTALLED_DIR}/debug/lib
-            -platform ${PLATFORM}
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-        LOGNAME config-${TARGET_TRIPLET}-dbg
-    )
-    message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
 endfunction()
