@@ -141,11 +141,13 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
 }
 
 function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
-                            [Parameter(Mandatory=$true)][string]$destination)
+                            [Parameter(Mandatory=$true)][string]$destinationDir)
 {
-    vcpkgCreateDirectory $destination
-    $baseName = (Get-ChildItem .\downloads\cmake-3.9.5-win32-x86.zip).BaseName
-    $destinationPartial = "$destination\$baseName-partially_extracted"
+    $parentPath = split-path -parent $destinationDir
+    vcpkgCreateDirectory $parentPath
+    $baseName = (Get-ChildItem $file).BaseName
+    $destinationPartial = "$destinationDir\$baseName-partially_extracted"
+
     vcpkgRemoveDirectory $destinationPartial
     vcpkgCreateDirectory $destinationPartial
 
@@ -171,8 +173,17 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
         }
     }
 
-    Move-Item -Path "$destinationPartial\*" -Destination $destination
-    vcpkgRemoveDirectory $destinationPartial
+    $hasASingleItem = (Get-ChildItem $destinationPartial | Measure-Object).Count -eq 1;
+
+    if ($hasASingleItem)
+    {
+        Move-Item -Path "$destinationPartial\*" -Destination $destinationDir
+        vcpkgRemoveDirectory $destinationPartial
+    }
+    else
+    {
+        Rename-Item -Path $destinationPartial -NewName $baseName
+    }
 }
 
 function vcpkgInvokeCommand()

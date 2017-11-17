@@ -27,7 +27,6 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         $expectedDownloadedFileHash = "dd3e183254c12f7c338d3edfa642f1ac84a763b8b9a2feabb4ad5fccece5dff9"
         $executableFromDownload = "$downloadsDir\cmake-3.9.5-win32-x86\bin\cmake.exe"
         $extractionType = $ExtractionType_ZIP
-        $extractionFolder = $downloadsDir
     }
     elseif($Dependency -eq "nuget")
     {
@@ -60,7 +59,6 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         # Therefore, choosing the cmd dir here as well.
         $executableFromDownload = "$downloadsDir\MinGit-2.15.0-32-bit\cmd\git.exe"
         $extractionType = $ExtractionType_ZIP
-        $extractionFolder = "$downloadsDir\MinGit-2.15.0-32-bit"
     }
     elseif($Dependency -eq "installerbase")
     {
@@ -71,7 +69,6 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         $expectedDownloadedFileHash = "f2ce23cf5cf9fc7ce409bdca49328e09a070c0026d3c8a04e4dfde7b05b83fe8"
         $executableFromDownload = "$downloadsDir\QtInstallerFramework-win-x86\bin\installerbase.exe"
         $extractionType = $ExtractionType_ZIP
-        $extractionFolder = $downloadsDir
     }
     else
     {
@@ -91,7 +88,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     {
         if (-not (Test-Path $executableFromDownload))
         {
-            vcpkgExtractFile -File $downloadPath -Destination $extractionFolder
+            vcpkgExtractFile -File $downloadPath -DestinationDir $downloadsDir
         }
     }
     elseif($extractionType -eq $ExtractionType_SELF_EXTRACTING_7Z)
