@@ -189,11 +189,13 @@ add_library(libEGL
 )
 target_link_libraries(libEGL PRIVATE angle::common angle::libANGLE libGLESv2)
 
-install(TARGETS libEGL libGLESv2
+install(TARGETS libEGL libGLESv2 EXPORT ANGLEExport
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
+
+install(EXPORT ANGLEExport FILE ANGLETargets.cmake NAMESPACE ANGLE:: DESTINATION share/angle)
 
 if(NOT DISABLE_INSTALL_HEADERS)
     install(
