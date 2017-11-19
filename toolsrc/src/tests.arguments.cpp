@@ -1,5 +1,4 @@
-#include <CppUnitTest.h>
-#include <vcpkg/vcpkgcmdarguments.h>
+#include "tests.pch.h"
 
 #pragma comment(lib, "version")
 #pragma comment(lib, "winhttp")

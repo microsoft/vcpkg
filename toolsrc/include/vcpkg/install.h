@@ -19,11 +19,15 @@ namespace vcpkg::Install
 
     struct SpecSummary
     {
-        explicit SpecSummary(const PackageSpec& spec);
+        SpecSummary(const PackageSpec& spec, const Dependencies::AnyAction* action);
+
+        const BinaryParagraph* get_binary_paragraph() const;
 
         PackageSpec spec;
-        Build::BuildResult result;
+        Build::ExtendedBuildResult build_result;
         std::string timing;
+
+        const Dependencies::AnyAction* action;
     };
 
     struct InstallSummary
@@ -51,9 +55,9 @@ namespace vcpkg::Install
         const fs::path& listfile() const;
     };
 
-    Build::BuildResult perform_install_plan_action(const VcpkgPaths& paths,
-                                                   const Dependencies::InstallPlanAction& action,
-                                                   StatusParagraphs& status_db);
+    Build::ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
+                                                           const Dependencies::InstallPlanAction& action,
+                                                           StatusParagraphs& status_db);
 
     enum class InstallResult
     {

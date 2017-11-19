@@ -342,3 +342,5 @@ move_to_manual_link(boost_test_exec_monitor)
 move_to_manual_link(boost_prg_exec_monitor)
 
 vcpkg_copy_pdbs()
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

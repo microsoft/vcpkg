@@ -17,6 +17,16 @@ file(READ "${SOURCE_PATH}/dlib/CMakeLists.txt" DLIB_CMAKE)
 string(REPLACE "PNG_LIBRARY" "PNG_LIBRARIES" DLIB_CMAKE "${DLIB_CMAKE}")
 file(WRITE "${SOURCE_PATH}/dlib/CMakeLists.txt" "${DLIB_CMAKE}")
 
+set(WITH_BLAS OFF)
+if("blas" IN_LIST FEATURES)
+  set(WITH_BLAS ON)
+endif()
+
+set(WITH_CUDA OFF)
+if("cuda" IN_LIST FEATURES)
+  set(WITH_CUDA ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA 
@@ -25,12 +35,11 @@ vcpkg_configure_cmake(
         -DDLIB_USE_FFTW=ON
         -DDLIB_PNG_SUPPORT=ON
         -DDLIB_JPEG_SUPPORT=ON
-        -DDLIB_USE_BLAS=OFF
+        -DDLIB_USE_BLAS=${WITH_BLAS}
         -DDLIB_USE_LAPACK=OFF
-        -DDLIB_USE_CUDA=OFF
+        -DDLIB_USE_CUDA=${WITH_CUDA}
         -DDLIB_GIF_SUPPORT=OFF
         -DDLIB_USE_MKL_FFT=OFF
-        #-DDLIB_USE_CUDA=ON
     OPTIONS_DEBUG
         -DDLIB_ENABLE_ASSERTS=ON
         #-DDLIB_ENABLE_STACK_TRACE=ON

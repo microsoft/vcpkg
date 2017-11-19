@@ -19,6 +19,9 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/use-vcpkg-icu.patch
 )
 
+# The built-in cmake FindICU is better
+file(REMOVE ${SOURCE_PATH}/cmake/FindICU.cmake)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA

@@ -9,10 +9,25 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_find_acquire_program(PYTHON2)
+get_filename_component(PYTHON2_DIR ${PYTHON2} DIRECTORY)
+set(ENV{PATH} "$ENV{PATH};${PYTHON2_DIR}")
+
+file(REMOVE_RECURSE ${SOURCE_PATH}/externals)
+
 # Patch up the file locations
 file(COPY 
     ${CURRENT_INSTALLED_DIR}/include/catch.hpp 
     DESTINATION ${SOURCE_PATH}/externals/Catch/single_include
+)
+
+file(COPY
+    ${CURRENT_INSTALLED_DIR}/include/eigen3/Eigen
+    DESTINATION ${SOURCE_PATH}/externals/Eigen
+)
+file(COPY
+    ${CURRENT_INSTALLED_DIR}/include/eigen3/unsupported/Eigen
+    DESTINATION ${SOURCE_PATH}/externals/Eigen/unsupported
 )
 
 file(COPY 
@@ -26,8 +41,15 @@ file(COPY
 )
 
 file(COPY
-    ${CURRENT_INSTALLED_DIR}/include
-    DESTINATION ${SOURCE_PATH}/externals/msgpack-c
+    ${CURRENT_INSTALLED_DIR}/include/msgpack.h
+    ${CURRENT_INSTALLED_DIR}/include/msgpack.hpp
+    ${CURRENT_INSTALLED_DIR}/include/msgpack
+    DESTINATION ${SOURCE_PATH}/externals/msgpack-c/include
+)
+
+file(COPY
+    ${CURRENT_INSTALLED_DIR}/include/fmt
+    DESTINATION ${SOURCE_PATH}/externals/cppformat
 )
 
 file(COPY
@@ -43,8 +65,6 @@ file(APPEND
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" COOLPROP_SHARED_LIBRARY)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" COOLPROP_STATIC_LIBRARY)
-string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" COOLPROP_MSVC_DYNAMIC)
-string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" COOLPROP_MSVC_STATIC)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -52,18 +72,12 @@ vcpkg_configure_cmake(
     OPTIONS
         -DCOOLPROP_SHARED_LIBRARY=${COOLPROP_SHARED_LIBRARY}
         -DCOOLPROP_STATIC_LIBRARY=${COOLPROP_STATIC_LIBRARY}
-        -DCOOLPROP_MSVC_DYNAMIC=${COOLPROP_MSVC_DYNAMIC}
-        -DCOOLPROP_MSVC_STATIC=${COOLPROP_MSVC_STATIC}
-    OPTIONS_RELEASE
-        -DCOOLPROP_RELEASE=ON
-    OPTIONS_DEBUG
-        -DCOOLPROP_DEBUG=ON
 )
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-if(${VCPKG_LIBRARY_LINKAGE} STREQUAL "dynamic")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(TARGET_FOLDER "shared_library")
 else()
     set(TARGET_FOLDER "static_library")

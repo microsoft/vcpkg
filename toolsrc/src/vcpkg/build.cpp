@@ -220,26 +220,25 @@ namespace vcpkg::Build
                                tonull);
     }
 
-    static void create_binary_feature_control_file(const SourceParagraph& source_paragraph,
-                                                   const FeatureParagraph& feature_paragraph,
-                                                   const Triplet& triplet,
-                                                   BinaryControlFile& bcf)
+    static BinaryParagraph create_binary_feature_control_file(const SourceParagraph& source_paragraph,
+                                                              const FeatureParagraph& feature_paragraph,
+                                                              const Triplet& triplet)
     {
-        BinaryParagraph bpgh(source_paragraph, feature_paragraph, triplet);
-        bcf.features.emplace_back(std::move(bpgh));
+        return BinaryParagraph(source_paragraph, feature_paragraph, triplet);
     }
 
-    static void create_binary_control_file(const SourceParagraph& source_paragraph,
-                                           const Triplet& triplet,
-                                           const BuildInfo& build_info,
-                                           BinaryControlFile& bcf)
+    static std::unique_ptr<BinaryControlFile> create_binary_control_file(const SourceParagraph& source_paragraph,
+                                                                         const Triplet& triplet,
+                                                                         const BuildInfo& build_info)
     {
+        auto bcf = std::make_unique<BinaryControlFile>();
         BinaryParagraph bpgh(source_paragraph, triplet);
         if (const auto p_ver = build_info.version.get())
         {
             bpgh.version = *p_ver;
         }
-        bcf.core_paragraph = std::move(bpgh);
+        bcf->core_paragraph = std::move(bpgh);
+        return bcf;
     }
 
     static void write_binary_control_file(const VcpkgPaths& paths, BinaryControlFile bcf)
@@ -311,8 +310,9 @@ namespace vcpkg::Build
                 {"CURRENT_PORT_DIR", config.port_dir / "/."},
                 {"TARGET_TRIPLET", triplet.canonical_name()},
                 {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
-                {"VCPKG_USE_HEAD_VERSION", to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
-                {"_VCPKG_NO_DOWNLOADS", !to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
+                {"VCPKG_USE_HEAD_VERSION",
+                 Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
+                {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
                 {"GIT", git_exe_path},
                 {"FEATURES", features},
             });
@@ -333,20 +333,18 @@ namespace vcpkg::Build
             {
                 locked_metrics->track_property("error", "build failed");
                 locked_metrics->track_property("build_error", spec_string);
-                return {BuildResult::BUILD_FAILED, {}};
+                return BuildResult::BUILD_FAILED;
             }
         }
 
         const BuildInfo build_info = read_build_info(paths.get_filesystem(), paths.build_info_file_path(spec));
         const size_t error_count = PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info);
 
-        BinaryControlFile bcf;
-
-        create_binary_control_file(config.src, triplet, build_info, bcf);
+        auto bcf = create_binary_control_file(config.src, triplet, build_info);
 
         if (error_count != 0)
         {
-            return {BuildResult::POST_BUILD_CHECKS_FAILED, {}};
+            return BuildResult::POST_BUILD_CHECKS_FAILED;
         }
         if (GlobalState::feature_packages)
         {
@@ -357,18 +355,31 @@ namespace vcpkg::Build
                     for (auto&& f_pgh : config.scf->feature_paragraphs)
                     {
                         if (f_pgh->name == feature)
-                            create_binary_feature_control_file(*config.scf->core_paragraph, *f_pgh, triplet, bcf);
+                            bcf->features.push_back(
+                                create_binary_feature_control_file(*config.scf->core_paragraph, *f_pgh, triplet));
                     }
                 }
             }
         }
 
-        write_binary_control_file(paths, bcf);
+        write_binary_control_file(paths, *bcf);
 
-        // const fs::path port_buildtrees_dir = paths.buildtrees / spec.name;
-        // delete_directory(port_buildtrees_dir);
+        if (config.build_package_options.clean_buildtrees == CleanBuildtrees::YES)
+        {
+            auto& fs = paths.get_filesystem();
+            auto buildtrees_dir = paths.buildtrees / spec.name();
+            auto buildtree_files = fs.get_files_non_recursive(buildtrees_dir);
+            for (auto&& file : buildtree_files)
+            {
+                if (fs.is_directory(file) && file.filename() != "src")
+                {
+                    std::error_code ec;
+                    fs.remove_all(file, ec);
+                }
+            }
+        }
 
-        return {BuildResult::SUCCEEDED, {}};
+        return {BuildResult::SUCCEEDED, std::move(bcf)};
     }
 
     const std::string& to_string(const BuildResult build_result)
@@ -548,5 +559,14 @@ namespace vcpkg::Build
         }
 
         return pre_build_info;
+    }
+    ExtendedBuildResult::ExtendedBuildResult(BuildResult code) : code(code) {}
+    ExtendedBuildResult::ExtendedBuildResult(BuildResult code, std::unique_ptr<BinaryControlFile>&& bcf)
+        : code(code), binary_control_file(std::move(bcf))
+    {
+    }
+    ExtendedBuildResult::ExtendedBuildResult(BuildResult code, std::vector<PackageSpec>&& unmet_deps)
+        : code(code), unmet_dependencies(std::move(unmet_deps))
+    {
     }
 }

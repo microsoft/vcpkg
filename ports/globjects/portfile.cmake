@@ -15,7 +15,12 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH})
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -DOPTION_BUILD_TESTS=OFF
+        -DOPTION_BUILD_GPU_TESTS=OFF
+)
 #vcpkg_build_cmake()
 vcpkg_install_cmake()
 

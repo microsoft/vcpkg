@@ -18,17 +18,6 @@ if (NOT EXISTS "${LIBFILEPATH}")
     message(FATAL_ERROR "Cannot find Windows ${WINDOWS_SDK} SDK. File does not exist: ${LIBFILEPATH}")
 endif()
 
-file(MAKE_DIRECTORY
-    ${CURRENT_PACKAGES_DIR}/include
-    ${CURRENT_PACKAGES_DIR}/lib
-    ${CURRENT_PACKAGES_DIR}/debug/lib
-    ${CURRENT_PACKAGES_DIR}/share/wincrypt
-)
-
-file(COPY
-    "${HEADERSPATH}\\Wincrypt.h"
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
-    )
 file(COPY ${LIBFILEPATH} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 file(COPY ${LIBFILEPATH} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 
@@ -38,3 +27,6 @@ if (DEFINED LICENSEPATH)
 else()
     file(WRITE ${CURRENT_PACKAGES_DIR}/share/wincrypt/copyright "See https://developer.microsoft.com/en-us/windows/downloads/windows-8-1-sdk for the Windows 8.1 SDK license")
 endif()
+
+# Allow empty include directory
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)

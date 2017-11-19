@@ -74,8 +74,9 @@ namespace vcpkg::PostBuildLint
         const fs::path include_dir = package_dir / "include";
         if (!fs.exists(include_dir) || fs.is_empty(include_dir))
         {
-            System::println(System::Color::warning,
-                            "The folder /include is empty. This indicates the library was not correctly installed.");
+            System::println(
+                System::Color::warning,
+                "The folder /include is empty or not present. This indicates the library was not correctly installed.");
             return LintStatus::ERROR_DETECTED;
         }
 

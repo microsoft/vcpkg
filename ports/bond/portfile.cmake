@@ -4,24 +4,24 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/bond-6.0.0)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/bond-7.0.2)
 
 vcpkg_download_distfile(ARCHIVE
-  URLS "https://github.com/Microsoft/bond/archive/6.0.0.zip"
-  FILENAME "bond-6.0.0.zip"
-  SHA512 d585debabb7b74c1e85313278456bd6b63a388dbf64515c550b1d9739114b0963ffb1982d145fa4d3717747e8eba82e79ed2744a6c9e3cb1615d9a78b75b42bb
+  URLS "https://github.com/Microsoft/bond/archive/7.0.2.zip"
+  FILENAME "bond-7.0.2.zip"
+  SHA512 4ae3b88fafbede6c1433d171713bdbfcbed61a3d2a983d7df4e33af893a50f233be0e95c1ea8e5f30dafb017b2a8100a23721292b04184159e5fd796b1a43398
 )
 vcpkg_download_distfile(GBC_ARCHIVE
-  URLS "https://github.com/Microsoft/bond/releases/download/6.0.0/gbc-6.0.0-amd64.exe.zip"
-  FILENAME "gbc-6.0.0-amd64.zip"
-  SHA512 2aa4b5add478b952cb7733dcbf5c35634cde66812f1f1920d5fb1e2a52681a101ac6157bdba535a59316c4590fa37c74889b734106ca3e202a7a5ec0bcb1847f
+  URLS "https://github.com/Microsoft/bond/releases/download/7.0.2/gbc-7.0.2-amd64.exe.zip"
+  FILENAME "gbc-7.0.2-amd64.exe.zip"
+  SHA512 069eafd7641ebd719425037cb8249d2d214eb09c6ce38fbf1d1811c01d1839b0a0987c55217075b6ae9f477f750d582250134387a530edb2aee407b21d973915
 )
 
 vcpkg_extract_source_archive(${ARCHIVE})
 
 # Extract the precompiled gbc
 vcpkg_extract_source_archive(${GBC_ARCHIVE} ${CURRENT_BUILDTREES_DIR}/tools/)
-set(FETCHED_GBC_PATH ${CURRENT_BUILDTREES_DIR}/tools/gbc-6.0.0-amd64.exe)
+set(FETCHED_GBC_PATH ${CURRENT_BUILDTREES_DIR}/tools/gbc-7.0.2-amd64.exe)
 
 if (NOT EXISTS "${FETCHED_GBC_PATH}")
     message(FATAL_ERROR "Fetching GBC failed. Expected '${FETCHED_GBC_PATH}' to exists, but it doesn't.")
@@ -30,9 +30,6 @@ endif()
 vcpkg_apply_patches(
   SOURCE_PATH ${SOURCE_PATH}
   PATCHES
-    # Change Boost_USE_STATIC_LIBS to be compatible with vcpkg's treatment
-    # of Boost
-    ${CMAKE_CURRENT_LIST_DIR}/0001_boost_static_libs.patch
     # Don't install rapidjson from the (empty) submodule. With vcpkg, we get
     # rapidjson from vcpkg
     ${CMAKE_CURRENT_LIST_DIR}/0002_omit_rapidjson.patch

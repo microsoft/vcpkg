@@ -1,9 +1,4 @@
-#include <CppUnitTest.h>
-
-#include <vcpkg/base/util.h>
-#include <vcpkg/paragraphs.h>
-#include <vcpkg/statusparagraph.h>
-#include <vcpkg/statusparagraphs.h>
+#include "tests.pch.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
