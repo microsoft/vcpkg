@@ -21,7 +21,6 @@ vcpkg_apply_patches(
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/001-fix-uwp.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/ANGLEConfig.cmake DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/commit.h DESTINATION ${SOURCE_PATH})
 
@@ -33,11 +32,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(READ ${CURRENT_PACKAGES_DIR}/debug/share/angle/ANGLETargets-debug.cmake ANGLE_DEBUG_TARGETS)
-string(REPLACE [[${_IMPORT_PREFIX}]] [[${_IMPORT_PREFIX}/debug]] ANGLE_DEBUG_TARGETS "${ANGLE_DEBUG_TARGETS}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/angle/ANGLETargets-debug.cmake "${ANGLE_DEBUG_TARGETS}")
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/ANGLEConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/angle)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-angle)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/angle ${CURRENT_PACKAGES_DIR}/share/unofficial-angle)
 
 vcpkg_copy_pdbs()
 
