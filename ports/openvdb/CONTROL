@@ -1,0 +1,8 @@
+Source: openvdb
+Version: 5.0.0
+Build-Depends: boost, ilmbase, openexr, tbb, blosc
+Description: Sparse volume data structure and tools
+
+Feature: tools
+Description: OpenVDB utilities: view, print and render
+Build-Depends: glew, glfw3
