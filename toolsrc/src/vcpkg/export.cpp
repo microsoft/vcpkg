@@ -369,7 +369,8 @@ namespace vcpkg::Export
     static void print_next_step_info(const fs::path& prefix)
     {
         const fs::path cmake_toolchain = prefix / "scripts" / "buildsystems" / "vcpkg.cmake";
-        const CMakeVariable cmake_variable = CMakeVariable("CMAKE_TOOLCHAIN_FILE", cmake_toolchain.generic_string());
+        const System::CMakeVariable cmake_variable =
+            System::CMakeVariable("CMAKE_TOOLCHAIN_FILE", cmake_toolchain.generic_string());
         System::println("\n"
                         "To use the exported libraries in CMake projects use:"
                         "\n"

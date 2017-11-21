@@ -301,7 +301,7 @@ namespace vcpkg::Build
 
         const Toolset& toolset = paths.get_toolset(pre_build_info.platform_toolset, pre_build_info.visual_studio_path);
 
-        const std::string cmd_launch_cmake = make_cmake_cmd(
+        const std::string cmd_launch_cmake = System::make_cmake_cmd(
             cmake_exe_path,
             ports_cmake_script_path,
             {
@@ -493,11 +493,11 @@ namespace vcpkg::Build
         const fs::path ports_cmake_script_path = paths.scripts / "get_triplet_environment.cmake";
         const fs::path triplet_file_path = paths.triplets / (triplet.canonical_name() + ".cmake");
 
-        const auto cmd_launch_cmake = make_cmake_cmd(cmake_exe_path,
-                                                     ports_cmake_script_path,
-                                                     {
-                                                         {"CMAKE_TRIPLET_FILE", triplet_file_path},
-                                                     });
+        const auto cmd_launch_cmake = System::make_cmake_cmd(cmake_exe_path,
+                                                             ports_cmake_script_path,
+                                                             {
+                                                                 {"CMAKE_TRIPLET_FILE", triplet_file_path},
+                                                             });
         const auto ec_data = System::cmd_execute_and_capture_output(cmd_launch_cmake);
         Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, ec_data.output);
 

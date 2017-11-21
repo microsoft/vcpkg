@@ -72,6 +72,43 @@ namespace vcpkg::System
         return supported_architectures;
     }
 
+    CMakeVariable::CMakeVariable(const CStringView varname, const char* varvalue)
+        : s(Strings::format(R"("-D%s=%s")", varname, varvalue))
+    {
+    }
+    CMakeVariable::CMakeVariable(const CStringView varname, const std::string& varvalue)
+        : CMakeVariable(varname, varvalue.c_str())
+    {
+    }
+    CMakeVariable::CMakeVariable(const CStringView varname, const fs::path& path)
+        : CMakeVariable(varname, path.generic_u8string())
+    {
+    }
+
+    std::string make_cmake_cmd(const fs::path& cmake_exe,
+                               const fs::path& cmake_script,
+                               const std::vector<CMakeVariable>& pass_variables)
+    {
+        const std::string cmd_cmake_pass_variables = Strings::join(" ", pass_variables, [](auto&& v) { return v.s; });
+        return Strings::format(
+            R"("%s" %s -P "%s")", cmake_exe.u8string(), cmd_cmake_pass_variables, cmake_script.generic_u8string());
+    }
+
+    PowershellParameter::PowershellParameter(const CStringView varname, const char* varvalue)
+        : s(Strings::format(R"(-%s '%s')", varname, varvalue))
+    {
+    }
+
+    PowershellParameter::PowershellParameter(const CStringView varname, const std::string& varvalue)
+        : PowershellParameter(varname, varvalue.c_str())
+    {
+    }
+
+    PowershellParameter::PowershellParameter(const CStringView varname, const fs::path& path)
+        : PowershellParameter(varname, path.generic_u8string())
+    {
+    }
+
     int cmd_execute_clean(const CStringView cmd_line)
     {
 #if defined(_WIN32)
@@ -272,8 +309,10 @@ namespace vcpkg::System
 
     std::string powershell_execute_and_capture_output(const std::string& title,
                                                       const fs::path& script_path,
-                                                      const CStringView args)
+                                                      const std::vector<PowershellParameter>& parameters)
     {
+        const std::string args = Strings::join(" ", parameters, [](auto&& v) { return v.s; });
+
         // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
         const std::string cmd = Strings::format(
             R"(powershell -NoProfile -ExecutionPolicy Bypass -Command "& {& '%s' %s}")", script_path.u8string(), args);

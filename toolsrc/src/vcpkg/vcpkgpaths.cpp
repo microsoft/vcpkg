@@ -92,8 +92,8 @@ namespace vcpkg
                         version_as_string);
         const fs::path script = scripts_folder / "fetchDependency.ps1";
         const std::string title = "Fetching %s version %s (No sufficient installed version was found)";
-        const std::string output =
-            System::powershell_execute_and_capture_output(title, script, Strings::format("-Dependency %s", tool_name));
+        const System::PowershellParameter dependency_param("Dependency", tool_name);
+        const std::string output = System::powershell_execute_and_capture_output(title, script, {dependency_param});
 
         const std::vector<std::string> dependency_path = keep_data_lines(output);
         Checks::check_exit(
