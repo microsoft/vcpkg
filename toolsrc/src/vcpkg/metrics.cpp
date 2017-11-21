@@ -258,7 +258,7 @@ namespace vcpkg::Metrics
                 const std::string matchstr = match[0];
                 const System::PowershellParameter value("Value", matchstr);
                 auto hash_result = System::powershell_execute_and_capture_output(
-                    "SHA256Hash", get_vcpkg_root() / "SHA256Hash.ps1", {value});
+                    "SHA256Hash", get_vcpkg_root() / "scripts" / "SHA256Hash.ps1", {value});
                 Util::erase_remove_if(hash_result,
                                       [](char ch) { return !(ch >= 'A' && ch <= 'F') && !(ch >= '0' && ch <= '9'); });
                 hash_result = Strings::ascii_to_lowercase(hash_result);
