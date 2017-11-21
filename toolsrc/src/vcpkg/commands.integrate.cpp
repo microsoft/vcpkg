@@ -139,7 +139,7 @@ namespace vcpkg::Commands::Integrate
     static fs::path get_appdata_targets_path()
     {
         static const fs::path LOCAL_APP_DATA =
-            fs::path(System::get_environment_variable("LOCALAPPDATA").value_or_exit(VCPKG_LINE_INFO));
+            fs::u8path(System::get_environment_variable("LOCALAPPDATA").value_or_exit(VCPKG_LINE_INFO));
         return LOCAL_APP_DATA / "vcpkg" / "vcpkg.user.targets";
     }
 #endif
