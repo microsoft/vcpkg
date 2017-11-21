@@ -1,18 +1,24 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d443757..303dfe2 100644
+index deceb65..1283013 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -102,14 +102,20 @@ IF(MSVC)
- ADD_DEFINITIONS("-D_CRT_SECURE_NO_WARNINGS")
+@@ -113,6 +113,15 @@ ADD_DEFINITIONS("-D_CRT_SECURE_NO_WARNINGS")
+ ADD_DEFINITIONS("-D_CRT_NONSTDC_NO_DEPRECATE")
  ENDIF(MSVC)
  
 +OPTION(ENABLE_STATIC "Enable static builds" OFF)
 +IF(ENABLE_STATIC)
++  set(BUILD_SHARED_LIBS OFF)
 +  set(ZIP_EXTERN_OVERRIDE ON)
 +  set(ZIP_EXTERN ON)
++ELSE(ENABLE_STATIC)
++  set(BUILD_SHARED_LIBS ON)
 +ENDIF(ENABLE_STATIC)
 +
  ADD_DEFINITIONS("-DHAVE_CONFIG_H")
+ 
+ # rpath handling: use rpath in installed binaries
+@@ -121,10 +130,10 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
  
  # Targets
  ADD_SUBDIRECTORY(lib)
@@ -25,10 +31,23 @@ index d443757..303dfe2 100644
 +# ADD_SUBDIRECTORY(regress)
 +# ADD_SUBDIRECTORY(examples)
  
- # TODO: pkgconfig file
+ # pkgconfig file
+ SET(prefix ${CMAKE_INSTALL_PREFIX})
+diff --git a/cmake-config.h.in b/cmake-config.h.in
+index 0d1839c..dd450ff 100644
+--- a/cmake-config.h.in
++++ b/cmake-config.h.in
+@@ -60,7 +60,7 @@
+ #cmakedefine WORDS_BIGENDIAN
+ /* END DEFINES */
+ #define PACKAGE "@PACKAGE@"
+-#define VERSION "@VERSION@"
++#define LIBZIP_VERSION "@VERSION@"
  
+ #ifndef HAVE_SSIZE_T_LIBZIP
+ #  if SIZE_T_LIBZIP == INT_LIBZIP
 diff --git a/cmake-zipconf.h.in b/cmake-zipconf.h.in
-index 17edc6c..ac9c394 100644
+index 6a276f6..410c898 100644
 --- a/cmake-zipconf.h.in
 +++ b/cmake-zipconf.h.in
 @@ -118,4 +118,10 @@ typedef unsigned long long zip_uint64_t;
@@ -42,49 +61,8 @@ index 17edc6c..ac9c394 100644
 +#endif
 +
  #endif /* zipconf.h */
-diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index 1596f30..eb55fc0 100644
---- a/lib/CMakeLists.txt
-+++ b/lib/CMakeLists.txt
-@@ -191,19 +191,20 @@ IF(NOT HAVE_MKSTEMP)
-   SET(LIBZIP_EXTRA_FILES mkstemp.c)
- ENDIF(NOT HAVE_MKSTEMP)
- 
--ADD_LIBRARY(zip SHARED ${LIBZIP_SOURCES} ${LIBZIP_EXTRA_FILES} ${LIBZIP_OPSYS_FILES})
--SET_TARGET_PROPERTIES(zip PROPERTIES VERSION 3.0 SOVERSION 3 )
--TARGET_LINK_LIBRARIES(zip ${ZLIB_LIBRARY})
--INSTALL(TARGETS zip
--  RUNTIME DESTINATION bin
--  ARCHIVE DESTINATION lib
--  LIBRARY DESTINATION lib)
--#CREATE_LIBTOOL_FILE(zip lib)
--
--#ADD_LIBRARY(zipstatic STATIC ${LIBZIP_SOURCES} ${LIBZIP_EXTRA_FILES} ${LIBZIP_OPSYS_FILES})
--#SET_TARGET_PROPERTIES(zipstatic PROPERTIES VERSION 3.0 SOVERSION 3 )
--#TARGET_LINK_LIBRARIES(zipstatic ${ZLIB_LIBRARY})
--#INSTALL(TARGETS zipstatic
--#  RUNTIME DESTINATION bin
--#  ARCHIVE DESTINATION lib
--#  LIBRARY DESTINATION lib)
-+IF(ENABLE_STATIC)
-+  ADD_LIBRARY(zipstatic STATIC ${LIBZIP_SOURCES} ${LIBZIP_EXTRA_FILES} ${LIBZIP_OPSYS_FILES})
-+  SET_TARGET_PROPERTIES(zipstatic PROPERTIES VERSION 3.0 SOVERSION 3 )
-+  TARGET_LINK_LIBRARIES(zipstatic ${ZLIB_LIBRARY})
-+  INSTALL(TARGETS zipstatic
-+    RUNTIME DESTINATION bin
-+    ARCHIVE DESTINATION lib
-+    LIBRARY DESTINATION lib)
-+ELSE(ENABLE_STATIC)
-+  ADD_LIBRARY(zip SHARED ${LIBZIP_SOURCES} ${LIBZIP_EXTRA_FILES} ${LIBZIP_OPSYS_FILES})
-+  SET_TARGET_PROPERTIES(zip PROPERTIES VERSION 3.0 SOVERSION 3 )
-+  TARGET_LINK_LIBRARIES(zip ${ZLIB_LIBRARY})
-+  INSTALL(TARGETS zip
-+    RUNTIME DESTINATION bin
-+    ARCHIVE DESTINATION lib
-+    LIBRARY DESTINATION lib)
-+ENDIF(ENABLE_STATIC)
 diff --git a/lib/compat.h b/lib/compat.h
-index 4c9e3a0..d667fe3 100644
+index 625c84e..8943587 100644
 --- a/lib/compat.h
 +++ b/lib/compat.h
 @@ -42,7 +42,9 @@
