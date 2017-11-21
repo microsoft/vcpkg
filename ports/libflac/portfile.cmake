@@ -7,16 +7,12 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(${ARCHIVE})
 
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    vcpkg_apply_patches(
-        SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/flac-1.3.2
-        PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/uwp-consolewidth.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/uwp-loadlibrary.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/uwp-createfile.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/uwp-writeconsole.patch"
-        )
-endif()
+vcpkg_apply_patches(
+    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/flac-1.3.2
+    PATCHES
+    "${CMAKE_CURRENT_LIST_DIR}/uwp-library-console.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/uwp-createfile2.patch"
+)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
     vcpkg_find_acquire_program(NASM)
