@@ -50,7 +50,7 @@ else()
     else()
         set(SDL_STATIC_CRT OFF)
     endif()
-    
+
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
@@ -61,10 +61,21 @@ else()
     )
 
     vcpkg_install_cmake()
-       
+
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/SDL2main.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/SDL2main.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/SDL2maind.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/SDL2maind.lib)
+
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
     vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake")
+
+    file(GLOB SHARE_FILES ${CURRENT_PACKAGES_DIR}/share/sdl2/*.cmake)
+    foreach(SHARE_FILE ${SHARE_FILES})
+        file(READ "${SHARE_FILE}" _contents)
+        string(REPLACE "lib/SDL2main" "lib/manual-link/SDL2main" _contents "${_contents}")
+        file(WRITE "${SHARE_FILE}" "${_contents}")
+    endforeach()
 endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/sdl2 RENAME copyright)
