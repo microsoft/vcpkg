@@ -1,4 +1,4 @@
-Source: qt5datavisualization3d
+Source: qt5datavis3d
 Version: 5.9.2-0
 Description: Qt5 Data Visualization 3d Module - UI Components for creating 3D data visualizations
-Build-Depends: qt5base
+Build-Depends: qt5modularscripts, qt5base

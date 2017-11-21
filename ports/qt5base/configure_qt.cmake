@@ -33,7 +33,7 @@ function(configure_qt)
             -datadir ${CURRENT_PACKAGES_DIR}/share/qt5/debug
             -plugindir ${CURRENT_PACKAGES_DIR}/debug/plugins
             -qmldir ${CURRENT_PACKAGES_DIR}/debug/qml
-            -headerdir ${CURRENT_PACKAGES_DIR}/share/qt5/debug/include
+            -headerdir ${CURRENT_PACKAGES_DIR}/include
             -I ${CURRENT_INSTALLED_DIR}/include
             -L ${CURRENT_INSTALLED_DIR}/debug/lib
             -platform ${PLATFORM}

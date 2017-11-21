@@ -1,0 +1,4 @@
+Source: qt5
+Version: 5.9.2-1
+Description: Qt5 Application Framework
+Build-Depends: qt5base, qt5charts, qt5datavis3d, qt5declarative, qt5gamepad, qt5imageformats, qt5multimedia, qt5scxml, qt5serial, qt5speech, qt5svg, qt5tools, qt5virtualkeyboard, qt5websockets, qt53d, qt5winextras, qt5xmlpatterns

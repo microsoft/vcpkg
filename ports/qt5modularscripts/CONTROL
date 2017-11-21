@@ -1,0 +1,3 @@
+Source: qt5modularscripts
+Version: 0
+Description: Vcpkg helpers to package qt5 modules
