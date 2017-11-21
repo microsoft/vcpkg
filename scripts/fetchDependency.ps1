@@ -20,12 +20,12 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 
     if($Dependency -eq "cmake")
     {
-        $requiredVersion = "3.9.5"
-        $downloadVersion = "3.9.5"
-        $url = "https://cmake.org/files/v3.9/cmake-3.9.5-win32-x86.zip"
-        $downloadPath = "$downloadsDir\cmake-3.9.5-win32-x86.zip"
-        $expectedDownloadedFileHash = "dd3e183254c12f7c338d3edfa642f1ac84a763b8b9a2feabb4ad5fccece5dff9"
-        $executableFromDownload = "$downloadsDir\cmake-3.9.5-win32-x86\bin\cmake.exe"
+        $requiredVersion = "3.10.0"
+        $downloadVersion = "3.10.0"
+        $url = "https://cmake.org/files/v3.10/cmake-3.10.0-win32-x86.zip"
+        $downloadPath = "$downloadsDir\cmake-3.10.0-win32-x86.zip"
+        $expectedDownloadedFileHash = "dce666e897f95a88d3eed6cddd1faa3f44179d519b33ca6065b385bbc7072419"
+        $executableFromDownload = "$downloadsDir\cmake-3.10.0-win32-x86\bin\cmake.exe"
         $extractionType = $ExtractionType_ZIP
     }
     elseif($Dependency -eq "nuget")
