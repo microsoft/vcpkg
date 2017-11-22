@@ -579,15 +579,17 @@ namespace vcpkg::Install
         auto files = fs.read_lines(paths.listfile_path(bpgh));
         if (auto p_lines = files.get())
         {
+            std::map<std::string, std::vector<std::string>> library_targets;
+
             for (auto&& suffix : *p_lines)
             {
-                if (Strings::case_insensitive_ascii_find(suffix, "/share/") != suffix.end())
+                if (Strings::case_insensitive_ascii_find(suffix, "/share/") != suffix.end() &&
+                    suffix.substr(suffix.size() - 6) == ".cmake")
                 {
-                    std::vector<std::string> library_targets;
-
                     // File is inside the share folder
                     auto path = paths.installed / suffix;
                     auto maybe_contents = fs.read_contents(path);
+                    auto find_package_name = path.parent_path().filename().u8string();
                     if (auto p_contents = maybe_contents.get())
                     {
                         std::sregex_iterator next(p_contents->begin(), p_contents->end(), cmake_library_regex);
@@ -596,37 +598,40 @@ namespace vcpkg::Install
                         while (next != last)
                         {
                             auto match = *next;
-                            library_targets.push_back(match[1]);
+                            library_targets[find_package_name].push_back(match[1]);
                             ++next;
                         }
                     }
+                }
+            }
 
-                    if (library_targets.empty())
+            if (library_targets.empty())
+            {
+            }
+            else
+            {
+                System::println("The package %s provides CMake targets:\n", bpgh.spec);
+
+                for (auto&& library_target_pair : library_targets)
+                {
+                    if (library_target_pair.second.size() <= 4)
                     {
-                    }
-                    else if (library_targets.size() <= 4)
-                    {
-                        System::println("The package %s provides CMake targets:\n"
-                                        "\n"
-                                        "    find_package(%s REQUIRED)\n"
+                        System::println("    find_package(%s REQUIRED)\n"
                                         "    target_link_libraries(main PRIVATE %s)\n",
-                                        bpgh.spec,
-                                        path.parent_path().filename().u8string(),
-                                        Strings::join(" ", library_targets));
+                                        library_target_pair.first,
+                                        Strings::join(" ", library_target_pair.second));
                     }
                     else
                     {
-                        auto omitted = library_targets.size() - 4;
-                        library_targets.erase(library_targets.begin() + 4, library_targets.end());
-                        System::println("The package %s provides CMake targets:\n"
-                                        "\n"
-                                        "    find_package(%s REQUIRED)\n"
+                        auto omitted = library_target_pair.second.size() - 4;
+                        library_target_pair.second.erase(library_target_pair.second.begin() + 4,
+                                                         library_target_pair.second.end());
+                        System::println("    find_package(%s REQUIRED)\n"
                                         "    # Note: %d targets were omitted\n"
                                         "    target_link_libraries(main PRIVATE %s)\n",
-                                        bpgh.spec,
-                                        path.parent_path().filename().u8string(),
+                                        library_target_pair.first,
                                         omitted,
-                                        Strings::join(" ", library_targets));
+                                        Strings::join(" ", library_target_pair.second));
                     }
                 }
             }
@@ -729,8 +734,6 @@ namespace vcpkg::Install
         {
             summary.print();
         }
-
-        auto& fs = paths.get_filesystem();
 
         for (auto&& result : summary.results)
         {
