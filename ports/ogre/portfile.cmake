@@ -62,6 +62,7 @@ vcpkg_configure_cmake(
         -DOGRE_STATIC=${OGRE_STATIC}
         -DOGRE_UNITY_BUILD=OFF
         -DOGRE_USE_STD11=ON
+        -DOGRE_CONFIG_THREAD_PROVIDER=std
         -DOGRE_NODE_STORAGE_LEGACY=OFF
         -DOGRE_BUILD_RENDERSYSTEM_D3D11=ON
         -DOGRE_BUILD_RENDERSYSTEM_GL=ON
@@ -80,7 +81,21 @@ vcpkg_install_cmake()
 
 # Remove unwanted files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/ogre)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+file(GLOB REL_CFGS ${CURRENT_PACKAGES_DIR}/bin/*.cfg)
+file(COPY ${REL_CFGS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+
+file(GLOB DBG_CFGS ${CURRENT_PACKAGES_DIR}/debug/bin/*.cfg)
+file(COPY ${DBG_CFGS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+
+file(REMOVE ${REL_CFGS} ${DBG_CFGS})
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ogre RENAME copyright)
