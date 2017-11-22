@@ -97,6 +97,34 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+
+file(GLOB MAIN_REL ${CURRENT_PACKAGES_DIR}/lib/OgreMain.lib ${CURRENT_PACKAGES_DIR}/lib/OgreMainStatic.lib)
+file(COPY ${MAIN_REL} DESTINATION ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+file(GLOB MAIN_DBG ${CURRENT_PACKAGES_DIR}/debug/lib/OgreMain_d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/OgreMainStatic_d.lib)
+file(COPY ${MAIN_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+file(REMOVE ${MAIN_REL} ${MAIN_DBG})
+
+# Ogre installs custom cmake config files which don't follow the normal pattern.
+# This normally makes them completely incompatible with multi-config generators, but with some effort it can be done.
+file(READ "${CURRENT_PACKAGES_DIR}/share/ogre/OGREConfig.cmake" _contents)
+string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${PACKAGE_PREFIX_DIR}" _contents "${_contents}")
+string(REPLACE "SDL2main.lib" "SDL2main$<$<CONFIG:Debug>:d>.lib" _contents "${_contents}")
+string(REPLACE "SDL2.lib" "SDL2$<$<CONFIG:Debug>:d>.lib" _contents "${_contents}")
+string(REPLACE "\${PACKAGE_PREFIX_DIR}/lib" "\${PACKAGE_PREFIX_DIR}$<$<CONFIG:Debug>:/debug>/lib" _contents "${_contents}")
+string(REPLACE "{OGRE_PREFIX_DIR}/lib" "{OGRE_PREFIX_DIR}$<$<CONFIG:Debug>:/debug>/lib" _contents "${_contents}")
+
+string(REPLACE "\"Ogre\${COMPONENT}\"" "\"Ogre\${COMPONENT}$<$<CONFIG:Debug>:_d>\"" _contents "${_contents}")
+string(REPLACE "\"Ogre\${COMPONENT}Static\"" "\"Ogre\${COMPONENT}Static$<$<CONFIG:Debug>:_d>\"" _contents "${_contents}")
+
+string(REPLACE "\"\${TYPE}_\${COMPONENT}\"" "\"\${TYPE}_\${COMPONENT}$<$<CONFIG:Debug>:_d>\"" _contents "${_contents}")
+string(REPLACE "\"\${TYPE}_\${COMPONENT}Static\"" "\"\${TYPE}_\${COMPONENT}Static$<$<CONFIG:Debug>:_d>\"" _contents "${_contents}")
+
+string(REPLACE "\"OgreMain\"" "\"\${PACKAGE_PREFIX_DIR}/lib/manual-link/OgreMain$<$<CONFIG:Debug>:_d>.lib\"" _contents "${_contents}")
+string(REPLACE "\"OgreMainStatic\"" "\"\${PACKAGE_PREFIX_DIR}/lib/manual-link/OgreMainStatic$<$<CONFIG:Debug>:_d>.lib\"" _contents "${_contents}")
+
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/ogre/OGREConfig.cmake" "${_contents}")
+
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ogre RENAME copyright)
 
