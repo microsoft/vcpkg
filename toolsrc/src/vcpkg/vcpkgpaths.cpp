@@ -447,38 +447,38 @@ namespace vcpkg
                 continue;
             }
 
-            if (major_version == "14")
+            if (major_version == "14" || major_version == "12")
             {
                 const fs::path vcvarsall_bat = vs_instance.root_path / "VC" / "vcvarsall.bat";
 
                 paths_examined.push_back(vcvarsall_bat);
                 if (fs.exists(vcvarsall_bat))
                 {
-                    const fs::path vs2015_dumpbin_exe = vs_instance.root_path / "VC" / "bin" / "dumpbin.exe";
-                    paths_examined.push_back(vs2015_dumpbin_exe);
+                    const fs::path vs_dumpbin_exe = vs_instance.root_path / "VC" / "bin" / "dumpbin.exe";
+                    paths_examined.push_back(vs_dumpbin_exe);
 
-                    const fs::path vs2015_bin_dir = vcvarsall_bat.parent_path() / "bin";
+                    const fs::path vs_bin_dir = vcvarsall_bat.parent_path() / "bin";
                     std::vector<ToolsetArchOption> supported_architectures;
-                    if (fs.exists(vs2015_bin_dir / "vcvars32.bat"))
+                    if (fs.exists(vs_bin_dir / "vcvars32.bat"))
                         supported_architectures.push_back({"x86", CPU::X86, CPU::X86});
-                    if (fs.exists(vs2015_bin_dir / "amd64\\vcvars64.bat"))
+                    if (fs.exists(vs_bin_dir / "amd64\\vcvars64.bat"))
                         supported_architectures.push_back({"x64", CPU::X64, CPU::X64});
-                    if (fs.exists(vs2015_bin_dir / "x86_amd64\\vcvarsx86_amd64.bat"))
+                    if (fs.exists(vs_bin_dir / "x86_amd64\\vcvarsx86_amd64.bat"))
                         supported_architectures.push_back({"x86_amd64", CPU::X86, CPU::X64});
-                    if (fs.exists(vs2015_bin_dir / "x86_arm\\vcvarsx86_arm.bat"))
+                    if (fs.exists(vs_bin_dir / "x86_arm\\vcvarsx86_arm.bat"))
                         supported_architectures.push_back({"x86_arm", CPU::X86, CPU::ARM});
-                    if (fs.exists(vs2015_bin_dir / "amd64_x86\\vcvarsamd64_x86.bat"))
+                    if (fs.exists(vs_bin_dir / "amd64_x86\\vcvarsamd64_x86.bat"))
                         supported_architectures.push_back({"amd64_x86", CPU::X64, CPU::X86});
-                    if (fs.exists(vs2015_bin_dir / "amd64_arm\\vcvarsamd64_arm.bat"))
+                    if (fs.exists(vs_bin_dir / "amd64_arm\\vcvarsamd64_arm.bat"))
                         supported_architectures.push_back({"amd64_arm", CPU::X64, CPU::ARM});
 
-                    if (fs.exists(vs2015_dumpbin_exe))
+                    if (fs.exists(vs_dumpbin_exe))
                     {
                         found_toolsets.push_back({vs_instance.root_path,
-                                                  vs2015_dumpbin_exe,
+                                                  vs_dumpbin_exe,
                                                   vcvarsall_bat,
                                                   {},
-                                                  V_140,
+                                                  major_version == "14" ? V_140 : V_120,
                                                   supported_architectures});
                     }
                 }
