@@ -18,7 +18,12 @@ else ()
     add_definitions(-D_LIB)
 endif ()
 
-add_definitions(-D_USE_SSE -DHAVE_CONFIG_H -D_WIN32)
+add_definitions(-DHAVE_CONFIG_H -D_WIN32)
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    add_definitions(-D_USE_SSE)
+endif()
+
 include_directories("${SOURCE_PATH}/include"
                     "${SOURCE_PATH}/win32")
 add_library(libspeexdsp ${LIBSPEEXDSP_SOURCES} ${LIBSPEEXDSP_HEADERS})
