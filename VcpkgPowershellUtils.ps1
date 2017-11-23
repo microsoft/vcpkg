@@ -141,19 +141,25 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
 }
 
 function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
-                            [Parameter(Mandatory=$true)][string]$destination)
+                            [Parameter(Mandatory=$true)][string]$destinationDir)
 {
-    vcpkgCreateDirectory $destination
+    $parentPath = split-path -parent $destinationDir
+    vcpkgCreateDirectory $parentPath
+    $baseName = (Get-ChildItem $file).BaseName
+    $destinationPartial = "$destinationDir\$baseName-partially_extracted"
+
+    vcpkgRemoveDirectory $destinationPartial
+    vcpkgCreateDirectory $destinationPartial
 
     if (vcpkgHasCommand -commandName 'Microsoft.PowerShell.Archive\Expand-Archive')
     {
         Write-Verbose("Extracting with Microsoft.PowerShell.Archive\Expand-Archive")
-        Microsoft.PowerShell.Archive\Expand-Archive -path $file -destinationpath $destination
+        Microsoft.PowerShell.Archive\Expand-Archive -path $file -destinationpath $destinationPartial
     }
     elseif (vcpkgHasCommand -commandName 'Pscx\Expand-Archive')
     {
         Write-Verbose("Extracting with Pscx\Expand-Archive")
-        Pscx\Expand-Archive -path $file -OutputPath $destination
+        Pscx\Expand-Archive -path $file -OutputPath $destinationPartial
     }
     else
     {
@@ -163,8 +169,20 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
         foreach($item in $zip.items())
         {
             # Piping to Out-Null is used to block until finished
-            $shell.Namespace($destination).copyhere($item) | Out-Null
+            $shell.Namespace($destinationPartial).copyhere($item) | Out-Null
         }
+    }
+
+    $hasASingleItem = (Get-ChildItem $destinationPartial | Measure-Object).Count -eq 1;
+
+    if ($hasASingleItem)
+    {
+        Move-Item -Path "$destinationPartial\*" -Destination $destinationDir
+        vcpkgRemoveDirectory $destinationPartial
+    }
+    else
+    {
+        Rename-Item -Path $destinationPartial -NewName $baseName
     }
 }
 
