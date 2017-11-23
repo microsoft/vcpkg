@@ -33,7 +33,7 @@ endif()
 #message(STATUS "cmake found at: ${CMAKE_COMMAND}")
 
 execute_process(
-    COMMAND ${GIT} clone --depth 1 https://github.com/google/googletest.git testing
+    COMMAND ${GIT} clone --depth 1 -b release-1.8.0 https://github.com/google/googletest.git testing
     WORKING_DIRECTORY ${SOURCE_PATH}/src
     ERROR_QUIET
 )
@@ -47,9 +47,27 @@ set(ENV{PATH} "$ENV{PATH};${PYTHON2_PATH}")
 #if(NOT GYP)
 #    message(FATAL_ERROR "gyp not found!")
 #endif()
+file(MAKE_DIRECTORY ${SOURCE_PATH}/gyp)
+# See "How to clone git repository with specific revision/changeset?" (stackoverflow.com)
+# Note: execute_process runs multiple commands in parallel, but we need them to execute in sequence
 execute_process(
-    COMMAND ${GIT} clone --depth 1 https://chromium.googlesource.com/external/gyp
-    WORKING_DIRECTORY ${SOURCE_PATH}
+    COMMAND ${GIT} init
+    WORKING_DIRECTORY ${SOURCE_PATH}/gyp
+    ERROR_QUIET
+)
+execute_process(
+    COMMAND ${GIT} remote add origin https://chromium.googlesource.com/external/gyp
+    WORKING_DIRECTORY ${SOURCE_PATH}/gyp
+    ERROR_QUIET
+)
+execute_process(
+    COMMAND ${GIT} fetch origin 5e2b3ddde7cda5eb6bc09a5546a76b00e49d888f --depth 1
+    WORKING_DIRECTORY ${SOURCE_PATH}/gyp
+    ERROR_QUIET
+)
+execute_process(
+    COMMAND ${GIT} reset --hard FETCH_HEAD
+    WORKING_DIRECTORY ${SOURCE_PATH}/gyp
     ERROR_QUIET
 )
 
