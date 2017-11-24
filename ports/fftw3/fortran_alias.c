@@ -1,9 +1,9 @@
 #if !defined(BENCHFFT_LDOUBLE) && !defined(FFTW_LDOUBLE) && !defined(FFTW_SINGLE) && !defined(BENCHFFT_SINGLE)
 
-#define FFTW_DLL
-#define _WIN32
-
 #include "fftw3.h"
+
+#undef FFTW_EXTERN
+#define FFTW_EXTERN __declspec(dllexport)
 
 FFTW_EXTERN void dfftw_execute_(const fftw_plan* plan) {
     fftw_execute(*plan);
