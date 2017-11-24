@@ -13,6 +13,7 @@ option(BUILD_LONG_DOUBLE "Additionally build long-double precision library" ON)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/fortran_alias.c DESTINATION ${SOURCE_PATH}/api)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
