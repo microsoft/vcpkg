@@ -12,6 +12,8 @@ if (BUILD_SHARED_LIBS)
     add_definitions(-DFFTW_DLL)
 endif()
 
+add_definitions(-DWINDOWS_F77_MANGLING)
+
 
 file(GLOB           fftw_api_SOURCE                 api/*.c             api/*.h)
 file(GLOB           fftw_dft_SOURCE                 dft/*.c             dft/*.h)
