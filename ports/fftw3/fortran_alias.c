@@ -1,5 +1,8 @@
 #if !defined(BENCHFFT_LDOUBLE) && !defined(FFTW_LDOUBLE) && !defined(FFTW_SINGLE) && !defined(BENCHFFT_SINGLE)
 
+#define FFTW_DLL
+#define _WIN32
+
 #include "fftw3.h"
 
 FFTW_EXTERN void dfftw_execute_(const fftw_plan* plan) {
