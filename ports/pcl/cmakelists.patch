@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d36a581fb..9b0195324 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -327,9 +327,9 @@ endif(WITH_PNG)
+ # Qhull
+ option(WITH_QHULL "Include convex-hull operations" TRUE)
+ if(WITH_QHULL)
+-  if(NOT PCL_SHARED_LIBS OR WIN32)
++  if(NOT PCL_SHARED_LIBS)
+     set(QHULL_USE_STATIC ON)
+-  endif(NOT PCL_SHARED_LIBS OR WIN32)
++  endif(NOT PCL_SHARED_LIBS)
+   find_package(Qhull)
+   if(QHULL_FOUND)
+     include_directories(${QHULL_INCLUDE_DIRS})
