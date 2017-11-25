@@ -4,6 +4,7 @@
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
+#include <vcpkg/build.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/vcpkgpaths.h>
@@ -115,11 +116,13 @@ namespace vcpkg
         static constexpr std::array<int, 3> EXPECTED_VERSION = {3, 9, 5};
         static const std::string VERSION_CHECK_ARGUMENTS = "--version";
 
-        const fs::path downloaded_copy = downloads_folder / "cmake-3.9.5-win32-x86" / "bin" / "cmake.exe";
         const std::vector<fs::path> from_path = Files::find_from_PATH("cmake");
 
         std::vector<fs::path> candidate_paths;
+        const fs::path downloaded_copy = downloads_folder / "cmake-3.9.5-win32-x86" / "bin" / "cmake.exe";
+#if defined(_WIN32)
         candidate_paths.push_back(downloaded_copy);
+#endif
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
 #if defined(_WIN32)
         candidate_paths.push_back(System::get_program_files_platform_bitness() / "CMake" / "bin" / "cmake.exe");
@@ -161,11 +164,13 @@ namespace vcpkg
         static constexpr std::array<int, 3> EXPECTED_VERSION = {2, 15, 0};
         static const std::string VERSION_CHECK_ARGUMENTS = "--version";
 
-        const fs::path downloaded_copy = downloads_folder / "MinGit-2.15.0-32-bit" / "cmd" / "git.exe";
         const std::vector<fs::path> from_path = Files::find_from_PATH("git");
 
+        const fs::path downloaded_copy = downloads_folder / "MinGit-2.15.0-32-bit" / "cmd" / "git.exe";
         std::vector<fs::path> candidate_paths;
+#if defined(_WIN32)
         candidate_paths.push_back(downloaded_copy);
+#endif
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
 #if defined(_WIN32)
         candidate_paths.push_back(System::get_program_files_platform_bitness() / "git" / "cmd" / "git.exe");
@@ -499,16 +504,36 @@ namespace vcpkg
         return found_toolsets;
     }
 
-    const Toolset& VcpkgPaths::get_toolset(const Optional<std::string>& toolset_version,
-                                           const Optional<fs::path>& visual_studio_path) const
+    const Toolset& VcpkgPaths::get_toolset(const Build::PreBuildInfo& prebuildinfo) const
     {
+        if (prebuildinfo.external_toolchain_file)
+        {
+            static Toolset external_toolset = []() -> Toolset {
+                Toolset ret;
+                ret.dumpbin = "";
+                ret.supported_architectures = {
+                    ToolsetArchOption{"", System::get_host_processor(), System::get_host_processor()}};
+#if defined(_WIN32)
+                ret.vcvarsall = "cmd";
+                ret.vcvarsall_options = {"/c", "echo done"};
+#else
+                ret.vcvarsall = "true";
+                ret.vcvarsall_options = {};
+#endif
+                ret.version = "external";
+                ret.visual_studio_root_path = "";
+                return ret;
+            }();
+            return external_toolset;
+        }
+
         // Invariant: toolsets are non-empty and sorted with newest at back()
         const std::vector<Toolset>& vs_toolsets =
             this->toolsets.get_lazy([this]() { return find_toolset_instances(*this); });
 
         std::vector<const Toolset*> candidates = Util::element_pointers(vs_toolsets);
-        const auto tsv = toolset_version.get();
-        const auto vsp = visual_studio_path.get();
+        const auto tsv = prebuildinfo.platform_toolset.get();
+        const auto vsp = prebuildinfo.visual_studio_path.get();
 
         if (tsv && vsp)
         {

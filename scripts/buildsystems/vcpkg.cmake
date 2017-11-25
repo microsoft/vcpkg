@@ -1,17 +1,17 @@
 # Mark variables as used so cmake doesn't complain about them
 mark_as_advanced(CMAKE_TOOLCHAIN_FILE)
 
+get_property( _CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE )
+if( _CMAKE_IN_TRY_COMPILE )
+    include( "${CMAKE_CURRENT_SOURCE_DIR}/../vcpkg.config.cmake" OPTIONAL )
+endif()
+
 if(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
     include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
 endif()
 
 if(VCPKG_TOOLCHAIN)
     return()
-endif()
-
-get_property( _CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE )
-if( _CMAKE_IN_TRY_COMPILE )
-    include( "${CMAKE_CURRENT_SOURCE_DIR}/../vcpkg.config.cmake" OPTIONAL )
 endif()
 
 if(VCPKG_TARGET_TRIPLET)
@@ -77,8 +77,14 @@ if(CMAKE_BUILD_TYPE MATCHES "^Debug$" OR NOT DEFINED CMAKE_BUILD_TYPE)
     list(APPEND CMAKE_LIBRARY_PATH
         ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/manual-link
     )
+    list(APPEND CMAKE_FIND_ROOT_PATH
+        ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug
+    )
 endif()
 list(APPEND CMAKE_PREFIX_PATH
+    ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}
+)
+list(APPEND CMAKE_FIND_ROOT_PATH
     ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}
 )
 list(APPEND CMAKE_LIBRARY_PATH

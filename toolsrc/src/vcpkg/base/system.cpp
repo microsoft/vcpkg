@@ -51,11 +51,21 @@ namespace vcpkg::System
 
     CPUArchitecture get_host_processor()
     {
+#if defined(_WIN32)
         auto w6432 = get_environment_variable("PROCESSOR_ARCHITEW6432");
         if (const auto p = w6432.get()) return to_cpu_architecture(*p).value_or_exit(VCPKG_LINE_INFO);
 
         const auto procarch = get_environment_variable("PROCESSOR_ARCHITECTURE").value_or_exit(VCPKG_LINE_INFO);
         return to_cpu_architecture(procarch).value_or_exit(VCPKG_LINE_INFO);
+#else
+#if defined(__x86_64__) || defined(_M_X64)
+        return CPUArchitecture::X64;
+#elif defined(__x86__) || defined(_M_X86)
+        return CPUArchitecture::X86;
+#else
+#error "Unknown host architecture"
+#endif
+#endif
     }
 
     std::vector<CPUArchitecture> get_supported_host_architectures()

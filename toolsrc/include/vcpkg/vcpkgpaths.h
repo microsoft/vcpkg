@@ -26,6 +26,11 @@ namespace vcpkg
         std::vector<ToolsetArchOption> supported_architectures;
     };
 
+    namespace Build
+    {
+        struct PreBuildInfo;
+    }
+
     struct VcpkgPaths
     {
         static Expected<VcpkgPaths> create(const fs::path& vcpkg_root_dir);
@@ -69,8 +74,7 @@ namespace vcpkg
         /// <remarks>
         ///   Valid version strings are "v120", "v140", "v141", and "". Empty string gets the latest.
         /// </remarks>
-        const Toolset& get_toolset(const Optional<std::string>& toolset_version,
-                                   const Optional<fs::path>& visual_studio_path) const;
+        const Toolset& get_toolset(const Build::PreBuildInfo& prebuildinfo) const;
 
         Files::Filesystem& get_filesystem() const;
 

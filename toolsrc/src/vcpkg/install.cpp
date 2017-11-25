@@ -561,7 +561,7 @@ namespace vcpkg::Install
 
     static void print_cmake_information(const BinaryParagraph& bpgh, const VcpkgPaths& paths)
     {
-        static const std::regex cmake_library_regex("^add_library\\(([^\\s\\$\\)]+)\\s");
+        static const std::regex cmake_library_regex(R"(\badd_library\(([^\s\)]+)\s)", std::regex_constants::ECMAScript);
 
         auto& fs = paths.get_filesystem();
 
