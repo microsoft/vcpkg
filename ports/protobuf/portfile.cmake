@@ -22,7 +22,9 @@ vcpkg_extract_source_archive(${ARCHIVE_FILE})
 # Add a flag that can be set to disable the protobuf compiler
 vcpkg_apply_patches(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/001-add-compiler-flag.patch"
+    PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/001-add-compiler-flag.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/export-ParseGeneratorParameter.patch"
 )
 
 
