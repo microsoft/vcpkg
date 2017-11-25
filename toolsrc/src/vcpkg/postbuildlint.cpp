@@ -48,7 +48,6 @@ namespace vcpkg::PostBuildLint
             {"msvcp60.dll", R"(msvcp60\.dll)"},
             {"msvcp60.dll", R"(msvcp60\.dll)"},
 
-            {"msvcrt.dll", R"(msvcrt\.dll)"},
             {"msvcr100.dll", R"(msvcr100\.dll)"},
             {"msvcr100d.dll", R"(msvcr100d\.dll)"},
             {"msvcr100_clr0400.dll", R"(msvcr100_clr0400\.dll)"},
