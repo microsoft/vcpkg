@@ -113,7 +113,11 @@ namespace vcpkg
 
     static fs::path get_cmake_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
     {
+#if defined(_WIN32)
         static constexpr std::array<int, 3> EXPECTED_VERSION = {3, 9, 5};
+#else
+        static constexpr std::array<int, 3> EXPECTED_VERSION = {3, 5, 1};
+#endif
         static const std::string VERSION_CHECK_ARGUMENTS = "--version";
 
         const std::vector<fs::path> from_path = Files::find_from_PATH("cmake");
@@ -161,7 +165,11 @@ namespace vcpkg
 
     fs::path get_git_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
     {
+#if defined(_WIN32)
         static constexpr std::array<int, 3> EXPECTED_VERSION = {2, 15, 0};
+#else
+        static constexpr std::array<int, 3> EXPECTED_VERSION = {2, 7, 4};
+#endif
         static const std::string VERSION_CHECK_ARGUMENTS = "--version";
 
         const std::vector<fs::path> from_path = Files::find_from_PATH("git");

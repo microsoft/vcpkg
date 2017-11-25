@@ -42,6 +42,8 @@ else()
             set(_VCPKG_TARGET_TRIPLET_ARCH arm)
         elseif(_VCPKG_CL MATCHES "bin/cl.exe$" OR _VCPKG_CL MATCHES "x86/cl.exe$")
             set(_VCPKG_TARGET_TRIPLET_ARCH x86)
+        elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64")
+            set(_VCPKG_TARGET_TRIPLET_ARCH x64)
         else()
             message(FATAL_ERROR "Unable to determine target architecture.")
         endif()
@@ -50,6 +52,8 @@ endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsPhone")
     set(_VCPKG_TARGET_TRIPLET_PLAT uwp)
+elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
+    set(_VCPKG_TARGET_TRIPLET_PLAT linux)
 else()
     set(_VCPKG_TARGET_TRIPLET_PLAT windows)
 endif()
@@ -93,7 +97,7 @@ list(APPEND CMAKE_LIBRARY_PATH
 
 set(Boost_COMPILER "-vc140")
 
-if (NOT DEFINED CMAKE_SYSTEM_VERSION)
+if (NOT DEFINED CMAKE_SYSTEM_VERSION AND _VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
     include(${_VCPKG_ROOT_DIR}/scripts/cmake/vcpkg_get_windows_sdk.cmake)
     # This is used as an implicit parameter for vcpkg_get_windows_sdk
     set(VCPKG_ROOT_DIR ${_VCPKG_ROOT_DIR})
@@ -134,7 +138,7 @@ function(add_executable name)
     list(FIND ARGV "IMPORTED" IMPORTED_IDX)
     list(FIND ARGV "ALIAS" ALIAS_IDX)
     if(IMPORTED_IDX EQUAL -1 AND ALIAS_IDX EQUAL -1)
-        if(VCPKG_APPLOCAL_DEPS)
+        if(VCPKG_APPLOCAL_DEPS AND _VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
             add_custom_command(TARGET ${name} POST_BUILD
                 COMMAND powershell -noprofile -executionpolicy Bypass -file ${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1
                     -targetBinary $<TARGET_FILE:${name}>
