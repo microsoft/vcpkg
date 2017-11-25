@@ -11,9 +11,6 @@ vcpkg_extract_source_archive(${ARCHIVE})
 option(BUILD_SINGLE "Additionally build single precision library" ON)
 option(BUILD_LONG_DOUBLE "Additionally build long-double precision library" ON)
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h DESTINATION ${SOURCE_PATH})
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -23,7 +20,13 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(COPY ${SOURCE_PATH}/api/fftw3.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/)
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/share/fftw3)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
+
 
 if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
     vcpkg_apply_patches(
