@@ -44,6 +44,12 @@ namespace vcpkg::Build
         YES
     };
 
+    enum class ConfigurationType
+    {
+        DEBUG,
+        RELEASE,
+    };
+
     struct BuildPackageOptions
     {
         UseHeadVersion use_head_version;
@@ -90,6 +96,7 @@ namespace vcpkg::Build
         Optional<std::string> platform_toolset;
         Optional<fs::path> visual_studio_path;
         Optional<std::string> external_toolchain_file;
+        Optional<ConfigurationType> build_type;
     };
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);

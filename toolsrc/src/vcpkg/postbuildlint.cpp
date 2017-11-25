@@ -758,7 +758,8 @@ namespace vcpkg::PostBuildLint
         std::vector<fs::path> release_libs = fs.get_files_recursive(release_lib_dir);
         Util::unstable_keep_if(release_libs, has_extension_pred(fs, ".lib"));
 
-        error_count += check_matching_debug_and_release_binaries(debug_libs, release_libs);
+        if (!pre_build_info.build_type)
+            error_count += check_matching_debug_and_release_binaries(debug_libs, release_libs);
 
         {
             std::vector<fs::path> libs;
@@ -777,7 +778,8 @@ namespace vcpkg::PostBuildLint
         {
             case Build::LinkageType::DYNAMIC:
             {
-                error_count += check_matching_debug_and_release_binaries(debug_dlls, release_dlls);
+                if (!pre_build_info.build_type)
+                    error_count += check_matching_debug_and_release_binaries(debug_dlls, release_dlls);
 
                 error_count += check_lib_files_are_available_if_dlls_are_available(
                     build_info.policies, debug_libs.size(), debug_dlls.size(), debug_lib_dir);
@@ -805,15 +807,15 @@ namespace vcpkg::PostBuildLint
 
                 if (!build_info.policies.is_enabled(BuildPolicy::ONLY_RELEASE_CRT))
                 {
-                    error_count +=
-                        check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::DEBUG, build_info.crt_linkage),
-                                                  debug_libs,
-                                                  toolset.dumpbin);
+                    error_count += check_crt_linkage_of_libs(
+                        BuildType::value_of(Build::ConfigurationType::DEBUG, build_info.crt_linkage),
+                        debug_libs,
+                        toolset.dumpbin);
                 }
-                error_count +=
-                    check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::RELEASE, build_info.crt_linkage),
-                                              release_libs,
-                                              toolset.dumpbin);
+                error_count += check_crt_linkage_of_libs(
+                    BuildType::value_of(Build::ConfigurationType::RELEASE, build_info.crt_linkage),
+                    release_libs,
+                    toolset.dumpbin);
                 break;
             }
             default: Checks::unreachable(VCPKG_LINE_INFO);

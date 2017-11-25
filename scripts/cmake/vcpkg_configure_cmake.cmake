@@ -199,29 +199,33 @@ function(vcpkg_configure_cmake)
         )
     endif()
 
-    message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-    vcpkg_execute_required_process(
-        COMMAND ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}
-            -G ${GENERATOR}
-            -DCMAKE_BUILD_TYPE=Release
-            -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-        LOGNAME config-${TARGET_TRIPLET}-rel
-    )
-    message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+        vcpkg_execute_required_process(
+            COMMAND ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}
+                -G ${GENERATOR}
+                -DCMAKE_BUILD_TYPE=Release
+                -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}
+            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+            LOGNAME config-${TARGET_TRIPLET}-rel
+        )
+        message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
+    endif()
 
-    message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-    vcpkg_execute_required_process(
-        COMMAND ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}
-            -G ${GENERATOR}
-            -DCMAKE_BUILD_TYPE=Debug
-            -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-        LOGNAME config-${TARGET_TRIPLET}-dbg
-    )
-    message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+        vcpkg_execute_required_process(
+            COMMAND ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}
+                -G ${GENERATOR}
+                -DCMAKE_BUILD_TYPE=Debug
+                -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug
+            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
+            LOGNAME config-${TARGET_TRIPLET}-dbg
+        )
+        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
+    endif()
 
     set(_VCPKG_CMAKE_GENERATOR "${GENERATOR}" PARENT_SCOPE)
 endfunction()

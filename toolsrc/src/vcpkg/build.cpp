@@ -565,6 +565,20 @@ namespace vcpkg::Build
                 continue;
             }
 
+            if (variable_name == "VCPKG_BUILD_TYPE")
+            {
+                if (variable_value.empty())
+                    pre_build_info.build_type = nullopt;
+                else if (Strings::case_insensitive_ascii_equals(variable_value, "debug"))
+                    pre_build_info.build_type = ConfigurationType::DEBUG;
+                else if (Strings::case_insensitive_ascii_equals(variable_value, "release"))
+                    pre_build_info.build_type = ConfigurationType::RELEASE;
+                else
+                    Checks::exit_with_message(
+                        VCPKG_LINE_INFO, "Unknown setting for VCPKG_BUILD_TYPE: %s", variable_value);
+                continue;
+            }
+
             Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown variable name %s", line);
         }
 
