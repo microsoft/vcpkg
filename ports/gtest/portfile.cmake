@@ -32,6 +32,22 @@ set(ENV{_CL_} "/D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING")
 
 vcpkg_install_cmake()
 
+file(
+    INSTALL
+        "${SOURCE_PATH}/googletest/src/gtest.cc"
+        "${SOURCE_PATH}/googletest/src/gtest_main.cc"
+        "${SOURCE_PATH}/googletest/src/gtest-all.cc"
+        "${SOURCE_PATH}/googletest/src/gtest-death-test.cc"
+        "${SOURCE_PATH}/googletest/src/gtest-filepath.cc"
+        "${SOURCE_PATH}/googletest/src/gtest-internal-inl.h"
+        "${SOURCE_PATH}/googletest/src/gtest-port.cc"
+        "${SOURCE_PATH}/googletest/src/gtest-printers.cc"
+        "${SOURCE_PATH}/googletest/src/gtest-test-part.cc"
+        "${SOURCE_PATH}/googletest/src/gtest-typed-test.cc"
+    DESTINATION
+        ${CURRENT_PACKAGES_DIR}/src
+)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL ${SOURCE_PATH}/googletest/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/gtest RENAME copyright)
 
