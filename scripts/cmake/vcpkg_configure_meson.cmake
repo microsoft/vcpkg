@@ -1,6 +1,11 @@
 function(vcpkg_configure_meson)
     cmake_parse_arguments(_vcm "" "SOURCE_PATH" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" ${ARGN})
     
+    #abort build if user tries to build port using custom toolset
+    if(NOT VCPKG_PLATFORM_TOOLSET MATCHES "^v[0-9][0-9][0-9]?(_xp)?$")
+        message(FATAL_ERROR "This port was created using meson build system which does not support custom toolsets.\n")
+    endif()
+
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
     
