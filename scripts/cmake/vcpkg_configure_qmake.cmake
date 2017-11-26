@@ -15,10 +15,18 @@
 
 function(vcpkg_configure_qmake)
     cmake_parse_arguments(_csc "" "SOURCE_PATH" "OPTIONS" ${ARGN})
-    
-    # Find qmake executable
+
+    #abort build if user tries to build port using custom toolset or custom subsystem
+    if(NOT VCPKG_PLATFORM_TOOLSET MATCHES "^v[0-9][0-9][0-9]?$")
+        message(FATAL_ERROR "This port was created using qmake build system which does not support custom toolsets.\n")
+    endif()
+    if(DEFINED VCPKG_LINKER_SUBSYSTEM OR DEFINED VCPKG_LINKER_SUBSYSTEM_MIN_VERSION)
+        message(FATAL_ERROR "This port was created using qmake build system which does not support custom subsystem.\n")
+    endif()
+
+    # Find qmake exectuable 
     find_program(QMAKE_COMMAND NAMES qmake.exe PATHS ${CURRENT_INSTALLED_DIR}/tools/qt5)
-    
+
     if(NOT QMAKE_COMMAND)
         message(FATAL_ERROR "vcpkg_configure_qmake: unable to find qmake.")
     endif()
