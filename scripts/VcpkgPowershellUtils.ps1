@@ -3,7 +3,7 @@ function vcpkgHasModule([Parameter(Mandatory=$true)][string]$moduleName)
     return [bool](Get-Module -ListAvailable -Name $moduleName)
 }
 
-function vcpkgCreateDirectory([Parameter(Mandatory=$true)][string]$dirPath)
+function vcpkgCreateDirectoryIfNotExists([Parameter(Mandatory=$true)][string]$dirPath)
 {
     if (!(Test-Path $dirPath))
     {
@@ -102,7 +102,7 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
     }
 
     $downloadDir = split-path -parent $downloadPath
-    vcpkgCreateDirectory $downloadDir
+    vcpkgCreateDirectoryIfNotExists $downloadDir
 
     $downloadPartPath = "$downloadPath.part"
     vcpkgRemoveFile $downloadPartPath
@@ -144,12 +144,12 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
                             [Parameter(Mandatory=$true)][string]$destinationDir)
 {
     $parentPath = split-path -parent $destinationDir
-    vcpkgCreateDirectory $parentPath
+    vcpkgCreateDirectoryIfNotExists $parentPath
     $baseName = (Get-ChildItem $file).BaseName
     $destinationPartial = "$destinationDir\$baseName-partially_extracted"
 
     vcpkgRemoveDirectory $destinationPartial
-    vcpkgCreateDirectory $destinationPartial
+    vcpkgCreateDirectoryIfNotExists $destinationPartial
 
     if (vcpkgHasCommand -commandName 'Microsoft.PowerShell.Archive\Expand-Archive')
     {
