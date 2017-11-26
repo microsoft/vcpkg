@@ -10,7 +10,8 @@ vcpkg_from_github(
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/config.patch"
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/cmakelists.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/config.patch"
             "${CMAKE_CURRENT_LIST_DIR}/config_install.patch"
             "${CMAKE_CURRENT_LIST_DIR}/find_flann.patch"
             "${CMAKE_CURRENT_LIST_DIR}/find_qhull.patch"
