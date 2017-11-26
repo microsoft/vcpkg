@@ -3,6 +3,8 @@
 #include <vcpkg/base/checks.h>
 #include <vcpkg/postbuildlint.buildtype.h>
 
+using vcpkg::Build::ConfigurationType;
+
 namespace vcpkg::PostBuildLint
 {
     BuildType BuildType::value_of(const ConfigurationType& config, const Build::LinkageType& linkage)

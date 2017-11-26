@@ -44,6 +44,10 @@ namespace vcpkg::System
 
     ExitCodeAndOutput cmd_execute_and_capture_output(const CStringView cmd_line);
 
+    void powershell_execute(const std::string& title,
+                            const fs::path& script_path,
+                            const std::vector<PowershellParameter>& parameters = {});
+
     std::string powershell_execute_and_capture_output(const std::string& title,
                                                       const fs::path& script_path,
                                                       const std::vector<PowershellParameter>& parameters = {});

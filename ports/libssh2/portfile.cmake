@@ -24,12 +24,12 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share)
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libssh2)
 
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libssh2 RENAME copyright)
 

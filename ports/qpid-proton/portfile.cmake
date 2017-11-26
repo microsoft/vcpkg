@@ -2,6 +2,7 @@ include(vcpkg_common_functions)
 
 # Use this throughout rather than literal string
 set(QPID_PROTON_VERSION 0.18.1)
+vcpkg_find_acquire_program(PYTHON2)
 
 # Go grab the code. Set SHA512 to 1 to get correct sha from download
 vcpkg_from_github(
@@ -13,7 +14,9 @@ vcpkg_from_github(
 )
 
 # Run cmake configure step
-vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH})
+vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH}
+                      OPTIONS
+                          -DPYTHON_EXECUTABLE=${PYTHON2})
 
 # Run cmake install step
 vcpkg_install_cmake()

@@ -51,11 +51,21 @@ namespace vcpkg::System
 
     CPUArchitecture get_host_processor()
     {
+#if defined(_WIN32)
         auto w6432 = get_environment_variable("PROCESSOR_ARCHITEW6432");
         if (const auto p = w6432.get()) return to_cpu_architecture(*p).value_or_exit(VCPKG_LINE_INFO);
 
         const auto procarch = get_environment_variable("PROCESSOR_ARCHITECTURE").value_or_exit(VCPKG_LINE_INFO);
         return to_cpu_architecture(procarch).value_or_exit(VCPKG_LINE_INFO);
+#else
+#if defined(__x86_64__) || defined(_M_X64)
+        return CPUArchitecture::X64;
+#elif defined(__x86__) || defined(_M_X86)
+        return CPUArchitecture::X86;
+#else
+#error "Unknown host architecture"
+#endif
+#endif
     }
 
     std::vector<CPUArchitecture> get_supported_host_architectures()
@@ -107,6 +117,16 @@ namespace vcpkg::System
     PowershellParameter::PowershellParameter(const CStringView varname, const fs::path& path)
         : PowershellParameter(varname, path.generic_u8string())
     {
+    }
+
+    static std::string make_powershell_cmd(const fs::path& script_path,
+                                           const std::vector<PowershellParameter>& parameters)
+    {
+        const std::string args = Strings::join(" ", parameters, [](auto&& v) { return v.s; });
+
+        // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
+        return Strings::format(
+            R"(powershell -NoProfile -ExecutionPolicy Bypass -Command "& {& '%s' %s}")", script_path.u8string(), args);
     }
 
     int cmd_execute_clean(const CStringView cmd_line)
@@ -307,16 +327,37 @@ namespace vcpkg::System
 #endif
     }
 
+    void powershell_execute(const std::string& title,
+                            const fs::path& script_path,
+                            const std::vector<PowershellParameter>& parameters)
+    {
+        const std::string cmd = make_powershell_cmd(script_path, parameters);
+        const int rc = System::cmd_execute(cmd);
+
+        if (rc)
+        {
+            System::println(Color::error,
+                            "%s\n"
+                            "Could not run:\n"
+                            "    '%s'",
+                            title,
+                            script_path.generic_string());
+
+            {
+                auto locked_metrics = Metrics::g_metrics.lock();
+                locked_metrics->track_property("error", "powershell script failed");
+                locked_metrics->track_property("title", title);
+            }
+
+            Checks::exit_with_code(VCPKG_LINE_INFO, rc);
+        }
+    }
+
     std::string powershell_execute_and_capture_output(const std::string& title,
                                                       const fs::path& script_path,
                                                       const std::vector<PowershellParameter>& parameters)
     {
-        const std::string args = Strings::join(" ", parameters, [](auto&& v) { return v.s; });
-
-        // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
-        const std::string cmd = Strings::format(
-            R"(powershell -NoProfile -ExecutionPolicy Bypass -Command "& {& '%s' %s}")", script_path.u8string(), args);
-
+        const std::string cmd = make_powershell_cmd(script_path, parameters);
         auto rc = System::cmd_execute_and_capture_output(cmd);
 
         if (rc.exit_code)

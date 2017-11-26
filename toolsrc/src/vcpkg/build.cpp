@@ -203,6 +203,10 @@ namespace vcpkg::Build
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
     {
+        if (pre_build_info.external_toolchain_file)
+            return Strings::format(
+                R"("%s" %s 2>&1)", toolset.vcvarsall.u8string(), Strings::join(" ", toolset.vcvarsall_options));
+
         const char* tonull = " >nul";
         if (GlobalState::debugging)
         {
@@ -299,8 +303,7 @@ namespace vcpkg::Build
             }
         }
 
-        const Toolset& toolset = paths.get_toolset(pre_build_info.platform_toolset, pre_build_info.visual_studio_path);
-
+        const Toolset& toolset = paths.get_toolset(pre_build_info);
         const std::string cmd_launch_cmake = System::make_cmake_cmd(
             cmake_exe_path,
             ports_cmake_script_path,
@@ -552,6 +555,27 @@ namespace vcpkg::Build
             {
                 pre_build_info.visual_studio_path =
                     variable_value.empty() ? nullopt : Optional<fs::path>{variable_value};
+                continue;
+            }
+
+            if (variable_name == "VCPKG_CHAINLOAD_TOOLCHAIN_FILE")
+            {
+                pre_build_info.external_toolchain_file =
+                    variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
+                continue;
+            }
+
+            if (variable_name == "VCPKG_BUILD_TYPE")
+            {
+                if (variable_value.empty())
+                    pre_build_info.build_type = nullopt;
+                else if (Strings::case_insensitive_ascii_equals(variable_value, "debug"))
+                    pre_build_info.build_type = ConfigurationType::DEBUG;
+                else if (Strings::case_insensitive_ascii_equals(variable_value, "release"))
+                    pre_build_info.build_type = ConfigurationType::RELEASE;
+                else
+                    Checks::exit_with_message(
+                        VCPKG_LINE_INFO, "Unknown setting for VCPKG_BUILD_TYPE: %s", variable_value);
                 continue;
             }
 

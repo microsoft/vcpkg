@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string]$Dependency
+    [Parameter(Mandatory=$true)][string]$Dependency
 )
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition

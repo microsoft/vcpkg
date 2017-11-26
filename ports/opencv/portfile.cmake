@@ -202,3 +202,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 vcpkg_copy_pdbs()
 
 set(VCPKG_LIBRARY_LINKAGE "dynamic")
+
+set(VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT enabled)
