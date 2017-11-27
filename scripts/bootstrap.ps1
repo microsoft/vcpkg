@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
-    [ValidateNotNullOrEmpty()]
-    [string]$disableMetrics = "0"
+    [ValidateNotNullOrEmpty()][string]$disableMetrics = "0",
+    [Parameter(Mandatory=$False)][string]$withVSPath = ""
 )
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
@@ -38,8 +38,8 @@ if (!(Test-Path $vcpkgSourcesPath))
 
 try
 {
-    pushd $vcpkgSourcesPath
-    $msbuildExeWithPlatformToolset = & $scriptsDir\findAnyMSBuildWithCppPlatformToolset.ps1
+    Push-Location $vcpkgSourcesPath
+    $msbuildExeWithPlatformToolset = & $scriptsDir\findAnyMSBuildWithCppPlatformToolset.ps1 $withVSPath
     $msbuildExe = $msbuildExeWithPlatformToolset[0]
     $platformToolset = $msbuildExeWithPlatformToolset[1]
     $windowsSDK = & $scriptsDir\getWindowsSDK.ps1
@@ -57,5 +57,5 @@ try
 }
 finally
 {
-    popd
+    Pop-Location
 }
