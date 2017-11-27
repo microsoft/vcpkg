@@ -19,7 +19,7 @@ function vcpkgCreateParentDirectoryIfNotExists([Parameter(Mandatory=$true)][stri
         return
     }
 
-    if (!(Test-Path $dirPath))
+    if (!(Test-Path $parentDir))
     {
         New-Item -ItemType Directory -Path $parentDir | Out-Null
     }
@@ -157,9 +157,7 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
                             [Parameter(Mandatory=$true)][string]$destinationDir)
 {
     vcpkgCreateParentDirectoryIfNotExists $destinationDir
-    $baseName = (Get-ChildItem $file).BaseName
-    $destination = "$destinationDir\$baseName"
-    $destinationPartial = "$destination-partially_extracted"
+    $destinationPartial = "$destinationDir-partially_extracted"
 
     vcpkgRemoveDirectory $destinationPartial
     vcpkgCreateDirectoryIfNotExists $destinationPartial
@@ -192,12 +190,12 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
     {
         Move-Item -Path "$destinationPartial\*" -Destination $destinationDir
         vcpkgRemoveDirectory $destinationPartial
-        return $destination
+        return $destinationDir
     }
     else
     {
-        Rename-Item -Path $destinationPartial -NewName $baseName
-        return $destination
+        Move-Item -Path $destinationPartial -Destination $destinationDir
+        return $destinationDir
     }
 }
 
