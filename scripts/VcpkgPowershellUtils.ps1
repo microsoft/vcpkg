@@ -11,6 +11,20 @@ function vcpkgCreateDirectoryIfNotExists([Parameter(Mandatory=$true)][string]$di
     }
 }
 
+function vcpkgCreateParentDirectoryIfNotExists([Parameter(Mandatory=$true)][string]$path)
+{
+    $parentDir = split-path -parent $path
+    if ([string]::IsNullOrEmpty($parentDir))
+    {
+        return
+    }
+
+    if (!(Test-Path $dirPath))
+    {
+        New-Item -ItemType Directory -Path $parentDir | Out-Null
+    }
+}
+
 function vcpkgRemoveDirectory([Parameter(Mandatory=$true)][string]$dirPath)
 {
     if (Test-Path $dirPath)
@@ -101,8 +115,7 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
         return
     }
 
-    $downloadDir = split-path -parent $downloadPath
-    vcpkgCreateDirectoryIfNotExists $downloadDir
+    vcpkgCreateParentDirectoryIfNotExists $downloadPath
 
     $downloadPartPath = "$downloadPath.part"
     vcpkgRemoveFile $downloadPartPath
@@ -143,10 +156,10 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
 function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
                             [Parameter(Mandatory=$true)][string]$destinationDir)
 {
-    $parentPath = split-path -parent $destinationDir
-    vcpkgCreateDirectoryIfNotExists $parentPath
+    vcpkgCreateParentDirectoryIfNotExists $destinationDir
     $baseName = (Get-ChildItem $file).BaseName
-    $destinationPartial = "$destinationDir\$baseName-partially_extracted"
+    $destination = "$destinationDir\$baseName"
+    $destinationPartial = "$destination-partially_extracted"
 
     vcpkgRemoveDirectory $destinationPartial
     vcpkgCreateDirectoryIfNotExists $destinationPartial
@@ -179,10 +192,12 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
     {
         Move-Item -Path "$destinationPartial\*" -Destination $destinationDir
         vcpkgRemoveDirectory $destinationPartial
+        return $destination
     }
     else
     {
         Rename-Item -Path $destinationPartial -NewName $baseName
+        return $destination
     }
 }
 
