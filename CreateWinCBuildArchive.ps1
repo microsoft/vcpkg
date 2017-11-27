@@ -3,8 +3,8 @@ param(
     [string]$destinationRoot = ".",
     [Parameter(ParameterSetName='SetLatest')]
     [switch]$latest,
-    [Parameter(ParameterSetName='SetBuildNumber')]
-    [string]$buildNumber
+    [Parameter(ParameterSetName='SetWinCBuildNumber')]
+    [string]$winCbuildNumber
 )
 
 function FormatElapsedTime([TimeSpan]$ts)
@@ -52,18 +52,19 @@ $destinationRoot = $destinationRoot -replace "\\$"  # Remove potential trailing 
 if ($latest)
 {
     $wincBuildRoot = "\\vcfs\Builds\VS\feature_WinC"
-    $buildNumber = Get-Content "$wincBuildRoot\latest.txt"
+    $winCbuildNumber = Get-Content "$wincBuildRoot\latest.txt"
 }
 
-$sevenZip = "$buildNumber.7z"
+$buildId = "WinC-$winCbuildNumber"
+$sevenZip = "$destinationRoot\$buildId.7z"
 if (Test-Path $sevenZip)
 {
-    Write-Host "Build number $buildNumber is already archived"
+    Write-Host "$buildId is already archived ($sevenZip)"
     return
 }
 
-$from = "$wincBuildRoot\$buildNumber"
-$to = "$destinationRoot\$buildNumber"
+$from = "$wincBuildRoot\$winCbuildNumber"
+$to = "$destinationRoot\$buildId"
 
 $toCompleted = "$to.copycompleted"
 
