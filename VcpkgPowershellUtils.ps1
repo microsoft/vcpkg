@@ -11,6 +11,20 @@ function vcpkgCreateDirectoryIfNotExists([Parameter(Mandatory=$true)][string]$di
     }
 }
 
+function vcpkgCreateParentDirectoryIfNotExists([Parameter(Mandatory=$true)][string]$path)
+{
+    $parentDir = split-path -parent $path
+    if ([string]::IsNullOrEmpty($parentDir))
+    {
+        return
+    }
+
+    if (!(Test-Path $parentDir))
+    {
+        New-Item -ItemType Directory -Path $parentDir | Out-Null
+    }
+}
+
 function vcpkgRemoveDirectory([Parameter(Mandatory=$true)][string]$dirPath)
 {
     if (Test-Path $dirPath)
@@ -101,8 +115,7 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
         return
     }
 
-    $downloadDir = split-path -parent $downloadPath
-    vcpkgCreateDirectoryIfNotExists $downloadDir
+    vcpkgCreateParentDirectoryIfNotExists $downloadPath
 
     $downloadPartPath = "$downloadPath.part"
     vcpkgRemoveFile $downloadPartPath
@@ -143,10 +156,8 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
 function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
                             [Parameter(Mandatory=$true)][string]$destinationDir)
 {
-    $parentPath = split-path -parent $destinationDir
-    vcpkgCreateDirectoryIfNotExists $parentPath
-    $baseName = (Get-ChildItem $file).BaseName
-    $destinationPartial = "$destinationDir\$baseName-partially_extracted"
+    vcpkgCreateParentDirectoryIfNotExists $destinationDir
+    $destinationPartial = "$destinationDir-partially_extracted"
 
     vcpkgRemoveDirectory $destinationPartial
     vcpkgCreateDirectoryIfNotExists $destinationPartial
@@ -182,7 +193,7 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
     }
     else
     {
-        Rename-Item -Path $destinationPartial -NewName $baseName
+        Move-Item -Path $destinationPartial -Destination $destinationDir
     }
 }
 
