@@ -190,12 +190,10 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
     {
         Move-Item -Path "$destinationPartial\*" -Destination $destinationDir
         vcpkgRemoveDirectory $destinationPartial
-        return $destinationDir
     }
     else
     {
         Move-Item -Path $destinationPartial -Destination $destinationDir
-        return $destinationDir
     }
 }
 
