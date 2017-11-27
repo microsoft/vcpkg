@@ -110,8 +110,7 @@ Recipe $vstsWorkPath {
             vcpkgDownloadFile "https://github.com/Microsoft/vsts-agent/releases/download/v2.124.0/vsts-agent-win7-x64-2.124.0.zip" $file
         }
 
-        Microsoft.PowerShell.Archive\Expand-Archive -path $file -destinationpath $vstsPath -ErrorAction Stop
-
+        vcpkgExtractFile -file $file -destinationDir $vstsPath
     }
 
     Push-Location $vstsPath
