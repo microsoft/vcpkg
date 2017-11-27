@@ -1,11 +1,6 @@
 function(vcpkg_configure_meson)
     cmake_parse_arguments(_vcm "" "SOURCE_PATH" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" ${ARGN})
     
-    #abort build if user tries to build port using custom toolset
-    if(NOT VCPKG_PLATFORM_TOOLSET MATCHES "^v[0-9][0-9][0-9]?(_xp)?$")
-        message(FATAL_ERROR "This port was created using meson build system which does not support custom toolsets.\n")
-    endif()
-
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
     
@@ -27,19 +22,7 @@ function(vcpkg_configure_meson)
         set(MESON_RELEASE_CXXFLAGS "${MESON_RELEASE_CXXFLAGS} /MT /O2 /Oi /Gy /DNDEBUG /Z7")
     endif()
     
-    set(MESON_COMMON_LDFLAGS "${MESON_COMMON_LDFLAGS} /DEBUG")
-
-    # Set linker subsystem
-    if(DEFINED VCPKG_LINKER_SUBSYSTEM_MIN_VERSION)
-        if(DEFINED VCPKG_LINKER_SUBSYSTEM)
-            set(MESON_COMMON_LDFLAGS "${MESON_COMMON_LDFLAGS} /SUBSYSTEM:${VCPKG_LINKER_SUBSYSTEM},${VCPKG_LINKER_SUBSYSTEM_MIN_VERSION}")
-        else()
-            set(MESON_COMMON_LDFLAGS "${MESON_COMMON_LDFLAGS} /SUBSYSTEM:CONSOLE,${VCPKG_LINKER_SUBSYSTEM_MIN_VERSION}")
-        endif()
-    endif()
-    if(DEFINED VCPKG_LINKER_SUBSYSTEM AND NOT DEFINED VCPKG_LINKER_SUBSYSTEM_MIN_VERSION)
-        set(MESON_COMMON_LDFLAGS "${MESON_COMMON_LDFLAGS} /SUBSYSTEM:${VCPKG_LINKER_SUBSYSTEM}")
-    endif()
+    set(MESON_COMMON_LDFLAGS "/DEBUG ${VCPKG_LINKER_FLAGS}")
 
     set(MESON_RELEASE_LDFLAGS "/INCREMENTAL:NO /OPT:REF /OPT:ICF")
     

@@ -17,10 +17,7 @@ function(vcpkg_configure_qmake)
     cmake_parse_arguments(_csc "" "SOURCE_PATH" "OPTIONS" ${ARGN})
 
     #abort build if user tries to build port using custom toolset or custom subsystem
-    if(NOT VCPKG_PLATFORM_TOOLSET MATCHES "^v[0-9][0-9][0-9]?$")
-        message(FATAL_ERROR "This port was created using qmake build system which does not support custom toolsets.\n")
-    endif()
-    if(DEFINED VCPKG_LINKER_SUBSYSTEM OR DEFINED VCPKG_LINKER_SUBSYSTEM_MIN_VERSION)
+    if(DEFINED VCPKG_LINKER_SUBSYSTEM)
         message(FATAL_ERROR "This port was created using qmake build system which does not support custom subsystem.\n")
     endif()
 

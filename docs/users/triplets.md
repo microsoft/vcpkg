@@ -19,20 +19,6 @@ Specifies the desired MSVCRT linkage.
 
 Valid options are `dynamic` and `static`.
 
-### VCPKG_LINKER_SUBSYSTEM
-Specifies the desired linker subsystem.
-
-Valid options are `boot_application`, `console`, `native`, `posix` and `windows` or empty.
-
-### VCPKG_LINKER_SUBSYSTEM_MIN_VERSION
-Specifies the desired linker subsystem minimum version which corresponds with minimal supported version of Windows NT.
-
-Works only with `cmake`, `meson` and `msbuild` based ports.
-
-Valid options are number in format `x.x` or empty.
-
-Set to `5.1` to enable Windows XP support. You should also set `VCPKG_PLATFORM_TOOLSET` to enable Windows XP support.
-
 ### VCPKG_LIBRARY_LINKAGE
 Specifies the preferred library linkage.
 
@@ -51,7 +37,17 @@ Works only with `cmake` and `msbuild` based ports.
 
 This can be set to `v141`, `v140`, or left blank. If left blank, we select the latest compiler toolset available on your machine.
 
-This can be set to `v141_xp` or `v140_xp` to build libraries in Windows XP compatibility mode. You should also set `VCPKG_LINKER_SUBSYSTEM_MIN_VERSION` to enable Windows XP support.
+This can be set to `v141_xp` or `v140_xp` to build libraries in Windows XP compatibility mode. You must also set `VCPKG_LINKER_SUBSYSTEM` to `CONSOLE` and `VCPKG_LINKER_SUBSYSTEM_MINIMUM_VERSION` to `5.1`.
+
+### VCPKG_LINKER_SUBSYSTEM
+Specifies the desired linker subsystem. This will transform into the first part of the `/SUBSYSTEM:` linker directive.
+
+See https://docs.microsoft.com/en-us/cpp/build/reference/subsystem-specify-subsystem for valid options.
+
+### VCPKG_LINKER_SUBSYSTEM_MINIMUM_VERSION
+Specifies the desired linker subsystem minimum version. This requires also defining `VCPKG_LINKER_SUBSYSTEM`.
+
+See https://docs.microsoft.com/en-us/cpp/build/reference/subsystem-specify-subsystem for valid options.
 
 ## Per-port customization
 The CMake Macro `PORT` will be set when interpreting the triplet file and can be used to change settings (such as `VCPKG_LIBRARY_LINKAGE`) on a per-port basis.
