@@ -8,7 +8,7 @@ vcpkg_from_github(
 )
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/log4cplus/ThreadPool/archive/master.tar.gz"
+    URLS "https://github.com/log4cplus/ThreadPool/archive/dda9e3d40502e85ce082c05d2c05c1bc94348b6a.tar.gz"
     FILENAME "master.tar.gz"
     SHA512 97b5877b9c49d02abfcba4ca1312b833b58e4f0e9884fdcf57c20b7ec58801ed24742c8316512b4de8ab29bae42cc1e34058c0d2443c3a5950a2fb3434f86662
 )
