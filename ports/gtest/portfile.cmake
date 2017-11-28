@@ -25,6 +25,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS -Dgtest_force_shared_crt=${gtest_force_shared_crt}
 )
 
