@@ -13,7 +13,7 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/gmp_printf.c DESTINATION ${SOURCE_PATH}/src)
 # Prepend stdint to the mpfr header
 file(READ "${SOURCE_PATH}/mpfr.h" _contents)
 string(CONCAT _contents "#include \"stdint.h\"\n" ${_contents})
-file(READ "${SOURCE_PATH}/mpfr.h" ${_contents})
+file(WRITE "${SOURCE_PATH}/mpfr.h" ${_contents})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
