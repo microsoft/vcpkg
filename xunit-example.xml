@@ -1,0 +1,20 @@
+<assemblies>
+<collection
+    name="Example collection"
+    time="150"
+    total="21"
+    passed="5"
+    failed="7"
+    skipped="2"
+>
+<test name="test1" type="test1class" method="test1method" time="121" result="Pass"></test>
+<test name="test2" type="test2class" method="test2method" time="122" result="Fail">
+    <traits>
+        <trait name="traitname" value="traitvalue" />
+    </traits>
+    <failure exception-type="exception-type">
+        <message><![CDATA[message cdata block]]></message>
+    </failure>
+</test>
+</collection>
+</assemblies>
