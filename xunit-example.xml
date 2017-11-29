@@ -1,4 +1,5 @@
 <assemblies>
+<assembly name="Example assembly">
 <collection
     name="Example collection"
     time="150"
@@ -17,4 +18,5 @@
     </failure>
 </test>
 </collection>
+</assembly>
 </assemblies>
