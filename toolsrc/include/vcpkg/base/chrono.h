@@ -7,18 +7,37 @@ namespace vcpkg::Chrono
 {
     class ElapsedTime
     {
-    public:
-        static ElapsedTime create_started();
+        using duration = std::chrono::high_resolution_clock::time_point::duration;
 
-        constexpr ElapsedTime() : m_start_tick() {}
+    public:
+        constexpr ElapsedTime() : m_duration() {}
+        constexpr ElapsedTime(duration d) : m_duration(d) {}
 
         template<class TimeUnit>
-        TimeUnit elapsed() const
+        TimeUnit as() const
         {
-            return std::chrono::duration_cast<TimeUnit>(std::chrono::high_resolution_clock::now() - this->m_start_tick);
+            return std::chrono::duration_cast<TimeUnit>(m_duration);
         }
 
-        double microseconds() const { return elapsed<std::chrono::duration<double, std::micro>>().count(); }
+        std::string to_string() const;
+
+    private:
+        std::chrono::high_resolution_clock::time_point::duration m_duration;
+    };
+
+    class ElapsedTimer
+    {
+    public:
+        static ElapsedTimer create_started();
+
+        constexpr ElapsedTimer() : m_start_tick() {}
+
+        ElapsedTime elapsed() const
+        {
+            return ElapsedTime(std::chrono::high_resolution_clock::now() - this->m_start_tick);
+        }
+
+        double microseconds() const { return elapsed().as<std::chrono::duration<double, std::micro>>().count(); }
 
         std::string to_string() const;
 

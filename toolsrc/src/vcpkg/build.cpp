@@ -67,7 +67,7 @@ namespace vcpkg::Build::Command
         const Build::BuildPackageConfig build_config{
             *scf, spec.triplet(), fs::path{port_dir}, build_package_options, features_as_set};
 
-        const auto build_timer = Chrono::ElapsedTime::create_started();
+        const auto build_timer = Chrono::ElapsedTimer::create_started();
         const auto result = Build::build_package(paths, build_config, status_db);
         System::println("Elapsed time for package %s: %s", spec.to_string(), build_timer.to_string());
 
@@ -323,7 +323,7 @@ namespace vcpkg::Build
         const auto cmd_set_environment = make_build_env_cmd(pre_build_info, toolset);
         const std::string command = Strings::format(R"(%s && %s)", cmd_set_environment, cmd_launch_cmake);
 
-        const auto timer = Chrono::ElapsedTime::create_started();
+        const auto timer = Chrono::ElapsedTimer::create_started();
 
         const int return_code = System::cmd_execute_clean(command);
         const auto buildtimeus = timer.microseconds();

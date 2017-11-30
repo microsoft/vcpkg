@@ -50,12 +50,14 @@ namespace vcpkg::Chrono
         return Strings::format("%.4g ns", nanos_as_double);
     }
 
-    ElapsedTime ElapsedTime::create_started()
+    ElapsedTimer ElapsedTimer::create_started()
     {
-        ElapsedTime t;
+        ElapsedTimer t;
         t.m_start_tick = std::chrono::high_resolution_clock::now();
         return t;
     }
 
-    std::string ElapsedTime::to_string() const { return format_time_userfriendly(elapsed<std::chrono::nanoseconds>()); }
+    std::string ElapsedTime::to_string() const { return format_time_userfriendly(as<std::chrono::nanoseconds>()); }
+
+    std::string ElapsedTimer::to_string() const { return elapsed().to_string(); }
 }

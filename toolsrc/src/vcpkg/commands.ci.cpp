@@ -63,9 +63,11 @@ namespace vcpkg::Commands::CI
     };
 
     static const std::string OPTION_EXCLUDE = "--exclude";
+    static const std::string OPTION_XUNIT = "--x-xunit";
 
-    static const std::array<CommandSetting, 1> CI_SETTINGS = {{
+    static const std::array<CommandSetting, 2> CI_SETTINGS = {{
         {OPTION_EXCLUDE, "Comma separated list of ports to skip"},
+        {OPTION_XUNIT, "File to output results in XUnit format (internal)"},
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -112,6 +114,18 @@ namespace vcpkg::Commands::CI
             System::println("\nTriplet: %s", result.triplet);
             System::println("Total elapsed time: %s", result.summary.total_elapsed_time);
             result.summary.print();
+        }
+
+        auto it_xunit = options.settings.find(OPTION_XUNIT);
+        if (it_xunit != options.settings.end())
+        {
+            std::string xunit_doc = "<assemblies><assembly><collection>\n";
+
+            for (auto&& result : results)
+                xunit_doc += result.summary.xunit_results();
+
+            xunit_doc += "</collection></assembly></assemblies>\n";
+            paths.get_filesystem().write_contents(fs::u8path(it_xunit->second), xunit_doc);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);

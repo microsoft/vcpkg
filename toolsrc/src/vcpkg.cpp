@@ -255,7 +255,7 @@ int main(const int argc, const char* const* const argv)
 {
     if (argc == 0) std::abort();
 
-    *GlobalState::timer.lock() = Chrono::ElapsedTime::create_started();
+    *GlobalState::timer.lock() = Chrono::ElapsedTimer::create_started();
 
 #if defined(_WIN32)
     GlobalState::g_init_console_cp = GetConsoleCP();
