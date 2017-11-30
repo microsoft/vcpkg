@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vcpkg/base/chrono.h>
 #include <vcpkg/build.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/vcpkgcmdarguments.h>
@@ -25,7 +26,7 @@ namespace vcpkg::Install
 
         PackageSpec spec;
         Build::ExtendedBuildResult build_result;
-        std::string timing;
+        vcpkg::Chrono::ElapsedTime timing;
 
         const Dependencies::AnyAction* action;
     };
@@ -36,6 +37,7 @@ namespace vcpkg::Install
         std::string total_elapsed_time;
 
         void print() const;
+        std::string xunit_results() const;
     };
 
     struct InstallDir

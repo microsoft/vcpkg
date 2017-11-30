@@ -274,8 +274,9 @@ __pycache__/
 
 .vscode/
 buildtrees/
+build*/
 downloads/
-installed/
+installed*/
 packages/
 scripts/buildsystems/tmp/
 *.exe

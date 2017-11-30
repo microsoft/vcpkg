@@ -257,7 +257,7 @@ CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s")",
         std::error_code ec;
         const bool was_deleted = fs.remove(path, ec);
 
-        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Error: Unable to remove user-wide integration: %d", ec.message());
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Error: Unable to remove user-wide integration: %s", ec.message());
 
         if (was_deleted)
         {
