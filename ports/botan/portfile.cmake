@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
-set(BOTAN_VERSION 2.3.0)
-set(BOTAN_HASH a8575bdb2eaa01fb45d8565bea0b54ddf47a21d2fb761fc0a286373b09d51e5a00e84d5cefc51040c5720db66f5625c6bc73ab09cffa9cd42472545610f9892a)
+set(BOTAN_VERSION 2.0.1)
+set(BOTAN_HASH  c5062ce92a6e6e333b4e6af095ed54d0c4ffacefc6ac87ec651dd1e0937793c9956b7c9c0d3acf49f059505526584168364e01c55ab72c953ad255e8396aed35)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/Botan-${BOTAN_VERSION})
 
 vcpkg_download_distfile(ARCHIVE
@@ -57,7 +57,7 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
             --makefile-style=nmake
             --with-pkcs11
             --prefix=${BOTAN_FLAG_PREFIX}
-            --link-method=copy
+            --link-method=copy          
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
         LOGNAME configure-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
     message(STATUS "Configure ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE} done")
@@ -73,7 +73,7 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
     vcpkg_execute_required_process(
         COMMAND "${PYTHON3}" "${SOURCE_PATH}/src/scripts/install.py" 
             --destdir=${BOTAN_FLAG_PREFIX}
-            --docdir=share
+            --docdir=share 
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
         LOGNAME install-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
 
