@@ -1,12 +1,11 @@
 include(vcpkg_common_functions)
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO behdad/harfbuzz
-    REF 1.7.1
-    SHA512 af25a393f0401e04647b8bc508cfed3cea399522e2932631d87f45127b7f975bfd9d896b1e3104a97f4b69b3e0e8a001173fbee0af0c559cd580d4aa5cd8d04d
-    HEAD_REF master
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/harfbuzz-1.6.3)
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://github.com/behdad/harfbuzz/releases/download/1.6.3/harfbuzz-1.6.3.tar.bz2"
+    FILENAME "harfbuzz-1.6.3.tar.bz2"
+    SHA512 37d1a161d9074e9898d9ef6cca6dffffc725005828d700744553b0145373b69bcd3b08f507d49f4c2e05850d9275a54f15983356c547c86e5e3c202cc7cbfbe8
 )
+vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
