@@ -2,6 +2,8 @@
 
 #include <chrono>
 #include <string>
+#include <time.h>
+#include <vcpkg/base/optional.h>
 
 namespace vcpkg::Chrono
 {
@@ -43,5 +45,22 @@ namespace vcpkg::Chrono
 
     private:
         std::chrono::high_resolution_clock::time_point m_start_tick;
+    };
+
+    class CTime
+    {
+    public:
+        static Optional<CTime> get_current_date_time();
+        static Optional<CTime> parse(CStringView str);
+
+        constexpr CTime() : m_tm{0} {}
+        explicit constexpr CTime(tm t) : m_tm{t} {}
+
+        std::string to_string() const;
+
+        std::chrono::system_clock::time_point to_time_point() const;
+
+    private:
+        mutable tm m_tm;
     };
 }
