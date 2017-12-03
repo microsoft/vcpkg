@@ -41,6 +41,12 @@ function(qt_modular_library NAME HASH)
     get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
     set(ENV{PATH} "${PYTHON3_EXE_PATH};$ENV{PATH}")
 
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
+    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" NATIVE_PACKAGES_DIR)
+    
+    string(SUBSTRING "${NATIVE_INSTALLED_DIR}" 2 -1 INSTALLED_DIR_WITHOUT_DRIVE)
+    string(SUBSTRING "${NATIVE_PACKAGES_DIR}" 2 -1 PACKAGES_DIR_WITHOUT_DRIVE)
+    
     #Configure debug
     vcpkg_configure_qmake_debug(
         SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${SRCDIR_NAME}
@@ -56,6 +62,7 @@ function(qt_modular_library NAME HASH)
         file(READ "${DEBUG_MAKEFILE}" _contents)
         string(REPLACE "zlib.lib" "zlibd.lib" _contents "${_contents}")
         string(REPLACE "vcpkg\\installed\\${TARGET_TRIPLET}\\lib" "vcpkg\\installed\\${TARGET_TRIPLET}\\debug\\lib" _contents "${_contents}")
+        string(REPLACE "/LIBPATH:${NATIVE_INSTALLED_DIR}\\debug\\lib qtmaind.lib" "shell32.lib /LIBPATH:${NATIVE_INSTALLED_DIR}\\debug\\lib\\manual-link qtmaind.lib /LIBPATH:${NATIVE_INSTALLED_DIR}\\debug\\lib" _contents "${_contents}")
         file(WRITE "${DEBUG_MAKEFILE}" "${_contents}")
     endforeach()
 
@@ -73,6 +80,12 @@ function(qt_modular_library NAME HASH)
     #Store release makefile path
     file(GLOB_RECURSE RELEASE_MAKEFILES ${RELEASE_DIR}/*Makefile*)
 
+    foreach(RELEASE_MAKEFILE ${RELEASE_MAKEFILES})
+        file(READ "${RELEASE_MAKEFILE}" _contents)
+        string(REPLACE "/LIBPATH:${NATIVE_INSTALLED_DIR}\\lib qtmain.lib" "shell32.lib /LIBPATH:${NATIVE_INSTALLED_DIR}\\lib\\manual-link qtmain.lib /LIBPATH:${NATIVE_INSTALLED_DIR}\\lib" _contents "${_contents}")
+        file(WRITE "${RELEASE_MAKEFILE}" "${_contents}")
+    endforeach()
+    
     #Build release
     vcpkg_build_qmake_release()
 
@@ -84,13 +97,7 @@ function(qt_modular_library NAME HASH)
             LOGNAME fix-cmake
         )
     endif()
-
-    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
-    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" NATIVE_PACKAGES_DIR)
-
-    string(SUBSTRING "${NATIVE_INSTALLED_DIR}" 2 -1 INSTALLED_DIR_WITHOUT_DRIVE)
-    string(SUBSTRING "${NATIVE_PACKAGES_DIR}" 2 -1 PACKAGES_DIR_WITHOUT_DRIVE)
-
+    
     #Set the correct install directory to packages
     foreach(MAKEFILE ${RELEASE_MAKEFILES} ${DEBUG_MAKEFILES})
         vcpkg_replace_string(${MAKEFILE} "(INSTALL_ROOT)${INSTALLED_DIR_WITHOUT_DRIVE}" "(INSTALL_ROOT)${PACKAGES_DIR_WITHOUT_DRIVE}")

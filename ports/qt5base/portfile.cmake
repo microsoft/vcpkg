@@ -91,4 +91,24 @@ vcpkg_execute_required_process(
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/qt5)
 
+#---------------------------------------------------------------------------
+# qtmain(d) vs. Qt5AxServer(d)
+#---------------------------------------------------------------------------
+# Qt applications have to either link to qtmain(d) or to Qt5AxServer(d),
+# never both. See http://doc.qt.io/qt-5/activeqt-server.html for more info.
+#
+# Create manual-link folders:
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+#
+# Either have users explicitly link against qtmain.lib, qtmaind.lib:
+file(COPY ${CURRENT_PACKAGES_DIR}/lib/qtmain.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+file(COPY ${CURRENT_PACKAGES_DIR}/lib/qtmain.prl DESTINATION ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/qtmain.lib)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/qtmain.prl)
+file(COPY ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+file(COPY ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.prl DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.lib)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.prl)
+
 file(INSTALL ${SOURCE_PATH}/LICENSE.LGPLv3 DESTINATION  ${CURRENT_PACKAGES_DIR}/share/qt5base RENAME copyright)
