@@ -18,4 +18,10 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+  file(READ "${CURRENT_PACKAGES_DIR}/include/speex/speex.h" _contents)
+  string(REPLACE "extern const SpeexMode" "__declspec(dllimport) extern const SpeexMode" _contents "${_contents}")
+  file(WRITE "${CURRENT_PACKAGES_DIR}/include/speex/speex.h" "${_contents}")
+endif()
+
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/speex RENAME copyright)

@@ -46,7 +46,7 @@ try
     & $msbuildExe "/p:VCPKG_VERSION=-$gitHash" "/p:DISABLE_METRICS=$disableMetrics" /p:Configuration=Release /p:Platform=x86 /p:PlatformToolset=$platformToolset /p:TargetPlatformVersion=$windowsSDK /m dirs.proj
     if ($LASTEXITCODE -ne 0)
     {
-        Write-Error "Building vcpkg.exe failed. Please ensure you have installed the Desktop C++ workload and the Windows SDK for Desktop C++."
+        Write-Error "Building vcpkg.exe failed. Please ensure you have installed Visual Studio with the Desktop C++ workload and the Windows SDK for Desktop C++."
         return
     }
 

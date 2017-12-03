@@ -280,7 +280,6 @@ namespace vcpkg
     const std::vector<std::string>& VcpkgPaths::get_available_triplets() const
     {
         return this->available_triplets.get_lazy([this]() -> std::vector<std::string> {
-
             std::vector<std::string> output;
             for (auto&& path : this->get_filesystem().get_files_non_recursive(this->triplets))
             {
@@ -384,6 +383,7 @@ namespace vcpkg
         std::vector<fs::path> paths_examined;
 
         std::vector<Toolset> found_toolsets;
+        std::vector<Toolset> excluded_toolsets;
 
         const std::vector<VisualStudioInstance> vs_instances = get_visual_studio_instances(paths);
         const bool v140_is_available = Util::find_if(vs_instances, [&](const VisualStudioInstance& vs_instance) {
@@ -440,17 +440,28 @@ namespace vcpkg
                     paths_examined.push_back(dumpbin_path);
                     if (fs.exists(dumpbin_path))
                     {
-                        found_toolsets.push_back(Toolset{
-                            vs_instance.root_path, dumpbin_path, vcvarsall_bat, {}, V_141, supported_architectures});
+                        const Toolset v141toolset = Toolset{
+                            vs_instance.root_path, dumpbin_path, vcvarsall_bat, {}, V_141, supported_architectures};
+
+                        auto english_language_pack = dumpbin_path.parent_path() / "1033";
+
+                        if (!fs.exists(english_language_pack))
+                        {
+                            excluded_toolsets.push_back(v141toolset);
+                            break;
+                        }
+
+                        found_toolsets.push_back(v141toolset);
 
                         if (v140_is_available)
                         {
-                            found_toolsets.push_back(Toolset{vs_instance.root_path,
-                                                             dumpbin_path,
-                                                             vcvarsall_bat,
-                                                             {"-vcvars_ver=14.0"},
-                                                             V_140,
-                                                             supported_architectures});
+                            const Toolset v140toolset = Toolset{vs_instance.root_path,
+                                                                dumpbin_path,
+                                                                vcvarsall_bat,
+                                                                {"-vcvars_ver=14.0"},
+                                                                V_140,
+                                                                supported_architectures};
+                            found_toolsets.push_back(v140toolset);
                         }
 
                         break;
@@ -487,15 +498,37 @@ namespace vcpkg
 
                     if (fs.exists(vs_dumpbin_exe))
                     {
-                        found_toolsets.push_back({vs_instance.root_path,
-                                                  vs_dumpbin_exe,
-                                                  vcvarsall_bat,
-                                                  {},
-                                                  major_version == "14" ? V_140 : V_120,
-                                                  supported_architectures});
+                        const Toolset toolset = {vs_instance.root_path,
+                                                 vs_dumpbin_exe,
+                                                 vcvarsall_bat,
+                                                 {},
+                                                 major_version == "14" ? V_140 : V_120,
+                                                 supported_architectures};
+
+                        auto english_language_pack = vs_dumpbin_exe.parent_path() / "1033";
+
+                        if (!fs.exists(english_language_pack))
+                        {
+                            excluded_toolsets.push_back(toolset);
+                            break;
+                        }
+
+                        found_toolsets.push_back(toolset);
                     }
                 }
             }
+        }
+
+        if (!excluded_toolsets.empty())
+        {
+            System::println(
+                System::Color::warning,
+                "Warning: The following VS instances are exluded because the English language pack is unavailable.");
+            for (const Toolset& toolset : excluded_toolsets)
+            {
+                System::println("    %s", toolset.visual_studio_root_path.u8string());
+            }
+            System::println(System::Color::warning, "Please install the English language pack.");
         }
 
         if (found_toolsets.empty())
@@ -575,6 +608,7 @@ namespace vcpkg
                                vs_root_path.generic_string());
         }
 
+        Checks::check_exit(VCPKG_LINE_INFO, !candidates.empty(), "No suitable Visual Studio instances were found");
         return *candidates.front();
     }
 
