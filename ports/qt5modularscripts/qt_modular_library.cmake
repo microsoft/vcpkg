@@ -144,25 +144,10 @@ function(qt_modular_library NAME HASH)
     endif()
     if(DEBUG_DLLS)
         file(INSTALL ${DEBUG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-        #file(REMOVE ${DEBUG_DLLS})
-        #Check if there are any binaries left over; if not - delete the directory
-        # file(GLOB DEBUG_BINS ${CURRENT_PACKAGES_DIR}/debug/tools/qt5/*)
-        # if(NOT DEBUG_BINS)
-        #     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/tools)
-        # endif()
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/tools)
     endif()
 
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/qt5/debug/include)
-
-    # file(GLOB DEBUG_LIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*.lib")
-    # if(EXISTS ${CURRENT_PACKAGES_DIR}/bin)
-    #     make_directory(${CURRENT_PACKAGES_DIR}/debug/bin)
-    #     foreach(DEBUG_LIB ${DEBUG_LIBS})
-    #         get_filename_component(DEBUG_STEM "${DEBUG_LIB}" NAME_WE)
-    #         file(RENAME ${CURRENT_PACKAGES_DIR}/bin/${DEBUG_STEM}.dll ${CURRENT_PACKAGES_DIR}/debug/bin/${DEBUG_STEM}.dll)
-    #     endforeach()
-    # endif()
 
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
