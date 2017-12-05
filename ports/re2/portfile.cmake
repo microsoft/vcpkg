@@ -10,7 +10,7 @@ vcpkg_from_github(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DRE2_BUILD_TESTING=1 -DBUILD_SHARED_LIBS=1 -DBUILD_TESTING=1
+    OPTIONS -DRE2_BUILD_TESTING=OFF
 )
 
 vcpkg_install_cmake()
