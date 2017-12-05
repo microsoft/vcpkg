@@ -1,4 +1,4 @@
 Source: folly
-Version: 2017.11.27.00
+Version: 2017.11.27.00-1
 Description: An open-source C++ library developed and used at Facebook. The library is UNSTABLE on Windows
-Build-Depends: zlib, openssl, boost, libevent, double-conversion, glog, gflags, lz4, liblzma, snappy
+Build-Depends: zlib, openssl, libevent, double-conversion, glog, gflags, lz4, liblzma, snappy, boost-context, boost-chrono, boost-date-time, boost-filesystem, boost-program-options, boost-regex, boost-system, boost-thread, boost-conversion, boost-multi-index, boost-crc
