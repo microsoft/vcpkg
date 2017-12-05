@@ -28,6 +28,14 @@ Finally, create a New Project (or open an existing one) in Visual Studio 2017 or
 
 For CMake projects, simply include our toolchain file. See our [using a package](docs/examples/using-sqlite.md) example for the specifics.
 
+## Tab-Completion / Auto-Completion
+`Vcpkg` supports auto-completion of commands, package names, options etc. To enable tab-completion in Powershell, use
+```
+.\vcpkg integrate powershell
+```
+and restart Powershell.
+
+
 ## Examples
 See the [documentation](docs/index.md) for specific walkthroughs, including [using a package](docs/examples/using-sqlite.md) and [adding a new package](docs/examples/packaging-zlib.md).
 
