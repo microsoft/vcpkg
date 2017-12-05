@@ -1,11 +1,12 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/re2-2017-12-01)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/google/re2/archive/2017-12-01.zip"
-    FILENAME "re2-2017-12-01.zip"
-    SHA512 64e9b8673201fd3b0253acfd9fcb2985e88db69724e31a9c839d3b5cddfa1b91cf9e4fb70b12250fd4d6a7934a50550f6000627607227ed97bca329bfeb5bcc4
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO google/re2
+    REF 2017-12-01
+    SHA512 1943be4543ac6cedaef27202e126bddc57472926c2f28470c5e980902252d58e18bb4578c538883d9368a041e4928983fa27cd960c3671fe3b6366dbd5048b29
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
