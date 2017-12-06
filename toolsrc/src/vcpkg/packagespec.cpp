@@ -96,8 +96,8 @@ namespace vcpkg
     std::vector<PackageSpec> PackageSpec::to_package_specs(const std::vector<std::string>& ports,
                                                            const Triplet& triplet)
     {
-        return Util::fmap(ports, [&](const std::string& s) -> PackageSpec {
-            auto maybe_spec = PackageSpec::from_name_and_triplet(s, triplet);
+        return Util::fmap(ports, [&](const std::string& spec_as_string) -> PackageSpec {
+            auto maybe_spec = PackageSpec::from_name_and_triplet(spec_as_string, triplet);
             if (auto spec = maybe_spec.get())
             {
                 return std::move(*spec);
@@ -107,7 +107,28 @@ namespace vcpkg
             Checks::exit_with_message(VCPKG_LINE_INFO,
                                       "Invalid package: %s\n"
                                       "%s",
-                                      s,
+                                      spec_as_string,
+                                      vcpkg::to_string(error_type));
+        });
+    }
+
+    std::vector<PackageSpec> PackageSpec::from_dependencies_of_port(const std::string& port,
+                                                                    const std::vector<std::string>& dependencies,
+                                                                    const Triplet& triplet)
+    {
+        return Util::fmap(dependencies, [&](const std::string& spec_as_string) -> PackageSpec {
+            auto maybe_spec = PackageSpec::from_name_and_triplet(spec_as_string, triplet);
+            if (auto spec = maybe_spec.get())
+            {
+                return std::move(*spec);
+            }
+
+            const PackageSpecParseResult error_type = maybe_spec.error();
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "Invalid dependency [%s] in package [%s]\n"
+                                      "%s",
+                                      spec_as_string,
+                                      port,
                                       vcpkg::to_string(error_type));
         });
     }
