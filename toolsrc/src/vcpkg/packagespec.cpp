@@ -2,6 +2,7 @@
 
 #include <vcpkg/base/util.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/packagespecparseresult.h>
 #include <vcpkg/parse.h>
 
 using vcpkg::Parse::parse_comma_list;
@@ -95,8 +96,19 @@ namespace vcpkg
     std::vector<PackageSpec> PackageSpec::to_package_specs(const std::vector<std::string>& ports,
                                                            const Triplet& triplet)
     {
-        return Util::fmap(ports, [&](const std::string s) {
-            return PackageSpec::from_name_and_triplet(s, triplet).value_or_exit(VCPKG_LINE_INFO);
+        return Util::fmap(ports, [&](const std::string& s) -> PackageSpec {
+            auto maybe_spec = PackageSpec::from_name_and_triplet(s, triplet);
+            if (auto spec = maybe_spec.get())
+            {
+                return std::move(*spec);
+            }
+
+            const PackageSpecParseResult error_type = maybe_spec.error();
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "Invalid package: %s\n"
+                                      "%s",
+                                      s,
+                                      vcpkg::to_string(error_type));
         });
     }
 
