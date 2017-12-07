@@ -10,6 +10,12 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+    ${CMAKE_CURRENT_LIST_DIR}/disable-tests.patch
+)
+
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 	set(LIBSODIUM_RELEASE_CONFIGURATION ReleaseDLL)
 	set(LIBSODIUM_DEBUG_CONFIGURATION DebugDLL)
