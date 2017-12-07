@@ -1,0 +1,29 @@
+<assemblies>
+<assembly name="Example assembly" test-framework="fwk1">
+<collection>
+<!-- <test name="test1" type="test1class" method="test1method" time="121" result="Pass"></test>
+<test name="test2" type="test2class" method="test2method" time="122" result="Fail">
+    <traits>
+        <trait name="traitname" value="traitvalue" />
+    </traits>
+    <failure exception-type="exception-type">
+        <message><![CDATA[message cdata block]]></message>
+    </failure>
+</test>
+</collection>
+</assembly>
+<assembly name="Example assembly2" test-framework="fwk2">
+<collection>
+<test name="test1" type="test1class" method="test1method" time="61" result="Pass"></test>
+<test name="test2" type="test2class" method="test2method" time="62" result="Fail">
+    <traits>
+        <trait name="traitname" value="traitvalue" />
+    </traits>
+    <failure exception-type="exception-type">
+        <message><![CDATA[message cdata block]]></message>
+    </failure>
+</test> -->
+<test name="a" method="a" time="0" result="Pass"></test>
+</collection>
+</assembly>
+</assemblies>
