@@ -21,6 +21,14 @@ else()
   set(JANSSON_BUILD_SHARED_LIBS OFF)
 endif()
 
+# Jansson tries to random-seed its hash table with system-provided entropy.
+# This is not ported to UWP yet.
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+  set(USE_WINDOWS_CRYPTOAPI OFF)
+else()
+  set(USE_WINDOWS_CRYPTOAPI ON)
+endif()
+
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   OPTIONS
@@ -28,6 +36,7 @@ vcpkg_configure_cmake(
   -DJANSSON_EXAMPLES=OFF
   -DJANSSON_WITHOUT_TESTS=ON
   -DJANSSON_BUILD_SHARED_LIBS=${JANSSON_BUILD_SHARED_LIBS}
+  -DUSE_WINDOWS_CRYPTOAPI=${USE_WINDOWS_CRYPTOAPI}
 )
 
 vcpkg_install_cmake(DISABLE_PARALLEL)

@@ -15,6 +15,7 @@ namespace fs
     using stdfs::copy_options;
     using stdfs::file_status;
     using stdfs::path;
+    using stdfs::u8path;
 
     inline bool is_regular_file(file_status s) { return stdfs::is_regular_file(s); }
     inline bool is_directory(file_status s) { return stdfs::is_directory(s); }

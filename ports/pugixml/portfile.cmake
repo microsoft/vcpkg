@@ -26,8 +26,7 @@ endif()
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/pugixml")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL ${SOURCE_PATH}/readme.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/pugixml RENAME copyright)

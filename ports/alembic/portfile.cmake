@@ -44,12 +44,12 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Alembic.dll ${CURRENT_PACKAGES_DIR
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/Alembic/AlembicTargets-debug.cmake DEBUG_CONFIG)
 string(REPLACE "\${_IMPORT_PREFIX}/debug/lib/Alembic.dll"
-               "\${_IMPORT_PREFIX}/debug/bin/Alembic.dll" DEBUG_CONFIG ${DEBUG_CONFIG})
+               "\${_IMPORT_PREFIX}/debug/bin/Alembic.dll" DEBUG_CONFIG "${DEBUG_CONFIG}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/Alembic/AlembicTargets-debug.cmake "${DEBUG_CONFIG}")
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/Alembic/AlembicTargets-release.cmake RELEASE_CONFIG)
 string(REPLACE "\${_IMPORT_PREFIX}/lib/Alembic.dll"
-               "\${_IMPORT_PREFIX}/bin/Alembic.dll" RELEASE_CONFIG ${RELEASE_CONFIG})
+               "\${_IMPORT_PREFIX}/bin/Alembic.dll" RELEASE_CONFIG "${RELEASE_CONFIG}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/Alembic/AlembicTargets-release.cmake "${RELEASE_CONFIG}")
 
 # Put the license file where vcpkg expects it

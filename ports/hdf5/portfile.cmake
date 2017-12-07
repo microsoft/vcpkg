@@ -1,3 +1,7 @@
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "${PORT} does not currently support UWP")
+endif()
+
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/CMake-hdf5-1.10.0-patch1/hdf5-1.10.0-patch1)
 vcpkg_download_distfile(ARCHIVE

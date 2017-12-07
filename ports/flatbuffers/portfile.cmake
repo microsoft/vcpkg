@@ -1,11 +1,3 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:\path\to\current\vcpkg>
-#   TARGET_TRIPLET is the current triplet (x86-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     message("Building DLLs not supported. Building static instead.")
     set(VCPKG_LIBRARY_LINKAGE static)
@@ -19,6 +11,10 @@ vcpkg_from_github(
     SHA512 57732fc352c216c4be6d3237f93b872abf9dd2b62361d7d2856f99804a178760e4665ead2e33d5acdd00984ad03a746f581c9784ece583e1b2df1a10776f967a
     HEAD_REF master
 )
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    list(APPEND OPTIONS -DFLATBUFFERS_BUILD_FLATC=OFF -DFLATBUFFERS_BUILD_FLATHASH=OFF)
+endif()
 
 set(OPTIONS)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

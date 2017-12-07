@@ -87,25 +87,29 @@ function(vcpkg_build_msbuild)
         /m
     )
 
-    message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-    vcpkg_execute_required_process(
-        COMMAND msbuild ${_csc_PROJECT_PATH}
-            /p:Configuration=${_csc_RELEASE_CONFIGURATION}
-            ${_csc_OPTIONS}
-            ${_csc_OPTIONS_RELEASE}
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-        LOGNAME build-${TARGET_TRIPLET}-rel
-    )
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+        vcpkg_execute_required_process(
+            COMMAND msbuild ${_csc_PROJECT_PATH}
+                /p:Configuration=${_csc_RELEASE_CONFIGURATION}
+                ${_csc_OPTIONS}
+                ${_csc_OPTIONS_RELEASE}
+            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+            LOGNAME build-${TARGET_TRIPLET}-rel
+        )
+    endif()
 
-    message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-    vcpkg_execute_required_process(
-        COMMAND msbuild ${_csc_PROJECT_PATH}
-            /p:Configuration=${_csc_DEBUG_CONFIGURATION}
-            ${_csc_OPTIONS}
-            ${_csc_OPTIONS_DEBUG}
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-        LOGNAME build-${TARGET_TRIPLET}-dbg
-    )
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+        vcpkg_execute_required_process(
+            COMMAND msbuild ${_csc_PROJECT_PATH}
+                /p:Configuration=${_csc_DEBUG_CONFIGURATION}
+                ${_csc_OPTIONS}
+                ${_csc_OPTIONS_DEBUG}
+            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
+            LOGNAME build-${TARGET_TRIPLET}-dbg
+        )
+    endif()
 endfunction()

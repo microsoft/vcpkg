@@ -19,6 +19,13 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+vcpkg_apply_patches(
+	SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libsndfile-6830c421899e32f8d413a903a21a9b6cf384d369
+	PATCHES
+		"${CMAKE_CURRENT_LIST_DIR}/uwp-createfile-getfilesize.patch"
+		"${CMAKE_CURRENT_LIST_DIR}/uwp-createfile-getfilesize-addendum.patch"
+)
+
 if (VCPKG_CRT_LINKAGE STREQUAL "dynamic")
     set(CRT_LIB_STATIC 0)
 elseif (VCPKG_CRT_LINKAGE STREQUAL "static")

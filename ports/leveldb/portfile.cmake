@@ -1,8 +1,6 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(FATAL_ERROR "leveldb doesn't currently support dynamic buildsas there are no export symbols defined.")
-endif()
+set(VCPKG_LIBRARY_LINKAGE static)
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/leveldb-8b1cd3753b184341e837b30383832645135d3d73)
 

@@ -3,11 +3,25 @@ function vcpkgHasModule([Parameter(Mandatory=$true)][string]$moduleName)
     return [bool](Get-Module -ListAvailable -Name $moduleName)
 }
 
-function vcpkgCreateDirectory([Parameter(Mandatory=$true)][string]$dirPath)
+function vcpkgCreateDirectoryIfNotExists([Parameter(Mandatory=$true)][string]$dirPath)
 {
     if (!(Test-Path $dirPath))
     {
         New-Item -ItemType Directory -Path $dirPath | Out-Null
+    }
+}
+
+function vcpkgCreateParentDirectoryIfNotExists([Parameter(Mandatory=$true)][string]$path)
+{
+    $parentDir = split-path -parent $path
+    if ([string]::IsNullOrEmpty($parentDir))
+    {
+        return
+    }
+
+    if (!(Test-Path $parentDir))
+    {
+        New-Item -ItemType Directory -Path $parentDir | Out-Null
     }
 }
 
@@ -101,8 +115,7 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
         return
     }
 
-    $downloadDir = split-path -parent $downloadPath
-    vcpkgCreateDirectory $downloadDir
+    vcpkgCreateParentDirectoryIfNotExists $downloadPath
 
     $downloadPartPath = "$downloadPath.part"
     vcpkgRemoveFile $downloadPartPath
@@ -143,13 +156,11 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
 function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
                             [Parameter(Mandatory=$true)][string]$destinationDir)
 {
-    $parentPath = split-path -parent $destinationDir
-    vcpkgCreateDirectory $parentPath
-    $baseName = (Get-ChildItem $file).BaseName
-    $destinationPartial = "$destinationDir\$baseName-partially_extracted"
+    vcpkgCreateParentDirectoryIfNotExists $destinationDir
+    $destinationPartial = "$destinationDir-partially_extracted"
 
     vcpkgRemoveDirectory $destinationPartial
-    vcpkgCreateDirectory $destinationPartial
+    vcpkgCreateDirectoryIfNotExists $destinationPartial
 
     if (vcpkgHasCommand -commandName 'Microsoft.PowerShell.Archive\Expand-Archive')
     {
@@ -182,7 +193,7 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
     }
     else
     {
-        Rename-Item -Path $destinationPartial -NewName $baseName
+        Move-Item -Path $destinationPartial -Destination $destinationDir
     }
 }
 

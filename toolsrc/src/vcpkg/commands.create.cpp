@@ -4,7 +4,6 @@
 #include <vcpkg/base/system.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
-#include <vcpkg/vcpkglib.h>
 
 namespace vcpkg::Commands::Create
 {
@@ -25,7 +24,7 @@ namespace vcpkg::Commands::Create
 
         const fs::path& cmake_exe = paths.get_cmake_exe();
 
-        std::vector<CMakeVariable> cmake_args{{"CMD", "CREATE"}, {"PORT", port_name}, {"URL", url}};
+        std::vector<System::CMakeVariable> cmake_args{{"CMD", "CREATE"}, {"PORT", port_name}, {"URL", url}};
 
         if (args.command_arguments.size() >= 3)
         {
