@@ -32,6 +32,7 @@ add_definitions(-DG_LOG_DOMAIN="GMime")
 # List the source files
 set(LIB_SRC gmime/gmime.c
             gmime/gmime-application-pkcs7-mime.c
+            gmime/gmime-autocrypt.c
             gmime/gmime-certificate.c
             gmime/gmime-charset.c
             gmime/gmime-common.c
@@ -97,64 +98,9 @@ set(LIB_SRC gmime/gmime.c
             util/gtrie.c
 )
 
-set (LIB_HEADERS gmime/gmime.h
-                 gmime/gmime-version.h
-                 gmime/gmime-error.h
-                 gmime/gmime-charset.h
-                 gmime/gmime-iconv.h
-                 gmime/gmime-iconv-utils.h
-                 gmime/gmime-param.h
-                 gmime/gmime-content-type.h
-                 gmime/gmime-disposition.h
-                 gmime/gmime-data-wrapper.h
-                 gmime/gmime-object.h
-                 gmime/gmime-part.h
-                 gmime/gmime-text-part.h
-                 gmime/gmime-part-iter.h
-                 gmime/gmime-application-pkcs7-mime.h
-                 gmime/gmime-multipart.h
-                 gmime/gmime-multipart-encrypted.h
-                 gmime/gmime-multipart-signed.h
-                 gmime/gmime-message.h
-                 gmime/gmime-message-part.h
-                 gmime/gmime-message-partial.h
-                 gmime/internet-address.h
-                 gmime/gmime-encodings.h
-                 gmime/gmime-format-options.h
-                 gmime/gmime-parser-options.h
-                 gmime/gmime-parser.h
-                 gmime/gmime-utils.h
-                 gmime/gmime-references.h
-                 gmime/gmime-stream.h
-                 gmime/gmime-stream-buffer.h
-                 gmime/gmime-stream-cat.h
-                 gmime/gmime-stream-file.h
-                 gmime/gmime-stream-filter.h
-                 gmime/gmime-stream-fs.h
-                 gmime/gmime-stream-gio.h
-                 gmime/gmime-stream-mem.h
-                 gmime/gmime-stream-mmap.h
-                 gmime/gmime-stream-null.h
-                 gmime/gmime-stream-pipe.h
-                 gmime/gmime-filter.h
-                 gmime/gmime-filter-basic.h
-                 gmime/gmime-filter-best.h
-                 gmime/gmime-filter-charset.h
-                 gmime/gmime-filter-checksum.h
-                 gmime/gmime-filter-dos2unix.h
-                 gmime/gmime-filter-enriched.h
-                 gmime/gmime-filter-from.h
-                 gmime/gmime-filter-gzip.h
-                 gmime/gmime-filter-html.h
-                 gmime/gmime-filter-smtp-data.h
-                 gmime/gmime-filter-strip.h
-                 gmime/gmime-filter-unix2dos.h
-                 gmime/gmime-filter-windows.h
-                 gmime/gmime-filter-yenc.h
-                 gmime/gmime-crypto-context.h
-                 gmime/gmime-pkcs7-context.h
-                 gmime/gmime-gpg-context.h
-)
+file(GLOB LIB_HEADERS gmime/gmime-*.h)
+list(APPEND LIB_HEADERS gmime/gmime.h)
+list(APPEND LIB_HEADERS gmime/internet-address.h)
 
 if(MSVC AND BUILD_SHARED_LIBS)
     set(MSVC_SRC gmime.def)
