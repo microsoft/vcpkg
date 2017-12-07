@@ -1,7 +1,6 @@
 # CMakeLists.txt in liveMedia
 
 SET(LIVE_MEDIA_SRCS
-rtcp_from_spec.c
 AC3AudioFileServerMediaSubsession.cpp
 AC3AudioRTPSink.cpp
 AC3AudioRTPSource.cpp
@@ -103,6 +102,7 @@ MPEG1or2VideoStreamDiscreteFramer.cpp
 MPEG1or2VideoStreamFramer.cpp
 MPEG2IndexFromTransportStream.cpp
 MPEG2TransportFileServerMediaSubsession.cpp
+MPEG2TransportStreamAccumulator.cpp
 MPEG2TransportStreamFramer.cpp
 MPEG2TransportStreamFromESSource.cpp
 MPEG2TransportStreamFromPESSource.cpp
@@ -138,6 +138,7 @@ QCELPAudioRTPSource.cpp
 QuickTimeFileSink.cpp
 QuickTimeGenericRTPSource.cpp
 RTCP.cpp
+rtcp_from_spec.c
 RTPInterface.cpp
 RTPSink.cpp
 RTPSource.cpp
@@ -145,6 +146,7 @@ RTSPClient.cpp
 RTSPCommon.cpp
 RTSPRegisterSender.cpp
 RTSPServer.cpp
+RTSPServerRegister.cpp
 RTSPServerSupportingHTTPStreaming.cpp
 ServerMediaSession.cpp
 SimpleRTPSink.cpp

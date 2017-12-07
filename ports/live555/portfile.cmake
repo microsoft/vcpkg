@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/live)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.live555.com/liveMedia/public/live.2017.09.12.tar.gz"
-    FILENAME "live.2017.09.12.tar.gz"
-    SHA512 09b18b5f5dce28519b6c7cd8d52eb3448711939df051f84c8d6dce0b88d05c982711059f2ce13efccd326b2dbfeb93b88c4e03fe4a88bbd8fcefcb25e51d107d
+    URLS "http://www.live555.com/liveMedia/public/live.2017.10.28.tar.gz"
+    FILENAME "live.2017.10.28.tar.gz"
+    SHA512 eea5bdb8d89e76c8b6aeb6ec04b77af3048cb41f228d230ba4da6045e9bc691a456023d44d8650fe690b08143567ed5af5b633f5b6522debff79344a813dc7d0
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
@@ -52,10 +52,10 @@ file(GLOB DEBUG_LIBS
 )
 
 file(GLOB HEADERS
-"${CURRENT_BUILDTREES_DIR}/src/live/BasicUsageEnvironment/include/*.hh"
-"${CURRENT_BUILDTREES_DIR}/src/live/groupsock/include/*.hh"
-"${CURRENT_BUILDTREES_DIR}/src/live/liveMedia/include/*.hh"
-"${CURRENT_BUILDTREES_DIR}/src/live/UsageEnvironment/include/*.hh"
+"${CURRENT_BUILDTREES_DIR}/src/live/BasicUsageEnvironment/include/*.h*"
+"${CURRENT_BUILDTREES_DIR}/src/live/groupsock/include/*.h*"
+"${CURRENT_BUILDTREES_DIR}/src/live/liveMedia/include/*.h*"
+"${CURRENT_BUILDTREES_DIR}/src/live/UsageEnvironment/include/*.h*"
 )
 if(DLLS)
     file(INSTALL ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
