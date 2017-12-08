@@ -25,19 +25,11 @@ function vcpkgCreateParentDirectoryIfNotExists([Parameter(Mandatory=$true)][stri
     }
 }
 
-function vcpkgRemoveDirectory([Parameter(Mandatory=$true)][string]$dirPath)
+function vcpkgRemoveItem([Parameter(Mandatory=$true)][string]$dirPath)
 {
     if (Test-Path $dirPath)
     {
         Remove-Item $dirPath -Recurse -Force
-    }
-}
-
-function vcpkgRemoveFile([Parameter(Mandatory=$true)][string]$filePath)
-{
-    if (Test-Path $filePath)
-    {
-        Remove-Item $filePath -Force
     }
 }
 
@@ -118,7 +110,7 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
     vcpkgCreateParentDirectoryIfNotExists $downloadPath
 
     $downloadPartPath = "$downloadPath.part"
-    vcpkgRemoveFile $downloadPartPath
+    vcpkgRemoveItem $downloadPartPath
 
     $wc = New-Object System.Net.WebClient
     $proxyAuth = !$wc.Proxy.IsBypassed($url)
@@ -144,7 +136,7 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
         catch [System.Exception]
         {
             # If BITS fails for any reason, delete any potentially partially downloaded files and continue
-            vcpkgRemoveFile $downloadPartPath
+            vcpkgRemoveItem $downloadPartPath
         }
     }
 
@@ -154,13 +146,20 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
 }
 
 function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
-                            [Parameter(Mandatory=$true)][string]$destinationDir)
+                            [Parameter(Mandatory=$true)][string]$destinationDir,
+                            [Parameter(Mandatory=$true)][string]$outFilename)
 {
-    vcpkgCreateParentDirectoryIfNotExists $destinationDir
-    $destinationPartial = "$destinationDir-partially_extracted"
+    vcpkgCreateDirectoryIfNotExists $destinationDir
+    $output = "$destinationDir/$outFilename"
+    vcpkgRemoveItem $output
+    $destinationPartial = "$destinationDir/partially-extracted"
 
-    vcpkgRemoveDirectory $destinationPartial
+    vcpkgRemoveItem $destinationPartial
     vcpkgCreateDirectoryIfNotExists $destinationPartial
+
+    $shell = new-object -com shell.application
+    $zip = $shell.NameSpace($file)
+    $itemCount = $zip.Items().Count
 
     if (vcpkgHasCommand -commandName 'Microsoft.PowerShell.Archive\Expand-Archive')
     {
@@ -175,8 +174,6 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
     else
     {
         Write-Verbose("Extracting via shell")
-        $shell = new-object -com shell.application
-        $zip = $shell.NameSpace($file)
         foreach($item in $zip.items())
         {
             # Piping to Out-Null is used to block until finished
@@ -184,16 +181,14 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
         }
     }
 
-    $hasASingleItem = (Get-ChildItem $destinationPartial | Measure-Object).Count -eq 1;
-
-    if ($hasASingleItem)
+    if ($itemCount -eq 1)
     {
-        Move-Item -Path "$destinationPartial\*" -Destination $destinationDir
-        vcpkgRemoveDirectory $destinationPartial
+        Move-Item -Path "$destinationPartial\*" -Destination $output
+        vcpkgRemoveItem $destinationPartial
     }
     else
     {
-        Move-Item -Path $destinationPartial -Destination $destinationDir
+        Move-Item -Path $destinationPartial -Destination $output
     }
 }
 
