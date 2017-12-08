@@ -73,6 +73,9 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/caffe2)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/caffe)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/caffe2)
 
+# Remove caffe includes to avoid conflict with caffe port
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/caffe)
+
 # Remove empty directories from include (should probably fix or
 # patch caffe2 install script)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/caffe2/test)

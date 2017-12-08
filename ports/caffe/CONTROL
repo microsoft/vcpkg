@@ -1,0 +1,24 @@
+Source: caffe
+Version: 1.0.0
+Build-Depends: boost-smart-ptr, boost-thread, boost-function, boost-date-time, boost-bind, boost-filesystem, boost-random, boost-math, boost-algorithm, gflags, glog, hdf5, protobuf, openblas
+Description: Caffe: a fast open framework for deep learning.
+
+Feature: lmdb
+Description: Build caffe with LMDB support
+Build-Depends: lmdb
+
+Feature: leveldb
+Description: Build caffe with LevelDB support
+Build-Depends: leveldb
+
+Feature: cuda
+Description: Build caffe with CUDA support
+Build-Depends: cuda
+
+Feature: mkl
+Description: Build caffe using BLAS as mkl backend
+Build-Depends: intel-mkl
+
+Feature: opencv
+Description: Build caffe with opencv
+Build-Depends: opencv
