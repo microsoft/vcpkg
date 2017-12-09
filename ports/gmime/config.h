@@ -8,7 +8,7 @@
 /* #undef ENABLE_WARNINGS */
 
 /* Define to the GMime version */
-#define GMIME_VERSION "3.0.2"
+#define GMIME_VERSION "@LIB_VERSION@"
 
 /* Define to 1 if you have the <dlfcn.h> header file. */
 /* #undef HAVE_DLFCN_H */
@@ -30,7 +30,7 @@
 #define HAVE_GETOPT_H 1
 
 /* Define to 1 if you have the `getpagesize' function. */
-#define HAVE_GETPAGESIZE 1
+/* #undef HAVE_GETPAGESIZE */
 
 /* Define to 1 to use auto-detected iconv-friendly charset names. */
 /* #undef HAVE_ICONV_DETECT_H */
@@ -117,7 +117,7 @@
 #define PACKAGE_NAME "gmime"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "gmime 3.0.2"
+#define PACKAGE_STRING "gmime @LIB_VERSION@"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "gmime"
@@ -126,16 +126,16 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "3.0.2"
+#define PACKAGE_VERSION "@LIB_VERSION@"
 
 /* The size of `off_t', as computed by sizeof. */
-#define SIZEOF_OFF_T 8
+/* #undef SIZEOF_OFF_T */
 
 /* The size of `size_t', as computed by sizeof. */
-#define SIZEOF_SIZE_T 8
+/* #undef SIZEOF_SIZE_T */
 
 /* The size of `ssize_t', as computed by sizeof. */
-#define SIZEOF_SSIZE_T 8
+/* #undef SIZEOF_SSIZE_T */
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1

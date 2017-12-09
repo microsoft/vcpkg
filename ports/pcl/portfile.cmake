@@ -10,7 +10,8 @@ vcpkg_from_github(
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/config.patch"
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/cmakelists.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/config.patch"
             "${CMAKE_CURRENT_LIST_DIR}/config_install.patch"
             "${CMAKE_CURRENT_LIST_DIR}/find_flann.patch"
             "${CMAKE_CURRENT_LIST_DIR}/find_qhull.patch"
@@ -19,6 +20,11 @@ vcpkg_apply_patches(
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
+
+set(WITH_OPENNI2 OFF)
+if("openni2" IN_LIST FEATURES)
+    set(WITH_OPENNI2 ON)
+endif()
 
 set(WITH_QT OFF)
 if("qt" IN_LIST FEATURES)
@@ -44,7 +50,7 @@ vcpkg_configure_cmake(
         # WITH
         -DWITH_CUDA=OFF
         -DWITH_LIBUSB=OFF
-        -DWITH_OPENNI2=ON
+        -DWITH_OPENNI2=${WITH_OPENNI2}
         -DWITH_PCAP=${WITH_PCAP}
         -DWITH_PNG=OFF
         -DWITH_QHULL=ON

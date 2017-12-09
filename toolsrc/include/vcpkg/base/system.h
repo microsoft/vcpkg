@@ -10,6 +10,28 @@ namespace vcpkg::System
 
     fs::path get_exe_path_of_current_process();
 
+    struct CMakeVariable
+    {
+        CMakeVariable(const CStringView varname, const char* varvalue);
+        CMakeVariable(const CStringView varname, const std::string& varvalue);
+        CMakeVariable(const CStringView varname, const fs::path& path);
+
+        std::string s;
+    };
+
+    std::string make_cmake_cmd(const fs::path& cmake_exe,
+                               const fs::path& cmake_script,
+                               const std::vector<CMakeVariable>& pass_variables);
+
+    struct PowershellParameter
+    {
+        PowershellParameter(const CStringView varname, const char* varvalue);
+        PowershellParameter(const CStringView varname, const std::string& varvalue);
+        PowershellParameter(const CStringView varname, const fs::path& path);
+
+        std::string s;
+    };
+
     struct ExitCodeAndOutput
     {
         int exit_code;
@@ -22,9 +44,13 @@ namespace vcpkg::System
 
     ExitCodeAndOutput cmd_execute_and_capture_output(const CStringView cmd_line);
 
+    void powershell_execute(const std::string& title,
+                            const fs::path& script_path,
+                            const std::vector<PowershellParameter>& parameters = {});
+
     std::string powershell_execute_and_capture_output(const std::string& title,
                                                       const fs::path& script_path,
-                                                      const CStringView args = "");
+                                                      const std::vector<PowershellParameter>& parameters = {});
 
     enum class Color
     {

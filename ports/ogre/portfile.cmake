@@ -1,17 +1,19 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/sinbad-ogre-dd30349ea667)
+
+set(OGRE_VERSION 1.10.9)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ogre-${OGRE_VERSION})
+
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://bitbucket.org/sinbad/ogre/get/v1-9-0.zip"
-    FILENAME "ogre-v1-9-0.zip"
-    SHA512 de7315a2450ecf0d9073e6a8f0c54737e041016f7ad820556d10701c7d23eefab9d3473476a8e95447c30ab21518b8e4cfb0271db72494ea67a3dea284c9a3d3
+    URLS "https://github.com/OGRECave/ogre/archive/v${OGRE_VERSION}.zip"
+    FILENAME "ogre-${OGRE_VERSION}.zip"
+    SHA512 2e68b30da6dc2e1df6575970623a14057675b069536ed0ac87faeefc8e295965ff7427c99385f29ab803b02bd5294f6886293aabdd17ec8c92f80baf53587457
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-use-vcpkg-freeimage.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/0002-ogre-cmake-dir-as-option.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/0003-use-flat-installation.patch"
+    PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/001-cmake-install-dir.patch"
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -20,41 +22,110 @@ else()
     set(OGRE_STATIC OFF)
 endif()
 
+# Configure features
+
+if("d3d9" IN_LIST FEATURES)
+    set(WITH_D3D9 ON)
+else()
+    set(WITH_D3D9 OFF)
+endif()
+
+if("java" IN_LIST FEATURES)
+    set(WITH_JAVA ON)
+else()
+    set(WITH_JAVA OFF)
+endif()
+
+if("python" IN_LIST FEATURES)
+    set(WITH_PYTHON ON)
+else()
+    set(WITH_PYTHON OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DOGRE_USE_BOOST:BOOL=OFF 
-            -DOGRE_BUILD_RENDERSYSTEM_D3D9:BOOL=OFF
-            -DOGRE_INSTALL_DEPENDENCIES:BOOL=OFF
-            -DOGRE_COPY_DEPENDENCIES:BOOL=OFF
-            -DOGRE_BUILD_TOOLS:BOOL=OFF
-            -DOGRE_CMAKE_DIR:STRING=share/ogre
-            -DOGRE_STATIC:BOOL=${OGRE_STATIC}
-            -DOGRE_INSTALL_SAMPLES:BOOL=OFF
-            -DOGRE_INSTALL_TOOLS:BOOL=OFF
-            # We disable this option because it is broken and we rely on vcpkg_copy_pdbs
-            -DOGRE_INSTALL_PDB:BOOL=OFF
-            -DOGRE_BUILD_DOCS:BOOL=OFF
-            -DOGRE_INSTALL_DOCS:BOOL=OFF
-            -DOGRE_INSTALL_SAMPLES_SOURCE:BOOL=OFF
-            -DOGRE_NO_INSTALLATION_SUFFIXES_ON_WIN32:BOOL=ON
+    PREFER_NINJA
+    OPTIONS
+        -DOGRE_BUILD_DEPENDENCIES=OFF
+        -DOGRE_BUILD_SAMPLES=OFF
+        -DOGRE_BUILD_TESTS=OFF
+        -DOGRE_BUILD_TOOLS=OFF
+        -DOGRE_BUILD_MSVC_MP=ON
+        -DOGRE_BUILD_MSVC_ZM=ON
+        -DOGRE_INSTALL_DEPENDENCIES=OFF
+        -DOGRE_INSTALL_DOCS=OFF
+        -DOGRE_INSTALL_PDB=OFF
+        -DOGRE_INSTALL_SAMPLES=OFF
+        -DOGRE_INSTALL_TOOLS=OFF
+        -DOGRE_INSTALL_CMAKE=ON
+        -DOGRE_INSTALL_VSPROPS=OFF
+        -DOGRE_STATIC=${OGRE_STATIC}
+        -DOGRE_UNITY_BUILD=OFF
+        -DOGRE_USE_STD11=ON
+        -DOGRE_CONFIG_THREAD_PROVIDER=std
+        -DOGRE_NODE_STORAGE_LEGACY=OFF
+        -DOGRE_BUILD_RENDERSYSTEM_D3D11=ON
+        -DOGRE_BUILD_RENDERSYSTEM_GL=ON
+        -DOGRE_BUILD_RENDERSYSTEM_GL3PLUS=ON
+        -DOGRE_BUILD_RENDERSYSTEM_GLES=OFF
+        -DOGRE_BUILD_RENDERSYSTEM_GLES2=OFF
+# Optional stuff
+        -DOGRE_BUILD_COMPONENT_JAVA=${WITH_JAVA}
+        -DOGRE_BUILD_COMPONENT_PYTHON=${WITH_PYTHON}
+        -DOGRE_BUILD_RENDERSYSTEM_D3D9=${WITH_D3D9}
+# vcpkg specific stuff
+        -DOGRE_CMAKE_DIR=share/ogre
 )
 
 vcpkg_install_cmake()
 
-# Add a OGREConfig.cmake to simplify the process of finding vcpkg OGRE
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/OGREConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/ogre)
-
-# Remove debug includes
+# Remove unwanted files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# Remove debug CMake files 
-# Note that at the moment OGRE do not export imported targets, 
-# so we do not need to copy the debug imported targets in the 
-# release CMake path
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/ogre)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
+file(GLOB REL_CFGS ${CURRENT_PACKAGES_DIR}/bin/*.cfg)
+file(COPY ${REL_CFGS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+
+file(GLOB DBG_CFGS ${CURRENT_PACKAGES_DIR}/debug/bin/*.cfg)
+file(COPY ${DBG_CFGS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+
+file(REMOVE ${REL_CFGS} ${DBG_CFGS})
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
+
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+
+file(GLOB MAIN_REL ${CURRENT_PACKAGES_DIR}/lib/OgreMain.lib ${CURRENT_PACKAGES_DIR}/lib/OgreMainStatic.lib)
+file(COPY ${MAIN_REL} DESTINATION ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+file(GLOB MAIN_DBG ${CURRENT_PACKAGES_DIR}/debug/lib/OgreMain_d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/OgreMainStatic_d.lib)
+file(COPY ${MAIN_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+file(REMOVE ${MAIN_REL} ${MAIN_DBG})
+
+# Ogre installs custom cmake config files which don't follow the normal pattern.
+# This normally makes them completely incompatible with multi-config generators, but with some effort it can be done.
+file(READ "${CURRENT_PACKAGES_DIR}/share/ogre/OGREConfig.cmake" _contents)
+string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${PACKAGE_PREFIX_DIR}" _contents "${_contents}")
+string(REPLACE "SDL2main.lib" "SDL2main$<$<CONFIG:Debug>:d>.lib" _contents "${_contents}")
+string(REPLACE "SDL2.lib" "SDL2$<$<CONFIG:Debug>:d>.lib" _contents "${_contents}")
+string(REPLACE "\${PACKAGE_PREFIX_DIR}/lib" "\${PACKAGE_PREFIX_DIR}$<$<CONFIG:Debug>:/debug>/lib" _contents "${_contents}")
+string(REPLACE "{OGRE_PREFIX_DIR}/lib" "{OGRE_PREFIX_DIR}$<$<CONFIG:Debug>:/debug>/lib" _contents "${_contents}")
+
+string(REPLACE "\"Ogre\${COMPONENT}\"" "\"Ogre\${COMPONENT}$<$<CONFIG:Debug>:_d>\"" _contents "${_contents}")
+string(REPLACE "\"Ogre\${COMPONENT}Static\"" "\"Ogre\${COMPONENT}Static$<$<CONFIG:Debug>:_d>\"" _contents "${_contents}")
+
+string(REPLACE "\"\${TYPE}_\${COMPONENT}\"" "\"\${TYPE}_\${COMPONENT}$<$<CONFIG:Debug>:_d>\"" _contents "${_contents}")
+string(REPLACE "\"\${TYPE}_\${COMPONENT}Static\"" "\"\${TYPE}_\${COMPONENT}Static$<$<CONFIG:Debug>:_d>\"" _contents "${_contents}")
+
+string(REPLACE "\"OgreMain\"" "\"\${PACKAGE_PREFIX_DIR}/lib/manual-link/OgreMain$<$<CONFIG:Debug>:_d>.lib\"" _contents "${_contents}")
+string(REPLACE "\"OgreMainStatic\"" "\"\${PACKAGE_PREFIX_DIR}/lib/manual-link/OgreMainStatic$<$<CONFIG:Debug>:_d>.lib\"" _contents "${_contents}")
+
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/ogre/OGREConfig.cmake" "${_contents}")
+
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ogre)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/ogre/COPYING ${CURRENT_PACKAGES_DIR}/share/ogre/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ogre RENAME copyright)
 
 vcpkg_copy_pdbs()

@@ -1,5 +1,5 @@
 Source: protobuf
-Version: 3.4.1-2
+Version: 3.5.0-1
 Description: Protocol Buffers - Google's data interchange format
 
 Feature: zlib

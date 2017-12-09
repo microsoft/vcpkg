@@ -1,3 +1,85 @@
+vcpkg (0.0.100)
+--------------
+  * Add ports:
+    - libmspack      0.6
+    - scintilla      3.7.6
+    - vlpp           0.9.3.1
+  * Update ports:
+    - allegro5       5.2.2.0-1 -> 5.2.3.0
+    - benchmark      1.2.0 -> 1.3.0
+    - brotli         0.6.0-1 -> 1.0.2
+    - chakracore     1.4.3 -> 1.7.4
+    - cppunit        1.13.2 -> 1.14.0
+    - doctest        1.2.0 -> 1.2.6
+    - ecm            5.37.0-1 -> 5.40.0
+    - expat          2.2.4-2 -> 2.2.5
+    - flint          2.5.2 -> 2.5.2-1
+    - folly          2017.10.02.00 -> 2017.11.27.00
+    - freerdp        2.0.0-rc0~vcpkg1-1 -> 2.0.0-rc1~vcpkg1
+    - libtorrent     1.1.4-1 -> 1.1.5
+    - libuv          1.16.1 -> 1.18.0
+    - libzip         1.2.0-2 -> 1.3.2
+    - log4cplus      REL_1_2_1-RC2-1 -> REL_2_0_0-RC2
+    - mpfr           3.1.6-1 -> 3.1.6-2
+    - nana           1.5.4-1 -> 1.5.5
+    - poco           1.7.8-2 -> 1.8.0.1
+    - pugixml        1.8.1-2 -> 1.8.1-3
+    - sciter         4.0.4 -> 4.0.6
+    - speex          1.2.0-1 -> 1.2.0-2
+  * `vcpkg` has exceeded 400 libraries!
+  * `vcpkg` now supports Tab-Completion/Auto-Completion in Powershell. To enable it, simply run `.\vcpkg integrate powershell` and restart Powershell.
+  * `vcpkg` now requires the English language pack of Visual Studio to be installed. This is needed because several libraries fail to build in non-English languages, so `vcpkg` sets the build environment to English to bypass these issues.
+
+-- vcpkg team <vcpkg@microsoft.com>  MON, 04 Dec 2017 17:00:00 -0800
+
+
+vcpkg (0.0.99)
+--------------
+  * Add ports:
+    - avro-c         1.8.2
+    - devil          1.8.0-1
+    - halide         release_2017_10_30
+    - librabbitmq    0.8.0
+    - openvdb        5.0.0
+    - qpid-proton    0.18.1
+    - unittest-cpp   2.0.0
+  * Update ports:
+    - alembic        1.7.4 -> 1.7.4-1
+    - angle          2017-06-14-8d471f-2 -> 2017-06-14-8d471f-4
+    - aubio          0.46~alpha-3 -> 0.46
+    - date           2.2 -> 2.3-c286981b3bf83c79554769df68b27415cee68d77
+    - fftw3          3.3.7 -> 3.3.7-1
+    - grpc           1.7.0 -> 1.7.2
+    - imgui          1.51-1 -> 1.52
+    - lcms           2.8-3 -> 2.8-4
+    - leptonica      1.74.4-1 -> 1.74.4-2
+    - leveldb        2017-10-25-8b1cd3753b184341e837b30383832645135d3d73 -> 2017-10-25-8b1cd3753b184341e837b30383832645135d3d73-1
+    - libflac        1.3.2-3 -> 1.3.2-4
+    - libiconv       1.14-1 -> 1.15
+    - libsndfile     1.0.29-6830c42-1 -> 1.0.29-6830c42-2
+    - libssh2        1.8.0-2 -> 1.8.0-3
+    - llvm           5.0.0-1 -> 5.0.0-2
+    - mpfr           3.1.6 -> 3.1.6-1
+    - ogre           1.9.0-1 -> 1.10.9-2
+    - opencv         3.3.1-7 -> 3.3.1-9
+    - opengl         0.0-3 -> 0.0-4
+    - pcl            1.8.1-4 -> 1.8.1-7
+    - protobuf       3.4.1-2 -> 3.5.0-1
+    - qhull          2015.2-1 -> 2015.2-2
+    - realsense2     2.8.1 -> 2.8.2
+    - redshell       1.0.0 -> 1.1.2
+    - sdl2           2.0.7-1 -> 2.0.7-3
+    - string-theory  1.6 -> 1.6-1
+    - tesseract      3.05.01-1 -> 3.05.01-2
+  * `vcpkg` now autodetects CMake usage information in libraries and displays it after install
+  * `vcpkg integrate install`: Fix issue that would cause failure with unicode usernames
+  * Introduce experimental support for `VCPKG_BUILD_TYPE`. Adding `set(VCPKG_BUILD_TYPE release)` in a triplet:  will cause *most* ports to only build release
+  * `vcpkg` now compiles inside WSL
+  * Update required version & auto-downloaded version of `cmake` to 3.10.0
+
+-- vcpkg team <vcpkg@microsoft.com>  SAT, 26 Nov 2017 03:30:00 -0800
+
+
 vcpkg (0.0.97)
 --------------
   * Add ports:

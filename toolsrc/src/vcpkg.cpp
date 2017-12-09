@@ -20,11 +20,13 @@
 #include <vcpkg/input.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/paragraphs.h>
+#include <vcpkg/userconfig.h>
 #include <vcpkg/vcpkglib.h>
 
 #include <cassert>
 #include <fstream>
 #include <memory>
+#include <random>
 
 #pragma comment(lib, "ole32")
 #pragma comment(lib, "shell32")
@@ -110,6 +112,28 @@ static void inner(const VcpkgCmdArguments& args)
     if (args.command != "autocomplete")
     {
         Commands::Version::warn_if_vcpkg_version_mismatch(paths);
+        std::string surveydate = *GlobalState::g_surveydate.lock();
+        auto maybe_surveydate = Chrono::CTime::parse(surveydate);
+        if (auto p_surveydate = maybe_surveydate.get())
+        {
+            auto delta = std::chrono::system_clock::now() - p_surveydate->to_time_point();
+            // 24 hours/day * 30 days/month
+            if (std::chrono::duration_cast<std::chrono::hours>(delta).count() > 24 * 30)
+            {
+                std::default_random_engine generator(
+                    static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count()));
+                std::uniform_int_distribution<int> distribution(1, 4);
+
+                if (distribution(generator) == 1)
+                {
+                    Metrics::g_metrics.lock()->track_property("surveyprompt", "true");
+                    System::println(
+                        System::Color::success,
+                        "Your feedback is important to improve Vcpkg! Please take 3 minutes to complete our survey "
+                        "by running: vcpkg contact --survey");
+                }
+            }
+        }
     }
 
     if (const auto command_function = find_command(Commands::get_available_commands_type_b()))
@@ -148,80 +172,41 @@ static void inner(const VcpkgCmdArguments& args)
 static void load_config()
 {
 #if defined(_WIN32)
-    fs::path localappdata;
-    {
-        // Config path in AppDataLocal
-        wchar_t* localappdatapath = nullptr;
-        if (S_OK != SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &localappdatapath)) __fastfail(1);
-        localappdata = localappdatapath;
-        CoTaskMemFree(localappdatapath);
-    }
+    auto& fs = Files::get_real_filesystem();
 
-    std::string user_id, user_time, user_mac;
-    try
-    {
-        auto maybe_pghs = Paragraphs::get_paragraphs(Files::get_real_filesystem(), localappdata / "vcpkg" / "config");
-        if (const auto p_pghs = maybe_pghs.get())
-        {
-            const auto& pghs = *p_pghs;
-
-            std::unordered_map<std::string, std::string> keys;
-            if (pghs.size() > 0) keys = pghs[0];
-
-            for (size_t x = 1; x < pghs.size(); ++x)
-            {
-                for (auto&& p : pghs[x])
-                    keys.insert(p);
-            }
-
-            user_id = keys["User-Id"];
-            user_time = keys["User-Since"];
-            user_mac = keys["Mac-Hash"];
-        }
-    }
-    catch (...)
-    {
-    }
+    auto config = UserConfig::try_read_data(fs);
 
     bool write_config = false;
 
     // config file not found, could not be read, or invalid
-    if (user_id.empty() || user_time.empty())
+    if (config.user_id.empty() || config.user_time.empty())
     {
-        ::vcpkg::Metrics::Metrics::init_user_information(user_id, user_time);
+        ::vcpkg::Metrics::Metrics::init_user_information(config.user_id, config.user_time);
         write_config = true;
     }
 
-    if (user_mac.empty())
+    if (config.user_mac.empty())
     {
-        user_mac = Metrics::get_MAC_user();
+        config.user_mac = Metrics::get_MAC_user();
         write_config = true;
     }
 
     {
         auto locked_metrics = Metrics::g_metrics.lock();
-        locked_metrics->set_user_information(user_id, user_time);
-        locked_metrics->track_property("user_mac", user_mac);
+        locked_metrics->set_user_information(config.user_id, config.user_time);
+        locked_metrics->track_property("user_mac", config.user_mac);
     }
+
+    if (config.last_completed_survey.empty())
+    {
+        config.last_completed_survey = config.user_time;
+    }
+
+    GlobalState::g_surveydate.lock()->assign(config.last_completed_survey);
 
     if (write_config)
     {
-        try
-        {
-            std::error_code ec;
-            auto& fs = Files::get_real_filesystem();
-            fs.create_directory(localappdata / "vcpkg", ec);
-            fs.write_contents(localappdata / "vcpkg" / "config",
-                              Strings::format("User-Id: %s\n"
-                                              "User-Since: %s\n"
-                                              "Mac-Hash: %s\n",
-                                              user_id,
-                                              user_time,
-                                              user_mac));
-        }
-        catch (...)
-        {
-        }
+        config.try_write_data(fs);
     }
 #endif
 }
@@ -255,7 +240,7 @@ int main(const int argc, const char* const* const argv)
 {
     if (argc == 0) std::abort();
 
-    *GlobalState::timer.lock() = Chrono::ElapsedTime::create_started();
+    *GlobalState::timer.lock() = Chrono::ElapsedTimer::create_started();
 
 #if defined(_WIN32)
     GlobalState::g_init_console_cp = GetConsoleCP();

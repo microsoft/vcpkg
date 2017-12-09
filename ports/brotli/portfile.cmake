@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/brotli
-    REF v0.6.0
-    SHA512 36caa277790efeb5bff0fdc090cdcf00fd9995c4e81a60ed31d36af2e13848ec1afe5d84e6926eebbee013525191e9404e112cb7fbede16097221c5bc3dfb5d5
+    REF v1.0.2
+    SHA512 b3ec98159e63b4169dea3e958d60d89247dc1c0f78aab27bfffb2ece659fa024df990d410aa15c12b2082d42e3785e32ec248dce2b116c7f34e98bb6337f9fc9
     HEAD_REF master
 )
 

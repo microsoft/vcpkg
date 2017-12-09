@@ -3,7 +3,7 @@ function vcpkgHasModule([Parameter(Mandatory=$true)][string]$moduleName)
     return [bool](Get-Module -ListAvailable -Name $moduleName)
 }
 
-function vcpkgCreateDirectory([Parameter(Mandatory=$true)][string]$dirPath)
+function vcpkgCreateDirectoryIfNotExists([Parameter(Mandatory=$true)][string]$dirPath)
 {
     if (!(Test-Path $dirPath))
     {
@@ -11,19 +11,25 @@ function vcpkgCreateDirectory([Parameter(Mandatory=$true)][string]$dirPath)
     }
 }
 
-function vcpkgRemoveDirectory([Parameter(Mandatory=$true)][string]$dirPath)
+function vcpkgCreateParentDirectoryIfNotExists([Parameter(Mandatory=$true)][string]$path)
+{
+    $parentDir = split-path -parent $path
+    if ([string]::IsNullOrEmpty($parentDir))
+    {
+        return
+    }
+
+    if (!(Test-Path $parentDir))
+    {
+        New-Item -ItemType Directory -Path $parentDir | Out-Null
+    }
+}
+
+function vcpkgRemoveItem([Parameter(Mandatory=$true)][string]$dirPath)
 {
     if (Test-Path $dirPath)
     {
         Remove-Item $dirPath -Recurse -Force
-    }
-}
-
-function vcpkgRemoveFile([Parameter(Mandatory=$true)][string]$filePath)
-{
-    if (Test-Path $filePath)
-    {
-        Remove-Item $filePath -Force
     }
 }
 
@@ -101,11 +107,10 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
         return
     }
 
-    $downloadDir = split-path -parent $downloadPath
-    vcpkgCreateDirectory $downloadDir
+    vcpkgCreateParentDirectoryIfNotExists $downloadPath
 
     $downloadPartPath = "$downloadPath.part"
-    vcpkgRemoveFile $downloadPartPath
+    vcpkgRemoveItem $downloadPartPath
 
     $wc = New-Object System.Net.WebClient
     $proxyAuth = !$wc.Proxy.IsBypassed($url)
@@ -131,7 +136,7 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
         catch [System.Exception]
         {
             # If BITS fails for any reason, delete any potentially partially downloaded files and continue
-            vcpkgRemoveFile $downloadPartPath
+            vcpkgRemoveItem $downloadPartPath
         }
     }
 
@@ -141,13 +146,20 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
 }
 
 function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
-                            [Parameter(Mandatory=$true)][string]$destination)
+                            [Parameter(Mandatory=$true)][string]$destinationDir,
+                            [Parameter(Mandatory=$true)][string]$outFilename)
 {
-    vcpkgCreateDirectory $destination
-    $baseName = (Get-ChildItem .\downloads\cmake-3.9.5-win32-x86.zip).BaseName
-    $destinationPartial = "$destination\$baseName-partially_extracted"
-    vcpkgRemoveDirectory $destinationPartial
-    vcpkgCreateDirectory $destinationPartial
+    vcpkgCreateDirectoryIfNotExists $destinationDir
+    $output = "$destinationDir/$outFilename"
+    vcpkgRemoveItem $output
+    $destinationPartial = "$destinationDir/partially-extracted"
+
+    vcpkgRemoveItem $destinationPartial
+    vcpkgCreateDirectoryIfNotExists $destinationPartial
+
+    $shell = new-object -com shell.application
+    $zip = $shell.NameSpace($file)
+    $itemCount = $zip.Items().Count
 
     if (vcpkgHasCommand -commandName 'Microsoft.PowerShell.Archive\Expand-Archive')
     {
@@ -162,8 +174,6 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
     else
     {
         Write-Verbose("Extracting via shell")
-        $shell = new-object -com shell.application
-        $zip = $shell.NameSpace($file)
         foreach($item in $zip.items())
         {
             # Piping to Out-Null is used to block until finished
@@ -171,8 +181,15 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
         }
     }
 
-    Move-Item -Path "$destinationPartial\*" -Destination $destination
-    vcpkgRemoveDirectory $destinationPartial
+    if ($itemCount -eq 1)
+    {
+        Move-Item -Path "$destinationPartial\*" -Destination $output
+        vcpkgRemoveItem $destinationPartial
+    }
+    else
+    {
+        Move-Item -Path $destinationPartial -Destination $output
+    }
 }
 
 function vcpkgInvokeCommand()

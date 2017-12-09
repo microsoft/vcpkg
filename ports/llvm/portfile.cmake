@@ -2,6 +2,10 @@
 #   building with Microsoft toolchain; it's also the default on other platforms
 set(VCPKG_LIBRARY_LINKAGE static)
 
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "llvm cannot currently be built for UWP")
+endif()
+
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/llvm-5.0.0.src)
 vcpkg_download_distfile(ARCHIVE

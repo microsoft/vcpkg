@@ -1,23 +1,14 @@
 include(vcpkg_common_functions)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF v1.51
-    SHA512 33aea46d0ab8419fcd4af765c9f1a88dfb1b80ad466276b655a67f40ffedabe399db6b0d76a2ece74e551928bd6f842ae3fa42998e0b1a2206157a3852e002d6
+    REF v1.52
+    SHA512 8ada897ae33bcffa222dab4e9ff602611fa27d43f26085b8f96c313fea917d3149f1e3f4640f6156cfb7bc39bcb116106ccb4e8da1409d467e78c93bf9f7ea03
     HEAD_REF master
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(GLOB STB_HEADERS ${SOURCE_PATH}/stb_*.h)
-if(STB_HEADERS)
-    file(REMOVE ${STB_HEADERS})
-endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

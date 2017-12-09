@@ -50,12 +50,76 @@ namespace vcpkg::Chrono
         return Strings::format("%.4g ns", nanos_as_double);
     }
 
-    ElapsedTime ElapsedTime::create_started()
+    ElapsedTimer ElapsedTimer::create_started()
     {
-        ElapsedTime t;
+        ElapsedTimer t;
         t.m_start_tick = std::chrono::high_resolution_clock::now();
         return t;
     }
 
-    std::string ElapsedTime::to_string() const { return format_time_userfriendly(elapsed<std::chrono::nanoseconds>()); }
+    std::string ElapsedTime::to_string() const { return format_time_userfriendly(as<std::chrono::nanoseconds>()); }
+
+    std::string ElapsedTimer::to_string() const { return elapsed().to_string(); }
+
+    Optional<CTime> CTime::get_current_date_time()
+    {
+        CTime ret;
+
+#if defined(_WIN32)
+        struct _timeb timebuffer;
+
+        _ftime_s(&timebuffer);
+
+        const errno_t err = gmtime_s(&ret.m_tm, &timebuffer.time);
+
+        if (err)
+        {
+            return nullopt;
+        }
+#else
+        time_t now = {0};
+        time(&now);
+        auto null_if_failed = gmtime_r(&now, &ret.m_tm);
+        if (null_if_failed == nullptr)
+        {
+            return nullopt;
+        }
+#endif
+
+        return ret;
+    }
+
+    Optional<CTime> CTime::parse(CStringView str)
+    {
+        CTime ret;
+        auto assigned = sscanf_s(str.c_str(),
+                                 "%d-%d-%dT%d:%d:%d.",
+                                 &ret.m_tm.tm_year,
+                                 &ret.m_tm.tm_mon,
+                                 &ret.m_tm.tm_mday,
+                                 &ret.m_tm.tm_hour,
+                                 &ret.m_tm.tm_min,
+                                 &ret.m_tm.tm_sec);
+        if (assigned != 6) return nullopt;
+        if (ret.m_tm.tm_year < 1900) return nullopt;
+        ret.m_tm.tm_year -= 1900;
+        if (ret.m_tm.tm_mon < 1) return nullopt;
+        ret.m_tm.tm_mon -= 1;
+        mktime(&ret.m_tm);
+        return ret;
+    }
+
+    std::string CTime::to_string() const
+    {
+        std::array<char, 80> date;
+        date.fill(0);
+
+        strftime(&date[0], date.size(), "%Y-%m-%dT%H:%M:%S.0Z", &m_tm);
+        return &date[0];
+    }
+    std::chrono::system_clock::time_point CTime::to_time_point() const
+    {
+        auto t = mktime(&m_tm);
+        return std::chrono::system_clock::from_time_t(t);
+    }
 }

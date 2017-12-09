@@ -32,30 +32,29 @@ namespace vcpkg::Build
         YES
     };
 
-    inline UseHeadVersion to_use_head_version(const bool value)
-    {
-        return value ? UseHeadVersion::YES : UseHeadVersion::NO;
-    }
-
-    inline bool to_bool(const UseHeadVersion value) { return value == UseHeadVersion::YES; }
-
     enum class AllowDownloads
     {
         NO = 0,
         YES
     };
 
-    inline AllowDownloads to_allow_downloads(const bool value)
+    enum class CleanBuildtrees
     {
-        return value ? AllowDownloads::YES : AllowDownloads::NO;
-    }
+        NO = 0,
+        YES
+    };
 
-    inline bool to_bool(const AllowDownloads value) { return value == AllowDownloads::YES; }
+    enum class ConfigurationType
+    {
+        DEBUG,
+        RELEASE,
+    };
 
     struct BuildPackageOptions
     {
         UseHeadVersion use_head_version;
         AllowDownloads allow_downloads;
+        CleanBuildtrees clean_buildtrees;
     };
 
     enum class BuildResult
@@ -96,14 +95,21 @@ namespace vcpkg::Build
         std::string cmake_system_version;
         Optional<std::string> platform_toolset;
         Optional<fs::path> visual_studio_path;
+        Optional<std::string> external_toolchain_file;
+        Optional<ConfigurationType> build_type;
     };
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);
 
     struct ExtendedBuildResult
     {
+        ExtendedBuildResult(BuildResult code);
+        ExtendedBuildResult(BuildResult code, std::vector<PackageSpec>&& unmet_deps);
+        ExtendedBuildResult(BuildResult code, std::unique_ptr<BinaryControlFile>&& bcf);
+
         BuildResult code;
         std::vector<PackageSpec> unmet_dependencies;
+        std::unique_ptr<BinaryControlFile> binary_control_file;
     };
 
     struct BuildPackageConfig

@@ -9,7 +9,9 @@ namespace vcpkg
 {
     struct GlobalState
     {
-        static Util::LockGuarded<Chrono::ElapsedTime> timer;
+        static Util::LockGuarded<Chrono::ElapsedTimer> timer;
+        static Util::LockGuarded<std::string> g_surveydate;
+
         static std::atomic<bool> debugging;
         static std::atomic<bool> feature_packages;
 

@@ -11,11 +11,12 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}/cppunit-1.13.2)
+set(VERSION 1.14.0)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}/cppunit-${VERSION})
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://dev-www.libreoffice.org/src/cppunit-1.13.2.tar.gz"
-    FILENAME "cppunit-1.13.2.tar.gz"
-    SHA512 8f4be569f321d577cec31931f49f4df143bc94e283605509b6ea50c60690aa91a2aed940e7eebd4b2413a4218f9a6c3978d312d8e587eab040283c6563846ecd
+    URLS "http://dev-www.libreoffice.org/src/cppunit-${VERSION}.tar.gz"
+    FILENAME "cppunit-${VERSION}.tar.gz"
+    SHA512 4ea1da423c6f7ab37e4144689f593396829ce74d43872d6b10709c1ad5fbda4ee945842f7e9803592520ef81ac713e95a3fe130295bf048cd32a605d1959882e
 )
 
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET})

@@ -11,11 +11,11 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libtorrent-libtorrent-1_1_4)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libtorrent-libtorrent-1_1_5)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/arvidn/libtorrent/archive/libtorrent-1_1_4.zip"
-    FILENAME "libtorrent-1_1_4.zip"
-    SHA512 fd3b875c9626721db9b3e719ce50deeb6f39a030df1e23dd421d0b142aac9c3bb7bee3a61f0c18bb30f85d4dd6131fe90d6138c09ba598f09230824f8d5a3fb1
+    URLS "https://github.com/arvidn/libtorrent/archive/libtorrent-1_1_5.zip"
+    FILENAME "libtorrent-1_1_5.zip"
+    SHA512 ebb7c1b08a4b07b4db54050a099950dc61446e2e7fcceb82c5db8e0629c7718c3c8808ee59d5f361ad85c75f7034a33dfcb5ebd619ef0bb9b5ae0cfdd10d01b5
 )
 
 vcpkg_extract_source_archive(${ARCHIVE})

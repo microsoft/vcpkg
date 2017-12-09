@@ -8,8 +8,8 @@ message(WARNING
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO HowardHinnant/date
-  REF 272d487b3d490126e520b67fe76bbb2e67226c07
-  SHA512   59e8ff642d3eb82cb6116a77d4c5e14bbc2ae6bd4019e64a49609b6e46d679c2cb4ccae74807b72223aed18ae015596193919cdb58b011bfb774ff3e29a1d43b
+  REF c286981b3bf83c79554769df68b27415cee68d77
+  SHA512 226e2cbc2598fbbe3a451664b017ab5b4314a682a9303268bd531931ea23baa4c9677c4433a87dbbc4a7d960dcfad1fcb632ac430d5d81c9909bcc567cf7eadf
   HEAD_REF master
 )
 
@@ -25,7 +25,7 @@ vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
-set(HEADER "${CURRENT_PACKAGES_DIR}/include/tz.h")
+set(HEADER "${CURRENT_PACKAGES_DIR}/include/date/tz.h")
 file(READ "${HEADER}" _contents)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
   string(REPLACE "DATE_BUILD_DLL" "1" _contents "${_contents}")

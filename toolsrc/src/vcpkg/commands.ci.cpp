@@ -41,7 +41,11 @@ namespace vcpkg::Commands::CI
 
         Checks::check_exit(VCPKG_LINE_INFO, !install_plan.empty(), "Install plan cannot be empty");
 
-        const Build::BuildPackageOptions install_plan_options = {Build::UseHeadVersion::NO, Build::AllowDownloads::YES};
+        const Build::BuildPackageOptions install_plan_options = {
+            Build::UseHeadVersion::NO,
+            Build::AllowDownloads::YES,
+            Build::CleanBuildtrees::YES,
+        };
 
         const std::vector<Dependencies::AnyAction> action_plan =
             Util::fmap(install_plan, [&install_plan_options](InstallPlanAction& install_action) {
@@ -49,7 +53,7 @@ namespace vcpkg::Commands::CI
                 return Dependencies::AnyAction(std::move(install_action));
             });
 
-        return Install::perform(action_plan, Install::KeepGoing::YES, Install::CleanBuildtrees::YES, paths, status_db);
+        return Install::perform(action_plan, Install::KeepGoing::YES, paths, status_db);
     }
 
     struct TripletAndSummary
@@ -59,9 +63,11 @@ namespace vcpkg::Commands::CI
     };
 
     static const std::string OPTION_EXCLUDE = "--exclude";
+    static const std::string OPTION_XUNIT = "--x-xunit";
 
-    static const std::array<CommandSetting, 1> CI_SETTINGS = {{
+    static const std::array<CommandSetting, 2> CI_SETTINGS = {{
         {OPTION_EXCLUDE, "Comma separated list of ports to skip"},
+        {OPTION_XUNIT, "File to output results in XUnit format (internal)"},
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -108,6 +114,18 @@ namespace vcpkg::Commands::CI
             System::println("\nTriplet: %s", result.triplet);
             System::println("Total elapsed time: %s", result.summary.total_elapsed_time);
             result.summary.print();
+        }
+
+        auto it_xunit = options.settings.find(OPTION_XUNIT);
+        if (it_xunit != options.settings.end())
+        {
+            std::string xunit_doc = "<assemblies><assembly><collection>\n";
+
+            for (auto&& result : results)
+                xunit_doc += result.summary.xunit_results();
+
+            xunit_doc += "</collection></assembly></assemblies>\n";
+            paths.get_filesystem().write_contents(fs::u8path(it_xunit->second), xunit_doc);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
