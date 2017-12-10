@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cdcseacave/TinyEXIF
-    REF 1.0.0
-    SHA512 530b3e165bc51fa5a1bb29ea1f8cb5d7100a995347622d50375fdb5fab36139e9474d97ae2e3d54ac2886c2da1fe7138ed15710277410b6a6504ce05537fff28
+    REF 1.0.1
+    SHA512 d018d882adbcebf9fa8ad67a78304a1dd21ffd3a01e3cf2d269fa34efedc5ec5f293767f3a21d62cb1bb9b88b2c364977a9125e9b88b2eac7866a8d6b27c2f23
     HEAD_REF master
 )
 
