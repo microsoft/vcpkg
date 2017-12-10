@@ -73,7 +73,7 @@ if(NOT DEFINED _VCPKG_ROOT_DIR)
             SET(_VCPKG_ROOT_DIR_CANDIDATE ${_VCPKG_ROOT_DIR_TEMP})
         endif()
     endwhile()
-    set(_VCPKG_ROOT_DIR ${_VCPKG_ROOT_DIR_CANDIDATE} CACHE STRING "Vcpkg root directory")
+    set(_VCPKG_ROOT_DIR ${_VCPKG_ROOT_DIR_CANDIDATE} CACHE INTERNAL "Vcpkg root directory")
 endif()
 set(_VCPKG_INSTALLED_DIR ${_VCPKG_ROOT_DIR}/installed)
 
