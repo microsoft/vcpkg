@@ -24,6 +24,8 @@ file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/libspeex.def"
   "speex_nb_mode\n"
   "speex_wb_mode\n"
   "speex_uwb_mode\n"
+  "speex_mode_list\n"
+  "speex_header_free\n"
 )
 
 set(SRC
