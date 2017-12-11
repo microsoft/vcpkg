@@ -1,0 +1,3 @@
+Source: clfft
+Version: 2.12.2
+Description: clFFT is an OpenCL 1.2 accelerated Fast Fourier Transform library.
