@@ -1,8 +1,10 @@
 #include "pch.h"
 
+#include <vcpkg/base/chrono.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
+#include <vcpkg/userconfig.h>
 
 namespace vcpkg::Commands::Contact
 {
@@ -28,6 +30,17 @@ namespace vcpkg::Commands::Contact
 
         if (Util::Sets::contains(parsed_args.switches, switches[0].name))
         {
+#if defined(_WIN32)
+            auto maybe_now = Chrono::CTime::get_current_date_time();
+            if (auto p_now = maybe_now.get())
+            {
+                auto& fs = Files::get_real_filesystem();
+                auto config = UserConfig::try_read_data(fs);
+                config.last_completed_survey = p_now->to_string();
+                config.try_write_data(fs);
+            }
+#endif
+
             System::cmd_execute("start https://aka.ms/NPS_vcpkg");
             System::println("Default browser launched to https://aka.ms/NPS_vcpkg, thank you for your feedback!");
         }

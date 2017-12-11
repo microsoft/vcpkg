@@ -25,12 +25,29 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS -Dgtest_force_shared_crt=${gtest_force_shared_crt}
 )
 
 set(ENV{_CL_} "/D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING")
 
 vcpkg_install_cmake()
+
+file(
+    INSTALL
+        "${SOURCE_PATH}/googletest/src/gtest.cc"
+        "${SOURCE_PATH}/googletest/src/gtest_main.cc"
+        "${SOURCE_PATH}/googletest/src/gtest-all.cc"
+        "${SOURCE_PATH}/googletest/src/gtest-death-test.cc"
+        "${SOURCE_PATH}/googletest/src/gtest-filepath.cc"
+        "${SOURCE_PATH}/googletest/src/gtest-internal-inl.h"
+        "${SOURCE_PATH}/googletest/src/gtest-port.cc"
+        "${SOURCE_PATH}/googletest/src/gtest-printers.cc"
+        "${SOURCE_PATH}/googletest/src/gtest-test-part.cc"
+        "${SOURCE_PATH}/googletest/src/gtest-typed-test.cc"
+    DESTINATION
+        ${CURRENT_PACKAGES_DIR}/src
+)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL ${SOURCE_PATH}/googletest/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/gtest RENAME copyright)
@@ -54,10 +71,10 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gtest_main.lib ${CURRENT_PACKAGES_DIR}/l
 file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gmock.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/gmock.lib)
 file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gmock_main.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/gmock_main.lib)
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gtest.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/gtest.lib)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gtest_main.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/gtest_main.lib)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gmock.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/gmock.lib)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gmock_main.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/gmock_main.lib)
+file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gtest.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/gtestd.lib)
+file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gtest_main.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/gtest_maind.lib)
+file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gmock.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/gmockd.lib)
+file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gmock_main.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/gmock_maind.lib)
 
 vcpkg_copy_pdbs()
 

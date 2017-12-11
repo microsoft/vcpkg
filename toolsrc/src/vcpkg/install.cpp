@@ -484,18 +484,18 @@ namespace vcpkg::Install
     {
         std::vector<SpecSummary> results;
 
-        const auto timer = Chrono::ElapsedTime::create_started();
+        const auto timer = Chrono::ElapsedTimer::create_started();
         size_t counter = 0;
         const size_t package_count = action_plan.size();
 
         for (const auto& action : action_plan)
         {
-            const auto build_timer = Chrono::ElapsedTime::create_started();
+            const auto build_timer = Chrono::ElapsedTimer::create_started();
             counter++;
 
             const PackageSpec& spec = action.spec();
             const std::string display_name = spec.to_string();
-            System::println("Starting package %d/%d: %s", counter, package_count, display_name);
+            System::println("Starting package %zd/%zd: %s", counter, package_count, display_name);
 
             results.emplace_back(spec, &action);
 
@@ -521,8 +521,8 @@ namespace vcpkg::Install
                 Checks::unreachable(VCPKG_LINE_INFO);
             }
 
-            results.back().timing = build_timer.to_string();
-            System::println("Elapsed time for package %s: %s", display_name, build_timer.to_string());
+            results.back().timing = build_timer.elapsed();
+            System::println("Elapsed time for package %s: %s", display_name, results.back().timing.to_string());
         }
 
         return InstallSummary{std::move(results), timer.to_string()};
@@ -533,6 +533,7 @@ namespace vcpkg::Install
     static const std::string OPTION_NO_DOWNLOADS = "--no-downloads";
     static const std::string OPTION_RECURSE = "--recurse";
     static const std::string OPTION_KEEP_GOING = "--keep-going";
+    static const std::string OPTION_XUNIT = "--x-xunit";
 
     static const std::array<CommandSwitch, 5> INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
@@ -541,7 +542,9 @@ namespace vcpkg::Install
         {OPTION_RECURSE, "Allow removal of packages as part of installation"},
         {OPTION_KEEP_GOING, "Continue installing packages on failure"},
     }};
-    static const std::array<std::string, 0> INSTALL_SETTINGS;
+    static const std::array<CommandSetting, 1> INSTALL_SETTINGS = {{
+        {OPTION_XUNIT, "File to output results in XUnit format (Internal use)"},
+    }};
 
     std::vector<std::string> get_all_port_names(const VcpkgPaths& paths)
     {
@@ -555,7 +558,7 @@ namespace vcpkg::Install
         Help::create_example_string("install zlib zlib:x64-windows curl boost"),
         1,
         SIZE_MAX,
-        {INSTALL_SWITCHES, {}},
+        {INSTALL_SWITCHES, INSTALL_SETTINGS},
         &get_all_port_names,
     };
 
@@ -627,7 +630,7 @@ namespace vcpkg::Install
                         library_target_pair.second.erase(library_target_pair.second.begin() + 4,
                                                          library_target_pair.second.end());
                         System::println("    find_package(%s REQUIRED)\n"
-                                        "    # Note: %d targets were omitted\n"
+                                        "    # Note: %zd targets were omitted\n"
                                         "    target_link_libraries(main PRIVATE %s)\n",
                                         library_target_pair.first,
                                         omitted,
@@ -735,6 +738,17 @@ namespace vcpkg::Install
             summary.print();
         }
 
+        auto it_xunit = options.settings.find(OPTION_XUNIT);
+        if (it_xunit != options.settings.end())
+        {
+            std::string xunit_doc = "<assemblies><assembly><collection>\n";
+
+            xunit_doc += summary.xunit_results();
+
+            xunit_doc += "</collection></assembly></assemblies>\n";
+            paths.get_filesystem().write_contents(fs::u8path(it_xunit->second), xunit_doc);
+        }
+
         for (auto&& result : summary.results)
         {
             if (!result.action) continue;
@@ -751,7 +765,7 @@ namespace vcpkg::Install
     }
 
     SpecSummary::SpecSummary(const PackageSpec& spec, const Dependencies::AnyAction* action)
-        : spec(spec), build_result{BuildResult::NULLVALUE, nullptr}, timing("0"), action(action)
+        : spec(spec), build_result{BuildResult::NULLVALUE, nullptr}, action(action)
     {
     }
 
@@ -769,5 +783,42 @@ namespace vcpkg::Install
                 }
             }
         return nullptr;
+    }
+
+    std::string InstallSummary::xunit_results() const
+    {
+        std::string xunit_doc;
+        for (auto&& result : results)
+        {
+            std::string inner_block;
+            const char* result_string = "";
+            switch (result.build_result.code)
+            {
+                case BuildResult::POST_BUILD_CHECKS_FAILED:
+                case BuildResult::FILE_CONFLICTS:
+                case BuildResult::BUILD_FAILED:
+                    result_string = "Fail";
+                    inner_block = Strings::format("<failure><message><![CDATA[%s]]></message></failure>",
+                                                  to_string(result.build_result.code));
+                    break;
+                case BuildResult::EXCLUDED:
+                case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES:
+                    result_string = "Skip";
+                    inner_block =
+                        Strings::format("<reason><![CDATA[%s]]></reason>", to_string(result.build_result.code));
+                    break;
+                case BuildResult::SUCCEEDED: result_string = "Pass"; break;
+                default: Checks::exit_fail(VCPKG_LINE_INFO);
+            }
+
+            xunit_doc += Strings::format(R"(<test name="%s" method="%s" time="%lld" result="%s">%s</test>)"
+                                         "\n",
+                                         result.spec,
+                                         result.spec,
+                                         result.timing.as<std::chrono::seconds>().count(),
+                                         result_string,
+                                         inner_block);
+        }
+        return xunit_doc;
     }
 }

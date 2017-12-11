@@ -2,9 +2,25 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO log4cplus/log4cplus
-    REF REL_1_2_1-RC2
-    SHA512  480a2a61b01e988253c1bf2bb26088030541a63811c8ffbb9e90581d556b717df5220e3ff72eedd27ea704af35218f71f20ceadf4d6d94984b4f56d273b4d3a3
+    REF REL_2_0_0-RC2
+    SHA512  34392d85088534e0661e6fa9726c5970647a5acaa559bafb5d3746a70f5baca01012f457d50c15e73d9aca1d3ed9ec99028cc65fab07f73cdadbbc0b4329bcb5
     HEAD_REF master
+)
+
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://github.com/log4cplus/ThreadPool/archive/dda9e3d40502e85ce082c05d2c05c1bc94348b6a.tar.gz"
+    FILENAME "log4cplus-threadpool-97b5877b9c49d02abf.tar.gz"
+    SHA512 97b5877b9c49d02abfcba4ca1312b833b58e4f0e9884fdcf57c20b7ec58801ed24742c8316512b4de8ab29bae42cc1e34058c0d2443c3a5950a2fb3434f86662
+)
+vcpkg_extract_source_archive(${ARCHIVE})
+
+file(
+    COPY
+        ${CURRENT_BUILDTREES_DIR}/src/ThreadPool-master/COPYING
+        ${CURRENT_BUILDTREES_DIR}/src/ThreadPool-master/example.cpp
+        ${CURRENT_BUILDTREES_DIR}/src/ThreadPool-master/README.md
+        ${CURRENT_BUILDTREES_DIR}/src/ThreadPool-master/ThreadPool.h
+    DESTINATION ${SOURCE_PATH}/threadpool
 )
 
 vcpkg_configure_cmake(

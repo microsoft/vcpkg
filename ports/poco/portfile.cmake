@@ -1,12 +1,12 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/poco-poco-1.7.8-release)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/pocoproject/poco/archive/poco-1.7.8-release.tar.gz"
-    FILENAME "poco-poco-1.7.8-release.tar.gz"
-    SHA512 50a47e6f69491859f48b72e3695c380ec871f7d5249d938216e3be41579d752675e5d746a150720d93122f87f585ebeea24dc9660c81642a12e70f761b9d2502
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO pocoproject/poco
+    REF poco-1.8.0.1-release
+    SHA512 b4a58053235582038186bdddbfa4842833bb3529af9522662e935efaf852f5155addd510729ea5c148b3bcc57ed3b8287cd98cbeb6d04e1a13bd31fadbdf7ad8
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}

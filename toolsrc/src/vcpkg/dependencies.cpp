@@ -114,19 +114,19 @@ namespace vcpkg::Dependencies
     {
         if (const auto p = this->status_paragraph.get())
         {
-            return PackageSpec::to_package_specs(p->package.depends, triplet);
+            return PackageSpec::from_dependencies_of_port(p->package.spec.name(), p->package.depends, triplet);
         }
 
         if (const auto p = this->binary_control_file.get())
         {
             auto deps = Util::fmap_flatten(p->features, [](const BinaryParagraph& pgh) { return pgh.depends; });
             deps.insert(deps.end(), p->core_paragraph.depends.cbegin(), p->core_paragraph.depends.cend());
-            return PackageSpec::to_package_specs(deps, triplet);
+            return PackageSpec::from_dependencies_of_port(p->core_paragraph.spec.name(), deps, triplet);
         }
 
         if (const auto p = this->source_paragraph.get())
         {
-            return PackageSpec::to_package_specs(filter_dependencies(p->depends, triplet), triplet);
+            return PackageSpec::from_dependencies_of_port(p->name, filter_dependencies(p->depends, triplet), triplet);
         }
 
         Checks::exit_with_message(VCPKG_LINE_INFO,

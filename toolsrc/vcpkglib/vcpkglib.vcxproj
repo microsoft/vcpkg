@@ -178,6 +178,7 @@
     <ClInclude Include="..\include\vcpkg\statusparagraphs.h" />
     <ClInclude Include="..\include\vcpkg\triplet.h" />
     <ClInclude Include="..\include\vcpkg\update.h" />
+    <ClInclude Include="..\include\vcpkg\userconfig.h" />
     <ClInclude Include="..\include\vcpkg\vcpkgcmdarguments.h" />
     <ClInclude Include="..\include\vcpkg\vcpkglib.h" />
     <ClInclude Include="..\include\vcpkg\vcpkgpaths.h" />
@@ -240,6 +241,7 @@
     <ClCompile Include="..\src\vcpkg\statusparagraphs.cpp" />
     <ClCompile Include="..\src\vcpkg\triplet.cpp" />
     <ClCompile Include="..\src\vcpkg\update.cpp" />
+    <ClCompile Include="..\src\vcpkg\userconfig.cpp" />
     <ClCompile Include="..\src\vcpkg\vcpkgcmdarguments.cpp" />
     <ClCompile Include="..\src\vcpkg\vcpkglib.cpp" />
     <ClCompile Include="..\src\vcpkg\vcpkgpaths.cpp" />

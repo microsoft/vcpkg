@@ -12,6 +12,7 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/gmp_printf.c DESTINATION ${SOURCE_PATH}/src)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()
