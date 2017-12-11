@@ -1,5 +1,14 @@
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fftw-3.3.7)
+
+# This can be removed in the next source code update
+if(EXISTS "${SOURCE_PATH}/CMakeLists.txt")
+    file(READ "${SOURCE_PATH}/CMakeLists.txt" _contents)
+    if("${_contents}" MATCHES "-D_OPENMP -DLIBFFTWF33_EXPORTS /openmp /bigobj")
+        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
+    endif()
+endif()
+
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.fftw.org/fftw-3.3.7.tar.gz"
     FILENAME "fftw-3.3.7.tar.gz"
@@ -11,9 +20,6 @@ vcpkg_extract_source_archive(${ARCHIVE})
 option(BUILD_SINGLE "Additionally build single precision library" ON)
 option(BUILD_LONG_DOUBLE "Additionally build long-double precision library" ON)
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h DESTINATION ${SOURCE_PATH})
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -23,7 +29,13 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(COPY ${SOURCE_PATH}/api/fftw3.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/)
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/share/fftw3)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
+
 
 if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
     vcpkg_apply_patches(

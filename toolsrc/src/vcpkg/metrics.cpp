@@ -233,12 +233,41 @@ namespace vcpkg::Metrics
 
     bool get_compiled_metrics_enabled() { return DISABLE_METRICS == 0; }
 
-    std::string get_SQM_user()
+    static fs::path get_vcpkg_root()
+    {
+        return Files::get_real_filesystem().find_file_recursively_up(
+            fs::stdfs::absolute(System::get_exe_path_of_current_process()), ".vcpkg-root");
+    }
+
+    std::string get_MAC_user()
     {
 #if defined(_WIN32)
-        auto hkcu_sqmclient =
-            System::get_registry_string(HKEY_CURRENT_USER, R"(Software\Microsoft\SQMClient)", "UserId");
-        return hkcu_sqmclient.value_or("{}");
+        auto getmac = System::cmd_execute_and_capture_output("getmac");
+
+        if (getmac.exit_code != 0) return "0";
+
+        std::regex mac_regex("([a-fA-F0-9]{2}(-[a-fA-F0-9]{2}){5})");
+        std::sregex_iterator next(getmac.output.begin(), getmac.output.end(), mac_regex);
+        std::sregex_iterator last;
+
+        while (next != last)
+        {
+            auto match = *next;
+            if (match[0] != "00-00-00-00-00-00")
+            {
+                const std::string matchstr = match[0];
+                const System::PowershellParameter value("Value", matchstr);
+                auto hash_result = System::powershell_execute_and_capture_output(
+                    "SHA256Hash", get_vcpkg_root() / "scripts" / "SHA256Hash.ps1", {value});
+                Util::erase_remove_if(hash_result,
+                                      [](char ch) { return !(ch >= 'A' && ch <= 'F') && !(ch >= '0' && ch <= '9'); });
+                hash_result = Strings::ascii_to_lowercase(hash_result);
+                return hash_result;
+            }
+            ++next;
+        }
+
+        return "0";
 #else
         return "{}";
 #endif

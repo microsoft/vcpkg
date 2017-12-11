@@ -223,33 +223,37 @@ set(B2_OPTIONS_REL
 ######################
 # Perform build + Package
 ######################
-message(STATUS "Building ${TARGET_TRIPLET}-rel")
-set(ENV{BOOST_BUILD_PATH} ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-vcpkg_execute_required_process_repeat(
-    COUNT 2
-    COMMAND "${SOURCE_PATH}/b2.exe"
-        --stagedir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/stage
-        --build-dir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-        ${B2_OPTIONS_REL}
-        variant=release
-        debug-symbols=on
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME build-${TARGET_TRIPLET}-rel
-)
-message(STATUS "Building ${TARGET_TRIPLET}-rel done")
-message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-set(ENV{BOOST_BUILD_PATH} ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-vcpkg_execute_required_process_repeat(
-    COUNT 2
-    COMMAND "${SOURCE_PATH}/b2.exe"
-        --stagedir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/stage
-        --build-dir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-        ${B2_OPTIONS_DBG}
-        variant=debug
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME build-${TARGET_TRIPLET}-dbg
-)
-message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    message(STATUS "Building ${TARGET_TRIPLET}-rel")
+    set(ENV{BOOST_BUILD_PATH} ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+    vcpkg_execute_required_process_repeat(
+        COUNT 2
+        COMMAND "${SOURCE_PATH}/b2.exe"
+            --stagedir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/stage
+            --build-dir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+            ${B2_OPTIONS_REL}
+            variant=release
+            debug-symbols=on
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME build-${TARGET_TRIPLET}-rel
+    )
+    message(STATUS "Building ${TARGET_TRIPLET}-rel done")
+endif()
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    message(STATUS "Building ${TARGET_TRIPLET}-dbg")
+    set(ENV{BOOST_BUILD_PATH} ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+    vcpkg_execute_required_process_repeat(
+        COUNT 2
+        COMMAND "${SOURCE_PATH}/b2.exe"
+            --stagedir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/stage
+            --build-dir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
+            ${B2_OPTIONS_DBG}
+            variant=debug
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME build-${TARGET_TRIPLET}-dbg
+    )
+    message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
+endif()
 
 message(STATUS "Packaging headers")
 file(
@@ -294,32 +298,36 @@ function(boost_rename_libs LIBS)
     endforeach()
 endfunction()
 
-message(STATUS "Packaging ${TARGET_TRIPLET}-rel")
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/stage/lib/
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-    FILES_MATCHING PATTERN "*.lib")
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    message(STATUS "Packaging ${TARGET_TRIPLET}-rel")
     file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/stage/lib/
-        DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-        FILES_MATCHING PATTERN "*.dll")
+        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
+        FILES_MATCHING PATTERN "*.lib")
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/stage/lib/
+            DESTINATION ${CURRENT_PACKAGES_DIR}/bin
+            FILES_MATCHING PATTERN "*.dll")
+    endif()
+    file(GLOB RELEASE_LIBS ${CURRENT_PACKAGES_DIR}/lib/*.lib)
+
+    boost_rename_libs(RELEASE_LIBS)
+    message(STATUS "Packaging ${TARGET_TRIPLET}-rel done")
 endif()
-file(GLOB RELEASE_LIBS ${CURRENT_PACKAGES_DIR}/lib/*.lib)
 
-boost_rename_libs(RELEASE_LIBS)
-message(STATUS "Packaging ${TARGET_TRIPLET}-rel done")
-
-message(STATUS "Packaging ${TARGET_TRIPLET}-dbg")
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/stage/lib/
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-    FILES_MATCHING PATTERN "*.lib")
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    message(STATUS "Packaging ${TARGET_TRIPLET}-dbg")
     file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/stage/lib/
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-        FILES_MATCHING PATTERN "*.dll")
+        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+        FILES_MATCHING PATTERN "*.lib")
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/stage/lib/
+            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
+            FILES_MATCHING PATTERN "*.dll")
+    endif()
+    file(GLOB DEBUG_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/*.lib)
+    boost_rename_libs(DEBUG_LIBS)
+    message(STATUS "Packaging ${TARGET_TRIPLET}-dbg done")
 endif()
-file(GLOB DEBUG_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/*.lib)
-boost_rename_libs(DEBUG_LIBS)
-message(STATUS "Packaging ${TARGET_TRIPLET}-dbg done")
 
 macro(move_to_manual_link LIBNAME)
     if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/${LIBNAME}-vc140-mt-${VERSION_FULL}.lib)
@@ -342,3 +350,5 @@ move_to_manual_link(boost_test_exec_monitor)
 move_to_manual_link(boost_prg_exec_monitor)
 
 vcpkg_copy_pdbs()
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

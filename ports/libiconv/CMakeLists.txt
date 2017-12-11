@@ -1,20 +1,5 @@
-##
-## CMake support for libiconv
-## based on the work here: https://github.com/vovythevov/libiconv-cmake
-##
-
 cmake_minimum_required(VERSION 3.0.0)
-project(Libiconv)
-
-#
-# Options
-#
-
-# Config file
-configure_file(
-  ${Libiconv_SOURCE_DIR}/config.h.in
-  ${Libiconv_BINARY_DIR}/config.h
-)
+project(libiconv C)
 
 if(BUILD_SHARED_LIBS)
   set(LIBICONV_DYNAMIC "1 /*LIBICONV_DYNAMIC*/")
@@ -26,59 +11,37 @@ set(USE_MBSTATE_T "0 /*USE_MBSTATE_T*/")
 set(BROKEN_WCHAR_H "0 /*BROKEN_WCHAR_H*/")
 set(HAVE_VISIBILITY "0 /*HAVE_VISIBILITY*/")
 
-include_directories(${Libiconv_SOURCE_DIR} ${Libiconv_BINARY_DIR})
+configure_file(config.h.in config.h)
+file(READ "${CMAKE_CURRENT_BINARY_DIR}/config.h" _contents)
+string(REPLACE "#undef HAVE_WORKING_O_NOFOLLOW" "#define HAVE_WORKING_O_NOFOLLOW 0" _contents "${_contents}")
+string(REPLACE "#undef HAVE_MBRTOWC" "#define HAVE_MBRTOWC 1" _contents "${_contents}")
+string(REPLACE "#undef HAVE_MBSINIT" "#define HAVE_MBSINIT 1" _contents "${_contents}")
+string(REPLACE "#undef HAVE_WCRTOMB" "#define HAVE_WCRTOMB 1" _contents "${_contents}")
+string(REPLACE "#undef ICONV_CONST" "#define ICONV_CONST const" _contents "${_contents}")
+string(REPLACE "#undef EILSEQ" "" _contents "${_contents}")
+string(REPLACE "#undef WORDS_LITTLEENDIAN" "#define WORDS_LITTLEENDIAN 1" _contents "${_contents}")
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/config.h" "${_contents}")
 
-#
-# Build libcharset
-#
-set(libname libcharset)
-set(libcharset_source_dir ${Libiconv_SOURCE_DIR}/libcharset)
+configure_file(libcharset/include/localcharset.h.build.in localcharset.h)
+configure_file(include/iconv.h.build.in iconv.h)
 
-add_definitions(-DLIBDIR)
-  
-configure_file(
-  ${Libiconv_SOURCE_DIR}/libcharset/include/localcharset.h.build.in
-  ${Libiconv_BINARY_DIR}/localcharset.h
-)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
-set(${libname}_sources
-  ${libcharset_source_dir}/lib/localcharset.c
-  ${Libiconv_BINARY_DIR}/localcharset.h
-)
+add_definitions(-DLIBDIR -D_CRT_SECURE_NO_WARNINGS)
 
-add_library(${libname} ${${libname}_sources})
-list(APPEND Libiconv_TARGETS ${libname})
-list(APPEND Libiconv_headers ${Libiconv_BINARY_DIR}/localcharset.h)
+add_library(libcharset libcharset/lib/localcharset.c)
 
-#
-# Build libiconv
-#
-set(libname libiconv)
+add_library(libiconv lib/iconv.c)
+target_link_libraries(libiconv libcharset)
 
-add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-
-configure_file(
-  ${Libiconv_SOURCE_DIR}/include/iconv.h.build.in
-  ${Libiconv_BINARY_DIR}/iconv.h
-  )
-
-set(${libname}_sources
-  ${Libiconv_SOURCE_DIR}/lib/iconv.c
-  ${Libiconv_BINARY_DIR}/iconv.h
-)
-
-add_library(${libname} ${${libname}_sources})
-target_link_libraries(${libname} libcharset)
-list(APPEND Libiconv_TARGETS ${libname})
-list(APPEND Libiconv_headers ${Libiconv_BINARY_DIR}/iconv.h)
-
-#
-# Export targets
-#
-install(TARGETS ${Libiconv_TARGETS}
+install(TARGETS libcharset libiconv
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )
 
-install(FILES ${Libiconv_headers} DESTINATION include)
+install(FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/iconv.h
+  ${CMAKE_CURRENT_BINARY_DIR}/localcharset.h
+  DESTINATION include
+)

@@ -41,7 +41,11 @@ namespace vcpkg::Commands::CI
 
         Checks::check_exit(VCPKG_LINE_INFO, !install_plan.empty(), "Install plan cannot be empty");
 
-        const Build::BuildPackageOptions install_plan_options = {Build::UseHeadVersion::NO, Build::AllowDownloads::YES};
+        const Build::BuildPackageOptions install_plan_options = {
+            Build::UseHeadVersion::NO,
+            Build::AllowDownloads::YES,
+            Build::CleanBuildtrees::YES,
+        };
 
         const std::vector<Dependencies::AnyAction> action_plan =
             Util::fmap(install_plan, [&install_plan_options](InstallPlanAction& install_action) {
@@ -75,8 +79,14 @@ namespace vcpkg::Commands::CI
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
-        const std::vector<std::string> exclusions = Strings::split(options.settings.at(OPTION_EXCLUDE), ",");
-        const std::set<std::string> exclusions_set(exclusions.cbegin(), exclusions.cend());
+
+        std::set<std::string> exclusions_set;
+        auto it_exclusions = options.settings.find(OPTION_EXCLUDE);
+        if (it_exclusions != options.settings.end())
+        {
+            auto exclusions = Strings::split(it_exclusions->second, ",");
+            exclusions_set.insert(exclusions.begin(), exclusions.end());
+        }
 
         std::vector<Triplet> triplets;
         for (const std::string& triplet : args.command_arguments)

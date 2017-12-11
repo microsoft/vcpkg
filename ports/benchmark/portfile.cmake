@@ -1,3 +1,7 @@
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "${PORT} does not currently support UWP")
+endif()
+
 if(VCPKG_CRT_LINKAGE STREQUAL static)
   message(FATAL_ERROR "Google benchmark only supports dynamic crt linkage.")
 endif()

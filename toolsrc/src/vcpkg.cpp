@@ -157,6 +157,7 @@ static void load_config()
         CoTaskMemFree(localappdatapath);
     }
 
+    std::string user_id, user_time, user_mac;
     try
     {
         auto maybe_pghs = Paragraphs::get_paragraphs(Files::get_real_filesystem(), localappdata / "vcpkg" / "config");
@@ -173,39 +174,54 @@ static void load_config()
                     keys.insert(p);
             }
 
-            auto user_id = keys["User-Id"];
-            auto user_time = keys["User-Since"];
-            if (!user_id.empty() && !user_time.empty())
-            {
-                Metrics::g_metrics.lock()->set_user_information(user_id, user_time);
-                return;
-            }
+            user_id = keys["User-Id"];
+            user_time = keys["User-Since"];
+            user_mac = keys["Mac-Hash"];
         }
     }
     catch (...)
     {
     }
 
+    bool write_config = false;
+
     // config file not found, could not be read, or invalid
-    std::string user_id, user_time;
+    if (user_id.empty() || user_time.empty())
+    {
+        ::vcpkg::Metrics::Metrics::init_user_information(user_id, user_time);
+        write_config = true;
+    }
+
+    if (user_mac.empty())
+    {
+        user_mac = Metrics::get_MAC_user();
+        write_config = true;
+    }
+
     {
         auto locked_metrics = Metrics::g_metrics.lock();
-        locked_metrics->init_user_information(user_id, user_time);
         locked_metrics->set_user_information(user_id, user_time);
+        locked_metrics->track_property("user_mac", user_mac);
     }
-    try
+
+    if (write_config)
     {
-        std::error_code ec;
-        auto& fs = Files::get_real_filesystem();
-        fs.create_directory(localappdata / "vcpkg", ec);
-        fs.write_contents(localappdata / "vcpkg" / "config",
-                          Strings::format("User-Id: %s\n"
-                                          "User-Since: %s\n",
-                                          user_id,
-                                          user_time));
-    }
-    catch (...)
-    {
+        try
+        {
+            std::error_code ec;
+            auto& fs = Files::get_real_filesystem();
+            fs.create_directory(localappdata / "vcpkg", ec);
+            fs.write_contents(localappdata / "vcpkg" / "config",
+                              Strings::format("User-Id: %s\n"
+                                              "User-Since: %s\n"
+                                              "Mac-Hash: %s\n",
+                                              user_id,
+                                              user_time,
+                                              user_mac));
+        }
+        catch (...)
+        {
+        }
     }
 #endif
 }
@@ -259,7 +275,6 @@ int main(const int argc, const char* const* const argv)
 #endif
     }
     load_config();
-    Metrics::g_metrics.lock()->track_property("sqmuser", Metrics::get_SQM_user());
 
     const VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(argc, argv);
 

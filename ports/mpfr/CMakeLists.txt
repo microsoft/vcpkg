@@ -11,6 +11,7 @@ set(GMP_INCLUDE_DIRS ${GMP_INCLUDE_DIR})
 
 # Sources
 set(SRCS
+  src/gmp_printf.c
   src/mpfr.h
   src/mpf2mpfr.h
   src/mpfr-gmp.h

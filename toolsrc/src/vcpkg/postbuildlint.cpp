@@ -38,27 +38,41 @@ namespace vcpkg::PostBuildLint
         }
     };
 
-    Span<const OutdatedDynamicCrt> get_outdated_dynamic_crts(CStringView toolset)
+    Span<const OutdatedDynamicCrt> get_outdated_dynamic_crts(const Optional<std::string>& toolset_version)
     {
-        static const std::vector<OutdatedDynamicCrt> V_NO_MSVCRT = {
+        static const std::vector<OutdatedDynamicCrt> V_NO_120 = {
             {"msvcp100.dll", R"(msvcp100\.dll)"},
             {"msvcp100d.dll", R"(msvcp100d\.dll)"},
             {"msvcp110.dll", R"(msvcp110\.dll)"},
             {"msvcp110_win.dll", R"(msvcp110_win\.dll)"},
-            {"msvcp120.dll", R"(msvcp120\.dll)"},
-            {"msvcp120_clr0400.dll", R"(msvcp120_clr0400\.dll)"},
             {"msvcp60.dll", R"(msvcp60\.dll)"},
             {"msvcp60.dll", R"(msvcp60\.dll)"},
 
+            {"msvcrt.dll", R"(msvcrt\.dll)"},
             {"msvcr100.dll", R"(msvcr100\.dll)"},
             {"msvcr100d.dll", R"(msvcr100d\.dll)"},
             {"msvcr100_clr0400.dll", R"(msvcr100_clr0400\.dll)"},
             {"msvcr110.dll", R"(msvcr110\.dll)"},
-            {"msvcr120.dll", R"(msvcr120\.dll)"},
-            {"msvcr120_clr0400.dll", R"(msvcr120_clr0400\.dll)"},
             {"msvcrt20.dll", R"(msvcrt20\.dll)"},
-            {"msvcrt40.dll", R"(msvcrt40\.dll)"}};
+            {"msvcrt40.dll", R"(msvcrt40\.dll)"},
+        };
 
+        static const std::vector<OutdatedDynamicCrt> V_NO_MSVCRT = [&]() {
+            auto ret = V_NO_120;
+            ret.push_back({"msvcp120.dll", R"(msvcp120\.dll)"});
+            ret.push_back({"msvcp120_clr0400.dll", R"(msvcp120_clr0400\.dll)"});
+            ret.push_back({"msvcr120.dll", R"(msvcr120\.dll)"});
+            ret.push_back({"msvcr120_clr0400.dll", R"(msvcr120_clr0400\.dll)"});
+            return ret;
+        }();
+
+        const auto tsv = toolset_version.get();
+        if (tsv && (*tsv) == "v120")
+        {
+            return V_NO_120;
+        }
+
+        // Default case for all version >= VS 2015.
         return V_NO_MSVCRT;
     }
 
@@ -74,8 +88,9 @@ namespace vcpkg::PostBuildLint
         const fs::path include_dir = package_dir / "include";
         if (!fs.exists(include_dir) || fs.is_empty(include_dir))
         {
-            System::println(System::Color::warning,
-                            "The folder /include is empty. This indicates the library was not correctly installed.");
+            System::println(
+                System::Color::warning,
+                "The folder /include is empty or not present. This indicates the library was not correctly installed.");
             return LintStatus::ERROR_DETECTED;
         }
 
@@ -638,7 +653,8 @@ namespace vcpkg::PostBuildLint
 
     static LintStatus check_outdated_crt_linkage_of_dlls(const std::vector<fs::path>& dlls,
                                                          const fs::path dumpbin_exe,
-                                                         const BuildInfo& build_info)
+                                                         const BuildInfo& build_info,
+                                                         const PreBuildInfo& pre_build_info)
     {
         if (build_info.policies.is_enabled(BuildPolicy::ALLOW_OBSOLETE_MSVCRT)) return LintStatus::SUCCESS;
 
@@ -650,7 +666,7 @@ namespace vcpkg::PostBuildLint
             System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line);
 
-            for (const OutdatedDynamicCrt& outdated_crt : get_outdated_dynamic_crts("v141"))
+            for (const OutdatedDynamicCrt& outdated_crt : get_outdated_dynamic_crts(pre_build_info.platform_toolset))
             {
                 if (std::regex_search(ec_data.output.cbegin(), ec_data.output.cend(), outdated_crt.regex))
                 {
@@ -710,7 +726,7 @@ namespace vcpkg::PostBuildLint
         const auto& fs = paths.get_filesystem();
 
         // for dumpbin
-        const Toolset& toolset = paths.get_toolset(pre_build_info.platform_toolset, pre_build_info.visual_studio_path);
+        const Toolset& toolset = paths.get_toolset(pre_build_info);
         const fs::path package_dir = paths.package_dir(spec);
 
         size_t error_count = 0;
@@ -742,7 +758,8 @@ namespace vcpkg::PostBuildLint
         std::vector<fs::path> release_libs = fs.get_files_recursive(release_lib_dir);
         Util::unstable_keep_if(release_libs, has_extension_pred(fs, ".lib"));
 
-        error_count += check_matching_debug_and_release_binaries(debug_libs, release_libs);
+        if (!pre_build_info.build_type)
+            error_count += check_matching_debug_and_release_binaries(debug_libs, release_libs);
 
         {
             std::vector<fs::path> libs;
@@ -761,7 +778,8 @@ namespace vcpkg::PostBuildLint
         {
             case Build::LinkageType::DYNAMIC:
             {
-                error_count += check_matching_debug_and_release_binaries(debug_dlls, release_dlls);
+                if (!pre_build_info.build_type)
+                    error_count += check_matching_debug_and_release_binaries(debug_dlls, release_dlls);
 
                 error_count += check_lib_files_are_available_if_dlls_are_available(
                     build_info.policies, debug_libs.size(), debug_dlls.size(), debug_lib_dir);
@@ -776,7 +794,7 @@ namespace vcpkg::PostBuildLint
                 error_count += check_uwp_bit_of_dlls(pre_build_info.cmake_system_name, dlls, toolset.dumpbin);
                 error_count += check_dll_architecture(pre_build_info.target_architecture, dlls);
 
-                error_count += check_outdated_crt_linkage_of_dlls(dlls, toolset.dumpbin, build_info);
+                error_count += check_outdated_crt_linkage_of_dlls(dlls, toolset.dumpbin, build_info, pre_build_info);
                 break;
             }
             case Build::LinkageType::STATIC:
@@ -789,15 +807,15 @@ namespace vcpkg::PostBuildLint
 
                 if (!build_info.policies.is_enabled(BuildPolicy::ONLY_RELEASE_CRT))
                 {
-                    error_count +=
-                        check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::DEBUG, build_info.crt_linkage),
-                                                  debug_libs,
-                                                  toolset.dumpbin);
+                    error_count += check_crt_linkage_of_libs(
+                        BuildType::value_of(Build::ConfigurationType::DEBUG, build_info.crt_linkage),
+                        debug_libs,
+                        toolset.dumpbin);
                 }
-                error_count +=
-                    check_crt_linkage_of_libs(BuildType::value_of(ConfigurationType::RELEASE, build_info.crt_linkage),
-                                              release_libs,
-                                              toolset.dumpbin);
+                error_count += check_crt_linkage_of_libs(
+                    BuildType::value_of(Build::ConfigurationType::RELEASE, build_info.crt_linkage),
+                    release_libs,
+                    toolset.dumpbin);
                 break;
             }
             default: Checks::unreachable(VCPKG_LINE_INFO);

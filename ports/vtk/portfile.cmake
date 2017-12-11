@@ -320,6 +320,11 @@ set(VTK_TOOLS
     pvtkpython
 )
 
+file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkhdf5.cmake" _contents)
+string(REPLACE "vtk::hdf5::hdf5_hl" "" _contents "${_contents}")
+string(REPLACE "vtk::hdf5::hdf5" "" _contents "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkhdf5.cmake" "${_contents}")
+
 foreach(TOOL_NAME IN LISTS VTK_TOOLS)
     _vtk_move_tool("${TOOL_NAME}")
 endforeach()

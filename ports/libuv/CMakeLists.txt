@@ -5,6 +5,7 @@ file(GLOB UV_SOURCES_COMMON src/*.c)
 file(GLOB UV_SOURCES_WIN src/win/*.c)
 
 add_library(libuv ${UV_SOURCES_COMMON} ${UV_SOURCES_WIN})
+target_compile_definitions(libuv PRIVATE WIN32_LEAN_AND_MEAN "_WIN32_WINNT=0x0600")
 target_link_libraries(libuv iphlpapi psapi shell32 userenv ws2_32)
 target_include_directories(libuv PUBLIC ./include PRIVATE ./src)
 set_target_properties(libuv PROPERTIES DEFINE_SYMBOL BUILDING_UV_SHARED)
