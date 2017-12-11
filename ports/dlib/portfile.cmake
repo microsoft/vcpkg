@@ -22,6 +22,11 @@ if("blas" IN_LIST FEATURES)
   set(WITH_BLAS ON)
 endif()
 
+set(WITH_LAPACK OFF)
+if("clapack" IN_LIST FEATURES)
+  set(WITH_LAPACK ON)
+endif()
+
 set(WITH_CUDA OFF)
 if("cuda" IN_LIST FEATURES)
   set(WITH_CUDA ON)
@@ -36,7 +41,7 @@ vcpkg_configure_cmake(
         -DDLIB_PNG_SUPPORT=ON
         -DDLIB_JPEG_SUPPORT=ON
         -DDLIB_USE_BLAS=${WITH_BLAS}
-        -DDLIB_USE_LAPACK=ON
+        -DDLIB_USE_LAPACK=${WITH_LAPACK}
         -DDLIB_USE_CUDA=${WITH_CUDA}
         -DDLIB_GIF_SUPPORT=OFF
         -DDLIB_USE_MKL_FFT=OFF

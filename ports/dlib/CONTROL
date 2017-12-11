@@ -4,7 +4,12 @@ Build-Depends: libjpeg-turbo, libpng, sqlite3, fftw3
 Description: Modern C++ toolkit containing machine learning algorithms and tools for creating complex software in C++
 
 Feature: blas
+Build-Depends: openblas
 Description: BLAS support for dlib
+
+Feature: lapack
+Build-Depends: clapack
+Description: LAPACK support for dlib
 
 Feature: cuda
 Build-Depends: cuda
