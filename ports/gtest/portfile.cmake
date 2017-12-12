@@ -17,16 +17,17 @@ vcpkg_apply_patches(
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-Enable-C-11-features-for-VS2015-fix-appveyor-fail.patch
 )
 
-if (VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-    set(gtest_force_shared_crt YES)
-else()
-    set(gtest_force_shared_crt NO)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" GTEST_BUILD_SHARED_LIBS)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" GTEST_FORCE_SHARED_CRT)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -Dgtest_force_shared_crt=${gtest_force_shared_crt}
+    OPTIONS 
+        -DBUILD_GMOCK=ON
+        -DBUILD_GTEST=ON
+        -DBUILD_SHARED_LIBS=${GTEST_BUILD_SHARED_LIBS}
+        -Dgtest_force_shared_crt=${GTEST_FORCE_SHARED_CRT}
 )
 
 set(ENV{_CL_} "/D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING")
