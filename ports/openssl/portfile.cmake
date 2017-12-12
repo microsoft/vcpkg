@@ -34,6 +34,7 @@ set(CONFIGURE_COMMAND ${PERL} Configure
     enable-static-engine
     enable-capieng
     no-ssl2
+    -utf-8
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
