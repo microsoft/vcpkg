@@ -348,108 +348,6 @@ namespace vcpkg::Install
         Checks::unreachable(VCPKG_LINE_INFO);
     }
 
-    static void print_plan(const std::vector<AnyAction>& action_plan, const bool is_recursive)
-    {
-        std::vector<const RemovePlanAction*> remove_plans;
-        std::vector<const InstallPlanAction*> rebuilt_plans;
-        std::vector<const InstallPlanAction*> only_install_plans;
-        std::vector<const InstallPlanAction*> new_plans;
-        std::vector<const InstallPlanAction*> already_installed_plans;
-        std::vector<const InstallPlanAction*> excluded;
-
-        const bool has_non_user_requested_packages = Util::find_if(action_plan, [](const AnyAction& package) -> bool {
-                                                         if (auto iplan = package.install_plan.get())
-                                                             return iplan->request_type != RequestType::USER_REQUESTED;
-                                                         else
-                                                             return false;
-                                                     }) != action_plan.cend();
-
-        for (auto&& action : action_plan)
-        {
-            if (auto install_action = action.install_plan.get())
-            {
-                // remove plans are guaranteed to come before install plans, so we know the plan will be contained if at
-                // all.
-                auto it = Util::find_if(
-                    remove_plans, [&](const RemovePlanAction* plan) { return plan->spec == install_action->spec; });
-                if (it != remove_plans.end())
-                {
-                    rebuilt_plans.emplace_back(install_action);
-                }
-                else
-                {
-                    switch (install_action->plan_type)
-                    {
-                        case InstallPlanType::INSTALL: only_install_plans.emplace_back(install_action); break;
-                        case InstallPlanType::ALREADY_INSTALLED:
-                            if (install_action->request_type == RequestType::USER_REQUESTED)
-                                already_installed_plans.emplace_back(install_action);
-                            break;
-                        case InstallPlanType::BUILD_AND_INSTALL: new_plans.emplace_back(install_action); break;
-                        case InstallPlanType::EXCLUDED: excluded.emplace_back(install_action); break;
-                        default: Checks::unreachable(VCPKG_LINE_INFO);
-                    }
-                }
-            }
-            else if (auto remove_action = action.remove_plan.get())
-            {
-                remove_plans.emplace_back(remove_action);
-            }
-        }
-
-        std::sort(remove_plans.begin(), remove_plans.end(), &RemovePlanAction::compare_by_name);
-        std::sort(rebuilt_plans.begin(), rebuilt_plans.end(), &InstallPlanAction::compare_by_name);
-        std::sort(only_install_plans.begin(), only_install_plans.end(), &InstallPlanAction::compare_by_name);
-        std::sort(new_plans.begin(), new_plans.end(), &InstallPlanAction::compare_by_name);
-        std::sort(already_installed_plans.begin(), already_installed_plans.end(), &InstallPlanAction::compare_by_name);
-        std::sort(excluded.begin(), excluded.end(), &InstallPlanAction::compare_by_name);
-
-        static auto actions_to_output_string = [](const std::vector<const InstallPlanAction*>& v) {
-            return Strings::join("\n", v, [](const InstallPlanAction* p) {
-                return to_output_string(p->request_type, p->displayname(), p->build_options);
-            });
-        };
-
-        if (excluded.size() > 0)
-        {
-            System::println("The following packages are excluded:\n%s", actions_to_output_string(excluded));
-        }
-
-        if (already_installed_plans.size() > 0)
-        {
-            System::println("The following packages are already installed:\n%s",
-                            actions_to_output_string(already_installed_plans));
-        }
-
-        if (rebuilt_plans.size() > 0)
-        {
-            System::println("The following packages will be rebuilt:\n%s", actions_to_output_string(rebuilt_plans));
-        }
-
-        if (new_plans.size() > 0)
-        {
-            System::println("The following packages will be built and installed:\n%s",
-                            actions_to_output_string(new_plans));
-        }
-
-        if (only_install_plans.size() > 0)
-        {
-            System::println("The following packages will be directly installed:\n%s",
-                            actions_to_output_string(only_install_plans));
-        }
-
-        if (has_non_user_requested_packages)
-            System::println("Additional packages (*) will be installed to complete this operation.");
-
-        if (remove_plans.size() > 0 && !is_recursive)
-        {
-            System::println(System::Color::warning,
-                            "If you are sure you want to rebuild the above packages, run the command with the "
-                            "--recurse option");
-            Checks::exit_fail(VCPKG_LINE_INFO);
-        }
-    }
-
     void InstallSummary::print() const
     {
         System::println("RESULTS");
@@ -499,7 +397,7 @@ namespace vcpkg::Install
 
             results.emplace_back(spec, &action);
 
-            if (const auto install_action = action.install_plan.get())
+            if (const auto install_action = action.install_action.get())
             {
                 auto result = perform_install_plan_action(paths, *install_action, status_db);
 
@@ -511,7 +409,7 @@ namespace vcpkg::Install
 
                 results.back().build_result = std::move(result);
             }
-            else if (const auto remove_action = action.remove_plan.get())
+            else if (const auto remove_action = action.remove_action.get())
             {
                 Checks::check_exit(VCPKG_LINE_INFO, GlobalState::feature_packages);
                 Remove::perform_remove_plan_action(paths, *remove_action, Remove::Purge::YES, status_db);
@@ -690,7 +588,7 @@ namespace vcpkg::Install
         }
         else
         {
-            Dependencies::PathsPortFile paths_port_file(paths);
+            Dependencies::PathsPortFileProvider paths_port_file(paths);
             auto install_plan = Dependencies::create_install_plan(
                 paths_port_file, Util::fmap(specs, [](auto&& spec) { return spec.package_spec; }), status_db);
 
@@ -700,7 +598,7 @@ namespace vcpkg::Install
 
         for (auto&& action : action_plan)
         {
-            if (auto p_install = action.install_plan.get())
+            if (auto p_install = action.install_action.get())
             {
                 p_install->build_options = install_plan_options;
                 if (p_install->request_type != RequestType::USER_REQUESTED)
@@ -713,16 +611,16 @@ namespace vcpkg::Install
 
         // log the plan
         const std::string specs_string = Strings::join(",", action_plan, [](const AnyAction& action) {
-            if (auto iaction = action.install_plan.get())
+            if (auto iaction = action.install_action.get())
                 return iaction->spec.to_string();
-            else if (auto raction = action.remove_plan.get())
+            else if (auto raction = action.remove_action.get())
                 return "R$" + raction->spec.to_string();
             Checks::unreachable(VCPKG_LINE_INFO);
         });
 
         Metrics::g_metrics.lock()->track_property("installplan", specs_string);
 
-        print_plan(action_plan, is_recursive);
+        Dependencies::print_plan(action_plan, is_recursive);
 
         if (dry_run)
         {
@@ -752,7 +650,7 @@ namespace vcpkg::Install
         for (auto&& result : summary.results)
         {
             if (!result.action) continue;
-            if (auto p_install_action = result.action->install_plan.get())
+            if (auto p_install_action = result.action->install_action.get())
             {
                 if (p_install_action->request_type != RequestType::USER_REQUESTED) continue;
                 auto bpgh = result.get_binary_paragraph();
@@ -773,7 +671,7 @@ namespace vcpkg::Install
     {
         if (build_result.binary_control_file) return &build_result.binary_control_file->core_paragraph;
         if (action)
-            if (auto p_install_plan = action->install_plan.get())
+            if (auto p_install_plan = action->install_action.get())
             {
                 if (auto p_bcf = p_install_plan->any_paragraph.binary_control_file.get())
                     return &p_bcf->core_paragraph;
