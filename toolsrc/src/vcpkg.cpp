@@ -128,9 +128,9 @@ static void inner(const VcpkgCmdArguments& args)
                 {
                     Metrics::g_metrics.lock()->track_property("surveyprompt", "true");
                     System::println(
-                         System::Color::success,
-                         "Your feedback is important to improve Vcpkg! Please take 3 minutes to complete our survey "
-                         "by running: vcpkg contact --survey");
+                        System::Color::success,
+                        "Your feedback is important to improve Vcpkg! Please take 3 minutes to complete our survey "
+                        "by running: vcpkg contact --survey");
                 }
             }
         }
