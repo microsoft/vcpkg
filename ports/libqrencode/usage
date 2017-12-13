@@ -1,0 +1,22 @@
+To include the libqrencode library into CMakeLists.txt you could use 
+the following example:
+
+
+	find_path(QRENCODE_INCLUDE_DIR NAMES qrencode.h)
+	find_library(QRENCODE_LIBRARY_RELEASE qrencode)
+	find_library(QRENCODE_LIBRARY_DEBUG qrencoded)
+	set(QRENCODE_LIBRARIES optimized ${QRENCODE_LIBRARY_RELEASE} debug ${QRENCODE_LIBRARY_DEBUG}) 
+	add_executable(main main.cpp)
+	target_include_directories(main PRIVATE ${QRENCODE_INCLUDE_DIR})
+	target_link_libraries(main PRIVATE ${QRENCODE_LIBRARIES})
+
+To select dynamic/static build use the VCPKG_TARGET_TRIPLET CMake command line 
+argument:
+	-DVCPKG_TARGET_TRIPLET=[x86|x64]-windows - dynamic 
+	-DVCPKG_TARGET_TRIPLET=[x86|x64]-windows-static - static 
+
+For example to build a x86 program linked with the libqrencode library statically 
+by VC2015 you could use the following command:
+
+	call cmake -G "Visual Studio 14 2015" -DCMAKE_TOOLCHAIN_FILE=F:\vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x86-windows-static ..
+
