@@ -14,7 +14,7 @@ namespace vcpkg::Update
         return left.spec.name() < right.spec.name();
     }
 
-    std::vector<OutdatedPackage> find_outdated_packages(const Dependencies::PortFileProvider& provider,
+    std::vector<OutdatedPackage> find_outdated_packages(const std::map<std::string, VersionT>& src_names_to_versions,
                                                         const StatusParagraphs& status_db)
     {
         const std::vector<StatusParagraph*> installed_packages = get_installed_ports(status_db);
@@ -24,23 +24,19 @@ namespace vcpkg::Update
         {
             if (!pgh->package.feature.empty())
             {
-                // Skip feature paragraphs; only consider master paragraphs for needing updates.
+                // Skip feature packages; only consider master packages for needing updates.
                 continue;
             }
 
-            auto maybe_scf = provider.get_control_file(pgh->package.spec.name());
-            if (auto p_scf = maybe_scf.get())
+            const auto it = src_names_to_versions.find(pgh->package.spec.name());
+            if (it == src_names_to_versions.end())
             {
-                auto&& port_version = p_scf->core_paragraph->version;
-                auto&& installed_version = pgh->package.version;
-                if (installed_version != port_version)
-                {
-                    output.push_back({pgh->package.spec, VersionDiff(installed_version, port_version)});
-                }
+                // Package was not installed from portfile
+                continue;
             }
-            else
+            if (it->second != pgh->package.version)
             {
-                // No portfile available
+                output.push_back({pgh->package.spec, VersionDiff(pgh->package.version, it->second)});
             }
         }
 
@@ -62,10 +58,10 @@ namespace vcpkg::Update
 
         const StatusParagraphs status_db = database_load_check(paths);
 
-        Dependencies::PathsPortFileProvider provider(paths);
-
-        const auto outdated_packages = SortedVector<OutdatedPackage>(find_outdated_packages(provider, status_db),
-                                                                     &OutdatedPackage::compare_by_name);
+        const auto outdated_packages = SortedVector<OutdatedPackage>(
+            find_outdated_packages(Paragraphs::load_all_port_names_and_versions(paths.get_filesystem(), paths.ports),
+                                   status_db),
+            &OutdatedPackage::compare_by_name);
 
         if (outdated_packages.empty())
         {
@@ -73,17 +69,19 @@ namespace vcpkg::Update
         }
         else
         {
+            std::string install_line;
             System::println("The following packages differ from their port versions:");
             for (auto&& package : outdated_packages)
             {
+                install_line += package.spec.to_string();
+                install_line += " ";
                 System::println("    %-32s %s", package.spec, package.version_diff.to_string());
             }
             System::println("\n"
-                            "To update these packages and all dependencies, run\n"
-                            "    .\\vcpkg upgrade\n"
-                            "\n"
-                            "To only remove outdated packages, run\n"
-                            "    .\\vcpkg remove --outdated\n");
+                            "To update these packages, run\n"
+                            "    .\\vcpkg remove --outdated\n"
+                            "    .\\vcpkg install " +
+                            install_line);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);

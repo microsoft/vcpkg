@@ -27,7 +27,7 @@ namespace vcpkg::Commands::CI
         const std::vector<PackageSpec> specs = PackageSpec::to_package_specs(ports, triplet);
 
         StatusParagraphs status_db = database_load_check(paths);
-        const auto& paths_port_file = Dependencies::PathsPortFileProvider(paths);
+        const auto& paths_port_file = Dependencies::PathsPortFile(paths);
         std::vector<InstallPlanAction> install_plan =
             Dependencies::create_install_plan(paths_port_file, specs, status_db);
 

@@ -36,7 +36,7 @@ namespace UnitTest1
                                std::vector<std::string> vec,
                                const Triplet& triplet = Triplet::X86_WINDOWS)
     {
-        const auto& plan = install_action->install_action.value_or_exit(VCPKG_LINE_INFO);
+        const auto& plan = install_action->install_plan.value_or_exit(VCPKG_LINE_INFO);
         const auto& feature_list = plan.feature_list;
 
         Assert::AreEqual(plan.spec.triplet().to_string().c_str(), triplet.to_string().c_str());
@@ -61,7 +61,7 @@ namespace UnitTest1
                                   std::string pkg_name,
                                   const Triplet& triplet = Triplet::X86_WINDOWS)
     {
-        const auto& plan = remove_action->remove_action.value_or_exit(VCPKG_LINE_INFO);
+        const auto& plan = remove_action->remove_plan.value_or_exit(VCPKG_LINE_INFO);
         Assert::AreEqual(plan.spec.triplet().to_string().c_str(), triplet.to_string().c_str());
         Assert::AreEqual(pkg_name.c_str(), plan.spec.name().c_str());
     }
@@ -98,7 +98,7 @@ namespace UnitTest1
             auto spec_b = spec_map.emplace("b", "c");
             auto spec_c = spec_map.emplace("c");
 
-            Dependencies::MapPortFileProvider map_port(spec_map.map);
+            Dependencies::MapPortFile map_port(spec_map.map);
             auto install_plan =
                 Dependencies::create_install_plan(map_port, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
 
@@ -122,7 +122,7 @@ namespace UnitTest1
             auto spec_g = spec_map.emplace("g");
             auto spec_h = spec_map.emplace("h");
 
-            Dependencies::MapPortFileProvider map_port(spec_map.map);
+            Dependencies::MapPortFile map_port(spec_map.map);
             auto install_plan = Dependencies::create_install_plan(
                 map_port, {spec_a, spec_b, spec_c}, StatusParagraphs(std::move(status_paragraphs)));
 
@@ -162,7 +162,7 @@ namespace UnitTest1
                                                           StatusParagraphs(std::move(status_paragraphs)));
 
             Assert::AreEqual(size_t(1), install_plan.size());
-            auto p = install_plan[0].install_action.get();
+            auto p = install_plan[0].install_plan.get();
             Assert::IsNotNull(p);
             Assert::AreEqual("a", p->spec.name().c_str());
             Assert::AreEqual(Dependencies::InstallPlanType::ALREADY_INSTALLED, p->plan_type);
@@ -183,13 +183,13 @@ namespace UnitTest1
                                                           StatusParagraphs(std::move(status_paragraphs)));
 
             Assert::AreEqual(size_t(2), install_plan.size());
-            auto p = install_plan[0].install_action.get();
+            auto p = install_plan[0].install_plan.get();
             Assert::IsNotNull(p);
             Assert::AreEqual("b", p->spec.name().c_str());
             Assert::AreEqual(Dependencies::InstallPlanType::BUILD_AND_INSTALL, p->plan_type);
             Assert::AreEqual(Dependencies::RequestType::AUTO_SELECTED, p->request_type);
 
-            auto p2 = install_plan[1].install_action.get();
+            auto p2 = install_plan[1].install_plan.get();
             Assert::IsNotNull(p2);
             Assert::AreEqual("a", p2->spec.name().c_str());
             Assert::AreEqual(Dependencies::InstallPlanType::BUILD_AND_INSTALL, p2->plan_type);
@@ -215,7 +215,7 @@ namespace UnitTest1
             auto spec_j = spec_map.emplace("j", "k");
             auto spec_k = spec_map.emplace("k");
 
-            Dependencies::MapPortFileProvider map_port(spec_map.map);
+            Dependencies::MapPortFile map_port(spec_map.map);
             auto install_plan =
                 Dependencies::create_install_plan(map_port, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
 
@@ -519,140 +519,6 @@ namespace UnitTest1
             Assert::AreEqual("opencv", remove_plan[0].spec.name().c_str());
             Assert::AreEqual("vtk", remove_plan[1].spec.name().c_str());
             Assert::AreEqual("expat", remove_plan[2].spec.name().c_str());
-        }
-    };
-
-    class UpgradePlanTests : public TestClass<UpgradePlanTests>
-    {
-        TEST_METHOD(basic_upgrade_scheme)
-        {
-            std::vector<std::unique_ptr<StatusParagraph>> pghs;
-            pghs.push_back(make_status_pgh("a"));
-            StatusParagraphs status_db(std::move(pghs));
-
-            PackageSpecMap spec_map(Triplet::X86_WINDOWS);
-            auto spec_a = spec_map.emplace("a");
-
-            Dependencies::MapPortFileProvider provider(spec_map.map);
-            Dependencies::PackageGraph graph(provider, status_db);
-
-            graph.upgrade(spec_a);
-
-            auto plan = graph.serialize();
-
-            Assert::AreEqual(size_t(2), plan.size());
-            Assert::AreEqual("a", plan[0].spec().name().c_str());
-            Assert::IsTrue(plan[0].remove_action.has_value());
-            Assert::AreEqual("a", plan[1].spec().name().c_str());
-            Assert::IsTrue(plan[1].install_action.has_value());
-        }
-
-        TEST_METHOD(basic_upgrade_scheme_with_recurse)
-        {
-            std::vector<std::unique_ptr<StatusParagraph>> pghs;
-            pghs.push_back(make_status_pgh("a"));
-            pghs.push_back(make_status_pgh("b", "a"));
-            StatusParagraphs status_db(std::move(pghs));
-
-            PackageSpecMap spec_map(Triplet::X86_WINDOWS);
-            auto spec_a = spec_map.emplace("a");
-            spec_map.emplace("b", "a");
-
-            Dependencies::MapPortFileProvider provider(spec_map.map);
-            Dependencies::PackageGraph graph(provider, status_db);
-
-            graph.upgrade(spec_a);
-
-            auto plan = graph.serialize();
-
-            Assert::AreEqual(size_t(4), plan.size());
-            Assert::AreEqual("b", plan[0].spec().name().c_str());
-            Assert::IsTrue(plan[0].remove_action.has_value());
-
-            Assert::AreEqual("a", plan[1].spec().name().c_str());
-            Assert::IsTrue(plan[1].remove_action.has_value());
-
-            Assert::AreEqual("a", plan[2].spec().name().c_str());
-            Assert::IsTrue(plan[2].install_action.has_value());
-
-            Assert::AreEqual("b", plan[3].spec().name().c_str());
-            Assert::IsTrue(plan[3].install_action.has_value());
-        }
-
-        TEST_METHOD(basic_upgrade_scheme_with_bystander)
-        {
-            std::vector<std::unique_ptr<StatusParagraph>> pghs;
-            pghs.push_back(make_status_pgh("a"));
-            pghs.push_back(make_status_pgh("b"));
-            StatusParagraphs status_db(std::move(pghs));
-
-            PackageSpecMap spec_map(Triplet::X86_WINDOWS);
-            auto spec_a = spec_map.emplace("a");
-            spec_map.emplace("b", "a");
-
-            Dependencies::MapPortFileProvider provider(spec_map.map);
-            Dependencies::PackageGraph graph(provider, status_db);
-
-            graph.upgrade(spec_a);
-
-            auto plan = graph.serialize();
-
-            Assert::AreEqual(size_t(2), plan.size());
-            Assert::AreEqual("a", plan[0].spec().name().c_str());
-            Assert::IsTrue(plan[0].remove_action.has_value());
-            Assert::AreEqual("a", plan[1].spec().name().c_str());
-            Assert::IsTrue(plan[1].install_action.has_value());
-        }
-
-        TEST_METHOD(basic_upgrade_scheme_with_new_dep)
-        {
-            std::vector<std::unique_ptr<StatusParagraph>> pghs;
-            pghs.push_back(make_status_pgh("a"));
-            StatusParagraphs status_db(std::move(pghs));
-
-            PackageSpecMap spec_map(Triplet::X86_WINDOWS);
-            auto spec_a = spec_map.emplace("a", "b");
-            spec_map.emplace("b");
-
-            Dependencies::MapPortFileProvider provider(spec_map.map);
-            Dependencies::PackageGraph graph(provider, status_db);
-
-            graph.upgrade(spec_a);
-
-            auto plan = graph.serialize();
-
-            Assert::AreEqual(size_t(3), plan.size());
-            Assert::AreEqual("a", plan[0].spec().name().c_str());
-            Assert::IsTrue(plan[0].remove_action.has_value());
-            Assert::AreEqual("b", plan[1].spec().name().c_str());
-            Assert::IsTrue(plan[1].install_action.has_value());
-            Assert::AreEqual("a", plan[2].spec().name().c_str());
-            Assert::IsTrue(plan[2].install_action.has_value());
-        }
-
-        TEST_METHOD(basic_upgrade_scheme_with_features)
-        {
-            std::vector<std::unique_ptr<StatusParagraph>> pghs;
-            pghs.push_back(make_status_pgh("a"));
-            pghs.push_back(make_status_feature_pgh("a", "a1"));
-            StatusParagraphs status_db(std::move(pghs));
-
-            PackageSpecMap spec_map(Triplet::X86_WINDOWS);
-            auto spec_a = spec_map.emplace("a", "", {{"a1", ""}});
-
-            Dependencies::MapPortFileProvider provider(spec_map.map);
-            Dependencies::PackageGraph graph(provider, status_db);
-
-            graph.upgrade(spec_a);
-
-            auto plan = graph.serialize();
-
-            Assert::AreEqual(size_t(2), plan.size());
-
-            Assert::AreEqual("a", plan[0].spec().name().c_str());
-            Assert::IsTrue(plan[0].remove_action.has_value());
-
-            features_check(&plan[1], "a", {"core", "a1"});
         }
     };
 }

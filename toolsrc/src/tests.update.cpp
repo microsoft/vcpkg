@@ -9,8 +9,6 @@ using namespace vcpkg::Update;
 
 namespace UnitTest1
 {
-    using Pgh = std::vector<std::unordered_map<std::string, std::string>>;
-
     class UpdateTests : public TestClass<UpdateTests>
     {
         TEST_METHOD(find_outdated_packages_basic)
@@ -21,12 +19,10 @@ namespace UnitTest1
 
             StatusParagraphs status_db(std::move(status_paragraphs));
 
-            std::unordered_map<std::string, SourceControlFile> map;
-            auto scf = unwrap(SourceControlFile::parse_control_file(Pgh{{{"Source", "a"}, {"Version", "0"}}}));
-            map.emplace("a", std::move(*scf));
-            Dependencies::MapPortFileProvider provider(map);
+            std::map<std::string, VersionT> port_versions;
+            port_versions["a"] = VersionT("0");
 
-            auto pkgs = SortedVector<OutdatedPackage>(Update::find_outdated_packages(provider, status_db),
+            auto pkgs = SortedVector<OutdatedPackage>(Update::find_outdated_packages(port_versions, status_db),
                                                       &OutdatedPackage::compare_by_name);
 
             Assert::AreEqual(size_t(1), pkgs.size());
@@ -45,12 +41,10 @@ namespace UnitTest1
 
             StatusParagraphs status_db(std::move(status_paragraphs));
 
-            std::unordered_map<std::string, SourceControlFile> map;
-            auto scf = unwrap(SourceControlFile::parse_control_file(Pgh{{{"Source", "a"}, {"Version", "0"}}}));
-            map.emplace("a", std::move(*scf));
-            Dependencies::MapPortFileProvider provider(map);
+            std::map<std::string, VersionT> port_versions;
+            port_versions["a"] = VersionT("0");
 
-            auto pkgs = SortedVector<OutdatedPackage>(Update::find_outdated_packages(provider, status_db),
+            auto pkgs = SortedVector<OutdatedPackage>(Update::find_outdated_packages(port_versions, status_db),
                                                       &OutdatedPackage::compare_by_name);
 
             Assert::AreEqual(size_t(1), pkgs.size());
@@ -71,12 +65,10 @@ namespace UnitTest1
 
             StatusParagraphs status_db(std::move(status_paragraphs));
 
-            std::unordered_map<std::string, SourceControlFile> map;
-            auto scf = unwrap(SourceControlFile::parse_control_file(Pgh{{{"Source", "a"}, {"Version", "0"}}}));
-            map.emplace("a", std::move(*scf));
-            Dependencies::MapPortFileProvider provider(map);
+            std::map<std::string, VersionT> port_versions;
+            port_versions["a"] = VersionT("0");
 
-            auto pkgs = SortedVector<OutdatedPackage>(Update::find_outdated_packages(provider, status_db),
+            auto pkgs = SortedVector<OutdatedPackage>(Update::find_outdated_packages(port_versions, status_db),
                                                       &OutdatedPackage::compare_by_name);
 
             Assert::AreEqual(size_t(1), pkgs.size());
@@ -92,12 +84,10 @@ namespace UnitTest1
 
             StatusParagraphs status_db(std::move(status_paragraphs));
 
-            std::unordered_map<std::string, SourceControlFile> map;
-            auto scf = unwrap(SourceControlFile::parse_control_file(Pgh{{{"Source", "a"}, {"Version", "2"}}}));
-            map.emplace("a", std::move(*scf));
-            Dependencies::MapPortFileProvider provider(map);
+            std::map<std::string, VersionT> port_versions;
+            port_versions["a"] = VersionT("2");
 
-            auto pkgs = SortedVector<OutdatedPackage>(Update::find_outdated_packages(provider, status_db),
+            auto pkgs = SortedVector<OutdatedPackage>(Update::find_outdated_packages(port_versions, status_db),
                                                       &OutdatedPackage::compare_by_name);
 
             Assert::AreEqual(size_t(0), pkgs.size());

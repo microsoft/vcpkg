@@ -24,17 +24,3 @@ std::unique_ptr<vcpkg::StatusParagraph> make_status_feature_pgh(const char* name
                                                                 const char* feature,
                                                                 const char* depends = "",
                                                                 const char* triplet = "x86-windows");
-
-template<class T, class S>
-T&& unwrap(vcpkg::ExpectedT<T, S>&& p)
-{
-    Assert::IsTrue(p.has_value());
-    return std::move(*p.get());
-}
-
-template<class T>
-T&& unwrap(vcpkg::Optional<T>&& opt)
-{
-    Assert::IsTrue(opt.has_value());
-    return std::move(*opt.get());
-}

@@ -32,4 +32,7 @@ namespace vcpkg::Paragraphs
 
     std::vector<std::unique_ptr<SourceControlFile>> load_all_ports(const Files::Filesystem& fs,
                                                                    const fs::path& ports_dir);
+
+    std::map<std::string, VersionT> load_all_port_names_and_versions(const Files::Filesystem& fs,
+                                                                     const fs::path& ports_dir);
 }
