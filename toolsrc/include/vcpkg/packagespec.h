@@ -34,13 +34,6 @@ namespace vcpkg
 
         std::string to_string() const;
 
-        bool operator<(const PackageSpec& other) const
-        {
-            if (name() < other.name()) return true;
-            if (name() > other.name()) return false;
-            return triplet() < other.triplet();
-        }
-
     private:
         std::string m_name;
         Triplet m_triplet;

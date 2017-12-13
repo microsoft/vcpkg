@@ -49,7 +49,8 @@ namespace vcpkg::Checks
 #else
     void register_console_ctrl_handler() {}
 #endif
-    void unreachable(const LineInfo& line_info)
+
+    [[noreturn]] void unreachable(const LineInfo& line_info)
     {
         System::println(System::Color::error, "Error: Unreachable code was reached");
         System::println(System::Color::error, line_info.to_string()); // Always print line_info here
@@ -60,13 +61,13 @@ namespace vcpkg::Checks
 #endif
     }
 
-    void exit_with_code(const LineInfo& line_info, const int exit_code)
+    [[noreturn]] void exit_with_code(const LineInfo& line_info, const int exit_code)
     {
         Debug::println(System::Color::error, line_info.to_string());
         cleanup_and_exit(exit_code);
     }
 
-    void exit_with_message(const LineInfo& line_info, const CStringView error_message)
+    [[noreturn]] void exit_with_message(const LineInfo& line_info, const CStringView error_message)
     {
         System::println(System::Color::error, error_message);
         exit_fail(line_info);
@@ -76,7 +77,7 @@ namespace vcpkg::Checks
     {
         if (!expression)
         {
-            exit_fail(line_info);
+            exit_with_message(line_info, "");
         }
     }
 
