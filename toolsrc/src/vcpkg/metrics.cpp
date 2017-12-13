@@ -403,7 +403,7 @@ namespace vcpkg::Metrics
         fs.write_contents(vcpkg_metrics_txt_path, payload);
 
         const std::string cmd_line =
-            Strings::format("start %s %s", temp_folder_path_exe.u8string(), vcpkg_metrics_txt_path.u8string());
+            Strings::format("start \"%s\" \"%s\"", temp_folder_path_exe.u8string(), vcpkg_metrics_txt_path.u8string());
         System::cmd_execute_clean(cmd_line);
 #endif
     }
