@@ -29,7 +29,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/assimp-4.0")
+vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/assimp-4.1")
 
 vcpkg_copy_pdbs()
 
