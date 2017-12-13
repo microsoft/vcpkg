@@ -14,17 +14,10 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/remove-deprecated-attribute.patch
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(LIBQRENCODE_BUILD_SHARED_LIBS YES)
-else()
-    set(LIBQRENCODE_BUILD_SHARED_LIBS NO)
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DBUILD_SHARED_LIBS=${LIBQRENCODE_BUILD_SHARED_LIBS}
         -DWITH_TOOLS=NO
 	-DWITH_TEST=NO
         -DSKIP_INSTALL_PROGRAMS=ON
@@ -50,3 +43,5 @@ file(COPY ${CURRENT_BUILDTREES_DIR}/src/libqrencode-4.0.0/COPYING DESTINATION ${
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libqrencode/COPYING ${CURRENT_PACKAGES_DIR}/share/libqrencode/copyright)
 
 vcpkg_copy_pdbs()
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

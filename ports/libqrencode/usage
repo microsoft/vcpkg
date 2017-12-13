@@ -18,5 +18,4 @@ argument:
 For example to build a x86 program linked with the libqrencode library statically 
 by VC2015 you could use the following command:
 
-	call cmake -G "Visual Studio 14 2015" -DCMAKE_TOOLCHAIN_FILE=F:\vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x86-windows-static ..
-
+	call cmake -G "Visual Studio 14 2015" -DCMAKE_TOOLCHAIN_FILE=F:\vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x86-windows-static .
