@@ -289,16 +289,4 @@ namespace vcpkg::Paragraphs
         }
         return std::move(results.paragraphs);
     }
-
-    std::map<std::string, VersionT> load_all_port_names_and_versions(const Files::Filesystem& fs,
-                                                                     const fs::path& ports_dir)
-    {
-        auto all_ports = load_all_ports(fs, ports_dir);
-
-        std::map<std::string, VersionT> names_and_versions;
-        for (auto&& port : all_ports)
-            names_and_versions.emplace(port->core_paragraph->name, port->core_paragraph->version);
-
-        return names_and_versions;
-    }
 }
