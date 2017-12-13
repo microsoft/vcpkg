@@ -17,7 +17,6 @@ vcpkg_apply_patches(
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-Enable-C-11-features-for-VS2015-fix-appveyor-fail.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" GTEST_BUILD_SHARED_LIBS)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" GTEST_FORCE_SHARED_CRT)
 
 vcpkg_configure_cmake(
@@ -26,7 +25,6 @@ vcpkg_configure_cmake(
     OPTIONS 
         -DBUILD_GMOCK=ON
         -DBUILD_GTEST=ON
-        -DBUILD_SHARED_LIBS=${GTEST_BUILD_SHARED_LIBS}
         -Dgtest_force_shared_crt=${GTEST_FORCE_SHARED_CRT}
 )
 
@@ -55,23 +53,20 @@ file(INSTALL ${SOURCE_PATH}/googletest/LICENSE DESTINATION ${CURRENT_PACKAGES_DI
 
 # This block will be unnecessary in googletest 1.9.0 (or later).
 # These dll files are installed in ../bin directory by default settings.
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/gtest.dll)
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin/)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gtest.dll ${CURRENT_PACKAGES_DIR}/bin/gtest.dll)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gtest_main.dll ${CURRENT_PACKAGES_DIR}/bin/gtest_main.dll)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gmock.dll ${CURRENT_PACKAGES_DIR}/bin/gmock.dll)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gmock_main.dll ${CURRENT_PACKAGES_DIR}/bin/gmock_main.dll)
-    endif()
-    if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/gtest.dll)
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin/)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gtest.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gtestd.dll)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gtest_main.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gtest_maind.dll)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gmock.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gmockd.dll)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gmock_main.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gmock_maind.dll)
-    endif()
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/gtest.dll)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin/)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gtest.dll ${CURRENT_PACKAGES_DIR}/bin/gtest.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gtest_main.dll ${CURRENT_PACKAGES_DIR}/bin/gtest_main.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gmock.dll ${CURRENT_PACKAGES_DIR}/bin/gmock.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gmock_main.dll ${CURRENT_PACKAGES_DIR}/bin/gmock_main.dll)
 endif()
-
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/gtest.dll)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin/)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gtest.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gtestd.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gtest_main.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gtest_maind.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gmock.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gmockd.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gmock_main.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gmock_maind.dll)
+endif()
 if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/gtest.lib)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gtest.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/gtest.lib)
