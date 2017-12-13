@@ -127,10 +127,10 @@ static void inner(const VcpkgCmdArguments& args)
                 if (distribution(generator) == 1)
                 {
                     Metrics::g_metrics.lock()->track_property("surveyprompt", "true");
-                    System::println(
-                        System::Color::success,
-                        "Your feedback is important to improve Vcpkg! Please take 3 minutes to complete our survey "
-                        "by running: vcpkg contact --survey");
+                    // System::println(
+                    //     System::Color::success,
+                    //     "Your feedback is important to improve Vcpkg! Please take 3 minutes to complete our survey "
+                    //     "by running: vcpkg contact --survey");
                 }
             }
         }

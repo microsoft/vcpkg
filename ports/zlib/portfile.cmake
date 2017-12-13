@@ -13,6 +13,10 @@ vcpkg_apply_patches(
     ${CMAKE_CURRENT_LIST_DIR}/cmake_dont_build_more_than_needed.patch
 )
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" Or VCPKG_TARGET_ARCHITECTURE STREQAL "arm64")
+    if ()
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA

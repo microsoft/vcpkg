@@ -36,6 +36,9 @@ namespace vcpkg
     const Triplet Triplet::X86_UWP = from_canonical_name("x86-uwp");
     const Triplet Triplet::X64_UWP = from_canonical_name("x64-uwp");
     const Triplet Triplet::ARM_UWP = from_canonical_name("arm-uwp");
+    const Triplet Triplet::ARM64_UWP = from_canonical_name("arm64-uwp");
+    const Triplet Triplet::ARM_WINDOWS = from_canonical_name("arm-windows");
+    const Triplet Triplet::ARM64_WINDOWS = from_canonical_name("arm64-windows");    
 
     bool Triplet::operator==(const Triplet& other) const { return this->m_instance == other.m_instance; }
 
