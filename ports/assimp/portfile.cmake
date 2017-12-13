@@ -3,15 +3,14 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO assimp/assimp
-    REF v4.0.1
-    SHA512 260b4c7e738f857d8364c4878ea4e789ca676180821943f6d9bff8f56e5f9377ea29660dca4e130c681a8aa12fc32f155adb1d78ca260ba242e68b8afa6cc1bb
+	REF v4.1.0
+    SHA512 5f1292de873ae16c9921d1d44f2871474d74c0ddfd76cc928a7d9b3e03aa6eca4cc72af0513da20a86d09c55d48646e610fd4a4f2b05364f08ad09cf27cbc67a
     HEAD_REF master
 )
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/const-compare-worditerator.patch"
         "${CMAKE_CURRENT_LIST_DIR}/dont-overwrite-prefix-path.patch"
 )
 
