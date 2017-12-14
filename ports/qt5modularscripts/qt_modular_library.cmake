@@ -37,9 +37,9 @@ function(qt_modular_library NAME HASH)
     file(REMOVE_RECURSE "${DEBUG_DIR}" "${RELEASE_DIR}")
 
     #Find Python and add it to the path
-    vcpkg_find_acquire_program(PYTHON3)
-    get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
-    set(ENV{PATH} "${PYTHON3_EXE_PATH};$ENV{PATH}")
+    vcpkg_find_acquire_program(PYTHON2)
+    get_filename_component(PYTHON2_EXE_PATH ${PYTHON2} DIRECTORY)
+    set(ENV{PATH} "${PYTHON2_EXE_PATH};$ENV{PATH}")
 
     file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
     file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" NATIVE_PACKAGES_DIR)
@@ -92,7 +92,7 @@ function(qt_modular_library NAME HASH)
     #Fix the cmake files if they exist
     if(EXISTS ${RELEASE_DIR}/lib/cmake)
         vcpkg_execute_required_process(
-            COMMAND ${PYTHON3} ${_qt5base_port_dir}/fixcmake.py
+            COMMAND ${PYTHON2} ${_qt5base_port_dir}/fixcmake.py
             WORKING_DIRECTORY ${RELEASE_DIR}/lib/cmake
             LOGNAME fix-cmake
         )
