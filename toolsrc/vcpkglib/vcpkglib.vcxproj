@@ -185,7 +185,6 @@
     <ClInclude Include="..\include\vcpkg\versiont.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\commands.upgrade.cpp" />
     <ClCompile Include="..\src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -221,6 +220,7 @@
     <ClCompile Include="..\src\vcpkg\commands.owns.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.portsdiff.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.search.cpp" />
+    <ClCompile Include="..\src\vcpkg\commands.upgrade.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.version.cpp" />
     <ClCompile Include="..\src\vcpkg\dependencies.cpp" />
     <ClCompile Include="..\src\vcpkg\export.cpp" />

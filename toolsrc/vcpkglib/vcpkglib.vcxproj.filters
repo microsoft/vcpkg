@@ -195,7 +195,7 @@
     <ClCompile Include="..\src\vcpkg\userconfig.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\commands.upgrade.cpp">
+    <ClCompile Include="..\src\vcpkg\commands.upgrade.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
   </ItemGroup>
