@@ -1,4 +1,4 @@
-Source: qt5serial
+Source: qt5serialport
 Version: 5.9.2-0
 Description: Qt5 Serial Port - provides access to hardware and virtual serial ports
 Build-Depends: qt5modularscripts, qt5base
