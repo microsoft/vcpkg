@@ -18,9 +18,7 @@ vcpkg_apply_patches(
             ${CMAKE_CURRENT_LIST_DIR}/crt-secure-no-deprecate.patch
 )
 
-if (${VCPKG_TARGET_ARCHITECTURE} MATCHES "^[Aa][Rr][Mm]64")
-    set (TIFF_CXX_TARGET -Dcxx=OFF)
-elseif (${TARGET_TRIPLET} matches "^[Aa][Rr][Mm]")
+if (${VCPKG_TARGET_ARCHITECTURE} MATCHES "^[Aa][Rr][Mm]64" OR ${VCPKG_TARGET_ARCHITECTURE} MATCHES "^[Aa][Rr][Mm]")
     set (TIFF_CXX_TARGET -Dcxx=OFF)
 else ()
     set (TIFF_CXX_TARGET -Dcxx=ON)
