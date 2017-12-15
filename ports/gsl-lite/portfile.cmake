@@ -1,11 +1,11 @@
 include(vcpkg_common_functions)
 
-set(GSL_LITE_VERSION v0.24.0)
+set(GSL_LITE_VERSION v0.26.0)
 
 vcpkg_download_distfile(HEADER
     URLS "https://github.com/martinmoene/gsl-lite/releases/download/${GSL_LITE_VERSION}/gsl-lite.h"
     FILENAME "gsl-lite-${GSL_LITE_VERSION}.h"
-    SHA512 fbe93aadf25feb488c2190e867933f198adb92a5a87e6bee8a8e1d6f0185829953348cb67eb52f70945d5a3cdb1f4d7403cfd950ab808b215ce445c37e9d9daf
+    SHA512 22bfa69120f98662adca0459a876186086f5deecfaaad6e0d7420fa2b2f7acac63c767b3b1f8915d36f3a44e647a730e2c22f2587befc938e81ea4329c5f2185
 )
 
 vcpkg_download_distfile(LICENSE
