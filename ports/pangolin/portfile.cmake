@@ -47,6 +47,23 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(WRITE ${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-release.cmake "${PANGOLIN_TARGETS}")
 endif()
 
+#release
+	file(READ ${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-release.cmake PANGOLIN_TARGETS)
+	string(REPLACE "IMPORTED_LOCATION_RELEASE \"${CURRENT_PACKAGES_DIR}/lib/pangolin.lib\"" "IMPORTED_LOCATION_RELEASE \"\$\{_IMPORT_PREFIX\}/lib/pangolin.lib\""  PANGOLIN_TARGETS "${PANGOLIN_TARGETS}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-release.cmake "${PANGOLIN_TARGETS}")
+	
+	file(READ ${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-release.cmake PANGOLIN_TARGETS)
+	string(REPLACE "list(APPEND _IMPORT_CHECK_FILES_FOR_pangolin \"${CURRENT_PACKAGES_DIR}/lib/pangolin.lib\" )" "list(APPEND _IMPORT_CHECK_FILES_FOR_pangolin \"\$\{_IMPORT_PREFIX\}/lib/pangolin.lib\" )"  PANGOLIN_TARGETS "${PANGOLIN_TARGETS}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-release.cmake "${PANGOLIN_TARGETS}")
+#debug	
+	file(READ ${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-debug.cmake PANGOLIN_TARGETS)
+	string(REPLACE "IMPORTED_LOCATION_DEBUG \"${CURRENT_PACKAGES_DIR}/debug/lib/pangolin.lib\"" "IMPORTED_LOCATION_DEBUG \"\$\{_IMPORT_PREFIX\}/debug/lib/pangolin.lib\""  PANGOLIN_TARGETS "${PANGOLIN_TARGETS}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-debug.cmake "${PANGOLIN_TARGETS}")
+	
+	file(READ ${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-debug.cmake PANGOLIN_TARGETS)
+	string(REPLACE "list(APPEND _IMPORT_CHECK_FILES_FOR_pangolin \"${CURRENT_PACKAGES_DIR}/debug/lib/pangolin.lib\" )" "list(APPEND _IMPORT_CHECK_FILES_FOR_pangolin \"\$\{_IMPORT_PREFIX\}/debug/lib/pangolin.lib\" )"  PANGOLIN_TARGETS "${PANGOLIN_TARGETS}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-debug.cmake "${PANGOLIN_TARGETS}")
+	
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Copy missing header file
