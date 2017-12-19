@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
-set(VERSION 1_65)
-set(VERSION_FULL 1_65_1)
-set(VERSION2 1.65.1)
+set(VERSION 1_66)
+set(VERSION_FULL 1_66_0)
+set(VERSION2 1.66.0)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/boost_${VERSION_FULL})
 
 ######################
@@ -10,7 +10,7 @@ set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/boost_${VERSION_FULL})
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "https://sourceforge.net/projects/boost/files/boost/${VERSION2}/boost_${VERSION_FULL}.7z" "http://dl.bintray.com/boostorg/release/${VERSION2}/source/boost_${VERSION_FULL}.7z"
     FILENAME "boost_${VERSION_FULL}.7z"
-    SHA512 b1d9264ec74dd75c68176f5a2d2da33a2c1e3162842cc61a07ac8ed1ebb953855cece4faf72ce99b490b665e813b839e35c7fc8026f2f9cb31b106fb8bab2a9c
+    SHA512 85e8c8d82fae41e44ca77a012acfc90a3658623dad1a35370fd4a09d3514d38c95b4400529a279151146384c734538847a2b34d55605476de65199c87e042276
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
