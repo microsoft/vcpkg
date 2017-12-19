@@ -373,6 +373,8 @@ namespace vcpkg::Dependencies
                 }
                 return RemovePlanAction{spec, RemovePlanType::REMOVE, request_type};
             }
+
+            std::string to_string(const PackageSpec& spec) const override { return spec.to_string(); }
         };
 
         const std::vector<StatusParagraph*>& installed_ports = get_installed_ports(status_db);
@@ -420,6 +422,8 @@ namespace vcpkg::Dependencies
 
                 Checks::exit_with_message(VCPKG_LINE_INFO, "Could not find package %s", spec);
             }
+
+            std::string to_string(const PackageSpec& spec) const override { return spec.to_string(); }
         };
 
         const std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
@@ -598,14 +602,11 @@ namespace vcpkg::Dependencies
 
     std::vector<AnyAction> PackageGraph::serialize() const
     {
-        Graphs::GraphAdjacencyProvider<ClusterPtr> adjacency_remove_graph(m_graph_plan->remove_graph.adjacency_list());
         auto remove_vertex_list = m_graph_plan->remove_graph.vertex_list();
-        auto remove_toposort = Graphs::topological_sort(remove_vertex_list, adjacency_remove_graph);
+        auto remove_toposort = Graphs::topological_sort(remove_vertex_list, m_graph_plan->remove_graph);
 
-        Graphs::GraphAdjacencyProvider<ClusterPtr> adjacency_install_graph(
-            m_graph_plan->install_graph.adjacency_list());
         auto insert_vertex_list = m_graph_plan->install_graph.vertex_list();
-        auto insert_toposort = Graphs::topological_sort(insert_vertex_list, adjacency_install_graph);
+        auto insert_toposort = Graphs::topological_sort(insert_vertex_list, m_graph_plan->install_graph);
 
         std::vector<AnyAction> plan;
 

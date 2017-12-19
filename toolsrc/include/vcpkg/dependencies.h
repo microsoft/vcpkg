@@ -1,6 +1,5 @@
 #pragma once
 
-#include <vcpkg/base/graphs.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/build.h>
