@@ -16,6 +16,11 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         -DWEBSOCKETPP_CONFIG_VERSION=${WEBSOCKETPP_PATH})
 endif()
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/undef-minmax.patch"
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/Release
     PREFER_NINJA
@@ -25,6 +30,7 @@ vcpkg_configure_cmake(
         -DBUILD_SAMPLES=OFF
         -DCPPREST_EXCLUDE_WEBSOCKETS=OFF
         -DCPPREST_EXPORT_DIR=share/cpprestsdk
+        -DWERROR=OFF
     OPTIONS_DEBUG
         -DCPPREST_INSTALL_HEADERS=OFF
 )
