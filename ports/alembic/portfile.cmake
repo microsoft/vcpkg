@@ -8,8 +8,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alembic/alembic
-    REF 1.7.1
-    SHA512 89e30b681a76eaf79b20ebeff62c495971b0eb64b28f249a14bbcf3bdb40df7eda93b0ede299dd5511bd4587a2cc2d4ebd851fb89bf999fdccc31fee3cffbba2
+    REF 1.7.4
+    SHA512 8e752d6d85bea3b6a53582d35a589fc40824456098d950974effe0a6a0e359fec1e056af1ea1379f7e23b7ffed2c05c7f5269fa4b64757631b7d57fb60ee98b0
     HEAD_REF master
 )
 
@@ -44,12 +44,12 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Alembic.dll ${CURRENT_PACKAGES_DIR
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/Alembic/AlembicTargets-debug.cmake DEBUG_CONFIG)
 string(REPLACE "\${_IMPORT_PREFIX}/debug/lib/Alembic.dll"
-               "\${_IMPORT_PREFIX}/debug/bin/Alembic.dll" DEBUG_CONFIG ${DEBUG_CONFIG})
+               "\${_IMPORT_PREFIX}/debug/bin/Alembic.dll" DEBUG_CONFIG "${DEBUG_CONFIG}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/Alembic/AlembicTargets-debug.cmake "${DEBUG_CONFIG}")
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/Alembic/AlembicTargets-release.cmake RELEASE_CONFIG)
 string(REPLACE "\${_IMPORT_PREFIX}/lib/Alembic.dll"
-               "\${_IMPORT_PREFIX}/bin/Alembic.dll" RELEASE_CONFIG ${RELEASE_CONFIG})
+               "\${_IMPORT_PREFIX}/bin/Alembic.dll" RELEASE_CONFIG "${RELEASE_CONFIG}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/Alembic/AlembicTargets-release.cmake "${RELEASE_CONFIG}")
 
 # Put the license file where vcpkg expects it

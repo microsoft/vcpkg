@@ -34,11 +34,6 @@ namespace vcpkg::Commands::Edit
 
     static const std::string OPTION_BUILDTREES = "--buildtrees";
 
-    static const std::array<std::string, 1> SWITCHES = {
-        OPTION_BUILDTREES,
-    };
-    static const std::array<std::string, 0> SETTINGS;
-
     static std::vector<std::string> valid_arguments(const VcpkgPaths& paths)
     {
         auto sources_and_errors = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
@@ -47,12 +42,15 @@ namespace vcpkg::Commands::Edit
                           [](auto&& pgh) -> std::string { return pgh->core_paragraph->name; });
     }
 
+    static const std::array<CommandSwitch, 1> EDIT_SWITCHES = {{
+        {OPTION_BUILDTREES, "Open editor into the port-specific buildtree subfolder"},
+    }};
+
     const CommandStructure COMMAND_STRUCTURE = {
-        "edit zlib",
+        Help::create_example_string("edit zlib"),
         1,
         1,
-        SWITCHES,
-        SETTINGS,
+        {EDIT_SWITCHES, {}},
         &valid_arguments,
     };
 
@@ -63,10 +61,7 @@ namespace vcpkg::Commands::Edit
 
         auto& fs = paths.get_filesystem();
 
-        static const std::string EXAMPLE = Help::create_example_string("edit zlib");
-        args.check_exact_arg_count(1, EXAMPLE);
-        const std::unordered_set<std::string> options =
-            args.check_and_get_optional_command_arguments({OPTION_BUILDTREES});
+        const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
         const std::string port_name = args.command_arguments.at(0);
 
         const fs::path portpath = paths.ports / port_name;
@@ -95,7 +90,7 @@ namespace vcpkg::Commands::Edit
         }
 
         const fs::path env_editor = *it;
-        if (options.find(OPTION_BUILDTREES) != options.cend())
+        if (Util::Sets::contains(options.switches, OPTION_BUILDTREES))
         {
             const auto buildtrees_current_dir = paths.buildtrees / port_name;
 

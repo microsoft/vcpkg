@@ -1,24 +1,51 @@
 include(vcpkg_common_functions)
 
 set(VTK_SHORT_VERSION "8.0")
-set(VTK_LONG_VERSION "${VTK_SHORT_VERSION}.0")
+set(VTK_LONG_VERSION "${VTK_SHORT_VERSION}.1")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "Kitware/VTK"
     REF "v${VTK_LONG_VERSION}"
-    SHA512 1a328f24df0b1c40c623ae80c9d49f8b27570144b10af02aeed41b90b50b8d4e0dd83d1341961f6818cde36e2cd793c578ebc95a46950cebfc518f486f249791
+    SHA512 3a70fa704d791d21a1e2421e6799ccc8238da5bc1fc0ab1925fb7956ccaebb7748c452faba1e7f4a2eafbc8612ed644f46f84b0cb3fe16ce539a823165feb29f
     HEAD_REF "master"
 )
 
 # =============================================================================
 # Options: These should be set by feature-packages when they become available
-set(VTK_WITH_QT                          ON ) # IMPORTANT: if ON make sure `qt5` is listed as dependency in the CONTROL file
-set(VTK_WITH_MPI                         ON ) # IMPORTANT: if ON make sure `mpi` is listed as dependency in the CONTROL file
-set(VTK_WITH_PYTHON                      OFF) # IMPORTANT: if ON make sure `python3` is listed as dependency in the CONTROL file
+
+if ("qt" IN_LIST FEATURES)
+    set(VTK_WITH_QT                      ON ) # IMPORTANT: if ON make sure `qt5` is listed as dependency in the CONTROL file
+else()
+    set(VTK_WITH_QT                      OFF ) # IMPORTANT: if ON make sure `qt5` is listed as dependency in the CONTROL file
+endif()
+
+if ("mpi" IN_LIST FEATURES)
+    set(VTK_WITH_MPI                     ON ) # IMPORTANT: if ON make sure `mpi` is listed as dependency in the CONTROL file
+else()
+    set(VTK_WITH_MPI                     OFF ) # IMPORTANT: if ON make sure `mpi` is listed as dependency in the CONTROL file
+endif()
+
+if ("python" IN_LIST FEATURES)
+    set(VTK_WITH_PYTHON                  ON) # IMPORTANT: if ON make sure `python3` is listed as dependency in the CONTROL file
+else()
+    set(VTK_WITH_PYTHON                  OFF) # IMPORTANT: if ON make sure `python3` is listed as dependency in the CONTROL file
+endif()
+
+if("openvr" IN_LIST FEATURES)
+    set(VTK_WITH_OPENVR                  ON) # IMPORTANT: if ON make sure `OpenVR` is listed as dependency in the CONTROL file
+else()
+    set(VTK_WITH_OPENVR                  OFF)
+endif()
+
+if("libharu" IN_LIST FEATURES)
+    set(VTK_WITH_LIBHARU                  ON)
+else()
+    set(VTK_WITH_LIBHARU                  OFF)
+endif()
+
 set(VTK_WITH_ALL_MODULES                 OFF) # IMPORTANT: if ON make sure `qt5`, `mpi`, `python3`, `ffmpeg`, `gdal`, `fontconfig`,
                                               #            `libmysql` and `atlmfc` are  listed as dependency in the CONTROL file
-
 # =============================================================================
 # Apply patches to the source code
 vcpkg_apply_patches(
@@ -54,6 +81,7 @@ vcpkg_apply_patches(
 file(REMOVE ${SOURCE_PATH}/CMake/FindGLEW.cmake)
 file(REMOVE ${SOURCE_PATH}/CMake/FindPythonLibs.cmake)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindGDAL.cmake DESTINATION ${SOURCE_PATH}/CMake)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindHDF5.cmake DESTINATION ${SOURCE_PATH}/CMake/NewCMake)
 
 # =============================================================================
 # Collect CMake options for optional components
@@ -78,6 +106,18 @@ if(VTK_WITH_PYTHON)
     )
 endif()
 
+if(VTK_WITH_OPENVR)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DModule_vtkRenderingOpenVR=ON
+    )
+endif()
+
+if(VTK_WITH_LIBHARU)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_USE_SYSTEM_LIBHARU=ON
+    )
+endif()
+
 if(VTK_WITH_ALL_MODULES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_BUILD_ALL_MODULES=ON
@@ -95,10 +135,6 @@ if(VTK_WITH_ALL_MODULES)
     )
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    list(APPEND ADDITIONAL_OPTIONS "-DVTK_EXTERNAL_HDF5_IS_SHARED=ON")
-endif()
-
 # =============================================================================
 # Configure & Install
 vcpkg_configure_cmake(
@@ -112,7 +148,6 @@ vcpkg_configure_cmake(
         -DVTK_USE_SYSTEM_EXPAT=ON
         -DVTK_USE_SYSTEM_FREETYPE=ON
         # -DVTK_USE_SYSTEM_GL2PS=ON
-        -DVTK_USE_SYSTEM_LIBHARU=ON
         -DVTK_USE_SYSTEM_JPEG=ON
         -DVTK_USE_SYSTEM_GLEW=ON
         -DVTK_USE_SYSTEM_HDF5=ON
@@ -132,12 +167,6 @@ vcpkg_configure_cmake(
         -DVTK_INSTALL_PACKAGE_DIR=share/vtk
         -DVTK_FORBID_DOWNLOADS=ON
         ${ADDITIONAL_OPTIONS}
-    OPTIONS_RELEASE
-        -DHDF5_C_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/hdf5.lib
-        -DHDF5_C_HL_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/hdf5_hl.lib
-    OPTIONS_DEBUG
-        -DHDF5_C_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/hdf5_D.lib
-        -DHDF5_C_HL_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/hdf5_hl_D.lib
 )
 
 vcpkg_install_cmake()
@@ -290,6 +319,11 @@ set(VTK_TOOLS
     vtkpython
     pvtkpython
 )
+
+file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkhdf5.cmake" _contents)
+string(REPLACE "vtk::hdf5::hdf5_hl" "" _contents "${_contents}")
+string(REPLACE "vtk::hdf5::hdf5" "" _contents "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkhdf5.cmake" "${_contents}")
 
 foreach(TOOL_NAME IN LISTS VTK_TOOLS)
     _vtk_move_tool("${TOOL_NAME}")

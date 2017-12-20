@@ -72,7 +72,8 @@ namespace vcpkg::Files
         {
             std::vector<fs::path> ret;
 
-            fs::stdfs::recursive_directory_iterator b(dir), e{};
+            std::error_code ec;
+            fs::stdfs::recursive_directory_iterator b(dir, ec), e{};
             for (; b != e; ++b)
             {
                 ret.push_back(b->path());

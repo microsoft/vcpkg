@@ -79,18 +79,29 @@ namespace vcpkg::Commands::Search
         }
     }
 
+    static std::array<CommandSwitch, 2> SEARCH_SWITCHES = {{
+        {OPTION_GRAPH, "Open editor into the port-specific buildtree subfolder"},
+        {OPTION_FULLDESC, "Do not truncate long text"},
+    }};
+
+    const CommandStructure COMMAND_STRUCTURE = {
+        Strings::format(
+            "The argument should be a substring to search for, or no argument to display all libraries.\n%s",
+            Help::create_example_string("search png")),
+        0,
+        1,
+        {SEARCH_SWITCHES, {}},
+        nullptr,
+    };
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const std::string EXAMPLE = Strings::format(
-            "The argument should be a substring to search for, or no argument to display all libraries.\n%s",
-            Help::create_example_string("search png"));
-        args.check_max_arg_count(1, EXAMPLE);
-        const std::unordered_set<std::string> options =
-            args.check_and_get_optional_command_arguments({OPTION_GRAPH, OPTION_FULLDESC});
+        const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
+        const bool full_description = Util::Sets::contains(options.switches, OPTION_FULLDESC);
 
         auto source_paragraphs = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
 
-        if (options.find(OPTION_GRAPH) != options.cend())
+        if (Util::Sets::contains(options.switches, OPTION_GRAPH))
         {
             const std::string graph_as_string = create_graph_as_string(source_paragraphs);
             System::println(graph_as_string);
@@ -101,12 +112,10 @@ namespace vcpkg::Commands::Search
         {
             for (const auto& source_control_file : source_paragraphs)
             {
-                do_print(*source_control_file->core_paragraph, options.find(OPTION_FULLDESC) != options.cend());
+                do_print(*source_control_file->core_paragraph, full_description);
                 for (auto&& feature_paragraph : source_control_file->feature_paragraphs)
                 {
-                    do_print(source_control_file->core_paragraph->name,
-                             *feature_paragraph,
-                             options.find(OPTION_FULLDESC) != options.cend());
+                    do_print(source_control_file->core_paragraph->name, *feature_paragraph, full_description);
                 }
             }
         }
@@ -120,10 +129,10 @@ namespace vcpkg::Commands::Search
             {
                 auto&& sp = *source_control_file->core_paragraph;
 
-                bool contains_name = icontains(sp.name, args_zero);
+                const bool contains_name = icontains(sp.name, args_zero);
                 if (contains_name || icontains(sp.description, args_zero))
                 {
-                    do_print(sp, options.find(OPTION_FULLDESC) != options.cend());
+                    do_print(sp, full_description);
                 }
 
                 for (auto&& feature_paragraph : source_control_file->feature_paragraphs)
@@ -131,7 +140,7 @@ namespace vcpkg::Commands::Search
                     if (contains_name || icontains(feature_paragraph->name, args_zero) ||
                         icontains(feature_paragraph->description, args_zero))
                     {
-                        do_print(sp.name, *feature_paragraph, options.find(OPTION_FULLDESC) != options.cend());
+                        do_print(sp.name, *feature_paragraph, full_description);
                     }
                 }
             }

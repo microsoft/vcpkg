@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Exiv2/exiv2
-    REF 4f4add2cdcbe73af7098122a509dff0739d15908
-    SHA512 32207cfd7ac932942562e062e851d7ba9be5586f33c2d924fb2a908a78f0c53f0d2973108c49bc865a3e7697a04a4b65d991441e4b89baca82b51b61affd4fa3
+    REF 8f5b795eaa4bc414d2d6041c1dbd1a7f7bf1fc99
+    SHA512 672d5d2e823e72ed20d0d5f8f993b797a39109f99734b25db8eefdefa47e54df83d0644798ecb04891f68544e9e407a816ec6901027f14ef116f186b07043c18
     HEAD_REF master
 )
 
@@ -13,6 +13,8 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH "share/exiv2/cmake")
 
 vcpkg_copy_pdbs()
 

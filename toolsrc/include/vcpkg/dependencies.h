@@ -1,8 +1,8 @@
 #pragma once
 
-#include <vcpkg/base/graphs.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/util.h>
+#include <vcpkg/build.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/vcpkgpaths.h>
@@ -18,6 +18,9 @@ namespace vcpkg::Dependencies
         AUTO_SELECTED
     };
 
+    std::string to_output_string(RequestType request_type,
+                                 const CStringView s,
+                                 const Build::BuildPackageOptions& options);
     std::string to_output_string(RequestType request_type, const CStringView s);
 
     struct AnyParagraph
@@ -26,7 +29,6 @@ namespace vcpkg::Dependencies
 
         Optional<StatusParagraph> status_paragraph;
         Optional<BinaryControlFile> binary_control_file;
-        Optional<SourceParagraph> source_paragraph;
         Optional<const SourceControlFile*> source_control_file;
     };
 }
@@ -38,7 +40,8 @@ namespace vcpkg::Dependencies
         UNKNOWN,
         BUILD_AND_INSTALL,
         INSTALL,
-        ALREADY_INSTALLED
+        ALREADY_INSTALLED,
+        EXCLUDED
     };
 
     struct InstallPlanAction : Util::MoveOnlyBase
@@ -62,6 +65,7 @@ namespace vcpkg::Dependencies
         AnyParagraph any_paragraph;
         InstallPlanType plan_type;
         RequestType request_type;
+        Build::BuildPackageOptions build_options;
         std::unordered_set<std::string> feature_list;
     };
 
@@ -86,11 +90,11 @@ namespace vcpkg::Dependencies
 
     struct AnyAction
     {
-        AnyAction(InstallPlanAction&& iplan) : install_plan(std::move(iplan)) {}
-        AnyAction(RemovePlanAction&& rplan) : remove_plan(std::move(rplan)) {}
+        AnyAction(InstallPlanAction&& iplan) : install_action(std::move(iplan)) {}
+        AnyAction(RemovePlanAction&& rplan) : remove_action(std::move(rplan)) {}
 
-        Optional<InstallPlanAction> install_plan;
-        Optional<RemovePlanAction> remove_plan;
+        Optional<InstallPlanAction> install_action;
+        Optional<RemovePlanAction> remove_action;
 
         const PackageSpec& spec() const;
     };
@@ -117,22 +121,44 @@ namespace vcpkg::Dependencies
 
     struct PortFileProvider
     {
-        virtual const SourceControlFile& get_control_file(const std::string& spec) const = 0;
+        virtual Optional<const SourceControlFile&> get_control_file(const std::string& src_name) const = 0;
     };
 
-    struct MapPortFile : Util::ResourceBase, PortFileProvider
+    struct MapPortFileProvider : Util::ResourceBase, PortFileProvider
     {
+        explicit MapPortFileProvider(const std::unordered_map<std::string, SourceControlFile>& map);
+        Optional<const SourceControlFile&> get_control_file(const std::string& src_name) const override;
+
+    private:
         const std::unordered_map<std::string, SourceControlFile>& ports;
-        explicit MapPortFile(const std::unordered_map<std::string, SourceControlFile>& map);
-        const SourceControlFile& get_control_file(const std::string& spec) const override;
     };
 
-    struct PathsPortFile : Util::ResourceBase, PortFileProvider
+    struct PathsPortFileProvider : Util::ResourceBase, PortFileProvider
     {
+        explicit PathsPortFileProvider(const VcpkgPaths& paths);
+        Optional<const SourceControlFile&> get_control_file(const std::string& src_name) const override;
+
+    private:
         const VcpkgPaths& ports;
         mutable std::unordered_map<std::string, SourceControlFile> cache;
-        explicit PathsPortFile(const VcpkgPaths& paths);
-        const SourceControlFile& get_control_file(const std::string& spec) const override;
+    };
+
+    struct ClusterGraph;
+    struct GraphPlan;
+
+    struct PackageGraph
+    {
+        PackageGraph(const PortFileProvider& provider, const StatusParagraphs& status_db);
+        ~PackageGraph();
+
+        void install(const FeatureSpec& spec);
+        void upgrade(const PackageSpec& spec);
+
+        std::vector<AnyAction> serialize() const;
+
+    private:
+        std::unique_ptr<GraphPlan> m_graph_plan;
+        std::unique_ptr<ClusterGraph> m_graph;
     };
 
     std::vector<InstallPlanAction> create_install_plan(const PortFileProvider& port_file_provider,
@@ -142,11 +168,18 @@ namespace vcpkg::Dependencies
     std::vector<RemovePlanAction> create_remove_plan(const std::vector<PackageSpec>& specs,
                                                      const StatusParagraphs& status_db);
 
-    std::vector<ExportPlanAction> create_export_plan(const VcpkgPaths& paths,
+    std::vector<ExportPlanAction> create_export_plan(const PortFileProvider& port_file_provider,
+                                                     const VcpkgPaths& paths,
                                                      const std::vector<PackageSpec>& specs,
                                                      const StatusParagraphs& status_db);
 
     std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<std::string, SourceControlFile>& map,
                                                        const std::vector<FeatureSpec>& specs,
                                                        const StatusParagraphs& status_db);
+
+    std::vector<AnyAction> create_feature_install_plan(const PortFileProvider& port_file_provider,
+                                                       const std::vector<FeatureSpec>& specs,
+                                                       const StatusParagraphs& status_db);
+
+    void print_plan(const std::vector<AnyAction>& action_plan, const bool is_recursive = true);
 }

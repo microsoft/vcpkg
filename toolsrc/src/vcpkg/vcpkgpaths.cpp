@@ -4,6 +4,7 @@
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
+#include <vcpkg/build.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/vcpkgpaths.h>
@@ -62,6 +63,23 @@ namespace vcpkg
         return nullopt;
     }
 
+    static std::vector<std::string> keep_data_lines(const std::string& data_blob)
+    {
+        static const std::regex DATA_LINE_REGEX(R"(<sol>::(.+?)(?=::<eol>))");
+
+        std::vector<std::string> data_lines;
+
+        const std::sregex_iterator it(data_blob.cbegin(), data_blob.cend(), DATA_LINE_REGEX);
+        const std::sregex_iterator end;
+        for (std::sregex_iterator i = it; i != end; ++i)
+        {
+            const std::smatch match = *i;
+            data_lines.push_back(match[1].str());
+        }
+
+        return data_lines;
+    }
+
     static fs::path fetch_dependency(const fs::path& scripts_folder,
                                      const std::string& tool_name,
                                      const fs::path& expected_downloaded_path,
@@ -74,25 +92,16 @@ namespace vcpkg
                         tool_name,
                         version_as_string);
         const fs::path script = scripts_folder / "fetchDependency.ps1";
-        const auto install_cmd =
-            System::create_powershell_script_cmd(script, Strings::format("-Dependency %s", tool_name));
-        const System::ExitCodeAndOutput rc = System::cmd_execute_and_capture_output(install_cmd);
-        if (rc.exit_code)
-        {
-            System::println(System::Color::error,
-                            "Launching powershell failed or was denied when trying to fetch %s version %s.\n"
-                            "(No sufficient installed version was found)",
-                            tool_name,
-                            version_as_string);
-            {
-                auto locked_metrics = Metrics::g_metrics.lock();
-                locked_metrics->track_property("error", "powershell install failed");
-                locked_metrics->track_property("dependency", tool_name);
-            }
-            Checks::exit_with_code(VCPKG_LINE_INFO, rc.exit_code);
-        }
+        const std::string title = Strings::format(
+            "Fetching %s version %s (No sufficient installed version was found)", tool_name, version_as_string);
+        const System::PowershellParameter dependency_param("Dependency", tool_name);
+        const std::string output = System::powershell_execute_and_capture_output(title, script, {dependency_param});
 
-        const fs::path actual_downloaded_path = Strings::trimmed(rc.output);
+        const std::vector<std::string> dependency_path = keep_data_lines(output);
+        Checks::check_exit(
+            VCPKG_LINE_INFO, dependency_path.size() == 1, "Expected dependency path, but got %s", output);
+
+        const fs::path actual_downloaded_path = Strings::trim(std::string{dependency_path.at(0)});
         std::error_code ec;
         const auto eq = fs::stdfs::equivalent(expected_downloaded_path, actual_downloaded_path, ec);
         Checks::check_exit(VCPKG_LINE_INFO,
@@ -105,14 +114,20 @@ namespace vcpkg
 
     static fs::path get_cmake_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
     {
-        static constexpr std::array<int, 3> EXPECTED_VERSION = {3, 9, 4};
+#if defined(_WIN32)
+        static constexpr std::array<int, 3> EXPECTED_VERSION = {3, 10, 0};
+#else
+        static constexpr std::array<int, 3> EXPECTED_VERSION = {3, 5, 1};
+#endif
         static const std::string VERSION_CHECK_ARGUMENTS = "--version";
 
-        const fs::path downloaded_copy = downloads_folder / "cmake-3.9.4-win32-x86" / "bin" / "cmake.exe";
         const std::vector<fs::path> from_path = Files::find_from_PATH("cmake");
 
         std::vector<fs::path> candidate_paths;
+        const fs::path downloaded_copy = downloads_folder / "cmake-3.10.0-win32-x86" / "bin" / "cmake.exe";
+#if defined(_WIN32)
         candidate_paths.push_back(downloaded_copy);
+#endif
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
 #if defined(_WIN32)
         candidate_paths.push_back(System::get_program_files_platform_bitness() / "CMake" / "bin" / "cmake.exe");
@@ -151,14 +166,20 @@ namespace vcpkg
 
     fs::path get_git_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
     {
-        static constexpr std::array<int, 3> EXPECTED_VERSION = {2, 14, 2};
+#if defined(_WIN32)
+        static constexpr std::array<int, 3> EXPECTED_VERSION = {2, 15, 0};
+#else
+        static constexpr std::array<int, 3> EXPECTED_VERSION = {2, 7, 4};
+#endif
         static const std::string VERSION_CHECK_ARGUMENTS = "--version";
 
-        const fs::path downloaded_copy = downloads_folder / "MinGit-2.14.2.3-32-bit" / "cmd" / "git.exe";
         const std::vector<fs::path> from_path = Files::find_from_PATH("git");
 
+        const fs::path downloaded_copy = downloads_folder / "MinGit-2.15.0-32-bit" / "cmd" / "git.exe";
         std::vector<fs::path> candidate_paths;
+#if defined(_WIN32)
         candidate_paths.push_back(downloaded_copy);
+#endif
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
 #if defined(_WIN32)
         candidate_paths.push_back(System::get_program_files_platform_bitness() / "git" / "cmd" / "git.exe");
@@ -260,7 +281,6 @@ namespace vcpkg
     const std::vector<std::string>& VcpkgPaths::get_available_triplets() const
     {
         return this->available_triplets.get_lazy([this]() -> std::vector<std::string> {
-
             std::vector<std::string> output;
             for (auto&& path : this->get_filesystem().get_files_non_recursive(this->triplets))
             {
@@ -324,16 +344,21 @@ namespace vcpkg
     static std::vector<VisualStudioInstance> get_visual_studio_instances(const VcpkgPaths& paths)
     {
         const fs::path script = paths.scripts / "findVisualStudioInstallationInstances.ps1";
-        const std::string cmd = System::create_powershell_script_cmd(script);
-        const System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, ec_data.exit_code == 0, "Could not run script to detect Visual Studio instances");
+        const std::string output =
+            System::powershell_execute_and_capture_output("Detecting Visual Studio instances", script);
 
-        const std::vector<std::string> instances_as_strings = Strings::split(ec_data.output, "\n");
-        Checks::check_exit(
-            VCPKG_LINE_INFO, !instances_as_strings.empty(), "Could not detect any Visual Studio instances");
+        const std::vector<std::string> instances_as_strings = keep_data_lines(output);
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           !instances_as_strings.empty(),
+                           "Could not detect any Visual Studio instances.\n"
+                           "Powershell script:\n"
+                           "    %s\n"
+                           "returned:\n"
+                           "%s",
+                           script.generic_string(),
+                           output);
 
-        std::vector<VisualStudioInstance> output;
+        std::vector<VisualStudioInstance> instances;
         for (const std::string& instance_as_string : instances_as_strings)
         {
             const std::vector<std::string> split = Strings::split(instance_as_string, "::");
@@ -341,12 +366,12 @@ namespace vcpkg
                                split.size() == 4,
                                "Invalid Visual Studio instance format.\n"
                                "Expected: PreferenceWeight::ReleaseType::Version::PathToVisualStudio\n"
-                               "Actual  : %s",
+                               "Actual  : %s\n",
                                instance_as_string);
-            output.push_back({split.at(3), split.at(2), split.at(1), split.at(0)});
+            instances.push_back({split.at(3), split.at(2), split.at(1), split.at(0)});
         }
 
-        return output;
+        return instances;
     }
 
     static std::vector<Toolset> find_toolset_instances(const VcpkgPaths& paths)
@@ -359,6 +384,7 @@ namespace vcpkg
         std::vector<fs::path> paths_examined;
 
         std::vector<Toolset> found_toolsets;
+        std::vector<Toolset> excluded_toolsets;
 
         const std::vector<VisualStudioInstance> vs_instances = get_visual_studio_instances(paths);
         const bool v140_is_available = Util::find_if(vs_instances, [&](const VisualStudioInstance& vs_instance) {
@@ -415,17 +441,28 @@ namespace vcpkg
                     paths_examined.push_back(dumpbin_path);
                     if (fs.exists(dumpbin_path))
                     {
-                        found_toolsets.push_back(Toolset{
-                            vs_instance.root_path, dumpbin_path, vcvarsall_bat, {}, V_141, supported_architectures});
+                        const Toolset v141toolset = Toolset{
+                            vs_instance.root_path, dumpbin_path, vcvarsall_bat, {}, V_141, supported_architectures};
+
+                        auto english_language_pack = dumpbin_path.parent_path() / "1033";
+
+                        if (!fs.exists(english_language_pack))
+                        {
+                            excluded_toolsets.push_back(v141toolset);
+                            break;
+                        }
+
+                        found_toolsets.push_back(v141toolset);
 
                         if (v140_is_available)
                         {
-                            found_toolsets.push_back(Toolset{vs_instance.root_path,
-                                                             dumpbin_path,
-                                                             vcvarsall_bat,
-                                                             {"-vcvars_ver=14.0"},
-                                                             V_140,
-                                                             supported_architectures});
+                            const Toolset v140toolset = Toolset{vs_instance.root_path,
+                                                                dumpbin_path,
+                                                                vcvarsall_bat,
+                                                                {"-vcvars_ver=14.0"},
+                                                                V_140,
+                                                                supported_architectures};
+                            found_toolsets.push_back(v140toolset);
                         }
 
                         break;
@@ -435,42 +472,64 @@ namespace vcpkg
                 continue;
             }
 
-            if (major_version == "14")
+            if (major_version == "14" || major_version == "12")
             {
                 const fs::path vcvarsall_bat = vs_instance.root_path / "VC" / "vcvarsall.bat";
 
                 paths_examined.push_back(vcvarsall_bat);
                 if (fs.exists(vcvarsall_bat))
                 {
-                    const fs::path vs2015_dumpbin_exe = vs_instance.root_path / "VC" / "bin" / "dumpbin.exe";
-                    paths_examined.push_back(vs2015_dumpbin_exe);
+                    const fs::path vs_dumpbin_exe = vs_instance.root_path / "VC" / "bin" / "dumpbin.exe";
+                    paths_examined.push_back(vs_dumpbin_exe);
 
-                    const fs::path vs2015_bin_dir = vcvarsall_bat.parent_path() / "bin";
+                    const fs::path vs_bin_dir = vcvarsall_bat.parent_path() / "bin";
                     std::vector<ToolsetArchOption> supported_architectures;
-                    if (fs.exists(vs2015_bin_dir / "vcvars32.bat"))
+                    if (fs.exists(vs_bin_dir / "vcvars32.bat"))
                         supported_architectures.push_back({"x86", CPU::X86, CPU::X86});
-                    if (fs.exists(vs2015_bin_dir / "amd64\\vcvars64.bat"))
+                    if (fs.exists(vs_bin_dir / "amd64\\vcvars64.bat"))
                         supported_architectures.push_back({"x64", CPU::X64, CPU::X64});
-                    if (fs.exists(vs2015_bin_dir / "x86_amd64\\vcvarsx86_amd64.bat"))
+                    if (fs.exists(vs_bin_dir / "x86_amd64\\vcvarsx86_amd64.bat"))
                         supported_architectures.push_back({"x86_amd64", CPU::X86, CPU::X64});
-                    if (fs.exists(vs2015_bin_dir / "x86_arm\\vcvarsx86_arm.bat"))
+                    if (fs.exists(vs_bin_dir / "x86_arm\\vcvarsx86_arm.bat"))
                         supported_architectures.push_back({"x86_arm", CPU::X86, CPU::ARM});
-                    if (fs.exists(vs2015_bin_dir / "amd64_x86\\vcvarsamd64_x86.bat"))
+                    if (fs.exists(vs_bin_dir / "amd64_x86\\vcvarsamd64_x86.bat"))
                         supported_architectures.push_back({"amd64_x86", CPU::X64, CPU::X86});
-                    if (fs.exists(vs2015_bin_dir / "amd64_arm\\vcvarsamd64_arm.bat"))
+                    if (fs.exists(vs_bin_dir / "amd64_arm\\vcvarsamd64_arm.bat"))
                         supported_architectures.push_back({"amd64_arm", CPU::X64, CPU::ARM});
 
-                    if (fs.exists(vs2015_dumpbin_exe))
+                    if (fs.exists(vs_dumpbin_exe))
                     {
-                        found_toolsets.push_back({vs_instance.root_path,
-                                                  vs2015_dumpbin_exe,
-                                                  vcvarsall_bat,
-                                                  {},
-                                                  V_140,
-                                                  supported_architectures});
+                        const Toolset toolset = {vs_instance.root_path,
+                                                 vs_dumpbin_exe,
+                                                 vcvarsall_bat,
+                                                 {},
+                                                 major_version == "14" ? V_140 : V_120,
+                                                 supported_architectures};
+
+                        auto english_language_pack = vs_dumpbin_exe.parent_path() / "1033";
+
+                        if (!fs.exists(english_language_pack))
+                        {
+                            excluded_toolsets.push_back(toolset);
+                            break;
+                        }
+
+                        found_toolsets.push_back(toolset);
                     }
                 }
             }
+        }
+
+        if (!excluded_toolsets.empty())
+        {
+            System::println(
+                System::Color::warning,
+                "Warning: The following VS instances are exluded because the English language pack is unavailable.");
+            for (const Toolset& toolset : excluded_toolsets)
+            {
+                System::println("    %s", toolset.visual_studio_root_path.u8string());
+            }
+            System::println(System::Color::warning, "Please install the English language pack.");
         }
 
         if (found_toolsets.empty())
@@ -487,16 +546,36 @@ namespace vcpkg
         return found_toolsets;
     }
 
-    const Toolset& VcpkgPaths::get_toolset(const Optional<std::string>& toolset_version,
-                                           const Optional<fs::path>& visual_studio_path) const
+    const Toolset& VcpkgPaths::get_toolset(const Build::PreBuildInfo& prebuildinfo) const
     {
+        if (prebuildinfo.external_toolchain_file)
+        {
+            static Toolset external_toolset = []() -> Toolset {
+                Toolset ret;
+                ret.dumpbin = "";
+                ret.supported_architectures = {
+                    ToolsetArchOption{"", System::get_host_processor(), System::get_host_processor()}};
+#if defined(_WIN32)
+                ret.vcvarsall = "cmd";
+                ret.vcvarsall_options = {"/c", "echo done"};
+#else
+                ret.vcvarsall = "true";
+                ret.vcvarsall_options = {};
+#endif
+                ret.version = "external";
+                ret.visual_studio_root_path = "";
+                return ret;
+            }();
+            return external_toolset;
+        }
+
         // Invariant: toolsets are non-empty and sorted with newest at back()
         const std::vector<Toolset>& vs_toolsets =
             this->toolsets.get_lazy([this]() { return find_toolset_instances(*this); });
 
         std::vector<const Toolset*> candidates = Util::element_pointers(vs_toolsets);
-        const auto tsv = toolset_version.get();
-        const auto vsp = visual_studio_path.get();
+        const auto tsv = prebuildinfo.platform_toolset.get();
+        const auto vsp = prebuildinfo.visual_studio_path.get();
 
         if (tsv && vsp)
         {
@@ -530,6 +609,7 @@ namespace vcpkg
                                vs_root_path.generic_string());
         }
 
+        Checks::check_exit(VCPKG_LINE_INFO, !candidates.empty(), "No suitable Visual Studio instances were found");
         return *candidates.front();
     }
 

@@ -4,23 +4,27 @@
 #include <vcpkg/base/system.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
-#include <vcpkg/vcpkglib.h>
 
 namespace vcpkg::Commands::Create
 {
+    const CommandStructure COMMAND_STRUCTURE = {
+        Help::create_example_string(
+            R"###(create zlib2 http://zlib.net/zlib1211.zip "zlib1211-2.zip")###"),
+        2,
+        3,
+        {},
+        nullptr,
+    };
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const std::string EXAMPLE = Help::create_example_string(
-            R"###(create zlib2 http://zlib.net/zlib1211.zip "zlib1211-2.zip")###");
-        args.check_max_arg_count(3, EXAMPLE);
-        args.check_min_arg_count(2, EXAMPLE);
-        args.check_and_get_optional_command_arguments({});
+        args.parse_arguments(COMMAND_STRUCTURE);
         const std::string port_name = args.command_arguments.at(0);
         const std::string url = args.command_arguments.at(1);
 
         const fs::path& cmake_exe = paths.get_cmake_exe();
 
-        std::vector<CMakeVariable> cmake_args{{"CMD", "CREATE"}, {"PORT", port_name}, {"URL", url}};
+        std::vector<System::CMakeVariable> cmake_args{{"CMD", "CREATE"}, {"PORT", port_name}, {"URL", url}};
 
         if (args.command_arguments.size() >= 3)
         {

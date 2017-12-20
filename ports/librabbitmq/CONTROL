@@ -1,0 +1,4 @@
+Source: librabbitmq
+Version: 0.8.0
+Build-Depends: openssl
+Description: A C-language AMQP client library for use with v2.0+ of the RabbitMQ broker.

@@ -8,8 +8,9 @@ namespace vcpkg
         VersionT();
         VersionT(const std::string& value);
 
-        std::string to_string() const;
+        const std::string& to_string() const;
 
+    private:
         std::string value;
     };
 

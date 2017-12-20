@@ -16,10 +16,10 @@ namespace vcpkg
         using const_iterator = container::const_reverse_iterator;
 
         const_iterator find(const PackageSpec& spec) const { return find(spec.name(), spec.triplet()); }
-        const_iterator find(const std::string& name, const Triplet& triplet) const;
-        iterator find(const std::string& name, const Triplet& triplet);
+        iterator find(const std::string& name, const Triplet& triplet, const std::string& feature = "");
+        const_iterator find(const std::string& name, const Triplet& triplet, const std::string& feature = "") const;
+
         std::vector<std::unique_ptr<StatusParagraph>*> find_all(const std::string& name, const Triplet& triplet);
-        iterator find(const std::string& name, const Triplet& triplet, const std::string& feature);
 
         const_iterator find_installed(const PackageSpec& spec) const
         {

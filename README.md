@@ -10,7 +10,7 @@ Prerequisites:
 - Windows 10, 8.1, or 7
 - Visual Studio 2017 or Visual Studio 2015 Update 3
 - Git
-- *Optional: CMake 3.9.4*
+- *Optional: CMake 3.10.0*
 
 Clone this repository, then run
 ```
@@ -27,6 +27,14 @@ C:\src\vcpkg> .\vcpkg install sdl2 curl
 Finally, create a New Project (or open an existing one) in Visual Studio 2017 or 2015. All installed libraries are immediately ready to be `#include`'d and used in your project.
 
 For CMake projects, simply include our toolchain file. See our [using a package](docs/examples/using-sqlite.md) example for the specifics.
+
+## Tab-Completion / Auto-Completion
+`Vcpkg` supports auto-completion of commands, package names, options etc. To enable tab-completion in Powershell, use
+```
+.\vcpkg integrate powershell
+```
+and restart Powershell.
+
 
 ## Examples
 See the [documentation](docs/index.md) for specific walkthroughs, including [using a package](docs/examples/using-sqlite.md) and [adding a new package](docs/examples/packaging-zlib.md).

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vcpkg/dependencies.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/vcpkgcmdarguments.h>
@@ -16,6 +17,8 @@ namespace vcpkg::Update
         VersionDiff version_diff;
     };
 
-    std::vector<OutdatedPackage> find_outdated_packages(const VcpkgPaths& paths, const StatusParagraphs& status_db);
+    std::vector<OutdatedPackage> find_outdated_packages(const Dependencies::PortFileProvider& provider,
+                                                        const StatusParagraphs& status_db);
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
 }

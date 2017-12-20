@@ -38,13 +38,14 @@ function(vcpkg_execute_required_process)
         RESULT_VARIABLE error_code
         WORKING_DIRECTORY ${vcpkg_execute_required_process_WORKING_DIRECTORY})
     #debug_message("error_code=${error_code}")
-    file(TO_NATIVE_PATH "${CURRENT_BUILDTREES_DIR}" NATIVE_BUILDTREES_DIR)
     if(error_code)
+        file(TO_NATIVE_PATH "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-out.log" NATIVE_LOG_OUT)
+        file(TO_NATIVE_PATH "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-err.log" NATIVE_LOG_ERR)
         message(FATAL_ERROR
             "  Command failed: ${vcpkg_execute_required_process_COMMAND}\n"
             "  Working Directory: ${vcpkg_execute_required_process_WORKING_DIRECTORY}\n"
             "  See logs for more information:\n"
-            "    ${NATIVE_BUILDTREES_DIR}\\${vcpkg_execute_required_process_LOGNAME}-out.log\n"
-            "    ${NATIVE_BUILDTREES_DIR}\\${vcpkg_execute_required_process_LOGNAME}-err.log\n")
+            "    ${NATIVE_LOG_OUT}\n"
+            "    ${NATIVE_LOG_ERR}\n")
     endif()
 endfunction()

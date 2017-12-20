@@ -10,7 +10,7 @@ function(vcpkg_get_windows_sdk ret)
         message(FATAL_ERROR "Could not find Windows SDK")
     endif()
 
-    # Remove trailing newline
-    string(REGEX REPLACE "\n$" "" WINDOWS_SDK "${WINDOWS_SDK}")
+    # Remove trailing newline and non-numeric characters
+    string(REGEX REPLACE "[^0-9.]" "" WINDOWS_SDK "${WINDOWS_SDK}")
     set(${ret} ${WINDOWS_SDK} PARENT_SCOPE)
 endfunction()

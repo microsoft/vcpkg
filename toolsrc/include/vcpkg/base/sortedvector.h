@@ -44,6 +44,8 @@ namespace vcpkg
 
         size_type size() const { return this->m_data.size(); }
 
+        const T& operator[](int i) const { return this->m_data[i]; }
+
     private:
         std::vector<T> m_data;
     };

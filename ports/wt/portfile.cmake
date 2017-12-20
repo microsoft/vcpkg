@@ -10,14 +10,13 @@ vcpkg_from_github(
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/add-disable-boost-autolink-option.patch
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/add-disable-boost-autolink-option.patch
+        ${CMAKE_CURRENT_LIST_DIR}/guard-NO_ERROR.patch
+        ${CMAKE_CURRENT_LIST_DIR}/boost-1.66.patch
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(SHARED_LIBS ON)
-else()
-    set(SHARED_LIBS OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIBS)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

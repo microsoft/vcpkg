@@ -1,16 +1,22 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$False)]
-    [string]$explicitlyRequestedVSPath = ""
+    [string]$withVSPath = ""
 )
 
-$explicitlyRequestedVSPath = $explicitlyRequestedVSPath -replace "\\$" # Remove potential trailing backslash
+$withVSPath = $withVSPath -replace "\\$" # Remove potential trailing backslash
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 $VisualStudioInstallationInstances = & $scriptsDir\findVisualStudioInstallationInstances.ps1
-Write-Verbose "VS Candidates:`n`r$([system.String]::Join([Environment]::NewLine, $VisualStudioInstallationInstances))"
-foreach ($instanceCandidate in $VisualStudioInstallationInstances)
+if ($VisualStudioInstallationInstances -eq $null)
 {
+    throw "Could not find Visual Studio. VS2015 or VS2017 (with C++) needs to be installed."
+}
+
+Write-Verbose "VS Candidates:`n`r$([system.String]::Join([Environment]::NewLine, $VisualStudioInstallationInstances))"
+foreach ($instanceCandidateWithEOL in $VisualStudioInstallationInstances)
+{
+    $instanceCandidate = $instanceCandidateWithEOL -replace "<sol>::" -replace "::<eol>"
     Write-Verbose "Inspecting: $instanceCandidate"
     $split = $instanceCandidate -split "::"
     # $preferenceWeight = $split[0]
@@ -18,7 +24,7 @@ foreach ($instanceCandidate in $VisualStudioInstallationInstances)
     $version = $split[2]
     $path = $split[3]
 
-    if ($explicitlyRequestedVSPath -ne "" -and $explicitlyRequestedVSPath -ne $path)
+    if ($withVSPath -ne "" -and $withVSPath -ne $path)
     {
         Write-Verbose "Skipping: $instanceCandidate"
         continue

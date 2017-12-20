@@ -1,26 +1,24 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:\path\to\current\vcpkg>
-#   TARGET_TRIPLET is the current triplet (x86-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#
-
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fftw-3.3.6-pl2)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fftw-3.3.7)
+
+# This can be removed in the next source code update
+if(EXISTS "${SOURCE_PATH}/CMakeLists.txt")
+    file(READ "${SOURCE_PATH}/CMakeLists.txt" _contents)
+    if("${_contents}" MATCHES "-D_OPENMP -DLIBFFTWF33_EXPORTS /openmp /bigobj")
+        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
+    endif()
+endif()
+
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.fftw.org/fftw-3.3.6-pl2.tar.gz"
-    FILENAME "fftw-3.3.6-pl2.tar.gz"
-    SHA512 e130309856752a1555b6d151c4d0ce9eb4b2c208fff7e3e89282ca8ef6104718f865cbb5e9c4af4367b3615b69b0d50fd001a26d74fd5324ff2faabe14fe3472
+    URLS "http://www.fftw.org/fftw-3.3.7.tar.gz"
+    FILENAME "fftw-3.3.7.tar.gz"
+    SHA512 a5db54293a6d711408bed5894766437eee920be015ad27023c7a91d4581e2ff5b96e3db0201e6eaccf7b064c4d32db1a2a8fab3e6813e524b4743ddd6216ba77
 )
 
 vcpkg_extract_source_archive(${ARCHIVE})
 
 option(BUILD_SINGLE "Additionally build single precision library" ON)
 option(BUILD_LONG_DOUBLE "Additionally build long-double precision library" ON)
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -31,7 +29,14 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(COPY ${SOURCE_PATH}/api/fftw3.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/fftw3)
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/share/fftw3)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
+
 
 if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
     vcpkg_apply_patches(
