@@ -67,7 +67,7 @@ namespace vcpkg::Build::Command
         const Build::BuildPackageConfig build_config{
             *scf, spec.triplet(), fs::path{port_dir}, build_package_options, features_as_set};
 
-        const auto build_timer = Chrono::ElapsedTime::create_started();
+        const auto build_timer = Chrono::ElapsedTimer::create_started();
         const auto result = Build::build_package(paths, build_config, status_db);
         System::println("Elapsed time for package %s: %s", spec.to_string(), build_timer.to_string());
 
@@ -260,13 +260,13 @@ namespace vcpkg::Build
                                       const BuildPackageConfig& config,
                                       const StatusParagraphs& status_db)
     {
-        const PackageSpec spec =
-            PackageSpec::from_name_and_triplet(config.src.name, config.triplet).value_or_exit(VCPKG_LINE_INFO);
+        const PackageSpec spec = PackageSpec::from_name_and_triplet(config.scf.core_paragraph->name, config.triplet)
+                                     .value_or_exit(VCPKG_LINE_INFO);
 
         const Triplet& triplet = config.triplet;
         {
             std::vector<PackageSpec> missing_specs;
-            for (auto&& dep : filter_dependencies(config.src.depends, triplet))
+            for (auto&& dep : filter_dependencies(config.scf.core_paragraph->depends, triplet))
             {
                 if (status_db.find_installed(dep, triplet) == status_db.end())
                 {
@@ -290,16 +290,13 @@ namespace vcpkg::Build
         std::string features;
         if (GlobalState::feature_packages)
         {
-            if (config.feature_list)
+            for (auto&& feature : config.feature_list)
             {
-                for (auto&& feature : *config.feature_list)
-                {
-                    features.append(feature + ";");
-                }
-                if (features.size() > 0)
-                {
-                    features.pop_back();
-                }
+                features.append(feature + ";");
+            }
+            if (features.size() > 0)
+            {
+                features.pop_back();
             }
         }
 
@@ -309,7 +306,7 @@ namespace vcpkg::Build
             ports_cmake_script_path,
             {
                 {"CMD", "BUILD"},
-                {"PORT", config.src.name},
+                {"PORT", config.scf.core_paragraph->name},
                 {"CURRENT_PORT_DIR", config.port_dir / "/."},
                 {"TARGET_TRIPLET", triplet.canonical_name()},
                 {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
@@ -323,7 +320,7 @@ namespace vcpkg::Build
         const auto cmd_set_environment = make_build_env_cmd(pre_build_info, toolset);
         const std::string command = Strings::format(R"(%s && %s)", cmd_set_environment, cmd_launch_cmake);
 
-        const auto timer = Chrono::ElapsedTime::create_started();
+        const auto timer = Chrono::ElapsedTimer::create_started();
 
         const int return_code = System::cmd_execute_clean(command);
         const auto buildtimeus = timer.microseconds();
@@ -343,7 +340,7 @@ namespace vcpkg::Build
         const BuildInfo build_info = read_build_info(paths.get_filesystem(), paths.build_info_file_path(spec));
         const size_t error_count = PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info);
 
-        auto bcf = create_binary_control_file(config.src, triplet, build_info);
+        auto bcf = create_binary_control_file(*config.scf.core_paragraph, triplet, build_info);
 
         if (error_count != 0)
         {
@@ -351,16 +348,13 @@ namespace vcpkg::Build
         }
         if (GlobalState::feature_packages)
         {
-            if (config.feature_list)
+            for (auto&& feature : config.feature_list)
             {
-                for (auto&& feature : *config.feature_list)
+                for (auto&& f_pgh : config.scf.feature_paragraphs)
                 {
-                    for (auto&& f_pgh : config.scf->feature_paragraphs)
-                    {
-                        if (f_pgh->name == feature)
-                            bcf->features.push_back(
-                                create_binary_feature_control_file(*config.scf->core_paragraph, *f_pgh, triplet));
-                    }
+                    if (f_pgh->name == feature)
+                        bcf->features.push_back(
+                            create_binary_feature_control_file(*config.scf.core_paragraph, *f_pgh, triplet));
                 }
             }
         }

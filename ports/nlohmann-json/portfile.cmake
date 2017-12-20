@@ -1,22 +1,18 @@
 include(vcpkg_common_functions)
-set(SOURCE_VERSION 2.1.1)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/json-${SOURCE_VERSION})
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/nlohmann/json/archive/v${SOURCE_VERSION}.zip"
-    FILENAME "nlohmann-json-v${SOURCE_VERSION}.zip"
-    SHA512 7f7155c4bcc4f704f329ba6976c31888a45d17bc2fa08ee9e64dc1b0b1f39439819b895cda9d77f3f60446ad6f5802e9c6ae79fbaf6d1b6f7e49ca050b86cd7c
-)
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+set(SOURCE_VERSION 3.0.0)
+
+vcpkg_download_distfile(HEADER
+    URLS "https://github.com/nlohmann/json/releases/download/v${SOURCE_VERSION}/json.hpp"
+    FILENAME "nlohmann-json-${SOURCE_VERSION}.hpp"
+    SHA512 0983320160900e7dbb1241d10f5be6eb0c1be39f2af3f153f488533c381e909f4af0d60c25c6a2e4bb7b69ad1ff0033651c52fe36886f917324f355281e99c05
 )
 
-vcpkg_install_cmake()
+vcpkg_download_distfile(LICENSE
+    URLS "https://github.com/nlohmann/json/raw/v${SOURCE_VERSION}/LICENSE.MIT"
+    FILENAME "nlohmann-json-LICENSE-${SOURCE_VERSION}.txt"
+    SHA512 629ac4ed0128af8750ddaefb86b01e52243457020b54e3c38a1a772dbbc1598442a45ab9a0537bd47e35eafa73df0a9d1f1ebe235f339dcd2df1083219ded2d1
+)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
-
-file(COPY ${SOURCE_PATH}/LICENSE.MIT DESTINATION ${CURRENT_PACKAGES_DIR}/share/nlohmann-json)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/nlohmann-json/LICENSE.MIT ${CURRENT_PACKAGES_DIR}/share/nlohmann-json/copyright)
+file(INSTALL ${HEADER} DESTINATION ${CURRENT_PACKAGES_DIR}/include/nlohmann RENAME json.hpp)
+file(INSTALL ${LICENSE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/nlohmann-json RENAME copyright)

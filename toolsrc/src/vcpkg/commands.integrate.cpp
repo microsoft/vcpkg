@@ -257,7 +257,7 @@ CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s")",
         std::error_code ec;
         const bool was_deleted = fs.remove(path, ec);
 
-        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Error: Unable to remove user-wide integration: %d", ec.message());
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Error: Unable to remove user-wide integration: %s", ec.message());
 
         if (was_deleted)
         {
@@ -324,18 +324,20 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         "  vcpkg integrate install         Make installed packages available user-wide. Requires admin privileges on "
         "first use\n"
         "  vcpkg integrate remove          Remove user-wide integration\n"
-        "  vcpkg integrate project         Generate a referencing nuget package for individual VS project use\n";
+        "  vcpkg integrate project         Generate a referencing nuget package for individual VS project use\n"
+        "  vcpkg integrate powershell      Enable PowerShell Tab-Completion\n";
 
     namespace Subcommand
     {
         static const std::string INSTALL = "install";
         static const std::string REMOVE = "remove";
         static const std::string PROJECT = "project";
+        static const std::string POWERSHELL = "powershell";
     }
 
     static std::vector<std::string> valid_arguments(const VcpkgPaths&)
     {
-        return {Subcommand::INSTALL, Subcommand::REMOVE, Subcommand::PROJECT};
+        return {Subcommand::INSTALL, Subcommand::REMOVE, Subcommand::PROJECT, Subcommand::POWERSHELL};
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -364,6 +366,12 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         if (args.command_arguments[0] == Subcommand::PROJECT)
         {
             return integrate_project(paths);
+        }
+        if (args.command_arguments[0] == Subcommand::POWERSHELL)
+        {
+            System::powershell_execute("PowerShell Tab-Completion",
+                                       paths.scripts / "addPoshVcpkgToPowershellProfile.ps1");
+            Checks::exit_success(VCPKG_LINE_INFO);
         }
 #endif
 

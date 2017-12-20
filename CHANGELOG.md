@@ -1,3 +1,38 @@
+vcpkg (0.0.100)
+--------------
+  * Add ports:
+    - libmspack      0.6
+    - scintilla      3.7.6
+    - vlpp           0.9.3.1
+  * Update ports:
+    - allegro5       5.2.2.0-1 -> 5.2.3.0
+    - benchmark      1.2.0 -> 1.3.0
+    - brotli         0.6.0-1 -> 1.0.2
+    - chakracore     1.4.3 -> 1.7.4
+    - cppunit        1.13.2 -> 1.14.0
+    - doctest        1.2.0 -> 1.2.6
+    - ecm            5.37.0-1 -> 5.40.0
+    - expat          2.2.4-2 -> 2.2.5
+    - flint          2.5.2 -> 2.5.2-1
+    - folly          2017.10.02.00 -> 2017.11.27.00
+    - freerdp        2.0.0-rc0~vcpkg1-1 -> 2.0.0-rc1~vcpkg1
+    - libtorrent     1.1.4-1 -> 1.1.5
+    - libuv          1.16.1 -> 1.18.0
+    - libzip         1.2.0-2 -> 1.3.2
+    - log4cplus      REL_1_2_1-RC2-1 -> REL_2_0_0-RC2
+    - mpfr           3.1.6-1 -> 3.1.6-2
+    - nana           1.5.4-1 -> 1.5.5
+    - poco           1.7.8-2 -> 1.8.0.1
+    - pugixml        1.8.1-2 -> 1.8.1-3
+    - sciter         4.0.4 -> 4.0.6
+    - speex          1.2.0-1 -> 1.2.0-2
+  * `vcpkg` has exceeded 400 libraries!
+  * `vcpkg` now supports Tab-Completion/Auto-Completion in Powershell. To enable it, simply run `.\vcpkg integrate powershell` and restart Powershell.
+  * `vcpkg` now requires the English language pack of Visual Studio to be installed. This is needed because several libraries fail to build in non-English languages, so `vcpkg` sets the build environment to English to bypass these issues.
+
+-- vcpkg team <vcpkg@microsoft.com>  MON, 04 Dec 2017 17:00:00 -0800
+
+
 vcpkg (0.0.99)
 --------------
   * Add ports:

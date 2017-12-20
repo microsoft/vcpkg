@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\tests.arguments.cpp" />
+    <ClCompile Include="..\src\tests.chrono.cpp" />
     <ClCompile Include="..\src\tests.dependencies.cpp" />
     <ClCompile Include="..\src\tests.packagespec.cpp" />
     <ClCompile Include="..\src\tests.paragraph.cpp" />

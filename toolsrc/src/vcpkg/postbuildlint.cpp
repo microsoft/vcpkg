@@ -479,7 +479,7 @@ namespace vcpkg::PostBuildLint
         }
 
         System::println(System::Color::warning,
-                        "Mismatching number of debug and release binaries. Found %d for debug but %d for release.",
+                        "Mismatching number of debug and release binaries. Found %zd for debug but %zd for release.",
                         debug_count,
                         release_count);
         System::println("Debug binaries");

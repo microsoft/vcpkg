@@ -88,7 +88,8 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     {
         if (-not (Test-Path $executableFromDownload))
         {
-            vcpkgExtractFile -File $downloadPath -DestinationDir $downloadsDir
+            $outFilename = (Get-ChildItem $downloadPath).BaseName
+            vcpkgExtractFile -File $downloadPath -DestinationDir $downloadsDir -outFilename $outFilename
         }
     }
     elseif($extractionType -eq $ExtractionType_SELF_EXTRACTING_7Z)

@@ -44,6 +44,7 @@ SET(HWLOC_PATH "${CURRENT_INSTALLED_DIR}/share/hwloc")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DBOOST_ROOT=${BOOST_PATH}
         -DHWLOC_ROOT=${HWLOC_ROOT}

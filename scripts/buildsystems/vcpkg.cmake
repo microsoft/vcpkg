@@ -1,6 +1,7 @@
 # Mark variables as used so cmake doesn't complain about them
 mark_as_advanced(CMAKE_TOOLCHAIN_FILE)
 
+# This is a backport of CMAKE_TRY_COMPILE_PLATFORM_VARIABLES to cmake 3.0
 get_property( _CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE )
 if( _CMAKE_IN_TRY_COMPILE )
     include( "${CMAKE_CURRENT_SOURCE_DIR}/../vcpkg.config.cmake" OPTIONAL )
@@ -30,9 +31,9 @@ else()
         set(_VCPKG_TARGET_TRIPLET_ARCH x86)
     elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017 Win64$")
         set(_VCPKG_TARGET_TRIPLET_ARCH x64)
-    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017 ARM")
+    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017 ARM$")
         set(_VCPKG_TARGET_TRIPLET_ARCH arm)
-    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017")
+    elseif(CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017$")
         set(_VCPKG_TARGET_TRIPLET_ARCH x86)
     else()
         find_program(_VCPKG_CL cl)
@@ -54,24 +55,26 @@ if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR CMAKE_SYSTEM_NAME STREQUAL "Wind
     set(_VCPKG_TARGET_TRIPLET_PLAT uwp)
 elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
     set(_VCPKG_TARGET_TRIPLET_PLAT linux)
-else()
+elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
     set(_VCPKG_TARGET_TRIPLET_PLAT windows)
 endif()
 
 set(VCPKG_TARGET_TRIPLET ${_VCPKG_TARGET_TRIPLET_ARCH}-${_VCPKG_TARGET_TRIPLET_PLAT} CACHE STRING "Vcpkg target triplet (ex. x86-windows)")
 set(_VCPKG_TOOLCHAIN_DIR ${CMAKE_CURRENT_LIST_DIR})
 
-# Detect .vcpkg-root to figure VCPKG_ROOT_DIR
-set(_VCPKG_ROOT_DIR_CANDIDATE ${CMAKE_CURRENT_LIST_DIR})
-while(IS_DIRECTORY ${_VCPKG_ROOT_DIR_CANDIDATE} AND NOT EXISTS "${_VCPKG_ROOT_DIR_CANDIDATE}/.vcpkg-root")
-    get_filename_component(_VCPKG_ROOT_DIR_TEMP ${_VCPKG_ROOT_DIR_CANDIDATE} DIRECTORY)
-    if (_VCPKG_ROOT_DIR_TEMP STREQUAL _VCPKG_ROOT_DIR_CANDIDATE) # If unchanged, we have reached the root of the drive
-        message(FATAL_ERROR "Could not find .vcpkg-root")
-    else()
-        SET(_VCPKG_ROOT_DIR_CANDIDATE ${_VCPKG_ROOT_DIR_TEMP})
-    endif()
-endwhile()
-set(_VCPKG_ROOT_DIR ${_VCPKG_ROOT_DIR_CANDIDATE})
+if(NOT DEFINED _VCPKG_ROOT_DIR)
+    # Detect .vcpkg-root to figure VCPKG_ROOT_DIR
+    set(_VCPKG_ROOT_DIR_CANDIDATE ${CMAKE_CURRENT_LIST_DIR})
+    while(IS_DIRECTORY ${_VCPKG_ROOT_DIR_CANDIDATE} AND NOT EXISTS "${_VCPKG_ROOT_DIR_CANDIDATE}/.vcpkg-root")
+        get_filename_component(_VCPKG_ROOT_DIR_TEMP ${_VCPKG_ROOT_DIR_CANDIDATE} DIRECTORY)
+        if (_VCPKG_ROOT_DIR_TEMP STREQUAL _VCPKG_ROOT_DIR_CANDIDATE) # If unchanged, we have reached the root of the drive
+            message(FATAL_ERROR "Could not find .vcpkg-root")
+        else()
+            SET(_VCPKG_ROOT_DIR_CANDIDATE ${_VCPKG_ROOT_DIR_TEMP})
+        endif()
+    endwhile()
+    set(_VCPKG_ROOT_DIR ${_VCPKG_ROOT_DIR_CANDIDATE} CACHE INTERNAL "Vcpkg root directory")
+endif()
 set(_VCPKG_INSTALLED_DIR ${_VCPKG_ROOT_DIR}/installed)
 
 if(CMAKE_BUILD_TYPE MATCHES "^Debug$" OR NOT DEFINED CMAKE_BUILD_TYPE)
@@ -94,8 +97,6 @@ list(APPEND CMAKE_FIND_ROOT_PATH
 list(APPEND CMAKE_LIBRARY_PATH
     ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/manual-link
 )
-
-set(Boost_COMPILER "-vc140")
 
 if (NOT DEFINED CMAKE_SYSTEM_VERSION AND _VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
     include(${_VCPKG_ROOT_DIR}/scripts/cmake/vcpkg_get_windows_sdk.cmake)
@@ -124,11 +125,11 @@ set(CMAKE_SYSTEM_IGNORE_PATH
     "C:/OpenSSL-Win64/lib/VC/static"
 )
 
-set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools)
+list(APPEND CMAKE_PROGRAM_PATH ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools)
 file(GLOB _VCPKG_TOOLS_DIRS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/*)
 foreach(_VCPKG_TOOLS_DIR ${_VCPKG_TOOLS_DIRS})
     if(IS_DIRECTORY ${_VCPKG_TOOLS_DIR})
-        set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${_VCPKG_TOOLS_DIR})
+        list(APPEND CMAKE_PROGRAM_PATH ${_VCPKG_TOOLS_DIR})
     endif()
 endforeach()
 
@@ -164,10 +165,22 @@ endfunction()
 
 macro(find_package name)
     if("${name}" STREQUAL "Boost")
+        set(_Boost_USE_STATIC_LIBS ${Boost_USE_STATIC_LIBS})
+        set(_Boost_USE_MULTITHREADED ${Boost_USE_MULTITHREADED})
+        set(_Boost_USE_STATIC_RUNTIME ${Boost_USE_STATIC_RUNTIME})
+        set(_Boost_COMPILER ${Boost_COMPILER})
         unset(Boost_USE_STATIC_LIBS)
         unset(Boost_USE_MULTITHREADED)
         unset(Boost_USE_STATIC_RUNTIME)
+        set(Boost_COMPILER "-vc140")
         _find_package(${ARGV})
+        if(NOT Boost_FOUND)
+            set(Boost_USE_STATIC_LIBS ${_Boost_USE_STATIC_LIBS})
+            set(Boost_USE_MULTITHREADED ${_Boost_USE_MULTITHREADED})
+            set(Boost_USE_STATIC_RUNTIME ${_Boost_USE_STATIC_RUNTIME})
+            set(Boost_COMPILER ${_Boost_COMPILER})
+            _find_package(${ARGV})
+        endif()
     elseif("${name}" STREQUAL "ICU")
         function(_vcpkg_find_in_list)
             list(FIND ARGV "COMPONENTS" COMPONENTS_IDX)
@@ -188,6 +201,23 @@ macro(find_package name)
         if(TIFF_LIBRARIES)
             list(APPEND TIFF_LIBRARIES ${LIBLZMA_LIBRARIES})
         endif()
+    elseif("${name}" STREQUAL "tinyxml2")
+        _find_package(${ARGV})
+        if(TARGET tinyxml2_static AND NOT TARGET tinyxml2)
+            add_library(tinyxml2 INTERFACE IMPORTED)
+            set_target_properties(tinyxml2 PROPERTIES INTERFACE_LINK_LIBRARIES "tinyxml2_static")
+        endif()
+    elseif("${name}" STREQUAL "MPI")
+        if(MPI_C_LIB_NAMES)
+            set(MPI_C_WORKS TRUE)
+            set(MPI_C_WRAPPER_FOUND TRUE)
+        endif()
+        if(MPI_CXX_LIB_NAMES)
+            set(MPI_CXX_WORKS TRUE)
+            set(MPI_CXX_WRAPPER_FOUND TRUE)
+            set(MPI_CXX_VALIDATE_SKIP_MPICXX TRUE)
+        endif()
+        _find_package(${ARGV})
     else()
         _find_package(${ARGV})
     endif()
@@ -202,8 +232,11 @@ set(_UNUSED ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP})
 
 if(NOT _CMAKE_IN_TRY_COMPILE)
     file(TO_CMAKE_PATH "${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}" _chainload_file)
+    file(TO_CMAKE_PATH "${_VCPKG_ROOT_DIR}" _root_dir)
     file(WRITE "${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/vcpkg.config.cmake"
         "set(VCPKG_TARGET_TRIPLET \"${VCPKG_TARGET_TRIPLET}\" CACHE STRING \"\")\n"
         "set(VCPKG_APPLOCAL_DEPS \"${VCPKG_APPLOCAL_DEPS}\" CACHE STRING \"\")\n"
-        "set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE \"${_chainload_file}\" CACHE STRING \"\")\n")
+        "set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE \"${_chainload_file}\" CACHE STRING \"\")\n"
+        "set(_VCPKG_ROOT_DIR \"${_root_dir}\" CACHE STRING \"\")\n"
+        )
 endif()

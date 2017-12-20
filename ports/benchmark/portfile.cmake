@@ -16,21 +16,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/benchmark
-    REF v1.2.0
-    SHA512 859063669fd84e847f04624013f0b2b734d75d90cada247682eaf345b86c88a9bc2320250e128f2361e37f402b3fb56a18c493ec6038973744a005a452d693ba
+    REF v1.3.0
+    SHA512 272775e4dbd0ecc65a2a3a64f24e79682b630929dea3af47349329ac8b796341f1197458a67c9aac0e514857ebe7cbc191d18f6fd2c0aea3242562e69d8a6849
     HEAD_REF master
-)
-
-vcpkg_download_distfile(PATCH
-    URLS "https://github.com/efcs/benchmark/commit/536b0b82b8ec12fc7e17e6d243633618f294a739.diff"
-    FILENAME google-benchmark-1.2.0-536b0b82.patch
-    SHA512 ed42cc0014741c8039c0fca5b4317b2ed09d06a25c91f49a48be6dce921e39469b002c088794c1ea73dc759166e20cb685b47f809ba28dddd95b5f3263be03cd
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        "${PATCH}"
 )
 
 vcpkg_configure_cmake(

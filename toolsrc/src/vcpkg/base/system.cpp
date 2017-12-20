@@ -202,6 +202,8 @@ namespace vcpkg::System
 
         env_cstr.append(Strings::to_utf16(NEW_PATH));
         env_cstr.push_back(L'\0');
+        env_cstr.append(L"VSLANG=1033");
+        env_cstr.push_back(L'\0');
 
         STARTUPINFOW startup_info;
         memset(&startup_info, 0, sizeof(STARTUPINFOW));

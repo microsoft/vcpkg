@@ -1,3 +1,4 @@
 Source: log4cplus
-Version: REL_1_2_1-RC2-1
+Version: REL_2_0_0-RC2
 Description: A simple to use C++ logging API providing thread--safe, flexible, and arbitrarily granular control over log management and configuration
+Build-Depends: catch

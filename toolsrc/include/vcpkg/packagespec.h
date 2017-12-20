@@ -22,6 +22,10 @@ namespace vcpkg
 
         static std::vector<PackageSpec> to_package_specs(const std::vector<std::string>& ports, const Triplet& triplet);
 
+        static std::vector<PackageSpec> from_dependencies_of_port(const std::string& port,
+                                                                  const std::vector<std::string>& dependencies,
+                                                                  const Triplet& triplet);
+
         const std::string& name() const;
 
         const Triplet& triplet() const;
@@ -29,6 +33,13 @@ namespace vcpkg
         std::string dir() const;
 
         std::string to_string() const;
+
+        bool operator<(const PackageSpec& other) const
+        {
+            if (name() < other.name()) return true;
+            if (name() > other.name()) return false;
+            return triplet() < other.triplet();
+        }
 
     private:
         std::string m_name;

@@ -17,19 +17,9 @@ set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF v2017.10.02.00
-    SHA512 4fc7840c7a6c528c8ba6a21817bc75f15f5cd5f781d104a1f0622fe1085a6cb26ff9749616b164afff0ea46be6d16877457a98f417e6dbe1044db7605650a6d3
+    REF v2017.11.27.00
+    SHA512 738bb00047a7cbd807f2dccd64031763df80bbebca73f1ae9500b750dcad156dde84e47f4eda7af1bcd7abfae10c973da47515f2e111929979d1637869cf06ee
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH
-        ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/fix-static-linking.diff
-        ${CMAKE_CURRENT_LIST_DIR}/fix-malloc.diff
-        ${CMAKE_CURRENT_LIST_DIR}/fix-MSG_ERRQUEUE.diff
-        ${CMAKE_CURRENT_LIST_DIR}/fix-histogram.diff
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
