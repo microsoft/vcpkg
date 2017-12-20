@@ -1,13 +1,1 @@
-# header only
-include(vcpkg_common_functions)
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO vinniefalco/Beast
-    REF 32902fad8b7c57be27b96e00ed6ec82748732133
-    SHA512 409bd23e19c4bb157619405713f73b90c5f680bec487ad7b6fc8bcd30db54444a78950ce631c8e267e4397b9128679528fd237d3c53f7e1e55634473a169af5f
-    HEAD_REF master
-)
-
-file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/beast RENAME copyright)
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
