@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO davisking/dlib
-    REF v19.7
-    SHA512 a3877066e04a411d96e910f4229c60a86971a9290e840aa4a5b2f0b102e9b8c37bfede259b80b71ba066d21eb0aa2565808e51d0eab6397ff5fd2bac60dcedd5
+    REF v19.8
+    SHA512 5fbe306dab1fe025de0892808431ddc4bc6f3e91eb509881a0b341dd2d0a5a36c5d99d45ece19c428d6025b0601b996cab4b554332323a0c73a65d66b82db01a
     HEAD_REF master
 )
 
@@ -55,6 +55,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Remove other files not required in package
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/all)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/appveyor)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/test)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/travis) 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_neon)
