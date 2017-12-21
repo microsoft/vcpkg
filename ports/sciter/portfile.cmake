@@ -12,8 +12,8 @@ include(vcpkg_common_functions)
 # header-only library
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 
-set(SCITER_REVISION d015c26ee369dffd353c40bb1a98a7350db14ab2)
-set(SCITER_SHA 41c33d0049d32ec07bf7c1af38d31c87c4504c2ee054a60ebaa867b4affe7c8eab60a2f2ffe3326f44d61751e5e7ffd3c067d878c79acf47c2598f6e65fbf7a9)
+set(SCITER_REVISION e5e612ae914233d2436240cdd7730fb739461f8e)
+set(SCITER_SHA 8d4412e6e9047bbcc5fa0dae4b49844367f3b621b0edca2544f907dc651a1be7fddbedf5004ddbcb5b9bbe26abca0259c78c89febab6778806c4a62a50908bf2)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     set(SCITER_ARCH 64)
@@ -21,7 +21,8 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
     set(SCITER_ARCH 32)
 endif()
 
-# check out
+# check out the `https://github.com/c-smile/sciter-sdk/archive/${SCITER_REVISION}.tar.gz`
+# hash checksum can be obtained with `curl -L -o tmp.tgz ${URL} && vcpkg hash tmp.tgz`
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO c-smile/sciter-sdk
