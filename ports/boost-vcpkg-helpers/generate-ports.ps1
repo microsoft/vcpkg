@@ -293,6 +293,7 @@ foreach ($library in $libraries)
         if ($library -eq "python")
         {
             $deps += @("python3")
+            $needsBuild = $true
         }
         elseif ($library -eq "iostreams")
         {
