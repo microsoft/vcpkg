@@ -4,7 +4,11 @@ set(LIB_NAME nghttp2)
 set(LIB_VERSION 1.28.0)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(FATAL_ERROR "nghttp2 doesn't support static library build now")
+    message("nghttp2 doesn't currently support static library build")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
+    if(VCPKG_CRT_LINKAGE STREQUAL static)
+        message(FATAL_ERROR "avoiding building DLL with static CRT.")
+    endif()
 endif()
 
 set(LIB_FILENAME ${LIB_NAME}-${LIB_VERSION}.tar.gz)
