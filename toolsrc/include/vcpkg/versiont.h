@@ -6,7 +6,7 @@ namespace vcpkg
     struct VersionT
     {
         VersionT();
-        VersionT(const std::string& value);
+        VersionT(std::string&& value);
 
         const std::string& to_string() const;
 

@@ -139,14 +139,14 @@ namespace vcpkg::Export::IFW
 )###",
                               create_release_date()));
 
-        for (auto package = unique_packages.begin(); package != unique_packages.end(); ++package)
+        for (const auto& unique_package : unique_packages)
         {
-            const ExportPlanAction& action = *(package->second);
+            const ExportPlanAction& action = *(unique_package.second);
             const BinaryParagraph& binary_paragraph =
                 action.any_paragraph.binary_control_file.value_or_exit(VCPKG_LINE_INFO).core_paragraph;
 
             package_xml_file_path =
-                raw_exported_dir_path / Strings::format("packages.%s", package->first) / "meta" / "package.xml";
+                raw_exported_dir_path / Strings::format("packages.%s", unique_package.first) / "meta" / "package.xml";
             package_xml_dir_path = package_xml_file_path.parent_path();
             fs.create_directories(package_xml_dir_path, ec);
             Checks::check_exit(VCPKG_LINE_INFO,

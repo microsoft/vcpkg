@@ -4,7 +4,7 @@
 
 #pragma warning(push)
 #pragma warning(disable : 4768)
-#include <Shlobj.h>
+#include <ShlObj.h>
 #pragma warning(pop)
 #else
 #include <unistd.h>
@@ -21,10 +21,8 @@
 #include <vcpkg/metrics.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/userconfig.h>
-#include <vcpkg/vcpkglib.h>
 
 #include <cassert>
-#include <fstream>
 #include <memory>
 #include <random>
 
@@ -49,7 +47,7 @@ static void inner(const VcpkgCmdArguments& args)
         Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
-    static const auto find_command = [&](auto&& commands) {
+    static const auto FIND_COMMAND = [&](auto&& commands) {
         auto it = Util::find_if(commands, [&](auto&& commandc) {
             return Strings::case_insensitive_ascii_equals(commandc.name, args.command);
         });
@@ -62,7 +60,7 @@ static void inner(const VcpkgCmdArguments& args)
             return static_cast<decltype(&*it)>(nullptr);
     };
 
-    if (const auto command_function = find_command(Commands::get_available_commands_type_c()))
+    if (const auto command_function = FIND_COMMAND(Commands::get_available_commands_type_c()))
     {
         return command_function->function(args);
     }
@@ -136,7 +134,7 @@ static void inner(const VcpkgCmdArguments& args)
         }
     }
 
-    if (const auto command_function = find_command(Commands::get_available_commands_type_b()))
+    if (const auto command_function = FIND_COMMAND(Commands::get_available_commands_type_b()))
     {
         return command_function->function(args, paths);
     }
@@ -161,7 +159,7 @@ static void inner(const VcpkgCmdArguments& args)
 
     Input::check_triplet(default_triplet, paths);
 
-    if (const auto command_function = find_command(Commands::get_available_commands_type_a()))
+    if (const auto command_function = FIND_COMMAND(Commands::get_available_commands_type_a()))
     {
         return command_function->function(args, paths, default_triplet);
     }
@@ -214,7 +212,7 @@ static void load_config()
 static std::string trim_path_from_command_line(const std::string& full_command_line)
 {
     Checks::check_exit(
-        VCPKG_LINE_INFO, full_command_line.size() > 0, "Internal failure - cannot have empty command line");
+        VCPKG_LINE_INFO, !full_command_line.empty(), "Internal failure - cannot have empty command line");
 
     if (full_command_line[0] == '"')
     {

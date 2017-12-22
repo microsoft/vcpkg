@@ -35,7 +35,8 @@ namespace vcpkg::Update
                 auto&& installed_version = pgh->package.version;
                 if (installed_version != port_version)
                 {
-                    output.push_back({pgh->package.spec, VersionDiff(installed_version, port_version)});
+                    output.push_back(
+                        {pgh->package.spec, VersionDiff(std::string{installed_version}, std::string{port_version})});
                 }
             }
             else

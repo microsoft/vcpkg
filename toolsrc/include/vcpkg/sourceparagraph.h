@@ -14,11 +14,12 @@ namespace vcpkg
 {
     struct Dependency
     {
+        static Dependency parse_dependency(std::string&& name, std::string&& qualifier);
+
         Features depend;
         std::string qualifier;
 
         std::string name() const;
-        static Dependency parse_dependency(std::string name, std::string qualifier);
     };
 
     std::vector<std::string> filter_dependencies(const std::vector<Dependency>& deps, const Triplet& t);

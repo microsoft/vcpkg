@@ -47,7 +47,7 @@ namespace vcpkg::Commands::Cache
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        if (args.command_arguments.size() == 0)
+        if (args.command_arguments.empty())
         {
             for (const BinaryParagraph& binary_paragraph : binary_paragraphs)
             {

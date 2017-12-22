@@ -69,8 +69,8 @@ namespace vcpkg::Export
     {
         static constexpr std::array<ExportPlanType, 2> ORDER = {ExportPlanType::ALREADY_BUILT,
                                                                 ExportPlanType::PORT_AVAILABLE_BUT_NOT_BUILT};
-        static constexpr Build::BuildPackageOptions build_options = {Build::UseHeadVersion::NO,
-                                                                     Build::AllowDownloads::YES};
+        static constexpr Build::BuildPackageOptions build_options = {
+            Build::UseHeadVersion::NO, Build::AllowDownloads::YES, Build::CleanBuildtrees::NO};
 
         for (const ExportPlanType plan_type : ORDER)
         {

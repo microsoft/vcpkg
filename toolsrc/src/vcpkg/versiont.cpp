@@ -6,7 +6,7 @@
 namespace vcpkg
 {
     VersionT::VersionT() : value("0.0.0") {}
-    VersionT::VersionT(const std::string& value) : value(value) {}
+    VersionT::VersionT(std::string&& value) : value(std::move(value)) {}
     const std::string& VersionT::to_string() const { return value; }
     bool operator==(const VersionT& left, const VersionT& right) { return left.to_string() == right.to_string(); }
     bool operator!=(const VersionT& left, const VersionT& right) { return left.to_string() != right.to_string(); }

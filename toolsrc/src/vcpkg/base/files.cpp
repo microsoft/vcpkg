@@ -18,9 +18,9 @@ namespace vcpkg::Files
                 return std::make_error_code(std::errc::no_such_file_or_directory);
             }
 
-            file_stream.seekg(0, file_stream.end);
+            file_stream.seekg(0, std::fstream::end);
             auto length = file_stream.tellg();
-            file_stream.seekg(0, file_stream.beg);
+            file_stream.seekg(0, std::fstream::beg);
 
             if (length > SIZE_MAX)
             {
