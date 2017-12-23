@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
-    REF 3.3.1
-    SHA512 ee228953b621be022c203e3d60b06be524bd134ba6188c447216ee89e14dfddeac7d6aaf85c5a0b0008b010254e2aa711813bfdb691a77b0bdba33682c6ca68c
+    REF 3.4.0
+    SHA512 aa7e475f356ffdaeb2ae9f7e9380c92cae58fabde9cd3b23c388f9190b8fde31ee70d16648042d0c43c03b2ff1f15e4be950be7851133ea0aa82cf6e42ba4710
     HEAD_REF master
 )
 
@@ -21,8 +21,8 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty/libjpeg ${SOURCE_PATH}/3rdparty/libp
 vcpkg_from_github(
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
-    REF 3.3.1
-    SHA512 b5f35f68faab811a440b6af6b33c766dcdf4cc8547c0a4ed3a6a3da80ca8ae77618039d94bee6d249e96899765bdbb34c997bd7ee53d864c43427eff92f7ea34
+    REF 3.4.0
+    SHA512 53f6127304f314d3be834f79520d4bc8a75e14cad8c9c14a66a7a6b37908ded114d24e3a2c664d4ec2275903db08ac826f29433e810c6400f3adc2714a3c5be7
     HEAD_REF master
 )
 
