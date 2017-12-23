@@ -60,8 +60,7 @@ namespace vcpkg::Build::Command
                            spec.name());
 
         const StatusParagraphs status_db = database_load_check(paths);
-        const Build::BuildPackageOptions build_package_options{
-            Build::UseHeadVersion::NO, Build::AllowDownloads::YES, Build::CleanBuildtrees::NO};
+        const Build::BuildPackageOptions build_package_options{Build::UseHeadVersion::NO, Build::AllowDownloads::YES};
 
         const std::unordered_set<std::string> features_as_set(full_spec.features.begin(), full_spec.features.end());
 
@@ -193,7 +192,7 @@ namespace vcpkg::Build
 
         for (auto&& host : host_architectures)
         {
-            const auto it = Util::find_if(toolset.supported_architectures, [&](const ToolsetArchOption& opt) {
+            auto it = Util::find_if(toolset.supported_architectures, [&](const ToolsetArchOption& opt) {
                 return host == opt.host_arch && target_arch == opt.target_arch;
             });
             if (it != toolset.supported_architectures.end()) return it->name;
@@ -295,7 +294,7 @@ namespace vcpkg::Build
             {
                 features.append(feature + ";");
             }
-            if (!features.empty())
+            if (features.size() > 0)
             {
                 features.pop_back();
             }
@@ -365,7 +364,7 @@ namespace vcpkg::Build
         if (config.build_package_options.clean_buildtrees == CleanBuildtrees::YES)
         {
             auto& fs = paths.get_filesystem();
-            const auto buildtrees_dir = paths.buildtrees / spec.name();
+            auto buildtrees_dir = paths.buildtrees / spec.name();
             auto buildtree_files = fs.get_files_non_recursive(buildtrees_dir);
             for (auto&& file : buildtree_files)
             {
@@ -501,7 +500,7 @@ namespace vcpkg::Build
 
         const std::vector<std::string> lines = Strings::split(ec_data.output, "\n");
 
-        PreBuildInfo pre_build_info{};
+        PreBuildInfo pre_build_info;
 
         const auto e = lines.cend();
         auto cur = std::find(lines.cbegin(), e, FLAG_GUID);

@@ -15,7 +15,7 @@ namespace vcpkg::Chrono
         using std::chrono::nanoseconds;
         using std::chrono::seconds;
 
-        const auto nanos_as_double = static_cast<double>(nanos.count());
+        const double nanos_as_double = static_cast<double>(nanos.count());
 
         if (duration_cast<hours>(nanos) > hours())
         {

@@ -191,7 +191,7 @@ namespace vcpkg::Commands::Integrate
             const auto found = std::regex_search(*contents_data, match, RE);
             if (found)
             {
-                const auto ver = strtol(match[1].str().c_str(), nullptr, 10);
+                const int ver = atoi(match[1].str().c_str());
                 if (ver >= 1) should_install_system = false;
             }
         }

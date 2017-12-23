@@ -158,7 +158,7 @@ namespace vcpkg
         return std::move(control_file);
     }
 
-    Dependency Dependency::parse_dependency(std::string&& name, std::string&& qualifier)
+    Dependency Dependency::parse_dependency(std::string name, std::string qualifier)
     {
         Dependency dep;
         dep.qualifier = qualifier;
@@ -182,7 +182,7 @@ namespace vcpkg
     {
         return Util::fmap(depends, [&](const std::string& depend_string) -> Dependency {
             auto pos = depend_string.find(' ');
-            if (pos == std::string::npos) return Dependency::parse_dependency(std::string{depend_string}, "");
+            if (pos == std::string::npos) return Dependency::parse_dependency(depend_string, "");
             // expect of the form "\w+ \[\w+\]"
             Dependency dep;
 
@@ -190,7 +190,7 @@ namespace vcpkg
             if (depend_string.c_str()[pos + 1] != '(' || depend_string[depend_string.size() - 1] != ')')
             {
                 // Error, but for now just slurp the entire string.
-                return Dependency::parse_dependency(std::string{depend_string}, "");
+                return Dependency::parse_dependency(depend_string, "");
             }
             dep.qualifier = depend_string.substr(pos + 2, depend_string.size() - pos - 3);
             return dep;

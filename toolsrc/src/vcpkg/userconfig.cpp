@@ -41,7 +41,7 @@ namespace vcpkg
                 const auto& pghs = *p_pghs;
 
                 std::unordered_map<std::string, std::string> keys;
-                if (!pghs.empty()) keys = pghs[0];
+                if (pghs.size() > 0) keys = pghs[0];
 
                 for (size_t x = 1; x < pghs.size(); ++x)
                 {
