@@ -50,14 +50,14 @@ namespace vcpkg
                                                                    const std::string& version_check_arguments,
                                                                    const std::array<int, 3>& expected_version)
     {
-        const auto it = Util::find_if(candidate_paths, [&](const fs::path& p) {
+        auto it = Util::find_if(candidate_paths, [&](const fs::path& p) {
             const std::string cmd = Strings::format(R"("%s" %s)", p.u8string(), version_check_arguments);
             return exists_and_has_equal_or_greater_version(cmd, expected_version);
         });
 
         if (it != candidate_paths.cend())
         {
-            return *it;
+            return std::move(*it);
         }
 
         return nullopt;

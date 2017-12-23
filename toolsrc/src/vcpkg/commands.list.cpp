@@ -57,7 +57,7 @@ namespace vcpkg::Commands::List
                       return lhs->package.displayname() < rhs->package.displayname();
                   });
 
-        if (args.command_arguments.empty())
+        if (args.command_arguments.size() == 0)
         {
             for (const StatusParagraph* status_paragraph : installed_packages)
             {
