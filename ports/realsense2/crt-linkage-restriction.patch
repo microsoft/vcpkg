@@ -1,8 +1,10 @@
---- a/CMakeLists.txt	2017-11-07 14:30:02.270145100 +0800
-+++ b/CMakeLists.txt	2017-11-07 14:26:42.306208800 +0800
-@@ -402,16 +402,6 @@
-     source_group("Header Files\\Processing Blocks" FILES
-         src/colorizer.h
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a59e2513..3b08f490 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -420,16 +420,6 @@ if(WIN32)
+         src/proc/temporal-filter.h
+         src/proc/syncer-processing-block.h
          )
 -
 -    foreach(flag_var
