@@ -3,20 +3,12 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hyperrealm/libconfig
-    REF v1.6
-    SHA512 6222110851970fda11d21e73bc322be95fb1ce62c513e2f4cc7875d7b32d1d211860971692db679edf8ac46151033a132fc669bd16590fec56360ef3a6e584f8
+    REF v1.7.1
+    SHA512 b58b468e9e2d5175fbde1ad9765c6604dc9b3f3944613a88404a45d0d232e7d79a47321bf3c06b97cb46a2104b4313fad5c7f8944149f550b7af51ad523e775e
     HEAD_REF master
 )
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-    "${CMAKE_CURRENT_LIST_DIR}/fix-scanner-source-msvc-patch.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/fix-scanner-header-msvc-patch.patch"
-)
-
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/scandir.c DESTINATION ${SOURCE_PATH}/lib/win32)
 
 
 vcpkg_configure_cmake(
