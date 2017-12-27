@@ -6,8 +6,8 @@ vcpkg_find_acquire_program(SCONS)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenMAMA/OpenMAMA
-    REF a5a93a24d2f89a0def0145552c8cd4a53c69e2de
-    SHA512 ddce249da470a4b2acda3953a1f8feed93eb1e05ee6048ed798a9f32eaf7ce037d611ff331a8982a8a309d4b09c05a37f9fbe8ca90420751e46f67f7a53a555f
+    REF 24bc69c07e3fdaf95351baea64a5fa87c15de6c9
+    SHA512 d660910fec772bad2ad2668066e5a03cb29cd40b6b443895967bb3b8ae12bbbdb8aa379a347bde7ecff81dad42e8149d2694cc542e41af17245d6ce227278afc
     HEAD_REF next
 )
 
@@ -24,6 +24,7 @@ vcpkg_execute_required_process(
         libevent_home=${CURRENT_INSTALLED_DIR}
         apr_home=${CURRENT_INSTALLED_DIR}
         qpid_home=${CURRENT_INSTALLED_DIR}
+        vcpkg_build=y
     WORKING_DIRECTORY ${SOURCE_PATH}
     LOGNAME clean-${TARGET_TRIPLET}.log
 )
@@ -43,6 +44,7 @@ vcpkg_execute_required_process(
         libevent_home=${CURRENT_INSTALLED_DIR}
         apr_home=${CURRENT_INSTALLED_DIR}
         qpid_home=${CURRENT_INSTALLED_DIR}
+        vcpkg_build=y
     WORKING_DIRECTORY ${SOURCE_PATH}
     LOGNAME build-${TARGET_TRIPLET}.log
 )
