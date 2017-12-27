@@ -1,7 +1,9 @@
 #include "pch.h"
 
+#include <vcpkg/commands.h>
 #include <vcpkg/metrics.h>
 
+#include <vcpkg/base/chrono.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.h>
@@ -15,32 +17,13 @@ namespace vcpkg::Metrics
 
     static std::string get_current_date_time()
     {
-        struct tm newtime;
-        std::array<char, 80> date;
-        date.fill(0);
-
-#if defined(_WIN32)
-        struct _timeb timebuffer;
-
-        _ftime_s(&timebuffer);
-        time_t now = timebuffer.time;
-        const int milli = timebuffer.millitm;
-
-        const errno_t err = gmtime_s(&newtime, &now);
-
-        if (err)
+        auto maybe_time = Chrono::CTime::get_current_date_time();
+        if (auto ptime = maybe_time.get())
         {
-            return "";
+            return ptime->to_string();
         }
-#else
-        time_t now;
-        time(&now);
-        gmtime_r(&now, &newtime);
-        const int milli = 0;
-#endif
 
-        strftime(&date[0], date.size(), "%Y-%m-%dT%H:%M:%S", &newtime);
-        return std::string(&date[0]) + "." + std::to_string(milli) + "Z";
+        return "";
     }
 
     static std::string generate_random_UUID()
@@ -255,9 +238,10 @@ namespace vcpkg::Metrics
             auto match = *next;
             if (match[0] != "00-00-00-00-00-00")
             {
-                std::string matchstr = match[0];
+                const std::string matchstr = match[0];
+                const System::PowershellParameter value("Value", matchstr);
                 auto hash_result = System::powershell_execute_and_capture_output(
-                    "SHA256Hash", get_vcpkg_root() / "SHA256Hash.ps1", Strings::format("-Value \"%s\"", matchstr));
+                    "SHA256Hash", get_vcpkg_root() / "scripts" / "SHA256Hash.ps1", {value});
                 Util::erase_remove_if(hash_result,
                                       [](char ch) { return !(ch >= 'A' && ch <= 'F') && !(ch >= '0' && ch <= '9'); });
                 hash_result = Strings::ascii_to_lowercase(hash_result);
@@ -393,8 +377,9 @@ namespace vcpkg::Metrics
         wchar_t temp_folder[MAX_PATH];
         GetTempPathW(MAX_PATH, temp_folder);
 
-        const fs::path temp_folder_path = temp_folder;
-        const fs::path temp_folder_path_exe = temp_folder_path / "vcpkgmetricsuploader.exe";
+        const fs::path temp_folder_path = fs::path(temp_folder) / "vcpkg";
+        const fs::path temp_folder_path_exe =
+            temp_folder_path / Strings::format("vcpkgmetricsuploader-%s.exe", Commands::Version::base_version());
 
         auto& fs = Files::get_real_filesystem();
 
@@ -412,6 +397,8 @@ namespace vcpkg::Metrics
             }();
 
             std::error_code ec;
+            fs.create_directories(temp_folder_path, ec);
+            if (ec) return;
             fs.copy_file(exe_path, temp_folder_path_exe, fs::copy_options::skip_existing, ec);
             if (ec) return;
         }
@@ -419,8 +406,9 @@ namespace vcpkg::Metrics
         const fs::path vcpkg_metrics_txt_path = temp_folder_path / ("vcpkg" + generate_random_UUID() + ".txt");
         fs.write_contents(vcpkg_metrics_txt_path, payload);
 
-        const std::string cmd_line =
-            Strings::format("start %s %s", temp_folder_path_exe.u8string(), vcpkg_metrics_txt_path.u8string());
+        const std::string cmd_line = Strings::format("start \"vcpkgmetricsuploader.exe\" \"%s\" \"%s\"",
+                                                     temp_folder_path_exe.u8string(),
+                                                     vcpkg_metrics_txt_path.u8string());
         System::cmd_execute_clean(cmd_line);
 #endif
     }

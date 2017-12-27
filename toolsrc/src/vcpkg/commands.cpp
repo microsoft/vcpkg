@@ -13,9 +13,10 @@ namespace vcpkg::Commands
     Span<const PackageNameAndFunction<CommandTypeA>> get_available_commands_type_a()
     {
         static std::vector<PackageNameAndFunction<CommandTypeA>> t = {
-            PackageNameAndFunction<CommandTypeA>{"install", &Install::perform_and_exit},
+            {"install", &Install::perform_and_exit},
             {"ci", &CI::perform_and_exit},
             {"remove", &Remove::perform_and_exit},
+            {"upgrade", &Upgrade::perform_and_exit},
             {"build", &Build::Command::perform_and_exit},
             {"env", &Env::perform_and_exit},
             {"build-external", &BuildExternal::perform_and_exit},

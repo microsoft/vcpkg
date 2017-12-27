@@ -41,10 +41,11 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/netcdf)
 
-file(READ ${CURRENT_PACKAGES_DIR}/debug/share/netcdf/netCDFTargets-debug.cmake NETCDF_TARGETS_DEBUG_MODULE)
-string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" NETCDF_TARGETS_DEBUG_MODULE "${NETCDF_TARGETS_DEBUG_MODULE}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/netcdf/netCDFTargets-debug.cmake "${NETCDF_TARGETS_DEBUG_MODULE}")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)

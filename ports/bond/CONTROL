@@ -1,5 +1,5 @@
 Source: bond
 Maintainer: bond@microsoft.com
-Version: 7.0.2
+Version: 7.0.2-1
 Description: Bond is a cross-platform framework for working with schematized data. It supports cross-language de/serialization and powerful generic mechanisms for efficiently manipulating data. Bond is broadly used at Microsoft in high scale services. <https://github.com/Microsoft/bond>
-Build-Depends: boost, rapidjson
+Build-Depends: rapidjson, boost-config, boost-utility, boost-assign

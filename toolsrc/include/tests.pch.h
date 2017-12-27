@@ -2,6 +2,7 @@
 
 #include <CppUnitTest.h>
 
+#include <vcpkg/base/chrono.h>
 #include <vcpkg/base/sortedvector.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/util.h>

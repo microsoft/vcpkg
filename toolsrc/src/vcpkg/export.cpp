@@ -290,7 +290,7 @@ namespace vcpkg::Export
         {OPTION_IFW_INSTALLER_FILE_PATH, "Specify the file path for the exported installer"},
     }};
 
-    const CommandStructure vcpkg::Export::COMMAND_STRUCTURE = {
+    const CommandStructure COMMAND_STRUCTURE = {
         Help::create_example_string("export zlib zlib:x64-windows boost --nuget"),
         0,
         SIZE_MAX,
@@ -369,7 +369,8 @@ namespace vcpkg::Export
     static void print_next_step_info(const fs::path& prefix)
     {
         const fs::path cmake_toolchain = prefix / "scripts" / "buildsystems" / "vcpkg.cmake";
-        const CMakeVariable cmake_variable = CMakeVariable("CMAKE_TOOLCHAIN_FILE", cmake_toolchain.generic_string());
+        const System::CMakeVariable cmake_variable =
+            System::CMakeVariable("CMAKE_TOOLCHAIN_FILE", cmake_toolchain.generic_string());
         System::println("\n"
                         "To use the exported libraries in CMake projects use:"
                         "\n"
@@ -477,7 +478,9 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
         // create the plan
         const StatusParagraphs status_db = database_load_check(paths);
-        std::vector<ExportPlanAction> export_plan = Dependencies::create_export_plan(paths, opts.specs, status_db);
+        Dependencies::PathsPortFileProvider provider(paths);
+        std::vector<ExportPlanAction> export_plan =
+            Dependencies::create_export_plan(provider, paths, opts.specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !export_plan.empty(), "Export plan cannot be empty");
 
         std::map<ExportPlanType, std::vector<const ExportPlanAction*>> group_by_plan_type;

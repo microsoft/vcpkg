@@ -20,7 +20,7 @@ namespace vcpkg::Commands::Env
         args.parse_arguments(COMMAND_STRUCTURE);
 
         const auto pre_build_info = Build::PreBuildInfo::from_triplet_file(paths, default_triplet);
-        const Toolset& toolset = paths.get_toolset(pre_build_info.platform_toolset, pre_build_info.visual_studio_path);
+        const Toolset& toolset = paths.get_toolset(pre_build_info);
         System::cmd_execute_clean(Build::make_build_env_cmd(pre_build_info, toolset) + " && cmd");
 
         Checks::exit_success(VCPKG_LINE_INFO);

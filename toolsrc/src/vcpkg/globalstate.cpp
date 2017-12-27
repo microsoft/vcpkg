@@ -4,7 +4,9 @@
 
 namespace vcpkg
 {
-    Util::LockGuarded<Chrono::ElapsedTime> GlobalState::timer;
+    Util::LockGuarded<Chrono::ElapsedTimer> GlobalState::timer;
+    Util::LockGuarded<std::string> GlobalState::g_surveydate;
+
     std::atomic<bool> GlobalState::debugging(false);
     std::atomic<bool> GlobalState::feature_packages(false);
 

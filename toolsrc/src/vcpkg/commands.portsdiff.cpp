@@ -98,8 +98,11 @@ namespace vcpkg::Commands::PortsDiff
                             ".vcpkg-root",
                             git_exe.u8string());
         System::cmd_execute_clean(cmd);
-        const std::map<std::string, VersionT> names_and_versions = Paragraphs::load_all_port_names_and_versions(
-            paths.get_filesystem(), temp_checkout_path / ports_dir_name_as_string);
+        const auto all_ports =
+            Paragraphs::load_all_ports(paths.get_filesystem(), temp_checkout_path / ports_dir_name_as_string);
+        std::map<std::string, VersionT> names_and_versions;
+        for (auto&& port : all_ports)
+            names_and_versions.emplace(port->core_paragraph->name, port->core_paragraph->version);
         fs.remove_all(temp_checkout_path, ec);
         return names_and_versions;
     }
@@ -151,14 +154,14 @@ namespace vcpkg::Commands::PortsDiff
         const std::vector<std::string>& added_ports = setp.only_left;
         if (!added_ports.empty())
         {
-            System::println("\nThe following %d ports were added:", added_ports.size());
+            System::println("\nThe following %zd ports were added:", added_ports.size());
             do_print_name_and_version(added_ports, current_names_and_versions);
         }
 
         const std::vector<std::string>& removed_ports = setp.only_right;
         if (!removed_ports.empty())
         {
-            System::println("\nThe following %d ports were removed:", removed_ports.size());
+            System::println("\nThe following %zd ports were removed:", removed_ports.size());
             do_print_name_and_version(removed_ports, previous_names_and_versions);
         }
 
@@ -168,7 +171,7 @@ namespace vcpkg::Commands::PortsDiff
 
         if (!updated_ports.empty())
         {
-            System::println("\nThe following %d ports were updated:", updated_ports.size());
+            System::println("\nThe following %zd ports were updated:", updated_ports.size());
             for (const UpdatedPort& p : updated_ports)
             {
                 System::println("    - %-14s %-16s", p.port, p.version_diff.to_string());

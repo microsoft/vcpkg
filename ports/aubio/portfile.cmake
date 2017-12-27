@@ -1,11 +1,12 @@
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/aubio-3c230fae309e9ea3298783368dd71bae6172359a)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/aubio/aubio/archive/3c230fae309e9ea3298783368dd71bae6172359a.zip"
-    FILENAME "aubio-0.4.6-3c230f.zip"
-    SHA512 081fe59612f0b1860f465208739b1377869c64b91cecf4a6f6fbdea19204b801c650ff956b34be5988ef1905f3546d3c55846037487e0b34b014f1adbb68629c
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO aubio/aubio
+    REF 0.4.6
+    SHA512 9bb787d81f39ab8e3440be9936552a712a24e009884818e13e80dde756ad3874055bcd931ca3af638122f6a0d0bc53e62e1abeedce3fd79af35fe9ddea6bc707
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 

@@ -44,6 +44,12 @@ namespace vcpkg::Build
         YES
     };
 
+    enum class ConfigurationType
+    {
+        DEBUG,
+        RELEASE,
+    };
+
     struct BuildPackageOptions
     {
         UseHeadVersion use_head_version;
@@ -89,6 +95,8 @@ namespace vcpkg::Build
         std::string cmake_system_version;
         Optional<std::string> platform_toolset;
         Optional<fs::path> visual_studio_path;
+        Optional<std::string> external_toolchain_file;
+        Optional<ConfigurationType> build_type;
     };
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);
@@ -106,39 +114,24 @@ namespace vcpkg::Build
 
     struct BuildPackageConfig
     {
-        BuildPackageConfig(const SourceParagraph& src,
-                           const Triplet& triplet,
-                           fs::path&& port_dir,
-                           const BuildPackageOptions& build_package_options)
-            : src(src)
-            , scf(nullptr)
-            , triplet(triplet)
-            , port_dir(std::move(port_dir))
-            , build_package_options(build_package_options)
-            , feature_list(nullptr)
-        {
-        }
-
         BuildPackageConfig(const SourceControlFile& src,
                            const Triplet& triplet,
                            fs::path&& port_dir,
                            const BuildPackageOptions& build_package_options,
                            const std::unordered_set<std::string>& feature_list)
-            : src(*src.core_paragraph)
-            , scf(&src)
+            : scf(src)
             , triplet(triplet)
             , port_dir(std::move(port_dir))
             , build_package_options(build_package_options)
-            , feature_list(&feature_list)
+            , feature_list(feature_list)
         {
         }
 
-        const SourceParagraph& src;
-        const SourceControlFile* scf;
+        const SourceControlFile& scf;
         const Triplet& triplet;
         fs::path port_dir;
         const BuildPackageOptions& build_package_options;
-        const std::unordered_set<std::string>* feature_list;
+        const std::unordered_set<std::string>& feature_list;
     };
 
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
