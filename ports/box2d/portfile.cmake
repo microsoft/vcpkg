@@ -7,9 +7,6 @@ elseif(TRIPLET_SYSTEM_ARCH MATCHES "arm")
     message(FATAL_ERROR "ARM not supported")
 endif(TRIPLET_SYSTEM_ARCH MATCHES "x86")
 
-if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-  message(FATAL_ERROR "Box2d only supports dynamic CRT linkage")
-endif()
 
 include(vcpkg_common_functions)
 
@@ -24,6 +21,14 @@ vcpkg_from_github(
     SHA512 39074bab01b36104aa685bfe39b40eb903d9dfb54cc3ba8098125db5291f55a8a9e578fc59563b2e8743abbbb26f419be7ae1524e235e7bd759257f99ff96bda
     HEAD_REF master
 )
+
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
+    vcpkg_apply_patches(
+        SOURCE_PATH ${SOURCE_PATH}
+        PATCHES
+            ${CMAKE_CURRENT_LIST_DIR}/use-static-linkage.patch
+    )
+endif()
 
 # Put the licence and readme files where vcpkg expects it
 message(STATUS "Packaging license")
