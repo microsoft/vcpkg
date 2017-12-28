@@ -39,6 +39,12 @@ namespace vcpkg::Commands
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
+    namespace Upgrade
+    {
+        extern const CommandStructure COMMAND_STRUCTURE;
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
+    }
+
     namespace Edit
     {
         extern const CommandStructure COMMAND_STRUCTURE;
@@ -98,6 +104,7 @@ namespace vcpkg::Commands
 
     namespace Version
     {
+        const char* base_version();
         const std::string& version();
         void warn_if_vcpkg_version_mismatch(const VcpkgPaths& paths);
         void perform_and_exit(const VcpkgCmdArguments& args);

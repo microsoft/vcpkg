@@ -92,14 +92,20 @@ namespace vcpkg::Chrono
     Optional<CTime> CTime::parse(CStringView str)
     {
         CTime ret;
-        auto assigned = sscanf_s(str.c_str(),
-                                 "%d-%d-%dT%d:%d:%d.",
-                                 &ret.m_tm.tm_year,
-                                 &ret.m_tm.tm_mon,
-                                 &ret.m_tm.tm_mday,
-                                 &ret.m_tm.tm_hour,
-                                 &ret.m_tm.tm_min,
-                                 &ret.m_tm.tm_sec);
+        auto assigned =
+#if defined(_WIN32)
+            sscanf_s
+#else
+            sscanf
+#endif
+            (str.c_str(),
+             "%d-%d-%dT%d:%d:%d.",
+             &ret.m_tm.tm_year,
+             &ret.m_tm.tm_mon,
+             &ret.m_tm.tm_mday,
+             &ret.m_tm.tm_hour,
+             &ret.m_tm.tm_min,
+             &ret.m_tm.tm_sec);
         if (assigned != 6) return nullopt;
         if (ret.m_tm.tm_year < 1900) return nullopt;
         ret.m_tm.tm_year -= 1900;

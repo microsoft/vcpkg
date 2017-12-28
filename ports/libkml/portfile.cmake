@@ -13,6 +13,7 @@ vcpkg_apply_patches(
     "${CMAKE_CURRENT_LIST_DIR}/patch_empty_literal_on_vc.patch"
 )
 
+file(REMOVE ${SOURCE_PATH}/cmake/External_boost.cmake)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

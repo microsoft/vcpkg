@@ -39,6 +39,16 @@ function(vcpkg_download_distfile VAR)
     set(multipleValuesArgs URLS)
     cmake_parse_arguments(vcpkg_download_distfile "" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
 
+    if(NOT DEFINED vcpkg_download_distfile_URLS)
+        message(FATAL_ERROR "vcpkg_download_distfile requires a URLS argument.")
+    endif()
+    if(NOT DEFINED vcpkg_download_distfile_FILENAME)
+        message(FATAL_ERROR "vcpkg_download_distfile requires a FILENAME argument.")
+    endif()
+    if(NOT DEFINED vcpkg_download_distfile_SHA512)
+        message(FATAL_ERROR "vcpkg_download_distfile requires a SHA512 argument.")
+    endif()
+
     set(downloaded_file_path ${DOWNLOADS}/${vcpkg_download_distfile_FILENAME})
     set(download_file_path_part "${DOWNLOADS}/temp/${vcpkg_download_distfile_FILENAME}")
 
