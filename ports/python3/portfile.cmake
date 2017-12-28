@@ -54,10 +54,11 @@ elseif (VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
 else()
     message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
-
+find_program(GIT git)
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/PCBuild/pythoncore.vcxproj
-    PLATFORM ${BUILD_ARCH})
+    PLATFORM ${BUILD_ARCH}
+    OPTIONS /p:GIT=${GIT})
     
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     vcpkg_apply_patches(
