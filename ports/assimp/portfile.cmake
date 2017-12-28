@@ -12,6 +12,7 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         "${CMAKE_CURRENT_LIST_DIR}/dont-overwrite-prefix-path.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/uninitialized-variable.patch"
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake-modules/FindZLIB.cmake)

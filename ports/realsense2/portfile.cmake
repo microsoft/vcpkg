@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IntelRealSense/librealsense
-    REF v2.8.2
-    SHA512 a2622ff241e939fad74f6d0224b5f9b505e971935bb8f27dc10159a5853bc5d55870c312c0f43014c8c7ec5a1c824e659ee9ee9a574b2d7c9b8e484c1a4918a1
+    REF v2.8.3
+    SHA512 9be27109da0247cf6669f01b3f0f945073f7851897da553915716d979c50f6228e771ca5a63955707f618d0db1fc58ba52f78dece6d904b6671dee56ba70d48f
     HEAD_REF master
 )
 
@@ -19,12 +19,12 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -DENFORCE_METADATA=on
-        -DBUILD_EXAMPLES=off
-        -DBUILD_GRAPHICAL_EXAMPLES=off
-        -DBUILD_PYTHON_BINDINGS=off
-        -DBUILD_UNIT_TESTS=off
-        -DBUILD_WITH_OPENMP=off  # keep OpenMP off until librealsense issue #744 is patched
+        -DENFORCE_METADATA=ON
+        -DBUILD_EXAMPLES=OFF
+        -DBUILD_GRAPHICAL_EXAMPLES=OFF
+        -DBUILD_PYTHON_BINDINGS=OFF
+        -DBUILD_UNIT_TESTS=OFF
+        -DBUILD_WITH_OPENMP=OFF  # keep OpenMP off until librealsense issue #744 is patched
         -DBUILD_SHARED_LIBS=${BUILD_SHARED}
     OPTIONS_DEBUG
         "-DCMAKE_PDB_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"

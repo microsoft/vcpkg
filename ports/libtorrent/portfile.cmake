@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arvidn/libtorrent
-    REF libtorrent-1_1_5
-    SHA512 edaff6347bf922af8b6d74e332e180fe122f64152a152fb905f4f2c3371dc29d668fc2b0ffcda3f56b50a1a51b25d1a3ae4284ed6e09f6a2eb7b34bcce8dd9c7
+    REF 94f4e88e05f92a1b07551598a4bedb2c16af0f2f
+    SHA512 1b4876a471a62813c97519ebf54fc06286b7ee43005e436c7139c6a6ac39fd40fefd5c9b7424e65509ec8deb95dfe1427544b686b6b9cd51cf3d3f133ba7a701
     HEAD_REF master
 )
 
