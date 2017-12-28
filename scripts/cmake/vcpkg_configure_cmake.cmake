@@ -59,9 +59,9 @@ function(vcpkg_configure_cmake)
 
     if(_csc_GENERATOR)
         set(GENERATOR ${_csc_GENERATOR})
-        # Ninja should not be used with Arm and Arm64 targets. Arm64 usage should be allowed
-        # once github issue #2375 is resolved 
-        elseif(_csc_PREFER_NINJA AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND NOT _csc_HOST_ARCHITECTURE STREQUAL "x86" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "^arm64$" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "^arm$")
+    # Ninja should not be used with Arm and Arm64 targets. Arm64 usage should be allowed
+    # once github issue #2375 is resolved 
+    elseif(_csc_PREFER_NINJA AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND NOT _csc_HOST_ARCHITECTURE STREQUAL "x86" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "^arm64$" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "^arm$")
         set(GENERATOR "Ninja")
     elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x86" AND VCPKG_PLATFORM_TOOLSET MATCHES "v120")
         set(GENERATOR "Visual Studio 12 2013")
