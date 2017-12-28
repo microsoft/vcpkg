@@ -11,8 +11,10 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}/datrie
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-exports.patch"
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES 
+        "${CMAKE_CURRENT_LIST_DIR}/fix-exports.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/fix-trietool.patch"
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
