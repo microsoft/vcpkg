@@ -26,6 +26,9 @@
 ##
 ## If this doesn't match the downloaded version, the build will be terminated with a message describing the mismatch.
 ##
+## ### SKIP_SHA512
+## Skip SHA512 hash check for file.
+##
 ## ## Notes
 ## The command [`vcpkg_from_github`](vcpkg_from_github.md) should be used instead of this for downloading the main archive for GitHub projects.
 ##
@@ -35,9 +38,10 @@
 ## * [fontconfig](https://github.com/Microsoft/vcpkg/blob/master/ports/fontconfig/portfile.cmake)
 ## * [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
 function(vcpkg_download_distfile VAR)
+    set(options SKIP_SHA512)
     set(oneValueArgs FILENAME SHA512)
     set(multipleValuesArgs URLS)
-    cmake_parse_arguments(vcpkg_download_distfile "" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
+    cmake_parse_arguments(vcpkg_download_distfile "${options}" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
 
     if(NOT DEFINED vcpkg_download_distfile_URLS)
         message(FATAL_ERROR "vcpkg_download_distfile requires a URLS argument.")
@@ -45,7 +49,7 @@ function(vcpkg_download_distfile VAR)
     if(NOT DEFINED vcpkg_download_distfile_FILENAME)
         message(FATAL_ERROR "vcpkg_download_distfile requires a FILENAME argument.")
     endif()
-    if(NOT _VCPKG_INTERNAL_NO_HASH_CHECK AND NOT DEFINED vcpkg_download_distfile_SHA512)
+    if(NOT DEFINED vcpkg_download_distfile_SKIP_SHA512 AND NOT _VCPKG_INTERNAL_NO_HASH_CHECK AND NOT DEFINED vcpkg_download_distfile_SHA512)
         message(FATAL_ERROR "vcpkg_download_distfile requires a SHA512 argument.")
     endif()
 
@@ -75,7 +79,9 @@ function(vcpkg_download_distfile VAR)
 
     if(EXISTS ${downloaded_file_path})
         message(STATUS "Using cached ${downloaded_file_path}")
-        test_hash("cached file" "Please delete the file and retry if this file should be downloaded again.")
+        if(NOT DEFINED vcpkg_download_distfile_SKIP_SHA512)
+            test_hash("cached file" "Please delete the file and retry if this file should be downloaded again.")
+        endif()
     else()
         if(_VCPKG_NO_DOWNLOADS)
             message(FATAL_ERROR "Downloads are disabled, but '${downloaded_file_path}' does not exist.")
@@ -103,7 +109,9 @@ function(vcpkg_download_distfile VAR)
             "    Failed to download file.\n"
             "    Add mirrors or submit an issue at https://github.com/Microsoft/vcpkg/issues\n")
         else()
-            test_hash("downloaded file" "The file may be corrupted.")
+            if(NOT DEFINED vcpkg_download_distfile_SKIP_SHA512)
+                test_hash("downloaded file" "The file may be corrupted.")
+            endif()
         endif()
     endif()
     set(${VAR} ${downloaded_file_path} PARENT_SCOPE)

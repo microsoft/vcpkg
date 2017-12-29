@@ -141,11 +141,13 @@ function(vcpkg_from_github)
         vcpkg_download_distfile(ARCHIVE_VERSION
             URLS "https://api.github.com/repos/${ORG_NAME}/${REPO_NAME}/git/refs/heads/${_vdud_HEAD_REF}"
             FILENAME ${downloaded_file_name}.version
+            SKIP_SHA512
         )
 
         vcpkg_download_distfile(ARCHIVE
             URLS ${URL}
             FILENAME ${downloaded_file_name}
+            SKIP_SHA512
         )
         set(_VCPKG_INTERNAL_NO_HASH_CHECK "FALSE")
     endif()
