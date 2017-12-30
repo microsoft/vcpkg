@@ -1,4 +1,4 @@
 Source: qwt
 Version: 6.1.3-2
 Description: Qt widgets library for technical applications
-Build-Depends: qt5base
+Build-Depends: qt5base, qt5svg
