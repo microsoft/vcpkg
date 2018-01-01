@@ -1,4 +1,4 @@
 Source: harfbuzz
-Version: 1.6.3-1
+Version: 1.7.4
 Description: HarfBuzz OpenType text shaping engine
-Build-Depends: freetype, glib (windows)
+Build-Depends: freetype, ragel, glib (windows)
