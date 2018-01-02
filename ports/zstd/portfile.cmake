@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/zstd
-    REF v1.3.1
-    SHA512 cc2ace7b2dd19a2bbf4c43a89d64a7ce121309f712bfb4940ccfd6f9353f1466612ef7096adcd852f54eaea8663d884acf681c83ae5b274b24c9b85f21367b7c
+    REF v1.3.3
+    SHA512 72b63f96f65ca987cdc82c24354f7665c7dc3b2563cb0646f355c34bf8f090d8a0759729f8beaba8317272bdab34749f934055707b25cfd69c98a9fdcfbc59ae
     HEAD_REF dev)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
