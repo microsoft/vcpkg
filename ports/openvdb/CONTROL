@@ -1,6 +1,6 @@
 Source: openvdb
-Version: 5.0.0
-Build-Depends: boost, ilmbase, openexr, tbb, blosc
+Version: 5.0.0-1
+Build-Depends: ilmbase, openexr, tbb, blosc, boost-iostreams, boost-system, boost-thread, boost-date-time, boost-any, boost-uuid, boost-interprocess
 Description: Sparse volume data structure and tools
 
 Feature: tools

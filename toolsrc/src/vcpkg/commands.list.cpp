@@ -13,14 +13,14 @@ namespace vcpkg::Commands::List
     {
         if (full_desc)
         {
-            System::println("%-30s %-16s %s", pgh.package.displayname(), pgh.package.version, pgh.package.description);
+            System::println("%-50s %-16s %s", pgh.package.displayname(), pgh.package.version, pgh.package.description);
         }
         else
         {
-            System::println("%-30s %-16s %s",
-                            vcpkg::shorten_text(pgh.package.displayname(), 30),
+            System::println("%-50s %-16s %s",
+                            vcpkg::shorten_text(pgh.package.displayname(), 50),
                             vcpkg::shorten_text(pgh.package.version, 16),
-                            vcpkg::shorten_text(pgh.package.description, 71));
+                            vcpkg::shorten_text(pgh.package.description, 51));
         }
     }
 

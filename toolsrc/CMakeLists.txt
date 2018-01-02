@@ -3,10 +3,12 @@ project(vcpkg CXX)
 
 add_compile_options(-std=c++1z)
 
-if(CMAKE_COMPILER_IS_GNUXX)
+if(CMAKE_COMPILER_IS_GNUXX OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set(GCC 1)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "[Cc]lang")
     set(CLANG 1)
+else()
+    message(FATAL_ERROR "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}")
 endif()
 
 file(GLOB_RECURSE VCPKGLIB_SOURCES src/vcpkg/*.cpp)

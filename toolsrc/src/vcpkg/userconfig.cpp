@@ -5,6 +5,7 @@
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/userconfig.h>
 
+#if defined(_WIN32)
 namespace
 {
     static vcpkg::Lazy<fs::path> s_localappdata;
@@ -24,13 +25,14 @@ namespace
         });
     }
 }
+#endif
 
 namespace vcpkg
 {
     UserConfig UserConfig::try_read_data(const Files::Filesystem& fs)
     {
         UserConfig ret;
-
+#if defined(_WIN32)
         try
         {
             auto maybe_pghs = Paragraphs::get_paragraphs(fs, get_localappdata() / "vcpkg" / "config");
@@ -56,12 +58,14 @@ namespace vcpkg
         catch (...)
         {
         }
+#endif
 
         return ret;
     }
 
     void UserConfig::try_write_data(Files::Filesystem& fs) const
     {
+#if defined(_WIN32)
         try
         {
             std::error_code ec;
@@ -79,5 +83,6 @@ namespace vcpkg
         catch (...)
         {
         }
+#endif
     }
 }

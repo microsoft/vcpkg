@@ -150,9 +150,9 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
                             [Parameter(Mandatory=$true)][string]$outFilename)
 {
     vcpkgCreateDirectoryIfNotExists $destinationDir
-    $output = "$destinationDir/$outFilename"
+    $output = "$destinationDir\$outFilename"
     vcpkgRemoveItem $output
-    $destinationPartial = "$destinationDir/partially-extracted"
+    $destinationPartial = "$destinationDir\partially-extracted"
 
     vcpkgRemoveItem $destinationPartial
     vcpkgCreateDirectoryIfNotExists $destinationPartial

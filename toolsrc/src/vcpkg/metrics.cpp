@@ -1,5 +1,6 @@
 #include "pch.h"
 
+#include <vcpkg/commands.h>
 #include <vcpkg/metrics.h>
 
 #include <vcpkg/base/chrono.h>
@@ -376,8 +377,9 @@ namespace vcpkg::Metrics
         wchar_t temp_folder[MAX_PATH];
         GetTempPathW(MAX_PATH, temp_folder);
 
-        const fs::path temp_folder_path = temp_folder;
-        const fs::path temp_folder_path_exe = temp_folder_path / "vcpkgmetricsuploader.exe";
+        const fs::path temp_folder_path = fs::path(temp_folder) / "vcpkg";
+        const fs::path temp_folder_path_exe =
+            temp_folder_path / Strings::format("vcpkgmetricsuploader-%s.exe", Commands::Version::base_version());
 
         auto& fs = Files::get_real_filesystem();
 
@@ -395,6 +397,8 @@ namespace vcpkg::Metrics
             }();
 
             std::error_code ec;
+            fs.create_directories(temp_folder_path, ec);
+            if (ec) return;
             fs.copy_file(exe_path, temp_folder_path_exe, fs::copy_options::skip_existing, ec);
             if (ec) return;
         }
@@ -402,8 +406,9 @@ namespace vcpkg::Metrics
         const fs::path vcpkg_metrics_txt_path = temp_folder_path / ("vcpkg" + generate_random_UUID() + ".txt");
         fs.write_contents(vcpkg_metrics_txt_path, payload);
 
-        const std::string cmd_line =
-            Strings::format("start %s %s", temp_folder_path_exe.u8string(), vcpkg_metrics_txt_path.u8string());
+        const std::string cmd_line = Strings::format("start \"vcpkgmetricsuploader.exe\" \"%s\" \"%s\"",
+                                                     temp_folder_path_exe.u8string(),
+                                                     vcpkg_metrics_txt_path.u8string());
         System::cmd_execute_clean(cmd_line);
 #endif
     }
