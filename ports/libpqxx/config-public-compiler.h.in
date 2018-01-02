@@ -1,0 +1,8 @@
+/* Define if compiler supports [[deprecated]] attribute */
+#cmakedefine PQXX_HAVE_DEPRECATED 1
+
+/* Define if the compiler supports std::experimental::optional. */
+#cmakedefine PQXX_HAVE_EXP_OPTIONAL 1
+
+/* Define if the compiler supports std::optional. */
+#cmakedefine PQXX_HAVE_OPTIONAL 1
