@@ -36,8 +36,9 @@
 
   <PropertyGroup Condition="'$(VcpkgEnabled)' == 'true'">
     <VcpkgConfiguration Condition="'$(VcpkgConfiguration)' == ''">$(Configuration)</VcpkgConfiguration>
-    <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Debug'))">Debug</VcpkgNormalizedConfiguration>
-    <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Release')) or '$(VcpkgConfiguration)' == 'RelWithDebInfo' or '$(VcpkgConfiguration)' == 'MinSizeRel'">Release</VcpkgNormalizedConfiguration>
+    <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.ToLower().StartsWith('debug'))">Debug</VcpkgNormalizedConfiguration>
+    <VcpkgTriplet Condition="$(VcpkgConfiguration.ToLower().EndsWith('static'))">$(VcpkgTriplet)-static</VcpkgTriplet>
+    <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.ToLower().StartsWith('release')) or '$(VcpkgConfiguration)' == 'RelWithDebInfo' or '$(VcpkgConfiguration)' == 'MinSizeRel'">Release</VcpkgNormalizedConfiguration>
     <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))\installed\$(VcpkgTriplet)\</VcpkgRoot>
   </PropertyGroup>
 
