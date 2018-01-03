@@ -1,5 +1,5 @@
---- a/src/CMakeLists.txt	Mon Aug 03 17:10:33 2015
-+++ b/src/CMakeLists.txt	Fri Jan 13 09:38:07 2017
+--- a/src/CMakeLists.txt	Fri Feb 03 20:42:43 2017
++++ b/src/CMakeLists.txt	Wed Jan 03 11:42:51 2018
 @@ -22,20 +22,22 @@
      ${SZIP_SRC_SOURCE_DIR}/szlib.h
  )
@@ -37,3 +37,14 @@
  
  if (BUILD_SHARED_LIBS)
    add_library (${SZIP_LIBSH_TARGET} SHARED ${SZIP_SRCS} ${SZIP_PUBLIC_HEADERS})
+@@ -62,8 +64,9 @@
+ if (SZIP_EXPORTED_TARGETS)
+   if (BUILD_SHARED_LIBS)
+     INSTALL_TARGET_PDB (${SZIP_LIBSH_TARGET} ${SZIP_INSTALL_BIN_DIR} libraries)
++  else()
++    INSTALL_TARGET_PDB (${SZIP_LIB_TARGET} ${SZIP_INSTALL_BIN_DIR} libraries)
+   endif (BUILD_SHARED_LIBS)
+-  INSTALL_TARGET_PDB (${SZIP_LIB_TARGET} ${SZIP_INSTALL_BIN_DIR} libraries)
+ 
+   install (
+       TARGETS
