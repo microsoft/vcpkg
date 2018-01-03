@@ -18,10 +18,8 @@ vcpkg_apply_patches(
             ${CMAKE_CURRENT_LIST_DIR}/crt-secure-no-deprecate.patch
 )
 
-if (${VCPKG_TARGET_ARCHITECTURE} MATCHES "^[Aa][Rr][Mm]64" OR ${VCPKG_TARGET_ARCHITECTURE} MATCHES "^[Aa][Rr][Mm]")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
     set (TIFF_CXX_TARGET -Dcxx=OFF)
-else ()
-    set (TIFF_CXX_TARGET -Dcxx=ON)
 endif()
 
 vcpkg_configure_cmake(
