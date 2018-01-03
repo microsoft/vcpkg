@@ -1,0 +1,22 @@
+diff --git a/includes/cpp_redis/misc/logger.hpp b/includes/cpp_redis/misc/logger.hpp
+index d79a98f..bfb33b9 100644
+--- a/includes/cpp_redis/misc/logger.hpp
++++ b/includes/cpp_redis/misc/logger.hpp
+@@ -26,6 +26,8 @@
+ #include <mutex>
+ #include <string>
+ 
++#include <cpp_redis/misc/cpp_redis_export.hpp>
++
+ namespace cpp_redis {
+ 
+ //!
+@@ -161,7 +163,7 @@ private:
+ //! variable containing the current logger
+ //! by default, not set (no logs)
+ //!
+-extern std::unique_ptr<logger_iface> active_logger;
++extern CPP_REDIS_EXPORT std::unique_ptr<logger_iface> active_logger;
+ 
+ //!
+ //! debug logging
