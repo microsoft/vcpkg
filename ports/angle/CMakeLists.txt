@@ -178,6 +178,7 @@ target_compile_definitions(libGLESv2
         -DGL_APICALL=
         -DEGLAPI=
 )
+target_include_directories(libGLESv2 PUBLIC "$<INSTALL_INTERFACE:include>")
 
 ##########
 # libEGL
@@ -188,12 +189,15 @@ add_library(libEGL
     "src/libEGL/resource.h"
 )
 target_link_libraries(libEGL PRIVATE angle::common angle::libANGLE libGLESv2)
+target_include_directories(libEGL PUBLIC "$<INSTALL_INTERFACE:include>")
 
-install(TARGETS libEGL libGLESv2
+install(TARGETS libEGL libGLESv2 EXPORT ANGLEExport
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
+
+install(EXPORT ANGLEExport FILE unofficial-angle-config.cmake NAMESPACE unofficial::angle:: DESTINATION share/unofficial-angle)
 
 if(NOT DISABLE_INSTALL_HEADERS)
     install(

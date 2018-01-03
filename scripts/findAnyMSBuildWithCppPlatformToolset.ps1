@@ -8,6 +8,11 @@ $withVSPath = $withVSPath -replace "\\$" # Remove potential trailing backslash
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 $VisualStudioInstallationInstances = & $scriptsDir\findVisualStudioInstallationInstances.ps1
+if ($VisualStudioInstallationInstances -eq $null)
+{
+    throw "Could not find Visual Studio. VS2015 or VS2017 (with C++) needs to be installed."
+}
+
 Write-Verbose "VS Candidates:`n`r$([system.String]::Join([Environment]::NewLine, $VisualStudioInstallationInstances))"
 foreach ($instanceCandidateWithEOL in $VisualStudioInstallationInstances)
 {

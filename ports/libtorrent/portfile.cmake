@@ -1,37 +1,25 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libtorrent-libtorrent-1_1_4)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/arvidn/libtorrent/archive/libtorrent-1_1_4.zip"
-    FILENAME "libtorrent-1_1_4.zip"
-    SHA512 fd3b875c9626721db9b3e719ce50deeb6f39a030df1e23dd421d0b142aac9c3bb7bee3a61f0c18bb30f85d4dd6131fe90d6138c09ba598f09230824f8d5a3fb1
-)
 
-vcpkg_extract_source_archive(${ARCHIVE})
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO arvidn/libtorrent
+    REF 94f4e88e05f92a1b07551598a4bedb2c16af0f2f
+    SHA512 1b4876a471a62813c97519ebf54fc06286b7ee43005e436c7139c6a6ac39fd40fefd5c9b7424e65509ec8deb95dfe1427544b686b6b9cd51cf3d3f133ba7a701
+    HEAD_REF master
+)
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/add-datetime-to-boost-libs.patch
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/add-dbghelp-to-win32-libs.patch
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/vcpkg-boost-madness.patch
+            ${CMAKE_CURRENT_LIST_DIR}/add-dbghelp-to-win32-libs.patch
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(LIBTORRENT_SHARED ON)
-else()
-    set(LIBTORRENT_SHARED OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LIBTORRENT_SHARED)
+
+file(READ "${SOURCE_PATH}/include/libtorrent/export.hpp" _contents)
+string(REPLACE "<boost/config/select_compiler_config.hpp>" "<boost/config/detail/select_compiler_config.hpp>" _contents "${_contents}")
+string(REPLACE "<boost/config/select_platform_config.hpp>" "<boost/config/detail/select_platform_config.hpp>" _contents "${_contents}")
+file(WRITE "${SOURCE_PATH}/include/libtorrent/export.hpp" "${_contents}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -43,7 +31,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     # Put shared libraries into the proper directory
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)

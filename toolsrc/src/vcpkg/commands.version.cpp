@@ -12,6 +12,13 @@
 
 namespace vcpkg::Commands::Version
 {
+    const char* base_version()
+    {
+        return
+#include "../VERSION.txt"
+            ;
+    }
+
     const std::string& version()
     {
         static const std::string S_VERSION =

@@ -16,7 +16,8 @@ vcpkg_from_github(
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0001_fix_package_detection.patch)
+        ${CMAKE_CURRENT_LIST_DIR}/0001_fix_package_detection.patch
+        ${CMAKE_CURRENT_LIST_DIR}/0002-fix_dependencies.patch)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(FCL_STATIC_LIBRARY ON)
@@ -36,6 +37,11 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake/")
+
+file(READ ${CURRENT_PACKAGES_DIR}/share/fcl/fclConfig.cmake FCL_CONFIG)
+string(REPLACE "unset(_expectedTargets)"
+               "unset(_expectedTargets)\n\nfind_package(octomap REQUIRED)\nfind_package(ccd REQUIRED)" FCL_CONFIG "${FCL_CONFIG}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/fcl/fclConfig.cmake "${FCL_CONFIG}")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

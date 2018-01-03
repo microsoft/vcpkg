@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_55_1
-    SHA512 b5c6dd6cca8d07c08d1760feff9822f1264359adde068afd1584fc3fdcfa50c68e0e1b5ecaa277298ad0923b61019943c181ee1f0870c312399038c4c4e0e327
+    REF curl-7_57_0
+    SHA512 19f963d86682153d2d73731c784adf6457bc3fd48b628d6d701649f64718b10df268797ce21ad5f5339efc5df81b8547772edcc36c046665309e32997d5d1afc
     HEAD_REF master
 )
 
@@ -64,6 +64,8 @@ else()
 endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
 file(READ ${CURRENT_PACKAGES_DIR}/include/curl/curl.h CURL_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     string(REPLACE "#ifdef CURL_STATICLIB" "#if 1" CURL_H "${CURL_H}")
@@ -73,3 +75,5 @@ endif()
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/curl/curl.h "${CURL_H}")
 
 vcpkg_copy_pdbs()
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

@@ -67,7 +67,7 @@ namespace vcpkg::Build::Command
         const Build::BuildPackageConfig build_config{
             *scf, spec.triplet(), fs::path{port_dir}, build_package_options, features_as_set};
 
-        const auto build_timer = Chrono::ElapsedTime::create_started();
+        const auto build_timer = Chrono::ElapsedTimer::create_started();
         const auto result = Build::build_package(paths, build_config, status_db);
         System::println("Elapsed time for package %s: %s", spec.to_string(), build_timer.to_string());
 
@@ -203,6 +203,10 @@ namespace vcpkg::Build
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
     {
+        if (pre_build_info.external_toolchain_file)
+            return Strings::format(
+                R"("%s" %s 2>&1)", toolset.vcvarsall.u8string(), Strings::join(" ", toolset.vcvarsall_options));
+
         const char* tonull = " >nul";
         if (GlobalState::debugging)
         {
@@ -220,26 +224,25 @@ namespace vcpkg::Build
                                tonull);
     }
 
-    static void create_binary_feature_control_file(const SourceParagraph& source_paragraph,
-                                                   const FeatureParagraph& feature_paragraph,
-                                                   const Triplet& triplet,
-                                                   BinaryControlFile& bcf)
+    static BinaryParagraph create_binary_feature_control_file(const SourceParagraph& source_paragraph,
+                                                              const FeatureParagraph& feature_paragraph,
+                                                              const Triplet& triplet)
     {
-        BinaryParagraph bpgh(source_paragraph, feature_paragraph, triplet);
-        bcf.features.emplace_back(std::move(bpgh));
+        return BinaryParagraph(source_paragraph, feature_paragraph, triplet);
     }
 
-    static void create_binary_control_file(const SourceParagraph& source_paragraph,
-                                           const Triplet& triplet,
-                                           const BuildInfo& build_info,
-                                           BinaryControlFile& bcf)
+    static std::unique_ptr<BinaryControlFile> create_binary_control_file(const SourceParagraph& source_paragraph,
+                                                                         const Triplet& triplet,
+                                                                         const BuildInfo& build_info)
     {
+        auto bcf = std::make_unique<BinaryControlFile>();
         BinaryParagraph bpgh(source_paragraph, triplet);
         if (const auto p_ver = build_info.version.get())
         {
             bpgh.version = *p_ver;
         }
-        bcf.core_paragraph = std::move(bpgh);
+        bcf->core_paragraph = std::move(bpgh);
+        return bcf;
     }
 
     static void write_binary_control_file(const VcpkgPaths& paths, BinaryControlFile bcf)
@@ -257,13 +260,13 @@ namespace vcpkg::Build
                                       const BuildPackageConfig& config,
                                       const StatusParagraphs& status_db)
     {
-        const PackageSpec spec =
-            PackageSpec::from_name_and_triplet(config.src.name, config.triplet).value_or_exit(VCPKG_LINE_INFO);
+        const PackageSpec spec = PackageSpec::from_name_and_triplet(config.scf.core_paragraph->name, config.triplet)
+                                     .value_or_exit(VCPKG_LINE_INFO);
 
         const Triplet& triplet = config.triplet;
         {
             std::vector<PackageSpec> missing_specs;
-            for (auto&& dep : filter_dependencies(config.src.depends, triplet))
+            for (auto&& dep : filter_dependencies(config.scf.core_paragraph->depends, triplet))
             {
                 if (status_db.find_installed(dep, triplet) == status_db.end())
                 {
@@ -287,32 +290,29 @@ namespace vcpkg::Build
         std::string features;
         if (GlobalState::feature_packages)
         {
-            if (config.feature_list)
+            for (auto&& feature : config.feature_list)
             {
-                for (auto&& feature : *config.feature_list)
-                {
-                    features.append(feature + ";");
-                }
-                if (features.size() > 0)
-                {
-                    features.pop_back();
-                }
+                features.append(feature + ";");
+            }
+            if (features.size() > 0)
+            {
+                features.pop_back();
             }
         }
 
-        const Toolset& toolset = paths.get_toolset(pre_build_info.platform_toolset, pre_build_info.visual_studio_path);
-
-        const std::string cmd_launch_cmake = make_cmake_cmd(
+        const Toolset& toolset = paths.get_toolset(pre_build_info);
+        const std::string cmd_launch_cmake = System::make_cmake_cmd(
             cmake_exe_path,
             ports_cmake_script_path,
             {
                 {"CMD", "BUILD"},
-                {"PORT", config.src.name},
+                {"PORT", config.scf.core_paragraph->name},
                 {"CURRENT_PORT_DIR", config.port_dir / "/."},
                 {"TARGET_TRIPLET", triplet.canonical_name()},
                 {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
-                {"VCPKG_USE_HEAD_VERSION", to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
-                {"_VCPKG_NO_DOWNLOADS", !to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
+                {"VCPKG_USE_HEAD_VERSION",
+                 Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
+                {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
                 {"GIT", git_exe_path},
                 {"FEATURES", features},
             });
@@ -320,7 +320,7 @@ namespace vcpkg::Build
         const auto cmd_set_environment = make_build_env_cmd(pre_build_info, toolset);
         const std::string command = Strings::format(R"(%s && %s)", cmd_set_environment, cmd_launch_cmake);
 
-        const auto timer = Chrono::ElapsedTime::create_started();
+        const auto timer = Chrono::ElapsedTimer::create_started();
 
         const int return_code = System::cmd_execute_clean(command);
         const auto buildtimeus = timer.microseconds();
@@ -333,42 +333,50 @@ namespace vcpkg::Build
             {
                 locked_metrics->track_property("error", "build failed");
                 locked_metrics->track_property("build_error", spec_string);
-                return {BuildResult::BUILD_FAILED, {}};
+                return BuildResult::BUILD_FAILED;
             }
         }
 
         const BuildInfo build_info = read_build_info(paths.get_filesystem(), paths.build_info_file_path(spec));
         const size_t error_count = PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info);
 
-        BinaryControlFile bcf;
-
-        create_binary_control_file(config.src, triplet, build_info, bcf);
+        auto bcf = create_binary_control_file(*config.scf.core_paragraph, triplet, build_info);
 
         if (error_count != 0)
         {
-            return {BuildResult::POST_BUILD_CHECKS_FAILED, {}};
+            return BuildResult::POST_BUILD_CHECKS_FAILED;
         }
         if (GlobalState::feature_packages)
         {
-            if (config.feature_list)
+            for (auto&& feature : config.feature_list)
             {
-                for (auto&& feature : *config.feature_list)
+                for (auto&& f_pgh : config.scf.feature_paragraphs)
                 {
-                    for (auto&& f_pgh : config.scf->feature_paragraphs)
-                    {
-                        if (f_pgh->name == feature)
-                            create_binary_feature_control_file(*config.scf->core_paragraph, *f_pgh, triplet, bcf);
-                    }
+                    if (f_pgh->name == feature)
+                        bcf->features.push_back(
+                            create_binary_feature_control_file(*config.scf.core_paragraph, *f_pgh, triplet));
                 }
             }
         }
 
-        write_binary_control_file(paths, bcf);
+        write_binary_control_file(paths, *bcf);
 
-        // const fs::path port_buildtrees_dir = paths.buildtrees / spec.name;
-        // delete_directory(port_buildtrees_dir);
+        if (config.build_package_options.clean_buildtrees == CleanBuildtrees::YES)
+        {
+            auto& fs = paths.get_filesystem();
+            auto buildtrees_dir = paths.buildtrees / spec.name();
+            auto buildtree_files = fs.get_files_non_recursive(buildtrees_dir);
+            for (auto&& file : buildtree_files)
+            {
+                if (fs.is_directory(file) && file.filename() != "src")
+                {
+                    std::error_code ec;
+                    fs.remove_all(file, ec);
+                }
+            }
+        }
 
-        return {BuildResult::SUCCEEDED, {}};
+        return {BuildResult::SUCCEEDED, std::move(bcf)};
     }
 
     const std::string& to_string(const BuildResult build_result)
@@ -482,11 +490,11 @@ namespace vcpkg::Build
         const fs::path ports_cmake_script_path = paths.scripts / "get_triplet_environment.cmake";
         const fs::path triplet_file_path = paths.triplets / (triplet.canonical_name() + ".cmake");
 
-        const auto cmd_launch_cmake = make_cmake_cmd(cmake_exe_path,
-                                                     ports_cmake_script_path,
-                                                     {
-                                                         {"CMAKE_TRIPLET_FILE", triplet_file_path},
-                                                     });
+        const auto cmd_launch_cmake = System::make_cmake_cmd(cmake_exe_path,
+                                                             ports_cmake_script_path,
+                                                             {
+                                                                 {"CMAKE_TRIPLET_FILE", triplet_file_path},
+                                                             });
         const auto ec_data = System::cmd_execute_and_capture_output(cmd_launch_cmake);
         Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, ec_data.output);
 
@@ -544,9 +552,39 @@ namespace vcpkg::Build
                 continue;
             }
 
+            if (variable_name == "VCPKG_CHAINLOAD_TOOLCHAIN_FILE")
+            {
+                pre_build_info.external_toolchain_file =
+                    variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
+                continue;
+            }
+
+            if (variable_name == "VCPKG_BUILD_TYPE")
+            {
+                if (variable_value.empty())
+                    pre_build_info.build_type = nullopt;
+                else if (Strings::case_insensitive_ascii_equals(variable_value, "debug"))
+                    pre_build_info.build_type = ConfigurationType::DEBUG;
+                else if (Strings::case_insensitive_ascii_equals(variable_value, "release"))
+                    pre_build_info.build_type = ConfigurationType::RELEASE;
+                else
+                    Checks::exit_with_message(
+                        VCPKG_LINE_INFO, "Unknown setting for VCPKG_BUILD_TYPE: %s", variable_value);
+                continue;
+            }
+
             Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown variable name %s", line);
         }
 
         return pre_build_info;
+    }
+    ExtendedBuildResult::ExtendedBuildResult(BuildResult code) : code(code) {}
+    ExtendedBuildResult::ExtendedBuildResult(BuildResult code, std::unique_ptr<BinaryControlFile>&& bcf)
+        : code(code), binary_control_file(std::move(bcf))
+    {
+    }
+    ExtendedBuildResult::ExtendedBuildResult(BuildResult code, std::vector<PackageSpec>&& unmet_deps)
+        : code(code), unmet_dependencies(std::move(unmet_deps))
+    {
     }
 }

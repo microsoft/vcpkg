@@ -58,19 +58,23 @@ function(vcpkg_build_cmake)
         set(TARGET_PARAM)
     endif()
 
-    message(STATUS "Build ${TARGET_TRIPLET}-rel")
-    vcpkg_execute_required_process(
-        COMMAND ${CMAKE_COMMAND} --build . --config Release ${TARGET_PARAM} -- ${BUILD_ARGS}
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-        LOGNAME ${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}-rel
-    )
-    message(STATUS "Build ${TARGET_TRIPLET}-rel done")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        message(STATUS "Build ${TARGET_TRIPLET}-rel")
+        vcpkg_execute_required_process(
+            COMMAND ${CMAKE_COMMAND} --build . --config Release ${TARGET_PARAM} -- ${BUILD_ARGS}
+            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+            LOGNAME ${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}-rel
+        )
+        message(STATUS "Build ${TARGET_TRIPLET}-rel done")
+    endif()
 
-    message(STATUS "Build ${TARGET_TRIPLET}-dbg")
-    vcpkg_execute_required_process(
-        COMMAND ${CMAKE_COMMAND} --build . --config Debug ${TARGET_PARAM} -- ${BUILD_ARGS}
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-        LOGNAME ${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}-dbg
-    )
-    message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        message(STATUS "Build ${TARGET_TRIPLET}-dbg")
+        vcpkg_execute_required_process(
+            COMMAND ${CMAKE_COMMAND} --build . --config Debug ${TARGET_PARAM} -- ${BUILD_ARGS}
+            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
+            LOGNAME ${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}-dbg
+        )
+        message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
+    endif()
 endfunction()

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vcpkg/base/chrono.h>
 #include <vcpkg/build.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/vcpkgcmdarguments.h>
@@ -19,11 +20,15 @@ namespace vcpkg::Install
 
     struct SpecSummary
     {
-        explicit SpecSummary(const PackageSpec& spec);
+        SpecSummary(const PackageSpec& spec, const Dependencies::AnyAction* action);
+
+        const BinaryParagraph* get_binary_paragraph() const;
 
         PackageSpec spec;
-        Build::BuildResult result;
-        std::string timing;
+        Build::ExtendedBuildResult build_result;
+        vcpkg::Chrono::ElapsedTime timing;
+
+        const Dependencies::AnyAction* action;
     };
 
     struct InstallSummary
@@ -32,6 +37,7 @@ namespace vcpkg::Install
         std::string total_elapsed_time;
 
         void print() const;
+        std::string xunit_results() const;
     };
 
     struct InstallDir
@@ -51,9 +57,9 @@ namespace vcpkg::Install
         const fs::path& listfile() const;
     };
 
-    Build::BuildResult perform_install_plan_action(const VcpkgPaths& paths,
-                                                   const Dependencies::InstallPlanAction& action,
-                                                   StatusParagraphs& status_db);
+    Build::ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
+                                                           const Dependencies::InstallPlanAction& action,
+                                                           StatusParagraphs& status_db);
 
     enum class InstallResult
     {

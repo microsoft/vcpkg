@@ -43,7 +43,6 @@ vcpkg_configure_cmake(
         -DBUILD_PLUGINS_STATIC=${BUILD_PLUGINS_STATIC}
         -DMAGNUM_PLUGINS_DEBUG_DIR=${CURRENT_INSTALLED_DIR}/debug/bin/magnum-d
         -DMAGNUM_PLUGINS_RELEASE_DIR=${CURRENT_INSTALLED_DIR}/bin/magnum
-        --trace
 )
 
 vcpkg_install_cmake()

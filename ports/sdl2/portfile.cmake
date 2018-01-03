@@ -15,56 +15,41 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/export-symbols-only-in-shared-build.patch
+        ${CMAKE_CURRENT_LIST_DIR}/enable-winrt-cmake.patch
 )
 
-if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
-    vcpkg_build_msbuild(
-        PROJECT_PATH ${SOURCE_PATH}/VisualC-WinRT/UWP_VS2015/SDL-UWP.vcxproj
-    )
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SDL_SHARED)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
 
-    file(COPY
-        ${SOURCE_PATH}/VisualC-WinRT/UWP_VS2015/Debug/SDL-UWP/SDL2.dll
-        ${SOURCE_PATH}/VisualC-WinRT/UWP_VS2015/Debug/SDL-UWP/SDL2.pdb
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(COPY
-        ${SOURCE_PATH}/VisualC-WinRT/UWP_VS2015/Release/SDL-UWP/SDL2.dll
-        ${SOURCE_PATH}/VisualC-WinRT/UWP_VS2015/Release/SDL-UWP/SDL2.pdb
-        DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(COPY ${SOURCE_PATH}/VisualC-WinRT/UWP_VS2015/Debug/SDL-UWP/SDL2.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-    file(COPY ${SOURCE_PATH}/VisualC-WinRT/UWP_VS2015/Release/SDL-UWP/SDL2.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DSDL_STATIC=${SDL_STATIC}
+        -DSDL_SHARED=${SDL_SHARED}
+        -DVIDEO_VULKAN=OFF
+        -DFORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
+        -DLIBC=ON
+)
 
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
-    file(COPY ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/include/include ${CURRENT_PACKAGES_DIR}/include/SDL2)
-else()
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        set(SDL_STATIC_LIB ON)
-        set(SDL_SHARED_LIB OFF)
-    else()
-        set(SDL_STATIC_LIB OFF)
-        set(SDL_SHARED_LIB ON)
-    endif()
-    if(VCPKG_CRT_LINKAGE STREQUAL static)
-        set(SDL_STATIC_CRT ON)
-    else()
-        set(SDL_STATIC_CRT OFF)
-    endif()
-    
-    vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS
-            -DSDL_STATIC=${SDL_STATIC_LIB}
-            -DSDL_SHARED=${SDL_SHARED_LIB}
-            -DFORCE_STATIC_VCRT=${SDL_STATIC_CRT}
-            -DLIBC=ON
-    )
+vcpkg_install_cmake()
 
-    vcpkg_install_cmake()
-       
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake")
+vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake")
+
+if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/SDL2main.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/SDL2main.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/SDL2maind.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/SDL2maind.lib)
+
+    file(GLOB SHARE_FILES ${CURRENT_PACKAGES_DIR}/share/sdl2/*.cmake)
+    foreach(SHARE_FILE ${SHARE_FILES})
+        file(READ "${SHARE_FILE}" _contents)
+        string(REPLACE "lib/SDL2main" "lib/manual-link/SDL2main" _contents "${_contents}")
+        file(WRITE "${SHARE_FILE}" "${_contents}")
+    endforeach()
 endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/sdl2 RENAME copyright)

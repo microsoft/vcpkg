@@ -8,16 +8,13 @@ if(VCPKG_CRT_LINKAGE STREQUAL "static" AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynam
     message(FATAL_ERROR "MPIR currently can only be built using the dynamic CRT when building DLLs")
 endif()
 
-set(MPIR_VERSION 3.0.0)
-set(MPIR_HASH "c735105db8b86db739fd915bf16064e6bc82d0565ad8858059e4e93f62c9d72d9a1c02a5ca9859b184346a8dc64fa714d4d61404cff1e405dc548cbd54d0a88e")
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mpir-${MPIR_VERSION})
-
-vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "http://mpir.org/mpir-${MPIR_VERSION}.tar.bz2"
-    FILENAME "mpir-${MPIR_VERSION}.tar.bz2"
-    SHA512 ${MPIR_HASH}
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO wbhart/mpir
+    REF mpir-3.0.0
+    SHA512 7d37f60645c533a6638dde5d9c48f5535022fa0ea02bafd5b714649c70814e88c5e5e3b0bef4c5a749aaf8772531de89c331716ee00ba1c2f9521c2cc8f3c61b
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
