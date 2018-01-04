@@ -1,25 +1,12 @@
 include(vcpkg_common_functions)
 
-# set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/szip-2.1)
-# vcpkg_download_distfile(ARCHIVE
-#     URLS "https://support.hdfgroup.org/ftp/lib-external/szip/2.1/src/szip-2.1.tar.gz"
-#     FILENAME "szip-2.1.tar.gz"
-#     SHA512 ea91b877bb061fe6c96988a3c4b705e101a6950e34e9be53d6a57455c6a625be0afa60f4a3cfdd09649205b9f8586cc25ea60fe07a8131579acf3826b35fb749
-# )
-# vcpkg_extract_source_archive(${ARCHIVE})
-
-# NOTE: We use Szip from the HDF5 cmake package dir, because it includes a lot of fixes for the CMake build files
-
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/CMake-hdf5-1.10.0-patch1)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/szip-2.1.1)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://hdf4.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.0-patch1/src/CMake-hdf5-1.10.0-patch1.zip"
-    FILENAME "CMake-hdf5-1.10.0-patch1.zip"
-    SHA512 ec2edb43438661323be5998ecf64c4dd537ddc7451e31f89390260d16883e60a1ccc1bf745bcb809af22f2bf7157d50331a33910b8ebf5c59cd50693dfb2ef8f
+    URLS "https://support.hdfgroup.org/ftp/lib-external/szip/2.1.1/src/szip-2.1.1.tar.gz"
+    FILENAME "szip-2.1.1.tar.gz"
+    SHA512 ada6406efb096cd8a2daf8f9217fe9111a96dcae87e29d1c31f58ddd2ad2aa7bac03f23c7205dc9360f3b62d259461759330c7189ef0c2fe559704b1ea9d40dd
 )
 vcpkg_extract_source_archive(${ARCHIVE})
-set(ARCHIVE ${SOURCE_PATH}/SZip.tar.gz)
-vcpkg_extract_source_archive(${ARCHIVE})
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/Szip)
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}

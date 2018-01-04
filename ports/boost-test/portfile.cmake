@@ -13,3 +13,12 @@ vcpkg_from_github(
 
 boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
 boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+
+file(GLOB MONITOR_LIBS ${CURRENT_PACKAGES_DIR}/lib/*_exec_monitor*)
+file(COPY ${MONITOR_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+file(GLOB DEBUG_MONITOR_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/*_exec_monitor*)
+file(COPY ${DEBUG_MONITOR_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+
+file(REMOVE ${DEBUG_MONITOR_LIBS} ${MONITOR_LIBS})

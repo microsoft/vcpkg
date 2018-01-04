@@ -18,6 +18,9 @@ namespace vcpkg
         static const Triplet X86_UWP;
         static const Triplet X64_UWP;
         static const Triplet ARM_UWP;
+        static const Triplet ARM64_UWP;
+        static const Triplet ARM_WINDOWS;
+        static const Triplet ARM64_WINDOWS;
 
         const std::string& canonical_name() const;
         const std::string& to_string() const;
