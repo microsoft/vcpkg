@@ -14,14 +14,18 @@
 #
 
 function(vcpkg_fixup_cmake_targets)
-    cmake_parse_arguments(_vfct "" "CONFIG_PATH" "" ${ARGN})
+    cmake_parse_arguments(_vfct "" "CONFIG_PATH;TARGET_PATH" "" ${ARGN})
 
     if(_vfct_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_fixup_cmake_targets was passed extra arguments: ${_vfct_UNPARSED_ARGUMENTS}")
     endif()
 
-    set(DEBUG_SHARE ${CURRENT_PACKAGES_DIR}/debug/share/${PORT})
-    set(RELEASE_SHARE ${CURRENT_PACKAGES_DIR}/share/${PORT})
+    if(NOT _vfct_TARGET_PATH)
+        set(_vfct_TARGET_PATH share/${PORT})
+    endif()
+
+    set(DEBUG_SHARE ${CURRENT_PACKAGES_DIR}/debug/${_vfct_TARGET_PATH})
+    set(RELEASE_SHARE ${CURRENT_PACKAGES_DIR}/${_vfct_TARGET_PATH})
 
     if(_vfct_CONFIG_PATH AND NOT RELEASE_SHARE STREQUAL "${CURRENT_PACKAGES_DIR}/${_vfct_CONFIG_PATH}")
         set(DEBUG_CONFIG ${CURRENT_PACKAGES_DIR}/debug/${_vfct_CONFIG_PATH})
@@ -114,7 +118,7 @@ function(vcpkg_fixup_cmake_targets)
             string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \"]+\\.exe)" "\${_IMPORT_PREFIX}/tools/${PORT}/\\1" _contents "${_contents}")
             string(REPLACE "\${_IMPORT_PREFIX}/lib" "\${_IMPORT_PREFIX}/debug/lib" _contents "${_contents}")
             string(REPLACE "\${_IMPORT_PREFIX}/bin" "\${_IMPORT_PREFIX}/debug/bin" _contents "${_contents}")
-            file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/${DEBUG_TARGET_NAME} "${_contents}")
+            file(WRITE ${CURRENT_PACKAGES_DIR}/${_vfct_TARGET_PATH}/${DEBUG_TARGET_NAME} "${_contents}")
 
             file(REMOVE ${DEBUG_TARGET})
         endforeach()
@@ -148,7 +152,7 @@ function(vcpkg_fixup_cmake_targets)
         file(WRITE ${MAIN_CONFIG} "${_contents}")
     endforeach()
 
-    # Remove /debug/share/<port>/ if it's empty.
+    # Remove /debug/<target_path>/ if it's empty.
     file(GLOB_RECURSE REMAINING_FILES "${DEBUG_SHARE}/*")
     if(NOT REMAINING_FILES)
         file(REMOVE_RECURSE ${DEBUG_SHARE})

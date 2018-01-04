@@ -38,17 +38,13 @@ function(vcpkg_build_cmake)
 
     if(_VCPKG_CMAKE_GENERATOR MATCHES "Ninja")
         set(BUILD_ARGS "-v") # verbose output
-        if (_bc_DISABLE_PARALLEL)
-            set(NO_PARALLEL_ARG "-j1")
-        endif()
+        set(NO_PARALLEL_ARG "-j1")
     elseif(_VCPKG_CMAKE_GENERATOR MATCHES "Visual Studio")
         set(BUILD_ARGS
             "/p:VCPkgLocalAppDataDisabled=true"
             "/p:UseIntelMKL=No"
         )
-        if (NOT _bc_DISABLE_PARALLEL)
-            set(PARALLEL_ARG "/m")
-        endif()
+        set(PARALLEL_ARG "/m")
     elseif(_VCPKG_CMAKE_GENERATOR MATCHES "NMake")
         # No options are currently added for nmake builds
     else()
@@ -59,6 +55,10 @@ function(vcpkg_build_cmake)
         set(TARGET_PARAM "--target" ${_bc_TARGET})
     else()
         set(TARGET_PARAM)
+    endif()
+
+    if(_bc_DISABLE_PARALLEL)
+        set(PARALLEL_ARG ${NO_PARALLEL_ARG})
     endif()
 
     foreach(BUILDTYPE "release" "debug")
