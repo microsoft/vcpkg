@@ -52,16 +52,12 @@ vcpkg_install_cmake()
 
 file(GLOB EXE ${CURRENT_PACKAGES_DIR}/bin/*)
 file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/bin/*)
-file(COPY ${EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-file(COPY ${DEBUG_EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools)
+file(COPY ${EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/llvm)
+file(COPY ${DEBUG_EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/llvm)
 file(REMOVE ${EXE})
 file(REMOVE ${DEBUG_EXE})
 
-file(GLOB CMAKECONFIG_DEBUG ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/clang/*)
-file(GLOB CMAKECONFIG ${CURRENT_PACKAGES_DIR}/lib/cmake/clang/*)
-file(COPY ${CMAKECONFIG_DEBUG} DESTINATION ${CURRENT_PACKAGES_DIR}/share/clang)
-file(COPY ${CMAKECONFIG} DESTINATION ${CURRENT_PACKAGES_DIR}/share/clang)
-
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/clang TARGET_PATH share/clang)
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/llvm)
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/llvm)
 
@@ -70,10 +66,8 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/tools
     ${CURRENT_PACKAGES_DIR}/debug/share
     ${CURRENT_PACKAGES_DIR}/debug/bin
-    ${CURRENT_PACKAGES_DIR}/debug/lib/cmake
     ${CURRENT_PACKAGES_DIR}/debug/msbuild-bin
     ${CURRENT_PACKAGES_DIR}/bin
-    ${CURRENT_PACKAGES_DIR}/lib/cmake
     ${CURRENT_PACKAGES_DIR}/msbuild-bin
     ${CURRENT_PACKAGES_DIR}/tools/msbuild-bin
 )
