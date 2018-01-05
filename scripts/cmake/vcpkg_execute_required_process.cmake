@@ -30,22 +30,34 @@
 ## * [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
 function(vcpkg_execute_required_process)
     cmake_parse_arguments(vcpkg_execute_required_process "" "WORKING_DIRECTORY;LOGNAME" "COMMAND" ${ARGN})
-    #debug_message("vcpkg_execute_required_process(${vcpkg_execute_required_process_COMMAND})")
+    set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-out.log")
+    set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-err.log")
     execute_process(
         COMMAND ${vcpkg_execute_required_process_COMMAND}
-        OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-out.log
-        ERROR_FILE ${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-err.log
+        OUTPUT_FILE ${LOG_OUT}
+        ERROR_FILE ${LOG_ERR}
         RESULT_VARIABLE error_code
         WORKING_DIRECTORY ${vcpkg_execute_required_process_WORKING_DIRECTORY})
-    #debug_message("error_code=${error_code}")
     if(error_code)
-        file(TO_NATIVE_PATH "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-out.log" NATIVE_LOG_OUT)
-        file(TO_NATIVE_PATH "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-err.log" NATIVE_LOG_ERR)
+        set(LOGS)
+        file(READ "${LOG_OUT}" out_contents)
+        file(READ "${LOG_ERR}" err_contents)
+        if(out_contents)
+            list(APPEND LOGS "${LOG_OUT}")
+        endif()
+        if(err_contents)
+            list(APPEND LOGS "${LOG_ERR}")
+        endif()
+        set(STRINGIFIED_LOGS)
+        foreach(LOG ${LOGS})
+            file(TO_NATIVE_PATH "${LOG}" NATIVE_LOG)
+            list(APPEND STRINGIFIED_LOGS "    ${NATIVE_LOG}\n")
+        endforeach()
         message(FATAL_ERROR
             "  Command failed: ${vcpkg_execute_required_process_COMMAND}\n"
             "  Working Directory: ${vcpkg_execute_required_process_WORKING_DIRECTORY}\n"
             "  See logs for more information:\n"
-            "    ${NATIVE_LOG_OUT}\n"
-            "    ${NATIVE_LOG_ERR}\n")
+            ${STRINGIFIED_LOGS}
+        )
     endif()
 endfunction()
