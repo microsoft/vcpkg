@@ -1,0 +1,4 @@
+Source: libpqxx
+Version: 6.0.0
+Description: The official C++ client API for PostgreSQL
+Build-Depends: libpq

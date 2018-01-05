@@ -45,7 +45,7 @@ function(vcpkg_download_distfile VAR)
     if(NOT DEFINED vcpkg_download_distfile_FILENAME)
         message(FATAL_ERROR "vcpkg_download_distfile requires a FILENAME argument.")
     endif()
-    if(NOT DEFINED vcpkg_download_distfile_SHA512)
+    if(NOT _VCPKG_INTERNAL_NO_HASH_CHECK AND NOT DEFINED vcpkg_download_distfile_SHA512)
         message(FATAL_ERROR "vcpkg_download_distfile requires a SHA512 argument.")
     endif()
 
