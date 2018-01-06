@@ -80,7 +80,7 @@ function(vcpkg_build_cmake)
             endif()
 
             execute_process(
-                COMMAND ${CMAKE_COMMAND} --build . --config Release ${TARGET_PARAM} -- ${BUILD_ARGS} ${PARALLEL_ARG}
+                COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${PARALLEL_ARG}
                 OUTPUT_FILE "${LOGPREFIX}-out.log"
                 ERROR_FILE "${LOGPREFIX}-err.log"
                 RESULT_VARIABLE error_code
@@ -99,7 +99,7 @@ function(vcpkg_build_cmake)
                 if(out_contents MATCHES "LINK : fatal error LNK1102:" OR out_contents MATCHES " fatal error C1060: ")
                     # The linker ran out of memory during execution. We will try continuing once more, with parallelism disabled.
                     execute_process(
-                        COMMAND ${CMAKE_COMMAND} --build . --config Release ${TARGET_PARAM} -- ${BUILD_ARGS} ${NO_PARALLEL_ARG}
+                        COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${NO_PARALLEL_ARG}
                         OUTPUT_FILE "${LOGPREFIX}-out-1.log"
                         ERROR_FILE "${LOGPREFIX}-err-1.log"
                         RESULT_VARIABLE error_code
@@ -124,7 +124,7 @@ function(vcpkg_build_cmake)
                         file(TO_NATIVE_PATH "${LOG}" NATIVE_LOG)
                         list(APPEND STRINGIFIED_LOGS "    ${NATIVE_LOG}\n")
                     endforeach()
-                    set(_eb_COMMAND ${CMAKE_COMMAND} --build . --config Release ${TARGET_PARAM} -- ${BUILD_ARGS} ${NO_PARALLEL_ARG})
+                    set(_eb_COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${NO_PARALLEL_ARG})
                     set(_eb_WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE})
                     message(FATAL_ERROR
                         "  Command failed: ${_eb_COMMAND}\n"
