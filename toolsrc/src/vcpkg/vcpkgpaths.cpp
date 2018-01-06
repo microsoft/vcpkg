@@ -583,7 +583,7 @@ namespace vcpkg
                 candidates, [&](const Toolset* t) { return *tsv == t->version && *vsp == t->visual_studio_root_path; });
             Checks::check_exit(VCPKG_LINE_INFO,
                                !candidates.empty(),
-                               "Could not find Visual Studio instace at %s with %s toolset.",
+                               "Could not find Visual Studio instance at %s with %s toolset.",
                                vsp->u8string(),
                                *tsv);
 
@@ -595,7 +595,7 @@ namespace vcpkg
         {
             Util::stable_keep_if(candidates, [&](const Toolset* t) { return *tsv == t->version; });
             Checks::check_exit(
-                VCPKG_LINE_INFO, !candidates.empty(), "Could not find Visual Studio instace with %s toolset.", *tsv);
+                VCPKG_LINE_INFO, !candidates.empty(), "Could not find Visual Studio instance with %s toolset.", *tsv);
         }
 
         if (vsp)
@@ -605,7 +605,7 @@ namespace vcpkg
                                  [&](const Toolset* t) { return vs_root_path == t->visual_studio_root_path; });
             Checks::check_exit(VCPKG_LINE_INFO,
                                !candidates.empty(),
-                               "Could not find Visual Studio instace at %s.",
+                               "Could not find Visual Studio instance at %s.",
                                vs_root_path.generic_string());
         }
 
