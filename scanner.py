@@ -11,7 +11,7 @@ def get_github():
     githubdoc = []
 
     with urllib.request.urlopen('https://api.github.com/search/issues?q=vcpkg+-repo:microsoft/vcpkg&sort=updated&per_page=30') as res:
-        doc = res.read()
+        doc = res.read().decode('utf-8')
         jdoc = json.loads(doc)
         print("total count = {}".format(jdoc['total_count']))
         today = datetime.datetime.utcnow()
@@ -29,7 +29,7 @@ def get_google():
     googledoc = []
 
     with urllib.request.urlopen('https://www.googleapis.com/customsearch/v1?key=AIzaSyAgDJeOcCtOgYSLPboFLf_3SsV9TqSYTFE&cx=016162264654347836401:8cwjt4hwu-k&q=vcpkg+-site:github.com&dateRestrict=d5&exactTerms=vcpkg') as res:
-        jdoc = json.loads(res.read())
+        jdoc = json.loads(res.read().decode('utf-8'))
         for item in jdoc['items'][:30]:
             googledoc.append("""<div class="google"><div><a href="{}">{}</a></div><div>{}</div></div>""".format(item['htmlFormattedUrl'], item['htmlTitle'][:120], item['htmlSnippet']))
 
@@ -42,8 +42,9 @@ def get_stackoverflow():
     url = 'https://api.stackexchange.com/2.2/search?order=desc&sort=activity&intitle=vcpkg&site=stackoverflow&fromdate={}'.format(int(fromdate))
     http.client.HTTPConnection.debuglevel = 1
     with urllib.request.urlopen(urllib.request.Request(url, headers={"Accept-Encoding": "gzip"})) as res:
-        doc = gzip.decompress(res.read())
-        jdoc = json.loads(doc)
+        doc1 = res.read()
+        doc = gzip.decompress(doc1)
+        jdoc = json.loads(doc.decode('utf-8'))
         for item in jdoc['items'][:30]:
             activitydate = datetime.datetime.fromtimestamp(int(item['last_activity_date'])).isoformat()
             stackdoc.append("""<div class="stacko"><div><a href="{}">{}</a></div><div>Last Activity: {}</div><div>views: {}</div></div>""".format(item['link'], html.escape(item['title']), activitydate, item['view_count']))
