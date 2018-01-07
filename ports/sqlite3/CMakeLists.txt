@@ -22,10 +22,20 @@ if(VCPKG_CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
     target_compile_definitions(sqlite3 PRIVATE -DSQLITE_OS_WINRT=1)
 endif()
 
-install(TARGETS sqlite3 EXPORT sqlite3Config    
+
+if(NOT SQLITE3_SKIP_TOOLS)
+    add_executable(sqlite3-bin ${SOURCE}/shell.c)
+    set_target_properties(sqlite3-bin PROPERTIES OUTPUT_NAME sqlite3)
+    target_link_libraries(sqlite3-bin PRIVATE sqlite3)
+    install(TARGETS sqlite3-bin sqlite3 RUNTIME DESTINATION tools)
+endif()
+
+
+install(TARGETS sqlite3 EXPORT sqlite3Config
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
+
 install(FILES ${SOURCE}/sqlite3.h ${SOURCE}/sqlite3ext.h DESTINATION include CONFIGURATIONS Release)
 install(EXPORT sqlite3Config DESTINATION share/sqlite3)
