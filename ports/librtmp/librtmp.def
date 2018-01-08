@@ -1,4 +1,11 @@
 EXPORTS
+	AMF3_Decode
+	AMF3CD_AddProp
+	AMF3CD_GetProp
+	AMF3Prop_Decode
+	AMF3ReadInteger
+	AMF3ReadString
+
 	AMF_AddProp
 	AMF_CountProp
 	AMF_Decode
@@ -24,13 +31,6 @@ EXPORTS
 	AMF_GetProp
 	AMF_Reset
 
-	AMF3_Decode
-	AMF3CD_AddProp
-	AMF3CD_GetProp
-	AMF3Prop_Decode
-	AMF3ReadInteger
-	AMF3ReadString
-
 	AMFProp_Decode
 	AMFProp_Dump
 	AMFProp_Encode
@@ -51,9 +51,7 @@ EXPORTS
 	RTMP_Connect0
 	RTMP_Connect1
 	RTMP_ConnectStream
-	RTMP_ctrlC
 	RTMP_debuglevel
-	RTMP_DefaultFlashVer
 	RTMP_DeleteStream
 	RTMP_DropRequest
 	RTMP_EnableWrite
@@ -97,9 +95,15 @@ EXPORTS
 	RTMP_SetupStream
 	RTMP_SetupURL
 	RTMP_Socket
-	RTMP_TLS_ctx
 	RTMP_TLS_Init
 	RTMP_ToggleStream
 	RTMP_UpdateBufferMS
 	RTMP_UserInterrupt
 	RTMP_Write
+	RTMPPacket_Alloc
+	RTMPPacket_Dump
+	RTMPPacket_Free
+	RTMPPacket_Reset
+	RTMPSockBuf_Close
+	RTMPSockBuf_Fill
+	RTMPSockBuf_Send
