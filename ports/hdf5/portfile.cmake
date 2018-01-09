@@ -21,6 +21,12 @@ vcpkg_apply_patches(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" DISABLE_STATIC_LIBS)
 
+if ("parallel" IN_LIST FEATURES)
+    set(ENABLE_PARALLEL ON)
+else()
+    set(ENABLE_PARALLEL OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -30,7 +36,7 @@ vcpkg_configure_cmake(
         -DHDF5_BUILD_EXAMPLES=OFF
         -DHDF5_BUILD_TOOLS=OFF
         -DHDF5_BUILD_CPP_LIB=OFF
-        -DHDF5_ENABLE_PARALLEL=ON
+        -DHDF5_ENABLE_PARALLEL=${ENABLE_PARALLEL}
         -DHDF5_ENABLE_Z_LIB_SUPPORT=ON
         -DHDF5_ENABLE_SZIP_SUPPORT=ON
         -DHDF5_ENABLE_SZIP_ENCODING=ON
