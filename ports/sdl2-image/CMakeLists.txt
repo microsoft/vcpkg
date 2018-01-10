@@ -42,6 +42,7 @@ add_library(SDL2_image
     IMG_xpm.c
     IMG_xv.c
     IMG_xxx.c
+    version.rc
     )
 
 set_target_properties(SDL2_image PROPERTIES DEFINE_SYMBOL SDL2_EXPORTS)
