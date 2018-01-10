@@ -36,4 +36,13 @@ write_basic_package_version_file(${CURRENT_PACKAGES_DIR}/share/odb/odbConfigVers
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libodb)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libodb/LICENSE ${CURRENT_PACKAGES_DIR}/share/libodb/copyright)
 
+set(LIBODB_HEADER_PATH ${CURRENT_PACKAGES_DIR}/include/odb/details/export.hxx)
+file(READ ${LIBODB_HEADER_PATH} LIBODB_HEADER)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    string(REPLACE "#ifdef LIBODB_STATIC_LIB" "#if 1" LIBODB_HEADER ${LIBODB_HEADER})
+else()
+    string(REPLACE "#ifdef LIBODB_STATIC_LIB" "#if 0" LIBODB_HEADER ${LIBODB_HEADER})
+endif()
+file(WRITE ${LIBODB_HEADER_PATH} ${LIBODB_HEADER})
+
 vcpkg_copy_pdbs()
