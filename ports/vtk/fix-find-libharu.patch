@@ -5,8 +5,8 @@
  find_path(LIBHARU_INCLUDE_DIR hpdf.h)
  
 -find_library(LIBHARU_LIBRARY NAMES hpdf hpdfs)
-+find_library(LIBHARU_LIBRARY_RELEASE NAMES hpdf libhpdf)
-+find_library(LIBHARU_LIBRARY_DEBUG NAMES hpdfd libhpdfd)
++find_library(LIBHARU_LIBRARY_RELEASE NAMES hpdf hpdfs libhpdf libhpdfs)
++find_library(LIBHARU_LIBRARY_DEBUG NAMES hpdfd hpdfsd libhpdfd libhpdfsd)
  
 -# handle the QUIETLY and REQUIRED arguments and set FONTCONFIG_FOUND to TRUE if
 +include(SelectLibraryConfigurations)

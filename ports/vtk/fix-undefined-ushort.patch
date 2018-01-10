@@ -1,0 +1,11 @@
+--- a/IO/SegY/vtkSegYIOUtils.h	Wed Dec 13 22:15:40 2017
++++ b/IO/SegY/vtkSegYIOUtils.h	Mon Jan 08 17:19:38 2018
+@@ -37,7 +37,7 @@
+   vtkSegYIOUtils();
+   bool checkIfBigEndian()
+   {
+-    ushort a = 0x1234;
++    unsigned short a = 0x1234;
+     if (*((unsigned char*)&a) == 0x12)
+       return true;
+     return false;

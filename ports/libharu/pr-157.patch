@@ -1,0 +1,509 @@
+diff --git a/include/hpdf.h b/include/hpdf.h
+index e369f67..40e3c41 100644
+--- a/include/hpdf.h
++++ b/include/hpdf.h
+@@ -77,6 +77,7 @@ typedef HPDF_HANDLE   HPDF_Dict;
+ typedef HPDF_HANDLE   HPDF_EmbeddedFile;
+ typedef HPDF_HANDLE   HPDF_OutputIntent;
+ typedef HPDF_HANDLE   HPDF_Xref;
++typedef HPDF_HANDLE   HPDF_Shading;
+ 
+ #else
+ 
+@@ -1171,6 +1172,11 @@ HPDF_EXPORT(HPDF_STATUS)
+ HPDF_Page_SetExtGState  (HPDF_Page        page,
+                          HPDF_ExtGState   ext_gstate);
+ 
++/* sh */
++HPDF_EXPORT(HPDF_STATUS)
++HPDF_Page_SetShading  (HPDF_Page    page,
++                       HPDF_Shading shading);
++
+ 
+ /*--- Special graphic state operator --------------------------------------*/
+ 
+@@ -1450,7 +1456,23 @@ HPDF_Page_SetCMYKStroke  (HPDF_Page  page,
+ 
+ /*--- Shading patterns ---------------------------------------------------*/
+ 
+-/* sh --not implemented yet */
++/* Notes for docs:
++ * - ShadingType must be HPDF_SHADING_FREE_FORM_TRIANGLE_MESH (the only
++ *   defined option...)
++ * - colorSpace must be HPDF_CS_DEVICE_RGB for now.
++ */
++HPDF_EXPORT(HPDF_Shading)
++HPDF_Shading_New  (HPDF_Doc         pdf,
++                   HPDF_ShadingType type,
++                   HPDF_ColorSpace  colorSpace,
++                   HPDF_REAL xMin, HPDF_REAL xMax,
++                   HPDF_REAL yMin, HPDF_REAL yMax);
++
++HPDF_EXPORT(HPDF_STATUS)
++HPDF_Shading_AddVertexRGB(HPDF_Shading shading,
++                          HPDF_Shading_FreeFormTriangleMeshEdgeFlag edgeFlag,
++                          HPDF_REAL x, HPDF_REAL y,
++                          HPDF_UINT8 r, HPDF_UINT8 g, HPDF_UINT8 b);
+ 
+ /*--- In-line images -----------------------------------------------------*/
+ 
+diff --git a/include/hpdf_error.h b/include/hpdf_error.h
+index b04e2cd..ef4fa61 100644
+--- a/include/hpdf_error.h
++++ b/include/hpdf_error.h
+@@ -145,6 +145,9 @@ extern "C" {
+ #define HPDF_INVALID_U3D_DATA                     0x1083
+ #define HPDF_NAME_CANNOT_GET_NAMES                0x1084
+ #define HPDF_INVALID_ICC_COMPONENT_NUM            0x1085
++/*                                                0x1086 */
++/*                                                0x1087 */
++#define HPDF_INVALID_SHADING_TYPE                 0x1088
+ 
+ /*---------------------------------------------------------------------------*/
+ 
+diff --git a/include/hpdf_objects.h b/include/hpdf_objects.h
+index 525adda..b16de02 100644
+--- a/include/hpdf_objects.h
++++ b/include/hpdf_objects.h
+@@ -61,6 +61,7 @@ extern "C" {
+ #define  HPDF_OSUBCLASS_EXT_GSTATE_R  0x0B00  /* read only object */
+ #define  HPDF_OSUBCLASS_NAMEDICT      0x0C00
+ #define  HPDF_OSUBCLASS_NAMETREE      0x0D00
++#define  HPDF_OSUBCLASS_SHADING       0x0E00
+ 
+ 
+ 
+@@ -595,6 +596,7 @@ typedef HPDF_Array HPDF_Destination;
+ typedef HPDF_Dict  HPDF_U3D;
+ typedef HPDF_Dict  HPDF_OutputIntent;
+ typedef HPDF_Dict  HPDF_JavaScript;
++typedef HPDF_Dict  HPDF_Shading;
+ 
+ #ifdef __cplusplus
+ }
+diff --git a/include/hpdf_pages.h b/include/hpdf_pages.h
+index 44b816c..60b1d84 100644
+--- a/include/hpdf_pages.h
++++ b/include/hpdf_pages.h
+@@ -55,6 +55,7 @@ typedef struct _HPDF_PageAttr_Rec {
+     HPDF_Dict          fonts;
+     HPDF_Dict          xobjects;
+     HPDF_Dict          ext_gstates;
++    HPDF_Dict          shadings;
+     HPDF_GState        gstate;
+     HPDF_Point         str_pos;
+     HPDF_Point         cur_pos;
+@@ -101,6 +102,10 @@ const char*
+ HPDF_Page_GetExtGStateName  (HPDF_Page       page,
+                              HPDF_ExtGState  gstate);
+ 
++const char*
++HPDF_Page_GetShadingName  (HPDF_Page    page,
++                           HPDF_Shading shading);
++
+ 
+ HPDF_Box
+ HPDF_Page_GetMediaBox  (HPDF_Page    page);
+diff --git a/include/hpdf_types.h b/include/hpdf_types.h
+index 8b3e0a8..a2e2157 100644
+--- a/include/hpdf_types.h
++++ b/include/hpdf_types.h
+@@ -557,6 +557,20 @@ typedef enum _HPDF_NameDictKey {
+     HPDF_NAME_EOF
+ } HPDF_NameDictKey;
+ 
++/*----------------------------------------------------------------------------*/
++
++typedef enum _HPDF_ShadingType {
++  HPDF_SHADING_FREE_FORM_TRIANGLE_MESH = 4 /* TODO the rest */
++} HPDF_ShadingType;
++
++typedef enum _HPDF_Shading_FreeFormTriangleMeshEdgeFlag {
++  HPDF_FREE_FORM_TRI_MESH_EDGEFLAG_NO_CONNECTION = 0,
++  HPDF_FREE_FORM_TRI_MESH_EDGEFLAG_BC,
++  HPDF_FREE_FORM_TRI_MESH_EDGEFLAG_AC
++} HPDF_Shading_FreeFormTriangleMeshEdgeFlag;
++
++/*----------------------------------------------------------------------------*/
++
+ #ifdef __cplusplus
+ }
+ #endif /* __cplusplus */
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 9d2a604..71c7d10 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -56,6 +56,7 @@ set(
+   	hpdf_page_operator.c
+   	hpdf_pages.c
+   	hpdf_real.c
++  	hpdf_shading.c
+   	hpdf_streams.c
+   	hpdf_string.c
+   	hpdf_u3d.c
+diff --git a/src/hpdf_page_operator.c b/src/hpdf_page_operator.c
+index 23f5920..dda1078 100644
+--- a/src/hpdf_page_operator.c
++++ b/src/hpdf_page_operator.c
+@@ -312,6 +312,37 @@ HPDF_Page_SetExtGState  (HPDF_Page        page,
+     return ret;
+ }
+ 
++/* sh */
++HPDF_EXPORT(HPDF_STATUS)
++HPDF_Page_SetShading  (HPDF_Page    page,
++                       HPDF_Shading shading)
++{
++    HPDF_STATUS ret = HPDF_Page_CheckState (page, HPDF_GMODE_PAGE_DESCRIPTION);
++    HPDF_PageAttr attr;
++    const char *local_name;
++
++    HPDF_PTRACE ((" HPDF_Page_SetShading\n"));
++
++    if (ret != HPDF_OK)
++        return ret;
++
++    if (page->mmgr != shading->mmgr)
++        return HPDF_RaiseError (page->error, HPDF_INVALID_OBJECT, 0);
++
++    attr = (HPDF_PageAttr)page->attr;
++    local_name = HPDF_Page_GetShadingName (page, shading);
++
++    if (!local_name)
++        return HPDF_CheckError (page->error);
++
++    if (HPDF_Stream_WriteEscapeName (attr->stream, local_name) != HPDF_OK)
++        return HPDF_CheckError (page->error);
++
++    if (HPDF_Stream_WriteStr (attr->stream, " sh\012") != HPDF_OK)
++        return HPDF_CheckError (page->error);
++
++    return ret;
++}
+ 
+ /*--- Special graphic state operator --------------------------------------*/
+ 
+diff --git a/src/hpdf_pages.c b/src/hpdf_pages.c
+index fcc9b5c..c0a7c4f 100644
+--- a/src/hpdf_pages.c
++++ b/src/hpdf_pages.c
+@@ -514,7 +514,7 @@ HPDF_Page_GetLocalFontName  (HPDF_Page  page,
+     /* search font-object from font-resource */
+     key = HPDF_Dict_GetKeyByObj (attr->fonts, font);
+     if (!key) {
+-        /* if the font is not resisterd in font-resource, register font to
++        /* if the font is not registered in font-resource, register font to
+          * font-resource.
+          */
+         char fontName[HPDF_LIMIT_MAX_NAME_LEN + 1];
+@@ -603,7 +603,7 @@ HPDF_Page_GetXObjectName  (HPDF_Page     page,
+     /* search xobject-object from xobject-resource */
+     key = HPDF_Dict_GetKeyByObj (attr->xobjects, xobj);
+     if (!key) {
+-        /* if the xobject is not resisterd in xobject-resource, register
++        /* if the xobject is not registered in xobject-resource, register
+          * xobject to xobject-resource.
+          */
+         char xobj_name[HPDF_LIMIT_MAX_NAME_LEN + 1];
+@@ -654,7 +654,7 @@ HPDF_Page_GetExtGStateName  (HPDF_Page       page,
+     /* search ext_gstate-object from ext_gstate-resource */
+     key = HPDF_Dict_GetKeyByObj (attr->ext_gstates, state);
+     if (!key) {
+-        /* if the ext-gstate is not resisterd in ext-gstate resource, register
++        /* if the ext-gstate is not registered in ext-gstate resource, register
+          *  to ext-gstate resource.
+          */
+         char ext_gstate_name[HPDF_LIMIT_MAX_NAME_LEN + 1];
+@@ -673,6 +673,55 @@ HPDF_Page_GetExtGStateName  (HPDF_Page       page,
+     return key;
+ }
+ 
++const char*
++HPDF_Page_GetShadingName  (HPDF_Page    page,
++                           HPDF_Shading shading)
++{
++    HPDF_PageAttr attr = (HPDF_PageAttr )page->attr;
++    const char *key;
++
++    HPDF_PTRACE((" HPDF_Page_GetShadingName\n"));
++
++    if (!attr->shadings) {
++        HPDF_Dict resources;
++        HPDF_Dict shadings;
++
++        resources = HPDF_Page_GetInheritableItem (page, "Resources",
++                                                  HPDF_OCLASS_DICT);
++        if (!resources)
++            return NULL;
++
++        shadings = HPDF_Dict_New (page->mmgr);
++        if (!shadings)
++            return NULL;
++
++        if (HPDF_Dict_Add (resources, "Shading", shadings) != HPDF_OK)
++            return NULL;
++
++        attr->shadings = shadings;
++    }
++
++    /* search shading-object from shading-resource */
++    key = HPDF_Dict_GetKeyByObj (attr->shadings, shading);
++    if (!key) {
++        /* if the shading is not registered in shadings resource, register
++         *  to shadings resource.
++         */
++        char shading_str[HPDF_LIMIT_MAX_NAME_LEN + 1];
++        char *ptr;
++        char *end_ptr = shading_str + HPDF_LIMIT_MAX_NAME_LEN;
++
++        ptr = (char *)HPDF_StrCpy (shading_str, "Sh", end_ptr);
++        HPDF_IToA (ptr, attr->shadings->list->count, end_ptr);
++
++        if (HPDF_Dict_Add (attr->shadings, shading_str, shading) != HPDF_OK)
++            return NULL;
++
++        key = HPDF_Dict_GetKeyByObj (attr->shadings, shading);
++    }
++
++    return key;
++}
+ 
+ static HPDF_STATUS
+ AddAnnotation  (HPDF_Page        page,
+diff --git a/src/hpdf_shading.c b/src/hpdf_shading.c
+new file mode 100644
+index 0000000..53204c0
+--- /dev/null
++++ b/src/hpdf_shading.c
+@@ -0,0 +1,231 @@
++/*
++ * << Haru Free PDF Library >> -- hpdf_shading.c
++ *
++ * URL: http://libharu.org
++ *
++ * Copyright (c) 1999-2006 Takeshi Kanno <takeshi_kanno@est.hi-ho.ne.jp>
++ * Copyright (c) 2007-2009 Antony Dovgal <tony@daylessday.org>
++ * Copyright (c) 2017 Kitware <kitware@kitware.com>
++ *
++ * Permission to use, copy, modify, distribute and sell this software
++ * and its documentation for any purpose is hereby granted without fee,
++ * provided that the above copyright notice appear in all copies and
++ * that both that copyright notice and this permission notice appear
++ * in supporting documentation.
++ * It is provided "as is" without express or implied warranty.
++ *
++ */
++
++#include "hpdf.h"
++#include "hpdf_utils.h"
++
++#include "assert.h"
++
++typedef struct _RGBVertex
++{
++  HPDF_UINT8 EdgeFlag;
++  HPDF_UINT32 X;
++  HPDF_UINT32 Y;
++  HPDF_UINT8 RGB[3];
++} RGBVertex;
++
++static const char *COL_CMYK = "DeviceCMYK";
++static const char *COL_RGB = "DeviceRGB";
++static const char *COL_GRAY = "DeviceGray";
++
++/* bbox is filled with xMin, xMax, yMin, yMax */
++static HPDF_BOOL _GetDecodeArrayVertexValues(HPDF_Shading shading,
++                                             HPDF_REAL *bbox)
++{
++  HPDF_Array decodeArray;
++  HPDF_Real r;
++  int i;
++
++  if (!shading) {
++    return HPDF_FALSE;
++  }
++
++  decodeArray = (HPDF_Array)(HPDF_Dict_GetItem(shading, "Decode",
++                                               HPDF_OCLASS_ARRAY));
++  if (!decodeArray) {
++    return HPDF_FALSE;
++  }
++
++  for (i = 0; i < 4; ++i)
++  {
++    r = HPDF_Array_GetItem(decodeArray, i, HPDF_OCLASS_REAL);
++    if (!r) {
++      return HPDF_FALSE;
++    }
++
++    bbox[i] = r->value;
++  }
++
++  return HPDF_TRUE;
++}
++
++static void UINT32Swap (HPDF_UINT32  *value)
++{
++  HPDF_BYTE b[4];
++
++  HPDF_MemCpy (b, (HPDF_BYTE *)value, 4);
++  *value = (HPDF_UINT32)((HPDF_UINT32)b[0] << 24 |
++           (HPDF_UINT32)b[1] << 16 |
++           (HPDF_UINT32)b[2] << 8 |
++           (HPDF_UINT32)b[3]);
++}
++
++/* Encode a position coordinate for writing */
++static HPDF_UINT32 _EncodeValue(HPDF_REAL x, HPDF_REAL xMin, HPDF_REAL xMax)
++{
++  HPDF_DOUBLE norm = (x - xMin) / (xMax - xMin);
++  HPDF_DOUBLE max = (HPDF_DOUBLE)(0xFFFFFFFF);
++  HPDF_UINT32 enc = (HPDF_UINT32)(norm * max);
++  UINT32Swap(&enc);
++  return enc;
++}
++
++HPDF_EXPORT(HPDF_Shading)
++HPDF_Shading_New  (HPDF_Doc         pdf,
++                   HPDF_ShadingType type,
++                   HPDF_ColorSpace  colorSpace,
++                   HPDF_REAL xMin, HPDF_REAL xMax,
++                   HPDF_REAL yMin, HPDF_REAL yMax)
++{
++  HPDF_Shading shading;
++  HPDF_Array decodeArray;
++  HPDF_STATUS ret = HPDF_OK;
++  int i;
++
++  HPDF_PTRACE((" HPDF_Shading_New\n"));
++
++  if (!HPDF_HasDoc(pdf)) {
++    return NULL;
++  }
++
++  /* Validate shading type: */
++  switch (type)
++  {
++    case HPDF_SHADING_FREE_FORM_TRIANGLE_MESH:
++      break;
++
++    default:
++      HPDF_SetError (pdf->mmgr->error, HPDF_INVALID_SHADING_TYPE, 0);
++      return NULL;
++  }
++
++  decodeArray = HPDF_Array_New(pdf->mmgr);
++  if (!decodeArray) {
++    return NULL;
++  }
++
++  /* X-range */
++  ret += HPDF_Array_AddReal(decodeArray, xMin);
++  ret += HPDF_Array_AddReal(decodeArray, xMax);
++
++  /* Y-range */
++  ret += HPDF_Array_AddReal(decodeArray, yMin);
++  ret += HPDF_Array_AddReal(decodeArray, yMax);
++
++  const char *colName = NULL;
++  switch (colorSpace) {
++    case HPDF_CS_DEVICE_RGB:
++      colName = COL_RGB;
++      for (i = 0; i < 3; ++i) {
++        ret += HPDF_Array_AddReal(decodeArray, 0.0);
++        ret += HPDF_Array_AddReal(decodeArray, 1.0);
++      }
++      break;
++
++    default:
++      HPDF_SetError(pdf->mmgr->error, HPDF_INVALID_COLOR_SPACE, 0);
++      return NULL;
++  }
++
++  if (ret != HPDF_OK) {
++    return NULL;
++  }
++
++  shading = HPDF_DictStream_New(pdf->mmgr, pdf->xref);
++  if (!shading) {
++    return NULL;
++  }
++
++  shading->header.obj_class |= HPDF_OSUBCLASS_SHADING;
++  ret += HPDF_Dict_AddNumber(shading, "ShadingType", type);
++  ret += HPDF_Dict_AddName(shading, "ColorSpace", colName);
++
++  switch (type)
++  {
++    case HPDF_SHADING_FREE_FORM_TRIANGLE_MESH:
++      ret += HPDF_Dict_AddNumber(shading, "BitsPerCoordinate", 32);
++      ret += HPDF_Dict_AddNumber(shading, "BitsPerComponent", 8);
++      ret += HPDF_Dict_AddNumber(shading, "BitsPerFlag", 8);
++      ret += HPDF_Dict_Add(shading, "Decode", decodeArray);
++      break;
++
++    default:
++      HPDF_SetError (pdf->mmgr->error, HPDF_INVALID_SHADING_TYPE, 0);
++      return NULL;
++  }
++
++  if (ret != HPDF_OK) {
++    return NULL;
++  }
++
++  return shading;
++}
++
++HPDF_EXPORT(HPDF_STATUS)
++HPDF_Shading_AddVertexRGB(HPDF_Shading shading,
++                          HPDF_Shading_FreeFormTriangleMeshEdgeFlag edgeFlag,
++                          HPDF_REAL x, HPDF_REAL y,
++                          HPDF_UINT8 r, HPDF_UINT8 g, HPDF_UINT8 b)
++{
++  HPDF_STATUS ret = HPDF_OK;
++  RGBVertex vert;
++  float bbox[4];
++
++  HPDF_PTRACE((" HPDF_Shading_AddVertexRGB\n"));
++
++  if (!shading) {
++    return HPDF_INVALID_OBJECT;
++  }
++
++  if (_GetDecodeArrayVertexValues(shading, bbox) != HPDF_TRUE) {
++    return HPDF_SetError(shading->error, HPDF_INVALID_OBJECT, 0);
++  }
++
++  vert.EdgeFlag = (HPDF_UINT8)edgeFlag;
++  vert.X = _EncodeValue(x, bbox[0], bbox[1]);
++  vert.Y = _EncodeValue(y, bbox[2], bbox[3]);
++  vert.RGB[0] = r;
++  vert.RGB[1] = g;
++  vert.RGB[2] = b;
++
++  ret = HPDF_Stream_Write(shading->stream,
++                          (HPDF_BYTE*)(&vert.EdgeFlag), sizeof(vert.EdgeFlag));
++  if (ret != HPDF_OK)
++  {
++    return ret;
++  }
++
++  ret = HPDF_Stream_Write(shading->stream,
++                          (HPDF_BYTE*)(&vert.X), sizeof(vert.X));
++  if (ret != HPDF_OK)
++  {
++    return ret;
++  }
++
++  ret = HPDF_Stream_Write(shading->stream,
++                          (HPDF_BYTE*)(&vert.Y), sizeof(vert.Y));
++  if (ret != HPDF_OK)
++  {
++    return ret;
++  }
++
++  ret = HPDF_Stream_Write(shading->stream,
++                          (HPDF_BYTE*)(&vert.RGB), sizeof(vert.RGB));
++
++  return ret;
++}

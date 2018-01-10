@@ -1,5 +1,5 @@
 Source: vtk
-Version: 8.1.0-1
+Version: 8.1.0-2
 Description: Software system for 3D computer graphics, image processing, and visualization
 Build-Depends: zlib, libpng, tiff, libxml2, jsoncpp, glew, freetype, expat, hdf5, libjpeg-turbo, proj4, lz4, libtheora
 
@@ -19,6 +19,9 @@ Feature: python
 Description: Python functionality for VTK
 Build-Depends: python3
 
-Feature: libharu
-Description: PDF libharu functionality for VTK
-Build-Depends: libharu
+Feature: vtkm
+Description: Multithreaded and GPU enabled filters for VTK
+
+Feature: all-modules
+Description: All modules of VTK
+Build-Depends: vtk[openvr], vtk[qt], vtk[mpi], vtk[python], vtk[vtkm], ffmpeg, gdal, fontconfig, libmysql, atlmfc, boost

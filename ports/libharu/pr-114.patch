@@ -1,0 +1,26 @@
+diff --git a/include/hpdf.h b/include/hpdf.h
+index 1cf0dd9..f648e4e 100644
+--- a/include/hpdf.h
++++ b/include/hpdf.h
+@@ -461,7 +461,7 @@ HPDF_Page_CreateXObjectFromImage    (HPDF_Doc       pdf,
+                                      HPDF_Page      page,
+                                      HPDF_Rect      rect,
+                                      HPDF_Image     image,
+-                                     HPDF_Boolean   zoom);
++                                     HPDF_BOOL      zoom);
+ 
+ HPDF_EXPORT(HPDF_XObject)
+ HPDF_Page_CreateXObjectAsWhiteRect  (HPDF_Doc   pdf,
+diff --git a/src/hpdf_pages.c b/src/hpdf_pages.c
+index 1dc2da0..f6bcb0f 100644
+--- a/src/hpdf_pages.c
++++ b/src/hpdf_pages.c
+@@ -582,7 +582,7 @@ HPDF_Page_CreateXObjectFromImage(HPDF_Doc       pdf,
+                                  HPDF_Page      page,
+                                  HPDF_Rect      rect,
+                                  HPDF_Image     image,
+-                                 HPDF_Boolean   zoom)
++                                 HPDF_BOOL      zoom)
+ {
+     HPDF_Dict resource;
+     HPDF_Dict fromxobject;
