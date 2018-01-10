@@ -4,7 +4,7 @@
  
  find_path(LIBHARU_INCLUDE_DIR hpdf.h)
  
--find_library(LIBHARU_LIBRARY NAMES hpdf)
+-find_library(LIBHARU_LIBRARY NAMES hpdf hpdfs)
 +find_library(LIBHARU_LIBRARY_RELEASE NAMES hpdf libhpdf)
 +find_library(LIBHARU_LIBRARY_DEBUG NAMES hpdfd libhpdfd)
  
