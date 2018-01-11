@@ -11,11 +11,13 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DCGAL_INSTALL_CMAKE_DIR=share/cgal
 )
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/CGAL")
+vcpkg_fixup_cmake_targets()
 
 vcpkg_copy_pdbs()
 

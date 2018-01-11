@@ -1,10 +1,10 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a59e2513..3b08f490 100644
+index d6717b19..3fb373be 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -420,16 +420,6 @@ if(WIN32)
-         src/proc/temporal-filter.h
+@@ -453,16 +453,6 @@ if(WIN32)
          src/proc/syncer-processing-block.h
+         src/proc/disparity-transform.h
          )
 -
 -    foreach(flag_var
