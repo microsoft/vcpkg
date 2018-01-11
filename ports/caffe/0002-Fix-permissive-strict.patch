@@ -1,0 +1,74 @@
+From 202c971d32a35f1e160ff952e4535d4fa7a198d2 Mon Sep 17 00:00:00 2001
+From: Vincent Lejeune <vljn.ovi@gmail.com>
+Date: Wed, 10 Jan 2018 19:05:58 +0100
+Subject: [PATCH 2/9] Fix permissive/strict
+
+---
+ src/caffe/net.cpp                | 2 +-
+ src/caffe/proto/caffe.proto      | 8 ++++----
+ src/caffe/util/upgrade_proto.cpp | 8 ++++----
+ 3 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/src/caffe/net.cpp b/src/caffe/net.cpp
+index 353c2f95..59349d35 100644
+--- a/src/caffe/net.cpp
++++ b/src/caffe/net.cpp
+@@ -471,7 +471,7 @@ void Net<Dtype>::AppendParam(const NetParameter& param, const int layer_id,
+         layers_[owner_layer_id]->blobs()[owner_param_id].get();
+     const int param_size = layer_param.param_size();
+     if (param_size > param_id && (layer_param.param(param_id).share_mode() ==
+-                                  ParamSpec_DimCheckMode_PERMISSIVE)) {
++                                  ParamSpec_DimCheckMode_PERMISSIVE_)) {
+       // Permissive dimension checking -- only check counts are the same.
+       CHECK_EQ(this_blob->count(), owner_blob->count())
+           << "Cannot share param '" << param_name << "' owned by layer '"
+diff --git a/src/caffe/proto/caffe.proto b/src/caffe/proto/caffe.proto
+index c96966b5..98b854d2 100644
+--- a/src/caffe/proto/caffe.proto
++++ b/src/caffe/proto/caffe.proto
+@@ -293,9 +293,9 @@ message ParamSpec {
+   optional DimCheckMode share_mode = 2;
+   enum DimCheckMode {
+     // STRICT (default) requires that num, channels, height, width each match.
+-    STRICT = 0;
++    STRICT_ = 0;
+     // PERMISSIVE requires only the count (num*channels*height*width) to match.
+-    PERMISSIVE = 1;
++    PERMISSIVE_ = 1;
+   }
+ 
+   // The multiplier on the global learning rate for this parameter.
+@@ -1268,8 +1268,8 @@ message V1LayerParameter {
+   repeated string param = 1001;
+   repeated DimCheckMode blob_share_mode = 1002;
+   enum DimCheckMode {
+-    STRICT = 0;
+-    PERMISSIVE = 1;
++    STRICT_ = 0;
++    PERMISSIVE_ = 1;
+   }
+   repeated float blobs_lr = 7;
+   repeated float weight_decay = 8;
+diff --git a/src/caffe/util/upgrade_proto.cpp b/src/caffe/util/upgrade_proto.cpp
+index 94771c8c..530de48b 100644
+--- a/src/caffe/util/upgrade_proto.cpp
++++ b/src/caffe/util/upgrade_proto.cpp
+@@ -719,11 +719,11 @@ bool UpgradeV1LayerParameter(const V1LayerParameter& v1_layer_param,
+   for (int i = 0; i < v1_layer_param.blob_share_mode_size(); ++i) {
+     while (layer_param->param_size() <= i) { layer_param->add_param(); }
+     switch (v1_layer_param.blob_share_mode(i)) {
+-    case V1LayerParameter_DimCheckMode_STRICT:
+-      mode = ParamSpec_DimCheckMode_STRICT;
++    case V1LayerParameter_DimCheckMode_STRICT_:
++      mode = ParamSpec_DimCheckMode_STRICT_;
+       break;
+-    case V1LayerParameter_DimCheckMode_PERMISSIVE:
+-      mode = ParamSpec_DimCheckMode_PERMISSIVE;
++    case V1LayerParameter_DimCheckMode_PERMISSIVE_:
++      mode = ParamSpec_DimCheckMode_PERMISSIVE_;
+       break;
+     default:
+       LOG(FATAL) << "Unknown blob_share_mode: "
+-- 
+2.14.1.windows.1
+

@@ -1,0 +1,39 @@
+From bf67ffaf28274d4cdd6d36c97ebe938149c8d8f2 Mon Sep 17 00:00:00 2001
+From: Vincent Lejeune <vljn.ovi@gmail.com>
+Date: Sat, 20 Jan 2018 23:07:28 +0100
+Subject: [PATCH 9/9] Fix Cuda
+
+---
+ cmake/Cuda.cmake               | 2 +-
+ src/caffe/layers/bnll_layer.cu | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/cmake/Cuda.cmake b/cmake/Cuda.cmake
+index b2b19e8b..2fbc5bab 100644
+--- a/cmake/Cuda.cmake
++++ b/cmake/Cuda.cmake
+@@ -4,7 +4,7 @@ endif()
+ 
+ # Known NVIDIA GPU achitectures Caffe can be compiled for.
+ # This list will be used for CUDA_ARCH_NAME = All option
+-set(Caffe_known_gpu_archs "20 21(20) 30 35 50 60 61")
++set(Caffe_known_gpu_archs "30 35 50 60 61")
+ 
+ ################################################################################################
+ # A function for automatic detection of GPUs installed  (if autodetection is enabled)
+diff --git a/src/caffe/layers/bnll_layer.cu b/src/caffe/layers/bnll_layer.cu
+index 8df8ef09..768a92bb 100644
+--- a/src/caffe/layers/bnll_layer.cu
++++ b/src/caffe/layers/bnll_layer.cu
+@@ -5,7 +5,7 @@
+ 
+ namespace caffe {
+ 
+-const float kBNLL_THRESHOLD = 50.;
++__constant__ float kBNLL_THRESHOLD = 50.;
+ 
+ template <typename Dtype>
+ __global__ void BNLLForward(const int n, const Dtype* in, Dtype* out) {
+-- 
+2.14.1.windows.1
+

@@ -1,0 +1,25 @@
+From f14cf165d12062a54fbd5bae17b6e3ac21abba1b Mon Sep 17 00:00:00 2001
+From: Vincent Lejeune <vljn.ovi@gmail.com>
+Date: Sat, 13 Jan 2018 18:09:05 +0100
+Subject: [PATCH 5/9] Disable examples
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 08f56a33..73526201 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -90,7 +90,7 @@ endif()
+ add_subdirectory(src/gtest)
+ add_subdirectory(src/caffe)
+ add_subdirectory(tools)
+-add_subdirectory(examples)
++#add_subdirectory(examples)
+ add_subdirectory(python)
+ add_subdirectory(matlab)
+ add_subdirectory(docs)
+-- 
+2.14.1.windows.1
+

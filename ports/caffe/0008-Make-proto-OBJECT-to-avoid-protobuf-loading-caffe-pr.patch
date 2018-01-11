@@ -1,0 +1,171 @@
+From 33ad943e12dd7f72802915c3c06cb68fb0ec5931 Mon Sep 17 00:00:00 2001
+From: Vincent Lejeune <vljn.ovi@gmail.com>
+Date: Sat, 20 Jan 2018 15:55:02 +0100
+Subject: [PATCH 8/9] Make proto OBJECT to avoid protobuf loading caffe proto
+ file twice.
+
+---
+ python/CMakeLists.txt    |   4 +-
+ src/caffe/CMakeLists.txt | 107 ++++++++++++++++++++++++-----------------------
+ tools/CMakeLists.txt     |   8 +++-
+ 3 files changed, 64 insertions(+), 55 deletions(-)
+
+diff --git a/python/CMakeLists.txt b/python/CMakeLists.txt
+index b676ade0..cd3afa56 100644
+--- a/python/CMakeLists.txt
++++ b/python/CMakeLists.txt
+@@ -5,11 +5,11 @@ endif()
+ 
+ file(GLOB_RECURSE python_srcs ${PROJECT_SOURCE_DIR}/python/*.cpp)
+ 
+-add_library(pycaffe SHARED ${python_srcs})
++add_library(pycaffe SHARED ${python_srcs} $<TARGET_OBJECTS:proto>)
+ caffe_default_properties(pycaffe)
+ set_target_properties(pycaffe PROPERTIES PREFIX "" OUTPUT_NAME "_caffe")
+ target_include_directories(pycaffe PUBLIC ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIR})
+-target_link_libraries(pycaffe PUBLIC caffe ${PYTHON_LIBRARIES})
++target_link_libraries(pycaffe PUBLIC caffe ${PYTHON_LIBRARIES} ${Caffe_LINKER_LIBS} ${PROTOBUF_LIBRARIES})
+ set_target_properties(pycaffe PROPERTIES LINK_FLAGS "/WHOLEARCHIVE:caffe.lib")
+ set_target_properties(pycaffe PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/WHOLEARCHIVE:caffe")
+ set_target_properties(pycaffe PROPERTIES LINK_FLAGS_DEBUG "/WHOLEARCHIVE:caffe-d")
+diff --git a/src/caffe/CMakeLists.txt b/src/caffe/CMakeLists.txt
+index 599a3a5d..57557ab1 100644
+--- a/src/caffe/CMakeLists.txt
++++ b/src/caffe/CMakeLists.txt
+@@ -1,41 +1,44 @@
+-# generate protobuf sources
+-file(GLOB proto_files proto/*.proto)
+-caffe_protobuf_generate_cpp_py(${proto_gen_folder} proto_srcs proto_hdrs proto_python ${proto_files})
+-
+-# include python files either to force generation
+-add_library(proto STATIC ${proto_hdrs} ${proto_srcs} ${proto_python})
+-caffe_default_properties(proto)
+-target_link_libraries(proto PUBLIC ${PROTOBUF_LIBRARIES})
+-target_include_directories(proto PUBLIC ${PROTOBUF_INCLUDE_DIR})
+-
+-list(INSERT Caffe_LINKER_LIBS 0 PUBLIC proto) # note, crucial to prepend!
+-
+-# --[ Caffe library
+-
+-# creates 'test_srcs', 'srcs', 'test_cuda', 'cuda' lists
+-caffe_pickup_caffe_sources(${PROJECT_SOURCE_DIR})
+-
+-if(HAVE_CUDA)
+-  caffe_cuda_compile(cuda_objs ${cuda})
+-  list(APPEND srcs ${cuda_objs} ${cuda})
+-endif()
+-
+-add_library(caffe ${srcs})
+-caffe_default_properties(caffe)
+-target_link_libraries(caffe ${Caffe_LINKER_LIBS})
+-target_include_directories(caffe ${Caffe_INCLUDE_DIRS}
+-                                 PUBLIC
+-                                 $<BUILD_INTERFACE:${Caffe_INCLUDE_DIR}>
+-                                 $<INSTALL_INTERFACE:include>)
+-target_compile_definitions(caffe ${Caffe_DEFINITIONS})
+-if(Caffe_COMPILE_OPTIONS)
+-  target_compile_options(caffe ${Caffe_COMPILE_OPTIONS})
+-endif()
+-set_target_properties(caffe PROPERTIES
+-    VERSION   ${CAFFE_TARGET_VERSION}
+-    SOVERSION ${CAFFE_TARGET_SOVERSION}
+-    )
+-
++# generate protobuf sources
++file(GLOB proto_files proto/*.proto)
++caffe_protobuf_generate_cpp_py(${proto_gen_folder} proto_srcs proto_hdrs proto_python ${proto_files})
++
++# include python files either to force generation
++add_library(proto OBJECT ${proto_hdrs} ${proto_srcs} ${proto_python})
++caffe_default_properties(proto)
++#target_link_libraries(proto PUBLIC ${PROTOBUF_LIBRARIES})
++target_include_directories(proto PUBLIC ${PROTOBUF_INCLUDE_DIR})
++
++#list(INSERT Caffe_LINKER_LIBS 0 PUBLIC proto) # note, crucial to prepend!
++
++# --[ Caffe library
++
++# creates 'test_srcs', 'srcs', 'test_cuda', 'cuda' lists
++caffe_pickup_caffe_sources(${PROJECT_SOURCE_DIR})
++
++if(HAVE_CUDA)
++  caffe_cuda_compile(cuda_objs ${cuda})
++  list(APPEND srcs ${cuda_objs} ${cuda})
++endif()
++
++add_library(caffe ${srcs})
++add_dependencies(caffe proto)
++caffe_default_properties(caffe)
++target_link_libraries(caffe ${Caffe_LINKER_LIBS})
++target_include_directories(caffe ${Caffe_INCLUDE_DIRS}
++                                 PUBLIC
++                                 ${PROTOBUF_INCLUDE_DIR}
++                                 $<BUILD_INTERFACE:${Caffe_INCLUDE_DIR}>
++                                 $<INSTALL_INTERFACE:include>)
++target_compile_definitions(caffe ${Caffe_DEFINITIONS})
++
++if(Caffe_COMPILE_OPTIONS)
++  target_compile_options(caffe ${Caffe_COMPILE_OPTIONS})
++endif()
++set_target_properties(caffe PROPERTIES
++    VERSION   ${CAFFE_TARGET_VERSION}
++    SOVERSION ${CAFFE_TARGET_SOVERSION}
++    )
++
+ if(MSVC AND BUILD_SHARED_LIBS)
+   # CMake 3.4 introduced a WINDOWS_EXPORT_ALL_SYMBOLS target property that makes it possible to 
+   # build shared libraries without using the usual declspec() decoration. 
+@@ -43,17 +46,17 @@ if(MSVC AND BUILD_SHARED_LIBS)
+   # and https://cmake.org/cmake/help/v3.5/prop_tgt/WINDOWS_EXPORT_ALL_SYMBOLS.html 
+   # for details. 
+   set_target_properties(caffe PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE) 
+-endif()
+-
+-# ---[ Tests
+- add_subdirectory(test)
+-
+-# ---[ Install
+-install(DIRECTORY ${Caffe_INCLUDE_DIR}/caffe DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+-install(FILES ${proto_hdrs} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/caffe/proto)
+-install(TARGETS caffe proto EXPORT CaffeTargets DESTINATION ${CMAKE_INSTALL_LIBDIR})
+-
+-file(WRITE ${PROJECT_BINARY_DIR}/__init__.py)
+-list(APPEND proto_python ${PROJECT_BINARY_DIR}/__init__.py)
+-install(PROGRAMS ${proto_python} DESTINATION python/caffe/proto)
+-
++endif()
++
++# ---[ Tests
++ add_subdirectory(test)
++
++# ---[ Install
++install(DIRECTORY ${Caffe_INCLUDE_DIR}/caffe DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
++install(FILES ${proto_hdrs} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/caffe/proto)
++install(TARGETS caffe proto EXPORT CaffeTargets DESTINATION ${CMAKE_INSTALL_LIBDIR})
++
++file(WRITE ${PROJECT_BINARY_DIR}/__init__.py)
++list(APPEND proto_python ${PROJECT_BINARY_DIR}/__init__.py)
++install(PROGRAMS ${proto_python} DESTINATION python/caffe/proto)
++
+diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
+index 576dd788..00b5ca03 100644
+--- a/tools/CMakeLists.txt
++++ b/tools/CMakeLists.txt
+@@ -11,7 +11,13 @@ foreach(source ${srcs})
+   endif()
+ 
+   # target
+-  add_executable(${name} ${source})
++  add_executable(${name} ${source} $<TARGET_OBJECTS:proto>)
++  target_include_directories(${name} ${Caffe_INCLUDE_DIRS}
++                                   PUBLIC
++                                   ${PROTOBUF_INCLUDE_DIR}
++                                   $<BUILD_INTERFACE:${Caffe_INCLUDE_DIR}>
++                                   $<INSTALL_INTERFACE:include>)
++  target_compile_definitions(${name} ${Caffe_DEFINITIONS})
+   target_link_libraries(${name} caffe)
+   caffe_default_properties(${name})
+   set_target_properties(${name} PROPERTIES LINK_FLAGS_RELEASE "/WHOLEARCHIVE:caffe")
+-- 
+2.14.1.windows.1
+

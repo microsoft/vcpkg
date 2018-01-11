@@ -1,0 +1,28 @@
+From 35c962ef00c6f9c5253dfbd18c7efcf81de35a84 Mon Sep 17 00:00:00 2001
+From: Vincent Lejeune <vljn.ovi@gmail.com>
+Date: Sat, 13 Jan 2018 23:38:10 +0100
+Subject: [PATCH 6/9] Do not rename caffe.bin.exe to avoid confusing ninja.
+
+---
+ tools/CMakeLists.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
+index aab8b3da..24d79ad0 100644
+--- a/tools/CMakeLists.txt
++++ b/tools/CMakeLists.txt
+@@ -25,6 +25,11 @@ foreach(source ${srcs})
+   # restore output name without suffix
+   if(name MATCHES "caffe.bin")
+     set_target_properties(${name} PROPERTIES OUTPUT_NAME caffe)
++      if(MSVC) 
++      # the exectuable will have an import library with the same name as the caffe lib 
++      # so change the import library to avoid name clashes 
++      set_target_properties(${name} PROPERTIES IMPORT_SUFFIX ".bin.lib") 
++    endif() 
+   endif()
+ 
+   # Install
+-- 
+2.14.1.windows.1
+

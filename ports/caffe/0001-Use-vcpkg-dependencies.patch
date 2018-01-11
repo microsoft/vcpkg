@@ -1,0 +1,334 @@
+From 25b4021cb8af2be69df50a052e8eaaf11cb48cba Mon Sep 17 00:00:00 2001
+From: Vincent Lejeune <vljn.ovi@gmail.com>
+Date: Wed, 10 Jan 2018 19:05:14 +0100
+Subject: [PATCH 1/9] Use vcpkg dependencies.
+
+---
+ cmake/Dependencies.cmake       | 19 ++++++--------
+ cmake/External/gflags.cmake    | 56 -----------------------------------------
+ cmake/External/glog.cmake      | 57 ------------------------------------------
+ cmake/Modules/FindGFlags.cmake | 50 ------------------------------------
+ cmake/Modules/FindGlog.cmake   | 48 -----------------------------------
+ cmake/ProtoBuf.cmake           |  9 +++----
+ 6 files changed, 12 insertions(+), 227 deletions(-)
+ delete mode 100644 cmake/External/gflags.cmake
+ delete mode 100644 cmake/External/glog.cmake
+ delete mode 100644 cmake/Modules/FindGFlags.cmake
+ delete mode 100644 cmake/Modules/FindGlog.cmake
+
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index 4a5bac47..f8062c9e 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -5,7 +5,7 @@ set(Caffe_DEFINITIONS "")
+ set(Caffe_COMPILE_OPTIONS "")
+ 
+ # ---[ Boost
+-find_package(Boost 1.55 REQUIRED COMPONENTS system thread filesystem)
++find_package(Boost REQUIRED COMPONENTS system thread filesystem)
+ list(APPEND Caffe_INCLUDE_DIRS PUBLIC ${Boost_INCLUDE_DIRS})
+ list(APPEND Caffe_LINKER_LIBS PUBLIC ${Boost_LIBRARIES})
+ 
+@@ -30,22 +30,19 @@ if(USE_OPENMP)
+ endif()
+ 
+ # ---[ Google-glog
+-include("cmake/External/glog.cmake")
+-list(APPEND Caffe_INCLUDE_DIRS PUBLIC ${GLOG_INCLUDE_DIRS})
+-list(APPEND Caffe_LINKER_LIBS PUBLIC ${GLOG_LIBRARIES})
++find_package(glog REQUIRED)
++list(APPEND Caffe_LINKER_LIBS PUBLIC glog::glog)
+ 
+ # ---[ Google-gflags
+-include("cmake/External/gflags.cmake")
+-list(APPEND Caffe_INCLUDE_DIRS PUBLIC ${GFLAGS_INCLUDE_DIRS})
+-list(APPEND Caffe_LINKER_LIBS PUBLIC ${GFLAGS_LIBRARIES})
++find_package(gflags REQUIRED)
++list(APPEND Caffe_LINKER_LIBS PUBLIC gflags)
+ 
+ # ---[ Google-protobuf
+ include(cmake/ProtoBuf.cmake)
+ 
+ # ---[ HDF5
+-find_package(HDF5 COMPONENTS HL REQUIRED)
+-list(APPEND Caffe_INCLUDE_DIRS PUBLIC ${HDF5_INCLUDE_DIRS})
+-list(APPEND Caffe_LINKER_LIBS PUBLIC ${HDF5_LIBRARIES} ${HDF5_HL_LIBRARIES})
++find_package(hdf5 COMPONENTS HL REQUIRED)
++list(APPEND Caffe_LINKER_LIBS PUBLIC hdf5-shared hdf5_hl-shared)
+ 
+ # ---[ LMDB
+ if(USE_LMDB)
+@@ -114,7 +111,7 @@ if(NOT APPLE)
+     list(APPEND Caffe_INCLUDE_DIRS PUBLIC ${Atlas_INCLUDE_DIR})
+     list(APPEND Caffe_LINKER_LIBS PUBLIC ${Atlas_LIBRARIES})
+   elseif(BLAS STREQUAL "Open" OR BLAS STREQUAL "open")
+-    find_package(OpenBLAS REQUIRED)
++    find_package(openblas REQUIRED)
+     list(APPEND Caffe_INCLUDE_DIRS PUBLIC ${OpenBLAS_INCLUDE_DIR})
+     list(APPEND Caffe_LINKER_LIBS PUBLIC ${OpenBLAS_LIB})
+   elseif(BLAS STREQUAL "MKL" OR BLAS STREQUAL "mkl")
+diff --git a/cmake/External/gflags.cmake b/cmake/External/gflags.cmake
+deleted file mode 100644
+index e3dba04f..00000000
+--- a/cmake/External/gflags.cmake
++++ /dev/null
+@@ -1,56 +0,0 @@
+-if (NOT __GFLAGS_INCLUDED) # guard against multiple includes
+-  set(__GFLAGS_INCLUDED TRUE)
+-
+-  # use the system-wide gflags if present
+-  find_package(GFlags)
+-  if (GFLAGS_FOUND)
+-    set(GFLAGS_EXTERNAL FALSE)
+-  else()
+-    # gflags will use pthreads if it's available in the system, so we must link with it
+-    find_package(Threads)
+-
+-    # build directory
+-    set(gflags_PREFIX ${CMAKE_BINARY_DIR}/external/gflags-prefix)
+-    # install directory
+-    set(gflags_INSTALL ${CMAKE_BINARY_DIR}/external/gflags-install)
+-
+-    # we build gflags statically, but want to link it into the caffe shared library
+-    # this requires position-independent code
+-    if (UNIX)
+-        set(GFLAGS_EXTRA_COMPILER_FLAGS "-fPIC")
+-    endif()
+-
+-    set(GFLAGS_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${GFLAGS_EXTRA_COMPILER_FLAGS})
+-    set(GFLAGS_C_FLAGS ${CMAKE_C_FLAGS} ${GFLAGS_EXTRA_COMPILER_FLAGS})
+-
+-    ExternalProject_Add(gflags
+-      PREFIX ${gflags_PREFIX}
+-      GIT_REPOSITORY "https://github.com/gflags/gflags.git"
+-      GIT_TAG "v2.1.2"
+-      UPDATE_COMMAND ""
+-      INSTALL_DIR ${gflags_INSTALL}
+-      CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+-                 -DCMAKE_INSTALL_PREFIX=${gflags_INSTALL}
+-                 -DBUILD_SHARED_LIBS=OFF
+-                 -DBUILD_STATIC_LIBS=ON
+-                 -DBUILD_PACKAGING=OFF
+-                 -DBUILD_TESTING=OFF
+-                 -DBUILD_NC_TESTS=OFF
+-                 -BUILD_CONFIG_TESTS=OFF
+-                 -DINSTALL_HEADERS=ON
+-                 -DCMAKE_C_FLAGS=${GFLAGS_C_FLAGS}
+-                 -DCMAKE_CXX_FLAGS=${GFLAGS_CXX_FLAGS}
+-      LOG_DOWNLOAD 1
+-      LOG_INSTALL 1
+-      )
+-
+-    set(GFLAGS_FOUND TRUE)
+-    set(GFLAGS_INCLUDE_DIRS ${gflags_INSTALL}/include)
+-    set(GFLAGS_LIBRARIES ${gflags_INSTALL}/lib/libgflags.a ${CMAKE_THREAD_LIBS_INIT})
+-    set(GFLAGS_LIBRARY_DIRS ${gflags_INSTALL}/lib)
+-    set(GFLAGS_EXTERNAL TRUE)
+-
+-    list(APPEND external_project_dependencies gflags)
+-  endif()
+-
+-endif()
+diff --git a/cmake/External/glog.cmake b/cmake/External/glog.cmake
+deleted file mode 100644
+index f9d0549c..00000000
+--- a/cmake/External/glog.cmake
++++ /dev/null
+@@ -1,57 +0,0 @@
+-# glog depends on gflags
+-include("cmake/External/gflags.cmake")
+-
+-if (NOT __GLOG_INCLUDED)
+-  set(__GLOG_INCLUDED TRUE)
+-
+-  # try the system-wide glog first
+-  find_package(Glog)
+-  if (GLOG_FOUND)
+-      set(GLOG_EXTERNAL FALSE)
+-  else()
+-    # fetch and build glog from github
+-
+-    # build directory
+-    set(glog_PREFIX ${CMAKE_BINARY_DIR}/external/glog-prefix)
+-    # install directory
+-    set(glog_INSTALL ${CMAKE_BINARY_DIR}/external/glog-install)
+-
+-    # we build glog statically, but want to link it into the caffe shared library
+-    # this requires position-independent code
+-    if (UNIX)
+-      set(GLOG_EXTRA_COMPILER_FLAGS "-fPIC")
+-    endif()
+-
+-    set(GLOG_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${GLOG_EXTRA_COMPILER_FLAGS})
+-    set(GLOG_C_FLAGS ${CMAKE_C_FLAGS} ${GLOG_EXTRA_COMPILER_FLAGS})
+-
+-    # depend on gflags if we're also building it
+-    if (GFLAGS_EXTERNAL)
+-      set(GLOG_DEPENDS gflags)
+-    endif()
+-
+-    ExternalProject_Add(glog
+-      DEPENDS ${GLOG_DEPENDS}
+-      PREFIX ${glog_PREFIX}
+-      GIT_REPOSITORY "https://github.com/google/glog"
+-      GIT_TAG "v0.3.4"
+-      UPDATE_COMMAND ""
+-      INSTALL_DIR ${gflags_INSTALL}
+-      PATCH_COMMAND autoreconf -i ${glog_PREFIX}/src/glog
+-      CONFIGURE_COMMAND env "CFLAGS=${GLOG_C_FLAGS}" "CXXFLAGS=${GLOG_CXX_FLAGS}" ${glog_PREFIX}/src/glog/configure --prefix=${glog_INSTALL} --enable-shared=no --enable-static=yes --with-gflags=${GFLAGS_LIBRARY_DIRS}/..
+-      LOG_DOWNLOAD 1
+-      LOG_CONFIGURE 1
+-      LOG_INSTALL 1
+-      )
+-
+-    set(GLOG_FOUND TRUE)
+-    set(GLOG_INCLUDE_DIRS ${glog_INSTALL}/include)
+-    set(GLOG_LIBRARIES ${GFLAGS_LIBRARIES} ${glog_INSTALL}/lib/libglog.a)
+-    set(GLOG_LIBRARY_DIRS ${glog_INSTALL}/lib)
+-    set(GLOG_EXTERNAL TRUE)
+-
+-    list(APPEND external_project_dependencies glog)
+-  endif()
+-
+-endif()
+-
+diff --git a/cmake/Modules/FindGFlags.cmake b/cmake/Modules/FindGFlags.cmake
+deleted file mode 100644
+index 29b60f05..00000000
+--- a/cmake/Modules/FindGFlags.cmake
++++ /dev/null
+@@ -1,50 +0,0 @@
+-# - Try to find GFLAGS
+-#
+-# The following variables are optionally searched for defaults
+-#  GFLAGS_ROOT_DIR:            Base directory where all GFLAGS components are found
+-#
+-# The following are set after configuration is done:
+-#  GFLAGS_FOUND
+-#  GFLAGS_INCLUDE_DIRS
+-#  GFLAGS_LIBRARIES
+-#  GFLAGS_LIBRARYRARY_DIRS
+-
+-include(FindPackageHandleStandardArgs)
+-
+-set(GFLAGS_ROOT_DIR "" CACHE PATH "Folder contains Gflags")
+-
+-# We are testing only a couple of files in the include directories
+-if(WIN32)
+-    find_path(GFLAGS_INCLUDE_DIR gflags/gflags.h
+-        PATHS ${GFLAGS_ROOT_DIR}/src/windows)
+-else()
+-    find_path(GFLAGS_INCLUDE_DIR gflags/gflags.h
+-        PATHS ${GFLAGS_ROOT_DIR})
+-endif()
+-
+-if(MSVC)
+-    find_library(GFLAGS_LIBRARY_RELEASE
+-        NAMES libgflags
+-        PATHS ${GFLAGS_ROOT_DIR}
+-        PATH_SUFFIXES Release)
+-
+-    find_library(GFLAGS_LIBRARY_DEBUG
+-        NAMES libgflags-debug
+-        PATHS ${GFLAGS_ROOT_DIR}
+-        PATH_SUFFIXES Debug)
+-
+-    set(GFLAGS_LIBRARY optimized ${GFLAGS_LIBRARY_RELEASE} debug ${GFLAGS_LIBRARY_DEBUG})
+-else()
+-    find_library(GFLAGS_LIBRARY gflags)
+-endif()
+-
+-find_package_handle_standard_args(GFlags DEFAULT_MSG GFLAGS_INCLUDE_DIR GFLAGS_LIBRARY)
+-
+-
+-if(GFLAGS_FOUND)
+-    set(GFLAGS_INCLUDE_DIRS ${GFLAGS_INCLUDE_DIR})
+-    set(GFLAGS_LIBRARIES ${GFLAGS_LIBRARY})
+-    message(STATUS "Found gflags  (include: ${GFLAGS_INCLUDE_DIR}, library: ${GFLAGS_LIBRARY})")
+-    mark_as_advanced(GFLAGS_LIBRARY_DEBUG GFLAGS_LIBRARY_RELEASE
+-                     GFLAGS_LIBRARY GFLAGS_INCLUDE_DIR GFLAGS_ROOT_DIR)
+-endif()
+diff --git a/cmake/Modules/FindGlog.cmake b/cmake/Modules/FindGlog.cmake
+deleted file mode 100644
+index 99abbe47..00000000
+--- a/cmake/Modules/FindGlog.cmake
++++ /dev/null
+@@ -1,48 +0,0 @@
+-# - Try to find Glog
+-#
+-# The following variables are optionally searched for defaults
+-#  GLOG_ROOT_DIR:            Base directory where all GLOG components are found
+-#
+-# The following are set after configuration is done:
+-#  GLOG_FOUND
+-#  GLOG_INCLUDE_DIRS
+-#  GLOG_LIBRARIES
+-#  GLOG_LIBRARYRARY_DIRS
+-
+-include(FindPackageHandleStandardArgs)
+-
+-set(GLOG_ROOT_DIR "" CACHE PATH "Folder contains Google glog")
+-
+-if(WIN32)
+-    find_path(GLOG_INCLUDE_DIR glog/logging.h
+-        PATHS ${GLOG_ROOT_DIR}/src/windows)
+-else()
+-    find_path(GLOG_INCLUDE_DIR glog/logging.h
+-        PATHS ${GLOG_ROOT_DIR})
+-endif()
+-
+-if(MSVC)
+-    find_library(GLOG_LIBRARY_RELEASE libglog_static
+-        PATHS ${GLOG_ROOT_DIR}
+-        PATH_SUFFIXES Release)
+-
+-    find_library(GLOG_LIBRARY_DEBUG libglog_static
+-        PATHS ${GLOG_ROOT_DIR}
+-        PATH_SUFFIXES Debug)
+-
+-    set(GLOG_LIBRARY optimized ${GLOG_LIBRARY_RELEASE} debug ${GLOG_LIBRARY_DEBUG})
+-else()
+-    find_library(GLOG_LIBRARY glog
+-        PATHS ${GLOG_ROOT_DIR}
+-        PATH_SUFFIXES lib lib64)
+-endif()
+-
+-find_package_handle_standard_args(Glog DEFAULT_MSG GLOG_INCLUDE_DIR GLOG_LIBRARY)
+-
+-if(GLOG_FOUND)
+-  set(GLOG_INCLUDE_DIRS ${GLOG_INCLUDE_DIR})
+-  set(GLOG_LIBRARIES ${GLOG_LIBRARY})
+-  message(STATUS "Found glog    (include: ${GLOG_INCLUDE_DIR}, library: ${GLOG_LIBRARY})")
+-  mark_as_advanced(GLOG_ROOT_DIR GLOG_LIBRARY_RELEASE GLOG_LIBRARY_DEBUG
+-                                 GLOG_LIBRARY GLOG_INCLUDE_DIR)
+-endif()
+diff --git a/cmake/ProtoBuf.cmake b/cmake/ProtoBuf.cmake
+index 8005b448..d197c1b3 100644
+--- a/cmake/ProtoBuf.cmake
++++ b/cmake/ProtoBuf.cmake
+@@ -1,9 +1,8 @@
+ # Finds Google Protocol Buffers library and compilers and extends
+ # the standard cmake script with version and python generation support
+ 
+-find_package( Protobuf REQUIRED )
+-list(APPEND Caffe_INCLUDE_DIRS PUBLIC ${PROTOBUF_INCLUDE_DIR})
+-list(APPEND Caffe_LINKER_LIBS PUBLIC ${PROTOBUF_LIBRARIES})
++find_package( Protobuf REQUIRED )#list(APPEND Caffe_INCLUDE_DIRS PUBLIC ${PROTOBUF_INCLUDE_DIR})
++list(APPEND Caffe_LINKER_LIBS PUBLIC protobuf::libprotobuf)
+ 
+ # As of Ubuntu 14.04 protoc is no longer a part of libprotobuf-dev package
+ # and should be installed separately as in: sudo apt-get install protobuf-compiler
+@@ -77,8 +76,8 @@ function(caffe_protobuf_generate_cpp_py output_dir srcs_var hdrs_var python_var)
+              "${output_dir}/${fil_we}.pb.h"
+              "${output_dir}/${fil_we}_pb2.py"
+       COMMAND ${CMAKE_COMMAND} -E make_directory "${output_dir}"
+-      COMMAND ${PROTOBUF_PROTOC_EXECUTABLE} --cpp_out    ${output_dir} ${_protoc_include} ${abs_fil}
+-      COMMAND ${PROTOBUF_PROTOC_EXECUTABLE} --python_out ${output_dir} ${_protoc_include} ${abs_fil}
++      COMMAND protobuf::protoc --cpp_out    ${output_dir} ${_protoc_include} ${abs_fil}
++      COMMAND protobuf::protoc --python_out ${output_dir} ${_protoc_include} ${abs_fil}
+       DEPENDS ${abs_fil}
+       COMMENT "Running C++/Python protocol buffer compiler on ${fil}" VERBATIM )
+   endforeach()
+-- 
+2.14.1.windows.1
+

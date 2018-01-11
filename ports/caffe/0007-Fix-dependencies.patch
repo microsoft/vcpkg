@@ -1,0 +1,39 @@
+From 6a5d1761d677396ec8a628e7bd6672ee9e6fa9a8 Mon Sep 17 00:00:00 2001
+From: Vincent Lejeune <vljn.ovi@gmail.com>
+Date: Sun, 14 Jan 2018 00:09:46 +0100
+Subject: [PATCH 7/9] Fix dependencies.
+
+---
+ python/CMakeLists.txt | 2 +-
+ tools/CMakeLists.txt  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/python/CMakeLists.txt b/python/CMakeLists.txt
+index 20af0dcf..b676ade0 100644
+--- a/python/CMakeLists.txt
++++ b/python/CMakeLists.txt
+@@ -9,7 +9,7 @@ add_library(pycaffe SHARED ${python_srcs})
+ caffe_default_properties(pycaffe)
+ set_target_properties(pycaffe PROPERTIES PREFIX "" OUTPUT_NAME "_caffe")
+ target_include_directories(pycaffe PUBLIC ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIR})
+-target_link_libraries(pycaffe PUBLIC ${Caffe_LINK} ${PYTHON_LIBRARIES})
++target_link_libraries(pycaffe PUBLIC caffe ${PYTHON_LIBRARIES})
+ set_target_properties(pycaffe PROPERTIES LINK_FLAGS "/WHOLEARCHIVE:caffe.lib")
+ set_target_properties(pycaffe PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/WHOLEARCHIVE:caffe")
+ set_target_properties(pycaffe PROPERTIES LINK_FLAGS_DEBUG "/WHOLEARCHIVE:caffe-d")
+diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
+index 24d79ad0..576dd788 100644
+--- a/tools/CMakeLists.txt
++++ b/tools/CMakeLists.txt
+@@ -12,7 +12,7 @@ foreach(source ${srcs})
+ 
+   # target
+   add_executable(${name} ${source})
+-  target_link_libraries(${name} ${Caffe_LINK})
++  target_link_libraries(${name} caffe)
+   caffe_default_properties(${name})
+   set_target_properties(${name} PROPERTIES LINK_FLAGS_RELEASE "/WHOLEARCHIVE:caffe")
+   set_target_properties(${name} PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/WHOLEARCHIVE:caffe")
+-- 
+2.14.1.windows.1
+

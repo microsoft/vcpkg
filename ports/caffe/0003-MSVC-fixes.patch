@@ -1,0 +1,181 @@
+From 0ec6bfcfd33ee645cea41d9bb6de374ff99d4de9 Mon Sep 17 00:00:00 2001
+From: Vincent Lejeune <vljn.ovi@gmail.com>
+Date: Sat, 13 Jan 2018 17:31:06 +0100
+Subject: [PATCH 3/9] MSVC-fixes
+
+---
+ python/caffe/_caffe.cpp           |  6 ++++--
+ src/caffe/common.cpp              |  8 ++++++++
+ src/caffe/util/db_lmdb.cpp        |  5 +++++
+ src/caffe/util/io.cpp             | 11 ++++++++++-
+ src/caffe/util/signal_handler.cpp | 26 +++++++++++++++++++++++++-
+ 5 files changed, 52 insertions(+), 4 deletions(-)
+
+diff --git a/python/caffe/_caffe.cpp b/python/caffe/_caffe.cpp
+index d7f43fff..e7d54ba7 100644
+--- a/python/caffe/_caffe.cpp
++++ b/python/caffe/_caffe.cpp
+@@ -53,15 +53,17 @@ void set_mode_gpu() { Caffe::set_mode(Caffe::GPU); }
+ 
+ void InitLog() {
+   ::google::InitGoogleLogging("");
++#if !defined(_MSC_VER)
+   ::google::InstallFailureSignalHandler();
++#endif
+ }
+ void InitLogLevel(int level) {
+   FLAGS_minloglevel = level;
+   InitLog();
+ }
+-void InitLogLevelPipe(int level, bool stderr) {
++void InitLogLevelPipe(int level, bool _stderr) {
+   FLAGS_minloglevel = level;
+-  FLAGS_logtostderr = stderr;
++  FLAGS_logtostderr = _stderr;
+   InitLog();
+ }
+ void Log(const string& s) {
+diff --git a/src/caffe/common.cpp b/src/caffe/common.cpp
+index 4f6f9bcc..319adabe 100644
+--- a/src/caffe/common.cpp
++++ b/src/caffe/common.cpp
+@@ -1,3 +1,8 @@
++#if defined(_MSC_VER)
++#include <process.h>
++#define getpid() _getpid()
++#endif
++
+ #include <boost/thread.hpp>
+ #include <glog/logging.h>
+ #include <cmath>
+@@ -46,7 +51,10 @@ void GlobalInit(int* pargc, char*** pargv) {
+   // Google logging.
+   ::google::InitGoogleLogging(*(pargv)[0]);
+   // Provide a backtrace on segfault.
++  // Windows port of glogs doesn't have this function built 
++#if !defined(_MSC_VER)
+   ::google::InstallFailureSignalHandler();
++#endif
+ }
+ 
+ #ifdef CPU_ONLY  // CPU-only Caffe.
+diff --git a/src/caffe/util/db_lmdb.cpp b/src/caffe/util/db_lmdb.cpp
+index 491a9bd0..fe9e562c 100644
+--- a/src/caffe/util/db_lmdb.cpp
++++ b/src/caffe/util/db_lmdb.cpp
+@@ -1,6 +1,11 @@
+ #ifdef USE_LMDB
+ #include "caffe/util/db_lmdb.hpp"
+ 
++#if defined(_MSC_VER)
++#include <direct.h>
++#define mkdir(X, Y) _mkdir(X)
++#endif
++
+ #include <sys/stat.h>
+ 
+ #include <string>
+diff --git a/src/caffe/util/io.cpp b/src/caffe/util/io.cpp
+index 835d2d4e..5736d35a 100644
+--- a/src/caffe/util/io.cpp
++++ b/src/caffe/util/io.cpp
+@@ -1,4 +1,9 @@
+ #include <fcntl.h>
++
++#if defined(_MSC_VER)
++#include <io.h>
++#endif
++
+ #include <google/protobuf/io/coded_stream.h>
+ #include <google/protobuf/io/zero_copy_stream_impl.h>
+ #include <google/protobuf/text_format.h>
+@@ -32,7 +37,11 @@ using google::protobuf::io::CodedOutputStream;
+ using google::protobuf::Message;
+ 
+ bool ReadProtoFromTextFile(const char* filename, Message* proto) {
++#if defined (_MSC_VER)  // for MSC compiler binary flag needs to be specified 
++  int fd = open(filename, O_RDONLY | O_BINARY);
++#else
+   int fd = open(filename, O_RDONLY);
++#endif
+   CHECK_NE(fd, -1) << "File not found: " << filename;
+   FileInputStream* input = new FileInputStream(fd);
+   bool success = google::protobuf::TextFormat::Parse(input, proto);
+@@ -50,7 +59,7 @@ void WriteProtoToTextFile(const Message& proto, const char* filename) {
+ }
+ 
+ bool ReadProtoFromBinaryFile(const char* filename, Message* proto) {
+-  int fd = open(filename, O_RDONLY);
++  int fd = open(filename, O_RDONLY | O_BINARY);
+   CHECK_NE(fd, -1) << "File not found: " << filename;
+   ZeroCopyInputStream* raw_input = new FileInputStream(fd);
+   CodedInputStream* coded_input = new CodedInputStream(raw_input);
+diff --git a/src/caffe/util/signal_handler.cpp b/src/caffe/util/signal_handler.cpp
+index 5d764ec5..7b232fbd 100644
+--- a/src/caffe/util/signal_handler.cpp
++++ b/src/caffe/util/signal_handler.cpp
+@@ -13,9 +13,15 @@ namespace {
+ 
+   void handle_signal(int signal) {
+     switch (signal) {
++#ifdef _MSC_VER 
++    case SIGBREAK:  // there is no SIGHUP in windows, take SIGBREAK instead. 
++      got_sighup = true;
++      break;
++#else
+     case SIGHUP:
+       got_sighup = true;
+       break;
++#endif
+     case SIGINT:
+       got_sigint = true;
+       break;
+@@ -27,7 +33,15 @@ namespace {
+       LOG(FATAL) << "Tried to hookup signal handlers more than once.";
+     }
+     already_hooked_up = true;
+-
++
++#ifdef _MSC_VER
++    if (signal(SIGBREAK, handle_signal) == SIG_ERR) {
++      LOG(FATAL) << "Cannot install SIGBREAK handler.";
++    }
++    if (signal(SIGINT, handle_signal) == SIG_ERR) {
++      LOG(FATAL) << "Cannot install SIGINT handler.";
++    }
++#else
+     struct sigaction sa;
+     // Setup the handler
+     sa.sa_handler = &handle_signal;
+@@ -42,11 +56,20 @@ namespace {
+     if (sigaction(SIGINT, &sa, NULL) == -1) {
+       LOG(FATAL) << "Cannot install SIGINT handler.";
+     }
++#endif
+   }
+ 
+   // Set the signal handlers to the default.
+   void UnhookHandler() {
+     if (already_hooked_up) {
++#ifdef _MSC_VER
++      if (signal(SIGBREAK, SIG_DFL) == SIG_ERR) {
++        LOG(FATAL) << "Cannot uninstall SIGBREAK handler.";
++      }
++      if (signal(SIGINT, SIG_DFL) == SIG_ERR) {
++        LOG(FATAL) << "Cannot uninstall SIGINT handler.";
++      }
++#else
+       struct sigaction sa;
+       // Setup the sighub handler
+       sa.sa_handler = SIG_DFL;
+@@ -63,6 +86,7 @@ namespace {
+       }
+ 
+       already_hooked_up = false;
++#endif
+     }
+   }
+ 
+-- 
+2.14.1.windows.1
+

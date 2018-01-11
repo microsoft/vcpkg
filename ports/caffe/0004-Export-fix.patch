@@ -1,0 +1,78 @@
+From cd5e717ddf8cba2dea5d1175047c66c2054ca101 Mon Sep 17 00:00:00 2001
+From: Vincent Lejeune <vljn.ovi@gmail.com>
+Date: Sat, 13 Jan 2018 17:57:39 +0100
+Subject: [PATCH 4/9] Export fix
+
+---
+ python/CMakeLists.txt    | 3 +++
+ src/caffe/CMakeLists.txt | 9 +++++++++
+ src/gtest/CMakeLists.txt | 4 +++-
+ tools/CMakeLists.txt     | 3 +++
+ 4 files changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/python/CMakeLists.txt b/python/CMakeLists.txt
+index c53299d2..20af0dcf 100644
+--- a/python/CMakeLists.txt
++++ b/python/CMakeLists.txt
+@@ -10,6 +10,9 @@ caffe_default_properties(pycaffe)
+ set_target_properties(pycaffe PROPERTIES PREFIX "" OUTPUT_NAME "_caffe")
+ target_include_directories(pycaffe PUBLIC ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIR})
+ target_link_libraries(pycaffe PUBLIC ${Caffe_LINK} ${PYTHON_LIBRARIES})
++set_target_properties(pycaffe PROPERTIES LINK_FLAGS "/WHOLEARCHIVE:caffe.lib")
++set_target_properties(pycaffe PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/WHOLEARCHIVE:caffe")
++set_target_properties(pycaffe PROPERTIES LINK_FLAGS_DEBUG "/WHOLEARCHIVE:caffe-d")
+ 
+ if(UNIX OR APPLE)
+     set(__linkname "${PROJECT_SOURCE_DIR}/python/caffe/_caffe.so")
+diff --git a/src/caffe/CMakeLists.txt b/src/caffe/CMakeLists.txt
+index b9152e92..599a3a5d 100644
+--- a/src/caffe/CMakeLists.txt
++++ b/src/caffe/CMakeLists.txt
+@@ -36,6 +36,15 @@ set_target_properties(caffe PROPERTIES
+     SOVERSION ${CAFFE_TARGET_SOVERSION}
+     )
+ 
++if(MSVC AND BUILD_SHARED_LIBS)
++  # CMake 3.4 introduced a WINDOWS_EXPORT_ALL_SYMBOLS target property that makes it possible to 
++  # build shared libraries without using the usual declspec() decoration. 
++  # See: https://blog.kitware.com/create-dlls-on-windows-without-declspec-using-new-cmake-export-all-feature/ 
++  # and https://cmake.org/cmake/help/v3.5/prop_tgt/WINDOWS_EXPORT_ALL_SYMBOLS.html 
++  # for details. 
++  set_target_properties(caffe PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE) 
++endif()
++
+ # ---[ Tests
+  add_subdirectory(test)
+ 
+diff --git a/src/gtest/CMakeLists.txt b/src/gtest/CMakeLists.txt
+index e98254af..827e0176 100644
+--- a/src/gtest/CMakeLists.txt
++++ b/src/gtest/CMakeLists.txt
+@@ -2,7 +2,9 @@ add_library(gtest STATIC EXCLUDE_FROM_ALL gtest.h gtest-all.cpp)
+ caffe_default_properties(gtest)
+ target_include_directories(gtest PUBLIC ${Caffe_SRC_DIR})
+ target_compile_definitions(gtest PUBLIC -DGTEST_USE_OWN_TR1_TUPLE)
+-
++set_target_properties(gtest PROPERTIES LINK_FLAGS_RELEASE "/WHOLEARCHIVE:caffe")
++set_target_properties(gtest PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/WHOLEARCHIVE:caffe")
++set_target_properties(gtest PROPERTIES LINK_FLAGS_DEBUG "/WHOLEARCHIVE:caffe-d")
+ 
+ #add_library(gtest_main gtest_main.cc)
+ #target_link_libraries(gtest_main gtest)
+diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
+index 37894505..aab8b3da 100644
+--- a/tools/CMakeLists.txt
++++ b/tools/CMakeLists.txt
+@@ -14,6 +14,9 @@ foreach(source ${srcs})
+   add_executable(${name} ${source})
+   target_link_libraries(${name} ${Caffe_LINK})
+   caffe_default_properties(${name})
++  set_target_properties(${name} PROPERTIES LINK_FLAGS_RELEASE "/WHOLEARCHIVE:caffe")
++  set_target_properties(${name} PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/WHOLEARCHIVE:caffe")
++  set_target_properties(${name} PROPERTIES LINK_FLAGS_DEBUG "/WHOLEARCHIVE:caffe-d")
+ 
+   # set back RUNTIME_OUTPUT_DIRECTORY
+   caffe_set_runtime_directory(${name} "${PROJECT_BINARY_DIR}/tools")
+-- 
+2.14.1.windows.1
+

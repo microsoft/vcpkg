@@ -1,0 +1,16 @@
+Source: caffe
+Version: 1.0
+Build-Depends: lmdb, gflags, glog, boost-thread, boost-filesystem, hdf5, protobuf, openblas
+Description: Deep learning framework.
+
+Feature: cuda
+Build-Depends: cuda
+Description: Cuda support
+
+Feature: python
+Build-Depends: python3, boost-python
+Description: PyCaffe
+
+Feature: opencv
+Build-Depends: opencv
+Description: Build caffe with opencv
