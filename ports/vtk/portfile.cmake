@@ -1,39 +1,39 @@
 include(vcpkg_common_functions)
 
-set(VTK_SHORT_VERSION "8.0")
-set(VTK_LONG_VERSION "${VTK_SHORT_VERSION}.1")
+set(VTK_SHORT_VERSION "8.1")
+set(VTK_LONG_VERSION "${VTK_SHORT_VERSION}.0")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "Kitware/VTK"
     REF "v${VTK_LONG_VERSION}"
-    SHA512 3a70fa704d791d21a1e2421e6799ccc8238da5bc1fc0ab1925fb7956ccaebb7748c452faba1e7f4a2eafbc8612ed644f46f84b0cb3fe16ce539a823165feb29f
+    SHA512 09e110cba4ad9a6684e9b2af0cbb5b9053e3596ccb62aab96cd9e71aa4a96c809d96e13153ff44c28ad83015a61ba5195f7d34056707b62654c1bc057f9b9edf
     HEAD_REF "master"
 )
 
 # =============================================================================
-# Options: These should be set by feature-packages when they become available
+# Options:
 
 if ("qt" IN_LIST FEATURES)
-    set(VTK_WITH_QT                      ON ) # IMPORTANT: if ON make sure `qt5` is listed as dependency in the CONTROL file
+    set(VTK_WITH_QT                      ON )
 else()
-    set(VTK_WITH_QT                      OFF ) # IMPORTANT: if ON make sure `qt5` is listed as dependency in the CONTROL file
+    set(VTK_WITH_QT                      OFF )
 endif()
 
 if ("mpi" IN_LIST FEATURES)
-    set(VTK_WITH_MPI                     ON ) # IMPORTANT: if ON make sure `mpi` is listed as dependency in the CONTROL file
+    set(VTK_WITH_MPI                     ON )
 else()
-    set(VTK_WITH_MPI                     OFF ) # IMPORTANT: if ON make sure `mpi` is listed as dependency in the CONTROL file
+    set(VTK_WITH_MPI                     OFF )
 endif()
 
 if ("python" IN_LIST FEATURES)
-    set(VTK_WITH_PYTHON                  ON) # IMPORTANT: if ON make sure `python3` is listed as dependency in the CONTROL file
+    set(VTK_WITH_PYTHON                  ON)
 else()
-    set(VTK_WITH_PYTHON                  OFF) # IMPORTANT: if ON make sure `python3` is listed as dependency in the CONTROL file
+    set(VTK_WITH_PYTHON                  OFF)
 endif()
 
 if("openvr" IN_LIST FEATURES)
-    set(VTK_WITH_OPENVR                  ON) # IMPORTANT: if ON make sure `OpenVR` is listed as dependency in the CONTROL file
+    set(VTK_WITH_OPENVR                  ON)
 else()
     set(VTK_WITH_OPENVR                  OFF)
 endif()

@@ -7,18 +7,14 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/SDL2_image-2.0.1)
+set(SDL2_IMAGE_VERSION "2.0.2")
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/SDL2_image-${SDL2_IMAGE_VERSION})
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.libsdl.org/projects/SDL_image/release/SDL2_image-2.0.1.zip"
-    FILENAME "SDL2_image-2.0.1.zip"
-    SHA512 37d12f4fae71c586bec73262bddb9207ab2f9a2ca6001d2cbfde646e268a950ba5cd4cff53d75e2da8959ae6da6e9cadc6eca88fa7bd9aa2758395d64c84a307
+    URLS "https://www.libsdl.org/projects/SDL_image/release/SDL2_image-${SDL2_IMAGE_VERSION}.zip"
+    FILENAME "SDL2_image-${SDL2_IMAGE_VERSION}.zip"
+    SHA512 bf143bdbd3cb7cfad61b8dcc35950584304deac802bad6c0c8144e914401a5ddef01f674d2dc1214371d0f371f76e87a45873e2655947e8e1da83fb44d8285f4
 )
 vcpkg_extract_source_archive(${ARCHIVE})
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES 
-        ${CMAKE_CURRENT_LIST_DIR}/correct-sdl-headers-dir.patch)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindWEBP.cmake DESTINATION ${SOURCE_PATH}/cmake)

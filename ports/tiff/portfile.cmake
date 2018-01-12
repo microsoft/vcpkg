@@ -18,6 +18,10 @@ vcpkg_apply_patches(
             ${CMAKE_CURRENT_LIST_DIR}/crt-secure-no-deprecate.patch
 )
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+    set (TIFF_CXX_TARGET -Dcxx=OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -28,6 +32,7 @@ vcpkg_configure_cmake(
         -DBUILD_TESTS=OFF
         -Djbig=OFF # This is disabled by default due to GPL/Proprietary licensing.
         -Djpeg12=OFF
+        ${TIFF_CXX_TARGET}
 )
 
 vcpkg_install_cmake()

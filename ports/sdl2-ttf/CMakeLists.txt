@@ -5,7 +5,7 @@ find_path(SDL_INCLUDE_DIR SDL2/SDL.h)
 find_library(SDL_LIBRARY NAMES SDL2d SDL2)
 find_package(FreeType REQUIRED)
 
-add_library(SDL2_ttf SDL_ttf.c)
+add_library(SDL2_ttf SDL_ttf.c version.rc)
 
 set_target_properties(SDL2_ttf PROPERTIES DEFINE_SYMBOL SDL2_EXPORTS)
 target_include_directories(SDL2_ttf PRIVATE ${SDL_INCLUDE_DIR}/SDL2 ${FREETYPE_INCLUDE_DIR_ft2build})

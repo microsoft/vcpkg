@@ -220,7 +220,7 @@ namespace vcpkg::System
                                                 nullptr,
                                                 nullptr,
                                                 FALSE,
-                                                BELOW_NORMAL_PRIORITY_CLASS | CREATE_UNICODE_ENVIRONMENT,
+                                                IDLE_PRIORITY_CLASS | CREATE_UNICODE_ENVIRONMENT,
                                                 env_cstr.data(),
                                                 nullptr,
                                                 &startup_info,

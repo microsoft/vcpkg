@@ -1,0 +1,29 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ae20868..01bb84c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -26,6 +26,7 @@
+ cmake_minimum_required(VERSION 2.8.7)
+ set(CMAKE_MACOSX_RPATH 1)
+ include(${CMAKE_ROOT}/Modules/ExternalProject.cmake)
++include(${CMAKE_ROOT}/Modules/GenerateExportHeader.cmake)
+ 
+ 
+ ###
+@@ -170,6 +171,8 @@ if(USE_CUSTOM_TCP_CLIENT)
+   set_target_properties(${PROJECT} PROPERTIES COMPILE_DEFINITIONS "__CPP_REDIS_USE_CUSTOM_TCP_CLIENT=${USE_CUSTOM_TCP_CLIENT}")
+ endif(USE_CUSTOM_TCP_CLIENT)
+ 
++generate_export_header(${PROJECT} EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/cpp_redis/misc/${PROJECT}_export.hpp)
++target_include_directories(${PROJECT} PUBLIC ${CMAKE_BINARY_DIR})
+ 
+ ###
+ # install
+@@ -181,6 +184,7 @@ install(DIRECTORY DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+ install(DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} DESTINATION lib USE_SOURCE_PERMISSIONS)
+ install(DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} DESTINATION bin USE_SOURCE_PERMISSIONS)
+ install(DIRECTORY ${CPP_REDIS_INCLUDES}/ DESTINATION include USE_SOURCE_PERMISSIONS)
++install (FILES ${CMAKE_BINARY_DIR}/cpp_redis/misc/${PROJECT}_export.hpp DESTINATION include/cpp_redis/misc)
+ 
+ 
+ ###

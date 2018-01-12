@@ -3,15 +3,14 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arvidn/libtorrent
-    REF 94f4e88e05f92a1b07551598a4bedb2c16af0f2f
-    SHA512 1b4876a471a62813c97519ebf54fc06286b7ee43005e436c7139c6a6ac39fd40fefd5c9b7424e65509ec8deb95dfe1427544b686b6b9cd51cf3d3f133ba7a701
+    REF libtorrent-1_1_6
+    SHA512 528034e63330d3c6910ab9db34a2a543618961c0095ecb8f865065516c341d063cba92aed2904b80aa0d0ef65df1b91c400f69d16defad787ff1ffb5edd09e37
     HEAD_REF master
 )
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/add-datetime-to-boost-libs.patch
-            ${CMAKE_CURRENT_LIST_DIR}/add-dbghelp-to-win32-libs.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LIBTORRENT_SHARED)
