@@ -36,7 +36,6 @@ set(SRCS librtmp/amf.c
          librtmp/log.c
          librtmp/parseurl.c
          librtmp/rtmp.c
-         librtmp/librtmp.def
 )
 
 if(MSVC)
@@ -54,4 +53,4 @@ install(TARGETS librtmp
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib)
 
-install(FILES librtmp/rtmp.h librtmp/amf.h DESTINATION include/librtmp)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/librtmp DESTINATION include FILES_MATCHING PATTERN "*.h")

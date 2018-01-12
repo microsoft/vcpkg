@@ -7,8 +7,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/flatbuffers
-    REF v1.7.1
-    SHA512 57732fc352c216c4be6d3237f93b872abf9dd2b62361d7d2856f99804a178760e4665ead2e33d5acdd00984ad03a746f581c9784ece583e1b2df1a10776f967a
+    REF v1.8.0
+    SHA512 8f6c84caa6456418fc751ea9de456dd37378b3239d1a41d2205140e7b19a5b8b2e342a22dc8d7fdd0c36878455e9d7401cc6438d3b771f7875e8fcfe7bbd52f1
     HEAD_REF master
 )
 
@@ -33,6 +33,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/flatbuffers")
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
