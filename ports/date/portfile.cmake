@@ -25,4 +25,11 @@ vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
+set(HEADER "${CURRENT_PACKAGES_DIR}/include/date/tz.h")
+file(READ "${HEADER}" _contents)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+  string(REPLACE "ifdef DATE_BUILD_DLL" "if 1" _contents "${_contents}")
+endif()
+file(WRITE "${HEADER}" "${_contents}")
+
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/date RENAME copyright)
