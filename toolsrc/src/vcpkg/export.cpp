@@ -251,6 +251,8 @@ namespace vcpkg::Export
         bool zip;
         bool seven_zip;
 
+        Optional<std::string> maybe_output;
+
         Optional<std::string> maybe_nuget_id;
         Optional<std::string> maybe_nuget_version;
 
@@ -258,6 +260,7 @@ namespace vcpkg::Export
         std::vector<PackageSpec> specs;
     };
 
+    static const std::string OPTION_OUTPUT = "--output";
     static const std::string OPTION_DRY_RUN = "--dry-run";
     static const std::string OPTION_RAW = "--raw";
     static const std::string OPTION_NUGET = "--nuget";
@@ -280,8 +283,9 @@ namespace vcpkg::Export
         {OPTION_ZIP, "Export to a zip file"},
         {OPTION_SEVEN_ZIP, "Export to a 7zip (.7z) file"},
     }};
-    static const std::array<CommandSetting, 7> EXPORT_SETTINGS = {{
-        {OPTION_NUGET_ID, "Specify the id for the exported NuGet package"},
+    static const std::array<CommandSetting, 8> EXPORT_SETTINGS = {{
+        {OPTION_OUTPUT, "Specify the output name (used to construct filename)"},
+        {OPTION_NUGET_ID, "Specify the id for the exported NuGet package (overrides " + OPTION_OUTPUT + ")"},
         {OPTION_NUGET_VERSION, "Specify the version for the exported NuGet package"},
         {OPTION_IFW_REPOSITORY_URL, "Specify the remote repository URL for the online installer"},
         {OPTION_IFW_PACKAGES_DIR_PATH, "Specify the temporary directory path for the repacked packages"},
@@ -315,6 +319,8 @@ namespace vcpkg::Export
         ret.ifw = options.switches.find(OPTION_IFW) != options.switches.cend();
         ret.zip = options.switches.find(OPTION_ZIP) != options.switches.cend();
         ret.seven_zip = options.switches.find(OPTION_SEVEN_ZIP) != options.switches.cend();
+
+        ret.maybe_output = maybe_lookup(options.settings, OPTION_OUTPUT);
 
         if (!ret.raw && !ret.nuget && !ret.ifw && !ret.zip && !ret.seven_zip && !ret.dry_run)
         {
@@ -520,7 +526,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        std::string export_id = create_export_id();
+        std::string export_id = opts.maybe_output.value_or(create_export_id());
 
         if (opts.raw || opts.nuget || opts.zip || opts.seven_zip)
         {
