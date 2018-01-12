@@ -14,8 +14,6 @@ add_library(tz src/tz.cpp)
 
 if(BUILD_SHARED_LIBS)
   target_compile_definitions(tz PRIVATE -DDATE_BUILD_DLL)
-else()
-  target_compile_definitions(tz PRIVATE -DDATE_BUILD_LIB)
 endif()
 
 install(
