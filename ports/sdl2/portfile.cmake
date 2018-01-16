@@ -1,15 +1,12 @@
 include(vcpkg_common_functions)
 
-set(SDL2_VERSION 2.0.7)
-set(SDL2_HASH eed5477843086a0e66552eb197a5c4929134522bc366d873732361ea0df5fb841ef7e2b1913e21d1bae69e6fd3152ee630492e615c58cbe903e7d6e47b587410)
-
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/SDL2-${SDL2_VERSION})
-vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "http://libsdl.org/release/SDL2-${SDL2_VERSION}.tar.gz"
-    FILENAME "SDL2-${SDL2_VERSION}.tar.gz"
-    SHA512 ${SDL2_HASH}
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO SDL-Mirror/SDL
+    REF release-2.0.7
+    SHA512 3667c7299d007e0438de90c6dd1f19ad9f30cf155c35792c40267bc74f8fe8acd1046ac918a104690ccba3faa2dbd86b37821a38c6c389179359b903209e2eb7
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
