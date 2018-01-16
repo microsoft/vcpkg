@@ -1,0 +1,24 @@
+diff --git a/src/libmpg123/mangle.h b/src/libmpg123/mangle.h
+index 6012ccc..bf37cd7 100644
+--- a/src/libmpg123/mangle.h
++++ b/src/libmpg123/mangle.h
+@@ -85,6 +85,10 @@
+ #define ASM_VALUE(a) MANGLE_MACROCAT($,a)
+ #endif
+ 
++#if defined(_WIN32) && !defined(_WIN64)
++#define OPT_X86
++#endif
++
+ /* Enable position-independent code for certain platforms. */
+ 
+ #if defined(OPT_X86)
+@@ -130,7 +134,7 @@ Lpic_base: \
+ /* Dummies for everyone else. */
+ #define LOCAL_VAR(a) a
+ #define GLOBAL_VAR ASM_NAME
+-#define GLOBAL_VAR_PTR(a) #error Cannot use indirect addressing in non-PIC object.
++#define GLOBAL_VAR_PTR(a) // #error Cannot use indirect addressing in non-PIC object.
+ #define FUNC ASM_NAME
+ #define EXTERNAL_FUNC ASM_NAME
+ #define GET_GOT
