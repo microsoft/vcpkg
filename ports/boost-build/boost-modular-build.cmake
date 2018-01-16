@@ -102,10 +102,25 @@ function(boost_modular_build)
         --ignore-site-config
         --hash
         -q
-
+        -sZLIB_INCLUDE="${CURRENT_INSTALLED_DIR}\\include"
+        -sBZIP2_INCLUDE="${CURRENT_INSTALLED_DIR}\\include"
         threadapi=win32
         threading=multi
     )
+    set(_bm_OPTIONS_DBG
+         -sZLIB_BINARY=zlibd
+         -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
+         -sBZIP2_BINARY=bz2d
+         -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
+    )
+ 
+    set(_bm_OPTIONS_REL
+         -sZLIB_BINARY=zlib
+         -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+         -sBZIP2_BINARY=bz2
+         -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+    )
+
 
     # Add build type specific options
     if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
@@ -176,6 +191,7 @@ function(boost_modular_build)
                 --build-dir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
                 --user-config=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/user-config.jam
                 ${_bm_OPTIONS}
+                ${_bm_OPTIONS_REL}
                 variant=release
                 debug-symbols=on
             WORKING_DIRECTORY ${_bm_SOURCE_PATH}
@@ -193,6 +209,7 @@ function(boost_modular_build)
                 --build-dir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
                 --user-config=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/user-config.jam
                 ${_bm_OPTIONS}
+                ${_bm_OPTIONS_DBG}
                 variant=debug
             WORKING_DIRECTORY ${_bm_SOURCE_PATH}
             LOGNAME build-${TARGET_TRIPLET}-dbg
