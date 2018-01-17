@@ -257,7 +257,7 @@ namespace vcpkg::Export
         IFW::Options ifw_options;
         std::vector<PackageSpec> specs;
     };
-
+    // Test change
     static const std::string OPTION_DRY_RUN = "--dry-run";
     static const std::string OPTION_RAW = "--raw";
     static const std::string OPTION_NUGET = "--nuget";
