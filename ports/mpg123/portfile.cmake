@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
-set(MPG123_VERSION 1.24.0)
-set(MPG123_HASH e7c0d7a103daf496e75a6aa6aca861cfc0ad391f242335990c2360305e567039d24ca3b37a35f79b75749055e255f4692b8b43d2fec332b119223b00e12b0cb7)
+set(MPG123_VERSION 1.25.8)
+set(MPG123_HASH f226317dddb07841a13753603fa13c0a867605a5a051626cb30d45cfba266d3d4296f5b8254f65b403bb5eef6addce1784ae8829b671a746854785cda1bad203)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mpg123-${MPG123_VERSION})
 
 #architecture detection
@@ -31,7 +31,9 @@ set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH} 
-    PATCHES "${CURRENT_PORT_DIR}/0001-fix-crt-linking.patch")
+    PATCHES
+        "${CURRENT_PORT_DIR}/0001-fix-crt-linking.patch"
+        "${CURRENT_PORT_DIR}/0002-fix-x86-build.patch")
 
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/libmpg123.vcxproj

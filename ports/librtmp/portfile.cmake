@@ -1,13 +1,13 @@
 include(vcpkg_common_functions)
 
-set(RTMPDUMP_VERSION 2.3)
-set(RTMPDUMP_FILENAME rtmpdump-${RTMPDUMP_VERSION}.tgz)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/rtmpdump-${RTMPDUMP_VERSION})
+set(RTMPDUMP_VERSION 2.4)
+set(RTMPDUMP_FILENAME rtmpdump-${RTMPDUMP_VERSION}.tar.gz)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/rtmpdump)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://rtmpdump.mplayerhq.hu/download/${RTMPDUMP_FILENAME}"
     FILENAME "${RTMPDUMP_FILENAME}"
-    SHA512 d8240ba372a704231286b81bbf75716d8b76874840538c4e1527f7f8b6ca66eeaba6b03167fe6fab06bf80f20f07d89ecb84cc428b3196234174a43f3328ec2a
+    SHA512 a6253af95492739366dce620a2a6cc6f4f18d7f12f9ef2c747240259066ca135beeb02091d0f3dd8380c0c294a30d3f702ad3fad1dee1db4e70473078fb81609
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
@@ -23,6 +23,7 @@ vcpkg_apply_patches(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()

@@ -1,13 +1,5 @@
-diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
-index 6ea1848..4134d7b 100644
 --- a/PCbuild/pythoncore.vcxproj
 +++ b/PCbuild/pythoncore.vcxproj
-@@ -1,4 +1,4 @@
--<?xml version="1.0" encoding="utf-8"?>
-+﻿<?xml version="1.0" encoding="utf-8"?>
- <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-   <ItemGroup Label="ProjectConfigurations">
-     <ProjectConfiguration Include="Debug|Win32">
 @@ -41,7 +41,7 @@
    <Import Project="python.props" />
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -17,7 +9,7 @@ index 6ea1848..4134d7b 100644
      <UseOfMfc>false</UseOfMfc>
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-@@ -66,12 +66,24 @@
+@@ -67,13 +67,25 @@
      <ClCompile>
        <AdditionalOptions>/Zm200  %(AdditionalOptions)</AdditionalOptions>
        <AdditionalIncludeDirectories>$(PySourcePath)Python;$(PySourcePath)Modules\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -26,6 +18,7 @@ index 6ea1848..4134d7b 100644
      </ClCompile>
      <Link>
        <AdditionalDependencies>version.lib;shlwapi.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(PySourcePath)PC\external\$(PlatformToolset)\$(ArchName)</AdditionalLibraryDirectories>
        <BaseAddress>0x1e000000</BaseAddress>
      </Link>
 +    <Lib>
