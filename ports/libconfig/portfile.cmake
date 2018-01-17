@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hyperrealm/libconfig
-    REF v1.7.1
-    SHA512 b58b468e9e2d5175fbde1ad9765c6604dc9b3f3944613a88404a45d0d232e7d79a47321bf3c06b97cb46a2104b4313fad5c7f8944149f550b7af51ad523e775e
+    REF v1.7.2
+    SHA512 9df57355c2d08381b4a0a6366f0db3633fbe8f73c2bb8c370c040b0bae96ce89ee4ac6c17a5a247fed855d890fa383e5b70cb5573fc9cfc62194d5b94e161cee
     HEAD_REF master
 )
 
