@@ -1,4 +1,0 @@
-Source: qt5networkauth
-Version: 5.9.2-0
-Description: Qt5 Network Authorization Module
-Build-Depends: qt5modularscripts, qt5base
