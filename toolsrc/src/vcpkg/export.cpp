@@ -283,9 +283,13 @@ namespace vcpkg::Export
         {OPTION_ZIP, "Export to a zip file"},
         {OPTION_SEVEN_ZIP, "Export to a 7zip (.7z) file"},
     }};
+
+    static const std::string EXPORT_SETTINGS_NUGET_ID_HELP_TEXT =
+        Strings::format("Specify the id for the exported NuGet package (overrides %s)", OPTION_OUTPUT);
+
     static const std::array<CommandSetting, 8> EXPORT_SETTINGS = {{
         {OPTION_OUTPUT, "Specify the output name (used to construct filename)"},
-        {OPTION_NUGET_ID, "Specify the id for the exported NuGet package (overrides " + OPTION_OUTPUT + ")"},
+        {OPTION_NUGET_ID, EXPORT_SETTINGS_NUGET_ID_HELP_TEXT},
         {OPTION_NUGET_VERSION, "Specify the version for the exported NuGet package"},
         {OPTION_IFW_REPOSITORY_URL, "Specify the remote repository URL for the online installer"},
         {OPTION_IFW_PACKAGES_DIR_PATH, "Specify the temporary directory path for the repacked packages"},
