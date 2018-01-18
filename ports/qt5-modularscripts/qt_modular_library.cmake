@@ -34,8 +34,6 @@ function(qt_modular_library NAME HASH)
     set(DEBUG_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
     set(RELEASE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
-    file(REMOVE_RECURSE "${DEBUG_DIR}" "${RELEASE_DIR}")
-
     #Find Python and add it to the path
     vcpkg_find_acquire_program(PYTHON2)
     get_filename_component(PYTHON2_EXE_PATH ${PYTHON2} DIRECTORY)
@@ -43,51 +41,14 @@ function(qt_modular_library NAME HASH)
 
     file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
     file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" NATIVE_PACKAGES_DIR)
-    
+
     string(SUBSTRING "${NATIVE_INSTALLED_DIR}" 2 -1 INSTALLED_DIR_WITHOUT_DRIVE)
     string(SUBSTRING "${NATIVE_PACKAGES_DIR}" 2 -1 PACKAGES_DIR_WITHOUT_DRIVE)
     
-    #Configure debug
-    vcpkg_configure_qmake_debug(
-        SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${SRCDIR_NAME}
-    )
+    #Configure debug+release
+    vcpkg_configure_qmake(SOURCE_PATH ${SOURCE_PATH})
 
-    #First generate the makefiles so we can modify them
-    vcpkg_build_qmake_debug(TARGETS qmake_all)
-
-    #Store debug makefiles path
-    file(GLOB_RECURSE DEBUG_MAKEFILES ${DEBUG_DIR}/*Makefile*)
-
-    foreach(DEBUG_MAKEFILE ${DEBUG_MAKEFILES})
-        file(READ "${DEBUG_MAKEFILE}" _contents)
-        string(REPLACE "zlib.lib" "zlibd.lib" _contents "${_contents}")
-        string(REPLACE "installed\\${TARGET_TRIPLET}\\lib" "installed\\${TARGET_TRIPLET}\\debug\\lib" _contents "${_contents}")
-        string(REPLACE "/LIBPATH:${NATIVE_INSTALLED_DIR}\\debug\\lib qtmaind.lib" "shell32.lib /LIBPATH:${NATIVE_INSTALLED_DIR}\\debug\\lib\\manual-link qtmaind.lib /LIBPATH:${NATIVE_INSTALLED_DIR}\\debug\\lib" _contents "${_contents}")
-        file(WRITE "${DEBUG_MAKEFILE}" "${_contents}")
-    endforeach()
-
-    #Build debug
-    vcpkg_build_qmake_debug()
-
-    #Configure release
-    vcpkg_configure_qmake_release(
-        SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${SRCDIR_NAME}
-    )
-
-    #First generate the makefiles so we can modify them
-    vcpkg_build_qmake_release(TARGETS qmake_all)
-
-    #Store release makefile path
-    file(GLOB_RECURSE RELEASE_MAKEFILES ${RELEASE_DIR}/*Makefile*)
-
-    foreach(RELEASE_MAKEFILE ${RELEASE_MAKEFILES})
-        file(READ "${RELEASE_MAKEFILE}" _contents)
-        string(REPLACE "/LIBPATH:${NATIVE_INSTALLED_DIR}\\lib qtmain.lib" "shell32.lib /LIBPATH:${NATIVE_INSTALLED_DIR}\\lib\\manual-link qtmain.lib /LIBPATH:${NATIVE_INSTALLED_DIR}\\lib" _contents "${_contents}")
-        file(WRITE "${RELEASE_MAKEFILE}" "${_contents}")
-    endforeach()
-    
-    #Build release
-    vcpkg_build_qmake_release()
+    vcpkg_build_qmake()
 
     #Fix the cmake files if they exist
     if(EXISTS ${RELEASE_DIR}/lib/cmake)
@@ -97,15 +58,16 @@ function(qt_modular_library NAME HASH)
             LOGNAME fix-cmake
         )
     endif()
-    
+
+    file(GLOB_RECURSE MAKEFILES ${DEBUG_DIR}/*Makefile* ${RELEASE_DIR}/*Makefile*)
+
     #Set the correct install directory to packages
-    foreach(MAKEFILE ${RELEASE_MAKEFILES} ${DEBUG_MAKEFILES})
+    foreach(MAKEFILE ${MAKEFILES})
         vcpkg_replace_string(${MAKEFILE} "(INSTALL_ROOT)${INSTALLED_DIR_WITHOUT_DRIVE}" "(INSTALL_ROOT)${PACKAGES_DIR_WITHOUT_DRIVE}")
     endforeach()
 
     #Install the module files
-    vcpkg_build_qmake_debug(TARGETS install)
-    vcpkg_build_qmake_release(TARGETS install)
+    vcpkg_build_qmake(TARGETS install SKIP_MAKEFILES BUILD_LOGNAME install)
 
     #Remove extra cmake files
     if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake)
