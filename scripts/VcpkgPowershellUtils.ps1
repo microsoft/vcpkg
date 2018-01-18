@@ -108,8 +108,7 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
     vcpkgRemoveItem $downloadPartPath
 
     $wc = New-Object System.Net.WebClient
-    $proxyAuth = !$wc.Proxy.IsBypassed($url)
-    if ($proxyAuth)
+    if (!$wc.Proxy.IsBypassed($url))
     {
         $wc.Proxy.Credentials = vcpkgGetCredentials
     }
