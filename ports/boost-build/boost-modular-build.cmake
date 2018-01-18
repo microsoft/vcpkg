@@ -1,4 +1,3 @@
-
 function(boost_modular_build)
     cmake_parse_arguments(_bm "" "SOURCE_PATH;REQUIREMENTS" "OPTIONS" ${ARGN})
 
@@ -21,7 +20,7 @@ function(boost_modular_build)
         list(APPEND _bm_OPTIONS windows-api=store)
     endif()
 
-    set(_bm_DIR ${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers)
+    set(_bm_DIR ${CURRENT_INSTALLED_DIR}/share/boost-build)
 
     if(EXISTS "${_bm_SOURCE_PATH}/Jamfile.v2")
         file(REMOVE_RECURSE "${_bm_SOURCE_PATH}/Jamfile.v2")
@@ -103,10 +102,25 @@ function(boost_modular_build)
         --ignore-site-config
         --hash
         -q
-
+        -sZLIB_INCLUDE="${CURRENT_INSTALLED_DIR}\\include"
+        -sBZIP2_INCLUDE="${CURRENT_INSTALLED_DIR}\\include"
         threadapi=win32
         threading=multi
     )
+    set(_bm_OPTIONS_DBG
+         -sZLIB_BINARY=zlibd
+         -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
+         -sBZIP2_BINARY=bz2d
+         -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
+    )
+ 
+    set(_bm_OPTIONS_REL
+         -sZLIB_BINARY=zlib
+         -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+         -sBZIP2_BINARY=bz2
+         -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+    )
+
 
     # Add build type specific options
     if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
@@ -177,6 +191,7 @@ function(boost_modular_build)
                 --build-dir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
                 --user-config=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/user-config.jam
                 ${_bm_OPTIONS}
+                ${_bm_OPTIONS_REL}
                 variant=release
                 debug-symbols=on
             WORKING_DIRECTORY ${_bm_SOURCE_PATH}
@@ -194,6 +209,7 @@ function(boost_modular_build)
                 --build-dir=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
                 --user-config=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/user-config.jam
                 ${_bm_OPTIONS}
+                ${_bm_OPTIONS_DBG}
                 variant=debug
             WORKING_DIRECTORY ${_bm_SOURCE_PATH}
             LOGNAME build-${TARGET_TRIPLET}-dbg
@@ -245,37 +261,12 @@ function(boost_modular_build)
         string(REPLACE "-a32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "_python3-" "_python-" NEW_FILENAME ${NEW_FILENAME})
-        if ("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
+        if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
             # nothing to do
-        elseif (EXISTS ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
+        elseif(EXISTS ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
             file(REMOVE ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME})
         else()
             file(RENAME ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME} ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
         endif()
     endforeach()
-endfunction()
-
-function(boost_modular_headers)
-    cmake_parse_arguments(_bm "" "SOURCE_PATH" "" ${ARGN})
-
-    if(NOT DEFINED _bm_SOURCE_PATH)
-        message(FATAL_ERROR "SOURCE_PATH is a required argument to boost_modular_headers.")
-    endif()
-
-    message(STATUS "Packaging headers")
-
-    file(
-        COPY ${_bm_SOURCE_PATH}/include/boost
-        DESTINATION ${CURRENT_PACKAGES_DIR}/include
-    )
-
-    message(STATUS "Packaging headers done")
-
-    vcpkg_download_distfile(ARCHIVE
-        URLS "https://raw.githubusercontent.com/boostorg/boost/boost-1.65.1/LICENSE_1_0.txt"
-        FILENAME "boost_LICENSE_1_0.txt"
-        SHA512 d6078467835dba8932314c1c1e945569a64b065474d7aced27c9a7acc391d52e9f234138ed9f1aa9cd576f25f12f557e0b733c14891d42c16ecdc4a7bd4d60b8
-    )
-
-    file(INSTALL ${ARCHIVE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 endfunction()

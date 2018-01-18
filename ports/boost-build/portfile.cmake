@@ -52,3 +52,14 @@ vcpkg_execute_required_process(
 
 file(INSTALL ${ARCHIVE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/boost-build RENAME copyright)
 file(INSTALL ${BOOSTCPP_ARCHIVE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/boost-build RENAME boostcpp.jam)
+
+
+
+file(
+    COPY
+        ${CMAKE_CURRENT_LIST_DIR}/boost-modular-build.cmake
+        ${CMAKE_CURRENT_LIST_DIR}/Jamroot.jam
+        ${CMAKE_CURRENT_LIST_DIR}/nothing.bat
+        ${CMAKE_CURRENT_LIST_DIR}/user-config.jam
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/boost-build
+)
