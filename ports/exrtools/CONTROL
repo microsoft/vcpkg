@@ -1,0 +1,4 @@
+Source: exrtools
+Version: 0.4
+Description: exrtools is a set of simple command-line utilities for manipulating with high dynamic range images in OpenEXR format
+Build-Depends: libjpeg-turbo, libpng, openexr, winsock2

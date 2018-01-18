@@ -1,0 +1,65 @@
+diff --git a/exrnormalize.c b/exrnormalize.c
+index 37c1ab5..77822d5 100644
+--- a/exrnormalize.c
++++ b/exrnormalize.c
+@@ -27,7 +27,7 @@
+ #include <stdint.h>
+ #include <string.h>
+ #include <limits.h>
+-#include <values.h>
++#include <float.h>
+ #include "exrinput.h"
+ #include "exroutput.h"
+ 
+diff --git a/exrpptm.c b/exrpptm.c
+index 21795e4..4cc2bbc 100644
+--- a/exrpptm.c
++++ b/exrpptm.c
+@@ -32,7 +32,7 @@
+ #include <stdlib.h>
+ #include <stdint.h>
+ #include <limits.h>
+-#include <values.h>
++#include <float.h>
+ #include <getopt.h>
+ #include "exrinput.h"
+ #include "exroutput.h"
+diff --git a/exrstats.c b/exrstats.c
+index 6b79bf2..a01d70c 100644
+--- a/exrstats.c
++++ b/exrstats.c
+@@ -24,7 +24,7 @@
+ 
+ #include <math.h>
+ #include <limits.h>
+-#include <values.h>
++#include <float.h>
+ #include <stdio.h>
+ #include "exrinput.h"
+ 
+diff --git a/pngoutput.c b/pngoutput.c
+index e08f4a6..54ad812 100644
+--- a/pngoutput.c
++++ b/pngoutput.c
+@@ -27,6 +27,7 @@
+ #include <errno.h>
+ #include <string.h>
+ #include <png.h>
++#include <zlib.h>
+ #include "pngoutput.h"
+ 
+ struct pngoutput_s
+diff --git a/ppmtoexr.c b/ppmtoexr.c
+index 14ae3b5..b9cef73 100644
+--- a/ppmtoexr.c
++++ b/ppmtoexr.c
+@@ -26,7 +26,8 @@
+ #include <stdlib.h>
+ #include <stdint.h>
+ #include <math.h>
+-#include <netinet/in.h>
++#define _WINSOCK_DEPRECATED_NO_WARNINGS
++#include <WinSock2.h>
+ #include "exroutput.h"
+ 
+ double voltage_to_intensity_rec709( double val )

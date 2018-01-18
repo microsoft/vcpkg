@@ -1,0 +1,12 @@
+diff --git a/IlmImf/ImfCRgbaFile.h b/IlmImf/ImfCRgbaFile.h
+index 5ac2bf8..059ab41 100644
+--- a/IlmImf/ImfCRgbaFile.h
++++ b/IlmImf/ImfCRgbaFile.h
+@@ -441,6 +441,7 @@ int	       	ImfTiledOutputLevelRoundingMode
+ struct ImfInputFile;
+ typedef struct ImfInputFile ImfInputFile;
+ 
++IMF_EXPORT 
+ ImfInputFile *		ImfOpenInputFile (const char name[]);
+ 
+ IMF_EXPORT 

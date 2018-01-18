@@ -10,7 +10,10 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/add-missing-export.patch)
+    PATCHES
+   ${CMAKE_CURRENT_LIST_DIR}/add-missing-export.patch
+   ${CMAKE_CURRENT_LIST_DIR}/forgotten_export.patch
+)
 
 # Ensure helper executables can run during build
 set(ENV{PATH} "$ENV{PATH};${CURRENT_INSTALLED_DIR}/bin")
