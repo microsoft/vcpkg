@@ -15,13 +15,14 @@ def get_github():
         jdoc = json.loads(doc)
         print("total count = {}".format(jdoc['total_count']))
         today = datetime.datetime.utcnow()
-        for item in jdoc['items'][:30]:
-            updated_at = item['updated_at']
-            dt_updated_at = datetime.datetime.strptime(updated_at, "%Y-%m-%dT%H:%M:%SZ")
-            if today - dt_updated_at > datetime.timedelta(days=3):
-                break
-            repo = item['repository_url'][29:]
-            githubdoc.append("""<div class="github"><div>{} comments</div><div>updated {}</div><div>{}</div><div><a href="{}">{}</a></div></div>""".format(item['comments'], updated_at, repo, item['html_url'], html.escape(item['title'])))
+        if 'items' in jdoc:
+            for item in jdoc['items'][:30]:
+                updated_at = item['updated_at']
+                dt_updated_at = datetime.datetime.strptime(updated_at, "%Y-%m-%dT%H:%M:%SZ")
+                if today - dt_updated_at > datetime.timedelta(days=3):
+                    break
+                repo = item['repository_url'][29:]
+                githubdoc.append("""<div class="github"><div>{} comments</div><div>updated {}</div><div>{}</div><div><a href="{}">{}</a></div></div>""".format(item['comments'], updated_at, repo, item['html_url'], html.escape(item['title'])))
 
     return "<h2>Github last 3 days ({} issues+PRs)</h2>{}".format(len(githubdoc), "".join(githubdoc))
 
