@@ -32,7 +32,7 @@ namespace vcpkg::Commands::Edit
         return output;
     }
 
-    static const std::string OPTION_BUILDTREES = "--buildtrees";
+    static constexpr StringLiteral OPTION_BUILDTREES = "--buildtrees";
 
     static std::vector<std::string> valid_arguments(const VcpkgPaths& paths)
     {
@@ -42,7 +42,7 @@ namespace vcpkg::Commands::Edit
                           [](auto&& pgh) -> std::string { return pgh->core_paragraph->name; });
     }
 
-    static const std::array<CommandSwitch, 1> EDIT_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 1> EDIT_SWITCHES = {{
         {OPTION_BUILDTREES, "Open editor into the port-specific buildtree subfolder"},
     }};
 

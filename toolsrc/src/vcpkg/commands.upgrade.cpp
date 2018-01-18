@@ -15,10 +15,10 @@ namespace vcpkg::Commands::Upgrade
     using Install::KeepGoing;
     using Install::to_keep_going;
 
-    static const std::string OPTION_NO_DRY_RUN = "--no-dry-run";
-    static const std::string OPTION_KEEP_GOING = "--keep-going";
+    static constexpr StringLiteral OPTION_NO_DRY_RUN = "--no-dry-run";
+    static constexpr StringLiteral OPTION_KEEP_GOING = "--keep-going";
 
-    static const std::array<CommandSwitch, 2> INSTALL_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 2> INSTALL_SWITCHES = {{
         {OPTION_NO_DRY_RUN, "Actually upgrade"},
         {OPTION_KEEP_GOING, "Continue installing packages on failure"},
     }};

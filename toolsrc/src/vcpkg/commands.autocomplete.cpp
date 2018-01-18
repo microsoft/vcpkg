@@ -136,8 +136,8 @@ namespace vcpkg::Commands::Autocomplete
                 const bool is_option = Strings::case_insensitive_ascii_starts_with(prefix, "-");
                 if (is_option)
                 {
-                    results =
-                        Util::fmap(command.structure.options.switches, [](const CommandSwitch& s) { return s.name; });
+                    results = Util::fmap(command.structure.options.switches,
+                                         [](const CommandSwitch& s) -> std::string { return s.name; });
 
                     auto settings = Util::fmap(command.structure.options.settings, [](auto&& s) { return s.name; });
                     results.insert(results.end(), settings.begin(), settings.end());
@@ -145,7 +145,9 @@ namespace vcpkg::Commands::Autocomplete
                 else
                 {
                     if (command.structure.valid_arguments != nullptr)
+                    {
                         results = command.structure.valid_arguments(paths);
+                    }
                 }
 
                 Util::unstable_keep_if(results, [&](const std::string& s) {

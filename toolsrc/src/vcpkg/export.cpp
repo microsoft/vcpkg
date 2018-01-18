@@ -1,5 +1,6 @@
 #include "pch.h"
 
+#include <vcpkg/base/stringliteral.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/commands.h>
@@ -260,22 +261,22 @@ namespace vcpkg::Export
         std::vector<PackageSpec> specs;
     };
 
-    static const std::string OPTION_OUTPUT = "--output";
-    static const std::string OPTION_DRY_RUN = "--dry-run";
-    static const std::string OPTION_RAW = "--raw";
-    static const std::string OPTION_NUGET = "--nuget";
-    static const std::string OPTION_IFW = "--ifw";
-    static const std::string OPTION_ZIP = "--zip";
-    static const std::string OPTION_SEVEN_ZIP = "--7zip";
-    static const std::string OPTION_NUGET_ID = "--nuget-id";
-    static const std::string OPTION_NUGET_VERSION = "--nuget-version";
-    static const std::string OPTION_IFW_REPOSITORY_URL = "--ifw-repository-url";
-    static const std::string OPTION_IFW_PACKAGES_DIR_PATH = "--ifw-packages-directory-path";
-    static const std::string OPTION_IFW_REPOSITORY_DIR_PATH = "--ifw-repository-directory-path";
-    static const std::string OPTION_IFW_CONFIG_FILE_PATH = "--ifw-configuration-file-path";
-    static const std::string OPTION_IFW_INSTALLER_FILE_PATH = "--ifw-installer-file-path";
+    static constexpr StringLiteral OPTION_OUTPUT = "--output";
+    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
+    static constexpr StringLiteral OPTION_RAW = "--raw";
+    static constexpr StringLiteral OPTION_NUGET = "--nuget";
+    static constexpr StringLiteral OPTION_IFW = "--ifw";
+    static constexpr StringLiteral OPTION_ZIP = "--zip";
+    static constexpr StringLiteral OPTION_SEVEN_ZIP = "--7zip";
+    static constexpr StringLiteral OPTION_NUGET_ID = "--nuget-id";
+    static constexpr StringLiteral OPTION_NUGET_VERSION = "--nuget-version";
+    static constexpr StringLiteral OPTION_IFW_REPOSITORY_URL = "--ifw-repository-url";
+    static constexpr StringLiteral OPTION_IFW_PACKAGES_DIR_PATH = "--ifw-packages-directory-path";
+    static constexpr StringLiteral OPTION_IFW_REPOSITORY_DIR_PATH = "--ifw-repository-directory-path";
+    static constexpr StringLiteral OPTION_IFW_CONFIG_FILE_PATH = "--ifw-configuration-file-path";
+    static constexpr StringLiteral OPTION_IFW_INSTALLER_FILE_PATH = "--ifw-installer-file-path";
 
-    static const std::array<CommandSwitch, 6> EXPORT_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 6> EXPORT_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually export"},
         {OPTION_RAW, "Export to an uncompressed directory"},
         {OPTION_NUGET, "Export a NuGet package"},
@@ -284,12 +285,9 @@ namespace vcpkg::Export
         {OPTION_SEVEN_ZIP, "Export to a 7zip (.7z) file"},
     }};
 
-    static const std::string EXPORT_SETTINGS_NUGET_ID_HELP_TEXT =
-        Strings::format("Specify the id for the exported NuGet package (overrides %s)", OPTION_OUTPUT);
-
-    static const std::array<CommandSetting, 8> EXPORT_SETTINGS = {{
+    static constexpr std::array<CommandSetting, 8> EXPORT_SETTINGS = {{
         {OPTION_OUTPUT, "Specify the output name (used to construct filename)"},
-        {OPTION_NUGET_ID, EXPORT_SETTINGS_NUGET_ID_HELP_TEXT},
+        {OPTION_NUGET_ID, "Specify the id for the exported NuGet package (overrides --output)"},
         {OPTION_NUGET_VERSION, "Specify the version for the exported NuGet package"},
         {OPTION_IFW_REPOSITORY_URL, "Specify the remote repository URL for the online installer"},
         {OPTION_IFW_PACKAGES_DIR_PATH, "Specify the temporary directory path for the repacked packages"},

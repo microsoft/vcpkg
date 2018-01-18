@@ -3,6 +3,7 @@
 #include <vcpkg/base/cstringview.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/span.h>
+#include <vcpkg/base/stringliteral.h>
 
 #include <memory>
 #include <unordered_map>
@@ -21,14 +22,24 @@ namespace vcpkg
 
     struct CommandSwitch
     {
-        std::string name;
-        CStringView short_help_text;
+        constexpr CommandSwitch(const StringLiteral& name, const StringLiteral& short_help_text)
+            : name(name), short_help_text(short_help_text)
+        {
+        }
+
+        StringLiteral name;
+        StringLiteral short_help_text;
     };
 
     struct CommandSetting
     {
-        std::string name;
-        CStringView short_help_text;
+        constexpr CommandSetting(const StringLiteral& name, const StringLiteral& short_help_text)
+            : name(name), short_help_text(short_help_text)
+        {
+        }
+
+        StringLiteral name;
+        StringLiteral short_help_text;
     };
 
     struct CommandOptionsStructure
