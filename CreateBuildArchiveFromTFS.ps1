@@ -1,10 +1,11 @@
 [CmdletBinding()]
 param(
     [string]$destinationRoot = ".",
+    [string]$tfsBranch = "WinC",
     [Parameter(ParameterSetName='SetLatest')]
     [switch]$latest,
-    [Parameter(ParameterSetName='SetWinCBuildNumber')]
-    [string]$winCbuildNumber
+    [Parameter(ParameterSetName='SetBuildNumber')]
+    [string]$buildNumber
 )
 
 function FormatElapsedTime([TimeSpan]$ts)
@@ -52,11 +53,11 @@ $destinationRoot = $destinationRoot -replace "\\$"  # Remove potential trailing 
 
 if ($latest)
 {
-    $wincBuildRoot = "\\vcfs\Builds\VS\feature_WinC"
-    $winCbuildNumber = Get-Content "$wincBuildRoot\latest.txt"
+    $buildRoot = "\\vcfs\Builds\VS\feature_$tfsBranch"
+    $buildNumber = Get-Content "$buildRoot\latest.txt"
 }
 
-$buildId = "WinC-$winCbuildNumber"
+$buildId = "$tfsBranch-$buildNumber"
 $sevenZip = "$destinationRoot\$buildId.7z"
 if (Test-Path $sevenZip)
 {
@@ -64,7 +65,7 @@ if (Test-Path $sevenZip)
     return
 }
 
-$from = "$wincBuildRoot\$winCbuildNumber"
+$from = "$buildRoot\$buildNumber"
 $to = "$destinationRoot\$buildId"
 
 $toCompleted = "$to.copycompleted"
