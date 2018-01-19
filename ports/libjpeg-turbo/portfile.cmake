@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjpeg-turbo/libjpeg-turbo
-    REF 1.5.2
-    SHA512 43f0c3e8c87bef4f0010827fd3c245df2467c0a6c714d2984284d3a64f933d06bbffc9fb893c8f3f2cd7f8fce2702cf39074c34e5bf370d90d1ca0d03c803590
+    REF 1.5.3
+    SHA512 0e7a2cd9943b610f49b562c20a5c350a50326a87bce1d39f14fe45760ed2f89a0d2d3e3f0de9f6a7714f566aabadec6b2422b592591ebb98bbad600ea411fea7
     HEAD_REF master
 )
 
