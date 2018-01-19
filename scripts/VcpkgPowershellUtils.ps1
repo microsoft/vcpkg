@@ -171,7 +171,7 @@ function vcpkgInvokeCommand()
                                         [switch]$wait)
 
     Write-Verbose "Executing: ${executable} ${arguments}"
-    $process = Start-Process -FilePath $executable -ArgumentList $arguments -PassThru
+    $process = Start-Process -FilePath $executable -ArgumentList $arguments -PassThru -NoNewWindow
     if ($wait)
     {
         Wait-Process -InputObject $process
