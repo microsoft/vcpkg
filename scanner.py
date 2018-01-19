@@ -15,7 +15,7 @@ def get_github():
         jdoc = json.loads(doc)
         print("total count = {}".format(jdoc['total_count']))
         today = datetime.datetime.utcnow()
-        if 'items' in jdoc:
+        try:
             for item in jdoc['items'][:30]:
                 updated_at = item['updated_at']
                 dt_updated_at = datetime.datetime.strptime(updated_at, "%Y-%m-%dT%H:%M:%SZ")
@@ -23,6 +23,8 @@ def get_github():
                     break
                 repo = item['repository_url'][29:]
                 githubdoc.append("""<div class="github"><div>{} comments</div><div>updated {}</div><div>{}</div><div><a href="{}">{}</a></div></div>""".format(item['comments'], updated_at, repo, item['html_url'], html.escape(item['title'])))
+        except:
+            githubdoc.append("<div>{}</div>".format(html.escape(sys.exc_info())))
 
     return "<h2>Github last 3 days ({} issues+PRs)</h2>{}".format(len(githubdoc), "".join(githubdoc))
 
@@ -31,8 +33,11 @@ def get_google():
 
     with urllib.request.urlopen('https://www.googleapis.com/customsearch/v1?key=AIzaSyAgDJeOcCtOgYSLPboFLf_3SsV9TqSYTFE&cx=016162264654347836401:8cwjt4hwu-k&q=vcpkg+-site:github.com&dateRestrict=d5&exactTerms=vcpkg') as res:
         jdoc = json.loads(res.read().decode('utf-8'))
-        for item in jdoc['items'][:30]:
-            googledoc.append("""<div class="google"><div><a href="{}">{}</a></div><div>{}</div></div>""".format(item['htmlFormattedUrl'], item['htmlTitle'][:120], item['htmlSnippet']))
+        try:
+            for item in jdoc['items'][:30]:
+                googledoc.append("""<div class="google"><div><a href="{}">{}</a></div><div>{}</div></div>""".format(item['htmlFormattedUrl'], item['htmlTitle'][:120], item['htmlSnippet']))
+        except:
+            googledoc.append("<div>{}</div>".format(html.escape(sys.exc_info())))
 
     return "<h2>Google last 4 days ({} hits)</h2>{}".format(len(googledoc), "".join(googledoc))
 
@@ -46,9 +51,12 @@ def get_stackoverflow():
         doc1 = res.read()
         doc = gzip.decompress(doc1)
         jdoc = json.loads(doc.decode('utf-8'))
-        for item in jdoc['items'][:30]:
-            activitydate = datetime.datetime.fromtimestamp(int(item['last_activity_date'])).isoformat()
-            stackdoc.append("""<div class="stacko"><div><a href="{}">{}</a></div><div>Last Activity: {}</div><div>views: {}</div></div>""".format(item['link'], html.escape(item['title']), activitydate, item['view_count']))
+        try:
+            for item in jdoc['items'][:30]:
+                activitydate = datetime.datetime.fromtimestamp(int(item['last_activity_date'])).isoformat()
+                stackdoc.append("""<div class="stacko"><div><a href="{}">{}</a></div><div>Last Activity: {}</div><div>views: {}</div></div>""".format(item['link'], html.escape(item['title']), activitydate, item['view_count']))
+        except:
+            stackdoc.append("<div>{}</div>".format(html.escape(sys.exc_info())))
     return "<h2>Stackoverflow last 14 days ({} posts)</h2>{}".format(len(stackdoc), "".join(stackdoc))
 
 stackodoc = get_stackoverflow()
