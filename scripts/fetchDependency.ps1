@@ -75,9 +75,12 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         throw "Unknown program requested"
     }
 
-    Write-Host "Downloading $Dependency..."
-    vcpkgDownloadFile $url $downloadPath
-    Write-Host "Downloading $Dependency has completed successfully."
+    if (!(Test-Path $downloadPath))
+    {
+        Write-Host "Downloading $Dependency..."
+        vcpkgDownloadFile $url $downloadPath
+        Write-Host "Downloading $Dependency has completed successfully."
+    }
 
     $downloadedFileHash = vcpkgGetSHA256 $downloadPath
     vcpkgCheckEqualFileHash -filePath $downloadPath -expectedHash $expectedDownloadedFileHash -actualHash $downloadedFileHash
