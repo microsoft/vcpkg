@@ -164,13 +164,13 @@ namespace vcpkg::Remove
         }
     }
 
-    static const std::string OPTION_PURGE = "--purge";
-    static const std::string OPTION_NO_PURGE = "--no-purge";
-    static const std::string OPTION_RECURSE = "--recurse";
-    static const std::string OPTION_DRY_RUN = "--dry-run";
-    static const std::string OPTION_OUTDATED = "--outdated";
+    static constexpr StringLiteral OPTION_PURGE = "--purge";
+    static constexpr StringLiteral OPTION_NO_PURGE = "--no-purge";
+    static constexpr StringLiteral OPTION_RECURSE = "--recurse";
+    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
+    static constexpr StringLiteral OPTION_OUTDATED = "--outdated";
 
-    static const std::array<CommandSwitch, 5> SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 5> SWITCHES = {{
         {OPTION_PURGE, "Remove the cached copy of the package (default)"},
         {OPTION_NO_PURGE, "Do not remove the cached copy of the package"},
         {OPTION_RECURSE, "Allow removal of packages not explicitly specified on the command line"},

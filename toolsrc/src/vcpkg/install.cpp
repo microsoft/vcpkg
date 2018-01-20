@@ -413,21 +413,21 @@ namespace vcpkg::Install
         return InstallSummary{std::move(results), timer.to_string()};
     }
 
-    static const std::string OPTION_DRY_RUN = "--dry-run";
-    static const std::string OPTION_USE_HEAD_VERSION = "--head";
-    static const std::string OPTION_NO_DOWNLOADS = "--no-downloads";
-    static const std::string OPTION_RECURSE = "--recurse";
-    static const std::string OPTION_KEEP_GOING = "--keep-going";
-    static const std::string OPTION_XUNIT = "--x-xunit";
+    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
+    static constexpr StringLiteral OPTION_USE_HEAD_VERSION = "--head";
+    static constexpr StringLiteral OPTION_NO_DOWNLOADS = "--no-downloads";
+    static constexpr StringLiteral OPTION_RECURSE = "--recurse";
+    static constexpr StringLiteral OPTION_KEEP_GOING = "--keep-going";
+    static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
 
-    static const std::array<CommandSwitch, 5> INSTALL_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 5> INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
         {OPTION_NO_DOWNLOADS, "Do not download new sources"},
         {OPTION_RECURSE, "Allow removal of packages as part of installation"},
         {OPTION_KEEP_GOING, "Continue installing packages on failure"},
     }};
-    static const std::array<CommandSetting, 1> INSTALL_SETTINGS = {{
+    static constexpr std::array<CommandSetting, 1> INSTALL_SETTINGS = {{
         {OPTION_XUNIT, "File to output results in XUnit format (Internal use)"},
     }};
 
