@@ -22,7 +22,7 @@ function Generate()
     $sanitizedName = $name -replace "_","-"
 
     $versionsuffix = ""
-    if ($Name -eq "test" -or $Name -eq "python")
+    if ($Name -eq "test" -or $Name -eq "python" -or $Name -eq "asio")
     {
         $versionsuffix = "-1"
     }
@@ -324,6 +324,10 @@ foreach ($library in $libraries)
         elseif ($library -eq "iostreams")
         {
             $deps += @("zlib", "bzip2")
+        }
+        elseif ($library -eq "asio")
+        {
+            $deps += @("openssl")
         }
 
         Generate `
