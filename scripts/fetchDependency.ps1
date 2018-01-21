@@ -75,7 +75,9 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         throw "Unknown program requested"
     }
 
+    Write-Host "Downloading $Dependency..."
     vcpkgDownloadFile $url $downloadPath
+    Write-Host "Downloading $Dependency has completed successfully."
 
     $downloadedFileHash = vcpkgGetSHA256 $downloadPath
     vcpkgCheckEqualFileHash -filePath $downloadPath -expectedHash $expectedDownloadedFileHash -actualHash $downloadedFileHash
@@ -89,7 +91,9 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         if (-not (Test-Path $executableFromDownload))
         {
             $outFilename = (Get-ChildItem $downloadPath).BaseName
+            Write-Host "Extracting $Dependency..."
             vcpkgExtractFile -File $downloadPath -DestinationDir $downloadsDir -outFilename $outFilename
+            Write-Host "Extracting $Dependency has completed successfully."
         }
     }
     elseif($extractionType -eq $ExtractionType_SELF_EXTRACTING_7Z)

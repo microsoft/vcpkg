@@ -94,11 +94,6 @@ function vcpkgCheckEqualFileHash(   [Parameter(Mandatory=$true)][string]$filePat
     }
 }
 
-if (vcpkgHasModule -moduleName 'BitsTransfer')
-{
-   Import-Module BitsTransfer -Verbose:$false
-}
-
 function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
                             [Parameter(Mandatory=$true)][string]$downloadPath)
 {
@@ -113,34 +108,11 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
     vcpkgRemoveItem $downloadPartPath
 
     $wc = New-Object System.Net.WebClient
-    $proxyAuth = !$wc.Proxy.IsBypassed($url)
-    if ($proxyAuth)
+    if (!$wc.Proxy.IsBypassed($url))
     {
         $wc.Proxy.Credentials = vcpkgGetCredentials
     }
 
-    # Some download (e.g. git from github)fail with Start-BitsTransfer
-    if (vcpkgHasCommand -commandName 'Start-BitsTransfer')
-    {
-        try
-        {
-            if ($proxyAuth)
-            {
-                $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyAuthentication","Basic")
-                $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyCredential", $wc.Proxy.Credentials)
-            }
-            Start-BitsTransfer -Source $url -Destination $downloadPartPath -ErrorAction Stop
-            Move-Item -Path $downloadPartPath -Destination $downloadPath
-            return
-        }
-        catch [System.Exception]
-        {
-            # If BITS fails for any reason, delete any potentially partially downloaded files and continue
-            vcpkgRemoveItem $downloadPartPath
-        }
-    }
-
-    Write-Verbose("Downloading $Dependency...")
     $wc.DownloadFile($url, $downloadPartPath)
     Move-Item -Path $downloadPartPath -Destination $downloadPath
 }

@@ -151,6 +151,7 @@
     <ClInclude Include="..\include\vcpkg\base\optional.h" />
     <ClInclude Include="..\include\vcpkg\base\sortedvector.h" />
     <ClInclude Include="..\include\vcpkg\base\span.h" />
+    <ClInclude Include="..\include\vcpkg\base\stringliteral.h" />
     <ClInclude Include="..\include\vcpkg\base\strings.h" />
     <ClInclude Include="..\include\vcpkg\base\system.h" />
     <ClInclude Include="..\include\vcpkg\base\util.h" />

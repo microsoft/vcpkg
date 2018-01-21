@@ -1,15 +1,3 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/QScintilla_gpl-2.10)
 vcpkg_download_distfile(ARCHIVE
@@ -31,52 +19,52 @@ set(BUILD_OPTIONS
     CONFIG-=hide_symbols
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(BUILD_OPTIONS
-        ${BUILD_OPTIONS}
-        CONFIG+=staticlib
-    )
-endif()
+SET(ENV{PATH} "$ENV{PATH};${CURRENT_INSTALLED_DIR}/bin;${CURRENT_INSTALLED_DIR}/debug/bin")
+
+#Store build paths
+set(DEBUG_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+set(RELEASE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
 vcpkg_configure_qmake(
-    SOURCE_PATH "${SOURCE_PATH}/Qt4Qt5"
+    SOURCE_PATH ${SOURCE_PATH}/Qt4Qt5
     OPTIONS
-        ${BUILD_OPTIONS}
+        CONFIG+=build_all
+        CONFIG-=hide_symbols
 )
 
-vcpkg_build_qmake()
-
-set(BUILD_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
+vcpkg_build_qmake(
+    RELEASE_TARGETS release
+    DEBUG_TARGETS debug
+)
 
 file(GLOB HEADER_FILES ${SOURCE_PATH}/Qt4Qt5/Qsci/*)
 file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/Qsci)
 
 file(INSTALL
-    ${BUILD_DIR}/release/qscintilla2_qt5.lib
+    ${RELEASE_DIR}/release/qscintilla2_qt5.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib
     RENAME qscintilla2.lib
 )
 
 file(INSTALL
-    ${BUILD_DIR}/debug/qscintilla2_qt5.lib
+    ${DEBUG_DIR}/debug/qscintilla2_qt5.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
     RENAME qscintilla2.lib
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
    file(INSTALL
-       ${BUILD_DIR}/release/qscintilla2_qt5.dll
+       ${RELEASE_DIR}/release/qscintilla2_qt5.dll
        DESTINATION ${CURRENT_PACKAGES_DIR}/bin
     )
 
     file(INSTALL
-        ${BUILD_DIR}/debug/qscintilla2_qt5.dll
+        ${DEBUG_DIR}/debug/qscintilla2_qt5.dll
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
     )
+endif()
 
 vcpkg_copy_pdbs()
-
-endif()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/qscintilla)

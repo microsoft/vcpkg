@@ -341,5 +341,8 @@
     <ClInclude Include="..\include\vcpkg\userconfig.h">
       <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\vcpkg\base\stringliteral.h">
+      <Filter>Header Files\vcpkg\base</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

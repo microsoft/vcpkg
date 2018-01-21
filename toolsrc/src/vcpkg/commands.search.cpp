@@ -10,8 +10,9 @@
 
 namespace vcpkg::Commands::Search
 {
-    static const std::string OPTION_GRAPH = "--graph";          // TODO: This should find a better home, eventually
-    static const std::string OPTION_FULLDESC = "--x-full-desc"; // TODO: This should find a better home, eventually
+    static constexpr StringLiteral OPTION_GRAPH = "--graph"; // TODO: This should find a better home, eventually
+    static constexpr StringLiteral OPTION_FULLDESC =
+        "--x-full-desc"; // TODO: This should find a better home, eventually
 
     static std::string replace_dashes_with_underscore(const std::string& input)
     {
@@ -79,7 +80,7 @@ namespace vcpkg::Commands::Search
         }
     }
 
-    static std::array<CommandSwitch, 2> SEARCH_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 2> SEARCH_SWITCHES = {{
         {OPTION_GRAPH, "Open editor into the port-specific buildtree subfolder"},
         {OPTION_FULLDESC, "Do not truncate long text"},
     }};

@@ -1,3 +1,3 @@
 Source: boost-vcpkg-helpers
-Version: 3
+Version: 4
 Description: a set of vcpkg-internal scripts used to modularize boost

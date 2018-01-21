@@ -7,7 +7,8 @@
 
 namespace vcpkg::Commands::List
 {
-    static const std::string OPTION_FULLDESC = "--x-full-desc"; // TODO: This should find a better home, eventually
+    static constexpr StringLiteral OPTION_FULLDESC =
+        "--x-full-desc"; // TODO: This should find a better home, eventually
 
     static void do_print(const StatusParagraph& pgh, bool full_desc)
     {
@@ -24,7 +25,7 @@ namespace vcpkg::Commands::List
         }
     }
 
-    static const std::array<CommandSwitch, 1> LIST_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 1> LIST_SWITCHES = {{
         {OPTION_FULLDESC, "Do not truncate long text"},
     }};
 

@@ -31,7 +31,9 @@ set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH} 
-    PATCHES "${CURRENT_PORT_DIR}/0001-fix-crt-linking.patch")
+    PATCHES
+        "${CURRENT_PORT_DIR}/0001-fix-crt-linking.patch"
+        "${CURRENT_PORT_DIR}/0002-fix-x86-build.patch")
 
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/libmpg123.vcxproj
