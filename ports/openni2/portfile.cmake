@@ -205,6 +205,10 @@ file(
         ${CURRENT_PACKAGES_DIR}/tools/openni2
 )
 
+# Deploy Script
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/openni2deploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/openni2deploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openni2)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/openni2/LICENSE ${CURRENT_PACKAGES_DIR}/share/openni2/copyright)
