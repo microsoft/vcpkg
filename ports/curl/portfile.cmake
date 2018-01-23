@@ -20,6 +20,12 @@ else()
     SET(CURL_STATICLIB ON)
 endif()
 
+set(USE_OPENSSL ON)
+if(CURL_USE_WINSSL)
+    set(USE_OPENSSL OFF)
+    set(USE_WINSSL ON)
+endif()
+
 set(UWP_OPTIONS)
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(UWP_OPTIONS
@@ -43,7 +49,8 @@ vcpkg_configure_cmake(
         -DBUILD_CURL_EXE=OFF
         -DENABLE_MANUAL=OFF
         -DCURL_STATICLIB=${CURL_STATICLIB}
-        -DCMAKE_USE_OPENSSL=ON
+        -DCMAKE_USE_OPENSSL=${USE_OPENSSL}
+        -DCMAKE_USE_WINSSL=${USE_WINSSL}
     OPTIONS_DEBUG
         -DENABLE_DEBUG=ON
 )
