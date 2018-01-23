@@ -5,6 +5,7 @@ param(
 )
 
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
+. "$scriptsDir\VcpkgPowershellUtils.ps1"
 $vcpkgRootDir = & $scriptsDir\findFileRecursivelyUp.ps1 $scriptsDir .vcpkg-root
 Write-Verbose("vcpkg Path " + $vcpkgRootDir)
 
@@ -52,9 +53,11 @@ try
     "/p:PlatformToolset=$platformToolset",
     "/p:TargetPlatformVersion=$windowsSDK",
     "/m",
-    "dirs.proj")
+    "dirs.proj") -join " "
 
-    & $msbuildExe $arguments
+    # vcpkgInvokeCommandClean cmd "/c echo %PATH%" -wait:$true
+    vcpkgInvokeCommandClean $msbuildExe $arguments -wait:$true
+
     if ($LASTEXITCODE -ne 0)
     {
         Write-Error "Building vcpkg.exe failed. Please ensure you have installed Visual Studio with the Desktop C++ workload and the Windows SDK for Desktop C++."
