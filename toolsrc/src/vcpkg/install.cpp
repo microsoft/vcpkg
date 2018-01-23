@@ -649,10 +649,9 @@ namespace vcpkg::Install
         if (action)
             if (auto p_install_plan = action->install_action.get())
             {
-                if (auto p_status = p_install_plan->status_paragraphs.get())
+                if (auto p_status = p_install_plan->installed_package.get())
                 {
-                    Checks::check_exit(VCPKG_LINE_INFO, p_status->size() > 0);
-                    return &(*p_status->begin())->package;
+                    return &p_status->core->package;
                 }
             }
         return nullptr;

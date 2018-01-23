@@ -44,4 +44,19 @@ namespace vcpkg
     std::string to_string(InstallState f);
 
     std::string to_string(Want f);
+
+    struct InstalledPackageView
+    {
+        InstalledPackageView() : core(nullptr) {}
+
+        InstalledPackageView(const StatusParagraph* c, std::vector<const StatusParagraph*>&& fs)
+            : core(c), features(std::move(fs))
+        {
+        }
+
+        std::vector<PackageSpec> dependencies() const;
+
+        const StatusParagraph* core;
+        std::vector<const StatusParagraph*> features;
+    };
 }

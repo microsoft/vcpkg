@@ -38,7 +38,7 @@ namespace vcpkg::Dependencies
         InstallPlanAction();
 
         InstallPlanAction(const PackageSpec& spec,
-                          std::vector<const StatusParagraph*>&& spghs,
+                          InstalledPackageView&& spghs,
                           const std::unordered_set<std::string>& features,
                           const RequestType& request_type);
 
@@ -52,7 +52,7 @@ namespace vcpkg::Dependencies
         PackageSpec spec;
 
         Optional<const SourceControlFile&> source_control_file;
-        Optional<std::vector<const StatusParagraph*>> status_paragraphs;
+        Optional<InstalledPackageView> installed_package;
 
         InstallPlanType plan_type;
         RequestType request_type;
@@ -103,7 +103,7 @@ namespace vcpkg::Dependencies
 
         ExportPlanAction();
         ExportPlanAction(const PackageSpec& spec,
-                         std::vector<const StatusParagraph*>&& status_paragraphs,
+                         InstalledPackageView&& installed_package,
                          const RequestType& request_type);
 
         ExportPlanAction(const PackageSpec& spec, const RequestType& request_type);
@@ -116,7 +116,7 @@ namespace vcpkg::Dependencies
         std::vector<PackageSpec> dependencies(const Triplet& triplet) const;
 
     private:
-        std::vector<const StatusParagraph*> m_spghs;
+        Optional<InstalledPackageView> m_installed_package;
     };
 
     struct PortFileProvider

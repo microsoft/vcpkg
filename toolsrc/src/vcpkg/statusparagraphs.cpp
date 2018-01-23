@@ -27,22 +27,27 @@ namespace vcpkg
         return spghs;
     }
 
-    std::vector<const std::unique_ptr<StatusParagraph>*> StatusParagraphs::find_all_installed(
-        const PackageSpec& spec) const
+    Optional<InstalledPackageView> StatusParagraphs::find_all_installed(const PackageSpec& spec) const
     {
-        std::vector<const std::unique_ptr<StatusParagraph>*> spghs;
+        InstalledPackageView ipv;
         for (auto&& p : *this)
         {
             if (p->package.spec.name() == spec.name() && p->package.spec.triplet() == spec.triplet() &&
                 p->is_installed())
             {
                 if (p->package.feature.empty())
-                    spghs.emplace(spghs.begin(), &p);
+                {
+                    Checks::check_exit(VCPKG_LINE_INFO, ipv.core == nullptr);
+                    ipv.core = p.get();
+                }
                 else
-                    spghs.emplace_back(&p);
+                    ipv.features.emplace_back(p.get());
             }
         }
-        return spghs;
+        if (ipv.core != nullptr)
+            return std::move(ipv);
+        else
+            return nullopt;
     }
 
     StatusParagraphs::iterator StatusParagraphs::find(const std::string& name,
