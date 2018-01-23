@@ -1,5 +1,7 @@
 # Proposal: Features / Feature packages (Feb 23 2017)
 
+**Note: this is the proposal as it was initially accepted and does not neccessarily reflect the current behavior.**
+
 ## 1. Motivation
 
 ### A. OpenCV + CUDA
