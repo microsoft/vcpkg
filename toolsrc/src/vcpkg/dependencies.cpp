@@ -743,29 +743,29 @@ namespace vcpkg::Dependencies
             });
         };
 
-        if (excluded.size() > 0)
+        if (!excluded.empty())
         {
             System::println("The following packages are excluded:\n%s", actions_to_output_string(excluded));
         }
 
-        if (already_installed_plans.size() > 0)
+        if (!already_installed_plans.empty())
         {
             System::println("The following packages are already installed:\n%s",
                             actions_to_output_string(already_installed_plans));
         }
 
-        if (rebuilt_plans.size() > 0)
+        if (!rebuilt_plans.empty())
         {
             System::println("The following packages will be rebuilt:\n%s", actions_to_output_string(rebuilt_plans));
         }
 
-        if (new_plans.size() > 0)
+        if (!new_plans.empty())
         {
             System::println("The following packages will be built and installed:\n%s",
                             actions_to_output_string(new_plans));
         }
 
-        if (only_install_plans.size() > 0)
+        if (!only_install_plans.empty())
         {
             System::println("The following packages will be directly installed:\n%s",
                             actions_to_output_string(only_install_plans));
@@ -774,7 +774,7 @@ namespace vcpkg::Dependencies
         if (has_non_user_requested_packages)
             System::println("Additional packages (*) will be modified to complete this operation.");
 
-        if (remove_plans.size() > 0 && !is_recursive)
+        if (!remove_plans.empty() && !is_recursive)
         {
             System::println(System::Color::warning,
                             "If you are sure you want to rebuild the above packages, run the command with the "
