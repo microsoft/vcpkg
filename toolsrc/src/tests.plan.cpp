@@ -41,7 +41,7 @@ namespace UnitTest1
 
         Assert::AreEqual(plan.spec.triplet().to_string().c_str(), triplet.to_string().c_str());
 
-        Assert::AreEqual(pkg_name.c_str(), plan.any_paragraph.source_control_file.get()->core_paragraph->name.c_str());
+        Assert::AreEqual(pkg_name.c_str(), plan.source_control_file.get()->core_paragraph->name.c_str());
         Assert::AreEqual(size_t(vec.size()), feature_list.size());
 
         for (auto&& feature_name : vec)

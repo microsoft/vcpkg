@@ -385,7 +385,7 @@ namespace vcpkg::Export
                         "    %s"
                         "\n",
                         cmake_variable.s);
-    };
+    }
 
     static void handle_raw_based_export(Span<const ExportPlanAction> export_plan,
                                         const ExportArguments& opts,
@@ -410,8 +410,7 @@ namespace vcpkg::Export
             const std::string display_name = action.spec.to_string();
             System::println("Exporting package %s... ", display_name);
 
-            const BinaryParagraph& binary_paragraph =
-                action.any_paragraph.binary_control_file.value_or_exit(VCPKG_LINE_INFO).core_paragraph;
+            const BinaryParagraph& binary_paragraph = action.core_paragraph().value_or_exit(VCPKG_LINE_INFO);
 
             const InstallDir dirs = InstallDir::from_destination_root(
                 raw_exported_dir_path / "installed",

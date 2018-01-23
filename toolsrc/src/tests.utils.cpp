@@ -13,7 +13,6 @@ namespace Microsoft::VisualStudio::CppUnitTestFramework
         {
             case Dependencies::InstallPlanType::ALREADY_INSTALLED: return L"ALREADY_INSTALLED";
             case Dependencies::InstallPlanType::BUILD_AND_INSTALL: return L"BUILD_AND_INSTALL";
-            case Dependencies::InstallPlanType::INSTALL: return L"INSTALL";
             case Dependencies::InstallPlanType::EXCLUDED: return L"EXCLUDED";
             case Dependencies::InstallPlanType::UNKNOWN: return L"UNKNOWN";
             default: return ToString(static_cast<int>(t));

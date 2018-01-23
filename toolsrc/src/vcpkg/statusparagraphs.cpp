@@ -18,7 +18,28 @@ namespace vcpkg
         {
             if (p->package.spec.name() == name && p->package.spec.triplet() == triplet)
             {
-                spghs.emplace_back(&p);
+                if (p->package.feature.empty())
+                    spghs.emplace(spghs.begin(), &p);
+                else
+                    spghs.emplace_back(&p);
+            }
+        }
+        return spghs;
+    }
+
+    std::vector<const std::unique_ptr<StatusParagraph>*> StatusParagraphs::find_all_installed(
+        const PackageSpec& spec) const
+    {
+        std::vector<const std::unique_ptr<StatusParagraph>*> spghs;
+        for (auto&& p : *this)
+        {
+            if (p->package.spec.name() == spec.name() && p->package.spec.triplet() == spec.triplet() &&
+                p->is_installed())
+            {
+                if (p->package.feature.empty())
+                    spghs.emplace(spghs.begin(), &p);
+                else
+                    spghs.emplace_back(&p);
             }
         }
         return spghs;
