@@ -678,7 +678,7 @@ namespace vcpkg::Dependencies
     }
 
     PackageGraph::PackageGraph(const PortFileProvider& provider, const StatusParagraphs& status_db)
-        : m_graph(create_feature_install_graph(provider, status_db)), m_graph_plan(std::make_unique<GraphPlan>())
+        : m_graph_plan(std::make_unique<GraphPlan>()), m_graph(create_feature_install_graph(provider, status_db))
     {
     }
 
