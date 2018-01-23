@@ -69,7 +69,7 @@ if (Test-Path "$g_install_root\plugins\qtdeploy.ps1") {
 
 # Note: This is a hack to make OpenNI2 work.
 if (Test-Path "$g_install_root\bin\OpenNI2\openni2deploy.ps1") {
-    . "$g_install_root\bin\openni2deploy.ps1"
+    . "$g_install_root\bin\OpenNI2\openni2deploy.ps1"
 }
 
 resolve($targetBinary)
