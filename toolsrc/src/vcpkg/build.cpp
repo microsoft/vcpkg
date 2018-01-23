@@ -61,7 +61,8 @@ namespace vcpkg::Build::Command
                            spec.name());
 
         const StatusParagraphs status_db = database_load_check(paths);
-        const Build::BuildPackageOptions build_package_options{Build::UseHeadVersion::NO, Build::AllowDownloads::YES};
+        const Build::BuildPackageOptions build_package_options{
+            Build::UseHeadVersion::NO, Build::AllowDownloads::YES, Build::CleanBuildtrees::NO};
 
         const std::unordered_set<std::string> features_as_set(full_spec.features.begin(), full_spec.features.end());
 
