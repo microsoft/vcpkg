@@ -4,7 +4,7 @@
 
 #pragma warning(push)
 #pragma warning(disable : 4768)
-#include <Shlobj.h>
+#include <ShlObj.h>
 #pragma warning(pop)
 #else
 #include <unistd.h>
