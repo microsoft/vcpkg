@@ -392,10 +392,8 @@ namespace vcpkg::Dependencies
                 {
                     return ExportPlanAction{spec, std::move(*p_ipv), request_type};
                 }
-                else
-                {
-                    return ExportPlanAction{spec, request_type};
-                }
+
+                return ExportPlanAction{spec, request_type};
             }
 
             std::string to_string(const PackageSpec& spec) const override { return spec.to_string(); }
