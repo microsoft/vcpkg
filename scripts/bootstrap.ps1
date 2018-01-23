@@ -4,7 +4,7 @@ param(
     [Parameter(Mandatory=$False)][string]$withVSPath = ""
 )
 
-$scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
+$scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 $vcpkgRootDir = & $scriptsDir\findFileRecursivelyUp.ps1 $scriptsDir .vcpkg-root
 Write-Verbose("vcpkg Path " + $vcpkgRootDir)
 

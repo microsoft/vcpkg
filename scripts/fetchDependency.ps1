@@ -3,7 +3,7 @@ param(
     [Parameter(Mandatory=$true)][string]$Dependency
 )
 
-$scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
+$scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 . "$scriptsDir\VcpkgPowershellUtils.ps1"
 
 Write-Verbose "Fetching dependency: $Dependency"
