@@ -49,7 +49,7 @@ function resolve([string]$targetBinary) {
         if (Test-Path "$installedDir\$_") {
             deployBinary $targetBinaryDir $installedDir "$_"
             if (Test-Path function:\deployPluginsIfQt) { deployPluginsIfQt $targetBinaryDir "$g_install_root\plugins" "$_" }
-            if (Test-Path function:\deployOpenNI2) { deployOpenNI2 $targetBinaryDir "$installedDir" "$_" }
+            if (Test-Path function:\deployOpenNI2) { deployOpenNI2 $targetBinaryDir "$g_install_root" "$_" }
             resolve "$targetBinaryDir\$_"
         } elseif (Test-Path "$targetBinaryDir\$_") {
             Write-Verbose "  ${_}: $_ not found in vcpkg; locally deployed"
@@ -68,7 +68,7 @@ if (Test-Path "$g_install_root\plugins\qtdeploy.ps1") {
 }
 
 # Note: This is a hack to make OpenNI2 work.
-if (Test-Path "$g_install_root\bin\openni2deploy.ps1") {
+if (Test-Path "$g_install_root\bin\OpenNI2\openni2deploy.ps1") {
     . "$g_install_root\bin\openni2deploy.ps1"
 }
 
