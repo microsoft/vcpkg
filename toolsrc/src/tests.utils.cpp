@@ -59,3 +59,10 @@ std::unique_ptr<StatusParagraph> make_status_feature_pgh(const char* name,
                                                  {"Depends", depends},
                                                  {"Status", "install ok installed"}});
 }
+
+PackageSpec unsafe_pspec(std::string name, Triplet t)
+{
+    auto m_ret = PackageSpec::from_name_and_triplet(name, t);
+    Assert::IsTrue(m_ret.has_value());
+    return m_ret.value_or_exit(VCPKG_LINE_INFO);
+}

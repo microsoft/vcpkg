@@ -269,10 +269,10 @@ namespace vcpkg::Build
             std::vector<PackageSpec> missing_specs;
             for (auto&& dep : filter_dependencies(config.scf.core_paragraph->depends, triplet))
             {
-                if (status_db.find_installed(dep, triplet) == status_db.end())
+                auto spec = PackageSpec::from_name_and_triplet(dep, triplet).value_or_exit(VCPKG_LINE_INFO);
+                if (!status_db.is_installed(spec))
                 {
-                    missing_specs.push_back(
-                        PackageSpec::from_name_and_triplet(dep, triplet).value_or_exit(VCPKG_LINE_INFO));
+                    missing_specs.push_back(spec);
                 }
             }
             // Fail the build if any dependencies were missing

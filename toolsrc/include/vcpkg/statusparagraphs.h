@@ -23,11 +23,8 @@ namespace vcpkg
 
         std::vector<const std::unique_ptr<StatusParagraph>*> find_all_installed(const PackageSpec& spec) const;
 
-        const_iterator find_installed(const PackageSpec& spec) const
-        {
-            return find_installed(spec.name(), spec.triplet());
-        }
-        const_iterator find_installed(const std::string& name, const Triplet& triplet) const;
+        const_iterator find_installed(const PackageSpec& spec) const;
+        bool is_installed(const PackageSpec& spec) const;
 
         iterator insert(std::unique_ptr<StatusParagraph>);
 

@@ -65,16 +65,23 @@ namespace vcpkg
         });
     }
 
-    StatusParagraphs::const_iterator StatusParagraphs::find_installed(const std::string& name,
-                                                                      const Triplet& triplet) const
+    StatusParagraphs::const_iterator StatusParagraphs::find_installed(const PackageSpec& spec) const
     {
-        const const_iterator it = find(name, triplet);
+        auto it = find(spec);
         if (it != end() && (*it)->is_installed())
         {
             return it;
         }
+        else
+        {
+            return end();
+        }
+    }
 
-        return end();
+    bool vcpkg::StatusParagraphs::is_installed(const PackageSpec& spec) const
+    {
+        auto it = find(spec);
+        return it != end() && (*it)->is_installed();
     }
 
     StatusParagraphs::iterator StatusParagraphs::insert(std::unique_ptr<StatusParagraph> pgh)

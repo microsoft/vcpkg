@@ -1,5 +1,7 @@
 #include "tests.pch.h"
 
+#include <tests.utils.h>
+
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 using namespace vcpkg;
@@ -25,7 +27,7 @@ Status: install ok installed
             StatusParagraphs status_db(Util::fmap(
                 *pghs.get(), [](RawParagraph& rpgh) { return std::make_unique<StatusParagraph>(std::move(rpgh)); }));
 
-            auto it = status_db.find_installed("ffmpeg", Triplet::X64_WINDOWS);
+            auto it = status_db.find_installed(unsafe_pspec("ffmpeg", Triplet::X64_WINDOWS));
             Assert::IsTrue(it != status_db.end());
         }
 
@@ -45,7 +47,7 @@ Status: purge ok not-installed
             StatusParagraphs status_db(Util::fmap(
                 *pghs.get(), [](RawParagraph& rpgh) { return std::make_unique<StatusParagraph>(std::move(rpgh)); }));
 
-            auto it = status_db.find_installed("ffmpeg", Triplet::X64_WINDOWS);
+            auto it = status_db.find_installed(unsafe_pspec("ffmpeg", Triplet::X64_WINDOWS));
             Assert::IsTrue(it == status_db.end());
         }
 
@@ -73,7 +75,7 @@ Status: purge ok not-installed
             StatusParagraphs status_db(Util::fmap(
                 *pghs.get(), [](RawParagraph& rpgh) { return std::make_unique<StatusParagraph>(std::move(rpgh)); }));
 
-            auto it = status_db.find_installed("ffmpeg", Triplet::X64_WINDOWS);
+            auto it = status_db.find_installed(unsafe_pspec("ffmpeg", Triplet::X64_WINDOWS));
             Assert::IsTrue(it != status_db.end());
         }
     };

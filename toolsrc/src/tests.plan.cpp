@@ -504,13 +504,6 @@ namespace UnitTest1
         }
     };
 
-    static PackageSpec unsafe_pspec(std::string name, Triplet t = Triplet::X86_WINDOWS)
-    {
-        auto m_ret = PackageSpec::from_name_and_triplet(name, t);
-        Assert::IsTrue(m_ret.has_value());
-        return m_ret.value_or_exit(VCPKG_LINE_INFO);
-    }
-
     class RemovePlanTests : public TestClass<RemovePlanTests>
     {
         TEST_METHOD(basic_remove_scheme)
