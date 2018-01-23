@@ -682,7 +682,7 @@ namespace vcpkg::Dependencies
     {
     }
 
-    PackageGraph::~PackageGraph() {}
+    PackageGraph::~PackageGraph() = default;
 
     void print_plan(const std::vector<AnyAction>& action_plan, const bool is_recursive)
     {
