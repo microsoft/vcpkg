@@ -527,7 +527,7 @@ namespace vcpkg::Dependencies
         return create_feature_install_plan(provider, specs, status_db);
     }
 
-    void PackageGraph::install(const FeatureSpec& spec)
+    void PackageGraph::install(const FeatureSpec& spec) const
     {
         Cluster& spec_cluster = m_graph->get(spec.spec());
         spec_cluster.request_type = RequestType::USER_REQUESTED;
@@ -565,7 +565,7 @@ namespace vcpkg::Dependencies
         m_graph_plan->install_graph.add_vertex(ClusterPtr{&spec_cluster});
     }
 
-    void PackageGraph::upgrade(const PackageSpec& spec)
+    void PackageGraph::upgrade(const PackageSpec& spec) const
     {
         Cluster& spec_cluster = m_graph->get(spec);
         spec_cluster.request_type = RequestType::USER_REQUESTED;

@@ -151,8 +151,8 @@ namespace vcpkg::Dependencies
         PackageGraph(const PortFileProvider& provider, const StatusParagraphs& status_db);
         ~PackageGraph();
 
-        void install(const FeatureSpec& spec);
-        void upgrade(const PackageSpec& spec);
+        void install(const FeatureSpec& spec) const;
+        void upgrade(const PackageSpec& spec) const;
 
         std::vector<AnyAction> serialize() const;
 
