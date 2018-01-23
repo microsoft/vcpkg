@@ -386,7 +386,7 @@ namespace vcpkg::Install
             }
             else if (const auto remove_action = action.remove_action.get())
             {
-                Remove::perform_remove_plan_action(paths, *remove_action, Remove::Purge::YES, status_db);
+                Remove::perform_remove_plan_action(paths, *remove_action, Remove::Purge::YES, &status_db);
             }
             else
             {

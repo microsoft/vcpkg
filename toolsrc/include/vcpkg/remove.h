@@ -17,10 +17,10 @@ namespace vcpkg::Remove
     void perform_remove_plan_action(const VcpkgPaths& paths,
                                     const Dependencies::RemovePlanAction& action,
                                     const Purge purge,
-                                    const StatusParagraphs& status_db);
+                                    StatusParagraphs* status_db);
 
     extern const CommandStructure COMMAND_STRUCTURE;
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
-    void remove_package(const VcpkgPaths& paths, const PackageSpec& spec, const StatusParagraphs& status_db);
+    void remove_package(const VcpkgPaths& paths, const PackageSpec& spec, StatusParagraphs* status_db);
 }

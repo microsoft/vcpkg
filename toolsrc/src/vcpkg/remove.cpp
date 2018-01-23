@@ -18,10 +18,10 @@ namespace vcpkg::Remove
     using Dependencies::RequestType;
     using Update::OutdatedPackage;
 
-    void remove_package(const VcpkgPaths& paths, const PackageSpec& spec, const StatusParagraphs& status_db)
+    void remove_package(const VcpkgPaths& paths, const PackageSpec& spec, StatusParagraphs* status_db)
     {
         auto& fs = paths.get_filesystem();
-        auto maybe_ipv = status_db.find_all_installed(spec);
+        auto maybe_ipv = status_db->find_all_installed(spec);
 
         Checks::check_exit(
             VCPKG_LINE_INFO, maybe_ipv.has_value(), "unable to remove package %s: already removed", spec);
@@ -106,6 +106,8 @@ namespace vcpkg::Remove
         {
             spgh.state = InstallState::NOT_INSTALLED;
             write_update(paths, spgh);
+
+            status_db->insert(std::make_unique<StatusParagraph>(std::move(spgh)));
         }
     }
 
@@ -143,7 +145,7 @@ namespace vcpkg::Remove
     void perform_remove_plan_action(const VcpkgPaths& paths,
                                     const RemovePlanAction& action,
                                     const Purge purge,
-                                    const StatusParagraphs& status_db)
+                                    StatusParagraphs* status_db)
     {
         const std::string display_name = action.spec.to_string();
 
@@ -285,7 +287,7 @@ namespace vcpkg::Remove
 
         for (const RemovePlanAction& action : remove_plan)
         {
-            perform_remove_plan_action(paths, action, purge, status_db);
+            perform_remove_plan_action(paths, action, purge, &status_db);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
