@@ -214,7 +214,7 @@ static void load_config()
 static std::string trim_path_from_command_line(const std::string& full_command_line)
 {
     Checks::check_exit(
-        VCPKG_LINE_INFO, full_command_line.size() > 0, "Internal failure - cannot have empty command line");
+        VCPKG_LINE_INFO, !full_command_line.empty(), "Internal failure - cannot have empty command line");
 
     if (full_command_line[0] == '"')
     {

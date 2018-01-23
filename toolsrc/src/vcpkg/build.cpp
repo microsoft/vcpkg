@@ -296,7 +296,7 @@ namespace vcpkg::Build
             {
                 features.append(feature + ";");
             }
-            if (features.size() > 0)
+            if (!features.empty())
             {
                 features.pop_back();
             }
