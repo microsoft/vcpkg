@@ -173,7 +173,7 @@ namespace vcpkg
         std::vector<StatusParagraph*> installed_packages;
         for (auto&& pgh : status_db)
         {
-            if (pgh->state != InstallState::INSTALLED || pgh->want != Want::INSTALL) continue;
+            if (!pgh->is_installed()) continue;
             installed_packages.push_back(pgh.get());
         }
 
@@ -189,7 +189,7 @@ namespace vcpkg
 
         for (const std::unique_ptr<StatusParagraph>& pgh : status_db)
         {
-            if (pgh->state != InstallState::INSTALLED || !pgh->package.feature.empty())
+            if (!pgh->is_installed() || !pgh->package.feature.empty())
             {
                 continue;
             }

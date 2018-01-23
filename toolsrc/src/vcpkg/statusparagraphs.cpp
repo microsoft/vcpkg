@@ -48,7 +48,7 @@ namespace vcpkg
                                                                       const Triplet& triplet) const
     {
         const const_iterator it = find(name, triplet);
-        if (it != end() && (*it)->want == Want::INSTALL && (*it)->state == InstallState::INSTALLED)
+        if (it != end() && (*it)->is_installed())
         {
             return it;
         }

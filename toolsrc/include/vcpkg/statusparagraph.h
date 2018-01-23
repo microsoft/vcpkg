@@ -32,6 +32,8 @@ namespace vcpkg
         StatusParagraph();
         explicit StatusParagraph(std::unordered_map<std::string, std::string>&& fields);
 
+        bool is_installed() const { return want == Want::INSTALL && state == InstallState::INSTALLED; }
+
         BinaryParagraph package;
         Want want;
         InstallState state;
