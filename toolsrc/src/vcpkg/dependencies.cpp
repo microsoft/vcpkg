@@ -415,10 +415,10 @@ namespace vcpkg::Dependencies
 
     static MarkPlusResult mark_plus(const std::string& feature,
                                     Cluster& cluster,
-                                    ClusterGraph& pkg_to_cluster,
+                                    ClusterGraph& graph,
                                     GraphPlan& graph_plan);
 
-    static void mark_minus(Cluster& cluster, ClusterGraph& pkg_to_cluster, GraphPlan& graph_plan);
+    static void mark_minus(Cluster& cluster, ClusterGraph& graph, GraphPlan& graph_plan);
 
     MarkPlusResult mark_plus(const std::string& feature, Cluster& cluster, ClusterGraph& graph, GraphPlan& graph_plan)
     {
