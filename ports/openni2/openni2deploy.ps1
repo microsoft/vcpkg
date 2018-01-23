@@ -8,7 +8,7 @@ function deployOpenNI2([string]$targetBinaryDir, [string]$installedDir, [string]
         }
         if(Test-Path "$installedDir\bin\OpenNI2\Drivers") {
             Write-Verbose "  Deploying OpenNI2 Drivers"
-            New-Item "$targetBinaryDir\bin\OpenNI2\Drivers" -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
+            New-Item "$targetBinaryDir\OpenNI2\Drivers" -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
             Get-ChildItem "$installedDir\bin\OpenNI2\Drivers\*.*" -include "*.dll","*.ini" | % {
                 deployBinary "$targetBinaryDir\OpenNI2\Drivers" "$installedDir\bin\OpenNI2\Drivers" $_.Name
             }
