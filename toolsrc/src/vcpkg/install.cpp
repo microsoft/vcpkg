@@ -293,7 +293,7 @@ namespace vcpkg::Install
 
             auto result = [&]() -> Build::ExtendedBuildResult {
                 const Build::BuildPackageConfig build_config{
-                    *action.any_paragraph.source_control_file.value_or_exit(VCPKG_LINE_INFO),
+                    action.any_paragraph.source_control_file.value_or_exit(VCPKG_LINE_INFO),
                     action.spec.triplet(),
                     paths.port_dir(action.spec),
                     action.build_options,

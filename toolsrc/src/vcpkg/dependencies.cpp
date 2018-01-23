@@ -117,7 +117,7 @@ namespace vcpkg::Dependencies
             return PackageSpec::from_dependencies_of_port(p->core_paragraph.spec.name(), deps, triplet);
         }
 
-        if (const auto p = this->source_control_file.value_or(nullptr))
+        if (const auto p = this->source_control_file.get())
         {
             return PackageSpec::from_dependencies_of_port(
                 p->core_paragraph->name, filter_dependencies(p->core_paragraph->depends, triplet), triplet);
@@ -159,7 +159,7 @@ namespace vcpkg::Dependencies
                                          const RequestType& request_type)
         : spec(spec), plan_type(InstallPlanType::BUILD_AND_INSTALL), request_type(request_type), feature_list(features)
     {
-        this->any_paragraph.source_control_file = &any_paragraph;
+        this->any_paragraph.source_control_file = any_paragraph;
     }
 
     InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
@@ -418,7 +418,7 @@ namespace vcpkg::Dependencies
                     return ExportPlanAction{spec, AnyParagraph{nullopt, std::move(*bcf), nullopt}, request_type};
 
                 auto maybe_scf = provider.get_control_file(spec.name());
-                if (auto scf = maybe_scf.get()) return ExportPlanAction{spec, {nullopt, nullopt, scf}, request_type};
+                if (auto scf = maybe_scf.get()) return ExportPlanAction{spec, {nullopt, nullopt, *scf}, request_type};
 
                 Checks::exit_with_message(VCPKG_LINE_INFO, "Could not find package %s", spec);
             }

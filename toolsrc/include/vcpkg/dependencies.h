@@ -29,7 +29,7 @@ namespace vcpkg::Dependencies
 
         Optional<StatusParagraph> status_paragraph;
         Optional<BinaryControlFile> binary_control_file;
-        Optional<const SourceControlFile*> source_control_file;
+        Optional<const SourceControlFile&> source_control_file;
     };
 }
 
