@@ -3,28 +3,19 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO discordapp/discord-rpc
-    REF v2.0.1
-    SHA512 496f8f34184c4be3c3341b05ebd440a9e89e36ecf15747ea8f4d1cc0404f1341404fda6c8358a2c08e0149023775472ea78603b9d41687f1004828523debda99
+    REF v2.1.0
+    SHA512 24bbc391670bfb53f0501ed189cef8193f35332de9fff3016fc18eb7eab4970d5c90576aa95dfcc4f1ef553e8b1ea781e1e40e595cbbcc1c4200e4ff174369de
     HEAD_REF master
 )
 
-vcpkg_apply_patches(
-    SOURCE_PATH
-        ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/fix-debug.diff
-)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(BUILD_DYNAMIC_LIB ON)
-else()
-    set(BUILD_DYNAMIC_LIB OFF)
+set(STATIC_CRT OFF)
+if(VCPKG_CRT_LINKAGE STREQUAL static)
+    set(STATIC_CRT ON)
 endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS
-    -DBUILD_DYNAMIC_LIB=${BUILD_DYNAMIC_LIB}
+    OPTIONS -DUSE_STATIC_CRT=${STATIC_CRT}
 )
 
 vcpkg_install_cmake()
