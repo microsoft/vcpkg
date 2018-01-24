@@ -1,3 +1,10 @@
+vcpkg (0.0.103)
+--------------
+  * `vcpkg upgrade`: Fix issue with any command executing more than 10 transactions with mixed transaction types (install + remove)
+
+-- vcpkg team <vcpkg@microsoft.com>  WED, 24 Jan 2017 14:30:00 -0800
+
+
 vcpkg (0.0.102)
 --------------
   * Add ports:
