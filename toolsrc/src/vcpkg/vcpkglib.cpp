@@ -92,7 +92,7 @@ namespace vcpkg
 
         const auto my_update_id = update_id++;
         const auto tmp_update_filename = paths.vcpkg_dir_updates / "incomplete";
-        const auto update_filename = paths.vcpkg_dir_updates / std::to_string(my_update_id);
+        const auto update_filename = paths.vcpkg_dir_updates / Strings::format("%010d", my_update_id);
 
         fs.write_contents(tmp_update_filename, Strings::serialize(p));
         fs.rename(tmp_update_filename, update_filename);
