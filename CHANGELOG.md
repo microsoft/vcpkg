@@ -1,3 +1,71 @@
+vcpkg (0.0.102)
+--------------
+  * Add ports:
+    - catch-classic  1.12.0
+    - catch2         2.1.0
+    - cgicc          3.2.19
+    - libdisasm      0.23
+    - qt5-3d         5.9.2-0
+    - qt5-base       5.9.2-1
+    - qt5-charts     5.9.2-0
+    - qt5-datavis3d  5.9.2-0
+    - qt5-declarative 5.9.2-0
+    - qt5-gamepad    5.9.2-0
+    - qt5-imageformats 5.9.2-0
+    - qt5-modularscripts 1
+    - qt5-multimedia 5.9.2-0
+    - qt5-networkauth 5.9.2-0
+    - qt5-scxml      5.9.2-0
+    - qt5-serialport 5.9.2-0
+    - qt5-speech     5.9.2-0
+    - qt5-svg        5.9.2-0
+    - qt5-tools      5.9.2-0
+    - qt5-virtualkeyboard 5.9.2-0
+    - qt5-websockets 5.9.2-0
+    - qt5-winextras  5.9.2-0
+    - qt5-xmlpatterns 5.9.2-0
+    - tre            0.8.0-1
+  * Update ports:
+    - boost-asio     1.66.0 -> 1.66.0-1
+    - boost-build    1.66.0 -> 1.66.0-3
+    - boost-vcpkg-helpers 3 -> 4
+    - corrade        jun2017-3 -> jan2018-1
+    - curl           7.57.0-1 -> 7.57.0-2
+    - date           2.3-c286981b3bf83c79554769df68b27415cee68d77 -> 2.4
+    - discord-rpc    2.0.1 -> 2.1.0
+    - dlib           19.8 -> 19.9
+    - libbson        1.9.0 -> 1.9.2
+    - libconfig      1.7.1 -> 1.7.2
+    - libjpeg-turbo  1.5.2-2 -> 1.5.3
+    - libodb         2.4.0-1 -> 2.4.0-2
+    - libogg         1.3.2-cab46b1-3 -> 1.3.3
+    - libwebp        0.6.0-2 -> 0.6.1
+    - libwebsockets  2.0.0-4 -> 2.4.1
+    - lz4            1.8.0-1 -> 1.8.1.2
+    - magnum         jun2017-6 -> jan2018-1
+    - magnum-plugins jun2017-5 -> jan2018-1
+    - mongo-c-driver 1.9.0 -> 1.9.2
+    - mpg123         1.25.8 -> 1.25.8-1
+    - openni2        2.2.0.33-4 -> 2.2.0.33-7
+    - osg            3.5.6-1 -> 3.5.6-2
+    - poco           1.8.0.1 -> 1.8.1
+    - qca            2.2.0-1 -> 2.2.0-2
+    - qscintilla     2.10-1 -> 2.10-4
+    - qt5            5.8-6 -> 5.9.2-1
+    - qwt            6.1.3-2 -> 6.1.3-4
+    - sciter         4.1.0 -> 4.1.1
+    - sdl2           2.0.7-3 -> 2.0.7-4
+    - tiff           4.0.8-1 -> 4.0.9
+    - xxhash         0.6.3-1 -> 0.6.4
+  * Remove usage of `BITS-transfer`. Use .NET functions (which used to be the fallback if `BITS-transfer` failed) by default.
+  * Enable the usage of `feature-packages` by default. More info [here](docs/specifications/feature-packages.md).
+  * Bootstrapping `vcpkg` now happens in a clean environment to avoid issues when building in a VS Developer Prompt among others.
+  * Update required version & auto-downloaded version of `cmake` to 3.10.2
+  * Update required version & auto-downloaded version of `vswhere` to 2.3.2
+
+-- vcpkg team <vcpkg@microsoft.com>  TUE, 23 Jan 2018 17:00:00 -0800
+
+
 vcpkg (0.0.101)
 --------------
   * Add ports:
