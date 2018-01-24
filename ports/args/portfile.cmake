@@ -4,7 +4,7 @@ SET(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/args-master)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/Taywee/args/archive/master.zip"
     FILENAME "args.zip"
-    SHA512 81751bfc86e15db1e5f245baa7df0464027b22b577c9de359e22dc4fe1dd550acfb116801b47d88b56d61b69a640c55757206f6f84977ace2fb02742b60ff216
+    SHA512 0868ba13dec8be41bf849e61ae3286611bf70726f86dd34adf8a41f5f775ddeb41e57f2afbd0bb5e2a757b452384791077ee562c09155333bf14ec89154ee20d
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
