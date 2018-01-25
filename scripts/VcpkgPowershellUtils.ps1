@@ -174,6 +174,7 @@ function vcpkgInvokeCommand()
     Wait-Process -InputObject $process
     $ec = $process.ExitCode
     Write-Verbose "Execution terminated with exit code $ec."
+    return $ec
 }
 
 function vcpkgInvokeCommandClean()
@@ -193,4 +194,5 @@ function vcpkgInvokeCommandClean()
     Wait-Process -InputObject $process
     $ec = $process.ExitCode
     Write-Verbose "Execution terminated with exit code $ec."
+    return $ec
 }
