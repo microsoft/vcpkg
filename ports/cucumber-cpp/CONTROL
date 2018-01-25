@@ -1,0 +1,4 @@
+Source: cucumber-cpp
+Version: 0.4
+Description: Cucumber-Cpp allows Cucumber to support step definitions written in C++.
+Build-Depends: boost-thread, boost-system, boost-regex, boost-date-time, boost-program-options
