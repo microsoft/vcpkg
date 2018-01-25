@@ -103,7 +103,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     {
         if (-not (Test-Path $executableFromDownload))
         {
-            vcpkgInvokeCommand $downloadPath "-y" -wait:$true
+            vcpkgInvokeCommand $downloadPath "-y"
         }
     }
     else

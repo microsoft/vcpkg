@@ -167,24 +167,19 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
 function vcpkgInvokeCommand()
 {
     param ( [Parameter(Mandatory=$true)][string]$executable,
-                                        [string]$arguments = "",
-            [Parameter(Mandatory=$true)][switch]$wait)
+                                        [string]$arguments = "")
 
     Write-Verbose "Executing: ${executable} ${arguments}"
     $process = Start-Process -FilePath "`"$executable`"" -ArgumentList $arguments -PassThru -NoNewWindow
-    if ($wait)
-    {
-        Wait-Process -InputObject $process
-        $ec = $process.ExitCode
-        Write-Verbose "Execution terminated with exit code $ec."
-    }
+    Wait-Process -InputObject $process
+    $ec = $process.ExitCode
+    Write-Verbose "Execution terminated with exit code $ec."
 }
 
 function vcpkgInvokeCommandClean()
 {
     param ( [Parameter(Mandatory=$true)][string]$executable,
-                                        [string]$arguments = "",
-            [Parameter(Mandatory=$true)][switch]$wait)
+                                        [string]$arguments = "")
 
     Write-Verbose "Clean-Executing: ${executable} ${arguments}"
     $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
@@ -195,10 +190,7 @@ function vcpkgInvokeCommandClean()
     $arg = "-encodedCommand $encodedCommand"
 
     $process = Start-Process -FilePath powershell.exe -ArgumentList $arg -PassThru -NoNewWindow
-    if ($wait)
-    {
-        Wait-Process -InputObject $process
-        $ec = $process.ExitCode
-        Write-Verbose "Execution terminated with exit code $ec."
-    }
+    Wait-Process -InputObject $process
+    $ec = $process.ExitCode
+    Write-Verbose "Execution terminated with exit code $ec."
 }

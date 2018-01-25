@@ -55,8 +55,8 @@ try
     "/m",
     "dirs.proj") -join " "
 
-    # vcpkgInvokeCommandClean cmd "/c echo %PATH%" -wait:$true
-    vcpkgInvokeCommandClean $msbuildExe $arguments -wait:$true
+    # vcpkgInvokeCommandClean cmd "/c echo %PATH%"
+    vcpkgInvokeCommandClean $msbuildExe $arguments
 
     if ($LASTEXITCODE -ne 0)
     {
