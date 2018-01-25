@@ -1,32 +1,81 @@
 #.rst:
 # .. command:: vcpkg_build_qmake
 #
-#  Build a qmake-based project, previously configured using vcpkg_configure_qmake . 
-#  As the CONFIG qmake option is assumed to be "debug_and_release" (the default value on Windows, see [1]),
-#  both the debug and release libraries are build in the same build tree. 
+#  Build a qmake-based project, previously configured using vcpkg_configure_qmake.
 #
 #  ::
 #  vcpkg_build_qmake()
 #
-#
-# [1] : http://doc.qt.io/qt-5/qmake-variable-reference.html
 
 function(vcpkg_build_qmake)
+    cmake_parse_arguments(_csc "SKIP_MAKEFILES" "BUILD_LOGNAME" "TARGETS;RELEASE_TARGETS;DEBUG_TARGETS" ${ARGN})
     vcpkg_find_acquire_program(JOM)
 
     # Make sure that the linker finds the libraries used 
-    set(ENV_LIB_BACKUP ENV{LIB})
-    set(ENV{LIB} "${CURRENT_INSTALLED_DIR}/lib;${CURRENT_INSTALLED_DIR}/debug/lib;$ENV{LIB}")
+    set(ENV_PATH_BACKUP "$ENV{PATH}")
     
-    message(STATUS "Package ${TARGET_TRIPLET}")
-    vcpkg_execute_required_process_repeat(
-        COUNT 2
-        COMMAND ${JOM}
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}
-        LOGNAME package-${TARGET_TRIPLET}
-    )
-    message(STATUS "Package ${TARGET_TRIPLET} done")
+    set(DEBUG_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+    set(RELEASE_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+
+    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
+
+    list(APPEND _csc_RELEASE_TARGETS ${_csc_TARGETS})
+    list(APPEND _csc_DEBUG_TARGETS ${_csc_TARGETS})
+
+    if(NOT _csc_BUILD_LOGNAME)
+        set(_csc_BUILD_LOGNAME build)
+    endif()
+
+    function(run_jom TARGETS LOG_PREFIX LOG_SUFFIX)
+        message(STATUS "Package ${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}")
+        vcpkg_execute_required_process(
+            COMMAND ${JOM} ${TARGETS}
+            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${LOG_SUFFIX}
+            LOGNAME package-${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}
+        )
+        message(STATUS "Package ${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX} done")
+    endfunction()
+
+    # This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
+    set(ENV_CL_BACKUP "$ENV{_CL_}")
+    set(ENV{_CL_} "/utf-8")
+
+    #First generate the makefiles so we can modify them
+    set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/debug/lib;${CURRENT_INSTALLED_DIR}/debug/bin;${CURRENT_INSTALLED_DIR}/tools/qt5;${ENV_PATH_BACKUP}")
+    if(NOT _csc_SKIP_MAKEFILES)
+        run_jom(qmake_all makefiles dbg)
+
+        #Store debug makefiles path
+        file(GLOB_RECURSE DEBUG_MAKEFILES ${DEBUG_DIR}/*Makefile*)
+
+        foreach(DEBUG_MAKEFILE ${DEBUG_MAKEFILES})
+            file(READ "${DEBUG_MAKEFILE}" _contents)
+            string(REPLACE "zlib.lib" "zlibd.lib" _contents "${_contents}")
+            string(REPLACE "installed\\${TARGET_TRIPLET}\\lib" "installed\\${TARGET_TRIPLET}\\debug\\lib" _contents "${_contents}")
+            string(REPLACE "/LIBPATH:${NATIVE_INSTALLED_DIR}\\debug\\lib qtmaind.lib" "shell32.lib /LIBPATH:${NATIVE_INSTALLED_DIR}\\debug\\lib\\manual-link qtmaind.lib /LIBPATH:${NATIVE_INSTALLED_DIR}\\debug\\lib" _contents "${_contents}")
+            file(WRITE "${DEBUG_MAKEFILE}" "${_contents}")
+        endforeach()
+    endif()
+
+    run_jom("${_csc_DEBUG_TARGETS}" ${_csc_BUILD_LOGNAME} dbg)
+
+    set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/lib;${CURRENT_INSTALLED_DIR}/bin;${CURRENT_INSTALLED_DIR}/tools/qt5;${ENV_PATH_BACKUP}")
+    if(NOT _csc_SKIP_MAKEFILES)
+        run_jom(qmake_all makefiles rel)
+
+        #Store release makefile path
+        file(GLOB_RECURSE RELEASE_MAKEFILES ${RELEASE_DIR}/*Makefile*)
+
+        foreach(RELEASE_MAKEFILE ${RELEASE_MAKEFILES})
+            file(READ "${RELEASE_MAKEFILE}" _contents)
+            string(REPLACE "/LIBPATH:${NATIVE_INSTALLED_DIR}\\lib qtmain.lib" "shell32.lib /LIBPATH:${NATIVE_INSTALLED_DIR}\\lib\\manual-link qtmain.lib /LIBPATH:${NATIVE_INSTALLED_DIR}\\lib" _contents "${_contents}")
+            file(WRITE "${RELEASE_MAKEFILE}" "${_contents}")
+        endforeach()
+    endif()
+
+    run_jom("${_csc_RELEASE_TARGETS}" ${_csc_BUILD_LOGNAME} rel)
     
-    # Restore the original value of ENV{LIB}
-    set(ENV{LIB} ENV_LIB_BACKUP)
+    # Restore the original value of ENV{PATH}
+    set(ENV{PATH} "${ENV_PATH_BACKUP}")
+    set(ENV{_CL_} "${ENV_CL_BACKUP}")
 endfunction()

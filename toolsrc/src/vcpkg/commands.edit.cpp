@@ -32,7 +32,7 @@ namespace vcpkg::Commands::Edit
         return output;
     }
 
-    static const std::string OPTION_BUILDTREES = "--buildtrees";
+    static constexpr StringLiteral OPTION_BUILDTREES = "--buildtrees";
 
     static std::vector<std::string> valid_arguments(const VcpkgPaths& paths)
     {
@@ -42,7 +42,7 @@ namespace vcpkg::Commands::Edit
                           [](auto&& pgh) -> std::string { return pgh->core_paragraph->name; });
     }
 
-    static const std::array<CommandSwitch, 1> EDIT_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 1> EDIT_SWITCHES = {{
         {OPTION_BUILDTREES, "Open editor into the port-specific buildtree subfolder"},
     }};
 
@@ -68,8 +68,11 @@ namespace vcpkg::Commands::Edit
         Checks::check_exit(VCPKG_LINE_INFO, fs.is_directory(portpath), R"(Could not find port named "%s")", port_name);
 
         std::vector<fs::path> candidate_paths;
-        const std::vector<fs::path> from_path = Files::find_from_PATH("EDITOR");
-        candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
+        auto maybe_editor_path = System::get_environment_variable("EDITOR");
+        if (auto editor_path = maybe_editor_path.get())
+        {
+            candidate_paths.emplace_back(*editor_path);
+        }
         candidate_paths.push_back(System::get_program_files_platform_bitness() / VS_CODE_INSIDERS);
         candidate_paths.push_back(System::get_program_files_32_bit() / VS_CODE_INSIDERS);
         candidate_paths.push_back(System::get_program_files_platform_bitness() / VS_CODE);
@@ -81,8 +84,9 @@ namespace vcpkg::Commands::Edit
         auto it = Util::find_if(candidate_paths, [&](const fs::path& p) { return fs.exists(p); });
         if (it == candidate_paths.cend())
         {
-            System::println(System::Color::error,
-                            "Error: Visual Studio Code was not found and the environment variable EDITOR is not set.");
+            System::println(
+                System::Color::error,
+                "Error: Visual Studio Code was not found and the environment variable EDITOR is not set or invalid.");
             System::println("The following paths were examined:");
             Files::print_paths(candidate_paths);
             System::println("You can also set the environmental variable EDITOR to your editor of choice.");

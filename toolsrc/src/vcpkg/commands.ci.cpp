@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/stringliteral.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/build.h>
@@ -62,10 +63,10 @@ namespace vcpkg::Commands::CI
         Install::InstallSummary summary;
     };
 
-    static const std::string OPTION_EXCLUDE = "--exclude";
-    static const std::string OPTION_XUNIT = "--x-xunit";
+    static constexpr StringLiteral OPTION_EXCLUDE = "--exclude";
+    static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
 
-    static const std::array<CommandSetting, 2> CI_SETTINGS = {{
+    static constexpr std::array<CommandSetting, 2> CI_SETTINGS = {{
         {OPTION_EXCLUDE, "Comma separated list of ports to skip"},
         {OPTION_XUNIT, "File to output results in XUnit format (internal)"},
     }};

@@ -1,0 +1,7 @@
+include(vcpkg_common_functions)
+
+include(${CURRENT_INSTALLED_DIR}/share/qt5modularscripts/qt_modular_library.cmake)
+
+qt_modular_library(qtimageformats 5f1b93c0e5fffa4c2c063d14c12ad97114a452b16814ca9ac45f00ec36308a09770b3b4d137cb5d19bd3aa3a6f576724084df5d0dad75236d49868af9243c9d2)
+
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)

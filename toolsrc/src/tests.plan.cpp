@@ -41,8 +41,7 @@ namespace UnitTest1
 
         Assert::AreEqual(plan.spec.triplet().to_string().c_str(), triplet.to_string().c_str());
 
-        Assert::AreEqual(pkg_name.c_str(),
-                         (*plan.any_paragraph.source_control_file.get())->core_paragraph->name.c_str());
+        Assert::AreEqual(pkg_name.c_str(), plan.source_control_file.get()->core_paragraph->name.c_str());
         Assert::AreEqual(size_t(vec.size()), feature_list.size());
 
         for (auto&& feature_name : vec)
@@ -434,14 +433,76 @@ namespace UnitTest1
             Assert::IsTrue(install_plan.size() == 1);
             features_check(&install_plan[0], "a", {"0", "1", "core"}, Triplet::X64_WINDOWS);
         }
-    };
 
-    static PackageSpec unsafe_pspec(std::string name, Triplet t = Triplet::X86_WINDOWS)
-    {
-        auto m_ret = PackageSpec::from_name_and_triplet(name, t);
-        Assert::IsTrue(m_ret.has_value());
-        return m_ret.value_or_exit(VCPKG_LINE_INFO);
-    }
+        TEST_METHOD(transitive_features_test)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+
+            PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+            auto spec_a_64 = FullPackageSpec{spec_map.emplace("a", "b", {{"0", "b[0]"}}), {"core"}};
+            auto spec_b_64 = FullPackageSpec{spec_map.emplace("b", "c", {{"0", "c[0]"}}), {"core"}};
+            auto spec_c_64 = FullPackageSpec{spec_map.emplace("c", "", {{"0", ""}}), {"core"}};
+
+            auto install_specs = FullPackageSpec::from_string("a[*]", Triplet::X64_WINDOWS);
+            Assert::IsTrue(install_specs.has_value());
+            if (!install_specs.has_value()) return;
+            auto install_plan = Dependencies::create_feature_install_plan(
+                spec_map.map,
+                FullPackageSpec::to_feature_specs({install_specs.value_or_exit(VCPKG_LINE_INFO)}),
+                StatusParagraphs(std::move(status_paragraphs)));
+
+            Assert::IsTrue(install_plan.size() == 3);
+            features_check(&install_plan[0], "c", {"0", "core"}, Triplet::X64_WINDOWS);
+            features_check(&install_plan[1], "b", {"0", "core"}, Triplet::X64_WINDOWS);
+            features_check(&install_plan[2], "a", {"0", "core"}, Triplet::X64_WINDOWS);
+        }
+
+        TEST_METHOD(no_transitive_features_test)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+
+            PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+            auto spec_a_64 = FullPackageSpec{spec_map.emplace("a", "b", {{"0", ""}}), {"core"}};
+            auto spec_b_64 = FullPackageSpec{spec_map.emplace("b", "c", {{"0", ""}}), {"core"}};
+            auto spec_c_64 = FullPackageSpec{spec_map.emplace("c", "", {{"0", ""}}), {"core"}};
+
+            auto install_specs = FullPackageSpec::from_string("a[*]", Triplet::X64_WINDOWS);
+            Assert::IsTrue(install_specs.has_value());
+            if (!install_specs.has_value()) return;
+            auto install_plan = Dependencies::create_feature_install_plan(
+                spec_map.map,
+                FullPackageSpec::to_feature_specs({install_specs.value_or_exit(VCPKG_LINE_INFO)}),
+                StatusParagraphs(std::move(status_paragraphs)));
+
+            Assert::IsTrue(install_plan.size() == 3);
+            features_check(&install_plan[0], "c", {"core"}, Triplet::X64_WINDOWS);
+            features_check(&install_plan[1], "b", {"core"}, Triplet::X64_WINDOWS);
+            features_check(&install_plan[2], "a", {"0", "core"}, Triplet::X64_WINDOWS);
+        }
+
+        TEST_METHOD(only_transitive_features_test)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+
+            PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+            auto spec_a_64 = FullPackageSpec{spec_map.emplace("a", "", {{"0", "b[0]"}}), {"core"}};
+            auto spec_b_64 = FullPackageSpec{spec_map.emplace("b", "", {{"0", "c[0]"}}), {"core"}};
+            auto spec_c_64 = FullPackageSpec{spec_map.emplace("c", "", {{"0", ""}}), {"core"}};
+
+            auto install_specs = FullPackageSpec::from_string("a[*]", Triplet::X64_WINDOWS);
+            Assert::IsTrue(install_specs.has_value());
+            if (!install_specs.has_value()) return;
+            auto install_plan = Dependencies::create_feature_install_plan(
+                spec_map.map,
+                FullPackageSpec::to_feature_specs({install_specs.value_or_exit(VCPKG_LINE_INFO)}),
+                StatusParagraphs(std::move(status_paragraphs)));
+
+            Assert::IsTrue(install_plan.size() == 3);
+            features_check(&install_plan[0], "c", {"0", "core"}, Triplet::X64_WINDOWS);
+            features_check(&install_plan[1], "b", {"0", "core"}, Triplet::X64_WINDOWS);
+            features_check(&install_plan[2], "a", {"0", "core"}, Triplet::X64_WINDOWS);
+        }
+    };
 
     class RemovePlanTests : public TestClass<RemovePlanTests>
     {

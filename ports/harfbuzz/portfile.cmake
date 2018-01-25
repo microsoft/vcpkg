@@ -10,7 +10,9 @@ vcpkg_from_github(
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-fix-uwp-build.patch"
+    PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/0001-fix-uwp-build.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/find-package-freetype.patch"
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")

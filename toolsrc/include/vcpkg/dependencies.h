@@ -23,23 +23,10 @@ namespace vcpkg::Dependencies
                                  const Build::BuildPackageOptions& options);
     std::string to_output_string(RequestType request_type, const CStringView s);
 
-    struct AnyParagraph
-    {
-        std::vector<PackageSpec> dependencies(const Triplet& triplet) const;
-
-        Optional<StatusParagraph> status_paragraph;
-        Optional<BinaryControlFile> binary_control_file;
-        Optional<const SourceControlFile*> source_control_file;
-    };
-}
-
-namespace vcpkg::Dependencies
-{
     enum class InstallPlanType
     {
         UNKNOWN,
         BUILD_AND_INSTALL,
-        INSTALL,
         ALREADY_INSTALLED,
         EXCLUDED
     };
@@ -51,18 +38,22 @@ namespace vcpkg::Dependencies
         InstallPlanAction();
 
         InstallPlanAction(const PackageSpec& spec,
+                          InstalledPackageView&& spghs,
                           const std::unordered_set<std::string>& features,
                           const RequestType& request_type);
-        InstallPlanAction(const PackageSpec& spec, const AnyParagraph& any_paragraph, const RequestType& request_type);
+
         InstallPlanAction(const PackageSpec& spec,
-                          const SourceControlFile& any_paragraph,
+                          const SourceControlFile& scf,
                           const std::unordered_set<std::string>& features,
                           const RequestType& request_type);
 
         std::string displayname() const;
 
         PackageSpec spec;
-        AnyParagraph any_paragraph;
+
+        Optional<const SourceControlFile&> source_control_file;
+        Optional<InstalledPackageView> installed_package;
+
         InstallPlanType plan_type;
         RequestType request_type;
         Build::BuildPackageOptions build_options;
@@ -111,12 +102,21 @@ namespace vcpkg::Dependencies
         static bool compare_by_name(const ExportPlanAction* left, const ExportPlanAction* right);
 
         ExportPlanAction();
-        ExportPlanAction(const PackageSpec& spec, const AnyParagraph& any_paragraph, const RequestType& request_type);
+        ExportPlanAction(const PackageSpec& spec,
+                         InstalledPackageView&& installed_package,
+                         const RequestType& request_type);
+
+        ExportPlanAction(const PackageSpec& spec, const RequestType& request_type);
 
         PackageSpec spec;
-        AnyParagraph any_paragraph;
         ExportPlanType plan_type;
         RequestType request_type;
+
+        Optional<const BinaryParagraph&> core_paragraph() const;
+        std::vector<PackageSpec> dependencies(const Triplet& triplet) const;
+
+    private:
+        Optional<InstalledPackageView> m_installed_package;
     };
 
     struct PortFileProvider
@@ -151,8 +151,8 @@ namespace vcpkg::Dependencies
         PackageGraph(const PortFileProvider& provider, const StatusParagraphs& status_db);
         ~PackageGraph();
 
-        void install(const FeatureSpec& spec);
-        void upgrade(const PackageSpec& spec);
+        void install(const FeatureSpec& spec) const;
+        void upgrade(const PackageSpec& spec) const;
 
         std::vector<AnyAction> serialize() const;
 

@@ -34,7 +34,7 @@ namespace vcpkg::Commands::Create
                                R"(Filename cannot contain invalid chars %s, but was %s)",
                                Files::FILESYSTEM_INVALID_CHARACTERS,
                                zip_file_name);
-            cmake_args.push_back({"FILENAME", zip_file_name});
+            cmake_args.emplace_back("FILENAME", zip_file_name);
         }
 
         const std::string cmd_launch_cmake = make_cmake_cmd(cmake_exe, paths.ports_cmake, cmake_args);
