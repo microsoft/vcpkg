@@ -56,9 +56,9 @@ try
     "dirs.proj") -join " "
 
     # vcpkgInvokeCommandClean cmd "/c echo %PATH%"
-    vcpkgInvokeCommandClean $msbuildExe $arguments
+    $ec = vcpkgInvokeCommandClean $msbuildExe $arguments
 
-    if ($LASTEXITCODE -ne 0)
+    if ($ec -ne 0)
     {
         Write-Error "Building vcpkg.exe failed. Please ensure you have installed Visual Studio with the Desktop C++ workload and the Windows SDK for Desktop C++."
         return
