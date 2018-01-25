@@ -51,7 +51,7 @@ function UnattendedVSinstall
     }
 
     Write-Host "Updating VS Installer"
-    vcpkgInvokeCommand "$scriptsDir\$filename" "--update --quiet --wait --norestart" -wait:$true
+    vcpkgInvokeCommand "$scriptsDir\$filename" "--update --quiet --wait --norestart"
 
     Write-Host "Installing Visual Studio"
     $arguments = ("--installPath $installPath",
@@ -72,7 +72,7 @@ function UnattendedVSinstall
     "--wait",
     "--norestart") -join " "
 
-    vcpkgInvokeCommand "$scriptsDir\$filename" "$arguments" -wait:$true
+    vcpkgInvokeCommand "$scriptsDir\$filename" "$arguments"
 }
 
 # Power Settings (so machine does not go to sleep)
@@ -94,7 +94,7 @@ Recipe "C:/Program Files/Microsoft MPI/Bin/mpiexec.exe" {
     Recipe $msmpiSetupFilename {
         vcpkgDownloadFile "https://download.microsoft.com/download/D/B/B/DBB64BA1-7B51-43DB-8BF1-D1FB45EACF7A/MSMpiSetup.exe" $msmpiSetupFilename
     }
-    vcpkgInvokeCommand "$msmpiSetupFilename" "-force -unattend" -wait:$true
+    vcpkgInvokeCommand "$msmpiSetupFilename" "-force -unattend"
 }
 
 $vstsPath = "C:\vsts"
@@ -127,7 +127,7 @@ Recipe $vstsWorkPath {
     "--windowsLogonPassword $pass",
     "--work $vstsWorkPath") -join " "
 
-    vcpkgInvokeCommand "$vstsPath\config.cmd" "$configCmdArguments" -wait:$true
+    vcpkgInvokeCommand "$vstsPath\config.cmd" "$configCmdArguments"
 
     Pop-Location
 }
