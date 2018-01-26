@@ -188,7 +188,7 @@ function vcpkgInvokeCommandClean()
     $command = "& `"$cleanEnvScript`"; & `"$executable`" $arguments"
     $bytes = [System.Text.Encoding]::Unicode.GetBytes($command)
     $encodedCommand = [Convert]::ToBase64String($bytes)
-    $arg = "-encodedCommand $encodedCommand"
+    $arg = "-NoProfile -ExecutionPolicy Bypass -encodedCommand $encodedCommand"
 
     $process = Start-Process -FilePath powershell.exe -ArgumentList $arg -PassThru -NoNewWindow
     Wait-Process -InputObject $process
