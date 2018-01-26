@@ -1,19 +1,12 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:\path\to\current\vcpkg>
-#   TARGET_TRIPLET is the current triplet (x86-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#
-
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openvr-1.0.9)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/ValveSoftware/openvr/archive/v1.0.9.zip"
-    FILENAME "openvr-v1.0.9.zip"
-    SHA512 969cf6bf94802553bb4f1e5d6a2348566847b3d60efee9d8f83233d1d85e44a870e388028be956950d4f8ecb79f8e0bcf0a6b987b0ab3083060ece5ea48b8fa7
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO ValveSoftware/openvr
+    REF v1.0.12
+    SHA512 42e6ac8635417fbb2c95a4b290f917d057c0d66ac1e07b4a0d16c4f8197b06c8ebf553299060a7996b5a9b5420f299f2bda257b8133dc99f9441c67331293ad1
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 set(VCPKG_LIBRARY_LINKAGE dynamic)
 
