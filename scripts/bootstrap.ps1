@@ -50,7 +50,7 @@ $arguments = (
 "/p:PlatformToolset=$platformToolset",
 "/p:TargetPlatformVersion=$windowsSDK",
 "/m",
-"$vcpkgSourcesPath\dirs.proj") -join " "
+"`"$vcpkgSourcesPath\dirs.proj`"") -join " "
 
 # vcpkgInvokeCommandClean cmd "/c echo %PATH%"
 $ec = vcpkgInvokeCommandClean $msbuildExe $arguments
