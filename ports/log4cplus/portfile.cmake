@@ -7,19 +7,20 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+set(THREADPOOL_REF dda9e3d40502e85ce082c05d2c05c1bc94348b6a)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/log4cplus/ThreadPool/archive/dda9e3d40502e85ce082c05d2c05c1bc94348b6a.tar.gz"
-    FILENAME "log4cplus-threadpool-97b5877b9c49d02abf.tar.gz"
-    SHA512 97b5877b9c49d02abfcba4ca1312b833b58e4f0e9884fdcf57c20b7ec58801ed24742c8316512b4de8ab29bae42cc1e34058c0d2443c3a5950a2fb3434f86662
+    URLS "https://github.com/log4cplus/ThreadPool/archive/${THREADPOOL_REF}.tar.gz"
+    FILENAME "log4cplus-threadpool-${THREADPOOL_REF}.tar.gz"
+    SHA512 225adb11f447495a00e401d32f63d9a7eb3a8191d477a21bfa3c39f1ff5cbe8bfb7770a740e840c5748f816137cdef1a5915b17d16b3dd4c3399d1a67ab0f381
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
 file(
     COPY
-        ${CURRENT_BUILDTREES_DIR}/src/ThreadPool-master/COPYING
-        ${CURRENT_BUILDTREES_DIR}/src/ThreadPool-master/example.cpp
-        ${CURRENT_BUILDTREES_DIR}/src/ThreadPool-master/README.md
-        ${CURRENT_BUILDTREES_DIR}/src/ThreadPool-master/ThreadPool.h
+        ${CURRENT_BUILDTREES_DIR}/src/ThreadPool-${THREADPOOL_REF}/COPYING
+        ${CURRENT_BUILDTREES_DIR}/src/ThreadPool-${THREADPOOL_REF}/example.cpp
+        ${CURRENT_BUILDTREES_DIR}/src/ThreadPool-${THREADPOOL_REF}/README.md
+        ${CURRENT_BUILDTREES_DIR}/src/ThreadPool-${THREADPOOL_REF}/ThreadPool.h
     DESTINATION ${SOURCE_PATH}/threadpool
 )
 

@@ -137,17 +137,17 @@ function(vcpkg_from_github)
         endif()
 
         # Try to download the file and version information from github.
-        set(_VCPKG_INTERNAL_NO_HASH_CHECK "TRUE")
         vcpkg_download_distfile(ARCHIVE_VERSION
             URLS "https://api.github.com/repos/${ORG_NAME}/${REPO_NAME}/git/refs/heads/${_vdud_HEAD_REF}"
             FILENAME ${downloaded_file_name}.version
+            SKIP_SHA512
         )
 
         vcpkg_download_distfile(ARCHIVE
             URLS ${URL}
             FILENAME ${downloaded_file_name}
+            SKIP_SHA512
         )
-        set(_VCPKG_INTERNAL_NO_HASH_CHECK "FALSE")
     endif()
 
     vcpkg_extract_source_archive_ex(
@@ -162,7 +162,10 @@ function(vcpkg_from_github)
     string(REGEX REPLACE "\"sha\": \"([a-f0-9]+)\"" "\\1" _version ${x})
 
     # exports VCPKG_HEAD_VERSION to the caller. This will get picked up by ports.cmake after the build.
-    set(VCPKG_HEAD_VERSION ${_version} PARENT_SCOPE)
+    # When multiple vcpkg_from_github's are used after each other, only use the version from the first (hopefully the primary one).
+    if(NOT DEFINED VCPKG_HEAD_VERSION)
+        set(VCPKG_HEAD_VERSION ${_version} PARENT_SCOPE)
+    endif()
 
     set_SOURCE_PATH(${CURRENT_BUILDTREES_DIR}/src/head ${SANITIZED_HEAD_REF})
 endfunction()

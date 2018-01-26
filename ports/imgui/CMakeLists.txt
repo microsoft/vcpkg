@@ -19,17 +19,22 @@ set(IMGUI_SOURCES
     imgui_draw.cpp
 )
 
-add_library(imgui
+add_library(${PROJECT_NAME}
     ${IMGUI_INCLUDES_PUBLIC}
     ${IMGUI_INCLUDES_PRIVATE}
     ${IMGUI_SOURCES}
 )
 
-install(TARGETS imgui
+target_include_directories(${PROJECT_NAME} PUBLIC $<INSTALL_INTERFACE:include>)
+
+install(TARGETS ${PROJECT_NAME}
+    EXPORT IMGUIExport
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
+
+install(EXPORT IMGUIExport FILE ${PROJECT_NAME}Config.cmake NAMESPACE ${PROJECT_NAME}:: DESTINATION share/${PROJECT_NAME})
 
 if(NOT IMGUI_SKIP_HEADERS)
     install(

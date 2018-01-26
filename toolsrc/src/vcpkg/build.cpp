@@ -4,6 +4,7 @@
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/enums.h>
 #include <vcpkg/base/optional.h>
+#include <vcpkg/base/stringliteral.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
@@ -26,7 +27,7 @@ namespace vcpkg::Build::Command
     using Dependencies::InstallPlanAction;
     using Dependencies::InstallPlanType;
 
-    static const std::string OPTION_CHECKS_ONLY = "--checks-only";
+    static constexpr StringLiteral OPTION_CHECKS_ONLY = "--checks-only";
 
     void perform_and_exit_ex(const FullPackageSpec& full_spec,
                              const fs::path& port_dir,
@@ -98,7 +99,7 @@ namespace vcpkg::Build::Command
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 
-    static const std::array<CommandSwitch, 1> BUILD_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 1> BUILD_SWITCHES = {{
         {OPTION_CHECKS_ONLY, "Only run checks, do not rebuild package"},
     }};
 
@@ -193,7 +194,7 @@ namespace vcpkg::Build
 
         for (auto&& host : host_architectures)
         {
-            const auto it = Util::find_if(toolset.supported_architectures, [&](const ToolsetArchOption& opt) {
+            auto it = Util::find_if(toolset.supported_architectures, [&](const ToolsetArchOption& opt) {
                 return host == opt.host_arch && target_arch == opt.target_arch;
             });
             if (it != toolset.supported_architectures.end()) return it->name;
@@ -269,10 +270,10 @@ namespace vcpkg::Build
             std::vector<PackageSpec> missing_specs;
             for (auto&& dep : filter_dependencies(config.scf.core_paragraph->depends, triplet))
             {
-                if (status_db.find_installed(dep, triplet) == status_db.end())
+                auto dep_spec = PackageSpec::from_name_and_triplet(dep, triplet).value_or_exit(VCPKG_LINE_INFO);
+                if (!status_db.is_installed(dep_spec))
                 {
-                    missing_specs.push_back(
-                        PackageSpec::from_name_and_triplet(dep, triplet).value_or_exit(VCPKG_LINE_INFO));
+                    missing_specs.push_back(std::move(dep_spec));
                 }
             }
             // Fail the build if any dependencies were missing
@@ -365,7 +366,7 @@ namespace vcpkg::Build
         if (config.build_package_options.clean_buildtrees == CleanBuildtrees::YES)
         {
             auto& fs = paths.get_filesystem();
-            const auto buildtrees_dir = paths.buildtrees / spec.name();
+            auto buildtrees_dir = paths.buildtrees / spec.name();
             auto buildtree_files = fs.get_files_non_recursive(buildtrees_dir);
             for (auto&& file : buildtree_files)
             {
@@ -501,7 +502,7 @@ namespace vcpkg::Build
 
         const std::vector<std::string> lines = Strings::split(ec_data.output, "\n");
 
-        PreBuildInfo pre_build_info{};
+        PreBuildInfo pre_build_info;
 
         const auto e = lines.cend();
         auto cur = std::find(lines.cbegin(), e, FLAG_GUID);

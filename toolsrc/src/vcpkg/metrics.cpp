@@ -152,7 +152,7 @@ namespace vcpkg::Metrics
 
         void track_property(const std::string& name, const std::string& value)
         {
-            if (!properties.empty()) properties.push_back(',');
+            if (properties.size() != 0) properties.push_back(',');
             properties.append(to_json_string(name));
             properties.push_back(':');
             properties.append(to_json_string(value));
@@ -160,7 +160,7 @@ namespace vcpkg::Metrics
 
         void track_metric(const std::string& name, double value)
         {
-            if (!measurements.empty()) measurements.push_back(',');
+            if (measurements.size() != 0) measurements.push_back(',');
             measurements.append(to_json_string(name));
             measurements.push_back(':');
             measurements.append(std::to_string(value));
@@ -302,7 +302,7 @@ namespace vcpkg::Metrics
         {
             if (MAXDWORD <= payload.size()) abort();
             std::wstring hdrs = L"Content-Type: application/json\r\n";
-            auto& p = const_cast<std::string&>(payload);
+            std::string& p = const_cast<std::string&>(payload);
             results = WinHttpSendRequest(request,
                                          hdrs.c_str(),
                                          static_cast<DWORD>(hdrs.size()),
@@ -383,27 +383,30 @@ namespace vcpkg::Metrics
 
         auto& fs = Files::get_real_filesystem();
 
-        const fs::path exe_path = [&fs]() -> fs::path {
-            auto vcpkgdir = System::get_exe_path_of_current_process().parent_path();
-            auto path = vcpkgdir / "vcpkgmetricsuploader.exe";
-            if (fs.exists(path)) return path;
+        if (true)
+        {
+            const fs::path exe_path = [&fs]() -> fs::path {
+                auto vcpkgdir = System::get_exe_path_of_current_process().parent_path();
+                auto path = vcpkgdir / "vcpkgmetricsuploader.exe";
+                if (fs.exists(path)) return path;
 
-            path = vcpkgdir / "scripts" / "vcpkgmetricsuploader.exe";
-            if (fs.exists(path)) return path;
+                path = vcpkgdir / "scripts" / "vcpkgmetricsuploader.exe";
+                if (fs.exists(path)) return path;
 
-            return "";
-        }();
+                return "";
+            }();
 
-        std::error_code ec;
-        fs.create_directories(temp_folder_path, ec);
-        if (ec) return;
-        fs.copy_file(exe_path, temp_folder_path_exe, fs::copy_options::skip_existing, ec);
-        if (ec) return;
+            std::error_code ec;
+            fs.create_directories(temp_folder_path, ec);
+            if (ec) return;
+            fs.copy_file(exe_path, temp_folder_path_exe, fs::copy_options::skip_existing, ec);
+            if (ec) return;
+        }
 
         const fs::path vcpkg_metrics_txt_path = temp_folder_path / ("vcpkg" + generate_random_UUID() + ".txt");
         fs.write_contents(vcpkg_metrics_txt_path, payload);
 
-        const std::string cmd_line = Strings::format(R"(start "vcpkgmetricsuploader.exe" "%s" "%s")",
+        const std::string cmd_line = Strings::format("start \"vcpkgmetricsuploader.exe\" \"%s\" \"%s\"",
                                                      temp_folder_path_exe.u8string(),
                                                      vcpkg_metrics_txt_path.u8string());
         System::cmd_execute_clean(cmd_line);

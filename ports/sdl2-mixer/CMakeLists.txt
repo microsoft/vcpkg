@@ -68,7 +68,8 @@ add_library(SDL2_mixer
     music_timidity.c
     music_wav.c
     native_midi/native_midi_common.c
-    native_midi/native_midi_win32.c)
+    native_midi/native_midi_win32.c
+    version.rc)
 
 set_target_properties(SDL2_mixer PROPERTIES DEFINE_SYMBOL SDL2_EXPORTS)
 target_compile_definitions(SDL2_mixer PRIVATE ${SDL_MIXER_DEFINES})

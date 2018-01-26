@@ -1,5 +1,6 @@
 #include "pch.h"
 
+#include <vcpkg/base/util.h>
 #include <vcpkg/statusparagraph.h>
 
 using namespace vcpkg::Parse;
@@ -82,5 +83,16 @@ namespace vcpkg
             case Want::UNKNOWN: return "unknown";
             default: return "error";
         }
+    }
+    std::vector<PackageSpec> InstalledPackageView::dependencies() const
+    {
+        auto deps = Util::fmap_flatten(features, [](const StatusParagraph* pgh) -> std::vector<std::string> const& {
+            return pgh->package.depends;
+        });
+
+        deps.insert(deps.end(), core->package.depends.begin(), core->package.depends.end());
+
+        auto&& spec = core->package.spec;
+        return PackageSpec::from_dependencies_of_port(spec.name(), deps, spec.triplet());
     }
 }

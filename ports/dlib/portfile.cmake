@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO davisking/dlib
-    REF v19.8
-    SHA512 5fbe306dab1fe025de0892808431ddc4bc6f3e91eb509881a0b341dd2d0a5a36c5d99d45ece19c428d6025b0601b996cab4b554332323a0c73a65d66b82db01a
+    REF v19.9
+    SHA512 1e2123c22e1b13cc84108fa627bfa92eadc9dee63f93a9f45676bbf2b752c8728117d915ac327f5223b0cdbce87dd3bef2f4d8d5ed3f8f5a314ffa9e8962a246
     HEAD_REF master
 )
 
@@ -16,11 +16,6 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/dlib/external/zlib)
 file(READ "${SOURCE_PATH}/dlib/CMakeLists.txt" DLIB_CMAKE)
 string(REPLACE "PNG_LIBRARY" "PNG_LIBRARIES" DLIB_CMAKE "${DLIB_CMAKE}")
 file(WRITE "${SOURCE_PATH}/dlib/CMakeLists.txt" "${DLIB_CMAKE}")
-
-set(WITH_BLAS OFF)
-if("blas" IN_LIST FEATURES)
-  set(WITH_BLAS ON)
-endif()
 
 set(WITH_CUDA OFF)
 if("cuda" IN_LIST FEATURES)
@@ -35,8 +30,8 @@ vcpkg_configure_cmake(
         -DDLIB_USE_FFTW=ON
         -DDLIB_PNG_SUPPORT=ON
         -DDLIB_JPEG_SUPPORT=ON
-        -DDLIB_USE_BLAS=${WITH_BLAS}
-        -DDLIB_USE_LAPACK=OFF
+        -DDLIB_USE_BLAS=ON
+        -DDLIB_USE_LAPACK=ON
         -DDLIB_USE_CUDA=${WITH_CUDA}
         -DDLIB_GIF_SUPPORT=OFF
         -DDLIB_USE_MKL_FFT=OFF

@@ -14,14 +14,18 @@
 #
 
 function(vcpkg_fixup_cmake_targets)
-    cmake_parse_arguments(_vfct "" "CONFIG_PATH" "" ${ARGN})
+    cmake_parse_arguments(_vfct "" "CONFIG_PATH;TARGET_PATH" "" ${ARGN})
 
     if(_vfct_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_fixup_cmake_targets was passed extra arguments: ${_vfct_UNPARSED_ARGUMENTS}")
     endif()
 
-    set(DEBUG_SHARE ${CURRENT_PACKAGES_DIR}/debug/share/${PORT})
-    set(RELEASE_SHARE ${CURRENT_PACKAGES_DIR}/share/${PORT})
+    if(NOT _vfct_TARGET_PATH)
+        set(_vfct_TARGET_PATH share/${PORT})
+    endif()
+
+    set(DEBUG_SHARE ${CURRENT_PACKAGES_DIR}/debug/${_vfct_TARGET_PATH})
+    set(RELEASE_SHARE ${CURRENT_PACKAGES_DIR}/${_vfct_TARGET_PATH})
 
     if(_vfct_CONFIG_PATH AND NOT RELEASE_SHARE STREQUAL "${CURRENT_PACKAGES_DIR}/${_vfct_CONFIG_PATH}")
         set(DEBUG_CONFIG ${CURRENT_PACKAGES_DIR}/debug/${_vfct_CONFIG_PATH})
@@ -87,11 +91,8 @@ function(vcpkg_fixup_cmake_targets)
         file(REMOVE ${UNUSED_FILES})
     endif()
 
-    # LLVM uses "LLVMExports-release.cmake"
     file(GLOB RELEASE_TARGETS
-        "${RELEASE_SHARE}/*[Tt]argets-release.cmake"
-        "${RELEASE_SHARE}/*[Cc]onfig-release.cmake"
-        "${RELEASE_SHARE}/*[Ee]xports-release.cmake"
+        "${RELEASE_SHARE}/*-release.cmake"
     )
     foreach(RELEASE_TARGET ${RELEASE_TARGETS})
         file(READ ${RELEASE_TARGET} _contents)
@@ -102,9 +103,7 @@ function(vcpkg_fixup_cmake_targets)
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         file(GLOB DEBUG_TARGETS
-            "${DEBUG_SHARE}/*[Tt]argets-debug.cmake"
-            "${DEBUG_SHARE}/*[Cc]onfig-debug.cmake"
-            "${DEBUG_SHARE}/*[Ee]xports-debug.cmake"
+            "${DEBUG_SHARE}/*-debug.cmake"
             )
         foreach(DEBUG_TARGET ${DEBUG_TARGETS})
             get_filename_component(DEBUG_TARGET_NAME ${DEBUG_TARGET} NAME)
@@ -114,7 +113,7 @@ function(vcpkg_fixup_cmake_targets)
             string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \"]+\\.exe)" "\${_IMPORT_PREFIX}/tools/${PORT}/\\1" _contents "${_contents}")
             string(REPLACE "\${_IMPORT_PREFIX}/lib" "\${_IMPORT_PREFIX}/debug/lib" _contents "${_contents}")
             string(REPLACE "\${_IMPORT_PREFIX}/bin" "\${_IMPORT_PREFIX}/debug/bin" _contents "${_contents}")
-            file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/${DEBUG_TARGET_NAME} "${_contents}")
+            file(WRITE ${CURRENT_PACKAGES_DIR}/${_vfct_TARGET_PATH}/${DEBUG_TARGET_NAME} "${_contents}")
 
             file(REMOVE ${DEBUG_TARGET})
         endforeach()
@@ -148,7 +147,7 @@ function(vcpkg_fixup_cmake_targets)
         file(WRITE ${MAIN_CONFIG} "${_contents}")
     endforeach()
 
-    # Remove /debug/share/<port>/ if it's empty.
+    # Remove /debug/<target_path>/ if it's empty.
     file(GLOB_RECURSE REMAINING_FILES "${DEBUG_SHARE}/*")
     if(NOT REMAINING_FILES)
         file(REMOVE_RECURSE ${DEBUG_SHARE})

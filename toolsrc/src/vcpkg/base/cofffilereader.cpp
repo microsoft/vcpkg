@@ -223,7 +223,7 @@ namespace vcpkg::CoffFileReader
         static const char* FILE_START = "!<arch>\n";
         static const size_t FILE_START_SIZE = 8;
 
-        fs.seekg(fstream::beg);
+        fs.seekg(fs.beg);
 
         char file_start[FILE_START_SIZE];
         fs.read(file_start, FILE_START_SIZE);

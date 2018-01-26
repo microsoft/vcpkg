@@ -1,16 +1,17 @@
 #header-only library
 include(vcpkg_common_functions)
-SET(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/asio-asio-1-10-8/asio/)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/chriskohlhoff/asio/archive/asio-1-10-8.zip"
-    FILENAME "asio-1-10-8.zip"
-    SHA512 bc9794a20fc7844a2a9d22bfa418005f61defbcecdd612daba0d317e6f8fc5a61d3a3b2d7d557b92584294b8adfccc3c47a8f0441f3e34a47a0f715ca1ba0e5b
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO chriskohlhoff/asio
+    REF asio-1-10-8
+    SHA512 55c26a6daf893f6e91ec7e8b5d70f1e27f2c1886552b2c9cb5c47b7c3bb08f78c9d6cec0a3bc6edbfb657a5094a001f742db0f18f81f51d79661b01fafea293e
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/asio)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/asio/COPYING ${CURRENT_PACKAGES_DIR}/share/asio/copyright)
+file(COPY ${SOURCE_PATH}/asio/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
 
 # Copy the asio header files
-file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR} FILES_MATCHING PATTERN "*.hpp" PATTERN "*.ipp")
+file(INSTALL ${SOURCE_PATH}/asio/include DESTINATION ${CURRENT_PACKAGES_DIR} FILES_MATCHING PATTERN "*.hpp" PATTERN "*.ipp")

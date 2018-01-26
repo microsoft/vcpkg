@@ -1,3 +1,326 @@
+vcpkg (0.0.103)
+--------------
+  * `vcpkg upgrade`: Fix issue with any command executing more than 10 transactions with mixed transaction types (install + remove)
+
+-- vcpkg team <vcpkg@microsoft.com>  WED, 24 Jan 2017 14:30:00 -0800
+
+
+vcpkg (0.0.102)
+--------------
+  * Add ports:
+    - catch-classic  1.12.0
+    - catch2         2.1.0
+    - cgicc          3.2.19
+    - libdisasm      0.23
+    - qt5-3d         5.9.2-0
+    - qt5-base       5.9.2-1
+    - qt5-charts     5.9.2-0
+    - qt5-datavis3d  5.9.2-0
+    - qt5-declarative 5.9.2-0
+    - qt5-gamepad    5.9.2-0
+    - qt5-imageformats 5.9.2-0
+    - qt5-modularscripts 1
+    - qt5-multimedia 5.9.2-0
+    - qt5-networkauth 5.9.2-0
+    - qt5-scxml      5.9.2-0
+    - qt5-serialport 5.9.2-0
+    - qt5-speech     5.9.2-0
+    - qt5-svg        5.9.2-0
+    - qt5-tools      5.9.2-0
+    - qt5-virtualkeyboard 5.9.2-0
+    - qt5-websockets 5.9.2-0
+    - qt5-winextras  5.9.2-0
+    - qt5-xmlpatterns 5.9.2-0
+    - tre            0.8.0-1
+  * Update ports:
+    - boost-asio     1.66.0 -> 1.66.0-1
+    - boost-build    1.66.0 -> 1.66.0-3
+    - boost-vcpkg-helpers 3 -> 4
+    - corrade        jun2017-3 -> jan2018-1
+    - curl           7.57.0-1 -> 7.57.0-2
+    - date           2.3-c286981b3bf83c79554769df68b27415cee68d77 -> 2.4
+    - discord-rpc    2.0.1 -> 2.1.0
+    - dlib           19.8 -> 19.9
+    - libbson        1.9.0 -> 1.9.2
+    - libconfig      1.7.1 -> 1.7.2
+    - libjpeg-turbo  1.5.2-2 -> 1.5.3
+    - libodb         2.4.0-1 -> 2.4.0-2
+    - libogg         1.3.2-cab46b1-3 -> 1.3.3
+    - libwebp        0.6.0-2 -> 0.6.1
+    - libwebsockets  2.0.0-4 -> 2.4.1
+    - lz4            1.8.0-1 -> 1.8.1.2
+    - magnum         jun2017-6 -> jan2018-1
+    - magnum-plugins jun2017-5 -> jan2018-1
+    - mongo-c-driver 1.9.0 -> 1.9.2
+    - mpg123         1.25.8 -> 1.25.8-1
+    - openni2        2.2.0.33-4 -> 2.2.0.33-7
+    - osg            3.5.6-1 -> 3.5.6-2
+    - poco           1.8.0.1 -> 1.8.1
+    - qca            2.2.0-1 -> 2.2.0-2
+    - qscintilla     2.10-1 -> 2.10-4
+    - qt5            5.8-6 -> 5.9.2-1
+    - qwt            6.1.3-2 -> 6.1.3-4
+    - sciter         4.1.0 -> 4.1.1
+    - sdl2           2.0.7-3 -> 2.0.7-4
+    - tiff           4.0.8-1 -> 4.0.9
+    - xxhash         0.6.3-1 -> 0.6.4
+  * Remove usage of `BITS-transfer`. Use .NET functions (which used to be the fallback if `BITS-transfer` failed) by default.
+  * Enable the usage of `feature-packages` by default. More info [here](docs/specifications/feature-packages.md).
+  * Bootstrapping `vcpkg` now happens in a clean environment to avoid issues when building in a VS Developer Prompt among others.
+  * Update required version & auto-downloaded version of `cmake` to 3.10.2
+  * Update required version & auto-downloaded version of `vswhere` to 2.3.2
+
+-- vcpkg team <vcpkg@microsoft.com>  TUE, 23 Jan 2018 17:00:00 -0800
+
+
+vcpkg (0.0.101)
+--------------
+  * Add ports:
+    - alac-decoder   0.2
+    - args           d8905de
+    - boost-accumulators 1.66.0
+    - boost-algorithm 1.66.0
+    - boost-align    1.66.0
+    - boost-any      1.66.0
+    - boost-array    1.66.0
+    - boost-asio     1.66.0
+    - boost-assert   1.66.0
+    - boost-assign   1.66.0
+    - boost-atomic   1.66.0
+    - boost-beast    1.66.0
+    - boost-bimap    1.66.0
+    - boost-bind     1.66.0
+    - boost-build    1.66.0
+    - boost-callable-traits 1.66.0
+    - boost-chrono   1.66.0
+    - boost-circular-buffer 1.66.0
+    - boost-compatibility 1.66.0
+    - boost-compute  1.66.0
+    - boost-concept-check 1.66.0
+    - boost-config   1.66.0
+    - boost-container 1.66.0
+    - boost-context  1.66.0
+    - boost-conversion 1.66.0
+    - boost-convert  1.66.0
+    - boost-core     1.66.0
+    - boost-coroutine 1.66.0
+    - boost-coroutine2 1.66.0
+    - boost-crc      1.66.0
+    - boost-date-time 1.66.0
+    - boost-detail   1.66.0
+    - boost-disjoint-sets 1.66.0
+    - boost-dll      1.66.0
+    - boost-dynamic-bitset 1.66.0
+    - boost-endian   1.66.0
+    - boost-exception 1.66.0
+    - boost-fiber    1.66.0
+    - boost-filesystem 1.66.0
+    - boost-flyweight 1.66.0
+    - boost-foreach  1.66.0
+    - boost-format   1.66.0
+    - boost-function 1.66.0
+    - boost-function-types 1.66.0
+    - boost-functional 1.66.0
+    - boost-fusion   1.66.0
+    - boost-geometry 1.66.0
+    - boost-gil      1.66.0
+    - boost-graph    1.66.0
+    - boost-graph-parallel 1.66.0
+    - boost-hana     1.66.0
+    - boost-heap     1.66.0
+    - boost-icl      1.66.0
+    - boost-integer  1.66.0
+    - boost-interprocess 1.66.0
+    - boost-interval 1.66.0
+    - boost-intrusive 1.66.0
+    - boost-io       1.66.0
+    - boost-iostreams 1.66.0
+    - boost-iterator 1.66.0
+    - boost-lambda   1.66.0
+    - boost-lexical-cast 1.66.0
+    - boost-local-function 1.66.0
+    - boost-locale   1.66.0
+    - boost-lockfree 1.66.0
+    - boost-log      1.66.0
+    - boost-logic    1.66.0
+    - boost-math     1.66.0
+    - boost-metaparse 1.66.0
+    - boost-move     1.66.0
+    - boost-mp11     1.66.0
+    - boost-mpi      1.66.0
+    - boost-mpl      1.66.0
+    - boost-msm      1.66.0
+    - boost-multi-array 1.66.0
+    - boost-multi-index 1.66.0
+    - boost-multiprecision 1.66.0
+    - boost-numeric-conversion 1.66.0
+    - boost-odeint   1.66.0
+    - boost-optional 1.66.0
+    - boost-parameter 1.66.0
+    - boost-phoenix  1.66.0
+    - boost-poly-collection 1.66.0
+    - boost-polygon  1.66.0
+    - boost-pool     1.66.0
+    - boost-predef   1.66.0
+    - boost-preprocessor 1.66.0
+    - boost-process  1.66.0
+    - boost-program-options 1.66.0
+    - boost-property-map 1.66.0
+    - boost-property-tree 1.66.0
+    - boost-proto    1.66.0
+    - boost-ptr-container 1.66.0
+    - boost-python   1.66.0-1
+    - boost-qvm      1.66.0
+    - boost-random   1.66.0
+    - boost-range    1.66.0
+    - boost-ratio    1.66.0
+    - boost-rational 1.66.0
+    - boost-regex    1.66.0
+    - boost-scope-exit 1.66.0
+    - boost-serialization 1.66.0
+    - boost-signals  1.66.0
+    - boost-signals2 1.66.0
+    - boost-smart-ptr 1.66.0
+    - boost-sort     1.66.0
+    - boost-spirit   1.66.0
+    - boost-stacktrace 1.66.0
+    - boost-statechart 1.66.0
+    - boost-static-assert 1.66.0
+    - boost-system   1.66.0
+    - boost-test     1.66.0-1
+    - boost-thread   1.66.0
+    - boost-throw-exception 1.66.0
+    - boost-timer    1.66.0
+    - boost-tokenizer 1.66.0
+    - boost-tti      1.66.0
+    - boost-tuple    1.66.0
+    - boost-type-erasure 1.66.0
+    - boost-type-index 1.66.0
+    - boost-type-traits 1.66.0
+    - boost-typeof   1.66.0
+    - boost-ublas    1.66.0
+    - boost-units    1.66.0
+    - boost-unordered 1.66.0
+    - boost-utility  1.66.0
+    - boost-uuid     1.66.0
+    - boost-variant  1.66.0
+    - boost-vcpkg-helpers 3
+    - boost-vmd      1.66.0
+    - boost-wave     1.66.0
+    - boost-winapi   1.66.0
+    - boost-xpressive 1.66.0
+    - brynet         0.9.0
+    - chaiscript     6.0.0
+    - cimg           2.1.8
+    - crow           0.1
+    - gainput        1.0.0
+    - jack2          1.9.12.2
+    - libdatrie      0.2.10-2
+    - libgit2        0.26.0
+    - libmupdf       1.11-1
+    - libpqxx        6.0.0
+    - libqrencode    4.0.0-1
+    - libsamplerate  0.1.9.0
+    - mbedtls        2.6.1
+    - nghttp2        1.28.0
+    - portmidi       0.217.1
+    - re2            2017-12-01-1
+    - rs-core-lib    commit-1ed2dadbda3977b13e5e83cc1f3eeca76b36ebe5
+    - sol            2.18.7
+    - soundtouch     2.0.0.2
+    - sqlitecpp      2.2
+    - tinyexif       1.0.1-1
+    - unicorn        2017-12-06-bc34c36eaeca0f4fc672015d24ce3efbcc81d6e4-1
+    - unicorn-lib    commit-3ffa7fe69a1d0c37fb52a4af61380c5fd84fa5aa
+    - yoga           1.7.0
+  * Update ports:
+    - ace            6.4.5 -> 6.4.6
+    - alembic        1.7.4-1 -> 1.7.5
+    - arrow          0.6.0 -> 0.6.0-1
+    - asio           1.10.8 -> 1.10.8-1
+    - assimp         4.0.1-3 -> 4.1.0-1
+    - aubio          0.46 -> 0.4.6
+    - aws-sdk-cpp    1.2.4 -> 1.3.15
+    - beast          v84-1 -> 0
+    - blaze          3.2-2 -> 3.2-3
+    - bond           7.0.2 -> 7.0.2-1
+    - boost          1.65.1-3 -> 1.66.0
+    - brotli         1.0.2 -> 1.0.2-1
+    - bullet3        2.86.1-1 -> 2.87
+    - cgal           4.11 -> 4.11-2
+    - cpp-redis      3.5.2-2 -> 4.3.0
+    - cpprestsdk     2.10.0 -> 2.10.1-1
+    - curl           7.55.1-1 -> 7.57.0-1
+    - directxmesh    oct2016 -> dec2017
+    - directxtex     dec2016 -> dec2017
+    - directxtk      dec2016-1 -> dec2017
+    - dlib           19.7 -> 19.8
+    - exiv2          4f4add2cdcbe73af7098122a509dff0739d15908 -> 8f5b795eaa4bc414d2d6041c1dbd1a7f7bf1fc99
+    - fcl            0.5.0-2 -> 0.5.0-3
+    - fftw3          3.3.7-1 -> 3.3.7-2
+    - flatbuffers    1.7.1-1 -> 1.8.0
+    - fmt            4.0.0-1 -> 4.1.0
+    - folly          2017.11.27.00 -> 2017.11.27.00-2
+    - gflags         2.2.0-5 -> 2.2.1
+    - glm            0.9.8.5 -> 0.9.8.5-1
+    - gmime          3.0.2 -> 3.0.5
+    - grpc           1.7.2 -> 1.8.3
+    - gsl-lite       0.24.0 -> 0.26.0
+    - gtest          1.8-1 -> 1.8.0-5
+    - harfbuzz       1.6.3-1 -> 1.7.4
+    - hdf5           1.10.0-patch1-2 -> 1.10.1-1
+    - hpx            1.0.0-5 -> 1.0.0-7
+    - imgui          1.52 -> 1.53
+    - itk            4.11.0 -> 4.13.0
+    - libbson        1.6.2-2 -> 1.9.0
+    - libconfig      1.6.0-1 -> 1.7.1
+    - libiconv       1.15 -> 1.15-1
+    - libkml         1.3.0-1 -> 1.3.0-2
+    - librtmp        2.3 -> 2.4
+    - libsodium      1.0.15 -> 1.0.15-1
+    - libtorrent     1.1.5 -> 1.1.6
+    - live555        2017.09.12 -> 2017.10.28
+    - llvm           5.0.0-2 -> 5.0.1
+    - mongo-c-driver 1.6.2-1 -> 1.9.0
+    - mongo-cxx-driver 3.1.1-1 -> 3.1.1-2
+    - mpg123         1.24.0-1 -> 1.25.8
+    - mpir           3.0.0-3 -> 3.0.0-4
+    - ms-gsl         20171104-d10ebc6555b627c9d1196076a78467e7be505987 -> 20171204-9d65e74400976b3509833f49b16d401600c7317d
+    - nlohmann-json  2.1.1-1 -> 3.0.1
+    - opencv         3.3.1-9 -> 3.4.0
+    - openimageio    1.7.15-1 -> 1.7.15-2
+    - openssl        1.0.2m -> 1.0.2n-1
+    - openvdb        5.0.0 -> 5.0.0-1
+    - pcl            1.8.1-7 -> 1.8.1-9
+    - pybind11       2.2.0 -> 2.2.1
+    - python3        3.6.1 -> 3.6.4
+    - range-v3       20151130-vcpkg4 -> 20151130-vcpkg5
+    - realsense2     2.8.2 -> 2.9.0
+    - sciter         4.0.6 -> 4.1.0
+    - sdl2-image     2.0.1-3 -> 2.0.2-1
+    - sdl2-mixer     2.0.2-1 -> 2.0.2-2
+    - sdl2-net       2.0.1-3 -> 2.0.1-4
+    - sdl2-ttf       2.0.14-3 -> 2.0.14-4
+    - sobjectizer    5.5.19.2-1 -> 5.5.20
+    - speex          1.2.0-2 -> 1.2.0-4
+    - string-theory  1.6-1 -> 1.7
+    - szip           2.1-2 -> 2.1.1
+    - tacopie        2.4.1-2 -> 3.2.0
+    - tbb            2017_U7 -> 2018_U2
+    - tclap          1.2.1 -> 1.2.2
+    - thrift         20172805-72ca60debae1d9fb35d9f0085118873669006d7f-1 -> 20172805-72ca60debae1d9fb35d9f0085118873669006d7f-2
+    - tinyxml2       5.0.1-1 -> 6.0.0
+    - vtk            8.0.1-5 -> 8.1.0-1
+    - wt             3.3.7-2 -> 3.3.7-4
+    - zeromq         20170908-18498f620f0f6d4076981ea16eb5760fe4d28dc2-1 -> 20170908-18498f620f0f6d4076981ea16eb5760fe4d28dc2-2
+    - zstd           1.3.1-1 -> 1.3.3
+  * Introduce `vcpkg upgrade` command. This command automatically rebuilds outdated libraries to the latest version.
+  * `vcpkg list`: Improve output for long triplets
+  * Update required version & auto-downloaded version of `cmake` to 3.10.1
+
+-- vcpkg team <vcpkg@microsoft.com>  WED, 10 Jan 2018 17:00:00 -0800
+
+
 vcpkg (0.0.100)
 --------------
   * Add ports:
