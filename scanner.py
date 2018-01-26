@@ -11,14 +11,14 @@ import sys
 def get_github():
     githubdoc = []
 
-    with urllib.request.urlopen('https://api.github.com/search/issues?q=vcpkg+-repo:microsoft/vcpkg&sort=updated&per_page=30') as res:
+    with urllib.request.urlopen('https://api.github.com/search/issues?q=vcpkg+-repo:microsoft/vcpkg&sort=updated&per_page=50') as res:
         doc = res.read().decode('utf-8')
         jdoc = json.loads(doc)
         print("total count = {}".format(jdoc['total_count']))
         today = datetime.datetime.utcnow()
         try:
             if 'items' in jdoc:
-                for item in jdoc['items'][:30]:
+                for item in jdoc['items'][:50]:
                     updated_at = item['updated_at']
                     dt_updated_at = datetime.datetime.strptime(updated_at, "%Y-%m-%dT%H:%M:%SZ")
                     if today - dt_updated_at > datetime.timedelta(days=3):
@@ -81,7 +81,7 @@ msg.set_content("""<style>.github { margin: 10px 0px; border-left: 3px #aaf soli
 
 msg['Subject'] = '[vcpkg] Automatic social analysis for vcpkg {}'.format(datetime.datetime.now().isoformat())
 msg['From'] = "vcpkg.social.analysis@xyz123.noreply"
-msg['To'] = "roschuma@microsoft.com,alkarata@microsoft.com,vcpkg@microsoft.com"
+msg['To'] = "vcpkg@microsoft.com,roschuma@microsoft.com,alkarata@microsoft.com,ericmitt@microsoft.com"
 
 with smtplib.SMTP(host='microsoft-com.mail.protection.outlook.com', port=25, timeout=10) as smtp:
     print("connected")
