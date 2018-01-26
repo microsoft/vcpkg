@@ -37,39 +37,31 @@ if (!(Test-Path $vcpkgSourcesPath))
     return
 }
 
-try
+$msbuildExeWithPlatformToolset = & $scriptsDir\findAnyMSBuildWithCppPlatformToolset.ps1 $withVSPath
+$msbuildExe = $msbuildExeWithPlatformToolset[0]
+$platformToolset = $msbuildExeWithPlatformToolset[1]
+$windowsSDK = & $scriptsDir\getWindowsSDK.ps1
+
+$arguments = (
+"`"/p:VCPKG_VERSION=-$gitHash`"",
+"`"/p:DISABLE_METRICS=$disableMetrics`"",
+"/p:Configuration=Release",
+"/p:Platform=x86",
+"/p:PlatformToolset=$platformToolset",
+"/p:TargetPlatformVersion=$windowsSDK",
+"/m",
+"`"$vcpkgSourcesPath\dirs.proj`"") -join " "
+
+# vcpkgInvokeCommandClean cmd "/c echo %PATH%"
+$ec = vcpkgInvokeCommandClean $msbuildExe $arguments
+
+if ($ec -ne 0)
 {
-    Push-Location $vcpkgSourcesPath
-    $msbuildExeWithPlatformToolset = & $scriptsDir\findAnyMSBuildWithCppPlatformToolset.ps1 $withVSPath
-    $msbuildExe = $msbuildExeWithPlatformToolset[0]
-    $platformToolset = $msbuildExeWithPlatformToolset[1]
-    $windowsSDK = & $scriptsDir\getWindowsSDK.ps1
-
-    $arguments = (
-    "`"/p:VCPKG_VERSION=-$gitHash`"",
-    "`"/p:DISABLE_METRICS=$disableMetrics`"",
-    "/p:Configuration=Release",
-    "/p:Platform=x86",
-    "/p:PlatformToolset=$platformToolset",
-    "/p:TargetPlatformVersion=$windowsSDK",
-    "/m",
-    "dirs.proj") -join " "
-
-    # vcpkgInvokeCommandClean cmd "/c echo %PATH%" -wait:$true
-    vcpkgInvokeCommandClean $msbuildExe $arguments -wait:$true
-
-    if ($LASTEXITCODE -ne 0)
-    {
-        Write-Error "Building vcpkg.exe failed. Please ensure you have installed Visual Studio with the Desktop C++ workload and the Windows SDK for Desktop C++."
-        return
-    }
-
-    Write-Verbose("Placing vcpkg.exe in the correct location")
-
-    Copy-Item $vcpkgSourcesPath\Release\vcpkg.exe $vcpkgRootDir\vcpkg.exe | Out-Null
-    Copy-Item $vcpkgSourcesPath\Release\vcpkgmetricsuploader.exe $vcpkgRootDir\scripts\vcpkgmetricsuploader.exe | Out-Null
+    Write-Error "Building vcpkg.exe failed. Please ensure you have installed Visual Studio with the Desktop C++ workload and the Windows SDK for Desktop C++."
+    return
 }
-finally
-{
-    Pop-Location
-}
+
+Write-Verbose("Placing vcpkg.exe in the correct location")
+
+Copy-Item $vcpkgSourcesPath\Release\vcpkg.exe $vcpkgRootDir\vcpkg.exe | Out-Null
+Copy-Item $vcpkgSourcesPath\Release\vcpkgmetricsuploader.exe $vcpkgRootDir\scripts\vcpkgmetricsuploader.exe | Out-Null

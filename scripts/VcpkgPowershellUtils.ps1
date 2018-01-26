@@ -167,24 +167,20 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
 function vcpkgInvokeCommand()
 {
     param ( [Parameter(Mandatory=$true)][string]$executable,
-                                        [string]$arguments = "",
-            [Parameter(Mandatory=$true)][switch]$wait)
+                                        [string]$arguments = "")
 
     Write-Verbose "Executing: ${executable} ${arguments}"
     $process = Start-Process -FilePath "`"$executable`"" -ArgumentList $arguments -PassThru -NoNewWindow
-    if ($wait)
-    {
-        Wait-Process -InputObject $process
-        $ec = $process.ExitCode
-        Write-Verbose "Execution terminated with exit code $ec."
-    }
+    Wait-Process -InputObject $process
+    $ec = $process.ExitCode
+    Write-Verbose "Execution terminated with exit code $ec."
+    return $ec
 }
 
 function vcpkgInvokeCommandClean()
 {
     param ( [Parameter(Mandatory=$true)][string]$executable,
-                                        [string]$arguments = "",
-            [Parameter(Mandatory=$true)][switch]$wait)
+                                        [string]$arguments = "")
 
     Write-Verbose "Clean-Executing: ${executable} ${arguments}"
     $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
@@ -192,13 +188,11 @@ function vcpkgInvokeCommandClean()
     $command = "& `"$cleanEnvScript`"; & `"$executable`" $arguments"
     $bytes = [System.Text.Encoding]::Unicode.GetBytes($command)
     $encodedCommand = [Convert]::ToBase64String($bytes)
-    $arg = "-encodedCommand $encodedCommand"
+    $arg = "-NoProfile -ExecutionPolicy Bypass -encodedCommand $encodedCommand"
 
     $process = Start-Process -FilePath powershell.exe -ArgumentList $arg -PassThru -NoNewWindow
-    if ($wait)
-    {
-        Wait-Process -InputObject $process
-        $ec = $process.ExitCode
-        Write-Verbose "Execution terminated with exit code $ec."
-    }
+    Wait-Process -InputObject $process
+    $ec = $process.ExitCode
+    Write-Verbose "Execution terminated with exit code $ec."
+    return $ec
 }
