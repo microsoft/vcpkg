@@ -8,6 +8,9 @@ param(
     [string]$buildNumber
 )
 
+$scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
+. "$scriptsDir\VcpkgPowershellUtils.ps1"
+
 function FormatElapsedTime([TimeSpan]$ts)
 {
     if ($ts.TotalHours -ge 1)
@@ -131,6 +134,6 @@ Move-Item -Path $sevenZipPart -Destination $sevenZip
 $formattedTime7z = FormatElapsedTime $time7z
 Write-Host "Creating 7z... done. Time Taken: $formattedTime7z seconds"
 
-Remove-Item $toCompleted -Recurse -Force -ErrorAction SilentlyContinue
+vcpkgRemoveItem $toCompleted
 
 KeepMostRecentFiles (Get-ChildItem $destinationRoot) -keepCount 10
