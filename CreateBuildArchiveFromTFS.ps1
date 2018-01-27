@@ -49,6 +49,20 @@ function MyCopyItem
     Write-Host "    Copying done. Time Taken: $formattedTime seconds"
 }
 
+function KeepMostRecentFiles
+{
+    param(
+        [Parameter(Mandatory=$true)]$files,
+        [int]$keepCount
+    )
+
+    $sortedfiles = $files | Sort-object LastWriteTime -Descending
+    for ($i = $keepCount; $i -lt $sortedfiles.Count; $i++)
+    {
+        vcpkgRemoveItem $sortedfiles[$i]
+    }
+}
+
 $destinationRoot = $destinationRoot -replace "\\$"  # Remove potential trailing backslash
 
 if ($latest)
@@ -118,3 +132,5 @@ $formattedTime7z = FormatElapsedTime $time7z
 Write-Host "Creating 7z... done. Time Taken: $formattedTime7z seconds"
 
 Remove-Item $toCompleted -Recurse -Force -ErrorAction SilentlyContinue
+
+KeepMostRecentFiles (Get-ChildItem $destinationRoot) -keepCount 10
