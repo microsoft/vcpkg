@@ -61,8 +61,8 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/external/libpng/arm)
 
 # Dlib encodes debug/release in its config.h. Patch it to respond to the NDEBUG macro instead.
 file(READ ${CURRENT_PACKAGES_DIR}/include/dlib/config.h _contents)
-string(REPLACE "/* #undef ENABLE_ASSERTS */" "#if !defined(NDEBUG)\n#define ENABLE_ASSERTS\n#endif" _contents ${_contents})
-string(REPLACE "#define DLIB_DISABLE_ASSERTS" "#if defined(NDEBUG)\n#define DLIB_DISABLE_ASSERTS\n#endif" _contents ${_contents})
+string(REPLACE "/* #undef ENABLE_ASSERTS */" "#if defined(_DEBUG)\n#define ENABLE_ASSERTS\n#endif" _contents ${_contents})
+string(REPLACE "#define DLIB_DISABLE_ASSERTS" "#if !defined(_DEBUG)\n#define DLIB_DISABLE_ASSERTS\n#endif" _contents ${_contents})
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/dlib/config.h ${_contents})
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/dlib/dlib.cmake _contents)
