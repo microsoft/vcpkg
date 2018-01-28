@@ -30,7 +30,7 @@ index c502769..0cb71e5 100644
 +find_library(CAIRO REQUIRED cairo>=1.12.16)
 +if(CMAKE_BUILD_TYPE STREQUAL Debug)
 +    set(CAIRO_LIB_SUFFIX d)
-++endif()
++endif()
  
  # Only build the documentation if we can find Sphinx.
  find_package(Sphinx)
