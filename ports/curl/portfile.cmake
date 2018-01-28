@@ -38,6 +38,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         -DENABLE_IPV6=OFF
         -DENABLE_UNIX_SOCKETS=OFF
     )
+    set(HTTP2_OPTIONS) ## disable curl HTTP2 support
 endif()
 
 vcpkg_find_acquire_program(PERL)
