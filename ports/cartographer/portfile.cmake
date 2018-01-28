@@ -14,27 +14,29 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/fix-find-packages.patch
 )
 
+#Although the dynamic version is built, but here is no export (.lib) for the dll
+set(VCPKG_LIBRARY_LINKAGE static)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS        
         -DGFLAGS_PREFER_EXPORTED_GFLAGS_CMAKE_CONFIGURATION=OFF 
         -DGLOG_PREFER_EXPORTED_GLOG_CMAKE_CONFIGURATION=OFF 
 		-Dgtest_disable_pthreads=ON 
-		-DCMAKE_USE_PTHREADS_INIT=0     
+		-DCMAKE_USE_PTHREADS_INIT=OFF     
 	OPTIONS_DEBUG
 		-DFORCE_DEBUG_BUILD=True
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
+
 
 vcpkg_copy_pdbs()
-
 
 # Clean
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-# Handle copyright of suitesparse and metis
+# Handle copyright of cartographer
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cartographer)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/cartographer/LICENSE ${CURRENT_PACKAGES_DIR}/share/cartographer/copyright)
