@@ -11,7 +11,10 @@ import sys
 def get_github():
     githubdoc = []
 
-    with urllib.request.urlopen('https://api.github.com/search/issues?q=vcpkg+-repo:microsoft/vcpkg&sort=updated&per_page=50') as res:
+    url = 'https://api.github.com/search/issues?q=vcpkg+-repo:microsoft/vcpkg&sort=updated&per_page=50'
+    print("[GITHUB] Fetching {}".format(url))
+
+    with urllib.request.urlopen(url) as res:
         doc = res.read().decode('utf-8')
         jdoc = json.loads(doc)
         print("total count = {}".format(jdoc['total_count']))
@@ -30,12 +33,15 @@ def get_github():
         except:
             githubdoc.append("<div>{}</div>".format(html.escape(sys.exc_info())))
 
-    return "<h2>Github last 3 days ({} issues+PRs)</h2>{}".format(len(githubdoc), "".join(githubdoc))
+    return "<h2>Github last 3 days ({} issues+PRs) <a href=\"{}\">[link]</a></h2>{}".format(len(githubdoc), url, "".join(githubdoc))
 
 def get_google():
     googledoc = []
 
-    with urllib.request.urlopen('https://www.googleapis.com/customsearch/v1?key=AIzaSyAgDJeOcCtOgYSLPboFLf_3SsV9TqSYTFE&cx=016162264654347836401:8cwjt4hwu-k&q=vcpkg+-site:github.com&dateRestrict=d5&exactTerms=vcpkg') as res:
+    url = 'https://www.googleapis.com/customsearch/v1?key=AIzaSyAgDJeOcCtOgYSLPboFLf_3SsV9TqSYTFE&cx=016162264654347836401:8cwjt4hwu-k&q=vcpkg+-site:github.com&dateRestrict=d5&exactTerms=vcpkg'
+    print("[GOOGLE] Fetching {}".format(url))
+
+    with urllib.request.urlopen(url) as res:
         jdoc = json.loads(res.read().decode('utf-8'))
         try:
             if 'items' in jdoc:
@@ -46,13 +52,14 @@ def get_google():
         except:
             googledoc.append("<div>{}</div>".format(html.escape(sys.exc_info())))
 
-    return "<h2>Google last 4 days ({} hits)</h2>{}".format(len(googledoc), "".join(googledoc))
+    return "<h2>Google last 4 days ({} hits) <a href=\"{}\">[link]</a></h2>{}".format(len(googledoc), url, "".join(googledoc))
 
 def get_stackoverflow():
     stackdoc = []
 
     fromdate = (datetime.datetime.now() - datetime.timedelta(days=14)).timestamp()
-    url = 'https://api.stackexchange.com/2.2/search?order=desc&sort=activity&intitle=vcpkg&site=stackoverflow&fromdate={}'.format(int(fromdate))
+    url = 'https://api.stackexchange.com/2.2/search/excerpts?order=desc&sort=activity&q=vcpkg&site=stackoverflow&fromdate={}'.format(int(fromdate))
+    print("[STACK OVERFLOW] Fetching {}".format(url))
     http.client.HTTPConnection.debuglevel = 1
     with urllib.request.urlopen(urllib.request.Request(url, headers={"Accept-Encoding": "gzip"})) as res:
         doc1 = res.read()
@@ -62,12 +69,16 @@ def get_stackoverflow():
             if 'items' in jdoc:
                 for item in jdoc['items'][:30]:
                     activitydate = datetime.datetime.fromtimestamp(int(item['last_activity_date'])).isoformat()
-                    stackdoc.append("""<div class="stacko"><div><a href="{}">{}</a></div><div>Last Activity: {}</div><div>views: {}</div></div>""".format(item['link'], html.escape(item['title']), activitydate, item['view_count']))
+                    if item['item_type'] == "question":
+                        link = "https://stackoverflow.com/questions/{}".format(item["question_id"])
+                    else:
+                        link = "https://stackoverflow.com/questions/{}#{}".format(item["question_id"], item["answer_id"])
+                    stackdoc.append("""<div class="stacko"><div><a href="{}">{}</a></div><div>Last Activity: {}</div><div>{}</div></div>""".format(link, html.escape(item['title']), activitydate, html.escape(item['excerpt'])))
             else:
                 stackdoc.append("""<div class="stacko">{}</div>""".format(html.escape(json.dumps(jdoc))))
         except:
             stackdoc.append("<div>{}</div>".format(html.escape(sys.exc_info())))
-    return "<h2>Stackoverflow last 14 days ({} posts)</h2>{}".format(len(stackdoc), "".join(stackdoc))
+    return "<h2>Stackoverflow last 14 days ({} posts) <a href=\"{}\">[link]</a></h2>{}".format(len(stackdoc), url, "".join(stackdoc))
 
 stackodoc = get_stackoverflow()
 googledoc = get_google()
