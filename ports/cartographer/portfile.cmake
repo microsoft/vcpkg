@@ -1,18 +1,10 @@
-set(MSVC_USE_STATIC_CRT_VALUE OFF)
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-	if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-	    message(FATAL_ERROR "Ceres does not currently support mixing static CRT and dynamic library linkage")
-	endif()
-	set(MSVC_USE_STATIC_CRT_VALUE ON)
-endif()
-
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googlecartographer/cartographer
     REF 0.3.0
-    SHA512 901638931817ae91fd723a831463ad7901b6f704a07a5bd8bde755c621e75c4d9fef7066977b4a3d723f707fa443c693b4c5927593ff2ce17255b9cb9bebbd4c
+    SHA512  34c40e438acd91815c3d4f73b350e430839b13ad0a20428ffa8417b801918994589b2abca1094cc6f1748ea2358ba84e9e97bd1c56e4d9c3ce9c6b5a455ca233
     HEAD_REF master
 )
 
@@ -28,7 +20,9 @@ vcpkg_configure_cmake(
         -DGFLAGS_PREFER_EXPORTED_GFLAGS_CMAKE_CONFIGURATION=OFF 
         -DGLOG_PREFER_EXPORTED_GLOG_CMAKE_CONFIGURATION=OFF 
 		-Dgtest_disable_pthreads=ON 
-        -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT_VALUE}
+		-DCMAKE_USE_PTHREADS_INIT=0     
+	OPTIONS_DEBUG
+		-DFORCE_DEBUG_BUILD=True
 )
 
 vcpkg_install_cmake()
