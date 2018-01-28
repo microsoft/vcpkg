@@ -14,8 +14,12 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/0002_fix_uwp.patch
 )
 
+SET(HTTP2_OPTIONS)
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     SET(CURL_STATICLIB OFF)
+    SET(HTTP2_OPTIONS
+        -DUSE_NGHTTP2=ON
+    )
 else()
     SET(CURL_STATICLIB ON)
 endif()
@@ -45,10 +49,10 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         ${UWP_OPTIONS}
+        ${HTTP2_OPTIONS}
         -DBUILD_TESTING=OFF
         -DBUILD_CURL_EXE=OFF
         -DENABLE_MANUAL=OFF
-        -DUSE_NGHTTP2=ON
         -DCURL_STATICLIB=${CURL_STATICLIB}
         -DCMAKE_USE_OPENSSL=${USE_OPENSSL}
         -DCMAKE_USE_WINSSL=${USE_WINSSL}
