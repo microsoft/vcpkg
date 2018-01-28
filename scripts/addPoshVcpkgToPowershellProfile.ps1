@@ -5,14 +5,15 @@ function findExistingImportModuleDirectives([Parameter(Mandatory=$true)][string]
 {
     if (!(Test-Path $path))
     {
-        return $false
+        return
     }
 
     $fileContents = Get-Content $path
-    return $fileContents -match 'Import-Module.+?(?=posh-vcpkg)'
+    $fileContents -match 'Import-Module.+?(?=posh-vcpkg)'
+    return
 }
 
-$scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
+$scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 . "$scriptsDir\VcpkgPowershellUtils.ps1"
 
 $profileEntry = "Import-Module '$scriptsDir\posh-vcpkg'"

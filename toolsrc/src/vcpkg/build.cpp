@@ -4,6 +4,7 @@
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/enums.h>
 #include <vcpkg/base/optional.h>
+#include <vcpkg/base/stringliteral.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
@@ -26,7 +27,7 @@ namespace vcpkg::Build::Command
     using Dependencies::InstallPlanAction;
     using Dependencies::InstallPlanType;
 
-    static const std::string OPTION_CHECKS_ONLY = "--checks-only";
+    static constexpr StringLiteral OPTION_CHECKS_ONLY = "--checks-only";
 
     void perform_and_exit_ex(const FullPackageSpec& full_spec,
                              const fs::path& port_dir,
@@ -60,7 +61,8 @@ namespace vcpkg::Build::Command
                            spec.name());
 
         const StatusParagraphs status_db = database_load_check(paths);
-        const Build::BuildPackageOptions build_package_options{Build::UseHeadVersion::NO, Build::AllowDownloads::YES};
+        const Build::BuildPackageOptions build_package_options{
+            Build::UseHeadVersion::NO, Build::AllowDownloads::YES, Build::CleanBuildtrees::NO};
 
         const std::unordered_set<std::string> features_as_set(full_spec.features.begin(), full_spec.features.end());
 
@@ -97,7 +99,7 @@ namespace vcpkg::Build::Command
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 
-    static const std::array<CommandSwitch, 1> BUILD_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 1> BUILD_SWITCHES = {{
         {OPTION_CHECKS_ONLY, "Only run checks, do not rebuild package"},
     }};
 
@@ -260,18 +262,18 @@ namespace vcpkg::Build
                                       const BuildPackageConfig& config,
                                       const StatusParagraphs& status_db)
     {
-        const PackageSpec spec =
-            PackageSpec::from_name_and_triplet(config.src.name, config.triplet).value_or_exit(VCPKG_LINE_INFO);
+        const PackageSpec spec = PackageSpec::from_name_and_triplet(config.scf.core_paragraph->name, config.triplet)
+                                     .value_or_exit(VCPKG_LINE_INFO);
 
         const Triplet& triplet = config.triplet;
         {
             std::vector<PackageSpec> missing_specs;
-            for (auto&& dep : filter_dependencies(config.src.depends, triplet))
+            for (auto&& dep : filter_dependencies(config.scf.core_paragraph->depends, triplet))
             {
-                if (status_db.find_installed(dep, triplet) == status_db.end())
+                auto dep_spec = PackageSpec::from_name_and_triplet(dep, triplet).value_or_exit(VCPKG_LINE_INFO);
+                if (!status_db.is_installed(dep_spec))
                 {
-                    missing_specs.push_back(
-                        PackageSpec::from_name_and_triplet(dep, triplet).value_or_exit(VCPKG_LINE_INFO));
+                    missing_specs.push_back(std::move(dep_spec));
                 }
             }
             // Fail the build if any dependencies were missing
@@ -290,16 +292,13 @@ namespace vcpkg::Build
         std::string features;
         if (GlobalState::feature_packages)
         {
-            if (config.feature_list)
+            for (auto&& feature : config.feature_list)
             {
-                for (auto&& feature : *config.feature_list)
-                {
-                    features.append(feature + ";");
-                }
-                if (features.size() > 0)
-                {
-                    features.pop_back();
-                }
+                features.append(feature + ";");
+            }
+            if (!features.empty())
+            {
+                features.pop_back();
             }
         }
 
@@ -309,7 +308,7 @@ namespace vcpkg::Build
             ports_cmake_script_path,
             {
                 {"CMD", "BUILD"},
-                {"PORT", config.src.name},
+                {"PORT", config.scf.core_paragraph->name},
                 {"CURRENT_PORT_DIR", config.port_dir / "/."},
                 {"TARGET_TRIPLET", triplet.canonical_name()},
                 {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
@@ -343,7 +342,7 @@ namespace vcpkg::Build
         const BuildInfo build_info = read_build_info(paths.get_filesystem(), paths.build_info_file_path(spec));
         const size_t error_count = PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info);
 
-        auto bcf = create_binary_control_file(config.src, triplet, build_info);
+        auto bcf = create_binary_control_file(*config.scf.core_paragraph, triplet, build_info);
 
         if (error_count != 0)
         {
@@ -351,16 +350,13 @@ namespace vcpkg::Build
         }
         if (GlobalState::feature_packages)
         {
-            if (config.feature_list)
+            for (auto&& feature : config.feature_list)
             {
-                for (auto&& feature : *config.feature_list)
+                for (auto&& f_pgh : config.scf.feature_paragraphs)
                 {
-                    for (auto&& f_pgh : config.scf->feature_paragraphs)
-                    {
-                        if (f_pgh->name == feature)
-                            bcf->features.push_back(
-                                create_binary_feature_control_file(*config.scf->core_paragraph, *f_pgh, triplet));
-                    }
+                    if (f_pgh->name == feature)
+                        bcf->features.push_back(
+                            create_binary_feature_control_file(*config.scf.core_paragraph, *f_pgh, triplet));
                 }
             }
         }

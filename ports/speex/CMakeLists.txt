@@ -16,12 +16,16 @@ include_directories(win32 include)
 set(CMAKE_DEBUG_POSTFIX d)
 
 file(READ "win32/libspeex.def" _contents)
-string(REPLACE "LIBRARY libspeex" "LIBRARY libspeexd" _contents "${_contents}")
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  string(REPLACE "LIBRARY libspeex" "LIBRARY libspeexd" _contents "${_contents}")
+endif()
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/libspeex.def"
   "${_contents}\n"
   "speex_nb_mode\n"
   "speex_wb_mode\n"
   "speex_uwb_mode\n"
+  "speex_mode_list\n"
+  "speex_header_free\n"
 )
 
 set(SRC

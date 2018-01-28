@@ -25,19 +25,11 @@ function vcpkgCreateParentDirectoryIfNotExists([Parameter(Mandatory=$true)][stri
     }
 }
 
-function vcpkgRemoveDirectory([Parameter(Mandatory=$true)][string]$dirPath)
+function vcpkgRemoveItem([Parameter(Mandatory=$true)][string]$dirPath)
 {
     if (Test-Path $dirPath)
     {
         Remove-Item $dirPath -Recurse -Force
-    }
-}
-
-function vcpkgRemoveFile([Parameter(Mandatory=$true)][string]$filePath)
-{
-    if (Test-Path $filePath)
-    {
-        Remove-Item $filePath -Force
     }
 }
 
@@ -102,11 +94,6 @@ function vcpkgCheckEqualFileHash(   [Parameter(Mandatory=$true)][string]$filePat
     }
 }
 
-if (vcpkgHasModule -moduleName 'BitsTransfer')
-{
-   Import-Module BitsTransfer -Verbose:$false
-}
-
 function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
                             [Parameter(Mandatory=$true)][string]$downloadPath)
 {
@@ -118,49 +105,33 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
     vcpkgCreateParentDirectoryIfNotExists $downloadPath
 
     $downloadPartPath = "$downloadPath.part"
-    vcpkgRemoveFile $downloadPartPath
+    vcpkgRemoveItem $downloadPartPath
 
     $wc = New-Object System.Net.WebClient
-    $proxyAuth = !$wc.Proxy.IsBypassed($url)
-    if ($proxyAuth)
+    if (!$wc.Proxy.IsBypassed($url))
     {
         $wc.Proxy.Credentials = vcpkgGetCredentials
     }
 
-    # Some download (e.g. git from github)fail with Start-BitsTransfer
-    if (vcpkgHasCommand -commandName 'Start-BitsTransfer')
-    {
-        try
-        {
-            if ($proxyAuth)
-            {
-                $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyAuthentication","Basic")
-                $PSDefaultParameterValues.Add("Start-BitsTransfer:ProxyCredential", $wc.Proxy.Credentials)
-            }
-            Start-BitsTransfer -Source $url -Destination $downloadPartPath -ErrorAction Stop
-            Move-Item -Path $downloadPartPath -Destination $downloadPath
-            return
-        }
-        catch [System.Exception]
-        {
-            # If BITS fails for any reason, delete any potentially partially downloaded files and continue
-            vcpkgRemoveFile $downloadPartPath
-        }
-    }
-
-    Write-Verbose("Downloading $Dependency...")
     $wc.DownloadFile($url, $downloadPartPath)
     Move-Item -Path $downloadPartPath -Destination $downloadPath
 }
 
 function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
-                            [Parameter(Mandatory=$true)][string]$destinationDir)
+                            [Parameter(Mandatory=$true)][string]$destinationDir,
+                            [Parameter(Mandatory=$true)][string]$outFilename)
 {
-    vcpkgCreateParentDirectoryIfNotExists $destinationDir
-    $destinationPartial = "$destinationDir-partially_extracted"
+    vcpkgCreateDirectoryIfNotExists $destinationDir
+    $output = "$destinationDir\$outFilename"
+    vcpkgRemoveItem $output
+    $destinationPartial = "$destinationDir\partially-extracted"
 
-    vcpkgRemoveDirectory $destinationPartial
+    vcpkgRemoveItem $destinationPartial
     vcpkgCreateDirectoryIfNotExists $destinationPartial
+
+    $shell = new-object -com shell.application
+    $zip = $shell.NameSpace($file)
+    $itemCount = $zip.Items().Count
 
     if (vcpkgHasCommand -commandName 'Microsoft.PowerShell.Archive\Expand-Archive')
     {
@@ -175,8 +146,6 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
     else
     {
         Write-Verbose("Extracting via shell")
-        $shell = new-object -com shell.application
-        $zip = $shell.NameSpace($file)
         foreach($item in $zip.items())
         {
             # Piping to Out-Null is used to block until finished
@@ -184,31 +153,46 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
         }
     }
 
-    $hasASingleItem = (Get-ChildItem $destinationPartial | Measure-Object).Count -eq 1;
-
-    if ($hasASingleItem)
+    if ($itemCount -eq 1)
     {
-        Move-Item -Path "$destinationPartial\*" -Destination $destinationDir
-        vcpkgRemoveDirectory $destinationPartial
+        Move-Item -Path "$destinationPartial\*" -Destination $output
+        vcpkgRemoveItem $destinationPartial
     }
     else
     {
-        Move-Item -Path $destinationPartial -Destination $destinationDir
+        Move-Item -Path $destinationPartial -Destination $output
     }
 }
 
 function vcpkgInvokeCommand()
 {
     param ( [Parameter(Mandatory=$true)][string]$executable,
-                                        [string]$arguments = "",
-                                        [switch]$wait)
+                                        [string]$arguments = "")
 
     Write-Verbose "Executing: ${executable} ${arguments}"
-    $process = Start-Process -FilePath $executable -ArgumentList $arguments -PassThru
-    if ($wait)
-    {
-        Wait-Process -InputObject $process
-        $ec = $process.ExitCode
-        Write-Verbose "Execution terminated with exit code $ec."
-    }
+    $process = Start-Process -FilePath "`"$executable`"" -ArgumentList $arguments -PassThru -NoNewWindow
+    Wait-Process -InputObject $process
+    $ec = $process.ExitCode
+    Write-Verbose "Execution terminated with exit code $ec."
+    return $ec
+}
+
+function vcpkgInvokeCommandClean()
+{
+    param ( [Parameter(Mandatory=$true)][string]$executable,
+                                        [string]$arguments = "")
+
+    Write-Verbose "Clean-Executing: ${executable} ${arguments}"
+    $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
+    $cleanEnvScript = "$scriptsDir\VcpkgPowershellUtils-ClearEnvironment.ps1"
+    $command = "& `"$cleanEnvScript`"; & `"$executable`" $arguments"
+    $bytes = [System.Text.Encoding]::Unicode.GetBytes($command)
+    $encodedCommand = [Convert]::ToBase64String($bytes)
+    $arg = "-NoProfile -ExecutionPolicy Bypass -encodedCommand $encodedCommand"
+
+    $process = Start-Process -FilePath powershell.exe -ArgumentList $arg -PassThru -NoNewWindow
+    Wait-Process -InputObject $process
+    $ec = $process.ExitCode
+    Write-Verbose "Execution terminated with exit code $ec."
+    return $ec
 }

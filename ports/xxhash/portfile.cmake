@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Cyan4973/xxHash
-    REF v0.6.3
-    SHA512 5b11009ecf142725c642be55e9072792709bd40d8674f30afdc13f9b9fd6936ea69e683c7b9df212b5126f9ba3925969fc0b65bb5518506b501bb339d3a29372
+    REF v0.6.4
+    SHA512 6c914bac5092dfd01349c8223c382d3c13ba1b22e08300ce86ea9663a9a934f930debdeb71c14365ec57d72b95088a4354da92dfb7fcf7d07ec01c0f4fb70ca7
     HEAD_REF dev)
 
 vcpkg_configure_cmake(

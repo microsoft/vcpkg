@@ -53,10 +53,8 @@ namespace vcpkg
         // Constructors are intentionally implicit
         constexpr Optional(NullOpt) {}
 
-        Optional(const T& t) : m_base(t) {}
-
-        template<class = std::enable_if_t<!std::is_reference<T>::value>>
-        Optional(T&& t) : m_base(std::move(t))
+        template<class U>
+        Optional(U&& t) : m_base(std::forward<U>(t))
         {
         }
 

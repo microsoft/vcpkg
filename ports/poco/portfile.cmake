@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocoproject/poco
-    REF poco-1.8.0.1-release
-    SHA512 b4a58053235582038186bdddbfa4842833bb3529af9522662e935efaf852f5155addd510729ea5c148b3bcc57ed3b8287cd98cbeb6d04e1a13bd31fadbdf7ad8
+    REF poco-1.8.1-release
+    SHA512 ca57b30c10fc4e611dbdd90c7e36db34b8cb9a7dae675dc8aed37457a26d3433080caf26eaace85adf8d6a6ad7945c49f7c66f274b26fe9cc0c7d5107be3828e
     HEAD_REF master
 )
 

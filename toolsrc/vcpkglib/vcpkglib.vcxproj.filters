@@ -195,6 +195,9 @@
     <ClCompile Include="..\src\vcpkg\userconfig.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\vcpkg\commands.upgrade.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\pch.h">
@@ -337,6 +340,9 @@
     </ClInclude>
     <ClInclude Include="..\include\vcpkg\userconfig.h">
       <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\base\stringliteral.h">
+      <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -7,24 +7,25 @@
 
 namespace vcpkg::Commands::List
 {
-    static const std::string OPTION_FULLDESC = "--x-full-desc"; // TODO: This should find a better home, eventually
+    static constexpr StringLiteral OPTION_FULLDESC =
+        "--x-full-desc"; // TODO: This should find a better home, eventually
 
     static void do_print(const StatusParagraph& pgh, bool full_desc)
     {
         if (full_desc)
         {
-            System::println("%-30s %-16s %s", pgh.package.displayname(), pgh.package.version, pgh.package.description);
+            System::println("%-50s %-16s %s", pgh.package.displayname(), pgh.package.version, pgh.package.description);
         }
         else
         {
-            System::println("%-30s %-16s %s",
-                            vcpkg::shorten_text(pgh.package.displayname(), 30),
+            System::println("%-50s %-16s %s",
+                            vcpkg::shorten_text(pgh.package.displayname(), 50),
                             vcpkg::shorten_text(pgh.package.version, 16),
-                            vcpkg::shorten_text(pgh.package.description, 71));
+                            vcpkg::shorten_text(pgh.package.description, 51));
         }
     }
 
-    static const std::array<CommandSwitch, 1> LIST_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 1> LIST_SWITCHES = {{
         {OPTION_FULLDESC, "Do not truncate long text"},
     }};
 
@@ -57,7 +58,7 @@ namespace vcpkg::Commands::List
                       return lhs->package.displayname() < rhs->package.displayname();
                   });
 
-        if (args.command_arguments.size() == 0)
+        if (args.command_arguments.empty())
         {
             for (const StatusParagraph* status_paragraph : installed_packages)
             {

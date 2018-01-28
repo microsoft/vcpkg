@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/magnum
-    REF ed7eac0b42a598dff8984830e7f943dd6af07deb
-    SHA512 843e209b82b4f6f7c3f9612aec2641a28cb09361eefefe435bb7d2c06d0e4df65b6b9adf5893222cf31ddc3ccec967eb343da1da6180e9fbfef1b26234e145d5
+    REF 68953f8c872b7c08f792c6082b8ab152f2119560
+    SHA512 00b507b85ed3454f81fe7098e1fc349d4048a2372e3b2aceabccc0c4287540ed3850f8dd9cdcd9cfb9542ba9af741e30e43e2b03bbc5490b552f862da34369b1
     HEAD_REF master
 )
 
@@ -43,7 +43,6 @@ vcpkg_configure_cmake(
         -DBUILD_PLUGINS_STATIC=${BUILD_PLUGINS_STATIC}
         -DMAGNUM_PLUGINS_DEBUG_DIR=${CURRENT_INSTALLED_DIR}/debug/bin/magnum-d
         -DMAGNUM_PLUGINS_RELEASE_DIR=${CURRENT_INSTALLED_DIR}/bin/magnum
-        --trace
 )
 
 vcpkg_install_cmake()

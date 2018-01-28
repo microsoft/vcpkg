@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO davisking/dlib
-    REF v19.7
-    SHA512 a3877066e04a411d96e910f4229c60a86971a9290e840aa4a5b2f0b102e9b8c37bfede259b80b71ba066d21eb0aa2565808e51d0eab6397ff5fd2bac60dcedd5
+    REF v19.9
+    SHA512 1e2123c22e1b13cc84108fa627bfa92eadc9dee63f93a9f45676bbf2b752c8728117d915ac327f5223b0cdbce87dd3bef2f4d8d5ed3f8f5a314ffa9e8962a246
     HEAD_REF master
 )
 
@@ -16,11 +16,6 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/dlib/external/zlib)
 file(READ "${SOURCE_PATH}/dlib/CMakeLists.txt" DLIB_CMAKE)
 string(REPLACE "PNG_LIBRARY" "PNG_LIBRARIES" DLIB_CMAKE "${DLIB_CMAKE}")
 file(WRITE "${SOURCE_PATH}/dlib/CMakeLists.txt" "${DLIB_CMAKE}")
-
-set(WITH_BLAS OFF)
-if("blas" IN_LIST FEATURES)
-  set(WITH_BLAS ON)
-endif()
 
 set(WITH_CUDA OFF)
 if("cuda" IN_LIST FEATURES)
@@ -35,8 +30,8 @@ vcpkg_configure_cmake(
         -DDLIB_USE_FFTW=ON
         -DDLIB_PNG_SUPPORT=ON
         -DDLIB_JPEG_SUPPORT=ON
-        -DDLIB_USE_BLAS=${WITH_BLAS}
-        -DDLIB_USE_LAPACK=OFF
+        -DDLIB_USE_BLAS=ON
+        -DDLIB_USE_LAPACK=ON
         -DDLIB_USE_CUDA=${WITH_CUDA}
         -DDLIB_GIF_SUPPORT=OFF
         -DDLIB_USE_MKL_FFT=OFF
@@ -55,6 +50,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Remove other files not required in package
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/all)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/appveyor)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/test)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/travis) 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_neon)
@@ -65,8 +61,8 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/external/libpng/arm)
 
 # Dlib encodes debug/release in its config.h. Patch it to respond to the NDEBUG macro instead.
 file(READ ${CURRENT_PACKAGES_DIR}/include/dlib/config.h _contents)
-string(REPLACE "/* #undef ENABLE_ASSERTS */" "#if !defined(NDEBUG)\n#define ENABLE_ASSERTS\n#endif" _contents ${_contents})
-string(REPLACE "#define DLIB_DISABLE_ASSERTS" "#if defined(NDEBUG)\n#define DLIB_DISABLE_ASSERTS\n#endif" _contents ${_contents})
+string(REPLACE "/* #undef ENABLE_ASSERTS */" "#if defined(_DEBUG)\n#define ENABLE_ASSERTS\n#endif" _contents ${_contents})
+string(REPLACE "#define DLIB_DISABLE_ASSERTS" "#if !defined(_DEBUG)\n#define DLIB_DISABLE_ASSERTS\n#endif" _contents ${_contents})
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/dlib/config.h ${_contents})
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/dlib/dlib.cmake _contents)

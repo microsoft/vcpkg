@@ -92,7 +92,8 @@ namespace vcpkg
                         tool_name,
                         version_as_string);
         const fs::path script = scripts_folder / "fetchDependency.ps1";
-        const std::string title = "Fetching %s version %s (No sufficient installed version was found)";
+        const std::string title = Strings::format(
+            "Fetching %s version %s (No sufficient installed version was found)", tool_name, version_as_string);
         const System::PowershellParameter dependency_param("Dependency", tool_name);
         const std::string output = System::powershell_execute_and_capture_output(title, script, {dependency_param});
 
@@ -114,7 +115,7 @@ namespace vcpkg
     static fs::path get_cmake_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
     {
 #if defined(_WIN32)
-        static constexpr std::array<int, 3> EXPECTED_VERSION = {3, 10, 0};
+        static constexpr std::array<int, 3> EXPECTED_VERSION = {3, 10, 2};
 #else
         static constexpr std::array<int, 3> EXPECTED_VERSION = {3, 5, 1};
 #endif
@@ -123,7 +124,7 @@ namespace vcpkg
         const std::vector<fs::path> from_path = Files::find_from_PATH("cmake");
 
         std::vector<fs::path> candidate_paths;
-        const fs::path downloaded_copy = downloads_folder / "cmake-3.10.0-win32-x86" / "bin" / "cmake.exe";
+        const fs::path downloaded_copy = downloads_folder / "cmake-3.10.2-win32-x86" / "bin" / "cmake.exe";
 #if defined(_WIN32)
         candidate_paths.push_back(downloaded_copy);
 #endif
@@ -582,7 +583,7 @@ namespace vcpkg
                 candidates, [&](const Toolset* t) { return *tsv == t->version && *vsp == t->visual_studio_root_path; });
             Checks::check_exit(VCPKG_LINE_INFO,
                                !candidates.empty(),
-                               "Could not find Visual Studio instace at %s with %s toolset.",
+                               "Could not find Visual Studio instance at %s with %s toolset.",
                                vsp->u8string(),
                                *tsv);
 
@@ -594,7 +595,7 @@ namespace vcpkg
         {
             Util::stable_keep_if(candidates, [&](const Toolset* t) { return *tsv == t->version; });
             Checks::check_exit(
-                VCPKG_LINE_INFO, !candidates.empty(), "Could not find Visual Studio instace with %s toolset.", *tsv);
+                VCPKG_LINE_INFO, !candidates.empty(), "Could not find Visual Studio instance with %s toolset.", *tsv);
         }
 
         if (vsp)
@@ -604,7 +605,7 @@ namespace vcpkg
                                  [&](const Toolset* t) { return vs_root_path == t->visual_studio_root_path; });
             Checks::check_exit(VCPKG_LINE_INFO,
                                !candidates.empty(),
-                               "Could not find Visual Studio instace at %s.",
+                               "Could not find Visual Studio instance at %s.",
                                vs_root_path.generic_string());
         }
 

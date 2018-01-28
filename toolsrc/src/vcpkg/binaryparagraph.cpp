@@ -92,8 +92,9 @@ namespace vcpkg
 
     std::string BinaryParagraph::displayname() const
     {
-        const auto f = this->feature.empty() ? "core" : this->feature;
-        return Strings::format("%s[%s]:%s", this->spec.name(), f, this->spec.triplet());
+        if (this->feature.empty() || this->feature == "core")
+            return Strings::format("%s:%s", this->spec.name(), this->spec.triplet());
+        return Strings::format("%s[%s]:%s", this->spec.name(), this->feature, this->spec.triplet());
     }
 
     std::string BinaryParagraph::dir() const { return this->spec.dir(); }
