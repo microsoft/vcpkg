@@ -1,4 +1,4 @@
-# header-only library
+# Ηeader-only library
 
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/forest-4.5.0)
