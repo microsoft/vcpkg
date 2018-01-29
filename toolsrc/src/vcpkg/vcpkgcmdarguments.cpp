@@ -129,6 +129,11 @@ namespace vcpkg
                     GlobalState::feature_packages = true;
                     continue;
                 }
+                if (arg == "--no-featurepackages")
+                {
+                    GlobalState::feature_packages = false;
+                    continue;
+                }
 
                 const auto eq_pos = arg.find('=');
                 if (eq_pos != std::string::npos)

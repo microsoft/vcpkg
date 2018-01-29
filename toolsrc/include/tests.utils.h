@@ -6,6 +6,7 @@
 #include <vcpkg/packagespec.h>
 #include <vcpkg/packagespecparseresult.h>
 #include <vcpkg/statusparagraph.h>
+#include <vcpkg/triplet.h>
 
 #include <memory>
 
@@ -38,3 +39,5 @@ T&& unwrap(vcpkg::Optional<T>&& opt)
     Assert::IsTrue(opt.has_value());
     return std::move(*opt.get());
 }
+
+vcpkg::PackageSpec unsafe_pspec(std::string name, vcpkg::Triplet t = vcpkg::Triplet::X86_WINDOWS);

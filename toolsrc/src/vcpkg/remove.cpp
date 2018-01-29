@@ -21,19 +21,28 @@ namespace vcpkg::Remove
     void remove_package(const VcpkgPaths& paths, const PackageSpec& spec, StatusParagraphs* status_db)
     {
         auto& fs = paths.get_filesystem();
-        auto spghs = status_db->find_all(spec.name(), spec.triplet());
-        const auto core_pkg = **status_db->find(spec.name(), spec.triplet(), "");
+        auto maybe_ipv = status_db->find_all_installed(spec);
+
+        Checks::check_exit(
+            VCPKG_LINE_INFO, maybe_ipv.has_value(), "unable to remove package %s: already removed", spec);
+
+        auto&& ipv = maybe_ipv.value_or_exit(VCPKG_LINE_INFO);
+
+        std::vector<StatusParagraph> spghs;
+        spghs.emplace_back(*ipv.core);
+        for (auto&& feature : ipv.features)
+        {
+            spghs.emplace_back(*feature);
+        }
 
         for (auto&& spgh : spghs)
         {
-            StatusParagraph& pkg = **spgh;
-            if (pkg.state != InstallState::INSTALLED) continue;
-            pkg.want = Want::PURGE;
-            pkg.state = InstallState::HALF_INSTALLED;
-            write_update(paths, pkg);
+            spgh.want = Want::PURGE;
+            spgh.state = InstallState::HALF_INSTALLED;
+            write_update(paths, spgh);
         }
 
-        auto maybe_lines = fs.read_lines(paths.listfile_path(core_pkg.package));
+        auto maybe_lines = fs.read_lines(paths.listfile_path(ipv.core->package));
 
         if (const auto lines = maybe_lines.get())
         {
@@ -90,15 +99,15 @@ namespace vcpkg::Remove
                 }
             }
 
-            fs.remove(paths.listfile_path(core_pkg.package));
+            fs.remove(paths.listfile_path(ipv.core->package));
         }
 
         for (auto&& spgh : spghs)
         {
-            StatusParagraph& pkg = **spgh;
-            if (pkg.state != InstallState::HALF_INSTALLED) continue;
-            pkg.state = InstallState::NOT_INSTALLED;
-            write_update(paths, pkg);
+            spgh.state = InstallState::NOT_INSTALLED;
+            write_update(paths, spgh);
+
+            status_db->insert(std::make_unique<StatusParagraph>(std::move(spgh)));
         }
     }
 
@@ -136,7 +145,7 @@ namespace vcpkg::Remove
     void perform_remove_plan_action(const VcpkgPaths& paths,
                                     const RemovePlanAction& action,
                                     const Purge purge,
-                                    StatusParagraphs& status_db)
+                                    StatusParagraphs* status_db)
     {
         const std::string display_name = action.spec.to_string();
 
@@ -147,7 +156,7 @@ namespace vcpkg::Remove
                 break;
             case RemovePlanType::REMOVE:
                 System::println("Removing package %s... ", display_name);
-                remove_package(paths, action.spec, &status_db);
+                remove_package(paths, action.spec, status_db);
                 System::println(System::Color::success, "Removing package %s... done", display_name);
                 break;
             case RemovePlanType::UNKNOWN:
@@ -164,13 +173,13 @@ namespace vcpkg::Remove
         }
     }
 
-    static const std::string OPTION_PURGE = "--purge";
-    static const std::string OPTION_NO_PURGE = "--no-purge";
-    static const std::string OPTION_RECURSE = "--recurse";
-    static const std::string OPTION_DRY_RUN = "--dry-run";
-    static const std::string OPTION_OUTDATED = "--outdated";
+    static constexpr StringLiteral OPTION_PURGE = "--purge";
+    static constexpr StringLiteral OPTION_NO_PURGE = "--no-purge";
+    static constexpr StringLiteral OPTION_RECURSE = "--recurse";
+    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
+    static constexpr StringLiteral OPTION_OUTDATED = "--outdated";
 
-    static const std::array<CommandSwitch, 5> SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 5> SWITCHES = {{
         {OPTION_PURGE, "Remove the cached copy of the package (default)"},
         {OPTION_NO_PURGE, "Do not remove the cached copy of the package"},
         {OPTION_RECURSE, "Allow removal of packages not explicitly specified on the command line"},
@@ -278,7 +287,7 @@ namespace vcpkg::Remove
 
         for (const RemovePlanAction& action : remove_plan)
         {
-            perform_remove_plan_action(paths, action, purge, status_db);
+            perform_remove_plan_action(paths, action, purge, &status_db);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);

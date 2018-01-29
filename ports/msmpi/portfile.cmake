@@ -20,7 +20,7 @@ endmacro()
 # We always want the ProgramFiles folder even on a 64-bit machine (not the ProgramFilesx86 folder)
 vcpkg_get_program_files_platform_bitness(PROGRAM_FILES_PLATFORM_BITNESS)
 set(SYSTEM_MPIEXEC_FILEPATH "${PROGRAM_FILES_PLATFORM_BITNESS}/Microsoft MPI/Bin/mpiexec.exe")
-set(MSMPI_EXPECTED_FULL_VERSION "8.1.12438.1084")
+set(MSMPI_EXPECTED_FULL_VERSION "8.1.12438")
 
 if(EXISTS "${SYSTEM_MPIEXEC_FILEPATH}")
     set(MPIEXEC_VERSION_LOGNAME "mpiexec-version")
@@ -31,7 +31,8 @@ if(EXISTS "${SYSTEM_MPIEXEC_FILEPATH}")
     )
     file(READ ${CURRENT_BUILDTREES_DIR}/${MPIEXEC_VERSION_LOGNAME}-out.log MPIEXEC_OUTPUT)
 
-    if(MPIEXEC_OUTPUT MATCHES "\\[Version ([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)\\]")
+    # Note: v8.1.1 was released with version 8.1.12438.1091. This is compatible with 8.1.12438.1084 (the version above), so ignore the fourth version number.
+    if(MPIEXEC_OUTPUT MATCHES "\\[Version ([0-9]+\\.[0-9]+\\.[0-9]+)\\.[0-9]+\\]")
         if(NOT CMAKE_MATCH_1 STREQUAL MSMPI_EXPECTED_FULL_VERSION)
             download_msmpi_redistributable_package()
 

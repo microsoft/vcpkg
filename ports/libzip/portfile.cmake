@@ -1,34 +1,27 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libzip-1.3.2)
-vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "https://nih.at/libzip/libzip-1.3.2.tar.gz"
-    FILENAME "libzip-1.3.2.tar.gz"
-    SHA512 75b7e6f541be30e721275723f264c20f9a3be5335d954b5909acdddb0f6dd9b2420166904c9b88206692a57a4aa54e4fe8ed4d62c1f4b900aebf6ad40f767376
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO nih-at/libzip
+    REF rel-1-4-0
+    SHA512 3d8c5e64c567d2b91670ea041228d74cc8415116dfeb5c9bcf587ab817618eace668c5171122eeccf2a5f25242c2439c5f60b361f99a06274ab58aea720fe0bb
 )
-vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
 # Patch cmake and configuration to allow static builds
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/enable-static.patch"
+    PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/cmake_dont_build_more_than_needed.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/fix-attribute.patch"
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DENABLE_STATIC=OFF
-    )
-else()
-    vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DENABLE_STATIC=ON
-    )
-endif()
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+)
 
 vcpkg_install_cmake()
 
 # Move zipconf.h to include and remove include directories from lib
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libzip/include/zipconf.h ${CURRENT_PACKAGES_DIR}/include/zipconf.h)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/libzip ${CURRENT_PACKAGES_DIR}/debug/lib/libzip)
 
 # Remove debug include

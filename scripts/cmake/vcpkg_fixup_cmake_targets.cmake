@@ -91,11 +91,8 @@ function(vcpkg_fixup_cmake_targets)
         file(REMOVE ${UNUSED_FILES})
     endif()
 
-    # LLVM uses "LLVMExports-release.cmake"
     file(GLOB RELEASE_TARGETS
-        "${RELEASE_SHARE}/*[Tt]argets-release.cmake"
-        "${RELEASE_SHARE}/*[Cc]onfig-release.cmake"
-        "${RELEASE_SHARE}/*[Ee]xports-release.cmake"
+        "${RELEASE_SHARE}/*-release.cmake"
     )
     foreach(RELEASE_TARGET ${RELEASE_TARGETS})
         file(READ ${RELEASE_TARGET} _contents)
@@ -106,9 +103,7 @@ function(vcpkg_fixup_cmake_targets)
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         file(GLOB DEBUG_TARGETS
-            "${DEBUG_SHARE}/*[Tt]argets-debug.cmake"
-            "${DEBUG_SHARE}/*[Cc]onfig-debug.cmake"
-            "${DEBUG_SHARE}/*[Ee]xports-debug.cmake"
+            "${DEBUG_SHARE}/*-debug.cmake"
             )
         foreach(DEBUG_TARGET ${DEBUG_TARGETS})
             get_filename_component(DEBUG_TARGET_NAME ${DEBUG_TARGET} NAME)

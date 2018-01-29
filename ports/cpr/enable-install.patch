@@ -13,5 +13,5 @@ index a6db5bd..b4982d1 100644
 +    ARCHIVE DESTINATION lib
 +)
 +if(NOT DISABLE_INSTALL_HEADERS)
-+    install(DIRECTORY ${CPR_INCLUDE_DIRS} DESTINATION include)
++    install(DIRECTORY ${CPR_INCLUDE_DIRS}/cpr DESTINATION include)
 +endif()
