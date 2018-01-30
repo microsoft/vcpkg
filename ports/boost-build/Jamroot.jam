@@ -125,6 +125,15 @@ if "@PORT@" != "boost-test"
     explicit boost_unit_test_framework ;
 }
 
+if "@PORT@" != "boost-serialization"
+{
+    use-project /boost/serialization : . ;
+
+    lib boost_serialization : : <file>@CURRENT_INSTALLED_DIR@/lib/boost_serialization-vc140-mt.lib <variant>release ;
+    lib boost_serialization : : <file>@CURRENT_INSTALLED_DIR@/debug/lib/boost_serialization-vc140-mt-gd.lib <variant>debug ;
+    explicit boost_serialization ;
+}
+
 rule requires ( foo * )
 {
 }

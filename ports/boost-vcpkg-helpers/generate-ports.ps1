@@ -22,7 +22,7 @@ function Generate()
     $sanitizedName = $name -replace "_","-"
 
     $versionsuffix = ""
-    if ($Name -eq "test" -or $Name -eq "python" -or $Name -eq "asio")
+    if ($Name -eq "test" -or $Name -eq "python" -or $Name -eq "asio" -or $Name -eq "mpi")
     {
         $versionsuffix = "-1"
     }
@@ -328,6 +328,10 @@ foreach ($library in $libraries)
         elseif ($library -eq "asio")
         {
             $deps += @("openssl")
+        }
+        elseif ($library -eq "mpi")
+        {
+            $deps += @("msmpi")
         }
 
         Generate `
