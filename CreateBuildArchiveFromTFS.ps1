@@ -55,14 +55,14 @@ function MyCopyItem
 function KeepMostRecentFiles
 {
     param(
-        [Parameter(Mandatory=$true)]$files,
+        [Parameter(Mandatory=$true)]$absoluteFilePaths,
         [int]$keepCount
     )
 
-    $sortedfiles = $files | Sort-object LastWriteTime -Descending
-    for ($i = $keepCount; $i -lt $sortedfiles.Count; $i++)
+    $sorted = $absoluteFilePaths | Sort-object LastWriteTime -Descending
+    for ($i = $keepCount; $i -lt $sorted.Count; $i++)
     {
-        vcpkgRemoveItem $sortedfiles[$i]
+        vcpkgRemoveItem $sorted[$i]
     }
 }
 
