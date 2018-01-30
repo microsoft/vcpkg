@@ -11,31 +11,6 @@ param(
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 . "$scriptsDir\VcpkgPowershellUtils.ps1"
 
-function FormatElapsedTime([TimeSpan]$ts)
-{
-    if ($ts.TotalHours -ge 1)
-    {
-        return [string]::Format( "{0:N2} h", $ts.TotalHours);
-    }
-
-    if ($ts.TotalMinutes -ge 1)
-    {
-        return [string]::Format( "{0:N2} min", $ts.TotalMinutes);
-    }
-
-    if ($ts.TotalSeconds -ge 1)
-    {
-        return [string]::Format( "{0:N2} s", $ts.TotalSeconds);
-    }
-
-    if ($ts.TotalMilliseconds -ge 1)
-    {
-        return [string]::Format( "{0:N2} ms", $ts.TotalMilliseconds);
-    }
-
-    throw $ts
-}
-
 function MyCopyItem
 {
     param(
@@ -131,7 +106,7 @@ Write-Host "Creating 7z..."
 # - mx9: Size= 675MB, CompressionTime=13.79min, DecompressionTime=59s
 $time7z = Measure-Command {& .\7za.exe a -t7z $sevenZipPart $toCompleted\* -mx9 -mmt -y}
 Move-Item -Path $sevenZipPart -Destination $sevenZip
-$formattedTime7z = FormatElapsedTime $time7z
+$formattedTime7z = vcpkgFormatElapsedTime $time7z
 Write-Host "Creating 7z... done. Time Taken: $formattedTime7z seconds"
 
 vcpkgRemoveItem $toCompleted
