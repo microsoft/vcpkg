@@ -1,8 +1,8 @@
 # Capture environment variables for the System and User. Also add some special/built-in variables.
 # These will be used to synthesize a clean environment
 $specialEnvironmentMap = @{ "SystemDrive"=$env:SystemDrive; "SystemRoot"=$env:SystemRoot; "UserProfile"=$env:UserProfile } # These are built-in and not set in the registry
-$machineEnvironmentMap = [Environment]::GetEnvironmentVariables('Machine') # HKEY_CURRENT_USER\Environment
-$userEnvironmentMap = [Environment]::GetEnvironmentVariables('User') # HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment
+$machineEnvironmentMap = [Environment]::GetEnvironmentVariables('Machine') # HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment
+$userEnvironmentMap = [Environment]::GetEnvironmentVariables('User') # HKEY_CURRENT_USER\Environment
 
 # Identify the keySet of environment variable names
 $nameSet = ($specialEnvironmentMap.Keys + $machineEnvironmentMap.Keys + $userEnvironmentMap.Keys) | Sort-Object | Select-Object -Unique

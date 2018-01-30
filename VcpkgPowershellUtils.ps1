@@ -174,6 +174,7 @@ function vcpkgInvokeCommand()
     Wait-Process -InputObject $process
     $ec = $process.ExitCode
     Write-Verbose "Execution terminated with exit code $ec."
+    return $ec
 }
 
 function vcpkgInvokeCommandClean()
@@ -187,10 +188,36 @@ function vcpkgInvokeCommandClean()
     $command = "& `"$cleanEnvScript`"; & `"$executable`" $arguments"
     $bytes = [System.Text.Encoding]::Unicode.GetBytes($command)
     $encodedCommand = [Convert]::ToBase64String($bytes)
-    $arg = "-encodedCommand $encodedCommand"
+    $arg = "-NoProfile -ExecutionPolicy Bypass -encodedCommand $encodedCommand"
 
     $process = Start-Process -FilePath powershell.exe -ArgumentList $arg -PassThru -NoNewWindow
     Wait-Process -InputObject $process
     $ec = $process.ExitCode
     Write-Verbose "Execution terminated with exit code $ec."
+    return $ec
+}
+
+function vcpkgFormatElapsedTime([TimeSpan]$ts)
+{
+    if ($ts.TotalHours -ge 1)
+    {
+        return [string]::Format( "{0:N2} h", $ts.TotalHours);
+    }
+
+    if ($ts.TotalMinutes -ge 1)
+    {
+        return [string]::Format( "{0:N2} min", $ts.TotalMinutes);
+    }
+
+    if ($ts.TotalSeconds -ge 1)
+    {
+        return [string]::Format( "{0:N2} s", $ts.TotalSeconds);
+    }
+
+    if ($ts.TotalMilliseconds -ge 1)
+    {
+        return [string]::Format( "{0:N2} ms", $ts.TotalMilliseconds);
+    }
+
+    throw $ts
 }
