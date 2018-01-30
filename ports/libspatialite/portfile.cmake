@@ -14,6 +14,7 @@ vcpkg_apply_patches(
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/fix-makefiles.patch
         ${CMAKE_CURRENT_LIST_DIR}/fix-sources.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix-latin-literals.patch
 )
 
 # fix most of the problems when spacebar is in the path
