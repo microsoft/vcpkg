@@ -79,10 +79,6 @@ $sevenZip = "$destinationRoot\$buildId.7z"
 if (Test-Path $sevenZip)
 {
     Write-Host "$buildId is already archived ($sevenZip)"
-
-    $allDrops = (Get-ChildItem $destinationRoot)
-    Write-Host $allDrops
-    # KeepMostRecentFiles $allDrops -keepCount 10
     return
 }
 
@@ -139,4 +135,7 @@ $formattedTime7z = FormatElapsedTime $time7z
 Write-Host "Creating 7z... done. Time Taken: $formattedTime7z seconds"
 
 vcpkgRemoveItem $toCompleted
+
+$allDropsFullPaths = (Get-ChildItem $destinationRoot).fullname
+KeepMostRecentFiles $allDropsFullPaths -keepCount 10
 
