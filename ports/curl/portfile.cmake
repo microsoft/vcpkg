@@ -28,6 +28,7 @@ set(USE_OPENSSL ON)
 if(CURL_USE_WINSSL)
     set(USE_OPENSSL OFF)
     set(USE_WINSSL ON)
+    set(HTTP2_OPTIONS) ## disable HTTP2 when CURL_USE_WINSSL
 endif()
 
 set(UWP_OPTIONS)
