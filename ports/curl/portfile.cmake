@@ -14,6 +14,7 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/0002_fix_uwp.patch
 )
 
+# Support HTTP2 TSL Download https://curl.haxx.se/ca/cacert.pem rename to curl-ca-bundle.crt, copy it to libcurl.dll location.
 SET(HTTP2_OPTIONS)
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     SET(CURL_STATICLIB OFF)
