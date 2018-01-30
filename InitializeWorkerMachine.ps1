@@ -97,6 +97,8 @@ Recipe "C:/Program Files/Microsoft MPI/Bin/mpiexec.exe" {
     vcpkgInvokeCommand "$msmpiSetupFilename" "-force -unattend"
 }
 
+$vstsRoot = "C:\"
+$vstsName = "vsts"
 $vstsPath = "C:\vsts"
 $vstsWorkPath = "$vstsPath\_work"
 
@@ -110,7 +112,7 @@ Recipe $vstsWorkPath {
             vcpkgDownloadFile "https://github.com/Microsoft/vsts-agent/releases/download/v2.124.0/vsts-agent-win7-x64-2.124.0.zip" $file
         }
 
-        vcpkgExtractFile -file $file -destinationDir $vstsPath
+        vcpkgExtractFile -file $file -destinationDir $vstsRoot -outFilename $vstsName
     }
 
     Push-Location $vstsPath
