@@ -22,9 +22,14 @@ function Generate()
     $sanitizedName = $name -replace "_","-"
 
     $versionsuffix = ""
-    if ($Name -eq "test" -or $Name -eq "python" -or $Name -eq "asio")
+    if ($Name -eq "python" -or $Name -eq "asio")
     {
         $versionsuffix = "-1"
+    }
+
+    if ($Name -eq "test")
+    {
+        $versionsuffix = "-2"
     }
 
     mkdir "$scriptsDir/../boost-$sanitizedName" -erroraction SilentlyContinue | out-null
@@ -158,15 +163,20 @@ function Generate()
     if ($Name -eq "test")
     {
         $portfileLines += @(
-            "file(MAKE_DIRECTORY `${CURRENT_PACKAGES_DIR}/lib/manual-link)"
-            "file(MAKE_DIRECTORY `${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)"
+            "if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL `"release`")"
+            "    file(MAKE_DIRECTORY `${CURRENT_PACKAGES_DIR}/lib/manual-link)"
+            "    file(GLOB MONITOR_LIBS `${CURRENT_PACKAGES_DIR}/lib/*_exec_monitor*)"
+            "    file(COPY `${MONITOR_LIBS} DESTINATION `${CURRENT_PACKAGES_DIR}/lib/manual-link)"
+            "    file(REMOVE `${MONITOR_LIBS})"
+            "endif()"
             ""
-            "file(GLOB MONITOR_LIBS `${CURRENT_PACKAGES_DIR}/lib/*_exec_monitor*)"
-            "file(COPY `${MONITOR_LIBS} DESTINATION `${CURRENT_PACKAGES_DIR}/lib/manual-link)"
-            "file(GLOB DEBUG_MONITOR_LIBS `${CURRENT_PACKAGES_DIR}/debug/lib/*_exec_monitor*)"
-            "file(COPY `${DEBUG_MONITOR_LIBS} DESTINATION `${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)"
+            "if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL `"debug`")"
+            "    file(MAKE_DIRECTORY `${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)"
+            "    file(GLOB DEBUG_MONITOR_LIBS `${CURRENT_PACKAGES_DIR}/debug/lib/*_exec_monitor*)"
+            "    file(COPY `${DEBUG_MONITOR_LIBS} DESTINATION `${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)"
+            "    file(REMOVE `${DEBUG_MONITOR_LIBS})"
+            "endif()"
             ""
-            "file(REMOVE `${DEBUG_MONITOR_LIBS} `${MONITOR_LIBS})"
         )
     }
 
