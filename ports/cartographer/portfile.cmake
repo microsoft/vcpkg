@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googlecartographer/cartographer
-    REF 0.3.0
-    SHA512  34c40e438acd91815c3d4f73b350e430839b13ad0a20428ffa8417b801918994589b2abca1094cc6f1748ea2358ba84e9e97bd1c56e4d9c3ce9c6b5a455ca233
+    REF a7ed7e224f98b396762c865b81b62dc3abea2e81
+    SHA512   2ab167c1c314591b4916baf70b8ad92ae542986c3578319d2454c904adae10f8027bc696579d6e2864d3606a6711563b82438e847527cad4ab0c2bd603a63eb7
     HEAD_REF master
 )
 
