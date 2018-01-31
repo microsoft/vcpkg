@@ -21,6 +21,23 @@ function Recipe
     }
 }
 
+function DownloadAndUpdateVSInstaller
+{
+    $filename = "vs_Community.exe"
+    $installerPath = "$scriptsDir\$filename"
+    Recipe $installerPath {
+        Write-Host "Downloading VS Installer..."
+        vcpkgDownloadFile "https://aka.ms/vs/15/release/vs_community.exe" $installerPath
+        Write-Host "Downloading VS Installer... done."
+    }
+
+    Write-Host "Updating VS Installer..."
+    vcpkgInvokeCommand $installerPath "--update --quiet --wait --norestart"
+    Write-Host "Updating VS Installer... done."
+
+    return $installerPath
+}
+
 function UnattendedVSinstall
 {
     param(
@@ -32,13 +49,7 @@ function UnattendedVSinstall
     # https://docs.microsoft.com/en-us/visualstudio/install/use-command-line-parameters-to-install-visual-studio
     # https://docs.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-community#desktop-development-with-c
 
-    $filename = "vs_Community.exe"
-    Recipe "$scriptsDir\$filename" {
-        vcpkgDownloadFile "https://aka.ms/vs/15/release/vs_community.exe" $scriptsDir\$filename
-    }
-
-    Write-Host "Updating VS Installer"
-    vcpkgInvokeCommand "$scriptsDir\$filename" "--update --quiet --wait --norestart"
+    $installerPath = DownloadAndUpdateVSInstaller
 
     Write-Host "Installing Visual Studio"
     $arguments = ("--installPath $installPath",
@@ -59,7 +70,7 @@ function UnattendedVSinstall
     "--wait",
     "--norestart") -join " "
 
-    vcpkgInvokeCommand "$scriptsDir\$filename" "$arguments"
+    vcpkgInvokeCommand $installerPath "$arguments"
 }
 
 
