@@ -21,10 +21,25 @@ function Recipe
     }
 }
 
+function checkExit
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory=$true)][bool]$condition,
+        [Parameter(Mandatory=$true)][String]$errorMessage
+    )
+
+    if (!$condition)
+    {
+        Write-Host "Error: $errorMessage"
+        throw
+    }
+}
+
 function DownloadAndUpdateVSInstaller
 {
-    $filename = "vs_Community.exe"
-    $installerPath = "$scriptsDir\$filename"
+    $installerPath = "$scriptsDir\vs_Community.exe"
     Recipe $installerPath {
         Write-Host "Downloading VS Installer..."
         vcpkgDownloadFile "https://aka.ms/vs/15/release/vs_community.exe" $installerPath
@@ -32,7 +47,8 @@ function DownloadAndUpdateVSInstaller
     }
 
     Write-Host "Updating VS Installer..."
-    vcpkgInvokeCommand $installerPath "--update --quiet --wait --norestart"
+    $ec = vcpkgInvokeCommand $installerPath "--update --quiet --wait --norestart"
+    checkExit ($ec -eq 0) "Updating VS installer... failed."
     Write-Host "Updating VS Installer... done."
 
     return $installerPath
@@ -51,8 +67,9 @@ function UnattendedVSinstall
 
     $installerPath = DownloadAndUpdateVSInstaller
 
-    Write-Host "Installing Visual Studio"
-    $arguments = ("--installPath $installPath",
+    Write-Host "Installing Visual Studio..."
+    $arguments = (
+    "--installPath `"$installPath`"",
     "--add Microsoft.VisualStudio.Workload.NativeDesktop",
     "--add Microsoft.VisualStudio.Workload.Universal",
     "--add Microsoft.VisualStudio.Component.VC.Tools.x86.x64",
@@ -70,9 +87,34 @@ function UnattendedVSinstall
     "--wait",
     "--norestart") -join " "
 
-    vcpkgInvokeCommand $installerPath "$arguments"
+    $ec = vcpkgInvokeCommand $installerPath "$arguments"
+    checkExit ($ec -eq 0) "Installing Visual Studio... failed."
+
+    Write-Host "Installing Visual Studio... done."
 }
 
+
+function UnattendedVSupdate
+{
+    param(
+        [Parameter(Mandatory=$true)][string]$installPath
+    )
+
+    $installerPath = DownloadAndUpdateVSInstaller
+
+    Write-Host "Updating Visual Studio..."
+    $arguments = (
+    "update",
+    "--installPath `"$installPath`"",
+    "--quiet",
+    "--wait",
+    "--norestart") -join " "
+
+    $ec = vcpkgInvokeCommand $installerPath "$arguments"
+    checkExit ($ec -eq 0) "Updating Visual Studio... failed."
+
+    Write-Host "Updating Visual Studio... done."
+}
 
 # Constants
 $VISUAL_STUDIO_2017_STABLE_PATH = "C:\VS2017\Stable"
