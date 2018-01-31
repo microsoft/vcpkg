@@ -7,7 +7,7 @@ param(
     [string]$buildNumber
 )
 
-$scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
+$scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 . "$scriptsDir\VcpkgPowershellUtils.ps1"
 
 $buildArchiveFolderRoot = "\\vcpkg-000\General\CustomBuilds"
