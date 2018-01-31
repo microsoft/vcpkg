@@ -20,7 +20,7 @@ if ($latest)
         throw;
     }
 
-    $buildArchive = ($branchBuildArchives | Sort-object LastWriteTime -Descending).fullname[0]
+    $buildArchive = ($branchBuildArchives | Sort-object Name -Descending).fullname[0]
 }
 else
 {
