@@ -37,6 +37,21 @@ function checkExit
     }
 }
 
+function checkWarn
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory=$true)][bool]$condition,
+        [Parameter(Mandatory=$true)][String]$errorMessage
+    )
+
+    if (!$condition)
+    {
+        Write-Warning "Error: $errorMessage"
+    }
+}
+
 function DownloadAndUpdateVSInstaller
 {
     $installerPath = "$scriptsDir\vs_Community.exe"
