@@ -1,4 +1,5 @@
 Source: curl
-Version: 7.57.0-1
-Build-Depends: zlib, openssl, libssh2
+Version: 7.58.0-1
+Build-Depends: zlib, openssl, libssh2, nghttp2
 Description: A library for transferring data with URLs
+# For WINSSL create target triplet which contains set(CURL_USE_WINSSL ON)

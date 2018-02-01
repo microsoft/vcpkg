@@ -1,0 +1,11 @@
+include(vcpkg_common_functions)
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO ArashPartow/exprtk
+    REF f32d2b4bbb640ea4732b8a7fce1bd9717e9c998b
+    SHA512 22c977dc2514bd525856ed26b8895687601e79784486efe9d4f27466e1e1932c4a947297d83e9b98a6c82df9eaf5b0f82990741bbb699d565ca11e5755a55dd6
+)
+
+file(COPY ${SOURCE_PATH}/exprtk.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/exprtk)

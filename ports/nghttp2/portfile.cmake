@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
 set(LIB_NAME nghttp2)
-set(LIB_VERSION 1.28.0)
+set(LIB_VERSION 1.29.0)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     message("nghttp2 doesn't currently support static library build")
@@ -17,7 +17,7 @@ set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${LIB_NAME}-${LIB_VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/nghttp2/nghttp2/releases/download/v${LIB_VERSION}/${LIB_FILENAME}"
     FILENAME "${LIB_FILENAME}"
-    SHA512 37fbc7fe5f7292ea17ec030f024de0a697ede3ea883457b7edebfb0f21c7eee9196c62df61945953b54b410eea3a64d180beeb477529bd744caf986be0a1b1c9
+    SHA512 34dfda7ba637fb23b24141aacf8a0c342a369a59c84d4e2bfed9b5a867f85a5d1d950267f018a820645954406d70bf499f01e2f9b1ebaa4b76e8f47c3693fd6e
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

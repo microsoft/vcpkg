@@ -10,6 +10,9 @@
 # Note: this function signature and behavior is depended upon by applocal.ps1
 function deployPluginsIfQt([string]$targetBinaryDir, [string]$QtPluginsDir, [string]$targetBinaryName) {
 
+    $baseDir = Split-Path $QtPluginsDir -parent
+    $binDir = "$baseDir\bin"
+
     function deployPlugins([string]$pluginSubdirName) {
         if (Test-Path "$QtPluginsDir\$pluginSubdirName") {
             Write-Verbose "  Deploying plugins directory '$pluginSubdirName'"
@@ -36,6 +39,11 @@ function deployPluginsIfQt([string]$targetBinaryDir, [string]$QtPluginsDir, [str
         deployPlugins "platforminputcontexts"
     } elseif ($targetBinaryName -like "Qt5Network*.dll") {
         deployPlugins "bearer"
+        if (Test-Path "$binDir\libeay32.dll")
+        {
+            deployBinary "$targetBinaryDir" "$binDir" "libeay32.dll"
+            deployBinary "$targetBinaryDir" "$binDir" "ssleay32.dll"
+        }
     } elseif ($targetBinaryName -like "Qt5Sql*.dll") {
         deployPlugins "sqldrivers"
     } elseif ($targetBinaryName -like "Qt5Multimedia*.dll") {

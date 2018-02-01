@@ -167,15 +167,57 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
 function vcpkgInvokeCommand()
 {
     param ( [Parameter(Mandatory=$true)][string]$executable,
-                                        [string]$arguments = "",
-                                        [switch]$wait)
+                                        [string]$arguments = "")
 
     Write-Verbose "Executing: ${executable} ${arguments}"
-    $process = Start-Process -FilePath $executable -ArgumentList $arguments -PassThru
-    if ($wait)
+    $process = Start-Process -FilePath "`"$executable`"" -ArgumentList $arguments -PassThru -NoNewWindow
+    Wait-Process -InputObject $process
+    $ec = $process.ExitCode
+    Write-Verbose "Execution terminated with exit code $ec."
+    return $ec
+}
+
+function vcpkgInvokeCommandClean()
+{
+    param ( [Parameter(Mandatory=$true)][string]$executable,
+                                        [string]$arguments = "")
+
+    Write-Verbose "Clean-Executing: ${executable} ${arguments}"
+    $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
+    $cleanEnvScript = "$scriptsDir\VcpkgPowershellUtils-ClearEnvironment.ps1"
+    $command = "& `"$cleanEnvScript`"; & `"$executable`" $arguments"
+    $bytes = [System.Text.Encoding]::Unicode.GetBytes($command)
+    $encodedCommand = [Convert]::ToBase64String($bytes)
+    $arg = "-NoProfile -ExecutionPolicy Bypass -encodedCommand $encodedCommand"
+
+    $process = Start-Process -FilePath powershell.exe -ArgumentList $arg -PassThru -NoNewWindow
+    Wait-Process -InputObject $process
+    $ec = $process.ExitCode
+    Write-Verbose "Execution terminated with exit code $ec."
+    return $ec
+}
+
+function vcpkgFormatElapsedTime([TimeSpan]$ts)
+{
+    if ($ts.TotalHours -ge 1)
     {
-        Wait-Process -InputObject $process
-        $ec = $process.ExitCode
-        Write-Verbose "Execution terminated with exit code $ec."
+        return [string]::Format( "{0:N2} h", $ts.TotalHours);
     }
+
+    if ($ts.TotalMinutes -ge 1)
+    {
+        return [string]::Format( "{0:N2} min", $ts.TotalMinutes);
+    }
+
+    if ($ts.TotalSeconds -ge 1)
+    {
+        return [string]::Format( "{0:N2} s", $ts.TotalSeconds);
+    }
+
+    if ($ts.TotalMilliseconds -ge 1)
+    {
+        return [string]::Format( "{0:N2} ms", $ts.TotalMilliseconds);
+    }
+
+    throw $ts
 }

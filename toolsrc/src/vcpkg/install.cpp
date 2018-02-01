@@ -292,12 +292,11 @@ namespace vcpkg::Install
                 System::println("Building package %s... ", display_name_with_features);
 
             auto result = [&]() -> Build::ExtendedBuildResult {
-                const Build::BuildPackageConfig build_config{
-                    *action.any_paragraph.source_control_file.value_or_exit(VCPKG_LINE_INFO),
-                    action.spec.triplet(),
-                    paths.port_dir(action.spec),
-                    action.build_options,
-                    action.feature_list};
+                const Build::BuildPackageConfig build_config{action.source_control_file.value_or_exit(VCPKG_LINE_INFO),
+                                                             action.spec.triplet(),
+                                                             paths.port_dir(action.spec),
+                                                             action.build_options,
+                                                             action.feature_list};
                 return Build::build_package(paths, build_config, status_db);
             }();
 
@@ -313,18 +312,6 @@ namespace vcpkg::Install
                 Paragraphs::try_load_cached_control_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO));
             auto code = aux_install(display_name_with_features, *bcf);
             return {code, std::move(bcf)};
-        }
-
-        if (plan_type == InstallPlanType::INSTALL)
-        {
-            if (use_head_version && is_user_requested)
-            {
-                System::println(
-                    System::Color::warning, "Package %s is already built -- not building from HEAD", display_name);
-            }
-            auto code = aux_install(display_name_with_features,
-                                    action.any_paragraph.binary_control_file.value_or_exit(VCPKG_LINE_INFO));
-            return code;
         }
 
         if (plan_type == InstallPlanType::EXCLUDED)
@@ -399,7 +386,7 @@ namespace vcpkg::Install
             }
             else if (const auto remove_action = action.remove_action.get())
             {
-                Remove::perform_remove_plan_action(paths, *remove_action, Remove::Purge::YES, status_db);
+                Remove::perform_remove_plan_action(paths, *remove_action, Remove::Purge::YES, &status_db);
             }
             else
             {
@@ -662,11 +649,9 @@ namespace vcpkg::Install
         if (action)
             if (auto p_install_plan = action->install_action.get())
             {
-                if (auto p_bcf = p_install_plan->any_paragraph.binary_control_file.get())
-                    return &p_bcf->core_paragraph;
-                else if (auto p_status = p_install_plan->any_paragraph.status_paragraph.get())
+                if (auto p_status = p_install_plan->installed_package.get())
                 {
-                    return &p_status->package;
+                    return &p_status->core->package;
                 }
             }
         return nullptr;

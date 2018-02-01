@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_57_0
-    SHA512 19f963d86682153d2d73731c784adf6457bc3fd48b628d6d701649f64718b10df268797ce21ad5f5339efc5df81b8547772edcc36c046665309e32997d5d1afc
+    REF curl-7_58_0
+    SHA512 148c25152732dd5ad2626bc70c7725577e25033a73eecefa4dd820927ec552f9c2d0235cc3f597404d3893eced7d5d2bd9522f6302b7f930e9f65912ac2c91f6
     HEAD_REF master
 )
 
@@ -14,10 +14,22 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/0002_fix_uwp.patch
 )
 
+# Support HTTP2 TSL Download https://curl.haxx.se/ca/cacert.pem rename to curl-ca-bundle.crt, copy it to libcurl.dll location.
+SET(HTTP2_OPTIONS)
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     SET(CURL_STATICLIB OFF)
+    SET(HTTP2_OPTIONS
+        -DUSE_NGHTTP2=ON
+    )
 else()
     SET(CURL_STATICLIB ON)
+endif()
+
+set(USE_OPENSSL ON)
+if(CURL_USE_WINSSL)
+    set(USE_OPENSSL OFF)
+    set(USE_WINSSL ON)
+    set(HTTP2_OPTIONS) ## disable HTTP2 when CURL_USE_WINSSL
 endif()
 
 set(UWP_OPTIONS)
@@ -28,6 +40,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         -DENABLE_IPV6=OFF
         -DENABLE_UNIX_SOCKETS=OFF
     )
+    set(HTTP2_OPTIONS) ## disable curl HTTP2 support
 endif()
 
 vcpkg_find_acquire_program(PERL)
@@ -39,11 +52,13 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         ${UWP_OPTIONS}
+        ${HTTP2_OPTIONS}
         -DBUILD_TESTING=OFF
         -DBUILD_CURL_EXE=OFF
         -DENABLE_MANUAL=OFF
         -DCURL_STATICLIB=${CURL_STATICLIB}
-        -DCMAKE_USE_OPENSSL=ON
+        -DCMAKE_USE_OPENSSL=${USE_OPENSSL}
+        -DCMAKE_USE_WINSSL=${USE_WINSSL}
     OPTIONS_DEBUG
         -DENABLE_DEBUG=ON
 )
