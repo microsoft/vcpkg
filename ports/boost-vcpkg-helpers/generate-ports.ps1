@@ -368,6 +368,7 @@ $boostDependsList = @($libraries_in_boost_port | % { "boost-$_" -replace "_","-"
 @(
     "Source: boost"
     "Version: $version"
+    "Description: Peer-reviewed portable C++ source libraries"
     "Build-Depends: $boostDependsList"
 ) | out-file -enc ascii $scriptsDir/../boost/CONTROL
 
