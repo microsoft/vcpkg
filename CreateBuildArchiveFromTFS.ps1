@@ -23,7 +23,7 @@ function MyCopyItem
     #     $time = Measure-Command {Copy-Item $fromPath $toPathPart -Recurse}
     $time = Measure-Command {& Robocopy.exe $fromPath $toPathPart /E /MT /LOG:"robocopylog.txt"}
     Move-Item -Path $toPathPart -Destination $toPath -ErrorAction Stop
-    $formattedTime = FormatElapsedTime $time
+    $formattedTime = vcpkgFormatElapsedTime $time
     Write-Host "    Copying done. Time Taken: $formattedTime seconds"
 }
 
