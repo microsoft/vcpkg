@@ -36,11 +36,13 @@ if (!(Test-Path $buildArchive))
 Write-Host "Deploying $buildArchive"
 
 $deploymentRoot = "C:\VS2017\Unstable\VC\Tools\MSVC\"
-$msvcVersion = "14.11.25503" # We should be smarter about finding this value. Also, what if multiples exist (if that is possible)?
+$msvcVersion = @(dir -Directory $deploymentRoot | Sort-object Name -Descending)[0].Name
+$deploymentPath = "$deploymentRoot\$msvcVersion"
 
 Write-Host "Cleaning-up $deploymentRoot..."
-vcpkgRemoveItem $deploymentRoot
-vcpkgCreateDirectoryIfNotExists $deploymentRoot
+vcpkgCreateDirectoryIfNotExists $deploymentPath
+Get-ChildItem $deploymentRoot -exclude $msvcVersion | % { vcpkgRemoveItem $_ }
+Get-ChildItem $deploymentPath -exclude "crt" | % { vcpkgRemoveItem $_ }
 Write-Host "Cleaning-up $deploymentRoot... done."
 
 Write-Host "Copying $buildArchive..."
@@ -49,7 +51,6 @@ $tempBuildArchive = "$deploymentRoot\$buildArchiveName"
 Copy-Item $buildArchive -Destination $tempBuildArchive
 Write-Host "Copying $buildArchive... done."
 
-$deploymentPath = "$deploymentRoot\$msvcVersion"
 Write-Host "Deployment path: $deploymentPath"
 Write-Host "Extracting 7z..."
 $time7z = Measure-Command {& .\7za.exe x $tempBuildArchive -o"$deploymentPath" -y}
