@@ -1,6 +1,6 @@
 diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
 --- a/trunk/CMakeLists.txt	2017-05-18 09:25:24.000000000 +0900
-+++ b/trunk/CMakeLists.txt	2018-02-01 13:56:34.031154195 +0900
++++ b/trunk/CMakeLists.txt	2018-02-02 19:19:51.036266268 +0900
 @@ -8,17 +8,22 @@
  # which were derived from those used by libLAS (http://liblas.org/) 
  #
@@ -27,25 +27,24 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
  
  set (PROJECT_BINARY_DIR bin)
  set (PROJECT_LIBRARY_DIR lib)
-@@ -40,53 +45,50 @@
+@@ -40,53 +45,54 @@
  set (LIBKEA_PACKAGE "LibKEA")
  set (LIBKEA_COPYRIGHT_YEAR 2013)
  
--if(MSVC)
++# set Name of C++ library
+ if(MSVC)
 -    # Name of C++ library
--    set(LIBKEA_LIB_NAME libkea)
--else()
+     set(LIBKEA_LIB_NAME libkea)
+ else()
 -    # Name of C++ library
--    set(LIBKEA_LIB_NAME kea)
--endif()
--
+     set(LIBKEA_LIB_NAME kea)
+ endif()
+ 
 -option (BUILD_SHARED_LIBS "Build with shared library" ON)
 -
 -set(HDF5_INCLUDE_DIR /usr/local/include CACHE PATH "Include PATH for HDF5")
 -set(HDF5_LIB_PATH /usr/local/lib CACHE PATH "Library PATH for HDF5")
-+# set Name of C++ library
-+set(LIBKEA_LIB_NAME kea)
- 
+-
 -set(GDAL_INCLUDE_DIR "NOTFOUND" CACHE PATH "Include PATH for GDAL")
 -set(GDAL_LIB_PATH "NOTFOUND" CACHE PATH "Library PATH for GDAL")
 -
@@ -114,7 +113,7 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
  ###############################################################################
  
  ###############################################################################
-@@ -100,68 +102,15 @@
+@@ -100,68 +106,15 @@
          
          # by default the compiler produces gratuitous warnings. Disable some of them
          set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4290 /wd4005 /wd4101 /wd4244 /wd4800 /wd4251 /wd4996")
@@ -126,7 +125,7 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
 -        set(VCPROJ_USER_ENVIRONMENT_PATH_DEBUG "${ENVIRONMENT_PATH}")
 -        mark_as_advanced(VCPROJ_USER_ENVIRONMENT_PATH_DEBUG)
 -
--else()
+ else()
 -  # Recommended C++ compilation flags
 -  # -Weffc++
 -  set(LIBKEA_COMMON_CXX_FLAGS
@@ -143,8 +142,10 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
 -  elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" OR "${CMAKE_CXX_COMPILER}" MATCHES "clang")
 -    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LIBKEA_COMMON_CXX_FLAGS}")
 -  endif()
--endif(MSVC)
--
++  set(CMAKE_CXX_FLAGS
++	"${CMAKE_CXX_FLAGS} -Wall -Wpointer-arith -Wcast-align -Wcast-qual -Wredundant-decls -Wno-long-long -DNDEBUG")
+ endif(MSVC)
+ 
 -if (APPLE)
 -  set(SO_EXT dylib)
 - # set(CMAKE_FIND_FRAMEWORK "LAST")
@@ -171,13 +172,11 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
 -
 -if (MSVC)
 -  set(GDAL_LIBRARIES -LIBPATH:"${GDAL_LIB_PATH}" gdal_i.lib)
- else()
+-else()
 -  set(GDAL_LIBRARIES -L${GDAL_LIB_PATH} -lgdal)
-+  set(CMAKE_CXX_FLAGS
-+	"${CMAKE_CXX_FLAGS} -Wall -Wpointer-arith -Wcast-align -Wcast-qual -Wredundant-decls -Wno-long-long -DNDEBUG")
- endif(MSVC)
+-endif(MSVC)
 -###############################################################################
- 
+-
  ###############################################################################
  # Setup configure file
 -configure_file ( "${PROJECT_HEADER_DIR}/kea-config.h.in" "${PROJECT_HEADER_DIR}/libkea/kea-config.h" )
@@ -187,7 +186,7 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
  ###############################################################################
  
  ###############################################################################
-@@ -174,7 +123,8 @@
+@@ -174,7 +127,8 @@
  # Build library
  
  include_directories ("${PROJECT_HEADER_DIR}")
@@ -197,7 +196,7 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
  add_subdirectory ("${PROJECT_SOURCE_DIR}")
  if (LIBKEA_WITH_GDAL)
  	add_subdirectory ("${PROJECT_GDAL_DIR}")
-@@ -185,13 +135,11 @@
+@@ -185,13 +139,11 @@
  # Tests
  enable_testing()
  add_test(NAME test1 COMMAND src/test1)
@@ -212,7 +211,7 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
  ###############################################################################
  
  ###############################################################################
-@@ -204,13 +152,19 @@
+@@ -204,13 +156,19 @@
  
  # Set files to ignore
  list(APPEND CPACK_SOURCE_IGNORE_FILES "_CPack_Packages")
@@ -236,7 +235,7 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
  
 diff -urN a/trunk/cmake/TransformVersion.cmake b/trunk/cmake/TransformVersion.cmake
 --- a/trunk/cmake/TransformVersion.cmake	1970-01-01 09:00:00.000000000 +0900
-+++ b/trunk/cmake/TransformVersion.cmake	2018-02-01 13:56:41.298786539 +0900
++++ b/trunk/cmake/TransformVersion.cmake	2018-02-02 19:18:18.661426721 +0900
 @@ -0,0 +1,33 @@
 +
 +function(TRANSFORM_VERSION numerical_result major_result minor_result patch_result version)
@@ -273,7 +272,7 @@ diff -urN a/trunk/cmake/TransformVersion.cmake b/trunk/cmake/TransformVersion.cm
 +endfunction()
 diff -urN a/trunk/gdal/CMakeLists.txt b/trunk/gdal/CMakeLists.txt
 --- a/trunk/gdal/CMakeLists.txt	2017-05-18 09:25:24.000000000 +0900
-+++ b/trunk/gdal/CMakeLists.txt	2018-02-01 13:56:56.606437265 +0900
++++ b/trunk/gdal/CMakeLists.txt	2018-02-02 19:20:44.813165519 +0900
 @@ -1,7 +1,7 @@
 -
  ###############################################################################
@@ -318,12 +317,14 @@ diff -urN a/trunk/gdal/CMakeLists.txt b/trunk/gdal/CMakeLists.txt
  #SET_TARGET_PROPERTIES(${LIBKEA_GDAL_DRIVER}
  #PROPERTIES
  #        SOVERSION ${LIBKEA_VERSION}
-@@ -44,6 +47,46 @@
+@@ -44,6 +47,47 @@
  ###############################################################################
  
  ###############################################################################
 -# Installation 
 -install (TARGETS ${LIBKEA_GDAL_DRIVER} DESTINATION lib/gdalplugins)
+-###############################################################################
+\ No newline at end of file
 +set(GDAL_PLUGIN_DIRS)
 +find_program(GDAL_CONFIG_EXECUTABLE "gdal-config" HINSTS ${GDAL_CONFIG})
 +if(EXISTS "${GDAL_CONFIG_EXECUTABLE}")
@@ -366,11 +367,11 @@ diff -urN a/trunk/gdal/CMakeLists.txt b/trunk/gdal/CMakeLists.txt
 +if(EXISTS "${GDAL_PLUGIN_DIR}")
 +    install (TARGETS ${LIBKEA_GDAL_DRIVER} DESTINATION ${GDAL_PLUGIN_DIR})
 +endif()
- ###############################################################################
-\ ファイル末尾に改行がありません
++###############################################################################
++
 diff -urN a/trunk/src/CMakeLists.txt b/trunk/src/CMakeLists.txt
 --- a/trunk/src/CMakeLists.txt	2017-05-18 09:25:24.000000000 +0900
-+++ b/trunk/src/CMakeLists.txt	2018-02-01 13:56:49.875072947 +0900
++++ b/trunk/src/CMakeLists.txt	2018-02-02 19:19:11.069743251 +0900
 @@ -4,7 +4,6 @@
  set(LIBKEA_SRC_DIR libkea)
  set(LIBKEA_HEADERS_DIR ../include/libkea)
@@ -388,7 +389,7 @@ diff -urN a/trunk/src/CMakeLists.txt b/trunk/src/CMakeLists.txt
 +# Build, link and install library
  add_library(${LIBKEA_LIB_NAME} ${LIBKEA_CPP} ${LIBKEA_H} )
 -target_link_libraries(${LIBKEA_LIB_NAME} ${HDF5_LIBRARIES} )
-+target_link_libraries(${LIBKEA_LIB_NAME} ${HDF5_LIBRARIES} ${HDF5_HL_LIBRARIES})
++target_link_libraries(${LIBKEA_LIB_NAME} PRIVATE hdf5::hdf5-shared hdf5::hdf5_hl-shared hdf5::hdf5_cpp-static hdf5::hdf5_cpp-shared)
 +
 +if(BUILD_SHARED_LIBS)
 +    SET_TARGET_PROPERTIES(${LIBKEA_LIB_NAME}
@@ -445,12 +446,12 @@ diff -urN a/trunk/src/CMakeLists.txt b/trunk/src/CMakeLists.txt
 -###############################################################################
 -# Installation 
 -install (TARGETS ${LIBKEA_LIB_NAME} DESTINATION lib)
-+# Install
++# Installation
 +install (TARGETS ${LIBKEA_LIB_NAME}
 +          RUNTIME DESTINATION bin
 +          LIBRARY DESTINATION lib
 +          ARCHIVE DESTINATION lib)
  install (FILES ${LIBKEA_H} DESTINATION include/libkea)
 -###############################################################################
-\ ファイル末尾に改行がありません
+\ No newline at end of file
 +###############################################################################
