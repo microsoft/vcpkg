@@ -473,6 +473,106 @@ namespace UnitTest1
             features_check(&install_plan[0], "a", {"1", "core"}, Triplet::X64_WINDOWS);
         }
 
+        TEST_METHOD(install_default_features_of_dependency_test_1)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+
+            // Add a port "a" which depends on the core of "b"
+            PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+            spec_map.emplace("a", "b[core]");
+            // "b" has two features, of which "b1" is default.
+            spec_map.emplace("b", "", {{"b0", ""}, {"b1", ""}}, {"b1"});
+
+            // Install "a" (without explicit feature specification)
+            auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
+            auto install_plan = Dependencies::create_feature_install_plan(
+                spec_map.map,
+                FullPackageSpec::to_feature_specs({install_specs.value_or_exit(VCPKG_LINE_INFO)}),
+                StatusParagraphs(std::move(status_paragraphs)));
+
+            // Expect "a" to get installed and defaults of "b" through the dependency,
+            // as no explicit features of "b" are installed by the user.
+            Assert::IsTrue(install_plan.size() == 2);
+            features_check(&install_plan[0], "a", {"core"}, Triplet::X64_WINDOWS);
+            features_check(&install_plan[1], "b", {"b1", "core"}, Triplet::X64_WINDOWS);
+        }
+
+        TEST_METHOD(install_default_features_of_dependency_test_2)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+            status_paragraphs.push_back(make_status_pgh("b"));
+            status_paragraphs.back()->package.spec =
+                PackageSpec::from_name_and_triplet("b", Triplet::X64_WINDOWS).value_or_exit(VCPKG_LINE_INFO);
+
+            // Add a port "a" which depends on the core of "b", which was already
+            // installed explicitly
+            PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+            spec_map.emplace("a", "b[core]");
+            // "b" has two features, of which "b1" is default.
+            spec_map.emplace("b", "", {{"b0", ""}, {"b1", ""}}, {"b1"});
+
+            // Install "a" (without explicit feature specification)
+            auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
+            auto install_plan = Dependencies::create_feature_install_plan(
+                spec_map.map,
+                FullPackageSpec::to_feature_specs({install_specs.value_or_exit(VCPKG_LINE_INFO)}),
+                StatusParagraphs(std::move(status_paragraphs)));
+
+            // Expect "a" to get installed, not the defaults of "b", as the required
+            // dependencies are already there, installed explicitly by the user.
+            Assert::IsTrue(install_plan.size() == 1);
+            features_check(&install_plan[0], "a", {"core"}, Triplet::X64_WINDOWS);
+        }
+
+        TEST_METHOD(install_default_features_of_dependency_test_3)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+            status_paragraphs.push_back(make_status_pgh("a"));
+            status_paragraphs.back()->package.spec =
+                PackageSpec::from_name_and_triplet("a", Triplet::X64_WINDOWS).value_or_exit(VCPKG_LINE_INFO);
+
+            // Add a port "a" of which "core" is already installed, but we will
+            // install the default features "explicitly"
+            // "a" has two features, of which "b1" is default.
+            PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+            spec_map.emplace("a", "", {{"a0", ""}, {"a1", ""}}, {"a1"});
+
+            // Install "a" (without explicit feature specification)
+            auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
+            auto install_plan = Dependencies::create_feature_install_plan(
+                spec_map.map,
+                FullPackageSpec::to_feature_specs({install_specs.value_or_exit(VCPKG_LINE_INFO)}),
+                StatusParagraphs(std::move(status_paragraphs)));
+
+            // Expect "a" to get removed for rebuild and then installed with default
+            // features.
+            Assert::IsTrue(install_plan.size() == 2);
+            remove_plan_check(&install_plan[0], "a", Triplet::X64_WINDOWS);
+            features_check(&install_plan[1], "a", {"a1", "core"}, Triplet::X64_WINDOWS);
+        }
+
+        TEST_METHOD(install_default_features_of_dependency_test_4)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+
+            // "a" has two features, of which "b1" is default.
+            PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+            spec_map.emplace("a", "", {{"a0", ""}, {"a1", ""}}, {"a1"});
+
+            // Explicitly install "a" without default features
+            auto install_specs = FullPackageSpec::from_string("a[core]", Triplet::X64_WINDOWS);
+            auto install_plan = Dependencies::create_feature_install_plan(
+                spec_map.map,
+                FullPackageSpec::to_feature_specs({ install_specs.value_or_exit(VCPKG_LINE_INFO) }),
+                StatusParagraphs(std::move(status_paragraphs)),
+                {"a"});
+
+            // Expect "a" to get removed for rebuild and then installed with default
+            // features.
+            Assert::IsTrue(install_plan.size() == 1);
+            features_check(&install_plan[0], "a", {"core"}, Triplet::X64_WINDOWS);
+        }
+
         TEST_METHOD(transitive_features_test)
         {
             std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
