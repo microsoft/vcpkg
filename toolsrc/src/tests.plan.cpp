@@ -9,15 +9,17 @@ using namespace vcpkg;
 namespace UnitTest1
 {
     static std::unique_ptr<SourceControlFile> make_control_file(
-        const char* name, const char* depends, const std::vector<std::pair<const char*, const char*>>& features = {})
+        const char* name,
+        const char* depends,
+        const std::vector<std::pair<const char*, const char*>>& features = {},
+        const std::vector<const char*>& default_features = {})
     {
         using Pgh = std::unordered_map<std::string, std::string>;
         std::vector<Pgh> scf_pghs;
-        scf_pghs.push_back(Pgh{
-            {"Source", name},
-            {"Version", "0"},
-            {"Build-Depends", depends},
-        });
+        scf_pghs.push_back(Pgh{{"Source", name},
+                               {"Version", "0"},
+                               {"Build-Depends", depends},
+                               {"Default-Features", Strings::join(", ", default_features)}});
         for (auto&& feature : features)
         {
             scf_pghs.push_back(Pgh{
@@ -41,6 +43,7 @@ namespace UnitTest1
                                std::vector<std::string> vec,
                                const Triplet& triplet = Triplet::X86_WINDOWS)
     {
+        Assert::IsTrue(install_action->install_action.has_value());
         const auto& plan = install_action->install_action.value_or_exit(VCPKG_LINE_INFO);
         const auto& feature_list = plan.feature_list;
 
@@ -88,9 +91,10 @@ namespace UnitTest1
 
         PackageSpec emplace(const char* name,
                             const char* depends = "",
-                            const std::vector<std::pair<const char*, const char*>>& features = {})
+                            const std::vector<std::pair<const char*, const char*>>& features = {},
+                            const std::vector<const char*>& default_features = {})
         {
-            return emplace(std::move(*make_control_file(name, depends, features)));
+            return emplace(std::move(*make_control_file(name, depends, features, default_features)));
         }
         PackageSpec emplace(vcpkg::SourceControlFile&& scf)
         {
@@ -453,27 +457,20 @@ namespace UnitTest1
         {
             std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
 
-            // Add a package "a" with default features "1" and features "0" and "1".
-            status_paragraphs.push_back(make_status_pgh("a", "", "1"));
-            status_paragraphs.push_back(make_status_feature_pgh("a", "0"));
-            status_paragraphs.push_back(make_status_feature_pgh("a", "1"));
-            status_paragraphs.back()->package.spec =
-                PackageSpec::from_name_and_triplet("a", Triplet::X64_WINDOWS).value_or_exit(VCPKG_LINE_INFO);
-
+            // Add a port "a" with default features "1" and features "0" and "1".
             PackageSpecMap spec_map(Triplet::X64_WINDOWS);
-            spec_map.emplace("a", "", {{ "0", "" }, { "1", "" }});
+            spec_map.emplace("a", "", {{"0", ""}, {"1", ""}}, {"1"});
 
             // Install "a" (without explicit feature specification)
             auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
             auto install_plan = Dependencies::create_feature_install_plan(
                 spec_map.map,
-                FullPackageSpec::to_feature_specs({ install_specs.value_or_exit(VCPKG_LINE_INFO) }),
+                FullPackageSpec::to_feature_specs({install_specs.value_or_exit(VCPKG_LINE_INFO)}),
                 StatusParagraphs(std::move(status_paragraphs)));
 
             // Expect the default feature "1" to be installed, but not "0"
-            Assert::IsTrue(install_plan.size() == 2);
-            remove_plan_check(&install_plan[0], "a", Triplet::X64_WINDOWS);
-            features_check(&install_plan[1], "a", { "1", "core" }, Triplet::X64_WINDOWS);
+            Assert::IsTrue(install_plan.size() == 1);
+            features_check(&install_plan[0], "a", {"1", "core"}, Triplet::X64_WINDOWS);
         }
 
         TEST_METHOD(transitive_features_test)
