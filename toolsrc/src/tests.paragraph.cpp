@@ -47,6 +47,7 @@ namespace UnitTest1
                     {"Maintainer", "m"},
                     {"Description", "d"},
                     {"Build-Depends", "bd"},
+                    {"Default-Features", "df"},
                     {"Supports", "x64"},
                 }});
             Assert::IsTrue(m_pgh.has_value());
@@ -58,6 +59,8 @@ namespace UnitTest1
             Assert::AreEqual("d", pgh->core_paragraph->description.c_str());
             Assert::AreEqual(size_t(1), pgh->core_paragraph->depends.size());
             Assert::AreEqual("bd", pgh->core_paragraph->depends[0].name().c_str());
+            Assert::AreEqual(size_t(1), pgh->core_paragraph->default_features.size());
+            Assert::AreEqual("df", pgh->core_paragraph->default_features[0].c_str());
             Assert::AreEqual(size_t(1), pgh->core_paragraph->supports.size());
             Assert::AreEqual("x64", pgh->core_paragraph->supports[0].c_str());
         }
