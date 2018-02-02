@@ -27,6 +27,11 @@ function vcpkgCreateParentDirectoryIfNotExists([Parameter(Mandatory=$true)][stri
 
 function vcpkgRemoveItem([Parameter(Mandatory=$true)][string]$dirPath)
 {
+    if ([string]::IsNullOrEmpty($dirPath))
+    {
+        return
+    }
+
     if (Test-Path $dirPath)
     {
         Remove-Item $dirPath -Recurse -Force
