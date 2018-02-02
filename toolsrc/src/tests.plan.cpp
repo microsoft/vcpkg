@@ -449,6 +449,33 @@ namespace UnitTest1
             features_check(&install_plan[0], "a", {"0", "1", "core"}, Triplet::X64_WINDOWS);
         }
 
+        TEST_METHOD(install_default_features_test)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+
+            // Add a package "a" with default features "1" and features "0" and "1".
+            status_paragraphs.push_back(make_status_pgh("a", "", "1"));
+            status_paragraphs.push_back(make_status_feature_pgh("a", "0"));
+            status_paragraphs.push_back(make_status_feature_pgh("a", "1"));
+            status_paragraphs.back()->package.spec =
+                PackageSpec::from_name_and_triplet("a", Triplet::X64_WINDOWS).value_or_exit(VCPKG_LINE_INFO);
+
+            PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+            spec_map.emplace("a", "", {{ "0", "" }, { "1", "" }});
+
+            // Install "a" (without explicit feature specification)
+            auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
+            auto install_plan = Dependencies::create_feature_install_plan(
+                spec_map.map,
+                FullPackageSpec::to_feature_specs({ install_specs.value_or_exit(VCPKG_LINE_INFO) }),
+                StatusParagraphs(std::move(status_paragraphs)));
+
+            // Expect the default feature "1" to be installed, but not "0"
+            Assert::IsTrue(install_plan.size() == 2);
+            remove_plan_check(&install_plan[0], "a", Triplet::X64_WINDOWS);
+            features_check(&install_plan[1], "a", { "1", "core" }, Triplet::X64_WINDOWS);
+        }
+
         TEST_METHOD(transitive_features_test)
         {
             std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
