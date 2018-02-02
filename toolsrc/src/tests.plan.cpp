@@ -567,9 +567,9 @@ namespace UnitTest1
         TEST_METHOD(features_depend_remove_scheme_once_removed_x64)
         {
             std::vector<std::unique_ptr<StatusParagraph>> pghs;
-            pghs.push_back(make_status_pgh("expat", "", "x64"));
-            pghs.push_back(make_status_pgh("vtk", "expat", "x64"));
-            pghs.push_back(make_status_pgh("opencv", "", "x64"));
+            pghs.push_back(make_status_pgh("expat", "", "", "x64"));
+            pghs.push_back(make_status_pgh("vtk", "expat", "", "x64"));
+            pghs.push_back(make_status_pgh("opencv", "", "", "x64"));
             pghs.push_back(make_status_feature_pgh("opencv", "vtk", "vtk", "x64"));
             StatusParagraphs status_db(std::move(pghs));
 
