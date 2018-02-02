@@ -508,6 +508,12 @@ namespace vcpkg::Dependencies
         }
     }
 
+    ///
+    /// <summary> Figure out which actions are required to install features specifications in `specs`.</summary>
+    /// <param name="provider"> Contains the ports of the current environment. </param>
+    /// <param name="specs"> Feature specifications to resolve dependencies for. </param>
+    /// <param name="status_db"> Status of installed packages in the current environment. </param>
+    ///
     std::vector<AnyAction> create_feature_install_plan(const PortFileProvider& provider,
                                                        const std::vector<FeatureSpec>& specs,
                                                        const StatusParagraphs& status_db)
@@ -519,6 +525,12 @@ namespace vcpkg::Dependencies
         return pgraph.serialize();
     }
 
+     ///
+     /// <summary> Figure out which actions are required to install features specifications in `specs`.</summary>
+     /// <param name="map"> Map of all source files in the current environment. </param>
+     /// <param name="specs"> Feature specifications to resolve dependencies for. </param>
+     /// <param name="status_db"> Status of installed packages in the current environment. </param>
+     ///
     std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<std::string, SourceControlFile>& map,
                                                        const std::vector<FeatureSpec>& specs,
                                                        const StatusParagraphs& status_db)

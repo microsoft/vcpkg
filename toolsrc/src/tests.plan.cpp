@@ -31,6 +31,11 @@ namespace UnitTest1
         return std::move(*m_pgh.get());
     }
 
+    ///
+    /// <summary>
+    /// Assert that the given action an install of given features from given package.
+    /// </summary>
+    ///
     static void features_check(Dependencies::AnyAction* install_action,
                                std::string pkg_name,
                                std::vector<std::string> vec,
@@ -56,6 +61,11 @@ namespace UnitTest1
         }
     }
 
+    ///
+    /// <summary>
+    /// Assert that the given action is a remove of given package.
+    /// </summary>
+    ///
     static void remove_plan_check(Dependencies::AnyAction* remove_action,
                                   std::string pkg_name,
                                   const Triplet& triplet = Triplet::X86_WINDOWS)
@@ -65,6 +75,11 @@ namespace UnitTest1
         Assert::AreEqual(pkg_name.c_str(), plan.spec.name().c_str());
     }
 
+    ///
+    /// <summary>
+    /// Map of source control files by their package name.
+    /// </summary>
+    ///
     struct PackageSpecMap
     {
         std::unordered_map<std::string, SourceControlFile> map;
