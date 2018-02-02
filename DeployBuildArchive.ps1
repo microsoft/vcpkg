@@ -53,7 +53,7 @@ Write-Host "Copying $buildArchive... done."
 
 Write-Host "Deployment path: $deploymentPath"
 Write-Host "Extracting 7z..."
-$time7z = Measure-Command {& .\$scriptsDir\7za.exe x $tempBuildArchive -o"$deploymentPath" -y}
+$time7z = Measure-Command {& $scriptsDir\7za.exe x $tempBuildArchive -o"$deploymentPath" -y}
 $formattedTime7z = vcpkgFormatElapsedTime $time7z
 Write-Host "Extracting 7z... done. Time Taken: $formattedTime7z seconds"
 

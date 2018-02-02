@@ -104,7 +104,7 @@ Write-Host "Creating 7z..."
 # - mx5: Size= 787MB, CompressionTime= 8.59min, DecompressionTime=64s
 # - mx7: Size= 724MB, CompressionTime=11.26min, DecompressionTime=64s
 # - mx9: Size= 675MB, CompressionTime=13.79min, DecompressionTime=59s
-$time7z = Measure-Command {& .\$scriptsDir\7za.exe a -t7z $sevenZipPart $toCompleted\* -mx9 -mmt -y}
+$time7z = Measure-Command {& $scriptsDir\7za.exe a -t7z $sevenZipPart $toCompleted\* -mx9 -mmt -y}
 Move-Item -Path $sevenZipPart -Destination $sevenZip
 $formattedTime7z = vcpkgFormatElapsedTime $time7z
 Write-Host "Creating 7z... done. Time Taken: $formattedTime7z seconds"
