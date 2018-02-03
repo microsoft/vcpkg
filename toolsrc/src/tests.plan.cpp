@@ -573,6 +573,36 @@ namespace UnitTest1
             features_check(&install_plan[0], "a", {"core"}, Triplet::X64_WINDOWS);
         }
 
+        TEST_METHOD(upgrade_with_default_features)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> pghs;
+            pghs.push_back(make_status_pgh("a"));
+            pghs.push_back(make_status_feature_pgh("a", "0"));
+            pghs.back()->package.spec =
+                PackageSpec::from_name_and_triplet("a", Triplet::X64_WINDOWS).value_or_exit(VCPKG_LINE_INFO);
+            StatusParagraphs status_db(std::move(pghs));
+
+            // Add a port "a" of which "core" and "0" are already installed.
+            PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+            auto spec_a = spec_map.emplace("a", "", {{"0", ""}, {"1", ""}}, {"1"});
+
+            Dependencies::MapPortFileProvider provider(spec_map.map);
+            Dependencies::PackageGraph graph(provider, status_db);
+
+            graph.upgrade(spec_a);
+            auto plan = graph.serialize();
+
+            // The upgrade should not install the default feature
+            Assert::AreEqual(size_t(2), plan.size());
+
+            Assert::AreEqual("a", plan[0].spec().name().c_str());
+            Assert::IsTrue(plan[0].remove_action.has_value());
+
+            Assert::AreEqual("a", plan[1].spec().name().c_str());
+            Assert::IsTrue(plan[1].install_action.has_value());
+            features_check(&plan[1], "a", {"core", "0"}, Triplet::X64_WINDOWS);
+        }
+
         TEST_METHOD(transitive_features_test)
         {
             std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
