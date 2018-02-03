@@ -15,10 +15,19 @@ vcpkg_apply_patches(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED_LIBS)
 
+if ("parallel" IN_LIST FEATURES)
+    set(ENABLE_PARALLEL ON)
+else()
+    set(ENABLE_PARALLEL OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/trunk
     PREFER_NINJA
-    OPTIONS -DBUILD_SHARED_LIBS=${ENABLE_SHARED_LIBS} -DLIBKEA_WITH_GDAL=OFF
+    OPTIONS
+      -DBUILD_SHARED_LIBS=${ENABLE_SHARED_LIBS}
+      -DHDF5_PREFER_PARALLEL=${ENABLE_PARALLEL}
+      -DLIBKEA_WITH_GDAL=OFF
 )
 
 vcpkg_install_cmake()
