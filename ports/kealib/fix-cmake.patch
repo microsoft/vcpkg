@@ -1,6 +1,6 @@
 diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
 --- a/trunk/CMakeLists.txt	2017-05-18 09:25:24.000000000 +0900
-+++ b/trunk/CMakeLists.txt	2018-02-02 19:19:51.036266268 +0900
++++ b/trunk/CMakeLists.txt	2018-02-04 08:33:04.627858969 +0900
 @@ -8,17 +8,22 @@
  # which were derived from those used by libLAS (http://liblas.org/) 
  #
@@ -27,19 +27,18 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
  
  set (PROJECT_BINARY_DIR bin)
  set (PROJECT_LIBRARY_DIR lib)
-@@ -40,53 +45,54 @@
+@@ -40,53 +45,52 @@
  set (LIBKEA_PACKAGE "LibKEA")
  set (LIBKEA_COPYRIGHT_YEAR 2013)
  
-+# set Name of C++ library
- if(MSVC)
+-if(MSVC)
 -    # Name of C++ library
-     set(LIBKEA_LIB_NAME libkea)
- else()
+-    set(LIBKEA_LIB_NAME libkea)
+-else()
 -    # Name of C++ library
-     set(LIBKEA_LIB_NAME kea)
- endif()
- 
+-    set(LIBKEA_LIB_NAME kea)
+-endif()
+-
 -option (BUILD_SHARED_LIBS "Build with shared library" ON)
 -
 -set(HDF5_INCLUDE_DIR /usr/local/include CACHE PATH "Include PATH for HDF5")
@@ -56,6 +55,9 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
 -ELSE()
 -    set(LIBKEA_WITH_GDAL FALSE CACHE BOOL "Choose if .kea GDAL driver should be built")
 -ENDIF()
++# set Name of C++ library
++set(LIBKEA_LIB_NAME kea)
+ 
 +include(CMakeDependentOption)
 +# CMake global option valiable
 +option (BUILD_SHARED_LIBS "Build shared library" ON)
@@ -67,9 +69,7 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
 +# static link to a dynamic link for HDF5 and all of it's dependencies.
 +# To use this feature, make sure that the HDF5_USE_STATIC_LIBRARIES
 +# variable is set before the call to find_package.
-+if(UNIX)
-+    option(HDF5_USE_STATIC_LIBRARIES "Force to use HDF5 static libraries." OFF)
-+endif()
++option(HDF5_USE_STATIC_LIBRARIES "Force to use HDF5 static libraries." OFF)
 +# Both the serial and parallel HDF5 wrappers are considered and the first
 +# directory to contain either one will be used.  In the event that both appear
 +# in the same directory the serial version is preferentially selected. This
@@ -86,7 +86,11 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
 +find_package(HDF5 COMPONENTS CXX HL REQUIRED)
 +find_package(GDAL)
 +cmake_dependent_option(LIBKEA_WITH_GDAL  "Choose if .kea GDAL driver should be built" ON "GDAL_FOUND" OFF)
- 
++# Wwhen static link, looking for all depenency for HDF5
++if(HDF5_USE_STATIC_LIBRAREIS)
++  find_package(zlib REQUIRED)
++  find_package(szip REQUIRED)
++endif()
  ###############################################################################
  
  ###############################################################################
@@ -113,7 +117,7 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
  ###############################################################################
  
  ###############################################################################
-@@ -100,68 +106,15 @@
+@@ -100,68 +104,15 @@
          
          # by default the compiler produces gratuitous warnings. Disable some of them
          set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4290 /wd4005 /wd4101 /wd4244 /wd4800 /wd4251 /wd4996")
@@ -186,7 +190,7 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
  ###############################################################################
  
  ###############################################################################
-@@ -174,7 +127,8 @@
+@@ -174,7 +125,8 @@
  # Build library
  
  include_directories ("${PROJECT_HEADER_DIR}")
@@ -196,7 +200,7 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
  add_subdirectory ("${PROJECT_SOURCE_DIR}")
  if (LIBKEA_WITH_GDAL)
  	add_subdirectory ("${PROJECT_GDAL_DIR}")
-@@ -185,13 +139,11 @@
+@@ -185,13 +137,11 @@
  # Tests
  enable_testing()
  add_test(NAME test1 COMMAND src/test1)
@@ -211,7 +215,7 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
  ###############################################################################
  
  ###############################################################################
-@@ -204,13 +156,19 @@
+@@ -204,13 +154,19 @@
  
  # Set files to ignore
  list(APPEND CPACK_SOURCE_IGNORE_FILES "_CPack_Packages")
