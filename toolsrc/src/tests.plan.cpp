@@ -493,8 +493,8 @@ namespace UnitTest1
             // Expect "a" to get installed and defaults of "b" through the dependency,
             // as no explicit features of "b" are installed by the user.
             Assert::IsTrue(install_plan.size() == 2);
-            features_check(&install_plan[0], "a", {"core"}, Triplet::X64_WINDOWS);
-            features_check(&install_plan[1], "b", {"b1", "core"}, Triplet::X64_WINDOWS);
+            features_check(&install_plan[1], "a", {"core"}, Triplet::X64_WINDOWS);
+            features_check(&install_plan[0], "b", {"b1", "core"}, Triplet::X64_WINDOWS);
         }
 
         TEST_METHOD(install_default_features_of_dependency_test_2)

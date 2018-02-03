@@ -151,7 +151,7 @@ namespace vcpkg::Dependencies
         PackageGraph(const PortFileProvider& provider, const StatusParagraphs& status_db);
         ~PackageGraph();
 
-        void install(const FeatureSpec& spec) const;
+        void install(const FeatureSpec& spec, const std::unordered_set<std::string>& prevent_default_features = {}) const;
         void upgrade(const PackageSpec& spec) const;
 
         std::vector<AnyAction> serialize() const;
@@ -163,7 +163,8 @@ namespace vcpkg::Dependencies
 
     std::vector<InstallPlanAction> create_install_plan(const PortFileProvider& port_file_provider,
                                                        const std::vector<PackageSpec>& specs,
-                                                       const StatusParagraphs& status_db);
+                                                       const StatusParagraphs& status_db,
+                                                       const std::unordered_set<std::string>& prevent_default_features = {});
 
     std::vector<RemovePlanAction> create_remove_plan(const std::vector<PackageSpec>& specs,
                                                      const StatusParagraphs& status_db);
@@ -175,11 +176,13 @@ namespace vcpkg::Dependencies
 
     std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<std::string, SourceControlFile>& map,
                                                        const std::vector<FeatureSpec>& specs,
-                                                       const StatusParagraphs& status_db);
+                                                       const StatusParagraphs& status_db,
+                                                       const std::unordered_set<std::string>& prevent_default_features = {});
 
     std::vector<AnyAction> create_feature_install_plan(const PortFileProvider& port_file_provider,
                                                        const std::vector<FeatureSpec>& specs,
-                                                       const StatusParagraphs& status_db);
+                                                       const StatusParagraphs& status_db,
+                                                       const std::unordered_set<std::string>& prevent_default_features = {});
 
     void print_plan(const std::vector<AnyAction>& action_plan, const bool is_recursive = true);
 }
