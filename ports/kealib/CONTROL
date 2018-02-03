@@ -1,6 +1,6 @@
 Source: kealib
 Version: 1.4.7
-Build-Depends: hdf5[cpp]
+Build-Depends: hdf5
 Description: kealib is gdal model using HDF5 standard.
 
 Feature: parallel
