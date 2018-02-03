@@ -40,6 +40,8 @@ $msvcVersion = @(dir -Directory $deploymentRoot | Sort-object Name -Descending)[
 $deploymentPath = "$deploymentRoot\$msvcVersion"
 
 Write-Host "Cleaning-up $deploymentRoot..."
+Get-Process -Name "cl" -ErrorAction SilentlyContinue | Stop-Process
+Get-Process -Name "VCTip" -ErrorAction SilentlyContinue | Stop-Process
 vcpkgCreateDirectoryIfNotExists $deploymentPath
 Get-ChildItem $deploymentRoot -exclude $msvcVersion | % { vcpkgRemoveItem $_ }
 Get-ChildItem $deploymentPath -exclude "crt" | % { vcpkgRemoveItem $_ }
