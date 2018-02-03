@@ -13,7 +13,7 @@ $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 $buildArchiveFolderRoot = "\\vcpkg-000\General\CustomBuilds"
 if ($latest)
 {
-    $branchBuildArchives = Get-ChildItem $buildArchiveFolderRoot | Where-Object {$_.Name -match "^$tfsBranch"}
+    $branchBuildArchives = Get-ChildItem $buildArchiveFolderRoot | Where-Object {$_.Name -match "^$tfsBranch.+\.7z"}
     if ($branchBuildArchives.count -eq 0)
     {
         Write-Error "Count not find build archives for branch $tfsBranch in: $buildArchiveFolderRoot"
@@ -24,7 +24,7 @@ if ($latest)
 }
 else
 {
-    $buildArchive = "$buildArchiveFolderRoot\$tfsBranch-$buildNumber"
+    $buildArchive = "$buildArchiveFolderRoot\$tfsBranch-$buildNumber.7z"
 }
 
 if (!(Test-Path $buildArchive))
