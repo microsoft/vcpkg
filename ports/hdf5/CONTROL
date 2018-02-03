@@ -6,6 +6,3 @@ Build-Depends: zlib, szip
 Feature: parallel
 Description: parallel support for HDF5
 Build-Depends: msmpi
-
-Feature: cpp
-Description: Builds cpp lib
