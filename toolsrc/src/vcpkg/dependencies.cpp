@@ -504,6 +504,17 @@ namespace vcpkg::Dependencies
         if (cluster.will_remove) return;
         cluster.will_remove = true;
 
+        std::unordered_set<std::string> prevent_default_features;
+
+        if (cluster.request_type == RequestType::USER_REQUESTED) {
+            // Do not install default features for packages which the user
+            // installed explicitly. New default features for dependent
+            // clusters should still be upgraded.
+            prevent_default_features.insert(cluster.spec.name());
+
+            // For dependent packages this is handles through the recursion
+        }
+
         graph_plan.remove_graph.add_vertex({&cluster});
         for (auto&& pair : cluster.edges)
         {
@@ -519,7 +530,7 @@ namespace vcpkg::Dependencies
         cluster.transient_uninstalled = true;
         for (auto&& original_feature : cluster.original_features)
         {
-            auto res = mark_plus(original_feature, cluster, graph, graph_plan);
+            auto res = mark_plus(original_feature, cluster, graph, graph_plan, prevent_default_features);
             if (res != MarkPlusResult::SUCCESS)
             {
                 System::println(System::Color::warning,
