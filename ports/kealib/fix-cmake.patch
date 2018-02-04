@@ -1,6 +1,6 @@
 diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
 --- a/trunk/CMakeLists.txt	2017-05-18 09:25:24.000000000 +0900
-+++ b/trunk/CMakeLists.txt	2018-02-04 08:33:04.627858969 +0900
++++ b/trunk/CMakeLists.txt	2018-02-04 10:38:26.562251456 +0900
 @@ -8,17 +8,22 @@
  # which were derived from those used by libLAS (http://liblas.org/) 
  #
@@ -27,7 +27,7 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
  
  set (PROJECT_BINARY_DIR bin)
  set (PROJECT_LIBRARY_DIR lib)
-@@ -40,53 +45,52 @@
+@@ -40,128 +45,69 @@
  set (LIBKEA_PACKAGE "LibKEA")
  set (LIBKEA_COPYRIGHT_YEAR 2013)
  
@@ -86,11 +86,6 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
 +find_package(HDF5 COMPONENTS CXX HL REQUIRED)
 +find_package(GDAL)
 +cmake_dependent_option(LIBKEA_WITH_GDAL  "Choose if .kea GDAL driver should be built" ON "GDAL_FOUND" OFF)
-+# Wwhen static link, looking for all depenency for HDF5
-+if(HDF5_USE_STATIC_LIBRAREIS)
-+  find_package(zlib REQUIRED)
-+  find_package(szip REQUIRED)
-+endif()
  ###############################################################################
  
  ###############################################################################
@@ -117,10 +112,16 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
  ###############################################################################
  
  ###############################################################################
-@@ -100,68 +104,15 @@
-         
-         # by default the compiler produces gratuitous warnings. Disable some of them
-         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4290 /wd4005 /wd4101 /wd4244 /wd4800 /wd4251 /wd4996")
+ # Platform and compiler specific settings
+ 
+ if(MSVC)
+-        add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
+-        add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+-        add_definitions(-D_CRT_NONSTDC_NO_WARNING)
+-        add_definitions(-D_SCL_SECURE_NO_WARNINGS)
+-        
+-        # by default the compiler produces gratuitous warnings. Disable some of them
+-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4290 /wd4005 /wd4101 /wd4244 /wd4800 /wd4251 /wd4996")
 -
 -        # Generate dot-user file with user-specific settings for Visual Studio project
 -        set(MSVC_ENVIRONMENT_PATH "" CACHE STRING
@@ -129,6 +130,13 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
 -        set(VCPROJ_USER_ENVIRONMENT_PATH_DEBUG "${ENVIRONMENT_PATH}")
 -        mark_as_advanced(VCPROJ_USER_ENVIRONMENT_PATH_DEBUG)
 -
++    add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
++    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
++    add_definitions(-D_CRT_NONSTDC_NO_WARNING)
++    add_definitions(-D_SCL_SECURE_NO_WARNINGS)
++    
++    # by default the compiler produces gratuitous warnings. Disable some of them
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4290 /wd4005 /wd4101 /wd4244 /wd4800 /wd4251 /wd4996")
  else()
 -  # Recommended C++ compilation flags
 -  # -Weffc++
@@ -146,8 +154,8 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
 -  elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" OR "${CMAKE_CXX_COMPILER}" MATCHES "clang")
 -    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LIBKEA_COMMON_CXX_FLAGS}")
 -  endif()
-+  set(CMAKE_CXX_FLAGS
-+	"${CMAKE_CXX_FLAGS} -Wall -Wpointer-arith -Wcast-align -Wcast-qual -Wredundant-decls -Wno-long-long -DNDEBUG")
++    set(CMAKE_CXX_FLAGS
++	      "${CMAKE_CXX_FLAGS} -Wall -Wpointer-arith -Wcast-align -Wcast-qual -Wredundant-decls -Wno-long-long -DNDEBUG")
  endif(MSVC)
  
 -if (APPLE)
@@ -190,7 +198,7 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
  ###############################################################################
  
  ###############################################################################
-@@ -174,7 +125,8 @@
+@@ -174,7 +120,8 @@
  # Build library
  
  include_directories ("${PROJECT_HEADER_DIR}")
@@ -200,7 +208,7 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
  add_subdirectory ("${PROJECT_SOURCE_DIR}")
  if (LIBKEA_WITH_GDAL)
  	add_subdirectory ("${PROJECT_GDAL_DIR}")
-@@ -185,13 +137,11 @@
+@@ -185,13 +132,11 @@
  # Tests
  enable_testing()
  add_test(NAME test1 COMMAND src/test1)
@@ -215,7 +223,7 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
  ###############################################################################
  
  ###############################################################################
-@@ -204,13 +154,19 @@
+@@ -204,13 +149,19 @@
  
  # Set files to ignore
  list(APPEND CPACK_SOURCE_IGNORE_FILES "_CPack_Packages")
