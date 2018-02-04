@@ -130,7 +130,8 @@ function(vcpkg_from_bitbucket)
 
     # The following is for --head scenarios
     set(URL "https://bitbucket.com/${ORG_NAME}/${REPO_NAME}/get/${_vdud_HEAD_REF}.tar.gz")
-    set(downloaded_file_path "${DOWNLOADS}/${ORG_NAME}-${REPO_NAME}-${_vdud_HEAD_REF}.tar.gz")
+    set(downloaded_file_name "${ORG_NAME}-${REPO_NAME}-${_vdud_HEAD_REF}.tar.gz")
+    set(downloaded_file_path "${DOWNLOADS}/${downloaded_file_name}")
 
     if(_VCPKG_NO_DOWNLOADS)
         if(NOT EXISTS ${downloaded_file_path} OR NOT EXISTS ${downloaded_file_path}.version)
@@ -150,17 +151,17 @@ function(vcpkg_from_bitbucket)
         endif()
 
         # Try to download the file and version information from bitbucket.
-        set(_VCPKG_INTERNAL_NO_HASH_CHECK "TRUE")
         vcpkg_download_distfile(ARCHIVE_VERSION
             URLS "https://api.bitbucket.com/2.0/repositories/${ORG_NAME}/${REPO_NAME}/refs/branches/${_vdud_HEAD_REF}"
-            FILENAME ${downloaded_file_name}.version
+            FILENAME "${downloaded_file_name}.version"
+            SKIP_SHA512
         )
 
         vcpkg_download_distfile(ARCHIVE
-            URLS ${URL}
-            FILENAME ${downloaded_file_name}
+            URLS "${URL}"
+            FILENAME "${downloaded_file_name}"
+            SKIP_SHA512
         )
-        set(_VCPKG_INTERNAL_NO_HASH_CHECK "FALSE")
     endif()
 
     vcpkg_extract_source_archive_ex(
