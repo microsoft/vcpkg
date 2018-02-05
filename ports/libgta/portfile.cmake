@@ -20,6 +20,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS -DGTA_BUILD_SHARED_LIBS=${ENABLE_SHARED_LIBS}
             -DGTA_BUILD_STATIC_LIBS=${ENABLE_STATIC_LIBS}
+            -DGTA_BUILD_DOCUMENTATION=OFF
 )
 
 vcpkg_build_cmake()
