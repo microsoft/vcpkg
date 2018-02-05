@@ -28,6 +28,9 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin$ {CURRENT_PACKAGES_DIR}/bin)
+endif()
 
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libgta)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libgta/COPYING ${CURRENT_PACKAGES_DIR}/share/libgta/copyright)
