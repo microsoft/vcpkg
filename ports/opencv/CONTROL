@@ -1,5 +1,5 @@
 Source: opencv
-Version: 3.4.0
+Version: 3.4.0-1
 Build-Depends: zlib, libpng, libjpeg-turbo, tiff, protobuf (windows)
 Description: computer vision library
 

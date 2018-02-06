@@ -1,0 +1,41 @@
+diff --git a/modules/core/src/utils/filesystem.cpp b/modules/core/src/utils/filesystem.cpp
+index 266a92f..1d5a302 100644
+--- a/modules/core/src/utils/filesystem.cpp
++++ b/modules/core/src/utils/filesystem.cpp
+@@ -186,7 +186,7 @@ bool createDirectory(const cv::String& path)
+     wchar_t wpath[MAX_PATH];
+     size_t copied = mbstowcs(wpath, path.c_str(), MAX_PATH);
+     CV_Assert((copied != MAX_PATH) && (copied != (size_t)-1));
+-    int result = CreateDirectoryA(wpath, NULL) ? 0 : -1;
++    int result = CreateDirectoryW(wpath, NULL) ? 0 : -1;
+ #else
+     int result = _mkdir(path.c_str());
+ #endif
+@@ -248,8 +248,16 @@ struct FileLock::Impl
+         int numRetries = 5;
+         do
+         {
++#ifdef WINRT
++            wchar_t wpath[MAX_PATH];
++            size_t copied = mbstowcs(wpath, fname, MAX_PATH);
++            CV_Assert((copied != MAX_PATH) && (copied != (size_t)-1));
++            handle = ::CreateFile2(wpath, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
++                                OPEN_EXISTING, NULL);
++#else
+             handle = ::CreateFileA(fname, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL,
+                                 OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
++#endif
+             if (INVALID_HANDLE_VALUE == handle)
+             {
+                 if (ERROR_SHARING_VIOLATION == GetLastError())
+@@ -399,7 +407,9 @@ cv::String getCacheDirectory(const char* sub_directory_name, const char* configu
+     if (cache_path.empty())
+     {
+         cv::String default_cache_path;
+-#ifdef _WIN32
++#if WINRT
++        // no defaults
++#elif defined _WIN32
+         char tmp_path_buf[MAX_PATH+1] = {0};
+         DWORD res = GetTempPath(MAX_PATH, tmp_path_buf);
+         if (res > 0 && res <= MAX_PATH)
