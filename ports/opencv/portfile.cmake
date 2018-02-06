@@ -15,6 +15,7 @@ vcpkg_apply_patches(
             "${CMAKE_CURRENT_LIST_DIR}/002-fix-uwp.patch"
             "${CMAKE_CURRENT_LIST_DIR}/no-double-expand-enable-pylint.patch"
             "${CMAKE_CURRENT_LIST_DIR}/msvs-fix-2017-u5.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/filesystem-uwp.patch"
 )
 file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty/libjpeg ${SOURCE_PATH}/3rdparty/libpng ${SOURCE_PATH}/3rdparty/zlib ${SOURCE_PATH}/3rdparty/libtiff)
 
