@@ -290,6 +290,7 @@ namespace vcpkg::Build
         const auto pre_build_info = PreBuildInfo::from_triplet_file(paths, triplet);
 
         std::string features;
+        std::string all_features;
         if (GlobalState::feature_packages)
         {
             for (auto&& feature : config.feature_list)
@@ -299,6 +300,10 @@ namespace vcpkg::Build
             if (!features.empty())
             {
                 features.pop_back();
+            }
+            for (auto& feature : config.scf.feature_paragraphs)
+            {
+                all_features.append(feature->name + ";");
             }
         }
 
@@ -317,6 +322,7 @@ namespace vcpkg::Build
                 {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
                 {"GIT", git_exe_path},
                 {"FEATURES", features},
+                {"ALL_FEATURES", all_features},
             });
 
         const auto cmd_set_environment = make_build_env_cmd(pre_build_info, toolset);

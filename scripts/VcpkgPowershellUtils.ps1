@@ -160,7 +160,7 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
     }
     else
     {
-        Move-Item -Path $destinationPartial -Destination $output
+        Move-Item -Path "$destinationPartial" -Destination $output
     }
 }
 
