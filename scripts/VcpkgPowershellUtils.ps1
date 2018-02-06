@@ -226,3 +226,23 @@ function vcpkgFormatElapsedTime([TimeSpan]$ts)
 
     throw $ts
 }
+
+function vcpkgFindFileRecursivelyUp()
+{
+    param(
+        [ValidateNotNullOrEmpty()]
+        [Parameter(Mandatory=$true)][string]$startingDir,
+        [ValidateNotNullOrEmpty()]
+        [Parameter(Mandatory=$true)][string]$filename
+    )
+
+    $currentDir = $startingDir
+
+    while (!($currentDir -eq "") -and !(Test-Path "$currentDir\$filename"))
+    {
+        Write-Verbose "Examining $currentDir for $filename"
+        $currentDir = Split-path $currentDir -Parent
+    }
+    Write-Verbose "Examining $currentDir for $filename - Found"
+    return $currentDir
+}
