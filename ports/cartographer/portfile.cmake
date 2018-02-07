@@ -14,8 +14,11 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/fix-find-packages.patch
 )
 
-#Although the dynamic version is built, but here is no export (.lib) for the dll
-set(VCPKG_LIBRARY_LINKAGE static)
+#cartographer does not export any symbol, CMake is used to export them all
+set (EXPORT_ALL_SYMBOLS FALSE)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+	set (EXPORT_ALL_SYMBOLS TRUE)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -23,7 +26,9 @@ vcpkg_configure_cmake(
         -DGFLAGS_PREFER_EXPORTED_GFLAGS_CMAKE_CONFIGURATION=OFF 
         -DGLOG_PREFER_EXPORTED_GLOG_CMAKE_CONFIGURATION=OFF 
 		-Dgtest_disable_pthreads=ON 
-		-DCMAKE_USE_PTHREADS_INIT=OFF     
+		-DCMAKE_USE_PTHREADS_INIT=OFF
+		-DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=${EXPORT_ALL_SYMBOLS}
+		-DBUILD_SHARED_LIBS=${EXPORT_ALL_SYMBOLS}		
 	OPTIONS_DEBUG
 		-DFORCE_DEBUG_BUILD=True
 )
