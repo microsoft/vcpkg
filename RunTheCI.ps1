@@ -39,10 +39,12 @@ $installedDirRemote = "$driveLetter\vcpkg-full-ci-$Triplet"
 Write-Host "Unlinking/deleting $installedDirLocal ..."
 if (IsReparsePoint $installedDirLocal)
 {
+    Write-Host "Reparse point detected. Unlinking."
     cmd /c rmdir $installedDirLocal
 }
 else
 {
+    Write-Host "Non-reparse point detected. Deleting."
     vcpkgRemoveItem $installedDirLocal
 }
 Write-Host "Unlinking/deleting $installedDirLocal ... done."
