@@ -104,7 +104,10 @@ file(INSTALL ${SOURCE_PATH}/lib/${LIB_SUB_PATH}-dbg/
 	DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin FILES_MATCHING PATTERN "*.dll")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/mswu ${CURRENT_PACKAGES_DIR}/debug/lib/mswud)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/mswu ${CURRENT_PACKAGES_DIR}/debug/bin/mswud)
-  
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()  
 # Handle copyright
 file(COPY ${SOURCE_PATH}/docs/licence.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/wxwidgets)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/wxWidgets/licence.txt ${CURRENT_PACKAGES_DIR}/share/wxwidgets/copyright)
