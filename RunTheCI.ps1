@@ -8,17 +8,20 @@ function IsReparsePoint([string]$path) {
   return [bool]($file.Attributes -band [IO.FileAttributes]::ReparsePoint)
 }
 
-$ErrorActionPreference = "Stop"
-
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 . "$scriptsDir\VcpkgPowershellUtils.ps1"
 
 $vcpkgRootDir = vcpkgFindFileRecursivelyUp $scriptsDir .vcpkg-root
 
-vcpkgRemoveItem "$vcpkgRootDir\TEST-full-ci.xml"
+$cixml = "$vcpkgRootDir\TEST-full-ci.xml"
 
+Write-Host "Deleting $cixml ..."
+vcpkgRemoveItem "$cixml"
+Write-Host "Deleting $cixml ... done."
+
+Write-Host "Bootstrapping vcpkg ..."
 & "$vcpkgRootDir\bootstrap-vcpkg.bat"
-if (-not $?) { exit $? }
+Write-Host "Bootstrapping vcpkg ... done."
 
 $driveLetter = "I:"
 Write-Host "Deleting drive $driveLetter\ ..."
