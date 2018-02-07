@@ -52,6 +52,17 @@ function checkWarn
     }
 }
 
+function vcpkgGetProcessByNameRegex
+{
+    param
+    (
+        [Parameter(Mandatory=$true)][String]$regex
+    )
+
+    # SilentlyContinue in case nothing is found
+    return Get-Process -Name "$regex" -ErrorAction SilentlyContinue
+}
+
 function DownloadAndUpdateVSInstaller
 {
     $installerPath = "$scriptsDir\vs_Community.exe"
@@ -108,7 +119,6 @@ function UnattendedVSinstall
     Write-Host "Installing Visual Studio... done."
 }
 
-
 function UnattendedVSupdate
 {
     param(
@@ -127,6 +137,20 @@ function UnattendedVSupdate
 
     $ec = vcpkgInvokeCommand $installerPath "$arguments"
     checkExit ($ec -eq 0) "Updating Visual Studio... failed."
+
+    for ($i=0; ($i -lt 3) -and ((vcpkgGetProcessByNameRegex "vs_installer*").Count -ne 0); $i++)
+    {
+        Write-Warning "VS Installer still running, waiting..."
+        Start-Sleep -s 5
+    }
+
+    $remaining = vcpkgGetProcessByNameRegex "vs_installer*"
+    if ($remaining.Count -ne 0)
+    {
+        Write-Warning "VS Installer still running, stopping it..."
+        Write-Warning $remaining
+        $remaining | Stop-Process
+    }
 
     Write-Host "Updating Visual Studio... done."
 }
