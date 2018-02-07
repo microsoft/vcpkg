@@ -9,6 +9,7 @@ param(
 
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 . "$scriptsDir\VcpkgPowershellUtils.ps1"
+. "$scriptsDir\VcpkgPowershellUtils-Private.ps1"
 
 $buildArchiveFolderRoot = "\\vcpkg-000\General\CustomBuilds"
 if ($latest)
@@ -42,6 +43,10 @@ $deploymentPath = "$deploymentRoot\$msvcVersion"
 Write-Host "Cleaning-up $deploymentRoot..."
 Get-Process -Name "cl" -ErrorAction SilentlyContinue | Stop-Process
 Get-Process -Name "VCTip" -ErrorAction SilentlyContinue | Stop-Process
+
+# Debugging
+findProcessesLockingFile "C:\VS2017\Unstable\VC\Tools\MSVC\14.12.25827\bin\HostX86\x86\msobj140.dll"
+
 vcpkgCreateDirectoryIfNotExists $deploymentPath
 Get-ChildItem $deploymentRoot -exclude $msvcVersion | % { vcpkgRemoveItem $_ }
 Get-ChildItem $deploymentPath -exclude "crt" | % { vcpkgRemoveItem $_ }

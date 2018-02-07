@@ -1,4 +1,3 @@
-
 function Recipe
 {
     [CmdletBinding()]
@@ -62,6 +61,26 @@ function vcpkgGetProcessByNameRegex
     # SilentlyContinue in case nothing is found
     return Get-Process -Name "$regex" -ErrorAction SilentlyContinue
 }
+
+function findProcessesLockingFile
+{
+Param(
+    [Parameter(Mandatory=$true)][string]$filename
+)
+    $handleApp = "$scriptsDir\Handle\Handle.exe"
+    $handleOut = Invoke-Expression ($handleApp + ' ' + $filename)
+    $locks = $handleOut |?{$_ -match "(.+?)\s+pid: (\d+?)\s+type: File\s+(\w+?): (.+)\s*$"}|%{
+        [PSCustomObject]@{
+            'AppName' = $Matches[1]
+            'PID' = $Matches[2]
+            'FileHandle' = $Matches[3]
+            'FilePath' = $Matches[4]
+        }
+    }
+
+    return $locks
+}
+
 
 function DownloadAndUpdateVSInstaller
 {
