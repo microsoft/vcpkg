@@ -1,8 +1,69 @@
+vcpkg (0.0.104)
+--------------
+  * Add ports:
+    - asmjit         673dcefaa048c5f5a2bf8b85daf8f7b9978d018a
+    - cccapstone     9b4128ee1153e78288a1b5433e2c06a0d47a4c4e
+    - crc32c         1.0.5
+    - epsilon        0.9.2
+    - exprtk         2018.01.01-f32d2b4
+    - forest         4.5.0
+    - libgta         1.0.8
+    - libodb-mysql   2.4.0-1
+    - libopenmpt     2017-01-28-cf2390140
+    - libudis86      2018-01-28-56ff6c87
+    - mujs           25821e6d74fab5fcc200fe5e818362e03e114428
+    - muparser       6cf2746
+    - openmama       6.2.1-a5a93a24d2f89a0def0145552c8cd4a53c69e2de
+    - torch-th       20180131-89ede3ba90c906a8ec6b9a0f4bef188ba5bb2fd8-1
+    - yara           e3439e4ead4ed5d3b75a0b46eaf15ddda2110bb9
+  * Update ports:
+    - abseil         2017-11-10 -> 2018-2-5
+    - blosc          1.12.1 -> 1.13.5
+    - boost-build    1.66.0-3 -> 1.66.0-4
+    - boost-test     1.66.0-1 -> 1.66.0-2
+    - catch          2.0.1-1 -> alias
+    - catch2         2.1.0 -> 2.1.1
+    - cgal           4.11-2 -> 4.11-3
+    - cpprestsdk     2.10.1-1 -> 2.10.2
+    - curl           7.58.0 -> 7.58.0-1
+    - dlib           19.9 -> 19.9-1
+    - flatbuffers    1.8.0 -> 1.8.0-2
+    - freeimage      3.17.0-3 -> 3.17.0-4
+    - gflags         2.2.1 -> 2.2.1-1
+    - gtest          1.8.0-5 -> 1.8.0-6
+    - highfive       1.3 -> 1.5
+    - jack2          1.9.12.2 -> 1.9.12
+    - libspatialite  4.3.0a -> 4.3.0a-1
+    - libwebp        0.6.1 -> 0.6.1-1
+    - libzip         1.3.2 -> 1.4.0
+    - live555        2017.10.28 -> 2018.01.29
+    - mpg123         1.25.8-1 -> 1.25.8-2
+    - nghttp2        1.28.0 -> 1.30.0-1
+    - nlohmann-json  3.0.1 -> 3.1.0
+    - opencv         3.4.0 -> 3.4.0-2
+    - opengl         0.0-4 -> 0.0-5
+    - openssl        1.0.2n-1 -> 1.0.2n-2
+    - openvr         1.0.9 -> 1.0.12
+    - poco           1.8.1 -> 1.8.1-1
+    - protobuf       3.5.0-1 -> 3.5.1
+    - qt5-base       5.9.2-1 -> 5.9.2-4
+    - realsense2     2.9.0 -> 2.9.1
+    - sciter         4.1.1 -> 4.1.2
+    - sobjectizer    5.5.20 -> 5.5.21
+    - soundtouch     2.0.0.2 -> 2.0.0
+    - strtk          2017.01.02-1e2960f -> 2018.01.01-5579ed1
+  * The `configure` step for `release` and `debug` now happen in parallel.
+    - This can significantly reduce build times for libraries where the `configure` step was a good chunk of the total build time. For example, the total build time for `zlib` drops from ~30sec to ~20sec.
+  * Fix a few bootstraping issues introduced in previous release (with the clean environment)
+
+-- vcpkg team <vcpkg@microsoft.com>  WED, 07 Feb 2018 20:30:00 -0800
+
+
 vcpkg (0.0.103)
 --------------
   * `vcpkg upgrade`: Fix issue with any command executing more than 10 transactions with mixed transaction types (install + remove)
 
--- vcpkg team <vcpkg@microsoft.com>  WED, 24 Jan 2017 14:30:00 -0800
+-- vcpkg team <vcpkg@microsoft.com>  WED, 24 Jan 2018 14:30:00 -0800
 
 
 vcpkg (0.0.102)
