@@ -190,10 +190,10 @@ function vcpkgInvokeCommandClean()
     Write-Verbose "Clean-Executing: ${executable} ${arguments}"
     $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
     $cleanEnvScript = "$scriptsDir\VcpkgPowershellUtils-ClearEnvironment.ps1"
-    $command = "& `"$cleanEnvScript`"; & `"$executable`" $arguments"
-    $bytes = [System.Text.Encoding]::Unicode.GetBytes($command)
-    $encodedCommand = [Convert]::ToBase64String($bytes)
-    $arg = "-NoProfile -ExecutionPolicy Bypass -encodedCommand $encodedCommand"
+    $tripleQuotes = "`"`"`""
+    $argumentsWithEscapedQuotes = $arguments -replace "`"", $tripleQuotes
+    $command = ". $tripleQuotes$cleanEnvScript$tripleQuotes; & $tripleQuotes$executable$tripleQuotes $argumentsWithEscapedQuotes"
+    $arg = "-NoProfile", "-ExecutionPolicy Bypass", "-command $command"
 
     $process = Start-Process -FilePath powershell.exe -ArgumentList $arg -PassThru -NoNewWindow
     Wait-Process -InputObject $process
@@ -225,4 +225,24 @@ function vcpkgFormatElapsedTime([TimeSpan]$ts)
     }
 
     throw $ts
+}
+
+function vcpkgFindFileRecursivelyUp()
+{
+    param(
+        [ValidateNotNullOrEmpty()]
+        [Parameter(Mandatory=$true)][string]$startingDir,
+        [ValidateNotNullOrEmpty()]
+        [Parameter(Mandatory=$true)][string]$filename
+    )
+
+    $currentDir = $startingDir
+
+    while (!($currentDir -eq "") -and !(Test-Path "$currentDir\$filename"))
+    {
+        Write-Verbose "Examining $currentDir for $filename"
+        $currentDir = Split-path $currentDir -Parent
+    }
+    Write-Verbose "Examining $currentDir for $filename - Found"
+    return $currentDir
 }

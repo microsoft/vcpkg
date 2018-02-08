@@ -7,7 +7,7 @@ $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 . "$scriptsDir\VcpkgPowershellUtils.ps1"
 
 Write-Verbose "Fetching dependency: $Dependency"
-$vcpkgRootDir = & $scriptsDir\findFileRecursivelyUp.ps1 $scriptsDir .vcpkg-root
+$vcpkgRootDir = vcpkgFindFileRecursivelyUp $scriptsDir .vcpkg-root
 
 $downloadsDir = "$vcpkgRootDir\downloads"
 
