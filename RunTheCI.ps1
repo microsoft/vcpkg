@@ -62,6 +62,6 @@ Write-Host "Deleting $packagesDir ..."
 vcpkgRemoveItem "$packagesDir"
 Write-Host "Deleting $packagesDir ... done."
 
-# ./vcpkg remove --outdated --recurse
+./vcpkg remove --outdated --recurse
 
-# ./vcpkg ci $Triplet --x-xunit=TEST-full-ci.xml --exclude=libsodium,aws-sdk-cpp
+./vcpkg ci $Triplet --x-xunit=TEST-full-ci.xml --exclude=libsodium,aws-sdk-cpp
