@@ -185,9 +185,9 @@ string(REPLACE " vc15"
 string(REPLACE " vc14"
                " ${OpenCV_RUNTIME}" OPENCV_CONFIG "${OPENCV_CONFIG}")
 string(REPLACE "/staticlib/"
-               "/lib/" OPENCV_CONFIG "${OPENCV_CONFIG_LIB}")
+               "/lib/" OPENCV_CONFIG "${OPENCV_CONFIG}")
 string(REPLACE "/${OpenCV_ARCH}/${OpenCV_RUNTIME}/"
-               "/" OPENCV_CONFIG "${OPENCV_CONFIG_LIB}")
+               "/" OPENCV_CONFIG "${OPENCV_CONFIG}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVConfig.cmake "${OPENCV_CONFIG}")
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/staticlib")
