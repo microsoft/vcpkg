@@ -1,0 +1,22 @@
+diff --git cmake/OpenCVGenConfig.cmake cmake/OpenCVGenConfig.cmake
+index 57c79f2..23f1012 100644
+--- a/cmake/OpenCVGenConfig.cmake
++++ b/cmake/OpenCVGenConfig.cmake
+@@ -103,7 +103,7 @@ function(ocv_gen_config TMP_DIR NESTED_PATH ROOT_NAME)
+   endif()
+ endfunction()
+
+-if((CMAKE_HOST_SYSTEM_NAME MATCHES "Linux" OR UNIX) AND NOT ANDROID)
++if(((CMAKE_HOST_SYSTEM_NAME MATCHES "Linux" OR UNIX) AND NOT ANDROID) OR INSTALL_FORCE_UNIX_PATHS)
+   ocv_gen_config("${CMAKE_BINARY_DIR}/unix-install" "" "")
+ endif()
+
+@@ -115,7 +115,7 @@ endif()
+ # --------------------------------------------------------------------------------------------
+ #  Part 3/3: ${BIN_DIR}/win-install/OpenCVConfig.cmake  -> For use within binary installers/packages
+ # --------------------------------------------------------------------------------------------
+-if(WIN32)
++if(WIN32 AND NOT INSTALL_FORCE_UNIX_PATHS)
+   if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
+     if(BUILD_SHARED_LIBS)
+       set(_lib_suffix "lib")
