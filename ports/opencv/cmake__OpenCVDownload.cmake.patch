@@ -1,0 +1,12 @@
+diff --git cmake/OpenCVDownload.cmake cmake/OpenCVDownload.cmake
+index f660502d..c5b32793 100644
+--- a/cmake/OpenCVDownload.cmake
++++ b/cmake/OpenCVDownload.cmake
+@@ -145,6 +145,7 @@ function(ocv_download)
+       ocv_download_log("#mismatch_md5 \"${CACHE_CANDIDATE}\" \"${target_md5}\"")
+       ocv_download_log("#delete \"${CACHE_CANDIDATE}\"")
+       file(REMOVE ${CACHE_CANDIDATE})
++      unset(CACHE_CANDIDATE)
+     endif()
+   endif()
+

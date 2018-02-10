@@ -11,11 +11,12 @@ vcpkg_from_github(
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-    "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt.patch"
     "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVCompilerOptions.cmake.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVDownload.cmake.patch"
     "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVGenConfig.cmake.patch"
     "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVGenHeaders.cmake.patch"
     "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVModule.cmake.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt.patch"
     "${CMAKE_CURRENT_LIST_DIR}/data__CMakeLists.txt.patch"
     "${CMAKE_CURRENT_LIST_DIR}/include__CMakeLists.txt.patch"
     "${CMAKE_CURRENT_LIST_DIR}/modules__core__src__utils__filesystem.cpp.patch"
