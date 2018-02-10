@@ -14,6 +14,7 @@ namespace vcpkg
     static constexpr CStringView V_120 = "v120";
     static constexpr CStringView V_140 = "v140";
     static constexpr CStringView V_141 = "v141";
+    static constexpr CStringView V_141_XP = "v141_xp";
 
     static bool exists_and_has_equal_or_greater_version(const std::string& version_cmd,
                                                         const std::array<int, 3>& expected_version)
@@ -453,6 +454,15 @@ namespace vcpkg
                         }
 
                         found_toolsets.push_back(v141toolset);
+
+                        //add additional toolsets
+                        if(fs.exists(vs_instance.root_path / "Common7" / "IDE" / "VC" / "VCTargets" /  "Platforms" / 
+                            "Win32" / "PlatformToolsets" / "v141_xp"))
+                        {
+                            const Toolset v141xptoolset = Toolset{vs_instance.root_path, dumpbin_path, vcvarsall_bat,
+                                {}, V_141_XP, supported_architectures};
+                            found_toolsets.push_back(v141xptoolset);
+                        }
 
                         if (v140_is_available)
                         {
