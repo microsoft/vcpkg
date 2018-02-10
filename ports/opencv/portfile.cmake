@@ -12,7 +12,6 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
     "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVCompilerOptions.cmake.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVDownload.cmake.patch"
     "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVGenConfig.cmake.patch"
     "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVGenHeaders.cmake.patch"
     "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVModule.cmake.patch"
@@ -81,6 +80,7 @@ if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
 endif()
 
 vcpkg_configure_cmake(
+    PREFER_NINJA_NONPARALLEL_CONFIG
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         # Ungrouped Entries
@@ -180,44 +180,44 @@ if(STATICLIB)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/staticlib)
 endif()
 
-file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVConfig.cmake OPENCV_CONFIG)
-string(REPLACE " vc15"
-               " ${OpenCV_RUNTIME}" OPENCV_CONFIG "${OPENCV_CONFIG}")
-string(REPLACE " vc14"
-               " ${OpenCV_RUNTIME}" OPENCV_CONFIG "${OPENCV_CONFIG}")
-string(REPLACE "/staticlib/"
-               "/lib/" OPENCV_CONFIG "${OPENCV_CONFIG}")
-string(REPLACE "/${OpenCV_ARCH}/${OpenCV_RUNTIME}/"
-               "/" OPENCV_CONFIG "${OPENCV_CONFIG}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVConfig.cmake "${OPENCV_CONFIG}")
+#file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVConfig.cmake OPENCV_CONFIG)
+#string(REPLACE " vc15"
+#               " ${OpenCV_RUNTIME}" OPENCV_CONFIG "${OPENCV_CONFIG}")
+#string(REPLACE " vc14"
+#               " ${OpenCV_RUNTIME}" OPENCV_CONFIG "${OPENCV_CONFIG}")
+#string(REPLACE "/staticlib/"
+#               "/lib/" OPENCV_CONFIG "${OPENCV_CONFIG}")
+#string(REPLACE "/${OpenCV_ARCH}/${OpenCV_RUNTIME}/"
+#               "/" OPENCV_CONFIG "${OPENCV_CONFIG}")
+#file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVConfig.cmake "${OPENCV_CONFIG}")
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/staticlib")
-  file(RENAME ${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/staticlib ${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/lib)
-endif()
-file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/lib/OpenCVModules-release.cmake OPENCV_CONFIG_LIB)
-string(REPLACE "/staticlib/"
-               "/lib/" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-string(REPLACE "/${OpenCV_ARCH}/${OpenCV_RUNTIME}/"
-               "/" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-string(REPLACE "${CURRENT_INSTALLED_DIR}"
-               "\${_IMPORT_PREFIX}" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/lib/OpenCVModules-release.cmake "${OPENCV_CONFIG_LIB}")
+#if(EXISTS "${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/staticlib")
+#  file(RENAME ${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/staticlib ${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/lib)
+#endif()
+#file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/lib/OpenCVModules-release.cmake OPENCV_CONFIG_LIB)
+#string(REPLACE "/staticlib/"
+#               "/lib/" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
+#string(REPLACE "/${OpenCV_ARCH}/${OpenCV_RUNTIME}/"
+#               "/" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
+#string(REPLACE "${CURRENT_INSTALLED_DIR}"
+#               "\${_IMPORT_PREFIX}" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
+#file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/lib/OpenCVModules-release.cmake "${OPENCV_CONFIG_LIB}")
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/staticlib")
-  file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/staticlib ${CURRENT_PACKAGES_DIR}/debug/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/lib)
-endif()
-file(READ ${CURRENT_PACKAGES_DIR}/debug/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/lib/OpenCVModules-debug.cmake OPENCV_CONFIG_LIB)
-string(REPLACE "/staticlib/"
-               "/lib/" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-string(REPLACE "/${OpenCV_ARCH}/${OpenCV_RUNTIME}/"
-               "/" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-string(REPLACE "PREFIX}/lib"
-               "PREFIX}/debug/lib" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-string(REPLACE "PREFIX}/bin"
-               "PREFIX}/debug/bin" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-string(REPLACE "${CURRENT_INSTALLED_DIR}"
-               "\${_IMPORT_PREFIX}" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/lib/OpenCVModules-debug.cmake "${OPENCV_CONFIG_LIB}")
+#if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/staticlib")
+#  file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/staticlib ${CURRENT_PACKAGES_DIR}/debug/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/lib)
+#endif()
+#file(READ ${CURRENT_PACKAGES_DIR}/debug/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/lib/OpenCVModules-debug.cmake OPENCV_CONFIG_LIB)
+#string(REPLACE "/staticlib/"
+#               "/lib/" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
+#string(REPLACE "/${OpenCV_ARCH}/${OpenCV_RUNTIME}/"
+#               "/" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
+#string(REPLACE "PREFIX}/lib"
+#               "PREFIX}/debug/lib" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
+#string(REPLACE "PREFIX}/bin"
+#               "PREFIX}/debug/bin" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
+#string(REPLACE "${CURRENT_INSTALLED_DIR}"
+#               "\${_IMPORT_PREFIX}" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
+#file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/lib/OpenCVModules-debug.cmake "${OPENCV_CONFIG_LIB}")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

@@ -21,6 +21,9 @@
 ## ### PREFER_NINJA
 ## Indicates that, when available, Vcpkg should use Ninja to perform the build. This should be specified unless the port is known to not work under Ninja.
 ##
+## ### PREFER_NINJA_NONPARALLEL_CONFIG
+## Indicates that, when available, Vcpkg should use Ninja to perform the build forcing non-parallel execution. This should be used only if parallel ninja execution is known to not work for this port.
+##
 ## ### GENERATOR
 ## Specifies the precise generator to use.
 ##
@@ -45,7 +48,7 @@
 ## * [poco](https://github.com/Microsoft/vcpkg/blob/master/ports/poco/portfile.cmake)
 ## * [opencv](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv/portfile.cmake)
 function(vcpkg_configure_cmake)
-    cmake_parse_arguments(_csc "PREFER_NINJA" "SOURCE_PATH;GENERATOR" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" ${ARGN})
+    cmake_parse_arguments(_csc "PREFER_NINJA;PREFER_NINJA_NONPARALLEL_CONFIG" "SOURCE_PATH;GENERATOR" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" ${ARGN})
 
     if(NOT VCPKG_PLATFORM_TOOLSET)
         message(FATAL_ERROR "Vcpkg has been updated with VS2017 support, however you need to rebuild vcpkg.exe by re-running bootstrap-vcpkg.bat\n")
@@ -69,9 +72,14 @@ function(vcpkg_configure_cmake)
         set(NINJA_CAN_BE_USED OFF)
     endif()
 
+    if (_csc_PREFER_NINJA_NONPARALLEL_CONFIG)
+        message(STATUS "Disabling Ninja parallel configure - package has opted-out")
+        set(NINJA_PARALLEL_CONFIGURE OFF)
+    endif()
+
     if(_csc_GENERATOR)
         set(GENERATOR ${_csc_GENERATOR})
-    elseif(_csc_PREFER_NINJA AND NINJA_CAN_BE_USED)
+    elseif((_csc_PREFER_NINJA OR _csc_PREFER_NINJA_NONPARALLEL_CONFIG) AND NINJA_CAN_BE_USED)
         set(GENERATOR "Ninja")
     elseif(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
         set(GENERATOR "Ninja")
@@ -102,7 +110,7 @@ function(vcpkg_configure_cmake)
     else()
         message(FATAL_ERROR "Unable to determine appropriate generator for: ${VCPKG_CMAKE_SYSTEM_NAME}-${VCPKG_TARGET_ARCHITECTURE}-${VCPKG_PLATFORM_TOOLSET}")
     endif()
-    
+
     # If we use Ninja, make sure it's on PATH
     if(GENERATOR STREQUAL "Ninja")
         vcpkg_find_acquire_program(NINJA)
@@ -209,7 +217,7 @@ function(vcpkg_configure_cmake)
         -DCMAKE_BUILD_TYPE=Debug
         -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug)
 
-    if(NINJA_CAN_BE_USED AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+    if(NINJA_CAN_BE_USED AND NINJA_PARALLEL_CONFIGURE AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
 
         vcpkg_find_acquire_program(NINJA)
         get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
@@ -239,7 +247,7 @@ function(vcpkg_configure_cmake)
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure)
         file(WRITE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure/build.ninja "${_contents}")
 
-        message(STATUS "Configuring ${TARGET_TRIPLET}")
+        message(STATUS "Configuring ${TARGET_TRIPLET} (parallel mode)")
         vcpkg_execute_required_process(
             COMMAND ninja -v
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure
