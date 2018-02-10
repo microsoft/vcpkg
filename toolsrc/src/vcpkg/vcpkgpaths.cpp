@@ -524,7 +524,7 @@ namespace vcpkg
         {
             System::println(
                 System::Color::warning,
-                "Warning: The following VS instances are exluded because the English language pack is unavailable.");
+                "Warning: The following VS instances are excluded because the English language pack is unavailable.");
             for (const Toolset& toolset : excluded_toolsets)
             {
                 System::println("    %s", toolset.visual_studio_root_path.u8string());
