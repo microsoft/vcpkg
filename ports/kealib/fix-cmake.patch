@@ -1,6 +1,6 @@
 diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
 --- a/trunk/CMakeLists.txt	2017-05-18 09:25:24.000000000 +0900
-+++ b/trunk/CMakeLists.txt	2018-02-04 10:38:26.562251456 +0900
++++ b/trunk/CMakeLists.txt	2018-02-10 23:49:14.854241745 +0900
 @@ -8,17 +8,22 @@
  # which were derived from those used by libLAS (http://liblas.org/) 
  #
@@ -383,7 +383,7 @@ diff -urN a/trunk/gdal/CMakeLists.txt b/trunk/gdal/CMakeLists.txt
 +
 diff -urN a/trunk/src/CMakeLists.txt b/trunk/src/CMakeLists.txt
 --- a/trunk/src/CMakeLists.txt	2017-05-18 09:25:24.000000000 +0900
-+++ b/trunk/src/CMakeLists.txt	2018-02-02 19:19:11.069743251 +0900
++++ b/trunk/src/CMakeLists.txt	2018-02-10 23:49:22.902424930 +0900
 @@ -4,7 +4,6 @@
  set(LIBKEA_SRC_DIR libkea)
  set(LIBKEA_HEADERS_DIR ../include/libkea)
@@ -392,7 +392,7 @@ diff -urN a/trunk/src/CMakeLists.txt b/trunk/src/CMakeLists.txt
  set(LIBKEA_H
  	${LIBKEA_HEADERS_DIR}/KEACommon.h
  	${LIBKEA_HEADERS_DIR}/KEAException.h
-@@ -29,44 +28,42 @@
+@@ -29,44 +28,47 @@
  ###############################################################################
  
  ###############################################################################
@@ -401,14 +401,17 @@ diff -urN a/trunk/src/CMakeLists.txt b/trunk/src/CMakeLists.txt
 +# Build, link and install library
  add_library(${LIBKEA_LIB_NAME} ${LIBKEA_CPP} ${LIBKEA_H} )
 -target_link_libraries(${LIBKEA_LIB_NAME} ${HDF5_LIBRARIES} )
-+target_link_libraries(${LIBKEA_LIB_NAME} PRIVATE hdf5::hdf5-shared hdf5::hdf5_hl-shared hdf5::hdf5_cpp-static hdf5::hdf5_cpp-shared)
-+
++add_library(Kealib INTERFACE)
 +if(BUILD_SHARED_LIBS)
 +    SET_TARGET_PROPERTIES(${LIBKEA_LIB_NAME}
 +            PROPERTIES
++            OUTPUT_NAME "${LIBKEA_LIB_NAME}"
++            PREFIX "lib"
 +            SOVERSION ${LIBKEA_VERSION_MAJOR}.${LIBKEA_VERSION_MINOR}
 +            VERSION ${LIBKEA_VERSION}
 +            CLEAN_DIRECT_OUTPUT 1)
++    target_link_libraries(${LIBKEA_LIB_NAME} PRIVATE hdf5::hdf5-shared hdf5::hdf5_hl-shared hdf5::hdf5_cpp-shared)
++    target_link_libraries(Kealib INTERFACE ${LIBKEA_LIB_NAME})
 +else()
 +    SET_TARGET_PROPERTIES(${LIBKEA_LIB_NAME}
 +            PROPERTIES
@@ -416,9 +419,11 @@ diff -urN a/trunk/src/CMakeLists.txt b/trunk/src/CMakeLists.txt
 +            PREFIX "lib"
 +            VERSION ${LIBKEA_VERSION}
 +            CLEAN_DIRECT_OUTPUT 1)
++    find_package(SZIP COMPONENTS static CONFIG)
++    find_package(ZLIB)
++    target_link_libraries(${LIBKEA_LIB_NAME} PRIVATE hdf5::hdf5_cpp-static)
++    target_link_libraries(Kealib INTERFACE ${LIBKEA_LIB_NAME} ${ZLIB_LIBRARIES} szip-static)
 +endif()
-+add_library(Kealib INTERFACE)
-+target_link_libraries(Kealib INTERFACE "${LIBKEA_LIB_NAME}")
 +target_include_directories(Kealib INTERFACE
 +                             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
 +                             $<INSTALL_INTERFACE:include/kealib>)
@@ -443,8 +448,7 @@ diff -urN a/trunk/src/CMakeLists.txt b/trunk/src/CMakeLists.txt
 -    # specific hack I'm not going to bother
 -endif()
 -
-+target_link_libraries (test1 Kealib)
- ###############################################################################
+-###############################################################################
 -# Set target properties
 -
 -SET_TARGET_PROPERTIES(${LIBKEA_LIB_NAME}
@@ -452,13 +456,14 @@ diff -urN a/trunk/src/CMakeLists.txt b/trunk/src/CMakeLists.txt
 -        SOVERSION ${LIBKEA_VERSION}
 -        VERSION ${LIBKEA_VERSION}
 -)
+-
++target_link_libraries (test1 Kealib)
+ ###############################################################################
  
  ###############################################################################
--
--###############################################################################
 -# Installation 
 -install (TARGETS ${LIBKEA_LIB_NAME} DESTINATION lib)
-+# Installation
++# Install
 +install (TARGETS ${LIBKEA_LIB_NAME}
 +          RUNTIME DESTINATION bin
 +          LIBRARY DESTINATION lib
