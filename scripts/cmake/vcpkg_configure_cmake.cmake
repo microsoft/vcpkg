@@ -67,6 +67,9 @@ function(vcpkg_configure_cmake)
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
         # Arm64 usage should be allowed once github issue #2375 is resolved
         set(NINJA_CAN_BE_USED OFF)
+    elseif(NOT VCPKG_PLATFORM_TOOLSET MATCHES "^v[0-9][0-9][0-9]?(_xp)?$")
+        # Custom toolsets are supported only for MSBuild generator
+        set(NINJA_CAN_BE_USED OFF)
     endif()
 
     if(_csc_GENERATOR)
@@ -108,6 +111,11 @@ function(vcpkg_configure_cmake)
         vcpkg_find_acquire_program(NINJA)
         get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
         set(ENV{PATH} "$ENV{PATH};${NINJA_PATH}")
+    endif()
+
+    # If we do not use Ninja, set toolset
+    if(NOT GENERATOR STREQUAL "Ninja")
+        set(TOOLSET "-T${VCPKG_PLATFORM_TOOLSET}")
     endif()
 
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
@@ -170,6 +178,11 @@ function(vcpkg_configure_cmake)
             message(FATAL_ERROR "Invalid setting for VCPKG_CRT_LINKAGE: \"${VCPKG_CRT_LINKAGE}\". It must be \"static\" or \"dynamic\"")
         endif()
 
+
+        list(APPEND _csc_OPTIONS_DEBUG
+            "-DCMAKE_SHARED_LINKER_FLAGS_DEBUG=/DEBUG /INCREMENTAL:NO ${VCPKG_LINKER_FLAGS}"
+            "-DCMAKE_EXE_LINKER_FLAGS_DEBUG=/DEBUG /INCREMENTAL:NO ${VCPKG_LINKER_FLAGS}"
+        )
         list(APPEND _csc_OPTIONS_RELEASE
             "-DCMAKE_SHARED_LINKER_FLAGS_RELEASE=/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS}"
             "-DCMAKE_EXE_LINKER_FLAGS_RELEASE=/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS}"
@@ -201,11 +214,13 @@ function(vcpkg_configure_cmake)
     set(rel_command
         ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}
         -G ${GENERATOR}
+        ${TOOLSET}
         -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR})
     set(dbg_command
         ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}
         -G ${GENERATOR}
+        ${TOOLSET}
         -DCMAKE_BUILD_TYPE=Debug
         -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug)
 
