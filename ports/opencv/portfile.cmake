@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
@@ -23,7 +24,6 @@ vcpkg_apply_patches(
     "${CMAKE_CURRENT_LIST_DIR}/modules__highgui__src__window_winrt_bridge.hpp.patch"
     "${CMAKE_CURRENT_LIST_DIR}/modules__videoio__src__cap_winrt__CaptureFrameGrabber.cpp.patch"
 )
-file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty/libjpeg ${SOURCE_PATH}/3rdparty/libpng ${SOURCE_PATH}/3rdparty/zlib ${SOURCE_PATH}/3rdparty/libtiff)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
@@ -70,6 +70,8 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   set(WITH_MSMF OFF)
 endif()
 
+set(BUILD_integrated_JPEG OFF)
+set(BUILD_integrated_TIFF OFF)
 set(BUILD_opencv_line_descriptor ON)
 set(BUILD_opencv_saliency ON)
 set(BUILD_opencv_bgsegm ON)
@@ -78,6 +80,11 @@ if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
   set(BUILD_opencv_saliency OFF)
   set(BUILD_opencv_bgsegm OFF)
 endif()
+if(VCPKG_LIBRARY_LINKAGE MATCHES "static")
+  set(BUILD_integrated_JPEG ON)
+  set(BUILD_integrated_TIFF ON)
+endif()
+
 
 vcpkg_configure_cmake(
     PREFER_NINJA_NONPARALLEL_CONFIG
@@ -90,13 +97,13 @@ vcpkg_configure_cmake(
         # BUILD
         -DBUILD_DOCS=OFF
         -DBUILD_EXAMPLES=OFF
-        -DBUILD_JPEG=OFF
+        -DBUILD_JPEG=${BUILD_integrated_JPEG}   #when building as a static lib, vcpkg's libjpeg-turbo is not correctly distinguished between release/debug
         -DBUILD_PACKAGE=OFF
         -DBUILD_PERF_TESTS=OFF
         -DBUILD_PNG=OFF
         -DBUILD_PROTOBUF=OFF
         -DBUILD_TESTS=OFF
-        -DBUILD_TIFF=OFF
+        -DBUILD_TIFF=${BUILD_integrated_TIFF}   #when building as a static lib, we have linking problems because vcpkg's tiff library depends on lzma, which is not imported as a dependency
         -DBUILD_WITH_DEBUG_INFO=ON
         -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
         -DBUILD_ZLIB=OFF

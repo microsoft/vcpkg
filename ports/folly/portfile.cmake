@@ -25,7 +25,8 @@ vcpkg_from_github(
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/cmake-link-boost-fix.cmake
+        ${CMAKE_CURRENT_LIST_DIR}/cmake-link-boost-fix.patch
+        ${CMAKE_CURRENT_LIST_DIR}/msvc-15.6-workaround.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)

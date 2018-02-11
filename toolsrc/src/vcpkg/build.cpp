@@ -258,9 +258,9 @@ namespace vcpkg::Build
         paths.get_filesystem().write_contents(binary_control_file, start);
     }
 
-    ExtendedBuildResult build_package(const VcpkgPaths& paths,
-                                      const BuildPackageConfig& config,
-                                      const StatusParagraphs& status_db)
+    static ExtendedBuildResult do_build_package(const VcpkgPaths& paths,
+                                                const BuildPackageConfig& config,
+                                                const StatusParagraphs& status_db)
     {
         const PackageSpec spec = PackageSpec::from_name_and_triplet(config.scf.core_paragraph->name, config.triplet)
                                      .value_or_exit(VCPKG_LINE_INFO);
@@ -369,10 +369,19 @@ namespace vcpkg::Build
 
         write_binary_control_file(paths, *bcf);
 
+        return {BuildResult::SUCCEEDED, std::move(bcf)};
+    }
+
+    ExtendedBuildResult build_package(const VcpkgPaths& paths,
+                                      const BuildPackageConfig& config,
+                                      const StatusParagraphs& status_db)
+    {
+        ExtendedBuildResult result = do_build_package(paths, config, status_db);
+
         if (config.build_package_options.clean_buildtrees == CleanBuildtrees::YES)
         {
             auto& fs = paths.get_filesystem();
-            auto buildtrees_dir = paths.buildtrees / spec.name();
+            auto buildtrees_dir = paths.buildtrees / config.scf.core_paragraph->name;
             auto buildtree_files = fs.get_files_non_recursive(buildtrees_dir);
             for (auto&& file : buildtree_files)
             {
@@ -384,7 +393,7 @@ namespace vcpkg::Build
             }
         }
 
-        return {BuildResult::SUCCEEDED, std::move(bcf)};
+        return result;
     }
 
     const std::string& to_string(const BuildResult build_result)
