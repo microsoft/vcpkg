@@ -1,0 +1,24 @@
+diff --git modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp
+index 236e227..3bef105 100644
+--- a/modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp
++++ b/modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp
+@@ -94,10 +94,10 @@ Media::CaptureFrameGrabber::~CaptureFrameGrabber()
+
+ void Media::CaptureFrameGrabber::ShowCameraSettings()
+ {
+-#if WINAPI_FAMILY!=WINAPI_FAMILY_PHONE_APP
++#if (WINAPI_FAMILY!=WINAPI_FAMILY_PHONE_APP) && (WINAPI_FAMILY!=WINAPI_FAMILY_APP)
+     if (_state == State::Started)
+     {
+-        CameraOptionsUI::Show(_capture.Get());
++        CameraOptionsUI::Show(_capture.Get()); // TODO: Turn it on again in UWP mode by adding reference to UWP Desktop Extensions
+     }
+ #endif
+ }
+@@ -170,4 +170,4 @@ void Media::CaptureFrameGrabber::ProcessSample(_In_ MediaSample^ sample)
+
+     // Dispatch without the lock taken to avoid deadlocks
+     t.set(As<IMF2DBuffer2>(buffer));
+-}
+\ No newline at end of file
++}

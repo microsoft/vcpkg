@@ -8,16 +8,22 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/opencv-installation-options.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/001-fix-uwp.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/002-fix-uwp.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/no-double-expand-enable-pylint.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/msvs-fix-2017-u5.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/filesystem-uwp.patch"
+    PATCHES
+    "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVCompilerOptions.cmake.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVGenConfig.cmake.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVGenHeaders.cmake.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVModule.cmake.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/data__CMakeLists.txt.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/include__CMakeLists.txt.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/modules__core__src__utils__filesystem.cpp.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/modules__highgui__include__opencv2__highgui__highgui_winrt.hpp.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/modules__highgui__src__window_winrt_bridge.hpp.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/modules__videoio__src__cap_winrt__CaptureFrameGrabber.cpp.patch"
 )
-file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty/libjpeg ${SOURCE_PATH}/3rdparty/libpng ${SOURCE_PATH}/3rdparty/zlib ${SOURCE_PATH}/3rdparty/libtiff)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
@@ -25,11 +31,6 @@ vcpkg_from_github(
     REF 3.4.0
     SHA512 53f6127304f314d3be834f79520d4bc8a75e14cad8c9c14a66a7a6b37908ded114d24e3a2c664d4ec2275903db08ac826f29433e810c6400f3adc2714a3c5be7
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-   SOURCE_PATH ${CONTRIB_SOURCE_PATH}
-   PATCHES "${CMAKE_CURRENT_LIST_DIR}/open_contrib-remove-waldboost.patch"
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
@@ -69,6 +70,8 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   set(WITH_MSMF OFF)
 endif()
 
+set(BUILD_integrated_JPEG OFF)
+set(BUILD_integrated_TIFF OFF)
 set(BUILD_opencv_line_descriptor ON)
 set(BUILD_opencv_saliency ON)
 set(BUILD_opencv_bgsegm ON)
@@ -77,8 +80,14 @@ if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
   set(BUILD_opencv_saliency OFF)
   set(BUILD_opencv_bgsegm OFF)
 endif()
+if(VCPKG_LIBRARY_LINKAGE MATCHES "static")
+  set(BUILD_integrated_JPEG ON)
+  set(BUILD_integrated_TIFF ON)
+endif()
+
 
 vcpkg_configure_cmake(
+    PREFER_NINJA_NONPARALLEL_CONFIG
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         # Ungrouped Entries
@@ -88,13 +97,13 @@ vcpkg_configure_cmake(
         # BUILD
         -DBUILD_DOCS=OFF
         -DBUILD_EXAMPLES=OFF
-        -DBUILD_JPEG=OFF
+        -DBUILD_JPEG=${BUILD_integrated_JPEG}   #when building as a static lib, vcpkg's libjpeg-turbo is not correctly distinguished between release/debug
         -DBUILD_PACKAGE=OFF
         -DBUILD_PERF_TESTS=OFF
         -DBUILD_PNG=OFF
         -DBUILD_PROTOBUF=OFF
         -DBUILD_TESTS=OFF
-        -DBUILD_TIFF=OFF
+        -DBUILD_TIFF=${BUILD_integrated_TIFF}   #when building as a static lib, we have linking problems because vcpkg's tiff library depends on lzma, which is not imported as a dependency
         -DBUILD_WITH_DEBUG_INFO=ON
         -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
         -DBUILD_ZLIB=OFF
@@ -179,39 +188,25 @@ if(STATICLIB)
 endif()
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVConfig.cmake OPENCV_CONFIG)
-string(REPLACE " vc15"
-               " ${OpenCV_RUNTIME}" OPENCV_CONFIG "${OPENCV_CONFIG}")
-string(REPLACE " vc14"
-               " ${OpenCV_RUNTIME}" OPENCV_CONFIG "${OPENCV_CONFIG}")
+string(REPLACE "/staticlib/"
+               "/lib/" OPENCV_CONFIG "${OPENCV_CONFIG}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVConfig.cmake "${OPENCV_CONFIG}")
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/staticlib")
-  file(RENAME ${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/staticlib ${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/lib)
-endif()
-file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/lib/OpenCVModules-release.cmake OPENCV_CONFIG_LIB)
+file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-release.cmake OPENCV_CONFIG_LIB)
 string(REPLACE "/staticlib/"
                "/lib/" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-string(REPLACE "/${OpenCV_ARCH}/${OpenCV_RUNTIME}/"
-               "/" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-string(REPLACE "${CURRENT_INSTALLED_DIR}"
-               "\${_IMPORT_PREFIX}" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/lib/OpenCVModules-release.cmake "${OPENCV_CONFIG_LIB}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-release.cmake "${OPENCV_CONFIG_LIB}")
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/staticlib")
-  file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/staticlib ${CURRENT_PACKAGES_DIR}/debug/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/lib)
-endif()
-file(READ ${CURRENT_PACKAGES_DIR}/debug/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/lib/OpenCVModules-debug.cmake OPENCV_CONFIG_LIB)
+file(READ ${CURRENT_PACKAGES_DIR}/debug/share/opencv/OpenCVModules-debug.cmake OPENCV_CONFIG_LIB)
 string(REPLACE "/staticlib/"
                "/lib/" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-string(REPLACE "/${OpenCV_ARCH}/${OpenCV_RUNTIME}/"
-               "/" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
 string(REPLACE "PREFIX}/lib"
                "PREFIX}/debug/lib" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
 string(REPLACE "PREFIX}/bin"
                "PREFIX}/debug/bin" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-string(REPLACE "${CURRENT_INSTALLED_DIR}"
-               "\${_IMPORT_PREFIX}" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/${OpenCV_ARCH}/${OpenCV_RUNTIME}/lib/OpenCVModules-debug.cmake "${OPENCV_CONFIG_LIB}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-debug.cmake "${OPENCV_CONFIG_LIB}")
+
+file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/opencv/OpenCVModules.cmake ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -219,7 +214,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/opencv)
 
 vcpkg_copy_pdbs()
-
-set(VCPKG_LIBRARY_LINKAGE "dynamic")
-
-set(VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT enabled)
