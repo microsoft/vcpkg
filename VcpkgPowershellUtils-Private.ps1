@@ -213,6 +213,28 @@ set(VCPKG_CMAKE_SYSTEM_VERSION 10.0)
     }
 }
 
+function IsReparsePoint([string]$path)
+{
+  $file = Get-Item $path -Force -ea SilentlyContinue
+  return [bool]($file.Attributes -band [IO.FileAttributes]::ReparsePoint)
+}
+
+function unlinkOrDeleteDirectory([string]$path)
+{
+    Write-Host "Unlinking/deleting $path ..."
+    if (IsReparsePoint $path)
+    {
+        Write-Host "Reparse point detected. Unlinking."
+        cmd /c rmdir $path
+    }
+    else
+    {
+        Write-Host "Non-reparse point detected. Deleting."
+        vcpkgRemoveItem $path
+    }
+    Write-Host "Unlinking/deleting $installpathedDirLocal ... done."
+}
+
 # Constants
 $VISUAL_STUDIO_2017_STABLE_PATH = "C:\VS2017\Stable"
 $VISUAL_STUDIO_2017_UNSTABLE_PATH = "C:\VS2017\Unstable"

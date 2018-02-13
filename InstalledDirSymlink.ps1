@@ -3,13 +3,9 @@ param(
     [string]$Triplet
 )
 
-function IsReparsePoint([string]$path) {
-  $file = Get-Item $path -Force -ea SilentlyContinue
-  return [bool]($file.Attributes -band [IO.FileAttributes]::ReparsePoint)
-}
-
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 . "$scriptsDir\VcpkgPowershellUtils.ps1"
+. "$scriptsDir\VcpkgPowershellUtils-Private.ps1"
 
 $vcpkgRootDir = vcpkgFindFileRecursivelyUp $scriptsDir .vcpkg-root
 
@@ -26,18 +22,7 @@ Write-Host "Mapping drive $driveLetter\ to $remoteShare ... done."
 $installedDirLocal = "$vcpkgRootDir\installed"
 $installedDirRemote = "$driveLetter\vcpkg-full-ci-$Triplet"
 
-Write-Host "Unlinking/deleting $installedDirLocal ..."
-if (IsReparsePoint $installedDirLocal)
-{
-    Write-Host "Reparse point detected. Unlinking."
-    cmd /c rmdir $installedDirLocal
-}
-else
-{
-    Write-Host "Non-reparse point detected. Deleting."
-    vcpkgRemoveItem $installedDirLocal
-}
-Write-Host "Unlinking/deleting $installedDirLocal ... done."
+unlinkOrDeleteDirectory $installedDirLocal
 
 Write-Host "Creating $installedDirRemote ..."
 vcpkgCreateDirectoryIfNotExists $installedDirRemote
