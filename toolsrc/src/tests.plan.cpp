@@ -920,5 +920,31 @@ namespace UnitTest1
 
             features_check(&plan[1], "a", {"core", "a1"});
         }
+
+        TEST_METHOD(basic_upgrade_scheme_with_new_default_feature)
+        {
+            // only core of package "a" is installed
+            std::vector<std::unique_ptr<StatusParagraph>> pghs;
+            pghs.push_back(make_status_pgh("a"));
+            StatusParagraphs status_db(std::move(pghs));
+
+            // a1 was added as a default feature and should be installed in upgrade
+            PackageSpecMap spec_map(Triplet::X86_WINDOWS);
+            auto spec_a = spec_map.emplace("a", "", {{"a1", ""}}, {"a1"});
+
+            Dependencies::MapPortFileProvider provider(spec_map.map);
+            Dependencies::PackageGraph graph(provider, status_db);
+
+            graph.upgrade(spec_a);
+
+            auto plan = graph.serialize();
+
+            Assert::AreEqual(size_t(2), plan.size());
+
+            Assert::AreEqual("a", plan[0].spec().name().c_str());
+            Assert::IsTrue(plan[0].remove_action.has_value());
+
+            features_check(&plan[1], "a", {"core", "a1"});
+        }
     };
 }

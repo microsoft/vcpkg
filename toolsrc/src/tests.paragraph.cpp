@@ -137,6 +137,22 @@ namespace UnitTest1
             Assert::AreEqual("uwp", pgh->core_paragraph->depends[1].qualifier.c_str());
         }
 
+        TEST_METHOD(SourceParagraph_Default_Features)
+        {
+            auto m_pgh =
+                vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
+                    {"Source", "a"},
+                    {"Version", "1.0"},
+                    {"Default-Features", "a1"},
+                }});
+            Assert::IsTrue(m_pgh.has_value());
+            auto& pgh = *m_pgh.get();
+
+            Assert::AreEqual(size_t(1), pgh->core_paragraph->default_features.size());
+            Assert::AreEqual("a1", pgh->core_paragraph->default_features[0].c_str());
+        }
+
+
         TEST_METHOD(BinaryParagraph_Construct_Minimum)
         {
             vcpkg::BinaryParagraph pgh({
@@ -201,6 +217,21 @@ namespace UnitTest1
 
             Assert::AreEqual(size_t(0), pgh.depends.size());
             Assert::IsTrue(pgh.abi == "abcd123");
+        }
+
+        TEST_METHOD(BinaryParagraph_Default_Features)
+        {
+            vcpkg::BinaryParagraph pgh({
+                {"Package", "a"},
+                {"Version", "1.0"},
+                {"Architecture", "x86-windows"},
+                {"Multi-Arch", "same"},
+                {"Default-Features", "a1"},
+            });
+
+            Assert::AreEqual(size_t(0), pgh.depends.size());
+            Assert::AreEqual(size_t(1), pgh.default_features.size());
+            Assert::IsTrue(pgh.default_features[0] == "a1");
         }
 
         TEST_METHOD(parse_paragraphs_empty)

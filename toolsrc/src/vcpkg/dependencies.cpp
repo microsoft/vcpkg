@@ -20,6 +20,9 @@ namespace vcpkg::Dependencies
         bool plus = false;
     };
 
+    /// <summary>
+    /// Representation of a package and its features in a ClusterGraph.
+    /// </summary>
     struct Cluster : Util::MoveOnlyBase
     {
         InstalledPackageView installed_package;
@@ -64,10 +67,18 @@ namespace vcpkg::Dependencies
         Graphs::Graph<ClusterPtr> install_graph;
     };
 
+    /// <summary>
+    /// Directional graph representing a collection of packages with their features connected by their dependencies.
+    /// </summary>
     struct ClusterGraph : Util::MoveOnlyBase
     {
         explicit ClusterGraph(const PortFileProvider& provider) : m_provider(provider) {}
 
+        /// <summary>
+        /// Find the cluster associated with spec or if not found, create it from the PortFileProvider.
+        /// </summary>
+        /// <param name="spec"> Package spec to get the cluster for. </param>
+        /// <returns> The cluster found or created for spec. </returns>
         Cluster& get(const PackageSpec& spec)
         {
             auto it = m_graph.find(spec);
@@ -536,6 +547,23 @@ namespace vcpkg::Dependencies
                 System::println(System::Color::warning,
                                 "Warning: could not reinstall feature %s",
                                 FeatureSpec{cluster.spec, original_feature});
+            }
+        }
+
+        // Check if any default features have been added
+        if (auto scf = cluster.source_control_file.value_or(nullptr)) {
+            auto& previous_df = cluster.installed_package.core->package.default_features;
+            for (auto&& default_feature : scf->core_paragraph->default_features) {
+                if (std::find(previous_df.begin(), previous_df.end(), default_feature) == previous_df.end()) {
+                    // this is a new default feature, mark it for installation
+                    auto res = mark_plus(default_feature, cluster, graph, graph_plan);
+                    if (res != MarkPlusResult::SUCCESS)
+                    {
+                        System::println(System::Color::warning,
+                                        "Warning: could not install new default feature %s",
+                                        FeatureSpec{cluster.spec, default_feature});
+                    }
+                }
             }
         }
     }
