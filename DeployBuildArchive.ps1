@@ -36,7 +36,7 @@ if (!(Test-Path $buildArchive))
 
 Write-Host "Deploying $buildArchive"
 
-$deploymentRoot = "C:\VS2017\Unstable\VC\Tools\MSVC\"
+$deploymentRoot = "C:\VS2017\Unstable\VC\Tools\MSVC"
 $msvcVersion = @(dir -Directory $deploymentRoot | Sort-object Name -Descending)[0].Name
 $deploymentPath = "$deploymentRoot\$msvcVersion"
 
@@ -45,7 +45,11 @@ Get-Process -Name "cl" -ErrorAction SilentlyContinue | Stop-Process
 Get-Process -Name "VCTip" -ErrorAction SilentlyContinue | Stop-Process
 
 # Debugging
-findProcessesLockingFile "C:\VS2017\Unstable\VC\Tools\MSVC\14.12.25827\bin\HostX86\x86\msobj140.dll"
+Write-Host "Finding which process is locking files..."
+findProcessesLockingFile "$deploymentPath\bin\HostX86\x86\msobj140.dll"
+findProcessesLockingFile "$deploymentPath\bin\HostX86\x86\mspdbcore.dll"
+findProcessesLockingFile "$deploymentPath\bin\HostX86\x86\vcruntime140.dll"
+Write-Host "Finding which process is locking files... done."
 
 vcpkgCreateDirectoryIfNotExists $deploymentPath
 Get-ChildItem $deploymentRoot -exclude $msvcVersion | % { vcpkgRemoveItem $_ }
