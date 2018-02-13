@@ -527,9 +527,6 @@ namespace vcpkg::Install
             return Input::check_and_get_full_package_spec(arg, default_triplet, COMMAND_STRUCTURE.example_text);
         });
 
-        // Set of package names whose default features should not be installed.
-        std::unordered_set<std::string> prevent_default_features;
-
         for (auto&& spec : specs)
         {
             Input::check_triplet(spec.package_spec.triplet(), paths);
@@ -537,11 +534,6 @@ namespace vcpkg::Install
             {
                 Checks::exit_with_message(
                     VCPKG_LINE_INFO, "Feature packages are experimentally available under the --featurepackages flag.");
-            }
-
-            // If the user installs a feature package explicitly, we do not install the default features
-            if (!spec.features.empty()) {
-                prevent_default_features.insert(spec.package_spec.name());
             }
         }
 
@@ -569,7 +561,7 @@ namespace vcpkg::Install
             scf_map[port->core_paragraph->name] = std::move(*port);
         MapPortFileProvider provider(scf_map);
 
-        action_plan = create_feature_install_plan(provider, FullPackageSpec::to_feature_specs(specs), status_db, prevent_default_features);
+        action_plan = create_feature_install_plan(provider, FullPackageSpec::to_feature_specs(specs), status_db);
 
         if (!GlobalState::feature_packages)
         {

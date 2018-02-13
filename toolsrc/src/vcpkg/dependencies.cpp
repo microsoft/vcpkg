@@ -282,11 +282,10 @@ namespace vcpkg::Dependencies
 
     std::vector<InstallPlanAction> create_install_plan(const PortFileProvider& port_file_provider,
                                                        const std::vector<PackageSpec>& specs,
-                                                       const StatusParagraphs& status_db,
-                                                       const std::unordered_set<std::string>& prevent_default_features)
+                                                       const StatusParagraphs& status_db)
     {
         auto fspecs = Util::fmap(specs, [](const PackageSpec& spec) { return FeatureSpec(spec, ""); });
-        auto plan = create_feature_install_plan(port_file_provider, fspecs, status_db, prevent_default_features);
+        auto plan = create_feature_install_plan(port_file_provider, fspecs, status_db);
 
         std::vector<InstallPlanAction> ret;
         ret.reserve(plan.size());
@@ -573,16 +572,19 @@ namespace vcpkg::Dependencies
     /// <param name="provider"> Contains the ports of the current environment. </param>
     /// <param name="specs"> Feature specifications to resolve dependencies for. </param>
     /// <param name="status_db"> Status of installed packages in the current environment. </param>
-    /// <param name="prevent_default_features"> 
-    ///    List of package names for which default features should not be installed instead of the core
-    ///    package (e.g. if the user is currently installing specific features of that package. 
-    /// </param>
     ///
     std::vector<AnyAction> create_feature_install_plan(const PortFileProvider& provider,
                                                        const std::vector<FeatureSpec>& specs,
-                                                       const StatusParagraphs& status_db,
-                                                       const std::unordered_set<std::string>& prevent_default_features)
+                                                       const StatusParagraphs& status_db)
     {
+        std::unordered_set<std::string> prevent_default_features;
+        for (auto&& spec : specs)
+        {
+            // When "core" is explicitly listed, default features should not be installed.
+            if (spec.feature() == "core")
+                prevent_default_features.insert(spec.name());
+        }
+
         PackageGraph pgraph(provider, status_db);
         for (auto&& spec : specs)
             pgraph.install(spec, prevent_default_features);
@@ -595,18 +597,17 @@ namespace vcpkg::Dependencies
     /// <param name="map"> Map of all source files in the current environment. </param>
     /// <param name="specs"> Feature specifications to resolve dependencies for. </param>
     /// <param name="status_db"> Status of installed packages in the current environment. </param>
-    /// <param name="prevent_default_features"> 
+    /// <param name="prevent_default_features">
     ///    List of package names for which default features should not be installed instead of the core
-    ///    package (e.g. if the user is currently installing specific features of that package. 
+    ///    package (e.g. if the user is currently installing specific features of that package.
     /// </param>
     ///
     std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<std::string, SourceControlFile>& map,
                                                        const std::vector<FeatureSpec>& specs,
-                                                       const StatusParagraphs& status_db,
-                                                       const std::unordered_set<std::string>& prevent_default_features)
+                                                       const StatusParagraphs& status_db)
     {
         MapPortFileProvider provider(map);
-        return create_feature_install_plan(provider, specs, status_db, prevent_default_features);
+        return create_feature_install_plan(provider, specs, status_db);
     }
 
     void PackageGraph::install(const FeatureSpec& spec, const std::unordered_set<std::string>& prevent_default_features) const

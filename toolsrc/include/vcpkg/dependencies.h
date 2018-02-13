@@ -163,8 +163,7 @@ namespace vcpkg::Dependencies
 
     std::vector<InstallPlanAction> create_install_plan(const PortFileProvider& port_file_provider,
                                                        const std::vector<PackageSpec>& specs,
-                                                       const StatusParagraphs& status_db,
-                                                       const std::unordered_set<std::string>& prevent_default_features = {});
+                                                       const StatusParagraphs& status_db);
 
     std::vector<RemovePlanAction> create_remove_plan(const std::vector<PackageSpec>& specs,
                                                      const StatusParagraphs& status_db);
@@ -176,13 +175,11 @@ namespace vcpkg::Dependencies
 
     std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<std::string, SourceControlFile>& map,
                                                        const std::vector<FeatureSpec>& specs,
-                                                       const StatusParagraphs& status_db,
-                                                       const std::unordered_set<std::string>& prevent_default_features = {});
+                                                       const StatusParagraphs& status_db);
 
     std::vector<AnyAction> create_feature_install_plan(const PortFileProvider& port_file_provider,
                                                        const std::vector<FeatureSpec>& specs,
-                                                       const StatusParagraphs& status_db,
-                                                       const std::unordered_set<std::string>& prevent_default_features = {});
+                                                       const StatusParagraphs& status_db);
 
     void print_plan(const std::vector<AnyAction>& action_plan, const bool is_recursive = true);
 }
