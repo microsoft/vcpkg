@@ -432,24 +432,38 @@ namespace vcpkg::Dependencies
 
     MarkPlusResult mark_plus(const std::string& feature, Cluster& cluster, ClusterGraph& graph, GraphPlan& graph_plan, const std::unordered_set<std::string>& prevent_default_features)
     {
-        if (feature.empty() && prevent_default_features.find(cluster.spec.name()) == prevent_default_features.end())
+        if (feature.empty())
         {
-            // Indicates that core was not specified in the reference
-
-            // Add default features for this package, if this is the "core" feature and we
-            // are not supposed to prevent default features for this package
-            if (auto scf = cluster.source_control_file.value_or(nullptr))
+            if (prevent_default_features.find(cluster.spec.name()) == prevent_default_features.end())
             {
-                for (auto&& default_feature : scf->core_paragraph.get()->default_features) {
-                    auto res = mark_plus(default_feature, cluster, graph, graph_plan, prevent_default_features);
+                // Indicates that core was not specified in the reference
 
+                // Add default features for this package, if this is the "core" feature and we
+                // are not supposed to prevent default features for this package
+                if (auto scf = cluster.source_control_file.value_or(nullptr))
+                {
+                    for (auto&& default_feature : scf->core_paragraph.get()->default_features) {
+                        auto res = mark_plus(default_feature, cluster, graph, graph_plan, prevent_default_features);
+                        if (res != MarkPlusResult::SUCCESS) {
+                            return res;
+                        }
+                    }
+
+                    // "core" is always an implicit default feature. In case we did not add it as
+                    // a dependency above (e.g. no default features), add it here.
+                    auto res = mark_plus("core", cluster, graph, graph_plan, prevent_default_features);
                     if (res != MarkPlusResult::SUCCESS) {
                         return res;
                     }
                 }
-            }
 
-            return MarkPlusResult::SUCCESS;
+                return MarkPlusResult::SUCCESS;
+            }
+            else
+            {
+                // Skip adding the default features, as explicitly told not to.
+                return MarkPlusResult::SUCCESS;
+            }
         }
 
         auto it = cluster.edges.find(feature);
