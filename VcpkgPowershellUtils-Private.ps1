@@ -215,8 +215,8 @@ set(VCPKG_CMAKE_SYSTEM_VERSION 10.0)
 
 function IsReparsePoint([string]$path)
 {
-  $file = Get-Item $path -Force -ea SilentlyContinue
-  return [bool]($file.Attributes -band [IO.FileAttributes]::ReparsePoint)
+    $file = Get-Item $path -Force -ea SilentlyContinue
+    return [bool]($file.Attributes -band [IO.FileAttributes]::ReparsePoint)
 }
 
 function unlinkOrDeleteDirectory([string]$path)
