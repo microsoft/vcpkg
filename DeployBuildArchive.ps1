@@ -69,4 +69,6 @@ $formattedTime7z = vcpkgFormatElapsedTime $time7z
 Write-Host "Extracting 7z... done. Time Taken: $formattedTime7z seconds"
 
 $deployedVersionFile = "$deploymentRoot\$DEPLOYED_VERSION_FILENAME"
-$buildArchiveName.BaseName | Out-File -filepath $deployedVersionFile
+
+$buildArchiveFileName = ($buildArchiveName -split "\.")[0]
+$buildArchiveFileName | Out-File -filepath $deployedVersionFile
