@@ -25,5 +25,5 @@ Write-Host "Deleting $cixml ... done."
 
 ./vcpkg remove --outdated --recurse
 
-./vcpkg ci $Triplet --x-xunit=TEST-full-ci.xml --exclude=aws-sdk-cpp
-# ./vcpkg install "zlib:$Triplet" --x-xunit=TEST-full-ci.xml
+# ./vcpkg ci $Triplet --x-xunit=TEST-full-ci.xml --exclude=aws-sdk-cpp
+./vcpkg install "zlib:$Triplet" --x-xunit=TEST-full-ci.xml
