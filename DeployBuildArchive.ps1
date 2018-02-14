@@ -68,3 +68,5 @@ $time7z = Measure-Command {& $scriptsDir\7za.exe x $tempBuildArchive -o"$deploym
 $formattedTime7z = vcpkgFormatElapsedTime $time7z
 Write-Host "Extracting 7z... done. Time Taken: $formattedTime7z seconds"
 
+$deployedVersionFile = "$deploymentRoot\$DEPLOYED_VERSION_FILENAME"
+$buildArchiveName | Out-File -filepath $deployedVersionFile
