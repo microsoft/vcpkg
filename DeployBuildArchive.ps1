@@ -36,7 +36,7 @@ if (!(Test-Path $buildArchive))
 
 Write-Host "Deploying $buildArchive"
 
-$deploymentRoot = "C:\VS2017\Unstable\VC\Tools\MSVC"
+$deploymentRoot = "$VISUAL_STUDIO_2017_UNSTABLE_PATH\VC\Tools\MSVC"
 $msvcVersion = @(dir -Directory $deploymentRoot | Sort-object Name -Descending)[0].Name
 $deploymentPath = "$deploymentRoot\$msvcVersion"
 
