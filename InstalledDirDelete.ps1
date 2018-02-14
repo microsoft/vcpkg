@@ -10,4 +10,4 @@ $vcpkgRootDir = vcpkgFindFileRecursivelyUp $scriptsDir .vcpkg-root
 
 $installedDir = "$vcpkgRootDir\installed"
 
-unlinkOrDeleteDirectory $installedDirLocal
+unlinkOrDeleteDirectory $installedDir
