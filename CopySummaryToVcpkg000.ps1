@@ -60,4 +60,6 @@ $outputPath = "$outputPathRoot\$outputFilename"
 $cixml = "$vcpkgRootDir\TEST-full-ci.xml"
 
 vcpkgCreateDirectoryIfNotExists $outputPathRoot
-Copy-Item $cixml $outputPath
+Write-Host "Copying $cixml to $outputPath..."
+Copy-Item $cixml -Destination $outputPath
+Write-Host "Copying $cixml to $outputPath... done."
