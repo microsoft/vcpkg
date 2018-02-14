@@ -49,6 +49,9 @@ Write-Host "Finding which process is locking files..."
 findProcessesLockingFile "$deploymentPath\bin\HostX86\x86\msobj140.dll"
 findProcessesLockingFile "$deploymentPath\bin\HostX86\x86\mspdbcore.dll"
 findProcessesLockingFile "$deploymentPath\bin\HostX86\x86\vcruntime140.dll"
+findProcessesLockingFile "$deploymentPath\bin\HostX64\x86\msobj140.dll"
+findProcessesLockingFile "$deploymentPath\bin\HostX64\x86\mspdbcore.dll"
+findProcessesLockingFile "$deploymentPath\bin\HostX64\x86\vcruntime140.dll"
 Write-Host "Finding which process is locking files... done."
 
 vcpkgCreateDirectoryIfNotExists $deploymentPath
