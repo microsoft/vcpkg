@@ -68,7 +68,7 @@ Param(
     [Parameter(Mandatory=$true)][string]$filename
 )
     $handleApp = "$scriptsDir\Handle\Handle.exe"
-    $handleOut = Invoke-Expression ($handleApp + ' ' + $filename)
+    $handleOut = & $handleApp "$filename" "-nobanner"
     $locks = $handleOut |?{$_ -match "(.+?)\s+pid: (\d+?)\s+type: File\s+(\w+?): (.+)\s*$"}|%{
         [PSCustomObject]@{
             'AppName' = $Matches[1]
