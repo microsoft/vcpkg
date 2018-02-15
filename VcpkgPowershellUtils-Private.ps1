@@ -167,7 +167,7 @@ function UnattendedVSupdate
     if ($remaining.Count -ne 0)
     {
         Write-Warning "VS Installer still running, stopping it..."
-        Write-Warning $remaining
+        Write-Host $remaining # Write-Warning doesn't accept arrays
         $remaining | Stop-Process
     }
 
