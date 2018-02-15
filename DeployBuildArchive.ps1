@@ -44,16 +44,6 @@ Write-Host "Cleaning-up $deploymentRoot..."
 Get-Process -Name "cl" -ErrorAction SilentlyContinue | Stop-Process
 Get-Process -Name "VCTip" -ErrorAction SilentlyContinue | Stop-Process
 
-# Debugging
-Write-Host "Finding which process is locking files..."
-findProcessesLockingFile "$deploymentPath\bin\HostX86\x86\msobj140.dll"
-findProcessesLockingFile "$deploymentPath\bin\HostX86\x86\mspdbcore.dll"
-findProcessesLockingFile "$deploymentPath\bin\HostX86\x86\vcruntime140.dll"
-findProcessesLockingFile "$deploymentPath\bin\HostX64\x86\msobj140.dll"
-findProcessesLockingFile "$deploymentPath\bin\HostX64\x86\mspdbcore.dll"
-findProcessesLockingFile "$deploymentPath\bin\HostX64\x86\vcruntime140.dll"
-Write-Host "Finding which process is locking files... done."
-
 vcpkgCreateDirectoryIfNotExists $deploymentPath
 Get-ChildItem $deploymentRoot -exclude $msvcVersion | % { vcpkgRemoveItem $_ }
 Get-ChildItem $deploymentPath -exclude "crt" | % { vcpkgRemoveItem $_ }
