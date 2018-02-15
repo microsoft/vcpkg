@@ -34,7 +34,8 @@ function vcpkgRemoveItem([Parameter(Mandatory=$true)][string]$dirPath)
 
     if (Test-Path $dirPath)
     {
-        Remove-Item $dirPath -Recurse -Force
+        # Remove-Item -Recurse occasionally fails. This is a workaround
+        get-childitem $dirPath -recurse | remove-item
     }
 }
 
