@@ -6,6 +6,11 @@
 
 namespace vcpkg
 {
+    /// <summary>Status paragraphs</summary>
+    ///
+    /// Collection of <see cref="vcpkg::StatusParagraph"/>, e.g. contains the information
+    /// about whether a package is installed or not.
+    ///
     struct StatusParagraphs
     {
         StatusParagraphs();
