@@ -223,6 +223,7 @@ set\(VCPKG_VISUAL_STUDIO_PATH[\s]+"(?<path>[^"]+)
     Get-Content $tripletFilePath | ForEach-Object {
         if($_ -match $vsInstallPathRegex){
             $installPath = $Matches['path']
+            $installPath = $installPath -replace "/","\"
             return
         }
     }
