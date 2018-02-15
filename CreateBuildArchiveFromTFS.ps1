@@ -64,7 +64,7 @@ $toCompleted = "$to.copycompleted"
 
 if (!(Test-Path $toCompleted))
 {
-    Remove-Item $to -Recurse -Force -ErrorAction SilentlyContinue
+    vcpkgRemoveItem $to
     Write-Host "Copying x86ret"
     MyCopyItem  "$from\binaries.x86ret\bin\i386" "$to\bin\HostX86\x86"
     MyCopyItem  "$from\binaries.x86ret\bin\x86_amd64" "$to\bin\HostX86\x64"
@@ -86,8 +86,8 @@ if (!(Test-Path $toCompleted))
 }
 
 $sevenZipPart = "$sevenZip.part"
-Remove-Item $sevenZip -Force -ErrorAction SilentlyContinue # Redundant
-Remove-Item $sevenZipPart -Force -ErrorAction SilentlyContinue
+vcpkgRemoveItem $sevenZip # Redundant
+vcpkgRemoveItem $sevenZipPart
 Write-Host "Creating 7z..."
 
 # a = archive

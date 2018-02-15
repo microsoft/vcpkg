@@ -25,17 +25,29 @@ function vcpkgCreateParentDirectoryIfNotExists([Parameter(Mandatory=$true)][stri
     }
 }
 
-function vcpkgRemoveItem([Parameter(Mandatory=$true)][string]$dirPath)
+function vcpkgIsDirectory([Parameter(Mandatory=$true)][string]$path)
 {
-    if ([string]::IsNullOrEmpty($dirPath))
+    return (Get-Item $path) -is [System.IO.DirectoryInfo]
+}
+
+function vcpkgRemoveItem([Parameter(Mandatory=$true)][string]$path)
+{
+    if ([string]::IsNullOrEmpty($path))
     {
         return
     }
 
-    if (Test-Path $dirPath)
+    if (Test-Path $path)
     {
         # Remove-Item -Recurse occasionally fails. This is a workaround
-        & cmd.exe /c rd /s /q $dirPath
+        if (vcpkgIsDirectory $path)
+        {
+            & cmd.exe /c rd /s /q $path
+        }
+        else
+        {
+            Remove-Item $path -Force
+        }
     }
 }
 
