@@ -5,11 +5,15 @@ param(
 
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 . "$scriptsDir\VcpkgPowershellUtils.ps1"
+. "$scriptsDir\VcpkgPowershellUtils-Private.ps1"
 
 $vcpkgRootDir = vcpkgFindFileRecursivelyUp $scriptsDir .vcpkg-root
 
+$tripletFilePath = "$vcpkgRootDir\triplets\$Triplet.cmake"
+$vsInstallPath = findVSInstallPathFromTriplet $tripletFilePath
+
 Write-Host "Bootstrapping vcpkg ..."
-& "$vcpkgRootDir\bootstrap-vcpkg.bat"
+vcpkgInvokeCommand "$vcpkgRootDir\scripts\bootstrap.ps1" -arguments "-Verbose -withVSPath $vsInstallPath"
 Write-Host "Bootstrapping vcpkg ... done."
 
 $packagesDir = "$vcpkgRootDir\packages"

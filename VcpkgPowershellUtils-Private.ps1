@@ -213,13 +213,13 @@ set(VCPKG_CMAKE_SYSTEM_VERSION 10.0)
     }
 }
 
-function IsReparsePoint([string]$path)
+function IsReparsePoint([Parameter(Mandatory=$true)][string]$path)
 {
     $file = Get-Item $path -Force -ea SilentlyContinue
     return [bool]($file.Attributes -band [IO.FileAttributes]::ReparsePoint)
 }
 
-function unlinkOrDeleteDirectory([string]$path)
+function unlinkOrDeleteDirectory([Parameter(Mandatory=$true)][string]$path)
 {
     Write-Host "Unlinking/deleting $path ..."
     if (IsReparsePoint $path)
@@ -233,6 +233,23 @@ function unlinkOrDeleteDirectory([string]$path)
         vcpkgRemoveItem $path
     }
     Write-Host "Unlinking/deleting $installpathedDirLocal ... done."
+}
+
+function findVSInstallPathFromTriplet([Parameter(Mandatory=$true)][string]$tripletFilePath)
+{
+    $vsInstallPathRegex =
+@"
+set\(VCPKG_VISUAL_STUDIO_PATH[\s]+"(?<path>[^"]+)
+"@
+    $installPath = ""
+    Get-Content $tripletFilePath | ForEach-Object {
+        if($_ -match $vsInstallPathRegex){
+            $installPath = $Matches['path']
+            return
+        }
+    }
+
+    return $installPath
 }
 
 # Constants

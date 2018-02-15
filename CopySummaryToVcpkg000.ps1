@@ -38,18 +38,7 @@ function findDeployedVersion([string]$vsInstallPath)
 }
 
 $tripletFilePath = "$vcpkgRootDir\triplets\$Triplet.cmake"
-
-$vsInstallPathRegex = @"
-set\(VCPKG_VISUAL_STUDIO_PATH[\s]+"(?<path>[^"]+)
-"@
-$vsInstallPath = ""
-Get-Content $tripletFilePath | ForEach-Object {
-    if($_ -match $vsInstallPathRegex){
-        $vsInstallPath =  $Matches['path']
-        return
-    }
-}
-
+$vsInstallPath = findVSInstallPathFromTriplet $tripletFilePath
 $deployedVersion = findDeployedVersion $vsInstallPath
 
 # "-Format s" is for "SortableDateTimePattern". It should be culture agnostic
