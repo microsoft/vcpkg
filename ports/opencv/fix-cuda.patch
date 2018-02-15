@@ -1,0 +1,18 @@
+diff --git a/cmake/FindCUDA.cmake b/cmake/FindCUDA.cmake
+index 4a19d5c..d1c5b8b 100644
+--- a/cmake/FindCUDA.cmake
++++ b/cmake/FindCUDA.cmake
+@@ -450,7 +450,12 @@ option(CUDA_HOST_COMPILATION_CPP "Generated file extension" ON)
+ set(CUDA_NVCC_FLAGS "" CACHE STRING "Semi-colon delimit multiple arguments.")
+ 
+ if(CMAKE_GENERATOR MATCHES "Visual Studio")
+-  set(CUDA_HOST_COMPILER "$(VCInstallDir)bin" CACHE FILEPATH "Host side compiler used by NVCC")
++  if(MSVC_VERSION GREATER 1900)
++    # Required for CUDA to work with VS2017
++    set(CUDA_HOST_COMPILER "${CMAKE_CXX_COMPILER}" CACHE FILEPATH "Host side compiler used by NVCC" FORCE)
++  else()
++    set(CUDA_HOST_COMPILER "$(VCInstallDir)bin" CACHE FILEPATH "Host side compiler used by NVCC")
++  endif()
+ else()
+   # Using cc which is symlink to clang may let NVCC think it is GCC and issue
+   # unhandled -dumpspecs option to clang. Also in case neither
