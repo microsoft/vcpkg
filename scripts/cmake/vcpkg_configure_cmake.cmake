@@ -75,6 +75,9 @@ function(vcpkg_configure_cmake)
     if (_csc_PREFER_NINJA_NONPARALLEL_CONFIG)
         message(STATUS "Disabling Ninja parallel configure - package has opted-out")
         set(NINJA_PARALLEL_CONFIGURE OFF)
+    else()
+        message(STATUS "Enabling Ninja parallel configure")
+        set(NINJA_PARALLEL_CONFIGURE ON)
     endif()
 
     if(_csc_GENERATOR)
@@ -247,7 +250,7 @@ function(vcpkg_configure_cmake)
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure)
         file(WRITE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure/build.ninja "${_contents}")
 
-        message(STATUS "Configuring ${TARGET_TRIPLET} (parallel mode)")
+        message(STATUS "Configuring ${TARGET_TRIPLET} (parallel mode rel+dbg)")
         vcpkg_execute_required_process(
             COMMAND ninja -v
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure
