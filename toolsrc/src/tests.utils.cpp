@@ -35,7 +35,10 @@ namespace Microsoft::VisualStudio::CppUnitTestFramework
     std::wstring ToString(const vcpkg::PackageSpec& t) { return ToString(t.to_string()); }
 }
 
-std::unique_ptr<StatusParagraph> make_status_pgh(const char* name, const char* depends, const char* default_features, const char* triplet)
+std::unique_ptr<StatusParagraph> make_status_pgh(const char* name,
+                                                 const char* depends,
+                                                 const char* default_features,
+                                                 const char* triplet)
 {
     using Pgh = std::unordered_map<std::string, std::string>;
     return std::make_unique<StatusParagraph>(Pgh{{"Package", name},

@@ -33,11 +33,9 @@ namespace UnitTest1
         return std::move(*m_pgh.get());
     }
 
-    ///
     /// <summary>
     /// Assert that the given action an install of given features from given package.
     /// </summary>
-    ///
     static void features_check(Dependencies::AnyAction* install_action,
                                std::string pkg_name,
                                std::vector<std::string> vec,
@@ -64,11 +62,9 @@ namespace UnitTest1
         }
     }
 
-    ///
     /// <summary>
     /// Assert that the given action is a remove of given package.
     /// </summary>
-    ///
     static void remove_plan_check(Dependencies::AnyAction* remove_action,
                                   std::string pkg_name,
                                   const Triplet& triplet = Triplet::X86_WINDOWS)
@@ -78,11 +74,9 @@ namespace UnitTest1
         Assert::AreEqual(pkg_name.c_str(), plan.spec.name().c_str());
     }
 
-    ///
     /// <summary>
     /// Map of source control files by their package name.
     /// </summary>
-    ///
     struct PackageSpecMap
     {
         std::unordered_map<std::string, SourceControlFile> map;
@@ -482,7 +476,7 @@ namespace UnitTest1
 
             // Add a port "a" of which "core" is already installed, but we will
             // install the default features "explicitly"
-            // "a" has two features, of which "b1" is default.
+            // "a" has two features, of which "a1" is default.
             PackageSpecMap spec_map(Triplet::X64_WINDOWS);
             spec_map.emplace("a", "", {{"a0", ""}, {"a1", ""}}, {"a1"});
 
@@ -519,7 +513,6 @@ namespace UnitTest1
             Assert::IsTrue(install_plan.size() == 1);
             features_check(&install_plan[0], "a", {"core"}, Triplet::X64_WINDOWS);
         }
-
 
         TEST_METHOD(install_default_features_of_dependency_test_1)
         {
@@ -635,7 +628,7 @@ namespace UnitTest1
 
             Assert::AreEqual("a", plan[2].spec().name().c_str());
             Assert::IsTrue(plan[2].install_action.has_value());
-            features_check(&plan[2], "a", { "core" }, Triplet::X64_WINDOWS);
+            features_check(&plan[2], "a", {"core"}, Triplet::X64_WINDOWS);
         }
 
         TEST_METHOD(transitive_features_test)

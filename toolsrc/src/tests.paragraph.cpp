@@ -152,7 +152,6 @@ namespace UnitTest1
             Assert::AreEqual("a1", pgh->core_paragraph->default_features[0].c_str());
         }
 
-
         TEST_METHOD(BinaryParagraph_Construct_Minimum)
         {
             vcpkg::BinaryParagraph pgh({
