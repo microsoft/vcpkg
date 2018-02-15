@@ -1,10 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)][string]$Triplet
-    [Parameter(ParameterSetName='SetFull')]
-    [switch]$full,
-    [Parameter(ParameterSetName='SetIncremental')]
-    [switch]$incremental
+    [Parameter(Mandatory=$true)][switch]$incremental,
 )
 
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
@@ -50,21 +47,15 @@ $installedDirRemote = "$driveLetter\vcpkg-full-ci-$Triplet"
 
 unlinkOrDeleteDirectory $installedDirLocal
 
-if ($full)
-{
-    Write-Host "Creating $installedDirRemote ..."
-    vcpkgCreateDirectoryIfNotExists $installedDirRemote
-    Write-Host "Creating $installedDirRemote ... done."
-    return
-}
-
 if ($incremental)
 {
     Write-Host "Linking $installedDirLocal to $installedDirRemote ..."
     cmd /c mklink /D $installedDirLocal $installedDirRemote
     Write-Host "Linking $installedDirLocal to $installedDirRemote ... done."
-    return
 }
-
-# Cannot be here
-throw 0;
+else
+{
+    Write-Host "Creating $installedDirRemote ..."
+    vcpkgCreateDirectoryIfNotExists $installedDirRemote
+    Write-Host "Creating $installedDirRemote ... done."
+}
