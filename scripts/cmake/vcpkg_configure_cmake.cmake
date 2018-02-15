@@ -188,6 +188,7 @@ function(vcpkg_configure_cmake)
         "-DCMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP=TRUE"
         "-DCMAKE_VERBOSE_MAKEFILE=ON"
         "-DVCPKG_APPLOCAL_DEPS=OFF"
+        "-DVCPKG_ALWAYS_USE_RELEASE_PREFIX=OFF"
         "-DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/buildsystems/vcpkg.cmake"
         "-DCMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION=ON"
     )
