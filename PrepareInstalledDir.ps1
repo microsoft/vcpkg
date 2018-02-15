@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)][string]$Triplet
-    [Parameter(Mandatory=$true)][switch]$incremental,
+    [Parameter(Mandatory=$true)][bool]$incremental,
 )
 
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
