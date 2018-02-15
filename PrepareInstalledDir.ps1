@@ -13,6 +13,28 @@ $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 
 $vcpkgRootDir = vcpkgFindFileRecursivelyUp $scriptsDir .vcpkg-root
 
+function IsReparsePoint([Parameter(Mandatory=$true)][string]$path)
+{
+    $file = Get-Item $path -Force -ea SilentlyContinue
+    return [bool]($file.Attributes -band [IO.FileAttributes]::ReparsePoint)
+}
+
+function unlinkOrDeleteDirectory([Parameter(Mandatory=$true)][string]$path)
+{
+    Write-Host "Unlinking/deleting $path ..."
+    if (IsReparsePoint $path)
+    {
+        Write-Host "Reparse point detected. Unlinking."
+        cmd /c rmdir $path
+    }
+    else
+    {
+        Write-Host "Non-reparse point detected. Deleting."
+        vcpkgRemoveItem $path
+    }
+    Write-Host "Unlinking/deleting $installpathedDirLocal ... done."
+}
+
 $driveLetter = "I:"
 Write-Host "Deleting drive $driveLetter\ ..."
 net use $driveLetter /delete

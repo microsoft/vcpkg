@@ -213,28 +213,6 @@ set(VCPKG_CMAKE_SYSTEM_VERSION 10.0)
     }
 }
 
-function IsReparsePoint([Parameter(Mandatory=$true)][string]$path)
-{
-    $file = Get-Item $path -Force -ea SilentlyContinue
-    return [bool]($file.Attributes -band [IO.FileAttributes]::ReparsePoint)
-}
-
-function unlinkOrDeleteDirectory([Parameter(Mandatory=$true)][string]$path)
-{
-    Write-Host "Unlinking/deleting $path ..."
-    if (IsReparsePoint $path)
-    {
-        Write-Host "Reparse point detected. Unlinking."
-        cmd /c rmdir $path
-    }
-    else
-    {
-        Write-Host "Non-reparse point detected. Deleting."
-        vcpkgRemoveItem $path
-    }
-    Write-Host "Unlinking/deleting $installpathedDirLocal ... done."
-}
-
 function findVSInstallPathFromTriplet([Parameter(Mandatory=$true)][string]$tripletFilePath)
 {
     $vsInstallPathRegex =
