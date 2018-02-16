@@ -16,6 +16,8 @@ vcpkg_apply_patches(
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-Updates-to-CMake-configuration-to-align-with-other-C.patch"
             "${CMAKE_CURRENT_LIST_DIR}/0002-Fix-directory-output.patch"
             "${CMAKE_CURRENT_LIST_DIR}/0003-Fix-cmake-TIFF-detection.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/0004-Fix-libxtiff-installation.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/0005-Control-shared-library-build-with-option.patch"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
