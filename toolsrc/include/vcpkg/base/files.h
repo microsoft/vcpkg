@@ -14,6 +14,7 @@ namespace fs
 
     using stdfs::copy_options;
     using stdfs::file_status;
+    using stdfs::file_type;
     using stdfs::path;
     using stdfs::u8path;
 
