@@ -16,6 +16,7 @@ vcpkg_apply_patches(
             "${CMAKE_CURRENT_LIST_DIR}/find_flann.patch"
             "${CMAKE_CURRENT_LIST_DIR}/find_qhull.patch"
             "${CMAKE_CURRENT_LIST_DIR}/find_openni2.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/find_cuda.patch"
             "${CMAKE_CURRENT_LIST_DIR}/vs2017-15.4-workaround.patch"
 )
 
