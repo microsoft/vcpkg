@@ -454,14 +454,14 @@ namespace vcpkg::Dependencies
                             return res;
                         }
                     }
+                }
 
-                    // "core" is always an implicit default feature. In case we did not add it as
-                    // a dependency above (e.g. no default features), add it here.
-                    auto res = mark_plus("core", cluster, graph, graph_plan, prevent_default_features);
-                    if (res != MarkPlusResult::SUCCESS)
-                    {
-                        return res;
-                    }
+                // "core" is always an implicit default feature. In case we did not add it as
+                // a dependency above (e.g. no default features), add it here.
+                auto res = mark_plus("core", cluster, graph, graph_plan, prevent_default_features);
+                if (res != MarkPlusResult::SUCCESS)
+                {
+                    return res;
                 }
 
                 return MarkPlusResult::SUCCESS;
