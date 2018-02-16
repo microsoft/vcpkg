@@ -44,6 +44,7 @@ Write-Host "Mapping drive $driveLetter\ to $remoteShare ... done."
 
 $installedDirLocal = "$vcpkgRootDir\installed"
 $installedDirRemote = "$driveLetter\vcpkg-full-ci-$Triplet"
+vcpkgCreateDirectoryIfNotExists $installedDirRemote
 
 unlinkOrDeleteDirectory $installedDirLocal
 
