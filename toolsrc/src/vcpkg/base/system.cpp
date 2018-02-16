@@ -175,8 +175,8 @@ namespace vcpkg::System
             L"USERPROFILE",
             L"windir",
             // Enables proxy information to be passed to Curl, the underlying download library in cmake.exe
-            L"HTTP_PROXY",
-            L"HTTPS_PROXY",
+            L"http_proxy",
+            L"https_proxy",
             // Enables find_package(CUDA) in CMake
             L"CUDA_PATH",
             // Environmental variable generated automatically by CUDA after installation
