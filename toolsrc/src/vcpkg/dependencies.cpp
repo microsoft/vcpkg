@@ -20,6 +20,9 @@ namespace vcpkg::Dependencies
         bool plus = false;
     };
 
+    /// <summary>
+    /// Representation of a package and its features in a ClusterGraph.
+    /// </summary>
     struct Cluster : Util::MoveOnlyBase
     {
         InstalledPackageView installed_package;
@@ -64,10 +67,18 @@ namespace vcpkg::Dependencies
         Graphs::Graph<ClusterPtr> install_graph;
     };
 
+    /// <summary>
+    /// Directional graph representing a collection of packages with their features connected by their dependencies.
+    /// </summary>
     struct ClusterGraph : Util::MoveOnlyBase
     {
         explicit ClusterGraph(const PortFileProvider& provider) : m_provider(provider) {}
 
+        /// <summary>
+        ///     Find the cluster associated with spec or if not found, create it from the PortFileProvider.
+        /// </summary>
+        /// <param name="spec">Package spec to get the cluster for.</param>
+        /// <returns>The cluster found or created for spec.</returns>
         Cluster& get(const PackageSpec& spec)
         {
             auto it = m_graph.find(spec);
@@ -414,16 +425,52 @@ namespace vcpkg::Dependencies
     static MarkPlusResult mark_plus(const std::string& feature,
                                     Cluster& cluster,
                                     ClusterGraph& graph,
-                                    GraphPlan& graph_plan);
+                                    GraphPlan& graph_plan,
+                                    const std::unordered_set<std::string>& prevent_default_features = {});
 
     static void mark_minus(Cluster& cluster, ClusterGraph& graph, GraphPlan& graph_plan);
 
-    MarkPlusResult mark_plus(const std::string& feature, Cluster& cluster, ClusterGraph& graph, GraphPlan& graph_plan)
+    MarkPlusResult mark_plus(const std::string& feature,
+                             Cluster& cluster,
+                             ClusterGraph& graph,
+                             GraphPlan& graph_plan,
+                             const std::unordered_set<std::string>& prevent_default_features)
     {
         if (feature.empty())
         {
-            // Indicates that core was not specified in the reference
-            return mark_plus("core", cluster, graph, graph_plan);
+            if (prevent_default_features.find(cluster.spec.name()) == prevent_default_features.end())
+            {
+                // Indicates that core was not specified in the reference
+
+                // Add default features for this package, if this is the "core" feature and we
+                // are not supposed to prevent default features for this package
+                if (auto scf = cluster.source_control_file.value_or(nullptr))
+                {
+                    for (auto&& default_feature : scf->core_paragraph.get()->default_features)
+                    {
+                        auto res = mark_plus(default_feature, cluster, graph, graph_plan, prevent_default_features);
+                        if (res != MarkPlusResult::SUCCESS)
+                        {
+                            return res;
+                        }
+                    }
+
+                    // "core" is always an implicit default feature. In case we did not add it as
+                    // a dependency above (e.g. no default features), add it here.
+                    auto res = mark_plus("core", cluster, graph, graph_plan, prevent_default_features);
+                    if (res != MarkPlusResult::SUCCESS)
+                    {
+                        return res;
+                    }
+                }
+
+                return MarkPlusResult::SUCCESS;
+            }
+            else
+            {
+                // Skip adding the default features, as explicitly told not to.
+                return MarkPlusResult::SUCCESS;
+            }
         }
 
         auto it = cluster.edges.find(feature);
@@ -454,16 +501,21 @@ namespace vcpkg::Dependencies
         if (feature != "core")
         {
             // All features implicitly depend on core
-            auto res = mark_plus("core", cluster, graph, graph_plan);
+            auto res = mark_plus("core", cluster, graph, graph_plan, prevent_default_features);
 
             // Should be impossible for "core" to not exist
             Checks::check_exit(VCPKG_LINE_INFO, res == MarkPlusResult::SUCCESS);
+        }
+        else
+        {
+            // Add the default features of this package.
+            auto res = mark_plus("", cluster, graph, graph_plan, prevent_default_features);
         }
 
         for (auto&& depend : cluster.edges[feature].build_edges)
         {
             auto& depend_cluster = graph.get(depend.spec());
-            auto res = mark_plus(depend.feature(), depend_cluster, graph, graph_plan);
+            auto res = mark_plus(depend.feature(), depend_cluster, graph, graph_plan, prevent_default_features);
 
             Checks::check_exit(VCPKG_LINE_INFO,
                                res == MarkPlusResult::SUCCESS,
@@ -483,6 +535,18 @@ namespace vcpkg::Dependencies
         if (cluster.will_remove) return;
         cluster.will_remove = true;
 
+        std::unordered_set<std::string> prevent_default_features;
+
+        if (cluster.request_type == RequestType::USER_REQUESTED)
+        {
+            // Do not install default features for packages which the user
+            // installed explicitly. New default features for dependent
+            // clusters should still be upgraded.
+            prevent_default_features.insert(cluster.spec.name());
+
+            // For dependent packages this is handles through the recursion
+        }
+
         graph_plan.remove_graph.add_vertex({&cluster});
         for (auto&& pair : cluster.edges)
         {
@@ -498,7 +562,7 @@ namespace vcpkg::Dependencies
         cluster.transient_uninstalled = true;
         for (auto&& original_feature : cluster.original_features)
         {
-            auto res = mark_plus(original_feature, cluster, graph, graph_plan);
+            auto res = mark_plus(original_feature, cluster, graph, graph_plan, prevent_default_features);
             if (res != MarkPlusResult::SUCCESS)
             {
                 System::println(System::Color::warning,
@@ -506,19 +570,54 @@ namespace vcpkg::Dependencies
                                 FeatureSpec{cluster.spec, original_feature});
             }
         }
+
+        // Check if any default features have been added
+        if (auto scf = cluster.source_control_file.value_or(nullptr))
+        {
+            auto& previous_df = cluster.installed_package.core->package.default_features;
+            for (auto&& default_feature : scf->core_paragraph->default_features)
+            {
+                if (std::find(previous_df.begin(), previous_df.end(), default_feature) == previous_df.end())
+                {
+                    // this is a new default feature, mark it for installation
+                    auto res = mark_plus(default_feature, cluster, graph, graph_plan);
+                    if (res != MarkPlusResult::SUCCESS)
+                    {
+                        System::println(System::Color::warning,
+                                        "Warning: could not install new default feature %s",
+                                        FeatureSpec{cluster.spec, default_feature});
+                    }
+                }
+            }
+        }
     }
 
+    /// <summary>Figure out which actions are required to install features specifications in `specs`.</summary>
+    /// <param name="provider">Contains the ports of the current environment.</param>
+    /// <param name="specs">Feature specifications to resolve dependencies for.</param>
+    /// <param name="status_db">Status of installed packages in the current environment.</param>
     std::vector<AnyAction> create_feature_install_plan(const PortFileProvider& provider,
                                                        const std::vector<FeatureSpec>& specs,
                                                        const StatusParagraphs& status_db)
     {
+        std::unordered_set<std::string> prevent_default_features;
+        for (auto&& spec : specs)
+        {
+            // When "core" is explicitly listed, default features should not be installed.
+            if (spec.feature() == "core") prevent_default_features.insert(spec.name());
+        }
+
         PackageGraph pgraph(provider, status_db);
         for (auto&& spec : specs)
-            pgraph.install(spec);
+            pgraph.install(spec, prevent_default_features);
 
         return pgraph.serialize();
     }
 
+    /// <summary>Figure out which actions are required to install features specifications in `specs`.</summary>
+    /// <param name="map">Map of all source files in the current environment.</param>
+    /// <param name="specs">Feature specifications to resolve dependencies for.</param>
+    /// <param name="status_db">Status of installed packages in the current environment.</param>
     std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<std::string, SourceControlFile>& map,
                                                        const std::vector<FeatureSpec>& specs,
                                                        const StatusParagraphs& status_db)
@@ -527,7 +626,12 @@ namespace vcpkg::Dependencies
         return create_feature_install_plan(provider, specs, status_db);
     }
 
-    void PackageGraph::install(const FeatureSpec& spec) const
+    /// <param name="prevent_default_features">
+    /// List of package names for which default features should not be installed instead of the core package (e.g. if
+    /// the user is currently installing specific features of that package).
+    /// </param>
+    void PackageGraph::install(const FeatureSpec& spec,
+                               const std::unordered_set<std::string>& prevent_default_features) const
     {
         Cluster& spec_cluster = m_graph->get(spec.spec());
         spec_cluster.request_type = RequestType::USER_REQUESTED;
@@ -537,13 +641,14 @@ namespace vcpkg::Dependencies
             {
                 for (auto&& feature : p_scf->feature_paragraphs)
                 {
-                    auto res = mark_plus(feature->name, spec_cluster, *m_graph, *m_graph_plan);
+                    auto res =
+                        mark_plus(feature->name, spec_cluster, *m_graph, *m_graph_plan, prevent_default_features);
 
                     Checks::check_exit(
                         VCPKG_LINE_INFO, res == MarkPlusResult::SUCCESS, "Error: Unable to locate feature %s", spec);
                 }
 
-                auto res = mark_plus("core", spec_cluster, *m_graph, *m_graph_plan);
+                auto res = mark_plus("core", spec_cluster, *m_graph, *m_graph_plan, prevent_default_features);
 
                 Checks::check_exit(
                     VCPKG_LINE_INFO, res == MarkPlusResult::SUCCESS, "Error: Unable to locate feature %s", spec);
@@ -556,7 +661,7 @@ namespace vcpkg::Dependencies
         }
         else
         {
-            auto res = mark_plus(spec.feature(), spec_cluster, *m_graph, *m_graph_plan);
+            auto res = mark_plus(spec.feature(), spec_cluster, *m_graph, *m_graph_plan, prevent_default_features);
 
             Checks::check_exit(
                 VCPKG_LINE_INFO, res == MarkPlusResult::SUCCESS, "Error: Unable to locate feature %s", spec);

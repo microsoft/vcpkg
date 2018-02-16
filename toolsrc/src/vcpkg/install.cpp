@@ -513,6 +513,11 @@ namespace vcpkg::Install
         }
     }
 
+    ///
+    /// <summary>
+    /// Run "install" command.
+    /// </summary>
+    ///
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
         // input sanitization

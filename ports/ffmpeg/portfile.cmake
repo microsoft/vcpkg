@@ -1,8 +1,3 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message(STATUS "Building as static libraries not currently supported. Building as DLLs instead.")
-    set(VCPKG_LIBRARY_LINKAGE "dynamic")
-endif()
-
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ffmpeg-3.3.3)
 vcpkg_download_distfile(ARCHIVE
@@ -13,7 +8,9 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/detect-openssl.patch
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/create-lib-libraries.patch
+        ${CMAKE_CURRENT_LIST_DIR}/detect-openssl.patch
 )
 
 vcpkg_find_acquire_program(YASM)
