@@ -13,8 +13,10 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-directory-output.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/fix-cmake-tiff-detection.patch")
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-Updates-to-CMake-configuration-to-align-with-other-C.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/0002-Fix-directory-output.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/0003-Fix-cmake-TIFF-detection.patch"
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
   set(BUILD_SHARED_LIBS ON)
