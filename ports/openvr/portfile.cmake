@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ValveSoftware/openvr
-    REF v1.0.12
-    SHA512 42e6ac8635417fbb2c95a4b290f917d057c0d66ac1e07b4a0d16c4f8197b06c8ebf553299060a7996b5a9b5420f299f2bda257b8133dc99f9441c67331293ad1
+    REF v1.0.13
+    SHA512 3ec901f9363f9517fd3246cf58c0792c2446c39d61997a46375756b0965e6fad6902a5d1b87eb65c579e1b615cbb6e6688e7dc8ced957e5dc50b4c4dcbbb36b9
     HEAD_REF master
 )
 
