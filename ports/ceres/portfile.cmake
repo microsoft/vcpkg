@@ -35,8 +35,13 @@ if("lapack" IN_LIST FEATURES)
 endif()
 
 set(EIGENSPARSE OFF)
-if("eigen" IN_LIST FEATURES)
+if("eigensparse" IN_LIST FEATURES)
     set(EIGENSPARSE ON)
+endif()
+
+set(GFLAGS OFF)
+if("tools" IN_LIST FEATURES)
+    set(GFLAGS ON)
 endif()
 
 vcpkg_configure_cmake(
@@ -45,6 +50,7 @@ vcpkg_configure_cmake(
         -DEXPORT_BUILD_DIR=ON
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
+        -DGFLAGS=${GFLAGS}
         -DCXSPARSE=${CXSPARSE}
         -DEIGENSPARSE=${EIGENSPARSE}
         -DLAPACK=${LAPACK}

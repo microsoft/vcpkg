@@ -1,6 +1,7 @@
 Source: ceres
-Version: 1.13.0-3
-Build-Depends: gflags, glog
+Version: 1.13.0-4
+# eigen is always required by CMake, even if it isn't used.
+Build-Depends: glog, eigen3
 Description: non-linear optimization package
 
 Feature: lapack
@@ -15,6 +16,9 @@ Feature: cxsparse
 Build-Depends: suitesparse[core]
 Description: CXSparse support for Ceres
 
-Feature: eigen
-Build-Depends: eigen3
+Feature: eigensparse
 Description: Use of Eigen as a sparse linear algebra library in Ceres
+
+Feature: tools
+Build-Depends: gflags
+Description: Ceres tools
