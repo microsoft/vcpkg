@@ -1,6 +1,8 @@
 [CmdletBinding()]
 param(
-    [string]$tfsBranch,
+    [Parameter(Mandatory=$true)][ValidateSet('tfs','msvc')][string]$repo,
+    [Parameter(Mandatory=$true)][string]$branch,
+    [Parameter(Mandatory=$true)][ValidateSet('ret','chk')][string]$retOrChk,
     [Parameter(ParameterSetName='SetLatest')]
     [switch]$latest,
     [Parameter(ParameterSetName='SetBuildNumber')]
@@ -11,13 +13,15 @@ $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 . "$scriptsDir\VcpkgPowershellUtils.ps1"
 . "$scriptsDir\VcpkgPowershellUtils-Private.ps1"
 
+$prefix = "$repo-$branch-$retOrChk"
+
 $buildArchiveFolderRoot = "\\vcpkg-000\General\CustomBuilds"
 if ($latest)
 {
-    $branchBuildArchives = Get-ChildItem $buildArchiveFolderRoot | Where-Object {$_.Name -match "^$tfsBranch.+\.7z"}
+    $branchBuildArchives = Get-ChildItem $buildArchiveFolderRoot | Where-object -Property name -match "^$prefix.+\.7z$"
     if ($branchBuildArchives.count -eq 0)
     {
-        Write-Error "Count not find build archives for branch $tfsBranch in: $buildArchiveFolderRoot"
+        Write-Error "Count not find build archives for branch $prefix in: $buildArchiveFolderRoot"
         throw;
     }
 
@@ -25,7 +29,7 @@ if ($latest)
 }
 else
 {
-    $buildArchive = "$buildArchiveFolderRoot\$tfsBranch-$buildNumber.7z"
+    $buildArchive = "$buildArchiveFolderRoot\$prefix-$buildNumber.7z"
 }
 
 if (!(Test-Path $buildArchive))

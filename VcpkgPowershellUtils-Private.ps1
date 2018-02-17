@@ -72,6 +72,20 @@ function vcpkgGetProcessByNameRegex
     return Get-Process -Name "$regex" -ErrorAction SilentlyContinue
 }
 
+function KeepMostRecentFiles
+{
+    param(
+        [Parameter(Mandatory=$true)]$absoluteFilePaths,
+        [Parameter(Mandatory=$true)][int]$keepCount
+    )
+
+    $sorted = $absoluteFilePaths | Sort-object LastWriteTime -Descending
+    for ($i = $keepCount; $i -lt $sorted.Count; $i++)
+    {
+        vcpkgRemoveItem $sorted[$i]
+    }
+}
+
 function findProcessesLockingFile
 {
 Param(
@@ -90,7 +104,6 @@ Param(
 
     return $locks
 }
-
 
 function DownloadAndUpdateVSInstaller
 {
