@@ -6,7 +6,7 @@ param(
     [Parameter(Mandatory=$true)][bool]$incremental
 )
 
-$vsTag = $vsTag.ToLower()
+$vsInstallNickname = $vsInstallNickname.ToLower()
 $tfsBranch = $tfsBranch.ToLower()
 $triplet = $triplet.ToLower()
 
