@@ -16,7 +16,7 @@ Finally, if the server's name for the archive is not very descriptive (such as d
 All this information can then be passed into the `create` command, which will download the sources and bootstrap the packaging process inside `ports\<packagename>`.
 
 ```no-highlight
-PS D:\src\vcpkg> .\vcpkg create zlib2 http://zlib.net/zlib128.zip zlib128.zip
+PS D:\src\vcpkg> .\vcpkg create zlib2 http://zlib.net/zlib-1.2.11.tar.gz zlib-1.2.11.zip
 -- Generated portfile: D:/src/vcpkg/ports/zlib2/portfile.cmake
 ```
 
@@ -39,29 +39,28 @@ PS D:\src\vcpkg> .\vcpkg build zlib2
 -- DOWNLOADS=D:/src/vcpkg/downloads
 -- CURRENT_PACKAGES_DIR=D:/src/vcpkg/packages/zlib2_x86-windows
 -- CURRENT_BUILDTREES_DIR=D:/src/vcpkg/buildtrees/zlib2
--- CURRENT_PORT_DIR=D:/src/vcpkg/ports/zlib2
--- Using cached D:/src/vcpkg/downloads/zlib128.zip
--- Extracting source D:/src/vcpkg/downloads/zlib128.zip
+-- CURRENT_PORT_DIR=D:/src/vcpkg/ports/zlib2/.
+-- Using cached D:/src/vcpkg/downloads/zlib-1.2.11.tar.gz
+-- Testing integrity of cached file...
+-- Testing integrity of cached file... OK
+-- Extracting source D:/src/vcpkg/downloads/zlib-1.2.11.tar.gz
 -- Extracting done
 -- Configuring x86-windows-rel
-CMake Error at scripts/cmake/vcpkg_execute_required_process.cmake:13 (message):
-  Command failed: C:/Program Files
-  (x86)/CMake/bin/cmake.exe;D:/src/vcpkg/buildtrees/zlib2/src/zlib128;-G;Ninja;-DCMAKE_VERBOSE_MAKEFILE=ON;-DCMAKE_BUILD_TYPE=Release;-DCMAKE_TOOLCHAIN_FILE=D:/src/vcpkg/triplets/x86-windows.cmake;-DCMAKE_PREFIX_PATH=D:/src/vcpkg/installed/x86-windows;-
-DCMAKE_INSTALL_PREFIX=D:/src/vcpkg/packages/zlib2_x86-windows
-
-
-  Working Directory: D:/src/vcpkg/buildtrees/zlib2/x86-windows-rel
-
-  See logs for more information:
-
-      D:/src/vcpkg/buildtrees/zlib2/config-x86-windows-rel-out.log
-      D:/src/vcpkg/buildtrees/zlib2/config-x86-windows-rel-err.log
-
-Call Stack (most recent call first):
-  scripts/cmake/vcpkg_configure_cmake.cmake:15 (vcpkg_execute_required_process)
-  ports/zlib2/portfile.cmake:8 (vcpkg_configure_cmake)
-  scripts/ports.cmake:105 (include)
-  scripts/ports.cmake:184 (build)
+-- Configuring x86-windows-rel done
+-- Configuring x86-windows-dbg
+-- Configuring x86-windows-dbg done
+-- Build x86-windows-rel
+-- Build x86-windows-rel done
+-- Build x86-windows-dbg
+-- Build x86-windows-dbg done
+-- Performing post-build validation
+Include files should not be duplicated into the /debug/include directory. If this cannot be disabled in the project cmake, use
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+/debug/share should not exist. Please reorganize any important files, then use
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+The software license must be available at ${CURRENT_PACKAGES_DIR}/share/zlib2/copyright
+Found 3 error(s). Please correct the portfile:
+    D:\src\vcpkg\ports\zlib2\portfile.cmake
 ```
 
 At this point, it is a matter of reading the error messages and log files while steadily improving the quality of the portfile. Zlib required providing a discrete copy of the LICENSE to copy into the package, suppressing the build and installation of executables and headers, and removing the static libraries after they were installed.
@@ -73,8 +72,8 @@ In the `ports\` directory are many libraries that can be used as examples, inclu
     - rapidjson
     - range-v3
 - MSBuild-based
+    - cppunit
     - mpg123
-    - glew
 - Non-CMake, custom buildsystem
     - openssl
-    - boost
+    - ffmpeg

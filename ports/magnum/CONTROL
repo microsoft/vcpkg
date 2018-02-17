@@ -1,4 +1,95 @@
 Source: magnum
-Version: jun2017-6
-Build-Depends: corrade, sdl2, openal-soft
-Description: C++11/C++14 and OpenGL graphics engine http://mosra.cz/blog/magnum.php
+Version: 2018.02-1
+Build-Depends: corrade[pluginmanager], corrade[utility]
+Description: C++11/C++14 graphics middleware for games and data visualization http://magnum.graphics/
+Default-Features: debugtools, meshtools, primitives, scenegraph, shaders, shapes, text, texturetools, sdl2application, windowlesswglapplication
+
+Feature: sdl2application
+Description: Sdl2Application library
+Build-Depends: sdl2
+
+Feature: glfwapplication
+Description: GlfwApplication library
+Build-Depends: glfw3
+
+Feature: glutapplication
+Description: GlutApplication library
+Build-Depends: freeglut
+
+Feature: audio
+Description: Audio library
+Build-Depends: openal-soft
+
+Feature: magnuminfo
+Description: magnum-info utility
+
+Feature: fontconverter
+Description: magnum-fontconverter utility
+Build-Depends: magnum[text]
+
+Feature: distancefieldconverter
+Description: magnum-distancefieldconverter utility
+Build-Depends: magnum[texturetools]
+
+Feature: imageconverter
+Description: magnum-imageconverter utility
+
+Feature: wavaudioimporter
+Description: WavAudioImporter plugin
+Build-Depends: magnum[audio]
+
+Feature: magnumfont
+Description: MagnumFont plugin
+Build-Depends: magnum[text]
+
+Feature: magnumfontconverter
+Description: MagnumFontConverter plugin
+Build-Depends: magnum[text], magnum[tgaimageconverter]
+
+Feature: objimporter
+Description: ObjImporter plugin
+
+Feature: tgaimageconverter
+Description: TgaImageConverter plugin
+
+Feature: tgaimporter
+Description: TgaImporter plugin
+
+Feature: debugtools
+Description: DebugTools library
+
+Feature: meshtools
+Description: MeshTools library
+
+Feature: primitives
+Description: Primitives library
+
+Feature: shapes
+Description: Shapes library
+
+Feature: scenegraph
+Description: SceneGraph library
+
+Feature: shaders
+Description: Shaders library
+
+Feature: text
+Description: Text library
+Build-Depends: magnum[texturetools]
+
+Feature: texturetools
+Description: TextureTools library
+
+Feature: al-info
+Description: magnum-al-info utility
+Build-Depends: magnum[audio]
+
+Feature: windowlesswglapplication
+Description: WindowlessWglApplication library
+
+Feature: wglcontext
+Description: WglContext library
+
+Feature: opengltester
+Description: OpenGLTester library
+Build-Depends: corrade[testsuite]

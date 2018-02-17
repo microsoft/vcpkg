@@ -17,7 +17,7 @@ namespace vcpkg::Remove
     void perform_remove_plan_action(const VcpkgPaths& paths,
                                     const Dependencies::RemovePlanAction& action,
                                     const Purge purge,
-                                    StatusParagraphs& status_db);
+                                    StatusParagraphs* status_db);
 
     extern const CommandStructure COMMAND_STRUCTURE;
 

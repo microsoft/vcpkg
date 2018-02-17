@@ -16,6 +16,7 @@ namespace vcpkg::Commands
             {"install", &Install::perform_and_exit},
             {"ci", &CI::perform_and_exit},
             {"remove", &Remove::perform_and_exit},
+            {"upgrade", &Upgrade::perform_and_exit},
             {"build", &Build::Command::perform_and_exit},
             {"env", &Env::perform_and_exit},
             {"build-external", &BuildExternal::perform_and_exit},
@@ -40,7 +41,9 @@ namespace vcpkg::Commands
             {"import", &Import::perform_and_exit},
             {"cache", &Cache::perform_and_exit},
             {"portsdiff", &PortsDiff::perform_and_exit},
-            {"autocomplete", &Autocomplete::perform_and_exit}};
+            {"autocomplete", &Autocomplete::perform_and_exit},
+            {"hash", &Hash::perform_and_exit},
+            };
         return t;
     }
 
@@ -48,8 +51,7 @@ namespace vcpkg::Commands
     {
         static std::vector<PackageNameAndFunction<CommandTypeC>> t = {
             {"version", &Version::perform_and_exit},
-            {"contact", &Contact::perform_and_exit},
-            {"hash", &Hash::perform_and_exit},
+            {"contact", &Contact::perform_and_exit}
         };
         return t;
     }

@@ -3,8 +3,8 @@ param(
 
 )
 
-$scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
-$vswhereExe = & $scriptsDir\fetchDependency.ps1 "vswhere"
+$scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
+$vswhereExe = (& $scriptsDir\fetchDependency.ps1 "vswhere") -replace "<sol>::" -replace "::<eol>"
 
 $output = & $vswhereExe -prerelease -legacy -products * -format xml
 [xml]$asXml = $output
@@ -29,7 +29,7 @@ foreach ($instance in $asXml.instances.instance)
     }
 
     # Placed like that for easy sorting according to preference
-    $results.Add("${releaseType}::${installationVersion}::${installationPath}::<eol>") > $null
+    $results.Add("<sol>::${releaseType}::${installationVersion}::${installationPath}::<eol>") > $null
 }
 
 # If nothing is found, attempt to find VS2015 Build Tools (not detected by vswhere.exe)
@@ -42,7 +42,7 @@ if ($results.Count -eq 0)
 
     if ((Test-Path $clExe) -And (Test-Path $vcvarsallbat))
     {
-        return "PreferenceWeight1::Legacy::14.0::$installationPath::<eol>"
+        return "<sol>::PreferenceWeight1::Legacy::14.0::$installationPath::<eol>"
     }
 }
 

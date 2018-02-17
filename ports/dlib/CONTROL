@@ -1,4 +1,8 @@
 Source: dlib
-Version: 19.4-5
-Build-Depends: libjpeg-turbo, libpng, sqlite3, fftw3
+Version: 19.9-1
+Build-Depends: libjpeg-turbo, libpng, sqlite3, fftw3, openblas, clapack
 Description: Modern C++ toolkit containing machine learning algorithms and tools for creating complex software in C++
+
+Feature: cuda
+Build-Depends: cuda
+Description: CUDA support for dlib

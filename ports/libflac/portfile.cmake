@@ -1,8 +1,3 @@
- # libFLAC uses winapi functions not available in WindowsStore
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "Error: UWP builds are currently not supported.")
-endif()
-
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/flac-1.3.2)
 vcpkg_download_distfile(ARCHIVE
@@ -11,6 +6,13 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 63910e8ebbe508316d446ffc9eb6d02efbd5f47d29d2ea7864da9371843c8e671854db6e89ba043fe08aef1845b8ece70db80f1cce853f591ca30d56ef7c3a15)
 
 vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/flac-1.3.2
+    PATCHES
+    "${CMAKE_CURRENT_LIST_DIR}/uwp-library-console.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/uwp-createfile2.patch"
+)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
     vcpkg_find_acquire_program(NASM)

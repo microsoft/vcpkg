@@ -1,23 +1,12 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
+set(MSVC_USE_STATIC_CRT_VALUE OFF)
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "Ceres does not currently support static CRT linkage")
+	if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+	    message(FATAL_ERROR "Ceres does not currently support mixing static CRT and dynamic library linkage")
+	endif()
+	set(MSVC_USE_STATIC_CRT_VALUE ON)
 endif()
 
 include(vcpkg_common_functions)
-
-set(VCPKG_PLATFORM_TOOLSET "v140") # Force VS2015 because VS2017 compiler return internal error
-# eigen3\eigen\src\core\redux.h(237): fatal error C1001: An internal error has occurred in the compiler. [internal\ceres\ceres.vcxproj]
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -27,14 +16,33 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/fix-find-packages.patch
-)
-
 # Ninja crash compiler with error:
 # "fatal error C1001: An internal error has occurred in the compiler. (compiler file 'f:\dd\vctools\compiler\utc\src\p2\main.c', line 255)"
+
+set(SUITESPARSE OFF)
+if("suitesparse" IN_LIST FEATURES)
+    set(SUITESPARSE ON)
+endif()
+
+set(CXSPARSE OFF)
+if("cxsparse" IN_LIST FEATURES)
+    set(CXSPARSE ON)
+endif()
+
+set(LAPACK OFF)
+if("lapack" IN_LIST FEATURES)
+    set(LAPACK ON)
+endif()
+
+set(EIGENSPARSE OFF)
+if("eigensparse" IN_LIST FEATURES)
+    set(EIGENSPARSE ON)
+endif()
+
+set(GFLAGS OFF)
+if("tools" IN_LIST FEATURES)
+    set(GFLAGS ON)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -42,16 +50,18 @@ vcpkg_configure_cmake(
         -DEXPORT_BUILD_DIR=ON
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
-        -DCXSPARSE=ON
-        -DEIGENSPARSE=ON
-        -DSUITESPARSE=ON
+        -DGFLAGS=${GFLAGS}
+        -DCXSPARSE=${CXSPARSE}
+        -DEIGENSPARSE=${EIGENSPARSE}
+        -DLAPACK=${LAPACK}
+        -DSUITESPARSE=${SUITESPARSE}
         -DGFLAGS_PREFER_EXPORTED_GFLAGS_CMAKE_CONFIGURATION=OFF # TheiaSfm doesn't work well with this
         -DGLOG_PREFER_EXPORTED_GLOG_CMAKE_CONFIGURATION=OFF # TheiaSfm doesn't work well with this
+        -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT_VALUE}
 )
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
-
 vcpkg_copy_pdbs()
 
 # Changes target search path

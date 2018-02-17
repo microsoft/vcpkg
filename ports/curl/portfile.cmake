@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_55_1
-    SHA512 b5c6dd6cca8d07c08d1760feff9822f1264359adde068afd1584fc3fdcfa50c68e0e1b5ecaa277298ad0923b61019943c181ee1f0870c312399038c4c4e0e327
+    REF curl-7_58_0
+    SHA512 148c25152732dd5ad2626bc70c7725577e25033a73eecefa4dd820927ec552f9c2d0235cc3f597404d3893eced7d5d2bd9522f6302b7f930e9f65912ac2c91f6
     HEAD_REF master
 )
 
@@ -14,10 +14,22 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/0002_fix_uwp.patch
 )
 
+# Support HTTP2 TSL Download https://curl.haxx.se/ca/cacert.pem rename to curl-ca-bundle.crt, copy it to libcurl.dll location.
+SET(HTTP2_OPTIONS)
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     SET(CURL_STATICLIB OFF)
+    SET(HTTP2_OPTIONS
+        -DUSE_NGHTTP2=ON
+    )
 else()
     SET(CURL_STATICLIB ON)
+endif()
+
+set(USE_OPENSSL ON)
+if(CURL_USE_WINSSL)
+    set(USE_OPENSSL OFF)
+    set(USE_WINSSL ON)
+    set(HTTP2_OPTIONS) ## disable HTTP2 when CURL_USE_WINSSL
 endif()
 
 set(UWP_OPTIONS)
@@ -28,6 +40,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         -DENABLE_IPV6=OFF
         -DENABLE_UNIX_SOCKETS=OFF
     )
+    set(HTTP2_OPTIONS) ## disable curl HTTP2 support
 endif()
 
 vcpkg_find_acquire_program(PERL)
@@ -39,11 +52,13 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         ${UWP_OPTIONS}
+        ${HTTP2_OPTIONS}
         -DBUILD_TESTING=OFF
         -DBUILD_CURL_EXE=OFF
         -DENABLE_MANUAL=OFF
         -DCURL_STATICLIB=${CURL_STATICLIB}
-        -DCMAKE_USE_OPENSSL=ON
+        -DCMAKE_USE_OPENSSL=${USE_OPENSSL}
+        -DCMAKE_USE_WINSSL=${USE_WINSSL}
     OPTIONS_DEBUG
         -DENABLE_DEBUG=ON
 )
@@ -64,6 +79,8 @@ else()
 endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
 file(READ ${CURRENT_PACKAGES_DIR}/include/curl/curl.h CURL_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     string(REPLACE "#ifdef CURL_STATICLIB" "#if 1" CURL_H "${CURL_H}")
@@ -73,3 +90,5 @@ endif()
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/curl/curl.h "${CURL_H}")
 
 vcpkg_copy_pdbs()
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

@@ -12,16 +12,9 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF v1.6.0
-    SHA512 70a68fecca43cfe8c94206fd39ad8f86e055eb2185ae8c90040cc35928f1102016775c66e83c3cc76690e44598764b215d884a206f8466d45b00e2c54593e682
+    REF v1.8.3
+    SHA512 9bf308252221488840fad7669b8f10143c6e2130585b350b31b8d9f362f55cb1d16e5ee79d9d02ce13521e9471a8d55e8fd6c1ae0b710e22e3f918fb9fdc4d40
     HEAD_REF master
-)
-
-# fix from PR https://github.com/grpc/grpc/pull/12411
-vcpkg_download_distfile(CMAKE_ERROR_FIX_DIFF
-    URLS "https://github.com/grpc/grpc/commit/74c139a83987087f9e2d2e6b5d44c240d719061d.diff"
-    FILENAME "grpc-cmake-error-fix.diff"
-    SHA512 38cdff0e6db12276400cf4eec66aafdbfe34912a78a0604ced3b216d3a60e5b87464f9083fa5e5dfb4df1490ef10565cbe04d3f750f59c7e7e1a05334c0b528e
 )
 
 # Issue: https://github.com/grpc/grpc/issues/10759
@@ -29,7 +22,6 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/disable-csharp-ext.patch
-        ${CMAKE_ERROR_FIX_DIFF}
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)

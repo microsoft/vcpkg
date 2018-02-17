@@ -150,6 +150,12 @@ file(
 file(
     INSTALL
         "${SOURCE_CONFIG_PATH}/OpenNI.ini"
+    DESTINATION
+        ${CURRENT_PACKAGES_DIR}/bin/OpenNI2
+)
+
+file(
+    INSTALL
         "${SOURCE_BIN_PATH_RELEASE}/OpenNI2.dll"
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/bin
@@ -170,6 +176,12 @@ file(
 file(
     INSTALL
         "${SOURCE_CONFIG_PATH}/OpenNI.ini"
+    DESTINATION
+        ${CURRENT_PACKAGES_DIR}/debug/bin/OpenNI2
+)
+
+file(
+    INSTALL
         "${SOURCE_BIN_PATH_DEBUG}/OpenNI2.dll"
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/debug/bin
@@ -204,6 +216,10 @@ file(
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/tools/openni2
 )
+
+# Deploy Script
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/openni2deploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/bin/OpenNI2)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/openni2deploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/OpenNI2)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openni2)

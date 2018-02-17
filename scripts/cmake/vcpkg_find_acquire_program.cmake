@@ -55,7 +55,10 @@ function(vcpkg_find_acquire_program VAR)
   elseif(VAR MATCHES "NASM")
     set(PROGNAME nasm)
     set(PATHS ${DOWNLOADS}/tools/nasm/nasm-2.12.02)
-    set(URL "http://www.nasm.us/pub/nasm/releasebuilds/2.12.02/win32/nasm-2.12.02-win32.zip")
+    set(URL
+      "http://www.nasm.us/pub/nasm/releasebuilds/2.12.02/win32/nasm-2.12.02-win32.zip"
+      "http://mirrors.kodi.tv/build-deps/win32/nasm-2.12.02-win32.zip"
+    )
     set(ARCHIVE "nasm-2.12.02-win32.zip")
     set(HASH df7aaba094e17832688c88993997612a2e2c96cc3dc14ca3e8347b44c7762115f5a7fc6d7f20be402553aaa4c9e43ddfcf6228f581cfe89289bae550de151b36)
   elseif(VAR MATCHES "YASM")
@@ -148,6 +151,14 @@ function(vcpkg_find_acquire_program VAR)
     set(URL "https://github.com/wixtoolset/wix3/releases/download/wix311rtm/wix311-binaries.zip")
     set(ARCHIVE "wix311-binaries.zip")
     set(HASH 74f0fa29b5991ca655e34a9d1000d47d4272e071113fada86727ee943d913177ae96dc3d435eaf494d2158f37560cd4c2c5274176946ebdb17bf2354ced1c516)
+  elseif(VAR MATCHES "SCONS")
+    set(PROGNAME scons)
+    set(REQUIRED_INTERPRETER PYTHON2)
+    set(SCRIPTNAME "scons.py")
+    set(PATHS ${DOWNLOADS}/tools/scons)
+    set(URL "https://sourceforge.net/projects/scons/files/scons-local-3.0.1.zip/download")
+    set(ARCHIVE "scons-local-3.0.1.zip")
+    set(HASH fe121b67b979a4e9580c7f62cfdbe0c243eba62a05b560d6d513ac7f35816d439b26d92fc2d7b7d7241c9ce2a49ea7949455a17587ef53c04a5f5125ac635727)
   else()
     message(FATAL "unknown tool ${VAR} -- unable to acquire.")
   endif()
@@ -164,18 +175,20 @@ function(vcpkg_find_acquire_program VAR)
 
   do_find()
   if("${${VAR}}" MATCHES "-NOTFOUND")
-    file(DOWNLOAD ${URL} ${DOWNLOADS}/${ARCHIVE}
-      EXPECTED_HASH SHA512=${HASH}
-      SHOW_PROGRESS
+    vcpkg_download_distfile(ARCHIVE_PATH
+        URLS ${URL}
+        SHA512 ${HASH}
+        FILENAME ${ARCHIVE}
     )
+
     file(MAKE_DIRECTORY ${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR})
     if(DEFINED NOEXTRACT)
-      file(COPY ${DOWNLOADS}/${ARCHIVE} DESTINATION ${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR})
+      file(COPY ${ARCHIVE_PATH} DESTINATION ${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR})
     else()
       get_filename_component(ARCHIVE_EXTENSION ${ARCHIVE} EXT)
       string(TOLOWER "${ARCHIVE_EXTENSION}" ARCHIVE_EXTENSION)
       if(ARCHIVE_EXTENSION STREQUAL ".msi")
-        file(TO_NATIVE_PATH "${DOWNLOADS}/${ARCHIVE}" ARCHIVE_NATIVE_PATH)
+        file(TO_NATIVE_PATH "${ARCHIVE_PATH}" ARCHIVE_NATIVE_PATH)
         file(TO_NATIVE_PATH "${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR}" DESTINATION_NATIVE_PATH)
         execute_process(
           COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
@@ -183,7 +196,7 @@ function(vcpkg_find_acquire_program VAR)
         )
       else()
         execute_process(
-          COMMAND ${CMAKE_COMMAND} -E tar xzf ${DOWNLOADS}/${ARCHIVE}
+          COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
           WORKING_DIRECTORY ${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR}
         )
       endif()

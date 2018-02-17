@@ -98,8 +98,11 @@ namespace vcpkg::Commands::PortsDiff
                             ".vcpkg-root",
                             git_exe.u8string());
         System::cmd_execute_clean(cmd);
-        const std::map<std::string, VersionT> names_and_versions = Paragraphs::load_all_port_names_and_versions(
-            paths.get_filesystem(), temp_checkout_path / ports_dir_name_as_string);
+        const auto all_ports =
+            Paragraphs::load_all_ports(paths.get_filesystem(), temp_checkout_path / ports_dir_name_as_string);
+        std::map<std::string, VersionT> names_and_versions;
+        for (auto&& port : all_ports)
+            names_and_versions.emplace(port->core_paragraph->name, port->core_paragraph->version);
         fs.remove_all(temp_checkout_path, ec);
         return names_and_versions;
     }
@@ -114,13 +117,18 @@ namespace vcpkg::Commands::PortsDiff
             VCPKG_LINE_INFO, output.output == VALID_COMMIT_OUTPUT, "Invalid commit id %s", git_commit_id);
     }
 
+    const CommandStructure COMMAND_STRUCTURE = {
+        Strings::format("The argument should be a branch/tag/hash to checkout.\n%s",
+                        Help::create_example_string("portsdiff mybranchname")),
+        1,
+        2,
+        {},
+        nullptr,
+    };
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const std::string EXAMPLE = Strings::format("The argument should be a branch/tag/hash to checkout.\n%s",
-                                                           Help::create_example_string("portsdiff mybranchname"));
-        args.check_min_arg_count(1, EXAMPLE);
-        args.check_max_arg_count(2, EXAMPLE);
-        args.check_and_get_optional_command_arguments({});
+        args.parse_arguments(COMMAND_STRUCTURE);
 
         const fs::path& git_exe = paths.get_git_exe();
 
@@ -146,14 +154,14 @@ namespace vcpkg::Commands::PortsDiff
         const std::vector<std::string>& added_ports = setp.only_left;
         if (!added_ports.empty())
         {
-            System::println("\nThe following %d ports were added:", added_ports.size());
+            System::println("\nThe following %zd ports were added:", added_ports.size());
             do_print_name_and_version(added_ports, current_names_and_versions);
         }
 
         const std::vector<std::string>& removed_ports = setp.only_right;
         if (!removed_ports.empty())
         {
-            System::println("\nThe following %d ports were removed:", removed_ports.size());
+            System::println("\nThe following %zd ports were removed:", removed_ports.size());
             do_print_name_and_version(removed_ports, previous_names_and_versions);
         }
 
@@ -163,7 +171,7 @@ namespace vcpkg::Commands::PortsDiff
 
         if (!updated_ports.empty())
         {
-            System::println("\nThe following %d ports were updated:", updated_ports.size());
+            System::println("\nThe following %zd ports were updated:", updated_ports.size());
             for (const UpdatedPort& p : updated_ports)
             {
                 System::println("    - %-14s %-16s", p.port, p.version_diff.to_string());

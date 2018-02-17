@@ -1,18 +1,30 @@
-#header-only library
 include(vcpkg_common_functions)
 
 vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO blaze-lib/blaze
-    REF v3.2
-    SHA512 f9a50c454125fe194f0d1fb259c5440c82068d41880a228fbd15fe383b6ef4198557daa406a08809065eedf223fc0c55d2309cc00ef549a3fc1a2a89e6d4b445
+    REF v3.3
+    SHA512 391be695114759c9eef56dbb20d039a20f88bc9b852285e950788ce5118dcf69f29c5497b62f5b18b6f777760b0bc17534d71eda40628046acfc861c7f7c2356
     HEAD_REF master
 )
 
-# Copy the blaze header files
-file(COPY "${SOURCE_PATH}/blaze"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/include"
-     FILES_MATCHING PATTERN "*.h")
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/no-absolute-paths-in-install.patch"
+)
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DBLAZE_SMP_THREADS=C++11
+)
+
+vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/blaze/cmake)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/blaze)

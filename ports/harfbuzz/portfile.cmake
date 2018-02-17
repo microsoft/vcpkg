@@ -1,15 +1,18 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/harfbuzz-1.4.6)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/behdad/harfbuzz/releases/download/1.4.6/harfbuzz-1.4.6.tar.bz2"
-    FILENAME "harfbuzz-1.4.6.tar.bz2"
-    SHA512 aade3902adadf3a8339ba1d05279e639da7cb53981adc64e2a2d32a5d49335a6a9782a62cdf80beca569ec8a639792bf0368c0b6ecad08f35bc85878678aa096
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO behdad/harfbuzz
+    REF 1.7.4
+    SHA512 9d96017ba980280fa2e741dc2c7197e1f4b62b1bbb1e17b57806dc594ed905f52f08136830aafc995420eb709e3c927b2a6ea396fecb3b4a33473c0e0f345dee
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-fix-uwp-build.patch"
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/0001-fix-uwp-build.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/find-package-freetype.patch"
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")

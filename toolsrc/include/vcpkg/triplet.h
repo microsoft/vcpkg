@@ -18,12 +18,16 @@ namespace vcpkg
         static const Triplet X86_UWP;
         static const Triplet X64_UWP;
         static const Triplet ARM_UWP;
+        static const Triplet ARM64_UWP;
+        static const Triplet ARM_WINDOWS;
+        static const Triplet ARM64_WINDOWS;
 
         const std::string& canonical_name() const;
         const std::string& to_string() const;
         size_t hash_code() const;
 
         bool operator==(const Triplet& other) const;
+        bool operator<(const Triplet& other) const { return canonical_name() < other.canonical_name(); }
 
     private:
         static const TripletInstance DEFAULT_INSTANCE;

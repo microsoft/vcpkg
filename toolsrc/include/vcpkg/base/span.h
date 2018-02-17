@@ -11,15 +11,17 @@ namespace vcpkg
     struct Span
     {
     public:
+        static_assert(!std::is_reference<T>::value, "Span<&> is illegal");
+
         using element_type = T;
-        using pointer = T*;
-        using reference = T&;
-        using iterator = T*;
+        using pointer = std::add_pointer_t<T>;
+        using reference = std::add_lvalue_reference_t<T>;
+        using iterator = pointer;
 
         constexpr Span() noexcept : m_ptr(nullptr), m_count(0) {}
         constexpr Span(std::nullptr_t) noexcept : Span() {}
-        constexpr Span(T* ptr, size_t count) noexcept : m_ptr(ptr), m_count(count) {}
-        constexpr Span(T* ptr_begin, T* ptr_end) noexcept : m_ptr(ptr_begin), m_count(ptr_end - ptr_begin) {}
+        constexpr Span(pointer ptr, size_t count) noexcept : m_ptr(ptr), m_count(count) {}
+        constexpr Span(pointer ptr_begin, pointer ptr_end) noexcept : m_ptr(ptr_begin), m_count(ptr_end - ptr_begin) {}
         constexpr Span(std::initializer_list<T> l) noexcept : m_ptr(l.begin()), m_count(l.size()) {}
 
         template<size_t N>
@@ -56,5 +58,17 @@ namespace vcpkg
     Span<const T> make_span(const std::vector<T>& v)
     {
         return {v.data(), v.size()};
+    }
+
+    template<class T>
+    constexpr T* begin(Span<T> sp)
+    {
+        return sp.begin();
+    }
+
+    template<class T>
+    constexpr T* end(Span<T> sp)
+    {
+        return sp.end();
     }
 }

@@ -21,6 +21,6 @@ install(TARGETS secp256k1
 )
 
 if(INSTALL_HEADERS)
-    file(GLOB HEADERS include/secp256k1.h)
+    file(GLOB HEADERS include/*.h)
     install(FILES ${HEADERS} DESTINATION include)
 endif()

@@ -14,8 +14,8 @@ endif()
 
 function(add_sublibrary LIB)
     file(GLOB_RECURSE SOURCES "absl/${LIB}/*.cc")
-    list(FILTER SOURCES EXCLUDE REGEX "_test(_.+)?.cc$|_nonprod.cc$")
-    file(GLOB HEADERS "absl/${LIB}/*.h")
+    list(FILTER SOURCES EXCLUDE REGEX "_test(ing)?(_.+)?.cc$|_nonprod.cc$")
+    file(GLOB HEADERS "absl/${LIB}/*.h" "absl/${LIB}/*.inc")
     file(GLOB INTERNAL_HEADERS "absl/${LIB}/internal/*.h")
 
     if(SOURCES)
@@ -83,7 +83,7 @@ target_link_public_libraries(time base numeric)
 target_link_public_libraries(synchronization base time)
 
 find_package(unofficial-cctz REQUIRED)
-targeT_link_libraries(time PUBLIC unofficial::cctz)
+target_link_libraries(time PUBLIC unofficial::cctz)
 
 install(
     EXPORT unofficial-abseil-targets

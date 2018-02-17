@@ -1,0 +1,19 @@
+diff --git a/src/wt/WGLWidget b/src/wt/WGLWidget
+index dd39701..94634f7 100644
+--- a/src/wt/WGLWidget
++++ b/src/wt/WGLWidget
+@@ -798,7 +798,14 @@ public:
+     SAMPLE_COVERAGE                = 0x80A0,
+     
+     /* ErrorCode */
++#ifdef _WIN32
++#pragma push_macro ("NO_ERROR")
++#undef NO_ERROR
++#endif
+     NO_ERROR                       = 0x0,
++#ifdef _WIN32
++#pragma pop_macro ("NO_ERROR")
++#endif
+     INVALID_ENUM                   = 0x0500,
+     INVALID_VALUE                  = 0x0501,
+     INVALID_OPERATION              = 0x0502,

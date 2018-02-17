@@ -4,14 +4,11 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "Abseil currently only supports being built for desktop")
 endif()
 
-message("NOTE: THIS PORT IS USING AN UNOFFICIAL BUILDSYSTEM. THE BINARY LAYOUT AND CMAKE INTEGRATION WILL CHANGE IN THE FUTURE.")
-message("To use from cmake:\n  find_package(unofficial-abseil REQUIRED)\n  link_libraries(unofficial::abseil::strings)")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO abseil/abseil-cpp
-    REF 1a9ba5e2e5a14413704f0c913fac53359576d3b6
-    SHA512 756e494c30324c937ca655d91afdee9acb923c7ee837a7c685441305bea2d54a75b3b21be7355abe416660984ba51ace9d234d70168fb029c601b7442397e8ff
+    REF bf7fc9986e20f664958fc227547fd8d2fdcf863e
+    SHA512 c80a1f850d40e2470db50dd0904730e615378fd1530e1bfef0908ec7ef7bf06ff7e1c6bbb1fe9aeb71e0f2df3fc2b7c516261d0521ff2822fd7f962a287b5718
     HEAD_REF master
 )
 
@@ -26,6 +23,14 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-abseil)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/abseil ${CURRENT_PACKAGES_DIR}/share/unofficial-abseil)
+
+file(GLOB_RECURSE HEADERS ${CURRENT_PACKAGES_DIR}/include/*)
+foreach(FILE ${HEADERS})
+    file(READ "${FILE}" _contents)
+    string(REPLACE "std::min(" "(std::min)(" _contents "${_contents}")
+    string(REPLACE "std::max(" "(std::max)(" _contents "${_contents}")
+    file(WRITE "${FILE}" "${_contents}")
+endforeach()
 
 vcpkg_copy_pdbs()
 

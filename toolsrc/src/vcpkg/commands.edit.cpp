@@ -32,12 +32,7 @@ namespace vcpkg::Commands::Edit
         return output;
     }
 
-    static const std::string OPTION_BUILDTREES = "--buildtrees";
-
-    static const std::array<std::string, 1> SWITCHES = {
-        OPTION_BUILDTREES,
-    };
-    static const std::array<std::string, 0> SETTINGS;
+    static constexpr StringLiteral OPTION_BUILDTREES = "--buildtrees";
 
     static std::vector<std::string> valid_arguments(const VcpkgPaths& paths)
     {
@@ -47,12 +42,15 @@ namespace vcpkg::Commands::Edit
                           [](auto&& pgh) -> std::string { return pgh->core_paragraph->name; });
     }
 
+    static constexpr std::array<CommandSwitch, 1> EDIT_SWITCHES = {{
+        {OPTION_BUILDTREES, "Open editor into the port-specific buildtree subfolder"},
+    }};
+
     const CommandStructure COMMAND_STRUCTURE = {
-        "edit zlib",
+        Help::create_example_string("edit zlib"),
         1,
         1,
-        SWITCHES,
-        SETTINGS,
+        {EDIT_SWITCHES, {}},
         &valid_arguments,
     };
 
@@ -63,18 +61,18 @@ namespace vcpkg::Commands::Edit
 
         auto& fs = paths.get_filesystem();
 
-        static const std::string EXAMPLE = Help::create_example_string("edit zlib");
-        args.check_exact_arg_count(1, EXAMPLE);
-        const std::unordered_set<std::string> options =
-            args.check_and_get_optional_command_arguments({OPTION_BUILDTREES});
+        const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
         const std::string port_name = args.command_arguments.at(0);
 
         const fs::path portpath = paths.ports / port_name;
         Checks::check_exit(VCPKG_LINE_INFO, fs.is_directory(portpath), R"(Could not find port named "%s")", port_name);
 
         std::vector<fs::path> candidate_paths;
-        const std::vector<fs::path> from_path = Files::find_from_PATH("EDITOR");
-        candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
+        auto maybe_editor_path = System::get_environment_variable("EDITOR");
+        if (auto editor_path = maybe_editor_path.get())
+        {
+            candidate_paths.emplace_back(*editor_path);
+        }
         candidate_paths.push_back(System::get_program_files_platform_bitness() / VS_CODE_INSIDERS);
         candidate_paths.push_back(System::get_program_files_32_bit() / VS_CODE_INSIDERS);
         candidate_paths.push_back(System::get_program_files_platform_bitness() / VS_CODE);
@@ -86,8 +84,9 @@ namespace vcpkg::Commands::Edit
         auto it = Util::find_if(candidate_paths, [&](const fs::path& p) { return fs.exists(p); });
         if (it == candidate_paths.cend())
         {
-            System::println(System::Color::error,
-                            "Error: Visual Studio Code was not found and the environment variable EDITOR is not set.");
+            System::println(
+                System::Color::error,
+                "Error: Visual Studio Code was not found and the environment variable EDITOR is not set or invalid.");
             System::println("The following paths were examined:");
             Files::print_paths(candidate_paths);
             System::println("You can also set the environmental variable EDITOR to your editor of choice.");
@@ -95,7 +94,7 @@ namespace vcpkg::Commands::Edit
         }
 
         const fs::path env_editor = *it;
-        if (options.find(OPTION_BUILDTREES) != options.cend())
+        if (Util::Sets::contains(options.switches, OPTION_BUILDTREES))
         {
             const auto buildtrees_current_dir = paths.buildtrees / port_name;
 

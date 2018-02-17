@@ -18,7 +18,13 @@ else ()
     add_definitions(-D_LIB)
 endif ()
 
-add_definitions(-D_USE_SSE -DHAVE_CONFIG_H -D_WIN32)
+add_definitions(-DHAVE_CONFIG_H -D_WIN32)
+
+string (TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" LOWERCASE_SYSTEM_PROCESSOR)
+if (LOWERCASE_SYSTEM_PROCESSOR STREQUAL "x86" OR LOWERCASE_SYSTEM_PROCESSOR STREQUAL "amd64")
+    add_definitions(-D_USE_SSE)
+endif()
+
 include_directories("${SOURCE_PATH}/include"
                     "${SOURCE_PATH}/win32")
 add_library(libspeexdsp ${LIBSPEEXDSP_SOURCES} ${LIBSPEEXDSP_HEADERS})

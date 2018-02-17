@@ -11,6 +11,7 @@ set(GMP_INCLUDE_DIRS ${GMP_INCLUDE_DIR})
 
 # Sources
 set(SRCS
+  src/gmp_printf.c
   src/mpfr.h
   src/mpf2mpfr.h
   src/mpfr-gmp.h
@@ -249,6 +250,7 @@ add_library(mpfr ${SRCS})
 
 # target_compile_definitions(mpfr PRIVATE HAVE_CONFIG_H)
 target_compile_definitions(mpfr PRIVATE __MPFR_WITHIN_MPFR)
+target_compile_definitions(mpfr PRIVATE HAVE_STDINT_H)
 if(BUILD_SHARED_LIBS)
     target_compile_definitions(mpfr PRIVATE __GMP_LIBGMP_DLL)
 endif()

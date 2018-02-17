@@ -6,6 +6,7 @@
 #include <vcpkg/dependencies.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
+#include <vcpkg/paragraphs.h>
 #include <vcpkg/remove.h>
 #include <vcpkg/update.h>
 #include <vcpkg/vcpkglib.h>
@@ -20,19 +21,28 @@ namespace vcpkg::Remove
     void remove_package(const VcpkgPaths& paths, const PackageSpec& spec, StatusParagraphs* status_db)
     {
         auto& fs = paths.get_filesystem();
-        auto spghs = status_db->find_all(spec.name(), spec.triplet());
-        const auto core_pkg = **status_db->find(spec.name(), spec.triplet(), "");
+        auto maybe_ipv = status_db->find_all_installed(spec);
+
+        Checks::check_exit(
+            VCPKG_LINE_INFO, maybe_ipv.has_value(), "unable to remove package %s: already removed", spec);
+
+        auto&& ipv = maybe_ipv.value_or_exit(VCPKG_LINE_INFO);
+
+        std::vector<StatusParagraph> spghs;
+        spghs.emplace_back(*ipv.core);
+        for (auto&& feature : ipv.features)
+        {
+            spghs.emplace_back(*feature);
+        }
 
         for (auto&& spgh : spghs)
         {
-            StatusParagraph& pkg = **spgh;
-            if (pkg.state != InstallState::INSTALLED) continue;
-            pkg.want = Want::PURGE;
-            pkg.state = InstallState::HALF_INSTALLED;
-            write_update(paths, pkg);
+            spgh.want = Want::PURGE;
+            spgh.state = InstallState::HALF_INSTALLED;
+            write_update(paths, spgh);
         }
 
-        auto maybe_lines = fs.read_lines(paths.listfile_path(core_pkg.package));
+        auto maybe_lines = fs.read_lines(paths.listfile_path(ipv.core->package));
 
         if (const auto lines = maybe_lines.get())
         {
@@ -89,15 +99,15 @@ namespace vcpkg::Remove
                 }
             }
 
-            fs.remove(paths.listfile_path(core_pkg.package));
+            fs.remove(paths.listfile_path(ipv.core->package));
         }
 
         for (auto&& spgh : spghs)
         {
-            StatusParagraph& pkg = **spgh;
-            if (pkg.state != InstallState::HALF_INSTALLED) continue;
-            pkg.state = InstallState::NOT_INSTALLED;
-            write_update(paths, pkg);
+            spgh.state = InstallState::NOT_INSTALLED;
+            write_update(paths, spgh);
+
+            status_db->insert(std::make_unique<StatusParagraph>(std::move(spgh)));
         }
     }
 
@@ -135,7 +145,7 @@ namespace vcpkg::Remove
     void perform_remove_plan_action(const VcpkgPaths& paths,
                                     const RemovePlanAction& action,
                                     const Purge purge,
-                                    StatusParagraphs& status_db)
+                                    StatusParagraphs* status_db)
     {
         const std::string display_name = action.spec.to_string();
 
@@ -146,7 +156,7 @@ namespace vcpkg::Remove
                 break;
             case RemovePlanType::REMOVE:
                 System::println("Removing package %s... ", display_name);
-                remove_package(paths, action.spec, &status_db);
+                remove_package(paths, action.spec, status_db);
                 System::println(System::Color::success, "Removing package %s... done", display_name);
                 break;
             case RemovePlanType::UNKNOWN:
@@ -163,20 +173,19 @@ namespace vcpkg::Remove
         }
     }
 
-    static const std::string OPTION_PURGE = "--purge";
-    static const std::string OPTION_NO_PURGE = "--no-purge";
-    static const std::string OPTION_RECURSE = "--recurse";
-    static const std::string OPTION_DRY_RUN = "--dry-run";
-    static const std::string OPTION_OUTDATED = "--outdated";
+    static constexpr StringLiteral OPTION_PURGE = "--purge";
+    static constexpr StringLiteral OPTION_NO_PURGE = "--no-purge";
+    static constexpr StringLiteral OPTION_RECURSE = "--recurse";
+    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
+    static constexpr StringLiteral OPTION_OUTDATED = "--outdated";
 
-    static const std::array<std::string, 5> SWITCHES = {
-        OPTION_PURGE,
-        OPTION_NO_PURGE,
-        OPTION_RECURSE,
-        OPTION_DRY_RUN,
-        OPTION_OUTDATED,
-    };
-    static const std::array<std::string, 0> SETTINGS;
+    static constexpr std::array<CommandSwitch, 5> SWITCHES = {{
+        {OPTION_PURGE, "Remove the cached copy of the package (default)"},
+        {OPTION_NO_PURGE, "Do not remove the cached copy of the package"},
+        {OPTION_RECURSE, "Allow removal of packages not explicitly specified on the command line"},
+        {OPTION_DRY_RUN, "Print the packages to be removed, but do not remove them"},
+        {OPTION_OUTDATED, "Select all packages with versions that do not match the portfiles"},
+    }};
 
     static std::vector<std::string> valid_arguments(const VcpkgPaths& paths)
     {
@@ -187,26 +196,30 @@ namespace vcpkg::Remove
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
-        "remove zlib zlib:x64-windows curl boost",
-        1,
+        Help::create_example_string("remove zlib zlib:x64-windows curl boost"),
+        0,
         SIZE_MAX,
-        SWITCHES,
-        SETTINGS,
+        {SWITCHES, {}},
         &valid_arguments,
     };
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
-        static const std::string EXAMPLE = Help::create_example_string("remove zlib zlib:x64-windows curl boost");
-        const std::unordered_set<std::string> options = args.check_and_get_optional_command_arguments(
-            {OPTION_PURGE, OPTION_NO_PURGE, OPTION_RECURSE, OPTION_DRY_RUN, OPTION_OUTDATED});
+        const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
         StatusParagraphs status_db = database_load_check(paths);
         std::vector<PackageSpec> specs;
-        if (options.find(OPTION_OUTDATED) != options.cend())
+        if (Util::Sets::contains(options.switches, OPTION_OUTDATED))
         {
-            args.check_exact_arg_count(0, EXAMPLE);
-            specs = Util::fmap(Update::find_outdated_packages(paths, status_db),
+            if (args.command_arguments.size() != 0)
+            {
+                System::println(System::Color::error, "Error: 'remove' accepts either libraries or '--outdated'");
+                Checks::exit_fail(VCPKG_LINE_INFO);
+            }
+
+            Dependencies::PathsPortFileProvider provider(paths);
+
+            specs = Util::fmap(Update::find_outdated_packages(provider, status_db),
                                [](auto&& outdated) { return outdated.spec; });
 
             if (specs.empty())
@@ -217,26 +230,30 @@ namespace vcpkg::Remove
         }
         else
         {
-            args.check_min_arg_count(1, EXAMPLE);
+            if (args.command_arguments.size() < 1)
+            {
+                System::println(System::Color::error, "Error: 'remove' accepts either libraries or '--outdated'");
+                Checks::exit_fail(VCPKG_LINE_INFO);
+            }
             specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
-                return Input::check_and_get_package_spec(arg, default_triplet, EXAMPLE);
+                return Input::check_and_get_package_spec(arg, default_triplet, COMMAND_STRUCTURE.example_text);
             });
 
             for (auto&& spec : specs)
                 Input::check_triplet(spec.triplet(), paths);
         }
 
-        const bool no_purge_was_passed = options.find(OPTION_NO_PURGE) != options.end();
-        const bool purge_was_passed = options.find(OPTION_PURGE) != options.end();
+        const bool no_purge_was_passed = Util::Sets::contains(options.switches, OPTION_NO_PURGE);
+        const bool purge_was_passed = Util::Sets::contains(options.switches, OPTION_PURGE);
         if (purge_was_passed && no_purge_was_passed)
         {
             System::println(System::Color::error, "Error: cannot specify both --no-purge and --purge.");
-            System::print(EXAMPLE);
+            System::print(COMMAND_STRUCTURE.example_text);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
         const Purge purge = to_purge(purge_was_passed || !no_purge_was_passed);
-        const bool is_recursive = options.find(OPTION_RECURSE) != options.cend();
-        const bool dry_run = options.find(OPTION_DRY_RUN) != options.cend();
+        const bool is_recursive = Util::Sets::contains(options.switches, OPTION_RECURSE);
+        const bool dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
 
         const std::vector<RemovePlanAction> remove_plan = Dependencies::create_remove_plan(specs, status_db);
         Checks::check_exit(VCPKG_LINE_INFO, !remove_plan.empty(), "Remove plan cannot be empty");
@@ -270,7 +287,7 @@ namespace vcpkg::Remove
 
         for (const RemovePlanAction& action : remove_plan)
         {
-            perform_remove_plan_action(paths, action, purge, status_db);
+            perform_remove_plan_action(paths, action, purge, &status_db);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);

@@ -92,7 +92,7 @@ namespace vcpkg
 
         const auto my_update_id = update_id++;
         const auto tmp_update_filename = paths.vcpkg_dir_updates / "incomplete";
-        const auto update_filename = paths.vcpkg_dir_updates / std::to_string(my_update_id);
+        const auto update_filename = paths.vcpkg_dir_updates / Strings::format("%010d", my_update_id);
 
         fs.write_contents(tmp_update_filename, Strings::serialize(p));
         fs.rename(tmp_update_filename, update_filename);
@@ -173,7 +173,7 @@ namespace vcpkg
         std::vector<StatusParagraph*> installed_packages;
         for (auto&& pgh : status_db)
         {
-            if (pgh->state != InstallState::INSTALLED || pgh->want != Want::INSTALL) continue;
+            if (!pgh->is_installed()) continue;
             installed_packages.push_back(pgh.get());
         }
 
@@ -189,7 +189,7 @@ namespace vcpkg
 
         for (const std::unique_ptr<StatusParagraph>& pgh : status_db)
         {
-            if (pgh->state != InstallState::INSTALLED || !pgh->package.feature.empty())
+            if (!pgh->is_installed() || !pgh->package.feature.empty())
             {
                 continue;
             }
@@ -212,29 +212,7 @@ namespace vcpkg
         return installed_files;
     }
 
-    CMakeVariable::CMakeVariable(const CStringView varname, const char* varvalue)
-        : s(Strings::format(R"("-D%s=%s")", varname, varvalue))
-    {
-    }
-    CMakeVariable::CMakeVariable(const CStringView varname, const std::string& varvalue)
-        : CMakeVariable(varname, varvalue.c_str())
-    {
-    }
-    CMakeVariable::CMakeVariable(const CStringView varname, const fs::path& path)
-        : CMakeVariable(varname, path.generic_u8string())
-    {
-    }
-
-    std::string make_cmake_cmd(const fs::path& cmake_exe,
-                               const fs::path& cmake_script,
-                               const std::vector<CMakeVariable>& pass_variables)
-    {
-        const std::string cmd_cmake_pass_variables = Strings::join(" ", pass_variables, [](auto&& v) { return v.s; });
-        return Strings::format(
-            R"("%s" %s -P "%s")", cmake_exe.u8string(), cmd_cmake_pass_variables, cmake_script.generic_u8string());
-    }
-
-    std::string shorten_text(const std::string& desc, size_t length)
+    std::string shorten_text(const std::string& desc, const size_t length)
     {
         Checks::check_exit(VCPKG_LINE_INFO, length >= 3);
         auto simple_desc = std::regex_replace(desc, std::regex("\\s+"), " ");

@@ -4,8 +4,6 @@ project(imgui CXX)
 set(CMAKE_DEBUG_POSTFIX d)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
-find_path(STB_INCLUDE_DIR stb_rect_pack.h stb_textedit.h stb_truetype.h)
-
 set(IMGUI_INCLUDES_PUBLIC
     imgui.h
     imconfig.h
@@ -21,19 +19,22 @@ set(IMGUI_SOURCES
     imgui_draw.cpp
 )
 
-add_library(imgui
+add_library(${PROJECT_NAME}
     ${IMGUI_INCLUDES_PUBLIC}
     ${IMGUI_INCLUDES_PRIVATE}
     ${IMGUI_SOURCES}
 )
 
-target_include_directories(imgui PUBLIC ${STB_INCLUDE_DIR})
+target_include_directories(${PROJECT_NAME} PUBLIC $<INSTALL_INTERFACE:include>)
 
-install(TARGETS imgui
+install(TARGETS ${PROJECT_NAME}
+    EXPORT IMGUIExport
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
+
+install(EXPORT IMGUIExport FILE ${PROJECT_NAME}Config.cmake NAMESPACE ${PROJECT_NAME}:: DESTINATION share/${PROJECT_NAME})
 
 if(NOT IMGUI_SKIP_HEADERS)
     install(

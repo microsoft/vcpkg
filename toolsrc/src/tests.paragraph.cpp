@@ -1,8 +1,4 @@
-#include <CppUnitTest.h>
-#include <vcpkg/binaryparagraph.h>
-#include <vcpkg/paragraphs.h>
-
-#include <vcpkg/base/strings.h>
+#include "tests.pch.h"
 
 #pragma comment(lib, "version")
 #pragma comment(lib, "winhttp")
@@ -51,6 +47,7 @@ namespace UnitTest1
                     {"Maintainer", "m"},
                     {"Description", "d"},
                     {"Build-Depends", "bd"},
+                    {"Default-Features", "df"},
                     {"Supports", "x64"},
                 }});
             Assert::IsTrue(m_pgh.has_value());
@@ -62,6 +59,8 @@ namespace UnitTest1
             Assert::AreEqual("d", pgh->core_paragraph->description.c_str());
             Assert::AreEqual(size_t(1), pgh->core_paragraph->depends.size());
             Assert::AreEqual("bd", pgh->core_paragraph->depends[0].name().c_str());
+            Assert::AreEqual(size_t(1), pgh->core_paragraph->default_features.size());
+            Assert::AreEqual("df", pgh->core_paragraph->default_features[0].c_str());
             Assert::AreEqual(size_t(1), pgh->core_paragraph->supports.size());
             Assert::AreEqual("x64", pgh->core_paragraph->supports[0].c_str());
         }
@@ -138,6 +137,21 @@ namespace UnitTest1
             Assert::AreEqual("uwp", pgh->core_paragraph->depends[1].qualifier.c_str());
         }
 
+        TEST_METHOD(SourceParagraph_Default_Features)
+        {
+            auto m_pgh =
+                vcpkg::SourceControlFile::parse_control_file(std::vector<std::unordered_map<std::string, std::string>>{{
+                    {"Source", "a"},
+                    {"Version", "1.0"},
+                    {"Default-Features", "a1"},
+                }});
+            Assert::IsTrue(m_pgh.has_value());
+            auto& pgh = *m_pgh.get();
+
+            Assert::AreEqual(size_t(1), pgh->core_paragraph->default_features.size());
+            Assert::AreEqual("a1", pgh->core_paragraph->default_features[0].c_str());
+        }
+
         TEST_METHOD(BinaryParagraph_Construct_Minimum)
         {
             vcpkg::BinaryParagraph pgh({
@@ -188,6 +202,35 @@ namespace UnitTest1
             Assert::AreEqual("a", pgh.depends[0].c_str());
             Assert::AreEqual("b", pgh.depends[1].c_str());
             Assert::AreEqual("c", pgh.depends[2].c_str());
+        }
+
+        TEST_METHOD(BinaryParagraph_Abi)
+        {
+            vcpkg::BinaryParagraph pgh({
+                {"Package", "zlib"},
+                {"Version", "1.2.8"},
+                {"Architecture", "x86-windows"},
+                {"Multi-Arch", "same"},
+                {"Abi", "abcd123"},
+            });
+
+            Assert::AreEqual(size_t(0), pgh.depends.size());
+            Assert::IsTrue(pgh.abi == "abcd123");
+        }
+
+        TEST_METHOD(BinaryParagraph_Default_Features)
+        {
+            vcpkg::BinaryParagraph pgh({
+                {"Package", "a"},
+                {"Version", "1.0"},
+                {"Architecture", "x86-windows"},
+                {"Multi-Arch", "same"},
+                {"Default-Features", "a1"},
+            });
+
+            Assert::AreEqual(size_t(0), pgh.depends.size());
+            Assert::AreEqual(size_t(1), pgh.default_features.size());
+            Assert::IsTrue(pgh.default_features[0] == "a1");
         }
 
         TEST_METHOD(parse_paragraphs_empty)
@@ -384,6 +427,22 @@ namespace UnitTest1
             auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);
             Assert::AreEqual(size_t(1), pghs.size());
             Assert::AreEqual("a, b, c", pghs[0]["Depends"].c_str());
+        }
+
+        TEST_METHOD(BinaryParagraph_serialize_abi)
+        {
+            vcpkg::BinaryParagraph pgh({
+                {"Package", "zlib"},
+                {"Version", "1.2.8"},
+                {"Architecture", "x86-windows"},
+                {"Multi-Arch", "same"},
+                {"Depends", "a, b, c"},
+                {"Abi", "123abc"},
+            });
+            std::string ss = Strings::serialize(pgh);
+            auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss).value_or_exit(VCPKG_LINE_INFO);
+            Assert::AreEqual(size_t(1), pghs.size());
+            Assert::AreEqual("123abc", pghs[0]["Abi"].c_str());
         }
     };
 }

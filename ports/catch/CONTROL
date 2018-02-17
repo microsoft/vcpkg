@@ -1,3 +1,4 @@
 Source: catch
-Version: 1.10.0
-Description: C++ Automated Test Cases in Headers
+Version: alias
+Build-Depends: catch2
+Description: Deprecated alias for Catch2 unit testing framework

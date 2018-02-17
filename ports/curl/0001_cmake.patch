@@ -11,3 +11,18 @@ index 12a7c61..9839c67 100644
  )
  
  if(LIBSSH2_INCLUDE_DIR)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7b73b98..6c7c559 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1132,7 +1132,9 @@ function(TRANSFORM_MAKEFILE_INC INPUT_FILE OUTPUT_FILE)
+ 
+ endfunction()
+ 
+-if(WIN32 AND NOT CYGWIN)
++if(MSVC)
++    set(CURL_INSTALL_CMAKE_DIR share/curl)
++elseif(WIN32 AND NOT CYGWIN)
+     set(CURL_INSTALL_CMAKE_DIR CMake)
+ else()
+     set(CURL_INSTALL_CMAKE_DIR lib/cmake/curl)

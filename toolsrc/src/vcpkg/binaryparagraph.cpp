@@ -16,6 +16,7 @@ namespace vcpkg
 
     namespace Fields
     {
+        static const std::string ABI = "Abi";
         static const std::string FEATURE = "Feature";
         static const std::string DESCRIPTION = "Description";
         static const std::string MAINTAINER = "Maintainer";
@@ -46,6 +47,8 @@ namespace vcpkg
 
         this->description = parser.optional_field(Fields::DESCRIPTION);
         this->maintainer = parser.optional_field(Fields::MAINTAINER);
+
+        this->abi = parser.optional_field(Fields::ABI);
 
         std::string multi_arch;
         parser.required_field(Fields::MULTI_ARCH, multi_arch);
@@ -89,8 +92,9 @@ namespace vcpkg
 
     std::string BinaryParagraph::displayname() const
     {
-        const auto f = this->feature.empty() ? "core" : this->feature;
-        return Strings::format("%s[%s]:%s", this->spec.name(), f, this->spec.triplet());
+        if (this->feature.empty() || this->feature == "core")
+            return Strings::format("%s:%s", this->spec.name(), this->spec.triplet());
+        return Strings::format("%s[%s]:%s", this->spec.name(), this->feature, this->spec.triplet());
     }
 
     std::string BinaryParagraph::dir() const { return this->spec.dir(); }
@@ -118,6 +122,7 @@ namespace vcpkg
         out_str.append("Multi-Arch: same\n");
 
         if (!pgh.maintainer.empty()) out_str.append("Maintainer: ").append(pgh.maintainer).push_back('\n');
+        if (!pgh.abi.empty()) out_str.append("Abi: ").append(pgh.abi).push_back('\n');
         if (!pgh.description.empty()) out_str.append("Description: ").append(pgh.description).push_back('\n');
     }
 }

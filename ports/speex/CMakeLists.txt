@@ -1,8 +1,6 @@
 cmake_minimum_required (VERSION 3.8.0)
 project (libspeex C)
 
-set(COMMON_INCLUDES ${PROJECT_BINARY_DIR}/include)
-
 option(USE_SSE  "USE_SSE  used Note: USE_SSE and FIXED_POINT are mutually exclusive." ON)
 if(MSVC)
   add_definitions(-DHAVE_CONFIG_H)
@@ -16,6 +14,19 @@ endif()
 include_directories(win32 include)
 
 set(CMAKE_DEBUG_POSTFIX d)
+
+file(READ "win32/libspeex.def" _contents)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  string(REPLACE "LIBRARY libspeex" "LIBRARY libspeexd" _contents "${_contents}")
+endif()
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/libspeex.def"
+  "${_contents}\n"
+  "speex_nb_mode\n"
+  "speex_wb_mode\n"
+  "speex_uwb_mode\n"
+  "speex_mode_list\n"
+  "speex_header_free\n"
+)
 
 set(SRC
   "libspeex/bits.c"
@@ -52,7 +63,7 @@ set(SRC
   "libspeex/vbr.c"
   "libspeex/vq.c"
   "libspeex/window.c"
-  "win32/libspeex.def"
+  "${CMAKE_CURRENT_BINARY_DIR}/libspeex.def"
 )
 
 add_library(libspeex ${SRC})

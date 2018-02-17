@@ -26,6 +26,11 @@ namespace vcpkg
         std::vector<ToolsetArchOption> supported_architectures;
     };
 
+    namespace Build
+    {
+        struct PreBuildInfo;
+    }
+
     struct VcpkgPaths
     {
         static Expected<VcpkgPaths> create(const fs::path& vcpkg_root_dir);
@@ -67,10 +72,9 @@ namespace vcpkg
 
         /// <summary>Retrieve a toolset matching a VS version</summary>
         /// <remarks>
-        ///   Valid version strings are "v140", "v141", and "". Empty string gets the latest.
+        ///   Valid version strings are "v120", "v140", "v141", and "". Empty string gets the latest.
         /// </remarks>
-        const Toolset& get_toolset(const Optional<std::string>& toolset_version,
-                                   const Optional<fs::path>& visual_studio_path) const;
+        const Toolset& get_toolset(const Build::PreBuildInfo& prebuildinfo) const;
 
         Files::Filesystem& get_filesystem() const;
 
@@ -83,5 +87,6 @@ namespace vcpkg
         Lazy<fs::path> ifw_binarycreator_exe;
         Lazy<fs::path> ifw_repogen_exe;
         Lazy<std::vector<Toolset>> toolsets;
+        Lazy<std::vector<Toolset>> toolsets_vs2013;
     };
 }

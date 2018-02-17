@@ -8,14 +8,12 @@ endif()
 add_definitions(-DNOMINMAX)
 
 
-include_directories(".")
+include_directories("./include")
 
-add_library(tz tz.cpp)
+add_library(tz src/tz.cpp)
 
 if(BUILD_SHARED_LIBS)
   target_compile_definitions(tz PRIVATE -DDATE_BUILD_DLL)
-else()
-  target_compile_definitions(tz PRIVATE -DDATE_BUILD_LIB)
 endif()
 
 install(
@@ -26,5 +24,5 @@ install(
 )
 
 if(NOT DISABLE_INSTALL_HEADERS)
-  install(FILES date.h tz.h julian.h iso_week.h islamic.h  DESTINATION include)
+  install(FILES include/date/date.h include/date/tz.h include/date/julian.h include/date/iso_week.h include/date/islamic.h  DESTINATION include/date)
 endif()

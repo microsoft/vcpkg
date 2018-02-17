@@ -1,12 +1,12 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/poco-poco-1.7.8-release)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/pocoproject/poco/archive/poco-1.7.8-release.tar.gz"
-    FILENAME "poco-poco-1.7.8-release.tar.gz"
-    SHA512 50a47e6f69491859f48b72e3695c380ec871f7d5249d938216e3be41579d752675e5d746a150720d93122f87f585ebeea24dc9660c81642a12e70f761b9d2502
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO pocoproject/poco
+    REF poco-1.8.1-release
+    SHA512 ca57b30c10fc4e611dbdd90c7e36db34b8cb9a7dae675dc8aed37457a26d3433080caf26eaace85adf8d6a6ad7945c49f7c66f274b26fe9cc0c7d5107be3828e
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
@@ -14,12 +14,16 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/config_h.patch
         ${CMAKE_CURRENT_LIST_DIR}/find_pcre.patch
         ${CMAKE_CURRENT_LIST_DIR}/foundation-public-include-pcre.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix-static-internal-pcre.patch
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(POCO_STATIC ON)
-else()
-    set(POCO_STATIC OFF)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" POCO_STATIC)
+
+if("mysql" IN_LIST FEATURES)
+    # enabling MySQL support
+    set(MYSQL_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include/mysql")
+    set(MYSQL_LIB "${CURRENT_INSTALLED_DIR}/lib/libmysql.lib")
+    set(MYSQL_LIB_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/libmysql.lib")
 endif()
 
 vcpkg_configure_cmake(
@@ -30,6 +34,11 @@ vcpkg_configure_cmake(
         -DENABLE_SEVENZIP=ON
         -DENABLE_TESTS=OFF
         -DPOCO_UNBUNDLED=ON # OFF means: using internal copy of sqlite, libz, pcre, expat, ...
+        -DMYSQL_INCLUDE_DIR=${MYSQL_INCLUDE_DIR}
+    OPTIONS_RELEASE
+        -DMYSQL_LIB=${MYSQL_LIB}
+    OPTIONS_DEBUG
+        -DMYSQL_LIB=${MYSQL_LIB_DEBUG}
 )
 
 vcpkg_install_cmake()
@@ -53,8 +62,7 @@ else()
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/poco)
 
 # copy license
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/poco)

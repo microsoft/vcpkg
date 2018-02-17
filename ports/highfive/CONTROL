@@ -1,4 +1,4 @@
 Source: highfive
-Version: 1.3
+Version: 1.5
 Description: HighFive is a modern C++/C++11 friendly interface for libhdf5
-Build-Depends: hdf5, boost
+Build-Depends: hdf5

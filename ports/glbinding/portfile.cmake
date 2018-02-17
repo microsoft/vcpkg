@@ -7,14 +7,20 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glbinding-2.1.1)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/cginternals/glbinding/archive/v2.1.1.zip"
-    FILENAME "glbinding-2.1.1.zip"
-    SHA512 66b21853a4f4760b7b22cafd5211958769c513e83be999018fe79cf56a9271e0e28566caaa2286393f54ac2154d564a68d12159598d03c965adf6756f3753f11
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO cginternals/glbinding
+    REF v2.1.1
+    SHA512 6c7251555801272a90c87a9386324eb6993102601a036fc7d9f9b4ebed64c74d011909566e5fc5a34ef8242e24915848296023daa1420c91aaf08cf9635be397
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
-vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH})
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -DOPTION_BUILD_TESTS=OFF
+        -DOPTION_BUILD_GPU_TESTS=OFF
+)
+
 #vcpkg_build_cmake()
 vcpkg_install_cmake()
 

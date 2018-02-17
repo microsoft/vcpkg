@@ -1,17 +1,17 @@
 include(vcpkg_common_functions)
 
-set(PROTOBUF_VERSION 3.4.1)
-set(PROTOC_VERSION 3.4.0)
+set(PROTOBUF_VERSION 3.5.1)
+set(PROTOC_VERSION 3.5.1)
 
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "https://github.com/google/protobuf/releases/download/v${PROTOBUF_VERSION}/protobuf-cpp-${PROTOBUF_VERSION}.tar.gz"
     FILENAME "protobuf-cpp-${PROTOBUF_VERSION}.tar.gz"
-    SHA512 6189e23c7e381f62e971bd0e35ad9c3ed8effe584755357013887c6a582cb5a9a654c39affa2a073b658854138f31bfb70f89fa1df494e9386f1d64fd73d07d2
+    SHA512 195ccb210229e0a1080dcdb0a1d87b2e421ad55f6b036c56db3183bd50a942c75b4cc84e6af8a10ad88022a247781a06f609a145a461dfbb8f04051b7dd714b3
 )
 vcpkg_download_distfile(TOOL_ARCHIVE_FILE
     URLS "https://github.com/google/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-win32.zip"
     FILENAME "protoc-${PROTOC_VERSION}-win32.zip"
-    SHA512 b874c3f47b39ac78f5675e05220318683004a365c248bf47ba50d8c66c8ed7763432451bab30524e131e1185a2bdaa6e6071b389eb61ad58b1b95974cf39d41b
+    SHA512 27b1b82e92d82c35158362435a29f590961b91f68cda21bffe46e52271340ea4587c4e3177668809af0d053b61e6efa69f0f62156ea11393cd9e6eb4474a3049
 )
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION})
@@ -22,7 +22,9 @@ vcpkg_extract_source_archive(${ARCHIVE_FILE})
 # Add a flag that can be set to disable the protobuf compiler
 vcpkg_apply_patches(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/001-add-compiler-flag.patch"
+    PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/001-add-compiler-flag.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/export-ParseGeneratorParameter.patch"
 )
 
 
@@ -47,12 +49,18 @@ else()
     set(protobuf_MSVC_STATIC_RUNTIME OFF)
 endif()
 
+if("zlib" IN_LIST FEATURES)
+    set(protobuf_WITH_ZLIB ON)
+else()
+    set(protobuf_WITH_ZLIB OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/cmake
     OPTIONS
         -Dprotobuf_BUILD_SHARED_LIBS=${protobuf_BUILD_SHARED_LIBS}
         -Dprotobuf_MSVC_STATIC_RUNTIME=${protobuf_MSVC_STATIC_RUNTIME}
-        -Dprotobuf_WITH_ZLIB=ON
+        -Dprotobuf_WITH_ZLIB=${protobuf_WITH_ZLIB}
         -Dprotobuf_BUILD_TESTS=OFF
         -Dprotobuf_BUILD_COMPILER=${protobuf_BUILD_COMPILER}
         -DCMAKE_INSTALL_CMAKEDIR=share/protobuf

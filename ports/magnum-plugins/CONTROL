@@ -1,4 +1,81 @@
 Source: magnum-plugins
-Version: jun2017-5
-Build-Depends: stb, magnum
-Description: Plugins for C++11/C++14 and OpenGL graphics engine http://mosra.cz/blog/magnum.php
+Version: 2018.02-1
+Build-Depends: magnum
+Description: Plugins for magnum, C++11/C++14 graphics middleware for games and data visualization http://magnum.graphics/
+Default-Features: anyimageimporter, anysceneimporter, anyimageconverter, ddsimporter, miniexrimageconverter, opengeximporter, stanfordimporter, stbimageconverter, stbimageimporter
+
+Feature: anyimageimporter
+Description: AnyImageImporter plugin
+
+Feature: anyaudioimporter
+Description: AnyAudioImporter plugin
+
+Feature: anyimageconverter
+Description: AnyImageConverter plugin
+
+Feature: anysceneimporter
+Description: AnySceneImporter plugin
+
+Feature: assimpimporter
+Description: AssimpImporter plugin
+Build-Depends: assimp, magnum-plugins[anyimageimporter]
+
+Feature: ddsimporter
+Description: DdsImporter plugin
+
+Feature: devilimageimporter
+Description: DevIlImageImporter plugin
+Build-Depends: devil
+
+Feature: drflacaudioimporter
+Description: DrFlacAudioImporter plugin
+Build-Depends: magnum[audio]
+
+Feature: drwavaudioimporter
+Description: DrWavAudioImporter plugin
+Build-Depends: magnum[audio]
+
+Feature: freetypefont
+Description: FreeTypeFont plugin
+Build-Depends: freetype, magnum[text]
+
+Feature: harfbuzzfont
+Description: HarfBuzzFont plugin
+Build-Depends: harfbuzz, magnum-plugins[freetypefont]
+
+Feature: jpegimporter
+Description: JpegImporter plugin
+Build-Depends: libjpeg-turbo
+
+Feature: miniexrimageconverter
+Description: MiniExrImageConverter plugin
+
+Feature: opengeximporter
+Description: OpenGexImporter plugin
+Build-Depends: magnum-plugins[anyimageimporter]
+
+Feature: pngimageconverter
+Description: PngImageConverter plugin
+Build-Depends: libpng
+
+Feature: pngimporter
+Description: PngImporter plugin
+Build-Depends: libpng
+
+Feature: stanfordimporter
+Description: StanfordImporter plugin
+
+Feature: stbimageconverter
+Description: StbImageConverter plugin
+
+Feature: stbimageimporter
+Description: StbImageImporter plugin
+
+Feature: stbtruetypefont
+Description: StbTrueTypeFont plugin
+Build-Depends: magnum[text]
+
+Feature: stbvorbisaudioimporter
+Description: StbVorbisAudioImporter plugin
+Build-Depends: magnum[audio]
+
