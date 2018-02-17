@@ -83,7 +83,26 @@ namespace vcpkg
         }
     }
 
+    StatusParagraphs::const_iterator StatusParagraphs::find_installed(const FeatureSpec& spec) const
+    {
+        auto it = find(spec);
+        if (it != end() && (*it)->is_installed())
+        {
+            return it;
+        }
+        else
+        {
+            return end();
+        }
+    }
+
     bool vcpkg::StatusParagraphs::is_installed(const PackageSpec& spec) const
+    {
+        auto it = find(spec);
+        return it != end() && (*it)->is_installed();
+    }
+
+    bool vcpkg::StatusParagraphs::is_installed(const FeatureSpec& spec) const
     {
         auto it = find(spec);
         return it != end() && (*it)->is_installed();

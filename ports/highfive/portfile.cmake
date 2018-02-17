@@ -1,13 +1,28 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/HighFive-1.3)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/BlueBrain/HighFive/archive/v1.3.tar.gz"
-    FILENAME "highfive.v1.3.tar.gz"
-    SHA512 258efae1ef5eed45ac1cf93c21c79fab9ee3c340d49a36a4aa2b43c98df1c80db9167a40a0b6a59c4f99b7c190d41d545b53c0f2c5c59aabaffc4b2584b4390b
-)
-vcpkg_extract_source_archive(${ARCHIVE})
 
-# Copy the highfive header files
-file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR} FILES_MATCHING PATTERN "*.hpp")
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO BlueBrain/HighFive
+    REF v1.5
+    SHA512 4133ec2768f54cb3e56c32f3193d6c61ea96013dc73901c39d31ecaf10b04ea2861b0f6f5c9795985050ef72a75e2d360a4b906c9cdeb8ee49309961e15d39bf
+    HEAD_REF master
+)
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DHIGHFIVE_UNIT_TESTS=OFF
+        -DHIGHFIVE_EXAMPLES=OFF
+        -DUSE_BOOST=OFF
+        -DHIGH_FIVE_DOCUMENTATION=OFF
+)
+
+vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/HighFive/CMake)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
+
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/highfive RENAME copyright)

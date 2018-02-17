@@ -7,8 +7,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO abseil/abseil-cpp
-    REF 778abb7c279547afe7a4642063712f13a80b8eea
-    SHA512 55268321429ac5dfc432fd60e71cfac5abbc4b7145bc16bfaaff9dd05af4a3a8cb92e95906f6ebcd493f71e2fd892ddc8923011ad15fbd37ed423b70200c8538
+    REF bf7fc9986e20f664958fc227547fd8d2fdcf863e
+    SHA512 c80a1f850d40e2470db50dd0904730e615378fd1530e1bfef0908ec7ef7bf06ff7e1c6bbb1fe9aeb71e0f2df3fc2b7c516261d0521ff2822fd7f962a287b5718
     HEAD_REF master
 )
 

@@ -27,6 +27,11 @@ function vcpkgCreateParentDirectoryIfNotExists([Parameter(Mandatory=$true)][stri
 
 function vcpkgRemoveItem([Parameter(Mandatory=$true)][string]$dirPath)
 {
+    if ([string]::IsNullOrEmpty($dirPath))
+    {
+        return
+    }
+
     if (Test-Path $dirPath)
     {
         Remove-Item $dirPath -Recurse -Force
@@ -160,7 +165,7 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
     }
     else
     {
-        Move-Item -Path $destinationPartial -Destination $output
+        Move-Item -Path "$destinationPartial" -Destination $output
     }
 }
 
@@ -185,14 +190,59 @@ function vcpkgInvokeCommandClean()
     Write-Verbose "Clean-Executing: ${executable} ${arguments}"
     $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
     $cleanEnvScript = "$scriptsDir\VcpkgPowershellUtils-ClearEnvironment.ps1"
-    $command = "& `"$cleanEnvScript`"; & `"$executable`" $arguments"
-    $bytes = [System.Text.Encoding]::Unicode.GetBytes($command)
-    $encodedCommand = [Convert]::ToBase64String($bytes)
-    $arg = "-NoProfile -ExecutionPolicy Bypass -encodedCommand $encodedCommand"
+    $tripleQuotes = "`"`"`""
+    $argumentsWithEscapedQuotes = $arguments -replace "`"", $tripleQuotes
+    $command = ". $tripleQuotes$cleanEnvScript$tripleQuotes; & $tripleQuotes$executable$tripleQuotes $argumentsWithEscapedQuotes"
+    $arg = "-NoProfile", "-ExecutionPolicy Bypass", "-command $command"
 
     $process = Start-Process -FilePath powershell.exe -ArgumentList $arg -PassThru -NoNewWindow
     Wait-Process -InputObject $process
     $ec = $process.ExitCode
     Write-Verbose "Execution terminated with exit code $ec."
     return $ec
+}
+
+function vcpkgFormatElapsedTime([TimeSpan]$ts)
+{
+    if ($ts.TotalHours -ge 1)
+    {
+        return [string]::Format( "{0:N2} h", $ts.TotalHours);
+    }
+
+    if ($ts.TotalMinutes -ge 1)
+    {
+        return [string]::Format( "{0:N2} min", $ts.TotalMinutes);
+    }
+
+    if ($ts.TotalSeconds -ge 1)
+    {
+        return [string]::Format( "{0:N2} s", $ts.TotalSeconds);
+    }
+
+    if ($ts.TotalMilliseconds -ge 1)
+    {
+        return [string]::Format( "{0:N2} ms", $ts.TotalMilliseconds);
+    }
+
+    throw $ts
+}
+
+function vcpkgFindFileRecursivelyUp()
+{
+    param(
+        [ValidateNotNullOrEmpty()]
+        [Parameter(Mandatory=$true)][string]$startingDir,
+        [ValidateNotNullOrEmpty()]
+        [Parameter(Mandatory=$true)][string]$filename
+    )
+
+    $currentDir = $startingDir
+
+    while (!($currentDir -eq "") -and !(Test-Path "$currentDir\$filename"))
+    {
+        Write-Verbose "Examining $currentDir for $filename"
+        $currentDir = Split-path $currentDir -Parent
+    }
+    Write-Verbose "Examining $currentDir for $filename - Found"
+    return $currentDir
 }

@@ -55,7 +55,10 @@ function(vcpkg_find_acquire_program VAR)
   elseif(VAR MATCHES "NASM")
     set(PROGNAME nasm)
     set(PATHS ${DOWNLOADS}/tools/nasm/nasm-2.12.02)
-    set(URL "http://www.nasm.us/pub/nasm/releasebuilds/2.12.02/win32/nasm-2.12.02-win32.zip")
+    set(URL
+      "http://www.nasm.us/pub/nasm/releasebuilds/2.12.02/win32/nasm-2.12.02-win32.zip"
+      "http://mirrors.kodi.tv/build-deps/win32/nasm-2.12.02-win32.zip"
+    )
     set(ARCHIVE "nasm-2.12.02-win32.zip")
     set(HASH df7aaba094e17832688c88993997612a2e2c96cc3dc14ca3e8347b44c7762115f5a7fc6d7f20be402553aaa4c9e43ddfcf6228f581cfe89289bae550de151b36)
   elseif(VAR MATCHES "YASM")

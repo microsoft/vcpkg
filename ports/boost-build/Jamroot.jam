@@ -8,7 +8,7 @@ import feature ;
 boostcpp.set-version $(BOOST_VERSION) ;
 
 project boost : requirements
-    <include>include&&@CURRENT_INSTALLED_DIR@/include
+    <include>include&&"@CURRENT_INSTALLED_DIR@/include"
     <define>BOOST_ALL_NO_LIB=1
     <tag>@$(__name__).tag
     @REQUIREMENTS@
@@ -36,8 +36,8 @@ if "@PORT@" != "boost-system"
 {
     use-project /boost/system : . ;
 
-    lib boost_system : : <file>@CURRENT_INSTALLED_DIR@/lib/boost_system-vc140-mt.lib <variant>release ;
-    lib boost_system : : <file>@CURRENT_INSTALLED_DIR@/debug/lib/boost_system-vc140-mt-gd.lib <variant>debug ;
+    lib boost_system : : <file>"@CURRENT_INSTALLED_DIR@/lib/boost_system-vc140-mt.lib" <variant>release ;
+    lib boost_system : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/boost_system-vc140-mt-gd.lib" <variant>debug ;
     explicit boost_system ;
 }
 
@@ -45,8 +45,8 @@ if "@PORT@" != "boost-chrono"
 {
     use-project /boost/chrono : . ;
 
-    lib boost_chrono : : <file>@CURRENT_INSTALLED_DIR@/lib/boost_chrono-vc140-mt.lib <variant>release ;
-    lib boost_chrono : : <file>@CURRENT_INSTALLED_DIR@/debug/lib/boost_chrono-vc140-mt-gd.lib <variant>debug ;
+    lib boost_chrono : : <file>"@CURRENT_INSTALLED_DIR@/lib/boost_chrono-vc140-mt.lib" <variant>release ;
+    lib boost_chrono : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/boost_chrono-vc140-mt-gd.lib" <variant>debug ;
     explicit boost_chrono ;
 }
 
@@ -54,8 +54,8 @@ if "@PORT@" != "boost-regex"
 {
     use-project /boost/regex : . ;
 
-    lib boost_regex : : <file>@CURRENT_INSTALLED_DIR@/lib/boost_regex-vc140-mt.lib <variant>release ;
-    lib boost_regex : : <file>@CURRENT_INSTALLED_DIR@/debug/lib/boost_regex-vc140-mt-gd.lib <variant>debug ;
+    lib boost_regex : : <file>"@CURRENT_INSTALLED_DIR@/lib/boost_regex-vc140-mt.lib" <variant>release ;
+    lib boost_regex : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/boost_regex-vc140-mt-gd.lib" <variant>debug ;
     explicit boost_regex ;
 }
 
@@ -63,8 +63,8 @@ if "@PORT@" != "boost-date-time"
 {
     use-project /boost/date_time : . ;
 
-    lib boost_date_time : : <file>@CURRENT_INSTALLED_DIR@/lib/boost_date_time-vc140-mt.lib <variant>release -<library>/boost/date_time//boost_date_time ;
-    lib boost_date_time : : <file>@CURRENT_INSTALLED_DIR@/debug/lib/boost_date_time-vc140-mt-gd.lib <variant>debug -<library>/boost/date_time//boost_date_time ;
+    lib boost_date_time : : <file>"@CURRENT_INSTALLED_DIR@/lib/boost_date_time-vc140-mt.lib" <variant>release -<library>/boost/date_time//boost_date_time ;
+    lib boost_date_time : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/boost_date_time-vc140-mt-gd.lib" <variant>debug -<library>/boost/date_time//boost_date_time ;
     explicit boost_date_time ;
 }
 
@@ -72,8 +72,8 @@ if "@PORT@" != "boost-thread"
 {
     use-project /boost/thread : . ;
 
-    lib boost_thread : : <file>@CURRENT_INSTALLED_DIR@/lib/boost_thread-vc140-mt.lib <variant>release : : <library>/boost/date_time//boost_date_time ;
-    lib boost_thread : : <file>@CURRENT_INSTALLED_DIR@/debug/lib/boost_thread-vc140-mt-gd.lib <variant>debug : : <library>/boost/date_time//boost_date_time ;
+    lib boost_thread : : <file>"@CURRENT_INSTALLED_DIR@/lib/boost_thread-vc140-mt.lib" <variant>release : : <library>/boost/date_time//boost_date_time ;
+    lib boost_thread : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/boost_thread-vc140-mt-gd.lib" <variant>debug : : <library>/boost/date_time//boost_date_time ;
     explicit boost_thread ;
 }
 
@@ -81,8 +81,8 @@ if "@PORT@" != "boost-timer"
 {
     use-project /boost/timer : . ;
 
-    lib boost_timer : : <file>@CURRENT_INSTALLED_DIR@/lib/boost_timer-vc140-mt.lib <variant>release ;
-    lib boost_timer : : <file>@CURRENT_INSTALLED_DIR@/debug/lib/boost_timer-vc140-mt-gd.lib <variant>debug ;
+    lib boost_timer : : <file>"@CURRENT_INSTALLED_DIR@/lib/boost_timer-vc140-mt.lib" <variant>release ;
+    lib boost_timer : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/boost_timer-vc140-mt-gd.lib" <variant>debug ;
     explicit boost_timer ;
 }
 
@@ -90,8 +90,8 @@ if "@PORT@" != "boost-filesystem"
 {
     use-project /boost/filesystem : . ;
 
-    lib boost_filesystem : : <file>@CURRENT_INSTALLED_DIR@/lib/boost_filesystem-vc140-mt.lib <variant>release : : <library>/boost/system//boost_system ;
-    lib boost_filesystem : : <file>@CURRENT_INSTALLED_DIR@/debug/lib/boost_filesystem-vc140-mt-gd.lib <variant>debug : : <library>/boost/system//boost_system ;
+    lib boost_filesystem : : <file>"@CURRENT_INSTALLED_DIR@/lib/boost_filesystem-vc140-mt.lib" <variant>release : : <library>/boost/system//boost_system ;
+    lib boost_filesystem : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/boost_filesystem-vc140-mt-gd.lib" <variant>debug : : <library>/boost/system//boost_system ;
     explicit boost_filesystem ;
 }
 
@@ -99,8 +99,8 @@ if "@PORT@" != "boost-atomic"
 {
     use-project /boost/atomic : . ;
 
-    lib boost_atomic : : <file>@CURRENT_INSTALLED_DIR@/lib/boost_atomic-vc140-mt.lib <variant>release ;
-    lib boost_atomic : : <file>@CURRENT_INSTALLED_DIR@/debug/lib/boost_atomic-vc140-mt-gd.lib <variant>debug ;
+    lib boost_atomic : : <file>"@CURRENT_INSTALLED_DIR@/lib/boost_atomic-vc140-mt.lib" <variant>release ;
+    lib boost_atomic : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/boost_atomic-vc140-mt-gd.lib" <variant>debug ;
     explicit boost_atomic ;
 }
 
@@ -111,8 +111,8 @@ if "@PORT@" != "boost-context"
 
     use-project /boost/context : . ;
 
-    lib boost_context : : <file>@CURRENT_INSTALLED_DIR@/lib/boost_context-vc140-mt.lib <variant>release ;
-    lib boost_context : : <file>@CURRENT_INSTALLED_DIR@/debug/lib/boost_context-vc140-mt-gd.lib <variant>debug ;
+    lib boost_context : : <file>"@CURRENT_INSTALLED_DIR@/lib/boost_context-vc140-mt.lib" <variant>release ;
+    lib boost_context : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/boost_context-vc140-mt-gd.lib" <variant>debug ;
     explicit boost_context ;
 }
 
@@ -120,8 +120,8 @@ if "@PORT@" != "boost-test"
 {
     use-project /boost/test : . ;
 
-    lib boost_unit_test_framework : : <file>@CURRENT_INSTALLED_DIR@/lib/boost_unit_test_framework-vc140-mt.lib <variant>release ;
-    lib boost_unit_test_framework : : <file>@CURRENT_INSTALLED_DIR@/debug/lib/boost_unit_test_framework-vc140-mt-gd.lib <variant>debug ;
+    lib boost_unit_test_framework : : <file>"@CURRENT_INSTALLED_DIR@/lib/boost_unit_test_framework-vc140-mt.lib" <variant>release ;
+    lib boost_unit_test_framework : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/boost_unit_test_framework-vc140-mt-gd.lib" <variant>debug ;
     explicit boost_unit_test_framework ;
 }
 

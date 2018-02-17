@@ -61,7 +61,7 @@ function(vcpkg_build_cmake)
         set(PARALLEL_ARG ${NO_PARALLEL_ARG})
     endif()
 
-    foreach(BUILDTYPE "release" "debug")
+    foreach(BUILDTYPE "debug" "release")
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
             if(BUILDTYPE STREQUAL "debug")
                 set(SHORT_BUILDTYPE "dbg")

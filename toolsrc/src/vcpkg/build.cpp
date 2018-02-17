@@ -258,22 +258,25 @@ namespace vcpkg::Build
         paths.get_filesystem().write_contents(binary_control_file, start);
     }
 
-    ExtendedBuildResult build_package(const VcpkgPaths& paths,
-                                      const BuildPackageConfig& config,
-                                      const StatusParagraphs& status_db)
+    static ExtendedBuildResult do_build_package(const VcpkgPaths& paths,
+                                                const BuildPackageConfig& config,
+                                                const StatusParagraphs& status_db)
     {
         const PackageSpec spec = PackageSpec::from_name_and_triplet(config.scf.core_paragraph->name, config.triplet)
                                      .value_or_exit(VCPKG_LINE_INFO);
 
         const Triplet& triplet = config.triplet;
         {
-            std::vector<PackageSpec> missing_specs;
+            std::vector<FeatureSpec> missing_specs;
             for (auto&& dep : filter_dependencies(config.scf.core_paragraph->depends, triplet))
             {
-                auto dep_spec = PackageSpec::from_name_and_triplet(dep, triplet).value_or_exit(VCPKG_LINE_INFO);
-                if (!status_db.is_installed(dep_spec))
+                auto dep_specs = FeatureSpec::from_strings_and_triplet({dep}, triplet);
+                for (auto&& feature : dep_specs)
                 {
-                    missing_specs.push_back(std::move(dep_spec));
+                    if (!status_db.is_installed(feature))
+                    {
+                        missing_specs.push_back(std::move(feature));
+                    }
                 }
             }
             // Fail the build if any dependencies were missing
@@ -290,6 +293,7 @@ namespace vcpkg::Build
         const auto pre_build_info = PreBuildInfo::from_triplet_file(paths, triplet);
 
         std::string features;
+        std::string all_features;
         if (GlobalState::feature_packages)
         {
             for (auto&& feature : config.feature_list)
@@ -299,6 +303,10 @@ namespace vcpkg::Build
             if (!features.empty())
             {
                 features.pop_back();
+            }
+            for (auto& feature : config.scf.feature_paragraphs)
+            {
+                all_features.append(feature->name + ";");
             }
         }
 
@@ -317,6 +325,7 @@ namespace vcpkg::Build
                 {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
                 {"GIT", git_exe_path},
                 {"FEATURES", features},
+                {"ALL_FEATURES", all_features},
             });
 
         const auto cmd_set_environment = make_build_env_cmd(pre_build_info, toolset);
@@ -363,10 +372,19 @@ namespace vcpkg::Build
 
         write_binary_control_file(paths, *bcf);
 
+        return {BuildResult::SUCCEEDED, std::move(bcf)};
+    }
+
+    ExtendedBuildResult build_package(const VcpkgPaths& paths,
+                                      const BuildPackageConfig& config,
+                                      const StatusParagraphs& status_db)
+    {
+        ExtendedBuildResult result = do_build_package(paths, config, status_db);
+
         if (config.build_package_options.clean_buildtrees == CleanBuildtrees::YES)
         {
             auto& fs = paths.get_filesystem();
-            auto buildtrees_dir = paths.buildtrees / spec.name();
+            auto buildtrees_dir = paths.buildtrees / config.scf.core_paragraph->name;
             auto buildtree_files = fs.get_files_non_recursive(buildtrees_dir);
             for (auto&& file : buildtree_files)
             {
@@ -378,7 +396,7 @@ namespace vcpkg::Build
             }
         }
 
-        return {BuildResult::SUCCEEDED, std::move(bcf)};
+        return result;
     }
 
     const std::string& to_string(const BuildResult build_result)
@@ -585,7 +603,7 @@ namespace vcpkg::Build
         : code(code), binary_control_file(std::move(bcf))
     {
     }
-    ExtendedBuildResult::ExtendedBuildResult(BuildResult code, std::vector<PackageSpec>&& unmet_deps)
+    ExtendedBuildResult::ExtendedBuildResult(BuildResult code, std::vector<FeatureSpec>&& unmet_deps)
         : code(code), unmet_dependencies(std::move(unmet_deps))
     {
     }

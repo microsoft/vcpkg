@@ -14,8 +14,13 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/0002_fix_uwp.patch
 )
 
+# Support HTTP2 TSL Download https://curl.haxx.se/ca/cacert.pem rename to curl-ca-bundle.crt, copy it to libcurl.dll location.
+SET(HTTP2_OPTIONS)
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     SET(CURL_STATICLIB OFF)
+    SET(HTTP2_OPTIONS
+        -DUSE_NGHTTP2=ON
+    )
 else()
     SET(CURL_STATICLIB ON)
 endif()
@@ -24,6 +29,7 @@ set(USE_OPENSSL ON)
 if(CURL_USE_WINSSL)
     set(USE_OPENSSL OFF)
     set(USE_WINSSL ON)
+    set(HTTP2_OPTIONS) ## disable HTTP2 when CURL_USE_WINSSL
 endif()
 
 set(UWP_OPTIONS)
@@ -34,6 +40,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         -DENABLE_IPV6=OFF
         -DENABLE_UNIX_SOCKETS=OFF
     )
+    set(HTTP2_OPTIONS) ## disable curl HTTP2 support
 endif()
 
 vcpkg_find_acquire_program(PERL)
@@ -45,6 +52,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         ${UWP_OPTIONS}
+        ${HTTP2_OPTIONS}
         -DBUILD_TESTING=OFF
         -DBUILD_CURL_EXE=OFF
         -DENABLE_MANUAL=OFF

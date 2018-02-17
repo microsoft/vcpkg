@@ -270,4 +270,6 @@ function(boost_modular_build)
             file(RENAME ${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME} ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
         endif()
     endforeach()
+
+    vcpkg_copy_pdbs()
 endfunction()

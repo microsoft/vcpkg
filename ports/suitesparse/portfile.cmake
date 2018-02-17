@@ -45,12 +45,17 @@ vcpkg_apply_patches(
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/remove-debug-postfix.patch"
 )
 
+set(USE_VCPKG_METIS OFF)
+if("metis" IN_LIST FEATURES)
+    set(USE_VCPKG_METIS ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SUITESPARSEWIN_PATH}
     PREFER_NINJA
     OPTIONS
         -DBUILD_METIS=OFF #Disable the option to build metis from source
-        -DUSE_VCPKG_METIS=ON #Force using vcpckg metis library
+        -DUSE_VCPKG_METIS=${USE_VCPKG_METIS} #Force using vcpckg metis library
         -DMETIS_SOURCE_DIR=${CURRENT_INSTALLED_DIR}
         -DLIB_POSTFIX=
         -DSUITESPARSE_USE_CUSTOM_BLAS_LAPACK_LIBS=ON
