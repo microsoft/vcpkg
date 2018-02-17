@@ -25,7 +25,7 @@ if ($latest)
         throw;
     }
 
-    $buildArchive = ($branchBuildArchives | Sort-object Name -Descending).fullname[0]
+    $buildArchive = ($branchBuildArchives | Sort-object Name -Descending | Select-object -first 1).fullname
 }
 else
 {
@@ -41,7 +41,7 @@ if (!(Test-Path $buildArchive))
 Write-Host "Deploying $buildArchive"
 
 $deploymentRoot = "$VISUAL_STUDIO_2017_UNSTABLE_PATH\VC\Tools\MSVC"
-$msvcVersion = @(dir -Directory $deploymentRoot | Sort-object Name -Descending)[0].Name
+$msvcVersion = (dir -Directory $deploymentRoot | Sort-object Name -Descending | Select-object -first 1).Name
 $deploymentPath = "$deploymentRoot\$msvcVersion"
 
 Write-Host "Cleaning-up $deploymentRoot..."
