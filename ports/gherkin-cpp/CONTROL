@@ -1,0 +1,4 @@
+Source: gherkin-cpp
+Version:
+Description: Gherkin parser/compiler in C++
+Build-Depends: fmem, gherkin-c

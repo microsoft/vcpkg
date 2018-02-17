@@ -12,21 +12,24 @@
 
 include(vcpkg_common_functions)
 
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO ambrou/gherkin-c
-    REF a91a928e9d463003e1251ba5590f8775da9bbe76
-    SHA512 59d22c671e6698a46046e714de7a984ee74d27ab7ee4eaf58999eee651467cb5566b39ed20ae31ee71af43034509de776af007a3add9b54962432eefed059aed
+    REPO Ambrou/gherkin-cpp
+    REF f006966697749c687d18b3c5f711b946db176d3c
+    SHA512 8023b64243100f4bc8628fc52b7c187b61bd1f7135b14de6ce08d06546a7a8e43d81e856bf53080f2864c4f3e5c9fb7b35ad383c47d9b64a2fe8b5c42c1db136
     HEAD_REF master
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    #PREFER_NINJA
-    OPTIONS 
-        -DBUILD_GHERKIN_TESTS=OFF
+    OPTIONS -DFMEM_INCLUDE=${VCPKG_ROOT_DIR}/packages/fmem_${TARGET_TRIPLET}/include -DGHERKIN_C_INCLUDE=${VCPKG_ROOT_DIR}/packages/gherkin-c_${TARGET_TRIPLET}/include
+    #PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
+    OPTIONS_RELEASE -DFMEM_LIB=${VCPKG_ROOT_DIR}/packages/fmem_${TARGET_TRIPLET}/lib -DGHERKIN_C_LIB=${VCPKG_ROOT_DIR}/packages/gherkin-c_${TARGET_TRIPLET}/lib
+    OPTIONS_DEBUG -DFMEM_LIB=${VCPKG_ROOT_DIR}/packages/fmem_${TARGET_TRIPLET}/debug/lib -DGHERKIN_C_LIB=${VCPKG_ROOT_DIR}/packages/gherkin-c_${TARGET_TRIPLET}/debug/lib
 )
+
+
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -34,4 +37,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/gherkin-c RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/gherkin-cpp RENAME copyright)
