@@ -32,9 +32,9 @@ Write-Host "Deleting $cixml ... done."
 
 if($miniTest)
 {
-    ./vcpkg install "zlib:$Triplet" --x-xunit=TEST-full-ci.xml
+    ./vcpkg install "zlib:$Triplet" --x-xunit=TEST-full-ci.xml | Tee-Object -FilePath "$Triplet.txt"
 }
 else
 {
-    ./vcpkg ci $Triplet --x-xunit=TEST-full-ci.xml --exclude=aws-sdk-cpp
+    ./vcpkg ci $Triplet --x-xunit=TEST-full-ci.xml --exclude=aws-sdk-cpp | Tee-Object -FilePath "$Triplet.txt"
 }
