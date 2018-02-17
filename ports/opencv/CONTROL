@@ -1,10 +1,10 @@
 Source: opencv
-Version: 3.4.0-2
+Version: 3.4.0-3
 Build-Depends: zlib, libpng, libjpeg-turbo, tiff, protobuf (windows)
 Description: computer vision library
 
 Feature: sfm
-Build-Depends: eigen3, glog, gflags
+Build-Depends: eigen3, glog, gflags, ceres
 Description: opencv_sfm module
 
 Feature: cuda
