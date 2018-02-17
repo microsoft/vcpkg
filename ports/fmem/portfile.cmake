@@ -16,8 +16,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Ambrou/fmem
-    REF v1.0
-    SHA512 07fb1dbf2d0b83b0bc69532bb9c0fa5acda07270c8db7e9d3f87e202cdffcf81fa3f146b3f20bf73864c5740eb4cbc95836162284a6bff77704e5a50d320e6c4
+    REF v1.1
+    SHA512 09c331e7fb0e7d9b145ff2b643a31b41361c0284e5347f90c2e06e785836b46bc76f9c04f95412f143f0e2214a7691f240fb0c5ad8f166f312c32d04fa4a99df
     HEAD_REF master
 )
 
@@ -32,11 +32,12 @@ vcpkg_configure_cmake(
     # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
 
+vcpkg_install_cmake()
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-vcpkg_build_cmake()
-
+vcpkg_copy_pdbs()
 
 # Handle copyright
-#file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/fmem RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/fmem RENAME copyright)
 
