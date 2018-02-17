@@ -1,0 +1,25 @@
+From 5c7cc68ada5f5a26d956c3d558c8c78719477610 Mon Sep 17 00:00:00 2001
+From: Daniel Olivier <dan_olivier@hotmail.com>
+Date: Mon, 23 Oct 2017 09:39:40 -0400
+Subject: [PATCH] Fix gyp for building with VS-2017 + vcpkg
+
+Necessary to bypass an error perhaps caused by specificas of my installation of the community edition
+
+diff --git a/pylib/gyp/MSVSVersion.py b/pylib/gyp/MSVSVersion.py
+index 44b958d5..ef0a080b 100644
+--- a/pylib/gyp/MSVSVersion.py
++++ b/pylib/gyp/MSVSVersion.py
+@@ -265,8 +265,8 @@ def _CreateVersion(name, path, sdk_based=False):
+                                   uses_vcxproj=True,
+                                   path=path,
+                                   sdk_based=sdk_based,
+-                                  default_toolset='v141',
+-                                  compatible_sdks=['v8.1', 'v10.0']),
++                                  default_toolset='v141'),
++                                  #, compatible_sdks=['v8.1', 'v10.0']),
+       '2015': VisualStudioVersion('2015',
+                                   'Visual Studio 2015',
+                                   solution_version='12.00',
+-- 
+2.14.2
+
