@@ -23,6 +23,7 @@ target_compile_definitions(libmupdf PRIVATE -DZ_SOLO)
 target_include_directories(libmupdf PRIVATE
   include
   generated
+  thirdparty/lcms2/include
   thirdparty/jbig2dec
   thirdparty/libjpeg
   thirdparty/mujs

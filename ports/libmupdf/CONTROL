@@ -1,4 +1,4 @@
 Source: libmupdf
-Version: 1.11-1
+Version: 1.12.0
 Build-Depends: freetype, libjpeg-turbo, harfbuzz, zlib, curl, glfw3
 Description: a lightweight PDF, XPS, and E-book library

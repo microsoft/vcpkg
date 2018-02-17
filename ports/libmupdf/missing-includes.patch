@@ -1,0 +1,37 @@
+diff --git a/source/fitz/compress.c b/source/fitz/compress.c
+index 439c461..c3b3dd5 100644
+--- a/source/fitz/compress.c
++++ b/source/fitz/compress.c
+@@ -1,5 +1,5 @@
+ #include "mupdf/fitz.h"
+-
++#include <limits.h>
+ #include <zlib.h>
+ 
+ static void *fz_z_alloc(void *opaque, unsigned int count, unsigned int size)
+diff --git a/source/fitz/load-png.c b/source/fitz/load-png.c
+index daa0814..1abf1d0 100644
+--- a/source/fitz/load-png.c
++++ b/source/fitz/load-png.c
+@@ -1,7 +1,7 @@
+ #include "mupdf/fitz.h"
+ 
+ #include <zlib.h>
+-
++#include <limits.h>
+ #include <string.h>
+ 
+ struct info
+diff --git a/source/pdf/pdf-write.c b/source/pdf/pdf-write.c
+index 154655e..c7d7bd4 100644
+--- a/source/pdf/pdf-write.c
++++ b/source/pdf/pdf-write.c
+@@ -3,7 +3,7 @@
+ #include "pdf-imp.h"
+ 
+ #include <zlib.h>
+-
++#include <limits.h>
+ #include <assert.h>
+ #include <string.h>
+ 

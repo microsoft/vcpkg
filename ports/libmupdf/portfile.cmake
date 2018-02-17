@@ -4,13 +4,18 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mupdf-1.11-source)
+set (MUPDF_VERSION 1.12.0)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mupdf-${MUPDF_VERSION}-source)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://mupdf.com/downloads/mupdf-1.11-source.tar.gz"
+    URLS "https://mupdf.com/downloads/archive/mupdf-${MUPDF_VERSION}-source.tar.gz"
     FILENAME "mupdf.tar.gz"
-    SHA512 501670f540e298a8126806ebbd9db8b29866f663b7bbf26c9ade1933e42f0c00ad410b9d93f3ddbfb3e45c38722869095de28d832fe3fb3703c55cc9a01dbf63
+    SHA512 11ae620e55e9ebd5844abd7decacc0dafc90dd1f4907ba6ed12f5c725d3920187fc730a7fc33979bf3ff9451da7dbb51f34480a878083e2064f3455555f47d96
 )
 vcpkg_extract_source_archive(${ARCHIVE})
+vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/missing-includes.patch
+)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
