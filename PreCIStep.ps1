@@ -32,5 +32,5 @@ if ($vsInstallNickname -eq $VISUAL_STUDIO_2017_UNSTABLE_NICKNAME -and ![string]:
 # Create triplets
 CreateTripletsForVS -vsInstallPath $vsInstallPath -vsInstallNickname $vsInstallNickname -outputDir "$vcpkgRootDir\triplets"
 
-# Preare installed dir
+# Prepare installed dir
 & $scriptsDir\PrepareInstalledDir.ps1 -triplet $triplet -incremental $incremental
