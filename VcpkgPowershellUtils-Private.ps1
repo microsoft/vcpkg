@@ -1,3 +1,16 @@
+
+# Constants
+$VISUAL_STUDIO_2017_STABLE_PATH = "C:\VS2017\Stable"
+$VISUAL_STUDIO_2017_UNSTABLE_PATH = "C:\VS2017\Unstable"
+
+$VISUAL_STUDIO_2017_STABLE_NICKNAME = "Stable"
+$VISUAL_STUDIO_2017_UNSTABLE_NICKNAME = "Unstable"
+
+$DEPLOYED_VERSION_FILENAME = "DEPLOYED_VERSION.txt"
+
+
+
+
 function Recipe
 {
     [CmdletBinding()]
@@ -231,11 +244,19 @@ set\(VCPKG_VISUAL_STUDIO_PATH[\s]+"(?<path>[^"]+)
     return $installPath
 }
 
-# Constants
-$VISUAL_STUDIO_2017_STABLE_PATH = "C:\VS2017\Stable"
-$VISUAL_STUDIO_2017_UNSTABLE_PATH = "C:\VS2017\Unstable"
 
-$VISUAL_STUDIO_2017_STABLE_NICKNAME = "Stable"
-$VISUAL_STUDIO_2017_UNSTABLE_NICKNAME = "Unstable"
+function findVSInstallPathFromNickname([Parameter(Mandatory=$true)][string]$vsInstallNickname)
+{
+    if ($vsInstallNickname -eq $VISUAL_STUDIO_2017_UNSTABLE_NICKNAME) # case-insensitive by default
+    {
+        return UnattendedVSupdate -installPath $VISUAL_STUDIO_2017_UNSTABLE_PATH
+    }
 
-$DEPLOYED_VERSION_FILENAME = "DEPLOYED_VERSION.txt"
+    if ($vsInstallNickname -eq $VISUAL_STUDIO_2017_STABLE_NICKNAME)
+    {
+        return UnattendedVSupdate -installPath $VISUAL_STUDIO_2017_STABLE_PATH
+    }
+
+    Write-Error "Could not deduce Visual Studio path for nickname: [$vsInstallNickname]"
+    throw 0
+}

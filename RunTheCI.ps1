@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
-    [string]$Triplet
+    [string]$Triplet,
+    [bool]$miniTest
 )
 
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
@@ -29,5 +30,11 @@ Write-Host "Deleting $cixml ... done."
 
 ./vcpkg remove --outdated --recurse
 
-./vcpkg ci $Triplet --x-xunit=TEST-full-ci.xml --exclude=aws-sdk-cpp
-# ./vcpkg install "zlib:$Triplet" --x-xunit=TEST-full-ci.xml
+if($miniTest)
+{
+    ./vcpkg install "zlib:$Triplet" --x-xunit=TEST-full-ci.xml
+}
+else
+{
+    ./vcpkg ci $Triplet --x-xunit=TEST-full-ci.xml --exclude=aws-sdk-cpp
+}

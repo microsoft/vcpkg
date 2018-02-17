@@ -34,7 +34,10 @@ function unlinkOrDeleteDirectory([Parameter(Mandatory=$true)][string]$path)
 
 $driveLetter = "I:"
 Write-Host "Deleting drive $driveLetter\ ..."
-net use $driveLetter /delete
+if (Test-Path $driveLetter)
+{
+    net use $driveLetter /delete
+}
 Write-Host "Deleting drive $driveLetter\ ... done."
 
 $remoteShare = "\\vcpkg-000\installed"
