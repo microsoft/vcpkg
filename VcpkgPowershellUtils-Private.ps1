@@ -159,7 +159,7 @@ function UnattendedVSupdate
 
     $installerPath = DownloadAndUpdateVSInstaller
 
-    Write-Host "Updating Visual Studio..."
+    Write-Host "Updating Visual Studio at: $installPath..."
     $arguments = (
     "update",
     "--installPath `"$installPath`"",
@@ -168,7 +168,7 @@ function UnattendedVSupdate
     "--norestart") -join " "
 
     $ec = vcpkgInvokeCommand $installerPath "$arguments"
-    checkExit ($ec -eq 0) "Updating Visual Studio... failed."
+    checkExit ($ec -eq 0) "Updating Visual Studio at: $installPath... failed."
 
     for ($i=0; ($i -lt 3) -and ((vcpkgGetProcessByNameRegex "vs_installer*").Count -ne 0); $i++)
     {
@@ -184,7 +184,7 @@ function UnattendedVSupdate
         $remaining | Stop-Process
     }
 
-    Write-Host "Updating Visual Studio... done."
+    Write-Host "Updating Visual Studio at: $installPath... done."
 }
 
 function CreateTripletsForVS
@@ -244,17 +244,16 @@ set\(VCPKG_VISUAL_STUDIO_PATH[\s]+"(?<path>[^"]+)
     return $installPath
 }
 
-
 function findVSInstallPathFromNickname([Parameter(Mandatory=$true)][string]$vsInstallNickname)
 {
     if ($vsInstallNickname -eq $VISUAL_STUDIO_2017_UNSTABLE_NICKNAME) # case-insensitive by default
     {
-        return UnattendedVSupdate -installPath $VISUAL_STUDIO_2017_UNSTABLE_PATH
+        return $VISUAL_STUDIO_2017_UNSTABLE_PATH
     }
 
     if ($vsInstallNickname -eq $VISUAL_STUDIO_2017_STABLE_NICKNAME)
     {
-        return UnattendedVSupdate -installPath $VISUAL_STUDIO_2017_STABLE_PATH
+        return $VISUAL_STUDIO_2017_STABLE_PATH
     }
 
     Write-Error "Could not deduce Visual Studio path for nickname: [$vsInstallNickname]"
