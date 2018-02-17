@@ -11,8 +11,20 @@ vcpkg_from_github(
     SHA512 0d5c872dc797b69ab8ea4b83aebcbac20735b8c6f5adfcc2950aa4d6013d240f5fac3376e817da75ae0ccead50cec0d931619e135a050add438777457b086549
 )
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/fix-target-files.patch"
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DEVENT__DISABLE_BENCHMARK=ON
+        -DEVENT__DISABLE_TESTS=ON
+        -DEVENT__DISABLE_REGRESS=ON
+        -DEVENT__DISABLE_SAMPLES=ON
 )
 
 vcpkg_install_cmake()
