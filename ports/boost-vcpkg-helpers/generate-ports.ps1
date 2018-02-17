@@ -291,7 +291,7 @@ foreach ($library in $libraries)
             -and `
             (($library -notmatch "detail") -or ($_ -notmatch "static_assert|integer|mpl|type_traits"))`
             -and `
-            (($library -notmatch "property_map") -or ($_ -notmatch "mpi"))`
+            ($_ -notmatch "mpi")`
             -and `
             (($library -notmatch "spirit") -or ($_ -notmatch "serialization"))`
             -and `
@@ -357,12 +357,17 @@ foreach ($library in $libraries)
 }
 
 # Generate master boost control file which depends on each individual library
-$boostDependsList = @($libraries_in_boost_port | % { "boost-$_" -replace "_","-" }) -join ", "
+# mpi is excluded due to it having a dependency on msmpi
+$boostDependsList = @($libraries_in_boost_port | % { "boost-$_" -replace "_","-" } | ? { $_ -notmatch "boost-mpi" }) -join ", "
 
 @(
     "Source: boost"
     "Version: $version"
     "Build-Depends: $boostDependsList"
+    ""
+    "Feature: mpi"
+    "Description: Build with MPI support"
+    "Build-Depends: boost-mpi"
 ) | out-file -enc ascii $scriptsDir/../boost/CONTROL
 
 "set(VCPKG_POLICY_EMPTY_PACKAGE enabled)`n" | out-file -enc ascii $scriptsDir/../boost/portfile.cmake
