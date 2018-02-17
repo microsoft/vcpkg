@@ -8,9 +8,6 @@ $VISUAL_STUDIO_2017_UNSTABLE_NICKNAME = "Unstable"
 
 $DEPLOYED_VERSION_FILENAME = "DEPLOYED_VERSION.txt"
 
-
-
-
 function Recipe
 {
     [CmdletBinding()]
