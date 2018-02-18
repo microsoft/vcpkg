@@ -267,13 +267,16 @@ namespace vcpkg::Build
 
         const Triplet& triplet = config.triplet;
         {
-            std::vector<PackageSpec> missing_specs;
+            std::vector<FeatureSpec> missing_specs;
             for (auto&& dep : filter_dependencies(config.scf.core_paragraph->depends, triplet))
             {
-                auto dep_spec = PackageSpec::from_name_and_triplet(dep, triplet).value_or_exit(VCPKG_LINE_INFO);
-                if (!status_db.is_installed(dep_spec))
+                auto dep_specs = FeatureSpec::from_strings_and_triplet({dep}, triplet);
+                for (auto&& feature : dep_specs)
                 {
-                    missing_specs.push_back(std::move(dep_spec));
+                    if (!status_db.is_installed(feature))
+                    {
+                        missing_specs.push_back(std::move(feature));
+                    }
                 }
             }
             // Fail the build if any dependencies were missing
@@ -600,7 +603,7 @@ namespace vcpkg::Build
         : code(code), binary_control_file(std::move(bcf))
     {
     }
-    ExtendedBuildResult::ExtendedBuildResult(BuildResult code, std::vector<PackageSpec>&& unmet_deps)
+    ExtendedBuildResult::ExtendedBuildResult(BuildResult code, std::vector<FeatureSpec>&& unmet_deps)
         : code(code), unmet_dependencies(std::move(unmet_deps))
     {
     }

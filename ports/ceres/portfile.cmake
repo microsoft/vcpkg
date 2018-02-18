@@ -16,14 +16,33 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/fix-find-packages.patch
-)
-
 # Ninja crash compiler with error:
 # "fatal error C1001: An internal error has occurred in the compiler. (compiler file 'f:\dd\vctools\compiler\utc\src\p2\main.c', line 255)"
+
+set(SUITESPARSE OFF)
+if("suitesparse" IN_LIST FEATURES)
+    set(SUITESPARSE ON)
+endif()
+
+set(CXSPARSE OFF)
+if("cxsparse" IN_LIST FEATURES)
+    set(CXSPARSE ON)
+endif()
+
+set(LAPACK OFF)
+if("lapack" IN_LIST FEATURES)
+    set(LAPACK ON)
+endif()
+
+set(EIGENSPARSE OFF)
+if("eigensparse" IN_LIST FEATURES)
+    set(EIGENSPARSE ON)
+endif()
+
+set(GFLAGS OFF)
+if("tools" IN_LIST FEATURES)
+    set(GFLAGS ON)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -31,9 +50,11 @@ vcpkg_configure_cmake(
         -DEXPORT_BUILD_DIR=ON
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
-        -DCXSPARSE=ON
-        -DEIGENSPARSE=ON
-        -DSUITESPARSE=ON
+        -DGFLAGS=${GFLAGS}
+        -DCXSPARSE=${CXSPARSE}
+        -DEIGENSPARSE=${EIGENSPARSE}
+        -DLAPACK=${LAPACK}
+        -DSUITESPARSE=${SUITESPARSE}
         -DGFLAGS_PREFER_EXPORTED_GFLAGS_CMAKE_CONFIGURATION=OFF # TheiaSfm doesn't work well with this
         -DGLOG_PREFER_EXPORTED_GLOG_CMAKE_CONFIGURATION=OFF # TheiaSfm doesn't work well with this
         -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT_VALUE}
@@ -41,7 +62,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
-
 vcpkg_copy_pdbs()
 
 # Changes target search path

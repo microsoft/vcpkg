@@ -21,8 +21,10 @@
 ## ### PREFER_NINJA
 ## Indicates that, when available, Vcpkg should use Ninja to perform the build. This should be specified unless the port is known to not work under Ninja.
 ##
-## ### PREFER_NINJA_NONPARALLEL_CONFIG
-## Indicates that, when available, Vcpkg should use Ninja to perform the build forcing non-parallel execution. This should be used only if parallel ninja execution is known to not work for this port.
+## ### DISABLE_PARALLEL_CONFIGURE
+## Disables running the CMake configure step in parallel.
+##
+## This is needed for libraries which write back into their source directory during configure.
 ##
 ## ### GENERATOR
 ## Specifies the precise generator to use.
@@ -48,7 +50,7 @@
 ## * [poco](https://github.com/Microsoft/vcpkg/blob/master/ports/poco/portfile.cmake)
 ## * [opencv](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv/portfile.cmake)
 function(vcpkg_configure_cmake)
-    cmake_parse_arguments(_csc "PREFER_NINJA;PREFER_NINJA_NONPARALLEL_CONFIG" "SOURCE_PATH;GENERATOR" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" ${ARGN})
+    cmake_parse_arguments(_csc "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE" "SOURCE_PATH;GENERATOR" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" ${ARGN})
 
     if(NOT VCPKG_PLATFORM_TOOLSET)
         message(FATAL_ERROR "Vcpkg has been updated with VS2017 support, however you need to rebuild vcpkg.exe by re-running bootstrap-vcpkg.bat\n")
@@ -72,12 +74,10 @@ function(vcpkg_configure_cmake)
         set(NINJA_CAN_BE_USED OFF)
     endif()
 
-    if (_csc_PREFER_NINJA_NONPARALLEL_CONFIG)
+    if (_csc_DISABLE_PARALLEL_CONFIGURE)
         message(STATUS "Disabling Ninja parallel configure - package has opted-out")
-        set(NINJA_PARALLEL_CONFIGURE OFF)
     else()
         message(STATUS "Enabling Ninja parallel configure")
-        set(NINJA_PARALLEL_CONFIGURE ON)
     endif()
 
     if(_csc_GENERATOR)
@@ -220,7 +220,7 @@ function(vcpkg_configure_cmake)
         -DCMAKE_BUILD_TYPE=Debug
         -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug)
 
-    if(NINJA_CAN_BE_USED AND NINJA_PARALLEL_CONFIGURE AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+    if(NINJA_CAN_BE_USED AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows" AND NOT _csc_DISABLE_PARALLEL_CONFIGURE)
 
         vcpkg_find_acquire_program(NINJA)
         get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)

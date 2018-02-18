@@ -2,16 +2,17 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/magnum
-    REF 68953f8c872b7c08f792c6082b8ab152f2119560
-    SHA512 00b507b85ed3454f81fe7098e1fc349d4048a2372e3b2aceabccc0c4287540ed3850f8dd9cdcd9cfb9542ba9af741e30e43e2b03bbc5490b552f862da34369b1
+    REF v2018.02
+    SHA512 aeb0cab91ae0a7cca79c15ce98d9b2f8d46f5bc11bb90718e59188bf233154fb51668e0241112b65103f40e675736d74c86a2e5ccffcb698780ccedb1b3fb8bd
     HEAD_REF master
 )
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/001-sdl-includes.patch 
+        ${CMAKE_CURRENT_LIST_DIR}/001-sdl-includes.patch
         ${CMAKE_CURRENT_LIST_DIR}/002-tools-path.patch
+        ${CMAKE_CURRENT_LIST_DIR}/003-glfw-find-module.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -22,23 +23,27 @@ else()
     set(BUILD_PLUGINS_STATIC 0)
 endif()
 
+# Handle features
+set(_COMPONENT_FLAGS "")
+foreach(_feature IN LISTS ALL_FEATURES)
+    # Uppercase the feature name and replace "-" with "_"
+    string(TOUPPER "${_feature}" _FEATURE)
+    string(REPLACE "-" "_" _FEATURE "${_FEATURE}")
+
+    # Turn "-DWITH_*=" ON or OFF depending on whether the feature
+    # is in the list.
+    if(_feature IN_LIST FEATURES)
+        list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=ON")
+    else()
+        list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=OFF")
+    endif()
+endforeach()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
-        -DWITH_SDL2APPLICATION=ON
-        -DWITH_WINDOWLESSWGLAPPLICATION=ON
-        -DWITH_WGLCONTEXT=ON
-        -DWITH_OPENGLTESTER=ON
-        -DWITH_AUDIO=ON
-        -DWITH_WAVAUDIOIMPORTER=ON
-        -DWITH_MAGNUMFONT=ON
-        -DWITH_MAGNUMFONTCONVERTER=ON
-        -DWITH_OBJIMPORTER=ON
-        -DWITH_TGAIMPORTER=ON
-        -DWITH_DISTANCEFIELDCONVERTER=ON
-        -DWITH_FONTCONVERTER=ON
-        -DWITH_TGAIMAGECONVERTER=ON
+        ${_COMPONENT_FLAGS}
         -DBUILD_STATIC=${BUILD_STATIC}
         -DBUILD_PLUGINS_STATIC=${BUILD_PLUGINS_STATIC}
         -DMAGNUM_PLUGINS_DEBUG_DIR=${CURRENT_INSTALLED_DIR}/debug/bin/magnum-d
@@ -48,17 +53,28 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Drop a copy of tools
-file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-distancefieldconverter.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
-file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-fontconverter.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
+if(distancefieldconverter IN_LIST FEATURES)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-distancefieldconverter.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
+endif()
+if(fontconverter IN_LIST FEATURES)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-fontconverter.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
+endif()
+if(al-info IN_LIST FEATURES)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-al-info.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
+endif()
+if(magnuminfo IN_LIST FEATURES)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-info.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
+endif()
 
 # Tools require dlls
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/magnum)
 
-file(GLOB_RECURSE TO_REMOVE 
+file(GLOB_RECURSE TO_REMOVE
    ${CURRENT_PACKAGES_DIR}/bin/*.exe
    ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-file(REMOVE ${TO_REMOVE})
-
+if(TO_REMOVE)
+    file(REMOVE ${TO_REMOVE})
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
