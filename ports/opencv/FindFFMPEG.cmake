@@ -143,10 +143,23 @@ IF (FFMPEG_libavformat_FOUND AND FFMPEG_libavcodec_FOUND AND STDINT_OK)
 
     # Note we don't add FFMPEG_LIBSWSCALE_LIBRARIES here,
     # it will be added if found later.
-    SET(FFMPEG_LIBRARIES
+    if(WIN32)
+      SET(FFMPEG_LIBRARIES
         ${FFMPEG_libavformat_LIBRARIES}
         ${FFMPEG_libavdevice_LIBRARIES}
         ${FFMPEG_libavcodec_LIBRARIES}
         ${FFMPEG_libavutil_LIBRARIES}
-        ${FFMPEG_libswscale_LIBRARIES})
+        ${FFMPEG_libswscale_LIBRARIES}
+        wsock32 ws2_32 Secur32
+      )
+    else()
+      SET(FFMPEG_LIBRARIES
+        ${FFMPEG_libavformat_LIBRARIES}
+        ${FFMPEG_libavdevice_LIBRARIES}
+        ${FFMPEG_libavcodec_LIBRARIES}
+        ${FFMPEG_libavutil_LIBRARIES}
+        ${FFMPEG_libswscale_LIBRARIES}
+      )
+    endif()
+
 ENDIF()
