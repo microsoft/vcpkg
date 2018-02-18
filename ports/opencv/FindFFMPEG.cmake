@@ -120,7 +120,6 @@ ELSE()
 ENDIF()
 
 FFMPEG_FIND(libavformat   avformat   avformat.h)
-FFMPEG_FIND(libavresample avresample avresample.h)
 FFMPEG_FIND(libavdevice   avdevice   avdevice.h)
 FFMPEG_FIND(libavcodec    avcodec    avcodec.h)
 FFMPEG_FIND(libavutil     avutil     avutil.h)
@@ -128,14 +127,12 @@ FFMPEG_FIND(libswscale    swscale    swscale.h)  # not sure about the header to 
 
 SET(FFMPEG_FOUND "NO")
 
-# Note we don't check FFMPEG_LIBSWSCALE_FOUND, FFMPEG_LIBAVDEVICE_FOUND,
-# and FFMPEG_LIBAVUTIL_FOUND as they are optional.
-IF (FFMPEG_LIBAVFORMAT_FOUND AND FFMPEG_LIBAVCODEC_FOUND AND STDINT_OK)
+# Note we don't check FFMPEG_libswscale_FOUND, FFMPEG_libavdevice_FOUND,
+# and FFMPEG_libavutil_FOUND as they are optional.
+IF (FFMPEG_libavformat_FOUND AND FFMPEG_libavcodec_FOUND AND STDINT_OK)
 
     SET(FFMPEG_FOUND "YES")
-
     SET(FFMPEG_INCLUDE_DIRS ${FFMPEG_libavformat_INCLUDE_DIRS})
-
     SET(FFMPEG_LIBRARY_DIRS ${FFMPEG_libavformat_LIBRARY_DIRS})
 
     # Note we hardcode the versions as expected by OpenCV
@@ -143,13 +140,11 @@ IF (FFMPEG_LIBAVFORMAT_FOUND AND FFMPEG_LIBAVCODEC_FOUND AND STDINT_OK)
     set(FFMPEG_libavformat_VERSION 57.71.100)
     set(FFMPEG_libavutil_VERSION 55.58.100)
     set(FFMPEG_libswscale_VERSION 4.6.100)
-    set(FFMPEG_libavresample_VERSION 3.5.0)
 
     # Note we don't add FFMPEG_LIBSWSCALE_LIBRARIES here,
     # it will be added if found later.
     SET(FFMPEG_LIBRARIES
         ${FFMPEG_libavformat_LIBRARIES}
-        ${FFMPEG_libavresample_LIBRARIES}
         ${FFMPEG_libavdevice_LIBRARIES}
         ${FFMPEG_libavcodec_LIBRARIES}
         ${FFMPEG_libavutil_LIBRARIES}
