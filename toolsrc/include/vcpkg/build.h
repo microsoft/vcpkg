@@ -104,11 +104,11 @@ namespace vcpkg::Build
     struct ExtendedBuildResult
     {
         ExtendedBuildResult(BuildResult code);
-        ExtendedBuildResult(BuildResult code, std::vector<PackageSpec>&& unmet_deps);
+        ExtendedBuildResult(BuildResult code, std::vector<FeatureSpec>&& unmet_deps);
         ExtendedBuildResult(BuildResult code, std::unique_ptr<BinaryControlFile>&& bcf);
 
         BuildResult code;
-        std::vector<PackageSpec> unmet_dependencies;
+        std::vector<FeatureSpec> unmet_dependencies;
         std::unique_ptr<BinaryControlFile> binary_control_file;
     };
 

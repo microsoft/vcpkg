@@ -15,6 +15,7 @@ Build-Depends: cuda
 Description: CUDA support for opencv
 
 Feature: ffmpeg
+Build-Depends: ffmpeg
 Description: ffmpeg support for opencv
 
 Feature: qt

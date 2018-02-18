@@ -26,11 +26,12 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
-            -DWITH_UTILITIES=OFF
             -DWITH_TIFF=ON
             -DWITH_PROJ4=ON
             -DWITH_ZLIB=ON
             -DWITH_JPEG=ON
+    OPTIONS_RELEASE -DWITH_UTILITIES=ON
+    OPTIONS_DEBUG   -DWITH_UTILITIES=OFF
 )
 
 vcpkg_build_cmake()
@@ -39,6 +40,11 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libgeotiff RENAME copyright)
+
+file(GLOB GEOTIFF_UTILS ${CURRENT_PACKAGES_DIR}/bin/*.exe)
+file(INSTALL ${GEOTIFF_UTILS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/libgeotiff/)
+file(REMOVE ${GEOTIFF_UTILS})
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/libgeotiff)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)

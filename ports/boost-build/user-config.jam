@@ -11,6 +11,14 @@ if "@PORT@" = "boost-python"
     using python : @PYTHON_VERSION@ : : "@PYTHON_INCLUDE_PATH@" : "@PYTHONLIBS_DEBUG@" : <python-debugging>on ;
 }
 
+if "@PORT@" = "boost-mpi"
+{
+    using mpi : :
+        <library-path>@CURRENT_INSTALLED_DIR@/lib
+        <include>@CURRENT_INSTALLED_DIR@/include
+        <find-shared-library>msmpi ;
+}
+
 project user-config : ;
 
 lib advapi32 ;

@@ -1,5 +1,4 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4464441..fbcf597 100644
+diff --git CMakeLists.txt CMakeLists.txt
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -292,11 +292,15 @@ OCV_OPTION(INSTALL_PYTHON_EXAMPLES  "Install Python examples"   OFF )
