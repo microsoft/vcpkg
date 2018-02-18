@@ -1,43 +1,15 @@
 include(vcpkg_common_functions)
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO opencv/opencv
-    REF 3.4.0
-    SHA512 aa7e475f356ffdaeb2ae9f7e9380c92cae58fabde9cd3b23c388f9190b8fde31ee70d16648042d0c43c03b2ff1f15e4be950be7851133ea0aa82cf6e42ba4710
-    HEAD_REF master
-)
-
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-    "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVCompilerOptions.cmake.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVGenConfig.cmake.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVGenHeaders.cmake.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVModule.cmake.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/data__CMakeLists.txt.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/include__CMakeLists.txt.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/modules__core__src__utils__filesystem.cpp.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/modules__highgui__include__opencv2__highgui__highgui_winrt.hpp.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/modules__highgui__src__window_winrt_bridge.hpp.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/modules__videoio__src__cap_winrt__CaptureFrameGrabber.cpp.patch"
-)
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
-    REPO opencv/opencv_contrib
-    REF 3.4.0
-    SHA512 53f6127304f314d3be834f79520d4bc8a75e14cad8c9c14a66a7a6b37908ded114d24e3a2c664d4ec2275903db08ac826f29433e810c6400f3adc2714a3c5be7
-    HEAD_REF master
-)
-
-string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
+set (OPENCV_PORT_VERSION "3.4.0")
 
 set(BUILD_opencv_sfm OFF)
 if("sfm" IN_LIST FEATURES)
   set(BUILD_opencv_sfm ON)
+endif()
+
+set(BUILD_opencv_contrib OFF)
+if("contrib" IN_LIST FEATURES)
+  set(BUILD_opencv_contrib ON)
 endif()
 
 set(WITH_CUDA OFF)
@@ -69,6 +41,48 @@ set(WITH_MSMF ON)
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   set(WITH_MSMF OFF)
 endif()
+
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO opencv/opencv
+    REF ${OPENCV_PORT_VERSION}
+    SHA512 aa7e475f356ffdaeb2ae9f7e9380c92cae58fabde9cd3b23c388f9190b8fde31ee70d16648042d0c43c03b2ff1f15e4be950be7851133ea0aa82cf6e42ba4710
+    HEAD_REF master
+)
+
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+    "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVCompilerOptions.cmake.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVFindLibsVideo.cmake.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVGenConfig.cmake.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVGenHeaders.cmake.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVModule.cmake.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/data__CMakeLists.txt.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/include__CMakeLists.txt.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/modules__core__src__utils__filesystem.cpp.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/modules__highgui__include__opencv2__highgui__highgui_winrt.hpp.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/modules__highgui__src__window_winrt_bridge.hpp.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/modules__videoio__src__cap_winrt__CaptureFrameGrabber.cpp.patch"
+)
+
+file(COPY ${CURRENT_PORT_DIR}/FindFFMPEG.cmake DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
+
+if(BUILD_opencv_contrib)
+  vcpkg_from_github(
+      OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
+      REPO opencv/opencv_contrib
+      REF ${OPENCV_PORT_VERSION}
+      SHA512 53f6127304f314d3be834f79520d4bc8a75e14cad8c9c14a66a7a6b37908ded114d24e3a2c664d4ec2275903db08ac826f29433e810c6400f3adc2714a3c5be7
+      HEAD_REF master
+  )
+  set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
+endif()
+
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
 set(BUILD_integrated_JPEG OFF)
 set(BUILD_integrated_TIFF OFF)
@@ -127,7 +141,7 @@ vcpkg_configure_cmake(
         # OPENCV
         -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
         "-DOPENCV_DOWNLOAD_PATH=${DOWNLOADS}/opencv-cache"
-        -DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules
+        ${BUILD_WITH_CONTRIB_FLAG}
         -DOPENCV_OTHER_INSTALL_PATH=share/opencv
         # WITH
         -DWITH_CUBLAS=OFF
