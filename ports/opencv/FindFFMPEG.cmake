@@ -1,11 +1,27 @@
+# Distributed under the OSI-approved BSD 3-Clause License.
+# Copyright Stefano Sinigardi
 #
-# Find the native FFMPEG includes and library
-# This module defines
-# FFMPEG_INCLUDE_DIR, where to find avcodec.h, avformat.h ...
-# FFMPEG_LIBRARIES, the libraries to link against to use FFMPEG.
-# FFMPEG_FOUND, If false, do not try to use FFMPEG.
-# FFMPEG_ROOT, if this module use this path to find FFMPEG headers
-# and libraries.
+#.rst:
+# FindFFMPEG
+# --------
+#
+# Result Variables
+# ^^^^^^^^^^^^^^^^
+#
+# This module will set the following variables in your project::
+#
+#  FFMPEG_FOUND          - True if FFMPEG found on the local system
+#  FFMPEG_INCLUDE_DIRD   - Location of FFMPEG header files.
+#  FFMPEG_LIBRARIES      - The FFMPEG libraries.
+#
+# Hints
+# ^^^^^
+#
+# Set ``FFMPEG_ROOT`` to a directory that contains a FFMPEG installation.
+#
+#
+
+include(FindPackageHandleStandardArgs)
 
 # Macro to find header and lib directories
 # example: FFMPEG_FIND(AVFORMAT avformat avformat.h)
@@ -104,7 +120,6 @@ ELSE()
 ENDIF()
 
 FFMPEG_FIND(libavformat   avformat   avformat.h)
-FFMPEG_FIND(libavresample avresample avresample.h)
 FFMPEG_FIND(libavdevice   avdevice   avdevice.h)
 FFMPEG_FIND(libavcodec    avcodec    avcodec.h)
 FFMPEG_FIND(libavutil     avutil     avutil.h)
@@ -112,14 +127,12 @@ FFMPEG_FIND(libswscale    swscale    swscale.h)  # not sure about the header to 
 
 SET(FFMPEG_FOUND "NO")
 
-# Note we don't check FFMPEG_LIBSWSCALE_FOUND, FFMPEG_LIBAVDEVICE_FOUND,
-# and FFMPEG_LIBAVUTIL_FOUND as they are optional.
-IF (FFMPEG_LIBAVFORMAT_FOUND AND FFMPEG_LIBAVCODEC_FOUND AND STDINT_OK)
+# Note we don't check FFMPEG_libswscale_FOUND, FFMPEG_libavdevice_FOUND,
+# and FFMPEG_libavutil_FOUND as they are optional.
+IF (FFMPEG_libavformat_FOUND AND FFMPEG_libavcodec_FOUND AND STDINT_OK)
 
     SET(FFMPEG_FOUND "YES")
-
     SET(FFMPEG_INCLUDE_DIRS ${FFMPEG_libavformat_INCLUDE_DIRS})
-
     SET(FFMPEG_LIBRARY_DIRS ${FFMPEG_libavformat_LIBRARY_DIRS})
 
     # Note we hardcode the versions as expected by OpenCV
@@ -127,15 +140,26 @@ IF (FFMPEG_LIBAVFORMAT_FOUND AND FFMPEG_LIBAVCODEC_FOUND AND STDINT_OK)
     set(FFMPEG_libavformat_VERSION 57.71.100)
     set(FFMPEG_libavutil_VERSION 55.58.100)
     set(FFMPEG_libswscale_VERSION 4.6.100)
-    set(FFMPEG_libavresample_VERSION 3.5.0)
 
     # Note we don't add FFMPEG_LIBSWSCALE_LIBRARIES here,
     # it will be added if found later.
-    SET(FFMPEG_LIBRARIES
+    if(WIN32)
+      SET(FFMPEG_LIBRARIES
         ${FFMPEG_libavformat_LIBRARIES}
-        ${FFMPEG_libavresample_LIBRARIES}
         ${FFMPEG_libavdevice_LIBRARIES}
         ${FFMPEG_libavcodec_LIBRARIES}
         ${FFMPEG_libavutil_LIBRARIES}
-        ${FFMPEG_libswscale_LIBRARIES})
+        ${FFMPEG_libswscale_LIBRARIES}
+        wsock32 ws2_32 Secur32
+      )
+    else()
+      SET(FFMPEG_LIBRARIES
+        ${FFMPEG_libavformat_LIBRARIES}
+        ${FFMPEG_libavdevice_LIBRARIES}
+        ${FFMPEG_libavcodec_LIBRARIES}
+        ${FFMPEG_libavutil_LIBRARIES}
+        ${FFMPEG_libswscale_LIBRARIES}
+      )
+    endif()
+
 ENDIF()

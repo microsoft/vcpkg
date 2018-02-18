@@ -1,5 +1,4 @@
 diff --git cmake/OpenCVModule.cmake cmake/OpenCVModule.cmake
-index a84bbff..1a098c4 100644
 --- a/cmake/OpenCVModule.cmake
 +++ b/cmake/OpenCVModule.cmake
 @@ -785,7 +785,7 @@ macro(ocv_create_module)

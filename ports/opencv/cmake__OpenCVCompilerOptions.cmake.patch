@@ -1,5 +1,4 @@
 diff --git cmake/OpenCVCompilerOptions.cmake cmake/OpenCVCompilerOptions.cmake
-index 353ee12..8f4aa3b 100644
 --- a/cmake/OpenCVCompilerOptions.cmake
 +++ b/cmake/OpenCVCompilerOptions.cmake
 @@ -37,6 +37,9 @@ if(MSVC)

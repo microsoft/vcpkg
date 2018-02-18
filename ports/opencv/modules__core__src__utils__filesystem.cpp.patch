@@ -1,5 +1,4 @@
 diff --git modules/core/src/utils/filesystem.cpp modules/core/src/utils/filesystem.cpp
-index 266a92f..1d5a302 100644
 --- a/modules/core/src/utils/filesystem.cpp
 +++ b/modules/core/src/utils/filesystem.cpp
 @@ -186,7 +186,7 @@ bool createDirectory(const cv::String& path)

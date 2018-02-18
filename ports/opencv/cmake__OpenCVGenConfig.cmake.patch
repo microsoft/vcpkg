@@ -1,5 +1,4 @@
 diff --git cmake/OpenCVGenConfig.cmake cmake/OpenCVGenConfig.cmake
-index 57c79f2..23f1012 100644
 --- a/cmake/OpenCVGenConfig.cmake
 +++ b/cmake/OpenCVGenConfig.cmake
 @@ -103,7 +103,7 @@ function(ocv_gen_config TMP_DIR NESTED_PATH ROOT_NAME)

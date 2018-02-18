@@ -101,7 +101,8 @@ endif()
 
 
 vcpkg_configure_cmake(
-    PREFER_NINJA_NONPARALLEL_CONFIG
+    DISABLE_PARALLEL_CONFIGURE
+    PREFER_NINJA
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         # Ungrouped Entries

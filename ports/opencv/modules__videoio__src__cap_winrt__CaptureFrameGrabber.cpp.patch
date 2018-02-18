@@ -1,5 +1,4 @@
 diff --git modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp
-index 236e227..3bef105 100644
 --- a/modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp
 +++ b/modules/videoio/src/cap_winrt/CaptureFrameGrabber.cpp
 @@ -94,10 +94,10 @@ Media::CaptureFrameGrabber::~CaptureFrameGrabber()

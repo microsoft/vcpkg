@@ -1,5 +1,4 @@
 diff --git cmake/OpenCVGenHeaders.cmake cmake/OpenCVGenHeaders.cmake
-index 477b910..beace28 100644
 --- a/cmake/OpenCVGenHeaders.cmake
 +++ b/cmake/OpenCVGenHeaders.cmake
 @@ -1,7 +1,9 @@

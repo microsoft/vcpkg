@@ -1,5 +1,4 @@
 diff --git include/CMakeLists.txt include/CMakeLists.txt
-index b4e48e6..5ac6f16 100644
 --- a/include/CMakeLists.txt
 +++ b/include/CMakeLists.txt
 @@ -1,7 +1,9 @@
