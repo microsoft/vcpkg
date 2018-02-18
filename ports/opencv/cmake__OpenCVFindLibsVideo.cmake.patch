@@ -1,5 +1,4 @@
 diff --git cmake/OpenCVFindLibsVideo.cmake cmake/OpenCVFindLibsVideo.cmake
-index f7b427b..18ecc5f 100644
 --- a/cmake/OpenCVFindLibsVideo.cmake
 +++ b/cmake/OpenCVFindLibsVideo.cmake
 @@ -1,6 +1,7 @@

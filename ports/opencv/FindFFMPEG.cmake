@@ -1,11 +1,27 @@
+# Distributed under the OSI-approved BSD 3-Clause License.
+# Copyright Stefano Sinigardi
 #
-# Find the native FFMPEG includes and library
-# This module defines
-# FFMPEG_INCLUDE_DIR, where to find avcodec.h, avformat.h ...
-# FFMPEG_LIBRARIES, the libraries to link against to use FFMPEG.
-# FFMPEG_FOUND, If false, do not try to use FFMPEG.
-# FFMPEG_ROOT, if this module use this path to find FFMPEG headers
-# and libraries.
+#.rst:
+# FindFFMPEG
+# --------
+#
+# Result Variables
+# ^^^^^^^^^^^^^^^^
+#
+# This module will set the following variables in your project::
+#
+#  FFMPEG_FOUND          - True if FFMPEG found on the local system
+#  FFMPEG_INCLUDE_DIRD   - Location of FFMPEG header files.
+#  FFMPEG_LIBRARIES      - The FFMPEG libraries.
+#
+# Hints
+# ^^^^^
+#
+# Set ``FFMPEG_ROOT`` to a directory that contains a FFMPEG installation.
+#
+#
+
+include(FindPackageHandleStandardArgs)
 
 # Macro to find header and lib directories
 # example: FFMPEG_FIND(AVFORMAT avformat avformat.h)
