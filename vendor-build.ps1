@@ -15,6 +15,7 @@ Invoke-VcpkgBuild "zlib"
 Invoke-VcpkgBuild "sqlite3"
 Invoke-VcpkgBuild "boost"
 Invoke-VcpkgBuild "fmt"
+Invoke-VcpkgBuild "protobuf"
 Invoke-VcpkgBuild "hiredis"
 Invoke-VcpkgBuild "json-c"
 Invoke-VcpkgBuild "libevent"
@@ -27,4 +28,4 @@ Invoke-VcpkgBuild "websocketpp"
 Invoke-VcpkgBuild "curl"
 
 # update the version anytime the installed package versions change
-Write-Output 8 > installed/version.txt
+Write-Output 9 > installed/version.txt
