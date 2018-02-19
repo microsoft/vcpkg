@@ -53,7 +53,7 @@ function(qt_modular_library NAME HASH)
     #Fix the cmake files if they exist
     if(EXISTS ${RELEASE_DIR}/lib/cmake)
         vcpkg_execute_required_process(
-            COMMAND ${PYTHON2} ${_qt5base_port_dir}/fixcmake.py
+            COMMAND ${PYTHON2} ${_qt5base_port_dir}/fixcmake.py ${PORT}
             WORKING_DIRECTORY ${RELEASE_DIR}/lib/cmake
             LOGNAME fix-cmake
         )
