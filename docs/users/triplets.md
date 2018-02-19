@@ -42,11 +42,11 @@ Example:
 ```cmake
 set(VCPKG_LIBRARY_LINKAGE static)
 set(VCPKG_CRT_LINKAGE dynamic)
-if(PORT STREQUAL "qt5")
+if(PORT MATCHES "qt5-")
     set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
 ```
-This will build `qt5` as DLLs against the dynamic CRT, but every other library as a static library (still against the dynamic CRT).
+This will build all the `qt5-*` libraries as DLLs against the dynamic CRT, but every other library as a static library (still against the dynamic CRT).
 
 For an example in a real project, see https://github.com/Intelight/vcpkg/blob/master/triplets/x86-windows-mixed.cmake.
 
