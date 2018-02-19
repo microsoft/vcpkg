@@ -31,7 +31,7 @@ namespace vcpkg::Checks
 #if defined(_WIN32)
         ::TerminateProcess(::GetCurrentProcess(), exit_code);
 #else
-        ::exit(exit_code);
+        std::exit(exit_code);
 #endif
     }
 

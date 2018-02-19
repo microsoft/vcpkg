@@ -30,7 +30,6 @@ namespace vcpkg::Commands::Contact
 
         if (Util::Sets::contains(parsed_args.switches, switches[0].name))
         {
-#if defined(_WIN32)
             auto maybe_now = Chrono::CTime::get_current_date_time();
             if (auto p_now = maybe_now.get())
             {
@@ -39,10 +38,14 @@ namespace vcpkg::Commands::Contact
                 config.last_completed_survey = p_now->to_string();
                 config.try_write_data(fs);
             }
-#endif
 
+#if defined(_WIN32)
             System::cmd_execute("start https://aka.ms/NPS_vcpkg");
-            System::println("Default browser launched to https://aka.ms/NPS_vcpkg, thank you for your feedback!");
+            System::println("Default browser launched to https://aka.ms/NPS_vcpkg; thank you for your feedback!");
+#else
+            System::println(
+                "Please navigate to https://aka.ms/NPS_vcpkg in your preferred browser. Thank you for your feedback!");
+#endif
         }
         else
         {

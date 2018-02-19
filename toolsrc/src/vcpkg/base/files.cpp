@@ -166,7 +166,7 @@ namespace vcpkg::Files
         }
         virtual void write_contents(const fs::path& file_path, const std::string& data, std::error_code& ec) override
         {
-            ec = std::error_code();
+            ec.clear();
 
             FILE* f = nullptr;
 #if defined(_WIN32)

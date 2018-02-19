@@ -171,7 +171,6 @@ static void inner(const VcpkgCmdArguments& args)
 
 static void load_config()
 {
-#if defined(_WIN32)
     auto& fs = Files::get_real_filesystem();
 
     auto config = UserConfig::try_read_data(fs);
@@ -185,16 +184,20 @@ static void load_config()
         write_config = true;
     }
 
+#if defined(_WIN32)
     if (config.user_mac.empty())
     {
         config.user_mac = Metrics::get_MAC_user();
         write_config = true;
     }
+#endif
 
     {
         auto locked_metrics = Metrics::g_metrics.lock();
         locked_metrics->set_user_information(config.user_id, config.user_time);
+#if defined(_WIN32)
         locked_metrics->track_property("user_mac", config.user_mac);
+#endif
     }
 
     if (config.last_completed_survey.empty())
@@ -208,7 +211,6 @@ static void load_config()
     {
         config.try_write_data(fs);
     }
-#endif
 }
 
 static std::string trim_path_from_command_line(const std::string& full_command_line)
