@@ -17,9 +17,11 @@ diff --git cmake/OpenCVFindLibsVideo.cmake cmake/OpenCVFindLibsVideo.cmake
      FIND_PACKAGE(GstreamerWindows)
      IF(GSTREAMER_gstbase_LIBRARY AND GSTREAMER_gstvideo_LIBRARY AND GSTREAMER_gstapp_LIBRARY AND GSTREAMER_gstpbutils_LIBRARY AND GSTREAMER_gstriff_LIBRARY)
        set(HAVE_GSTREAMER TRUE)
-@@ -213,38 +213,29 @@ endif(WITH_XIMEA)
+@@ -212,39 +212,35 @@ endif(WITH_XIMEA)
+
  # --- FFMPEG ---
  ocv_clear_vars(HAVE_FFMPEG)
++message(STATUS "Should look for FFMPEG: ${WITH_FFMPEG}")
  if(WITH_FFMPEG)
 -  if(WIN32 AND NOT ARM)
 -    include("${OpenCV_SOURCE_DIR}/3rdparty/ffmpeg/ffmpeg.cmake")
@@ -67,12 +69,16 @@ diff --git cmake/OpenCVFindLibsVideo.cmake cmake/OpenCVFindLibsVideo.cmake
 +                  "-DLINK_LIBRARIES:STRING=${FFMPEG_LIBRARIES}"
 +      OUTPUT_VARIABLE TRY_OUT
 +  )
++  message(STATUS "FFMPEG_FOUND: ${FFMPEG_FOUND}")
++  message(STATUS "FFMPEG_INCLUDE_DIRS: ${FFMPEG_INCLUDE_DIRS}")
++  message(STATUS "FFMPEG_LIBRARIES: ${FFMPEG_LIBRARIES}")
 +  if(NOT __VALID_FFMPEG)
 +    #message(FATAL_ERROR "FFMPEG: test check build log:\n${TRY_OUT}")
 +    message(STATUS "WARNING: Can't build ffmpeg test code")
 +    set(HAVE_FFMPEG FALSE)
 +  else()
 +    ocv_append_build_options(VIDEOIO FFMPEG)
++    set(HAVE_FFMPEG TRUE)
    endif()
  endif(WITH_FFMPEG)
 

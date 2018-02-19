@@ -67,6 +67,7 @@ vcpkg_apply_patches(
     "${CMAKE_CURRENT_LIST_DIR}/modules__highgui__include__opencv2__highgui__highgui_winrt.hpp.patch"
     "${CMAKE_CURRENT_LIST_DIR}/modules__highgui__src__window_winrt_bridge.hpp.patch"
     "${CMAKE_CURRENT_LIST_DIR}/modules__videoio__src__cap_winrt__CaptureFrameGrabber.cpp.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/modules__videoio__CMakeLists.txt.patch"
 )
 
 file(COPY ${CURRENT_PORT_DIR}/FindFFMPEG.cmake DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
