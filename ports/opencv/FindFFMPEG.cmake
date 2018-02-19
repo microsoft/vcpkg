@@ -1,165 +1,104 @@
 # Distributed under the OSI-approved BSD 3-Clause License.
-# Copyright Stefano Sinigardi
 #
 #.rst:
 # FindFFMPEG
 # --------
 #
+# Find the FFPMEG libraries
+#
 # Result Variables
 # ^^^^^^^^^^^^^^^^
 #
-# This module will set the following variables in your project::
+# The following variables will be defined:
 #
-#  FFMPEG_FOUND          - True if FFMPEG found on the local system
-#  FFMPEG_INCLUDE_DIRD   - Location of FFMPEG header files.
-#  FFMPEG_LIBRARIES      - The FFMPEG libraries.
+#  ``FFMPEG_FOUND``
+#    True if FFMPEG found on the local system
+#
+#  ``FFMPEG_INCLUDE_DIRS``
+#    Location of FFMPEG header files
+#
+#  ``FFMPEG_LIBRARY_DIRS``
+#    Location of FFMPEG libraries
+#
+#  ``FFMPEG_LIBRARIES``
+#    List of the FFMPEG libraries found
 #
 # Hints
 # ^^^^^
 #
-# Set ``FFMPEG_ROOT`` to a directory that contains a FFMPEG installation.
+#  ``FFMPEG_ROOT``
+#    Set this variable to a directory that contains a FFMPEG installation
 #
 #
 
 include(FindPackageHandleStandardArgs)
+include(SelectLibraryConfigurations)
 
-# Macro to find header and lib directories
-# example: FFMPEG_FIND(AVFORMAT avformat avformat.h)
-MACRO(FFMPEG_FIND varname shortname headername)
-    # old version of ffmpeg put header in $prefix/include/[ffmpeg]
-    # so try to find header in include directory
-    FIND_PATH(FFMPEG_${varname}_INCLUDE_DIRS lib${shortname}/${headername}
-        PATHS
-        ${FFMPEG_ROOT}/include/lib${shortname}
-        $ENV{FFMPEG_DIR}/include/lib${shortname}
-        ~/Library/Frameworks/lib${shortname}
-        /Library/Frameworks/lib${shortname}
-        /usr/local/include/lib${shortname}
-        /usr/include/lib${shortname}
-        /sw/include/lib${shortname} # Fink
-        /opt/local/include/lib${shortname} # DarwinPorts
-        /opt/csw/include/lib${shortname} # Blastwave
-        /opt/include/lib${shortname}
-        /usr/freeware/include/lib${shortname}
-        PATH_SUFFIXES ffmpeg
-        DOC "Location of FFMPEG Headers"
-    )
+#  Platform dependent libraries required by FFMPEG
+if(WIN32)
+  if(NOT CYGWIN)
+    set( FFMPEG_PLATFORM_DEPENDENT_LIBS wsock32 ws2_32 Secur32 )
+  endif()
+endif()
 
-    FIND_PATH(FFMPEG_${varname}_INCLUDE_DIRS lib${shortname}/${headername}
-        PATHS
-        ${FFMPEG_ROOT}/include
-        $ENV{FFMPEG_DIR}/include
-        ~/Library/Frameworks
-        /Library/Frameworks
-        /usr/local/include
-        /usr/include
-        /sw/include # Fink
-        /opt/local/include # DarwinPorts
-        /opt/csw/include # Blastwave
-        /opt/include
-        /usr/freeware/include
-        PATH_SUFFIXES ffmpeg
-        DOC "Location of FFMPEG Headers"
-    )
+# If the user has provided ``FFMPEG_ROOT``, use it!  Choose items found
+# at this location over system locations.
+if( EXISTS "$ENV{FFMPEG_ROOT}" )
+  file( TO_CMAKE_PATH "$ENV{FFMPEG_ROOT}" FFMPEG_ROOT )
+  set( FFMPEG_ROOT "${FFMPEG_ROOT}" CACHE PATH "Prefix for FFMPEG installation." )
+elseif(EXISTS "$ENV{FFMPEG_DIR}" )
+  file( TO_CMAKE_PATH "$ENV{FFMPEG_DIR}" FFMPEG_ROOT )
+  set( FFMPEG_ROOT "${FFMPEG_ROOT}" CACHE PATH "Prefix for FFMPEG installation." )
+endif()
 
-    FIND_LIBRARY(FFMPEG_${varname}_LIBRARIES
-        NAMES ${shortname}
-        PATHS
-        ${FFMPEG_ROOT}/lib
-        $ENV{FFMPEG_DIR}/lib
-        ~/Library/Frameworks
-        /Library/Frameworks
-        /usr/local/lib
-        /usr/local/lib64
-        /usr/lib
-        /usr/lib64
-        /sw/lib
-        /opt/local/lib
-        /opt/csw/lib
-        /opt/lib
-        /usr/freeware/lib64
-        DOC "Location of FFMPEG Libraries"
-    )
+macro(FFMPEG_FIND varname shortname headername)
+  if(NOT FFMPEG_${varname}_INCLUDE_DIRS)
+    find_path(FFMPEG_${varname}_INCLUDE_DIRS NAMES lib${shortname}/${headername} PATHS ${FFMPEG_ROOT}/include ${FFMPEG_INCLUDE_DIRS} PATH_SUFFIXES ffmpeg Release Debug)
+  endif()
+  if(NOT FFMPEG_${varname}_LIBRARY)
+    find_library(FFMPEG_${varname}_LIBRARY_RELEASE NAMES ${shortname} PATHS ${FFMPEG_ROOT} PATH_SUFFIXES ffmpeg ffmpeg/lib)
+    find_library(FFMPEG_${varname}_LIBRARY_DEBUG NAMES ${shortname} ${shortname}d PATHS ${FFMPEG_ROOT} PATH_SUFFIXES ffmpeg ffmpeg/lib ffmpeg/debug/lib debug/ffmpeg/lib)
+    select_library_configurations(FFMPEG_${varname})
+  endif()
+  if (FFMPEG_${varname}_LIBRARY AND FFMPEG_${varname}_INCLUDE_DIRS)
+    set(FFMPEG_${varname}_FOUND 1)
+  endif(FFMPEG_${varname}_LIBRARY AND FFMPEG_${varname}_INCLUDE_DIRS)
+endmacro(FFMPEG_FIND)
 
-    IF (FFMPEG_${varname}_LIBRARIES AND FFMPEG_${varname}_INCLUDE_DIRS)
-        SET(FFMPEG_${varname}_FOUND 1)
-    ENDIF(FFMPEG_${varname}_LIBRARIES AND FFMPEG_${varname}_INCLUDE_DIRS)
+if(WIN32)
+  if(NOT FFMPEG_${varname}_INCLUDE_DIRS)
+    find_path(FFMPEG_stdint_INCLUDE_DIRS NAMES stdint.h PATHS ${FFMPEG_ROOT}/include ${FFMPEG_INCLUDE_DIRS} PATH_SUFFIXES ffmpeg Release Debug)
+  endif()
+  if (FFMPEG_stdint_INCLUDE_DIRS)
+    set(STDINT_OK TRUE)
+  endif()
+else()
+  set(STDINT_OK TRUE)
+endif()
 
-ENDMACRO(FFMPEG_FIND)
-
-SET(FFMPEG_ROOT "$ENV{FFMPEG_DIR}" CACHE PATH "Location of FFMPEG")
-
-# find stdint.h
-IF(WIN32)
-
-    FIND_PATH(FFMPEG_STDINT_INCLUDE_DIR stdint.h
-        PATHS
-        ${FFMPEG_ROOT}/include
-        $ENV{FFMPEG_DIR}/include
-        ~/Library/Frameworks
-        /Library/Frameworks
-        /usr/local/include
-        /usr/include
-        /sw/include # Fink
-        /opt/local/include # DarwinPorts
-        /opt/csw/include # Blastwave
-        /opt/include
-        /usr/freeware/include
-        PATH_SUFFIXES ffmpeg
-        DOC "Location of FFMPEG stdint.h Header"
-    )
-
-    IF (FFMPEG_STDINT_INCLUDE_DIR)
-        SET(STDINT_OK TRUE)
-    ENDIF()
-
-ELSE()
-
-    SET(STDINT_OK TRUE)
-
-ENDIF()
 
 FFMPEG_FIND(libavformat   avformat   avformat.h)
 FFMPEG_FIND(libavdevice   avdevice   avdevice.h)
 FFMPEG_FIND(libavcodec    avcodec    avcodec.h)
 FFMPEG_FIND(libavutil     avutil     avutil.h)
-FFMPEG_FIND(libswscale    swscale    swscale.h)  # not sure about the header to look for here.
+FFMPEG_FIND(libswscale    swscale    swscale.h)
 
-SET(FFMPEG_FOUND "NO")
+set(FFMPEG_FOUND "NO")
 
-# Note we don't check FFMPEG_libswscale_FOUND, FFMPEG_libavdevice_FOUND,
-# and FFMPEG_libavutil_FOUND as they are optional.
-IF (FFMPEG_libavformat_FOUND AND FFMPEG_libavcodec_FOUND AND STDINT_OK)
+if (FFMPEG_libavformat_FOUND AND FFMPEG_libavdevice_FOUND AND FFMPEG_libavcodec_FOUND AND FFMPEG_libavutil_FOUND AND FFMPEG_libswscale_FOUND AND STDINT_OK)
+  set(FFMPEG_FOUND "YES")
 
-    SET(FFMPEG_FOUND "YES")
-    SET(FFMPEG_INCLUDE_DIRS ${FFMPEG_libavformat_INCLUDE_DIRS})
-    SET(FFMPEG_LIBRARY_DIRS ${FFMPEG_libavformat_LIBRARY_DIRS})
+  set(FFMPEG_INCLUDE_DIRS ${FFMPEG_libavformat_INCLUDE_DIRS})
+  set(FFMPEG_LIBRARY_DIRS ${FFMPEG_libavformat_LIBRARY_DIRS})
+  set(FFMPEG_INCLUDE_DIR ${FFMPEG_libavformat_INCLUDE_DIRS})
+  set(FFMPEG_LIBRARY_DIR ${FFMPEG_libavformat_LIBRARY_DIRS})
 
-    # Note we hardcode the versions as expected by OpenCV
-    set(FFMPEG_libavcodec_VERSION 57.89.100)
-    set(FFMPEG_libavformat_VERSION 57.71.100)
-    set(FFMPEG_libavutil_VERSION 55.58.100)
-    set(FFMPEG_libswscale_VERSION 4.6.100)
-
-    # Note we don't add FFMPEG_LIBSWSCALE_LIBRARIES here,
-    # it will be added if found later.
-    if(WIN32)
-      SET(FFMPEG_LIBRARIES
-        ${FFMPEG_libavformat_LIBRARIES}
-        ${FFMPEG_libavdevice_LIBRARIES}
-        ${FFMPEG_libavcodec_LIBRARIES}
-        ${FFMPEG_libavutil_LIBRARIES}
-        ${FFMPEG_libswscale_LIBRARIES}
-        wsock32 ws2_32 Secur32
-      )
-    else()
-      SET(FFMPEG_LIBRARIES
-        ${FFMPEG_libavformat_LIBRARIES}
-        ${FFMPEG_libavdevice_LIBRARIES}
-        ${FFMPEG_libavcodec_LIBRARIES}
-        ${FFMPEG_libavutil_LIBRARIES}
-        ${FFMPEG_libswscale_LIBRARIES}
-      )
-    endif()
-
-ENDIF()
+  list(APPEND FFMPEG_LIBRARIES
+    ${FFMPEG_libavformat_LIBRARY}
+    ${FFMPEG_libavdevice_LIBRARY}
+    ${FFMPEG_libavcodec_LIBRARY}
+    ${FFMPEG_libavutil_LIBRARY}
+    ${FFMPEG_libswscale_LIBRARY}
+    ${FFMPEG_PLATFORM_DEPENDENT_LIBS}
+  )
+endif()
