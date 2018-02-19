@@ -134,5 +134,5 @@ file(INSTALL
 file(INSTALL
         "${SOURCE_PATH}/LICENSE.txt"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}
+        ${CURRENT_PACKAGES_DIR}/share/opencl/copyright
 )
