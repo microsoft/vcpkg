@@ -32,6 +32,12 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+# Rename libraries for static builds
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/jasper.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/jasperd.lib")
+endif()
+
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)

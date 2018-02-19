@@ -56,6 +56,7 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
     "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVCompilerOptions.cmake.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVFindLibsGrmft.cmake.patch"
     "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVFindLibsVideo.cmake.patch"
     "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVGenConfig.cmake.patch"
     "${CMAKE_CURRENT_LIST_DIR}/cmake__OpenCVGenHeaders.cmake.patch"
@@ -71,6 +72,8 @@ vcpkg_apply_patches(
 )
 
 file(COPY ${CURRENT_PORT_DIR}/FindFFMPEG.cmake DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
+file(COPY ${CURRENT_PORT_DIR}/FindJPEG.cmake DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
+file(COPY ${CURRENT_PORT_DIR}/FindJasper.cmake DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
 
 if(BUILD_opencv_contrib)
   vcpkg_from_github(
@@ -96,7 +99,7 @@ if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
   set(BUILD_opencv_bgsegm OFF)
 endif()
 if(VCPKG_LIBRARY_LINKAGE MATCHES "static")
-  set(BUILD_integrated_JPEG ON)
+#  set(BUILD_integrated_JPEG ON)
   set(BUILD_integrated_TIFF ON)
 endif()
 
@@ -120,6 +123,7 @@ vcpkg_configure_cmake(
         -DBUILD_PROTOBUF=OFF
         -DBUILD_TESTS=OFF
         -DBUILD_TIFF=${BUILD_integrated_TIFF}   #when building as a static lib, we have linking problems because vcpkg's tiff library depends on lzma, which is not imported as a dependency
+        -DBUILD_JASPER=OFF
         -DBUILD_WITH_DEBUG_INFO=ON
         -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
         -DBUILD_ZLIB=OFF

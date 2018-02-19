@@ -31,6 +31,8 @@
 #
 #
 
+#include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)
+#include(${CMAKE_CURRENT_LIST_DIR}/SelectLibraryConfigurations.cmake)
 include(FindPackageHandleStandardArgs)
 include(SelectLibraryConfigurations)
 
@@ -56,13 +58,13 @@ macro(FFMPEG_FIND varname shortname headername)
     find_path(FFMPEG_${varname}_INCLUDE_DIRS NAMES lib${shortname}/${headername} PATHS ${FFMPEG_ROOT}/include ${FFMPEG_INCLUDE_DIRS} PATH_SUFFIXES ffmpeg Release Debug)
   endif()
   if(NOT FFMPEG_${varname}_LIBRARY)
-    find_library(FFMPEG_${varname}_LIBRARY_RELEASE NAMES ${shortname} PATHS ${FFMPEG_ROOT} PATH_SUFFIXES ffmpeg ffmpeg/lib)
-    find_library(FFMPEG_${varname}_LIBRARY_DEBUG NAMES ${shortname} ${shortname}d PATHS ${FFMPEG_ROOT} PATH_SUFFIXES ffmpeg ffmpeg/lib ffmpeg/debug/lib debug/ffmpeg/lib)
+    find_library(FFMPEG_${varname}_LIBRARY_RELEASE NAMES ${shortname} PATHS ${FFMPEG_ROOT} PATH_SUFFIXES lib ffmpeg ffmpeg/lib)
+    find_library(FFMPEG_${varname}_LIBRARY_DEBUG NAMES ${shortname} ${shortname}d PATHS debug ${FFMPEG_ROOT}/debug PATH_SUFFIXES debug/lib lib ffmpeg ffmpeg/lib ffmpeg/debug/lib debug/ffmpeg/lib)
     select_library_configurations(FFMPEG_${varname})
   endif()
   if (FFMPEG_${varname}_LIBRARY AND FFMPEG_${varname}_INCLUDE_DIRS)
     set(FFMPEG_${varname}_FOUND 1)
-  endif(FFMPEG_${varname}_LIBRARY AND FFMPEG_${varname}_INCLUDE_DIRS)
+  endif()
 endmacro(FFMPEG_FIND)
 
 if(WIN32)
@@ -83,15 +85,11 @@ FFMPEG_FIND(libavcodec    avcodec    avcodec.h)
 FFMPEG_FIND(libavutil     avutil     avutil.h)
 FFMPEG_FIND(libswscale    swscale    swscale.h)
 
-set(FFMPEG_FOUND "NO")
-
 if (FFMPEG_libavformat_FOUND AND FFMPEG_libavdevice_FOUND AND FFMPEG_libavcodec_FOUND AND FFMPEG_libavutil_FOUND AND FFMPEG_libswscale_FOUND AND STDINT_OK)
-  set(FFMPEG_FOUND "YES")
+  list(APPEND FFMPEG_INCLUDE_DIRS ${FFMPEG_libavformat_INCLUDE_DIRS} ${FFMPEG_libavdevice_INCLUDE_DIRS} ${FFMPEG_libavcodec_INCLUDE_DIRS} ${FFMPEG_libavutil_INCLUDE_DIRS} ${FFMPEG_libswscale_INCLUDE_DIRS})
+  list(REMOVE_DUPLICATES FFMPEG_INCLUDE_DIRS)
 
-  set(FFMPEG_INCLUDE_DIRS ${FFMPEG_libavformat_INCLUDE_DIRS})
-  set(FFMPEG_LIBRARY_DIRS ${FFMPEG_libavformat_LIBRARY_DIRS})
   set(FFMPEG_INCLUDE_DIR ${FFMPEG_libavformat_INCLUDE_DIRS})
-  set(FFMPEG_LIBRARY_DIR ${FFMPEG_libavformat_LIBRARY_DIRS})
 
   list(APPEND FFMPEG_LIBRARIES
     ${FFMPEG_libavformat_LIBRARY}
@@ -101,4 +99,7 @@ if (FFMPEG_libavformat_FOUND AND FFMPEG_libavdevice_FOUND AND FFMPEG_libavcodec_
     ${FFMPEG_libswscale_LIBRARY}
     ${FFMPEG_PLATFORM_DEPENDENT_LIBS}
   )
+  set(FFMPEG_LIBRARY ${FFMPEG_LIBRARIES})
 endif()
+
+find_package_handle_standard_args(FFMPEG REQUIRED_VARS FFMPEG_LIBRARIES FFMPEG_INCLUDE_DIR)
