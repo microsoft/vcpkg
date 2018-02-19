@@ -1,7 +1,10 @@
 cmake_minimum_required(VERSION 3.9)
-project(libdisasm)
-set(
-  SRCS
+project(libdisasm C)
+
+set(CMAKE_DEBUG_POSTFIX d)
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
+set(SRCS
   ia32_implicit.c
   ia32_implicit.h
   ia32_insn.c
@@ -32,7 +35,7 @@ set(
 
 include_directories(libdisasm)
 
-add_library(libdisasm  ${SRCS})
+add_library(libdisasm ${SRCS})
 
 install(
   TARGETS libdisasm
