@@ -1,4 +1,4 @@
 Source: cartographer
-Version: 0.3.0-1
-Build-Depends:ceres, gflags, glog, lua, cairo, boost-iostreams, gtest, protobuf
-Description: google 2D & 3D SLAM package
+Version: 0.3.0-3
+Build-Depends: ceres[eigensparse], gflags, glog, lua, cairo, boost-iostreams, gtest, protobuf
+Description: Google 2D & 3D SLAM package
