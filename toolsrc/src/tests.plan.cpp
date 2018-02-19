@@ -111,13 +111,13 @@ namespace UnitTest1
             auto spec_c = spec_map.emplace("c");
 
             Dependencies::MapPortFileProvider map_port(spec_map.map);
-            auto install_plan =
-                Dependencies::create_install_plan(map_port, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
+            auto install_plan = Dependencies::create_feature_install_plan(
+                map_port, {FeatureSpec{spec_a, ""}}, StatusParagraphs(std::move(status_paragraphs)));
 
             Assert::AreEqual(size_t(3), install_plan.size());
-            Assert::AreEqual("c", install_plan[0].spec.name().c_str());
-            Assert::AreEqual("b", install_plan[1].spec.name().c_str());
-            Assert::AreEqual("a", install_plan[2].spec.name().c_str());
+            Assert::AreEqual("c", install_plan[0].spec().name().c_str());
+            Assert::AreEqual("b", install_plan[1].spec().name().c_str());
+            Assert::AreEqual("a", install_plan[2].spec().name().c_str());
         }
 
         TEST_METHOD(multiple_install_scheme)
@@ -135,12 +135,14 @@ namespace UnitTest1
             auto spec_h = spec_map.emplace("h");
 
             Dependencies::MapPortFileProvider map_port(spec_map.map);
-            auto install_plan = Dependencies::create_install_plan(
-                map_port, {spec_a, spec_b, spec_c}, StatusParagraphs(std::move(status_paragraphs)));
+            auto install_plan = Dependencies::create_feature_install_plan(
+                map_port,
+                {FeatureSpec{spec_a, ""}, FeatureSpec{spec_b, ""}, FeatureSpec{spec_c, ""}},
+                StatusParagraphs(std::move(status_paragraphs)));
 
             auto iterator_pos = [&](const PackageSpec& spec) -> int {
                 auto it = std::find_if(
-                    install_plan.begin(), install_plan.end(), [&](auto& action) { return action.spec == spec; });
+                    install_plan.begin(), install_plan.end(), [&](auto& action) { return action.spec() == spec; });
                 Assert::IsTrue(it != install_plan.end());
                 return (int)(it - install_plan.begin());
             };
@@ -228,18 +230,18 @@ namespace UnitTest1
             auto spec_k = spec_map.emplace("k");
 
             Dependencies::MapPortFileProvider map_port(spec_map.map);
-            auto install_plan =
-                Dependencies::create_install_plan(map_port, {spec_a}, StatusParagraphs(std::move(status_paragraphs)));
+            auto install_plan = Dependencies::create_feature_install_plan(
+                map_port, {FeatureSpec{spec_a, ""}}, StatusParagraphs(std::move(status_paragraphs)));
 
             Assert::AreEqual(size_t(8), install_plan.size());
-            Assert::AreEqual("h", install_plan[0].spec.name().c_str());
-            Assert::AreEqual("g", install_plan[1].spec.name().c_str());
-            Assert::AreEqual("f", install_plan[2].spec.name().c_str());
-            Assert::AreEqual("e", install_plan[3].spec.name().c_str());
-            Assert::AreEqual("d", install_plan[4].spec.name().c_str());
-            Assert::AreEqual("c", install_plan[5].spec.name().c_str());
-            Assert::AreEqual("b", install_plan[6].spec.name().c_str());
-            Assert::AreEqual("a", install_plan[7].spec.name().c_str());
+            Assert::AreEqual("h", install_plan[0].spec().name().c_str());
+            Assert::AreEqual("g", install_plan[1].spec().name().c_str());
+            Assert::AreEqual("f", install_plan[2].spec().name().c_str());
+            Assert::AreEqual("e", install_plan[3].spec().name().c_str());
+            Assert::AreEqual("d", install_plan[4].spec().name().c_str());
+            Assert::AreEqual("c", install_plan[5].spec().name().c_str());
+            Assert::AreEqual("b", install_plan[6].spec().name().c_str());
+            Assert::AreEqual("a", install_plan[7].spec().name().c_str());
         }
 
         TEST_METHOD(basic_feature_test_1)
