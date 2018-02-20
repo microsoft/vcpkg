@@ -1,13 +1,15 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)][string]$vsInstallNickname,
-    [Parameter(Mandatory=$true)][string]$tfsBranch,
+    [Parameter(Mandatory=$true)][ValidateSet('tfs','msvc')][string]$repo,
+    [Parameter(Mandatory=$true)][string]$branch,
+    [Parameter(Mandatory=$true)][ValidateSet('ret','chk')][string]$retOrChk,
     [Parameter(Mandatory=$true)][string]$triplet,
     [Parameter(Mandatory=$true)][bool]$incremental
 )
 
 $vsInstallNickname = $vsInstallNickname.ToLower()
-$tfsBranch = $tfsBranch.ToLower()
+$branch = $branch.ToLower()
 $triplet = $triplet.ToLower()
 
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
@@ -24,9 +26,9 @@ $vsInstallPath = findVSInstallPathFromNickname($vsInstallNickname)
 UnattendedVSupdate -installPath $vsInstallPath
 
 # For unstable builds, deploy the custom build archive
-if ($vsInstallNickname -eq $VISUAL_STUDIO_2017_UNSTABLE_NICKNAME -and ![string]::IsNullOrEmpty($tfsBranch))
+if ($vsInstallNickname -eq $VISUAL_STUDIO_2017_UNSTABLE_NICKNAME -and ![string]::IsNullOrEmpty($branch))
 {
-    & $scriptsDir\DeployBuildArchive.ps1 -tfsBranch $tfsBranch -latest
+    & $scriptsDir\DeployBuildArchive.ps1 -repo $repo -branch $branch -retOrChk $retOrChk -latest
 }
 
 # Create triplets
