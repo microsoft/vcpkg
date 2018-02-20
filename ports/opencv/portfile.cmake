@@ -74,6 +74,7 @@ vcpkg_apply_patches(
 file(COPY ${CURRENT_PORT_DIR}/FindFFMPEG.cmake DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
 file(COPY ${CURRENT_PORT_DIR}/FindJPEG.cmake DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
 file(COPY ${CURRENT_PORT_DIR}/FindJasper.cmake DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
+file(COPY ${CURRENT_PORT_DIR}/FindWebP.cmake DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
 
 if(BUILD_opencv_contrib)
   vcpkg_from_github(
@@ -88,7 +89,6 @@ endif()
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
-set(BUILD_integrated_JPEG OFF)
 set(BUILD_integrated_TIFF OFF)
 set(BUILD_opencv_line_descriptor ON)
 set(BUILD_opencv_saliency ON)
@@ -99,7 +99,6 @@ if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
   set(BUILD_opencv_bgsegm OFF)
 endif()
 if(VCPKG_LIBRARY_LINKAGE MATCHES "static")
-#  set(BUILD_integrated_JPEG ON)
   set(BUILD_integrated_TIFF ON)
 endif()
 
@@ -116,14 +115,15 @@ vcpkg_configure_cmake(
         # BUILD
         -DBUILD_DOCS=OFF
         -DBUILD_EXAMPLES=OFF
-        -DBUILD_JPEG=${BUILD_integrated_JPEG}   #when building as a static lib, vcpkg's libjpeg-turbo is not correctly distinguished between release/debug
+        -DBUILD_JASPER=OFF
+        -DBUILD_JPEG=OFF
         -DBUILD_PACKAGE=OFF
         -DBUILD_PERF_TESTS=OFF
         -DBUILD_PNG=OFF
         -DBUILD_PROTOBUF=OFF
         -DBUILD_TESTS=OFF
         -DBUILD_TIFF=${BUILD_integrated_TIFF}   #when building as a static lib, we have linking problems because vcpkg's tiff library depends on lzma, which is not imported as a dependency
-        -DBUILD_JASPER=OFF
+        -DBUILD_WEBP=OFF
         -DBUILD_WITH_DEBUG_INFO=ON
         -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
         -DBUILD_ZLIB=OFF

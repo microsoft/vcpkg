@@ -29,14 +29,10 @@ vcpkg_configure_cmake(
         -DJAS_ENABLE_DOC=OFF
         -DJAS_ENABLE_PROGRAMS=OFF
         -DJAS_ENABLE_SHARED=${JAS_ENABLE_SHARED}
+        -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_install_cmake()
-
-# Rename libraries for static builds
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/jasper.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/jasperd.lib")
-endif()
 
 vcpkg_copy_pdbs()
 
