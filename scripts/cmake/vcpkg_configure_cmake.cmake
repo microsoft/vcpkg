@@ -75,14 +75,12 @@ function(vcpkg_configure_cmake)
     endif()
 
     if (_csc_DISABLE_PARALLEL_CONFIGURE)
-        message(STATUS "Disabling Ninja parallel configure - package has opted-out")
-    else()
-        message(STATUS "Enabling Ninja parallel configure")
+        message(STATUS "Disabling parallel configure - package has opted-out")
     endif()
 
     if(_csc_GENERATOR)
         set(GENERATOR ${_csc_GENERATOR})
-    elseif((_csc_PREFER_NINJA OR _csc_PREFER_NINJA_NONPARALLEL_CONFIG) AND NINJA_CAN_BE_USED)
+    elseif(_csc_PREFER_NINJA AND NINJA_CAN_BE_USED)
         set(GENERATOR "Ninja")
     elseif(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
         set(GENERATOR "Ninja")
@@ -250,7 +248,7 @@ function(vcpkg_configure_cmake)
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure)
         file(WRITE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure/build.ninja "${_contents}")
 
-        message(STATUS "Configuring ${TARGET_TRIPLET} (parallel mode rel+dbg)")
+        message(STATUS "Configuring ${TARGET_TRIPLET}-rel+dbg")
         vcpkg_execute_required_process(
             COMMAND ninja -v
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure
@@ -258,17 +256,6 @@ function(vcpkg_configure_cmake)
         )
         message(STATUS "Configuring ${TARGET_TRIPLET} done")
     else()
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-            file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-            vcpkg_execute_required_process(
-                COMMAND ${rel_command}
-                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-                LOGNAME config-${TARGET_TRIPLET}-rel
-            )
-            message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
-        endif()
-
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
             message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
             file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
@@ -278,6 +265,17 @@ function(vcpkg_configure_cmake)
                 LOGNAME config-${TARGET_TRIPLET}-dbg
             )
             message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
+        endif()
+
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+            message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
+            file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+            vcpkg_execute_required_process(
+                COMMAND ${rel_command}
+                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+                LOGNAME config-${TARGET_TRIPLET}-rel
+            )
+            message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
         endif()
     endif()
 

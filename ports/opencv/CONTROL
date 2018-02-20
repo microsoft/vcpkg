@@ -7,7 +7,7 @@ Feature: contrib
 Description: opencv_contrib module
 
 Feature: sfm
-Build-Depends: eigen3, glog, gflags
+Build-Depends: eigen3, glog, gflags, ceres
 Description: opencv_sfm module
 
 Feature: cuda
