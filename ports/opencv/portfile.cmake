@@ -2,11 +2,6 @@ include(vcpkg_common_functions)
 
 set (OPENCV_PORT_VERSION "3.4.0")
 
-set(BUILD_opencv_sfm OFF)
-if("sfm" IN_LIST FEATURES)
-  set(BUILD_opencv_sfm ON)
-endif()
-
 set(BUILD_opencv_contrib OFF)
 if("contrib" IN_LIST FEATURES)
   set(BUILD_opencv_contrib ON)
@@ -22,24 +17,34 @@ if("ffmpeg" IN_LIST FEATURES)
   set(WITH_FFMPEG ON)
 endif()
 
-set(WITH_QT OFF)
-if("qt" IN_LIST FEATURES)
-  set(WITH_QT ON)
-endif()
-
-set(WITH_VTK OFF)
-if("vtk" IN_LIST FEATURES)
-  set(WITH_VTK ON)
-endif()
-
 set(WITH_GDCM OFF)
 if("gdcm" IN_LIST FEATURES)
   set(WITH_GDCM ON)
 endif()
 
+set(WITH_IPP OFF) #note: enabling it will trigger a download uncontrolled by vcpkg (for now)
+if("ipp" IN_LIST FEATURES)
+  set(WITH_IPP ON)
+endif()
+
 set(WITH_MSMF ON)
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   set(WITH_MSMF OFF)
+endif()
+
+set(WITH_QT OFF)
+if("qt" IN_LIST FEATURES)
+  set(WITH_QT ON)
+endif()
+
+set(BUILD_opencv_sfm OFF)
+if("sfm" IN_LIST FEATURES)
+  set(BUILD_opencv_sfm ON)
+endif()
+
+set(WITH_VTK OFF)
+if("vtk" IN_LIST FEATURES)
+  set(WITH_VTK ON)
 endif()
 
 
@@ -71,10 +76,11 @@ vcpkg_apply_patches(
     "${CMAKE_CURRENT_LIST_DIR}/modules__videoio__CMakeLists.txt.patch"
 )
 
-file(COPY ${CURRENT_PORT_DIR}/FindFFMPEG.cmake DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
-file(COPY ${CURRENT_PORT_DIR}/FindJPEG.cmake DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
-file(COPY ${CURRENT_PORT_DIR}/FindJasper.cmake DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
-file(COPY ${CURRENT_PORT_DIR}/FindWebP.cmake DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
+file(COPY ${CURRENT_PORT_DIR}/FindFFMPEG.cmake  DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
+file(COPY ${CURRENT_PORT_DIR}/FindJasper.cmake  DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
+file(COPY ${CURRENT_PORT_DIR}/FindJPEG.cmake    DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
+file(COPY ${CURRENT_PORT_DIR}/FindOpenEXR.cmake DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
+file(COPY ${CURRENT_PORT_DIR}/FindWebP.cmake    DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
 
 if(BUILD_opencv_contrib)
   vcpkg_from_github(
@@ -117,6 +123,7 @@ vcpkg_configure_cmake(
         -DBUILD_EXAMPLES=OFF
         -DBUILD_JASPER=OFF
         -DBUILD_JPEG=OFF
+        -DBUILD_OPENEXR=OFF
         -DBUILD_PACKAGE=OFF
         -DBUILD_PERF_TESTS=OFF
         -DBUILD_PNG=OFF
@@ -153,6 +160,7 @@ vcpkg_configure_cmake(
         -DWITH_CUBLAS=OFF
         -DWITH_CUDA=${WITH_CUDA}
         -DWITH_FFMPEG=${WITH_FFMPEG}
+        -DWITH_IPP={WITH_IPP}
         -DWITH_LAPACK=OFF
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENCLAMDBLAS=OFF

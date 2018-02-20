@@ -1,0 +1,21 @@
+diff --git a/Imath/CMakeLists.txt b/Imath/CMakeLists.txt
+index feed29e..01d4ca2 100644
+--- a/Imath/CMakeLists.txt
++++ b/Imath/CMakeLists.txt
+@@ -13,7 +13,6 @@ ADD_LIBRARY ( Imath ${LIB_TYPE}
+   ImathVec.cpp
+   ImathMatrixAlgo.cpp
+ )
+-TARGET_LINK_LIBRARIES(Imath Iex)
+ 
+ 
+ INSTALL ( TARGETS
+@@ -22,7 +21,7 @@ INSTALL ( TARGETS
+   lib
+ )
+ 
+-INSTALL ( FILES 
++INSTALL ( FILES
+   ImathBoxAlgo.h
+   ImathBox.h
+   ImathColorAlgo.h

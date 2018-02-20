@@ -10,7 +10,16 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/add-missing-export.patch)
+    PATCHES
+    "${CMAKE_CURRENT_LIST_DIR}/add-missing-export.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/IlmImf__CMakeLists.txt.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/IlmImfExamples__CMakeLists.txt.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/IlmImfFuzzTest__CMakeLists.txt.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/IlmImfTest__CMakeLists.txt.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/IlmImfUtil__CMakeLists.txt.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/IlmImfUtilTest__CMakeLists.txt.patch"
+)
 
 # Ensure helper executables can run during build
 set(ENV{PATH} "$ENV{PATH};${CURRENT_INSTALLED_DIR}/bin")
@@ -19,15 +28,30 @@ set(ENV{PATH} "$ENV{PATH};${CURRENT_INSTALLED_DIR}/bin")
 set(VCPKG_C_FLAGS_DEBUG "${VCPKG_C_FLAGS_DEBUG}")
 set(VCPKG_CXX_FLAGS_DEBUG "${VCPKG_CXX_FLAGS_DEBUG} -I\"${CURRENT_INSTALLED_DIR}/include/OpenExr\"")
 
-vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH}
+if(VCPKG_LIBRARY_LINKAGE MATCHES "static")
+  set(BUILD_SHARED_LIBS OFF)
+else()
+  set(BUILD_SHARED_LIBS ON)
+endif()
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DNAMESPACE_VERSIONING=OFF
+        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
     OPTIONS_DEBUG
         -DILMBASE_PACKAGE_PREFIX=${CURRENT_INSTALLED_DIR}/debug
+        -DCMAKE_DEBUG_POSTFIX=d
+        -DILMBASE_LIBSUFFIX=d
     OPTIONS_RELEASE
         -DILMBASE_PACKAGE_PREFIX=${CURRENT_INSTALLED_DIR})
 
 vcpkg_install_cmake()
 
+# if you need to have OpenEXR tools, edit CMakeLists.txt.patch and remove the part that disables building executables,
+# then remove the following line which deletes them and finally use vcpkg_copy_tool_dependencies() to save them
+# (may require additional patching to the OpenEXR toolchain which is really broken)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

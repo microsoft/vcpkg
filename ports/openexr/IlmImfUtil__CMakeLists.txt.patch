@@ -1,0 +1,20 @@
+diff --git a/IlmImfUtil/CMakeLists.txt b/IlmImfUtil/CMakeLists.txt
+index 3eca4bc..9b76c1e 100644
+--- a/IlmImfUtil/CMakeLists.txt
++++ b/IlmImfUtil/CMakeLists.txt
+@@ -26,15 +26,6 @@ ADD_LIBRARY ( IlmImfUtil ${LIB_TYPE}
+   ${ILMIMFUTIL_SRCS}
+ )
+ 
+-TARGET_LINK_LIBRARIES ( IlmImfUtil 
+-  Half 
+-  Iex${ILMBASE_LIBSUFFIX}
+-  Imath${ILMBASE_LIBSUFFIX}
+-  IlmThread${ILMBASE_LIBSUFFIX}
+-  IlmImf
+-  ${PTHREAD_LIB} ${ZLIB_LIBRARIES}
+-)
+-
+ 
+ # Libraries
+ 

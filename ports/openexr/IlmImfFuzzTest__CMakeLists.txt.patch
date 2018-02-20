@@ -1,0 +1,17 @@
+diff --git a/IlmImfFuzzTest/CMakeLists.txt b/IlmImfFuzzTest/CMakeLists.txt
+index 12fe072..d6ed8b9 100644
+--- a/IlmImfFuzzTest/CMakeLists.txt
++++ b/IlmImfFuzzTest/CMakeLists.txt
+@@ -9,9 +9,9 @@ ADD_EXECUTABLE ( IlmImfFuzzTest
+   testFuzzTiles.cpp
+   )
+ 
+-TARGET_LINK_LIBRARIES ( IlmImfFuzzTest 
+-        IlmImf
+-        Half
++TARGET_LINK_LIBRARIES ( IlmImfFuzzTest
++        IlmImf${ILMBASE_LIBSUFFIX}
++        Half${ILMBASE_LIBSUFFIX}
+         Iex${ILMBASE_LIBSUFFIX}
+         Imath${ILMBASE_LIBSUFFIX}
+         IlmThread${ILMBASE_LIBSUFFIX}

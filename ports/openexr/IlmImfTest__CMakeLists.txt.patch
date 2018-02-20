@@ -1,0 +1,17 @@
+diff --git a/IlmImfTest/CMakeLists.txt b/IlmImfTest/CMakeLists.txt
+index c07d9f2..6e780f6 100644
+--- a/IlmImfTest/CMakeLists.txt
++++ b/IlmImfTest/CMakeLists.txt
+@@ -63,9 +63,9 @@ ADD_EXECUTABLE ( IlmImfTest
+ 
+ 
+ ADD_TEST ( TestIlmImf IlmImfTest )
+-TARGET_LINK_LIBRARIES ( IlmImfTest 
+-        IlmImf  
+-        Half 
++TARGET_LINK_LIBRARIES ( IlmImfTest
++        IlmImf${ILMBASE_LIBSUFFIX}
++        Half${ILMBASE_LIBSUFFIX}
+         Iex${ILMBASE_LIBSUFFIX}
+         Imath${ILMBASE_LIBSUFFIX}
+         IlmThread${ILMBASE_LIBSUFFIX}

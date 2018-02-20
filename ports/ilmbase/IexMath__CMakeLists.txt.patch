@@ -1,0 +1,29 @@
+diff --git a/IexMath/CMakeLists.txt b/IexMath/CMakeLists.txt
+index 9a28c21..9f731dc 100644
+--- a/IexMath/CMakeLists.txt
++++ b/IexMath/CMakeLists.txt
+@@ -4,10 +4,9 @@ IF(BUILD_SHARED_LIBS)
+     ADD_DEFINITIONS(-DIEXMATH_EXPORTS)
+ ENDIF()
+ ADD_LIBRARY ( IexMath ${LIB_TYPE}
+-  IexMathFloatExc.cpp  
++  IexMathFloatExc.cpp
+   IexMathFpu.cpp
+   )
+-TARGET_LINK_LIBRARIES(IexMath Iex)
+ 
+ INSTALL ( TARGETS
+   IexMath
+@@ -15,9 +14,9 @@ INSTALL ( TARGETS
+   lib
+ )
+ 
+-INSTALL ( FILES 
+-  IexMathFloatExc.h  
+-  IexMathFpu.h  
++INSTALL ( FILES
++  IexMathFloatExc.h
++  IexMathFpu.h
+   IexMathIeeeExc.h
+   DESTINATION
+   include/OpenEXR

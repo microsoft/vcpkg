@@ -1,0 +1,37 @@
+diff --git a/IlmImf/CMakeLists.txt b/IlmImf/CMakeLists.txt
+index 18d90ed..aab2c87 100644
+--- a/IlmImf/CMakeLists.txt
++++ b/IlmImf/CMakeLists.txt
+@@ -7,7 +7,7 @@ ADD_EXECUTABLE ( b44ExpLogTable
+ )
+ 
+ TARGET_LINK_LIBRARIES ( b44ExpLogTable
+-  Half
++  Half${ILMBASE_LIBSUFFIX}
+   Iex${ILMBASE_LIBSUFFIX}
+   IlmThread${ILMBASE_LIBSUFFIX}
+   ${PTHREAD_LIB}
+@@ -24,7 +24,7 @@ ADD_EXECUTABLE ( dwaLookups
+ )
+ 
+ TARGET_LINK_LIBRARIES ( dwaLookups
+-  Half
++  Half${ILMBASE_LIBSUFFIX}
+   Iex${ILMBASE_LIBSUFFIX}
+   IlmThread${ILMBASE_LIBSUFFIX}
+   ${PTHREAD_LIB}
+@@ -136,14 +136,6 @@ ADD_LIBRARY ( IlmImf ${LIB_TYPE}
+   ${ILMIMF_SRCS}
+ )
+ 
+-TARGET_LINK_LIBRARIES ( IlmImf 
+-  Half 
+-  Iex${ILMBASE_LIBSUFFIX}
+-  Imath${ILMBASE_LIBSUFFIX}
+-  IlmThread${ILMBASE_LIBSUFFIX}
+-  ${PTHREAD_LIB} ${ZLIB_LIBRARIES}
+-)
+-
+ 
+ ADD_DEPENDENCIES ( IlmImf b44ExpLogTable )
+ 
