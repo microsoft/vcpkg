@@ -117,19 +117,19 @@ file(INSTALL
         ${CURRENT_PACKAGES_DIR}/lib/Debug
 )
 
-file(INSTALL
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/OpenCL.dll"
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/OpenCL.pdb"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/bin/Release
-)
-
-file(INSTALL
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/OpenCL.dll"
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/OpenCL.pdb"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/bin/Debug
-)
+#file(INSTALL
+#        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/OpenCL.dll"
+#        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/OpenCL.pdb"
+#    DESTINATION
+#        ${CURRENT_PACKAGES_DIR}/bin/Release
+#)
+#
+#file(INSTALL
+#        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/OpenCL.dll"
+#        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/OpenCL.pdb"
+#    DESTINATION
+#        ${CURRENT_PACKAGES_DIR}/bin/Debug
+#)
 
 file(INSTALL
         "${SOURCE_PATH}/LICENSE.txt"
