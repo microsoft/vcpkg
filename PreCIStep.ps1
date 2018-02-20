@@ -1,9 +1,9 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)][string]$vsInstallNickname,
-    [Parameter(Mandatory=$true)][ValidateSet('tfs','msvc')][string]$repo,
+    [Parameter(Mandatory=$true)][ValidateSet('tfs','msvc', 'NOT_APPLICABLE')][string]$repo,
     [Parameter(Mandatory=$true)][string]$branch,
-    [Parameter(Mandatory=$true)][ValidateSet('ret','chk')][string]$retOrChk,
+    [Parameter(Mandatory=$true)][ValidateSet('ret','chk', 'NOT_APPLICABLE')][string]$retOrChk,
     [Parameter(Mandatory=$true)][string]$triplet,
     [Parameter(Mandatory=$true)][bool]$incremental
 )
