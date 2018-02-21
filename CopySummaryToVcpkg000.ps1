@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
-    [string]$Triplet
+    [Parameter(Mandatory=$true)][string]$triplet,
+    [Parameter(Mandatory=$true)][string]$buildId
 )
 
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
@@ -28,7 +29,7 @@ function findDeployedVersion([string]$vsInstallPath)
     if (Test-Path $deployedVersionFile)
     {
         $deployedVersion = Get-Content $deployedVersionFile
-        $deployedVersion = "-$deployedVersion"
+        $deployedVersion = "_$deployedVersion"
         return $deployedVersion
     }
     else
@@ -37,14 +38,14 @@ function findDeployedVersion([string]$vsInstallPath)
     }
 }
 
-$tripletFilePath = "$vcpkgRootDir\triplets\$Triplet.cmake"
+$tripletFilePath = "$vcpkgRootDir\triplets\$triplet.cmake"
 $vsInstallPath = findVSInstallPathFromTriplet $tripletFilePath
 $deployedVersion = findDeployedVersion $vsInstallPath
 
 # "-Format s" is for "SortableDateTimePattern". It should be culture agnostic
 $timestamp = (Get-Date -Format s).ToString()
 $timestamp = $timestamp -replace ":" # Remove colons from the HH:MM:ss format
-$outputFilename = "$timestamp-$triplet$deployedVersion.xml"
+$outputFilename = "$buildId_$timestamp_$triplet$deployedVersion.xml"
 $outputPathRoot = "\\vcpkg-000\General\Results"
 $outputPath = "$outputPathRoot\$outputFilename"
 $cixml = "$vcpkgRootDir\TEST-full-ci.xml"

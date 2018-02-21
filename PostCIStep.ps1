@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory=$true)][string]$triplet
+    [Parameter(Mandatory=$true)][string]$triplet,
+    [Parameter(Mandatory=$true)][string]$buildId
 )
 
 $triplet = $triplet.ToLower()
@@ -12,7 +13,7 @@ $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 $vcpkgRootDir = vcpkgFindFileRecursivelyUp $scriptsDir .vcpkg-root
 
 # Copy summary to Vcpkg-000
-& $scriptsDir\CopySummaryToVcpkg000.ps1 -triplet $triplet
+& $scriptsDir\CopySummaryToVcpkg000.ps1 -triplet $triplet -buildId $buildId
 
 # Delete all logs
 $logs = Get-ChildItem $vcpkgRootDir/buildtrees/*/* | ? { $_.Extension -eq ".log" }
