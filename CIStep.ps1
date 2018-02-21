@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
-    [string]$Triplet,
-    [bool]$miniTest
+    [Parameter(Mandatory=$true)][string]$triplet,
+    [Parameter(Mandatory=$true)][bool]$miniTest
 )
 
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
@@ -10,7 +10,7 @@ $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 
 $vcpkgRootDir = vcpkgFindFileRecursivelyUp $scriptsDir .vcpkg-root
 
-$tripletFilePath = "$vcpkgRootDir\triplets\$Triplet.cmake"
+$tripletFilePath = "$vcpkgRootDir\triplets\$triplet.cmake"
 $vsInstallPath = findVSInstallPathFromTriplet $tripletFilePath
 
 Write-Host "Bootstrapping vcpkg ..."
@@ -22,19 +22,19 @@ Write-Host "Deleting $packagesDir ..."
 vcpkgRemoveItem "$packagesDir"
 Write-Host "Deleting $packagesDir ... done."
 
-$cixml = "$vcpkgRootDir\TEST-full-ci.xml"
+$ciXmlPath = "$vcpkgRootDir\test-full-ci.xml"
 
-Write-Host "Deleting $cixml ..."
-vcpkgRemoveItem "$cixml"
-Write-Host "Deleting $cixml ... done."
+Write-Host "Deleting $ciXmlPath ..."
+vcpkgRemoveItem $ciXmlPath
+Write-Host "Deleting $ciXmlPath ... done."
 
 ./vcpkg remove --outdated --recurse
 
 if($miniTest)
 {
-    ./vcpkg install "zlib:$Triplet" --x-xunit=TEST-full-ci.xml | Tee-Object -FilePath "$Triplet.txt"
+    ./vcpkg install "zlib:$Triplet" "--x-xunit=$ciXmlPath" | Tee-Object -FilePath "$triplet.txt"
 }
 else
 {
-    ./vcpkg ci $Triplet --x-xunit=TEST-full-ci.xml --exclude=aws-sdk-cpp | Tee-Object -FilePath "$Triplet.txt"
+    ./vcpkg ci $Triplet "--x-xunit=$ciXmlPath" --exclude=aws-sdk-cpp | Tee-Object -FilePath "$triplet.txt"
 }

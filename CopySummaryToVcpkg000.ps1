@@ -48,16 +48,17 @@ $timestamp = $timestamp -replace ":" # Remove colons from the HH:MM:ss format
 $outputFilename = "$buildId_$timestamp_$triplet$deployedVersion.xml"
 $outputPathRoot = "\\vcpkg-000\General\Results"
 $outputPath = "$outputPathRoot\$outputFilename"
-$cixml = "$vcpkgRootDir\TEST-full-ci.xml"
 
-if (Test-Path $cixml)
+$ciXmlPath = "$vcpkgRootDir\test-full-ci.xml"
+
+if (Test-Path $ciXmlPath)
 {
     vcpkgCreateDirectoryIfNotExists $outputPathRoot
-    Write-Host "Copying $cixml to $outputPath..."
-    Copy-Item $cixml -Destination $outputPath
-    Write-Host "Copying $cixml to $outputPath... done."
+    Write-Host "Copying $ciXmlPath to $outputPath..."
+    Copy-Item $ciXmlPath -Destination $outputPath
+    Write-Host "Copying $ciXmlPath to $outputPath... done."
 }
 else
 {
-    Write-Host "$cixml not found, skip copying it to $outputPath."
+    Write-Host "$ciXmlPath not found, skip copying it to $outputPath."
 }
