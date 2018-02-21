@@ -74,10 +74,6 @@ function(vcpkg_configure_cmake)
         set(NINJA_CAN_BE_USED OFF)
     endif()
 
-    if (_csc_DISABLE_PARALLEL_CONFIGURE)
-        message(STATUS "Disabling parallel configure - package has opted-out")
-    endif()
-
     if(_csc_GENERATOR)
         set(GENERATOR ${_csc_GENERATOR})
     elseif(_csc_PREFER_NINJA AND NINJA_CAN_BE_USED)

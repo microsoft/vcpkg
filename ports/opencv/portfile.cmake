@@ -79,7 +79,9 @@ vcpkg_apply_patches(
 file(COPY ${CURRENT_PORT_DIR}/FindFFMPEG.cmake  DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
 file(COPY ${CURRENT_PORT_DIR}/FindJasper.cmake  DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
 file(COPY ${CURRENT_PORT_DIR}/FindJPEG.cmake    DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
+file(COPY ${CURRENT_PORT_DIR}/FindLibLZMA.cmake DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
 file(COPY ${CURRENT_PORT_DIR}/FindOpenEXR.cmake DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
+file(COPY ${CURRENT_PORT_DIR}/FindTIFF.cmake    DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
 file(COPY ${CURRENT_PORT_DIR}/FindWebP.cmake    DESTINATION ${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/cmake/)
 
 if(BUILD_opencv_contrib)
@@ -95,7 +97,6 @@ endif()
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
-set(BUILD_integrated_TIFF OFF)
 set(BUILD_opencv_line_descriptor ON)
 set(BUILD_opencv_saliency ON)
 set(BUILD_opencv_bgsegm ON)
@@ -103,9 +104,6 @@ if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
   set(BUILD_opencv_line_descriptor OFF)
   set(BUILD_opencv_saliency OFF)
   set(BUILD_opencv_bgsegm OFF)
-endif()
-if(VCPKG_LIBRARY_LINKAGE MATCHES "static")
-  set(BUILD_integrated_TIFF ON)
 endif()
 
 
@@ -129,7 +127,7 @@ vcpkg_configure_cmake(
         -DBUILD_PNG=OFF
         -DBUILD_PROTOBUF=OFF
         -DBUILD_TESTS=OFF
-        -DBUILD_TIFF=${BUILD_integrated_TIFF}   #when building as a static lib, we have linking problems because vcpkg's tiff library depends on lzma, which is not imported as a dependency
+        -DBUILD_TIFF=OFF
         -DBUILD_WEBP=OFF
         -DBUILD_WITH_DEBUG_INFO=ON
         -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
@@ -160,7 +158,7 @@ vcpkg_configure_cmake(
         -DWITH_CUBLAS=OFF
         -DWITH_CUDA=${WITH_CUDA}
         -DWITH_FFMPEG=${WITH_FFMPEG}
-        -DWITH_IPP={WITH_IPP}
+        -DWITH_IPP=${WITH_IPP}
         -DWITH_LAPACK=OFF
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENCLAMDBLAS=OFF
@@ -195,47 +193,14 @@ else()
   set(OpenCV_ARCH x86)
 endif()
 
-file(GLOB BIN_AND_LIB ${CURRENT_PACKAGES_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/*)
-file(COPY ${BIN_AND_LIB} DESTINATION ${CURRENT_PACKAGES_DIR})
-file(GLOB DEBUG_BIN_AND_LIB ${CURRENT_PACKAGES_DIR}/debug/${OpenCV_ARCH}/${OpenCV_RUNTIME}/*)
-file(COPY ${DEBUG_BIN_AND_LIB} DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/${OpenCV_ARCH})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/${OpenCV_ARCH})
-
-file(GLOB STATICLIB ${CURRENT_PACKAGES_DIR}/staticlib/*)
-if(STATICLIB)
-  file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib)
-  file(COPY ${STATICLIB} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/staticlib)
-endif()
-file(GLOB STATICLIB ${CURRENT_PACKAGES_DIR}/debug/staticlib/*)
-if(STATICLIB)
-  file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib)
-  file(COPY ${STATICLIB} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/staticlib)
-endif()
-
-file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVConfig.cmake OPENCV_CONFIG)
-string(REPLACE "/staticlib/"
-               "/lib/" OPENCV_CONFIG "${OPENCV_CONFIG}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVConfig.cmake "${OPENCV_CONFIG}")
-
-file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-release.cmake OPENCV_CONFIG_LIB)
-string(REPLACE "/staticlib/"
-               "/lib/" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-release.cmake "${OPENCV_CONFIG_LIB}")
-
 file(READ ${CURRENT_PACKAGES_DIR}/debug/share/opencv/OpenCVModules-debug.cmake OPENCV_CONFIG_LIB)
-string(REPLACE "/staticlib/"
-               "/lib/" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
 string(REPLACE "PREFIX}/lib"
                "PREFIX}/debug/lib" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
-string(REPLACE "PREFIX}/bin"
-               "PREFIX}/debug/bin" OPENCV_CONFIG_LIB "${OPENCV_CONFIG_LIB}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules-debug.cmake "${OPENCV_CONFIG_LIB}")
 
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share/opencv/OpenCVModules.cmake ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake)
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

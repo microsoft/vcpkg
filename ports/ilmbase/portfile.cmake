@@ -22,12 +22,6 @@ vcpkg_apply_patches(
     "${CMAKE_CURRENT_LIST_DIR}/Imath__CMakeLists.txt.patch"
 )
 
-if(VCPKG_LIBRARY_LINKAGE MATCHES "static")
-  set(BUILD_SHARED_LIBS OFF)
-else()
-  set(BUILD_SHARED_LIBS ON)
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA

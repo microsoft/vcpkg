@@ -1,6 +1,6 @@
 Source: opencv
 Version: 3.4.0-3
-Build-Depends: opengl, zlib, libpng, libjpeg-turbo, libwebp, jasper, tiff, protobuf (windows)
+Build-Depends: opengl, zlib, libpng, libjpeg-turbo, libwebp, jasper, tiff, openexr, protobuf (windows)
 Description: computer vision library
 
 Feature: contrib
