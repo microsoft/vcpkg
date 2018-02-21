@@ -547,7 +547,7 @@ namespace vcpkg::Install
             Util::Enum::to_enum<Build::UseHeadVersion>(use_head_version),
             Util::Enum::to_enum<Build::AllowDownloads>(!no_downloads),
             Build::CleanBuildtrees::NO,
-        };
+            Build::CleanPackages::NO};
 
         // Note: action_plan will hold raw pointers to SourceControlFiles from this map
         std::vector<AnyAction> action_plan;

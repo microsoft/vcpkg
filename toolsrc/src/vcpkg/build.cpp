@@ -61,8 +61,10 @@ namespace vcpkg::Build::Command
                            spec.name());
 
         const StatusParagraphs status_db = database_load_check(paths);
-        const Build::BuildPackageOptions build_package_options{
-            Build::UseHeadVersion::NO, Build::AllowDownloads::YES, Build::CleanBuildtrees::NO};
+        const Build::BuildPackageOptions build_package_options{Build::UseHeadVersion::NO,
+                                                               Build::AllowDownloads::YES,
+                                                               Build::CleanBuildtrees::NO,
+                                                               Build::CleanPackages::NO};
 
         const std::unordered_set<std::string> features_as_set(full_spec.features.begin(), full_spec.features.end());
 
@@ -385,7 +387,7 @@ namespace vcpkg::Build
         if (config.build_package_options.clean_buildtrees == CleanBuildtrees::YES)
         {
             auto& fs = paths.get_filesystem();
-            auto buildtrees_dir = paths.buildtrees / config.scf.core_paragraph->name;
+            const fs::path buildtrees_dir = paths.buildtrees / config.scf.core_paragraph->name;
             auto buildtree_files = fs.get_files_non_recursive(buildtrees_dir);
             for (auto&& file : buildtree_files)
             {
@@ -395,6 +397,16 @@ namespace vcpkg::Build
                     fs.remove_all(file, ec);
                 }
             }
+        }
+
+        if (config.build_package_options.clean_packages == CleanPackages::YES)
+        {
+            auto& fs = paths.get_filesystem();
+            const PackageSpec spec = PackageSpec::from_name_and_triplet(config.scf.core_paragraph->name, config.triplet)
+                                         .value_or_exit(VCPKG_LINE_INFO);
+            const fs::path package_dir = paths.package_dir(spec);
+            std::error_code ec;
+            fs.remove_all(package_dir, ec);
         }
 
         return result;

@@ -24,17 +24,16 @@ namespace vcpkg::Commands::CI
     {
         Input::check_triplet(triplet, paths);
         std::vector<PackageSpec> specs = PackageSpec::to_package_specs(ports, triplet);
-        auto featurespecs = Util::fmap(specs, [](auto& spec) { return FeatureSpec(spec, ""); });
+        const auto featurespecs = Util::fmap(specs, [](auto& spec) { return FeatureSpec(spec, ""); });
 
         StatusParagraphs status_db = database_load_check(paths);
         const auto& paths_port_file = Dependencies::PathsPortFileProvider(paths);
         auto action_plan = Dependencies::create_feature_install_plan(paths_port_file, featurespecs, status_db);
 
-        const Build::BuildPackageOptions install_plan_options = {
-            Build::UseHeadVersion::NO,
-            Build::AllowDownloads::YES,
-            Build::CleanBuildtrees::YES,
-        };
+        const Build::BuildPackageOptions install_plan_options = {Build::UseHeadVersion::NO,
+                                                                 Build::AllowDownloads::YES,
+                                                                 Build::CleanBuildtrees::YES,
+                                                                 Build::CleanPackages::YES};
 
         for (auto&& action : action_plan)
         {

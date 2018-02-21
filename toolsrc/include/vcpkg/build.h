@@ -44,6 +44,12 @@ namespace vcpkg::Build
         YES
     };
 
+    enum class CleanPackages
+    {
+        NO = 0,
+        YES
+    };
+
     enum class ConfigurationType
     {
         DEBUG,
@@ -55,6 +61,7 @@ namespace vcpkg::Build
         UseHeadVersion use_head_version;
         AllowDownloads allow_downloads;
         CleanBuildtrees clean_buildtrees;
+        CleanPackages clean_packages;
     };
 
     enum class BuildResult
