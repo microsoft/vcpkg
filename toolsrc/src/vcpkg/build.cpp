@@ -339,7 +339,8 @@ namespace vcpkg::Build
 
         {
             auto locked_metrics = Metrics::g_metrics.lock();
-            locked_metrics->track_metric("buildtimeus-" + spec_string, buildtimeus);
+            locked_metrics->track_buildtime(spec.to_string() + ":[" + Strings::join(",", config.feature_list) + "]",
+                                            buildtimeus);
             if (return_code != 0)
             {
                 locked_metrics->track_property("error", "build failed");
