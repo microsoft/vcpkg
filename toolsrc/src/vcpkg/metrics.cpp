@@ -150,6 +150,9 @@ namespace vcpkg::Metrics
         std::string properties;
         std::string measurements;
 
+        std::vector<std::string> buildtime_names;
+        std::vector<std::string> buildtime_times;
+
         void track_property(const std::string& name, const std::string& value)
         {
             if (properties.size() != 0) properties.push_back(',');
@@ -166,8 +169,23 @@ namespace vcpkg::Metrics
             measurements.append(std::to_string(value));
         }
 
+        void track_buildtime(const std::string& name, double value)
+        {
+            buildtime_names.push_back(name);
+            buildtime_times.push_back(std::to_string(value));
+        }
+
         std::string format_event_data_template() const
         {
+            auto props_plus_buildtimes = properties;
+            if (buildtime_names.size() > 0)
+            {
+                if (props_plus_buildtimes.size() > 0) props_plus_buildtimes.push_back(',');
+                props_plus_buildtimes.append(Strings::format(R"("buildnames": [%s], "buildtimes": [%s])",
+                                                             Strings::join(",", buildtime_names, to_json_string),
+                                                             Strings::join(",", buildtime_times)));
+            }
+
             const std::string& session_id = get_session_id();
             return Strings::format(R"([{
     "ver": 1,
@@ -199,7 +217,7 @@ namespace vcpkg::Metrics
                                    session_id,
                                    user_id,
                                    user_timestamp,
-                                   properties,
+                                   props_plus_buildtimes,
                                    measurements);
         }
     };
@@ -273,6 +291,11 @@ namespace vcpkg::Metrics
     void Metrics::set_print_metrics(bool should_print_metrics) { g_should_print_metrics = should_print_metrics; }
 
     void Metrics::track_metric(const std::string& name, double value) { g_metricmessage.track_metric(name, value); }
+
+    void Metrics::track_buildtime(const std::string& name, double value)
+    {
+        g_metricmessage.track_buildtime(name, value);
+    }
 
     void Metrics::track_property(const std::string& name, const std::string& value)
     {

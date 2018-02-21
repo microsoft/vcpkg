@@ -167,7 +167,7 @@ namespace vcpkg
     fs::path get_git_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
     {
 #if defined(_WIN32)
-        static constexpr std::array<int, 3> EXPECTED_VERSION = {2, 15, 0};
+        static constexpr std::array<int, 3> EXPECTED_VERSION = {2, 16, 2};
 #else
         static constexpr std::array<int, 3> EXPECTED_VERSION = {2, 7, 4};
 #endif
@@ -175,7 +175,7 @@ namespace vcpkg
 
         const std::vector<fs::path> from_path = Files::find_from_PATH("git");
 
-        const fs::path downloaded_copy = downloads_folder / "MinGit-2.15.0-32-bit" / "cmd" / "git.exe";
+        const fs::path downloaded_copy = downloads_folder / "MinGit-2.16.2-32-bit" / "cmd" / "git.exe";
         std::vector<fs::path> candidate_paths;
 #if defined(_WIN32)
         candidate_paths.push_back(downloaded_copy);

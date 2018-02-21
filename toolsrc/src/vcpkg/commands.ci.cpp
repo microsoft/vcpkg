@@ -20,27 +20,15 @@ namespace vcpkg::Commands::CI
 
     static Install::InstallSummary run_ci_on_triplet(const Triplet& triplet,
                                                      const VcpkgPaths& paths,
-                                                     const std::vector<std::string>& ports,
-                                                     const std::set<std::string>& exclusions_set)
+                                                     const std::vector<std::string>& ports)
     {
         Input::check_triplet(triplet, paths);
-
-        const std::vector<PackageSpec> specs = PackageSpec::to_package_specs(ports, triplet);
+        std::vector<PackageSpec> specs = PackageSpec::to_package_specs(ports, triplet);
+        auto featurespecs = Util::fmap(specs, [](auto& spec) { return FeatureSpec(spec, ""); });
 
         StatusParagraphs status_db = database_load_check(paths);
         const auto& paths_port_file = Dependencies::PathsPortFileProvider(paths);
-        std::vector<InstallPlanAction> install_plan =
-            Dependencies::create_install_plan(paths_port_file, specs, status_db);
-
-        for (InstallPlanAction& plan : install_plan)
-        {
-            if (Util::Sets::contains(exclusions_set, plan.spec.name()))
-            {
-                plan.plan_type = InstallPlanType::EXCLUDED;
-            }
-        }
-
-        Checks::check_exit(VCPKG_LINE_INFO, !install_plan.empty(), "Install plan cannot be empty");
+        auto action_plan = Dependencies::create_feature_install_plan(paths_port_file, featurespecs, status_db);
 
         const Build::BuildPackageOptions install_plan_options = {
             Build::UseHeadVersion::NO,
@@ -48,11 +36,13 @@ namespace vcpkg::Commands::CI
             Build::CleanBuildtrees::YES,
         };
 
-        const std::vector<Dependencies::AnyAction> action_plan =
-            Util::fmap(install_plan, [&install_plan_options](InstallPlanAction& install_action) {
-                install_action.build_options = install_plan_options;
-                return Dependencies::AnyAction(std::move(install_action));
-            });
+        for (auto&& action : action_plan)
+        {
+            if (auto p = action.install_action.get())
+            {
+                p->build_options = install_plan_options;
+            }
+        }
 
         return Install::perform(action_plan, Install::KeepGoing::YES, paths, status_db);
     }
@@ -102,11 +92,13 @@ namespace vcpkg::Commands::CI
             triplets.push_back(default_triplet);
         }
 
-        const std::vector<std::string> ports = Install::get_all_port_names(paths);
+        std::vector<std::string> ports = Install::get_all_port_names(paths);
+        Util::erase_remove_if(ports, [&](auto&& port) { return Util::Sets::contains(exclusions_set, port); });
+
         std::vector<TripletAndSummary> results;
         for (const Triplet& triplet : triplets)
         {
-            Install::InstallSummary summary = run_ci_on_triplet(triplet, paths, ports, exclusions_set);
+            Install::InstallSummary summary = run_ci_on_triplet(triplet, paths, ports);
             results.push_back({triplet, std::move(summary)});
         }
 

@@ -14,7 +14,7 @@ $gitHash = "unknownhash"
 $oldpath = $env:path
 try
 {
-    $env:path += ";$vcpkgRootDir\downloads\MinGit-2.15.0-32-bit\cmd"
+    $env:path += ";$vcpkgRootDir\downloads\MinGit-2.16.2-32-bit\cmd"
     if (Get-Command "git" -ErrorAction SilentlyContinue)
     {
         $gitHash = git log HEAD -n 1 --format="%cd-%H" --date=short

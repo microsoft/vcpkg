@@ -1,0 +1,3 @@
+Source: tinytoml
+Version: 20180219-1
+Description: A header only C++11 library for parsing TOML.

@@ -280,33 +280,6 @@ namespace vcpkg::Dependencies
         return nullopt;
     }
 
-    std::vector<InstallPlanAction> create_install_plan(const PortFileProvider& port_file_provider,
-                                                       const std::vector<PackageSpec>& specs,
-                                                       const StatusParagraphs& status_db)
-    {
-        auto fspecs = Util::fmap(specs, [](const PackageSpec& spec) { return FeatureSpec(spec, ""); });
-        auto plan = create_feature_install_plan(port_file_provider, fspecs, status_db);
-
-        std::vector<InstallPlanAction> ret;
-        ret.reserve(plan.size());
-
-        for (auto&& action : plan)
-        {
-            if (auto p_install = action.install_action.get())
-            {
-                ret.push_back(std::move(*p_install));
-            }
-            else
-            {
-                Checks::exit_with_message(VCPKG_LINE_INFO,
-                                          "The installation plan requires feature packages support. Please re-run the "
-                                          "command with --featurepackages.");
-            }
-        }
-
-        return ret;
-    }
-
     std::vector<RemovePlanAction> create_remove_plan(const std::vector<PackageSpec>& specs,
                                                      const StatusParagraphs& status_db)
     {

@@ -162,10 +162,6 @@ namespace vcpkg::Dependencies
         std::unique_ptr<ClusterGraph> m_graph;
     };
 
-    std::vector<InstallPlanAction> create_install_plan(const PortFileProvider& port_file_provider,
-                                                       const std::vector<PackageSpec>& specs,
-                                                       const StatusParagraphs& status_db);
-
     std::vector<RemovePlanAction> create_remove_plan(const std::vector<PackageSpec>& specs,
                                                      const StatusParagraphs& status_db);
 
