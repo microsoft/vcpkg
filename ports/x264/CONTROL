@@ -1,0 +1,4 @@
+Source: x264
+Version: 
+Description: x264 is a free software library and application for encoding video streams into the H.264/MPEG-4 AVC compression format. Sources: https://cgit.kde.org/qca.git/
+Build-Depends: 
