@@ -45,7 +45,7 @@ $buildArchiveFileName = ($buildArchiveName -split "\.")[0]
 $deploymentRoot = "$VISUAL_STUDIO_2017_UNSTABLE_PATH\VC\Tools\MSVC"
 $deployedVersionFile = "$deploymentRoot\$DEPLOYED_VERSION_FILENAME"
 $alreadyDeployedVersion = Get-Content $deployedVersionFile -ErrorAction SilentlyContinue
-if (![string]::IsNullOrEmpty($alreadyDeployedVersion) -and $alreadyDeployedVersion -eq buildArchiveFileName)
+if ($buildArchiveFileName -eq $alreadyDeployedVersion)  # If file not available, the will be empty, so condition will fail
 {
     Write-Host "$buildArchive is already deployed, so no need to re-deploy."
     return
