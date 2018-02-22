@@ -4,6 +4,8 @@ perl Configure no-asm no-hw no-dso VC-WINUNIVERSAL -FS -FIWindows.h
 
 for /D %%f in ("%WindowsSdkDir%References\%WindowsSDKLibVersion%Windows.Foundation.FoundationContract\*") do set LibPath=%LibPath%;%%f\
 for /D %%f in ("%WindowsSdkDir%References\%WindowsSDKLibVersion%Windows.Foundation.UniversalApiContract\*") do set LibPath=%LibPath%;%%f\
+for /D %%f in ("%WindowsSdkDir%References\Windows.Foundation.FoundationContract\*") do set LibPath=%LibPath%;%%f\
+for /D %%f in ("%WindowsSdkDir%References\Windows.Foundation.UniversalApiContract\*") do set LibPath=%LibPath%;%%f\
 
 call ms\do_winuniversal.bat
 
