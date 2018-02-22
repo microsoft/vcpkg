@@ -45,7 +45,7 @@ $deployedVersion = findDeployedVersion $vsInstallPath
 # "-Format s" is for "SortableDateTimePattern". It should be culture agnostic
 $timestamp = (Get-Date -Format s).ToString()
 $timestamp = $timestamp -replace ":" # Remove colons from the HH:MM:ss format
-$outputFilename = "$buildId_$timestamp_$triplet$deployedVersion.xml"
+$outputFilename = "${buildId}_${timestamp}_${triplet}${deployedVersion}.xml"
 $outputPathRoot = "\\vcpkg-000\General\Results"
 $outputPath = "$outputPathRoot\$outputFilename"
 
