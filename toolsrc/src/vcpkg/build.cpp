@@ -399,16 +399,6 @@ namespace vcpkg::Build
             }
         }
 
-        if (config.build_package_options.clean_packages == CleanPackages::YES)
-        {
-            auto& fs = paths.get_filesystem();
-            const PackageSpec spec = PackageSpec::from_name_and_triplet(config.scf.core_paragraph->name, config.triplet)
-                                         .value_or_exit(VCPKG_LINE_INFO);
-            const fs::path package_dir = paths.package_dir(spec);
-            std::error_code ec;
-            fs.remove_all(package_dir, ec);
-        }
-
         return result;
     }
 
