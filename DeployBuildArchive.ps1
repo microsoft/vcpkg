@@ -19,13 +19,12 @@ $buildArchiveFolderRoot = "\\vcpkg-000\General\CustomBuilds"
 if ($latest)
 {
     $branchBuildArchives = Get-ChildItem $buildArchiveFolderRoot | Where-object -Property name -match "^$prefix.+\.7z$"
-    if ($branchBuildArchives.count -eq 0)
+    $buildArchive = ($branchBuildArchives | Sort-object Name -Descending | Select-object -first 1).fullname
+    if ([string]::IsNullOrEmpty($buildArchive))
     {
         Write-Error "Count not find build archives for branch $prefix in: $buildArchiveFolderRoot"
         throw;
     }
-
-    $buildArchive = ($branchBuildArchives | Sort-object Name -Descending | Select-object -first 1).fullname
 }
 else
 {
