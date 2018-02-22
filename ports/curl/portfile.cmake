@@ -16,7 +16,7 @@ vcpkg_apply_patches(
 
 # Support HTTP2 TSL Download https://curl.haxx.se/ca/cacert.pem rename to curl-ca-bundle.crt, copy it to libcurl.dll location.
 SET(HTTP2_OPTIONS)
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     SET(CURL_STATICLIB OFF)
     SET(HTTP2_OPTIONS
         -DUSE_NGHTTP2=ON
@@ -25,13 +25,39 @@ else()
     SET(CURL_STATICLIB ON)
 endif()
 
-set(USE_OPENSSL ON)
-if(CURL_USE_WINSSL)
+if(NOT "http2" IN_LIST FEATURES)
+    set(HTTP2_OPTIONS)
+endif()
+
+# SSL via OpenSSL
+if("openssl" IN_LIST FEATURES)
+    set(USE_OPENSSL ON)
+endif()
+
+# SSL via Schannel
+if("winssl" IN_LIST FEATURES)
     set(USE_OPENSSL OFF)
     set(USE_WINSSL ON)
     set(HTTP2_OPTIONS) ## disable HTTP2 when CURL_USE_WINSSL
 endif()
 
+# SSH
+if("ssh" IN_LIST FEATURES)
+    set(USE_LIBSSH2 ON)
+endif()
+
+# HTTP/HTTPS only
+# Note that `HTTP_ONLY` curl option disables everything including HTTPS, which is not an option.
+if("http-only" IN_LIST FEATURES)
+    set(USE_HTTP_ONLY ON)
+endif()
+
+# curl exe
+if("curl" IN_LIST FEATURES)
+    set(BUILD_CURL_EXE ON)
+endif()
+
+# UWP targets
 set(UWP_OPTIONS)
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(UWP_OPTIONS
@@ -54,11 +80,13 @@ vcpkg_configure_cmake(
         ${UWP_OPTIONS}
         ${HTTP2_OPTIONS}
         -DBUILD_TESTING=OFF
-        -DBUILD_CURL_EXE=OFF
+        -DBUILD_CURL_EXE=${BUILD_CURL_EXE}
         -DENABLE_MANUAL=OFF
         -DCURL_STATICLIB=${CURL_STATICLIB}
         -DCMAKE_USE_OPENSSL=${USE_OPENSSL}
         -DCMAKE_USE_WINSSL=${USE_WINSSL}
+        -DCMAKE_USE_LIBSSH2=${USE_LIBSSH2}
+        -DHTTP_ONLY=${USE_HTTP_ONLY}
     OPTIONS_DEBUG
         -DENABLE_DEBUG=ON
 )
@@ -67,6 +95,11 @@ vcpkg_install_cmake()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/curl RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+if("curl" IN_LIST FEATURES)
+    file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/curl.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/curl.exe ${CURRENT_PACKAGES_DIR}/debug/bin/curl-d.exe)
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
