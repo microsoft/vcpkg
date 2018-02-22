@@ -29,7 +29,7 @@ function unlinkOrDeleteDirectory([Parameter(Mandatory=$true)][string]$path)
         Write-Host "Non-reparse point detected. Deleting."
         vcpkgRemoveItem $path
     }
-    Write-Host "Unlinking/deleting $installpathedDirLocal ... done."
+    Write-Host "Unlinking/deleting $path ... done."
 }
 
 $driveLetter = "I:"
