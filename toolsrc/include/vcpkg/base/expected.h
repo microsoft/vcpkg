@@ -38,7 +38,7 @@ namespace vcpkg
         const std::error_code& error() const { return m_err; }
         std::error_code& error() { return m_err; }
 
-        CStringView to_string() const { return "value was error"; }
+        CStringView to_string() const { return m_err.message(); }
 
     private:
         std::error_code m_err;
