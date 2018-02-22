@@ -8,6 +8,8 @@ param(
     [Parameter(Mandatory=$true)][bool]$incremental
 )
 
+Set-StrictMode -Version Latest
+
 $vsInstallNickname = $vsInstallNickname.ToLower()
 $branch = $branch.ToLower()
 $triplet = $triplet.ToLower()

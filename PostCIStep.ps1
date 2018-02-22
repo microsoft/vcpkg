@@ -4,6 +4,8 @@ param(
     [Parameter(Mandatory=$true)][string]$buildId
 )
 
+Set-StrictMode -Version Latest
+
 $triplet = $triplet.ToLower()
 
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition

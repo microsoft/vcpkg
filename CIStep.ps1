@@ -4,6 +4,8 @@ param(
     [Parameter(Mandatory=$true)][bool]$miniTest
 )
 
+Set-StrictMode -Version Latest
+
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 . "$scriptsDir\VcpkgPowershellUtils.ps1"
 . "$scriptsDir\VcpkgPowershellUtils-Private.ps1"
