@@ -221,7 +221,7 @@ namespace vcpkg::Metrics
                                    "Linux",
 #elif defined(__unix__)
                                    "Unix",
-#elif defined(__unix__)
+#else
                                    "Other",
 #endif
                                    get_os_version_string(),
