@@ -78,7 +78,8 @@ namespace vcpkg
                                               user_id,
                                               user_time,
                                               user_mac,
-                                              last_completed_survey));
+                                              last_completed_survey),
+                              ec);
         }
         catch (...)
         {

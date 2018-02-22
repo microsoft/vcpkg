@@ -427,8 +427,9 @@ namespace vcpkg::Metrics
         }
 
         const fs::path vcpkg_metrics_txt_path = temp_folder_path / ("vcpkg" + generate_random_UUID() + ".txt");
-        fs.write_contents(vcpkg_metrics_txt_path, payload);
-
+        std::error_code ec;
+        fs.write_contents(vcpkg_metrics_txt_path, payload, ec);
+        if (ec) return;
         const std::string cmd_line = Strings::format("start \"vcpkgmetricsuploader.exe\" \"%s\" \"%s\"",
                                                      temp_folder_path_exe.u8string(),
                                                      vcpkg_metrics_txt_path.u8string());
