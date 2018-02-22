@@ -2,6 +2,14 @@ include(vcpkg_common_functions)
 
 set(OPENCV_PORT_VERSION "3.4.0")
 
+# This is to ensure we are patching clean sources. These lines can be removed when the OpenCV version is next upgraded.
+if(EXISTS "${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}" AND NOT EXISTS "${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/rework.stamp")
+  file(REMOVE_RECURSE
+    "${CURRENT_BUILDTREES_DIR}/src/opencv-opencv-${OPENCV_PORT_VERSION}.tar.gz.extracted"
+    "${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}"
+  )
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
@@ -18,6 +26,8 @@ vcpkg_apply_patches(
       "${CMAKE_CURRENT_LIST_DIR}/0003-disable-downloading.patch"
       "${CMAKE_CURRENT_LIST_DIR}/0004-use-find-package-required.patch"
 )
+
+file(WRITE "${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/rework.stamp")
 
 vcpkg_download_distfile(TINYDNN_ARCHIVE
     URLS "https://github.com/tiny-dnn/tiny-dnn/archive/v1.0.0a3.tar.gz"
