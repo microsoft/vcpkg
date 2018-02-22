@@ -14,8 +14,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO malaterre/GDCM
-    REF v2.8.3
-    SHA512 f8c3d600f067c9b60a32ff5fb7e751c06088e1e4a8e8d0f5e25d9fc7d49e8fab1f0242b10433f522d2043777cddace78c5a9c2cb25bac75a8e84fee554370f62
+    REF v2.8.4
+    SHA512 d58854507bcc477bcf7944c82014ceac4c603bf8f0e75ddda2371052f4972f1535cb782b47d0822a8929131b804ea5c16b9236b414d70cbf96a494741391c534
 )
 
 vcpkg_apply_patches(
