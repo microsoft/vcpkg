@@ -25,6 +25,7 @@ vcpkg_apply_patches(
       "${CMAKE_CURRENT_LIST_DIR}/0002-install-options.patch"
       "${CMAKE_CURRENT_LIST_DIR}/0003-disable-downloading.patch"
       "${CMAKE_CURRENT_LIST_DIR}/0004-use-find-package-required.patch"
+      "${CMAKE_CURRENT_LIST_DIR}/0005-use-external-ffmpeg.patch"
 )
 
 file(WRITE "${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/rework.stamp")
@@ -98,21 +99,7 @@ endif()
 set(WITH_FFMPEG OFF)
 if("ffmpeg" IN_LIST FEATURES)
   set(WITH_FFMPEG ON)
-  vcpkg_download_distfile(OCV_DOWNLOAD
-    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/66b1fed06cf3510235f367f96aa26da5cb234a15/ffmpeg/opencv_ffmpeg.dll"
-    FILENAME "opencv-cache/ffmpeg/3ae76b105113d944984b2351c61e21c6-opencv_ffmpeg.dll"
-    SHA512 62ad0d6de7a7887a08313e20c474b4f98ae7746a2c10cce2ea5eae284250830e721b81308a401d0fadd238dda85c3ec0f347b41361fd56e473e790e3c40fa554
-  )
-  vcpkg_download_distfile(OCV_DOWNLOAD
-    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/66b1fed06cf3510235f367f96aa26da5cb234a15/ffmpeg/opencv_ffmpeg_64.dll"
-    FILENAME "opencv-cache/ffmpeg/cf3bb5bc9d393b022ea7a42eb63e794d-opencv_ffmpeg_64.dll"
-    SHA512 5de95a180895aaa5186578572dd1968d2ff3ce8d24c46755c94d768ea6f463c92416c86e851b06b15fc314dd852a456282a56f5b14d6fb9130a054ac9e8230bd
-  )
-  vcpkg_download_distfile(OCV_DOWNLOAD
-    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/66b1fed06cf3510235f367f96aa26da5cb234a15/ffmpeg/ffmpeg_version.cmake"
-    FILENAME "opencv-cache/ffmpeg/ec59008da403fb18ab3c1ed66aed583b-ffmpeg_version.cmake"
-    SHA512 97784032256b104ed9bb3e3f71824985c551b3e4a86928bcf60d3beef50817f66cf276256e140e645e78e04f4463f3665bdda0574585d05af640fb43d0ba4cb9
-  )
+  list(APPEND CMAKE_MODULE_PATH ${CURRENT_INSTALLED_DIR}/share/ffmpeg)
 endif()
 
 set(WITH_IPP OFF)
@@ -354,7 +341,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/opencv)
 
 vcpkg_copy_pdbs()
-
-set(VCPKG_LIBRARY_LINKAGE "dynamic")
-
-set(VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT enabled)
