@@ -5,7 +5,6 @@ param(
 )
 
 Set-StrictMode -Version Latest
-$errorActionPreference = "Stop"
 
 $triplet = $triplet.ToLower()
 

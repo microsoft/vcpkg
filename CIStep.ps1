@@ -5,7 +5,6 @@ param(
 )
 
 Set-StrictMode -Version Latest
-$errorActionPreference = "Stop"
 
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 . "$scriptsDir\VcpkgPowershellUtils.ps1"

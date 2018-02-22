@@ -9,7 +9,6 @@ param(
 )
 
 Set-StrictMode -Version Latest
-$errorActionPreference = "Stop"
 
 $vsInstallNickname = $vsInstallNickname.ToLower()
 $branch = $branch.ToLower()
