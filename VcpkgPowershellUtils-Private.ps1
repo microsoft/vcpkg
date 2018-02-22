@@ -69,6 +69,7 @@ function vcpkgGetProcessesByNameRegex
     )
 
     # SilentlyContinue in case nothing is found
+    # Comma is needed to force array in case there are 0 or 1 elements.
     return ,@(Get-Process -Name "$regex" -ErrorAction SilentlyContinue)
 }
 
