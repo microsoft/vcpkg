@@ -1,4 +1,3 @@
-# Distributed under the OSI-approved BSD 3-Clause License.
 #
 #.rst:
 # FindTIFF
