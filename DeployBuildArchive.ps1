@@ -38,8 +38,19 @@ if (!(Test-Path $buildArchive))
 }
 
 Write-Host "Deploying $buildArchive"
+$buildArchiveName = Split-Path $buildArchive -leaf
+$buildArchiveFileName = ($buildArchiveName -split "\.")[0]
+
 
 $deploymentRoot = "$VISUAL_STUDIO_2017_UNSTABLE_PATH\VC\Tools\MSVC"
+$deployedVersionFile = "$deploymentRoot\$DEPLOYED_VERSION_FILENAME"
+$alreadyDeployedVersion = Get-Content $deployedVersionFile -ErrorAction SilentlyContinue
+if (![string]::IsNullOrEmpty($alreadyDeployedVersion) -and $alreadyDeployedVersion -eq buildArchiveFileName)
+{
+    Write-Host "$buildArchive is already deployed, so no need to re-deploy."
+    return
+}
+
 $msvcVersion = (dir -Directory $deploymentRoot | Sort-object Name -Descending | Select-object -first 1).Name
 $deploymentPath = "$deploymentRoot\$msvcVersion"
 
@@ -53,7 +64,6 @@ Get-ChildItem $deploymentPath -exclude "crt" | % { vcpkgRemoveItem $_ }
 Write-Host "Cleaning-up $deploymentRoot... done."
 
 Write-Host "Copying $buildArchive..."
-$buildArchiveName = Split-Path $buildArchive -leaf
 $tempBuildArchive = "$deploymentRoot\$buildArchiveName"
 Copy-Item $buildArchive -Destination $tempBuildArchive
 Write-Host "Copying $buildArchive... done."
@@ -64,7 +74,6 @@ $time7z = Measure-Command {& $scriptsDir\7za.exe x $tempBuildArchive -o"$deploym
 $formattedTime7z = vcpkgFormatElapsedTime $time7z
 Write-Host "Extracting 7z... done. Time Taken: $formattedTime7z seconds"
 
-$deployedVersionFile = "$deploymentRoot\$DEPLOYED_VERSION_FILENAME"
-
-$buildArchiveFileName = ($buildArchiveName -split "\.")[0]
+Write-Host "Writing file: $deployedVersionFile..."
 $buildArchiveFileName | Out-File -filepath $deployedVersionFile
+Write-Host "Writing file: $deployedVersionFile... done."
