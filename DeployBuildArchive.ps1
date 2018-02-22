@@ -45,7 +45,7 @@ $buildArchiveFileName = ($buildArchiveName -split "\.")[0]
 $deploymentRoot = "$VISUAL_STUDIO_2017_UNSTABLE_PATH\VC\Tools\MSVC"
 $deployedVersionFile = "$deploymentRoot\$DEPLOYED_VERSION_FILENAME"
 $alreadyDeployedVersion = Get-Content $deployedVersionFile -ErrorAction SilentlyContinue
-if ($buildArchiveFileName -eq $alreadyDeployedVersion)  # If file not available, the will be empty, so condition will fail
+if ($buildArchiveFileName -eq $alreadyDeployedVersion)  # If file not available, the variable will be empty, so condition will fail
 {
     Write-Host "$buildArchive is already deployed, so no need to re-deploy."
     return
@@ -70,7 +70,12 @@ Write-Host "Copying $buildArchive... done."
 
 Write-Host "Deployment path: $deploymentPath"
 Write-Host "Extracting 7z..."
-$time7z = Measure-Command {& $scriptsDir\7za.exe x $tempBuildArchive -o"$deploymentPath" -y}
+$time7z = Measure-Command {$ec = vcpkgInvokeCommand "$scriptsDir\7za.exe" "x `"$tempBuildArchive`" -o`"$deploymentPath`" -y"}
+if ($ec -ne 0)
+{
+    Write-Error "Error when extracting $tempBuildArchive"
+    throw 0;
+}
 $formattedTime7z = vcpkgFormatElapsedTime $time7z
 Write-Host "Extracting 7z... done. Time Taken: $formattedTime7z seconds"
 
