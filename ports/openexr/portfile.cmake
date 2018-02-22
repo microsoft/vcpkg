@@ -14,7 +14,6 @@ vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
     "${CMAKE_CURRENT_LIST_DIR}/add-missing-export.patch"
     "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt.patch"
     "${CMAKE_CURRENT_LIST_DIR}/IlmImf__CMakeLists.txt.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/IlmImfUtil__CMakeLists.txt.patch"
 )
 
 # Ensure helper executables can run during build
