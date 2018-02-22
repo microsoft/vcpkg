@@ -57,7 +57,7 @@ namespace vcpkg::Files
             std::error_code ec;
             write_contents(file_path, data, ec);
             Checks::check_exit(
-                VCPKG_LINE_INFO, ec, "error while writing file: %s: %s", file_path.u8string(), ec.message());
+                VCPKG_LINE_INFO, !ec, "error while writing file: %s: %s", file_path.u8string(), ec.message());
         }
     };
 
