@@ -1,3 +1,4 @@
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 function vcpkgHasModule([Parameter(Mandatory=$true)][string]$moduleName)
 {
     return [bool](Get-Module -ListAvailable -Name $moduleName)
