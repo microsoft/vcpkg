@@ -1,0 +1,13 @@
+diff --git a/mman.h b/mman.h
+index 0846d06..290679f 100644
+--- a/mman.h
++++ b/mman.h
+@@ -18,7 +18,7 @@
+ #if defined(MMAN_LIBRARY)
+ #define MMANSHARED_EXPORT __declspec(dllexport)
+ #else
+-#define MMANSHARED_EXPORT __declspec(dllimport)
++#define MMANSHARED_EXPORT
+ #endif
+ 
+ /* Determine offset type */
