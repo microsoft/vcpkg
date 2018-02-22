@@ -1,4 +1,12 @@
 Source: cpr
-Version: 1.3.0-1
+Version: 1.3.0-2
 Description: C++ Requests is a simple wrapper around libcurl inspired by the excellent Python Requests project.
 Build-Depends: curl
+
+Feature: openssl
+Build-Depends: curl[openssl]
+Description: SSL support via OpenSSL
+
+Feature: winssl
+Build-Depends: curl[winssl]
+Description: SSL support via Schannel
