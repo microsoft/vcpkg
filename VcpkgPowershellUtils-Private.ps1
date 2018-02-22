@@ -69,7 +69,7 @@ function vcpkgGetProcessesByNameRegex
     )
 
     # SilentlyContinue in case nothing is found
-    return @(Get-Process -Name "$regex" -ErrorAction SilentlyContinue)
+    return ,@(Get-Process -Name "$regex" -ErrorAction SilentlyContinue)
 }
 
 function KeepMostRecentFiles
@@ -180,7 +180,7 @@ function UnattendedVSupdate
     $ec = vcpkgInvokeCommand $installerPath "$arguments"
     checkExit ($ec -eq 0) "Updating Visual Studio at: $installPath... failed."
 
-    for ($i=0; ($i -lt 3) -and (@(vcpkgGetProcessesByNameRegex "vs_installer*").Count -ne 0); $i++)
+    for ($i=0; ($i -lt 3) -and ((vcpkgGetProcessesByNameRegex "vs_installer*").Count -ne 0); $i++)
     {
         Write-Warning "VS Installer still running, waiting..."
         Start-Sleep -s 5
