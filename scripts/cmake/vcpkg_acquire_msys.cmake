@@ -45,6 +45,7 @@
 
 function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
   set(TOOLPATH ${DOWNLOADS}/tools/msys2)
+  cmake_parse_arguments(_am "" "" "PACKAGES" ${ARGN})
 
   # detect host architecture
   if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
@@ -85,15 +86,31 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
       WORKING_DIRECTORY ${TOOLPATH}
     )
     execute_process(
-      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin:\$PATH;pacman-key --init;pacman-key --populate"
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman-key --init;pacman-key --populate"
       WORKING_DIRECTORY ${TOOLPATH}
     )
     execute_process(
-      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin:\$PATH;pacman -Syu --noconfirm"
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "PATH=/usr/bin;pacman -Syu --noconfirm"
       WORKING_DIRECTORY ${TOOLPATH}
     )
     file(WRITE "${TOOLPATH}/${STAMP}" "0")
     message(STATUS "Acquiring MSYS2... OK")
+  endif()
+
+  if(_am_PACKAGES)
+    message(STATUS "Acquiring MSYS Packages...")
+    string(REPLACE ";" " " _am_PACKAGES "${_am_PACKAGES}")
+
+    set(_ENV_ORIGINAL $ENV{PATH})
+    set(ENV{PATH} ${PATH_TO_ROOT}/usr/bin)
+    vcpkg_execute_required_process(
+      COMMAND ${PATH_TO_ROOT}/usr/bin/bash.exe --noprofile --norc -c "pacman -Sy --noconfirm --needed ${_am_PACKAGES}"
+      WORKING_DIRECTORY ${TOOLPATH}
+      LOGNAME msys-pacman-${TARGET_TRIPLET}
+    )
+    set(ENV{PATH} "${_ENV_ORIGINAL}")
+
+    message(STATUS "Acquiring MSYS Packages... OK")
   endif()
 
   set(${PATH_TO_ROOT_OUT} ${PATH_TO_ROOT} PARENT_SCOPE)
