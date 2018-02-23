@@ -14,7 +14,13 @@ $gitHash = "unknownhash"
 $oldpath = $env:path
 try
 {
-    $env:path += ";$vcpkgRootDir\downloads\MinGit-2.16.2-32-bit\cmd"
+    [xml]$asXml = Get-Content "$scriptsDir\vcpkgDependencies.xml"
+    $dependencyData = $asXml.SelectSingleNode("//dependencies/dependency[@name=`"git`"]")
+    $postExtractionExecutableRelativePath = $dependencyData.postExtractionExecutableRelativePath
+    $gitFromDownload = "$vcpkgRootDir\downloads\$postExtractionExecutableRelativePath"
+    $gitDir = split-path -parent $gitFromDownload
+
+    $env:path += ";$gitDir"
     if (Get-Command "git" -ErrorAction SilentlyContinue)
     {
         $gitHash = git log HEAD -n 1 --format="%cd-%H" --date=short
@@ -29,6 +35,7 @@ finally
     $env:path = $oldpath
 }
 Write-Verbose("Git repo version string is " + $gitHash)
+
 $vcpkgSourcesPath = "$vcpkgRootDir\toolsrc"
 
 if (!(Test-Path $vcpkgSourcesPath))
