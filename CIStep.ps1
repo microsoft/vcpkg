@@ -38,5 +38,5 @@ if($miniTest)
 }
 else
 {
-    ./vcpkg ci $Triplet "--x-xunit=$ciXmlPath" --exclude=aws-sdk-cpp | Tee-Object -FilePath "$triplet.txt"
+    ./vcpkg ci $Triplet "--x-xunit=$ciXmlPath" --exclude=aws-sdk-cpp,ecm,llvm | Tee-Object -FilePath "$triplet.txt"
 }
