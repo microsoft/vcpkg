@@ -107,14 +107,14 @@ file(INSTALL
         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/OpenCL.lib"
         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/OpenCL.exp"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/lib/Release
+        ${CURRENT_PACKAGES_DIR}/lib
 )
 
 file(INSTALL
         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/OpenCL.lib"
         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/OpenCL.exp"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/lib/Debug
+        ${CURRENT_PACKAGES_DIR}/debug/lib
 )
 
 #file(INSTALL
