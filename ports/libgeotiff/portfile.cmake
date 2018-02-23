@@ -18,6 +18,7 @@ vcpkg_apply_patches(
             "${CMAKE_CURRENT_LIST_DIR}/0003-Fix-cmake-TIFF-detection.patch"
             "${CMAKE_CURRENT_LIST_DIR}/0004-Fix-libxtiff-installation.patch"
             "${CMAKE_CURRENT_LIST_DIR}/0005-Control-shared-library-build-with-option.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/0006-Fix-utility-link-error.patch"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
