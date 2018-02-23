@@ -10,7 +10,7 @@ namespace vcpkg::Checks
 {
     [[noreturn]] static void cleanup_and_exit(const int exit_code)
     {
-        static std::atomic<bool> have_entered = false;
+        static std::atomic<bool> have_entered{false};
         if (have_entered) std::terminate();
         have_entered = true;
 
