@@ -1,124 +1,76 @@
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory=$true)][string]$Dependency
+    [Parameter(Mandatory=$true)][string]$dependency
 )
 
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 . "$scriptsDir\VcpkgPowershellUtils.ps1"
 
-Write-Verbose "Fetching dependency: $Dependency"
+Write-Verbose "Fetching dependency: $dependency"
 $vcpkgRootDir = vcpkgFindFileRecursivelyUp $scriptsDir .vcpkg-root
 
 $downloadsDir = "$vcpkgRootDir\downloads"
 
-function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
+function fetchDependencyInternal([Parameter(Mandatory=$true)][string]$dependency)
 {
-    # Enums (without resorting to C#) are only available on powershell 5+.
-    $ExtractionType_NO_EXTRACTION_REQUIRED = 0
-    $ExtractionType_ZIP = 1
-    $ExtractionType_SELF_EXTRACTING_7Z = 2
+    $dependency = $dependency.toLower()
 
-    if($Dependency -eq "cmake")
+    [xml]$asXml = Get-Content "$scriptsDir\vcpkgDependencies.xml"
+    $dependencyData = $asXml.SelectSingleNode("//dependencies/dependency[@name=`"$dependency`"]") # Case-sensitive!
+
+    if ($dependencyData -eq $null)
     {
-        $requiredVersion = "3.10.2"
-        $downloadVersion = "3.10.2"
-        $url = "https://cmake.org/files/v3.10/cmake-3.10.2-win32-x86.zip"
-        $downloadPath = "$downloadsDir\cmake-3.10.2-win32-x86.zip"
-        $expectedDownloadedFileHash = "f5f7e41a21d0e9b655aca58498b08e17ecd27796bf82837e2c84435359169dd6"
-        $executableFromDownload = "$downloadsDir\cmake-3.10.2-win32-x86\bin\cmake.exe"
-        $extractionType = $ExtractionType_ZIP
+        throw "Unkown dependency $dependency"
     }
-    elseif($Dependency -eq "nuget")
-    {
-        $requiredVersion = "4.4.0"
-        $downloadVersion = "4.4.0"
-        $url = "https://dist.nuget.org/win-x86-commandline/v4.4.0/nuget.exe"
-        $downloadPath = "$downloadsDir\nuget-$downloadVersion\nuget.exe"
-        $expectedDownloadedFileHash = "2cf9b118937eef825464e548f0c44f7f64090047746de295d75ac3dcffa3e1f6"
-        $executableFromDownload = $downloadPath
-        $extractionType = $ExtractionType_NO_EXTRACTION_REQUIRED
-    }
-    elseif($Dependency -eq "vswhere")
-    {
-        $requiredVersion = "2.3.2"
-        $downloadVersion = "2.3.2"
-        $url = "https://github.com/Microsoft/vswhere/releases/download/2.3.2/vswhere.exe"
-        $downloadPath = "$downloadsDir\vswhere-$downloadVersion\vswhere.exe"
-        $expectedDownloadedFileHash = "103f2784c4b2c8e70c7c1c03687abbf22bce052aae30639406e4e13ffa29ee04"
-        $executableFromDownload = $downloadPath
-        $extractionType = $ExtractionType_NO_EXTRACTION_REQUIRED
-    }
-    elseif($Dependency -eq "git")
-    {
-        $requiredVersion = "2.16.2"
-        $downloadVersion = "2.16.2"
-        $url = "https://github.com/git-for-windows/git/releases/download/v2.16.2.windows.1/MinGit-2.16.2-32-bit.zip"
-        $downloadPath = "$downloadsDir\MinGit-2.16.2-32-bit.zip"
-        $expectedDownloadedFileHash = "322c727e482aa97522c64a5ac68bdda3780111e8670bcfb532beac8e11ece5da"
-        # There is another copy of git.exe in MinGit\bin. However, an installed version of git add the cmd dir to the PATH.
-        # Therefore, choosing the cmd dir here as well.
-        $executableFromDownload = "$downloadsDir\MinGit-2.16.2-32-bit\cmd\git.exe"
-        $extractionType = $ExtractionType_ZIP
-    }
-    elseif($Dependency -eq "installerbase")
-    {
-        $requiredVersion = "3.1.81"
-        $downloadVersion = "3.1.81"
-        $url = "https://github.com/podsvirov/installer-framework/releases/download/cr203958-9/QtInstallerFramework-win-x86.zip"
-        $downloadPath = "$downloadsDir\QtInstallerFramework-win-x86.zip"
-        $expectedDownloadedFileHash = "f2ce23cf5cf9fc7ce409bdca49328e09a070c0026d3c8a04e4dfde7b05b83fe8"
-        $executableFromDownload = "$downloadsDir\QtInstallerFramework-win-x86\bin\installerbase.exe"
-        $extractionType = $ExtractionType_ZIP
-    }
-    else
-    {
-        throw "Unknown program requested"
-    }
+
+    $requiredVersion = $dependencyData.requiredVersion
+    $downloadVersion = $dependencyData.downloadVersion
+    $url = $dependencyData.x86url
+    $downloadRelativePath = $dependencyData.downloadRelativePath
+    $downloadPath = "$downloadsDir\$downloadRelativePath"
+    $expectedDownloadedFileHash = $dependencyData.sha256
+    $extension = $dependencyData.extension
 
     if (!(Test-Path $downloadPath))
     {
-        Write-Host "Downloading $Dependency..."
+        Write-Host "Downloading $dependency..."
         vcpkgDownloadFile $url $downloadPath
-        Write-Host "Downloading $Dependency has completed successfully."
+        Write-Host "Downloading $dependency has completed successfully."
     }
 
     $downloadedFileHash = vcpkgGetSHA256 $downloadPath
     vcpkgCheckEqualFileHash -filePath $downloadPath -expectedHash $expectedDownloadedFileHash -actualHash $downloadedFileHash
 
-    if ($extractionType -eq $ExtractionType_NO_EXTRACTION_REQUIRED)
+
+    if ($extension -eq "exe")
     {
-        # do nothing
+        $executableFromDownload = $downloadPath
     }
-    elseif($extractionType -eq $ExtractionType_ZIP)
+    elseif ($extension -eq "zip")
     {
+        $postExtractionExecutableRelativePath = $dependencyData.postExtractionExecutableRelativePath
+        $executableFromDownload = "$downloadsDir\$postExtractionExecutableRelativePath"
         if (-not (Test-Path $executableFromDownload))
         {
             $outFilename = (Get-ChildItem $downloadPath).BaseName
-            Write-Host "Extracting $Dependency..."
+            Write-Host "Extracting $dependency..."
             vcpkgExtractFile -File $downloadPath -DestinationDir $downloadsDir -outFilename $outFilename
-            Write-Host "Extracting $Dependency has completed successfully."
-        }
-    }
-    elseif($extractionType -eq $ExtractionType_SELF_EXTRACTING_7Z)
-    {
-        if (-not (Test-Path $executableFromDownload))
-        {
-            vcpkgInvokeCommand $downloadPath "-y"
+            Write-Host "Extracting $dependency has completed successfully."
         }
     }
     else
     {
-        throw "Invalid extraction type"
+        throw "Unexpected file type"
     }
 
     if (-not (Test-Path $executableFromDownload))
     {
-        throw ("Could not detect or download " + $Dependency)
+        throw ("Could not detect or download " + $dependency)
     }
 
     return $executableFromDownload
 }
 
-$path = SelectProgram $Dependency
-Write-Verbose "Fetching dependency: $Dependency. Done."
+$path = fetchDependencyInternal $dependency
+Write-Verbose "Fetching dependency: $dependency. Done."
 return "<sol>::$path::<eol>"
