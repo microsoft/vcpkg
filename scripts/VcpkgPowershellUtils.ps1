@@ -120,10 +120,25 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
         return
     }
 
+    if ($url -match "github")
+    {
+        if ([System.Enum]::IsDefined([Net.SecurityProtocolType], "Tls12"))
+        {
+            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        }
+        else
+        {
+            Write-Warning "Github has dropped support for TLS versions prior to 1.2, which is not available on your system"
+            Write-Warning "Please manually download $url to $downloadPath"
+            throw "Download failed"
+        }
+    }
+
     vcpkgCreateParentDirectoryIfNotExists $downloadPath
 
     $downloadPartPath = "$downloadPath.part"
     vcpkgRemoveItem $downloadPartPath
+
 
     $wc = New-Object System.Net.WebClient
     if (!$wc.Proxy.IsBypassed($url))
