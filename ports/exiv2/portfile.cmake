@@ -13,6 +13,11 @@ vcpkg_configure_cmake(
     PREFER_NINJA
 )
 
+vcpkg_apply_patches(
+    SOURCE_PATH "${SOURCE_PATH}"
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/use-iconv.patch"
+)
+
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH "share/exiv2/cmake")
