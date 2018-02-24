@@ -1,0 +1,96 @@
+# Appveyor CI configuration for vcpkg project.
+#
+# Copyright 2018 Hiroshi Miura
+#
+image: Visual Studio 2017
+max_jobs: 1
+
+# shallow_clone should false for branch comparison
+shallow_clone: false
+clone_folder: c:\projects\vcpkg
+
+environment:
+  matrix:
+    - triplet: x86-windows
+    - triplet: x86-windows-static
+    - triplet: x64-windows
+    - triplet: x64-windows-static
+
+cache:
+  - downloads
+  - installed
+  - packages
+
+# Help developer to investigate windows build using RDP to AppVeyor.
+# see https://www.appveyor.com/docs/how-to/rdp-to-build-worker/
+#init:
+#  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#on_failure:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+install:
+  - ps: |
+      ./scripts/bootstrap.ps1
+      if (-not $?) { throw $? }
+      # Clear out any intermediate files from the previous build
+      if (Test-Path buildtrees)
+      {
+          Get-ChildItem buildtrees/*/* | ? { $_.Name -ne "src" } | Remove-Item -Recurse -Force
+      }
+      # Purge any outdated packages
+      ./vcpkg remove --outdated --recurse
+      if (-not $?) { throw $? }
+      cd c:\projects\vcpkg
+      # fetch upstream project which is necessary for forked project to compare with.
+      git remote add upstream https://github.com/Microsoft/vcpkg.git
+      git fetch -q upstream
+      # Detect modified ports and make changes list
+      $changes = git diff --name-only upstream/master... |
+          ?{$_ -match "ports/(?<change>.*?)/"} |
+          %{$Matches.change} |
+          Group-Object |
+          Select-Object -Property name |
+          %{$_.name}
+      # Build package names list to export
+      $export_targets = ""
+      foreach($target in $changes)
+      {
+          $export_targets += " ${target}"
+      }
+      if([string]::IsNullOrWhitespace($export_targets))
+      {
+        # simple test when non-ports update
+        ./vcpkg.exe remove zlib:$env:triplet --recurse
+        ./vcpkg.exe install zlib:$env:triplet 
+        if (-not $?) { throw $? }
+        ./vcpkg.exe export zlib:$env:triplet --zip --nuget
+        if (-not $?) { throw $? }
+      }
+      else
+      {
+        # ports test
+        foreach($target in $changes)
+        {
+          ./vcpkg.exe remove ${target}:$env:triplet --recurse
+        }
+        foreach($target in $changes)
+        {
+          ./vcpkg.exe install ${target}:$env:triplet
+          if (-not $?) { throw $? }
+        }
+        ./vcpkg.exe export ${export_targets} --zip --nuget
+        if (-not $?) { throw $? }
+      }
+
+build: off
+
+test: off
+
+artifacts:
+  # build src and logs (include depends) are published as an artifact zip
+  # Also publishes exports for user deployment test
+  - path: buildtrees
+  - path: '*.zip'
+  - path: '*.nupkg'
+
+deploy: off
