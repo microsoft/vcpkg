@@ -4,16 +4,17 @@
 ##
 ## ## Usage
 ## ```cmake
-## vcpkg_acquire_msys(<MSYS_ROOT_VAR>)
+## vcpkg_acquire_msys(<MSYS_ROOT_VAR> [PACKAGES <package>...])
 ## ```
 ##
 ## ## Parameters
 ## ### MSYS_ROOT_VAR
 ## An out-variable that will be set to the path to MSYS2.
 ##
-## ### PACAKGES
-## A list of packages to be ensured available in msys.
-## To ensure a package is available:`vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)`
+## ### PACKAGES
+## A list of packages to acquire in msys.
+##
+## To ensure a package is available: `vcpkg_acquire_msys(MSYS_ROOT PACKAGES make automake1.15)`
 ##
 ## ## Notes
 ## A call to `vcpkg_acquire_msys` will usually be followed by a call to `bash.exe`:
