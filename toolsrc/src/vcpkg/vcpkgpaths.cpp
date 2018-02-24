@@ -80,10 +80,10 @@ namespace vcpkg
         return data_lines;
     }
 
-    static fs::path fetch_dependency(const fs::path& scripts_folder,
-                                     const std::string& tool_name,
-                                     const fs::path& expected_downloaded_path,
-                                     const std::array<int, 3>& version)
+    static fs::path fetch_tool(const fs::path& scripts_folder,
+                               const std::string& tool_name,
+                               const fs::path& expected_downloaded_path,
+                               const std::array<int, 3>& version)
     {
         const std::string version_as_string = Strings::format("%d.%d.%d", version[0], version[1], version[2]);
         System::println("A suitable version of %s was not found (required v%s). Downloading portable %s v%s...",
@@ -91,22 +91,21 @@ namespace vcpkg
                         version_as_string,
                         tool_name,
                         version_as_string);
-        const fs::path script = scripts_folder / "fetchDependency.ps1";
+        const fs::path script = scripts_folder / "fetchtool.ps1";
         const std::string title = Strings::format(
             "Fetching %s version %s (No sufficient installed version was found)", tool_name, version_as_string);
-        const System::PowershellParameter dependency_param("Dependency", tool_name);
-        const std::string output = System::powershell_execute_and_capture_output(title, script, {dependency_param});
+        const System::PowershellParameter tool_param("tool", tool_name);
+        const std::string output = System::powershell_execute_and_capture_output(title, script, {tool_param});
 
-        const std::vector<std::string> dependency_path = keep_data_lines(output);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, dependency_path.size() == 1, "Expected dependency path, but got %s", output);
+        const std::vector<std::string> tool_path = keep_data_lines(output);
+        Checks::check_exit(VCPKG_LINE_INFO, tool_path.size() == 1, "Expected tool path, but got %s", output);
 
-        const fs::path actual_downloaded_path = Strings::trim(std::string{dependency_path.at(0)});
+        const fs::path actual_downloaded_path = Strings::trim(std::string{tool_path.at(0)});
         std::error_code ec;
         const auto eq = fs::stdfs::equivalent(expected_downloaded_path, actual_downloaded_path, ec);
         Checks::check_exit(VCPKG_LINE_INFO,
                            eq && !ec,
-                           "Expected dependency downloaded path to be %s, but was %s",
+                           "Expected tool downloaded path to be %s, but was %s",
                            expected_downloaded_path.u8string(),
                            actual_downloaded_path.u8string());
         return actual_downloaded_path;
@@ -141,7 +140,7 @@ namespace vcpkg
             return *p;
         }
 
-        return fetch_dependency(scripts_folder, "cmake", downloaded_copy, EXPECTED_VERSION);
+        return fetch_tool(scripts_folder, "cmake", downloaded_copy, EXPECTED_VERSION);
     }
 
     fs::path get_nuget_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
@@ -161,7 +160,7 @@ namespace vcpkg
             return *p;
         }
 
-        return fetch_dependency(scripts_folder, "nuget", downloaded_copy, EXPECTED_VERSION);
+        return fetch_tool(scripts_folder, "nuget", downloaded_copy, EXPECTED_VERSION);
     }
 
     fs::path get_git_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
@@ -193,7 +192,7 @@ namespace vcpkg
             return *p;
         }
 
-        return fetch_dependency(scripts_folder, "git", downloaded_copy, EXPECTED_VERSION);
+        return fetch_tool(scripts_folder, "git", downloaded_copy, EXPECTED_VERSION);
     }
 
     static fs::path get_ifw_installerbase_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
@@ -221,7 +220,7 @@ namespace vcpkg
             return *p;
         }
 
-        return fetch_dependency(scripts_folder, "installerbase", downloaded_copy, EXPECTED_VERSION);
+        return fetch_tool(scripts_folder, "installerbase", downloaded_copy, EXPECTED_VERSION);
     }
 
     Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir)

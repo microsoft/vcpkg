@@ -14,9 +14,9 @@ $gitHash = "unknownhash"
 $oldpath = $env:path
 try
 {
-    [xml]$asXml = Get-Content "$scriptsDir\vcpkgDependencies.xml"
-    $dependencyData = $asXml.SelectSingleNode("//dependencies/dependency[@name=`"git`"]")
-    $postExtractionExecutableRelativePath = $dependencyData.postExtractionExecutableRelativePath
+    [xml]$asXml = Get-Content "$scriptsDir\vcpkgTools.xml"
+    $toolData = $asXml.SelectSingleNode("//tools/tool[@name=`"git`"]")
+    $postExtractionExecutableRelativePath = $toolData.postExtractionExecutableRelativePath
     $gitFromDownload = "$vcpkgRootDir\downloads\$postExtractionExecutableRelativePath"
     $gitDir = split-path -parent $gitFromDownload
 
