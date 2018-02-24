@@ -5,8 +5,8 @@ set(UNRAR_FILENAME unrarsrc-${UNRAR_VERSION}.tar.gz)
 set(UNRAR_URL http://www.rarlab.com/rar/${UNRAR_FILENAME})
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/unrar)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(FATAL_ERROR "A static build is included with the dynamic build.  Try VCPKG INSTALL UNRAR:X86-WINDOWS UNRAR:X64-WINDOWS")
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    message(FATAL_ERROR "Unrar does not currently support building statically")
 endif()
 
 #SRC
@@ -32,6 +32,7 @@ file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/unrar.dll  DESTINAT
 file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/unrar.lib  DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/unrar.dll  DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/unrar.lib  DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+
 vcpkg_copy_pdbs()
 
 #COPYRIGHT
