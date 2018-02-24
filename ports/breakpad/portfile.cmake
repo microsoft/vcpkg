@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/breakpad
     REF 6bb6c9b26afd9844b9e35fcaa39fb24893e7abb5
-    SHA512 a6a786c2cabb1fd2749d79215c7a3024ae6d1a894166060b22869cd3ee3010edb3e0613c0aeea254580554f402d919ed630ee088c53a1f218e01a7280ad29fec
+    SHA512 af96ec1383cce40d6dd14cf105ff0ff66bbc68ffd8941b9e5da9cb3462bfb100aa66debf38a759c7fa41a1847f4ff90bca73c859a5e0b18d8e73b3c8a008576f
     HEAD_REF master
 )
 
