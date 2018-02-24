@@ -17,13 +17,19 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/fix-headers.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix-cmake-order.patch
 )
+
+set(WITH_EXTRAS OFF)
+if("extra" IN_LIST FEATURES)
+    set(WITH_EXTRAS ON)
+endif()
 
 # TODO: check SSE and AVX avability and set corresponding tags
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/similarity_search
-    # OPTIONS
-    #     -DUSE_HDF5=ON
+    OPTIONS
+        -DWITH_EXTRAS=${WITH_EXTRAS}
 )
 
 vcpkg_install_cmake()
