@@ -32,6 +32,11 @@ Write-Host "Deleting $ciXmlPath ... done."
 
 ./vcpkg remove --outdated --recurse
 
+cmd /c subst V: /D
+cmd /c subst V: .
+
+pushd V:\
+
 if($miniTest)
 {
     ./vcpkg install "zlib:$Triplet" "--x-xunit=$ciXmlPath" | Tee-Object -FilePath "$triplet.txt"
@@ -40,3 +45,5 @@ else
 {
     ./vcpkg ci $Triplet "--x-xunit=$ciXmlPath" --exclude=aws-sdk-cpp,ecm,llvm | Tee-Object -FilePath "$triplet.txt"
 }
+
+popd
