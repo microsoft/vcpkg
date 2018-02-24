@@ -1,0 +1,48 @@
+#
+#.rst:
+# FindJasper
+# ----------
+#
+# Try to find the Jasper JPEG2000 library
+#
+# Result Variables
+# ^^^^^^^^^^^^^^^^
+#
+#   ``JASPER_FOUND``
+#     True if Jasper found on local system
+#
+#   ``JASPER_INCLUDE_DIR``
+#     the Jasper include directory
+#
+#   ``JASPER_LIBRARIES``
+#     the libraries needed to use Jasper
+#
+#   ``JASPER_VERSION_STRING``
+#     the version of Jasper found (since CMake 2.8.8)
+
+#include(${CMAKE_CURRENT_LIST_DIR}/SelectLibraryConfigurations.cmake)
+#include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)
+include(SelectLibraryConfigurations)
+include(FindPackageHandleStandardArgs)
+
+find_path(JASPER_INCLUDE_DIR jasper/jasper.h)
+
+if(NOT JASPER_LIBRARIES)
+  find_library(JASPER_LIBRARY_RELEASE NAMES jasper libjasper)
+  find_library(JASPER_LIBRARY_DEBUG NAMES jasperd)
+  SELECT_LIBRARY_CONFIGURATIONS(JASPER)
+endif()
+
+if(JASPER_INCLUDE_DIR AND EXISTS "${JASPER_INCLUDE_DIR}/jasper/jas_config.h")
+  file(STRINGS "${JASPER_INCLUDE_DIR}/jasper/jas_config.h" jasper_version_str REGEX "^#define[\t ]+JAS_VERSION[\t ]+\".*\".*")
+
+  string(REGEX REPLACE "^#define[\t ]+JAS_VERSION[\t ]+\"([^\"]+)\".*" "\\1" JASPER_VERSION_STRING "${jasper_version_str}")
+endif()
+
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(Jasper REQUIRED_VARS JASPER_LIBRARIES JASPER_INCLUDE_DIR VERSION_VAR JASPER_VERSION_STRING)
+
+if(JASPER_FOUND)
+  set(JASPER_LIBRARIES ${JASPER_LIBRARIES})
+endif()
+
+mark_as_advanced(JASPER_INCLUDE_DIR)

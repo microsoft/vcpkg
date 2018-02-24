@@ -1,0 +1,22 @@
+diff --git cmake/OpenCVGenHeaders.cmake cmake/OpenCVGenHeaders.cmake
+--- a/cmake/OpenCVGenHeaders.cmake
++++ b/cmake/OpenCVGenHeaders.cmake
+@@ -1,7 +1,9 @@
+ # platform-specific config file
+ configure_file("${OpenCV_SOURCE_DIR}/cmake/templates/cvconfig.h.in" "${OPENCV_CONFIG_FILE_INCLUDE_DIR}/cvconfig.h")
+ configure_file("${OpenCV_SOURCE_DIR}/cmake/templates/cvconfig.h.in" "${OPENCV_CONFIG_FILE_INCLUDE_DIR}/opencv2/cvconfig.h")
+-install(FILES "${OPENCV_CONFIG_FILE_INCLUDE_DIR}/cvconfig.h" DESTINATION ${OPENCV_INCLUDE_INSTALL_PATH}/opencv2 COMPONENT dev)
++if(INSTALL_HEADERS)
++  install(FILES "${OPENCV_CONFIG_FILE_INCLUDE_DIR}/cvconfig.h" DESTINATION ${OPENCV_INCLUDE_INSTALL_PATH}/opencv2 COMPONENT dev)
++endif()
+
+ # platform-specific config file
+ ocv_compiler_optimization_fill_cpu_config()
+@@ -29,4 +31,6 @@ set(OPENCV_MODULE_DEFINITIONS_CONFIGMAKE "${OPENCV_MODULE_DEFINITIONS_CONFIGMAKE
+ #endforeach()
+
+ configure_file("${OpenCV_SOURCE_DIR}/cmake/templates/opencv_modules.hpp.in" "${OPENCV_CONFIG_FILE_INCLUDE_DIR}/opencv2/opencv_modules.hpp")
+-install(FILES "${OPENCV_CONFIG_FILE_INCLUDE_DIR}/opencv2/opencv_modules.hpp" DESTINATION ${OPENCV_INCLUDE_INSTALL_PATH}/opencv2 COMPONENT dev)
++if(INSTALL_HEADERS)
++  install(FILES "${OPENCV_CONFIG_FILE_INCLUDE_DIR}/opencv2/opencv_modules.hpp" DESTINATION ${OPENCV_INCLUDE_INSTALL_PATH}/opencv2 COMPONENT dev)
++endif()

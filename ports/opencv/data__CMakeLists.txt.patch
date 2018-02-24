@@ -1,0 +1,16 @@
+diff --git data/CMakeLists.txt data/CMakeLists.txt
+--- a/data/CMakeLists.txt
++++ b/data/CMakeLists.txt
+@@ -1,8 +1,10 @@
+ file(GLOB HAAR_CASCADES haarcascades/*.xml)
+ file(GLOB LBP_CASCADES lbpcascades/*.xml)
+
+-install(FILES ${HAAR_CASCADES} DESTINATION ${OPENCV_OTHER_INSTALL_PATH}/haarcascades COMPONENT libs)
+-install(FILES ${LBP_CASCADES}  DESTINATION ${OPENCV_OTHER_INSTALL_PATH}/lbpcascades  COMPONENT libs)
++if(INSTALL_OTHER)
++  install(FILES ${HAAR_CASCADES} DESTINATION ${OPENCV_OTHER_INSTALL_PATH}/haarcascades COMPONENT libs)
++  install(FILES ${LBP_CASCADES}  DESTINATION ${OPENCV_OTHER_INSTALL_PATH}/lbpcascades  COMPONENT libs)
++endif()
+
+ if(INSTALL_TESTS AND OPENCV_TEST_DATA_PATH)
+   install(DIRECTORY "${OPENCV_TEST_DATA_PATH}/" DESTINATION "${OPENCV_TEST_DATA_INSTALL_PATH}" COMPONENT "tests")

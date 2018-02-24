@@ -1,0 +1,13 @@
+diff --git cmake/OpenCVCompilerOptions.cmake cmake/OpenCVCompilerOptions.cmake
+--- a/cmake/OpenCVCompilerOptions.cmake
++++ b/cmake/OpenCVCompilerOptions.cmake
+@@ -37,6 +37,9 @@ if(MSVC)
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHa")
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}"  CACHE STRING "Flags used by the compiler during all build types." FORCE)
+   endif()
++  if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /ZW")
++  endif()
+ endif()
+
+ set(OPENCV_EXTRA_FLAGS "")

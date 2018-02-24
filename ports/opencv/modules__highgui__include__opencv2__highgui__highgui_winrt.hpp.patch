@@ -1,0 +1,18 @@
+diff --git modules/highgui/include/opencv2/highgui/highgui_winrt.hpp modules/highgui/include/opencv2/highgui/highgui_winrt.hpp
+--- a/modules/highgui/include/opencv2/highgui/highgui_winrt.hpp
++++ b/modules/highgui/include/opencv2/highgui/highgui_winrt.hpp
+@@ -24,6 +24,7 @@
+ // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ // POSSIBILITY OF SUCH DAMAGE.
+
++#include "opencv2/core/cvdef.h"
+ using namespace Windows::UI::Xaml::Controls;
+
+ namespace cv
+@@ -45,4 +46,4 @@ namespace cv
+
+ //! @} videoio_winrt
+
+-} // cv
+\ No newline at end of file
++} // cv

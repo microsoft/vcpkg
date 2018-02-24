@@ -29,9 +29,11 @@ vcpkg_configure_cmake(
         -DJAS_ENABLE_DOC=OFF
         -DJAS_ENABLE_PROGRAMS=OFF
         -DJAS_ENABLE_SHARED=${JAS_ENABLE_SHARED}
+        -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_install_cmake()
+
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)

@@ -1,0 +1,18 @@
+diff --git modules/highgui/src/window_winrt_bridge.hpp modules/highgui/src/window_winrt_bridge.hpp
+--- a/modules/highgui/src/window_winrt_bridge.hpp
++++ b/modules/highgui/src/window_winrt_bridge.hpp
+@@ -28,6 +28,7 @@
+
+ #include <map>
+ #include <opencv2\core.hpp>
++#include "opencv2/highgui/highgui_c.h"
+
+ using namespace Windows::UI::Xaml::Controls;
+
+@@ -232,4 +233,4 @@ private:
+
+     // Default Slider size, fallback solution for unexpected edge cases
+     static const double sliderDefaultWidth;
+-};
+\ No newline at end of file
++};

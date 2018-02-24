@@ -1,0 +1,30 @@
+diff --git cmake/OpenCVFindLibsGrfmt.cmake cmake/OpenCVFindLibsGrfmt.cmake
+--- a/cmake/OpenCVFindLibsGrfmt.cmake
++++ b/cmake/OpenCVFindLibsGrfmt.cmake
+@@ -2,6 +2,8 @@
+ #  Detect 3rd-party image IO libraries
+ # ----------------------------------------------------------------------------
+ 
++SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR};${CMAKE_MODULE_PATH}")
++
+ # --- zlib (required) ---
+ if(BUILD_ZLIB)
+   ocv_clear_vars(ZLIB_FOUND)
+@@ -95,7 +97,7 @@ if(WITH_WEBP)
+   if(BUILD_WEBP)
+     ocv_clear_vars(WEBP_FOUND WEBP_LIBRARY WEBP_LIBRARIES WEBP_INCLUDE_DIR)
+   else()
+-    include(cmake/OpenCVFindWebP.cmake)
++    include(FindWebP)
+     if(WEBP_FOUND)
+       set(HAVE_WEBP 1)
+     endif()
+@@ -192,7 +194,7 @@ if(WITH_OPENEXR)
+   if(BUILD_OPENEXR)
+     ocv_clear_vars(OPENEXR_FOUND)
+   else()
+-    include("${OpenCV_SOURCE_DIR}/cmake/OpenCVFindOpenEXR.cmake")
++    include(FindOpenEXR)
+   endif()
+ 
+   if(NOT OPENEXR_FOUND)

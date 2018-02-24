@@ -1,0 +1,23 @@
+diff --git cmake/OpenCVModule.cmake cmake/OpenCVModule.cmake
+--- a/cmake/OpenCVModule.cmake
++++ b/cmake/OpenCVModule.cmake
+@@ -785,7 +785,7 @@ macro(ocv_create_module)
+     set(the_module_target ${the_module})
+   endif()
+
+-  if(WINRT)
++  if(WINRT AND BUILD_TESTS)
+     # removing APPCONTAINER from modules to run from console
+     # in case of usual starting of WinRT test apps output is missing
+     # so starting of console version w/o APPCONTAINER is required to get test results
+@@ -930,7 +930,9 @@ macro(_ocv_create_module)
+     foreach(hdr ${OPENCV_MODULE_${the_module}_HEADERS})
+       string(REGEX REPLACE "^.*opencv2/" "opencv2/" hdr2 "${hdr}")
+       if(NOT hdr2 MATCHES "private" AND hdr2 MATCHES "^(opencv2/?.*)/[^/]+.h(..)?$" )
+-        install(FILES ${hdr} OPTIONAL DESTINATION "${OPENCV_INCLUDE_INSTALL_PATH}/${CMAKE_MATCH_1}" COMPONENT dev)
++        if(INSTALL_HEADERS)
++          install(FILES ${hdr} OPTIONAL DESTINATION "${OPENCV_INCLUDE_INSTALL_PATH}/${CMAKE_MATCH_1}" COMPONENT dev)
++        endif()
+       endif()
+     endforeach()
+   endif()

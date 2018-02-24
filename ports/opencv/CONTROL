@@ -1,27 +1,34 @@
 Source: opencv
 Version: 3.4.0-3
-Build-Depends: zlib, libpng, libjpeg-turbo, tiff, protobuf (windows)
+Build-Depends: opengl, zlib, libpng, libjpeg-turbo, libwebp, jasper, tiff, openexr, protobuf (windows)
 Description: computer vision library
 
-Feature: sfm
-Build-Depends: eigen3, glog, gflags, ceres
-Description: opencv_sfm module
+Feature: contrib
+Description: opencv_contrib module
 
 Feature: cuda
 Build-Depends: cuda
 Description: CUDA support for opencv
 
 Feature: ffmpeg
-Description: prebuilt ffmpeg support for opencv
+Build-Depends: ffmpeg
+Description: ffmpeg support for opencv
+
+Feature: gdcm
+Build-Depends: gdcm2
+Description: GDCM support for opencv
+
+Feature: ipp
+Description: Enable Intel Integrated Performance Primitives
 
 Feature: qt
 Build-Depends: qt5
 Description: Qt GUI support for opencv
 
+Feature: sfm
+Build-Depends: eigen3, glog, gflags, ceres
+Description: opencv_sfm module
+
 Feature: vtk
 Build-Depends: vtk
 Description: vtk support for opencv
-
-Feature: gdcm
-Build-Depends: gdcm2
-Description: GDCM support for opencv

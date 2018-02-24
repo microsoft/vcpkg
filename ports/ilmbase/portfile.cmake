@@ -13,12 +13,21 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 ${ILM_HASH})
 
 vcpkg_extract_source_archive(${ARCHIVE})
-vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-parallel-build.patch)
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+    "${CMAKE_CURRENT_LIST_DIR}/fix-parallel-build.patch"
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA)
+    PREFER_NINJA
+    OPTIONS
+        -DNAMESPACE_VERSIONING=OFF
+        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
+    OPTIONS_DEBUG
+        -DCMAKE_DEBUG_POSTFIX=d
+    )
 vcpkg_install_cmake()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
