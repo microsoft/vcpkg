@@ -2,15 +2,18 @@
 
 include(vcpkg_common_functions)
 
-find_program(NMAKE nmake REQUIRED)
-# Use nmake to build
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MiKTeX/miktex
     REF 2.9.6600
     SHA512 d09ad76504c2cb36cd61e57657e420f5c6ad92af5069ca3fb2d6aabfd0c86e08595c3ec02f0b7ea106e4a24e2dc64c9c357986959846f2753baf1afd6aa2d85d
     HEAD_REF master
+)
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/fix-msc-ver.patch
 )
 
 vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils sed libxslt)
@@ -33,3 +36,43 @@ vcpkg_configure_cmake(
         -DWITH_MIKTEX_DOC=OFF
         -DWITH_UI_QT=OFF
 )
+
+find_program(NMAKE nmake REQUIRED)
+
+if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
+    set(CL_FLAGS_DBG "/MDd /Zi")
+    set(CL_FLAGS_REL "/MD /Ox")
+else()
+    set(CL_FLAGS_DBG "/MTd /Zi")
+    set(CL_FLAGS_REL "/MT /Ox")
+endif()
+
+################
+# Debug build
+################
+message(STATUS "Building ${TARGET_TRIPLET}-dbg")
+
+file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/debug" INST_DIR_DBG)
+
+vcpkg_execute_required_process(
+    COMMAND ${NMAKE} clean install
+    "INST_DIR=\"${INST_DIR_DBG}\"" INSTALLED_ROOT=${CURRENT_INSTALLED_DIR} "LIBS_ALL=${LIBS_ALL_DBG}"
+    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
+    LOGNAME nmake-build-${TARGET_TRIPLET}-debug
+)
+message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
+vcpkg_copy_pdbs()
+
+################
+# Release build
+################
+message(STATUS "Building ${TARGET_TRIPLET}-rel")
+
+file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR_REL)
+vcpkg_execute_required_process(
+    COMMAND ${NMAKE} clean install
+    "INST_DIR=\"${INST_DIR_REL}\"" INSTALLED_ROOT=${CURRENT_INSTALLED_DIR} "LIBS_ALL=${LIBS_ALL_REL}"
+    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+    LOGNAME nmake-build-${TARGET_TRIPLET}-release
+)
+message(STATUS "Building ${TARGET_TRIPLET}-rel done")
