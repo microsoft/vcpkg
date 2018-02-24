@@ -1,3 +1,4 @@
 Source: miktex
 Version: 2.9.6600
 Description: MiKTeX is an up-to-date implementation of TeX along with other related programs
+Build-Depends: icu
