@@ -29,9 +29,9 @@ file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(READ ${CURRENT_PACKAGES_DIR}/include/sys/mman.h _contents)
+    file(READ ${CURRENT_PACKAGES_DIR}/include/mman/sys/mman.h _contents)
     string(REPLACE "__declspec(dllimport)" "" _contents "${_contents}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/include/sys/mman.h "${_contents}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/include/mman/sys/mman.h "${_contents}")
 endif()
 
 vcpkg_copy_pdbs()
