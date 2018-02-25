@@ -64,5 +64,5 @@ else
     Write-Host "Creating $installedDirRemote ... done."
 }
 
-cmd /c rmdir "$vcpkgRootDir\archives"
+unlinkOrDeleteDirectory "$vcpkgRootDir\archives"
 cmd /c mklink /D "$vcpkgRootDir\archives" "$driveLetter\archives"
