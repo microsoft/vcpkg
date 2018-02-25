@@ -27,9 +27,9 @@ if ($vcpkg_from_github_invokes.Count -eq 0)
     return
 }
 
-$repo = $vcpkg_from_github_invokes[0].Groups[1].Value
+$repo = $vcpkg_from_github_invokes[0].Groups[1].Value -replace "`"",""
 Write-Verbose "repo=$repo"
-$oldtag = $vcpkg_from_github_invokes[0].Groups[2].Value
+$oldtag = $vcpkg_from_github_invokes[0].Groups[2].Value -replace "`"",""
 Write-Verbose "oldtag=$oldtag"
 
 try
@@ -63,13 +63,14 @@ if ($newtag -ne $oldtag)
 {
     Write-Verbose "Replacing"
     $filename = $($repo -replace "/","-") + "-$newtag.tar.gz"
-    $downloaded_filename = "$VcpkgPath/downloads/$filename"
+    $downloaded_filename = "$VcpkgPath/downloads/$filename" -replace "\\","/"
     Write-Verbose "Archive path is $downloaded_filename"
 
     if (!(Test-Path "$VcpkgPath/downloads/$filename"))
     {
         Write-Verbose "Downloading"
-        Invoke-WebRequest -Uri "https://github.com/$repo/archive/$newtag.tar.gz" -OutFile $downloaded_filename
+        "file(DOWNLOAD `"https://github.com/$repo/archive/$newtag.tar.gz`" `"$downloaded_filename`")" | out-file -enc ascii temp.cmake
+        cmake -P temp.cmake
     }
     $sha = $(cmake -E sha512sum "$downloaded_filename") -replace " .*",""
     Write-Verbose "SHA512=$sha"

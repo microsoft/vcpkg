@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$True)][String]$VcpkgPath,
+    [Parameter(Mandatory=$False)][Switch]$NoNonRolling,
     [Parameter(Mandatory=$False)][Switch]$NoRolling
 )
 
@@ -32,12 +33,53 @@ $ports = @(
 )
 
 $rollingPorts = @(
+    "abseil",
+    "alac",
+    "angle",
+    "args",
+    "asmjit",
+    "aurora",
+    "breakpad",
+    "butteraugli",
+    "cccapstone",
+    "clara",
+    "ctemplate",
+    "exiv2",
+    "fdk-aac",
+    "freetype-gl",
+    "glslang",
+    "guetzli",
+    "jsonnet",
+    "libharu",
+    "libudis86",
+    "lodepng",
+    "luasocket",
     "ms-gsl",
-    "abseil"
+    "msinttypes",
+    "mujs",
+    "nuklear",
+    "picosha2",
+    "piex",
+    "re2",
+    "refprop-headers",
+    "rs-core-lib",
+    "secp256k1",
+    "shaderc",
+    "spirv-tools",
+    "thrift",
+    "tiny-dnn",
+    "torch-th",
+    "unicorn-lib",
+    "unicorn",
+    "yara",
+    "zeromq"
 )
 
-$ports | % {
-    & "$utilsdir/upgradePort.ps1" -VcpkgPath $VcpkgPath -Port $_
+if (!$NoNonRolling)
+{
+    $ports | % {
+        & "$utilsdir/upgradePort.ps1" -VcpkgPath $VcpkgPath -Port $_
+    }
 }
 
 if (!$NoRolling)

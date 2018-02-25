@@ -43,7 +43,7 @@ if($miniTest)
 }
 else
 {
-    ./vcpkg ci $Triplet "--x-xunit=$ciXmlPath" --exclude=aws-sdk-cpp,ecm,llvm,catch-classic,libpng-apng,libmariadb,libp7-baical,luajit | Tee-Object -FilePath "$triplet.txt"
+    ./vcpkg ci $Triplet "--x-xunit=$ciXmlPath" --exclude=aws-sdk-cpp,ecm,llvm,catch-classic,libpng-apng,libmariadb,libp7-baical,luajit,mozjpeg | Tee-Object -FilePath "$triplet.txt"
 }
 
 popd
