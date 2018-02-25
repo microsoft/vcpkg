@@ -1,4 +1,4 @@
-﻿if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     message(STATUS "Warning: Static building not supported yet. Building dynamic.")
     set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
@@ -10,8 +10,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/ChakraCore
-    REF v1.7.4
-    SHA512 116ed75d3128f8d9e8ad5a12deed194e14403e05f495422b14277a31620a37b7c8324f04738947388393b0e204f7748bb81d90ebab3373a198db76b70f89f374
+    REF v1.8.1
+    SHA512 203eaad21130fca9ac043952327f758947d41288ce9eb771bc469e768079a39cc517f86746d85ae270b04c5b7640d18d02f497a18cda05190dfaa68fdc16cbb9
     HEAD_REF master
 )
 

@@ -1,14 +1,3 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
 include(vcpkg_common_functions)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -17,16 +6,14 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 
 if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-  message(FATAL_ERROR "DirectXTex only supports dynamic CRT linkage")
+    message(FATAL_ERROR "DirectXTex only supports dynamic CRT linkage")
 endif()
 
-set(DIRECTXTEX_VERSION dec2017)
-set(DIRECTXTEX_ARCHIVE_HASH f4154c820059893ce0a42a1224d14adc0f8b54f36aa7f687f29aba0358488da9eb83cbdbf682499c5b210e99607d74209595153d4ed86eb30c43b775c5d8a72f)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
-    REF ${DIRECTXTEX_VERSION}
-    SHA512 ${DIRECTXTEX_ARCHIVE_HASH}
+    REF feb2018b
+    SHA512 7ab88ea863947ec279c9c83bd6dd48e15345430c750c7215c22998661fad1a711f207c57227bc5cc3cddfb5e0a89a8971d7ef3319057636e2b6f3e2e607ea0cb
     HEAD_REF master
 )
 
