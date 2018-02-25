@@ -7,7 +7,7 @@
 
 namespace vcpkg::Commands::Hash
 {
-    static void do_file_hash(fs::path const& cmake_exe_path, fs::path const& path, std::string const& hash_type)
+    std::string get_file_hash(fs::path const& cmake_exe_path, fs::path const& path, std::string const& hash_type)
     {
         const std::string cmd_line = Strings::format(
             R"("%s" -E %ssum %s)", cmake_exe_path.u8string(), Strings::ascii_to_lowercase(hash_type), path.u8string());
@@ -27,7 +27,7 @@ namespace vcpkg::Commands::Hash
 
         auto hash = output.substr(0, start);
         Util::erase_remove_if(hash, isspace);
-        System::println(hash);
+        return hash;
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -45,11 +45,13 @@ namespace vcpkg::Commands::Hash
 
         if (args.command_arguments.size() == 1)
         {
-            do_file_hash(paths.get_cmake_exe(), args.command_arguments[0], "SHA512");
+            auto hash = get_file_hash(paths.get_cmake_exe(), args.command_arguments[0], "SHA512");
+            System::println(hash);
         }
         if (args.command_arguments.size() == 2)
         {
-            do_file_hash(paths.get_cmake_exe(), args.command_arguments[0], args.command_arguments[1]);
+            auto hash = get_file_hash(paths.get_cmake_exe(), args.command_arguments[0], args.command_arguments[1]);
+            System::println(hash);
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);

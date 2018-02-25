@@ -39,12 +39,12 @@ namespace vcpkg::Dependencies
 
         InstallPlanAction(const PackageSpec& spec,
                           InstalledPackageView&& spghs,
-                          const std::unordered_set<std::string>& features,
+                          const std::set<std::string>& features,
                           const RequestType& request_type);
 
         InstallPlanAction(const PackageSpec& spec,
                           const SourceControlFile& scf,
-                          const std::unordered_set<std::string>& features,
+                          const std::set<std::string>& features,
                           const RequestType& request_type);
 
         std::string displayname() const;
@@ -57,7 +57,7 @@ namespace vcpkg::Dependencies
         InstallPlanType plan_type;
         RequestType request_type;
         Build::BuildPackageOptions build_options;
-        std::unordered_set<std::string> feature_list;
+        std::set<std::string> feature_list;
     };
 
     enum class RemovePlanType

@@ -12,6 +12,7 @@
 
 #include <array>
 #include <map>
+#include <set>
 #include <vector>
 
 namespace vcpkg::Build
@@ -125,7 +126,7 @@ namespace vcpkg::Build
                            const Triplet& triplet,
                            fs::path&& port_dir,
                            const BuildPackageOptions& build_package_options,
-                           const std::unordered_set<std::string>& feature_list)
+                           const std::set<std::string>& feature_list)
             : scf(src)
             , triplet(triplet)
             , port_dir(std::move(port_dir))
@@ -138,7 +139,7 @@ namespace vcpkg::Build
         const Triplet& triplet;
         fs::path port_dir;
         const BuildPackageOptions& build_package_options;
-        const std::unordered_set<std::string>& feature_list;
+        const std::set<std::string>& feature_list;
     };
 
     ExtendedBuildResult build_package(const VcpkgPaths& paths,
