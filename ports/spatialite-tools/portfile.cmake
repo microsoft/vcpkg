@@ -4,7 +4,7 @@ option(BUILD_DEBUG_TOOLS "Build debug version of tools" OFF)
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/spatialite-tools-4.3.0)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.gaia-gis.it/gaia-sins/spatialite-tools-4.3.0.tar.gz"
+    URLS "http://www.gaia-gis.it/gaia-sins/spatialite-tools-sources/spatialite-tools-4.3.0.tar.gz"
     FILENAME "spatialite-tools-4.3.0.tar.gz"
     SHA512 e1de27c1c65ff2ff0b08583113517bea74edf33fff59ad6e9c77492ea3ae87d9c0f17d7670ee6602b32eea73ad3678bb5410ef2c6fac6e213bf2e341a907db88
 )
