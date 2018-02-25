@@ -52,6 +52,9 @@ vcpkg_configure_cmake(
         -DUSE_SYSTEM_FREETYPE2=ON
         -DUSE_SYSTEM_JPEG=ON
         -DUSE_SYSTEM_GD=ON
+        -DUSE_SYSTEM_GRAPHITE2=ON
+        -DUSE_SYSTEM_HUNSPELL=ON
+        -DUSE_SYSTEM_ZZIP=ON
         # Use (dependencies brought by above packages)
         -DUSE_SYSTEM_PNG=ON
         -DUSE_SYSTEM_BZIP2=ON

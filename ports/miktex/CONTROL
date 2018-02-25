@@ -1,5 +1,5 @@
 Source: miktex
 Version: 2.9.6600
 Description: MiKTeX is an up-to-date implementation of TeX along with other related programs
-# freetype, cairo, libjpeg, libgd are only needed for static build
-Build-Depends: icu, freetype, cairo, libjpeg-turbo, libgd
+# following packages except for icu are actually only needed for static build, since their are contained in miktex
+Build-Depends: icu, freetype, cairo, libjpeg-turbo, libgd, graphite2, hunspell, zziplib
