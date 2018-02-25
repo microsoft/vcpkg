@@ -1,0 +1,37 @@
+diff --git a/cmake/modules/FindGD.cmake b/cmake/modules/FindGD.cmake
+index 7fccc51..6c91b62 100644
+--- a/cmake/modules/FindGD.cmake
++++ b/cmake/modules/FindGD.cmake
+@@ -26,7 +26,7 @@ find_path(GD_INCLUDE_DIR
+ 
+ find_library(GD_LIBRARY
+   NAMES
+-    gd
++    libgd libgd_static
+ )
+ 
+ find_package_handle_standard_args(GD DEFAULT_MSG GD_LIBRARY GD_INCLUDE_DIR)
+diff --git a/cmake/modules/FindHUNSPELL.cmake b/cmake/modules/FindHUNSPELL.cmake
+index 862ccef..ed2a50e 100644
+--- a/cmake/modules/FindHUNSPELL.cmake
++++ b/cmake/modules/FindHUNSPELL.cmake
+@@ -26,6 +26,7 @@ find_path(HUNSPELL_INCLUDE_DIR
+ 
+ find_library(HUNSPELL_LIBRARY
+   NAMES
++    libhunspell
+     hunspell
+     hunspell-1.3
+     hunspell-1.4
+diff --git a/cmake/modules/FindZZIP.cmake b/cmake/modules/FindZZIP.cmake
+index 5e9d75e..5e38d9f 100644
+--- a/cmake/modules/FindZZIP.cmake
++++ b/cmake/modules/FindZZIP.cmake
+@@ -25,6 +25,7 @@ find_path(ZZIP_INCLUDE_DIR
+ find_library(ZZIP_LIBRARY
+   NAMES
+     zzip
++    zziplib
+ )
+ 
+ find_package_handle_standard_args(ZZIP DEFAULT_MSG ZZIP_LIBRARY ZZIP_INCLUDE_DIR)

@@ -14,6 +14,7 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/fix-msc-ver.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix-cmake-find.patch
 )
 
 vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils sed libxslt)
@@ -27,6 +28,7 @@ get_filename_component(FLEX_EXE_PATH ${FLEX} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${FLEX_EXE_PATH}")
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(FATAL_ERROR "Static build of MikTeX is currently unavailable")
     set(LINK_EVERYTHING_STATICALLY ON)
     set(INSTALL_STATIC_LIBRARIES ON)
 else()
@@ -36,7 +38,6 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    # PREFER_NINJA
     GENERATOR "NMake Makefiles"
     OPTIONS
         # With
@@ -44,25 +45,25 @@ vcpkg_configure_cmake(
         -DWITH_COM=OFF
         -DWITH_MIKTEX_DOC=OFF
         -DWITH_UI_QT=OFF
-        # Static
-        -DLINK_EVERYTHING_STATICALLY=${LINK_EVERYTHING_STATICALLY}
-        -DINSTALL_STATIC_LIBRARIES=${INSTALL_STATIC_LIBRARIES}
-        # Use (essential for static build)
-        -DUSE_SYSTEM_CAIRO=ON
-        -DUSE_SYSTEM_FREETYPE2=ON
-        -DUSE_SYSTEM_JPEG=ON
-        -DUSE_SYSTEM_GD=ON
-        -DUSE_SYSTEM_GRAPHITE2=ON
-        -DUSE_SYSTEM_HUNSPELL=ON
-        -DUSE_SYSTEM_ZZIP=ON
-        # Use (dependencies brought by above packages)
-        -DUSE_SYSTEM_PNG=ON
-        -DUSE_SYSTEM_BZIP2=ON
-        -DUSE_SYSTEM_ZLIB=ON
-        -DUSE_SYSTEM_PIXMAN=ON
-        -DUSE_SYSTEM_FONTCONFIG=ON
-        -DUSE_SYSTEM_EXPAT=ON
-        -DUSE_SYSTEM_LZMA=ON
+        # # Static
+        # -DLINK_EVERYTHING_STATICALLY=${LINK_EVERYTHING_STATICALLY}
+        # -DINSTALL_STATIC_LIBRARIES=${INSTALL_STATIC_LIBRARIES}
+        # # Use (essential for static build)
+        # -DUSE_SYSTEM_CAIRO=ON
+        # -DUSE_SYSTEM_FREETYPE2=ON
+        # -DUSE_SYSTEM_JPEG=ON
+        # -DUSE_SYSTEM_GD=ON
+        # -DUSE_SYSTEM_GRAPHITE2=ON
+        # -DUSE_SYSTEM_HUNSPELL=ON
+        # -DUSE_SYSTEM_ZZIP=ON
+        # # Use (dependencies brought by above packages)
+        # -DUSE_SYSTEM_PNG=ON
+        # -DUSE_SYSTEM_BZIP2=ON
+        # -DUSE_SYSTEM_ZLIB=ON
+        # -DUSE_SYSTEM_PIXMAN=ON
+        # -DUSE_SYSTEM_FONTCONFIG=ON
+        # -DUSE_SYSTEM_EXPAT=ON
+        # -DUSE_SYSTEM_LZMA=ON
 )
 
 message(STATUS "Note: The building procedure will take hours")
