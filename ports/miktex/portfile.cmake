@@ -26,26 +26,44 @@ vcpkg_find_acquire_program(FLEX)
 get_filename_component(FLEX_EXE_PATH ${FLEX} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${FLEX_EXE_PATH}")
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    set(LINK_EVERYTHING_STATICALLY ON)
+    set(INSTALL_STATIC_LIBRARIES ON)
+else()
+    set(LINK_EVERYTHING_STATICALLY OFF)
+    set(INSTALL_STATIC_LIBRARIES OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     # PREFER_NINJA
     GENERATOR "NMake Makefiles"
     OPTIONS
+        # With
         -DWITH_UI_MFC=OFF
         -DWITH_COM=OFF
         -DWITH_MIKTEX_DOC=OFF
         -DWITH_UI_QT=OFF
+        # Static
+        -DLINK_EVERYTHING_STATICALLY=${LINK_EVERYTHING_STATICALLY}
+        -DINSTALL_STATIC_LIBRARIES=${INSTALL_STATIC_LIBRARIES}
+        # Use (essential for static build)
+        -DUSE_SYSTEM_CAIRO=ON
+        -DUSE_SYSTEM_FREETYPE2=ON
+        -DUSE_SYSTEM_JPEG=ON
+        -DUSE_SYSTEM_GD=ON
+        # Use (dependencies brought by above packages)
+        -DUSE_SYSTEM_PNG=ON
+        -DUSE_SYSTEM_BZIP2=ON
+        -DUSE_SYSTEM_ZLIB=ON
+        -DUSE_SYSTEM_PIXMAN=ON
+        -DUSE_SYSTEM_FONTCONFIG=ON
+        -DUSE_SYSTEM_EXPAT=ON
+        -DUSE_SYSTEM_LZMA=ON
 )
 
+message(STATUS "Note: The building procedure will take hours")
 find_program(NMAKE nmake REQUIRED)
-
-if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
-    set(CL_FLAGS_DBG "/MDd /Zi")
-    set(CL_FLAGS_REL "/MD /Ox")
-else()
-    set(CL_FLAGS_DBG "/MTd /Zi")
-    set(CL_FLAGS_REL "/MT /Ox")
-endif()
 
 ################
 # Debug build
@@ -76,3 +94,19 @@ vcpkg_execute_required_process(
     LOGNAME nmake-build-${TARGET_TRIPLET}-release
 )
 message(STATUS "Building ${TARGET_TRIPLET}-rel done")
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/texmf)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/miktex)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
+file(RENAME ${CURRENT_PACKAGES_DIR}/texmf ${CURRENT_PACKAGES_DIR}/tools/texmf)
+
+# if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+# else()
+# endif()
+
+# Copy over PDBs
+vcpkg_copy_pdbs()
+
+# Handle copyright
+file(RENAME ${SOURCE_PATH}/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/miktex/copyright)
