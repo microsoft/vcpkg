@@ -11,10 +11,10 @@ clone_folder: c:\projects\vcpkg
 
 environment:
   matrix:
-    - triplet: x86-windows
-    - triplet: x86-windows-static
-    - triplet: x64-windows
-    - triplet: x64-windows-static
+    - VCPKG_DEFAULT_TRIPLET: x86-windows
+    - VCPKG_DEFAULT_TRIPLET: x86-windows-static
+    - VCPKG_DEFAULT_TRIPLET: x64-windows
+    - VCPKG_DEFAULT_TRIPLET: x64-windows-static
 
 cache:
   - downloads
@@ -45,41 +45,25 @@ install:
       git remote add upstream https://github.com/Microsoft/vcpkg.git
       git fetch -q upstream
       # Detect modified ports and make changes list
-      $changes = git diff --name-only upstream/master... |
+      $targets = git diff --name-only upstream/master... |
           ?{$_ -match "ports/(?<change>.*?)/"} |
           %{$Matches.change} |
           Group-Object |
           Select-Object -Property name |
           %{$_.name}
-      # Build package names list to export
-      $export_targets = ""
-      foreach($target in $changes)
+      if([string]::IsNullOrWhitespace($targets))
       {
-          $export_targets += " ${target}"
-      }
-      if([string]::IsNullOrWhitespace($export_targets))
-      {
-        # simple test when non-ports update
-        ./vcpkg.exe remove zlib:$env:triplet --recurse
-        ./vcpkg.exe install zlib:$env:triplet 
-        if (-not $?) { throw $? }
-        ./vcpkg.exe export zlib:$env:triplet --zip --nuget
-        if (-not $?) { throw $? }
+          ./vcpkg.exe remove  zlib --recurse
+          ./vcpkg.exe install zlib 
+          if (-not $?) { throw $? }
       }
       else
       {
-        # ports test
-        foreach($target in $changes)
-        {
-          ./vcpkg.exe remove ${target}:$env:triplet --recurse
-        }
-        foreach($target in $changes)
-        {
-          ./vcpkg.exe install ${target}:$env:triplet
+          ./vcpkg.exe remove  ${targets} --recurse
+          ./vcpkg.exe install ${targets} --recurse
           if (-not $?) { throw $? }
-        }
-        ./vcpkg.exe export ${export_targets} --zip --nuget
-        if (-not $?) { throw $? }
+          ./vcpkg.exe export  ${targets} --zip --nuget
+          if (-not $?) { throw $? }
       }
 
 build: off
