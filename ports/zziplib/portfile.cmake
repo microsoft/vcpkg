@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gdraheim/zziplib
-    REF v0.13.62
-    SHA512 e3dda9cfb7dadd44d3307d3ae0c706c68ef9d6434f78ed6fdb470defb03790e3c0c84d8e5149d3cff329d24627401b3ef2f0378bb3b2c3fcce89d7ae41627fb3
+    REF v0.13.68
+    SHA512 e8a9976242acc04064ec239b9b929228370a946e5bd37092adcc1bda14605710a3850d39795d1937b609d1ab9a9a1998152f8c88b2dccc387ac6ec774d9cfce9
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
