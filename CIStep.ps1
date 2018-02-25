@@ -37,6 +37,8 @@ cmd /c subst V: .
 
 pushd V:\
 
+$env:VCPKG_FEATURE_FLAGS = "binarycaching"
+
 if($miniTest)
 {
     ./vcpkg install "zlib:$Triplet" "--x-xunit=$ciXmlPath" | Tee-Object -FilePath "$triplet.txt"
