@@ -8,8 +8,8 @@ endif()
 include(vcpkg_common_functions)
 
 set(VERSION 4.7)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/Source)
-set(PROJECT_PATH ${SOURCE_PATH}/Projects/VS2017)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src)
+set(PROJECT_PATH ${SOURCE_PATH}/Source/Projects/VS2017)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://monkeysaudio.com/files/MAC_SDK_433.zip"
@@ -18,6 +18,13 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 vcpkg_extract_source_archive(${ARCHIVE})
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_apply_patches(
+        SOURCE_PATH ${SOURCE_PATH}
+        PATCHES ${CMAKE_CURRENT_LIST_DIR}/use-dynamic-linkage.patch
+    )
+endif()
 
 vcpkg_build_msbuild(
     PROJECT_PATH ${PROJECT_PATH}/Console/Console.vcxproj
@@ -43,5 +50,6 @@ file(COPY
 file(INSTALL ${PROJECT_PATH}/Console/Release/Console.exe
      DESTINATION ${CURRENT_PACKAGES_DIR}/tools/monkeys-audio
      RENAME mac.exe)
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/license DESTINATION ${CURRENT_PACKAGES_DIR}/share/monkeys-audio RENAME copyright)
