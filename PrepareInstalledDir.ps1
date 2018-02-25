@@ -18,6 +18,11 @@ function IsReparsePoint([Parameter(Mandatory=$true)][string]$path)
 
 function unlinkOrDeleteDirectory([Parameter(Mandatory=$true)][string]$path)
 {
+    if (!(Test-Path $path))
+    {
+        return
+    }
+
     Write-Host "Unlinking/deleting $path ..."
     if (IsReparsePoint $path)
     {
