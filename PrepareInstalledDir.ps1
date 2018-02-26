@@ -1,7 +1,8 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)][string]$Triplet,
-    [Parameter(Mandatory=$true)][bool]$incremental
+    [Parameter(Mandatory=$true)][bool]$incremental,
+    [Parameter(Mandatory=$false)][bool]$AlwaysLocal
 )
 
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
@@ -54,20 +55,30 @@ $installedDirLocal = "$vcpkgRootDir\installed"
 $installedDirRemote = "$driveLetter\vcpkg-full-ci-$Triplet"
 vcpkgCreateDirectoryIfNotExists $installedDirRemote
 
-unlinkOrDeleteDirectory $installedDirLocal
-
-if ($incremental)
+if ($incremental -and !$AlwaysLocal)
 {
+    unlinkOrDeleteDirectory $installedDirLocal
     Write-Host "Linking $installedDirLocal to $installedDirRemote ..."
     cmd /c mklink /D $installedDirLocal $installedDirRemote
     Write-Host "Linking $installedDirLocal to $installedDirRemote ... done."
 }
+elseif ($incremental -and $AlwaysLocal)
+{
+    if ((Test-Path $path) -and (IsReparsePoint $path))
+    {
+        Write-Host "Reparse point detected. Unlinking."
+        cmd /c rmdir $path
+    }
+}
+elseif (!$incremental -and !$AlwaysLocal)
+{
+    unlinkOrDeleteDirectory $installedDirLocal
+}
 else
 {
-    Write-Host "Creating $installedDirRemote ..."
-    vcpkgCreateDirectoryIfNotExists $installedDirRemote
-    Write-Host "Creating $installedDirRemote ... done."
+    throw "invalid argument combination"
 }
 
+# binary caching
 unlinkOrDeleteDirectory "$vcpkgRootDir\archives"
 cmd /c mklink /D "$vcpkgRootDir\archives" "$driveLetter\archives"

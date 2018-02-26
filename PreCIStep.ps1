@@ -5,7 +5,8 @@ param(
     [Parameter(Mandatory=$true)][string]$branch,
     [Parameter(Mandatory=$true)][ValidateSet('ret','chk', 'NOT_APPLICABLE')][string]$retOrChk,
     [Parameter(Mandatory=$true)][string]$triplet,
-    [Parameter(Mandatory=$true)][bool]$incremental
+    [Parameter(Mandatory=$true)][bool]$incremental,
+    [Parameter(Mandatory=$false)][bool]$AlwaysLocal
 )
 
 Set-StrictMode -Version Latest
@@ -37,4 +38,4 @@ if ($vsInstallNickname -eq $VISUAL_STUDIO_2017_UNSTABLE_NICKNAME -and ![string]:
 CreateTripletsForVS -vsInstallPath $vsInstallPath -vsInstallNickname $vsInstallNickname -outputDir "$vcpkgRootDir\triplets"
 
 # Prepare installed dir
-& $scriptsDir\PrepareInstalledDir.ps1 -triplet $triplet -incremental $incremental
+& $scriptsDir\PrepareInstalledDir.ps1 -triplet $triplet -incremental $incremental -AlwaysLocal $AlwaysLocal
