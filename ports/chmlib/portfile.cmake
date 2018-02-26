@@ -6,7 +6,7 @@ endif()
 set(CHMLIB_VERSION chmlib-0.40)
 set(CHMLIB_FILENAME ${CHMLIB_VERSION}.zip)
 set(CHMLIB_URL http://www.jedrea.com/chmlib/${CHMLIB_FILENAME})
-set(CHMLIB_SRC ${CURRENT_BUILDTREES_DIR}/src/${CHMLIB_VERSION}/src)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${CHMLIB_VERSION})
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(
@@ -17,50 +17,18 @@ vcpkg_download_distfile(
 )   
 vcpkg_extract_source_archive(${ARCHIVE})
 
-file(GLOB VCXPROJS "${VCPKG_ROOT_DIR}/ports/${PORT}/*.vcxproj")
-file(COPY ${VCXPROJS} DESTINATION ${CHMLIB_SRC})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-vcpkg_build_msbuild(
-    PROJECT_PATH ${CHMLIB_SRC}/chm.vcxproj
-    RELEASE_CONFIGURATION Release
-    DEBUG_CONFIGURATION Debug
-    TARGET Build
-    OPTIONS /v:diagnostic
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS_RELEASE -DBUILD_TOOLS=ON
+    OPTIONS_DEBUG -DBUILD_TOOLS=OFF
 )
 
-#enum_chmLib RELEASE only
-vcpkg_build_msbuild(
-    PROJECT_PATH ${CHMLIB_SRC}/enum_chmLib.vcxproj
-    RELEASE_CONFIGURATION Release
-    DEBUG_CONFIGURATION Release
-    TARGET Build
-    OPTIONS /v:diagnostic
-)
+vcpkg_install_cmake()
 
-#enumdir_chmLib RELEASE only
-vcpkg_build_msbuild(
-    PROJECT_PATH ${CHMLIB_SRC}/enumdir_chmLib.vcxproj
-    RELEASE_CONFIGURATION Release
-    DEBUG_CONFIGURATION Release
-    TARGET Build
-    OPTIONS /v:diagnostic
-)
+file(INSTALL ${SOURCE_PATH}/src/chm_lib.h  DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-#extract_chmLib RELEASE only
-vcpkg_build_msbuild(
-    PROJECT_PATH ${CHMLIB_SRC}/extract_chmLib.vcxproj
-    RELEASE_CONFIGURATION Release
-    DEBUG_CONFIGURATION Release
-    TARGET Build
-    OPTIONS /v:diagnostic
-)
-
-file(INSTALL ${CHMLIB_SRC}/chm_lib.h  DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${VCPKG_TARGET_ARCHITECTURE}-windows-static-rel/chm.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${VCPKG_TARGET_ARCHITECTURE}-windows-static-dbg/chm.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${VCPKG_TARGET_ARCHITECTURE}-windows-static-rel/enum_chmLib.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${VCPKG_TARGET_ARCHITECTURE}-windows-static-rel/enumdir_chmLib.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${VCPKG_TARGET_ARCHITECTURE}-windows-static-rel/extract_chmLib.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/chmlib-0.40/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/chmlib)
+file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/chmlib)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/chmlib/COPYING ${CURRENT_PACKAGES_DIR}/share/chmlib/copyright)
