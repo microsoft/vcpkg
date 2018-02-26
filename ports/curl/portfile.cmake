@@ -56,7 +56,7 @@ endif()
 
 # curl exe
 set(BUILD_CURL_EXE OFF)
-if("curl" IN_LIST FEATURES)
+if("tool" IN_LIST FEATURES)
     set(BUILD_CURL_EXE ON)
 endif()
 
