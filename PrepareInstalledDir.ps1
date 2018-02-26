@@ -64,10 +64,10 @@ if ($incremental -and !$AlwaysLocal)
 }
 elseif ($incremental -and $AlwaysLocal)
 {
-    if ((Test-Path $path) -and (IsReparsePoint $path))
+    if ((Test-Path $installedDirLocal) -and (IsReparsePoint $installedDirLocal))
     {
         Write-Host "Reparse point detected. Unlinking."
-        cmd /c rmdir $path
+        cmd /c rmdir $installedDirLocal
     }
 }
 elseif (!$incremental -and !$AlwaysLocal)
