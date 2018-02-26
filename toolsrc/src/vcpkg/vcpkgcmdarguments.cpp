@@ -126,12 +126,22 @@ namespace vcpkg
                 }
                 if (arg == "--featurepackages")
                 {
-                    GlobalState::feature_packages = true;
+                    parse_switch(true, "featurepackages", args.featurepackages);
                     continue;
                 }
                 if (arg == "--no-featurepackages")
                 {
-                    GlobalState::feature_packages = false;
+                    parse_switch(false, "featurepackages", args.featurepackages);
+                    continue;
+                }
+                if (arg == "--binarycaching")
+                {
+                    parse_switch(true, "binarycaching", args.binarycaching);
+                    continue;
+                }
+                if (arg == "--no-binarycaching")
+                {
+                    parse_switch(false, "binarycaching", args.binarycaching);
                     continue;
                 }
 

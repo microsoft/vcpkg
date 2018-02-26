@@ -98,6 +98,7 @@ namespace vcpkg::Build
         /// </summary>
         static PreBuildInfo from_triplet_file(const VcpkgPaths& paths, const Triplet& triplet);
 
+        std::string triplet_abi_tag;
         std::string target_architecture;
         std::string cmake_system_name;
         std::string cmake_system_version;

@@ -1,3 +1,4 @@
+* -text
 *.patch text eol=lf
 *.vcxproj text eol=crlf
 *.vcxproj.filters text eol=crlf
