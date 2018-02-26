@@ -26,19 +26,15 @@ if("http2" IN_LIST FEATURES)
     set(HTTP2_OPTIONS -DUSE_NGHTTP2=ON)
 endif()
 
-# SSL via OpenSSL
+# SSL
 set(USE_OPENSSL OFF)
-if("openssl" IN_LIST FEATURES)
-    if(CURL_USE_WINSSL)
-        message(FATAL_ERROR "The openssl feature conflicts with CURL_USE_WINSSL.")
-    endif()
-    set(USE_OPENSSL ON)
-endif()
-
-# SSL via Schannel
 set(USE_WINSSL OFF)
-if(CURL_USE_WINSSL)
-    set(USE_WINSSL ON)
+if("ssl" IN_LIST FEATURES)
+    if(CURL_USE_WINSSL)
+        set(USE_WINSSL ON)
+    else()
+        set(USE_OPENSSL ON)
+    endif()
 endif()
 
 # SSH
