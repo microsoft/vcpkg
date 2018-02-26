@@ -317,6 +317,8 @@ namespace vcpkg::Dependencies
                     {
                         dep.erase(std::find(dep.begin(), dep.end(), '['), dep.end());
                     }
+                    Util::unstable_keep_if(deps,
+                                           [&](auto&& e) { return e != an_installed_package->package.spec.name(); });
                     // </hack>
                     if (std::find(deps.begin(), deps.end(), spec.name()) == deps.end()) continue;
 
