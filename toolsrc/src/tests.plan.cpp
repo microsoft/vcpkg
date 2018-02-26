@@ -780,6 +780,21 @@ namespace UnitTest1
             Assert::AreEqual("vtk", remove_plan[1].spec.name().c_str());
             Assert::AreEqual("expat", remove_plan[2].spec.name().c_str());
         }
+
+        TEST_METHOD(features_depend_core_remove_scheme)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> pghs;
+            pghs.push_back(make_status_pgh("curl", "", "", "x64"));
+            pghs.push_back(make_status_pgh("cpr", "curl[core]", "", "x64"));
+            StatusParagraphs status_db(std::move(pghs));
+
+            auto remove_plan = Dependencies::create_remove_plan(
+                {unsafe_pspec("curl", Triplet::from_canonical_name("x64"))}, status_db);
+
+            Assert::AreEqual(size_t(2), remove_plan.size());
+            Assert::AreEqual("cpr", remove_plan[0].spec.name().c_str());
+            Assert::AreEqual("curl", remove_plan[1].spec.name().c_str());
+        }
     };
 
     class UpgradePlanTests : public TestClass<UpgradePlanTests>
