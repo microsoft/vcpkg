@@ -327,8 +327,9 @@ namespace vcpkg::Build
         std::vector<FeatureSpec> required_fspecs = compute_required_feature_specs(config, status_db);
 
         // Find all features that aren't installed. This destroys required_fspecs.
-        Util::unstable_keep_if(required_fspecs,
-                               [&](FeatureSpec const& fspec) { return !status_db.is_installed(fspec); });
+        Util::unstable_keep_if(required_fspecs, [&](FeatureSpec const& fspec) {
+            return !status_db.is_installed(fspec) && fspec.name() != spec.name();
+        });
 
         if (!required_fspecs.empty())
         {
