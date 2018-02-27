@@ -79,6 +79,8 @@ namespace vcpkg
         Optional<bool> sendmetrics = nullopt;
         Optional<bool> printmetrics = nullopt;
 
+        // feature flags
+        Optional<bool> featurepackages = nullopt;
         std::string command;
         std::vector<std::string> command_arguments;
 

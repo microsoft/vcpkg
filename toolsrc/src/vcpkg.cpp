@@ -265,6 +265,7 @@ int main(const int argc, const char* const* const argv)
 
     const VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(argc, argv);
 
+    if (const auto p = args.featurepackages.get()) GlobalState::feature_packages = *p;
     if (const auto p = args.printmetrics.get()) Metrics::g_metrics.lock()->set_print_metrics(*p);
     if (const auto p = args.sendmetrics.get()) Metrics::g_metrics.lock()->set_send_metrics(*p);
     if (const auto p = args.debug.get()) GlobalState::debugging = *p;

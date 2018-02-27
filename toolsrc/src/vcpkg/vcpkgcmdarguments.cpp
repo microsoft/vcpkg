@@ -126,12 +126,13 @@ namespace vcpkg
                 }
                 if (arg == "--featurepackages")
                 {
-                    GlobalState::feature_packages = true;
+                    parse_switch(true, "featurepackages", args.featurepackages);
                     continue;
                 }
                 if (arg == "--no-featurepackages")
                 {
-                    GlobalState::feature_packages = false;
+                    parse_switch(false, "featurepackages", args.featurepackages);
+                    continue;
                     continue;
                 }
 
