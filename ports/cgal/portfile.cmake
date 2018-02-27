@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CGAL/cgal
-    REF releases/CGAL-4.11
-    SHA512 91e555d5988bee387afa31331e1e3a8990206468fd8c774fd82979d9ff169e9c4835ecc6ba3d576cda617b6cb2cd52d27657d2434e38b29ce0e7e643436810ab
+    REF releases/CGAL-4.11.1
+    SHA512 fa5bdf62020bfba9d0774dd6333d0a4c6800d4d4c65a8be640710dde5446eca47941567ef801ace5b30b6027f5442b42bb7e0175f52758c5acc595b72cc031f6
     HEAD_REF master
 )
 
