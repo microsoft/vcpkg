@@ -13,23 +13,27 @@ if (!(Test-Path "$VcpkgPath/.vcpkg-root"))
 $utilsdir = split-path -parent $script:MyInvocation.MyCommand.Definition
 
 $ports = @(
-    "cpp-redis",
     "azure-storage-cpp",
-    "doctest",
-    "gdcm2",
-    "grpc",
-    "matio",
-    "spdlog",
-    "yaml-cpp",
-    "rocksdb",
-    "wt",
+    "c-ares",
+    # disabled due to slow update cadence. In the future, once they have passed our current ref (Jan 29, 2018), this can be reenabled.
+    # "cartographer",
     "cctz",
+    "cgal",
     "chakracore",
+    "cimg",
+    "cpp-redis",
     "directxmesh",
     "directxtex",
     "directxtk",
-    "cartographer",
-    "grpc"
+    "doctest",
+    "gdcm2",
+    "grpc",
+    "libwebsockets",
+    "matio",
+    "rocksdb",
+    "spdlog",
+    "wt",
+    "yaml-cpp"
 )
 
 $rollingPorts = @(
