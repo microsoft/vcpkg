@@ -133,6 +133,15 @@ namespace vcpkg
                 {
                     parse_switch(false, "featurepackages", args.featurepackages);
                     continue;
+                }
+                if (arg == "--binarycaching")
+                {
+                    parse_switch(true, "binarycaching", args.binarycaching);
+                    continue;
+                }
+                if (arg == "--no-binarycaching")
+                {
+                    parse_switch(false, "binarycaching", args.binarycaching);
                     continue;
                 }
 

@@ -81,6 +81,8 @@ namespace vcpkg
 
         // feature flags
         Optional<bool> featurepackages = nullopt;
+        Optional<bool> binarycaching = nullopt;
+
         std::string command;
         std::vector<std::string> command_arguments;
 

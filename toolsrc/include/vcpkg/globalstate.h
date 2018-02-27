@@ -14,6 +14,7 @@ namespace vcpkg
 
         static std::atomic<bool> debugging;
         static std::atomic<bool> feature_packages;
+        static std::atomic<bool> g_binary_caching;
 
         static std::atomic<int> g_init_console_cp;
         static std::atomic<int> g_init_console_output_cp;

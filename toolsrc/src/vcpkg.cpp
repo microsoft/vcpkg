@@ -263,9 +263,18 @@ int main(const int argc, const char* const* const argv)
     }
     load_config();
 
+    const auto vcpkg_feature_flags_env = System::get_environment_variable("VCPKG_FEATURE_FLAGS");
+    if (const auto v = vcpkg_feature_flags_env.get())
+    {
+        auto flags = Strings::split(*v, ",");
+        if (std::find(flags.begin(), flags.end(), "binarycaching") != flags.end()) GlobalState::g_binary_caching = true;
+    }
+
     const VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(argc, argv);
 
     if (const auto p = args.featurepackages.get()) GlobalState::feature_packages = *p;
+    if (const auto p = args.binarycaching.get()) GlobalState::g_binary_caching = *p;
+
     if (const auto p = args.printmetrics.get()) Metrics::g_metrics.lock()->set_print_metrics(*p);
     if (const auto p = args.sendmetrics.get()) Metrics::g_metrics.lock()->set_send_metrics(*p);
     if (const auto p = args.debug.get()) GlobalState::debugging = *p;
