@@ -15,7 +15,7 @@ endif()
 function(add_sublibrary LIB)
     file(GLOB_RECURSE SOURCES "absl/${LIB}/*.cc")
     list(FILTER SOURCES EXCLUDE REGEX "_test(ing)?(_.+)?.cc$|_nonprod.cc$")
-    file(GLOB HEADERS "absl/${LIB}/*.h")
+    file(GLOB HEADERS "absl/${LIB}/*.h" "absl/${LIB}/*.inc")
     file(GLOB INTERNAL_HEADERS "absl/${LIB}/internal/*.h")
 
     if(SOURCES)

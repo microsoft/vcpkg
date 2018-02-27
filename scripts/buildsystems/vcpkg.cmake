@@ -223,6 +223,18 @@ macro(find_package name)
             add_library(tinyxml2 INTERFACE IMPORTED)
             set_target_properties(tinyxml2 PROPERTIES INTERFACE_LINK_LIBRARIES "tinyxml2_static")
         endif()
+    elseif("${name}" STREQUAL "HDF5" AND NOT PROJECT_NAME STREQUAL "VTK")
+        # This is a hack to make VTK work. TODO: find another way to suppress the built-in find module.
+        _find_package(${ARGV} CONFIG)
+    elseif("${name}" STREQUAL "CURL")
+        _find_package(${ARGV})
+        if(CURL_FOUND)
+            if(EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/nghttp2.lib")
+                list(APPEND CURL_LIBRARIES
+                    "debug" "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/nghttp2.lib"
+                    "optimized" "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/nghttp2.lib")
+            endif()
+        endif()
     else()
         _find_package(${ARGV})
     endif()

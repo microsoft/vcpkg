@@ -4,8 +4,9 @@ param(
     [Parameter(Mandatory=$False)][string]$withVSPath = ""
 )
 
-$scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
-$vcpkgRootDir = & $scriptsDir\findFileRecursivelyUp.ps1 $scriptsDir .vcpkg-root
+$scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
+. "$scriptsDir\VcpkgPowershellUtils.ps1"
+$vcpkgRootDir = vcpkgFindFileRecursivelyUp $scriptsDir .vcpkg-root
 Write-Verbose("vcpkg Path " + $vcpkgRootDir)
 
 
@@ -36,26 +37,31 @@ if (!(Test-Path $vcpkgSourcesPath))
     return
 }
 
-try
-{
-    Push-Location $vcpkgSourcesPath
-    $msbuildExeWithPlatformToolset = & $scriptsDir\findAnyMSBuildWithCppPlatformToolset.ps1 $withVSPath
-    $msbuildExe = $msbuildExeWithPlatformToolset[0]
-    $platformToolset = $msbuildExeWithPlatformToolset[1]
-    $windowsSDK = & $scriptsDir\getWindowsSDK.ps1
-    & $msbuildExe "/p:VCPKG_VERSION=-$gitHash" "/p:DISABLE_METRICS=$disableMetrics" /p:Configuration=Release /p:Platform=x86 /p:PlatformToolset=$platformToolset /p:TargetPlatformVersion=$windowsSDK /m dirs.proj
-    if ($LASTEXITCODE -ne 0)
-    {
-        Write-Error "Building vcpkg.exe failed. Please ensure you have installed Visual Studio with the Desktop C++ workload and the Windows SDK for Desktop C++."
-        return
-    }
+$msbuildExeWithPlatformToolset = & $scriptsDir\findAnyMSBuildWithCppPlatformToolset.ps1 $withVSPath
+$msbuildExe = $msbuildExeWithPlatformToolset[0]
+$platformToolset = $msbuildExeWithPlatformToolset[1]
+$windowsSDK = & $scriptsDir\getWindowsSDK.ps1
 
-    Write-Verbose("Placing vcpkg.exe in the correct location")
+$arguments = (
+"`"/p:VCPKG_VERSION=-$gitHash`"",
+"`"/p:DISABLE_METRICS=$disableMetrics`"",
+"/p:Configuration=Release",
+"/p:Platform=x86",
+"/p:PlatformToolset=$platformToolset",
+"/p:TargetPlatformVersion=$windowsSDK",
+"/m",
+"`"$vcpkgSourcesPath\dirs.proj`"") -join " "
 
-    Copy-Item $vcpkgSourcesPath\Release\vcpkg.exe $vcpkgRootDir\vcpkg.exe | Out-Null
-    Copy-Item $vcpkgSourcesPath\Release\vcpkgmetricsuploader.exe $vcpkgRootDir\scripts\vcpkgmetricsuploader.exe | Out-Null
-}
-finally
+# vcpkgInvokeCommandClean cmd "/c echo %PATH%"
+$ec = vcpkgInvokeCommandClean $msbuildExe $arguments
+
+if ($ec -ne 0)
 {
-    Pop-Location
+    Write-Error "Building vcpkg.exe failed. Please ensure you have installed Visual Studio with the Desktop C++ workload and the Windows SDK for Desktop C++."
+    return
 }
+
+Write-Verbose("Placing vcpkg.exe in the correct location")
+
+Copy-Item $vcpkgSourcesPath\Release\vcpkg.exe $vcpkgRootDir\vcpkg.exe | Out-Null
+Copy-Item $vcpkgSourcesPath\Release\vcpkgmetricsuploader.exe $vcpkgRootDir\scripts\vcpkgmetricsuploader.exe | Out-Null

@@ -41,8 +41,7 @@ namespace UnitTest1
 
         Assert::AreEqual(plan.spec.triplet().to_string().c_str(), triplet.to_string().c_str());
 
-        Assert::AreEqual(pkg_name.c_str(),
-                         (*plan.any_paragraph.source_control_file.get())->core_paragraph->name.c_str());
+        Assert::AreEqual(pkg_name.c_str(), plan.source_control_file.get()->core_paragraph->name.c_str());
         Assert::AreEqual(size_t(vec.size()), feature_list.size());
 
         for (auto&& feature_name : vec)
@@ -504,13 +503,6 @@ namespace UnitTest1
             features_check(&install_plan[2], "a", {"0", "core"}, Triplet::X64_WINDOWS);
         }
     };
-
-    static PackageSpec unsafe_pspec(std::string name, Triplet t = Triplet::X86_WINDOWS)
-    {
-        auto m_ret = PackageSpec::from_name_and_triplet(name, t);
-        Assert::IsTrue(m_ret.has_value());
-        return m_ret.value_or_exit(VCPKG_LINE_INFO);
-    }
 
     class RemovePlanTests : public TestClass<RemovePlanTests>
     {

@@ -15,6 +15,7 @@ vcpkg_apply_patches(
             "${CMAKE_CURRENT_LIST_DIR}/002-fix-uwp.patch"
             "${CMAKE_CURRENT_LIST_DIR}/no-double-expand-enable-pylint.patch"
             "${CMAKE_CURRENT_LIST_DIR}/msvs-fix-2017-u5.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/filesystem-uwp.patch"
 )
 file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty/libjpeg ${SOURCE_PATH}/3rdparty/libpng ${SOURCE_PATH}/3rdparty/zlib ${SOURCE_PATH}/3rdparty/libtiff)
 
@@ -68,6 +69,15 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   set(WITH_MSMF OFF)
 endif()
 
+set(BUILD_opencv_line_descriptor ON)
+set(BUILD_opencv_saliency ON)
+set(BUILD_opencv_bgsegm ON)
+if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
+  set(BUILD_opencv_line_descriptor OFF)
+  set(BUILD_opencv_saliency OFF)
+  set(BUILD_opencv_bgsegm OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
@@ -94,6 +104,9 @@ vcpkg_configure_cmake(
         -DBUILD_opencv_python2=OFF
         -DBUILD_opencv_python3=OFF
         -DBUILD_opencv_sfm=${BUILD_opencv_sfm}
+        -DBUILD_opencv_line_descriptor=${BUILD_opencv_line_descriptor}
+        -DBUILD_opencv_saliency=${BUILD_opencv_saliency}
+        -DBUILD_opencv_bgsegm=${BUILD_opencv_bgsegm}
         # CMAKE
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
         # ENABLE
@@ -137,6 +150,10 @@ else()
 endif()
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
   set(OpenCV_ARCH x64)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+  set(OpenCV_ARCH ARM)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+  set(OpenCV_ARCH ARM64)
 else()
   set(OpenCV_ARCH x86)
 endif()

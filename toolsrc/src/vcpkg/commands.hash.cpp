@@ -7,7 +7,7 @@
 
 namespace vcpkg::Commands::Hash
 {
-    static void do_file_hash(fs::path const &cmake_exe_path, fs::path const& path, std::string const& hash_type)
+    static void do_file_hash(fs::path const& cmake_exe_path, fs::path const& path, std::string const& hash_type)
     {
         const std::string cmd_line = Strings::format(
             R"("%s" -E %ssum %s)", cmake_exe_path.u8string(), Strings::ascii_to_lowercase(hash_type), path.u8string());
@@ -17,7 +17,7 @@ namespace vcpkg::Commands::Hash
 
         std::string const& output = ec_data.output;
 
-        const auto start = output.find_first_of(" ");
+        const auto start = output.find_first_of(' ');
         Checks::check_exit(
             VCPKG_LINE_INFO, start != std::string::npos, "Unexpected output format from command: %s", cmd_line);
 

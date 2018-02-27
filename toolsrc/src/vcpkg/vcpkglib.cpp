@@ -92,7 +92,7 @@ namespace vcpkg
 
         const auto my_update_id = update_id++;
         const auto tmp_update_filename = paths.vcpkg_dir_updates / "incomplete";
-        const auto update_filename = paths.vcpkg_dir_updates / std::to_string(my_update_id);
+        const auto update_filename = paths.vcpkg_dir_updates / Strings::format("%010d", my_update_id);
 
         fs.write_contents(tmp_update_filename, Strings::serialize(p));
         fs.rename(tmp_update_filename, update_filename);
@@ -173,7 +173,7 @@ namespace vcpkg
         std::vector<StatusParagraph*> installed_packages;
         for (auto&& pgh : status_db)
         {
-            if (pgh->state != InstallState::INSTALLED || pgh->want != Want::INSTALL) continue;
+            if (!pgh->is_installed()) continue;
             installed_packages.push_back(pgh.get());
         }
 
@@ -189,7 +189,7 @@ namespace vcpkg
 
         for (const std::unique_ptr<StatusParagraph>& pgh : status_db)
         {
-            if (pgh->state != InstallState::INSTALLED || !pgh->package.feature.empty())
+            if (!pgh->is_installed() || !pgh->package.feature.empty())
             {
                 continue;
             }

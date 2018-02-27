@@ -96,10 +96,15 @@ file(INSTALL ${SOURCE_PATH}/lib/${LIB_SUB_PATH}-rel/mswu/wx/setup.h DESTINATION 
 file(INSTALL ${SOURCE_PATH}/lib/${LIB_SUB_PATH}-rel/mswu/wx/msw/rcdefs.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/wx/msw)
 file(INSTALL ${SOURCE_PATH}/lib/${LIB_SUB_PATH}-rel/
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib FILES_MATCHING PATTERN "*.lib" PATTERN "*.pdb")
+file(INSTALL ${SOURCE_PATH}/lib/${LIB_SUB_PATH}-rel/
+	DESTINATION ${CURRENT_PACKAGES_DIR}/bin FILES_MATCHING PATTERN "*.dll")
 file(INSTALL ${SOURCE_PATH}/lib/${LIB_SUB_PATH}-dbg/
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib FILES_MATCHING PATTERN "*.lib" PATTERN "*.pdb")
+file(INSTALL ${SOURCE_PATH}/lib/${LIB_SUB_PATH}-dbg/
+	DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin FILES_MATCHING PATTERN "*.dll")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/mswu ${CURRENT_PACKAGES_DIR}/debug/lib/mswud)
-    
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/mswu ${CURRENT_PACKAGES_DIR}/debug/bin/mswud)
+  
 # Handle copyright
 file(COPY ${SOURCE_PATH}/docs/licence.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/wxwidgets)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/wxWidgets/licence.txt ${CURRENT_PACKAGES_DIR}/share/wxwidgets/copyright)

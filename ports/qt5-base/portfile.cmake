@@ -31,8 +31,10 @@ if (EXISTS ${CURRENT_BUILDTREES_DIR}/src/${ARCHIVE_NAME})
 endif()
 
 vcpkg_apply_patches(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${SRCDIR_NAME}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-system-pcre2.patch"
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/fix-system-pcre2.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/fix-system-freetype.patch"
 )
 
 # This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
@@ -51,9 +53,9 @@ configure_qt(
         -system-harfbuzz
         -system-doubleconversion
         -system-sqlite
+        -no-fontconfig
         -sql-sqlite
         -sql-psql
-        -feature-freetype
         -nomake examples -nomake tests
         -opengl desktop # other options are "-no-opengl" and "-opengl angle"
         -mp
@@ -61,6 +63,7 @@ configure_qt(
     OPTIONS_RELEASE
         ZLIB_LIBS="-lzlib"
         LIBPNG_LIBS="-llibpng16"
+        FREETYPE_LIBS="-lfreetype"
     OPTIONS_DEBUG
         ZLIB_LIBS="-lzlibd"
         LIBPNG_LIBS="-llibpng16d"
@@ -112,5 +115,6 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.lib)
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.prl)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/qtdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/plugins)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/qtdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/plugins)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.LGPLv3 DESTINATION  ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

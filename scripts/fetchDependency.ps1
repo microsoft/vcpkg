@@ -3,11 +3,11 @@ param(
     [Parameter(Mandatory=$true)][string]$Dependency
 )
 
-$scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
+$scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 . "$scriptsDir\VcpkgPowershellUtils.ps1"
 
 Write-Verbose "Fetching dependency: $Dependency"
-$vcpkgRootDir = & $scriptsDir\findFileRecursivelyUp.ps1 $scriptsDir .vcpkg-root
+$vcpkgRootDir = vcpkgFindFileRecursivelyUp $scriptsDir .vcpkg-root
 
 $downloadsDir = "$vcpkgRootDir\downloads"
 
@@ -20,12 +20,12 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
 
     if($Dependency -eq "cmake")
     {
-        $requiredVersion = "3.10.1"
-        $downloadVersion = "3.10.1"
-        $url = "https://cmake.org/files/v3.10/cmake-3.10.1-win32-x86.zip"
-        $downloadPath = "$downloadsDir\cmake-3.10.1-win32-x86.zip"
-        $expectedDownloadedFileHash = "6fe010cce1201d884cd7a9535db8a1f16d98b8965341251fde8f1c5069ee58c0"
-        $executableFromDownload = "$downloadsDir\cmake-3.10.1-win32-x86\bin\cmake.exe"
+        $requiredVersion = "3.10.2"
+        $downloadVersion = "3.10.2"
+        $url = "https://cmake.org/files/v3.10/cmake-3.10.2-win32-x86.zip"
+        $downloadPath = "$downloadsDir\cmake-3.10.2-win32-x86.zip"
+        $expectedDownloadedFileHash = "f5f7e41a21d0e9b655aca58498b08e17ecd27796bf82837e2c84435359169dd6"
+        $executableFromDownload = "$downloadsDir\cmake-3.10.2-win32-x86\bin\cmake.exe"
         $extractionType = $ExtractionType_ZIP
     }
     elseif($Dependency -eq "nuget")
@@ -40,11 +40,11 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     }
     elseif($Dependency -eq "vswhere")
     {
-        $requiredVersion = "2.2.11"
-        $downloadVersion = "2.2.11"
-        $url = "https://github.com/Microsoft/vswhere/releases/download/2.2.11/vswhere.exe"
+        $requiredVersion = "2.3.2"
+        $downloadVersion = "2.3.2"
+        $url = "https://github.com/Microsoft/vswhere/releases/download/2.3.2/vswhere.exe"
         $downloadPath = "$downloadsDir\vswhere-$downloadVersion\vswhere.exe"
-        $expectedDownloadedFileHash = "0235c2cb6341978abdf32e27fcf1d7af5cb5514c035e529c4cd9283e6f1a261f"
+        $expectedDownloadedFileHash = "103f2784c4b2c8e70c7c1c03687abbf22bce052aae30639406e4e13ffa29ee04"
         $executableFromDownload = $downloadPath
         $extractionType = $ExtractionType_NO_EXTRACTION_REQUIRED
     }
@@ -75,9 +75,12 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
         throw "Unknown program requested"
     }
 
-    Write-Host "Downloading $Dependency..."
-    vcpkgDownloadFile $url $downloadPath
-    Write-Host "Downloading $Dependency has completed successfully."
+    if (!(Test-Path $downloadPath))
+    {
+        Write-Host "Downloading $Dependency..."
+        vcpkgDownloadFile $url $downloadPath
+        Write-Host "Downloading $Dependency has completed successfully."
+    }
 
     $downloadedFileHash = vcpkgGetSHA256 $downloadPath
     vcpkgCheckEqualFileHash -filePath $downloadPath -expectedHash $expectedDownloadedFileHash -actualHash $downloadedFileHash
@@ -100,7 +103,7 @@ function SelectProgram([Parameter(Mandatory=$true)][string]$Dependency)
     {
         if (-not (Test-Path $executableFromDownload))
         {
-            vcpkgInvokeCommand $downloadPath "-y" -wait:$true
+            vcpkgInvokeCommand $downloadPath "-y"
         }
     }
     else

@@ -5,6 +5,7 @@
 
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/span.h>
+#include <vcpkg/base/system.h>
 
 namespace vcpkg::Graphs
 {

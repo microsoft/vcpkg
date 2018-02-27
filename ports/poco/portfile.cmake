@@ -14,6 +14,7 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/config_h.patch
         ${CMAKE_CURRENT_LIST_DIR}/find_pcre.patch
         ${CMAKE_CURRENT_LIST_DIR}/foundation-public-include-pcre.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix-static-internal-pcre.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" POCO_STATIC)

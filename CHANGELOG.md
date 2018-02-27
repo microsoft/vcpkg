@@ -1,3 +1,139 @@
+vcpkg (0.0.104)
+--------------
+  * Add ports:
+    - asmjit         673dcefaa048c5f5a2bf8b85daf8f7b9978d018a
+    - cccapstone     9b4128ee1153e78288a1b5433e2c06a0d47a4c4e
+    - crc32c         1.0.5
+    - epsilon        0.9.2
+    - exprtk         2018.01.01-f32d2b4
+    - forest         4.5.0
+    - libgta         1.0.8
+    - libodb-mysql   2.4.0-1
+    - libopenmpt     2017-01-28-cf2390140
+    - libudis86      2018-01-28-56ff6c87
+    - mujs           25821e6d74fab5fcc200fe5e818362e03e114428
+    - muparser       6cf2746
+    - openmama       6.2.1-a5a93a24d2f89a0def0145552c8cd4a53c69e2de
+    - torch-th       20180131-89ede3ba90c906a8ec6b9a0f4bef188ba5bb2fd8-1
+    - yara           e3439e4ead4ed5d3b75a0b46eaf15ddda2110bb9
+  * Update ports:
+    - abseil         2017-11-10 -> 2018-2-5
+    - blosc          1.12.1 -> 1.13.5
+    - boost-build    1.66.0-3 -> 1.66.0-4
+    - boost-test     1.66.0-1 -> 1.66.0-2
+    - catch          2.0.1-1 -> alias
+    - catch2         2.1.0 -> 2.1.1
+    - cgal           4.11-2 -> 4.11-3
+    - cpprestsdk     2.10.1-1 -> 2.10.2
+    - curl           7.58.0 -> 7.58.0-1
+    - dlib           19.9 -> 19.9-1
+    - flatbuffers    1.8.0 -> 1.8.0-2
+    - freeimage      3.17.0-3 -> 3.17.0-4
+    - gflags         2.2.1 -> 2.2.1-1
+    - gtest          1.8.0-5 -> 1.8.0-6
+    - highfive       1.3 -> 1.5
+    - jack2          1.9.12.2 -> 1.9.12
+    - libspatialite  4.3.0a -> 4.3.0a-1
+    - libwebp        0.6.1 -> 0.6.1-1
+    - libzip         1.3.2 -> 1.4.0
+    - live555        2017.10.28 -> 2018.01.29
+    - mpg123         1.25.8-1 -> 1.25.8-2
+    - nghttp2        1.28.0 -> 1.30.0-1
+    - nlohmann-json  3.0.1 -> 3.1.0
+    - opencv         3.4.0 -> 3.4.0-2
+    - opengl         0.0-4 -> 0.0-5
+    - openssl        1.0.2n-1 -> 1.0.2n-2
+    - openvr         1.0.9 -> 1.0.12
+    - poco           1.8.1 -> 1.8.1-1
+    - protobuf       3.5.0-1 -> 3.5.1
+    - qt5-base       5.9.2-1 -> 5.9.2-4
+    - realsense2     2.9.0 -> 2.9.1
+    - sciter         4.1.1 -> 4.1.2
+    - sobjectizer    5.5.20 -> 5.5.21
+    - soundtouch     2.0.0.2 -> 2.0.0
+    - strtk          2017.01.02-1e2960f -> 2018.01.01-5579ed1
+  * The `configure` step for `release` and `debug` now happen in parallel.
+    - This can significantly reduce build times for libraries where the `configure` step was a good chunk of the total build time. For example, the total build time for `zlib` drops from ~30sec to ~20sec.
+  * Fix a few bootstraping issues introduced in previous release (with the clean environment)
+
+-- vcpkg team <vcpkg@microsoft.com>  WED, 07 Feb 2018 20:30:00 -0800
+
+
+vcpkg (0.0.103)
+--------------
+  * `vcpkg upgrade`: Fix issue with any command executing more than 10 transactions with mixed transaction types (install + remove)
+
+-- vcpkg team <vcpkg@microsoft.com>  WED, 24 Jan 2018 14:30:00 -0800
+
+
+vcpkg (0.0.102)
+--------------
+  * Add ports:
+    - catch-classic  1.12.0
+    - catch2         2.1.0
+    - cgicc          3.2.19
+    - libdisasm      0.23
+    - qt5-3d         5.9.2-0
+    - qt5-base       5.9.2-1
+    - qt5-charts     5.9.2-0
+    - qt5-datavis3d  5.9.2-0
+    - qt5-declarative 5.9.2-0
+    - qt5-gamepad    5.9.2-0
+    - qt5-imageformats 5.9.2-0
+    - qt5-modularscripts 1
+    - qt5-multimedia 5.9.2-0
+    - qt5-networkauth 5.9.2-0
+    - qt5-scxml      5.9.2-0
+    - qt5-serialport 5.9.2-0
+    - qt5-speech     5.9.2-0
+    - qt5-svg        5.9.2-0
+    - qt5-tools      5.9.2-0
+    - qt5-virtualkeyboard 5.9.2-0
+    - qt5-websockets 5.9.2-0
+    - qt5-winextras  5.9.2-0
+    - qt5-xmlpatterns 5.9.2-0
+    - tre            0.8.0-1
+  * Update ports:
+    - boost-asio     1.66.0 -> 1.66.0-1
+    - boost-build    1.66.0 -> 1.66.0-3
+    - boost-vcpkg-helpers 3 -> 4
+    - corrade        jun2017-3 -> jan2018-1
+    - curl           7.57.0-1 -> 7.57.0-2
+    - date           2.3-c286981b3bf83c79554769df68b27415cee68d77 -> 2.4
+    - discord-rpc    2.0.1 -> 2.1.0
+    - dlib           19.8 -> 19.9
+    - libbson        1.9.0 -> 1.9.2
+    - libconfig      1.7.1 -> 1.7.2
+    - libjpeg-turbo  1.5.2-2 -> 1.5.3
+    - libodb         2.4.0-1 -> 2.4.0-2
+    - libogg         1.3.2-cab46b1-3 -> 1.3.3
+    - libwebp        0.6.0-2 -> 0.6.1
+    - libwebsockets  2.0.0-4 -> 2.4.1
+    - lz4            1.8.0-1 -> 1.8.1.2
+    - magnum         jun2017-6 -> jan2018-1
+    - magnum-plugins jun2017-5 -> jan2018-1
+    - mongo-c-driver 1.9.0 -> 1.9.2
+    - mpg123         1.25.8 -> 1.25.8-1
+    - openni2        2.2.0.33-4 -> 2.2.0.33-7
+    - osg            3.5.6-1 -> 3.5.6-2
+    - poco           1.8.0.1 -> 1.8.1
+    - qca            2.2.0-1 -> 2.2.0-2
+    - qscintilla     2.10-1 -> 2.10-4
+    - qt5            5.8-6 -> 5.9.2-1
+    - qwt            6.1.3-2 -> 6.1.3-4
+    - sciter         4.1.0 -> 4.1.1
+    - sdl2           2.0.7-3 -> 2.0.7-4
+    - tiff           4.0.8-1 -> 4.0.9
+    - xxhash         0.6.3-1 -> 0.6.4
+  * Remove usage of `BITS-transfer`. Use .NET functions (which used to be the fallback if `BITS-transfer` failed) by default.
+  * Enable the usage of `feature-packages` by default. More info [here](docs/specifications/feature-packages.md).
+  * Bootstrapping `vcpkg` now happens in a clean environment to avoid issues when building in a VS Developer Prompt among others.
+  * Update required version & auto-downloaded version of `cmake` to 3.10.2
+  * Update required version & auto-downloaded version of `vswhere` to 2.3.2
+
+-- vcpkg team <vcpkg@microsoft.com>  TUE, 23 Jan 2018 17:00:00 -0800
+
+
 vcpkg (0.0.101)
 --------------
   * Add ports:

@@ -13,7 +13,6 @@ namespace Microsoft::VisualStudio::CppUnitTestFramework
         {
             case Dependencies::InstallPlanType::ALREADY_INSTALLED: return L"ALREADY_INSTALLED";
             case Dependencies::InstallPlanType::BUILD_AND_INSTALL: return L"BUILD_AND_INSTALL";
-            case Dependencies::InstallPlanType::INSTALL: return L"INSTALL";
             case Dependencies::InstallPlanType::EXCLUDED: return L"EXCLUDED";
             case Dependencies::InstallPlanType::UNKNOWN: return L"UNKNOWN";
             default: return ToString(static_cast<int>(t));
@@ -59,4 +58,11 @@ std::unique_ptr<StatusParagraph> make_status_feature_pgh(const char* name,
                                                  {"Multi-Arch", "same"},
                                                  {"Depends", depends},
                                                  {"Status", "install ok installed"}});
+}
+
+PackageSpec unsafe_pspec(std::string name, Triplet t)
+{
+    auto m_ret = PackageSpec::from_name_and_triplet(name, t);
+    Assert::IsTrue(m_ret.has_value());
+    return m_ret.value_or_exit(VCPKG_LINE_INFO);
 }

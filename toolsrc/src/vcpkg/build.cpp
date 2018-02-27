@@ -61,7 +61,8 @@ namespace vcpkg::Build::Command
                            spec.name());
 
         const StatusParagraphs status_db = database_load_check(paths);
-        const Build::BuildPackageOptions build_package_options{Build::UseHeadVersion::NO, Build::AllowDownloads::YES};
+        const Build::BuildPackageOptions build_package_options{
+            Build::UseHeadVersion::NO, Build::AllowDownloads::YES, Build::CleanBuildtrees::NO};
 
         const std::unordered_set<std::string> features_as_set(full_spec.features.begin(), full_spec.features.end());
 
@@ -269,10 +270,10 @@ namespace vcpkg::Build
             std::vector<PackageSpec> missing_specs;
             for (auto&& dep : filter_dependencies(config.scf.core_paragraph->depends, triplet))
             {
-                if (status_db.find_installed(dep, triplet) == status_db.end())
+                auto dep_spec = PackageSpec::from_name_and_triplet(dep, triplet).value_or_exit(VCPKG_LINE_INFO);
+                if (!status_db.is_installed(dep_spec))
                 {
-                    missing_specs.push_back(
-                        PackageSpec::from_name_and_triplet(dep, triplet).value_or_exit(VCPKG_LINE_INFO));
+                    missing_specs.push_back(std::move(dep_spec));
                 }
             }
             // Fail the build if any dependencies were missing
@@ -289,15 +290,20 @@ namespace vcpkg::Build
         const auto pre_build_info = PreBuildInfo::from_triplet_file(paths, triplet);
 
         std::string features;
+        std::string all_features;
         if (GlobalState::feature_packages)
         {
             for (auto&& feature : config.feature_list)
             {
                 features.append(feature + ";");
             }
-            if (features.size() > 0)
+            if (!features.empty())
             {
                 features.pop_back();
+            }
+            for (auto& feature : config.scf.feature_paragraphs)
+            {
+                all_features.append(feature->name + ";");
             }
         }
 
@@ -316,6 +322,7 @@ namespace vcpkg::Build
                 {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
                 {"GIT", git_exe_path},
                 {"FEATURES", features},
+                {"ALL_FEATURES", all_features},
             });
 
         const auto cmd_set_environment = make_build_env_cmd(pre_build_info, toolset);

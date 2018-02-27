@@ -6,7 +6,7 @@ param(
 
 $withVSPath = $withVSPath -replace "\\$" # Remove potential trailing backslash
 
-$scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
+$scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 $VisualStudioInstallationInstances = & $scriptsDir\findVisualStudioInstallationInstances.ps1
 if ($VisualStudioInstallationInstances -eq $null)
 {
