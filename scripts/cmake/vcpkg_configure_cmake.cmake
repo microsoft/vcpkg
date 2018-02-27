@@ -151,8 +151,8 @@ function(vcpkg_configure_cmake)
     if(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
         list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
     else()
-        set(VCPKG_CXX_FLAGS " /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP ${VCPKG_CXX_FLAGS}")
-        set(VCPKG_C_FLAGS " /DWIN32 /D_WINDOWS /W3 /utf-8 /MP ${VCPKG_C_FLAGS}")
+        set(VCPKG_CXX_FLAGS " /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MP ${VCPKG_CXX_FLAGS}")
+        set(VCPKG_C_FLAGS " /DWIN32 /D_WINDOWS /W3 /MP ${VCPKG_C_FLAGS}")
         if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
             list(APPEND _csc_OPTIONS_DEBUG
                 "-DCMAKE_CXX_FLAGS_DEBUG=/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 ${VCPKG_CXX_FLAGS_DEBUG}"
@@ -174,14 +174,18 @@ function(vcpkg_configure_cmake)
         else()
             message(FATAL_ERROR "Invalid setting for VCPKG_CRT_LINKAGE: \"${VCPKG_CRT_LINKAGE}\". It must be \"static\" or \"dynamic\"")
         endif()
+        
+        if(NOT DEFINED VCPKG_CHARACTER_SET)
+            set(VCPKG_CHARACTER_SET "/utf-8")
+        endif()
 
         list(APPEND _csc_OPTIONS_RELEASE
             "-DCMAKE_SHARED_LINKER_FLAGS_RELEASE=/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS}"
             "-DCMAKE_EXE_LINKER_FLAGS_RELEASE=/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS}"
         )
         list(APPEND _csc_OPTIONS
-            "-DCMAKE_CXX_FLAGS=${VCPKG_CXX_FLAGS}"
-            "-DCMAKE_C_FLAGS=${VCPKG_C_FLAGS}"
+            "-DCMAKE_CXX_FLAGS=${VCPKG_CXX_FLAGS}${VCPKG_CHARACTER_SET}"
+            "-DCMAKE_C_FLAGS=${VCPKG_C_FLAGS}${VCPKG_CHARACTER_SET}"
         )
     endif()
 
