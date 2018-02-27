@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tronkko/dirent
-    REF 8b1db5092479a73d47eafd3de739b27e876e6bf3
-    SHA512 f529aa65c2a4b8249c1291f3bccad25fa3a9c2146a2c74abc0a4710f68e2bd6f73cd52682bb406fbcab71d6a5225a354f9e8bdc22ce63b7a4e64bb65bab34b9f
+    REF 1.23.1
+    SHA512 13c59f0d225ccc09a2b92a29b41b6644dabdb0b39df7bb528d5ac60dbe71a2770eaa37d3890e0df21065bc798e9cc018e174d34c6697da7da665caafe062bbc2
     HEAD_REF master
 )
 file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)

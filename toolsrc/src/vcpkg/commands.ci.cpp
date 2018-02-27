@@ -18,35 +18,6 @@ namespace vcpkg::Commands::CI
     using Dependencies::InstallPlanAction;
     using Dependencies::InstallPlanType;
 
-    static Install::InstallSummary run_ci_on_triplet(const Triplet& triplet,
-                                                     const VcpkgPaths& paths,
-                                                     const std::vector<std::string>& ports)
-    {
-        Input::check_triplet(triplet, paths);
-        std::vector<PackageSpec> specs = PackageSpec::to_package_specs(ports, triplet);
-        auto featurespecs = Util::fmap(specs, [](auto& spec) { return FeatureSpec(spec, ""); });
-
-        StatusParagraphs status_db = database_load_check(paths);
-        const auto& paths_port_file = Dependencies::PathsPortFileProvider(paths);
-        auto action_plan = Dependencies::create_feature_install_plan(paths_port_file, featurespecs, status_db);
-
-        const Build::BuildPackageOptions install_plan_options = {
-            Build::UseHeadVersion::NO,
-            Build::AllowDownloads::YES,
-            Build::CleanBuildtrees::YES,
-        };
-
-        for (auto&& action : action_plan)
-        {
-            if (auto p = action.install_action.get())
-            {
-                p->build_options = install_plan_options;
-            }
-        }
-
-        return Install::perform(action_plan, Install::KeepGoing::YES, paths, status_db);
-    }
-
     struct TripletAndSummary
     {
         Triplet triplet;
@@ -92,13 +63,38 @@ namespace vcpkg::Commands::CI
             triplets.push_back(default_triplet);
         }
 
-        std::vector<std::string> ports = Install::get_all_port_names(paths);
-        Util::erase_remove_if(ports, [&](auto&& port) { return Util::Sets::contains(exclusions_set, port); });
+        StatusParagraphs status_db = database_load_check(paths);
+        const auto& paths_port_file = Dependencies::PathsPortFileProvider(paths);
 
+        const Build::BuildPackageOptions install_plan_options = {Build::UseHeadVersion::NO,
+                                                                 Build::AllowDownloads::YES,
+                                                                 Build::CleanBuildtrees::YES,
+                                                                 Build::CleanPackages::YES};
+
+        std::vector<std::string> ports = Install::get_all_port_names(paths);
         std::vector<TripletAndSummary> results;
         for (const Triplet& triplet : triplets)
         {
-            Install::InstallSummary summary = run_ci_on_triplet(triplet, paths, ports);
+            Input::check_triplet(triplet, paths);
+            std::vector<PackageSpec> specs = PackageSpec::to_package_specs(ports, triplet);
+            // Install the default features for every package
+            const auto featurespecs = Util::fmap(specs, [](auto& spec) { return FeatureSpec(spec, ""); });
+
+            auto action_plan = Dependencies::create_feature_install_plan(paths_port_file, featurespecs, status_db);
+
+            for (auto&& action : action_plan)
+            {
+                if (auto p = action.install_action.get())
+                {
+                    p->build_options = install_plan_options;
+                    if (Util::Sets::contains(exclusions_set, p->spec.name()))
+                    {
+                        p->plan_type = InstallPlanType::EXCLUDED;
+                    }
+                }
+            }
+
+            auto summary = Install::perform(action_plan, Install::KeepGoing::YES, paths, status_db);
             results.push_back({triplet, std::move(summary)});
         }
 

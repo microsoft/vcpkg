@@ -21,41 +21,46 @@ if(COR_H_PATH MATCHES "NOTFOUND")
 endif()
 get_filename_component(NETFXSDK_PATH "${COR_H_PATH}/../.." ABSOLUTE)
 
+set(BUILDTREE_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
+file(REMOVE_RECURSE ${BUILDTREE_PATH})
+file(COPY ${SOURCE_PATH}/ DESTINATION ${BUILDTREE_PATH})
+
 vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/Build/Chakra.Core.sln
+    PROJECT_PATH ${BUILDTREE_PATH}/Build/Chakra.Core.sln
     OPTIONS "/p:DotNetSdkRoot=${NETFXSDK_PATH}/" "/p:CustomBeforeMicrosoftCommonTargets=${CMAKE_CURRENT_LIST_DIR}/no-warning-as-error.props"
 )
 
 file(INSTALL
-    ${SOURCE_PATH}/lib/jsrt/ChakraCore.h
-    ${SOURCE_PATH}/lib/jsrt/ChakraCommon.h
-    ${SOURCE_PATH}/lib/jsrt/ChakraCommonWindows.h
-    ${SOURCE_PATH}/lib/jsrt/ChakraDebug.h
+    ${BUILDTREE_PATH}/lib/jsrt/ChakraCore.h
+    ${BUILDTREE_PATH}/lib/jsrt/ChakraCommon.h
+    ${BUILDTREE_PATH}/lib/jsrt/ChakraCommonWindows.h
+    ${BUILDTREE_PATH}/lib/jsrt/ChakraDebug.h
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
 file(INSTALL
-    ${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_debug/ChakraCore.dll
-    ${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_debug/ChakraCore.pdb
+    ${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_debug/ChakraCore.dll
+    ${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_debug/ChakraCore.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
 )
 file(INSTALL
-    ${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_debug/Chakracore.lib
+    ${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_debug/Chakracore.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
 )
 file(INSTALL
-    ${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/ChakraCore.dll
-    ${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/ChakraCore.pdb
+    ${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/ChakraCore.dll
+    ${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/ChakraCore.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/bin
 )
 file(INSTALL
-    ${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/Chakracore.lib
+    ${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/Chakracore.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib
 )
 file(INSTALL
-    ${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/ch.exe
-    ${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/GCStress.exe
-    ${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/rl.exe
+    ${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/ch.exe
+    ${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/GCStress.exe
+    ${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/rl.exe
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/chakracore)
+
 vcpkg_copy_pdbs()
 file(INSTALL
     ${SOURCE_PATH}/LICENSE.txt

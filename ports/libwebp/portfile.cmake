@@ -36,3 +36,5 @@ file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libwe
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libwebp/COPYING ${CURRENT_PACKAGES_DIR}/share/libwebp/copyright)
 
 vcpkg_copy_pdbs()
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindWebP.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libwebp)

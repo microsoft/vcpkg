@@ -308,6 +308,15 @@ namespace vcpkg::Install
             auto bcf = std::make_unique<BinaryControlFile>(
                 Paragraphs::try_load_cached_control_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO));
             auto code = aux_install(display_name_with_features, *bcf);
+
+            if (action.build_options.clean_packages == Build::CleanPackages::YES)
+            {
+                auto& fs = paths.get_filesystem();
+                const fs::path package_dir = paths.package_dir(action.spec);
+                std::error_code ec;
+                fs.remove_all(package_dir, ec);
+            }
+
             return {code, std::move(bcf)};
         }
 
@@ -547,7 +556,7 @@ namespace vcpkg::Install
             Util::Enum::to_enum<Build::UseHeadVersion>(use_head_version),
             Util::Enum::to_enum<Build::AllowDownloads>(!no_downloads),
             Build::CleanBuildtrees::NO,
-        };
+            Build::CleanPackages::NO};
 
         // Note: action_plan will hold raw pointers to SourceControlFiles from this map
         std::vector<AnyAction> action_plan;

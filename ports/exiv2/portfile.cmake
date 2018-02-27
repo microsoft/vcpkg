@@ -8,8 +8,14 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_apply_patches(
+    SOURCE_PATH "${SOURCE_PATH}"
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/use-iconv.patch"
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()
@@ -25,6 +31,10 @@ file(REMOVE ${EXE})
 file(REMOVE ${DEBUG_EXE})
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 # Handle copyright 
 file(COPY ${SOURCE_PATH}/ABOUT-NLS DESTINATION ${CURRENT_PACKAGES_DIR}/share/exiv2)

@@ -30,8 +30,8 @@ namespace vcpkg::Dependencies
         Optional<const SourceControlFile*> source_control_file;
         PackageSpec spec;
         std::unordered_map<std::string, FeatureNodeEdges> edges;
-        std::unordered_set<std::string> to_install_features;
-        std::unordered_set<std::string> original_features;
+        std::set<std::string> to_install_features;
+        std::set<std::string> original_features;
         bool will_remove = false;
         bool transient_uninstalled = true;
         RequestType request_type = RequestType::AUTO_SELECTED;
@@ -143,7 +143,7 @@ namespace vcpkg::Dependencies
 
     InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
                                          const SourceControlFile& scf,
-                                         const std::unordered_set<std::string>& features,
+                                         const std::set<std::string>& features,
                                          const RequestType& request_type)
         : spec(spec)
         , source_control_file(scf)
@@ -155,7 +155,7 @@ namespace vcpkg::Dependencies
 
     InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
                                          InstalledPackageView&& ipv,
-                                         const std::unordered_set<std::string>& features,
+                                         const std::set<std::string>& features,
                                          const RequestType& request_type)
         : spec(spec)
         , installed_package(std::move(ipv))

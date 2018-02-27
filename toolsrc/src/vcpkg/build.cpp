@@ -61,10 +61,13 @@ namespace vcpkg::Build::Command
                            spec.name());
 
         const StatusParagraphs status_db = database_load_check(paths);
-        const Build::BuildPackageOptions build_package_options{
-            Build::UseHeadVersion::NO, Build::AllowDownloads::YES, Build::CleanBuildtrees::NO};
+        const Build::BuildPackageOptions build_package_options{Build::UseHeadVersion::NO,
+                                                               Build::AllowDownloads::YES,
+                                                               Build::CleanBuildtrees::NO,
+                                                               Build::CleanPackages::NO};
 
-        const std::unordered_set<std::string> features_as_set(full_spec.features.begin(), full_spec.features.end());
+        std::set<std::string> features_as_set(full_spec.features.begin(), full_spec.features.end());
+        features_as_set.emplace("core");
 
         const Build::BuildPackageConfig build_config{
             *scf, spec.triplet(), fs::path{port_dir}, build_package_options, features_as_set};
@@ -258,56 +261,93 @@ namespace vcpkg::Build
         paths.get_filesystem().write_contents(binary_control_file, start);
     }
 
+    static std::vector<FeatureSpec> compute_required_feature_specs(const BuildPackageConfig& config,
+                                                                   const StatusParagraphs& status_db)
+    {
+        const Triplet& triplet = config.triplet;
+
+        auto dep_strings =
+            Util::fmap_flatten(config.feature_list, [&](std::string const& feature) -> std::vector<std::string> {
+                if (feature == "core")
+                {
+                    return filter_dependencies(config.scf.core_paragraph->depends, triplet);
+                }
+
+                auto it =
+                    Util::find_if(config.scf.feature_paragraphs,
+                                  [&](std::unique_ptr<FeatureParagraph> const& fpgh) { return fpgh->name == feature; });
+                Checks::check_exit(VCPKG_LINE_INFO, it != config.scf.feature_paragraphs.end());
+
+                return filter_dependencies(it->get()->depends, triplet);
+            });
+
+        auto dep_fspecs = FeatureSpec::from_strings_and_triplet(dep_strings, triplet);
+        Util::sort_unique_erase(dep_fspecs);
+
+        // expand defaults
+        std::vector<FeatureSpec> ret;
+        for (auto&& fspec : dep_fspecs)
+        {
+            if (fspec.feature().empty())
+            {
+                // reference to default features
+                auto it = status_db.find_installed(fspec.spec());
+                if (it == status_db.end())
+                {
+                    // not currently installed, so just leave the default reference so it will fail later
+                    ret.push_back(fspec);
+                }
+                else
+                {
+                    ret.push_back(FeatureSpec{fspec.spec(), "core"});
+                    for (auto&& default_feature : it->get()->package.default_features)
+                        ret.push_back(FeatureSpec{fspec.spec(), default_feature});
+                }
+            }
+            else
+            {
+                ret.push_back(fspec);
+            }
+        }
+        Util::sort_unique_erase(ret);
+
+        return ret;
+    }
+
     static ExtendedBuildResult do_build_package(const VcpkgPaths& paths,
                                                 const BuildPackageConfig& config,
                                                 const StatusParagraphs& status_db)
     {
-        const PackageSpec spec = PackageSpec::from_name_and_triplet(config.scf.core_paragraph->name, config.triplet)
-                                     .value_or_exit(VCPKG_LINE_INFO);
-
+        auto& fs = paths.get_filesystem();
         const Triplet& triplet = config.triplet;
+
+        const PackageSpec spec =
+            PackageSpec::from_name_and_triplet(config.scf.core_paragraph->name, triplet).value_or_exit(VCPKG_LINE_INFO);
+
+        std::vector<FeatureSpec> required_fspecs = compute_required_feature_specs(config, status_db);
+
+        // Find all features that aren't installed. This destroys required_fspecs.
+        Util::unstable_keep_if(required_fspecs,
+                               [&](FeatureSpec const& fspec) { return !status_db.is_installed(fspec); });
+
+        if (!required_fspecs.empty())
         {
-            std::vector<FeatureSpec> missing_specs;
-            for (auto&& dep : filter_dependencies(config.scf.core_paragraph->depends, triplet))
-            {
-                auto dep_specs = FeatureSpec::from_strings_and_triplet({dep}, triplet);
-                for (auto&& feature : dep_specs)
-                {
-                    if (!status_db.is_installed(feature))
-                    {
-                        missing_specs.push_back(std::move(feature));
-                    }
-                }
-            }
-            // Fail the build if any dependencies were missing
-            if (!missing_specs.empty())
-            {
-                return {BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES, std::move(missing_specs)};
-            }
+            return {BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES, std::move(required_fspecs)};
         }
 
         const fs::path& cmake_exe_path = paths.get_cmake_exe();
         const fs::path& git_exe_path = paths.get_git_exe();
 
         const fs::path ports_cmake_script_path = paths.ports_cmake;
+
         const auto pre_build_info = PreBuildInfo::from_triplet_file(paths, triplet);
 
-        std::string features;
+        std::string features = Strings::join(";", config.feature_list);
+
         std::string all_features;
-        if (GlobalState::feature_packages)
+        for (auto& feature : config.scf.feature_paragraphs)
         {
-            for (auto&& feature : config.feature_list)
-            {
-                features.append(feature + ";");
-            }
-            if (!features.empty())
-            {
-                features.pop_back();
-            }
-            for (auto& feature : config.scf.feature_paragraphs)
-            {
-                all_features.append(feature->name + ";");
-            }
+            all_features.append(feature->name + ";");
         }
 
         const Toolset& toolset = paths.get_toolset(pre_build_info);
@@ -349,7 +389,7 @@ namespace vcpkg::Build
             }
         }
 
-        const BuildInfo build_info = read_build_info(paths.get_filesystem(), paths.build_info_file_path(spec));
+        const BuildInfo build_info = read_build_info(fs, paths.build_info_file_path(spec));
         const size_t error_count = PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info);
 
         auto bcf = create_binary_control_file(*config.scf.core_paragraph, triplet, build_info);
@@ -358,16 +398,13 @@ namespace vcpkg::Build
         {
             return BuildResult::POST_BUILD_CHECKS_FAILED;
         }
-        if (GlobalState::feature_packages)
+        for (auto&& feature : config.feature_list)
         {
-            for (auto&& feature : config.feature_list)
+            for (auto&& f_pgh : config.scf.feature_paragraphs)
             {
-                for (auto&& f_pgh : config.scf.feature_paragraphs)
-                {
-                    if (f_pgh->name == feature)
-                        bcf->features.push_back(
-                            create_binary_feature_control_file(*config.scf.core_paragraph, *f_pgh, triplet));
-                }
+                if (f_pgh->name == feature)
+                    bcf->features.push_back(
+                        create_binary_feature_control_file(*config.scf.core_paragraph, *f_pgh, triplet));
             }
         }
 
@@ -385,7 +422,7 @@ namespace vcpkg::Build
         if (config.build_package_options.clean_buildtrees == CleanBuildtrees::YES)
         {
             auto& fs = paths.get_filesystem();
-            auto buildtrees_dir = paths.buildtrees / config.scf.core_paragraph->name;
+            const fs::path buildtrees_dir = paths.buildtrees / config.scf.core_paragraph->name;
             auto buildtree_files = fs.get_files_non_recursive(buildtrees_dir);
             for (auto&& file : buildtree_files)
             {
