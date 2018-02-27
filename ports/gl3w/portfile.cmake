@@ -10,31 +10,44 @@ vcpkg_from_github(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-set(BUILD_SHARED_LIBS OFF)
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(BUILD_SHARED_LIBS ON)
-    vcpkg_apply_patches(
-        SOURCE_PATH ${SOURCE_PATH}
-        PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-enable-shared-build.patch)
-endif()
+vcpkg_download_distfile(
+  GLCOREARB_H
+  URLS "http://www.opengl.org/registry/api/GL/glcorearb.h"
+  FILENAME "glcorearb-2018-02-27.h"
+  SHA512 02c3672606e6360f2e1e8335fe581bc2d2b3d518b0f24b0c327006a70de07261dace4b53b13e93029a8eb2af43bcba904c4392f2c35ac512c7f278534ef8eb5d
+)
+
+file(INSTALL ${GLCOREARB_H} DESTINATION ${SOURCE_PATH}/include/GL RENAME glcorearb.h)
+
+vcpkg_apply_patches(
+  SOURCE_PATH ${SOURCE_PATH}
+  PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-enable-shared-build.patch
+)
 
 vcpkg_find_acquire_program(PYTHON3)
 
-get_filename_component(PYTHON3_PATH ${PYTHON3} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PYTHON3_PATH}")
-
-message($ENV{PATH})
+vcpkg_execute_required_process(
+  COMMAND ${PYTHON3} ${SOURCE_PATH}/gl3w_gen.py
+  WORKING_DIRECTORY ${SOURCE_PATH}
+  LOGNAME gl3w-gen
+)
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
-  OPTIONS -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
   OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
 )
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/gl3w)
 
-file(INSTALL ${SOURCE_PATH}/UNLICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/gl3w RENAME copyright)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+  set(HEADER ${CURRENT_PACKAGES_DIR}/include/GL/gl3w.h)
+  file(READ ${HEADER} _contents)
+  string(REPLACE "#define GL3W_API" "#define GL3W_API __declspec(dllimport)" _contents "${_contents}")
+  file(WRITE ${HEADER} "${_contents}")
+endif()
 
+file(INSTALL ${SOURCE_PATH}/UNLICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/gl3w RENAME copyright)

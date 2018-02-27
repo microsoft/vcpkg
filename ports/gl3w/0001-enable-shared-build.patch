@@ -11,20 +11,18 @@ diff --git a/gl3w_gen.py b/gl3w_gen.py
 index 611331a..3515cf9 100755
 --- a/gl3w_gen.py
 +++ b/gl3w_gen.py
-@@ -130,6 +130,12 @@ with open(os.path.join(args.root, 'include/GL/gl3w.h'), 'wb') as f:
+@@ -130,6 +130,10 @@ with open(os.path.join(args.root, 'include/GL/gl3w.h'), 'wb') as f:
  
  #include <GL/glcorearb.h>
  
-+#ifdef GL3W_EXPORTS
-+	#define GL3W_API __declspec(dllexport)
-+#else
-+	#define GL3W_API __declspec(dllimport)
++#ifndef GL3W_API
++    #define GL3W_API
 +#endif
 +
  #ifndef __gl_h_
  #define __gl_h_
  #endif
-@@ -147,10 +153,10 @@ typedef void (*GL3WglProc)(void);
+@@ -147,10 +151,10 @@ typedef void (*GL3WglProc)(void);
  typedef GL3WglProc (*GL3WGetProcAddressProc)(const char *proc);
  
  /* gl3w api */
@@ -48,7 +46,7 @@ index 611331a..3515cf9 100755
  
  /* OpenGL functions */
  ''')
-@@ -329,7 +335,7 @@ static const char *proc_names[] = {
+@@ -329,7 +333,7 @@ static const char *proc_names[] = {
          write(f, '\t"{0}",\n'.format(proc))
      write(f, r'''};
  
