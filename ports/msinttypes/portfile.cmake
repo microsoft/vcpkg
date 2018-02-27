@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO chemeris/msinttypes
-    REF 7636cabe55318824dc702d15b69711f5d7c30250
-    SHA512 1c3c350d12c6b69e1cb6469f742afc126d50fd92e137ecacdb8367e320350cd42d7d41fbb0aa38d6a13aefbef5308f9ec89825e9b80a932f552a889f63b35cb2
+    REF f9e7c5758ed9e3b9f4b2394de1881c704dd79de0
+    SHA512 943ccb1245e41ad554908fd7664725f2aac929222bd823b375fbd2e8a4c4ffc42c268543c43a817b65dca047c3253d04527378ec3902e5e7df7f6ba5a736d6f3
     HEAD_REF master
 )
 

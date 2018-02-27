@@ -536,8 +536,34 @@ namespace UnitTest1
             // Expect "a" to get installed and defaults of "b" through the dependency,
             // as no explicit features of "b" are installed by the user.
             Assert::IsTrue(install_plan.size() == 2);
-            features_check(&install_plan[1], "a", {"core"}, Triplet::X64_WINDOWS);
             features_check(&install_plan[0], "b", {"b1", "core"}, Triplet::X64_WINDOWS);
+            features_check(&install_plan[1], "a", {"core"}, Triplet::X64_WINDOWS);
+        }
+
+        TEST_METHOD(do_not_install_default_features_of_existing_dependency)
+        {
+            // Add a port "a" which depends on the core of "b"
+            PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+            spec_map.emplace("a", "b[core]");
+            // "b" has two features, of which "b1" is default.
+            spec_map.emplace("b", "", {{"b0", ""}, {"b1", ""}}, {"b1"});
+
+            std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+            // "b[core]" is already installed
+            status_paragraphs.push_back(make_status_pgh("b"));
+            status_paragraphs.back()->package.spec =
+                PackageSpec::from_name_and_triplet("b", Triplet::X64_WINDOWS).value_or_exit(VCPKG_LINE_INFO);
+
+            // Install "a" (without explicit feature specification)
+            auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
+            auto install_plan = Dependencies::create_feature_install_plan(
+                spec_map.map,
+                FullPackageSpec::to_feature_specs({install_specs.value_or_exit(VCPKG_LINE_INFO)}),
+                StatusParagraphs(std::move(status_paragraphs)));
+
+            // Expect "a" to get installed, but not require rebuilding "b"
+            Assert::IsTrue(install_plan.size() == 1);
+            features_check(&install_plan[0], "a", {"core"}, Triplet::X64_WINDOWS);
         }
 
         TEST_METHOD(install_default_features_of_dependency_test_2)
@@ -779,6 +805,36 @@ namespace UnitTest1
             Assert::AreEqual("opencv", remove_plan[0].spec.name().c_str());
             Assert::AreEqual("vtk", remove_plan[1].spec.name().c_str());
             Assert::AreEqual("expat", remove_plan[2].spec.name().c_str());
+        }
+
+        TEST_METHOD(features_depend_core_remove_scheme)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> pghs;
+            pghs.push_back(make_status_pgh("curl", "", "", "x64"));
+            pghs.push_back(make_status_pgh("cpr", "curl[core]", "", "x64"));
+            StatusParagraphs status_db(std::move(pghs));
+
+            auto remove_plan = Dependencies::create_remove_plan(
+                {unsafe_pspec("curl", Triplet::from_canonical_name("x64"))}, status_db);
+
+            Assert::AreEqual(size_t(2), remove_plan.size());
+            Assert::AreEqual("cpr", remove_plan[0].spec.name().c_str());
+            Assert::AreEqual("curl", remove_plan[1].spec.name().c_str());
+        }
+
+        TEST_METHOD(features_depend_core_remove_scheme_2)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> pghs;
+            pghs.push_back(make_status_pgh("curl", "", "", "x64"));
+            pghs.push_back(make_status_feature_pgh("curl", "a", "", "x64"));
+            pghs.push_back(make_status_feature_pgh("curl", "b", "curl[a]", "x64"));
+            StatusParagraphs status_db(std::move(pghs));
+
+            auto remove_plan = Dependencies::create_remove_plan(
+                {unsafe_pspec("curl", Triplet::from_canonical_name("x64"))}, status_db);
+
+            Assert::AreEqual(size_t(1), remove_plan.size());
+            Assert::AreEqual("curl", remove_plan[0].spec.name().c_str());
         }
     };
 

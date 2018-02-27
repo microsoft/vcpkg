@@ -29,7 +29,7 @@ namespace vcpkg::Dependencies
 
         Optional<const SourceControlFile*> source_control_file;
         PackageSpec spec;
-        std::unordered_map<std::string, FeatureNodeEdges> edges;
+        std::unordered_map<std::string, FeatureNodeEdges> edges_by_feature;
         std::set<std::string> to_install_features;
         std::set<std::string> original_features;
         bool will_remove = false;
@@ -100,13 +100,13 @@ namespace vcpkg::Dependencies
             FeatureNodeEdges core_dependencies;
             core_dependencies.build_edges =
                 filter_dependencies_to_specs(scf.core_paragraph->depends, out_cluster.spec.triplet());
-            out_cluster.edges.emplace("core", std::move(core_dependencies));
+            out_cluster.edges_by_feature.emplace("core", std::move(core_dependencies));
 
             for (const auto& feature : scf.feature_paragraphs)
             {
                 FeatureNodeEdges added_edges;
                 added_edges.build_edges = filter_dependencies_to_specs(feature->depends, out_cluster.spec.triplet());
-                out_cluster.edges.emplace(feature->name, std::move(added_edges));
+                out_cluster.edges_by_feature.emplace(feature->name, std::move(added_edges));
             }
             out_cluster.source_control_file = &scf;
         }
@@ -309,7 +309,17 @@ namespace vcpkg::Dependencies
                 {
                     if (an_installed_package->package.spec.triplet() != spec.triplet()) continue;
 
-                    const std::vector<std::string>& deps = an_installed_package->package.depends;
+                    std::vector<std::string> deps = an_installed_package->package.depends;
+                    // <hack>
+                    // This is a hack to work around existing installations that put featurespecs into binary packages
+                    // (example: curl[core]) Eventually, this can be returned to a simple string search.
+                    for (auto&& dep : deps)
+                    {
+                        dep.erase(std::find(dep.begin(), dep.end(), '['), dep.end());
+                    }
+                    Util::unstable_keep_if(deps,
+                                           [&](auto&& e) { return e != an_installed_package->package.spec.name(); });
+                    // </hack>
                     if (std::find(deps.begin(), deps.end(), spec.name()) == deps.end()) continue;
 
                     dependents.push_back(an_installed_package->package.spec);
@@ -446,10 +456,10 @@ namespace vcpkg::Dependencies
             }
         }
 
-        auto it = cluster.edges.find(feature);
-        if (it == cluster.edges.end()) return MarkPlusResult::FEATURE_NOT_FOUND;
+        auto it = cluster.edges_by_feature.find(feature);
+        if (it == cluster.edges_by_feature.end()) return MarkPlusResult::FEATURE_NOT_FOUND;
 
-        if (cluster.edges[feature].plus) return MarkPlusResult::SUCCESS;
+        if (cluster.edges_by_feature[feature].plus) return MarkPlusResult::SUCCESS;
 
         if (cluster.original_features.find(feature) == cluster.original_features.end())
         {
@@ -460,7 +470,7 @@ namespace vcpkg::Dependencies
         {
             return MarkPlusResult::SUCCESS;
         }
-        cluster.edges[feature].plus = true;
+        cluster.edges_by_feature[feature].plus = true;
 
         if (!cluster.original_features.empty())
         {
@@ -485,7 +495,7 @@ namespace vcpkg::Dependencies
             auto res = mark_plus("", cluster, graph, graph_plan, prevent_default_features);
         }
 
-        for (auto&& depend : cluster.edges[feature].build_edges)
+        for (auto&& depend : cluster.edges_by_feature[feature].build_edges)
         {
             auto& depend_cluster = graph.get(depend.spec());
             auto res = mark_plus(depend.feature(), depend_cluster, graph, graph_plan, prevent_default_features);
@@ -521,7 +531,7 @@ namespace vcpkg::Dependencies
         }
 
         graph_plan.remove_graph.add_vertex({&cluster});
-        for (auto&& pair : cluster.edges)
+        for (auto&& pair : cluster.edges_by_feature)
         {
             auto& remove_edges_edges = pair.second.remove_edges;
             for (auto&& depend : remove_edges_edges)
@@ -746,7 +756,7 @@ namespace vcpkg::Dependencies
                 auto depends_name = dependency.feature();
                 if (depends_name.empty()) depends_name = "core";
 
-                auto& target_node = dep_cluster.edges[depends_name];
+                auto& target_node = dep_cluster.edges_by_feature[depends_name];
                 target_node.remove_edges.emplace_back(FeatureSpec{spec, status_paragraph_feature});
             }
         }
