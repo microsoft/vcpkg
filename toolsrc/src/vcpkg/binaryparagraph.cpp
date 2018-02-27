@@ -71,22 +71,17 @@ namespace vcpkg
         Checks::check_exit(VCPKG_LINE_INFO, multi_arch == "same", "Multi-Arch must be 'same' but was %s", multi_arch);
     }
 
-    BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh, const Triplet& triplet)
+    BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh, const Triplet& triplet, const std::string& abi_tag)
+        : version(spgh.version), description(spgh.description), maintainer(spgh.maintainer), abi(abi_tag)
     {
         this->spec = PackageSpec::from_name_and_triplet(spgh.name, triplet).value_or_exit(VCPKG_LINE_INFO);
-        this->version = spgh.version;
-        this->description = spgh.description;
-        this->maintainer = spgh.maintainer;
         this->depends = filter_dependencies(spgh.depends, triplet);
     }
 
     BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh, const FeatureParagraph& fpgh, const Triplet& triplet)
+        : version(), feature(fpgh.name), description(fpgh.description), maintainer()
     {
         this->spec = PackageSpec::from_name_and_triplet(spgh.name, triplet).value_or_exit(VCPKG_LINE_INFO);
-        this->version = "";
-        this->feature = fpgh.name;
-        this->description = fpgh.description;
-        this->maintainer = "";
         this->depends = filter_dependencies(fpgh.depends, triplet);
     }
 

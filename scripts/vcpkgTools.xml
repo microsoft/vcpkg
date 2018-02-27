@@ -33,4 +33,11 @@
         <sha256>f2ce23cf5cf9fc7ce409bdca49328e09a070c0026d3c8a04e4dfde7b05b83fe8</sha256>
         <archiveRelativePath>QtInstallerFramework-win-x86.zip</archiveRelativePath>
     </tool>
+    <tool name="7zip">
+        <requiredVersion>18.01.0</requiredVersion>
+        <exeRelativePath>7za920\7za.exe</exeRelativePath>
+        <url>http://www.7-zip.org/a/7za920.zip</url>
+        <sha256>2a3afe19c180f8373fa02ff00254d5394fec0349f5804e0ad2f6067854ff28ac</sha256>
+        <archiveRelativePath>7za920.zip</archiveRelativePath>
+    </tool>
 </tools>

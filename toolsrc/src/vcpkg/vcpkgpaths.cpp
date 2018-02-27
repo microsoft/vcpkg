@@ -205,6 +205,20 @@ namespace vcpkg
         return fetch_tool(paths.scripts, "cmake", TOOL_DATA);
     }
 
+    static fs::path get_7za_path(const VcpkgPaths& paths)
+    {
+#if defined(_WIN32)
+        static const ToolData TOOL_DATA = parse_tool_data_from_xml(paths, "7zip");
+        if (!paths.get_filesystem().exists(TOOL_DATA.downloaded_exe_path))
+        {
+            return fetch_tool(paths.scripts, "7zip", TOOL_DATA);
+        }
+        return TOOL_DATA.downloaded_exe_path;
+#else
+        Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot download 7zip for non-Windows platforms.");
+#endif
+    }
+
     static fs::path get_nuget_path(const VcpkgPaths& paths)
     {
         static const ToolData TOOL_DATA = parse_tool_data_from_xml(paths, "nuget");
@@ -351,6 +365,11 @@ namespace vcpkg
         auto it = Util::find_if(this->get_available_triplets(),
                                 [&](auto&& available_triplet) { return t.canonical_name() == available_triplet; });
         return it != this->get_available_triplets().cend();
+    }
+
+    const fs::path& VcpkgPaths::get_7za_exe() const
+    {
+        return this->_7za_exe.get_lazy([this]() { return get_7za_path(*this); });
     }
 
     const fs::path& VcpkgPaths::get_cmake_exe() const
