@@ -111,6 +111,13 @@ function(qt_modular_library NAME HASH)
 
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/qt5/debug/include)
 
+    #Install a qt.conf file in tools/{PORT}
+    file(GLOB QTEXECUTABLE ${CURRENT_PACKAGES_DIR}/tools/${PORT}/*.exe)
+    if (QTEXECUTABLE)
+        file(COPY ${VCPKG_ROOT_DIR}/ports/qt5-modularscripts/qt.conf 
+             DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/)
+    endif()
+
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
     #Find the relevant license file and install it
