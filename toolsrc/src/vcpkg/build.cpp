@@ -322,7 +322,13 @@ namespace vcpkg::Build
         auto& fs = paths.get_filesystem();
         const Triplet& triplet = config.triplet;
 
-        std::vector<std::pair<std::string, std::string>> abi_tag_entries;
+        struct AbiEntry
+        {
+            std::string key;
+            std::string value;
+        };
+
+        std::vector<AbiEntry> abi_tag_entries;
 
         const PackageSpec spec =
             PackageSpec::from_name_and_triplet(config.scf.core_paragraph->name, triplet).value_or_exit(VCPKG_LINE_INFO);
@@ -346,9 +352,11 @@ namespace vcpkg::Build
         // dep_pspecs was not destroyed
         for (auto&& pspec : dep_pspecs)
         {
+            if (pspec == spec) continue;
             auto status_it = status_db.find_installed(pspec);
             Checks::check_exit(VCPKG_LINE_INFO, status_it != status_db.end());
-            abi_tag_entries.emplace_back(status_it->get()->package.spec.name(), status_it->get()->package.abi);
+            abi_tag_entries.emplace_back(
+                AbiEntry{status_it->get()->package.spec.name(), status_it->get()->package.abi});
         }
 
         const fs::path& cmake_exe_path = paths.get_cmake_exe();
@@ -358,40 +366,40 @@ namespace vcpkg::Build
 
         if (GlobalState::g_binary_caching)
         {
-            abi_tag_entries.emplace_back(
-                "portfile", Commands::Hash::get_file_hash(cmake_exe_path, config.port_dir / "portfile.cmake", "SHA1"));
-            abi_tag_entries.emplace_back(
-                "control", Commands::Hash::get_file_hash(cmake_exe_path, config.port_dir / "CONTROL", "SHA1"));
+            abi_tag_entries.emplace_back(AbiEntry{
+                "portfile", Commands::Hash::get_file_hash(cmake_exe_path, config.port_dir / "portfile.cmake", "SHA1")});
+            abi_tag_entries.emplace_back(AbiEntry{
+                "control", Commands::Hash::get_file_hash(cmake_exe_path, config.port_dir / "CONTROL", "SHA1")});
         }
 
         const auto pre_build_info = PreBuildInfo::from_triplet_file(paths, triplet);
-        abi_tag_entries.emplace_back("triplet", pre_build_info.triplet_abi_tag);
+        abi_tag_entries.emplace_back(AbiEntry{"triplet", pre_build_info.triplet_abi_tag});
 
         std::string features = Strings::join(";", config.feature_list);
-        abi_tag_entries.emplace_back("features", features);
+        abi_tag_entries.emplace_back(AbiEntry{"features", features});
 
         if (config.build_package_options.use_head_version == UseHeadVersion::YES)
-            abi_tag_entries.emplace_back("head", "");
+            abi_tag_entries.emplace_back(AbiEntry{"head", ""});
 
         std::string full_abi_info =
-            Strings::join("", abi_tag_entries, [](auto&& p) { return p.first + " " + p.second + "\n"; });
+            Strings::join("", abi_tag_entries, [](const AbiEntry& p) { return p.key + " " + p.value + "\n"; });
 
         std::string abi_tag;
 
         if (GlobalState::g_binary_caching)
         {
-            if (GlobalState::debugging || 1)
+            if (GlobalState::debugging)
             {
                 System::println("[DEBUG] <abientries>");
                 for (auto&& entry : abi_tag_entries)
                 {
-                    System::println("[DEBUG] %s|%s", entry.first, entry.second);
+                    System::println("[DEBUG] %s|%s", entry.key, entry.value);
                 }
                 System::println("[DEBUG] </abientries>");
             }
 
             auto abi_tag_entries_missing = abi_tag_entries;
-            Util::stable_keep_if(abi_tag_entries_missing, [](auto&& p) { return p.second.empty(); });
+            Util::stable_keep_if(abi_tag_entries_missing, [](const AbiEntry& p) { return p.value.empty(); });
 
             if (abi_tag_entries_missing.empty())
             {
@@ -404,9 +412,10 @@ namespace vcpkg::Build
             }
             else
             {
-                System::println(
-                    "Warning: binary caching disabled because abi keys are missing values:\n%s",
-                    Strings::join("", abi_tag_entries_missing, [](auto&& e) { return "    " + e.first + "\n"; }));
+                System::println("Warning: binary caching disabled because abi keys are missing values:\n%s",
+                                Strings::join("", abi_tag_entries_missing, [](const AbiEntry& e) {
+                                    return "    " + e.key + "\n";
+                                }));
             }
         }
 
@@ -433,10 +442,10 @@ namespace vcpkg::Build
             auto&& _7za = paths.get_7za_exe();
 
             System::cmd_execute_clean(Strings::format(
-                R"(cd "%s" && "%s" x "%s" >nul)", pkg_path.u8string(), _7za.u8string(), archive_path.u8string()));
+                R"("%s" x "%s" -o"%s" -y >nul)", _7za.u8string(), archive_path.u8string(), pkg_path.u8string()));
 
             auto maybe_bcf = Paragraphs::try_load_cached_control_package(paths, spec);
-            bcf = std::make_unique<BinaryControlFile>(std::move(maybe_bcf.value_or_exit(VCPKG_LINE_INFO)));
+            bcf = std::make_unique<BinaryControlFile>(std::move(maybe_bcf).value_or_exit(VCPKG_LINE_INFO));
         }
         else
         {
@@ -532,10 +541,10 @@ namespace vcpkg::Build
                 auto&& _7za = paths.get_7za_exe();
 
                 System::cmd_execute_clean(Strings::format(
-                    R"(cd "%s" && "%s" a "%s" * >nul)",
-                    paths.package_dir(spec).u8string(),
+                    R"("%s" a "%s" "%s\*" >nul)",
                     _7za.u8string(),
-                    tmp_archive_path.u8string()));
+                    tmp_archive_path.u8string(),
+                    paths.package_dir(spec).u8string()));
 
                 fs.create_directories(archives_dir, ec);
 
