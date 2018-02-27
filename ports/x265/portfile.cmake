@@ -8,9 +8,18 @@ vcpkg_from_bitbucket(
     HEAD_REF master
 )
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/disable-install-pdb.patch
+)
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/source
     PREFER_NINJA
+    OPTIONS -DENABLE_SHARED=${ENABLE_SHARED}
+    OPTIONS_DEBUG -DENABLE_CLI=OFF
 )
 
 vcpkg_install_cmake()
@@ -21,7 +30,11 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/x265)
 file(RENAME ${CURRENT_PACKAGES_DIR}/bin/x265.exe ${CURRENT_PACKAGES_DIR}/tools/x265/x265.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/x265.exe)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+endif()
+
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/x265)
 
 # Handle copyright
