@@ -10,7 +10,10 @@ namespace vcpkg::Commands::Hash
     std::string get_file_hash(fs::path const& cmake_exe_path, fs::path const& path, std::string const& hash_type)
     {
         const std::string cmd_line = Strings::format(
-            R"("%s" -E %ssum %s)", cmake_exe_path.u8string(), Strings::ascii_to_lowercase(hash_type), path.u8string());
+            R"("%s" -E %ssum "%s")",
+            cmake_exe_path.u8string(),
+            Strings::ascii_to_lowercase(hash_type),
+            path.u8string());
 
         const auto ec_data = System::cmd_execute_and_capture_output(cmd_line);
         Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line);
