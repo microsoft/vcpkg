@@ -28,14 +28,17 @@ Add-MpPreference -ExclusionPath "C:\"
 $vsInstallPath = findVSInstallPathFromNickname($vsInstallNickname)
 UnattendedVSupdate -installPath $vsInstallPath
 
+$comment = "stable"
 # For unstable builds, deploy the custom build archive
 if ($vsInstallNickname -eq $VISUAL_STUDIO_2017_UNSTABLE_NICKNAME -and ![string]::IsNullOrEmpty($branch))
 {
-    & $scriptsDir\DeployBuildArchive.ps1 -repo $repo -branch $branch -retOrChk $retOrChk -latest
+    $buildArchive = & $scriptsDir\GetLatestBuildArchive.ps1 -repo $repo -branch $branch -retOrChk $retOrChk
+    & $scriptsDir\DeployBuildArchive.ps1 -buildArchive $buildArchive
+    $comment = "$buildArchive"
 }
 
 # Create triplets
-CreateTripletsForVS -vsInstallPath $vsInstallPath -vsInstallNickname $vsInstallNickname -outputDir "$vcpkgRootDir\triplets"
+CreateTripletsForVS -vsInstallPath $vsInstallPath -vsInstallNickname $vsInstallNickname -outputDir "$vcpkgRootDir\triplets" -comment $comment
 
 # Prepare installed dir
 & $scriptsDir\PrepareInstalledDir.ps1 -triplet $triplet -incremental $incremental -AlwaysLocal $AlwaysLocal

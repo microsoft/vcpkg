@@ -205,7 +205,8 @@ function CreateTripletsForVS
     (
         [Parameter(Mandatory=$true)][String]$vsInstallPath,
         [Parameter(Mandatory=$true)][String]$vsInstallNickname,
-        [Parameter(Mandatory=$true)][String]$outputDir
+        [Parameter(Mandatory=$true)][String]$outputDir,
+        [Parameter(Mandatory=$true)][String]$comment
     )
 
     $vsInstallPath = $vsInstallPath -replace "\\","/"
@@ -216,6 +217,7 @@ function CreateTripletsForVS
         foreach ($linkage in @("dynamic", "static"))
         {
             @"
+# $comment
 set(VCPKG_TARGET_ARCHITECTURE $architecture)
 set(VCPKG_CRT_LINKAGE $linkage)
 set(VCPKG_LIBRARY_LINKAGE $linkage)
@@ -225,6 +227,7 @@ set(VCPKG_VISUAL_STUDIO_PATH "$vsInstallPath")
 
         $linkage = "dynamic"
         @"
+# $comment
 set(VCPKG_TARGET_ARCHITECTURE $architecture)
 set(VCPKG_CRT_LINKAGE $linkage)
 set(VCPKG_LIBRARY_LINKAGE $linkage)
