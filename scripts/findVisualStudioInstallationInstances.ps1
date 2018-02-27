@@ -4,7 +4,7 @@ param(
 )
 
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
-$vswhereExe = (& $scriptsDir\fetchDependency.ps1 "vswhere") -replace "<sol>::" -replace "::<eol>"
+$vswhereExe = (& $scriptsDir\fetchTool.ps1 "vswhere") -replace "<sol>::" -replace "::<eol>"
 
 $output = & $vswhereExe -prerelease -legacy -products * -format xml
 [xml]$asXml = $output

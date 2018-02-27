@@ -74,6 +74,16 @@ namespace vcpkg::Strings
 #endif
     }
 
+    std::string escape_string(const CStringView& s, char char_to_escape, char escape_char)
+    {
+        std::string ret = s.c_str();
+        // Replace '\' with '\\' or '`' with '``'
+        ret = Strings::replace_all(std::move(ret), {escape_char}, {escape_char, escape_char});
+        // Replace '"' with '\"' or '`"'
+        ret = Strings::replace_all(std::move(ret), {char_to_escape}, {escape_char, char_to_escape});
+        return ret;
+    }
+
     std::string::const_iterator case_insensitive_ascii_find(const std::string& s, const std::string& pattern)
     {
         const std::string pattern_as_lower_case(ascii_to_lowercase(pattern));

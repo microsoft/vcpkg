@@ -8,7 +8,11 @@
 #define STRINGIFY(...) #__VA_ARGS__
 #define MACRO_TO_STRING(X) STRINGIFY(X)
 
+#if defined(VCPKG_VERSION)
 #define VCPKG_VERSION_AS_STRING MACRO_TO_STRING(VCPKG_VERSION)
+#else
+#define VCPKG_VERSION_AS_STRING "-unknownhash"
+#endif
 
 namespace vcpkg::Commands::Version
 {

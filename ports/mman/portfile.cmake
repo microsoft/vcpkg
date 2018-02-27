@@ -8,21 +8,30 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(ENABLE_SHARED OFF)
-else()
-    set(ENABLE_SHARED ON)
-endif()
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/mman-static.patch
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS
-        -DBUILD_SHARED_LIBS=${ENABLE_SHARED}
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()
 
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include/mman)
+file(RENAME ${CURRENT_PACKAGES_DIR}/include/sys ${CURRENT_PACKAGES_DIR}/include/mman/sys)
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/mman)
 file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/mman RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(READ ${CURRENT_PACKAGES_DIR}/include/mman/sys/mman.h _contents)
+    string(REPLACE "__declspec(dllimport)" "" _contents "${_contents}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/include/mman/sys/mman.h "${_contents}")
+endif()
 
 vcpkg_copy_pdbs()

@@ -14,6 +14,7 @@ namespace fs
 
     using stdfs::copy_options;
     using stdfs::file_status;
+    using stdfs::file_type;
     using stdfs::path;
     using stdfs::u8path;
 
@@ -33,7 +34,7 @@ namespace vcpkg::Files
         virtual std::vector<fs::path> get_files_non_recursive(const fs::path& dir) const = 0;
 
         virtual void write_lines(const fs::path& file_path, const std::vector<std::string>& lines) = 0;
-        virtual void write_contents(const fs::path& file_path, const std::string& data) = 0;
+        virtual void write_contents(const fs::path& file_path, const std::string& data, std::error_code& ec) = 0;
         virtual void rename(const fs::path& oldpath, const fs::path& newpath) = 0;
         virtual bool remove(const fs::path& path) = 0;
         virtual bool remove(const fs::path& path, std::error_code& ec) = 0;
@@ -50,6 +51,14 @@ namespace vcpkg::Files
                                fs::copy_options opts,
                                std::error_code& ec) = 0;
         virtual fs::file_status status(const fs::path& path, std::error_code& ec) const = 0;
+
+        inline void write_contents(const fs::path& file_path, const std::string& data)
+        {
+            std::error_code ec;
+            write_contents(file_path, data, ec);
+            Checks::check_exit(
+                VCPKG_LINE_INFO, !ec, "error while writing file: %s: %s", file_path.u8string(), ec.message());
+        }
     };
 
     Filesystem& get_real_filesystem();

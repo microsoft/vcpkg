@@ -38,6 +38,8 @@ namespace vcpkg::Strings
 
     std::string to_utf8(const CWStringView& w);
 
+    std::string escape_string(const CStringView& s, char char_to_escape, char escape_char);
+
     std::string::const_iterator case_insensitive_ascii_find(const std::string& s, const std::string& pattern);
 
     bool case_insensitive_ascii_contains(const std::string& s, const std::string& pattern);

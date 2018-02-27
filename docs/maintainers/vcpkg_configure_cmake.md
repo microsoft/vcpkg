@@ -21,6 +21,11 @@ Specifies the directory containing the `CMakeLists.txt`. By convention, this is 
 ### PREFER_NINJA
 Indicates that, when available, Vcpkg should use Ninja to perform the build. This should be specified unless the port is known to not work under Ninja.
 
+### DISABLE_PARALLEL_CONFIGURE
+Disables running the CMake configure step in parallel.
+
+This is needed for libraries which write back into their source directory during configure.
+
 ### GENERATOR
 Specifies the precise generator to use.
 

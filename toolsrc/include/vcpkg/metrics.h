@@ -14,6 +14,7 @@ namespace vcpkg::Metrics
         static void init_user_information(std::string& user_id, std::string& first_use_time);
 
         void track_metric(const std::string& name, double value);
+        void track_buildtime(const std::string& name, double value);
         void track_property(const std::string& name, const std::string& value);
 
         void upload(const std::string& payload);

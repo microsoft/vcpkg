@@ -2,8 +2,10 @@ include(vcpkg_common_functions)
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/glew/glew-2.1.0)
 
+# Don't change to vcpkg_from_github! The github-auto-generated archives are missing some files.
+# More info: https://github.com/nigels-com/glew/issues/31
 vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "https://sourceforge.net/projects/glew/files/glew/2.1.0/glew-2.1.0.tgz"
+    URLS "https://github.com/nigels-com/glew/releases/download/glew-2.1.0/glew-2.1.0.tgz"
     FILENAME "glew-2.1.0.tgz"
     SHA512 9a9b4d81482ccaac4b476c34ed537585ae754a82ebb51c3efa16d953c25cc3931be46ed2e49e79c730cd8afc6a1b78c97d52cd714044a339c3bc29734cd4d2ab
 )
