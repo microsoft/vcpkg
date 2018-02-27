@@ -7,6 +7,13 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/pr-157.patch
+        ${CMAKE_CURRENT_LIST_DIR}/pr-114.patch
+)
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LIBHPDF_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "shared" LIBHPDF_SHARED)
 

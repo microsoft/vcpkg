@@ -15,15 +15,15 @@ vcpkg_from_github(
 # Options:
 
 if ("qt" IN_LIST FEATURES)
-    set(VTK_WITH_QT                      ON )
+    set(VTK_WITH_QT                      ON)
 else()
-    set(VTK_WITH_QT                      OFF )
+    set(VTK_WITH_QT                      OFF)
 endif()
 
 if ("mpi" IN_LIST FEATURES)
-    set(VTK_WITH_MPI                     ON )
+    set(VTK_WITH_MPI                     ON)
 else()
-    set(VTK_WITH_MPI                     OFF )
+    set(VTK_WITH_MPI                     OFF)
 endif()
 
 if ("python" IN_LIST FEATURES)
@@ -38,14 +38,35 @@ else()
     set(VTK_WITH_OPENVR                  OFF)
 endif()
 
-if("libharu" IN_LIST FEATURES)
-    set(VTK_WITH_LIBHARU                  ON)
+if("vtkm" IN_LIST FEATURES)
+    set(VTK_WITH_VTKM                    ON)
 else()
-    set(VTK_WITH_LIBHARU                  OFF)
+    set(VTK_WITH_VTKM                    OFF)
 endif()
 
-set(VTK_WITH_ALL_MODULES                 OFF) # IMPORTANT: if ON make sure `qt5`, `mpi`, `python3`, `ffmpeg`, `gdal`, `fontconfig`,
-                                              #            `libmysql` and `atlmfc` are  listed as dependency in the CONTROL file
+if("all-modules" IN_LIST FEATURES)
+    set(VTK_WITH_ALL_MODULES             ON)
+else()
+    set(VTK_WITH_ALL_MODULES             OFF)
+endif()
+
+# =============================================================================
+# Download and extract VTKm to correct location if it is enabled
+if(VTK_WITH_VTKM)
+    vcpkg_download_distfile(
+        VTK_ARCHIVE
+        URLS https://gitlab.kitware.com/vtk/vtk-m/repository/v1.1.0/archive.tar.bz2
+        FILENAME vtkm-1.1.0.tar.bz2
+        SHA512 f318e17c5f30bff22edfeb1e69df5579070b0b6e7f9c498ad971a1213bce99b21e4a48e6a78e09f7de6bcef7fdd889136fe219211d651a049076c648c1399fd9
+    )
+    vcpkg_extract_source_archive(
+        ${VTK_ARCHIVE}
+        ${SOURCE_PATH}/ThirdParty/vtkm
+    )
+    file(REMOVE_RECURSE ${SOURCE_PATH}/ThirdParty/vtkm/vtk-m)
+    file(RENAME ${SOURCE_PATH}/ThirdParty/vtkm/vtk-m-v1.1.0-5c5b3c74fa61dd5355db2623aed94323eb66faac ${SOURCE_PATH}/ThirdParty/vtkm/vtk-m)
+endif()
+
 # =============================================================================
 # Apply patches to the source code
 vcpkg_apply_patches(
@@ -71,6 +92,9 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/fix-find-libharu.patch
         ${CMAKE_CURRENT_LIST_DIR}/fix-find-mysql.patch
         ${CMAKE_CURRENT_LIST_DIR}/fix-find-odbc.patch
+        
+        ${CMAKE_CURRENT_LIST_DIR}/fix-undefined-ushort.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix-wrong-argument-count.patch
 )
 
 # Remove the FindGLEW.cmake and FindPythonLibs.cmake that are distributed with VTK,
@@ -112,11 +136,9 @@ if(VTK_WITH_OPENVR)
     )
 endif()
 
-if(VTK_WITH_LIBHARU)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_USE_SYSTEM_LIBHARU=ON
-    )
-endif()
+list(APPEND ADDITIONAL_OPTIONS
+    -DModule_vtkAcceleratorsVTKm=${VTK_WITH_VTKM}
+)
 
 if(VTK_WITH_ALL_MODULES)
     list(APPEND ADDITIONAL_OPTIONS
@@ -161,6 +183,7 @@ vcpkg_configure_cmake(
         -DVTK_USE_SYSTEM_PNG=ON
         -DVTK_USE_SYSTEM_TIFF=ON
         -DVTK_USE_SYSTEM_ZLIB=ON
+        -DVTK_USE_SYSTEM_LIBHARU=ON
         -DVTK_INSTALL_INCLUDE_DIR=include
         -DVTK_INSTALL_DATA_DIR=share/vtk/data
         -DVTK_INSTALL_DOC_DIR=share/vtk/doc
@@ -332,8 +355,8 @@ endforeach()
 # =============================================================================
 # Remove other files and directories that are not valid for vcpkg
 if(VTK_WITH_ALL_MODULES)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/XdmfConfig.cmake)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/XdmfConfig.cmake)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/CMake)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/CMake)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
