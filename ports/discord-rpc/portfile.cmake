@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO discordapp/discord-rpc
-    REF v2.1.0
-    SHA512 24bbc391670bfb53f0501ed189cef8193f35332de9fff3016fc18eb7eab4970d5c90576aa95dfcc4f1ef553e8b1ea781e1e40e595cbbcc1c4200e4ff174369de
+    REF v3.0.0
+    SHA512 d14ae2b33d832c456621fd0abb137450ae9d7eedf2a3d343a82f2b609da3946e501a9d8016f62b3dd0219a0eaf3c47f82d6023960608d670632939e0b35e8167
     HEAD_REF master
 )
 
