@@ -6,8 +6,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/cctz
-    REF v2.1
-    SHA512 b6531ce64fdd8581944457cdeff7f9ff9c00958af51ddb262c74e08fcc076466c59c7bef1ce7edccc9512a7f4cb204e04581d287c4a9a684057fe39421c3fbc6
+    REF v2.2
+    SHA512 27a9116721a78aff4f692499a48b48ddab7210216b84cff4192414c3e769fede4018118422676981a41ccd09e517a0892d6d732ed7e347ac5e4026ae64999fa4
     HEAD_REF master
 )
 

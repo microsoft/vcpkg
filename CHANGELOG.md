@@ -1,8 +1,125 @@
+vcpkg (0.0.105)
+--------------
+  * Add ports:
+    - breakpad       2018-2-19
+    - cartographer   0.3.0-3
+    - chipmunk       7.0.2
+    - ebml           1.3.5-1
+    - intel-mkl      2018.0.1
+    - jbig2dec       0.13
+    - libgeotiff     1.4.2-2
+    - liblo          0.29-1
+    - libpng-apng    1.6.34-2
+    - magnum-extras  2018.02-1
+    - magnum-integration 2018.02-1
+    - matroska       1.4.8
+    - mman           git-f5ff813
+    - qt5-graphicaleffects 5.9.2-0
+    - qt5-quickcontrols 5.9.2-0
+    - qt5-quickcontrols2 5.9.2-0
+    - recast         1.5.1
+    - tinydir        1.2.3
+    - tinytoml       20180219-1
+  * Update ports:
+    - aubio          0.4.6 -> 0.4.6-1
+    - aws-sdk-cpp    1.3.15 -> 1.3.58
+    - blaze          3.2-3 -> 3.3
+    - boost-build    1.66.0-4 -> 1.66.0-5
+    - boost-mpi      1.66.0 -> 1.66.0-1
+    - catch2         2.1.1 -> 2.1.2
+    - ceres          1.13.0-2 -> 1.13.0-4
+    - corrade        jan2018-1 -> 2018.02-1
+    - cuda           8.0-1 -> 9.0
+    - draco          0.10.0-1 -> 1.2.5
+    - ffmpeg         3.3.3-1 -> 3.3.3-2
+    - folly          2017.11.27.00-2 -> 2017.11.27.00-3
+    - hpx            1.0.0-7 -> 1.0.0-8
+    - jansson        2.10-1 -> 2.11
+    - libdisasm      0.23 -> 0.23-1
+    - libmupdf       1.11-1 -> 1.12.0
+    - magnum         jan2018-1 -> 2018.02-1
+    - magnum-plugins jan2018-1 -> 2018.02-1
+    - opencv         3.4.0-2 -> 3.4.0-3
+    - openvr         1.0.12 -> 1.0.13
+    - pcre2          10.30-1 -> 10.30-2
+    - qt5-base       5.9.2-4 -> 5.9.2-5
+    - realsense2     2.9.1 -> 2.10.0
+    - sciter         4.1.2 -> 4.1.3
+    - suitesparse    4.5.5-3 -> 4.5.5-4
+    - szip           2.1.1 -> 2.1.1-1
+    - uriparser      0.8.4-1 -> 0.8.5
+  * Better handling of `feature packages`.
+  * Bump required version & auto-downloaded version of `git` to 2.6.2
+
+-- vcpkg team <vcpkg@microsoft.com>  TUE, 20 Feb 2018 18:30:00 -0800
+
+
+vcpkg (0.0.104)
+--------------
+  * Add ports:
+    - asmjit         673dcefaa048c5f5a2bf8b85daf8f7b9978d018a
+    - cccapstone     9b4128ee1153e78288a1b5433e2c06a0d47a4c4e
+    - crc32c         1.0.5
+    - epsilon        0.9.2
+    - exprtk         2018.01.01-f32d2b4
+    - forest         4.5.0
+    - libgta         1.0.8
+    - libodb-mysql   2.4.0-1
+    - libopenmpt     2017-01-28-cf2390140
+    - libudis86      2018-01-28-56ff6c87
+    - mujs           25821e6d74fab5fcc200fe5e818362e03e114428
+    - muparser       6cf2746
+    - openmama       6.2.1-a5a93a24d2f89a0def0145552c8cd4a53c69e2de
+    - torch-th       20180131-89ede3ba90c906a8ec6b9a0f4bef188ba5bb2fd8-1
+    - yara           e3439e4ead4ed5d3b75a0b46eaf15ddda2110bb9
+  * Update ports:
+    - abseil         2017-11-10 -> 2018-2-5
+    - blosc          1.12.1 -> 1.13.5
+    - boost-build    1.66.0-3 -> 1.66.0-4
+    - boost-test     1.66.0-1 -> 1.66.0-2
+    - catch          2.0.1-1 -> alias
+    - catch2         2.1.0 -> 2.1.1
+    - cgal           4.11-2 -> 4.11-3
+    - cpprestsdk     2.10.1-1 -> 2.10.2
+    - curl           7.58.0 -> 7.58.0-1
+    - dlib           19.9 -> 19.9-1
+    - flatbuffers    1.8.0 -> 1.8.0-2
+    - freeimage      3.17.0-3 -> 3.17.0-4
+    - gflags         2.2.1 -> 2.2.1-1
+    - gtest          1.8.0-5 -> 1.8.0-6
+    - highfive       1.3 -> 1.5
+    - jack2          1.9.12.2 -> 1.9.12
+    - libspatialite  4.3.0a -> 4.3.0a-1
+    - libwebp        0.6.1 -> 0.6.1-1
+    - libzip         1.3.2 -> 1.4.0
+    - live555        2017.10.28 -> 2018.01.29
+    - mpg123         1.25.8-1 -> 1.25.8-2
+    - nghttp2        1.28.0 -> 1.30.0-1
+    - nlohmann-json  3.0.1 -> 3.1.0
+    - opencv         3.4.0 -> 3.4.0-2
+    - opengl         0.0-4 -> 0.0-5
+    - openssl        1.0.2n-1 -> 1.0.2n-2
+    - openvr         1.0.9 -> 1.0.12
+    - poco           1.8.1 -> 1.8.1-1
+    - protobuf       3.5.0-1 -> 3.5.1
+    - qt5-base       5.9.2-1 -> 5.9.2-4
+    - realsense2     2.9.0 -> 2.9.1
+    - sciter         4.1.1 -> 4.1.2
+    - sobjectizer    5.5.20 -> 5.5.21
+    - soundtouch     2.0.0.2 -> 2.0.0
+    - strtk          2017.01.02-1e2960f -> 2018.01.01-5579ed1
+  * The `configure` step for `release` and `debug` now happen in parallel.
+    - This can significantly reduce build times for libraries where the `configure` step was a good chunk of the total build time. For example, the total build time for `zlib` drops from ~30sec to ~20sec.
+  * Fix a few bootstraping issues introduced in previous release (with the clean environment)
+
+-- vcpkg team <vcpkg@microsoft.com>  WED, 07 Feb 2018 20:30:00 -0800
+
+
 vcpkg (0.0.103)
 --------------
   * `vcpkg upgrade`: Fix issue with any command executing more than 10 transactions with mixed transaction types (install + remove)
 
--- vcpkg team <vcpkg@microsoft.com>  WED, 24 Jan 2017 14:30:00 -0800
+-- vcpkg team <vcpkg@microsoft.com>  WED, 24 Jan 2018 14:30:00 -0800
 
 
 vcpkg (0.0.102)

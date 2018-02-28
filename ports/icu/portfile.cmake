@@ -15,18 +15,13 @@ vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/disable-escapestr-tool.patch)
 
 # Acquire tools
-vcpkg_acquire_msys(MSYS_ROOT)
+vcpkg_acquire_msys(MSYS_ROOT PACKAGES make automake1.15)
 
 # Insert msys into the path between the compiler toolset and windows system32. This prevents masking of "link.exe" but DOES mask "find.exe".
 string(REPLACE ";$ENV{SystemRoot}\\system32;" ";${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "$ENV{PATH}")
 string(REPLACE ";$ENV{SystemRoot}\\System32;" ";${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\System32;" NEWPATH "${NEWPATH}")
 set(ENV{PATH} "${NEWPATH}")
 set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
-
-vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc -c "pacman -Sy --noconfirm --needed make automake1.15"
-    WORKING_DIRECTORY "${MSYS_ROOT}"
-    LOGNAME "pacman-${TARGET_TRIPLET}")
 
 set(AUTOMAKE_DIR ${MSYS_ROOT}/usr/share/automake-1.15)
 file(COPY ${AUTOMAKE_DIR}/config.guess ${AUTOMAKE_DIR}/config.sub DESTINATION ${SOURCE_PATH}/source)

@@ -1,0 +1,81 @@
+From 4969dd6e7b656e92bf1bc921f0cd1af00707e17f Mon Sep 17 00:00:00 2001
+From: Hiroshi Miura <miurahr@linux.com>
+Date: Wed, 7 Feb 2018 10:47:53 +0900
+Subject: [PATCH 2/2] Add CFLAGS for CRT selection and warning supression
+
+Signed-off-by: Hiroshi Miura <miurahr@linux.com>
+---
+ makefile.vc |  2 +-
+ nmake.opt   | 42 +++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 40 insertions(+), 4 deletions(-)
+
+diff --git a/makefile.vc b/makefile.vc
+index 33f1f34..64fb9f3 100644
+--- a/makefile.vc
++++ b/makefile.vc
+@@ -20,7 +20,7 @@ EPSILON_EXE            =    epsilon.exe
+ 
+-CFLAGS	=	/nologo -IC:\OSGeo4W\include -I.\lib -I.\lib\msvc \
++CFLAGS	=	/nologo -I$(INSTALLED_ROOT)\include -I.\lib -I.\lib\msvc \
+ 			-I.\src -I..\popt\include \
+-			$(OPTFLAGS)
++			$(OPTFLAGS) $(WARNFLAGS)
+ 
+ default:	all
+ 
+diff --git a/nmake.opt b/nmake.opt
+index d5a51e2..d8088df 100644
+--- a/nmake.opt
++++ b/nmake.opt
+@@ -1,9 +1,45 @@
+ # Directory tree where EPSILON will be installed.
++!IFNDEF INSTDIR
+ INSTDIR=C:\OSGeo4W
++!ENDIF
++
++# Flags to choose CRT variant to link against (e.g. static: /MT, /MTd, dynamic: /MD, /MDd)
++!IFNDEF CRT_FLAGS
++!IFNDEF DEBUG
++CRT_FLAGS=/MD
++!ELSE
++CRT_FLAGS=/MDd
++!ENDIF
++!ENDIF
++
++# Flags for enforcing PDB use
++!IFNDEF PDB_FLAGS
++PDB_FLAGS=/Fdepsilon.pdb
++!ENDIF
++
++# Set flags controlling warnings level, and suppression of some warnings.
++!IFNDEF WARNFLAGS
++# 4127: conditional expression is constant
++# 4251: 'identifier' : class 'type' needs to have dll-interface to be used by clients of class 'type2'
++# 4275: non – DLL-interface classkey 'identifier' used as base for DLL-interface classkey 'identifier'
++# 4786: ??????????
++# 4100: 'identifier' : unreferenced formal parameter
++# 4245: 'conversion' : conversion from 'type1' to 'type2', signed/unsigned mismatch
++# 4206: nonstandard extension used : translation unit is empty (only applies to C source code)
++# 4351: new behavior: elements of array 'array' will be default initialized (needed for https://trac.osgeo.org/gdal/changeset/35593)
++# 4611: interaction between '_setjmp' and C++ object destruction is non-portable
++#
++WARNFLAGS =	/W3 /wd4127 /wd4251 /wd4275 /wd4786 /wd4100 /wd4245 /wd4206 /wd4351 /wd4611
++!ENDIF
++
++!IFNDEF OPTFLAGS
++!IFNDEF DEBUG
++OPTFLAGS=	$(PDB_FLAGS) /nologo $(CRT_FLAGS) /D_CRT_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_DEPRECATE /D_CRT_NONSTDC_NO_DEPRECATE /DNDEBUG
++!ELSE
++OPTFLAGS=	$(PDB_FLAGS) /nologo $(CRT_FLAGS) /EHsc /D_CRT_SECURE_NO_DEPRECATE /D_CRT_NONSTDC_NO_DEPRECATE /DDEBUG
++!ENDIF
++!ENDIF
+ 
+-# Uncomment the first for an optimized build, or the second for debug.
+-OPTFLAGS=	/nologo /Ox /fp:precise /W3 /MD /D_CRT_SECURE_NO_WARNINGS 
+-#OPTFLAGS=	/nologo /Zi /MD /Fdepsilon.pdb
+ 
+ # Set the version number for the DLL.  Normally we leave this blank since
+ # we want software that is dynamically loading the DLL to have no problem
+-- 
+2.16.1
+

@@ -74,6 +74,7 @@ namespace vcpkg::Files
 
             std::error_code ec;
             fs::stdfs::recursive_directory_iterator b(dir, ec), e{};
+            if (ec) return ret;
             for (; b != e; ++b)
             {
                 ret.push_back(b->path());
@@ -86,7 +87,9 @@ namespace vcpkg::Files
         {
             std::vector<fs::path> ret;
 
-            fs::stdfs::directory_iterator b(dir), e{};
+            std::error_code ec;
+            fs::stdfs::directory_iterator b(dir, ec), e{};
+            if (ec) return ret;
             for (; b != e; ++b)
             {
                 ret.push_back(b->path());
@@ -161,21 +164,30 @@ namespace vcpkg::Files
         {
             return fs::stdfs::status(path, ec);
         }
-        virtual void write_contents(const fs::path& file_path, const std::string& data) override
+        virtual void write_contents(const fs::path& file_path, const std::string& data, std::error_code& ec) override
         {
+            ec.clear();
+
             FILE* f = nullptr;
 #if defined(_WIN32)
-            auto ec = _wfopen_s(&f, file_path.native().c_str(), L"wb");
+            auto err = _wfopen_s(&f, file_path.native().c_str(), L"wb");
 #else
             f = fopen(file_path.native().c_str(), "wb");
-            int ec = f != nullptr ? 0 : 1;
+            int err = f != nullptr ? 0 : 1;
 #endif
-            Checks::check_exit(
-                VCPKG_LINE_INFO, ec == 0, "Error: Could not open file for writing: %s", file_path.u8string().c_str());
+            if (err != 0)
+            {
+                ec.assign(err, std::system_category());
+                return;
+            }
+
             auto count = fwrite(data.data(), sizeof(data[0]), data.size(), f);
             fclose(f);
 
-            Checks::check_exit(VCPKG_LINE_INFO, count == data.size());
+            if (count != data.size())
+            {
+                ec = std::make_error_code(std::errc::no_space_on_device);
+            }
         }
     };
 

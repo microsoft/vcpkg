@@ -39,12 +39,12 @@ namespace vcpkg::Dependencies
 
         InstallPlanAction(const PackageSpec& spec,
                           InstalledPackageView&& spghs,
-                          const std::unordered_set<std::string>& features,
+                          const std::set<std::string>& features,
                           const RequestType& request_type);
 
         InstallPlanAction(const PackageSpec& spec,
                           const SourceControlFile& scf,
-                          const std::unordered_set<std::string>& features,
+                          const std::set<std::string>& features,
                           const RequestType& request_type);
 
         std::string displayname() const;
@@ -57,7 +57,7 @@ namespace vcpkg::Dependencies
         InstallPlanType plan_type;
         RequestType request_type;
         Build::BuildPackageOptions build_options;
-        std::unordered_set<std::string> feature_list;
+        std::set<std::string> feature_list;
     };
 
     enum class RemovePlanType
@@ -151,7 +151,8 @@ namespace vcpkg::Dependencies
         PackageGraph(const PortFileProvider& provider, const StatusParagraphs& status_db);
         ~PackageGraph();
 
-        void install(const FeatureSpec& spec) const;
+        void install(const FeatureSpec& spec,
+                     const std::unordered_set<std::string>& prevent_default_features = {}) const;
         void upgrade(const PackageSpec& spec) const;
 
         std::vector<AnyAction> serialize() const;
@@ -160,10 +161,6 @@ namespace vcpkg::Dependencies
         std::unique_ptr<GraphPlan> m_graph_plan;
         std::unique_ptr<ClusterGraph> m_graph;
     };
-
-    std::vector<InstallPlanAction> create_install_plan(const PortFileProvider& port_file_provider,
-                                                       const std::vector<PackageSpec>& specs,
-                                                       const StatusParagraphs& status_db);
 
     std::vector<RemovePlanAction> create_remove_plan(const std::vector<PackageSpec>& specs,
                                                      const StatusParagraphs& status_db);

@@ -81,6 +81,10 @@ if(NOT DEFINED _VCPKG_ROOT_DIR)
 endif()
 set(_VCPKG_INSTALLED_DIR ${_VCPKG_ROOT_DIR}/installed)
 
+if(NOT EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" AND NOT _CMAKE_IN_TRY_COMPILE)
+    message(WARNING "There are no libraries installed for the Vcpkg triplet ${VCPKG_TARGET_TRIPLET}.")
+endif()
+
 if(CMAKE_BUILD_TYPE MATCHES "^Debug$" OR NOT DEFINED CMAKE_BUILD_TYPE)
     list(APPEND CMAKE_PREFIX_PATH
         ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug
@@ -163,6 +167,15 @@ function(add_library name)
     list(FIND ARGV "INTERFACE" INTERFACE_IDX)
     list(FIND ARGV "ALIAS" ALIAS_IDX)
     if(IMPORTED_IDX EQUAL -1 AND INTERFACE_IDX EQUAL -1 AND ALIAS_IDX EQUAL -1)
+        get_target_property(IS_LIBRARY_SHARED ${name} TYPE)
+        if(VCPKG_APPLOCAL_DEPS AND _VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp" AND IS_LIBRARY_SHARED STREQUAL "SHARED_LIBRARY")
+            add_custom_command(TARGET ${name} POST_BUILD
+                COMMAND powershell -noprofile -executionpolicy Bypass -file ${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1
+                    -targetBinary $<TARGET_FILE:${name}>
+                    -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
+                    -OutVariable out
+            )
+        endif()
         set_target_properties(${name} PROPERTIES VS_USER_PROPS do_not_import_user.props)
         set_target_properties(${name} PROPERTIES VS_GLOBAL_VcpkgEnabled false)
     endif()
@@ -222,6 +235,18 @@ macro(find_package name)
         if(TARGET tinyxml2_static AND NOT TARGET tinyxml2)
             add_library(tinyxml2 INTERFACE IMPORTED)
             set_target_properties(tinyxml2 PROPERTIES INTERFACE_LINK_LIBRARIES "tinyxml2_static")
+        endif()
+    elseif("${name}" STREQUAL "HDF5" AND NOT PROJECT_NAME STREQUAL "VTK")
+        # This is a hack to make VTK work. TODO: find another way to suppress the built-in find module.
+        _find_package(${ARGV} CONFIG)
+    elseif("${name}" STREQUAL "CURL")
+        _find_package(${ARGV})
+        if(CURL_FOUND)
+            if(EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/nghttp2.lib")
+                list(APPEND CURL_LIBRARIES
+                    "debug" "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/nghttp2.lib"
+                    "optimized" "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/nghttp2.lib")
+            endif()
         endif()
     else()
         _find_package(${ARGV})

@@ -38,7 +38,7 @@ namespace vcpkg
         const std::error_code& error() const { return m_err; }
         std::error_code& error() { return m_err; }
 
-        CStringView to_string() const { return "value was error"; }
+        CStringView to_string() const { return m_err.message(); }
 
     private:
         std::error_code m_err;
@@ -103,7 +103,12 @@ namespace vcpkg
     private:
         void exit_if_error(const LineInfo& line_info) const
         {
-            Checks::check_exit(line_info, !m_s.has_error(), m_s.to_string());
+            // This is used for quick value_or_exit() calls, so always put line_info in the error message.
+            Checks::check_exit(line_info,
+                               !m_s.has_error(),
+                               "Failed at [%s] with message:\n%s",
+                               line_info.to_string(),
+                               m_s.to_string());
         }
 
         ErrorHolder<S> m_s;

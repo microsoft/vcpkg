@@ -6,7 +6,7 @@ param(
 
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 . "$scriptsDir\VcpkgPowershellUtils.ps1"
-$vcpkgRootDir = & $scriptsDir\findFileRecursivelyUp.ps1 $scriptsDir .vcpkg-root
+$vcpkgRootDir = vcpkgFindFileRecursivelyUp $scriptsDir .vcpkg-root
 Write-Verbose("vcpkg Path " + $vcpkgRootDir)
 
 
@@ -14,7 +14,13 @@ $gitHash = "unknownhash"
 $oldpath = $env:path
 try
 {
-    $env:path += ";$vcpkgRootDir\downloads\MinGit-2.15.0-32-bit\cmd"
+    [xml]$asXml = Get-Content "$scriptsDir\vcpkgTools.xml"
+    $toolData = $asXml.SelectSingleNode("//tools/tool[@name=`"git`"]")
+    $postExtractionExecutableRelativePath = $toolData.postExtractionExecutableRelativePath
+    $gitFromDownload = "$vcpkgRootDir\downloads\$postExtractionExecutableRelativePath"
+    $gitDir = split-path -parent $gitFromDownload
+
+    $env:path += ";$gitDir"
     if (Get-Command "git" -ErrorAction SilentlyContinue)
     {
         $gitHash = git log HEAD -n 1 --format="%cd-%H" --date=short
@@ -29,6 +35,7 @@ finally
     $env:path = $oldpath
 }
 Write-Verbose("Git repo version string is " + $gitHash)
+
 $vcpkgSourcesPath = "$vcpkgRootDir\toolsrc"
 
 if (!(Test-Path $vcpkgSourcesPath))

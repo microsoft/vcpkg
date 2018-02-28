@@ -19,6 +19,7 @@ function deployPluginsIfQt([string]$targetBinaryDir, [string]$QtPluginsDir, [str
             New-Item "$targetBinaryDir\$pluginSubdirName" -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
             Get-ChildItem "$QtPluginsDir\$pluginSubdirName\*.dll" | % {
                 deployBinary "$targetBinaryDir\$pluginSubdirName" "$QtPluginsDir\$pluginSubdirName" $_.Name
+                resolve $_
             }
         } else {
             Write-Verbose "  Skipping plugins directory '$pluginSubdirName': doesn't exist"

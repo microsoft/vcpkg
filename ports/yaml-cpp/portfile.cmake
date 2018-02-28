@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jbeder/yaml-cpp
-    REF 380ecb404ef99ba132154ed43dd2b84136b30b14
-    SHA512 30d344d271d15163be755c998b28750857355f26a3fdbaf620932b60e419a7f72884bc7fd65bf3076f4e5315e0f82aab6011406a8146e2c01ba3fc267723d5bc
+    REF yaml-cpp-0.6.1
+    SHA512 606482d1d38c6747e22604a24c119adb4b70287da7deadb94cc20d70df47122f1714ec9bfc8f566ecf075b94d48771df17430c50039cb984bdf1980f3b445791
     HEAD_REF master
 )
 
@@ -12,6 +12,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DYAML_CPP_BUILD_TOOLS=OFF
+        -DYAML_CPP_BUILD_TESTS=OFF
 )
 
 vcpkg_install_cmake()
