@@ -17,13 +17,28 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+# Patch relative dir of clFFTConfig.cmake and include
+file(
+    COPY ${CURRENT_PORT_DIR}/src/clFFTConfig.cmake.in
+    DESTINATION ${SOURCE_PATH}/src
+)
+# Patch omission of 'import' folder inside lib
+file(
+    COPY ${CURRENT_PORT_DIR}/src/library/CMakeLists.txt
+    DESTINATION ${SOURCE_PATH}/src/library
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/src
     OPTIONS
+        # Vcpkg-specific
+        -DLINK_CRT_STATIC_LIBS=${CRT_STATIC_LIBS_VALUE}
         -DBUILD_SHARED_LIBS=${BUILD_SHARED_VALUE}
         -DBUILD_STATIC_LIBS=${BUILD_STATIC_VALUE}
-        -DLINK_CRT_STATIC_LIBS=${CRT_STATIC_LIBS_VALUE}
+        # clFFT-specific
+        -DBUILD_LOADLIBRARIES=OFF
         -DBUILD_EXAMPLES=OFF
+        -DSUFFIX_LIB=""
 )
 
 vcpkg_install_cmake()
