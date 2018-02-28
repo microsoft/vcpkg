@@ -163,7 +163,7 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
     vcpkgCreateDirectoryIfNotExists $destinationPartial
 
     $shell = new-object -com shell.application
-    $zip = $shell.NameSpace($file)
+    $zip = $shell.NameSpace($(Get-Item $file).fullname)
     $itemCount = $zip.Items().Count
 
     if (vcpkgHasCommand -commandName 'Microsoft.PowerShell.Archive\Expand-Archive')
