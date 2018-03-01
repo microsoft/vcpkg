@@ -21,4 +21,4 @@ $vcpkgRootDir = vcpkgFindFileRecursivelyUp $scriptsDir .vcpkg-root
 $logs = Get-ChildItem $vcpkgRootDir/buildtrees/*/* | ? { $_.Extension -eq ".log" }
 $logs | Remove-Item
 
-vcpkgRemoveItem $vcpkgRootDir/installed
+vcpkgRemoveItem "$vcpkgRootDir/installed"
