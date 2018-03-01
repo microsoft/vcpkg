@@ -1,6 +1,5 @@
 include(vcpkg_common_functions)
 
-
 # OpenCL C headers
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -11,23 +10,10 @@ vcpkg_from_github(
 )
 
 file(INSTALL
-        "${SOURCE_PATH}/opencl22/CL/cl.h"
-        "${SOURCE_PATH}/opencl22/CL/cl_d3d10.h"
-        "${SOURCE_PATH}/opencl22/CL/cl_d3d11.h"
-        "${SOURCE_PATH}/opencl22/CL/cl_dx9_media_sharing.h"
-        "${SOURCE_PATH}/opencl22/CL/cl_dx9_media_sharing_intel.h"
-        "${SOURCE_PATH}/opencl22/CL/cl_egl.h"
-        "${SOURCE_PATH}/opencl22/CL/cl_ext.h"
-        "${SOURCE_PATH}/opencl22/CL/cl_ext_intel.h"
-        "${SOURCE_PATH}/opencl22/CL/cl_gl.h"
-        "${SOURCE_PATH}/opencl22/CL/cl_gl_ext.h"
-        "${SOURCE_PATH}/opencl22/CL/cl_platform.h"
-        "${SOURCE_PATH}/opencl22/CL/cl_va_api_media_sharing_intel.h"
-        "${SOURCE_PATH}/opencl22/CL/opencl.h"
+        "${SOURCE_PATH}/opencl22/CL"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include/CL
+        ${CURRENT_PACKAGES_DIR}/include
 )
-
 
 # OpenCL C++ headers
 vcpkg_from_github(
@@ -40,35 +26,12 @@ vcpkg_from_github(
 
 vcpkg_find_acquire_program(PYTHON3)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
-        -DBUILD_DOCS=OFF
-        -DBUILD_EXAMPLES=OFF
-        -DBUILD_TESTS=OFF
-)
-
-# Obtained Python is not in PATH, CMake scripts cannot invoke it
-#vcpkg_build_cmake(TARGET
-#        generate_clhpp
-#        generate_cl2hpp
-#)
-
-# Having Python invoked manually, there's no need to copy results
-#file(INSTALL
-#        "${CURRENT_BUILDTREES_DIR}/CL/cl.hpp"
-#        "${CURRENT_BUILDTREES_DIR}/CL/cl2.hpp"
-#    DESTINATION
-#        ${CURRENT_PACKAGES_DIR}/include/CL
-#)
-
 vcpkg_execute_required_process(
     COMMAND "${PYTHON3}" "${SOURCE_PATH}/gen_cl_hpp.py"
         -i ${SOURCE_PATH}/input_cl.hpp
         -o ${CURRENT_PACKAGES_DIR}/include/CL/cl.hpp
     WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME generate_clhpp-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}
+    LOGNAME generate_clhpp-${TARGET_TRIPLET}
 )
 
 vcpkg_execute_required_process(
@@ -76,7 +39,7 @@ vcpkg_execute_required_process(
         -i ${SOURCE_PATH}/input_cl2.hpp
         -o ${CURRENT_PACKAGES_DIR}/include/CL/cl2.hpp
     WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME generate_cl2hpp-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}
+    LOGNAME generate_cl2hpp-${TARGET_TRIPLET}
 )
 message(STATUS "Generating OpenCL C++ headers done")
 
@@ -89,9 +52,9 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static") 
-    message(STATUS "Building the ICD loader as a static library is not supported. Building as DLLs instead.") 
-    set(VCPKG_LIBRARY_LINKAGE "dynamic") 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    message(STATUS "Building the ICD loader as a static library is not supported. Building as DLLs instead.")
+    set(VCPKG_LIBRARY_LINKAGE "dynamic")
 endif()
 
 vcpkg_configure_cmake(
@@ -105,31 +68,15 @@ vcpkg_build_cmake(TARGET OpenCL)
 
 file(INSTALL
         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/OpenCL.lib"
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/OpenCL.exp"
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/lib
 )
 
 file(INSTALL
         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/OpenCL.lib"
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/OpenCL.exp"
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/debug/lib
 )
-
-#file(INSTALL
-#        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/OpenCL.dll"
-#        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/OpenCL.pdb"
-#    DESTINATION
-#        ${CURRENT_PACKAGES_DIR}/bin/Release
-#)
-#
-#file(INSTALL
-#        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/OpenCL.dll"
-#        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/OpenCL.pdb"
-#    DESTINATION
-#        ${CURRENT_PACKAGES_DIR}/bin/Debug
-#)
 
 file(INSTALL
         "${SOURCE_PATH}/LICENSE.txt"
@@ -139,4 +86,5 @@ file(INSTALL
 file(COPY
         ${CMAKE_CURRENT_LIST_DIR}/usage
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/share/${PORT}) 
+        ${CURRENT_PACKAGES_DIR}/share/${PORT}
+)

@@ -1,12 +1,3 @@
-set(BUILD_SHARED_VALUE ON)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-	set(BUILD_SHARED_VALUE OFF)
-endif()
-set(CRT_STATIC_LIBS_VALUE OFF)
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-	set(CRT_STATIC_LIBS_VALUE ON)
-endif()
-
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
@@ -17,33 +8,24 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# Patch relative dir of clFFTConfig.cmake and include
-file(
-    COPY ${CURRENT_PORT_DIR}/src/clFFTConfig.cmake.in
-    DESTINATION ${SOURCE_PATH}/src
-)
-# Patch omission of 'import' folder inside lib
-file(
-    COPY ${CURRENT_PORT_DIR}/src/library/CMakeLists.txt
-    DESTINATION ${SOURCE_PATH}/src/library
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/tweak-install.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/src
+    PREFER_NINJA
     OPTIONS
-        # Vcpkg-specific
-        -DLINK_CRT_STATIC_LIBS=${CRT_STATIC_LIBS_VALUE}
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_VALUE}
-        -DBUILD_STATIC_LIBS=${BUILD_STATIC_VALUE}
-        # clFFT-specific
         -DBUILD_LOADLIBRARIES=OFF
         -DBUILD_EXAMPLES=OFF
-        -DSUFFIX_LIB=""
+        -DSUFFIX_LIB=
 )
 
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
 file(INSTALL
         "${SOURCE_PATH}/LICENSE"
     DESTINATION
