@@ -13,6 +13,7 @@ vcpkg_apply_patches(
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/disable-static-lib-in-shared-build.patch
         ${CMAKE_CURRENT_LIST_DIR}/default-component-shared.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix-szip-config-to-set-szip-found.patch
 )
 
 vcpkg_configure_cmake(

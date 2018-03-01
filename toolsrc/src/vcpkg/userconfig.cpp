@@ -29,13 +29,22 @@ namespace
 
 namespace vcpkg
 {
+    static fs::path get_config_path()
+    {
+#if defined(_WIN32)
+        return get_localappdata() / "vcpkg" / "config";
+#else
+        auto maybe_home = System::get_environment_variable("HOME");
+        return fs::path(maybe_home.value_or("/var")) / "vcpkg" / "config";
+#endif
+    }
+
     UserConfig UserConfig::try_read_data(const Files::Filesystem& fs)
     {
         UserConfig ret;
-#if defined(_WIN32)
         try
         {
-            auto maybe_pghs = Paragraphs::get_paragraphs(fs, get_localappdata() / "vcpkg" / "config");
+            auto maybe_pghs = Paragraphs::get_paragraphs(fs, get_config_path());
             if (const auto p_pghs = maybe_pghs.get())
             {
                 const auto& pghs = *p_pghs;
@@ -58,19 +67,19 @@ namespace vcpkg
         catch (...)
         {
         }
-#endif
 
         return ret;
     }
 
     void UserConfig::try_write_data(Files::Filesystem& fs) const
     {
-#if defined(_WIN32)
         try
         {
+            auto config_path = get_config_path();
+            auto config_dir = config_path.parent_path();
             std::error_code ec;
-            fs.create_directory(get_localappdata() / "vcpkg", ec);
-            fs.write_contents(get_localappdata() / "vcpkg" / "config",
+            fs.create_directory(config_dir, ec);
+            fs.write_contents(config_path,
                               Strings::format("User-Id: %s\n"
                                               "User-Since: %s\n"
                                               "Mac-Hash: %s\n"
@@ -78,11 +87,11 @@ namespace vcpkg
                                               user_id,
                                               user_time,
                                               user_mac,
-                                              last_completed_survey));
+                                              last_completed_survey),
+                              ec);
         }
         catch (...)
         {
         }
-#endif
     }
 }

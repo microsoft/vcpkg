@@ -1,8 +1,3 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message(STATUS "Building as static libraries not currently supported. Building as DLLs instead.")
-    set(VCPKG_LIBRARY_LINKAGE "dynamic")
-endif()
-
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ffmpeg-3.3.3)
 vcpkg_download_distfile(ARCHIVE
@@ -13,14 +8,20 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/detect-openssl.patch
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/create-lib-libraries.patch
+        ${CMAKE_CURRENT_LIST_DIR}/detect-openssl.patch
 )
 
 vcpkg_find_acquire_program(YASM)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
 
-vcpkg_acquire_msys(MSYS_ROOT)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES perl gcc diffutils make)
+else()
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils make)
+endif()
 set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
 set(ENV{LIB} "${CURRENT_INSTALLED_DIR}/lib;$ENV{LIB}")
@@ -48,14 +49,6 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
             get_filename_component(GAS_ITEM_PATH ${GAS_PATH} DIRECTORY)
             set(ENV{PATH} "$ENV{PATH};${GAS_ITEM_PATH}")
         endforeach(GAS_PATH)
-
-        ## Get Perl and GCC for MSYS2
-        vcpkg_execute_required_process(
-            COMMAND ${BASH} --noprofile --norc -c 'PATH=/usr/bin:\$PATH;pacman -Sy --noconfirm --needed perl gcc'
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
-            LOGNAME msys-${TARGET_TRIPLET}
-        )
-
     elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     else()
@@ -149,3 +142,6 @@ vcpkg_copy_pdbs()
 # TODO: Examine build log and confirm that this license matches the build output
 file(COPY ${SOURCE_PATH}/COPYING.LGPLv2.1 DESTINATION ${CURRENT_PACKAGES_DIR}/share/ffmpeg)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/ffmpeg/COPYING.LGPLv2.1 ${CURRENT_PACKAGES_DIR}/share/ffmpeg/copyright)
+
+# Used by OpenCV
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindFFMPEG.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/ffmpeg)

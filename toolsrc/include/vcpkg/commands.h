@@ -120,6 +120,7 @@ namespace vcpkg::Commands
     namespace Hash
     {
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
+        std::string get_file_hash(fs::path const& cmake_exe_path, fs::path const& path, std::string const& hash_type);
     }
 
     template<class T>

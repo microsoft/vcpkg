@@ -1,3 +1,59 @@
+vcpkg (0.0.105)
+--------------
+  * Add ports:
+    - breakpad       2018-2-19
+    - cartographer   0.3.0-3
+    - chipmunk       7.0.2
+    - ebml           1.3.5-1
+    - intel-mkl      2018.0.1
+    - jbig2dec       0.13
+    - libgeotiff     1.4.2-2
+    - liblo          0.29-1
+    - libpng-apng    1.6.34-2
+    - magnum-extras  2018.02-1
+    - magnum-integration 2018.02-1
+    - matroska       1.4.8
+    - mman           git-f5ff813
+    - qt5-graphicaleffects 5.9.2-0
+    - qt5-quickcontrols 5.9.2-0
+    - qt5-quickcontrols2 5.9.2-0
+    - recast         1.5.1
+    - tinydir        1.2.3
+    - tinytoml       20180219-1
+  * Update ports:
+    - aubio          0.4.6 -> 0.4.6-1
+    - aws-sdk-cpp    1.3.15 -> 1.3.58
+    - blaze          3.2-3 -> 3.3
+    - boost-build    1.66.0-4 -> 1.66.0-5
+    - boost-mpi      1.66.0 -> 1.66.0-1
+    - catch2         2.1.1 -> 2.1.2
+    - ceres          1.13.0-2 -> 1.13.0-4
+    - corrade        jan2018-1 -> 2018.02-1
+    - cuda           8.0-1 -> 9.0
+    - draco          0.10.0-1 -> 1.2.5
+    - ffmpeg         3.3.3-1 -> 3.3.3-2
+    - folly          2017.11.27.00-2 -> 2017.11.27.00-3
+    - hpx            1.0.0-7 -> 1.0.0-8
+    - jansson        2.10-1 -> 2.11
+    - libdisasm      0.23 -> 0.23-1
+    - libmupdf       1.11-1 -> 1.12.0
+    - magnum         jan2018-1 -> 2018.02-1
+    - magnum-plugins jan2018-1 -> 2018.02-1
+    - opencv         3.4.0-2 -> 3.4.0-3
+    - openvr         1.0.12 -> 1.0.13
+    - pcre2          10.30-1 -> 10.30-2
+    - qt5-base       5.9.2-4 -> 5.9.2-5
+    - realsense2     2.9.1 -> 2.10.0
+    - sciter         4.1.2 -> 4.1.3
+    - suitesparse    4.5.5-3 -> 4.5.5-4
+    - szip           2.1.1 -> 2.1.1-1
+    - uriparser      0.8.4-1 -> 0.8.5
+  * Better handling of `feature packages`.
+  * Bump required version & auto-downloaded version of `git` to 2.6.2
+
+-- vcpkg team <vcpkg@microsoft.com>  TUE, 20 Feb 2018 18:30:00 -0800
+
+
 vcpkg (0.0.104)
 --------------
   * Add ports:

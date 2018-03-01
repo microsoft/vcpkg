@@ -1,3 +1,10 @@
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  message(FATAL_ERROR "scintilla only supports dynamic linkage")
+endif()
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
+  message(FATAL_ERROR "scintilla only supports dynamic crt")
+endif()
+
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
@@ -15,7 +22,7 @@ vcpkg_apply_patches(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/lib/TH
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    PREFER_NINJA
     OPTIONS
         -DWITH_OPENMP=OFF
 )

@@ -12,14 +12,20 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
+set(SQLITE3_SKIP_TOOLS ON)
+if("tool" IN_LIST FEATURES)
+    set(SQLITE3_SKIP_TOOLS OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DSOURCE=${SOURCE_PATH}
-        -DVCPKG_CMAKE_SYSTEM_NAME=${VCPKG_CMAKE_SYSTEM_NAME}
+        -DSQLITE3_SKIP_TOOLS=${SQLITE3_SKIP_TOOLS}
+    OPTIONS_DEBUG
+        -DSQLITE3_SKIP_TOOLS=ON
 )
-vcpkg_build_cmake()
+
 vcpkg_install_cmake()
 
 file(READ ${CURRENT_PACKAGES_DIR}/debug/share/sqlite3/sqlite3Config-debug.cmake SQLITE3_DEBUG_CONFIG)

@@ -86,13 +86,42 @@ namespace vcpkg
     }
     std::vector<PackageSpec> InstalledPackageView::dependencies() const
     {
+        // accumulate all features in installed dependencies
+        // Todo: make this unneeded by collapsing all package dependencies into the core package
         auto deps = Util::fmap_flatten(features, [](const StatusParagraph* pgh) -> std::vector<std::string> const& {
             return pgh->package.depends;
         });
 
+        // Add the core paragraph dependencies to the list
         deps.insert(deps.end(), core->package.depends.begin(), core->package.depends.end());
 
         auto&& spec = core->package.spec;
-        return PackageSpec::from_dependencies_of_port(spec.name(), deps, spec.triplet());
+
+        // <hack>
+        // This is a hack to work around existing installations that put featurespecs into binary packages
+        // (example: curl[core])
+        for (auto&& dep : deps)
+        {
+            dep.erase(std::find(dep.begin(), dep.end(), '['), dep.end());
+        }
+        Util::unstable_keep_if(deps, [&](auto&& e) { return e != spec.name(); });
+        // </hack>
+        Util::sort_unique_erase(deps);
+
+        return Util::fmap(deps, [&](const std::string& dep) -> PackageSpec {
+            auto maybe_dependency_spec = PackageSpec::from_name_and_triplet(dep, spec.triplet());
+            if (auto dependency_spec = maybe_dependency_spec.get())
+            {
+                return std::move(*dependency_spec);
+            }
+
+            const PackageSpecParseResult error_type = maybe_dependency_spec.error();
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "Invalid dependency [%s] in package [%s]\n"
+                                      "%s",
+                                      dep,
+                                      spec.name(),
+                                      vcpkg::to_string(error_type));
+        });
     }
 }

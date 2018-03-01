@@ -15,16 +15,18 @@ namespace vcpkg
         static ExpectedT<ParsedSpecifier, PackageSpecParseResult> from_string(const std::string& input);
     };
 
+    ///
+    /// <summary>
+    /// Full specification of a package. Contains all information to reference
+    /// a specific package.
+    /// </summary>
+    ///
     struct PackageSpec
     {
         static ExpectedT<PackageSpec, PackageSpecParseResult> from_name_and_triplet(const std::string& name,
                                                                                     const Triplet& triplet);
 
         static std::vector<PackageSpec> to_package_specs(const std::vector<std::string>& ports, const Triplet& triplet);
-
-        static std::vector<PackageSpec> from_dependencies_of_port(const std::string& port,
-                                                                  const std::vector<std::string>& dependencies,
-                                                                  const Triplet& triplet);
 
         const std::string& name() const;
 
@@ -46,6 +48,12 @@ namespace vcpkg
         Triplet m_triplet;
     };
 
+    ///
+    /// <summary>
+    /// Full specification of a feature. Contains all information to reference
+    /// a single feature in a specific package.
+    /// </summary>
+    ///
     struct FeatureSpec
     {
         FeatureSpec(const PackageSpec& spec, const std::string& feature) : m_spec(spec), m_feature(feature) {}
@@ -82,6 +90,12 @@ namespace vcpkg
         std::string m_feature;
     };
 
+    ///
+    /// <summary>
+    /// Full specification of a package. Contains all information to reference
+    /// a collection of features in a single package.
+    /// </summary>
+    ///
     struct FullPackageSpec
     {
         PackageSpec package_spec;
@@ -93,6 +107,11 @@ namespace vcpkg
                                                                               const Triplet& default_triplet);
     };
 
+    ///
+    /// <summary>
+    /// Contains all information to reference a collection of features in a single package by their names.
+    /// </summary>
+    ///
     struct Features
     {
         std::string name;

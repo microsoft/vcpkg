@@ -13,15 +13,12 @@ endif()
 
 file(GLOB_RECURSE VCPKGLIB_SOURCES src/vcpkg/*.cpp)
 
-add_library(vcpkglib STATIC ${VCPKGLIB_SOURCES})
-target_compile_definitions(vcpkglib PRIVATE -DDISABLE_METRICS=0)
-target_include_directories(vcpkglib PUBLIC include)
+add_executable(vcpkg src/vcpkg.cpp ${VCPKGLIB_SOURCES})
+target_compile_definitions(vcpkg PRIVATE -DDISABLE_METRICS=0)
+target_include_directories(vcpkg PUBLIC include)
 
 if(GCC)
-    target_link_libraries(vcpkglib PUBLIC stdc++fs)
+    target_link_libraries(vcpkg PUBLIC stdc++fs)
 elseif(CLANG)
-    target_link_libraries(vcpkglib PUBLIC c++experimental)
+    target_link_libraries(vcpkg PUBLIC c++experimental)
 endif()
-
-add_executable(vcpkg src/vcpkg.cpp)
-target_link_libraries(vcpkg PRIVATE vcpkglib)

@@ -7,6 +7,10 @@ param(
     [switch]$DisableWin81SDK = $False
 )
 
+Set-StrictMode -Version Latest
+$scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
+. "$scriptsDir\VcpkgPowershellUtils.ps1"
+
 if ($DisableWin10SDK -and $DisableWin81SDK)
 {
     throw "Both Win10SDK and Win81SDK were disabled."
@@ -61,8 +65,10 @@ function CheckWindows10SDK($path)
 
 Write-Verbose "`n"
 Write-Verbose "Looking for Windows 10 SDK"
-CheckWindows10SDK((Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows Kits\Installed Roots\' -Name 'KitsRoot10' -ErrorAction SilentlyContinue).KitsRoot10)
-CheckWindows10SDK((Get-ItemProperty -Path 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows Kits\Installed Roots\' -Name 'KitsRoot10' -ErrorAction SilentlyContinue).KitsRoot10)
+$regkey10 = Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows Kits\Installed Roots\' -Name 'KitsRoot10' -ErrorAction SilentlyContinue
+$regkey10Wow6432 = Get-ItemProperty -Path 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows Kits\Installed Roots\' -Name 'KitsRoot10' -ErrorAction SilentlyContinue
+if (vcpkgHasProperty -object $regkey10 "KitsRoot10") { CheckWindows10SDK($regkey10.KitsRoot10) }
+if (vcpkgHasProperty -object $regkey10Wow6432 "KitsRoot10") { CheckWindows10SDK($regkey10Wow6432.KitsRoot10) }
 CheckWindows10SDK("$env:ProgramFiles\Windows Kits\10")
 CheckWindows10SDK("${env:ProgramFiles(x86)}\Windows Kits\10")
 
@@ -89,8 +95,10 @@ function CheckWindows81SDK($path)
 
 Write-Verbose "`n"
 Write-Verbose "Looking for Windows 8.1 SDK"
-CheckWindows81SDK((Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows Kits\Installed Roots\' -Name 'KitsRoot81' -ErrorAction SilentlyContinue).KitsRoot81)
-CheckWindows81SDK((Get-ItemProperty -Path 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows Kits\Installed Roots\' -Name 'KitsRoot81' -ErrorAction SilentlyContinue).KitsRoot81)
+$regkey81 = Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows Kits\Installed Roots\' -Name 'KitsRoot81' -ErrorAction SilentlyContinue
+$regkey81Wow6432 = Get-ItemProperty -Path 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows Kits\Installed Roots\' -Name 'KitsRoot81' -ErrorAction SilentlyContinue
+if (vcpkgHasProperty -object $regkey81 "KitsRoot81") { CheckWindows81SDK($regkey81.KitsRoot81) }
+if (vcpkgHasProperty -object $regkey81Wow6432 "KitsRoot81") { CheckWindows81SDK($regkey81Wow6432.KitsRoot81) }
 CheckWindows81SDK("$env:ProgramFiles\Windows Kits\8.1")
 CheckWindows81SDK("${env:ProgramFiles(x86)}\Windows Kits\8.1")
 
