@@ -44,11 +44,11 @@ $env:VCPKG_FEATURE_FLAGS = "binarycaching"
 
 if($miniTest)
 {
-    ./vcpkg install "zlib:$Triplet" "--x-xunit=$ciXmlPath" | Tee-Object -FilePath "$triplet.txt"
+    ./vcpkg install "zlib:$triplet" "--x-xunit=$ciXmlPath" | Tee-Object -FilePath "$triplet.txt"
 }
 else
 {
-    ./vcpkg ci $Triplet "--x-xunit=$ciXmlPath" --exclude=aws-sdk-cpp,ecm,llvm,catch-classic,libpng-apng,libmariadb,libp7-baical,luajit,mozjpeg | Tee-Object -FilePath "$triplet.txt"
+    ./vcpkg ci $triplet "--x-xunit=$ciXmlPath" --exclude=aws-sdk-cpp,ecm,llvm,catch-classic,libpng-apng,libmariadb,libp7-baical,luajit,mozjpeg | Tee-Object -FilePath "$triplet.txt"
 }
 
 popd
