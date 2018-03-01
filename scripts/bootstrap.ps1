@@ -16,8 +16,7 @@ try
 {
     [xml]$asXml = Get-Content "$scriptsDir\vcpkgTools.xml"
     $toolData = $asXml.SelectSingleNode("//tools/tool[@name=`"git`"]")
-    $postExtractionExecutableRelativePath = $toolData.postExtractionExecutableRelativePath
-    $gitFromDownload = "$vcpkgRootDir\downloads\$postExtractionExecutableRelativePath"
+    $gitFromDownload = "$vcpkgRootDir\downloads\$($toolData.exeRelativePath)"
     $gitDir = split-path -parent $gitFromDownload
 
     $env:path += ";$gitDir"
