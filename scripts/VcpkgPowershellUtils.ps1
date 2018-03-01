@@ -3,6 +3,11 @@ function vcpkgHasModule([Parameter(Mandatory=$true)][string]$moduleName)
     return [bool](Get-Module -ListAvailable -Name $moduleName)
 }
 
+function vcpkgHasProperty([Parameter(Mandatory=$true)]$object, [Parameter(Mandatory=$true)]$propertyName)
+{
+    return [bool]($object.psobject.Properties | where { $_.Name -eq "$propertyName"})
+}
+
 function vcpkgCreateDirectoryIfNotExists([Parameter(Mandatory=$true)][string]$dirPath)
 {
     if (!(Test-Path $dirPath))
