@@ -16,10 +16,7 @@ $tripletFilePath = "$vcpkgRootDir\triplets\$triplet.cmake"
 $vsInstallPath = findVSInstallPathFromTriplet $tripletFilePath
 
 Write-Host "Bootstrapping vcpkg ..."
-& {
-    Set-StrictMode -Off
-    & "$vcpkgRootDir\scripts\bootstrap.ps1" -Verbose -withVSPath $vsInstallPath
-}
+& "$vcpkgRootDir\scripts\bootstrap.ps1" -Verbose -withVSPath $vsInstallPath
 Write-Host "Bootstrapping vcpkg ... done."
 
 $packagesDir = "$vcpkgRootDir\packages"
