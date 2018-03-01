@@ -3,8 +3,13 @@ function vcpkgHasModule([Parameter(Mandatory=$true)][string]$moduleName)
     return [bool](Get-Module -ListAvailable -Name $moduleName)
 }
 
-function vcpkgHasProperty([Parameter(Mandatory=$true)]$object, [Parameter(Mandatory=$true)]$propertyName)
+function vcpkgHasProperty([Parameter(Mandatory=$true)][AllowNull()]$object, [Parameter(Mandatory=$true)]$propertyName)
 {
+    if ($object -eq $null)
+    {
+        return $false
+    }
+
     return [bool]($object.psobject.Properties | where { $_.Name -eq "$propertyName"})
 }
 
