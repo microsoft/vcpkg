@@ -14,9 +14,13 @@ $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 . "$scriptsDir\VcpkgPowershellUtils-Private.ps1"
 
 # Power Settings (so machine does not go to sleep)
-Write-Host "Configuring power settings..."
+Write-Host "Configuring power settings and pagefile..."
 powercfg /SETACVALUEINDEX SCHEME_BALANCED SUB_SLEEP STANDBYIDLE 0
-Write-Host "Configuring power settings... done."
+powercfg /h off
+
+wmic computersystem set AutomaticManagedPagefile=False
+wmic pagefileset delete
+Write-Host "Configuring power settings and pagefile... done."
 
 $unstablePath = $VISUAL_STUDIO_2017_UNSTABLE_PATH
 Recipe $unstablePath {
