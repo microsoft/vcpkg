@@ -17,8 +17,9 @@ vcpkg_apply_patches(
 file(REMOVE ${SOURCE_PATH}/zconf.h)
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE
+    SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DSKIP_INSTALL_FILES=ON
         -DSKIP_BUILD_EXAMPLES=ON
