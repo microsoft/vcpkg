@@ -3,12 +3,11 @@ param(
     [ValidateNotNullOrEmpty()][string]$disableMetrics = "0",
     [Parameter(Mandatory=$False)][string]$withVSPath = ""
 )
-
+Set-StrictMode -Version Latest
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 . "$scriptsDir\VcpkgPowershellUtils.ps1"
 $vcpkgRootDir = vcpkgFindFileRecursivelyUp $scriptsDir .vcpkg-root
 Write-Verbose("vcpkg Path " + $vcpkgRootDir)
-
 
 $gitHash = "unknownhash"
 $oldpath = $env:path
