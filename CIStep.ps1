@@ -20,9 +20,11 @@ Write-Host "Bootstrapping vcpkg ..."
 Write-Host "Bootstrapping vcpkg ... done."
 
 $packagesDir = "$vcpkgRootDir\packages"
-Write-Host "Deleting $packagesDir ..."
+$installedDir = "$vcpkgRootDir\installed"
+Write-Host "Deleting $packagesDir & $installedDir  ..."
 vcpkgRemoveItem "$packagesDir"
-Write-Host "Deleting $packagesDir ... done."
+vcpkgRemoveItem "$installedDir"
+Write-Host "Deleting $packagesDir & $installedDir  ... done."
 
 $ciXmlPath = "$vcpkgRootDir\test-full-ci.xml"
 
