@@ -1,7 +1,8 @@
-diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
---- a/trunk/CMakeLists.txt	2017-05-18 09:25:24.000000000 +0900
-+++ b/trunk/CMakeLists.txt	2018-02-10 23:49:14.854241745 +0900
-@@ -8,17 +8,22 @@
+diff --git a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
+index 464fb13..dc8e26f 100644
+--- a/trunk/CMakeLists.txt
++++ b/trunk/CMakeLists.txt
+@@ -8,6 +8,7 @@
  # which were derived from those used by libLAS (http://liblas.org/) 
  #
  # History
@@ -9,186 +10,46 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
  # 2012/07/02 - Created by Peter Bunting
  #
  ###############################################################################
+@@ -50,13 +51,10 @@ endif()
  
- ###############################################################################
- # Set Project name and version
-+cmake_minimum_required (VERSION 3.5)
-+if (POLICY CMP0018)
-+  # position independent code policy
-+  cmake_policy(SET CMP0018 NEW)
-+endif ()
- project (LIBKEA)
+ option (BUILD_SHARED_LIBS "Build with shared library" ON)
  
--if (WIN32)
--  set (WINDOWS ${WIN32})
--endif()
-+set(CMAKE_CXX_STANDARD 98)
-+set(CMAKE_CXX_STANDARD_REQUIRED ON)
- 
- set (PROJECT_BINARY_DIR bin)
- set (PROJECT_LIBRARY_DIR lib)
-@@ -40,128 +45,69 @@
- set (LIBKEA_PACKAGE "LibKEA")
- set (LIBKEA_COPYRIGHT_YEAR 2013)
- 
--if(MSVC)
--    # Name of C++ library
--    set(LIBKEA_LIB_NAME libkea)
--else()
--    # Name of C++ library
--    set(LIBKEA_LIB_NAME kea)
--endif()
--
--option (BUILD_SHARED_LIBS "Build with shared library" ON)
--
 -set(HDF5_INCLUDE_DIR /usr/local/include CACHE PATH "Include PATH for HDF5")
 -set(HDF5_LIB_PATH /usr/local/lib CACHE PATH "Library PATH for HDF5")
--
--set(GDAL_INCLUDE_DIR "NOTFOUND" CACHE PATH "Include PATH for GDAL")
--set(GDAL_LIB_PATH "NOTFOUND" CACHE PATH "Library PATH for GDAL")
--
+ 
+ set(GDAL_INCLUDE_DIR "NOTFOUND" CACHE PATH "Include PATH for GDAL")
+ set(GDAL_LIB_PATH "NOTFOUND" CACHE PATH "Library PATH for GDAL")
+ 
 -set(HDF5_STATIC_LIBS FALSE CACHE BOOL "On Windows, link against static HDF5 libs")
--
--IF(GDAL_INCLUDE_DIR AND GDAL_LIB_PATH)
--    # by default, only build if paths are set
--    set(LIBKEA_WITH_GDAL TRUE CACHE BOOL "Choose if .kea GDAL driver should be built")
--ELSE()
--    set(LIBKEA_WITH_GDAL FALSE CACHE BOOL "Choose if .kea GDAL driver should be built")
--ENDIF()
-+# set Name of C++ library
-+set(LIBKEA_LIB_NAME kea)
  
-+include(CMakeDependentOption)
-+# CMake global option valiable
-+option (BUILD_SHARED_LIBS "Build shared library" ON)
-+
-+# FindHDF5 feature
-+# -------------------
-+# On UNIX systems, this module will read the variable
-+# HDF5_USE_STATIC_LIBRARIES to determine whether or not to prefer a
-+# static link to a dynamic link for HDF5 and all of it's dependencies.
-+# To use this feature, make sure that the HDF5_USE_STATIC_LIBRARIES
-+# variable is set before the call to find_package.
-+option(HDF5_USE_STATIC_LIBRARIES "Force to use HDF5 static libraries." OFF)
-+# Both the serial and parallel HDF5 wrappers are considered and the first
-+# directory to contain either one will be used.  In the event that both appear
-+# in the same directory the serial version is preferentially selected. This
-+# behavior can be reversed by setting the variable HDF5_PREFER_PARALLEL to
-+# true.
-+option(HDF5_PREFER_PARALLEL "Prefer HDF5 parallel wrapper instead of serial one." OFF)
-+# To provide the module with a hint about where to find your HDF5
-+# installation, you can set the environment variable HDF5_ROOT.  The
-+# Find module will then look in this path when searching for HDF5
-+# executables, paths, and libraries.
-+if(NOT "x$ENV{HDF5_ROOT}" STREQUAL "x")
-+    message(STATUS "HDF5_ROOT environment variable specified: $ENV{HDF5_ROOT}")
-+endif()
-+find_package(HDF5 COMPONENTS CXX HL REQUIRED)
-+find_package(GDAL)
-+cmake_dependent_option(LIBKEA_WITH_GDAL  "Choose if .kea GDAL driver should be built" ON "GDAL_FOUND" OFF)
+ IF(GDAL_INCLUDE_DIR AND GDAL_LIB_PATH)
+     # by default, only build if paths are set
+@@ -65,6 +63,8 @@ ELSE()
+     set(LIBKEA_WITH_GDAL FALSE CACHE BOOL "Choose if .kea GDAL driver should be built")
+ ENDIF()
+ 
++find_package(hdf5 COMPONENTS CXX HL REQUIRED)
++link_libraries(hdf5::hdf5_cpp-shared)
  ###############################################################################
  
  ###############################################################################
- # CMake settings
--cmake_minimum_required(VERSION 2.8.10)
--
--IF(NOT CMAKE_BUILD_TYPE)
--  #SET(CMAKE_BUILD_TYPE "DEBUG")
--  SET(CMAKE_BUILD_TYPE "RELEASE")
--  #SET(CMAKE_BUILD_TYPE "RELWITHDEBINFO")
--  #SET(CMAKE_BUILD_TYPE "MINSIZEREL")
--ENDIF()
+@@ -141,14 +141,7 @@ endif(APPLE)
+ # Check the required libraries are present
  
- set(CMAKE_COLOR_MAKEFILE ON)
--
- set(CMAKE_MACOSX_RPATH 1)
- 
--# Allow advanced users to generate Makefiles printing detailed commands
--mark_as_advanced(CMAKE_VERBOSE_MAKEFILE)
--
- # Path to additional CMake modules
--set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ./cmake/modules/)
-+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
- ###############################################################################
- 
- ###############################################################################
- # Platform and compiler specific settings
- 
- if(MSVC)
--        add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
--        add_definitions(-D_CRT_SECURE_NO_WARNINGS)
--        add_definitions(-D_CRT_NONSTDC_NO_WARNING)
--        add_definitions(-D_SCL_SECURE_NO_WARNINGS)
--        
--        # by default the compiler produces gratuitous warnings. Disable some of them
--        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4290 /wd4005 /wd4101 /wd4244 /wd4800 /wd4251 /wd4996")
--
--        # Generate dot-user file with user-specific settings for Visual Studio project
--        set(MSVC_ENVIRONMENT_PATH "" CACHE STRING
--            "Custom PATH for Environment property in Visual Studio project configuration")
--        mark_as_advanced(MSVC_ENVIRONMENT_PATH)
--        set(VCPROJ_USER_ENVIRONMENT_PATH_DEBUG "${ENVIRONMENT_PATH}")
--        mark_as_advanced(VCPROJ_USER_ENVIRONMENT_PATH_DEBUG)
--
-+    add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
-+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-+    add_definitions(-D_CRT_NONSTDC_NO_WARNING)
-+    add_definitions(-D_SCL_SECURE_NO_WARNINGS)
-+    
-+    # by default the compiler produces gratuitous warnings. Disable some of them
-+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4290 /wd4005 /wd4101 /wd4244 /wd4800 /wd4251 /wd4996")
- else()
--  # Recommended C++ compilation flags
--  # -Weffc++
--  set(LIBKEA_COMMON_CXX_FLAGS
--	"-Wall -Wpointer-arith -Wcast-align -Wcast-qual -Wredundant-decls -Wno-long-long -DNDEBUG")
--	#"-pedantic -ansi -Wall -Wpointer-arith -Wcast-align -Wcast-qual -Wfloat-equal -Wredundant-decls -Wno-long-long")
--
--  if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
--
--    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC ${LIBKEA_COMMON_CXX_FLAGS}")
--    if (CMAKE_COMPILER_IS_GNUCXX)
--      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98")
--    endif()
--
--  elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" OR "${CMAKE_CXX_COMPILER}" MATCHES "clang")
--    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LIBKEA_COMMON_CXX_FLAGS}")
--  endif()
-+    set(CMAKE_CXX_FLAGS
-+	      "${CMAKE_CXX_FLAGS} -Wall -Wpointer-arith -Wcast-align -Wcast-qual -Wredundant-decls -Wno-long-long -DNDEBUG")
- endif(MSVC)
- 
--if (APPLE)
--  set(SO_EXT dylib)
-- # set(CMAKE_FIND_FRAMEWORK "LAST")
--elseif(WIN32)
--  set(SO_EXT dll)
--else()
--  set(SO_EXT so)
--endif(APPLE)
--###############################################################################
--
--###############################################################################
--# Check the required libraries are present
--
--if (MSVC)
+ if (MSVC)
 -  if(HDF5_STATIC_LIBS)
 -    set(HDF5_LIBRARIES -LIBPATH:"${HDF5_LIB_PATH}" hdf5_cpp.lib hdf5.lib zlibstatic.lib)
 -  else()
 -    set(HDF5_LIBRARIES -LIBPATH:"${HDF5_LIB_PATH}" hdf5_cpp.lib hdf5.lib)
 -    set_property(DIRECTORY PROPERTY COMPILE_DEFINITIONS H5_BUILT_AS_DYNAMIC_LIB)
 -  endif()
--else()
+ else()
 -  set(HDF5_LIBRARIES "-L${HDF5_LIB_PATH} -lhdf5 -lhdf5_hl -lhdf5_cpp")
--endif(MSVC)
--
--if (MSVC)
--  set(GDAL_LIBRARIES -LIBPATH:"${GDAL_LIB_PATH}" gdal_i.lib)
--else()
--  set(GDAL_LIBRARIES -L${GDAL_LIB_PATH} -lgdal)
--endif(MSVC)
--###############################################################################
--
+ endif(MSVC)
+ 
+ if (MSVC)
+@@ -160,21 +153,19 @@ endif(MSVC)
+ 
  ###############################################################################
  # Setup configure file
 -configure_file ( "${PROJECT_HEADER_DIR}/kea-config.h.in" "${PROJECT_HEADER_DIR}/libkea/kea-config.h" )
@@ -198,17 +59,21 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
  ###############################################################################
  
  ###############################################################################
-@@ -174,7 +120,8 @@
+ # Documentation
+-file(READ "doc/index.txt" README )
+-file(WRITE "README.txt" "${README}")
+ ###############################################################################
+ 
+ ###############################################################################
  # Build library
  
  include_directories ("${PROJECT_HEADER_DIR}")
 -include_directories(${HDF5_INCLUDE_DIR})
 +include_directories ("${CMAKE_BINARY_DIR}/${PROJECT_HEADER_DIR}")
-+include_directories(${HDF5_INCLUDE_DIRS})
  add_subdirectory ("${PROJECT_SOURCE_DIR}")
  if (LIBKEA_WITH_GDAL)
  	add_subdirectory ("${PROJECT_GDAL_DIR}")
-@@ -185,13 +132,11 @@
+@@ -185,13 +176,11 @@ endif(LIBKEA_WITH_GDAL)
  # Tests
  enable_testing()
  add_test(NAME test1 COMMAND src/test1)
@@ -223,252 +88,35 @@ diff -urN a/trunk/CMakeLists.txt b/trunk/CMakeLists.txt
  ###############################################################################
  
  ###############################################################################
-@@ -204,13 +149,19 @@
- 
- # Set files to ignore
- list(APPEND CPACK_SOURCE_IGNORE_FILES "_CPack_Packages")
--list(APPEND CPACK_SOURCE_IGNORE_FILES ".gz")
-+list(APPEND CPACK_SOURCE_IGNORE_FILES ".bak")
- list(APPEND CPACK_SOURCE_IGNORE_FILES ".bz2")
--list(APPEND CPACK_SOURCE_IGNORE_FILES ".zip")
-+list(APPEND CPACK_SOURCE_IGNORE_FILES ".gz")
-+list(APPEND CPACK_SOURCE_IGNORE_FILES ".hg")
-+list(APPEND CPACK_SOURCE_IGNORE_FILES ".hgtags")
-+list(APPEND CPACK_SOURCE_IGNORE_FILES ".idea")
-+list(APPEND CPACK_SOURCE_IGNORE_FILES ".orig")
- list(APPEND CPACK_SOURCE_IGNORE_FILES ".svn")
-+list(APPEND CPACK_SOURCE_IGNORE_FILES ".zip")
- list(APPEND CPACK_SOURCE_IGNORE_FILES "README")
- list(APPEND CPACK_SOURCE_IGNORE_FILES "HOWTORELEASE.txt")
- list(APPEND CPACK_SOURCE_IGNORE_FILES "CMakeCache.txt")
-+list(APPEND CPACK_SOURCE_IGNORE_FILES "cmake-build-*")
- list(APPEND CPACK_SOURCE_IGNORE_FILES "CPackConfig.cmake")
- list(APPEND CPACK_SOURCE_IGNORE_FILES "schemas")
- 
-diff -urN a/trunk/cmake/TransformVersion.cmake b/trunk/cmake/TransformVersion.cmake
---- a/trunk/cmake/TransformVersion.cmake	1970-01-01 09:00:00.000000000 +0900
-+++ b/trunk/cmake/TransformVersion.cmake	2018-02-02 19:18:18.661426721 +0900
-@@ -0,0 +1,33 @@
-+
-+function(TRANSFORM_VERSION numerical_result major_result minor_result patch_result version)
-+  # internal_version ignores everything in version after any character that
-+  # is not 0-9 or ".".  This should take care of the case when there is
-+  # some non-numerical data in the patch version.
-+  string(REGEX REPLACE "^([0-9.]+).*$" "\\1" internal_version ${version})
-+
-+  # internal_version is normally a period-delimited triplet string of the form
-+  # "major.minor.patch", but patch and/or minor could be missing.
-+  # Transform internal_version into a numerical result that can be compared.
-+  string(REGEX REPLACE "^([0-9]*).+$" "\\1" major ${internal_version})
-+  string(REGEX REPLACE "^[0-9]*\\.([0-9]*).*$" "\\1" minor ${internal_version})
-+  string(REGEX REPLACE "^[0-9]*\\.[0-9]*\\.([0-9]*)$" "\\1" patch ${internal_version})
-+
-+  if(NOT patch MATCHES "[0-9]+")
-+    set(patch 0)
-+  endif(NOT patch MATCHES "[0-9]+")
-+
-+  if(NOT minor MATCHES "[0-9]+")
-+    set(minor 0)
-+  endif(NOT minor MATCHES "[0-9]+")
-+
-+  if(NOT major MATCHES "[0-9]+")
-+    set(major 0)
-+  endif(NOT major MATCHES "[0-9]+")
-+  math(EXPR internal_numerical_result
-+    "${major}*1000000 + ${minor}*1000 + ${patch}"
-+    )
-+  set(${numerical_result} ${internal_numerical_result} PARENT_SCOPE)
-+  set(${major_result} ${major} PARENT_SCOPE)
-+  set(${minor_result} ${minor} PARENT_SCOPE)
-+  set(${patch_result} ${patch} PARENT_SCOPE)
-+endfunction()
-diff -urN a/trunk/gdal/CMakeLists.txt b/trunk/gdal/CMakeLists.txt
---- a/trunk/gdal/CMakeLists.txt	2017-05-18 09:25:24.000000000 +0900
-+++ b/trunk/gdal/CMakeLists.txt	2018-02-02 19:20:44.813165519 +0900
-@@ -1,7 +1,7 @@
--
- ###############################################################################
- # set file locations
--set(LIBKEA_HEADERS_DIR ../include/libkea)
-+set(LIBKEA_LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../src)
-+option(KEAHDF5_STATIC_LIBS "Build against static KEA and HDF5" OFF)
- 
- set(KEA_GDAL_H keadataset.h keaband.h keaoverview.h keacopy.h keamaskband.h kearat.h)
- 
-@@ -17,24 +17,27 @@
- source_group("gdal_include_kea" FILES ${KEA_GDAL_H})
- ###############################################################################
- 
-+if(MSVC)
-+    # by default the compiler produces gratuitous warnings. Disable some of them
-+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4290 /wd4005 /wd4101 /wd4244 /wd4800 /wd4251 /wd4996")
-+endif()
- ###############################################################################
- # Build and link library
-+option (BUILD_SHARED_LIBS "Build with shared library" ON)
- 
- add_library(${LIBKEA_GDAL_DRIVER} ${KEA_GDAL_CPP} ${KEA_GDAL_H} )
- # remove the leading "lib" as GDAL won't look for files with this prefix
- set_target_properties(${LIBKEA_GDAL_DRIVER} PROPERTIES PREFIX "")
- 
--if (WIN32)
--  target_link_libraries(${LIBKEA_GDAL_DRIVER} ${GDAL_LIBRARIES} -LIBPATH:../src libkea.lib)
--else()
--  target_link_libraries(${LIBKEA_GDAL_DRIVER} ${GDAL_LIBRARIES} -L../src -lkea)
--endif(WIN32)
-+find_package(GDAL REQUIRED)
-+target_link_libraries(${LIBKEA_GDAL_DRIVER} PUBLIC ${GDAL_LIBRARY} PRIVATE Kealib)
- include_directories(${GDAL_INCLUDE_DIR})
-+include_directories(${LIBKEA_HEADERS_DIR})
- ###############################################################################
- 
- ###############################################################################
--# Set target properties
- 
-+# Set target properties
- #SET_TARGET_PROPERTIES(${LIBKEA_GDAL_DRIVER}
- #PROPERTIES
- #        SOVERSION ${LIBKEA_VERSION}
-@@ -44,6 +47,47 @@
- ###############################################################################
- 
- ###############################################################################
--# Installation 
--install (TARGETS ${LIBKEA_GDAL_DRIVER} DESTINATION lib/gdalplugins)
--###############################################################################
-\ No newline at end of file
-+set(GDAL_PLUGIN_DIRS)
-+find_program(GDAL_CONFIG_EXECUTABLE "gdal-config" HINSTS ${GDAL_CONFIG})
-+if(EXISTS "${GDAL_CONFIG_EXECUTABLE}")
-+    # find gdal prefix and version
-+    execute_process(COMMAND ${GDAL_CONFIG_EXECUTABLE} --prefix OUTPUT_VARIABLE GDAL_PREFIX OUTPUT_STRIP_TRAILING_WHITESPACE)
-+    string(STRIP ${GDAL_PREFIX} GDAL_PREFIX)
-+    execute_process(COMMAND ${GDAL_CONFIG_EXECUTABLE} --version OUTPUT_VARIABLE GDAL_VERSION_STRING)
-+    include(TransformVersion)
-+    transform_version(GDAL_VERSION_NUM GDAL_VERSION_MAJOR GDAL_VERSION_MINOR GDAL_VERSION_PATCH ${GDAL_VERSION_STRING})
-+    if(OSX_FRAMEWORK)
-+        list(APPEND GDAL_PLUGIN_DIRS "${GDAL_PREFIX}/PlugIns")
-+    endif()
-+    # debian/ubuntu/mint
-+    list(APPEND GDAL_PLUGIN_DIRS "${GDAL_PREFIX}/lib/gdalplugins/${GDAL_VERSION_MAJOR}.${GDAL_VERSION_MINOR}")
-+    # standard unix location such as /usr/local/lib/gdalplugins, /opt/gdal/lib/gdalplugins
-+    list(APPEND GDAL_PLUGIN_DIRS "${GDAL_PREFIX}/lib/gdalplugins")
-+endif()
-+# windows/osge4w
-+if(WIN32)
-+     list(APPEND GDAL_PLUGIN_DIRS "c:\\OSGEO4W\\bin\\gdalplugins")
-+endif()
-+if(UNIX)
-+    # default location for unix/mac
-+    list(APPEND GDAL_PLUGIN_DIRS "/usr/local/lib/gdalplugins/")
-+endif()
-+
-+# detect plugin directory
-+set(GDAL_PLUGIN_DIR "NOTFOUND")
-+foreach(dir ${GDAL_PLUGIN_DIRS})
-+    # FIXME: we should check library existence in a proper location
-+    if(EXISTS "${dir}" AND IS_DIRECTORY "${dir}")
-+        set(GDAL_PLUGIN_DIR "${dir}")
-+        message(STATUS "GDAL plugin installation dir: ${GDAL_PLUGIN_DIR}")
-+        break()
-+    endif()
-+endforeach()
-+unset(GDAL_PLUGIN_DIRS)
-+
-+# Installation
-+if(EXISTS "${GDAL_PLUGIN_DIR}")
-+    install (TARGETS ${LIBKEA_GDAL_DRIVER} DESTINATION ${GDAL_PLUGIN_DIR})
-+endif()
-+###############################################################################
-+
-diff -urN a/trunk/src/CMakeLists.txt b/trunk/src/CMakeLists.txt
---- a/trunk/src/CMakeLists.txt	2017-05-18 09:25:24.000000000 +0900
-+++ b/trunk/src/CMakeLists.txt	2018-02-10 23:49:22.902424930 +0900
-@@ -4,7 +4,6 @@
- set(LIBKEA_SRC_DIR libkea)
- set(LIBKEA_HEADERS_DIR ../include/libkea)
- 
--
- set(LIBKEA_H
- 	${LIBKEA_HEADERS_DIR}/KEACommon.h
- 	${LIBKEA_HEADERS_DIR}/KEAException.h
-@@ -29,44 +28,47 @@
- ###############################################################################
- 
- ###############################################################################
--# Build and link library
--
-+# Build, link and install library
- add_library(${LIBKEA_LIB_NAME} ${LIBKEA_CPP} ${LIBKEA_H} )
--target_link_libraries(${LIBKEA_LIB_NAME} ${HDF5_LIBRARIES} )
-+add_library(Kealib INTERFACE)
-+if(BUILD_SHARED_LIBS)
-+    SET_TARGET_PROPERTIES(${LIBKEA_LIB_NAME}
-+            PROPERTIES
-+            OUTPUT_NAME "${LIBKEA_LIB_NAME}"
-+            PREFIX "lib"
-+            SOVERSION ${LIBKEA_VERSION_MAJOR}.${LIBKEA_VERSION_MINOR}
-+            VERSION ${LIBKEA_VERSION}
-+            CLEAN_DIRECT_OUTPUT 1)
-+    target_link_libraries(${LIBKEA_LIB_NAME} PRIVATE hdf5::hdf5-shared hdf5::hdf5_hl-shared hdf5::hdf5_cpp-shared)
-+    target_link_libraries(Kealib INTERFACE ${LIBKEA_LIB_NAME})
-+else()
-+    SET_TARGET_PROPERTIES(${LIBKEA_LIB_NAME}
-+            PROPERTIES
-+            OUTPUT_NAME "${LIBKEA_LIB_NAME}"
-+            PREFIX "lib"
-+            VERSION ${LIBKEA_VERSION}
-+            CLEAN_DIRECT_OUTPUT 1)
-+    find_package(SZIP COMPONENTS static CONFIG)
-+    find_package(ZLIB)
-+    target_link_libraries(${LIBKEA_LIB_NAME} PRIVATE hdf5::hdf5_cpp-static)
-+    target_link_libraries(Kealib INTERFACE ${LIBKEA_LIB_NAME} ${ZLIB_LIBRARIES} szip-static)
-+endif()
-+target_include_directories(Kealib INTERFACE
-+                             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
-+                             $<INSTALL_INTERFACE:include/kealib>)
- ###############################################################################
+diff --git a/trunk/src/CMakeLists.txt b/trunk/src/CMakeLists.txt
+index 84456c4..b804e74 100644
+--- a/trunk/src/CMakeLists.txt
++++ b/trunk/src/CMakeLists.txt
+@@ -37,6 +37,7 @@ target_link_libraries(${LIBKEA_LIB_NAME} ${HDF5_LIBRARIES} )
  
  ###############################################################################
  # Testing
--# exe needs to be in 'src' otherwise it doesn't work
++if(NOT DISABLE_TESTS)
+ # exe needs to be in 'src' otherwise it doesn't work
  add_executable (test1 ${PROJECT_TEST_DIR}/test1.cpp)
--target_link_libraries (test1 ${LIBKEA_LIB_NAME})
--if(NOT WIN32)
--    # set rpath so the text exe finds hdf5. Really only needed
--    # by Conda builds as LD_LIBRARY_PATH not set on Unix by Conda
--    # No rpath on Windows so Conda sets PATH properly
--    if(CMAKE_COMPILER_IS_GNUCC)
--        set_target_properties (test1 PROPERTIES LINK_FLAGS "-Wl,-rpath ${HDF5_LIB_PATH}")
--    elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
--        # this matches AppleClang also
--        set_target_properties (test1 PROPERTIES LINK_FLAGS "-Xlinker -rpath ${HDF5_LIB_PATH}")
--    endif()
--    # probably should match other compilers, but since this is a Conda
--    # specific hack I'm not going to bother
--endif()
--
--###############################################################################
--# Set target properties
--
--SET_TARGET_PROPERTIES(${LIBKEA_LIB_NAME}
--PROPERTIES
--        SOVERSION ${LIBKEA_VERSION}
--        VERSION ${LIBKEA_VERSION}
--)
--
-+target_link_libraries (test1 Kealib)
- ###############################################################################
+ target_link_libraries (test1 ${LIBKEA_LIB_NAME})
+@@ -53,6 +54,7 @@ if(NOT WIN32)
+     # probably should match other compilers, but since this is a Conda
+     # specific hack I'm not going to bother
+ endif()
++endif()
  
  ###############################################################################
--# Installation 
+ # Set target properties
+@@ -67,6 +69,9 @@ PROPERTIES
+ 
+ ###############################################################################
+ # Installation 
 -install (TARGETS ${LIBKEA_LIB_NAME} DESTINATION lib)
-+# Install
 +install (TARGETS ${LIBKEA_LIB_NAME}
 +          RUNTIME DESTINATION bin
 +          LIBRARY DESTINATION lib
 +          ARCHIVE DESTINATION lib)
  install (FILES ${LIBKEA_H} DESTINATION include/libkea)
--###############################################################################
+ ###############################################################################
 \ No newline at end of file
-+###############################################################################

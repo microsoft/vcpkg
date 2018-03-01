@@ -13,9 +13,6 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/fix-cmake.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED_LIBS)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC_LIBS)
-
 if ("parallel" IN_LIST FEATURES)
     set(ENABLE_PARALLEL ON)
 else()
@@ -26,18 +23,17 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/trunk
     PREFER_NINJA
     OPTIONS
-      -DBUILD_SHARED_LIBS=${ENABLE_SHARED_LIBS}
       -DHDF5_PREFER_PARALLEL=${ENABLE_PARALLEL}
-      -DHDF5_USE_STATIC_LIBRARIES=${ENABLE_STATIC_LIBS}
       -DLIBKEA_WITH_GDAL=OFF
+      -DDISABLE_TESTS=ON
 )
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/kealib RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/trunk/python/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/kealib RENAME copyright)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
 endif()
