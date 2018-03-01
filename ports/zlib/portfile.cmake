@@ -13,6 +13,9 @@ vcpkg_apply_patches(
     ${CMAKE_CURRENT_LIST_DIR}/cmake_dont_build_more_than_needed.patch
 )
 
+# This is generated during the cmake build
+file(REMOVE ${SOURCE_PATH}/zconf.h)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
