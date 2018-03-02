@@ -1,14 +1,12 @@
 include(vcpkg_common_functions)
 
-set(OGRE_VERSION 1.10.9)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ogre-${OGRE_VERSION})
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/OGRECave/ogre/archive/v${OGRE_VERSION}.zip"
-    FILENAME "ogre-${OGRE_VERSION}.zip"
-    SHA512 2e68b30da6dc2e1df6575970623a14057675b069536ed0ac87faeefc8e295965ff7427c99385f29ab803b02bd5294f6886293aabdd17ec8c92f80baf53587457
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO OGRECave/ogre
+    REF v1.10.11
+    SHA512 2dfedd6f0a0de1a8c687c001439138b233200ca11e5c9940debf43d8a0380ca6472e0b5f4d599f0e22ca2049d0a5d34066ef41b6bc4912130694fa5d851fc900
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
@@ -126,6 +124,6 @@ string(REPLACE "\"OgreMainStatic\"" "\"\${PACKAGE_PREFIX_DIR}/lib/manual-link/Og
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/ogre/OGREConfig.cmake" "${_contents}")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ogre RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ogre RENAME copyright)
 
 vcpkg_copy_pdbs()
