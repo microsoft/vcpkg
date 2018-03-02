@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SDL-Mirror/SDL
-    REF release-2.0.7
-    SHA512 3667c7299d007e0438de90c6dd1f19ad9f30cf155c35792c40267bc74f8fe8acd1046ac918a104690ccba3faa2dbd86b37821a38c6c389179359b903209e2eb7
+    REF release-2.0.8
+    SHA512 5922dbeb14bb22991160251664b417d3f846867c18b5ecc1bd19c328ffd69b16252b7d45b9a317bafd1207fdb66d93a022dfb239e02447db9babd941956b6b37
     HEAD_REF master
 )
 
