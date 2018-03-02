@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/freexl-1.0.4)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.gaia-gis.it/gaia-sins/freexl-1.0.4.tar.gz"
+    URLS "http://www.gaia-gis.it/gaia-sins/freexl-sources/freexl-1.0.4.tar.gz"
     FILENAME "freexl-1.0.4.tar.gz"
     SHA512 d72561f7b82e0281cb211fbf249e5e45411a7cdd009cfb58da3696f0a0341ea7df210883bfde794be28738486aeb4ffc67ec2c98fd2acde5280e246e204ce788
 )

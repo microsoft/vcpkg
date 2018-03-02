@@ -1,4 +1,4 @@
 Source: exiv2
-Version: 8f5b795eaa4bc414d2d6041c1dbd1a7f7bf1fc99
-Build-Depends:zlib, expat
+Version: 2018-02-25
+Build-Depends: zlib, expat, libiconv
 Description: Image metadata library and tools http://www.exiv2.org

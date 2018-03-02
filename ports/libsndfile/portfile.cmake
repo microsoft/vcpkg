@@ -1,29 +1,18 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libsndfile-6830c421899e32f8d413a903a21a9b6cf384d369)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/erikd/libsndfile/archive/6830c421899e32f8d413a903a21a9b6cf384d369.zip"
-    FILENAME "libsndfile-1.0.29-6830c42.zip"
-    SHA512 94b561f384606f2c3dccc79164ffb4f37b93cf96e102e8bc319b50acc0e27045eea61cbe49f25610151adbeb13cc1fd57ddbbeb76abddb0fb5027e0581b83bb6
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO erikd/libsndfile
+    REF 6830c421899e32f8d413a903a21a9b6cf384d369
+    SHA512 b13c5d7bc27218eff8a8c4ce89a964b4920b1d3946e4843e60be965d77ec205845750a82bf654a7c2c772bf3a24f6ff5706881b24ff12115f2525c8134b6d0b9
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
-	SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libsndfile-6830c421899e32f8d413a903a21a9b6cf384d369
-	PATCHES
-		"${CMAKE_CURRENT_LIST_DIR}/uwp-createfile-getfilesize.patch"
-		"${CMAKE_CURRENT_LIST_DIR}/uwp-createfile-getfilesize-addendum.patch"
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/uwp-createfile-getfilesize.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/uwp-createfile-getfilesize-addendum.patch"
 )
 
 if (VCPKG_CRT_LINKAGE STREQUAL "dynamic")
@@ -44,30 +33,34 @@ option(BUILD_EXECUTABLES "Build sndfile tools and install to folder tools" OFF)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    OPTIONS -DBUILD_PROGRAMS=${BUILD_EXECUTABLES} -DBUILD_EXAMPLES=0 -DBUILD_REGTEST=0 -DBUILD_TESTING=0 -DENABLE_STATIC_RUNTIME=${CRT_LIB_STATIC} -DBUILD_STATIC_LIBS=${BUILD_STATIC} -DBUILD_SHARED_LIBS=${BUILD_DYNAMIC}
+    PREFER_NINJA
+    OPTIONS -DBUILD_EXAMPLES=0 -DBUILD_REGTEST=0 -DBUILD_TESTING=0 -DENABLE_STATIC_RUNTIME=${CRT_LIB_STATIC} -DBUILD_STATIC_LIBS=${BUILD_STATIC}
+    OPTIONS_RELEASE -DBUILD_PROGRAMS=${BUILD_EXECUTABLES}
     # Setting ENABLE_PACKAGE_CONFIG=0 has no effect
-    # Avoid building tools in debug-build:
     OPTIONS_DEBUG -DBUILD_PROGRAMS=0
 )
 
 vcpkg_install_cmake()
 
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+
+# Fix applied for 6830c421899e32f8d413a903a21a9b6cf384d369
+file(READ "${CURRENT_PACKAGES_DIR}/share/libsndfile/LibSndFileTargets.cmake" _contents)
+string(REPLACE "INTERFACE_INCLUDE_DIRECTORIES \"\${_IMPORT_PREFIX}/lib\"" "INTERFACE_INCLUDE_DIRECTORIES \"\${_IMPORT_PREFIX}/include\"" _contents "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/libsndfile/LibSndFileTargets.cmake" "${_contents}")
+
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
-file(COPY ${CURRENT_PACKAGES_DIR}/share/doc/libsndfile DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/libsndfile ${CURRENT_PACKAGES_DIR}/share/${PORT}/doc)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/doc/libsndfile ${CURRENT_PACKAGES_DIR}/share/${PORT}/doc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
-file(COPY ${CURRENT_PACKAGES_DIR}/cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake )
 
 if(BUILD_EXECUTABLES)
     file(GLOB TOOLS ${CURRENT_PACKAGES_DIR}/bin/*.exe)
     file(COPY ${TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
     file(REMOVE ${TOOLS})
+    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 endif(BUILD_EXECUTABLES)
 
 # Handle copyright

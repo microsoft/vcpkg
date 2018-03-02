@@ -16,7 +16,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{F589
 		..\scripts\bootstrap.ps1 = ..\scripts\bootstrap.ps1
 		..\scripts\fetchDependency.ps1 = ..\scripts\fetchDependency.ps1
 		..\scripts\findAnyMSBuildWithCppPlatformToolset.ps1 = ..\scripts\findAnyMSBuildWithCppPlatformToolset.ps1
-		..\scripts\findFileRecursivelyUp.ps1 = ..\scripts\findFileRecursivelyUp.ps1
 		..\scripts\findVisualStudioInstallationInstances.ps1 = ..\scripts\findVisualStudioInstallationInstances.ps1
 		..\scripts\get_triplet_environment.cmake = ..\scripts\get_triplet_environment.cmake
 		..\scripts\getProgramFiles32bit.ps1 = ..\scripts\getProgramFiles32bit.ps1

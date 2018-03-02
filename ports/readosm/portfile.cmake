@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/readosm-1.1.0)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.gaia-gis.it/gaia-sins/readosm-1.1.0.tar.gz"
+    URLS "http://www.gaia-gis.it/gaia-sins/readosm-sources/readosm-1.1.0.tar.gz"
     FILENAME "readosm-1.1.0.tar.gz"
     SHA512 d3581f564c4461c6a1a3d5fd7d18a262c884b2ac935530064bfaebd6c05d692fb92cc600fb40e87e03f7160ebf0eeeb05f51a0e257935d056b233fe28fc01a11
 )

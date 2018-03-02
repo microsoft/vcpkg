@@ -1,0 +1,25 @@
+From 692f6f4fcf9bfddaf8779ba622f190c3a8c772f9 Mon Sep 17 00:00:00 2001
+From: Robert Schumacher <roschuma@microsoft.com>
+Date: Wed, 21 Feb 2018 17:20:22 -0800
+Subject: [PATCH 3/5] disable-downloading
+
+---
+ cmake/OpenCVDownload.cmake | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/cmake/OpenCVDownload.cmake b/cmake/OpenCVDownload.cmake
+index f660502..90785f1 100644
+--- a/cmake/OpenCVDownload.cmake
++++ b/cmake/OpenCVDownload.cmake
+@@ -151,6 +151,8 @@ function(ocv_download)
+   # Download
+   if(NOT EXISTS "${CACHE_CANDIDATE}")
+     ocv_download_log("#cmake_download \"${CACHE_CANDIDATE}\" \"${DL_URL}\"")
++    string(REPLACE "${OPENCV_DOWNLOAD_PATH}/" "opencv-cache/" CACHE_SUBPATH "${CACHE_CANDIDATE}")
++    message(FATAL_ERROR "    Downloads are not permitted during configure. Please pre-download the file \"${CACHE_CANDIDATE}\":\n    \n    vcpkg_download_distfile(OCV_DOWNLOAD\n        URLS \"${DL_URL}\"\n        FILENAME \"${CACHE_SUBPATH}\"\n        SHA512 0\n    )")
+     file(DOWNLOAD "${DL_URL}" "${CACHE_CANDIDATE}"
+          INACTIVITY_TIMEOUT 60
+          TIMEOUT 600
+-- 
+2.15.1.windows.2
+

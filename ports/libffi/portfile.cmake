@@ -3,13 +3,14 @@ if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x86 AND NOT VCPKG_TARGET_ARCHITECTURE 
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libffi-3.1)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/libffi/libffi/archive/v3.1.zip"
-    FILENAME "libffi-3.1.zip"
-    SHA512 a5d4cc638262aecec29e70333119f561588a737fd8f353e18d9bf1bfa7b38eb6aba371778119ea8d35339b458815105d5b110063295b6588a8761b24dac77a7c)
-    
-vcpkg_extract_source_archive(${ARCHIVE})
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO libffi/libffi
+    REF v3.1
+    SHA512 b214e4a876995f44e0a93bad5bf1b3501ea1fbedafbf33ea600007bd08c9bc965a1f0dd90ea870281c3add6c051febd19aa6cdce36f3ee8ba535ba2c0703153c
+    HEAD_REF master
+)
+
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_apply_patches(

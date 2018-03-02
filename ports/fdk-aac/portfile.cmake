@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO mstorsjo/fdk-aac
-  REF 1e3515e03e2dbdbd48dacc31ef75d25c201a4c51
-  SHA512 4bb0cb75fac46b30f64f5588a528f3c97d66b456fb866524018596dc79eb8b01735eb7e2bc56489127091924117a8a5f4a722dd9cc90c4caa8ad5c55e58faa40
+  REF 89aeea5f292306c429550e4c9fe55d865c903600
+  SHA512 0c89677b6c4f1cc056e8e0ee19c0ca79c9a35babcc8ad1a9b8d93bdfc97c54a12267a1de6e86ebede6825ea40f25b7be938495180e8bc6d4cbab7ebd2e63fcd4
   HEAD_REF master
 )
 

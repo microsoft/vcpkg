@@ -22,19 +22,11 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_find_acquire_program(YASM)
 vcpkg_find_acquire_program(PERL)
-vcpkg_acquire_msys(MSYS_ROOT)
+vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 set(ENV{PATH} "${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
 set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
-
-message(STATUS "Installing MSYS Packages")
-vcpkg_execute_required_process(
-    COMMAND
-        ${BASH} --noprofile --norc -c
-        "pacman -Sy --noconfirm --needed make"
-    WORKING_DIRECTORY ${MSYS_ROOT}
-    LOGNAME pacman-${TARGET_TRIPLET})
 
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 

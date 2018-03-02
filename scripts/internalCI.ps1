@@ -18,5 +18,5 @@ if (-not $?) { throw $? }
 
 ./vcpkg.exe install azure-storage-cpp cpprestsdk:x64-windows-static cpprestsdk:x86-uwp `
 bond cryptopp zlib expat sdl2 curl sqlite3 libuv protobuf:x64-windows sfml opencv:x64-windows uwebsockets uwebsockets:x64-windows-static `
-opencv:x86-uwp boost:x86-uwp --keep-going "--x-xunit=TEST-internal-ci.xml"
+opencv:x86-uwp boost:x86-uwp --keep-going "--x-xunit=TEST-internal-ci.xml" --recurse
 if (-not $?) { throw $? }

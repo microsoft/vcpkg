@@ -1,8 +1,14 @@
 import os
 import re
+import sys
 from glob import glob
 
+port="qt5"
+if len(sys.argv) > 1:
+    port=sys.argv[1]
+
 files = [y for x in os.walk('.') for y in glob(os.path.join(x[0], '*.cmake'))]
+tooldir="/tools/"+port+"/"
 
 for f in files:
     openedfile = open(f, "r")
@@ -10,6 +16,7 @@ for f in files:
     dllpattern = re.compile("_install_prefix}/bin/Qt5.*d.dll")
     libpattern = re.compile("_install_prefix}/lib/Qt5.*d.lib")
     exepattern = re.compile("_install_prefix}/bin/[a-z]+.exe")
+    toolexepattern = re.compile("_install_prefix}/tools/qt5/[a-z]+.exe")
     tooldllpattern = re.compile("_install_prefix}/tools/qt5/Qt5.*d.dll")
     for line in openedfile:
         if "_install_prefix}/tools/qt5/${LIB_LOCATION}" in line:
@@ -49,7 +56,9 @@ for f in files:
         elif tooldllpattern.search(line) != None:
             builder += line.replace("/tools/qt5/", "/debug/bin/")
         elif exepattern.search(line) != None:
-            builder += line.replace("/bin/", "/tools/qt5/")
+            builder += line.replace("/bin/", tooldir)
+        elif toolexepattern.search(line) != None:
+            builder += line.replace("/tools/qt5/",tooldir)
         else:
             builder += line
     new_file = open(f, "w")

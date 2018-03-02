@@ -1,11 +1,10 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/zziplib-0.13.62)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://sourceforge.net/projects/zziplib/files/zziplib13/0.13.62/zziplib-0.13.62.tar.bz2/download"
-    FILENAME "zziplib-0.13.62.tar.bz2"
-    SHA512 fd3b9e9015ba7603bdebd8f6a2ac6d11003705bfab22f3a0025f75455042664aea69440845b59e6f389417dff5ac777f49541d8cbacb2a220e67d20bb6973e25
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO gdraheim/zziplib
+    REF v0.13.68
+    SHA512 e8a9976242acc04064ec239b9b929228370a946e5bd37092adcc1bda14605710a3850d39795d1937b609d1ab9a9a1998152f8c88b2dccc387ac6ec774d9cfce9
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
