@@ -11,6 +11,7 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         "${CMAKE_CURRENT_LIST_DIR}/cmake_dont_build_more_than_needed.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/Fix-arm-targets.patch"
         "${CMAKE_CURRENT_LIST_DIR}/fix-attribute.patch"
 )
 
