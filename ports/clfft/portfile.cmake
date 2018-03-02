@@ -13,6 +13,12 @@ vcpkg_apply_patches(
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/tweak-install.patch
 )
 
+# v2.12.2 has a very old FindOpenCL.cmake using OPENCL_ vs. OpenCL_ var names
+# conflicting with the built-in, more modern FindOpenCL.cmake 
+file(
+    REMOVE ${SOURCE_PATH}/src/FindOpenCL.cmake
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/src
     PREFER_NINJA
