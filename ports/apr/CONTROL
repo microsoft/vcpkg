@@ -1,3 +1,4 @@
 Source: apr
 Version: 1.6.3
+Homepage: https://www.apache.org/dist/apr
 Description: The Apache Portable Runtime (APR) is a C library that forms a system portability layer that covers many operating systems.

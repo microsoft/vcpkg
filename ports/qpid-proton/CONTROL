@@ -1,4 +1,5 @@
 Source: qpid-proton
 Version: 0.18.1
 Build-Depends: openssl
+Homepage: https://github.com/apache/qpid-proton
 Description: Qpid Proton is a high-performance, lightweight messaging library.

@@ -2,4 +2,5 @@
 Source: boost-asio
 Version: 1.66.0-1
 Build-Depends: boost-coroutine (windows), boost-date-time, boost-regex, boost-system, boost-vcpkg-helpers, openssl
+Homepage: https://github.com/boostorg/asio
 Description: Boost asio module

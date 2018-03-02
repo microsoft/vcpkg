@@ -1,3 +1,4 @@
 Source: mdnsresponder
 Version: 765.30.11
+Homepage: https://opensource.apple.com/tarballs/mDNSResponder
 Description: The mDNSResponder project is a component of Bonjour, Apple's ease-of-use IP networking initiative: <http://developer.apple.com/bonjour/>

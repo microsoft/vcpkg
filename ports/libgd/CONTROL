@@ -1,4 +1,5 @@
 Source: libgd
 Version: 2.2.4-3
+Homepage: https://github.com/libgd/libgd
 Description: Open source code library for the dynamic creation of images by programmers.
 Build-Depends: freetype, libjpeg-turbo, libpng, libwebp, tiff, fontconfig

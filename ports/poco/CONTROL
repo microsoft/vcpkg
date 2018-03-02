@@ -1,8 +1,10 @@
 Source: poco
 Version: 1.8.1-1
 Build-Depends: zlib, pcre, sqlite3, expat
+Homepage: https://github.com/pocoproject/poco
 Description: Modern, powerful open source C++ class libraries for building network and internet-based applications that run on desktop, server, mobile and embedded systems.
 
 Feature: mysql
 Build-Depends: libmysql
+Homepage: https://github.com/pocoproject/poco
 Description: Mysql support for POCO

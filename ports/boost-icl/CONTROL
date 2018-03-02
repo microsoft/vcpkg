@@ -2,4 +2,5 @@
 Source: boost-icl
 Version: 1.66.0
 Build-Depends: boost-assert, boost-concept-check, boost-config, boost-date-time, boost-detail, boost-iterator, boost-move, boost-mpl, boost-rational, boost-static-assert, boost-type-traits, boost-utility, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/icl
 Description: Boost icl module

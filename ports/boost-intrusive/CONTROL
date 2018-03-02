@@ -2,4 +2,5 @@
 Source: boost-intrusive
 Version: 1.66.0
 Build-Depends: boost-assert, boost-config, boost-core, boost-functional, boost-move, boost-static-assert, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/intrusive
 Description: Boost intrusive module

@@ -1,3 +1,4 @@
 Source: nlohmann-json
 Version: 3.1.0
+Homepage: https://github.com/nlohmann/json/releases
 Description: JSON for Modern C++

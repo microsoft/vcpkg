@@ -1,4 +1,5 @@
 Source: exiv2
 Version: 2018-02-25
 Build-Depends: zlib, expat, libiconv
+Homepage: https://github.com/Exiv2/exiv2
 Description: Image metadata library and tools http://www.exiv2.org

@@ -1,3 +1,4 @@
 Source: libconfig
 Version: 1.7.2
+Homepage: https://github.com/hyperrealm/libconfig
 Description: C/C++ library for processing configuration files

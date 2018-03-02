@@ -2,4 +2,5 @@
 Source: boost-function
 Version: 1.66.0
 Build-Depends: boost-assert, boost-config, boost-core, boost-detail, boost-integer, boost-mpl, boost-preprocessor, boost-type-index, boost-typeof, boost-type-traits, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/function
 Description: Boost function module

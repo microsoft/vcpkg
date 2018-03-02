@@ -1,4 +1,5 @@
 Source: libssh
 Version: 0.7.5-1
+Homepage: https://red.libssh.org/attachments/download/218
 Description:libssh is a multiplatform C library implementing the SSHv2 and SSHv1 protocol on client and server side
 Build-Depends: zlib, openssl

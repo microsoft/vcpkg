@@ -1,4 +1,5 @@
 Source: harfbuzz
 Version: 1.7.4
+Homepage: https://github.com/behdad/harfbuzz
 Description: HarfBuzz OpenType text shaping engine
 Build-Depends: freetype, ragel, glib (windows)

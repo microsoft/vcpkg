@@ -2,4 +2,5 @@
 Source: boost-gil
 Version: 1.66.0
 Build-Depends: boost-bind, boost-concept-check, boost-config, boost-integer, boost-iterator, boost-mpl, boost-preprocessor, boost-smart-ptr, boost-static-assert, boost-type-traits, boost-utility, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/gil
 Description: Boost gil module

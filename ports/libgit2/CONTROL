@@ -1,3 +1,4 @@
 Source: libgit2
 Version: 0.26.0
+Homepage: https://github.com/libgit2/libgit2
 Description: Git linkable library

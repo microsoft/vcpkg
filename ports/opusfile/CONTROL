@@ -1,4 +1,5 @@
 Source: opusfile
 Version: 0.9-1
+Homepage: https://github.com/xiph/opusfile
 Description: Stand-alone decoder library for .opus streams
 Build-Depends: libogg, opus, openssl

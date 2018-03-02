@@ -2,4 +2,5 @@
 Source: boost-poly-collection
 Version: 1.66.0
 Build-Depends: boost-assert, boost-config, boost-core, boost-detail, boost-iterator, boost-mpl, boost-type-erasure (windows), boost-type-traits, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/poly_collection
 Description: Boost poly_collection module

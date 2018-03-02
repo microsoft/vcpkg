@@ -2,4 +2,5 @@
 Source: boost-coroutine2
 Version: 1.66.0
 Build-Depends: boost-assert, boost-config, boost-context (windows), boost-detail, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/coroutine2
 Description: Boost coroutine2 module

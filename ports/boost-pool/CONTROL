@@ -2,4 +2,5 @@
 Source: boost-pool
 Version: 1.66.0
 Build-Depends: boost-assert, boost-compatibility, boost-config, boost-detail, boost-integer, boost-thread (windows), boost-throw-exception, boost-type-traits, boost-vcpkg-helpers
+Homepage: https://github.com/boostorg/pool
 Description: Boost pool module

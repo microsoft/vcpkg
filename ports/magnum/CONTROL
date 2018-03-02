@@ -1,95 +1,122 @@
 Source: magnum
 Version: 2018.02-1
 Build-Depends: corrade[pluginmanager], corrade[utility]
+Homepage: https://github.com/mosra/magnum
 Description: C++11/C++14 graphics middleware for games and data visualization http://magnum.graphics/
 Default-Features: debugtools, meshtools, primitives, scenegraph, shaders, shapes, text, texturetools, sdl2application, windowlesswglapplication
 
 Feature: sdl2application
+Homepage: https://github.com/mosra/magnum
 Description: Sdl2Application library
 Build-Depends: sdl2
 
 Feature: glfwapplication
+Homepage: https://github.com/mosra/magnum
 Description: GlfwApplication library
 Build-Depends: glfw3
 
 Feature: glutapplication
+Homepage: https://github.com/mosra/magnum
 Description: GlutApplication library
 Build-Depends: freeglut
 
 Feature: audio
+Homepage: https://github.com/mosra/magnum
 Description: Audio library
 Build-Depends: openal-soft
 
 Feature: magnuminfo
+Homepage: https://github.com/mosra/magnum
 Description: magnum-info utility
 
 Feature: fontconverter
+Homepage: https://github.com/mosra/magnum
 Description: magnum-fontconverter utility
 Build-Depends: magnum[text]
 
 Feature: distancefieldconverter
+Homepage: https://github.com/mosra/magnum
 Description: magnum-distancefieldconverter utility
 Build-Depends: magnum[texturetools]
 
 Feature: imageconverter
+Homepage: https://github.com/mosra/magnum
 Description: magnum-imageconverter utility
 
 Feature: wavaudioimporter
+Homepage: https://github.com/mosra/magnum
 Description: WavAudioImporter plugin
 Build-Depends: magnum[audio]
 
 Feature: magnumfont
+Homepage: https://github.com/mosra/magnum
 Description: MagnumFont plugin
 Build-Depends: magnum[text]
 
 Feature: magnumfontconverter
+Homepage: https://github.com/mosra/magnum
 Description: MagnumFontConverter plugin
 Build-Depends: magnum[text], magnum[tgaimageconverter]
 
 Feature: objimporter
+Homepage: https://github.com/mosra/magnum
 Description: ObjImporter plugin
 
 Feature: tgaimageconverter
+Homepage: https://github.com/mosra/magnum
 Description: TgaImageConverter plugin
 
 Feature: tgaimporter
+Homepage: https://github.com/mosra/magnum
 Description: TgaImporter plugin
 
 Feature: debugtools
+Homepage: https://github.com/mosra/magnum
 Description: DebugTools library
 
 Feature: meshtools
+Homepage: https://github.com/mosra/magnum
 Description: MeshTools library
 
 Feature: primitives
+Homepage: https://github.com/mosra/magnum
 Description: Primitives library
 
 Feature: shapes
+Homepage: https://github.com/mosra/magnum
 Description: Shapes library
 
 Feature: scenegraph
+Homepage: https://github.com/mosra/magnum
 Description: SceneGraph library
 
 Feature: shaders
+Homepage: https://github.com/mosra/magnum
 Description: Shaders library
 
 Feature: text
+Homepage: https://github.com/mosra/magnum
 Description: Text library
 Build-Depends: magnum[texturetools]
 
 Feature: texturetools
+Homepage: https://github.com/mosra/magnum
 Description: TextureTools library
 
 Feature: al-info
+Homepage: https://github.com/mosra/magnum
 Description: magnum-al-info utility
 Build-Depends: magnum[audio]
 
 Feature: windowlesswglapplication
+Homepage: https://github.com/mosra/magnum
 Description: WindowlessWglApplication library
 
 Feature: wglcontext
+Homepage: https://github.com/mosra/magnum
 Description: WglContext library
 
 Feature: opengltester
+Homepage: https://github.com/mosra/magnum
 Description: OpenGLTester library
 Build-Depends: corrade[testsuite]

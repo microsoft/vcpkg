@@ -1,3 +1,4 @@
 Source: cereal
 Version: 1.2.2-1
+Homepage: https://github.com/USCiLab/cereal
 Description: a header-only C++11 serialization library (built in support for binary, XML and JSon)

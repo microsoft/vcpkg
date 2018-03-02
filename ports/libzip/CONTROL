@@ -1,4 +1,5 @@
 Source: libzip
 Version: 1.4.0
 Build-Depends: zlib
+Homepage: https://github.com/nih-at/libzip
 Description: A library for reading, creating, and modifying zip archives.

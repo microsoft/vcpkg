@@ -2,4 +2,5 @@
 Source: boost-iostreams
 Version: 1.66.0
 Build-Depends: boost-assert, boost-bind, boost-build, boost-config, boost-core, boost-detail, boost-function, boost-integer, boost-iterator, boost-mpl, boost-preprocessor, boost-range, boost-regex, boost-smart-ptr, boost-static-assert, boost-throw-exception, boost-type-traits, boost-utility, boost-vcpkg-helpers, bzip2, zlib
+Homepage: https://github.com/boostorg/iostreams
 Description: Boost iostreams module

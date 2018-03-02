@@ -2,4 +2,5 @@
 Source: boost-python
 Version: 1.66.0-1
 Build-Depends: boost-bind, boost-config, boost-core, boost-detail, boost-graph, boost-integer, boost-iterator, boost-mpl, boost-preprocessor, boost-property-map, boost-smart-ptr, boost-static-assert, boost-tuple, boost-utility, boost-vcpkg-helpers, python3
+Homepage: https://github.com/boostorg/python
 Description: Boost python module

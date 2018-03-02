@@ -2,4 +2,5 @@
 Source: boost-dll
 Version: 1.66.0
 Build-Depends: boost-config, boost-core, boost-filesystem (windows), boost-integer, boost-move, boost-mpl, boost-predef, boost-smart-ptr, boost-spirit, boost-static-assert, boost-system, boost-throw-exception, boost-type-index, boost-type-traits, boost-utility, boost-vcpkg-helpers, boost-winapi
+Homepage: https://github.com/boostorg/dll
 Description: Boost dll module

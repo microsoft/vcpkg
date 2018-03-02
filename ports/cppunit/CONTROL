@@ -1,3 +1,4 @@
 Source: cppunit
 Version: 1.14.0
+Homepage: http://dev-www.libreoffice.org/src
 Description: CppUnit is the C++ port of the famous JUnit framework for unit testing. Test output is in XML for automatic testing and GUI based for supervised tests.

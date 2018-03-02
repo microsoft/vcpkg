@@ -1,3 +1,4 @@
 Source: cppwinrt
 Version: fall_2017_creators_update_for_vs_15.3-2
+Homepage: https://github.com/Microsoft/cppwinrt
 Description: C++/WinRT is a standard C++ language projection for the Windows Runtime.
