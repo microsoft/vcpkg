@@ -212,7 +212,7 @@ function CreateTripletsForVS
     $vsInstallPath = $vsInstallPath -replace "\\","/"
     $vsInstallNickname = $vsInstallNickname.ToLower()
 
-    foreach ($architecture in @("x86", "x64"))
+    foreach ($architecture in @("x86", "x64", "arm", "arm64"))
     {
         foreach ($linkage in @("dynamic", "static"))
         {
