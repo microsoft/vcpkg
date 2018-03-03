@@ -62,10 +62,12 @@ function(vcpkg_configure_cmake)
         set(_csc_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITECTURE})
     endif()
 
-    set(NINJA_CAN_BE_USED ON)
+    set(NINJA_CAN_BE_USED ON) # Ninja as generator
+    set(NINJA_HOST ON) # Ninja as parallel configurator
     if(_csc_HOST_ARCHITECTURE STREQUAL "x86")
         # Prebuilt ninja binaries are only provided for x64 hosts
         set(NINJA_CAN_BE_USED OFF)
+        set(NINJA_HOST OFF)
     elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         # Ninja and MSBuild have many differences when targetting UWP, so use MSBuild to maximize existing compatibility
         set(NINJA_CAN_BE_USED OFF)
@@ -214,7 +216,7 @@ function(vcpkg_configure_cmake)
         -DCMAKE_BUILD_TYPE=Debug
         -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug)
 
-    if(NINJA_CAN_BE_USED AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows" AND NOT _csc_DISABLE_PARALLEL_CONFIGURE)
+    if(NINJA_HOST AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows" AND NOT _csc_DISABLE_PARALLEL_CONFIGURE)
 
         vcpkg_find_acquire_program(NINJA)
         get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
