@@ -2,9 +2,17 @@
 param(
     [Parameter(Mandatory=$True)][String]$Port,
     [Parameter(Mandatory=$True)][String]$VcpkgPath,
+    [Parameter(Mandatory=$True)][String]$WorkDirectory,
     [Parameter(Mandatory=$False)][Switch]$DryRun,
+    [Parameter(Mandatory=$False)][Switch]$Releases,
+    [Parameter(Mandatory=$False)][Switch]$Tags,
     [Parameter(Mandatory=$False)][Switch]$Rolling
 )
+
+if (!$Releases -and !$Tags -and !$Rolling)
+{
+    throw "Must pass releases, tags, or rolling"
+}
 
 if (!(Test-Path "$VcpkgPath/.vcpkg-root"))
 {
@@ -17,8 +25,8 @@ $portfile = "$portdir/portfile.cmake"
 $portfile_contents = Get-Content $portfile -Raw
 
 $vcpkg_from_github_invokes = @($portfile_contents | select-string $(@("vcpkg_from_github\([^)]*",
-"REPO ([^)\s]+)[^)\S]+",
-"REF ([^)\s]+)[^)\S]+",
+"REPO +`"?([^)\s]+)[^)\S`"]+",
+"REF +([^)\s]+)[^)\S]+",
 "[^)]*\)") -join "") | % Matches)
 
 if ($vcpkg_from_github_invokes.Count -eq 0)
@@ -32,30 +40,52 @@ Write-Verbose "repo=$repo"
 $oldtag = $vcpkg_from_github_invokes[0].Groups[2].Value -replace "`"",""
 Write-Verbose "oldtag=$oldtag"
 
-try
+if ($Tags)
 {
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    if (!$Rolling)
+    $workdirarg = "--git-dir=$WorkDirectory/$repo.git"
+    if (!(Test-Path "$WorkDirectory/$repo.git"))
     {
-        $doc = Invoke-WebRequest -Uri "https://api.github.com/repos/$repo/releases/latest" | ConvertFrom-Json
-        $newtag = $doc | % tag_name
+        git clone --bare https://github.com/$repo "$WorkDirectory/$repo.git"
     }
     else
     {
-        $doc = Invoke-WebRequest -Uri "https://api.github.com/repos/$repo/branches/master" | ConvertFrom-Json
-        $newtag = $doc.commit.sha
+        git $workdirarg fetch
     }
-    Write-Verbose "newtag=$newtag"
+    $latesttagsha = git $workdirarg rev-list --tags --max-count=1
+    $newtag = git $workdirarg describe --tags --abbrev=0 $latesttagsha
 }
-catch [System.Net.WebException]
+else
 {
-    "unable to fetch for $Port"
-    return
+    try
+    {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        if ($Releases)
+        {
+            $doc = Invoke-WebRequest -Uri "https://api.github.com/repos/$repo/releases/latest" | ConvertFrom-Json
+            $newtag = $doc | % tag_name
+            if (!$newtag)
+            {
+                "$Port not upgraded: no releases"
+                return
+            }
+        }
+        else
+        {
+            $doc = Invoke-WebRequest -Uri "https://api.github.com/repos/$repo/branches/master" | ConvertFrom-Json
+            $newtag = $doc.commit.sha
+        }
+        Write-Verbose "newtag=$newtag"
+    }
+    catch [System.Net.WebException]
+    {
+        "unable to fetch for $Port"
+        return
+    }
 }
 
 if (!$newtag)
 {
-    "$Port not upgraded: no releases"
+    "$Port not upgraded: calculating newtag failed"
     return
 }
 
