@@ -23,6 +23,7 @@ Vcpkg helps you get C and C++ libraries on Windows. This tool and ecosystem are 
 ### Specifications
 
 - [Export](specifications/export-command.md)
+- [Import](specifications/import-command.md)
 
 ### Blog posts
 

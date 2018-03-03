@@ -1,126 +1,133 @@
 #include "pch.h"
 
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/util.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
-#include <vcpkg/paragraphs.h>
-#include <vcpkg/statusparagraph.h>
+#include <vcpkg/import.h>
+#include <vcpkg/import.ext.h>
+#include <vcpkg/import.pkg.h>
 
 namespace vcpkg::Commands::Import
 {
-    struct Binaries
+    static Optional<std::string> maybe_lookup(std::unordered_map<std::string, std::string> const& m,
+                                              std::string const& key)
     {
-        std::vector<fs::path> dlls;
-        std::vector<fs::path> libs;
+        const auto it = m.find(key);
+        if (it != m.end()) return it->second;
+        return nullopt;
+    } 
+
+    struct ImportArguments
+    {
+        bool dry_run;
+        bool external;
+        bool vcexport;
+
+        vcpkg::Import::Pkg::Options vcexport_options;
+        vcpkg::Import::Ext::Options external_options;
     };
 
-    static void check_is_directory(const LineInfo& line_info, const Files::Filesystem& fs, const fs::path& dirpath)
-    {
-        Checks::check_exit(line_info, fs.is_directory(dirpath), "The path %s is not a directory", dirpath.string());
-    }
+    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
+    static constexpr StringLiteral OPTION_EXTERNAL = "--ext";
+    static constexpr StringLiteral OPTION_VCEXPORT = "--vc";
+    static constexpr StringLiteral OPTION_CONTROL_FILE_PATH = "--control";
+    static constexpr StringLiteral OPTION_INCLUDE_DIRECTORY = "--include";
+    static constexpr StringLiteral OPTION_PROJECT_DIRECTORY = "--project";
+    static constexpr StringLiteral OPTION_VCEXPORT_FILE_PATH = "--pkg";
 
-    static Binaries find_binaries_in_dir(const Files::Filesystem& fs, const fs::path& path)
-    {
-        auto files = fs.get_files_recursive(path);
+    static constexpr std::array<CommandSwitch, 3> IMPORT_SWITCHES = {{
+        {OPTION_DRY_RUN, "Do not actually export"},
+        {OPTION_EXTERNAL, "Import from an external directory"},
+        {OPTION_VCEXPORT, "Import a vcpkg exported package"},
+    }};
 
-        check_is_directory(VCPKG_LINE_INFO, fs, path);
-
-        Binaries binaries;
-        for (auto&& file : files)
-        {
-            if (fs.is_directory(file)) continue;
-            const auto ext = file.extension();
-            if (ext == ".dll")
-                binaries.dlls.push_back(std::move(file));
-            else if (ext == ".lib")
-                binaries.libs.push_back(std::move(file));
-        }
-        return binaries;
-    }
-
-    static void copy_files_into_directory(Files::Filesystem& fs,
-                                          const std::vector<fs::path>& files,
-                                          const fs::path& destination_folder)
-    {
-        std::error_code ec;
-        fs.create_directory(destination_folder, ec);
-
-        for (auto const& src_path : files)
-        {
-            const fs::path dest_path = destination_folder / src_path.filename();
-            fs.copy(src_path, dest_path, fs::copy_options::overwrite_existing);
-        }
-    }
-
-    static void place_library_files_in(Files::Filesystem& fs,
-                                       const fs::path& include_directory,
-                                       const fs::path& project_directory,
-                                       const fs::path& destination_path)
-    {
-        check_is_directory(VCPKG_LINE_INFO, fs, include_directory);
-        check_is_directory(VCPKG_LINE_INFO, fs, project_directory);
-        check_is_directory(VCPKG_LINE_INFO, fs, destination_path);
-        const Binaries debug_binaries = find_binaries_in_dir(fs, project_directory / "Debug");
-        const Binaries release_binaries = find_binaries_in_dir(fs, project_directory / "Release");
-
-        const fs::path destination_include_directory = destination_path / "include";
-        fs.copy(include_directory,
-                destination_include_directory,
-                fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-
-        copy_files_into_directory(fs, release_binaries.dlls, destination_path / "bin");
-        copy_files_into_directory(fs, release_binaries.libs, destination_path / "lib");
-
-        std::error_code ec;
-        fs.create_directory(destination_path / "debug", ec);
-        copy_files_into_directory(fs, debug_binaries.dlls, destination_path / "debug" / "bin");
-        copy_files_into_directory(fs, debug_binaries.libs, destination_path / "debug" / "lib");
-    }
-
-    static void do_import(const VcpkgPaths& paths,
-                          const fs::path& include_directory,
-                          const fs::path& project_directory,
-                          const BinaryParagraph& control_file_data)
-    {
-        auto& fs = paths.get_filesystem();
-        const fs::path library_destination_path = paths.package_dir(control_file_data.spec);
-        std::error_code ec;
-        fs.create_directory(library_destination_path, ec);
-        place_library_files_in(paths.get_filesystem(), include_directory, project_directory, library_destination_path);
-
-        const fs::path control_file_path = library_destination_path / "CONTROL";
-        fs.write_contents(control_file_path, Strings::serialize(control_file_data));
-    }
+    static constexpr std::array<CommandSetting, 4> IMPORT_SETTINGS = {{
+        {OPTION_CONTROL_FILE_PATH, "Specify a CONTROL file"},
+        {OPTION_INCLUDE_DIRECTORY, "Specify a include directory"},
+        {OPTION_PROJECT_DIRECTORY, "Specify a project directory"},
+        {OPTION_VCEXPORT_FILE_PATH, "SPecify a vcexport.7z file"},
+    }};
 
     const CommandStructure COMMAND_STRUCTURE = {
         Help::create_example_string(
-            R"(import C:\path\to\CONTROLfile C:\path\to\includedir C:\path\to\projectdir)"),
+            R"(import --ext --control C:\path\to\CONTROLfile --include C:\path\to\includedir --project C:\path\to\projectdir)"),
+        0,
         3,
-        3,
-        {},
+        {IMPORT_SWITCHES, IMPORT_SETTINGS},
         nullptr,
     };
 
+    static ImportArguments handle_import_command_arguments(const VcpkgCmdArguments& args)
+    {
+        ImportArguments ret;
+
+        const auto options = args.parse_arguments(COMMAND_STRUCTURE);
+
+        ret.dry_run = options.switches.find(OPTION_DRY_RUN) != options.switches.cend();
+        ret.external = options.switches.find(OPTION_EXTERNAL) != options.switches.cend();
+        ret.vcexport = options.switches.find(OPTION_VCEXPORT) != options.switches.cend();
+
+        if (!ret.external && !ret.vcexport && !ret.dry_run)
+        {
+            // For backword compatibility, fall back to external import
+            ret.external = true;
+        }
+
+        // option handler stolen from export.cpp
+        struct OptionPair
+        {
+            const std::string& name;
+            Optional<std::string>& out_opt;
+        };
+        const auto options_implies =
+            [&](const std::string& main_opt_name, bool main_opt, Span<const OptionPair> implying_opts) {
+                if (main_opt)
+                {
+                    for (auto&& opt : implying_opts)
+                        opt.out_opt = maybe_lookup(options.settings, opt.name);
+                }
+                else
+                {
+                    for (auto&& opt : implying_opts)
+                        Checks::check_exit(VCPKG_LINE_INFO,
+                                           !maybe_lookup(options.settings, opt.name),
+                                           "%s is only valid with %s",
+                                           opt.name,
+                                           main_opt_name);
+                }
+            };
+        options_implies(OPTION_VCEXPORT,
+                        ret.vcexport,
+                        {
+                            {OPTION_VCEXPORT_FILE_PATH, ret.vcexport_options.maybe_vcexport_file_path},
+                        });
+        options_implies(OPTION_EXTERNAL,
+                        ret.external,
+                        {
+                            {OPTION_CONTROL_FILE_PATH, ret.external_options.maybe_control_file_path},
+                            {OPTION_INCLUDE_DIRECTORY, ret.external_options.maybe_include_directory},
+                            {OPTION_PROJECT_DIRECTORY, ret.external_options.maybe_project_directory},
+                        });
+        return ret;
+    }
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        args.parse_arguments(COMMAND_STRUCTURE);
+        const auto opts = handle_import_command_arguments(args);
 
-        const fs::path control_file_path(args.command_arguments[0]);
-        const fs::path include_directory(args.command_arguments[1]);
-        const fs::path project_directory(args.command_arguments[2]);
-
-        const Expected<std::unordered_map<std::string, std::string>> pghs =
-            Paragraphs::get_single_paragraph(paths.get_filesystem(), control_file_path);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           pghs.get() != nullptr,
-                           "Invalid control file %s for package",
-                           control_file_path.generic_string());
-
-        StatusParagraph spgh;
-        spgh.package = BinaryParagraph(*pghs.get());
-        auto& control_file_data = spgh.package;
-
-        do_import(paths, include_directory, project_directory, control_file_data);
+        if (opts.dry_run)
+        {
+            Checks::exit_success(VCPKG_LINE_INFO);
+        }
+        if (opts.vcexport)
+        {
+            vcpkg::Import::Pkg::do_import(paths, opts.vcexport_options);
+        }
+        if (opts.external)
+        {
+            vcpkg::Import::Ext::do_import(paths, opts.external_options);
+        } 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 }
