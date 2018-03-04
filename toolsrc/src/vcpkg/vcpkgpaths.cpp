@@ -628,13 +628,8 @@ namespace vcpkg
                 ret.dumpbin = "";
                 ret.supported_architectures = {
                     ToolsetArchOption{"", System::get_host_processor(), System::get_host_processor()}};
-#if defined(_WIN32)
-                ret.vcvarsall = "cmd";
-                ret.vcvarsall_options = {"/c", "echo done"};
-#else
-                ret.vcvarsall = "true";
+                ret.vcvarsall = "";
                 ret.vcvarsall_options = {};
-#endif
                 ret.version = "external";
                 ret.visual_studio_root_path = "";
                 return ret;
