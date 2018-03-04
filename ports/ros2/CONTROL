@@ -1,4 +1,0 @@
-Source: ros2
-Version: ardent-20180209
-Description: Version 2.0 of the Robot Operating System (ROS) software stack
-#Build-Depends: qt5-base, boost-core, asio, eigen3, tinyxml, tinyxml2, opencv, openssl, fastrtps
