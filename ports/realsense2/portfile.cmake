@@ -12,7 +12,15 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/build_with_static_crt.patch # https://github.com/IntelRealSense/librealsense/pull/1262
+        ${CMAKE_CURRENT_LIST_DIR}/fix_rgb_using_avx2.patch # https://github.com/IntelRealSense/librealsense/pull/1245
 )
+
+# This option will be deprecated in the later versions.
+# Please see Pull Request #1245. https://github.com/IntelRealSense/librealsense/pull/1245
+set(RGB_USING_AVX2 OFF)
+if("avx2" IN_LIST FEATURES)
+    set(RGB_USING_AVX2 ON)
+endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_LIBRARY_LINKAGE)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_CRT_LINKAGE)
@@ -28,6 +36,7 @@ vcpkg_configure_cmake(
         -DBUILD_WITH_OPENMP=OFF
         -DBUILD_SHARED_LIBS=${BUILD_LIBRARY_LINKAGE}
         -DBUILD_WITH_STATIC_CRT=${BUILD_CRT_LINKAGE}
+        -DRGB_USING_AVX2=${RGB_USING_AVX2}
     OPTIONS_DEBUG
         "-DCMAKE_PDB_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
 )
