@@ -5,7 +5,7 @@ vcpkg_from_github(
     REPO IntelRealSense/librealsense
     REF v2.10.1
     SHA512 fb00a424a5bd7335cc661261e76cf623e27a89af1033692d4cb6ed523af1295359929c235e82253911e61323cb7b82551a9223862174cb0e2363ac944b2db923
-    HEAD_REF master
+    HEAD_REF development
 )
 
 vcpkg_apply_patches(
