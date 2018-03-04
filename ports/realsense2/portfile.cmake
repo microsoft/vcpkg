@@ -39,6 +39,7 @@ vcpkg_configure_cmake(
         -DRGB_USING_AVX2=${RGB_USING_AVX2}
     OPTIONS_DEBUG
         "-DCMAKE_PDB_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
+        -DCMAKE_DEBUG_POSTFIX="_d"
 )
 
 vcpkg_install_cmake()
