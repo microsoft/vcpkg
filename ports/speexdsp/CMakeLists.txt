@@ -1,6 +1,7 @@
 # CMAKE project for libspeexdsp
 cmake_minimum_required(VERSION 3.1)
 option(SOURCE_PATH   "Root directory.")
+option(USE_SSE       "Use SSE")
 project (libspeexdsp)
 
 file(GLOB_RECURSE LIBSPEEXDSP_SOURCES "${SOURCE_PATH}/libspeexdsp/*.c")
@@ -20,9 +21,8 @@ endif ()
 
 add_definitions(-DHAVE_CONFIG_H -D_WIN32)
 
-string (TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" LOWERCASE_SYSTEM_PROCESSOR)
-if (LOWERCASE_SYSTEM_PROCESSOR STREQUAL "x86" OR LOWERCASE_SYSTEM_PROCESSOR STREQUAL "amd64")
-    add_definitions(-D_USE_SSE)
+if (USE_SSE)
+    add_definitions(-D_USE_SSE -D_USE_SSE2)
 endif()
 
 include_directories("${SOURCE_PATH}/include"
