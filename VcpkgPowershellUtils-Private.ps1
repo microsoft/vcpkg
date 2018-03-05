@@ -42,7 +42,7 @@ function checkExit
     if (!$condition)
     {
         Write-Host "Error: $errorMessage"
-        throw
+        throw "$errorMessage"
     }
 }
 
