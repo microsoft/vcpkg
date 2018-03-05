@@ -21,7 +21,11 @@ namespace vcpkg::Commands::Env
 
         const auto pre_build_info = Build::PreBuildInfo::from_triplet_file(paths, default_triplet);
         const Toolset& toolset = paths.get_toolset(pre_build_info);
-        System::cmd_execute_clean(Build::make_build_env_cmd(pre_build_info, toolset) + " && cmd");
+        auto env_cmd = Build::make_build_env_cmd(pre_build_info, toolset);
+        if (env_cmd.empty())
+            System::cmd_execute_clean("cmd");
+        else
+            System::cmd_execute_clean(env_cmd + " && cmd");
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }

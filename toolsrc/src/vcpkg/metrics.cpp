@@ -150,6 +150,9 @@ namespace vcpkg::Metrics
         std::string properties;
         std::string measurements;
 
+        std::vector<std::string> buildtime_names;
+        std::vector<std::string> buildtime_times;
+
         void track_property(const std::string& name, const std::string& value)
         {
             if (properties.size() != 0) properties.push_back(',');
@@ -166,8 +169,23 @@ namespace vcpkg::Metrics
             measurements.append(std::to_string(value));
         }
 
+        void track_buildtime(const std::string& name, double value)
+        {
+            buildtime_names.push_back(name);
+            buildtime_times.push_back(std::to_string(value));
+        }
+
         std::string format_event_data_template() const
         {
+            auto props_plus_buildtimes = properties;
+            if (buildtime_names.size() > 0)
+            {
+                if (props_plus_buildtimes.size() > 0) props_plus_buildtimes.push_back(',');
+                props_plus_buildtimes.append(Strings::format(R"("buildnames": [%s], "buildtimes": [%s])",
+                                                             Strings::join(",", buildtime_names, to_json_string),
+                                                             Strings::join(",", buildtime_times)));
+            }
+
             const std::string& session_id = get_session_id();
             return Strings::format(R"([{
     "ver": 1,
@@ -178,8 +196,8 @@ namespace vcpkg::Metrics
     "iKey": "b4e88960-4393-4dd9-ab8e-97e8fe6d7603",
     "flags": 0.000000,
     "tags": {
-        "ai.device.os": "Windows",
-        "ai.device.osVersion": "%s",
+        "ai.device.os": "Other",
+        "ai.device.osVersion": "%s-%s",
         "ai.session.id": "%s",
         "ai.user.id": "%s",
         "ai.user.accountAcquisitionDate": "%s"
@@ -195,11 +213,22 @@ namespace vcpkg::Metrics
     }
 }])",
                                    timestamp,
+#if defined(_WIN32)
+                                   "Windows",
+#elif defined(__APPLE__)
+                                   "OSX",
+#elif defined(__linux__)
+                                   "Linux",
+#elif defined(__unix__)
+                                   "Unix",
+#else
+                                   "Other",
+#endif
                                    get_os_version_string(),
                                    session_id,
                                    user_id,
                                    user_timestamp,
-                                   properties,
+                                   props_plus_buildtimes,
                                    measurements);
         }
     };
@@ -273,6 +302,11 @@ namespace vcpkg::Metrics
     void Metrics::set_print_metrics(bool should_print_metrics) { g_should_print_metrics = should_print_metrics; }
 
     void Metrics::track_metric(const std::string& name, double value) { g_metricmessage.track_metric(name, value); }
+
+    void Metrics::track_buildtime(const std::string& name, double value)
+    {
+        g_metricmessage.track_buildtime(name, value);
+    }
 
     void Metrics::track_property(const std::string& name, const std::string& value)
     {
@@ -367,49 +401,62 @@ namespace vcpkg::Metrics
 
     void Metrics::flush()
     {
-#if defined(_WIN32)
         const std::string payload = g_metricmessage.format_event_data_template();
         if (g_should_print_metrics) std::cerr << payload << "\n";
         if (!g_should_send_metrics) return;
 
-        // upload(payload);
-
+#if defined(_WIN32)
         wchar_t temp_folder[MAX_PATH];
         GetTempPathW(MAX_PATH, temp_folder);
 
         const fs::path temp_folder_path = fs::path(temp_folder) / "vcpkg";
         const fs::path temp_folder_path_exe =
             temp_folder_path / Strings::format("vcpkgmetricsuploader-%s.exe", Commands::Version::base_version());
+#endif
 
         auto& fs = Files::get_real_filesystem();
 
-        if (true)
-        {
-            const fs::path exe_path = [&fs]() -> fs::path {
-                auto vcpkgdir = System::get_exe_path_of_current_process().parent_path();
-                auto path = vcpkgdir / "vcpkgmetricsuploader.exe";
-                if (fs.exists(path)) return path;
+#if defined(_WIN32)
 
-                path = vcpkgdir / "scripts" / "vcpkgmetricsuploader.exe";
-                if (fs.exists(path)) return path;
+        const fs::path exe_path = [&fs]() -> fs::path {
+            auto vcpkgdir = System::get_exe_path_of_current_process().parent_path();
+            auto path = vcpkgdir / "vcpkgmetricsuploader.exe";
+            if (fs.exists(path)) return path;
 
-                return "";
-            }();
+            path = vcpkgdir / "scripts" / "vcpkgmetricsuploader.exe";
+            if (fs.exists(path)) return path;
 
-            std::error_code ec;
-            fs.create_directories(temp_folder_path, ec);
-            if (ec) return;
-            fs.copy_file(exe_path, temp_folder_path_exe, fs::copy_options::skip_existing, ec);
-            if (ec) return;
-        }
+            return "";
+        }();
 
+        std::error_code ec;
+        fs.create_directories(temp_folder_path, ec);
+        if (ec) return;
+        fs.copy_file(exe_path, temp_folder_path_exe, fs::copy_options::skip_existing, ec);
+        if (ec) return;
+#else
+        if (!fs.exists("/tmp")) return;
+        const fs::path temp_folder_path = "/tmp/vcpkg";
+        std::error_code ec;
+        fs.create_directory(temp_folder_path, ec);
+        // ignore error
+        ec.clear();
+#endif
         const fs::path vcpkg_metrics_txt_path = temp_folder_path / ("vcpkg" + generate_random_UUID() + ".txt");
-        fs.write_contents(vcpkg_metrics_txt_path, payload);
+        fs.write_contents(vcpkg_metrics_txt_path, payload, ec);
+        if (ec) return;
 
+#if defined(_WIN32)
         const std::string cmd_line = Strings::format("start \"vcpkgmetricsuploader.exe\" \"%s\" \"%s\"",
                                                      temp_folder_path_exe.u8string(),
                                                      vcpkg_metrics_txt_path.u8string());
-        System::cmd_execute_clean(cmd_line);
+#else
+        auto escaped_path = Strings::escape_string(vcpkg_metrics_txt_path.u8string(), '\'', '\\');
+        const std::string cmd_line = Strings::format(
+            R"((curl "https://dc.services.visualstudio.com/v2/track" -H "Content-Type: application/json" -X POST --data '@%s' >/dev/null 2>&1; rm '%s') &)",
+            escaped_path,
+            escaped_path);
 #endif
+        System::cmd_execute_clean(cmd_line);
     }
 }

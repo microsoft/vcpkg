@@ -3,14 +3,14 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/include/mysql/mysql.h")
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mysql-server-mysql-5.7.17)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/mysql/mysql-server/archive/mysql-5.7.17.tar.gz"
-    FILENAME "mysql-server-mysql-5.7.17.tar.gz"
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO mysql/mysql-server
+    REF mysql-5.7.17
     SHA512 31488972e08a6b83f88e6e3f7923aca91e01eac702f4942fdae92e13f66d92ac86c24dfe7a65a001db836c900147d1c3871b36af8cbb281a0e6c555617cac12c
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}

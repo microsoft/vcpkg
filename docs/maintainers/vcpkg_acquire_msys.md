@@ -4,12 +4,17 @@ Download and prepare an MSYS2 instance.
 
 ## Usage
 ```cmake
-vcpkg_acquire_msys(<MSYS_ROOT_VAR>)
+vcpkg_acquire_msys(<MSYS_ROOT_VAR> [PACKAGES <package>...])
 ```
 
 ## Parameters
 ### MSYS_ROOT_VAR
 An out-variable that will be set to the path to MSYS2.
+
+### PACKAGES
+A list of packages to acquire in msys.
+
+To ensure a package is available: `vcpkg_acquire_msys(MSYS_ROOT PACKAGES make automake1.15)`
 
 ## Notes
 A call to `vcpkg_acquire_msys` will usually be followed by a call to `bash.exe`:
@@ -22,19 +27,6 @@ vcpkg_execute_required_process(
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
     LOGNAME build-${TARGET_TRIPLET}-rel
 )
-```
-To ensure a package is available:
-```cmake
-vcpkg_acquire_msys(MSYS_ROOT)
-set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
-
-message(STATUS "Installing MSYS Packages")
-vcpkg_execute_required_process(
-    COMMAND
-        ${BASH} --noprofile --norc -c
-            'PATH=/usr/bin:\$PATH pacman -Sy --noconfirm --needed make'
-    WORKING_DIRECTORY ${MSYS_ROOT}
-    LOGNAME pacman-${TARGET_TRIPLET})
 ```
 
 ## Examples

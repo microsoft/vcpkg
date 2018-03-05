@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/butteraugli
-    REF 8c60a2aefa19adb40e457be5358d7cc93205c72f
-    SHA512 ff3d8fd952d291b51dab60cef6fa46b723c4a7b649c3df70f89c63febce865dc6a2e5f95ca165ea4424fed52a57c2d76c918eb31646c44ba34a0fa51a003c9dd
+    REF 856a4da68d02d30e3bf843e33536f2b3a698b249
+    SHA512 f02ee97f186b59cc685a63095e5618aedbfebf08ab2cf438189fc4214c7d562506368ec210c08df236132dc2f855b6b0a6226bd6dc27c1c04e9c1b0b0ac4f1df
     HEAD_REF master
 )
 

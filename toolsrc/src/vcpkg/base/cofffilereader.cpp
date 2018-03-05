@@ -306,8 +306,5 @@ namespace vcpkg::CoffFileReader
 
         return {std::vector<MachineType>(machine_types.cbegin(), machine_types.cend())};
     }
-#else
-    DllInfo read_dll(const fs::path& path) { exit(-1); }
-    LibInfo read_lib(const fs::path& path) { exit(-1); }
 #endif
 }

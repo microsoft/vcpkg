@@ -19,7 +19,7 @@ USA.  */
 #ifndef _LIBINTL_H
 #define _LIBINTL_H	1
 
-#ifdef BUILDING_LIBINTL
+#if defined(_WIN32) && defined(libintl_EXPORTS)
 #define LIBINTL_DLL_EXPORTED __declspec(dllexport)
 #else
 #define LIBINTL_DLL_EXPORTED
