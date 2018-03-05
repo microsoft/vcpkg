@@ -170,7 +170,7 @@ function(add_library name)
     list(FIND ARGV "ALIAS" ALIAS_IDX)
     if(IMPORTED_IDX EQUAL -1 AND INTERFACE_IDX EQUAL -1 AND ALIAS_IDX EQUAL -1)
         get_target_property(IS_LIBRARY_SHARED ${name} TYPE)
-        if(VCPKG_APPLOCAL_DEPS AND _VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp" AND IS_LIBRARY_SHARED STREQUAL "SHARED_LIBRARY")
+        if(VCPKG_APPLOCAL_DEPS AND _VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp" AND (IS_LIBRARY_SHARED STREQUAL "SHARED_LIBRARY" OR IS_LIBRARY_SHARED STREQUAL "MODULE_LIBRARY"))
             add_custom_command(TARGET ${name} POST_BUILD
                 COMMAND powershell -noprofile -executionpolicy Bypass -file ${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1
                     -targetBinary $<TARGET_FILE:${name}>
