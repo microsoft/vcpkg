@@ -1,3 +1,7 @@
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR VCPKG_CRT_LINKAGE STREQUAL "static")
+    message(FATAL_ERROR "ismrmrd only supports dynamic library and crt linkage")
+endif()
+
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
@@ -11,6 +15,7 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS -DUSE_SYSTEM_PUGIXML=ON
 )
 
 vcpkg_install_cmake()
@@ -21,13 +26,17 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/ismrmrd/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(COPY ${CURRENT_PACKAGES_DIR}/lib/ismrmrd.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/ismrmrd.dll)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/ismrmrd.dll)
+    file(COPY ${CURRENT_PACKAGES_DIR}/lib/ismrmrd.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/ismrmrd.dll)
+endif()
 
-file(COPY ${CURRENT_PACKAGES_DIR}/debug/lib/ismrmrd.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/ismrmrd.dll)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/ismrmrd.dll)
+    file(COPY ${CURRENT_PACKAGES_DIR}/debug/lib/ismrmrd.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/ismrmrd.dll)
+endif()
 
-file(COPY ${CURRENT_PACKAGES_DIR}/bin/ismrmrd_info.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+file(COPY ${CURRENT_PACKAGES_DIR}/bin/ismrmrd_info.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/ismrmrd)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/ismrmrd_info.exe)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/ismrmrd_info.exe)
@@ -35,3 +44,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/ismrmrd_info.exe)
 file(COPY ${CURRENT_BUILDTREES_DIR}/src/ismrmrd-1.3.2/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ismrmrd)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/ismrmrd/LICENSE ${CURRENT_PACKAGES_DIR}/share/ismrmrd/copyright)
 
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/ismrmrd)
