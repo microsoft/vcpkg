@@ -1030,7 +1030,7 @@ vcpkg (0.0.82)
     - flann                1.9.1-4
     - folly                v2017.07.17.01
     - g2o                  20170730_git-1
-    - geogram              1.4.9
+    - geogram              1.6.0
     - gsl-lite             0.24.0
     - hpx                  1.0.0-4
     - hunspell             1.6.1-1
