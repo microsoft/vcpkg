@@ -1,0 +1,4 @@
+Source: google-cloud-cpp
+Version: 2018-03-01
+Description: C++ Client Libraries for Google Cloud Platform APIs.
+Build-Depends: grpc, gtest
