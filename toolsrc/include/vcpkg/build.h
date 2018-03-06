@@ -12,6 +12,7 @@
 
 #include <array>
 #include <map>
+#include <set>
 #include <vector>
 
 namespace vcpkg::Build
@@ -97,6 +98,7 @@ namespace vcpkg::Build
         /// </summary>
         static PreBuildInfo from_triplet_file(const VcpkgPaths& paths, const Triplet& triplet);
 
+        std::string triplet_abi_tag;
         std::string target_architecture;
         std::string cmake_system_name;
         std::string cmake_system_version;
@@ -125,7 +127,7 @@ namespace vcpkg::Build
                            const Triplet& triplet,
                            fs::path&& port_dir,
                            const BuildPackageOptions& build_package_options,
-                           const std::unordered_set<std::string>& feature_list)
+                           const std::set<std::string>& feature_list)
             : scf(src)
             , triplet(triplet)
             , port_dir(std::move(port_dir))
@@ -138,7 +140,7 @@ namespace vcpkg::Build
         const Triplet& triplet;
         fs::path port_dir;
         const BuildPackageOptions& build_package_options;
-        const std::unordered_set<std::string>& feature_list;
+        const std::set<std::string>& feature_list;
     };
 
     ExtendedBuildResult build_package(const VcpkgPaths& paths,

@@ -23,7 +23,6 @@ set(HEADERS zzip/__debug.h
             zzip/__fnmatch.h
             zzip/__hints.h
             zzip/__mmap.h
-            zzip/_config.h
             zzip/_msvc.h
             zzip/autoconf.h
             zzip/conf.h

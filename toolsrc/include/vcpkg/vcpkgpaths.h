@@ -63,6 +63,7 @@ namespace vcpkg
 
         fs::path ports_cmake;
 
+        const fs::path& get_7za_exe() const;
         const fs::path& get_cmake_exe() const;
         const fs::path& get_git_exe() const;
         const fs::path& get_nuget_exe() const;
@@ -80,6 +81,7 @@ namespace vcpkg
 
     private:
         Lazy<std::vector<std::string>> available_triplets;
+        Lazy<fs::path> _7za_exe;
         Lazy<fs::path> cmake_exe;
         Lazy<fs::path> git_exe;
         Lazy<fs::path> nuget_exe;

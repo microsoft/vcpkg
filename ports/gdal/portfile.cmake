@@ -2,6 +2,12 @@ if (TRIPLET_SYSTEM_ARCH MATCHES "arm")
     message(FATAL_ERROR " ARM is currently not supported.")
 endif()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    message(FATAL_ERROR "GDAL's nmake buildsystem does not support building static libraries")
+elseif(VCPKG_CRT_LINKAGE STREQUAL "static")
+    message(FATAL_ERROR "GDAL's nmake buildsystem does not support static crt linkage")
+endif()
+
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE

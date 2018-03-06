@@ -41,10 +41,13 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/MagnumExtras TARGET_PATH share/MagnumExtras)
+
 # Messages to the user
 if("ui" IN_LIST FEATURES)
     message(WARNING "It is recommended to install one of magnum-plugins[freetypefont,harfbuzzfont,stbtruetypefont] to have the UI library working out of the box")
 endif()
+
 
 # Debug includes and share are the same as release
 file(REMOVE_RECURSE
@@ -52,15 +55,16 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Clean up empty directories
-if(NOT FEATURES)
+if("${FEATURES}" STREQUAL "")
     file(REMOVE_RECURSE
         ${CURRENT_PACKAGES_DIR}/bin
         ${CURRENT_PACKAGES_DIR}/lib
-        ${CURRENT_PACKAGES_DIR}/debug)
+        ${CURRENT_PACKAGES_DIR}/debug
+    )
     set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()

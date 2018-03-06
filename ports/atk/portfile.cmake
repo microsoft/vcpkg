@@ -1,7 +1,6 @@
 # ATK uses DllMain
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR VCPKG_CRT_LINKAGE STREQUAL "static")
+    message(FATAL_ERROR "ATK only supports dynamic library and crt linkage")
 endif()
 
 include(vcpkg_common_functions)

@@ -1,5 +1,3 @@
-message(FATAL_ERROR "temporarily disabled")
-
 # LLVM documentation recommends always using static library linkage when
 #   building with Microsoft toolchain; it's also the default on other platforms
 set(VCPKG_LIBRARY_LINKAGE static)

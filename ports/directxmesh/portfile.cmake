@@ -1,14 +1,3 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
 include(vcpkg_common_functions)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -20,13 +9,11 @@ if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
   message(FATAL_ERROR "DirectXMesh only supports dynamic CRT linkage")
 endif()
 
-set(DIRECTXMESH_VERSION dec2017)
-set(DIRECTXMESH_ARCHIVE_HASH 82468f1fcf0d51cf614921b1bd2dd06a05b120f84531d59429042951a39d1e978b5395cdf75269fe1767789ce487bfc6e544c54df4b1b9bec9adb1c853dc8497)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
-    REF ${DIRECTXMESH_VERSION}
-    SHA512 ${DIRECTXMESH_ARCHIVE_HASH}
+    REF feb2018
+    SHA512 b5d21c8960ef9c8f2e608807ce29fd4873d0f4ad5bb0b6432f6efbb6110bfd61a16fbaab8a5c626cc1977f48923a562a618f29b9b2f112db625c0a8eb43f0422
     HEAD_REF master
 )
 

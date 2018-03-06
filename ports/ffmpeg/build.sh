@@ -8,7 +8,6 @@ fi
 if [ "$HTTPS_PROXY" ]; then
     export https_proxy=$HTTPS_PROXY
 fi
-pacman -Sy --noconfirm --needed diffutils make
 
 PATH_TO_BUILD_DIR="`cygpath "$1"`"
 PATH_TO_SRC_DIR="`cygpath "$2"`"

@@ -14,24 +14,49 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/0002_fix_uwp.patch
 )
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
+
 # Support HTTP2 TSL Download https://curl.haxx.se/ca/cacert.pem rename to curl-ca-bundle.crt, copy it to libcurl.dll location.
-SET(HTTP2_OPTIONS)
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    SET(CURL_STATICLIB OFF)
-    SET(HTTP2_OPTIONS
-        -DUSE_NGHTTP2=ON
-    )
-else()
-    SET(CURL_STATICLIB ON)
+set(HTTP2_OPTIONS)
+if("http2" IN_LIST FEATURES)
+    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        message(FATAL_ERROR "The http2 feature cannot be enabled when building for UWP.")
+    endif()
+
+    set(HTTP2_OPTIONS -DUSE_NGHTTP2=ON)
 endif()
 
-set(USE_OPENSSL ON)
-if(CURL_USE_WINSSL)
-    set(USE_OPENSSL OFF)
-    set(USE_WINSSL ON)
-    set(HTTP2_OPTIONS) ## disable HTTP2 when CURL_USE_WINSSL
+# SSL
+set(USE_OPENSSL OFF)
+set(USE_WINSSL OFF)
+if("ssl" IN_LIST FEATURES)
+    if(CURL_USE_WINSSL)
+        set(USE_WINSSL ON)
+    else()
+        set(USE_OPENSSL ON)
+    endif()
 endif()
 
+# SSH
+set(USE_LIBSSH2 OFF)
+if("ssh" IN_LIST FEATURES)
+    set(USE_LIBSSH2 ON)
+endif()
+
+# HTTP/HTTPS only
+# Note that `HTTP_ONLY` curl option disables everything including HTTPS, which is not an option.
+set(USE_HTTP_ONLY ON)
+if("non-http" IN_LIST FEATURES)
+    set(USE_HTTP_ONLY OFF)
+endif()
+
+# curl exe
+set(BUILD_CURL_EXE OFF)
+if("tool" IN_LIST FEATURES)
+    set(BUILD_CURL_EXE ON)
+endif()
+
+# UWP targets
 set(UWP_OPTIONS)
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(UWP_OPTIONS
@@ -40,7 +65,6 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         -DENABLE_IPV6=OFF
         -DENABLE_UNIX_SOCKETS=OFF
     )
-    set(HTTP2_OPTIONS) ## disable curl HTTP2 support
 endif()
 
 vcpkg_find_acquire_program(PERL)
@@ -54,12 +78,17 @@ vcpkg_configure_cmake(
         ${UWP_OPTIONS}
         ${HTTP2_OPTIONS}
         -DBUILD_TESTING=OFF
-        -DBUILD_CURL_EXE=OFF
+        -DBUILD_CURL_EXE=${BUILD_CURL_EXE}
         -DENABLE_MANUAL=OFF
         -DCURL_STATICLIB=${CURL_STATICLIB}
         -DCMAKE_USE_OPENSSL=${USE_OPENSSL}
         -DCMAKE_USE_WINSSL=${USE_WINSSL}
+        -DCMAKE_USE_LIBSSH2=${USE_LIBSSH2}
+        -DHTTP_ONLY=${USE_HTTP_ONLY}
+    OPTIONS_RELEASE
+        -DBUILD_CURL_EXE=${BUILD_CURL_EXE}
     OPTIONS_DEBUG
+        -DBUILD_CURL_EXE=OFF
         -DENABLE_DEBUG=ON
 )
 
@@ -68,17 +97,27 @@ vcpkg_install_cmake()
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/curl RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/curl.exe")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/curl")
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/curl.exe ${CURRENT_PACKAGES_DIR}/tools/curl/curl.exe)
+    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/curl)
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
     # Drop debug suffix, as FindCURL.cmake does not look for it
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl.lib)
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d.lib")
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl.lib)
+    endif()
 else()
     file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/curl-config ${CURRENT_PACKAGES_DIR}/debug/bin/curl-config)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libcurl_imp.lib ${CURRENT_PACKAGES_DIR}/lib/libcurl.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d_imp.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl.lib)
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/libcurl_imp.lib")
+        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libcurl_imp.lib ${CURRENT_PACKAGES_DIR}/lib/libcurl.lib)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl-d_imp.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libcurl.lib)
+    endif()
 endif()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(READ ${CURRENT_PACKAGES_DIR}/include/curl/curl.h CURL_H)

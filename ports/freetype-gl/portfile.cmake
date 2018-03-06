@@ -8,8 +8,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rougier/freetype-gl
-    REF 82fb152a74f01b1483ac80d15935fbdfaf3ed836
-    SHA512 4842d9e66fd25dbb3a4e3f4bf597a0c1fc3c3c30e0cb1baae1c3306ddcb663ff9108d8fc01bde539fea7cb03a6329054f66166d9e448086358ab7b05953f5884
+    REF bcd2b5fb5d19f1ea5d384d0edbdda2f6d0590fa0
+    SHA512 10bd8e874598e796c3123c8bc277ecb6f5d95c924c6d6bab1bec4700864c83e2f71bf9ac45c15eadba9e150660cbe9debe3509428b10264eb6a8ba64a80f3651
     HEAD_REF master
 )
 

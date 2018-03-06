@@ -4,12 +4,17 @@
 ##
 ## ## Usage
 ## ```cmake
-## vcpkg_acquire_msys(<MSYS_ROOT_VAR>)
+## vcpkg_acquire_msys(<MSYS_ROOT_VAR> [PACKAGES <package>...])
 ## ```
 ##
 ## ## Parameters
 ## ### MSYS_ROOT_VAR
 ## An out-variable that will be set to the path to MSYS2.
+##
+## ### PACKAGES
+## A list of packages to acquire in msys.
+##
+## To ensure a package is available: `vcpkg_acquire_msys(MSYS_ROOT PACKAGES make automake1.15)`
 ##
 ## ## Notes
 ## A call to `vcpkg_acquire_msys` will usually be followed by a call to `bash.exe`:
@@ -22,19 +27,6 @@
 ##     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
 ##     LOGNAME build-${TARGET_TRIPLET}-rel
 ## )
-## ```
-## To ensure a package is available:
-## ```cmake
-## vcpkg_acquire_msys(MSYS_ROOT)
-## set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
-##
-## message(STATUS "Installing MSYS Packages")
-## vcpkg_execute_required_process(
-##     COMMAND
-##         ${BASH} --noprofile --norc -c
-##             'PATH=/usr/bin:\$PATH pacman -Sy --noconfirm --needed make'
-##     WORKING_DIRECTORY ${MSYS_ROOT}
-##     LOGNAME pacman-${TARGET_TRIPLET})
 ## ```
 ##
 ## ## Examples
@@ -56,13 +48,19 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
 
   if(_vam_HOST_ARCHITECTURE STREQUAL "AMD64")
     set(TOOLSUBPATH msys64)
-    set(URL "https://sourceforge.net/projects/msys2/files/Base/x86_64/msys2-base-x86_64-20161025.tar.xz/download")
+    set(URLS
+      "http://repo.msys2.org/distrib/x86_64/msys2-base-x86_64-20161025.tar.xz"
+      "https://sourceforge.net/projects/msys2/files/Base/x86_64/msys2-base-x86_64-20161025.tar.xz/download"
+    )
     set(ARCHIVE "msys2-base-x86_64-20161025.tar.xz")
     set(HASH 6c4c18ec59db80b8269698d074866438a624f1ce735ee5005a01b148b02e8f2e966ae381aa1cb4c50f6226c3b7feb271e36907cf26580df084d695b3c9f5c0eb)
     set(STAMP "initialized-msys2_64.stamp")
   else()
     set(TOOLSUBPATH msys32)
-    set(URL "https://sourceforge.net/projects/msys2/files/Base/i686/msys2-base-i686-20161025.tar.xz/download")
+    set(URLS
+      "http://repo.msys2.org/distrib/i686/msys2-base-i686-20161025.tar.xz"
+      "https://sourceforge.net/projects/msys2/files/Base/i686/msys2-base-i686-20161025.tar.xz/download"
+    )
     set(ARCHIVE "msys2-base-i686-20161025.tar.xz")
     set(HASH c9260a38e0c6bf963adeaea098c4e376449c1dd0afe07480741d6583a1ac4c138951ccb0c5388bd148e04255a5c1a23bf5ee2d58dcd6607c14f1eaa5639a7c85)
     set(STAMP "initialized-msys2_32.stamp")
@@ -74,7 +72,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
 
     message(STATUS "Acquiring MSYS2...")
     vcpkg_download_distfile(ARCHIVE_PATH
-        URLS ${URL}
+        URLS ${URLS}
         FILENAME ${ARCHIVE}
         SHA512 ${HASH}
     )

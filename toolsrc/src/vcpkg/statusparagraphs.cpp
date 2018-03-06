@@ -54,6 +54,11 @@ namespace vcpkg
                                                       const Triplet& triplet,
                                                       const std::string& feature)
     {
+        if (feature == "core")
+        {
+            // The core feature maps to .feature == ""
+            return find(name, triplet, "");
+        }
         return std::find_if(begin(), end(), [&](const std::unique_ptr<StatusParagraph>& pgh) {
             const PackageSpec& spec = pgh->package.spec;
             return spec.name() == name && spec.triplet() == triplet && pgh->package.feature == feature;
@@ -64,6 +69,11 @@ namespace vcpkg
                                                             const Triplet& triplet,
                                                             const std::string& feature) const
     {
+        if (feature == "core")
+        {
+            // The core feature maps to .feature == ""
+            return find(name, triplet, "");
+        }
         return std::find_if(begin(), end(), [&](const std::unique_ptr<StatusParagraph>& pgh) {
             const PackageSpec& spec = pgh->package.spec;
             return spec.name() == name && spec.triplet() == triplet && pgh->package.feature == feature;

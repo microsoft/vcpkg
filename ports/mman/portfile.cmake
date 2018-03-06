@@ -21,13 +21,17 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include/mman)
+file(RENAME ${CURRENT_PACKAGES_DIR}/include/sys ${CURRENT_PACKAGES_DIR}/include/mman/sys)
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/mman)
 file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/mman RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(READ ${CURRENT_PACKAGES_DIR}/include/sys/mman.h _contents)
+    file(READ ${CURRENT_PACKAGES_DIR}/include/mman/sys/mman.h _contents)
     string(REPLACE "__declspec(dllimport)" "" _contents "${_contents}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/include/sys/mman.h "${_contents}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/include/mman/sys/mman.h "${_contents}")
 endif()
 
 vcpkg_copy_pdbs()

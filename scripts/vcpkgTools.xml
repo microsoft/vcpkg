@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<tools version="1">
+    <tool name="cmake">
+        <requiredVersion>3.10.2</requiredVersion>
+        <exeRelativePath>cmake-3.10.2-win32-x86\bin\cmake.exe</exeRelativePath>
+        <url>https://cmake.org/files/v3.10/cmake-3.10.2-win32-x86.zip</url>
+        <sha256>f5f7e41a21d0e9b655aca58498b08e17ecd27796bf82837e2c84435359169dd6</sha256>
+        <archiveRelativePath>cmake-3.10.2-win32-x86.zip</archiveRelativePath>
+    </tool>
+    <tool name="git">
+        <requiredVersion>2.16.2</requiredVersion>
+        <exeRelativePath>MinGit-2.16.2-32-bit\cmd\git.exe</exeRelativePath>
+        <url>https://github.com/git-for-windows/git/releases/download/v2.16.2.windows.1/MinGit-2.16.2-32-bit.zip</url>
+        <sha256>322c727e482aa97522c64a5ac68bdda3780111e8670bcfb532beac8e11ece5da</sha256>
+        <archiveRelativePath>MinGit-2.16.2-32-bit.zip</archiveRelativePath>
+    </tool>
+    <tool name="vswhere">
+        <requiredVersion>2.3.2</requiredVersion>
+        <exeRelativePath>vswhere-2.3.2\vswhere.exe</exeRelativePath>
+        <url>https://github.com/Microsoft/vswhere/releases/download/2.3.2/vswhere.exe</url>
+        <sha256>103f2784c4b2c8e70c7c1c03687abbf22bce052aae30639406e4e13ffa29ee04</sha256>
+    </tool>
+    <tool name="nuget">
+        <requiredVersion>4.4.0</requiredVersion>
+        <exeRelativePath>nuget-4.4.0\nuget.exe</exeRelativePath>
+        <url>https://dist.nuget.org/win-x86-commandline/v4.4.0/nuget.exe</url>
+        <sha256>2cf9b118937eef825464e548f0c44f7f64090047746de295d75ac3dcffa3e1f6</sha256>
+    </tool>
+    <tool name="installerbase">
+        <requiredVersion>3.1.81</requiredVersion>
+        <exeRelativePath>QtInstallerFramework-win-x86\bin\installerbase.exe</exeRelativePath>
+        <url>https://github.com/podsvirov/installer-framework/releases/download/cr203958-9/QtInstallerFramework-win-x86.zip</url>
+        <sha256>f2ce23cf5cf9fc7ce409bdca49328e09a070c0026d3c8a04e4dfde7b05b83fe8</sha256>
+        <archiveRelativePath>QtInstallerFramework-win-x86.zip</archiveRelativePath>
+    </tool>
+    <tool name="7zip">
+        <requiredVersion>18.01.0</requiredVersion>
+        <exeRelativePath>7za920\7za.exe</exeRelativePath>
+        <url>http://www.7-zip.org/a/7za920.zip</url>
+        <sha256>2a3afe19c180f8373fa02ff00254d5394fec0349f5804e0ad2f6067854ff28ac</sha256>
+        <archiveRelativePath>7za920.zip</archiveRelativePath>
+    </tool>
+</tools>

@@ -15,35 +15,99 @@ namespace vcpkg
     static constexpr CStringView V_140 = "v140";
     static constexpr CStringView V_141 = "v141";
 
-    static bool exists_and_has_equal_or_greater_version(const std::string& version_cmd,
-                                                        const std::array<int, 3>& expected_version)
+    struct ToolData
+    {
+        std::array<int, 3> required_version;
+        fs::path downloaded_exe_path;
+    };
+
+    static Optional<std::array<int, 3>> parse_version_string(const std::string& version_as_string)
     {
         static const std::regex RE(R"###((\d+)\.(\d+)\.(\d+))###");
 
+        std::match_results<std::string::const_iterator> match;
+        const auto found = std::regex_search(version_as_string, match, RE);
+        if (!found)
+        {
+            return {};
+        }
+
+        const int d1 = atoi(match[1].str().c_str());
+        const int d2 = atoi(match[2].str().c_str());
+        const int d3 = atoi(match[3].str().c_str());
+        const std::array<int, 3> result = {d1, d2, d3};
+        return result;
+    }
+
+    static ToolData parse_tool_data_from_xml(const VcpkgPaths& paths, const std::string& tool)
+    {
+        static const fs::path XML_PATH = paths.scripts / "vcpkgTools.xml";
+
+        const auto get_string_inside_tags =
+            [](const std::string& input, const std::regex& regex, const std::string& tag_name) -> std::string {
+            std::smatch match;
+            const bool has_match = std::regex_search(input.cbegin(), input.cend(), match, regex);
+            Checks::check_exit(
+                VCPKG_LINE_INFO, has_match, "Could not find tag <%s> in %s", tag_name, XML_PATH.generic_string());
+
+            return match[1];
+        };
+
+        static const std::string XML = paths.get_filesystem().read_contents(XML_PATH).value_or_exit(VCPKG_LINE_INFO);
+        static const std::regex VERSION_REGEX{
+            Strings::format(R"###(<requiredVersion>([\s\S]*?)</requiredVersion>)###", tool)};
+        static const std::regex EXE_RELATIVE_PATH_REGEX{
+            Strings::format(R"###(<exeRelativePath>([\s\S]*?)</exeRelativePath>)###", tool)};
+
+        const std::regex tool_regex{Strings::format(R"###(<tool[\s]+name="%s">([\s\S]*?)</tool>)###", tool)};
+
+        std::smatch match_tool;
+        const bool has_match_tool = std::regex_search(XML.cbegin(), XML.cend(), match_tool, tool_regex);
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           has_match_tool,
+                           "Could not find entry for tool [%s] in %s",
+                           tool,
+                           XML_PATH.generic_string());
+
+        const std::string tool_data_as_string = get_string_inside_tags(XML, tool_regex, tool);
+
+        const std::string required_version_as_string =
+            get_string_inside_tags(tool_data_as_string, VERSION_REGEX, "requiredVersion");
+
+        const std::string exe_relative_path =
+            get_string_inside_tags(tool_data_as_string, EXE_RELATIVE_PATH_REGEX, "exeRelativePath");
+
+        const Optional<std::array<int, 3>> required_version = parse_version_string(required_version_as_string);
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           required_version.has_value(),
+                           "Could not parse version for tool %s. Version string was: %s",
+                           tool,
+                           required_version_as_string);
+
+        const fs::path exe_path = paths.downloads / exe_relative_path;
+        return ToolData{*required_version.get(), exe_path};
+    }
+
+    static bool exists_and_has_equal_or_greater_version(const std::string& version_cmd,
+                                                        const std::array<int, 3>& expected_version)
+    {
         const auto rc = System::cmd_execute_and_capture_output(Strings::format(R"(%s)", version_cmd));
         if (rc.exit_code != 0)
         {
             return false;
         }
 
-        std::match_results<std::string::const_iterator> match;
-        const auto found = std::regex_search(rc.output, match, RE);
-        if (!found)
+        const Optional<std::array<int, 3>> v = parse_version_string(rc.output);
+        if (!v.has_value())
         {
             return false;
         }
 
-        const int d1 = atoi(match[1].str().c_str());
-        const int d2 = atoi(match[2].str().c_str());
-        const int d3 = atoi(match[3].str().c_str());
-        if (d1 > expected_version[0] || (d1 == expected_version[0] && d2 > expected_version[1]) ||
-            (d1 == expected_version[0] && d2 == expected_version[1] && d3 >= expected_version[2]))
-        {
-            // satisfactory version found
-            return true;
-        }
-
-        return false;
+        const std::array<int, 3> actual_version = *v.get();
+        return (actual_version[0] > expected_version[0] ||
+                (actual_version[0] == expected_version[0] && actual_version[1] > expected_version[1]) ||
+                (actual_version[0] == expected_version[0] && actual_version[1] == expected_version[1] &&
+                 actual_version[2] >= expected_version[2]));
     }
 
     static Optional<fs::path> find_if_has_equal_or_greater_version(const std::vector<fs::path>& candidate_paths,
@@ -80,54 +144,51 @@ namespace vcpkg
         return data_lines;
     }
 
-    static fs::path fetch_dependency(const fs::path& scripts_folder,
-                                     const std::string& tool_name,
-                                     const fs::path& expected_downloaded_path,
-                                     const std::array<int, 3>& version)
+    static fs::path fetch_tool(const fs::path& scripts_folder, const std::string& tool_name, const ToolData& tool_data)
     {
+        const std::array<int, 3>& version = tool_data.required_version;
+
         const std::string version_as_string = Strings::format("%d.%d.%d", version[0], version[1], version[2]);
         System::println("A suitable version of %s was not found (required v%s). Downloading portable %s v%s...",
                         tool_name,
                         version_as_string,
                         tool_name,
                         version_as_string);
-        const fs::path script = scripts_folder / "fetchDependency.ps1";
+        const fs::path script = scripts_folder / "fetchtool.ps1";
         const std::string title = Strings::format(
             "Fetching %s version %s (No sufficient installed version was found)", tool_name, version_as_string);
-        const System::PowershellParameter dependency_param("Dependency", tool_name);
-        const std::string output = System::powershell_execute_and_capture_output(title, script, {dependency_param});
+        const System::PowershellParameter tool_param("tool", tool_name);
+        const std::string output = System::powershell_execute_and_capture_output(title, script, {tool_param});
 
-        const std::vector<std::string> dependency_path = keep_data_lines(output);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, dependency_path.size() == 1, "Expected dependency path, but got %s", output);
+        const std::vector<std::string> tool_path = keep_data_lines(output);
+        Checks::check_exit(VCPKG_LINE_INFO, tool_path.size() == 1, "Expected tool path, but got %s", output);
 
-        const fs::path actual_downloaded_path = Strings::trim(std::string{dependency_path.at(0)});
+        const fs::path actual_downloaded_path = Strings::trim(std::string{tool_path.at(0)});
+        const fs::path& expected_downloaded_path = tool_data.downloaded_exe_path;
         std::error_code ec;
         const auto eq = fs::stdfs::equivalent(expected_downloaded_path, actual_downloaded_path, ec);
         Checks::check_exit(VCPKG_LINE_INFO,
                            eq && !ec,
-                           "Expected dependency downloaded path to be %s, but was %s",
+                           "Expected tool downloaded path to be %s, but was %s",
                            expected_downloaded_path.u8string(),
                            actual_downloaded_path.u8string());
         return actual_downloaded_path;
     }
 
-    static fs::path get_cmake_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
+    static fs::path get_cmake_path(const VcpkgPaths& paths)
     {
 #if defined(_WIN32)
-        static constexpr std::array<int, 3> EXPECTED_VERSION = {3, 10, 2};
+        static const ToolData TOOL_DATA = parse_tool_data_from_xml(paths, "cmake");
 #else
-        static constexpr std::array<int, 3> EXPECTED_VERSION = {3, 5, 1};
+        static const ToolData TOOL_DATA = ToolData{{3, 5, 1}, ""};
 #endif
         static const std::string VERSION_CHECK_ARGUMENTS = "--version";
 
-        const std::vector<fs::path> from_path = Files::find_from_PATH("cmake");
-
         std::vector<fs::path> candidate_paths;
-        const fs::path downloaded_copy = downloads_folder / "cmake-3.10.2-win32-x86" / "bin" / "cmake.exe";
 #if defined(_WIN32)
-        candidate_paths.push_back(downloaded_copy);
+        candidate_paths.push_back(TOOL_DATA.downloaded_exe_path);
 #endif
+        const std::vector<fs::path> from_path = Files::find_from_PATH("cmake");
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
 #if defined(_WIN32)
         candidate_paths.push_back(System::get_program_files_platform_bitness() / "CMake" / "bin" / "cmake.exe");
@@ -135,51 +196,61 @@ namespace vcpkg
 #endif
 
         const Optional<fs::path> path =
-            find_if_has_equal_or_greater_version(candidate_paths, VERSION_CHECK_ARGUMENTS, EXPECTED_VERSION);
+            find_if_has_equal_or_greater_version(candidate_paths, VERSION_CHECK_ARGUMENTS, TOOL_DATA.required_version);
         if (const auto p = path.get())
         {
             return *p;
         }
 
-        return fetch_dependency(scripts_folder, "cmake", downloaded_copy, EXPECTED_VERSION);
+        return fetch_tool(paths.scripts, "cmake", TOOL_DATA);
     }
 
-    fs::path get_nuget_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
-    {
-        static constexpr std::array<int, 3> EXPECTED_VERSION = {4, 4, 0};
-
-        const fs::path downloaded_copy = downloads_folder / "nuget-4.4.0" / "nuget.exe";
-        const std::vector<fs::path> from_path = Files::find_from_PATH("nuget");
-
-        std::vector<fs::path> candidate_paths;
-        candidate_paths.push_back(downloaded_copy);
-        candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
-
-        auto path = find_if_has_equal_or_greater_version(candidate_paths, "", EXPECTED_VERSION);
-        if (const auto p = path.get())
-        {
-            return *p;
-        }
-
-        return fetch_dependency(scripts_folder, "nuget", downloaded_copy, EXPECTED_VERSION);
-    }
-
-    fs::path get_git_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
+    static fs::path get_7za_path(const VcpkgPaths& paths)
     {
 #if defined(_WIN32)
-        static constexpr std::array<int, 3> EXPECTED_VERSION = {2, 16, 2};
+        static const ToolData TOOL_DATA = parse_tool_data_from_xml(paths, "7zip");
+        if (!paths.get_filesystem().exists(TOOL_DATA.downloaded_exe_path))
+        {
+            return fetch_tool(paths.scripts, "7zip", TOOL_DATA);
+        }
+        return TOOL_DATA.downloaded_exe_path;
 #else
-        static constexpr std::array<int, 3> EXPECTED_VERSION = {2, 7, 4};
+        Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot download 7zip for non-Windows platforms.");
+#endif
+    }
+
+    static fs::path get_nuget_path(const VcpkgPaths& paths)
+    {
+        static const ToolData TOOL_DATA = parse_tool_data_from_xml(paths, "nuget");
+
+        std::vector<fs::path> candidate_paths;
+        candidate_paths.push_back(TOOL_DATA.downloaded_exe_path);
+        const std::vector<fs::path> from_path = Files::find_from_PATH("nuget");
+        candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
+
+        auto path = find_if_has_equal_or_greater_version(candidate_paths, "", TOOL_DATA.required_version);
+        if (const auto p = path.get())
+        {
+            return *p;
+        }
+
+        return fetch_tool(paths.scripts, "nuget", TOOL_DATA);
+    }
+
+    static fs::path get_git_path(const VcpkgPaths& paths)
+    {
+#if defined(_WIN32)
+        static const ToolData TOOL_DATA = parse_tool_data_from_xml(paths, "git");
+#else
+        static const ToolData TOOL_DATA = ToolData{{2, 7, 4}, ""};
 #endif
         static const std::string VERSION_CHECK_ARGUMENTS = "--version";
 
-        const std::vector<fs::path> from_path = Files::find_from_PATH("git");
-
-        const fs::path downloaded_copy = downloads_folder / "MinGit-2.16.2-32-bit" / "cmd" / "git.exe";
         std::vector<fs::path> candidate_paths;
 #if defined(_WIN32)
-        candidate_paths.push_back(downloaded_copy);
+        candidate_paths.push_back(TOOL_DATA.downloaded_exe_path);
 #endif
+        const std::vector<fs::path> from_path = Files::find_from_PATH("git");
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
 #if defined(_WIN32)
         candidate_paths.push_back(System::get_program_files_platform_bitness() / "git" / "cmd" / "git.exe");
@@ -187,25 +258,23 @@ namespace vcpkg
 #endif
 
         const Optional<fs::path> path =
-            find_if_has_equal_or_greater_version(candidate_paths, VERSION_CHECK_ARGUMENTS, EXPECTED_VERSION);
+            find_if_has_equal_or_greater_version(candidate_paths, VERSION_CHECK_ARGUMENTS, TOOL_DATA.required_version);
         if (const auto p = path.get())
         {
             return *p;
         }
 
-        return fetch_dependency(scripts_folder, "git", downloaded_copy, EXPECTED_VERSION);
+        return fetch_tool(paths.scripts, "git", TOOL_DATA);
     }
 
-    static fs::path get_ifw_installerbase_path(const fs::path& downloads_folder, const fs::path& scripts_folder)
+    static fs::path get_ifw_installerbase_path(const VcpkgPaths& paths)
     {
-        static constexpr std::array<int, 3> EXPECTED_VERSION = {3, 1, 81};
+        static const ToolData TOOL_DATA = parse_tool_data_from_xml(paths, "installerbase");
+
         static const std::string VERSION_CHECK_ARGUMENTS = "--framework-version";
 
-        const fs::path downloaded_copy =
-            downloads_folder / "QtInstallerFramework-win-x86" / "bin" / "installerbase.exe";
-
         std::vector<fs::path> candidate_paths;
-        candidate_paths.push_back(downloaded_copy);
+        candidate_paths.push_back(TOOL_DATA.downloaded_exe_path);
         // TODO: Uncomment later
         // const std::vector<fs::path> from_path = Files::find_from_PATH("installerbase");
         // candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
@@ -215,13 +284,13 @@ namespace vcpkg
         // "QtIFW-3.1.0" / "bin" / "installerbase.exe");
 
         const Optional<fs::path> path =
-            find_if_has_equal_or_greater_version(candidate_paths, VERSION_CHECK_ARGUMENTS, EXPECTED_VERSION);
+            find_if_has_equal_or_greater_version(candidate_paths, VERSION_CHECK_ARGUMENTS, TOOL_DATA.required_version);
         if (const auto p = path.get())
         {
             return *p;
         }
 
-        return fetch_dependency(scripts_folder, "installerbase", downloaded_copy, EXPECTED_VERSION);
+        return fetch_tool(paths.scripts, "installerbase", TOOL_DATA);
     }
 
     Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir)
@@ -298,25 +367,29 @@ namespace vcpkg
         return it != this->get_available_triplets().cend();
     }
 
+    const fs::path& VcpkgPaths::get_7za_exe() const
+    {
+        return this->_7za_exe.get_lazy([this]() { return get_7za_path(*this); });
+    }
+
     const fs::path& VcpkgPaths::get_cmake_exe() const
     {
-        return this->cmake_exe.get_lazy([this]() { return get_cmake_path(this->downloads, this->scripts); });
+        return this->cmake_exe.get_lazy([this]() { return get_cmake_path(*this); });
     }
 
     const fs::path& VcpkgPaths::get_git_exe() const
     {
-        return this->git_exe.get_lazy([this]() { return get_git_path(this->downloads, this->scripts); });
+        return this->git_exe.get_lazy([this]() { return get_git_path(*this); });
     }
 
     const fs::path& VcpkgPaths::get_nuget_exe() const
     {
-        return this->nuget_exe.get_lazy([this]() { return get_nuget_path(this->downloads, this->scripts); });
+        return this->nuget_exe.get_lazy([this]() { return get_nuget_path(*this); });
     }
 
     const fs::path& VcpkgPaths::get_ifw_installerbase_exe() const
     {
-        return this->ifw_installerbase_exe.get_lazy(
-            [this]() { return get_ifw_installerbase_path(this->downloads, this->scripts); });
+        return this->ifw_installerbase_exe.get_lazy([this]() { return get_ifw_installerbase_path(*this); });
     }
 
     const fs::path& VcpkgPaths::get_ifw_binarycreator_exe() const
@@ -555,13 +628,8 @@ namespace vcpkg
                 ret.dumpbin = "";
                 ret.supported_architectures = {
                     ToolsetArchOption{"", System::get_host_processor(), System::get_host_processor()}};
-#if defined(_WIN32)
-                ret.vcvarsall = "cmd";
-                ret.vcvarsall_options = {"/c", "echo done"};
-#else
-                ret.vcvarsall = "true";
+                ret.vcvarsall = "";
                 ret.vcvarsall_options = {};
-#endif
                 ret.version = "external";
                 ret.visual_studio_root_path = "";
                 return ret;
