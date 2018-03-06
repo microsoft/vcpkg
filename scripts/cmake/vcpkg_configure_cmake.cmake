@@ -80,7 +80,7 @@ function(vcpkg_configure_cmake)
         set(GENERATOR ${_csc_GENERATOR})
     elseif(_csc_PREFER_NINJA AND NINJA_CAN_BE_USED)
         set(GENERATOR "Ninja")
-    elseif(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
+    elseif(VCPKG_CHAINLOAD_TOOLCHAIN_FILE OR (VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore"))
         set(GENERATOR "Ninja")
 
     elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x86" AND VCPKG_PLATFORM_TOOLSET MATCHES "v120")
@@ -152,39 +152,8 @@ function(vcpkg_configure_cmake)
 
     if(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
         list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
-    else()
-        set(VCPKG_CXX_FLAGS " /DWIN32 /D_WINDOWS /W3 /utf-8 /GR /EHsc /MP ${VCPKG_CXX_FLAGS}")
-        set(VCPKG_C_FLAGS " /DWIN32 /D_WINDOWS /W3 /utf-8 /MP ${VCPKG_C_FLAGS}")
-        if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-            list(APPEND _csc_OPTIONS_DEBUG
-                "-DCMAKE_CXX_FLAGS_DEBUG=/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 ${VCPKG_CXX_FLAGS_DEBUG}"
-                "-DCMAKE_C_FLAGS_DEBUG=/D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1 ${VCPKG_C_FLAGS_DEBUG}"
-            )
-            list(APPEND _csc_OPTIONS_RELEASE
-                "-DCMAKE_CXX_FLAGS_RELEASE=/MD /O2 /Oi /Gy /DNDEBUG /Z7 ${VCPKG_CXX_FLAGS_RELEASE}"
-                "-DCMAKE_C_FLAGS_RELEASE=/MD /O2 /Oi /Gy /DNDEBUG /Z7 ${VCPKG_C_FLAGS_RELEASE}"
-            )
-        elseif(VCPKG_CRT_LINKAGE STREQUAL "static")
-            list(APPEND _csc_OPTIONS_DEBUG
-                "-DCMAKE_CXX_FLAGS_DEBUG=/D_DEBUG /MTd /Z7 /Ob0 /Od /RTC1 ${VCPKG_CXX_FLAGS_DEBUG}"
-                "-DCMAKE_C_FLAGS_DEBUG=/D_DEBUG /MTd /Z7 /Ob0 /Od /RTC1 ${VCPKG_C_FLAGS_DEBUG}"
-            )
-            list(APPEND _csc_OPTIONS_RELEASE
-                "-DCMAKE_CXX_FLAGS_RELEASE=/MT /O2 /Oi /Gy /DNDEBUG /Z7 ${VCPKG_CXX_FLAGS_RELEASE}"
-                "-DCMAKE_C_FLAGS_RELEASE=/MT /O2 /Oi /Gy /DNDEBUG /Z7 ${VCPKG_C_FLAGS_RELEASE}"
-            )
-        else()
-            message(FATAL_ERROR "Invalid setting for VCPKG_CRT_LINKAGE: \"${VCPKG_CRT_LINKAGE}\". It must be \"static\" or \"dynamic\"")
-        endif()
-
-        list(APPEND _csc_OPTIONS_RELEASE
-            "-DCMAKE_SHARED_LINKER_FLAGS_RELEASE=/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS}"
-            "-DCMAKE_EXE_LINKER_FLAGS_RELEASE=/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS}"
-        )
-        list(APPEND _csc_OPTIONS
-            "-DCMAKE_CXX_FLAGS=${VCPKG_CXX_FLAGS}"
-            "-DCMAKE_C_FLAGS=${VCPKG_C_FLAGS}"
-        )
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT DEFINED VCPKG_CMAKE_SYSTEM_NAME)
+        list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/toolchains/windows.cmake")
     endif()
 
     list(APPEND _csc_OPTIONS
@@ -197,6 +166,14 @@ function(vcpkg_configure_cmake)
         "-DVCPKG_APPLOCAL_DEPS=OFF"
         "-DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/buildsystems/vcpkg.cmake"
         "-DCMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION=ON"
+        "-DVCPKG_CXX_FLAGS=${VCPKG_CXX_FLAGS}"
+        "-DVCPKG_CXX_FLAGS_RELEASE=${VCPKG_CXX_FLAGS_RELEASE}"
+        "-DVCPKG_CXX_FLAGS_DEBUG=${VCPKG_CXX_FLAGS_DEBUG}"
+        "-DVCPKG_C_FLAGS=${VCPKG_C_FLAGS}"
+        "-DVCPKG_C_FLAGS_RELEASE=${VCPKG_C_FLAGS_RELEASE}"
+        "-DVCPKG_C_FLAGS_DEBUG=${VCPKG_C_FLAGS_DEBUG}"
+        "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
+        "-DVCPKG_LINKER_FLAGS=${VCPKG_LINKER_FLAGS}"
     )
 
     if(DEFINED ARCH)

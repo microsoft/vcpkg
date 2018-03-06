@@ -209,6 +209,7 @@ namespace vcpkg::Build
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
     {
         if (pre_build_info.external_toolchain_file.has_value()) return "";
+        if (!pre_build_info.cmake_system_name.empty() && pre_build_info.cmake_system_name != "WindowsStore") return "";
 
         const char* tonull = " >nul";
         if (GlobalState::debugging)
