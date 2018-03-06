@@ -154,6 +154,12 @@ function(vcpkg_configure_cmake)
         list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
     elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT DEFINED VCPKG_CMAKE_SYSTEM_NAME)
         list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/toolchains/windows.cmake")
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+        list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/toolchains/linux.cmake")
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
+        list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/toolchains/android.cmake")
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/toolchains/osx.cmake")
     endif()
 
     list(APPEND _csc_OPTIONS

@@ -106,6 +106,8 @@ function(vcpkg_find_acquire_program VAR)
     set(PROGNAME ninja)
     set(SUBDIR "ninja-1.8.2")
     set(PATHS ${DOWNLOADS}/tools/ninja/${SUBDIR})
+    set(BREW_PACKAGE_NAME "ninja")
+    set(APT_PACKAGE_NAME "ninja-build")
     set(URL "https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip")
     set(ARCHIVE "ninja-1.8.2-win.zip")
     set(HASH 9b9ce248240665fcd6404b989f3b3c27ed9682838225e6dc9b67b551774f251e4ff8a207504f941e7c811e7a8be1945e7bcb94472a335ef15e23a0200a32e6d5)
@@ -181,6 +183,16 @@ function(vcpkg_find_acquire_program VAR)
 
   do_find()
   if("${${VAR}}" MATCHES "-NOTFOUND")
+    if(NOT CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+      set(EXAMPLE ".")
+      if(DEFINED BREW_PACKAGE_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
+        set(EXAMPLE ":\n    brew install ${BREW_PACKAGE_NAME}")
+      elseif(DEFINED APT_PACKAGE_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
+        set(EXAMPLE ":\n    sudo apt-get install ${APT_PACKAGE_NAME}")
+      endif()
+      message(FATAL_ERROR "Could not find ${PROGNAME}. Please install it via your package manager${EXAMPLE}")
+    endif()
+
     vcpkg_download_distfile(ARCHIVE_PATH
         URLS ${URL}
         SHA512 ${HASH}
