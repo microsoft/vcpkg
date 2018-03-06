@@ -51,7 +51,10 @@ add_definitions(-DLOCALEDIR=\"${LOCALDIR}\")
 add_definitions(-DLOCALE_ALIAS_PATH=\"${LOCALDIR}\")
 add_definitions(-DLIBDIR=\"${LOCALDIR}\")
 add_definitions(-DINSTALLDIR=\"${LOCALDIR}\")
-add_definitions("-DBUILDING_LIBINTL -DBUILDING_DLL -DIN_LIBINTL -DENABLE_RELOCATABLE=1 -DIN_LIBRARY")
+if(BUILD_SHARED_LIBS)
+  add_definitions(-DBUILDING_DLL)
+endif()
+add_definitions("-DBUILDING_LIBINTL -DIN_LIBINTL -DENABLE_RELOCATABLE=1 -DIN_LIBRARY")
 
 add_definitions("-DNO_XMALLOC -Dset_relocation_prefix=libintl_set_relocation_prefix -Drelocate=libintl_relocate -DDEPENDS_ON_LIBICONV=1 -DHAVE_CONFIG_H -D_CRT_SECURE_NO_WARNINGS")
 
