@@ -8,12 +8,6 @@ vcpkg_from_github(
     SHA512 fd532f2c180c328d396f557386b70e961c122af11e379ce57db3709d20345280ada200dadde136ae3557ad25daa944d8a86f7868cd0bedea78427d42c27d6e6d
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS -DBUILD_TESTING=OFF
-)
-
 file(INSTALL
     ${SOURCE_PATH}/src/entt
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
