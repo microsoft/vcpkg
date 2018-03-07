@@ -73,6 +73,7 @@ $tagPorts = @(
     "sfml",
     "snappy",
     "tbb",
+    "uwebsockets",
     "zziplib"
 )
 
