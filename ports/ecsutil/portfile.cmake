@@ -12,7 +12,8 @@
 
 include(vcpkg_common_functions)
 
-set(ECSUtil_HASH c25095edf6975706356485314e3a3fcab924a45cd18b28744f62c8b8d6451a705fb37877ee778b1d9dc426e3bc80b4323fe8ba7fabd7d119d7fe245a55252e55)
+set(ECSUTIL_VERSION "0.9.0.1")
+set(ECSUtil_HASH 871ec138bdde0e6bc2fd3fa1bcade925651c0ac4ec30ce07eae95788c09c5f32494b218e059ab7fb755ee5937a6d696cf211569a5c0999d3b47b37db781a5ad5)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src)
 
 #architecture detection
@@ -28,13 +29,18 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(ECSUtil_CONFIGURATION_RELEASE Release)
     set(ECSUtil_CONFIGURATION_DEBUG Debug)
 else()
-    set(ECSUtil_CONFIGURATION_RELEASE "Release Lib Static")
-    set(ECSUtil_CONFIGURATION_DEBUG "Debug Lib Static")
+	if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
+	    set(ECSUtil_CONFIGURATION_RELEASE "Release Lib")
+		set(ECSUtil_CONFIGURATION_DEBUG "Debug Lib")
+	else()
+	    set(ECSUtil_CONFIGURATION_RELEASE "Release Lib Static")
+		set(ECSUtil_CONFIGURATION_DEBUG "Debug Lib Static")
+	endif()
 endif()
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://kskskszlib.net/zlib-1.2.11.tar.gz"
-    FILENAME "ecs-object-client-windows-cpp.zip"
+    URLS "http://bobk2824.github.io/ecs-object-client-windows-cpp.${ECSUTIL_VERSION}.zip"
+    FILENAME "ecs-object-client-windows-cpp.${ECSUTIL_VERSION}.zip"
     SHA512 ${ECSUtil_HASH}
 )
 vcpkg_extract_source_archive(${ARCHIVE})
@@ -55,10 +61,17 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(COPY ${SOURCE_PATH}/Release/${ECSUtil_ARCH}/ECSUtil.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(COPY ${SOURCE_PATH}/Release/${ECSUtil_ARCH}/ECSUtil.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 elseif (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(COPY "${SOURCE_PATH}/Debug Lib Static/${ECSUtil_ARCH}/ECSUtil.lib" DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-    file(COPY "${SOURCE_PATH}/objDebug Lib Static/${ECSUtil_ARCH}/ECSUtil/ECSUtil.pdb" DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-    file(COPY "${SOURCE_PATH}/Release Lib Static/${ECSUtil_ARCH}/ECSUtil.lib" DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-    file(COPY "${SOURCE_PATH}/objRelease Lib Static/${ECSUtil_ARCH}/ECSUtil/ECSUtil.pdb" DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+	if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
+		file(COPY "${SOURCE_PATH}/Debug Lib/${ECSUtil_ARCH}/ECSUtil.lib" DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+		file(COPY "${SOURCE_PATH}/objDebug Lib/${ECSUtil_ARCH}/ECSUtil/ECSUtil.pdb" DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+		file(COPY "${SOURCE_PATH}/Release Lib/${ECSUtil_ARCH}/ECSUtil.lib" DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+		file(COPY "${SOURCE_PATH}/objRelease Lib/${ECSUtil_ARCH}/ECSUtil/ECSUtil.pdb" DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+	else()
+		file(COPY "${SOURCE_PATH}/Debug Lib Static/${ECSUtil_ARCH}/ECSUtil.lib" DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+		file(COPY "${SOURCE_PATH}/objDebug Lib Static/${ECSUtil_ARCH}/ECSUtil/ECSUtil.pdb" DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+		file(COPY "${SOURCE_PATH}/Release Lib Static/${ECSUtil_ARCH}/ECSUtil.lib" DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+		file(COPY "${SOURCE_PATH}/objRelease Lib Static/${ECSUtil_ARCH}/ECSUtil/ECSUtil.pdb" DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+	endif()
 endif()
 
 # Handle copyright
