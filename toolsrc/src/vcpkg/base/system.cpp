@@ -7,6 +7,10 @@
 
 #include <time.h>
 
+#if defined(__APPLE__)
+#  include <mach-o/dyld.h>
+#endif
+
 #pragma comment(lib, "Advapi32")
 
 namespace vcpkg::System
@@ -31,7 +35,15 @@ namespace vcpkg::System
         const int bytes = GetModuleFileNameW(nullptr, buf, _MAX_PATH);
         if (bytes == 0) std::abort();
         return fs::path(buf, buf + bytes);
-#else
+#elif __APPLE__
+        uint32_t size = 1024 * 32;
+        char buf[size] = {};
+        bool result = _NSGetExecutablePath(buf, &size);
+        Checks::check_exit(VCPKG_LINE_INFO, result != -1, "Could not determine current executable path.");
+        std::unique_ptr<char> canonicalPath (realpath(buf, NULL));
+        Checks::check_exit(VCPKG_LINE_INFO, result != -1, "Could not determine current executable path.");
+        return fs::path(std::string(canonicalPath.get()));
+#else /* LINUX */
         std::array<char, 1024 * 4> buf;
         auto written = readlink("/proc/self/exe", buf.data(), buf.size());
         Checks::check_exit(VCPKG_LINE_INFO, written != -1, "Could not determine current executable path.");
