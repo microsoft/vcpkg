@@ -1,10 +1,15 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     message(STATUS "Warning: Static building not supported yet. Building dynamic.")
     set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
-if (VCPKG_CRT_LINKAGE STREQUAL static)
+if(VCPKG_CRT_LINKAGE STREQUAL static)
     message(FATAL_ERROR "Static linking of the CRT is not yet supported.")
 endif()
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "UWP is not currently supported.")
+endif()
+
 include(vcpkg_common_functions)
 
 vcpkg_from_github(

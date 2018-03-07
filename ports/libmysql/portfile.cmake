@@ -2,6 +2,10 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/include/mysql/mysql.h")
     message(FATAL_ERROR "FATAL ERROR: libmysql and libmariadb are incompatible.")
 endif()
 
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "libmysql cannot currently be cross-compiled for UWP")
+endif()
+
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
@@ -18,6 +22,11 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/boost_and_build.patch
 )
 
+set(STACK_DIRECTION)
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    set(STACK_DIRECTION -DSTACK_DIRECTION=-1)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
@@ -25,6 +34,8 @@ vcpkg_configure_cmake(
         -DWITH_UNIT_TESTS=OFF
         -DENABLED_PROFILING=OFF
         -DWIX_DIR=OFF
+        -DHAVE_LLVM_LIBCPP_EXITCODE=1
+        ${STACK_DIRECTION}
         -DWINDOWS_RUNTIME_MD=ON # Note: this disables _replacement_ of /MD with /MT. If /MT is specified, it will be preserved.
 )
 
