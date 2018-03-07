@@ -246,7 +246,7 @@ function findVSInstallPathFromTriplet([Parameter(Mandatory=$true)][string]$tripl
 @"
 set\(VCPKG_VISUAL_STUDIO_PATH[\s]+"(?<path>[^"]+)
 "@
-    $installPath = ""
+    $installPath = "$VISUAL_STUDIO_2017_STABLE_NICKNAME"
     Get-Content $tripletFilePath | ForEach-Object {
         if($_ -match $vsInstallPathRegex){
             $installPath = $Matches['path']
