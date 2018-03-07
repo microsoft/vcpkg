@@ -13,6 +13,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/cmake.patch
+)
+
 file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/external)
 file(MAKE_DIRECTORY ${SOURCE_PATH}/cmake/external)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/MSDirent.cmake DESTINATION ${SOURCE_PATH}/cmake/external)
