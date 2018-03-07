@@ -25,6 +25,7 @@
 ## - NASM
 ## - NINJA
 ## - YASM
+## - ARIA2 (Downloader)
 ##
 ## Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_acquire_msys.md).
 ##
@@ -178,6 +179,13 @@ function(vcpkg_find_acquire_program VAR)
     set(URL "http://ftp.stack.nl/pub/users/dimitri/doxygen-1.8.14.windows.bin.zip")
     set(ARCHIVE "doxygen-1.8.14.windows.bin.zip")
     set(HASH d0d706501e7112045b1f401f22d12a2c8d9b7728edee9ad1975a17dff914c16494ae48a70beab6f6304643779935843f268c7afed3b9da7d403b5cb11cac0c50)
+  # Download Tools
+  elseif(VAR MATCHES "ARIA2")
+    set(PROGNAME aria2c)
+    set(PATHS ${DOWNLOADS}/tools/aria2c/aria2-1.33.1-win-32bit-build1)
+    set(URL "https://github.com/aria2/aria2/releases/download/release-1.33.1/aria2-1.33.1-win-32bit-build1.zip")
+    set(ARCHIVE "aria2-1.33.1-win-32bit-build1.zip")
+    set(HASH 2456176ba3d506a07cf0cc4f61f080e1ff8cb4106426d66f354c5bb67a9a8720b5ddb26904275e61b1f623c932355f7dcde4cd17556cc895f11293c23c3a9bf3)
   else()
     message(FATAL "unknown tool ${VAR} -- unable to acquire.")
   endif()

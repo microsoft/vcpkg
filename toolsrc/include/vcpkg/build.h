@@ -57,12 +57,20 @@ namespace vcpkg::Build
         RELEASE,
     };
 
+    enum class DownloadTool
+    {
+        BUILT_IN,
+        ARIA2,
+    };
+	const std::string& to_string(DownloadTool tool);
+
     struct BuildPackageOptions
     {
         UseHeadVersion use_head_version;
         AllowDownloads allow_downloads;
         CleanBuildtrees clean_buildtrees;
         CleanPackages clean_packages;
+        DownloadTool download_tool;
     };
 
     enum class BuildResult
