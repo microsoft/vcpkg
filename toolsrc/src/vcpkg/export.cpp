@@ -228,6 +228,7 @@ namespace vcpkg::Export
             {fs::path{"scripts"} / "getWindowsSDK.ps1"},
             {fs::path{"scripts"} / "getProgramFilesPlatformBitness.ps1"},
             {fs::path{"scripts"} / "getProgramFiles32bit.ps1"},
+            {fs::path{"scripts"} / "VcpkgPowershellUtils.ps1"},
         };
 
         for (const fs::path& file : integration_files_relative_to_root)
@@ -428,7 +429,7 @@ namespace vcpkg::Export
         {
             System::println(
                 System::Color::success, R"(Files exported at: "%s")", raw_exported_dir_path.generic_string());
-            print_next_step_info(export_to_path);
+            print_next_step_info(raw_exported_dir_path);
         }
 
         if (opts.nuget)
