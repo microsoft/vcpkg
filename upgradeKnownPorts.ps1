@@ -116,9 +116,9 @@ $rollingPorts = @(
     "tiny-dnn",
     "torch-th",
     "unicorn-lib",
-    "unicorn",
-    "yara",
-    "zeromq"
+    "unicorn"
+    #"yara",
+    #"zeromq"
 )
 
 if (!$NoReleases)
