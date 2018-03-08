@@ -12,7 +12,6 @@
 
 include(vcpkg_common_functions)
 
-# Extract from GitHub
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO c-libs/fmem
@@ -21,15 +20,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# Configure with CMAKE
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    PREFER_NINJA
     OPTIONS 
         -DBUILD_TESTING=OFF
-    # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
 
 vcpkg_install_cmake()
