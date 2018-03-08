@@ -4,3 +4,7 @@ Description: Intel® RealSense™ SDK 2.0 is a cross-platform library for Intel�
 
 Feature: avx2
 Description: rgb image decode using avx2
+
+Feature: tools
+Build-Depends: opengl
+Description: Build Intel® RealSense™ examples and tools
