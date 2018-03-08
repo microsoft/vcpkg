@@ -2,21 +2,30 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/include/mysql/mysql.h")
     message(FATAL_ERROR "FATAL ERROR: libmysql and libmariadb are incompatible.")
 endif()
 
-include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mysql-server-mysql-5.7.17)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "libmysql cannot currently be cross-compiled for UWP")
+endif()
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/mysql/mysql-server/archive/mysql-5.7.17.tar.gz"
-    FILENAME "mysql-server-mysql-5.7.17.tar.gz"
+include(vcpkg_common_functions)
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO mysql/mysql-server
+    REF mysql-5.7.17
     SHA512 31488972e08a6b83f88e6e3f7923aca91e01eac702f4942fdae92e13f66d92ac86c24dfe7a65a001db836c900147d1c3871b36af8cbb281a0e6c555617cac12c
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/boost_and_build.patch
 )
+
+set(STACK_DIRECTION)
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    set(STACK_DIRECTION -DSTACK_DIRECTION=-1)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -25,6 +34,8 @@ vcpkg_configure_cmake(
         -DWITH_UNIT_TESTS=OFF
         -DENABLED_PROFILING=OFF
         -DWIX_DIR=OFF
+        -DHAVE_LLVM_LIBCPP_EXITCODE=1
+        ${STACK_DIRECTION}
         -DWINDOWS_RUNTIME_MD=ON # Note: this disables _replacement_ of /MD with /MT. If /MT is specified, it will be preserved.
 )
 

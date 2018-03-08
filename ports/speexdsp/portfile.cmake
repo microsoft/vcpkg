@@ -8,9 +8,15 @@ vcpkg_download_distfile(ARCHIVE_FILE
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
+set(USE_SSE OFF)
+set(USE_NEON OFF)
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(USE_SSE ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${CMAKE_PATH}
-    OPTIONS -DSOURCE_PATH=${SOURCE_PATH}
+    OPTIONS -DSOURCE_PATH=${SOURCE_PATH} -DUSE_SSE=${USE_SSE}
 )
 
 vcpkg_install_cmake()

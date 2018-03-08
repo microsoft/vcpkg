@@ -208,9 +208,7 @@ namespace vcpkg::Build
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
     {
-        if (pre_build_info.external_toolchain_file)
-            return Strings::format(
-                R"("%s" %s 2>&1)", toolset.vcvarsall.u8string(), Strings::join(" ", toolset.vcvarsall_options));
+        if (pre_build_info.external_toolchain_file.has_value()) return "";
 
         const char* tonull = " >nul";
         if (GlobalState::debugging)
@@ -479,8 +477,9 @@ namespace vcpkg::Build
                     {"ALL_FEATURES", all_features},
                 });
 
-            const auto cmd_set_environment = make_build_env_cmd(pre_build_info, toolset);
-            const std::string command = Strings::format(R"(%s && %s)", cmd_set_environment, cmd_launch_cmake);
+            auto command = make_build_env_cmd(pre_build_info, toolset);
+            if (!command.empty()) command.append(" && ");
+            command.append(cmd_launch_cmake);
 
             const auto timer = Chrono::ElapsedTimer::create_started();
 

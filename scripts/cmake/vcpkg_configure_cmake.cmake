@@ -62,10 +62,12 @@ function(vcpkg_configure_cmake)
         set(_csc_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITECTURE})
     endif()
 
-    set(NINJA_CAN_BE_USED ON)
+    set(NINJA_CAN_BE_USED ON) # Ninja as generator
+    set(NINJA_HOST ON) # Ninja as parallel configurator
     if(_csc_HOST_ARCHITECTURE STREQUAL "x86")
         # Prebuilt ninja binaries are only provided for x64 hosts
         set(NINJA_CAN_BE_USED OFF)
+        set(NINJA_HOST OFF)
     elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         # Ninja and MSBuild have many differences when targetting UWP, so use MSBuild to maximize existing compatibility
         set(NINJA_CAN_BE_USED OFF)
@@ -107,7 +109,7 @@ function(vcpkg_configure_cmake)
     else()
         message(FATAL_ERROR "Unable to determine appropriate generator for: ${VCPKG_CMAKE_SYSTEM_NAME}-${VCPKG_TARGET_ARCHITECTURE}-${VCPKG_PLATFORM_TOOLSET}")
     endif()
-    
+
     # If we use Ninja, make sure it's on PATH
     if(GENERATOR STREQUAL "Ninja")
         vcpkg_find_acquire_program(NINJA)
@@ -214,7 +216,7 @@ function(vcpkg_configure_cmake)
         -DCMAKE_BUILD_TYPE=Debug
         -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug)
 
-    if(NINJA_CAN_BE_USED AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows" AND NOT _csc_DISABLE_PARALLEL_CONFIGURE)
+    if(NINJA_HOST AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows" AND NOT _csc_DISABLE_PARALLEL_CONFIGURE)
 
         vcpkg_find_acquire_program(NINJA)
         get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
@@ -252,17 +254,6 @@ function(vcpkg_configure_cmake)
         )
         message(STATUS "Configuring ${TARGET_TRIPLET} done")
     else()
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-            file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-            vcpkg_execute_required_process(
-                COMMAND ${rel_command}
-                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-                LOGNAME config-${TARGET_TRIPLET}-rel
-            )
-            message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
-        endif()
-
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
             message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
             file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
@@ -272,6 +263,17 @@ function(vcpkg_configure_cmake)
                 LOGNAME config-${TARGET_TRIPLET}-dbg
             )
             message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
+        endif()
+
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+            message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
+            file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+            vcpkg_execute_required_process(
+                COMMAND ${rel_command}
+                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+                LOGNAME config-${TARGET_TRIPLET}-rel
+            )
+            message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
         endif()
     endif()
 

@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-source-parsers/jsoncpp
-    REF 1.8.1
-    SHA512 4203826fca4c366b51d28ffc928399c914ffaba8be1cada64ff118b5742e6b469d3fc3e59344587d851447857b479794c5697d4fd11a9a55b32a3a7a801b745b
+    REF 1.8.4
+    SHA512 f70361a3263dd8b9441374a9a409462be1426c0d6587c865171a80448ab73b3f69de2b4d70d2f0c541764e1e6cccc727dd53178347901f625ec6fb54fb94f4f1
     HEAD_REF master
 )
 

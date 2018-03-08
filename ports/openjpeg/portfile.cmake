@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uclouvain/openjpeg
-    REF v2.2.0
-    SHA512 20651c380bee582ab1950994c424cc00061ad852e9c5438fb32a9809e3f275571a4cc7e92589add0d91debf2394262e58f441c2dd918809fc1c602ed68396a3a
+    REF v2.3.0
+    SHA512 0a9d427be4a820b1d759fca4b50e293721b45fe4885aa61ca1ae09e099f75ed93520448090c780d62f51076d575cc03618cd6d5181bdb6b34e4fc07b4cfdd568
     HEAD_REF master
 )
 

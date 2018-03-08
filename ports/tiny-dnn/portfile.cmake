@@ -8,8 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(INSTALL ${SOURCE_PATH}/tiny_dnn DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${SOURCE_PATH}/tiny_dnn DESTINATION ${CURRENT_PACKAGES_DIR}/include/)
 
-
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/tiny-dnn-dd906fed8c8aff8dc837657c42f9d55f8b793b0e/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tiny-dnn)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/share/tiny-dnn/LICENSE ${CURRENT_PACKAGES_DIR}/share/tiny-dnn/copyright)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tiny-dnn)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/tiny-dnn/LICENSE ${CURRENT_PACKAGES_DIR}/share/tiny-dnn/copyright)

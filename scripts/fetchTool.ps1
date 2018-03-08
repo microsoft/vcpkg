@@ -3,6 +3,7 @@ param(
     [Parameter(Mandatory=$true)][string]$tool
 )
 
+Set-StrictMode -Version Latest
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 . "$scriptsDir\VcpkgPowershellUtils.ps1"
 
@@ -31,7 +32,8 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
         return $exePath
     }
 
-    if ($toolData.archiveRelativePath)
+    $isArchive = vcpkgHasProperty -object $toolData -propertyName "archiveRelativePath"
+    if ($isArchive)
     {
         $downloadPath = "$downloadsDir\$($toolData.archiveRelativePath)"
     }
@@ -52,7 +54,7 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
     $downloadedFileHash = vcpkgGetSHA256 $downloadPath
     vcpkgCheckEqualFileHash -filePath $downloadPath -expectedHash $expectedDownloadedFileHash -actualHash $downloadedFileHash
 
-    if ($toolData.archiveRelativePath)
+    if ($isArchive)
     {
         $outFilename = (Get-ChildItem $downloadPath).BaseName
         Write-Host "Extracting $tool..."

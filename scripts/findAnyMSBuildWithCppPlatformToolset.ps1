@@ -4,9 +4,11 @@ param(
     [string]$withVSPath = ""
 )
 
+Set-StrictMode -Version Latest
+$scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
+
 $withVSPath = $withVSPath -replace "\\$" # Remove potential trailing backslash
 
-$scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 $VisualStudioInstallationInstances = & $scriptsDir\findVisualStudioInstallationInstances.ps1
 if ($VisualStudioInstallationInstances -eq $null)
 {
