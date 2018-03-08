@@ -13,26 +13,10 @@ vcpkg_from_github(
 file(
     REMOVE ${SOURCE_PATH}/src/FindOpenCL.cmake
 )
-# Rename results of built-in FindOpenCL.cmake results so they look as expected
-file(
-    COPY
-        ${CMAKE_CURRENT_LIST_DIR}/src/CMakeLists.txt
-    DESTINATION
-        ${SOURCE_PATH}/src
-)
-# Remove 'import' from ARCHIVE DESTINATION
-file(
-    COPY
-        ${CMAKE_CURRENT_LIST_DIR}/src/library/CMakeLists.txt
-    DESTINATION
-        ${SOURCE_PATH}/src/library
-)
-# Fix relative location of installed config scripts and include dir
-file(
-    COPY
-        ${CMAKE_CURRENT_LIST_DIR}/src/clBLASConfig.cmake.in
-    DESTINATION
-        ${SOURCE_PATH}/src
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/cmake.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -54,8 +38,10 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL
         "${SOURCE_PATH}/LICENSE"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/share/clblas/copyright
+        ${CURRENT_PACKAGES_DIR}/share/clblas
+    RENAME copyright
 )
+
 file(REMOVE
         ${CURRENT_PACKAGES_DIR}/debug/bin/clBLAS-tune.exe
         ${CURRENT_PACKAGES_DIR}/bin/clBLAS-tune.exe

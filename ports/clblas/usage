@@ -1,5 +1,0 @@
-The package clBLAS is compatible with the projects clBLASConfig.cmake:
-
-    find_package(clBLAS REQUIRED)
-    target_link_libraries(main PRIVATE ${CLBLAS_LIBRARIES})
-    target_include_directories(main PRIVATE ${CLBLAS_INCLUDE_DIRS})
