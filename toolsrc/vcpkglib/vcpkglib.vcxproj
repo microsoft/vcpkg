@@ -164,6 +164,9 @@
     <ClInclude Include="..\include\vcpkg\globalstate.h" />
     <ClInclude Include="..\include\vcpkg\help.h" />
     <ClInclude Include="..\include\vcpkg\input.h" />
+    <CIInclude Include="..\include\vcpkg\import.h" />
+    <CIInclude Include="..\include\vcpkg\import.ext.h" />
+    <CIInclude Include="..\include\vcpkg\import.pkg.h" />
     <ClInclude Include="..\include\vcpkg\install.h" />
     <ClInclude Include="..\include\vcpkg\metrics.h" />
     <ClInclude Include="..\include\vcpkg\packagespec.h" />
@@ -227,6 +230,8 @@
     <ClCompile Include="..\src\vcpkg\export.cpp" />
     <ClCompile Include="..\src\vcpkg\globalstate.cpp" />
     <ClCompile Include="..\src\vcpkg\help.cpp" />
+    <ClCompile Include="..\src\vcpkg\import.ext.cpp" />
+    <ClCompile Include="..\src\vcpkg\import.pkg.cpp" />
     <ClCompile Include="..\src\vcpkg\input.cpp" />
     <ClCompile Include="..\src\vcpkg\install.cpp" />
     <ClCompile Include="..\src\vcpkg\metrics.cpp" />
