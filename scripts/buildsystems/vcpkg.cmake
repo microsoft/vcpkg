@@ -275,7 +275,12 @@ macro(find_package name)
     elseif("${name}" STREQUAL "LibXml2")
         _find_package(${ARGV})
         if(LibXml2_FOUND AND (CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsStore"))
-            list(APPEND LIBXML2_LIBRARIES libiconv libcharset ws2_32)
+            list(APPEND LIBXML2_LIBRARIES
+                debug ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/libiconv.lib
+                optimized ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/libiconv.lib
+                debug ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/libcharset.lib
+                optimized ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/libcharset.lib
+                ws2_32)
         endif()
     else()
         _find_package(${ARGV})
