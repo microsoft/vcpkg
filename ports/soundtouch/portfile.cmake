@@ -19,6 +19,9 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 50ef36b6cd21c16e235b908c5518e29b159b11f658a014c47fe767d3d8acebaefefec0ce253b4ed322cbd26387c69c0ed464ddace0c098e61d56d55c198117a5
 )
 
+# MSBuild performs in-source builds, so to ensure reliability we must clear them each time
+file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
+
 vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_execute_required_process(

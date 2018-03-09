@@ -52,7 +52,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/xercesc/NLS)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/xercesc/util/MsgLoaders/ICU/resources)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/xerces-c)
+file(COPY ${SOURCE_PATH}/LICENSE ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/xerces-c)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/xerces-c/LICENSE ${CURRENT_PACKAGES_DIR}/share/xerces-c/copyright)
 
 vcpkg_copy_pdbs()
