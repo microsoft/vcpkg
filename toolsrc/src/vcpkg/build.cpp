@@ -438,10 +438,15 @@ namespace vcpkg::Build
             auto files = fs.get_files_non_recursive(pkg_path);
             Checks::check_exit(VCPKG_LINE_INFO, files.empty(), "unable to clear path: %s", pkg_path.u8string());
 
+#if defined(_WIN32)
             auto&& _7za = paths.get_7za_exe();
 
             System::cmd_execute_clean(Strings::format(
                 R"("%s" x "%s" -o"%s" -y >nul)", _7za.u8string(), archive_path.u8string(), pkg_path.u8string()));
+#else
+            System::cmd_execute_clean(Strings::format(
+                R"(unzip -qq "%s" "-d%s")", archive_path.u8string(), pkg_path.u8string()));
+#endif
 
             auto maybe_bcf = Paragraphs::try_load_cached_control_package(paths, spec);
             bcf = std::make_unique<BinaryControlFile>(std::move(maybe_bcf).value_or_exit(VCPKG_LINE_INFO));
@@ -538,6 +543,7 @@ namespace vcpkg::Build
                                    !fs.exists(tmp_archive_path),
                                    "Could not remove file: %s",
                                    tmp_archive_path.u8string());
+#if defined(_WIN32)
                 auto&& _7za = paths.get_7za_exe();
 
                 System::cmd_execute_clean(Strings::format(
@@ -545,7 +551,12 @@ namespace vcpkg::Build
                     _7za.u8string(),
                     tmp_archive_path.u8string(),
                     paths.package_dir(spec).u8string()));
-
+#else
+                System::cmd_execute_clean(Strings::format(
+                    R"(cd '%s' && zip --quiet -r '%s' *)",
+                    paths.package_dir(spec).u8string(),
+                    tmp_archive_path.u8string()));
+#endif
                 fs.create_directories(archives_dir, ec);
 
                 fs.rename(tmp_archive_path, archive_path);
