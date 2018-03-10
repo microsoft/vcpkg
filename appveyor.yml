@@ -17,8 +17,6 @@ environment:
     - VCPKG_DEFAULT_TRIPLET: x64-windows-static
 
 cache:
-  - downloads
-  - installed
   - packages
 
 # Help developer to investigate windows build using RDP to AppVeyor.
@@ -54,13 +52,14 @@ install:
       if([string]::IsNullOrWhitespace($targets))
       {
           ./vcpkg.exe remove  zlib --recurse
-          ./vcpkg.exe install zlib 
+          ./vcpkg.exe install zlib
           if (-not $?) { throw $? }
       }
       else
       {
+          ./vcpkg.exe cache
           ./vcpkg.exe remove  ${targets} --recurse
-          ./vcpkg.exe install ${targets} --recurse
+          ./vcpkg.exe install ${targets} --recurse --keep-going
           if (-not $?) { throw $? }
           ./vcpkg.exe export  ${targets} --zip --nuget
           if (-not $?) { throw $? }
