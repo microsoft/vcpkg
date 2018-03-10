@@ -10,6 +10,9 @@ shallow_clone: false
 clone_folder: c:\projects\vcpkg
 
 environment:
+  APPVEYOR_SAVE_CACHE_ON_ERROR: false
+  APPVEYOR_CACHE_ENTRY_ZIP_ARGS: "-t7z -m0=lzma -mx=9"
+ 
   matrix:
     - VCPKG_DEFAULT_TRIPLET: x86-windows
     - VCPKG_DEFAULT_TRIPLET: x86-windows-static
@@ -26,11 +29,17 @@ cache:
 #on_failure:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
+# Control cache save baaed on branch name
+#init:
+#  - ps: IF ($env:APPVEYOR_REPO_BRANCH -eq "develop") {$env:APPVEYOR_CACHE_SKIP_SAVE = "true"}
+
 install:
   - ps: |
       ./scripts/bootstrap.ps1
       if (-not $?) { throw $? }
       cd c:\projects\vcpkg
+      Write-Host "------Cached packages------"
+      .\vcpkg.exe cache
       # fetch upstream project which is necessary for forked project to compare with.
       git remote add upstream https://github.com/Microsoft/vcpkg.git
       git fetch -q upstream
@@ -41,11 +50,12 @@ install:
           Group-Object |
           Select-Object -Property name |
           %{$_.name}
+      # When no modified ports found
       if([string]::IsNullOrWhitespace($targets))
       {
           $targets = "zlib"
       }
-      ./vcpkg.exe cache
+      Write-Host "----Clean&build targets----"
       ./vcpkg.exe remove  ${targets} --recurse
       ./vcpkg.exe install ${targets} --recurse --keep-going
       if (-not $?) { throw $? }
