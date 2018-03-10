@@ -202,7 +202,15 @@ namespace vcpkg
         std::vector<std::string> ret;
         for (auto&& dep : deps)
         {
-            if (dep.qualifier.empty() || t.canonical_name().find(dep.qualifier) != std::string::npos)
+            auto qualifiers = Strings::split(dep.qualifier, "&");
+            if (std::all_of(qualifiers.begin(), qualifiers.end(), [&](const std::string& qualifier) {
+                    if (qualifier.empty()) return true;
+                    if (qualifier[0] == '!')
+                    {
+                        return t.canonical_name().find(qualifier.substr(1)) == std::string::npos;
+                    }
+                    return t.canonical_name().find(qualifier) != std::string::npos;
+                }))
             {
                 ret.emplace_back(dep.name());
             }

@@ -1,27 +1,20 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d3e3365..a20580e 100644
+index 8c0a385..887ddf5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -152,13 +152,13 @@ FILE ( APPEND ${CMAKE_CURRENT_BINARY_DIR}/config/OpenEXRConfig.h "
- IF (HAVE_GCC_INLINE_ASM_AVX)
-   FILE ( APPEND ${CMAKE_CURRENT_BINARY_DIR}/config/OpenEXRConfig.h "#define OPENEXR_IMF_HAVE_GCC_INLINE_ASM_AVX 1\n" )
- ENDIF()
--  
-+
- IF (HAVE_SYSCONF_NPROCESSORS_ONLN)
+@@ -157,8 +157,8 @@ IF (HAVE_SYSCONF_NPROCESSORS_ONLN)
    FILE ( APPEND ${CMAKE_CURRENT_BINARY_DIR}/config/OpenEXRConfig.h "#define OPENEXR_IMF_HAVE_SYSCONF_NPROCESSORS_ONLN 1\n" )
  ENDIF()
--  
+   
 -SET (OPENEXR_LIBSUFFIX "")
 -SET (ILMBASE_LIBSUFFIX "")
-+
 +SET (OPENEXR_LIBSUFFIX "" CACHE STRING "Default suffix for OpenEXR")
 +SET (ILMBASE_LIBSUFFIX "" CACHE STRING "Default suffix for ILMBase")
  IF (NAMESPACE_VERSIONING)
    SET ( OPENEXR_LIBSUFFIX "-${OPENEXR_VERSION_API}" )
    # assume same NAMESPACE_VERSION setting for IlmBase for now
 @@ -188,32 +188,6 @@ SET_TARGET_PROPERTIES ( IlmImfUtil
-   SOVERSION 22
+   SOVERSION 23
    OUTPUT_NAME "IlmImfUtil${OPENEXR_LIBSUFFIX}"
    )
 -  
@@ -53,10 +46,11 @@ index d3e3365..a20580e 100644
  
  ##########################
  # Installation
-@@ -225,36 +199,3 @@ INSTALL ( FILES
+@@ -224,37 +198,3 @@ INSTALL ( FILES
+   DESTINATION
    ${CMAKE_INSTALL_PREFIX}/include/OpenEXR
    )
- 
+-
 -# Documentation
 -INSTALL ( FILES
 -  doc/TechnicalIntroduction.pdf
