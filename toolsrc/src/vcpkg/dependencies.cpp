@@ -530,7 +530,7 @@ namespace vcpkg::Dependencies
             for (auto&& depend : remove_edges_edges)
             {
                 auto& depend_cluster = graph.get(depend.spec());
-                graph_plan.remove_graph.add_edge({&cluster}, {&depend_cluster});
+                if (&depend_cluster != &cluster) graph_plan.remove_graph.add_edge({&cluster}, {&depend_cluster});
                 mark_minus(depend_cluster, graph, graph_plan);
             }
         }
