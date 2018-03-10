@@ -30,14 +30,6 @@ install:
   - ps: |
       ./scripts/bootstrap.ps1
       if (-not $?) { throw $? }
-      # Clear out any intermediate files from the previous build
-      if (Test-Path buildtrees)
-      {
-          Get-ChildItem buildtrees/*/* | ? { $_.Name -ne "src" } | Remove-Item -Recurse -Force
-      }
-      # Purge any outdated packages
-      ./vcpkg remove --outdated --recurse
-      if (-not $?) { throw $? }
       cd c:\projects\vcpkg
       # fetch upstream project which is necessary for forked project to compare with.
       git remote add upstream https://github.com/Microsoft/vcpkg.git
