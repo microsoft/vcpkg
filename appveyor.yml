@@ -51,19 +51,14 @@ install:
           %{$_.name}
       if([string]::IsNullOrWhitespace($targets))
       {
-          ./vcpkg.exe remove  zlib --recurse
-          ./vcpkg.exe install zlib
-          if (-not $?) { throw $? }
+          $targets = "zlib"
       }
-      else
-      {
-          ./vcpkg.exe cache
-          ./vcpkg.exe remove  ${targets} --recurse
-          ./vcpkg.exe install ${targets} --recurse --keep-going
-          if (-not $?) { throw $? }
-          ./vcpkg.exe export  ${targets} --zip --nuget
-          if (-not $?) { throw $? }
-      }
+      ./vcpkg.exe cache
+      ./vcpkg.exe remove  ${targets} --recurse
+      ./vcpkg.exe install ${targets} --recurse --keep-going
+      if (-not $?) { throw $? }
+      ./vcpkg.exe export  ${targets} --zip --nuget
+      if (-not $?) { throw $? }
 
 build: off
 
