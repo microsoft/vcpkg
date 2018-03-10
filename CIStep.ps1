@@ -40,6 +40,7 @@ cmd /c subst V: .
 pushd V:\
 
 $env:VCPKG_FEATURE_FLAGS = "binarycaching"
+$env:VCPKG_DEFAULT_VS_PATH = $vsInstallPath
 
 if($miniTest)
 {

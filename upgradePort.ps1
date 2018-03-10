@@ -49,7 +49,7 @@ if ($Tags)
     }
     else
     {
-        git $workdirarg fetch
+        git $workdirarg fetch --tags
     }
     $latesttagsha = git $workdirarg rev-list --tags --max-count=1
     $newtag = git $workdirarg describe --tags --abbrev=0 $latesttagsha
