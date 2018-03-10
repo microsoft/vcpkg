@@ -2,8 +2,8 @@
 param(
     [Parameter(Mandatory=$True)][String]$VcpkgPath,
     [Parameter(Mandatory=$True)][String]$WorkDirectory,
-    [Parameter(Mandatory=$False)][Switch]$NoReleases,
     [Parameter(Mandatory=$False)][Switch]$NoTags,
+    [Parameter(Mandatory=$False)][Switch]$NoTagsRegex,
     [Parameter(Mandatory=$False)][Switch]$NoRolling
 )
 
@@ -14,44 +14,29 @@ if (!(Test-Path "$VcpkgPath/.vcpkg-root"))
 
 $utilsdir = split-path -parent $script:MyInvocation.MyCommand.Definition
 
-$releasePorts = @(
+$tagPorts = @(
     "azure-storage-cpp",
     "assimp",
+    "brynet",
     "c-ares",
     # disabled due to slow update cadence. In the future, once they have passed our current ref (Jan 29, 2018), this can be reenabled.
     # "cartographer",
-    "cgal",
+    "cctz",
+    # Disabled due to tags moving. Reactivate after releases/CGAL-4.11.1
+    #"cgal",
     "chakracore",
     "cimg",
     "cpp-redis",
+    "curl",
     "directxmesh",
-    "directxtex",
-    "directxtk",
     "discord-rpc",
     "doctest",
-    "gdcm2",
-    "glm",
-    "libevent",
-    "matio",
-    "openblas",
-    "plog",
-    "rapidjson",
-    "rocksdb",
-    "spdlog",
-    "wt",
-    "wxwidgets",
-    "yaml-cpp"
-)
-
-$tagPorts = @(
-    "brynet",
-    "cctz",
-    "curl",
     "eastl",
     "eigen3",
     "expat",
     "fmt",
     #"folly",
+    "gdcm2",
     "gflags",
     "glog",
     "grpc",
@@ -60,21 +45,39 @@ $tagPorts = @(
     "jsoncpp",
     "openal-soft",
     "protobuf",
+    "libevent",
     #"libffi",
     "libjpeg-turbo",
     "libogg",
-    "libpng",
     "libsodium",
     "libuv",
     "libwebsockets",
     "lz4",
+    "matio",
+    "openblas",
     "openjpeg",
+    "plog",
+    "rapidjson",
+    "rocksdb",
     "sdl2",
     "sfml",
     "snappy",
+    "spdlog",
     "tbb",
     "uwebsockets",
+    "wt",
+    "wxwidgets",
+    "yaml-cpp",
     "zziplib"
+)
+
+$tagPortsWithRegex = @(
+    (New-Object PSObject -Property @{ "port"="libpng"; "regex"="v[\d\.]+`$" }),
+    (New-Object PSObject -Property @{ "port"="glm"; "regex"="^[\d\.]+`$" }),
+    (New-Object PSObject -Property @{ "port"="wxwidgets"; "regex"="v3.1" }),
+
+    (New-Object PSObject -Property @{ "port"="directxtex"; "regex"="^[^\d]+\d+[^\d]?$" }),
+    (New-Object PSObject -Property @{ "port"="directxtk"; "regex"="^[^\d]+\d+[^\d]?$" })
 )
 
 $rollingPorts = @(
@@ -121,17 +124,17 @@ $rollingPorts = @(
     #"zeromq"
 )
 
-if (!$NoReleases)
-{
-    $releasePorts | % {
-        & "$utilsdir/upgradePort.ps1" -VcpkgPath $VcpkgPath -WorkDirectory $WorkDirectory -Port $_ -Releases
-    }
-}
-
 if (!$NoTags)
 {
     $tagPorts | % {
         & "$utilsdir/upgradePort.ps1" -VcpkgPath $VcpkgPath -WorkDirectory $WorkDirectory -Port $_ -Tags
+    }
+}
+
+if (!$NoTagsRegex)
+{
+    $tagPortsWithRegex | % {
+        & "$utilsdir/upgradePort.ps1" -VcpkgPath $VcpkgPath -WorkDirectory $WorkDirectory -Port $_.port -Regex $_.regex -Tags
     }
 }
 

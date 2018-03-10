@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$True)][String]$Port,
+    [Parameter(Mandatory=$False)][String]$Regex,
     [Parameter(Mandatory=$True)][String]$VcpkgPath,
     [Parameter(Mandatory=$True)][String]$WorkDirectory,
     [Parameter(Mandatory=$False)][Switch]$DryRun,
@@ -51,7 +52,9 @@ if ($Tags)
     {
         git $workdirarg fetch --tags
     }
-    $latesttagsha = git $workdirarg rev-list --tags --max-count=1
+    Write-Verbose "git $workdirarg tag | ? { $_ -match $Regex }"
+    $alltags = git $workdirarg tag | ? { $_ -match $Regex }
+    $latesttagsha = git $workdirarg rev-list $alltags --max-count=1
     $newtag = git $workdirarg describe --tags --abbrev=0 $latesttagsha
 }
 else
@@ -106,7 +109,7 @@ if ($newtag -ne $oldtag)
     Write-Verbose "SHA512=$sha"
 
     $oldcall = $vcpkg_from_github_invokes[0].Groups[0].Value
-    $newcall = $oldcall -replace "REF[\s]+$oldtag","REF $newtag" -replace "SHA512[\s]+[^)\s]+","SHA512 $sha"
+    $newcall = $oldcall -replace "\sREF[^\n]+"," REF $newtag" -replace "SHA512[\s]+[^)\s]+","SHA512 $sha"
     Write-Verbose "oldcall is $oldcall"
     Write-Verbose "newcall is $newcall"
     $new_portfile_contents = $portfile_contents -replace [regex]::escape($oldcall),$newcall
@@ -122,7 +125,7 @@ if ($newtag -ne $oldtag)
     }
     else
     {
-        $newtag_without_v = $newtag -replace "^v([\d])","`$1" -replace "^$libname-",""
+        $newtag_without_v = $newtag -replace "^v\.?([\.\d])","`$1" -replace "^$libname-",""
     }
     Write-Verbose "processed newtag is $newtag_without_v"
 
