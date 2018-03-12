@@ -6,3 +6,11 @@ Description: a library to decode, encode, transcode, mux, demux, stream, filter 
 Feature: openssl
 Build-Depends: openssl
 Description: openssl support in ffmpeg
+
+Feature: x264
+Build-Depends: x264
+Description: x264 support in ffmpeg
+
+Feature: x265
+Build-Depends: x265
+Description: x265 support in ffmpeg
