@@ -44,14 +44,14 @@ foreach ($key in $keys)
 
 $diffCount = $differences.Count
 Write-Host "Number of differences found: $diffCount"
-$title = "{0,20} : {1,20} VS {2,20}" -f "DiffsTable", $leftPath, $rightPath
+$title = "{0,40} : {1,20} VS {2,20}" -f "DiffsTable", $leftPath, $rightPath
 Write-Host $title
 
 foreach ($key in $differences)
 {
     $l1 = $leftPortsPassMap[$key]
     $r1 = $rightPortsPassMap[$key]
-    $string = "{0,20} : {1,20} VS {2,-20}" -f $key, $l1, $r1
+    $string = "{0,40} : {1,20} VS {2,-20}" -f $key, $l1, $r1
     $string
 }
 

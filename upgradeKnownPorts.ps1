@@ -52,6 +52,7 @@ $tagPorts = @(
     "libsodium",
     "libuv",
     "libwebsockets",
+    "libzip",
     "lz4",
     "matio",
     "openblas",
