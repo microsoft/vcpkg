@@ -10,7 +10,7 @@ endif()
 add_library(sqlite3 sqlite3.c)
 
 target_compile_definitions(sqlite3 PRIVATE 
-    $<$<CONFIG:Debug>:-DSQLITE_DEBUG>
+    $<$<CONFIG:Debug>:SQLITE_DEBUG>
     ${API}
     -DSQLITE_ENABLE_RTREE
     -DSQLITE_ENABLE_UNLOCK_NOTIFY

@@ -6,14 +6,24 @@ function(boost_modular_build)
     endif()
 
     # Todo: this serves too similar a purpose as vcpkg_find_acquire_program()
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-        set(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/tools/boost-build")
-    else()
+    if(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         get_filename_component(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../x86-windows/tools/boost-build" ABSOLUTE)
+    elseif(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        get_filename_component(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../x86-windows/tools/boost-build" ABSOLUTE)
+    else()
+        set(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/tools/boost-build")
     endif()
 
     if(NOT EXISTS "${BOOST_BUILD_PATH}")
         message(FATAL_ERROR "The x86 boost-build tools must be installed to build for non-x86/x64 platforms. Please run `vcpkg install boost-build:x86-windows`.")
+    endif()
+
+    if(EXISTS "${BOOST_BUILD_PATH}/b2.exe")
+        set(B2_EXE "${BOOST_BUILD_PATH}/b2.exe")
+    elseif(EXISTS "${BOOST_BUILD_PATH}/b2")
+        set(B2_EXE "${BOOST_BUILD_PATH}/b2")
+    else()
+        message(FATAL_ERROR "Could not find b2 in ${BOOST_BUILD_PATH}")
     endif()
 
     if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -28,7 +38,15 @@ function(boost_modular_build)
 
     set(REQUIREMENTS ${_bm_REQUIREMENTS})
 
-    configure_file(${_bm_DIR}/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        set(BOOST_LIB_PREFIX)
+        set(BOOST_LIB_RELEASE_SUFFIX -vc140-mt.lib)
+        set(BOOST_LIB_DEBUG_SUFFIX -vc140-mt-gd.lib)
+    else()
+        set(BOOST_LIB_PREFIX lib)
+        set(BOOST_LIB_RELEASE_SUFFIX .a)
+        set(BOOST_LIB_DEBUG_SUFFIX .a)
+    endif()
 
     # boost thread superfluously builds has_atomic_flag_lockfree on windows.
     if(EXISTS "${_bm_SOURCE_PATH}/build/Jamfile.v2")
@@ -57,6 +75,21 @@ function(boost_modular_build)
             "\n# project.load [ path.join [ path.make $(here:D) ] ../../config/checks/architecture ] ;"
             _contents "${_contents}")
         file(WRITE ${_bm_SOURCE_PATH}/build/log-architecture.jam "${_contents}")
+    endif()
+
+    configure_file(${_bm_DIR}/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
+
+    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+        vcpkg_configure_cmake(
+            SOURCE_PATH ${CURRENT_INSTALLED_DIR}/share/boost-build
+            PREFER_NINJA
+            OPTIONS
+                "-DB2_EXE=${B2_EXE}"
+                "-DSOURCE_PATH=${_bm_SOURCE_PATH}"
+                "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
+        )
+        vcpkg_install_cmake()
+        return()
     endif()
 
     #####################
@@ -90,11 +123,22 @@ function(boost_modular_build)
         ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
     )
 
+    if(DEFINED ENV{NUMBER_OF_PROCESSORS})
+        set(NUMBER_OF_PROCESSORS $ENV{NUMBER_OF_PROCESSORS})
+    else()
+        execute_process(
+            COMMAND nproc
+            OUTPUT_VARIABLE NUMBER_OF_PROCESSORS
+        )
+        string(REPLACE "\n" "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
+        string(REPLACE " " "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
+    endif()
+
     ######################
     # Generate configuration
     ######################
     list(APPEND _bm_OPTIONS
-        -j$ENV{NUMBER_OF_PROCESSORS}
+        -j${NUMBER_OF_PROCESSORS}
         --debug-configuration
         --debug-building
         --debug-generators
@@ -102,23 +146,27 @@ function(boost_modular_build)
         --ignore-site-config
         --hash
         -q
-        -sZLIB_INCLUDE="${CURRENT_INSTALLED_DIR}\\include"
-        -sBZIP2_INCLUDE="${CURRENT_INSTALLED_DIR}\\include"
-        threadapi=win32
+        -sZLIB_INCLUDE="${CURRENT_INSTALLED_DIR}/include"
+        -sBZIP2_INCLUDE="${CURRENT_INSTALLED_DIR}/include"
         threading=multi
     )
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        list(APPEND _bm_OPTIONS threadapi=win32)
+    else()
+        list(APPEND _bm_OPTIONS threadapi=pthread)
+    endif()
     set(_bm_OPTIONS_DBG
          -sZLIB_BINARY=zlibd
-         -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
+         -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}/debug/lib"
          -sBZIP2_BINARY=bz2d
-         -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\debug\\lib"
+         -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}/debug/lib"
     )
  
     set(_bm_OPTIONS_REL
          -sZLIB_BINARY=zlib
-         -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+         -sZLIB_LIBPATH="${CURRENT_INSTALLED_DIR}/lib"
          -sBZIP2_BINARY=bz2
-         -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}\\lib"
+         -sBZIP2_LIBPATH="${CURRENT_INSTALLED_DIR}/lib"
     )
 
 
@@ -173,6 +221,8 @@ function(boost_modular_build)
         list(APPEND _bm_OPTIONS toolset=msvc-14.1)
     elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v140")
         list(APPEND _bm_OPTIONS toolset=msvc-14.0)
+    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "external")
+        list(APPEND _bm_OPTIONS toolset=gcc)
     else()
         message(FATAL_ERROR "Unsupported value for VCPKG_PLATFORM_TOOLSET: '${VCPKG_PLATFORM_TOOLSET}'")
     endif()
@@ -180,8 +230,6 @@ function(boost_modular_build)
     ######################
     # Perform build + Package
     ######################
-    set(B2_EXE "${BOOST_BUILD_PATH}/b2.exe")
-
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Building ${TARGET_TRIPLET}-rel")
         set(ENV{BOOST_BUILD_PATH} "${BOOST_BUILD_PATH}")
@@ -219,10 +267,13 @@ function(boost_modular_build)
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Packaging ${TARGET_TRIPLET}-rel")
-        file(GLOB REL_LIBS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/boost/build/*/*.lib)
+        file(GLOB REL_LIBS
+            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/boost/build/*/*.lib
+            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/boost/build/*/*.a
+            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/boost/build/*/*.so
+        )
         file(COPY ${REL_LIBS}
-            DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-            FILES_MATCHING PATTERN "*.lib")
+            DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
         if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
             file(GLOB REL_DLLS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/boost/build/*/*.dll)
             file(COPY ${REL_DLLS}
@@ -234,10 +285,13 @@ function(boost_modular_build)
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         message(STATUS "Packaging ${TARGET_TRIPLET}-dbg")
-        file(GLOB DBG_LIBS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/boost/build/*/*.lib)
+        file(GLOB DBG_LIBS
+            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/boost/build/*/*.lib
+            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/boost/build/*/*.a
+            ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/boost/build/*/*.so
+        )
         file(COPY ${DBG_LIBS}
-            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-            FILES_MATCHING PATTERN "*.lib")
+            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
         if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
             file(GLOB DBG_DLLS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/boost/build/*/*.dll)
             file(COPY ${DBG_DLLS}

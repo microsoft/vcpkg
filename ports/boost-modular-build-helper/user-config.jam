@@ -1,9 +1,23 @@
 import toolset ;
 
-using msvc : : cl.exe :
-<setup>"@NOTHING_BAT@"
-@TOOLSET_OPTIONS@
-;
+if "@VCPKG_PLATFORM_TOOLSET@" != "external"
+{
+    using msvc : : cl.exe :
+    <setup>"@NOTHING_BAT@"
+    @TOOLSET_OPTIONS@
+    ;
+}
+else
+{
+    using gcc : 5.4.1 : @CMAKE_CXX_COMPILER@
+        :
+        <ranlib>@CMAKE_RANLIB@
+        <archiver>@CMAKE_AR@
+        @CXXFLAGS@
+        # MINGW here causes b2 to not run cygpath
+        <flavor>mingw
+        ;
+}
 
 if "@PORT@" = "boost-python"
 {

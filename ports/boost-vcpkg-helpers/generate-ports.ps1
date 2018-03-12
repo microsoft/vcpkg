@@ -322,7 +322,7 @@ foreach ($library in $libraries)
         $needsBuild = $false
         if ((Test-Path $unpacked/build/Jamfile.v2) -and $library -ne "metaparse")
         {
-            $deps += @("boost-build")
+            $deps += @("boost-build", "boost-modular-build-helper")
             $needsBuild = $true
         }
 

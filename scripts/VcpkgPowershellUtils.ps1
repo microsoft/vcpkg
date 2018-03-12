@@ -172,10 +172,6 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
     vcpkgRemoveItem $destinationPartial
     vcpkgCreateDirectoryIfNotExists $destinationPartial
 
-    $shell = new-object -com shell.application
-    $zip = $shell.NameSpace($(Get-Item $file).fullname)
-    $itemCount = $zip.Items().Count
-
     if (vcpkgHasCommand -commandName 'Microsoft.PowerShell.Archive\Expand-Archive')
     {
         Write-Verbose("Extracting with Microsoft.PowerShell.Archive\Expand-Archive")
@@ -189,12 +185,16 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
     else
     {
         Write-Verbose("Extracting via shell")
+        $shell = new-object -com shell.application
+        $zip = $shell.NameSpace($(Get-Item $file).fullname)
         foreach($item in $zip.items())
         {
             # Piping to Out-Null is used to block until finished
             $shell.Namespace($destinationPartial).copyhere($item) | Out-Null
         }
     }
+
+    $itemCount = @(Get-ChildItem "$destinationPartial").Count
 
     if ($itemCount -eq 1)
     {

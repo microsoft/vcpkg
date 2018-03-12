@@ -8,14 +8,7 @@ vcpkg_download_distfile(ARCHIVE_FILE
     FILENAME "protobuf-cpp-${PROTOBUF_VERSION}.tar.gz"
     SHA512 195ccb210229e0a1080dcdb0a1d87b2e421ad55f6b036c56db3183bd50a942c75b4cc84e6af8a10ad88022a247781a06f609a145a461dfbb8f04051b7dd714b3
 )
-vcpkg_download_distfile(TOOL_ARCHIVE_FILE
-    URLS "https://github.com/google/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-win32.zip"
-    FILENAME "protoc-${PROTOC_VERSION}-win32.zip"
-    SHA512 27b1b82e92d82c35158362435a29f590961b91f68cda21bffe46e52271340ea4587c4e3177668809af0d053b61e6efa69f0f62156ea11393cd9e6eb4474a3049
-)
-
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION})
-set(TOOL_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION}-win32)
 
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
@@ -25,19 +18,29 @@ vcpkg_apply_patches(
     PATCHES
         "${CMAKE_CURRENT_LIST_DIR}/001-add-compiler-flag.patch"
         "${CMAKE_CURRENT_LIST_DIR}/export-ParseGeneratorParameter.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/js-embed.patch"
 )
 
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(TOOL_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION}-win32)
+    vcpkg_download_distfile(TOOL_ARCHIVE_FILE
+        URLS "https://github.com/google/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-win32.zip"
+        FILENAME "protoc-${PROTOC_VERSION}-win32.zip"
+        SHA512 27b1b82e92d82c35158362435a29f590961b91f68cda21bffe46e52271340ea4587c4e3177668809af0d053b61e6efa69f0f62156ea11393cd9e6eb4474a3049
+    )
 
-vcpkg_extract_source_archive(${TOOL_ARCHIVE_FILE} ${TOOL_PATH})
+    vcpkg_extract_source_archive(${TOOL_ARCHIVE_FILE} ${TOOL_PATH})
+endif()
+
 
 # Disable the protobuf compiler when targeting UWP
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
+if(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME)
   set(protobuf_BUILD_COMPILER OFF)
 else()
   set(protobuf_BUILD_COMPILER ON)
 endif()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(protobuf_BUILD_SHARED_LIBS ON)
 else()
     set(protobuf_BUILD_SHARED_LIBS OFF)
@@ -57,6 +60,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/cmake
+    PREFER_NINJA
     OPTIONS
         -Dprotobuf_BUILD_SHARED_LIBS=${protobuf_BUILD_SHARED_LIBS}
         -Dprotobuf_MSVC_STATIC_RUNTIME=${protobuf_MSVC_STATIC_RUNTIME}
@@ -92,7 +96,7 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-debug.cmake "
 
 protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/share)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin)
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/bin)
 else()
@@ -107,5 +111,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/protobuf RENAME copyright)
-file(INSTALL ${TOOL_PATH}/bin/protoc.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    file(INSTALL ${TOOL_PATH}/bin/protoc.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+endif()
 vcpkg_copy_pdbs()

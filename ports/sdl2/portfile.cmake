@@ -32,11 +32,32 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake")
+elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/SDL2")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/SDL2")
+elseif(EXISTS "${CURRENT_PACKAGES_DIR}/SDL2.framework/Resources")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "SDL2.framework/Resources")
+endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake")
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/debug/include
+    ${CURRENT_PACKAGES_DIR}/debug/share
+    ${CURRENT_PACKAGES_DIR}/bin/sdl2-config
+    ${CURRENT_PACKAGES_DIR}/debug/bin/sdl2-config
+    ${CURRENT_PACKAGES_DIR}/SDL2.framework
+    ${CURRENT_PACKAGES_DIR}/debug/SDL2.framework
+)
 
-if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+file(GLOB BINS ${CURRENT_PACKAGES_DIR}/debug/bin/* ${CURRENT_PACKAGES_DIR}/bin/*)
+if(NOT BINS)
+    file(REMOVE_RECURSE
+        ${CURRENT_PACKAGES_DIR}/bin
+        ${CURRENT_PACKAGES_DIR}/debug/bin
+    )
+endif()
+
+if(NOT VCPKG_CMAKE_SYSTEM_NAME)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/SDL2main.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/SDL2main.lib)
     file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/SDL2maind.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/SDL2maind.lib)

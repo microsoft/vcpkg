@@ -1,11 +1,3 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:\path\to\current\vcpkg>
-#   TARGET_TRIPLET is the current triplet (x86-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#
-
 include(vcpkg_common_functions)
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/pixman-0.34.0)
@@ -17,29 +9,26 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists_pixman.txt DESTINATION ${SOURCE_PATH}/pixman)
-file(RENAME ${SOURCE_PATH}/pixman/CMakeLists_pixman.txt ${SOURCE_PATH}/pixman/CMakeLists.txt)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/pixman)
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
+    SOURCE_PATH ${SOURCE_PATH}/pixman
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()
 
 # Copy the appropriate header files.
 file(COPY
-"${SOURCE_PATH}/pixman/pixman.h"
-"${SOURCE_PATH}/pixman/pixman-accessor.h"
-"${SOURCE_PATH}/pixman/pixman-combine32.h"
-"${SOURCE_PATH}/pixman/pixman-compiler.h"
-"${SOURCE_PATH}/pixman/pixman-edge-imp.h"
-"${SOURCE_PATH}/pixman/pixman-inlines.h"
-"${SOURCE_PATH}/pixman/pixman-private.h"
-"${SOURCE_PATH}/pixman/pixman-version.h"
-DESTINATION
-${CURRENT_PACKAGES_DIR}/include
+    "${SOURCE_PATH}/pixman/pixman.h"
+    "${SOURCE_PATH}/pixman/pixman-accessor.h"
+    "${SOURCE_PATH}/pixman/pixman-combine32.h"
+    "${SOURCE_PATH}/pixman/pixman-compiler.h"
+    "${SOURCE_PATH}/pixman/pixman-edge-imp.h"
+    "${SOURCE_PATH}/pixman/pixman-inlines.h"
+    "${SOURCE_PATH}/pixman/pixman-private.h"
+    "${SOURCE_PATH}/pixman/pixman-version.h"
+    DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
 
 # Handle copyright
