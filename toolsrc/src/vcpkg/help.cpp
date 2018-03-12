@@ -92,6 +92,7 @@ namespace vcpkg::Help
             "\n"
             "%s" // Integration help
             "\n"
+            "  vcpkg env                       Creates a clean shell environment for development or compiling.\n"
             "  vcpkg export <pkg>... [opt]...  Exports a package\n"
             "  vcpkg edit <pkg>                Open up a port for editing (uses %%EDITOR%%, default 'code')\n"
             "  vcpkg import <pkg>              Import a pre-built library\n"
@@ -102,10 +103,6 @@ namespace vcpkg::Help
             "  vcpkg version                   Display version information\n"
             "  vcpkg contact                   Display contact information to send feedback\n"
             "\n"
-            //"internal commands:\n"
-            //"  --check-build-deps <controlfile>\n"
-            //"  --create-binary-control <controlfile>\n"
-            //"\n"
             "Options:\n"
             "  --triplet <t>                   Specify the target architecture triplet.\n"
             "                                  (default: %%VCPKG_DEFAULT_TRIPLET%%, see 'vcpkg help triplet')\n"
