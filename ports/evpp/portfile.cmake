@@ -20,10 +20,17 @@ else ()
         SHA512 08226fe9853c1984f6554ede8f79a5767eec1d12ff2ff7172eef6f715ac7ea3f495b2336876823842408bd92b0ad99c9a3d506c07fc0add369f5cfa777f0406a
         HEAD_REF master
     )
+    file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty/rapidjson ${SOURCE_PATH}/3rdparty/concurrentqueue)
+
+    vcpkg_apply_patches(
+        SOURCE_PATH ${SOURCE_PATH}
+        PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-rapidjson-1-1.patch
+    )
 endif ()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS -DEVPP_VCPKG_BUILD=ON
 )
 
