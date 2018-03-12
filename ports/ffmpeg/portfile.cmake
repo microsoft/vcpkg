@@ -33,8 +33,9 @@ file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg ${CURRENT_BU
 
 set(OPTIONS "--enable-asm --enable-yasm --disable-doc --enable-debug")
 set(OPTIONS "${OPTIONS} --enable-runtime-cpudetect")
+
 if("openssl" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-openssl")
+    set(OPTIONS "${OPTIONS} --enable-openssl --enable-gpl --enable-nonfree")
 else()
     set(OPTIONS "${OPTIONS} --disable-openssl")
 endif()
@@ -71,7 +72,7 @@ endif()
 #endif()
 
 if("x264" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-libx264")
+    set(OPTIONS "${OPTIONS} --enable-libx264 --enable-gpl --enable-nonfree")
 else()
     set(OPTIONS "${OPTIONS} --disable-libx264")
 endif()
