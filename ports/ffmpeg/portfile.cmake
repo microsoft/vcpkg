@@ -11,6 +11,7 @@ vcpkg_apply_patches(
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/create-lib-libraries.patch
         ${CMAKE_CURRENT_LIST_DIR}/detect-openssl.patch
+        ${CMAKE_CURRENT_LIST_DIR}/configure_opencv_opengl.patch
 )
 
 vcpkg_find_acquire_program(YASM)
