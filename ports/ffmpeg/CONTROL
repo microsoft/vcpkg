@@ -14,3 +14,6 @@ Description: x264 support in ffmpeg
 Feature: x265
 Build-Depends: x265
 Description: x265 support in ffmpeg
+
+Feature: tool
+Description: build ffmpeg and ffprobe program

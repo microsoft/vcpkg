@@ -1,0 +1,23 @@
+diff --git a/configure b/configure
+index 759e0f4..c3ed49a 100644
+--- a/configure
++++ b/configure
+@@ -3849,6 +3849,7 @@ msvc_common_flags(){
+             -lavifil32)           echo vfw32.lib ;;
+             -lavicap32)           echo vfw32.lib user32.lib ;;
+             -lx264)               echo libx264.lib ;;
++            -lx265)               echo libx265.lib ;;
+             -l*)                  echo ${flag#-l}.lib ;;
+             -LARGEADDRESSAWARE)   echo $flag ;;
+             -L*)                  echo -libpath:${flag#-L} ;;
+@@ -5873,7 +5874,9 @@ enabled libx264           && { use_pkg_config x264 "stdint.h x264.h" x264_encode
+                                die "ERROR: libx264 must be installed and version must be >= 0.118."; } &&
+                              { check_cpp_condition x264.h "X264_MPEG2" &&
+                                enable libx262; }
+-enabled libx265           && require_pkg_config x265 x265.h x265_api_get &&
++enabled libx265           && { use_pkg_config x265 x265.h x265_api_get ||
++                               { require libx265 x265.h x265_api_get -lx265 &&
++                                 warn "using libx265 without pkg-config"; } } &&
+                              { check_cpp_condition x265.h "X265_BUILD >= 68" ||
+                                die "ERROR: libx265 version must be >= 68."; }
+ enabled libxavs           && require libxavs "stdint.h xavs.h" xavs_encoder_encode -lxavs

@@ -11,6 +11,7 @@ vcpkg_apply_patches(
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/create-lib-libraries.patch
         ${CMAKE_CURRENT_LIST_DIR}/detect-openssl.patch
+        ${CMAKE_CURRENT_LIST_DIR}/detect-x265.patch
 )
 
 vcpkg_find_acquire_program(YASM)
@@ -30,8 +31,13 @@ set(_csc_PROJECT_PATH ffmpeg)
 
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
 
-set(OPTIONS "--disable-ffmpeg --disable-ffprobe --disable-doc --enable-debug")
+set(OPTIONS " --disable-doc --enable-debug")
 set(OPTIONS "${OPTIONS} --enable-runtime-cpudetect")
+
+if(NOT "tool" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --disable-ffmpeg --disable-ffprobe")
+endif()
+
 if("openssl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-openssl")
 else()
@@ -143,9 +149,10 @@ endforeach()
 
 file(GLOB EXP_FILES ${CURRENT_PACKAGES_DIR}/lib/*.exp ${CURRENT_PACKAGES_DIR}/debug/lib/*.exp)
 file(GLOB LIB_FILES ${CURRENT_PACKAGES_DIR}/bin/*.lib ${CURRENT_PACKAGES_DIR}/debug/bin/*.lib)
-file(GLOB EXE_FILES ${CURRENT_PACKAGES_DIR}/bin/*.exe ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
+file(GLOB EXE_FILES ${CURRENT_PACKAGES_DIR}/bin/*.exe)
+file(GLOB EXE_DEBUG_FILES ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
 file(COPY ${EXE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-set(FILES_TO_REMOVE ${EXP_FILES} ${LIB_FILES} ${DEF_FILES})
+set(FILES_TO_REMOVE ${EXP_FILES} ${LIB_FILES} ${DEF_FILES} ${EXE_DEBUG_FILES})
 list(LENGTH FILES_TO_REMOVE FILES_TO_REMOVE_LEN)
 if(FILES_TO_REMOVE_LEN GREATER 0)
     file(REMOVE ${FILES_TO_REMOVE})
