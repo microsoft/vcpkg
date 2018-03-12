@@ -12,8 +12,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/angle
-    REF 8d471f907d8d4ec1d46bc9366493bd76c11c1870 
-    SHA512 b4670caeeaa5d662bc82702eb5f620123812ea6b5d82f57a65df54ae25cdaa5c9ff0fdb592448b07569d9c09af3d3c51b0b2f135c5800d1845b425009656bf18
+    REF 3c43b4d1e6d08a74a61775b1b6013fe3ac266985
+    SHA512 0cec8024361310df428bfac8a8bc4886d4ea13844aa81b42dd94bc7e68b7c95d0cbb1d669f519b4a3abc14dfe6da05d37dfacb2c694efc22fdae7d6725f1db21
     HEAD_REF master
 )
 vcpkg_apply_patches(

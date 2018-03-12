@@ -11,6 +11,7 @@ vcpkg_apply_patches(
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/create-lib-libraries.patch
         ${CMAKE_CURRENT_LIST_DIR}/detect-openssl.patch
+        ${CMAKE_CURRENT_LIST_DIR}/configure_opencv_opengl.patch
 )
 
 vcpkg_find_acquire_program(YASM)
@@ -30,12 +31,90 @@ set(_csc_PROJECT_PATH ffmpeg)
 
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
 
-set(OPTIONS "--disable-ffmpeg --disable-ffprobe --disable-doc --enable-debug")
+set(OPTIONS "--enable-asm --enable-yasm --disable-doc --enable-debug")
 set(OPTIONS "${OPTIONS} --enable-runtime-cpudetect")
 if("openssl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-openssl")
 else()
     set(OPTIONS "${OPTIONS} --disable-openssl")
+endif()
+
+if("ffmpeg" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-ffmpeg")
+else()
+    set(OPTIONS "${OPTIONS} --disable-ffmpeg")
+endif()
+
+if("ffplay" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-ffplay")
+else()
+    set(OPTIONS "${OPTIONS} --disable-ffplay")
+endif()
+
+if("ffserver" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-ffserver")
+else()
+    set(OPTIONS "${OPTIONS} --disable-ffserver")
+endif()
+
+if("ffprobe" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-ffprobe")
+else()
+    set(OPTIONS "${OPTIONS} --disable-ffprobe")
+endif()
+
+#if("zlib" IN_LIST FEATURES)
+#    set(OPTIONS "${OPTIONS} --enable-zlib")
+#else()
+#    set(OPTIONS "${OPTIONS} --disable-zlib")
+#endif()
+
+if("x264" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libx264")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libx264")
+endif()
+
+if("x265" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libx265")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libx265")
+endif()
+
+if("librtmp" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-librtmp")
+else()
+    set(OPTIONS "${OPTIONS} --disable-librtmp")
+endif()
+
+if("libssh" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libssh")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libssh")
+endif()
+
+if("opengl" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-opengl")
+else()
+    set(OPTIONS "${OPTIONS} --disable-opengl")
+endif()
+
+if("opencv" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libopencv")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libopencv")
+endif()
+
+if("opencl" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-opencl")
+else()
+    set(OPTIONS "${OPTIONS} --disable-opencl")
+endif()
+
+if("openjpeg" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libopenjpeg")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libopenjpeg")
 endif()
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -67,6 +146,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(OPTIONS "${OPTIONS} --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib")
     endif()
 endif()
+
+message(STATUS "Building Options: ${OPTIONS}")
 
 if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
     set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-cflags=-MDd --extra-cxxflags=-MDd")
