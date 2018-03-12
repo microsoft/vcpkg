@@ -31,7 +31,7 @@ set(_csc_PROJECT_PATH ffmpeg)
 
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
 
-set(OPTIONS "--enable-asm --enable-yasm --disable-doc --enable-debug --enable-gpl --enable-nonfree")
+set(OPTIONS "--enable-asm --enable-yasm --disable-doc --enable-debug")
 set(OPTIONS "${OPTIONS} --enable-runtime-cpudetect")
 if("openssl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-openssl")
