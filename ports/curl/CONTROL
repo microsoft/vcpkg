@@ -1,5 +1,5 @@
 Source: curl
-Version: 7.58.0-4
+Version: 7.58.0-5
 Build-Depends: zlib
 Description: A library for transferring data with URLs
 Default-Features: ssl

@@ -95,6 +95,12 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/curl)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/curl)
+elseif(EXISTS ${CURRENT_PACKAGES_DIR}/share/curl)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH share/curl)
+endif()
+
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/curl RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

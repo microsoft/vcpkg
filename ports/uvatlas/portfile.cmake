@@ -1,17 +1,12 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:\path\to\current\vcpkg>
-#   TARGET_TRIPLET is the current triplet (x86-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#
-
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     message(STATUS "Warning: Dynamic building not supported yet. Building static.")
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 if (VCPKG_CRT_LINKAGE STREQUAL static)
     message(FATAL_ERROR "UVAtlas does not currently support static crt linkage")
+endif()
+if(VCPKG_CMAKE_SYSTEM_NAME)
+    message(FATAL_ERROR "UVAtlas only supports Windows Desktop")
 endif()
 
 include(vcpkg_common_functions)
@@ -23,7 +18,7 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-IF (TRIPLET_SYSTEM_ARCH MATCHES "x86")
+IF(TRIPLET_SYSTEM_ARCH MATCHES "x86")
 	SET(BUILD_ARCH "Win32")
 ELSE()
 	SET(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})

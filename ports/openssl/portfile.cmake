@@ -7,13 +7,16 @@ include(vcpkg_common_functions)
 set(OPENSSL_VERSION 1.0.2n)
 set(MASTER_COPY_SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-${OPENSSL_VERSION})
 
-vcpkg_find_acquire_program(PERL)
-vcpkg_find_acquire_program(NASM)
-find_program(NMAKE nmake)
+if(CMAKE_HOST_WIN32)
+    vcpkg_find_acquire_program(PERL)
+    vcpkg_find_acquire_program(NASM)
+else()
+    find_program(PERL perl)
+    find_program(NASM nasm)
+endif()
 
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-vcpkg_find_acquire_program(JOM)
 set(ENV{PATH} "${NASM_EXE_PATH};$ENV{PATH};${PERL_EXE_PATH}")
 
 vcpkg_download_distfile(OPENSSL_SOURCE_ARCHIVE
@@ -30,6 +33,13 @@ vcpkg_apply_patches(
             ${CMAKE_CURRENT_LIST_DIR}/EmbedSymbolsInStaticLibsZ7.patch
             ${CMAKE_CURRENT_LIST_DIR}/RemoveNonASCIIChar.patch
 )
+
+if(VCPKG_CMAKE_SYSTEM_NAME)
+    include(${CMAKE_CURRENT_LIST_DIR}/portfile-nonwindows.cmake)
+    return()
+endif()
+
+vcpkg_find_acquire_program(JOM)
 
 set(CONFIGURE_COMMAND ${PERL} Configure
     enable-static-engine
@@ -85,7 +95,7 @@ execute_process(
     ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-err.log
 )
 vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f ${OPENSSL_MAKEFILE} install
+    COMMAND ${JOM} -j 1 -f ${OPENSSL_MAKEFILE} install
     WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
     LOGNAME build-${TARGET_TRIPLET}-rel-1)
 
@@ -118,7 +128,7 @@ execute_process(
     ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-err.log
 )
 vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f ${OPENSSL_MAKEFILE} install
+    COMMAND ${JOM} -j 1 -f ${OPENSSL_MAKEFILE} install
     WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
     LOGNAME build-${TARGET_TRIPLET}-dbg-1)
 

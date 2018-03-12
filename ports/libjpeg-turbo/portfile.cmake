@@ -10,9 +10,10 @@ vcpkg_from_github(
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/add-options-for-exes-docs-headers.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/linux-cmake.patch"
 )
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(LIBJPEGTURBO_SIMD -DWITH_SIMD=OFF)
 else()
     set(LIBJPEGTURBO_SIMD -DWITH_SIMD=ON)
@@ -41,7 +42,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Rename libraries for static builds
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND EXISTS "${CURRENT_PACKAGES_DIR}/lib/jpeg-static.lib")
     file(RENAME "${CURRENT_PACKAGES_DIR}/lib/jpeg-static.lib" "${CURRENT_PACKAGES_DIR}/lib/jpeg.lib")
     file(RENAME "${CURRENT_PACKAGES_DIR}/lib/turbojpeg-static.lib" "${CURRENT_PACKAGES_DIR}/lib/turbojpeg.lib")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg.lib")
