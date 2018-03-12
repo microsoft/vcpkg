@@ -63,6 +63,7 @@ else()
     set(OPTIONS "${OPTIONS} --disable-ffprobe")
 endif()
 
+# TODO: we have to enable option for zlib on ffmpeg
 #if("zlib" IN_LIST FEATURES)
 #    set(OPTIONS "${OPTIONS} --enable-zlib")
 #else()
