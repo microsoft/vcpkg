@@ -68,6 +68,10 @@ if("vorbis" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libvorbis")
 endif()
 
+if("fdk-aac" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libfdk-aac")
+endif()
+
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
     set(OPTIONS "${OPTIONS} --disable-programs --enable-cross-compile --target-os=win32 --arch=${VCPKG_TARGET_ARCHITECTURE}")

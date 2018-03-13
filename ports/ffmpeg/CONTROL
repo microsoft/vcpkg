@@ -5,23 +5,27 @@ Description: a library to decode, encode, transcode, mux, demux, stream, filter 
 
 Feature: openssl
 Build-Depends: openssl
-Description: openssl support in ffmpeg
+Description: enable openssl, needed for https support
 
 Feature: x264
 Build-Depends: x264
-Description: x264 support in ffmpeg
+Description: enable H.264 encoding via x264
 
 Feature: x265
 Build-Depends: x265
-Description: x265 support in ffmpeg
+Description: enable HEVC encoding via x265
 
 Feature: lame
 Build-Depends: lame
-Description: lame support in ffmpeg
+Description: enable MP3 encoding via libmp3lame
 
 Feature: vorbis
 Build-Depends: libvorbis
-Description: vorbis support in ffmpeg
+Description: enable Vorbis en/decoding via libvorbis
+
+Feature: fdk-aac
+Build-Depends: fdk-aac
+Description: enable AAC de/encoding via libfdk-aac
 
 Feature: tools
 Description: build ffmpeg and ffprobe program
