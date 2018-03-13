@@ -1,4 +1,4 @@
 Source: rocksdb
-Version: 5.10.4-2
+Version: 5.10.4-3
 Description: A library that provides an embeddable, persistent key-value store for fast storage
-Build-Depends: snappy, gflags, lz4, zlib
+Build-Depends: zlib
