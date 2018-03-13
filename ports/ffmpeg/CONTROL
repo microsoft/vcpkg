@@ -23,9 +23,33 @@ Feature: vorbis
 Build-Depends: libvorbis
 Description: enable Vorbis en/decoding via libvorbis
 
+Feature: freetype
+Build-Depends: freetype
+Description: enable libfreetype, needed for drawtext filter
+
+Feature: openjpeg
+Build-Depends: openjpeg
+Description: openjpeg support in ffmpeg
+
+Feature: rtmp
+Build-Depends: librtmp
+Description: enable RTMP[E] support via librtmp
+
 Feature: fdk-aac
 Build-Depends: fdk-aac
 Description: enable AAC de/encoding via libfdk-aac
+
+Feature: opus
+Build-Depends: opus
+Description: enable Opus de/encoding via libopus
+
+Feature: vpx
+Build-Depends: libvpx
+Description: enable VP8 and VP9 de/encoding via libvpx
+
+Feature: webp
+Build-Depends: libwebp
+Description: enable WebP encoding via libwebp
 
 Feature: tools
 Description: build ffmpeg and ffprobe program

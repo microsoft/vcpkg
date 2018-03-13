@@ -13,6 +13,13 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/detect-openssl.patch
         ${CMAKE_CURRENT_LIST_DIR}/detect-x265.patch
         ${CMAKE_CURRENT_LIST_DIR}/detect-lame.patch
+        ${CMAKE_CURRENT_LIST_DIR}/detect-freetype.patch
+        ${CMAKE_CURRENT_LIST_DIR}/detect-openjpeg.patch #TODO: version is disdetected
+        ${CMAKE_CURRENT_LIST_DIR}/detect-opus.patch
+        ${CMAKE_CURRENT_LIST_DIR}/detect-rtmp.patch
+        ${CMAKE_CURRENT_LIST_DIR}/detect-libvpx.patch
+        ${CMAKE_CURRENT_LIST_DIR}/detect-webp.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix-openjpeg-version.patch
 )
 
 vcpkg_find_acquire_program(YASM)
@@ -68,8 +75,33 @@ if("vorbis" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libvorbis")
 endif()
 
+if("freetype" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libfreetype")
+endif()
+
+if("openjpeg" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libopenjpeg")
+endif()
+
+if("rtmp" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-librtmp")
+endif()
+
 if("fdk-aac" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libfdk-aac")
+endif()
+
+if("opus" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libopus")
+    set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include/opus;$ENV{INCLUDE}")
+endif()
+
+if("vpx" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libvpx")
+endif()
+
+if("webp" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libwebp")
 endif()
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")

@@ -1,0 +1,12 @@
+diff --git a/configure b/configure
+index a223b03..9aa51c9 100644
+--- a/configure
++++ b/configure
+@@ -3856,6 +3856,7 @@ msvc_common_flags(){
+             -lx265)               echo libx265.lib ;;
+             -lmp3lame)            echo libmp3lame.lib ;;
+             -lopenjpeg)           echo openjp2.lib ;;
++            -lvpx)                echo vpxmd.lib ;;
+             -l*)                  echo ${flag#-l}.lib ;;
+             -LARGEADDRESSAWARE)   echo $flag ;;
+             -L*)                  echo -libpath:${flag#-L} ;;
