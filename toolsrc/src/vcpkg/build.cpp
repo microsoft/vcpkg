@@ -315,8 +315,90 @@ namespace vcpkg::Build
     }
 
     static ExtendedBuildResult do_build_package(const VcpkgPaths& paths,
+                                                const PreBuildInfo& pre_build_info,
+                                                const PackageSpec& spec,
+                                                const std::string& abi_tag,
                                                 const BuildPackageConfig& config,
                                                 const StatusParagraphs& status_db)
+    {
+        auto& fs = paths.get_filesystem();
+        const Triplet& triplet = spec.triplet();
+
+        const fs::path& cmake_exe_path = paths.get_cmake_exe();
+        const fs::path& git_exe_path = paths.get_git_exe();
+
+        std::string all_features;
+        for (auto& feature : config.scf.feature_paragraphs)
+        {
+            all_features.append(feature->name + ";");
+        }
+
+        const Toolset& toolset = paths.get_toolset(pre_build_info);
+        const std::string cmd_launch_cmake = System::make_cmake_cmd(
+            cmake_exe_path,
+            paths.ports_cmake,
+            {
+                {"CMD", "BUILD"},
+                {"PORT", config.scf.core_paragraph->name},
+                {"CURRENT_PORT_DIR", config.port_dir / "/."},
+                {"TARGET_TRIPLET", spec.triplet().canonical_name()},
+                {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
+                {"VCPKG_USE_HEAD_VERSION",
+                 Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
+                {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
+                {"GIT", git_exe_path},
+                {"FEATURES", Strings::join(";", config.feature_list)},
+                {"ALL_FEATURES", all_features},
+            });
+
+        auto command = make_build_env_cmd(pre_build_info, toolset);
+        if (!command.empty()) command.append(" && ");
+        command.append(cmd_launch_cmake);
+
+        const auto timer = Chrono::ElapsedTimer::create_started();
+
+        const int return_code = System::cmd_execute_clean(command);
+        const auto buildtimeus = timer.microseconds();
+        const auto spec_string = spec.to_string();
+
+        {
+            auto locked_metrics = Metrics::g_metrics.lock();
+            locked_metrics->track_buildtime(spec.to_string() + ":[" + Strings::join(",", config.feature_list) + "]",
+                                            buildtimeus);
+            if (return_code != 0)
+            {
+                locked_metrics->track_property("error", "build failed");
+                locked_metrics->track_property("build_error", spec_string);
+                return BuildResult::BUILD_FAILED;
+            }
+        }
+
+        const BuildInfo build_info = read_build_info(fs, paths.build_info_file_path(spec));
+        const size_t error_count = PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info);
+
+        auto bcf = create_binary_control_file(*config.scf.core_paragraph, triplet, build_info, abi_tag);
+
+        if (error_count != 0)
+        {
+            return BuildResult::POST_BUILD_CHECKS_FAILED;
+        }
+        for (auto&& feature : config.feature_list)
+        {
+            for (auto&& f_pgh : config.scf.feature_paragraphs)
+            {
+                if (f_pgh->name == feature)
+                    bcf->features.push_back(
+                        create_binary_feature_control_file(*config.scf.core_paragraph, *f_pgh, triplet));
+            }
+        }
+
+        write_binary_control_file(paths, *bcf);
+        return {BuildResult::SUCCEEDED, std::move(bcf)};
+    }
+
+    ExtendedBuildResult build_package(const VcpkgPaths& paths,
+                                      const BuildPackageConfig& config,
+                                      const StatusParagraphs& status_db)
     {
         auto& fs = paths.get_filesystem();
         const Triplet& triplet = config.triplet;
@@ -359,9 +441,6 @@ namespace vcpkg::Build
         }
 
         const fs::path& cmake_exe_path = paths.get_cmake_exe();
-        const fs::path& git_exe_path = paths.get_git_exe();
-
-        const fs::path ports_cmake_script_path = paths.ports_cmake;
 
         if (GlobalState::g_binary_caching)
         {
@@ -420,124 +499,66 @@ namespace vcpkg::Build
 
         std::unique_ptr<BinaryControlFile> bcf;
 
-        auto archives_dir = paths.root / "archives";
-        if (!abi_tag.empty())
-        {
-            archives_dir /= abi_tag.substr(0, 2);
-        }
-        auto archive_path = archives_dir / (abi_tag + ".zip");
+        auto archives_root_dir = paths.root / "archives";
+        auto archive_name = abi_tag + ".zip";
+        auto archive_subpath = abi_tag.empty() ? fs::path() : fs::u8path(abi_tag.substr(0, 2)) / archive_name;
+        auto archive_path = archives_root_dir / archive_subpath;
+        auto archive_tombstone_path = archives_root_dir / "fail" / archive_subpath;
 
-        if (GlobalState::g_binary_caching && !abi_tag.empty() && fs.exists(archive_path))
-        {
-            System::println("Using cached binary package: %s", archive_path.u8string());
+        auto found_archive = false;
 
-            auto pkg_path = paths.package_dir(spec);
-            std::error_code ec;
-            fs.remove_all(pkg_path, ec);
-            fs.create_directories(pkg_path, ec);
-            auto files = fs.get_files_non_recursive(pkg_path);
-            Checks::check_exit(VCPKG_LINE_INFO, files.empty(), "unable to clear path: %s", pkg_path.u8string());
+        if (GlobalState::g_binary_caching && !abi_tag.empty())
+        {
+            if (fs.exists(archive_path))
+            {
+                System::println("Using cached binary package: %s", archive_path.u8string());
+
+                auto pkg_path = paths.package_dir(spec);
+                std::error_code ec;
+                fs.remove_all(pkg_path, ec);
+                fs.create_directories(pkg_path, ec);
+                auto files = fs.get_files_non_recursive(pkg_path);
+                Checks::check_exit(VCPKG_LINE_INFO, files.empty(), "unable to clear path: %s", pkg_path.u8string());
 
 #if defined(_WIN32)
-            auto&& _7za = paths.get_7za_exe();
+                auto&& _7za = paths.get_7za_exe();
 
-            System::cmd_execute_clean(Strings::format(
-                R"("%s" x "%s" -o"%s" -y >nul)", _7za.u8string(), archive_path.u8string(), pkg_path.u8string()));
+                System::cmd_execute_clean(Strings::format(
+                    R"("%s" x "%s" -o"%s" -y >nul)", _7za.u8string(), archive_path.u8string(), pkg_path.u8string()));
 #else
-            System::cmd_execute_clean(Strings::format(
-                R"(unzip -qq "%s" "-d%s")", archive_path.u8string(), pkg_path.u8string()));
+                System::cmd_execute_clean(Strings::format(
+                    R"(unzip -qq "%s" "-d%s")", archive_path.u8string(), pkg_path.u8string()));
 #endif
 
-            auto maybe_bcf = Paragraphs::try_load_cached_control_package(paths, spec);
-            bcf = std::make_unique<BinaryControlFile>(std::move(maybe_bcf).value_or_exit(VCPKG_LINE_INFO));
+                auto maybe_bcf = Paragraphs::try_load_cached_package(paths, spec);
+                bcf = std::make_unique<BinaryControlFile>(std::move(maybe_bcf).value_or_exit(VCPKG_LINE_INFO));
+                found_archive = true;
+                return {BuildResult::SUCCEEDED, std::move(bcf)};
+            }
+            else if (fs.exists(archive_tombstone_path))
+            {
+                System::println("Found failure tombstone: %s", archive_tombstone_path.u8string());
+                return BuildResult::BUILD_FAILED;
+            }
         }
-        else
+
+        if (GlobalState::g_binary_caching && !abi_tag.empty())
         {
-            if (GlobalState::g_binary_caching && !abi_tag.empty())
+            System::println("Could not locate cached archive: %s", archive_path.u8string());
+        }
+
+        ExtendedBuildResult result = do_build_package(paths, pre_build_info, spec, abi_tag, config, status_db);
+
+        if (GlobalState::g_binary_caching && !abi_tag.empty())
+        {
+            if (result.code == BuildResult::SUCCEEDED)
             {
-                System::println("Could not locate cached archive: %s", archive_path.u8string());
-            }
+                auto tmp_archive_path = paths.buildtrees / spec.name() / (triplet.to_string() + ".zip");
 
-            std::string all_features;
-            for (auto& feature : config.scf.feature_paragraphs)
-            {
-                all_features.append(feature->name + ";");
-            }
-
-            const Toolset& toolset = paths.get_toolset(pre_build_info);
-            const std::string cmd_launch_cmake = System::make_cmake_cmd(
-                cmake_exe_path,
-                ports_cmake_script_path,
-                {
-                    {"CMD", "BUILD"},
-                    {"PORT", config.scf.core_paragraph->name},
-                    {"CURRENT_PORT_DIR", config.port_dir / "/."},
-                    {"TARGET_TRIPLET", triplet.canonical_name()},
-                    {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
-                    {"VCPKG_USE_HEAD_VERSION",
-                     Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
-                    {"_VCPKG_NO_DOWNLOADS",
-                     !Util::Enum::to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
-                    {"GIT", git_exe_path},
-                    {"FEATURES", features},
-                    {"ALL_FEATURES", all_features},
-                });
-
-            auto command = make_build_env_cmd(pre_build_info, toolset);
-            if (!command.empty()) command.append(" && ");
-            command.append(cmd_launch_cmake);
-
-            const auto timer = Chrono::ElapsedTimer::create_started();
-
-            const int return_code = System::cmd_execute_clean(command);
-            const auto buildtimeus = timer.microseconds();
-            const auto spec_string = spec.to_string();
-
-            {
-                auto locked_metrics = Metrics::g_metrics.lock();
-                locked_metrics->track_buildtime(spec.to_string() + ":[" + Strings::join(",", config.feature_list) + "]",
-                                                buildtimeus);
-                if (return_code != 0)
-                {
-                    locked_metrics->track_property("error", "build failed");
-                    locked_metrics->track_property("build_error", spec_string);
-                    return BuildResult::BUILD_FAILED;
-                }
-            }
-
-            const BuildInfo build_info = read_build_info(fs, paths.build_info_file_path(spec));
-            const size_t error_count = PostBuildLint::perform_all_checks(spec, paths, pre_build_info, build_info);
-
-            bcf = create_binary_control_file(*config.scf.core_paragraph, triplet, build_info, abi_tag);
-
-            if (error_count != 0)
-            {
-                return BuildResult::POST_BUILD_CHECKS_FAILED;
-            }
-            for (auto&& feature : config.feature_list)
-            {
-                for (auto&& f_pgh : config.scf.feature_paragraphs)
-                {
-                    if (f_pgh->name == feature)
-                        bcf->features.push_back(
-                            create_binary_feature_control_file(*config.scf.core_paragraph, *f_pgh, triplet));
-                }
-            }
-
-            if (GlobalState::g_binary_caching && !abi_tag.empty())
-            {
                 std::error_code ec;
                 fs.write_contents(
                     paths.package_dir(spec) / "share" / spec.name() / "vcpkg_abi_info.txt", full_abi_info, ec);
-            }
 
-            write_binary_control_file(paths, *bcf);
-
-            if (GlobalState::g_binary_caching && !abi_tag.empty())
-            {
-                auto tmp_archive_path = paths.buildtrees / spec.name() / (spec.triplet().to_string() + ".zip");
-
-                std::error_code ec;
                 fs.remove(tmp_archive_path, ec);
                 Checks::check_exit(VCPKG_LINE_INFO,
                                    !fs.exists(tmp_archive_path),
@@ -557,21 +578,20 @@ namespace vcpkg::Build
                     paths.package_dir(spec).u8string(),
                     tmp_archive_path.u8string()));
 #endif
-                fs.create_directories(archives_dir, ec);
+                fs.create_directories(archive_path.parent_path(), ec);
 
                 fs.rename(tmp_archive_path, archive_path);
 
                 System::println("Stored binary cache: %s", archive_path.u8string());
             }
+            else if (result.code == BuildResult::BUILD_FAILED || result.code == BuildResult::POST_BUILD_CHECKS_FAILED)
+            {
+                // Build failed, so store failure archive
+                std::error_code ec;
+                fs.create_directories(archive_tombstone_path.parent_path(), ec);
+                fs.write_contents(archive_tombstone_path, "", ec);
+            }
         }
-        return {BuildResult::SUCCEEDED, std::move(bcf)};
-    }
-
-    ExtendedBuildResult build_package(const VcpkgPaths& paths,
-                                      const BuildPackageConfig& config,
-                                      const StatusParagraphs& status_db)
-    {
-        ExtendedBuildResult result = do_build_package(paths, config, status_db);
 
         if (config.build_package_options.clean_buildtrees == CleanBuildtrees::YES)
         {
