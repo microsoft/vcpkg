@@ -3,3 +3,5 @@ include(vcpkg_common_functions)
 include(${CURRENT_INSTALLED_DIR}/share/qt5modularscripts/qt_modular_library.cmake)
 
 qt_modular_library(qtdeclarative 49b8b50932b73ea39da14ac3425044193dfd64eabceadba379aa01cf2fc141177f9870c387caf1cf93ce09e8b197828a54b8d9fcefc4d9cdf400a6c6dd9a9e90)
+
+ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools/qt5-declarative/platforminputcontexts)
