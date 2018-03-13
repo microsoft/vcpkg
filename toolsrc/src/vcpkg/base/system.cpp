@@ -8,7 +8,11 @@
 #include <time.h>
 
 #if defined(__APPLE__)
-#  include <mach-o/dyld.h>
+#include <mach-o/dyld.h>
+#endif
+
+#if defined(__FreeBSD__)
+#include <sys/sysctl.h>
 #endif
 
 #pragma comment(lib, "Advapi32")
@@ -35,14 +39,22 @@ namespace vcpkg::System
         const int bytes = GetModuleFileNameW(nullptr, buf, _MAX_PATH);
         if (bytes == 0) std::abort();
         return fs::path(buf, buf + bytes);
-#elif __APPLE__
+#elif defined(__APPLE__)
         uint32_t size = 1024 * 32;
         char buf[size] = {};
         bool result = _NSGetExecutablePath(buf, &size);
         Checks::check_exit(VCPKG_LINE_INFO, result != -1, "Could not determine current executable path.");
-        std::unique_ptr<char> canonicalPath (realpath(buf, NULL));
+        std::unique_ptr<char> canonicalPath(realpath(buf, NULL));
         Checks::check_exit(VCPKG_LINE_INFO, result != -1, "Could not determine current executable path.");
         return fs::path(std::string(canonicalPath.get()));
+#elif defined(__FreeBSD__)
+        int mib[4] = {CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1};
+        char exePath[2048];
+        size_t len = sizeof(exePath);
+        auto rcode = sysctl(mib, 4, exePath, &len, NULL, 0);
+        Checks::check_exit(VCPKG_LINE_INFO, rcode == 0, "Could not determine current executable path.");
+        Checks::check_exit(VCPKG_LINE_INFO, len > 0, "Could not determine current executable path.");
+        return fs::path(exePath, exePath + len - 1);
 #else /* LINUX */
         std::array<char, 1024 * 4> buf;
         auto written = readlink("/proc/self/exe", buf.data(), buf.size());
