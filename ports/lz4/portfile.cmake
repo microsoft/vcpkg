@@ -12,7 +12,8 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS_DEBUG
-        -DLZ4_SKIP_INCLUDES=ON)
+        -DLZ4_SKIP_INCLUDES=ON
+        -DCMAKE_DEBUG_POSTFIX=d)
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
