@@ -25,6 +25,11 @@ vcpkg_apply_patches(
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/enable-debug.patch
 )
 
+set(BUILD_FLAGS CPU=P3 asm=NO)
+if("sndfile" IN_LIST FEATURES)
+    set(BUILD_FLAGS "${BUILD_FLAGS} SNDFILE=YES")
+endif()
+
 find_program(NMAKE nmake)
 
 ################
@@ -34,7 +39,7 @@ find_program(NMAKE nmake)
 message(STATUS "Building ${TARGET_TRIPLET}-dbg")
 
 vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f Makefile.MSVC config.h rebuild CPU=P3 asm=NO BUILD_TYPE=DEBUG
+    COMMAND ${NMAKE} -f Makefile.MSVC config.h rebuild ${BUILD_FLAGS} BUILD_TYPE=DEBUG
     WORKING_DIRECTORY ${SOURCE_PATH}
     LOGNAME nmake-build-${TARGET_TRIPLET}-dbg
 )
@@ -64,7 +69,7 @@ message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
 message(STATUS "Building ${TARGET_TRIPLET}-rel")
 
 vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f Makefile.MSVC config.h rebuild CPU=P3 asm=NO BUILD_TYPE=RELEASE
+    COMMAND ${NMAKE} -f Makefile.MSVC config.h rebuild ${BUILD_FLAGS} BUILD_TYPE=RELEASE
         "CL_FLAGS=${CL_FLAGS_REL}"
     WORKING_DIRECTORY ${SOURCE_PATH}
     LOGNAME nmake-build-${TARGET_TRIPLET}-rel
@@ -86,7 +91,7 @@ else()
 endif()
 file(COPY 
     ${SOURCE_PATH}/include/lame.h
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+    DESTINATION ${CURRENT_PACKAGES_DIR}/include/lame)
 file(COPY 
     ${SOURCE_PATH}/output/lame.exe
     ${SOURCE_PATH}/output/mp3rtp.exe

@@ -1,6 +1,3 @@
-diff --git a/Dll/BladeMP3EncDll.obj b/Dll/BladeMP3EncDll.obj
-index 0e87cfe..57f549a 100644
-Binary files a/Dll/BladeMP3EncDll.obj and b/Dll/BladeMP3EncDll.obj differ
 diff --git a/Makefile.MSVC b/Makefile.MSVC
 index 6538911..d965953 100644
 --- a/Makefile.MSVC
