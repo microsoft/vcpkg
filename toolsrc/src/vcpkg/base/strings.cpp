@@ -108,11 +108,10 @@ namespace vcpkg::Strings
 #endif
     }
 
-    std::string ascii_to_lowercase(const std::string& input)
+    std::string ascii_to_lowercase(std::string s)
     {
-        std::string output(input);
-        std::transform(output.begin(), output.end(), output.begin(), &details::tolower_char);
-        return output;
+        std::transform(s.begin(), s.end(), s.begin(), &details::tolower_char);
+        return s;
     }
 
     bool case_insensitive_ascii_starts_with(const std::string& s, const std::string& pattern)
