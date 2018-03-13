@@ -306,7 +306,7 @@ namespace vcpkg::Install
             System::println("Building package %s... done", display_name_with_features);
 
             auto bcf = std::make_unique<BinaryControlFile>(
-                Paragraphs::try_load_cached_control_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO));
+                Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO));
             auto code = aux_install(display_name_with_features, *bcf);
 
             if (action.build_options.clean_packages == Build::CleanPackages::YES)
