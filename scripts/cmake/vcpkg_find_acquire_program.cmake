@@ -49,12 +49,16 @@ function(vcpkg_find_acquire_program VAR)
   if(VAR MATCHES "PERL")
     set(PROGNAME perl)
     set(PATHS ${DOWNLOADS}/tools/perl/perl/bin)
+    set(BREW_PACKAGE_NAME "perl")
+    set(APT_PACKAGE_NAME "perl")
     set(URL "http://strawberryperl.com/download/5.24.1.1/strawberry-perl-5.24.1.1-32bit-portable.zip")
     set(ARCHIVE "strawberry-perl-5.24.1.1-32bit-portable.zip")
     set(HASH a6e685ea24376f50db5f06c5b46075f1d3be25168fa1f27fa9b02e2ac017826cee62a2b43562f9b6c989337a231ba914416c110075457764de2d11f99d5e0f26)
   elseif(VAR MATCHES "NASM")
     set(PROGNAME nasm)
     set(PATHS ${DOWNLOADS}/tools/nasm/nasm-2.12.02)
+    set(BREW_PACKAGE_NAME "nasm")
+    set(APT_PACKAGE_NAME "nasm")
     set(URL
       "http://www.nasm.us/pub/nasm/releasebuilds/2.12.02/win32/nasm-2.12.02-win32.zip"
       "http://mirrors.kodi.tv/build-deps/win32/nasm-2.12.02-win32.zip"
