@@ -15,20 +15,25 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS -DWITH_STATIC_LIB=ON
-
 )
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake/libssh")
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  file(INSTALL ${CURRENT_PACKAGES_DIR}/lib/static/ssh.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-  file(INSTALL ${CURRENT_PACKAGES_DIR}/debug/lib/static/ssh.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/lib/static/ssh.lib ${CURRENT_PACKAGES_DIR}/lib/ssh.lib)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/static/ssh.lib ${CURRENT_PACKAGES_DIR}/debug/lib/ssh.lib)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+
+  file(READ ${CURRENT_PACKAGES_DIR}/include/libssh/libssh.h _contents)
+  string(REPLACE "#ifdef LIBSSH_STATIC" "#if 1" _contents "${_contents}")
+  file(WRITE ${CURRENT_PACKAGES_DIR}/include/libssh/libssh.h "${_contents}")
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/static ${CURRENT_PACKAGES_DIR}/debug/lib/static)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+# The installed cmake config files are nonfunctional (0.7.5)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake ${CURRENT_PACKAGES_DIR}/cmake)
+
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libssh RENAME copyright)
