@@ -15,5 +15,13 @@ Feature: x265
 Build-Depends: x265
 Description: x265 support in ffmpeg
 
+Feature: lame
+Build-Depends: lame
+Description: lame support in ffmpeg
+
+Feature: vorbis
+Build-Depends: libvorbis
+Description: vorbis support in ffmpeg
+
 Feature: tools
 Description: build ffmpeg and ffprobe program

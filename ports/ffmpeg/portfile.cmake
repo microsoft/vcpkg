@@ -12,6 +12,7 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/create-lib-libraries.patch
         ${CMAKE_CURRENT_LIST_DIR}/detect-openssl.patch
         ${CMAKE_CURRENT_LIST_DIR}/detect-x265.patch
+        ${CMAKE_CURRENT_LIST_DIR}/detect-lame.patch
 )
 
 vcpkg_find_acquire_program(YASM)
@@ -57,6 +58,14 @@ endif()
 
 if(FFMPEG_ENABLE_GPL)
     set(OPTIONS "${OPTIONS} --enable-gpl")
+endif()
+
+if("lame" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libmp3lame")
+endif()
+
+if("vorbis" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libvorbis")
 endif()
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
