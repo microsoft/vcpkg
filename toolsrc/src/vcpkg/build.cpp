@@ -620,6 +620,7 @@ namespace vcpkg::Build
                 paths, pre_build_info, spec, abi_tag_and_file.value_or(AbiTagAndFile{}).tag, config, status_db);
 
             std::error_code ec;
+            fs.create_directories(paths.package_dir(spec) / "share" / spec.name(), ec);
             auto abi_file_in_package = paths.package_dir(spec) / "share" / spec.name() / "vcpkg_abi_info.txt";
             fs.copy_file(maybe_abi_tag_and_file->tag_file, abi_file_in_package, fs::stdfs::copy_options::none, ec);
             Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not copy into file: %s", abi_file_in_package.u8string());
