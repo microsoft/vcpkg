@@ -273,12 +273,10 @@ namespace vcpkg::Build
                     return filter_dependencies(config.scf.core_paragraph->depends, triplet);
                 }
 
-                auto it =
-                    Util::find_if(config.scf.feature_paragraphs,
-                                  [&](std::unique_ptr<FeatureParagraph> const& fpgh) { return fpgh->name == feature; });
-                Checks::check_exit(VCPKG_LINE_INFO, it != config.scf.feature_paragraphs.end());
+                auto maybe_feature = config.scf.find_feature(feature);
+                Checks::check_exit(VCPKG_LINE_INFO, maybe_feature.has_value());
 
-                return filter_dependencies(it->get()->depends, triplet);
+                return filter_dependencies(maybe_feature.get()->depends, triplet);
             });
 
         auto dep_fspecs = FeatureSpec::from_strings_and_triplet(dep_strings, triplet);
@@ -423,22 +421,10 @@ namespace vcpkg::Build
         return result;
     }
 
-    struct AbiEntry
-    {
-        std::string key;
-        std::string value;
-    };
-
-    struct AbiTagAndFile
-    {
-        std::string tag;
-        fs::path tag_file;
-    };
-
-    static Optional<AbiTagAndFile> compute_abi_tag(const VcpkgPaths& paths,
-                                                   const BuildPackageConfig& config,
-                                                   const PreBuildInfo& pre_build_info,
-                                                   Span<const AbiEntry> dependency_abis)
+    Optional<AbiTagAndFile> compute_abi_tag(const VcpkgPaths& paths,
+                                            const BuildPackageConfig& config,
+                                            const PreBuildInfo& pre_build_info,
+                                            Span<const AbiEntry> dependency_abis)
     {
         if (!GlobalState::g_binary_caching) return nullopt;
 
@@ -584,17 +570,17 @@ namespace vcpkg::Build
 
         const auto pre_build_info = PreBuildInfo::from_triplet_file(paths, triplet);
 
-        auto abi_tag_and_file = compute_abi_tag(paths, config, pre_build_info, dependency_abis);
+        auto maybe_abi_tag_and_file = compute_abi_tag(paths, config, pre_build_info, dependency_abis);
 
         std::unique_ptr<BinaryControlFile> bcf;
 
-        auto maybe_abi_tag_and_file = abi_tag_and_file.get();
+        auto abi_tag_and_file = maybe_abi_tag_and_file.get();
 
-        if (GlobalState::g_binary_caching && maybe_abi_tag_and_file)
+        if (GlobalState::g_binary_caching && abi_tag_and_file)
         {
             auto archives_root_dir = paths.root / "archives";
-            auto archive_name = maybe_abi_tag_and_file->tag + ".zip";
-            auto archive_subpath = fs::u8path(maybe_abi_tag_and_file->tag.substr(0, 2)) / archive_name;
+            auto archive_name = abi_tag_and_file->tag + ".zip";
+            auto archive_subpath = fs::u8path(abi_tag_and_file->tag.substr(0, 2)) / archive_name;
             auto archive_path = archives_root_dir / archive_subpath;
             auto archive_tombstone_path = archives_root_dir / "fail" / archive_subpath;
 
@@ -617,12 +603,12 @@ namespace vcpkg::Build
             System::println("Could not locate cached archive: %s", archive_path.u8string());
 
             ExtendedBuildResult result = do_build_package_and_clean_buildtrees(
-                paths, pre_build_info, spec, abi_tag_and_file.value_or(AbiTagAndFile{}).tag, config, status_db);
+                paths, pre_build_info, spec, maybe_abi_tag_and_file.value_or(AbiTagAndFile{}).tag, config, status_db);
 
             std::error_code ec;
             fs.create_directories(paths.package_dir(spec) / "share" / spec.name(), ec);
             auto abi_file_in_package = paths.package_dir(spec) / "share" / spec.name() / "vcpkg_abi_info.txt";
-            fs.copy_file(maybe_abi_tag_and_file->tag_file, abi_file_in_package, fs::stdfs::copy_options::none, ec);
+            fs.copy_file(abi_tag_and_file->tag_file, abi_file_in_package, fs::stdfs::copy_options::none, ec);
             Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not copy into file: %s", abi_file_in_package.u8string());
 
             if (result.code == BuildResult::SUCCEEDED)
@@ -648,7 +634,7 @@ namespace vcpkg::Build
         else
         {
             return do_build_package_and_clean_buildtrees(
-                paths, pre_build_info, spec, abi_tag_and_file.value_or(AbiTagAndFile{}).tag, config, status_db);
+                paths, pre_build_info, spec, maybe_abi_tag_and_file.value_or(AbiTagAndFile{}).tag, config, status_db);
         }
     }
 

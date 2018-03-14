@@ -24,10 +24,10 @@ namespace vcpkg::Util
 
     namespace Sets
     {
-        template<class Container>
-        bool contains(const Container& container, const ElementT<Container>& item)
+        template<class Container, class Key>
+        bool contains(const Container& container, const Key& item)
         {
-            return container.find(item) != container.cend();
+            return container.find(item) != container.end();
         }
     }
 
