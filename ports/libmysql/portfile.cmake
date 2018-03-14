@@ -6,21 +6,26 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "libmysql cannot currently be cross-compiled for UWP")
 endif()
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    message(FATAL_ERROR "32-bit builds are not supported by libmysql.")
+endif()
+
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mysql/mysql-server
-    REF mysql-5.7.17
-    SHA512 31488972e08a6b83f88e6e3f7923aca91e01eac702f4942fdae92e13f66d92ac86c24dfe7a65a001db836c900147d1c3871b36af8cbb281a0e6c555617cac12c
+    REF mysql-8.0.4
+    SHA512 8d9129e7670e88df14238299052a5fe6d4f3e40bf27ef7a3ca8f4f91fb40507b13463e9bd24435b34e5d06c5d056dfb259fb04e77cc251b188eea734db5642be
     HEAD_REF master
 )
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/boost_and_build.patch
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/ignore-boost-version.patch
 )
+
+file(REMOVE_RECURSE ${SOURCE_PATH}/include/boost_1_65_0)
 
 set(STACK_DIRECTION)
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -29,6 +34,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DWITHOUT_SERVER=ON
         -DWITH_UNIT_TESTS=OFF
@@ -37,6 +43,7 @@ vcpkg_configure_cmake(
         -DHAVE_LLVM_LIBCPP_EXITCODE=1
         ${STACK_DIRECTION}
         -DWINDOWS_RUNTIME_MD=ON # Note: this disables _replacement_ of /MD with /MT. If /MT is specified, it will be preserved.
+        -DIGNORE_BOOST_VERSION=ON
 )
 
 vcpkg_install_cmake()
@@ -62,9 +69,9 @@ file(REMOVE_RECURSE
 
 # remove misc files
 file(REMOVE
-    ${CURRENT_PACKAGES_DIR}/COPYING
+    ${CURRENT_PACKAGES_DIR}/LICENSE
     ${CURRENT_PACKAGES_DIR}/README
-    ${CURRENT_PACKAGES_DIR}/debug/COPYING
+    ${CURRENT_PACKAGES_DIR}/debug/LICENSE
     ${CURRENT_PACKAGES_DIR}/debug/README)
 
 # remove not-related libs
@@ -95,5 +102,5 @@ else()
 endif()
 
 # copy license
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libmysql)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libmysql/COPYING ${CURRENT_PACKAGES_DIR}/share/libmysql/copyright)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libmysql)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/libmysql/LICENSE ${CURRENT_PACKAGES_DIR}/share/libmysql/copyright)
