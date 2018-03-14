@@ -46,7 +46,11 @@
 #include <set>
 #include <stdexcept>
 #include <string>
+#if defined(_WIN32)
 #include <sys/timeb.h>
+#else
+#include <sys/time.h>
+#endif
 #include <sys/types.h>
 #include <system_error>
 #include <thread>

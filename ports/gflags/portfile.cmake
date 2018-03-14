@@ -25,6 +25,7 @@ vcpkg_configure_cmake(
         -DGFLAGS_REGISTER_BUILD_DIR:BOOL=OFF
         -DGFLAGS_REGISTER_INSTALL_PREFIX:BOOL=OFF
         -DBUILD_gflags_nothreads_LIB:BOOL=OFF
+        -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_install_cmake()

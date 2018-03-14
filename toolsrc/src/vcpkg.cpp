@@ -157,7 +157,15 @@ static void inner(const VcpkgCmdArguments& args)
         }
         else
         {
+#if defined(_WIN32)
             default_triplet = Triplet::X86_WINDOWS;
+#elif defined(__APPLE__)
+            default_triplet = Triplet::from_canonical_name("x64-osx");
+#elif defined(__FreeBSD__)
+            default_triplet = Triplet::from_canonical_name("x64-freebsd");
+#else
+            default_triplet = Triplet::from_canonical_name("x64-linux");
+#endif
         }
     }
 

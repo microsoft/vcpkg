@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 3.5)
-
 if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
     set(CMAKE_CROSSCOMPILING OFF CACHE BOOL "")
 endif()

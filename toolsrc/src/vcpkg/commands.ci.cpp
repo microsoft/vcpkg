@@ -24,6 +24,7 @@ namespace vcpkg::Commands::CI
         Install::InstallSummary summary;
     };
 
+    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
     static constexpr StringLiteral OPTION_EXCLUDE = "--exclude";
     static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
 
@@ -32,11 +33,14 @@ namespace vcpkg::Commands::CI
         {OPTION_XUNIT, "File to output results in XUnit format (internal)"},
     }};
 
+    static constexpr std::array<CommandSwitch, 1> CI_SWITCHES = {
+        {{OPTION_DRY_RUN, "Print out plan without execution"}}};
+
     const CommandStructure COMMAND_STRUCTURE = {
         Help::create_example_string("ci x64-windows"),
-        0,
+        1,
         SIZE_MAX,
-        {{}, CI_SETTINGS},
+        {CI_SWITCHES, CI_SETTINGS},
         nullptr,
     };
 
@@ -51,6 +55,8 @@ namespace vcpkg::Commands::CI
             auto exclusions = Strings::split(it_exclusions->second, ",");
             exclusions_set.insert(exclusions.begin(), exclusions.end());
         }
+
+        auto is_dry_run = Util::Sets::contains(options.switches, OPTION_DRY_RUN);
 
         std::vector<Triplet> triplets;
         for (const std::string& triplet : args.command_arguments)
@@ -94,8 +100,15 @@ namespace vcpkg::Commands::CI
                 }
             }
 
-            auto summary = Install::perform(action_plan, Install::KeepGoing::YES, paths, status_db);
-            results.push_back({triplet, std::move(summary)});
+            if (is_dry_run)
+            {
+                Dependencies::print_plan(action_plan);
+            }
+            else
+            {
+                auto summary = Install::perform(action_plan, Install::KeepGoing::YES, paths, status_db);
+                results.push_back({triplet, std::move(summary)});
+            }
         }
 
         for (auto&& result : results)
