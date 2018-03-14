@@ -6,8 +6,8 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "libmysql cannot currently be cross-compiled for UWP")
 endif()
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    message(FATAL_ERROR "32-bit builds are not supported by libmysql.")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND NOT CMAKE_SYSTEM_NAME OR CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "Oracle has dropped support in libmysql for 32-bit Windows.")
 endif()
 
 include(vcpkg_common_functions)
