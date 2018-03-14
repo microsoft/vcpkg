@@ -29,7 +29,7 @@ Description: enable libfreetype, needed for drawtext filter
 
 Feature: openjpeg
 Build-Depends: openjpeg
-Description: openjpeg support in ffmpeg
+Description: enable JPEG 2000 de/encoding via OpenJPEG
 
 Feature: rtmp
 Build-Depends: librtmp

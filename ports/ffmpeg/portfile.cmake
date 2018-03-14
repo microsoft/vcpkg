@@ -41,8 +41,12 @@ file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg ${CURRENT_BU
 
 set(OPTIONS " --disable-doc --enable-debug")
 set(OPTIONS "${OPTIONS} --enable-runtime-cpudetect")
+set(FFMPEG_ENABLE_GPL OFF)
+set(FFMPEG_ENABLE_NONFREE OFF)
 
-if(NOT "tool" IN_LIST FEATURES)
+if("tools" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --disable-network") # FIXME: prevent compiliing problems for winsock
+else()
     set(OPTIONS "${OPTIONS} --disable-ffmpeg --disable-ffprobe")
 endif()
 
@@ -52,7 +56,6 @@ else()
     set(OPTIONS "${OPTIONS} --disable-openssl")
 endif()
 
-set(FFMPEG_ENABLE_GPL OFF)
 if("x264" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libx264")
     set(FFMPEG_ENABLE_GPL ON)
@@ -61,10 +64,6 @@ endif()
 if("x265" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libx265")
     set(FFMPEG_ENABLE_GPL ON)
-endif()
-
-if(FFMPEG_ENABLE_GPL)
-    set(OPTIONS "${OPTIONS} --enable-gpl")
 endif()
 
 if("lame" IN_LIST FEATURES)
@@ -89,6 +88,7 @@ endif()
 
 if("fdk-aac" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libfdk-aac")
+    set(FFMPEG_ENABLE_NONFREE ON)
 endif()
 
 if("opus" IN_LIST FEATURES)
@@ -102,6 +102,13 @@ endif()
 
 if("webp" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libwebp")
+endif()
+
+if(FFMPEG_ENABLE_GPL)
+    set(OPTIONS "${OPTIONS} --enable-gpl")
+endif()
+if(FFMPEG_ENABLE_NONFREE)
+    set(OPTIONS "${OPTIONS} --enable-nonfree")
 endif()
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -196,8 +203,13 @@ file(GLOB EXP_FILES ${CURRENT_PACKAGES_DIR}/lib/*.exp ${CURRENT_PACKAGES_DIR}/de
 file(GLOB LIB_FILES ${CURRENT_PACKAGES_DIR}/bin/*.lib ${CURRENT_PACKAGES_DIR}/debug/bin/*.lib)
 file(GLOB EXE_FILES ${CURRENT_PACKAGES_DIR}/bin/*.exe)
 file(GLOB EXE_DEBUG_FILES ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-file(COPY ${EXE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-set(FILES_TO_REMOVE ${EXP_FILES} ${LIB_FILES} ${DEF_FILES} ${EXE_DEBUG_FILES})
+
+if("tools" IN_LIST FEATURES)
+    file(COPY ${EXE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+endif()
+
+set(FILES_TO_REMOVE ${EXP_FILES} ${LIB_FILES} ${DEF_FILES} ${EXE_FILES} ${EXE_DEBUG_FILES})
 list(LENGTH FILES_TO_REMOVE FILES_TO_REMOVE_LEN)
 if(FILES_TO_REMOVE_LEN GREATER 0)
     file(REMOVE ${FILES_TO_REMOVE})
