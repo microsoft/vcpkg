@@ -18,6 +18,7 @@ vcpkg_apply_patches(
       "${CMAKE_CURRENT_LIST_DIR}/0003-disable-downloading.patch"
       "${CMAKE_CURRENT_LIST_DIR}/0004-use-find-package-required.patch"
       "${CMAKE_CURRENT_LIST_DIR}/0005-remove-protobuf-target.patch"
+      "${CMAKE_CURRENT_LIST_DIR}/0006-ffmpeg-ext-lib.patch"
 )
 
 file(WRITE "${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/rework.stamp")
@@ -109,21 +110,13 @@ endif()
 set(WITH_FFMPEG OFF)
 if("ffmpeg" IN_LIST FEATURES)
   set(WITH_FFMPEG ON)
-  vcpkg_download_distfile(OCV_DOWNLOAD
-    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0a0e88972a7ea97708378d0488a65f83e7cc5e69/ffmpeg/opencv_ffmpeg.dll"
-    FILENAME "opencv-cache/ffmpeg/b8120c07962d591e2e9071a1bf566fd0-opencv_ffmpeg.dll"
-    SHA512 53325e3bb04de19273270475d7b7d9190c950b0d12e1179feef63c69ba66c9f8593d8ed9b030109dee8c104ab5babea69f18c7cae7366a57d48272d67c00d871
-  )
-  vcpkg_download_distfile(OCV_DOWNLOAD
-    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0a0e88972a7ea97708378d0488a65f83e7cc5e69/ffmpeg/opencv_ffmpeg_64.dll"
-    FILENAME "opencv-cache/ffmpeg/dc9c50e7b05482acc25d6ce0ac61bf1d-opencv_ffmpeg_64.dll"
-    SHA512 7d90df6f5d141f842a45e5678cf1349657612321250ece4ad5c6b5fb28a50140735d91ced0ce1a6e81962ef87236cbd1669c0b4410308f70fccee341a7a5c28b
-  )
-  vcpkg_download_distfile(OCV_DOWNLOAD
-    URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0a0e88972a7ea97708378d0488a65f83e7cc5e69/ffmpeg/ffmpeg_version.cmake"
-    FILENAME "opencv-cache/ffmpeg/3b90f67f4b429e77d3da36698cef700c-ffmpeg_version.cmake"
-    SHA512 7d0142c30ac6f6260c1bcabc22753030fd25a708477fa28053e8df847c366967d3b93a8ac14af19a2b7b73d9f8241749a431458faf21a0c8efc7d6d99eecfdcf
-  )
+  # use VCPKG FindFFMPEG.cmake search file
+  list(APPEND CMAKE_MODULE_PATH ${CURRENT_INSTALLED_DIR}/share/ffmpeg)
+  # source file stub used to build opencv_ffmpeg*.dll
+  file(COPY "${CMAKE_CURRENT_LIST_DIR}/ffopencv.cpp" DESTINATION "${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/3rdparty/ffmpeg")
+  # build file for opencv_ffmpeg*.dll FFMPEG wrapper API
+  file(COPY "${CMAKE_CURRENT_LIST_DIR}/ffmpeg-dll-CMakeLists.txt" DESTINATION "${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/3rdparty/ffmpeg")
+  file(RENAME "${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/3rdparty/ffmpeg/ffmpeg-dll-CMakeLists.txt" "${CURRENT_BUILDTREES_DIR}/src/opencv-${OPENCV_PORT_VERSION}/3rdparty/ffmpeg/CMakeLists.txt")
 endif()
 
 set(WITH_IPP OFF)

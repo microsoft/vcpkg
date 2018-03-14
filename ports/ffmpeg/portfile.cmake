@@ -30,17 +30,29 @@ set(_csc_PROJECT_PATH ffmpeg)
 
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
 
-set(OPTIONS "--disable-ffmpeg --disable-ffprobe --disable-doc --enable-debug")
-set(OPTIONS "${OPTIONS} --enable-runtime-cpudetect")
+set(OPTIONS "--enable-cross-compile --disable-programs --disable-doc --target-os=win32")
+# set(OPTIONS "${OPTIONS} --enable-runtime-cpudetect")
+
+message(STATUS "VCPKG_TARGET_ARCHITECTURE=${VCPKG_TARGET_ARCHITECTURE}")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    set(OPTIONS "${OPTIONS} --arch=x86_64")
+else()
+    set(OPTIONS "${OPTIONS} --arch=${VCPKG_TARGET_ARCHITECTURE}")
+endif()
+
 if("openssl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-openssl")
 else()
     set(OPTIONS "${OPTIONS} --disable-openssl")
 endif()
 
+if("avresample" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-avresample")
+endif()
+
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
-    set(OPTIONS "${OPTIONS} --disable-programs --enable-cross-compile --target-os=win32 --arch=${VCPKG_TARGET_ARCHITECTURE}")
+    # set(OPTIONS "${OPTIONS} --enable-cross-compile")
     set(OPTIONS "${OPTIONS} --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00")
 
     if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
@@ -56,12 +68,18 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     endif()
 endif()
 
-set(OPTIONS_DEBUG "") # Note: --disable-optimizations can't be used due to http://ffmpeg.org/pipermail/libav-user/2013-March/003945.html
+set(OPTIONS_DEBUG "--enable-debug") # Note: --disable-optimizations can't be used due to http://ffmpeg.org/pipermail/libav-user/2013-March/003945.html
 set(OPTIONS_RELEASE "")
 
-set(OPTIONS "${OPTIONS} --extra-cflags=-DHAVE_UNISTD_H=0")
+set(OPTIONS "${OPTIONS} --extra-cflags=-DHAVE_UNISTD_H=0 --enable-w32threads")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    if("staticlibs" IN_LIST FEATURES)
+        set(OPTIONS_STATIC "${OPTIONS} --enable-static --disable-shared")
+        set(OPTIONS_STATIC_DEBUG "${OPTIONS_DEBUG} --extra-cflags=-MTd --extra-cxxflags=-MTd")
+        set(OPTIONS_STATIC_RELEASE "${OPTIONS_RELEASE} --extra-cflags=-MT --extra-cxxflags=-MT")
+    endif()
+    
     set(OPTIONS "${OPTIONS} --disable-static --enable-shared")
     if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         set(OPTIONS "${OPTIONS} --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib")
@@ -76,19 +94,9 @@ else()
     set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-cflags=-MT --extra-cxxflags=-MT")
 endif()
 
-message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
-file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc "${CMAKE_CURRENT_LIST_DIR}\\build.sh"
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" # BUILD DIR
-        "${SOURCE_PATH}" # SOURCE DIR
-        "${CURRENT_PACKAGES_DIR}" # PACKAGE DIR
-        "${OPTIONS} ${OPTIONS_RELEASE}"
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-    LOGNAME build-${TARGET_TRIPLET}-rel
-)
-
 message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
+message(STATUS "OPTIONS - ${OPTIONS}")
+message(STATUS "OPTIONS_DEBUG - ${OPTIONS_DEBUG}")
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 vcpkg_execute_required_process(
     COMMAND ${BASH} --noprofile --norc "${CMAKE_CURRENT_LIST_DIR}\\build.sh"
@@ -100,7 +108,72 @@ vcpkg_execute_required_process(
     LOGNAME build-${TARGET_TRIPLET}-dbg
 )
 
+message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
+message(STATUS "OPTIONS - ${OPTIONS}")
+message(STATUS "OPTIONS_RELEASE - ${OPTIONS_RELEASE}")
+file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+vcpkg_execute_required_process(
+    COMMAND ${BASH} --noprofile --norc "${CMAKE_CURRENT_LIST_DIR}\\build.sh"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" # BUILD DIR
+        "${SOURCE_PATH}" # SOURCE DIR
+        "${CURRENT_PACKAGES_DIR}" # PACKAGE DIR
+        "${OPTIONS} ${OPTIONS_RELEASE}"
+    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+    LOGNAME build-${TARGET_TRIPLET}-rel
+)
+
+
+
+if("staticlibs" IN_LIST FEATURES)
+    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        message(STATUS "Building ${_csc_PROJECT_PATH} for Static Debug Libs")
+        message(STATUS "OPTIONS_STATIC - ${OPTIONS_STATIC}")
+        message(STATUS "OPTIONS_STATIC_DEBUG - ${OPTIONS_STATIC_DEBUG}")
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-static-dbg)
+        vcpkg_execute_required_process(
+            COMMAND ${BASH} --noprofile --norc "${CMAKE_CURRENT_LIST_DIR}\\build.sh"
+                "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-static-dbg" # BUILD DIR
+                "${SOURCE_PATH}" # SOURCE DIR
+                "${CURRENT_PACKAGES_DIR}/debug/static" # PACKAGE DIR
+                "${OPTIONS_STATIC} ${OPTIONS_STATIC_DEBUG}"
+            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-static-dbg
+            LOGNAME build-${TARGET_TRIPLET}-static-dbg
+        )
+
+        message(STATUS "Building ${_csc_PROJECT_PATH} for Static Release Libs")
+        message(STATUS "OPTIONS_STATIC - ${OPTIONS_STATIC}")
+        message(STATUS "OPTIONS_STATIC_RELEASE - ${OPTIONS_STATIC_RELEASE}")
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-static-rel)
+        vcpkg_execute_required_process(
+            COMMAND ${BASH} --noprofile --norc "${CMAKE_CURRENT_LIST_DIR}\\build.sh"
+                "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-static-rel" # BUILD DIR
+                "${SOURCE_PATH}" # SOURCE DIR
+                "${CURRENT_PACKAGES_DIR}/static" # PACKAGE DIR
+                "${OPTIONS_STATIC} ${OPTIONS_STATIC_RELEASE}"
+            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-static-rel
+            LOGNAME build-${TARGET_TRIPLET}-static-rel
+        )
+    else()
+        message(STATUS "Static files already built - copying to package output dir")
+        message(STATUS "Building ${_csc_PROJECT_PATH} for Static Debug Libs")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/static")
+        file(GLOB STATIC_DEBUG_LIB_FILES "${CURRENT_PACKAGES_DIR}/debug/lib/*.lib")
+        foreach(STATIC_DEBUG_LIB_FILE ${STATIC_DEBUG_LIB_FILES})
+            file(COPY STATIC_DEBUG_LIB_FILE DESTINATION ${CURRENT_PACKAGES_DIR}/debug/static/lib)
+        endforeach()
+
+        message(STATUS "Building ${_csc_PROJECT_PATH} for Static Release Libs")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/static")
+        file(GLOB STATIC_LIB_FILES "${CURRENT_PACKAGES_DIR}/lib/*.lib")
+        foreach(STATIC_LIB_FILE ${STATIC_LIB_FILES})
+            file(COPY STATIC_LIB_FILE DESTINATION ${CURRENT_PACKAGES_DIR}/static/lib)
+        endforeach()
+    endif()
+endif()
+
 file(GLOB DEF_FILES ${CURRENT_PACKAGES_DIR}/lib/*.def ${CURRENT_PACKAGES_DIR}/debug/lib/*.def)
+
+message(STATUS "FOUND DEF FILES - ${DEF_FILES}")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
     set(LIB_MACHINE_ARG /machine:ARM)
@@ -134,7 +207,7 @@ list(LENGTH FILES_TO_REMOVE FILES_TO_REMOVE_LEN)
 if(FILES_TO_REMOVE_LEN GREATER 0)
     file(REMOVE ${FILES_TO_REMOVE})
 endif()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/debug/static/include ${CURRENT_PACKAGES_DIR}/static/include)
 
 vcpkg_copy_pdbs()
 

@@ -1,6 +1,6 @@
 Source: opencv
 Version: 3.4.1
-Build-Depends: zlib
+Build-Depends: zlib, liblzma
 Description: computer vision library
 Default-Features: opengl, jpeg, png, tiff, eigen, flann
 
@@ -31,6 +31,7 @@ Build-Depends: cuda
 Description: CUDA support for opencv
 
 Feature: ffmpeg
+Build-Depends: ffmpeg[staticlibs]
 Description: prebuilt ffmpeg support for opencv
 
 Feature: ipp

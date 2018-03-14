@@ -1,0 +1,46 @@
+# ----------------------------------------------------------------------------
+#  CMake file for ffopencv FFMPEG wrapper. See root CMakeLists.txt
+#
+# ----------------------------------------------------------------------------
+
+project(${FFOPENCV_LIB} C)
+
+include(CheckFunctionExists)
+include(CheckIncludeFile)
+include(CheckCSourceCompiles)
+include(CheckTypeSize)
+
+# lzma required for TIFF support
+find_package(LIBLZMA REQUIRED)
+if(LIBLZMA_FOUND)
+  message(STATUS "LIBLZMA_FOUND - ${LIBLZMA_FOUND}")
+else()
+  message(STATUS "LIBLZMA NOT FOUND")
+endif()
+
+add_library(${FFOPENCV_LIB} SHARED "ffopencv.cpp")
+
+target_include_directories(${FFOPENCV_LIB} PUBLIC "${OpenCV_SOURCE_DIR}/modules/videoio/src" "${OpenCV_SOURCE_DIR}/include" ${FFMPEG_INCLUDE_DIRS} )
+
+set_target_properties(${FFOPENCV_LIB} PROPERTIES DEFINE_SYMBOL FFOPENCV_DLL)
+ocv_include_directories(${OpenCV_INCLUDE_DIRS})
+ocv_target_link_libraries(${FFOPENCV_LIB} LINK_PRIVATE ${FFMPEG_STATIC_LIBRARIES})
+ocv_target_link_libraries(${FFOPENCV_LIB} LINK_PRIVATE ${LIBLZMA_LIBRARIES})
+
+set_target_properties(${FFOPENCV_LIB} PROPERTIES
+  OUTPUT_NAME ${FFOPENCV_OUTPUT_NAME}
+  DEBUG_POSTFIX ""
+  COMPILE_PDB_NAME ${FFOPENCV_OUTPUT_NAME}
+  ARCHIVE_OUTPUT_DIRECTORY ${3P_LIBRARY_OUTPUT_PATH}
+  RUNTIME_OUTPUT_DIRECTORY ${OpenCV_BINARY_DIR}/3rdparty/ffmpeg
+)
+
+if(ENABLE_SOLUTION_FOLDERS)
+  set_target_properties(${FFOPENCV_LIB} PROPERTIES FOLDER "3rdparty")
+endif()
+
+if(NOT BUILD_SHARED_LIBS)
+  ocv_install_target(${FFOPENCV_LIB} EXPORT OpenCVModules ARCHIVE DESTINATION ${OPENCV_3P_LIB_INSTALL_PATH} COMPONENT dev)
+endif()
+
+# ocv_install_3rdparty_licenses(ffmpeg README)
