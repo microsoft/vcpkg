@@ -1,11 +1,12 @@
-dif --git a/Modules/_io/_iomodule.c b/Modules/_io/_iomodule.c
+diff --git a/Modules/_io/_iomodule.c b/Modules/_io/_iomodule.c
 --- a/Modules/_io/_iomodule.c
 +++ b/Modules/_io/_iomodule.c
-@@ -21,6 +21,7 @@
+@@ -21,7 +21,7 @@
  #endif /* HAVE_SYS_STAT_H */
  
  #ifdef MS_WINDOWS
+-#include <consoleapi.h>
 +#include <windows.h>
- #include <consoleapi.h>
  #endif
  
+ /* Various interned strings */
