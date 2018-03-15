@@ -19,11 +19,13 @@ vcpkg_extract_source_archive(${ARCHIVE})
 #     PATCHES
 #         "${CMAKE_CURRENT_LIST_DIR}/enable-static.patch"
 # )
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        -DENABLE_STATIC_LIB=${BUILD_STATIC}
         -DENABLE_LIB_ONLY=ON
         -DENABLE_ASIO_LIB=OFF
 )
