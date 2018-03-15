@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeromq/libzmq
-    REF b575b05d2c79157a4a6933e790b95f2af7706808
-    SHA512 6941c8d51092c6a434398bc11bf7799d8625687e16a3457f8352c6dca883ef403213ad5a06229e38d5a4f1fb17584cef215a924d189927f65d72fb002e84a582
+    REF 59516ed51a5c8ce7e1de0d9f938141f68507dd3c
+    SHA512 3a7b9875cdc09e5b24acb007fe4052e879fccd6e326b93b0c1e3fcffc13964e4de04289bda050846fe7ac1281fbb7ee03874b44db1323dada518c809417a2129
     HEAD_REF master
 )
 
@@ -31,7 +31,7 @@ vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/ZeroMQ)
+vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/zeromq/ZeroMQConfig.cmake _contents)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
