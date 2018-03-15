@@ -128,6 +128,11 @@ function(vcpkg_download_distfile VAR)
                 set(download_success 0)
             else()
                 message(STATUS "Downloading ${vcpkg_download_distfile_FILENAME}... OK")
+                file(REMOVE
+                    ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-out.log
+                    ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-err.log
+                    ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-detailed.log
+                )
                 set(download_success 1)
             endif()
         else()
