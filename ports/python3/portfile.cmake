@@ -30,6 +30,13 @@ vcpkg_from_github(
     SHA512 32cca5e344ee66f08712ab5533e5518f724f978ec98d985f7612d0bd8d7f5cac25625363c9eead192faf1806d4ea3393515f72ba962a2a0bed26261e56d8c637 
     HEAD_REF master
  )
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${TEMP_SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/0004-Fix-iomodule-for-RS4-SDK.patch
+)
+
 # We need per-triplet directories because we need to patch the project files differently based on the linkage
 file(COPY ${TEMP_SOURCE_PATH} DESTINATION ${SOURCE_PATH})
 set(SOURCE_PATH ${SOURCE_PATH}/cpython-${PYTHON_VERSION})
