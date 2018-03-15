@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
 set(LIB_NAME nghttp2)
-set(LIB_VERSION 1.30.0)
+set(LIB_VERSION 1.31.0)
 
 set(LIB_FILENAME ${LIB_NAME}-${LIB_VERSION}.tar.gz)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${LIB_NAME}-${LIB_VERSION})
@@ -9,20 +9,23 @@ set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${LIB_NAME}-${LIB_VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/nghttp2/nghttp2/releases/download/v${LIB_VERSION}/${LIB_FILENAME}"
     FILENAME "${LIB_FILENAME}"
-    SHA512 26ce717a085e9fbdf8e644d4c8ab6961ca60029c4dfa112c9932523d1c4cc3f40fda4283afddf78a649e7f6fb7d3f3bfce3197186a4f70819b5996e8158089da
+    SHA512 077632a87033271c61e06fef2a5b6a2628d2961dd0f0b2ae419468165eb071e24facffb97564cec248a2c96ff6de662174c1d733afb8ebe3fb2bda367fb84675
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/enable-static.patch"
-)
+# Details: https://github.com/nghttp2/nghttp2/pull/1146
+# vcpkg_apply_patches(
+#     SOURCE_PATH ${SOURCE_PATH}
+#     PATCHES
+#         "${CMAKE_CURRENT_LIST_DIR}/enable-static.patch"
+# )
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        -DENABLE_STATIC_LIB=${BUILD_STATIC}
         -DENABLE_LIB_ONLY=ON
         -DENABLE_ASIO_LIB=OFF
 )
