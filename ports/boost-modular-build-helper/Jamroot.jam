@@ -129,8 +129,8 @@ if "@PORT@" != "boost-serialization"
 {
     use-project /boost/serialization : . ;
 
-    lib boost_serialization : : <file>@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_serialization@BOOST_LIB_RELEASE_SUFFIX@ <variant>release ;
-    lib boost_serialization : : <file>@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_serialization@BOOST_LIB_DEBUG_SUFFIX@ <variant>debug ;
+    lib boost_serialization : : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_serialization@BOOST_LIB_RELEASE_SUFFIX@" <variant>release ;
+    lib boost_serialization : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_serialization@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug ;
     explicit boost_serialization ;
 }
 

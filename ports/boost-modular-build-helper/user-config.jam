@@ -28,8 +28,8 @@ if "@PORT@" = "boost-python"
 if "@PORT@" = "boost-mpi"
 {
     using mpi : :
-        <library-path>@CURRENT_INSTALLED_DIR@/lib
-        <include>@CURRENT_INSTALLED_DIR@/include
+        <library-path>"@CURRENT_INSTALLED_DIR@/lib"
+        <include>"@CURRENT_INSTALLED_DIR@/include"
         <find-shared-library>msmpi ;
 }
 
