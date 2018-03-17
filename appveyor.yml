@@ -15,6 +15,7 @@ environment:
     - VCPKG_DEFAULT_TRIPLET: x86-windows-static
     - VCPKG_DEFAULT_TRIPLET: x64-windows
     - VCPKG_DEFAULT_TRIPLET: x64-windows-static
+    - VCPKG_DEFAULT_TRIPLET: arm-uwp
 
 cache:
   - archives
