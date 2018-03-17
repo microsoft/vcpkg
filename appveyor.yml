@@ -3,13 +3,11 @@
 # Copyright 2018 Hiroshi Miura
 #
 image: Visual Studio 2017
-
 shallow_clone: false
 
 environment:
   APPVEYOR_SAVE_CACHE_ON_ERROR: true
   VCPKG_FEATURE_FLAGS: "binarycaching"
-  
   matrix:
     - VCPKG_DEFAULT_TRIPLET: x86-windows
     - VCPKG_DEFAULT_TRIPLET: x86-windows-static
@@ -27,23 +25,16 @@ install:
       # fetch upstream project which is necessary for forked project to compare with.
       git remote add upstream https://github.com/Microsoft/vcpkg.git
       git fetch -q upstream
-      $env:targets = git diff --name-only upstream/master... |
+      $targets = git diff --name-only upstream/master... |
           ?{$_ -match "ports/(?<change>.*?)/"} | %{$Matches.change} | Group-Object | % Name
-      if([string]::IsNullOrWhitespace($targets)) { $env:targets = "zlib" }
-      ./vcpkg.exe remove  $env:targets --recurse
-      ./vcpkg.exe install $env:targets --recurse --keep-going --binarycaching
+      if([string]::IsNullOrWhitespace($targets)) { $targets = "zlib" }
+      ./vcpkg.exe remove  $targets --recurse
+      ./vcpkg.exe install $targets --recurse --keep-going --binarycaching
+      ./vcpkg.exe export $targets --zip
 
 build: off
-
 test: off
-
 deploy: off
-
-on_success:
-  -ps: ./vcpkg.exe export $env:targets --zip
-
-on_failure:
-  -ps: $env:targets.Split(" ") | %{ 7z a $_-buildlog.zip buildtrees\$_\*.log }
 
 artifacts:
   - path: '*.zip'
