@@ -3,16 +3,13 @@
 # Copyright 2018 Hiroshi Miura
 #
 image: Visual Studio 2017
-max_jobs: 1
 
-# shallow_clone should false for branch comparison
 shallow_clone: false
-clone_folder: c:\projects\vcpkg
 
 environment:
-  APPVEYOR_SAVE_CACHE_ON_ERROR: false
-  APPVEYOR_CACHE_ENTRY_ZIP_ARGS: "-t7z -m0=lzma -mx=9"
- 
+  APPVEYOR_SAVE_CACHE_ON_ERROR: true
+  VCPKG_FEATURE_FLAGS: "binarycaching"
+  
   matrix:
     - VCPKG_DEFAULT_TRIPLET: x86-windows
     - VCPKG_DEFAULT_TRIPLET: x86-windows-static
@@ -20,57 +17,32 @@ environment:
     - VCPKG_DEFAULT_TRIPLET: x64-windows-static
 
 cache:
-  - packages
-
-# Help developer to investigate windows build using RDP to AppVeyor.
-# see https://www.appveyor.com/docs/how-to/rdp-to-build-worker/
-#init:
-#  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-#on_failure:
-#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-
-# Control cache save baaed on branch name
-#init:
-#  - ps: IF ($env:APPVEYOR_REPO_BRANCH -eq "develop") {$env:APPVEYOR_CACHE_SKIP_SAVE = "true"}
+  - archives
 
 install:
   - ps: |
       ./scripts/bootstrap.ps1
-      if (-not $?) { throw $? }
-      cd c:\projects\vcpkg
-      Write-Host "------Cached packages------"
-      .\vcpkg.exe cache
+      # Detect modified ports and make changes list
       # fetch upstream project which is necessary for forked project to compare with.
       git remote add upstream https://github.com/Microsoft/vcpkg.git
       git fetch -q upstream
-      # Detect modified ports and make changes list
-      $targets = git diff --name-only upstream/master... |
-          ?{$_ -match "ports/(?<change>.*?)/"} |
-          %{$Matches.change} |
-          Group-Object |
-          Select-Object -Property name |
-          %{$_.name}
-      # When no modified ports found
-      if([string]::IsNullOrWhitespace($targets))
-      {
-          $targets = "zlib"
-      }
-      Write-Host "----Clean&build targets----"
-      ./vcpkg.exe remove  ${targets} --recurse
-      ./vcpkg.exe install ${targets} --recurse --keep-going
-      if (-not $?) { throw $? }
-      ./vcpkg.exe export  ${targets} --zip --nuget
-      if (-not $?) { throw $? }
+      $env:targets = git diff --name-only upstream/master... |
+          ?{$_ -match "ports/(?<change>.*?)/"} | %{$Matches.change} | Group-Object | % Name
+      if([string]::IsNullOrWhitespace($targets)) { $env:targets = "zlib" }
+      ./vcpkg.exe remove  $env:targets --recurse
+      ./vcpkg.exe install $env:targets --recurse --keep-going --binarycaching
 
 build: off
 
 test: off
 
-artifacts:
-  # build src and logs (include depends) are published as an artifact zip
-  # Also publishes exports for user deployment test
-  - path: buildtrees
-  - path: '*.zip'
-  - path: '*.nupkg'
-
 deploy: off
+
+on_success:
+  -ps: ./vcpkg.exe export $env:targets --zip
+
+on_failure:
+  -ps: $env:targets.Split(" ") | %{ 7z a $_-buildlog.zip buildtrees\$_\*.log }
+
+artifacts:
+  - path: '*.zip'
