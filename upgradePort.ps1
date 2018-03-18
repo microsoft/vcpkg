@@ -50,7 +50,7 @@ if ($Tags)
     }
     else
     {
-        git $workdirarg fetch --tags
+        git $workdirarg fetch --tags -p
     }
     Write-Verbose "git $workdirarg tag | ? { $_ -match $Regex }"
     $alltags = git $workdirarg tag | ? { $_ -match $Regex }

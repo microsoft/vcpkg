@@ -67,7 +67,6 @@ $tagPorts = @(
     "tbb",
     "uwebsockets",
     "wt",
-    "wxwidgets",
     "yaml-cpp",
     "zziplib"
 )
@@ -76,6 +75,8 @@ $tagPortsWithRegex = @(
     (New-Object PSObject -Property @{ "port"="libpng"; "regex"="v[\d\.]+`$" }),
     (New-Object PSObject -Property @{ "port"="glm"; "regex"="^[\d\.]+`$" }),
     (New-Object PSObject -Property @{ "port"="wxwidgets"; "regex"="v3.1" }),
+
+    (New-Object PSObject -Property @{ "port"="libmysql"; "regex"="^mysql-[\d\.]+$" }),
 
     (New-Object PSObject -Property @{ "port"="directxtex"; "regex"="^[^\d]+\d+[^\d]?$" }),
     (New-Object PSObject -Property @{ "port"="directxtk"; "regex"="^[^\d]+\d+[^\d]?$" })
@@ -120,9 +121,9 @@ $rollingPorts = @(
     "tiny-dnn",
     "torch-th",
     "unicorn-lib",
-    "unicorn"
+    "unicorn",
     #"yara",
-    #"zeromq"
+    "zeromq"
 )
 
 if (!$NoTags)
