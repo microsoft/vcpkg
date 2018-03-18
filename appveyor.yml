@@ -6,17 +6,12 @@ image: Visual Studio 2017
 shallow_clone: false
 
 environment:
-  APPVEYOR_SAVE_CACHE_ON_ERROR: true
-  VCPKG_FEATURE_FLAGS: "binarycaching"
   matrix:
     - VCPKG_DEFAULT_TRIPLET: x86-windows
     - VCPKG_DEFAULT_TRIPLET: x86-windows-static
     - VCPKG_DEFAULT_TRIPLET: x64-windows
     - VCPKG_DEFAULT_TRIPLET: x64-windows-static
     - VCPKG_DEFAULT_TRIPLET: arm-uwp
-
-cache:
-  - archives
 
 install:
   - ps: |
@@ -29,7 +24,7 @@ install:
           ?{$_ -match "ports/(?<change>.*?)/"} | %{$Matches.change} | Group-Object | % Name
       if([string]::IsNullOrWhitespace($targets)) { $targets = "zlib" }
       ./vcpkg.exe remove  $targets --recurse
-      ./vcpkg.exe install $targets --recurse --keep-going --binarycaching
+      ./vcpkg.exe install $targets --recurse --keep-going
       ./vcpkg.exe export $targets --zip
 
 build: off
