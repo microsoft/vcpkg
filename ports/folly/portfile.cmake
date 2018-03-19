@@ -17,15 +17,14 @@ set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF v2017.11.27.00
-    SHA512 738bb00047a7cbd807f2dccd64031763df80bbebca73f1ae9500b750dcad156dde84e47f4eda7af1bcd7abfae10c973da47515f2e111929979d1637869cf06ee
+    REF v2018.03.19.00
+    SHA512 72df8768753bf9f1109ad3f16645d811906b633833c91c7d9fe856a06c16b5e398876cf6cae415401eff96b568c99ffa1dc0c44d81cd40219bafb0f4c72fc2ca
     HEAD_REF master
 )
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/cmake-link-boost-fix.patch
         ${CMAKE_CURRENT_LIST_DIR}/msvc-15.6-workaround.patch
 )
 
@@ -42,19 +41,11 @@ vcpkg_configure_cmake(
         -DMSVC_USE_STATIC_RUNTIME=${MSVC_USE_STATIC_RUNTIME}
 )
 
-# Folly runs built executables during the build, so they need access to the installed DLLs.
-set(ENV{PATH} "$ENV{PATH};${CURRENT_INSTALLED_DIR}/bin;${CURRENT_INSTALLED_DIR}/debug/bin")
-
-vcpkg_install_cmake()
+vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets()
-
-# changes target search path
-file(READ ${CURRENT_PACKAGES_DIR}/share/folly/folly-targets.cmake FOLLY_MODULE)
-string(REPLACE "${CURRENT_INSTALLED_DIR}/lib/" "" FOLLY_MODULE "${FOLLY_MODULE}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/folly/folly-targets.cmake "${FOLLY_MODULE}")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
