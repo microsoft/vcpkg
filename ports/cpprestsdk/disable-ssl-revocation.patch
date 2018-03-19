@@ -1,0 +1,20 @@
+diff --git a/Release/src/http/client/http_client_winhttp.cpp b/Release/src/http/client/http_client_winhttp.cpp
+index 1d17db58..e764390f 100644
+--- a/Release/src/http/client/http_client_winhttp.cpp
++++ b/Release/src/http/client/http_client_winhttp.cpp
+@@ -638,6 +638,7 @@ protected:
+             return;
+         }
+ 
++#if 0
+         // Enable the certificate revocation check
+         if (m_secure)
+         {
+@@ -649,6 +650,7 @@ protected:
+                 return;
+             }
+         }
++#endif
+ 
+         if(proxy_info_required)
+         {
