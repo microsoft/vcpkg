@@ -618,9 +618,12 @@ namespace vcpkg::Build
                 compress_archive(paths, spec, tmp_archive_path);
 
                 fs.create_directories(archive_path.parent_path(), ec);
-                fs.rename(tmp_archive_path, archive_path);
-
-                System::println("Stored binary cache: %s", archive_path.u8string());
+                fs.rename(tmp_archive_path, archive_path, ec);
+                if (ec)
+                    System::println(
+                        System::Color::warning, "Failed to store binary cache: %s", archive_path.u8string());
+                else
+                    System::println("Stored binary cache: %s", archive_path.u8string());
             }
             else if (result.code == BuildResult::BUILD_FAILED || result.code == BuildResult::POST_BUILD_CHECKS_FAILED)
             {
