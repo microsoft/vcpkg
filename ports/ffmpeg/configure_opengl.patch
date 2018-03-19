@@ -1,0 +1,24 @@
+--- a/configure
++++ b/configure
+@@ -5903,12 +5903,15 @@
+                              { check_cpp_condition "OpenCL/cl.h" "defined(CL_VERSION_1_2)" ||
+                                check_cpp_condition "CL/cl.h" "defined(CL_VERSION_1_2)" ||
+                                die "ERROR: opencl must be installed and version must be 1.2 or compatible"; }
+-enabled opengl            && { check_lib GL/glx.h glXGetProcAddress "-lGL" ||
+-                               check_lib windows.h wglGetProcAddress "-lopengl32 -lgdi32" ||
+-                               check_lib OpenGL/gl3.h glGetError "-Wl,-framework,OpenGL" ||
+-                               check_lib ES2/gl.h glGetError "-isysroot=${sysroot} -Wl,-framework,OpenGLES" ||
+-                               die "ERROR: opengl not found."
+-                             }
++#enabled opengl            && { check_lib GL/glx.h glXGetProcAddress "-lGL" ||
++#                               check_lib windows.h wglGetProcAddress "-lopengl32 -lgdi32" ||
++#                               check_lib OpenGL/gl3.h glGetError "-Wl,-framework,OpenGL" ||
++#                               check_lib ES2/gl.h glGetError "-isysroot=${sysroot} -Wl,-framework,OpenGLES" ||
++#                               die "ERROR: opengl not found."
++#                             }
++enabled opengl           && { require opengl "windows.h GL/GL.h GL/GLU.h" wglGetProcAddress -lOpenGL32 -lGLU32 &&
++                              warn "using opengl without check_lib"; } &&
++                              add_cppflags -DWIN32_LEAN_AND_MEAN
+ enabled omx_rpi && enable omx
+ enabled omx               && { check_header OMX_Core.h ||
+                                 { ! enabled cross_compile && enabled omx_rpi && {

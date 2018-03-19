@@ -1,8 +1,64 @@
 Source: ffmpeg
-Version: 3.3.3-3
+Version: 3.3.3-4
 Description: a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.
   FFmpeg is the leading multimedia framework, able to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created. It supports the most obscure ancient formats up to the cutting edge. No matter if they were designed by some standards committee, the community or a corporation. It is also highly portable: FFmpeg compiles, runs, and passes our testing infrastructure FATE across Linux, Mac OS X, Microsoft Windows, the BSDs, Solaris, etc. under a wide variety of build environments, machine architectures, and configurations.
 
+Feature: ffmpeg
+Description: ffmpeg appplication support in ffmpeg
+
+Feature: ffserver
+Description: ffserver appplication support in ffmpeg
+
+Feature: ffplay
+Description: ffplay appplication support in ffmpeg
+
+Feature: ffprobe
+Description: ffprobe appplication support in ffmpeg
+  
 Feature: openssl
 Build-Depends: openssl
 Description: openssl support in ffmpeg
+
+Feature: bzip2
+Build-Depends: bzip2
+Description: bzip2 support in ffmpeg
+
+Feature: pthreads
+Build-Depends: pthreads
+Description: pthreads support in ffmpeg
+
+Feature: freetype
+Build-Depends: freetype
+Description: freetype support in ffmpeg
+
+Feature: fontconfig
+Build-Depends: fontconfig
+Description: fontconfig support in ffmpeg
+
+Feature: x264
+Build-Depends: x264
+Description: x264 support in ffmpeg
+
+Feature: x265
+Build-Depends: x265
+Description: x265 support in ffmpeg
+
+Feature: librtmp
+Build-Depends: librtmp
+Description: librtmp support in ffmpeg
+
+Feature: libssh
+Build-Depends: libssh
+Description: libssh support in ffmpeg
+
+Feature: opengl
+Build-Depends: opengl
+Description: opengl support in ffmpeg, you have to download glext.h from this url https://www.khronos.org/registry/OpenGL/index_gl.php to GL directory
+
+Feature: opencl
+Build-Depends: opencl
+Description: opencl support in ffmpeg
+
+Feature: openjpeg
+Build-Depends: openjpeg
+Description: openjpeg support in ffmpeg
