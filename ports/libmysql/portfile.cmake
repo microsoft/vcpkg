@@ -22,7 +22,9 @@ vcpkg_from_github(
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/ignore-boost-version.patch
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/ignore-boost-version.patch
+        ${CMAKE_CURRENT_LIST_DIR}/system-libs.patch
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/include/boost_1_65_0)
@@ -44,9 +46,15 @@ vcpkg_configure_cmake(
         ${STACK_DIRECTION}
         -DWINDOWS_RUNTIME_MD=ON # Note: this disables _replacement_ of /MD with /MT. If /MT is specified, it will be preserved.
         -DIGNORE_BOOST_VERSION=ON
+        -DWITH_SSL=system
+        -DWITH_ICU=system
+        -DWITH_LIBEVENT=system
+        -DWITH_LZMA=system
+        -DWITH_LZ4=system
+        -DWITH_ZLIB=system
 )
 
-vcpkg_install_cmake()
+vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
 # delete debug headers
 file(REMOVE_RECURSE
