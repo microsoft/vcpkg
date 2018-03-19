@@ -11,7 +11,9 @@ vcpkg_apply_patches(
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/create-lib-libraries.patch
         ${CMAKE_CURRENT_LIST_DIR}/detect-openssl.patch
-        ${CMAKE_CURRENT_LIST_DIR}/configure_opencv.patch
+        ${CMAKE_CURRENT_LIST_DIR}/configure_librtmp.patch
+		${CMAKE_CURRENT_LIST_DIR}/configure_x265.patch
+		${CMAKE_CURRENT_LIST_DIR}/configure_opencv.patch
 )
 
 vcpkg_find_acquire_program(YASM)
@@ -117,6 +119,12 @@ if("openjpeg" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libopenjpeg")
 else()
     set(OPTIONS "${OPTIONS} --disable-libopenjpeg")
+endif()
+
+if("openal" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libopenal")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libopenal")
 endif()
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
