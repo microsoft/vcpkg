@@ -16,6 +16,11 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         -DWEBSOCKETPP_CONFIG_VERSION=${WEBSOCKETPP_PATH})
 endif()
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/disable-ssl-revocation.patch" "${CMAKE_CURRENT_LIST_DIR}/allow-compression-flag.patch"
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/Release
     PREFER_NINJA
@@ -23,7 +28,8 @@ vcpkg_configure_cmake(
         ${OPTIONS}
         -DBUILD_TESTS=OFF
         -DBUILD_SAMPLES=OFF
-        -DCPPREST_EXCLUDE_WEBSOCKETS=OFF
+        -DCPPREST_EXCLUDE_WEBSOCKETS=ON
+        -DCPPREST_EXCLUDE_COMPRESSION=OFF
         -DCPPREST_EXPORT_DIR=share/cpprestsdk
         -DWERROR=OFF
     OPTIONS_DEBUG
