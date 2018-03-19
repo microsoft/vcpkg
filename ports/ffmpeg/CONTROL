@@ -53,7 +53,7 @@ Description: libssh support in ffmpeg
 
 Feature: opengl
 Build-Depends: opengl
-Description: opengl support in ffmpeg
+Description: opengl support in ffmpeg, you have to download glext.h from this url https://www.khronos.org/registry/OpenGL/index_gl.php to GL directory
 
 Feature: opencl
 Build-Depends: opencl

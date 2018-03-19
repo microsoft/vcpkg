@@ -15,6 +15,7 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/configure_x265.patch
         ${CMAKE_CURRENT_LIST_DIR}/configure_opencv.patch
         ${CMAKE_CURRENT_LIST_DIR}/configure_opengl.patch
+		${CMAKE_CURRENT_LIST_DIR}/configure_opengl_enc.patch
         ${CMAKE_CURRENT_LIST_DIR}/configure_openjpeg.patch
         ${CMAKE_CURRENT_LIST_DIR}/configure_libssh.patch
 )
