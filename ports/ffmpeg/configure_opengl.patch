@@ -1,11 +1,44 @@
 --- a/configure
 +++ b/configure
-@@ -5915,7 +5918,7 @@
+@@ -5914,12 +5917,15 @@
+                              { check_cpp_condition "OpenCL/cl.h" "defined(CL_VERSION_1_2)" ||
                                 check_cpp_condition "CL/cl.h" "defined(CL_VERSION_1_2)" ||
                                 die "ERROR: opencl must be installed and version must be 1.2 or compatible"; }
- enabled opengl            && { check_lib GL/glx.h glXGetProcAddress "-lGL" ||
+-enabled opengl            && { check_lib GL/glx.h glXGetProcAddress "-lGL" ||
 -                               check_lib windows.h wglGetProcAddress "-lopengl32 -lgdi32" ||
-+                               check_lib "GL/GL.h GL/GLU.h" wglGetProcAddress "-lOpenGL32 -lGlU32" ||
-                                check_lib OpenGL/gl3.h glGetError "-Wl,-framework,OpenGL" ||
-                                check_lib ES2/gl.h glGetError "-isysroot=${sysroot} -Wl,-framework,OpenGLES" ||
-                                die "ERROR: opengl not found."
+-                               check_lib OpenGL/gl3.h glGetError "-Wl,-framework,OpenGL" ||
+-                               check_lib ES2/gl.h glGetError "-isysroot=${sysroot} -Wl,-framework,OpenGLES" ||
+-                               die "ERROR: opengl not found."
+-                             }
++#enabled opengl            && { check_lib GL/glx.h glXGetProcAddress "-lGL" ||
++#                               check_lib windows.h wglGetProcAddress "-lopengl32 -lgdi32" ||
++#                               check_lib OpenGL/gl3.h glGetError "-Wl,-framework,OpenGL" ||
++#                               check_lib ES2/gl.h glGetError "-isysroot=${sysroot} -Wl,-framework,OpenGLES" ||
++#                               die "ERROR: opengl not found."
++#                             }
++enabled opengl           && { require opengl "windows.h GL/GL.h GL/GLU.h" wglGetProcAddress -lOpenGL32 -lGLU32 &&
++                              warn "using opengl without check_lib"; } &&
++                                                         add_cppflags -DWIN32_LEAN_AND_MEAN
+ enabled omx_rpi && enable omx
+ enabled omx               && { check_header OMX_Core.h ||
+                                 { ! enabled cross_compile && enabled omx_rpi && {
+--- a/libavdevice/opengl_enc.c
++++ b/libavdevice/opengl_enc.c
+@@ -25,7 +25,6 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include <unistd.h>
+ #include <stddef.h>
+
+ #include "config.h"
+@@ -33,6 +32,8 @@
+ #if HAVE_WINDOWS_H
+ #define WIN32_LEAN_AND_MEAN
+ #include <windows.h>
++#else
++#include <unistd.h>
+ #endif
+ #if HAVE_OPENGL_GL3_H
+ #include <OpenGL/gl3.h>
+								 
