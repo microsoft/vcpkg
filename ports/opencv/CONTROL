@@ -76,3 +76,7 @@ Description: JPEG 2000 support for opencv
 Feature: eigen
 Build-Depends: eigen3
 Description: Eigen support for opencv
+
+Feature: python
+Build-Depends: python3[executable]
+Description: Python3 support for opencv

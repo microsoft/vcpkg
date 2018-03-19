@@ -213,6 +213,11 @@ if("eigen" IN_LIST FEATURES)
   set(WITH_EIGEN ON)
 endif()
 
+set(WITH_PYTHON3 OFF)
+if("python" IN_LIST FEATURES)
+  set(WITH_PYTHON3 ON)
+endif()
+
 if(BUILD_opencv_contrib)
   vcpkg_from_github(
       OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
@@ -267,7 +272,7 @@ vcpkg_configure_cmake(
         -DBUILD_opencv_line_descriptor=${BUILD_opencv_line_descriptor}
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
         -DBUILD_opencv_python2=OFF
-        -DBUILD_opencv_python3=OFF
+        -DBUILD_opencv_python3=${WITH_PYTHON3}
         -DBUILD_opencv_saliency=${BUILD_opencv_saliency}
         -DBUILD_opencv_sfm=${BUILD_opencv_sfm}
         # PROTOBUF
@@ -308,6 +313,8 @@ vcpkg_configure_cmake(
         -DWITH_VTK=${WITH_VTK}
         -DWITH_WEBP=${WITH_WEBP}
         -DWITH_ZLIB=${WITH_ZLIB}
+        # Python
+        "-DPYTHON3_PACKAGES_PATH=${CURRENT_PACKAGES_DIR}/python/"
     OPTIONS_DEBUG
         -DINSTALL_HEADERS=OFF
         -DINSTALL_OTHER=OFF
