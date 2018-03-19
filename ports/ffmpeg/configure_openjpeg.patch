@@ -1,0 +1,11 @@
+--- a/configure
++++ b/configure
+@@ -5815,7 +5815,7 @@
+                                check_lib openjpeg-2.1/openjpeg.h opj_version -lopenjp2 ||
+                                { check_lib openjpeg-2.0/openjpeg.h opj_version -lopenjp2 -DOPJ_STATIC && add_cppflags -DOPJ_STATIC; } ||
+                                { check_lib openjpeg-1.5/openjpeg.h opj_version -lopenjpeg -DOPJ_STATIC && add_cppflags -DOPJ_STATIC; } ||
+-                               { check_lib openjpeg.h opj_version -lopenjpeg -DOPJ_STATIC && add_cppflags -DOPJ_STATIC; } ||
++                               { check_lib openjpeg.h opj_version -lopenjp2 -DOPJ_STATIC && add_cppflags -DOPJ_STATIC; } ||
+                                die "ERROR: libopenjpeg not found"; }
+ enabled libopenmpt        && require_pkg_config "libopenmpt >= 0.2.6557" libopenmpt/libopenmpt.h openmpt_module_create
+ enabled libopus           && require_pkg_config opus opus_multistream.h opus_multistream_decoder_create

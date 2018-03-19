@@ -19,10 +19,6 @@ Feature: openssl
 Build-Depends: openssl
 Description: openssl support in ffmpeg
 
-#Feature: zlib
-#Build-Depends: zlib
-#Description: zlib support in ffmpeg
-
 Feature: bzip2
 Build-Depends: bzip2
 Description: bzip2 support in ffmpeg
@@ -59,10 +55,6 @@ Feature: opengl
 Build-Depends: opengl
 Description: opengl support in ffmpeg
 
-#Feature: opencv
-#Build-Depends: opencv
-#Description: opencv support in ffmpeg
-
 Feature: opencl
 Build-Depends: opencl
 Description: opencl support in ffmpeg
@@ -70,7 +62,3 @@ Description: opencl support in ffmpeg
 Feature: openjpeg
 Build-Depends: openjpeg
 Description: openjpeg support in ffmpeg
-
-Feature: openal
-Build-Depends: openal
-Description: openal support in ffmpeg

@@ -1,0 +1,11 @@
+--- a/configure
++++ b/configure
+@@ -5915,7 +5918,7 @@
+                                check_cpp_condition "CL/cl.h" "defined(CL_VERSION_1_2)" ||
+                                die "ERROR: opencl must be installed and version must be 1.2 or compatible"; }
+ enabled opengl            && { check_lib GL/glx.h glXGetProcAddress "-lGL" ||
+-                               check_lib windows.h wglGetProcAddress "-lopengl32 -lgdi32" ||
++                               check_lib "GL/GL.h GL/GLU.h" wglGetProcAddress "-lOpenGL32 -lGlU32" ||
+                                check_lib OpenGL/gl3.h glGetError "-Wl,-framework,OpenGL" ||
+                                check_lib ES2/gl.h glGetError "-isysroot=${sysroot} -Wl,-framework,OpenGLES" ||
+                                die "ERROR: opengl not found."
