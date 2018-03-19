@@ -5,11 +5,11 @@ endif()
 
 include(vcpkg_common_functions)
 
-set(GOOGLE_CLOUD_CPP_VERSION 0bd7b17b08ab4fd14fc6de580cd762f0603bffab)
+set(GOOGLE_CLOUD_CPP_VERSION 0.1.0-pre1)
 vcpkg_download_distfile(GOOGLE_CLOUD_CPP
-    URLS "https://github.com/coryan/google-cloud-cpp/archive/0bd7b17b08ab4fd14fc6de580cd762f0603bffab.zip"
+    URLS "https://github.com/GoogleCloudPlatform/google-cloud-cpp/archive/v${GOOGLE_CLOUD_CPP_VERSION}.zip"
     FILENAME "gcpp-${GOOGLE_CLOUD_CPP_VERSION}.zip"
-    SHA512 72236e4b75e86611ed6befe6a5d097dd8055648692510cd02f8419f167128359b9c278e229ab42288597ccb236dd9e946292155863839d3e93a0492a422237d4
+    SHA512 2c08818d4ce9712c5ecb7015ea88a6905ef05f55b8a3586e13b2167a5bb4b3c25488660324c05f1dc1f5c5953533c0bb319e209373fa509beeeff810be62fa54
 )
 
 set(GOOGLEAPIS_VERSION 92f10d7033c6fa36e1a5a369ab5aa8bafd564009)
@@ -42,6 +42,7 @@ vcpkg_configure_cmake(
 set(ENV{PATH} "$ENV{PATH};${CURRENT_INSTALLED_DIR}/bin;${CURRENT_INSTALLED_DIR}/debug/bin")
 
 vcpkg_install_cmake()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/bigtable/client/testing)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
