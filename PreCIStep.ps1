@@ -24,9 +24,9 @@ $vcpkgRootDir = vcpkgFindFileRecursivelyUp $scriptsDir .vcpkg-root
 # Re-exclude "C:\" from Windows Defender because it looks like the exclusion list is cleared on Windows Update
 Add-MpPreference -ExclusionPath "C:\"
 
-# Update the relevant Visual Studio installation
+# Update the relevant Visual Studio installation - DISABLED due to flakiness
 $vsInstallPath = findVSInstallPathFromNickname($vsInstallNickname)
-UnattendedVSupdate -installPath $vsInstallPath
+# UnattendedVSupdate -installPath $vsInstallPath
 
 $comment = "stable"
 # For unstable builds, deploy the custom build archive
