@@ -109,6 +109,10 @@ else()
     file (RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libmysql.pdb ${CURRENT_PACKAGES_DIR}/debug/bin/libmysql.pdb)
 endif()
 
+file(READ ${CURRENT_PACKAGES_DIR}/include/mysql/mysql_com.h _contents)
+string(REPLACE "#include <mysql/udf_registration_types.h>" "#include \"mysql/udf_registration_types.h\"" _contents "${_contents}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/mysql/mysql_com.h "${_contents}")
+
 # copy license
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libmysql)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libmysql/LICENSE ${CURRENT_PACKAGES_DIR}/share/libmysql/copyright)
