@@ -25,6 +25,8 @@ The current list of programs includes:
 - NASM
 - NINJA
 - YASM
+- DOXYGEN
+- SWIG
 
 Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_acquire_msys.md).
 

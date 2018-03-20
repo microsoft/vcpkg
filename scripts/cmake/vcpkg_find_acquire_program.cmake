@@ -25,6 +25,8 @@
 ## - NASM
 ## - NINJA
 ## - YASM
+## - DOXYGEN
+## - SWIG
 ##
 ## Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_acquire_msys.md).
 ##
@@ -171,6 +173,12 @@ function(vcpkg_find_acquire_program VAR)
     set(URL "http://ftp.stack.nl/pub/users/dimitri/doxygen-1.8.14.windows.bin.zip")
     set(ARCHIVE "doxygen-1.8.14.windows.bin.zip")
     set(HASH d0d706501e7112045b1f401f22d12a2c8d9b7728edee9ad1975a17dff914c16494ae48a70beab6f6304643779935843f268c7afed3b9da7d403b5cb11cac0c50)
+  elseif(VAR MATCHES "SWIG")
+    set(PROGNAME swig)
+    set(PATHS ${DOWNLOADS}/tools/swig/swigwin-3.0.12)
+    set(URL "https://jaist.dl.sourceforge.net/project/swig/swigwin/swigwin-3.0.12/swigwin-3.0.12.zip")
+    set(ARCHIVE "swigwin-3.0.12.zip")
+    set(HASH f47024e850e2a7eca97e2d67c6a3e88677a44678bf0bf9cc0cd4f784648d325645e05dee5b3d661caa24b9653054447d3b53eefe005a09ad6a82cdc286c3c22b)
   else()
     message(FATAL "unknown tool ${VAR} -- unable to acquire.")
   endif()
