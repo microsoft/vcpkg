@@ -36,6 +36,10 @@ endif()
 
 if("python" IN_LIST FEATURES)
     set(WITH_PYTHON ON)
+    
+    vcpkg_find_acquire_program(SWIG)
+    get_filename_component(SWIG_DIR "${SWIG}" DIRECTORY)
+    set(ENV{PATH} "$ENV{PATH};${SWIG_DIR}")
 else()
     set(WITH_PYTHON OFF)
 endif()
