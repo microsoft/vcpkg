@@ -16,7 +16,7 @@ Feature: ffprobe
 Description: ffprobe appplication support in ffmpeg
   
 Feature: openssl
-Build-Depends: openssl
+Build-Depends: openssl, ffmpeg[nonfree]
 Description: openssl support in ffmpeg
 
 Feature: bzip2
