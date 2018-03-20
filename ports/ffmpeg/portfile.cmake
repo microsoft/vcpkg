@@ -39,6 +39,8 @@ file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg ${CURRENT_BU
 
 set(OPTIONS "--enable-asm --enable-yasm --disable-doc --enable-debug")
 set(OPTIONS "${OPTIONS} --enable-runtime-cpudetect")
+set(FFMPEG_ENABLE_GPL OFF)
+set(FFMPEG_ENABLE_NONFREE OFF)
 
 if("openssl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-openssl")
@@ -77,13 +79,15 @@ else()
 endif()
 
 if("x264" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-libx264 --enable-gpl --enable-nonfree")
+    set(OPTIONS "${OPTIONS} --enable-libx264")
+	set(FFMPEG_ENABLE_GPL ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libx264")
 endif()
 
 if("x265" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-libx265 --enable-gpl --enable-nonfree")
+    set(OPTIONS "${OPTIONS} --enable-libx265")
+	set(FFMPEG_ENABLE_GPL ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libx265")
 endif()
@@ -122,6 +126,14 @@ if("openjpeg" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libopenjpeg")
 else()
     set(OPTIONS "${OPTIONS} --disable-libopenjpeg")
+endif()
+
+if(FFMPEG_ENABLE_GPL)
+    set(OPTIONS "${OPTIONS} --enable-gpl")
+endif()
+
+if(FFMPEG_ENABLE_NONFREE)
+    set(OPTIONS "${OPTIONS} --enable-nonfree")
 endif()
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
