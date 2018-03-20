@@ -25,10 +25,14 @@ vcpkg_install_cmake()
 # Rename exported target files into something vcpkg_fixup_cmake_targets expects
 if(NOT VCPKG_USE_HEAD_VERSION)
     if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/CMake/double-conversionLibraryDepends-debug.cmake
-                    ${CURRENT_PACKAGES_DIR}/debug/CMake/double-conversionTargets-debug.cmake)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/CMake/double-conversionLibraryDepends-release.cmake
-                    ${CURRENT_PACKAGES_DIR}/CMake/double-conversionTargets-release.cmake)
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/CMake/double-conversionLibraryDepends-debug.cmake
+                        ${CURRENT_PACKAGES_DIR}/debug/CMake/double-conversionTargets-debug.cmake)
+        endif()
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+            file(RENAME ${CURRENT_PACKAGES_DIR}/CMake/double-conversionLibraryDepends-release.cmake
+                        ${CURRENT_PACKAGES_DIR}/CMake/double-conversionTargets-release.cmake)
+        endif()
         file(RENAME ${CURRENT_PACKAGES_DIR}/CMake/double-conversionLibraryDepends.cmake
                     ${CURRENT_PACKAGES_DIR}/CMake/double-conversionTargets.cmake)
 
