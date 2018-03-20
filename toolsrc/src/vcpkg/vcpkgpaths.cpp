@@ -293,7 +293,7 @@ namespace vcpkg
         return fetch_tool(paths.scripts, "installerbase", TOOL_DATA);
     }
 
-    Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir)
+    Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir, const std::string& default_vs_path)
     {
         std::error_code ec;
         const fs::path canonical_vcpkg_root_dir = fs::stdfs::canonical(vcpkg_root_dir, ec);
@@ -304,6 +304,7 @@ namespace vcpkg
 
         VcpkgPaths paths;
         paths.root = canonical_vcpkg_root_dir;
+        paths.default_vs_path = default_vs_path;
 
         if (paths.root.empty())
         {
@@ -621,20 +622,16 @@ namespace vcpkg
 
     const Toolset& VcpkgPaths::get_toolset(const Build::PreBuildInfo& prebuildinfo) const
     {
-        if (prebuildinfo.external_toolchain_file)
+        if (prebuildinfo.external_toolchain_file ||
+            (!prebuildinfo.cmake_system_name.empty() && prebuildinfo.cmake_system_name != "WindowsStore"))
         {
             static Toolset external_toolset = []() -> Toolset {
                 Toolset ret;
                 ret.dumpbin = "";
                 ret.supported_architectures = {
                     ToolsetArchOption{"", System::get_host_processor(), System::get_host_processor()}};
-#if defined(_WIN32)
-                ret.vcvarsall = "cmd";
-                ret.vcvarsall_options = {"/c", "echo done"};
-#else
-                ret.vcvarsall = "true";
+                ret.vcvarsall = "";
                 ret.vcvarsall_options = {};
-#endif
                 ret.version = "external";
                 ret.visual_studio_root_path = "";
                 return ret;
@@ -648,7 +645,11 @@ namespace vcpkg
 
         std::vector<const Toolset*> candidates = Util::element_pointers(vs_toolsets);
         const auto tsv = prebuildinfo.platform_toolset.get();
-        const auto vsp = prebuildinfo.visual_studio_path.get();
+        auto vsp = prebuildinfo.visual_studio_path.get();
+        if (!vsp && !default_vs_path.empty())
+        {
+            vsp = &default_vs_path;
+        }
 
         if (tsv && vsp)
         {

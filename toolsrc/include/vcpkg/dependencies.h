@@ -93,7 +93,7 @@ namespace vcpkg::Dependencies
     enum class ExportPlanType
     {
         UNKNOWN,
-        PORT_AVAILABLE_BUT_NOT_BUILT,
+        NOT_BUILT,
         ALREADY_BUILT
     };
 
@@ -165,9 +165,7 @@ namespace vcpkg::Dependencies
     std::vector<RemovePlanAction> create_remove_plan(const std::vector<PackageSpec>& specs,
                                                      const StatusParagraphs& status_db);
 
-    std::vector<ExportPlanAction> create_export_plan(const PortFileProvider& port_file_provider,
-                                                     const VcpkgPaths& paths,
-                                                     const std::vector<PackageSpec>& specs,
+    std::vector<ExportPlanAction> create_export_plan(const std::vector<PackageSpec>& specs,
                                                      const StatusParagraphs& status_db);
 
     std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<std::string, SourceControlFile>& map,

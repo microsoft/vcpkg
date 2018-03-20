@@ -7,6 +7,14 @@
 
 #include <time.h>
 
+#if defined(__APPLE__)
+#include <mach-o/dyld.h>
+#endif
+
+#if defined(__FreeBSD__)
+#include <sys/sysctl.h>
+#endif
+
 #pragma comment(lib, "Advapi32")
 
 namespace vcpkg::System
@@ -31,7 +39,23 @@ namespace vcpkg::System
         const int bytes = GetModuleFileNameW(nullptr, buf, _MAX_PATH);
         if (bytes == 0) std::abort();
         return fs::path(buf, buf + bytes);
-#else
+#elif defined(__APPLE__)
+        uint32_t size = 1024 * 32;
+        char buf[size] = {};
+        bool result = _NSGetExecutablePath(buf, &size);
+        Checks::check_exit(VCPKG_LINE_INFO, result != -1, "Could not determine current executable path.");
+        std::unique_ptr<char> canonicalPath(realpath(buf, NULL));
+        Checks::check_exit(VCPKG_LINE_INFO, result != -1, "Could not determine current executable path.");
+        return fs::path(std::string(canonicalPath.get()));
+#elif defined(__FreeBSD__)
+        int mib[4] = {CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1};
+        char exePath[2048];
+        size_t len = sizeof(exePath);
+        auto rcode = sysctl(mib, 4, exePath, &len, NULL, 0);
+        Checks::check_exit(VCPKG_LINE_INFO, rcode == 0, "Could not determine current executable path.");
+        Checks::check_exit(VCPKG_LINE_INFO, len > 0, "Could not determine current executable path.");
+        return fs::path(exePath, exePath + len - 1);
+#else /* LINUX */
         std::array<char, 1024 * 4> buf;
         auto written = readlink("/proc/self/exe", buf.data(), buf.size());
         Checks::check_exit(VCPKG_LINE_INFO, written != -1, "Could not determine current executable path.");
@@ -129,12 +153,12 @@ namespace vcpkg::System
             R"(powershell -NoProfile -ExecutionPolicy Bypass -Command "& {& '%s' %s}")", script_path.u8string(), args);
     }
 
-    int cmd_execute_clean(const CStringView cmd_line)
+    int cmd_execute_clean(const CStringView cmd_line, const std::unordered_map<std::string, std::string>& extra_env)
     {
 #if defined(_WIN32)
         static const std::string SYSTEM_ROOT = get_environment_variable("SystemRoot").value_or_exit(VCPKG_LINE_INFO);
         static const std::string SYSTEM_32 = SYSTEM_ROOT + R"(\system32)";
-        static const std::string NEW_PATH = Strings::format(
+        std::string NEW_PATH = Strings::format(
             R"(Path=%s;%s;%s\Wbem;%s\WindowsPowerShell\v1.0\)", SYSTEM_32, SYSTEM_ROOT, SYSTEM_32, SYSTEM_32);
 
         std::vector<std::wstring> env_wstrings = {
@@ -200,10 +224,21 @@ namespace vcpkg::System
             env_cstr.push_back(L'\0');
         }
 
+		if (extra_env.find("PATH") != extra_env.end())
+			NEW_PATH += Strings::format(";%s", extra_env.find("PATH")->second);
         env_cstr.append(Strings::to_utf16(NEW_PATH));
         env_cstr.push_back(L'\0');
         env_cstr.append(L"VSLANG=1033");
         env_cstr.push_back(L'\0');
+
+		for (auto item : extra_env)
+		{
+			if (item.first == "PATH") continue;
+			env_cstr.append(Strings::to_utf16(item.first));
+			env_cstr.push_back(L'=');
+			env_cstr.append(Strings::to_utf16(item.second));
+			env_cstr.push_back(L'\0');
+		}
 
         STARTUPINFOW startup_info;
         memset(&startup_info, 0, sizeof(STARTUPINFOW));

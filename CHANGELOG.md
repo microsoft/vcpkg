@@ -1,3 +1,168 @@
+vcpkg (0.0.106)
+--------------
+  * Add ports:
+    - armadillo      8.400.0-1
+    - boost-modular-build-helper 2
+    - clblas         2.12-1
+    - clfft          2.12.2
+    - entt           2.4.2-1
+    - fastcdr        1.0.6-1
+    - gamma          gamma-2018-01-27
+    - gl3w           8f7f459d
+    - graphite2      1.3.10
+    - ismrmrd        1.3.2-1
+    - kealib         1.4.7-1
+    - lcm            1.3.95
+    - libcds         2.3.2
+    - monkeys-audio  4.3.3
+    - msix           1.0
+    - nmslib         1.7.2
+    - opencl         2.2 (2017.07.18)
+    - openmesh       6.3
+    - quirc          1.0-1
+    - shogun         6.1.3
+    - x264           152-e9a5903edf8ca59
+    - x265           2.7-1
+  * Update ports:
+    - abseil         2018-2-5 -> 2018-03-17
+    - ace            6.4.6 -> 6.4.7
+    - alembic        1.7.5 -> 1.7.6
+    - args           d8905de -> 2018-02-23
+    - asio           1.10.8-1 -> 1.12.0
+    - atk            2.24.0-1 -> 2.24.0-2
+    - avro-c         1.8.2 -> 1.8.2-1
+    - azure-storage-cpp 3.0.0-4 -> 3.2.1
+    - benchmark      1.3.0 -> 1.3.0-1
+    - boost-build    1.66.0-5 -> 1.66.0-8
+    - breakpad       2018-2-19 -> 2018-03-13
+    - butteraugli    2017-09-02-8c60a2aefa19adb-1 -> 2018-02-25
+    - c-ares         1.13.0-1 -> cares-1_14_0
+    - catch-classic  1.12.0 -> 1.12.1
+    - catch2         2.1.2 -> 2.2.1
+    - cctz           2.1 -> 2.2
+    - cgal           4.11-3 -> 4.11.1
+    - chakracore     1.7.4 -> 1.8.2
+    - chmlib         0.40-1 -> 0.40-2
+    - cimg           2.1.8 -> 221
+    - clara          2017-07-20-9661f2b4a50895d52ebb4c59382785a2b416c310 -> 2018-03-11
+    - console-bridge 0.3.2-2 -> 0.3.2-3
+    - coolprop       6.1.0-2 -> 6.1.0-3
+    - cpp-redis      4.3.0 -> 4.3.1
+    - cpr            1.3.0-1 -> 1.3.0-3
+    - curl           7.58.0-1 -> 7_59_0-2
+    - devil          1.8.0-1 -> 1.8.0-2
+    - directxmesh    dec2017 -> feb2018
+    - directxtex     dec2017 -> feb2018b
+    - directxtk      dec2017 -> feb2018
+    - dirent         2017-06-23-5c7194c2fe2c68c1a8212712c0b4b6195382d27d -> 1.23.1
+    - discord-rpc    2.1.0 -> 3.0.0
+    - doctest        1.2.6 -> 1.2.8
+    - eastl          3.05.08 -> 3.07.02
+    - evpp           0.6.1-1 -> 0.7.0
+    - exiv2          8f5b795eaa4bc414d2d6041c1dbd1a7f7bf1fc99 -> 2018-03-17
+    - fdk-aac        2017-11-02-1e351 -> 2018-03-07
+    - ffmpeg         3.3.3-2 -> 3.3.3-4
+    - freetype       2.8.1-1 -> 2.8.1-3
+    - freetype-gl    2017-10-9-82fb152a74f01b1483ac80d15935fbdfaf3ed836 -> 2018-02-25
+    - freexl         1.0.4 -> 1.0.4-1
+    - g2o            20170730_git-2 -> 20170730_git-3
+    - gdal           2.2.2 -> 2.2.2-1
+    - gdcm2          2.8.3 -> 2.8.4
+    - geogram        1.4.9-1 -> 1.6.0-1
+    - gflags         2.2.1-1 -> 2.2.1-3
+    - glib           2.52.3-1 -> 2.52.3-2
+    - glslang        3a21c880500eac21cdf79bef5b80f970a55ac6af-1 -> 2018-03-02
+    - grpc           1.8.3 -> 1.10.0
+    - gsl            2.4-2 -> 2.4-3
+    - gsl-lite       0.26.0 -> 0.28.0
+    - gtest          1.8.0-6 -> 1.8.0-7
+    - halide         release_2017_10_30 -> release_2018_02_15
+    - harfbuzz       1.7.4 -> 1.7.6
+    - ilmbase        2.2.0-1 -> 2.2.1-1
+    - jansson        2.11 -> 2.11-2
+    - jsoncpp        1.8.1-1 -> 1.8.4
+    - jsonnet        2017-09-02-11cf9fa9f2fe8acbb14b096316006082564ca580 -> 2018-03-17
+    - leptonica      1.74.4-2 -> 1.74.4-3
+    - libgeotiff     1.4.2-2 -> 1.4.2-3
+    - libiconv       1.15-1 -> 1.15-2
+    - libjpeg-turbo  1.5.3 -> 1.5.3-1
+    - libmysql       5.7.17-3 -> 8.0.4-2
+    - libpng         1.6.34-2 -> 1.6.34-3
+    - librtmp        2.4 -> 2.4-1
+    - libsndfile     1.0.29-6830c42-2 -> 1.0.29-6830c42-3
+    - libsodium      1.0.15-1 -> 1.0.16-1
+    - libspatialite  4.3.0a-1 -> 4.3.0a-2
+    - libssh         0.7.5-1 -> 0.7.5-4
+    - libuv          1.18.0 -> 1.19.2
+    - libwebp        0.6.1-1 -> 0.6.1-2
+    - libwebsockets  2.4.1 -> 2.4.2
+    - libxml2        2.9.4-2 -> 2.9.4-4
+    - libzip         1.4.0 -> rel-1-5-0
+    - live555        2018.01.29 -> 2018.02.28
+    - lodepng        2017-09-01-8a0f16afe74a6a-1 -> 2018-02-25
+    - luasocket      2017.05.25.5a17f79b0301f0a1b4c7f1c73388757a7e2ed309 -> 2018-02-25
+    - lz4            1.8.1.2 -> 1.8.1.2-1
+    - magnum-extras  2018.02-1 -> 2018.02-2
+    - matio          1.5.10-2 -> 1.5.12
+    - mman           git-f5ff813 -> git-f5ff813-2
+    - ms-gsl         20171204-9d65e74400976b3509833f49b16d401600c7317d -> 2018-03-17
+    - msinttypes     2017-06-26-f9e7c5758ed9e3b9f4b2394de1881c704dd79de0 -> 2018-02-25
+    - msmpi          8.1 -> 9.0
+    - nlohmann-json  3.1.0 -> 3.1.2
+    - nuklear        2017-06-15-5c7194c2fe2c68c1a8212712c0b4b6195382d27d -> 2018-03-17
+    - ogre           1.10.9-2 -> 1.10.11
+    - opencv         3.4.0-3 -> 3.4.1
+    - openexr        2.2.0-1 -> 2.2.1-1
+    - openimageio    1.7.15-2 -> 1.8.9
+    - openjpeg       2.2.0-1 -> 2.3.0
+    - pcl            1.8.1-9 -> 1.8.1-10
+    - picosha2       2017-09-01-c5ff159b6 -> 2018-02-25
+    - piex           2017-09-01-473434f2dd974978b-1 -> 2018-03-13
+    - protobuf       3.5.1 -> 3.5.1-1
+    - qt5-modularscripts 1 -> 2
+    - re2            2017-12-01-1 -> 2018-03-17
+    - readosm        1.1.0 -> 1.1.0-1
+    - realsense2     2.10.0 -> 2.10.1
+    - rocksdb        2017-06-28-18c63af6ef2b9f014c404b88488ae52e6fead03c-1 -> 5.11.3
+    - rs-core-lib    commit-1ed2dadbda3977b13e5e83cc1f3eeca76b36ebe5 -> 2018-03-17
+    - rttr           0.9.5-1 -> 0.9.5-2
+    - scintilla      3.7.6 -> 4.0.3
+    - sdl2           2.0.7-4 -> 2.0.8-1
+    - snappy         1.1.7-1 -> 1.1.7-2
+    - spatialite-tools 4.3.0 -> 4.3.0-1
+    - spdlog         0.14.0-1 -> 0.16.3
+    - spirv-tools    2017.1-dev-7e2d26c77b606b21af839b37fd21381c4a669f23-1 -> 2018.1-1
+    - sqlite3        3.21.0 -> 3.21.0-1
+    - stb            20170724-9d9f75e -> 2018-03-02
+    - thrift         20172805-72ca60debae1d9fb35d9f0085118873669006d7f-2 -> 2018-03-17
+    - tiny-dnn       2017-10-09-dd906fed8c8aff8dc837657c42f9d55f8b793b0e -> 2018-03-13
+    - tinyxml2       6.0.0 -> 6.0.0-2
+    - torch-th       20180131-89ede3ba90c906a8ec6b9a0f4bef188ba5bb2fd8-1 -> 20180131-89ede3ba90c906a8ec6b9a0f4bef188ba5bb2fd8-2
+    - unicorn        2017-12-06-bc34c36eaeca0f4fc672015d24ce3efbcc81d6e4-1 -> 2018-03-13
+    - unicorn-lib    commit-3ffa7fe69a1d0c37fb52a4af61380c5fd84fa5aa -> 2018-03-13
+    - uwebsockets    0.14.4-1 -> 0.14.6-1
+    - wt             3.3.7-4 -> 4.0.2
+    - wtl            9.1 -> 10.0
+    - wxwidgets      3.1.0-1 -> 3.1.1
+    - yaml-cpp       0.5.4-rc-2 -> 0.6.2
+    - zeromq         20170908-18498f620f0f6d4076981ea16eb5760fe4d28dc2-2 -> 2018-03-17
+    - zziplib        0.13.62-1 -> 0.13.69
+  * Use TLS 1.2 for downloads.
+  * Tools used by `vcpkg` (`git`, `cmake` etc) are now specified in `scripts\vcpkgTools.xml`.
+    - Add `7zip`
+  * Fix various bugs regarding feature packages. Affects `install`, `upgrade` and `export`.
+  * `vcpkg hash`: Fix bug with whitespace in path.
+  * Visual Studio detection now properly identifies legacy versions (VS2015).
+  * Windows SDK detection no longer fails if certain registry keys are not in their expected places.
+  * Dependency qualifiers now support `!` for inversion.
+  * Add `VCPKG_DEFAULT_VS_PATH` environment variable.
+    - `vcpkg` automatically chooses the latest stable version of Visual Studio to use.
+    - You can now select the desired VS with the `VCPKG_DEFAULT_VS_PATH` environment variable
+    - You can also select the behavior by specifiying `VCPKG_VISUAL_STUDIO_PATH` in the triplet file (and this takes precedence over the new environment variable)
+
+-- vcpkg team <vcpkg@microsoft.com>  MON, 19 Mar 2018 19:00:00 -0800
+
+
 vcpkg (0.0.105)
 --------------
   * Add ports:

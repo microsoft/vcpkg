@@ -29,6 +29,9 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/readme.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/tinyxml2)
+file(COPY
+  ${SOURCE_PATH}/readme.md
+  ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
+  DESTINATION ${CURRENT_PACKAGES_DIR}/share/tinyxml2
+)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/tinyxml2/readme.md ${CURRENT_PACKAGES_DIR}/share/tinyxml2/copyright)

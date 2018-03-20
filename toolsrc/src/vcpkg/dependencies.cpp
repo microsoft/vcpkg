@@ -223,7 +223,7 @@ namespace vcpkg::Dependencies
     }
 
     ExportPlanAction::ExportPlanAction(const PackageSpec& spec, const RequestType& request_type)
-        : spec(spec), plan_type(ExportPlanType::PORT_AVAILABLE_BUT_NOT_BUILT), request_type(request_type)
+        : spec(spec), plan_type(ExportPlanType::NOT_BUILT), request_type(request_type)
     {
     }
 
@@ -349,23 +349,16 @@ namespace vcpkg::Dependencies
         return Graphs::topological_sort(specs, RemoveAdjacencyProvider{status_db, installed_ports, specs_as_set});
     }
 
-    std::vector<ExportPlanAction> create_export_plan(const PortFileProvider& port_file_provider,
-                                                     const VcpkgPaths& paths,
-                                                     const std::vector<PackageSpec>& specs,
+    std::vector<ExportPlanAction> create_export_plan(const std::vector<PackageSpec>& specs,
                                                      const StatusParagraphs& status_db)
     {
         struct ExportAdjacencyProvider final : Graphs::AdjacencyProvider<PackageSpec, ExportPlanAction>
         {
-            const VcpkgPaths& paths;
             const StatusParagraphs& status_db;
-            const PortFileProvider& provider;
             const std::unordered_set<PackageSpec>& specs_as_set;
 
-            ExportAdjacencyProvider(const VcpkgPaths& p,
-                                    const StatusParagraphs& s,
-                                    const PortFileProvider& prov,
-                                    const std::unordered_set<PackageSpec>& specs_as_set)
-                : paths(p), status_db(s), provider(prov), specs_as_set(specs_as_set)
+            ExportAdjacencyProvider(const StatusParagraphs& s, const std::unordered_set<PackageSpec>& specs_as_set)
+                : status_db(s), specs_as_set(specs_as_set)
             {
             }
 
@@ -394,8 +387,8 @@ namespace vcpkg::Dependencies
         };
 
         const std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
-        std::vector<ExportPlanAction> toposort = Graphs::topological_sort(
-            specs, ExportAdjacencyProvider{paths, status_db, port_file_provider, specs_as_set});
+        std::vector<ExportPlanAction> toposort =
+            Graphs::topological_sort(specs, ExportAdjacencyProvider{status_db, specs_as_set});
         return toposort;
     }
 
@@ -537,7 +530,7 @@ namespace vcpkg::Dependencies
             for (auto&& depend : remove_edges_edges)
             {
                 auto& depend_cluster = graph.get(depend.spec());
-                graph_plan.remove_graph.add_edge({&cluster}, {&depend_cluster});
+                if (&depend_cluster != &cluster) graph_plan.remove_graph.add_edge({&cluster}, {&depend_cluster});
                 mark_minus(depend_cluster, graph, graph_plan);
             }
         }

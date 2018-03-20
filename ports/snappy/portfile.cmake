@@ -12,7 +12,8 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DSNAPPY_BUILD_TESTS=OFF)
+        -DSNAPPY_BUILD_TESTS=OFF
+        -DCMAKE_DEBUG_POSTFIX=d)
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Snappy)

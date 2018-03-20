@@ -1,4 +1,4 @@
 Source: c-ares
-Version: 1.13.0-1
+Version: cares-1_14_0
 Description: A C library for asynchronous DNS requests
 Build-Depends:

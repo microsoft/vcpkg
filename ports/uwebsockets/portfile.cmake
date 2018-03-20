@@ -1,12 +1,12 @@
 include(vcpkg_common_functions)
-set(VERSION 0.14.4)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/uwebsockets-${VERSION})
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/uWebSockets/uWebSockets/archive/v${VERSION}.zip"
-    FILENAME "uwebsockets-v${VERSION}.zip"
-    SHA512 cc395437790a51a729582897111304e7d6c72574d59c55929a686b6a8a489eb3ea3ea7f037aeda9083243317ed885bd710a708d3dd635220387d3253e0712b10
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO uWebSockets/uWebSockets
+    REF v0.14.6
+    SHA512 cac3be6fcd49796590f19bde89e4195cecf9097248f7550ef6942573b59cd132f136ec026203e8524270440a7ae18c49472eb2166028b5c68d4a4cc457af4748
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 

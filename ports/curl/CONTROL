@@ -1,5 +1,5 @@
 Source: curl
-Version: 7.58.0-4
+Version: 7_59_0-2
 Build-Depends: zlib
 Description: A library for transferring data with URLs
 Default-Features: ssl
@@ -12,7 +12,7 @@ Feature: non-http
 Description: Enables protocols beyond HTTP/HTTPS/HTTP2
 
 Feature: http2
-Build-Depends: nghttp2, ssl
+Build-Depends: nghttp2, curl[ssl]
 Description: HTTP2 support
 
 Feature: ssl

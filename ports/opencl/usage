@@ -1,0 +1,7 @@
+The package opencl is compatible with built-in CMake targets:
+
+    find_package(OpenCL REQUIRED)
+    target_link_libraries(main PRIVATE ${OpenCL_LIBRARIES})
+    target_include_directories(main PRIVATE ${OpenCL_INCLUDE_DIRS})
+
+You will also need to install an appropriate driver package from your CPU/GPU manufacturer.

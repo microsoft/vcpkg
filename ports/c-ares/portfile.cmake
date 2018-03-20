@@ -1,10 +1,14 @@
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "c-ares does not currently support UWP.")
+endif()
+
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO c-ares/c-ares
-    REF cares-1_13_0
-    SHA512 0ee8a45772c64701d0e860cd84925cef8938a319b3004e02e86af900cbd9e07609940bc474a46bf4252b9b7e3815e1951de8f0eb16718074ec1d39c2105a2abe
+    REF cares-1_14_0
+    SHA512 3ae7938648aec2fae651667bef02139f7eef2e7cd425cc310b7e3d56f409646f6170d37a3c9269aa654bfb1ced0a52b89fe49be9023edf8ff57efd0efaf59052
     HEAD_REF master
 )
 

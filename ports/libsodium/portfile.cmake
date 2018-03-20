@@ -34,6 +34,10 @@ ELSE()
     SET(BUILD_ARCH ${VCPKG_TARGET_ARCHITECTURE})
 ENDIF()
 
+file(INSTALL
+    ${SOURCE_PATH}/src/libsodium/include/sodium.h
+    DESTINATION ${CURRENT_PACKAGES_DIR}/include
+)
 
 file(GLOB LIBSODIUM_HEADERS "${SOURCE_PATH}/src/libsodium/include/sodium/*.h")
 file(INSTALL

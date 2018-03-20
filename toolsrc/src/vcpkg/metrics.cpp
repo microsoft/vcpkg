@@ -92,7 +92,7 @@ namespace vcpkg::Metrics
             {
                 encoded.append("\\\"");
             }
-            else if (ch < 0x20 || ch >= 0x80)
+            else if (ch < 0x20 || static_cast<unsigned char>(ch) >= 0x80)
             {
                 // Note: this treats incoming Strings as Latin-1
                 static constexpr const char HEX[16] = {

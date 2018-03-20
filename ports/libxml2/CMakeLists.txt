@@ -5,8 +5,10 @@ option(INSTALL_HEADERS "Install public header files" ON)
 
 find_package(ZLIB REQUIRED)
 find_package(LibLZMA REQUIRED)
-find_library(ICONV NAMES libiconv)
-find_library(ICONV_CHARSET NAMES libcharset)
+if(WIN32)
+    find_library(ICONV NAMES libiconv)
+    find_library(ICONV_CHARSET NAMES libcharset)
+endif()
 
 set(SOURCES
     buf.c
@@ -79,17 +81,24 @@ target_include_directories(libxml2 PRIVATE ${CMAKE_CURRENT_BINARY_DIR} win32/vc1
 target_link_libraries(libxml2 PRIVATE
     ZLIB::ZLIB
     ${LIBLZMA_LIBRARIES}
-    ${ICONV}
-    ${ICONV_CHARSET}
-    wsock32.lib
-    ws2_32.lib
 )
+if(WIN32)
+    target_link_libraries(libxml2 PRIVATE
+        ${ICONV}
+        ${ICONV_CHARSET}
+        wsock32.lib
+        ws2_32.lib
+    )
+    target_compile_definitions(libxml2 PRIVATE
+        -DHAVE_WIN32_THREADS
+    )
+endif()
+
 target_compile_definitions(libxml2 PRIVATE
     -D_CRT_SECURE_NO_DEPRECATE
     -D_CRT_NONSTDC_NO_DEPRECATE
     -D_REENTRANT
     -DNOLIBTOOL
-    -DHAVE_WIN32_THREADS
     -DHAVE_ZLIB_H
     -DHAVE_LZMA_H
 )
