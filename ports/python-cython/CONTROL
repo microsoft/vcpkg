@@ -1,4 +1,4 @@
 Source: python-cython
 Version: 0.28.1
 Description: Cython is a programming language that makes writing C extensions for the Python language as easy as Python itself
-Build-Depends: python3[executable]
+Build-Depends: python-setuptools

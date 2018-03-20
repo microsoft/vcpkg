@@ -1,4 +1,4 @@
 Source: python-setuptools
 Version: 39.0.1
 Description: Install setuptools and pip support to python
-Build-Depends: python3[executable], python3[_socket], python3[select], python3[_ctypes], python3[pyexpat], python3[unicodedata]
+Build-Depends: python3[executable], python3[_socket], python3[select], python3[_ctypes], python3[pyexpat], python3[unicodedata], python3[_ssl]

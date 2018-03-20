@@ -8,8 +8,15 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+message(STATUS "Installing...")
 vcpkg_execute_required_process(
-    COMMAND ${PYTHON_EXECUTABLE} setup.py install
+    COMMAND ${PYTHON_EXECUTABLE} -m pip install .
+        -t ${CURRENT_PACKAGES_DIR}/python/Lib/site-packages
+        --ignore-installed --compile
+        --log ${CURRENT_BUILDTREES_DIR}/install-${TARGET_TRIPLET}-detailed.log
     WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME install-numpy-${TARGET_TRIPLET}
+    LOGNAME install-${TARGET_TRIPLET}
 )
+message(STATUS "Installing... done")
+
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)

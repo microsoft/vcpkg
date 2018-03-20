@@ -11,6 +11,10 @@ Description: build python module "_ctypes"
 Feature: _socket
 Description: build python module "_socket"
 
+Feature: _ssl
+Description: build python module "_ssl"
+Build-Depends: openssl
+
 Feature: pyexpat
 Description: build python module "pyexpat"
 
