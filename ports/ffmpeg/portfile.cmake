@@ -48,28 +48,10 @@ else()
     set(OPTIONS "${OPTIONS} --disable-openssl")
 endif()
 
-if("ffmpeg" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-ffmpeg")
+if("tools" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --disable-network") # FIXME: prevent compiliing problems for winsock
 else()
-    set(OPTIONS "${OPTIONS} --disable-ffmpeg")
-endif()
-
-if("ffplay" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-ffplay")
-else()
-    set(OPTIONS "${OPTIONS} --disable-ffplay")
-endif()
-
-if("ffserver" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-ffserver")
-else()
-    set(OPTIONS "${OPTIONS} --disable-ffserver")
-endif()
-
-if("ffprobe" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-ffprobe")
-else()
-    set(OPTIONS "${OPTIONS} --disable-ffprobe")
+    set(OPTIONS "${OPTIONS} --disable-ffmpeg --disable-ffprobe")
 endif()
 
 if("zlib" IN_LIST FEATURES)
@@ -126,6 +108,16 @@ if("openjpeg" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libopenjpeg")
 else()
     set(OPTIONS "${OPTIONS} --disable-libopenjpeg")
+endif()
+
+if("fdk-aac" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libfdk-aac")
+    set(FFMPEG_ENABLE_NONFREE ON)
+endif()
+
+if("opus" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libopus")
+    set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include/opus;$ENV{INCLUDE}")
 endif()
 
 if(FFMPEG_ENABLE_GPL)

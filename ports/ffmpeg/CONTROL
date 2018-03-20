@@ -2,22 +2,10 @@ Source: ffmpeg
 Version: 3.3.3-4
 Description: a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.
   FFmpeg is the leading multimedia framework, able to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created. It supports the most obscure ancient formats up to the cutting edge. No matter if they were designed by some standards committee, the community or a corporation. It is also highly portable: FFmpeg compiles, runs, and passes our testing infrastructure FATE across Linux, Mac OS X, Microsoft Windows, the BSDs, Solaris, etc. under a wide variety of build environments, machine architectures, and configurations.
-
-Feature: ffmpeg
-Description: ffmpeg appplication support in ffmpeg
-
-Feature: ffserver
-Description: ffserver appplication support in ffmpeg
-
-Feature: ffplay
-Description: ffplay appplication support in ffmpeg
-
-Feature: ffprobe
-Description: ffprobe appplication support in ffmpeg
   
 Feature: openssl
 Build-Depends: openssl
-Description: openssl support in ffmpeg
+Description: enable openssl, needed for https support
 
 Feature: bzip2
 Build-Depends: bzip2
@@ -62,3 +50,14 @@ Description: opencl support in ffmpeg
 Feature: openjpeg
 Build-Depends: openjpeg
 Description: openjpeg support in ffmpeg
+
+Feature: fdk-aac
+Build-Depends: fdk-aac
+Description: enable AAC de/encoding via libfdk-aac
+
+Feature: opus
+Build-Depends: opus
+Description: enable Opus de/encoding via libopus
+
+Feature: tools
+Description: build ffmpeg and ffprobe program
