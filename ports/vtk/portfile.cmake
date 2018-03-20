@@ -15,15 +15,15 @@ vcpkg_from_github(
 # Options:
 
 if ("qt" IN_LIST FEATURES)
-    set(VTK_WITH_QT                      ON )
+    set(VTK_WITH_QT                      ON)
 else()
-    set(VTK_WITH_QT                      OFF )
+    set(VTK_WITH_QT                      OFF)
 endif()
 
 if ("mpi" IN_LIST FEATURES)
-    set(VTK_WITH_MPI                     ON )
+    set(VTK_WITH_MPI                     ON)
 else()
-    set(VTK_WITH_MPI                     OFF )
+    set(VTK_WITH_MPI                     OFF)
 endif()
 
 if ("python" IN_LIST FEATURES)
@@ -39,9 +39,9 @@ else()
 endif()
 
 if("libharu" IN_LIST FEATURES)
-    set(VTK_WITH_LIBHARU                  ON)
+    set(VTK_WITH_LIBHARU                 ON)
 else()
-    set(VTK_WITH_LIBHARU                  OFF)
+    set(VTK_WITH_LIBHARU                 OFF)
 endif()
 
 set(VTK_WITH_ALL_MODULES                 OFF) # IMPORTANT: if ON make sure `qt5`, `mpi`, `python3`, `ffmpeg`, `gdal`, `fontconfig`,
@@ -103,6 +103,9 @@ if(VTK_WITH_PYTHON)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_WRAP_PYTHON=ON
         -DVTK_PYTHON_VERSION=3
+        -DVTK_INSTALL_PYTHON_MODULE_DIR=${CURRENT_PACKAGES_DIR}/python/Lib/site-packages
+        # If python executable is not detected, vtk will not install python modules
+        -DPYTHON_EXECUTABLE=${CURRENT_INSTALLED_DIR}/python/python.exe
     )
 endif()
 

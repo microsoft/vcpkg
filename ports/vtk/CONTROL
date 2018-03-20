@@ -17,7 +17,7 @@ Build-Depends: msmpi, hdf5[parallel]
 
 Feature: python
 Description: Python functionality for VTK
-Build-Depends: python3
+Build-Depends: python3[executable]
 
 Feature: libharu
 Description: PDF libharu functionality for VTK
