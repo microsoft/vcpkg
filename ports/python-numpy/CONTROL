@@ -1,0 +1,4 @@
+Source: python-numpy
+Version: 1.14.2
+Description: NumPy is the fundamental package for scientific computing with Python.
+Build-Depends: python-setuptools

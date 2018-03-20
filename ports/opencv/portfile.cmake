@@ -314,7 +314,7 @@ vcpkg_configure_cmake(
         -DWITH_WEBP=${WITH_WEBP}
         -DWITH_ZLIB=${WITH_ZLIB}
         # Python
-        "-DPYTHON3_PACKAGES_PATH=${CURRENT_PACKAGES_DIR}/python/"
+        "-DPYTHON3_PACKAGES_PATH=${CURRENT_PACKAGES_DIR}/python/Lib/site-packages"
     OPTIONS_DEBUG
         -DINSTALL_HEADERS=OFF
         -DINSTALL_OTHER=OFF

@@ -62,7 +62,27 @@ if ("executable" IN_LIST FEATURES)
     vcpkg_build_msbuild(
         PROJECT_PATH ${SOURCE_PATH}/PCBuild/python.vcxproj
         PLATFORM ${BUILD_ARCH})
+    vcpkg_build_msbuild(
+        PROJECT_PATH ${SOURCE_PATH}/PCBuild/pythonw.vcxproj
+        PLATFORM ${BUILD_ARCH})
 endif()
+
+set(BUILD_MODULE OFF)
+macro(add_python_module MNAME)
+    set(BUILD_MODULE ON)
+    if ("${MNAME}" IN_LIST FEATURES)
+        vcpkg_build_msbuild(
+            PROJECT_PATH ${SOURCE_PATH}/PCBuild/${MNAME}.vcxproj
+            PLATFORM ${BUILD_ARCH})
+    endif()
+endmacro()
+
+add_python_module(_ctypes)
+add_python_module(_socket)
+add_python_module(pyexpat)
+add_python_module(select)
+add_python_module(unicodedata)
+add_python_module(winsound)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     vcpkg_apply_patches(
@@ -75,17 +95,34 @@ endif()
 file(GLOB HEADERS ${SOURCE_PATH}/Include/*.h)
 file(COPY ${HEADERS} ${SOURCE_PATH}/PC/pyconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR})
 
-file(COPY ${SOURCE_PATH}/Lib DESTINATION ${CURRENT_PACKAGES_DIR}/share/python${PYTHON_VERSION_MAJOR})
+file(GLOB LIBS ${SOURCE_PATH}/PCBuild/${OUT_DIR}/*.lib)
+file(GLOB DEBUG_LIBS ${SOURCE_PATH}/PCBuild/${OUT_DIR}/*_d.lib)
+list(REMOVE_ITEM LIBS ${DEBUG_LIBS})
+file(COPY ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+file(COPY ${DEBUG_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 
-file(COPY ${SOURCE_PATH}/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-file(COPY ${SOURCE_PATH}/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}_d.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+# only python3 is supported in vcpkg right now, so the directory doesn't split python2 and python3
+# setup python directories
+file(COPY ${SOURCE_PATH}/Lib DESTINATION ${CURRENT_PACKAGES_DIR}/python)
+file(COPY ${HEADERS} ${SOURCE_PATH}/PC/pyconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/python/include)
+file(COPY ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/python/libs)
+
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(COPY ${SOURCE_PATH}/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(COPY ${SOURCE_PATH}/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}_d.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
+
 if ("executable" IN_LIST FEATURES)
-    file(COPY ${SOURCE_PATH}/PCBuild/${OUT_DIR}/python.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/python)
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/python)
+    file(COPY ${SOURCE_PATH}/PCBuild/${OUT_DIR}/python.exe DESTINATION ${CURRENT_PACKAGES_DIR}/python)
+    file(COPY ${SOURCE_PATH}/PCBuild/${OUT_DIR}/pythonw.exe DESTINATION ${CURRENT_PACKAGES_DIR}/python)
+    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/python)
+endif()
+
+if (BUILD_MODULE)
+    file(GLOB PYDS ${SOURCE_PATH}/PCBuild/${OUT_DIR}/*.pyd)
+    file(GLOB DEBUG_PYDS ${SOURCE_PATH}/PCBuild/${OUT_DIR}/*_d.pyd)
+    list(REMOVE_ITEM PYDS ${DEBUG_PYDS})
+    file(COPY ${PYDS} DESTINATION ${CURRENT_PACKAGES_DIR}/python/DLLs)
 endif()
 
 # Handle copyright

@@ -61,7 +61,7 @@ namespace vcpkg::Commands::Env
                 if (fs.is_directory(tool_dir)) path_vars.push_back(tool_dir.u8string());
             }
         }
-        if (add_python) extra_env.emplace("PYTHONPATH", (paths.installed / triplet.to_string() / "python").u8string());
+        if (add_python) extra_env.emplace("PYTHONPATH", (paths.installed / triplet.to_string() / "python" / "Lib" / "site-packages").u8string());
         if (path_vars.size() > 0) extra_env.emplace("PATH", Strings::join(";", path_vars));
 
         if (env_cmd.empty())

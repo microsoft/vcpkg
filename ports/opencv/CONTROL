@@ -78,5 +78,5 @@ Build-Depends: eigen3
 Description: Eigen support for opencv
 
 Feature: python
-Build-Depends: python3[executable]
+Build-Depends: python-numpy
 Description: Python3 support for opencv

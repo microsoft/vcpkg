@@ -3,4 +3,22 @@ Version: 3.6.4
 Description: The Python programming language as an embeddable library
 
 Feature: executable
-Description: Build exectuable for `PythonInterop` in CMake
+Description: Build executables for `PythonInterop` in CMake
+
+Feature: _ctypes
+Description: build python module "_ctypes"
+
+Feature: _socket
+Description: build python module "_socket"
+
+Feature: pyexpat
+Description: build python module "pyexpat"
+
+Feature: select
+Description: build python module "select"
+
+Feature: unicodedata
+Description: build python module "unicodedata"
+
+Feature: winsound
+Description: build python module "winsound"
