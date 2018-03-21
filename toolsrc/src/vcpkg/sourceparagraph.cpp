@@ -158,6 +158,16 @@ namespace vcpkg
         return std::move(control_file);
     }
 
+    Optional<const FeatureParagraph&> SourceControlFile::find_feature(const std::string& featurename) const
+    {
+        auto it = Util::find_if(feature_paragraphs,
+                                [&](const std::unique_ptr<FeatureParagraph>& p) { return p->name == featurename; });
+        if (it != feature_paragraphs.end())
+            return **it;
+        else
+            return nullopt;
+    }
+
     Dependency Dependency::parse_dependency(std::string name, std::string qualifier)
     {
         Dependency dep;

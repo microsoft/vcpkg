@@ -668,39 +668,42 @@ namespace vcpkg::Install
         return nullptr;
     }
 
+    std::string InstallSummary::xunit_result(const PackageSpec& spec, Chrono::ElapsedTime time, BuildResult code)
+    {
+        std::string inner_block;
+        const char* result_string = "";
+        switch (code)
+        {
+            case BuildResult::POST_BUILD_CHECKS_FAILED:
+            case BuildResult::FILE_CONFLICTS:
+            case BuildResult::BUILD_FAILED:
+                result_string = "Fail";
+                inner_block = Strings::format("<failure><message><![CDATA[%s]]></message></failure>", to_string(code));
+                break;
+            case BuildResult::EXCLUDED:
+            case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES:
+                result_string = "Skip";
+                inner_block = Strings::format("<reason><![CDATA[%s]]></reason>", to_string(code));
+                break;
+            case BuildResult::SUCCEEDED: result_string = "Pass"; break;
+            default: Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+
+        return Strings::format(R"(<test name="%s" method="%s" time="%lld" result="%s">%s</test>)"
+                               "\n",
+                               spec,
+                               spec,
+                               time.as<std::chrono::seconds>().count(),
+                               result_string,
+                               inner_block);
+    }
+
     std::string InstallSummary::xunit_results() const
     {
         std::string xunit_doc;
         for (auto&& result : results)
         {
-            std::string inner_block;
-            const char* result_string = "";
-            switch (result.build_result.code)
-            {
-                case BuildResult::POST_BUILD_CHECKS_FAILED:
-                case BuildResult::FILE_CONFLICTS:
-                case BuildResult::BUILD_FAILED:
-                    result_string = "Fail";
-                    inner_block = Strings::format("<failure><message><![CDATA[%s]]></message></failure>",
-                                                  to_string(result.build_result.code));
-                    break;
-                case BuildResult::EXCLUDED:
-                case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES:
-                    result_string = "Skip";
-                    inner_block =
-                        Strings::format("<reason><![CDATA[%s]]></reason>", to_string(result.build_result.code));
-                    break;
-                case BuildResult::SUCCEEDED: result_string = "Pass"; break;
-                default: Checks::exit_fail(VCPKG_LINE_INFO);
-            }
-
-            xunit_doc += Strings::format(R"(<test name="%s" method="%s" time="%lld" result="%s">%s</test>)"
-                                         "\n",
-                                         result.spec,
-                                         result.spec,
-                                         result.timing.as<std::chrono::seconds>().count(),
-                                         result_string,
-                                         inner_block);
+            xunit_doc += xunit_result(result.spec, result.timing, result.build_result.code);
         }
         return xunit_doc;
     }

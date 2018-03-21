@@ -144,12 +144,14 @@ namespace vcpkg::Dependencies
     InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
                                          const SourceControlFile& scf,
                                          const std::set<std::string>& features,
-                                         const RequestType& request_type)
+                                         const RequestType& request_type,
+                                         std::vector<PackageSpec>&& dependencies)
         : spec(spec)
         , source_control_file(scf)
         , plan_type(InstallPlanType::BUILD_AND_INSTALL)
         , request_type(request_type)
         , feature_list(features)
+        , computed_dependencies(std::move(dependencies))
     {
     }
 
@@ -162,6 +164,7 @@ namespace vcpkg::Dependencies
         , plan_type(InstallPlanType::ALREADY_INSTALLED)
         , request_type(request_type)
         , feature_list(features)
+        , computed_dependencies(installed_package.get()->dependencies())
     {
     }
 
@@ -683,11 +686,17 @@ namespace vcpkg::Dependencies
                 // If it will be transiently uninstalled, we need to issue a full installation command
                 auto pscf = p_cluster->source_control_file.value_or_exit(VCPKG_LINE_INFO);
                 Checks::check_exit(VCPKG_LINE_INFO, pscf != nullptr);
+
+                auto dep_specs = Util::fmap(m_graph_plan->install_graph.adjacency_list(p_cluster),
+                                            [](ClusterPtr const& p) { return p->spec; });
+                Util::sort_unique_erase(dep_specs);
+
                 plan.emplace_back(InstallPlanAction{
                     p_cluster->spec,
                     *pscf,
                     p_cluster->to_install_features,
                     p_cluster->request_type,
+                    std::move(dep_specs),
                 });
             }
             else

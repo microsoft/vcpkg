@@ -593,6 +593,87 @@ namespace UnitTest1
             features_check(&install_plan[0], "a", {"core"}, Triplet::X64_WINDOWS);
         }
 
+        TEST_METHOD(install_plan_action_dependencies)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+
+            // Add a port "a" which depends on the core of "b", which was already
+            // installed explicitly
+            PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+            auto spec_c = spec_map.emplace("c");
+            auto spec_b = spec_map.emplace("b", "c");
+            spec_map.emplace("a", "b");
+
+            // Install "a" (without explicit feature specification)
+            auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
+            auto install_plan = Dependencies::create_feature_install_plan(
+                spec_map.map,
+                FullPackageSpec::to_feature_specs({install_specs.value_or_exit(VCPKG_LINE_INFO)}),
+                StatusParagraphs(std::move(status_paragraphs)));
+
+            Assert::IsTrue(install_plan.size() == 3);
+            features_check(&install_plan[0], "c", {"core"}, Triplet::X64_WINDOWS);
+
+            features_check(&install_plan[1], "b", {"core"}, Triplet::X64_WINDOWS);
+            Assert::IsTrue(install_plan[1].install_action.get()->computed_dependencies ==
+                           std::vector<PackageSpec>{spec_c});
+
+            features_check(&install_plan[2], "a", {"core"}, Triplet::X64_WINDOWS);
+            Assert::IsTrue(install_plan[2].install_action.get()->computed_dependencies ==
+                           std::vector<PackageSpec>{spec_b});
+        }
+
+        TEST_METHOD(install_plan_action_dependencies_2)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+
+            // Add a port "a" which depends on the core of "b", which was already
+            // installed explicitly
+            PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+            auto spec_c = spec_map.emplace("c");
+            auto spec_b = spec_map.emplace("b", "c");
+            spec_map.emplace("a", "c, b");
+
+            // Install "a" (without explicit feature specification)
+            auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
+            auto install_plan = Dependencies::create_feature_install_plan(
+                spec_map.map,
+                FullPackageSpec::to_feature_specs({install_specs.value_or_exit(VCPKG_LINE_INFO)}),
+                StatusParagraphs(std::move(status_paragraphs)));
+
+            Assert::IsTrue(install_plan.size() == 3);
+            features_check(&install_plan[0], "c", {"core"}, Triplet::X64_WINDOWS);
+
+            features_check(&install_plan[1], "b", {"core"}, Triplet::X64_WINDOWS);
+            Assert::IsTrue(install_plan[1].install_action.get()->computed_dependencies ==
+                           std::vector<PackageSpec>{spec_c});
+
+            features_check(&install_plan[2], "a", {"core"}, Triplet::X64_WINDOWS);
+            Assert::IsTrue(install_plan[2].install_action.get()->computed_dependencies ==
+                           std::vector<PackageSpec>{spec_b, spec_c});
+        }
+
+        TEST_METHOD(install_plan_action_dependencies_3)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+
+            // Add a port "a" which depends on the core of "b", which was already
+            // installed explicitly
+            PackageSpecMap spec_map(Triplet::X64_WINDOWS);
+            spec_map.emplace("a", "", {{"0", ""}, {"1", "a[0]"}}, {"1"});
+
+            // Install "a" (without explicit feature specification)
+            auto install_specs = FullPackageSpec::from_string("a", Triplet::X64_WINDOWS);
+            auto install_plan = Dependencies::create_feature_install_plan(
+                spec_map.map,
+                FullPackageSpec::to_feature_specs({install_specs.value_or_exit(VCPKG_LINE_INFO)}),
+                StatusParagraphs(std::move(status_paragraphs)));
+
+            Assert::IsTrue(install_plan.size() == 1);
+            features_check(&install_plan[0], "a", {"1", "0", "core"}, Triplet::X64_WINDOWS);
+            Assert::IsTrue(install_plan[0].install_action.get()->computed_dependencies == std::vector<PackageSpec>{});
+        }
+
         TEST_METHOD(upgrade_with_default_features_1)
         {
             std::vector<std::unique_ptr<StatusParagraph>> pghs;
@@ -619,7 +700,6 @@ namespace UnitTest1
             Assert::IsTrue(plan[0].remove_action.has_value());
 
             Assert::AreEqual("a", plan[1].spec().name().c_str());
-            Assert::IsTrue(plan[1].install_action.has_value());
             features_check(&plan[1], "a", {"core", "0"}, Triplet::X86_WINDOWS);
         }
 
@@ -651,11 +731,9 @@ namespace UnitTest1
             Assert::IsTrue(plan[0].remove_action.has_value());
 
             Assert::AreEqual("b", plan[1].spec().name().c_str());
-            Assert::IsTrue(plan[1].install_action.has_value());
             features_check(&plan[1], "b", {"b0", "core"}, Triplet::X64_WINDOWS);
 
             Assert::AreEqual("a", plan[2].spec().name().c_str());
-            Assert::IsTrue(plan[2].install_action.has_value());
             features_check(&plan[2], "a", {"core"}, Triplet::X64_WINDOWS);
         }
 
