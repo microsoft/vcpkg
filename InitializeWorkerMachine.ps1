@@ -36,7 +36,7 @@ Recipe "C:/Program Files/Microsoft MPI/Bin/mpiexec.exe" {
     Write-Host "Installing MSMPI..."
     $msmpiSetupFilename = "$scriptsDir\msmpisetup.exe"
     Recipe $msmpiSetupFilename {
-        vcpkgDownloadFile "https://download.microsoft.com/download/D/B/B/DBB64BA1-7B51-43DB-8BF1-D1FB45EACF7A/MSMpiSetup.exe" $msmpiSetupFilename
+        vcpkgDownloadFile "https://download.microsoft.com/download/2/E/C/2EC96D7F-687B-4613-80F6-E10F670A2D97/msmpisetup.exe" $msmpiSetupFilename
     }
     $ec = vcpkgInvokeCommand "$msmpiSetupFilename" "-force -unattend"
     checkWarn ($ec -eq 0) "Installing MSMPI... failed."
