@@ -8,11 +8,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_find_acquire_program(PYTHON3)
-
-get_filename_component(PYPATH ${PYTHON3} PATH)
-set(ENV{PATH} "$ENV{PATH};${PYPATH}")
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
