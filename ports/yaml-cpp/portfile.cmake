@@ -17,7 +17,12 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
+endif()
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/yaml-cpp)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/yaml-cpp)
+endif()
 
 # Adjust paths and remove hardcoded ones from the config files
 file(READ ${CURRENT_PACKAGES_DIR}/share/yaml-cpp/yaml-cpp-config.cmake YAML_CONFIG)
