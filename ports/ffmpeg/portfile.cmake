@@ -11,13 +11,19 @@ vcpkg_apply_patches(
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/create-lib-libraries.patch
         ${CMAKE_CURRENT_LIST_DIR}/detect-openssl.patch
-        ${CMAKE_CURRENT_LIST_DIR}/configure_librtmp.patch
-        ${CMAKE_CURRENT_LIST_DIR}/configure_x265.patch
-        ${CMAKE_CURRENT_LIST_DIR}/configure_opencv.patch
-        ${CMAKE_CURRENT_LIST_DIR}/configure_opengl.patch
-		${CMAKE_CURRENT_LIST_DIR}/configure_opengl_enc.patch
-        ${CMAKE_CURRENT_LIST_DIR}/configure_openjpeg.patch
-        ${CMAKE_CURRENT_LIST_DIR}/configure_libssh.patch
+        ${CMAKE_CURRENT_LIST_DIR}/detect_librtmp.patch
+        ${CMAKE_CURRENT_LIST_DIR}/detect_opencv.patch
+        ${CMAKE_CURRENT_LIST_DIR}/detect_opengl.patch
+        ${CMAKE_CURRENT_LIST_DIR}/detect_libssh.patch
+		${CMAKE_CURRENT_LIST_DIR}/detect-x265.patch
+        ${CMAKE_CURRENT_LIST_DIR}/detect-freetype.patch
+		${CMAKE_CURRENT_LIST_DIR}/detect-fontconfig.patch
+        ${CMAKE_CURRENT_LIST_DIR}/detect-opus.patch
+        ${CMAKE_CURRENT_LIST_DIR}/detect-openjpeg.patch #TODO: version is disdetected
+        ${CMAKE_CURRENT_LIST_DIR}/detect-lame.patch
+        ${CMAKE_CURRENT_LIST_DIR}/detect-libvpx.patch
+        ${CMAKE_CURRENT_LIST_DIR}/detect-webp.patch
+        #${CMAKE_CURRENT_LIST_DIR}/fix-openjpeg-version.patch		
 )
 
 vcpkg_find_acquire_program(YASM)
@@ -37,10 +43,14 @@ set(_csc_PROJECT_PATH ffmpeg)
 
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
 
-set(OPTIONS "--enable-asm --enable-yasm --disable-doc --enable-debug")
+set(OPTIONS "--enable-asm --enable-yasm --disable-doc")
 set(OPTIONS "${OPTIONS} --enable-runtime-cpudetect")
 set(FFMPEG_ENABLE_GPL OFF)
 set(FFMPEG_ENABLE_NONFREE OFF)
+
+if("nonfree" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-gpl --enable-nonfree")
+endif()
 
 if("openssl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-openssl")
@@ -63,6 +73,7 @@ endif()
 if("x264" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libx264")
 	set(FFMPEG_ENABLE_GPL ON)
+	set(FFMPEG_ENABLE_NONFREE ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libx264")
 endif()
@@ -70,8 +81,21 @@ endif()
 if("x265" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libx265")
 	set(FFMPEG_ENABLE_GPL ON)
+	set(FFMPEG_ENABLE_NONFREE ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libx265")
+endif()
+
+if("lame" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libmp3lame")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libmp3lame")
+endif()
+
+if("vorbis" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libvorbis")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libvorbis")
 endif()
 
 if("librtmp" IN_LIST FEATURES)
@@ -79,6 +103,19 @@ if("librtmp" IN_LIST FEATURES)
 else()
     set(OPTIONS "${OPTIONS} --disable-librtmp")
 endif()
+
+if("freetype" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libfreetype")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libfreetype")
+endif()
+
+if("fontconfig" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libfontconfig")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libfontconfig")
+endif()
+
 
 if("libssh" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libssh")
@@ -98,6 +135,13 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libopencv")
 endif()
 
+
+if("vorbis" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libvorbis")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libvorbis")	
+endif()
+
 if("opencl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-opencl")
 else()
@@ -113,11 +157,27 @@ endif()
 if("fdk-aac" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libfdk-aac")
     set(FFMPEG_ENABLE_NONFREE ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-libfdk-aac")	
 endif()
 
 if("opus" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libopus")
     set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include/opus;$ENV{INCLUDE}")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libopus")		
+endif()
+
+if("vpx" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libvpx")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libvpx")			
+endif()
+
+if("webp" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libwebp")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libwebp")				
 endif()
 
 if(FFMPEG_ENABLE_GPL)
@@ -146,7 +206,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     endif()
 endif()
 
-set(OPTIONS_DEBUG "") # Note: --disable-optimizations can't be used due to http://ffmpeg.org/pipermail/libav-user/2013-March/003945.html
+set(OPTIONS_DEBUG "--enable-debug") # Note: --disable-optimizations can't be used due to http://ffmpeg.org/pipermail/libav-user/2013-March/003945.html
 set(OPTIONS_RELEASE "")
 
 set(OPTIONS "${OPTIONS} --extra-cflags=-DHAVE_UNISTD_H=0")
