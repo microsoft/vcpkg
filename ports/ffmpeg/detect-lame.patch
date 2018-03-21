@@ -1,11 +1,9 @@
 --- a/configure
 +++ b/configure
-@@ -3853,7 +3853,8 @@
-             -lavicap32)           echo vfw32.lib user32.lib ;;
-             -lx264)               echo libx264.lib ;;
+@@ -3856,6 +3856,7 @@
              -lx265)               echo libx265.lib ;;
--            -lopenjpeg)           echo openjp2.lib ;;
-+            -lopenjpeg)           echo openjp2.lib ;;
+             -lfontconfig)         echo fontconfig.lib ;;
+             -lopenjpeg)           echo openjp2.lib ;;
 +            -lmp3lame)            echo libmp3lame.lib ;;
              -l*)                  echo ${flag#-l}.lib ;;
              -LARGEADDRESSAWARE)   echo $flag ;;

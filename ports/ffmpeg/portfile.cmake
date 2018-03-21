@@ -12,12 +12,12 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/create-lib-libraries.patch
         ${CMAKE_CURRENT_LIST_DIR}/detect-openssl.patch
         ${CMAKE_CURRENT_LIST_DIR}/detect_librtmp.patch
+        ${CMAKE_CURRENT_LIST_DIR}/detect-fontconfig.patch
         ${CMAKE_CURRENT_LIST_DIR}/detect_opencv.patch
         ${CMAKE_CURRENT_LIST_DIR}/detect_opengl.patch
         ${CMAKE_CURRENT_LIST_DIR}/detect_libssh.patch
 		${CMAKE_CURRENT_LIST_DIR}/detect-x265.patch
         ${CMAKE_CURRENT_LIST_DIR}/detect-freetype.patch
-		${CMAKE_CURRENT_LIST_DIR}/detect-fontconfig.patch
         ${CMAKE_CURRENT_LIST_DIR}/detect-opus.patch
         ${CMAKE_CURRENT_LIST_DIR}/detect-openjpeg.patch #TODO: version is disdetected
         ${CMAKE_CURRENT_LIST_DIR}/detect-lame.patch

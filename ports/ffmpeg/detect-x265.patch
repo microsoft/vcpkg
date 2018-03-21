@@ -2,24 +2,25 @@ diff --git a/configure b/configure
 index 759e0f4..c3ed49a 100644
 --- a/configure
 +++ b/configure
-@@ -3851,7 +3851,8 @@
-             -lz)                  echo zlib.lib ;;
+@@ -3853,6 +3853,7 @@
              -lavifil32)           echo vfw32.lib ;;
              -lavicap32)           echo vfw32.lib user32.lib ;;
--            -lx264)               echo libx264.lib ;;
-+            -lx264)               echo libx264.lib ;;
+             -lx264)               echo libx264.lib ;;
 +            -lx265)               echo libx265.lib ;;
+             -lfontconfig)         echo fontconfig.lib ;;
              -l*)                  echo ${flag#-l}.lib ;;
              -LARGEADDRESSAWARE)   echo $flag ;;
-             -L*)                  echo -libpath:${flag#-L} ;;
-@@ -5871,7 +5872,9 @@
+@@ -5892,9 +5893,9 @@
                                 die "ERROR: libx264 must be installed and version must be >= 0.118."; } &&
                               { check_cpp_condition x264.h "X264_MPEG2" &&
                                 enable libx262; }
 -enabled libx265           && require_pkg_config x265 x265.h x265_api_get &&
+-                             { check_cpp_condition x265.h "X265_BUILD >= 68" ||
+-                               die "ERROR: libx265 version must be >= 68."; }
 +enabled libx265           && { use_pkg_config x265 x265.h x265_api_get ||
 +                               { require libx265 x265.h x265_api_get -lx265 &&
 +                                 warn "using libx265 without pkg-config"; } } &&
-                              { check_cpp_condition x265.h "X265_BUILD >= 68" ||
-                                die "ERROR: libx265 version must be >= 68."; }
  enabled libxavs           && require libxavs "stdint.h xavs.h" xavs_encoder_encode -lxavs
+ enabled libxvid           && require libxvid xvid.h xvid_global -lxvidcore
+ enabled libzimg           && require_pkg_config "zimg >= 2.3.0" zimg.h zimg_get_api_version
+

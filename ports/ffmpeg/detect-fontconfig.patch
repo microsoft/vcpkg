@@ -2,13 +2,21 @@ diff --git a/configure b/configure
 index 4eee567..8d4e998 100644
 --- a/configure
 +++ b/configure
-@@ -5784,7 +5784,8 @@
+@@ -3849,6 +3849,7 @@
+             -lavifil32)           echo vfw32.lib ;;
+             -lavicap32)           echo vfw32.lib user32.lib ;;
+             -lx264)               echo libx264.lib ;;
++            -lfontconfig)         echo fontconfig.lib ;;
+             -l*)                  echo ${flag#-l}.lib ;;
+             -LARGEADDRESSAWARE)   echo $flag ;;
+             -L*)                  echo -libpath:${flag#-L} ;;
+@@ -5784,7 +5785,8 @@
  flite_libs="-lflite_cmu_time_awb -lflite_cmu_us_awb -lflite_cmu_us_kal -lflite_cmu_us_kal16 -lflite_cmu_us_rms -lflite_cmu_us_slt -lflite_usenglish -lflite_cmulex -lflite"
  enabled libflite          && require libflite "flite/flite.h" flite_init $flite_libs
  enabled fontconfig        && enable libfontconfig
 -enabled libfontconfig     && require_pkg_config fontconfig "fontconfig/fontconfig.h" FcInit
-+enabled libfontconfig     && { check_header "fontconfig/fontconfig.h" ||
-+                                 warn "using libfdk without pkg-config"; }
++enabled libfontconfig     && { require libfontconfig "fontconfig/fontconfig.h" FcInit -lfontconfig ||
++                               warn "using libfontconfig without pkg-config"; }
  enabled libfreetype       && require_libfreetype
  enabled libfribidi        && require_pkg_config fribidi fribidi.h fribidi_version_info
  enabled libgme            && require  libgme gme/gme.h gme_new_emu -lgme -lstdc++
