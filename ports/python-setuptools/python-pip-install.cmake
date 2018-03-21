@@ -7,6 +7,17 @@ function(python_pip_install)
     if(NOT DEFINED _ppi_SOURCE_PATH)
         message(FATAL_ERROR "SOURCE_PATH is a required argument to python-pip-install.")
     endif()
+    
+    # prepend semicolon
+    if(DEFINED VCPKG_PYTHON_INCLUDE_DIRS)
+        set(VCPKG_PYTHON_INCLUDE_DIRS "\;" ${VCPKG_PYTHON_INCLUDE_DIRS})
+    endif()
+    if(DEFINED VCPKG_PYTHON_DEBUG_LIBS)
+        set(VCPKG_PYTHON_DEBUG_LIBS "\;" ${VCPKG_PYTHON_DEBUG_LIBS})
+    endif()
+    if(DEFINED VCPKG_PYTHON_LIBS)
+        set(VCPKG_PYTHON_LIBS "\;" ${VCPKG_PYTHON_LIBS})
+    endif()
 
     message(STATUS "Installing python module for Debug..")
     configure_file(${CURRENT_INSTALLED_DIR}/share/python-setuptools/distutils-dbg.cfg.in

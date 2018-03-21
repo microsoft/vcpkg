@@ -1,3 +1,3 @@
 [build_ext]
-include-dirs=${CURRENT_INSTALLED_DIR}/python/include;${CURRENT_INSTALLED_DIR}/include
-library-dirs=${CURRENT_INSTALLED_DIR}/python/libs;${CURRENT_INSTALLED_DIR}/libs
+include-dirs=${CURRENT_INSTALLED_DIR}/python/include;${CURRENT_INSTALLED_DIR}/include${VCPKG_PYTHON_INCLUDE_DIRS}
+library-dirs=${CURRENT_INSTALLED_DIR}/python/libs;${CURRENT_INSTALLED_DIR}/libs${VCPKG_PYTHON_LIBS}
