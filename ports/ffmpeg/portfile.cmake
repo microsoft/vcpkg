@@ -149,7 +149,7 @@ else()
 endif()
 
 if("openjpeg" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-libopenjpeg")
+#    set(OPTIONS "${OPTIONS} --enable-libopenjpeg")
 else()
     set(OPTIONS "${OPTIONS} --disable-libopenjpeg")
 endif()
