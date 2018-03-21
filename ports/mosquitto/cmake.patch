@@ -1,0 +1,27 @@
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -4,8 +4,8 @@
+ if (${WITH_THREADING} STREQUAL ON)
+        add_definitions("-DWITH_THREADING")
+        if (WIN32)
+-               set (PTHREAD_LIBRARIES C:\\pthreads\\Pre-built.2\\lib\\x86\\pthreadVC2.lib)
+-               set (PTHREAD_INCLUDE_DIR C:\\pthreads\\Pre-built.2\\include)
++               set (PTHREAD_LIBRARIES ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/lib/pthreadsVC2.lib)
++               set (PTHREAD_INCLUDE_DIR ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/include)
+        else (WIN32)
+                find_library(LIBPTHREAD pthread)
+                if (LIBPTHREAD)
+				
+--- a/man/CMakeLists.txt
++++ b/man/CMakeLists.txt
+@@ -1,5 +1,5 @@
+-install(FILES mosquitto_passwd.1 mosquitto_pub.1 mosquitto_sub.1 DESTINATION ${MANDIR}/man1)
+-install(FILES libmosquitto.3 DESTINATION ${MANDIR}/man3)
+-install(FILES mosquitto.conf.5 DESTINATION ${MANDIR}/man5)
+-install(FILES mosquitto-tls.7 mqtt.7 DESTINATION ${MANDIR}/man7)
+-install(FILES mosquitto.8 DESTINATION ${MANDIR}/man8)
++#install(FILES mosquitto_passwd.1 mosquitto_pub.1 mosquitto_sub.1 DESTINATION ${MANDIR}/man1)
++#install(FILES libmosquitto.3 DESTINATION ${MANDIR}/man3)
++#install(FILES mosquitto.conf.5 DESTINATION ${MANDIR}/man5)
++#install(FILES mosquitto-tls.7 mqtt.7 DESTINATION ${MANDIR}/man7)
++#install(FILES mosquitto.8 DESTINATION ${MANDIR}/man8)

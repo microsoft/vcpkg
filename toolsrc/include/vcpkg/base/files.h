@@ -36,6 +36,7 @@ namespace vcpkg::Files
         virtual void write_lines(const fs::path& file_path, const std::vector<std::string>& lines) = 0;
         virtual void write_contents(const fs::path& file_path, const std::string& data, std::error_code& ec) = 0;
         virtual void rename(const fs::path& oldpath, const fs::path& newpath) = 0;
+        virtual void rename(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec) = 0;
         virtual bool remove(const fs::path& path) = 0;
         virtual bool remove(const fs::path& path, std::error_code& ec) = 0;
         virtual std::uintmax_t remove_all(const fs::path& path, std::error_code& ec) = 0;

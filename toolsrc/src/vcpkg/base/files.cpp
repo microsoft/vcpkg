@@ -108,6 +108,10 @@ namespace vcpkg::Files
             output.close();
         }
 
+        virtual void rename(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec) override
+        {
+            fs::stdfs::rename(oldpath, newpath, ec);
+        }
         virtual void rename(const fs::path& oldpath, const fs::path& newpath) override
         {
             fs::stdfs::rename(oldpath, newpath);

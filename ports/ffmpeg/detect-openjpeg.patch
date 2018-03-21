@@ -1,0 +1,12 @@
+--- a/configure
++++ b/configure
+@@ -3852,7 +3852,8 @@
+             -lavifil32)           echo vfw32.lib ;;
+             -lavicap32)           echo vfw32.lib user32.lib ;;
+             -lx264)               echo libx264.lib ;;
+-            -lx265)               echo libx265.lib ;;
++            -lx265)               echo libx265.lib ;;
++            -lopenjpeg)           echo openjp2.lib ;;
+             -l*)                  echo ${flag#-l}.lib ;;
+             -LARGEADDRESSAWARE)   echo $flag ;;
+             -L*)                  echo -libpath:${flag#-L} ;;

@@ -1,0 +1,50 @@
+diff --git a/Makefile.MSVC b/Makefile.MSVC
+index 6538911..d965953 100644
+--- a/Makefile.MSVC
++++ b/Makefile.MSVC
+@@ -194,22 +194,26 @@ LIB_OPTS = /nologo $(MACHINE)
+ #	 - try to get the Intel compiler demonstration code!
+ #	   ICL produces faster code.
+ 
++!	IF "$(BUILD_TYPE)" == "DEBUG"
+ # debugging options
+-# CC_OPTS = /nologo /Zi /Ge /GZ
+-# LN_OPTS = /nologo /debug:full /debugtype:cv /fixed:no
++
++CC_OPTS = /nologo /Zi /Ge /GZ /MTd
++LN_OPTS = /nologo /debug:full /debugtype:cv /fixed:no
+ 
+ # profiling options
+ # CC_OPTS = /nologo /Zi /O2b2gity /G6As /DNDEBUG
+ # LN_OPTS = /nologo /debug:full /debugtype:cv /fixed:no /profile
+ 
++!	ELSE
+ # release options
++
+ !	IF "$(MSVCVER)" == "Win64"
+ CC_OPTS = /nologo /DWin64 /O2b2ity /GAy /Gs1024 /Zp8 /GL /GS- /Zi
+ !	ELSEIF "$(MSVCVER)" == "8.0"
+ CC_OPTS = /nologo /O2 /Wp64 /Oi /GL /arch:SSE /fp:precise
+ !	ELSEif "$(CPU)"=="P6"
+ CC_OPTS = /nologo /O2 /Ob2 /GAy /Gs1024 /Zp8 /Zi
+-!else
++!	ELSE
+ CC_OPTS = /nologo /O2 /Ob2 /GAy /Gs1024 /QIfdiv /QI0f /YX
+ !	ENDIF
+ 
+@@ -231,11 +235,11 @@ CC_OPTS = $(CC_OPTS) /W$(WARN)
+ CC_OPTS = $(CC_OPTS) /DFLOAT8=float /DREAL_IS_FLOAT=1
+ !	ENDIF
+ 
+-# temporary remove NDEBUG, see configure.in
+-#CC_OPTS = $(CC_OPTS) /DNDEBUG /MT
+-CC_OPTS = $(CC_OPTS) /MT
++CC_OPTS = $(CC_OPTS) /DNDEBUG /MT
++
++LN_OPTS = /nologo
++!	ENDIF
+ 
+-LN_OPTS = /nologo /pdb:none
+ LN_DLL = /nologo /DLL
+ 
+ CC_OUT = /Fo

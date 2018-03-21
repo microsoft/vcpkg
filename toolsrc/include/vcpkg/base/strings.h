@@ -46,7 +46,9 @@ namespace vcpkg::Strings
 
     bool case_insensitive_ascii_equals(const CStringView left, const CStringView right);
 
-    std::string ascii_to_lowercase(std::string input);
+    std::string ascii_to_lowercase(std::string s);
+
+    std::string ascii_to_uppercase(std::string s);
 
     bool case_insensitive_ascii_starts_with(const std::string& s, const std::string& pattern);
 

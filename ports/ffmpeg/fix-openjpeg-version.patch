@@ -1,0 +1,44 @@
+diff --git a/libavcodec/libopenjpegdec.c b/libavcodec/libopenjpegdec.c
+index ce4e2b0..45c4cb7 100644
+--- a/libavcodec/libopenjpegdec.c
++++ b/libavcodec/libopenjpegdec.c
+@@ -48,8 +48,15 @@
+ #  define OPENJPEG_MAJOR_VERSION 2
+ #  define OPJ(x) OPJ_##x
+ #else
+-#  define OPENJPEG_MAJOR_VERSION 1
+-#  define OPJ(x) x
++#  if HAVE_OPJ_CONFIG_H
++#    include <opj_config.h>
++#    define OPENJPEG_MAJOR_VERSION OPJ_VERSION_MAJOR
++#    define OPJ(x) OPJ_##x
++#    define HAVE_OPENJPEG_2_1_OPENJPEG_H 1
++#  else
++#    define OPENJPEG_MAJOR_VERSION 1
++#    define OPJ(x) x
++#  endif
+ #endif
+
+ #define JP2_SIG_TYPE    0x6A502020
+diff --git a/libavcodec/libopenjpegenc.c b/libavcodec/libopenjpegenc.c
+index 4a12729..c44ee16 100644
+--- a/libavcodec/libopenjpegenc.c
++++ b/libavcodec/libopenjpegenc.c
+@@ -46,8 +46,15 @@
+ #  define OPENJPEG_MAJOR_VERSION 2
+ #  define OPJ(x) OPJ_##x
+ #else
+-#  define OPENJPEG_MAJOR_VERSION 1
+-#  define OPJ(x) x
++#  if HAVE_OPJ_CONFIG_H
++#    include <opj_config.h>
++#    define OPENJPEG_MAJOR_VERSION OPJ_VERSION_MAJOR
++#    define OPJ(x) OPJ_##x
++#    define HAVE_OPENJPEG_2_1_OPENJPEG_H 1
++#  else
++#    define OPENJPEG_MAJOR_VERSION 1
++#    define OPJ(x) x
++#  endif
+ #endif
+
+ typedef struct LibOpenJPEGContext {

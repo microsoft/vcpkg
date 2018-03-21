@@ -204,4 +204,21 @@ namespace vcpkg::Build
     };
 
     BuildInfo read_build_info(const Files::Filesystem& fs, const fs::path& filepath);
+
+    struct AbiEntry
+    {
+        std::string key;
+        std::string value;
+    };
+
+    struct AbiTagAndFile
+    {
+        std::string tag;
+        fs::path tag_file;
+    };
+
+    Optional<AbiTagAndFile> compute_abi_tag(const VcpkgPaths& paths,
+                                            const BuildPackageConfig& config,
+                                            const PreBuildInfo& pre_build_info,
+                                            Span<const AbiEntry> dependency_abis);
 }
