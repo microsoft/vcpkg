@@ -87,6 +87,12 @@ function(vcpkg_build_msbuild)
         /m
     )
 
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        # Disable LTCG for static libraries because this setting introduces ABI incompatibility between minor compiler versions
+        # TODO: Add a way for the user to override this if they want to opt-in to incompatibility
+        list(APPEND _csc_OPTIONS /p:WholeProgramOptimization=false)
+    endif()
+
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
