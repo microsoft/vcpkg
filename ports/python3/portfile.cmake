@@ -69,8 +69,8 @@ endif()
 
 set(BUILD_MODULE OFF)
 macro(add_python_module MNAME)
-    set(BUILD_MODULE ON)
     if ("${MNAME}" IN_LIST FEATURES)
+        set(BUILD_MODULE ON)
         vcpkg_build_msbuild(
             PROJECT_PATH ${SOURCE_PATH}/PCBuild/${MNAME}.vcxproj
             PLATFORM ${BUILD_ARCH})

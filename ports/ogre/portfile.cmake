@@ -107,6 +107,12 @@ file(GLOB MAIN_DBG ${CURRENT_PACKAGES_DIR}/debug/lib/OgreMain_d.lib ${CURRENT_PA
 file(COPY ${MAIN_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
 file(REMOVE ${MAIN_REL} ${MAIN_DBG})
 
+if("python" IN_LIST FEATURES)
+    file(GLOB PYTHON_MODULES ${CURRENT_PACKAGES_DIR}/lib/python*/dist-packages/*)
+    file(COPY ${PYTHON_MODULES} DESTINATION ${CURRENT_PACKAGES_DIR}/python/Lib/site-packages)
+    file(REMOVE ${PYTHON_MODULES})
+endif()
+
 # Ogre installs custom cmake config files which don't follow the normal pattern.
 # This normally makes them completely incompatible with multi-config generators, but with some effort it can be done.
 file(READ "${CURRENT_PACKAGES_DIR}/share/ogre/OGREConfig.cmake" _contents)
