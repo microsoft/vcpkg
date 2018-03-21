@@ -1,0 +1,12 @@
+--- a/configure
++++ b/configure
+@@ -3854,7 +3854,8 @@
+             -lx264)               echo libx264.lib ;;
+             -lx265)               echo libx265.lib ;;
+             -lopenjpeg)           echo openjp2.lib ;;
+-            -lmp3lame)            echo libmp3lame.lib ;;
++            -lmp3lame)            echo libmp3lame.lib ;;
++            -lvpx)                echo vpxmd.lib ;;
+             -l*)                  echo ${flag#-l}.lib ;;
+             -LARGEADDRESSAWARE)   echo $flag ;;
+             -L*)                  echo -libpath:${flag#-L} ;;

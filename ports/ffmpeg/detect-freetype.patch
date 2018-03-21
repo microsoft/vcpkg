@@ -1,0 +1,23 @@
+diff --git a/configure b/configure
+index a45c32f..4eee567 100644
+--- a/configure
++++ b/configure
+@@ -1353,10 +1353,14 @@
+ require_libfreetype(){
+     log require_libfreetype "$@"
+     pkg="freetype2"
+-    check_cmd $pkg_config --exists --print-errors $pkg \
+-      || die "ERROR: $pkg not found"
+-    pkg_cflags=$($pkg_config --cflags $pkg_config_flags $pkg)
+-    pkg_libs=$($pkg_config --libs $pkg_config_flags $pkg)
++    if check_cmd $pkg_config --exists --print-errors $pkg ; then
++        pkg_cflags=$($pkg_config --cflags $pkg_config_flags $pkg)
++        pkg_libs=$($pkg_config --libs $pkg_config_flags $pkg)
++    else
++        warn "using $pkg without pkg-config"
++        pkg_cflags="-I${includedir}/freetype"
++        pkg_libs="-L${libdir} -lfreetype"
++    fi
+     {
+         echo "#include <ft2build.h>"
+         echo "#include FT_FREETYPE_H"
