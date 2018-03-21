@@ -13,7 +13,7 @@ Description: build python module "_socket"
 
 Feature: _ssl
 Description: build python module "_ssl"
-Build-Depends: openssl
+#Build-Depends: openssl
 
 Feature: pyexpat
 Description: build python module "pyexpat"

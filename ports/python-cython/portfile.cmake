@@ -1,5 +1,4 @@
 include(vcpkg_common_functions)
-set(PYTHON_EXECUTABLE ${CURRENT_INSTALLED_DIR}/python/python.exe)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cython/cython
@@ -8,13 +7,5 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-message(STATUS "Installing...")
-# use -t will not install tools under /Scripts
-vcpkg_execute_required_process(
-    COMMAND ${PYTHON_EXECUTABLE} -m pip install . -t ${CURRENT_PACKAGES_DIR}/python/Lib/site-packages --ignore-installed --compile
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME install-${TARGET_TRIPLET}
-)
-message(STATUS "Installing... done")
-
-set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+include(${CURRENT_INSTALLED_DIR}/share/python-setuptools/python-pip-install.cmake)
+python_pip_install(SOURCE_PATH ${SOURCE_PATH})
