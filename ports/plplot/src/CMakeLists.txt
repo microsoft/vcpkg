@@ -181,11 +181,7 @@ include_directories(
 add_library(plplot ${plplot_LIB_SRCS})
 add_dependencies(plplot plhershey-unicode.h_built)
 
-# target_include_directories(plplot PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
-#                                          $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/lib/qsastime>
-#                                          $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>
-#                                          $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>
-#                                          $<INSTALL_INTERFACE:include/>)
+target_include_directories(plplot INTERFACE $<INSTALL_INTERFACE:include/>)
 
 # Deal with external libraries.
 set(LIB_INSTALL_RPATH ${LIB_DIR})
