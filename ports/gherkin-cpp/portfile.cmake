@@ -15,8 +15,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Ambrou/gherkin-cpp
-    REF f006966697749c687d18b3c5f711b946db176d3c
-    SHA512 8023b64243100f4bc8628fc52b7c187b61bd1f7135b14de6ce08d06546a7a8e43d81e856bf53080f2864c4f3e5c9fb7b35ad383c47d9b64a2fe8b5c42c1db136
+    REF 7486a6869a5f58ef9eae48187cdd09706031fad2
+    SHA512 bf5d068da2c9ef0bd08803ad8dd6a19bf84ca0765f9eeb8a83b7f12c1c5b854bdaa010d9843835124ca8a5eee3a877a41e30ced829165b7f07fb70520d53bae5
     HEAD_REF master
 )
 
