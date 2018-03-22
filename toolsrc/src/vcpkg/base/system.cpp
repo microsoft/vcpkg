@@ -285,14 +285,14 @@ namespace vcpkg::System
         fflush(nullptr);
 
         // Basically we are wrapping it in quotes
-        const std::string& actual_cmd_line = Strings::format(R"###("%s")###", cmd_line);
 #if defined(_WIN32)
+        const std::string& actual_cmd_line = Strings::format(R"###("%s")###", cmd_line);
         Debug::println("_wsystem(%s)", actual_cmd_line);
         const int exit_code = _wsystem(Strings::to_utf16(actual_cmd_line).c_str());
         Debug::println("_wsystem() returned %d", exit_code);
 #else
-        Debug::println("_system(%s)", actual_cmd_line);
-        const int exit_code = system(actual_cmd_line.c_str());
+        Debug::println("_system(%s)", cmd_line);
+        const int exit_code = system(cmd_line.c_str());
         Debug::println("_system() returned %d", exit_code);
 #endif
         return exit_code;

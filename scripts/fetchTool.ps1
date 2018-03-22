@@ -35,14 +35,14 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
     $isArchive = vcpkgHasProperty -object $toolData -propertyName "archiveRelativePath"
     if ($isArchive)
     {
-        $downloadPath = "$downloadsDir\$($toolData.archiveRelativePath)"
+        $downloadPath = "$downloadsDir\$(@($toolData.archiveRelativePath)[0])"
     }
     else
     {
-        $downloadPath = "$downloadsDir\$($toolData.exeRelativePath)"
+        $downloadPath = "$downloadsDir\$(@($toolData.exeRelativePath)[0])"
     }
 
-    $url = $toolData.url
+    [String]$url = @($toolData.url)[0]
     if (!(Test-Path $downloadPath))
     {
         Write-Host "Downloading $tool..."
@@ -50,7 +50,7 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
         Write-Host "Downloading $tool has completed successfully."
     }
 
-    $expectedDownloadedFileHash = $toolData.sha256
+    $expectedDownloadedFileHash = @($toolData.sha256)[0]
     $downloadedFileHash = vcpkgGetSHA256 $downloadPath
     vcpkgCheckEqualFileHash -filePath $downloadPath -expectedHash $expectedDownloadedFileHash -actualHash $downloadedFileHash
 
