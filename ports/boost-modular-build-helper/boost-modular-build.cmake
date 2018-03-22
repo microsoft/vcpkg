@@ -79,7 +79,7 @@ function(boost_modular_build)
 
     configure_file(${_bm_DIR}/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
 
-    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         vcpkg_configure_cmake(
             SOURCE_PATH ${CURRENT_INSTALLED_DIR}/share/boost-build
             PREFER_NINJA

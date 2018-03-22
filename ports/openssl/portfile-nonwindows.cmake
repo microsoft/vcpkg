@@ -4,6 +4,9 @@ if(CMAKE_HOST_WIN32)
     set(MAKE ${MSYS_ROOT}/usr/bin/make.exe)
 else()
     find_program(MAKE make)
+    if(NOT MAKE)
+        message(FATAL_ERROR "Could not find make. Please install it through your package manager.")
+    endif()
 endif()
 
 vcpkg_configure_cmake(

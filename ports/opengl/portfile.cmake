@@ -16,7 +16,7 @@ else()
 endif()
 
 if (NOT EXISTS "${LIBGLFILEPATH}")
-    message(FATAL_ERROR "Cannot find Windows ${WINDOWS_SDK} SDK. File does not exist: ${LIBFILEPATH}")
+    message(FATAL_ERROR "Cannot find Windows ${WINDOWS_SDK} SDK. File does not exist: ${LIBGLFILEPATH}")
 endif()
 
 if (NOT EXISTS "${LIBGLUFILEPATH}")

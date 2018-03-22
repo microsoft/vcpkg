@@ -533,7 +533,15 @@ namespace vcpkg::System
 
     static const fs::path& get_program_files()
     {
-        static const fs::path PATH = System::get_environment_variable("PROGRAMFILES").value_or_exit(VCPKG_LINE_INFO);
+        static const fs::path PATH = []() -> fs::path {
+            auto value = System::get_environment_variable("PROGRAMFILES");
+            if (auto v = value.get())
+            {
+                return *v;
+            }
+            Checks::exit_with_message(VCPKG_LINE_INFO, "Could not find PROGRAMFILES environment variable");
+        }();
+
         return PATH;
     }
 
@@ -543,7 +551,7 @@ namespace vcpkg::System
             auto value = System::get_environment_variable("ProgramFiles(x86)");
             if (auto v = value.get())
             {
-                return std::move(*v);
+                return *v;
             }
             return get_program_files();
         }();
@@ -556,7 +564,7 @@ namespace vcpkg::System
             auto value = System::get_environment_variable("ProgramW6432");
             if (auto v = value.get())
             {
-                return std::move(*v);
+                return *v;
             }
             return get_program_files();
         }();

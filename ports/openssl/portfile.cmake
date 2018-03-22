@@ -8,11 +8,9 @@ set(OPENSSL_VERSION 1.0.2n)
 set(MASTER_COPY_SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-${OPENSSL_VERSION})
 
 vcpkg_find_acquire_program(PERL)
-vcpkg_find_acquire_program(NASM)
 
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-set(ENV{PATH} "${NASM_EXE_PATH};$ENV{PATH};${PERL_EXE_PATH}")
+set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH}")
 
 vcpkg_download_distfile(OPENSSL_SOURCE_ARCHIVE
     URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.0.2/openssl-${OPENSSL_VERSION}.tar.gz"
@@ -33,6 +31,10 @@ if(VCPKG_CMAKE_SYSTEM_NAME)
     include(${CMAKE_CURRENT_LIST_DIR}/portfile-nonwindows.cmake)
     return()
 endif()
+
+vcpkg_find_acquire_program(NASM)
+get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
+set(ENV{PATH} "${NASM_EXE_PATH};$ENV{PATH}")
 
 vcpkg_find_acquire_program(JOM)
 
