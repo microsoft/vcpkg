@@ -32,6 +32,7 @@ vcpkg_configure_cmake(
         -DENABLE_wxwidgets=${ENABLE_wxwidgets}
         -DPLD_wxpng=${ENABLE_wxwidgets}
         -DPLD_wxwidgets=${ENABLE_wxwidgets}
+        -DENABLE_DYNDRIVERS=OFF
         -DDATA_DIR=${CURRENT_PACKAGES_DIR}/share/plplot
     OPTIONS_DEBUG
         -DDRV_DIR=${CURRENT_PACKAGES_DIR}/debug/bin
