@@ -28,16 +28,15 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DENABLE_wxwidgets=ON
         -DPL_DOUBLE=ON
         -DENABLE_wxwidgets=${ENABLE_wxwidgets}
         -DPLD_wxpng=${ENABLE_wxwidgets}
         -DPLD_wxwidgets=${ENABLE_wxwidgets}
+        -DDATA_DIR=${CURRENT_PACKAGES_DIR}/share/plplot
     OPTIONS_DEBUG
         -DDRV_DIR=${CURRENT_PACKAGES_DIR}/debug/bin
     OPTIONS_RELEASE
         -DDRV_DIR=${CURRENT_PACKAGES_DIR}/bin
-        #-DPL_HAVE_QHULL=ON
 )
 
 vcpkg_install_cmake()
@@ -47,58 +46,31 @@ file(REMOVE
     ${CURRENT_PACKAGES_DIR}/debug/bin/pltek.exe
     ${CURRENT_PACKAGES_DIR}/bin/pltek.exe
 )
-# Move entire cmake config dir
-file(RENAME
-    ${CURRENT_PACKAGES_DIR}/lib/cmake/plplot
-    ${CURRENT_PACKAGES_DIR}/share/plplot/
-)
-# Move entire cmake config dir
-file(RENAME
-    ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/plplot
-    ${CURRENT_PACKAGES_DIR}/debug/share/plplot/
-)
 
 # Remove unwanted and duplicate directories
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    #${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/debug/lib/cmake
-    ${CURRENT_PACKAGES_DIR}/lib/cmake
+        ${CURRENT_PACKAGES_DIR}/debug/include
 )
 
-#file(COPY
-#    ${CURRENT_PACKAGES_DIR}/lib
-#    DESTINATION
-#        ${CURRENT_PACKAGES_DIR}/bin
-#    FILES_MATCHING PATTERN
-#        "*.dll"
-#)
-
-#file(COPY
-#    ${CURRENT_PACKAGES_DIR}/debug/lib/
-#    DESTINATION
-#        ${CURRENT_PACKAGES_DIR}/debug/bin
-#    FILES_MATCHING PATTERN
-#        "*.dll"
-#)
-
-#file(GLOB_RECURSE misplaced_release_dlls
-#    ${CURRENT_PACKAGES_DIR}/lib/*.dll
-#)
-
-#file(GLOB_RECURSE misplaced_debug_dlls
-#    ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll
-#)
-
-#file(REMOVE
-#    ${misplaced_release_dlls}
-#    ${misplaced_debug_dlls}
-#)
-
-#file(REMOVE_RECURSE
-#    ${CURRENT_PACKAGES_DIR}/lib
-#    ${CURRENT_PACKAGES_DIR}/debug/lib
-#)
+# Copy CMake Package Config scripts
+file(COPY
+        ${CURRENT_PACKAGES_DIR}/lib/cmake/plplot
+    DESTINATION
+        ${CURRENT_PACKAGES_DIR}/share
+    FILES_MATCHING PATTERN
+        "*.cmake"
+)
+file(COPY
+        ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/plplot
+    DESTINATION
+        ${CURRENT_PACKAGES_DIR}/debug/share
+    FILES_MATCHING PATTERN
+        "*.cmake"
+)
+file(REMOVE_RECURSE
+        ${CURRENT_PACKAGES_DIR}/lib/cmake
+        ${CURRENT_PACKAGES_DIR}/debug/lib/cmake
+)
 
 file(INSTALL
     ${SOURCE_PATH}/Copyright
