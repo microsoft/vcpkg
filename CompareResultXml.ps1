@@ -31,11 +31,6 @@ foreach ($key in $keys)
     $l = $leftPortsPassMap[$key]
     $r = $rightPortsPassMap[$key]
 
-    if ($l -eq "Skip" -or $r -eq "Skip")
-    {
-        continue
-    }
-
     if ($l -ne $r)
     {
         $differences.add($key) > $null

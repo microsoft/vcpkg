@@ -19,6 +19,7 @@ $tagPorts = @(
     "assimp",
     "brynet",
     "c-ares",
+    "caf",
     # disabled due to slow update cadence. In the future, once they have passed our current ref (Jan 29, 2018), this can be reenabled.
     # "cartographer",
     "cctz",

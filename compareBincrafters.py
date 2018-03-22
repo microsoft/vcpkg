@@ -21,6 +21,7 @@ replacements = {
     "boost-numeric-odeint":"boost-odeint",
     "openal":"openal-soft",
     "pthreads4w":"pthreads",
+    "openvpn-tap-windows6":"tap-windows6",
 }
 
 skips = [
