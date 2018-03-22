@@ -7,10 +7,10 @@ include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET})
 find_program(NMAKE nmake)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://downloads.sourceforge.net/project/pdcurses/pdcurses/3.4/pdcurs34.zip"
-    FILENAME "pdcurs34.zip"
-    SHA512 0b916bfe37517abb80df7313608cc4e1ed7659a41ce82763000dfdfa5b8311ffd439193c74fc84a591f343147212bf1caf89e7db71f1f7e4fa70f534834cb039
+vcpkg_from_github(
+    OUT_SOURCE_PATH <SOURCE_PATH>
+    REPO <Bill-Gray/PDCurses>
+    HEAD_REF <master>
 )
 
 if(EXISTS ${CURRENT_BUILDTREES_DIR}/src)
