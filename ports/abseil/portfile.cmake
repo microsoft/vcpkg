@@ -21,8 +21,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-abseil)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/abseil ${CURRENT_PACKAGES_DIR}/share/unofficial-abseil)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-abseil TARGET_PATH share/unofficial-abseil)
 
 file(GLOB_RECURSE HEADERS ${CURRENT_PACKAGES_DIR}/include/*)
 foreach(FILE ${HEADERS})
