@@ -69,14 +69,24 @@ namespace vcpkg::Commands::Edit
 
         std::vector<fs::path> candidate_paths;
         auto maybe_editor_path = System::get_environment_variable("EDITOR");
-        if (auto editor_path = maybe_editor_path.get())
+        if (const std::string* editor_path = maybe_editor_path.get())
         {
             candidate_paths.emplace_back(*editor_path);
         }
-        candidate_paths.push_back(System::get_program_files_platform_bitness() / VS_CODE_INSIDERS);
-        candidate_paths.push_back(System::get_program_files_32_bit() / VS_CODE_INSIDERS);
-        candidate_paths.push_back(System::get_program_files_platform_bitness() / VS_CODE);
-        candidate_paths.push_back(System::get_program_files_32_bit() / VS_CODE);
+
+        const auto& program_files = System::get_program_files_platform_bitness();
+        if (const fs::path* pf = program_files.get())
+        {
+            candidate_paths.push_back(*pf / VS_CODE_INSIDERS);
+            candidate_paths.push_back(*pf / VS_CODE);
+        }
+
+        const auto& program_files_32_bit = System::get_program_files_32_bit();
+        if (const fs::path* pf = program_files_32_bit.get())
+        {
+            candidate_paths.push_back(*pf / VS_CODE_INSIDERS);
+            candidate_paths.push_back(*pf / VS_CODE);
+        }
 
         const std::vector<fs::path> from_registry = find_from_registry();
         candidate_paths.insert(candidate_paths.end(), from_registry.cbegin(), from_registry.cend());

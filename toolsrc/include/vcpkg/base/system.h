@@ -110,9 +110,9 @@ namespace vcpkg::System
 
     std::vector<CPUArchitecture> get_supported_host_architectures();
 
-    const fs::path& get_program_files_32_bit();
+    const Optional<fs::path>& get_program_files_32_bit();
 
-    const fs::path& get_program_files_platform_bitness();
+    const Optional<fs::path>& get_program_files_platform_bitness();
 }
 
 namespace vcpkg::Debug

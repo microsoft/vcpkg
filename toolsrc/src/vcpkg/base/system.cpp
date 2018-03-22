@@ -224,21 +224,21 @@ namespace vcpkg::System
             env_cstr.push_back(L'\0');
         }
 
-		if (extra_env.find("PATH") != extra_env.end())
-			NEW_PATH += Strings::format(";%s", extra_env.find("PATH")->second);
+        if (extra_env.find("PATH") != extra_env.end())
+            NEW_PATH += Strings::format(";%s", extra_env.find("PATH")->second);
         env_cstr.append(Strings::to_utf16(NEW_PATH));
         env_cstr.push_back(L'\0');
         env_cstr.append(L"VSLANG=1033");
         env_cstr.push_back(L'\0');
 
-		for (auto item : extra_env)
-		{
-			if (item.first == "PATH") continue;
-			env_cstr.append(Strings::to_utf16(item.first));
-			env_cstr.push_back(L'=');
-			env_cstr.append(Strings::to_utf16(item.second));
-			env_cstr.push_back(L'\0');
-		}
+        for (auto item : extra_env)
+        {
+            if (item.first == "PATH") continue;
+            env_cstr.append(Strings::to_utf16(item.first));
+            env_cstr.push_back(L'=');
+            env_cstr.append(Strings::to_utf16(item.second));
+            env_cstr.push_back(L'\0');
+        }
 
         STARTUPINFOW startup_info;
         memset(&startup_info, 0, sizeof(STARTUPINFOW));
@@ -531,23 +531,24 @@ namespace vcpkg::System
     }
 #endif
 
-    static const fs::path& get_program_files()
+    static const Optional<fs::path>& get_program_files()
     {
-        static const fs::path PATH = []() -> fs::path {
+        static const auto PATH = []() -> Optional<fs::path> {
             auto value = System::get_environment_variable("PROGRAMFILES");
             if (auto v = value.get())
             {
                 return *v;
             }
-            Checks::exit_with_message(VCPKG_LINE_INFO, "Could not find PROGRAMFILES environment variable");
+
+            return nullopt;
         }();
 
         return PATH;
     }
 
-    const fs::path& get_program_files_32_bit()
+    const Optional<fs::path>& get_program_files_32_bit()
     {
-        static const fs::path PATH = []() -> fs::path {
+        static const auto PATH = []() -> Optional<fs::path> {
             auto value = System::get_environment_variable("ProgramFiles(x86)");
             if (auto v = value.get())
             {
@@ -558,9 +559,9 @@ namespace vcpkg::System
         return PATH;
     }
 
-    const fs::path& get_program_files_platform_bitness()
+    const Optional<fs::path>& get_program_files_platform_bitness()
     {
-        static const fs::path PATH = []() -> fs::path {
+        static const auto PATH = []() -> Optional<fs::path> {
             auto value = System::get_environment_variable("ProgramW6432");
             if (auto v = value.get())
             {
