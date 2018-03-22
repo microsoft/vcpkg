@@ -148,12 +148,12 @@ namespace vcpkg::Commands::Integrate
     static void integrate_install(const VcpkgPaths& paths)
     {
         static const std::array<fs::path, 2> OLD_SYSTEM_TARGET_FILES = {
-            System::get_program_files_32_bit() /
+            System::get_program_files_32_bit().value_or_exit(VCPKG_LINE_INFO) /
                 "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.nuget.targets",
-            System::get_program_files_32_bit() /
+            System::get_program_files_32_bit().value_or_exit(VCPKG_LINE_INFO) /
                 "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.system.targets"};
         static const fs::path SYSTEM_WIDE_TARGETS_FILE =
-            System::get_program_files_32_bit() /
+            System::get_program_files_32_bit().value_or_exit(VCPKG_LINE_INFO) /
             "MSBuild/Microsoft.Cpp/v4.0/V140/ImportBefore/Default/vcpkg.system.props";
 
         auto& fs = paths.get_filesystem();
