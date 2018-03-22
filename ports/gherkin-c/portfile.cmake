@@ -18,6 +18,7 @@ vcpkg_from_github(
     REPO ambrou/gherkin-c
     REF a91a928e9d463003e1251ba5590f8775da9bbe76
     SHA512 59d22c671e6698a46046e714de7a984ee74d27ab7ee4eaf58999eee651467cb5566b39ed20ae31ee71af43034509de776af007a3add9b54962432eefed059aed
+
     HEAD_REF master
 )
 
