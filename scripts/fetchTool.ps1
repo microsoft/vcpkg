@@ -25,7 +25,7 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
         throw "Unkown tool $tool"
     }
 
-    $exePath = "$downloadsDir\$($toolData.exeRelativePath)"
+    $exePath = "$downloadsDir\$(@($toolData.exeRelativePath)[0])"
 
     if (Test-Path $exePath)
     {
