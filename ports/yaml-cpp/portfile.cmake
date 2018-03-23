@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jbeder/yaml-cpp
-    REF yaml-cpp-0.6.1
-    SHA512 606482d1d38c6747e22604a24c119adb4b70287da7deadb94cc20d70df47122f1714ec9bfc8f566ecf075b94d48771df17430c50039cb984bdf1980f3b445791
+    REF yaml-cpp-0.6.2
+    SHA512 fea8ce0a20a00cbc75023d1db442edfcd32d0ac57a3c41b32ec8d56f87cc1d85d7dd7a923ce662f5d3a315f91a736d6be0d649997acd190915c1d68cc93795e4
     HEAD_REF master
 )
 
@@ -17,7 +17,12 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
+endif()
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/yaml-cpp)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/yaml-cpp)
+endif()
 
 # Adjust paths and remove hardcoded ones from the config files
 file(READ ${CURRENT_PACKAGES_DIR}/share/yaml-cpp/yaml-cpp-config.cmake YAML_CONFIG)
@@ -32,7 +37,14 @@ get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)
 get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)" YAML_CONFIG "${YAML_CONFIG}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/yaml-cpp/yaml-cpp-targets.cmake "${YAML_CONFIG}")
 
-foreach(CONF debug release)
+set(_targets_cmake_conf)
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    list(APPEND _targets_cmake_conf "debug")
+endif()
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    list(APPEND _targets_cmake_conf "release")
+endif()
+foreach(CONF ${_targets_cmake_conf})
     file(READ ${CURRENT_PACKAGES_DIR}/share/yaml-cpp/yaml-cpp-targets-${CONF}.cmake YAML_CONFIG)
     string(REPLACE "${CURRENT_PACKAGES_DIR}" "\${_IMPORT_PREFIX}" YAML_CONFIG "${YAML_CONFIG}")
     file(WRITE ${CURRENT_PACKAGES_DIR}/share/yaml-cpp/yaml-cpp-targets-${CONF}.cmake "${YAML_CONFIG}")

@@ -2,9 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 
 project(libidn2 C)
 
-find_path(ICONV_INCLUDE_DIR iconv.h)
-find_library(ICONV NAMES libiconv)
-find_library(ICONV_CHARSET NAMES libcharset)
+find_package(unofficial-iconv REQUIRED)
 
 set(CMAKE_DEBUG_POSTFIX "d")
 
@@ -94,8 +92,8 @@ set(GL_SRC gl/rawmemchr.c
 
 add_library(libidn2 ${LIB_SRC} ${UNISTR_SRC} ${GL_SRC})
 
-target_include_directories(libidn2 PRIVATE . ./unistring ./gl ${ICONV_INCLUDE_DIR})
-target_link_libraries(libidn2 PRIVATE ${ICONV} ${ICONV_CHARSET})
+target_include_directories(libidn2 PRIVATE . ./unistring ./gl)
+target_link_libraries(libidn2 PRIVATE unofficial::iconv::libiconv unofficial::iconv::libcharset)
 
 install(TARGETS libidn2
         RUNTIME DESTINATION bin

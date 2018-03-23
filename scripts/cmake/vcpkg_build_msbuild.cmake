@@ -19,6 +19,11 @@
 ## ```
 ##
 ## ## Parameters
+## ### USE_VCPKG_INTEGRATION
+## Apply the normal `integrate install` integration for building the project.
+##
+## By default, projects built with this command will not automatically link libraries or have header paths set.
+##
 ## ### PROJECT_PATH
 ## The path to the solution (`.sln`) or project (`.vcxproj`) file.
 ##
@@ -56,7 +61,13 @@
 ## * [cppunit](https://github.com/Microsoft/vcpkg/blob/master/ports/cppunit/portfile.cmake)
 
 function(vcpkg_build_msbuild)
-    cmake_parse_arguments(_csc "" "PROJECT_PATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;PLATFORM_TOOLSET;TARGET_PLATFORM_VERSION;TARGET" "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG" ${ARGN})
+    cmake_parse_arguments(
+        _csc
+        "USE_VCPKG_INTEGRATION"
+        "PROJECT_PATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;PLATFORM_TOOLSET;TARGET_PLATFORM_VERSION;TARGET"
+        "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG"
+        ${ARGN}
+    )
 
     if(NOT DEFINED _csc_RELEASE_CONFIGURATION)
         set(_csc_RELEASE_CONFIGURATION Release)
@@ -86,6 +97,16 @@ function(vcpkg_build_msbuild)
         /p:WindowsTargetPlatformVersion=${_csc_TARGET_PLATFORM_VERSION}
         /m
     )
+
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        # Disable LTCG for static libraries because this setting introduces ABI incompatibility between minor compiler versions
+        # TODO: Add a way for the user to override this if they want to opt-in to incompatibility
+        list(APPEND _csc_OPTIONS /p:WholeProgramOptimization=false)
+    endif()
+
+    if(_csc_USE_VCPKG_INTEGRATION)
+        list(APPEND _csc_OPTIONS /p:ForceImportBeforeCppTargets=${VCPKG_ROOT_DIR}/scripts/buildsystems/msbuild/vcpkg.targets)
+    endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Building ${_csc_PROJECT_PATH} for Release")

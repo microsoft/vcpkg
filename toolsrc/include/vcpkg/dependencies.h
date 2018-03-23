@@ -45,7 +45,8 @@ namespace vcpkg::Dependencies
         InstallPlanAction(const PackageSpec& spec,
                           const SourceControlFile& scf,
                           const std::set<std::string>& features,
-                          const RequestType& request_type);
+                          const RequestType& request_type,
+                          std::vector<PackageSpec>&& dependencies);
 
         std::string displayname() const;
 
@@ -58,6 +59,8 @@ namespace vcpkg::Dependencies
         RequestType request_type;
         Build::BuildPackageOptions build_options;
         std::set<std::string> feature_list;
+
+        std::vector<PackageSpec> computed_dependencies;
     };
 
     enum class RemovePlanType

@@ -158,6 +158,16 @@ namespace vcpkg
         return std::move(control_file);
     }
 
+    Optional<const FeatureParagraph&> SourceControlFile::find_feature(const std::string& featurename) const
+    {
+        auto it = Util::find_if(feature_paragraphs,
+                                [&](const std::unique_ptr<FeatureParagraph>& p) { return p->name == featurename; });
+        if (it != feature_paragraphs.end())
+            return **it;
+        else
+            return nullopt;
+    }
+
     Dependency Dependency::parse_dependency(std::string name, std::string qualifier)
     {
         Dependency dep;
@@ -202,7 +212,15 @@ namespace vcpkg
         std::vector<std::string> ret;
         for (auto&& dep : deps)
         {
-            if (dep.qualifier.empty() || t.canonical_name().find(dep.qualifier) != std::string::npos)
+            auto qualifiers = Strings::split(dep.qualifier, "&");
+            if (std::all_of(qualifiers.begin(), qualifiers.end(), [&](const std::string& qualifier) {
+                    if (qualifier.empty()) return true;
+                    if (qualifier[0] == '!')
+                    {
+                        return t.canonical_name().find(qualifier.substr(1)) == std::string::npos;
+                    }
+                    return t.canonical_name().find(qualifier) != std::string::npos;
+                }))
             {
                 ret.emplace_back(dep.name());
             }

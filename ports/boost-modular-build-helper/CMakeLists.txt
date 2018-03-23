@@ -1,0 +1,120 @@
+cmake_minimum_required(VERSION 3.9)
+project(boost CXX)
+
+find_path(ZLIB_INCLUDE zlib.h)
+find_path(BZIP2_INCLUDE bzlib.h)
+find_path(ICU_PATH include/unicode/utf.h)
+
+set(VCPKG_PLATFORM_TOOLSET external)
+
+set(B2_OPTIONS)
+
+# Add build type specific options
+if(BUILD_SHARED_LIBS)
+    list(APPEND B2_OPTIONS runtime-link=shared)
+    set(LIB_RUNTIME_LINK "shared")
+else()
+    list(APPEND B2_OPTIONS runtime-link=static)
+    set(LIB_RUNTIME_LINK "static")
+endif()
+
+if(BUILD_SHARED_LIBS)
+    list(APPEND B2_OPTIONS link=shared)
+else()
+    list(APPEND B2_OPTIONS link=static)
+endif()
+
+if(CMAKE_SYSTEM_PROCESSOR STREQUAL "AMD64")
+    list(APPEND B2_OPTIONS address-model=64)
+endif()
+
+list(APPEND B2_OPTIONS target-os=linux toolset=gcc)
+
+string(REPLACE " " " <compileflags>" CXXFLAGS "${CMAKE_CXX_FLAGS}")
+#set(CXXFLAGS "${CXXFLAGS} <compileflags>-Wno-error=unused-command-line-argument")
+if(CMAKE_CXX_COMPILER_TARGET)
+    set(CXXFLAGS "${CXXFLAGS} <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_TARGET} <compileflags>${CMAKE_CXX_COMPILER_TARGET}")
+endif()
+if(CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN)
+    set(CXXFLAGS "${CXXFLAGS} <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_EXTERNAL_TOOLCHAIN} <compileflags>${CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN}")
+endif()
+if(CMAKE_SYSROOT AND CMAKE_CXX_COMPILE_OPTIONS_SYSROOT)
+    set(CXXFLAGS "${CXXFLAGS} <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_SYSROOT}${CMAKE_SYSROOT}")
+endif()
+foreach(INCDIR ${CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES})
+    set(CXXFLAGS "${CXXFLAGS} <compileflags>${CMAKE_INCLUDE_FLAG_C}${CMAKE_INCLUDE_FLAG_C_SEP}${INCDIR}")
+endforeach()
+
+find_library(ZLIB_LIBPATH z)
+list(APPEND B2_OPTIONS
+    -sZLIB_BINARY=z
+    -sZLIB_LIBPATH="${ZLIB_LIBPATH}"
+)
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    find_library(BZIP2_LIBPATH bz2)
+    list(APPEND B2_OPTIONS
+        -sBZIP2_BINARY=bz2
+        -sBZIP2_LIBPATH="${BZIP2_LIBPATH}"
+        variant=release
+    )
+elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    find_library(BZIP2_LIBPATH bz2d)
+    list(APPEND B2_OPTIONS
+        -sBZIP2_BINARY=bz2d
+        -sBZIP2_LIBPATH="${BZIP2_LIBPATH}"
+        variant=debug
+    )
+endif()
+
+configure_file(${CMAKE_CURRENT_LIST_DIR}/user-config.jam ${CMAKE_CURRENT_BINARY_DIR}/user-config.jam @ONLY)
+
+set(NUMBER_OF_PROCESSORS 1)
+if(DEFINED ENV{NUMBER_OF_PROCESSORS})
+    set(NUMBER_OF_PROCESSORS $ENV{NUMBER_OF_PROCESSORS})
+elseif(CMAKE_HOST_LINUX)
+    execute_process(
+        COMMAND nproc
+        OUTPUT_VARIABLE NUMBER_OF_PROCESSORS
+    )
+    string(REPLACE "\n" "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
+    string(REPLACE " " "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
+endif()
+if(NOT NUMBER_OF_PROCESSORS)
+    set(NUMBER_OF_PROCESSORS 1)
+endif()
+
+add_custom_target(boost ALL
+    COMMAND "${B2_EXE}"
+        --user-config=${CMAKE_CURRENT_BINARY_DIR}/user-config.jam
+        --stagedir=${CMAKE_CURRENT_BINARY_DIR}/stage
+        --build-dir=${CMAKE_CURRENT_BINARY_DIR}
+        ${B2_OPTIONS}
+        --layout=system
+        --with-atomic
+        --with-random
+        --with-date_time
+        --with-filesystem
+        --with-system
+        --with-thread
+        --with-chrono
+        -sZLIB_INCLUDE="${ZLIB_INCLUDE}"
+        -sBZIP2_INCLUDE="${BZIP2_INCLUDE}"
+        -sICU_PATH="${ICU_PATH}"
+        -j${NUMBER_OF_PROCESSORS}
+        -sBOOST_ROOT=${BOOST_BUILD_PATH}
+        -sBOOST_BUILD_PATH=${BOOST_BUILD_PATH}
+        --debug-configuration
+        --ignore-site-config
+        --hash
+        -q
+
+        architecture=x86
+        threading=multi
+        threadapi=pthread
+        debug-symbols=on
+    WORKING_DIRECTORY ${SOURCE_PATH}
+)
+
+install(
+    CODE "file(GLOB LIBS ${CMAKE_CURRENT_BINARY_DIR}/boost/build/*/*.a)\nif(LIBS)\nfile(INSTALL \${LIBS} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/lib\")\nendif()"
+)

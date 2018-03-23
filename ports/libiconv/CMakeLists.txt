@@ -30,18 +30,29 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 add_definitions(-DLIBDIR -D_CRT_SECURE_NO_WARNINGS)
 
 add_library(libcharset libcharset/lib/localcharset.c)
+target_include_directories(libcharset PUBLIC $<INSTALL_INTERFACE:include>)
 
 add_library(libiconv lib/iconv.c)
-target_link_libraries(libiconv libcharset)
+target_link_libraries(libiconv PRIVATE libcharset)
+target_include_directories(libiconv PUBLIC $<INSTALL_INTERFACE:include>)
 
-install(TARGETS libcharset libiconv
+install(TARGETS libcharset libiconv EXPORT unofficial-iconv-targets
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )
 
-install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/iconv.h
-  ${CMAKE_CURRENT_BINARY_DIR}/localcharset.h
-  DESTINATION include
+if(NOT DISABLE_INSTALL_HEADERS)
+  install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/iconv.h
+    ${CMAKE_CURRENT_BINARY_DIR}/localcharset.h
+    DESTINATION include
+  )
+endif()
+
+install(
+    EXPORT unofficial-iconv-targets
+    FILE unofficial-iconv-config.cmake
+    NAMESPACE unofficial::iconv::
+    DESTINATION share/unofficial-iconv
 )

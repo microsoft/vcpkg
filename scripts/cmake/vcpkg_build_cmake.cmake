@@ -15,6 +15,9 @@
 ## The target passed to the cmake build command (`cmake --build . --target <target>`). If not specified, no target will
 ## be passed.
 ##
+## ### ADD_BIN_TO_PATH
+## Adds the appropriate Release and Debug `bin\` directories to the path during the build such that executables can run against the in-tree DLLs.
+##
 ## ## Notes:
 ## This command should be preceeded by a call to [`vcpkg_configure_cmake()`](vcpkg_configure_cmake.md).
 ## You can use the alias [`vcpkg_install_cmake()`](vcpkg_configure_cmake.md) function if your CMake script supports the
@@ -27,7 +30,7 @@
 ## * [poco](https://github.com/Microsoft/vcpkg/blob/master/ports/poco/portfile.cmake)
 ## * [opencv](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv/portfile.cmake)
 function(vcpkg_build_cmake)
-    cmake_parse_arguments(_bc "DISABLE_PARALLEL" "TARGET;LOGFILE_ROOT" "" ${ARGN})
+    cmake_parse_arguments(_bc "DISABLE_PARALLEL;ADD_BIN_TO_PATH" "TARGET;LOGFILE_ROOT" "" ${ARGN})
 
     if(NOT _bc_LOGFILE_ROOT)
         set(_bc_LOGFILE_ROOT "build")
@@ -65,20 +68,24 @@ function(vcpkg_build_cmake)
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
             if(BUILDTYPE STREQUAL "debug")
                 set(SHORT_BUILDTYPE "dbg")
+                set(CONFIG "Debug")
             else()
                 set(SHORT_BUILDTYPE "rel")
+                set(CONFIG "Release")
             endif()
 
             message(STATUS "Build ${TARGET_TRIPLET}-${SHORT_BUILDTYPE}")
             set(LOGPREFIX "${CURRENT_BUILDTREES_DIR}/${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}-${SHORT_BUILDTYPE}")
             set(LOGS)
 
-            if(BUILDTYPE STREQUAL "release")
-                set(CONFIG "Release")
-            else()
-                set(CONFIG "Debug")
+            if(_bc_ADD_BIN_TO_PATH)
+                set(_BACKUP_ENV_PATH "$ENV{PATH}")
+                if(BUILDTYPE STREQUAL "debug")
+                    set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin;$ENV{PATH}")
+                else()
+                    set(ENV{PATH} "${CURRENT_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin;$ENV{PATH}")
+                endif()
             endif()
-
             execute_process(
                 COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${PARALLEL_ARG}
                 OUTPUT_FILE "${LOGPREFIX}-out.log"
@@ -134,6 +141,9 @@ function(vcpkg_build_cmake)
                 endif()
             endif()
             message(STATUS "Build ${TARGET_TRIPLET}-${SHORT_BUILDTYPE} done")
+            if(_bc_ADD_BIN_TO_PATH)
+                set(ENV{PATH} "${_BACKUP_ENV_PATH}")
+            endif()
         endif()
     endforeach()
 endfunction()

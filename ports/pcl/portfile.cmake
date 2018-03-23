@@ -76,6 +76,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/pcl)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 if(BUILD_TOOLS)
     file(GLOB EXEFILES_RELEASE ${CURRENT_PACKAGES_DIR}/bin/*.exe)

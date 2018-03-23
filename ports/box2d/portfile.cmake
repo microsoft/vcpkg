@@ -42,23 +42,27 @@ set(OUTPUTS_PATH "${SOURCE_PATH}/Box2D/Build/vs2015/bin/${PROJECT_ARCH_BITS}")
 
 vcpkg_build_msbuild(PROJECT_PATH ${SOURCE_PATH}/Box2D/Build/vs2015/Box2D.vcxproj)
 
-message(STATUS "Packaging ${TARGET_TRIPLET}-Release lib")
-file(
-    INSTALL ${OUTPUTS_PATH}/Release/
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-    FILES_MATCHING PATTERN "*.lib"
-)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/Box2D.lib ${CURRENT_PACKAGES_DIR}/lib/box2d.lib)
-message(STATUS "Packaging ${TARGET_TRIPLET}-Release lib done")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    message(STATUS "Packaging ${TARGET_TRIPLET}-Release lib")
+    file(
+        INSTALL ${OUTPUTS_PATH}/Release/
+        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
+        FILES_MATCHING PATTERN "*.lib"
+    )
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/Box2D.lib ${CURRENT_PACKAGES_DIR}/lib/box2d.lib)
+    message(STATUS "Packaging ${TARGET_TRIPLET}-Release lib done")
+endif()
 
-message(STATUS "Packaging ${TARGET_TRIPLET}-Debug lib")
-file(
-    INSTALL ${OUTPUTS_PATH}/Debug/
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-    FILES_MATCHING PATTERN "*.lib"
-)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Box2D.lib ${CURRENT_PACKAGES_DIR}/debug/lib/box2d.lib)
-message(STATUS "Packaging ${TARGET_TRIPLET}-Debug lib done")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    message(STATUS "Packaging ${TARGET_TRIPLET}-Debug lib")
+    file(
+        INSTALL ${OUTPUTS_PATH}/Debug/
+        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+        FILES_MATCHING PATTERN "*.lib"
+    )
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Box2D.lib ${CURRENT_PACKAGES_DIR}/debug/lib/box2d.lib)
+    message(STATUS "Packaging ${TARGET_TRIPLET}-Debug lib done")
+endif()
 
 message(STATUS "Packaging headers")
 file(
