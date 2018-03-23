@@ -8,8 +8,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-c-shared-utility
-    REF 1.1.1
-    SHA512 859513c3bebc3cb5a9e6c0840d2b5bdb5b21b753ed846dced6f4e88f8f937bae89264da57c1bf430660417b10449914b29000b930520e5834140f63df2109b5f
+    REF 1.0.0-pre-release-1.0.9
+    SHA512 df28d0bb01961943d86febd7b54bafd7037b8461b4025e1db26ba0b76c4cadfa722c4cb5695ac0d4f57e16576eb23f3da02703bcc363af54a0476bccec95ce45
     HEAD_REF master
 )
 
