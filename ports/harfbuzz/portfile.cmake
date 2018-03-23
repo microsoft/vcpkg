@@ -12,10 +12,10 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         "${CMAKE_CURRENT_LIST_DIR}/0001-fix-uwp-build.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/find-package-freetype.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/find-package-freetype-2.patch"
 )
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_CMAKE_SYSTEM_NAME)
     SET(HAVE_GLIB "OFF")
     SET(BUILTIN_UCDN "ON")
 else()
