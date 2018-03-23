@@ -18,10 +18,9 @@ if("wxwidgets" IN_LIST FEATURES)
 endif()
 
 # Patch build scripts
-file(COPY
-        ${CMAKE_CURRENT_LIST_DIR}/src/CMakeLists.txt
-    DESTINATION
-        ${SOURCE_PATH}/src/
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/install-interface-include-directories.patch"
 )
 
 vcpkg_configure_cmake(
