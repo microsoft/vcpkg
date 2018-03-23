@@ -1,5 +1,5 @@
 Source: magnum-plugins
-Version: 2018.02-1
+Version: 2018.02-2
 Build-Depends: magnum
 Description: Plugins for magnum, C++11/C++14 graphics middleware for games and data visualization http://magnum.graphics/
 Default-Features: anyimageimporter, anysceneimporter, anyimageconverter, ddsimporter, miniexrimageconverter, opengeximporter, stanfordimporter, stbimageconverter, stbimageimporter
@@ -9,6 +9,7 @@ Description: AnyImageImporter plugin
 
 Feature: anyaudioimporter
 Description: AnyAudioImporter plugin
+Build-Depends: magnum[audio]
 
 Feature: anyimageconverter
 Description: AnyImageConverter plugin
@@ -79,3 +80,6 @@ Feature: stbvorbisaudioimporter
 Description: StbVorbisAudioImporter plugin
 Build-Depends: magnum[audio]
 
+Feature: tinygltfimporter
+Description: TinyGltfImporter plugin
+Build-Depends: magnum-plugins[anyimageimporter], magnum-plugins[stbimageimporter]
