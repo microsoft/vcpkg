@@ -15,14 +15,19 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Remove duplicate include files 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/include/unistd.h)
+
+# cfitsio uses very common names for its headers, so they must be moved to a subdirectory
+file(RENAME ${CURRENT_PACKAGES_DIR}/include ${CURRENT_PACKAGES_DIR}/cfitsio)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
+file(RENAME ${CURRENT_PACKAGES_DIR}/cfitsio ${CURRENT_PACKAGES_DIR}/include/cfitsio)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-	# move DLLs to bin directories for dynamic builds
-	file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-	file(RENAME  ${CURRENT_PACKAGES_DIR}/lib/cfitsio.dll ${CURRENT_PACKAGES_DIR}/bin/cfitsio.dll)
-	file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-	file(RENAME  ${CURRENT_PACKAGES_DIR}/debug/lib/cfitsio.dll ${CURRENT_PACKAGES_DIR}/debug/bin/cfitsio.dll)
+    # move DLLs to bin directories for dynamic builds
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
+    file(RENAME  ${CURRENT_PACKAGES_DIR}/lib/cfitsio.dll ${CURRENT_PACKAGES_DIR}/bin/cfitsio.dll)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(RENAME  ${CURRENT_PACKAGES_DIR}/debug/lib/cfitsio.dll ${CURRENT_PACKAGES_DIR}/debug/bin/cfitsio.dll)
 endif()
 
 # Handle copyright
