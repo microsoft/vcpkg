@@ -6,7 +6,7 @@ index d81b6a7..6b51809 100644
  add_library(plplot ${plplot_LIB_SRCS})
  add_dependencies(plplot plhershey-unicode.h_built)
  
-+target_include_directories(plplot INTERFACE $<INSTALL_INTERFACE:include/>)
++target_include_directories(plplot INTERFACE $<INSTALL_INTERFACE:include>)
 +
  # Deal with external libraries.
  set(LIB_INSTALL_RPATH ${LIB_DIR})
