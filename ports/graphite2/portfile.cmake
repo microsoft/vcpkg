@@ -17,8 +17,8 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-# file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/gr2fonttest.exe)
-# file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/gr2fonttest.exe)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/gr2fonttest.exe)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/gr2fonttest.exe)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
