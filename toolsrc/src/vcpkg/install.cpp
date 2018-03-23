@@ -70,8 +70,8 @@ namespace vcpkg::Install
             }
 
             const std::string filename = file.filename().u8string();
-            if (fs::is_regular_file(status) && (Strings::case_insensitive_ascii_equals(filename.c_str(), "CONTROL") ||
-                                                Strings::case_insensitive_ascii_equals(filename.c_str(), "BUILD_INFO")))
+            if (fs::is_regular_file(status) && (Strings::case_insensitive_ascii_equals(filename, "CONTROL") ||
+                                                Strings::case_insensitive_ascii_equals(filename, "BUILD_INFO")))
             {
                 // Do not copy the control file
                 continue;
