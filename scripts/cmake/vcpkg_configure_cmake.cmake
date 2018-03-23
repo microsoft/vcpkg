@@ -180,8 +180,8 @@ function(vcpkg_configure_cmake)
         "-DVCPKG_C_FLAGS_DEBUG=${VCPKG_C_FLAGS_DEBUG}"
         "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
         "-DVCPKG_LINKER_FLAGS=${VCPKG_LINKER_FLAGS}"
-        "-DCMAKE_INSTALL_LIBDIR=lib"
-        "-DCMAKE_INSTALL_BINDIR=bin"
+        "-DCMAKE_INSTALL_LIBDIR:STRING=lib"
+        "-DCMAKE_INSTALL_BINDIR:STRING=bin"
     )
 
     if(DEFINED ARCH)
