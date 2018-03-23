@@ -8,8 +8,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO actor-framework/actor-framework
-    REF 0.15.6
-    SHA512 180ef1149fcbbe4532452cbe4509c177ecc3ae3971453505f6600b715be38b3c891ae7f83b8d368fcb20af037e4d6e94f7f750f477bd499d48316fe33fca511e
+    REF 0.15.7
+    SHA512 ff0fa205ad71677b84fa09a2e6ce6bb6d1bc9b790bbbc3ac51505467402ff61a218528004212efa2063c798cc512972d318a2c9423067ee51cef719de2b6b186
     HEAD_REF master
 )
 

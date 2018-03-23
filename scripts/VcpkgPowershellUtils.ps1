@@ -140,7 +140,7 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
         {
             Write-Warning "Github has dropped support for TLS versions prior to 1.2, which is not available on your system"
             Write-Warning "Please manually download $url to $downloadPath"
-            Write-Warning "To solve this issue for future downloads, you can also install PowerShell 5.1+"
+            Write-Warning "To solve this issue for future downloads, you can also install Windows Management Framework 5.1+"
             throw "Download failed"
         }
     }

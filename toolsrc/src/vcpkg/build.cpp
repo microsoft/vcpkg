@@ -449,6 +449,8 @@ namespace vcpkg::Build
         if (config.build_package_options.use_head_version == UseHeadVersion::YES)
             abi_tag_entries.emplace_back(AbiEntry{"head", ""});
 
+        Util::sort(abi_tag_entries);
+
         std::string full_abi_info =
             Strings::join("", abi_tag_entries, [](const AbiEntry& p) { return p.key + " " + p.value + "\n"; });
 

@@ -209,6 +209,11 @@ namespace vcpkg::Build
     {
         std::string key;
         std::string value;
+
+        bool operator<(const AbiEntry& other) const
+        {
+            return key < other.key || (key == other.key && value < other.value);
+        }
     };
 
     struct AbiTagAndFile
