@@ -28,11 +28,12 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/rsync.dll)
 endif()
 if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/rsync.dll)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/rsync.dll ${CURRENT_PACKAGES_DIR}/debug/bin/rsync.dll
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/rsync.dll ${CURRENT_PACKAGES_DIR}/debug/bin/rsync.dll)
 endif()
 
 file(INSTALL
     ${SOURCE_PATH}/COPYING
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/librsync RENAME copyright)
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/librsync RENAME copyright
+)
 
 vcpkg_copy_pdbs()
