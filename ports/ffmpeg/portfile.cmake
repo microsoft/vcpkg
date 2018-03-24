@@ -5,6 +5,11 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "ffmpeg-3.3.3.tar.bz2"
     SHA512 1cc63bf73356f4e618c0d3572a216bdf5689f10deff56b4262f6d740b0bee5a4b3eac234f45fca3d4d2da77903a507b4fba725b76d2d2070f31b6dae9e7a2dab
 )
+
+if (${SOURCE_PATH} MATCHES " ")
+    message(FATAL_ERROR "Error: ffmpeg will not build with spaces in the path. Please use a directory with no spaces")
+endif()
+
 vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
