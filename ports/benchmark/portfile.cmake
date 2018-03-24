@@ -26,6 +26,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DBENCHMARK_ENABLE_TESTING=OFF
+        -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_install_cmake()

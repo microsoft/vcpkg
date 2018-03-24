@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.3)
-project(vcpkg CXX)
+project(vcpkg C CXX)
 
 if(CMAKE_COMPILER_IS_GNUXX OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set(GCC 1)
@@ -19,10 +19,14 @@ file(GLOB_RECURSE VCPKGLIB_SOURCES src/vcpkg/*.cpp)
 
 add_executable(vcpkg src/vcpkg.cpp ${VCPKGLIB_SOURCES})
 target_compile_definitions(vcpkg PRIVATE -DDISABLE_METRICS=0)
-target_include_directories(vcpkg PUBLIC include)
+target_include_directories(vcpkg PRIVATE include)
 
 if(GCC)
-    target_link_libraries(vcpkg PUBLIC stdc++fs)
+    target_link_libraries(vcpkg PRIVATE stdc++fs)
 elseif(CLANG)
-    target_link_libraries(vcpkg PUBLIC c++experimental)
+    target_link_libraries(vcpkg PRIVATE c++experimental)
 endif()
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+target_link_libraries(vcpkg PRIVATE Threads::Threads)

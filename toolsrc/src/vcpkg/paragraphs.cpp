@@ -228,7 +228,7 @@ namespace vcpkg::Paragraphs
         return error_info;
     }
 
-    Expected<BinaryControlFile> try_load_cached_control_package(const VcpkgPaths& paths, const PackageSpec& spec)
+    Expected<BinaryControlFile> try_load_cached_package(const VcpkgPaths& paths, const PackageSpec& spec)
     {
         Expected<std::vector<std::unordered_map<std::string, std::string>>> pghs =
             get_paragraphs(paths.get_filesystem(), paths.package_dir(spec) / "CONTROL");

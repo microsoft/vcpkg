@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.8)
 project(cctz CXX)
 
+set(CMAKE_CXX_STANDARD 14)
+
 set(CMAKE_DEBUG_POSTFIX d)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 

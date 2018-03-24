@@ -158,4 +158,13 @@ function(vcpkg_fixup_cmake_targets)
     if(NOT REMAINING_FILES)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
     endif()
+
+    # Patch out any remaining absolute references
+    file(TO_CMAKE_PATH "${CURRENT_PACKAGES_DIR}" CMAKE_CURRENT_PACKAGES_DIR)
+    file(GLOB CMAKE_FILES ${RELEASE_SHARE}/*.cmake)
+    foreach(CMAKE_FILE IN LISTS CMAKE_FILES)
+        file(READ ${CMAKE_FILE} _contents)
+        string(REPLACE "${CMAKE_CURRENT_PACKAGES_DIR}" "\${CMAKE_CURRENT_LIST_DIR}/../.." _contents "${_contents}")
+        file(WRITE ${CMAKE_FILE} "${_contents}")
+    endforeach()
 endfunction()

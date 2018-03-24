@@ -49,12 +49,16 @@ function(vcpkg_find_acquire_program VAR)
   if(VAR MATCHES "PERL")
     set(PROGNAME perl)
     set(PATHS ${DOWNLOADS}/tools/perl/perl/bin)
+    set(BREW_PACKAGE_NAME "perl")
+    set(APT_PACKAGE_NAME "perl")
     set(URL "http://strawberryperl.com/download/5.24.1.1/strawberry-perl-5.24.1.1-32bit-portable.zip")
     set(ARCHIVE "strawberry-perl-5.24.1.1-32bit-portable.zip")
     set(HASH a6e685ea24376f50db5f06c5b46075f1d3be25168fa1f27fa9b02e2ac017826cee62a2b43562f9b6c989337a231ba914416c110075457764de2d11f99d5e0f26)
   elseif(VAR MATCHES "NASM")
     set(PROGNAME nasm)
     set(PATHS ${DOWNLOADS}/tools/nasm/nasm-2.12.02)
+    set(BREW_PACKAGE_NAME "nasm")
+    set(APT_PACKAGE_NAME "nasm")
     set(URL
       "http://www.nasm.us/pub/nasm/releasebuilds/2.12.02/win32/nasm-2.12.02-win32.zip"
       "http://mirrors.kodi.tv/build-deps/win32/nasm-2.12.02-win32.zip"
@@ -106,6 +110,8 @@ function(vcpkg_find_acquire_program VAR)
     set(PROGNAME ninja)
     set(SUBDIR "ninja-1.8.2")
     set(PATHS ${DOWNLOADS}/tools/ninja/${SUBDIR})
+    set(BREW_PACKAGE_NAME "ninja")
+    set(APT_PACKAGE_NAME "ninja-build")
     set(URL "https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip")
     set(ARCHIVE "ninja-1.8.2-win.zip")
     set(HASH 9b9ce248240665fcd6404b989f3b3c27ed9682838225e6dc9b67b551774f251e4ff8a207504f941e7c811e7a8be1945e7bcb94472a335ef15e23a0200a32e6d5)
@@ -181,6 +187,16 @@ function(vcpkg_find_acquire_program VAR)
 
   do_find()
   if("${${VAR}}" MATCHES "-NOTFOUND")
+    if(NOT CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+      set(EXAMPLE ".")
+      if(DEFINED BREW_PACKAGE_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
+        set(EXAMPLE ":\n    brew install ${BREW_PACKAGE_NAME}")
+      elseif(DEFINED APT_PACKAGE_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
+        set(EXAMPLE ":\n    sudo apt-get install ${APT_PACKAGE_NAME}")
+      endif()
+      message(FATAL_ERROR "Could not find ${PROGNAME}. Please install it via your package manager${EXAMPLE}")
+    endif()
+
     vcpkg_download_distfile(ARCHIVE_PATH
         URLS ${URL}
         SHA512 ${HASH}

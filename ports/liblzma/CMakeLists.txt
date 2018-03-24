@@ -7,7 +7,59 @@ if(BUILD_SHARED_LIBS)
     add_definitions(-DDLL_EXPORT)
 endif()
 
-include_directories(windows)
+if(NOT MSVC)
+    add_definitions(-DHAVE_VISIBILITY=1)
+endif()
+
+if(WIN32)
+    include_directories(windows)
+else()
+    include_directories(${CMAKE_CURRENT_BINARY_DIR})
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/config.h
+    """
+#define TUKLIB_SYMBOL_PREFIX lzma_
+#define ASSUME_RAM 128
+#define HAVE_CHECK_CRC32 1
+#define HAVE_CHECK_CRC64 1
+#define HAVE_CHECK_SHA256 1
+#define HAVE_DECODERS 1
+#define HAVE_DECODER_ARM 1
+#define HAVE_DECODER_ARMTHUMB 1
+#define HAVE_DECODER_DELTA 1
+#define HAVE_DECODER_IA64 1
+#define HAVE_DECODER_LZMA1 1
+#define HAVE_DECODER_LZMA2 1
+#define HAVE_DECODER_POWERPC 1
+#define HAVE_DECODER_SPARC 1
+#define HAVE_DECODER_X86 1
+#define HAVE_ENCODERS 1
+#define HAVE_ENCODER_ARM 1
+#define HAVE_ENCODER_ARMTHUMB 1
+#define HAVE_ENCODER_DELTA 1
+#define HAVE_ENCODER_IA64 1
+#define HAVE_ENCODER_LZMA1 1
+#define HAVE_ENCODER_LZMA2 1
+#define HAVE_ENCODER_POWERPC 1
+#define HAVE_ENCODER_SPARC 1
+#define HAVE_ENCODER_X86 1
+#define HAVE_INTTYPES_H 1
+#define HAVE_LIMITS_H 1
+#define HAVE_MF_BT2 1
+#define HAVE_MF_BT3 1
+#define HAVE_MF_BT4 1
+#define HAVE_MF_HC3 1
+#define HAVE_MF_HC4 1
+#define HAVE_STDBOOL_H 1
+#define HAVE_STDINT_H 1
+#define HAVE_STDLIB_H 1
+#define HAVE_STRING_H 1
+#define HAVE_VISIBILITY 1
+#define MYTHREAD_POSIX 1
+#define PACKAGE_NAME \"XZ Utils\"
+#define PACKAGE_URL \"http://tukaani.org/xz/\"
+#define SIZEOF_SIZE_T (sizeof(size_t))
+""")
+endif()
 include_directories(src/liblzma/common)
 include_directories(src/common)
 include_directories(src/liblzma/api)

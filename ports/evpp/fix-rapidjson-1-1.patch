@@ -1,0 +1,159 @@
+diff --git a/3rdparty/libhashkit/crc32.c b/3rdparty/libhashkit/crc32.c
+index 6db0478..ff34194 100644
+--- a/3rdparty/libhashkit/crc32.c
++++ b/3rdparty/libhashkit/crc32.c
+@@ -73,7 +73,7 @@ static const uint32_t crc32tab[256] = {
+   0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d,
+ };
+ 
+-uint32_t hashkit_crc32(const char *key, size_t key_length, void *context __attribute__((unused)))
++uint32_t hashkit_crc32(const char *key, size_t key_length, void * context)
+ {
+   uint64_t x;
+   uint32_t crc= UINT32_MAX;
+diff --git a/3rdparty/libhashkit/fnv.c b/3rdparty/libhashkit/fnv.c
+index ee3754d..d79fe39 100644
+--- a/3rdparty/libhashkit/fnv.c
++++ b/3rdparty/libhashkit/fnv.c
+@@ -14,7 +14,7 @@ static uint64_t FNV_64_PRIME= UINT64_C(0x100000001b3);
+ static uint32_t FNV_32_INIT= 2166136261UL;
+ static uint32_t FNV_32_PRIME= 16777619;
+ 
+-uint32_t hashkit_fnv1_64(const char *key, size_t key_length, void *context __attribute__((unused)))
++uint32_t hashkit_fnv1_64(const char *key, size_t key_length, void * context)
+ {
+   /* Thanks to pierre@demartines.com for the pointer */
+   uint64_t hash= FNV_64_INIT;
+@@ -28,7 +28,7 @@ uint32_t hashkit_fnv1_64(const char *key, size_t key_length, void *context __att
+   return (uint32_t)hash;
+ }
+ 
+-uint32_t hashkit_fnv1a_64(const char *key, size_t key_length, void *context __attribute__((unused)))
++uint32_t hashkit_fnv1a_64(const char *key, size_t key_length, void * context)
+ {
+   uint32_t hash= (uint32_t) FNV_64_INIT;
+ 
+@@ -42,7 +42,7 @@ uint32_t hashkit_fnv1a_64(const char *key, size_t key_length, void *context __at
+   return hash;
+ }
+ 
+-uint32_t hashkit_fnv1_32(const char *key, size_t key_length, void *context __attribute__((unused)))
++uint32_t hashkit_fnv1_32(const char *key, size_t key_length, void * context)
+ {
+   uint32_t hash= FNV_32_INIT;
+ 
+@@ -56,7 +56,7 @@ uint32_t hashkit_fnv1_32(const char *key, size_t key_length, void *context __att
+   return hash;
+ }
+ 
+-uint32_t hashkit_fnv1a_32(const char *key, size_t key_length, void *context __attribute__((unused)))
++uint32_t hashkit_fnv1a_32(const char *key, size_t key_length, void * context)
+ {
+   uint32_t hash= FNV_32_INIT;
+ 
+diff --git a/3rdparty/libhashkit/hsieh.c b/3rdparty/libhashkit/hsieh.c
+index ba46ed2..c3e9a38 100644
+--- a/3rdparty/libhashkit/hsieh.c
++++ b/3rdparty/libhashkit/hsieh.c
+@@ -17,7 +17,7 @@
+                       +(uint32_t)(((const uint8_t *)(d))[0]) )
+ #endif
+ 
+-uint32_t hashkit_hsieh(const char *key, size_t key_length, void *context __attribute__((unused)))
++uint32_t hashkit_hsieh(const char *key, size_t key_length, void * context)
+ {
+   uint32_t hash = 0, tmp;
+   int rem;
+diff --git a/3rdparty/libhashkit/jenkins.c b/3rdparty/libhashkit/jenkins.c
+index b684d7a..2b59714 100644
+--- a/3rdparty/libhashkit/jenkins.c
++++ b/3rdparty/libhashkit/jenkins.c
+@@ -56,7 +56,7 @@ use a bitmask.  For example, if you need only 10 bits, do
+ In which case, the hash table should have hashsize(10) elements.
+ */
+ 
+-uint32_t hashkit_jenkins(const char *key, size_t length, void *context __attribute__((unused)))
++uint32_t hashkit_jenkins(const char *key, size_t length, void * context)
+ {
+   uint32_t a,b,c;                                          /* internal state */
+   union { const void *ptr; size_t i; } u;     /* needed for Mac Powerbook G4 */
+diff --git a/3rdparty/libhashkit/md5.c b/3rdparty/libhashkit/md5.c
+index 7371c6d..0e3181b 100644
+--- a/3rdparty/libhashkit/md5.c
++++ b/3rdparty/libhashkit/md5.c
+@@ -352,7 +352,7 @@ unsigned int len)
+    (((UINT4)input[j+2]) << 16) | (((UINT4)input[j+3]) << 24);
+ }
+ 
+-uint32_t hashkit_md5(const char *key, size_t key_length, void *context __attribute__((unused)))
++uint32_t hashkit_md5(const char *key, size_t key_length, void * context)
+ {
+   unsigned char results[16];
+ 
+diff --git a/3rdparty/libhashkit/murmur.c b/3rdparty/libhashkit/murmur.c
+index a18ac40..9e55eec 100644
+--- a/3rdparty/libhashkit/murmur.c
++++ b/3rdparty/libhashkit/murmur.c
+@@ -17,7 +17,7 @@
+ 
+ #include "common.h"
+ 
+-uint32_t hashkit_murmur(const char *key, size_t length, void *context __attribute__((unused)))
++uint32_t hashkit_murmur(const char *key, size_t length, void * context)
+ {
+   /* 
+     'm' and 'r' are mixing constants generated offline.  They're not
+diff --git a/3rdparty/libhashkit/one_at_a_time.c b/3rdparty/libhashkit/one_at_a_time.c
+index 579d044..539861c 100644
+--- a/3rdparty/libhashkit/one_at_a_time.c
++++ b/3rdparty/libhashkit/one_at_a_time.c
+@@ -13,7 +13,7 @@ http://en.wikipedia.org/wiki/Jenkins_hash_function
+ 
+ #include "common.h"
+ 
+-uint32_t hashkit_one_at_a_time(const char *key, size_t key_length, void *context __attribute__((unused)))
++uint32_t hashkit_one_at_a_time(const char *key, size_t key_length, void * context)
+ {
+   const char *ptr= key;
+   uint32_t value= 0;
+diff --git a/3rdparty/libhashkit/strerror.c b/3rdparty/libhashkit/strerror.c
+index 270fa21..7446782 100644
+--- a/3rdparty/libhashkit/strerror.c
++++ b/3rdparty/libhashkit/strerror.c
+@@ -8,7 +8,7 @@
+ 
+ #include "common.h"
+ 
+-const char *hashkit_strerror(hashkit_st *ptr __attribute__((unused)), hashkit_return_t rc)
++const char *hashkit_strerror(hashkit_st *ptr, hashkit_return_t rc)
+ {
+   switch (rc)
+   {
+diff --git a/apps/evnsq/option.cc b/apps/evnsq/option.cc
+index e2128f5..0248ace 100644
+--- a/apps/evnsq/option.cc
++++ b/apps/evnsq/option.cc
+@@ -21,14 +21,14 @@ std::string Option::ToJSON() const {
+     doc.AddMember("write_timeout", rapidjson::Value(int64_t(write_timeout.Milliseconds())), doc.GetAllocator());
+     doc.AddMember("msg_timeout", rapidjson::Value(int64_t(msg_timeout.Milliseconds())), doc.GetAllocator());
+ 
+-    doc.AddMember("client_id", rapidjson::Value(client_id, doc.GetAllocator()), doc.GetAllocator());
+-    doc.AddMember("hostname", rapidjson::Value(hostname, doc.GetAllocator()), doc.GetAllocator());
+-    doc.AddMember("user_agent", rapidjson::Value(user_agent, doc.GetAllocator()), doc.GetAllocator());
++    doc.AddMember("client_id", rapidjson::Value(client_id.data(), client_id.size(), doc.GetAllocator()), doc.GetAllocator());
++    doc.AddMember("hostname", rapidjson::Value(hostname.data(), hostname.size(), doc.GetAllocator()), doc.GetAllocator());
++    doc.AddMember("user_agent", rapidjson::Value(user_agent.data(), user_agent.size(), doc.GetAllocator()), doc.GetAllocator());
+ 
+     doc.AddMember("heartbeat_interval", rapidjson::Value(int64_t(heartbeat_interval.Milliseconds())), doc.GetAllocator());
+ 
+     doc.AddMember("deflate", rapidjson::Value(false), doc.GetAllocator());
+-    doc.AddMember("long_id", rapidjson::Value(hostname, doc.GetAllocator()), doc.GetAllocator());
++    doc.AddMember("long_id", rapidjson::Value(hostname.data(), hostname.size(), doc.GetAllocator()), doc.GetAllocator());
+     doc.AddMember("output_buffer_size", rapidjson::Value(int64_t(16384)), doc.GetAllocator());
+     doc.AddMember("output_buffer_timeout", rapidjson::Value(int64_t(250)), doc.GetAllocator());
+     doc.AddMember("feature_negotiation", rapidjson::Value(feature_negotiation), doc.GetAllocator());
+@@ -40,3 +40,4 @@ std::string Option::ToJSON() const {
+     return std::string(buffer.GetString(), buffer.GetSize());
+ }
+ }
++

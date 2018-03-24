@@ -19,6 +19,8 @@ namespace vcpkg
     {
         std::array<int, 3> required_version;
         fs::path downloaded_exe_path;
+        std::string url;
+        fs::path downloaded_path;
     };
 
     static Optional<std::array<int, 3>> parse_version_string(const std::string& version_as_string)
@@ -41,7 +43,23 @@ namespace vcpkg
 
     static ToolData parse_tool_data_from_xml(const VcpkgPaths& paths, const std::string& tool)
     {
+#if defined(_WIN32)
+        static constexpr StringLiteral OS_STRING = "";
+#elif defined(__APPLE__)
+        static constexpr StringLiteral OS_STRING = " os=\"osx\"";
+#else // assume linux
+        static constexpr StringLiteral OS_STRING = " os=\"linux\"";
+#endif
+
         static const fs::path XML_PATH = paths.scripts / "vcpkgTools.xml";
+
+        const auto maybe_get_string_inside_tags = [](const std::string& input,
+                                                     const std::regex& regex) -> Optional<std::string> {
+            std::smatch match;
+            const bool has_match = std::regex_search(input.cbegin(), input.cend(), match, regex);
+            if (!has_match) return nullopt;
+            return match[1];
+        };
 
         const auto get_string_inside_tags =
             [](const std::string& input, const std::regex& regex, const std::string& tag_name) -> std::string {
@@ -57,7 +75,10 @@ namespace vcpkg
         static const std::regex VERSION_REGEX{
             Strings::format(R"###(<requiredVersion>([\s\S]*?)</requiredVersion>)###", tool)};
         static const std::regex EXE_RELATIVE_PATH_REGEX{
-            Strings::format(R"###(<exeRelativePath>([\s\S]*?)</exeRelativePath>)###", tool)};
+            Strings::format(R"###(<exeRelativePath%s>([\s\S]*?)</exeRelativePath>)###", OS_STRING)};
+        static const std::regex ARCHIVE_RELATIVE_PATH_REGEX{
+            Strings::format(R"###(<archiveRelativePath%s>([\s\S]*?)</archiveRelativePath>)###", OS_STRING)};
+        static const std::regex URL_REGEX{Strings::format(R"###(<url%s>([\s\S]*?)</url>)###", OS_STRING)};
 
         const std::regex tool_regex{Strings::format(R"###(<tool[\s]+name="%s">([\s\S]*?)</tool>)###", tool)};
 
@@ -74,8 +95,12 @@ namespace vcpkg
         const std::string required_version_as_string =
             get_string_inside_tags(tool_data_as_string, VERSION_REGEX, "requiredVersion");
 
+        const std::string url = get_string_inside_tags(tool_data_as_string, URL_REGEX, "url");
+
         const std::string exe_relative_path =
             get_string_inside_tags(tool_data_as_string, EXE_RELATIVE_PATH_REGEX, "exeRelativePath");
+
+        auto archive_relative_path = maybe_get_string_inside_tags(tool_data_as_string, ARCHIVE_RELATIVE_PATH_REGEX);
 
         const Optional<std::array<int, 3>> required_version = parse_version_string(required_version_as_string);
         Checks::check_exit(VCPKG_LINE_INFO,
@@ -85,7 +110,10 @@ namespace vcpkg
                            required_version_as_string);
 
         const fs::path exe_path = paths.downloads / exe_relative_path;
-        return ToolData{*required_version.get(), exe_path};
+        return ToolData{*required_version.get(),
+                        exe_path,
+                        url,
+                        paths.downloads / archive_relative_path.value_or(exe_relative_path)};
     }
 
     static bool exists_and_has_equal_or_greater_version(const std::string& version_cmd,
@@ -144,8 +172,10 @@ namespace vcpkg
         return data_lines;
     }
 
-    static fs::path fetch_tool(const fs::path& scripts_folder, const std::string& tool_name, const ToolData& tool_data)
+    static fs::path fetch_tool(const VcpkgPaths& paths, const std::string& tool_name, const ToolData& tool_data)
     {
+        const auto& fs = paths.get_filesystem();
+        const fs::path& scripts_folder = paths.scripts;
         const std::array<int, 3>& version = tool_data.required_version;
 
         const std::string version_as_string = Strings::format("%d.%d.%d", version[0], version[1], version[2]);
@@ -154,6 +184,7 @@ namespace vcpkg
                         version_as_string,
                         tool_name,
                         version_as_string);
+#if defined(_WIN32)
         const fs::path script = scripts_folder / "fetchtool.ps1";
         const std::string title = Strings::format(
             "Fetching %s version %s (No sufficient installed version was found)", tool_name, version_as_string);
@@ -173,27 +204,44 @@ namespace vcpkg
                            expected_downloaded_path.u8string(),
                            actual_downloaded_path.u8string());
         return actual_downloaded_path;
+#else
+        if (!fs.exists(tool_data.downloaded_path))
+        {
+            auto code = System::cmd_execute(
+                Strings::format(R"(curl '%s' --create-dirs --output '%s')", tool_data.url, tool_data.downloaded_path));
+            Checks::check_exit(VCPKG_LINE_INFO, code == 0, "curl failed while downloading %s", tool_data.url);
+        }
+        auto code = System::cmd_execute(
+            Strings::format(R"(cd '%s' && tar xzf '%s')", paths.downloads, tool_data.downloaded_path));
+        Checks::check_exit(VCPKG_LINE_INFO, code == 0, "tar failed while extracting %s", tool_data.downloaded_path);
+
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           fs.exists(tool_data.downloaded_exe_path),
+                           "Expected %s to exist after extracting",
+                           tool_data.downloaded_exe_path);
+
+        return tool_data.downloaded_exe_path;
+#endif
     }
 
     static fs::path get_cmake_path(const VcpkgPaths& paths)
     {
-#if defined(_WIN32)
+        std::vector<fs::path> candidate_paths;
+#if defined(_WIN32) || defined(__APPLE__) || defined(__linux__)
         static const ToolData TOOL_DATA = parse_tool_data_from_xml(paths, "cmake");
+        candidate_paths.push_back(TOOL_DATA.downloaded_exe_path);
 #else
         static const ToolData TOOL_DATA = ToolData{{3, 5, 1}, ""};
 #endif
         static const std::string VERSION_CHECK_ARGUMENTS = "--version";
 
-        std::vector<fs::path> candidate_paths;
-#if defined(_WIN32)
-        candidate_paths.push_back(TOOL_DATA.downloaded_exe_path);
-#endif
         const std::vector<fs::path> from_path = Files::find_from_PATH("cmake");
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
-#if defined(_WIN32)
-        candidate_paths.push_back(System::get_program_files_platform_bitness() / "CMake" / "bin" / "cmake.exe");
-        candidate_paths.push_back(System::get_program_files_32_bit() / "CMake" / "bin");
-#endif
+
+        const auto& program_files = System::get_program_files_platform_bitness();
+        if (const auto pf = program_files.get()) candidate_paths.push_back(*pf / "CMake" / "bin" / "cmake.exe");
+        const auto& program_files_32_bit = System::get_program_files_32_bit();
+        if (const auto pf = program_files_32_bit.get()) candidate_paths.push_back(*pf / "CMake" / "bin" / "cmake.exe");
 
         const Optional<fs::path> path =
             find_if_has_equal_or_greater_version(candidate_paths, VERSION_CHECK_ARGUMENTS, TOOL_DATA.required_version);
@@ -202,7 +250,7 @@ namespace vcpkg
             return *p;
         }
 
-        return fetch_tool(paths.scripts, "cmake", TOOL_DATA);
+        return fetch_tool(paths, "cmake", TOOL_DATA);
     }
 
     static fs::path get_7za_path(const VcpkgPaths& paths)
@@ -211,7 +259,7 @@ namespace vcpkg
         static const ToolData TOOL_DATA = parse_tool_data_from_xml(paths, "7zip");
         if (!paths.get_filesystem().exists(TOOL_DATA.downloaded_exe_path))
         {
-            return fetch_tool(paths.scripts, "7zip", TOOL_DATA);
+            return fetch_tool(paths, "7zip", TOOL_DATA);
         }
         return TOOL_DATA.downloaded_exe_path;
 #else
@@ -234,7 +282,7 @@ namespace vcpkg
             return *p;
         }
 
-        return fetch_tool(paths.scripts, "nuget", TOOL_DATA);
+        return fetch_tool(paths, "nuget", TOOL_DATA);
     }
 
     static fs::path get_git_path(const VcpkgPaths& paths)
@@ -252,10 +300,11 @@ namespace vcpkg
 #endif
         const std::vector<fs::path> from_path = Files::find_from_PATH("git");
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
-#if defined(_WIN32)
-        candidate_paths.push_back(System::get_program_files_platform_bitness() / "git" / "cmd" / "git.exe");
-        candidate_paths.push_back(System::get_program_files_32_bit() / "git" / "cmd" / "git.exe");
-#endif
+
+        const auto& program_files = System::get_program_files_platform_bitness();
+        if (const auto pf = program_files.get()) candidate_paths.push_back(*pf / "git" / "cmd" / "git.exe");
+        const auto& program_files_32_bit = System::get_program_files_32_bit();
+        if (const auto pf = program_files_32_bit.get()) candidate_paths.push_back(*pf / "git" / "cmd" / "git.exe");
 
         const Optional<fs::path> path =
             find_if_has_equal_or_greater_version(candidate_paths, VERSION_CHECK_ARGUMENTS, TOOL_DATA.required_version);
@@ -264,7 +313,7 @@ namespace vcpkg
             return *p;
         }
 
-        return fetch_tool(paths.scripts, "git", TOOL_DATA);
+        return fetch_tool(paths, "git", TOOL_DATA);
     }
 
     static fs::path get_ifw_installerbase_path(const VcpkgPaths& paths)
@@ -290,10 +339,10 @@ namespace vcpkg
             return *p;
         }
 
-        return fetch_tool(paths.scripts, "installerbase", TOOL_DATA);
+        return fetch_tool(paths, "installerbase", TOOL_DATA);
     }
 
-    Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir)
+    Expected<VcpkgPaths> VcpkgPaths::create(const fs::path& vcpkg_root_dir, const std::string& default_vs_path)
     {
         std::error_code ec;
         const fs::path canonical_vcpkg_root_dir = fs::stdfs::canonical(vcpkg_root_dir, ec);
@@ -304,6 +353,7 @@ namespace vcpkg
 
         VcpkgPaths paths;
         paths.root = canonical_vcpkg_root_dir;
+        paths.default_vs_path = default_vs_path;
 
         if (paths.root.empty())
         {
@@ -621,7 +671,8 @@ namespace vcpkg
 
     const Toolset& VcpkgPaths::get_toolset(const Build::PreBuildInfo& prebuildinfo) const
     {
-        if (prebuildinfo.external_toolchain_file)
+        if (prebuildinfo.external_toolchain_file ||
+            (!prebuildinfo.cmake_system_name.empty() && prebuildinfo.cmake_system_name != "WindowsStore"))
         {
             static Toolset external_toolset = []() -> Toolset {
                 Toolset ret;
@@ -643,7 +694,11 @@ namespace vcpkg
 
         std::vector<const Toolset*> candidates = Util::element_pointers(vs_toolsets);
         const auto tsv = prebuildinfo.platform_toolset.get();
-        const auto vsp = prebuildinfo.visual_studio_path.get();
+        auto vsp = prebuildinfo.visual_studio_path.get();
+        if (!vsp && !default_vs_path.empty())
+        {
+            vsp = &default_vs_path;
+        }
 
         if (tsv && vsp)
         {

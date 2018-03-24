@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nih-at/libzip
-    REF ad1f02d3b2aac532a89cbf8fd21f55677789b82d
-    SHA512 b1ed427916ec555ead454d39a244502f64bbc8799c20394944797b878196f1b9a9dda64be218fe89bb1747c841d7b36e8e7fb7b0be1fbdf777f049cd823635d6
+    REF rel-1-5-0
+    SHA512 d8267dd86231d82e0d14fc3e47c7deed3f54bccbc734dff12a7e2522422653f64ebdb76b35b9eb4326227ae89e06bd4cad263558c8312220ff5979b3b2299460
 )
 
 # Patch cmake and configuration to allow static builds

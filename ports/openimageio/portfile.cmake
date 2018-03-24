@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
-    REF Release-1.7.15
-    SHA512 5b83961a77de36082e0a3abeac8015f9455504680d7437777524a9ac17ac7994df2a2ad1af86a884cf17c1afcd71a36a30e24711cba8d8a30511c05e36d7fadc
+    REF Release-1.8.9
+    SHA512 300eab0d2e7277c46550339d72af59b3ab2232d296b4d46808575015075cdbb9dd911e9b335c0d10bf6d95ebde907240af0f4828d422aca091f82491693dfef3
     HEAD_REF master
 )
 
@@ -47,6 +47,7 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/doc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/doc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openimageio)
