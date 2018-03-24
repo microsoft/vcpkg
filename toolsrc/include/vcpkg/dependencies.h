@@ -175,7 +175,7 @@ namespace vcpkg::Dependencies
                                                        const std::vector<FeatureSpec>& specs,
                                                        const StatusParagraphs& status_db);
 
-    std::vector<AnyAction> create_feature_install_plan(const PortFileProvider& port_file_provider,
+    std::vector<AnyAction> create_feature_install_plan(const PortFileProvider& provider,
                                                        const std::vector<FeatureSpec>& specs,
                                                        const StatusParagraphs& status_db);
 
