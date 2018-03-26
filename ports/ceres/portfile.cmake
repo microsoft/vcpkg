@@ -46,6 +46,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DEXPORT_BUILD_DIR=ON
         -DBUILD_EXAMPLES=OFF
@@ -55,7 +56,7 @@ vcpkg_configure_cmake(
         -DEIGENSPARSE=${EIGENSPARSE}
         -DLAPACK=${LAPACK}
         -DSUITESPARSE=${SUITESPARSE}
-        -DGFLAGS_PREFER_EXPORTED_GFLAGS_CMAKE_CONFIGURATION=OFF # TheiaSfm doesn't work well with this
+        -DGFLAGS_PREFER_EXPORTED_GFLAGS_CMAKE_CONFIGURATION=ON
         -DGLOG_PREFER_EXPORTED_GLOG_CMAKE_CONFIGURATION=OFF # TheiaSfm doesn't work well with this
         -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT_VALUE}
 )
