@@ -11,7 +11,7 @@ vcpkg_from_github(
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/cmake.patch
+        ${CMAKE_CURRENT_LIST_DIR}/0001-win64-cmake.patch
 )
 
 file(COPY ${CURRENT_PORT_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -72,10 +72,10 @@ file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
 file(REMOVE ${EXE})
 file(REMOVE ${DEBUG_EXE})
 
-file(GLOB LIB_FILES          	${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/*.lib)
-file(GLOB DEBUG_LIB_FILES    	${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/*.lib)
-file(GLOB CPP_LIB_FILES         ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/cpp/*.lib)
-file(GLOB DEBUG_CPP_LIB_FILES   ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/cpp/*.lib)
+file(GLOB LIB_FILES          	${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/Release/*.lib)
+file(GLOB DEBUG_LIB_FILES    	${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/Debug/*.lib)
+file(GLOB CPP_LIB_FILES         ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/cpp/Release/*.lib)
+file(GLOB DEBUG_CPP_LIB_FILES   ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/cpp/Debug/*.lib)
 
 file(COPY ${DEBUG_LIB_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
 file(COPY ${DEBUG_CPP_LIB_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
