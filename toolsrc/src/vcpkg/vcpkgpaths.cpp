@@ -405,6 +405,7 @@ namespace vcpkg
             {
                 output.push_back(path.stem().filename().string());
             }
+            Util::sort(output);
 
             return output;
         });

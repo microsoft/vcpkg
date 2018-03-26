@@ -1,0 +1,4 @@
+Source: azure-uhttp-c
+Version: 2018-02-09
+Build-Depends: azure-c-shared-utility
+Description: Azure HTTP Library written in C

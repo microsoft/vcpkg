@@ -9,16 +9,24 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/disable-tests-docs.patch"
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DDISABLE_TESTS=ON
+        -DDISABLE_DOCS=ON
 )
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-# file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/gr2fonttest.exe)
-# file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/gr2fonttest.exe)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/graphite2)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 

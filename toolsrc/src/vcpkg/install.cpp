@@ -70,8 +70,8 @@ namespace vcpkg::Install
             }
 
             const std::string filename = file.filename().u8string();
-            if (fs::is_regular_file(status) && (Strings::case_insensitive_ascii_equals(filename.c_str(), "CONTROL") ||
-                                                Strings::case_insensitive_ascii_equals(filename.c_str(), "BUILD_INFO")))
+            if (fs::is_regular_file(status) && (Strings::case_insensitive_ascii_equals(filename, "CONTROL") ||
+                                                Strings::case_insensitive_ascii_equals(filename, "BUILD_INFO")))
             {
                 // Do not copy the control file
                 continue;
@@ -558,16 +558,15 @@ namespace vcpkg::Install
             Build::CleanBuildtrees::NO,
             Build::CleanPackages::NO};
 
-        // Note: action_plan will hold raw pointers to SourceControlFiles from this map
-        std::vector<AnyAction> action_plan;
-
         auto all_ports = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
         std::unordered_map<std::string, SourceControlFile> scf_map;
         for (auto&& port : all_ports)
             scf_map[port->core_paragraph->name] = std::move(*port);
         MapPortFileProvider provider(scf_map);
 
-        action_plan = create_feature_install_plan(provider, FullPackageSpec::to_feature_specs(specs), status_db);
+        // Note: action_plan will hold raw pointers to SourceControlFiles from this map
+        std::vector<AnyAction> action_plan =
+            create_feature_install_plan(provider, FullPackageSpec::to_feature_specs(specs), status_db);
 
         if (!GlobalState::feature_packages)
         {
