@@ -11,8 +11,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ceres-solver/ceres-solver
-    REF 1.13.0
-    SHA512 b548a303d1d4eeb75545551c381624879e363a2eba13cdd998fb3bea9bd51f6b9215b579d59d6133117b70d8bf35e18b983400c3d6200403210c18fcb1886ebb
+    REF 1.14.0
+    SHA512 6dddddf5bd5834332a69add468578ad527e4d94fe85c9751ddf5fe9ad11a34918bdd9c994c49dd6ffc398333d0ac9752ac89aaef1293e2fe0a55524e303d415d
     HEAD_REF master
 )
 
