@@ -30,6 +30,7 @@ function GetDescription($dir, $modulename)
 $subfolders | % {
     $modulename = $_.name -replace "^aws-cpp-sdk-",""
     if ($modulename -match "-tests`$") { return }
+    if ($modulename -match "-sample`$") { return }
     if ($modulename -eq "core") { return }
 
     $controltext += @("")
@@ -44,7 +45,7 @@ $subfolders | % {
 }
 
 Write-Verbose ($controltext -join "`n")
-$controltext | out-file -enc ascii $ControlFile
+[IO.File]::WriteAllText($ControlFile, ($controltext -join "`n")+"`n")
 
 Write-Verbose ($cmakefragmenttext -join "`n")
-$cmakefragmenttext | out-file -enc ascii $CMakeFragmentFile
+[IO.File]::WriteAllText($CMakeFragmentFile, ($cmakefragmenttext -join "`n") +"`n")

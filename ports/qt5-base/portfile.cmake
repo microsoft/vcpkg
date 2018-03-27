@@ -42,7 +42,7 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/include/QtZlib)
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-#        "${CMAKE_CURRENT_LIST_DIR}/fix-system-pcre2.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/fix-system-pcre2.patch"
         "${CMAKE_CURRENT_LIST_DIR}/fix-system-freetype.patch"
 )
 

@@ -304,9 +304,6 @@ Description: C++ SDK for the AWS pinpoint service
 Feature: polly
 Description: C++ SDK for the AWS polly service
 
-Feature: polly-sample
-Description: C++ SDK for the AWS polly-sample service
-
 Feature: pricing
 Description: C++ SDK for the AWS pricing service
 
