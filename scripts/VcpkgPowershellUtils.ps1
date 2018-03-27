@@ -110,9 +110,9 @@ function vcpkgGetSHA256([Parameter(Mandatory=$true)][string]$filePath)
 
 function vcpkgCheckEqualFileHash(   [Parameter(Mandatory=$true)][string]$filePath,
                                     [Parameter(Mandatory=$true)][string]$expectedHash,
-                                    [Parameter(Mandatory=$true)][string]$actualHash )
+                                    [Parameter(Mandatory=$true)][string]$actualHash)
 {
-    if ($expectedDownloadedFileHash -ne $downloadedFileHash)
+    if ($expectedHash -ne $actualHash)
     {
         Write-Host ("`nFile does not have expected hash:`n" +
         "        File path: [ $filePath ]`n" +
@@ -150,7 +150,6 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
     $downloadPartPath = "$downloadPath.part"
     vcpkgRemoveItem $downloadPartPath
 
-
     $wc = New-Object System.Net.WebClient
     if (!$wc.Proxy.IsBypassed($url))
     {
@@ -161,7 +160,7 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
     Move-Item -Path $downloadPartPath -Destination $downloadPath
 }
 
-function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
+function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$archivePath,
                             [Parameter(Mandatory=$true)][string]$destinationDir,
                             [Parameter(Mandatory=$true)][string]$outFilename)
 {
@@ -176,18 +175,18 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
     if (vcpkgHasCommand -commandName 'Microsoft.PowerShell.Archive\Expand-Archive')
     {
         Write-Verbose("Extracting with Microsoft.PowerShell.Archive\Expand-Archive")
-        Microsoft.PowerShell.Archive\Expand-Archive -path $file -destinationpath $destinationPartial
+        Microsoft.PowerShell.Archive\Expand-Archive -path $archivePath -destinationpath $destinationPartial
     }
     elseif (vcpkgHasCommand -commandName 'Pscx\Expand-Archive')
     {
         Write-Verbose("Extracting with Pscx\Expand-Archive")
-        Pscx\Expand-Archive -path $file -OutputPath $destinationPartial
+        Pscx\Expand-Archive -path $archivePath -OutputPath $destinationPartial
     }
     else
     {
         Write-Verbose("Extracting via shell")
         $shell = new-object -com shell.application
-        $zip = $shell.NameSpace($(Get-Item $file).fullname)
+        $zip = $shell.NameSpace($(Get-Item $archivePath).fullname)
         foreach($item in $zip.items())
         {
             # Piping to Out-Null is used to block until finished

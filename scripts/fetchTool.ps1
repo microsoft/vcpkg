@@ -47,7 +47,7 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
     {
         Write-Host "Downloading $tool..."
         vcpkgDownloadFile $url $downloadPath
-        Write-Host "Downloading $tool has completed successfully."
+        Write-Host "Downloading $tool... done."
     }
 
     $expectedDownloadedFileHash = @($toolData.sha256)[0]
