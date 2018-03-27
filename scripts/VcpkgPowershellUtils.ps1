@@ -194,11 +194,14 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$archivePath,
         }
     }
 
-    $itemCount = @(Get-ChildItem "$destinationPartial").Count
+    $items = @(Get-ChildItem "$destinationPartial")
+    $itemCount = $items.Count
 
     if ($itemCount -eq 1)
     {
-        Move-Item -Path "$destinationPartial\*" -Destination $output
+        $item =  $items | Select-Object -first 1
+        Write-Host "$item"
+        Move-Item -Path "$destinationPartial\$item" -Destination $output
         vcpkgRemoveItem $destinationPartial
     }
     else
