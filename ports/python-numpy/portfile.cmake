@@ -7,7 +7,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-set(VCPKG_PYTHON_INCLUDE_DIRS)
+file(REMOVE ${SOURCE_PATH}/site.cfg)
 
 if("openblas" IN_LIST FEATURES)
     file(WRITE ${SOURCE_PATH}/site.cfg
