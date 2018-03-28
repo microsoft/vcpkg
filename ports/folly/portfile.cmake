@@ -28,17 +28,47 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/msvc-15.6-workaround.patch
 )
 
+file(COPY
+    ${CMAKE_CURRENT_LIST_DIR}/FindLZ4.cmake
+    ${CMAKE_CURRENT_LIST_DIR}/FindSnappy.cmake
+    DESTINATION ${SOURCE_PATH}/CMake/
+)
+
 if(VCPKG_CRT_LINKAGE STREQUAL static)
     set(MSVC_USE_STATIC_RUNTIME ON)
 else()
     set(MSVC_USE_STATIC_RUNTIME OFF)
 endif()
 
+set(FEATURE_OPTIONS)
+
+macro(feature FEATURENAME PACKAGENAME)
+    if("${FEATURENAME}" IN_LIST FEATURES)
+        list(APPEND FEATURE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_${PACKAGENAME}=OFF)
+    else()
+        list(APPEND FEATURE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_${PACKAGENAME}=ON)
+    endif()
+endmacro()
+
+feature(zlib ZLIB)
+feature(bzip2 BZip2)
+feature(lzma LibLZMA)
+feature(lz4 LZ4)
+feature(zstd Zstd)
+feature(snappy Snappy)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DMSVC_USE_STATIC_RUNTIME=${MSVC_USE_STATIC_RUNTIME}
+        -DCMAKE_DISABLE_FIND_PACKAGE_LibDwarf=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Libiberty=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_LibAIO=ON
+        -DLIBAIO_FOUND=OFF
+        -DLIBURCU_FOUND=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_LibURCU=ON
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake(ADD_BIN_TO_PATH)
