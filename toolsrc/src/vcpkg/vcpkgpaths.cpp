@@ -80,7 +80,7 @@ namespace vcpkg
         static const std::regex URL_REGEX{Strings::format(R"###(<url>([\s\S]*?)</url>)###")};
 
         const std::regex tool_regex{
-            Strings::format(R"###(<tool[\s]+name="%s"[\s]+%s>([\s\S]*?)</tool>)###", tool, OS_STRING)};
+            Strings::format(R"###(<tool[\s]+name="%s"[\s]*%s>([\s\S]*?)</tool>)###", tool, OS_STRING)};
 
         std::smatch match_tool;
         const bool has_match_tool = std::regex_search(XML.cbegin(), XML.cend(), match_tool, tool_regex);
