@@ -313,12 +313,16 @@ vcpkg_configure_cmake(
         -DWITH_VTK=${WITH_VTK}
         -DWITH_WEBP=${WITH_WEBP}
         -DWITH_ZLIB=${WITH_ZLIB}
-        # Python
-        "-DPYTHON3_EXECUTABLE=${CURRENT_INSTALLED_DIR}/python/python.exe"
-        "-DPYTHON3_PACKAGES_PATH=${CURRENT_PACKAGES_DIR}/python/Lib/site-packages"
     OPTIONS_DEBUG
         -DINSTALL_HEADERS=OFF
         -DINSTALL_OTHER=OFF
+        # Python
+        "-DPYTHON3_EXECUTABLE=${CURRENT_INSTALLED_DIR}/debug/python/python_d.exe"
+        "-DPYTHON3_PACKAGES_PATH=${CURRENT_PACKAGES_DIR}/debug/python/Lib/site-packages"
+    OPTIONS_RELEASE
+        # Python
+        "-DPYTHON3_EXECUTABLE=${CURRENT_INSTALLED_DIR}/python/python.exe"
+        "-DPYTHON3_PACKAGES_PATH=${CURRENT_PACKAGES_DIR}/python/Lib/site-packages"
 )
 
 vcpkg_install_cmake()
