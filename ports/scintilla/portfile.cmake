@@ -1,8 +1,10 @@
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  message(FATAL_ERROR "scintilla only supports dynamic linkage")
+  message(STATUS "Scintilla buildsystem doesn't support static linkage. Building dynamic instead.")
+  set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
-  message(FATAL_ERROR "scintilla only supports dynamic crt")
+  message(STATUS "Scintilla buildsystem doesn't support static crt linkage. Building dynamic instead.")
+  set(VCPKG_CRT_LINKAGE dynamic)
 endif()
 
 include(vcpkg_common_functions)
