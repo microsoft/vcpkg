@@ -1,5 +1,10 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    message("dlib only supports static linkage")
+    set(VCPKG_LIBRARY_LINKAGE "static")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO davisking/dlib
@@ -35,7 +40,6 @@ vcpkg_configure_cmake(
         -DDLIB_USE_CUDA=${WITH_CUDA}
         -DDLIB_GIF_SUPPORT=OFF
         -DDLIB_USE_MKL_FFT=OFF
-        -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=TRUE
     OPTIONS_DEBUG
         -DDLIB_ENABLE_ASSERTS=ON
         #-DDLIB_ENABLE_STACK_TRACE=ON

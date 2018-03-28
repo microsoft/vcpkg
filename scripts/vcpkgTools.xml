@@ -6,12 +6,20 @@
         <url>https://cmake.org/files/v3.10/cmake-3.10.2-win32-x86.zip</url>
         <sha256>f5f7e41a21d0e9b655aca58498b08e17ecd27796bf82837e2c84435359169dd6</sha256>
         <archiveRelativePath>cmake-3.10.2-win32-x86.zip</archiveRelativePath>
-        <exeRelativePath os="osx">cmake-3.10.2-Darwin-x86_64/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url os="osx">https://cmake.org/files/v3.10/cmake-3.10.2-Darwin-x86_64.tar.gz</url>
-        <archiveRelativePath os="osx">cmake-3.10.2-Darwin-x86_64.tar.gz</archiveRelativePath>
-        <exeRelativePath os="linux">cmake-3.10.2-Linux-x86_64/bin/cmake</exeRelativePath>
-        <url os="linux">https://cmake.org/files/v3.10/cmake-3.10.2-Linux-x86_64.tar.gz</url>
-        <archiveRelativePath os="linux">cmake-3.10.2-Linux-x86_64.tar.gz</archiveRelativePath>
+    </tool>
+    <tool name="cmake" os="osx">
+        <requiredVersion>3.10.2</requiredVersion>
+        <exeRelativePath>cmake-3.10.2-Darwin-x86_64/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://cmake.org/files/v3.10/cmake-3.10.2-Darwin-x86_64.tar.gz</url>
+        <sha256>e748eb7698f8e2783c2eea9ab81eebf66da0238bbf8e8fa722a67a38f2110718</sha256>
+        <archiveRelativePath>cmake-3.10.2-Darwin-x86_64.tar.gz</archiveRelativePath>
+    </tool>
+    <tool name="cmake" os="linux">
+        <requiredVersion>3.10.2</requiredVersion>
+        <exeRelativePath>cmake-3.10.2-Linux-x86_64/bin/cmake</exeRelativePath>
+        <url>https://cmake.org/files/v3.10/cmake-3.10.2-Linux-x86_64.tar.gz</url>
+        <sha256>7a82b46c35f4e68a0807e8dc04e779dee3f36cd42c6387fd13b5c29fe62a69ea</sha256>
+        <archiveRelativePath>cmake-3.10.2-Linux-x86_64.tar.gz</archiveRelativePath>
     </tool>
     <tool name="git">
         <requiredVersion>2.16.2</requiredVersion>

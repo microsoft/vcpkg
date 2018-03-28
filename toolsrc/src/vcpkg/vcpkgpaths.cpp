@@ -46,9 +46,9 @@ namespace vcpkg
 #if defined(_WIN32)
         static constexpr StringLiteral OS_STRING = "";
 #elif defined(__APPLE__)
-        static constexpr StringLiteral OS_STRING = " os=\"osx\"";
+        static constexpr StringLiteral OS_STRING = R"(os="osx")";
 #else // assume linux
-        static constexpr StringLiteral OS_STRING = " os=\"linux\"";
+        static constexpr StringLiteral OS_STRING = R"(os="linux")";
 #endif
 
         static const fs::path XML_PATH = paths.scripts / "vcpkgTools.xml";
@@ -72,15 +72,15 @@ namespace vcpkg
         };
 
         static const std::string XML = paths.get_filesystem().read_contents(XML_PATH).value_or_exit(VCPKG_LINE_INFO);
-        static const std::regex VERSION_REGEX{
-            Strings::format(R"###(<requiredVersion>([\s\S]*?)</requiredVersion>)###", tool)};
+        static const std::regex VERSION_REGEX{R"###(<requiredVersion>([\s\S]*?)</requiredVersion>)###"};
         static const std::regex EXE_RELATIVE_PATH_REGEX{
-            Strings::format(R"###(<exeRelativePath%s>([\s\S]*?)</exeRelativePath>)###", OS_STRING)};
+            Strings::format(R"###(<exeRelativePath>([\s\S]*?)</exeRelativePath>)###")};
         static const std::regex ARCHIVE_RELATIVE_PATH_REGEX{
-            Strings::format(R"###(<archiveRelativePath%s>([\s\S]*?)</archiveRelativePath>)###", OS_STRING)};
-        static const std::regex URL_REGEX{Strings::format(R"###(<url%s>([\s\S]*?)</url>)###", OS_STRING)};
+            Strings::format(R"###(<archiveRelativePath>([\s\S]*?)</archiveRelativePath>)###")};
+        static const std::regex URL_REGEX{Strings::format(R"###(<url>([\s\S]*?)</url>)###")};
 
-        const std::regex tool_regex{Strings::format(R"###(<tool[\s]+name="%s">([\s\S]*?)</tool>)###", tool)};
+        const std::regex tool_regex{
+            Strings::format(R"###(<tool[\s]+name="%s"[\s]*%s>([\s\S]*?)</tool>)###", tool, OS_STRING)};
 
         std::smatch match_tool;
         const bool has_match_tool = std::regex_search(XML.cbegin(), XML.cend(), match_tool, tool_regex);
