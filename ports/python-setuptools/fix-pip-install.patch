@@ -1,0 +1,12 @@
+diff --git a/req/req_install.py b/req/req_install.py
+index 1a98f37..b0bfb3b 100644
+--- a/req/req_install.py
++++ b/req/req_install.py
+@@ -918,6 +918,7 @@ class InstallRequirement(object):
+                         os.path.relpath(
+                             prepend_root(filename), egg_info_dir)
+                     )
++            ensure_dir(egg_info_dir)
+             inst_files_path = os.path.join(egg_info_dir, 'installed-files.txt')
+             with open(inst_files_path, 'w') as f:
+                 f.write('\n'.join(new_lines) + '\n')

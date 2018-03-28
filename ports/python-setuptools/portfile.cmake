@@ -14,6 +14,10 @@ vcpkg_execute_required_process(
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
     LOGNAME install-pip-${TARGET_TRIPLET}-rel
 )
+vcpkg_apply_patches(
+    SOURCE_PATH ${CURRENT_INSTALLED_DIR}/debug/python/Lib/site-packages/pip
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-pip-install.patch
+)
 message(STATUS "Installing built-in pip wheel.. done")
 
 # upgrade pip: need 9.0.2 to workaround https://github.com/pypa/pip/issues/373
@@ -27,6 +31,10 @@ vcpkg_execute_required_process(
     COMMAND ${PYTHON_EXECUTABLE} -m pip install --upgrade pip
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
     LOGNAME upgrade-pip-${TARGET_TRIPLET}-rel
+)
+vcpkg_apply_patches(
+    SOURCE_PATH ${CURRENT_INSTALLED_DIR}/python/Lib/site-packages/pip
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-pip-install.patch
 )
 message(STATUS "Upgrading pip.. done")
 
