@@ -15,13 +15,14 @@ if (!(Test-Path "$VcpkgPath/.vcpkg-root"))
 $utilsdir = split-path -parent $script:MyInvocation.MyCommand.Definition
 
 $tagPorts = @(
+    "assimp",
+    "aws-sdk-cpp",
     "azure-storage-cpp",
     "azure-iot-sdk-c",
     "azure-c-shared-utility",
     "azure-uamqp-c",
     "azure-uhttp-c",
     "azure-umqtt-c",
-    "assimp",
     "bitserializer",
     "brynet",
     "c-ares",
@@ -86,6 +87,7 @@ $tagPortsWithRegex = @(
     (New-Object PSObject -Property @{ "port"="libmysql"; "regex"="^mysql-[\d\.]+$" }),
     (New-Object PSObject -Property @{ "port"="tbb"; "regex"="^[\d]+_" }),
     (New-Object PSObject -Property @{ "port"="openimageio"; "regex"="^Release-" }),
+    (New-Object PSObject -Property @{ "port"="catch2"; "regex"="^v[2-9]\.[\d\.]+`$" }),
 
     (New-Object PSObject -Property @{ "port"="directxtex"; "regex"="^[^\d]+\d+[^\d]?$" }),
     (New-Object PSObject -Property @{ "port"="directxtk"; "regex"="^[^\d]+\d+[^\d]?$" })

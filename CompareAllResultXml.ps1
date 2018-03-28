@@ -1,20 +1,28 @@
 [CmdletBinding()]
 param
 (
-    [Parameter(Mandatory=$true, Position=0)][string]$leftBuild,
-    [Parameter(Mandatory=$true, Position=1)][string]$rightBuild
+    [Parameter(Mandatory=$true, Position=0)][string[]]$leftBuild,
+    [Parameter(Mandatory=$false, Position=1)][string[]]$rightBuild
 )
 
 $myDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 
-$leftresults = ls \\vcpkg-000\General\Results\${leftBuild}_*.xml
-$rightresults = ls \\vcpkg-000\General\Results\${rightBuild}_*.xml
+$leftresults = $leftBuild | % { ls \\vcpkg-000\General\Results\${_}_*.xml }
+if ($rightBuild.count -eq 0)
+{
+    $rightBuild = & $myDir\baseline.ps1
+}
+
+$rightresults = $rightBuild | % { ls \\vcpkg-000\General\Results\${_}_*.xml }
 
 Write-Verbose "Left results"
 Write-Verbose "$leftresults"
 
 Write-Verbose "Right results"
 Write-Verbose "$rightresults"
+
+Write-Verbose "$leftBuild=left"
+Write-Verbose "$rightBuild=right"
 
 $allresults = @($leftresults) + @($rightresults)
 
