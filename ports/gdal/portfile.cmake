@@ -3,9 +3,11 @@ if (TRIPLET_SYSTEM_ARCH MATCHES "arm")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "GDAL's nmake buildsystem does not support building static libraries")
+    message(STATUS "GDAL's nmake buildsystem does not support building static libraries. Building dynamic instead.")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
 elseif(VCPKG_CRT_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "GDAL's nmake buildsystem does not support static crt linkage")
+	message(STATUS "GDAL's nmake buildsystem doesn't support static crt linkage. Building dynamic instead.")
+    set(VCPKG_CRT_LINKAGE dynamic)
 endif()
 
 include(vcpkg_common_functions)
