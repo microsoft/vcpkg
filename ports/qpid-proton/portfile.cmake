@@ -4,7 +4,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "qpid-proton does not support static CRT linkage.")
+    message("qpid-proton does not support static  CRT linkage. Building dynamically.")
+    set(VCPKG_CRT_LINKAGE "dynamic")
 endif()
 
 include(vcpkg_common_functions)
