@@ -14,7 +14,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-  message(FATAL_ERROR "Redshell only supports dynamic CRT linkage")
+  message("Redshell only supports dynamic crt linkage")
+  set(VCPKG_CRT_LINKAGE "dynamic")
 endif()
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/redshell)
