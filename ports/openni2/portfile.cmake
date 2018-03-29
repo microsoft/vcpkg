@@ -11,7 +11,8 @@ endif()
 
 # Static CRT linkage not supported
 if (VCPKG_CRT_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "Warning: Static CRT linkage is not supported.")
+    message(STATUS "Warning: Static CRT linkage is not supported. Building dynamic.")
+    set(VCPKG_CRT_LINKAGE "dynamic")
 endif()
 
 # Download Source Code
