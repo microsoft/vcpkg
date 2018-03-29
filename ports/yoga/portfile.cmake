@@ -12,7 +12,8 @@
 include(vcpkg_common_functions)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(FATAL_ERROR "Error: Dynamic building not supported yet.")
+    message(WARNING "Dynamic not supported building static")
+    set(VCPKG_LIBRARY_LINKAGE static)
 elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     message(FATAL_ERROR "Error: UWP builds not supported yet.")
 endif()
