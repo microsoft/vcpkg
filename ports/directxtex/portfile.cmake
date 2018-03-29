@@ -6,7 +6,9 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 
 if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-    message(FATAL_ERROR "DirectXTex only supports dynamic CRT linkage")
+    message(STATUS "DirectXTex doesn't support static CRT linkage. Building dynamic instead.")
+    set(VCPKG_CRT_LINKAGE dynamic)
+
 endif()
 
 vcpkg_from_github(
