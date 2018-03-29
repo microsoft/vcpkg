@@ -16,7 +16,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "Only dynamic linking against the CRT is currently supported.")
+    message(STATUS "buildsystem doesn't support static crt linkage. Building dynamic instead.")
+	set(VCPKG_CRT_LINKAGE dynamic)
 endif()
 
 include(vcpkg_common_functions)
