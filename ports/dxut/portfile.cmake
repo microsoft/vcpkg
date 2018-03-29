@@ -4,7 +4,8 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 
 if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-  message(FATAL_ERROR "DXUT only supports dynamic CRT linkage")
+  message(STATUS "DXUT doesn't support static CRT linkage. Building dynamic instead.")
+  set(VCPKG_CRT_LINKAGE dynamic)
 endif()
 
 include(vcpkg_common_functions)
