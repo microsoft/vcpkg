@@ -5,7 +5,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(VCPKG_LIBRARY_LINKAGE "dynamic")
 endif()
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "msix only supports dynamic crt linkage")
+    message("msix does not support static  CRT linkage. Building dynamically.")
+    set(VCPKG_CRT_LINKAGE "dynamic")
 endif()
 
 vcpkg_from_github(
