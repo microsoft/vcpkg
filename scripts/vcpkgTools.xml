@@ -54,4 +54,18 @@
         <sha256>2a3afe19c180f8373fa02ff00254d5394fec0349f5804e0ad2f6067854ff28ac</sha256>
         <archiveRelativePath>7za920.zip</archiveRelativePath>
     </tool>
+    <tool name="ninja" os="linux">
+        <requiredVersion>1.8.2</requiredVersion>
+        <exeRelativePath>ninja</exeRelativePath>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-linux.zip</url>
+        <sha256>d2fea9ff33b3ef353161ed906f260d565ca55b8ca0568fa07b1d2cab90a84a07</sha256>
+        <archiveRelativePath>ninja-linux.zip</archiveRelativePath>
+    </tool>
+    <tool name="ninja" os="osx">
+        <requiredVersion>1.8.2</requiredVersion>
+        <exeRelativePath>ninja</exeRelativePath>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-mac.zip</url>
+        <sha256>0347d55c66061652b26f48769d566761630ffde3143793b29064a57f356542cc</sha256>
+        <archiveRelativePath>ninja-mac.zip</archiveRelativePath>
+    </tool>
 </tools>
