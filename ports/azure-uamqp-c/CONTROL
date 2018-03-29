@@ -1,0 +1,4 @@
+Source: azure-uamqp-c
+Version: 1.0.0-pre-release-1.0.9
+Build-Depends: azure-c-shared-utility
+Description: AMQP library for C
