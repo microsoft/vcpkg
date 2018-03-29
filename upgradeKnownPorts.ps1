@@ -47,7 +47,6 @@ $tagPorts = @(
     "gdcm2",
     "gflags",
     "glog",
-    "grpc",
     "gtest",
     "harfbuzz",
     "jsoncpp",
@@ -67,6 +66,7 @@ $tagPorts = @(
     "openblas",
     "openjpeg",
     "plog",
+    "pmdk",
     "rapidjson",
     "rocksdb",
     "sdl2",
@@ -88,6 +88,7 @@ $tagPortsWithRegex = @(
     (New-Object PSObject -Property @{ "port"="tbb"; "regex"="^[\d]+_" }),
     (New-Object PSObject -Property @{ "port"="openimageio"; "regex"="^Release-" }),
     (New-Object PSObject -Property @{ "port"="catch2"; "regex"="^v[2-9]\.[\d\.]+`$" }),
+    (New-Object PSObject -Property @{ "port"="grpc"; "regex"="^v[\d\.]+`$" }),
 
     (New-Object PSObject -Property @{ "port"="directxtex"; "regex"="^[^\d]+\d+[^\d]?$" }),
     (New-Object PSObject -Property @{ "port"="directxtk"; "regex"="^[^\d]+\d+[^\d]?$" })
