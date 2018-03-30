@@ -1,10 +1,15 @@
 include(vcpkg_common_functions)
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    message("dlib only supports static linkage")
+    set(VCPKG_LIBRARY_LINKAGE "static")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO davisking/dlib
-    REF v19.9
-    SHA512 1e2123c22e1b13cc84108fa627bfa92eadc9dee63f93a9f45676bbf2b752c8728117d915ac327f5223b0cdbce87dd3bef2f4d8d5ed3f8f5a314ffa9e8962a246
+    REF v19.10
+    SHA512 88c5b41c12219e6166c6621b654b3869ca4a2af777a8fa55429b833b90b048e3e74ea7ad752d7440809b8171bbd38090cb24a29770391fc3a9d53f9a5fba3341
     HEAD_REF master
 )
 

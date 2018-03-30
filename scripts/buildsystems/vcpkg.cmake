@@ -44,7 +44,7 @@ else()
         elseif(_VCPKG_CL MATCHES "arm/cl.exe$")
             set(_VCPKG_TARGET_TRIPLET_ARCH arm)
         elseif(_VCPKG_CL MATCHES "arm64/cl.exe$")
-            set(_VCPKG_TARGET_TRIPLET_ARCH arm64)            
+            set(_VCPKG_TARGET_TRIPLET_ARCH arm64)
         elseif(_VCPKG_CL MATCHES "bin/cl.exe$" OR _VCPKG_CL MATCHES "x86/cl.exe$")
             set(_VCPKG_TARGET_TRIPLET_ARCH x86)
         elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64")
@@ -109,16 +109,6 @@ list(APPEND CMAKE_FIND_ROOT_PATH
 list(APPEND CMAKE_LIBRARY_PATH
     ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/manual-link
 )
-
-if (NOT DEFINED CMAKE_SYSTEM_VERSION AND _VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
-    include(${_VCPKG_ROOT_DIR}/scripts/cmake/vcpkg_get_windows_sdk.cmake)
-    # This is used as an implicit parameter for vcpkg_get_windows_sdk
-    set(VCPKG_ROOT_DIR ${_VCPKG_ROOT_DIR})
-    vcpkg_get_windows_sdk(WINDOWS_SDK_VERSION)
-    unset(VCPKG_ROOT_DIR)
-    set(CMAKE_SYSTEM_VERSION ${WINDOWS_SDK_VERSION} CACHE STRING "Windows SDK version")
-    message(STATUS "Found Windows SDK ${WINDOWS_SDK_VERSION}")
-endif()
 
 file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _programfiles)
 set(CMAKE_SYSTEM_IGNORE_PATH

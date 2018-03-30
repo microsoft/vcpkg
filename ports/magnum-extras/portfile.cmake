@@ -7,11 +7,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(BUILD_STATIC 1)
-else()
-    set(BUILD_STATIC 0)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
 # Handle features
 set(_COMPONENT_FLAGS "")
@@ -48,14 +44,14 @@ if("ui" IN_LIST FEATURES)
     message(WARNING "It is recommended to install one of magnum-plugins[freetypefont,harfbuzzfont,stbtruetypefont] to have the UI library working out of the box")
 endif()
 
-
 # Debug includes and share are the same as release
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share)
+    ${CURRENT_PACKAGES_DIR}/debug/share
+)
 
 # Clean up empty directories
-if("${FEATURES}" STREQUAL "")
+if("${FEATURES}" STREQUAL "core")
     file(REMOVE_RECURSE
         ${CURRENT_PACKAGES_DIR}/bin
         ${CURRENT_PACKAGES_DIR}/lib

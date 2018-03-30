@@ -1,3 +1,68 @@
+vcpkg (0.0.107)
+--------------
+  * Add ports:
+    - azmq           1.0.2
+    - azure-c-shared-utility 1.0.0-pre-release-1.0.9
+    - azure-iot-sdk-c 1.0.0-pre-release-1.0.9
+    - azure-uamqp-c  1.0.0-pre-release-1.0.9
+    - azure-uhttp-c  2018-02-09
+    - azure-umqtt-c  1.0.0-pre-release-1.0.9
+    - bitserializer  0.7
+    - caf            0.15.7
+    - fmem           c-libs-2ccee3d2fb
+    - gherkin-c      c-libs-e63e83104b
+    - librsync       2.0.2
+    - libuuid        1.0.3
+    - mpark-variant  1.3.0
+    - nanomsg        1.1.2
+    - nvml           1.3-0
+    - nvtt           2.1.0
+    - openvpn3       2018-03-21
+    - parson         2018-03-23
+    - plplot         5.13.0-1
+    - sqlite-orm     1.1
+    - tap-windows6   9.21.2-0e30f5c
+  * Update ports:
+    - abseil         2018-03-17 -> 2018-03-23
+    - alembic        1.7.6 -> 1.7.7
+    - asio           1.12.0 -> 1.12.0-1
+    - aubio          0.4.6-1 -> 0.4.6-2
+    - aws-sdk-cpp    1.3.58 -> 1.4.21
+    - catch2         2.2.1 -> 2.2.1-1
+    - ccfits         2.5-1 -> 2.5-2
+    - ceres          1.13.0-4 -> 1.14.0-1
+    - cfitsio        3.410-1 -> 3.410-2
+    - clara          2018-03-11 -> 2018-03-23
+    - cpprestsdk     2.10.2 -> 2.10.2-1
+    - discord-rpc    3.0.0 -> 3.1.0
+    - dlib           19.9-1 -> 19.10
+    - eastl          3.07.02 -> 3.08.00
+    - exiv2          2018-03-17 -> 2018-03-23
+    - ffmpeg         3.3.3-4 -> 3.3.3-5
+    - gdcm2          2.8.4 -> 2.8.5
+    - harfbuzz       1.7.6 -> 1.7.6-1
+    - hpx            1.0.0-8 -> 1.1.0-1
+    - lcm            1.3.95 -> 1.3.95-1
+    - libpq          9.6.1-1 -> 9.6.1-4
+    - libvpx         1.6.1-1 -> 1.6.1-2
+    - mpg123         1.25.8-2 -> 1.25.8-4
+    - nuklear        2018-03-17 -> 2018-03-23
+    - openssl        1.0.2n-2 -> 1.0.2n-3
+    - paho-mqtt      1.2.0-2 -> 1.2.0-3
+    - plog           1.1.3 -> 1.1.4
+    - qt5-quickcontrols 5.9.2-0 -> 5.9.2-1
+    - qt5-quickcontrols2 5.9.2-0 -> 5.9.2-1
+    - sciter         4.1.3 -> 4.1.4
+    - shapelib       1.4.1 -> 1.4.1-1
+    - signalrclient  1.0.0-beta1-2 -> 1.0.0-beta1-3
+    - soundtouch     2.0.0 -> 2.0.0-1
+    - thrift         2018-03-17 -> 2018-03-23
+    - unicorn        2018-03-13 -> 2018-03-20
+    - zeromq         2018-03-17 -> 2018-03-23
+
+-- vcpkg team <vcpkg@microsoft.com>  TUE, 27 Mar 2018 22:00:00 -0800
+
+
 vcpkg (0.0.106)
 --------------
   * Add ports:

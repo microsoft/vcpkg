@@ -25,7 +25,7 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
         throw "Unkown tool $tool"
     }
 
-    $exePath = "$downloadsDir\$(@($toolData.exeRelativePath)[0])"
+    $exePath = "$downloadsDir\$($toolData.exeRelativePath)"
 
     if (Test-Path $exePath)
     {
@@ -35,22 +35,22 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
     $isArchive = vcpkgHasProperty -object $toolData -propertyName "archiveRelativePath"
     if ($isArchive)
     {
-        $downloadPath = "$downloadsDir\$(@($toolData.archiveRelativePath)[0])"
+        $downloadPath = "$downloadsDir\$($toolData.archiveRelativePath)"
     }
     else
     {
-        $downloadPath = "$downloadsDir\$(@($toolData.exeRelativePath)[0])"
+        $downloadPath = "$downloadsDir\$($toolData.exeRelativePath)"
     }
 
-    [String]$url = @($toolData.url)[0]
+    [String]$url = $toolData.url
     if (!(Test-Path $downloadPath))
     {
         Write-Host "Downloading $tool..."
         vcpkgDownloadFile $url $downloadPath
-        Write-Host "Downloading $tool has completed successfully."
+        Write-Host "Downloading $tool... done."
     }
 
-    $expectedDownloadedFileHash = @($toolData.sha256)[0]
+    $expectedDownloadedFileHash = $toolData.sha256
     $downloadedFileHash = vcpkgGetSHA256 $downloadPath
     vcpkgCheckEqualFileHash -filePath $downloadPath -expectedHash $expectedDownloadedFileHash -actualHash $downloadedFileHash
 
@@ -58,13 +58,14 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
     {
         $outFilename = (Get-ChildItem $downloadPath).BaseName
         Write-Host "Extracting $tool..."
-        vcpkgExtractFile -File $downloadPath -DestinationDir $downloadsDir -outFilename $outFilename
-        Write-Host "Extracting $tool has completed successfully."
+        vcpkgExtractFile -ArchivePath $downloadPath -DestinationDir $downloadsDir -outFilename $outFilename
+        Write-Host "Extracting $tool... done."
     }
 
     if (-not (Test-Path $exePath))
     {
-        throw ("Could not detect or download " + $tool)
+        Write-Error "Could not detect or download $tool"
+        throw
     }
 
     return $exePath

@@ -54,6 +54,7 @@ namespace vcpkg
         StatusParagraphs current_status_db = load_current_database(fs, status_file, status_file_old);
 
         auto update_files = fs.get_files_non_recursive(updates_dir);
+        Util::sort(update_files);
         if (update_files.empty())
         {
             // updates directory is empty, control file is up-to-date.
