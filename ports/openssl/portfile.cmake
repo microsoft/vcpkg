@@ -155,6 +155,10 @@ file(READ "${CURRENT_PACKAGES_DIR}/include/openssl/dtls1.h" _contents)
 string(REPLACE "<winsock.h>" "<winsock2.h>" _contents "${_contents}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/openssl/dtls1.h" "${_contents}")
 
+file(READ "${CURRENT_PACKAGES_DIR}/include/openssl/rand.h" _contents)
+string(REPLACE "#  include <windows.h>" "#ifndef _WINSOCKAPI_\n#define _WINSOCKAPI_\n#endif\n#  include <windows.h>" _contents "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/openssl/rand.h" "${_contents}")
+
 vcpkg_copy_pdbs()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
