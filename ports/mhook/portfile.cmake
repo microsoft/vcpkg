@@ -1,7 +1,5 @@
 include(vcpkg_common_functions)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mhook-2.5.1)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apriorit/mhook
@@ -12,6 +10,7 @@ vcpkg_from_github(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()
