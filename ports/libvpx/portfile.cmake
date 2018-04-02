@@ -5,8 +5,8 @@ endif()
 
 include(vcpkg_common_functions)
 
-set(LIBVPX_VERSION 1.6.1)
-set(LIBVPX_HASH 13b7eb515d026b302b8c484d6f06df067feb5aed4ceac953d85fe84fd684dab07e89ddbf80b4f395c6d9127709422156287e5754f49246050b2e18930adb3970)
+set(LIBVPX_VERSION 1.7.0)
+set(LIBVPX_HASH 8b3b766b550f8d86907628d7ed88035f9a2612aac21542e0fd5ad35b905eb82cbe1be02a1a24afce7a3bcc4766f62611971f72724761996b392136c40a1e7ff0)
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libvpx-${LIBVPX_VERSION})
 
@@ -14,7 +14,7 @@ string(REGEX REPLACE "\\\\" "/" SOURCE_PATH_UNIX ${SOURCE_PATH})
 string(REGEX REPLACE "\\\\" "/" CURRENT_PACKAGES_DIR_UNIX ${CURRENT_PACKAGES_DIR})
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/webmproject/libvpx/archive/v${LIBVPX_VERSION}.tar.gz"
+    URLS "https://github.com/webmproject/libvpx/archive/v${LIBVPX_VERSION}/libvpx-${LIBVPX_VERSION}.tar.gz"
     FILENAME "libvpx-${LIBVPX_VERSION}.tar.gz"
     SHA512 ${LIBVPX_HASH}
 )
@@ -23,8 +23,11 @@ vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_find_acquire_program(YASM)
 vcpkg_find_acquire_program(PERL)
 vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
+vcpkg_acquire_msys(MSYS_ROOT PACKAGES diffutils)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
+
+message(STATUS "PERL_EXE_PATH ; ${PERL_EXE_PATH}")
 set(ENV{PATH} "${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
 set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 
@@ -48,7 +51,7 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
     set(LIBVPX_ARCH_DIR "ARM")
 endif()
 
-set(LIBVPX_TARGET_VS "vs14")
+set(LIBVPX_TARGET_VS "vs15")
 
 message(STATUS "Generating makefile")
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})

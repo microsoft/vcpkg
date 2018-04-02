@@ -23,6 +23,13 @@ vcpkg_from_github(
 file(COPY ${CMAKE_SOURCE_PATH}/cryptopp-config.cmake DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_SOURCE_PATH}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
+vcpkg_apply_patches(
+  SOURCE_PATH "${SOURCE_PATH}"
+  PATCHES
+    "${CMAKE_CURRENT_LIST_DIR}/patch.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/cmake.patch"
+)
+
 # Dynamic linking should be avoided for Crypto++ to reduce the attack surface,
 # so generate a static lib for both dynamic and static vcpkg targets.
 # See also:

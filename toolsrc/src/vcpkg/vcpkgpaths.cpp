@@ -44,11 +44,11 @@ namespace vcpkg
     static ToolData parse_tool_data_from_xml(const VcpkgPaths& paths, const std::string& tool)
     {
 #if defined(_WIN32)
-        static constexpr StringLiteral OS_STRING = "";
+        static constexpr StringLiteral OS_STRING = "windows";
 #elif defined(__APPLE__)
-        static constexpr StringLiteral OS_STRING = R"(os="osx")";
+        static constexpr StringLiteral OS_STRING = "osx";
 #else // assume linux
-        static constexpr StringLiteral OS_STRING = R"(os="linux")";
+        static constexpr StringLiteral OS_STRING = "linux";
 #endif
 
         static const fs::path XML_PATH = paths.scripts / "vcpkgTools.xml";
@@ -79,11 +79,16 @@ namespace vcpkg
             Strings::format(R"###(<archiveRelativePath>([\s\S]*?)</archiveRelativePath>)###")};
         static const std::regex URL_REGEX{Strings::format(R"###(<url>([\s\S]*?)</url>)###")};
 
-        const std::regex tool_regex{
-            Strings::format(R"###(<tool[\s]+name="%s"[\s]*%s>([\s\S]*?)</tool>)###", tool, OS_STRING)};
+        std::regex tool_regex{
+            Strings::format(R"###(<tool[\s]+name="%s"[\s]+os="%s">([\s\S]*?)<\/tool>)###", tool, OS_STRING)};
 
         std::smatch match_tool;
-        const bool has_match_tool = std::regex_search(XML.cbegin(), XML.cend(), match_tool, tool_regex);
+        bool has_match_tool = std::regex_search(XML.cbegin(), XML.cend(), match_tool, tool_regex);
+        if (!has_match_tool && OS_STRING == "windows") // Legacy support. Change introduced in vcpkg v0.0.107.
+        {
+            tool_regex = Strings::format(R"###(<tool[\s]+name="%s">([\s\S]*?)<\/tool>)###", tool);
+            has_match_tool = std::regex_search(XML.cbegin(), XML.cend(), match_tool, tool_regex);
+        }
         Checks::check_exit(VCPKG_LINE_INFO,
                            has_match_tool,
                            "Could not find entry for tool [%s] in %s",
