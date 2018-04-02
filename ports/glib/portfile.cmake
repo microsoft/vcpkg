@@ -5,7 +5,9 @@ endif()
 
 # Glib relies on DllMain
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR VCPKG_CRT_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "Glib only supports dynamic library and crt linkage")
+    message(STATUS "Glib buildsystem doesn't support static library and crt linkage. Building dynamic instead.")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
+    set(VCPKG_CRT_LINKAGE dynamic)
 endif()
 
 include(vcpkg_common_functions)
