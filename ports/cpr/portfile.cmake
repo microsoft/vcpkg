@@ -27,6 +27,8 @@ vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/cpr-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/cpr)
+
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cpr)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/cpr/LICENSE ${CURRENT_PACKAGES_DIR}/share/cpr/copyright)
