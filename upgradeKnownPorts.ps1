@@ -62,6 +62,7 @@ $tagPorts = @(
     "libzip",
     "lz4",
     "matio",
+    "mhook",
     "mpark-variant",
     "openblas",
     "openjpeg",
