@@ -20,6 +20,7 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/fix-vlfeat-static.patch
         ${CMAKE_CURRENT_LIST_DIR}/fix-glog-error.patch
         ${CMAKE_CURRENT_LIST_DIR}/fix-find-suitesparse.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix-oiio.patch
 )
 
 vcpkg_configure_cmake(
