@@ -120,7 +120,7 @@ namespace vcpkg::Commands::Edit
             const auto buildtrees_current_dir = paths.buildtrees / port_name;
 
             const auto cmd_line = Strings::format(
-                R"("%s" "%s" %s -n)", env_editor.u8string(), portpath.u8string(), buildtrees_current_dir.u8string());
+                R"("%s" "%s" "%s" -n)", env_editor.u8string(), portpath.u8string(), buildtrees_current_dir.u8string());
             Checks::exit_with_code(VCPKG_LINE_INFO, System::cmd_execute(cmd_line));
         }
 
