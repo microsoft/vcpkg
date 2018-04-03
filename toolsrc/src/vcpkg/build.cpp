@@ -322,6 +322,12 @@ namespace vcpkg::Build
         auto& fs = paths.get_filesystem();
         const Triplet& triplet = spec.triplet();
 
+#if !defined(_WIN32)
+        // TODO: remove when vcpkg.exe is in charge for acquiring tools. Change introduced in vcpkg v0.0.107.
+        // bootstrap should have already downloaded ninja, but making sure it is present in case it was deleted.
+        vcpkg::Util::unused(paths.get_ninja_exe());
+#endif
+
         const fs::path& cmake_exe_path = paths.get_cmake_exe();
         const fs::path& git_exe_path = paths.get_git_exe();
 

@@ -18,9 +18,10 @@ namespace vcpkg
     struct ToolData
     {
         std::array<int, 3> required_version;
-        fs::path downloaded_exe_path;
+        fs::path exe_path;
         std::string url;
         fs::path downloaded_path;
+        fs::path tool_dir_path;
     };
 
     static Optional<std::array<int, 3>> parse_version_string(const std::string& version_as_string)
@@ -114,11 +115,20 @@ namespace vcpkg
                            tool,
                            required_version_as_string);
 
+// Legacy support. Change introduced in vcpkg v0.0.107.
+#if !defined(_WIN32)
+        const std::string tool_dir_name = Strings::format("%s-%s", tool, required_version_as_string);
+        const fs::path tool_dir_path = paths.downloads / "tools" / tool_dir_name;
+        const fs::path exe_path = tool_dir_path / exe_relative_path;
+#else
+        const fs::path tool_dir_path;
         const fs::path exe_path = paths.downloads / exe_relative_path;
+#endif
         return ToolData{*required_version.get(),
                         exe_path,
                         url,
-                        paths.downloads / archive_relative_path.value_or(exe_relative_path)};
+                        paths.downloads / archive_relative_path.value_or(exe_relative_path),
+                        tool_dir_path};
     }
 
     static bool exists_and_has_equal_or_greater_version(const std::string& version_cmd,
@@ -177,6 +187,36 @@ namespace vcpkg
         return data_lines;
     }
 
+    static void extract_archive(const VcpkgPaths& paths, const fs::path& archive, const fs::path& to_path)
+    {
+        Files::Filesystem& fs = paths.get_filesystem();
+        const fs::path to_path_partial = to_path.u8string() + ".partial";
+
+        std::error_code ec;
+        fs.remove_all(to_path_partial, ec);
+        fs.create_directories(to_path_partial, ec);
+
+        const auto ext = archive.extension();
+        if (ext == ".gz" && ext.extension() != ".tar")
+        {
+            const auto code = System::cmd_execute(
+                Strings::format(R"(cd '%s' && tar xzf '%s')", to_path_partial.u8string(), archive.u8string()));
+            Checks::check_exit(VCPKG_LINE_INFO, code == 0, "tar failed while extracting %s", archive.u8string());
+        }
+        else if (ext == ".zip")
+        {
+            const auto code = System::cmd_execute(
+                Strings::format(R"(cd '%s' && unzip -qqo '%s')", to_path_partial.u8string(), archive.u8string()));
+            Checks::check_exit(VCPKG_LINE_INFO, code == 0, "unzip failed while extracting %s", archive.u8string());
+        }
+        else
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO, "Unexpected archive extension: %s", ext.u8string());
+        }
+
+        fs.rename(to_path_partial, to_path);
+    }
+
     static fs::path fetch_tool(const VcpkgPaths& paths, const std::string& tool_name, const ToolData& tool_data)
     {
         const auto& fs = paths.get_filesystem();
@@ -200,7 +240,7 @@ namespace vcpkg
         Checks::check_exit(VCPKG_LINE_INFO, tool_path.size() == 1, "Expected tool path, but got %s", output);
 
         const fs::path actual_downloaded_path = Strings::trim(std::string{tool_path.at(0)});
-        const fs::path& expected_downloaded_path = tool_data.downloaded_exe_path;
+        const fs::path& expected_downloaded_path = tool_data.exe_path;
         std::error_code ec;
         const auto eq = fs::stdfs::equivalent(expected_downloaded_path, actual_downloaded_path, ec);
         Checks::check_exit(VCPKG_LINE_INFO,
@@ -216,16 +256,17 @@ namespace vcpkg
                 Strings::format(R"(curl '%s' --create-dirs --output '%s')", tool_data.url, tool_data.downloaded_path));
             Checks::check_exit(VCPKG_LINE_INFO, code == 0, "curl failed while downloading %s", tool_data.url);
         }
-        auto code = System::cmd_execute(
-            Strings::format(R"(cd '%s' && tar xzf '%s')", paths.downloads, tool_data.downloaded_path));
-        Checks::check_exit(VCPKG_LINE_INFO, code == 0, "tar failed while extracting %s", tool_data.downloaded_path);
+
+        System::println("Extracting %s...", tool_name);
+        extract_archive(paths, tool_data.downloaded_path, tool_data.tool_dir_path);
+        System::println("Extracting %s... done.", tool_name);
 
         Checks::check_exit(VCPKG_LINE_INFO,
-                           fs.exists(tool_data.downloaded_exe_path),
+                           fs.exists(tool_data.exe_path),
                            "Expected %s to exist after extracting",
-                           tool_data.downloaded_exe_path);
+                           tool_data.exe_path);
 
-        return tool_data.downloaded_exe_path;
+        return tool_data.exe_path;
 #endif
     }
 
@@ -234,7 +275,7 @@ namespace vcpkg
         std::vector<fs::path> candidate_paths;
 #if defined(_WIN32) || defined(__APPLE__) || defined(__linux__)
         static const ToolData TOOL_DATA = parse_tool_data_from_xml(paths, "cmake");
-        candidate_paths.push_back(TOOL_DATA.downloaded_exe_path);
+        candidate_paths.push_back(TOOL_DATA.exe_path);
 #else
         static const ToolData TOOL_DATA = ToolData{{3, 5, 1}, ""};
 #endif
@@ -262,14 +303,32 @@ namespace vcpkg
     {
 #if defined(_WIN32)
         static const ToolData TOOL_DATA = parse_tool_data_from_xml(paths, "7zip");
-        if (!paths.get_filesystem().exists(TOOL_DATA.downloaded_exe_path))
+        if (!paths.get_filesystem().exists(TOOL_DATA.exe_path))
         {
             return fetch_tool(paths, "7zip", TOOL_DATA);
         }
-        return TOOL_DATA.downloaded_exe_path;
+        return TOOL_DATA.exe_path;
 #else
         Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot download 7zip for non-Windows platforms.");
 #endif
+    }
+
+    static fs::path get_ninja_path(const VcpkgPaths& paths)
+    {
+        static const ToolData TOOL_DATA = parse_tool_data_from_xml(paths, "ninja");
+
+        std::vector<fs::path> candidate_paths;
+        candidate_paths.push_back(TOOL_DATA.exe_path);
+        const std::vector<fs::path> from_path = Files::find_from_PATH("ninja");
+        candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
+
+        auto path = find_if_has_equal_or_greater_version(candidate_paths, "--version", TOOL_DATA.required_version);
+        if (const auto p = path.get())
+        {
+            return *p;
+        }
+
+        return fetch_tool(paths, "ninja", TOOL_DATA);
     }
 
     static fs::path get_nuget_path(const VcpkgPaths& paths)
@@ -277,7 +336,7 @@ namespace vcpkg
         static const ToolData TOOL_DATA = parse_tool_data_from_xml(paths, "nuget");
 
         std::vector<fs::path> candidate_paths;
-        candidate_paths.push_back(TOOL_DATA.downloaded_exe_path);
+        candidate_paths.push_back(TOOL_DATA.exe_path);
         const std::vector<fs::path> from_path = Files::find_from_PATH("nuget");
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
 
@@ -301,7 +360,7 @@ namespace vcpkg
 
         std::vector<fs::path> candidate_paths;
 #if defined(_WIN32)
-        candidate_paths.push_back(TOOL_DATA.downloaded_exe_path);
+        candidate_paths.push_back(TOOL_DATA.exe_path);
 #endif
         const std::vector<fs::path> from_path = Files::find_from_PATH("git");
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
@@ -328,7 +387,7 @@ namespace vcpkg
         static const std::string VERSION_CHECK_ARGUMENTS = "--framework-version";
 
         std::vector<fs::path> candidate_paths;
-        candidate_paths.push_back(TOOL_DATA.downloaded_exe_path);
+        candidate_paths.push_back(TOOL_DATA.exe_path);
         // TODO: Uncomment later
         // const std::vector<fs::path> from_path = Files::find_from_PATH("installerbase");
         // candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
@@ -436,6 +495,11 @@ namespace vcpkg
     const fs::path& VcpkgPaths::get_git_exe() const
     {
         return this->git_exe.get_lazy([this]() { return get_git_path(*this); });
+    }
+
+    const fs::path& VcpkgPaths::get_ninja_exe() const
+    {
+        return this->ninja_exe.get_lazy([this]() { return get_ninja_path(*this); });
     }
 
     const fs::path& VcpkgPaths::get_nuget_exe() const
