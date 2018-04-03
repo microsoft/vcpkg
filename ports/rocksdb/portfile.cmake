@@ -42,6 +42,11 @@ if("snappy" IN_LIST FEATURES)
   set(WITH_SNAPPY ON)
 endif()
 
+set(WITH_ZLIB OFF)
+if("zlib" IN_LIST FEATURES)
+  set(WITH_ZLIB ON)
+endif()
+
 get_filename_component(ROCKSDB_VERSION "${SOURCE_PATH}" NAME)
 string(REPLACE "rocksdb-rocksdb-" "" ROCKSDB_VERSION "${ROCKSDB_VERSION}")
 
@@ -52,7 +57,7 @@ vcpkg_configure_cmake(
   -DWITH_GFLAGS=0
   -DWITH_SNAPPY=${WITH_SNAPPY}
   -DWITH_LZ4=${WITH_LZ4}
-  -DWITH_ZLIB=1
+  -DWITH_ZLIB=${WITH_ZLIB}
   -DWITH_TESTS=OFF
   -DROCKSDB_INSTALL_ON_WINDOWS=ON
   -DFAIL_ON_WARNINGS=OFF
