@@ -165,6 +165,19 @@ namespace vcpkg::Build
         }
     }
 
+    static const std::string NAME_BUILD_IN_DOWNLOAD = "BUILT_IN";
+    static const std::string NAME_ARIA2_DOWNLOAD = "ARIA2";
+
+    const std::string& to_string(DownloadTool tool)
+    {
+        switch (tool)
+        {
+            case DownloadTool::BUILT_IN: return NAME_BUILD_IN_DOWNLOAD;
+            case DownloadTool::ARIA2: return NAME_ARIA2_DOWNLOAD;
+            default: Checks::unreachable(VCPKG_LINE_INFO);
+        }
+    }
+
     Optional<LinkageType> to_linkage_type(const std::string& str)
     {
         if (str == "dynamic") return LinkageType::DYNAMIC;
@@ -348,8 +361,10 @@ namespace vcpkg::Build
                 {"TARGET_TRIPLET", spec.triplet().canonical_name()},
                 {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
                 {"VCPKG_USE_HEAD_VERSION",
-                 Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
-                {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
+                    Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
+                {"_VCPKG_NO_DOWNLOADS",
+                    !Util::Enum::to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
+                {"_VCPKG_DOWNLOAD_TOOL", to_string(config.build_package_options.download_tool)},
                 {"GIT", git_exe_path},
                 {"FEATURES", Strings::join(";", config.feature_list)},
                 {"ALL_FEATURES", all_features},
