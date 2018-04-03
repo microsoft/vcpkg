@@ -66,6 +66,7 @@ namespace vcpkg
         const fs::path& get_7za_exe() const;
         const fs::path& get_cmake_exe() const;
         const fs::path& get_git_exe() const;
+        const fs::path& get_ninja_exe() const;
         const fs::path& get_nuget_exe() const;
         const fs::path& get_ifw_installerbase_exe() const;
         const fs::path& get_ifw_binarycreator_exe() const;
@@ -84,6 +85,7 @@ namespace vcpkg
         Lazy<fs::path> _7za_exe;
         Lazy<fs::path> cmake_exe;
         Lazy<fs::path> git_exe;
+        Lazy<fs::path> ninja_exe;
         Lazy<fs::path> nuget_exe;
         Lazy<fs::path> ifw_installerbase_exe;
         Lazy<fs::path> ifw_binarycreator_exe;
