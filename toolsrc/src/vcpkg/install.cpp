@@ -412,7 +412,7 @@ namespace vcpkg::Install
     static constexpr StringLiteral OPTION_RECURSE = "--recurse";
     static constexpr StringLiteral OPTION_KEEP_GOING = "--keep-going";
     static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
-    static constexpr StringLiteral OPTION_USE_ARIA2 = "--use-aria2";
+    static constexpr StringLiteral OPTION_USE_ARIA2 = "--x-use-aria2";
 
     static constexpr std::array<CommandSwitch, 6> INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
@@ -556,8 +556,7 @@ namespace vcpkg::Install
         StatusParagraphs status_db = database_load_check(paths);
 
         Build::DownloadTool download_tool = Build::DownloadTool::BUILT_IN;
-        if (use_aria2)
-            download_tool = Build::DownloadTool::ARIA2;
+        if (use_aria2) download_tool = Build::DownloadTool::ARIA2;
 
         const Build::BuildPackageOptions install_plan_options = {
             Util::Enum::to_enum<Build::UseHeadVersion>(use_head_version),
