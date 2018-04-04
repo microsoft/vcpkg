@@ -341,8 +341,8 @@ namespace vcpkg::Build
         vcpkg::Util::unused(paths.get_ninja_exe());
 #endif
 
-        const fs::path& cmake_exe_path = paths.get_cmake_exe();
-        const fs::path& git_exe_path = paths.get_git_exe();
+        const fs::path& cmake_exe_path = paths.get_tool_exe(Tools::CMAKE);
+        const fs::path& git_exe_path = paths.get_tool_exe(Tools::GIT);
 
         std::string all_features;
         for (auto& feature : config.scf.feature_paragraphs)
@@ -361,9 +361,8 @@ namespace vcpkg::Build
                 {"TARGET_TRIPLET", spec.triplet().canonical_name()},
                 {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
                 {"VCPKG_USE_HEAD_VERSION",
-                    Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
-                {"_VCPKG_NO_DOWNLOADS",
-                    !Util::Enum::to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
+                 Util::Enum::to_bool(config.build_package_options.use_head_version) ? "1" : "0"},
+                {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(config.build_package_options.allow_downloads) ? "1" : "0"},
                 {"_VCPKG_DOWNLOAD_TOOL", to_string(config.build_package_options.download_tool)},
                 {"GIT", git_exe_path},
                 {"FEATURES", Strings::join(";", config.feature_list)},
@@ -519,7 +518,7 @@ namespace vcpkg::Build
         Checks::check_exit(VCPKG_LINE_INFO, files.empty(), "unable to clear path: %s", pkg_path.u8string());
 
 #if defined(_WIN32)
-        auto&& _7za = paths.get_7za_exe();
+        auto&& _7za = paths.get_tool_exe(Tools::SEVEN_ZIP);
 
         System::cmd_execute_clean(Strings::format(
             R"("%s" x "%s" -o"%s" -y >nul)", _7za.u8string(), archive_path.u8string(), pkg_path.u8string()));
@@ -539,7 +538,7 @@ namespace vcpkg::Build
         Checks::check_exit(
             VCPKG_LINE_INFO, !fs.exists(tmp_archive_path), "Could not remove file: %s", tmp_archive_path.u8string());
 #if defined(_WIN32)
-        auto&& _7za = paths.get_7za_exe();
+        auto&& _7za = paths.get_tool_exe(Tools::SEVEN_ZIP);
 
         System::cmd_execute_clean(Strings::format(
             R"("%s" a "%s" "%s\*" >nul)",
@@ -771,7 +770,7 @@ namespace vcpkg::Build
     {
         static constexpr CStringView FLAG_GUID = "c35112b6-d1ba-415b-aa5d-81de856ef8eb";
 
-        const fs::path& cmake_exe_path = paths.get_cmake_exe();
+        const fs::path& cmake_exe_path = paths.get_tool_exe(Tools::CMAKE);
         const fs::path ports_cmake_script_path = paths.scripts / "get_triplet_environment.cmake";
         const fs::path triplet_file_path = paths.triplets / (triplet.canonical_name() + ".cmake");
 

@@ -7,8 +7,22 @@
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/lazy.h>
 
+#include <map>
+
 namespace vcpkg
 {
+    namespace Tools
+    {
+        static const std::string SEVEN_ZIP = "7zip";
+        static const std::string CMAKE = "cmake";
+        static const std::string GIT = "git";
+        static const std::string NINJA = "ninja";
+        static const std::string NUGET = "nuget";
+        static const std::string IFW_INSTALLER_BASE = "ifw_installerbase";
+        static const std::string IFW_BINARYCREATOR = "ifw_binarycreator";
+        static const std::string IFW_REPOGEN = "ifw_repogen";
+    }
+
     struct ToolsetArchOption
     {
         CStringView name;
@@ -63,14 +77,7 @@ namespace vcpkg
 
         fs::path ports_cmake;
 
-        const fs::path& get_7za_exe() const;
-        const fs::path& get_cmake_exe() const;
-        const fs::path& get_git_exe() const;
-        const fs::path& get_ninja_exe() const;
-        const fs::path& get_nuget_exe() const;
-        const fs::path& get_ifw_installerbase_exe() const;
-        const fs::path& get_ifw_binarycreator_exe() const;
-        const fs::path& get_ifw_repogen_exe() const;
+        const fs::path& get_tool_exe(const std::string& tool) const;
 
         /// <summary>Retrieve a toolset matching a VS version</summary>
         /// <remarks>
@@ -82,14 +89,7 @@ namespace vcpkg
 
     private:
         Lazy<std::vector<std::string>> available_triplets;
-        Lazy<fs::path> _7za_exe;
-        Lazy<fs::path> cmake_exe;
-        Lazy<fs::path> git_exe;
-        Lazy<fs::path> ninja_exe;
-        Lazy<fs::path> nuget_exe;
-        Lazy<fs::path> ifw_installerbase_exe;
-        Lazy<fs::path> ifw_binarycreator_exe;
-        Lazy<fs::path> ifw_repogen_exe;
+        mutable std::map<std::string, fs::path> tool_paths;
         Lazy<std::vector<Toolset>> toolsets;
         Lazy<std::vector<Toolset>> toolsets_vs2013;
 

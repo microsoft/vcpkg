@@ -135,6 +135,13 @@ namespace vcpkg::Commands
         std::string get_file_hash(const VcpkgPaths& paths, fs::path const& path, std::string const& hash_type);
     }
 
+    namespace Fetch
+    {
+        std::vector<Toolset> find_toolset_instances(const VcpkgPaths& paths);
+        fs::path get_tool_path(const VcpkgPaths& paths, const std::string& tool);
+        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
+    }
+
     template<class T>
     struct PackageNameAndFunction
     {

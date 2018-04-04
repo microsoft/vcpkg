@@ -22,7 +22,7 @@ namespace vcpkg::Commands::Create
         const std::string port_name = args.command_arguments.at(0);
         const std::string url = args.command_arguments.at(1);
 
-        const fs::path& cmake_exe = paths.get_cmake_exe();
+        const fs::path& cmake_exe = paths.get_tool_exe(Tools::CMAKE);
 
         std::vector<System::CMakeVariable> cmake_args{{"CMD", "CREATE"}, {"PORT", port_name}, {"URL", url}};
 

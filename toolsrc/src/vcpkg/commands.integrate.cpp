@@ -276,7 +276,7 @@ CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s")",
     {
         auto& fs = paths.get_filesystem();
 
-        const fs::path& nuget_exe = paths.get_nuget_exe();
+        const fs::path& nuget_exe = paths.get_tool_exe(Tools::NUGET);
 
         const fs::path& buildsystems_dir = paths.buildsystems;
         const fs::path tmp_dir = buildsystems_dir / "tmp";

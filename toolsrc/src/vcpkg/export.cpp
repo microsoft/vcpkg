@@ -123,7 +123,7 @@ namespace vcpkg::Export
                                     const fs::path& output_dir)
     {
         Files::Filesystem& fs = paths.get_filesystem();
-        const fs::path& nuget_exe = paths.get_nuget_exe();
+        const fs::path& nuget_exe = paths.get_tool_exe(Tools::NUGET);
 
         // This file will be placed in "build\native" in the nuget package. Therefore, go up two dirs.
         const std::string targets_redirect_content =
@@ -189,7 +189,7 @@ namespace vcpkg::Export
                                       const fs::path& output_dir,
                                       const ArchiveFormat& format)
     {
-        const fs::path& cmake_exe = paths.get_cmake_exe();
+        const fs::path& cmake_exe = paths.get_tool_exe(Tools::CMAKE);
 
         const std::string exported_dir_filename = raw_exported_dir.filename().u8string();
         const std::string exported_archive_filename =
