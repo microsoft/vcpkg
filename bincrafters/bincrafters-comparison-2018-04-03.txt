@@ -1,0 +1,300 @@
+Skipping azure-iot-sdk-demo-conan because azure-iot-sdk-demo-conan
+Skipping bazel-installer because .*-installer$
+Skipping bincrafters.github.io because bincrafters.github.io
+Skipping bison because bison
+Skipping boost-generator because boost-generator
+Skipping boost-level11group because boost-level11group
+Skipping boost-level14group because boost-level14group
+Skipping boost-level5group because boost-level5group
+Skipping boost-level8group because boost-level8group
+Skipping boost-package-tools because boost-package-tools
+Skipping changelog because changelog
+Skipping cmake-findboost-modular because cmake-findboost-modular
+Skipping community because community
+Skipping cygwin-installer because .*-installer$
+Skipping depot-tools-installer because .*-installer$
+Skipping emd because emd
+Skipping envy because envy
+Skipping flex because flex
+Skipping git-ws because git-ws
+Skipping go-bin-deb because go-bin-deb
+Skipping go-bin-rpm because go-bin-rpm
+Skipping go-msi because go-msi
+Skipping gump because gump
+Skipping gyp because gyp
+Skipping gyp-installer because .*-installer$
+Skipping java-installer because .*-installer$
+Skipping jfrog-cli-go because jfrog-cli-go
+Skipping msys2-installer because .*-installer$
+Skipping nasm-installer because .*-installer$
+Skipping ninja-installer because .*-installer$
+Skipping ragel-installer because .*-installer$
+Skipping readme-generator because readme-generator
+Skipping templates because templates
+Skipping vs-extension because vs-extension
+Skipping wdk10-installer because .*-installer$
+Skipping winflexbison because winflexbison
+Skipping yasm-installer because .*-installer$
+Intersection
+    abseil
+    asio
+    azure-c-shared-utility
+    azure-iot-sdk-c
+    azure-uamqp-c
+    azure-uhttp-c
+    azure-umqtt-c
+    boost
+    boost-accumulators
+    boost-algorithm
+    boost-align
+    boost-any
+    boost-array
+    boost-asio
+    boost-assert
+    boost-assign
+    boost-atomic
+    boost-beast
+    boost-bimap
+    boost-bind
+    boost-build
+    boost-callable-traits
+    boost-chrono
+    boost-circular-buffer
+    boost-compatibility
+    boost-compute
+    boost-concept-check
+    boost-config
+    boost-container
+    boost-context
+    boost-conversion
+    boost-convert
+    boost-core
+    boost-coroutine
+    boost-coroutine2
+    boost-crc
+    boost-date-time
+    boost-detail
+    boost-disjoint-sets
+    boost-dll
+    boost-dynamic-bitset
+    boost-endian
+    boost-exception
+    boost-fiber
+    boost-filesystem
+    boost-flyweight
+    boost-foreach
+    boost-format
+    boost-function
+    boost-function-types
+    boost-functional
+    boost-fusion
+    boost-geometry
+    boost-gil
+    boost-graph
+    boost-graph-parallel
+    boost-hana
+    boost-heap
+    boost-icl
+    boost-integer
+    boost-interprocess
+    boost-interval
+    boost-intrusive
+    boost-io
+    boost-iostreams
+    boost-iterator
+    boost-lambda
+    boost-lexical-cast
+    boost-local-function
+    boost-locale
+    boost-lockfree
+    boost-log
+    boost-logic
+    boost-math
+    boost-metaparse
+    boost-move
+    boost-mp11
+    boost-mpi
+    boost-mpl
+    boost-msm
+    boost-multi-array
+    boost-multi-index
+    boost-multiprecision
+    boost-numeric-conversion
+    boost-odeint
+    boost-optional
+    boost-parameter
+    boost-phoenix
+    boost-poly-collection
+    boost-polygon
+    boost-pool
+    boost-predef
+    boost-preprocessor
+    boost-process
+    boost-program-options
+    boost-property-map
+    boost-property-tree
+    boost-proto
+    boost-ptr-container
+    boost-python
+    boost-qvm
+    boost-random
+    boost-range
+    boost-ratio
+    boost-rational
+    boost-regex
+    boost-scope-exit
+    boost-serialization
+    boost-signals
+    boost-signals2
+    boost-smart-ptr
+    boost-sort
+    boost-spirit
+    boost-stacktrace
+    boost-statechart
+    boost-static-assert
+    boost-system
+    boost-test
+    boost-thread
+    boost-throw-exception
+    boost-timer
+    boost-tokenizer
+    boost-tti
+    boost-tuple
+    boost-type-erasure
+    boost-type-index
+    boost-type-traits
+    boost-typeof
+    boost-ublas
+    boost-units
+    boost-unordered
+    boost-utility
+    boost-uuid
+    boost-variant
+    boost-vmd
+    boost-wave
+    boost-winapi
+    boost-xpressive
+    botan
+    caf
+    catch
+    catch2
+    celero
+    ceres
+    cimg
+    clara
+    config
+    cpprestsdk
+    cryptopp
+    curl
+    date
+    doctest
+    double-conversion
+    event
+    expat
+    fdk-aac
+    ffmpeg
+    flac
+    flatbuffers
+    fmt
+    freetype
+    gflags
+    giflib
+    glfw3
+    glog
+    gtest
+    harfbuzz
+    iconv
+    icu
+    jansson
+    jpeg-turbo
+    lcms
+    log4cplus
+    lz4
+    lzma
+    mbedtls
+    ms-gsl
+    msgpack
+    msmpi
+    mysql
+    nanomsg
+    nuklear
+    ogg
+    openal-soft
+    openjpeg
+    openvpn3
+    opus
+    parson
+    pixman
+    png
+    podofo
+    portaudio
+    pthreads
+    qrencode
+    rxcpp
+    sdl2
+    sodium
+    spdlog
+    sqlite3
+    ssh2
+    tap-windows6
+    tiff
+    tiny-dnn
+    tinyexr
+    usb
+    utf8proc
+    uuid
+    uv
+    vorbis
+    vpx
+    webp
+    websocketpp
+    websockets
+    winpcap
+    x264
+    x265
+    xml2
+    yaml-cpp
+    zeromq
+    zip
+    zstd
+Only in Bincrafters
+    ajson
+    azure-c-testrunnerswitcher
+    azure-ctest
+    bincrafters-package-tools
+    blackhole
+    boost-systemtype-traits
+    build-requires-profiles
+    cli11
+    concurrentqueue
+    dir-monitor
+    easyexif
+    easyloggingpp
+    gmp
+    greatest
+    handler
+    hopscotch-map
+    iot-edge
+    jpeg
+    lksctp-tools
+    macchina.io
+    mill
+    mp3lame
+    nanoflann
+    nanosvg
+    npcap-dll
+    npcap-helper
+    npcap-npf
+    npcap-npfinstall
+    npcap-wlanhelper
+    npcap-wpcap
+    openmpi
+    osip
+    pcap
+    picobench
+    readerwriterqueue
+    seqan
+    sparsepp
+    sqlpp11
+    tins
+    umock-c

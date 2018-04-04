@@ -47,6 +47,7 @@ $tagPorts = @(
     "gdcm2",
     "gflags",
     "glog",
+    "google-cloud-cpp",
     "gtest",
     "harfbuzz",
     "jsoncpp",
