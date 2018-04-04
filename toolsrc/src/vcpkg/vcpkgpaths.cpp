@@ -252,8 +252,8 @@ namespace vcpkg
 #else
         if (!fs.exists(tool_data.downloaded_path))
         {
-            auto code = System::cmd_execute(
-                Strings::format(R"(curl '%s' --create-dirs --output '%s')", tool_data.url, tool_data.downloaded_path));
+            auto code = System::cmd_execute(Strings::format(
+                R"(curl -L '%s' --create-dirs --output '%s')", tool_data.url, tool_data.downloaded_path));
             Checks::check_exit(VCPKG_LINE_INFO, code == 0, "curl failed while downloading %s", tool_data.url);
         }
 
