@@ -47,7 +47,18 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
     if (!(Test-Path $downloadPath))
     {
         Write-Host "Downloading $tool..."
-        vcpkgDownloadFile $url $downloadPath
+
+        # aria2 needs 7zip & 7zr to extract. So, we need to download those trough powershell
+        if ($tool -eq "aria2" -or $tool -eq "7zip" -or $tool -eq "7zr")
+        {
+            vcpkgDownloadFile $url $downloadPath
+        }
+        else
+        {
+            $aria2exe = fetchToolInternal "aria2"
+            vcpkgDownloadFileWithAria2 $aria2exe $url $downloadPath
+        }
+
         Write-Host "Downloading $tool... done."
     }
 

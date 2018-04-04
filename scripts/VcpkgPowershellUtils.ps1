@@ -155,6 +155,32 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
     Move-Item -Path $downloadPartPath -Destination $downloadPath
 }
 
+function vcpkgDownloadFileWithAria2(    [Parameter(Mandatory=$true)][string]$aria2exe,
+                                        [Parameter(Mandatory=$true)][string]$url,
+                                        [Parameter(Mandatory=$true)][string]$downloadPath)
+{
+    if (Test-Path $downloadPath)
+    {
+        return
+    }
+
+    vcpkgCreateParentDirectoryIfNotExists $downloadPath
+    $downloadPartPath = "$downloadPath.part"
+    vcpkgRemoveItem $downloadPartPath
+
+    $parentDir = split-path -parent $downloadPath
+    $filename = split-path -leaf $downloadPath
+
+    $ec = vcpkgInvokeCommand "$aria2exe" "--dir `"$parentDir`" --out `"$filename.part`" $url"
+    if ($ec -ne 0)
+    {
+        Write-Host "Could not download $url"
+        throw
+    }
+
+    Move-Item -Path $downloadPartPath -Destination $downloadPath
+}
+
 function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$sevenZipExe,
                             [Parameter(Mandatory=$true)][string]$archivePath,
                             [Parameter(Mandatory=$true)][string]$destinationDir)

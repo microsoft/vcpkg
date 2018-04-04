@@ -60,6 +60,13 @@
         <url>https://www.7-zip.org/a/7zr.exe</url>
         <sha256>2c7a8709260e0295a2a3cfd5a8ad0459f37490ed1794ea68bf85a6fab362553b</sha256>
     </tool>
+    <tool name="aria2">
+        <requiredVersion>18.01.0</requiredVersion>
+        <exeRelativePath>aria2-1.33.1-win-32bit-build1\aria2c.exe</exeRelativePath>
+        <url>https://github.com/aria2/aria2/releases/download/release-1.33.1/aria2-1.33.1-win-32bit-build1.zip</url>
+        <sha256>04bf07c0449c703db17fbcd586365aebba00201ca513ca4808b543f1f9208f1f</sha256>
+        <archiveRelativePath>aria2-1.33.1-win-32bit-build1.zip</archiveRelativePath>
+    </tool>
     <tool name="ninja" os="linux">
         <requiredVersion>1.8.2</requiredVersion>
         <exeRelativePath>ninja</exeRelativePath>
