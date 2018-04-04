@@ -25,7 +25,8 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
         throw "Unkown tool $tool"
     }
 
-    $exePath = "$downloadsDir\$($toolData.exeRelativePath)"
+    $toolPath="$downloadsDir\tools\$tool-$($toolData.requiredVersion)-windows"
+    $exePath = "$toolPath\$($toolData.exeRelativePath)"
 
     if (Test-Path $exePath)
     {
@@ -39,7 +40,7 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
     }
     else
     {
-        $downloadPath = "$downloadsDir\$($toolData.exeRelativePath)"
+        $downloadPath = "$toolPath\$($toolData.exeRelativePath)"
     }
 
     [String]$url = $toolData.url
@@ -56,9 +57,22 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
 
     if ($isArchive)
     {
-        $outFilename = (Get-ChildItem $downloadPath).BaseName
         Write-Host "Extracting $tool..."
-        vcpkgExtractFile -ArchivePath $downloadPath -DestinationDir $downloadsDir -outFilename $outFilename
+        if ($tool -eq "7zip")
+        {
+            $sevenZipR = fetchToolInternal "7zr"
+            $ec = vcpkgInvokeCommand "$sevenZipR" "x `"$downloadPath`" -o`"$toolPath`" -y"
+            if ($ec -ne 0)
+            {
+                Write-Host "Could not extract $downloadPath"
+                throw
+            }
+        }
+        else
+        {
+            $sevenZipExe = fetchToolInternal "7zip"
+            vcpkgExtractFile -sevenZipExe "$sevenZipExe" -ArchivePath $downloadPath -DestinationDir $toolPath
+        }
         Write-Host "Extracting $tool... done."
     }
 

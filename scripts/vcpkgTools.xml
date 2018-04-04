@@ -23,20 +23,20 @@
     </tool>
     <tool name="git">
         <requiredVersion>2.16.2</requiredVersion>
-        <exeRelativePath>MinGit-2.16.2-32-bit\cmd\git.exe</exeRelativePath>
+        <exeRelativePath>cmd\git.exe</exeRelativePath>
         <url>https://github.com/git-for-windows/git/releases/download/v2.16.2.windows.1/MinGit-2.16.2-32-bit.zip</url>
         <sha256>322c727e482aa97522c64a5ac68bdda3780111e8670bcfb532beac8e11ece5da</sha256>
         <archiveRelativePath>MinGit-2.16.2-32-bit.zip</archiveRelativePath>
     </tool>
     <tool name="vswhere">
         <requiredVersion>2.3.2</requiredVersion>
-        <exeRelativePath>vswhere-2.3.2\vswhere.exe</exeRelativePath>
+        <exeRelativePath>vswhere.exe</exeRelativePath>
         <url>https://github.com/Microsoft/vswhere/releases/download/2.3.2/vswhere.exe</url>
         <sha256>103f2784c4b2c8e70c7c1c03687abbf22bce052aae30639406e4e13ffa29ee04</sha256>
     </tool>
     <tool name="nuget">
         <requiredVersion>4.4.0</requiredVersion>
-        <exeRelativePath>nuget-4.4.0\nuget.exe</exeRelativePath>
+        <exeRelativePath>nuget.exe</exeRelativePath>
         <url>https://dist.nuget.org/win-x86-commandline/v4.4.0/nuget.exe</url>
         <sha256>2cf9b118937eef825464e548f0c44f7f64090047746de295d75ac3dcffa3e1f6</sha256>
     </tool>
@@ -49,10 +49,16 @@
     </tool>
     <tool name="7zip">
         <requiredVersion>18.01.0</requiredVersion>
-        <exeRelativePath>7za920\7za.exe</exeRelativePath>
-        <url>http://www.7-zip.org/a/7za920.zip</url>
-        <sha256>2a3afe19c180f8373fa02ff00254d5394fec0349f5804e0ad2f6067854ff28ac</sha256>
-        <archiveRelativePath>7za920.zip</archiveRelativePath>
+        <exeRelativePath>7za.exe</exeRelativePath>
+        <url>https://www.7-zip.org/a/7z1801-extra.7z</url>
+        <sha256>9371df22bcd0e1aff9eaa52aa3292350eecd011f11494e709314ae3f3eb279e2</sha256>
+        <archiveRelativePath>7z1801-extra.7z</archiveRelativePath>
+    </tool>
+    <tool name="7zr">
+        <requiredVersion>18.01.0</requiredVersion>
+        <exeRelativePath>7zr.exe</exeRelativePath>
+        <url>https://www.7-zip.org/a/7zr.exe</url>
+        <sha256>2c7a8709260e0295a2a3cfd5a8ad0459f37490ed1794ea68bf85a6fab362553b</sha256>
     </tool>
     <tool name="ninja" os="linux">
         <requiredVersion>1.8.2</requiredVersion>

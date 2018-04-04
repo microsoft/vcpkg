@@ -115,15 +115,9 @@ namespace vcpkg
                            tool,
                            required_version_as_string);
 
-// Legacy support. Change introduced in vcpkg v0.0.107.
-#if !defined(_WIN32)
-        const std::string tool_dir_name = Strings::format("%s-%s", tool, required_version_as_string);
+        const std::string tool_dir_name = Strings::format("%s-%s-%s", tool, required_version_as_string, OS_STRING);
         const fs::path tool_dir_path = paths.downloads / "tools" / tool_dir_name;
         const fs::path exe_path = tool_dir_path / exe_relative_path;
-#else
-        const fs::path tool_dir_path;
-        const fs::path exe_path = paths.downloads / exe_relative_path;
-#endif
         return ToolData{*required_version.get(),
                         exe_path,
                         url,

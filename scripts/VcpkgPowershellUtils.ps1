@@ -1,8 +1,3 @@
-function vcpkgHasModule([Parameter(Mandatory=$true)][string]$moduleName)
-{
-    return [bool](Get-Module -ListAvailable -Name $moduleName)
-}
-
 function vcpkgHasProperty([Parameter(Mandatory=$true)][AllowNull()]$object, [Parameter(Mandatory=$true)]$propertyName)
 {
     if ($object -eq $null)
@@ -160,54 +155,21 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
     Move-Item -Path $downloadPartPath -Destination $downloadPath
 }
 
-function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$archivePath,
-                            [Parameter(Mandatory=$true)][string]$destinationDir,
-                            [Parameter(Mandatory=$true)][string]$outFilename)
+function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$sevenZipExe,
+                            [Parameter(Mandatory=$true)][string]$archivePath,
+                            [Parameter(Mandatory=$true)][string]$destinationDir)
 {
-    vcpkgCreateDirectoryIfNotExists $destinationDir
-    $output = "$destinationDir\$outFilename"
-    vcpkgRemoveItem $output
-    $destinationPartial = "$destinationDir\partially-extracted"
-
+    vcpkgRemoveItem $destinationDir
+    $destinationPartial = "$destinationDir.partial"
     vcpkgRemoveItem $destinationPartial
     vcpkgCreateDirectoryIfNotExists $destinationPartial
-
-    if (vcpkgHasCommand -commandName 'Microsoft.PowerShell.Archive\Expand-Archive')
+    $ec = vcpkgInvokeCommand "$sevenZipExe" "x `"$archivePath`" -o`"$destinationPartial`" -y"
+    if ($ec -ne 0)
     {
-        Write-Verbose("Extracting with Microsoft.PowerShell.Archive\Expand-Archive")
-        Microsoft.PowerShell.Archive\Expand-Archive -path $archivePath -destinationpath $destinationPartial
+        Write-Host "Could not extract $archivePath"
+        throw
     }
-    elseif (vcpkgHasCommand -commandName 'Pscx\Expand-Archive')
-    {
-        Write-Verbose("Extracting with Pscx\Expand-Archive")
-        Pscx\Expand-Archive -path $archivePath -OutputPath $destinationPartial
-    }
-    else
-    {
-        Write-Verbose("Extracting via shell")
-        $shell = new-object -com shell.application
-        $zip = $shell.NameSpace($(Get-Item $archivePath).fullname)
-        foreach($item in $zip.items())
-        {
-            # Piping to Out-Null is used to block until finished
-            $shell.Namespace($destinationPartial).copyhere($item) | Out-Null
-        }
-    }
-
-    $items = @(Get-ChildItem "$destinationPartial")
-    $itemCount = $items.Count
-
-    if ($itemCount -eq 1)
-    {
-        $item =  $items | Select-Object -first 1
-        Write-Host "$item"
-        Move-Item -Path "$destinationPartial\$item" -Destination $output
-        vcpkgRemoveItem $destinationPartial
-    }
-    else
-    {
-        Move-Item -Path "$destinationPartial" -Destination $output
-    }
+    Rename-Item -Path "$destinationPartial" -NewName $destinationDir
 }
 
 function vcpkgInvokeCommand()
