@@ -17,6 +17,7 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/use-vcpkg-icu.patch
+        ${CMAKE_CURRENT_LIST_DIR}/ws2-32.patch
 )
 
 # The built-in cmake FindICU is better
