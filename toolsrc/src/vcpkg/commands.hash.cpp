@@ -103,6 +103,42 @@ namespace vcpkg::Commands::Hash
 
         return to_hex(hash_buffer.get(), length_in_bytes);
     }
+
+    std::string get_string_hash(const std::string& s, const std::string& hash_type)
+    {
+        BCryptAlgorithmHandle algorithm_handle;
+
+        NTSTATUS error_code = BCryptOpenAlgorithmProvider(
+            &algorithm_handle.handle, Strings::to_utf16(Strings::ascii_to_uppercase(hash_type)).c_str(), nullptr, 0);
+        Checks::check_exit(VCPKG_LINE_INFO, NT_SUCCESS(error_code), "Failed to open the algorithm provider");
+
+        DWORD hash_buffer_bytes;
+        DWORD cb_data;
+        error_code = BCryptGetProperty(algorithm_handle.handle,
+                                       BCRYPT_HASH_LENGTH,
+                                       reinterpret_cast<PUCHAR>(&hash_buffer_bytes),
+                                       sizeof(DWORD),
+                                       &cb_data,
+                                       0);
+        Checks::check_exit(VCPKG_LINE_INFO, NT_SUCCESS(error_code), "Failed to get hash length");
+        const ULONG length_in_bytes = hash_buffer_bytes;
+
+        BCryptHashHandle hash_handle;
+
+        error_code = BCryptCreateHash(algorithm_handle.handle, &hash_handle.handle, nullptr, 0, nullptr, 0, 0);
+        Checks::check_exit(VCPKG_LINE_INFO, NT_SUCCESS(error_code), "Failed to initialize the hasher");
+
+        auto* const buffer = reinterpret_cast<unsigned char*>(const_cast<char*>(s.c_str()));
+        error_code = BCryptHashData(hash_handle.handle, buffer, static_cast<ULONG>(s.size()), 0);
+        Checks::check_exit(VCPKG_LINE_INFO, NT_SUCCESS(error_code), "Failed to hash data");
+
+        std::unique_ptr<unsigned char[]> hash_buffer = std::make_unique<UCHAR[]>(length_in_bytes);
+
+        error_code = BCryptFinishHash(hash_handle.handle, hash_buffer.get(), length_in_bytes, 0);
+        Checks::check_exit(VCPKG_LINE_INFO, NT_SUCCESS(error_code), "Failed to finalize the hash");
+
+        return to_hex(hash_buffer.get(), length_in_bytes);
+    }
 }
 
 #else
@@ -120,6 +156,27 @@ namespace vcpkg::Commands::Hash
 
         const std::string cmd_line = Strings::format(
             R"(shasum -a %s "%s" | awk '{ print $1 }')", digest_size, path.u8string());
+        const auto ec_data = System::cmd_execute_and_capture_output(cmd_line);
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           ec_data.exit_code == 0,
+                           "Failed to run:\n"
+                           "    %s",
+                           cmd_line);
+        return Strings::trim(std::string{ec_data.output});
+    }
+
+    std::string get_string_hash(const std::string& s, const std::string& hash_type)
+    {
+        if (!Strings::case_insensitive_ascii_starts_with(hash_type, "SHA"))
+        {
+            Checks::exit_with_message(
+                VCPKG_LINE_INFO, "shasum only supports SHA hashes, but %s was provided", hash_type);
+        }
+
+        const std::string digest_size = hash_type.substr(3, hash_type.length() - 3);
+
+        const std::string cmd_line = Strings::format(
+            R"(echo -n "%s" | shasum -a %s | awk '{ print $1 }')", s, digest_size);
         const auto ec_data = System::cmd_execute_and_capture_output(cmd_line);
         Checks::check_exit(VCPKG_LINE_INFO,
                            ec_data.exit_code == 0,
