@@ -78,16 +78,11 @@ namespace vcpkg::Commands::Fetch
             Strings::format(R"###(<archiveRelativePath>([\s\S]*?)</archiveRelativePath>)###")};
         static const std::regex URL_REGEX{Strings::format(R"###(<url>([\s\S]*?)</url>)###")};
 
-        std::regex tool_regex{
+        const std::regex tool_regex{
             Strings::format(R"###(<tool[\s]+name="%s"[\s]+os="%s">([\s\S]*?)<\/tool>)###", tool, OS_STRING)};
 
         std::smatch match_tool;
-        bool has_match_tool = std::regex_search(XML.cbegin(), XML.cend(), match_tool, tool_regex);
-        if (!has_match_tool && OS_STRING == "windows") // Legacy support. Change introduced in vcpkg v0.0.107.
-        {
-            tool_regex = Strings::format(R"###(<tool[\s]+name="%s">([\s\S]*?)<\/tool>)###", tool);
-            has_match_tool = std::regex_search(XML.cbegin(), XML.cend(), match_tool, tool_regex);
-        }
+        const bool has_match_tool = std::regex_search(XML.cbegin(), XML.cend(), match_tool, tool_regex);
         Checks::check_exit(VCPKG_LINE_INFO,
                            has_match_tool,
                            "Could not find entry for tool [%s] in %s",
