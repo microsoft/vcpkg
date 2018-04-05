@@ -1,3 +1,10 @@
+if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/libiconv)
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-iconv-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libiconv)
+    return()
+endif()
+
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libiconv-1.15)
 vcpkg_download_distfile(ARCHIVE
@@ -20,14 +27,15 @@ vcpkg_apply_patches(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
 )
 
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-iconv TARGET_PATH share/unofficial-iconv)
+
 vcpkg_copy_pdbs()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/libiconv)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libiconv/COPYING.LIB ${CURRENT_PACKAGES_DIR}/share/libiconv/copyright)
-
-# clean out the debug include
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

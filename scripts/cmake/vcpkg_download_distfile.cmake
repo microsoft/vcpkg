@@ -103,19 +103,53 @@ function(vcpkg_download_distfile VAR)
         endif()
 
         # Tries to download the file.
-        foreach(url IN LISTS vcpkg_download_distfile_URLS)
-            message(STATUS "Downloading ${url}...")
-            file(DOWNLOAD ${url} "${download_file_path_part}" STATUS download_status)
-            list(GET download_status 0 status_code)
-            if (NOT "${status_code}" STREQUAL "0")
-                message(STATUS "Downloading ${url}... Failed. Status: ${download_status}")
+        list(GET vcpkg_download_distfile_URLS 0 SAMPLE_URL)
+        if(${_VCPKG_DOWNLOAD_TOOL} MATCHES "ARIA2" AND NOT ${SAMPLE_URL} MATCHES "aria2")
+            vcpkg_find_acquire_program("ARIA2")
+            message(STATUS "Downloading ${vcpkg_download_distfile_FILENAME}...")
+            execute_process(
+                COMMAND ${ARIA2} ${vcpkg_download_distfile_URLS}
+                -o temp/${vcpkg_download_distfile_FILENAME}
+                -l download-${vcpkg_download_distfile_FILENAME}-detailed.log
+                OUTPUT_FILE download-${vcpkg_download_distfile_FILENAME}-out.log
+                ERROR_FILE download-${vcpkg_download_distfile_FILENAME}-err.log
+                RESULT_VARIABLE error_code
+                WORKING_DIRECTORY ${DOWNLOADS}
+            )
+            if (NOT "${error_code}" STREQUAL "0")
+                message(STATUS
+                    "Downloading ${vcpkg_download_distfile_FILENAME}... Failed.\n"
+                    "    Exit Code: ${error_code}\n"
+                    "    See logs for more information:\n"
+                    "        ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-out.log\n"
+                    "        ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-err.log\n"
+                    "        ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-detailed.log\n"
+                )
                 set(download_success 0)
             else()
-                message(STATUS "Downloading ${url}... OK")
+                message(STATUS "Downloading ${vcpkg_download_distfile_FILENAME}... OK")
+                file(REMOVE
+                    ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-out.log
+                    ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-err.log
+                    ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-detailed.log
+                )
                 set(download_success 1)
-                break()
             endif()
-        endforeach(url)
+        else()
+            foreach(url IN LISTS vcpkg_download_distfile_URLS)
+                message(STATUS "Downloading ${url}...")
+                file(DOWNLOAD ${url} "${download_file_path_part}" STATUS download_status)
+                list(GET download_status 0 status_code)
+                if (NOT "${status_code}" STREQUAL "0")
+                    message(STATUS "Downloading ${url}... Failed. Status: ${download_status}")
+                    set(download_success 0)
+                else()
+                    message(STATUS "Downloading ${url}... OK")
+                    set(download_success 1)
+                    break()
+                endif()
+            endforeach(url)
+        endif()
 
         if (NOT download_success)
             message(FATAL_ERROR

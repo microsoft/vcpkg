@@ -25,10 +25,15 @@ vcpkg_configure_cmake(
         -DGFLAGS_REGISTER_BUILD_DIR:BOOL=OFF
         -DGFLAGS_REGISTER_INSTALL_PREFIX:BOOL=OFF
         -DBUILD_gflags_nothreads_LIB:BOOL=OFF
+        -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/gflags)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)

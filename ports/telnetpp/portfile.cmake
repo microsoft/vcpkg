@@ -44,4 +44,4 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/share/telnetpp/telnetpp-config-debug.cmake "$
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/telnetpp RENAME COPYRIGHT)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/telnetpp RENAME copyright)

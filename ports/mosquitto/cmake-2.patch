@@ -1,0 +1,68 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3a68061..e4197fd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -24,10 +24,10 @@ endif (WIN32)
+ add_definitions (-DCMAKE -DVERSION=\"${VERSION}\" -DTIMESTAMP=\"${TIMESTAMP}\")
+ 
+ if (WIN32)
+-	set (BINDIR .)
+-	set (SBINDIR .)
++	set (BINDIR bin)
++	set (SBINDIR bin)
+ 	set (SYSCONFDIR .)
+-	set (LIBDIR .)
++	set (LIBDIR lib)
+ 	set (INCLUDEDIR include)
+ 	set (DATAROOTDIR share)
+ 	set (MANDIR man)
+@@ -86,10 +86,10 @@ option(WITH_SRV "Include SRV lookup support?" ON)
+ add_subdirectory(lib)
+ add_subdirectory(client)
+ add_subdirectory(src)
+-add_subdirectory(man)
++#add_subdirectory(man)
+ 
+ # ========================================
+ # Install config file
+ # ========================================
+ 
+-install(FILES mosquitto.conf aclfile.example pskfile.example pwfile.example DESTINATION "${SYSCONFDIR}")
++#install(FILES mosquitto.conf aclfile.example pskfile.example pwfile.example DESTINATION "${SYSCONFDIR}")
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 1260761..aebd580 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -4,8 +4,8 @@ option(WITH_THREADING "Include client library threading support?" ON)
+ if (${WITH_THREADING} STREQUAL ON)
+ 	add_definitions("-DWITH_THREADING")
+ 	if (WIN32)
+-               set (PTHREAD_LIBRARIES ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/lib/pthreadsVC2.lib)
+-               set (PTHREAD_INCLUDE_DIR ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/include)
++		find_library(PTHREAD_LIBRARIES NAMES pthreadsVC2)
++		find_path(PTHREAD_INCLUDE_DIR pthread.h)
+ 	else (WIN32)
+ 		find_library(LIBPTHREAD pthread)
+ 		if (LIBPTHREAD)
+@@ -78,7 +78,7 @@ set_target_properties(libmosquitto PROPERTIES
+ 	SOVERSION 1
+ )
+ 
+-install(TARGETS libmosquitto RUNTIME DESTINATION "${BINDIR}" LIBRARY DESTINATION "${LIBDIR}")
++install(TARGETS libmosquitto RUNTIME DESTINATION "${BINDIR}" LIBRARY DESTINATION "${LIBDIR}" ARCHIVE DESTINATION "${LIBDIR}")
+ install(FILES mosquitto.h DESTINATION "${INCLUDEDIR}")
+ 
+ if (UNIX)
+diff --git a/lib/cpp/CMakeLists.txt b/lib/cpp/CMakeLists.txt
+index b80dc18..e91ec77 100644
+--- a/lib/cpp/CMakeLists.txt
++++ b/lib/cpp/CMakeLists.txt
+@@ -10,7 +10,7 @@ set_target_properties(mosquittopp PROPERTIES
+ 	VERSION ${VERSION}
+ 	SOVERSION 1
+ )
+-install(TARGETS mosquittopp RUNTIME DESTINATION "${BINDIR}" LIBRARY DESTINATION "${LIBDIR}")
++install(TARGETS mosquittopp RUNTIME DESTINATION "${BINDIR}" LIBRARY DESTINATION "${LIBDIR}" ARCHIVE DESTINATION "${LIBDIR}")
+ install(FILES mosquittopp.h DESTINATION "${INCLUDEDIR}")
+ 
+ if (UNIX)

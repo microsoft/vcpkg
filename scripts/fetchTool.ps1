@@ -42,12 +42,12 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
         $downloadPath = "$downloadsDir\$($toolData.exeRelativePath)"
     }
 
-    $url = $toolData.url
+    [String]$url = $toolData.url
     if (!(Test-Path $downloadPath))
     {
         Write-Host "Downloading $tool..."
         vcpkgDownloadFile $url $downloadPath
-        Write-Host "Downloading $tool has completed successfully."
+        Write-Host "Downloading $tool... done."
     }
 
     $expectedDownloadedFileHash = $toolData.sha256
@@ -58,13 +58,14 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
     {
         $outFilename = (Get-ChildItem $downloadPath).BaseName
         Write-Host "Extracting $tool..."
-        vcpkgExtractFile -File $downloadPath -DestinationDir $downloadsDir -outFilename $outFilename
-        Write-Host "Extracting $tool has completed successfully."
+        vcpkgExtractFile -ArchivePath $downloadPath -DestinationDir $downloadsDir -outFilename $outFilename
+        Write-Host "Extracting $tool... done."
     }
 
     if (-not (Test-Path $exePath))
     {
-        throw ("Could not detect or download " + $tool)
+        Write-Error "Could not detect or download $tool"
+        throw
     }
 
     return $exePath

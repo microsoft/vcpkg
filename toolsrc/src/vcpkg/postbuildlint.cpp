@@ -391,6 +391,7 @@ namespace vcpkg::PostBuildLint
     static LintStatus check_dll_architecture(const std::string& expected_architecture,
                                              const std::vector<fs::path>& files)
     {
+#if defined(_WIN32)
         std::vector<FileAndArch> binaries_with_invalid_architecture;
 
         for (const fs::path& file : files)
@@ -413,6 +414,7 @@ namespace vcpkg::PostBuildLint
             print_invalid_architecture_files(expected_architecture, binaries_with_invalid_architecture);
             return LintStatus::ERROR_DETECTED;
         }
+#endif
 
         return LintStatus::SUCCESS;
     }
@@ -420,6 +422,7 @@ namespace vcpkg::PostBuildLint
     static LintStatus check_lib_architecture(const std::string& expected_architecture,
                                              const std::vector<fs::path>& files)
     {
+#if defined(_WIN32)
         std::vector<FileAndArch> binaries_with_invalid_architecture;
 
         for (const fs::path& file : files)
@@ -451,6 +454,7 @@ namespace vcpkg::PostBuildLint
             print_invalid_architecture_files(expected_architecture, binaries_with_invalid_architecture);
             return LintStatus::ERROR_DETECTED;
         }
+#endif
 
         return LintStatus::SUCCESS;
     }
@@ -790,11 +794,15 @@ namespace vcpkg::PostBuildLint
                 dlls.insert(dlls.cend(), debug_dlls.cbegin(), debug_dlls.cend());
                 dlls.insert(dlls.cend(), release_dlls.cbegin(), release_dlls.cend());
 
-                error_count += check_exports_of_dlls(dlls, toolset.dumpbin);
-                error_count += check_uwp_bit_of_dlls(pre_build_info.cmake_system_name, dlls, toolset.dumpbin);
-                error_count += check_dll_architecture(pre_build_info.target_architecture, dlls);
+                if (!toolset.dumpbin.empty())
+                {
+                    error_count += check_exports_of_dlls(dlls, toolset.dumpbin);
+                    error_count += check_uwp_bit_of_dlls(pre_build_info.cmake_system_name, dlls, toolset.dumpbin);
+                    error_count +=
+                        check_outdated_crt_linkage_of_dlls(dlls, toolset.dumpbin, build_info, pre_build_info);
+                }
 
-                error_count += check_outdated_crt_linkage_of_dlls(dlls, toolset.dumpbin, build_info, pre_build_info);
+                error_count += check_dll_architecture(pre_build_info.target_architecture, dlls);
                 break;
             }
             case Build::LinkageType::STATIC:
@@ -805,17 +813,20 @@ namespace vcpkg::PostBuildLint
 
                 error_count += check_bin_folders_are_not_present_in_static_build(fs, package_dir);
 
-                if (!build_info.policies.is_enabled(BuildPolicy::ONLY_RELEASE_CRT))
+                if (!toolset.dumpbin.empty())
                 {
+                    if (!build_info.policies.is_enabled(BuildPolicy::ONLY_RELEASE_CRT))
+                    {
+                        error_count += check_crt_linkage_of_libs(
+                            BuildType::value_of(Build::ConfigurationType::DEBUG, build_info.crt_linkage),
+                            debug_libs,
+                            toolset.dumpbin);
+                    }
                     error_count += check_crt_linkage_of_libs(
-                        BuildType::value_of(Build::ConfigurationType::DEBUG, build_info.crt_linkage),
-                        debug_libs,
+                        BuildType::value_of(Build::ConfigurationType::RELEASE, build_info.crt_linkage),
+                        release_libs,
                         toolset.dumpbin);
                 }
-                error_count += check_crt_linkage_of_libs(
-                    BuildType::value_of(Build::ConfigurationType::RELEASE, build_info.crt_linkage),
-                    release_libs,
-                    toolset.dumpbin);
                 break;
             }
             default: Checks::unreachable(VCPKG_LINE_INFO);

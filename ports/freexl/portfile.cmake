@@ -37,31 +37,35 @@ endif()
 ################
 # Debug build
 ################
-message(STATUS "Building ${TARGET_TRIPLET}-dbg")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    message(STATUS "Building ${TARGET_TRIPLET}-dbg")
 
-file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/debug" INST_DIR_DBG)
-vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f makefile.vc clean install
-    INST_DIR="${INST_DIR_DBG}" INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}" "LINK_FLAGS=/debug" "CL_FLAGS=${CL_FLAGS_DBG}" "LIBS_ALL=${LIBS_ALL_DBG}"
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME nmake-build-${TARGET_TRIPLET}-debug
-)
-message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
-vcpkg_copy_pdbs()
+    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/debug" INST_DIR_DBG)
+    vcpkg_execute_required_process(
+        COMMAND ${NMAKE} -f makefile.vc clean install
+        INST_DIR="${INST_DIR_DBG}" INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}" "LINK_FLAGS=/debug" "CL_FLAGS=${CL_FLAGS_DBG}" "LIBS_ALL=${LIBS_ALL_DBG}"
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME nmake-build-${TARGET_TRIPLET}-debug
+    )
+    message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
+    vcpkg_copy_pdbs()
+endif()
 
 ################
 # Release build
 ################
-message(STATUS "Building ${TARGET_TRIPLET}-rel")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    message(STATUS "Building ${TARGET_TRIPLET}-rel")
 
-file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR_REL)
-vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f makefile.vc clean install
-    INST_DIR="${INST_DIR_REL}" INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}" "LINK_FLAGS=" "CL_FLAGS=${CL_FLAGS_REL}" "LIBS_ALL=${LIBS_ALL_REL}"
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME nmake-build-${TARGET_TRIPLET}-release
-)
-message(STATUS "Building ${TARGET_TRIPLET}-rel done")
+    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR_REL)
+    vcpkg_execute_required_process(
+        COMMAND ${NMAKE} -f makefile.vc clean install
+        INST_DIR="${INST_DIR_REL}" INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}" "LINK_FLAGS=" "CL_FLAGS=${CL_FLAGS_REL}" "LIBS_ALL=${LIBS_ALL_REL}"
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME nmake-build-${TARGET_TRIPLET}-release
+    )
+    message(STATUS "Building ${TARGET_TRIPLET}-rel done")
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/freexl RENAME copyright)
@@ -74,8 +78,12 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 else()
   file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/freexl.lib)
   file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/freexl.lib)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/lib/freexl_i.lib ${CURRENT_PACKAGES_DIR}/lib/freexl.lib)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/freexl_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/freexl.lib)
+  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/freexl_i.lib ${CURRENT_PACKAGES_DIR}/lib/freexl.lib)
+  endif()
+  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/freexl_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/freexl.lib)
+  endif()
 endif()
 
 

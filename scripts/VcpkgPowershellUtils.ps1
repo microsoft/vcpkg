@@ -110,9 +110,9 @@ function vcpkgGetSHA256([Parameter(Mandatory=$true)][string]$filePath)
 
 function vcpkgCheckEqualFileHash(   [Parameter(Mandatory=$true)][string]$filePath,
                                     [Parameter(Mandatory=$true)][string]$expectedHash,
-                                    [Parameter(Mandatory=$true)][string]$actualHash )
+                                    [Parameter(Mandatory=$true)][string]$actualHash)
 {
-    if ($expectedDownloadedFileHash -ne $downloadedFileHash)
+    if ($expectedHash -ne $actualHash)
     {
         Write-Host ("`nFile does not have expected hash:`n" +
         "        File path: [ $filePath ]`n" +
@@ -140,6 +140,7 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
         {
             Write-Warning "Github has dropped support for TLS versions prior to 1.2, which is not available on your system"
             Write-Warning "Please manually download $url to $downloadPath"
+            Write-Warning "To solve this issue for future downloads, you can also install Windows Management Framework 5.1+"
             throw "Download failed"
         }
     }
@@ -148,7 +149,6 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
 
     $downloadPartPath = "$downloadPath.part"
     vcpkgRemoveItem $downloadPartPath
-
 
     $wc = New-Object System.Net.WebClient
     if (!$wc.Proxy.IsBypassed($url))
@@ -160,7 +160,7 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
     Move-Item -Path $downloadPartPath -Destination $downloadPath
 }
 
-function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
+function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$archivePath,
                             [Parameter(Mandatory=$true)][string]$destinationDir,
                             [Parameter(Mandatory=$true)][string]$outFilename)
 {
@@ -172,23 +172,21 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
     vcpkgRemoveItem $destinationPartial
     vcpkgCreateDirectoryIfNotExists $destinationPartial
 
-    $shell = new-object -com shell.application
-    $zip = $shell.NameSpace($(Get-Item $file).fullname)
-    $itemCount = $zip.Items().Count
-
     if (vcpkgHasCommand -commandName 'Microsoft.PowerShell.Archive\Expand-Archive')
     {
         Write-Verbose("Extracting with Microsoft.PowerShell.Archive\Expand-Archive")
-        Microsoft.PowerShell.Archive\Expand-Archive -path $file -destinationpath $destinationPartial
+        Microsoft.PowerShell.Archive\Expand-Archive -path $archivePath -destinationpath $destinationPartial
     }
     elseif (vcpkgHasCommand -commandName 'Pscx\Expand-Archive')
     {
         Write-Verbose("Extracting with Pscx\Expand-Archive")
-        Pscx\Expand-Archive -path $file -OutputPath $destinationPartial
+        Pscx\Expand-Archive -path $archivePath -OutputPath $destinationPartial
     }
     else
     {
         Write-Verbose("Extracting via shell")
+        $shell = new-object -com shell.application
+        $zip = $shell.NameSpace($(Get-Item $archivePath).fullname)
         foreach($item in $zip.items())
         {
             # Piping to Out-Null is used to block until finished
@@ -196,9 +194,14 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$file,
         }
     }
 
+    $items = @(Get-ChildItem "$destinationPartial")
+    $itemCount = $items.Count
+
     if ($itemCount -eq 1)
     {
-        Move-Item -Path "$destinationPartial\*" -Destination $output
+        $item =  $items | Select-Object -first 1
+        Write-Host "$item"
+        Move-Item -Path "$destinationPartial\$item" -Destination $output
         vcpkgRemoveItem $destinationPartial
     }
     else

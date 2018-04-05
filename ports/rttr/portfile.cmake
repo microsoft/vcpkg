@@ -20,6 +20,7 @@ vcpkg_apply_patches(
     PATCHES
         "${CMAKE_CURRENT_LIST_DIR}/fix-directory-output.patch"
         "${CMAKE_CURRENT_LIST_DIR}/disable-unit-tests.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/remove-owner-read-perms.patch"
 )
 
 vcpkg_configure_cmake(
@@ -30,6 +31,14 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+
+file(GLOB REL_EXES ${CURRENT_PACKAGES_DIR}/bin/*.exe)
+file(GLOB DBG_EXES ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
+if(REL_EXES)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/rttr)
+    file(COPY ${REL_EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/rttr)
+endif()
+file(REMOVE ${REL_EXES} ${DBG_EXES})
 
 #Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/rttr)

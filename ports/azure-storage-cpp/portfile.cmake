@@ -7,8 +7,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-storage-cpp
-    REF v3.1.0
-    SHA512 ebd6f8aab33046942d641bd42b126dae94c49c08963b96b0141cd6827cb865c95f05f4c7a4df9ce8c62b4ec39092c0538a8c274a0a7219c74656ad111b15bfb8
+    REF v3.2.1
+    SHA512 8d1e8de439e52f53eb28b77e8adf394468f4861c2c4c1f79ec1437c72e3fc0bc871e4e2662ee58090748915b0f12ce6736a7cc6ede619d332686b9fb6a026c9f
     HEAD_REF master
 )
 
