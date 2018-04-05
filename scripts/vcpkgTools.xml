@@ -54,11 +54,12 @@
         <sha256>9371df22bcd0e1aff9eaa52aa3292350eecd011f11494e709314ae3f3eb279e2</sha256>
         <archiveRelativePath>7z1801-extra.7z</archiveRelativePath>
     </tool>
-    <tool name="7zr">
-        <requiredVersion>18.01.0</requiredVersion>
-        <exeRelativePath>7zr.exe</exeRelativePath>
-        <url>https://www.7-zip.org/a/7zr.exe</url>
-        <sha256>2c7a8709260e0295a2a3cfd5a8ad0459f37490ed1794ea68bf85a6fab362553b</sha256>
+    <tool name="7zip920">
+        <requiredVersion>9.20.0</requiredVersion>
+        <exeRelativePath>7za.exe</exeRelativePath>
+        <url>https://www.7-zip.org/a/7za920.zip</url>
+        <sha256>2a3afe19c180f8373fa02ff00254d5394fec0349f5804e0ad2f6067854ff28ac</sha256>
+        <archiveRelativePath>7za920.zip</archiveRelativePath>
     </tool>
     <tool name="aria2">
         <requiredVersion>18.01.0</requiredVersion>

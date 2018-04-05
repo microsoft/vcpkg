@@ -198,6 +198,25 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$sevenZipExe,
     Rename-Item -Path "$destinationPartial" -NewName $destinationDir
 }
 
+function vcpkgExtractZipFileWithShell(  [Parameter(Mandatory=$true)][string]$archivePath,
+                                        [Parameter(Mandatory=$true)][string]$destinationDir)
+{
+    vcpkgRemoveItem $destinationDir
+    $destinationPartial = "$destinationDir.partial"
+    vcpkgRemoveItem $destinationPartial
+    vcpkgCreateDirectoryIfNotExists $destinationPartial
+
+    $shell = new-object -com shell.application
+    $zip = $shell.NameSpace($(Get-Item $archivePath).fullname)
+    foreach($item in $zip.items())
+    {
+        # Piping to Out-Null is used to block until finished
+        $shell.Namespace($destinationPartial).copyhere($item) | Out-Null
+    }
+
+    Rename-Item -Path "$destinationPartial" -NewName $destinationDir
+}
+
 function vcpkgInvokeCommand()
 {
     param ( [Parameter(Mandatory=$true)][string]$executable,
