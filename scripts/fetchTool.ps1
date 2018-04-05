@@ -62,8 +62,8 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
         Write-Host "Downloading $tool... done."
     }
 
-    $expectedDownloadedFileHash = $toolData.sha256
-    $downloadedFileHash = vcpkgGetSHA256 $downloadPath
+    $expectedDownloadedFileHash = $toolData.sha512
+    $downloadedFileHash = vcpkgGetSHA512 $downloadPath
     vcpkgCheckEqualFileHash -filePath $downloadPath -expectedHash $expectedDownloadedFileHash -actualHash $downloadedFileHash
 
     if ($isArchive)

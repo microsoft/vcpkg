@@ -79,22 +79,22 @@ function vcpkgGetCredentials()
     }
 }
 
-function vcpkgGetSHA256([Parameter(Mandatory=$true)][string]$filePath)
+function vcpkgGetSHA512([Parameter(Mandatory=$true)][string]$filePath)
 {
     if (vcpkgHasCommand -commandName 'Microsoft.PowerShell.Utility\Get-FileHash')
     {
         Write-Verbose("Hashing with Microsoft.PowerShell.Utility\Get-FileHash")
-        $hash = (Microsoft.PowerShell.Utility\Get-FileHash -Path $filePath -Algorithm SHA256).Hash
+        $hash = (Microsoft.PowerShell.Utility\Get-FileHash -Path $filePath -Algorithm SHA512).Hash
     }
     elseif(vcpkgHasCommand -commandName 'Pscx\Get-Hash')
     {
         Write-Verbose("Hashing with Pscx\Get-Hash")
-        $hash = (Pscx\Get-Hash -Path $filePath -Algorithm SHA256).HashString
+        $hash = (Pscx\Get-Hash -Path $filePath -Algorithm SHA512).HashString
     }
     else
     {
         Write-Verbose("Hashing with .NET")
-        $hashAlgorithm = [Security.Cryptography.HashAlgorithm]::Create("SHA256")
+        $hashAlgorithm = [Security.Cryptography.HashAlgorithm]::Create("SHA512")
         $fileAsByteArray = [io.File]::ReadAllBytes($filePath)
         $hashByteArray = $hashAlgorithm.ComputeHash($fileAsByteArray)
         $hash = -Join ($hashByteArray | ForEach-Object {"{0:x2}" -f $_})
