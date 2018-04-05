@@ -50,6 +50,7 @@ namespace vcpkg::Commands::Fetch
         static constexpr StringLiteral OS_STRING = "linux";
 #endif
 
+        static const std::string XML_VERSION = "1";
         static const fs::path XML_PATH = paths.scripts / "vcpkgTools.xml";
 
         const auto maybe_get_string_inside_tags = [](const std::string& input,
@@ -70,6 +71,7 @@ namespace vcpkg::Commands::Fetch
             return match[1];
         };
 
+        static const std::regex XML_VERSION_REGEX{R"###(<tools[\s]+version="([^"]+)">)###"};
         static const std::string XML = paths.get_filesystem().read_contents(XML_PATH).value_or_exit(VCPKG_LINE_INFO);
         static const std::regex VERSION_REGEX{R"###(<requiredVersion>([\s\S]*?)</requiredVersion>)###"};
         static const std::regex EXE_RELATIVE_PATH_REGEX{
@@ -77,6 +79,17 @@ namespace vcpkg::Commands::Fetch
         static const std::regex ARCHIVE_RELATIVE_PATH_REGEX{
             Strings::format(R"###(<archiveName>([\s\S]*?)</archiveName>)###")};
         static const std::regex URL_REGEX{Strings::format(R"###(<url>([\s\S]*?)</url>)###")};
+
+        std::smatch match_xml_version;
+        const bool has_xml_version = std::regex_search(XML.cbegin(), XML.cend(), match_xml_version, XML_VERSION_REGEX);
+        Checks::check_exit(
+            VCPKG_LINE_INFO, has_xml_version, "Could not find <tools version=x> in %s", XML_PATH.generic_string());
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           XML_VERSION == match_xml_version[1],
+                           "Expected %s version: [%s], but was [%s]. Please re-run bootstrap-vcpkg.",
+                           XML_PATH.generic_string(),
+                           XML_VERSION,
+                           match_xml_version[1]);
 
         const std::regex tool_regex{
             Strings::format(R"###(<tool[\s]+name="%s"[\s]+os="%s">([\s\S]*?)<\/tool>)###", tool, OS_STRING)};
