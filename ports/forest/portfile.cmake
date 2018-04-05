@@ -5,7 +5,7 @@ set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/forest-7.0.1)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/xorz57/forest/archive/7.0.1.zip"
     FILENAME "forest-7.0.1.zip"
-    SHA512 ae256ad38802d0827cfcd45ffae35ddb95cf74e38cf3e5d806f6e2215f701abfb8159f82e2bb6362788fe96a9f9008429d366e7abbc7980b29b3528052cfe43e
+    SHA512 c3e59f79fba57abc4583a7feb4645e2e383ca42fdbc014abf002e88ca5a720d443039329cdc497ffe4c72323c2843f614d190f2fd7c1c9083d57972791161525
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
