@@ -15,7 +15,7 @@ namespace vcpkg::Commands::Fetch
 
     struct ToolData
     {
-        std::array<int, 3> required_version;
+        std::array<int, 3> version;
         fs::path exe_path;
         std::string url;
         fs::path downloaded_path;
@@ -73,7 +73,7 @@ namespace vcpkg::Commands::Fetch
 
         static const std::regex XML_VERSION_REGEX{R"###(<tools[\s]+version="([^"]+)">)###"};
         static const std::string XML = paths.get_filesystem().read_contents(XML_PATH).value_or_exit(VCPKG_LINE_INFO);
-        static const std::regex VERSION_REGEX{R"###(<requiredVersion>([\s\S]*?)</requiredVersion>)###"};
+        static const std::regex VERSION_REGEX{R"###(<version>([\s\S]*?)</version>)###"};
         static const std::regex EXE_RELATIVE_PATH_REGEX{
             Strings::format(R"###(<exeRelativePath>([\s\S]*?)</exeRelativePath>)###")};
         static const std::regex ARCHIVE_NAME_REGEX{Strings::format(R"###(<archiveName>([\s\S]*?)</archiveName>)###")};
@@ -104,7 +104,7 @@ namespace vcpkg::Commands::Fetch
         const std::string tool_data_as_string = get_string_inside_tags(XML, tool_regex, tool);
 
         const std::string required_version_as_string =
-            get_string_inside_tags(tool_data_as_string, VERSION_REGEX, "requiredVersion");
+            get_string_inside_tags(tool_data_as_string, VERSION_REGEX, "version");
 
         const std::string url = get_string_inside_tags(tool_data_as_string, URL_REGEX, "url");
 
@@ -220,7 +220,7 @@ namespace vcpkg::Commands::Fetch
     {
         const auto& fs = paths.get_filesystem();
         const fs::path& scripts_folder = paths.scripts;
-        const std::array<int, 3>& version = tool_data.required_version;
+        const std::array<int, 3>& version = tool_data.version;
 
         const std::string version_as_string = Strings::format("%d.%d.%d", version[0], version[1], version[2]);
         System::println("A suitable version of %s was not found (required v%s). Downloading portable %s v%s...",
@@ -289,7 +289,7 @@ namespace vcpkg::Commands::Fetch
         if (const auto pf = program_files_32_bit.get()) candidate_paths.push_back(*pf / "CMake" / "bin" / "cmake.exe");
 
         const Optional<fs::path> path =
-            find_if_has_equal_or_greater_version(candidate_paths, VERSION_CHECK_ARGUMENTS, TOOL_DATA.required_version);
+            find_if_has_equal_or_greater_version(candidate_paths, VERSION_CHECK_ARGUMENTS, TOOL_DATA.version);
         if (const auto p = path.get())
         {
             return *p;
@@ -321,7 +321,7 @@ namespace vcpkg::Commands::Fetch
         const std::vector<fs::path> from_path = Files::find_from_PATH("ninja");
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
 
-        auto path = find_if_has_equal_or_greater_version(candidate_paths, "--version", TOOL_DATA.required_version);
+        auto path = find_if_has_equal_or_greater_version(candidate_paths, "--version", TOOL_DATA.version);
         if (const auto p = path.get())
         {
             return *p;
@@ -339,7 +339,7 @@ namespace vcpkg::Commands::Fetch
         const std::vector<fs::path> from_path = Files::find_from_PATH("nuget");
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
 
-        auto path = find_if_has_equal_or_greater_version(candidate_paths, "", TOOL_DATA.required_version);
+        auto path = find_if_has_equal_or_greater_version(candidate_paths, "", TOOL_DATA.version);
         if (const auto p = path.get())
         {
             return *p;
@@ -370,7 +370,7 @@ namespace vcpkg::Commands::Fetch
         if (const auto pf = program_files_32_bit.get()) candidate_paths.push_back(*pf / "git" / "cmd" / "git.exe");
 
         const Optional<fs::path> path =
-            find_if_has_equal_or_greater_version(candidate_paths, VERSION_CHECK_ARGUMENTS, TOOL_DATA.required_version);
+            find_if_has_equal_or_greater_version(candidate_paths, VERSION_CHECK_ARGUMENTS, TOOL_DATA.version);
         if (const auto p = path.get())
         {
             return *p;
@@ -396,7 +396,7 @@ namespace vcpkg::Commands::Fetch
         // "QtIFW-3.1.0" / "bin" / "installerbase.exe");
 
         const Optional<fs::path> path =
-            find_if_has_equal_or_greater_version(candidate_paths, VERSION_CHECK_ARGUMENTS, TOOL_DATA.required_version);
+            find_if_has_equal_or_greater_version(candidate_paths, VERSION_CHECK_ARGUMENTS, TOOL_DATA.version);
         if (const auto p = path.get())
         {
             return *p;
