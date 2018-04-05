@@ -33,10 +33,10 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
         return $exePath
     }
 
-    $isArchive = vcpkgHasProperty -object $toolData -propertyName "archiveRelativePath"
+    $isArchive = vcpkgHasProperty -object $toolData -propertyName "archiveName"
     if ($isArchive)
     {
-        $downloadPath = "$downloadsDir\$($toolData.archiveRelativePath)"
+        $downloadPath = "$downloadsDir\$($toolData.archiveName)"
     }
     else
     {

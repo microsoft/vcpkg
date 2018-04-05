@@ -75,7 +75,7 @@ namespace vcpkg::Commands::Fetch
         static const std::regex EXE_RELATIVE_PATH_REGEX{
             Strings::format(R"###(<exeRelativePath>([\s\S]*?)</exeRelativePath>)###")};
         static const std::regex ARCHIVE_RELATIVE_PATH_REGEX{
-            Strings::format(R"###(<archiveRelativePath>([\s\S]*?)</archiveRelativePath>)###")};
+            Strings::format(R"###(<archiveName>([\s\S]*?)</archiveName>)###")};
         static const std::regex URL_REGEX{Strings::format(R"###(<url>([\s\S]*?)</url>)###")};
 
         const std::regex tool_regex{

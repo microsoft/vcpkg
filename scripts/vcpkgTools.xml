@@ -5,28 +5,28 @@
         <exeRelativePath>cmake-3.10.2-win32-x86\bin\cmake.exe</exeRelativePath>
         <url>https://cmake.org/files/v3.10/cmake-3.10.2-win32-x86.zip</url>
         <sha256>f5f7e41a21d0e9b655aca58498b08e17ecd27796bf82837e2c84435359169dd6</sha256>
-        <archiveRelativePath>cmake-3.10.2-win32-x86.zip</archiveRelativePath>
+        <archiveName>cmake-3.10.2-win32-x86.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
         <requiredVersion>3.10.2</requiredVersion>
         <exeRelativePath>cmake-3.10.2-Darwin-x86_64/CMake.app/Contents/bin/cmake</exeRelativePath>
         <url>https://cmake.org/files/v3.10/cmake-3.10.2-Darwin-x86_64.tar.gz</url>
         <sha256>e748eb7698f8e2783c2eea9ab81eebf66da0238bbf8e8fa722a67a38f2110718</sha256>
-        <archiveRelativePath>cmake-3.10.2-Darwin-x86_64.tar.gz</archiveRelativePath>
+        <archiveName>cmake-3.10.2-Darwin-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
         <requiredVersion>3.10.2</requiredVersion>
         <exeRelativePath>cmake-3.10.2-Linux-x86_64/bin/cmake</exeRelativePath>
         <url>https://cmake.org/files/v3.10/cmake-3.10.2-Linux-x86_64.tar.gz</url>
         <sha256>7a82b46c35f4e68a0807e8dc04e779dee3f36cd42c6387fd13b5c29fe62a69ea</sha256>
-        <archiveRelativePath>cmake-3.10.2-Linux-x86_64.tar.gz</archiveRelativePath>
+        <archiveName>cmake-3.10.2-Linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="git" os="windows">
         <requiredVersion>2.16.2</requiredVersion>
         <exeRelativePath>cmd\git.exe</exeRelativePath>
         <url>https://github.com/git-for-windows/git/releases/download/v2.16.2.windows.1/MinGit-2.16.2-32-bit.zip</url>
         <sha256>322c727e482aa97522c64a5ac68bdda3780111e8670bcfb532beac8e11ece5da</sha256>
-        <archiveRelativePath>MinGit-2.16.2-32-bit.zip</archiveRelativePath>
+        <archiveName>MinGit-2.16.2-32-bit.zip</archiveName>
     </tool>
     <tool name="vswhere" os="windows">
         <requiredVersion>2.3.2</requiredVersion>
@@ -45,41 +45,41 @@
         <exeRelativePath>QtInstallerFramework-win-x86\bin\installerbase.exe</exeRelativePath>
         <url>https://github.com/podsvirov/installer-framework/releases/download/cr203958-9/QtInstallerFramework-win-x86.zip</url>
         <sha256>f2ce23cf5cf9fc7ce409bdca49328e09a070c0026d3c8a04e4dfde7b05b83fe8</sha256>
-        <archiveRelativePath>QtInstallerFramework-win-x86.zip</archiveRelativePath>
+        <archiveName>QtInstallerFramework-win-x86.zip</archiveName>
     </tool>
     <tool name="7zip" os="windows">
         <requiredVersion>18.01.0</requiredVersion>
         <exeRelativePath>7za.exe</exeRelativePath>
         <url>https://www.7-zip.org/a/7z1801-extra.7z</url>
         <sha256>9371df22bcd0e1aff9eaa52aa3292350eecd011f11494e709314ae3f3eb279e2</sha256>
-        <archiveRelativePath>7z1801-extra.7z</archiveRelativePath>
+        <archiveName>7z1801-extra.7z</archiveName>
     </tool>
     <tool name="7zip920" os="windows">
         <requiredVersion>9.20.0</requiredVersion>
         <exeRelativePath>7za.exe</exeRelativePath>
         <url>https://www.7-zip.org/a/7za920.zip</url>
         <sha256>2a3afe19c180f8373fa02ff00254d5394fec0349f5804e0ad2f6067854ff28ac</sha256>
-        <archiveRelativePath>7za920.zip</archiveRelativePath>
+        <archiveName>7za920.zip</archiveName>
     </tool>
     <tool name="aria2" os="windows">
         <requiredVersion>18.01.0</requiredVersion>
         <exeRelativePath>aria2-1.33.1-win-32bit-build1\aria2c.exe</exeRelativePath>
         <url>https://github.com/aria2/aria2/releases/download/release-1.33.1/aria2-1.33.1-win-32bit-build1.zip</url>
         <sha256>04bf07c0449c703db17fbcd586365aebba00201ca513ca4808b543f1f9208f1f</sha256>
-        <archiveRelativePath>aria2-1.33.1-win-32bit-build1.zip</archiveRelativePath>
+        <archiveName>aria2-1.33.1-win-32bit-build1.zip</archiveName>
     </tool>
     <tool name="ninja" os="linux">
         <requiredVersion>1.8.2</requiredVersion>
         <exeRelativePath>ninja</exeRelativePath>
         <url>https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-linux.zip</url>
         <sha256>d2fea9ff33b3ef353161ed906f260d565ca55b8ca0568fa07b1d2cab90a84a07</sha256>
-        <archiveRelativePath>ninja-linux.zip</archiveRelativePath>
+        <archiveName>ninja-linux.zip</archiveName>
     </tool>
     <tool name="ninja" os="osx">
         <requiredVersion>1.8.2</requiredVersion>
         <exeRelativePath>ninja</exeRelativePath>
         <url>https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-mac.zip</url>
         <sha256>0347d55c66061652b26f48769d566761630ffde3143793b29064a57f356542cc</sha256>
-        <archiveRelativePath>ninja-mac.zip</archiveRelativePath>
+        <archiveName>ninja-mac.zip</archiveName>
     </tool>
 </tools>
