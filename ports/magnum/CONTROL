@@ -71,6 +71,7 @@ Build-Depends: magnum[text], magnum[tgaimageconverter]
 
 Feature: meshtools
 Description: MeshTools library
+Build-Depends: magnum[trade]
 
 Feature: objimporter
 Description: ObjImporter plugin
@@ -86,6 +87,7 @@ Build-Depends: corrade[testsuite], magnum[gl]
 
 Feature: primitives
 Description: Primitives library
+Build-Depends: magnum[trade]
 
 Feature: sdl2application
 Description: Sdl2Application library
