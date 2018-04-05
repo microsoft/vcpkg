@@ -77,7 +77,6 @@ $tagPorts = @(
     "spdlog",
     "sqlite-orm",
     "uwebsockets",
-    "wt",
     "yaml-cpp",
     "zziplib"
 )
@@ -93,7 +92,9 @@ $tagPortsWithRegex = @(
     (New-Object PSObject -Property @{ "port"="grpc"; "regex"="^v[\d\.]+`$" }),
 
     (New-Object PSObject -Property @{ "port"="directxtex"; "regex"="^[^\d]+\d+[^\d]?$" }),
-    (New-Object PSObject -Property @{ "port"="directxtk"; "regex"="^[^\d]+\d+[^\d]?$" })
+    (New-Object PSObject -Property @{ "port"="directxtk"; "regex"="^[^\d]+\d+[^\d]?$" }),
+    (New-Object PSObject -Property @{ "port"="wt"; "regex"="^[^\d\.]+`$" })
+
 )
 
 $rollingPorts = @(
