@@ -20,6 +20,7 @@ namespace vcpkg::Commands::Fetch
         std::string url;
         fs::path downloaded_path;
         fs::path tool_dir_path;
+        std::string sha512;
     };
 
     static Optional<std::array<int, 3>> parse_version_string(const std::string& version_as_string)
@@ -78,6 +79,7 @@ namespace vcpkg::Commands::Fetch
             Strings::format(R"###(<exeRelativePath>([\s\S]*?)</exeRelativePath>)###")};
         static const std::regex ARCHIVE_NAME_REGEX{Strings::format(R"###(<archiveName>([\s\S]*?)</archiveName>)###")};
         static const std::regex URL_REGEX{Strings::format(R"###(<url>([\s\S]*?)</url>)###")};
+        static const std::regex SHA512_REGEX{Strings::format(R"###(<sha512>([\s\S]*?)</sha512>)###")};
 
         std::smatch match_xml_version;
         const bool has_xml_version = std::regex_search(XML.cbegin(), XML.cend(), match_xml_version, XML_VERSION_REGEX);
@@ -123,11 +125,15 @@ namespace vcpkg::Commands::Fetch
         const std::string tool_dir_name = Strings::format("%s-%s-%s", tool, required_version_as_string, OS_STRING);
         const fs::path tool_dir_path = paths.downloads / "tools" / tool_dir_name;
         const fs::path exe_path = tool_dir_path / exe_relative_path;
+
+        const std::string sha512 = get_string_inside_tags(tool_data_as_string, SHA512_REGEX, "sha512");
+
         return ToolData{*required_version.get(),
                         exe_path,
                         url,
                         paths.downloads / archive_name.value_or(exe_relative_path),
-                        tool_dir_path};
+                        tool_dir_path,
+                        sha512};
     }
 
     static bool exists_and_has_equal_or_greater_version(const std::string& version_cmd,
@@ -255,6 +261,17 @@ namespace vcpkg::Commands::Fetch
                 R"(curl -L '%s' --create-dirs --output '%s')", tool_data.url, tool_data.downloaded_path));
             Checks::check_exit(VCPKG_LINE_INFO, code == 0, "curl failed while downloading %s", tool_data.url);
         }
+
+        const std::string actual_hash = Hash::get_file_hash(paths, tool_data.downloaded_path, "SHA512");
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           tool_data.sha512 == actual_hash,
+                           "File does not have the expected hash:\n"
+                           "      File path : [ %s ]\n"
+                           "   Expected hash: [ %s ]\n"
+                           "     Actual hash: [ %s ] \n",
+                           tool_data.downloaded_path.u8string(),
+                           tool_data.sha512,
+                           actual_hash);
 
         System::println("Extracting %s...", tool_name);
         extract_archive(paths, tool_data.downloaded_path, tool_data.tool_dir_path);
