@@ -48,8 +48,8 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
     {
         Write-Host "Downloading $tool..."
 
-        # aria2 needs 7zip & 7zip920 to extract. So, we need to download those trough powershell
-        if ($tool -eq "aria2" -or $tool -eq "7zip" -or $tool -eq "7zip920")
+        # Download aria2 with .NET. aria2 will be used to download everything else.
+        if ($tool -eq "aria2")
         {
             vcpkgDownloadFile $url $downloadPath
         }
@@ -69,7 +69,9 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
     if ($isArchive)
     {
         Write-Host "Extracting $tool..."
-        if ($tool -eq "7zip920")
+        # Extract 7zip920 with shell because we need it to extract 7zip
+        # Extract aria2 with shell because we need it to download 7zip
+        if ($tool -eq "7zip920" -or $tool -eq "aria2")
         {
             vcpkgExtractZipFileWithShell -ArchivePath $downloadPath -DestinationDir $toolPath
         }
