@@ -18,7 +18,7 @@ namespace vcpkg::Commands::Fetch
         std::array<int, 3> version;
         fs::path exe_path;
         std::string url;
-        fs::path downloaded_path;
+        fs::path download_path;
         fs::path tool_dir_path;
         std::string sha512;
     };
@@ -219,7 +219,41 @@ namespace vcpkg::Commands::Fetch
             Checks::exit_with_message(VCPKG_LINE_INFO, "Unexpected archive extension: %s", ext.u8string());
         }
 
-        fs.rename(to_path_partial, to_path);
+        fs.rename(to_path_partial, to_path, ec);
+    }
+
+    static void download_file(const VcpkgPaths& paths,
+                              const std::string& url,
+                              const fs::path& download_path,
+                              const std::string& sha512)
+    {
+        Files::Filesystem& fs = paths.get_filesystem();
+        if (fs.exists(download_path))
+        {
+            return;
+        }
+
+        const std::string download_path_part = download_path.u8string() + ".part";
+        std::error_code ec;
+        fs.remove(download_path_part, ec);
+        const auto code = System::cmd_execute(Strings::format(
+            R"(curl -L '%s' --create-dirs --output '%s')", url, download_path_part));
+        Checks::check_exit(VCPKG_LINE_INFO, code == 0, "Could not download %s", url);
+
+        const std::string actual_hash = Hash::get_file_hash(paths, download_path_part, "SHA512");
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           sha512 == actual_hash,
+                           "File does not have the expected hash:\n"
+                           "            url : [ %s ]\n"
+                           "      File path : [ %s ]\n"
+                           "   Expected hash: [ %s ]\n"
+                           "     Actual hash: [ %s ] \n",
+                           url,
+                           download_path.u8string(),
+                           sha512,
+                           actual_hash);
+
+        fs.rename(download_path_part, download_path, ec);
     }
 
     static fs::path fetch_tool(const VcpkgPaths& paths, const std::string& tool_name, const ToolData& tool_data)
@@ -255,26 +289,15 @@ namespace vcpkg::Commands::Fetch
                            actual_downloaded_path.u8string());
         return actual_downloaded_path;
 #else
-        if (!fs.exists(tool_data.downloaded_path))
+        if (!fs.exists(tool_data.download_path))
         {
-            auto code = System::cmd_execute(Strings::format(
-                R"(curl -L '%s' --create-dirs --output '%s')", tool_data.url, tool_data.downloaded_path));
-            Checks::check_exit(VCPKG_LINE_INFO, code == 0, "curl failed while downloading %s", tool_data.url);
+            System::println("Downloading %s...", tool_name);
+            download_file(paths, tool_data.url, tool_data.download_path, tool_data.sha512);
+            System::println("Downloading %s... done.", tool_name);
         }
 
-        const std::string actual_hash = Hash::get_file_hash(paths, tool_data.downloaded_path, "SHA512");
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           tool_data.sha512 == actual_hash,
-                           "File does not have the expected hash:\n"
-                           "      File path : [ %s ]\n"
-                           "   Expected hash: [ %s ]\n"
-                           "     Actual hash: [ %s ] \n",
-                           tool_data.downloaded_path.u8string(),
-                           tool_data.sha512,
-                           actual_hash);
-
         System::println("Extracting %s...", tool_name);
-        extract_archive(paths, tool_data.downloaded_path, tool_data.tool_dir_path);
+        extract_archive(paths, tool_data.download_path, tool_data.tool_dir_path);
         System::println("Extracting %s... done.", tool_name);
 
         Checks::check_exit(VCPKG_LINE_INFO,
