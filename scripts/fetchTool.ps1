@@ -51,20 +51,16 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
         # Download aria2 with .NET. aria2 will be used to download everything else.
         if ($tool -eq "aria2")
         {
-            vcpkgDownloadFile $url $downloadPath
+            vcpkgDownloadFile $url $downloadPath $toolData.sha512
         }
         else
         {
             $aria2exe = fetchToolInternal "aria2"
-            vcpkgDownloadFileWithAria2 $aria2exe $url $downloadPath
+            vcpkgDownloadFileWithAria2 $aria2exe $url $downloadPath $toolData.sha512
         }
 
         Write-Host "Downloading $tool... done."
     }
-
-    $expectedDownloadedFileHash = $toolData.sha512
-    $downloadedFileHash = vcpkgGetSHA512 $downloadPath
-    vcpkgCheckEqualFileHash -filePath $downloadPath -expectedHash $expectedDownloadedFileHash -actualHash $downloadedFileHash
 
     if ($isArchive)
     {

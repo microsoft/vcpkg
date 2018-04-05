@@ -103,22 +103,25 @@ function vcpkgGetSHA512([Parameter(Mandatory=$true)][string]$filePath)
     return $hash.ToLower()
 }
 
-function vcpkgCheckEqualFileHash(   [Parameter(Mandatory=$true)][string]$filePath,
+function vcpkgCheckEqualFileHash(   [Parameter(Mandatory=$true)][string]$url,
+                                    [Parameter(Mandatory=$true)][string]$filePath,
                                     [Parameter(Mandatory=$true)][string]$expectedHash,
                                     [Parameter(Mandatory=$true)][string]$actualHash)
 {
     if ($expectedHash -ne $actualHash)
     {
         Write-Host ("`nFile does not have expected hash:`n" +
+        "              url: [ $url ]`n" +
         "        File path: [ $filePath ]`n" +
         "    Expected hash: [ $expectedHash ]`n" +
         "      Actual hash: [ $actualHash ]`n")
-        throw "Invalid Hash for file $filePath"
+        throw
     }
 }
 
 function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
-                            [Parameter(Mandatory=$true)][string]$downloadPath)
+                            [Parameter(Mandatory=$true)][string]$downloadPath,
+                            [Parameter(Mandatory=$true)][string]$sha512)
 {
     if (Test-Path $downloadPath)
     {
@@ -152,12 +155,17 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
     }
 
     $wc.DownloadFile($url, $downloadPartPath)
+
+    $actualHash = vcpkgGetSHA512 $downloadPartPath
+    vcpkgCheckEqualFileHash -url $url -filePath $downloadPath -expectedHash $sha512 -actualHash $actualHash
+
     Move-Item -Path $downloadPartPath -Destination $downloadPath
 }
 
 function vcpkgDownloadFileWithAria2(    [Parameter(Mandatory=$true)][string]$aria2exe,
                                         [Parameter(Mandatory=$true)][string]$url,
-                                        [Parameter(Mandatory=$true)][string]$downloadPath)
+                                        [Parameter(Mandatory=$true)][string]$downloadPath,
+                                        [Parameter(Mandatory=$true)][string]$sha512)
 {
     if (Test-Path $downloadPath)
     {
@@ -177,6 +185,9 @@ function vcpkgDownloadFileWithAria2(    [Parameter(Mandatory=$true)][string]$ari
         Write-Host "Could not download $url"
         throw
     }
+
+    $actualHash = vcpkgGetSHA512 $downloadPartPath
+    vcpkgCheckEqualFileHash -url $url -filePath $downloadPath -expectedHash $sha512 -actualHash $actualHash
 
     Move-Item -Path $downloadPartPath -Destination $downloadPath
 }
