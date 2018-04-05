@@ -76,8 +76,7 @@ namespace vcpkg::Commands::Fetch
         static const std::regex VERSION_REGEX{R"###(<requiredVersion>([\s\S]*?)</requiredVersion>)###"};
         static const std::regex EXE_RELATIVE_PATH_REGEX{
             Strings::format(R"###(<exeRelativePath>([\s\S]*?)</exeRelativePath>)###")};
-        static const std::regex ARCHIVE_RELATIVE_PATH_REGEX{
-            Strings::format(R"###(<archiveName>([\s\S]*?)</archiveName>)###")};
+        static const std::regex ARCHIVE_NAME_REGEX{Strings::format(R"###(<archiveName>([\s\S]*?)</archiveName>)###")};
         static const std::regex URL_REGEX{Strings::format(R"###(<url>([\s\S]*?)</url>)###")};
 
         std::smatch match_xml_version;
@@ -112,7 +111,7 @@ namespace vcpkg::Commands::Fetch
         const std::string exe_relative_path =
             get_string_inside_tags(tool_data_as_string, EXE_RELATIVE_PATH_REGEX, "exeRelativePath");
 
-        auto archive_relative_path = maybe_get_string_inside_tags(tool_data_as_string, ARCHIVE_RELATIVE_PATH_REGEX);
+        auto archive_name = maybe_get_string_inside_tags(tool_data_as_string, ARCHIVE_NAME_REGEX);
 
         const Optional<std::array<int, 3>> required_version = parse_version_string(required_version_as_string);
         Checks::check_exit(VCPKG_LINE_INFO,
@@ -127,7 +126,7 @@ namespace vcpkg::Commands::Fetch
         return ToolData{*required_version.get(),
                         exe_path,
                         url,
-                        paths.downloads / archive_relative_path.value_or(exe_relative_path),
+                        paths.downloads / archive_name.value_or(exe_relative_path),
                         tool_dir_path};
     }
 
