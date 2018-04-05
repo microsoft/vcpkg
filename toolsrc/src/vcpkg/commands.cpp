@@ -42,7 +42,6 @@ namespace vcpkg::Commands
             {"cache", &Cache::perform_and_exit},
             {"portsdiff", &PortsDiff::perform_and_exit},
             {"autocomplete", &Autocomplete::perform_and_exit},
-            {"hash", &Hash::perform_and_exit},
             // {"fetch", &Fetch::perform_and_exit},
         };
         return t;
@@ -50,8 +49,11 @@ namespace vcpkg::Commands
 
     Span<const PackageNameAndFunction<CommandTypeC>> get_available_commands_type_c()
     {
-        static std::vector<PackageNameAndFunction<CommandTypeC>> t = {{"version", &Version::perform_and_exit},
-                                                                      {"contact", &Contact::perform_and_exit}};
+        static std::vector<PackageNameAndFunction<CommandTypeC>> t = {
+            {"version", &Version::perform_and_exit},
+            {"contact", &Contact::perform_and_exit},
+            {"hash", &Hash::perform_and_exit},
+        };
         return t;
     }
 }

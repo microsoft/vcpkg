@@ -60,7 +60,7 @@ namespace vcpkg::Commands::Hash
         };
     }
 
-    std::string get_file_hash(const VcpkgPaths&, const fs::path& path, const std::string& hash_type)
+    std::string get_file_hash(const fs::path& path, const std::string& hash_type)
     {
         BCryptAlgorithmHandle algorithm_handle;
 
@@ -108,30 +108,25 @@ namespace vcpkg::Commands::Hash
 #else
 namespace vcpkg::Commands::Hash
 {
-    std::string get_file_hash(const VcpkgPaths& paths, const fs::path& path, const std::string& hash_type)
+    std::string get_file_hash(const fs::path& path, const std::string& hash_type)
     {
+        if (!Strings::case_insensitive_ascii_starts_with(hash_type, "SHA"))
+        {
+            Checks::exit_with_message(
+                VCPKG_LINE_INFO, "shasum only supports SHA hashes, but %s was provided", hash_type);
+        }
+
+        const std::string digest_size = hash_type.substr(3, hash_type.length() - 3);
+
         const std::string cmd_line = Strings::format(
-            R"("%s" -E %ssum "%s")",
-            paths.get_tool_exe(Tools::CMAKE).u8string(),
-            Strings::ascii_to_lowercase(hash_type),
-            path.u8string());
-
+            R"(shasum -a %s "%s" | awk '{ print $1 }')", digest_size, path.u8string());
         const auto ec_data = System::cmd_execute_and_capture_output(cmd_line);
-        Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line);
-
-        std::string const& output = ec_data.output;
-
-        const auto start = output.find_first_of(' ');
-        Checks::check_exit(
-            VCPKG_LINE_INFO, start != std::string::npos, "Unexpected output format from command: %s", cmd_line);
-
-        const auto end = output.find_first_of("\r\n", start + 1);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, end != std::string::npos, "Unexpected output format from command: %s", cmd_line);
-
-        auto hash = output.substr(0, start);
-        Util::erase_remove_if(hash, isspace);
-        return hash;
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           ec_data.exit_code == 0,
+                           "Failed to run:\n"
+                           "    %s",
+                           cmd_line);
+        return Strings::trim(std::string{ec_data.output});
     }
 }
 #endif
@@ -147,13 +142,13 @@ namespace vcpkg::Commands::Hash
         nullptr,
     };
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
+    void perform_and_exit(const VcpkgCmdArguments& args)
     {
         Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
 
         const fs::path file_to_hash = args.command_arguments[0];
         const std::string algorithm = args.command_arguments.size() == 2 ? args.command_arguments[1] : "SHA512";
-        const std::string hash = get_file_hash(paths, file_to_hash, algorithm);
+        const std::string hash = get_file_hash(file_to_hash, algorithm);
         System::println(hash);
         Checks::exit_success(VCPKG_LINE_INFO);
     }
