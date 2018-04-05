@@ -112,7 +112,7 @@ namespace vcpkg::Commands::Hash
     {
         const std::string cmd_line = Strings::format(
             R"("%s" -E %ssum "%s")",
-            paths.get_cmake_exe().u8string(),
+            paths.get_tool_exe(Tools::CMAKE).u8string(),
             Strings::ascii_to_lowercase(hash_type),
             path.u8string());
 

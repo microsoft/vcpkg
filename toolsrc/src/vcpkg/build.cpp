@@ -338,7 +338,7 @@ namespace vcpkg::Build
 #if !defined(_WIN32)
         // TODO: remove when vcpkg.exe is in charge for acquiring tools. Change introduced in vcpkg v0.0.107.
         // bootstrap should have already downloaded ninja, but making sure it is present in case it was deleted.
-        vcpkg::Util::unused(paths.get_ninja_exe());
+        vcpkg::Util::unused(paths.get_tool_exe(Tools::NINJA));
 #endif
 
         const fs::path& cmake_exe_path = paths.get_tool_exe(Tools::CMAKE);
