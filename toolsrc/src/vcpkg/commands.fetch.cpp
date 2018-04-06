@@ -229,25 +229,12 @@ namespace vcpkg::Commands::Fetch
         fs.rename(to_path_partial, to_path);
     }
 
-    static void download_file(const VcpkgPaths& paths,
-                              const std::string& url,
-                              const fs::path& download_path,
-                              const std::string& sha512)
+    static void verify_hash(const VcpkgPaths& paths,
+                            const std::string& url,
+                            const fs::path& path,
+                            const std::string& sha512)
     {
-        Files::Filesystem& fs = paths.get_filesystem();
-        if (fs.exists(download_path))
-        {
-            return;
-        }
-
-        const std::string download_path_part = download_path.u8string() + ".part";
-        std::error_code ec;
-        fs.remove(download_path_part, ec);
-        const auto code = System::cmd_execute(Strings::format(
-            R"(curl -L '%s' --create-dirs --output '%s')", url, download_path_part));
-        Checks::check_exit(VCPKG_LINE_INFO, code == 0, "Could not download %s", url);
-
-        const std::string actual_hash = Hash::get_file_hash(paths, download_path_part, "SHA512");
+        const std::string actual_hash = Hash::get_file_hash(paths, path, "SHA512");
         Checks::check_exit(VCPKG_LINE_INFO,
                            sha512 == actual_hash,
                            "File does not have the expected hash:\n"
@@ -256,10 +243,25 @@ namespace vcpkg::Commands::Fetch
                            "   Expected hash : [ %s ]\n"
                            "     Actual hash : [ %s ]\n",
                            url,
-                           download_path.u8string(),
+                           path.u8string(),
                            sha512,
                            actual_hash);
+    }
 
+    static void download_file(const VcpkgPaths& paths,
+                              const std::string& url,
+                              const fs::path& download_path,
+                              const std::string& sha512)
+    {
+        Files::Filesystem& fs = paths.get_filesystem();
+        const std::string download_path_part = download_path.u8string() + ".part";
+        std::error_code ec;
+        fs.remove(download_path_part, ec);
+        const auto code = System::cmd_execute(Strings::format(
+            R"(curl -L '%s' --create-dirs --output '%s')", url, download_path_part));
+        Checks::check_exit(VCPKG_LINE_INFO, code == 0, "Could not download %s", url);
+
+        verify_hash(paths, url, download_path_part, sha512);
         fs.rename(download_path_part, download_path);
     }
 
@@ -301,6 +303,10 @@ namespace vcpkg::Commands::Fetch
             System::println("Downloading %s...", tool_name);
             download_file(paths, tool_data.url, tool_data.download_path, tool_data.sha512);
             System::println("Downloading %s... done.", tool_name);
+        }
+        else
+        {
+            verify_hash(paths, tool_data.url, tool_data.download_path, tool_data.sha512);
         }
 
         System::println("Extracting %s...", tool_name);
