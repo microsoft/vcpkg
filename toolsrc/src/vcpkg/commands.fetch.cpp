@@ -199,6 +199,7 @@ namespace vcpkg::Commands::Fetch
         return data_lines;
     }
 
+#if !defined(_WIN32)
     static void extract_archive(const VcpkgPaths& paths, const fs::path& archive, const fs::path& to_path)
     {
         Files::Filesystem& fs = paths.get_filesystem();
@@ -265,6 +266,7 @@ namespace vcpkg::Commands::Fetch
         fs.rename(download_path_part, download_path);
     }
 
+#endif
     static fs::path fetch_tool(const VcpkgPaths& paths, const std::string& tool_name, const ToolData& tool_data)
     {
         const auto& fs = paths.get_filesystem();
