@@ -61,6 +61,10 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
 
         Write-Host "Downloading $tool... done."
     }
+    else
+    {
+        vcpkgCheckEqualFileHash -url $url -filePath $downloadPath -expectedHash $toolData.sha512
+    }
 
     if ($isArchive)
     {
