@@ -247,10 +247,10 @@ namespace vcpkg::Commands::Fetch
         Checks::check_exit(VCPKG_LINE_INFO,
                            sha512 == actual_hash,
                            "File does not have the expected hash:\n"
-                           "            url : [ %s ]\n"
-                           "      File path : [ %s ]\n"
-                           "   Expected hash: [ %s ]\n"
-                           "     Actual hash: [ %s ] \n",
+                           "             url : [ %s ]\n"
+                           "       File path : [ %s ]\n"
+                           "   Expected hash : [ %s ]\n"
+                           "     Actual hash : [ %s ]\n",
                            url,
                            download_path.u8string(),
                            sha512,
