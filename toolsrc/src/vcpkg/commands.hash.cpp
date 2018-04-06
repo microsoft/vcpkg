@@ -152,7 +152,7 @@ namespace vcpkg::Commands::Hash
 #else
 namespace vcpkg::Commands::Hash
 {
-    std::string get_file_hash(const fs::path& path, const std::string& hash_type)
+    static std::string get_digest_size(const std::string& hash_type)
     {
         if (!Strings::case_insensitive_ascii_starts_with(hash_type, "SHA"))
         {
@@ -160,10 +160,11 @@ namespace vcpkg::Commands::Hash
                 VCPKG_LINE_INFO, "shasum only supports SHA hashes, but %s was provided", hash_type);
         }
 
-        const std::string digest_size = hash_type.substr(3, hash_type.length() - 3);
+        return hash_type.substr(3, hash_type.length() - 3);
+    }
 
-        const std::string cmd_line = Strings::format(
-            R"(shasum -a %s "%s" | awk '{ print $1 }')", digest_size, path.u8string());
+    static std::string run_shasum_and_post_process(const std::string& cmd_line)
+    {
         const auto ec_data = System::cmd_execute_and_capture_output(cmd_line);
         Checks::check_exit(VCPKG_LINE_INFO,
                            ec_data.exit_code == 0,
@@ -173,25 +174,27 @@ namespace vcpkg::Commands::Hash
         return Strings::trim(std::string{ec_data.output});
     }
 
+    std::string get_file_hash(const fs::path& path, const std::string& hash_type)
+    {
+        const std::string digest_size = get_digest_size(hash_type);
+        const std::string cmd_line = Strings::format(
+            R"(shasum -a %s "%s" | awk '{ print $1 }')", digest_size, path.u8string());
+        return run_shasum_and_post_process(cmd_line);
+    }
+
     std::string get_string_hash(const std::string& s, const std::string& hash_type)
     {
-        if (!Strings::case_insensitive_ascii_starts_with(hash_type, "SHA"))
-        {
-            Checks::exit_with_message(
-                VCPKG_LINE_INFO, "shasum only supports SHA hashes, but %s was provided", hash_type);
-        }
+        const std::string digest_size = get_digest_size(hash_type);
 
-        const std::string digest_size = hash_type.substr(3, hash_type.length() - 3);
+        static const std::regex ALLOWED_CHARS{"^[a-zA-Z0-9:]*$"};
+
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           std::regex_match(s, ALLOWED_CHARS),
+                           "Only alphanumeric chars and colons are currently allowed");
 
         const std::string cmd_line = Strings::format(
             R"(echo -n "%s" | shasum -a %s | awk '{ print $1 }')", s, digest_size);
-        const auto ec_data = System::cmd_execute_and_capture_output(cmd_line);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           ec_data.exit_code == 0,
-                           "Failed to run:\n"
-                           "    %s",
-                           cmd_line);
-        return Strings::trim(std::string{ec_data.output});
+        return run_shasum_and_post_process(cmd_line);
     }
 }
 #endif
