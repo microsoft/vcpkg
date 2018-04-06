@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<tools version="1">
+<tools version="2">
     <tool name="cmake" os="windows">
         <version>3.10.2</version>
         <exeRelativePath>cmake-3.10.2-win32-x86\bin\cmake.exe</exeRelativePath>

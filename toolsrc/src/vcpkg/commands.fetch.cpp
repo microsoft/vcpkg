@@ -51,7 +51,7 @@ namespace vcpkg::Commands::Fetch
         static constexpr StringLiteral OS_STRING = "linux";
 #endif
 
-        static const std::string XML_VERSION = "1";
+        static const std::string XML_VERSION = "2";
         static const fs::path XML_PATH = paths.scripts / "vcpkgTools.xml";
 
         const auto maybe_get_string_inside_tags = [](const std::string& input,
