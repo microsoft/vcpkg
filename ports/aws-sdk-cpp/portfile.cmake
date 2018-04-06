@@ -14,8 +14,11 @@ set(BUILD_ONLY core)
 
 include(${CMAKE_CURRENT_LIST_DIR}/compute_build_only.cmake)
 
-# This handles escaping the list
-string(REPLACE ";" "\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
+if(CMAKE_HOST_WIN32)
+    string(REPLACE ";" "\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
+else()
+    string(REPLACE ";" "\\\\\\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
