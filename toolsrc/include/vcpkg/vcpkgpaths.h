@@ -3,6 +3,7 @@
 #include <vcpkg/binaryparagraph.h>
 #include <vcpkg/packagespec.h>
 
+#include <vcpkg/base/cache.h>
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/lazy.h>
@@ -89,7 +90,7 @@ namespace vcpkg
 
     private:
         Lazy<std::vector<std::string>> available_triplets;
-        mutable std::map<std::string, fs::path> tool_paths;
+        Cache<std::string, fs::path> tool_paths;
         Lazy<std::vector<Toolset>> toolsets;
         Lazy<std::vector<Toolset>> toolsets_vs2013;
 
