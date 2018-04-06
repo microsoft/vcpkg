@@ -70,8 +70,8 @@ namespace vcpkg::Install
             }
 
             const std::string filename = file.filename().u8string();
-            if (fs::is_regular_file(status) && (Strings::case_insensitive_ascii_equals(filename.c_str(), "CONTROL") ||
-                                                Strings::case_insensitive_ascii_equals(filename.c_str(), "BUILD_INFO")))
+            if (fs::is_regular_file(status) && (Strings::case_insensitive_ascii_equals(filename, "CONTROL") ||
+                                                Strings::case_insensitive_ascii_equals(filename, "BUILD_INFO")))
             {
                 // Do not copy the control file
                 continue;
@@ -306,7 +306,7 @@ namespace vcpkg::Install
             System::println("Building package %s... done", display_name_with_features);
 
             auto bcf = std::make_unique<BinaryControlFile>(
-                Paragraphs::try_load_cached_control_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO));
+                Paragraphs::try_load_cached_package(paths, action.spec).value_or_exit(VCPKG_LINE_INFO));
             auto code = aux_install(display_name_with_features, *bcf);
 
             if (action.build_options.clean_packages == Build::CleanPackages::YES)
@@ -412,13 +412,15 @@ namespace vcpkg::Install
     static constexpr StringLiteral OPTION_RECURSE = "--recurse";
     static constexpr StringLiteral OPTION_KEEP_GOING = "--keep-going";
     static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
+    static constexpr StringLiteral OPTION_USE_ARIA2 = "--x-use-aria2";
 
-    static constexpr std::array<CommandSwitch, 5> INSTALL_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 6> INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
         {OPTION_NO_DOWNLOADS, "Do not download new sources"},
         {OPTION_RECURSE, "Allow removal of packages as part of installation"},
         {OPTION_KEEP_GOING, "Continue installing packages on failure"},
+        {OPTION_USE_ARIA2, "Use aria2 to perform download tasks"},
     }};
     static constexpr std::array<CommandSetting, 1> INSTALL_SETTINGS = {{
         {OPTION_XUNIT, "File to output results in XUnit format (Internal use)"},
@@ -547,19 +549,21 @@ namespace vcpkg::Install
         const bool use_head_version = Util::Sets::contains(options.switches, (OPTION_USE_HEAD_VERSION));
         const bool no_downloads = Util::Sets::contains(options.switches, (OPTION_NO_DOWNLOADS));
         const bool is_recursive = Util::Sets::contains(options.switches, (OPTION_RECURSE));
+        const bool use_aria2 = Util::Sets::contains(options.switches, (OPTION_USE_ARIA2));
         const KeepGoing keep_going = to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING));
 
         // create the plan
         StatusParagraphs status_db = database_load_check(paths);
 
+        Build::DownloadTool download_tool = Build::DownloadTool::BUILT_IN;
+        if (use_aria2) download_tool = Build::DownloadTool::ARIA2;
+
         const Build::BuildPackageOptions install_plan_options = {
             Util::Enum::to_enum<Build::UseHeadVersion>(use_head_version),
             Util::Enum::to_enum<Build::AllowDownloads>(!no_downloads),
             Build::CleanBuildtrees::NO,
-            Build::CleanPackages::NO};
-
-        // Note: action_plan will hold raw pointers to SourceControlFiles from this map
-        std::vector<AnyAction> action_plan;
+            Build::CleanPackages::NO,
+            download_tool};
 
         auto all_ports = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
         std::unordered_map<std::string, SourceControlFile> scf_map;
@@ -567,7 +571,9 @@ namespace vcpkg::Install
             scf_map[port->core_paragraph->name] = std::move(*port);
         MapPortFileProvider provider(scf_map);
 
-        action_plan = create_feature_install_plan(provider, FullPackageSpec::to_feature_specs(specs), status_db);
+        // Note: action_plan will hold raw pointers to SourceControlFiles from this map
+        std::vector<AnyAction> action_plan =
+            create_feature_install_plan(provider, FullPackageSpec::to_feature_specs(specs), status_db);
 
         if (!GlobalState::feature_packages)
         {
@@ -668,39 +674,42 @@ namespace vcpkg::Install
         return nullptr;
     }
 
+    std::string InstallSummary::xunit_result(const PackageSpec& spec, Chrono::ElapsedTime time, BuildResult code)
+    {
+        std::string inner_block;
+        const char* result_string = "";
+        switch (code)
+        {
+            case BuildResult::POST_BUILD_CHECKS_FAILED:
+            case BuildResult::FILE_CONFLICTS:
+            case BuildResult::BUILD_FAILED:
+                result_string = "Fail";
+                inner_block = Strings::format("<failure><message><![CDATA[%s]]></message></failure>", to_string(code));
+                break;
+            case BuildResult::EXCLUDED:
+            case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES:
+                result_string = "Skip";
+                inner_block = Strings::format("<reason><![CDATA[%s]]></reason>", to_string(code));
+                break;
+            case BuildResult::SUCCEEDED: result_string = "Pass"; break;
+            default: Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+
+        return Strings::format(R"(<test name="%s" method="%s" time="%lld" result="%s">%s</test>)"
+                               "\n",
+                               spec,
+                               spec,
+                               time.as<std::chrono::seconds>().count(),
+                               result_string,
+                               inner_block);
+    }
+
     std::string InstallSummary::xunit_results() const
     {
         std::string xunit_doc;
         for (auto&& result : results)
         {
-            std::string inner_block;
-            const char* result_string = "";
-            switch (result.build_result.code)
-            {
-                case BuildResult::POST_BUILD_CHECKS_FAILED:
-                case BuildResult::FILE_CONFLICTS:
-                case BuildResult::BUILD_FAILED:
-                    result_string = "Fail";
-                    inner_block = Strings::format("<failure><message><![CDATA[%s]]></message></failure>",
-                                                  to_string(result.build_result.code));
-                    break;
-                case BuildResult::EXCLUDED:
-                case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES:
-                    result_string = "Skip";
-                    inner_block =
-                        Strings::format("<reason><![CDATA[%s]]></reason>", to_string(result.build_result.code));
-                    break;
-                case BuildResult::SUCCEEDED: result_string = "Pass"; break;
-                default: Checks::exit_fail(VCPKG_LINE_INFO);
-            }
-
-            xunit_doc += Strings::format(R"(<test name="%s" method="%s" time="%lld" result="%s">%s</test>)"
-                                         "\n",
-                                         result.spec,
-                                         result.spec,
-                                         result.timing.as<std::chrono::seconds>().count(),
-                                         result_string,
-                                         inner_block);
+            xunit_doc += xunit_result(result.spec, result.timing, result.build_result.code);
         }
         return xunit_doc;
     }

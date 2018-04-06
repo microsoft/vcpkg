@@ -45,7 +45,8 @@ namespace vcpkg::Dependencies
         InstallPlanAction(const PackageSpec& spec,
                           const SourceControlFile& scf,
                           const std::set<std::string>& features,
-                          const RequestType& request_type);
+                          const RequestType& request_type,
+                          std::vector<PackageSpec>&& dependencies);
 
         std::string displayname() const;
 
@@ -58,6 +59,8 @@ namespace vcpkg::Dependencies
         RequestType request_type;
         Build::BuildPackageOptions build_options;
         std::set<std::string> feature_list;
+
+        std::vector<PackageSpec> computed_dependencies;
     };
 
     enum class RemovePlanType
@@ -93,7 +96,7 @@ namespace vcpkg::Dependencies
     enum class ExportPlanType
     {
         UNKNOWN,
-        PORT_AVAILABLE_BUT_NOT_BUILT,
+        NOT_BUILT,
         ALREADY_BUILT
     };
 
@@ -165,16 +168,14 @@ namespace vcpkg::Dependencies
     std::vector<RemovePlanAction> create_remove_plan(const std::vector<PackageSpec>& specs,
                                                      const StatusParagraphs& status_db);
 
-    std::vector<ExportPlanAction> create_export_plan(const PortFileProvider& port_file_provider,
-                                                     const VcpkgPaths& paths,
-                                                     const std::vector<PackageSpec>& specs,
+    std::vector<ExportPlanAction> create_export_plan(const std::vector<PackageSpec>& specs,
                                                      const StatusParagraphs& status_db);
 
     std::vector<AnyAction> create_feature_install_plan(const std::unordered_map<std::string, SourceControlFile>& map,
                                                        const std::vector<FeatureSpec>& specs,
                                                        const StatusParagraphs& status_db);
 
-    std::vector<AnyAction> create_feature_install_plan(const PortFileProvider& port_file_provider,
+    std::vector<AnyAction> create_feature_install_plan(const PortFileProvider& provider,
                                                        const std::vector<FeatureSpec>& specs,
                                                        const StatusParagraphs& status_db);
 

@@ -7,11 +7,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(BUILD_STATIC 1)
-else()
-    set(BUILD_STATIC 0)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
 # Handle features
 set(_COMPONENT_FLAGS "")
@@ -44,14 +40,16 @@ vcpkg_install_cmake()
 # Debug includes and share are the same as release
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share)
+    ${CURRENT_PACKAGES_DIR}/debug/share
+)
 
 # Clean up empty directories
-if(NOT FEATURES)
+if("${FEATURES}" STREQUAL "core")
     file(REMOVE_RECURSE
         ${CURRENT_PACKAGES_DIR}/bin
         ${CURRENT_PACKAGES_DIR}/lib
-        ${CURRENT_PACKAGES_DIR}/debug)
+        ${CURRENT_PACKAGES_DIR}/debug
+    )
     set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 endif()
 

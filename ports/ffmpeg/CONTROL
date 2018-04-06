@@ -1,8 +1,35 @@
 Source: ffmpeg
-Version: 3.3.3-3
+Version: 3.3.3-5
 Description: a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.
   FFmpeg is the leading multimedia framework, able to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created. It supports the most obscure ancient formats up to the cutting edge. No matter if they were designed by some standards committee, the community or a corporation. It is also highly portable: FFmpeg compiles, runs, and passes our testing infrastructure FATE across Linux, Mac OS X, Microsoft Windows, the BSDs, Solaris, etc. under a wide variety of build environments, machine architectures, and configurations.
 
+Feature: ffserver
+Description: ffserver appplication support in ffmpeg
+
+Feature: ffplay
+Description: ffplay appplication support in ffmpeg
+
+Feature: ffprobe
+Description: ffprobe appplication support in ffmpeg
+
 Feature: openssl
-Build-Depends: openssl
+Build-Depends: openssl, ffmpeg[nonfree]
 Description: openssl support in ffmpeg
+
+Feature: lzma
+Build-Depends: liblzma
+Description: lzma support in ffmpeg
+
+Feature: x264
+Build-Depends: x264, ffmpeg[gpl]
+Description: x264 support in ffmpeg
+
+Feature: opencl
+Build-Depends: opencl
+Description: opencl support in ffmpeg
+
+Feature: nonfree
+Description: allow nonfree and unredistributable libraries
+
+Feature: gpl
+Description: allow GPL licensed libraries

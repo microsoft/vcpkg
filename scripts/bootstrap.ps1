@@ -3,12 +3,11 @@ param(
     [ValidateNotNullOrEmpty()][string]$disableMetrics = "0",
     [Parameter(Mandatory=$False)][string]$withVSPath = ""
 )
-
+Set-StrictMode -Version Latest
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 . "$scriptsDir\VcpkgPowershellUtils.ps1"
 $vcpkgRootDir = vcpkgFindFileRecursivelyUp $scriptsDir .vcpkg-root
 Write-Verbose("vcpkg Path " + $vcpkgRootDir)
-
 
 $gitHash = "unknownhash"
 $oldpath = $env:path
@@ -16,8 +15,7 @@ try
 {
     [xml]$asXml = Get-Content "$scriptsDir\vcpkgTools.xml"
     $toolData = $asXml.SelectSingleNode("//tools/tool[@name=`"git`"]")
-    $postExtractionExecutableRelativePath = $toolData.postExtractionExecutableRelativePath
-    $gitFromDownload = "$vcpkgRootDir\downloads\$postExtractionExecutableRelativePath"
+    $gitFromDownload = "$vcpkgRootDir\downloads\$($toolData.exeRelativePath)"
     $gitDir = split-path -parent $gitFromDownload
 
     $env:path += ";$gitDir"

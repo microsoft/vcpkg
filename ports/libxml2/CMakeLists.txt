@@ -3,58 +3,16 @@ project(libxml2 C)
 
 option(INSTALL_HEADERS "Install public header files" ON)
 
+set(CMAKE_SHARED_LIBRARY_PREFIX)
+set(CMAKE_STATIC_LIBRARY_PREFIX)
+
 find_package(ZLIB REQUIRED)
 find_package(LibLZMA REQUIRED)
-find_library(ICONV NAMES libiconv)
-find_library(ICONV_CHARSET NAMES libcharset)
+find_package(unofficial-iconv REQUIRED)
 
-set(SOURCES
-    buf.c
-    c14n.c
-    catalog.c
-    chvalid.c
-    debugXML.c
-    dict.c
-    DOCBparser.c
-    encoding.c
-    entities.c
-    error.c
-    globals.c
-    hash.c
-    HTMLparser.c
-    HTMLtree.c
-    legacy.c
-    list.c
-    nanoftp.c
-    nanohttp.c
-    parser.c
-    parserInternals.c
-    pattern.c
-    relaxng.c
-    SAX.c
-    SAX2.c
-    schematron.c
-    threads.c
-    tree.c
-    uri.c
-    valid.c
-    xinclude.c
-    xlink.c
-    xmlIO.c
-    xmlmemory.c
-    xmlreader.c
-    xmlregexp.c
-    xmlmodule.c
-    xmlsave.c
-    xmlschemas.c
-    xmlschemastypes.c
-    xmlstring.c
-    xmlunicode.c
-    xmlwriter.c
-    xpath.c
-    xpointer.c
-    xzlib.c
-)
+file(GLOB SOURCES *.c)
+list(FILTER SOURCES EXCLUDE REGEX "/(run|test|trio)[^/]*$")
+list(FILTER SOURCES EXCLUDE REGEX "xml(lint|catalog).c$")
 
 # Generate xmlexports with fixed definition of LIBXML_STATIC
 file(READ include/libxml/xmlexports.h XMLEXPORTS_H)
@@ -65,31 +23,46 @@ else()
 endif()
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/xmlexports.h "${XMLEXPORTS_H}")
 
-file(GLOB PUBLIC_HEADERS include/libxml/*.h)
-list(FILTER PUBLIC_HEADERS EXCLUDE REGEX "xmlexports\\.h$")
-list(APPEND PUBLIC_HEADERS ${CMAKE_CURRENT_BINARY_DIR}/xmlexports.h)
-
-configure_file(include/win32config.h config.h COPYONLY)
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    configure_file(include/win32config.h config.h COPYONLY)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    configure_file("${PORT_DIR}/config.osx.h" config.h COPYONLY)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    configure_file("${PORT_DIR}/config.linux.h" config.h COPYONLY)
+else()
+    message(FATAL_ERROR "No config.h checked in for the target platform. Please run ./configure for libxml2 and add the resulting config.h into this port.")
+endif()
 
 add_library(libxml2 ${SOURCES})
 if(INSTALL_HEADERS)
+    file(GLOB PUBLIC_HEADERS include/libxml/*.h)
+    list(FILTER PUBLIC_HEADERS EXCLUDE REGEX "xmlexports\\.h$")
+    list(APPEND PUBLIC_HEADERS ${CMAKE_CURRENT_BINARY_DIR}/xmlexports.h)
+
     set_target_properties(libxml2 PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
 endif()
-target_include_directories(libxml2 PRIVATE ${CMAKE_CURRENT_BINARY_DIR} win32/vc10 include ${LIBLZMA_INCLUDE_DIRS})
+target_include_directories(libxml2 PRIVATE ${CMAKE_CURRENT_BINARY_DIR} include ${LIBLZMA_INCLUDE_DIRS})
 target_link_libraries(libxml2 PRIVATE
+    unofficial::iconv::libcharset unofficial::iconv::libiconv
     ZLIB::ZLIB
     ${LIBLZMA_LIBRARIES}
-    ${ICONV}
-    ${ICONV_CHARSET}
-    wsock32.lib
-    ws2_32.lib
 )
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    target_include_directories(libxml2 PRIVATE win32/vc10)
+    target_link_libraries(libxml2 PRIVATE
+        wsock32.lib
+        ws2_32.lib
+    )
+    target_compile_definitions(libxml2 PRIVATE
+        -DHAVE_WIN32_THREADS
+    )
+endif()
+
 target_compile_definitions(libxml2 PRIVATE
     -D_CRT_SECURE_NO_DEPRECATE
     -D_CRT_NONSTDC_NO_DEPRECATE
     -D_REENTRANT
     -DNOLIBTOOL
-    -DHAVE_WIN32_THREADS
     -DHAVE_ZLIB_H
     -DHAVE_LZMA_H
 )

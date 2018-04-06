@@ -12,6 +12,7 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/use-abort-on-all-platforms.patch
+        ${CMAKE_CURRENT_LIST_DIR}/skip-install-symlink.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -32,15 +33,20 @@ vcpkg_configure_cmake(
         -DSKIP_INSTALL_PROGRAMS=ON
         -DSKIP_INSTALL_EXECUTABLES=ON
         -DSKIP_INSTALL_FILES=ON
+        -DSKIP_INSTALL_SYMLINK=ON
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
 )
 
 vcpkg_install_cmake()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libpng16_static.lib ${CURRENT_PACKAGES_DIR}/lib/libpng16.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libpng16_staticd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libpng16d.lib)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/libpng16_static.lib)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libpng16_static.lib ${CURRENT_PACKAGES_DIR}/lib/libpng16.lib)
+    endif()
+    if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/libpng16_staticd.lib)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libpng16_staticd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libpng16d.lib)
+    endif()
 endif()
 
 # Remove CMake config files as they are incorrectly generated and everyone uses built-in FindPNG anyway.

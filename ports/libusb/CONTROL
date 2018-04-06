@@ -1,3 +1,3 @@
 Source: libusb
 Version: 1.0.21-fc99620
-Description: A library for USB device access from Windows userspace.
+Description: a cross-platform library to access USB devices

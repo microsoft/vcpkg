@@ -71,22 +71,22 @@ function(vcpkg_download_distfile VAR)
     file(REMOVE_RECURSE "${DOWNLOADS}/temp")
     file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
 
-    function(test_hash FILE_KIND CUSTOM_ERROR_ADVICE)
+    function(test_hash FILE_PATH FILE_KIND CUSTOM_ERROR_ADVICE)
         if(_VCPKG_INTERNAL_NO_HASH_CHECK)
             # When using the internal hash skip, do not output an explicit message.
             return()
         endif()
         if(vcpkg_download_distfile_SKIP_SHA512)
-            message(STATUS "Skipping hash check for ${downloaded_file_path}.")
+            message(STATUS "Skipping hash check for ${FILE_PATH}.")
             return()
         endif()
 
         message(STATUS "Testing integrity of ${FILE_KIND}...")
-        file(SHA512 ${downloaded_file_path} FILE_HASH)
+        file(SHA512 ${FILE_PATH} FILE_HASH)
         if(NOT "${FILE_HASH}" STREQUAL "${vcpkg_download_distfile_SHA512}")
             message(FATAL_ERROR
                 "\nFile does not have expected hash:\n"
-                "        File path: [ ${downloaded_file_path} ]\n"
+                "        File path: [ ${FILE_PATH} ]\n"
                 "    Expected hash: [ ${vcpkg_download_distfile_SHA512} ]\n"
                 "      Actual hash: [ ${FILE_HASH} ]\n"
                 "${CUSTOM_ERROR_ADVICE}\n")
@@ -96,37 +96,73 @@ function(vcpkg_download_distfile VAR)
 
     if(EXISTS ${downloaded_file_path})
         message(STATUS "Using cached ${downloaded_file_path}")
-        test_hash("cached file" "Please delete the file and retry if this file should be downloaded again.")
+        test_hash("${downloaded_file_path}" "cached file" "Please delete the file and retry if this file should be downloaded again.")
     else()
         if(_VCPKG_NO_DOWNLOADS)
             message(FATAL_ERROR "Downloads are disabled, but '${downloaded_file_path}' does not exist.")
         endif()
 
         # Tries to download the file.
-        foreach(url IN LISTS vcpkg_download_distfile_URLS)
-            message(STATUS "Downloading ${url}...")
-            file(DOWNLOAD ${url} "${download_file_path_part}" STATUS download_status)
-            list(GET download_status 0 status_code)
-            if (NOT "${status_code}" STREQUAL "0")
-                message(STATUS "Downloading ${url}... Failed. Status: ${download_status}")
+        list(GET vcpkg_download_distfile_URLS 0 SAMPLE_URL)
+        if(${_VCPKG_DOWNLOAD_TOOL} MATCHES "ARIA2" AND NOT ${SAMPLE_URL} MATCHES "aria2")
+            vcpkg_find_acquire_program("ARIA2")
+            message(STATUS "Downloading ${vcpkg_download_distfile_FILENAME}...")
+            execute_process(
+                COMMAND ${ARIA2} ${vcpkg_download_distfile_URLS}
+                -o temp/${vcpkg_download_distfile_FILENAME}
+                -l download-${vcpkg_download_distfile_FILENAME}-detailed.log
+                OUTPUT_FILE download-${vcpkg_download_distfile_FILENAME}-out.log
+                ERROR_FILE download-${vcpkg_download_distfile_FILENAME}-err.log
+                RESULT_VARIABLE error_code
+                WORKING_DIRECTORY ${DOWNLOADS}
+            )
+            if (NOT "${error_code}" STREQUAL "0")
+                message(STATUS
+                    "Downloading ${vcpkg_download_distfile_FILENAME}... Failed.\n"
+                    "    Exit Code: ${error_code}\n"
+                    "    See logs for more information:\n"
+                    "        ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-out.log\n"
+                    "        ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-err.log\n"
+                    "        ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-detailed.log\n"
+                )
                 set(download_success 0)
             else()
-                get_filename_component(downloaded_file_dir "${downloaded_file_path}" DIRECTORY)
-                file(MAKE_DIRECTORY "${downloaded_file_dir}")
-                file(RENAME ${download_file_path_part} ${downloaded_file_path})
-                message(STATUS "Downloading ${url}... OK")
+                message(STATUS "Downloading ${vcpkg_download_distfile_FILENAME}... OK")
+                file(REMOVE
+                    ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-out.log
+                    ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-err.log
+                    ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-detailed.log
+                )
                 set(download_success 1)
-                break()
             endif()
-        endforeach(url)
+        else()
+            foreach(url IN LISTS vcpkg_download_distfile_URLS)
+                message(STATUS "Downloading ${url}...")
+                file(DOWNLOAD ${url} "${download_file_path_part}" STATUS download_status)
+                list(GET download_status 0 status_code)
+                if (NOT "${status_code}" STREQUAL "0")
+                    message(STATUS "Downloading ${url}... Failed. Status: ${download_status}")
+                    set(download_success 0)
+                else()
+                    message(STATUS "Downloading ${url}... OK")
+                    set(download_success 1)
+                    break()
+                endif()
+            endforeach(url)
+        endif()
 
         if (NOT download_success)
             message(FATAL_ERROR
-            "\n"
+            "    \n"
             "    Failed to download file.\n"
-            "    Add mirrors or submit an issue at https://github.com/Microsoft/vcpkg/issues\n")
+            "    If you use a proxy, please set the HTTPS_PROXY and HTTP_PROXY environment\n"
+            "    variables to \"https://user:password@your-proxy-ip-address:port/\".\n"
+            "    Otherwise, please submit an issue at https://github.com/Microsoft/vcpkg/issues\n")
         else()
-            test_hash("downloaded file" "The file may have been corrupted in transit.")
+            test_hash("${download_file_path_part}" "downloaded file" "The file may have been corrupted in transit. This can be caused by proxies. If you use a proxy, please set the HTTPS_PROXY and HTTP_PROXY environment variables to \"https://user:password@your-proxy-ip-address:port/\".\n")
+            get_filename_component(downloaded_file_dir "${downloaded_file_path}" DIRECTORY)
+            file(MAKE_DIRECTORY "${downloaded_file_dir}")
+            file(RENAME ${download_file_path_part} ${downloaded_file_path})
         endif()
     endif()
     set(${VAR} ${downloaded_file_path} PARENT_SCOPE)

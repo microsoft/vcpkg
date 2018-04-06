@@ -10,7 +10,9 @@ vcpkg_from_github(
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/cmake-install.patch
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/cmake-install.patch
+        ${CMAKE_CURRENT_LIST_DIR}/lib-suffix-option.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" DISABLE_INSTALL_STATIC)
@@ -24,6 +26,7 @@ vcpkg_configure_cmake(
         -DENABLE_STRESS_TEST=OFF
         -DDISABLE_INSTALL_STATIC=${DISABLE_INSTALL_STATIC}
         -DDISABLE_INSTALL_SHARED=${DISABLE_INSTALL_SHARED}
+        "-DLIB_SUFFIX="
 )
 
 vcpkg_install_cmake()

@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Exiv2/exiv2
-    REF 28fa146d9758230ea65e2b89574095514aa50429
-    SHA512 710020dd404d43edd268a9229f240222b185576d8c277884c57479d291d0f3145b6076d0225849c38ab2e618d113dbc61cd6a60d4545e2a44797a63a2f01a603
+    REF db5bb66d0697572eacaf0c2aa3b8e7ac2a0c4e54
+    SHA512 afc82f79073ace4d567a9db4ee8991c013d12b2939930e12fe5adf0f7d398b87bce127689f3ca9b1c234cc1321ed3f6bee8335590958616a03af9de58e12c24b
     HEAD_REF master
 )
 
@@ -25,12 +25,8 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH "share/exiv2/cmake")
 vcpkg_copy_pdbs()
 
 # Clean
-file(GLOB EXE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
-file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-file(REMOVE ${EXE})
-file(REMOVE ${DEBUG_EXE})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(GLOB EXE ${CURRENT_PACKAGES_DIR}/bin/*.exe ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share ${EXE} ${DEBUG_EXE})
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)

@@ -144,12 +144,14 @@ namespace vcpkg::Dependencies
     InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
                                          const SourceControlFile& scf,
                                          const std::set<std::string>& features,
-                                         const RequestType& request_type)
+                                         const RequestType& request_type,
+                                         std::vector<PackageSpec>&& dependencies)
         : spec(spec)
         , source_control_file(scf)
         , plan_type(InstallPlanType::BUILD_AND_INSTALL)
         , request_type(request_type)
         , feature_list(features)
+        , computed_dependencies(std::move(dependencies))
     {
     }
 
@@ -162,6 +164,7 @@ namespace vcpkg::Dependencies
         , plan_type(InstallPlanType::ALREADY_INSTALLED)
         , request_type(request_type)
         , feature_list(features)
+        , computed_dependencies(installed_package.get()->dependencies())
     {
     }
 
@@ -223,7 +226,7 @@ namespace vcpkg::Dependencies
     }
 
     ExportPlanAction::ExportPlanAction(const PackageSpec& spec, const RequestType& request_type)
-        : spec(spec), plan_type(ExportPlanType::PORT_AVAILABLE_BUT_NOT_BUILT), request_type(request_type)
+        : spec(spec), plan_type(ExportPlanType::NOT_BUILT), request_type(request_type)
     {
     }
 
@@ -349,23 +352,16 @@ namespace vcpkg::Dependencies
         return Graphs::topological_sort(specs, RemoveAdjacencyProvider{status_db, installed_ports, specs_as_set});
     }
 
-    std::vector<ExportPlanAction> create_export_plan(const PortFileProvider& port_file_provider,
-                                                     const VcpkgPaths& paths,
-                                                     const std::vector<PackageSpec>& specs,
+    std::vector<ExportPlanAction> create_export_plan(const std::vector<PackageSpec>& specs,
                                                      const StatusParagraphs& status_db)
     {
         struct ExportAdjacencyProvider final : Graphs::AdjacencyProvider<PackageSpec, ExportPlanAction>
         {
-            const VcpkgPaths& paths;
             const StatusParagraphs& status_db;
-            const PortFileProvider& provider;
             const std::unordered_set<PackageSpec>& specs_as_set;
 
-            ExportAdjacencyProvider(const VcpkgPaths& p,
-                                    const StatusParagraphs& s,
-                                    const PortFileProvider& prov,
-                                    const std::unordered_set<PackageSpec>& specs_as_set)
-                : paths(p), status_db(s), provider(prov), specs_as_set(specs_as_set)
+            ExportAdjacencyProvider(const StatusParagraphs& s, const std::unordered_set<PackageSpec>& specs_as_set)
+                : status_db(s), specs_as_set(specs_as_set)
             {
             }
 
@@ -394,8 +390,8 @@ namespace vcpkg::Dependencies
         };
 
         const std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
-        std::vector<ExportPlanAction> toposort = Graphs::topological_sort(
-            specs, ExportAdjacencyProvider{paths, status_db, port_file_provider, specs_as_set});
+        std::vector<ExportPlanAction> toposort =
+            Graphs::topological_sort(specs, ExportAdjacencyProvider{status_db, specs_as_set});
         return toposort;
     }
 
@@ -537,7 +533,7 @@ namespace vcpkg::Dependencies
             for (auto&& depend : remove_edges_edges)
             {
                 auto& depend_cluster = graph.get(depend.spec());
-                graph_plan.remove_graph.add_edge({&cluster}, {&depend_cluster});
+                if (&depend_cluster != &cluster) graph_plan.remove_graph.add_edge({&cluster}, {&depend_cluster});
                 mark_minus(depend_cluster, graph, graph_plan);
             }
         }
@@ -690,11 +686,17 @@ namespace vcpkg::Dependencies
                 // If it will be transiently uninstalled, we need to issue a full installation command
                 auto pscf = p_cluster->source_control_file.value_or_exit(VCPKG_LINE_INFO);
                 Checks::check_exit(VCPKG_LINE_INFO, pscf != nullptr);
+
+                auto dep_specs = Util::fmap(m_graph_plan->install_graph.adjacency_list(p_cluster),
+                                            [](ClusterPtr const& p) { return p->spec; });
+                Util::sort_unique_erase(dep_specs);
+
                 plan.emplace_back(InstallPlanAction{
                     p_cluster->spec,
                     *pscf,
                     p_cluster->to_install_features,
                     p_cluster->request_type,
+                    std::move(dep_specs),
                 });
             }
             else

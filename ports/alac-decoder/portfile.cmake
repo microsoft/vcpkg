@@ -15,6 +15,7 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/remove_stdint_headers.patch
+        ${CMAKE_CURRENT_LIST_DIR}/no-pragma-warning.patch
 )
 
 vcpkg_configure_cmake(

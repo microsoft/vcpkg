@@ -11,6 +11,7 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/jasper-fix-uwp.patch
+        ${CMAKE_CURRENT_LIST_DIR}/opengl-not-required.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

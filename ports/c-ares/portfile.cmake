@@ -1,3 +1,7 @@
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "c-ares does not currently support UWP.")
+endif()
+
 include(vcpkg_common_functions)
 
 vcpkg_from_github(

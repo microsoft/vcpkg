@@ -2,8 +2,10 @@
 param(
 
 )
-
+Set-StrictMode -Version Latest
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
+. "$scriptsDir\VcpkgPowershellUtils.ps1"
+
 $vswhereExe = (& $scriptsDir\fetchTool.ps1 "vswhere") -replace "<sol>::" -replace "::<eol>"
 
 $output = & $vswhereExe -prerelease -legacy -products * -format xml
@@ -14,7 +16,13 @@ foreach ($instance in $asXml.instances.instance)
 {
     $installationPath = $instance.InstallationPath -replace "\\$" # Remove potential trailing backslash
     $installationVersion = $instance.InstallationVersion
-    $isPrerelease = $instance.IsPrerelease
+
+    $isPrerelease = -7
+    if (vcpkgHasProperty -object $instance -propertyName "isPrerelease")
+    {
+        $isPrerelease = $instance.isPrerelease
+    }
+
     if ($isPrerelease -eq 0)
     {
         $releaseType = "PreferenceWeight3::StableRelease"
