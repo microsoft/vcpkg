@@ -1,13 +1,12 @@
-# Ηeader-only library
-
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/forest-7.0.1)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/xorz57/forest/archive/7.0.1.zip"
-    FILENAME "forest-7.0.1.zip"
-    SHA512 c3e59f79fba57abc4583a7feb4645e2e383ca42fdbc014abf002e88ca5a720d443039329cdc497ffe4c72323c2843f614d190f2fd7c1c9083d57972791161525
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO xorz57/forest
+    REF 7.0.1
+    SHA512 75f5f643ec20bab3298e5983f2ab1672dc304102059cf454341fe37495f1e18ac6a6fcce927b49f441a586ec788d4be44e1ceab8e1947565c2ab3ff519daded8
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 # Handle headers
 file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR} FILES_MATCHING PATTERN "*.h")
