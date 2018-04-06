@@ -240,7 +240,7 @@ namespace vcpkg::Commands::Fetch
             R"(curl -L '%s' --create-dirs --output '%s')", url, download_path_part));
         Checks::check_exit(VCPKG_LINE_INFO, code == 0, "Could not download %s", url);
 
-        const std::string actual_hash = Hash::get_file_hash(download_path_part, "SHA512");
+        const std::string actual_hash = Hash::get_file_hash(paths, download_path_part, "SHA512");
         Checks::check_exit(VCPKG_LINE_INFO,
                            sha512 == actual_hash,
                            "File does not have the expected hash:\n"

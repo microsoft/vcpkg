@@ -7,6 +7,19 @@
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 
+namespace vcpkg::Commands::Hash
+{
+    static void verify_has_only_allowed_chars(const std::string& s)
+    {
+        static const std::regex ALLOWED_CHARS{"^[a-zA-Z0-9-]*$"};
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           std::regex_match(s, ALLOWED_CHARS),
+                           "Only alphanumeric chars and dashes are currently allowed. String was:\n"
+                           "    % s",
+                           s);
+    }
+}
+
 #if defined(_WIN32)
 #include <bcrypt.h>
 
@@ -138,13 +151,16 @@ namespace vcpkg::Commands::Hash
         };
     }
 
-    std::string get_file_hash(const fs::path& path, const std::string& hash_type)
+    std::string get_file_hash(const VcpkgPaths& paths, const fs::path& path, const std::string& hash_type)
     {
+        Checks::check_exit(
+            VCPKG_LINE_INFO, paths.get_filesystem().exists(path), "File %s does not exist", path.u8string());
         return BCryptHasher{hash_type}.hash_file(path);
     }
 
     std::string get_string_hash(const std::string& s, const std::string& hash_type)
     {
+        verify_has_only_allowed_chars(s);
         return BCryptHasher{hash_type}.hash_string(s);
     }
 }
@@ -174,9 +190,11 @@ namespace vcpkg::Commands::Hash
         return Strings::trim(std::string{ec_data.output});
     }
 
-    std::string get_file_hash(const fs::path& path, const std::string& hash_type)
+    std::string get_file_hash(const VcpkgPaths& paths, const fs::path& path, const std::string& hash_type)
     {
         const std::string digest_size = get_digest_size(hash_type);
+        Checks::check_exit(
+            VCPKG_LINE_INFO, paths.get_filesystem().exists(path), "File %s does not exist", path.u8string());
         const std::string cmd_line = Strings::format(
             R"(shasum -a %s "%s" | awk '{ print $1 }')", digest_size, path.u8string());
         return run_shasum_and_post_process(cmd_line);
@@ -185,12 +203,7 @@ namespace vcpkg::Commands::Hash
     std::string get_string_hash(const std::string& s, const std::string& hash_type)
     {
         const std::string digest_size = get_digest_size(hash_type);
-
-        static const std::regex ALLOWED_CHARS{"^[a-zA-Z0-9:]*$"};
-
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           std::regex_match(s, ALLOWED_CHARS),
-                           "Only alphanumeric chars and colons are currently allowed");
+        verify_has_only_allowed_chars(s);
 
         const std::string cmd_line = Strings::format(
             R"(echo -n "%s" | shasum -a %s | awk '{ print $1 }')", s, digest_size);
@@ -210,13 +223,13 @@ namespace vcpkg::Commands::Hash
         nullptr,
     };
 
-    void perform_and_exit(const VcpkgCmdArguments& args)
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
 
         const fs::path file_to_hash = args.command_arguments[0];
         const std::string algorithm = args.command_arguments.size() == 2 ? args.command_arguments[1] : "SHA512";
-        const std::string hash = get_file_hash(file_to_hash, algorithm);
+        const std::string hash = get_file_hash(paths, file_to_hash, algorithm);
         System::println(hash);
         Checks::exit_success(VCPKG_LINE_INFO);
     }
