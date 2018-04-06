@@ -32,7 +32,6 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        --trace
         -DBUILD_META_EXAMPLES=OFF
         -DBUILD_EXAMPLES=OFF
         -DUSE_SVMLIGHT=OFF
