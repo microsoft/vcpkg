@@ -83,8 +83,11 @@ namespace vcpkg::Commands::Fetch
 
         std::smatch match_xml_version;
         const bool has_xml_version = std::regex_search(XML.cbegin(), XML.cend(), match_xml_version, XML_VERSION_REGEX);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, has_xml_version, "Could not find <tools version=x> in %s", XML_PATH.generic_string());
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           has_xml_version,
+                           R"(Could not find <tools version="%s"> in %s)",
+                           XML_VERSION,
+                           XML_PATH.generic_string());
         Checks::check_exit(VCPKG_LINE_INFO,
                            XML_VERSION == match_xml_version[1],
                            "Expected %s version: [%s], but was [%s]. Please re-run bootstrap-vcpkg.",
