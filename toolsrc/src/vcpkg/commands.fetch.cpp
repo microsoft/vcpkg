@@ -47,10 +47,13 @@ namespace vcpkg::Commands::Fetch
         static constexpr StringLiteral OS_STRING = "windows";
 #elif defined(__APPLE__)
         static constexpr StringLiteral OS_STRING = "osx";
-#else // assume linux
+#elif defined(__linux__)
         static constexpr StringLiteral OS_STRING = "linux";
+#else
+        return ToolData{};
 #endif
 
+#if defined(_WIN32) || defined(__APPLE__) || defined(__linux__)
         static const std::string XML_VERSION = "2";
         static const fs::path XML_PATH = paths.scripts / "vcpkgTools.xml";
 
@@ -137,6 +140,7 @@ namespace vcpkg::Commands::Fetch
                         paths.downloads / archive_name.value_or(exe_relative_path),
                         tool_dir_path,
                         sha512};
+#endif
     }
 
     static bool exists_and_has_equal_or_greater_version(const std::string& version_cmd,
