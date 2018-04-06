@@ -39,28 +39,52 @@ namespace vcpkg::Commands::Hash
             return output;
         }
 
-        struct BCryptAlgorithmHandle : Util::ResourceBase
+        class BCryptHasher
         {
-            BCRYPT_ALG_HANDLE handle = nullptr;
-
-            ~BCryptAlgorithmHandle()
+            struct BCryptAlgorithmHandle : Util::ResourceBase
             {
-                if (handle) BCryptCloseAlgorithmProvider(handle, 0);
-            }
-        };
+                BCRYPT_ALG_HANDLE handle = nullptr;
 
-        struct BCryptHashHandle : Util::ResourceBase
-        {
-            BCRYPT_HASH_HANDLE handle = nullptr;
+                ~BCryptAlgorithmHandle()
+                {
+                    if (handle) BCryptCloseAlgorithmProvider(handle, 0);
+                }
+            };
 
-            ~BCryptHashHandle()
+            struct BCryptHashHandle : Util::ResourceBase
             {
-                if (handle) BCryptDestroyHash(handle);
-            }
-        };
+                BCRYPT_HASH_HANDLE handle = nullptr;
 
-        struct BCryptHasher
-        {
+                ~BCryptHashHandle()
+                {
+                    if (handle) BCryptDestroyHash(handle);
+                }
+            };
+
+            static void initialize_hash_handle(BCryptHashHandle& hash_handle,
+                                               const BCryptAlgorithmHandle& algorithm_handle)
+            {
+                const NTSTATUS error_code =
+                    BCryptCreateHash(algorithm_handle.handle, &hash_handle.handle, nullptr, 0, nullptr, 0, 0);
+                Checks::check_exit(VCPKG_LINE_INFO, NT_SUCCESS(error_code), "Failed to initialize the hasher");
+            }
+
+            static void hash_data(BCryptHashHandle& hash_handle, const unsigned char* buffer, const size_t& data_size)
+            {
+                const NTSTATUS error_code = BCryptHashData(
+                    hash_handle.handle, const_cast<unsigned char*>(buffer), static_cast<ULONG>(data_size), 0);
+                Checks::check_exit(VCPKG_LINE_INFO, NT_SUCCESS(error_code), "Failed to hash data");
+            }
+
+            static std::string finalize_hash_handle(const BCryptHashHandle& hash_handle, const ULONG length_in_bytes)
+            {
+                std::unique_ptr<unsigned char[]> hash_buffer = std::make_unique<UCHAR[]>(length_in_bytes);
+                const NTSTATUS error_code = BCryptFinishHash(hash_handle.handle, hash_buffer.get(), length_in_bytes, 0);
+                Checks::check_exit(VCPKG_LINE_INFO, NT_SUCCESS(error_code), "Failed to finalize the hash");
+                return to_hex(hash_buffer.get(), length_in_bytes);
+            }
+
+        public:
             explicit BCryptHasher(const std::string& hash_type)
             {
                 NTSTATUS error_code =
@@ -85,7 +109,7 @@ namespace vcpkg::Commands::Hash
             std::string hash_file(const fs::path& path) const
             {
                 BCryptHashHandle hash_handle;
-                this->initialize_hash_handle(hash_handle);
+                initialize_hash_handle(hash_handle, this->algorithm_handle);
 
                 FILE* file = nullptr;
                 const auto ec = _wfopen_s(&file, path.c_str(), L"rb");
@@ -97,41 +121,18 @@ namespace vcpkg::Commands::Hash
                 }
                 fclose(file);
 
-                return this->finalize_hash_handle(hash_handle);
+                return finalize_hash_handle(hash_handle, length_in_bytes);
             }
 
             std::string hash_string(const std::string& s) const
             {
                 BCryptHashHandle hash_handle;
-                this->initialize_hash_handle(hash_handle);
-                hash_data(hash_handle, reinterpret_cast<unsigned char*>(const_cast<char*>(s.c_str())), s.size());
-                return this->finalize_hash_handle(hash_handle);
+                initialize_hash_handle(hash_handle, this->algorithm_handle);
+                hash_data(hash_handle, reinterpret_cast<const unsigned char*>(s.c_str()), s.size());
+                return finalize_hash_handle(hash_handle, length_in_bytes);
             }
 
         private:
-            void initialize_hash_handle(BCryptHashHandle& hash_handle) const
-            {
-                const NTSTATUS error_code =
-                    BCryptCreateHash(this->algorithm_handle.handle, &hash_handle.handle, nullptr, 0, nullptr, 0, 0);
-                Checks::check_exit(VCPKG_LINE_INFO, NT_SUCCESS(error_code), "Failed to initialize the hasher");
-            }
-
-            void hash_data(BCryptHashHandle& hash_handle, unsigned char* buffer, const size_t& data_size) const
-            {
-                const NTSTATUS error_code =
-                    BCryptHashData(hash_handle.handle, buffer, static_cast<ULONG>(data_size), 0);
-                Checks::check_exit(VCPKG_LINE_INFO, NT_SUCCESS(error_code), "Failed to hash data");
-            }
-
-            std::string finalize_hash_handle(const BCryptHashHandle& hash_handle) const
-            {
-                std::unique_ptr<unsigned char[]> hash_buffer = std::make_unique<UCHAR[]>(this->length_in_bytes);
-                const NTSTATUS error_code =
-                    BCryptFinishHash(hash_handle.handle, hash_buffer.get(), this->length_in_bytes, 0);
-                Checks::check_exit(VCPKG_LINE_INFO, NT_SUCCESS(error_code), "Failed to finalize the hash");
-                return to_hex(hash_buffer.get(), this->length_in_bytes);
-            }
-
             BCryptAlgorithmHandle algorithm_handle;
             ULONG length_in_bytes;
         };
