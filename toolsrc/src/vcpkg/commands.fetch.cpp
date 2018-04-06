@@ -222,7 +222,7 @@ namespace vcpkg::Commands::Fetch
             Checks::exit_with_message(VCPKG_LINE_INFO, "Unexpected archive extension: %s", ext.u8string());
         }
 
-        fs.rename(to_path_partial, to_path, ec);
+        fs.rename(to_path_partial, to_path);
     }
 
     static void download_file(const VcpkgPaths& paths,
@@ -256,7 +256,7 @@ namespace vcpkg::Commands::Fetch
                            sha512,
                            actual_hash);
 
-        fs.rename(download_path_part, download_path, ec);
+        fs.rename(download_path_part, download_path);
     }
 
     static fs::path fetch_tool(const VcpkgPaths& paths, const std::string& tool_name, const ToolData& tool_data)
