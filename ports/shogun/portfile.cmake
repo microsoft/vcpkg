@@ -28,6 +28,10 @@ else()
     set(CMAKE_DISABLE_FIND_PACKAGE_BLAS 1)
 endif()
 
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
