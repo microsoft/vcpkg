@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Exiv2/exiv2
-    REF 07d75cd0e833286ce9e301ea83229f3e283c6191
-    SHA512 8cf5cb919c12e719d70f2ea71c84835f09f2962095eeb56bb27ef3cd22ad4ea032dfbf9704f9c7393de0a969d3ae0609dafeb619b6c28dca598c8f34a3810b4d
+    REF db5bb66d0697572eacaf0c2aa3b8e7ac2a0c4e54
+    SHA512 afc82f79073ace4d567a9db4ee8991c013d12b2939930e12fe5adf0f7d398b87bce127689f3ca9b1c234cc1321ed3f6bee8335590958616a03af9de58e12c24b
     HEAD_REF master
 )
 
