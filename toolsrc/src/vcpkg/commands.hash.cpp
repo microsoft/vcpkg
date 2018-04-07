@@ -204,8 +204,7 @@ namespace vcpkg::Commands::Hash
         const std::string digest_size = get_digest_size(hash_type);
         Checks::check_exit(
             VCPKG_LINE_INFO, paths.get_filesystem().exists(path), "File %s does not exist", path.u8string());
-        const std::string cmd_line = Strings::format(
-            R"(shasum -a %s "%s")", digest_size, path.u8string());
+        const std::string cmd_line = Strings::format(R"(shasum -a %s "%s")", digest_size, path.u8string());
         return run_shasum_and_post_process(cmd_line);
     }
 
@@ -214,8 +213,7 @@ namespace vcpkg::Commands::Hash
         const std::string digest_size = get_digest_size(hash_type);
         verify_has_only_allowed_chars(s);
 
-        const std::string cmd_line = Strings::format(
-            R"(echo -n "%s" | shasum -a %s)", s, digest_size);
+        const std::string cmd_line = Strings::format(R"(echo -n "%s" | shasum -a %s)", s, digest_size);
         return run_shasum_and_post_process(cmd_line);
     }
 }
