@@ -2,6 +2,7 @@
 
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/cofffilereader.h>
+#include <vcpkg/base/stringliteral.h>
 
 using namespace std;
 
@@ -47,7 +48,7 @@ namespace vcpkg::CoffFileReader
     {
         static const size_t OFFSET_TO_PE_SIGNATURE_OFFSET = 0x3c;
 
-        static const char* PE_SIGNATURE = "PE\0\0";
+        static const StringLiteral PE_SIGNATURE = "PE\0\0";
         static const size_t PE_SIGNATURE_SIZE = 4;
 
         fs.seekg(OFFSET_TO_PE_SIGNATURE_OFFSET, ios_base::beg);
@@ -56,7 +57,7 @@ namespace vcpkg::CoffFileReader
         fs.seekg(offset_to_pe_signature);
         char signature[PE_SIGNATURE_SIZE];
         fs.read(signature, PE_SIGNATURE_SIZE);
-        verify_equal_strings(VCPKG_LINE_INFO, PE_SIGNATURE, signature, PE_SIGNATURE_SIZE, "PE_SIGNATURE");
+        verify_equal_strings(VCPKG_LINE_INFO, PE_SIGNATURE.c_str(), signature, PE_SIGNATURE_SIZE, "PE_SIGNATURE");
         fs.seekg(offset_to_pe_signature + PE_SIGNATURE_SIZE, ios_base::beg);
     }
 
@@ -102,7 +103,7 @@ namespace vcpkg::CoffFileReader
         static ArchiveMemberHeader read(fstream& fs)
         {
             static const size_t HEADER_END_OFFSET = 58;
-            static const char* HEADER_END = "`\n";
+            static const StringLiteral HEADER_END = "`\n";
             static const size_t HEADER_END_SIZE = 2;
 
             ArchiveMemberHeader ret;
@@ -113,7 +114,7 @@ namespace vcpkg::CoffFileReader
             {
                 const std::string header_end = ret.data.substr(HEADER_END_OFFSET, HEADER_END_SIZE);
                 verify_equal_strings(
-                    VCPKG_LINE_INFO, HEADER_END, header_end.c_str(), HEADER_END_SIZE, "LIB HEADER_END");
+                    VCPKG_LINE_INFO, HEADER_END.c_str(), header_end.c_str(), HEADER_END_SIZE, "LIB HEADER_END");
             }
 
             return ret;
@@ -220,14 +221,14 @@ namespace vcpkg::CoffFileReader
 
     static void read_and_verify_archive_file_signature(fstream& fs)
     {
-        static const char* FILE_START = "!<arch>\n";
+        static const StringLiteral FILE_START = "!<arch>\n";
         static const size_t FILE_START_SIZE = 8;
 
         fs.seekg(fs.beg);
 
         char file_start[FILE_START_SIZE];
         fs.read(file_start, FILE_START_SIZE);
-        verify_equal_strings(VCPKG_LINE_INFO, FILE_START, file_start, FILE_START_SIZE, "LIB FILE_START");
+        verify_equal_strings(VCPKG_LINE_INFO, FILE_START.c_str(), file_start, FILE_START_SIZE, "LIB FILE_START");
     }
 
     DllInfo read_dll(const fs::path& path)
