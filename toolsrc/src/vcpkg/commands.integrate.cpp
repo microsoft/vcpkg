@@ -108,7 +108,7 @@ namespace vcpkg::Commands::Integrate
 #if defined(_WIN32)
     static ElevationPromptChoice elevated_cmd_execute(const std::string& param)
     {
-        SHELLEXECUTEINFOW sh_ex_info = {0};
+        SHELLEXECUTEINFOW sh_ex_info{};
         sh_ex_info.cbSize = sizeof(sh_ex_info);
         sh_ex_info.fMask = SEE_MASK_NOCLOSEPROCESS;
         sh_ex_info.hwnd = nullptr;

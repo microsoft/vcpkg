@@ -10,7 +10,7 @@ namespace vcpkg::Commands::List
     static constexpr StringLiteral OPTION_FULLDESC =
         "--x-full-desc"; // TODO: This should find a better home, eventually
 
-    static void do_print(const StatusParagraph& pgh, bool full_desc)
+    static void do_print(const StatusParagraph& pgh, const bool full_desc)
     {
         if (full_desc)
         {

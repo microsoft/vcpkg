@@ -93,7 +93,7 @@ namespace vcpkg::Commands::Edit
         const std::vector<fs::path> from_registry = find_from_registry();
         candidate_paths.insert(candidate_paths.end(), from_registry.cbegin(), from_registry.cend());
 
-        auto it = Util::find_if(candidate_paths, [&](const fs::path& p) { return fs.exists(p); });
+        const auto it = Util::find_if(candidate_paths, [&](const fs::path& p) { return fs.exists(p); });
         if (it == candidate_paths.cend())
         {
             System::println(
