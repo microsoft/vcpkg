@@ -46,10 +46,10 @@ namespace vcpkg::CoffFileReader
 
     static void read_and_verify_pe_signature(fstream& fs)
     {
-        static const size_t OFFSET_TO_PE_SIGNATURE_OFFSET = 0x3c;
+        static constexpr size_t OFFSET_TO_PE_SIGNATURE_OFFSET = 0x3c;
 
-        static const StringLiteral PE_SIGNATURE = "PE\0\0";
-        static const size_t PE_SIGNATURE_SIZE = 4;
+        static constexpr StringLiteral PE_SIGNATURE = "PE\0\0";
+        static constexpr size_t PE_SIGNATURE_SIZE = 4;
 
         fs.seekg(OFFSET_TO_PE_SIGNATURE_OFFSET, ios_base::beg);
         const auto offset_to_pe_signature = read_value_from_stream<int32_t>(fs);
@@ -72,7 +72,7 @@ namespace vcpkg::CoffFileReader
 
     struct CoffFileHeader
     {
-        static const size_t HEADER_SIZE = 20;
+        static constexpr size_t HEADER_SIZE = 20;
 
         static CoffFileHeader read(fstream& fs)
         {
@@ -84,8 +84,8 @@ namespace vcpkg::CoffFileReader
 
         MachineType machine_type() const
         {
-            static const size_t MACHINE_TYPE_OFFSET = 0;
-            static const size_t MACHINE_TYPE_SIZE = 2;
+            static constexpr size_t MACHINE_TYPE_OFFSET = 0;
+            static constexpr size_t MACHINE_TYPE_SIZE = 2;
 
             std::string machine_field_as_string = data.substr(MACHINE_TYPE_OFFSET, MACHINE_TYPE_SIZE);
             const auto machine = reinterpret_bytes<uint16_t>(machine_field_as_string.c_str());
@@ -98,13 +98,13 @@ namespace vcpkg::CoffFileReader
 
     struct ArchiveMemberHeader
     {
-        static const size_t HEADER_SIZE = 60;
+        static constexpr size_t HEADER_SIZE = 60;
 
         static ArchiveMemberHeader read(fstream& fs)
         {
-            static const size_t HEADER_END_OFFSET = 58;
-            static const StringLiteral HEADER_END = "`\n";
-            static const size_t HEADER_END_SIZE = 2;
+            static constexpr size_t HEADER_END_OFFSET = 58;
+            static constexpr StringLiteral HEADER_END = "`\n";
+            static constexpr size_t HEADER_END_SIZE = 2;
 
             ArchiveMemberHeader ret;
             ret.data.resize(HEADER_SIZE);
@@ -122,17 +122,17 @@ namespace vcpkg::CoffFileReader
 
         std::string name() const
         {
-            static const size_t HEADER_NAME_OFFSET = 0;
-            static const size_t HEADER_NAME_SIZE = 16;
+            static constexpr size_t HEADER_NAME_OFFSET = 0;
+            static constexpr size_t HEADER_NAME_SIZE = 16;
             return data.substr(HEADER_NAME_OFFSET, HEADER_NAME_SIZE);
         }
 
         uint64_t member_size() const
         {
-            static const size_t ALIGNMENT_SIZE = 2;
+            static constexpr size_t ALIGNMENT_SIZE = 2;
 
-            static const size_t HEADER_SIZE_OFFSET = 48;
-            static const size_t HEADER_SIZE_FIELD_SIZE = 10;
+            static constexpr size_t HEADER_SIZE_OFFSET = 48;
+            static constexpr size_t HEADER_SIZE_FIELD_SIZE = 10;
             const std::string as_string = data.substr(HEADER_SIZE_OFFSET, HEADER_SIZE_FIELD_SIZE);
             // This is in ASCII decimal representation
             const uint64_t value = std::strtoull(as_string.c_str(), nullptr, 10);
@@ -148,7 +148,7 @@ namespace vcpkg::CoffFileReader
     {
         static OffsetsArray read(fstream& fs, const uint32_t offset_count)
         {
-            static const size_t OFFSET_WIDTH = 4;
+            static constexpr size_t OFFSET_WIDTH = 4;
 
             std::string raw_offsets;
             const size_t raw_offset_size = offset_count * OFFSET_WIDTH;
@@ -178,17 +178,17 @@ namespace vcpkg::CoffFileReader
 
     struct ImportHeader
     {
-        static const size_t HEADER_SIZE = 20;
+        static constexpr size_t HEADER_SIZE = 20;
 
         static ImportHeader read(fstream& fs)
         {
-            static const size_t SIG1_OFFSET = 0;
-            static const auto SIG1 = static_cast<uint16_t>(MachineType::UNKNOWN);
-            static const size_t SIG1_SIZE = 2;
+            static constexpr size_t SIG1_OFFSET = 0;
+            static constexpr auto SIG1 = static_cast<uint16_t>(MachineType::UNKNOWN);
+            static constexpr size_t SIG1_SIZE = 2;
 
-            static const size_t SIG2_OFFSET = 2;
-            static const uint16_t SIG2 = 0xFFFF;
-            static const size_t SIG2_SIZE = 2;
+            static constexpr size_t SIG2_OFFSET = 2;
+            static constexpr uint16_t SIG2 = 0xFFFF;
+            static constexpr size_t SIG2_SIZE = 2;
 
             ImportHeader ret;
             ret.data.resize(HEADER_SIZE);
@@ -207,8 +207,8 @@ namespace vcpkg::CoffFileReader
 
         MachineType machine_type() const
         {
-            static const size_t MACHINE_TYPE_OFFSET = 6;
-            static const size_t MACHINE_TYPE_SIZE = 2;
+            static constexpr size_t MACHINE_TYPE_OFFSET = 6;
+            static constexpr size_t MACHINE_TYPE_SIZE = 2;
 
             std::string machine_field_as_string = data.substr(MACHINE_TYPE_OFFSET, MACHINE_TYPE_SIZE);
             const auto machine = reinterpret_bytes<uint16_t>(machine_field_as_string.c_str());
@@ -221,8 +221,8 @@ namespace vcpkg::CoffFileReader
 
     static void read_and_verify_archive_file_signature(fstream& fs)
     {
-        static const StringLiteral FILE_START = "!<arch>\n";
-        static const size_t FILE_START_SIZE = 8;
+        static constexpr StringLiteral FILE_START = "!<arch>\n";
+        static constexpr size_t FILE_START_SIZE = 8;
 
         fs.seekg(std::fstream::beg);
 
