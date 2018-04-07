@@ -158,7 +158,7 @@ namespace vcpkg::System
 #if defined(_WIN32)
         static const std::string SYSTEM_ROOT = get_environment_variable("SystemRoot").value_or_exit(VCPKG_LINE_INFO);
         static const std::string SYSTEM_32 = SYSTEM_ROOT + R"(\system32)";
-        std::string NEW_PATH = Strings::format(
+        std::string new_path = Strings::format(
             R"(Path=%s;%s;%s\Wbem;%s\WindowsPowerShell\v1.0\)", SYSTEM_32, SYSTEM_ROOT, SYSTEM_32, SYSTEM_32);
 
         std::vector<std::wstring> env_wstrings = {
@@ -225,13 +225,13 @@ namespace vcpkg::System
         }
 
         if (extra_env.find("PATH") != extra_env.end())
-            NEW_PATH += Strings::format(";%s", extra_env.find("PATH")->second);
-        env_cstr.append(Strings::to_utf16(NEW_PATH));
+            new_path += Strings::format(";%s", extra_env.find("PATH")->second);
+        env_cstr.append(Strings::to_utf16(new_path));
         env_cstr.push_back(L'\0');
         env_cstr.append(L"VSLANG=1033");
         env_cstr.push_back(L'\0');
 
-        for (auto item : extra_env)
+        for (const auto& item : extra_env)
         {
             if (item.first == "PATH") continue;
             env_cstr.append(Strings::to_utf16(item.first));
@@ -339,7 +339,7 @@ namespace vcpkg::System
         const auto ec = _pclose(pipe);
         remove_byte_order_marks(&output);
 
-        Debug::println("_pclose() returned %d after %8d us", ec, (int)timer.microseconds());
+        Debug::println("_pclose() returned %d after %8d us", ec, static_cast<int>(timer.microseconds()));
 
         return {ec, Strings::to_utf8(output)};
 #else
