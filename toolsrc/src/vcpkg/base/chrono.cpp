@@ -117,9 +117,7 @@ namespace vcpkg::Chrono
 
     std::string CTime::to_string() const
     {
-        std::array<char, 80> date;
-        date.fill(0);
-
+        std::array<char, 80> date{};
         strftime(&date[0], date.size(), "%Y-%m-%dT%H:%M:%S.0Z", &m_tm);
         return &date[0];
     }
