@@ -8,8 +8,6 @@
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/lazy.h>
 
-#include <map>
-
 namespace vcpkg
 {
     namespace Tools

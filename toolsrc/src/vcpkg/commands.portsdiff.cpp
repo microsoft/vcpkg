@@ -3,6 +3,7 @@
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
+#include <vcpkg/versiont.h>
 
 #include <vcpkg/base/sortedvector.h>
 #include <vcpkg/base/system.h>

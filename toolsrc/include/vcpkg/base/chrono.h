@@ -2,7 +2,6 @@
 
 #include <chrono>
 #include <string>
-#include <time.h>
 #include <vcpkg/base/optional.h>
 
 namespace vcpkg::Chrono
