@@ -43,7 +43,7 @@ namespace vcpkg::CoffFileReader
                            actual);
     }
 
-    static void read_and_verify_PE_signature(fstream& fs)
+    static void read_and_verify_pe_signature(fstream& fs)
     {
         static const size_t OFFSET_TO_PE_SIGNATURE_OFFSET = 0x3c;
 
@@ -51,13 +51,13 @@ namespace vcpkg::CoffFileReader
         static const size_t PE_SIGNATURE_SIZE = 4;
 
         fs.seekg(OFFSET_TO_PE_SIGNATURE_OFFSET, ios_base::beg);
-        const int32_t offset_to_PE_signature = read_value_from_stream<int32_t>(fs);
+        const auto offset_to_pe_signature = read_value_from_stream<int32_t>(fs);
 
-        fs.seekg(offset_to_PE_signature);
+        fs.seekg(offset_to_pe_signature);
         char signature[PE_SIGNATURE_SIZE];
         fs.read(signature, PE_SIGNATURE_SIZE);
         verify_equal_strings(VCPKG_LINE_INFO, PE_SIGNATURE, signature, PE_SIGNATURE_SIZE, "PE_SIGNATURE");
-        fs.seekg(offset_to_PE_signature + PE_SIGNATURE_SIZE, ios_base::beg);
+        fs.seekg(offset_to_pe_signature + PE_SIGNATURE_SIZE, ios_base::beg);
     }
 
     static fpos_t align_to_size(const uint64_t unaligned, const uint64_t alignment_size)
@@ -235,7 +235,7 @@ namespace vcpkg::CoffFileReader
         std::fstream fs(path, std::ios::in | std::ios::binary | std::ios::ate);
         Checks::check_exit(VCPKG_LINE_INFO, fs.is_open(), "Could not open file %s for reading", path.generic_string());
 
-        read_and_verify_PE_signature(fs);
+        read_and_verify_pe_signature(fs);
         CoffFileHeader header = CoffFileHeader::read(fs);
         const MachineType machine = header.machine_type();
         return {machine};
@@ -283,8 +283,8 @@ namespace vcpkg::CoffFileReader
         marker.advance_by(ArchiveMemberHeader::HEADER_SIZE + second_linker_member_header.member_size());
         marker.seek_to_marker(fs);
 
-        const bool hasLongnameMemberHeader = peek_value_from_stream<uint16_t>(fs) == 0x2F2F;
-        if (hasLongnameMemberHeader)
+        const bool has_longname_member_header = peek_value_from_stream<uint16_t>(fs) == 0x2F2F;
+        if (has_longname_member_header)
         {
             const ArchiveMemberHeader longnames_member_header = ArchiveMemberHeader::read(fs);
             marker.advance_by(ArchiveMemberHeader::HEADER_SIZE + longnames_member_header.member_size());
@@ -298,9 +298,9 @@ namespace vcpkg::CoffFileReader
             marker.set_to_offset(offset + ArchiveMemberHeader::HEADER_SIZE); // Skip the header, no need to read it.
             marker.seek_to_marker(fs);
             const auto first_two_bytes = peek_value_from_stream<uint16_t>(fs);
-            const bool isImportHeader = to_machine_type(first_two_bytes) == MachineType::UNKNOWN;
+            const bool is_import_header = to_machine_type(first_two_bytes) == MachineType::UNKNOWN;
             const MachineType machine =
-                isImportHeader ? ImportHeader::read(fs).machine_type() : CoffFileHeader::read(fs).machine_type();
+                is_import_header ? ImportHeader::read(fs).machine_type() : CoffFileHeader::read(fs).machine_type();
             machine_types.insert(machine);
         }
 
