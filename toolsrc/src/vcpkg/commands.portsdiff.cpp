@@ -128,7 +128,7 @@ namespace vcpkg::Commands::PortsDiff
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        args.parse_arguments(COMMAND_STRUCTURE);
+        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
 
         const fs::path& git_exe = paths.get_tool_exe(Tools::GIT);
 
