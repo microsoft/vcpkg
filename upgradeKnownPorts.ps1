@@ -44,6 +44,7 @@ $tagPorts = @(
     "expat",
     "fmt",
     #"folly",
+    "forest",
     "gdcm2",
     "gflags",
     "glog",
@@ -93,7 +94,7 @@ $tagPortsWithRegex = @(
 
     (New-Object PSObject -Property @{ "port"="directxtex"; "regex"="^[^\d]+\d+[^\d]?$" }),
     (New-Object PSObject -Property @{ "port"="directxtk"; "regex"="^[^\d]+\d+[^\d]?$" }),
-    (New-Object PSObject -Property @{ "port"="wt"; "regex"="^[^\d\.]+`$" })
+    (New-Object PSObject -Property @{ "port"="wt"; "regex"="^[\d\.]+`$" })
 
 )
 
