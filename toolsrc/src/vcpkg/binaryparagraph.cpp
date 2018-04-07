@@ -79,7 +79,7 @@ namespace vcpkg
     }
 
     BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh, const FeatureParagraph& fpgh, const Triplet& triplet)
-        : version(), feature(fpgh.name), description(fpgh.description), maintainer()
+        : version(), description(fpgh.description), maintainer(), feature(fpgh.name)
     {
         this->spec = PackageSpec::from_name_and_triplet(spgh.name, triplet).value_or_exit(VCPKG_LINE_INFO);
         this->depends = filter_dependencies(fpgh.depends, triplet);
