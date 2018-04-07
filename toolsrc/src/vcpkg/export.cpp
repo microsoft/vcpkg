@@ -70,8 +70,11 @@ namespace vcpkg::Export
     {
         static constexpr std::array<ExportPlanType, 2> ORDER = {ExportPlanType::ALREADY_BUILT,
                                                                 ExportPlanType::NOT_BUILT};
-        static constexpr Build::BuildPackageOptions build_options = {Build::UseHeadVersion::NO,
-                                                                     Build::AllowDownloads::YES};
+        static constexpr Build::BuildPackageOptions BUILD_OPTIONS = {Build::UseHeadVersion::NO,
+                                                                     Build::AllowDownloads::YES,
+                                                                     Build::CleanBuildtrees::NO,
+                                                                     Build::CleanPackages::NO,
+                                                                     Build::DownloadTool::BUILT_IN};
 
         for (const ExportPlanType plan_type : ORDER)
         {
@@ -84,7 +87,7 @@ namespace vcpkg::Export
             std::vector<const ExportPlanAction*> cont = it->second;
             std::sort(cont.begin(), cont.end(), &ExportPlanAction::compare_by_name);
             const std::string as_string = Strings::join("\n", cont, [](const ExportPlanAction* p) {
-                return Dependencies::to_output_string(p->request_type, p->spec.to_string(), build_options);
+                return Dependencies::to_output_string(p->request_type, p->spec.to_string(), BUILD_OPTIONS);
             });
 
             switch (plan_type)
