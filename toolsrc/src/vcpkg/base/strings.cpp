@@ -7,7 +7,7 @@
 namespace vcpkg::Strings::details
 {
     // To disambiguate between two overloads
-    static bool IS_SPACE(const char c) { return std::isspace(c) != 0; };
+    static bool is_space(const char c) { return std::isspace(c) != 0; }
 
     // Avoids C4244 warnings because of char<->int conversion that occur when using std::tolower()
     static char tolower_char(const char c) { return static_cast<char>(std::tolower(c)); }
@@ -143,8 +143,8 @@ namespace vcpkg::Strings
 
     std::string trim(std::string&& s)
     {
-        s.erase(std::find_if_not(s.rbegin(), s.rend(), details::IS_SPACE).base(), s.end());
-        s.erase(s.begin(), std::find_if_not(s.begin(), s.end(), details::IS_SPACE));
+        s.erase(std::find_if_not(s.rbegin(), s.rend(), details::is_space).base(), s.end());
+        s.erase(s.begin(), std::find_if_not(s.begin(), s.end(), details::is_space));
         return std::move(s);
     }
 
