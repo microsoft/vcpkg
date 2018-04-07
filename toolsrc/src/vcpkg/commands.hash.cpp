@@ -187,7 +187,16 @@ namespace vcpkg::Commands::Hash
                            "Failed to run:\n"
                            "    %s",
                            cmd_line);
-        return Strings::trim(std::string{ec_data.output});
+
+        std::vector<std::string> split = Strings::split(ec_data.output, " ");
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           split.size() == 3,
+                           "Expected output of the form [hash filename\n] (3 tokens), but got\n"
+                           "[%s] (%s tokens)",
+                           ec_data.output,
+                           std::to_string(split.size()));
+
+        return split[0];
     }
 
     std::string get_file_hash(const VcpkgPaths& paths, const fs::path& path, const std::string& hash_type)
@@ -196,7 +205,7 @@ namespace vcpkg::Commands::Hash
         Checks::check_exit(
             VCPKG_LINE_INFO, paths.get_filesystem().exists(path), "File %s does not exist", path.u8string());
         const std::string cmd_line = Strings::format(
-            R"(shasum -a %s "%s" | awk '{ print $1 }')", digest_size, path.u8string());
+            R"(shasum -a %s "%s")", digest_size, path.u8string());
         return run_shasum_and_post_process(cmd_line);
     }
 
@@ -206,7 +215,7 @@ namespace vcpkg::Commands::Hash
         verify_has_only_allowed_chars(s);
 
         const std::string cmd_line = Strings::format(
-            R"(echo -n "%s" | shasum -a %s | awk '{ print $1 }')", s, digest_size);
+            R"(echo -n "%s" | shasum -a %s)", s, digest_size);
         return run_shasum_and_post_process(cmd_line);
     }
 }
