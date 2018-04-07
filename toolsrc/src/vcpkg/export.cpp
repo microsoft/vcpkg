@@ -13,8 +13,6 @@
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/vcpkglib.h>
 
-#include <regex>
-
 namespace vcpkg::Export
 {
     using Dependencies::ExportPlanAction;
