@@ -1,5 +1,11 @@
-The package curl is compatible with built-in CMake targets:
+The package curl is compatible with CMake targets:
 
-    find_package(CURL REQUIRED)
+    find_package(CURL CONFIG REQUIRED)
     target_link_libraries(main PRIVATE ${CURL_LIBRARIES})
     target_include_directories(main PRIVATE ${CURL_INCLUDE_DIRS})
+
+If you want to use find_pacakge(CURL MODULE REQUIRED),
+you need to override cmake module with a bundled one,
+because built-in CMake module has a bug not to be able to find debug
+library in Windows. https://gitlab.kitware.com/cmake/cmake/issues/17887
+Please copy FindCURL.cmake into where CMAKE_MODULE_PATH specified.
