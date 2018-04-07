@@ -15,7 +15,7 @@ namespace vcpkg::Chrono
         using std::chrono::nanoseconds;
         using std::chrono::seconds;
 
-        const double nanos_as_double = static_cast<double>(nanos.count());
+        const auto nanos_as_double = static_cast<double>(nanos.count());
 
         if (duration_cast<hours>(nanos) > hours())
         {
@@ -92,7 +92,7 @@ namespace vcpkg::Chrono
     Optional<CTime> CTime::parse(CStringView str)
     {
         CTime ret;
-        auto assigned =
+        const auto assigned =
 #if defined(_WIN32)
             sscanf_s
 #else
@@ -123,7 +123,7 @@ namespace vcpkg::Chrono
     }
     std::chrono::system_clock::time_point CTime::to_time_point() const
     {
-        auto t = mktime(&m_tm);
+        const time_t t = mktime(&m_tm);
         return std::chrono::system_clock::from_time_t(t);
     }
 }
