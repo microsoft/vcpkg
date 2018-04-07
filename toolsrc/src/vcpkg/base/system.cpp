@@ -5,7 +5,7 @@
 #include <vcpkg/globalstate.h>
 #include <vcpkg/metrics.h>
 
-#include <time.h>
+#include <ctime>
 
 #if defined(__APPLE__)
 #include <mach-o/dyld.h>
@@ -23,7 +23,7 @@ namespace vcpkg::System
     {
         using std::chrono::system_clock;
         std::time_t now_time = system_clock::to_time_t(system_clock::now());
-        tm parts;
+        tm parts{};
 #if defined(_WIN32)
         localtime_s(&parts, &now_time);
 #else
