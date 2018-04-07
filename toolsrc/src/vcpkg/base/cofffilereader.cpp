@@ -87,7 +87,7 @@ namespace vcpkg::CoffFileReader
             static const size_t MACHINE_TYPE_SIZE = 2;
 
             std::string machine_field_as_string = data.substr(MACHINE_TYPE_OFFSET, MACHINE_TYPE_SIZE);
-            const uint16_t machine = reinterpret_bytes<uint16_t>(machine_field_as_string.c_str());
+            const auto machine = reinterpret_bytes<uint16_t>(machine_field_as_string.c_str());
             return to_machine_type(machine);
         }
 
@@ -158,7 +158,7 @@ namespace vcpkg::CoffFileReader
             for (uint32_t i = 0; i < offset_count; ++i)
             {
                 const std::string value_as_string = raw_offsets.substr(OFFSET_WIDTH * i, OFFSET_WIDTH * (i + 1));
-                const uint32_t value = reinterpret_bytes<uint32_t>(value_as_string.c_str());
+                const auto value = reinterpret_bytes<uint32_t>(value_as_string.c_str());
 
                 // Ignore offsets that point to offset 0. See vcpkg github #223 #288 #292
                 if (value != 0)
@@ -182,7 +182,7 @@ namespace vcpkg::CoffFileReader
         static ImportHeader read(fstream& fs)
         {
             static const size_t SIG1_OFFSET = 0;
-            static const uint16_t SIG1 = static_cast<uint16_t>(MachineType::UNKNOWN);
+            static const auto SIG1 = static_cast<uint16_t>(MachineType::UNKNOWN);
             static const size_t SIG1_SIZE = 2;
 
             static const size_t SIG2_OFFSET = 2;
@@ -194,11 +194,11 @@ namespace vcpkg::CoffFileReader
             fs.read(&ret.data[0], HEADER_SIZE);
 
             const std::string sig1_as_string = ret.data.substr(SIG1_OFFSET, SIG1_SIZE);
-            const uint16_t sig1 = reinterpret_bytes<uint16_t>(sig1_as_string.c_str());
+            const auto sig1 = reinterpret_bytes<uint16_t>(sig1_as_string.c_str());
             Checks::check_exit(VCPKG_LINE_INFO, sig1 == SIG1, "Sig1 was incorrect. Expected %s but got %s", SIG1, sig1);
 
             const std::string sig2_as_string = ret.data.substr(SIG2_OFFSET, SIG2_SIZE);
-            const uint16_t sig2 = reinterpret_bytes<uint16_t>(sig2_as_string.c_str());
+            const auto sig2 = reinterpret_bytes<uint16_t>(sig2_as_string.c_str());
             Checks::check_exit(VCPKG_LINE_INFO, sig2 == SIG2, "Sig2 was incorrect. Expected %s but got %s", SIG2, sig2);
 
             return ret;
@@ -210,7 +210,7 @@ namespace vcpkg::CoffFileReader
             static const size_t MACHINE_TYPE_SIZE = 2;
 
             std::string machine_field_as_string = data.substr(MACHINE_TYPE_OFFSET, MACHINE_TYPE_SIZE);
-            const uint16_t machine = reinterpret_bytes<uint16_t>(machine_field_as_string.c_str());
+            const auto machine = reinterpret_bytes<uint16_t>(machine_field_as_string.c_str());
             return to_machine_type(machine);
         }
 
@@ -278,7 +278,7 @@ namespace vcpkg::CoffFileReader
                            second_linker_member_header.name().substr(0, 2) == "/ ",
                            "Could not find proper second linker member");
         // The first 4 bytes contains the number of archive members
-        const uint32_t archive_member_count = read_value_from_stream<uint32_t>(fs);
+        const auto archive_member_count = read_value_from_stream<uint32_t>(fs);
         const OffsetsArray offsets = OffsetsArray::read(fs, archive_member_count);
         marker.advance_by(ArchiveMemberHeader::HEADER_SIZE + second_linker_member_header.member_size());
         marker.seek_to_marker(fs);
@@ -297,7 +297,7 @@ namespace vcpkg::CoffFileReader
         {
             marker.set_to_offset(offset + ArchiveMemberHeader::HEADER_SIZE); // Skip the header, no need to read it.
             marker.seek_to_marker(fs);
-            const uint16_t first_two_bytes = peek_value_from_stream<uint16_t>(fs);
+            const auto first_two_bytes = peek_value_from_stream<uint16_t>(fs);
             const bool isImportHeader = to_machine_type(first_two_bytes) == MachineType::UNKNOWN;
             const MachineType machine =
                 isImportHeader ? ImportHeader::read(fs).machine_type() : CoffFileHeader::read(fs).machine_type();
