@@ -166,6 +166,12 @@ function vcpkgDownloadFileWithAria2(    [Parameter(Mandatory=$true)][string]$ari
     $parentDir = split-path -parent $downloadPath
     $filename = split-path -leaf $downloadPath
 
+    if ((Test-Path $url) -or ($url.StartsWith("file://"))) # if is local file
+    {
+        vcpkgDownloadFile $url $downloadPath $sha512
+        return
+    }
+
     $ec = vcpkgInvokeCommand "$aria2exe" "--dir `"$parentDir`" --out `"$filename.part`" $url"
     if ($ec -ne 0)
     {
