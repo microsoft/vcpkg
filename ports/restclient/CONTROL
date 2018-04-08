@@ -1,0 +1,4 @@
+Source: restclient
+Version: 0.4.4
+Description: This is a simple REST client for C++. It wraps libcurl for HTTP requests.
+Build-Depends: curl
