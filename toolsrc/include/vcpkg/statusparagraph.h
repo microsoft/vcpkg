@@ -54,6 +54,7 @@ namespace vcpkg
         {
         }
 
+        const PackageSpec& spec() const { return core->package.spec; }
         std::vector<PackageSpec> dependencies() const;
 
         const StatusParagraph* core;

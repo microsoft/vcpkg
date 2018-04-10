@@ -37,8 +37,7 @@ namespace vcpkg::Dependencies
 
         InstallPlanAction();
 
-        InstallPlanAction(const PackageSpec& spec,
-                          InstalledPackageView&& spghs,
+        InstallPlanAction(InstalledPackageView&& spghs,
                           const std::set<std::string>& features,
                           const RequestType& request_type);
 

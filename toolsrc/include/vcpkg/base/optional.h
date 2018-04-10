@@ -64,6 +64,12 @@ namespace vcpkg
             return std::move(this->m_base.value());
         }
 
+        T& value_or_exit(const LineInfo& line_info) &
+        {
+            this->exit_if_null(line_info);
+            return this->m_base.value();
+        }
+
         const T& value_or_exit(const LineInfo& line_info) const&
         {
             this->exit_if_null(line_info);

@@ -201,9 +201,9 @@ namespace vcpkg::Remove
     static std::vector<std::string> valid_arguments(const VcpkgPaths& paths)
     {
         const StatusParagraphs status_db = database_load_check(paths);
-        const std::vector<StatusParagraph*> installed_packages = get_installed_ports(status_db);
+        auto installed_packages = get_installed_ports(status_db);
 
-        return Util::fmap(installed_packages, [](auto&& pgh) -> std::string { return pgh->package.spec.to_string(); });
+        return Util::fmap(installed_packages, [](auto&& pgh) -> std::string { return pgh.spec().to_string(); });
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
