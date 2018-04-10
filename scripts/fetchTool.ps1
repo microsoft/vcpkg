@@ -22,7 +22,7 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
 
     if ($toolData -eq $null)
     {
-        throw "Unkown tool $tool"
+        throw "Unknown tool $tool"
     }
 
     $toolPath="$downloadsDir\tools\$tool-$($toolData.version)-windows"
