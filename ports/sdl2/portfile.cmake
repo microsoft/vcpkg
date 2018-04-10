@@ -28,6 +28,7 @@ vcpkg_configure_cmake(
         -DVIDEO_VULKAN=OFF
         -DFORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
         -DLIBC=ON
+        -DCMAKE_RC_FLAGS=-c65001
 )
 
 vcpkg_install_cmake()
