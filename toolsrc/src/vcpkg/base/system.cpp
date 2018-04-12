@@ -214,7 +214,7 @@ namespace vcpkg::System
 
         for (auto&& env_wstring : env_wstrings)
         {
-            const Optional<std::string> value = System::get_environment_variable(Strings::to_utf8(env_wstring));
+            const Optional<std::string> value = System::get_environment_variable(Strings::to_utf8(env_wstring.c_str()));
             const auto v = value.get();
             if (!v || v->empty()) continue;
 
@@ -298,17 +298,6 @@ namespace vcpkg::System
         return exit_code;
     }
 
-    // On Win7, output from powershell calls contain a byte order mark, so we strip it out if it is present
-    static void remove_byte_order_marks(std::wstring* s)
-    {
-        const wchar_t* a = s->c_str();
-        // This is the UTF-8 byte-order mark
-        while (s->size() >= 3 && a[0] == 0xEF && a[1] == 0xBB && a[2] == 0xBF)
-        {
-            s->erase(0, 3);
-        }
-    }
-
     ExitCodeAndOutput cmd_execute_and_capture_output(const CStringView cmd_line)
     {
         // Flush stdout before launching external process
@@ -325,7 +314,7 @@ namespace vcpkg::System
         const auto pipe = _wpopen(Strings::to_utf16(actual_cmd_line).c_str(), L"r");
         if (pipe == nullptr)
         {
-            return {1, Strings::to_utf8(output)};
+            return {1, Strings::to_utf8(output.c_str())};
         }
         while (fgetws(buf, 1024, pipe))
         {
@@ -333,15 +322,22 @@ namespace vcpkg::System
         }
         if (!feof(pipe))
         {
-            return {1, Strings::to_utf8(output)};
+            return {1, Strings::to_utf8(output.c_str())};
         }
 
         const auto ec = _pclose(pipe);
-        remove_byte_order_marks(&output);
+
+        // On Win7, output from powershell calls contain a utf-8 byte order mark in the utf-16 stream, so we strip it
+        // out if it is present. 0xEF,0xBB,0xBF is the UTF-8 byte-order mark
+        const wchar_t* a = output.c_str();
+        while (output.size() >= 3 && a[0] == 0xEF && a[1] == 0xBB && a[2] == 0xBF)
+        {
+            output.erase(0, 3);
+        }
 
         Debug::println("_pclose() returned %d after %8d us", ec, static_cast<int>(timer.microseconds()));
 
-        return {ec, Strings::to_utf8(output)};
+        return {ec, Strings::to_utf8(output.c_str())};
 #else
         const auto actual_cmd_line = Strings::format(R"###(%s 2>&1)###", cmd_line);
 
@@ -481,7 +477,7 @@ namespace vcpkg::System
         const auto sz2 = GetEnvironmentVariableW(w_varname.c_str(), ret.data(), static_cast<DWORD>(ret.size()));
         Checks::check_exit(VCPKG_LINE_INFO, sz2 + 1 == sz);
         ret.pop_back();
-        return Strings::to_utf8(ret);
+        return Strings::to_utf8(ret.c_str());
 #else
         auto v = getenv(varname.c_str());
         if (!v) return nullopt;
@@ -522,7 +518,7 @@ namespace vcpkg::System
             return nullopt;
 
         ret.pop_back(); // remove extra trailing null byte
-        return Strings::to_utf8(ret);
+        return Strings::to_utf8(ret.c_str());
     }
 #else
     Optional<std::string> get_registry_string(void* base_hkey, const CStringView sub_key, const CStringView valuename)

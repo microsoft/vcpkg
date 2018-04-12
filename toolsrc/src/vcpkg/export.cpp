@@ -247,12 +247,12 @@ namespace vcpkg::Export
 
     struct ExportArguments
     {
-        bool dry_run;
-        bool raw;
-        bool nuget;
-        bool ifw;
-        bool zip;
-        bool seven_zip;
+        bool dry_run = false;
+        bool raw = false;
+        bool nuget = false;
+        bool ifw = false;
+        bool zip = false;
+        bool seven_zip = false;
 
         Optional<std::string> maybe_output;
 

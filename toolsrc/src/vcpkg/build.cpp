@@ -330,8 +330,7 @@ namespace vcpkg::Build
                                                 const PreBuildInfo& pre_build_info,
                                                 const PackageSpec& spec,
                                                 const std::string& abi_tag,
-                                                const BuildPackageConfig& config,
-                                                const StatusParagraphs& status_db)
+                                                const BuildPackageConfig& config)
     {
         auto& fs = paths.get_filesystem();
         const Triplet& triplet = spec.triplet();
@@ -419,10 +418,9 @@ namespace vcpkg::Build
                                                                      const PreBuildInfo& pre_build_info,
                                                                      const PackageSpec& spec,
                                                                      const std::string& abi_tag,
-                                                                     const BuildPackageConfig& config,
-                                                                     const StatusParagraphs& status_db)
+                                                                     const BuildPackageConfig& config)
     {
-        auto result = do_build_package(paths, pre_build_info, spec, abi_tag, config, status_db);
+        auto result = do_build_package(paths, pre_build_info, spec, abi_tag, config);
 
         if (config.build_package_options.clean_buildtrees == CleanBuildtrees::YES)
         {
@@ -564,7 +562,7 @@ namespace vcpkg::Build
         auto dep_pspecs = Util::fmap(required_fspecs, [](FeatureSpec const& fspec) { return fspec.spec(); });
         Util::sort_unique_erase(dep_pspecs);
 
-        // Find all features that aren't installed. This destroys required_fspecs.
+        // Find all features that aren't installed. This mutates required_fspecs.
         Util::unstable_keep_if(required_fspecs, [&](FeatureSpec const& fspec) {
             return !status_db.is_installed(fspec) && fspec.name() != name;
         });
@@ -624,7 +622,7 @@ namespace vcpkg::Build
             System::println("Could not locate cached archive: %s", archive_path.u8string());
 
             ExtendedBuildResult result = do_build_package_and_clean_buildtrees(
-                paths, pre_build_info, spec, maybe_abi_tag_and_file.value_or(AbiTagAndFile{}).tag, config, status_db);
+                paths, pre_build_info, spec, maybe_abi_tag_and_file.value_or(AbiTagAndFile{}).tag, config);
 
             std::error_code ec;
             fs.create_directories(paths.package_dir(spec) / "share" / spec.name(), ec);
@@ -657,7 +655,7 @@ namespace vcpkg::Build
         }
 
         return do_build_package_and_clean_buildtrees(
-            paths, pre_build_info, spec, maybe_abi_tag_and_file.value_or(AbiTagAndFile{}).tag, config, status_db);
+            paths, pre_build_info, spec, maybe_abi_tag_and_file.value_or(AbiTagAndFile{}).tag, config);
     }
 
     const std::string& to_string(const BuildResult build_result)

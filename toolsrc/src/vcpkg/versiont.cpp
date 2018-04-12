@@ -5,7 +5,7 @@
 
 namespace vcpkg
 {
-    VersionT::VersionT() : value("0.0.0") {}
+    VersionT::VersionT() noexcept : value("0.0.0") {}
     VersionT::VersionT(std::string&& value) : value(std::move(value)) {}
     VersionT::VersionT(const std::string& value) : value(value) {}
     const std::string& VersionT::to_string() const { return value; }
@@ -13,7 +13,7 @@ namespace vcpkg
     bool operator!=(const VersionT& left, const VersionT& right) { return left.to_string() != right.to_string(); }
     std::string to_printf_arg(const VersionT& version) { return version.to_string(); }
 
-    VersionDiff::VersionDiff() : left(), right() {}
+    VersionDiff::VersionDiff() noexcept : left(), right() {}
     VersionDiff::VersionDiff(const VersionT& left, const VersionT& right) : left(left), right(right) {}
 
     std::string VersionDiff::to_string() const

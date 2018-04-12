@@ -105,6 +105,7 @@ function(vcpkg_build_cmake)
 
                 if(out_contents MATCHES "LINK : fatal error LNK1102:" OR out_contents MATCHES " fatal error C1060: ")
                     # The linker ran out of memory during execution. We will try continuing once more, with parallelism disabled.
+                    message(STATUS "Restarting Build ${TARGET_TRIPLET}-${SHORT_BUILDTYPE} without parallelism because memory exceeded")
                     execute_process(
                         COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${NO_PARALLEL_ARG}
                         OUTPUT_FILE "${LOGPREFIX}-out-1.log"
@@ -121,6 +122,33 @@ function(vcpkg_build_cmake)
                         endif()
                         if(err_contents)
                             list(APPEND LOGS "${LOGPREFIX}-err-1.log")
+                        endif()
+                    endif()
+                elseif(out_contents MATCHES ": No such file or directory")
+                    # WSL workaround - WSL occassionally fails with no such file or directory. Detect if we are running in WSL and restart.
+                    execute_process(COMMAND "uname" "-r"
+                        OUTPUT_VARIABLE UNAME_R ERROR_VARIABLE UNAME_R
+                        OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_STRIP_TRAILING_WHITESPACE)
+
+                    if (UNAME_R MATCHES "Microsoft")
+                        message(STATUS "Restarting Build ${TARGET_TRIPLET}-${SHORT_BUILDTYPE} because of (potential) wsl subsystem issue.")
+                        execute_process(
+                            COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS}
+                            OUTPUT_FILE "${LOGPREFIX}-out-1.log"
+                            ERROR_FILE "${LOGPREFIX}-err-1.log"
+                            RESULT_VARIABLE error_code
+                            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE})
+
+                        if(error_code)
+                            file(READ "${LOGPREFIX}-out-1.log" out_contents)
+                            file(READ "${LOGPREFIX}-err-1.log" err_contents)
+
+                            if(out_contents)
+                                list(APPEND LOGS "${LOGPREFIX}-out-1.log")
+                            endif()
+                            if(err_contents)
+                                list(APPEND LOGS "${LOGPREFIX}-err-1.log")
+                            endif()
                         endif()
                     endif()
                 endif()

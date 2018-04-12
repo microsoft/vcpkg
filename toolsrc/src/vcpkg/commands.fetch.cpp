@@ -269,8 +269,6 @@ namespace vcpkg::Commands::Fetch
 #endif
     static fs::path fetch_tool(const VcpkgPaths& paths, const std::string& tool_name, const ToolData& tool_data)
     {
-        const auto& fs = paths.get_filesystem();
-        const fs::path& scripts_folder = paths.scripts;
         const std::array<int, 3>& version = tool_data.version;
 
         const std::string version_as_string = Strings::format("%d.%d.%d", version[0], version[1], version[2]);
@@ -280,7 +278,7 @@ namespace vcpkg::Commands::Fetch
                         tool_name,
                         version_as_string);
 #if defined(_WIN32)
-        const fs::path script = scripts_folder / "fetchtool.ps1";
+        const fs::path script = paths.scripts / "fetchtool.ps1";
         const std::string title = Strings::format(
             "Fetching %s version %s (No sufficient installed version was found)", tool_name, version_as_string);
         const System::PowershellParameter tool_param("tool", tool_name);
@@ -300,6 +298,7 @@ namespace vcpkg::Commands::Fetch
                            actual_downloaded_path.u8string());
         return actual_downloaded_path;
 #else
+        const auto& fs = paths.get_filesystem();
         if (!fs.exists(tool_data.download_path))
         {
             System::println("Downloading %s...", tool_name);

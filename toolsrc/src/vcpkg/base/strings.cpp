@@ -39,7 +39,7 @@ namespace vcpkg::Strings::details
         _vsnprintf_s_l(&output.at(0), output.size() + 1, output.size(), fmtstr, c_locale(), args);
 #else
         va_start(args, fmtstr);
-        auto res = vsnprintf(&output.at(0), output.size() + 1, fmtstr, args);
+        vsnprintf(&output.at(0), output.size() + 1, fmtstr, args);
 #endif
         va_end(args);
 
@@ -52,23 +52,25 @@ namespace vcpkg::Strings
     std::wstring to_utf16(const CStringView& s)
     {
 #if defined(_WIN32)
-        const int size = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
         std::wstring output;
+        const size_t size = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
+        if (size == 0) return output;
         output.resize(size - 1);
-        MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, output.data(), size - 1);
+        MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, output.data(), static_cast<int>(size) - 1);
         return output;
 #else
         Checks::unreachable(VCPKG_LINE_INFO);
 #endif
     }
 
-    std::string to_utf8(const CWStringView& w)
+    std::string to_utf8(const wchar_t* w)
     {
 #if defined(_WIN32)
-        const int size = WideCharToMultiByte(CP_UTF8, 0, w.c_str(), -1, nullptr, 0, nullptr, nullptr);
         std::string output;
+        const size_t size = WideCharToMultiByte(CP_UTF8, 0, w, -1, nullptr, 0, nullptr, nullptr);
+        if (size == 0) return output;
         output.resize(size - 1);
-        WideCharToMultiByte(CP_UTF8, 0, w.c_str(), -1, output.data(), size - 1, nullptr, nullptr);
+        WideCharToMultiByte(CP_UTF8, 0, w, -1, output.data(), static_cast<int>(size) - 1, nullptr, nullptr);
         return output;
 #else
         Checks::unreachable(VCPKG_LINE_INFO);
