@@ -247,7 +247,7 @@ namespace vcpkg::CoffFileReader
     {
         void set_to_offset(const fpos_t position) { this->m_absolute_position = position; }
 
-        void set_to_current_pos(fstream& fs) { this->m_absolute_position = fs.tellg().seekpos(); }
+        void set_to_current_pos(fstream& fs) { this->m_absolute_position = fs.tellg(); }
 
         void seek_to_marker(fstream& fs) const { fs.seekg(this->m_absolute_position, ios_base::beg); }
 
