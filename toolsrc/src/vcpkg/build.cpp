@@ -47,9 +47,9 @@ namespace vcpkg::Build::Command
         const ParseExpected<SourceControlFile> source_control_file =
             Paragraphs::try_load_port(paths.get_filesystem(), port_dir);
 
-        if (!source_control_file.has_value())
+        if (auto err = source_control_file.get_error())
         {
-            print_error_message(source_control_file.error());
+            print_error_message(*err);
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 

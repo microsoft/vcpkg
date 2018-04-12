@@ -13,21 +13,5 @@ namespace vcpkg
     };
 
     CStringView to_string(PackageSpecParseResult ev) noexcept;
-
-    template<>
-    struct ErrorHolder<PackageSpecParseResult>
-    {
-        ErrorHolder() noexcept : m_err(PackageSpecParseResult::SUCCESS) {}
-        ErrorHolder(PackageSpecParseResult err) : m_err(err) {}
-
-        bool has_error() const { return m_err != PackageSpecParseResult::SUCCESS; }
-
-        const PackageSpecParseResult& error() const { return m_err; }
-        PackageSpecParseResult& error() { return m_err; }
-
-        CStringView to_string() const { return vcpkg::to_string(m_err); }
-
-    private:
-        PackageSpecParseResult m_err;
-    };
+    inline CStringView to_printf_arg(PackageSpecParseResult ev) noexcept { return to_string(ev); }
 }

@@ -533,7 +533,7 @@ namespace vcpkg::System
             auto value = System::get_environment_variable("PROGRAMFILES");
             if (auto v = value.get())
             {
-                return *v;
+                return fs::u8path(*v);
             }
 
             return nullopt;
@@ -548,7 +548,7 @@ namespace vcpkg::System
             auto value = System::get_environment_variable("ProgramFiles(x86)");
             if (auto v = value.get())
             {
-                return *v;
+                return fs::u8path(*v);
             }
             return get_program_files();
         }();
@@ -561,7 +561,7 @@ namespace vcpkg::System
             auto value = System::get_environment_variable("ProgramW6432");
             if (auto v = value.get())
             {
-                return *v;
+                return fs::u8path(*v);
             }
             return get_program_files();
         }();

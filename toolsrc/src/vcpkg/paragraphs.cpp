@@ -166,35 +166,30 @@ namespace vcpkg::Paragraphs
     Expected<std::unordered_map<std::string, std::string>> get_single_paragraph(const Files::Filesystem& fs,
                                                                                 const fs::path& control_path)
     {
-        const Expected<std::string> contents = fs.read_contents(control_path);
+        auto contents = fs.read_contents(control_path);
         if (auto spgh = contents.get())
-        {
             return parse_single_paragraph(*spgh);
-        }
-
-        return contents.error();
+        else
+            return std::move(*contents.get_error());
     }
 
     Expected<std::vector<std::unordered_map<std::string, std::string>>> get_paragraphs(const Files::Filesystem& fs,
                                                                                        const fs::path& control_path)
     {
-        const Expected<std::string> contents = fs.read_contents(control_path);
+        auto contents = fs.read_contents(control_path);
         if (auto spgh = contents.get())
-        {
             return parse_paragraphs(*spgh);
-        }
-
-        return contents.error();
+        else
+            return std::move(*contents.get_error());
     }
 
     Expected<std::unordered_map<std::string, std::string>> parse_single_paragraph(const std::string& str)
     {
-        const std::vector<std::unordered_map<std::string, std::string>> p =
-            Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
+        auto pghs = Parser(str.c_str(), str.c_str() + str.size()).get_paragraphs();
 
-        if (p.size() == 1)
+        if (pghs.size() == 1)
         {
-            return p.at(0);
+            return std::move(pghs[0]);
         }
 
         return std::error_code(ParagraphParseResult::EXPECTED_ONE_PARAGRAPH);
@@ -222,10 +217,13 @@ namespace vcpkg::Paragraphs
             }
             return csf;
         }
-        auto error_info = std::make_unique<ParseControlErrorInfo>();
-        error_info->name = path.filename().generic_u8string();
-        error_info->error = pghs.error();
-        return error_info;
+        else
+        {
+            auto error_info = std::make_unique<ParseControlErrorInfo>();
+            error_info->name = path.filename().generic_u8string();
+            error_info->error = *pghs.get_error();
+            return std::move(error_info);
+        }
     }
 
     Expected<BinaryControlFile> try_load_cached_package(const VcpkgPaths& paths, const PackageSpec& spec)
@@ -242,10 +240,12 @@ namespace vcpkg::Paragraphs
             bcf.features =
                 Util::fmap(*p, [&](auto&& raw_feature) -> BinaryParagraph { return BinaryParagraph(raw_feature); });
 
-            return bcf;
+            return std::move(bcf);
         }
-
-        return pghs.error();
+        else
+        {
+            return std::move(*pghs.get_error());
+        }
     }
 
     LoadResults try_load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir)
@@ -256,14 +256,10 @@ namespace vcpkg::Paragraphs
         for (auto&& path : port_dirs)
         {
             auto maybe_spgh = try_load_port(fs, path);
-            if (const auto spgh = maybe_spgh.get())
-            {
+            if (auto spgh = maybe_spgh.get())
                 ret.paragraphs.emplace_back(std::move(*spgh));
-            }
             else
-            {
-                ret.errors.emplace_back(std::move(maybe_spgh).error());
-            }
+                ret.errors.emplace_back(std::move(*maybe_spgh.get_error()));
         }
         return ret;
     }

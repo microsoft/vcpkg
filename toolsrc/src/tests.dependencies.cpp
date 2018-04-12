@@ -66,16 +66,16 @@ namespace UnitTest1
         {
             auto v = Supports::parse({"arm64"});
             Assert::AreEqual(uintptr_t(0), uintptr_t(v.get()));
-            Assert::AreEqual(size_t(1), v.error().size());
-            Assert::AreEqual("arm64", v.error()[0].c_str());
+            Assert::AreEqual(size_t(1), (*v.get_error()).size());
+            Assert::AreEqual("arm64", (*v.get_error())[0].c_str());
         }
 
         TEST_METHOD(parse_supports_case_sensitive)
         {
             auto v = Supports::parse({"Windows"});
             Assert::AreEqual(uintptr_t(0), uintptr_t(v.get()));
-            Assert::AreEqual(size_t(1), v.error().size());
-            Assert::AreEqual("Windows", v.error()[0].c_str());
+            Assert::AreEqual(size_t(1), (*v.get_error()).size());
+            Assert::AreEqual("Windows", (*v.get_error())[0].c_str());
         }
 
         TEST_METHOD(parse_supports_some)

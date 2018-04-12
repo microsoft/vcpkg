@@ -14,6 +14,8 @@ namespace vcpkg::Parse
         std::vector<std::string> missing_fields;
         std::vector<std::string> extra_fields;
         std::error_code error;
+
+        std::string to_string() const { return ""; }
     };
 
     template<class P>

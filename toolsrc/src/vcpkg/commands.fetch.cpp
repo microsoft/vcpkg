@@ -62,7 +62,7 @@ namespace vcpkg::Commands::Fetch
             std::smatch match;
             const bool has_match = std::regex_search(input.cbegin(), input.cend(), match, regex);
             if (!has_match) return nullopt;
-            return match[1];
+            return std::string(match[1]);
         };
 
         const auto get_string_inside_tags =

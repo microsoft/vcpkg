@@ -18,11 +18,14 @@ namespace vcpkg::Input
         {
             return PackageSpec{spec->package_spec};
         }
-
-        // Intentionally show the lowercased string
-        System::println(System::Color::error, "Error: %s: %s", vcpkg::to_string(expected_spec.error()), as_lowercase);
-        System::print(example_text);
-        Checks::exit_fail(VCPKG_LINE_INFO);
+        else
+        {
+            // Intentionally show the lowercased string
+            System::println(
+                System::Color::error, "Error: %s: %s", vcpkg::to_string(*expected_spec.get_error()), as_lowercase);
+            System::print(example_text);
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
     }
 
     void check_triplet(const Triplet& t, const VcpkgPaths& paths)
@@ -46,10 +49,13 @@ namespace vcpkg::Input
         {
             return *spec;
         }
-
-        // Intentionally show the lowercased string
-        System::println(System::Color::error, "Error: %s: %s", vcpkg::to_string(expected_spec.error()), as_lowercase);
-        System::print(example_text);
-        Checks::exit_fail(VCPKG_LINE_INFO);
+        else
+        {
+            // Intentionally show the lowercased string
+            System::println(
+                System::Color::error, "Error: %s: %s", vcpkg::to_string(*expected_spec.get_error()), as_lowercase);
+            System::print(example_text);
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
     }
 }

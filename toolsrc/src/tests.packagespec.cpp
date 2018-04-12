@@ -38,7 +38,7 @@ namespace UnitTest1
         TEST_METHOD(parsed_specifier_from_string)
         {
             auto maybe_spec = vcpkg::ParsedSpecifier::from_string("zlib");
-            Assert::AreEqual(vcpkg::PackageSpecParseResult::SUCCESS, maybe_spec.error());
+            Assert::IsNull(maybe_spec.get_error());
             auto spec = maybe_spec.get();
             Assert::AreEqual("zlib", spec->name.c_str());
             Assert::AreEqual(size_t(0), spec->features.size());
@@ -48,7 +48,7 @@ namespace UnitTest1
         TEST_METHOD(parsed_specifier_from_string_with_triplet)
         {
             auto maybe_spec = vcpkg::ParsedSpecifier::from_string("zlib:x64-uwp");
-            Assert::AreEqual(vcpkg::PackageSpecParseResult::SUCCESS, maybe_spec.error());
+            Assert::IsNull(maybe_spec.get_error());
             auto spec = maybe_spec.get();
             Assert::AreEqual("zlib", spec->name.c_str());
             Assert::AreEqual("x64-uwp", spec->triplet.c_str());
@@ -56,14 +56,15 @@ namespace UnitTest1
 
         TEST_METHOD(parsed_specifier_from_string_with_colons)
         {
-            auto ec = vcpkg::ParsedSpecifier::from_string("zlib:x86-uwp:").error();
-            Assert::AreEqual(vcpkg::PackageSpecParseResult::TOO_MANY_COLONS, ec);
+            auto parse = vcpkg::ParsedSpecifier::from_string("zlib:x86-uwp:");
+            Assert::IsTrue(parse.has_error());
+            Assert::AreEqual(vcpkg::PackageSpecParseResult::TOO_MANY_COLONS, *parse.get_error());
         }
 
         TEST_METHOD(parsed_specifier_from_string_with_feature)
         {
             auto maybe_spec = vcpkg::ParsedSpecifier::from_string("zlib[feature]:x64-uwp");
-            Assert::AreEqual(vcpkg::PackageSpecParseResult::SUCCESS, maybe_spec.error());
+            Assert::IsNull(maybe_spec.get_error());
             auto spec = maybe_spec.get();
             Assert::AreEqual("zlib", spec->name.c_str());
             Assert::IsTrue(spec->features.size() == 1);
@@ -74,7 +75,7 @@ namespace UnitTest1
         TEST_METHOD(parsed_specifier_from_string_with_many_features)
         {
             auto maybe_spec = vcpkg::ParsedSpecifier::from_string("zlib[0, 1,2]");
-            Assert::AreEqual(vcpkg::PackageSpecParseResult::SUCCESS, maybe_spec.error());
+            Assert::IsNull(maybe_spec.get_error());
             auto spec = maybe_spec.get();
             Assert::AreEqual("zlib", spec->name.c_str());
             Assert::IsTrue(spec->features.size() == 3);
@@ -87,7 +88,7 @@ namespace UnitTest1
         TEST_METHOD(parsed_specifier_wildcard_feature)
         {
             auto maybe_spec = vcpkg::ParsedSpecifier::from_string("zlib[*]");
-            Assert::AreEqual(vcpkg::PackageSpecParseResult::SUCCESS, maybe_spec.error());
+            Assert::IsNull(maybe_spec.get_error());
             auto spec = maybe_spec.get();
             Assert::AreEqual("zlib", spec->name.c_str());
             Assert::IsTrue(spec->features.size() == 1);

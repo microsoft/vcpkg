@@ -129,7 +129,7 @@ namespace vcpkg
     }
 
     ParseExpected<SourceControlFile> SourceControlFile::parse_control_file(
-        std::vector<std::unordered_map<std::string, std::string>>&& control_paragraphs)
+        std::vector<RawParagraph>&& control_paragraphs)
     {
         if (control_paragraphs.size() == 0)
         {
@@ -142,7 +142,7 @@ namespace vcpkg
         if (const auto source = maybe_source.get())
             control_file->core_paragraph = std::move(*source);
         else
-            return std::move(maybe_source).error();
+            return std::move(*maybe_source.get_error());
 
         control_paragraphs.erase(control_paragraphs.begin());
 
@@ -152,7 +152,7 @@ namespace vcpkg
             if (const auto feature = maybe_feature.get())
                 control_file->feature_paragraphs.emplace_back(std::move(*feature));
             else
-                return std::move(maybe_feature).error();
+                return std::move(*maybe_feature.get_error());
         }
 
         return std::move(control_file);
@@ -172,11 +172,14 @@ namespace vcpkg
     {
         Dependency dep;
         dep.qualifier = qualifier;
-        if (auto maybe_features = Features::from_string(name))
-            dep.depend = *maybe_features.get();
+        auto maybe_features = Features::from_string(name);
+        if (auto features = maybe_features.get())
+            dep.depend = *features;
         else
-            Checks::exit_with_message(
-                VCPKG_LINE_INFO, "error while parsing dependency: %s: %s", to_string(maybe_features.error()), name);
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "error while parsing dependency: %s: %s",
+                                      to_string(*maybe_features.get_error()),
+                                      name);
         return dep;
     }
 

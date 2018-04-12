@@ -1,26 +1,22 @@
 #pragma once
 
+#include <vcpkg/base/optional.h>
+
 namespace vcpkg
 {
     template<typename T>
     class Lazy
     {
     public:
-        Lazy() : value(T()), initialized(false) {}
-
         template<class F>
         T const& get_lazy(const F& f) const
         {
-            if (!initialized)
-            {
-                value = f();
-                initialized = true;
-            }
-            return value;
+            if (auto p = m_value.get()) return *p;
+            m_value = f();
+            return *m_value.get();
         }
 
     private:
-        mutable T value;
-        mutable bool initialized;
+        mutable Optional<T> m_value;
     };
 }

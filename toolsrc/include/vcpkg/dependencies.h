@@ -81,7 +81,7 @@ namespace vcpkg::Dependencies
         RequestType request_type;
     };
 
-    struct AnyAction
+    struct AnyAction : Util::MoveOnlyBase
     {
         AnyAction(InstallPlanAction&& iplan) : install_action(std::move(iplan)) {}
         AnyAction(RemovePlanAction&& rplan) : remove_action(std::move(rplan)) {}

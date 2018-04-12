@@ -18,7 +18,7 @@ namespace vcpkg
         const fs::path canonical_vcpkg_root_dir = fs::stdfs::canonical(vcpkg_root_dir, ec);
         if (ec)
         {
-            return ec;
+            return std::move(ec);
         }
 
         VcpkgPaths paths;
@@ -49,7 +49,7 @@ namespace vcpkg
 
         paths.ports_cmake = paths.scripts / "ports.cmake";
 
-        return paths;
+        return std::move(paths);
     }
 
     fs::path VcpkgPaths::package_dir(const PackageSpec& spec) const { return this->packages / spec.dir(); }

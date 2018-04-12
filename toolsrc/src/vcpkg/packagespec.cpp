@@ -45,7 +45,7 @@ namespace vcpkg
             {
                 Checks::exit_with_message(VCPKG_LINE_INFO,
                                           "error while parsing feature list: %s: %s",
-                                          vcpkg::to_string(maybe_spec.error()),
+                                          vcpkg::to_string(*maybe_spec.get_error()),
                                           depend);
             }
         }
@@ -67,16 +67,13 @@ namespace vcpkg
     ExpectedT<FullPackageSpec, PackageSpecParseResult> FullPackageSpec::from_string(const std::string& spec_as_string,
                                                                                     const Triplet& default_triplet)
     {
-        auto res = ParsedSpecifier::from_string(spec_as_string);
-        if (auto p = res.get())
-        {
+        return Util::fmap(ParsedSpecifier::from_string(spec_as_string), [&](ParsedSpecifier& spec) {
             FullPackageSpec fspec;
-            Triplet t = p->triplet.empty() ? default_triplet : Triplet::from_canonical_name(p->triplet);
-            fspec.package_spec = PackageSpec::from_name_and_triplet(p->name, t).value_or_exit(VCPKG_LINE_INFO);
-            fspec.features = std::move(p->features);
+            Triplet t = spec.triplet.empty() ? default_triplet : Triplet::from_canonical_name(spec.triplet);
+            fspec.package_spec = PackageSpec::from_name_and_triplet(spec.name, t).value_or_exit(VCPKG_LINE_INFO);
+            fspec.features = std::move(spec.features);
             return fspec;
-        }
-        return res.error();
+        });
     }
 
     ExpectedT<PackageSpec, PackageSpecParseResult> PackageSpec::from_name_and_triplet(const std::string& name,
@@ -86,11 +83,13 @@ namespace vcpkg
         {
             return PackageSpecParseResult::INVALID_CHARACTERS;
         }
-
-        PackageSpec p;
-        p.m_name = name;
-        p.m_triplet = triplet;
-        return p;
+        else
+        {
+            PackageSpec p;
+            p.m_name = name;
+            p.m_triplet = triplet;
+            return std::move(p);
+        }
     }
 
     std::vector<PackageSpec> PackageSpec::to_package_specs(const std::vector<std::string>& ports,
@@ -102,13 +101,14 @@ namespace vcpkg
             {
                 return std::move(*spec);
             }
-
-            const PackageSpecParseResult error_type = maybe_spec.error();
-            Checks::exit_with_message(VCPKG_LINE_INFO,
-                                      "Invalid package: %s\n"
-                                      "%s",
-                                      spec_as_string,
-                                      vcpkg::to_string(error_type));
+            else
+            {
+                Checks::exit_with_message(VCPKG_LINE_INFO,
+                                          "Invalid package: %s\n"
+                                          "%s",
+                                          spec_as_string,
+                                          vcpkg::to_string(*maybe_spec.get_error()));
+            }
         });
     }
 
@@ -137,7 +137,7 @@ namespace vcpkg
         if (pos == std::string::npos && pos_l_bracket == std::string::npos)
         {
             f.name = input;
-            return f;
+            return std::move(f);
         }
         else if (pos == std::string::npos)
         {
@@ -148,7 +148,7 @@ namespace vcpkg
             const std::string name = input.substr(0, pos_l_bracket);
             f.name = name;
             f.features = parse_comma_list(input.substr(pos_l_bracket + 1, pos_r_bracket - pos_l_bracket - 1));
-            return f;
+            return std::move(f);
         }
         else if (pos_l_bracket == std::string::npos && pos_r_bracket == std::string::npos)
         {
@@ -173,23 +173,19 @@ namespace vcpkg
         {
             return PackageSpecParseResult::TOO_MANY_COLONS;
         }
-        return f;
+        return std::move(f);
     }
 
     ExpectedT<Features, PackageSpecParseResult> Features::from_string(const std::string& name)
     {
-        auto maybe_spec = ParsedSpecifier::from_string(name);
-        if (auto spec = maybe_spec.get())
-        {
+        return Util::fmap(ParsedSpecifier::from_string(name), [&](ParsedSpecifier& spec) {
             Checks::check_exit(
-                VCPKG_LINE_INFO, spec->triplet.empty(), "error: triplet not allowed in specifier: %s", name);
+                VCPKG_LINE_INFO, spec.triplet.empty(), "error: triplet not allowed in specifier: %s", name);
 
             Features f;
-            f.name = spec->name;
-            f.features = spec->features;
+            f.name = std::move(spec.name);
+            f.features = std::move(spec.features);
             return f;
-        }
-
-        return maybe_spec.error();
+        });
     }
 }

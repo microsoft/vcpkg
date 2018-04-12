@@ -92,7 +92,7 @@ namespace vcpkg::Commands::Autocomplete
             const auto triplet_prefix = match[3].str();
 
             auto maybe_port = Paragraphs::try_load_port(paths.get_filesystem(), paths.port_dir(port_name));
-            if (maybe_port.error())
+            if (maybe_port.has_error())
             {
                 Checks::exit_success(VCPKG_LINE_INFO);
             }

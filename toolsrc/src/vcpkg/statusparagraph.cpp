@@ -115,14 +115,15 @@ namespace vcpkg
             {
                 return std::move(*dependency_spec);
             }
-
-            const PackageSpecParseResult error_type = maybe_dependency_spec.error();
-            Checks::exit_with_message(VCPKG_LINE_INFO,
-                                      "Invalid dependency [%s] in package [%s]\n"
-                                      "%s",
-                                      dep,
-                                      l_spec.name(),
-                                      vcpkg::to_string(error_type));
+            else
+            {
+                Checks::exit_with_message(VCPKG_LINE_INFO,
+                                          "Invalid dependency [%s] in package [%s]\n"
+                                          "%s",
+                                          dep,
+                                          l_spec.name(),
+                                          vcpkg::to_string(*maybe_dependency_spec.get_error()));
+            }
         });
     }
 }

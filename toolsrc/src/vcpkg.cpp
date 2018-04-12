@@ -58,8 +58,7 @@ static void inner(const VcpkgCmdArguments& args)
         {
             return &*it;
         }
-        else
-            return static_cast<decltype(&*it)>(nullptr);
+        return decltype(&*it){};
     };
 
     if (const auto command_function = find_command(Commands::get_available_commands_type_c()))
@@ -70,7 +69,7 @@ static void inner(const VcpkgCmdArguments& args)
     fs::path vcpkg_root_dir;
     if (args.vcpkg_root_dir != nullptr)
     {
-        vcpkg_root_dir = fs::stdfs::absolute(Strings::to_utf16(*args.vcpkg_root_dir));
+        vcpkg_root_dir = fs::stdfs::absolute(fs::u8path(*args.vcpkg_root_dir));
     }
     else
     {
@@ -97,11 +96,11 @@ static void inner(const VcpkgCmdArguments& args)
     auto default_vs_path = System::get_environment_variable("VCPKG_DEFAULT_VS_PATH").value_or("");
 
     const Expected<VcpkgPaths> expected_paths = VcpkgPaths::create(vcpkg_root_dir, default_vs_path);
-    Checks::check_exit(VCPKG_LINE_INFO,
-                       !expected_paths.error(),
-                       "Error: Invalid vcpkg root directory %s: %s",
-                       vcpkg_root_dir.string(),
-                       expected_paths.error().message());
+    if (auto err = expected_paths.get_error())
+    {
+        Checks::exit_with_message(
+            VCPKG_LINE_INFO, "Error: Invalid vcpkg root directory %s: %s", vcpkg_root_dir.string(), err->message());
+    }
     const VcpkgPaths paths = expected_paths.value_or_exit(VCPKG_LINE_INFO);
 
 #if defined(_WIN32)

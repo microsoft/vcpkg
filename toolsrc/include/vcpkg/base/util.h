@@ -230,8 +230,7 @@ namespace vcpkg::Util
     }
 
     template<class T>
-    void unused(T&& param)
+    void unused(T&&)
     {
-        (void)param;
     }
 }
