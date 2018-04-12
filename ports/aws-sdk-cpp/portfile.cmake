@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/aws-sdk-cpp
-    REF 1.4.32
-    SHA512 f37aaf1d439acd1563fe50624e2e7856ba5d267a540a8cd1fde80d0d7bd9e2cdd261f9f6e3e843548cc17b8ea7158419a9e0ed27092acf5c22b5c9e38d327c64
+    REF 1.4.33
+    SHA512 ebe8e402107b7b70a9b397c94ad981ff02d97e10e6fd8337f19b732185ecbb79e132eecd513300ce733a765fd780dd765c1d2b34479e5e1d891fa771722bad81
     HEAD_REF master
 )
 
