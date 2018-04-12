@@ -9,7 +9,7 @@ namespace vcpkg
     struct Triplet
     {
     public:
-        constexpr Triplet() : m_instance(&DEFAULT_INSTANCE) {}
+        constexpr Triplet() noexcept : m_instance(&DEFAULT_INSTANCE) {}
 
         static Triplet from_canonical_name(const std::string& triplet_as_string);
 

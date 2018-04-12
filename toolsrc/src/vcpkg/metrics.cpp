@@ -245,12 +245,6 @@ namespace vcpkg::Metrics
 
     bool get_compiled_metrics_enabled() { return DISABLE_METRICS == 0; }
 
-    static fs::path get_vcpkg_root()
-    {
-        return Files::get_real_filesystem().find_file_recursively_up(
-            fs::stdfs::absolute(System::get_exe_path_of_current_process()), ".vcpkg-root");
-    }
-
     std::string get_MAC_user()
     {
 #if defined(_WIN32)

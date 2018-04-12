@@ -35,7 +35,7 @@ namespace vcpkg::Dependencies
     {
         static bool compare_by_name(const InstallPlanAction* left, const InstallPlanAction* right);
 
-        InstallPlanAction();
+        InstallPlanAction() noexcept;
 
         InstallPlanAction(InstalledPackageView&& spghs,
                           const std::set<std::string>& features,
@@ -73,7 +73,7 @@ namespace vcpkg::Dependencies
     {
         static bool compare_by_name(const RemovePlanAction* left, const RemovePlanAction* right);
 
-        RemovePlanAction();
+        RemovePlanAction() noexcept;
         RemovePlanAction(const PackageSpec& spec, const RemovePlanType& plan_type, const RequestType& request_type);
 
         PackageSpec spec;
@@ -103,7 +103,7 @@ namespace vcpkg::Dependencies
     {
         static bool compare_by_name(const ExportPlanAction* left, const ExportPlanAction* right);
 
-        ExportPlanAction();
+        ExportPlanAction() noexcept;
         ExportPlanAction(const PackageSpec& spec,
                          InstalledPackageView&& installed_package,
                          const RequestType& request_type);

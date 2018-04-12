@@ -22,7 +22,7 @@ namespace vcpkg::Dependencies
 
     struct ClusterSource
     {
-        const SourceControlFile* scf;
+        const SourceControlFile* scf = nullptr;
         std::unordered_map<std::string, std::vector<FeatureSpec>> build_edges;
     };
 
@@ -145,7 +145,10 @@ namespace vcpkg::Dependencies
         }
     }
 
-    InstallPlanAction::InstallPlanAction() : plan_type(InstallPlanType::UNKNOWN), request_type(RequestType::UNKNOWN) {}
+    InstallPlanAction::InstallPlanAction() noexcept
+        : plan_type(InstallPlanType::UNKNOWN), request_type(RequestType::UNKNOWN), build_options{}
+    {
+    }
 
     InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
                                          const SourceControlFile& scf,
@@ -156,6 +159,7 @@ namespace vcpkg::Dependencies
         , source_control_file(scf)
         , plan_type(InstallPlanType::BUILD_AND_INSTALL)
         , request_type(request_type)
+        , build_options{}
         , feature_list(features)
         , computed_dependencies(std::move(dependencies))
     {
@@ -168,6 +172,7 @@ namespace vcpkg::Dependencies
         , installed_package(std::move(ipv))
         , plan_type(InstallPlanType::ALREADY_INSTALLED)
         , request_type(request_type)
+        , build_options{}
         , feature_list(features)
         , computed_dependencies(installed_package.get()->dependencies())
     {
@@ -189,7 +194,10 @@ namespace vcpkg::Dependencies
         return left->spec.name() < right->spec.name();
     }
 
-    RemovePlanAction::RemovePlanAction() : plan_type(RemovePlanType::UNKNOWN), request_type(RequestType::UNKNOWN) {}
+    RemovePlanAction::RemovePlanAction() noexcept
+        : plan_type(RemovePlanType::UNKNOWN), request_type(RequestType::UNKNOWN)
+    {
+    }
 
     RemovePlanAction::RemovePlanAction(const PackageSpec& spec,
                                        const RemovePlanType& plan_type,
@@ -218,7 +226,10 @@ namespace vcpkg::Dependencies
         return left->spec.name() < right->spec.name();
     }
 
-    ExportPlanAction::ExportPlanAction() : plan_type(ExportPlanType::UNKNOWN), request_type(RequestType::UNKNOWN) {}
+    ExportPlanAction::ExportPlanAction() noexcept
+        : plan_type(ExportPlanType::UNKNOWN), request_type(RequestType::UNKNOWN)
+    {
+    }
 
     ExportPlanAction::ExportPlanAction(const PackageSpec& spec,
                                        InstalledPackageView&& installed_package,
@@ -506,14 +517,14 @@ namespace vcpkg::Dependencies
         {
             if (auto p_source = cluster.source.get())
             {
-                for (auto&& feature : p_source->scf->feature_paragraphs)
+                for (auto&& fpgh : p_source->scf->feature_paragraphs)
                 {
-                    auto res = mark_plus(feature->name, cluster, graph, graph_plan, prevent_default_features);
+                    auto res = mark_plus(fpgh->name, cluster, graph, graph_plan, prevent_default_features);
 
                     Checks::check_exit(VCPKG_LINE_INFO,
                                        res == MarkPlusResult::SUCCESS,
                                        "Error: Unable to locate feature %s in %s",
-                                       feature->name,
+                                       fpgh->name,
                                        cluster.spec);
                 }
 

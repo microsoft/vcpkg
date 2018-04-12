@@ -127,12 +127,15 @@ namespace vcpkg::Commands::Hash
                 FILE* file = nullptr;
                 const auto ec = _wfopen_s(&file, path.c_str(), L"rb");
                 Checks::check_exit(VCPKG_LINE_INFO, ec == 0, "Failed to open file: %s", path.u8string());
-                unsigned char buffer[4096];
-                while (const auto actual_size = fread(buffer, 1, sizeof(buffer), file))
+                if (file != nullptr)
                 {
-                    hash_data(hash_handle, buffer, actual_size);
+                    unsigned char buffer[4096];
+                    while (const auto actual_size = fread(buffer, 1, sizeof(buffer), file))
+                    {
+                        hash_data(hash_handle, buffer, actual_size);
+                    }
+                    fclose(file);
                 }
-                fclose(file);
 
                 return finalize_hash_handle(hash_handle, length_in_bytes);
             }

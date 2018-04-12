@@ -81,7 +81,7 @@ namespace UnitTest1
     {
         std::unordered_map<std::string, SourceControlFile> map;
         Triplet triplet;
-        PackageSpecMap(const Triplet& t = Triplet::X86_WINDOWS) { triplet = t; }
+        PackageSpecMap(const Triplet& t = Triplet::X86_WINDOWS) noexcept { triplet = t; }
 
         PackageSpec emplace(const char* name,
                             const char* depends = "",

@@ -148,17 +148,18 @@ namespace vcpkg::CoffFileReader
     {
         static OffsetsArray read(fstream& fs, const uint32_t offset_count)
         {
-            static constexpr size_t OFFSET_WIDTH = 4;
+            static constexpr uint32_t OFFSET_WIDTH = 4;
 
             std::string raw_offsets;
-            const size_t raw_offset_size = offset_count * OFFSET_WIDTH;
+            const uint32_t raw_offset_size = offset_count * OFFSET_WIDTH;
             raw_offsets.resize(raw_offset_size);
             fs.read(&raw_offsets[0], raw_offset_size);
 
             OffsetsArray ret;
             for (uint32_t i = 0; i < offset_count; ++i)
             {
-                const std::string value_as_string = raw_offsets.substr(OFFSET_WIDTH * i, OFFSET_WIDTH * (i + 1));
+                const std::string value_as_string = raw_offsets.substr(OFFSET_WIDTH * static_cast<size_t>(i),
+                                                                       OFFSET_WIDTH * (static_cast<size_t>(i) + 1));
                 const auto value = reinterpret_bytes<uint32_t>(value_as_string.c_str());
 
                 // Ignore offsets that point to offset 0. See vcpkg github #223 #288 #292

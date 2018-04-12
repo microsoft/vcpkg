@@ -24,7 +24,7 @@ namespace vcpkg
         static const std::string DEFAULTFEATURES = "Default-Features";
     }
 
-    BinaryParagraph::BinaryParagraph() = default;
+    BinaryParagraph::BinaryParagraph() noexcept = default;
 
     BinaryParagraph::BinaryParagraph(std::unordered_map<std::string, std::string> fields)
     {

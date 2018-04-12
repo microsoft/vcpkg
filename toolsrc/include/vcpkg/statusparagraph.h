@@ -29,7 +29,7 @@ namespace vcpkg
     /// </summary>
     struct StatusParagraph
     {
-        StatusParagraph();
+        StatusParagraph() noexcept;
         explicit StatusParagraph(std::unordered_map<std::string, std::string>&& fields);
 
         bool is_installed() const { return want == Want::INSTALL && state == InstallState::INSTALLED; }
@@ -47,7 +47,7 @@ namespace vcpkg
 
     struct InstalledPackageView
     {
-        InstalledPackageView() : core(nullptr) {}
+        InstalledPackageView() noexcept : core(nullptr) {}
 
         InstalledPackageView(const StatusParagraph* c, std::vector<const StatusParagraph*>&& fs)
             : core(c), features(std::move(fs))
