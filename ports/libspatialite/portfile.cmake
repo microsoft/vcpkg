@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libspatialite-4.3.0a)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.gaia-gis.it/gaia-sins/libspatialite-4.3.0a.tar.gz"
+    URLS "http://www.gaia-gis.it/gaia-sins/libspatialite-sources/libspatialite-4.3.0a.tar.gz"
     FILENAME "libspatialite-4.3.0a.tar.gz"
     SHA512 adfd63e8dde0f370b07e4e7bb557647d2bfb5549205b60bdcaaca69ff81298a3d885e7c1ca515ef56dd0aca152ae940df8b5dbcb65bb61ae0a9337499895c3c0
 )
@@ -14,6 +14,7 @@ vcpkg_apply_patches(
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/fix-makefiles.patch
         ${CMAKE_CURRENT_LIST_DIR}/fix-sources.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix-latin-literals.patch
 )
 
 # fix most of the problems when spacebar is in the path
@@ -59,32 +60,36 @@ set(LIBS_ALL_REL
 ################
 # Debug build
 ################
-message(STATUS "Building ${TARGET_TRIPLET}-dbg")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    message(STATUS "Building ${TARGET_TRIPLET}-dbg")
 
-file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/debug" INST_DIR_DBG)
+    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/debug" INST_DIR_DBG)
 
-vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f makefile.vc clean install
-    "INST_DIR=\"${INST_DIR_DBG}\"" INSTALLED_ROOT=${CURRENT_INSTALLED_DIR} "LINK_FLAGS=/debug" "CL_FLAGS=${CL_FLAGS_DBG}" "LIBS_ALL=${LIBS_ALL_DBG}"
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME nmake-build-${TARGET_TRIPLET}-debug
-)
-message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
-vcpkg_copy_pdbs()
+    vcpkg_execute_required_process(
+        COMMAND ${NMAKE} -f makefile.vc clean install
+        "INST_DIR=\"${INST_DIR_DBG}\"" INSTALLED_ROOT=${CURRENT_INSTALLED_DIR} "LINK_FLAGS=/debug" "CL_FLAGS=${CL_FLAGS_DBG}" "LIBS_ALL=${LIBS_ALL_DBG}"
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME nmake-build-${TARGET_TRIPLET}-debug
+    )
+    message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
+    vcpkg_copy_pdbs()
+endif()
 
 ################
 # Release build
 ################
-message(STATUS "Building ${TARGET_TRIPLET}-rel")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    message(STATUS "Building ${TARGET_TRIPLET}-rel")
 
-file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR_REL)
-vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f makefile.vc clean install
-    "INST_DIR=\"${INST_DIR_REL}\"" INSTALLED_ROOT=${CURRENT_INSTALLED_DIR} "LINK_FLAGS=" "CL_FLAGS=${CL_FLAGS_REL}" "LIBS_ALL=${LIBS_ALL_REL}"
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME nmake-build-${TARGET_TRIPLET}-release
-)
-message(STATUS "Building ${TARGET_TRIPLET}-rel done")
+    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR_REL)
+    vcpkg_execute_required_process(
+        COMMAND ${NMAKE} -f makefile.vc clean install
+        "INST_DIR=\"${INST_DIR_REL}\"" INSTALLED_ROOT=${CURRENT_INSTALLED_DIR} "LINK_FLAGS=" "CL_FLAGS=${CL_FLAGS_REL}" "LIBS_ALL=${LIBS_ALL_REL}"
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME nmake-build-${TARGET_TRIPLET}-release
+    )
+    message(STATUS "Building ${TARGET_TRIPLET}-rel done")
+endif()
 
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -98,8 +103,12 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 else()
   file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/spatialite.lib)
   file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib ${CURRENT_PACKAGES_DIR}/lib/spatialite.lib)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib)
+  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib ${CURRENT_PACKAGES_DIR}/lib/spatialite.lib)
+  endif()
+  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib)
+  endif()
 endif()
 
 message(STATUS "Packaging ${TARGET_TRIPLET} done")

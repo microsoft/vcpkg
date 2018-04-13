@@ -3,13 +3,12 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tiny-dnn/tiny-dnn
-    REF dd906fed8c8aff8dc837657c42f9d55f8b793b0e
-    SHA512 d853db7f49af1bece55337b93631c41191f3abd8287969f230330662fecc612e4e53ab789535fc6f9770ae0c8623d8e020e6036c2c804783d08f176a08c05d1b
+    REF 1c5259477b8b4eab376cc19fd1d55ae965ef5e5a
+    SHA512 756b8e3d5d00b44973bbae2c0bedbe15206bce479dc70ae5fc89f455772deadc05503afd7abcae2048aeabefd7a45cba0fae38555df7e0d9eb33e9feed21b099
     HEAD_REF master
 )
 
-file(INSTALL ${SOURCE_PATH}/tiny_dnn DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${SOURCE_PATH}/tiny_dnn DESTINATION ${CURRENT_PACKAGES_DIR}/include/)
 
-
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/tiny-dnn-dd906fed8c8aff8dc837657c42f9d55f8b793b0e/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tiny-dnn)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/share/tiny-dnn/LICENSE ${CURRENT_PACKAGES_DIR}/share/tiny-dnn/copyright)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tiny-dnn)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/tiny-dnn/LICENSE ${CURRENT_PACKAGES_DIR}/share/tiny-dnn/copyright)

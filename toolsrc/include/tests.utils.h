@@ -20,6 +20,7 @@ namespace Microsoft::VisualStudio::CppUnitTestFramework
 
 std::unique_ptr<vcpkg::StatusParagraph> make_status_pgh(const char* name,
                                                         const char* depends = "",
+                                                        const char* default_features = "",
                                                         const char* triplet = "x86-windows");
 std::unique_ptr<vcpkg::StatusParagraph> make_status_feature_pgh(const char* name,
                                                                 const char* feature,

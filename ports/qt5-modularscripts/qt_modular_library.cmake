@@ -53,7 +53,7 @@ function(qt_modular_library NAME HASH)
     #Fix the cmake files if they exist
     if(EXISTS ${RELEASE_DIR}/lib/cmake)
         vcpkg_execute_required_process(
-            COMMAND ${PYTHON2} ${_qt5base_port_dir}/fixcmake.py
+            COMMAND ${PYTHON2} ${_qt5base_port_dir}/fixcmake.py ${PORT}
             WORKING_DIRECTORY ${RELEASE_DIR}/lib/cmake
             LOGNAME fix-cmake
         )
@@ -77,6 +77,16 @@ function(qt_modular_library NAME HASH)
     if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
     endif()
+
+    file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/debug/lib/*.prl")
+    file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/lib" CMAKE_RELEASE_LIB_PATH)
+    file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib" CMAKE_DEBUG_LIB_PATH)
+    foreach(PRL_FILE IN LISTS PRL_FILES)
+        file(READ "${PRL_FILE}" _contents)
+        string(REPLACE "${CMAKE_RELEASE_LIB_PATH}" "\$\$[QT_INSTALL_LIBS]" _contents "${_contents}")
+        string(REPLACE "${CMAKE_DEBUG_LIB_PATH}" "\$\$[QT_INSTALL_LIBS]" _contents "${_contents}")
+        file(WRITE "${PRL_FILE}" "${_contents}")
+    endforeach()
 
     file(GLOB RELEASE_LIBS "${CURRENT_PACKAGES_DIR}/lib/*")
     if(NOT RELEASE_LIBS)

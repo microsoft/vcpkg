@@ -24,6 +24,19 @@ function deployBinary([string]$targetBinaryDir, [string]$SourceDir, [string]$tar
     if ($tlogFile) { Add-Content $tlogFile "$targetBinaryDir\$targetBinaryName" }
 }
 
+
+Write-Verbose "Resolving base path $targetBinary..."
+try
+{
+    $baseBinaryPath = Resolve-Path $targetBinary -erroraction stop
+    $baseTargetBinaryDir = Split-Path $baseBinaryPath -parent
+}
+catch [System.Management.Automation.ItemNotFoundException]
+{
+    return
+}
+
+# Note: this function signature is depended upon by the qtdeploy.ps1 script
 function resolve([string]$targetBinary) {
     Write-Verbose "Resolving $targetBinary..."
     try
@@ -47,10 +60,10 @@ function resolve([string]$targetBinary) {
         }
         $g_searched.Set_Item($_, $true)
         if (Test-Path "$installedDir\$_") {
-            deployBinary $targetBinaryDir $installedDir "$_"
+            deployBinary $baseTargetBinaryDir $installedDir "$_"
             if (Test-Path function:\deployPluginsIfQt) { deployPluginsIfQt $targetBinaryDir "$g_install_root\plugins" "$_" }
             if (Test-Path function:\deployOpenNI2) { deployOpenNI2 $targetBinaryDir "$g_install_root" "$_" }
-            resolve "$targetBinaryDir\$_"
+            resolve "$baseTargetBinaryDir\$_"
         } elseif (Test-Path "$targetBinaryDir\$_") {
             Write-Verbose "  ${_}: $_ not found in vcpkg; locally deployed"
             resolve "$targetBinaryDir\$_"

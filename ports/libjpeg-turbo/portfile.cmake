@@ -7,18 +7,30 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_download_distfile(GETENV_PATCH
+    URLS "https://github.com/libjpeg-turbo/libjpeg-turbo/commit/bd96b30b74fe166fc94218cfc64a097fafdcc05f.diff"
+    FILENAME "libjpeg-turbo-bd96b30b74fe166fc94218cfc64a097fafdcc05f.diff"
+    SHA512 4cd064521b5e4baba4adf972f9f574f6dd43a2cd3e3ad143ca2cdf0f165024406d4fd2ed094124d0c17c5370394140e82fdd892d3cdc49609acdf8f79db1758c
+)
+
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/add-options-for-exes-docs-headers.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/linux-cmake.patch"
+        "${GETENV_PATCH}"
 )
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR (VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore"))
     set(LIBJPEGTURBO_SIMD -DWITH_SIMD=OFF)
 else()
     set(LIBJPEGTURBO_SIMD -DWITH_SIMD=ON)
     vcpkg_find_acquire_program(NASM)
     get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
     set(ENV{PATH} "$ENV{PATH};${NASM_EXE_PATH}")
+endif()
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(ENV{_CL_} "-DNO_GETENV -DNO_PUTENV")
 endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
@@ -41,7 +53,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Rename libraries for static builds
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND EXISTS "${CURRENT_PACKAGES_DIR}/lib/jpeg-static.lib")
     file(RENAME "${CURRENT_PACKAGES_DIR}/lib/jpeg-static.lib" "${CURRENT_PACKAGES_DIR}/lib/jpeg.lib")
     file(RENAME "${CURRENT_PACKAGES_DIR}/lib/turbojpeg-static.lib" "${CURRENT_PACKAGES_DIR}/lib/turbojpeg.lib")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg.lib")

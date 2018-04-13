@@ -8,7 +8,11 @@
 #define STRINGIFY(...) #__VA_ARGS__
 #define MACRO_TO_STRING(X) STRINGIFY(X)
 
+#if defined(VCPKG_VERSION)
 #define VCPKG_VERSION_AS_STRING MACRO_TO_STRING(VCPKG_VERSION)
+#else
+#define VCPKG_VERSION_AS_STRING "-unknownhash"
+#endif
 
 namespace vcpkg::Commands::Version
 {
@@ -79,7 +83,7 @@ namespace vcpkg::Commands::Version
 
     void perform_and_exit(const VcpkgCmdArguments& args)
     {
-        args.parse_arguments(COMMAND_STRUCTURE);
+        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
 
         System::println("Vcpkg package management program version %s\n"
                         "\n"

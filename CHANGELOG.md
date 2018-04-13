@@ -1,8 +1,420 @@
+vcpkg (0.0.108)
+--------------
+  * Add ports:
+    - google-cloud-cpp 0.1.0
+    - mhook          2.5.1-1
+    - mosquitto      1.4.15
+    - pmdk           1.4-1 (renamed from nvml)
+  * Remove Ports:
+    - nvml           1.3-0 (renamed to pmdk)
+  * Update ports:
+    - abseil         2018-03-23 -> 2018-04-05
+    - asio           1.12.0-1 -> 1.12.0-2
+    - aws-sdk-cpp    1.4.21 -> 1.4.30-1
+    - azure-c-shared-utility 1.0.0-pre-release-1.0.9 -> 1.1.2
+    - azure-iot-sdk-c 1.0.0-pre-release-1.0.9 -> 1.2.2
+    - azure-uamqp-c  1.0.0-pre-release-1.0.9 -> 1.2.2
+    - azure-umqtt-c  1.0.0-pre-release-1.0.9 -> 1.1.2
+    - breakpad       2018-03-13 -> 2018-04-05
+    - clara          2018-03-23 -> 2018-04-02
+    - cryptopp       5.6.5-1 -> 6.1.0-2
+    - discord-rpc    3.1.0 -> 3.2.0
+    - dlib           19.10 -> 19.10-1
+    - eastl          3.08.00 -> 3.09.00
+    - exiv2          2018-03-23 -> 2018-04-05
+    - folly          2017.11.27.00-3 -> 2018.03.19.00-2
+    - forest         4.5.0 -> 7.0.1
+    - gdcm2          2.8.5 -> 2.8.6
+    - grpc           1.10.0 -> 1.10.1
+    - gtest          1.8.0-7 -> 1.8.0-8
+    - libiconv       1.15-2 -> 1.15-3
+    - libuv          1.19.2 -> 1.20.0
+    - libvpx         1.6.1-2 -> 1.7.0
+    - libxml2        2.9.4-4 -> 2.9.4-5
+    - nuklear        2018-03-23 -> 2018-04-05
+    - openimageio    1.8.9 -> 1.8.10
+    - openssl        1.0.2n-3 -> 1.0.2o-1
+    - qt5-base       5.9.2-5 -> 5.9.2-6
+    - qt5-modularscripts 2 -> 3
+    - qwt            6.1.3-4 -> 6.1.3-5
+    - recast         1.5.1 -> 1.5.1-1
+    - rocksdb        5.11.3 -> 5.12.2
+    - rs-core-lib    2018-03-17 -> 2018-04-05
+    - sciter         4.1.4 -> 4.1.5
+    - tbb            2018_U2 -> 2018_U3
+    - tesseract      3.05.01-2 -> 3.05.01-3
+    - theia          0.7-d15154a-1 -> 0.7-d15154a-3
+    - thrift         2018-03-23 -> 2018-04-05
+    - unrar          5.5.8 -> 5.5.8-1
+    - yoga           1.7.0 -> 1.7.0-1
+    - zeromq         2018-03-23 -> 2018-04-05
+  * `vcpkg.cmake`: Remove detection for Windows SDK. Let `cmake` detect it instead.
+  * Rework `vcpkgTools.xml`.
+    - `<requiredVersion>` renamed to `<version>`
+    - `<archiveRelativePath>` renamed `<archiveName>`
+    - `<sha256>` changed to `<sha512>`
+    - `<tool>` tags now specify an `os="x"` property
+    - The version of the tools list (i.e. `<tools version="1">`) is now verified by `vcpkg.exe`.
+  * Use [7zip](https://www.7-zip.org/) to extract vcpkg tools defined in `vcpkgTools.xml`.
+  * Use [aria2](https://aria2.github.io/) to download vcpkg tools defined in `vcpkgTools.xml`.
+    - The experimental flag `vcpkg install <port> --x-use-aria2` allows you to use `aria2` for other downloads as well.
+  * `vckg hash` improvements
+
+-- vcpkg team <vcpkg@microsoft.com>  FRI, 06 Apr 2018 19:30:00 -0800
+
+
+vcpkg (0.0.107)
+--------------
+  * Add ports:
+    - azmq           1.0.2
+    - azure-c-shared-utility 1.0.0-pre-release-1.0.9
+    - azure-iot-sdk-c 1.0.0-pre-release-1.0.9
+    - azure-uamqp-c  1.0.0-pre-release-1.0.9
+    - azure-uhttp-c  2018-02-09
+    - azure-umqtt-c  1.0.0-pre-release-1.0.9
+    - bitserializer  0.7
+    - caf            0.15.7
+    - fmem           c-libs-2ccee3d2fb
+    - gherkin-c      c-libs-e63e83104b
+    - librsync       2.0.2
+    - libuuid        1.0.3
+    - mpark-variant  1.3.0
+    - nanomsg        1.1.2
+    - nvml           1.3-0
+    - nvtt           2.1.0
+    - openvpn3       2018-03-21
+    - parson         2018-03-23
+    - plplot         5.13.0-1
+    - sqlite-orm     1.1
+    - tap-windows6   9.21.2-0e30f5c
+  * Update ports:
+    - abseil         2018-03-17 -> 2018-03-23
+    - alembic        1.7.6 -> 1.7.7
+    - asio           1.12.0 -> 1.12.0-1
+    - aubio          0.4.6-1 -> 0.4.6-2
+    - aws-sdk-cpp    1.3.58 -> 1.4.21
+    - catch2         2.2.1 -> 2.2.1-1
+    - ccfits         2.5-1 -> 2.5-2
+    - ceres          1.13.0-4 -> 1.14.0-1
+    - cfitsio        3.410-1 -> 3.410-2
+    - clara          2018-03-11 -> 2018-03-23
+    - cpprestsdk     2.10.2 -> 2.10.2-1
+    - discord-rpc    3.0.0 -> 3.1.0
+    - dlib           19.9-1 -> 19.10
+    - eastl          3.07.02 -> 3.08.00
+    - exiv2          2018-03-17 -> 2018-03-23
+    - ffmpeg         3.3.3-4 -> 3.3.3-5
+    - gdcm2          2.8.4 -> 2.8.5
+    - harfbuzz       1.7.6 -> 1.7.6-1
+    - hpx            1.0.0-8 -> 1.1.0-1
+    - lcm            1.3.95 -> 1.3.95-1
+    - libpq          9.6.1-1 -> 9.6.1-4
+    - libvpx         1.6.1-1 -> 1.6.1-2
+    - mpg123         1.25.8-2 -> 1.25.8-4
+    - nuklear        2018-03-17 -> 2018-03-23
+    - openssl        1.0.2n-2 -> 1.0.2n-3
+    - paho-mqtt      1.2.0-2 -> 1.2.0-3
+    - plog           1.1.3 -> 1.1.4
+    - qt5-quickcontrols 5.9.2-0 -> 5.9.2-1
+    - qt5-quickcontrols2 5.9.2-0 -> 5.9.2-1
+    - sciter         4.1.3 -> 4.1.4
+    - shapelib       1.4.1 -> 1.4.1-1
+    - signalrclient  1.0.0-beta1-2 -> 1.0.0-beta1-3
+    - soundtouch     2.0.0 -> 2.0.0-1
+    - thrift         2018-03-17 -> 2018-03-23
+    - unicorn        2018-03-13 -> 2018-03-20
+    - zeromq         2018-03-17 -> 2018-03-23
+
+-- vcpkg team <vcpkg@microsoft.com>  TUE, 27 Mar 2018 22:00:00 -0800
+
+
+vcpkg (0.0.106)
+--------------
+  * Add ports:
+    - armadillo      8.400.0-1
+    - boost-modular-build-helper 2
+    - clblas         2.12-1
+    - clfft          2.12.2
+    - entt           2.4.2-1
+    - fastcdr        1.0.6-1
+    - gamma          gamma-2018-01-27
+    - gl3w           8f7f459d
+    - graphite2      1.3.10
+    - ismrmrd        1.3.2-1
+    - kealib         1.4.7-1
+    - lcm            1.3.95
+    - libcds         2.3.2
+    - monkeys-audio  4.3.3
+    - msix           1.0
+    - nmslib         1.7.2
+    - opencl         2.2 (2017.07.18)
+    - openmesh       6.3
+    - quirc          1.0-1
+    - shogun         6.1.3
+    - x264           152-e9a5903edf8ca59
+    - x265           2.7-1
+  * Update ports:
+    - abseil         2018-2-5 -> 2018-03-17
+    - ace            6.4.6 -> 6.4.7
+    - alembic        1.7.5 -> 1.7.6
+    - args           d8905de -> 2018-02-23
+    - asio           1.10.8-1 -> 1.12.0
+    - atk            2.24.0-1 -> 2.24.0-2
+    - avro-c         1.8.2 -> 1.8.2-1
+    - azure-storage-cpp 3.0.0-4 -> 3.2.1
+    - benchmark      1.3.0 -> 1.3.0-1
+    - boost-build    1.66.0-5 -> 1.66.0-8
+    - breakpad       2018-2-19 -> 2018-03-13
+    - butteraugli    2017-09-02-8c60a2aefa19adb-1 -> 2018-02-25
+    - c-ares         1.13.0-1 -> cares-1_14_0
+    - catch-classic  1.12.0 -> 1.12.1
+    - catch2         2.1.2 -> 2.2.1
+    - cctz           2.1 -> 2.2
+    - cgal           4.11-3 -> 4.11.1
+    - chakracore     1.7.4 -> 1.8.2
+    - chmlib         0.40-1 -> 0.40-2
+    - cimg           2.1.8 -> 221
+    - clara          2017-07-20-9661f2b4a50895d52ebb4c59382785a2b416c310 -> 2018-03-11
+    - console-bridge 0.3.2-2 -> 0.3.2-3
+    - coolprop       6.1.0-2 -> 6.1.0-3
+    - cpp-redis      4.3.0 -> 4.3.1
+    - cpr            1.3.0-1 -> 1.3.0-3
+    - curl           7.58.0-1 -> 7_59_0-2
+    - devil          1.8.0-1 -> 1.8.0-2
+    - directxmesh    dec2017 -> feb2018
+    - directxtex     dec2017 -> feb2018b
+    - directxtk      dec2017 -> feb2018
+    - dirent         2017-06-23-5c7194c2fe2c68c1a8212712c0b4b6195382d27d -> 1.23.1
+    - discord-rpc    2.1.0 -> 3.0.0
+    - doctest        1.2.6 -> 1.2.8
+    - eastl          3.05.08 -> 3.07.02
+    - evpp           0.6.1-1 -> 0.7.0
+    - exiv2          8f5b795eaa4bc414d2d6041c1dbd1a7f7bf1fc99 -> 2018-03-17
+    - fdk-aac        2017-11-02-1e351 -> 2018-03-07
+    - ffmpeg         3.3.3-2 -> 3.3.3-4
+    - freetype       2.8.1-1 -> 2.8.1-3
+    - freetype-gl    2017-10-9-82fb152a74f01b1483ac80d15935fbdfaf3ed836 -> 2018-02-25
+    - freexl         1.0.4 -> 1.0.4-1
+    - g2o            20170730_git-2 -> 20170730_git-3
+    - gdal           2.2.2 -> 2.2.2-1
+    - gdcm2          2.8.3 -> 2.8.4
+    - geogram        1.4.9-1 -> 1.6.0-1
+    - gflags         2.2.1-1 -> 2.2.1-3
+    - glib           2.52.3-1 -> 2.52.3-2
+    - glslang        3a21c880500eac21cdf79bef5b80f970a55ac6af-1 -> 2018-03-02
+    - grpc           1.8.3 -> 1.10.0
+    - gsl            2.4-2 -> 2.4-3
+    - gsl-lite       0.26.0 -> 0.28.0
+    - gtest          1.8.0-6 -> 1.8.0-7
+    - halide         release_2017_10_30 -> release_2018_02_15
+    - harfbuzz       1.7.4 -> 1.7.6
+    - ilmbase        2.2.0-1 -> 2.2.1-1
+    - jansson        2.11 -> 2.11-2
+    - jsoncpp        1.8.1-1 -> 1.8.4
+    - jsonnet        2017-09-02-11cf9fa9f2fe8acbb14b096316006082564ca580 -> 2018-03-17
+    - leptonica      1.74.4-2 -> 1.74.4-3
+    - libgeotiff     1.4.2-2 -> 1.4.2-3
+    - libiconv       1.15-1 -> 1.15-2
+    - libjpeg-turbo  1.5.3 -> 1.5.3-1
+    - libmysql       5.7.17-3 -> 8.0.4-2
+    - libpng         1.6.34-2 -> 1.6.34-3
+    - librtmp        2.4 -> 2.4-1
+    - libsndfile     1.0.29-6830c42-2 -> 1.0.29-6830c42-3
+    - libsodium      1.0.15-1 -> 1.0.16-1
+    - libspatialite  4.3.0a-1 -> 4.3.0a-2
+    - libssh         0.7.5-1 -> 0.7.5-4
+    - libuv          1.18.0 -> 1.19.2
+    - libwebp        0.6.1-1 -> 0.6.1-2
+    - libwebsockets  2.4.1 -> 2.4.2
+    - libxml2        2.9.4-2 -> 2.9.4-4
+    - libzip         1.4.0 -> rel-1-5-0
+    - live555        2018.01.29 -> 2018.02.28
+    - lodepng        2017-09-01-8a0f16afe74a6a-1 -> 2018-02-25
+    - luasocket      2017.05.25.5a17f79b0301f0a1b4c7f1c73388757a7e2ed309 -> 2018-02-25
+    - lz4            1.8.1.2 -> 1.8.1.2-1
+    - magnum-extras  2018.02-1 -> 2018.02-2
+    - matio          1.5.10-2 -> 1.5.12
+    - mman           git-f5ff813 -> git-f5ff813-2
+    - ms-gsl         20171204-9d65e74400976b3509833f49b16d401600c7317d -> 2018-03-17
+    - msinttypes     2017-06-26-f9e7c5758ed9e3b9f4b2394de1881c704dd79de0 -> 2018-02-25
+    - msmpi          8.1 -> 9.0
+    - nlohmann-json  3.1.0 -> 3.1.2
+    - nuklear        2017-06-15-5c7194c2fe2c68c1a8212712c0b4b6195382d27d -> 2018-03-17
+    - ogre           1.10.9-2 -> 1.10.11
+    - opencv         3.4.0-3 -> 3.4.1
+    - openexr        2.2.0-1 -> 2.2.1-1
+    - openimageio    1.7.15-2 -> 1.8.9
+    - openjpeg       2.2.0-1 -> 2.3.0
+    - pcl            1.8.1-9 -> 1.8.1-10
+    - picosha2       2017-09-01-c5ff159b6 -> 2018-02-25
+    - piex           2017-09-01-473434f2dd974978b-1 -> 2018-03-13
+    - protobuf       3.5.1 -> 3.5.1-1
+    - qt5-modularscripts 1 -> 2
+    - re2            2017-12-01-1 -> 2018-03-17
+    - readosm        1.1.0 -> 1.1.0-1
+    - realsense2     2.10.0 -> 2.10.1
+    - rocksdb        2017-06-28-18c63af6ef2b9f014c404b88488ae52e6fead03c-1 -> 5.11.3
+    - rs-core-lib    commit-1ed2dadbda3977b13e5e83cc1f3eeca76b36ebe5 -> 2018-03-17
+    - rttr           0.9.5-1 -> 0.9.5-2
+    - scintilla      3.7.6 -> 4.0.3
+    - sdl2           2.0.7-4 -> 2.0.8-1
+    - snappy         1.1.7-1 -> 1.1.7-2
+    - spatialite-tools 4.3.0 -> 4.3.0-1
+    - spdlog         0.14.0-1 -> 0.16.3
+    - spirv-tools    2017.1-dev-7e2d26c77b606b21af839b37fd21381c4a669f23-1 -> 2018.1-1
+    - sqlite3        3.21.0 -> 3.21.0-1
+    - stb            20170724-9d9f75e -> 2018-03-02
+    - thrift         20172805-72ca60debae1d9fb35d9f0085118873669006d7f-2 -> 2018-03-17
+    - tiny-dnn       2017-10-09-dd906fed8c8aff8dc837657c42f9d55f8b793b0e -> 2018-03-13
+    - tinyxml2       6.0.0 -> 6.0.0-2
+    - torch-th       20180131-89ede3ba90c906a8ec6b9a0f4bef188ba5bb2fd8-1 -> 20180131-89ede3ba90c906a8ec6b9a0f4bef188ba5bb2fd8-2
+    - unicorn        2017-12-06-bc34c36eaeca0f4fc672015d24ce3efbcc81d6e4-1 -> 2018-03-13
+    - unicorn-lib    commit-3ffa7fe69a1d0c37fb52a4af61380c5fd84fa5aa -> 2018-03-13
+    - uwebsockets    0.14.4-1 -> 0.14.6-1
+    - wt             3.3.7-4 -> 4.0.2
+    - wtl            9.1 -> 10.0
+    - wxwidgets      3.1.0-1 -> 3.1.1
+    - yaml-cpp       0.5.4-rc-2 -> 0.6.2
+    - zeromq         20170908-18498f620f0f6d4076981ea16eb5760fe4d28dc2-2 -> 2018-03-17
+    - zziplib        0.13.62-1 -> 0.13.69
+  * Use TLS 1.2 for downloads.
+  * Tools used by `vcpkg` (`git`, `cmake` etc) are now specified in `scripts\vcpkgTools.xml`.
+    - Add `7zip`
+  * Fix various bugs regarding feature packages. Affects `install`, `upgrade` and `export`.
+  * `vcpkg hash`: Fix bug with whitespace in path.
+  * Visual Studio detection now properly identifies legacy versions (VS2015).
+  * Windows SDK detection no longer fails if certain registry keys are not in their expected places.
+  * Dependency qualifiers now support `!` for inversion.
+  * Add `VCPKG_DEFAULT_VS_PATH` environment variable.
+    - `vcpkg` automatically chooses the latest stable version of Visual Studio to use.
+    - You can now select the desired VS with the `VCPKG_DEFAULT_VS_PATH` environment variable
+    - You can also select the behavior by specifiying `VCPKG_VISUAL_STUDIO_PATH` in the triplet file (and this takes precedence over the new environment variable)
+
+-- vcpkg team <vcpkg@microsoft.com>  MON, 19 Mar 2018 19:00:00 -0800
+
+
+vcpkg (0.0.105)
+--------------
+  * Add ports:
+    - breakpad       2018-2-19
+    - cartographer   0.3.0-3
+    - chipmunk       7.0.2
+    - ebml           1.3.5-1
+    - intel-mkl      2018.0.1
+    - jbig2dec       0.13
+    - libgeotiff     1.4.2-2
+    - liblo          0.29-1
+    - libpng-apng    1.6.34-2
+    - magnum-extras  2018.02-1
+    - magnum-integration 2018.02-1
+    - matroska       1.4.8
+    - mman           git-f5ff813
+    - qt5-graphicaleffects 5.9.2-0
+    - qt5-quickcontrols 5.9.2-0
+    - qt5-quickcontrols2 5.9.2-0
+    - recast         1.5.1
+    - tinydir        1.2.3
+    - tinytoml       20180219-1
+  * Update ports:
+    - aubio          0.4.6 -> 0.4.6-1
+    - aws-sdk-cpp    1.3.15 -> 1.3.58
+    - blaze          3.2-3 -> 3.3
+    - boost-build    1.66.0-4 -> 1.66.0-5
+    - boost-mpi      1.66.0 -> 1.66.0-1
+    - catch2         2.1.1 -> 2.1.2
+    - ceres          1.13.0-2 -> 1.13.0-4
+    - corrade        jan2018-1 -> 2018.02-1
+    - cuda           8.0-1 -> 9.0
+    - draco          0.10.0-1 -> 1.2.5
+    - ffmpeg         3.3.3-1 -> 3.3.3-2
+    - folly          2017.11.27.00-2 -> 2017.11.27.00-3
+    - hpx            1.0.0-7 -> 1.0.0-8
+    - jansson        2.10-1 -> 2.11
+    - libdisasm      0.23 -> 0.23-1
+    - libmupdf       1.11-1 -> 1.12.0
+    - magnum         jan2018-1 -> 2018.02-1
+    - magnum-plugins jan2018-1 -> 2018.02-1
+    - opencv         3.4.0-2 -> 3.4.0-3
+    - openvr         1.0.12 -> 1.0.13
+    - pcre2          10.30-1 -> 10.30-2
+    - qt5-base       5.9.2-4 -> 5.9.2-5
+    - realsense2     2.9.1 -> 2.10.0
+    - sciter         4.1.2 -> 4.1.3
+    - suitesparse    4.5.5-3 -> 4.5.5-4
+    - szip           2.1.1 -> 2.1.1-1
+    - uriparser      0.8.4-1 -> 0.8.5
+  * Better handling of `feature packages`.
+  * Bump required version & auto-downloaded version of `git` to 2.6.2
+
+-- vcpkg team <vcpkg@microsoft.com>  TUE, 20 Feb 2018 18:30:00 -0800
+
+
+vcpkg (0.0.104)
+--------------
+  * Add ports:
+    - asmjit         673dcefaa048c5f5a2bf8b85daf8f7b9978d018a
+    - cccapstone     9b4128ee1153e78288a1b5433e2c06a0d47a4c4e
+    - crc32c         1.0.5
+    - epsilon        0.9.2
+    - exprtk         2018.01.01-f32d2b4
+    - forest         4.5.0
+    - libgta         1.0.8
+    - libodb-mysql   2.4.0-1
+    - libopenmpt     2017-01-28-cf2390140
+    - libudis86      2018-01-28-56ff6c87
+    - mujs           25821e6d74fab5fcc200fe5e818362e03e114428
+    - muparser       6cf2746
+    - openmama       6.2.1-a5a93a24d2f89a0def0145552c8cd4a53c69e2de
+    - torch-th       20180131-89ede3ba90c906a8ec6b9a0f4bef188ba5bb2fd8-1
+    - yara           e3439e4ead4ed5d3b75a0b46eaf15ddda2110bb9
+  * Update ports:
+    - abseil         2017-11-10 -> 2018-2-5
+    - blosc          1.12.1 -> 1.13.5
+    - boost-build    1.66.0-3 -> 1.66.0-4
+    - boost-test     1.66.0-1 -> 1.66.0-2
+    - catch          2.0.1-1 -> alias
+    - catch2         2.1.0 -> 2.1.1
+    - cgal           4.11-2 -> 4.11-3
+    - cpprestsdk     2.10.1-1 -> 2.10.2
+    - curl           7.58.0 -> 7.58.0-1
+    - dlib           19.9 -> 19.9-1
+    - flatbuffers    1.8.0 -> 1.8.0-2
+    - freeimage      3.17.0-3 -> 3.17.0-4
+    - gflags         2.2.1 -> 2.2.1-1
+    - gtest          1.8.0-5 -> 1.8.0-6
+    - highfive       1.3 -> 1.5
+    - jack2          1.9.12.2 -> 1.9.12
+    - libspatialite  4.3.0a -> 4.3.0a-1
+    - libwebp        0.6.1 -> 0.6.1-1
+    - libzip         1.3.2 -> 1.4.0
+    - live555        2017.10.28 -> 2018.01.29
+    - mpg123         1.25.8-1 -> 1.25.8-2
+    - nghttp2        1.28.0 -> 1.30.0-1
+    - nlohmann-json  3.0.1 -> 3.1.0
+    - opencv         3.4.0 -> 3.4.0-2
+    - opengl         0.0-4 -> 0.0-5
+    - openssl        1.0.2n-1 -> 1.0.2n-2
+    - openvr         1.0.9 -> 1.0.12
+    - poco           1.8.1 -> 1.8.1-1
+    - protobuf       3.5.0-1 -> 3.5.1
+    - qt5-base       5.9.2-1 -> 5.9.2-4
+    - realsense2     2.9.0 -> 2.9.1
+    - sciter         4.1.1 -> 4.1.2
+    - sobjectizer    5.5.20 -> 5.5.21
+    - soundtouch     2.0.0.2 -> 2.0.0
+    - strtk          2017.01.02-1e2960f -> 2018.01.01-5579ed1
+  * The `configure` step for `release` and `debug` now happen in parallel.
+    - This can significantly reduce build times for libraries where the `configure` step was a good chunk of the total build time. For example, the total build time for `zlib` drops from ~30sec to ~20sec.
+  * Fix a few bootstraping issues introduced in previous release (with the clean environment)
+
+-- vcpkg team <vcpkg@microsoft.com>  WED, 07 Feb 2018 20:30:00 -0800
+
+
 vcpkg (0.0.103)
 --------------
   * `vcpkg upgrade`: Fix issue with any command executing more than 10 transactions with mixed transaction types (install + remove)
 
--- vcpkg team <vcpkg@microsoft.com>  WED, 24 Jan 2017 14:30:00 -0800
+-- vcpkg team <vcpkg@microsoft.com>  WED, 24 Jan 2018 14:30:00 -0800
 
 
 vcpkg (0.0.102)

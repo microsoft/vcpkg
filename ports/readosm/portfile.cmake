@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/readosm-1.1.0)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.gaia-gis.it/gaia-sins/readosm-1.1.0.tar.gz"
+    URLS "http://www.gaia-gis.it/gaia-sins/readosm-sources/readosm-1.1.0.tar.gz"
     FILENAME "readosm-1.1.0.tar.gz"
     SHA512 d3581f564c4461c6a1a3d5fd7d18a262c884b2ac935530064bfaebd6c05d692fb92cc600fb40e87e03f7160ebf0eeeb05f51a0e257935d056b233fe28fc01a11
 )
@@ -30,34 +30,38 @@ endif()
 ################
 # Debug build
 ################
-message(STATUS "Building ${TARGET_TRIPLET}-dbg")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    message(STATUS "Building ${TARGET_TRIPLET}-dbg")
 
-file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/debug" INST_DIR_DBG)
+    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/debug" INST_DIR_DBG)
 
-vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f makefile.vc clean install
-    INST_DIR="${INST_DIR_DBG}" INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}" "LINK_FLAGS=/debug" "CL_FLAGS=${CL_FLAGS_DBG}"
-    "LIBS_ALL=${LIBS_ALL_DBG}"
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME nmake-build-${TARGET_TRIPLET}-debug
-)
-vcpkg_copy_pdbs()
-message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
+    vcpkg_execute_required_process(
+        COMMAND ${NMAKE} -f makefile.vc clean install
+        INST_DIR="${INST_DIR_DBG}" INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}" "LINK_FLAGS=/debug" "CL_FLAGS=${CL_FLAGS_DBG}"
+        "LIBS_ALL=${LIBS_ALL_DBG}"
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME nmake-build-${TARGET_TRIPLET}-debug
+    )
+    vcpkg_copy_pdbs()
+    message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
+endif()
 
 ################
 # Release build
 ################
-message(STATUS "Building ${TARGET_TRIPLET}-rel")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    message(STATUS "Building ${TARGET_TRIPLET}-rel")
 
-file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR_REL)
-vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f makefile.vc clean install
-    INST_DIR="${INST_DIR_REL}" INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}" "LINK_FLAGS=" "CL_FLAGS=${CL_FLAGS_REL}"
-    "LIBS_ALL=${LIBS_ALL_REL}"
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME nmake-build-${TARGET_TRIPLET}-release
-)
-message(STATUS "Building ${TARGET_TRIPLET}-rel done")
+    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR_REL)
+    vcpkg_execute_required_process(
+        COMMAND ${NMAKE} -f makefile.vc clean install
+        INST_DIR="${INST_DIR_REL}" INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}" "LINK_FLAGS=" "CL_FLAGS=${CL_FLAGS_REL}"
+        "LIBS_ALL=${LIBS_ALL_REL}"
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME nmake-build-${TARGET_TRIPLET}-release
+    )
+    message(STATUS "Building ${TARGET_TRIPLET}-rel done")
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/readosm RENAME copyright)
@@ -70,8 +74,12 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 else()
   file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/readosm.lib)
   file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/readosm.lib)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/lib/readosm_i.lib ${CURRENT_PACKAGES_DIR}/lib/readosm.lib)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/readosm_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/readosm.lib)
+  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/readosm_i.lib ${CURRENT_PACKAGES_DIR}/lib/readosm.lib)
+  endif()
+  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/readosm_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/readosm.lib)
+  endif()
 endif()
 
 

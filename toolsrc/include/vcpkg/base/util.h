@@ -3,10 +3,9 @@
 #include <algorithm>
 #include <map>
 #include <mutex>
+#include <unordered_map>
 #include <utility>
 #include <vector>
-
-#include <vcpkg/base/optional.h>
 
 namespace vcpkg::Util
 {
@@ -24,10 +23,21 @@ namespace vcpkg::Util
 
     namespace Sets
     {
-        template<class Container>
-        bool contains(const Container& container, const ElementT<Container>& item)
+        template<class Container, class Key>
+        bool contains(const Container& container, const Key& item)
         {
-            return container.find(item) != container.cend();
+            return container.find(item) != container.end();
+        }
+    }
+
+    namespace Maps
+    {
+        template<class K, class V1, class V2, class Func>
+        void transform_values(const std::unordered_map<K, V1>& container, std::unordered_map<K, V2>& output, Func func)
+        {
+            std::for_each(container.cbegin(), container.cend(), [&](const std::pair<const K, V1>& p) {
+                output[p.first] = func(p.second);
+            });
         }
     }
 
@@ -127,6 +137,15 @@ namespace vcpkg::Util
         std::sort(begin(cont), end(cont));
     }
 
+    template<class Range>
+    void sort_unique_erase(Range& cont)
+    {
+        using std::begin;
+        using std::end;
+        std::sort(begin(cont), end(cont));
+        cont.erase(std::unique(begin(cont), end(cont)), end(cont));
+    }
+
     template<class Range1, class Range2>
     bool all_equal(const Range1& r1, const Range2& r2)
     {
@@ -149,6 +168,8 @@ namespace vcpkg::Util
 
         MoveOnlyBase& operator=(const MoveOnlyBase&) = delete;
         MoveOnlyBase& operator=(MoveOnlyBase&&) = default;
+
+        ~MoveOnlyBase() = default;
     };
 
     struct ResourceBase
@@ -159,6 +180,8 @@ namespace vcpkg::Util
 
         ResourceBase& operator=(const ResourceBase&) = delete;
         ResourceBase& operator=(ResourceBase&&) = delete;
+
+        ~ResourceBase() = default;
     };
 
     template<class T>
@@ -204,5 +227,11 @@ namespace vcpkg::Util
         {
             return e == E::YES;
         }
+    }
+
+    template<class T>
+    void unused(T&& param)
+    {
+        (void)param;
     }
 }

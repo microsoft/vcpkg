@@ -1,5 +1,5 @@
-set(OPENEXR_VERSION 2.2.0)
-set(OPENEXR_HASH 017abbeeb6b814508180721bc8e8940094965c4c55b135a198c6bcb109a04bf7f72e4aee81ee72cb2185fe818a41d892b383e8d2d59f40c673198948cb79279a)
+set(OPENEXR_VERSION 2.2.1)
+set(OPENEXR_HASH 192100c6ac47534f3a93c55327d2ab90b07a8265156855086b326184328c257dcde12991b3f3f1831e2df4226fe884adcfe481c2f02a157c715aee665e89a480)
 
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openexr-${OPENEXR_VERSION})
@@ -10,7 +10,10 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/add-missing-export.patch)
+    PATCHES
+    "${CMAKE_CURRENT_LIST_DIR}/add-missing-export.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt.patch"
+)
 
 # Ensure helper executables can run during build
 set(ENV{PATH} "$ENV{PATH};${CURRENT_INSTALLED_DIR}/bin")
@@ -28,6 +31,9 @@ vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH}
 
 vcpkg_install_cmake()
 
+# if you need to have OpenEXR tools, edit CMakeLists.txt.patch and remove the part that disables building executables,
+# then remove the following line which deletes them and finally use vcpkg_copy_tool_dependencies() to save them
+# (may require additional patching to the OpenEXR toolchain which is really broken)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -52,3 +58,5 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/include/OpenEXR/ImfExport.h "${HEADER_FILE}")
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/openexr)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/openexr/LICENSE ${CURRENT_PACKAGES_DIR}/share/openexr/copyright)
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindOpenEXR.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/openexr)

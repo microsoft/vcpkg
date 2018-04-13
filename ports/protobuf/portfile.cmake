@@ -1,21 +1,14 @@
 include(vcpkg_common_functions)
 
-set(PROTOBUF_VERSION 3.5.0)
-set(PROTOC_VERSION 3.5.0)
+set(PROTOBUF_VERSION 3.5.1)
+set(PROTOC_VERSION 3.5.1)
 
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "https://github.com/google/protobuf/releases/download/v${PROTOBUF_VERSION}/protobuf-cpp-${PROTOBUF_VERSION}.tar.gz"
     FILENAME "protobuf-cpp-${PROTOBUF_VERSION}.tar.gz"
-    SHA512 b1d3f3617898e3f73630ea7a43416a60b970291b4f93952b8d4f68ee5cd401f752d76cd1f6a65a87186b415208142401e01ffebb2ec52534e1db31abcc0d052e
+    SHA512 195ccb210229e0a1080dcdb0a1d87b2e421ad55f6b036c56db3183bd50a942c75b4cc84e6af8a10ad88022a247781a06f609a145a461dfbb8f04051b7dd714b3
 )
-vcpkg_download_distfile(TOOL_ARCHIVE_FILE
-    URLS "https://github.com/google/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-win32.zip"
-    FILENAME "protoc-${PROTOC_VERSION}-win32.zip"
-    SHA512 d332045346883ac1ca76a77cc9d6303b1c83147f49e7525c531d390b1ac57be1c765e01dc53eeb38a0d9fa3e30cab420f6a6f52dbb0c4d0a84a421de955007a4
-)
-
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION})
-set(TOOL_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION}-win32)
 
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 
@@ -25,19 +18,29 @@ vcpkg_apply_patches(
     PATCHES
         "${CMAKE_CURRENT_LIST_DIR}/001-add-compiler-flag.patch"
         "${CMAKE_CURRENT_LIST_DIR}/export-ParseGeneratorParameter.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/js-embed.patch"
 )
 
+if(CMAKE_HOST_WIN32)
+    set(TOOL_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION}-win32)
+    vcpkg_download_distfile(TOOL_ARCHIVE_FILE
+        URLS "https://github.com/google/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-win32.zip"
+        FILENAME "protoc-${PROTOC_VERSION}-win32.zip"
+        SHA512 27b1b82e92d82c35158362435a29f590961b91f68cda21bffe46e52271340ea4587c4e3177668809af0d053b61e6efa69f0f62156ea11393cd9e6eb4474a3049
+    )
 
-vcpkg_extract_source_archive(${TOOL_ARCHIVE_FILE} ${TOOL_PATH})
+    vcpkg_extract_source_archive(${TOOL_ARCHIVE_FILE} ${TOOL_PATH})
+endif()
+
 
 # Disable the protobuf compiler when targeting UWP
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
+if(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME)
   set(protobuf_BUILD_COMPILER OFF)
 else()
   set(protobuf_BUILD_COMPILER ON)
 endif()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(protobuf_BUILD_SHARED_LIBS ON)
 else()
     set(protobuf_BUILD_SHARED_LIBS OFF)
@@ -57,6 +60,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/cmake
+    PREFER_NINJA
     OPTIONS
         -Dprotobuf_BUILD_SHARED_LIBS=${protobuf_BUILD_SHARED_LIBS}
         -Dprotobuf_MSVC_STATIC_RUNTIME=${protobuf_MSVC_STATIC_RUNTIME}
@@ -81,23 +85,39 @@ endfunction()
 
 protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(READ ${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-release.cmake RELEASE_MODULE)
-string(REPLACE "\${_IMPORT_PREFIX}/bin/protoc.exe" "\${_IMPORT_PREFIX}/tools/protoc.exe" RELEASE_MODULE "${RELEASE_MODULE}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-release.cmake "${RELEASE_MODULE}")
+if(CMAKE_HOST_WIN32)
+    set(EXECUTABLE_SUFFIX ".exe")
+else()
+    set(EXECUTABLE_SUFFIX "")
+endif()
 
-file(READ ${CURRENT_PACKAGES_DIR}/debug/share/protobuf/protobuf-targets-debug.cmake DEBUG_MODULE)
-string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" DEBUG_MODULE "${DEBUG_MODULE}")
-string(REPLACE "\${_IMPORT_PREFIX}/debug/bin/protoc.exe" "\${_IMPORT_PREFIX}/tools/protoc.exe" DEBUG_MODULE "${DEBUG_MODULE}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-debug.cmake "${DEBUG_MODULE}")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(READ ${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-release.cmake RELEASE_MODULE)
+    string(REPLACE "\${_IMPORT_PREFIX}/bin/protoc${EXECUTABLE_SUFFIX}" "\${_IMPORT_PREFIX}/tools/protoc${EXECUTABLE_SUFFIX}" RELEASE_MODULE "${RELEASE_MODULE}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-release.cmake "${RELEASE_MODULE}")
+endif()
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(READ ${CURRENT_PACKAGES_DIR}/debug/share/protobuf/protobuf-targets-debug.cmake DEBUG_MODULE)
+    string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" DEBUG_MODULE "${DEBUG_MODULE}")
+    string(REPLACE "\${_IMPORT_PREFIX}/debug/bin/protoc${EXECUTABLE_SUFFIX}" "\${_IMPORT_PREFIX}/tools/protoc${EXECUTABLE_SUFFIX}" DEBUG_MODULE "${DEBUG_MODULE}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-debug.cmake "${DEBUG_MODULE}")
+endif()
 
 protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/share)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin)
-    protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/bin)
+if(CMAKE_HOST_WIN32)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin)
+        protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/bin)
+    else()
+        protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin/protoc.exe)
+        protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/bin/protoc.exe)
+    endif()
 else()
-    protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin/protoc.exe)
-    protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/bin/protoc.exe)
+    protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/protoc DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+    protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -107,5 +127,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/protobuf RENAME copyright)
-file(INSTALL ${TOOL_PATH}/bin/protoc.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+if(CMAKE_HOST_WIN32)
+    file(INSTALL ${TOOL_PATH}/bin/protoc.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
+endif()
 vcpkg_copy_pdbs()

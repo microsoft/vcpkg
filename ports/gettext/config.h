@@ -1,6 +1,12 @@
 /* config.h.  Generated from config.h.in by configure.  */
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+#ifndef WIN32
+# define _GL_INLINE_HEADER_BEGIN
+# define _GL_INLINE_HEADER_END
+# define _GL_INLINE static inline
+#endif
+
 /* Disable function deprecated warnings */
 #define _CRT_NONSTDC_NO_WARNINGS
 
@@ -471,7 +477,9 @@
 
 /* Define as the maximum value of type 'size_t', if the system doesn't define
    it. */
+#if defined(_WIN32)
 #define SIZE_MAX (((1UL << 31) - 1) * 2 + 1)
+#endif
 
 /* Define to l, ll, u, ul, ull, etc., as suitable for constants of type
    'size_t'. */
@@ -607,7 +615,7 @@
 /* Define as a signed type of the same size as size_t. */
 #ifdef _WIN64
 #define ssize_t __int64
-#else
+#elif _WIN32
 #define ssize_t __int32
 #endif
 
@@ -618,7 +626,7 @@
    <inttypes.h> don't define. */
 #ifdef _WIN64
 #define uintmax_t unsigned __int64
-#else
+#elif _WIN32
 #define uintmax_t unsigned __int32
 #endif
 

@@ -1,0 +1,1 @@
+add_custom_target(LIBS)

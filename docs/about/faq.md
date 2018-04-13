@@ -72,6 +72,10 @@ A lower level mechanism to achieve the same as the `vcpkg integrate project` NuG
 <Import Project="<vcpkg_root>\scripts\buildsystems\msbuild\vcpkg.targets" />
 ```
 
+## How can I remove temporary files?
+
+You can save some disk space by completely removing the `packages\`, `buildtrees\`, and `downloads\` folders.
+
 ## How is CMake used internally by Vcpkg?
 Vcpkg uses CMake internally as a build scripting language. This is because CMake is already an extremely common build system for cross-platform open source libraries and is becoming very popular for C++ projects in general. It is easy to acquire on Windows, does not require system-wide installation, and legible for unfamiliar users.
 

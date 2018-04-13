@@ -29,6 +29,9 @@ namespace vcpkg
 
     std::string to_string(const Dependency& dep);
 
+    /// <summary>
+    /// Port metadata of additional feature in a package (part of CONTROL file)
+    /// </summary>
     struct FeatureParagraph
     {
         std::string name;
@@ -37,7 +40,7 @@ namespace vcpkg
     };
 
     /// <summary>
-    /// Port metadata (CONTROL file)
+    /// Port metadata of the core feature of a package (part of CONTROL file)
     /// </summary>
     struct SourceParagraph
     {
@@ -49,6 +52,10 @@ namespace vcpkg
         std::vector<Dependency> depends;
         std::vector<std::string> default_features;
     };
+
+    /// <summary>
+    /// Full metadata of a package: core and other features.
+    /// </summary>
     struct SourceControlFile
     {
         static Parse::ParseExpected<SourceControlFile> parse_control_file(
@@ -56,6 +63,8 @@ namespace vcpkg
 
         std::unique_ptr<SourceParagraph> core_paragraph;
         std::vector<std::unique_ptr<FeatureParagraph>> feature_paragraphs;
+
+        Optional<const FeatureParagraph&> find_feature(const std::string& featurename) const;
     };
 
     void print_error_message(Span<const std::unique_ptr<Parse::ParseControlErrorInfo>> error_info_list);

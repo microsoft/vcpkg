@@ -141,11 +141,11 @@ namespace vcpkg::Commands::Upgrade
 
         Checks::check_exit(VCPKG_LINE_INFO, !plan.empty());
 
-        const Build::BuildPackageOptions install_plan_options = {
-            Build::UseHeadVersion::NO,
-            Build::AllowDownloads::YES,
-            Build::CleanBuildtrees::NO,
-        };
+        const Build::BuildPackageOptions install_plan_options = {Build::UseHeadVersion::NO,
+                                                                 Build::AllowDownloads::YES,
+                                                                 Build::CleanBuildtrees::NO,
+                                                                 Build::CleanPackages::NO,
+                                                                 Build::DownloadTool::BUILT_IN};
 
         // Set build settings for all install actions
         for (auto&& action : plan)

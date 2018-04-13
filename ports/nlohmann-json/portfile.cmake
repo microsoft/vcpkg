@@ -1,17 +1,17 @@
 include(vcpkg_common_functions)
 
-set(SOURCE_VERSION 3.0.1)
+set(SOURCE_VERSION 3.1.2)
 
 vcpkg_download_distfile(HEADER
     URLS "https://github.com/nlohmann/json/releases/download/v${SOURCE_VERSION}/json.hpp"
     FILENAME "nlohmann-json-${SOURCE_VERSION}.hpp"
-    SHA512 95c0f0ca2e0eddfa462e732055ac6ede208929120bbe5c5d6e1035a7263900590bfeaddcbc4e1043aaa9255906cb0f038af64abf9a8da9fc98a7dc61356e2fef
+    SHA512 05df0ad3338f0bca885c0aa9da523922b99016986a9b01426b13888c0febd83bf1f6f063886f6c75f8a656ef79abac6292fe442dc05b1897d546ba5b70be48a5
 )
 
 vcpkg_download_distfile(LICENSE
     URLS "https://github.com/nlohmann/json/raw/v${SOURCE_VERSION}/LICENSE.MIT"
     FILENAME "nlohmann-json-LICENSE-${SOURCE_VERSION}.txt"
-    SHA512 629ac4ed0128af8750ddaefb86b01e52243457020b54e3c38a1a772dbbc1598442a45ab9a0537bd47e35eafa73df0a9d1f1ebe235f339dcd2df1083219ded2d1
+    SHA512 0fdb404547467f4523579acde53066badf458504d33edbb6e39df0ae145ed27d48a720189a60c225c0aab05f2aa4ce4050dcb241b56dc693f7ee9f54c8728a75
 )
 
 file(INSTALL ${HEADER} DESTINATION ${CURRENT_PACKAGES_DIR}/include/nlohmann RENAME json.hpp)

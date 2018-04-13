@@ -1,26 +1,18 @@
 include(vcpkg_common_functions)
 
-set(LUASOCKET_VERSION 2017.05.25.5a17f79b0301f0a1b4c7f1c73388757a7e2ed309)
-set(LUASOCKET_REVISION 5a17f79b0301f0a1b4c7f1c73388757a7e2ed309)
-set(LUASOCKET_HASH 82a827956d992c7d67a3e9aed18db0cdce34f32e5b49c44976c1d19cb96ff1c10121abb2130d306cf51125fdc5eb3be0cc491a3862e5a8fde3d944ba3b4a94b7)
-
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/luasocket-${LUASOCKET_VERSION})
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO diegonehab/luasocket
-    REF ${LUASOCKET_REVISION}
-    SHA512 ${LUASOCKET_HASH}
+    REF 652959890943c34d7180cae372339b91e62f0d7b
+    SHA512 8666e3dec0a3a0429e59a66c79b167f88b05a2a0b2c7f5456754cb5c505bcf8c39c4d358880a2f78a488ad07bee4e6e5b9a6a63c2affcee788091dee15ed2f6a
     HEAD_REF master)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH})
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS)
+)
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
