@@ -116,7 +116,7 @@ function(vcpkg_find_acquire_program VAR)
     if(CMAKE_HOST_WIN32)
       set(PATHS "${DOWNLOADS}/tools/ninja/${SUBDIR}")
     else()
-      set(PATHS "${DOWNLOADS}/tools/${SUBDIR}")
+      set(PATHS "${DOWNLOADS}/tools/${SUBDIR}-linux")
     endif()
     set(BREW_PACKAGE_NAME "ninja")
     set(APT_PACKAGE_NAME "ninja-build")
@@ -218,19 +218,20 @@ function(vcpkg_find_acquire_program VAR)
         FILENAME ${ARCHIVE}
     )
 
-    file(MAKE_DIRECTORY ${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR})
+    set(PROG_PATH_SUBDIR "${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR}")
+    file(MAKE_DIRECTORY ${PROG_PATH_SUBDIR})
     if(DEFINED NOEXTRACT)
       if(DEFINED _vfa_RENAME)
-        file(INSTALL ${ARCHIVE_PATH} DESTINATION ${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR} RENAME ${_vfa_RENAME})
+        file(INSTALL ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR} RENAME ${_vfa_RENAME})
       else()
-        file(COPY ${ARCHIVE_PATH} DESTINATION ${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR})
+        file(COPY ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR})
       endif()
     else()
       get_filename_component(ARCHIVE_EXTENSION ${ARCHIVE} EXT)
       string(TOLOWER "${ARCHIVE_EXTENSION}" ARCHIVE_EXTENSION)
       if(ARCHIVE_EXTENSION STREQUAL ".msi")
         file(TO_NATIVE_PATH "${ARCHIVE_PATH}" ARCHIVE_NATIVE_PATH)
-        file(TO_NATIVE_PATH "${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR}" DESTINATION_NATIVE_PATH)
+        file(TO_NATIVE_PATH "${PROG_PATH_SUBDIR}" DESTINATION_NATIVE_PATH)
         execute_process(
           COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
           WORKING_DIRECTORY ${DOWNLOADS}
@@ -238,7 +239,7 @@ function(vcpkg_find_acquire_program VAR)
       else()
         execute_process(
           COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
-          WORKING_DIRECTORY ${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR}
+          WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
         )
       endif()
     endif()

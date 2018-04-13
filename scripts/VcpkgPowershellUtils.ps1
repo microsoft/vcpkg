@@ -84,22 +84,22 @@ function vcpkgGetCredentials()
     }
 }
 
-function vcpkgGetSHA256([Parameter(Mandatory=$true)][string]$filePath)
+function vcpkgGetSHA512([Parameter(Mandatory=$true)][string]$filePath)
 {
     if (vcpkgHasCommand -commandName 'Microsoft.PowerShell.Utility\Get-FileHash')
     {
         Write-Verbose("Hashing with Microsoft.PowerShell.Utility\Get-FileHash")
-        $hash = (Microsoft.PowerShell.Utility\Get-FileHash -Path $filePath -Algorithm SHA256).Hash
+        $hash = (Microsoft.PowerShell.Utility\Get-FileHash -Path $filePath -Algorithm SHA512).Hash
     }
     elseif(vcpkgHasCommand -commandName 'Pscx\Get-Hash')
     {
         Write-Verbose("Hashing with Pscx\Get-Hash")
-        $hash = (Pscx\Get-Hash -Path $filePath -Algorithm SHA256).HashString
+        $hash = (Pscx\Get-Hash -Path $filePath -Algorithm SHA512).HashString
     }
     else
     {
         Write-Verbose("Hashing with .NET")
-        $hashAlgorithm = [Security.Cryptography.HashAlgorithm]::Create("SHA256")
+        $hashAlgorithm = [Security.Cryptography.HashAlgorithm]::Create("SHA512")
         $fileAsByteArray = [io.File]::ReadAllBytes($filePath)
         $hashByteArray = $hashAlgorithm.ComputeHash($fileAsByteArray)
         $hash = -Join ($hashByteArray | ForEach-Object {"{0:x2}" -f $_})
@@ -108,28 +108,26 @@ function vcpkgGetSHA256([Parameter(Mandatory=$true)][string]$filePath)
     return $hash.ToLower()
 }
 
-function vcpkgCheckEqualFileHash(   [Parameter(Mandatory=$true)][string]$filePath,
-                                    [Parameter(Mandatory=$true)][string]$expectedHash,
-                                    [Parameter(Mandatory=$true)][string]$actualHash)
+function vcpkgCheckEqualFileHash(   [Parameter(Mandatory=$true)][string]$url,
+                                    [Parameter(Mandatory=$true)][string]$filePath,
+                                    [Parameter(Mandatory=$true)][string]$expectedHash)
 {
+    $actualHash = vcpkgGetSHA512 $filePath
     if ($expectedHash -ne $actualHash)
     {
         Write-Host ("`nFile does not have expected hash:`n" +
+        "              url: [ $url ]`n" +
         "        File path: [ $filePath ]`n" +
         "    Expected hash: [ $expectedHash ]`n" +
         "      Actual hash: [ $actualHash ]`n")
-        throw "Invalid Hash for file $filePath"
+        throw
     }
 }
 
 function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
-                            [Parameter(Mandatory=$true)][string]$downloadPath)
+                            [Parameter(Mandatory=$true)][string]$downloadPath,
+                            [Parameter(Mandatory=$true)][string]$sha512)
 {
-    if (Test-Path $downloadPath)
-    {
-        return
-    }
-
     if ($url -match "github")
     {
         if ([System.Enum]::IsDefined([Net.SecurityProtocolType], "Tls12"))
@@ -157,20 +155,64 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
     }
 
     $wc.DownloadFile($url, $downloadPartPath)
+    vcpkgCheckEqualFileHash -url $url -filePath $downloadPartPath -expectedHash $sha512
     Move-Item -Path $downloadPartPath -Destination $downloadPath
 }
 
-function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$archivePath,
-                            [Parameter(Mandatory=$true)][string]$destinationDir,
-                            [Parameter(Mandatory=$true)][string]$outFilename)
+function vcpkgDownloadFileWithAria2(    [Parameter(Mandatory=$true)][string]$aria2exe,
+                                        [Parameter(Mandatory=$true)][string]$url,
+                                        [Parameter(Mandatory=$true)][string]$downloadPath,
+                                        [Parameter(Mandatory=$true)][string]$sha512)
 {
-    vcpkgCreateDirectoryIfNotExists $destinationDir
-    $output = "$destinationDir\$outFilename"
-    vcpkgRemoveItem $output
-    $destinationPartial = "$destinationDir\partially-extracted"
+    vcpkgCreateParentDirectoryIfNotExists $downloadPath
+    $downloadPartPath = "$downloadPath.part"
+    vcpkgRemoveItem $downloadPartPath
 
+    $parentDir = split-path -parent $downloadPath
+    $filename = split-path -leaf $downloadPath
+
+    if ((Test-Path $url) -or ($url.StartsWith("file://"))) # if is local file
+    {
+        vcpkgDownloadFile $url $downloadPath $sha512
+        return
+    }
+
+    $ec = vcpkgInvokeCommand "$aria2exe" "--dir `"$parentDir`" --out `"$filename.part`" $url"
+    if ($ec -ne 0)
+    {
+        Write-Host "Could not download $url"
+        throw
+    }
+
+    vcpkgCheckEqualFileHash -url $url -filePath $downloadPartPath -expectedHash $sha512
+    Move-Item -Path $downloadPartPath -Destination $downloadPath
+}
+
+function vcpkgExtractFileWith7z([Parameter(Mandatory=$true)][string]$sevenZipExe,
+                                [Parameter(Mandatory=$true)][string]$archivePath,
+                                [Parameter(Mandatory=$true)][string]$destinationDir)
+{
+    vcpkgRemoveItem $destinationDir
+    $destinationPartial = "$destinationDir.partial"
     vcpkgRemoveItem $destinationPartial
     vcpkgCreateDirectoryIfNotExists $destinationPartial
+    $ec = vcpkgInvokeCommand "$sevenZipExe" "x `"$archivePath`" -o`"$destinationPartial`" -y"
+    if ($ec -ne 0)
+    {
+        Write-Host "Could not extract $archivePath"
+        throw
+    }
+    Rename-Item -Path "$destinationPartial" -NewName $destinationDir
+}
+
+function vcpkgExtractZipFile(  [Parameter(Mandatory=$true)][string]$archivePath,
+                               [Parameter(Mandatory=$true)][string]$destinationDir)
+{
+    vcpkgRemoveItem $destinationDir
+    $destinationPartial = "$destinationDir.partial"
+    vcpkgRemoveItem $destinationPartial
+    vcpkgCreateDirectoryIfNotExists $destinationPartial
+
 
     if (vcpkgHasCommand -commandName 'Microsoft.PowerShell.Archive\Expand-Archive')
     {
@@ -194,20 +236,7 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$archivePath,
         }
     }
 
-    $items = @(Get-ChildItem "$destinationPartial")
-    $itemCount = $items.Count
-
-    if ($itemCount -eq 1)
-    {
-        $item =  $items | Select-Object -first 1
-        Write-Host "$item"
-        Move-Item -Path "$destinationPartial\$item" -Destination $output
-        vcpkgRemoveItem $destinationPartial
-    }
-    else
-    {
-        Move-Item -Path "$destinationPartial" -Destination $output
-    }
+    Rename-Item -Path "$destinationPartial" -NewName $destinationDir
 }
 
 function vcpkgInvokeCommand()

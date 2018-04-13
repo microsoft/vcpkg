@@ -5,7 +5,7 @@
 #include <vcpkg/globalstate.h>
 #include <vcpkg/metrics.h>
 
-#include <time.h>
+#include <ctime>
 
 #if defined(__APPLE__)
 #include <mach-o/dyld.h>
@@ -23,7 +23,7 @@ namespace vcpkg::System
     {
         using std::chrono::system_clock;
         std::time_t now_time = system_clock::to_time_t(system_clock::now());
-        tm parts;
+        tm parts{};
 #if defined(_WIN32)
         localtime_s(&parts, &now_time);
 #else
@@ -158,7 +158,7 @@ namespace vcpkg::System
 #if defined(_WIN32)
         static const std::string SYSTEM_ROOT = get_environment_variable("SystemRoot").value_or_exit(VCPKG_LINE_INFO);
         static const std::string SYSTEM_32 = SYSTEM_ROOT + R"(\system32)";
-        std::string NEW_PATH = Strings::format(
+        std::string new_path = Strings::format(
             R"(Path=%s;%s;%s\Wbem;%s\WindowsPowerShell\v1.0\)", SYSTEM_32, SYSTEM_ROOT, SYSTEM_32, SYSTEM_32);
 
         std::vector<std::wstring> env_wstrings = {
@@ -214,7 +214,7 @@ namespace vcpkg::System
 
         for (auto&& env_wstring : env_wstrings)
         {
-            const Optional<std::string> value = System::get_environment_variable(Strings::to_utf8(env_wstring));
+            const Optional<std::string> value = System::get_environment_variable(Strings::to_utf8(env_wstring.c_str()));
             const auto v = value.get();
             if (!v || v->empty()) continue;
 
@@ -225,13 +225,13 @@ namespace vcpkg::System
         }
 
         if (extra_env.find("PATH") != extra_env.end())
-            NEW_PATH += Strings::format(";%s", extra_env.find("PATH")->second);
-        env_cstr.append(Strings::to_utf16(NEW_PATH));
+            new_path += Strings::format(";%s", extra_env.find("PATH")->second);
+        env_cstr.append(Strings::to_utf16(new_path));
         env_cstr.push_back(L'\0');
         env_cstr.append(L"VSLANG=1033");
         env_cstr.push_back(L'\0');
 
-        for (auto item : extra_env)
+        for (const auto& item : extra_env)
         {
             if (item.first == "PATH") continue;
             env_cstr.append(Strings::to_utf16(item.first));
@@ -298,17 +298,6 @@ namespace vcpkg::System
         return exit_code;
     }
 
-    // On Win7, output from powershell calls contain a byte order mark, so we strip it out if it is present
-    static void remove_byte_order_marks(std::wstring* s)
-    {
-        const wchar_t* a = s->c_str();
-        // This is the UTF-8 byte-order mark
-        while (s->size() >= 3 && a[0] == 0xEF && a[1] == 0xBB && a[2] == 0xBF)
-        {
-            s->erase(0, 3);
-        }
-    }
-
     ExitCodeAndOutput cmd_execute_and_capture_output(const CStringView cmd_line)
     {
         // Flush stdout before launching external process
@@ -325,7 +314,7 @@ namespace vcpkg::System
         const auto pipe = _wpopen(Strings::to_utf16(actual_cmd_line).c_str(), L"r");
         if (pipe == nullptr)
         {
-            return {1, Strings::to_utf8(output)};
+            return {1, Strings::to_utf8(output.c_str())};
         }
         while (fgetws(buf, 1024, pipe))
         {
@@ -333,15 +322,22 @@ namespace vcpkg::System
         }
         if (!feof(pipe))
         {
-            return {1, Strings::to_utf8(output)};
+            return {1, Strings::to_utf8(output.c_str())};
         }
 
         const auto ec = _pclose(pipe);
-        remove_byte_order_marks(&output);
 
-        Debug::println("_pclose() returned %d after %8d us", ec, (int)timer.microseconds());
+        // On Win7, output from powershell calls contain a utf-8 byte order mark in the utf-16 stream, so we strip it
+        // out if it is present. 0xEF,0xBB,0xBF is the UTF-8 byte-order mark
+        const wchar_t* a = output.c_str();
+        while (output.size() >= 3 && a[0] == 0xEF && a[1] == 0xBB && a[2] == 0xBF)
+        {
+            output.erase(0, 3);
+        }
 
-        return {ec, Strings::to_utf8(output)};
+        Debug::println("_pclose() returned %d after %8d us", ec, static_cast<int>(timer.microseconds()));
+
+        return {ec, Strings::to_utf8(output.c_str())};
 #else
         const auto actual_cmd_line = Strings::format(R"###(%s 2>&1)###", cmd_line);
 
@@ -481,7 +477,7 @@ namespace vcpkg::System
         const auto sz2 = GetEnvironmentVariableW(w_varname.c_str(), ret.data(), static_cast<DWORD>(ret.size()));
         Checks::check_exit(VCPKG_LINE_INFO, sz2 + 1 == sz);
         ret.pop_back();
-        return Strings::to_utf8(ret);
+        return Strings::to_utf8(ret.c_str());
 #else
         auto v = getenv(varname.c_str());
         if (!v) return nullopt;
@@ -522,7 +518,7 @@ namespace vcpkg::System
             return nullopt;
 
         ret.pop_back(); // remove extra trailing null byte
-        return Strings::to_utf8(ret);
+        return Strings::to_utf8(ret.c_str());
     }
 #else
     Optional<std::string> get_registry_string(void* base_hkey, const CStringView sub_key, const CStringView valuename)

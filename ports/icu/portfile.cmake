@@ -1,15 +1,31 @@
+# Common Ambient Variables:
+#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
+#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
+#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
+#   PORT                      = current port name (zlib, etc)
+#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
+#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
+#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
+#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
+#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
+#
 if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     message(FATAL_ERROR "Error: UWP builds are currently not supported.")
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/icu-59.1/icu)
-set(ICU_VERSION 59)
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://download.icu-project.org/files/icu4c/59.1/icu4c-59_1-src.zip"
-    FILENAME "icu4c-59_1-src.zip"
-    SHA512 1d3b39678e7cc4e9794e724982886a4918642231048eb76b9f683aad5a19e0b7c52b3b9c7107cb1a3879464682c4a3a97b58ab012d082bd9e5a80c67adf8ce8b)
-vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src/icu-59.1)
+set(VERSION 61.1)
+set(VERSION2 61_1)
+set(ICU_VERSION_MAJOR 61)
+
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/icu-${VERSION}/icu)
+vcpkg_download_distfile(
+	ARCHIVE
+    URLS "http://download.icu-project.org/files/icu4c/${VERSION}/icu4c-${VERSION2}-src.zip"
+    FILENAME "icu4c-${VERSION2}-src.zip"
+    SHA512 60fed25976b8c2fe2df0b0ab745ded24da237711ec8c1e1dbdfe6eaf2014fb6b3a4bcaa488174cf770737a1c159a2d3f48a86a139cbb277163f064e607b8928f
+	)
+vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src/icu-${VERSION})
 
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/disable-escapestr-tool.patch)
@@ -109,8 +125,8 @@ file(REMOVE ${TEST_LIBS})
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     # copy icu dlls from lib to bin
-    file(GLOB RELEASE_DLLS ${CURRENT_PACKAGES_DIR}/lib/icu*${ICU_VERSION}.dll)
-    file(GLOB DEBUG_DLLS ${CURRENT_PACKAGES_DIR}/debug/lib/icu*d${ICU_VERSION}.dll)
+    file(GLOB RELEASE_DLLS ${CURRENT_PACKAGES_DIR}/lib/icu*${ICU_VERSION_MAJOR}.dll)
+    file(GLOB DEBUG_DLLS ${CURRENT_PACKAGES_DIR}/debug/lib/icu*d${ICU_VERSION_MAJOR}.dll)
     file(COPY ${RELEASE_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(COPY ${DEBUG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 else()
@@ -139,5 +155,6 @@ endif()
 # This is expected because ICU database contains no executable code
 vcpkg_copy_pdbs()
 
+# Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/icu)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/icu/LICENSE ${CURRENT_PACKAGES_DIR}/share/icu/copyright)

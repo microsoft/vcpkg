@@ -5,7 +5,7 @@ namespace vcpkg
 {
     struct VersionT
     {
-        VersionT();
+        VersionT() noexcept;
         VersionT(std::string&& value);
         VersionT(const std::string& value);
 
@@ -23,7 +23,7 @@ namespace vcpkg
         VersionT left;
         VersionT right;
 
-        VersionDiff();
+        VersionDiff() noexcept;
         VersionDiff(const VersionT& left, const VersionT& right);
 
         std::string to_string() const;

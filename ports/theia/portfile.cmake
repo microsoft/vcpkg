@@ -3,6 +3,10 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 
+if(VCPKG_TARGET_ARCHIECTURE STREQUAL "x86")
+    message(FATAL_ERROR "theia requires ceres[suitesparse] which depends on suitesparse which depends on openblas which is unavailable on x86.")
+endif()
+
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
