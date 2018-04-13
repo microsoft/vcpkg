@@ -291,7 +291,7 @@ namespace vcpkg::Export::IFW
         std::error_code ec;
         Files::Filesystem& fs = paths.get_filesystem();
 
-        const fs::path& installerbase_exe = paths.get_ifw_installerbase_exe();
+        const fs::path& installerbase_exe = paths.get_tool_exe(Tools::IFW_INSTALLER_BASE);
         fs::path tempmaintenancetool = ifw_packages_dir_path / "maintenance" / "data" / "tempmaintenancetool.exe";
         fs.create_directories(tempmaintenancetool.parent_path(), ec);
         Checks::check_exit(VCPKG_LINE_INFO,
@@ -335,7 +335,7 @@ namespace vcpkg::Export::IFW
 
     void do_repository(const std::string& export_id, const Options& ifw_options, const VcpkgPaths& paths)
     {
-        const fs::path& repogen_exe = paths.get_ifw_repogen_exe();
+        const fs::path& repogen_exe = paths.get_tool_exe(Tools::IFW_REPOGEN);
         const fs::path packages_dir = get_packages_dir_path(export_id, ifw_options, paths);
         const fs::path repository_dir = get_repository_dir_path(export_id, ifw_options, paths);
 
@@ -361,7 +361,7 @@ namespace vcpkg::Export::IFW
 
     void do_installer(const std::string& export_id, const Options& ifw_options, const VcpkgPaths& paths)
     {
-        const fs::path& binarycreator_exe = paths.get_ifw_binarycreator_exe();
+        const fs::path& binarycreator_exe = paths.get_tool_exe(Tools::IFW_BINARYCREATOR);
         const fs::path config_file = get_config_file_path(export_id, ifw_options, paths);
         const fs::path packages_dir = get_packages_dir_path(export_id, ifw_options, paths);
         const fs::path repository_dir = get_repository_dir_path(export_id, ifw_options, paths);

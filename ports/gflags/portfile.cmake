@@ -14,7 +14,8 @@ vcpkg_from_github(
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/revert-fix-install.patch"
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/0001-patch-dir.patch # gflags was estimating a wrong relative path between the gflags-config.cmake file and the include path; "../.." goes from share/gflags/ to the triplet root
 )
 
 vcpkg_configure_cmake(
@@ -24,10 +25,15 @@ vcpkg_configure_cmake(
         -DGFLAGS_REGISTER_BUILD_DIR:BOOL=OFF
         -DGFLAGS_REGISTER_INSTALL_PREFIX:BOOL=OFF
         -DBUILD_gflags_nothreads_LIB:BOOL=OFF
+        -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/gflags)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)

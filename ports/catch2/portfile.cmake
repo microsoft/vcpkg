@@ -1,18 +1,30 @@
 include(vcpkg_common_functions)
 
-set(CATCH_VERSION v2.1.2)
-
-vcpkg_download_distfile(HEADER
-    URLS "https://github.com/catchorg/Catch2/releases/download/${CATCH_VERSION}/catch.hpp"
-    FILENAME "catchorg-catch2-${CATCH_VERSION}.hpp"
-    SHA512 4d6b26aff890fd543c05a780f777df6a3ac609d67d7bc6888377c7e18b7d8d371f12725a5ff03ce5c3fac05730e8b7116164c7173a04eb56ca38c2f3e3cbb9a6
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO catchorg/Catch2
+    REF v2.2.2
+    SHA512 ab91036c6c3ace087d0382ce99f26b2c30a4b75d52f285619ca282a618470fe388afe47495f3b2764268d600c6834c60ba464483d06f3a1c4316c099477c8e38
+    HEAD_REF master
 )
 
-vcpkg_download_distfile(LICENSE
-    URLS "https://raw.githubusercontent.com/catchorg/Catch2/${CATCH_VERSION}/LICENSE.txt"
-    FILENAME "catchorg-catch2-LICENSE-${CATCH_VERSION}.txt"
-    SHA512 d6078467835dba8932314c1c1e945569a64b065474d7aced27c9a7acc391d52e9f234138ed9f1aa9cd576f25f12f557e0b733c14891d42c16ecdc4a7bd4d60b8
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DBUILD_TESTING=OFF
+        -DCATCH_BUILD_EXAMPLES=OFF
 )
 
-file(INSTALL ${HEADER} DESTINATION ${CURRENT_PACKAGES_DIR}/include RENAME catch.hpp)
-file(INSTALL ${LICENSE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/catch2 RENAME copyright)
+vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Catch2 TARGET_PATH share/catch2)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
+
+if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/include/catch/catch.hpp)
+    message(FATAL_ERROR "Main includes have moved. Please update the forwarder.")
+endif()
+
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/catch.hpp "#include <catch/catch.hpp>")
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/catch2 RENAME copyright)

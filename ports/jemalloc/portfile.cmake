@@ -20,6 +20,7 @@ vcpkg_apply_patches(
 )
 
 vcpkg_configure_cmake(
+    DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS -DGIT_FOUND=OFF -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON

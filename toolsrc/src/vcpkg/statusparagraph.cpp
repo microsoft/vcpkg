@@ -12,7 +12,7 @@ namespace vcpkg
         static const std::string STATUS = "Status";
     }
 
-    StatusParagraph::StatusParagraph() : want(Want::ERROR_STATE), state(InstallState::ERROR_STATE) {}
+    StatusParagraph::StatusParagraph() noexcept : want(Want::ERROR_STATE), state(InstallState::ERROR_STATE) {}
 
     void serialize(const StatusParagraph& pgh, std::string& out_str)
     {
@@ -25,6 +25,7 @@ namespace vcpkg
     }
 
     StatusParagraph::StatusParagraph(std::unordered_map<std::string, std::string>&& fields)
+        : want(Want::ERROR_STATE), state(InstallState::ERROR_STATE)
     {
         auto status_it = fields.find(BinaryParagraphRequiredField::STATUS);
         Checks::check_exit(VCPKG_LINE_INFO, status_it != fields.end(), "Expected 'Status' field in status paragraph");
@@ -86,13 +87,42 @@ namespace vcpkg
     }
     std::vector<PackageSpec> InstalledPackageView::dependencies() const
     {
+        // accumulate all features in installed dependencies
+        // Todo: make this unneeded by collapsing all package dependencies into the core package
         auto deps = Util::fmap_flatten(features, [](const StatusParagraph* pgh) -> std::vector<std::string> const& {
             return pgh->package.depends;
         });
 
+        // Add the core paragraph dependencies to the list
         deps.insert(deps.end(), core->package.depends.begin(), core->package.depends.end());
 
-        auto&& spec = core->package.spec;
-        return PackageSpec::from_dependencies_of_port(spec.name(), deps, spec.triplet());
+        auto&& l_spec = spec();
+
+        // <hack>
+        // This is a hack to work around existing installations that put featurespecs into binary packages
+        // (example: curl[core])
+        for (auto&& dep : deps)
+        {
+            dep.erase(std::find(dep.begin(), dep.end(), '['), dep.end());
+        }
+        Util::unstable_keep_if(deps, [&](auto&& e) { return e != l_spec.name(); });
+        // </hack>
+        Util::sort_unique_erase(deps);
+
+        return Util::fmap(deps, [&](const std::string& dep) -> PackageSpec {
+            auto maybe_dependency_spec = PackageSpec::from_name_and_triplet(dep, l_spec.triplet());
+            if (auto dependency_spec = maybe_dependency_spec.get())
+            {
+                return std::move(*dependency_spec);
+            }
+
+            const PackageSpecParseResult error_type = maybe_dependency_spec.error();
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "Invalid dependency [%s] in package [%s]\n"
+                                      "%s",
+                                      dep,
+                                      l_spec.name(),
+                                      vcpkg::to_string(error_type));
+        });
     }
 }

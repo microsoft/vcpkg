@@ -1,0 +1,13 @@
+diff --git a/ogr/ogrsf_frmts/mysql/ogr_mysql.h b/ogr/ogrsf_frmts/mysql/ogr_mysql.h
+index 76a6762..b2f0fcb 100644
+--- a/ogr/ogrsf_frmts/mysql/ogr_mysql.h
++++ b/ogr/ogrsf_frmts/mysql/ogr_mysql.h
+@@ -43,7 +43,7 @@
+ #pragma warning( disable : 4211 ) /* nonstandard extension used : redefined extern to static */
+ #endif
+ 
+-#include <my_global.h>
++/* #include <my_global.h> */ /* Mysql 8+ no longer ships with my_global.h */
+ #include <mysql.h>
+ 
+ #ifdef _MSC_VER

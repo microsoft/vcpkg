@@ -15,6 +15,7 @@ vcpkg_from_github(
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-Enable-C-11-features-for-VS2015-fix-appveyor-fail.patch
+            ${CMAKE_CURRENT_LIST_DIR}/0002-Fix-z7-override.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" GTEST_FORCE_SHARED_CRT)
@@ -25,6 +26,7 @@ vcpkg_configure_cmake(
     OPTIONS 
         -DBUILD_GMOCK=ON
         -DBUILD_GTEST=ON
+        -DCMAKE_DEBUG_POSTFIX=d
         -Dgtest_force_shared_crt=${GTEST_FORCE_SHARED_CRT}
 )
 
@@ -60,12 +62,12 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/gtest.dll)
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gmock.dll ${CURRENT_PACKAGES_DIR}/bin/gmock.dll)
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gmock_main.dll ${CURRENT_PACKAGES_DIR}/bin/gmock_main.dll)
 endif()
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/gtest.dll)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/gtestd.dll)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin/)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gtest.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gtest.dll)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gtest_main.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gtest_main.dll)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gmock.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gmock.dll)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gmock_main.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gmock_main.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gtestd.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gtestd.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gtest_maind.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gtest_maind.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gmockd.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gmockd.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gmock_maind.dll ${CURRENT_PACKAGES_DIR}/debug/bin/gmock_maind.dll)
 endif()
 if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/gtest.lib)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
@@ -74,12 +76,12 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/gtest.lib)
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gmock.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/gmock.lib)
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gmock_main.lib ${CURRENT_PACKAGES_DIR}/lib/manual-link/gmock_main.lib)
 endif()
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/gtest.lib)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/gtestd.lib)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gtest.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/gtestd.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gtest_main.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/gtest_maind.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gmock.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/gmockd.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gmock_main.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/gmock_maind.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gtestd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/gtestd.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gtest_maind.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/gtest_maind.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gmockd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/gmockd.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gmock_maind.lib ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/gmock_maind.lib)
 endif()
 
 vcpkg_copy_pdbs()

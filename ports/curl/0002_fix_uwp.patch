@@ -60,14 +60,14 @@ diff --git a/lib/ftp.c b/lib/ftp.c
 index 8042edf..3442df7 100644
 --- a/lib/ftp.c
 +++ b/lib/ftp.c
-@@ -4297,7 +4297,7 @@ CURLcode ftp_parse_url_path(struct connectdata *conn)
+@@ -4260,7 +4260,7 @@ CURLcode ftp_parse_url_path(struct connectdata *conn)
      /* prevpath is "raw" so we convert the input path before we compare the
         strings */
      size_t dlen;
 -    char *path;
 +    char *path = NULL;
      CURLcode result =
-       Curl_urldecode(conn->data, data->state.path, 0, &path, &dlen, FALSE);
+       Curl_urldecode(conn->data, data->state.path, 0, &path, &dlen, TRUE);
      if(result) {
 diff --git a/lib/rand.c b/lib/rand.c
 index 2670af9..0d18d37 100644

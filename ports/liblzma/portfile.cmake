@@ -3,13 +3,14 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/xz-5.2.3)
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://tukaani.org/xz/xz-5.2.3.tar.gz"
-    FILENAME "xz-5.2.3.tar.gz"
-    SHA512 a5eb4f707cf31579d166a6f95dbac45cf7ea181036d1632b4f123a4072f502f8d57cd6e7d0588f0bf831a07b8fc4065d26589a25c399b95ddcf5f73435163da6)
-    
-vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO xz-mirror/xz
+    REF v5.2.3
+    SHA512 d126666e58c6536aa7ae6aa6aac480f421e25aa61c4b5e7adb3de7b99423275a94d583ceaf0b15d559eaf9bc9be18f381cd46e49b1f8cb238c1d715876731063
+    HEAD_REF master
+)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
@@ -17,7 +18,8 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS_DEBUG
-        -DLIBLZMA_SKIP_HEADERS=ON)
+        -DLIBLZMA_SKIP_HEADERS=ON
+)
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()

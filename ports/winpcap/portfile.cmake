@@ -17,6 +17,10 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "WpcapSrc_4_1_3.zip"
     SHA512 89a5109ed17f8069f7a43497f6fec817c58620dbc5fa506e52069b9113c5bc13f69c307affe611281cb727cfa0f8529d07044d41427e350b24468ccc89a87f33
 )
+
+# MSBuild performs in-source builds, so to ensure reliability we must clear them each time
+file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
+
 vcpkg_extract_source_archive(${ARCHIVE})
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")

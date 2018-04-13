@@ -1,0 +1,35 @@
+diff --git a/src/msix/CMakeLists.txt b/src/msix/CMakeLists.txt
+index 586c140..41a24ae 100644
+--- a/src/msix/CMakeLists.txt
++++ b/src/msix/CMakeLists.txt
+@@ -129,6 +129,17 @@ set(LIB_SOURCES
+ # Define the library
+ add_library(${LIBRARY_NAME} SHARED ${LIB_SOURCES} ${LIB_PUBLIC_HEADERS} ${LIB_PRIVATE_HEADERS})
+ 
++if(INSTALL_LIBMSIX)
++    install(TARGETS ${LIBRARY_NAME}
++        RUNTIME DESTINATION bin
++        LIBRARY DESTINATION lib
++        ARCHIVE DESTINATION lib
++    )
++    if(INSTALL_HEADERS)
++        install(FILES ${LIB_PUBLIC_HEADERS} DESTINATION include)
++    endif()
++endif()
++
+ # specify that this library is to be built with C++14
+ set_property(TARGET ${LIBRARY_NAME} PROPERTY CXX_STANDARD 14)
+ 
+@@ -149,8 +160,10 @@ include_directories(
+ 	${CMAKE_PROJECT_ROOT}/lib/xerces/src
+ )
+ 
+-target_link_libraries(${PROJECT_NAME} PRIVATE zlibstatic)
+-target_link_libraries(${PROJECT_NAME} PRIVATE xerces-c)
++find_package(ZLIB REQUIRED)
++find_package(XercesC REQUIRED)
++target_link_libraries(${PROJECT_NAME} PRIVATE ZLIB::ZLIB)
++target_link_libraries(${PROJECT_NAME} PRIVATE XercesC::XercesC)
+ 
+ IF(AOSP)
+     target_link_libraries(${PROJECT_NAME} PRIVATE -latomic)

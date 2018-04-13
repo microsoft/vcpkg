@@ -17,7 +17,7 @@ namespace vcpkg
     template<>
     struct ErrorHolder<PackageSpecParseResult>
     {
-        ErrorHolder() : m_err(PackageSpecParseResult::SUCCESS) {}
+        ErrorHolder() noexcept : m_err(PackageSpecParseResult::SUCCESS) {}
         ErrorHolder(PackageSpecParseResult err) : m_err(err) {}
 
         bool has_error() const { return m_err != PackageSpecParseResult::SUCCESS; }

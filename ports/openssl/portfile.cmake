@@ -4,22 +4,18 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 endif()
 
 include(vcpkg_common_functions)
-set(OPENSSL_VERSION 1.0.2n)
+set(OPENSSL_VERSION 1.0.2o)
 set(MASTER_COPY_SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-${OPENSSL_VERSION})
 
 vcpkg_find_acquire_program(PERL)
-vcpkg_find_acquire_program(NASM)
-find_program(NMAKE nmake)
 
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-vcpkg_find_acquire_program(JOM)
-set(ENV{PATH} "${NASM_EXE_PATH};$ENV{PATH};${PERL_EXE_PATH}")
+set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH}")
 
 vcpkg_download_distfile(OPENSSL_SOURCE_ARCHIVE
     URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.0.2/openssl-${OPENSSL_VERSION}.tar.gz"
     FILENAME "openssl-${OPENSSL_VERSION}.tar.gz"
-    SHA512 144bf0d6aa27b4af01df0b7b734c39962649e1711554247d42e05e14d8945742b18745aefdba162e2dfc762b941fd7d3b2d5dc6a781ae4ba10a6f5a3cadb0687
+    SHA512 8a2c93657c85143e76785bb32ee836908c31a6f5f8db993fa9777acba6079e630cdddd03edbad65d1587199fc13a1507789eacf038b56eb99139c2091d9df7fd
 )
 
 vcpkg_extract_source_archive(${OPENSSL_SOURCE_ARCHIVE})
@@ -28,8 +24,18 @@ vcpkg_apply_patches(
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/ConfigureIncludeQuotesFix.patch
             ${CMAKE_CURRENT_LIST_DIR}/STRINGIFYPatch.patch
             ${CMAKE_CURRENT_LIST_DIR}/EmbedSymbolsInStaticLibsZ7.patch
-            ${CMAKE_CURRENT_LIST_DIR}/RemoveNonASCIIChar.patch
 )
+
+if(VCPKG_CMAKE_SYSTEM_NAME)
+    include(${CMAKE_CURRENT_LIST_DIR}/portfile-nonwindows.cmake)
+    return()
+endif()
+
+vcpkg_find_acquire_program(NASM)
+get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
+set(ENV{PATH} "${NASM_EXE_PATH};$ENV{PATH}")
+
+vcpkg_find_acquire_program(JOM)
 
 set(CONFIGURE_COMMAND ${PERL} Configure
     enable-static-engine
@@ -85,7 +91,7 @@ execute_process(
     ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-err.log
 )
 vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f ${OPENSSL_MAKEFILE} install
+    COMMAND nmake -f ${OPENSSL_MAKEFILE} install
     WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
     LOGNAME build-${TARGET_TRIPLET}-rel-1)
 
@@ -118,7 +124,7 @@ execute_process(
     ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-err.log
 )
 vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f ${OPENSSL_MAKEFILE} install
+    COMMAND nmake -f ${OPENSSL_MAKEFILE} install
     WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
     LOGNAME build-${TARGET_TRIPLET}-dbg-1)
 
@@ -144,6 +150,14 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/)
 endif()
+
+file(READ "${CURRENT_PACKAGES_DIR}/include/openssl/dtls1.h" _contents)
+string(REPLACE "<winsock.h>" "<winsock2.h>" _contents "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/openssl/dtls1.h" "${_contents}")
+
+file(READ "${CURRENT_PACKAGES_DIR}/include/openssl/rand.h" _contents)
+string(REPLACE "#  include <windows.h>" "#ifndef _WINSOCKAPI_\n#define _WINSOCKAPI_\n#endif\n#  include <windows.h>" _contents "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/openssl/rand.h" "${_contents}")
 
 vcpkg_copy_pdbs()
 

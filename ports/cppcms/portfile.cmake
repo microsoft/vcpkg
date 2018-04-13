@@ -6,7 +6,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
-    message("cppcms doesn't support static CRT linkage.")
+    message(FATAL_ERROR "cppcms doesn't support static CRT linkage.")
 endif()
 
 vcpkg_from_github(

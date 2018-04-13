@@ -3,18 +3,27 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IntelRealSense/librealsense
-    REF v2.10.0
-    SHA512 b00cd4617d59197f7baa40d5a4833027c2b0c45e3e67047dce38e9415905ecf78c1ee9fe499c8e3292b54b8de8e96064001d0f154fdb10b2c64c19a8162db6d1
-    HEAD_REF master
+    REF v2.10.1
+    SHA512 fb00a424a5bd7335cc661261e76cf623e27a89af1033692d4cb6ed523af1295359929c235e82253911e61323cb7b82551a9223862174cb0e2363ac944b2db923
+    HEAD_REF development
 )
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/crt-linkage-restriction.patch
+        ${CMAKE_CURRENT_LIST_DIR}/build_with_static_crt.patch # https://github.com/IntelRealSense/librealsense/pull/1262
+        ${CMAKE_CURRENT_LIST_DIR}/fix_rgb_using_avx2.patch # https://github.com/IntelRealSense/librealsense/pull/1245
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
+# This option will be deprecated in the later versions.
+# Please see Pull Request #1245. https://github.com/IntelRealSense/librealsense/pull/1245
+set(RGB_USING_AVX2 OFF)
+if("avx2" IN_LIST FEATURES)
+    set(RGB_USING_AVX2 ON)
+endif()
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_LIBRARY_LINKAGE)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_CRT_LINKAGE)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -24,10 +33,13 @@ vcpkg_configure_cmake(
         -DBUILD_GRAPHICAL_EXAMPLES=OFF
         -DBUILD_PYTHON_BINDINGS=OFF
         -DBUILD_UNIT_TESTS=OFF
-        -DBUILD_WITH_OPENMP=OFF  # keep OpenMP off until librealsense issue #744 is patched
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED}
+        -DBUILD_WITH_OPENMP=OFF
+        -DBUILD_SHARED_LIBS=${BUILD_LIBRARY_LINKAGE}
+        -DBUILD_WITH_STATIC_CRT=${BUILD_CRT_LINKAGE}
+        -DRGB_USING_AVX2=${RGB_USING_AVX2}
     OPTIONS_DEBUG
         "-DCMAKE_PDB_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
+        -DCMAKE_DEBUG_POSTFIX="_d"
 )
 
 vcpkg_install_cmake()
