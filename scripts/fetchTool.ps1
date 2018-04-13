@@ -73,7 +73,7 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
         # Extract aria2 with shell because we need it to download 7zip
         if ($tool -eq "7zip920" -or $tool -eq "aria2")
         {
-            vcpkgExtractZipFileWithShell -ArchivePath $downloadPath -DestinationDir $toolPath
+            vcpkgExtractZipFile -ArchivePath $downloadPath -DestinationDir $toolPath
         }
         elseif ($tool -eq "7zip")
         {
@@ -88,7 +88,7 @@ function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
         else
         {
             $sevenZipExe = fetchToolInternal "7zip"
-            vcpkgExtractFile -sevenZipExe "$sevenZipExe" -ArchivePath $downloadPath -DestinationDir $toolPath
+            vcpkgExtractFileWith7z -sevenZipExe "$sevenZipExe" -ArchivePath $downloadPath -DestinationDir $toolPath
         }
         Write-Host "Extracting $tool... done."
     }
