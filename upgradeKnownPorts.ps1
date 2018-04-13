@@ -36,6 +36,7 @@ $tagPorts = @(
     "cimg",
     "cpp-redis",
     "curl",
+    "date",
     "directxmesh",
     "discord-rpc",
     "doctest",
@@ -43,7 +44,7 @@ $tagPorts = @(
     "eigen3",
     "expat",
     "fmt",
-    #"folly",
+    "folly",
     "forest",
     "gdcm2",
     "gflags",
@@ -57,6 +58,7 @@ $tagPorts = @(
     "libevent",
     #"libffi",
     "libjpeg-turbo",
+    "liblinear",
     "libogg",
     "libsodium",
     "libuv",
@@ -79,6 +81,7 @@ $tagPorts = @(
     "sqlite-orm",
     "uwebsockets",
     "yaml-cpp",
+    "yoga",
     "zziplib"
 )
 
