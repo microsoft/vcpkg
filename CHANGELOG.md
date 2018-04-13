@@ -1,3 +1,68 @@
+vcpkg (0.0.108)
+--------------
+  * Add ports:
+    - google-cloud-cpp 0.1.0
+    - mhook          2.5.1-1
+    - mosquitto      1.4.15
+    - pmdk           1.4-1 (renamed from nvml)
+  * Remove Ports:
+    - nvml           1.3-0 (renamed to pmdk)
+  * Update ports:
+    - abseil         2018-03-23 -> 2018-04-05
+    - asio           1.12.0-1 -> 1.12.0-2
+    - aws-sdk-cpp    1.4.21 -> 1.4.30-1
+    - azure-c-shared-utility 1.0.0-pre-release-1.0.9 -> 1.1.2
+    - azure-iot-sdk-c 1.0.0-pre-release-1.0.9 -> 1.2.2
+    - azure-uamqp-c  1.0.0-pre-release-1.0.9 -> 1.2.2
+    - azure-umqtt-c  1.0.0-pre-release-1.0.9 -> 1.1.2
+    - breakpad       2018-03-13 -> 2018-04-05
+    - clara          2018-03-23 -> 2018-04-02
+    - cryptopp       5.6.5-1 -> 6.1.0-2
+    - discord-rpc    3.1.0 -> 3.2.0
+    - dlib           19.10 -> 19.10-1
+    - eastl          3.08.00 -> 3.09.00
+    - exiv2          2018-03-23 -> 2018-04-05
+    - folly          2017.11.27.00-3 -> 2018.03.19.00-2
+    - forest         4.5.0 -> 7.0.1
+    - gdcm2          2.8.5 -> 2.8.6
+    - grpc           1.10.0 -> 1.10.1
+    - gtest          1.8.0-7 -> 1.8.0-8
+    - libiconv       1.15-2 -> 1.15-3
+    - libuv          1.19.2 -> 1.20.0
+    - libvpx         1.6.1-2 -> 1.7.0
+    - libxml2        2.9.4-4 -> 2.9.4-5
+    - nuklear        2018-03-23 -> 2018-04-05
+    - openimageio    1.8.9 -> 1.8.10
+    - openssl        1.0.2n-3 -> 1.0.2o-1
+    - qt5-base       5.9.2-5 -> 5.9.2-6
+    - qt5-modularscripts 2 -> 3
+    - qwt            6.1.3-4 -> 6.1.3-5
+    - recast         1.5.1 -> 1.5.1-1
+    - rocksdb        5.11.3 -> 5.12.2
+    - rs-core-lib    2018-03-17 -> 2018-04-05
+    - sciter         4.1.4 -> 4.1.5
+    - tbb            2018_U2 -> 2018_U3
+    - tesseract      3.05.01-2 -> 3.05.01-3
+    - theia          0.7-d15154a-1 -> 0.7-d15154a-3
+    - thrift         2018-03-23 -> 2018-04-05
+    - unrar          5.5.8 -> 5.5.8-1
+    - yoga           1.7.0 -> 1.7.0-1
+    - zeromq         2018-03-23 -> 2018-04-05
+  * `vcpkg.cmake`: Remove detection for Windows SDK. Let `cmake` detect it instead.
+  * Rework `vcpkgTools.xml`.
+    - `<requiredVersion>` renamed to `<version>`
+    - `<archiveRelativePath>` renamed `<archiveName>`
+    - `<sha256>` changed to `<sha512>`
+    - `<tool>` tags now specify an `os="x"` property
+    - The version of the tools list (i.e. `<tools version="1">`) is now verified by `vcpkg.exe`.
+  * Use [7zip](https://www.7-zip.org/) to extract vcpkg tools defined in `vcpkgTools.xml`.
+  * Use [aria2](https://aria2.github.io/) to download vcpkg tools defined in `vcpkgTools.xml`.
+    - The experimental flag `vcpkg install <port> --x-use-aria2` allows you to use `aria2` for other downloads as well.
+  * `vckg hash` improvements
+
+-- vcpkg team <vcpkg@microsoft.com>  FRI, 06 Apr 2018 19:30:00 -0800
+
+
 vcpkg (0.0.107)
 --------------
   * Add ports:

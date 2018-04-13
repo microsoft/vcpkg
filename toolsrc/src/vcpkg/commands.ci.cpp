@@ -77,11 +77,8 @@ namespace vcpkg::Commands::CI
                 {
                     auto triplet = p->spec.triplet();
 
-                    const Build::BuildPackageConfig build_config{p->source_control_file.value_or_exit(VCPKG_LINE_INFO),
-                                                                 triplet,
-                                                                 paths.port_dir(p->spec),
-                                                                 install_plan_options,
-                                                                 p->feature_list};
+                    const Build::BuildPackageConfig build_config{
+                        *scf, triplet, paths.port_dir(p->spec), install_plan_options, p->feature_list};
 
                     auto dependency_abis =
                         Util::fmap(p->computed_dependencies, [&](const PackageSpec& spec) -> Build::AbiEntry {

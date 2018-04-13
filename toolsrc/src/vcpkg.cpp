@@ -223,6 +223,7 @@ static void load_config()
     }
 }
 
+#if defined(_WIN32)
 static std::string trim_path_from_command_line(const std::string& full_command_line)
 {
     Checks::check_exit(
@@ -243,6 +244,7 @@ static std::string trim_path_from_command_line(const std::string& full_command_l
         ++it;
     return std::string(it, full_command_line.cend());
 }
+#endif
 
 #if defined(_WIN32)
 int wmain(const int argc, const wchar_t* const* const argv)

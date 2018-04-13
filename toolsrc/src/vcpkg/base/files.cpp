@@ -22,9 +22,9 @@ namespace vcpkg::Files
             auto length = file_stream.tellg();
             file_stream.seekg(0, file_stream.beg);
 
-            if (length > SIZE_MAX)
+            if (length == std::streampos(-1))
             {
-                return std::make_error_code(std::errc::file_too_large);
+                return std::make_error_code(std::errc::io_error);
             }
 
             std::string output;
@@ -185,12 +185,15 @@ namespace vcpkg::Files
                 return;
             }
 
-            auto count = fwrite(data.data(), sizeof(data[0]), data.size(), f);
-            fclose(f);
-
-            if (count != data.size())
+            if (f != nullptr)
             {
-                ec = std::make_error_code(std::errc::no_space_on_device);
+                auto count = fwrite(data.data(), sizeof(data[0]), data.size(), f);
+                fclose(f);
+
+                if (count != data.size())
+                {
+                    ec = std::make_error_code(std::errc::no_space_on_device);
+                }
             }
         }
     };

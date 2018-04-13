@@ -214,6 +214,7 @@
     <ClCompile Include="..\src\vcpkg\commands.edit.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.env.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.exportifw.cpp" />
+    <ClCompile Include="..\src\vcpkg\commands.fetch.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.hash.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.import.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.integrate.cpp" />

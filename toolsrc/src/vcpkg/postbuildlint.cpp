@@ -361,6 +361,7 @@ namespace vcpkg::PostBuildLint
         std::string actual_arch;
     };
 
+#if defined(_WIN32)
     static std::string get_actual_architecture(const MachineType& machine_type)
     {
         switch (machine_type)
@@ -374,7 +375,9 @@ namespace vcpkg::PostBuildLint
             default: return "Machine Type Code = " + std::to_string(static_cast<uint16_t>(machine_type));
         }
     }
+#endif
 
+#if defined(_WIN32)
     static void print_invalid_architecture_files(const std::string& expected_architecture,
                                                  std::vector<FileAndArch> binaries_with_invalid_architecture)
     {
@@ -391,7 +394,6 @@ namespace vcpkg::PostBuildLint
     static LintStatus check_dll_architecture(const std::string& expected_architecture,
                                              const std::vector<fs::path>& files)
     {
-#if defined(_WIN32)
         std::vector<FileAndArch> binaries_with_invalid_architecture;
 
         for (const fs::path& file : files)
@@ -414,10 +416,10 @@ namespace vcpkg::PostBuildLint
             print_invalid_architecture_files(expected_architecture, binaries_with_invalid_architecture);
             return LintStatus::ERROR_DETECTED;
         }
-#endif
 
         return LintStatus::SUCCESS;
     }
+#endif
 
     static LintStatus check_lib_architecture(const std::string& expected_architecture,
                                              const std::vector<fs::path>& files)
@@ -802,7 +804,9 @@ namespace vcpkg::PostBuildLint
                         check_outdated_crt_linkage_of_dlls(dlls, toolset.dumpbin, build_info, pre_build_info);
                 }
 
+#if defined(_WIN32)
                 error_count += check_dll_architecture(pre_build_info.target_architecture, dlls);
+#endif
                 break;
             }
             case Build::LinkageType::STATIC:

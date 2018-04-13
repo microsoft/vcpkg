@@ -62,7 +62,7 @@ namespace vcpkg::Build
         BUILT_IN,
         ARIA2,
     };
-	const std::string& to_string(DownloadTool tool);
+    const std::string& to_string(DownloadTool tool);
 
     struct BuildPackageOptions
     {
@@ -203,8 +203,8 @@ namespace vcpkg::Build
 
     struct BuildInfo
     {
-        LinkageType crt_linkage;
-        LinkageType library_linkage;
+        LinkageType crt_linkage = LinkageType::DYNAMIC;
+        LinkageType library_linkage = LinkageType::DYNAMIC;
 
         Optional<std::string> version;
 

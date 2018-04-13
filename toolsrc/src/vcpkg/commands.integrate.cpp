@@ -8,6 +8,7 @@
 
 namespace vcpkg::Commands::Integrate
 {
+#if defined(_WIN32)
     static std::string create_appdata_targets_shortcut(const std::string& target_path) noexcept
     {
         return Strings::format(R"###(
@@ -18,7 +19,9 @@ namespace vcpkg::Commands::Integrate
                                target_path,
                                target_path);
     }
+#endif
 
+#if defined(_WIN32)
     static std::string create_system_targets_shortcut() noexcept
     {
         return R"###(
@@ -31,7 +34,9 @@ namespace vcpkg::Commands::Integrate
 </Project>
 )###";
     }
+#endif
 
+#if defined(_WIN32)
     static std::string create_nuget_targets_file_contents(const fs::path& msbuild_vcpkg_targets_file) noexcept
     {
         const std::string as_string = msbuild_vcpkg_targets_file.string();
@@ -47,7 +52,9 @@ namespace vcpkg::Commands::Integrate
                                as_string,
                                as_string);
     }
+#endif
 
+#if defined(_WIN32)
     static std::string create_nuget_props_file_contents() noexcept
     {
         return R"###(
@@ -58,7 +65,9 @@ namespace vcpkg::Commands::Integrate
 </Project>
 )###";
     }
+#endif
 
+#if defined(_WIN32)
     static std::string get_nuget_id(const fs::path& vcpkg_root_dir)
     {
         std::string dir_id = vcpkg_root_dir.generic_string();
@@ -71,7 +80,9 @@ namespace vcpkg::Commands::Integrate
         const std::string nuget_id = "vcpkg." + dir_id;
         return nuget_id;
     }
+#endif
 
+#if defined(_WIN32)
     static std::string create_nuspec_file_contents(const fs::path& vcpkg_root_dir,
                                                    const std::string& nuget_id,
                                                    const std::string& nupkg_version)
@@ -98,17 +109,18 @@ namespace vcpkg::Commands::Integrate
         content = Strings::replace_all(std::move(content), "@VERSION@", nupkg_version);
         return content;
     }
+#endif
 
+#if defined(_WIN32)
     enum class ElevationPromptChoice
     {
         YES,
         NO
     };
 
-#if defined(_WIN32)
     static ElevationPromptChoice elevated_cmd_execute(const std::string& param)
     {
-        SHELLEXECUTEINFOW sh_ex_info = {0};
+        SHELLEXECUTEINFOW sh_ex_info{};
         sh_ex_info.cbSize = sizeof(sh_ex_info);
         sh_ex_info.fMask = SEE_MASK_NOCLOSEPROCESS;
         sh_ex_info.hwnd = nullptr;
@@ -272,11 +284,12 @@ CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s")",
     }
 #endif
 
+#if defined(WIN32)
     static void integrate_project(const VcpkgPaths& paths)
     {
         auto& fs = paths.get_filesystem();
 
-        const fs::path& nuget_exe = paths.get_nuget_exe();
+        const fs::path& nuget_exe = paths.get_tool_exe(Tools::NUGET);
 
         const fs::path& buildsystems_dir = paths.buildsystems;
         const fs::path tmp_dir = buildsystems_dir / "tmp";
@@ -319,13 +332,19 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
+#endif
 
+#if defined(_WIN32)
     const char* const INTEGRATE_COMMAND_HELPSTRING =
         "  vcpkg integrate install         Make installed packages available user-wide. Requires admin privileges on "
         "first use\n"
         "  vcpkg integrate remove          Remove user-wide integration\n"
         "  vcpkg integrate project         Generate a referencing nuget package for individual VS project use\n"
         "  vcpkg integrate powershell      Enable PowerShell Tab-Completion\n";
+#else
+    const char* const INTEGRATE_COMMAND_HELPSTRING =
+        "No user-wide integration methods are available on this platform\n";
+#endif
 
     namespace Subcommand
     {
@@ -352,7 +371,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        args.parse_arguments(COMMAND_STRUCTURE);
+        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
 
 #if defined(_WIN32)
         if (args.command_arguments[0] == Subcommand::INSTALL)
