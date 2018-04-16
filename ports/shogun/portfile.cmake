@@ -22,6 +22,16 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/external)
 file(MAKE_DIRECTORY ${SOURCE_PATH}/cmake/external)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/MSDirent.cmake DESTINATION ${SOURCE_PATH}/cmake/external)
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    set(CMAKE_DISABLE_FIND_PACKAGE_BLAS 0)
+else()
+    set(CMAKE_DISABLE_FIND_PACKAGE_BLAS 1)
+endif()
+
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -47,6 +57,7 @@ vcpkg_configure_cmake(
         -DCMAKE_DISABLE_FIND_PACKAGE_Ctags=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_CCache=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=TRUE
+        -DCMAKE_DISABLE_FIND_PACKAGE_BLAS=${CMAKE_DISABLE_FIND_PACKAGE_BLAS}
 
         -DINSTALL_TARGETS=shogun-static
 )

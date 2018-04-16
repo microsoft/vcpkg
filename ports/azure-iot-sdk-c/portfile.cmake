@@ -8,8 +8,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-iot-sdk-c
-    REF 1.0.0-pre-release-1.0.9
-    SHA512 972b5da73399805963031dfacc436665c1a7aaecf4a0035af369d9cf184cb4e7be608b4ca5768902dcfb04f18324c399d095f6543ff3d1da835c40da6e18934e
+    REF 1.2.2
+    SHA512 1542f8347e5efc3104eacf1696b84739299bedb4f50dce3869b3a53072b5c016aadf34223658c18fe28e87eab775a0687b5bf18b5629a7a87b8709b123b3599a
     HEAD_REF master
 )
 

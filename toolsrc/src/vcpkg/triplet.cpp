@@ -1,6 +1,5 @@
 #include "pch.h"
 
-#include <vcpkg/base/checks.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/triplet.h>
 
@@ -38,7 +37,7 @@ namespace vcpkg
     const Triplet Triplet::ARM_UWP = from_canonical_name("arm-uwp");
     const Triplet Triplet::ARM64_UWP = from_canonical_name("arm64-uwp");
     const Triplet Triplet::ARM_WINDOWS = from_canonical_name("arm-windows");
-    const Triplet Triplet::ARM64_WINDOWS = from_canonical_name("arm64-windows");    
+    const Triplet Triplet::ARM64_WINDOWS = from_canonical_name("arm64-windows");
 
     bool Triplet::operator==(const Triplet& other) const { return this->m_instance == other.m_instance; }
 

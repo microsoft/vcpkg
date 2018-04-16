@@ -15,3 +15,8 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/COPYING ${CURRENT_PACKAGES_DIR
 
 # Copy the asio header files
 file(INSTALL ${SOURCE_PATH}/asio/include DESTINATION ${CURRENT_PACKAGES_DIR} FILES_MATCHING PATTERN "*.hpp" PATTERN "*.ipp")
+
+# Always use "ASIO_STANDALONE" to avoid boost dependency
+file(READ "${CURRENT_PACKAGES_DIR}/include/asio/detail/config.hpp" _contents)
+string(REPLACE "defined(ASIO_STANDALONE)" "!defined(VCPKG_DISABLE_ASIO_STANDALONE)" _contents "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/asio/detail/config.hpp" "${_contents}")

@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/aws-sdk-cpp
-    REF 1.4.27
-    SHA512 d714fe12d3701461b897256d824b169ff3242bb412d386a2c1455c0dc1dcedf3add444eab556551fbb69e0339b49c3133c1f820710b5681d25a23237e919ddd0
+    REF 1.4.33
+    SHA512 ebe8e402107b7b70a9b397c94ad981ff02d97e10e6fd8337f19b732185ecbb79e132eecd513300ce733a765fd780dd765c1d2b34479e5e1d891fa771722bad81
     HEAD_REF master
 )
 
@@ -14,8 +14,11 @@ set(BUILD_ONLY core)
 
 include(${CMAKE_CURRENT_LIST_DIR}/compute_build_only.cmake)
 
-# This handles escaping the list
-string(REPLACE ";" "\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
+if(CMAKE_HOST_WIN32)
+    string(REPLACE ";" "\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
+else()
+    string(REPLACE ";" "\\\\\\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

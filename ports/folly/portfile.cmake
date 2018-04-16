@@ -17,8 +17,8 @@ set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF v2018.03.19.00
-    SHA512 72df8768753bf9f1109ad3f16645d811906b633833c91c7d9fe856a06c16b5e398876cf6cae415401eff96b568c99ffa1dc0c44d81cd40219bafb0f4c72fc2ca
+    REF v2018.04.09.00
+    SHA512 625034437ee6c261949652dbd6cafb50b0954b691750e4591cd0eb03cf369348cfae3b4b98c012bd906a157b7642ebcb1d8843311c74416ed51bffc5b1da3018
     HEAD_REF master
 )
 
@@ -75,7 +75,7 @@ vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/folly)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
