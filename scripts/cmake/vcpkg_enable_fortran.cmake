@@ -226,12 +226,12 @@ function(_vcpkg_find_and_load_gnu_fortran_compiler VERSION_OUT_VAR)
 
   # Append the MinGW directory to PATH
   if(WIN32)
-    set(ENVIRONMENT_SEPERATOR "\\;")
+    set(ENVIRONMENT_SEPARATOR "\\;")
   else()
-    set(ENVIRONMENT_SEPERATOR ":")
+    set(ENVIRONMENT_SEPARATOR ":")
   endif()
 
-  set(ENV{PATH} "$ENV{PATH}${ENVIRONMENT_SEPERATOR}${MINGW_BIN_PATH}")
+  set(ENV{PATH} "$ENV{PATH}${ENVIRONMENT_SEPARATOR}${MINGW_BIN_PATH}")
 
   # MinGW does not yet support linking against the UCRT, so all binaries compiled by
   # gfortran will link against an old msvcrt.
@@ -305,13 +305,13 @@ function(_vcpkg_find_and_load_flang_fortran_compiler VERSION_OUT_VAR)
 
   # Append the Flang directory to PATH
   if(WIN32)
-    set(ENVIRONMENT_SEPERATOR "\\;")
+    set(ENVIRONMENT_SEPARATOR "\\;")
   else()
-    set(ENVIRONMENT_SEPERATOR ":")
+    set(ENVIRONMENT_SEPARATOR ":")
   endif()
 
-  set(ENV{PATH} "$ENV{PATH}${ENVIRONMENT_SEPERATOR}${FLANG_BIN_PATH}")
-  set(ENV{LIB}  "$ENV{LIB}${ENVIRONMENT_SEPERATOR}${FLANG_LIB_PATH}")
+  set(ENV{PATH} "$ENV{PATH}${ENVIRONMENT_SEPARATOR}${FLANG_BIN_PATH}")
+  set(ENV{LIB}  "$ENV{LIB}${ENVIRONMENT_SEPARATOR}${FLANG_LIB_PATH}")
   set(${VERSION_OUT_VAR} "${FLANG_VERSION}" PARENT_SCOPE)
 endfunction()
 
