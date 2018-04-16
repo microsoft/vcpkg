@@ -34,19 +34,15 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
     if(VCPKG_FORTRAN_ENABLED AND DEFINED VCPKG_FORTRAN_COMPILER AND VCPKG_FORTRAN_COMPILER STREQUAL Flang)
         # Make sure that CMake uses the correct compilers:
         # while we want to use flang as Fortran compiler we want to keep cl for C and C++
-        list(APPEND _csc_OPTIONS
-            "-DCMAKE_Fortran_COMPILER=flang"
-            "-DCMAKE_C_COMPILER=cl"
-            "-DCMAKE_CXX_COMPILER=cl"
-        )
+        set(CMAKE_Fortran_COMPILER "flang" CACHE STRING "")
+        set(CMAKE_C_COMPILER "cl" CACHE STRING "")
+        set(CMAKE_CXX_COMPILER "cl" CACHE STRING "")
     endif()
 
     # When using GNU gfortran as Fortran compiler CMake requires to use gcc and g++ as C and C++ compilers
     # so we should not set all the other C and C++ compiler flags
     if(VCPKG_FORTRAN_ENABLED AND DEFINED VCPKG_FORTRAN_COMPILER AND VCPKG_FORTRAN_COMPILER STREQUAL GNU)
-        list(APPEND _csc_OPTIONS
-            "-DCMAKE_GNUtoMS=ON"
-        )
+        set(CMAKE_GNUtoMS "ON" CACHE STRING "")
     else()
         set(CMAKE_CXX_FLAGS " /DWIN32 /D_WINDOWS /W3 ${CHARSET_FLAG} /GR /EHsc /MP ${VCPKG_CXX_FLAGS}" CACHE STRING "")
         set(CMAKE_C_FLAGS " /DWIN32 /D_WINDOWS /W3 ${CHARSET_FLAG} /MP ${VCPKG_C_FLAGS}" CACHE STRING "")
