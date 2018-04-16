@@ -113,7 +113,7 @@ function(vcpkg_find_acquire_program VAR)
   elseif(VAR MATCHES "NINJA")
     # We use the Ninja fork from Kitware because it enables Fortran support
     set(PROGNAME ninja)
-    set(SUBDIR "ninja-1.8.2.g972a7.kitware.dyndep-1_i686-pc-windows-msvc")
+    set(SUBDIR "ninja-1.8.2.g972a7.kitware.dyndep-1_i686-pc-windows-msvc/ninja-1.8.2.g972a7.kitware.dyndep-1_i686-pc-windows-msvc")
     if(CMAKE_HOST_WIN32)
       set(PATHS "${DOWNLOADS}/tools/ninja/${SUBDIR}")
     else()
