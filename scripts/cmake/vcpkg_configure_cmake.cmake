@@ -78,9 +78,6 @@ function(vcpkg_configure_cmake)
 
     if(_csc_GENERATOR)
         set(GENERATOR ${_csc_GENERATOR})
-    elseif(VCPKG_FORTRAN_ENABLED AND DEFINED VCPKG_FORTRAN_COMPILER AND VCPKG_FORTRAN_COMPILER STREQUAL Flang)
-        # Flang is not supported by Ninja, nor Visual Studio so we use NMake here
-        set(GENERATOR "NMake Makefiles")
     elseif(_csc_PREFER_NINJA AND NINJA_CAN_BE_USED)
         set(GENERATOR "Ninja")
     elseif(VCPKG_CHAINLOAD_TOOLCHAIN_FILE OR (VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore"))
