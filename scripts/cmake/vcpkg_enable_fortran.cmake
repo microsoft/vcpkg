@@ -246,22 +246,22 @@ function(_vcpkg_find_and_load_flang_fortran_compiler VERSION_OUT_VAR)
 
   if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x64")
     set(URLS
-        "https://conda.anaconda.org/conda-forge/win-64/clangdev-${FLANG_VERSION}-flang_1.tar.bz2"
-        "https://conda.anaconda.org/conda-forge/win-64/libflang-${FLANG_VERSION}-vc14_1.tar.bz2"
-        "https://conda.anaconda.org/conda-forge/win-64/openmp-${FLANG_VERSION}-vc14_0.tar.bz2"
-        "https://conda.anaconda.org/conda-forge/win-64/flang-${FLANG_VERSION}-vc14_1.tar.bz2"
+        "https://conda.anaconda.org/conda-forge/win-64/clangdev-${FLANG_VERSION}-flang_3.tar.bz2"
+        "https://conda.anaconda.org/conda-forge/win-64/libflang-${FLANG_VERSION}-vc14_20180208.tar.bz2"
+        "https://conda.anaconda.org/conda-forge/win-64/openmp-${FLANG_VERSION}-vc14_1.tar.bz2"
+        "https://conda.anaconda.org/conda-forge/win-64/flang-${FLANG_VERSION}-vc14_20180208.tar.bz2"
     )
     set(ARCHIVES
-        "clangdev-${FLANG_VERSION}-flang_1.tar.bz2"
-        "libflang-${FLANG_VERSION}-vc14_1.tar.bz2"
-        "openmp-${FLANG_VERSION}-vc14_0.tar.bz2"
-        "flang-${FLANG_VERSION}-vc14_1.tar.bz2"
+        "clangdev-${FLANG_VERSION}-flang_3.tar.bz2"
+        "libflang-${FLANG_VERSION}-vc14_20180208.tar.bz2"
+        "openmp-${FLANG_VERSION}-vc14_1.tar.bz2"
+        "flang-${FLANG_VERSION}-vc14_20180208.tar.bz2"
     )
     set(HASHS
-        "5329c6cd5199dc4b9242eefad99cfce161a91af431272d483e9fa31747bb730bfaef841a88e6e83b9f069a7b677bdad779122455abc486b6d889ca0464151b07"
-        "e8584b8f19697adef9275845e9ab5c506083cac0bcc726ecf5b836e0380bbcb4c94798cb33ba5816fbea5744992c0cee6e92201b1a14d199c15552183b042b78"
-        "8ddd52a7158ccaa4ad28f702442e849404d931235c53438e7f2b04a09ae1e5e710296cac4a1d83746b1e223d9060cc240f587238c1ca612a70cf437579a14f41"
-        "cbb75c5624e063d028a4dc129f0a5c7f3daa166efb5a930801c22da4a1965858936be23669a90ae3846e424db04c41e8532a0fe06616604b33a72b8fcbcd2b8f"
+        "fd5eb1d39ba631e2e85ecf63906c8a5d0f87e5f3f9a86dbe4cfd28d399e922f9786804f94f2a3372d13c9c4f01d9d253fba31d9695be815b4798108db17939b4"
+        "a8bcb44b344c9ca3571e1de08894d9ee450e2a36e9a604dedb264415adbabb9b0b698b39d96abc8b319041b15ba991b28d463a61523388509038a363cbaebae2"
+        "5277f0a33d8672b711bbf6c97c9e2e755aea411bfab2fce4470bb2dd112cbbb11c913de2062331cc61c3acf7b294a6243148d7cb71b955cc087586a2f598809a"
+        "c72a4532dfc666ad301e1349c1ff0f067049690f53dbf30fd38382a546b619045a34660ee9591ce5c91cf2a937af59e87d0336db2ee7f59707d167cd92a920c4"
     )
     list(LENGTH URLS PACKAGE_COUNT)
   else()
