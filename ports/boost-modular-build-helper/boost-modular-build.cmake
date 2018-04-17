@@ -1,5 +1,5 @@
 function(boost_modular_build)
-    cmake_parse_arguments(_bm "" "SOURCE_PATH;REQUIREMENTS" "OPTIONS" ${ARGN})
+    cmake_parse_arguments(_bm "" "SOURCE_PATH;REQUIREMENTS;BOOST_CMAKE_FRAGMENT" "OPTIONS" ${ARGN})
 
     if(NOT DEFINED _bm_SOURCE_PATH)
         message(FATAL_ERROR "SOURCE_PATH is a required argument to boost_modular_build.")
@@ -80,6 +80,9 @@ function(boost_modular_build)
     configure_file(${_bm_DIR}/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
 
     if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        if(DEFINED _bm_BOOST_CMAKE_FRAGMENT)
+            set(fragment_option "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
+        endif()
         vcpkg_configure_cmake(
             SOURCE_PATH ${CURRENT_INSTALLED_DIR}/share/boost-build
             PREFER_NINJA
@@ -87,8 +90,13 @@ function(boost_modular_build)
                 "-DB2_EXE=${B2_EXE}"
                 "-DSOURCE_PATH=${_bm_SOURCE_PATH}"
                 "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
+                ${fragment_option}
         )
         vcpkg_install_cmake()
+
+        if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/lib)
+            message(FATAL_ERROR "No libraries were produced. This indicates a failure while building the boost library.")
+        endif()
         return()
     endif()
 
