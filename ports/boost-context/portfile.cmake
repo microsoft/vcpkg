@@ -5,10 +5,15 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/context
-    REF boost-1.66.0
-    SHA512 73efe1ab2c3b589e0ec7a095ab4a62090d8a980efbc81ac915823d1015fec215647a558bf0102fb42dbcdb05e9a4f70bd145bba095f09f1f4aec24eceddef3d4
+    REF boost-1.67.0
+    SHA512 4d6f7c0211c6941c8089d844b4ceae45322c2089ce41c029a21ef9b4fabdc0030a0c99fcc6c6be43d10372a171726b03a62aecae0241b8f2427439a2a283c306
     HEAD_REF master
 )
+
+file(READ "${SOURCE_PATH}/build/Jamfile.v2" _contents)
+string(REPLACE "import ../../config/checks/config" "import config/checks/config" _contents "${_contents}")
+file(WRITE "${SOURCE_PATH}/build/Jamfile.v2" "${_contents}")
+file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/build/config")
 
 include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(SOURCE_PATH ${SOURCE_PATH})

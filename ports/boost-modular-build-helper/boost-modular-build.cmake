@@ -32,10 +32,6 @@ function(boost_modular_build)
 
     set(_bm_DIR ${CURRENT_INSTALLED_DIR}/share/boost-build)
 
-    if(EXISTS "${_bm_SOURCE_PATH}/Jamfile.v2")
-        file(REMOVE_RECURSE "${_bm_SOURCE_PATH}/Jamfile.v2")
-    endif()
-
     set(REQUIREMENTS ${_bm_REQUIREMENTS})
 
     if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -48,16 +44,10 @@ function(boost_modular_build)
         set(BOOST_LIB_DEBUG_SUFFIX .a)
     endif()
 
-    # boost thread superfluously builds has_atomic_flag_lockfree on windows.
     if(EXISTS "${_bm_SOURCE_PATH}/build/Jamfile.v2")
         file(READ ${_bm_SOURCE_PATH}/build/Jamfile.v2 _contents)
-        string(REPLACE
-            "\n\nexe has_atomic_flag_lockfree"
-            "\n\nexplicit has_atomic_flag_lockfree ;\nexe has_atomic_flag_lockfree"
-            _contents
-            "${_contents}"
-        )
-        string(REPLACE "\nimport ../../config/checks/config : requires ;" "\n# import ../../config/checks/config : requires ;" _contents "${_contents}")
+        #string(REPLACE "import ../../predef/check/predef" "import predef/check/predef" _contents "${_contents}")
+        #string(REPLACE "import ../../config/checks/config" "import config/checks/config" _contents "${_contents}")
         string(REGEX REPLACE
             "\.\./\.\./([^/ ]+)/build//(boost_[^/ ]+)"
             "/boost/\\1//\\2"
@@ -68,16 +58,13 @@ function(boost_modular_build)
         file(WRITE ${_bm_SOURCE_PATH}/build/Jamfile.v2 "${_contents}")
     endif()
 
-    if(EXISTS "${_bm_SOURCE_PATH}/build/log-architecture.jam")
-        file(READ ${_bm_SOURCE_PATH}/build/log-architecture.jam _contents)
-        string(REPLACE
-            "\nproject.load [ path.join [ path.make $(here:D) ] ../../config/checks/architecture ] ;"
-            "\n# project.load [ path.join [ path.make $(here:D) ] ../../config/checks/architecture ] ;"
-            _contents "${_contents}")
-        file(WRITE ${_bm_SOURCE_PATH}/build/log-architecture.jam "${_contents}")
-    endif()
-
     configure_file(${_bm_DIR}/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
+    # if(EXISTS "${CURRENT_INSTALLED_DIR}/share/boost-config/checks")
+    #     file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${_bm_SOURCE_PATH}/build/config")
+    # endif()
+    # if(EXISTS "${CURRENT_INSTALLED_DIR}/share/boost-predef/check")
+    #     file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-predef/check" DESTINATION "${_bm_SOURCE_PATH}/build/predef")
+    # endif()
 
     if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         if(DEFINED _bm_BOOST_CMAKE_FRAGMENT)
@@ -250,7 +237,7 @@ function(boost_modular_build)
                 ${_bm_OPTIONS_REL}
                 variant=release
                 debug-symbols=on
-            WORKING_DIRECTORY ${_bm_SOURCE_PATH}
+            WORKING_DIRECTORY ${_bm_SOURCE_PATH}/build
             LOGNAME build-${TARGET_TRIPLET}-rel
         )
         message(STATUS "Building ${TARGET_TRIPLET}-rel done")
@@ -267,7 +254,7 @@ function(boost_modular_build)
                 ${_bm_OPTIONS}
                 ${_bm_OPTIONS_DBG}
                 variant=debug
-            WORKING_DIRECTORY ${_bm_SOURCE_PATH}
+            WORKING_DIRECTORY ${_bm_SOURCE_PATH}/build
             LOGNAME build-${TARGET_TRIPLET}-dbg
         )
         message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
@@ -322,7 +309,7 @@ function(boost_modular_build)
         string(REPLACE "-x64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-1_66" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
+        string(REPLACE "-1_67" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
         string(REPLACE "_python3-" "_python-" NEW_FILENAME ${NEW_FILENAME})
         if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
             # nothing to do
