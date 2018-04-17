@@ -9,6 +9,10 @@ set(VCPKG_PLATFORM_TOOLSET external)
 
 set(B2_OPTIONS)
 
+if(DEFINED BOOST_CMAKE_FRAGMENT)
+    include(${BOOST_CMAKE_FRAGMENT})
+endif()
+
 # Add build type specific options
 if(BUILD_SHARED_LIBS)
     list(APPEND B2_OPTIONS runtime-link=shared)
@@ -28,7 +32,11 @@ if(CMAKE_SYSTEM_PROCESSOR STREQUAL "AMD64")
     list(APPEND B2_OPTIONS address-model=64)
 endif()
 
-list(APPEND B2_OPTIONS target-os=linux toolset=gcc)
+if(APPLE)
+    list(APPEND B2_OPTIONS target-os=darwin toolset=clang)
+else()
+    list(APPEND B2_OPTIONS target-os=linux toolset=gcc)
+endif()
 
 string(REPLACE " " " <compileflags>" CXXFLAGS "${CMAKE_CXX_FLAGS}")
 #set(CXXFLAGS "${CXXFLAGS} <compileflags>-Wno-error=unused-command-line-argument")
@@ -44,6 +52,10 @@ endif()
 foreach(INCDIR ${CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES})
     set(CXXFLAGS "${CXXFLAGS} <compileflags>${CMAKE_INCLUDE_FLAG_C}${CMAKE_INCLUDE_FLAG_C_SEP}${INCDIR}")
 endforeach()
+
+if(APPLE)
+  set(CXXFLAGS "${CXXFLAGS} <compileflags>-D_DARWIN_C_SOURCE")
+endif()
 
 find_library(ZLIB_LIBPATH z)
 list(APPEND B2_OPTIONS

@@ -6,7 +6,8 @@ param (
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 
-$libsDisabledInUWP = "iostreams|filesystem|thread|context|python|stacktrace|program-options|program_options|coroutine`$|fiber|locale|test|type-erasure|type_erasure|wave|log"
+$libsDisabledInLinux = "python|fiber"
+$libsDisabledInUWP = "iostreams|filesystem|thread|context|python|stacktrace|program[_-]options|coroutine`$|fiber|locale|test|type[_-]erasure|wave|log"
 
 function Generate()
 {
@@ -100,6 +101,7 @@ function Generate()
                 "include(`${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)"
                 "boost_modular_build("
                 "    SOURCE_PATH `${SOURCE_PATH}"
+                "    BOOST_CMAKE_FRAGMENT `"`${CMAKE_CURRENT_LIST_DIR}/cmake-fragment.cmake`""
                 "    OPTIONS"
                 "        boost.locale.iconv=off"
                 "        boost.locale.posix=off"
@@ -307,9 +309,13 @@ foreach ($library in $libraries)
             -and `
             (($library -notmatch "utility|concept_check") -or ($_ -notmatch "iterator"))
         } | % { "boost-$_" -replace "_","-" } | % {
-            if ($_ -match $libsDisabledInUWP)
+            if ($_ -match $libsDisabledInLinux -and $_ -match $libsDisabledInUWP)
             {
                 "$_ (windows)"
+            }
+            elseif ($_ -match $libsDisabledInUWP)
+            {
+                "$_ (!uwp)"
             }
             else
             {
@@ -320,7 +326,7 @@ foreach ($library in $libraries)
         $deps += @("boost-vcpkg-helpers")
 
         $needsBuild = $false
-        if ((Test-Path $unpacked/build/Jamfile.v2) -and $library -ne "metaparse")
+        if ((Test-Path $unpacked/build/Jamfile.v2) -and $library -ne "metaparse" -and $library -ne "graph_parallel")
         {
             $deps += @("boost-build", "boost-modular-build-helper")
             $needsBuild = $true
@@ -334,6 +340,10 @@ foreach ($library in $libraries)
         elseif ($library -eq "iostreams")
         {
             $deps += @("zlib", "bzip2")
+        }
+        elseif ($library -eq "locale")
+        {
+            $deps += @("libiconv (!uwp&!windows)")
         }
         elseif ($library -eq "asio")
         {
@@ -350,9 +360,13 @@ foreach ($library in $libraries)
             -Depends $deps `
             -NeedsBuild $needsBuild
 
-        if ($library -match $libsDisabledInUWP)
+        if ($library -match $libsDisabledInLinux -and $library -match $libsDisabledInUWP)
         {
             $libraries_in_boost_port += @("$library (windows)")
+        }
+        elseif ($library -match $libsDisabledInUWP)
+        {
+            $libraries_in_boost_port += @("$library (!uwp)")
         }
         else
         {
