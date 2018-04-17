@@ -1,13 +1,13 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.66.0"
+    $version = "1.67.0"
 )
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 
 $libsDisabledInLinux = "python|fiber"
-$libsDisabledInUWP = "iostreams|filesystem|thread|context|python|stacktrace|program[_-]options|coroutine`$|fiber|locale|test|type[_-]erasure|wave|log"
+$libsDisabledInUWP = "iostreams|filesystem|thread|context|contract|python|stacktrace|program[_-]options|coroutine`$|fiber|locale|test|type[_-]erasure|wave|log"
 
 function Generate()
 {
@@ -76,15 +76,9 @@ function Generate()
         ""
     )
 
-    if ($Name -eq "python")
+    if (Test-Path "$scriptsDir/post-source-stubs/$Name.cmake")
     {
-        $portfileLines += @(
-            "# Find Python. Can't use find_package here, but we already know where everything is"
-            "file(GLOB PYTHON_INCLUDE_PATH `"`${CURRENT_INSTALLED_DIR}/include/python[0-9.]*`")"
-            "set(PYTHONLIBS_RELEASE `"`${CURRENT_INSTALLED_DIR}/lib`")"
-            "set(PYTHONLIBS_DEBUG `"`${CURRENT_INSTALLED_DIR}/debug/lib`")"
-            "string(REGEX REPLACE `".*python([0-9\.]+)`$`" `"\\1`" PYTHON_VERSION `"`${PYTHON_INCLUDE_PATH}`")"
-        )
+        $portfileLines += @(get-content "$scriptsDir/post-source-stubs/$Name.cmake")
     }
 
     if ($NeedsBuild)
@@ -127,7 +121,7 @@ function Generate()
         {
             $portfileLines += @(
                 "include(`${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)"
-                "boost_modular_build(SOURCE_PATH `${SOURCE_PATH} REQUIREMENTS `"<library>/boost/date_time//boost_date_time`")"
+                "boost_modular_build(SOURCE_PATH `${SOURCE_PATH} REQUIREMENTS `"<library>/boost/date_time//boost_date_time`" OPTIONS /boost/thread//boost_thread)"
             )
         }
         else
@@ -160,6 +154,14 @@ function Generate()
             "if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)"
             "    file(APPEND `${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp `"\n#define BOOST_ALL_DYN_LINK\n`")"
             "endif()"
+            "file(COPY `${SOURCE_PATH}/checks DESTINATION `${CURRENT_PACKAGES_DIR}/share/boost-config)"
+        )
+    }
+    if ($Name -eq "predef")
+    {
+        $portfileLines += @(
+            ""
+            "file(COPY `${SOURCE_PATH}/tools/check DESTINATION `${CURRENT_PACKAGES_DIR}/share/boost-predef)"
         )
     }
     if ($Name -eq "test")
@@ -198,6 +200,19 @@ if (!(Test-Path "$scriptsDir/boost"))
         popd
     }
 }
+else
+{
+    pushd $scriptsDir/boost
+    try
+    {
+        git fetch
+        git checkout -f boost-$version
+    }
+    finally
+    {
+        popd
+    }
+}
 
 $libraries_found = ls $scriptsDir/boost/libs -directory | % name | % {
     if ($_ -match "numeric")
@@ -229,7 +244,7 @@ foreach ($library in $libraries)
     if (!(Test-Path $archive))
     {
         "Downloading boost/$library..."
-        Invoke-WebRequest "https://github.com/boostorg/$library/archive/boost-$version.tar.gz" -OutFile $archive
+        & "$scriptsDir\..\..\downloads\tools\aria2-18.01.0-windows\aria2-1.33.1-win-32bit-build1\aria2c.exe" "https://github.com/boostorg/$library/archive/boost-$version.tar.gz" -d "$scriptsDir/downloads" -o "$library-boost-$version.tar.gz"
     }
     $hash = vcpkg hash $archive
     $unpacked = "$scriptsDir/libs/$library-boost-$version"
@@ -292,6 +307,11 @@ foreach ($library in $libraries)
         "    [unknown] " + $($groups | ? { $libraries_found -notcontains $_ })
 
         $deps = @($groups | ? { $libraries_found -contains $_ })
+
+        if ($library -eq "regex")
+        {
+            $deps += @("container_hash")
+        }
 
         $deps = @($deps | ? {
             # Boost contains cycles, so remove a few dependencies to break the loop.
