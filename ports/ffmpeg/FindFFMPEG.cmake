@@ -8,4 +8,4 @@ foreach(FFMPEG_SUBLIBRARY avformat avdevice avcodec avutil swscale)
 endforeach()
 list(APPEND FFMPEG_LIBRARIES wsock32 ws2_32 Secur32)
 
-find_package_handle_standard_args(FFMPEG REQUIRED_VARS FFMPEG_LIBRARIES FFMPEG_INCLUDE_DIR)
+find_package_handle_standard_args(FFMPEG REQUIRED_VARS FFMPEG_LIBRARIES FFMPEG_INCLUDE_DIRS)

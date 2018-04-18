@@ -11,8 +11,12 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/dont-export-symbols-in-static-build.patch)
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/dont-export-symbols-in-static-build.patch
+        ${CMAKE_CURRENT_LIST_DIR}/cmake-3-11.patch
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(OPENAL_LIBTYPE "SHARED")

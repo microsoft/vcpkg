@@ -7,7 +7,7 @@ namespace vcpkg
 {
     struct CStringView
     {
-        constexpr CStringView() : cstr(nullptr) {}
+        constexpr CStringView() noexcept : cstr(nullptr) {}
         constexpr CStringView(const char* cstr) : cstr(cstr) {}
         constexpr CStringView(const CStringView&) = default;
         CStringView(const std::string& str) : cstr(str.c_str()) {}
@@ -16,19 +16,6 @@ namespace vcpkg
 
     private:
         const char* cstr;
-    };
-
-    struct CWStringView
-    {
-        constexpr CWStringView() : cstr(nullptr) {}
-        constexpr CWStringView(const wchar_t* cstr) : cstr(cstr) {}
-        constexpr CWStringView(const CWStringView&) = default;
-        CWStringView(const std::wstring& str) : cstr(str.c_str()) {}
-
-        constexpr const wchar_t* c_str() const { return cstr; }
-
-    private:
-        const wchar_t* cstr;
     };
 
     namespace details

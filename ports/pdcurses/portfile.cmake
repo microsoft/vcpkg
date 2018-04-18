@@ -4,20 +4,25 @@ if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET})
 find_program(NMAKE nmake)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://downloads.sourceforge.net/project/pdcurses/pdcurses/3.4/pdcurs34.zip"
-    FILENAME "pdcurs34.zip"
-    SHA512 0b916bfe37517abb80df7313608cc4e1ed7659a41ce82763000dfdfa5b8311ffd439193c74fc84a591f343147212bf1caf89e7db71f1f7e4fa70f534834cb039
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO wmcbrine/PDCurses
+    REF PDCurses_3_4
+    SHA512 a05065c2e43771bf769f25f229b6058c4dc6add65d993f2e304e98bded8a8af88e674638c7385383451fddc45cf3bd8c9a95febffc7abcbcce0e6384e4f397b3
+    HEAD_REF master
 )
 
-if(EXISTS ${CURRENT_BUILDTREES_DIR}/src)
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
-endif()
+file(REMOVE_RECURSE
+    ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}
+)
 
-vcpkg_extract_source_archive(${ARCHIVE} ${SOURCE_PATH})
+file(GLOB SOURCES ${SOURCE_PATH}/*)
+
+file(COPY ${SOURCES} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
+
+set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
 
 file(READ ${SOURCE_PATH}/win32/vcwin32.mak PDC_MAK_ORIG)
 string(REPLACE " -pdb:none" "" PDC_MAK_ORIG ${PDC_MAK_ORIG})

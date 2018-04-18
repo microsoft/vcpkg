@@ -19,7 +19,7 @@ namespace vcpkg::Commands::DependInfo
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        args.parse_arguments(COMMAND_STRUCTURE);
+        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
 
         std::vector<std::unique_ptr<SourceControlFile>> source_control_files =
             Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
@@ -30,7 +30,6 @@ namespace vcpkg::Commands::DependInfo
 
             Util::erase_remove_if(source_control_files,
                                   [&](const std::unique_ptr<SourceControlFile>& source_control_file) {
-
                                       const SourceParagraph& source_paragraph = *source_control_file->core_paragraph;
 
                                       if (Strings::case_insensitive_ascii_contains(source_paragraph.name, filter))

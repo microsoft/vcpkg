@@ -3,8 +3,6 @@
 #include <vcpkg/dependencies.h>
 #include <vcpkg/vcpkgpaths.h>
 
-#include <vcpkg/base/files.h>
-
 #include <string>
 #include <vector>
 

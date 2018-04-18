@@ -45,15 +45,15 @@ endif()
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/c/projects/Win32/VC10/AllInOne/AllInOne.vcxproj
     PLATFORM ${BUILD_ARCH}
-    # Need this for it to pick up xerces-c port: https://github.com/Microsoft/vcpkg/issues/891
-    OPTIONS /p:ForceImportBeforeCppTargets=${VCPKG_ROOT_DIR}/scripts/buildsystems/msbuild/vcpkg.targets)
+    USE_VCPKG_INTEGRATION
+)
 
 # This is needed to generate the required LocalMsgIndex.hpp header
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/c/projects/Win32/VC10/Utils/XalanMsgLib/XalanMsgLib.vcxproj
     PLATFORM ${BUILD_ARCH}
-    # Need this for it to pick up xerces-c port: https://github.com/Microsoft/vcpkg/issues/891
-    OPTIONS /p:ForceImportBeforeCppTargets=${VCPKG_ROOT_DIR}/scripts/buildsystems/msbuild/vcpkg.targets)
+    USE_VCPKG_INTEGRATION
+)
 
 file(COPY ${SOURCE_PATH}/c/Build/${OUTPUT_DIR}/VC10/Debug/XalanMessages_1_11D.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 file(COPY ${SOURCE_PATH}/c/Build/${OUTPUT_DIR}/VC10/Debug/Xalan-C_1_11D.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
