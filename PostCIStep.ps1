@@ -18,7 +18,10 @@ $vcpkgRootDir = vcpkgFindFileRecursivelyUp $scriptsDir .vcpkg-root
 & $scriptsDir\CopySummaryToVcpkg000.ps1 -triplet $triplet -buildId $buildId
 
 # Delete all logs
-$logs = Get-ChildItem $vcpkgRootDir/buildtrees/*/* | ? { $_.Extension -eq ".log" }
-$logs | Remove-Item
+if (Test-Path $vcpkgRootDir/buildtrees)
+{
+    $logs = Get-ChildItem $vcpkgRootDir/buildtrees/*/* | ? { $_.Extension -eq ".log" }
+    $logs | Remove-Item
+}
 
 vcpkgRemoveItem "$vcpkgRootDir\installed"
