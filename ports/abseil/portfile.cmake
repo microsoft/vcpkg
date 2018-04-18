@@ -7,8 +7,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO abseil/abseil-cpp
-    REF 5337d2d0e312ce6bce0140b5f1da5548a0b3fed5
-    SHA512 14b2680c39260c5dc6a4b06583f7581ebfe11cde5c2e93cbca72385b1ba0c216894a3e88aa47ad84cc45af1c237b58e2b6240c35e1c0a73246a06ad472573558
+    REF a7e522daf1ec9cda69b356472f662142dd0c1215
+    SHA512 250b602fc3f5a4c3b6522ef0f49bdf63db0070289cb415cb31bb672b95b35dc9494f881adeb1b090927b1cd942c3674b6142747f601c8f7233bd12d4078583f3
     HEAD_REF master
 )
 
@@ -21,8 +21,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-abseil)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/abseil ${CURRENT_PACKAGES_DIR}/share/unofficial-abseil)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-abseil TARGET_PATH share/unofficial-abseil)
 
 file(GLOB_RECURSE HEADERS ${CURRENT_PACKAGES_DIR}/include/*)
 foreach(FILE ${HEADERS})

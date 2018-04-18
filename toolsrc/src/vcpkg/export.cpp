@@ -13,8 +13,6 @@
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/vcpkglib.h>
 
-#include <regex>
-
 namespace vcpkg::Export
 {
     using Dependencies::ExportPlanAction;
@@ -70,8 +68,11 @@ namespace vcpkg::Export
     {
         static constexpr std::array<ExportPlanType, 2> ORDER = {ExportPlanType::ALREADY_BUILT,
                                                                 ExportPlanType::NOT_BUILT};
-        static constexpr Build::BuildPackageOptions build_options = {Build::UseHeadVersion::NO,
-                                                                     Build::AllowDownloads::YES};
+        static constexpr Build::BuildPackageOptions BUILD_OPTIONS = {Build::UseHeadVersion::NO,
+                                                                     Build::AllowDownloads::YES,
+                                                                     Build::CleanBuildtrees::NO,
+                                                                     Build::CleanPackages::NO,
+                                                                     Build::DownloadTool::BUILT_IN};
 
         for (const ExportPlanType plan_type : ORDER)
         {
@@ -84,7 +85,7 @@ namespace vcpkg::Export
             std::vector<const ExportPlanAction*> cont = it->second;
             std::sort(cont.begin(), cont.end(), &ExportPlanAction::compare_by_name);
             const std::string as_string = Strings::join("\n", cont, [](const ExportPlanAction* p) {
-                return Dependencies::to_output_string(p->request_type, p->spec.to_string(), build_options);
+                return Dependencies::to_output_string(p->request_type, p->spec.to_string(), BUILD_OPTIONS);
             });
 
             switch (plan_type)
@@ -123,7 +124,7 @@ namespace vcpkg::Export
                                     const fs::path& output_dir)
     {
         Files::Filesystem& fs = paths.get_filesystem();
-        const fs::path& nuget_exe = paths.get_nuget_exe();
+        const fs::path& nuget_exe = paths.get_tool_exe(Tools::NUGET);
 
         // This file will be placed in "build\native" in the nuget package. Therefore, go up two dirs.
         const std::string targets_redirect_content =
@@ -189,7 +190,7 @@ namespace vcpkg::Export
                                       const fs::path& output_dir,
                                       const ArchiveFormat& format)
     {
-        const fs::path& cmake_exe = paths.get_cmake_exe();
+        const fs::path& cmake_exe = paths.get_tool_exe(Tools::CMAKE);
 
         const std::string exported_dir_filename = raw_exported_dir.filename().u8string();
         const std::string exported_archive_filename =
@@ -228,6 +229,7 @@ namespace vcpkg::Export
             {fs::path{"scripts"} / "getWindowsSDK.ps1"},
             {fs::path{"scripts"} / "getProgramFilesPlatformBitness.ps1"},
             {fs::path{"scripts"} / "getProgramFiles32bit.ps1"},
+            {fs::path{"scripts"} / "VcpkgPowershellUtils.ps1"},
         };
 
         for (const fs::path& file : integration_files_relative_to_root)
@@ -245,12 +247,12 @@ namespace vcpkg::Export
 
     struct ExportArguments
     {
-        bool dry_run;
-        bool raw;
-        bool nuget;
-        bool ifw;
-        bool zip;
-        bool seven_zip;
+        bool dry_run = false;
+        bool raw = false;
+        bool nuget = false;
+        bool ifw = false;
+        bool zip = false;
+        bool seven_zip = false;
 
         Optional<std::string> maybe_output;
 
@@ -428,7 +430,7 @@ namespace vcpkg::Export
         {
             System::println(
                 System::Color::success, R"(Files exported at: "%s")", raw_exported_dir_path.generic_string());
-            print_next_step_info(export_to_path);
+            print_next_step_info(raw_exported_dir_path);
         }
 
         if (opts.nuget)

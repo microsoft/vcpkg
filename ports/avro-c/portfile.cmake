@@ -16,9 +16,12 @@ vcpkg_apply_patches(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/lang/c
+    PREFER_NINJA
+    OPTIONS
+        -DCMAKE_DISABLE_FIND_PACKAGE_Snappy=ON
 )
 
-vcpkg_install_cmake(DISABLE_PARALLEL)
+vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 

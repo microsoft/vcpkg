@@ -26,11 +26,9 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/szip/data/COPYING ${CURRENT_PACKAGES_DIR}/share/szip/copyright)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/szip)
 
-file(READ ${CURRENT_PACKAGES_DIR}/debug/share/szip/szip-targets-debug.cmake SZIP_TARGETS_DEBUG_MODULE)
-string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" SZIP_TARGETS_DEBUG_MODULE "${SZIP_TARGETS_DEBUG_MODULE}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/szip/szip-targets-debug.cmake "${SZIP_TARGETS_DEBUG_MODULE}")
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/szip/data/COPYING ${CURRENT_PACKAGES_DIR}/share/szip/copyright)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

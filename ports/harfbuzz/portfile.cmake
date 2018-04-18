@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO behdad/harfbuzz
-    REF 1.7.5
-    SHA512 c6e0e91203fdf3cbc8e4fd3c5d5cdb8fd8d0c87609b2c35433a42c92721a7f707612cad339eb4871cae8f7e129245e93f1509f21ca45a0a81d44225e2207cbdc
+    REF 1.7.6
+    SHA512 90b51475d532377fe1686264a40f4a5555fc024f6984c1e3c114d8f4662e0c7f4a13e6a95e35fd5b3c54d1bb1b3cb97840b23f5ec2c6a799da61db1614b0fce3
     HEAD_REF master
 )
 
@@ -12,10 +12,10 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         "${CMAKE_CURRENT_LIST_DIR}/0001-fix-uwp-build.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/find-package-freetype.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/find-package-freetype-2.patch"
 )
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_CMAKE_SYSTEM_NAME)
     SET(HAVE_GLIB "OFF")
     SET(BUILTIN_UCDN "ON")
 else()

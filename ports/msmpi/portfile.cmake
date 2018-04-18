@@ -2,16 +2,16 @@ include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/msmpi-8.1)
 
 vcpkg_download_distfile(SDK_ARCHIVE
-    URLS "https://download.microsoft.com/download/D/B/B/DBB64BA1-7B51-43DB-8BF1-D1FB45EACF7A/msmpisdk.msi"
-    FILENAME "msmpisdk-8.1.msi"
-    SHA512 a0cfb713865257b812c19644286fc0d02ec57ce2a0bea066fead4e0ff18b545a0787065ab748f8dd335bb2fa486911aab54c1b842993b7b685c5832c014a63bf
+    URLS "https://download.microsoft.com/download/2/E/C/2EC96D7F-687B-4613-80F6-E10F670A2D97/msmpisdk.msi"
+    FILENAME "msmpisdk-9.0.msi"
+    SHA512 f80cc7619c42a5a0975224c5a0ab6d4085a97ab9a1480318cd72db2f600db52fb81d3959a2a9e0dbd9412b02d0814b8191dd4745bbde397110210e05960628b4
 )
 
 macro(download_msmpi_redistributable_package)
     vcpkg_download_distfile(REDIST_ARCHIVE
-        URLS "https://download.microsoft.com/download/D/B/B/DBB64BA1-7B51-43DB-8BF1-D1FB45EACF7A/MSMpiSetup.exe"
-        FILENAME "MSMpiSetup-8.1.exe"
-        SHA512 92ae65f3d52e786e39dffedabdf48255b4985a075993e626f5f59674e9ffaedbf33a4725e8f142b21468e24cd6d3e49f3d91da0fbda1867784cc93300c12c96b
+        URLS "https://download.microsoft.com/download/2/E/C/2EC96D7F-687B-4613-80F6-E10F670A2D97/msmpisetup.exe"
+        FILENAME "msmpisetup-9.0.exe"
+        SHA512 ad1cc3bc74e4c9c3c0f304395df9468e729e0acd9c77c8c6c806e88eadf4693811d29e608ffb459fcb6f4a20f61946ef4ac2e411aac49fb8f8d5aaddd10d4554
     )
 endmacro()
 
@@ -20,7 +20,7 @@ endmacro()
 # We always want the ProgramFiles folder even on a 64-bit machine (not the ProgramFilesx86 folder)
 vcpkg_get_program_files_platform_bitness(PROGRAM_FILES_PLATFORM_BITNESS)
 set(SYSTEM_MPIEXEC_FILEPATH "${PROGRAM_FILES_PLATFORM_BITNESS}/Microsoft MPI/Bin/mpiexec.exe")
-set(MSMPI_EXPECTED_FULL_VERSION "8.1.12438")
+set(MSMPI_EXPECTED_FULL_VERSION "9.0.12497")
 
 if(EXISTS "${SYSTEM_MPIEXEC_FILEPATH}")
     set(MPIEXEC_VERSION_LOGNAME "mpiexec-version")
@@ -31,7 +31,6 @@ if(EXISTS "${SYSTEM_MPIEXEC_FILEPATH}")
     )
     file(READ ${CURRENT_BUILDTREES_DIR}/${MPIEXEC_VERSION_LOGNAME}-out.log MPIEXEC_OUTPUT)
 
-    # Note: v8.1.1 was released with version 8.1.12438.1091. This is compatible with 8.1.12438.1084 (the version above), so ignore the fourth version number.
     if(MPIEXEC_OUTPUT MATCHES "\\[Version ([0-9]+\\.[0-9]+\\.[0-9]+)\\.[0-9]+\\]")
         if(NOT CMAKE_MATCH_1 STREQUAL MSMPI_EXPECTED_FULL_VERSION)
             download_msmpi_redistributable_package()

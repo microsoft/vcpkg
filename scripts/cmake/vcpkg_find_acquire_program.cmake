@@ -25,6 +25,7 @@
 ## - NASM
 ## - NINJA
 ## - YASM
+## - ARIA2 (Downloader)
 ##
 ## Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_acquire_msys.md).
 ##
@@ -40,6 +41,7 @@ function(vcpkg_find_acquire_program VAR)
   endif()
 
   unset(NOEXTRACT)
+  unset(_vfa_RENAME)
   unset(SUBDIR)
   unset(REQUIRED_INTERPRETER)
 
@@ -49,12 +51,16 @@ function(vcpkg_find_acquire_program VAR)
   if(VAR MATCHES "PERL")
     set(PROGNAME perl)
     set(PATHS ${DOWNLOADS}/tools/perl/perl/bin)
+    set(BREW_PACKAGE_NAME "perl")
+    set(APT_PACKAGE_NAME "perl")
     set(URL "http://strawberryperl.com/download/5.24.1.1/strawberry-perl-5.24.1.1-32bit-portable.zip")
     set(ARCHIVE "strawberry-perl-5.24.1.1-32bit-portable.zip")
     set(HASH a6e685ea24376f50db5f06c5b46075f1d3be25168fa1f27fa9b02e2ac017826cee62a2b43562f9b6c989337a231ba914416c110075457764de2d11f99d5e0f26)
   elseif(VAR MATCHES "NASM")
     set(PROGNAME nasm)
     set(PATHS ${DOWNLOADS}/tools/nasm/nasm-2.12.02)
+    set(BREW_PACKAGE_NAME "nasm")
+    set(APT_PACKAGE_NAME "nasm")
     set(URL
       "http://www.nasm.us/pub/nasm/releasebuilds/2.12.02/win32/nasm-2.12.02-win32.zip"
       "http://mirrors.kodi.tv/build-deps/win32/nasm-2.12.02-win32.zip"
@@ -63,11 +69,13 @@ function(vcpkg_find_acquire_program VAR)
     set(HASH df7aaba094e17832688c88993997612a2e2c96cc3dc14ca3e8347b44c7762115f5a7fc6d7f20be402553aaa4c9e43ddfcf6228f581cfe89289bae550de151b36)
   elseif(VAR MATCHES "YASM")
     set(PROGNAME yasm)
-    set(PATHS ${DOWNLOADS}/tools/yasm)
-    set(URL "http://www.tortall.net/projects/yasm/releases/yasm-1.3.0-win32.exe")
-    set(ARCHIVE "yasm.exe")
+    set(SUBDIR 1.3.0.6)
+    set(PATHS ${DOWNLOADS}/tools/yasm/${SUBDIR})
+    set(URL "https://www.tortall.net/projects/yasm/snapshots/v1.3.0.6.g1962/yasm-1.3.0.6.g1962.exe")
+    set(ARCHIVE "yasm-1.3.0.6.g1962.exe")
+    set(_vfa_RENAME "yasm.exe")
     set(NOEXTRACT ON)
-    set(HASH 850b26be5bbbdaeaf45ac39dd27f69f1a85e600c35afbd16b9f621396b3c7a19863ea3ff316b025b578fce0a8280eef2203306a2b3e46ee1389abb65313fb720)
+    set(HASH c1945669d983b632a10c5ff31e86d6ecbff143c3d8b2c433c0d3d18f84356d2b351f71ac05fd44e5403651b00c31db0d14615d7f9a6ecce5750438d37105c55b)
   elseif(VAR MATCHES "PYTHON3")
     set(PROGNAME python)
     set(SUBDIR "python3")
@@ -98,14 +106,20 @@ function(vcpkg_find_acquire_program VAR)
     set(HASH 830cd94ed6518fbe4604a0f5a3322671b4674b87d25a71349c745500d38e85c0fac4f6995242fc5521eb048e3966bb5ec2a96a06b041343ed8da9bba78124f34)
   elseif(VAR MATCHES "7Z")
     set(PROGNAME 7z)
-    set(PATHS "${PROGRAM_FILES_PLATFORM_BITNESS}/7-Zip" "${PROGRAM_FILES_32_BIT}/7-Zip" ${DOWNLOADS}/tools/7z/Files/7-Zip)
+    set(PATHS "${PROGRAM_FILES_PLATFORM_BITNESS}/7-Zip" "${PROGRAM_FILES_32_BIT}/7-Zip" "${DOWNLOADS}/tools/7z/Files/7-Zip")
     set(URL "http://7-zip.org/a/7z1604.msi")
     set(ARCHIVE "7z1604.msi")
     set(HASH 556f95f7566fe23704d136239e4cf5e2a26f939ab43b44145c91b70d031a088d553e5c21301f1242a2295dcde3143b356211f0108c68e65eef8572407618326d)
   elseif(VAR MATCHES "NINJA")
     set(PROGNAME ninja)
     set(SUBDIR "ninja-1.8.2")
-    set(PATHS ${DOWNLOADS}/tools/ninja/${SUBDIR})
+    if(CMAKE_HOST_WIN32)
+      set(PATHS "${DOWNLOADS}/tools/ninja/${SUBDIR}")
+    else()
+      set(PATHS "${DOWNLOADS}/tools/${SUBDIR}-linux")
+    endif()
+    set(BREW_PACKAGE_NAME "ninja")
+    set(APT_PACKAGE_NAME "ninja-build")
     set(URL "https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip")
     set(ARCHIVE "ninja-1.8.2-win.zip")
     set(HASH 9b9ce248240665fcd6404b989f3b3c27ed9682838225e6dc9b67b551774f251e4ff8a207504f941e7c811e7a8be1945e7bcb94472a335ef15e23a0200a32e6d5)
@@ -165,6 +179,13 @@ function(vcpkg_find_acquire_program VAR)
     set(URL "http://ftp.stack.nl/pub/users/dimitri/doxygen-1.8.14.windows.bin.zip")
     set(ARCHIVE "doxygen-1.8.14.windows.bin.zip")
     set(HASH d0d706501e7112045b1f401f22d12a2c8d9b7728edee9ad1975a17dff914c16494ae48a70beab6f6304643779935843f268c7afed3b9da7d403b5cb11cac0c50)
+  # Download Tools
+  elseif(VAR MATCHES "ARIA2")
+    set(PROGNAME aria2c)
+    set(PATHS ${DOWNLOADS}/tools/aria2c/aria2-1.33.1-win-32bit-build1)
+    set(URL "https://github.com/aria2/aria2/releases/download/release-1.33.1/aria2-1.33.1-win-32bit-build1.zip")
+    set(ARCHIVE "aria2-1.33.1-win-32bit-build1.zip")
+    set(HASH 2456176ba3d506a07cf0cc4f61f080e1ff8cb4106426d66f354c5bb67a9a8720b5ddb26904275e61b1f623c932355f7dcde4cd17556cc895f11293c23c3a9bf3)
   else()
     message(FATAL "unknown tool ${VAR} -- unable to acquire.")
   endif()
@@ -181,21 +202,36 @@ function(vcpkg_find_acquire_program VAR)
 
   do_find()
   if("${${VAR}}" MATCHES "-NOTFOUND")
+    if(NOT CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+      set(EXAMPLE ".")
+      if(DEFINED BREW_PACKAGE_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
+        set(EXAMPLE ":\n    brew install ${BREW_PACKAGE_NAME}")
+      elseif(DEFINED APT_PACKAGE_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
+        set(EXAMPLE ":\n    sudo apt-get install ${APT_PACKAGE_NAME}")
+      endif()
+      message(FATAL_ERROR "Could not find ${PROGNAME}. Please install it via your package manager${EXAMPLE}")
+    endif()
+
     vcpkg_download_distfile(ARCHIVE_PATH
         URLS ${URL}
         SHA512 ${HASH}
         FILENAME ${ARCHIVE}
     )
 
-    file(MAKE_DIRECTORY ${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR})
+    set(PROG_PATH_SUBDIR "${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR}")
+    file(MAKE_DIRECTORY ${PROG_PATH_SUBDIR})
     if(DEFINED NOEXTRACT)
-      file(COPY ${ARCHIVE_PATH} DESTINATION ${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR})
+      if(DEFINED _vfa_RENAME)
+        file(INSTALL ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR} RENAME ${_vfa_RENAME})
+      else()
+        file(COPY ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR})
+      endif()
     else()
       get_filename_component(ARCHIVE_EXTENSION ${ARCHIVE} EXT)
       string(TOLOWER "${ARCHIVE_EXTENSION}" ARCHIVE_EXTENSION)
       if(ARCHIVE_EXTENSION STREQUAL ".msi")
         file(TO_NATIVE_PATH "${ARCHIVE_PATH}" ARCHIVE_NATIVE_PATH)
-        file(TO_NATIVE_PATH "${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR}" DESTINATION_NATIVE_PATH)
+        file(TO_NATIVE_PATH "${PROG_PATH_SUBDIR}" DESTINATION_NATIVE_PATH)
         execute_process(
           COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
           WORKING_DIRECTORY ${DOWNLOADS}
@@ -203,7 +239,7 @@ function(vcpkg_find_acquire_program VAR)
       else()
         execute_process(
           COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
-          WORKING_DIRECTORY ${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR}
+          WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
         )
       endif()
     endif()

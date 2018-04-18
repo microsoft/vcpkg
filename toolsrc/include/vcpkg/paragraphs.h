@@ -3,11 +3,8 @@
 #include <vcpkg/binaryparagraph.h>
 #include <vcpkg/parse.h>
 #include <vcpkg/vcpkgpaths.h>
-#include <vcpkg/versiont.h>
 
 #include <vcpkg/base/expected.h>
-
-#include <map>
 
 namespace vcpkg::Paragraphs
 {
@@ -20,7 +17,7 @@ namespace vcpkg::Paragraphs
 
     Parse::ParseExpected<SourceControlFile> try_load_port(const Files::Filesystem& fs, const fs::path& control_path);
 
-    Expected<BinaryControlFile> try_load_cached_control_package(const VcpkgPaths& paths, const PackageSpec& spec);
+    Expected<BinaryControlFile> try_load_cached_package(const VcpkgPaths& paths, const PackageSpec& spec);
 
     struct LoadResults
     {

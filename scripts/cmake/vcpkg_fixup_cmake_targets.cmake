@@ -28,6 +28,12 @@ function(vcpkg_fixup_cmake_targets)
     set(RELEASE_SHARE ${CURRENT_PACKAGES_DIR}/${_vfct_TARGET_PATH})
 
     if(_vfct_CONFIG_PATH AND NOT RELEASE_SHARE STREQUAL "${CURRENT_PACKAGES_DIR}/${_vfct_CONFIG_PATH}")
+        if(_vfct_CONFIG_PATH STREQUAL "share")
+            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/debug/share2)
+            file(RENAME ${CURRENT_PACKAGES_DIR}/share ${CURRENT_PACKAGES_DIR}/share2)
+            set(_vfct_CONFIG_PATH share2)
+        endif()
+
         set(DEBUG_CONFIG ${CURRENT_PACKAGES_DIR}/debug/${_vfct_CONFIG_PATH})
         set(RELEASE_CONFIG ${CURRENT_PACKAGES_DIR}/${_vfct_CONFIG_PATH})
 
@@ -36,6 +42,7 @@ function(vcpkg_fixup_cmake_targets)
                 message(FATAL_ERROR "'${DEBUG_CONFIG}' does not exist.")
             endif()
 
+            # This roundabout handling enables CONFIG_PATH share
             file(MAKE_DIRECTORY ${DEBUG_SHARE})
             file(GLOB FILES ${DEBUG_CONFIG}/*)
             file(COPY ${FILES} DESTINATION ${DEBUG_SHARE})
@@ -76,12 +83,12 @@ function(vcpkg_fixup_cmake_targets)
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        if(NOT EXISTS ${DEBUG_SHARE})
+        if(NOT EXISTS "${DEBUG_SHARE}")
             message(FATAL_ERROR "'${DEBUG_SHARE}' does not exist.")
         endif()
     endif()
 
-    file(GLOB UNUSED_FILES
+    file(GLOB_RECURSE UNUSED_FILES
         "${DEBUG_SHARE}/*[Tt]argets.cmake"
         "${DEBUG_SHARE}/*[Cc]onfig.cmake"
         "${DEBUG_SHARE}/*[Cc]onfigVersion.cmake"
@@ -91,10 +98,10 @@ function(vcpkg_fixup_cmake_targets)
         file(REMOVE ${UNUSED_FILES})
     endif()
 
-    file(GLOB RELEASE_TARGETS
+    file(GLOB_RECURSE RELEASE_TARGETS
         "${RELEASE_SHARE}/*-release.cmake"
     )
-    foreach(RELEASE_TARGET ${RELEASE_TARGETS})
+    foreach(RELEASE_TARGET IN LISTS RELEASE_TARGETS)
         file(READ ${RELEASE_TARGET} _contents)
         string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${_IMPORT_PREFIX}" _contents "${_contents}")
         string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \"]+\\.exe)" "\${_IMPORT_PREFIX}/tools/${PORT}/\\1" _contents "${_contents}")
@@ -102,25 +109,25 @@ function(vcpkg_fixup_cmake_targets)
     endforeach()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(GLOB DEBUG_TARGETS
+        file(GLOB_RECURSE DEBUG_TARGETS
             "${DEBUG_SHARE}/*-debug.cmake"
             )
-        foreach(DEBUG_TARGET ${DEBUG_TARGETS})
-            get_filename_component(DEBUG_TARGET_NAME ${DEBUG_TARGET} NAME)
+        foreach(DEBUG_TARGET IN LISTS DEBUG_TARGETS)
+            file(RELATIVE_PATH DEBUG_TARGET_REL "${DEBUG_SHARE}" "${DEBUG_TARGET}")
 
             file(READ ${DEBUG_TARGET} _contents)
             string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${_IMPORT_PREFIX}" _contents "${_contents}")
             string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \"]+\\.exe)" "\${_IMPORT_PREFIX}/tools/${PORT}/\\1" _contents "${_contents}")
             string(REPLACE "\${_IMPORT_PREFIX}/lib" "\${_IMPORT_PREFIX}/debug/lib" _contents "${_contents}")
             string(REPLACE "\${_IMPORT_PREFIX}/bin" "\${_IMPORT_PREFIX}/debug/bin" _contents "${_contents}")
-            file(WRITE ${CURRENT_PACKAGES_DIR}/${_vfct_TARGET_PATH}/${DEBUG_TARGET_NAME} "${_contents}")
+            file(WRITE ${RELEASE_SHARE}/${DEBUG_TARGET_REL} "${_contents}")
 
             file(REMOVE ${DEBUG_TARGET})
         endforeach()
     endif()
 
-    file(GLOB MAIN_TARGETS "${RELEASE_SHARE}/*[Tt]argets.cmake")
-    foreach(MAIN_TARGET ${MAIN_TARGETS})
+    file(GLOB_RECURSE MAIN_TARGETS "${RELEASE_SHARE}/*[Tt]argets.cmake")
+    foreach(MAIN_TARGET IN LISTS MAIN_TARGETS)
         file(READ ${MAIN_TARGET} _contents)
         string(REGEX REPLACE
             "get_filename_component\\(_IMPORT_PREFIX \"\\\${CMAKE_CURRENT_LIST_FILE}\" PATH\\)(\nget_filename_component\\(_IMPORT_PREFIX \"\\\${_IMPORT_PREFIX}\" PATH\\))*"
@@ -133,8 +140,8 @@ function(vcpkg_fixup_cmake_targets)
         file(WRITE ${MAIN_TARGET} "${_contents}")
     endforeach()
 
-    file(GLOB MAIN_CONFIGS "${RELEASE_SHARE}/*[Cc]onfig.cmake")
-    foreach(MAIN_CONFIG ${MAIN_CONFIGS})
+    file(GLOB_RECURSE MAIN_CONFIGS "${RELEASE_SHARE}/*[Cc]onfig.cmake")
+    foreach(MAIN_CONFIG IN LISTS MAIN_CONFIGS)
         file(READ ${MAIN_CONFIG} _contents)
         string(REGEX REPLACE
             "get_filename_component\\(_IMPORT_PREFIX \"\\\${CMAKE_CURRENT_LIST_FILE}\" PATH\\)(\nget_filename_component\\(_IMPORT_PREFIX \"\\\${_IMPORT_PREFIX}\" PATH\\))*"
@@ -158,4 +165,13 @@ function(vcpkg_fixup_cmake_targets)
     if(NOT REMAINING_FILES)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
     endif()
+
+    # Patch out any remaining absolute references
+    file(TO_CMAKE_PATH "${CURRENT_PACKAGES_DIR}" CMAKE_CURRENT_PACKAGES_DIR)
+    file(GLOB CMAKE_FILES ${RELEASE_SHARE}/*.cmake)
+    foreach(CMAKE_FILE IN LISTS CMAKE_FILES)
+        file(READ ${CMAKE_FILE} _contents)
+        string(REPLACE "${CMAKE_CURRENT_PACKAGES_DIR}" "\${CMAKE_CURRENT_LIST_DIR}/../.." _contents "${_contents}")
+        file(WRITE ${CMAKE_FILE} "${_contents}")
+    endforeach()
 endfunction()

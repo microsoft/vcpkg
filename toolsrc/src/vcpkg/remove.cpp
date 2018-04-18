@@ -58,7 +58,7 @@ namespace vcpkg::Remove
                 const auto status = fs.status(target, ec);
                 if (ec)
                 {
-                    System::println(System::Color::error, "failed: %s", ec.message());
+                    System::println(System::Color::error, "failed: status(%s): %s", target.u8string(), ec.message());
                     continue;
                 }
 
@@ -71,12 +71,23 @@ namespace vcpkg::Remove
                     fs.remove(target, ec);
                     if (ec)
                     {
-                        System::println(System::Color::error, "failed: %s: %s", target.u8string(), ec.message());
+#if defined(_WIN32)
+                        fs::stdfs::permissions(target, fs::stdfs::perms::owner_all | fs::stdfs::perms::group_all, ec);
+                        fs.remove(target, ec);
+                        if (ec)
+                        {
+                            System::println(
+                                System::Color::error, "failed: remove(%s): %s", target.u8string(), ec.message());
+                        }
+#else
+                        System::println(
+                            System::Color::error, "failed: remove(%s): %s", target.u8string(), ec.message());
+#endif
                     }
                 }
-                else if (!fs::status_known(status))
+                else if (!fs::stdfs::exists(status))
                 {
-                    System::println(System::Color::warning, "Warning: unknown status: %s", target.u8string());
+                    System::println(System::Color::warning, "Warning: %s: file not found", target.u8string());
                 }
                 else
                 {
@@ -190,9 +201,9 @@ namespace vcpkg::Remove
     static std::vector<std::string> valid_arguments(const VcpkgPaths& paths)
     {
         const StatusParagraphs status_db = database_load_check(paths);
-        const std::vector<StatusParagraph*> installed_packages = get_installed_ports(status_db);
+        auto installed_packages = get_installed_ports(status_db);
 
-        return Util::fmap(installed_packages, [](auto&& pgh) -> std::string { return pgh->package.spec.to_string(); });
+        return Util::fmap(installed_packages, [](auto&& pgh) -> std::string { return pgh.spec().to_string(); });
     }
 
     const CommandStructure COMMAND_STRUCTURE = {

@@ -17,17 +17,12 @@ namespace vcpkg::Update
     std::vector<OutdatedPackage> find_outdated_packages(const Dependencies::PortFileProvider& provider,
                                                         const StatusParagraphs& status_db)
     {
-        const std::vector<StatusParagraph*> installed_packages = get_installed_ports(status_db);
+        auto installed_packages = get_installed_ports(status_db);
 
         std::vector<OutdatedPackage> output;
-        for (const StatusParagraph* pgh : installed_packages)
+        for (auto&& ipv : installed_packages)
         {
-            if (!pgh->package.feature.empty())
-            {
-                // Skip feature paragraphs; only consider master paragraphs for needing updates.
-                continue;
-            }
-
+            const auto& pgh = ipv.core;
             auto maybe_scf = provider.get_control_file(pgh->package.spec.name());
             if (auto p_scf = maybe_scf.get())
             {

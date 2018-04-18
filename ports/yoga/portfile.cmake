@@ -12,7 +12,8 @@
 include(vcpkg_common_functions)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(FATAL_ERROR "Error: Dynamic building not supported yet.")
+    message(WARNING "Dynamic not supported, building static")
+    set(VCPKG_LIBRARY_LINKAGE static)
 elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     message(FATAL_ERROR "Error: UWP builds not supported yet.")
 endif()
@@ -20,8 +21,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/yoga
-    REF 1.7.0
-    SHA512 3472a6db429e1fd0365321b2e663935741c4c97331f3936ea7b590b8218ada567ef7517fb20b1c843c1aad393e2b564e9626170a3d6c25e85450f9e8eb7ffdcc
+    REF v1.8.0
+    SHA512 9af0e9e66ce223c99a9cab12721099ca40f85d2fa2a0e0a7d2bcff6d5acc5b6ca0edaaa53e49ec921bf78bb986070702cfe3271c4819147486dad6f6ee93e690
     HEAD_REF master
 )
 
@@ -33,8 +34,12 @@ vcpkg_build_cmake()
 vcpkg_copy_pdbs()
 
 file(INSTALL ${SOURCE_PATH}/yoga DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN "*.h")
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/yogacore.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Debug/yogacore.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/yogacore.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+endif()
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Debug/yogacore.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+endif()
 
 vcpkg_copy_pdbs()
 

@@ -35,7 +35,7 @@ namespace vcpkg
         return get_localappdata() / "vcpkg" / "config";
 #else
         auto maybe_home = System::get_environment_variable("HOME");
-        return fs::path(maybe_home.value_or("/var")) / "vcpkg" / "config";
+        return fs::path(maybe_home.value_or("/var")) / ".vcpkg" / "config";
 #endif
     }
 

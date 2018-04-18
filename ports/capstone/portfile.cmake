@@ -46,6 +46,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt 
+file(INSTALL ${SOURCE_PATH}/LICENSE.TXT 
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/capstone 
     RENAME copyright)

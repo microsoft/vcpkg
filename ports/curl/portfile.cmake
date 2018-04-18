@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_58_0
-    SHA512 148c25152732dd5ad2626bc70c7725577e25033a73eecefa4dd820927ec552f9c2d0235cc3f597404d3893eced7d5d2bd9522f6302b7f930e9f65912ac2c91f6
+    REF curl-7_59_0
+    SHA512 eac51b986db7eafb836bc4fa00def88054304110990bf99a4387a5ff85a8375616c2ee5bee91bf608737faffe9f228dfd62be69a4b0622a4afe3deb1098b6bd3
     HEAD_REF master
 )
 
@@ -12,6 +12,7 @@ vcpkg_apply_patches(
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/0001_cmake.patch
         ${CMAKE_CURRENT_LIST_DIR}/0002_fix_uwp.patch
+        ${CMAKE_CURRENT_LIST_DIR}/0003_fix_libraries.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
@@ -93,6 +94,12 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/curl)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/curl)
+elseif(EXISTS ${CURRENT_PACKAGES_DIR}/share/curl)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH share/curl)
+endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/curl RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
