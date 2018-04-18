@@ -19,7 +19,7 @@ add_definitions(
     -DANGLE_ENABLE_DEBUG_ANNOTATIONS
 )
 
-configure_file(commit.h include/id/commit.h COPYONLY)
+configure_file(src/commit.h include/id/commit.h COPYONLY)
 include_directories(include src ${CMAKE_CURRENT_BINARY_DIR}/include)
 
 ##########
@@ -205,7 +205,7 @@ install(TARGETS libEGL libGLESv2 EXPORT ANGLEExport
     ARCHIVE DESTINATION lib
 )
 
-install(EXPORT ANGLEExport FILE unofficial-angle-config.cmake NAMESPACE unofficial::angle:: DESTINATION share/unofficial-angle)
+install(EXPORT ANGLEExport FILE ms-angle-config.cmake NAMESPACE ms-angle:: DESTINATION share/ms-angle)
 
 if(NOT DISABLE_INSTALL_HEADERS)
     install(

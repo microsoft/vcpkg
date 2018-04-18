@@ -17,7 +17,6 @@ vcpkg_apply_patches(
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/commit.h DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -27,8 +26,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-angle)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/ms-angle ${CURRENT_PACKAGES_DIR}/share/unofficial-angle)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/ms-angle)
 
 vcpkg_copy_pdbs()
 
