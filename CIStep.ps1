@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)][string]$triplet,
+    [Parameter(Mandatory=$true)][bool]$binaryCaching,
     [Parameter(Mandatory=$true)][bool]$miniTest
 )
 
@@ -19,27 +20,21 @@ Write-Host "Bootstrapping vcpkg ..."
 & "$vcpkgRootDir\scripts\bootstrap.ps1" -Verbose -withVSPath $vsInstallPath
 Write-Host "Bootstrapping vcpkg ... done."
 
-$packagesDir = "$vcpkgRootDir\packages"
-$installedDir = "$vcpkgRootDir\installed"
-Write-Host "Deleting $packagesDir & $installedDir  ..."
-vcpkgRemoveItem "$packagesDir"
-vcpkgRemoveItem "$installedDir"
-Write-Host "Deleting $packagesDir & $installedDir  ... done."
-
 $ciXmlPath = "$vcpkgRootDir\test-full-ci.xml"
-
-Write-Host "Deleting $ciXmlPath ..."
 vcpkgRemoveItem $ciXmlPath
-Write-Host "Deleting $ciXmlPath ... done."
 
 ./vcpkg remove --outdated --recurse
 
 cmd /c subst V: /D
 cmd /c subst V: .
 
-pushd V:\
+Push-Location V:\
 
-$env:VCPKG_FEATURE_FLAGS = "binarycaching"
+if ($binaryCaching)
+{
+    $env:VCPKG_FEATURE_FLAGS = "binarycaching"
+}
+
 $env:VCPKG_DEFAULT_VS_PATH = $vsInstallPath
 
 if($miniTest)
@@ -51,4 +46,4 @@ else
     ./vcpkg ci $triplet "--x-xunit=$ciXmlPath" --exclude=aws-sdk-cpp,ecm,llvm,catch-classic,libpng-apng,libmariadb,libp7-baical,luajit,mozjpeg | Tee-Object -FilePath "$triplet.txt"
 }
 
-popd
+Pop-Location

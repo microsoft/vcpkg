@@ -3,17 +3,13 @@ param(
     [Parameter(Mandatory=$true)][string]$vsInstallNickname,
     [Parameter(Mandatory=$true)][ValidateSet('tfs','msvc', 'NOT_APPLICABLE')][string]$repo,
     [Parameter(Mandatory=$true)][string]$branch,
-    [Parameter(Mandatory=$true)][ValidateSet('ret','chk', 'NOT_APPLICABLE')][string]$retOrChk,
-    [Parameter(Mandatory=$true)][string]$triplet,
-    [Parameter(Mandatory=$true)][bool]$incremental,
-    [Parameter(Mandatory=$false)][bool]$AlwaysLocal
+    [Parameter(Mandatory=$true)][ValidateSet('ret','chk', 'NOT_APPLICABLE')][string]$retOrChk
 )
 
 Set-StrictMode -Version Latest
 
 $vsInstallNickname = $vsInstallNickname.ToLower()
 $branch = $branch.ToLower()
-$triplet = $triplet.ToLower()
 
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 . "$scriptsDir\VcpkgPowershellUtils.ps1"
@@ -40,5 +36,25 @@ if ($vsInstallNickname -eq $VISUAL_STUDIO_2017_UNSTABLE_NICKNAME -and ![string]:
 # Create triplets
 CreateTripletsForVS -vsInstallPath $vsInstallPath -vsInstallNickname $vsInstallNickname -outputDir "$vcpkgRootDir\triplets" -comment $comment
 
-# Prepare installed dir
-& $scriptsDir\PrepareInstalledDir.ps1 -triplet $triplet -incremental $incremental -AlwaysLocal $AlwaysLocal
+# Cleanup folders
+vcpkgRemoveItem "$vcpkgRootDir\buildtrees"
+vcpkgRemoveItem "$vcpkgRootDir\packages"
+vcpkgRemoveItem "$vcpkgRootDir\installed"
+# vcpkgRemoveItem "$vcpkgRootDir\downloads" # Don't delete at this time
+
+# binary caching
+$driveLetter = "I:"
+Write-Host "Deleting drive $driveLetter\ ..."
+if (Test-Path $driveLetter)
+{
+    net use $driveLetter /delete
+}
+Write-Host "Deleting drive $driveLetter\ ... done."
+
+$remoteShare = "\\vcpkg-000\installed"
+Write-Host "Mapping drive $driveLetter\ to $remoteShare ..."
+net use $driveLetter $remoteShare B7PeL56r /USER:\vcpkg
+Write-Host "Mapping drive $driveLetter\ to $remoteShare ... done."
+
+unlinkOrDeleteDirectory "$vcpkgRootDir\archives"
+cmd /c mklink /D "$vcpkgRootDir\archives" "$driveLetter\archives"

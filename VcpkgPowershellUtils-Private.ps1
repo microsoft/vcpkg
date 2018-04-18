@@ -273,3 +273,30 @@ function findVSInstallPathFromNickname([Parameter(Mandatory=$true)][string]$vsIn
     Write-Error "Could not deduce Visual Studio path for nickname: [$vsInstallNickname]"
     throw 0
 }
+
+function IsReparsePoint([Parameter(Mandatory=$true)][string]$path)
+{
+    $file = Get-Item $path -Force -ea SilentlyContinue
+    return [bool]($file.Attributes -band [IO.FileAttributes]::ReparsePoint)
+}
+
+function unlinkOrDeleteDirectory([Parameter(Mandatory=$true)][string]$path)
+{
+    if (!(Test-Path $path))
+    {
+        return
+    }
+
+    Write-Host "Unlinking/deleting $path ..."
+    if (IsReparsePoint $path)
+    {
+        Write-Host "Reparse point detected. Unlinking."
+        cmd /c rmdir $path
+    }
+    else
+    {
+        Write-Host "Non-reparse point detected. Deleting."
+        vcpkgRemoveItem $path
+    }
+    Write-Host "Unlinking/deleting $path ... done."
+}
