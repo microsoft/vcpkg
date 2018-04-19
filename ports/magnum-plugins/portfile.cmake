@@ -14,9 +14,9 @@ vcpkg_apply_patches(
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(BUILD_STATIC 1)
+    set(BUILD_PLUGINS_STATIC 1)
 else()
-    set(BUILD_STATIC 0)
+    set(BUILD_PLUGINS_STATIC 0)
 endif()
 
 # Handle features
@@ -40,7 +40,8 @@ vcpkg_configure_cmake(
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
         ${_COMPONENT_FLAGS}
-        -DBUILD_STATIC=${BUILD_STATIC}
+        -DBUILD_STATIC=${BUILD_PLUGINS_STATIC}
+        -DBUILD_PLUGINS_STATIC=${BUILD_PLUGINS_STATIC}
         -DMAGNUM_PLUGINS_DEBUG_DIR=${CURRENT_INSTALLED_DIR}/debug/bin/magnum-d
         -DMAGNUM_PLUGINS_RELEASE_DIR=${CURRENT_INSTALLED_DIR}/bin/magnum
 )
