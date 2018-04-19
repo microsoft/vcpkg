@@ -34,8 +34,11 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE 
 	${CURRENT_PACKAGES_DIR}/lib 
+    ${CURRENT_PACKAGES_DIR}/debug/include
 	${CURRENT_PACKAGES_DIR}/debug/lib
 	)
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/restinio")
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/../../LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/restinio)
