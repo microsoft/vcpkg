@@ -10,6 +10,12 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/uwp-cflags.patch
+)
+
 # Acquire tools
 vcpkg_acquire_msys(MSYS_ROOT PACKAGES make automake1.15)
 
@@ -64,8 +70,8 @@ message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
 message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-set(ENV{CFLAGS} "${X264_RUNTIME}d -Od -Zi")
-set(ENV{CXXFLAGS} "${X264_RUNTIME}d -Od -Zi")
+set(ENV{CFLAGS} "${X264_RUNTIME}d -Od -Zi -RTC1")
+set(ENV{CXXFLAGS} "${X264_RUNTIME}d -Od -Zi -RTC1")
 set(ENV{LDFLAGS} "-DEBUG")
 vcpkg_execute_required_process(
     COMMAND ${BASH} --noprofile --norc -c 
