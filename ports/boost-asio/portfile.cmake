@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/asio
-    REF boost-1.66.0
-    SHA512 7d9989bd96b2940183a1aa75e7f7a6cec0ecf630922009d440ba876802411eba80ddc9b22bd4af65d6f12e3414eb130dc27a884c53bceabdfe8bafb9772db01f
+    REF boost-1.67.0
+    SHA512 b7497608afa49580eeb9a74feefc624eb66a3e6db21f2a65291ccb287fe60dc8d923a9143bc10e73b8508ec2ef094e6caf2ef96528790c5324b6aceced55f29f
     HEAD_REF master
 )
 

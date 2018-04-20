@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/lexical_cast
-    REF boost-1.66.0
-    SHA512 93afc3a296ca30ebb3f48aaf7752a4da33d3e621b56f0f574e98a21aceb7c402fc7512ac65895c8bf473b6962222d0022a6d2aadad5ce2cdbfdf5318967dc76b
+    REF boost-1.67.0
+    SHA512 b3c0c4e94265784001d8b9fc317a2bafe4c83aede9311a7172a76b1c0bf47cc811f7963e9580d0d3f0527f16531abb204b9201c0cc611dd322bcfce2671fa54d
     HEAD_REF master
 )
 
