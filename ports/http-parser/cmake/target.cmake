@@ -1,0 +1,2 @@
+set(NODEJS_HTTP_PARSER_VERSION "2.7.1")
+set(NODEJS_HTTP_PARSER_LIB http_parser)
