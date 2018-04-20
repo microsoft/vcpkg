@@ -12,7 +12,6 @@ if(CMAKE_BUILD_TYPE MATCHES "Release")
   add_definitions(-DHTTP_PARSER_STRICT=0)
 endif()
 
-set(NODEJS_HTTP_PARSER_LIB http_parser)
 add_library(${NODEJS_HTTP_PARSER_LIB} http_parser.c http_parser.h)
 
 target_include_directories(${NODEJS_HTTP_PARSER_LIB} PUBLIC
