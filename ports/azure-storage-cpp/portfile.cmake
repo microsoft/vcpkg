@@ -18,11 +18,14 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/cmake.patch
         ${CMAKE_CURRENT_LIST_DIR}/static-builds.patch
         ${CMAKE_CURRENT_LIST_DIR}/support-cpprest-findpackage.patch
+        ${CMAKE_CURRENT_LIST_DIR}/glibmm-cmake.patch
+        ${CMAKE_CURRENT_LIST_DIR}/pplx-do-while.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/Microsoft.WindowsAzure.Storage
     OPTIONS
+        -DCMAKE_FIND_FRAMEWORK=LAST
         -DBUILD_TESTS=OFF
         -DBUILD_SAMPLES=OFF
 )

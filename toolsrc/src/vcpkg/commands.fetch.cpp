@@ -41,6 +41,22 @@ namespace vcpkg::Commands::Fetch
         return result;
     }
 
+    static Optional<std::string> extract_string_between_delimiters(const std::string& input,
+                                                                   const std::string& left_delim,
+                                                                   const std::string& right_delim,
+                                                                   const size_t& starting_offset = 0)
+    {
+        const size_t from = input.find(left_delim, starting_offset);
+        if (from == std::string::npos) return nullopt;
+
+        const size_t substring_start = from + left_delim.length();
+
+        const size_t to = input.find(right_delim, substring_start);
+        if (from == std::string::npos) return nullopt;
+
+        return input.substr(substring_start, to - substring_start);
+    }
+
     static ToolData parse_tool_data_from_xml(const VcpkgPaths& paths, const std::string& tool)
     {
 #if defined(_WIN32)
@@ -57,33 +73,21 @@ namespace vcpkg::Commands::Fetch
         static const std::string XML_VERSION = "2";
         static const fs::path XML_PATH = paths.scripts / "vcpkgTools.xml";
 
-        const auto maybe_get_string_inside_tags = [](const std::string& input,
-                                                     const std::regex& regex) -> Optional<std::string> {
-            std::smatch match;
-            const bool has_match = std::regex_search(input.cbegin(), input.cend(), match, regex);
-            if (!has_match) return nullopt;
-            return match[1];
-        };
-
         const auto get_string_inside_tags =
-            [](const std::string& input, const std::regex& regex, const std::string& tag_name) -> std::string {
-            std::smatch match;
-            const bool has_match = std::regex_search(input.cbegin(), input.cend(), match, regex);
-            Checks::check_exit(
-                VCPKG_LINE_INFO, has_match, "Could not find tag <%s> in %s", tag_name, XML_PATH.generic_string());
+            [](const std::string& input, const std::string& left_delim, const std::string& right_delim) -> std::string {
+            Optional<std::string> result = extract_string_between_delimiters(input, left_delim, right_delim);
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               result.has_value(),
+                               "Could not find tag <%s>.*<%s> in %s",
+                               left_delim,
+                               right_delim,
+                               XML_PATH.generic_string());
 
-            return match[1];
+            return *result.get();
         };
 
         static const std::regex XML_VERSION_REGEX{R"###(<tools[\s]+version="([^"]+)">)###"};
         static const std::string XML = paths.get_filesystem().read_contents(XML_PATH).value_or_exit(VCPKG_LINE_INFO);
-        static const std::regex VERSION_REGEX{R"###(<version>([\s\S]*?)</version>)###"};
-        static const std::regex EXE_RELATIVE_PATH_REGEX{
-            Strings::format(R"###(<exeRelativePath>([\s\S]*?)</exeRelativePath>)###")};
-        static const std::regex ARCHIVE_NAME_REGEX{Strings::format(R"###(<archiveName>([\s\S]*?)</archiveName>)###")};
-        static const std::regex URL_REGEX{Strings::format(R"###(<url>([\s\S]*?)</url>)###")};
-        static const std::regex SHA512_REGEX{Strings::format(R"###(<sha512>([\s\S]*?)</sha512>)###")};
-
         std::smatch match_xml_version;
         const bool has_xml_version = std::regex_search(XML.cbegin(), XML.cend(), match_xml_version, XML_VERSION_REGEX);
         Checks::check_exit(VCPKG_LINE_INFO,
@@ -98,43 +102,36 @@ namespace vcpkg::Commands::Fetch
                            XML_VERSION,
                            match_xml_version[1]);
 
-        const std::regex tool_regex{
-            Strings::format(R"###(<tool[\s]+name="%s"[\s]+os="%s">([\s\S]*?)<\/tool>)###", tool, OS_STRING)};
-
-        std::smatch match_tool;
-        const bool has_match_tool = std::regex_search(XML.cbegin(), XML.cend(), match_tool, tool_regex);
+        const std::regex tool_regex{Strings::format(R"###(<tool[\s]+name="%s"[\s]+os="%s">)###", tool, OS_STRING)};
+        std::smatch match_tool_entry;
+        const bool has_tool_entry = std::regex_search(XML.cbegin(), XML.cend(), match_tool_entry, tool_regex);
         Checks::check_exit(VCPKG_LINE_INFO,
-                           has_match_tool,
+                           has_tool_entry,
                            "Could not find entry for tool [%s] in %s",
                            tool,
                            XML_PATH.generic_string());
 
-        const std::string tool_data_as_string = get_string_inside_tags(XML, tool_regex, tool);
+        const std::string tool_data = get_string_inside_tags(XML, match_tool_entry[0], R"(</tool>)");
 
-        const std::string required_version_as_string =
-            get_string_inside_tags(tool_data_as_string, VERSION_REGEX, "version");
-
-        const std::string url = get_string_inside_tags(tool_data_as_string, URL_REGEX, "url");
-
+        const std::string version_as_string = get_string_inside_tags(tool_data, "<version>", R"(</version>)");
         const std::string exe_relative_path =
-            get_string_inside_tags(tool_data_as_string, EXE_RELATIVE_PATH_REGEX, "exeRelativePath");
+            get_string_inside_tags(tool_data, "<exeRelativePath>", R"(</exeRelativePath>)");
+        const std::string url = get_string_inside_tags(tool_data, "<url>", R"(</url>)");
+        const std::string sha512 = get_string_inside_tags(tool_data, "<sha512>", R"(</sha512>)");
+        auto archive_name = extract_string_between_delimiters(tool_data, "<archiveName>", R"(</archiveName>)");
 
-        auto archive_name = maybe_get_string_inside_tags(tool_data_as_string, ARCHIVE_NAME_REGEX);
-
-        const Optional<std::array<int, 3>> required_version = parse_version_string(required_version_as_string);
+        const Optional<std::array<int, 3>> version = parse_version_string(version_as_string);
         Checks::check_exit(VCPKG_LINE_INFO,
-                           required_version.has_value(),
+                           version.has_value(),
                            "Could not parse version for tool %s. Version string was: %s",
                            tool,
-                           required_version_as_string);
+                           version_as_string);
 
-        const std::string tool_dir_name = Strings::format("%s-%s-%s", tool, required_version_as_string, OS_STRING);
+        const std::string tool_dir_name = Strings::format("%s-%s-%s", tool, version_as_string, OS_STRING);
         const fs::path tool_dir_path = paths.downloads / "tools" / tool_dir_name;
         const fs::path exe_path = tool_dir_path / exe_relative_path;
 
-        const std::string sha512 = get_string_inside_tags(tool_data_as_string, SHA512_REGEX, "sha512");
-
-        return ToolData{*required_version.get(),
+        return ToolData{*version.get(),
                         exe_path,
                         url,
                         paths.downloads / archive_name.value_or(exe_relative_path),
