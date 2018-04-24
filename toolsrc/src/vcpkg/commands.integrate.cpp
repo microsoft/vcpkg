@@ -392,8 +392,10 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
                                        paths.scripts / "addPoshVcpkgToPowershellProfile.ps1");
             Checks::exit_success(VCPKG_LINE_INFO);
         }
-#endif
 
         Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown parameter %s for integrate", args.command_arguments[0]);
+#else
+        Checks::exit_success(VCPKG_LINE_INFO);
+#endif
     }
 }
