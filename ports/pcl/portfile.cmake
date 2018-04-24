@@ -18,6 +18,7 @@ vcpkg_apply_patches(
             "${CMAKE_CURRENT_LIST_DIR}/find_openni2.patch"
             "${CMAKE_CURRENT_LIST_DIR}/find_cuda.patch"
             "${CMAKE_CURRENT_LIST_DIR}/vs2017-15.4-workaround.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/boost_uuid_random_generator_compat.patch"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
