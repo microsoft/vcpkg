@@ -22,6 +22,7 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/disable-csharp-ext.patch
+        ${CMAKE_CURRENT_LIST_DIR}/disable-csharp-ext-2.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
@@ -66,8 +67,12 @@ if(TOOLS)
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/grpc)
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+else()
+    SET(VCPKG_POLICY_EMPTY_PACKAGE enabled) # Leave the executable files in bin/ and debug/bin
+endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_pdbs()
