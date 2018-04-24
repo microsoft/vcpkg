@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/foreach
-    REF boost-1.66.0
-    SHA512 17ae42db9b9b13841133cb35ccd1b0a2bf6121e72ef53b7f06d8715d0ef2d9c6daee631df1c8eb87013b1415ec4ed7481b3d67aa86122c84bfc560b0815f81c6
+    REF boost-1.67.0
+    SHA512 67cce17f58564a1ab09f85f9da3c73135dab2171be9487723e69d1bf10cb1abef2aae3747d39ca605510505510943a114d7637d49dd5f3b097c191b4993052b5
     HEAD_REF master
 )
 

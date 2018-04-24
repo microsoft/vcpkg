@@ -9,9 +9,16 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# cppzmq is a single header library, so we just need to copy that file in the include directory
-file(INSTALL ${SOURCE_PATH}/zmq.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SOURCE_PATH}/zmq_addon.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+)
+
+vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/cppzmq)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cppzmq)

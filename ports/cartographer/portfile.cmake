@@ -16,7 +16,8 @@ vcpkg_apply_patches(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS        
+    PREFER_NINJA
+    OPTIONS
         -DGFLAGS_PREFER_EXPORTED_GFLAGS_CMAKE_CONFIGURATION=OFF 
         -DGLOG_PREFER_EXPORTED_GLOG_CMAKE_CONFIGURATION=OFF 
         -Dgtest_disable_pthreads=ON 
@@ -27,7 +28,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cartographer)
 vcpkg_copy_pdbs()
 
 # Clean
