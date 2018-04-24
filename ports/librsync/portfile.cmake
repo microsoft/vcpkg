@@ -30,6 +30,9 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/rsync.dll)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
     file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/rsync.dll ${CURRENT_PACKAGES_DIR}/debug/bin/rsync.dll)
 endif()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 
 file(INSTALL
     ${SOURCE_PATH}/COPYING
