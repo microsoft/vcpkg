@@ -14,7 +14,10 @@ To get started:
 ```
 > git clone https://github.com/Microsoft/vcpkg
 > cd vcpkg
-> ./bootstrap-vcpkg.bat
+
+PS> ./bootstrap-vcpkg.bat
+
+Ubuntu:~/$ ./bootstrap-vcpkg.sh
 ```
 
 Then, to hook up user-wide integration, run (note: requires admin on first use)
@@ -34,7 +37,7 @@ If you are a Visual Studio 2017 or 2015 user, you can create a New Project (or o
 
 For more information, see our [using a package](docs/examples/using-sqlite.md) example for the specifics. 
 
-Additional notes on Windows and Linux support can be found in the [official announcement](https://blogs.msdn.microsoft.com/vcblog/2018/04/24/announcing-a-single-c-library-manager-for-linux-macos-and-windows-vcpkg/).
+Additional notes on macOS and Linux support can be found in the [official announcement](https://blogs.msdn.microsoft.com/vcblog/2018/04/24/announcing-a-single-c-library-manager-for-linux-macos-and-windows-vcpkg/).
 
 ## Tab-Completion / Auto-Completion
 
