@@ -91,8 +91,8 @@ err()
 }
 
 # mustToolVersion must output the version number for the given tool name on
-# stdout, or exit with an error message and error code 0.
-# Takes the tool name as an argument
+# stdout, or exit with an error message and error code 1.
+# Takes the lowercase tool name as an argument.
 mustToolVersion()
 {
     tool="$1"
