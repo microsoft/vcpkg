@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# The current system name
+UNAME="$(uname)"
+
 # Find vcpkg-root
 vcpkgRootDir=$(X= cd -- "$(dirname -- "$0")" && pwd -P)
 while [ "$vcpkgRootDir" != "/" ] && ! [ -e "$vcpkgRootDir/.vcpkg-root" ]; do
@@ -38,7 +41,8 @@ vcpkgCheckEqualFileHash()
         actualHash=$(shasum -a 512 "$filePath")
     fi
 
-    actualHash="${actualHash%% *}" # shasum returns [hash filename], so get the first word
+    # shasum returns [hash filename], so get the first word
+    actualHash="${actualHash%% *}"
 
     if ! [ "$expectedHash" = "$actualHash" ]; then
         echo ""
@@ -77,6 +81,41 @@ vcpkgExtractArchive()
         $(cd "$toPath.partial" && tar xzf "$archive")
     fi
     mv "$toPath.partial" "$toPath"
+}
+
+# err outputs a message to stderr, then quits with error code 1
+err()
+{
+    echo "$*" >/dev/stderr
+    exit 1
+}
+
+# mustToolVersion must output the version number for the given tool name on
+# stdout, or exit with an error message and error code 0.
+# Takes the tool name as an argument
+mustToolVersion()
+{
+    tool="$1"
+    if [ "$tool" = "" ]; then
+        err "No tool name provided"
+    fi
+
+    if [ "$UNAME" = "Linux" ]; then
+        os="linux"
+    elif [ "$UNAME" = "Darwin" ]; then
+        os="osx"
+    else
+        err "Unknown uname: $UNAME"
+    fi
+
+    xmlFileAsString=`cat $vcpkgRootDir/scripts/vcpkgTools.xml`
+    toolRegexStart="<tool name=\"$tool\" os=\"$os\">"
+    toolData="$(extractStringBetweenDelimiters "$xmlFileAsString" "$toolRegexStart" "</tool>")"
+    if [ "$toolData" = "" ]; then
+        err "Unknown tool: $tool"
+    fi
+
+    echo -n "$(extractStringBetweenDelimiters "$toolData" "<version>" "</version>")"
 }
 
 fetchTool()
@@ -129,17 +168,17 @@ fetchTool()
     url="$(extractStringBetweenDelimiters "$toolData" "<url>" "</url>")"
     sha512="$(extractStringBetweenDelimiters "$toolData" "<sha512>" "</sha512>")"
     if ! [ -e "$downloadPath" ]; then
-        echo "Downloading $tool..."
+        echo "Downloading $tool $version..."
         vcpkgDownloadFile $url "$downloadPath" $sha512
-        echo "Downloading $tool... done."
+        echo "Downloading $tool $version... done."
     else
         vcpkgCheckEqualFileHash $url "$downloadPath" $sha512
     fi
 
     if [ $isArchive = true ]; then
-        echo "Extracting $tool..."
+        echo "Extracting $tool $version..."
         vcpkgExtractArchive "$downloadPath" "$toolPath"
-        echo "Extracting $tool... done."
+        echo "Extracting $tool $version... done."
     fi
 
     if ! [ -e "$exePath" ]; then
@@ -179,10 +218,39 @@ selectCXX()
     eval $__output="'$CXX'"
 }
 
+selectCMake()
+{
+    cmakeVersion="$(mustToolVersion cmake)"
+    cmakeSysVersion="$(cmake --version 2>/dev/null | head -1 | cut -d' ' -f3)"
+    highestVersion=$(echo "$cmakeVersion/$cmakeSysVersion" | tr / '\n' | sort -Vr | head -1)
+    if [ "$cmakeSysVersion" = "$highestVersion" ]; then
+        # Using the system version of cmake, since it's newer
+        cmakeExe="$(which cmake)"
+        return
+    fi
+    # The wanted version of CMake is newer than the system version of cmake,
+    # or cmake is missing.
+    fetchTool "cmake" "$UNAME" cmakeExe || return 1
+}
+
+selectNinja()
+{
+    ninjaVersion="$(mustToolVersion ninja)"
+    ninjaSysVersion="$(ninja --version 2>/dev/null)"
+    highestVersion=$(echo "$ninjaVersion/$ninjaSysVersion" | tr / '\n' | sort -Vr | head -1)
+    if [ "$ninjaSysVersion" = "$highestVersion" ]; then
+        # Using the system version of Ninja, since it's newer
+        ninjaExe="$(which ninja)"
+        return
+    fi
+    # The wanted version of Ninja is newer than the system version of ninja,
+    # or ninja is missing.
+    fetchTool "ninja" "$UNAME" ninjaExe || return 1
+}
+
 # Preparation
-UNAME="$(uname)"
-fetchTool "cmake" "$UNAME" cmakeExe || exit 1
-fetchTool "ninja" "$UNAME" ninjaExe || exit 1
+selectCMake || exit 1
+selectNinja || exit 1
 selectCXX CXX || exit 1
 
 # Do the build
