@@ -1,7 +1,7 @@
 # Vcpkg <a href="#">![](https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/8476/badge)</a>
 
 ## Overview
-Vcpkg helps you get C and C++ libraries on Windows. This tool and ecosystem are currently in a preview state; your involvement is vital to its success.
+Vcpkg helps you manage your C and C++ libraries on Windows, Linux and  macOS. This tool and ecosystem are currently in a preview state; your involvement is vital to its success.
 
 For short description of available commands, run `vcpkg help`.
 
@@ -10,24 +10,34 @@ Prerequisites:
 - Git
 - *Optional: CMake 3.10.2*
 
-Clone this repository, then run
+To get started:
 ```
-C:\src\vcpkg> .\bootstrap-vcpkg.bat
+> git clone https://github.com/Microsoft/vcpkg
+> cd vcpkg
+> ./bootstrap-vcpkg.bat
 ```
+
 Then, to hook up user-wide integration, run (note: requires admin on first use)
 ```
-C:\src\vcpkg> .\vcpkg integrate install
+> ./vcpkg integrate install
 ```
+
 Install any packages with
 ```
-C:\src\vcpkg> .\vcpkg install sdl2 curl
+> ./vcpkg install sdl2 curl
 ```
-Finally, create a New Project (or open an existing one) in Visual Studio 2017 or 2015. All installed libraries are immediately ready to be `#include`'d and used in your project.
 
-The best way to use installed libraries with cmake is via the toolchain file `scripts\buildsystems\vcpkg.cmake`. To use this file, you simply need to add it onto your CMake command line as `-DCMAKE_TOOLCHAIN_FILE=D:\src\vcpkg\scripts\buildsystems\vcpkg.cmake`.
-For more information, see our [using a package](docs/examples/using-sqlite.md) example for the specifics.
+The best way to use installed libraries with Cmake is via the toolchain file `scripts\buildsystems\vcpkg.cmake`. To use this file, you simply need to add it onto your CMake command line as `-DCMAKE_TOOLCHAIN_FILE=[vcpkg root]\scripts\buildsystems\vcpkg.cmake`.
+
+
+If you are a Visual Studio 2017 or 2015 user, you can create a New Project (or open an existing one). All installed libraries are immediately ready to be `#include`'d and used in your project without additional configuration.
+
+For more information, see our [using a package](docs/examples/using-sqlite.md) example for the specifics. 
+
+Additional notes on Windows and Linux support can be found in the [official announcement](https://blogs.msdn.microsoft.com/vcblog/2018/04/24/announcing-a-single-c-library-manager-for-linux-macos-and-windows-vcpkg/).
 
 ## Tab-Completion / Auto-Completion
+
 `Vcpkg` supports auto-completion of commands, package names, options etc. To enable tab-completion in Powershell, use
 ```
 .\vcpkg integrate powershell
