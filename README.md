@@ -7,8 +7,8 @@ For short description of available commands, run `vcpkg help`.
 
 ## Quick Start
 Prerequisites:
-- Windows 10, 8.1, or 7
-- Visual Studio 2017 or Visual Studio 2015 Update 3
+- Windows 10, 8.1, 7, Linux, or OSX
+- Visual Studio 2017 or Visual Studio 2015 Update 3 (on Windows)
 - Git
 - *Optional: CMake 3.10.2*
 
