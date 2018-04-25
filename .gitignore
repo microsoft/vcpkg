@@ -279,7 +279,7 @@ downloads/
 installed*/
 packages/
 scripts/buildsystems/tmp/
-#ignore custom triplets 
+#ignore custom triplets
 triplets/*
 #add vcpkg-designed triplets back in
 !triplets/arm-uwp.cmake
@@ -292,6 +292,8 @@ triplets/*
 !triplets/x86-windows-static.cmake
 !triplets/arm64-uwp.cmake
 !triplets/arm64-windows.cmake
+!triplets/x64-linux.cmake
+!triplets/x64-osx.cmake
 *.exe
 *.zip
 

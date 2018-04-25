@@ -45,3 +45,6 @@ lib icuin : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/icuind.lib" <variant>debu
 
 lib icudt : : <file>"@CURRENT_INSTALLED_DIR@/lib/icudt.lib" <variant>release : : ;
 lib icudt : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/icudtd.lib" <variant>debug : : ;
+
+lib iconv : : <file>"@LIBICONV_LIBRARY@" <link>shared <runtime-link>shared <variant>release : : ;
+lib iconv : : <file>"@LIBICONV_LIBRARY@" <link>shared <runtime-link>shared <variant>debug : : ;

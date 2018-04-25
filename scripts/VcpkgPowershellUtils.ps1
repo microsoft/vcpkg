@@ -1,3 +1,8 @@
+function vcpkgHasModule([Parameter(Mandatory=$true)][string]$moduleName)
+{
+    return [bool](Get-Module -ListAvailable -Name $moduleName)
+}
+
 function vcpkgHasProperty([Parameter(Mandatory=$true)][AllowNull()]$object, [Parameter(Mandatory=$true)]$propertyName)
 {
     if ($object -eq $null)
@@ -183,9 +188,9 @@ function vcpkgDownloadFileWithAria2(    [Parameter(Mandatory=$true)][string]$ari
     Move-Item -Path $downloadPartPath -Destination $downloadPath
 }
 
-function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$sevenZipExe,
-                            [Parameter(Mandatory=$true)][string]$archivePath,
-                            [Parameter(Mandatory=$true)][string]$destinationDir)
+function vcpkgExtractFileWith7z([Parameter(Mandatory=$true)][string]$sevenZipExe,
+                                [Parameter(Mandatory=$true)][string]$archivePath,
+                                [Parameter(Mandatory=$true)][string]$destinationDir)
 {
     vcpkgRemoveItem $destinationDir
     $destinationPartial = "$destinationDir.partial"
@@ -200,20 +205,35 @@ function vcpkgExtractFile(  [Parameter(Mandatory=$true)][string]$sevenZipExe,
     Rename-Item -Path "$destinationPartial" -NewName $destinationDir
 }
 
-function vcpkgExtractZipFileWithShell(  [Parameter(Mandatory=$true)][string]$archivePath,
-                                        [Parameter(Mandatory=$true)][string]$destinationDir)
+function vcpkgExtractZipFile(  [Parameter(Mandatory=$true)][string]$archivePath,
+                               [Parameter(Mandatory=$true)][string]$destinationDir)
 {
     vcpkgRemoveItem $destinationDir
     $destinationPartial = "$destinationDir.partial"
     vcpkgRemoveItem $destinationPartial
     vcpkgCreateDirectoryIfNotExists $destinationPartial
 
-    $shell = new-object -com shell.application
-    $zip = $shell.NameSpace($(Get-Item $archivePath).fullname)
-    foreach($item in $zip.items())
+
+    if (vcpkgHasCommand -commandName 'Microsoft.PowerShell.Archive\Expand-Archive')
     {
-        # Piping to Out-Null is used to block until finished
-        $shell.Namespace($destinationPartial).copyhere($item) | Out-Null
+        Write-Verbose("Extracting with Microsoft.PowerShell.Archive\Expand-Archive")
+        Microsoft.PowerShell.Archive\Expand-Archive -path $archivePath -destinationpath $destinationPartial
+    }
+    elseif (vcpkgHasCommand -commandName 'Pscx\Expand-Archive')
+    {
+        Write-Verbose("Extracting with Pscx\Expand-Archive")
+        Pscx\Expand-Archive -path $archivePath -OutputPath $destinationPartial
+    }
+    else
+    {
+        Write-Verbose("Extracting via shell")
+        $shell = new-object -com shell.application
+        $zip = $shell.NameSpace($(Get-Item $archivePath).fullname)
+        foreach($item in $zip.items())
+        {
+            # Piping to Out-Null is used to block until finished
+            $shell.Namespace($destinationPartial).copyhere($item) | Out-Null
+        }
     }
 
     Rename-Item -Path "$destinationPartial" -NewName $destinationDir

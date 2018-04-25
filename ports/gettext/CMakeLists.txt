@@ -1,49 +1,75 @@
 cmake_minimum_required(VERSION 3.5)
 project(libintl C)
 
-find_library(ICONV_LIB NAMES iconv libiconv)
-find_path(ICONV_PATH iconv.h)
+find_package(unofficial-iconv REQUIRED)
 
-find_library(CHARSET_LIB NAMES charset libcharset)
-find_path(CHARSET_PATH localcharset.h)
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/config .)
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR} . ${ICONV_PATH} ${CHARSET_PATH})
-link_libraries(${CHARSET_LIB} ${ICONV_LIB})
+set(CMAKE_STATIC_LIBRARY_PREFIX)
+set(CMAKE_SHARED_LIBRARY_PREFIX)
 
-file(READ config.h _contents)
+if(WIN32)
+    set(HAVE_POSIX_PRINTF 0)
+    set(HAVE_SNPRINTF 0)
+    set(HAVE_ASPRINTF 0)
+    set(HAVE_WPRINTF 0)
+    set(HAVE_NEWLOCALE 0)
+
+    configure_file(intl/libgnuintl.win32.h config/libgnuintl.h COPYONLY)
+    configure_file(config.win32.h config/config.h COPYONLY)
+else()
+    set(HAVE_POSIX_PRINTF 1)
+    set(HAVE_SNPRINTF 1)
+    set(HAVE_ASPRINTF 1)
+    set(HAVE_WPRINTF 1)
+    set(HAVE_NEWLOCALE 1)
+    add_definitions(-DHAVE_NEWLOCALE=1)
+
+    configure_file(intl/libgnuintl.in.h config/libgnuintl.h @ONLY)
+    configure_file(config.win32.h config/config.h COPYONLY)
+endif()
+
+if(NOT DISABLE_INSTALL_HEADERS)
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/config/libgnuintl.h" DESTINATION include RENAME libintl.h)
+endif()
+
+file(READ "${CMAKE_CURRENT_BINARY_DIR}/config/config.h" _contents)
 if(NOT WIN32)
     string(REPLACE "/* #undef HAVE_STPCPY */" "#define HAVE_STPCPY 1" _contents "${_contents}")
 endif()
-file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/config.h" "${_contents}")
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/config/config.h" "${_contents}")
 
 FILE(GLOB SOURCES
-"intl/bindtextdom.c"
-"intl/dcgettext.c"
-"intl/dcigettext.c"
-"intl/dcngettext.c"
-"intl/dgettext.c"
-"intl/dngettext.c"
-"intl/explodename.c"
-"intl/finddomain.c"
-"intl/gettext.c"
-"intl/hash-string.c"
-"intl/intl-compat.c"
-"intl/l10nflist.c"
-"intl/langprefs.c"
-"intl/loadmsgcat.c"
-"intl/localealias.c"
-"intl/localename.c"
-"intl/lock.c"
-"intl/log.c"
-"intl/ngettext.c"
-"intl/osdep.c"
-"intl/plural-exp.c"
-"intl/plural.c"
-"intl/printf.c"
-"intl/relocatable.c"
-"intl/textdomain.c"
-"intl/version.c"
+    "intl/bindtextdom.c"
+    "intl/dcgettext.c"
+    "intl/dcigettext.c"
+    "intl/dcngettext.c"
+    "intl/dgettext.c"
+    "intl/dngettext.c"
+    "intl/explodename.c"
+    "intl/finddomain.c"
+    "intl/gettext.c"
+    "intl/hash-string.c"
+    "intl/intl-compat.c"
+    "intl/l10nflist.c"
+    "intl/langprefs.c"
+    "intl/loadmsgcat.c"
+    "intl/localealias.c"
+    "intl/localename.c"
+    "intl/lock.c"
+    "intl/log.c"
+    "intl/ngettext.c"
+    "intl/osdep.c"
+    "intl/plural-exp.c"
+    "intl/plural.c"
+    "intl/printf.c"
+    "intl/relocatable.c"
+    "intl/textdomain.c"
+    "intl/version.c"
 )
+if(NOT WIN32)
+    list(APPEND SOURCES "intl/setlocale.c")
+endif()
 
 set(LOCALDIR "c:/gettext")
 
@@ -59,6 +85,7 @@ add_definitions("-DBUILDING_LIBINTL -DIN_LIBINTL -DENABLE_RELOCATABLE=1 -DIN_LIB
 add_definitions("-DNO_XMALLOC -Dset_relocation_prefix=libintl_set_relocation_prefix -Drelocate=libintl_relocate -DDEPENDS_ON_LIBICONV=1 -DHAVE_CONFIG_H -D_CRT_SECURE_NO_WARNINGS")
 
 add_library(libintl ${SOURCES})
+target_link_libraries(libintl PRIVATE unofficial::iconv::libcharset unofficial::iconv::libiconv)
 
 install(TARGETS libintl
   RUNTIME DESTINATION bin

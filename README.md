@@ -26,7 +26,8 @@ C:\src\vcpkg> .\vcpkg install sdl2 curl
 ```
 Finally, create a New Project (or open an existing one) in Visual Studio 2017 or 2015. All installed libraries are immediately ready to be `#include`'d and used in your project.
 
-For CMake projects, simply include our toolchain file. See our [using a package](docs/examples/using-sqlite.md) example for the specifics.
+The best way to use installed libraries with cmake is via the toolchain file `scripts\buildsystems\vcpkg.cmake`. To use this file, you simply need to add it onto your CMake command line as `-DCMAKE_TOOLCHAIN_FILE=D:\src\vcpkg\scripts\buildsystems\vcpkg.cmake`.
+For more information, see our [using a package](docs/examples/using-sqlite.md) example for the specifics.
 
 ## Tab-Completion / Auto-Completion
 `Vcpkg` supports auto-completion of commands, package names, options etc. To enable tab-completion in Powershell, use

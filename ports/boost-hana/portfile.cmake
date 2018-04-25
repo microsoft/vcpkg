@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/hana
-    REF boost-1.66.0
-    SHA512 cf105931ad59147edd97aaee29d9af4f069ada58c1c0f49eba7c3f921c5a412c90609853603504207526cf80c728f188ba4ee024fc2b7c8c924f98faf543167a
+    REF boost-1.67.0
+    SHA512 45e8b9da8c09bd6cb74f52068f0e4af43f40126227ad5c557e111c8edce2e8857f5a11c6ecc6c57833041a38d9355a7c0263f9b84cc335725c994a9cb029411b
     HEAD_REF master
 )
 
