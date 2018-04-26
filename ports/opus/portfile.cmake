@@ -1,7 +1,3 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "UWP builds not supported")
-endif()
-
 include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -30,19 +26,41 @@ else()
     set(DEBUG_CONFIGURATION "DebugDll")
 endif()
 
-if(TARGET_TRIPLET MATCHES "x86")
-    set(ARCH_DIR "Win32")
-elseif(TARGET_TRIPLET MATCHES "x64")
-    set(ARCH_DIR "x64")
-else()
-    message(FATAL_ERROR "Architecture not supported")
-endif()
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
+    vcpkg_apply_patches(
+        SOURCE_PATH ${SOURCE_PATH}
+        PATCHES
+            ${CMAKE_CURRENT_LIST_DIR}/opus_uwp_project.patch
+    )
 
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/win32/VS2015/opus.vcxproj
-    RELEASE_CONFIGURATION ${RELEASE_CONFIGURATION}
-    DEBUG_CONFIGURATION ${DEBUG_CONFIGURATION}
-)
+    if(TARGET_TRIPLET MATCHES "x86")
+        set(ARCH_DIR "Win32_UWP")
+    elseif(TARGET_TRIPLET MATCHES "x64")
+        set(ARCH_DIR "x64_UWP")
+    else()
+        message(FATAL_ERROR "Architecture not supported")
+    endif()
+
+    vcpkg_build_msbuild(
+        PROJECT_PATH ${SOURCE_PATH}/win32/VS2015/opus_uwp.vcxproj
+        RELEASE_CONFIGURATION ${RELEASE_CONFIGURATION}
+        DEBUG_CONFIGURATION ${DEBUG_CONFIGURATION}
+    )
+else()
+    if(TARGET_TRIPLET MATCHES "x86")
+        set(ARCH_DIR "Win32")
+    elseif(TARGET_TRIPLET MATCHES "x64")
+        set(ARCH_DIR "x64")
+    else()
+        message(FATAL_ERROR "Architecture not supported")
+    endif()
+
+    vcpkg_build_msbuild(
+        PROJECT_PATH ${SOURCE_PATH}/win32/VS2015/opus.vcxproj
+        RELEASE_CONFIGURATION ${RELEASE_CONFIGURATION}
+        DEBUG_CONFIGURATION ${DEBUG_CONFIGURATION}
+    )
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     # Install release build

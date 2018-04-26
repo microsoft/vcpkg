@@ -1,0 +1,900 @@
+From 2b06685c0edcdc1dbca66b08b8fe73d4f9269625 Mon Sep 17 00:00:00 2001
+From: Ashik Salim <ashikns@gmail.com>
+Date: Wed, 25 Apr 2018 22:18:49 +0530
+Subject: [PATCH 1/2] upgrade projects to toolset v141, sdk 16299
+
+---
+ win32/VS2015/opus.vcxproj             | 25 +++++++++++++------------
+ win32/VS2015/opus_demo.vcxproj        | 25 +++++++++++++------------
+ win32/VS2015/test_opus_api.vcxproj    | 25 +++++++++++++------------
+ win32/VS2015/test_opus_decode.vcxproj | 25 +++++++++++++------------
+ win32/VS2015/test_opus_encode.vcxproj | 25 +++++++++++++------------
+ 5 files changed, 65 insertions(+), 60 deletions(-)
+
+diff --git a/win32/VS2015/opus.vcxproj b/win32/VS2015/opus.vcxproj
+index 33bf706d..035e0cb9 100644
+--- a/win32/VS2015/opus.vcxproj
++++ b/win32/VS2015/opus.vcxproj
+@@ -54,55 +54,56 @@
+     <Keyword>Win32Proj</Keyword>
+     <ProjectName>opus</ProjectName>
+     <ProjectGuid>{219EC965-228A-1824-174D-96449D05F88A}</ProjectGuid>
++    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+     <ConfigurationType>StaticLibrary</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="Configuration">
+     <ConfigurationType>DynamicLibrary</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL_fixed|Win32'" Label="Configuration">
+     <ConfigurationType>DynamicLibrary</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+     <ConfigurationType>StaticLibrary</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="Configuration">
+     <ConfigurationType>DynamicLibrary</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL_fixed|x64'" Label="Configuration">
+     <ConfigurationType>DynamicLibrary</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+     <ConfigurationType>StaticLibrary</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="Configuration">
+     <ConfigurationType>DynamicLibrary</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL_fixed|Win32'" Label="Configuration">
+     <ConfigurationType>DynamicLibrary</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+     <ConfigurationType>StaticLibrary</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="Configuration">
+     <ConfigurationType>DynamicLibrary</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL_fixed|x64'" Label="Configuration">
+     <ConfigurationType>DynamicLibrary</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+   <ImportGroup Label="ExtensionSettings">
+diff --git a/win32/VS2015/opus_demo.vcxproj b/win32/VS2015/opus_demo.vcxproj
+index f4344e53..3c398c07 100644
+--- a/win32/VS2015/opus_demo.vcxproj
++++ b/win32/VS2015/opus_demo.vcxproj
+@@ -62,55 +62,56 @@
+     <ProjectGuid>{016C739D-6389-43BF-8D88-24B2BF6F620F}</ProjectGuid>
+     <Keyword>Win32Proj</Keyword>
+     <RootNamespace>opus_demo</RootNamespace>
++    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL_fixed|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL_fixed|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL_fixed|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL_fixed|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+   <ImportGroup Label="ExtensionSettings">
+diff --git a/win32/VS2015/test_opus_api.vcxproj b/win32/VS2015/test_opus_api.vcxproj
+index 7cae131b..c351a850 100644
+--- a/win32/VS2015/test_opus_api.vcxproj
++++ b/win32/VS2015/test_opus_api.vcxproj
+@@ -62,55 +62,56 @@
+     <ProjectGuid>{1D257A17-D254-42E5-82D6-1C87A6EC775A}</ProjectGuid>
+     <Keyword>Win32Proj</Keyword>
+     <RootNamespace>test_opus_api</RootNamespace>
++    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL_fixed|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL_fixed|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL_fixed|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL_fixed|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+   <ImportGroup Label="ExtensionSettings">
+diff --git a/win32/VS2015/test_opus_decode.vcxproj b/win32/VS2015/test_opus_decode.vcxproj
+index df01dca1..03447e73 100644
+--- a/win32/VS2015/test_opus_decode.vcxproj
++++ b/win32/VS2015/test_opus_decode.vcxproj
+@@ -62,55 +62,56 @@
+     <ProjectGuid>{8578322A-1883-486B-B6FA-E0094B65C9F2}</ProjectGuid>
+     <Keyword>Win32Proj</Keyword>
+     <RootNamespace>test_opus_api</RootNamespace>
++    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL_fixed|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL_fixed|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL_fixed|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL_fixed|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+   <ImportGroup Label="ExtensionSettings">
+diff --git a/win32/VS2015/test_opus_encode.vcxproj b/win32/VS2015/test_opus_encode.vcxproj
+index 405efee9..b0fc395e 100644
+--- a/win32/VS2015/test_opus_encode.vcxproj
++++ b/win32/VS2015/test_opus_encode.vcxproj
+@@ -63,55 +63,56 @@
+     <ProjectGuid>{84DAA768-1A38-4312-BB61-4C78BB59E5B8}</ProjectGuid>
+     <Keyword>Win32Proj</Keyword>
+     <RootNamespace>test_opus_api</RootNamespace>
++    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL_fixed|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL_fixed|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL_fixed|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL_fixed|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+-    <PlatformToolset>v140</PlatformToolset>
++    <PlatformToolset>v141</PlatformToolset>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+   <ImportGroup Label="ExtensionSettings">
+-- 
+2.16.0.windows.2
+
+
+From 761507e2883b30ce9477d473b33ec78f3df2e623 Mon Sep 17 00:00:00 2001
+From: Ashik Salim <ashikns@gmail.com>
+Date: Wed, 25 Apr 2018 22:53:16 +0530
+Subject: [PATCH 2/2] add opus uwp project
+
+---
+ win32/VS2015/opus.sln                 |  29 ++-
+ win32/VS2015/opus_uwp.vcxproj         | 424 ++++++++++++++++++++++++++++++++++
+ win32/VS2015/opus_uwp.vcxproj.filters |   9 +
+ 3 files changed, 460 insertions(+), 2 deletions(-)
+ create mode 100644 win32/VS2015/opus_uwp.vcxproj
+ create mode 100644 win32/VS2015/opus_uwp.vcxproj.filters
+
+diff --git a/win32/VS2015/opus.sln b/win32/VS2015/opus.sln
+index 7b678e7f..427aec63 100644
+--- a/win32/VS2015/opus.sln
++++ b/win32/VS2015/opus.sln
+@@ -1,7 +1,7 @@
+ ﻿
+ Microsoft Visual Studio Solution File, Format Version 12.00
+-# Visual Studio 14
+-VisualStudioVersion = 14.0.25420.1
++# Visual Studio 15
++VisualStudioVersion = 15.0.27428.2037
+ MinimumVisualStudioVersion = 10.0.40219.1
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "opus", "opus.vcxproj", "{219EC965-228A-1824-174D-96449D05F88A}"
+ EndProject
+@@ -25,6 +25,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_opus_encode", "test_op
+ 		{219EC965-228A-1824-174D-96449D05F88A} = {219EC965-228A-1824-174D-96449D05F88A}
+ 	EndProjectSection
+ EndProject
++Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "opus_uwp", "opus_uwp.vcxproj", "{95ED48A6-AE4D-4B60-9983-B24ADA6B4A7E}"
++EndProject
+ Global
+ 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+ 		Debug|Win32 = Debug|Win32
+@@ -161,8 +163,31 @@ Global
+ 		{84DAA768-1A38-4312-BB61-4C78BB59E5B8}.ReleaseDLL|Win32.Build.0 = ReleaseDLL|Win32
+ 		{84DAA768-1A38-4312-BB61-4C78BB59E5B8}.ReleaseDLL|x64.ActiveCfg = ReleaseDLL|x64
+ 		{84DAA768-1A38-4312-BB61-4C78BB59E5B8}.ReleaseDLL|x64.Build.0 = ReleaseDLL|x64
++		{95ED48A6-AE4D-4B60-9983-B24ADA6B4A7E}.Debug|Win32.ActiveCfg = Debug|Win32
++		{95ED48A6-AE4D-4B60-9983-B24ADA6B4A7E}.Debug|Win32.Build.0 = Debug|Win32
++		{95ED48A6-AE4D-4B60-9983-B24ADA6B4A7E}.Debug|x64.ActiveCfg = Debug|x64
++		{95ED48A6-AE4D-4B60-9983-B24ADA6B4A7E}.Debug|x64.Build.0 = Debug|x64
++		{95ED48A6-AE4D-4B60-9983-B24ADA6B4A7E}.DebugDLL_fixed|Win32.ActiveCfg = Debug|Win32
++		{95ED48A6-AE4D-4B60-9983-B24ADA6B4A7E}.DebugDLL_fixed|x64.ActiveCfg = Debug|x64
++		{95ED48A6-AE4D-4B60-9983-B24ADA6B4A7E}.DebugDLL|Win32.ActiveCfg = DebugDLL|Win32
++		{95ED48A6-AE4D-4B60-9983-B24ADA6B4A7E}.DebugDLL|Win32.Build.0 = DebugDLL|Win32
++		{95ED48A6-AE4D-4B60-9983-B24ADA6B4A7E}.DebugDLL|x64.ActiveCfg = DebugDLL|x64
++		{95ED48A6-AE4D-4B60-9983-B24ADA6B4A7E}.DebugDLL|x64.Build.0 = DebugDLL|x64
++		{95ED48A6-AE4D-4B60-9983-B24ADA6B4A7E}.Release|Win32.ActiveCfg = Release|Win32
++		{95ED48A6-AE4D-4B60-9983-B24ADA6B4A7E}.Release|Win32.Build.0 = Release|Win32
++		{95ED48A6-AE4D-4B60-9983-B24ADA6B4A7E}.Release|x64.ActiveCfg = Release|x64
++		{95ED48A6-AE4D-4B60-9983-B24ADA6B4A7E}.Release|x64.Build.0 = Release|x64
++		{95ED48A6-AE4D-4B60-9983-B24ADA6B4A7E}.ReleaseDLL_fixed|Win32.ActiveCfg = Release|Win32
++		{95ED48A6-AE4D-4B60-9983-B24ADA6B4A7E}.ReleaseDLL_fixed|x64.ActiveCfg = Release|x64
++		{95ED48A6-AE4D-4B60-9983-B24ADA6B4A7E}.ReleaseDLL|Win32.ActiveCfg = ReleaseDLL|Win32
++		{95ED48A6-AE4D-4B60-9983-B24ADA6B4A7E}.ReleaseDLL|Win32.Build.0 = ReleaseDLL|Win32
++		{95ED48A6-AE4D-4B60-9983-B24ADA6B4A7E}.ReleaseDLL|x64.ActiveCfg = ReleaseDLL|x64
++		{95ED48A6-AE4D-4B60-9983-B24ADA6B4A7E}.ReleaseDLL|x64.Build.0 = ReleaseDLL|x64
+ 	EndGlobalSection
+ 	GlobalSection(SolutionProperties) = preSolution
+ 		HideSolutionNode = FALSE
+ 	EndGlobalSection
++	GlobalSection(ExtensibilityGlobals) = postSolution
++		SolutionGuid = {83D1FC34-0421-4E4A-9075-0CAD7870315D}
++	EndGlobalSection
+ EndGlobal
+diff --git a/win32/VS2015/opus_uwp.vcxproj b/win32/VS2015/opus_uwp.vcxproj
+new file mode 100644
+index 00000000..83f526e5
+--- /dev/null
++++ b/win32/VS2015/opus_uwp.vcxproj
+@@ -0,0 +1,424 @@
++<?xml version="1.0" encoding="utf-8"?>
++<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
++  <ItemGroup Label="ProjectConfigurations">
++    <ProjectConfiguration Include="DebugDLL|Win32">
++      <Configuration>DebugDLL</Configuration>
++      <Platform>Win32</Platform>
++    </ProjectConfiguration>
++    <ProjectConfiguration Include="DebugDLL|x64">
++      <Configuration>DebugDLL</Configuration>
++      <Platform>x64</Platform>
++    </ProjectConfiguration>
++    <ProjectConfiguration Include="Debug|Win32">
++      <Configuration>Debug</Configuration>
++      <Platform>Win32</Platform>
++    </ProjectConfiguration>
++    <ProjectConfiguration Include="Debug|x64">
++      <Configuration>Debug</Configuration>
++      <Platform>x64</Platform>
++    </ProjectConfiguration>
++    <ProjectConfiguration Include="ReleaseDLL|Win32">
++      <Configuration>ReleaseDLL</Configuration>
++      <Platform>Win32</Platform>
++    </ProjectConfiguration>
++    <ProjectConfiguration Include="ReleaseDLL|x64">
++      <Configuration>ReleaseDLL</Configuration>
++      <Platform>x64</Platform>
++    </ProjectConfiguration>
++    <ProjectConfiguration Include="Release|Win32">
++      <Configuration>Release</Configuration>
++      <Platform>Win32</Platform>
++    </ProjectConfiguration>
++    <ProjectConfiguration Include="Release|x64">
++      <Configuration>Release</Configuration>
++      <Platform>x64</Platform>
++    </ProjectConfiguration>
++  </ItemGroup>
++  <PropertyGroup Label="Globals">
++    <ProjectGuid>{95ed48a6-ae4d-4b60-9983-b24ada6b4a7e}</ProjectGuid>
++    <Keyword>StaticLibrary</Keyword>
++    <RootNamespace>opus</RootNamespace>
++    <DefaultLanguage>en-US</DefaultLanguage>
++    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
++    <AppContainerApplication>true</AppContainerApplication>
++    <ApplicationType>Windows Store</ApplicationType>
++    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
++    <WindowsTargetPlatformMinVersion>10.0.16299.0</WindowsTargetPlatformMinVersion>
++    <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
++  </PropertyGroup>
++  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
++    <ConfigurationType>StaticLibrary</ConfigurationType>
++    <UseDebugLibraries>true</UseDebugLibraries>
++    <PlatformToolset>v141</PlatformToolset>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="Configuration">
++    <ConfigurationType>DynamicLibrary</ConfigurationType>
++    <UseDebugLibraries>true</UseDebugLibraries>
++    <PlatformToolset>v141</PlatformToolset>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
++    <ConfigurationType>StaticLibrary</ConfigurationType>
++    <UseDebugLibraries>true</UseDebugLibraries>
++    <PlatformToolset>v141</PlatformToolset>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="Configuration">
++    <ConfigurationType>DynamicLibrary</ConfigurationType>
++    <UseDebugLibraries>true</UseDebugLibraries>
++    <PlatformToolset>v141</PlatformToolset>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
++    <ConfigurationType>StaticLibrary</ConfigurationType>
++    <UseDebugLibraries>false</UseDebugLibraries>
++    <WholeProgramOptimization>false</WholeProgramOptimization>
++    <PlatformToolset>v141</PlatformToolset>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="Configuration">
++    <ConfigurationType>DynamicLibrary</ConfigurationType>
++    <UseDebugLibraries>false</UseDebugLibraries>
++    <WholeProgramOptimization>false</WholeProgramOptimization>
++    <PlatformToolset>v141</PlatformToolset>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
++    <ConfigurationType>StaticLibrary</ConfigurationType>
++    <UseDebugLibraries>false</UseDebugLibraries>
++    <WholeProgramOptimization>false</WholeProgramOptimization>
++    <PlatformToolset>v141</PlatformToolset>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="Configuration">
++    <ConfigurationType>DynamicLibrary</ConfigurationType>
++    <UseDebugLibraries>false</UseDebugLibraries>
++    <WholeProgramOptimization>false</WholeProgramOptimization>
++    <PlatformToolset>v141</PlatformToolset>
++  </PropertyGroup>
++  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
++  <ImportGroup Label="ExtensionSettings">
++  </ImportGroup>
++  <ImportGroup Label="Shared">
++  </ImportGroup>
++  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="common.props" />
++  </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="common.props" />
++  </ImportGroup>
++  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="common.props" />
++  </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="common.props" />
++  </ImportGroup>
++  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="common.props" />
++  </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="common.props" />
++  </ImportGroup>
++  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="common.props" />
++  </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="common.props" />
++  </ImportGroup>
++  <PropertyGroup Label="UserMacros" />
++  <PropertyGroup />
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
++    <GenerateManifest>false</GenerateManifest>
++    <OutDir>$(Platform)_UWP\$(Configuration)\</OutDir>
++    <IntDir>$(Platform)_UWP\$(Configuration)\$(ProjectName)\</IntDir>
++    <TargetName>opus</TargetName>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
++    <GenerateManifest>false</GenerateManifest>
++    <OutDir>$(Platform)_UWP\$(Configuration)\</OutDir>
++    <IntDir>$(Platform)_UWP\$(Configuration)\$(ProjectName)\</IntDir>
++    <TargetName>opus</TargetName>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
++    <GenerateManifest>false</GenerateManifest>
++    <OutDir>$(Platform)_UWP\$(Configuration)\</OutDir>
++    <IntDir>$(Platform)_UWP\$(Configuration)\$(ProjectName)\</IntDir>
++    <TargetName>opus</TargetName>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
++    <GenerateManifest>false</GenerateManifest>
++    <OutDir>$(Platform)_UWP\$(Configuration)\</OutDir>
++    <IntDir>$(Platform)_UWP\$(Configuration)\$(ProjectName)\</IntDir>
++    <TargetName>opus</TargetName>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
++    <GenerateManifest>false</GenerateManifest>
++    <OutDir>$(Platform)_UWP\$(Configuration)\</OutDir>
++    <IntDir>$(Platform)_UWP\$(Configuration)\$(ProjectName)\</IntDir>
++    <TargetName>opus</TargetName>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
++    <GenerateManifest>false</GenerateManifest>
++    <OutDir>$(Platform)_UWP\$(Configuration)\</OutDir>
++    <IntDir>$(Platform)_UWP\$(Configuration)\$(ProjectName)\</IntDir>
++    <TargetName>opus</TargetName>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
++    <GenerateManifest>false</GenerateManifest>
++    <OutDir>$(Platform)_UWP\$(Configuration)\</OutDir>
++    <IntDir>$(Platform)_UWP\$(Configuration)\$(ProjectName)\</IntDir>
++    <TargetName>opus</TargetName>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
++    <GenerateManifest>false</GenerateManifest>
++    <OutDir>$(Platform)_UWP\$(Configuration)\</OutDir>
++    <IntDir>$(Platform)_UWP\$(Configuration)\$(ProjectName)\</IntDir>
++    <TargetName>opus</TargetName>
++  </PropertyGroup>
++  <ItemDefinitionGroup>
++    <ClCompile>
++      <AdditionalIncludeDirectories>..\..\silk\fixed;..\..\silk\float;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <PrecompiledHeader>NotUsing</PrecompiledHeader>
++      <CompileAsWinRT>false</CompileAsWinRT>
++      <SDLCheck>true</SDLCheck>
++      <PreprocessorDefinitions>_WIN32_WINNT=0x0A00;WINVER=0x0A00;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <PreprocessorDefinitions Condition="'$(ConfigurationType)'=='DynamicLibrary'">DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <PreprocessorDefinitions Condition="'$(Configuration)'=='DebugDLL_fixed' or '$(Configuration)'=='ReleaseDLL_fixed'">FIXED_POINT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <AdditionalOptions Condition="'$(Platform)'=='Win32'">/arch:IA32 %(AdditionalOptions)</AdditionalOptions>
++      <RuntimeLibrary Condition="'$(Configuration)'=='Debug' or '$(Configuration)'=='DebugDLL'">MultiThreadedDebugDLL</RuntimeLibrary>
++      <RuntimeLibrary Condition="'$(Configuration)'=='Release' or '$(Configuration)'=='ReleaseDLL'">MultiThreadedDLL</RuntimeLibrary>
++    </ClCompile>
++    <Link>
++      <SubSystem>Console</SubSystem>
++      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
++      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
++    </Link>
++    <PreBuildEvent>
++      <Command>"$(ProjectDir)..\..\win32\genversion.bat" "$(ProjectDir)..\..\win32\version.h" PACKAGE_VERSION</Command>
++      <Message>Generating version.h</Message>
++    </PreBuildEvent>
++  </ItemDefinitionGroup>
++  <ItemGroup>
++    <ClInclude Include="..\..\celt\arch.h" />
++    <ClInclude Include="..\..\celt\bands.h" />
++    <ClInclude Include="..\..\celt\celt.h" />
++    <ClInclude Include="..\..\celt\celt_lpc.h" />
++    <ClInclude Include="..\..\celt\cwrs.h" />
++    <ClInclude Include="..\..\celt\ecintrin.h" />
++    <ClInclude Include="..\..\celt\entcode.h" />
++    <ClInclude Include="..\..\celt\entdec.h" />
++    <ClInclude Include="..\..\celt\entenc.h" />
++    <ClInclude Include="..\..\celt\fixed_c5x.h" />
++    <ClInclude Include="..\..\celt\fixed_c6x.h" />
++    <ClInclude Include="..\..\celt\fixed_debug.h" />
++    <ClInclude Include="..\..\celt\fixed_generic.h" />
++    <ClInclude Include="..\..\celt\float_cast.h" />
++    <ClInclude Include="..\..\celt\kiss_fft.h" />
++    <ClInclude Include="..\..\celt\laplace.h" />
++    <ClInclude Include="..\..\celt\mathops.h" />
++    <ClInclude Include="..\..\celt\mdct.h" />
++    <ClInclude Include="..\..\celt\mfrngcod.h" />
++    <ClInclude Include="..\..\celt\modes.h" />
++    <ClInclude Include="..\..\celt\os_support.h" />
++    <ClInclude Include="..\..\celt\pitch.h" />
++    <ClInclude Include="..\..\celt\quant_bands.h" />
++    <ClInclude Include="..\..\celt\rate.h" />
++    <ClInclude Include="..\..\celt\stack_alloc.h" />
++    <ClInclude Include="..\..\celt\static_modes_fixed.h" />
++    <ClInclude Include="..\..\celt\static_modes_float.h" />
++    <ClInclude Include="..\..\celt\vq.h" />
++    <ClInclude Include="..\..\celt\x86\celt_lpc_sse.h" />
++    <ClInclude Include="..\..\celt\x86\pitch_sse.h" />
++    <ClInclude Include="..\..\celt\x86\vq_sse.h" />
++    <ClInclude Include="..\..\celt\x86\x86cpu.h" />
++    <ClInclude Include="..\..\celt\_kiss_fft_guts.h" />
++    <ClInclude Include="..\..\include\opus.h" />
++    <ClInclude Include="..\..\include\opus_defines.h" />
++    <ClInclude Include="..\..\include\opus_types.h" />
++    <ClInclude Include="..\..\include\opus_multistream.h" />
++    <ClInclude Include="..\..\silk\API.h" />
++    <ClInclude Include="..\..\silk\control.h" />
++    <ClInclude Include="..\..\silk\debug.h" />
++    <ClInclude Include="..\..\silk\define.h" />
++    <ClInclude Include="..\..\silk\errors.h" />
++    <ClInclude Include="..\..\silk\float\main_FLP.h" />
++    <ClInclude Include="..\..\silk\float\SigProc_FLP.h" />
++    <ClInclude Include="..\..\silk\float\structs_FLP.h" />
++    <ClInclude Include="..\..\silk\Inlines.h" />
++    <ClInclude Include="..\..\silk\MacroCount.h" />
++    <ClInclude Include="..\..\silk\MacroDebug.h" />
++    <ClInclude Include="..\..\silk\macros.h" />
++    <ClInclude Include="..\..\silk\main.h" />
++    <ClInclude Include="..\..\silk\pitch_est_defines.h" />
++    <ClInclude Include="..\..\silk\PLC.h" />
++    <ClInclude Include="..\..\silk\resampler_private.h" />
++    <ClInclude Include="..\..\silk\resampler_rom.h" />
++    <ClInclude Include="..\..\silk\resampler_structs.h" />
++    <ClInclude Include="..\..\silk\structs.h" />
++    <ClInclude Include="..\..\silk\tables.h" />
++    <ClInclude Include="..\..\silk\tuning_parameters.h" />
++    <ClInclude Include="..\..\silk\typedef.h" />
++    <ClInclude Include="..\..\silk\x86\main_sse.h" />
++    <ClInclude Include="..\..\win32\config.h" />
++    <ClInclude Include="..\..\src\analysis.h" />
++    <ClInclude Include="..\..\src\mlp.h" />
++    <ClInclude Include="..\..\src\opus_private.h" />
++    <ClInclude Include="..\..\src\tansig_table.h" />
++  </ItemGroup>
++  <ItemGroup>
++    <ClCompile Include="..\..\celt\bands.c" />
++    <ClCompile Include="..\..\celt\celt.c" />
++    <ClCompile Include="..\..\celt\celt_decoder.c" />
++    <ClCompile Include="..\..\celt\celt_encoder.c" />
++    <ClCompile Include="..\..\celt\celt_lpc.c" />
++    <ClCompile Include="..\..\celt\cwrs.c" />
++    <ClCompile Include="..\..\celt\entcode.c" />
++    <ClCompile Include="..\..\celt\entdec.c" />
++    <ClCompile Include="..\..\celt\entenc.c" />
++    <ClCompile Include="..\..\celt\kiss_fft.c" />
++    <ClCompile Include="..\..\celt\laplace.c" />
++    <ClCompile Include="..\..\celt\mathops.c" />
++    <ClCompile Include="..\..\celt\mdct.c" />
++    <ClCompile Include="..\..\celt\modes.c" />
++    <ClCompile Include="..\..\celt\pitch.c" />
++    <ClCompile Include="..\..\celt\quant_bands.c" />
++    <ClCompile Include="..\..\celt\rate.c" />
++    <ClCompile Include="..\..\celt\vq.c" />
++    <ClCompile Include="..\..\celt\x86\celt_lpc_sse.c" />
++    <ClCompile Include="..\..\celt\x86\pitch_sse.c" />
++    <ClCompile Include="..\..\celt\x86\pitch_sse2.c" />
++    <ClCompile Include="..\..\celt\x86\pitch_sse4_1.c" />
++    <ClCompile Include="..\..\celt\x86\vq_sse2.c" />
++    <ClCompile Include="..\..\celt\x86\x86cpu.c" />
++    <ClCompile Include="..\..\celt\x86\x86_celt_map.c" />
++    <ClCompile Include="..\..\silk\A2NLSF.c" />
++    <ClCompile Include="..\..\silk\ana_filt_bank_1.c" />
++    <ClCompile Include="..\..\silk\biquad_alt.c" />
++    <ClCompile Include="..\..\silk\bwexpander.c" />
++    <ClCompile Include="..\..\silk\bwexpander_32.c" />
++    <ClCompile Include="..\..\silk\check_control_input.c" />
++    <ClCompile Include="..\..\silk\CNG.c" />
++    <ClCompile Include="..\..\silk\code_signs.c" />
++    <ClCompile Include="..\..\silk\control_audio_bandwidth.c" />
++    <ClCompile Include="..\..\silk\control_codec.c" />
++    <ClCompile Include="..\..\silk\control_SNR.c" />
++    <ClCompile Include="..\..\silk\debug.c" />
++    <ClCompile Include="..\..\silk\decoder_set_fs.c" />
++    <ClCompile Include="..\..\silk\decode_core.c" />
++    <ClCompile Include="..\..\silk\decode_frame.c" />
++    <ClCompile Include="..\..\silk\decode_indices.c" />
++    <ClCompile Include="..\..\silk\decode_parameters.c" />
++    <ClCompile Include="..\..\silk\decode_pitch.c" />
++    <ClCompile Include="..\..\silk\decode_pulses.c" />
++    <ClCompile Include="..\..\silk\dec_API.c" />
++    <ClCompile Include="..\..\silk\encode_indices.c" />
++    <ClCompile Include="..\..\silk\encode_pulses.c" />
++    <ClCompile Include="..\..\silk\enc_API.c" />
++    <ClCompile Include="..\..\silk\gain_quant.c" />
++    <ClCompile Include="..\..\silk\HP_variable_cutoff.c" />
++    <ClCompile Include="..\..\silk\init_decoder.c" />
++    <ClCompile Include="..\..\silk\init_encoder.c" />
++    <ClCompile Include="..\..\silk\inner_prod_aligned.c" />
++    <ClCompile Include="..\..\silk\interpolate.c" />
++    <ClCompile Include="..\..\silk\lin2log.c" />
++    <ClCompile Include="..\..\silk\log2lin.c" />
++    <ClCompile Include="..\..\silk\LPC_analysis_filter.c" />
++    <ClCompile Include="..\..\silk\LPC_fit.c" />
++    <ClCompile Include="..\..\silk\LPC_inv_pred_gain.c" />
++    <ClCompile Include="..\..\silk\LP_variable_cutoff.c" />
++    <ClCompile Include="..\..\silk\NLSF2A.c" />
++    <ClCompile Include="..\..\silk\NLSF_decode.c" />
++    <ClCompile Include="..\..\silk\NLSF_del_dec_quant.c" />
++    <ClCompile Include="..\..\silk\NLSF_encode.c" />
++    <ClCompile Include="..\..\silk\NLSF_stabilize.c" />
++    <ClCompile Include="..\..\silk\NLSF_unpack.c" />
++    <ClCompile Include="..\..\silk\NLSF_VQ.c" />
++    <ClCompile Include="..\..\silk\NLSF_VQ_weights_laroia.c" />
++    <ClCompile Include="..\..\silk\NSQ.c" />
++    <ClCompile Include="..\..\silk\NSQ_del_dec.c" />
++    <ClCompile Include="..\..\silk\pitch_est_tables.c" />
++    <ClCompile Include="..\..\silk\PLC.c" />
++    <ClCompile Include="..\..\silk\process_NLSFs.c" />
++    <ClCompile Include="..\..\silk\quant_LTP_gains.c" />
++    <ClCompile Include="..\..\silk\resampler.c" />
++    <ClCompile Include="..\..\silk\resampler_down2.c" />
++    <ClCompile Include="..\..\silk\resampler_down2_3.c" />
++    <ClCompile Include="..\..\silk\resampler_private_AR2.c" />
++    <ClCompile Include="..\..\silk\resampler_private_down_FIR.c" />
++    <ClCompile Include="..\..\silk\resampler_private_IIR_FIR.c" />
++    <ClCompile Include="..\..\silk\resampler_private_up2_HQ.c" />
++    <ClCompile Include="..\..\silk\resampler_rom.c" />
++    <ClCompile Include="..\..\silk\shell_coder.c" />
++    <ClCompile Include="..\..\silk\sigm_Q15.c" />
++    <ClCompile Include="..\..\silk\sort.c" />
++    <ClCompile Include="..\..\silk\stereo_decode_pred.c" />
++    <ClCompile Include="..\..\silk\stereo_encode_pred.c" />
++    <ClCompile Include="..\..\silk\stereo_find_predictor.c" />
++    <ClCompile Include="..\..\silk\stereo_LR_to_MS.c" />
++    <ClCompile Include="..\..\silk\stereo_MS_to_LR.c" />
++    <ClCompile Include="..\..\silk\stereo_quant_pred.c" />
++    <ClCompile Include="..\..\silk\sum_sqr_shift.c" />
++    <ClCompile Include="..\..\silk\tables_gain.c" />
++    <ClCompile Include="..\..\silk\tables_LTP.c" />
++    <ClCompile Include="..\..\silk\tables_NLSF_CB_NB_MB.c" />
++    <ClCompile Include="..\..\silk\tables_NLSF_CB_WB.c" />
++    <ClCompile Include="..\..\silk\tables_other.c" />
++    <ClCompile Include="..\..\silk\tables_pitch_lag.c" />
++    <ClCompile Include="..\..\silk\tables_pulses_per_block.c" />
++    <ClCompile Include="..\..\silk\table_LSF_cos.c" />
++    <ClCompile Include="..\..\silk\VAD.c" />
++    <ClCompile Include="..\..\silk\VQ_WMat_EC.c" />
++    <ClCompile Include="..\..\silk\x86\NSQ_del_dec_sse.c" />
++    <ClCompile Include="..\..\silk\x86\NSQ_sse.c" />
++    <ClCompile Include="..\..\silk\x86\VAD_sse.c" />
++    <ClCompile Include="..\..\silk\x86\VQ_WMat_EC_sse.c" />
++    <ClCompile Include="..\..\silk\x86\x86_silk_map.c" />
++    <ClCompile Include="..\..\src\analysis.c" />
++    <ClCompile Include="..\..\src\mlp.c" />
++    <ClCompile Include="..\..\src\mlp_data.c" />
++    <ClCompile Include="..\..\src\opus.c" />
++    <ClCompile Include="..\..\src\opus_compare.c">
++      <DisableSpecificWarnings>4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
++    </ClCompile>
++    <ClCompile Include="..\..\src\opus_decoder.c" />
++    <ClCompile Include="..\..\src\opus_encoder.c" />
++    <ClCompile Include="..\..\src\opus_multistream.c" />
++    <ClCompile Include="..\..\src\opus_multistream_decoder.c" />
++    <ClCompile Include="..\..\src\opus_multistream_encoder.c" />
++    <ClCompile Include="..\..\src\repacketizer.c" />
++  </ItemGroup>
++  <Choose>
++    <When Condition="'$(Configuration)'=='DebugDLL_fixed' or '$(Configuration)'=='ReleaseDLL_fixed' or $(PreprocessorDefinitions.Contains('FIXED_POINT'))">
++      <ItemGroup>
++        <ClCompile Include="..\..\silk\fixed\*.c">
++          <ExcludedFromBuild>false</ExcludedFromBuild>
++        </ClCompile>
++        <ClCompile Include="..\..\silk\fixed\x86\*.c">
++          <ExcludedFromBuild>false</ExcludedFromBuild>
++        </ClCompile>
++        <ClCompile Include="..\..\silk\float\*.c">
++          <ExcludedFromBuild>true</ExcludedFromBuild>
++        </ClCompile>
++      </ItemGroup>
++    </When>
++    <Otherwise>
++      <ItemGroup>
++        <ClCompile Include="..\..\silk\fixed\*.c">
++          <ExcludedFromBuild>true</ExcludedFromBuild>
++        </ClCompile>
++        <ClCompile Include="..\..\silk\fixed\x86\*.c">
++          <ExcludedFromBuild>true</ExcludedFromBuild>
++        </ClCompile>
++        <ClCompile Include="..\..\silk\float\*.c">
++          <ExcludedFromBuild>false</ExcludedFromBuild>
++        </ClCompile>
++      </ItemGroup>
++    </Otherwise>
++  </Choose>
++  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
++  <ImportGroup Label="ExtensionTargets">
++  </ImportGroup>
++</Project>
+\ No newline at end of file
+diff --git a/win32/VS2015/opus_uwp.vcxproj.filters b/win32/VS2015/opus_uwp.vcxproj.filters
+new file mode 100644
+index 00000000..2c12610d
+--- /dev/null
++++ b/win32/VS2015/opus_uwp.vcxproj.filters
+@@ -0,0 +1,9 @@
++﻿<?xml version="1.0" encoding="utf-8"?>
++<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
++  <ItemGroup>
++    <Filter Include="Resource Files">
++      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
++      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
++    </Filter>
++  </ItemGroup>
++</Project>
+\ No newline at end of file
+-- 
+2.16.0.windows.2
+
