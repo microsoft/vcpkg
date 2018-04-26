@@ -29,15 +29,15 @@ vcpkgCheckRepoTool()
 vcpkgCheckEqualFileHash()
 {
     url=$1; filePath=$2; expectedHash=$3
-    
-    SHASUM="shasum -a 512" # sha512sum is not available on osx
 
-    # checking for sha512sum on os which doesn't have shasum
-    if which sha512sum >/dev/null 2>&1; then
-        SHASUM=sha512sum
+    if command -v "sha512sum" >/dev/null 2>&1 ; then
+        actualHash=$(sha512sum "$filePath")
+    else
+        # sha512sum is not available by default on osx
+        # shasum is not available by default on Fedora
+        actualHash=$(shasum -a 512 "$filePath")
     fi
 
-    actualHash=$("$SHASUM" "$filePath")
     actualHash="${actualHash%% *}" # shasum returns [hash filename], so get the first word
 
     if ! [ "$expectedHash" = "$actualHash" ]; then
