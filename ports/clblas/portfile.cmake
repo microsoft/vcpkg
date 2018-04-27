@@ -9,7 +9,7 @@ vcpkg_from_github(
 )
 
 # v2.12 has a very old FindOpenCL.cmake using OPENCL_ vs. OpenCL_ var names
-# conflicting with the built-in, more modern FindOpenCL.cmake 
+# conflicting with the built-in, more modern FindOpenCL.cmake
 file(
     REMOVE ${SOURCE_PATH}/src/FindOpenCL.cmake
 )
@@ -45,6 +45,7 @@ file(INSTALL
 )
 
 file(REMOVE
+        ${CURRENT_PACKAGES_DIR}/debug/bin/clBLAS-tune.pdb
         ${CURRENT_PACKAGES_DIR}/debug/bin/clBLAS-tune.exe
         ${CURRENT_PACKAGES_DIR}/bin/clBLAS-tune.exe
         ${CURRENT_PACKAGES_DIR}/debug/bin/concrt140d.dll
