@@ -20,7 +20,9 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
 file(COPY ${CURRENT_PACKAGES_DIR}/lib/fastrtps DESTINATION ${CURRENT_PACKAGES_DIR}/share)
 
