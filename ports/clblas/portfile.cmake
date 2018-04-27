@@ -32,7 +32,9 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(INSTALL
