@@ -7,6 +7,10 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message("Freeglut currently requires the following libraries from the system package manager:\n    opengl\n    glu\n    libx11\n\nThese can be installed on Ubuntu systems via apt-get install libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev")
+endif()
+
 # disable debug suffix, because FindGLUT.cmake from CMake 3.8 doesn't support it
 file(READ ${SOURCE_PATH}/CMakeLists.txt FREEGLUT_CMAKELISTS)
 string(REPLACE "SET( CMAKE_DEBUG_POSTFIX \"d\" )"
@@ -41,9 +45,11 @@ string(REPLACE "pragma comment (lib, \"freeglutd.lib\")"
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/GL/freeglut_std.h "${FREEGLUT_STDH}")
 
 # Rename static lib (otherwise it's incompatible with FindGLUT.cmake)
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/freeglut_static.lib ${CURRENT_PACKAGES_DIR}/lib/freeglut.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/freeglut_static.lib ${CURRENT_PACKAGES_DIR}/debug/lib/freeglut.lib)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/freeglut_static.lib ${CURRENT_PACKAGES_DIR}/lib/freeglut.lib)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/freeglut_static.lib ${CURRENT_PACKAGES_DIR}/debug/lib/freeglut.lib)
+    endif()
 endif()
 
 # Clean
