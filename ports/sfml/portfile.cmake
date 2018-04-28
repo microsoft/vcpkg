@@ -1,7 +1,7 @@
 
 include(vcpkg_common_functions)
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
-    REPO "sfml/sfml"
+    REPO "SFML/SFML"
     REF "2.4.2"
     HEAD_REF master
     SHA512 8acfdf320939c953a9a3413398f82d02d68a56a337f1366c2677c14ce032baa8ba059113ac3c91bb6e6fc22eef119369a265be7ef6894526e6a97a01f37e1972)
