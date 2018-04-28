@@ -11,35 +11,29 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/restinio-0.4.5-vcpkg/dev/restinio)
+
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/restinio-0.4.5-vcpkg)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://bitbucket.org/ngrodzitski/restinio-vcpkg-archives-tesst-2018/downloads/restinio-0.4.5-vcpkg.zip"
     FILENAME "restinio-0.4.5-vcpkg.zip"
-    SHA512 be6e68d43fb28dea0bc4dd2052c2734795d9e749c2cd09731592e1bac54d4d0a543e13b981805d1fe26e326e48bfca8f7e5d87f137c8e9bb4a2756ef0942b232
+    SHA512 9a6b262ad3e27a14781c1f29e1d63efc8933bdf316682823e5313b6ee92add58143f65cf9db92d05365a1a587499531fb9b3aeb121c78d0ac4a04867dd54ca78
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH ${SOURCE_PATH}/vcpkg
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
-	    -DRESTINIO_USE_BOOST_ASIO=none
-	    -DRESTINIO_STAND_ALONE_ASIO_DEFINES=\-DASIO_STANDALONE=1\ \-DASIO_HAS_STD_CHRONO=1\ \-DASIO_DISABLE_STD_STRING_VIEW=1
-		-DRESTINIO_INSTALL=ON
     # OPTIONS_RELEASE -DOPTIMIZE=1
     # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
 
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE 
-	${CURRENT_PACKAGES_DIR}/lib 
-    ${CURRENT_PACKAGES_DIR}/debug/include
-	${CURRENT_PACKAGES_DIR}/debug/lib
-	)
-
 vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/restinio")
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/debug)
+
 # Handle copyright
-file(COPY ${SOURCE_PATH}/../../LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/restinio)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/restinio)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/restinio/LICENSE ${CURRENT_PACKAGES_DIR}/share/restinio/copyright)
