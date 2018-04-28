@@ -1,0 +1,13 @@
+diff --git a/Microsoft.WindowsAzure.Storage/cmake/Modules/FindGlibmm.cmake b/Microsoft.WindowsAzure.Storage/cmake/Modules/FindGlibmm.cmake
+index 79a4bcb..fe130bd 100644
+--- a/Microsoft.WindowsAzure.Storage/cmake/Modules/FindGlibmm.cmake
++++ b/Microsoft.WindowsAzure.Storage/cmake/Modules/FindGlibmm.cmake
+@@ -36,7 +36,7 @@ find_path(GlibmmConfig_INCLUDE_DIR
+ )
+ 
+ find_library(Glibmm_LIBRARY
+-  NAMES glibmm-2.4
++  NAMES glibmm glibmm-2.4
+   PATHS 
+     ${Glibmm_PKGCONF_LIBRARY_DIRS} 
+     /usr
