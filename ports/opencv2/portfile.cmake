@@ -1,3 +1,6 @@
+# in case of errors on Ubuntu, please try installing first
+# sudo apt-get install libv4l-dev
+
 include(vcpkg_common_functions)
 
 if (EXISTS "${CURRENT_INSTALLED_DIR}/share/OpenCV")
