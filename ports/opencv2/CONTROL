@@ -2,7 +2,7 @@ Source: opencv2
 Version: 2.4.13.6
 Build-Depends: zlib
 Description: computer vision library, version 2
-Default-Features: opengl, ffmpeg, tiff, png, jpeg, jasper, eigen
+Default-Features: opengl, ffmpeg, png, jpeg, jasper, eigen
 
 Feature: opengl
 Build-Depends: opengl
@@ -22,10 +22,6 @@ Description: Qt GUI support for opencv
 Feature: vtk
 Build-Depends: vtk
 Description: vtk support for opencv
-
-Feature: tiff
-Build-Depends: tiff
-Description: TIFF support for opencv
 
 Feature: png
 Build-Depends: libpng
