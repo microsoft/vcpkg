@@ -23,6 +23,7 @@ $tagPorts = @(
     "azure-uamqp-c",
     "azure-uhttp-c",
     "azure-umqtt-c",
+    "benchmark",
     "bitserializer",
     "brynet",
     "c-ares",
@@ -30,6 +31,7 @@ $tagPorts = @(
     # disabled due to slow update cadence. In the future, once they have passed our current ref (Jan 29, 2018), this can be reenabled.
     # "cartographer",
     "cctz",
+    "celero",
     # Disabled due to tags moving. Reactivate after releases/CGAL-4.11.1
     #"cgal",
     "chakracore",
