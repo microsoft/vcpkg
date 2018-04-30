@@ -165,6 +165,7 @@ vcpkg_configure_cmake(
         -DVTK_INSTALL_DATA_DIR=share/vtk/data
         -DVTK_INSTALL_DOC_DIR=share/vtk/doc
         -DVTK_INSTALL_PACKAGE_DIR=share/vtk
+        -DVTK_INSTALL_RUNTIME_DIR=tools
         -DVTK_FORBID_DOWNLOADS=ON
         ${ADDITIONAL_OPTIONS}
 )
@@ -294,15 +295,14 @@ string(REGEX REPLACE "${CURRENT_INSTALLED_DIR}/lib/[^\\.]*\\.lib" "" VTK_TARGETS
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets.cmake" "${VTK_TARGETS_CONTENT}")
 
 # =============================================================================
-# Move executable to tools directory and clean-up other directories
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/vtk)
+# Clean-up other directories
 
-function(_vtk_move_tool TOOL_NAME)
-    if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/${TOOL_NAME}.exe)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/bin/${TOOL_NAME}.exe ${CURRENT_PACKAGES_DIR}/tools/vtk/${TOOL_NAME}.exe)
+
+function(_vtk_remove_tool TOOL_NAME)
+    set(filename ${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL_NAME}.exe)
+    if(EXISTS ${filename})
+        file(REMOVE ${filename})
     endif()
-
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL_NAME}.exe)
 endfunction()
 
 set(VTK_TOOLS
@@ -326,7 +326,7 @@ string(REPLACE "vtk::hdf5::hdf5" "" _contents "${_contents}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/Modules/vtkhdf5.cmake" "${_contents}")
 
 foreach(TOOL_NAME IN LISTS VTK_TOOLS)
-    _vtk_move_tool("${TOOL_NAME}")
+    _vtk_remove_tool("${TOOL_NAME}")
 endforeach()
 
 # =============================================================================
