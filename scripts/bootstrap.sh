@@ -30,7 +30,14 @@ vcpkgCheckEqualFileHash()
 {
     url=$1; filePath=$2; expectedHash=$3
 
-    actualHash=$(shasum -a 512 "$filePath") # sha512sum not available on osx
+    if command -v "sha512sum" >/dev/null 2>&1 ; then
+        actualHash=$(sha512sum "$filePath")
+    else
+        # sha512sum is not available by default on osx
+        # shasum is not available by default on Fedora
+        actualHash=$(shasum -a 512 "$filePath")
+    fi
+
     actualHash="${actualHash%% *}" # shasum returns [hash filename], so get the first word
 
     if ! [ "$expectedHash" = "$actualHash" ]; then
