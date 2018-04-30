@@ -9,7 +9,7 @@ else()
 endif()
 add_library(sqlite3 sqlite3.c)
 
-target_compile_definitions(sqlite3 PRIVATE 
+target_compile_definitions(sqlite3 PRIVATE
     $<$<CONFIG:Debug>:SQLITE_DEBUG>
     ${API}
     -DSQLITE_ENABLE_RTREE
@@ -25,7 +25,11 @@ if(NOT SQLITE3_SKIP_TOOLS)
     add_executable(sqlite3-bin shell.c)
     set_target_properties(sqlite3-bin PROPERTIES OUTPUT_NAME sqlite3)
     target_link_libraries(sqlite3-bin PRIVATE sqlite3)
-    install(TARGETS sqlite3-bin sqlite3 RUNTIME DESTINATION tools)
+    install(TARGETS sqlite3-bin sqlite3
+      RUNTIME DESTINATION tools
+      LIBRARY DESTINATION lib
+      ARCHIVE DESTINATION lib
+    )
 endif()
 
 install(TARGETS sqlite3 EXPORT sqlite3Config

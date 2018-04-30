@@ -20,10 +20,6 @@ vcpkg_from_github(
     REF v2018.04.16.00
     SHA512 1f14da6eece3a490bd134a40550c2a3f78356789090e19933b8f10bc356837ee774a21e6f0b88c45831a968587049092b9d0d77617f040ab8e177de224400408
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/find-gflags.patch
 )

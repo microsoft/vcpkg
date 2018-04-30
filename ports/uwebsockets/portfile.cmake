@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uWebSockets/uWebSockets
-    REF v0.14.7
-    SHA512 1049497f7b63770dcfdc44bef562ce43b87fa553e8ec778c8ee2506f406a23f5fdcf67904f0458e38fc0843899b43b92ccef5f36cae40228cfe47b6f38fa0e15
+    REF v0.14.8
+    SHA512 5e78e2f10e95648ad1e7f26612f69da3bbdcdb3f17c99e3bb9775e3eb440a2741f05375dcc043b43f0f2d4de6da54e7534431c5c10c1350103a4379b55cf9081
     HEAD_REF master
 )
 

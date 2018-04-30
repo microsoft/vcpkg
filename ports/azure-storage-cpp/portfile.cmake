@@ -10,10 +10,6 @@ vcpkg_from_github(
     REF v3.2.1
     SHA512 8d1e8de439e52f53eb28b77e8adf394468f4861c2c4c1f79ec1437c72e3fc0bc871e4e2662ee58090748915b0f12ce6736a7cc6ede619d332686b9fb6a026c9f
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/cmake.patch
         ${CMAKE_CURRENT_LIST_DIR}/static-builds.patch
@@ -35,7 +31,7 @@ vcpkg_install_cmake()
 file(INSTALL
     ${SOURCE_PATH}/LICENSE.txt
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/azure-storage-cpp RENAME copyright)
-file(REMOVE_RECURSE 
+file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_pdbs()
