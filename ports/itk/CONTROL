@@ -1,4 +1,8 @@
 Source: itk
 Version: 4.13.0
 Description: Insight Segmentation and Registration Toolkit (ITK) is used for image processing and analysis.
-Build-Depends: double-conversion, libjpeg-turbo, zlib, libpng, tiff, expat
+Build-Depends: double-conversion, libjpeg-turbo, zlib, libpng, tiff, expat, hdf5[cpp]
+
+Feature: vtk
+Description: Build ITKVtkGlue module.
+Build-Depends: vtk
