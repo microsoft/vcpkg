@@ -1,0 +1,3 @@
+Source: bde
+Version: 3.x.x.x
+Description: Basic Development Environment - a set of foundational C++ libraries used at Bloomberg.
