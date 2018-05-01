@@ -108,6 +108,13 @@ vcpkg_execute_required_process(
 )
 # Include files should not be duplicated
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+# pkg-config files should point to correct include directory
+file(GLOB PC_FILES "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
+foreach(PC_FILE_NAME ${PC_FILES})
+    file(READ "${PC_FILE_NAME}" _contents)
+    string(REPLACE "includedir=\${prefix}/include" "includedir=\${prefix}/../include" _contents "${_contents}")
+    file(WRITE "${PC_FILE_NAME}" "${_contents}")
+endforeach()
 message(STATUS "Installing ${TARGET_TRIPLET}-dbg done")
 
 # Configure release
