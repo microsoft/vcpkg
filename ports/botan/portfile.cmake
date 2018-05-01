@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
-set(BOTAN_VERSION 2.0.1)
-set(BOTAN_HASH  c5062ce92a6e6e333b4e6af095ed54d0c4ffacefc6ac87ec651dd1e0937793c9956b7c9c0d3acf49f059505526584168364e01c55ab72c953ad255e8396aed35)
+set(BOTAN_VERSION 2.6.0)
+set(BOTAN_HASH 2082b4aaac0802f117a5f75c67a69e6d364b436a0ebe543032e370c3f085752bbe1ca48051462066e13bd42e47573ebc532d1d45074fe406df032f33346ee645)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/Botan-${BOTAN_VERSION})
 
 vcpkg_download_distfile(ARCHIVE
@@ -10,9 +10,6 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 ${BOTAN_HASH}
 )
 vcpkg_extract_source_archive(${ARCHIVE})
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH} 
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-fix-crt-linking.patch")
 
 vcpkg_find_acquire_program(JOM)
 vcpkg_find_acquire_program(PYTHON3)
