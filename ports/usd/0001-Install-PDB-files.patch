@@ -1,0 +1,31 @@
+From efce3c54895a37bdfbd3038e645c4d647a9e646c Mon Sep 17 00:00:00 2001
+From: Victor Yudin <victor@yudin.org>
+Date: Tue, 1 May 2018 08:23:43 -0400
+Subject: [PATCH] Install PDB files
+
+---
+ cmake/macros/Private.cmake | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/cmake/macros/Private.cmake b/cmake/macros/Private.cmake
+index db731f3c..348bc7ab 100644
+--- a/cmake/macros/Private.cmake
++++ b/cmake/macros/Private.cmake
+@@ -1322,6 +1322,14 @@ function(_pxr_library NAME)
+                 PUBLIC_HEADER DESTINATION ${headerInstallPrefix}
+             )
+ 
++            if(CMAKE_HOST_WIN32)
++                _get_install_dir("bin" binInstallPrefix)
++                install(
++                    FILES $<TARGET_PDB_FILE:${NAME}>
++                    DESTINATION ${binInstallPrefix}
++                    OPTIONAL)
++            endif(CMAKE_HOST_WIN32)
++
+             export(TARGETS ${NAME}
+                 APPEND
+                 FILE "${PROJECT_BINARY_DIR}/pxrTargets.cmake"
+-- 
+2.13.0.windows.1
+
