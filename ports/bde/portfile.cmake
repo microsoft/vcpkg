@@ -11,7 +11,7 @@
 #
 
 include(vcpkg_common_functions)
-set(BDE_VERSION       3.x.x.x)
+set(BDE_VERSION       3.2.0.0)
 set(BDE_TOOLS_VERSION 1.x)
 
 # Paths used in build
