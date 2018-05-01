@@ -1,0 +1,3 @@
+Source: libgo
+Version: 2.7
+Description: The best stackful coroutine by c++11.
