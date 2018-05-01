@@ -21,7 +21,6 @@ set(SOURCE_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bde-${BD
 # Acquire Python 2 and add it to PATH
 vcpkg_find_acquire_program(PYTHON2)
 get_filename_component(PYTHON2_EXE_PATH ${PYTHON2} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PYTHON2_EXE_PATH}")
 
 # Acquire BDE Tools and add them to PATH
 vcpkg_from_github(
@@ -32,7 +31,13 @@ vcpkg_from_github(
     HEAD_REF master
 )
 message(STATUS "Configure bde-tools-v${BDE_TOOLS_VERSION}")
-set(ENV{PATH} "$ENV{PATH};${TOOLS_PATH}/bin")
+if(VCPKG_CMAKE_SYSTEM_NAME)
+    set(ENV{PATH} "$ENV{PATH}:${PYTHON2_EXE_PATH}")
+    set(ENV{PATH} "$ENV{PATH}:${TOOLS_PATH}/bin")
+else()
+    set(ENV{PATH} "$ENV{PATH};${PYTHON2_EXE_PATH}")
+    set(ENV{PATH} "$ENV{PATH};${TOOLS_PATH}/bin")
+endif()
 
 # Acquire BDE sources
 vcpkg_from_github(
@@ -47,7 +52,12 @@ vcpkg_from_github(
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
                     ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 
-set(WAF_COMMAND waf.bat)
+# Identify waf executable and calculate configure args
+if(VCPKG_CMAKE_SYSTEM_NAME)
+    set(WAF_COMMAND waf)
+else()
+    set(WAF_COMMAND waf.bat)
+endif()
 set(CONFIGURE_COMMON_ARGS --use-flat-include-dir)
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(CONFIGURE_COMMON_ARGS ${CONFIGURE_COMMON_ARGS} --abi-bits=32)
@@ -61,10 +71,12 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 else()
     message(FATAL_ERROR "Unsupported library linkage: ${VCPKG_LIBRARY_LINKAGE}")
 endif()
-if(VCPKG_CRT_LINKAGE STREQUAL static)
-    set(CONFIGURE_COMMON_ARGS ${CONFIGURE_COMMON_ARGS} --msvc-runtime-type=static)
-else()
-    set(CONFIGURE_COMMON_ARGS ${CONFIGURE_COMMON_ARGS} --msvc-runtime-type=dynamic)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME)
+    if(VCPKG_CRT_LINKAGE STREQUAL static)
+        set(CONFIGURE_COMMON_ARGS ${CONFIGURE_COMMON_ARGS} --msvc-runtime-type=static)
+    else()
+        set(CONFIGURE_COMMON_ARGS ${CONFIGURE_COMMON_ARGS} --msvc-runtime-type=dynamic)
+    endif()
 endif()
 
 # Configure debug
