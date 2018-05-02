@@ -73,16 +73,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
    file(COPY ${LIB_TO_MOVE_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum)
 else()
-   # remove headers and libs for plugins
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include)
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib)
-   # hint vcpkg
-   set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-   set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/MagnumPlugins)
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/magnum)
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d)
+    set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/magnum)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d)
 endif()
 
 # Handle copyright
