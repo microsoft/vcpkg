@@ -4,6 +4,7 @@ param(
 )
 
 Set-StrictMode -Version Latest
+
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 . "$scriptsDir\VcpkgPowershellUtils.ps1"
 
@@ -12,6 +13,7 @@ $vcpkgRootDir = vcpkgFindFileRecursivelyUp $scriptsDir .vcpkg-root
 
 $downloadsDir = "$vcpkgRootDir\downloads"
 vcpkgCreateDirectoryIfNotExists $downloadsDir
+$downloadsDir = Resolve-Path $downloadsDir
 
 function fetchToolInternal([Parameter(Mandatory=$true)][string]$tool)
 {

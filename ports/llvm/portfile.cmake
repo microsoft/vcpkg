@@ -70,6 +70,7 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/bin
     ${CURRENT_PACKAGES_DIR}/msbuild-bin
     ${CURRENT_PACKAGES_DIR}/tools/msbuild-bin
+    ${CURRENT_PACKAGES_DIR}/include/llvm/BinaryFormat/WasmRelocs
 )
 
 # Remove one empty include subdirectory if it is indeed empty

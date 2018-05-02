@@ -1,3 +1,10 @@
+vcpkg (0.0.110)
+--------------
+  * `vcpkg` is now available for Linux and MacOS. More information [here](https://blogs.msdn.microsoft.com/vcblog/2018/04/24/announcing-a-single-c-library-manager-for-linux-macos-and-windows-vcpkg/).
+
+-- vcpkg team <vcpkg@microsoft.com>  TUE, 24 Apr 2018 10:30:00 -0800
+
+
 vcpkg (0.0.109)
 --------------
   * Add ports:
