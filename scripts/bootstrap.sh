@@ -166,7 +166,7 @@ selectCXX()
 
     gccversion="$("$CXX" -v 2>&1)"
     gccversion="$(extractStringBetweenDelimiters "$gccversion" "gcc version " ".")"
-    if [ "$gccversion" = "5" ]; then
+    if [ "$gccversion" -lt "6" ]; then
         echo "CXX ($CXX) is too old; please install a newer compiler such as g++-7."
         echo "sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y"
         echo "sudo apt-get update -y"

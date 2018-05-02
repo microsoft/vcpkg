@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocoproject/poco
-    REF poco-1.8.1-release
-    SHA512 ca57b30c10fc4e611dbdd90c7e36db34b8cb9a7dae675dc8aed37457a26d3433080caf26eaace85adf8d6a6ad7945c49f7c66f274b26fe9cc0c7d5107be3828e
+    REF poco-1.9.0-release
+    SHA512 de2346d62b2e89ba04abe62a83f6ede7a496e80bcbe53a880a1aa8e87a8ebd9a430dd70fdc6aada836bb1021c6df21375fd0cbcf62dbb6e29a2f65d6d90cf2b9
     HEAD_REF master
 )
 
@@ -18,6 +18,7 @@ vcpkg_apply_patches(
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" POCO_STATIC)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" POCO_MT)
 
 if("mysql" IN_LIST FEATURES)
     # enabling MySQL support
@@ -31,6 +32,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DPOCO_STATIC=${POCO_STATIC}
+        -DPOCO_MT=${POCO_MT}
         -DENABLE_SEVENZIP=ON
         -DENABLE_TESTS=OFF
         -DPOCO_UNBUNDLED=ON # OFF means: using internal copy of sqlite, libz, pcre, expat, ...

@@ -15,8 +15,8 @@ vcpkg_find_acquire_program(BISON)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/thrift
-    REF 4a00fc658a1dc90be33a223a2c7ee336679e8745
-    SHA512 b5f380b195498103d0ab4612c1754b29a8dce8e9360e46f5d6dd6daead477c6d2b9b0092ef83a081d937973e21a77fa8b55d5cb7c1d2d5abe71c6b0caa4dae30
+    REF 0293c3643b0075b510b9d92b2cc39b6d5e0fadb8
+    SHA512 2bf217d9317b35215d5f984ae76509ddf505459dec97fde6aae8b4a2632882df971c438a99afc87fbe28dd931e2d1283315d1dbb3eb8af92c94fa0fdffd05ac0
     HEAD_REF master
 )
 
