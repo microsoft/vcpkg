@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/magnum-plugins
-    REF v2018.02
-    SHA512 650d3ec26b3c72aa98ffa242b072e382445de49d4849042faf5dac800d5e4cce223cac3fa1cc079fcb230632730af1d90ac7d347d152a1f31d224732499e96b4
+    REF v2018.04
+    SHA512 0b8ae1488e210d111826532299d1e29c5eba32c75f7c210caff088a9a57459b6354474c7a53fccd0c78553d67d79bf041d471b5822c59cb2c9612126cf3e49ef
     HEAD_REF master
 )
 
@@ -53,8 +53,9 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share)
 
-# Clean up empty directories
-if(NOT FEATURES)
+# Clean up empty directories, if not building anything.
+# FEATURES may only contain "core", but that does not build anything.
+if(NOT FEATURES OR FEATURES STREQUAL "core")
     file(REMOVE_RECURSE
         ${CURRENT_PACKAGES_DIR}/bin
         ${CURRENT_PACKAGES_DIR}/lib
@@ -63,15 +64,15 @@ if(NOT FEATURES)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-   # move plugin libs to conventional place
-   file(GLOB_RECURSE LIB_TO_MOVE ${CURRENT_PACKAGES_DIR}/lib/magnum/*)
-   file(COPY ${LIB_TO_MOVE} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/magnum)
-   file(GLOB_RECURSE LIB_TO_MOVE_DBG ${CURRENT_PACKAGES_DIR}/debug/lib/magnum/*)
-   file(COPY ${LIB_TO_MOVE_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+    # move plugin libs to conventional place
+    file(GLOB_RECURSE LIB_TO_MOVE ${CURRENT_PACKAGES_DIR}/lib/magnum/*)
+    file(COPY ${LIB_TO_MOVE} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/magnum)
+    file(GLOB_RECURSE LIB_TO_MOVE_DBG ${CURRENT_PACKAGES_DIR}/debug/lib/magnum/*)
+    file(COPY ${LIB_TO_MOVE_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum)
 else()
     set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/magnum)
