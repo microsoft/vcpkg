@@ -36,7 +36,7 @@ namespace vcpkg::Strings
 
     std::wstring to_utf16(const CStringView& s);
 
-    std::string to_utf8(const CWStringView& w);
+    std::string to_utf8(const wchar_t* w);
 
     std::string escape_string(const CStringView& s, char char_to_escape, char escape_char);
 

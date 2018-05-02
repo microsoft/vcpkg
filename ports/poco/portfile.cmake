@@ -18,6 +18,7 @@ vcpkg_apply_patches(
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" POCO_STATIC)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" POCO_MT)
 
 if("mysql" IN_LIST FEATURES)
     # enabling MySQL support
@@ -31,6 +32,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DPOCO_STATIC=${POCO_STATIC}
+        -DPOCO_MT=${POCO_MT}
         -DENABLE_SEVENZIP=ON
         -DENABLE_TESTS=OFF
         -DPOCO_UNBUNDLED=ON # OFF means: using internal copy of sqlite, libz, pcre, expat, ...

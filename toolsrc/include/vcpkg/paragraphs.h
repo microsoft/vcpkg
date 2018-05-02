@@ -3,11 +3,8 @@
 #include <vcpkg/binaryparagraph.h>
 #include <vcpkg/parse.h>
 #include <vcpkg/vcpkgpaths.h>
-#include <vcpkg/versiont.h>
 
 #include <vcpkg/base/expected.h>
-
-#include <map>
 
 namespace vcpkg::Paragraphs
 {

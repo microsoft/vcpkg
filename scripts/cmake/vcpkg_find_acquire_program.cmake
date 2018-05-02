@@ -25,6 +25,7 @@
 ## - NASM
 ## - NINJA
 ## - YASM
+## - ARIA2 (Downloader)
 ##
 ## Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_acquire_msys.md).
 ##
@@ -114,8 +115,10 @@ function(vcpkg_find_acquire_program VAR)
     set(SUBDIR "ninja-1.8.2")
     if(CMAKE_HOST_WIN32)
       set(PATHS "${DOWNLOADS}/tools/ninja/${SUBDIR}")
+    elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
+      set(PATHS "${DOWNLOADS}/tools/${SUBDIR}-osx")
     else()
-      set(PATHS "${DOWNLOADS}/tools/${SUBDIR}")
+      set(PATHS "${DOWNLOADS}/tools/${SUBDIR}-linux")
     endif()
     set(BREW_PACKAGE_NAME "ninja")
     set(APT_PACKAGE_NAME "ninja-build")
@@ -178,6 +181,13 @@ function(vcpkg_find_acquire_program VAR)
     set(URL "http://ftp.stack.nl/pub/users/dimitri/doxygen-1.8.14.windows.bin.zip")
     set(ARCHIVE "doxygen-1.8.14.windows.bin.zip")
     set(HASH d0d706501e7112045b1f401f22d12a2c8d9b7728edee9ad1975a17dff914c16494ae48a70beab6f6304643779935843f268c7afed3b9da7d403b5cb11cac0c50)
+  # Download Tools
+  elseif(VAR MATCHES "ARIA2")
+    set(PROGNAME aria2c)
+    set(PATHS ${DOWNLOADS}/tools/aria2c/aria2-1.33.1-win-32bit-build1)
+    set(URL "https://github.com/aria2/aria2/releases/download/release-1.33.1/aria2-1.33.1-win-32bit-build1.zip")
+    set(ARCHIVE "aria2-1.33.1-win-32bit-build1.zip")
+    set(HASH 2456176ba3d506a07cf0cc4f61f080e1ff8cb4106426d66f354c5bb67a9a8720b5ddb26904275e61b1f623c932355f7dcde4cd17556cc895f11293c23c3a9bf3)
   else()
     message(FATAL "unknown tool ${VAR} -- unable to acquire.")
   endif()
@@ -210,19 +220,20 @@ function(vcpkg_find_acquire_program VAR)
         FILENAME ${ARCHIVE}
     )
 
-    file(MAKE_DIRECTORY ${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR})
+    set(PROG_PATH_SUBDIR "${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR}")
+    file(MAKE_DIRECTORY ${PROG_PATH_SUBDIR})
     if(DEFINED NOEXTRACT)
       if(DEFINED _vfa_RENAME)
-        file(INSTALL ${ARCHIVE_PATH} DESTINATION ${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR} RENAME ${_vfa_RENAME})
+        file(INSTALL ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR} RENAME ${_vfa_RENAME})
       else()
-        file(COPY ${ARCHIVE_PATH} DESTINATION ${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR})
+        file(COPY ${ARCHIVE_PATH} DESTINATION ${PROG_PATH_SUBDIR})
       endif()
     else()
       get_filename_component(ARCHIVE_EXTENSION ${ARCHIVE} EXT)
       string(TOLOWER "${ARCHIVE_EXTENSION}" ARCHIVE_EXTENSION)
       if(ARCHIVE_EXTENSION STREQUAL ".msi")
         file(TO_NATIVE_PATH "${ARCHIVE_PATH}" ARCHIVE_NATIVE_PATH)
-        file(TO_NATIVE_PATH "${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR}" DESTINATION_NATIVE_PATH)
+        file(TO_NATIVE_PATH "${PROG_PATH_SUBDIR}" DESTINATION_NATIVE_PATH)
         execute_process(
           COMMAND msiexec /a ${ARCHIVE_NATIVE_PATH} /qn TARGETDIR=${DESTINATION_NATIVE_PATH}
           WORKING_DIRECTORY ${DOWNLOADS}
@@ -230,7 +241,7 @@ function(vcpkg_find_acquire_program VAR)
       else()
         execute_process(
           COMMAND ${CMAKE_COMMAND} -E tar xzf ${ARCHIVE_PATH}
-          WORKING_DIRECTORY ${DOWNLOADS}/tools/${PROGNAME}/${SUBDIR}
+          WORKING_DIRECTORY ${PROG_PATH_SUBDIR}
         )
       endif()
     endif()

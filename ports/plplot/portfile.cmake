@@ -53,6 +53,14 @@ file(REMOVE
     ${CURRENT_PACKAGES_DIR}/bin/pltek.exe
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    message(STATUS "Static build: Removing the full bin directory.")
+    file(REMOVE_RECURSE
+        ${CURRENT_PACKAGES_DIR}/debug/bin
+        ${CURRENT_PACKAGES_DIR}/bin
+    )
+endif()
+
 # Remove unwanted and duplicate directories
 file(REMOVE_RECURSE
         ${CURRENT_PACKAGES_DIR}/debug/include

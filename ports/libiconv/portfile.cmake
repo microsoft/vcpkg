@@ -1,7 +1,7 @@
 if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/libiconv)
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-iconv-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/libiconv)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/unofficial-iconv)
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/unofficial-iconv-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-iconv)
     return()
 endif()
 

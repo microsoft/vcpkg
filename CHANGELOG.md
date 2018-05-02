@@ -1,3 +1,151 @@
+vcpkg (0.0.110)
+--------------
+  * `vcpkg` is now available for Linux and MacOS. More information [here](https://blogs.msdn.microsoft.com/vcblog/2018/04/24/announcing-a-single-c-library-manager-for-linux-macos-and-windows-vcpkg/).
+
+-- vcpkg team <vcpkg@microsoft.com>  TUE, 24 Apr 2018 10:30:00 -0800
+
+
+vcpkg (0.0.109)
+--------------
+  * Add ports:
+    - boost-container-hash 1.67.0
+    - boost-contract 1.67.0
+    - boost-hof      1.67.0
+    - fastrtps       1.5.0
+    - fluidsynth     1.1.10
+    - liblinear      2.20
+    - libxmlpp       2.40.1-1
+    - utf8h          841cb2deb8eb806e73fff0e1f43a11fca4f5da45
+    - vxl            20180414-7a130cf-1
+  * Update ports:
+    - abseil         2018-04-05 -> 2018-04-12
+    - aws-sdk-cpp    1.4.30-1 -> 1.4.33
+    - azure-c-shared-utility 1.1.2 -> 1.1.3
+    - azure-iot-sdk-c 1.2.2 -> 1.2.3
+    - azure-uamqp-c  1.2.2 -> 1.2.3
+    - azure-umqtt-c  1.1.2 -> 1.1.3
+    - benchmark      1.3.0-1 -> 1.4.0
+    - boost          1.66.0 -> 1.67.0
+    - boost-*        1.66.0 -> 1.67.0
+    - breakpad       2018-04-05 -> 2018-04-17
+    - cartographer   0.3.0-3 -> 0.3.0-4
+    - catch2         2.2.1-1 -> 2.2.2
+    - celero         2.1.0-1 -> 2.1.0-2
+    - chakracore     1.8.2 -> 1.8.3
+    - cimg           221 -> 2.2.2
+    - cppzmq         4.2.2 -> 4.2.2-1
+    - date           2.4 -> 2.4.1
+    - directxmesh    feb2018 -> feb2018-eb751e0b631b05aa25c36c08e7d6bbf09f5e94a9
+    - exiv2          2018-04-05 -> 2018-04-12
+    - folly          2018.03.19.00-2 -> 2018.04.16.00
+    - forest         7.0.1 -> 7.0.6
+    - gettext        0.19-2 -> 0.19-4
+    - glib           2.52.3-2 -> 2.52.3-9
+    - glibmm         2.52.1 -> 2.52.1-7
+    - graphicsmagick 1.3.26-2 -> 1.3.28
+    - grpc           1.10.1 -> 1.10.1-1
+    - icu            59.1-1 -> 61.1-1
+    - jsonnet        2018-03-17 -> 2018-04-17
+    - libiconv       1.15-3 -> 1.15-4
+    - libsigcpp      2.10 -> 2.10-1
+    - libtorrent     1.1.6 -> 1.1.6-1
+    - libuuid        1.0.3 -> 1.0.3-1
+    - libzip         rel-1-5-0 -> rel-1-5-1
+    - llvm           5.0.1 -> 6.0.0
+    - magnum         2018.02-1 -> 2018.02-2
+    - magnum-plugins 2018.02-1 -> 2018.02-2
+    - nuklear        2018-04-05 -> 2018-04-17
+    - openssl        1.0.2o-1 -> 1.0.2o-2
+    - openvr         1.0.13 -> 1.0.14
+    - parson         2018-03-23 -> 2018-04-17
+    - protobuf       3.5.1-1 -> 3.5.1-3
+    - pugixml        1.8.1-3 -> 1.9-1
+    - realsense2     2.10.1 -> 2.10.1-1
+    - rs-core-lib    2018-04-05 -> 2018-04-12
+    - sol            2.18.7 -> 2.19.5
+    - sqlite3        3.21.0-1 -> 3.23.0
+    - thrift         2018-04-05 -> 2018-04-17
+    - tinyxml2       6.0.0-2 -> 6.2.0
+    - unicorn-lib    2018-03-13 -> 2018-04-09
+    - uwebsockets    0.14.6-1 -> 0.14.7-1
+    - wt             4.0.2 -> 4.0.3
+    - x264           152-e9a5903edf8ca59 -> 152-e9a5903edf8ca59-1
+    - yoga           1.7.0-1 -> 1.8.0-1
+    - zeromq         2018-04-05 -> 2018-04-17
+  * Bump required version & auto-downloaded version of `nuget` to 4.6.2
+  * Bump required version & auto-downloaded version of `vswhere` to 2.4.1
+  * `vcpkg edit` improvements
+    - '--all' now will open both the buildtrees dir and the package dir
+    - Allow multiple ports to be specified as arguments
+
+-- vcpkg team <vcpkg@microsoft.com>  MON, 23 Apr 2018 19:00:00 -0800
+
+
+vcpkg (0.0.108)
+--------------
+  * Add ports:
+    - google-cloud-cpp 0.1.0
+    - mhook          2.5.1-1
+    - mosquitto      1.4.15
+    - pmdk           1.4-1 (renamed from nvml)
+  * Remove Ports:
+    - nvml           1.3-0 (renamed to pmdk)
+  * Update ports:
+    - abseil         2018-03-23 -> 2018-04-05
+    - asio           1.12.0-1 -> 1.12.0-2
+    - aws-sdk-cpp    1.4.21 -> 1.4.30-1
+    - azure-c-shared-utility 1.0.0-pre-release-1.0.9 -> 1.1.2
+    - azure-iot-sdk-c 1.0.0-pre-release-1.0.9 -> 1.2.2
+    - azure-uamqp-c  1.0.0-pre-release-1.0.9 -> 1.2.2
+    - azure-umqtt-c  1.0.0-pre-release-1.0.9 -> 1.1.2
+    - breakpad       2018-03-13 -> 2018-04-05
+    - clara          2018-03-23 -> 2018-04-02
+    - cryptopp       5.6.5-1 -> 6.1.0-2
+    - discord-rpc    3.1.0 -> 3.2.0
+    - dlib           19.10 -> 19.10-1
+    - eastl          3.08.00 -> 3.09.00
+    - exiv2          2018-03-23 -> 2018-04-05
+    - folly          2017.11.27.00-3 -> 2018.03.19.00-2
+    - forest         4.5.0 -> 7.0.1
+    - gdcm2          2.8.5 -> 2.8.6
+    - grpc           1.10.0 -> 1.10.1
+    - gtest          1.8.0-7 -> 1.8.0-8
+    - libiconv       1.15-2 -> 1.15-3
+    - libuv          1.19.2 -> 1.20.0
+    - libvpx         1.6.1-2 -> 1.7.0
+    - libxml2        2.9.4-4 -> 2.9.4-5
+    - nuklear        2018-03-23 -> 2018-04-05
+    - openimageio    1.8.9 -> 1.8.10
+    - openssl        1.0.2n-3 -> 1.0.2o-1
+    - qt5-base       5.9.2-5 -> 5.9.2-6
+    - qt5-modularscripts 2 -> 3
+    - qwt            6.1.3-4 -> 6.1.3-5
+    - recast         1.5.1 -> 1.5.1-1
+    - rocksdb        5.11.3 -> 5.12.2
+    - rs-core-lib    2018-03-17 -> 2018-04-05
+    - sciter         4.1.4 -> 4.1.5
+    - tbb            2018_U2 -> 2018_U3
+    - tesseract      3.05.01-2 -> 3.05.01-3
+    - theia          0.7-d15154a-1 -> 0.7-d15154a-3
+    - thrift         2018-03-23 -> 2018-04-05
+    - unrar          5.5.8 -> 5.5.8-1
+    - yoga           1.7.0 -> 1.7.0-1
+    - zeromq         2018-03-23 -> 2018-04-05
+  * `vcpkg.cmake`: Remove detection for Windows SDK. Let `cmake` detect it instead.
+  * Rework `vcpkgTools.xml`.
+    - `<requiredVersion>` renamed to `<version>`
+    - `<archiveRelativePath>` renamed `<archiveName>`
+    - `<sha256>` changed to `<sha512>`
+    - `<tool>` tags now specify an `os="x"` property
+    - The version of the tools list (i.e. `<tools version="1">`) is now verified by `vcpkg.exe`.
+  * Use [7zip](https://www.7-zip.org/) to extract vcpkg tools defined in `vcpkgTools.xml`.
+  * Use [aria2](https://aria2.github.io/) to download vcpkg tools defined in `vcpkgTools.xml`.
+    - The experimental flag `vcpkg install <port> --x-use-aria2` allows you to use `aria2` for other downloads as well.
+  * `vckg hash` improvements
+
+-- vcpkg team <vcpkg@microsoft.com>  FRI, 06 Apr 2018 19:30:00 -0800
+
+
 vcpkg (0.0.107)
 --------------
   * Add ports:

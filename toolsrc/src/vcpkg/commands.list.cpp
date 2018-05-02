@@ -10,7 +10,7 @@ namespace vcpkg::Commands::List
     static constexpr StringLiteral OPTION_FULLDESC =
         "--x-full-desc"; // TODO: This should find a better home, eventually
 
-    static void do_print(const StatusParagraph& pgh, bool full_desc)
+    static void do_print(const StatusParagraph& pgh, const bool full_desc)
     {
         if (full_desc)
         {
@@ -44,13 +44,18 @@ namespace vcpkg::Commands::List
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
         const StatusParagraphs status_paragraphs = database_load_check(paths);
-        std::vector<StatusParagraph*> installed_packages = get_installed_ports(status_paragraphs);
+        auto installed_ipv = get_installed_ports(status_paragraphs);
 
-        if (installed_packages.empty())
+        if (installed_ipv.empty())
         {
             System::println("No packages are installed. Did you mean `search`?");
             Checks::exit_success(VCPKG_LINE_INFO);
         }
+
+        auto installed_packages = Util::fmap(installed_ipv, [](const InstalledPackageView& ipv) { return ipv.core; });
+        auto installed_features =
+            Util::fmap_flatten(installed_ipv, [](const InstalledPackageView& ipv) { return ipv.features; });
+        installed_packages.insert(installed_packages.end(), installed_features.begin(), installed_features.end());
 
         std::sort(installed_packages.begin(),
                   installed_packages.end(),

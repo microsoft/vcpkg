@@ -64,7 +64,7 @@ namespace vcpkg::Files
 
     Filesystem& get_real_filesystem();
 
-    static const char* FILESYSTEM_INVALID_CHARACTERS = R"(\/:*?"<>|)";
+    static constexpr const char* FILESYSTEM_INVALID_CHARACTERS = R"(\/:*?"<>|)";
 
     bool has_invalid_chars_for_filesystem(const std::string& s);
 

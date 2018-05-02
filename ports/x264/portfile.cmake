@@ -10,6 +10,12 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/uwp-cflags.patch
+)
+
 # Acquire tools
 vcpkg_acquire_msys(MSYS_ROOT PACKAGES make automake1.15)
 
@@ -25,8 +31,16 @@ set(CONFIGURE_OPTIONS "--host=i686-pc-mingw32 --enable-strip --disable-lavf --di
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --enable-shared")
+    if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib")
+    endif()
 else()
     set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --enable-static")
+endif()
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
+    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00")
 endif()
 
 set(CONFIGURE_OPTIONS_RELEASE "--prefix=${CURRENT_PACKAGES_DIR}")
@@ -86,8 +100,10 @@ vcpkg_execute_required_process(
     LOGNAME "build-${TARGET_TRIPLET}-dbg")
 message(STATUS "Package ${TARGET_TRIPLET}-dbg done")
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/x264)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/x264.exe ${CURRENT_PACKAGES_DIR}/tools/x264/x264.exe)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/x264)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/x264.exe ${CURRENT_PACKAGES_DIR}/tools/x264/x264.exe)
+endif()
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/lib/pkgconfig

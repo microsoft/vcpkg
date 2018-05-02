@@ -77,11 +77,8 @@ namespace vcpkg::Commands::CI
                 {
                     auto triplet = p->spec.triplet();
 
-                    const Build::BuildPackageConfig build_config{p->source_control_file.value_or_exit(VCPKG_LINE_INFO),
-                                                                 triplet,
-                                                                 paths.port_dir(p->spec),
-                                                                 install_plan_options,
-                                                                 p->feature_list};
+                    const Build::BuildPackageConfig build_config{
+                        *scf, triplet, paths.port_dir(p->spec), install_plan_options, p->feature_list};
 
                     auto dependency_abis =
                         Util::fmap(p->computed_dependencies, [&](const PackageSpec& spec) -> Build::AbiEntry {
@@ -157,8 +154,10 @@ namespace vcpkg::Commands::CI
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
-        Checks::check_exit(
-            VCPKG_LINE_INFO, GlobalState::g_binary_caching, "The ci command requires binary caching to be enabled.");
+        if (!GlobalState::g_binary_caching)
+        {
+            System::println(System::Color::warning, "Warning: Running ci without binary caching!");
+        }
 
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 

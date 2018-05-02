@@ -23,6 +23,9 @@ endif()
 
 if(GCC OR CLANG)
     add_compile_options(-std=c++1z)
+    if(WERROR)
+        add_compile_options(-Wall -Wno-unknown-pragmas -Werror)
+    endif()
 endif()
 
 file(GLOB_RECURSE VCPKGLIB_SOURCES src/vcpkg/*.cpp)

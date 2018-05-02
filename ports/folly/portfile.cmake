@@ -17,15 +17,11 @@ set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF v2018.03.19.00
-    SHA512 72df8768753bf9f1109ad3f16645d811906b633833c91c7d9fe856a06c16b5e398876cf6cae415401eff96b568c99ffa1dc0c44d81cd40219bafb0f4c72fc2ca
+    REF v2018.04.23.00
+    SHA512 7614f799fe12047070f2efe471ccbb6166dca62947d3fd5baa9a3cc50bab6238bda77ca61153779913903ad57346767b21cf59c025a0a93db39ad99e1258c45d
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/msvc-15.6-workaround.patch
+        ${CMAKE_CURRENT_LIST_DIR}/find-gflags.patch
 )
 
 file(COPY
@@ -33,6 +29,7 @@ file(COPY
     ${CMAKE_CURRENT_LIST_DIR}/FindSnappy.cmake
     DESTINATION ${SOURCE_PATH}/CMake/
 )
+file(REMOVE ${SOURCE_PATH}/CMake/FindGFlags.cmake)
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
     set(MSVC_USE_STATIC_RUNTIME ON)
@@ -75,7 +72,7 @@ vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/folly)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

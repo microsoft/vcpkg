@@ -8,8 +8,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-umqtt-c
-    REF 1.0.0-pre-release-1.0.9
-    SHA512 8cabeb431e1b8db64551c0374e80157d9db39011f38db8d3a3dfb77ddf3d6ffed4d6ee0ab697a0af3ce93571fc8a83bb2f3efa52387afe301583151e75f55658
+    REF 1.1.3
+    SHA512 5c57fe40dce8166e1e138db45b642152a337dbbbc4d85998ac99b016627c0135b99bd7b189d249c6278837ef4af5ba4e4f964a9b65788acef37d7b37ae125b16
     HEAD_REF master
 )
 
