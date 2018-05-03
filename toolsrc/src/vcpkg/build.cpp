@@ -357,7 +357,7 @@ namespace vcpkg::Build
             {
                 {"CMD", "BUILD"},
                 {"PORT", config.scf.core_paragraph->name},
-                {"CURRENT_PORT_DIR", config.port_dir / "/."},
+                {"CURRENT_PORT_DIR", config.port_dir},
                 {"TARGET_TRIPLET", spec.triplet().canonical_name()},
                 {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
                 {"VCPKG_USE_HEAD_VERSION",
