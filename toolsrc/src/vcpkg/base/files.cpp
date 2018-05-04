@@ -55,9 +55,9 @@ namespace vcpkg::Files
         virtual fs::path find_file_recursively_up(const fs::path& starting_dir,
                                                   const std::string& filename) const override
         {
+            static const fs::path UNIX_ROOT = "/";
             fs::path current_dir = starting_dir;
-            fs::path unix_root = "/";
-            for (; !current_dir.empty() && current_dir != unix_root; current_dir = current_dir.parent_path())
+            for (; !current_dir.empty() && current_dir != UNIX_ROOT; current_dir = current_dir.parent_path())
             {
                 const fs::path candidate = current_dir / filename;
                 if (exists(candidate))
