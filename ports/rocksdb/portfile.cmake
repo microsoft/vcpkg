@@ -13,6 +13,7 @@ vcpkg_apply_patches(
   PATCHES
     "${CMAKE_CURRENT_LIST_DIR}/0002-disable-gtest.patch"
     "${CMAKE_CURRENT_LIST_DIR}/0003-only-build-one-flavor.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/0004-zlib-findpackage.patch"
     "${CMAKE_CURRENT_LIST_DIR}/use-find-package.patch"
     "${CMAKE_CURRENT_LIST_DIR}/pass-major-version.patch"
 )
