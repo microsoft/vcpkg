@@ -154,10 +154,9 @@ namespace vcpkg::Commands::Hash
         };
     }
 
-    std::string get_file_hash(const VcpkgPaths& paths, const fs::path& path, const std::string& hash_type)
+    std::string get_file_hash(const Files::Filesystem& fs, const fs::path& path, const std::string& hash_type)
     {
-        Checks::check_exit(
-            VCPKG_LINE_INFO, paths.get_filesystem().exists(path), "File %s does not exist", path.u8string());
+        Checks::check_exit(VCPKG_LINE_INFO, fs.exists(path), "File %s does not exist", path.u8string());
         return BCryptHasher{hash_type}.hash_file(path);
     }
 
@@ -239,7 +238,7 @@ namespace vcpkg::Commands::Hash
 
         const fs::path file_to_hash = args.command_arguments[0];
         const std::string algorithm = args.command_arguments.size() == 2 ? args.command_arguments[1] : "SHA512";
-        const std::string hash = get_file_hash(paths, file_to_hash, algorithm);
+        const std::string hash = get_file_hash(paths.get_filesystem(), file_to_hash, algorithm);
         System::println(hash);
         Checks::exit_success(VCPKG_LINE_INFO);
     }

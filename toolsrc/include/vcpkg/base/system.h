@@ -47,6 +47,7 @@ namespace vcpkg::System
 
     ExitCodeAndOutput cmd_execute_and_capture_output(const CStringView cmd_line);
 
+#if defined(_WIN32)
     void powershell_execute(const std::string& title,
                             const fs::path& script_path,
                             const std::vector<PowershellParameter>& parameters = {});
@@ -54,6 +55,7 @@ namespace vcpkg::System
     std::string powershell_execute_and_capture_output(const std::string& title,
                                                       const fs::path& script_path,
                                                       const std::vector<PowershellParameter>& parameters = {});
+#endif
 
     enum class Color
     {
