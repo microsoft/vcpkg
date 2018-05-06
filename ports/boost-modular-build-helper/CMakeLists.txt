@@ -124,9 +124,11 @@ add_custom_target(boost ALL
         threading=multi
         threadapi=pthread
         debug-symbols=on
+
+        stage
     WORKING_DIRECTORY ${SOURCE_PATH}/build
 )
 
 install(
-    CODE "file(GLOB LIBS ${CMAKE_CURRENT_BINARY_DIR}/boost/build/*/*.a)\nif(LIBS)\nfile(INSTALL \${LIBS} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/lib\")\nendif()"
+    CODE "file(GLOB LIBS ${CMAKE_CURRENT_BINARY_DIR}/stage/lib/*)\nif(LIBS)\nfile(INSTALL \${LIBS} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/lib\")\nendif()"
 )

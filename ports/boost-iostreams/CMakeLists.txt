@@ -26,6 +26,13 @@ target_link_libraries(boost_iostreams PRIVATE ZLIB::ZLIB)
 find_package(BZip2 REQUIRED)
 target_link_libraries(boost_iostreams PRIVATE BZip2::BZip2)
 
+# CHECK_LIBRARY_EXISTS in FindLibLZMA.cmake doesn't always work. But we are sure
+# that lzma_auto_decoder, lzma_easy_encoder and lzma_lzma_preset exist because
+# we build liblzma.
+set(LIBLZMA_HAS_AUTO_DECODER 1)
+set(LIBLZMA_HAS_EASY_ENCODER 1)
+set(LIBLZMA_HAS_LZMA_PRESET 1)
+
 find_package(LibLZMA REQUIRED)
 target_include_directories(boost_iostreams PRIVATE ${LIBLZMA_INCLUDE_DIRS})
 target_link_libraries(boost_iostreams PRIVATE ${LIBLZMA_LIBRARIES})

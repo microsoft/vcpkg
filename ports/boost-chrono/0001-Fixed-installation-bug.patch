@@ -1,0 +1,21 @@
+From ca8040de8d7977899a0b1f7f4191aa3412033765 Mon Sep 17 00:00:00 2001
+From: Victor Yudin <victor@yudin.org>
+Date: Fri, 4 May 2018 19:05:12 -0400
+Subject: [PATCH] Fixed installation bug
+
+---
+ build/Jamfile.v2 | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/build/Jamfile.v2 b/build/Jamfile.v2
+index bd9608c..3bd0356 100644
+--- a/build/Jamfile.v2
++++ b/build/Jamfile.v2
+@@ -114,3 +114,4 @@ lib boost_chrono
+     <link>static:<define>BOOST_All_STATIC_LINK=1 # tell source we're building static lib's
+     ;
+ 
++boost-install boost_chrono ;
+-- 
+2.17.0
+
