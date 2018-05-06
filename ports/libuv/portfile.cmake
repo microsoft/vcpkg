@@ -1,4 +1,7 @@
 include(vcpkg_common_functions)
+
+MESSAGE( " *** VCPKG_CMAKE_SYSTEM_NAME : " ${VCPKG_CMAKE_SYSTEM_NAME} )
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libuv/libuv
@@ -12,7 +15,9 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS_DEBUG
-        -DUV_SKIP_HEADERS=ON)
+        -DUV_SKIP_HEADERS=ON
+    OPTIONS
+        -DVCPKG_CMAKE_SYSTEM_NAME=${VCPKG_CMAKE_SYSTEM_NAME})
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
