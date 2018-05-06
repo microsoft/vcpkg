@@ -1,7 +1,5 @@
 include(vcpkg_common_functions)
 
-MESSAGE( " *** VCPKG_CMAKE_SYSTEM_NAME : " ${VCPKG_CMAKE_SYSTEM_NAME} )
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libuv/libuv
