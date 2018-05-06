@@ -1,0 +1,30 @@
+--- CMakeLists.txt	2018-05-01 22:05:17.000000000 -0400
++++ CMakeLists.txt	2018-05-05 18:48:11.154005732 -0400
+@@ -14,12 +14,15 @@
+     decompress.c
+     bzlib.c)
+ 
+-add_library(libbz2 ${LIBBZ2_SOURCES})
+-set_target_properties(libbz2 PROPERTIES
++add_library(bz2 ${LIBBZ2_SOURCES})
++set_target_properties(bz2 PROPERTIES
+     ARCHIVE_OUTPUT_NAME bz2 # required for FindBzip2 to work
+     DEBUG_POSTFIX d)
++if(CMAKE_HOST_UNIX)
++    set_target_properties(bz2 PROPERTIES PREFIX lib)
++endif()
+ if(BUILD_SHARED_LIBS)
+-    target_compile_definitions(libbz2 PRIVATE -DBZ_BUILD_DLL)
++    target_compile_definitions(bz2 PRIVATE -DBZ_BUILD_DLL)
+ endif()
+ 
+ if(MSVC)
+@@ -28,7 +29,7 @@
+     add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
+ endif()
+ 
+-install(TARGETS libbz2
++install(TARGETS bz2
+     RUNTIME DESTINATION bin
+     ARCHIVE DESTINATION lib
+     LIBRARY DESTINATION lib)
