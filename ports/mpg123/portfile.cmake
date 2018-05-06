@@ -29,13 +29,12 @@ vcpkg_find_acquire_program(YASM)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     vcpkg_apply_patches(
         SOURCE_PATH ${SOURCE_PATH}
         PATCHES
             "${CURRENT_PORT_DIR}/0001-fix-crt-linking.patch"
             "${CURRENT_PORT_DIR}/0002-fix-x86-build.patch")
-
 
     vcpkg_build_msbuild(
         PROJECT_PATH ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/libmpg123.vcxproj
@@ -80,11 +79,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         ${SOURCE_PATH}/src/libmpg123/mpg123.h.in
         DESTINATION ${CURRENT_PACKAGES_DIR}/include
     )
-
-    file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/mpg123 RENAME copyright)
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mpg123-${MPG123_VERSION})
-
     file(REMOVE_RECURSE ${SOURCE_PATH}/build/debug)
     file(REMOVE_RECURSE ${SOURCE_PATH}/build/release)
 
@@ -145,14 +140,6 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR VCPKG_CMAKE_SYSTEM_NAME STRE
             "${SOURCE_PATH}/build/debug/lib/libmpg123.a"
             "${SOURCE_PATH}/build/debug/lib/libout123.a"
         DESTINATION
-            ${CURRENT_PACKAGES_DIR}/lib/debug
-    )
-
-    file(
-        INSTALL
-            "${SOURCE_PATH}/build/debug/lib/libmpg123.a"
-            "${SOURCE_PATH}/build/debug/lib/libout123.a"
-        DESTINATION
             ${CURRENT_INSTALLED_DIR}/debug/lib
     )
 
@@ -163,9 +150,8 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR VCPKG_CMAKE_SYSTEM_NAME STRE
         DESTINATION
             ${CURRENT_PACKAGES_DIR}/lib
     )
-
-    file(COPY ${CURRENT_BUILDTREES_DIR}/src/mpg123-1.25.8/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/mpg123)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/share/mpg123/COPYING ${CURRENT_PACKAGES_DIR}/share/mpg123/copyright)
 endif()
+
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/mpg123 RENAME copyright)
 
 message(STATUS "Installing done")
