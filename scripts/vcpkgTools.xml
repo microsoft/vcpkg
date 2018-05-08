@@ -22,11 +22,11 @@
         <archiveName>cmake-3.10.2-Linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="git" os="windows">
-        <version>2.16.2</version>
+        <version>2.17.0</version>
         <exeRelativePath>cmd\git.exe</exeRelativePath>
-        <url>https://github.com/git-for-windows/git/releases/download/v2.16.2.windows.1/MinGit-2.16.2-32-bit.zip</url>
-        <sha512>004e1dc1904f2e2d5c3534d0a56f58bf030b1146f5b263d6d191e60f72cd35455977c588604708125a1e93268ee8f7a5ab32ed6115adc028257b12d5926f350a</sha512>
-        <archiveName>MinGit-2.16.2-32-bit.zip</archiveName>
+        <url>https://github.com/git-for-windows/git/releases/download/v2.17.0.windows.1/MinGit-2.17.0-32-bit.zip</url>
+        <sha512>a34575ab1b4f553e62535e38492904b512df4d6a837cf4abf205dbcdd05edf1eef450cc5b15a4f63f901424d5f3cd1f78b6b22437d0d4f8cd9ce4e42e82617b9</sha512>
+        <archiveName>MinGit-2.17.0-32-bit.zip</archiveName>
     </tool>
     <tool name="vswhere" os="windows">
         <version>2.4.1</version>
