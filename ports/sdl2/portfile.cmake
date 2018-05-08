@@ -25,7 +25,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DSDL_STATIC=${SDL_STATIC}
         -DSDL_SHARED=${SDL_SHARED}
-        -DVIDEO_VULKAN=OFF
+        -DVIDEO_VULKAN=ON
         -DFORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
         -DLIBC=ON
 )
