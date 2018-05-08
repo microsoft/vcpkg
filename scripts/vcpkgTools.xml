@@ -28,6 +28,18 @@
         <sha512>a34575ab1b4f553e62535e38492904b512df4d6a837cf4abf205dbcdd05edf1eef450cc5b15a4f63f901424d5f3cd1f78b6b22437d0d4f8cd9ce4e42e82617b9</sha512>
         <archiveName>MinGit-2.17.0-32-bit.zip</archiveName>
     </tool>
+    <tool name="git" os="linux">
+        <version>2.7.4</version>
+        <exeRelativePath></exeRelativePath>
+        <url></url>
+        <sha512></sha512>
+    </tool>
+    <tool name="git" os="osx">
+        <version>2.7.4</version>
+        <exeRelativePath></exeRelativePath>
+        <url></url>
+        <sha512></sha512>
+    </tool>
     <tool name="vswhere" os="windows">
         <version>2.4.1</version>
         <exeRelativePath>vswhere.exe</exeRelativePath>

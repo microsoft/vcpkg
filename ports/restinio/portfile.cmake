@@ -1,10 +1,12 @@
 include(vcpkg_common_functions)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/restinio-0.4.5-vcpkg)
+set(RESTINIO_VERSION 0.4.5.1)
+
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/restinio-${RESTINIO_VERSION}-vcpkg)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://bitbucket.org/sobjectizerteam/restinio-0.4/downloads/restinio-0.4.5-vcpkg.zip"
-    FILENAME "restinio-0.4.5-vcpkg.zip"
-    SHA512 f5f135f761f29b2d4a9641ac1b37bb57bb6213df39b92ad349f8b73440142b2bd2a6093ee4c222417f61303ae46e960fb77b7a0c34d7e3924f3df1a50036b2da
+    URLS "https://bitbucket.org/sobjectizerteam/restinio-0.4/downloads/restinio-${RESTINIO_VERSION}-vcpkg.zip"
+    FILENAME "restinio-${RESTINIO_VERSION}-vcpkg.zip"
+    SHA512 198153f9b8d866c2aa57932720b31ff1f8e523d9640ad0c8becb911afed1fa12caa636847234cfc83d584a15bdc4b05fb98cbc4730af2520b453c5de468eb7fa
 )
 
 vcpkg_extract_source_archive(${ARCHIVE})

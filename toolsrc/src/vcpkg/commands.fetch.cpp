@@ -83,7 +83,8 @@ namespace vcpkg::Commands::Fetch
                                right_delim,
                                XML_PATH.generic_string());
 
-            return *result.get();
+            auto r = *result.get();
+            return Strings::trim(std::move(r));
         };
 
         static const std::regex XML_VERSION_REGEX{R"###(<tools[\s]+version="([^"]+)">)###"};
@@ -255,8 +256,8 @@ namespace vcpkg::Commands::Fetch
         const std::string download_path_part = download_path.u8string() + ".part";
         std::error_code ec;
         fs.remove(download_path_part, ec);
-        const auto code = System::cmd_execute(Strings::format(
-            R"(curl -L '%s' --create-dirs --output '%s')", url, download_path_part));
+        const auto code = System::cmd_execute(
+            Strings::format(R"(curl -L '%s' --create-dirs --output '%s')", url, download_path_part));
         Checks::check_exit(VCPKG_LINE_INFO, code == 0, "Could not download %s", url);
 
         verify_hash(paths, url, download_path_part, sha512);
@@ -267,8 +268,13 @@ namespace vcpkg::Commands::Fetch
     static fs::path fetch_tool(const VcpkgPaths& paths, const std::string& tool_name, const ToolData& tool_data)
     {
         const std::array<int, 3>& version = tool_data.version;
-
         const std::string version_as_string = Strings::format("%d.%d.%d", version[0], version[1], version[2]);
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           !tool_data.url.empty(),
+                           "A suitable version of %s was not found (required v%s) and unable to automatically "
+                           "download a portable one. Please install a newer version of git.",
+                           tool_name,
+                           version_as_string);
         System::println("A suitable version of %s was not found (required v%s). Downloading portable %s v%s...",
                         tool_name,
                         version_as_string,
@@ -401,11 +407,7 @@ namespace vcpkg::Commands::Fetch
 
     static fs::path get_git_path(const VcpkgPaths& paths)
     {
-#if defined(_WIN32)
         static const ToolData TOOL_DATA = parse_tool_data_from_xml(paths, "git");
-#else
-        static const ToolData TOOL_DATA = ToolData{{2, 7, 4}, ""};
-#endif
         static const std::string VERSION_CHECK_ARGUMENTS = "--version";
 
         std::vector<fs::path> candidate_paths;
