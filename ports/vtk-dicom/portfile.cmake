@@ -21,7 +21,7 @@ vcpkg_from_github(
     HEAD_REF "master"
 )
 
-if ("GDCM" IN_LIST FEATURES)
+if ("gdcm" IN_LIST FEATURES)
     set(USE_GDCM                      ON )
 else()
     set(USE_GDCM                      OFF )
