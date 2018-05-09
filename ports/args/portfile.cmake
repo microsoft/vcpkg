@@ -9,9 +9,14 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+)
+
 # Put the licence file where vcpkg expects it
-file(COPY ${SOURCE_PATH}/license DESTINATION ${CURRENT_PACKAGES_DIR}/share/args)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/args/license ${CURRENT_PACKAGES_DIR}/share/args/copyright)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/args)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/args/LICENSE ${CURRENT_PACKAGES_DIR}/share/args/copyright)
 
 # Copy the args header files
 file(INSTALL ${SOURCE_PATH}/ DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN "*.hxx")
