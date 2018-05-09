@@ -26,6 +26,11 @@ vcpkg_from_github(
 get_filename_component(PMDK_VERSION "${SOURCE_PATH}" NAME)
 string(REPLACE "pmdk-" "" PMDK_VERSION "${PMDK_VERSION}")
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}/src/windows/srcversion
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/addPowerShellExecutionPolicy.patch"
+)
+
 # Build only the selected projects
 vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/src/PMDK.sln
