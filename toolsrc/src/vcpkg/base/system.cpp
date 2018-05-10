@@ -274,8 +274,11 @@ namespace vcpkg::System
         Debug::println("CreateProcessW() returned %lu", exit_code);
         return static_cast<int>(exit_code);
 #else
+        Debug::println("system(%s)", cmd_line.c_str());
         fflush(nullptr);
-        return system(cmd_line.c_str());
+        int rc = system(cmd_line.c_str());
+        Debug::println("system() returned %d", rc);
+        return rc;
 #endif
     }
 
