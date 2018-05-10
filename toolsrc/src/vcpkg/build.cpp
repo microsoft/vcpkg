@@ -217,7 +217,12 @@ namespace vcpkg::Build
             if (it != toolset.supported_architectures.end()) return it->name;
         }
 
-        Checks::exit_with_message(VCPKG_LINE_INFO, "Unsupported toolchain combination %s", target_architecture);
+        Checks::exit_with_message(VCPKG_LINE_INFO,
+                                  "Unsupported toolchain combination. Target was: %s but supported ones were:\n%s",
+                                  target_architecture,
+                                  Strings::join(",", toolset.supported_architectures, [](const ToolsetArchOption& t) {
+                                      return t.name.c_str();
+                                  }));
     }
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
@@ -520,8 +525,8 @@ namespace vcpkg::Build
         System::cmd_execute_clean(Strings::format(
             R"("%s" x "%s" -o"%s" -y >nul)", seven_zip_exe.u8string(), archive_path.u8string(), pkg_path.u8string()));
 #else
-        System::cmd_execute_clean(Strings::format(
-            R"(unzip -qq "%s" "-d%s")", archive_path.u8string(), pkg_path.u8string()));
+        System::cmd_execute_clean(
+            Strings::format(R"(unzip -qq "%s" "-d%s")", archive_path.u8string(), pkg_path.u8string()));
 #endif
     }
 
@@ -537,11 +542,10 @@ namespace vcpkg::Build
 #if defined(_WIN32)
         auto&& seven_zip_exe = paths.get_tool_exe(Tools::SEVEN_ZIP);
 
-        System::cmd_execute_clean(Strings::format(
-            R"("%s" a "%s" "%s\*" >nul)",
-            seven_zip_exe.u8string(),
-            tmp_archive_path.u8string(),
-            paths.package_dir(spec).u8string()));
+        System::cmd_execute_clean(Strings::format(R"("%s" a "%s" "%s\*" >nul)",
+                                                  seven_zip_exe.u8string(),
+                                                  tmp_archive_path.u8string(),
+                                                  paths.package_dir(spec).u8string()));
 #else
         System::cmd_execute_clean(Strings::format(
             R"(cd '%s' && zip --quiet -r '%s' *)", paths.package_dir(spec).u8string(), tmp_archive_path.u8string()));
