@@ -13,6 +13,7 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/0001_cmake.patch
         ${CMAKE_CURRENT_LIST_DIR}/0002_fix_uwp.patch
         ${CMAKE_CURRENT_LIST_DIR}/0003_fix_libraries.patch
+        ${CMAKE_CURRENT_LIST_DIR}/0004_nghttp2_staticlib.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
