@@ -27,7 +27,7 @@ namespace vcpkg::Checks
     // Display an error message to the user and exit the tool.
     [[noreturn]] void exit_with_message(const LineInfo& line_info,
                                         const char* error_message_template,
-                                        const Arg1 error_message_arg1,
+                                        const Arg1& error_message_arg1,
                                         const Args&... error_message_args)
     {
         exit_with_message(line_info,
@@ -42,7 +42,7 @@ namespace vcpkg::Checks
     void check_exit(const LineInfo& line_info,
                     Conditional&& expression,
                     const char* error_message_template,
-                    const Arg1 error_message_arg1,
+                    const Arg1& error_message_arg1,
                     const Args&... error_message_args)
     {
         if (!expression)

@@ -1,4 +1,4 @@
-if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
     return()
 endif()
@@ -14,9 +14,14 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/gettext-runtime)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/libgnuintl.h DESTINATION ${SOURCE_PATH}/gettext-runtime/intl)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h DESTINATION ${SOURCE_PATH}/gettext-runtime)
+file(COPY
+    ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
+    ${CMAKE_CURRENT_LIST_DIR}/config.win32.h
+    DESTINATION ${SOURCE_PATH}/gettext-runtime
+)
+file(REMOVE ${SOURCE_PATH}/gettext-runtime/intl/libgnuintl.h ${SOURCE_PATH}/gettext-runtime/config.h)
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/libgnuintl.win32.h DESTINATION ${SOURCE_PATH}/gettext-runtime/intl)
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
@@ -27,12 +32,10 @@ vcpkg_apply_patches(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/gettext-runtime
     PREFER_NINJA
+    OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
 )
 
 vcpkg_install_cmake()
-
-file(COPY ${SOURCE_PATH}/gettext-runtime/intl/libgnuintl.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(RENAME ${CURRENT_PACKAGES_DIR}/include/libgnuintl.h ${CURRENT_PACKAGES_DIR}/include/libintl.h)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/gettext)

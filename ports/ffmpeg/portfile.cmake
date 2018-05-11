@@ -3,14 +3,20 @@ set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ffmpeg-3.3.3)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://ffmpeg.org/releases/ffmpeg-3.3.3.tar.bz2"
     FILENAME "ffmpeg-3.3.3.tar.bz2"
-    SHA512  1cc63bf73356f4e618c0d3572a216bdf5689f10deff56b4262f6d740b0bee5a4b3eac234f45fca3d4d2da77903a507b4fba725b76d2d2070f31b6dae9e7a2dab
+    SHA512 1cc63bf73356f4e618c0d3572a216bdf5689f10deff56b4262f6d740b0bee5a4b3eac234f45fca3d4d2da77903a507b4fba725b76d2d2070f31b6dae9e7a2dab
 )
+
+if (${SOURCE_PATH} MATCHES " ")
+    message(FATAL_ERROR "Error: ffmpeg will not build with spaces in the path. Please use a directory with no spaces")
+endif()
+
 vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/create-lib-libraries.patch
         ${CMAKE_CURRENT_LIST_DIR}/detect-openssl.patch
+        ${CMAKE_CURRENT_LIST_DIR}/configure_opencv.patch
 )
 
 vcpkg_find_acquire_program(YASM)
@@ -30,13 +36,65 @@ set(_csc_PROJECT_PATH ffmpeg)
 
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
 
-set(OPTIONS "--disable-ffmpeg --disable-ffprobe --disable-doc --enable-debug")
+set(OPTIONS "--enable-asm --enable-yasm --disable-doc --enable-debug --disable-ffmpeg")
 set(OPTIONS "${OPTIONS} --enable-runtime-cpudetect")
+
+if("nonfree" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-nonfree")
+endif()
+
+if("gpl" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-gpl")
+endif()
+
 if("openssl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-openssl")
 else()
     set(OPTIONS "${OPTIONS} --disable-openssl")
 endif()
+
+if("ffplay" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-ffplay")
+else()
+    set(OPTIONS "${OPTIONS} --disable-ffplay")
+endif()
+
+if("ffserver" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-ffserver")
+else()
+    set(OPTIONS "${OPTIONS} --disable-ffserver")
+endif()
+
+if("ffprobe" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-ffprobe")
+else()
+    set(OPTIONS "${OPTIONS} --disable-ffprobe")
+endif()
+
+if("x264" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libx264")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libx264")
+endif()
+
+if("opencl" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-opencl")
+else()
+    set(OPTIONS "${OPTIONS} --disable-opencl")
+endif()
+
+if("lzma" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-lzma")
+else()
+    set(OPTIONS "${OPTIONS} --disable-lzma")
+endif()
+
+# bzip2's debug library is named "bz2d", which isn't found by ffmpeg
+# if("bzip2" IN_LIST FEATURES)
+#     set(OPTIONS "${OPTIONS} --enable-bzip2")
+# else()
+#     set(OPTIONS "${OPTIONS} --disable-bzip2")
+# endif()
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
@@ -67,6 +125,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(OPTIONS "${OPTIONS} --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib")
     endif()
 endif()
+
+message(STATUS "Building Options: ${OPTIONS}")
 
 if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
     set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-cflags=-MDd --extra-cxxflags=-MDd")

@@ -24,14 +24,14 @@ if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
     set(CL_FLAGS_DBG "/MDd /Zi")
     set(CL_FLAGS_REL "/MD /Ox")
     set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib")
-    set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_c.lib")
+    set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib")
     set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib")
     set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib")
 else()
     set(CL_FLAGS_DBG "/MTd /Zi")
     set(CL_FLAGS_REL "/MT /Ox")
     set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libgeos_c.lib ${CURRENT_INSTALLED_DIR}/lib/libgeos.lib")
-    set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libgeos_c.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libgeos.lib")
+    set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libgeos_cd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libgeosd.lib")
     set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib ${CURRENT_INSTALLED_DIR}/lib/lzma.lib ws2_32.lib")
     set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib ${CURRENT_INSTALLED_DIR}/debug/lib/lzma.lib ws2_32.lib")
 endif()
@@ -60,32 +60,36 @@ set(LIBS_ALL_REL
 ################
 # Debug build
 ################
-message(STATUS "Building ${TARGET_TRIPLET}-dbg")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    message(STATUS "Building ${TARGET_TRIPLET}-dbg")
 
-file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/debug" INST_DIR_DBG)
+    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/debug" INST_DIR_DBG)
 
-vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f makefile.vc clean install
-    "INST_DIR=\"${INST_DIR_DBG}\"" INSTALLED_ROOT=${CURRENT_INSTALLED_DIR} "LINK_FLAGS=/debug" "CL_FLAGS=${CL_FLAGS_DBG}" "LIBS_ALL=${LIBS_ALL_DBG}"
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME nmake-build-${TARGET_TRIPLET}-debug
-)
-message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
-vcpkg_copy_pdbs()
+    vcpkg_execute_required_process(
+        COMMAND ${NMAKE} -f makefile.vc clean install
+        "INST_DIR=\"${INST_DIR_DBG}\"" INSTALLED_ROOT=${CURRENT_INSTALLED_DIR} "LINK_FLAGS=/debug" "CL_FLAGS=${CL_FLAGS_DBG}" "LIBS_ALL=${LIBS_ALL_DBG}"
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME nmake-build-${TARGET_TRIPLET}-debug
+    )
+    message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
+    vcpkg_copy_pdbs()
+endif()
 
 ################
 # Release build
 ################
-message(STATUS "Building ${TARGET_TRIPLET}-rel")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    message(STATUS "Building ${TARGET_TRIPLET}-rel")
 
-file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR_REL)
-vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f makefile.vc clean install
-    "INST_DIR=\"${INST_DIR_REL}\"" INSTALLED_ROOT=${CURRENT_INSTALLED_DIR} "LINK_FLAGS=" "CL_FLAGS=${CL_FLAGS_REL}" "LIBS_ALL=${LIBS_ALL_REL}"
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME nmake-build-${TARGET_TRIPLET}-release
-)
-message(STATUS "Building ${TARGET_TRIPLET}-rel done")
+    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR_REL)
+    vcpkg_execute_required_process(
+        COMMAND ${NMAKE} -f makefile.vc clean install
+        "INST_DIR=\"${INST_DIR_REL}\"" INSTALLED_ROOT=${CURRENT_INSTALLED_DIR} "LINK_FLAGS=" "CL_FLAGS=${CL_FLAGS_REL}" "LIBS_ALL=${LIBS_ALL_REL}"
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME nmake-build-${TARGET_TRIPLET}-release
+    )
+    message(STATUS "Building ${TARGET_TRIPLET}-rel done")
+endif()
 
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -99,8 +103,12 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 else()
   file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/spatialite.lib)
   file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib ${CURRENT_PACKAGES_DIR}/lib/spatialite.lib)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib)
+  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib ${CURRENT_PACKAGES_DIR}/lib/spatialite.lib)
+  endif()
+  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib)
+  endif()
 endif()
 
 message(STATUS "Packaging ${TARGET_TRIPLET} done")

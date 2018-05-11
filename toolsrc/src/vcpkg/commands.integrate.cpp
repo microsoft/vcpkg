@@ -5,9 +5,11 @@
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/userconfig.h>
 
 namespace vcpkg::Commands::Integrate
 {
+#if defined(_WIN32)
     static std::string create_appdata_targets_shortcut(const std::string& target_path) noexcept
     {
         return Strings::format(R"###(
@@ -18,7 +20,9 @@ namespace vcpkg::Commands::Integrate
                                target_path,
                                target_path);
     }
+#endif
 
+#if defined(_WIN32)
     static std::string create_system_targets_shortcut() noexcept
     {
         return R"###(
@@ -31,7 +35,9 @@ namespace vcpkg::Commands::Integrate
 </Project>
 )###";
     }
+#endif
 
+#if defined(_WIN32)
     static std::string create_nuget_targets_file_contents(const fs::path& msbuild_vcpkg_targets_file) noexcept
     {
         const std::string as_string = msbuild_vcpkg_targets_file.string();
@@ -47,7 +53,9 @@ namespace vcpkg::Commands::Integrate
                                as_string,
                                as_string);
     }
+#endif
 
+#if defined(_WIN32)
     static std::string create_nuget_props_file_contents() noexcept
     {
         return R"###(
@@ -58,7 +66,9 @@ namespace vcpkg::Commands::Integrate
 </Project>
 )###";
     }
+#endif
 
+#if defined(_WIN32)
     static std::string get_nuget_id(const fs::path& vcpkg_root_dir)
     {
         std::string dir_id = vcpkg_root_dir.generic_string();
@@ -71,7 +81,9 @@ namespace vcpkg::Commands::Integrate
         const std::string nuget_id = "vcpkg." + dir_id;
         return nuget_id;
     }
+#endif
 
+#if defined(_WIN32)
     static std::string create_nuspec_file_contents(const fs::path& vcpkg_root_dir,
                                                    const std::string& nuget_id,
                                                    const std::string& nupkg_version)
@@ -98,17 +110,18 @@ namespace vcpkg::Commands::Integrate
         content = Strings::replace_all(std::move(content), "@VERSION@", nupkg_version);
         return content;
     }
+#endif
 
+#if defined(_WIN32)
     enum class ElevationPromptChoice
     {
         YES,
         NO
     };
 
-#if defined(_WIN32)
     static ElevationPromptChoice elevated_cmd_execute(const std::string& param)
     {
-        SHELLEXECUTEINFOW sh_ex_info = {0};
+        SHELLEXECUTEINFOW sh_ex_info{};
         sh_ex_info.cbSize = sizeof(sh_ex_info);
         sh_ex_info.fMask = SEE_MASK_NOCLOSEPROCESS;
         sh_ex_info.hwnd = nullptr;
@@ -144,19 +157,19 @@ namespace vcpkg::Commands::Integrate
     }
 #endif
 
+    static fs::path get_path_txt_path() { return get_user_dir() / "vcpkg.path.txt"; }
+
 #if defined(_WIN32)
-    static void integrate_install(const VcpkgPaths& paths)
+    static void integrate_install_msbuild14(Files::Filesystem& fs, const fs::path& tmp_dir)
     {
         static const std::array<fs::path, 2> OLD_SYSTEM_TARGET_FILES = {
-            System::get_program_files_32_bit() /
+            System::get_program_files_32_bit().value_or_exit(VCPKG_LINE_INFO) /
                 "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.nuget.targets",
-            System::get_program_files_32_bit() /
+            System::get_program_files_32_bit().value_or_exit(VCPKG_LINE_INFO) /
                 "MSBuild/14.0/Microsoft.Common.Targets/ImportBefore/vcpkg.system.targets"};
         static const fs::path SYSTEM_WIDE_TARGETS_FILE =
-            System::get_program_files_32_bit() /
+            System::get_program_files_32_bit().value_or_exit(VCPKG_LINE_INFO) /
             "MSBuild/Microsoft.Cpp/v4.0/V140/ImportBefore/Default/vcpkg.system.props";
-
-        auto& fs = paths.get_filesystem();
 
         // TODO: This block of code should eventually be removed
         for (auto&& old_system_wide_targets_file : OLD_SYSTEM_TARGET_FILES)
@@ -176,12 +189,6 @@ namespace vcpkg::Commands::Integrate
                 }
             }
         }
-
-        std::error_code ec;
-        const fs::path tmp_dir = paths.buildsystems / "tmp";
-        fs.create_directory(paths.buildsystems, ec);
-        fs.create_directory(tmp_dir, ec);
-
         bool should_install_system = true;
         const Expected<std::string> system_wide_file_contents = fs.read_contents(SYSTEM_WIDE_TARGETS_FILE);
         static const std::regex RE(R"###(<!-- version (\d+) -->)###");
@@ -220,24 +227,52 @@ namespace vcpkg::Commands::Integrate
                                "Error: failed to copy targets file to %s",
                                SYSTEM_WIDE_TARGETS_FILE.string());
         }
+    }
+#endif
 
-        const fs::path appdata_src_path = tmp_dir / "vcpkg.user.targets";
-        fs.write_contents(appdata_src_path,
-                          create_appdata_targets_shortcut(paths.buildsystems_msbuild_targets.string()));
-        auto appdata_dst_path = get_appdata_targets_path();
+    static void integrate_install(const VcpkgPaths& paths)
+    {
+        auto& fs = paths.get_filesystem();
 
-        const auto rc = fs.copy_file(appdata_src_path, appdata_dst_path, fs::copy_options::overwrite_existing, ec);
-
-        if (!rc || ec)
+#if defined(_WIN32)
         {
-            System::println(System::Color::error,
-                            "Error: Failed to copy file: %s -> %s",
-                            appdata_src_path.string(),
-                            appdata_dst_path.string());
+            std::error_code ec;
+            const fs::path tmp_dir = paths.buildsystems / "tmp";
+            fs.create_directory(paths.buildsystems, ec);
+            fs.create_directory(tmp_dir, ec);
+
+            integrate_install_msbuild14(fs, tmp_dir);
+
+            const fs::path appdata_src_path = tmp_dir / "vcpkg.user.targets";
+            fs.write_contents(appdata_src_path,
+                              create_appdata_targets_shortcut(paths.buildsystems_msbuild_targets.string()));
+            auto appdata_dst_path = get_appdata_targets_path();
+
+            const auto rc = fs.copy_file(appdata_src_path, appdata_dst_path, fs::copy_options::overwrite_existing, ec);
+
+            if (!rc || ec)
+            {
+                System::println(System::Color::error,
+                                "Error: Failed to copy file: %s -> %s",
+                                appdata_src_path.string(),
+                                appdata_dst_path.string());
+                Checks::exit_fail(VCPKG_LINE_INFO);
+            }
+        }
+#endif
+
+        const auto pathtxt = get_path_txt_path();
+        std::error_code ec;
+        fs.write_contents(pathtxt, paths.root.generic_u8string(), ec);
+        if (ec)
+        {
+            System::println(System::Color::error, "Error: Failed to write file: %s", pathtxt.string());
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
+
         System::println(System::Color::success, "Applied user-wide integration for this vcpkg root.");
         const fs::path cmake_toolchain = paths.buildsystems / "vcpkg.cmake";
+#if defined(_WIN32)
         System::println(
             R"(
 All MSBuild C++ projects can now #include any installed libraries.
@@ -246,17 +281,29 @@ Installing new libraries will make them instantly available.
 
 CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s")",
             cmake_toolchain.generic_string());
+#else
+        System::println(
+            R"(
+CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s")",
+            cmake_toolchain.generic_string());
+#endif
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 
     static void integrate_remove(Files::Filesystem& fs)
     {
+        std::error_code ec;
+        bool was_deleted = false;
+
+#if defined(_WIN32)
         const fs::path path = get_appdata_targets_path();
 
-        std::error_code ec;
-        const bool was_deleted = fs.remove(path, ec);
+        was_deleted |= fs.remove(path, ec);
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Error: Unable to remove user-wide integration: %s", ec.message());
+#endif
 
+        was_deleted |= fs.remove(get_path_txt_path(), ec);
         Checks::check_exit(VCPKG_LINE_INFO, !ec, "Error: Unable to remove user-wide integration: %s", ec.message());
 
         if (was_deleted)
@@ -270,13 +317,13 @@ CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s")",
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
-#endif
 
+#if defined(WIN32)
     static void integrate_project(const VcpkgPaths& paths)
     {
         auto& fs = paths.get_filesystem();
 
-        const fs::path& nuget_exe = paths.get_nuget_exe();
+        const fs::path& nuget_exe = paths.get_tool_exe(Tools::NUGET);
 
         const fs::path& buildsystems_dir = paths.buildsystems;
         const fs::path tmp_dir = buildsystems_dir / "tmp";
@@ -319,13 +366,20 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
+#endif
 
+#if defined(_WIN32)
     const char* const INTEGRATE_COMMAND_HELPSTRING =
         "  vcpkg integrate install         Make installed packages available user-wide. Requires admin privileges on "
         "first use\n"
         "  vcpkg integrate remove          Remove user-wide integration\n"
         "  vcpkg integrate project         Generate a referencing nuget package for individual VS project use\n"
         "  vcpkg integrate powershell      Enable PowerShell Tab-Completion\n";
+#else
+    const char* const INTEGRATE_COMMAND_HELPSTRING =
+        "  vcpkg integrate install         Make installed packages available user-wide.\n"
+        "  vcpkg integrate remove          Remove user-wide integration\n";
+#endif
 
     namespace Subcommand
     {
@@ -352,9 +406,8 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        args.parse_arguments(COMMAND_STRUCTURE);
+        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
 
-#if defined(_WIN32)
         if (args.command_arguments[0] == Subcommand::INSTALL)
         {
             return integrate_install(paths);
@@ -363,6 +416,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         {
             return integrate_remove(paths.get_filesystem());
         }
+#if defined(_WIN32)
         if (args.command_arguments[0] == Subcommand::PROJECT)
         {
             return integrate_project(paths);

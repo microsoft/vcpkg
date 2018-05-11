@@ -7,10 +7,11 @@
 namespace vcpkg::Strings::details
 {
     // To disambiguate between two overloads
-    static const auto isspace = [](const char c) { return std::isspace(c); };
+    static bool is_space(const char c) { return std::isspace(c) != 0; }
 
     // Avoids C4244 warnings because of char<->int conversion that occur when using std::tolower()
     static char tolower_char(const char c) { return static_cast<char>(std::tolower(c)); }
+    static char toupper_char(const char c) { return static_cast<char>(std::toupper(c)); }
 
 #if defined(_WIN32)
     static _locale_t& c_locale()
@@ -38,7 +39,7 @@ namespace vcpkg::Strings::details
         _vsnprintf_s_l(&output.at(0), output.size() + 1, output.size(), fmtstr, c_locale(), args);
 #else
         va_start(args, fmtstr);
-        auto res = vsnprintf(&output.at(0), output.size() + 1, fmtstr, args);
+        vsnprintf(&output.at(0), output.size() + 1, fmtstr, args);
 #endif
         va_end(args);
 
@@ -48,31 +49,29 @@ namespace vcpkg::Strings::details
 
 namespace vcpkg::Strings
 {
+#if defined(_WIN32)
     std::wstring to_utf16(const CStringView& s)
     {
-#if defined(_WIN32)
-        const int size = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
         std::wstring output;
+        const size_t size = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
+        if (size == 0) return output;
         output.resize(size - 1);
-        MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, output.data(), size - 1);
+        MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, output.data(), static_cast<int>(size) - 1);
         return output;
-#else
-        Checks::unreachable(VCPKG_LINE_INFO);
-#endif
     }
+#endif
 
-    std::string to_utf8(const CWStringView& w)
-    {
 #if defined(_WIN32)
-        const int size = WideCharToMultiByte(CP_UTF8, 0, w.c_str(), -1, nullptr, 0, nullptr, nullptr);
+    std::string to_utf8(const wchar_t* w)
+    {
         std::string output;
+        const size_t size = WideCharToMultiByte(CP_UTF8, 0, w, -1, nullptr, 0, nullptr, nullptr);
+        if (size == 0) return output;
         output.resize(size - 1);
-        WideCharToMultiByte(CP_UTF8, 0, w.c_str(), -1, output.data(), size - 1, nullptr, nullptr);
+        WideCharToMultiByte(CP_UTF8, 0, w, -1, output.data(), static_cast<int>(size) - 1, nullptr, nullptr);
         return output;
-#else
-        Checks::unreachable(VCPKG_LINE_INFO);
-#endif
     }
+#endif
 
     std::string escape_string(const CStringView& s, char char_to_escape, char escape_char)
     {
@@ -108,11 +107,16 @@ namespace vcpkg::Strings
 #endif
     }
 
-    std::string ascii_to_lowercase(const std::string& input)
+    std::string ascii_to_lowercase(std::string s)
     {
-        std::string output(input);
-        std::transform(output.begin(), output.end(), output.begin(), &details::tolower_char);
-        return output;
+        std::transform(s.begin(), s.end(), s.begin(), &details::tolower_char);
+        return s;
+    }
+
+    std::string ascii_to_uppercase(std::string s)
+    {
+        std::transform(s.begin(), s.end(), s.begin(), &details::toupper_char);
+        return s;
     }
 
     bool case_insensitive_ascii_starts_with(const std::string& s, const std::string& pattern)
@@ -137,8 +141,8 @@ namespace vcpkg::Strings
 
     std::string trim(std::string&& s)
     {
-        s.erase(std::find_if_not(s.rbegin(), s.rend(), details::isspace).base(), s.end());
-        s.erase(s.begin(), std::find_if_not(s.begin(), s.end(), details::isspace));
+        s.erase(std::find_if_not(s.rbegin(), s.rend(), details::is_space).base(), s.end());
+        s.erase(s.begin(), std::find_if_not(s.begin(), s.end(), details::is_space));
         return std::move(s);
     }
 

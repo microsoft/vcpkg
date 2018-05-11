@@ -1,12 +1,14 @@
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/SignalR-Client-Cpp-1.0.0-beta1)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/aspnet/SignalR-Client-Cpp/archive/1.0.0-beta1.tar.gz"
-    FILENAME "SignalR-Client-Cpp-1.0.0-beta1.tar.gz"
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO SignalR/SignalR-Client-Cpp
+    REF 1.0.0-beta1
     SHA512 b38f6f946f1499080071949cbcf574405118f9acfb469441e5b5b0df3e5f0d277a83b30e0d613dc5e54732b9071e3273dac1ee65129f994d5a60eef0e45bdf6c
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}

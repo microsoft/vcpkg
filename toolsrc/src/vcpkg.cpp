@@ -70,7 +70,7 @@ static void inner(const VcpkgCmdArguments& args)
     fs::path vcpkg_root_dir;
     if (args.vcpkg_root_dir != nullptr)
     {
-        vcpkg_root_dir = fs::stdfs::absolute(Strings::to_utf16(*args.vcpkg_root_dir));
+        vcpkg_root_dir = fs::stdfs::absolute(fs::u8path(*args.vcpkg_root_dir));
     }
     else
     {
@@ -93,6 +93,8 @@ static void inner(const VcpkgCmdArguments& args)
     }
 
     Checks::check_exit(VCPKG_LINE_INFO, !vcpkg_root_dir.empty(), "Error: Could not detect vcpkg-root.");
+
+    Debug::println("Using vcpkg-root: %s", vcpkg_root_dir.u8string());
 
     auto default_vs_path = System::get_environment_variable("VCPKG_DEFAULT_VS_PATH").value_or("");
 
@@ -157,7 +159,15 @@ static void inner(const VcpkgCmdArguments& args)
         }
         else
         {
+#if defined(_WIN32)
             default_triplet = Triplet::X86_WINDOWS;
+#elif defined(__APPLE__)
+            default_triplet = Triplet::from_canonical_name("x64-osx");
+#elif defined(__FreeBSD__)
+            default_triplet = Triplet::from_canonical_name("x64-freebsd");
+#else
+            default_triplet = Triplet::from_canonical_name("x64-linux");
+#endif
         }
     }
 
@@ -215,6 +225,7 @@ static void load_config()
     }
 }
 
+#if defined(_WIN32)
 static std::string trim_path_from_command_line(const std::string& full_command_line)
 {
     Checks::check_exit(
@@ -235,6 +246,7 @@ static std::string trim_path_from_command_line(const std::string& full_command_l
         ++it;
     return std::string(it, full_command_line.cend());
 }
+#endif
 
 #if defined(_WIN32)
 int wmain(const int argc, const wchar_t* const* const argv)

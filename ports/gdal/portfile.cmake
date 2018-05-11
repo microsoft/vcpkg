@@ -1,5 +1,5 @@
 if (TRIPLET_SYSTEM_ARCH MATCHES "arm")
-    message(FATAL_ERROR " ARM is currently not supported.")
+    message(FATAL_ERROR "ARM is currently not supported.")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -16,12 +16,13 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 b886238a7915c97f4acec5920dabe959d1ab15a8be0bc31ba0d05ad69d1d7d96f864faf0aa82921fa1a1b40b733744202b86f2f45ff63d6518cd18a53f3544a8
     )
 
-# Extract source into archictecture specific directory, because GDALs' nmake based build currently does not
+# Extract source into architecture specific directory, because GDALs' nmake based build currently does not
 # support out of source builds.
 set(SOURCE_PATH_DEBUG   ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-debug/gdal-2.2.2)
 set(SOURCE_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-release/gdal-2.2.2)
 
 foreach(BUILD_TYPE debug release)
+    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE})
     vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE})
     vcpkg_apply_patches(
         SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-2.2.2
@@ -29,6 +30,9 @@ foreach(BUILD_TYPE debug release)
         ${CMAKE_CURRENT_LIST_DIR}/0001-Add-variable-CXX_CRT_FLAGS-to-allow-for-selection-of.patch
         ${CMAKE_CURRENT_LIST_DIR}/0002-Ensures-inclusion-of-PDB-in-release-dll-if-so-reques.patch
         ${CMAKE_CURRENT_LIST_DIR}/0003-Fix-openjpeg-include.patch
+        ${CMAKE_CURRENT_LIST_DIR}/no-mysql-global-h.patch
+        ${CMAKE_CURRENT_LIST_DIR}/no-mysql-sys-h.patch
+        ${CMAKE_CURRENT_LIST_DIR}/no-my-bool.patch
     )
 endforeach()
 
@@ -51,7 +55,7 @@ file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.lib" PNG_LIBRA
 # Setup geos libraries + include path
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" GEOS_INCLUDE_DIR)
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib" GEOS_LIBRARY_REL)
-file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/geos_c.lib" GEOS_LIBRARY_DBG)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib" GEOS_LIBRARY_DBG)
 
 # Setup expat libraries + include path
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" EXPAT_INCLUDE_DIR)

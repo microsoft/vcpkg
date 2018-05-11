@@ -34,8 +34,7 @@ vcpkg_build_msbuild(
     PROJECT_PATH ${SOURCE_PATH}/MSVC_Net2013/gtkmm.sln
     TARGET gtkmm
     PLATFORM ${VS_PLATFORM}
-    # Need this for it to pick up xerces-c port: https://github.com/Microsoft/vcpkg/issues/891
-    OPTIONS /p:ForceImportBeforeCppTargets=${VCPKG_ROOT_DIR}/scripts/buildsystems/msbuild/vcpkg.targets
+    USE_VCPKG_INTEGRATION
 )
 
 # Handle headers

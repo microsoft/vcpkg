@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO leethomason/tinyxml2
-    REF 6.0.0
-    SHA512 30c68f491830187738b01ca5db1a96e7b4907cf8fa09a533c90ea084ab5e73f798dff6305cfc4edccc8989926e91c0482677bb5796799113c839dbd0528c8ad5
+    REF 6.2.0
+    SHA512 ef784240aeb090ab04aad659352ad4b224c431feecf485f33aca7936bcaa0ef4ab9d0a2e0692d3cf6036ac3e8012019d65665e780a920bbad3d4820f736445b1
     HEAD_REF master
 )
 

@@ -17,8 +17,8 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/brotli)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/brotli.exe ${CURRENT_PACKAGES_DIR}/tools/brotli/brotli.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/brotli.exe)
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/brotli${CMAKE_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/brotli/brotli${CMAKE_EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/brotli${CMAKE_EXECUTABLE_SUFFIX})
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/brotli)
 

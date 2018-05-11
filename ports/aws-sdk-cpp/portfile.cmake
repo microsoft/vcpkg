@@ -3,79 +3,80 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/aws-sdk-cpp
-    REF 1.3.58
-    SHA512 755fe3fd9d507a43fb03c1530a979f5a5a2848588ccab39509987043b3d274f27a7b163bf078a006123450ee881fd4a092cd703246f6f669810f47c186c2b0b8
+    REF 1.4.38
+    SHA512 ad0ea1fa8ca63da5d936d28b1df1e9d0a609547956b5a25c0fac4043c5ba912ef33e6ee4da7898d804eee4ccb9289540ebdf3a91a101c9d439daef78903cd087
     HEAD_REF master
 )
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES 
-		${CMAKE_CURRENT_LIST_DIR}/drop_git.patch
-		${CMAKE_CURRENT_LIST_DIR}/disable_warning_as_error.patch
-)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
 
-if(VCPKG_CRT_LINKAGE STREQUAL static)
-	set(FORCE_SHARED_CRT OFF)
+set(BUILD_ONLY core)
+
+include(${CMAKE_CURRENT_LIST_DIR}/compute_build_only.cmake)
+
+if(CMAKE_HOST_WIN32)
+    string(REPLACE ";" "\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
 else()
-	set(FORCE_SHARED_CRT ON)
+    string(REPLACE ";" "\\\\\\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
 endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-	PREFER_NINJA
-	OPTIONS
-		-DENABLE_TESTING=OFF
-		-DFORCE_SHARED_CRT=${FORCE_SHARED_CRT}
+    PREFER_NINJA
+    OPTIONS
+        -DENABLE_UNITY_BUILD=ON
+        -DENABLE_TESTING=OFF
+        -DFORCE_SHARED_CRT=${FORCE_SHARED_CRT}
+        -DCMAKE_DISABLE_FIND_PACKAGE_Git=TRUE
+        "-DBUILD_ONLY=${BUILD_ONLY}"
 )
 
 vcpkg_install_cmake()
 
-file(GLOB CMAKE_FILES ${CURRENT_PACKAGES_DIR}/lib/cmake/*)
-
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
-
-file(COPY ${CMAKE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
 
 vcpkg_copy_pdbs()
 
-file(GLOB AWS_TARGETS "${CURRENT_PACKAGES_DIR}/share/aws-cpp-sdk-*/aws-cpp-sdk-*targets.cmake")
-foreach(AWS_TARGETS ${AWS_TARGETS})
-    file(READ ${AWS_TARGETS} _contents)
+file(GLOB_RECURSE AWS_TARGETS "${CURRENT_PACKAGES_DIR}/share/*/*-targets-*.cmake")
+foreach(AWS_TARGET IN LISTS AWS_TARGETS)
+    file(READ ${AWS_TARGET} _contents)
     string(REGEX REPLACE
-        "get_filename_component\\(_IMPORT_PREFIX \"\\\${CMAKE_CURRENT_LIST_FILE}\" PATH\\)(\nget_filename_component\\(_IMPORT_PREFIX \"\\\${_IMPORT_PREFIX}\" PATH\\))*"
-        "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
-        _contents "${_contents}")
-    file(WRITE ${AWS_TARGETS} "${_contents}")
-endforeach()
-
-file(GLOB AWS_TARGETS_RELEASE "${CURRENT_PACKAGES_DIR}/share/aws-cpp-sdk-*/aws-cpp-sdk-*targets-release.cmake")
-foreach(AWS_TARGETS_RELEASE ${AWS_TARGETS_RELEASE})
-    file(READ ${AWS_TARGETS_RELEASE} _contents)
-    string(REGEX REPLACE
-        "bin\\/([A-Za-z0-9_.-]+lib)"
+        "bin\\/([A-Za-z0-9_.-]+\\.lib)"
         "lib/\\1"
         _contents "${_contents}")
-    file(WRITE ${AWS_TARGETS_RELEASE} "${_contents}")
+    file(WRITE ${AWS_TARGET} "${_contents}")
 endforeach()
 
-file(REMOVE_RECURSE 
-	${CURRENT_PACKAGES_DIR}/debug/include
-	${CURRENT_PACKAGES_DIR}/lib/cmake
-	${CURRENT_PACKAGES_DIR}/lib/pkgconfig
-	${CURRENT_PACKAGES_DIR}/debug/lib/cmake
-	${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig
-	${CURRENT_PACKAGES_DIR}/nuget
-	${CURRENT_PACKAGES_DIR}/debug/nuget)
+file(GLOB AWS_CONFIGS "${CURRENT_PACKAGES_DIR}/share/*/aws-cpp-sdk-*-config.cmake")
+list(FILTER AWS_CONFIGS EXCLUDE REGEX "aws-cpp-sdk-core-config\\.cmake\$")
+foreach(AWS_CONFIG IN LISTS AWS_CONFIGS)
+    file(READ "${AWS_CONFIG}" _contents)
+    file(WRITE "${AWS_CONFIG}" "include(CMakeFindDependencyMacro)\nfind_dependency(aws-cpp-sdk-core)\n${_contents}")
+endforeach()
+
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/debug/include
+    ${CURRENT_PACKAGES_DIR}/debug/share
+    ${CURRENT_PACKAGES_DIR}/share/AWSSDK
+    ${CURRENT_PACKAGES_DIR}/lib/pkgconfig
+    ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig
+    ${CURRENT_PACKAGES_DIR}/nuget
+    ${CURRENT_PACKAGES_DIR}/debug/nuget
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-	file(GLOB LIB_FILES          ${CURRENT_PACKAGES_DIR}/bin/*.lib)
-	file(GLOB DEBUG_LIB_FILES    ${CURRENT_PACKAGES_DIR}/debug/bin/*.lib)
-	file(COPY ${LIB_FILES}       DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-	file(COPY ${DEBUG_LIB_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-	file(REMOVE ${LIB_FILES} ${DEBUG_LIB_FILES})
-	
-	file(APPEND ${CURRENT_PACKAGES_DIR}/include/aws/core/SDKConfig.h "#define USE_IMPORT_EXPORT")
+    file(GLOB LIB_FILES ${CURRENT_PACKAGES_DIR}/bin/*.lib)
+    if(LIB_FILES)
+        file(COPY ${LIB_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+        file(REMOVE ${LIB_FILES})
+    endif()
+    file(GLOB DEBUG_LIB_FILES ${CURRENT_PACKAGES_DIR}/debug/bin/*.lib)
+    if(DEBUG_LIB_FILES)
+        file(COPY ${DEBUG_LIB_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+        file(REMOVE ${DEBUG_LIB_FILES})
+    endif()
+
+    file(APPEND ${CURRENT_PACKAGES_DIR}/include/aws/core/SDKConfig.h "#ifndef USE_IMPORT_EXPORT\n#define USE_IMPORT_EXPORT\n#endif")
 endif()
 
 # Handle copyright

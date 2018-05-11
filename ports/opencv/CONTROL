@@ -1,14 +1,30 @@
 Source: opencv
-Version: 3.4.0-3
-Build-Depends: opengl, zlib, protobuf (windows)
+Version: 3.4.1
+Build-Depends: zlib
 Description: computer vision library
-Default-Features: jpeg, png, tiff, eigen
+Default-Features: opengl, jpeg, png, tiff, eigen, flann
+
+Feature: opengl
+Build-Depends: opengl
+Description: opengl support for opencv
+
+Feature: dnn
+Build-Depends: protobuf
+Description: opencv_dnn module
+
+Feature: ovis
+Build-Depends: ogre
+Description: opencv_ovis module
+
+Feature: flann
+Description: opencv_flann module
 
 Feature: sfm
 Build-Depends: eigen3, glog, gflags, ceres
 Description: opencv_sfm module
 
 Feature: contrib
+Build-Depends: opencv[flann]
 Description: opencv_contrib module
 
 Feature: cuda
