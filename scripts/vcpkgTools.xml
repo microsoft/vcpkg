@@ -1,43 +1,97 @@
 <?xml version="1.0"?>
-<tools version="1">
-    <tool name="cmake">
-        <requiredVersion>3.10.2</requiredVersion>
+<tools version="2">
+    <tool name="cmake" os="windows">
+        <version>3.10.2</version>
         <exeRelativePath>cmake-3.10.2-win32-x86\bin\cmake.exe</exeRelativePath>
         <url>https://cmake.org/files/v3.10/cmake-3.10.2-win32-x86.zip</url>
-        <sha256>f5f7e41a21d0e9b655aca58498b08e17ecd27796bf82837e2c84435359169dd6</sha256>
-        <archiveRelativePath>cmake-3.10.2-win32-x86.zip</archiveRelativePath>
+        <sha512>9c16861a2ac09c7011b84f38459ecfec2829a9f825b254acbbde46d98f12f8ca0d4db3a6764758cb671507ee7c0327576d87658b81d7ddf1e8280b37569eb16d</sha512>
+        <archiveName>cmake-3.10.2-win32-x86.zip</archiveName>
     </tool>
-    <tool name="git">
-        <requiredVersion>2.16.2</requiredVersion>
-        <exeRelativePath>MinGit-2.16.2-32-bit\cmd\git.exe</exeRelativePath>
-        <url>https://github.com/git-for-windows/git/releases/download/v2.16.2.windows.1/MinGit-2.16.2-32-bit.zip</url>
-        <sha256>322c727e482aa97522c64a5ac68bdda3780111e8670bcfb532beac8e11ece5da</sha256>
-        <archiveRelativePath>MinGit-2.16.2-32-bit.zip</archiveRelativePath>
+    <tool name="cmake" os="osx">
+        <version>3.10.2</version>
+        <exeRelativePath>cmake-3.10.2-Darwin-x86_64/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://cmake.org/files/v3.10/cmake-3.10.2-Darwin-x86_64.tar.gz</url>
+        <sha512>cb7d76e11c892eb786da5804282c4141564390c3552e08c506c7abb93015eb5f619c55255459872b219399ce8114ac321fe92df7f82a7e42bbc874eec240571e</sha512>
+        <archiveName>cmake-3.10.2-Darwin-x86_64.tar.gz</archiveName>
     </tool>
-    <tool name="vswhere">
-        <requiredVersion>2.3.2</requiredVersion>
-        <exeRelativePath>vswhere-2.3.2\vswhere.exe</exeRelativePath>
-        <url>https://github.com/Microsoft/vswhere/releases/download/2.3.2/vswhere.exe</url>
-        <sha256>103f2784c4b2c8e70c7c1c03687abbf22bce052aae30639406e4e13ffa29ee04</sha256>
+    <tool name="cmake" os="linux">
+        <version>3.10.2</version>
+        <exeRelativePath>cmake-3.10.2-Linux-x86_64/bin/cmake</exeRelativePath>
+        <url>https://cmake.org/files/v3.10/cmake-3.10.2-Linux-x86_64.tar.gz</url>
+        <sha512>54389b5cb3f3cb9d182d35e0b1eaf7b301695899930da0d26e9df1dc25056213a077646d23ea609a93daa81d30687757d9cf0dc263339fa3d73dbeb1284bc1a9</sha512>
+        <archiveName>cmake-3.10.2-Linux-x86_64.tar.gz</archiveName>
     </tool>
-    <tool name="nuget">
-        <requiredVersion>4.4.0</requiredVersion>
-        <exeRelativePath>nuget-4.4.0\nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v4.4.0/nuget.exe</url>
-        <sha256>2cf9b118937eef825464e548f0c44f7f64090047746de295d75ac3dcffa3e1f6</sha256>
+    <tool name="git" os="windows">
+        <version>2.17.0</version>
+        <exeRelativePath>cmd\git.exe</exeRelativePath>
+        <url>https://github.com/git-for-windows/git/releases/download/v2.17.0.windows.1/MinGit-2.17.0-32-bit.zip</url>
+        <sha512>a34575ab1b4f553e62535e38492904b512df4d6a837cf4abf205dbcdd05edf1eef450cc5b15a4f63f901424d5f3cd1f78b6b22437d0d4f8cd9ce4e42e82617b9</sha512>
+        <archiveName>MinGit-2.17.0-32-bit.zip</archiveName>
     </tool>
-    <tool name="installerbase">
-        <requiredVersion>3.1.81</requiredVersion>
+    <tool name="git" os="linux">
+        <version>2.7.4</version>
+        <exeRelativePath></exeRelativePath>
+        <url></url>
+        <sha512></sha512>
+    </tool>
+    <tool name="git" os="osx">
+        <version>2.7.4</version>
+        <exeRelativePath></exeRelativePath>
+        <url></url>
+        <sha512></sha512>
+    </tool>
+    <tool name="vswhere" os="windows">
+        <version>2.4.1</version>
+        <exeRelativePath>vswhere.exe</exeRelativePath>
+        <url>https://github.com/Microsoft/vswhere/releases/download/2.4.1/vswhere.exe</url>
+        <sha512>f477842d0cebefcd6bf9c6d536ab8ea20ec5b0aa967ee963ab6a101aeff9df8742ca600d35f39e2e7158d76d8231f1ed2bef6104dce84d2bf8d6b07d17d706a1</sha512>
+    </tool>
+    <tool name="nuget" os="windows">
+        <version>4.6.2</version>
+        <exeRelativePath>nuget.exe</exeRelativePath>
+        <url>https://dist.nuget.org/win-x86-commandline/v4.6.2/nuget.exe</url>
+        <sha512>60daea7bec2de23089f7ad73985dd788ac154171d6326c2c456726849b8f97dfc38cbdd9b9bf8d96aced009ccaaed317905b65c108e149cfbbbcdfb95f8f0519</sha512>
+    </tool>
+    <tool name="installerbase" os="windows">
+        <version>3.1.81</version>
         <exeRelativePath>QtInstallerFramework-win-x86\bin\installerbase.exe</exeRelativePath>
         <url>https://github.com/podsvirov/installer-framework/releases/download/cr203958-9/QtInstallerFramework-win-x86.zip</url>
-        <sha256>f2ce23cf5cf9fc7ce409bdca49328e09a070c0026d3c8a04e4dfde7b05b83fe8</sha256>
-        <archiveRelativePath>QtInstallerFramework-win-x86.zip</archiveRelativePath>
+        <sha512>1f3e593270d7c2a4e271fdb49c637a2de462351310ef66bba298d30f6ca23365ec6aecf2e57799a00c873267cd3f92060ecac03eb291d42903d0e0869cd17c73</sha512>
+        <archiveName>QtInstallerFramework-win-x86.zip</archiveName>
     </tool>
-    <tool name="7zip">
-        <requiredVersion>18.01.0</requiredVersion>
-        <exeRelativePath>7za920\7za.exe</exeRelativePath>
-        <url>http://www.7-zip.org/a/7za920.zip</url>
-        <sha256>2a3afe19c180f8373fa02ff00254d5394fec0349f5804e0ad2f6067854ff28ac</sha256>
-        <archiveRelativePath>7za920.zip</archiveRelativePath>
+    <tool name="7zip" os="windows">
+        <version>18.01.0</version>
+        <exeRelativePath>7za.exe</exeRelativePath>
+        <url>https://www.7-zip.org/a/7z1801-extra.7z</url>
+        <sha512>9133fc551d76515e37fdd4dd8c1e28d464aea493548246b44565a42bba46715764f41f9cfa14d470d298c3a6e9829d200f8be5168cb67cf8f23d8042fca833bc</sha512>
+        <archiveName>7z1801-extra.7z</archiveName>
+    </tool>
+    <tool name="7zip920" os="windows">
+        <version>9.20.0</version>
+        <exeRelativePath>7za.exe</exeRelativePath>
+        <url>https://www.7-zip.org/a/7za920.zip</url>
+        <sha512>84e830c91a0e8ae499cc4814080da6569d8a6acbddc585c8b62abc86c809793aeb669b0a741063a379fd281ade85f120bc27efeb67d63bf961be893eec8bc3b3</sha512>
+        <archiveName>7za920.zip</archiveName>
+    </tool>
+    <tool name="aria2" os="windows">
+        <version>18.01.0</version>
+        <exeRelativePath>aria2-1.33.1-win-32bit-build1\aria2c.exe</exeRelativePath>
+        <url>https://github.com/aria2/aria2/releases/download/release-1.33.1/aria2-1.33.1-win-32bit-build1.zip</url>
+        <sha512>2456176ba3d506a07cf0cc4f61f080e1ff8cb4106426d66f354c5bb67a9a8720b5ddb26904275e61b1f623c932355f7dcde4cd17556cc895f11293c23c3a9bf3</sha512>
+        <archiveName>aria2-1.33.1-win-32bit-build1.zip</archiveName>
+    </tool>
+    <tool name="ninja" os="linux">
+        <version>1.8.2</version>
+        <exeRelativePath>ninja</exeRelativePath>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-linux.zip</url>
+        <sha512>38fcb68e745c1f15b4b50f20069ffe686b1ef5baf93b74958e132ea5d30d155cf6970d6dc1b095aafd421ebd8bcc63acf4f64e305c496266b5182f99b815cca5</sha512>
+        <archiveName>ninja-linux.zip</archiveName>
+    </tool>
+    <tool name="ninja" os="osx">
+        <version>1.8.2</version>
+        <exeRelativePath>ninja</exeRelativePath>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-mac.zip</url>
+        <sha512>acadfb286eb7d93676629701917fa0c3c39f36daa068c169e4a098c29f97380d1ea95abfd42b04798ff118fd9dc93fdb250fcda36086bac20bc5506354214fc3</sha512>
+        <archiveName>ninja-mac.zip</archiveName>
     </tool>
 </tools>

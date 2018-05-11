@@ -14,24 +14,28 @@ namespace vcpkg::Commands::Contact
         return S_EMAIL;
     }
 
-    static const CommandSwitch switches[] = {{"--survey", "Launch default browser to the current vcpkg survey"}};
+    static constexpr StringLiteral OPTION_SURVEY = "--survey";
+
+    static constexpr std::array<CommandSwitch, 1> SWITCHES = {{
+        {OPTION_SURVEY, "Launch default browser to the current vcpkg survey"},
+    }};
 
     const CommandStructure COMMAND_STRUCTURE = {
         Help::create_example_string("contact"),
         0,
         0,
-        {switches, {}},
+        {SWITCHES, {}},
         nullptr,
     };
 
     void perform_and_exit(const VcpkgCmdArguments& args)
     {
-        auto parsed_args = args.parse_arguments(COMMAND_STRUCTURE);
+        const ParsedArguments parsed_args = args.parse_arguments(COMMAND_STRUCTURE);
 
-        if (Util::Sets::contains(parsed_args.switches, switches[0].name))
+        if (Util::Sets::contains(parsed_args.switches, SWITCHES[0].name))
         {
             auto maybe_now = Chrono::CTime::get_current_date_time();
-            if (auto p_now = maybe_now.get())
+            if (const auto p_now = maybe_now.get())
             {
                 auto& fs = Files::get_real_filesystem();
                 auto config = UserConfig::try_read_data(fs);

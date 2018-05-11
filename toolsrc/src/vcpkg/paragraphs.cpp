@@ -228,7 +228,7 @@ namespace vcpkg::Paragraphs
         return error_info;
     }
 
-    Expected<BinaryControlFile> try_load_cached_control_package(const VcpkgPaths& paths, const PackageSpec& spec)
+    Expected<BinaryControlFile> try_load_cached_package(const VcpkgPaths& paths, const PackageSpec& spec)
     {
         Expected<std::vector<std::unordered_map<std::string, std::string>>> pghs =
             get_paragraphs(paths.get_filesystem(), paths.package_dir(spec) / "CONTROL");
@@ -251,7 +251,13 @@ namespace vcpkg::Paragraphs
     LoadResults try_load_all_ports(const Files::Filesystem& fs, const fs::path& ports_dir)
     {
         LoadResults ret;
-        for (auto&& path : fs.get_files_non_recursive(ports_dir))
+        auto port_dirs = fs.get_files_non_recursive(ports_dir);
+        Util::sort(port_dirs);
+        Util::erase_remove_if(port_dirs, [&](auto&& port_dir_entry) {
+            return fs.is_regular_file(port_dir_entry) && port_dir_entry.filename() == ".DS_Store";
+        });
+
+        for (auto&& path : port_dirs)
         {
             auto maybe_spgh = try_load_port(fs, path);
             if (const auto spgh = maybe_spgh.get())

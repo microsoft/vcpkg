@@ -7,15 +7,22 @@ if(NOT DEFINED LIBFLAC_ARCHITECTURE)
     message(FATAL_ERROR "Target architecture not specified")
 endif()
 
-file(GLOB LIBFLAC_SOURCES
-    ${PROJECT_SOURCE_DIR}/src/libFLAC/*.c
-    ${PROJECT_SOURCE_DIR}/src/share/win_utf8_io/win_utf8_io.c)
+file(GLOB LIBFLAC_SOURCES src/libFLAC/*.c)
 
-file(GLOB LIBFLACXX_SOURCES
-    ${PROJECT_SOURCE_DIR}/src/libFLAC++/*.cpp)
+if(WIN32)
+    list(APPEND LIBFLAC_SOURCES src/share/win_utf8_io/win_utf8_io.c)
+else()
+    list(FILTER LIBFLAC_SOURCES EXCLUDE REGEX "windows[^/]*$")
 
-include_directories(${PROJECT_SOURCE_DIR}/include)
-include_directories(${PROJECT_SOURCE_DIR}/src/libFLAC/include)
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/config.h "#include <inttypes.h>")
+    include_directories(${CMAKE_CURRENT_BINARY_DIR})
+    add_definitions(-DHAVE_CONFIG_H)
+endif()
+
+file(GLOB LIBFLACXX_SOURCES src/libFLAC++/*.cpp)
+
+include_directories(include)
+include_directories(src/libFLAC/include)
 
 if(NOT LIBFLAC_ARCHITECTURE MATCHES arm)
     add_definitions(-DFLAC__SSE_OS)
@@ -44,14 +51,15 @@ endif()
 add_definitions(-DPACKAGE_VERSION="1.3.2")
 add_definitions(-DFLAC__HAS_OGG)
 add_definitions(-DFLAC__ALIGN_MALLOC_DATA) # 32 byte boundary
+add_definitions(-DHAVE_LROUND)
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 add_definitions(-D_CRT_NONSTDC_NO_WARNINGS)
 
 add_library(libFLAC ${LIBFLAC_SOURCES})
 add_library(libFLACXX ${LIBFLACXX_SOURCES})
 
-set_target_properties(libFLAC PROPERTIES OUTPUT_NAME flac)
-set_target_properties(libFLACXX PROPERTIES OUTPUT_NAME flac++)
+set_target_properties(libFLAC PROPERTIES OUTPUT_NAME FLAC)
+set_target_properties(libFLACXX PROPERTIES OUTPUT_NAME FLAC++)
 
 find_library(OGG_LIBRARY ogg)
 find_path(OGG_INCLUDE_DIR ogg/ogg.h)
@@ -73,10 +81,10 @@ install(TARGETS libFLAC libFLACXX
     LIBRARY DESTINATION lib)
 
 if(NOT DEFINED LIBFLAC_SKIP_HEADERS)
-    install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/FLAC/
+    install(DIRECTORY include/FLAC/
         DESTINATION include/FLAC
         FILES_MATCHING PATTERN "*.h")
-    install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/FLAC++/
+    install(DIRECTORY include/FLAC++/
         DESTINATION include/FLAC++
         FILES_MATCHING PATTERN "*.h")
 endif()

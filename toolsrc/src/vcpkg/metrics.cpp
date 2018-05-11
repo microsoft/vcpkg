@@ -92,7 +92,7 @@ namespace vcpkg::Metrics
             {
                 encoded.append("\\\"");
             }
-            else if (ch < 0x20 || ch >= 0x80)
+            else if (ch < 0x20 || static_cast<unsigned char>(ch) >= 0x80)
             {
                 // Note: this treats incoming Strings as Latin-1
                 static constexpr const char HEX[16] = {
@@ -245,12 +245,6 @@ namespace vcpkg::Metrics
 
     bool get_compiled_metrics_enabled() { return DISABLE_METRICS == 0; }
 
-    static fs::path get_vcpkg_root()
-    {
-        return Files::get_real_filesystem().find_file_recursively_up(
-            fs::stdfs::absolute(System::get_exe_path_of_current_process()), ".vcpkg-root");
-    }
-
     std::string get_MAC_user()
     {
 #if defined(_WIN32)
@@ -264,17 +258,10 @@ namespace vcpkg::Metrics
 
         while (next != last)
         {
-            auto match = *next;
+            const auto match = *next;
             if (match[0] != "00-00-00-00-00-00")
             {
-                const std::string matchstr = match[0];
-                const System::PowershellParameter value("Value", matchstr);
-                auto hash_result = System::powershell_execute_and_capture_output(
-                    "SHA256Hash", get_vcpkg_root() / "scripts" / "SHA256Hash.ps1", {value});
-                Util::erase_remove_if(hash_result,
-                                      [](char ch) { return !(ch >= 'A' && ch <= 'F') && !(ch >= '0' && ch <= '9'); });
-                hash_result = Strings::ascii_to_lowercase(hash_result);
-                return hash_result;
+                return vcpkg::Commands::Hash::get_string_hash(match[0], "SHA256");
             }
             ++next;
         }

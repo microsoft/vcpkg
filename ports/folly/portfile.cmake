@@ -17,17 +17,19 @@ set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF v2017.11.27.00
-    SHA512 738bb00047a7cbd807f2dccd64031763df80bbebca73f1ae9500b750dcad156dde84e47f4eda7af1bcd7abfae10c973da47515f2e111929979d1637869cf06ee
+    REF v2018.04.23.00
+    SHA512 7614f799fe12047070f2efe471ccbb6166dca62947d3fd5baa9a3cc50bab6238bda77ca61153779913903ad57346767b21cf59c025a0a93db39ad99e1258c45d
     HEAD_REF master
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/find-gflags.patch
 )
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/cmake-link-boost-fix.patch
-        ${CMAKE_CURRENT_LIST_DIR}/msvc-15.6-workaround.patch
+file(COPY
+    ${CMAKE_CURRENT_LIST_DIR}/FindLZ4.cmake
+    ${CMAKE_CURRENT_LIST_DIR}/FindSnappy.cmake
+    DESTINATION ${SOURCE_PATH}/CMake/
 )
+file(REMOVE ${SOURCE_PATH}/CMake/FindGFlags.cmake)
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
     set(MSVC_USE_STATIC_RUNTIME ON)
@@ -35,26 +37,42 @@ else()
     set(MSVC_USE_STATIC_RUNTIME OFF)
 endif()
 
+set(FEATURE_OPTIONS)
+
+macro(feature FEATURENAME PACKAGENAME)
+    if("${FEATURENAME}" IN_LIST FEATURES)
+        list(APPEND FEATURE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_${PACKAGENAME}=OFF)
+    else()
+        list(APPEND FEATURE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_${PACKAGENAME}=ON)
+    endif()
+endmacro()
+
+feature(zlib ZLIB)
+feature(bzip2 BZip2)
+feature(lzma LibLZMA)
+feature(lz4 LZ4)
+feature(zstd Zstd)
+feature(snappy Snappy)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DMSVC_USE_STATIC_RUNTIME=${MSVC_USE_STATIC_RUNTIME}
+        -DCMAKE_DISABLE_FIND_PACKAGE_LibDwarf=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Libiberty=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_LibAIO=ON
+        -DLIBAIO_FOUND=OFF
+        -DLIBURCU_FOUND=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_LibURCU=ON
+        ${FEATURE_OPTIONS}
 )
 
-# Folly runs built executables during the build, so they need access to the installed DLLs.
-set(ENV{PATH} "$ENV{PATH};${CURRENT_INSTALLED_DIR}/bin;${CURRENT_INSTALLED_DIR}/debug/bin")
-
-vcpkg_install_cmake()
+vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets()
-
-# changes target search path
-file(READ ${CURRENT_PACKAGES_DIR}/share/folly/folly-targets.cmake FOLLY_MODULE)
-string(REPLACE "${CURRENT_INSTALLED_DIR}/lib/" "" FOLLY_MODULE "${FOLLY_MODULE}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/folly/folly-targets.cmake "${FOLLY_MODULE}")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/folly)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

@@ -77,7 +77,7 @@ add_library(graphicsmagick coders/art.c coders/avs.c
 		coders/tiff.c coders/tile.c coders/tim.c coders/topol.c
 		coders/ttf.c coders/txt.c coders/uil.c coders/url.c
 		coders/uyvy.c coders/vicar.c coders/vid.c coders/viff.c
-		coders/wbmp.c coders/webp.c coders/wmf.c coders/wpg.c
+		coders/wbmp.c coders/wmf.c coders/wpg.c
 		coders/x.c coders/xbm.c coders/xc.c coders/xcf.c
 		coders/xpm.c coders/xtrn.c coders/xwd.c coders/yuv.c
 		filters/analyze.c

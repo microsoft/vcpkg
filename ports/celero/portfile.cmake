@@ -5,12 +5,11 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DigitalInBlue/Celero
-    REF v2.1.0
-    SHA512 30563567255b09a2c810d97896839589ed99d45b6c8d075fd16d1a0068457d70195a199f5c982c84784c2e03284c1eaac565253fa72b81d9e2d4102721b80221
+    REF v2.2.0
+    SHA512 6fac1fa949b18caabf59f3675c6e592cfadc3efa5e674b1f8b183e728ec880a4f5616d5d41c97f8fc26ef9520284188f519b7634209d0a56fb38a6993a9e9680
     HEAD_REF master
 )
 
@@ -24,6 +23,10 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/celero/celero-target.cmake ${CURRENT_PACKAGES_DIR}/share/celero/celero-config.cmake)
+
 file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/celero RENAME copyright)

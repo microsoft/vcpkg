@@ -7,5 +7,6 @@ file(
         ${CMAKE_CURRENT_LIST_DIR}/nothing.bat
         ${CMAKE_CURRENT_LIST_DIR}/user-config.jam
         ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/boost-build
+    DESTINATION
+        ${CURRENT_PACKAGES_DIR}/share/boost-build
 )

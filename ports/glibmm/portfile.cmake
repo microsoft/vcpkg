@@ -1,13 +1,6 @@
-# Glib uses winapi functions not available in WindowsStore, so glibmm
-# also
+# Glib uses winapi functions not available in WindowsStore, so glibmm also
 if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     message(FATAL_ERROR "Error: UWP builds are currently not supported.")
-endif()
-
-# Glib relies on DllMain, so glibmm also
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
 
 include(vcpkg_common_functions)
@@ -21,82 +14,21 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix_properties.patch ${CMAKE_CURRENT_LIST_DIR}/fix_charset.patch
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/glibmm-api-variant.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/msvc_recommended_pragmas.h DESTINATION ${SOURCE_PATH}/MSVC_Net2013)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-set(VS_PLATFORM ${VCPKG_TARGET_ARCHITECTURE})
-if(${VCPKG_TARGET_ARCHITECTURE} STREQUAL x86)
-    set(VS_PLATFORM "Win32")
-endif(${VCPKG_TARGET_ARCHITECTURE} STREQUAL x86)
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/MSVC_Net2013/glibmm.sln
-    TARGET giomm
-    PLATFORM ${VS_PLATFORM}
-    # Need this for it to pick up xerces-c port: https://github.com/Microsoft/vcpkg/issues/891
-    OPTIONS /p:ForceImportBeforeCppTargets=${VCPKG_ROOT_DIR}/scripts/buildsystems/msbuild/vcpkg.targets
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DWARNINGS_HEADER=${CMAKE_CURRENT_LIST_DIR}/msvc_recommended_pragmas.h
+    OPTIONS_DEBUG
+        -DDISABLE_INSTALL_HEADERS=ON
 )
 
-# Handle headers
-file(COPY ${SOURCE_PATH}/MSVC_Net2013/giomm/giommconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(COPY ${SOURCE_PATH}/gio/giomm.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(
-    COPY
-    ${SOURCE_PATH}/gio/giomm
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
-    FILES_MATCHING PATTERN *.h
-)
-file(COPY ${SOURCE_PATH}/MSVC_Net2013/glibmm/glibmmconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(COPY ${SOURCE_PATH}/glib/glibmm.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(
-    COPY
-    ${SOURCE_PATH}/glib/glibmm
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
-    FILES_MATCHING PATTERN *.h
-)
-
-# Handle libraries
-file(
-    COPY
-    ${SOURCE_PATH}/MSVC_Net2013/Release/${VS_PLATFORM}/bin/giomm.dll
-    DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-)
-file(
-    COPY
-    ${SOURCE_PATH}/MSVC_Net2013/Release/${VS_PLATFORM}/bin/giomm.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-)
-file(
-    COPY
-    ${SOURCE_PATH}/MSVC_Net2013/Release/${VS_PLATFORM}/bin/glibmm.dll
-    DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-)
-file(
-    COPY
-    ${SOURCE_PATH}/MSVC_Net2013/Release/${VS_PLATFORM}/bin/glibmm.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-)
-file(
-    COPY
-    ${SOURCE_PATH}/MSVC_Net2013/Debug/${VS_PLATFORM}/bin/giomm.dll
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-)
-file(
-    COPY
-    ${SOURCE_PATH}/MSVC_Net2013/Debug/${VS_PLATFORM}/bin/giomm.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-)
-file(
-    COPY
-    ${SOURCE_PATH}/MSVC_Net2013/Debug/${VS_PLATFORM}/bin/glibmm.dll
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-)
-file(
-    COPY
-    ${SOURCE_PATH}/MSVC_Net2013/Debug/${VS_PLATFORM}/bin/glibmm.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-)
+vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 

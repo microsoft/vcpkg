@@ -1,0 +1,13 @@
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -4,8 +4,8 @@
+ if (${WITH_THREADING} STREQUAL ON)
+        add_definitions("-DWITH_THREADING")
+        if (WIN32)
+-               set (PTHREAD_LIBRARIES C:\\pthreads\\Pre-built.2\\lib\\x86\\pthreadVC2.lib)
+-               set (PTHREAD_INCLUDE_DIR C:\\pthreads\\Pre-built.2\\include)
++               set (PTHREAD_LIBRARIES ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/lib/pthreadsVC2.lib)
++               set (PTHREAD_INCLUDE_DIR ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/include)
+        else (WIN32)
+                find_library(LIBPTHREAD pthread)
+                if (LIBPTHREAD)

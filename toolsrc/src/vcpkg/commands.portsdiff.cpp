@@ -3,6 +3,7 @@
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
+#include <vcpkg/versiont.h>
 
 #include <vcpkg/base/sortedvector.h>
 #include <vcpkg/base/system.h>
@@ -79,7 +80,7 @@ namespace vcpkg::Commands::PortsDiff
     {
         std::error_code ec;
         auto& fs = paths.get_filesystem();
-        const fs::path& git_exe = paths.get_git_exe();
+        const fs::path& git_exe = paths.get_tool_exe(Tools::GIT);
         const fs::path dot_git_dir = paths.root / ".git";
         const std::string ports_dir_name_as_string = paths.ports.filename().u8string();
         const fs::path temp_checkout_path =
@@ -128,9 +129,9 @@ namespace vcpkg::Commands::PortsDiff
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        args.parse_arguments(COMMAND_STRUCTURE);
+        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
 
-        const fs::path& git_exe = paths.get_git_exe();
+        const fs::path& git_exe = paths.get_tool_exe(Tools::GIT);
 
         const std::string git_commit_id_for_previous_snapshot = args.command_arguments.at(0);
         const std::string git_commit_id_for_current_snapshot =

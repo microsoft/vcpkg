@@ -34,7 +34,7 @@ namespace vcpkg::Commands::Owns
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        args.parse_arguments(COMMAND_STRUCTURE);
+        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
 
         const StatusParagraphs status_db = database_load_check(paths);
         search_file(paths, args.command_arguments[0], status_db);
