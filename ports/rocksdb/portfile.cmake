@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO facebook/rocksdb
-  REF v5.12.2
-  SHA512 53e81e87e84f0500cd09d754c39e86265a16a52d4b84f9044f8d9759c224881eb7ef4bf89f9b01fdff25f123ed4dfa7b5cb272d2311f27b322c15fe2e893bbe3
+  REF v5.12.4
+  SHA512 661e30a9fd2a83f2d8dbcc9f27e8ae2e83f384bb7f4f61dc41d89e85d93edc1032b70ab97063e0e3c0bda591612214793d1b075c6dcfeda2e0a32acb6e9d8689
   HEAD_REF master
 )
 

@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/magnum
-    REF v2018.02
-    SHA512 aeb0cab91ae0a7cca79c15ce98d9b2f8d46f5bc11bb90718e59188bf233154fb51668e0241112b65103f40e675736d74c86a2e5ccffcb698780ccedb1b3fb8bd
+    REF v2018.04
+    SHA512 6ad50e782c8cb10157cf969a571f8c0c0c91161de60ac25cf86eda09106f4de73168618a1a5fe0931c3fd293c718911e14d610bd4f86fe3e073620bd7619a9eb
     HEAD_REF master
 )
 
@@ -90,10 +90,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
    file(COPY ${LIB_TO_MOVE_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum)
 else()
-   # remove headers and libs for plugins
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/MagnumPlugins)
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/magnum)
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d)
+   file(COPY ${CMAKE_CURRENT_LIST_DIR}/magnumdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/bin/magnum)
+   file(COPY ${CMAKE_CURRENT_LIST_DIR}/magnumdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/magnum-d)
 endif()
 
 # Handle copyright

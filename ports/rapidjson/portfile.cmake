@@ -9,10 +9,23 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# Put the licence file where vcpkg expects it
-file(COPY ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/rapidjson)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/rapidjson/license.txt ${CURRENT_PACKAGES_DIR}/share/rapidjson/copyright)
+# Use RapidJSON's own build process, skipping examples and tests
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -DRAPIDJSON_BUILD_DOC:BOOL=OFF
+        -DRAPIDJSON_BUILD_EXAMPLES:BOOL=OFF
+        -DRAPIDJSON_BUILD_TESTS:BOOL=OFF
+        -DCMAKE_INSTALL_DIR:STRING=cmake
+)
+vcpkg_install_cmake()
 
-# Copy the rapidjson header files
-file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR} FILES_MATCHING PATTERN "*.h")
-vcpkg_copy_pdbs()
+# Move CMake config files to the right place
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+
+# Delete redundant directories
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/share/doc)
+
+# Put the licence file where vcpkg expects it
+file(COPY ${SOURCE_PATH}/license.txt ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/rapidjson)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/rapidjson/license.txt ${CURRENT_PACKAGES_DIR}/share/rapidjson/copyright)

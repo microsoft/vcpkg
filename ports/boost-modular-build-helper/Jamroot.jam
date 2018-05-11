@@ -1,5 +1,5 @@
-constant BOOST_VERSION : 1.66.0 ;
-constant BOOST_VERSION_ABI_TAG : 1_66 ;
+constant BOOST_VERSION : 1.67.0 ;
+constant BOOST_VERSION_ABI_TAG : 1_67 ;
 constant BOOST_JAMROOT_MODULE : $(__name__) ;
 
 import boostcpp ;
@@ -39,6 +39,9 @@ if "@PORT@" != "boost-system"
     lib boost_system : : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_system@BOOST_LIB_RELEASE_SUFFIX@" <variant>release ;
     lib boost_system : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_system@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug ;
     explicit boost_system ;
+
+    use-project /boost : . ;
+    alias system : boost_system ;
 }
 
 if "@PORT@" != "boost-chrono"

@@ -154,8 +154,10 @@ namespace vcpkg::Commands::CI
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet)
     {
-        Checks::check_exit(
-            VCPKG_LINE_INFO, GlobalState::g_binary_caching, "The ci command requires binary caching to be enabled.");
+        if (!GlobalState::g_binary_caching)
+        {
+            System::println(System::Color::warning, "Warning: Running ci without binary caching!");
+        }
 
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 

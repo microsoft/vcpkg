@@ -44,7 +44,7 @@
 #define ENABLE_NLS 1
 
 /* Define to 1 if the package shall run at any location in the filesystem. */
-/* #undef ENABLE_RELOCATABLE */
+#define ENABLE_RELOCATABLE 1
 
 /* Define to 1 when using the gnulib module fwriteerror. */
 #define GNULIB_FWRITEERROR 1

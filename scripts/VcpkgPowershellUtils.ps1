@@ -89,7 +89,13 @@ function vcpkgGetSHA512([Parameter(Mandatory=$true)][string]$filePath)
     if (vcpkgHasCommand -commandName 'Microsoft.PowerShell.Utility\Get-FileHash')
     {
         Write-Verbose("Hashing with Microsoft.PowerShell.Utility\Get-FileHash")
-        $hash = (Microsoft.PowerShell.Utility\Get-FileHash -Path $filePath -Algorithm SHA512).Hash
+        $hashresult = Microsoft.PowerShell.Utility\Get-FileHash -Path $filePath -Algorithm SHA512 -ErrorVariable hashError
+        if ($hashError)
+        {
+            Start-Sleep 3
+            $hashresult = Microsoft.PowerShell.Utility\Get-FileHash -Path $filePath -Algorithm SHA512 -ErrorVariable Stop
+        }
+        $hash = $hashresult.Hash
     }
     elseif(vcpkgHasCommand -commandName 'Pscx\Get-Hash')
     {
@@ -177,7 +183,7 @@ function vcpkgDownloadFileWithAria2(    [Parameter(Mandatory=$true)][string]$ari
         return
     }
 
-    $ec = vcpkgInvokeCommand "$aria2exe" "--dir `"$parentDir`" --out `"$filename.part`" $url"
+    $ec = vcpkgInvokeCommand "$aria2exe" "--dir=`"$parentDir`" --out=`"$filename.part`" $url"
     if ($ec -ne 0)
     {
         Write-Host "Could not download $url"
@@ -202,7 +208,12 @@ function vcpkgExtractFileWith7z([Parameter(Mandatory=$true)][string]$sevenZipExe
         Write-Host "Could not extract $archivePath"
         throw
     }
-    Rename-Item -Path "$destinationPartial" -NewName $destinationDir
+    Rename-Item -Path "$destinationPartial" -NewName $destinationDir -ErrorVariable renameResult
+    if ($renameResult)
+    {
+        Start-Sleep 3
+        Rename-Item -Path "$destinationPartial" -NewName $destinationDir -ErrorAction Stop
+    }
 }
 
 function vcpkgExtractZipFile(  [Parameter(Mandatory=$true)][string]$archivePath,
