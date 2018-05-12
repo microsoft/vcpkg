@@ -45,7 +45,10 @@ $windowsSDK = & $scriptsDir\getWindowsSDK.ps1
 
 $platform = "x86"
 $vcpkgReleaseDir = "$vcpkgSourcesPath\Release"
-if ($env:PROCESSOR_ARCHITECTURE -eq "AMD64" -and $win64) {
+# x86_64 architecture is 9
+$architecture=(Get-WmiObject win32_Processor -ErrorAction SilentlyContinue).Architecture
+
+if ([Environment]::Is64BitOperatingSystem -and $architecture -eq 9  -and $win64) {
     Write-Host "Try to build vcpkg win64 binary"
     $platform = "x64"
     $vcpkgReleaseDir = "$vcpkgSourcesPath\x64\Release"
