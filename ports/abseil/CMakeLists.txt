@@ -75,6 +75,7 @@ add_sublibrary(utility)
 
 target_link_public_libraries(algorithm base meta)
 target_link_public_libraries(container algorithm base memory)
+target_link_public_libraries(debugging base)
 target_link_public_libraries(memory meta)
 target_link_public_libraries(meta base)
 target_link_public_libraries(numeric base)
