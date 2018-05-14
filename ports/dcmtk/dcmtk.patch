@@ -1,0 +1,15 @@
+diff --git "a/CMake/dcmtkPrepare.cmake" "b/CMake/dcmtkPrepare.cmake"
+--- a/CMake/dcmtkPrepare.cmake	2018-02-05 12:58:13.000000000 -0500
++++ b/CMake/dcmtkPrepare.cmake	2018-04-25 15:07:12.927851000 -0400
+@@ -192,9 +192,9 @@
+ # CMake's files (DCMTKTarget.cmake, DCMTKConfigVersion.cmake and DCMTKConfig.cmake) are installed
+ # to different installation paths under Unix- and Windows-based systems
+ IF(UNIX)
+-  SET(DCMTK_INSTALL_CMKDIR "${CMAKE_INSTALL_LIBDIR}/cmake/dcmtk")
++  SET(DCMTK_INSTALL_CMKDIR "${CMAKE_INSTALL_LIBDIR}/share/dcmtk")
+ ELSEIF(WIN32)
+-  SET(DCMTK_INSTALL_CMKDIR "cmake")
++  SET(DCMTK_INSTALL_CMKDIR "share")
+ ENDIF(UNIX)
+ 
+ #-----------------------------------------------------------------------------
