@@ -44,6 +44,7 @@ $tagPorts = @(
     "doctest",
     "eastl",
     "eigen3",
+    "entt",
     "expat",
     "fmt",
     "folly",
@@ -59,7 +60,7 @@ $tagPorts = @(
     "protobuf",
     "libevent",
     #"libffi",
-    "libjpeg-turbo",
+    #"libjpeg-turbo", # jpeg-turbo is preparing for a 2.0 release
     "liblinear",
     "libogg",
     "libsodium",
@@ -74,6 +75,7 @@ $tagPorts = @(
     "openjpeg",
     "plog",
     "pmdk",
+    "poco",
     "rapidjson",
     "rocksdb",
     "sdl2",
@@ -100,7 +102,6 @@ $tagPortsWithRegex = @(
     (New-Object PSObject -Property @{ "port"="directxtex"; "regex"="^[^\d]+\d+[^\d]?$" }),
     (New-Object PSObject -Property @{ "port"="directxtk"; "regex"="^[^\d]+\d+[^\d]?$" }),
     (New-Object PSObject -Property @{ "port"="wt"; "regex"="^[\d\.]+`$" })
-
 )
 
 $rollingPorts = @(
