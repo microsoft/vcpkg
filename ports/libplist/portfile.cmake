@@ -14,9 +14,9 @@ include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libplist-2.0.1.195)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-    set(MSBUILD_PLATFORM  x64)
+    set(MSBUILD_PLATFORM x64)
 else()
-    set(MSBUILD_PLATFORM  Win32)
+    set(MSBUILD_PLATFORM Win32)
 endif()
 
 set(DEBUG_CONFIG Debug)
@@ -30,8 +30,9 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/libplist.vcxproj
+    PROJECT_PATH ${SOURCE_PATH}/libplist.sln
     DEBUG_CONFIGURATION ${DEBUG_CONFIG}
+    PLATFORM ${MSBUILD_PLATFORM}
     RELEASE_CONFIGURATION ${RELEASE_CONFIG}
 )
 
@@ -45,7 +46,9 @@ file(COPY            ${SOURCE_PATH}/include/
 # Copy binary files
 file (MAKE_DIRECTORY
     ${CURRENT_PACKAGES_DIR}/lib
-    ${CURRENT_PACKAGES_DIR}/debug/lib)
+    ${CURRENT_PACKAGES_DIR}/debug/lib
+    ${CURRENT_PACKAGES_DIR}/tools
+    ${CURRENT_PACKAGES_DIR}/debug/tools)
 
 file(COPY       ${SOURCE_PATH}/${MSBUILD_PLATFORM}/${DEBUG_CONFIG}/libplist.lib
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
@@ -55,6 +58,13 @@ file(COPY       ${SOURCE_PATH}/${MSBUILD_PLATFORM}/${DEBUG_CONFIG}/libplist.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 file(COPY       ${SOURCE_PATH}/${MSBUILD_PLATFORM}/${RELEASE_CONFIG}/libplist.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+
+# Copy utilities
+file(GLOB debug_tools "${SOURCE_PATH}/${MSBUILD_PLATFORM}/${DEBUG_CONFIG}/*.exe")
+file(COPY ${debug_tools} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools)
+
+file(GLOB release_tools "${SOURCE_PATH}/${MSBUILD_PLATFORM}/${RELEASE_CONFIG}/*.exe")
+file(COPY ${release_tools} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING.lesser DESTINATION ${CURRENT_PACKAGES_DIR}/share/libplist RENAME copyright)

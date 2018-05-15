@@ -30,9 +30,10 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/libusbmuxd.vcxproj
+    PROJECT_PATH ${SOURCE_PATH}/libusbmuxd.sln
     DEBUG_CONFIGURATION ${DEBUG_CONFIG}
     RELEASE_CONFIGURATION ${RELEASE_CONFIG}
+    PLATFORM ${MSBUILD_PLATFORM}
     USE_VCPKG_INTEGRATION
 )
 
@@ -56,6 +57,13 @@ file(COPY       ${SOURCE_PATH}/${MSBUILD_PLATFORM}/${DEBUG_CONFIG}/libusbmuxd.pd
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 file(COPY       ${SOURCE_PATH}/${MSBUILD_PLATFORM}/${RELEASE_CONFIG}/libusbmuxd.pdb
     DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+
+# Copy utilities
+file(GLOB debug_tools "${SOURCE_PATH}/${MSBUILD_PLATFORM}/${DEBUG_CONFIG}/*.exe")
+file(COPY ${debug_tools} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools)
+
+file(GLOB release_tools "${SOURCE_PATH}/${MSBUILD_PLATFORM}/${RELEASE_CONFIG}/*.exe")
+file(COPY ${release_tools} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libusbmuxd RENAME copyright)
