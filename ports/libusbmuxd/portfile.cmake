@@ -24,7 +24,7 @@ set(RELEASE_CONFIG Release)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/libimobiledevice-win32/libusbmuxd/archive/1.0.105.zip"
-    FILENAME "libplist-1.0.105.zip"
+    FILENAME "libusbmuxd-1.0.105.zip"
     SHA512 584edbbf3002b215c42f5b924bdf5508fb1f1eae38a84a33acf118933c5cf51d5c03e501004519e5cd082b196c550fd0fed63182fbf008f973449f32e5991dd6
 )
 vcpkg_extract_source_archive(${ARCHIVE})
