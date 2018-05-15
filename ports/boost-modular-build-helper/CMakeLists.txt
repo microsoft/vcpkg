@@ -28,8 +28,10 @@ else()
     list(APPEND B2_OPTIONS link=static)
 endif()
 
-if(CMAKE_SYSTEM_PROCESSOR STREQUAL "AMD64")
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
     list(APPEND B2_OPTIONS address-model=64)
+else()
+    list(APPEND B2_OPTIONS address-model=32)
 endif()
 
 if(APPLE)
