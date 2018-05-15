@@ -5,9 +5,18 @@ if(CMAKE_BUILD_TYPE STREQUAL Debug)
     set(LIB_SUFFIX d)
 endif()
 
+add_definitions(-DREADLINE_LIBRARY)
+add_definitions(-DBUILD_READLINE_DLL)
 add_definitions(-DHAVE_CONFIG_H)
-add_definitions(-DREADLINE_LIBRARY=1)
-add_definitions(-DUSE_READLINE_STATIC)
+add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+
+if(CMAKE_BUILD_TYPE STREQUAL Debug)
+    add_definitions(-D_DEBUG)
+endif()
+
+add_definitions(-D_WINDOWS)
+add_definitions(-D_USRDLL)
+add_definitions(-DREADLINE_EXPORTS)
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR} # thats where the config.h is located
@@ -25,8 +34,6 @@ add_library(readline
     isearch.c
     display.c
     signals.c
- #   emacs_keymap.c
- #   vi_keymap.c
     util.c
     kill.c
 	undo.c

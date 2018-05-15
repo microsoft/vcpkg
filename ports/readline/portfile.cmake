@@ -11,17 +11,18 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/src/readline/5.0/readline-5.0-src)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/readline-vs/src/readline/5.0/readline-5.0-src)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://downloads.sourceforge.net/project/gnuwin32/readline/5.0-1/readline-5.0-1-src.zip"
+    URLS "https://github.com/lltcggie/readline/archive/vs.zip"
     FILENAME "readline-5.0-1-src.zip"
-    SHA512 f5bf7fe3211c3ca971684b8910216ab9e460d97e1d572c1c263e7648079a077d4af32621fadf3ca7459cb35f9c0e90dbd9c4b2d94af4578adf8fc6c5f0e9bd8f
+    SHA512 c67908b9c868aa611a48dfc4db43718169cbdc6784107beb22cd1a4d28f0c4aa88f30cae0839a530c481c74173e1d7a2bf0000596099ed9b940c05c9dc7d5ebc
 )
 
 vcpkg_extract_source_archive(${ARCHIVE})
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h DESTINATION ${SOURCE_PATH})
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
     set(LIBVPX_CRT_LINKAGE --enable-static-msvcrt)
