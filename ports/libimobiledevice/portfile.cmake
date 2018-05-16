@@ -11,7 +11,8 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libimobiledevice-1.2.1.213)
+set(LIBIMOBILEDEVICE_VERSION "1.2.1.215")
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libimobiledevice-${LIBIMOBILEDEVICE_VERSION})
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     set(MSBUILD_PLATFORM  x64)
@@ -23,9 +24,9 @@ set(DEBUG_CONFIG Debug)
 set(RELEASE_CONFIG Release)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/libimobiledevice-win32/libimobiledevice/archive/1.2.1.213.zip"
-    FILENAME "libimobiledevice-1.2.1.213.zip"
-    SHA512 43b057d5de57f50924d69c17c65b9f512735110c037e88284106a5e9b177f6a3d02496f775ce531e96580a0de973db74d373690d18a3d77ae676ebf2170b806a
+    URLS "https://github.com/libimobiledevice-win32/libimobiledevice/archive/${LIBIMOBILEDEVICE_VERSION}.zip"
+    FILENAME "libimobiledevice-${LIBIMOBILEDEVICE_VERSION}.zip"
+    SHA512 5fcf8df01f9f8a5c1ca6d73d3e8b70eaefff3d7c1c92ff02aa69521d4b6799cb27d6ae2c6cefd187b6ca443362a1aedea9d05bcacb3272460541a5c5135c5698
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

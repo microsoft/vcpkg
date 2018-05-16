@@ -11,7 +11,8 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libusbmuxd-1.0.105)
+set(LIBUSBMUXD_VERSION "1.0.109")
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libusbmuxd-${LIBUSBMUXD_VERSION})
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     set(MSBUILD_PLATFORM x64)
@@ -23,9 +24,9 @@ set(DEBUG_CONFIG Debug)
 set(RELEASE_CONFIG Release)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/libimobiledevice-win32/libusbmuxd/archive/1.0.105.zip"
-    FILENAME "libusbmuxd-1.0.105.zip"
-    SHA512 584edbbf3002b215c42f5b924bdf5508fb1f1eae38a84a33acf118933c5cf51d5c03e501004519e5cd082b196c550fd0fed63182fbf008f973449f32e5991dd6
+    URLS "https://github.com/libimobiledevice-win32/libusbmuxd/archive/${LIBUSBMUXD_VERSION}.zip"
+    FILENAME "libusbmuxd-${LIBUSBMUXD_VERSION}.zip"
+    SHA512 c93933dbbc31cef411aa6428fe0d5b934ebcd921394663b32250456f47e01951936eafb43fd03c1a0bc38f35325714dbc029c5baaecd92a04a4e63e632635279
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

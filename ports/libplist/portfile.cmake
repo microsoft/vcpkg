@@ -11,7 +11,8 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libplist-2.0.1.195)
+set(PLIST_VERSION "2.0.1.197")
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libplist-${PLIST_VERSION})
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     set(MSBUILD_PLATFORM x64)
@@ -23,9 +24,9 @@ set(DEBUG_CONFIG Debug)
 set(RELEASE_CONFIG Release)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/libimobiledevice-win32/libplist/archive/2.0.1.195.zip"
-    FILENAME "libplist-2.0.1.195.zip"
-    SHA512 8638fcd4a7ec0b0579823d4b14df0f2a50cc8019b4b1f4359c0339e0a5e26a20123efa2ad5a6035728d0e3e12e6d06206da3ca1df5b7344403d7ea5d8393a40f
+    URLS "https://github.com/libimobiledevice-win32/libplist/archive/${PLIST_VERSION}.zip"
+    FILENAME "libplist-${PLIST_VERSION}.zip"
+    SHA512 a64b4eba21e7a76d97d20468ce0080d6902e559937a8b5d4d6e00c4e5043a909d284fd94a673956f636eb86418402fb8347e88bef6acee97a97c4ab2ffd44506
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
