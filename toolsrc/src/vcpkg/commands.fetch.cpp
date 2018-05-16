@@ -647,7 +647,7 @@ namespace vcpkg::Commands::Fetch
             LEGACY
         };
 
-        static bool prefered_first_comparator(const VisualStudioInstance& left, const VisualStudioInstance& right)
+        static bool preferred_first_comparator(const VisualStudioInstance& left, const VisualStudioInstance& right)
         {
             const auto get_preference_weight = [](const ReleaseType& type) -> int {
                 switch (type)
@@ -747,7 +747,7 @@ namespace vcpkg::Commands::Fetch
     }
 
 #if defined(_WIN32)
-    std::vector<Toolset> find_toolset_instances_prefered_first(const VcpkgPaths& paths)
+    std::vector<Toolset> find_toolset_instances_preferred_first(const VcpkgPaths& paths)
     {
         using CPU = System::CPUArchitecture;
 
@@ -760,7 +760,7 @@ namespace vcpkg::Commands::Fetch
         std::vector<Toolset> excluded_toolsets;
 
         const SortedVector<VisualStudioInstance> sorted{get_visual_studio_instances(paths),
-                                                        VisualStudioInstance::prefered_first_comparator};
+                                                        VisualStudioInstance::preferred_first_comparator};
 
         const bool v140_is_available = Util::find_if(sorted, [&](const VisualStudioInstance& vs_instance) {
                                            return vs_instance.major_version() == "14";
