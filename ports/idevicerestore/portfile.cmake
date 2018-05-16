@@ -11,7 +11,7 @@
 #
 
 include(vcpkg_common_functions)
-set(IDEVICRESTORE_VERSION "")
+set(IDEVICRESTORE_VERSION "1.0.12")
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/idevicerestore-${IDEVICRESTORE_VERSION})
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
@@ -26,7 +26,7 @@ set(RELEASE_CONFIG Release)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/libimobiledevice-win32/idevicerestore/archive/${IDEVICRESTORE_VERSION}.zip"
     FILENAME "idevicerestore-${IDEVICRESTORE_VERSION}"
-    SHA512 17a4c06983b570755ad720196316d7ab54b02b1ce0eb9f82c5bf479a0d57e8beb44940e233cd8353aa978122f7a20ca7710dedb3a08608a1df3d3b939a5e2f66
+    SHA512 6b251b621a327da8d8755819c9ac0d27e3b2402c55719510d47a63857d6550a021abfcaefa556c242336f0228c13ce12dbe1ae0bb8b9a8a0fcd0a2e0fccec14c
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
