@@ -17,8 +17,10 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/brotli)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/brotli${CMAKE_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/brotli/brotli${CMAKE_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/brotli${CMAKE_EXECUTABLE_SUFFIX})
+file(GLOB EXES ${CURRENT_PACKAGES_DIR}/bin/brotli ${CURRENT_PACKAGES_DIR}/bin/brotli.exe)
+file(GLOB DEBUG_EXES ${CURRENT_PACKAGES_DIR}/debug/bin/brotli ${CURRENT_PACKAGES_DIR}/debug/bin/brotli.exe)
+file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/brotli)
+file(REMOVE ${EXES} ${DEBUG_EXES})
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/brotli)
 
@@ -26,8 +28,14 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(GLOB STATIC_LIBS "${CURRENT_PACKAGES_DIR}/lib/*-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/*-static.lib")
     file(REMOVE ${STATIC_LIBS})
 else()
-    file(GLOB LIBS "${CURRENT_PACKAGES_DIR}/lib/*.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/*.lib")
+    file(GLOB LIBS
+        "${CURRENT_PACKAGES_DIR}/lib/*.lib"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/*.lib"
+        "${CURRENT_PACKAGES_DIR}/lib/*.a"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/*.a"
+    )
     list(FILTER LIBS EXCLUDE REGEX "-static\\.lib\$")
+    list(FILTER LIBS EXCLUDE REGEX "-static\\.a\$")
     file(REMOVE_RECURSE ${LIBS} ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 

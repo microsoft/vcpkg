@@ -155,6 +155,7 @@ namespace vcpkg::System
 
     int cmd_execute_clean(const CStringView cmd_line, const std::unordered_map<std::string, std::string>& extra_env)
     {
+        auto timer = Chrono::ElapsedTimer::create_started();
 #if defined(_WIN32)
         static const std::string SYSTEM_ROOT = get_environment_variable("SystemRoot").value_or_exit(VCPKG_LINE_INFO);
         static const std::string SYSTEM_32 = SYSTEM_ROOT + R"(\system32)";
@@ -271,7 +272,7 @@ namespace vcpkg::System
         DWORD exit_code = 0;
         GetExitCodeProcess(process_info.hProcess, &exit_code);
 
-        Debug::println("CreateProcessW() returned %lu", exit_code);
+        Debug::println("CreateProcessW() returned %lu after %d us", exit_code, static_cast<int>(timer.microseconds()));
         return static_cast<int>(exit_code);
 #else
         Debug::println("system(%s)", cmd_line.c_str());
@@ -369,12 +370,19 @@ namespace vcpkg::System
 #endif
     }
 
+#if defined(_WIN32)
     void powershell_execute(const std::string& title,
                             const fs::path& script_path,
                             const std::vector<PowershellParameter>& parameters)
     {
+        SetConsoleCP(437);
+        SetConsoleOutputCP(437);
+
         const std::string cmd = make_powershell_cmd(script_path, parameters);
         const int rc = System::cmd_execute(cmd);
+
+        SetConsoleCP(CP_UTF8);
+        SetConsoleOutputCP(CP_UTF8);
 
         if (rc)
         {
@@ -394,13 +402,21 @@ namespace vcpkg::System
             Checks::exit_with_code(VCPKG_LINE_INFO, rc);
         }
     }
+#endif
 
+#if defined(_WIN32)
     std::string powershell_execute_and_capture_output(const std::string& title,
                                                       const fs::path& script_path,
                                                       const std::vector<PowershellParameter>& parameters)
     {
+        SetConsoleCP(437);
+        SetConsoleOutputCP(437);
+
         const std::string cmd = make_powershell_cmd(script_path, parameters);
         auto rc = System::cmd_execute_and_capture_output(cmd);
+
+        SetConsoleCP(CP_UTF8);
+        SetConsoleOutputCP(CP_UTF8);
 
         if (rc.exit_code)
         {
@@ -433,6 +449,7 @@ namespace vcpkg::System
 
         return rc.output;
     }
+#endif
 
     void println() { putchar('\n'); }
 
