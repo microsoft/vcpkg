@@ -157,7 +157,9 @@ selectCXX()
 
     if [ "x$CXX" = "x" ]; then
         CXX=g++
-        if which g++-7 >/dev/null 2>&1; then
+        if which g++-8 >/dev/null 2>&1; then
+            CXX=g++-8
+        elif which g++-7 >/dev/null 2>&1; then
             CXX=g++-7
         elif which g++-6 >/dev/null 2>&1; then
             CXX=g++-6
