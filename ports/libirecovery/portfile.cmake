@@ -11,7 +11,8 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libirecovery-1.0.21)
+set(LIBIRECOVERY_VERSION "1.0.25")
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libirecovery-${LIBIRECOVERY_VERSION})
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     set(MSBUILD_PLATFORM  x64)
@@ -23,9 +24,9 @@ set(DEBUG_CONFIG Debug)
 set(RELEASE_CONFIG Release)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/libimobiledevice-win32/libirecovery/archive/1.0.21.zip"
-    FILENAME "libirecovery-1.0.21.zip"
-    SHA512 5d9b53526c6f5daefdf3e9feb697a94800635a511808129169c4823a971e9d994f084c7bd927c21b50f4fbad482cb4c2fb7bf1132129089d1e1a078b87e03b0b
+    URLS "https://github.com/libimobiledevice-win32/libirecovery/archive/${LIBIRECOVERY_VERSION}.zip"
+    FILENAME "libirecovery-${LIBIRECOVERY_VERSION}.zip"
+    SHA512 9811ab185842d49c34dba2476e1b69e76af265defc32edc08cef80bd663f19861070a885c5198771ab6631be83fd3271b1d45017d6d7eefd2dc2b03f0eda30f9
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

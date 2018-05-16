@@ -11,7 +11,8 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libideviceactivation-1.0.35)
+set(LIBIDEVICEACTIVATION_VERSION "1.0.38")
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libideviceactivation-${LIBIDEVICEACTIVATION_VERSION})
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     set(MSBUILD_PLATFORM  x64)
@@ -23,9 +24,9 @@ set(DEBUG_CONFIG Debug)
 set(RELEASE_CONFIG Release)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/libimobiledevice-win32/libideviceactivation/archive/1.0.35.zip"
-    FILENAME "libideviceactivation-1.0.35.zip"
-    SHA512 2f3653f28ef4eacfa5ced6e905e99400da677056633fbdab52abdf51f7d3f8d5794c3ed36069d5173161ccbdeabd00ee385b49ccfdf5871ac3b74b06510e2efc
+    URLS "https://github.com/libimobiledevice-win32/libideviceactivation/archive/${LIBIDEVICEACTIVATION_VERSION}.zip"
+    FILENAME "libideviceactivation-${LIBIDEVICEACTIVATION_VERSION}.zip"
+    SHA512 3ccc8cdf1784aaf969df3c99b6106621aad9e4b1a613e3aacf395e3240448a6d4de7db4fa5a32a456ac1cb363735aea3e5e36eb60d8f5dd9b4d903015675f016
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
