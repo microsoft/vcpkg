@@ -5,35 +5,18 @@ param(
 )
 Set-StrictMode -Version Latest
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
-. "$scriptsDir\VcpkgPowershellUtils.ps1"
-$vcpkgRootDir = vcpkgFindFileRecursivelyUp $scriptsDir .vcpkg-root
-Write-Verbose("vcpkg Path " + $vcpkgRootDir)
 
-$gitHash = "unknownhash"
-$oldpath = $env:path
-try
+$vcpkgRootDir = $scriptsDir
+$withVSPath = $withVSPath -replace "\\$" # Remove potential trailing backslash
+
+while (!($vcpkgRootDir -eq "") -and !(Test-Path "$vcpkgRootDir\.vcpkg-root"))
 {
-    [xml]$asXml = Get-Content "$scriptsDir\vcpkgTools.xml"
-    $toolData = $asXml.SelectSingleNode("//tools/tool[@name=`"git`"]")
-    $gitFromDownload = "$vcpkgRootDir\downloads\$($toolData.exeRelativePath)"
-    $gitDir = split-path -parent $gitFromDownload
-
-    $env:path += ";$gitDir"
-    if (Get-Command "git" -ErrorAction SilentlyContinue)
-    {
-        $gitHash = git log HEAD -n 1 --format="%cd-%H" --date=short
-        if ($LASTEXITCODE -ne 0)
-        {
-            $gitHash = "unknownhash"
-        }
-    }
+    Write-Verbose "Examining $vcpkgRootDir for .vcpkg-root"
+    $vcpkgRootDir = Split-path $vcpkgRootDir -Parent
 }
-finally
-{
-    $env:path = $oldpath
-}
-Write-Verbose("Git repo version string is " + $gitHash)
+Write-Verbose "Examining $vcpkgRootDir for .vcpkg-root - Found"
 
+$gitHash = "nohash"
 $vcpkgSourcesPath = "$vcpkgRootDir\toolsrc"
 
 if (!(Test-Path $vcpkgSourcesPath))
@@ -42,7 +25,58 @@ if (!(Test-Path $vcpkgSourcesPath))
     return
 }
 
-$msbuildExeWithPlatformToolset = & $scriptsDir\findAnyMSBuildWithCppPlatformToolset.ps1 $withVSPath
+function findAnyMSBuildWithCppPlatformToolset([string]$withVSPath)
+{
+    $VisualStudioInstances = & $scriptsDir\getVisualStudioInstances.ps1
+    if ($VisualStudioInstances -eq $null)
+    {
+        throw "Could not find Visual Studio. VS2015 or VS2017 (with C++) needs to be installed."
+    }
+
+    Write-Verbose "VS Candidates:`n`r$([system.String]::Join([Environment]::NewLine, $VisualStudioInstances))"
+    foreach ($instanceCandidateWithEOL in $VisualStudioInstances)
+    {
+        $instanceCandidate = $instanceCandidateWithEOL -replace "<sol>::" -replace "::<eol>"
+        Write-Verbose "Inspecting: $instanceCandidate"
+        $split = $instanceCandidate -split "::"
+        # $preferenceWeight = $split[0]
+        # $releaseType = $split[1]
+        $version = $split[2]
+        $path = $split[3]
+
+        if ($withVSPath -ne "" -and $withVSPath -ne $path)
+        {
+            Write-Verbose "Skipping: $instanceCandidate"
+            continue
+        }
+
+        $majorVersion = $version.Substring(0,2);
+        if ($majorVersion -eq "15")
+        {
+            $VCFolder= "$path\VC\Tools\MSVC\"
+            if (Test-Path $VCFolder)
+            {
+                Write-Verbose "Picking: $instanceCandidate"
+                return "$path\MSBuild\15.0\Bin\MSBuild.exe", "v141"
+            }
+        }
+
+        if ($majorVersion -eq "14")
+        {
+            $clExe= "$path\VC\bin\cl.exe"
+            if (Test-Path $clExe)
+            {
+                Write-Verbose "Picking: $instanceCandidate"
+                $programFilesPath = getProgramFiles32bit
+                return "$programFilesPath\MSBuild\14.0\Bin\MSBuild.exe", "v140"
+            }
+        }
+    }
+
+    throw "Could not find MSBuild version with C++ support. VS2015 or VS2017 (with C++) needs to be installed."
+}
+
+$msbuildExeWithPlatformToolset = findAnyMSBuildWithCppPlatformToolset $withVSPath
 $msbuildExe = $msbuildExeWithPlatformToolset[0]
 $platformToolset = $msbuildExeWithPlatformToolset[1]
 $windowsSDK = & $scriptsDir\getWindowsSDK.ps1
@@ -54,10 +88,33 @@ $arguments = (
 "/p:Platform=x86",
 "/p:PlatformToolset=$platformToolset",
 "/p:TargetPlatformVersion=$windowsSDK",
+"/verbosity:minimal",
 "/m",
+"/nologo",
 "`"$vcpkgSourcesPath\dirs.proj`"") -join " "
 
+function vcpkgInvokeCommandClean()
+{
+    param ( [Parameter(Mandatory=$true)][string]$executable,
+                                        [string]$arguments = "")
+
+    Write-Verbose "Clean-Executing: ${executable} ${arguments}"
+    $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
+    $cleanEnvScript = "$scriptsDir\VcpkgPowershellUtils-ClearEnvironment.ps1"
+    $tripleQuotes = "`"`"`""
+    $argumentsWithEscapedQuotes = $arguments -replace "`"", $tripleQuotes
+    $command = ". $tripleQuotes$cleanEnvScript$tripleQuotes; & $tripleQuotes$executable$tripleQuotes $argumentsWithEscapedQuotes"
+    $arg = "-NoProfile", "-ExecutionPolicy Bypass", "-command $command"
+
+    $process = Start-Process -FilePath powershell.exe -ArgumentList $arg -PassThru -NoNewWindow
+    Wait-Process -InputObject $process
+    $ec = $process.ExitCode
+    Write-Verbose "Execution terminated with exit code $ec."
+    return $ec
+}
+
 # vcpkgInvokeCommandClean cmd "/c echo %PATH%"
+Write-Host "`nBuilding vcpkg.exe ...`n"
 $ec = vcpkgInvokeCommandClean $msbuildExe $arguments
 
 if ($ec -ne 0)
@@ -65,6 +122,7 @@ if ($ec -ne 0)
     Write-Error "Building vcpkg.exe failed. Please ensure you have installed Visual Studio with the Desktop C++ workload and the Windows SDK for Desktop C++."
     return
 }
+Write-Host "`nBuilding vcpkg.exe... done.`n"
 
 Write-Verbose("Placing vcpkg.exe in the correct location")
 
