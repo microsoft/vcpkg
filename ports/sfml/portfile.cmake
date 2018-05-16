@@ -2,9 +2,9 @@
 include(vcpkg_common_functions)
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO SFML/SFML
-    REF 2.4.2
+    REF 2.5.0
     HEAD_REF master
-    SHA512 8acfdf320939c953a9a3413398f82d02d68a56a337f1366c2677c14ce032baa8ba059113ac3c91bb6e6fc22eef119369a265be7ef6894526e6a97a01f37e1972
+    SHA512 94306dcbed7d68bb7e226cd91e25950a07bcf393988c4bb79f9de3555c18c78cae4573e911235f712e711a7c02a614bf370df32b8d85240d2f08142327e05076
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/extlibs)
@@ -36,9 +36,5 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/sfml-main.lib)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/sfml-main-d.lib)
 endif()
 
-# At the time of writing, HEAD has license.md instead of license.txt
-if(VCPKG_HEAD_VERSION)
-    file(INSTALL ${SOURCE_PATH}/license.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/sfml RENAME copyright)
-else()
-    file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/sfml RENAME copyright)
-endif()
+
+file(INSTALL ${SOURCE_PATH}/license.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/sfml RENAME copyright)
