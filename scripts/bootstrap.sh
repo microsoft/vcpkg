@@ -97,7 +97,7 @@ fetchTool()
         return 1
     fi
 
-    xmlFileAsString=`cat $vcpkgRootDir/scripts/vcpkgTools.xml`
+    xmlFileAsString=`cat "$vcpkgRootDir/scripts/vcpkgTools.xml"`
     toolRegexStart="<tool name=\"$tool\" os=\"$os\">"
     toolData="$(extractStringBetweenDelimiters "$xmlFileAsString" "$toolRegexStart" "</tool>")"
     if [ "$toolData" = "" ]; then
