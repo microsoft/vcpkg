@@ -201,11 +201,10 @@ namespace vcpkg::Commands::Hash
         return split[0];
     }
 
-    std::string get_file_hash(const VcpkgPaths& paths, const fs::path& path, const std::string& hash_type)
+    std::string get_file_hash(const Files::Filesystem& fs, const fs::path& path, const std::string& hash_type)
     {
         const std::string digest_size = get_digest_size(hash_type);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, paths.get_filesystem().exists(path), "File %s does not exist", path.u8string());
+        Checks::check_exit(VCPKG_LINE_INFO, fs.exists(path), "File %s does not exist", path.u8string());
         const std::string cmd_line = Strings::format(R"(shasum -a %s "%s")", digest_size, path.u8string());
         return run_shasum_and_post_process(cmd_line);
     }
