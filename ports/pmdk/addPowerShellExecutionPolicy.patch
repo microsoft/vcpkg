@@ -1,7 +1,7 @@
-diff --git a/srcversion.vcxproj b/srcversion.vcxproj
+diff --git a/src/windows/srcversion/srcversion.vcxproj b/src/windows/srcversion/srcversion.vcxproj
 index 8761197..795d1a7 100644
---- a/srcversion.vcxproj
-+++ b/srcversion.vcxproj
+--- a/src/windows/srcversion/srcversion.vcxproj
++++ b/src/windows/srcversion/srcversion.vcxproj
 @@ -72,7 +72,7 @@
        </Command>
      </PreBuildEvent>
