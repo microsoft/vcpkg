@@ -40,7 +40,7 @@ namespace vcpkg::System
         if (bytes == 0) std::abort();
         return fs::path(buf, buf + bytes);
 #elif defined(__APPLE__)
-	static constexpr const uint32_t buff_size = 1024 * 32;
+        static constexpr const uint32_t buff_size = 1024 * 32;
         uint32_t size = buff_size;
         char buf[buff_size] = {};
         bool result = _NSGetExecutablePath(buf, &size);
