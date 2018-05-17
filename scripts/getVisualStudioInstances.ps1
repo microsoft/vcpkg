@@ -50,13 +50,16 @@ else
     Write-Verbose "Could not locate vswhere at $vswhereExe"
 }
 
-$installationPath = Split-Path -Parent $(Split-Path -Parent "$env:vs140comntools")
-$clExe = "$installationPath\VC\bin\cl.exe"
-$vcvarsallbat = "$installationPath\VC\vcvarsall.bat"
-
-if ((Test-Path $clExe) -And (Test-Path $vcvarsallbat))
+if ("$env:vs140comntools" -ne "")
 {
-    $results.Add("<sol>::PreferenceWeight1::Legacy::14.0::$installationPath::<eol>") > $null
+    $installationPath = Split-Path -Parent $(Split-Path -Parent "$env:vs140comntools")
+    $clExe = "$installationPath\VC\bin\cl.exe"
+    $vcvarsallbat = "$installationPath\VC\vcvarsall.bat"
+
+    if ((Test-Path $clExe) -And (Test-Path $vcvarsallbat))
+    {
+        $results.Add("<sol>::PreferenceWeight1::Legacy::14.0::$installationPath::<eol>") > $null
+    }
 }
 
 $installationPath = "$programFiles\Microsoft Visual Studio 14.0"
