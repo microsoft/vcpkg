@@ -40,8 +40,9 @@ namespace vcpkg::System
         if (bytes == 0) std::abort();
         return fs::path(buf, buf + bytes);
 #elif defined(__APPLE__)
-        uint32_t size = 1024 * 32;
-        char buf[size] = {};
+	static constexpr const uint32_t buff_size = 1024 * 32;
+        uint32_t size = buff_size;
+        char buf[buff_size] = {};
         bool result = _NSGetExecutablePath(buf, &size);
         Checks::check_exit(VCPKG_LINE_INFO, result != -1, "Could not determine current executable path.");
         std::unique_ptr<char> canonicalPath(realpath(buf, NULL));
