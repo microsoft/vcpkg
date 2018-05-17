@@ -5,6 +5,7 @@ param(
 )
 Set-StrictMode -Version Latest
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
+. "$scriptsDir\VcpkgPowershellUtils.ps1"
 
 $vcpkgRootDir = $scriptsDir
 $withVSPath = $withVSPath -replace "\\$" # Remove potential trailing backslash

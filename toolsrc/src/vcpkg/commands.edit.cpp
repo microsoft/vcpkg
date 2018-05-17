@@ -78,7 +78,8 @@ namespace vcpkg::Commands::Edit
         if (Util::Sets::contains(options.switches, OPTION_BUILDTREES))
         {
             return Util::fmap(ports, [&](const std::string& port_name) -> std::string {
-                return (paths.buildtrees / port_name).u8string();
+                const auto buildtrees_current_dir = paths.buildtrees / port_name;
+                return Strings::format(R"###("%s")###", buildtrees_current_dir.u8string());
             });
         }
 

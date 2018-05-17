@@ -647,7 +647,7 @@ namespace vcpkg::Commands::Fetch
             LEGACY
         };
 
-        static bool prefered_first_comparator(const VisualStudioInstance& left, const VisualStudioInstance& right)
+        static bool preferred_first_comparator(const VisualStudioInstance& left, const VisualStudioInstance& right)
         {
             const auto get_preference_weight = [](const ReleaseType& type) -> int {
                 switch (type)
@@ -682,45 +682,43 @@ namespace vcpkg::Commands::Fetch
     static std::vector<VisualStudioInstance> get_visual_studio_instances(const VcpkgPaths& paths)
     {
         const auto& fs = paths.get_filesystem();
+        std::vector<VisualStudioInstance> instances;
 
         const auto& program_files_32_bit = System::get_program_files_32_bit().value_or_exit(VCPKG_LINE_INFO);
+
+        // Instances from vswhere
         const fs::path vswhere_exe = program_files_32_bit / "Microsoft Visual Studio" / "Installer" / "vswhere.exe";
-        Checks::check_exit(
-            VCPKG_LINE_INFO, fs.exists(vswhere_exe), "Could not locate vswhere at %s", vswhere_exe.u8string());
-
-        const auto code_and_output = System::cmd_execute_and_capture_output(
-            Strings::format(R"("%s" -prerelease -legacy -products * -format xml)", vswhere_exe.u8string()));
-
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           code_and_output.exit_code == 0,
-                           "Running vswhere.exe failed with message:\n%s",
-                           code_and_output.output);
-
-        const auto& xml_as_string = code_and_output.output;
-
-        const auto instance_entries = find_all_enclosed(xml_as_string, "<instance>", "</instance>");
-
-        std::vector<VisualStudioInstance> instances;
-        for (const VcpkgStringRange& instance : instance_entries)
+        if (fs.exists(vswhere_exe))
         {
-            auto maybe_is_prerelease = find_at_most_one_enclosed(instance, "<isPrerelease>", "</isPrerelease>");
+            const auto code_and_output = System::cmd_execute_and_capture_output(
+                Strings::format(R"("%s" -prerelease -legacy -products * -format xml)", vswhere_exe.u8string()));
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               code_and_output.exit_code == 0,
+                               "Running vswhere.exe failed with message:\n%s",
+                               code_and_output.output);
 
-            VisualStudioInstance::ReleaseType release_type = VisualStudioInstance::ReleaseType::LEGACY;
-            if (auto p = maybe_is_prerelease.get())
+            const auto instance_entries = find_all_enclosed(code_and_output.output, "<instance>", "</instance>");
+            for (const VcpkgStringRange& instance : instance_entries)
             {
-                auto s = p->to_string();
-                if (s == "0")
-                    release_type = VisualStudioInstance::ReleaseType::STABLE;
-                else if (s == "1")
-                    release_type = VisualStudioInstance::ReleaseType::PRERELEASE;
-                else
-                    Checks::unreachable(VCPKG_LINE_INFO);
-            }
+                auto maybe_is_prerelease = find_at_most_one_enclosed(instance, "<isPrerelease>", "</isPrerelease>");
 
-            instances.emplace_back(
-                find_exactly_one_enclosed(instance, "<installationPath>", "</installationPath>").to_string(),
-                find_exactly_one_enclosed(instance, "<installationVersion>", "</installationVersion>").to_string(),
-                release_type);
+                VisualStudioInstance::ReleaseType release_type = VisualStudioInstance::ReleaseType::LEGACY;
+                if (const auto p = maybe_is_prerelease.get())
+                {
+                    const auto s = p->to_string();
+                    if (s == "0")
+                        release_type = VisualStudioInstance::ReleaseType::STABLE;
+                    else if (s == "1")
+                        release_type = VisualStudioInstance::ReleaseType::PRERELEASE;
+                    else
+                        Checks::unreachable(VCPKG_LINE_INFO);
+                }
+
+                instances.emplace_back(
+                    find_exactly_one_enclosed(instance, "<installationPath>", "</installationPath>").to_string(),
+                    find_exactly_one_enclosed(instance, "<installationVersion>", "</installationVersion>").to_string(),
+                    release_type);
+            }
         }
 
         const auto append_if_has_cl = [&](fs::path&& path_root) {
@@ -731,8 +729,9 @@ namespace vcpkg::Commands::Fetch
                 instances.emplace_back(std::move(path_root), "14.0", VisualStudioInstance::ReleaseType::LEGACY);
         };
 
-        auto maybe_vs140comntools = System::get_environment_variable("vs140comntools");
-        if (const auto path_as_string = maybe_vs140comntools.get())
+        // VS2015 instance from environment variable
+        auto maybe_vs140_comntools = System::get_environment_variable("vs140comntools");
+        if (const auto path_as_string = maybe_vs140_comntools.get())
         {
             // We want lexically_normal(), but it is not available
             // Correct root path might be 2 or 3 levels up, depending on if the path has trailing backslash. Try both.
@@ -741,13 +740,14 @@ namespace vcpkg::Commands::Fetch
             append_if_has_cl(fs::path{*path_as_string}.parent_path().parent_path().parent_path());
         }
 
+        // VS2015 instance from Program Files
         append_if_has_cl(program_files_32_bit / "Microsoft Visual Studio 14.0");
 
         return instances;
     }
 
 #if defined(_WIN32)
-    std::vector<Toolset> find_toolset_instances_prefered_first(const VcpkgPaths& paths)
+    std::vector<Toolset> find_toolset_instances_preferred_first(const VcpkgPaths& paths)
     {
         using CPU = System::CPUArchitecture;
 
@@ -760,7 +760,7 @@ namespace vcpkg::Commands::Fetch
         std::vector<Toolset> excluded_toolsets;
 
         const SortedVector<VisualStudioInstance> sorted{get_visual_studio_instances(paths),
-                                                        VisualStudioInstance::prefered_first_comparator};
+                                                        VisualStudioInstance::preferred_first_comparator};
 
         const bool v140_is_available = Util::find_if(sorted, [&](const VisualStudioInstance& vs_instance) {
                                            return vs_instance.major_version() == "14";
