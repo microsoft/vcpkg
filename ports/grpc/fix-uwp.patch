@@ -1,0 +1,554 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0dc0bd3..2407e4a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -84,6 +84,9 @@ if(UNIX)
+ endif()
+ if(WIN32)
+   set(_gRPC_PLATFORM_WINDOWS ON)
++  if(${CMAKE_SYSTEM_NAME} MATCHES "WindowsStore")
++    set(_gRPC_PLATFORM_UWP ON)
++  endif()
+ endif()
+ 
+ set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
+@@ -144,6 +147,10 @@ file(MAKE_DIRECTORY ${_gRPC_PROTO_GENS_DIR})
+ #     ``.proto`` files
+ #
+ function(protobuf_generate_grpc_cpp)
++  if(_gRPC_PLATFORM_UWP)
++    return()
++  endif()
++
+   if(NOT ARGN)
+     message(SEND_ERROR "Error: PROTOBUF_GENERATE_GRPC_CPP() called without any proto files")
+     return()
+@@ -178,27 +185,29 @@ function(protobuf_generate_grpc_cpp)
+   endforeach()
+ endfunction()
+ 
+-add_custom_target(plugins
+-  DEPENDS
+-  grpc_cpp_plugin
+-  grpc_csharp_plugin
+-  grpc_node_plugin
+-  grpc_objective_c_plugin
+-  grpc_php_plugin
+-  grpc_python_plugin
+-  grpc_ruby_plugin
+-)
++if(NOT _gRPC_PLATFORM_UWP)
++  add_custom_target(plugins
++    DEPENDS
++    grpc_cpp_plugin
++    grpc_csharp_plugin
++    grpc_node_plugin
++    grpc_objective_c_plugin
++    grpc_php_plugin
++    grpc_python_plugin
++    grpc_ruby_plugin
++  )
+ 
+-add_custom_target(tools_c
+-  DEPENDS
+-  check_epollexclusive
+-  grpc_create_jwt
+-  grpc_print_google_default_creds_token
+-  grpc_verify_jwt
+-  gen_hpack_tables
+-  gen_legal_metadata_characters
+-  gen_percent_encoding_tables
+-)
++  add_custom_target(tools_c
++    DEPENDS
++    check_epollexclusive
++    grpc_create_jwt
++    grpc_print_google_default_creds_token
++    grpc_verify_jwt
++    gen_hpack_tables
++    gen_legal_metadata_characters
++    gen_percent_encoding_tables
++  )
++endif()
+ 
+ add_custom_target(tools_cxx
+   DEPENDS
+@@ -3223,7 +3232,7 @@ if (gRPC_INSTALL)
+   )
+ endif()
+ 
+-
++if(NOT _gRPC_PLATFORM_UWP)
+ add_library(grpc++_error_details
+   ${_gRPC_PROTO_GENS_DIR}/src/proto/grpc/status/status.pb.cc
+   ${_gRPC_PROTO_GENS_DIR}/src/proto/grpc/status/status.grpc.pb.cc
+@@ -3285,6 +3294,7 @@ if (gRPC_INSTALL)
+     ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
+   )
+ endif()
++endif()
+ 
+ if (gRPC_BUILD_TESTS)
+ 
+@@ -3347,67 +3357,69 @@ endforeach()
+ 
+ endif (gRPC_BUILD_TESTS)
+ 
+-add_library(grpc++_reflection
+-  src/cpp/ext/proto_server_reflection.cc
+-  src/cpp/ext/proto_server_reflection_plugin.cc
+-  ${_gRPC_PROTO_GENS_DIR}/src/proto/grpc/reflection/v1alpha/reflection.pb.cc
+-  ${_gRPC_PROTO_GENS_DIR}/src/proto/grpc/reflection/v1alpha/reflection.grpc.pb.cc
+-  ${_gRPC_PROTO_GENS_DIR}/src/proto/grpc/reflection/v1alpha/reflection.pb.h
+-  ${_gRPC_PROTO_GENS_DIR}/src/proto/grpc/reflection/v1alpha/reflection.grpc.pb.h
+-)
+-
+-if(WIN32 AND MSVC)
+-  set_target_properties(grpc++_reflection PROPERTIES COMPILE_PDB_NAME "grpc++_reflection"
+-    COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
++if(NOT _gRPC_PLATFORM_UWP)
++  add_library(grpc++_reflection
++    src/cpp/ext/proto_server_reflection.cc
++    src/cpp/ext/proto_server_reflection_plugin.cc
++    ${_gRPC_PROTO_GENS_DIR}/src/proto/grpc/reflection/v1alpha/reflection.pb.cc
++    ${_gRPC_PROTO_GENS_DIR}/src/proto/grpc/reflection/v1alpha/reflection.grpc.pb.cc
++    ${_gRPC_PROTO_GENS_DIR}/src/proto/grpc/reflection/v1alpha/reflection.pb.h
++    ${_gRPC_PROTO_GENS_DIR}/src/proto/grpc/reflection/v1alpha/reflection.grpc.pb.h
+   )
+-  if (gRPC_INSTALL)
+-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/grpc++_reflection.pdb
+-      DESTINATION ${gRPC_INSTALL_LIBDIR} OPTIONAL
++
++  if(WIN32 AND MSVC)
++    set_target_properties(grpc++_reflection PROPERTIES COMPILE_PDB_NAME "grpc++_reflection"
++      COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+     )
++    if (gRPC_INSTALL)
++      install(FILES ${CMAKE_CURRENT_BINARY_DIR}/grpc++_reflection.pdb
++        DESTINATION ${gRPC_INSTALL_LIBDIR} OPTIONAL
++      )
++    endif()
+   endif()
+-endif()
+ 
+-protobuf_generate_grpc_cpp(
+-  src/proto/grpc/reflection/v1alpha/reflection.proto
+-)
++  protobuf_generate_grpc_cpp(
++    src/proto/grpc/reflection/v1alpha/reflection.proto
++  )
+ 
+-target_include_directories(grpc++_reflection
+-  PUBLIC $<INSTALL_INTERFACE:${gRPC_INSTALL_INCLUDEDIR}> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+-  PRIVATE ${_gRPC_SSL_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_PROTOBUF_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_ZLIB_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_BENCHMARK_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_CARES_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_GFLAGS_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_PROTO_GENS_DIR}
+-)
++  target_include_directories(grpc++_reflection
++    PUBLIC $<INSTALL_INTERFACE:${gRPC_INSTALL_INCLUDEDIR}> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
++    PRIVATE ${_gRPC_SSL_INCLUDE_DIR}
++    PRIVATE ${_gRPC_PROTOBUF_INCLUDE_DIR}
++    PRIVATE ${_gRPC_ZLIB_INCLUDE_DIR}
++    PRIVATE ${_gRPC_BENCHMARK_INCLUDE_DIR}
++    PRIVATE ${_gRPC_CARES_INCLUDE_DIR}
++    PRIVATE ${_gRPC_GFLAGS_INCLUDE_DIR}
++    PRIVATE ${_gRPC_PROTO_GENS_DIR}
++  )
+ 
+-target_link_libraries(grpc++_reflection
+-  ${_gRPC_PROTOBUF_LIBRARIES}
+-  ${_gRPC_ALLTARGETS_LIBRARIES}
+-  grpc++
+-  grpc
+-)
++  target_link_libraries(grpc++_reflection
++    ${_gRPC_PROTOBUF_LIBRARIES}
++    ${_gRPC_ALLTARGETS_LIBRARIES}
++    grpc++
++    grpc
++  )
+ 
+-foreach(_hdr
+-  include/grpc++/ext/proto_server_reflection_plugin.h
+-  include/grpcpp/ext/proto_server_reflection_plugin.h
+-)
+-  string(REPLACE "include/" "" _path ${_hdr})
+-  get_filename_component(_path ${_path} PATH)
+-  install(FILES ${_hdr}
+-    DESTINATION "${gRPC_INSTALL_INCLUDEDIR}/${_path}"
++  foreach(_hdr
++    include/grpc++/ext/proto_server_reflection_plugin.h
++    include/grpcpp/ext/proto_server_reflection_plugin.h
+   )
+-endforeach()
++    string(REPLACE "include/" "" _path ${_hdr})
++    get_filename_component(_path ${_path} PATH)
++    install(FILES ${_hdr}
++      DESTINATION "${gRPC_INSTALL_INCLUDEDIR}/${_path}"
++    )
++  endforeach()
+ 
+ 
+-if (gRPC_INSTALL)
+-  install(TARGETS grpc++_reflection EXPORT gRPCTargets
+-    RUNTIME DESTINATION ${gRPC_INSTALL_BINDIR}
+-    LIBRARY DESTINATION ${gRPC_INSTALL_LIBDIR}
+-    ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
+-  )
++  if (gRPC_INSTALL)
++    install(TARGETS grpc++_reflection EXPORT gRPCTargets
++      RUNTIME DESTINATION ${gRPC_INSTALL_BINDIR}
++      LIBRARY DESTINATION ${gRPC_INSTALL_LIBDIR}
++      ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
++    )
++  endif()
+ endif()
+ 
+ if (gRPC_BUILD_TESTS)
+@@ -4197,26 +4209,28 @@ endforeach()
+ 
+ endif (gRPC_BUILD_TESTS)
+ 
+-add_library(grpc_plugin_support
+-  src/compiler/cpp_generator.cc
+-  src/compiler/csharp_generator.cc
+-  src/compiler/node_generator.cc
+-  src/compiler/objective_c_generator.cc
+-  src/compiler/php_generator.cc
+-  src/compiler/python_generator.cc
+-  src/compiler/ruby_generator.cc
+-)
+-
+-if(WIN32 AND MSVC)
+-  set_target_properties(grpc_plugin_support PROPERTIES COMPILE_PDB_NAME "grpc_plugin_support"
+-    COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
++if(NOT _gRPC_PLATFORM_UWP)
++  add_library(grpc_plugin_support
++    src/compiler/cpp_generator.cc
++    src/compiler/csharp_generator.cc
++    src/compiler/node_generator.cc
++    src/compiler/objective_c_generator.cc
++    src/compiler/php_generator.cc
++    src/compiler/python_generator.cc
++    src/compiler/ruby_generator.cc
+   )
+-  if (gRPC_INSTALL)
+-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/grpc_plugin_support.pdb
+-      DESTINATION ${gRPC_INSTALL_LIBDIR} OPTIONAL
++
++  if(WIN32 AND MSVC)
++    set_target_properties(grpc_plugin_support PROPERTIES COMPILE_PDB_NAME "grpc_plugin_support"
++      COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+     )
++    if (gRPC_INSTALL)
++      install(FILES ${CMAKE_CURRENT_BINARY_DIR}/grpc_plugin_support.pdb
++        DESTINATION ${gRPC_INSTALL_LIBDIR} OPTIONAL
++      )
++    endif()
+   endif()
+-endif()
++
+ 
+ 
+ target_include_directories(grpc_plugin_support
+@@ -4236,6 +4250,8 @@ target_link_libraries(grpc_plugin_support
+   ${_gRPC_PROTOBUF_LIBRARIES}
+   ${_gRPC_ALLTARGETS_LIBRARIES}
+ )
++endif()
++
+ 
+ foreach(_hdr
+   include/grpc++/impl/codegen/config_protobuf.h
+@@ -4248,13 +4264,14 @@ foreach(_hdr
+   )
+ endforeach()
+ 
+-
+-if (gRPC_INSTALL)
+-  install(TARGETS grpc_plugin_support EXPORT gRPCTargets
+-    RUNTIME DESTINATION ${gRPC_INSTALL_BINDIR}
+-    LIBRARY DESTINATION ${gRPC_INSTALL_LIBDIR}
+-    ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
+-  )
++if(NOT _gRPC_PLATFORM_UWP)
++  if (gRPC_INSTALL)
++    install(TARGETS grpc_plugin_support EXPORT gRPCTargets
++      RUNTIME DESTINATION ${gRPC_INSTALL_BINDIR}
++      LIBRARY DESTINATION ${gRPC_INSTALL_LIBDIR}
++      ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
++    )
++  endif()
+ endif()
+ 
+ if (gRPC_BUILD_TESTS)
+@@ -10250,11 +10267,11 @@ target_link_libraries(grpc_cli
+ 
+ endif (gRPC_BUILD_TESTS)
+ 
+-add_executable(grpc_cpp_plugin
+-  src/compiler/cpp_plugin.cc
++if(NOT _gRPC_PLATFORM_UWP)
++  add_executable(grpc_cpp_plugin
++    src/compiler/cpp_plugin.cc
+ )
+ 
+-
+ target_include_directories(grpc_cpp_plugin
+   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
+@@ -10351,142 +10368,141 @@ if (gRPC_INSTALL)
+   )
+ endif()
+ 
++  add_executable(grpc_objective_c_plugin
++    src/compiler/objective_c_plugin.cc
++  )
+ 
+-add_executable(grpc_objective_c_plugin
+-  src/compiler/objective_c_plugin.cc
+-)
+-
+-
+-target_include_directories(grpc_objective_c_plugin
+-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
+-  PRIVATE ${_gRPC_SSL_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_PROTOBUF_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_ZLIB_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_BENCHMARK_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_CARES_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_GFLAGS_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_PROTO_GENS_DIR}
+-)
+-
+-target_link_libraries(grpc_objective_c_plugin
+-  ${_gRPC_PROTOBUF_PROTOC_LIBRARIES}
+-  ${_gRPC_PROTOBUF_LIBRARIES}
+-  ${_gRPC_ALLTARGETS_LIBRARIES}
+-  grpc_plugin_support
+-)
+ 
++  target_include_directories(grpc_objective_c_plugin
++    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
++    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
++    PRIVATE ${_gRPC_SSL_INCLUDE_DIR}
++    PRIVATE ${_gRPC_PROTOBUF_INCLUDE_DIR}
++    PRIVATE ${_gRPC_ZLIB_INCLUDE_DIR}
++    PRIVATE ${_gRPC_BENCHMARK_INCLUDE_DIR}
++    PRIVATE ${_gRPC_CARES_INCLUDE_DIR}
++    PRIVATE ${_gRPC_GFLAGS_INCLUDE_DIR}
++    PRIVATE ${_gRPC_PROTO_GENS_DIR}
++  )
+ 
+-if (gRPC_INSTALL)
+-  install(TARGETS grpc_objective_c_plugin EXPORT gRPCTargets
+-    RUNTIME DESTINATION ${gRPC_INSTALL_BINDIR}
+-    LIBRARY DESTINATION ${gRPC_INSTALL_LIBDIR}
+-    ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
++  target_link_libraries(grpc_objective_c_plugin
++    ${_gRPC_PROTOBUF_PROTOC_LIBRARIES}
++    ${_gRPC_PROTOBUF_LIBRARIES}
++    ${_gRPC_ALLTARGETS_LIBRARIES}
++    grpc_plugin_support
+   )
+-endif()
+ 
+ 
+-add_executable(grpc_php_plugin
+-  src/compiler/php_plugin.cc
+-)
++  if (gRPC_INSTALL)
++    install(TARGETS grpc_objective_c_plugin EXPORT gRPCTargets
++      RUNTIME DESTINATION ${gRPC_INSTALL_BINDIR}
++      LIBRARY DESTINATION ${gRPC_INSTALL_LIBDIR}
++      ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
++    )
++  endif()
+ 
+ 
+-target_include_directories(grpc_php_plugin
+-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
+-  PRIVATE ${_gRPC_SSL_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_PROTOBUF_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_ZLIB_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_BENCHMARK_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_CARES_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_GFLAGS_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_PROTO_GENS_DIR}
+-)
++  add_executable(grpc_php_plugin
++    src/compiler/php_plugin.cc
++  )
+ 
+-target_link_libraries(grpc_php_plugin
+-  ${_gRPC_PROTOBUF_PROTOC_LIBRARIES}
+-  ${_gRPC_PROTOBUF_LIBRARIES}
+-  ${_gRPC_ALLTARGETS_LIBRARIES}
+-  grpc_plugin_support
+-)
+ 
++  target_include_directories(grpc_php_plugin
++    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
++    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
++    PRIVATE ${_gRPC_SSL_INCLUDE_DIR}
++    PRIVATE ${_gRPC_PROTOBUF_INCLUDE_DIR}
++    PRIVATE ${_gRPC_ZLIB_INCLUDE_DIR}
++    PRIVATE ${_gRPC_BENCHMARK_INCLUDE_DIR}
++    PRIVATE ${_gRPC_CARES_INCLUDE_DIR}
++    PRIVATE ${_gRPC_GFLAGS_INCLUDE_DIR}
++    PRIVATE ${_gRPC_PROTO_GENS_DIR}
++  )
+ 
+-if (gRPC_INSTALL)
+-  install(TARGETS grpc_php_plugin EXPORT gRPCTargets
+-    RUNTIME DESTINATION ${gRPC_INSTALL_BINDIR}
+-    LIBRARY DESTINATION ${gRPC_INSTALL_LIBDIR}
+-    ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
++  target_link_libraries(grpc_php_plugin
++    ${_gRPC_PROTOBUF_PROTOC_LIBRARIES}
++    ${_gRPC_PROTOBUF_LIBRARIES}
++    ${_gRPC_ALLTARGETS_LIBRARIES}
++    grpc_plugin_support
+   )
+-endif()
+ 
+ 
+-add_executable(grpc_python_plugin
+-  src/compiler/python_plugin.cc
+-)
++  if (gRPC_INSTALL)
++    install(TARGETS grpc_php_plugin EXPORT gRPCTargets
++      RUNTIME DESTINATION ${gRPC_INSTALL_BINDIR}
++      LIBRARY DESTINATION ${gRPC_INSTALL_LIBDIR}
++      ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
++    )
++  endif()
+ 
+ 
+-target_include_directories(grpc_python_plugin
+-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
+-  PRIVATE ${_gRPC_SSL_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_PROTOBUF_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_ZLIB_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_BENCHMARK_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_CARES_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_GFLAGS_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_PROTO_GENS_DIR}
+-)
++  add_executable(grpc_python_plugin
++    src/compiler/python_plugin.cc
++  )
+ 
+-target_link_libraries(grpc_python_plugin
+-  ${_gRPC_PROTOBUF_PROTOC_LIBRARIES}
+-  ${_gRPC_PROTOBUF_LIBRARIES}
+-  ${_gRPC_ALLTARGETS_LIBRARIES}
+-  grpc_plugin_support
+-)
+ 
++  target_include_directories(grpc_python_plugin
++    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
++    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
++    PRIVATE ${_gRPC_SSL_INCLUDE_DIR}
++    PRIVATE ${_gRPC_PROTOBUF_INCLUDE_DIR}
++    PRIVATE ${_gRPC_ZLIB_INCLUDE_DIR}
++    PRIVATE ${_gRPC_BENCHMARK_INCLUDE_DIR}
++    PRIVATE ${_gRPC_CARES_INCLUDE_DIR}
++    PRIVATE ${_gRPC_GFLAGS_INCLUDE_DIR}
++    PRIVATE ${_gRPC_PROTO_GENS_DIR}
++  )
+ 
+-if (gRPC_INSTALL)
+-  install(TARGETS grpc_python_plugin EXPORT gRPCTargets
+-    RUNTIME DESTINATION ${gRPC_INSTALL_BINDIR}
+-    LIBRARY DESTINATION ${gRPC_INSTALL_LIBDIR}
+-    ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
++  target_link_libraries(grpc_python_plugin
++    ${_gRPC_PROTOBUF_PROTOC_LIBRARIES}
++    ${_gRPC_PROTOBUF_LIBRARIES}
++    ${_gRPC_ALLTARGETS_LIBRARIES}
++    grpc_plugin_support
+   )
+-endif()
+ 
+ 
+-add_executable(grpc_ruby_plugin
+-  src/compiler/ruby_plugin.cc
+-)
++  if (gRPC_INSTALL)
++    install(TARGETS grpc_python_plugin EXPORT gRPCTargets
++      RUNTIME DESTINATION ${gRPC_INSTALL_BINDIR}
++      LIBRARY DESTINATION ${gRPC_INSTALL_LIBDIR}
++      ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
++    )
++  endif()
+ 
+ 
+-target_include_directories(grpc_ruby_plugin
+-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
+-  PRIVATE ${_gRPC_SSL_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_PROTOBUF_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_ZLIB_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_BENCHMARK_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_CARES_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_GFLAGS_INCLUDE_DIR}
+-  PRIVATE ${_gRPC_PROTO_GENS_DIR}
+-)
++  add_executable(grpc_ruby_plugin
++    src/compiler/ruby_plugin.cc
++  )
+ 
+-target_link_libraries(grpc_ruby_plugin
+-  ${_gRPC_PROTOBUF_PROTOC_LIBRARIES}
+-  ${_gRPC_PROTOBUF_LIBRARIES}
+-  ${_gRPC_ALLTARGETS_LIBRARIES}
+-  grpc_plugin_support
+-)
+ 
++  target_include_directories(grpc_ruby_plugin
++    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
++    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
++    PRIVATE ${_gRPC_SSL_INCLUDE_DIR}
++    PRIVATE ${_gRPC_PROTOBUF_INCLUDE_DIR}
++    PRIVATE ${_gRPC_ZLIB_INCLUDE_DIR}
++    PRIVATE ${_gRPC_BENCHMARK_INCLUDE_DIR}
++    PRIVATE ${_gRPC_CARES_INCLUDE_DIR}
++    PRIVATE ${_gRPC_GFLAGS_INCLUDE_DIR}
++    PRIVATE ${_gRPC_PROTO_GENS_DIR}
++  )
+ 
+-if (gRPC_INSTALL)
+-  install(TARGETS grpc_ruby_plugin EXPORT gRPCTargets
+-    RUNTIME DESTINATION ${gRPC_INSTALL_BINDIR}
+-    LIBRARY DESTINATION ${gRPC_INSTALL_LIBDIR}
+-    ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
++  target_link_libraries(grpc_ruby_plugin
++    ${_gRPC_PROTOBUF_PROTOC_LIBRARIES}
++    ${_gRPC_PROTOBUF_LIBRARIES}
++    ${_gRPC_ALLTARGETS_LIBRARIES}
++    grpc_plugin_support
+   )
+-endif()
+ 
++
++  if (gRPC_INSTALL)
++    install(TARGETS grpc_ruby_plugin EXPORT gRPCTargets
++      RUNTIME DESTINATION ${gRPC_INSTALL_BINDIR}
++      LIBRARY DESTINATION ${gRPC_INSTALL_LIBDIR}
++      ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
++    )
++  endif()
++endif()
+ if (gRPC_BUILD_TESTS)
+ 
+ add_executable(grpc_tool_test
