@@ -1,5 +1,5 @@
 Source: vtk-dicom
-Version: 0.8.8-alpha
+Version: 0.8.8-alpha-1
 Description: DICOM for VTK
 Build-Depends: vtk, zlib
 
