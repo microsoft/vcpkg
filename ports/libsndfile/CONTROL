@@ -1,4 +1,7 @@
 Source: libsndfile
-Version: 1.0.29-6830c42-3
+Version: 1.0.29-6830c42-4
 Description: Library to read, write and manipulate many soundfile types. Authored by Eric de Castro Lopo
+
+Feature: external-libs
+Description: Support OGG and FLAC audio files
 Build-Depends: libogg, libflac, libvorbis
