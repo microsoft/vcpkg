@@ -14,10 +14,13 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
-    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/PDAL-${PDAL_VERSION_STR}-src
+    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-    ${CURRENT_PORT_DIR}/0001-win32_compiler_options.cmake.patch
+        ${CMAKE_CURRENT_LIST_DIR}/0001-win32_compiler_options.cmake.patch
+        ${CMAKE_CURRENT_LIST_DIR}/no-source-dir-writes.patch
 )
+
+file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")
 
 # Deploy custom CMake modules to enforce expected dependencies look-up
 foreach(_module IN ITEMS FindGDAL FindGEOS FindGeoTIFF)
