@@ -61,7 +61,9 @@ if(NOT UV_SKIP_HEADERS)
     include/uv-win.h
     include/uv-unix.h
     include/uv-darwin.h
-    DESTINATION include)
+    include/pthread-barrier.h
+    DESTINATION include
+)
 endif()
 
 install(TARGETS libuv
