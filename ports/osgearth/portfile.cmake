@@ -5,17 +5,21 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
 
+if(VCPKG_CRT_LINKAGE STREQUAL static)
+    message(FATAL_ERROR "osgearth does not support static CRT linkage")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gwaldron/osgearth
-	REF d06e47995620674900d96eb694ff4866a29a9d4f
-	SHA512 d4b790dc2be4b6ffcd3ab5b4c1062bb56dd4503511ea3f4033a2546ce553dbd45535bfb70ba646416acebf67eba2e5d2740a05477387acad87956bf99fc4038a
+    REF d06e47995620674900d96eb694ff4866a29a9d4f
+    SHA512 d4b790dc2be4b6ffcd3ab5b4c1062bb56dd4503511ea3f4033a2546ce553dbd45535bfb70ba646416acebf67eba2e5d2740a05477387acad87956bf99fc4038a
     HEAD_REF master
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS
+    PREFER_NINJA
 )
 
 vcpkg_install_cmake()
