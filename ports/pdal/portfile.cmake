@@ -4,10 +4,6 @@
 set(PDAL_VERSION_STR "1.7.1")
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/PDAL-${PDAL_VERSION_STR}-src)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "PDAL's dependency GDAL does not support building static libraries")
-endif()
-
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
@@ -48,8 +44,7 @@ vcpkg_configure_cmake(
         -DWITH_COMPLETION:BOOL=OFF
 )
 
-vcpkg_build_cmake(ADD_BIN_TO_PATH)
-vcpkg_install_cmake()
+vcpkg_install_cmake(ADD_BIN_TO_PATH)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/pdal/cmake)
 vcpkg_copy_pdbs()
 
@@ -60,7 +55,7 @@ file(INSTALL ${SOURCE_PATH}/LICENSE.txt
 
 # Install PDAL executable
 file(GLOB _pdal_apps ${CURRENT_PACKAGES_DIR}/bin/*.exe)
-file(INSTALL ${_pdal_apps} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/pdal)
+file(COPY ${_pdal_apps} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/pdal)
 file(REMOVE ${_pdal_apps})
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
