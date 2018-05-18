@@ -7,11 +7,14 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 # enable all file formats which are supported natively
 set(SUPPORTED_FORMATS BMP GIF LBM PCX PNM TGA XPM XCF XV SVG)
 
+# Forwarding the argument from the portfile replaces the ; in the lists with whitespace, convert it back
+string (REPLACE " " ";" SDL_IMAGE_DEPENDENCIES "${SDL_IMAGE_DEPENDENCIES}")
+
 # enable all file formats which are supported through external dependencies
 # first try to load them statically (lib file in vcpkg installation)
 # if this fails try to make them a dynamic dependency (dll will be loaded at runtime) if possible. vcpkg cannot resolve these dependencies!
 # else do not support this file format at all
-set(DEPENDENCIES PNG JPEG TIFF WEBP)
+set(DEPENDENCIES ${SDL_IMAGE_DEPENDENCIES})
 
 # patch library names for preprocessor flags
 set(JPEG_FLAG JPG)
