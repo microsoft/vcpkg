@@ -7,6 +7,7 @@ Set-StrictMode -Version Latest
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 $vcpkgRootDir = $scriptsDir
 $withVSPath = $withVSPath -replace "\\$" # Remove potential trailing backslash
+
 function vcpkgHasProperty([Parameter(Mandatory=$true)][AllowNull()]$object, [Parameter(Mandatory=$true)]$propertyName)
 {
     if ($object -eq $null)
@@ -84,7 +85,7 @@ function getVisualStudioInstances()
             }
 
             # Placed like that for easy sorting according to preference
-            $results.Add("<sol>::${releaseType}::${installationVersion}::${installationPath}::<eol>") > $null
+            $results.Add("${releaseType}::${installationVersion}::${installationPath}") > $null
         }
     }
     else
@@ -100,7 +101,7 @@ function getVisualStudioInstances()
 
         if ((Test-Path $clExe) -And (Test-Path $vcvarsallbat))
         {
-            $results.Add("<sol>::PreferenceWeight1::Legacy::14.0::$installationPath::<eol>") > $null
+            $results.Add("PreferenceWeight1::Legacy::14.0::$installationPath") > $null
         }
     }
 
@@ -110,7 +111,7 @@ function getVisualStudioInstances()
 
     if ((Test-Path $clExe) -And (Test-Path $vcvarsallbat))
     {
-        $results.Add("<sol>::PreferenceWeight1::Legacy::14.0::$installationPath::<eol>") > $null
+        $results.Add("PreferenceWeight1::Legacy::14.0::$installationPath") > $null
     }
 
     $results.Sort()
@@ -128,9 +129,8 @@ function findAnyMSBuildWithCppPlatformToolset([string]$withVSPath)
     }
 
     Write-Verbose "VS Candidates:`n`r$([system.String]::Join([Environment]::NewLine, $VisualStudioInstances))"
-    foreach ($instanceCandidateWithEOL in $VisualStudioInstances)
+    foreach ($instanceCandidate in $VisualStudioInstances)
     {
-        $instanceCandidate = $instanceCandidateWithEOL -replace "<sol>::" -replace "::<eol>"
         Write-Verbose "Inspecting: $instanceCandidate"
         $split = $instanceCandidate -split "::"
         # $preferenceWeight = $split[0]
