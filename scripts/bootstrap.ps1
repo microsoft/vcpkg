@@ -310,7 +310,7 @@ function vcpkgInvokeCommandClean()
 
     Write-Verbose "Clean-Executing: ${executable} ${arguments}"
     $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
-    $cleanEnvScript = "$scriptsDir\VcpkgPowershellUtils-ClearEnvironment.ps1"
+    $cleanEnvScript = "$scriptsDir\cleanEnvironmentHelper.ps1"
     $tripleQuotes = "`"`"`""
     $argumentsWithEscapedQuotes = $arguments -replace "`"", $tripleQuotes
     $command = ". $tripleQuotes$cleanEnvScript$tripleQuotes; & $tripleQuotes$executable$tripleQuotes $argumentsWithEscapedQuotes"
