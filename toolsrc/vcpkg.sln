@@ -17,7 +17,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{F589
 		..\scripts\fetchDependency.ps1 = ..\scripts\fetchDependency.ps1
 		..\scripts\getVisualStudioInstances.ps1 = ..\scripts\getVisualStudioInstances.ps1
 		..\scripts\get_triplet_environment.cmake = ..\scripts\get_triplet_environment.cmake
-		..\scripts\getWindowsSDK.ps1 = ..\scripts\getWindowsSDK.ps1
 		..\scripts\internalCI.ps1 = ..\scripts\internalCI.ps1
 		..\scripts\ports.cmake = ..\scripts\ports.cmake
 		..\scripts\SHA256Hash.ps1 = ..\scripts\SHA256Hash.ps1
