@@ -7,13 +7,13 @@ param
 
 $myDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 
-$leftresults = $leftBuild | % { ls \\vcpkg-000\General\Results\${_}_*.xml }
+$leftresults = $leftBuild | % { ls \\vcpkg-000.redmond.corp.microsoft.com\General\Results\${_}_*.xml }
 if ($rightBuild.count -eq 0)
 {
     $rightBuild = & $myDir\baseline.ps1
 }
 
-$rightresults = $rightBuild | % { ls \\vcpkg-000\General\Results\${_}_*.xml }
+$rightresults = $rightBuild | % { ls \\vcpkg-000.redmond.corp.microsoft.com\General\Results\${_}_*.xml }
 
 Write-Verbose "Left results"
 Write-Verbose "$leftresults"

@@ -11,7 +11,7 @@ $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 
 $prefix = "$repo-$branch-$retOrChk"
 
-$buildArchiveFolderRoot = "\\vcpkg-000\General\CustomBuilds"
+$buildArchiveFolderRoot = "\\vcpkg-000.redmond.corp.microsoft.com\General\CustomBuilds"
 $branchBuildArchives = Get-ChildItem $buildArchiveFolderRoot | Where-object -Property name -match "^$prefix.+\.7z$"
 $buildArchive = ($branchBuildArchives | Sort-object Name -Descending | Select-object -first 1).fullname
 if ([string]::IsNullOrEmpty($buildArchive))

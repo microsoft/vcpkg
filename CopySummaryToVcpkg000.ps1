@@ -43,7 +43,7 @@ $vsInstallPath = findVSInstallPathFromTriplet $tripletFilePath
 $deployedVersion = findDeployedVersion $vsInstallPath
 
 $outputFilename = "${buildId}_${triplet}${deployedVersion}.xml"
-$outputPathRoot = "\\vcpkg-000\General\Results"
+$outputPathRoot = "\\vcpkg-000.redmond.corp.microsoft.com\General\Results"
 $outputPath = "$outputPathRoot\$outputFilename"
 
 $ciXmlPath = "$vcpkgRootDir\test-full-ci.xml"

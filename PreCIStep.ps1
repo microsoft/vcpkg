@@ -51,7 +51,7 @@ if (Test-Path $driveLetter)
 }
 Write-Host "Deleting drive $driveLetter\ ... done."
 
-$remoteShare = "\\vcpkg-000\installed"
+$remoteShare = "\\vcpkg-000.redmond.corp.microsoft.com\installed"
 Write-Host "Mapping drive $driveLetter\ to $remoteShare ..."
 net use $driveLetter $remoteShare B7PeL56r /USER:\vcpkg
 Write-Host "Mapping drive $driveLetter\ to $remoteShare ... done."

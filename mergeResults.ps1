@@ -6,7 +6,7 @@ param
 
 $myDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 
-$xmls = @($Builds | % { ls \\vcpkg-000\General\Results\${_}_*.xml })
+$xmls = @($Builds | % { ls \\vcpkg-000.redmond.corp.microsoft.com\General\Results\${_}_*.xml })
 
 $groups = $xmls | % { $a = @($_.name -split "_", 2); New-Object PSObject -Property @{ "id"=$a[0]; "triplet"=$($a[1] -replace "(-dynamic)?(-stable|-unstable.*)?\.xml",""); "file"=$_ } } | group triplet
 

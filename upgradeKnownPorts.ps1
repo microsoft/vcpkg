@@ -79,6 +79,7 @@ $tagPorts = @(
     "rapidjson",
     "rocksdb",
     "sdl2",
+    "sdl2pp",
     "sfml",
     "snappy",
     "spdlog",
