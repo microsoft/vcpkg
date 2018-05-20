@@ -7,14 +7,14 @@ set(SDL_MIXER_INCLUDES ${SDL_INCLUDE_DIR})
 set(SDL_MIXER_LIBRARIES ${SDL_LIBRARY})
 
 # builtin formats
-set(SDL_MIXER_DEFINES 
+set(SDL_MIXER_DEFINES
     MUSIC_WAV
     MUSIC_MID_NATIVE)
 
 # MP3 support
 if(SDL_MIXER_ENABLE_MP3)
     find_path(MPG123_INCLUDE_DIR mpg123.h)
-    find_library(MPG123_LIBRARY libmpg123)
+    find_library(MPG123_LIBRARY NAMES libmpg123 mpg123)
     list(APPEND SDL_MIXER_INCLUDES ${MPG123_INCLUDE_DIR})
     list(APPEND SDL_MIXER_LIBRARIES ${MPG123_LIBRARY})
     list(APPEND SDL_MIXER_DEFINES MUSIC_MP3_MPG123)
@@ -47,7 +47,7 @@ if(SDL_MIXER_ENABLE_OGGVORBIS)
     list(APPEND SDL_MIXER_DEFINES MUSIC_OGG)
 endif()
 
-add_library(SDL2_mixer 
+add_library(SDL2_mixer
     effect_position.c
     effect_stereoreverse.c
     effects_internal.c
