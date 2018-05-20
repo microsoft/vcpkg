@@ -1,27 +1,14 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:\path\to\current\vcpkg>
-#   TARGET_TRIPLET is the current triplet (x86-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#
-
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/soci-6eb1a3e9775ab7cdbf0f7f5aa5891792313cd8d9)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/SOCI/soci/archive/6eb1a3e9775ab7cdbf0f7f5aa5891792313cd8d9.zip"
-    FILENAME "soci-master-2016.10.22.zip"
-    SHA512 6bb0f7d3442de627089760485d3e663f12873b4871c4b4b4dfac5d380bad014865ac8382f7356e02514e9140f187dea8dcf8d6c25ac9c3e827e9fa69e9ed13b5
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO SOCI/soci
+    REF 6eb1a3e9775ab7cdbf0f7f5aa5891792313cd8d9
+    SHA512 0d0127e422934c5ac707184b519b7682cb67d1480ebecf56520d085c9d29381075c1e2f7bfd8f5b7873ce3cc8ce35ba793e06f0c1f8bb506a83949cd27d15015
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(SOCI_STATIC OFF)
-    set(SOCI_DYNAMIC ON)
-elseif(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(SOCI_STATIC ON)
-    set(SOCI_DYNAMIC OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SOCI_DYNAMIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SOCI_STATIC)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -31,21 +18,26 @@ vcpkg_configure_cmake(
         -DSOCI_LIBDIR=lib # This is to always have output in the lib folder and not lib64 for 64-bit builds
         -DSOCI_STATIC=${SOCI_STATIC}
         -DSOCI_SHARED=${SOCI_DYNAMIC}
+
+        -DWITH_BOOST=ON
+        -DWITH_SQLITE3=ON
+
+        -DWITH_MYSQL=OFF
+        -DWITH_ODBC=OFF
+        -DWITH_ORACLE=OFF
+        -DWITH_POSTGRESQL=OFF
+        -DWITH_FIREBIRD=OFF
+        -DWITH_DB2=OFF
 )
 
 vcpkg_install_cmake()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/soci)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(RENAME ${CURRENT_PACKAGES_DIR}/cmake/SOCI.cmake ${CURRENT_PACKAGES_DIR}/share/soci/SOCIConfig.cmake)
-file(RENAME ${CURRENT_PACKAGES_DIR}/cmake/SOCI-release.cmake ${CURRENT_PACKAGES_DIR}/share/soci/SOCI-release.cmake)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/cmake/SOCI-debug.cmake ${CURRENT_PACKAGES_DIR}/share/soci/SOCI-debug.cmake)
-file(READ ${CURRENT_PACKAGES_DIR}/share/soci/SOCIConfig.cmake CONFIG_FILE)
-set(pattern "get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\n")
-string(REPLACE "${pattern}" "${pattern}${pattern}" CONFIG_FILE ${CONFIG_FILE})
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/soci/SOCIConfig.cmake ${CONFIG_FILE})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake)
+file(RENAME ${CURRENT_PACKAGES_DIR}/cmake/SOCI.cmake ${CURRENT_PACKAGES_DIR}/cmake/SOCIConfig.cmake)
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/soci)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/soci/LICENSE_1_0.txt ${CURRENT_PACKAGES_DIR}/share/soci/copyright)
