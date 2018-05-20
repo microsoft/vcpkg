@@ -19,7 +19,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{F589
 		..\scripts\internalCI.ps1 = ..\scripts\internalCI.ps1
 		..\scripts\ports.cmake = ..\scripts\ports.cmake
 		..\scripts\SHA256Hash.ps1 = ..\scripts\SHA256Hash.ps1
-		..\scripts\VcpkgPowershellUtils.ps1 = ..\scripts\VcpkgPowershellUtils.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cmake", "cmake", "{A0122231-04D5-420B-81CA-7960946E5E65}"
