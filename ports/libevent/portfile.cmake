@@ -21,6 +21,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        -DEVENT_INSTALL_CMAKE_DIR:PATH=share/libevent
         -DEVENT__DISABLE_BENCHMARK=ON
         -DEVENT__DISABLE_TESTS=ON
         -DEVENT__DISABLE_REGRESS=ON
@@ -31,7 +32,7 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+vcpkg_fixup_cmake_targets()
 vcpkg_copy_pdbs()
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libevent)

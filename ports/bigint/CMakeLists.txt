@@ -13,7 +13,7 @@ set(
 	BigInteger.cc
 	BigIntegerAlgorithms.cc
 	BigUnsignedInABase.cc
-  BigIntegerUtils.cc
+	BigIntegerUtils.cc
 )
 
 set(
@@ -24,6 +24,7 @@ set(
 	BigIntegerAlgorithms.hh
 	BigUnsignedInABase.hh
 	BigIntegerLibrary.hh
+	BigIntegerUtils.hh
 )
 
 add_library(bigint ${bigint_srcs})
