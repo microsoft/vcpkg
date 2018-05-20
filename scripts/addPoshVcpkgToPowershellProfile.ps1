@@ -14,7 +14,6 @@ function findExistingImportModuleDirectives([Parameter(Mandatory=$true)][string]
 }
 
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
-. "$scriptsDir\VcpkgPowershellUtils.ps1"
 
 $profileEntry = "Import-Module '$scriptsDir\posh-vcpkg'"
 $profilePath = $PROFILE # Implicit powershell variable
