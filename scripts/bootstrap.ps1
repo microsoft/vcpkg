@@ -41,7 +41,6 @@ while (!($vcpkgRootDir -eq "") -and !(Test-Path "$vcpkgRootDir\.vcpkg-root"))
 }
 Write-Verbose "Examining $vcpkgRootDir for .vcpkg-root - Found"
 
-$gitHash = "nohash"
 $vcpkgSourcesPath = "$vcpkgRootDir\toolsrc"
 
 if (!(Test-Path $vcpkgSourcesPath))
@@ -293,7 +292,7 @@ $platformToolset = $msbuildExeWithPlatformToolset[1]
 $windowsSDK = getWindowsSDK
 
 $arguments = (
-"`"/p:VCPKG_VERSION=-$gitHash`"",
+"`"/p:VCPKG_VERSION=-nohash`"",
 "`"/p:DISABLE_METRICS=$disableMetrics`"",
 "/p:Configuration=Release",
 "/p:Platform=x86",
