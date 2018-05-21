@@ -1,8 +1,32 @@
 diff --git a/Microsoft.WindowsAzure.Storage/CMakeLists.txt b/Microsoft.WindowsAzure.Storage/CMakeLists.txt
-index 07878c2..8d1c47e 100644
+index a23b93f..e471b86 100644
 --- a/Microsoft.WindowsAzure.Storage/CMakeLists.txt
 +++ b/Microsoft.WindowsAzure.Storage/CMakeLists.txt
-@@ -51,20 +51,25 @@ if(UNIX)
+@@ -1,5 +1,5 @@
+ set(CMAKE_LEGACY_CYGWIN_WIN32 0)
+-cmake_minimum_required(VERSION 2.6)
++cmake_minimum_required(VERSION 3.8)
+ project(azurestorage)
+ 
+ enable_testing()
+@@ -21,8 +21,6 @@ if(UNIX)
+ 
+ 	# Prefer the latest (make the latest one first)
+     list(REVERSE OPENSSL_ROOT_DIR)
+-
+-
+ 	if(NOT GETTEXT_LIB_DIR)
+ 		message(WARNING "No GETTEXT_LIB_DIR specified, assuming: /usr/local/opt/gettext/lib")
+ 		set(GETTEXT_LIB_DIR "/usr/local/opt/gettext/lib")
+@@ -40,6 +38,7 @@ if(UNIX)
+   find_package(OpenSSL 1.0.0 REQUIRED)
+ 
+ 
++
+   find_package(UUID REQUIRED)
+   find_package(Casablanca REQUIRED)
+   find_package(LibXML2 REQUIRED)
+@@ -48,20 +47,25 @@ if(UNIX)
      find_package(UnitTest++ REQUIRED)
    endif()
  
@@ -36,7 +60,7 @@ index 07878c2..8d1c47e 100644
    message("-- Setting gcc options")
  
    set(WARNINGS "-Wall -Wextra -Wunused-parameter -Wcast-align -Wcast-qual -Wconversion -Wformat=2 -Winit-self -Winvalid-pch -Wmissing-format-attribute -Wmissing-include-dirs -Wpacked -Wredundant-decls -Wunreachable-code")
-@@ -81,22 +86,29 @@ if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
+@@ -78,22 +82,31 @@ if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
      add_definitions(-DBOOST_LOG_DYN_LINK)
    endif()
    add_definitions(-D_TURN_OFF_PLATFORM_STRING)
@@ -75,23 +99,39 @@ index 07878c2..8d1c47e 100644
 +  add_compile_options(/MP)
 +  if(BUILD_SHARED_LIBS)
 +    add_definitions(-DWASTORAGE_DLL -D_USRDLL)
++  else()
++    add_definitions(-D_NO_WASTORAGE_API)
 +  endif()
  else()
    message("-- Unknown compiler, success is doubtful.")
  endif()
-@@ -109,7 +121,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries)
+@@ -106,7 +119,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries)
  set(AZURESTORAGE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes)
- set(AZURESTORAGE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/includes ${CASABLANCA_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIRS} ${LibXML++_INCLUDE_DIRS} ${UUID_INCLUDE_DIRS} ${Glibmm_INCLUDE_DIRS})
+ set(AZURESTORAGE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/includes ${CASABLANCA_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIRS} ${UUID_INCLUDE_DIRS} ${LibXML2_INCLUDE_DIR})
  
 -
  set(AZURESTORAGE_LIBRARY azurestorage)
- set(AZURESTORAGE_LIBRARIES ${AZURESTORAGE_LIBRARY} ${CASABLANCA_LIBRARIES} ${Boost_LIBRARIES} ${Boost_FRAMEWORK} ${OPENSSL_LIBRARIES} ${LibXML++_LIBRARIES} ${UUID_LIBRARIES} ${Glibmm_LIBRARIES})
+ set(AZURESTORAGE_LIBRARIES ${AZURESTORAGE_LIBRARY} ${CASABLANCA_LIBRARY} ${Boost_LIBRARIES} ${Boost_FRAMEWORK} ${OPENSSL_LIBRARIES} ${UUID_LIBRARIES} ${LibXML2_LIBRARIES})
  
 diff --git a/Microsoft.WindowsAzure.Storage/cmake/Modules/FindCasablanca.cmake b/Microsoft.WindowsAzure.Storage/cmake/Modules/FindCasablanca.cmake
-index 5c1df3c..da66eb4 100644
+index 5c1df3c..40e1767 100644
 --- a/Microsoft.WindowsAzure.Storage/cmake/Modules/FindCasablanca.cmake
 +++ b/Microsoft.WindowsAzure.Storage/cmake/Modules/FindCasablanca.cmake
-@@ -27,6 +27,7 @@ find_path(CASABLANCA_INCLUDE_DIR
+@@ -23,10 +23,21 @@ find_path(CASABLANCA_INCLUDE_DIR
+     include
+ )
+ 
++find_package(cpprestsdk)
++
++if(cpprestsdk_FOUND)
++  set(CASABLANCA_LIBRARY cpprestsdk::cpprest)
++  set(CASABLANCA_PROCESS_LIBS CASABLANCA_LIBRARY)
++  set(CASABLANCA_PROCESS_INCLUDES CASABLANCA_INCLUDE_DIR)
++  libfind_process(CASABLANCA)
++  return()
++endif()
++
+ # Library
  find_library(CASABLANCA_LIBRARY
    NAMES 
      cpprest
@@ -100,7 +140,7 @@ index 5c1df3c..da66eb4 100644
      ${CASABLANCA_PKGCONF_LIBRARY_DIRS}
      ${CASABLANCA_DIR}
 diff --git a/Microsoft.WindowsAzure.Storage/src/CMakeLists.txt b/Microsoft.WindowsAzure.Storage/src/CMakeLists.txt
-index b08111f..74ba2fb 100644
+index 59fedac..3737eeb 100644
 --- a/Microsoft.WindowsAzure.Storage/src/CMakeLists.txt
 +++ b/Microsoft.WindowsAzure.Storage/src/CMakeLists.txt
 @@ -2,7 +2,7 @@ include_directories(${Boost_INCLUDE_DIR} ${OPENSSL_INCLUDE_DIR})
@@ -110,9 +150,9 @@ index b08111f..74ba2fb 100644
 -if(UNIX)
 +if(UNIX OR WIN32)
    set(SOURCES
+      xml_wrapper.cpp
       xmlhelpers.cpp
-      response_parsers.cpp
-@@ -64,24 +64,46 @@ if ("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
+@@ -65,24 +65,46 @@ if ("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
  endif()
  if (APPLE)
@@ -139,7 +179,7 @@ index b08111f..74ba2fb 100644
  
  target_link_libraries(${AZURESTORAGE_LIBRARIES})
 +if(WIN32)
-+  target_link_libraries(${AZURESTORAGE_LIBRARY} Ws2_32.lib rpcrt4.lib xmllite.lib bcrypt.lib) 
++  target_link_libraries(${AZURESTORAGE_LIBRARY} Ws2_32.lib rpcrt4.lib xmllite.lib bcrypt.lib)
 +endif()
  
  # Portions specific to azure storage binary versioning and installation.
