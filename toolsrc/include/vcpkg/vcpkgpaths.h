@@ -66,6 +66,7 @@ namespace vcpkg
         fs::path triplets;
         fs::path scripts;
 
+        fs::path tools;
         fs::path buildsystems;
         fs::path buildsystems_msbuild_targets;
 

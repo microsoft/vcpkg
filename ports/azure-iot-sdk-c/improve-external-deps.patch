@@ -26,33 +26,6 @@ index 063733a..71bfc7d 100644
  else()
      add_subdirectory(c-utility)
  
-diff --git a/iothub_client/CMakeLists.txt b/iothub_client/CMakeLists.txt
-index e6d000a..70ade26 100644
---- a/iothub_client/CMakeLists.txt
-+++ b/iothub_client/CMakeLists.txt
-@@ -24,22 +24,6 @@ set(install_staticlibs
-     iothub_client
- )
- 
--add_library(parson
--    ../deps/parson/parson.c
--)
--
--if(MSVC)
--    set_source_files_properties(../deps/parson/parson.c PROPERTIES COMPILE_FLAGS "/wd4244 /wd4232")
--endif()
--
--set(install_staticlibs ${install_staticlibs}
--    parson
--)
--
--set(iothub_client_libs ${iothub_client_libs}
--    parson
--)
--
- if(NOT dont_use_uploadtoblob)
-     set(iothub_client_ll_transport_c_files
-         ${iothub_client_ll_transport_c_files}
 diff --git a/iothub_client/tests/iothubclient_amqp_dt_e2e/CMakeLists.txt b/iothub_client/tests/iothubclient_amqp_dt_e2e/CMakeLists.txt
 index 161872a..d53e111 100644
 --- a/iothub_client/tests/iothubclient_amqp_dt_e2e/CMakeLists.txt
@@ -119,18 +92,3 @@ index 11a9a9a..4097293 100644
  endif()
  
  if (NOT ${ARCHITECTURE} STREQUAL "ARM")
-diff --git a/serializer/CMakeLists.txt b/serializer/CMakeLists.txt
-index 0f6dc74..b4f784c 100644
---- a/serializer/CMakeLists.txt
-+++ b/serializer/CMakeLists.txt
-@@ -87,10 +87,6 @@ else()
- endif()
- setSdkTargetBuildProperties(serializer)
- 
--target_link_libraries(serializer
--    parson
--)
--
- if (NOT ${skip_samples})
- if(WIN32)
-     if (NOT ${ARCHITECTURE} STREQUAL "ARM")

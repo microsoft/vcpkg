@@ -39,6 +39,7 @@ namespace vcpkg
         paths.triplets = paths.root / "triplets";
         paths.scripts = paths.root / "scripts";
 
+        paths.tools = paths.downloads / "tools";
         paths.buildsystems = paths.scripts / "buildsystems";
         paths.buildsystems_msbuild_targets = paths.buildsystems / "msbuild" / "vcpkg.targets";
 
@@ -113,9 +114,11 @@ namespace vcpkg
             return external_toolset;
         }
 
-        // Invariant: toolsets are non-empty and sorted with newest at back()
-        const std::vector<Toolset>& vs_toolsets =
-            this->toolsets.get_lazy([this]() { return Commands::Fetch::find_toolset_instances(*this); });
+#if !defined(_WIN32)
+        Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot build windows triplets from non-windows.");
+#else
+        const std::vector<Toolset>& vs_toolsets = this->toolsets.get_lazy(
+            [this]() { return Commands::Fetch::find_toolset_instances_preferred_first(*this); });
 
         std::vector<const Toolset*> candidates = Util::element_pointers(vs_toolsets);
         const auto tsv = prebuildinfo.platform_toolset.get();
@@ -159,6 +162,8 @@ namespace vcpkg
 
         Checks::check_exit(VCPKG_LINE_INFO, !candidates.empty(), "No suitable Visual Studio instances were found");
         return *candidates.front();
+
+#endif
     }
 
     Files::Filesystem& VcpkgPaths::get_filesystem() const { return Files::get_real_filesystem(); }
