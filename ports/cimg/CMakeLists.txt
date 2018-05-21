@@ -5,7 +5,7 @@ add_library(${PROJECT_NAME} INTERFACE)
 
 target_include_directories(${PROJECT_NAME} INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/CImg>
 )
 
 install(TARGETS ${PROJECT_NAME}
@@ -17,5 +17,10 @@ install(EXPORT CImgExport FILE ${PROJECT_NAME}Config.cmake NAMESPACE ${PROJECT_N
 
 install(
     FILES ${CMAKE_CURRENT_SOURCE_DIR}/CImg.h
-    DESTINATION include
+    DESTINATION include/cimg
+)
+
+install(
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/plugins/
+    DESTINATION include/cimg/plugins
 )
