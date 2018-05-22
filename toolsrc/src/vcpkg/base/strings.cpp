@@ -128,6 +128,12 @@ namespace vcpkg::Strings
 #endif
     }
 
+    bool ends_with(const std::string& s, StringLiteral pattern)
+    {
+        if (s.size() < pattern.size()) return false;
+        return std::equal(s.end() - pattern.size(), s.end(), pattern.c_str(), pattern.c_str() + pattern.size());
+    }
+
     std::string replace_all(std::string&& s, const std::string& search, const std::string& rep)
     {
         size_t pos = 0;
