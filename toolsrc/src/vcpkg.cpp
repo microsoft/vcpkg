@@ -262,9 +262,6 @@ int main(const int argc, const char* const* const argv)
     GlobalState::g_init_console_cp = GetConsoleCP();
     GlobalState::g_init_console_output_cp = GetConsoleOutputCP();
 
-    SetConsoleCP(CP_UTF8);
-    SetConsoleOutputCP(CP_UTF8);
-
     const std::string trimmed_command_line = trim_path_from_command_line(Strings::to_utf8(GetCommandLineW()));
 #endif
 
