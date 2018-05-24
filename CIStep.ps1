@@ -2,7 +2,8 @@
 param(
     [Parameter(Mandatory=$true)][string]$triplet,
     [Parameter(Mandatory=$true)][bool]$binaryCaching,
-    [Parameter(Mandatory=$true)][bool]$miniTest
+    [Parameter(Mandatory=$true)][bool]$miniTest,
+    [Parameter(Mandatory=$true)][bool]$noExclusions = $false
 )
 
 Set-StrictMode -Version Latest
@@ -43,7 +44,13 @@ if($miniTest)
 }
 else
 {
-    ./vcpkg ci $triplet "--x-xunit=$ciXmlPath" --exclude=aws-sdk-cpp,ecm,llvm,catch-classic,libpng-apng,libmariadb,libp7-baical,luajit,mozjpeg | Tee-Object -FilePath "$triplet.txt"
+    $exclusions = "--exclude=aws-sdk-cpp,ecm,llvm,catch-classic,libpng-apng,libmariadb,libp7-baical,luajit,mozjpeg"
+    if ($noExclusions)
+    {
+        $exclusions = ""
+    }
+
+    ./vcpkg ci $triplet "--x-xunit=$ciXmlPath" $exclusions | Tee-Object -FilePath "$triplet.txt"
 }
 
 Pop-Location
