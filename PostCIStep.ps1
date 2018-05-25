@@ -67,8 +67,11 @@ $headersListName = "$baseName-headersList.txt"
 $headersListPath = "$vcpkgRootDir\$headersListName"
 $outputHeadersListPath = "$outputPathRoot\$headersListName"
 $tripletIncludeDir = "$vcpkgRootDir\installed\$triplet\include"
-(Get-ChildItem $tripletIncludeDir -recurse | Where-Object {$_.extension -eq ".h"}).FullName | Out-File $headersListPath
-Copy-Item $headersListPath -Destination $outputHeadersListPath
+if (Test-Path $tripletIncludeDir)
+{
+    (Get-ChildItem $tripletIncludeDir -recurse | Where-Object {$_.extension -eq ".h"}).FullName | Out-File $headersListPath
+    Copy-Item $headersListPath -Destination $outputHeadersListPath
+}
 
 # Delete all logs
 if (Test-Path $vcpkgRootDir/buildtrees)
