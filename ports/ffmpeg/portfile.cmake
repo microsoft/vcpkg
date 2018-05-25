@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ffmpeg-3.3.3)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ffmpeg-4.0)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://ffmpeg.org/releases/ffmpeg-3.3.3.tar.bz2"
-    FILENAME "ffmpeg-3.3.3.tar.bz2"
-    SHA512 1cc63bf73356f4e618c0d3572a216bdf5689f10deff56b4262f6d740b0bee5a4b3eac234f45fca3d4d2da77903a507b4fba725b76d2d2070f31b6dae9e7a2dab
+    URLS "http://ffmpeg.org/releases/ffmpeg-4.0.tar.bz2"
+    FILENAME "ffmpeg-4.0.tar.bz2"
+    SHA512 73224e0f29ce39280a7d67fe9f7ad4a2a7cdb079f1b65916cbac5c0754b995d27d85fee3eb9621b6cba4fbd7a07dcf7b94414a8e5bb9b74738d24af18311d0f2
 )
 
 if (${SOURCE_PATH} MATCHES " ")
@@ -15,8 +15,7 @@ vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/create-lib-libraries.patch
-        ${CMAKE_CURRENT_LIST_DIR}/detect-openssl.patch
-        ${CMAKE_CURRENT_LIST_DIR}/configure_opencv.patch
+        ${CMAKE_CURRENT_LIST_DIR}/openssl_opencv.patch
 )
 
 vcpkg_find_acquire_program(YASM)
@@ -57,12 +56,6 @@ if("ffplay" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-ffplay")
 else()
     set(OPTIONS "${OPTIONS} --disable-ffplay")
-endif()
-
-if("ffserver" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-ffserver")
-else()
-    set(OPTIONS "${OPTIONS} --disable-ffserver")
 endif()
 
 if("ffprobe" IN_LIST FEATURES)
@@ -136,18 +129,6 @@ else()
     set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-cflags=-MT --extra-cxxflags=-MT")
 endif()
 
-message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
-file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc "${CMAKE_CURRENT_LIST_DIR}\\build.sh"
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" # BUILD DIR
-        "${SOURCE_PATH}" # SOURCE DIR
-        "${CURRENT_PACKAGES_DIR}" # PACKAGE DIR
-        "${OPTIONS} ${OPTIONS_RELEASE}"
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-    LOGNAME build-${TARGET_TRIPLET}-rel
-)
-
 message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
 file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 vcpkg_execute_required_process(
@@ -158,6 +139,18 @@ vcpkg_execute_required_process(
         "${OPTIONS} ${OPTIONS_DEBUG}"
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
     LOGNAME build-${TARGET_TRIPLET}-dbg
+)
+
+message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
+file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+vcpkg_execute_required_process(
+    COMMAND ${BASH} --noprofile --norc "${CMAKE_CURRENT_LIST_DIR}\\build.sh"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" # BUILD DIR
+        "${SOURCE_PATH}" # SOURCE DIR
+        "${CURRENT_PACKAGES_DIR}" # PACKAGE DIR
+        "${OPTIONS} ${OPTIONS_RELEASE}"
+    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+    LOGNAME build-${TARGET_TRIPLET}-rel
 )
 
 file(GLOB DEF_FILES ${CURRENT_PACKAGES_DIR}/lib/*.def ${CURRENT_PACKAGES_DIR}/debug/lib/*.def)
