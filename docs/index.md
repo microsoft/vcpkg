@@ -26,6 +26,7 @@ Vcpkg helps you get C and C++ libraries on Windows. This tool and ecosystem are 
 
 ### Blog posts
 - [Announcing a single C++ library manager for Linux, macOS and Windows: Vcpkg](https://blogs.msdn.microsoft.com/vcblog/2018/04/24/announcing-a-single-c-library-manager-for-linux-macos-and-windows-vcpkg/)
+- [Vcpkg: Using multiple enlistments to handle multiple versions of a library](https://blogs.msdn.microsoft.com/vcblog/2017/10/23/vcpkg-using-multiple-enlistments/)
 - [Vcpkg: introducing the export command](https://blogs.msdn.microsoft.com/vcblog/2017/05/03/vcpkg-introducing-export-command/)
 - [Binary Compatibility and Pain-free Upgrade Why Moving to Visual Studio 2017 is almost "too easy"](https://blogs.msdn.microsoft.com/vcblog/2017/03/07/binary-compatibility-and-pain-free-upgrade-why-moving-to-visual-studio-2017-is-almost-too-easy/)
 - [Vcpkg recent enhancements](https://blogs.msdn.microsoft.com/vcblog/2017/02/14/vcpkg-recent-enhancements/)

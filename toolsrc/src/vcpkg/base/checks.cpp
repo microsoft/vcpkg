@@ -16,6 +16,8 @@ namespace vcpkg::Checks
 
         const auto elapsed_us = GlobalState::timer.lock()->microseconds();
 
+        Debug::println("Exiting after %d us", static_cast<int>(elapsed_us));
+
         auto metrics = Metrics::g_metrics.lock();
         metrics->track_metric("elapsed_us", elapsed_us);
         GlobalState::debugging = false;
