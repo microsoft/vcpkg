@@ -1,7 +1,8 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)][string]$triplet,
-    [Parameter(Mandatory=$true)][string]$buildId
+    [Parameter(Mandatory=$true)][string]$buildId,
+    [Parameter(Mandatory=$true)][bool]$recordHeaderList = $false
 )
 
 Set-StrictMode -Version Latest
@@ -22,6 +23,11 @@ if (Test-Path $vcpkgRootDir/buildtrees)
 {
     $logs = Get-ChildItem $vcpkgRootDir/buildtrees/*/* | ? { $_.Extension -eq ".log" }
     $logs | Remove-Item
+}
+
+if ($recordHeaderList)
+{
+    cmd /c dir "$vcpkgRootDir\installed\$triplet\include" *.h /s /B > "$triplet-headersList.txt"
 }
 
 vcpkgRemoveItem "$vcpkgRootDir\installed"
