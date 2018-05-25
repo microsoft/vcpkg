@@ -3,7 +3,7 @@ param(
     [Parameter(Mandatory=$true)][string]$triplet,
     [Parameter(Mandatory=$true)][bool]$binaryCaching,
     [Parameter(Mandatory=$true)][bool]$miniTest,
-    [Parameter(Mandatory=$true)][bool]$noExclusions = $false
+    [Parameter(Mandatory=$true)][bool]$noExclusions
 )
 
 Set-StrictMode -Version Latest

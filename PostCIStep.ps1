@@ -2,7 +2,7 @@
 param(
     [Parameter(Mandatory=$true)][string]$triplet,
     [Parameter(Mandatory=$true)][string]$buildId,
-    [Parameter(Mandatory=$true)][bool]$recordHeaderList = $false
+    [Parameter(Mandatory=$true)][bool]$recordHeaderList
 )
 
 Set-StrictMode -Version Latest
