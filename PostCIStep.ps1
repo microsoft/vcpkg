@@ -1,8 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)][string]$triplet,
-    [Parameter(Mandatory=$true)][string]$buildId,
-    [Parameter(Mandatory=$true)][bool]$recordHeaderList
+    [Parameter(Mandatory=$true)][string]$buildId
 )
 
 Set-StrictMode -Version Latest
@@ -64,14 +63,11 @@ else
     Write-Host "$ciXmlPath not found, skip copying it to $outputXmlPath."
 }
 
-if ($recordHeaderList)
-{
-    $headersListName = "$baseName-headersList.txt"
-    $headersListPath = "$vcpkgRootDir\$headersListName"
-    $outputHeadersListPath = "$outputPathRoot\$headersListName"
-    cmd /c dir "$vcpkgRootDir\installed\$triplet\include" *.h /s /B > $headersListPath
-    Copy-Item $headersListPath -Destination $outputHeadersListPath
-}
+$headersListName = "$baseName-headersList.txt"
+$headersListPath = "$vcpkgRootDir\$headersListName"
+$outputHeadersListPath = "$outputPathRoot\$headersListName"
+cmd /c dir "$vcpkgRootDir\installed\$triplet\include" *.h /s /B > $headersListPath
+Copy-Item $headersListPath -Destination $outputHeadersListPath
 
 
 # Delete all logs
