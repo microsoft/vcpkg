@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include <vcpkg/base/checks.h>
+#include <vcpkg/base/sortedvector.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
@@ -19,6 +20,7 @@ namespace vcpkg::Commands::Fetch
         fs::path exe_path;
         std::string url;
         fs::path download_path;
+        bool is_archive;
         fs::path tool_dir_path;
         std::string sha512;
     };
@@ -41,20 +43,85 @@ namespace vcpkg::Commands::Fetch
         return result;
     }
 
-    static Optional<std::string> extract_string_between_delimiters(const std::string& input,
-                                                                   const std::string& left_delim,
-                                                                   const std::string& right_delim,
-                                                                   const size_t& starting_offset = 0)
+    struct VcpkgStringRange
     {
-        const size_t from = input.find(left_delim, starting_offset);
-        if (from == std::string::npos) return nullopt;
+        VcpkgStringRange() = default;
 
-        const size_t substring_start = from + left_delim.length();
+        // Implicit by design
+        VcpkgStringRange(const std::string& s) : begin(s.cbegin()), end(s.cend()) {}
 
-        const size_t to = input.find(right_delim, substring_start);
-        if (from == std::string::npos) return nullopt;
+        VcpkgStringRange(const std::string::const_iterator begin, const std::string::const_iterator end)
+            : begin(begin), end(end)
+        {
+        }
 
-        return input.substr(substring_start, to - substring_start);
+        std::string::const_iterator begin;
+        std::string::const_iterator end;
+
+        std::string to_string() const { return std::string(this->begin, this->end); }
+    };
+
+    static std::vector<VcpkgStringRange> find_all_enclosed(const VcpkgStringRange& input,
+                                                           const std::string& left_delim,
+                                                           const std::string& right_delim)
+    {
+        std::string::const_iterator it_left = input.begin;
+        std::string::const_iterator it_right = input.begin;
+
+        std::vector<VcpkgStringRange> output;
+
+        while (true)
+        {
+            it_left = std::search(it_right, input.end, left_delim.cbegin(), left_delim.cend());
+            if (it_left == input.end) break;
+
+            it_left += left_delim.length();
+
+            it_right = std::search(it_left, input.end, right_delim.cbegin(), right_delim.cend());
+            if (it_right == input.end) break;
+
+            output.emplace_back(it_left, it_right);
+
+            ++it_right;
+        }
+
+        return output;
+    }
+
+    static VcpkgStringRange find_exactly_one_enclosed(const VcpkgStringRange& input,
+                                                      const std::string& left_tag,
+                                                      const std::string& right_tag)
+    {
+        std::vector<VcpkgStringRange> result = find_all_enclosed(input, left_tag, right_tag);
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           result.size() == 1,
+                           "Found %d sets of %s.*%s but expected exactly 1, in block:\n%s",
+                           result.size(),
+                           left_tag,
+                           right_tag,
+                           input);
+        return std::move(result.front());
+    }
+
+    static Optional<VcpkgStringRange> find_at_most_one_enclosed(const VcpkgStringRange& input,
+                                                                const std::string& left_tag,
+                                                                const std::string& right_tag)
+    {
+        std::vector<VcpkgStringRange> result = find_all_enclosed(input, left_tag, right_tag);
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           result.size() <= 1,
+                           "Found %d sets of %s.*%s but expected at most 1, in block:\n%s",
+                           result.size(),
+                           left_tag,
+                           right_tag,
+                           input);
+
+        if (result.empty())
+        {
+            return nullopt;
+        }
+
+        return result.front();
     }
 
     static ToolData parse_tool_data_from_xml(const VcpkgPaths& paths, const std::string& tool)
@@ -72,21 +139,6 @@ namespace vcpkg::Commands::Fetch
 #if defined(_WIN32) || defined(__APPLE__) || defined(__linux__)
         static const std::string XML_VERSION = "2";
         static const fs::path XML_PATH = paths.scripts / "vcpkgTools.xml";
-
-        const auto get_string_inside_tags =
-            [](const std::string& input, const std::string& left_delim, const std::string& right_delim) -> std::string {
-            Optional<std::string> result = extract_string_between_delimiters(input, left_delim, right_delim);
-            Checks::check_exit(VCPKG_LINE_INFO,
-                               result.has_value(),
-                               "Could not find tag <%s>.*<%s> in %s",
-                               left_delim,
-                               right_delim,
-                               XML_PATH.generic_string());
-
-            auto r = *result.get();
-            return Strings::trim(std::move(r));
-        };
-
         static const std::regex XML_VERSION_REGEX{R"###(<tools[\s]+version="([^"]+)">)###"};
         static const std::string XML = paths.get_filesystem().read_contents(XML_PATH).value_or_exit(VCPKG_LINE_INFO);
         std::smatch match_xml_version;
@@ -112,14 +164,14 @@ namespace vcpkg::Commands::Fetch
                            tool,
                            XML_PATH.generic_string());
 
-        const std::string tool_data = get_string_inside_tags(XML, match_tool_entry[0], R"(</tool>)");
-
-        const std::string version_as_string = get_string_inside_tags(tool_data, "<version>", R"(</version>)");
+        const std::string tool_data = find_exactly_one_enclosed(XML, match_tool_entry[0], "</tool>").to_string();
+        const std::string version_as_string =
+            find_exactly_one_enclosed(tool_data, "<version>", "</version>").to_string();
         const std::string exe_relative_path =
-            get_string_inside_tags(tool_data, "<exeRelativePath>", R"(</exeRelativePath>)");
-        const std::string url = get_string_inside_tags(tool_data, "<url>", R"(</url>)");
-        const std::string sha512 = get_string_inside_tags(tool_data, "<sha512>", R"(</sha512>)");
-        auto archive_name = extract_string_between_delimiters(tool_data, "<archiveName>", R"(</archiveName>)");
+            find_exactly_one_enclosed(tool_data, "<exeRelativePath>", "</exeRelativePath>").to_string();
+        const std::string url = find_exactly_one_enclosed(tool_data, "<url>", "</url>").to_string();
+        const std::string sha512 = find_exactly_one_enclosed(tool_data, "<sha512>", "</sha512>").to_string();
+        auto archive_name = find_at_most_one_enclosed(tool_data, "<archiveName>", "</archiveName>");
 
         const Optional<std::array<int, 3>> version = parse_version_string(version_as_string);
         Checks::check_exit(VCPKG_LINE_INFO,
@@ -129,13 +181,14 @@ namespace vcpkg::Commands::Fetch
                            version_as_string);
 
         const std::string tool_dir_name = Strings::format("%s-%s-%s", tool, version_as_string, OS_STRING);
-        const fs::path tool_dir_path = paths.downloads / "tools" / tool_dir_name;
+        const fs::path tool_dir_path = paths.tools / tool_dir_name;
         const fs::path exe_path = tool_dir_path / exe_relative_path;
 
         return ToolData{*version.get(),
                         exe_path,
                         url,
-                        paths.downloads / archive_name.value_or(exe_relative_path),
+                        paths.downloads / archive_name.value_or(exe_relative_path).to_string(),
+                        archive_name.has_value(),
                         tool_dir_path,
                         sha512};
 #endif
@@ -163,51 +216,87 @@ namespace vcpkg::Commands::Fetch
                  actual_version[2] >= expected_version[2]));
     }
 
-    static Optional<fs::path> find_if_has_equal_or_greater_version(const std::vector<fs::path>& candidate_paths,
+    static Optional<fs::path> find_if_has_equal_or_greater_version(Files::Filesystem& fs,
+                                                                   const std::vector<fs::path>& candidate_paths,
                                                                    const std::string& version_check_arguments,
                                                                    const std::array<int, 3>& expected_version)
     {
-        auto it = Util::find_if(candidate_paths, [&](const fs::path& p) {
+        const auto it = Util::find_if(candidate_paths, [&](const fs::path& p) {
+            if (!fs.exists(p)) return false;
             const std::string cmd = Strings::format(R"("%s" %s)", p.u8string(), version_check_arguments);
             return exists_and_has_equal_or_greater_version(cmd, expected_version);
         });
 
         if (it != candidate_paths.cend())
         {
-            return std::move(*it);
+            return *it;
         }
 
         return nullopt;
     }
 
-    static std::vector<std::string> keep_data_lines(const std::string& data_blob)
-    {
-        static const std::regex DATA_LINE_REGEX(R"(<sol>::(.+?)(?=::<eol>))");
-
-        std::vector<std::string> data_lines;
-
-        const std::sregex_iterator it(data_blob.cbegin(), data_blob.cend(), DATA_LINE_REGEX);
-        const std::sregex_iterator end;
-        for (std::sregex_iterator i = it; i != end; ++i)
-        {
-            const std::smatch match = *i;
-            data_lines.push_back(match[1].str());
-        }
-
-        return data_lines;
-    }
-
-#if !defined(_WIN32)
     static void extract_archive(const VcpkgPaths& paths, const fs::path& archive, const fs::path& to_path)
     {
         Files::Filesystem& fs = paths.get_filesystem();
         const fs::path to_path_partial = to_path.u8string() + ".partial";
 
         std::error_code ec;
+        fs.remove_all(to_path, ec);
         fs.remove_all(to_path_partial, ec);
         fs.create_directories(to_path_partial, ec);
-
         const auto ext = archive.extension();
+#if defined(_WIN32)
+        if (ext == ".nupkg")
+        {
+            static bool recursion_limiter_sevenzip_old = false;
+            Checks::check_exit(VCPKG_LINE_INFO, !recursion_limiter_sevenzip_old);
+            recursion_limiter_sevenzip_old = true;
+            const auto nuget_exe = get_tool_path(paths, Tools::NUGET);
+
+            const std::string stem = archive.stem().u8string();
+            // assuming format of [name].[version in the form d.d.d]
+            // This assumption may not always hold
+            std::smatch match;
+            const bool has_match = std::regex_match(stem, match, std::regex{R"###(^(.+)\.(\d+\.\d+\.\d+)$)###"});
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               has_match,
+                               "Could not deduce nuget id and version from filename: %s",
+                               archive.u8string());
+
+            const std::string nugetid = match[1];
+            const std::string version = match[2];
+
+            const auto code_and_output = System::cmd_execute_and_capture_output(Strings::format(
+                R"("%s" install %s -Version %s -OutputDirectory "%s" -Source "%s" -nocache -DirectDownload -NonInteractive -ForceEnglishOutput -PackageSaveMode nuspec)",
+                nuget_exe.u8string(),
+                nugetid,
+                version,
+                to_path_partial.u8string(),
+                paths.downloads.u8string()));
+
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               code_and_output.exit_code == 0,
+                               "Failed to extract '%s' with message:\n%s",
+                               archive.u8string(),
+                               code_and_output.output);
+            recursion_limiter_sevenzip_old = false;
+        }
+        else
+        {
+            static bool recursion_limiter_sevenzip = false;
+            Checks::check_exit(VCPKG_LINE_INFO, !recursion_limiter_sevenzip);
+            recursion_limiter_sevenzip = true;
+            const auto seven_zip = get_tool_path(paths, Tools::SEVEN_ZIP);
+            const auto code_and_output = System::cmd_execute_and_capture_output(Strings::format(
+                R"("%s" x "%s" -o"%s" -y)", seven_zip.u8string(), archive.u8string(), to_path_partial.u8string()));
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               code_and_output.exit_code == 0,
+                               "7zip failed while extracting '%s' with message:\n%s",
+                               archive.u8string(),
+                               code_and_output.output);
+            recursion_limiter_sevenzip = false;
+        }
+#else
         if (ext == ".gz" && ext.extension() != ".tar")
         {
             const auto code = System::cmd_execute(
@@ -224,16 +313,23 @@ namespace vcpkg::Commands::Fetch
         {
             Checks::exit_with_message(VCPKG_LINE_INFO, "Unexpected archive extension: %s", ext.u8string());
         }
+#endif
 
-        fs.rename(to_path_partial, to_path);
+        fs.rename(to_path_partial, to_path, ec);
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           !ec,
+                           "Failed to do post-extract rename-in-place.\nfs.rename(%s, %s, %s)",
+                           to_path_partial.u8string(),
+                           to_path.u8string(),
+                           ec.message());
     }
 
-    static void verify_hash(const VcpkgPaths& paths,
+    static void verify_hash(const Files::Filesystem& fs,
                             const std::string& url,
                             const fs::path& path,
                             const std::string& sha512)
     {
-        const std::string actual_hash = Hash::get_file_hash(paths, path, "SHA512");
+        const std::string actual_hash = Hash::get_file_hash(fs, path, "SHA512");
         Checks::check_exit(VCPKG_LINE_INFO,
                            sha512 == actual_hash,
                            "File does not have the expected hash:\n"
@@ -247,24 +343,119 @@ namespace vcpkg::Commands::Fetch
                            actual_hash);
     }
 
-    static void download_file(const VcpkgPaths& paths,
+#if defined(_WIN32)
+    static void winhttp_download_file(Files::Filesystem& fs,
+                                      CStringView target_file_path,
+                                      CStringView hostname,
+                                      CStringView url_path)
+    {
+        // Make sure the directories are present, otherwise fopen_s fails
+        const auto dir = fs::path(target_file_path.c_str()).parent_path();
+        std::error_code ec;
+        fs.create_directories(dir, ec);
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directories %s", dir.u8string());
+
+        FILE* f = nullptr;
+        const errno_t err = fopen_s(&f, target_file_path.c_str(), "wb");
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           !err,
+                           "Could not download https://%s%s. Failed to open file %s. Error code was %s",
+                           hostname,
+                           url_path,
+                           target_file_path,
+                           std::to_string(err));
+
+        auto hSession = WinHttpOpen(
+            L"vcpkg/1.0", WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
+        Checks::check_exit(VCPKG_LINE_INFO, hSession, "WinHttpOpen() failed: %d", GetLastError());
+
+        // Use Windows 10 defaults on Windows 7
+        DWORD secure_protocols(WINHTTP_FLAG_SECURE_PROTOCOL_SSL3 | WINHTTP_FLAG_SECURE_PROTOCOL_TLS1 |
+                               WINHTTP_FLAG_SECURE_PROTOCOL_TLS1_1 | WINHTTP_FLAG_SECURE_PROTOCOL_TLS1_2);
+        WinHttpSetOption(hSession, WINHTTP_OPTION_SECURE_PROTOCOLS, &secure_protocols, sizeof(secure_protocols));
+
+        // Specify an HTTP server.
+        auto hConnect = WinHttpConnect(hSession, Strings::to_utf16(hostname).c_str(), INTERNET_DEFAULT_HTTPS_PORT, 0);
+        Checks::check_exit(VCPKG_LINE_INFO, hConnect, "WinHttpConnect() failed: %d", GetLastError());
+
+        // Create an HTTP request handle.
+        auto hRequest = WinHttpOpenRequest(hConnect,
+                                           L"GET",
+                                           Strings::to_utf16(url_path).c_str(),
+                                           nullptr,
+                                           WINHTTP_NO_REFERER,
+                                           WINHTTP_DEFAULT_ACCEPT_TYPES,
+                                           WINHTTP_FLAG_SECURE);
+        Checks::check_exit(VCPKG_LINE_INFO, hRequest, "WinHttpOpenRequest() failed: %d", GetLastError());
+
+        // Send a request.
+        auto bResults =
+            WinHttpSendRequest(hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, WINHTTP_NO_REQUEST_DATA, 0, 0, 0);
+        Checks::check_exit(VCPKG_LINE_INFO, bResults, "WinHttpSendRequest() failed: %d", GetLastError());
+
+        // End the request.
+        bResults = WinHttpReceiveResponse(hRequest, NULL);
+        Checks::check_exit(VCPKG_LINE_INFO, bResults, "WinHttpReceiveResponse() failed: %d", GetLastError());
+
+        std::vector<char> buf;
+
+        size_t total_downloaded_size = 0;
+        DWORD dwSize = 0;
+        do
+        {
+            DWORD downloaded_size = 0;
+            bResults = WinHttpQueryDataAvailable(hRequest, &dwSize);
+            Checks::check_exit(VCPKG_LINE_INFO, bResults, "WinHttpQueryDataAvailable() failed: %d", GetLastError());
+
+            if (buf.size() < dwSize) buf.resize(dwSize * 2);
+
+            bResults = WinHttpReadData(hRequest, (LPVOID)buf.data(), dwSize, &downloaded_size);
+            Checks::check_exit(VCPKG_LINE_INFO, bResults, "WinHttpReadData() failed: %d", GetLastError());
+            fwrite(buf.data(), 1, downloaded_size, f);
+
+            total_downloaded_size += downloaded_size;
+        } while (dwSize > 0);
+
+        WinHttpCloseHandle(hSession);
+        WinHttpCloseHandle(hConnect);
+        WinHttpCloseHandle(hRequest);
+        fflush(f);
+        fclose(f);
+    }
+#endif
+
+    static void download_file(Files::Filesystem& fs,
                               const std::string& url,
                               const fs::path& download_path,
                               const std::string& sha512)
     {
-        Files::Filesystem& fs = paths.get_filesystem();
         const std::string download_path_part = download_path.u8string() + ".part";
         std::error_code ec;
+        fs.remove(download_path, ec);
         fs.remove(download_path_part, ec);
+#if defined(_WIN32)
+        auto url_no_proto = url.substr(8); // drop https://
+        auto path_begin = Util::find(url_no_proto, '/');
+        std::string hostname(url_no_proto.begin(), path_begin);
+        std::string path(path_begin, url_no_proto.end());
+
+        winhttp_download_file(fs, download_path_part.c_str(), hostname, path);
+#else
         const auto code = System::cmd_execute(
             Strings::format(R"(curl -L '%s' --create-dirs --output '%s')", url, download_path_part));
         Checks::check_exit(VCPKG_LINE_INFO, code == 0, "Could not download %s", url);
+#endif
 
-        verify_hash(paths, url, download_path_part, sha512);
-        fs.rename(download_path_part, download_path);
+        verify_hash(fs, url, download_path_part, sha512);
+        fs.rename(download_path_part, download_path, ec);
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           !ec,
+                           "Failed to do post-download rename-in-place.\nfs.rename(%s, %s, %s)",
+                           download_path_part,
+                           download_path.u8string(),
+                           ec.message());
     }
 
-#endif
     static fs::path fetch_tool(const VcpkgPaths& paths, const std::string& tool_name, const ToolData& tool_data)
     {
         const std::array<int, 3>& version = tool_data.version;
@@ -280,50 +471,37 @@ namespace vcpkg::Commands::Fetch
                         version_as_string,
                         tool_name,
                         version_as_string);
-#if defined(_WIN32)
-        const fs::path script = paths.scripts / "fetchtool.ps1";
-        const std::string title = Strings::format(
-            "Fetching %s version %s (No sufficient installed version was found)", tool_name, version_as_string);
-        const System::PowershellParameter tool_param("tool", tool_name);
-        const std::string output = System::powershell_execute_and_capture_output(title, script, {tool_param});
-
-        const std::vector<std::string> tool_path = keep_data_lines(output);
-        Checks::check_exit(VCPKG_LINE_INFO, tool_path.size() == 1, "Expected tool path, but got %s", output);
-
-        const fs::path actual_downloaded_path = Strings::trim(std::string{tool_path.at(0)});
-        const fs::path& expected_downloaded_path = tool_data.exe_path;
-        std::error_code ec;
-        const auto eq = fs::stdfs::equivalent(expected_downloaded_path, actual_downloaded_path, ec);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           eq && !ec,
-                           "Expected tool downloaded path to be %s, but was %s",
-                           expected_downloaded_path.u8string(),
-                           actual_downloaded_path.u8string());
-        return actual_downloaded_path;
-#else
-        const auto& fs = paths.get_filesystem();
+        auto& fs = paths.get_filesystem();
         if (!fs.exists(tool_data.download_path))
         {
             System::println("Downloading %s...", tool_name);
-            download_file(paths, tool_data.url, tool_data.download_path, tool_data.sha512);
+            download_file(fs, tool_data.url, tool_data.download_path, tool_data.sha512);
             System::println("Downloading %s... done.", tool_name);
         }
         else
         {
-            verify_hash(paths, tool_data.url, tool_data.download_path, tool_data.sha512);
+            verify_hash(fs, tool_data.url, tool_data.download_path, tool_data.sha512);
         }
 
-        System::println("Extracting %s...", tool_name);
-        extract_archive(paths, tool_data.download_path, tool_data.tool_dir_path);
-        System::println("Extracting %s... done.", tool_name);
+        if (tool_data.is_archive)
+        {
+            System::println("Extracting %s...", tool_name);
+            extract_archive(paths, tool_data.download_path, tool_data.tool_dir_path);
+            System::println("Extracting %s... done.", tool_name);
+        }
+        else
+        {
+            std::error_code ec;
+            fs.create_directories(tool_data.exe_path.parent_path(), ec);
+            fs.rename(tool_data.download_path, tool_data.exe_path, ec);
+        }
 
         Checks::check_exit(VCPKG_LINE_INFO,
                            fs.exists(tool_data.exe_path),
-                           "Expected %s to exist after extracting",
-                           tool_data.exe_path);
+                           "Expected %s to exist after fetching",
+                           tool_data.exe_path.u8string());
 
         return tool_data.exe_path;
-#endif
     }
 
     static fs::path get_cmake_path(const VcpkgPaths& paths)
@@ -345,8 +523,8 @@ namespace vcpkg::Commands::Fetch
         const auto& program_files_32_bit = System::get_program_files_32_bit();
         if (const auto pf = program_files_32_bit.get()) candidate_paths.push_back(*pf / "CMake" / "bin" / "cmake.exe");
 
-        const Optional<fs::path> path =
-            find_if_has_equal_or_greater_version(candidate_paths, VERSION_CHECK_ARGUMENTS, TOOL_DATA.version);
+        const Optional<fs::path> path = find_if_has_equal_or_greater_version(
+            paths.get_filesystem(), candidate_paths, VERSION_CHECK_ARGUMENTS, TOOL_DATA.version);
         if (const auto p = path.get())
         {
             return *p;
@@ -378,7 +556,8 @@ namespace vcpkg::Commands::Fetch
         const std::vector<fs::path> from_path = Files::find_from_PATH("ninja");
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
 
-        auto path = find_if_has_equal_or_greater_version(candidate_paths, "--version", TOOL_DATA.version);
+        auto path = find_if_has_equal_or_greater_version(
+            paths.get_filesystem(), candidate_paths, "--version", TOOL_DATA.version);
         if (const auto p = path.get())
         {
             return *p;
@@ -396,7 +575,8 @@ namespace vcpkg::Commands::Fetch
         const std::vector<fs::path> from_path = Files::find_from_PATH("nuget");
         candidate_paths.insert(candidate_paths.end(), from_path.cbegin(), from_path.cend());
 
-        auto path = find_if_has_equal_or_greater_version(candidate_paths, "", TOOL_DATA.version);
+        auto path =
+            find_if_has_equal_or_greater_version(paths.get_filesystem(), candidate_paths, "", TOOL_DATA.version);
         if (const auto p = path.get())
         {
             return *p;
@@ -422,8 +602,8 @@ namespace vcpkg::Commands::Fetch
         const auto& program_files_32_bit = System::get_program_files_32_bit();
         if (const auto pf = program_files_32_bit.get()) candidate_paths.push_back(*pf / "git" / "cmd" / "git.exe");
 
-        const Optional<fs::path> path =
-            find_if_has_equal_or_greater_version(candidate_paths, VERSION_CHECK_ARGUMENTS, TOOL_DATA.version);
+        const Optional<fs::path> path = find_if_has_equal_or_greater_version(
+            paths.get_filesystem(), candidate_paths, VERSION_CHECK_ARGUMENTS, TOOL_DATA.version);
         if (const auto p = path.get())
         {
             return *p;
@@ -448,8 +628,8 @@ namespace vcpkg::Commands::Fetch
         // candidate_paths.push_back(fs::path(System::get_environment_variable("HOMEDRIVE").value_or("C:")) / "Qt" /
         // "QtIFW-3.1.0" / "bin" / "installerbase.exe");
 
-        const Optional<fs::path> path =
-            find_if_has_equal_or_greater_version(candidate_paths, VERSION_CHECK_ARGUMENTS, TOOL_DATA.version);
+        const Optional<fs::path> path = find_if_has_equal_or_greater_version(
+            paths.get_filesystem(), candidate_paths, VERSION_CHECK_ARGUMENTS, TOOL_DATA.version);
         if (const auto p = path.get())
         {
             return *p;
@@ -460,48 +640,114 @@ namespace vcpkg::Commands::Fetch
 
     struct VisualStudioInstance
     {
+        enum class ReleaseType
+        {
+            STABLE,
+            PRERELEASE,
+            LEGACY
+        };
+
+        static bool preferred_first_comparator(const VisualStudioInstance& left, const VisualStudioInstance& right)
+        {
+            const auto get_preference_weight = [](const ReleaseType& type) -> int {
+                switch (type)
+                {
+                    case ReleaseType::STABLE: return 3;
+                    case ReleaseType::PRERELEASE: return 2;
+                    case ReleaseType::LEGACY: return 1;
+                    default: Checks::unreachable(VCPKG_LINE_INFO);
+                }
+            };
+
+            if (left.release_type != right.release_type)
+            {
+                return get_preference_weight(left.release_type) > get_preference_weight(right.release_type);
+            }
+
+            return left.version > right.version;
+        }
+
+        VisualStudioInstance(fs::path&& root_path, std::string&& version, const ReleaseType& release_type)
+            : root_path(std::move(root_path)), version(std::move(version)), release_type(release_type)
+        {
+        }
+
         fs::path root_path;
         std::string version;
-        std::string release_type;
-        std::string preference_weight; // Mostly unused, just for verification that order is as intended
+        ReleaseType release_type;
 
         std::string major_version() const { return version.substr(0, 2); }
     };
 
     static std::vector<VisualStudioInstance> get_visual_studio_instances(const VcpkgPaths& paths)
     {
-        const fs::path script = paths.scripts / "findVisualStudioInstallationInstances.ps1";
-        const std::string output =
-            System::powershell_execute_and_capture_output("Detecting Visual Studio instances", script);
-
-        const std::vector<std::string> instances_as_strings = keep_data_lines(output);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           !instances_as_strings.empty(),
-                           "Could not detect any Visual Studio instances.\n"
-                           "Powershell script:\n"
-                           "    %s\n"
-                           "returned:\n"
-                           "%s",
-                           script.generic_string(),
-                           output);
-
+        const auto& fs = paths.get_filesystem();
         std::vector<VisualStudioInstance> instances;
-        for (const std::string& instance_as_string : instances_as_strings)
+
+        const auto& program_files_32_bit = System::get_program_files_32_bit().value_or_exit(VCPKG_LINE_INFO);
+
+        // Instances from vswhere
+        const fs::path vswhere_exe = program_files_32_bit / "Microsoft Visual Studio" / "Installer" / "vswhere.exe";
+        if (fs.exists(vswhere_exe))
         {
-            const std::vector<std::string> split = Strings::split(instance_as_string, "::");
+            const auto code_and_output = System::cmd_execute_and_capture_output(
+                Strings::format(R"("%s" -prerelease -legacy -products * -format xml)", vswhere_exe.u8string()));
             Checks::check_exit(VCPKG_LINE_INFO,
-                               split.size() == 4,
-                               "Invalid Visual Studio instance format.\n"
-                               "Expected: PreferenceWeight::ReleaseType::Version::PathToVisualStudio\n"
-                               "Actual  : %s\n",
-                               instance_as_string);
-            instances.push_back({split.at(3), split.at(2), split.at(1), split.at(0)});
+                               code_and_output.exit_code == 0,
+                               "Running vswhere.exe failed with message:\n%s",
+                               code_and_output.output);
+
+            const auto instance_entries = find_all_enclosed(code_and_output.output, "<instance>", "</instance>");
+            for (const VcpkgStringRange& instance : instance_entries)
+            {
+                auto maybe_is_prerelease = find_at_most_one_enclosed(instance, "<isPrerelease>", "</isPrerelease>");
+
+                VisualStudioInstance::ReleaseType release_type = VisualStudioInstance::ReleaseType::LEGACY;
+                if (const auto p = maybe_is_prerelease.get())
+                {
+                    const auto s = p->to_string();
+                    if (s == "0")
+                        release_type = VisualStudioInstance::ReleaseType::STABLE;
+                    else if (s == "1")
+                        release_type = VisualStudioInstance::ReleaseType::PRERELEASE;
+                    else
+                        Checks::unreachable(VCPKG_LINE_INFO);
+                }
+
+                instances.emplace_back(
+                    find_exactly_one_enclosed(instance, "<installationPath>", "</installationPath>").to_string(),
+                    find_exactly_one_enclosed(instance, "<installationVersion>", "</installationVersion>").to_string(),
+                    release_type);
+            }
         }
+
+        const auto append_if_has_cl = [&](fs::path&& path_root) {
+            const auto cl_exe = path_root / "VC" / "bin" / "cl.exe";
+            const auto vcvarsall_bat = path_root / "VC" / "vcvarsall.bat";
+
+            if (fs.exists(cl_exe) && fs.exists(vcvarsall_bat))
+                instances.emplace_back(std::move(path_root), "14.0", VisualStudioInstance::ReleaseType::LEGACY);
+        };
+
+        // VS2015 instance from environment variable
+        auto maybe_vs140_comntools = System::get_environment_variable("vs140comntools");
+        if (const auto path_as_string = maybe_vs140_comntools.get())
+        {
+            // We want lexically_normal(), but it is not available
+            // Correct root path might be 2 or 3 levels up, depending on if the path has trailing backslash. Try both.
+            auto common7_tools = fs::path{*path_as_string};
+            append_if_has_cl(fs::path{*path_as_string}.parent_path().parent_path());
+            append_if_has_cl(fs::path{*path_as_string}.parent_path().parent_path().parent_path());
+        }
+
+        // VS2015 instance from Program Files
+        append_if_has_cl(program_files_32_bit / "Microsoft Visual Studio 14.0");
 
         return instances;
     }
 
-    std::vector<Toolset> find_toolset_instances(const VcpkgPaths& paths)
+#if defined(_WIN32)
+    std::vector<Toolset> find_toolset_instances_preferred_first(const VcpkgPaths& paths)
     {
         using CPU = System::CPUArchitecture;
 
@@ -513,12 +759,14 @@ namespace vcpkg::Commands::Fetch
         std::vector<Toolset> found_toolsets;
         std::vector<Toolset> excluded_toolsets;
 
-        const std::vector<VisualStudioInstance> vs_instances = get_visual_studio_instances(paths);
-        const bool v140_is_available = Util::find_if(vs_instances, [&](const VisualStudioInstance& vs_instance) {
-                                           return vs_instance.major_version() == "14";
-                                       }) != vs_instances.cend();
+        const SortedVector<VisualStudioInstance> sorted{get_visual_studio_instances(paths),
+                                                        VisualStudioInstance::preferred_first_comparator};
 
-        for (const VisualStudioInstance& vs_instance : vs_instances)
+        const bool v140_is_available = Util::find_if(sorted, [&](const VisualStudioInstance& vs_instance) {
+                                           return vs_instance.major_version() == "14";
+                                       }) != sorted.end();
+
+        for (const VisualStudioInstance& vs_instance : sorted)
         {
             const std::string major_version = vs_instance.major_version();
             if (major_version == "15")
@@ -568,7 +816,7 @@ namespace vcpkg::Commands::Fetch
                     paths_examined.push_back(dumpbin_path);
                     if (fs.exists(dumpbin_path))
                     {
-                        const Toolset v141toolset = Toolset{
+                        const Toolset v141toolset{
                             vs_instance.root_path, dumpbin_path, vcvarsall_bat, {}, V_141, supported_architectures};
 
                         auto english_language_pack = dumpbin_path.parent_path() / "1033";
@@ -583,12 +831,12 @@ namespace vcpkg::Commands::Fetch
 
                         if (v140_is_available)
                         {
-                            const Toolset v140toolset = Toolset{vs_instance.root_path,
-                                                                dumpbin_path,
-                                                                vcvarsall_bat,
-                                                                {"-vcvars_ver=14.0"},
-                                                                V_140,
-                                                                supported_architectures};
+                            const Toolset v140toolset{vs_instance.root_path,
+                                                      dumpbin_path,
+                                                      vcvarsall_bat,
+                                                      {"-vcvars_ver=14.0"},
+                                                      V_140,
+                                                      supported_architectures};
                             found_toolsets.push_back(v140toolset);
                         }
 
@@ -672,6 +920,7 @@ namespace vcpkg::Commands::Fetch
 
         return found_toolsets;
     }
+#endif
 
     fs::path get_tool_path(const VcpkgPaths& paths, const std::string& tool)
     {

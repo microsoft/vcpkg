@@ -40,8 +40,9 @@ namespace vcpkg::System
         if (bytes == 0) std::abort();
         return fs::path(buf, buf + bytes);
 #elif defined(__APPLE__)
-        uint32_t size = 1024 * 32;
-        char buf[size] = {};
+        static constexpr const uint32_t buff_size = 1024 * 32;
+        uint32_t size = buff_size;
+        char buf[buff_size] = {};
         bool result = _NSGetExecutablePath(buf, &size);
         Checks::check_exit(VCPKG_LINE_INFO, result != -1, "Could not determine current executable path.");
         std::unique_ptr<char> canonicalPath(realpath(buf, NULL));
@@ -128,33 +129,9 @@ namespace vcpkg::System
             R"("%s" %s -P "%s")", cmake_exe.u8string(), cmd_cmake_pass_variables, cmake_script.generic_u8string());
     }
 
-    PowershellParameter::PowershellParameter(const CStringView varname, const char* varvalue)
-        : s(Strings::format(R"(-%s '%s')", varname, varvalue))
-    {
-    }
-
-    PowershellParameter::PowershellParameter(const CStringView varname, const std::string& varvalue)
-        : PowershellParameter(varname, varvalue.c_str())
-    {
-    }
-
-    PowershellParameter::PowershellParameter(const CStringView varname, const fs::path& path)
-        : PowershellParameter(varname, path.generic_u8string())
-    {
-    }
-
-    static std::string make_powershell_cmd(const fs::path& script_path,
-                                           const std::vector<PowershellParameter>& parameters)
-    {
-        const std::string args = Strings::join(" ", parameters, [](auto&& v) { return v.s; });
-
-        // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
-        return Strings::format(
-            R"(powershell -NoProfile -ExecutionPolicy Bypass -Command "& {& '%s' %s}")", script_path.u8string(), args);
-    }
-
     int cmd_execute_clean(const CStringView cmd_line, const std::unordered_map<std::string, std::string>& extra_env)
     {
+        auto timer = Chrono::ElapsedTimer::create_started();
 #if defined(_WIN32)
         static const std::string SYSTEM_ROOT = get_environment_variable("SystemRoot").value_or_exit(VCPKG_LINE_INFO);
         static const std::string SYSTEM_32 = SYSTEM_ROOT + R"(\system32)";
@@ -271,7 +248,7 @@ namespace vcpkg::System
         DWORD exit_code = 0;
         GetExitCodeProcess(process_info.hProcess, &exit_code);
 
-        Debug::println("CreateProcessW() returned %lu", exit_code);
+        Debug::println("CreateProcessW() returned %lu after %d us", exit_code, static_cast<int>(timer.microseconds()));
         return static_cast<int>(exit_code);
 #else
         Debug::println("system(%s)", cmd_line.c_str());
@@ -367,71 +344,6 @@ namespace vcpkg::System
 
         return {ec, output};
 #endif
-    }
-
-    void powershell_execute(const std::string& title,
-                            const fs::path& script_path,
-                            const std::vector<PowershellParameter>& parameters)
-    {
-        const std::string cmd = make_powershell_cmd(script_path, parameters);
-        const int rc = System::cmd_execute(cmd);
-
-        if (rc)
-        {
-            System::println(Color::error,
-                            "%s\n"
-                            "Could not run:\n"
-                            "    '%s'",
-                            title,
-                            script_path.generic_string());
-
-            {
-                auto locked_metrics = Metrics::g_metrics.lock();
-                locked_metrics->track_property("error", "powershell script failed");
-                locked_metrics->track_property("title", title);
-            }
-
-            Checks::exit_with_code(VCPKG_LINE_INFO, rc);
-        }
-    }
-
-    std::string powershell_execute_and_capture_output(const std::string& title,
-                                                      const fs::path& script_path,
-                                                      const std::vector<PowershellParameter>& parameters)
-    {
-        const std::string cmd = make_powershell_cmd(script_path, parameters);
-        auto rc = System::cmd_execute_and_capture_output(cmd);
-
-        if (rc.exit_code)
-        {
-            System::println(Color::error,
-                            "%s\n"
-                            "Could not run:\n"
-                            "    '%s'\n"
-                            "Error message was:\n"
-                            "    %s",
-                            title,
-                            script_path.generic_string(),
-                            rc.output);
-
-            {
-                auto locked_metrics = Metrics::g_metrics.lock();
-                locked_metrics->track_property("error", "powershell script failed");
-                locked_metrics->track_property("title", title);
-            }
-
-            Checks::exit_with_code(VCPKG_LINE_INFO, rc.exit_code);
-        }
-
-        // Remove newline from all output.
-        // Powershell returns newlines when it hits the column count of the console.
-        // For example, this is 80 in cmd on Windows 7. If the expected output is longer than 80 lines, we get
-        // newlines in-between the data.
-        // To solve this, we design our interaction with powershell to not depend on newlines,
-        // and then strip all newlines here.
-        rc.output = Strings::replace_all(std::move(rc.output), "\n", "");
-
-        return rc.output;
     }
 
     void println() { putchar('\n'); }
