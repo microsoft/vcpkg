@@ -48,19 +48,19 @@ $deployedVersion = findDeployedVersion $vsInstallPath
 $baseName = "${buildId}_${triplet}${deployedVersion}"
 
 # Copy Summary and logs to vcpkg-000
-$outputXmlFilename = "$baseName.xml"
 $outputPathRoot = "\\vcpkg-000.redmond.corp.microsoft.com\General\Results"
 vcpkgCreateDirectoryIfNotExists $outputPathRoot
 
-$ciXmlPath = "$vcpkgRootDir\test-full-ci.xml"
-$outputXmlPath = "$outputPathRoot\$outputXmlFilename"
-if (Test-Path $ciXmlPath)
+$xmlFilename = "$baseName.xml"
+$xmlPath = "$vcpkgRootDir\test-full-ci.xml"
+$outputXmlPath = "$outputPathRoot\$xmlFilename"
+if (Test-Path $xmlPath)
 {
-    Copy-Item $ciXmlPath -Destination $outputXmlPath
+    Move-Item $xmlPath -Destination $outputXmlPath
 }
 else
 {
-    Write-Host "$ciXmlPath not found, skip copying it to $outputXmlPath."
+    Write-Host "$xmlPath not found, skip moving it to $outputXmlPath."
 }
 
 $headersListName = "$baseName-headersList.txt"
@@ -70,7 +70,7 @@ $tripletIncludeDir = "$vcpkgRootDir\installed\$triplet\include"
 if (Test-Path $tripletIncludeDir)
 {
     (Get-ChildItem $tripletIncludeDir -recurse | Where-Object {$_.extension -eq ".h"}).FullName | Out-File $headersListPath
-    Copy-Item $headersListPath -Destination $outputHeadersListPath
+    Move-Item $headersListPath -Destination $outputHeadersListPath
 }
 
 # Delete all logs
