@@ -1,26 +1,27 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libwebsockets-2.0.0)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/warmcat/libwebsockets/archive/v2.0.0.zip"
-    FILENAME "libwebsockets-v2.0.0.zip"
-    SHA512 bf57a46f2c60095e7e6ec6656b185ffd2cf8f553bc22255ae8f6825d3613316d794f139cdefacbdf60ef997b0cd675fe356813d406c9b7c5a5ae838ce5326042
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO warmcat/libwebsockets
+    REF v3.0.0
+    SHA512 626edd00cc4f7559c67fc1663cbc4679a3c4e7a1b60944a7cf6968c6676073bbc15f9b90f4f2ea629394ebbcf84856663ae032a3557bae383bd0db54838d30e8
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
-	SOURCE_PATH ${SOURCE_PATH}
-	PATCHES
-		${CMAKE_CURRENT_LIST_DIR}/0001-Fix-UWP.patch
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-UWP.patch
 )
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LWS_WITH_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LWS_WITH_SHARED)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -DLWS_WITH_STATIC=OFF
+        -DLWS_WITH_STATIC=${LWS_WITH_STATIC}
+        -DLWS_WITH_SHARED=${LWS_WITH_SHARED}
         -DLWS_USE_BUNDLED_ZLIB=OFF
         -DLWS_WITHOUT_TESTAPPS=ON
         -DLWS_IPV6=ON
@@ -31,15 +32,24 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
-file(RENAME ${CURRENT_PACKAGES_DIR}/cmake ${CURRENT_PACKAGES_DIR}/share/libwebsockets)
-file(RENAME
-    ${CURRENT_PACKAGES_DIR}/debug/cmake/LibwebsocketsTargets-debug.cmake
-    ${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsTargets-debug.cmake
-)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake")
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/libwebsockets-test-server)
+file(READ ${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsConfig.cmake LIBWEBSOCKETSCONFIG_CMAKE)
+string(REPLACE "/../include" "/../../include" LIBWEBSOCKETSCONFIG_CMAKE "${LIBWEBSOCKETSCONFIG_CMAKE}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsConfig.cmake "${LIBWEBSOCKETSCONFIG_CMAKE}")
+file(READ ${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsTargets-debug.cmake LIBWEBSOCKETSTARGETSDEBUG_CMAKE)
+string(REPLACE "websockets_static.lib" "websockets.lib" LIBWEBSOCKETSTARGETSDEBUG_CMAKE "${LIBWEBSOCKETSTARGETSDEBUG_CMAKE}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsTargets-debug.cmake "${LIBWEBSOCKETSTARGETSDEBUG_CMAKE}")
+file(READ ${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsTargets-release.cmake LIBWEBSOCKETSTARGETSRELEASE_CMAKE)
+string(REPLACE "websockets_static.lib" "websockets.lib" LIBWEBSOCKETSTARGETSRELEASE_CMAKE "${LIBWEBSOCKETSTARGETSRELEASE_CMAKE}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsTargets-release.cmake "${LIBWEBSOCKETSTARGETSRELEASE_CMAKE}")
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libwebsockets)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libwebsockets/LICENSE ${CURRENT_PACKAGES_DIR}/share/libwebsockets/copyright)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/websockets_static.lib ${CURRENT_PACKAGES_DIR}/debug/lib/websockets.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/websockets_static.lib ${CURRENT_PACKAGES_DIR}/lib/websockets.lib)
+endif ()
 vcpkg_copy_pdbs()

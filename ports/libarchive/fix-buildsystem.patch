@@ -132,8 +132,8 @@ index 1f85c01..11b2fb1 100644
 --- a/libarchive/CMakeLists.txt
 +++ b/libarchive/CMakeLists.txt
 @@ -210,28 +210,22 @@ IF(WIN32 AND NOT CYGWIN)
-   LIST(APPEND libarchive_SOURCES filter_fork_windows.c)
- ENDIF(WIN32 AND NOT CYGWIN)
+   LIST(APPEND libarchive_SOURCES archive_disk_acl_sunos.c)
+ ENDIF()
  
 -# Libarchive is a shared library
 -ADD_LIBRARY(archive SHARED ${libarchive_SOURCES} ${include_HEADERS})

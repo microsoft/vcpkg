@@ -1,11 +1,14 @@
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+message(FATAL_ERROR "${PORT} does not currently support UWP")
+endif()
+
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/expat-2.1.1)
-vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "http://downloads.sourceforge.net/project/expat/expat/2.1.1/expat-2.1.1.tar.bz2"
-    FILENAME "expat-2.1.1.tar.bz2"
-    SHA512 088e2ef3434f2affd4fc79fe46f0e9826b9b4c3931ddc780cd18892f1cd1e11365169c6807f45916a56bb6abcc627dcd17a23f970be0bf464f048f5be2713628
-)
-vcpkg_extract_source_archive(${ARCHIVE_FILE})
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO libexpat/libexpat
+    REF R_2_2_5
+    SHA512 61ce2a479521412e0c56c352106c4adfb61a6bedb883921aba3ebccc29311ddd192646ac2c51b41572728d4de6ab4cb60a1dbc71515d742a80a8b59d89ca74d6
+    HEAD_REF master)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(EXPAT_LINKAGE ON)
@@ -14,7 +17,8 @@ else()
 endif()
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH ${SOURCE_PATH}/expat
+    PREFER_NINJA
     OPTIONS
         -DBUILD_examples=OFF
         -DBUILD_tests=OFF
@@ -25,9 +29,14 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/expat RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/expat/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/expat RENAME copyright)
 
 vcpkg_copy_pdbs()
+
+# CMake's FindExpat currently doesn't look for expatd.lib
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/expatd.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/expatd.lib ${CURRENT_PACKAGES_DIR}/debug/lib/expat.lib)
+endif()
 
 file(READ ${CURRENT_PACKAGES_DIR}/include/expat_external.h EXPAT_EXTERNAL_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

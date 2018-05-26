@@ -1,3 +1,4 @@
 Source: proj
-Version: 4.9.3
-Description: PROJ.4 library for cartographic projections
+Version: 0
+Description: a stub package that pulls in proj4. Do not depend on this package.
+Build-Depends: proj4

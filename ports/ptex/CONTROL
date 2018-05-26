@@ -1,0 +1,4 @@
+Source: ptex
+Version: 2.1.28-1
+Description: Per-Face Texture Mapping for Production Rendering.
+Build-Depends: zlib

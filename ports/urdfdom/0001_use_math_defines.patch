@@ -1,0 +1,26 @@
+From a374a5b04db27fde58a11cc2ba5ea10a0d0a7dad Mon Sep 17 00:00:00 2001
+From: Mikhail Paulyshka <me@mixaill.tk>
+Date: Sun, 3 Sep 2017 23:24:55 +0300
+Subject: [PATCH] define _USE_MATH_DEFINES
+
+---
+ urdf_parser/CMakeLists.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/urdf_parser/CMakeLists.txt b/urdf_parser/CMakeLists.txt
+index 333226e..2158965 100644
+--- a/urdf_parser/CMakeLists.txt
++++ b/urdf_parser/CMakeLists.txt
+@@ -1,5 +1,9 @@
+ include_directories(include)
+ 
++if(MSVC)
++add_definitions(-D_USE_MATH_DEFINES)
++endif()
++
+ add_library(urdfdom_world SHARED src/pose.cpp src/model.cpp src/link.cpp src/joint.cpp src/world.cpp)
+ target_link_libraries(urdfdom_world ${TinyXML_LIBRARIES} ${console_bridge_LIBRARIES})
+ set_target_properties(urdfdom_world PROPERTIES SOVERSION ${URDF_MAJOR_MINOR_VERSION})
+-- 
+2.12.2.windows.2
+

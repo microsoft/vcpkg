@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 2.6)
-project(SMPEG2)
+project(SMPEG2 CXX)
 
 find_path(SDL_INCLUDE_DIR SDL2/SDL.h)
-find_library(SDL_LIBRARY SDL2)
+find_library(SDL_LIBRARY NAMES SDL2d SDL2)
 
 include_directories(${SDL_INCLUDE_DIR})
 include_directories(${SDL_INCLUDE_DIR}/SDL2)
@@ -42,6 +42,7 @@ add_library(smpeg2
     MPEGsystem.cpp
     smpeg.cpp)
 
+set_target_properties(smpeg2 PROPERTIES DEFINE_SYMBOL SDL2_EXPORTS)
 target_link_libraries(smpeg2 ${SDL_LIBRARY})
 
 install(TARGETS smpeg2

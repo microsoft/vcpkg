@@ -7,33 +7,32 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/cairo-1.15.4)
+set(CAIRO_VERSION 1.15.8)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/cairo-${CAIRO_VERSION})
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://cairographics.org/snapshots/cairo-1.15.4.tar.xz"
-    FILENAME "cairo-1.15.4.tar.xz"
-    SHA512 ac3e6879fcf0876bca9f801cdf9e970ef1822644228cdd21962d0bf5db5fc074973f4ae651eb9c76b44fffd405cf0a0c7cbb228dba96b835ea137a2740277ee9
+    URLS "http://cairographics.org/snapshots/cairo-${CAIRO_VERSION}.tar.xz"
+    FILENAME "cairo-${CAIRO_VERSION}.tar.xz"
+    SHA512 5af1eebf432201dae0efaa5b6766b151d8273ea00dae48e104d56477005b4d423d64b5d11c512736a4cb076632fb2a572ec35becd922825a68d933bb5ff96ca1
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists_cairo.txt DESTINATION ${SOURCE_PATH}/src)
-file(RENAME ${SOURCE_PATH}/src/CMakeLists_cairo.txt ${SOURCE_PATH}/src/CMakeLists.txt)
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/export-only-in-shared-build.patch"
+)
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/src)
 file(COPY ${CURRENT_PORT_DIR}/cairo-features.h DESTINATION ${SOURCE_PATH}/src)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
-    )
-elseif (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
-    )
-endif()
+vcpkg_configure_cmake(
+    PREFER_NINJA
+    SOURCE_PATH ${SOURCE_PATH}/src
+)
 
 vcpkg_install_cmake()
 
 # Copy the appropriate header files.
-file(COPY
+foreach(FILE
 "${SOURCE_PATH}/src/cairo.h"
 "${SOURCE_PATH}/src/cairo-deprecated.h"
 "${SOURCE_PATH}/src/cairo-features.h"
@@ -44,10 +43,20 @@ file(COPY
 "${SOURCE_PATH}/cairo-version.h"
 "${SOURCE_PATH}/src/cairo-win32.h"
 "${SOURCE_PATH}/util/cairo-gobject/cairo-gobject.h"
-"${SOURCE_PATH}/src/cairo-ft.h"
-DESTINATION
-${CURRENT_PACKAGES_DIR}/include
-)
+"${SOURCE_PATH}/src/cairo-ft.h")
+  file(COPY ${FILE} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+  file(COPY ${FILE} DESTINATION ${CURRENT_PACKAGES_DIR}/include/cairo)
+endforeach()
+
+foreach(FILE "${CURRENT_PACKAGES_DIR}/include/cairo.h" "${CURRENT_PACKAGES_DIR}/include/cairo/cairo.h")
+    file(READ ${FILE} CAIRO_H)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        string(REPLACE "defined (CAIRO_WIN32_STATIC_BUILD)" "1" CAIRO_H "${CAIRO_H}")
+    else()
+        string(REPLACE "defined (CAIRO_WIN32_STATIC_BUILD)" "0" CAIRO_H "${CAIRO_H}")
+    endif()
+    file(WRITE ${FILE} "${CAIRO_H}")
+endforeach()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/cairo)

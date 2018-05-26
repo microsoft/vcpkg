@@ -1,25 +1,20 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:\path\to\current\vcpkg>
-#   TARGET_TRIPLET is the current triplet (x86-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     message("Building DLLs not supported. Building static instead.")
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 
-
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/flatbuffers-1.6.0)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/google/flatbuffers/archive/v1.6.0.zip"
-    FILENAME "flatbuffers-1.6.0.zip"
-    SHA512 c23043a54d7055f4e0a0164fdafd3f1d60292e57d62d20d30f641c9da90935d14da847f86239a19f777e68b707cfb25452da9192607a3a399ab25ce06b31c282
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO google/flatbuffers
+    REF v1.8.0
+    SHA512 8f6c84caa6456418fc751ea9de456dd37378b3239d1a41d2205140e7b19a5b8b2e342a22dc8d7fdd0c36878455e9d7401cc6438d3b771f7875e8fcfe7bbd52f1
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    list(APPEND OPTIONS -DFLATBUFFERS_BUILD_FLATC=OFF -DFLATBUFFERS_BUILD_FLATHASH=OFF)
+endif()
 
 set(OPTIONS)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -37,15 +32,15 @@ vcpkg_configure_cmake(
     # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
 
-vcpkg_build_cmake()
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/flatbuffers")
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/flatc.exe)
-    make_directory(${CURRENT_PACKAGES_DIR}/tools)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/flatc.exe ${CURRENT_PACKAGES_DIR}/tools/flatc.exe)
+    make_directory(${CURRENT_PACKAGES_DIR}/tools/flatbuffers)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/flatc.exe ${CURRENT_PACKAGES_DIR}/tools/flatbuffers/flatc.exe)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 endif()
 if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/flatbuffers.dll)

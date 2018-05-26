@@ -23,7 +23,6 @@ set(HEADERS zzip/__debug.h
             zzip/__fnmatch.h
             zzip/__hints.h
             zzip/__mmap.h
-            zzip/_config.h
             zzip/_msvc.h
             zzip/autoconf.h
             zzip/conf.h
@@ -55,7 +54,7 @@ set(SRCS zzip/dir.c
 
 add_library(zziplib ${SRCS} ${HEADERS})
 
-if(${BUILD_SHARED_LIBS})
+if(BUILD_SHARED_LIBS)
     target_compile_definitions(zziplib PRIVATE -DZZIPLIB_EXPORTS)
 endif()
 

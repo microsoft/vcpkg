@@ -1,3 +1,7 @@
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "${PORT} does not currently support UWP")
+endif()
+
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     message(STATUS "Warning: Static building not supported yet. Building dynamic.")
     set(VCPKG_LIBRARY_LINKAGE dynamic)
@@ -5,9 +9,9 @@ endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ACE_wrappers/ace)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://download.dre.vanderbilt.edu/previous_versions/ACE-6.4.3.zip"
-    FILENAME "ACE-6.4.3.zip"
-    SHA512 1d700733ec617559f338e908b2343c66c0c856bfac7bd2230f18290970fe3bc25a394839a9d66fa74f6edd239a70f9d6cf5746585ed796fbe9f8aeca90eab84e
+    URLS "http://download.dre.vanderbilt.edu/previous_versions/ACE-6.4.8.zip"
+    FILENAME "ACE-6.4.8.zip"
+    SHA512 a46e7d03bf9d8a76905c91e416749b092016210bd93308bdee0ca8740f7f3ac7c4b4d5688929729fa277c02019710c7e288f5f5f9ee187a0ec176d9ebbb90f96
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

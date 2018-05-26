@@ -1,0 +1,34 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 72348fe..c6fbecb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1010,14 +1010,9 @@ else()
+     set(PKG_CONFIG_FILES allegro ${ADDON_PKG_CONFIG_FILES})
+ endif(WANT_MONOLITH)
+ 
+-# Install pkg-config files on Unix, and when cross-compiling on Unix.
++# Install pkg-config files
+ 
+-if(UNIX AND NOT WANT_FRAMEWORKS AND NOT IPHONE)
+-    set(INSTALL_PKG_CONFIG_FILES true)
+-endif()
+-if(CMAKE_CROSSCOMPILING AND CMAKE_HOST_UNIX)
+-    set(INSTALL_PKG_CONFIG_FILES true)
+-endif()
++set(INSTALL_PKG_CONFIG_FILES true)
+ 
+ if(INSTALL_PKG_CONFIG_FILES)
+     append_lib_type_suffix(lib_type)
+diff --git a/cmake/Common.cmake b/cmake/Common.cmake
+index 782196f..de29535 100644
+--- a/cmake/Common.cmake
++++ b/cmake/Common.cmake
+@@ -223,7 +223,7 @@ function(install_our_library target filename)
+             # PUBLIC_HEADER DESTINATION "include"
+             )
+     if(MSVC AND BUILD_SHARED_LIBS)
+-        install(FILES ${CMAKE_BINARY_DIR}/lib/\${CMAKE_INSTALL_CONFIG_NAME}/${filename}.pdb
++        install(FILES ${CMAKE_BINARY_DIR}/lib/${filename}.pdb
+             DESTINATION lib
+             CONFIGURATIONS Debug RelWithDebInfo
+         )

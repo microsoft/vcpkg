@@ -1,0 +1,3 @@
+Source: rpclib
+Version: 2.2.0
+Description: a RPC library for C++, providing both a client and server implementation. It is built using modern C++14.

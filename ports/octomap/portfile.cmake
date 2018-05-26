@@ -1,3 +1,8 @@
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message("Octomap does not currently support building purely static. Building dynamic instead.")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
+endif()
+
 include(vcpkg_common_functions)
 set(GIT_REF "cefed0c1d79afafa5aeb05273cf1246b093b771c")
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/octomap-${GIT_REF})

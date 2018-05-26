@@ -1,10 +1,10 @@
 include(vcpkg_common_functions)
-set(PANGO_VERSION 1.40.5)
+set(PANGO_VERSION 1.40.11)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/pango-${PANGO_VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "http://ftp.gnome.org/pub/GNOME/sources/pango/1.40/pango-${PANGO_VERSION}.tar.xz"
     FILENAME "pango-${PANGO_VERSION}.tar.xz"
-    SHA512 40e8bf85dbb4b6fd35da3acec06a0d2b9dde95a3c5a212d243dbcbc0d00f12bd061757a04cb2f4a8db61329efd7ed9be53e3f5d6a2eb2a3defba1d12f9eed43d)
+    SHA512 e4ac40f8da9c326e1e4dfaf4b1d2070601b17f88f5a12991a9a8bbc58bb08640404e2a794a5c68c5ebb2e7e80d9c186d4b26cd417bb63a23f024ef8a38bb152a)
 
 vcpkg_extract_source_archive(${ARCHIVE})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -20,7 +20,6 @@ vcpkg_configure_cmake(
 	OPTIONS_DEBUG
 	    -DPANGO_SKIP_HEADERS=ON)
 
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 

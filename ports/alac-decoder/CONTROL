@@ -1,0 +1,3 @@
+Source: alac-decoder
+Version: 0.2
+Description:  ALAC C implementation of a decoder, written from reverse engineering the file format

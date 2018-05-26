@@ -1,29 +1,21 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/taglib-1.11.1)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO taglib/taglib
-    REF v1.11.1
-    SHA512 7846775c4954ea948fe4383e514ba7c11f55d038ee06b6ea5a0a1c1069044b348026e76b27aa4ba1c71539aa8143e1401fab39184cc6e915ba0ae2c06133cb98
+    REF 662f340f933077a926de443c9882f483973570e3
+    SHA512 34087f77bb099f1f8ec82926a212a562bf589fc13f54eac50a56730c4411af2f4dbf1b7d09877087899048c3070325aea02297c6a94d0ad43fbf6742363dd2b6
     HEAD_REF master
 )
 
-if(NOT VCPKG_USE_HEAD_VERSION) # these have been fixed upstream after 1.11.1
-	# patches for UWP
-	vcpkg_apply_patches(
-		SOURCE_PATH ${SOURCE_PATH}
-		PATCHES
-			${CMAKE_CURRENT_LIST_DIR}/replace_non-uwp_functions.patch
-			${CMAKE_CURRENT_LIST_DIR}/dont-assume-latin-1.patch
-	)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+	set(WINRT_OPTIONS -DHAVE_VSNPRINTF=1 -DPLATFORM_WINRT=1)
 endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-	OPTIONS
-		-DHAVE_VSNPRINTF=1		#  taglib/ConfigureChecks.cmake doesn't properly detect MSVC vsnprintf() on UWP
+    OPTIONS ${WINRT_OPTIONS}
 )
 
 vcpkg_install_cmake()

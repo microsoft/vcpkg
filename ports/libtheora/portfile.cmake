@@ -1,31 +1,41 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:\path\to\current\vcpkg>
-#   TARGET_TRIPLET is the current triplet (x86-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#
-
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libtheora-1.1.1)
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://downloads.xiph.org/releases/theora/libtheora-1.1.1.tar.bz2"
-    FILENAME "libtheora-1.1.1.tar.bz2"
-    SHA512 9ab9b3af1c35d16a7d6d84f61f59ef3180132e30c27bdd7c0fa2683e0d00e2c791accbc7fd2c90718cc947d8bd10ee4a5940fb55f90f1fd7b0ed30583a47dbbd
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO xiph/theora
+    REF fa5707d68c2a4338d58aa8b6afc95539ba89fecb
+    SHA512 e33da23a17e93709dfe4421b512cedbd9aab0d706f5650e0436f9c8e1cde76b902c3338d46750bb86d83e1bceb111ee84e90df36fb59b5c2e7f7aee1610752b2
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/0001-fix-uwp.patch
+)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/libtheora.def DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindOGG.cmake DESTINATION ${SOURCE_PATH})
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(THEORA_X86_OPT ON)
+else()
+    set(THEORA_X86_OPT OFF)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DUSE_X86=${THEORA_X86_OPT}
 )
 
+vcpkg_build_cmake()
 vcpkg_install_cmake()
+vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libtheora)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libtheora/LICENSE ${CURRENT_PACKAGES_DIR}/share/libtheora/copyright)

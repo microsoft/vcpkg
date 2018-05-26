@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
-set(MPG123_VERSION 1.24.0)
-set(MPG123_HASH e7c0d7a103daf496e75a6aa6aca861cfc0ad391f242335990c2360305e567039d24ca3b37a35f79b75749055e255f4692b8b43d2fec332b119223b00e12b0cb7)
+set(MPG123_VERSION 1.25.8)
+set(MPG123_HASH f226317dddb07841a13753603fa13c0a867605a5a051626cb30d45cfba266d3d4296f5b8254f65b403bb5eef6addce1784ae8829b671a746854785cda1bad203)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/mpg123-${MPG123_VERSION})
 
 #architecture detection
@@ -29,53 +29,128 @@ vcpkg_find_acquire_program(YASM)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH} 
-    PATCHES "${CURRENT_PORT_DIR}/0001-fix-crt-linking.patch")
+if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    vcpkg_apply_patches(
+        SOURCE_PATH ${SOURCE_PATH}
+        PATCHES
+            "${CURRENT_PORT_DIR}/0001-fix-crt-linking.patch"
+            "${CURRENT_PORT_DIR}/0002-fix-x86-build.patch")
 
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/libmpg123.vcxproj
-    RELEASE_CONFIGURATION Release_x86${MPG123_CONFIGURATION_SUFFIX}
-    DEBUG_CONFIGURATION Debug_x86${MPG123_CONFIGURATION_SUFFIX}
-)
+    vcpkg_build_msbuild(
+        PROJECT_PATH ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/libmpg123.vcxproj
+        RELEASE_CONFIGURATION Release_x86${MPG123_CONFIGURATION_SUFFIX}
+        DEBUG_CONFIGURATION Debug_x86${MPG123_CONFIGURATION_SUFFIX}
+    )
 
-message(STATUS "Installing")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    message(STATUS "Installing")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        file(INSTALL
+            ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug/libmpg123.dll
+            ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug/libmpg123.pdb
+            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
+        )
+        file(INSTALL
+            ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Release/libmpg123.dll
+            ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Release/libmpg123.pdb
+            DESTINATION ${CURRENT_PACKAGES_DIR}/bin
+        )
+    else()
+        file(INSTALL
+            ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug_x86/libmpg123.pdb
+            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+        )
+        file(INSTALL
+            ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Release_x86/libmpg123.pdb
+            DESTINATION ${CURRENT_PACKAGES_DIR}/lib
+        )
+    endif()
+
     file(INSTALL
-        ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug/libmpg123.dll
-        ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug/libmpg123.pdb
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-    )
-    file(INSTALL
-        ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Release/libmpg123.dll
-        ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Release/libmpg123.pdb
-        DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-    )
-else()
-    file(INSTALL
-        ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug_x86/libmpg123.pdb
+        ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug/libmpg123.lib
         DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
     )
     file(INSTALL
-        ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Release_x86/libmpg123.pdb
+        ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Release/libmpg123.lib
         DESTINATION ${CURRENT_PACKAGES_DIR}/lib
     )
-endif()
+    file(INSTALL
+        ${SOURCE_PATH}/ports/MSVC++/mpg123.h
+        ${SOURCE_PATH}/src/libmpg123/fmt123.h
+        ${SOURCE_PATH}/src/libmpg123/mpg123.h.in
+        DESTINATION ${CURRENT_PACKAGES_DIR}/include
+    )
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    file(REMOVE_RECURSE ${SOURCE_PATH}/build/debug)
+    file(REMOVE_RECURSE ${SOURCE_PATH}/build/release)
 
-file(INSTALL
-    ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug/libmpg123.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-)
-file(INSTALL
-    ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Release/libmpg123.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-)
-file(INSTALL
-    ${SOURCE_PATH}/ports/MSVC++/mpg123.h
-    ${SOURCE_PATH}/src/libmpg123/fmt123.h
-    ${SOURCE_PATH}/src/libmpg123/mpg123.h.in
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
-)
+    ################
+    # Debug build
+    ################
+    message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
+    vcpkg_execute_required_process(
+        COMMAND "${SOURCE_PATH}/configure" --prefix=${SOURCE_PATH}/build/debug --enable-debug=yes --enable-static=yes --disable-dependency-tracking --with-default-audio=coreaudio --with-module-suffix=.so
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME config-${TARGET_TRIPLET}-dbg
+    )
+    message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done.")
+
+    message(STATUS "Installing ${TARGET_TRIPLET}-dbg")
+    vcpkg_execute_required_process(
+        COMMAND make -j install
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME build-${TARGET_TRIPLET}-dbg
+    )
+    message(STATUS "Installing ${TARGET_TRIPLET}-dbg done.")
+
+    ################
+    # Release build
+    ################
+    message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
+    vcpkg_execute_required_process(
+        COMMAND make distclean
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME config-${TARGET_TRIPLET}-dbg
+    )
+    vcpkg_execute_required_process(
+        COMMAND "${SOURCE_PATH}/configure" --prefix=${SOURCE_PATH}/build/release --enable-static=yes --disable-dependency-tracking --with-default-audio=coreaudio --with-module-suffix=.so
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME config-${TARGET_TRIPLET}-rel
+    )
+    message(STATUS "Configuring ${TARGET_TRIPLET}-rel done.")
+
+    message(STATUS "Installing ${TARGET_TRIPLET}-rel")
+    vcpkg_execute_required_process(
+        COMMAND make -j install
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME build-${TARGET_TRIPLET}-rel
+    )
+    message(STATUS "Installing ${TARGET_TRIPLET}-rel done.")
+
+    file(
+        INSTALL
+            "${SOURCE_PATH}/build/debug/include/fmt123.h"
+            "${SOURCE_PATH}/build/debug/include/mpg123.h"
+            "${SOURCE_PATH}/build/debug/include/out123.h"
+        DESTINATION
+            ${CURRENT_PACKAGES_DIR}/include
+    )
+
+    file(
+        INSTALL
+            "${SOURCE_PATH}/build/debug/lib/libmpg123.a"
+            "${SOURCE_PATH}/build/debug/lib/libout123.a"
+        DESTINATION
+            ${CURRENT_INSTALLED_DIR}/debug/lib
+    )
+
+    file(
+        INSTALL
+            "${SOURCE_PATH}/build/release/lib/libmpg123.a"
+            "${SOURCE_PATH}/build/release/lib/libout123.a"
+        DESTINATION
+            ${CURRENT_PACKAGES_DIR}/lib
+    )
+endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/mpg123 RENAME copyright)
 

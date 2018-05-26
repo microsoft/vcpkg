@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 72d62c5e..d7eb5cd4 100644
+index fe0f629e..54b6d8ec 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -39,7 +39,6 @@ install (DIRECTORY
+@@ -49,7 +49,6 @@ install (DIRECTORY
      cpp/inc/bond
      cpp/generated/bond
      python/inc/bond

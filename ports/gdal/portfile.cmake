@@ -1,28 +1,42 @@
+# vcpkg portfile.cmake for GDAL
+#
+# NOTE: update the version and checksum for new GDAL release
+set(GDAL_VERSION_STR "2.3.0")
+set(GDAL_VERSION_PKG "230")
+set(GDAL_VERSION_LIB "203")
+set(GDAL_PACKAGE_SUM "f3f790b7ecb28916d6d0628b15ddc6b396a25a8f1f374589ea5e95b5a50addc99e05e363113f907b6c96faa69870b5dc9fdf3d771f9c8937b4aa8819bd78b190")
+
 if (TRIPLET_SYSTEM_ARCH MATCHES "arm")
-    message(FATAL_ERROR " ARM is currently not supported.")
+    message(FATAL_ERROR "ARM is currently not supported.")
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    message(FATAL_ERROR "GDAL's nmake buildsystem does not support building static libraries")
+elseif(VCPKG_CRT_LINKAGE STREQUAL "static")
+    message(FATAL_ERROR "GDAL's nmake buildsystem does not support static crt linkage")
 endif()
 
 include(vcpkg_common_functions)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://download.osgeo.org/gdal/1.11.3/gdal1113.zip"
-    FILENAME "gdal1113.zip"
-    SHA512 42feb98a54019d3b6ac54f598f299a57e117db500c662d39faa9d5f5090f03c1b8d7680242e1abd8035738edc4fc3197ae118a0ce50733691a76a5cf377bcd46
-)
+    URLS "http://download.osgeo.org/gdal/${GDAL_VERSION_STR}/gdal${GDAL_VERSION_PKG}.zip"
+    FILENAME "gdal${GDAL_VERSION_PKG}.zip"
+    SHA512 ${GDAL_PACKAGE_SUM}
+    )
 
-# Extract source into archictecture specific directory, because GDALs' nmake based build currently does not
+# Extract source into architecture specific directory, because GDALs' nmake based build currently does not
 # support out of source builds.
-set(SOURCE_PATH_DEBUG   ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-debug/gdal-1.11.3)
-set(SOURCE_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-release/gdal-1.11.3)
+set(SOURCE_PATH_DEBUG   ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-debug/gdal-${GDAL_VERSION_STR})
+set(SOURCE_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-release/gdal-${GDAL_VERSION_STR})
 
 foreach(BUILD_TYPE debug release)
+    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE})
     vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE})
     vcpkg_apply_patches(
-        SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-1.11.3
+        SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}
         PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0001-Add-support-for-MSVC1900-backported-from-GDAL2.patch
-        ${CMAKE_CURRENT_LIST_DIR}/0002-Add-variable-CXX_CRT_FLAGS-to-allow-for-selection-of.patch
-        ${CMAKE_CURRENT_LIST_DIR}/0003-Ensures-inclusion-of-PDB-in-release-dll-if-so-reques.patch
+        ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-debug-crt-flags.patch
+        ${CMAKE_CURRENT_LIST_DIR}/no-my-bool.patch
     )
 endforeach()
 
@@ -45,7 +59,7 @@ file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.lib" PNG_LIBRA
 # Setup geos libraries + include path
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" GEOS_INCLUDE_DIR)
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib" GEOS_LIBRARY_REL)
-file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/geos_c.lib" GEOS_LIBRARY_DBG)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib" GEOS_LIBRARY_DBG)
 
 # Setup expat libraries + include path
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" EXPAT_INCLUDE_DIR)
@@ -54,8 +68,8 @@ file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/expat.lib" EXPAT_LIBRARY
 
 # Setup curl libraries + include path
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" CURL_INCLUDE_DIR)
-file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libcurl_imp.lib" CURL_LIBRARY_REL)
-file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libcurl_imp.lib" CURL_LIBRARY_DBG)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libcurl.lib" CURL_LIBRARY_REL)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libcurl.lib" CURL_LIBRARY_DBG)
 
 # Setup sqlite3 libraries + include path
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" SQLITE_INCLUDE_DIR)
@@ -210,7 +224,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 else()
   file(GLOB EXE_FILES ${CURRENT_PACKAGES_DIR}/bin/*.exe)
   file(REMOVE ${EXE_FILES} ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)
-  file(COPY ${SOURCE_PATH_DEBUG}/gdal111.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+  file(COPY ${SOURCE_PATH_DEBUG}/gdal${GDAL_VERSION_LIB}.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
   file(COPY ${SOURCE_PATH_DEBUG}/gdal_i.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
   file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gdal_i.lib ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)
   file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdal_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gdald.lib)

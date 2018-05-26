@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 340e38f..1963d90 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -258,7 +258,7 @@ endif()
+ 
+ # Boost
+ if(NOT DEFINED Boost_INCLUDE_DIR OR NOT DEFINED Boost_LIBRARIES)
+-	FIND_PACKAGE(Boost REQUIRED COMPONENTS system chrono random)
++	FIND_PACKAGE(Boost REQUIRED COMPONENTS system date_time chrono random)
+ endif()
+ include_directories(${Boost_INCLUDE_DIRS})
+ target_link_libraries(torrent-rasterbar ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})

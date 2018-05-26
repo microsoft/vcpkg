@@ -1,0 +1,23 @@
+diff -Naur .\libxmp-lite-4.4.1/src/common.h .\libxmp-lite-4.4.1-orig/src/common.h
+--- a/src/common.h	2016-07-16 13:37:36 +0200
++++ b/src/common.h	2017-05-23 00:52:17 +0200
+@@ -77,19 +77,12 @@
+ #ifndef CLIB_DECL
+ #define CLIB_DECL
+ #endif
+-#ifdef DEBUG
+-#ifndef ATTR_PRINTF
+-#define ATTR_PRINTF(x,y)
+-#endif
+-void CLIB_DECL D_(const char *text, ...) ATTR_PRINTF(1,2);
+-#else
+ // VS prior to VC7.1 does not support variadic macros. VC8.0 does not optimize unused parameters passing
+ #if _MSC_VER < 1400
+ void __inline CLIB_DECL D_(const char *text, ...) { do {} while (0); }
+ #else
+ #define D_(args, ...) do {} while (0)
+ #endif
+-#endif
+ 
+ #elif defined __ANDROID__
+ 

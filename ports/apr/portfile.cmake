@@ -1,17 +1,16 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:\path\to\current\vcpkg>
-#   TARGET_TRIPLET is the current triplet (x86-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "${PORT} does not currently support UWP")
+endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/apr-1.5.2)
+
+set(VERSION 1.6.3)
+
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/apr-${VERSION})
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.apache.org/dist/apr/apr-1.5.2.tar.bz2"
-    FILENAME "apr-1.5.2.tar.bz2"
-    SHA512 d1156ad16abf07887797777b56c2147c890f16d8445829b3e3b4917950d24c5fd2f8febd439992467a5ea0511da562c0fb4a7cfd8a235ab55882388bfa2b919d
+    URLS "https://www.apache.org/dist/apr/apr-${VERSION}.tar.bz2"
+    FILENAME "apr-${VERSION}.tar.bz2"
+    SHA512 f6b8679ae7fafff793c825c78775c84a646267c441710a50664589850e13148719b4eab48ab6e7c95b7aed085cff831115687434a7b160dcc2faa0eae63ac996
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

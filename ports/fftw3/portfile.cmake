@@ -1,41 +1,49 @@
-# Common Ambient Variables:
-#   VCPKG_ROOT_DIR = <C:\path\to\current\vcpkg>
-#   TARGET_TRIPLET is the current triplet (x86-windows, etc)
-#   PORT is the current port name (zlib, etc)
-#   CURRENT_BUILDTREES_DIR = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR  = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#
-
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fftw-3.3.6-pl1)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fftw-3.3.7)
+
+# This can be removed in the next source code update
+if(EXISTS "${SOURCE_PATH}/CMakeLists.txt")
+    file(READ "${SOURCE_PATH}/CMakeLists.txt" _contents)
+    if("${_contents}" MATCHES "-D_OPENMP -DLIBFFTWF33_EXPORTS /openmp /bigobj")
+        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
+    endif()
+endif()
+
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.fftw.org/fftw-3.3.6-pl1.tar.gz"
-    FILENAME "fftw-3.3.6-pl1.tar.gz"
-    SHA512 e2ed33fcb068a36a841bbd898d12ceec74f4e9a0a349e7c55959878b50224a69a0f87656347dad7d7e1448ebc50d28d8f34f6da7992c43072d26942fd97c0134
+    URLS "http://www.fftw.org/fftw-3.3.7.tar.gz"
+    FILENAME "fftw-3.3.7.tar.gz"
+    SHA512 a5db54293a6d711408bed5894766437eee920be015ad27023c7a91d4581e2ff5b96e3db0201e6eaccf7b064c4d32db1a2a8fab3e6813e524b4743ddd6216ba77
 )
 
 vcpkg_extract_source_archive(${ARCHIVE})
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h DESTINATION ${SOURCE_PATH})
+foreach(PRECISION ENABLE_DEFAULT_PRECISION ENABLE_FLOAT ENABLE_LONG_DOUBLE)
+	vcpkg_configure_cmake(
+		SOURCE_PATH ${SOURCE_PATH}
+		PREFER_NINJA
+		OPTIONS 
+			-D${PRECISION}=ON
+	)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-)
+	vcpkg_install_cmake()
+	vcpkg_copy_pdbs()
 
-vcpkg_install_cmake()
-vcpkg_copy_pdbs()
+	file(COPY ${SOURCE_PATH}/api/fftw3.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-file(COPY ${SOURCE_PATH}/api/fftw3.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+	vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
 
-if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
-    vcpkg_apply_patches(
-            SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
-            PATCHES
-                    ${CMAKE_CURRENT_LIST_DIR}/fix-dynamic.patch)
-endif()
+	if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
+		vcpkg_apply_patches(
+			   SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
+			   PATCHES
+					   ${CMAKE_CURRENT_LIST_DIR}/fix-dynamic.patch)
+	endif()
 
+	# Cleanup
+	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+endforeach()
+	
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/fftw3)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/fftw3/COPYING ${CURRENT_PACKAGES_DIR}/share/fftw3/copyright)

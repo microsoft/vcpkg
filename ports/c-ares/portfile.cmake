@@ -1,10 +1,14 @@
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "c-ares does not currently support UWP.")
+endif()
+
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO c-ares/c-ares
-    REF 40eb41f522eb9a86f9397352f10d1e63c89f2c54
-    SHA512 901d7da97098f79d13ae8d72c85936bd15fbd6b65399c247462ad5367ac85ff32c90325998c21364f959e1bde2c8b7dbc9d9d7524ea34e6bc48dfb3854c199e1
+    REF cares-1_14_0
+    SHA512 3ae7938648aec2fae651667bef02139f7eef2e7cd425cc310b7e3d56f409646f6170d37a3c9269aa654bfb1ced0a52b89fe49be9023edf8ff57efd0efaf59052
     HEAD_REF master
 )
 
@@ -28,14 +32,17 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/c-ares")
 
-if(VCPKG_CRT_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 else()
-    file(GLOB RELEASE_EXE_FILES "${CURRENT_PACKAGES_DIR}/bin/*.exe")
-    file(REMOVE ${RELEASE_EXE_FILES})
-    file(GLOB DEBUG_EXE_FILES "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
-    file(REMOVE ${DEBUG_EXE_FILES})
+    file(GLOB EXE_FILES
+        "${CURRENT_PACKAGES_DIR}/bin/*.exe"
+        "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe"
+    )
+    if (EXE_FILES)
+        file(REMOVE ${EXE_FILES})
+    endif()
 endif()
 
 vcpkg_copy_pdbs()

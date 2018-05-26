@@ -1,21 +1,36 @@
-#header-only library
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/range-v3-6eb5c831ffe12cd5cb96390dbe917ca1b248772d)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/ericniebler/range-v3/archive/6eb5c831ffe12cd5cb96390dbe917ca1b248772d.zip"
-    FILENAME "range-v3-6eb5c831ffe12cd5cb96390dbe917ca1b248772d.zip"
-    SHA512 2605af46c2c049f66dc982b1c4e506a8f115d47cc6c61a80f08921c667e52ad3097c485280ee43711c84b84a1490929e085b89cf9ad4c83b93222315210e92aa
-)
-vcpkg_download_distfile(DIFF
-    URLS "https://github.com/Microsoft/Range-V3-VS2015/compare/fork_base...00ed689bac7a9dcd8601dbde382758675516799d.diff"
-    FILENAME "range-v3-fork_base_to_00ed689bac7a9dcd8601dbde382758675516799d.diff"
-    SHA512 615a53ebac22df03e865bdcc86580914c4505ec5fc691b6a2f864f7bf63690b99d0da0db2d5b1026e34b0a3f7557f30dfa0cad65643bae0b53c0ec066af9eb8e
-)
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES ${DIFF})
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAME)
+    message("The current range-v3 releases are not compatible with the current MSVC releases.")
+    message("The latest available range-v3 fork compatible with MSVC will be used instead.")
+    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+else()
+    vcpkg_from_github(
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO ericniebler/range-v3
+        REF 0.3.5
+        SHA512 0b8b97c32760f19e7a3f35b0f28b0c15c7735fbd1aa54f685c58faf50bf2cf112aed4ac7cfa9154b9caf7047400a6c7fd5c33d978f2e3cec6bc392a758aeabad
+        HEAD_REF master
+    )
 
-file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/range-v3)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/range-v3/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/range-v3/copyright)
-file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR} FILES_MATCHING PATTERN "*.hpp")
-vcpkg_copy_pdbs()
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        PREFER_NINJA
+        OPTIONS
+            -DRANGE_V3_NO_TESTING=ON
+            -DRANGE_V3_NO_EXAMPLE=ON
+            -DRANGE_V3_NO_PERF=ON
+            -DRANGE_V3_NO_HEADER_CHECK=ON
+    )
+
+    vcpkg_install_cmake()
+
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/range-v3)
+
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
+
+    vcpkg_copy_pdbs()
+
+    file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/range-v3)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/share/range-v3/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/range-v3/copyright)
+endif()

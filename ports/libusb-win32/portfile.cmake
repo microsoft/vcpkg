@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "Error: UWP builds are currently not supported.")
+if (VCPKG_CMAKE_SYSTEM_NAME)
+    message(FATAL_ERROR "Error: only Windows Desktop builds are currently supported.")
 endif()
 
 set(LIBUSB_VERSION 1.2.6.0)

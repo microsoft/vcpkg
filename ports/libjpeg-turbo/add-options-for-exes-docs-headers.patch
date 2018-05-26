@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index bfb7661..5373cd7 100644
+index 131b437..c29e604 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -55,6 +55,9 @@ option(WITH_JAVA "Build Java wrapper for the TurboJPEG library" FALSE)
+@@ -62,6 +62,9 @@ option(WITH_JAVA "Build Java wrapper for the TurboJPEG library" FALSE)
  option(WITH_12BIT "Encode/decode JPEG images with 12-bit samples (implies WITH_SIMD=0 WITH_TURBOJPEG=0 WITH_ARITH_ENC=0 WITH_ARITH_DEC=0)" FALSE)
  option(ENABLE_STATIC "Build static libraries" TRUE)
  option(ENABLE_SHARED "Build shared libraries" TRUE)
@@ -12,7 +12,7 @@ index bfb7661..5373cd7 100644
  
  if(WITH_12BIT)
    set(WITH_SIMD FALSE)
-@@ -264,14 +267,16 @@ if(WITH_TURBOJPEG)
+@@ -279,14 +282,16 @@ if(WITH_TURBOJPEG)
      target_link_libraries(turbojpeg jpeg-static)
      set_target_properties(turbojpeg PROPERTIES LINK_INTERFACE_LIBRARIES "")
  
@@ -36,7 +36,7 @@ index bfb7661..5373cd7 100644
    endif()
  
    if(ENABLE_STATIC)
-@@ -284,14 +289,16 @@ if(WITH_TURBOJPEG)
+@@ -299,14 +304,16 @@ if(WITH_TURBOJPEG)
        add_dependencies(turbojpeg-static simd)
      endif()
  
@@ -60,7 +60,7 @@ index bfb7661..5373cd7 100644
    endif()
  endif()
  
-@@ -303,7 +310,7 @@ else()
+@@ -318,7 +325,7 @@ else()
    set(DJPEG_BMP_SOURCES wrbmp.c wrtarga.c)
  endif()
  
@@ -69,7 +69,7 @@ index bfb7661..5373cd7 100644
    add_executable(cjpeg-static cjpeg.c cdjpeg.c rdgif.c rdppm.c rdswitch.c
      ${CJPEG_BMP_SOURCES})
    set_property(TARGET cjpeg-static PROPERTY COMPILE_FLAGS ${COMPILE_FLAGS})
-@@ -319,10 +326,11 @@ if(ENABLE_STATIC)
+@@ -334,10 +341,11 @@ if(ENABLE_STATIC)
    set_property(TARGET jpegtran-static PROPERTY COMPILE_FLAGS "-DUSE_SETMODE")
  endif()
  
@@ -84,7 +84,7 @@ index bfb7661..5373cd7 100644
  
  #
  # Tests
-@@ -880,24 +888,30 @@ add_custom_target(installer
+@@ -917,24 +925,30 @@ add_custom_target(installer
  
  if(WITH_TURBOJPEG)
    if(ENABLE_SHARED)
@@ -119,7 +119,7 @@ index bfb7661..5373cd7 100644
      install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/cjpeg-static.exe
        DESTINATION bin RENAME cjpeg.exe)
      install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/djpeg-static.exe
-@@ -907,14 +921,20 @@ if(ENABLE_STATIC)
+@@ -944,17 +958,23 @@ if(ENABLE_STATIC)
    endif()
  endif()
  
@@ -149,6 +149,10 @@ index bfb7661..5373cd7 100644
 +    ${CMAKE_SOURCE_DIR}/jmorecfg.h ${CMAKE_SOURCE_DIR}/jpeglib.h
 +    DESTINATION include)
 +endif()
+ 
+ configure_file("${CMAKE_SOURCE_DIR}/cmakescripts/cmake_uninstall.cmake.in"
+   "cmake_uninstall.cmake" IMMEDIATE @ONLY)
+
 diff --git a/sharedlib/CMakeLists.txt b/sharedlib/CMakeLists.txt
 index d423cce..9da7c6e 100644
 --- a/sharedlib/CMakeLists.txt

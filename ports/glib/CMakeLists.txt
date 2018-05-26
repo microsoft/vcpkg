@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.0)
 project(glib C)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_C_STANDARD 11)
+
 set(GLIB_DLL_SUFFIX 2)
 set(GLIB_LIB_SUFFIX 2.0)
 
@@ -9,7 +12,7 @@ if(CMAKE_BUILD_TYPE STREQUAL Debug)
 endif()
 
 if(BUILD_SHARED_LIBS)
-    set(GLIB_EXPORT_MACRO DLL_EXPORT)
+    add_definitions(-DDLL_EXPORT)
 endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
@@ -23,25 +26,70 @@ find_path(PCRE_INCLUDE_DIR pcre.h)
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
     set(PCRE_SUFFIX d)
 endif()
-find_library(PCRE_LIBRARY pcre${PCRE_SUFFIX})
+find_library(PCRE_LIBRARY NAMES pcre${PCRE_SUFFIX} pcre)
 # libiconv
-find_path(ICONV_INCLUDE_DIR iconv.h)
-find_library(ICONV_LIBRARY NAMES iconv libiconv)
+find_package(unofficial-iconv REQUIRED)
 # libffi
 find_path(FFI_INCLUDE_DIR ffi.h)
 find_library(FFI_LIBRARY NAMES ffi libffi)
-# libintl(gettext)
-find_path(LIBINTL_INCLUDE_DIR libintl.h)
-find_library(LIBINTL_LIBRARY NAMES intl libintl)
+get_filename_component(LIB_DIR "${FFI_LIBRARY}" DIRECTORY)
+if(APPLE)
+    find_library(COREFOUNDATION_LIBRARY CoreFoundation)
+    find_library(FOUNDATION_LIBRARY Foundation)
+    find_library(CORESERVICES_LIBRARY CoreServices)
+    link_libraries(${CORESERVICES_LIBRARY} ${COREFOUNDATION_LIBRARY} ${FOUNDATION_LIBRARY})
+endif()
+
+if(WIN32 OR APPLE)
+    # libintl(gettext)
+    find_path(LIBINTL_INCLUDE_DIR libintl.h)
+    find_library(LIBINTL_LIBRARY NAMES intl libintl)
+else()
+    set(LIBINTL_INCLUDE_DIR)
+    set(LIBINTL_LIBRARY)
+endif()
+
+if(WIN32)
+    set(LIBRESOLV_LIBRARY)
+else()
+    find_library(LIBRESOLV_LIBRARY NAMES resolv libresolv)
+endif()
 
 #prepare config files
-configure_file(config.h.win32 ${CMAKE_SOURCE_DIR}/config.h COPYONLY)
-configure_file(glib/glibconfig.h.win32 ${CMAKE_SOURCE_DIR}/glib/glibconfig.h COPYONLY)
-configure_file(gmodule/gmoduleconf.h.win32 ${CMAKE_SOURCE_DIR}/gmodule/gmoduleconf.h COPYONLY)
-configure_file(gio/gnetworking.h.win32 ${CMAKE_SOURCE_DIR}/gio/gnetworking.h COPYONLY)
-add_definitions(-DHAVE_CONFIG_H)
+if(WIN32)
+    configure_file(config.h.win32 ${CMAKE_BINARY_DIR}/config/config.h COPYONLY)
+    configure_file(glib/glibconfig.h.win32 ${CMAKE_BINARY_DIR}/config/glib/glibconfig.h COPYONLY)
+    configure_file(gmodule/gmoduleconf.h.win32 ${CMAKE_BINARY_DIR}/config/gmodule/gmoduleconf.h COPYONLY)
+    configure_file(gio/gnetworking.h.win32 ${CMAKE_BINARY_DIR}/config/gio/gnetworking.h COPYONLY)
+    add_definitions(-DHAVE_CONFIG_H)
+else()
+    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/config)
+    set(ENV{LIBFFI_LIBS} "${FFI_LIBRARY}")
+    set(ENV{PCRE_LIBS} "${PCRE_LIBRARY}")
+    set(ENV{LIBFFI_CFLAGS} "-I${FFI_INCLUDE_DIR}")
+    set(ENV{PCRE_CFLAGS} "-I${PCRE_INCLUDE_DIR}")
+    set(ENV{MSGFMT} "/bin/echo")
+    set(ENV{GMSGFMT} "/bin/echo")
+    if(NOT EXISTS "${CMAKE_BINARY_DIR}/config/config.h")
+        execute_process(
+            COMMAND "${CMAKE_SOURCE_DIR}/configure"
+                --disable-libelf
+                --disable-libmount
+                "CPPFLAGS=-I${PCRE_INCLUDE_DIR}"
+                "CFLAGS=-I${PCRE_INCLUDE_DIR}"
+                "LDFLAGS=-L${LIB_DIR}"
+            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/config
+            RESULT_VARIABLE res
+        )
+        if(NOT res EQUAL 0)
+            message(FATAL_ERROR "Configure failed.")
+        endif()
+    endif()
+    add_definitions("-DGIO_MODULE_DIR=\"gio/modules\"")
+endif()
 
-include_directories(. ./glib)
+include_directories(${CMAKE_BINARY_DIR}/config ${CMAKE_BINARY_DIR}/config/glib ${CMAKE_BINARY_DIR}/config/gio ${CMAKE_BINARY_DIR}/config/gmodule)
+include_directories(. glib)
 
 # This macro purposely doesn't find nodes with sources that have additional properties set
 # Most of such files in glib are PCRE sources which we don't use anyway
@@ -62,60 +110,155 @@ endmacro()
 # main module
 extract_vcproj_sources(win32/vs14/glib.vcxproj GLIB_SOURCES)
 list(APPEND GLIB_SOURCES glib/libcharset/localcharset.c) # modified internal version with prefixed symbols
+if(NOT WIN32)
+    list(FILTER GLIB_SOURCES EXCLUDE REGEX "win32.c\$|win32-helper.c\$")
+    list(APPEND GLIB_SOURCES "glib/gthread-posix.c" "glib/giounix.c" "glib/gspawn.c" "glib/glib-unix.c")
+endif()
 add_library(glib ${GLIB_SOURCES})
-target_compile_definitions(glib PRIVATE USE_SYSTEM_PCRE ${GLIB_EXPORT_MACRO} GLIB_COMPILATION G_LOG_DOMAIN="GLib" LIBDIR)
-target_link_libraries(glib ws2_32 winmm ${PCRE_LIBRARY} ${ICONV_LIBRARY} ${LIBINTL_LIBRARY})
+target_compile_definitions(glib PRIVATE GLIB_COMPILATION G_LOG_DOMAIN="GLib" LIBDIR="")
+target_link_libraries(glib PRIVATE ${PCRE_LIBRARY} unofficial::iconv::libiconv unofficial::iconv::libcharset ${LIBINTL_LIBRARY})
+if(WIN32)
+    target_compile_definitions(glib PRIVATE USE_SYSTEM_PCRE)
+    target_link_libraries(glib PRIVATE ws2_32 winmm)
+else()
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+    find_package(Threads REQUIRED)
+    target_link_libraries(glib PRIVATE Threads::Threads ${CMAKE_DL_LIBS})
+endif()
 target_include_directories(glib PRIVATE ${PCRE_INCLUDE_DIR} ${ICONV_INCLUDE_DIR})
-target_include_directories(glib PUBLIC  ${LIBINTL_INCLUDE_DIR})
+target_include_directories(glib PUBLIC ${LIBINTL_INCLUDE_DIR})
 list(APPEND GLIB_TARGETS glib)
+if(NOT GLIB_SKIP_HEADERS)
+    install(FILES glib/glib.h glib/glib-object.h ${CMAKE_BINARY_DIR}/config/glib/glibconfig.h DESTINATION include)
+
+    file(GLOB GLIB_HEADERS glib/*.h)
+    list(FILTER GLIB_HEADERS EXCLUDE REGEX "/glib.h\$|/glib-object.h\$|private.h\$")
+    install(FILES ${GLIB_HEADERS} DESTINATION include/glib)
+
+    file(GLOB GLIB_DEP_HEADERS glib/deprecated/*.h)
+    install(FILES ${GLIB_DEP_HEADERS} DESTINATION include/glib/deprecated)
+endif()
 
 # gthread
 add_library(gthread gthread/gthread-impl.c)
 target_compile_definitions(gthread PRIVATE G_LOG_DOMAIN="GThread")
-target_link_libraries(gthread glib ${LIBINTL_LIBRARY})
+target_link_libraries(gthread PRIVATE glib ${LIBINTL_LIBRARY})
 target_include_directories(gthread PRIVATE ${LIBINTL_INCLUDE_DIR})
 list(APPEND GLIB_TARGETS gthread)
 
 # gobject
 extract_vcproj_sources(win32/vs14/gobject.vcxproj GOBJECT_SOURCES)
 add_library(gobject ${GOBJECT_SOURCES})
-target_compile_definitions(gobject PRIVATE GOBJECT_COMPILATION ${GLIB_EXPORT_MACRO} G_LOG_DOMAIN="GLib-GObject")
-target_link_libraries(gobject gthread glib ${FFI_LIBRARY})
+target_compile_definitions(gobject PRIVATE GOBJECT_COMPILATION G_LOG_DOMAIN="GLib-GObject")
+target_link_libraries(gobject PRIVATE gthread glib ${FFI_LIBRARY})
 target_include_directories(gobject PRIVATE ${FFI_INCLUDE_DIR})
 list(APPEND GLIB_TARGETS gobject)
+if(NOT GLIB_SKIP_HEADERS)
+    file(GLOB GOBJECT_HEADERS gobject/*.h gobject/gobjectnotifyqueue.c)
+    list(FILTER GOBJECT_HEADERS EXCLUDE REGEX "private.h\$")
+    install(FILES ${GOBJECT_HEADERS} DESTINATION include/gobject)
+endif()
 
 # gmodule
 add_library(gmodule gmodule/gmodule.c)
 target_compile_definitions(gmodule PRIVATE G_LOG_DOMAIN="GModule")
-target_link_libraries(gmodule glib ${LIBINTL_LIBRARY})
+target_link_libraries(gmodule PRIVATE glib ${LIBINTL_LIBRARY})
+target_include_directories(gmodule PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/gmodule>)
 target_include_directories(gmodule PRIVATE ${LIBINTL_INCLUDE_DIR})
 list(APPEND GLIB_TARGETS gmodule)
+if(NOT GLIB_SKIP_HEADERS)
+    install(FILES gmodule/gmodule.h DESTINATION include)
+endif()
+
+# gio subdirs
+if(NOT WIN32)
+    file(GLOB XDGMIME_SOURCES gio/xdgmime/*.c)
+    add_library(xdgmime ${XDGMIME_SOURCES})
+    target_compile_definitions(xdgmime PRIVATE -DXDG_PREFIX=_gio_xdg)
+    list(APPEND GLIB_TARGETS xdgmime)
+endif()
+
+if(NOT WIN32 AND NOT APPLE)
+    file(GLOB INOTIFY_SOURCES gio/inotify/*.c)
+    add_library(inotify ${INOTIFY_SOURCES})
+    target_link_libraries(inotify PRIVATE gmodule)
+    target_compile_definitions(inotify PRIVATE -DG_LOG_DOMAIN=\"GLib-GIO\" -DGIO_COMPILATION -DG_DISABLE_DEPRECATED)
+    list(APPEND GLIB_TARGETS inotify)
+endif()
+
+if(APPLE)
+    file(GLOB KQUEUE_SOURCES gio/kqueue/*.c)
+    add_library(kqueue ${KQUEUE_SOURCES})
+    target_link_libraries(kqueue PRIVATE gmodule)
+    target_compile_definitions(kqueue PRIVATE -DG_LOG_DOMAIN=\"GLib-GIO\" -DGIO_COMPILATION -DG_DISABLE_DEPRECATED)
+    list(APPEND GLIB_TARGETS kqueue)
+endif()
 
 # gio
 extract_vcproj_sources(win32/vs14/gio.vcxproj GIO_SOURCES)
+if(NOT WIN32)
+    file(GLOB GIO_UNIX_SOURCES "gio/gunix*.c" "gio/g*notificationbackend.c" "gio/g*portal*.c")
+    list(APPEND GIO_SOURCES ${GIO_UNIX_SOURCES})
+    list(APPEND GIO_SOURCES
+        "gio/gcontenttype.c"
+        "gio/gfiledescriptorbased.c"
+        "gio/gnetworkmonitornm.c"
+        "gio/xdp-dbus.c"
+    )
+    list(FILTER GIO_SOURCES EXCLUDE REGEX "/gwin32[^/]+\$|win32/[^/]+\$|win32.c\$|gregistrysettingsbackend.c\$")
+    if(APPLE)
+        set_property(SOURCE
+            gio/gcocoanotificationbackend.c
+            gio/gosxappinfo.c
+            gio/gnextstepsettingsbackend.c
+            PROPERTY COMPILE_FLAGS "-x objective-c")
+        list(APPEND GIO_SOURCES
+            "gio/gnextstepsettingsbackend.c"
+            "gio/gosxappinfo.c"
+        )
+    else()
+        list(APPEND GIO_SOURCES
+            "gio/gnetworkmonitornetlink.c"
+            "gio/gdesktopappinfo.c"
+        )
+        list(FILTER GIO_SOURCES EXCLUDE REGEX "gcocoanotificationbackend.c\$")
+    endif()
+endif()
+if(NOT GLIB_SKIP_HEADERS)
+    file(GLOB GIO_HEADERS gio/*.h)
+    list(FILTER GIO_HEADERS EXCLUDE REGEX "private.h\$")
+    install(FILES ${GIO_HEADERS} ${CMAKE_BINARY_DIR}/config/gio/gnetworking.h DESTINATION include/gio)
+endif()
 add_library(gio ${GIO_SOURCES})
-target_compile_definitions(gio PRIVATE GIO_COMPILATION ${GLIB_EXPORT_MACRO} G_LOG_DOMAIN="GLib-GIO")
-target_link_libraries(gio glib gmodule gobject ws2_32 shlwapi dnsapi iphlpapi ${ZLIB_LIBRARIES})
-target_include_directories(gio PRIVATE ./gio ./gmodule ${ZLIB_INCLUDE_DIRS})
+target_compile_definitions(gio PRIVATE GIO_COMPILATION G_LOG_DOMAIN="GLib-GIO")
+target_link_libraries(gio PRIVATE glib gmodule gobject ZLIB::ZLIB ${LIBRESOLV_LIBRARY} ${LIBINTL_LIBRARY})
+target_include_directories(gio PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/gio>)
+if(WIN32)
+    target_link_libraries(gio PRIVATE ws2_32 shlwapi dnsapi iphlpapi)
+elseif(APPLE)
+    target_link_libraries(gio PRIVATE xdgmime kqueue)
+else()
+    target_link_libraries(gio PRIVATE xdgmime inotify)
+endif()
 list(APPEND GLIB_TARGETS gio)
 
 foreach(GTARGET ${GLIB_TARGETS})
-    set_target_properties(${GTARGET} PROPERTIES 
+    set_target_properties(${GTARGET} PROPERTIES
         OUTPUT_NAME ${GTARGET}-${GLIB_DLL_SUFFIX}
         ARCHIVE_OUTPUT_NAME ${GTARGET}-${GLIB_LIB_SUFFIX})
 endforeach()
 
 macro(add_glib_tool TOOL_NAME)
     add_executable(${TOOL_NAME} ${ARGN})
-    target_link_libraries(${TOOL_NAME} glib)
+    target_link_libraries(${TOOL_NAME} glib ${LIBINTL_LIBRARY})
     target_compile_definitions(${TOOL_NAME} PRIVATE GLIB_COMPILATION)
     list(APPEND GLIB_TOOLS ${TOOL_NAME})
 endmacro()
 
 macro(add_gio_tool TOOL_NAME)
     add_executable(${TOOL_NAME} ${ARGN})
-    target_link_libraries(${TOOL_NAME} glib gio gobject gmodule)
-    target_include_directories(${TOOL_NAME} PRIVATE ./gmodule ./gio)
+    target_link_libraries(${TOOL_NAME} PRIVATE glib gio gobject gmodule ${LIBINTL_LIBRARY})
+    target_include_directories(${TOOL_NAME} PRIVATE gmodule gio)
     target_compile_definitions(${TOOL_NAME} PRIVATE GIO_COMPILATION)
     list(APPEND GLIB_TOOLS ${TOOL_NAME})
 endmacro()
@@ -123,22 +266,22 @@ endmacro()
 if(NOT GLIB_SKIP_TOOLS)
     configure_file(gobject/glib-mkenums.in ${CMAKE_SOURCE_DIR}/gobject/glib-mkenums @ONLY) # uses GLIB_VERSION
     install(FILES gobject/glib-mkenums DESTINATION tools/glib)
-    
+
     configure_file(gio/gdbus-2.0/codegen/gdbus-codegen.in ${CMAKE_SOURCE_DIR}/gio/gdbus-2.0/codegen/gdbus-codegen COPYONLY)
     install(FILES gio/gdbus-2.0/codegen/gdbus-codegen DESTINATION tools/glib)
     file(GLOB CODEGEN_SOURCES gio/gdbus-2.0/codegen/*.py)
     install(FILES ${CODEGEN_SOURCES} DESTINATION tools/glib/codegen)
-    
-    add_gio_tool(gdbus gio/gdbus-tool.c)    
+
+    add_gio_tool(gdbus gio/gdbus-tool.c)
     add_gio_tool(gio-querymodules gio/gio-querymodules.c)
     file(GLOB GIO_TOOL_SOURCES gio/gio-tool*.c)
     add_gio_tool(gio-tool ${GIO_TOOL_SOURCES})
     set_target_properties(gio-tool PROPERTIES OUTPUT_NAME gio)
     add_gio_tool(glib-compile-resources gio/glib-compile-resources.c gio/gvdb/gvdb-builder.c)
-    add_gio_tool(glib-compile-schemas gio/glib-compile-schemas.c gio/gvdb/gvdb-builder.c)   
+    add_gio_tool(glib-compile-schemas gio/glib-compile-schemas.c gio/gvdb/gvdb-builder.c)
     add_gio_tool(gresource gio/gresource-tool.c)
     add_gio_tool(gsettings gio/gsettings-tool.c)
-    
+
     if(CMAKE_SIZEOF_VOID_P EQUAL 4)
         set(WIN win32)
     else()
@@ -146,20 +289,20 @@ if(NOT GLIB_SKIP_TOOLS)
     endif()
 
     add_glib_tool(glib-genmarshal gobject/glib-genmarshal.c)
-    add_glib_tool(gspawn-${WIN}-helper WIN32 glib/gspawn-win32-helper.c)
-    add_glib_tool(gspawn-${WIN}-helper-console glib/gspawn-win32-helper-console.c)
-    
+    if(WIN32)
+        add_glib_tool(gspawn-${WIN}-helper WIN32 glib/gspawn-win32-helper.c)
+        add_glib_tool(gspawn-${WIN}-helper-console glib/gspawn-win32-helper-console.c)
+    endif()
+
     install(TARGETS ${GLIB_TOOLS} RUNTIME DESTINATION tools/glib)
 endif()
 
 install(TARGETS ${GLIB_TARGETS} RUNTIME DESTINATION bin ARCHIVE DESTINATION lib LIBRARY DESTINATION lib)
-if(NOT GLIB_SKIP_HEADERS)
-    include(install_headers)
-endif()
 
 message(STATUS "Link-time dependencies:")
 message(STATUS "  " ${ZLIB_LIBRARIES})
 message(STATUS "  " ${PCRE_LIBRARY})
 message(STATUS "  " ${ICONV_LIBRARY})
+message(STATUS "  " ${CHARSET_LIBRARY})
 message(STATUS "  " ${FFI_LIBRARY})
 message(STATUS "  " ${LIBINTL_LIBRARY})

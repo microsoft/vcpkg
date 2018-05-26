@@ -1,5 +1,5 @@
 option(SUFFIX_D "Add d Suffix to lib" ${SUFFIX_D})
-if(NOT ${SUFFIX_D})
+if(NOT SUFFIX_D)
     find_library(GLSLANG glslang)
     find_library(OSDEPENDENT OSDependent)
     find_library(OGLCOMPILER OGLCompiler)
@@ -15,6 +15,8 @@ ENDIF()
 
 add_library(glslang STATIC IMPORTED GLOBAL)
 set_property(TARGET glslang PROPERTY IMPORTED_LOCATION "${GLSLANG}")
+set(glslang_SOURCE_DIR "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include" CACHE STRING "glslang source dir")
+set_property(TARGET glslang APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include")
 
 add_library(OSDependent STATIC IMPORTED GLOBAL)
 set_property(TARGET OSDependent PROPERTY IMPORTED_LOCATION "${OSDEPENDENT}")

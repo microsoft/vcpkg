@@ -32,8 +32,6 @@ endif()
 
 
 if(CMD MATCHES "^BUILD$")
-    string(REGEX REPLACE "([^-]*)-([^-]*)" "\\1" TRIPLET_SYSTEM_ARCH ${TARGET_TRIPLET})
-
     set(CMAKE_TRIPLET_FILE ${VCPKG_ROOT_DIR}/triplets/${TARGET_TRIPLET}.cmake)
     if(NOT EXISTS ${CMAKE_TRIPLET_FILE})
         message(FATAL_ERROR "Unsupported target triplet. Triplet file does not exist: ${CMAKE_TRIPLET_FILE}")
@@ -70,6 +68,7 @@ if(CMD MATCHES "^BUILD$")
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR} ${CURRENT_PACKAGES_DIR})
 
     include(${CMAKE_TRIPLET_FILE})
+    set(TRIPLET_SYSTEM_ARCH ${VCPKG_TARGET_ARCHITECTURE})
     include(${CURRENT_PORT_DIR}/portfile.cmake)
 
     set(BUILD_INFO_FILE_PATH ${CURRENT_PACKAGES_DIR}/BUILD_INFO)
@@ -84,6 +83,9 @@ if(CMD MATCHES "^BUILD$")
     endif()
     if (DEFINED VCPKG_POLICY_ONLY_RELEASE_CRT)
         file(APPEND ${BUILD_INFO_FILE_PATH} "PolicyOnlyReleaseCRT: ${VCPKG_POLICY_ONLY_RELEASE_CRT}\n")
+    endif()
+    if (DEFINED VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT)
+        file(APPEND ${BUILD_INFO_FILE_PATH} "PolicyAllowObsoleteMsvcrt: ${VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT}\n")
     endif()
     if (DEFINED VCPKG_POLICY_EMPTY_INCLUDE_FOLDER)
         file(APPEND ${BUILD_INFO_FILE_PATH} "PolicyEmptyIncludeFolder: ${VCPKG_POLICY_EMPTY_INCLUDE_FOLDER}\n")
@@ -106,10 +108,12 @@ elseif(CMD MATCHES "^CREATE$")
         message(STATUS "If this is not desired, delete the file and ${NATIVE_VCPKG_ROOT_DIR}\\ports\\${PORT}")
     else()
         include(vcpkg_download_distfile)
-        file(DOWNLOAD ${URL} ${DOWNLOADS}/${FILENAME} STATUS error_code)
-        if(NOT error_code MATCHES "0;")
-            message(FATAL_ERROR "Error downloading file: ${error_code}")
-        endif()
+        set(_VCPKG_INTERNAL_NO_HASH_CHECK "TRUE")
+        vcpkg_download_distfile(ARCHIVE
+            URLS ${URL}
+            FILENAME ${FILENAME}
+        )
+        set(_VCPKG_INTERNAL_NO_HASH_CHECK "FALSE")
     endif()
     file(SHA512 ${DOWNLOADS}/${FILENAME} SHA512)
 

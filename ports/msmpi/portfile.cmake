@@ -1,20 +1,28 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/msmpi-8.0)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/msmpi-8.1)
 
 vcpkg_download_distfile(SDK_ARCHIVE
-    URLS "https://download.microsoft.com/download/B/2/E/B2EB83FE-98C2-4156-834A-E1711E6884FB/msmpisdk.msi"
-    FILENAME "msmpisdk-8.0.msi"
-    SHA512 49c762873ba777ccb3c959a1d2ca1392e4c3c8d366e604ad707184ea432302e6649894ec6599162d0d40f3e6ebc0dada1eb9ca0da1cde0f6ba7a9b1847dac8c0
+    URLS "https://download.microsoft.com/download/2/E/C/2EC96D7F-687B-4613-80F6-E10F670A2D97/msmpisdk.msi"
+    FILENAME "msmpisdk-9.0.msi"
+    SHA512 f80cc7619c42a5a0975224c5a0ab6d4085a97ab9a1480318cd72db2f600db52fb81d3959a2a9e0dbd9412b02d0814b8191dd4745bbde397110210e05960628b4
 )
+
+macro(download_msmpi_redistributable_package)
+    vcpkg_download_distfile(REDIST_ARCHIVE
+        URLS "https://download.microsoft.com/download/2/E/C/2EC96D7F-687B-4613-80F6-E10F670A2D97/msmpisetup.exe"
+        FILENAME "msmpisetup-9.0.exe"
+        SHA512 ad1cc3bc74e4c9c3c0f304395df9468e729e0acd9c77c8c6c806e88eadf4693811d29e608ffb459fcb6f4a20f61946ef4ac2e411aac49fb8f8d5aaddd10d4554
+    )
+endmacro()
 
 ### Check for correct version of installed redistributable package
 
 # We always want the ProgramFiles folder even on a 64-bit machine (not the ProgramFilesx86 folder)
 vcpkg_get_program_files_platform_bitness(PROGRAM_FILES_PLATFORM_BITNESS)
 set(SYSTEM_MPIEXEC_FILEPATH "${PROGRAM_FILES_PLATFORM_BITNESS}/Microsoft MPI/Bin/mpiexec.exe")
-set(MSMPI_EXPECTED_FULL_VERSION "8.0.12438.0")
+set(MSMPI_EXPECTED_FULL_VERSION "9.0.12497")
 
-if(EXISTS ${SYSTEM_MPIEXEC_FILEPATH})
+if(EXISTS "${SYSTEM_MPIEXEC_FILEPATH}")
     set(MPIEXEC_VERSION_LOGNAME "mpiexec-version")
     vcpkg_execute_required_process(
         COMMAND ${SYSTEM_MPIEXEC_FILEPATH}
@@ -23,12 +31,17 @@ if(EXISTS ${SYSTEM_MPIEXEC_FILEPATH})
     )
     file(READ ${CURRENT_BUILDTREES_DIR}/${MPIEXEC_VERSION_LOGNAME}-out.log MPIEXEC_OUTPUT)
 
-    if(${MPIEXEC_OUTPUT} MATCHES "\\[Version ([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)\\]")
-        if(NOT ${CMAKE_MATCH_1} STREQUAL ${MSMPI_EXPECTED_FULL_VERSION})
+    if(MPIEXEC_OUTPUT MATCHES "\\[Version ([0-9]+\\.[0-9]+\\.[0-9]+)\\.[0-9]+\\]")
+        if(NOT CMAKE_MATCH_1 STREQUAL MSMPI_EXPECTED_FULL_VERSION)
+            download_msmpi_redistributable_package()
+
             message(FATAL_ERROR
                 "  The version of the installed MSMPI redistributable packages does not match the version to be installed\n"
-                "  Expected version: ${MSMPI_EXPECTED_FULL_VERSION}\n"
-                "  Found version: ${CMAKE_MATCH_1}\n")
+                "    Expected version: ${MSMPI_EXPECTED_FULL_VERSION}\n"
+                "    Found version: ${CMAKE_MATCH_1}\n"
+                "  Please upgrade the installed version on your system.\n"
+                "  The appropriate installer for the expected version has been downloaded to:\n"
+                "    ${REDIST_ARCHIVE}\n")
         endif()
     else()
         message(FATAL_ERROR
@@ -38,11 +51,7 @@ if(EXISTS ${SYSTEM_MPIEXEC_FILEPATH})
             "    ${CURRENT_BUILDTREES_DIR}\\${MPIEXEC_VERSION_LOGNAME}-err.log\n")
     endif()
 else()
-    vcpkg_download_distfile(REDIST_ARCHIVE
-        URLS "https://download.microsoft.com/download/B/2/E/B2EB83FE-98C2-4156-834A-E1711E6884FB/MSMpiSetup.exe"
-        FILENAME "MSMpiSetup-8.0.exe"
-        SHA512 f5271255817f5417de8e432cd21e5ff3c617911a30b7777560c0ceb6f4031ace5fa88fc7675759ae0964bcf4e2076fe367a06c129f3a9ad06871a08bf95ed68b
-    )
+    download_msmpi_redistributable_package()
 
     message(FATAL_ERROR
         "  Could not find:\n"
@@ -56,8 +65,15 @@ file(TO_NATIVE_PATH "${SDK_ARCHIVE}" SDK_ARCHIVE)
 file(TO_NATIVE_PATH "${SOURCE_PATH}/sdk" SDK_SOURCE_DIR)
 file(TO_NATIVE_PATH "${CURRENT_BUILDTREES_DIR}/msiexec-${TARGET_TRIPLET}.log" MSIEXEC_LOG_PATH)
 
+set(PARAM_MSI "/a \"${SDK_ARCHIVE}\"")
+set(PARAM_LOG "/log \"${MSIEXEC_LOG_PATH}\"")
+set(PARAM_TARGET_DIR "TARGETDIR=\"${SDK_SOURCE_DIR}\"")
+set(SCRIPT_FILE ${CURRENT_BUILDTREES_DIR}/msiextract-msmpi.bat)
+# Write the command out to a script file and run that to avoid weird escaping behavior when spaces are present
+file(WRITE ${SCRIPT_FILE} "msiexec ${PARAM_MSI} /qn ${PARAM_LOG} ${PARAM_TARGET_DIR}")
+
 vcpkg_execute_required_process(
-    COMMAND msiexec /a ${SDK_ARCHIVE} /qn TARGETDIR=${SDK_SOURCE_DIR} /log "${MSIEXEC_LOG_PATH}"
+    COMMAND ${SCRIPT_FILE}
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
     LOGNAME extract-sdk
 )
@@ -86,7 +102,7 @@ file(INSTALL
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/lib
 )
-if(${TRIPLET_SYSTEM_ARCH} STREQUAL "x86")
+if(TRIPLET_SYSTEM_ARCH STREQUAL "x86")
     file(INSTALL
             "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifes.lib"
             "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifms.lib"
@@ -105,7 +121,7 @@ file(INSTALL
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/debug/lib
 )
-if(${TRIPLET_SYSTEM_ARCH} STREQUAL "x86")
+if(TRIPLET_SYSTEM_ARCH STREQUAL "x86")
     file(INSTALL
             "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifes.lib"
             "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifms.lib"

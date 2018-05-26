@@ -1,12 +1,13 @@
 #cmake-only scripts
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/extra-cmake-modules-5.32.0)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://download.kde.org/stable/frameworks/5.32/extra-cmake-modules-5.32.0.zip"
-    FILENAME "extra-cmake-modules-5.32.0.zip"
-    SHA512 f966820e88fdbcdea7f20ff6b76ab8a6d2f7eaf78950bc690243b7201b9f646d92c83a998c19feab3bfe2ed528ec96ad1fa36e6ae320419d226cddd28cd433e5
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO KDE/extra-cmake-modules
+    REF v5.40.0
+    SHA512 1f79d797770367e79c2c6dd73c125d32fcc5fe404b350d953b69cc6544babc1c73e2986c833635daaac85a5af966977e40fe41c01ac48ccc45d46d2e1636d21f
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

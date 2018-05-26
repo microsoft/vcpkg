@@ -1,0 +1,4 @@
+Source: ismrmrd
+Version: 1.3.2-2
+Description: ISMRM Raw Data Format
+Build-Depends: pugixml

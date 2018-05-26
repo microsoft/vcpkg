@@ -1,0 +1,65 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dd327d0..5043452 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -6,15 +6,6 @@ include(CTest)
+ include(FindZLIB)
+ include(FindThreads)
+ 
+-enable_testing()
+-
+-# Detect the build type from the $FLAVOR environment variable
+-if ("$ENV{FLAVOR}" MATCHES "debug")
+-    set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "type of build" FORCE)
+-else ()
+-    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "type of build" FORCE)
+-endif ()
+-
+ if (NOT WIN32)
+     set(CMAKE_CXX_FLAGS "-std=c++98 -Wall -Wextra -pedantic")
+ endif ()
+@@ -40,6 +31,6 @@ include_directories(src/ptex)
+ include_directories(${ZLIB_INCLUDE_DIR})
+ 
+ add_subdirectory(src/ptex)
+-add_subdirectory(src/utils)
+-add_subdirectory(src/tests)
+-add_subdirectory(src/doc)
++#add_subdirectory(src/utils)
++#add_subdirectory(src/tests)
++#add_subdirectory(src/doc)
+diff --git a/src/ptex/CMakeLists.txt b/src/ptex/CMakeLists.txt
+index c926d98..ac2c71d 100644
+--- a/src/ptex/CMakeLists.txt
++++ b/src/ptex/CMakeLists.txt
+@@ -1,6 +1,8 @@
+-if (WIN32)
+-    add_definitions(/DPTEX_EXPORTS)
+-endif (WIN32)
++if (BUILD_SHARED_LIBS)
++    add_definitions(-DPTEX_EXPORTS)
++else ()
++    add_definitions(-DPTEX_STATIC)  
++endif ()
+ 
+ set(SRCS
+     PtexCache.cpp
+@@ -14,15 +16,11 @@ set(SRCS
+     PtexUtils.cpp
+     PtexWriter.cpp)
+ 
+-add_library(Ptex_static STATIC ${SRCS})
+-set_target_properties(Ptex_static PROPERTIES OUTPUT_NAME Ptex)
++add_library(Ptex ${SRCS})
+ 
+-add_library(Ptex_dynamic SHARED ${SRCS})
+-set_target_properties(Ptex_dynamic PROPERTIES OUTPUT_NAME Ptex)
++target_link_libraries(Ptex ${CMAKE_THREAD_LIBS_INIT} ${ZLIB_LIBRARIES})
+ 
+-target_link_libraries(Ptex_dynamic ${CMAKE_THREAD_LIBS_INIT} ${ZLIB_LIBRARIES})
+-
+-install(TARGETS Ptex_static Ptex_dynamic DESTINATION ${CMAKE_INSTALL_LIBDIR})
++install(TARGETS Ptex RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ 
+ install(FILES
+         PtexHalf.h

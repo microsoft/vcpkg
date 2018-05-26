@@ -1,10 +1,10 @@
 #header-only library
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/utfcpp-2.3.4)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/utfcpp-2.3.5)
 vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "https://github.com/nemtrif/utfcpp/archive/v2.3.4.tar.gz"
-    FILENAME "utfcpp-2.3.4.tar.gz"
-    SHA512 1baa67c4efb926bba97dfbc869ac057d5d6cf67e94879fc0854ec3d75a5bae7c47cb3e9fd9cbc7bed9ca5daf40f173c0349bce2f6aa34a400bdf77d01522ff2f
+    URLS "https://github.com/nemtrif/utfcpp/archive/v2.3.5.tar.gz"
+    FILENAME "utfcpp-2.3.5.tar.gz"
+    SHA512 d5e672de952b78a78a8af0c81664f15667b30558fd406a9abc72c14dc444e0869e7c02cb66fa017ec0e760c0fb23c3e923a4b171c2acb3ed7b71612783e789ee
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 

@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
-set(LIBTIFF_VERSION 4.0.7)
-set(LIBTIFF_HASH 941357bdd5f947cdca41a1d31ae14b3fadc174ae5dce7b7981dbe58f61995f575ac2e97a7cc4fcc435184012017bec0920278263490464644f2cdfad9a6c5ddc)
+set(LIBTIFF_VERSION 4.0.9)
+set(LIBTIFF_HASH 04f3d5eefccf9c1a0393659fe27f3dddd31108c401ba0dc587bca152a1c1f6bc844ba41622ff5572da8cc278593eff8c402b44e7af0a0090e91d326c2d79f6cd)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/tiff-${LIBTIFF_VERSION})
 
 vcpkg_download_distfile(ARCHIVE
@@ -18,6 +18,10 @@ vcpkg_apply_patches(
             ${CMAKE_CURRENT_LIST_DIR}/crt-secure-no-deprecate.patch
 )
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+    set (TIFF_CXX_TARGET -Dcxx=OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -28,6 +32,7 @@ vcpkg_configure_cmake(
         -DBUILD_TESTS=OFF
         -Djbig=OFF # This is disabled by default due to GPL/Proprietary licensing.
         -Djpeg12=OFF
+        ${TIFF_CXX_TARGET}
 )
 
 vcpkg_install_cmake()

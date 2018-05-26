@@ -1,0 +1,10 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d64ee41..e33e7bf 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -76,4 +76,4 @@ add_subdirectory(src)
+ add_subdirectory(doc) 
+ 
+ # here we specify the installation directory
+-set(CMAKE_INSTALL_PREFIX ${RTTR_INSTALL_DIR} CACHE PATH  "RTTR install prefix" FORCE)
++set(CMAKE_INSTALL_PREFIX ${RTTR_INSTALL_DIR} CACHE PATH  "RTTR install prefix")

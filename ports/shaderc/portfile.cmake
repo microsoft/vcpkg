@@ -7,35 +7,19 @@
 #
 
 include(vcpkg_common_functions)
-find_program(GIT git)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src)
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO google/shaderc
+    REF 12fb656ab20ea9aa06e7084a74e5ff832b7ce2da
+    SHA512 6fb45a0b01e6709c44a11658648b9271fe06bd94023dcc5042c47b5f2a04889c2efb0ab4c166f18728594ac9b9aa9f8b354af46d88eb7f7c39c7246f52f5a933
+    HEAD_REF master
+)
 
-set(SHADERC_GIT_URL "https://github.com/google/shaderc.git")
-set(SHADERC_GIT_REF "2df47b51d83ad83cbc2e7f8ff2b56776293e8958")
-if(NOT EXISTS "${DOWNLOADS}/shaderc.git")
-    message(STATUS "Cloning")
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} clone --bare ${SHADERC_GIT_URL} ${DOWNLOADS}/shaderc.git
-        WORKING_DIRECTORY ${DOWNLOADS}
-        LOGNAME clone
-    )
-endif()
-if(NOT EXISTS "${SOURCE_PATH}/.git")
-    message(STATUS "Adding worktree and patching")
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR})
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} worktree add -f --detach ${SOURCE_PATH} ${SHADERC_GIT_REF}
-        WORKING_DIRECTORY ${DOWNLOADS}/shaderc.git
-        LOGNAME worktree
-    )
-    message(STATUS "Patching")
-    vcpkg_execute_required_process(
-        COMMAND ${GIT} apply ${CMAKE_CURRENT_LIST_DIR}/0001-Do-not-generate-build-version.inc.patch --ignore-whitespace --whitespace=fix
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME patch
-    )
-endif()
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH} 
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-Do-not-generate-build-version.inc.patch
+)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/third_party/glslang)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists_spirv.txt DESTINATION ${SOURCE_PATH}/third_party/spirv-tools)
@@ -69,10 +53,7 @@ file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
 #Safe to remove as libs are static
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
-
-
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/shaderc.txt)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/shaderc)

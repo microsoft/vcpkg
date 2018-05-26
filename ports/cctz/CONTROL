@@ -1,0 +1,3 @@
+Source: cctz
+Version: 2.2
+Description: two libraries that cooperate with <chrono> to give C++ programmers all the necessary tools for computing with dates, times, and time zones in a simple and correct manner.

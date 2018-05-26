@@ -1,17 +1,22 @@
-﻿if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     message(STATUS "Warning: Static building not supported yet. Building dynamic.")
     set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
-if (VCPKG_CRT_LINKAGE STREQUAL static)
+if(VCPKG_CRT_LINKAGE STREQUAL static)
     message(FATAL_ERROR "Static linking of the CRT is not yet supported.")
 endif()
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    message(FATAL_ERROR "UWP is not currently supported.")
+endif()
+
 include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/ChakraCore
-    REF v1.4.3
-    SHA512 6083bbbb4b980f44fe0e1d3581eea17190e379134f9312f11d195694aa3e0d9723406d8048ce461bc2744306c07b44465d6d58636b114a82b2f42d7a3316c9af
+    REF v1.8.4
+    SHA512 54f0ec00656d26c3cb3c034c0d1f0c927b67ce083cca6d2ced1f936e31a0987d0e4000dfb2419ffa6a21a15fa87b03a9214e92e8694158fc1e3715a095f08e19
     HEAD_REF master
 )
 
@@ -21,41 +26,50 @@ if(COR_H_PATH MATCHES "NOTFOUND")
 endif()
 get_filename_component(NETFXSDK_PATH "${COR_H_PATH}/../.." ABSOLUTE)
 
+set(BUILDTREE_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
+file(REMOVE_RECURSE ${BUILDTREE_PATH})
+file(COPY ${SOURCE_PATH}/ DESTINATION ${BUILDTREE_PATH})
+
 vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/Build/Chakra.Core.sln
+    PROJECT_PATH ${BUILDTREE_PATH}/Build/Chakra.Core.sln
     OPTIONS "/p:DotNetSdkRoot=${NETFXSDK_PATH}/" "/p:CustomBeforeMicrosoftCommonTargets=${CMAKE_CURRENT_LIST_DIR}/no-warning-as-error.props"
 )
 
 file(INSTALL
-    ${SOURCE_PATH}/lib/jsrt/ChakraCore.h
-    ${SOURCE_PATH}/lib/jsrt/ChakraCommon.h
-    ${SOURCE_PATH}/lib/jsrt/ChakraCommonWindows.h
-    ${SOURCE_PATH}/lib/jsrt/ChakraDebug.h
+    ${BUILDTREE_PATH}/lib/jsrt/ChakraCore.h
+    ${BUILDTREE_PATH}/lib/jsrt/ChakraCommon.h
+    ${BUILDTREE_PATH}/lib/jsrt/ChakraCommonWindows.h
+    ${BUILDTREE_PATH}/lib/jsrt/ChakraDebug.h
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
-file(INSTALL
-    ${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_debug/ChakraCore.dll
-    ${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_debug/ChakraCore.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-)
-file(INSTALL
-    ${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_debug/Chakracore.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-)
-file(INSTALL
-    ${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/ChakraCore.dll
-    ${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/ChakraCore.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-)
-file(INSTALL
-    ${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/Chakracore.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-)
-file(INSTALL
-    ${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/ch.exe
-    ${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/GCStress.exe
-    ${SOURCE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/rl.exe
-    DESTINATION ${CURRENT_PACKAGES_DIR}/tools/chakracore)
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(INSTALL
+        ${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_debug/ChakraCore.dll
+        ${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_debug/ChakraCore.pdb
+        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
+    )
+    file(INSTALL
+        ${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_debug/Chakracore.lib
+        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+    )
+endif()
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(INSTALL
+        ${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/ChakraCore.dll
+        ${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/ChakraCore.pdb
+        DESTINATION ${CURRENT_PACKAGES_DIR}/bin
+    )
+    file(INSTALL
+        ${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/Chakracore.lib
+        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
+    )
+    file(INSTALL
+        ${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/ch.exe
+        ${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/GCStress.exe
+        ${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/rl.exe
+        DESTINATION ${CURRENT_PACKAGES_DIR}/tools/chakracore)
+endif()
+
 vcpkg_copy_pdbs()
 file(INSTALL
     ${SOURCE_PATH}/LICENSE.txt

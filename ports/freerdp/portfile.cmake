@@ -1,8 +1,8 @@
 include(vcpkg_common_functions)
 
-set(FREERDP_VERSION 2.0.0-beta1+android11)
-set(FREERDP_REVISION 86fcb35f4273bf11410f962572e65644c6fe9ae3)
-set(FREERDP_HASH 6ad9f6dfab827f7bb50c31c6694d7254d890fff5178581b6ffd4f4e970a31e866b4a3d3e637d25d13dbb8f7d7e0cc219a056ce4f5642951576d9531cb0859ebe)
+set(FREERDP_VERSION 2.0.0-rc1)
+set(FREERDP_REVISION 2.0.0-rc1)
+set(FREERDP_HASH 5d8fd7d6900feac1e42bfc0ebc111524205c3baa093958ced42d03635076ae7d88cd86439a22ff0656bc53f0302daee5a114a4ac26328ae598ee086490926182)
 
 string(REGEX REPLACE "\\+" "-" FREERDP_VERSION_ESCAPED ${FREERDP_VERSION})
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/FreeRDP-${FREERDP_VERSION_ESCAPED})
@@ -49,16 +49,20 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 
 if(NOT TARGET_TRIPLET MATCHES "uwp")
-    make_directory("${CURRENT_PACKAGES_DIR}/tools")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/winpr-hash.exe"     "${CURRENT_PACKAGES_DIR}/tools/winpr-hash.exe")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/winpr-makecert.exe" "${CURRENT_PACKAGES_DIR}/tools/winpr-makecert.exe")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/wfreerdp.exe"       "${CURRENT_PACKAGES_DIR}/tools/wfreerdp.exe")
+    file(GLOB_RECURSE TOOLS_RELEASE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
+    file(GLOB_RECURSE TOOLS_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
 
-    make_directory("${CURRENT_PACKAGES_DIR}/debug/tools")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/winpr-hash.exe"     "${CURRENT_PACKAGES_DIR}/debug/tools/winpr-hash.exe")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/winpr-makecert.exe" "${CURRENT_PACKAGES_DIR}/debug/tools/winpr-makecert.exe")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/wfreerdp.exe"       "${CURRENT_PACKAGES_DIR}/debug/tools/wfreerdp.exe")
+    file(COPY ${TOOLS_RELEASE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+
+    file(REMOVE ${TOOLS_RELEASE} ${TOOLS_DEBUG})
 endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
+
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/freerdp)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/freerdp/LICENSE ${CURRENT_PACKAGES_DIR}/share/freerdp/copyright)
@@ -66,6 +70,7 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/freerdp/LICENSE ${CURRENT_PACKAGES_DIR
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)

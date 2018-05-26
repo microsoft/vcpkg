@@ -1,52 +1,82 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/aws-sdk-cpp-1.0.61)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/aws/aws-sdk-cpp/archive/1.0.61.tar.gz"
-    FILENAME "aws-sdk-cpp-1.0.61.tar.gz"
-    SHA512 aef0a85a32db24dc4fba0fc49c2533074580f3df628e787ff0808f03deea5dac42e19b1edc966706784e98cfed17a350c3eff4f222df7cc756065be56d1fc6a6
-)
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES 
-		${CMAKE_CURRENT_LIST_DIR}/drop_git.patch
-		${CMAKE_CURRENT_LIST_DIR}/disable_warning_as_error.patch
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO aws/aws-sdk-cpp
+    REF 1.4.52
+    SHA512 ef10a2d9d491ae28179ec7622b34470153cf3a6fdf50ca8f942c098d74a12a9e555c314537c91e06285990fe942bee9e4ff21396752153d482e9db1776981d6b
+    HEAD_REF master
 )
 
-if(VCPKG_CRT_LINKAGE STREQUAL static)
-	set(FORCE_SHARED_CRT OFF)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
+
+set(BUILD_ONLY core)
+
+include(${CMAKE_CURRENT_LIST_DIR}/compute_build_only.cmake)
+
+if(CMAKE_HOST_WIN32)
+    string(REPLACE ";" "\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
 else()
-	set(FORCE_SHARED_CRT ON)
+    string(REPLACE ";" "\\\\\\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
 endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-	PREFER_NINJA
-	OPTIONS
-		-DENABLE_TESTING=OFF
-		-DFORCE_SHARED_CRT=${FORCE_SHARED_CRT}
+    PREFER_NINJA
+    OPTIONS
+        -DENABLE_UNITY_BUILD=ON
+        -DENABLE_TESTING=OFF
+        -DFORCE_SHARED_CRT=${FORCE_SHARED_CRT}
+        -DCMAKE_DISABLE_FIND_PACKAGE_Git=TRUE
+        "-DBUILD_ONLY=${BUILD_ONLY}"
 )
 
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE 
-	${CURRENT_PACKAGES_DIR}/debug/include
-	${CURRENT_PACKAGES_DIR}/lib/cmake
-	${CURRENT_PACKAGES_DIR}/lib/pkgconfig
-	${CURRENT_PACKAGES_DIR}/debug/lib/cmake
-	${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig
-	${CURRENT_PACKAGES_DIR}/nuget
-	${CURRENT_PACKAGES_DIR}/debug/nuget)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
+
+vcpkg_copy_pdbs()
+
+file(GLOB_RECURSE AWS_TARGETS "${CURRENT_PACKAGES_DIR}/share/*/*-targets-*.cmake")
+foreach(AWS_TARGET IN LISTS AWS_TARGETS)
+    file(READ ${AWS_TARGET} _contents)
+    string(REGEX REPLACE
+        "bin\\/([A-Za-z0-9_.-]+\\.lib)"
+        "lib/\\1"
+        _contents "${_contents}")
+    file(WRITE ${AWS_TARGET} "${_contents}")
+endforeach()
+
+file(GLOB AWS_CONFIGS "${CURRENT_PACKAGES_DIR}/share/*/aws-cpp-sdk-*-config.cmake")
+list(FILTER AWS_CONFIGS EXCLUDE REGEX "aws-cpp-sdk-core-config\\.cmake\$")
+foreach(AWS_CONFIG IN LISTS AWS_CONFIGS)
+    file(READ "${AWS_CONFIG}" _contents)
+    file(WRITE "${AWS_CONFIG}" "include(CMakeFindDependencyMacro)\nfind_dependency(aws-cpp-sdk-core)\n${_contents}")
+endforeach()
+
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/debug/include
+    ${CURRENT_PACKAGES_DIR}/debug/share
+    ${CURRENT_PACKAGES_DIR}/share/AWSSDK
+    ${CURRENT_PACKAGES_DIR}/lib/pkgconfig
+    ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig
+    ${CURRENT_PACKAGES_DIR}/nuget
+    ${CURRENT_PACKAGES_DIR}/debug/nuget
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-	file(GLOB LIB_FILES          ${CURRENT_PACKAGES_DIR}/bin/*.lib)
-	file(GLOB DEBUG_LIB_FILES    ${CURRENT_PACKAGES_DIR}/debug/bin/*.lib)
-	file(COPY ${LIB_FILES}       DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-	file(COPY ${DEBUG_LIB_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-	file(REMOVE ${LIB_FILES} ${DEBUG_LIB_FILES})
-	
-	file(APPEND ${CURRENT_PACKAGES_DIR}/include/aws/core/SDKConfig.h "#define USE_IMPORT_EXPORT")
+    file(GLOB LIB_FILES ${CURRENT_PACKAGES_DIR}/bin/*.lib)
+    if(LIB_FILES)
+        file(COPY ${LIB_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+        file(REMOVE ${LIB_FILES})
+    endif()
+    file(GLOB DEBUG_LIB_FILES ${CURRENT_PACKAGES_DIR}/debug/bin/*.lib)
+    if(DEBUG_LIB_FILES)
+        file(COPY ${DEBUG_LIB_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+        file(REMOVE ${DEBUG_LIB_FILES})
+    endif()
+
+    file(APPEND ${CURRENT_PACKAGES_DIR}/include/aws/core/SDKConfig.h "#ifndef USE_IMPORT_EXPORT\n#define USE_IMPORT_EXPORT\n#endif")
 endif()
 
 # Handle copyright

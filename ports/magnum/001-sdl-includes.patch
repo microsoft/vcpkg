@@ -1,0 +1,20 @@
+diff --git a/src/Magnum/Platform/Sdl2Application.h b/src/Magnum/Platform/Sdl2Application.h
+index 99c3174..311b2c1 100644
+--- a/src/Magnum/Platform/Sdl2Application.h
++++ b/src/Magnum/Platform/Sdl2Application.h
+@@ -42,11 +42,11 @@
+ #ifdef CORRADE_TARGET_WINDOWS /* Windows version of SDL2 redefines main(), we don't want that */
+ #define SDL_MAIN_HANDLED
+ #endif
+-#include <SDL.h>
+-#include <SDL_scancode.h>
++#include <SDL2/SDL.h>
++#include <SDL2/SDL_scancode.h>
+ 
+ #ifdef CORRADE_TARGET_WINDOWS_RT
+-#include <SDL_main.h> /* For SDL_WinRTRunApp */
++#include <SDL2/SDL_main.h> /* For SDL_WinRTRunApp */
+ #include <wrl.h> /* For the WinMain entrypoint */
+ #endif
+ 
+

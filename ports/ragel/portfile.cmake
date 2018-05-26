@@ -23,7 +23,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/ragel.txt)
+# Allow empty include directory
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ragel)

@@ -1,38 +1,35 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     message(STATUS "Warning: Dynamic building not supported yet. Building static.")
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/bond-5.3.1)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/bond-7.0.2)
 
 vcpkg_download_distfile(ARCHIVE
-  URLS "https://github.com/Microsoft/bond/archive/5.3.1.zip"
-  FILENAME "bond-5.3.1.zip"
-  SHA512 aa1b3b6cbbbfbdb450306b59d0216c4b63b25ce2f5852387b42cb5c098e8fb6f90d8d1f688344fa4375244510009767d7d46a6a0b5f49c725b22cf3e9d73d1e5
+  URLS "https://github.com/Microsoft/bond/archive/7.0.2.zip"
+  FILENAME "bond-7.0.2.zip"
+  SHA512 4ae3b88fafbede6c1433d171713bdbfcbed61a3d2a983d7df4e33af893a50f233be0e95c1ea8e5f30dafb017b2a8100a23721292b04184159e5fd796b1a43398
 )
 vcpkg_download_distfile(GBC_ARCHIVE
-  URLS "https://github.com/Microsoft/bond/releases/download/5.3.1/gbc-5.3.1-amd64.exe.zip"
-  FILENAME "gbc-5.3.1-amd64.zip"
-  SHA512 fb1eff0b7bd34cba26fa6a0ffeba7789cff55976e95a695aa2cf6ae60b5c4e8b0dd15f0d7968599bd5b17c9b8b325aa29e3e13aca4854ec38ed50253d67038e4
+  URLS "https://github.com/Microsoft/bond/releases/download/7.0.2/gbc-7.0.2-amd64.exe.zip"
+  FILENAME "gbc-7.0.2-amd64.exe.zip"
+  SHA512 069eafd7641ebd719425037cb8249d2d214eb09c6ce38fbf1d1811c01d1839b0a0987c55217075b6ae9f477f750d582250134387a530edb2aee407b21d973915
 )
 
 vcpkg_extract_source_archive(${ARCHIVE})
 
 # Extract the precompiled gbc
 vcpkg_extract_source_archive(${GBC_ARCHIVE} ${CURRENT_BUILDTREES_DIR}/tools/)
-set(FETCHED_GBC_PATH ${CURRENT_BUILDTREES_DIR}/tools/gbc-5.3.1-amd64.exe)
+set(FETCHED_GBC_PATH ${CURRENT_BUILDTREES_DIR}/tools/gbc-7.0.2-amd64.exe)
 
-if (NOT EXISTS ${FETCHED_GBC_PATH})
+if (NOT EXISTS "${FETCHED_GBC_PATH}")
     message(FATAL_ERROR "Fetching GBC failed. Expected '${FETCHED_GBC_PATH}' to exists, but it doesn't.")
 endif()
 
 vcpkg_apply_patches(
   SOURCE_PATH ${SOURCE_PATH}
   PATCHES
-    # Change Boost_USE_STATIC_LIBS to be compatible with vcpkg's treatment
-    # of Boost
-    ${CMAKE_CURRENT_LIST_DIR}/0001_boost_static_libs.patch
     # Don't install rapidjson from the (empty) submodule. With vcpkg, we get
     # rapidjson from vcpkg
     ${CMAKE_CURRENT_LIST_DIR}/0002_omit_rapidjson.patch
@@ -40,9 +37,12 @@ vcpkg_apply_patches(
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
+  PREFER_NINJA
   OPTIONS
     -DBOND_LIBRARIES_ONLY=TRUE
     -DBOND_GBC_PATH=${FETCHED_GBC_PATH}
+    -DBOND_ENABLE_COMM=FALSE
+    -DBOND_ENABLE_GRPC=FALSE
 )
 
 vcpkg_install_cmake()

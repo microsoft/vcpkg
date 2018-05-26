@@ -1,0 +1,4 @@
+Source: gl2ps
+Version: 1.4.0-1
+Description: OpenGL to PostScript Printing Library
+Build-Depends: freeglut, zlib, libpng
