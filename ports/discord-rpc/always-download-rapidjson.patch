@@ -1,0 +1,45 @@
+From c1f972b4901e60602b6d5c3b117b766ab6c8ee5e Mon Sep 17 00:00:00 2001
+From: Nils Berg <berg.nils@gmail.com>
+Date: Tue, 29 May 2018 09:19:09 +0200
+Subject: [PATCH] always download rapidjson
+
+---
+ CMakeLists.txt | 21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5dad9e9..c474d04 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -32,19 +32,16 @@ execute_process(
+     ERROR_QUIET
+ )
+ 
+-find_file(RAPIDJSONTEST NAMES rapidjson rapidjson-1.1.0 PATHS ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty CMAKE_FIND_ROOT_PATH_BOTH)
+-if (NOT RAPIDJSONTEST)
+-    message("no rapidjson, download")
+-    set(RJ_TAR_FILE ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/v1.1.0.tar.gz)
+-    file(DOWNLOAD https://github.com/miloyip/rapidjson/archive/v1.1.0.tar.gz ${RJ_TAR_FILE})
+-    execute_process(
+-        COMMAND ${CMAKE_COMMAND} -E tar xzf ${RJ_TAR_FILE}
+-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty
+-    )
+-    file(REMOVE ${RJ_TAR_FILE})
+-endif(NOT RAPIDJSONTEST)
++message("downloading rapidjson")
++set(RJ_TAR_FILE ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/v1.1.0.tar.gz)
++file(DOWNLOAD https://github.com/miloyip/rapidjson/archive/v1.1.0.tar.gz ${RJ_TAR_FILE})
++execute_process(
++  COMMAND ${CMAKE_COMMAND} -E tar xzf ${RJ_TAR_FILE}
++  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty
++  )
++file(REMOVE ${RJ_TAR_FILE})
+ 
+-find_file(RAPIDJSON NAMES rapidjson rapidjson-1.1.0 PATHS ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty CMAKE_FIND_ROOT_PATH_BOTH)
++set(RAPIDJSON ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/rapidjson-1.1.0)
+ 
+ add_library(rapidjson STATIC IMPORTED ${RAPIDJSON})
+ 
+-- 
+2.17.0
+

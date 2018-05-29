@@ -8,6 +8,12 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_apply_patches(
+  SOURCE_PATH ${SOURCE_PATH}
+  PATCHES
+  ${CMAKE_CURRENT_LIST_DIR}/always-download-rapidjson.patch
+  )
+
 set(STATIC_CRT OFF)
 if(VCPKG_CRT_LINKAGE STREQUAL static)
     set(STATIC_CRT ON)
