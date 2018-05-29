@@ -52,26 +52,33 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+# Executable suffix
+if (WIN32)
+    set(EXECUTABLE_SUFFIX ".exe")
+else()
+    set(EXECUTABLE_SUFFIX "")
+endif()
+
 # Drop a copy of tools
 if(distancefieldconverter IN_LIST FEATURES)
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-distancefieldconverter.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-distancefieldconverter${EXECUTABLE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
 endif()
 if(fontconverter IN_LIST FEATURES)
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-fontconverter.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-fontconverter${EXECUTABLE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
 endif()
 if(al-info IN_LIST FEATURES)
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-al-info.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-al-info${EXECUTABLE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
 endif()
 if(magnuminfo IN_LIST FEATURES)
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-info.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
+    file(COPY ${CURRENT_PACKAGES_DIR}/bin/magnum-info${EXECUTABLE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/magnum)
 endif()
 
 # Tools require dlls
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/magnum)
 
 file(GLOB_RECURSE TO_REMOVE
-   ${CURRENT_PACKAGES_DIR}/bin/*.exe
-   ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
+   ${CURRENT_PACKAGES_DIR}/bin/*${EXECUTABLE_SUFFIX}
+   ${CURRENT_PACKAGES_DIR}/debug/bin/*${EXECUTABLE_SUFFIX})
 if(TO_REMOVE)
     file(REMOVE ${TO_REMOVE})
 endif()
