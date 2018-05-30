@@ -10,6 +10,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ost-1.67.0-d7a1dca9d6
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch"
+)
+
 include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)

@@ -1,0 +1,422 @@
+diff --git a/include/boost/filesystem/path.hpp b/include/boost/filesystem/path.hpp
+index 65e27b1..7c7e0b7 100644
+--- a/include/boost/filesystem/path.hpp
++++ b/include/boost/filesystem/path.hpp
+@@ -42,6 +42,19 @@
+ 
+ #include <boost/config/abi_prefix.hpp> // must be the last #include
+ 
++#ifdef BOOST_WINDOWS_API
++#include <boost/predef/platform.h>
++#endif
++
++#if BOOST_PLAT_WINDOWS_RUNTIME 
++#define generic GenericFromBoost
++#endif
++
++#if BOOST_PLAT_WINDOWS_RUNTIME 
++#undef generic
++#define generic GenericFromBoost
++#endif
++
+ namespace boost
+ {
+ namespace filesystem
+@@ -1008,6 +1021,10 @@ namespace path_traits
+ }  // namespace filesystem
+ }  // namespace boost
+ 
++#if BOOST_PLAT_WINDOWS_RUNTIME 
++#undef generic
++#endif
++
+ //----------------------------------------------------------------------------//
+ 
+ #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
+diff --git a/src/operations.cpp b/src/operations.cpp
+index 035612c..ca0ef3f 100644
+--- a/src/operations.cpp
++++ b/src/operations.cpp
+@@ -106,7 +106,7 @@ using std::wstring;
+ #   include <windows.h>
+ #   include <winnt.h>
+ #   if !defined(_WIN32_WINNT)
+-#     define  _WIN32_WINNT   0x0500
++#     define  _WIN32_WINNT   0x0A00
+ #   endif
+ #   if defined(__BORLANDC__) || defined(__MWERKS__)
+ #     if defined(__BORLANDC__)
+@@ -234,11 +234,17 @@ typedef DWORD err_t;
+ #   define BOOST_ERRNO    ::GetLastError()
+ #   define BOOST_SET_CURRENT_DIRECTORY(P)(::SetCurrentDirectoryW(P)!= 0)
+ #   define BOOST_CREATE_DIRECTORY(P)(::CreateDirectoryW(P, 0)!= 0)
++#   ifndef BOOST_PLAT_WINDOWS_RUNTIME 
+ #   define BOOST_CREATE_HARD_LINK(F,T)(create_hard_link_api(F, T, 0)!= 0)
+ #   define BOOST_CREATE_SYMBOLIC_LINK(F,T,Flag)(create_symbolic_link_api(F, T, Flag)!= 0)
++#   endif
+ #   define BOOST_REMOVE_DIRECTORY(P)(::RemoveDirectoryW(P)!= 0)
+ #   define BOOST_DELETE_FILE(P)(::DeleteFileW(P)!= 0)
++
++#   ifndef BOOST_PLAT_WINDOWS_RUNTIME 
+ #   define BOOST_COPY_DIRECTORY(F,T)(::CreateDirectoryExW(F, T, 0)!= 0)
++#   endif
++
+ #   define BOOST_COPY_FILE(F,T,FailIfExistsBool)(::CopyFileW(F, T, FailIfExistsBool)!= 0)
+ #   define BOOST_MOVE_FILE(OLD,NEW)(::MoveFileExW(OLD, NEW, MOVEFILE_REPLACE_EXISTING|MOVEFILE_COPY_ALLOWED)!= 0)
+ #   define BOOST_RESIZE_FILE(P,SZ)(resize_file_api(P, SZ)!= 0)
+@@ -247,6 +253,55 @@ typedef DWORD err_t;
+ #   define BOOST_ERROR_ALREADY_EXISTS ERROR_ALREADY_EXISTS
+ #   define BOOST_ERROR_NOT_SUPPORTED ERROR_NOT_SUPPORTED
+ 
++#if BOOST_PLAT_WINDOWS_RUNTIME 
++#   define BOOST_COPY_DIRECTORY(F,T)(::CreateDirectoryW(F, 0)!= 0)
++
++inline DWORD WIN32_FROM_HRESULT(HRESULT hr)
++{
++    if ((hr & 0xFFFF0000) == MAKE_HRESULT(SEVERITY_ERROR, FACILITY_WIN32, 0))
++        return HRESULT_CODE(hr);
++    if (hr == S_OK)
++        return HRESULT_CODE(hr);
++    return ERROR_SUCCESS;
++}
++
++inline BOOL WINAPI CopyFileW(LPCWSTR lpExistingFileName, LPCWSTR lpNewFileName, BOOL bFailIfExists)
++{
++    COPYFILE2_EXTENDED_PARAMETERS params;
++
++    params.dwSize = sizeof(params);
++    params.dwCopyFlags = bFailIfExists ? COPY_FILE_FAIL_IF_EXISTS : 0;
++    params.pfCancel = FALSE;
++    params.pProgressRoutine = nullptr;
++    params.pvCallbackContext = nullptr;
++
++    auto hr = CopyFile2(lpExistingFileName, lpNewFileName, &params);
++    if (FAILED(hr))
++    {
++        SetLastError(WIN32_FROM_HRESULT(hr));
++        return FALSE;
++    }
++
++    return TRUE;
++}
++
++inline DWORD WINAPI GetFileAttributesW(LPCWSTR lpFileName)
++{
++    WIN32_FILE_ATTRIBUTE_DATA info;
++    if (!GetFileAttributesExW(lpFileName, GetFileExInfoStandard, &info))
++    {
++        return INVALID_FILE_ATTRIBUTES;
++    }
++
++    return info.dwFileAttributes;
++}
++
++
++inline HMODULE GetModuleHandle(LPCTSTR lpModuleName)
++{
++    return NULL;
++}
++#endif
+ # endif
+ 
+ //--------------------------------------------------------------------------------------//
+@@ -587,6 +642,16 @@ namespace
+     }
+   };
+ 
++#if BOOST_PLAT_WINDOWS_RUNTIME
++  HANDLE create_file_handle(const path& p, DWORD dwDesiredAccess,
++    DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes,
++    DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes,
++    HANDLE hTemplateFile)
++  {
++    return ::CreateFile2(p.c_str(), dwDesiredAccess, dwShareMode,
++      dwCreationDisposition, nullptr);
++  }    
++#else
+   HANDLE create_file_handle(const path& p, DWORD dwDesiredAccess,
+     DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes,
+     DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes,
+@@ -596,9 +661,13 @@ namespace
+       lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes,
+       hTemplateFile);
+   }
++#endif
+ 
+   bool is_reparse_point_a_symlink(const path& p)
+   {
++#if BOOST_PLAT_WINDOWS_RUNTIME 
++	return false;
++#else
+     handle_wrapper h(create_file_handle(p, FILE_READ_EA,
+       FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING,
+       FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT, NULL));
+@@ -624,6 +693,7 @@ namespace
+         // with "mklink /j junction-name target-path".
+       || reinterpret_cast<const REPARSE_DATA_BUFFER*>(buf.get())->ReparseTag
+         == IO_REPARSE_TAG_MOUNT_POINT;  // aka "directory junction" or "junction"
++#endif
+   }
+ 
+   inline std::size_t get_full_path_name(
+@@ -681,8 +751,13 @@ namespace
+ 
+   BOOL resize_file_api(const wchar_t* p, boost::uintmax_t size)
+   {
++#if BOOST_PLAT_WINDOWS_RUNTIME 
++    handle_wrapper h(create_file_handle(p, GENERIC_WRITE,
++						0, 0, OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL, 0));
++#else  
+     handle_wrapper h(CreateFileW(p, GENERIC_WRITE, 0, 0, OPEN_EXISTING,
+                                 FILE_ATTRIBUTE_NORMAL, 0));
++#endif
+     LARGE_INTEGER sz;
+     sz.QuadPart = size;
+     return h.handle != INVALID_HANDLE_VALUE
+@@ -693,6 +768,9 @@ namespace
+   //  Windows kernel32.dll functions that may or may not be present
+   //  must be accessed through pointers
+ 
++#ifndef BOOST_PLAT_WINDOWS_RUNTIME 
++
++
+   typedef BOOL (WINAPI *PtrCreateHardLinkW)(
+     /*__in*/       LPCWSTR lpFileName,
+     /*__in*/       LPCWSTR lpExistingFileName,
+@@ -714,6 +792,7 @@ namespace
+       ::GetModuleHandleW(L"kernel32.dll"), "CreateSymbolicLinkW"));
+ 
+ #endif
++#endif
+ 
+ //#ifdef BOOST_WINDOWS_API
+ //
+@@ -1037,6 +1116,10 @@ namespace detail
+   void create_directory_symlink(const path& to, const path& from,
+                                  system::error_code* ec)
+   {
++#if BOOST_PLAT_WINDOWS_RUNTIME 
++    error(BOOST_ERROR_NOT_SUPPORTED, to, from, ec,
++      "boost::filesystem::create_directory_symlink");
++#else
+ #   if defined(BOOST_WINDOWS_API) && _WIN32_WINNT < 0x0600  // SDK earlier than Vista and Server 2008
+ 
+     error(BOOST_ERROR_NOT_SUPPORTED, to, from, ec,
+@@ -1053,6 +1136,7 @@ namespace detail
+     error(!BOOST_CREATE_SYMBOLIC_LINK(from.c_str(), to.c_str(),
+       SYMBOLIC_LINK_FLAG_DIRECTORY) ? BOOST_ERRNO : 0,
+       to, from, ec, "boost::filesystem::create_directory_symlink");
++#   endif
+ #   endif
+   }
+ 
+@@ -1064,6 +1148,9 @@ namespace detail
+ 
+     error(BOOST_ERROR_NOT_SUPPORTED, to, from, ec,
+       "boost::filesystem::create_hard_link");
++#elif defined BOOST_PLAT_WINDOWS_RUNTIME
++      error(BOOST_ERROR_NOT_SUPPORTED, to, from, ec,
++          "boost::filesystem::create_hard_link");
+ #   else
+ 
+ #     if defined(BOOST_WINDOWS_API) && _WIN32_WINNT >= 0x0500
+@@ -1084,6 +1171,9 @@ namespace detail
+ #   if defined(BOOST_WINDOWS_API) && _WIN32_WINNT < 0x0600  // SDK earlier than Vista and Server 2008
+     error(BOOST_ERROR_NOT_SUPPORTED, to, from, ec,
+       "boost::filesystem::create_directory_symlink");
++#elif defined BOOST_PLAT_WINDOWS_RUNTIME
++      error(BOOST_ERROR_NOT_SUPPORTED, to, from, ec,
++          "boost::filesystem::create_directory_symlink");
+ #   else
+ 
+ #     if defined(BOOST_WINDOWS_API) && _WIN32_WINNT >= 0x0600
+@@ -1211,7 +1301,26 @@ namespace detail
+     }
+ 
+     // at this point, both handles are known to be valid
++#if BOOST_PLAT_WINDOWS_RUNTIME 
++    // Link count info is only available through GetFileInformationByHandle
++	FILE_ID_INFO info1, info2; 
++	
++	if (error(!::GetFileInformationByHandleEx(h1.handle, FileIdInfo, &info1, sizeof(FILE_ID_INFO))== 0 ? BOOST_ERRNO : 0,
++      p1, p2, ec, "boost::filesystem::equivalent"))
++        return  false;
+ 
++	if (error(!::GetFileInformationByHandleEx(h2.handle, FileIdInfo, &info2, sizeof(FILE_ID_INFO))== 0 ? BOOST_ERRNO : 0,
++      p1, p2, ec, "boost::filesystem::equivalent"))
++        return  false;
++		
++	// In theory, volume serial numbers are sufficient to distinguish between
++    // devices, but in practice VSN's are sometimes duplicated, so last write
++    // time and file size are also checked.
++      return 
++        info1.VolumeSerialNumber == info2.VolumeSerialNumber
++        && std::equal(info1.FileId.Identifier, &info1.FileId.Identifier[15], info2.FileId.Identifier);
++#else
++	
+     BY_HANDLE_FILE_INFORMATION info1, info2;
+ 
+     if (error(!::GetFileInformationByHandle(h1.handle, &info1) ? BOOST_ERRNO : 0,
+@@ -1237,6 +1346,8 @@ namespace detail
+           == info2.ftLastWriteTime.dwHighDateTime;
+ 
+ #   endif
++#endif
++
+   }
+ 
+   BOOST_FILESYSTEM_DECL
+@@ -1285,7 +1396,21 @@ namespace detail
+            : static_cast<boost::uintmax_t>(path_stat.st_nlink);
+ 
+ #   else // Windows
+-
++#if BOOST_PLAT_WINDOWS_RUNTIME 
++    // Link count info is only available through GetFileInformationByHandle
++	FILE_STANDARD_INFO info; 
++    handle_wrapper h(
++      create_file_handle(p.c_str(), 0,
++          FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, 0,
++          OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, 0));
++    return
++      !error(h.handle == INVALID_HANDLE_VALUE ? BOOST_ERRNO : 0,
++              p, ec, "boost::filesystem::hard_link_count")
++      && !error(::GetFileInformationByHandleEx(h.handle, FileStandardInfo, &info, sizeof(FILE_STANDARD_INFO))== 0 ? BOOST_ERRNO : 0,
++                 p, ec, "boost::filesystem::hard_link_count")
++           ? info.NumberOfLinks
++           : 0;
++#else
+     // Link count info is only available through GetFileInformationByHandle
+     BY_HANDLE_FILE_INFORMATION info;
+     handle_wrapper h(
+@@ -1299,6 +1424,7 @@ namespace detail
+                  p, ec, "boost::filesystem::hard_link_count")
+            ? info.nNumberOfLinks
+            : 0;
++#   endif
+ #   endif
+   }
+ 
+@@ -1528,7 +1654,7 @@ namespace detail
+       }
+     }
+ 
+-#   elif _WIN32_WINNT < 0x0600  // SDK earlier than Vista and Server 2008
++#   elif _WIN32_WINNT < 0x0600 || BOOST_PLAT_WINDOWS_RUNTIME // SDK earlier than Vista and Server 2008
+     error(BOOST_ERROR_NOT_SUPPORTED, p, ec,
+           "boost::filesystem::read_symlink");
+ #   else  // Vista and Server 2008 SDK, or later
+@@ -1838,6 +1964,9 @@ namespace detail
+       
+ #   else  // Windows
+ 
++#if BOOST_PLAT_WINDOWS_RUNTIME 
++	return  Windows::Storage::ApplicationData::Current->TemporaryFolder->Path->Data();
++#else
+       const wchar_t* tmp_env = L"TMP";
+       const wchar_t* temp_env = L"TEMP";
+       const wchar_t* localappdata_env = L"LOCALAPPDATA";
+@@ -1877,6 +2006,7 @@ namespace detail
+       }
+       return p;
+ 
++#   endif
+ #   endif
+   }
+   
+@@ -2155,8 +2285,14 @@ namespace
+         && dirpath[dirpath.size()-1] != L':'))? L"\\*" : L"*";
+ 
+     WIN32_FIND_DATAW data;
++#if BOOST_PLAT_WINDOWS_RUNTIME 
++    if ((handle = ::FindFirstFileExW(dirpath.c_str(), FindExInfoStandard,
++		&data,FindExSearchNameMatch, NULL, 0))
++      == INVALID_HANDLE_VALUE)
++#else
+     if ((handle = ::FindFirstFileW(dirpath.c_str(), &data))
+       == INVALID_HANDLE_VALUE)
++ #endif
+     { 
+       handle = 0;  // signal eof
+       return error_code( (::GetLastError() == ERROR_FILE_NOT_FOUND
+diff --git a/src/unique_path.cpp b/src/unique_path.cpp
+index 1b05c83..0cd62ab 100644
+--- a/src/unique_path.cpp
++++ b/src/unique_path.cpp
+@@ -47,6 +47,7 @@ void fail(int err, boost::system::error_code* ec)
+ }
+ 
+ #ifdef BOOST_WINDOWS_API
++ #if BOOST_PLAT_WINDOWS_RUNTIME == BOOST_VERSION_NUMBER_NOT_AVAILABLE
+ 
+ int acquire_crypt_handle(HCRYPTPROV& handle)
+ {
+@@ -70,7 +71,7 @@ int acquire_crypt_handle(HCRYPTPROV& handle)
+ 
+   return ::GetLastError();
+ }
+-
++#endif
+ #endif
+ 
+ void system_crypt_random(void* buf, std::size_t len, boost::system::error_code* ec)
+@@ -103,7 +104,20 @@ void system_crypt_random(void* buf, std::size_t len, boost::system::error_code*
+   }
+ 
+   close(file);
+-
++#elif BOOST_PLAT_WINDOWS_RUNTIME
++	using namespace Platform;
++	using namespace Windows::Foundation;
++	using namespace Windows::Foundation::Collections;
++	using namespace Windows::Security::Cryptography;
++	using namespace Windows::Storage::Streams;
++	IBuffer ^ibuf = CryptographicBuffer::GenerateRandom(len);
++	Array<unsigned char> ^arr;
++	CryptographicBuffer::CopyToByteArray(ibuf, &arr);
++	unsigned arrayLen = arr->Length;
++
++	// Make sure not to overflow the copy
++	arrayLen = (arrayLen > len) ? len : arrayLen;
++	memcpy(buf, arr->Data, arrayLen);
+ # else // BOOST_WINDOWS_API
+ 
+   HCRYPTPROV handle;
+diff --git a/src/windows_file_codecvt.cpp b/src/windows_file_codecvt.cpp
+index 998db60..08e70e1 100644
+--- a/src/windows_file_codecvt.cpp
++++ b/src/windows_file_codecvt.cpp
+@@ -23,6 +23,7 @@
+ #ifdef BOOST_WINDOWS_API
+ 
+ #include "windows_file_codecvt.hpp"
++#include <boost/predef/platform.h>
+ 
+ // Versions of MinGW prior to GCC 4.6 requires this
+ #ifndef WINVER
+@@ -36,7 +37,11 @@
+     const char* from, const char* from_end, const char*& from_next,
+     wchar_t* to, wchar_t* to_end, wchar_t*& to_next) const
+   {
++#if BOOST_PLAT_WINDOWS_RUNTIME 
++	UINT codepage = CP_ACP;
++#else
+     UINT codepage = AreFileApisANSI() ? CP_ACP : CP_OEMCP;
++#endif
+ 
+     int count;
+     if ((count = ::MultiByteToWideChar(codepage, MB_PRECOMPOSED, from,
+@@ -56,8 +61,11 @@
+     const wchar_t* from, const wchar_t* from_end, const wchar_t*  & from_next,
+     char* to, char* to_end, char* & to_next) const
+   {
+-    UINT codepage = AreFileApisANSI() ? CP_ACP : CP_OEMCP;
+-
++ #if BOOST_PLAT_WINDOWS_RUNTIME 
++	UINT codepage = CP_ACP;
++#else
++	UINT codepage = AreFileApisANSI() ? CP_ACP : CP_OEMCP;
++#endif
+     int count;
+     if ((count = ::WideCharToMultiByte(codepage, WC_NO_BEST_FIT_CHARS, from,
+       from_end - from, to, to_end - to, 0, 0)) == 0)
