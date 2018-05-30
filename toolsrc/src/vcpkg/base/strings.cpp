@@ -49,33 +49,29 @@ namespace vcpkg::Strings::details
 
 namespace vcpkg::Strings
 {
+#if defined(_WIN32)
     std::wstring to_utf16(const CStringView& s)
     {
-#if defined(_WIN32)
         std::wstring output;
         const size_t size = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
         if (size == 0) return output;
         output.resize(size - 1);
         MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, output.data(), static_cast<int>(size) - 1);
         return output;
-#else
-        Checks::unreachable(VCPKG_LINE_INFO);
-#endif
     }
+#endif
 
+#if defined(_WIN32)
     std::string to_utf8(const wchar_t* w)
     {
-#if defined(_WIN32)
         std::string output;
         const size_t size = WideCharToMultiByte(CP_UTF8, 0, w, -1, nullptr, 0, nullptr, nullptr);
         if (size == 0) return output;
         output.resize(size - 1);
         WideCharToMultiByte(CP_UTF8, 0, w, -1, output.data(), static_cast<int>(size) - 1, nullptr, nullptr);
         return output;
-#else
-        Checks::unreachable(VCPKG_LINE_INFO);
-#endif
     }
+#endif
 
     std::string escape_string(const CStringView& s, char char_to_escape, char escape_char)
     {
@@ -130,6 +126,12 @@ namespace vcpkg::Strings
 #else
         return strncasecmp(s.c_str(), pattern.c_str(), pattern.size()) == 0;
 #endif
+    }
+
+    bool ends_with(const std::string& s, StringLiteral pattern)
+    {
+        if (s.size() < pattern.size()) return false;
+        return std::equal(s.end() - pattern.size(), s.end(), pattern.c_str(), pattern.c_str() + pattern.size());
     }
 
     std::string replace_all(std::string&& s, const std::string& search, const std::string& rep)

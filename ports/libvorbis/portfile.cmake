@@ -7,11 +7,11 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/vorbis-143caf4023a90c09a5eb685fdd46fb9b9c36b1ee)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/vorbis-112d3bd0aaacad51305e1464d4b381dabad0e88b)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/xiph/vorbis/archive/143caf4023a90c09a5eb685fdd46fb9b9c36b1ee.zip"
-    FILENAME "vorbis-143caf4023a90c09a5eb685fdd46fb9b9c36b1ee.zip"
-    SHA512 9eeb64b1664ba8a1d118cdc5efc0090fe5f542eff33a16f4676fde8e59031fd0f9017857a7c45ca549899cab34efefd81dd54a57fab97f91f776fd9426f4e37a
+    URLS "https://github.com/xiph/vorbis/archive/112d3bd0aaacad51305e1464d4b381dabad0e88b.zip"
+    FILENAME "vorbis-112d3bd0aaacad51305e1464d4b381dabad0e88b.zip"
+    SHA512 94e773a34f3e8d1c8ed0422f0eab345b35f76a96760141af83d69d007ebf076fca2d083a77d36bfa4ea10dfefa03a8fa35201aced963655ab8a524aaa7580b11
 )
 
 vcpkg_extract_source_archive(${ARCHIVE})

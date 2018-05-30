@@ -1,3 +1,173 @@
+vcpkg (0.0.113)
+--------------
+  * Add ports:
+    - json-dto       0.2.5
+    - keystone       0.9.1
+    - osgearth       2.9
+    - pdal           1.7.1-2
+    - sdl2pp         0.16.0-1
+  * Update ports:
+    - args           2018-02-23 -> 2018-05-17
+    - aws-sdk-cpp    1.4.40 -> 1.4.52
+    - chakracore     1.8.3 -> 1.8.4
+    - cimg           2.2.2 -> 2.2.3
+    - curl           7_59_0-2 -> 7.60.0
+    - directxmesh    apr2018 -> may2018
+    - directxtex     apr2018 -> may2018
+    - directxtk      apr2018 -> may2018
+    - doctest        1.2.8 -> 1.2.9
+    - entt           2.4.2-1 -> 2.5.0
+    - exiv2          2018-04-25 -> 2018-05-17
+    - fdk-aac        2018-03-07 -> 2018-05-17
+    - forest         7.0.6 -> 7.0.7
+    - gdal           2.2.2-1 -> 2.3.0-1
+    - grpc           1.10.1-1 -> 1.10.1-2
+    - jsonnet        2018-05-01 -> 2018-05-17
+    - libuv          1.20.2 -> 1.20.3-2
+    - libwebsockets  2.4.2 -> 3.0.0
+    - lodepng        2018-02-25 -> 2018-05-17
+    - mpg123         1.25.8-4 -> 1.25.8-5
+    - ms-gsl         2018-05-01 -> 2018-05-17
+    - mujs           2018-05-01 -> 2018-05-17
+    - nuklear        2018-04-25 -> 2018-05-17
+    - opus           1.2.1 -> 1.2.1-1
+    - parson         2018-04-17 -> 2018-05-17
+    - pmdk           1.4-1 -> 1.4-2
+    - podofo         0.9.5-1 -> 0.9.5-2
+    - re2            2018-05-01 -> 2018-05-17
+    - rocksdb        5.12.4 -> 5.13.1
+    - rs-core-lib    2018-05-01 -> 2018-05-17
+    - sdl2-mixer     2.0.2-2 -> 2.0.2-4
+    - thrift         2018-05-01 -> 2018-05-17
+    - unicorn        2018-04-25 -> 2018-05-17
+    - unicorn-lib    2018-05-01 -> 2018-05-17
+    - uwebsockets    0.14.8-1 -> 0.14.8-2
+    - wtl            10.0 -> 10.0-1
+    - zeromq         2018-05-01 -> 2018-05-17
+  * `vcpkg` no longer calls `powershell` from `cmake`.
+    - This completes the fix for the issue where `vcpkg.exe` would change the console's font when invoking `powershell`.
+    - `Powershell` is no longer called other than for bootstrap and powershell integration for tab-completion.
+
+-- vcpkg team <vcpkg@microsoft.com>  SAT, 16 May 2018 19:30:00 -0800
+
+
+vcpkg (0.0.112)
+--------------
+  * Add ports:
+    - robin-map      0.2.0
+  * Update ports:
+    - abseil         2018-04-25-1 -> 2018-05-01-1
+    - ace            6.4.7 -> 6.4.8
+    - aws-sdk-cpp    1.4.38 -> 1.4.40
+    - azure-storage-cpp 3.2.1 -> 4.0.0
+    - blosc          1.13.5 -> 1.13.5-1
+    - boost-modular-build-helper 2018-04-16-4 -> 2018-05-14
+    - brotli         1.0.2-2 -> 1.0.2-3
+    - catch-classic  1.12.1 -> 1.12.2
+    - folly          2018.04.23.00 -> 2018.05.14.00
+    - jsonnet        2018-04-25 -> 2018-05-01
+    - ms-gsl         2018-04-25 -> 2018-05-01
+    - mujs           25821e6d74fab5fcc200fe5e818362e03e114428 -> 2018-05-01
+    - openimageio    1.8.10 -> Release-1.9.2dev
+    - openvr         1.0.14 -> 1.0.15
+    - protobuf       3.5.1-3 -> 3.5.1-4
+    - re2            2018-03-17 -> 2018-05-01
+    - rs-core-lib    2018-04-25 -> 2018-05-01
+    - sol            2.20.0 -> 2.20.0-1
+    - thrift         2018-04-25 -> 2018-05-01
+    - unicorn-lib    2018-04-09 -> 2018-05-01
+    - zeromq         2018-04-25 -> 2018-05-01
+  * `vcpkg` no longer calls powershell for downloading/extracting and detecting Visual Studio.
+    - This also fixes an issue where `vcpkg.exe` would change the console's font when invoking `powershell`.
+
+-- vcpkg team <vcpkg@microsoft.com>  WED, 16 May 2018 19:00:00 -0800
+
+
+vcpkg (0.0.111)
+--------------
+  * Add ports:
+    - cmark          0.28.3-1
+    - inja           1.0.0
+    - libgo          2.7
+    - range-v3-vs2015 20151130-vcpkg5
+    - restinio       0.4.5.1
+    - treehopper     1.11.3-1
+    - yajl           2.1.0-1
+    - yato           1.0-1
+  * Update ports:
+    - abseil         2018-04-12 -> 2018-04-25-1
+    - alembic        1.7.7 -> 1.7.8
+    - aws-sdk-cpp    1.4.33 -> 1.4.38
+    - bigint         2010.04.30-1 -> 2010.04.30-2
+    - box2d          2.3.1-374664b -> 2.3.1-374664b-1
+    - brotli         1.0.2-1 -> 1.0.2-2
+    - cgal           4.11.1 -> 4.12
+    - corrade        2018.02-1 -> 2018.04-1
+    - directxmesh    feb2018-eb751e0b631b05aa25c36c08e7d6bbf09f5e94a9 -> apr2018
+    - directxtex     feb2018b -> apr2018
+    - directxtk      feb2018 -> apr2018
+    - discord-rpc    3.2.0 -> 3.3.0
+    - exiv2          2018-04-12 -> 2018-04-25
+    - exprtk         2018.01.01-f32d2b4 -> 2018.04.30-46877b6
+    - folly          2018.04.16.00 -> 2018.04.23.00
+    - freeglut       3.0.0-3 -> 3.0.0-4
+    - gainput        1.0.0 -> 1.0.0-1
+    - geos           3.6.2-2 -> 3.6.2-3
+    - http-parser    2.7.1-2 -> 2.7.1-3
+    - imgui          1.53 -> 1.60
+    - ismrmrd        1.3.2-1 -> 1.3.2-2
+    - jsonnet        2018-04-17 -> 2018-04-25
+    - leveldb        2017-10-25-8b1cd3753b184341e837b30383832645135d3d73-1 -> 2017-10-25-8b1cd3753b184341e837b30383832645135d3d73-2
+    - libflac        1.3.2-4 -> 1.3.2-5
+    - libqrencode    4.0.0-1 -> 4.0.0-2
+    - libuv          1.20.0 -> 1.20.2
+    - libxmlpp       2.40.1-1 -> 2.40.1-2
+    - llvm           6.0.0 -> 6.0.0-1
+    - magnum         2018.02-2 -> 2018.04-1
+    - magnum-extras  2018.02-2 -> 2018.04-1
+    - magnum-integration 2018.02-1 -> 2018.04-1
+    - magnum-plugins 2018.02-2 -> 2018.04-1
+    - ms-gsl         2018-03-17 -> 2018-04-25
+    - nuklear        2018-04-17 -> 2018-04-25
+    - openal-soft    1.18.2-1 -> 1.18.2-2
+    - physfs         2.0.3-2 -> 3.0.1
+    - poco           1.8.1-1 -> 1.9.0
+    - python3        3.6.4 -> 3.6.4-1
+    - quirc          1.0-1 -> 1.0-2
+    - range-v3       20151130-vcpkg5 -> 0.3.5
+    - rapidjson      1.1.0 -> 1.1.0-1
+    - realsense2     2.10.1-1 -> 2.10.4
+    - rhash          1.3.5-1 -> 1.3.6
+    - rocksdb        5.12.2 -> 5.12.4
+    - rs-core-lib    2018-04-12 -> 2018-04-25
+    - sciter         4.1.5 -> 4.1.7
+    - sfml           2.4.2-2 -> 2.4.2-3
+    - sobjectizer    5.5.21 -> 5.5.22
+    - sol            2.19.5 -> 2.20.0
+    - sqlite3        3.23.0 -> 3.23.1-1
+    - strtk          2018.01.01-5579ed1 -> 2018.05.07-48c9554
+    - thrift         2018-04-17 -> 2018-04-25
+    - unicorn        2018-03-20 -> 2018-04-25
+    - uwebsockets    0.14.7-1 -> 0.14.8-1
+    - vlpp           0.9.3.1 -> 0.9.3.1-1
+    - zeromq         2018-04-17 -> 2018-04-25
+    - zstd           1.3.3 -> 1.3.4
+  * Add clean patching for vcpkg_from_github()
+    - `vcpkg_from_github()` now takes a PATCHES argument (see the azure-storage-cpp [portfile](ports\azure-storage-cpp\portfile.cmake) as an example)
+    - A unique directory name is derived from the source hash and the patch hashes
+    - Modifying the patches would previously cause the new patches to fail to apply if sources with a previous version of the patches were present in the buildtrees. This is no longer the case.
+  * Fix various cross-platform issues
+
+-- vcpkg team <vcpkg@microsoft.com>  FRI, 11 May 2018 21:45:00 -0800
+
+
+vcpkg (0.0.110)
+--------------
+  * `vcpkg` is now available for Linux and MacOS. More information [here](https://blogs.msdn.microsoft.com/vcblog/2018/04/24/announcing-a-single-c-library-manager-for-linux-macos-and-windows-vcpkg/).
+
+-- vcpkg team <vcpkg@microsoft.com>  TUE, 24 Apr 2018 10:30:00 -0800
+
+
 vcpkg (0.0.109)
 --------------
   * Add ports:

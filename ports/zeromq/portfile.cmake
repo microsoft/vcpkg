@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeromq/libzmq
-    REF c971445025535b9f989ab0b78f5ddd1c026f1878
-    SHA512 4eb85e207f53de73cf5369c4c3e79d858ee380e1374ebe807dfc6f99782efc2b98984f48a2cce11b9bf22c7934ef3d1a075cb98fb9e90d5f216a4e128d6df212
+    REF 6a5051fac3bb09db7e7772dcbdd591ee7ded1400
+    SHA512 e05e1d293be513836e3afa117f6acb6f75ecd1b772c7be1c2850b0f165205fec8f0a91bb9b0aaffa9477aae5cc6aae401b9d5d5aa5986c28c3d76e3d4fa4f3e9
     HEAD_REF master
 )
 

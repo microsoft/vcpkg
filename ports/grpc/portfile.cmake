@@ -15,14 +15,10 @@ vcpkg_from_github(
     REF v1.10.1
     SHA512 2221d902c60eada6dd1547a63d26bd3b30cb6710247b5e48523bacde498a3691cc177f1dbe9db8a007b8ae341a5b0c8ec999539e26a9bcff480a8d0b02140997
     HEAD_REF master
-)
-
-# Issue: https://github.com/grpc/grpc/issues/10759
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/disable-csharp-ext.patch
         ${CMAKE_CURRENT_LIST_DIR}/disable-csharp-ext-2.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
@@ -30,6 +26,14 @@ if(VCPKG_CRT_LINKAGE STREQUAL static)
 else()
     set(gRPC_MSVC_STATIC_RUNTIME OFF)
 endif()
+
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(cares_CARES_PROVIDER OFF)
+else()
+    set(cares_CARES_PROVIDER "package")
+endif()
+
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -41,7 +45,7 @@ vcpkg_configure_cmake(
         -DgRPC_ZLIB_PROVIDER=package
         -DgRPC_SSL_PROVIDER=package
         -DgRPC_PROTOBUF_PROVIDER=package
-        -DgRPC_CARES_PROVIDER=package
+        -DgRPC_CARES_PROVIDER=${cares_CARES_PROVIDER}
         -DgRPC_GFLAGS_PROVIDER=none
         -DgRPC_BENCHMARK_PROVIDER=none
         -DgRPC_INSTALL_CSHARP_EXT=OFF
