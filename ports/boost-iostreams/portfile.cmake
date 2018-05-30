@@ -18,6 +18,11 @@ vcpkg_download_distfile(LICENSE
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ost-1.67.0-28e6d2af2f
+    PATCHES "${CURRENT_PORT_DIR}/Removeseekpos.patch"
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
