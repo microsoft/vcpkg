@@ -4,8 +4,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO skypjack/entt
-    REF v2.5.0
-    SHA512 a56d17c4ac832b50349293eb40c32efb079d90c9a7010589979eac5f13b97e82c032f94b87d0d7885099ee6f1857e68e064e3248c7f4d52ccca02620fd80ea25
+    REF v2.6.0
+    SHA512 767884f968c8992f77a89d8d8ec253f449ef4115b421b16a38f4c9359ee43535e46cada8a5e3f9ade86a8de05bed4f792776a90cf4e6a143280c52066baca9d9
 )
 
 file(INSTALL
