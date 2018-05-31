@@ -679,6 +679,7 @@ namespace vcpkg::Commands::Fetch
         std::string major_version() const { return version.substr(0, 2); }
     };
 
+#if defined(WIN32)
     static std::vector<VisualStudioInstance> get_visual_studio_instances(const VcpkgPaths& paths)
     {
         const auto& fs = paths.get_filesystem();
@@ -745,6 +746,7 @@ namespace vcpkg::Commands::Fetch
 
         return instances;
     }
+#endif
 
 #if defined(_WIN32)
     std::vector<Toolset> find_toolset_instances_preferred_first(const VcpkgPaths& paths)
