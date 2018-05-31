@@ -4,7 +4,7 @@ set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/szip-2.1.1)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://support.hdfgroup.org/ftp/lib-external/szip/2.1.1/src/szip-2.1.1.tar.gz"
     FILENAME "szip-2.1.1.tar.gz"
-    SHA512 ada6406efb096cd8a2daf8f9217fe9111a96dcae87e29d1c31f58ddd2ad2aa7bac03f23c7205dc9360f3b62d259461759330c7189ef0c2fe559704b1ea9d40dd
+    SHA512 af7333799d02f393db5a97798a434e918134edc217708b53fc92da7f0d9f32cf965e7aa421a35903d030034f7baa7497107f18b4b7f1c2bce72612c3c9b2d6f3
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
