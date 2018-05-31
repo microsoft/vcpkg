@@ -253,6 +253,10 @@ namespace vcpkg::Paragraphs
         LoadResults ret;
         auto port_dirs = fs.get_files_non_recursive(ports_dir);
         Util::sort(port_dirs);
+        Util::erase_remove_if(port_dirs, [&](auto&& port_dir_entry) {
+            return fs.is_regular_file(port_dir_entry) && port_dir_entry.filename() == ".DS_Store";
+        });
+
         for (auto&& path : port_dirs)
         {
             auto maybe_spgh = try_load_port(fs, path);

@@ -5,15 +5,6 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace Microsoft::VisualStudio::CppUnitTestFramework
-{
-    template<>
-    inline std::wstring ToString<vcpkg::PackageSpecParseResult>(const vcpkg::PackageSpecParseResult& t)
-    {
-        return ToString(static_cast<uint32_t>(t));
-    }
-}
-
 namespace Strings = vcpkg::Strings;
 
 namespace UnitTest1

@@ -7,23 +7,23 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 endif()
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/llvm-5.0.1.src)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/llvm-6.0.0.src)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://releases.llvm.org/5.0.1/llvm-5.0.1.src.tar.xz"
-    FILENAME "llvm-5.0.1.src.tar.xz"
-    SHA512 bee1d45fca15ce725b1f2b1339b13eb6f750a3a321cfd099075477ec25835a8ca55b5366172c4aad46592dfd8afe372349ecf264f581463d017f9cee2d63c1cb
+    URLS "http://releases.llvm.org/6.0.0/llvm-6.0.0.src.tar.xz"
+    FILENAME "llvm-6.0.0.src.tar.xz"
+    SHA512 a71fdd5ddc46f01327ad891cfcc198febdbe10769c57f14d8a4fb7d514621ee4080e1a641200d3353c16a16731d390270499ec6cd3dc98fadc570f3eb6b52b8c
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_download_distfile(CLANG_ARCHIVE
-    URLS "http://releases.llvm.org/5.0.1/cfe-5.0.1.src.tar.xz"
-    FILENAME "cfe-5.0.1.src.tar.xz"
-    SHA512 6619177a2ff9934fe8b15d6aa229abb8e34d0b1a75228d9efba9393daf71d6419a7256de57b31e2f9f829f71f842118556f996e86ee076f1e0a7cd394dfd31a2
+    URLS "http://releases.llvm.org/6.0.0/cfe-6.0.0.src.tar.xz"
+    FILENAME "cfe-6.0.0.src.tar.xz"
+    SHA512 e886dd27448503bbfc7fd4f68eb089c19b2f2be4f0e5b26d3df253833f60b91d70b472a6b530063386e2252075b110ce9f5942800feddf6c34b94a75cf7bd5c6
 )
 vcpkg_extract_source_archive(${CLANG_ARCHIVE} ${SOURCE_PATH}/tools)
 
 if(NOT EXISTS ${SOURCE_PATH}/tools/clang)
-  file(RENAME ${SOURCE_PATH}/tools/cfe-5.0.1.src ${SOURCE_PATH}/tools/clang)
+  file(RENAME ${SOURCE_PATH}/tools/cfe-6.0.0.src ${SOURCE_PATH}/tools/clang)
 endif()
 
 vcpkg_apply_patches(
@@ -70,6 +70,7 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/bin
     ${CURRENT_PACKAGES_DIR}/msbuild-bin
     ${CURRENT_PACKAGES_DIR}/tools/msbuild-bin
+    ${CURRENT_PACKAGES_DIR}/include/llvm/BinaryFormat/WasmRelocs
 )
 
 # Remove one empty include subdirectory if it is indeed empty

@@ -217,7 +217,12 @@ namespace vcpkg::Build
             if (it != toolset.supported_architectures.end()) return it->name;
         }
 
-        Checks::exit_with_message(VCPKG_LINE_INFO, "Unsupported toolchain combination %s", target_architecture);
+        Checks::exit_with_message(VCPKG_LINE_INFO,
+                                  "Unsupported toolchain combination. Target was: %s but supported ones were:\n%s",
+                                  target_architecture,
+                                  Strings::join(",", toolset.supported_architectures, [](const ToolsetArchOption& t) {
+                                      return t.name.c_str();
+                                  }));
     }
 
     std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
@@ -357,7 +362,7 @@ namespace vcpkg::Build
             {
                 {"CMD", "BUILD"},
                 {"PORT", config.scf.core_paragraph->name},
-                {"CURRENT_PORT_DIR", config.port_dir / "/."},
+                {"CURRENT_PORT_DIR", config.port_dir},
                 {"TARGET_TRIPLET", spec.triplet().canonical_name()},
                 {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
                 {"VCPKG_USE_HEAD_VERSION",
@@ -456,9 +461,14 @@ namespace vcpkg::Build
         abi_tag_entries.insert(abi_tag_entries.end(), dependency_abis.begin(), dependency_abis.end());
 
         abi_tag_entries.emplace_back(
-            AbiEntry{"portfile", Commands::Hash::get_file_hash(paths, config.port_dir / "portfile.cmake", "SHA1")});
+            AbiEntry{"portfile", Commands::Hash::get_file_hash(fs, config.port_dir / "portfile.cmake", "SHA1")});
         abi_tag_entries.emplace_back(
-            AbiEntry{"control", Commands::Hash::get_file_hash(paths, config.port_dir / "CONTROL", "SHA1")});
+            AbiEntry{"control", Commands::Hash::get_file_hash(fs, config.port_dir / "CONTROL", "SHA1")});
+
+        if (pre_build_info.cmake_system_name == "Linux")
+        {
+            abi_tag_entries.emplace_back(AbiEntry{"toolchain", "1"});
+        }
 
         abi_tag_entries.emplace_back(AbiEntry{"triplet", pre_build_info.triplet_abi_tag});
 
@@ -493,7 +503,7 @@ namespace vcpkg::Build
             const auto abi_file_path = paths.buildtrees / name / (triplet.canonical_name() + ".vcpkg_abi_info.txt");
             fs.write_contents(abi_file_path, full_abi_info);
 
-            return AbiTagAndFile{Commands::Hash::get_file_hash(paths, abi_file_path, "SHA1"), abi_file_path};
+            return AbiTagAndFile{Commands::Hash::get_file_hash(fs, abi_file_path, "SHA1"), abi_file_path};
         }
 
         System::println(
@@ -520,8 +530,8 @@ namespace vcpkg::Build
         System::cmd_execute_clean(Strings::format(
             R"("%s" x "%s" -o"%s" -y >nul)", seven_zip_exe.u8string(), archive_path.u8string(), pkg_path.u8string()));
 #else
-        System::cmd_execute_clean(Strings::format(
-            R"(unzip -qq "%s" "-d%s")", archive_path.u8string(), pkg_path.u8string()));
+        System::cmd_execute_clean(
+            Strings::format(R"(unzip -qq "%s" "-d%s")", archive_path.u8string(), pkg_path.u8string()));
 #endif
     }
 
@@ -537,11 +547,10 @@ namespace vcpkg::Build
 #if defined(_WIN32)
         auto&& seven_zip_exe = paths.get_tool_exe(Tools::SEVEN_ZIP);
 
-        System::cmd_execute_clean(Strings::format(
-            R"("%s" a "%s" "%s\*" >nul)",
-            seven_zip_exe.u8string(),
-            tmp_archive_path.u8string(),
-            paths.package_dir(spec).u8string()));
+        System::cmd_execute_clean(Strings::format(R"("%s" a "%s" "%s\*" >nul)",
+                                                  seven_zip_exe.u8string(),
+                                                  tmp_archive_path.u8string(),
+                                                  paths.package_dir(spec).u8string()));
 #else
         System::cmd_execute_clean(Strings::format(
             R"(cd '%s' && zip --quiet -r '%s' *)", paths.package_dir(spec).u8string(), tmp_archive_path.u8string()));
@@ -779,14 +788,12 @@ namespace vcpkg::Build
                 {
                     return it_hash->second;
                 }
-                auto hash = Commands::Hash::get_file_hash(paths, triplet_file_path, "SHA1");
+                auto hash = Commands::Hash::get_file_hash(paths.get_filesystem(), triplet_file_path, "SHA1");
                 s_hash_cache.emplace(triplet_file_path, hash);
                 return hash;
             }
-            else
-            {
-                return std::string();
-            }
+
+            return std::string();
         }();
 
         const auto cmd_launch_cmake = System::make_cmake_cmd(cmake_exe_path,
