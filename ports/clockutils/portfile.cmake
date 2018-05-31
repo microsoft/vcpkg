@@ -14,6 +14,11 @@ else()
     SET(SHARED_FLAG OFF)
 endif()
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES "${CURRENT_PORT_DIR}/fix-warningC4643.patch"
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
