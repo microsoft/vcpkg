@@ -816,7 +816,7 @@ namespace vcpkg::Commands::Fetch
                     paths_examined.push_back(dumpbin_path);
                     if (fs.exists(dumpbin_path))
                     {
-                        const Toolset v141toolset = Toolset{
+                        const Toolset v141toolset{
                             vs_instance.root_path, dumpbin_path, vcvarsall_bat, {}, V_141, supported_architectures};
 
                         auto english_language_pack = dumpbin_path.parent_path() / "1033";
@@ -831,12 +831,12 @@ namespace vcpkg::Commands::Fetch
 
                         if (v140_is_available)
                         {
-                            const Toolset v140toolset = Toolset{vs_instance.root_path,
-                                                                dumpbin_path,
-                                                                vcvarsall_bat,
-                                                                {"-vcvars_ver=14.0"},
-                                                                V_140,
-                                                                supported_architectures};
+                            const Toolset v140toolset{vs_instance.root_path,
+                                                      dumpbin_path,
+                                                      vcvarsall_bat,
+                                                      {"-vcvars_ver=14.0"},
+                                                      V_140,
+                                                      supported_architectures};
                             found_toolsets.push_back(v140toolset);
                         }
 
