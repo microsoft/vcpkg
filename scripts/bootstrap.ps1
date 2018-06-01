@@ -1,7 +1,8 @@
 [CmdletBinding()]
 param(
     [ValidateNotNullOrEmpty()][string]$disableMetrics = "0",
-    [Parameter(Mandatory=$False)][string]$withVSPath = ""
+    [Parameter(Mandatory = $False)][string]$withVSPath = "",
+    [Switch]$win64
 )
 Set-StrictMode -Version Latest
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
@@ -43,8 +44,7 @@ Write-Verbose "Examining $vcpkgRootDir for .vcpkg-root - Found"
 
 $vcpkgSourcesPath = "$vcpkgRootDir\toolsrc"
 
-if (!(Test-Path $vcpkgSourcesPath))
-{
+if (!(Test-Path $vcpkgSourcesPath)) {
     Write-Error "Unable to determine vcpkg sources directory. '$vcpkgSourcesPath' does not exist."
     return
 }
@@ -291,17 +291,28 @@ $msbuildExe = $msbuildExeWithPlatformToolset[0]
 $platformToolset = $msbuildExeWithPlatformToolset[1]
 $windowsSDK = getWindowsSDK
 
+$platform = "x86"
+$vcpkgReleaseDir = "$vcpkgSourcesPath\Release"
+# x86_64 architecture is 9
+$architecture=(Get-WmiObject win32_Processor -ErrorAction SilentlyContinue).Architecture
+
+if ([Environment]::Is64BitOperatingSystem -and $architecture -eq 9  -and $win64) {
+    Write-Host "Try to build vcpkg win64 binary"
+    $platform = "x64"
+    $vcpkgReleaseDir = "$vcpkgSourcesPath\x64\Release"
+}
+
 $arguments = (
-"`"/p:VCPKG_VERSION=-nohash`"",
-"`"/p:DISABLE_METRICS=$disableMetrics`"",
-"/p:Configuration=Release",
-"/p:Platform=x86",
-"/p:PlatformToolset=$platformToolset",
-"/p:TargetPlatformVersion=$windowsSDK",
-"/verbosity:minimal",
-"/m",
-"/nologo",
-"`"$vcpkgSourcesPath\dirs.proj`"") -join " "
+    "`"/p:VCPKG_VERSION=-nohash`"",
+    "`"/p:DISABLE_METRICS=$disableMetrics`"",
+    "/p:Configuration=Release",
+    "/p:Platform=$platform",
+    "/p:PlatformToolset=$platformToolset",
+    "/p:TargetPlatformVersion=$windowsSDK",
+    "/verbosity:minimal",
+    "/m",
+    "/nologo",
+    "`"$vcpkgSourcesPath\dirs.proj`"") -join " "
 
 function vcpkgInvokeCommandClean()
 {
@@ -327,8 +338,7 @@ function vcpkgInvokeCommandClean()
 Write-Host "`nBuilding vcpkg.exe ...`n"
 $ec = vcpkgInvokeCommandClean $msbuildExe $arguments
 
-if ($ec -ne 0)
-{
+if ($ec -ne 0) {
     Write-Error "Building vcpkg.exe failed. Please ensure you have installed Visual Studio with the Desktop C++ workload and the Windows SDK for Desktop C++."
     return
 }
@@ -336,5 +346,5 @@ Write-Host "`nBuilding vcpkg.exe... done.`n"
 
 Write-Verbose("Placing vcpkg.exe in the correct location")
 
-Copy-Item $vcpkgSourcesPath\Release\vcpkg.exe $vcpkgRootDir\vcpkg.exe | Out-Null
-Copy-Item $vcpkgSourcesPath\Release\vcpkgmetricsuploader.exe $vcpkgRootDir\scripts\vcpkgmetricsuploader.exe | Out-Null
+Copy-Item "$vcpkgReleaseDir\vcpkg.exe" "$vcpkgRootDir\vcpkg.exe" | Out-Null
+Copy-Item "$vcpkgReleaseDir\vcpkgmetricsuploader.exe" "$vcpkgRootDir\scripts\vcpkgmetricsuploader.exe" | Out-Null
