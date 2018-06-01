@@ -8,6 +8,7 @@ vcpkg_from_github(
     REF boost-1.67.0
     SHA512 73fada0b6e236e0b86f28d8cf75e71dfb6b6a84622986cd72f39de3a310442e6122c91d22ba95bd29381dd559f5cac52a1e28cf97e7e8a6f0c70ccc4f38ceeba
     HEAD_REF master
+    PATCHES "${CURRENT_PORT_DIR}/Removeseekpos.patch"
 )
 
 vcpkg_download_distfile(LICENSE
