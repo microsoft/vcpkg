@@ -8,8 +8,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO davisking/dlib
-    REF v19.11
-    SHA512 d0219a4dc7355e2b9f62098093abd99cd6ddef080b25269acc2e14a402a7b7dafc9a5448a6ff97548089c78f81e2068b404de2be0449f1696d9e40db6acd8046
+    REF v19.13
+    SHA512 3b6869cb9b08d98152bc0d474714f5d342e3d35e6226e5eeb54216ad64d0d0a48a5bf0e78a7db68540b5f593c74f2b3cefac2f545e4038130283c127a16cd00f
     HEAD_REF master
 )
 
@@ -62,6 +62,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_ne
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_cudnn)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_cuda)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_cpp11)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_avx)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/external/libpng/arm)
 
 # Dlib encodes debug/release in its config.h. Patch it to respond to the NDEBUG macro instead.

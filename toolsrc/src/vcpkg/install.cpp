@@ -462,14 +462,14 @@ namespace vcpkg::Install
         auto files = fs.read_lines(paths.listfile_path(bpgh));
         if (auto p_lines = files.get())
         {
+            std::map<std::string, std::string> config_files;
             std::map<std::string, std::vector<std::string>> library_targets;
 
             for (auto&& suffix : *p_lines)
             {
-                if (Strings::case_insensitive_ascii_find(suffix, "/share/") != suffix.end() &&
-                    suffix.substr(suffix.size() - 6) == ".cmake")
+                if (Strings::case_insensitive_ascii_contains(suffix, "/share/") && Strings::ends_with(suffix, ".cmake"))
                 {
-                    // File is inside the share folder
+                    // CMake file is inside the share folder
                     auto path = paths.installed / suffix;
                     auto maybe_contents = fs.read_contents(path);
                     auto find_package_name = path.parent_path().filename().u8string();
@@ -485,6 +485,21 @@ namespace vcpkg::Install
                             ++next;
                         }
                     }
+
+                    auto filename = fs::u8path(suffix).filename().u8string();
+
+                    if (Strings::ends_with(filename, "Config.cmake"))
+                    {
+                        auto root = filename.substr(0, filename.size() - 12);
+                        if (Strings::case_insensitive_ascii_equals(root, find_package_name))
+                            config_files[find_package_name] = root;
+                    }
+                    else if (Strings::ends_with(filename, "-config.cmake"))
+                    {
+                        auto root = filename.substr(0, filename.size() - 13);
+                        if (Strings::case_insensitive_ascii_equals(root, find_package_name))
+                            config_files[find_package_name] = root;
+                    }
                 }
             }
 
@@ -497,11 +512,23 @@ namespace vcpkg::Install
 
                 for (auto&& library_target_pair : library_targets)
                 {
+                    auto config_it = config_files.find(library_target_pair.first);
+                    if (config_it != config_files.end())
+                        System::println("    find_package(%s CONFIG REQUIRED)", config_it->second);
+                    else
+                        System::println("    find_package(%s CONFIG REQUIRED)", library_target_pair.first);
+
+                    std::sort(library_target_pair.second.begin(),
+                              library_target_pair.second.end(),
+                              [](const std::string& l, const std::string& r) {
+                                  if (l.size() < r.size()) return true;
+                                  if (l.size() > r.size()) return false;
+                                  return l < r;
+                              });
+
                     if (library_target_pair.second.size() <= 4)
                     {
-                        System::println("    find_package(%s REQUIRED)\n"
-                                        "    target_link_libraries(main PRIVATE %s)\n",
-                                        library_target_pair.first,
+                        System::println("    target_link_libraries(main PRIVATE %s)\n",
                                         Strings::join(" ", library_target_pair.second));
                     }
                     else
@@ -509,10 +536,8 @@ namespace vcpkg::Install
                         auto omitted = library_target_pair.second.size() - 4;
                         library_target_pair.second.erase(library_target_pair.second.begin() + 4,
                                                          library_target_pair.second.end());
-                        System::println("    find_package(%s REQUIRED)\n"
-                                        "    # Note: %zd targets were omitted\n"
+                        System::println("    # Note: %zd target(s) were omitted.\n"
                                         "    target_link_libraries(main PRIVATE %s)\n",
-                                        library_target_pair.first,
                                         omitted,
                                         Strings::join(" ", library_target_pair.second));
                     }

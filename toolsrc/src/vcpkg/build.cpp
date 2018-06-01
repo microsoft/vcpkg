@@ -465,6 +465,11 @@ namespace vcpkg::Build
         abi_tag_entries.emplace_back(
             AbiEntry{"control", Commands::Hash::get_file_hash(fs, config.port_dir / "CONTROL", "SHA1")});
 
+        if (pre_build_info.cmake_system_name == "Linux")
+        {
+            abi_tag_entries.emplace_back(AbiEntry{"toolchain", "1"});
+        }
+
         abi_tag_entries.emplace_back(AbiEntry{"triplet", pre_build_info.triplet_abi_tag});
 
         const std::string features = Strings::join(";", config.feature_list);
