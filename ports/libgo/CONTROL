@@ -1,3 +1,4 @@
 Source: libgo
-Version: 2.7
+Version: 2.8-1
+Build-Depends: boost-context
 Description: The best stackful coroutine by c++11.
