@@ -325,7 +325,6 @@ function vcpkgInvokeCommandClean()
 
 # vcpkgInvokeCommandClean cmd "/c echo %PATH%"
 Write-Host "`nBuilding vcpkg.exe ...`n"
-Write-Host $arguments
 $ec = vcpkgInvokeCommandClean $msbuildExe $arguments
 
 if ($ec -ne 0)
