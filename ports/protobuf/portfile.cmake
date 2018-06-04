@@ -19,6 +19,8 @@ vcpkg_apply_patches(
         "${CMAKE_CURRENT_LIST_DIR}/001-add-compiler-flag.patch"
         "${CMAKE_CURRENT_LIST_DIR}/export-ParseGeneratorParameter.patch"
         "${CMAKE_CURRENT_LIST_DIR}/js-embed.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/wire_format_lite_h_fix_error_C4146.patch"
 )
 
 if(CMAKE_HOST_WIN32)

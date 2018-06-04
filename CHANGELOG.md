@@ -1,3 +1,88 @@
+vcpkg (0.0.113)
+--------------
+  * Add ports:
+    - json-dto       0.2.5
+    - keystone       0.9.1
+    - osgearth       2.9
+    - pdal           1.7.1-2
+    - sdl2pp         0.16.0-1
+  * Update ports:
+    - args           2018-02-23 -> 2018-05-17
+    - aws-sdk-cpp    1.4.40 -> 1.4.52
+    - chakracore     1.8.3 -> 1.8.4
+    - cimg           2.2.2 -> 2.2.3
+    - curl           7_59_0-2 -> 7.60.0
+    - directxmesh    apr2018 -> may2018
+    - directxtex     apr2018 -> may2018
+    - directxtk      apr2018 -> may2018
+    - doctest        1.2.8 -> 1.2.9
+    - entt           2.4.2-1 -> 2.5.0
+    - exiv2          2018-04-25 -> 2018-05-17
+    - fdk-aac        2018-03-07 -> 2018-05-17
+    - forest         7.0.6 -> 7.0.7
+    - gdal           2.2.2-1 -> 2.3.0-1
+    - grpc           1.10.1-1 -> 1.10.1-2
+    - jsonnet        2018-05-01 -> 2018-05-17
+    - libuv          1.20.2 -> 1.20.3-2
+    - libwebsockets  2.4.2 -> 3.0.0
+    - lodepng        2018-02-25 -> 2018-05-17
+    - mpg123         1.25.8-4 -> 1.25.8-5
+    - ms-gsl         2018-05-01 -> 2018-05-17
+    - mujs           2018-05-01 -> 2018-05-17
+    - nuklear        2018-04-25 -> 2018-05-17
+    - opus           1.2.1 -> 1.2.1-1
+    - parson         2018-04-17 -> 2018-05-17
+    - pmdk           1.4-1 -> 1.4-2
+    - podofo         0.9.5-1 -> 0.9.5-2
+    - re2            2018-05-01 -> 2018-05-17
+    - rocksdb        5.12.4 -> 5.13.1
+    - rs-core-lib    2018-05-01 -> 2018-05-17
+    - sdl2-mixer     2.0.2-2 -> 2.0.2-4
+    - thrift         2018-05-01 -> 2018-05-17
+    - unicorn        2018-04-25 -> 2018-05-17
+    - unicorn-lib    2018-05-01 -> 2018-05-17
+    - uwebsockets    0.14.8-1 -> 0.14.8-2
+    - wtl            10.0 -> 10.0-1
+    - zeromq         2018-05-01 -> 2018-05-17
+  * `vcpkg` no longer calls `powershell` from `cmake`.
+    - This completes the fix for the issue where `vcpkg.exe` would change the console's font when invoking `powershell`.
+    - `Powershell` is no longer called other than for bootstrap and powershell integration for tab-completion.
+
+-- vcpkg team <vcpkg@microsoft.com>  SAT, 16 May 2018 19:30:00 -0800
+
+
+vcpkg (0.0.112)
+--------------
+  * Add ports:
+    - robin-map      0.2.0
+  * Update ports:
+    - abseil         2018-04-25-1 -> 2018-05-01-1
+    - ace            6.4.7 -> 6.4.8
+    - aws-sdk-cpp    1.4.38 -> 1.4.40
+    - azure-storage-cpp 3.2.1 -> 4.0.0
+    - blosc          1.13.5 -> 1.13.5-1
+    - boost-modular-build-helper 2018-04-16-4 -> 2018-05-14
+    - brotli         1.0.2-2 -> 1.0.2-3
+    - catch-classic  1.12.1 -> 1.12.2
+    - folly          2018.04.23.00 -> 2018.05.14.00
+    - jsonnet        2018-04-25 -> 2018-05-01
+    - ms-gsl         2018-04-25 -> 2018-05-01
+    - mujs           25821e6d74fab5fcc200fe5e818362e03e114428 -> 2018-05-01
+    - openimageio    1.8.10 -> Release-1.9.2dev
+    - openvr         1.0.14 -> 1.0.15
+    - protobuf       3.5.1-3 -> 3.5.1-4
+    - re2            2018-03-17 -> 2018-05-01
+    - rs-core-lib    2018-04-25 -> 2018-05-01
+    - sol            2.20.0 -> 2.20.0-1
+    - thrift         2018-04-25 -> 2018-05-01
+    - unicorn-lib    2018-04-09 -> 2018-05-01
+    - zeromq         2018-04-25 -> 2018-05-01
+  * `vcpkg` no longer calls powershell for downloading/extracting and detecting Visual Studio.
+    - This also fixes an issue where `vcpkg.exe` would change the console's font when invoking `powershell`.
+
+-- vcpkg team <vcpkg@microsoft.com>  WED, 16 May 2018 19:00:00 -0800
+
+
 vcpkg (0.0.111)
 --------------
   * Add ports:

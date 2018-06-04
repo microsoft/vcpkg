@@ -226,10 +226,6 @@ namespace vcpkg::Export
             {fs::path{"scripts"} / "buildsystems" / "msbuild" / "vcpkg.targets"},
             {fs::path{"scripts"} / "buildsystems" / "vcpkg.cmake"},
             {fs::path{"scripts"} / "cmake" / "vcpkg_get_windows_sdk.cmake"},
-            {fs::path{"scripts"} / "getWindowsSDK.ps1"},
-            {fs::path{"scripts"} / "getProgramFilesPlatformBitness.ps1"},
-            {fs::path{"scripts"} / "getProgramFiles32bit.ps1"},
-            {fs::path{"scripts"} / "VcpkgPowershellUtils.ps1"},
         };
 
         for (const fs::path& file : integration_files_relative_to_root)

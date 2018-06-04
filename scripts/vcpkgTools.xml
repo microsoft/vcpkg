@@ -22,11 +22,11 @@
         <archiveName>cmake-3.10.2-Linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="git" os="windows">
-        <version>2.17.0</version>
+        <version>2.17.1</version>
         <exeRelativePath>cmd\git.exe</exeRelativePath>
-        <url>https://github.com/git-for-windows/git/releases/download/v2.17.0.windows.1/MinGit-2.17.0-32-bit.zip</url>
-        <sha512>a34575ab1b4f553e62535e38492904b512df4d6a837cf4abf205dbcdd05edf1eef450cc5b15a4f63f901424d5f3cd1f78b6b22437d0d4f8cd9ce4e42e82617b9</sha512>
-        <archiveName>MinGit-2.17.0-32-bit.zip</archiveName>
+        <url>https://github.com/git-for-windows/git/releases/download/v2.17.1.windows.1/MinGit-2.17.1-32-bit.zip</url>
+        <sha512>8bf93f6d3b6eb8a4ccbf840ff0b8b11a8b3a28fc5cd27aaa98dab5964acebbd17307e8ecec4e0cdd8b8ba095491d39bc9d55f4330284089cf3dadcab1d3fb7a4</sha512>
+        <archiveName>MinGit-2.17.1-32-bit.zip</archiveName>
     </tool>
     <tool name="git" os="linux">
         <version>2.7.4</version>
@@ -61,17 +61,10 @@
     </tool>
     <tool name="7zip" os="windows">
         <version>18.01.0</version>
-        <exeRelativePath>7za.exe</exeRelativePath>
-        <url>https://www.7-zip.org/a/7z1801-extra.7z</url>
-        <sha512>9133fc551d76515e37fdd4dd8c1e28d464aea493548246b44565a42bba46715764f41f9cfa14d470d298c3a6e9829d200f8be5168cb67cf8f23d8042fca833bc</sha512>
-        <archiveName>7z1801-extra.7z</archiveName>
-    </tool>
-    <tool name="7zip920" os="windows">
-        <version>9.20.0</version>
-        <exeRelativePath>7za.exe</exeRelativePath>
-        <url>https://www.7-zip.org/a/7za920.zip</url>
-        <sha512>84e830c91a0e8ae499cc4814080da6569d8a6acbddc585c8b62abc86c809793aeb669b0a741063a379fd281ade85f120bc27efeb67d63bf961be893eec8bc3b3</sha512>
-        <archiveName>7za920.zip</archiveName>
+        <exeRelativePath>7-Zip.CommandLine.18.1.0\tools\7za.exe</exeRelativePath>
+        <url>https://www.nuget.org/api/v2/package/7-Zip.CommandLine/18.1.0</url>
+        <sha512>8c75314102e68d2b2347d592f8e3eb05812e1ebb525decbac472231633753f1d4ca31c8e6881a36144a8da26b2571305b3ae3f4e2b85fc4a290aeda63d1a13b8</sha512>
+        <archiveName>7-zip.commandline.18.1.0.nupkg</archiveName>
     </tool>
     <tool name="aria2" os="windows">
         <version>18.01.0</version>

@@ -1,8 +1,7 @@
-diff --git a/ogr/ogrsf_frmts/mysql/ogrmysqldatasource.cpp b/ogr/ogrsf_frmts/mysql/ogrmysqldatasource.cpp
-index 8733af9..f49d862 100644
---- a/ogr/ogrsf_frmts/mysql/ogrmysqldatasource.cpp
-+++ b/ogr/ogrsf_frmts/mysql/ogrmysqldatasource.cpp
-@@ -259,7 +259,7 @@ int OGRMySQLDataSource::Open( const char * pszNewName, char** papszOpenOptionsIn
+diff -Nuar a/ogr/ogrsf_frmts/mysql/ogrmysqldatasource.cpp b/ogr/ogrsf_frmts/mysql/ogrmysqldatasource.cpp
+--- a/ogr/ogrsf_frmts/mysql/ogrmysqldatasource.cpp	2018-05-04 09:09:26.000000000 +0200
++++ b/ogr/ogrsf_frmts/mysql/ogrmysqldatasource.cpp	2018-05-11 23:07:44.284558300 +0200
+@@ -235,7 +235,7 @@
          // Enable automatic reconnection
          // Must be called after mysql_real_connect() on MySQL < 5.0.19
          // and at any point on more recent versions.
