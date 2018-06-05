@@ -16,6 +16,8 @@ vcpkg_apply_patches(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DEXV_UNICODE_PATH:bool=TRUE
 )
 
 vcpkg_install_cmake()
