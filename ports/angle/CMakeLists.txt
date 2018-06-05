@@ -7,8 +7,8 @@ else()
     set(WINDOWS_DESKTOP 0)
 endif()
 
-add_compile_options(/d2guard4 /Wv:18)
-set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /guard:cf")
+add_compile_options(/d2guard4 /Wv:18 /guard:cf)
+set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /GUARD:CF")
 
 add_definitions(
     -D_CRT_SECURE_NO_DEPRECATE
