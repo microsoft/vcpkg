@@ -294,7 +294,7 @@ $windowsSDK = getWindowsSDK
 $arguments = (
 "`"/p:VCPKG_VERSION=-nohash`"",
 "`"/p:DISABLE_METRICS=$disableMetrics`"",
-"/p:Configuration=Release",
+"/p:Configuration=release",
 "/p:Platform=x86",
 "/p:PlatformToolset=$platformToolset",
 "/p:TargetPlatformVersion=$windowsSDK",
@@ -336,5 +336,5 @@ Write-Host "`nBuilding vcpkg.exe... done.`n"
 
 Write-Verbose("Placing vcpkg.exe in the correct location")
 
-Copy-Item $vcpkgSourcesPath\Release\vcpkg.exe $vcpkgRootDir\vcpkg.exe | Out-Null
-Copy-Item $vcpkgSourcesPath\Release\vcpkgmetricsuploader.exe $vcpkgRootDir\scripts\vcpkgmetricsuploader.exe | Out-Null
+Copy-Item $vcpkgSourcesPath\release\vcpkg.exe $vcpkgRootDir\vcpkg.exe | Out-Null
+Copy-Item $vcpkgSourcesPath\release\vcpkgmetricsuploader.exe $vcpkgRootDir\scripts\vcpkgmetricsuploader.exe | Out-Null

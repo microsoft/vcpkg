@@ -21,7 +21,7 @@ PS> .\bootstrap-vcpkg.bat
 Ubuntu:~/$ ./bootstrap-vcpkg.sh
 ```
 
-Then, to hook up user-wide integration, run (note: requires admin on first use)
+Then, to hook up user-wide [integration](docs/users/integration.md), run (note: requires admin on first use)
 ```
 PS> .\vcpkg integrate install
 Ubuntu:~/$ ./vcpkg integrate install
