@@ -1,0 +1,5 @@
+The package libyuv provides CMake integration:
+
+    find_package(LIBYUV REQUIRED)
+    target_include_directories(main PRIVATE ${LIBYUV_INCLUDE_DIRS})
+    target_link_libraries(main PRIVATE ${LIBYUV_LIBS})
