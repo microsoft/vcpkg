@@ -8,11 +8,17 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+set(WITH_CGAL_Qt5  OFF)
+if("qt5" IN_LIST FEATURES)
+  set(WITH_CGAL_Qt5 ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DCGAL_INSTALL_CMAKE_DIR=share/cgal
+        -DWITH_CGAL_Qt5=${WITH_CGAL_Qt5}
 )
 
 vcpkg_install_cmake()
