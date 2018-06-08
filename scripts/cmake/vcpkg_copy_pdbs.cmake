@@ -10,11 +10,21 @@
 ## ## Notes
 ## This command should always be called by portfiles after they have finished rearranging the binary output.
 ##
+## ## Parameters
+## ### BUILD_PATHS
+## Additional paths passed to dumpbin in order to locate pdbs.
+##
 ## ## Examples
 ##
 ## * [zlib](https://github.com/Microsoft/vcpkg/blob/master/ports/zlib/portfile.cmake)
 ## * [cpprestsdk](https://github.com/Microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
 function(vcpkg_copy_pdbs)
+    cmake_parse_arguments(_vcp "" "" "BUILD_PATHS" ${ARGN})
+    
+    list(APPEND _vcp_BUILD_PATHS
+        ${CURRENT_PACKAGES_DIR}/bin/*.dll
+        ${CURRENT_PACKAGES_DIR}/debug/bin/*.dll
+    )
 
     function(merge_filelist OUTVAR INVAR)
         set(MSG "")
@@ -25,7 +35,7 @@ function(vcpkg_copy_pdbs)
     endfunction()
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(GLOB_RECURSE DLLS ${CURRENT_PACKAGES_DIR}/bin/*.dll ${CURRENT_PACKAGES_DIR}/debug/bin/*.dll)
+        file(GLOB_RECURSE DLLS _vcp_BUILD_PATHS)
 
         set(DLLS_WITHOUT_MATCHING_PDBS)
 
