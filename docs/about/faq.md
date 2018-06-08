@@ -42,7 +42,7 @@ See the [Privacy document](privacy.md) for all information regarding privacy.
 Yes. If you already have a CMake toolchain file, you will need to include our toolchain file at the end of yours. This should be as simple as an `include(<vcpkg_root>\scripts\buildsystems\vcpkg.cmake)` directive. Alternatively, you could copy the contents of our `scripts\buildsystems\vcpkg.cmake` into the end of your existing toolchain file.
 
 ## Can I use my own/specific flags for rebuilding libs?
-Yes. In the current preview, there is not yet a standardized global way to change them, however you can edit individual portfiles and tweak the exact build process however you'd like.
+Yes. In the current version, there is not yet a standardized global way to change them, however you can edit individual portfiles and tweak the exact build process however you'd like.
 
 By saving the changes to the portfile (and checking them in), you'll get the same results even if you're rebuilding from scratch in the future and forgot what exact settings you used.
 
