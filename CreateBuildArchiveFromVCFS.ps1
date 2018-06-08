@@ -126,5 +126,5 @@ CreateBuildArchiveFromVCFSInternal -destinationRoot $destinationRoot -latest -re
 CreateBuildArchiveFromVCFSInternal -destinationRoot $destinationRoot -latest -repo tfs -branch WinC -retOrChk chk
 CreateBuildArchiveFromVCFSInternal -destinationRoot $destinationRoot -latest -repo msvc -branch master -retOrChk ret
 CreateBuildArchiveFromVCFSInternal -destinationRoot $destinationRoot -latest -repo msvc -branch master -retOrChk chk
-CreateBuildArchiveFromVCFSInternal -destinationRoot $destinationRoot -latest -repo msvc -branch "prod/fe" -retOrChk ret
-CreateBuildArchiveFromVCFSInternal -destinationRoot $destinationRoot -latest -repo msvc -branch "prod/fe" -retOrChk chk
+CreateBuildArchiveFromVCFSInternal -destinationRoot $destinationRoot -latest -repo msvc -branch fe -retOrChk ret
+CreateBuildArchiveFromVCFSInternal -destinationRoot $destinationRoot -latest -repo msvc -branch fe -retOrChk chk
