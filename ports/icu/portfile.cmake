@@ -21,14 +21,59 @@ set(ICU_VERSION_MAJOR 61)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/icu-${VERSION}/icu)
 vcpkg_download_distfile(
 	ARCHIVE
-    URLS "http://download.icu-project.org/files/icu4c/${VERSION}/icu4c-${VERSION2}-src.zip"
-    FILENAME "icu4c-${VERSION2}-src.zip"
-    SHA512 60fed25976b8c2fe2df0b0ab745ded24da237711ec8c1e1dbdfe6eaf2014fb6b3a4bcaa488174cf770737a1c159a2d3f48a86a139cbb277163f064e607b8928f
+    URLS "http://download.icu-project.org/files/icu4c/${VERSION}/icu4c-${VERSION2}-src.tgz"
+    FILENAME "icu4c-${VERSION2}-src.tgz"
+    SHA512 4c37691246db802e4bae0c8c5f6ac1dac64c5753b607e539c5c1c36e361fcd9dd81bd1d3b5416c2960153b83700ccdb356412847d0506ab7782ae626ac0ffb94
 	)
 vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src/icu-${VERSION})
 
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/disable-escapestr-tool.patch)
+
+set(CONFIGURE_OPTIONS "--disable-samples --disable-tests")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --disable-static --enable-shared")
+else()
+    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --enable-static --disable-shared")
+endif()
+
+set(CONFIGURE_OPTIONS_RELASE "--disable-debug --enable-release --prefix=${CURRENT_PACKAGES_DIR}")
+set(CONFIGURE_OPTIONS_DEBUG  "--enable-debug --disable-release --prefix=${CURRENT_PACKAGES_DIR}/debug")
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+
+set(BASH bash)
+
+# Configure release
+message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
+file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+set(ENV{CFLAGS} "-O2")
+set(ENV{CXXFLAGS} "-O2")
+vcpkg_execute_required_process(
+    COMMAND ${BASH} --noprofile --norc -c 
+        "${SOURCE_PATH}/source/runConfigureICU Linux ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_RELASE}"
+    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+    LOGNAME "configure-${TARGET_TRIPLET}-rel")
+message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
+
+# Configure debug
+message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
+file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+set(ENV{CFLAGS} "-O0 -g")
+set(ENV{CXXFLAGS} "-O0 -g")
+vcpkg_execute_required_process(
+    COMMAND ${BASH} --noprofile --norc -c 
+        "${SOURCE_PATH}/source/runConfigureICU Linux ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_DEBUG}"
+    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
+    LOGNAME "configure-${TARGET_TRIPLET}-dbg")
+message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
+
+else() # not Linux:
+
+set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --host=i686-pc-mingw32")
 
 # Acquire tools
 vcpkg_acquire_msys(MSYS_ROOT PACKAGES make automake1.15)
@@ -41,17 +86,6 @@ set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 
 set(AUTOMAKE_DIR ${MSYS_ROOT}/usr/share/automake-1.15)
 file(COPY ${AUTOMAKE_DIR}/config.guess ${AUTOMAKE_DIR}/config.sub DESTINATION ${SOURCE_PATH}/source)
-
-set(CONFIGURE_OPTIONS "--host=i686-pc-mingw32 --disable-samples --disable-tests")
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --disable-static --enable-shared")
-else()
-    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --enable-static --disable-shared")
-endif()
-
-set(CONFIGURE_OPTIONS_RELASE "--disable-debug --enable-release --prefix=${CURRENT_PACKAGES_DIR}")
-set(CONFIGURE_OPTIONS_DEBUG  "--enable-debug --disable-release --prefix=${CURRENT_PACKAGES_DIR}/debug")
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
     set(ICU_RUNTIME "-MT")
@@ -86,6 +120,8 @@ vcpkg_execute_required_process(
     WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
     LOGNAME "configure-${TARGET_TRIPLET}-dbg")
 message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
+
+endif()
 
 unset(ENV{CFLAGS})
 unset(ENV{CXXFLAGS})
@@ -130,12 +166,15 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(COPY ${RELEASE_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(COPY ${DEBUG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 else()
-    # rename static libraries to match import libs
-    # see https://gitlab.kitware.com/cmake/cmake/issues/16617
-    foreach(MODULE dt in io tu uc)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/sicu${MODULE}.lib ${CURRENT_PACKAGES_DIR}/lib/icu${MODULE}.lib)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/sicu${MODULE}d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/icu${MODULE}d.lib)
-    endforeach()
+    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    else()
+        # rename static libraries to match import libs
+        # see https://gitlab.kitware.com/cmake/cmake/issues/16617
+        foreach(MODULE dt in io tu uc)
+            file(RENAME ${CURRENT_PACKAGES_DIR}/lib/sicu${MODULE}.lib ${CURRENT_PACKAGES_DIR}/lib/icu${MODULE}.lib)
+            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/sicu${MODULE}d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/icu${MODULE}d.lib)
+        endforeach()
+    endif()
 
     # force U_STATIC_IMPLEMENTATION macro
     foreach(HEADER utypes.h utf_old.h platform.h)
