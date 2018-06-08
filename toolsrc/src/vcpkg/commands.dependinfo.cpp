@@ -93,13 +93,9 @@ namespace vcpkg::Commands::DependInfo
             }
         }
 
-        s.append("<Nodes>");
-        s.append(nodes);
-        s.append("</Nodes>");
+        s.append(Strings::format("<Nodes>%s</Nodes>", nodes));
 
-        s.append("<Links>");
-        s.append(links);
-        s.append("</Links>");
+        s.append(Strings::format("<Links>%s</Links>", links));
 
         s.append("</DirectedGraph>");
         return s;
