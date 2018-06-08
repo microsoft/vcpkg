@@ -1,0 +1,3 @@
+Source: nanorange
+Version: 60be62
+Description: NanoRange is a new C++14 implementation of the C++20 Ranges proposals.
