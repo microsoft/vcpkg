@@ -128,3 +128,5 @@ CreateBuildArchiveFromVCFSInternal -destinationRoot $destinationRoot -latest -re
 CreateBuildArchiveFromVCFSInternal -destinationRoot $destinationRoot -latest -repo msvc -branch master -retOrChk chk
 CreateBuildArchiveFromVCFSInternal -destinationRoot $destinationRoot -latest -repo msvc -branch fe -retOrChk ret
 CreateBuildArchiveFromVCFSInternal -destinationRoot $destinationRoot -latest -repo msvc -branch fe -retOrChk chk
+CreateBuildArchiveFromVCFSInternal -destinationRoot $destinationRoot -latest -repo msvc -branch be -retOrChk ret
+CreateBuildArchiveFromVCFSInternal -destinationRoot $destinationRoot -latest -repo msvc -branch be -retOrChk chk
