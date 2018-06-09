@@ -8,7 +8,7 @@ else()
 endif()
 
 add_compile_options(/d2guard4 /Wv:18 /guard:cf)
-set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /GUARD:CF")
+set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS}")
 
 add_definitions(
     -D_CRT_SECURE_NO_DEPRECATE
