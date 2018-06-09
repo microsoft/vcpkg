@@ -12,7 +12,7 @@ In order to opt-out of data collection, you can re-run the boostrap script with 
 
 ```PS> .\bootstrap-vcpkg.bat -disableMetrics 1```
 
-```PS> .\bootstrap-vcpkg.sh -disableMetrics```
+```~/$ .\bootstrap-vcpkg.sh -disableMetrics```
 
 For more information about how Microsoft protects your privacy, see https://privacy.microsoft.com/en-us/privacy.
 
