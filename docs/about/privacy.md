@@ -8,9 +8,11 @@ We do collect telemetry data from usage of "vcpkg.exe". We explicitly ONLY colle
 ## What telemetry is collected?
 
 We collect the command line used, the time of invocation, and how long execution took. Some commands also add additional calculated information (such as the full set of libraries to install). We generate a completely random UUID on first use and attach it to each event.
-In order to opt-out of data collection, you can re-run the boostrap script with the following flag:
+In order to opt-out of data collection, you can re-run the boostrap script with the following flag, for Windows and Linux/OSX, respectively:
 
 ```PS> .\bootstrap-vcpkg.bat -disableMetrics 1```
+
+```PS> .\bootstrap-vcpkg.sh -disableMetrics```
 
 For more information about how Microsoft protects your privacy, see https://privacy.microsoft.com/en-us/privacy.
 
