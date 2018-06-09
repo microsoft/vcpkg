@@ -35,7 +35,7 @@ function(vcpkg_copy_pdbs)
     endfunction()
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(GLOB_RECURSE DLLS _vcp_BUILD_PATHS)
+        file(GLOB_RECURSE DLLS ${_vcp_BUILD_PATHS})
 
         set(DLLS_WITHOUT_MATCHING_PDBS)
 
