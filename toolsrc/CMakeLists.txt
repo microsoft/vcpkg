@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.3)
 project(vcpkg C CXX)
 
-OPTION(DEFINE_DISABLE_METRICS "Option for disabling metrics" "0")
+OPTION(DEFINE_DISABLE_METRICS "Option for disabling metrics" OFF)
 
 if(CMAKE_COMPILER_IS_GNUXX OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set(GCC 1)
@@ -32,8 +32,14 @@ endif()
 
 file(GLOB_RECURSE VCPKGLIB_SOURCES src/vcpkg/*.cpp)
 
+if (DEFINE_DISABLE_METRICS)
+    set(DISABLE_METRICS_VALUE "1")
+else()
+    set(DISABLE_METRICS_VALUE "0")
+endif()
+
 add_executable(vcpkg src/vcpkg.cpp ${VCPKGLIB_SOURCES})
-target_compile_definitions(vcpkg PRIVATE -DDISABLE_METRICS=${DEFINE_DISABLE_METRICS})
+target_compile_definitions(vcpkg PRIVATE -DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
 target_include_directories(vcpkg PRIVATE include)
 
 if(GCC)

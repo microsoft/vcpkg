@@ -1,10 +1,10 @@
 #!/bin/sh
 
-vcpkgDisableMetrics="0"
+vcpkgDisableMetrics="OFF"
 for var in "$@"
 do
     if [ "$var" = "-disableMetrics" ]; then
-        vcpkgDisableMetrics="1"
+        vcpkgDisableMetrics="ON"
     else
         echo "Unknown argument $var"
         exit 1
