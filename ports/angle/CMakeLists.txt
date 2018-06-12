@@ -7,8 +7,9 @@ else()
     set(WINDOWS_DESKTOP 0)
 endif()
 
-add_compile_options(/d2guard4 /Wv:18 /guard:cf)
+add_compile_options(-std=c++17 -fPIC)
 set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS}")
+set(CMAKE_STATIC_LIBRARY_PREFIX "")
 
 add_definitions(
     -D_CRT_SECURE_NO_DEPRECATE
@@ -25,7 +26,7 @@ include_directories(include src ${CMAKE_CURRENT_BINARY_DIR}/include)
 ##########
 # angle::common
 file(GLOB ANGLE_COMMON_SOURCES "src/common/*.h" "src/common/*.inl" "src/common/*.cpp" "src/common/third_party/base/*.h")
-list(FILTER ANGLE_COMMON_SOURCES EXCLUDE REGEX "_unittest|event_tracer|_linux|_mac")
+list(FILTER ANGLE_COMMON_SOURCES EXCLUDE REGEX "_unittest|event_tracer|_win|_mac")
 add_library(angle_common STATIC ${ANGLE_COMMON_SOURCES})
 target_include_directories(angle_common PUBLIC src/common/third_party/base)
 add_library(angle::common ALIAS angle_common)
@@ -69,68 +70,19 @@ add_library(angle::preprocessor ALIAS angle_preprocessor)
 # libANGLE
 
 ## OpenGL Renderer
-if(WINDOWS_DESKTOP)
-    file(GLOB LIBANGLE_GL_SOURCES
-        "src/libANGLE/renderer/gl/*.cpp"
-        "src/libANGLE/renderer/gl/*.inl"
-        "src/libANGLE/renderer/gl/*.h"
-
-        "src/libANGLE/renderer/gl/wgl/*.cpp"
-        "src/libANGLE/renderer/gl/wgl/*.inl"
-        "src/libANGLE/renderer/gl/wgl/*.h"
-    )
-    list(FILTER LIBANGLE_GL_SOURCES EXCLUDE REGEX "_unittest")
-    add_library(angle_renderer_opengl INTERFACE)
-    target_sources(angle_renderer_opengl INTERFACE ${LIBANGLE_GL_SOURCES})
-    target_compile_definitions(angle_renderer_opengl INTERFACE -DANGLE_ENABLE_OPENGL)
-    add_library(angle::renderer::opengl ALIAS angle_renderer_opengl)
-endif()
-
-## All D3D Sources
-file(GLOB_RECURSE LIBANGLE_D3D_SOURCES
-    "src/libANGLE/renderer/d3d/*.cpp"
-    "src/libANGLE/renderer/d3d/*.inl"
-    "src/libANGLE/renderer/d3d/*.h"
+file(GLOB LIBANGLE_GL_SOURCES
+    "src/libANGLE/renderer/gl/*.cpp"
+    "src/libANGLE/renderer/gl/*.inl"
+    "src/libANGLE/renderer/gl/*.h"
 )
-list(FILTER LIBANGLE_D3D_SOURCES EXCLUDE REGEX "_unittest")
-
-## WinRT D3D Renderer
-if(WINDOWS_STORE)
-    set(LIBANGLE_D3D_WINRT_SOURCES ${LIBANGLE_D3D_SOURCES})
-    list(FILTER LIBANGLE_D3D_WINRT_SOURCES INCLUDE REGEX "winrt")
-    add_library(angle_renderer_winrt INTERFACE)
-    target_sources(angle_renderer_winrt INTERFACE ${LIBANGLE_D3D_WINRT_SOURCES})
-    add_library(angle::renderer::winrt ALIAS angle_renderer_winrt)
-endif()
-
-## Win32/d3d9 D3D Renderer
-if(WINDOWS_DESKTOP)
-    set(LIBANGLE_D3D_DESKTOP_SOURCES ${LIBANGLE_D3D_SOURCES})
-    list(FILTER LIBANGLE_D3D_DESKTOP_SOURCES INCLUDE REGEX "d3d9|win32")
-    find_library(D3D9_LIB NAMES d3d9)
-    add_library(angle_renderer_win32 INTERFACE)
-    target_sources(angle_renderer_win32 INTERFACE ${LIBANGLE_D3D_DESKTOP_SOURCES})
-    target_compile_definitions(angle_renderer_win32 INTERFACE -DANGLE_ENABLE_D3D9)
-    target_link_libraries(angle_renderer_win32 INTERFACE ${D3D9_LIB})
-    add_library(angle::renderer::win32 ALIAS angle_renderer_win32)
-endif()
-
-## D3D11 Base renderer
-list(FILTER LIBANGLE_D3D_SOURCES EXCLUDE REGEX "winrt|d3d9|win32")
-find_library(DXGUID_LIB NAMES dxguid)
-find_library(D3D11_LIB NAMES d3d11)
-add_library(angle_renderer_d3d INTERFACE)
-target_sources(angle_renderer_d3d INTERFACE ${LIBANGLE_D3D_SOURCES})
-target_compile_definitions(angle_renderer_d3d INTERFACE
-    -DANGLE_ENABLE_D3D11
-    "-DANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ \"d3dcompiler_47.dll\", \"d3dcompiler_46.dll\", \"d3dcompiler_43.dll\" }"
-)
-target_link_libraries(angle_renderer_d3d INTERFACE ${D3D11_LIB} ${DXGUID_LIB})
-add_library(angle::renderer::d3d ALIAS angle_renderer_d3d)
+list(FILTER LIBANGLE_GL_SOURCES EXCLUDE REGEX "_unittest")
+add_library(angle_renderer_opengl INTERFACE)
+target_sources(angle_renderer_opengl INTERFACE ${LIBANGLE_GL_SOURCES})
+target_compile_definitions(angle_renderer_opengl INTERFACE -DANGLE_ENABLE_OPENGL)
+add_library(angle::renderer::opengl ALIAS angle_renderer_opengl)
 
 ## Core libANGLE library
 file(GLOB LIBANGLE_SOURCES
-    "src/third_party/systeminfo/SystemInfo.cpp"
     "src/common/third_party/murmurhash/MurmurHash3.cpp"
     "src/common/event_tracer.cpp"
 
@@ -145,6 +97,14 @@ file(GLOB LIBANGLE_SOURCES
     "src/libANGLE/renderer/null/*.cpp"
     "src/libANGLE/renderer/null/*.inl"
     "src/libANGLE/renderer/null/*.h"
+
+    "src/libANGLE/renderer/gl/*.cpp"
+    "src/libANGLE/renderer/gl/*.inl"
+    "src/libANGLE/renderer/gl/*.h"
+
+    "src/libANGLE/renderer/gl/glx/*.cpp"
+    "src/libANGLE/renderer/gl/glx/*.inl"
+    "src/libANGLE/renderer/gl/glx/*.h"
 )
 list(FILTER LIBANGLE_SOURCES EXCLUDE REGEX "_unittest")
 
@@ -154,15 +114,14 @@ target_link_libraries(libANGLE PRIVATE
     angle::image_util
     angle::translator
     angle::preprocessor
-    angle::renderer::d3d
-    $<$<BOOL:${WINDOWS_STORE}>:angle::renderer::winrt>
-    $<$<BOOL:${WINDOWS_DESKTOP}>:angle::renderer::win32>
-    $<$<BOOL:${WINDOWS_DESKTOP}>:angle::renderer::opengl>
+    angle::renderer::opengl
 )
 target_include_directories(libANGLE PRIVATE "src/third_party/khronos")
 target_compile_definitions(libANGLE
     PRIVATE -DANGLE_ENABLE_NULL
-    PUBLIC -DLIBANGLE_IMPLEMENTATION
+    PUBLIC 
+        -DLIBANGLE_IMPLEMENTATION 
+        -DANGLE_USE_X11
 )
 add_library(angle::libANGLE ALIAS libANGLE)
 
@@ -190,6 +149,11 @@ add_library(libEGL
 )
 target_link_libraries(libEGL PRIVATE angle::common angle::libANGLE libGLESv2)
 target_include_directories(libEGL PUBLIC "$<INSTALL_INTERFACE:include>")
+
+
+SET_TARGET_PROPERTIES(libANGLE PROPERTIES PREFIX "")
+SET_TARGET_PROPERTIES(libGLESv2 PROPERTIES PREFIX "")
+SET_TARGET_PROPERTIES(libEGL PROPERTIES PREFIX "")
 
 install(TARGETS libEGL libGLESv2 EXPORT ANGLEExport
     RUNTIME DESTINATION bin
