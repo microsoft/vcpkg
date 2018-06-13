@@ -1,5 +1,16 @@
 #!/bin/sh
 
+vcpkgDisableMetrics="OFF"
+for var in "$@"
+do
+    if [ "$var" = "-disableMetrics" ]; then
+        vcpkgDisableMetrics="ON"
+    else
+        echo "Unknown argument $var"
+        exit 1
+    fi
+done
+
 # Find vcpkg-root
 vcpkgRootDir=$(X= cd -- "$(dirname -- "$0")" && pwd -P)
 while [ "$vcpkgRootDir" != "/" ] && ! [ -e "$vcpkgRootDir/.vcpkg-root" ]; do
@@ -190,7 +201,7 @@ buildDir="$vcpkgRootDir/toolsrc/build.rel"
 rm -rf "$buildDir"
 mkdir -p "$buildDir"
 
-(cd "$buildDir" && CXX=$CXX "$cmakeExe" .. -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe")
+(cd "$buildDir" && CXX=$CXX "$cmakeExe" .. -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DDEFINE_DISABLE_METRICS=$vcpkgDisableMetrics")
 (cd "$buildDir" && "$cmakeExe" --build .)
 
 rm -rf "$vcpkgRootDir/vcpkg"

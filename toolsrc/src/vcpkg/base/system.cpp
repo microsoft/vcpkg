@@ -254,7 +254,7 @@ namespace vcpkg::System
         Debug::println("system(%s)", cmd_line.c_str());
         fflush(nullptr);
         int rc = system(cmd_line.c_str());
-        Debug::println("system() returned %d", rc);
+        Debug::println("system() returned %d after %d us", rc, static_cast<int>(timer.microseconds()));
         return rc;
 #endif
     }

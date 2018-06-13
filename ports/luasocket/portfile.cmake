@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO diegonehab/luasocket
-    REF 652959890943c34d7180cae372339b91e62f0d7b
-    SHA512 8666e3dec0a3a0429e59a66c79b167f88b05a2a0b2c7f5456754cb5c505bcf8c39c4d358880a2f78a488ad07bee4e6e5b9a6a63c2affcee788091dee15ed2f6a
+    REF 4df569e9f867432f25f0bfbfa56b0962feb3326e
+    SHA512 ef4aa61f12822a6004096c422ba2ea4f109bee1cc2eb3847bd2b16f6ec2dd28b20a767bfd8b1ee73e355f7b0ced3c2f7c4cf5123e8d0472e25c193920c2d34a1
     HEAD_REF master)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
