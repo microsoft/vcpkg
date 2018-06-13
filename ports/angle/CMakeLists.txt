@@ -219,6 +219,7 @@ elseif(WINDOWS_DESKTOP)
         angle::renderer::opengl
     )
 else()
+    set(LIBANGLE_RENDERER_PLATFORM )
 endif()
 
 add_library(libANGLE STATIC ${LIBANGLE_SOURCES})
