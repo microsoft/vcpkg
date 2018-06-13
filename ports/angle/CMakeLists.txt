@@ -209,10 +209,12 @@ if(LINUX OR APPLE)
     )
 elseif(WINDOWS_STORE)
     set(LIBANGLE_RENDERER_PLATFORM
+        angle::renderer::d3d
         angle::renderer::winrt
     )
 elseif(WINDOWS_DESKTOP)
     set(LIBANGLE_RENDERER_PLATFORM
+        angle::renderer::d3d
         angle::renderer::win32
         angle::renderer::opengl
     )
