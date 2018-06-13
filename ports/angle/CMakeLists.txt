@@ -24,6 +24,9 @@ else()
     add_compile_options(-std=c++17 -fPIC)
 endif()
 
+if (APPLE)
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -framework Cocoa -framework OpenGL -framework IOKit -framework CoreFoundation -framework IOSurface -framework QuartzCore -framework CoreGraphics")
+endif()
 set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS}")
 set(CMAKE_STATIC_LIBRARY_PREFIX "")
 
@@ -95,20 +98,33 @@ add_library(angle::preprocessor ALIAS angle_preprocessor)
 ## OpenGL Renderer
 if(WINDOWS_DESKTOP OR LINUX OR APPLE)
     if(WINDOWS_DESKTOP)
-        set(ANGLE_RENDERER_OPENGL_WGL 
+        set(ANGLE_RENDERER_OPENGL_PLATFORM 
             "src/libANGLE/renderer/gl/wgl/*.cpp"
             "src/libANGLE/renderer/gl/wgl/*.inl"
             "src/libANGLE/renderer/gl/wgl/*.h"
         )
-    else()
-        set(ANGLE_RENDERER_OPENGL_WGL )
+    elseif(APPLE)
+        set(ANGLE_RENDERER_OPENGL_PLATFORM 
+            "src/libANGLE/renderer/gl/cgl/*.mm"
+            "src/libANGLE/renderer/gl/cgl/*.cpp"
+            "src/libANGLE/renderer/gl/cgl/*.inl"
+            "src/libANGLE/renderer/gl/cgl/*.h"
+            "gpu_info_util/SystemInfo_mac.mm"
+        )
+    elseif(LINUX)
+        set(ANGLE_RENDERER_OPENGL_PLATFORM 
+            "src/libANGLE/renderer/gl/glx/*.cpp"
+            "src/libANGLE/renderer/gl/glx/*.inl"
+            "src/libANGLE/renderer/gl/glx/*.h"
+        )
     endif()
 
     file(GLOB LIBANGLE_GL_SOURCES
         "src/libANGLE/renderer/gl/*.cpp"
         "src/libANGLE/renderer/gl/*.inl"
         "src/libANGLE/renderer/gl/*.h"
-        ${ANGLE_RENDERER_OPENGL_WGL}
+
+        ${ANGLE_RENDERER_OPENGL_PLATFORM}
     )
     list(FILTER LIBANGLE_GL_SOURCES EXCLUDE REGEX "_unittest")
     add_library(angle_renderer_opengl INTERFACE)
@@ -163,19 +179,7 @@ if(WINDOWS_ANY)
 endif()
 
 ## Core libANGLE library
-if (LINUX OR APPLE)
-    set(LIBANGLE_SOURCES_PLATFORM 
-
-        "src/libANGLE/renderer/gl/*.cpp"
-        "src/libANGLE/renderer/gl/*.inl"
-        "src/libANGLE/renderer/gl/*.h"
-
-        "src/libANGLE/renderer/gl/glx/*.cpp"
-        "src/libANGLE/renderer/gl/glx/*.inl"
-        "src/libANGLE/renderer/gl/glx/*.h"
-
-    )
-elseif(WINDOWS_ANY)
+if(WINDOWS_ANY)
     set(LIBANGLE_SOURCES_PLATFORM
         "src/third_party/systeminfo/SystemInfo.cpp"
     )
