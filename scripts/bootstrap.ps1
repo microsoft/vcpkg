@@ -329,15 +329,18 @@ if ($disableMetrics)
 
 $platform = "x86"
 $vcpkgReleaseDir = "$vcpkgSourcesPath\release"
-# x86_64 architecture is 9
-$architecture=(Get-WmiObject win32_Processor -ErrorAction SilentlyContinue).Architecture
 
-if ([Environment]::Is64BitOperatingSystem -and $architecture -eq 9 -and $win64)
+if ($win64)
 {
-    $platform = "x64"
-    $vcpkgReleaseDir = "$vcpkgSourcesPath\x64\Release"
-}
+    $architecture=(Get-WmiObject win32_operatingsystem | Select-Object osarchitecture).osarchitecture
+    if ($architecture -ne "64-bit")
+    {
+        throw "Cannot build 64-bit on non-64-bit system"
+    }
 
+    $platform = "x64"
+    $vcpkgReleaseDir = "$vcpkgSourcesPath\x64\release"
+}
 
 $arguments = (
 "`"/p:VCPKG_VERSION=-nohash`"",
