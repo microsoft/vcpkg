@@ -2,6 +2,7 @@
 param(
     $badParam,
     [Parameter(Mandatory=$False)][switch]$disableMetrics = $false,
+    [Parameter(Mandatory=$False)][switch]$win64 = $false,
     [Parameter(Mandatory=$False)][string]$withVSPath = "",
     [Parameter(Mandatory=$False)][string]$withWinSDK = ""
 )
@@ -326,11 +327,23 @@ if ($disableMetrics)
     $disableMetricsValue = "1"
 }
 
+$platform = "x86"
+$vcpkgReleaseDir = "$vcpkgSourcesPath\release"
+# x86_64 architecture is 9
+$architecture=(Get-WmiObject win32_Processor -ErrorAction SilentlyContinue).Architecture
+
+if ([Environment]::Is64BitOperatingSystem -and $architecture -eq 9 -and $win64)
+{
+    $platform = "x64"
+    $vcpkgReleaseDir = "$vcpkgSourcesPath\x64\Release"
+}
+
+
 $arguments = (
 "`"/p:VCPKG_VERSION=-nohash`"",
 "`"/p:DISABLE_METRICS=$disableMetricsValue`"",
 "/p:Configuration=release",
-"/p:Platform=x86",
+"/p:Platform=$platform",
 "/p:PlatformToolset=$platformToolset",
 "/p:TargetPlatformVersion=$windowsSDK",
 "/verbosity:minimal",
@@ -371,5 +384,5 @@ Write-Host "`nBuilding vcpkg.exe... done.`n"
 
 Write-Verbose("Placing vcpkg.exe in the correct location")
 
-Copy-Item $vcpkgSourcesPath\release\vcpkg.exe $vcpkgRootDir\vcpkg.exe | Out-Null
-Copy-Item $vcpkgSourcesPath\release\vcpkgmetricsuploader.exe $vcpkgRootDir\scripts\vcpkgmetricsuploader.exe | Out-Null
+Copy-Item "$vcpkgReleaseDir\vcpkg.exe" "$vcpkgRootDir\vcpkg.exe" | Out-Null
+Copy-Item "$vcpkgReleaseDir\vcpkgmetricsuploader.exe" "$vcpkgRootDir\scripts\vcpkgmetricsuploader.exe" | Out-Null
