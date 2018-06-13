@@ -38,6 +38,7 @@ if ($binaryCaching)
 
 $env:VCPKG_DEFAULT_VS_PATH = $vsInstallPath
 
+
 if($miniTest)
 {
     ./vcpkg install "zlib:$triplet" "--x-xunit=$ciXmlPath" | Tee-Object -FilePath "$triplet.txt"
@@ -50,6 +51,11 @@ else
         $exclusions = ""
     }
 
+    # WORKAROUND: the x86-windows flavors of these are needed for the uwp flavors, but they are not auto-installed.
+    # Install them so the CI succeeds
+    ./vcpkg install "protobuf:x86-windows" "boost-build:x86-windows"
+
+    # Run the CI
     ./vcpkg ci $triplet "--x-xunit=$ciXmlPath" $exclusions | Tee-Object -FilePath "$triplet.txt"
 }
 
