@@ -6,10 +6,16 @@ if(WIN32 AND NOT WINDOWS_STORE)
 else()
     set(WINDOWS_DESKTOP 0)
 endif()
-set(WINDOWS_ANY WINDOWS_DESKTOP OR WINDOWS_STORE)
+if (WINDOWS_DESKTOP OR WINDOWS_STORE)
+    set(WINDOWS_ANY 1)
+else()
+    set(WINDOWS_ANY 0)
+endif()
 
 if(UNIX AND NOT APPLE)
-    set(LINUX TRUE)
+    set(LINUX 1)
+else()
+    set(LINUX 0)
 endif()
 
 if(WINDOWS_ANY)
@@ -157,8 +163,27 @@ if(WINDOWS_ANY)
 endif()
 
 ## Core libANGLE library
+if (LINUX OR APPLE)
+    set(LIBANGLE_SOURCES_PLATFORM 
+
+        "src/libANGLE/renderer/gl/*.cpp"
+        "src/libANGLE/renderer/gl/*.inl"
+        "src/libANGLE/renderer/gl/*.h"
+
+        "src/libANGLE/renderer/gl/glx/*.cpp"
+        "src/libANGLE/renderer/gl/glx/*.inl"
+        "src/libANGLE/renderer/gl/glx/*.h"
+
+    )
+elseif(WINDOWS_ANY)
+    set(LIBANGLE_SOURCES_PLATFORM
+        "src/third_party/systeminfo/SystemInfo.cpp"
+    )
+else()
+    set(LIBANGLE_SOURCES_PLATFORM )
+endif()
+
 file(GLOB LIBANGLE_SOURCES
-    $<$<BOOL:${WINDOWS_ANY}>:"src/third_party/systeminfo/SystemInfo.cpp">
     "src/common/third_party/murmurhash/MurmurHash3.cpp"
     "src/common/event_tracer.cpp"
 
@@ -174,15 +199,25 @@ file(GLOB LIBANGLE_SOURCES
     "src/libANGLE/renderer/null/*.inl"
     "src/libANGLE/renderer/null/*.h"
 
-    "src/libANGLE/renderer/gl/*.cpp"
-    "src/libANGLE/renderer/gl/*.inl"
-    "src/libANGLE/renderer/gl/*.h"
-
-    "src/libANGLE/renderer/gl/glx/*.cpp"
-    "src/libANGLE/renderer/gl/glx/*.inl"
-    "src/libANGLE/renderer/gl/glx/*.h"
+    "${LIBANGLE_SOURCES_PLATFORM}"
 )
 list(FILTER LIBANGLE_SOURCES EXCLUDE REGEX "_unittest")
+
+if(LINUX OR APPLE)
+    set(LIBANGLE_RENDERER_PLATFORM
+        angle::renderer::opengl
+    )
+elseif(WINDOWS_STORE)
+    set(LIBANGLE_RENDERER_PLATFORM
+        angle::renderer::winrt
+    )
+elseif(WINDOWS_DESKTOP)
+    set(LIBANGLE_RENDERER_PLATFORM
+        angle::renderer::win32
+        angle::renderer::opengl
+    )
+else()
+endif()
 
 add_library(libANGLE STATIC ${LIBANGLE_SOURCES})
 target_link_libraries(libANGLE PRIVATE
@@ -190,14 +225,14 @@ target_link_libraries(libANGLE PRIVATE
     angle::image_util
     angle::translator
     angle::preprocessor
-    angle::renderer::opengl
+    ${LIBANGLE_RENDERER_PLATFORM}
 )
 target_include_directories(libANGLE PRIVATE "src/third_party/khronos")
 target_compile_definitions(libANGLE
     PRIVATE -DANGLE_ENABLE_NULL
     PUBLIC 
         -DLIBANGLE_IMPLEMENTATION 
-        -DANGLE_USE_X11
+        $<$<BOOL:${LINUX}>:ANGLE_USE_X11>
 )
 add_library(angle::libANGLE ALIAS libANGLE)
 
