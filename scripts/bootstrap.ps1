@@ -1,10 +1,24 @@
 [CmdletBinding()]
 param(
-    [ValidateNotNullOrEmpty()][string]$disableMetrics = "0",
+    $badParam,
+    [Parameter(Mandatory=$False)][switch]$disableMetrics = $false,
     [Parameter(Mandatory=$False)][string]$withVSPath = "",
     [Parameter(Mandatory=$False)][string]$withWinSDK = ""
 )
 Set-StrictMode -Version Latest
+# Powershell2-compatible way of forcing named-parameters
+if ($badParam)
+{
+    if ($disableMetrics -and $badParam -eq "1")
+    {
+        Write-Warning "'disableMetrics 1' is deprecated, please change to 'disableMetrics' (without '1')"
+    }
+    else
+    {
+        throw "Only named parameters are allowed"
+    }
+}
+
 $scriptsDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 $withVSPath = $withVSPath -replace "\\$" # Remove potential trailing backslash
 
@@ -306,9 +320,15 @@ $msbuildExe = $msbuildExeWithPlatformToolset[0]
 $platformToolset = $msbuildExeWithPlatformToolset[1]
 $windowsSDK = getWindowsSDK -withWinSDK $withWinSDK
 
+$disableMetricsValue = "0"
+if ($disableMetrics)
+{
+    $disableMetricsValue = "1"
+}
+
 $arguments = (
 "`"/p:VCPKG_VERSION=-nohash`"",
-"`"/p:DISABLE_METRICS=$disableMetrics`"",
+"`"/p:DISABLE_METRICS=$disableMetricsValue`"",
 "/p:Configuration=release",
 "/p:Platform=x86",
 "/p:PlatformToolset=$platformToolset",
