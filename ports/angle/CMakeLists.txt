@@ -199,7 +199,7 @@ file(GLOB LIBANGLE_SOURCES
     "src/libANGLE/renderer/null/*.inl"
     "src/libANGLE/renderer/null/*.h"
 
-    "${LIBANGLE_SOURCES_PLATFORM}"
+    ${LIBANGLE_SOURCES_PLATFORM}
 )
 list(FILTER LIBANGLE_SOURCES EXCLUDE REGEX "_unittest")
 
