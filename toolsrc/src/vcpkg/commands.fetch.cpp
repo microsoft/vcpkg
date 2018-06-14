@@ -7,6 +7,7 @@
 #include <vcpkg/base/util.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
+#
 
 namespace vcpkg::Commands::Fetch
 {
@@ -316,9 +317,19 @@ namespace vcpkg::Commands::Fetch
 #endif
 
         fs.rename(to_path_partial, to_path, ec);
+
+        for (int i = 0; i < 5 && ec; i++)
+        {
+            i++;
+            using namespace std::chrono_literals;
+            std::this_thread::sleep_for(i * 100ms);
+            fs.rename(to_path_partial, to_path, ec);
+        }
+
         Checks::check_exit(VCPKG_LINE_INFO,
                            !ec,
-                           "Failed to do post-extract rename-in-place.\nfs.rename(%s, %s, %s)",
+                           "Failed to do post-extract rename-in-place.\n"
+                           "fs.rename(%s, %s, %s)",
                            to_path_partial.u8string(),
                            to_path.u8string(),
                            ec.message());
@@ -450,7 +461,8 @@ namespace vcpkg::Commands::Fetch
         fs.rename(download_path_part, download_path, ec);
         Checks::check_exit(VCPKG_LINE_INFO,
                            !ec,
-                           "Failed to do post-download rename-in-place.\nfs.rename(%s, %s, %s)",
+                           "Failed to do post-download rename-in-place.\n"
+                           "fs.rename(%s, %s, %s)",
                            download_path_part,
                            download_path.u8string(),
                            ec.message());
@@ -463,9 +475,10 @@ namespace vcpkg::Commands::Fetch
         Checks::check_exit(VCPKG_LINE_INFO,
                            !tool_data.url.empty(),
                            "A suitable version of %s was not found (required v%s) and unable to automatically "
-                           "download a portable one. Please install a newer version of git.",
+                           "download a portable one. Please install a newer version of %s.",
                            tool_name,
-                           version_as_string);
+                           version_as_string,
+                           tool_name);
         System::println("A suitable version of %s was not found (required v%s). Downloading portable %s v%s...",
                         tool_name,
                         version_as_string,
