@@ -1,4 +1,4 @@
 Source: nana
 Version: 1.5.5
 Description: Cross-platform library for GUI programming in modern C++ style.
-Build-Depends: libpng, libjpeg-turbo
+Build-Depends: libpng, libjpeg-turbo, freetype (!uwp&&!windows), fontconfig (!uwp&&!windows)
