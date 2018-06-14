@@ -226,6 +226,14 @@ else()
     set(LIBANGLE_RENDERER_PLATFORM )
 endif()
 
+if(LINUX)
+    set(LIBANGLE_RENDERER_COMPILEDEF
+        -DANGLE_USE_X11
+    )
+else()
+    set(LIBANGLE_RENDERER_COMPILEDEF )
+endif()
+
 add_library(libANGLE STATIC ${LIBANGLE_SOURCES})
 target_link_libraries(libANGLE PRIVATE
     angle::common
@@ -239,7 +247,7 @@ target_compile_definitions(libANGLE
     PRIVATE -DANGLE_ENABLE_NULL
     PUBLIC 
         -DLIBANGLE_IMPLEMENTATION 
-        $<$<BOOL:${LINUX}>:ANGLE_USE_X11>
+        ${LIBANGLE_RENDERER_COMPILEDEF}
 )
 add_library(angle::libANGLE ALIAS libANGLE)
 
