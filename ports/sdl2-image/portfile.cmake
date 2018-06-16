@@ -29,14 +29,22 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        "-DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}"
         -DUSE_PNG=ON
         -DUSE_JPEG=${USE_JPEG}
         -DUSE_TIFF=${USE_TIFF}
         -DUSE_WEBP=${USE_WEBP}
+        -DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/libwebp
 )
 
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-sdl2-image TARGET_PATH share/unofficial-sdl2-image)
+
+configure_file(
+    ${CMAKE_CURRENT_LIST_DIR}/unofficial-sdl2-image-config.in.cmake
+    ${CURRENT_PACKAGES_DIR}/share/unofficial-sdl2-image/unofficial-sdl2-image-config.cmake
+    @ONLY
+)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/sdl2-image)

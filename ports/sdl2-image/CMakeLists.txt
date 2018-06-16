@@ -1,32 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 project(SDL2_image C)
 
-### configuration ###
-
-list(APPEND CMAKE_MODULE_PATH "${CURRENT_INSTALLED_DIR}/share/libwebp")
-# enable all file formats which are supported natively
-set(SUPPORTED_FORMATS BMP GIF LBM PCX PNM TGA XPM XCF XV SVG)
-
-# enable all file formats which are supported through external dependencies
-# first try to load them statically (lib file in vcpkg installation)
-# if this fails try to make them a dynamic dependency (dll will be loaded at runtime) if possible. vcpkg cannot resolve these dependencies!
-# else do not support this file format at all
-
-# Can be explicitly enabled or disabled via USE_XYZ
-set(DEPENDENCIES PNG JPEG TIFF WEBP)
-
-# patch library names for preprocessor flags
-set(JPEG_FLAG JPG)
-set(TIFF_FLAG TIF)
-
-# names of potentially dynamically loaded libraries
-set(JPEG_DYNAMIC \"libjpeg-9.dll\")
-set(PNG_DYNAMIC \"libpng16-16.dll\")
-set(TIFF_DYNAMIC \"libtiff-5.dll\")
-set(WEBP_DYNAMIC \"libwebp-4.dll\")
-
-### implementation ###
-
 add_library(SDL2_image
     IMG.c
     IMG_bmp.c
@@ -45,74 +19,55 @@ add_library(SDL2_image
     IMG_xv.c
     IMG_xxx.c
     version.rc
-    )
+)
 
 set_target_properties(SDL2_image PROPERTIES DEFINE_SYMBOL SDL2_EXPORTS)
 
-foreach(FORMAT ${SUPPORTED_FORMATS})
+# enable all file formats which are supported natively
+foreach(FORMAT BMP GIF LBM PCX PNM TGA XPM XCF XV SVG)
     add_definitions(-DLOAD_${FORMAT})
 endforeach(FORMAT)
 
-# SDL
-find_path(SDL_INCLUDE_DIR SDL2/SDL.h)
-find_library(SDL_LIBRARY NAMES SDL2d SDL2)
+find_package(SDL2 CONFIG REQUIRED)
+find_package(PNG REQUIRED)
 
-include_directories(${SDL_INCLUDE_DIR})
-include_directories(${SDL_INCLUDE_DIR}/SDL2)
-include_directories(${CMAKE_SOURCE_DIR})
+find_path(SDL2_INNER_HEADERS NAMES SDL2/SDL_endian.h)
+include_directories(${CMAKE_SOURCE_DIR} ${SDL2_INNER_HEADERS}/SDL2)
 
-target_link_libraries(SDL2_image ${SDL_LIBRARY})
-
-# external dependencies
-foreach(DEPENDENCY IN LISTS DEPENDENCIES)
-    if(NOT USE_${DEPENDENCY})
-        continue()
-    endif()
-    find_package(${DEPENDENCY})
-
-    if(NOT DEFINED ${DEPENDENCY}_FLAG)
-        set(${DEPENDENCY}_FLAG ${DEPENDENCY})
-    endif()
-
-    add_definitions(-DLOAD_${${DEPENDENCY}_FLAG})
-    if(${DEPENDENCY}_FOUND)
-        message(STATUS "  --> linking statically.")
-        target_link_libraries(SDL2_image ${${DEPENDENCY}_LIBRARIES})
-    elseif(DEFINED ${DEPENDENCY}_DYNAMIC)
-        message(STATUS "  --> linking dynamically.")
-        add_definitions(-DLOAD_${${DEPENDENCY}_FLAG}_DYNAMIC=${${DEPENDENCY}_DYNAMIC})
-        set(RUNTIME_DEPENDENCIES ON)
-    else()
-        message(STATUS "  --> skipping.")
-    endif()
-endforeach(DEPENDENCY)
-
-if(DEFINED RUNTIME_DEPENDENCIES)
-    include_directories(VisualC/external/include)
+add_definitions(-DLOAD_PNG -DLOAD_JPG -DLOAD_TIF -DLOAD_WEBP)
+target_link_libraries(
+    SDL2_image
+    PUBLIC SDL2::SDL2
+    PRIVATE PNG::PNG
+)
+if(USE_JPEG)
+    find_package(JPEG REQUIRED)
+    target_link_libraries(SDL2_image PRIVATE ${JPEG_LIBRARIES})
+    target_compile_definitions(SDL2_image PRIVATE -DLOAD_JPG)
+endif()
+if(USE_TIFF)
+    find_package(TIFF REQUIRED)
+    target_link_libraries(SDL2_image PRIVATE ${TIFF_LIBRARIES})
+    target_compile_definitions(SDL2_image PRIVATE -DLOAD_TIF)
+endif()
+if(USE_WEBP)
+    find_package(WebP REQUIRED)
+    target_link_libraries(SDL2_image PRIVATE ${WEBP_LIBRARIES})
+    target_compile_definitions(SDL2_image PRIVATE -DLOAD_WEBP)
 endif()
 
-
-install(TARGETS SDL2_image
+install(
+    TARGETS SDL2_image
+    EXPORT sdl2-image
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib)
+    LIBRARY DESTINATION lib
+)
 
 install(FILES SDL_image.h DESTINATION include/SDL2 CONFIGURATIONS Release)
-
-
-message(STATUS "Link-time dependencies:")
-message(STATUS "  " ${SDL_LIBRARY})
-foreach(DEPENDENCY ${DEPENDENCIES})
-    if(${DEPENDENCY}_FOUND)
-        message(STATUS "  " ${DEPENDENCY})
-    endif()
-endforeach(DEPENDENCY)
-
-if(DEFINED RUNTIME_DEPENDENCIES)
-    message(STATUS "Run-time dependencies:")
-    foreach(DEPENDENCY ${DEPENDENCIES})
-        if(NOT ${DEPENDENCY}_FOUND AND DEFINED ${DEPENDENCY}_DYNAMIC)
-            message(STATUS "  " ${${DEPENDENCY}_DYNAMIC})
-        endif()
-    endforeach(DEPENDENCY)
-endif()
+install(
+    EXPORT sdl2-image
+    NAMESPACE unofficial::sdl2-image::
+    FILE unofficial-sdl2-image-targets.cmake
+    DESTINATION share/unofficial-sdl2-image
+)
