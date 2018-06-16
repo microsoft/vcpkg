@@ -1,4 +1,8 @@
-#header-only library
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore"))
+    message("tinyobjloader doesn't support dynamic linkage on Windows. Building static instead.")
+    set(VCPKG_LIBRARY_LINKAGE static)
+endif()
+
 include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -8,10 +12,28 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# Put the licence file where vcpkg expects it
-file(COPY ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/tinyobjloader/README.md)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/tinyobjloader/README.md ${CURRENT_PACKAGES_DIR}/share/tinyobjloader/copyright)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" TINYOBJLOADER_COMPILATION_SHARED)
 
-# Copy the tinyobjloader header files
-file(GLOB HEADER_FILES ${SOURCE_PATH}/*.h)
-file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+vcpkg_configure_cmake(
+    SOURCE_PATH "${SOURCE_PATH}"
+    PREFER_NINJA
+    OPTIONS
+        -DTINYOBJLOADER_COMPILATION_SHARED=${TINYOBJLOADER_COMPILATION_SHARED}
+        -DCMAKE_INSTALL_DOCDIR:STRING=share/tinyobjloader
+)
+
+vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/tinyobjloader/cmake)
+
+file(
+    REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/debug/include
+    ${CURRENT_PACKAGES_DIR}/debug/share
+    ${CURRENT_PACKAGES_DIR}/lib/tinyobjloader
+    ${CURRENT_PACKAGES_DIR}/debug/lib/tinyobjloader
+)
+
+vcpkg_copy_pdbs()
+
+# Put the licence file where vcpkg expects it
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/tinyobjloader/LICENSE ${CURRENT_PACKAGES_DIR}/share/tinyobjloader/copyright)
