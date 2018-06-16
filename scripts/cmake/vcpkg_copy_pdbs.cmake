@@ -4,7 +4,7 @@
 ##
 ## ## Usage
 ## ```cmake
-## vcpkg_copy_pdbs()
+## vcpkg_copy_pdbs([BUILD_PATHS <${CURRENT_PACKAGES_DIR}/bin/*.dll> ...])
 ## ```
 ##
 ## ## Notes
@@ -12,7 +12,9 @@
 ##
 ## ## Parameters
 ## ### BUILD_PATHS
-## Additional paths passed to dumpbin in order to locate pdbs.
+## Path patterns passed to `file(GLOB_RECURSE)` for locating dlls.
+##
+## Defaults to `${CURRENT_PACKAGES_DIR}/bin/*.dll` and `${CURRENT_PACKAGES_DIR}/debug/bin/*.dll`.
 ##
 ## ## Examples
 ##
@@ -21,10 +23,13 @@
 function(vcpkg_copy_pdbs)
     cmake_parse_arguments(_vcp "" "" "BUILD_PATHS" ${ARGN})
     
-    list(APPEND _vcp_BUILD_PATHS
-        ${CURRENT_PACKAGES_DIR}/bin/*.dll
-        ${CURRENT_PACKAGES_DIR}/debug/bin/*.dll
-    )
+    if(NOT _vcp_BUILD_PATHS)
+        set(
+            _vcp_BUILD_PATHS
+            ${CURRENT_PACKAGES_DIR}/bin/*.dll
+            ${CURRENT_PACKAGES_DIR}/debug/bin/*.dll
+        )
+    endif()
 
     function(merge_filelist OUTVAR INVAR)
         set(MSG "")
