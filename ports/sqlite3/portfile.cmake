@@ -27,14 +27,15 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(READ ${CURRENT_PACKAGES_DIR}/debug/share/sqlite3/sqlite3Config-debug.cmake SQLITE3_DEBUG_CONFIG)
-    string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" SQLITE3_DEBUG_CONFIG "${SQLITE3_DEBUG_CONFIG}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/sqlite3/sqlite3Config-debug.cmake "${SQLITE3_DEBUG_CONFIG}")
-endif()
+vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+configure_file(
+    ${CMAKE_CURRENT_LIST_DIR}/sqlite3-config.in.cmake
+    ${CURRENT_PACKAGES_DIR}/share/sqlite3/sqlite3-config.cmake
+    @ONLY
+)
 
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/sqlite3/copyright "SQLite is in the Public Domain.\nhttp://www.sqlite.org/copyright.html\n")
 vcpkg_copy_pdbs()
