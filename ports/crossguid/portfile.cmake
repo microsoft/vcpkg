@@ -2,31 +2,28 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO graeme-hill/crossguid
-    REF v0.2.2
-    SHA512 49a707f830b32ba136bd52e72dda191a7d29acee9795df54f225bb269853cc123390c01875dd1da7cbaebd5bb7001988d6f9758dcffa9171b5f2961f576682ca
+    REF c4f8e9b21f779abe287c022e73eeac365d430337
+    SHA512 38876f410d0014ad930b720312cecc99be1361b9810a21d5ffc1deba6221ea0e2aebd0da332adb18fd314d0477fd33410403120629b8df405bb64a9884e3d0b0
     HEAD_REF master
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported.")
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    message(STATUS "Warning: Dynamic building not supported. Building static instead")
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DXG_TESTS:BOOL=OFF
+    OPTIONS
+        -DCROSSGUID_TESTS:BOOL=OFF
 )
 
-vcpkg_build_cmake()
+vcpkg_install_cmake()
 
-file(INSTALL ${SOURCE_PATH}/Guid.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/xg.lib  DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/xg.lib  DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/crossguid/cmake)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/crossguid)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/crossguid/LICENSE ${CURRENT_PACKAGES_DIR}/share/crossguid/copyright)
-
