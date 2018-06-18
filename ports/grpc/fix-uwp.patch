@@ -1,0 +1,160 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f58ee19..7fdcf48 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -79,14 +79,16 @@ if(UNIX)
+     set(_gRPC_PLATFORM_LINUX ON)
+   elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+     set(_gRPC_PLATFORM_MAC ON)
+-  elseif(${CMAKE_SYSTEM_NAME} MATCHES "Android")
+-    set(_gRPC_PLATFORM_ANDROID ON)
+   else()
+     set(_gRPC_PLATFORM_POSIX ON)
+   endif()
+ endif()
+ if(WIN32)
+   set(_gRPC_PLATFORM_WINDOWS ON)
++  if(${CMAKE_SYSTEM_NAME} MATCHES "WindowsStore")
++    set(_gRPC_PLATFORM_UWP ON)
++	set(gRPC_BUILD_CODEGEN OFF)
++  endif()
+ endif()
+ 
+ set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
+@@ -152,6 +154,10 @@ file(MAKE_DIRECTORY ${_gRPC_PROTO_GENS_DIR})
+ #     ``.proto`` files
+ #
+ function(protobuf_generate_grpc_cpp)
++  if(_gRPC_PLATFORM_UWP)
++    return()
++  endif()
++
+   if(NOT ARGN)
+     message(SEND_ERROR "Error: PROTOBUF_GENERATE_GRPC_CPP() called without any proto files")
+     return()
+@@ -186,27 +192,29 @@ function(protobuf_generate_grpc_cpp)
+   endforeach()
+ endfunction()
+ 
+-add_custom_target(plugins
+-  DEPENDS
+-  grpc_cpp_plugin
+-  grpc_csharp_plugin
+-  grpc_node_plugin
+-  grpc_objective_c_plugin
+-  grpc_php_plugin
+-  grpc_python_plugin
+-  grpc_ruby_plugin
+-)
+-
+-add_custom_target(tools_c
+-  DEPENDS
+-  check_epollexclusive
+-  grpc_create_jwt
+-  grpc_print_google_default_creds_token
+-  grpc_verify_jwt
+-  gen_hpack_tables
+-  gen_legal_metadata_characters
+-  gen_percent_encoding_tables
+-)
++if(NOT _gRPC_PLATFORM_UWP)
++	add_custom_target(plugins
++	  DEPENDS
++	  grpc_cpp_plugin
++	  grpc_csharp_plugin
++	  grpc_node_plugin
++	  grpc_objective_c_plugin
++	  grpc_php_plugin
++	  grpc_python_plugin
++	  grpc_ruby_plugin
++	)
++	
++	add_custom_target(tools_c
++	  DEPENDS
++	  check_epollexclusive
++	  grpc_create_jwt
++	  grpc_print_google_default_creds_token
++	  grpc_verify_jwt
++	  gen_hpack_tables
++	  gen_legal_metadata_characters
++	  gen_percent_encoding_tables
++	)
++endif()
+ 
+ add_custom_target(tools_cxx
+   DEPENDS
+@@ -3540,7 +3548,6 @@ if (gRPC_INSTALL)
+   )
+ endif()
+ 
+-
+ if (gRPC_BUILD_CODEGEN)
+ add_library(grpc++_error_details
+   ${_gRPC_PROTO_GENS_DIR}/src/proto/grpc/status/status.pb.cc
+@@ -3595,7 +3602,6 @@ foreach(_hdr
+     DESTINATION "${gRPC_INSTALL_INCLUDEDIR}/${_path}"
+   )
+ endforeach()
+-endif (gRPC_BUILD_CODEGEN)
+ 
+ 
+ if (gRPC_INSTALL)
+@@ -3605,6 +3611,7 @@ if (gRPC_INSTALL)
+     ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
+   )
+ endif()
++endif (gRPC_BUILD_CODEGEN)
+ 
+ if (gRPC_BUILD_TESTS)
+ 
+@@ -3725,7 +3732,7 @@ foreach(_hdr
+     DESTINATION "${gRPC_INSTALL_INCLUDEDIR}/${_path}"
+   )
+ endforeach()
+-endif (gRPC_BUILD_CODEGEN)
++
+ 
+ 
+ if (gRPC_INSTALL)
+@@ -3735,6 +3742,7 @@ if (gRPC_INSTALL)
+     ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
+   )
+ endif()
++endif (gRPC_BUILD_CODEGEN)
+ 
+ if (gRPC_BUILD_TESTS)
+ 
+diff --git a/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc b/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc
+index 55efe0e..f538f26 100644
+--- a/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc
++++ b/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc
+@@ -60,6 +60,8 @@ bool check_bios_data(const char* bios_data_file) {
+ 
+ static void init_mu(void) { gpr_mu_init(&g_mu); }
+ 
++#if !defined(WINAPI_FAMILY) || WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP
++
+ static bool run_powershell() {
+   SECURITY_ATTRIBUTES sa;
+   sa.nLength = sizeof(sa);
+@@ -97,8 +99,12 @@ static bool run_powershell() {
+   CloseHandle(h);
+   return true;
+ }
++#endif
+ 
+ bool grpc_alts_is_running_on_gcp() {
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY != WINAPI_FAMILY_DESKTOP_APP)
++  g_is_on_compute_engine = false;
++#else
+   gpr_once_init(&g_once, init_mu);
+   gpr_mu_lock(&g_mu);
+   if (!g_compute_engine_detection_done) {
+@@ -108,6 +114,7 @@ bool grpc_alts_is_running_on_gcp() {
+     g_compute_engine_detection_done = true;
+   }
+   gpr_mu_unlock(&g_mu);
++#endif
+   return g_is_on_compute_engine;
+ }
+ 
