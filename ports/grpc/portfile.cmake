@@ -18,7 +18,7 @@ vcpkg_from_github(
     PATCHES
         # ${CMAKE_CURRENT_LIST_DIR}/disable-csharp-ext.patch
         # ${CMAKE_CURRENT_LIST_DIR}/disable-csharp-ext-2.patch
-        # ${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch
 )
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
