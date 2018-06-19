@@ -19,6 +19,7 @@ vcpkg_configure_cmake(
     OPTIONS
         # Due to missing dllexport flags we export all symbols
         -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=TRUE
+        -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_install_cmake()
