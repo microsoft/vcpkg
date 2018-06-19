@@ -3,6 +3,9 @@ project(leveldb C CXX)
 
 option(INSTALL_HEADERS "Install header files" ON)
 
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 IF (MSVC)
 add_definitions(
        -DWIN32
