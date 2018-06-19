@@ -17,7 +17,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DEXV_UNICODE_PATH:bool=TRUE
+        -DEXIV2_ENABLE_WIN_UNICODE:BOOL=TRUE
 )
 
 vcpkg_install_cmake()
