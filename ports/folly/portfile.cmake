@@ -65,6 +65,7 @@ vcpkg_configure_cmake(
         -DLIBAIO_FOUND=OFF
         -DLIBURCU_FOUND=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_LibURCU=ON
+        -DCMAKE_INSTALL_DIR=share/folly
         ${FEATURE_OPTIONS}
 )
 
@@ -72,7 +73,7 @@ vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/folly)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/folly)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
