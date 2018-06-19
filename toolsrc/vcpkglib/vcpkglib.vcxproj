@@ -141,6 +141,7 @@
     <ClInclude Include="..\include\vcpkg\base\chrono.h" />
     <ClInclude Include="..\include\vcpkg\base\cofffilereader.h" />
     <ClInclude Include="..\include\vcpkg\base\cstringview.h" />
+    <ClInclude Include="..\include\vcpkg\base\downloads.h" />
     <ClInclude Include="..\include\vcpkg\base\enums.h" />
     <ClInclude Include="..\include\vcpkg\base\expected.h" />
     <ClInclude Include="..\include\vcpkg\base\files.h" />
@@ -195,6 +196,7 @@
     <ClCompile Include="..\src\vcpkg\base\checks.cpp" />
     <ClCompile Include="..\src\vcpkg\base\chrono.cpp" />
     <ClCompile Include="..\src\vcpkg\base\cofffilereader.cpp" />
+    <ClCompile Include="..\src\vcpkg\base\downloads.cpp" />
     <ClCompile Include="..\src\vcpkg\base\enums.cpp" />
     <ClCompile Include="..\src\vcpkg\base\files.cpp" />
     <ClCompile Include="..\src\vcpkg\base\lineinfo.cpp" />
