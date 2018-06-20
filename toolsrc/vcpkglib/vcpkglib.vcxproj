@@ -154,6 +154,7 @@
     <ClInclude Include="..\include\vcpkg\base\sortedvector.h" />
     <ClInclude Include="..\include\vcpkg\base\span.h" />
     <ClInclude Include="..\include\vcpkg\base\stringliteral.h" />
+    <ClInclude Include="..\include\vcpkg\base\stringrange.h" />
     <ClInclude Include="..\include\vcpkg\base\strings.h" />
     <ClInclude Include="..\include\vcpkg\base\system.h" />
     <ClInclude Include="..\include\vcpkg\base\util.h" />
@@ -186,6 +187,7 @@
     <ClInclude Include="..\include\vcpkg\vcpkglib.h" />
     <ClInclude Include="..\include\vcpkg\vcpkgpaths.h" />
     <ClInclude Include="..\include\vcpkg\versiont.h" />
+    <ClInclude Include="..\include\vcpkg\visualstudio.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\pch.cpp">
@@ -203,6 +205,7 @@
     <ClCompile Include="..\src\vcpkg\base\files.cpp" />
     <ClCompile Include="..\src\vcpkg\base\lineinfo.cpp" />
     <ClCompile Include="..\src\vcpkg\base\machinetype.cpp" />
+    <ClCompile Include="..\src\vcpkg\base\stringrange.cpp" />
     <ClCompile Include="..\src\vcpkg\base\strings.cpp" />
     <ClCompile Include="..\src\vcpkg\base\system.cpp" />
     <ClCompile Include="..\src\vcpkg\binaryparagraph.cpp" />
@@ -253,6 +256,7 @@
     <ClCompile Include="..\src\vcpkg\vcpkglib.cpp" />
     <ClCompile Include="..\src\vcpkg\vcpkgpaths.cpp" />
     <ClCompile Include="..\src\vcpkg\versiont.cpp" />
+    <ClCompile Include="..\src\vcpkg\visualstudio.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

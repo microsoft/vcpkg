@@ -9,6 +9,7 @@
 #include <vcpkg/metrics.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/vcpkgpaths.h>
+#include <vcpkg/visualstudio.h>
 
 namespace vcpkg
 {
@@ -117,8 +118,8 @@ namespace vcpkg
 #if !defined(_WIN32)
         Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot build windows triplets from non-windows.");
 #else
-        const std::vector<Toolset>& vs_toolsets = this->toolsets.get_lazy(
-            [this]() { return Commands::Fetch::find_toolset_instances_preferred_first(*this); });
+        const std::vector<Toolset>& vs_toolsets =
+            this->toolsets.get_lazy([this]() { return VisualStudio::find_toolset_instances_preferred_first(*this); });
 
         std::vector<const Toolset*> candidates = Util::element_pointers(vs_toolsets);
         const auto tsv = prebuildinfo.platform_toolset.get();
