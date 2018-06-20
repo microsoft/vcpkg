@@ -204,6 +204,9 @@
     <ClCompile Include="..\src\vcpkg\base\downloads.cpp">
       <Filter>Source Files\vcpkg\base</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\vcpkg\base\archives.cpp">
+      <Filter>Source Files\vcpkg\base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\pch.h">
@@ -351,6 +354,9 @@
       <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
     <ClInclude Include="..\include\vcpkg\base\downloads.h">
+      <Filter>Header Files\vcpkg\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\base\archives.h">
       <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
   </ItemGroup>
