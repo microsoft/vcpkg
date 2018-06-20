@@ -73,11 +73,11 @@ namespace vcpkg::VisualStudio
                                code_and_output.output);
 
             const auto instance_entries =
-                VcpkgStringRange::find_all_enclosed(code_and_output.output, "<instance>", "</instance>");
-            for (const VcpkgStringRange& instance : instance_entries)
+                StringRange::find_all_enclosed(code_and_output.output, "<instance>", "</instance>");
+            for (const StringRange& instance : instance_entries)
             {
                 auto maybe_is_prerelease =
-                    VcpkgStringRange::find_at_most_one_enclosed(instance, "<isPrerelease>", "</isPrerelease>");
+                    StringRange::find_at_most_one_enclosed(instance, "<isPrerelease>", "</isPrerelease>");
 
                 VisualStudioInstance::ReleaseType release_type = VisualStudioInstance::ReleaseType::LEGACY;
                 if (const auto p = maybe_is_prerelease.get())
@@ -92,10 +92,9 @@ namespace vcpkg::VisualStudio
                 }
 
                 instances.emplace_back(
-                    VcpkgStringRange::find_exactly_one_enclosed(instance, "<installationPath>", "</installationPath>")
+                    StringRange::find_exactly_one_enclosed(instance, "<installationPath>", "</installationPath>")
                         .to_string(),
-                    VcpkgStringRange::find_exactly_one_enclosed(
-                        instance, "<installationVersion>", "</installationVersion>")
+                    StringRange::find_exactly_one_enclosed(instance, "<installationVersion>", "</installationVersion>")
                         .to_string(),
                     release_type);
             }

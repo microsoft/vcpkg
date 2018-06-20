@@ -83,16 +83,15 @@ namespace vcpkg::Commands::Fetch
                            XML_PATH.generic_string());
 
         const std::string tool_data =
-            VcpkgStringRange::find_exactly_one_enclosed(XML, match_tool_entry[0], "</tool>").to_string();
+            StringRange::find_exactly_one_enclosed(XML, match_tool_entry[0], "</tool>").to_string();
         const std::string version_as_string =
-            VcpkgStringRange::find_exactly_one_enclosed(tool_data, "<version>", "</version>").to_string();
+            StringRange::find_exactly_one_enclosed(tool_data, "<version>", "</version>").to_string();
         const std::string exe_relative_path =
-            VcpkgStringRange::find_exactly_one_enclosed(tool_data, "<exeRelativePath>", "</exeRelativePath>")
-                .to_string();
-        const std::string url = VcpkgStringRange::find_exactly_one_enclosed(tool_data, "<url>", "</url>").to_string();
+            StringRange::find_exactly_one_enclosed(tool_data, "<exeRelativePath>", "</exeRelativePath>").to_string();
+        const std::string url = StringRange::find_exactly_one_enclosed(tool_data, "<url>", "</url>").to_string();
         const std::string sha512 =
-            VcpkgStringRange::find_exactly_one_enclosed(tool_data, "<sha512>", "</sha512>").to_string();
-        auto archive_name = VcpkgStringRange::find_at_most_one_enclosed(tool_data, "<archiveName>", "</archiveName>");
+            StringRange::find_exactly_one_enclosed(tool_data, "<sha512>", "</sha512>").to_string();
+        auto archive_name = StringRange::find_at_most_one_enclosed(tool_data, "<archiveName>", "</archiveName>");
 
         const Optional<std::array<int, 3>> version = parse_version_string(version_as_string);
         Checks::check_exit(VCPKG_LINE_INFO,
