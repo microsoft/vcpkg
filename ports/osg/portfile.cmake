@@ -15,13 +15,16 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     message(STATUS "Warning: Static building will not support load data through plugins.")
     set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/OpenSceneGraph-OpenSceneGraph-3.5.6)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/openscenegraph/OpenSceneGraph/archive/OpenSceneGraph-3.5.6.zip"
-    FILENAME "osg-3.5.6.zip"
-    SHA512 f1745748ff86243291da96a4781af9487204a82540d3cc42b33bcbf693137ab9a6a741cad18afa74f62ef66933840ac54894397f880471f6c639210fa23e7f4b
+
+vcpkg_from_github(
+	OUT_SOURCE_PATH SOURCE_PATH
+	REPO openscenegraph/OpenSceneGraph
+	REF OpenSceneGraph-3.5.6
+	SHA512 bfd52115bc1f48dfb6eaeae1d8c62741c6487e6a8933b5ef97c979800b285e3a5300c9d55eb961e1973314c06b2525b547db683b0395c1f44b46d17cded38dba
+	HEAD_REF master
+	PATCHES
+        "${CURRENT_PORT_DIR}/fix-C2039.patch"
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
