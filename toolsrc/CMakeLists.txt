@@ -48,6 +48,10 @@ elseif(CLANG)
     target_link_libraries(vcpkg PRIVATE c++experimental)
 endif()
 
+if(WIN32)
+    target_link_libraries(vcpkg PRIVATE bcrypt)
+endif()
+
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 target_link_libraries(vcpkg PRIVATE Threads::Threads)
