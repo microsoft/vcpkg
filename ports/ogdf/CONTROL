@@ -1,0 +1,3 @@
+Source: ogdf
+Version: snapshot_2018-03-28
+Description: OGDF is a self-contained C++ class library for the automatic layout of diagrams.
