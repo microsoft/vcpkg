@@ -16,7 +16,6 @@ vcpkg_extract_source_archive(${ARCHIVE_FILE})
 vcpkg_apply_patches(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION}
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/001-add-compiler-flag.patch"
         "${CMAKE_CURRENT_LIST_DIR}/export-ParseGeneratorParameter.patch"
         "${CMAKE_CURRENT_LIST_DIR}/js-embed.patch"
         "${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch"
@@ -37,9 +36,9 @@ endif()
 
 # Disable the protobuf compiler when targeting UWP
 if(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME)
-  set(protobuf_BUILD_COMPILER OFF)
+  set(protobuf_BUILD_PROTOC_BINARIES OFF)
 else()
-  set(protobuf_BUILD_COMPILER ON)
+  set(protobuf_BUILD_PROTOC_BINARIES ON)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -68,7 +67,7 @@ vcpkg_configure_cmake(
         -Dprotobuf_MSVC_STATIC_RUNTIME=${protobuf_MSVC_STATIC_RUNTIME}
         -Dprotobuf_WITH_ZLIB=${protobuf_WITH_ZLIB}
         -Dprotobuf_BUILD_TESTS=OFF
-        -Dprotobuf_BUILD_COMPILER=${protobuf_BUILD_COMPILER}
+        -Dprotobuf_BUILD_PROTOC_BINARIES=${protobuf_BUILD_PROTOC_BINARIES}
         -DCMAKE_INSTALL_CMAKEDIR=share/protobuf
 )
 
