@@ -9,6 +9,7 @@
 #   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
 #   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
 #
+message("3D Streaming Toolkit only works on Windows. As such, this build will fail on any other OS.")
 
 include(vcpkg_common_functions)
 
@@ -33,13 +34,21 @@ vcpkg_from_github(
 execute_process(
     COMMAND powershell.exe -ExecutionPolicy Bypass ${SOURCE_PATH}/Utilities/setup.ps1
     WORKING_DIRECTORY ${SOURCE_PATH}
-    
 )
 
 vcpkg_build_msbuild(
-    PROJECT_PATH ${CURRENT_BUILDTREES_DIR}/src/3DStreamingToolkit-1.0/Plugins/NativeServerPlugin/StreamingNativeServerPlugin.sln
-    PLATFORM x64
+    PROJECT_PATH ${SOURCE_PATH}/Plugins/NativeServerPlugin/StreamingNativeServerPlugin.sln
+)
+
+file(COPY ${SOURCE_PATH}/Plugins/NativeServerPlugin/inc
+    DESTINATION ${CURRENT_PACKAGES_DIR}
+)
+
+file(RENAME ${CURRENT_PACKAGES_DIR}/inc ${CURRENT_PACKAGES_DIR}/include
 )
 
 # Handle copyright
-# file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/3DSTKNativeServer RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE 
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/3DSTKNativeServer
+    RENAME copyright
+)
