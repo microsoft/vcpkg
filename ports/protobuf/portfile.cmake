@@ -16,7 +16,6 @@ vcpkg_extract_source_archive(${ARCHIVE_FILE})
 vcpkg_apply_patches(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION}
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/export-ParseGeneratorParameter.patch"
         "${CMAKE_CURRENT_LIST_DIR}/js-embed.patch"
         "${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch"
         "${CMAKE_CURRENT_LIST_DIR}/wire_format_lite_h_fix_error_C4146.patch"
