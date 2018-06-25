@@ -12,8 +12,8 @@
 
 include(vcpkg_common_functions)
 
-set(ECSUTIL_VERSION "0.9.0.5")
-set(ECSUtil_HASH 104fe777ed5eff9e6bf18bad4dbb482e0898c0f493862e06f676db0670a785378d36bd79fc9744a6b573c05dcf3f0362ba0b5922cae9b4d4f586bfc0f281c5c7)
+set(ECSUTIL_VERSION "0.9.0.6")
+set(ECSUtil_HASH 5c609275a1f7b4d31890a63fd2a19b4abb8e3aeaef09bd0e8617f50a2922564f68461c6cf7d0f044a2e3749ebe549cd47fed5852193f1763748d7e4c2bd763da)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src)
 
 #architecture detection
