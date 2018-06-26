@@ -1,0 +1,22 @@
+From d72b243c717159b2e44f2dc12d25752be578e2ec Mon Sep 17 00:00:00 2001
+From: Roman Sztergbaum <roman.sztergbaum@epitech.eu>
+Date: Sat, 23 Jun 2018 10:43:51 +0200
+Subject: [PATCH] fix install interface
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index abd298f8..ba52ded8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -141,7 +141,7 @@ CMAKE_DEPENDENT_OPTION(TESTS_DYNAMIC_LOADING_EXAMPLES "Enable build of dynamic l
+ add_library(sol2 INTERFACE)
+ target_include_directories(sol2 INTERFACE
+ 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+-	$<INSTALL_INTERFACE:include/sol>)
++	$<INSTALL_INTERFACE:include/sol> $<INSTALL_INTERFACE:include>)
+ 
+ # # Version configurations
+ configure_package_config_file(
