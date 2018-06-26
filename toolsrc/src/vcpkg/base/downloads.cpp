@@ -4,7 +4,9 @@
 #include <vcpkg/base/util.h>
 #include <vcpkg/commands.h>
 
+#if defined(_WIN32)
 #include <VersionHelpers.h>
+#endif
 
 namespace vcpkg::Downloads
 {
