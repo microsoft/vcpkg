@@ -16,7 +16,7 @@ index abd298f8..ba52ded8 100644
  target_include_directories(sol2 INTERFACE
  	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 -	$<INSTALL_INTERFACE:include/sol>)
-+	$<INSTALL_INTERFACE:include>)
++	$<INSTALL_INTERFACE:include/sol> $<INSTALL_INTERFACE:include>)
  
  # # Version configurations
  configure_package_config_file(
