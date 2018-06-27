@@ -6,9 +6,6 @@ vcpkg_from_github(
     REF v2.20.4
     SHA512 dacacf57da3d1be3f20542ba83676e247a0d5815d0ee5dbfdbe996ffa264a5aaa71d7e5088088b0f1b41001f681d3c81339fc3f1ba394095eeaef4cb9376499a
     HEAD_REF develop
-#    PATCHES
-#        ${CMAKE_CURRENT_LIST_DIR}/sol2_fix_targets.patch
-#        ${CMAKE_CURRENT_LIST_DIR}/sol2_fix_install_interface.patch
 )
 
 vcpkg_configure_cmake(
