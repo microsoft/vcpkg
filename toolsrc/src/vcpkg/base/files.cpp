@@ -16,6 +16,14 @@ namespace vcpkg::Files
 {
     static const std::regex FILESYSTEM_INVALID_CHARACTERS_REGEX = std::regex(R"([\/:*?"<>|])");
 
+    void Filesystem::write_contents(const fs::path& file_path, const std::string& data)
+    {
+        std::error_code ec;
+        write_contents(file_path, data, ec);
+        Checks::check_exit(
+            VCPKG_LINE_INFO, !ec, "error while writing file: %s: %s", file_path.u8string(), ec.message());
+    }
+
     struct RealFilesystem final : Filesystem
     {
         virtual Expected<std::string> read_contents(const fs::path& file_path) const override
@@ -241,6 +249,40 @@ namespace vcpkg::Files
                 }
             }
         }
+
+        virtual std::vector<fs::path> find_from_PATH(const std::string& name) const override
+        {
+#if defined(_WIN32)
+            static constexpr StringLiteral EXTS[] = {".cmd", ".exe", ".bat"};
+            auto paths = Strings::split(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO), ";");
+
+            std::vector<fs::path> ret;
+            for (auto&& path : paths)
+            {
+                auto base = path + "/" + name;
+                for (auto&& ext : EXTS)
+                {
+                    auto p = fs::u8path(base + ext.c_str());
+                    if (Util::find(ret, p) != ret.end() && this->exists(p))
+                    {
+                        ret.push_back(p);
+                        Debug::println("Found path: %s", p.u8string());
+                    }
+                }
+            }
+
+            return ret;
+#else
+            const std::string cmd = Strings::format("which %s", name);
+            auto out = System::cmd_execute_and_capture_output(cmd);
+            if (out.exit_code != 0)
+            {
+                return {};
+            }
+
+            return Util::fmap(Strings::split(out.output, "\n"), [](auto&& s) { return fs::path(s); });
+#endif
+        }
     };
 
     Filesystem& get_real_filesystem()
@@ -262,21 +304,5 @@ namespace vcpkg::Files
             System::println("    %s", p.generic_string());
         }
         System::println();
-    }
-
-    std::vector<fs::path> find_from_PATH(const std::string& name)
-    {
-#if defined(_WIN32)
-        const std::string cmd = Strings::format("where.exe %s", name);
-#else
-        const std::string cmd = Strings::format("which %s", name);
-#endif
-        auto out = System::cmd_execute_and_capture_output(cmd);
-        if (out.exit_code != 0)
-        {
-            return {};
-        }
-
-        return Util::fmap(Strings::split(out.output, "\n"), [](auto&& s) { return fs::path(s); });
     }
 }
