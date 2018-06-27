@@ -9,38 +9,36 @@
 #   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
 #   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
 #
-message("3D Streaming Toolkit only works on Windows. As such, this build will fail on any other OS.")
+
+message(WARNING "3D Streaming Toolkit only works on Windows. As such, this build will fail on any other OS.")
 
 include(vcpkg_common_functions)
 
+set(VCPKG_TARGET_ARCHITECTURE x64)
+set(VCPKG_CMAKE_SYSTEM_NAME "")
+
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src)
 
-#vcpkg_download_distfile(ARCHIVE
-#    URLS "https://github.com/CatalystCode/3DStreamingToolkit/archive/v1.0.tar.gz"
-#    FILENAME "v1.0.tar.gz"
-#    SHA512 344ca5199965a01d53874df41cf4d1f7010e7f7240abd65237d2444fc5146fa20bbd89233c268598ab907f10b1f1a0a5331631ea7023c27832d640baa06cb41a
-#)
-
-#vcpkg_extract_source_archive(${ARCHIVE})
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO CatalystCode/3DStreamingToolkit
-    REF 56afbb5d97da14e5422a9aea50fed1ad34a7e1b4
-    SHA512 538d79bf218c73f77e2e14a37131a7a341512ad80417b13802534fb09b464815ebb900cba141b084a412501277a06537f4b7107cb7e3ba1d06d2ba476ef8f462
-    HEAD_REF master 
+vcpkg_download_distfile(ARCHIVE
+   URLS https://github.com/CatalystCode/3DStreamingToolkit/archive/v2.0.tar.gz
+   FILENAME "v2.0.tar.gz"
+   SHA512 e0b5cc82b2061b4bf976e5d15342005a60dd671ba50d86a3094be028447dc1a66e46f4e26dba97a00781afc0257f0401378bbfd0f45dc447e428388f773d1b1a
 )
 
+vcpkg_extract_source_archive(${ARCHIVE})
+
+set(TOOLKIT_PATH ${SOURCE_PATH}/3DStreamingToolkit-2.0)
+
 execute_process(
-    COMMAND powershell.exe -ExecutionPolicy Bypass ${SOURCE_PATH}/Utilities/setup.ps1
-    WORKING_DIRECTORY ${SOURCE_PATH}
+    COMMAND powershell.exe -ExecutionPolicy Bypass ${TOOLKIT_PATH}/Utilities/setup.ps1
+    WORKING_DIRECTORY ${TOOLKIT_PATH}
 )
 
 vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/Plugins/NativeServerPlugin/StreamingNativeServerPlugin.sln
+    PROJECT_PATH ${TOOLKIT_PATH}/Plugins/NativeServerPlugin/StreamingNativeServerPlugin.sln
 )
 
-file(COPY ${SOURCE_PATH}/Plugins/NativeServerPlugin/inc
+file(COPY ${TOOLKIT_PATH}/Plugins/NativeServerPlugin/inc
     DESTINATION ${CURRENT_PACKAGES_DIR}
 )
 
@@ -48,7 +46,7 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/inc ${CURRENT_PACKAGES_DIR}/include
 )
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE 
+file(INSTALL ${TOOLKIT_PATH}/LICENSE 
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/3DSTKNativeServer
     RENAME copyright
 )
