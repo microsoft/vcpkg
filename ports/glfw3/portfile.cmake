@@ -43,7 +43,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
 file(READ ${CURRENT_PACKAGES_DIR}/share/glfw3/glfw3Targets.cmake _contents)
 set(pattern "get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\n")
 string(REPLACE "${pattern}${pattern}${pattern}" "${pattern}${pattern}" _contents "${_contents}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/glfw3/glfw3Targets.cmake ${_contents})
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/glfw3/glfw3Targets.cmake "${_contents}")
 
 file(READ ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/glfw3/glfw3Targets-debug.cmake _contents)
 string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" _contents "${_contents}")
