@@ -43,8 +43,8 @@ Recipe "C:/Program Files/Microsoft MPI/Bin/mpiexec.exe" {
     Write-Host "Installing MSMPI... done."
 }
 
-$vstsRoot = "C:\"
-$vstsPath = "C:\vsts"
+$vstsRoot = "C:\vsts"
+$vstsPath = "$vstsRoot\vsts"
 $vstsWorkPath = "$vstsPath\_work"
 
 Recipe $vstsWorkPath {
@@ -59,7 +59,7 @@ Recipe $vstsWorkPath {
             vcpkgDownloadFile "https://github.com/Microsoft/vsts-agent/releases/download/v2.124.0/vsts-agent-win7-x64-2.124.0.zip" $file
         }
 
-        vcpkgExtractFile -archivePath $file -destinationDir $vstsRoot
+        vcpkgExtractZipFile -archivePath $file -destinationDir $vstsRoot
     }
 
     Push-Location $vstsPath

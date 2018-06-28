@@ -126,7 +126,7 @@ function vcpkgCheckEqualFileHash(   [Parameter(Mandatory=$true)][string]$url,
 
 function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
                             [Parameter(Mandatory=$true)][string]$downloadPath,
-                            [Parameter(Mandatory=$true)][string]$sha512)
+                            [string]$sha512)
 {
     if ($url -match "github")
     {
@@ -155,7 +155,10 @@ function vcpkgDownloadFile( [Parameter(Mandatory=$true)][string]$url,
     }
 
     $wc.DownloadFile($url, $downloadPartPath)
-    vcpkgCheckEqualFileHash -url $url -filePath $downloadPartPath -expectedHash $sha512
+    if($sha512)
+    {
+        vcpkgCheckEqualFileHash -url $url -filePath $downloadPartPath -expectedHash $sha512
+    }
     Move-Item -Path $downloadPartPath -Destination $downloadPath
 }
 
