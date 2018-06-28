@@ -646,10 +646,14 @@ namespace vcpkg::Build
                 compress_archive(paths, spec, tmp_archive_path);
 
                 fs.create_directories(archive_path.parent_path(), ec);
-                fs.rename(tmp_archive_path, archive_path, ec);
+                fs.rename_or_copy(tmp_archive_path, archive_path, ".tmp", ec);
                 if (ec)
-                    System::println(
-                        System::Color::warning, "Failed to store binary cache: %s", archive_path.u8string());
+                {
+                    System::println(System::Color::warning,
+                                    "Failed to store binary cache %s: %s",
+                                    archive_path.u8string(),
+                                    ec.message());
+                }
                 else
                     System::println("Stored binary cache: %s", archive_path.u8string());
             }
