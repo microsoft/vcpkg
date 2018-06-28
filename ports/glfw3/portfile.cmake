@@ -16,7 +16,7 @@ if(NOT EXISTS ${SOURCE_PATH}/patch-config.stamp)
     #string(REPLACE "@PACKAGE_CMAKE_INSTALL_PREFIX@" "@PACKAGE_CMAKE_INSTALL_PREFIX@/../.."
     #    CONFIG ${CONFIG}
     #)
-    file(WRITE ${SOURCE_PATH}/src/glfw3Config.cmake.in ${CONFIG})
+    file(WRITE ${SOURCE_PATH}/src/glfw3Config.cmake.in "${CONFIG}")
     file(APPEND ${SOURCE_PATH}/src/glfw3Config.cmake.in "set(GLFW3_LIBRARIES \${GLFW3_LIBRARY})\n")
     file(WRITE ${SOURCE_PATH}/patch-config.stamp)
 endif()
