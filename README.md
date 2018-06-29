@@ -14,7 +14,7 @@ Prerequisites:
 
 To get started:
 ```
-> git clone https://github.com/Microsoft/vcpkg
+> git clone https://github.com/Microsoft/vcpkg.git
 > cd vcpkg
 
 PS> .\bootstrap-vcpkg.bat
