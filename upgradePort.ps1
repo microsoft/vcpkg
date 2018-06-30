@@ -64,7 +64,7 @@ else
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         if ($Releases)
         {
-            $doc = Invoke-WebRequest -Uri "https://api.github.com/repos/$repo/releases/latest" | ConvertFrom-Json
+            $doc = Invoke-WebRequest -Uri "https://api.github.com/repos/$repo/releases/latest" -UseBasicParsing | ConvertFrom-Json
             $newtag = $doc | % tag_name
             if (!$newtag)
             {
@@ -74,7 +74,7 @@ else
         }
         else
         {
-            $doc = Invoke-WebRequest -Uri "https://api.github.com/repos/$repo/branches/master" | ConvertFrom-Json
+            $doc = Invoke-WebRequest -Uri "https://api.github.com/repos/$repo/branches/master" -UseBasicParsing | ConvertFrom-Json
             $newtag = $doc.commit.sha
         }
         Write-Verbose "newtag=$newtag"
