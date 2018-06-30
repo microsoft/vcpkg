@@ -10,5 +10,5 @@ $logsDrive = $logsDrive[0]
 
 scp -B ras0219@Roberts-Mini:/mnt/logs/*_x64-osx.xml $logsDrive\
 if (!$?) { throw "failed" }
-ssh ras0219@Roberts-Mini rm /var/vsts/_work/2/s/*_x64-osx.xml
+ssh ras0219@Roberts-Mini rm /mnt/logs/*_x64-osx.xml
 if (!$?) { throw "failed" }
