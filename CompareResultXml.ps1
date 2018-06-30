@@ -2,7 +2,8 @@
 param
 (
     [Parameter(Mandatory=$true, Position=0)][string]$leftPath,
-    [Parameter(Mandatory=$true, Position=1)][string]$rightPath
+    [Parameter(Mandatory=$true, Position=1)][string]$rightPath,
+    [switch]$regressions
 )
 
 function toPassMap([xml]$asText)
@@ -31,9 +32,19 @@ foreach ($key in $keys)
     $l = $leftPortsPassMap[$key]
     $r = $rightPortsPassMap[$key]
 
-    if ($l -ne $r)
+    if($regressions)
     {
-        $differences.add($key) > $null
+        if ($r -eq "Pass" -and $l -eq "Fail")
+        {
+            $differences.add($key) > $null
+        }
+    }
+    else
+    {
+        if ($l -ne $r)
+        {
+            $differences.add($key) > $null
+        }
     }
 }
 

@@ -44,7 +44,7 @@ Recipe "C:/Program Files/Microsoft MPI/Bin/mpiexec.exe" {
 }
 
 $vstsRoot = "C:\vsts"
-$vstsPath = "$vstsRoot\vsts"
+$vstsPath = "$vstsRoot"
 $vstsWorkPath = "$vstsPath\_work"
 
 Recipe $vstsWorkPath {

@@ -2,18 +2,32 @@
 param
 (
     [Parameter(Mandatory=$true, Position=0)][string[]]$leftBuild,
-    [Parameter(Mandatory=$false, Position=1)][string[]]$rightBuild
+    [Parameter(Mandatory=$false, Position=1)][string[]]$rightBuild,
+    [switch]$regressions
 )
+
+$logsDrive = @(net use | where { $_ -match "\\\\vcpkgstandard.file.core.windows.net\\logs" } | % { $_.substring(13,2) })
+if ($logsDrive.length -eq 0)
+{
+    throw "Cannot locate drive mapped to \\vcpkgstandard.file.core.windows.net\logs"
+}
+$logsDrive = $logsDrive[0]
 
 $myDir = split-path -parent $script:MyInvocation.MyCommand.Definition
 
-$leftresults = $leftBuild | % { ls \\vcpkg-000.redmond.corp.microsoft.com\General\Results\${_}_*.xml }
+$leftresults = $leftBuild | % {
+    ls \\vcpkg-000.redmond.corp.microsoft.com\General\Results\${_}_*.xml -erroraction silentlycontinue
+    ls $logsDrive\${_}_*.xml -erroraction silentlycontinue
+}
 if ($rightBuild.count -eq 0)
 {
     $rightBuild = & $myDir\baseline.ps1
 }
 
-$rightresults = $rightBuild | % { ls \\vcpkg-000.redmond.corp.microsoft.com\General\Results\${_}_*.xml }
+$rightresults = $rightBuild | % {
+    ls \\vcpkg-000.redmond.corp.microsoft.com\General\Results\${_}_*.xml -erroraction silentlycontinue
+    ls $logsDrive\${_}_*.xml -erroraction silentlycontinue
+}
 
 Write-Verbose "Left results"
 Write-Verbose "$leftresults"
@@ -38,6 +52,13 @@ $groups | % {
     }
     else
     {
-        & $myDir/CompareResultXml.ps1 $_.Group[0].file $_.Group[1].file
+        if ($regressions)
+        {
+            & $myDir/CompareResultXml.ps1 $_.Group[0].file $_.Group[1].file -regressions
+        }
+        else
+        {
+            & $myDir/CompareResultXml.ps1 $_.Group[0].file $_.Group[1].file
+        }
     }
 }
