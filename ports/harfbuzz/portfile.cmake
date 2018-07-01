@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO behdad/harfbuzz
-    REF 1.7.6
-    SHA512 90b51475d532377fe1686264a40f4a5555fc024f6984c1e3c114d8f4662e0c7f4a13e6a95e35fd5b3c54d1bb1b3cb97840b23f5ec2c6a799da61db1614b0fce3
+    REF 1.8.1
+    SHA512 f54e5bda75acb7a1cb68fe672a1b918dbc40dcbb2034b04d626dd6b7a940e2b81ececc82bf9e33dc70c744f57175820c4e8756eb3605d8d8c33d367c0ffc8a13
     HEAD_REF master
 )
 

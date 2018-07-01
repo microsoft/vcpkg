@@ -12,10 +12,10 @@ To change the triplet used by your project, such as to enable static linking, se
 ### VCPKG_TARGET_ARCHITECTURE
 Specifies the target machine architecture.
 
-Valid options are `x86`, `x64`, and `arm`.
+Valid options are `x86`, `x64`, `arm`, and `arm64`.
 
 ### VCPKG_CRT_LINKAGE
-Specifies the desired MSVCRT linkage.
+Specifies the desired CRT linkage (for MSVC).
 
 Valid options are `dynamic` and `static`.
 
@@ -27,16 +27,36 @@ Valid options are `dynamic` and `static`. Note that libraries can ignore this se
 ### VCPKG_CMAKE_SYSTEM_NAME
 Specifies the target platform.
 
-Valid options are `WindowsStore` or empty. Empty corresponds to Windows Desktop and `WindowsStore` corresponds to UWP.
-When setting this variable to `WindowsStore`, you must also set `VCPKG_CMAKE_SYSTEM_VERSION` to `10.0`.
+Valid options include any CMake system name, such as:
+- Empty (Windows Desktop for legacy reasons)
+- `WindowsStore` (Universal Windows Platform)
+- `Darwin` (Mac OSX)
+- `Linux` (Linux)
 
 ### VCPKG_PLATFORM_TOOLSET
-Specifies the C/C++ compiler toolchain to use.
+Specifies the VS-based C/C++ compiler toolchain to use.
 
 This can be set to `v141`, `v140`, or left blank. If left blank, we select the latest compiler toolset available on your machine.
 
 Visual Studio 2015 platform toolset is `v140`  
 Visual Studio 2017 platform toolset is `v141`
+
+### VCPKG_CHAINLOAD_TOOLCHAIN_FILE
+Specifies an alternate CMake Toolchain file to use.
+
+This (if set) will override all other compiler detection logic. By default, a toolchain file is selected from `scripts/toolchains/` appropriate to the platform.
+
+See also the CMake documentation for toolchain files: https://cmake.org/cmake/help/v3.11/manual/cmake-toolchains.7.html.
+
+### VCPKG_CXX_FLAGS
+Sets additional compiler flags to be used when not using `VCPKG_CHAINLOAD_TOOLCHAIN_FILE`.
+
+This option also has forms for configuration-specific and C flags:
+- `VCPKG_CXX_FLAGS_DEBUG`
+- `VCPKG_CXX_FLAGS_RELEASE`
+- `VCPKG_C_FLAGS`
+- `VCPKG_C_FLAGS_DEBUG`
+- `VCPKG_C_FLAGS_RELEASE`
 
 ## Per-port customization
 The CMake Macro `PORT` will be set when interpreting the triplet file and can be used to change settings (such as `VCPKG_LIBRARY_LINKAGE`) on a per-port basis.
@@ -44,16 +64,19 @@ The CMake Macro `PORT` will be set when interpreting the triplet file and can be
 Example:
 ```cmake
 set(VCPKG_LIBRARY_LINKAGE static)
-set(VCPKG_CRT_LINKAGE dynamic)
 if(PORT MATCHES "qt5-")
     set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
 ```
-This will build all the `qt5-*` libraries as DLLs against the dynamic CRT, but every other library as a static library (still against the dynamic CRT).
+This will build all the `qt5-*` libraries as DLLs, but every other library as a static library.
 
 For an example in a real project, see https://github.com/Intelight/vcpkg/blob/master/triplets/x86-windows-mixed.cmake.
 
 ## Additional Remarks
-The default triplet when running any vcpkg command is `%VCPKG_DEFAULT_TRIPLET%` or `x86-windows` if that environment variable is undefined.
+The default triplet when running any vcpkg command is `%VCPKG_DEFAULT_TRIPLET%` or a platform-specific choice if that environment variable is undefined.
+
+- Windows: `x86-windows`
+- Linux: `x64-linux`
+- OSX: `x64-osx`
 
 We recommend using a systematic naming scheme when creating new triplets. The Android toolchain naming scheme is a good source of inspiration: https://developer.android.com/ndk/guides/standalone_toolchain.html.

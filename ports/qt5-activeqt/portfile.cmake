@@ -1,0 +1,7 @@
+include(vcpkg_common_functions)
+
+include(${CURRENT_INSTALLED_DIR}/share/qt5modularscripts/qt_modular_library.cmake)
+
+qt_modular_library(qtactiveqt c013e5cba0b11af88161d3cad21923c4b3bf04b0905e5b0c527c1984806d0eb39f31322ff464b139f5d36b5c9f4afefe70492fc1e1f0e964e6e0eaa3f6edaaf9)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools/qt5-activeqt/platforminputcontexts)

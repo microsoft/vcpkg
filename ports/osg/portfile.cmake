@@ -15,13 +15,14 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     message(STATUS "Warning: Static building will not support load data through plugins.")
     set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/OpenSceneGraph-OpenSceneGraph-3.5.6)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/openscenegraph/OpenSceneGraph/archive/OpenSceneGraph-3.5.6.zip"
-    FILENAME "osg-3.5.6.zip"
-    SHA512 f1745748ff86243291da96a4781af9487204a82540d3cc42b33bcbf693137ab9a6a741cad18afa74f62ef66933840ac54894397f880471f6c639210fa23e7f4b
+
+vcpkg_from_github(
+	OUT_SOURCE_PATH SOURCE_PATH
+	REPO openscenegraph/OpenSceneGraph
+	REF OpenSceneGraph-3.6.2-rc3
+	SHA512 369c0790ad990cc0f5403209b6e8afe73069f4a467883f9031ac0539bdd090f2cd71487285e515da39bb5a5f67a15548edd479d489dc57374b481ed32ebed0eb
+	HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -46,12 +47,12 @@ file(REMOVE_RECURSE ${OSG_TOOLS})
 file(GLOB OSG_TOOLS_DBG ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
 file(REMOVE_RECURSE ${OSG_TOOLS_DBG})
 
-file(GLOB OSG_PLUGINS_DBG ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-3.5.6/*.dll)
-file(COPY ${OSG_PLUGINS_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/osg/osgPlugins-3.5.6)
-file(GLOB OSG_PLUGINS_REL ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-3.5.6/*.dll)
-file(COPY ${OSG_PLUGINS_REL} DESTINATION ${OSG_TOOL_PATH}/osgPlugins-3.5.6)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-3.5.6/)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-3.5.6/)
+file(GLOB OSG_PLUGINS_DBG ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-3.6.2/*.dll)
+file(COPY ${OSG_PLUGINS_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/osg/osgPlugins-3.6.2)
+file(GLOB OSG_PLUGINS_REL ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-3.6.2/*.dll)
+file(COPY ${OSG_PLUGINS_REL} DESTINATION ${OSG_TOOL_PATH}/osgPlugins-3.6.2)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-3.6.2/)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-3.6.2/)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/osg)

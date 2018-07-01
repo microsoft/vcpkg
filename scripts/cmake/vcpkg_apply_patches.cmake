@@ -51,7 +51,6 @@ function(vcpkg_apply_patches)
             message(STATUS "Applying patch failed. This is expected if this patch was previously applied.")
         endif()
 
-        message(STATUS "Applying patch ${PATCH} done")
         math(EXPR PATCHNUM "${PATCHNUM}+1")
     endforeach()
 endfunction()

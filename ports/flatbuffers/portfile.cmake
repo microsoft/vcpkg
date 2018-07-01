@@ -7,8 +7,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/flatbuffers
-    REF v1.8.0
-    SHA512 8f6c84caa6456418fc751ea9de456dd37378b3239d1a41d2205140e7b19a5b8b2e342a22dc8d7fdd0c36878455e9d7401cc6438d3b771f7875e8fcfe7bbd52f1
+    REF v1.9.0
+    SHA512 0ba07dbe5b2fde1d0a6e14ee26ee2816062541d934eda204b846a30c019362f2626761b628c900293928b9b546dba8ca477c13182e022c3e0e0a142fd67f0696
     HEAD_REF master
 )
 
