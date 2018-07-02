@@ -21,6 +21,12 @@ vcpkg_from_github(
 vcpkg_apply_patches(
     SOURCE_PATH ${TEMP_SOURCE_PATH}
     PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/0005-Fix-DefaultWindowsSDKVersion.patch
+)
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${TEMP_SOURCE_PATH}
+    PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/0004-Fix-iomodule-for-RS4-SDK.patch
 )
 
