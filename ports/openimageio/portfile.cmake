@@ -28,6 +28,12 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/fix_libraw.patch
 )
 
+# Features
+set(USE_LIBRAW OFF)
+if("libraw" IN_LIST FEATURES)
+    set(USE_LIBRAW ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -39,7 +45,7 @@ vcpkg_configure_cmake(
         -DUSE_FIELD3D=OFF
         -DUSE_FREETYPE=OFF
         -DUSE_GIF=OFF
-        -DUSE_LIBRAW=ON
+        -DUSE_LIBRAW=${USE_LIBRAW}
         -DUSE_NUKE=OFF
         -DUSE_OCIO=OFF
         -DUSE_OPENCV=OFF
