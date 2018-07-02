@@ -19,6 +19,15 @@ else()
     set(LINKSTATIC OFF)
 endif()
 
+
+# fix_libraw: replace 'LibRaw_r_LIBRARIES' occurences by 'LibRaw_LIBRARIES'
+#             since libraw port installs 'raw_r' library as 'raw'
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/fix_libraw.patch
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -30,7 +39,7 @@ vcpkg_configure_cmake(
         -DUSE_FIELD3D=OFF
         -DUSE_FREETYPE=OFF
         -DUSE_GIF=OFF
-        -DUSE_LIBRAW=OFF
+        -DUSE_LIBRAW=ON
         -DUSE_NUKE=OFF
         -DUSE_OCIO=OFF
         -DUSE_OPENCV=OFF
