@@ -15,6 +15,11 @@ vcpkg_apply_patches(
         "${CMAKE_CURRENT_LIST_DIR}/find-package-freetype-2.patch"
 )
 
+SET(HB_HAVE_ICU "OFF")
+if("icu" IN_LIST FEATURES)
+    SET(HB_HAVE_ICU "ON")
+endif()
+
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_CMAKE_SYSTEM_NAME)
     SET(HAVE_GLIB "OFF")
     SET(BUILTIN_UCDN "ON")
@@ -30,6 +35,7 @@ vcpkg_configure_cmake(
         -DHB_HAVE_FREETYPE=ON
         -DHB_HAVE_GLIB=${HAVE_GLIB}
         -DHB_BUILTIN_UCDN=${BUILTIN_UCDN}
+        -DHB_HAVE_ICU=${HB_HAVE_ICU}
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
 )
