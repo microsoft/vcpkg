@@ -6,6 +6,10 @@ vcpkg_from_github(
     REF Release-1.8.12
     SHA512 2475792ff475d34b47b6af5ca71c6cf6d9d8c60452a506b1bf740b9dbb20ea72109117dc9a531b8302095de99f6280172723f26e23dc6e038256cbb43b697145
     HEAD_REF master
+    PATCHES
+        # fix_libraw: replace 'LibRaw_r_LIBRARIES' occurences by 'LibRaw_LIBRARIES'
+        #             since libraw port installs 'raw_r' library as 'raw'
+        ${CMAKE_CURRENT_LIST_DIR}/fix_libraw.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -18,15 +22,6 @@ else()
     set(BUILDSTATIC OFF)
     set(LINKSTATIC OFF)
 endif()
-
-
-# fix_libraw: replace 'LibRaw_r_LIBRARIES' occurences by 'LibRaw_LIBRARIES'
-#             since libraw port installs 'raw_r' library as 'raw'
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/fix_libraw.patch
-)
 
 # Features
 set(USE_LIBRAW OFF)
