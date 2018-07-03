@@ -15,6 +15,7 @@ vcpkg_apply_patches(
         "${CMAKE_CURRENT_LIST_DIR}/find-package-freetype-2.patch"
 )
 
+SET(HB_HAVE_ICU "OFF")
 if("icu" IN_LIST FEATURES)
     SET(HB_HAVE_ICU "ON")
 endif()
