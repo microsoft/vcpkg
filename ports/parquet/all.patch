@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 304f3fb..0f2c563 100644
+index 304f3fb..0b0fc1f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -16,7 +16,7 @@
@@ -7,7 +7,7 @@ index 304f3fb..0f2c563 100644
  
  # Require cmake that supports BYPRODUCTS in add_custom_command, ExternalProject_Add [1].
 -cmake_minimum_required(VERSION 3.2.0)
-+cmake_minimum_required(VERSION 3.11.1)
++cmake_minimum_required(VERSION 3.8)
  
  file(READ "${CMAKE_CURRENT_SOURCE_DIR}/.parquetcppversion" PARQUET_VERSION)
  string(REPLACE "\n" "" PARQUET_VERSION "${PARQUET_VERSION}")
