@@ -1,5 +1,5 @@
 Source: harfbuzz
-Version: 1.8.1
+Version: 1.8.2
 Description: HarfBuzz OpenType text shaping engine
 Build-Depends: freetype, ragel, glib (windows)
 
