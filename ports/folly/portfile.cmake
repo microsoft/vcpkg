@@ -17,12 +17,11 @@ set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF v2018.06.25.00
-    SHA512 4961c02326005bcd82200f9e1b0b3d00c9afb60ed6dacdcc4f191095670122ea2fe33e91b3d638dc55664636af7c1b4f75b5f5c0c5cdfb0e8ca310ab28aa5ca3
+    REF v2018.07.02.00
+    SHA512 dcec94b3ab47deef124797bb2616544e4fba8b62ee8886d3b2c604534dafcca810ecf111b86032db15a9a77c89aa0139be047e2761e8df0d067dd72a584dcc13
     HEAD_REF master
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/find-gflags.patch
-		${CMAKE_CURRENT_LIST_DIR}/fixC2338.patch
 )
 
 file(COPY
