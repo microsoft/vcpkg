@@ -58,10 +58,15 @@ namespace vcpkg::Commands::CI
         std::map<PackageSpec, std::string> abi_tag_map;
         std::set<PackageSpec> will_fail;
 
-        const Build::BuildPackageOptions install_plan_options = {Build::UseHeadVersion::NO,
-                                                                 Build::AllowDownloads::YES,
-                                                                 Build::CleanBuildtrees::YES,
-                                                                 Build::CleanPackages::YES};
+        const Build::BuildPackageOptions install_plan_options = {
+            Build::UseHeadVersion::NO,
+            Build::AllowDownloads::YES,
+            Build::CleanBuildtrees::YES,
+            Build::CleanPackages::YES,
+            Build::DownloadTool::BUILT_IN,
+            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
+            Build::FailOnTombstone::YES,
+        };
 
         vcpkg::Cache<Triplet, Build::PreBuildInfo> pre_build_info_cache;
 
@@ -185,10 +190,15 @@ namespace vcpkg::Commands::CI
         StatusParagraphs status_db = database_load_check(paths);
         const auto& paths_port_file = Dependencies::PathsPortFileProvider(paths);
 
-        const Build::BuildPackageOptions install_plan_options = {Build::UseHeadVersion::NO,
-                                                                 Build::AllowDownloads::YES,
-                                                                 Build::CleanBuildtrees::YES,
-                                                                 Build::CleanPackages::YES};
+        const Build::BuildPackageOptions install_plan_options = {
+            Build::UseHeadVersion::NO,
+            Build::AllowDownloads::YES,
+            Build::CleanBuildtrees::YES,
+            Build::CleanPackages::YES,
+            Build::DownloadTool::BUILT_IN,
+            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
+            Build::FailOnTombstone::YES,
+        };
 
         std::vector<std::map<PackageSpec, BuildResult>> all_known_results;
 

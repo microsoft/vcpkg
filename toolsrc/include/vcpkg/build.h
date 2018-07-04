@@ -64,6 +64,18 @@ namespace vcpkg::Build
     };
     const std::string& to_string(DownloadTool tool);
 
+    enum class BinaryCaching
+    {
+        NO = 0,
+        YES
+    };
+
+    enum class FailOnTombstone
+    {
+        NO = 0,
+        YES
+    };
+
     struct BuildPackageOptions
     {
         UseHeadVersion use_head_version;
@@ -71,6 +83,8 @@ namespace vcpkg::Build
         CleanBuildtrees clean_buildtrees;
         CleanPackages clean_packages;
         DownloadTool download_tool;
+        BinaryCaching binary_caching;
+        FailOnTombstone fail_on_tombstone;
     };
 
     enum class BuildResult

@@ -7,7 +7,14 @@ We do collect telemetry data from usage of "vcpkg.exe". We explicitly ONLY colle
 
 ## What telemetry is collected?
 
-We collect the command line used, the time of invocation, and how long the command took. Some commands also add additional calculated information (such as the full set of libraries to install). We generate a completely random UUID on first use and attach it to each event. For this preview, we do not offer a mechanism to disable this data collection since it is critical for improving the product. In the full release, you will be able to opt-out with a simple configuration. For more information about how Microsoft protects your privacy, see https://privacy.microsoft.com/en-us/privacy.
+We collect the command line used, the time of invocation, and how long execution took. Some commands also add additional calculated information (such as the full set of libraries to install). We generate a completely random UUID on first use and attach it to each event.
+In order to opt-out of data collection, you can re-run the boostrap script with the following flag, for Windows and Linux/OSX, respectively:
+
+```PS> .\bootstrap-vcpkg.bat -disableMetrics```
+
+```~/$ ./bootstrap-vcpkg.sh -disableMetrics```
+
+For more information about how Microsoft protects your privacy, see https://privacy.microsoft.com/en-us/privacy.
 
 Here is an example of an event for the command line `vcpkg install zlib`:
 ```json

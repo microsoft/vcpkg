@@ -1,4 +1,4 @@
 Source: gdcm2
-Version: 2.8.6
+Version: 2.8.7
 Description: Grassroots DICOM library
 Build-Depends: zlib, expat

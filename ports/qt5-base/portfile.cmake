@@ -45,6 +45,7 @@ vcpkg_apply_patches(
         "${CMAKE_CURRENT_LIST_DIR}/fix-system-pcre2.patch"
         "${CMAKE_CURRENT_LIST_DIR}/fix-system-freetype.patch"
         "${CMAKE_CURRENT_LIST_DIR}/fix-system-pcre2-linux.patch"
+		"${CMAKE_CURRENT_LIST_DIR}/fix-C3615.patch"
 )
 
 # This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
