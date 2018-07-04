@@ -1,16 +1,9 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 include(vcpkg_common_functions)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    message("Only static linkage is supported by pngwriter.")
+    set(VCPKG_LIBRARY_LINKAGE static)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -20,7 +13,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -28,15 +20,9 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/PNGwriter)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/PNGwriter/PNGwriterConfig.cmake ${CURRENT_PACKAGES_DIR}/share/PNGwriter/PNGwriterConfig.cmake)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/PNGwriter/PNGwriterTargets-debug.cmake ${CURRENT_PACKAGES_DIR}/share/PNGwriter/PNGwriterTargets-debug.cmake)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/PNGwriter/PNGwriterTargets-release.cmake ${CURRENT_PACKAGES_DIR}/share/PNGwriter/PNGwriterTargets-release.cmake)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/PNGwriter/PNGwriterConfigVersion.cmake ${CURRENT_PACKAGES_DIR}/share/PNGwriter/PNGwriterConfigVersion.cmake)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/PNGwriter/PNGwriterTargets.cmake ${CURRENT_PACKAGES_DIR}/share/PNGwriter/PNGwriterTargets.cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/PNGwriter)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/doc/ DESTINATION ${CURRENT_PACKAGES_DIR}/share/pngwriter RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/doc/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/pngwriter RENAME copyright)
