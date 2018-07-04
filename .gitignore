@@ -298,6 +298,7 @@ triplets/*
 !triplets/arm64-windows.cmake
 !triplets/x64-linux.cmake
 !triplets/x64-osx.cmake
+!triplets/x86-emscripten.cmake
 *.exe
 *.zip
 
