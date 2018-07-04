@@ -437,13 +437,14 @@ namespace vcpkg::Metrics
         const std::string cmd_line = Strings::format("start \"vcpkgmetricsuploader.exe\" \"%s\" \"%s\"",
                                                      temp_folder_path_exe.u8string(),
                                                      vcpkg_metrics_txt_path.u8string());
+        System::cmd_execute_no_wait(cmd_line);
 #else
         auto escaped_path = Strings::escape_string(vcpkg_metrics_txt_path.u8string(), '\'', '\\');
         const std::string cmd_line = Strings::format(
             R"((curl "https://dc.services.visualstudio.com/v2/track" -H "Content-Type: application/json" -X POST --data '@%s' >/dev/null 2>&1; rm '%s') &)",
             escaped_path,
             escaped_path);
-#endif
         System::cmd_execute_clean(cmd_line);
+#endif
     }
 }

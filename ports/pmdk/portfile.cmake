@@ -18,8 +18,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pmem/pmdk
-    REF 1.4
-    SHA512 95dbea9acfea4a6cb433a25f56f7484946a93fbce1c5e0e1d6ff36e0824e3e0e9f28f37024918998358f8ff12e69d0902fcf88357b9ad12695f32e06e86ffac8
+    REF 1.4.1
+    SHA512 c5398a0b728803f3ccc0787682a749e9685924338532f6ec61299e865fec60c0fd13b3bfafe65794a251fe809e69b321812b6c2fb27e3f08651e6e6abe8e1923
     HEAD_REF master
     PATCHES
         "${CMAKE_CURRENT_LIST_DIR}/addPowerShellExecutionPolicy.patch"

@@ -61,11 +61,15 @@ namespace vcpkg::Build::Command
                            spec.name());
 
         const StatusParagraphs status_db = database_load_check(paths);
-        const Build::BuildPackageOptions build_package_options{Build::UseHeadVersion::NO,
-                                                               Build::AllowDownloads::YES,
-                                                               Build::CleanBuildtrees::NO,
-                                                               Build::CleanPackages::NO,
-                                                               Build::DownloadTool::BUILT_IN};
+        const Build::BuildPackageOptions build_package_options{
+            Build::UseHeadVersion::NO,
+            Build::AllowDownloads::YES,
+            Build::CleanBuildtrees::NO,
+            Build::CleanPackages::NO,
+            Build::DownloadTool::BUILT_IN,
+            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
+            Build::FailOnTombstone::NO,
+        };
 
         std::set<std::string> features_as_set(full_spec.features.begin(), full_spec.features.end());
         features_as_set.emplace("core");
@@ -450,7 +454,7 @@ namespace vcpkg::Build
                                             const PreBuildInfo& pre_build_info,
                                             Span<const AbiEntry> dependency_abis)
     {
-        if (!GlobalState::g_binary_caching) return nullopt;
+        if (config.build_package_options.binary_caching == BinaryCaching::NO) return nullopt;
 
         auto& fs = paths.get_filesystem();
         const Triplet& triplet = config.triplet;
@@ -458,12 +462,19 @@ namespace vcpkg::Build
 
         std::vector<AbiEntry> abi_tag_entries;
 
+        abi_tag_entries.emplace_back(AbiEntry{"cmake", Commands::Fetch::get_tool_version(paths, Tools::CMAKE)});
+
         abi_tag_entries.insert(abi_tag_entries.end(), dependency_abis.begin(), dependency_abis.end());
 
         abi_tag_entries.emplace_back(
             AbiEntry{"portfile", Commands::Hash::get_file_hash(fs, config.port_dir / "portfile.cmake", "SHA1")});
         abi_tag_entries.emplace_back(
             AbiEntry{"control", Commands::Hash::get_file_hash(fs, config.port_dir / "CONTROL", "SHA1")});
+
+        if (pre_build_info.cmake_system_name == "Linux")
+        {
+            abi_tag_entries.emplace_back(AbiEntry{"toolchain", "1"});
+        }
 
         abi_tag_entries.emplace_back(AbiEntry{"triplet", pre_build_info.triplet_abi_tag});
 
@@ -597,7 +608,7 @@ namespace vcpkg::Build
 
         const auto abi_tag_and_file = maybe_abi_tag_and_file.get();
 
-        if (GlobalState::g_binary_caching && abi_tag_and_file)
+        if (config.build_package_options.binary_caching == BinaryCaching::YES && abi_tag_and_file)
         {
             const fs::path archives_root_dir = paths.root / "archives";
             const std::string archive_name = abi_tag_and_file->tag + ".zip";
@@ -619,8 +630,16 @@ namespace vcpkg::Build
 
             if (fs.exists(archive_tombstone_path))
             {
-                System::println("Found failure tombstone: %s", archive_tombstone_path.u8string());
-                return BuildResult::BUILD_FAILED;
+                if (config.build_package_options.fail_on_tombstone == FailOnTombstone::YES)
+                {
+                    System::println("Found failure tombstone: %s", archive_tombstone_path.u8string());
+                    return BuildResult::BUILD_FAILED;
+                }
+                else
+                {
+                    System::println(
+                        System::Color::warning, "Found failure tombstone: %s", archive_tombstone_path.u8string());
+                }
             }
 
             System::println("Could not locate cached archive: %s", archive_path.u8string());
@@ -641,10 +660,14 @@ namespace vcpkg::Build
                 compress_archive(paths, spec, tmp_archive_path);
 
                 fs.create_directories(archive_path.parent_path(), ec);
-                fs.rename(tmp_archive_path, archive_path, ec);
+                fs.rename_or_copy(tmp_archive_path, archive_path, ".tmp", ec);
                 if (ec)
-                    System::println(
-                        System::Color::warning, "Failed to store binary cache: %s", archive_path.u8string());
+                {
+                    System::println(System::Color::warning,
+                                    "Failed to store binary cache %s: %s",
+                                    archive_path.u8string(),
+                                    ec.message());
+                }
                 else
                     System::println("Stored binary cache: %s", archive_path.u8string());
             }
@@ -776,17 +799,14 @@ namespace vcpkg::Build
         const std::string triplet_abi_tag = [&]() {
             static std::map<fs::path, std::string> s_hash_cache;
 
-            if (GlobalState::g_binary_caching)
+            auto it_hash = s_hash_cache.find(triplet_file_path);
+            if (it_hash != s_hash_cache.end())
             {
-                auto it_hash = s_hash_cache.find(triplet_file_path);
-                if (it_hash != s_hash_cache.end())
-                {
-                    return it_hash->second;
-                }
-                auto hash = Commands::Hash::get_file_hash(paths.get_filesystem(), triplet_file_path, "SHA1");
-                s_hash_cache.emplace(triplet_file_path, hash);
-                return hash;
+                return it_hash->second;
             }
+            auto hash = Commands::Hash::get_file_hash(paths.get_filesystem(), triplet_file_path, "SHA1");
+            s_hash_cache.emplace(triplet_file_path, hash);
+            return hash;
 
             return std::string();
         }();

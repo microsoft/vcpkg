@@ -1,18 +1,11 @@
 cmake_minimum_required(VERSION 3.0)
 project(fontconfig C)
 
-add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS)
-add_definitions(-FI"${FC_INCLUDE_DIR}/config.h")
-
-if(CMAKE_BUILD_TYPE STREQUAL Debug)
-    set(LIB_SUFFIX d)
-endif()
+add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS -DHAVE_CONFIG_H)
 
 # find dependencies
-find_path(ICONV_INCLUDE_DIR iconv.h)
-find_library(ICONV_LIBRARY NAMES iconv libiconv)
-find_path(FREETYPE_INCLUDE_DIR ft2build.h)
-find_library(FREETYPE_LIBRARY freetype${LIB_SUFFIX})
+find_package(unofficial-iconv CONFIG REQUIRED)
+find_package(Freetype REQUIRED)
 find_path(EXPAT_INCLUDE_DIR expat.h)
 find_library(EXPAT_LIBRARY expat)
 
@@ -48,15 +41,15 @@ add_library(fontconfig
 set_target_properties(fontconfig PROPERTIES DEFINE_SYMBOL "FcPublic=__declspec(dllexport)")
 
 target_include_directories(fontconfig PRIVATE .
-    ${FC_INCLUDE_DIR}
-    ${FREETYPE_INCLUDE_DIR}
-    ${EXPAT_INCLUDE_DIR}
-    ${ICONV_INCLUDE_DIR})
+    ${FC_INCLUDE_DIR}/alias
+    ${EXPAT_INCLUDE_DIR})
+if(WIN32)
+    target_include_directories(fontconfig PRIVATE ${FC_INCLUDE_DIR}/win32)
+else()
+    target_include_directories(fontconfig PRIVATE ${FC_INCLUDE_DIR}/unix)
+endif()
 
-target_link_libraries(fontconfig
-    ${FREETYPE_LIBRARY}
-    ${ICONV_LIBRARY}
-    ${EXPAT_LIBRARY})
+target_link_libraries(fontconfig PRIVATE unofficial::iconv::libiconv Freetype::Freetype ${EXPAT_LIBRARY})
 
 install(TARGETS fontconfig
     RUNTIME DESTINATION bin

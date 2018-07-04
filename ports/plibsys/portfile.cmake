@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO saprykin/plibsys
-    REF 0.0.3
-    SHA512 e2393fecb3e5feae81a4d60cd03e2ca17bc58453efaa5598beacdc5acedbc7c90374f9f851301fee08ace8dace843a2dff8c1c449cd457302363c98dd24e0415
+    REF 0.0.4
+    SHA512 61957666fb454469e1ff68435463eaf426e960caed33540dbb495e1aa7c446c9803d100f33f1a6ea70d5f2ee2d0d19ec315f3a8c651747f65a186ad061c05e51
     HEAD_REF master
 )
 

@@ -139,8 +139,8 @@ namespace vcpkg::Commands
 
     namespace Fetch
     {
-        std::vector<Toolset> find_toolset_instances_preferred_first(const VcpkgPaths& paths);
         fs::path get_tool_path(const VcpkgPaths& paths, const std::string& tool);
+        std::string get_tool_version(const VcpkgPaths& paths, const std::string& tool);
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 

@@ -1,7 +1,7 @@
 #header-only library
 include(vcpkg_common_functions)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://downloads.sourceforge.net/project/wtl/WTL%2010/WTL%2010.0.7336/WTL10_7336.zip"
+    URLS "https://downloads.sourceforge.net/project/wtl/WTL%2010/WTL%2010.0.7336/WTL10_7336.zip"
     FILENAME "WTL10_7336.zip"
     SHA512 68368be0b35fba97ed63fd684e98c077ab94ea2ce928693da7f1f48e2547486109e045e026218a7c8652aec46930b79572679c0b79afaa75a3dbf98572e4d9b5
 )
