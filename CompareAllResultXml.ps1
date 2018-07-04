@@ -3,7 +3,8 @@ param
 (
     [Parameter(Mandatory=$true, Position=0)][string[]]$leftBuild,
     [Parameter(Mandatory=$false, Position=1)][string[]]$rightBuild,
-    [switch]$regressions
+    [switch]$regressions,
+    [string[]]$explicitPorts = @()
 )
 
 $logsDrive = @(net use | where { $_ -match "\\\\vcpkgstandard.file.core.windows.net\\logs" } | % { $_.substring(13,2) })
@@ -54,11 +55,11 @@ $groups | % {
     {
         if ($regressions)
         {
-            & $myDir/CompareResultXml.ps1 $_.Group[0].file $_.Group[1].file -regressions
+            & $myDir/CompareResultXml.ps1 $_.Group[0].file $_.Group[1].file -regressions -explicitPorts $explicitPorts
         }
         else
         {
-            & $myDir/CompareResultXml.ps1 $_.Group[0].file $_.Group[1].file
+            & $myDir/CompareResultXml.ps1 $_.Group[0].file $_.Group[1].file -explicitPorts $explicitPorts
         }
     }
 }

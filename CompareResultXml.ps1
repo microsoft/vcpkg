@@ -3,7 +3,8 @@ param
 (
     [Parameter(Mandatory=$true, Position=0)][string]$leftPath,
     [Parameter(Mandatory=$true, Position=1)][string]$rightPath,
-    [switch]$regressions
+    [switch]$regressions,
+    [string[]]$explicitPorts
 )
 
 function toPassMap([xml]$asText)
@@ -38,10 +39,18 @@ foreach ($key in $keys)
         {
             $differences.add($key) > $null
         }
+        elseif ($explicitPorts.contains($key))
+        {
+            $differences.add($key) > $null
+        }
     }
     else
     {
         if ($l -ne $r)
+        {
+            $differences.add($key) > $null
+        }
+        elseif ($explicitPorts.contains($key))
         {
             $differences.add($key) > $null
         }
