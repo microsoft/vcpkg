@@ -11,18 +11,21 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openmesh-6.3)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.openmesh.org/media/Releases/6.3/OpenMesh-6.3.tar.gz"
-    FILENAME "openmesh-6.3.tar.gz"
-    SHA512 2ef2dcd2e0abcb0c36a3a9abac433ef4d3430115498ff1134525b27a0f023d7e3bb0d80550f0c8b9658c87651594bce29138bdca05db57f02a5e99e2275c2c07
+
+vcpkg_from_gitlab(
+    OUT_SOURCE_PATH SOURCE_PATH
+    GITLAB_URL "https://graphics.rwth-aachen.de:9000"
+    REPO "OpenMesh/OpenMesh"
+    REF "OpenMesh-7.0"
+    HEAD_REF "master"
+    SHA512 "70e414088c094199af31a8694fb91fa5f9b574b3cc86b30b3fb64d938e6a218f9f38d857c559f958276b01ec9263ef71cd4039444e50a8cb38e820243aac7956"
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    OPTIONS -DBUILD_APPS=OFF # [TODO]: add apps as feature, requires qt5 and freeglut
+    OPTIONS -DBUILD_APPS=OFF
+    # [TODO]: add apps as feature, requires qt5 and freeglut
     # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
     # OPTIONS_RELEASE -DOPTIMIZE=1
     # OPTIONS_DEBUG -DDEBUGGABLE=1
