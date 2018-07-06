@@ -170,6 +170,16 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/qtmain.lib)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.prl)
 endif()
 
+#---------------------------------------------------------------------------
+# Qt5Bootstrap: a release-only dependency
+#---------------------------------------------------------------------------
+# Move release-only Qt5Bootstrap.lib from debug folders:
+file(COPY ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+file(COPY ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.prl DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.lib)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.prl)
+#---------------------------------------------------------------------------
+
 file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/debug/lib/*.prl")
 file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/lib" CMAKE_RELEASE_LIB_PATH)
 file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib" CMAKE_DEBUG_LIB_PATH)
