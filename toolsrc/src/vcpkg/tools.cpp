@@ -1,13 +1,16 @@
 #include "pch.h"
 
+#include <vcpkg/archives.h>
 #include <vcpkg/tools.h>
 #include <vcpkg/vcpkgpaths.h>
 
-#include <vcpkg/base/archives.h>
+#include <vcpkg/base/checks.h>
 #include <vcpkg/base/downloads.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/stringrange.h>
+#include <vcpkg/base/strings.h>
+#include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
 
 namespace vcpkg

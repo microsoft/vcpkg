@@ -137,7 +137,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\include\pch.h" />
-    <ClInclude Include="..\include\vcpkg\base\archives.h" />
+    <ClInclude Include="..\include\vcpkg\archives.h" />
     <ClInclude Include="..\include\vcpkg\base\cache.h" />
     <ClInclude Include="..\include\vcpkg\base\checks.h" />
     <ClInclude Include="..\include\vcpkg\base\chrono.h" />
@@ -148,6 +148,7 @@
     <ClInclude Include="..\include\vcpkg\base\expected.h" />
     <ClInclude Include="..\include\vcpkg\base\files.h" />
     <ClInclude Include="..\include\vcpkg\base\graphs.h" />
+    <ClInclude Include="..\include\vcpkg\base\hash.h" />
     <ClInclude Include="..\include\vcpkg\base\lazy.h" />
     <ClInclude Include="..\include\vcpkg\base\lineinfo.h" />
     <ClInclude Include="..\include\vcpkg\base\machinetype.h" />
@@ -198,13 +199,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg\base\archives.cpp" />
+    <ClCompile Include="..\src\vcpkg\archives.cpp" />
     <ClCompile Include="..\src\vcpkg\base\checks.cpp" />
     <ClCompile Include="..\src\vcpkg\base\chrono.cpp" />
     <ClCompile Include="..\src\vcpkg\base\cofffilereader.cpp" />
     <ClCompile Include="..\src\vcpkg\base\downloads.cpp" />
     <ClCompile Include="..\src\vcpkg\base\enums.cpp" />
     <ClCompile Include="..\src\vcpkg\base\files.cpp" />
+    <ClCompile Include="..\src\vcpkg\base\hash.cpp" />
     <ClCompile Include="..\src\vcpkg\base\lineinfo.cpp" />
     <ClCompile Include="..\src\vcpkg\base\machinetype.cpp" />
     <ClCompile Include="..\src\vcpkg\base\stringrange.cpp" />
@@ -223,7 +225,6 @@
     <ClCompile Include="..\src\vcpkg\commands.edit.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.env.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.exportifw.cpp" />
-    <ClCompile Include="..\src\vcpkg\commands.hash.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.import.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.integrate.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.list.cpp" />

@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include <vcpkg/base/archives.h>
+#include <vcpkg/archives.h>
 #include <vcpkg/commands.h>
 
 namespace vcpkg::Archives
