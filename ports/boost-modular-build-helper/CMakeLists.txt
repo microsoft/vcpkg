@@ -40,7 +40,9 @@ else()
     list(APPEND B2_OPTIONS target-os=linux toolset=gcc)
 endif()
 
-string(REPLACE " " " <compileflags>" CXXFLAGS "${CMAKE_CXX_FLAGS}")
+string(STRIP "${CMAKE_CXX_FLAGS}" CXXFLAGS)
+string(REPLACE " " " <compileflags>" CXXFLAGS "<compilerflags>${CXXFLAGS}")
+
 #set(CXXFLAGS "${CXXFLAGS} <compileflags>-Wno-error=unused-command-line-argument")
 if(CMAKE_CXX_COMPILER_TARGET)
     set(CXXFLAGS "${CXXFLAGS} <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_TARGET} <compileflags>${CMAKE_CXX_COMPILER_TARGET}")
