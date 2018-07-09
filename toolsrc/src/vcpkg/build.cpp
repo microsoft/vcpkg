@@ -462,7 +462,7 @@ namespace vcpkg::Build
 
         std::vector<AbiEntry> abi_tag_entries;
 
-        abi_tag_entries.emplace_back(AbiEntry{"cmake", Commands::Fetch::get_tool_version(paths, Tools::CMAKE)});
+        abi_tag_entries.emplace_back(AbiEntry{"cmake", paths.get_tool_version(Tools::CMAKE)});
 
         abi_tag_entries.insert(abi_tag_entries.end(), dependency_abis.begin(), dependency_abis.end());
 
