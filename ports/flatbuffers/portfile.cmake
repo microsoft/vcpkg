@@ -21,6 +21,11 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND OPTIONS -DFLATBUFFERS_BUILD_SHAREDLIB=ON)
 endif()
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/ignore_use_of_cmake_toolchain_file.patch
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
@@ -38,18 +43,18 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/flatbuffers")
 if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
-if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/flatc.exe)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/flatc${CMAKE_EXECUTABLE_SUFFIX})
     make_directory(${CURRENT_PACKAGES_DIR}/tools/flatbuffers)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/flatc.exe ${CURRENT_PACKAGES_DIR}/tools/flatbuffers/flatc.exe)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/flatc${CMAKE_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/flatbuffers/flatc${CMAKE_EXECUTABLE_SUFFIX})
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 endif()
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/flatbuffers.dll)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/flatbuffers${CMAKE_SHARED_LIBRARY_SUFFIX})
     make_directory(${CURRENT_PACKAGES_DIR}/bin)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/flatbuffers.dll ${CURRENT_PACKAGES_DIR}/bin/flatbuffers.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/flatbuffers${CMAKE_SHARED_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/bin/flatbuffers${CMAKE_SHARED_LIBRARY_SUFFIX})
 endif()
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/flatbuffers.dll)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/flatbuffers${CMAKE_SHARED_LIBRARY_SUFFIX})
     make_directory(${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/flatbuffers.dll ${CURRENT_PACKAGES_DIR}/debug/bin/flatbuffers.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/flatbuffers${CMAKE_SHARED_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/debug/bin/flatbuffers${CMAKE_SHARED_LIBRARY_SUFFIX})
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
