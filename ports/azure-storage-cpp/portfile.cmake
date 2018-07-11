@@ -11,7 +11,6 @@ vcpkg_from_github(
     SHA512 730d082b4bf4ef73ee8aa5f8c87927149e4c2b65fc58dc9609f992ab8fcdd7e9fdbc4b77fbc46378ebd575196477dee7943db5d43724591d505aba511fe3052a
     HEAD_REF master
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/cmake.patch
         ${CMAKE_CURRENT_LIST_DIR}/pplx-do-while.patch
 )
 
