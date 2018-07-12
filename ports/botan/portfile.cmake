@@ -11,6 +11,12 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}/src/build-data
+	PATCHES
+		${CMAKE_CURRENT_LIST_DIR}/fix-C2338.patch
+)
+
 vcpkg_find_acquire_program(JOM)
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
