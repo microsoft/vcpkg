@@ -1,12 +1,12 @@
 include(vcpkg_common_functions)
 
-set(PROTOBUF_VERSION 3.5.1)
-set(PROTOC_VERSION 3.5.1)
+set(PROTOBUF_VERSION 3.6.0)
+set(PROTOC_VERSION 3.6.0)
 
 vcpkg_download_distfile(ARCHIVE_FILE
     URLS "https://github.com/google/protobuf/releases/download/v${PROTOBUF_VERSION}/protobuf-cpp-${PROTOBUF_VERSION}.tar.gz"
     FILENAME "protobuf-cpp-${PROTOBUF_VERSION}.tar.gz"
-    SHA512 195ccb210229e0a1080dcdb0a1d87b2e421ad55f6b036c56db3183bd50a942c75b4cc84e6af8a10ad88022a247781a06f609a145a461dfbb8f04051b7dd714b3
+    SHA512 469a85026ca45dc43ccd01221d098905a244e92ca79a6681fae528a3a539184475e14fff9898a0eb82654782fd60c5e4650896b5ce7c7ab3f1baa879251c94b3
 )
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION})
 
@@ -16,11 +16,8 @@ vcpkg_extract_source_archive(${ARCHIVE_FILE})
 vcpkg_apply_patches(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/protobuf-${PROTOBUF_VERSION}
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/001-add-compiler-flag.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/export-ParseGeneratorParameter.patch"
         "${CMAKE_CURRENT_LIST_DIR}/js-embed.patch"
         "${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/wire_format_lite_h_fix_error_C4146.patch"
 )
 
 if(CMAKE_HOST_WIN32)
@@ -28,7 +25,7 @@ if(CMAKE_HOST_WIN32)
     vcpkg_download_distfile(TOOL_ARCHIVE_FILE
         URLS "https://github.com/google/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-win32.zip"
         FILENAME "protoc-${PROTOC_VERSION}-win32.zip"
-        SHA512 27b1b82e92d82c35158362435a29f590961b91f68cda21bffe46e52271340ea4587c4e3177668809af0d053b61e6efa69f0f62156ea11393cd9e6eb4474a3049
+        SHA512 18a134a50801270739975e0d4d1241c04ac36c8bf90f893bc0aed82f7843784ffac662fd43bad627e4ab940dbbee148a7ad98d3a829f0e52b5bdae7214eacc0e
     )
 
     vcpkg_extract_source_archive(${TOOL_ARCHIVE_FILE} ${TOOL_PATH})
