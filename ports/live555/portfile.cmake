@@ -3,8 +3,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(VCPKG_LIBRARY_LINKAGE "static")
 endif()
 
+# The current Live555 version from http://www.live555.com/liveMedia/public/
+set(LIVE_VERSION 2018.07.07)
+
 include(vcpkg_common_functions)
-set(LIVE_VERSION 2018.07.01)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${LIVE_VERSION}/live)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.live555.com/liveMedia/public/live.${LIVE_VERSION}.tar.gz"
