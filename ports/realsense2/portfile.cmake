@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IntelRealSense/librealsense
-    REF v2.12.0
-    SHA512 459849a1e5fd11416d5a037046ec331be440cdcec23263a3d3e4eaffe983fdd6decdc115e44489ad663767260c564273168d0afc4473a2dfd713952596f01ea9
+    REF v2.13.0
+    SHA512 5cee1371e83a0bcd24829c073c064c630347a6f69b59377603a75b5d036c6306e9b36285a7deef519bd63a42dfaf933c99709a25942407be97f1791361c4becf
     HEAD_REF development
 )
 
