@@ -1,6 +1,5 @@
 Source: curl
 Version: 7.60.0-2
-Build-Depends: zlib
 Description: A library for transferring data with URLs
 Default-Features: ssl
 # For WINSSL add set(CURL_USE_WINSSL ON) to your triplet file
@@ -22,3 +21,7 @@ Description: SSL support
 Feature: ssh
 Build-Depends: libssh2, curl[non-http]
 Description: SSH support via libssh2
+
+Feature: zlib
+Build-Depends: zlib
+Description: GZip compressed downloads

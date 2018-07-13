@@ -59,6 +59,12 @@ if("tool" IN_LIST FEATURES)
     set(BUILD_CURL_EXE ON)
 endif()
 
+# zlib compression
+set(CURL_ZLIB OFF)
+if("zlib" IN_LIST FEATURES)
+	set(CURL_ZLIB ON)
+endif()
+
 # UWP targets
 set(UWP_OPTIONS)
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -88,6 +94,7 @@ vcpkg_configure_cmake(
         -DCMAKE_USE_WINSSL=${USE_WINSSL}
         -DCMAKE_USE_LIBSSH2=${USE_LIBSSH2}
         -DHTTP_ONLY=${USE_HTTP_ONLY}
+        -DCURL_ZLIB=${CURL_ZLIB}
     OPTIONS_RELEASE
         -DBUILD_CURL_EXE=${BUILD_CURL_EXE}
     OPTIONS_DEBUG
