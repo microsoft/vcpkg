@@ -5,6 +5,7 @@
 
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/hash.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.h>
 
@@ -261,7 +262,7 @@ namespace vcpkg::Metrics
             const auto match = *next;
             if (match[0] != "00-00-00-00-00-00")
             {
-                return vcpkg::Commands::Hash::get_string_hash(match[0], "SHA256");
+                return vcpkg::Hash::get_string_hash(match[0], "SHA256");
             }
             ++next;
         }

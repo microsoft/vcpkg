@@ -69,9 +69,6 @@
     <ClCompile Include="..\src\vcpkg\commands.exportifw.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg\commands.hash.cpp">
-      <Filter>Source Files\vcpkg</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\vcpkg\commands.import.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
@@ -198,19 +195,22 @@
     <ClCompile Include="..\src\vcpkg\commands.upgrade.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg\commands.fetch.cpp">
+    <ClCompile Include="..\src\vcpkg\archives.cpp">
       <Filter>Source Files\vcpkg</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\vcpkg\base\downloads.cpp">
-      <Filter>Source Files\vcpkg\base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\vcpkg\base\archives.cpp">
-      <Filter>Source Files\vcpkg\base</Filter>
     </ClCompile>
     <ClCompile Include="..\src\vcpkg\visualstudio.cpp">
       <Filter>Source Files\vcpkg</Filter>
     </ClCompile>
     <ClCompile Include="..\src\vcpkg\base\stringrange.cpp">
+      <Filter>Source Files\vcpkg\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\tools.cpp">
+      <Filter>Source Files\vcpkg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\base\hash.cpp">
+      <Filter>Source Files\vcpkg\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\vcpkg\base\downloads.cpp">
       <Filter>Source Files\vcpkg\base</Filter>
     </ClCompile>
   </ItemGroup>
@@ -359,16 +359,25 @@
     <ClInclude Include="..\include\vcpkg\base\stringliteral.h">
       <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\vcpkg\base\downloads.h">
-      <Filter>Header Files\vcpkg\base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\vcpkg\base\archives.h">
-      <Filter>Header Files\vcpkg\base</Filter>
+    <ClInclude Include="..\include\vcpkg\archives.h">
+      <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
     <ClInclude Include="..\include\vcpkg\visualstudio.h">
-      <Filter>Header Files\vcpkg\base</Filter>
+      <Filter>Header Files\vcpkg</Filter>
     </ClInclude>
     <ClInclude Include="..\include\vcpkg\base\stringrange.h">
+      <Filter>Header Files\vcpkg\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\base\cache.h">
+      <Filter>Header Files\vcpkg\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\tools.h">
+      <Filter>Header Files\vcpkg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\base\hash.h">
+      <Filter>Header Files\vcpkg\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\vcpkg\base\downloads.h">
       <Filter>Header Files\vcpkg\base</Filter>
     </ClInclude>
   </ItemGroup>

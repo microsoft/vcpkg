@@ -1,11 +1,13 @@
 #include "pch.h"
 
 #include <vcpkg/base/downloads.h>
+#include <vcpkg/base/hash.h>
 #include <vcpkg/base/util.h>
-#include <vcpkg/commands.h>
 
 #if defined(_WIN32)
 #include <VersionHelpers.h>
+#else
+#include <vcpkg/base/system.h>
 #endif
 
 namespace vcpkg::Downloads
@@ -32,10 +34,12 @@ namespace vcpkg::Downloads
                            target_file_path,
                            std::to_string(err));
 
-        auto hSession = WinHttpOpen(
-            L"vcpkg/1.0",
-            IsWindows8Point1OrGreater() ? WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY : WINHTTP_ACCESS_TYPE_DEFAULT_PROXY,
-            WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
+        auto hSession = WinHttpOpen(L"vcpkg/1.0",
+                                    IsWindows8Point1OrGreater() ? WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY
+                                                                : WINHTTP_ACCESS_TYPE_DEFAULT_PROXY,
+                                    WINHTTP_NO_PROXY_NAME,
+                                    WINHTTP_NO_PROXY_BYPASS,
+                                    0);
         Checks::check_exit(VCPKG_LINE_INFO, hSession, "WinHttpOpen() failed: %d", GetLastError());
 
         // Use Windows 10 defaults on Windows 7
@@ -98,7 +102,7 @@ namespace vcpkg::Downloads
                                      const fs::path& path,
                                      const std::string& sha512)
     {
-        const std::string actual_hash = Commands::Hash::get_file_hash(fs, path, "SHA512");
+        const std::string actual_hash = vcpkg::Hash::get_file_hash(fs, path, "SHA512");
         Checks::check_exit(VCPKG_LINE_INFO,
                            sha512 == actual_hash,
                            "File does not have the expected hash:\n"
@@ -144,5 +148,4 @@ namespace vcpkg::Downloads
                            download_path.u8string(),
                            ec.message());
     }
-
 }

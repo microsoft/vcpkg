@@ -1,11 +1,13 @@
 #include "pch.h"
 
+#include <vcpkg/base/hash.h>
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/enums.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/stringliteral.h>
 #include <vcpkg/base/system.h>
+
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
@@ -462,14 +464,14 @@ namespace vcpkg::Build
 
         std::vector<AbiEntry> abi_tag_entries;
 
-        abi_tag_entries.emplace_back(AbiEntry{"cmake", Commands::Fetch::get_tool_version(paths, Tools::CMAKE)});
+        abi_tag_entries.emplace_back(AbiEntry{"cmake", paths.get_tool_version(Tools::CMAKE)});
 
         abi_tag_entries.insert(abi_tag_entries.end(), dependency_abis.begin(), dependency_abis.end());
 
         abi_tag_entries.emplace_back(
-            AbiEntry{"portfile", Commands::Hash::get_file_hash(fs, config.port_dir / "portfile.cmake", "SHA1")});
+            AbiEntry{"portfile", vcpkg::Hash::get_file_hash(fs, config.port_dir / "portfile.cmake", "SHA1")});
         abi_tag_entries.emplace_back(
-            AbiEntry{"control", Commands::Hash::get_file_hash(fs, config.port_dir / "CONTROL", "SHA1")});
+            AbiEntry{"control", vcpkg::Hash::get_file_hash(fs, config.port_dir / "CONTROL", "SHA1")});
 
         if (pre_build_info.cmake_system_name == "Linux")
         {
@@ -509,7 +511,7 @@ namespace vcpkg::Build
             const auto abi_file_path = paths.buildtrees / name / (triplet.canonical_name() + ".vcpkg_abi_info.txt");
             fs.write_contents(abi_file_path, full_abi_info);
 
-            return AbiTagAndFile{Commands::Hash::get_file_hash(fs, abi_file_path, "SHA1"), abi_file_path};
+            return AbiTagAndFile{Hash::get_file_hash(fs, abi_file_path, "SHA1"), abi_file_path};
         }
 
         System::println(
@@ -804,7 +806,7 @@ namespace vcpkg::Build
             {
                 return it_hash->second;
             }
-            auto hash = Commands::Hash::get_file_hash(paths.get_filesystem(), triplet_file_path, "SHA1");
+            auto hash = Hash::get_file_hash(paths.get_filesystem(), triplet_file_path, "SHA1");
             s_hash_cache.emplace(triplet_file_path, hash);
             return hash;
 
