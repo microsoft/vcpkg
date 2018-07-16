@@ -2,7 +2,7 @@ Source: opencv
 Version: 3.4.1
 Build-Depends: zlib
 Description: computer vision library
-Default-Features: opengl, jpeg, png, tiff, eigen, flann
+Default-Features: opengl, jpeg, png, tiff, eigen, flann, world
 
 Feature: opengl
 Build-Depends: opengl
@@ -76,3 +76,7 @@ Description: JPEG 2000 support for opencv
 Feature: eigen
 Build-Depends: eigen3
 Description: Eigen support for opencv
+
+Feature: world
+Build-Depends: world
+Description: Compile to a single package support for opencv
