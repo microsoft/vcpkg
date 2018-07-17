@@ -263,7 +263,7 @@ namespace vcpkg::Files
                 for (auto&& ext : EXTS)
                 {
                     auto p = fs::u8path(base + ext.c_str());
-                    if (Util::find(ret, p) != ret.end() && this->exists(p))
+                    if (Util::find(ret, p) == ret.end() && this->exists(p))
                     {
                         ret.push_back(p);
                         Debug::println("Found path: %s", p.u8string());
