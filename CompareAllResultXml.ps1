@@ -41,7 +41,7 @@ Write-Verbose "$rightBuild=right"
 
 $allresults = @($leftresults) + @($rightresults)
 
-$groups = $allresults | % { $a = @($_.name -split "_", 2); New-Object PSObject -Property @{ "id"=$a[0]; "triplet"=$($a[1] -replace "(-dynamic)?(-stable|-unstable.*)?\.xml",""); "file"=$_ } } | group triplet
+$groups = $allresults | % { $a = @($_.name -split "_"); New-Object PSObject -Property @{ "id"=$a[0]; "triplet"=$($a[-1] -replace "(-dynamic)?(-stable|-unstable.*)?\.xml",""); "file"=$_ } } | group triplet
 
 $groups
 
