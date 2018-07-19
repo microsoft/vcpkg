@@ -31,11 +31,28 @@ endif()
 # SSL
 set(USE_OPENSSL OFF)
 set(USE_WINSSL OFF)
-if("ssl" IN_LIST FEATURES)
+
+if("ssl" IN_LIST FEATURES) # For backward compatibility
+    message(WARNING "The 'ssl' feature is deprecated. Use the [openssl,winssl] features to specify one or more SSL backends")
+
+	foreach(conflict IN ITEMS "openssl" "winssl")
+        if(${conflict} IN_LIST FEATURES)
+            message(FATAL_ERROR "You cannot enable the 'ssl' feature along with the '${conflict}' feature!")
+        endif()
+    endforeach()
+
     if(CURL_USE_WINSSL)
         set(USE_WINSSL ON)
     else()
         set(USE_OPENSSL ON)
+    endif()
+else()
+    if("openssl" IN_LIST FEATURES)
+        set(USE_OPENSSL ON)
+    endif()
+
+    if("winssl" IN_LIST FEATURES)
+        set(USE_WINSSL ON)
     endif()
 endif()
 
