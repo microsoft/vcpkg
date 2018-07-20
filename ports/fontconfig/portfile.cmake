@@ -8,6 +8,13 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 2be3ee0e8e0e3b62571135a3cae06e456c289dd1ad40ef2a7c780406418ee5efce863a833eca5a8ef55bc737a0ea04ef562bba6fd27e174ae43e42131b52810d)
 
 vcpkg_extract_source_archive(${ARCHIVE})
+
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/fcobjtypehash.patch"
+)
+
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
@@ -17,7 +24,8 @@ vcpkg_configure_cmake(
         -DFC_INCLUDE_DIR=${CMAKE_CURRENT_LIST_DIR}/include
     OPTIONS_DEBUG
         -DFC_SKIP_TOOLS=ON
-        -DFC_SKIP_HEADERS=ON)
+        -DFC_SKIP_HEADERS=ON
+)
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()

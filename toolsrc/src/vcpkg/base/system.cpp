@@ -129,10 +129,12 @@ namespace vcpkg::System
             R"("%s" %s -P "%s")", cmake_exe.u8string(), cmd_cmake_pass_variables, cmake_script.generic_u8string());
     }
 
-    int cmd_execute_clean(const CStringView cmd_line, const std::unordered_map<std::string, std::string>& extra_env)
-    {
-        auto timer = Chrono::ElapsedTimer::create_started();
 #if defined(_WIN32)
+    static void windows_create_clean_process(const CStringView cmd_line,
+                                             const std::unordered_map<std::string, std::string>& extra_env,
+                                             PROCESS_INFORMATION& process_info,
+                                             DWORD dwCreationFlags)
+    {
         static const std::string SYSTEM_ROOT = get_environment_variable("SystemRoot").value_or_exit(VCPKG_LINE_INFO);
         static const std::string SYSTEM_32 = SYSTEM_ROOT + R"(\system32)";
         std::string new_path = Strings::format(
@@ -221,9 +223,6 @@ namespace vcpkg::System
         memset(&startup_info, 0, sizeof(STARTUPINFOW));
         startup_info.cb = sizeof(STARTUPINFOW);
 
-        PROCESS_INFORMATION process_info;
-        memset(&process_info, 0, sizeof(PROCESS_INFORMATION));
-
         // Basically we are wrapping it in quotes
         const std::string actual_cmd_line = Strings::format(R"###(cmd.exe /c "%s")###", cmd_line);
         Debug::println("CreateProcessW(%s)", actual_cmd_line);
@@ -232,13 +231,42 @@ namespace vcpkg::System
                                                 nullptr,
                                                 nullptr,
                                                 FALSE,
-                                                IDLE_PRIORITY_CLASS | CREATE_UNICODE_ENVIRONMENT,
+                                                IDLE_PRIORITY_CLASS | CREATE_UNICODE_ENVIRONMENT | dwCreationFlags,
                                                 env_cstr.data(),
                                                 nullptr,
                                                 &startup_info,
                                                 &process_info);
 
         Checks::check_exit(VCPKG_LINE_INFO, succeeded, "Process creation failed with error code: %lu", GetLastError());
+    }
+#endif
+
+#if defined(_WIN32)
+    void cmd_execute_no_wait(const CStringView cmd_line)
+    {
+        auto timer = Chrono::ElapsedTimer::create_started();
+
+        PROCESS_INFORMATION process_info;
+        memset(&process_info, 0, sizeof(PROCESS_INFORMATION));
+
+        windows_create_clean_process(cmd_line, {}, process_info, DETACHED_PROCESS);
+
+        CloseHandle(process_info.hThread);
+        CloseHandle(process_info.hProcess);
+
+        Debug::println("CreateProcessW() took %d us", static_cast<int>(timer.microseconds()));
+    }
+#endif
+
+    int cmd_execute_clean(const CStringView cmd_line, const std::unordered_map<std::string, std::string>& extra_env)
+    {
+        auto timer = Chrono::ElapsedTimer::create_started();
+#if defined(_WIN32)
+
+        PROCESS_INFORMATION process_info;
+        memset(&process_info, 0, sizeof(PROCESS_INFORMATION));
+
+        windows_create_clean_process(cmd_line, extra_env, process_info, NULL);
 
         CloseHandle(process_info.hThread);
 
@@ -247,6 +275,8 @@ namespace vcpkg::System
 
         DWORD exit_code = 0;
         GetExitCodeProcess(process_info.hProcess, &exit_code);
+
+        CloseHandle(process_info.hProcess);
 
         Debug::println("CreateProcessW() returned %lu after %d us", exit_code, static_cast<int>(timer.microseconds()));
         return static_cast<int>(exit_code);

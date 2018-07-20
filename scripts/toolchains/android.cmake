@@ -6,8 +6,14 @@ set(ANDROID_TOOLCHAIN clang CACHE STRING "")
 set(ANDROID_NATIVE_API_LEVEL 21 CACHE STRING "")
 set(CMAKE_ANDROID_NDK_TOOLCHAIN_VERSION clang CACHE STRING "")
 
-if(NOT EXISTS "$ENV{ProgramData}/Microsoft/AndroidNDK64/android-ndk-r13b/build/cmake/android.toolchain.cmake")
-    message(FATAL_ERROR "Could not find android ndk. Searched at $ENV{ProgramData}/Microsoft/AndroidNDK64/android-ndk-r13b")
+if(DEFINED ENV{ANDROID_NDK_HOME})
+    set(ANDROID_NDK_HOME $ENV{ANDROID_NDK_HOME})
+else()
+    set(ANDROID_NDK_HOME "$ENV{ProgramData}/Microsoft/AndroidNDK64/android-ndk-r13b/")
 endif()
 
-include("$ENV{ProgramData}/Microsoft/AndroidNDK64/android-ndk-r13b/build/cmake/android.toolchain.cmake")
+if(NOT EXISTS "${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake")
+    message(FATAL_ERROR "Could not find android ndk. Searched at ${ANDROID_NDK_HOME}")
+endif()
+
+include("${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake")

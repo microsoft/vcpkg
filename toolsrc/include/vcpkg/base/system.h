@@ -36,6 +36,10 @@ namespace vcpkg::System
 
     int cmd_execute(const CStringView cmd_line);
 
+#if defined(_WIN32)
+    void cmd_execute_no_wait(const CStringView cmd_line);
+#endif
+
     ExitCodeAndOutput cmd_execute_and_capture_output(const CStringView cmd_line);
 
     enum class Color
