@@ -31,11 +31,12 @@ endif()
 # SSL
 set(USE_OPENSSL OFF)
 set(USE_WINSSL OFF)
+set(USE_MBEDTLS OFF)
 
 if("ssl" IN_LIST FEATURES) # For backward compatibility
-    message(WARNING "The 'ssl' feature is deprecated. Use the [openssl,winssl] features to specify one or more SSL backends")
+    message(WARNING "The 'ssl' feature is deprecated. Use the [openssl,winssl,mbedtls] features to specify one or more SSL backends")
 
-	foreach(conflict IN ITEMS "openssl" "winssl")
+	foreach(conflict IN ITEMS "openssl" "winssl" "mbedtls")
         if(${conflict} IN_LIST FEATURES)
             message(FATAL_ERROR "You cannot enable the 'ssl' feature along with the '${conflict}' feature!")
         endif()
@@ -53,6 +54,10 @@ else()
 
     if("winssl" IN_LIST FEATURES)
         set(USE_WINSSL ON)
+    endif()
+
+    if("mbedtls" IN_LIST FEATURES)
+        set(USE_MBEDTLS ON)
     endif()
 endif()
 
@@ -102,6 +107,7 @@ vcpkg_configure_cmake(
         -DCURL_STATICLIB=${CURL_STATICLIB}
         -DCMAKE_USE_OPENSSL=${USE_OPENSSL}
         -DCMAKE_USE_WINSSL=${USE_WINSSL}
+        -DCMAKE_USE_MBEDTLS=${USE_MBEDTLS}
         -DCMAKE_USE_LIBSSH2=${USE_LIBSSH2}
         -DHTTP_ONLY=${USE_HTTP_ONLY}
     OPTIONS_RELEASE

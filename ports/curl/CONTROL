@@ -15,7 +15,7 @@ Build-Depends: nghttp2, curl[ssl]
 Description: HTTP2 support
 
 # Deprecated, still respects the CURL_USE_WINSSL define
-# Replacement: Use the [openssl,winssl] features to specify 1+ SSL backends
+# Replacement: Use the [openssl,winssl,mbedtls] features to specify 1+ SSL backends
 Feature: ssl
 Build-Depends: openssl
 Description: SSL support (deprecated)
@@ -31,3 +31,7 @@ Description: SSL support (OpenSSL)
 
 Feature: winssl
 Description: SSL support (Secure Channel / "WinSSL")
+
+Feature: mbedtls
+Build-Depends: mbedtls
+Description: SSL support (mbedTLS)
