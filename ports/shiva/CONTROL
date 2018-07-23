@@ -1,4 +1,4 @@
 Source: shiva
-Version: 0.3
+Version: 0.6
 Description: Modern C++ Game Engine
-Build-Depends: boost-stacktrace, boost-filesystem, boost-dll, boost-function, entt, eastl
+Build-Depends: boost-stacktrace, boost-filesystem, boost-dll, entt, eastl, lua, sol2, pybind11, spdlog
