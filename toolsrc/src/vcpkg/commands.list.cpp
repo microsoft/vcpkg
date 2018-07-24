@@ -76,7 +76,7 @@ namespace vcpkg::Commands::List
             for (const StatusParagraph* status_paragraph : installed_packages)
             {
                 const std::string displayname = status_paragraph->package.displayname();
-                if (Strings::case_insensitive_ascii_find(displayname, args.command_arguments[0]) == displayname.end())
+                if (!Strings::case_insensitive_ascii_contains(displayname, args.command_arguments[0]))
                 {
                     continue;
                 }

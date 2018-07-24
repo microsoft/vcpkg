@@ -21,7 +21,7 @@ PS D:\src\vcpkg> .\vcpkg create zlib2 http://zlib.net/zlib-1.2.11.tar.gz zlib-1.
 ```
 
 ### Create the CONTROL file
-In addition to the generated `ports\<package>\portfile.cmake`, we also need a `ports\<package>\CONTROL` file. This file is a simply formatted set of fields describing the package's metadata.
+In addition to the generated `ports\<package>\portfile.cmake`, we also need a `ports\<package>\CONTROL` file. This file is a simple set of fields describing the package's metadata.
 
 *For zlib2, we'll create the file `ports\zlib2\CONTROL` with the following contents:*
 ```no-highlight

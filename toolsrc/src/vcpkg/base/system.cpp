@@ -40,8 +40,9 @@ namespace vcpkg::System
         if (bytes == 0) std::abort();
         return fs::path(buf, buf + bytes);
 #elif defined(__APPLE__)
-        uint32_t size = 1024 * 32;
-        char buf[size] = {};
+        static constexpr const uint32_t buff_size = 1024 * 32;
+        uint32_t size = buff_size;
+        char buf[buff_size] = {};
         bool result = _NSGetExecutablePath(buf, &size);
         Checks::check_exit(VCPKG_LINE_INFO, result != -1, "Could not determine current executable path.");
         std::unique_ptr<char> canonicalPath(realpath(buf, NULL));
@@ -128,34 +129,12 @@ namespace vcpkg::System
             R"("%s" %s -P "%s")", cmake_exe.u8string(), cmd_cmake_pass_variables, cmake_script.generic_u8string());
     }
 
-    PowershellParameter::PowershellParameter(const CStringView varname, const char* varvalue)
-        : s(Strings::format(R"(-%s '%s')", varname, varvalue))
-    {
-    }
-
-    PowershellParameter::PowershellParameter(const CStringView varname, const std::string& varvalue)
-        : PowershellParameter(varname, varvalue.c_str())
-    {
-    }
-
-    PowershellParameter::PowershellParameter(const CStringView varname, const fs::path& path)
-        : PowershellParameter(varname, path.generic_u8string())
-    {
-    }
-
-    static std::string make_powershell_cmd(const fs::path& script_path,
-                                           const std::vector<PowershellParameter>& parameters)
-    {
-        const std::string args = Strings::join(" ", parameters, [](auto&& v) { return v.s; });
-
-        // TODO: switch out ExecutionPolicy Bypass with "Remove Mark Of The Web" code and restore RemoteSigned
-        return Strings::format(
-            R"(powershell -NoProfile -ExecutionPolicy Bypass -Command "& {& '%s' %s}")", script_path.u8string(), args);
-    }
-
-    int cmd_execute_clean(const CStringView cmd_line, const std::unordered_map<std::string, std::string>& extra_env)
-    {
 #if defined(_WIN32)
+    static void windows_create_clean_process(const CStringView cmd_line,
+                                             const std::unordered_map<std::string, std::string>& extra_env,
+                                             PROCESS_INFORMATION& process_info,
+                                             DWORD dwCreationFlags)
+    {
         static const std::string SYSTEM_ROOT = get_environment_variable("SystemRoot").value_or_exit(VCPKG_LINE_INFO);
         static const std::string SYSTEM_32 = SYSTEM_ROOT + R"(\system32)";
         std::string new_path = Strings::format(
@@ -244,9 +223,6 @@ namespace vcpkg::System
         memset(&startup_info, 0, sizeof(STARTUPINFOW));
         startup_info.cb = sizeof(STARTUPINFOW);
 
-        PROCESS_INFORMATION process_info;
-        memset(&process_info, 0, sizeof(PROCESS_INFORMATION));
-
         // Basically we are wrapping it in quotes
         const std::string actual_cmd_line = Strings::format(R"###(cmd.exe /c "%s")###", cmd_line);
         Debug::println("CreateProcessW(%s)", actual_cmd_line);
@@ -255,13 +231,42 @@ namespace vcpkg::System
                                                 nullptr,
                                                 nullptr,
                                                 FALSE,
-                                                IDLE_PRIORITY_CLASS | CREATE_UNICODE_ENVIRONMENT,
+                                                IDLE_PRIORITY_CLASS | CREATE_UNICODE_ENVIRONMENT | dwCreationFlags,
                                                 env_cstr.data(),
                                                 nullptr,
                                                 &startup_info,
                                                 &process_info);
 
         Checks::check_exit(VCPKG_LINE_INFO, succeeded, "Process creation failed with error code: %lu", GetLastError());
+    }
+#endif
+
+#if defined(_WIN32)
+    void cmd_execute_no_wait(const CStringView cmd_line)
+    {
+        auto timer = Chrono::ElapsedTimer::create_started();
+
+        PROCESS_INFORMATION process_info;
+        memset(&process_info, 0, sizeof(PROCESS_INFORMATION));
+
+        windows_create_clean_process(cmd_line, {}, process_info, DETACHED_PROCESS);
+
+        CloseHandle(process_info.hThread);
+        CloseHandle(process_info.hProcess);
+
+        Debug::println("CreateProcessW() took %d us", static_cast<int>(timer.microseconds()));
+    }
+#endif
+
+    int cmd_execute_clean(const CStringView cmd_line, const std::unordered_map<std::string, std::string>& extra_env)
+    {
+        auto timer = Chrono::ElapsedTimer::create_started();
+#if defined(_WIN32)
+
+        PROCESS_INFORMATION process_info;
+        memset(&process_info, 0, sizeof(PROCESS_INFORMATION));
+
+        windows_create_clean_process(cmd_line, extra_env, process_info, NULL);
 
         CloseHandle(process_info.hThread);
 
@@ -271,11 +276,16 @@ namespace vcpkg::System
         DWORD exit_code = 0;
         GetExitCodeProcess(process_info.hProcess, &exit_code);
 
-        Debug::println("CreateProcessW() returned %lu", exit_code);
+        CloseHandle(process_info.hProcess);
+
+        Debug::println("CreateProcessW() returned %lu after %d us", exit_code, static_cast<int>(timer.microseconds()));
         return static_cast<int>(exit_code);
 #else
+        Debug::println("system(%s)", cmd_line.c_str());
         fflush(nullptr);
-        return system(cmd_line.c_str());
+        int rc = system(cmd_line.c_str());
+        Debug::println("system() returned %d after %d us", rc, static_cast<int>(timer.microseconds()));
+        return rc;
 #endif
     }
 
@@ -364,71 +374,6 @@ namespace vcpkg::System
 
         return {ec, output};
 #endif
-    }
-
-    void powershell_execute(const std::string& title,
-                            const fs::path& script_path,
-                            const std::vector<PowershellParameter>& parameters)
-    {
-        const std::string cmd = make_powershell_cmd(script_path, parameters);
-        const int rc = System::cmd_execute(cmd);
-
-        if (rc)
-        {
-            System::println(Color::error,
-                            "%s\n"
-                            "Could not run:\n"
-                            "    '%s'",
-                            title,
-                            script_path.generic_string());
-
-            {
-                auto locked_metrics = Metrics::g_metrics.lock();
-                locked_metrics->track_property("error", "powershell script failed");
-                locked_metrics->track_property("title", title);
-            }
-
-            Checks::exit_with_code(VCPKG_LINE_INFO, rc);
-        }
-    }
-
-    std::string powershell_execute_and_capture_output(const std::string& title,
-                                                      const fs::path& script_path,
-                                                      const std::vector<PowershellParameter>& parameters)
-    {
-        const std::string cmd = make_powershell_cmd(script_path, parameters);
-        auto rc = System::cmd_execute_and_capture_output(cmd);
-
-        if (rc.exit_code)
-        {
-            System::println(Color::error,
-                            "%s\n"
-                            "Could not run:\n"
-                            "    '%s'\n"
-                            "Error message was:\n"
-                            "    %s",
-                            title,
-                            script_path.generic_string(),
-                            rc.output);
-
-            {
-                auto locked_metrics = Metrics::g_metrics.lock();
-                locked_metrics->track_property("error", "powershell script failed");
-                locked_metrics->track_property("title", title);
-            }
-
-            Checks::exit_with_code(VCPKG_LINE_INFO, rc.exit_code);
-        }
-
-        // Remove newline from all output.
-        // Powershell returns newlines when it hits the column count of the console.
-        // For example, this is 80 in cmd on Windows 7. If the expected output is longer than 80 lines, we get
-        // newlines in-between the data.
-        // To solve this, we design our interaction with powershell to not depend on newlines,
-        // and then strip all newlines here.
-        rc.output = Strings::replace_all(std::move(rc.output), "\n", "");
-
-        return rc.output;
     }
 
     void println() { putchar('\n'); }

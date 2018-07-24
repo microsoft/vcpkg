@@ -3,16 +3,22 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CGAL/cgal
-    REF 27859944b4d96797030fc018892d5123b7cba0b2
-    SHA512 020d4398fcae0607cd3fe1bd22a190fbe1d45cba0c7e3c95d6d3dfb6d23c43949a1608069972e511f5d47fc787c350c0a0a0085faa2f4b9fd26ce101376752c6 
+    REF f7c3c8212b56c0d6dae63787efc99093f4383415
+    SHA512 fc40483b5f0e2071c3458cbd67ee7e503f68b7f6a1bbb525b6003d1a440e662cb85c257167ce6d55a73e0cc49b27a7d2b56dcf6b5eeddc78772567fdc48ba160
     HEAD_REF master
 )
+
+set(WITH_CGAL_Qt5  OFF)
+if("qt5" IN_LIST FEATURES)
+  set(WITH_CGAL_Qt5 ON)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DCGAL_INSTALL_CMAKE_DIR=share/cgal
+        -DWITH_CGAL_Qt5=${WITH_CGAL_Qt5}
 )
 
 vcpkg_install_cmake()

@@ -27,6 +27,7 @@ The current list of programs includes:
 - YASM
 - DOXYGEN
 - SWIG
+- ARIA2 (Downloader)
 
 Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_acquire_msys.md).
 
@@ -38,3 +39,4 @@ Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_ac
 
 ## Source
 [scripts/cmake/vcpkg_find_acquire_program.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_find_acquire_program.cmake)
+e

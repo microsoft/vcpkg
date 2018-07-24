@@ -45,6 +45,7 @@ vcpkg_apply_patches(
         "${CMAKE_CURRENT_LIST_DIR}/fix-system-pcre2.patch"
         "${CMAKE_CURRENT_LIST_DIR}/fix-system-freetype.patch"
         "${CMAKE_CURRENT_LIST_DIR}/fix-system-pcre2-linux.patch"
+		"${CMAKE_CURRENT_LIST_DIR}/fix-C3615.patch"
 )
 
 # This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
@@ -69,6 +70,8 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
         set(PLATFORM "win32-msvc2015")
     elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
         set(PLATFORM "win32-msvc2017")
+    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v120")
+        set(PLATFORM "win32-msvc2013")
     endif()
     configure_qt(
         SOURCE_PATH ${SOURCE_PATH}

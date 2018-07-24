@@ -3,8 +3,8 @@ index 107c1c5..233bcf6 100644
 --- a/cmake/libprotoc.cmake
 +++ b/cmake/libprotoc.cmake
 @@ -73,7 +73,7 @@ set(libprotoc_files
-   ${protobuf_source_dir}/src/google/protobuf/compiler/javanano/javanano_message_field.cc
-   ${protobuf_source_dir}/src/google/protobuf/compiler/javanano/javanano_primitive_field.cc
+   ${protobuf_source_dir}/src/google/protobuf/compiler/java/java_string_field.cc
+   ${protobuf_source_dir}/src/google/protobuf/compiler/java/java_string_field_lite.cc
    ${protobuf_source_dir}/src/google/protobuf/compiler/js/js_generator.cc
 -  ${protobuf_source_dir}/src/google/protobuf/compiler/js/well_known_types_embed.cc
 +  ${CMAKE_CURRENT_BINARY_DIR}/well_known_types_embed.cc

@@ -1,15 +1,3 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/podofo-0.9.5)
 vcpkg_download_distfile(ARCHIVE
@@ -19,17 +7,30 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DPODOFO_BUILD_LIB_ONLY=1 -DPODOFO_BUILD_SHARED=1
-    )
-elseif (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS -DPODOFO_BUILD_LIB_ONLY=1 -DPODOFO_BUILD_STATIC=1
-    )
+set(PODOFO_NO_FONTMANAGER ON)
+if("fontconfig" IN_LIST FEATURES)
+  set(PODOFO_NO_FONTMANAGER OFF)
 endif()
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PODOFO_BUILD_SHARED)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PODOFO_BUILD_STATIC)
+
+set(IS_WIN32 OFF)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAME)
+    set(IS_WIN32 ON)
+endif()
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -DPODOFO_BUILD_LIB_ONLY=1
+        -DPODOFO_BUILD_SHARED=${PODOFO_BUILD_SHARED}
+        -DPODOFO_BUILD_STATIC=${PODOFO_BUILD_STATIC}
+        -DPODOFO_NO_FONTMANAGER=${PODOFO_NO_FONTMANAGER}
+        -DCMAKE_DISABLE_FIND_PACKAGE_FONTCONFIG=${PODOFO_NO_FONTMANAGER}
+        -DCMAKE_DISABLE_FIND_PACKAGE_LIBCRYPTO=${IS_WIN32}
+        -DCMAKE_DISABLE_FIND_PACKAGE_LIBIDN=ON
+)
 
 vcpkg_install_cmake()
 

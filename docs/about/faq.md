@@ -26,7 +26,7 @@ To see an example of this, look at [`ports\opengl\portfile.cmake`](https://githu
 We currently target Windows Desktop (x86 and x64) as well as the Universal Windows Platform (x86, x64, and ARM). See `vcpkg help triplet` for the current list.
 
 ## Does Vcpkg run on Linux/OSX?
-No, for this preview we are focusing on Windows as a host platform. If you'd be interested in having Vcpkg run on Linux or OSX, please let us know in [this issue](https://github.com/microsoft/vcpkg/issues/57)!
+Yes! We continously test on OSX and Ubuntu 16.04, however we know users have been successful with Arch, Fedora, and FreeBSD. If you have trouble with your favorite Linux distribution, let us know in an issue and we'd be happy to help!
 
 ## How do I use different versions of a library on one machine?
 Within a single instance of Vcpkg (e.g. one set of `installed\`, `packages\`, `ports\` and so forth), you can only have one version of a library installed (otherwise, the headers would conflict with each other!). For those with experience with system-wide package managers, packages in Vcpkg correspond to the `X-dev` or `X-devel` packages.
@@ -42,7 +42,7 @@ See the [Privacy document](privacy.md) for all information regarding privacy.
 Yes. If you already have a CMake toolchain file, you will need to include our toolchain file at the end of yours. This should be as simple as an `include(<vcpkg_root>\scripts\buildsystems\vcpkg.cmake)` directive. Alternatively, you could copy the contents of our `scripts\buildsystems\vcpkg.cmake` into the end of your existing toolchain file.
 
 ## Can I use my own/specific flags for rebuilding libs?
-Yes. In the current preview, there is not yet a standardized global way to change them, however you can edit individual portfiles and tweak the exact build process however you'd like.
+Yes. In the current version, there is not yet a standardized global way to change them, however you can edit individual portfiles and tweak the exact build process however you'd like.
 
 By saving the changes to the portfile (and checking them in), you'll get the same results even if you're rebuilding from scratch in the future and forgot what exact settings you used.
 
