@@ -21,22 +21,29 @@ vcpkg_from_github(
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/win-cmake.patch
 )
 
-vcpkg_find_acquire_program(PYTHON2)
-vcpkg_find_acquire_program(FLEX)
-vcpkg_find_acquire_program(BISON)
+if(UNIX)
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        PREFER_NINJA
+    )
+elseif(WIN32)
+    vcpkg_find_acquire_program(PYTHON2)
+    vcpkg_find_acquire_program(FLEX)
+    vcpkg_find_acquire_program(BISON)
 
-get_filename_component(VCPKG_DOWNLOADS_PYTHON2_DIR "${PYTHON2}" DIRECTORY)
-get_filename_component(VCPKG_DOWNLOADS_FLEX_DIR "${FLEX}" DIRECTORY)
-get_filename_component(VCPKG_DOWNLOADS_BISON_DIR "${BISON}" DIRECTORY)
+    get_filename_component(VCPKG_DOWNLOADS_PYTHON2_DIR "${PYTHON2}" DIRECTORY)
+    get_filename_component(VCPKG_DOWNLOADS_FLEX_DIR "${FLEX}" DIRECTORY)
+    get_filename_component(VCPKG_DOWNLOADS_BISON_DIR "${BISON}" DIRECTORY)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
-        -DVCPKG_DOWNLOADS_PYTHON2_DIR=${VCPKG_DOWNLOADS_PYTHON2_DIR}
-        -DVCPKG_DOWNLOADS_FLEX_DIR=${VCPKG_DOWNLOADS_FLEX_DIR}
-        -DVCPKG_DOWNLOADS_BISON_DIR=${VCPKG_DOWNLOADS_BISON_DIR}
-)
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        PREFER_NINJA
+        OPTIONS
+            -DVCPKG_DOWNLOADS_PYTHON2_DIR=${VCPKG_DOWNLOADS_PYTHON2_DIR}
+            -DVCPKG_DOWNLOADS_FLEX_DIR=${VCPKG_DOWNLOADS_FLEX_DIR}
+            -DVCPKG_DOWNLOADS_BISON_DIR=${VCPKG_DOWNLOADS_BISON_DIR}
+    )
+endif()
 
 vcpkg_install_cmake()
 
