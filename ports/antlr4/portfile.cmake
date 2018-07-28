@@ -24,8 +24,7 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src
-    PATCHES     ${CMAKE_CURRENT_LIST_DIR}/crt_mt.patch
-                ${CMAKE_CURRENT_LIST_DIR}/Fix-building-in-Visual-Studio-2017.patch
+    PATCHES     ${CMAKE_CURRENT_LIST_DIR}/Fix-building-in-Visual-Studio-2017.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -34,6 +33,18 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 else()
     set(DEBUG_CONFIG   "Debug DLL")
     set(RELEASE_CONFIG "Release DLL")
+endif()
+
+if (VCPKG_CRT_LINKAGE STREQUAL "static")
+    vcpkg_apply_patches(
+        SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src
+        PATCHES     ${CMAKE_CURRENT_LIST_DIR}/crt_mt.patch
+    )
+else()
+    vcpkg_apply_patches(
+        SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src
+        PATCHES     ${CMAKE_CURRENT_LIST_DIR}/crt_md.patch
+    )
 endif()
 
 vcpkg_build_msbuild(
