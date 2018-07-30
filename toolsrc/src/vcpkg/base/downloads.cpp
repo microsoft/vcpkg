@@ -51,6 +51,18 @@ namespace vcpkg::Downloads
         auto hConnect = WinHttpConnect(hSession, Strings::to_utf16(hostname).c_str(), INTERNET_DEFAULT_HTTPS_PORT, 0);
         Checks::check_exit(VCPKG_LINE_INFO, hConnect, "WinHttpConnect() failed: %d", GetLastError());
 
+        // Use global proxy if one is set.
+        WINHTTP_PROXY_INFO proxy{};
+        DWORD  proxy_size{sizeof(WINHTTP_PROXY_INFO)};
+        BOOL proxy_query_sucess = WinHttpQueryOption(nullptr,WINHTTP_OPTION_PROXY,&proxy, &proxy_size);
+        Checks::check_exit(VCPKG_LINE_INFO, proxy_query_sucess, "WinHttpQueryOption() failed: %d", GetLastError());
+        if(proxy.dwAccessType == WINHTTP_ACCESS_TYPE_NAMED_PROXY)
+        {
+            WinHttpSetOption(hSession, WINHTTP_OPTION_PROXY, &proxy, sizeof(WINHTTP_PROXY_INFO));
+        }
+        if(proxy.lpszProxy){GlobalFree(proxy.lpszProxy);}
+        if(proxy.lpszProxyBypass){GlobalFree(proxy.lpszProxyBypass);}
+
         // Create an HTTP request handle.
         auto hRequest = WinHttpOpenRequest(hConnect,
                                            L"GET",
