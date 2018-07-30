@@ -1,3 +1,4 @@
 Source: soci
-Version: 2016.10.22-1
+Version: 3.2.3-1
+Build-Depends: sqlite3
 Description: SOCI database access library

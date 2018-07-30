@@ -71,7 +71,7 @@ See `.\vcpkg help triplet` for all supported targets.
 <a name="msbuild"></a>
 #### VS/MSBuild Project (User-wide integration)
 
-The recommended and most productive way to use vcpkg is via user-wide integration, making the system available for all projects you build. The user-wide integration will prompt for administrator access the first time it is used on a given machine, but afterwords is no longer required and the integration is configured on a per-user basis.
+The recommended and most productive way to use vcpkg is via user-wide integration, making the system available for all projects you build. The user-wide integration will prompt for administrator access the first time it is used on a given machine, but afterwards is no longer required and the integration is configured on a per-user basis.
 ```no-highlight
 PS D:\src\vcpkg> .\vcpkg integrate install
 Applied user-wide integration for this vcpkg root.

@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/config
-    REF boost-1.66.0
-    SHA512 7754f48170ceb06fce2961bf7ecf85d7601eccdaf1949fc5730a2bfb4524ff32b703be053059defcfb1c08d21573e8184a38283c59b6091f69e565eade06d9c1
+    REF boost-1.67.0
+    SHA512 517dc632e009c052f7d594c715342a2d94a95e0bcf466c3e3fbab1de38b7314846733f98e7010c386a5bab81d365fb6a08be04d21bee8c93450df97c53a12791
     HEAD_REF master
 )
 
@@ -18,3 +18,4 @@ file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#undef BOOS
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#define BOOST_ALL_DYN_LINK\n")
 endif()
+file(COPY ${SOURCE_PATH}/checks DESTINATION ${CURRENT_PACKAGES_DIR}/share/boost-config)

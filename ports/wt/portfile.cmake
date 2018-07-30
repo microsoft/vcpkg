@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO emweb/wt
-    REF 4.0.2
-    SHA512 85e35374bec662c314b20d0699656895364386ee2e51ca99d131702f02ea5a4defeb357fdda3cf068049f077daaa7a3af1dc3d239fb73b3cf13b574778e5609c
+    REF 4.0.3
+    SHA512 5985f72cbd3065ac696aad4d11711f2d69e066ee17141b56fd7c2616c7f7353586ab8d13db2baa90fa8f3cb116aa7c9044ee3cc42e99e8f5c8704f886ac3b2b6
     HEAD_REF master
 )
 

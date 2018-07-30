@@ -10,7 +10,6 @@ function(vcpkg_install_meson)
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
         LOGNAME package-${TARGET_TRIPLET}-rel
     )
-    message(STATUS "Package ${TARGET_TRIPLET}-rel done")
 
     message(STATUS "Package ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_required_process(
@@ -18,6 +17,5 @@ function(vcpkg_install_meson)
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
         LOGNAME package-${TARGET_TRIPLET}-dbg
     )
-    message(STATUS "Package ${TARGET_TRIPLET}-dbg done")
 
 endfunction()

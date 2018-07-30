@@ -70,7 +70,7 @@ static void inner(const VcpkgCmdArguments& args)
     fs::path vcpkg_root_dir;
     if (args.vcpkg_root_dir != nullptr)
     {
-        vcpkg_root_dir = fs::stdfs::absolute(Strings::to_utf16(*args.vcpkg_root_dir));
+        vcpkg_root_dir = fs::stdfs::absolute(fs::u8path(*args.vcpkg_root_dir));
     }
     else
     {
@@ -94,6 +94,8 @@ static void inner(const VcpkgCmdArguments& args)
 
     Checks::check_exit(VCPKG_LINE_INFO, !vcpkg_root_dir.empty(), "Error: Could not detect vcpkg-root.");
 
+    Debug::println("Using vcpkg-root: %s", vcpkg_root_dir.u8string());
+
     auto default_vs_path = System::get_environment_variable("VCPKG_DEFAULT_VS_PATH").value_or("");
 
     const Expected<VcpkgPaths> expected_paths = VcpkgPaths::create(vcpkg_root_dir, default_vs_path);
@@ -102,7 +104,7 @@ static void inner(const VcpkgCmdArguments& args)
                        "Error: Invalid vcpkg root directory %s: %s",
                        vcpkg_root_dir.string(),
                        expected_paths.error().message());
-    const VcpkgPaths paths = expected_paths.value_or_exit(VCPKG_LINE_INFO);
+    const VcpkgPaths& paths = expected_paths.value_or_exit(VCPKG_LINE_INFO);
 
 #if defined(_WIN32)
     const int exit_code = _wchdir(paths.root.c_str());

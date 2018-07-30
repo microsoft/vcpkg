@@ -53,7 +53,6 @@ function(vcpkg_extract_source_archive_ex)
         )
         file(WRITE ${WORKING_DIRECTORY}/${ARCHIVE_FILENAME}.extracted)
     endif()
-    message(STATUS "Extracting done")
 endfunction()
 
 function(vcpkg_extract_source_archive ARCHIVE)

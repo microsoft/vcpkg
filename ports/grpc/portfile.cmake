@@ -12,22 +12,29 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF v1.10.1
-    SHA512 2221d902c60eada6dd1547a63d26bd3b30cb6710247b5e48523bacde498a3691cc177f1dbe9db8a007b8ae341a5b0c8ec999539e26a9bcff480a8d0b02140997
+    REF v1.12.0
+    SHA512 68a8c261ea570790974769d6c0ca8138cf4242b79e9ff74a11b10d35a27f98ff24c03f3d05932ac46811c0ba7d1a094388ae8dbeb495fc8e723ad74695994d49
     HEAD_REF master
-)
-
-# Issue: https://github.com/grpc/grpc/issues/10759
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/disable-csharp-ext.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch
 )
 
-if(VCPKG_CRT_LINKAGE STREQUAL static)
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(gRPC_BUILD_CODEGEN OFF)
+else()
+    set(gRPC_BUILD_CODEGEN ON)
+endif()
+
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
     set(gRPC_MSVC_STATIC_RUNTIME ON)
 else()
     set(gRPC_MSVC_STATIC_RUNTIME OFF)
+endif()
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(cares_CARES_PROVIDER OFF)
+else()
+    set(cares_CARES_PROVIDER "package")
 endif()
 
 vcpkg_configure_cmake(
@@ -40,7 +47,8 @@ vcpkg_configure_cmake(
         -DgRPC_ZLIB_PROVIDER=package
         -DgRPC_SSL_PROVIDER=package
         -DgRPC_PROTOBUF_PROVIDER=package
-        -DgRPC_CARES_PROVIDER=package
+        -DgRPC_PROTOBUF_PACKAGE_TYPE=CONFIG
+        -DgRPC_CARES_PROVIDER=${cares_CARES_PROVIDER}
         -DgRPC_GFLAGS_PROVIDER=none
         -DgRPC_BENCHMARK_PROVIDER=none
         -DgRPC_INSTALL_CSHARP_EXT=OFF
@@ -48,17 +56,16 @@ vcpkg_configure_cmake(
         -DgRPC_INSTALL_LIBDIR:STRING=lib
         -DgRPC_INSTALL_INCLUDEDIR:STRING=include
         -DgRPC_INSTALL_CMAKEDIR:STRING=share/grpc
+        -DgRPC_BUILD_CODEGEN=${gRPC_BUILD_CODEGEN}
 )
 
-# gRPC runs built executables during the build, so they need access to the installed DLLs.
-set(ENV{PATH} "$ENV{PATH};${CURRENT_INSTALLED_DIR}/bin;${CURRENT_INSTALLED_DIR}/debug/bin")
+vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
-vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH "share/grpc")
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/grpc RENAME copyright)
 
-# Install tools and plugins
+# Install tools
 file(GLOB TOOLS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.exe")
 if(TOOLS)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/grpc)
@@ -66,8 +73,13 @@ if(TOOLS)
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/grpc)
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*.exe" "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
+if(EXES)
+    file(REMOVE ${EXES})
+endif()
+
+# Ignore the C# extension DLL in bin/
+SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_pdbs()

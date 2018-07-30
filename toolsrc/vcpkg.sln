@@ -14,17 +14,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{F5893B21-EA71-4432-84D6-5FB0E0461A2A}"
 	ProjectSection(SolutionItems) = preProject
 		..\scripts\bootstrap.ps1 = ..\scripts\bootstrap.ps1
-		..\scripts\fetchDependency.ps1 = ..\scripts\fetchDependency.ps1
-		..\scripts\findAnyMSBuildWithCppPlatformToolset.ps1 = ..\scripts\findAnyMSBuildWithCppPlatformToolset.ps1
-		..\scripts\findVisualStudioInstallationInstances.ps1 = ..\scripts\findVisualStudioInstallationInstances.ps1
 		..\scripts\get_triplet_environment.cmake = ..\scripts\get_triplet_environment.cmake
-		..\scripts\getProgramFiles32bit.ps1 = ..\scripts\getProgramFiles32bit.ps1
-		..\scripts\getProgramFilesPlatformBitness.ps1 = ..\scripts\getProgramFilesPlatformBitness.ps1
-		..\scripts\getWindowsSDK.ps1 = ..\scripts\getWindowsSDK.ps1
 		..\scripts\internalCI.ps1 = ..\scripts\internalCI.ps1
 		..\scripts\ports.cmake = ..\scripts\ports.cmake
-		..\scripts\SHA256Hash.ps1 = ..\scripts\SHA256Hash.ps1
-		..\scripts\VcpkgPowershellUtils.ps1 = ..\scripts\VcpkgPowershellUtils.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cmake", "cmake", "{A0122231-04D5-420B-81CA-7960946E5E65}"

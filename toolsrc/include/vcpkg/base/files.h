@@ -37,6 +37,10 @@ namespace vcpkg::Files
         virtual void write_contents(const fs::path& file_path, const std::string& data, std::error_code& ec) = 0;
         virtual void rename(const fs::path& oldpath, const fs::path& newpath) = 0;
         virtual void rename(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec) = 0;
+        virtual void rename_or_copy(const fs::path& oldpath,
+                                    const fs::path& newpath,
+                                    StringLiteral temp_suffix,
+                                    std::error_code& ec) = 0;
         virtual bool remove(const fs::path& path) = 0;
         virtual bool remove(const fs::path& path, std::error_code& ec) = 0;
         virtual std::uintmax_t remove_all(const fs::path& path, std::error_code& ec) = 0;
@@ -53,13 +57,9 @@ namespace vcpkg::Files
                                std::error_code& ec) = 0;
         virtual fs::file_status status(const fs::path& path, std::error_code& ec) const = 0;
 
-        inline void write_contents(const fs::path& file_path, const std::string& data)
-        {
-            std::error_code ec;
-            write_contents(file_path, data, ec);
-            Checks::check_exit(
-                VCPKG_LINE_INFO, !ec, "error while writing file: %s: %s", file_path.u8string(), ec.message());
-        }
+        virtual std::vector<fs::path> find_from_PATH(const std::string& name) const = 0;
+
+        void write_contents(const fs::path& file_path, const std::string& data);
     };
 
     Filesystem& get_real_filesystem();
@@ -69,6 +69,4 @@ namespace vcpkg::Files
     bool has_invalid_chars_for_filesystem(const std::string& s);
 
     void print_paths(const std::vector<fs::path>& paths);
-
-    std::vector<fs::path> find_from_PATH(const std::string& name);
 }

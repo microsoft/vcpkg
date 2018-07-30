@@ -1,11 +1,13 @@
 include(vcpkg_common_functions)
-set(LIBRAW_VERSION 0.18.2)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/LibRaw-${LIBRAW_VERSION})
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.libraw.org/data/LibRaw-${LIBRAW_VERSION}.zip"
-    FILENAME "LibRaw-${LIBRAW_VERSION}.zip"
-    SHA512 e557dc47e8c2f79cdb55fafe7e668b823ecd7afe2537c8b7cd6e3f299110efa4ba1696ce8aa01bdba06a5570eec53a4a04f1af32974f98a1521ab5cd174effd3
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO LibRaw/LibRaw
+    REF 0.19.0
+    SHA512 4fbcce6567463cff1784d0ab9e908906acf79ad3d5af3d52d231f99941b3c3e5daf9049ce2d32a56ba7ec523138ad0c1ff8b61d38fe33abcf1aa6deafd4927f2
+    HEAD_REF master
 )
+
 set(LIBRAW_CMAKE_COMMIT "a71f3b83ee3dccd7be32f9a2f410df4d9bdbde0a")
 set(LIBRAW_CMAKE_SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/LibRaw-cmake-${LIBRAW_CMAKE_COMMIT})
 vcpkg_download_distfile(CMAKE_BUILD_ARCHIVE
@@ -14,7 +16,6 @@ vcpkg_download_distfile(CMAKE_BUILD_ARCHIVE
     SHA512 54216e6760e2339dc3bf4b4be533a13160047cabfc033a06da31f2226c43fc93eaea9672af83589e346ce9231c1a57910ac5e800759e692fe2cd9d53b7fba0c6
 )
 
-vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_extract_source_archive(${CMAKE_BUILD_ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src)
 
 # Copy the CMake build system from the external repo
