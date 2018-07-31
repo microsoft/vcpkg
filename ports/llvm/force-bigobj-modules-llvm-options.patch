@@ -1,0 +1,15 @@
+diff --git a/cmake/modules/HandleLLVMOptions.cmake b/cmake/modules/HandleLLVMOptions.cmake
+index f77600a..fa6aee8 100644
+--- a/cmake/modules/HandleLLVMOptions.cmake
++++ b/cmake/modules/HandleLLVMOptions.cmake
+@@ -458,6 +458,10 @@ elseif( LLVM_COMPILER_IS_GCC_COMPATIBLE )
+   endif(LLVM_ENABLE_MODULES)
+ endif( MSVC )
+ 
++if (MSVC AND NOT CLANG_CL)
++  append("/bigobj" CMAKE_C_FLAGS CMAKE_CXX_FLAGS)
++endif()
++
+ if (MSVC)
+   if (NOT CLANG_CL)
+     set(msvc_warning_flags

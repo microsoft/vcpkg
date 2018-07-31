@@ -1,4 +1,54 @@
 Source: llvm
-Version: 6.0.0-1
+Version: 6.0.1-1
 Description: The LLVM Compiler Infrastructure
 Build-Depends: atlmfc (windows)
+Default-Features: abi-breaking-checks-off
+
+Feature: clang
+Description: Build with Clang.
+
+Feature: clang-tools-extra
+Description: Build with extra tools for Clang.
+Build-Depends: llvm[clang]
+
+Feature: test-suite
+Description: Build with LLVM Test Suite.
+
+Feature: lld
+Description: Build with LLD linker.
+
+Feature: lldb
+Description: Build with LLDB debugger.
+
+Feature: plo
+Description: Build with Poly-Loop-Optimizer.
+
+Feature: compiler-rt
+Description: Build with Compiler-RT.
+
+Feature: libunwind
+Description: Build with LLVM Unwinder.
+
+Feature: libomp
+Description: Build with OpenMP support.
+
+Feature: enable-cxx1y
+Description: Build in C++1y mode, if available.
+
+Feature: enable-eh
+Description: Build LLVM with exception-handling support. This is necessary if you wish to link against LLVM libraries and make use of C++ exceptions in your own code that need to propagate through LLVM code.
+
+Feature: enable-rtti
+Description: Build LLVM with run-time type information. Defaults to disabled.
+
+Feature: enable-expensive-checks
+Description: Build LLVM with additional time/memory expensive checking.
+
+Feature: single
+Description: Build all of LLVM's components in a single shared library.
+
+Feature: abi-breaking-checks-on
+Description: Used to decide if LLVM should be built with ABI breaking checks or not. A version of LLVM built with ABI breaking checks is not ABI compatible with a version built without it.
+
+Feature: abi-breaking-checks-off
+Description: Used to decide if LLVM should be built with ABI breaking checks or not. A version of LLVM built with ABI breaking checks is not ABI compatible with a version built without it.

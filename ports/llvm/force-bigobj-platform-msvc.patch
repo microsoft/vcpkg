@@ -1,0 +1,12 @@
+diff --git a/cmake/platforms/WinMsvc.cmake b/cmake/platforms/WinMsvc.cmake
+index a736a45..cd2f51c 100644
+--- a/cmake/platforms/WinMsvc.cmake
++++ b/cmake/platforms/WinMsvc.cmake
+@@ -228,6 +228,7 @@ set(CROSS_TOOLCHAIN_FLAGS_NATIVE "${_CTF_NATIVE_DEFAULT}" CACHE STRING "")
+ 
+ set(COMPILE_FLAGS
+     -D_CRT_SECURE_NO_WARNINGS
++    /bigobj
+     --target=${TRIPLE_ARCH}-windows-msvc
+     -fms-compatibility-version=19.11
+     -imsvc "${MSVC_INCLUDE}"
