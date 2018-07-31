@@ -43,6 +43,7 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
 set(ENV{PYTHON_HOME} "${PYTHON3_DIR}")
+# TODO: Find a way to set the PYTHON_HOME for LLDB package
 
 # Download and extract the main LLVM project
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/llvm-${LLVM_VERSION}.src)
@@ -97,6 +98,7 @@ foreach(_feature IN LISTS ALL_FEATURES)
                 NAME lldb
                 SHA512 93ee2efea07276f8838bc2b3ff039cab8c7a1a6965647aaa4dee99f55c6465d5584ed3be87b144e2e32b5acc7db9cec56d89404de764a2f53643ed154d213721
             )
+            message(WARNING "The LLDB feature does not support Python yet.")
         elseif ("${_feature}" STREQUAL "test-suite")
             llvm_download(
                 NAME test-suite
