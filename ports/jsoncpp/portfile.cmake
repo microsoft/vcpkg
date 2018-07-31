@@ -39,3 +39,5 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/share/jsoncpp/LICENSE ${CURRENT_PACKAGES_DIR
 
 # Copy pdb files
 vcpkg_copy_pdbs()
+
+set(VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT enabled)
