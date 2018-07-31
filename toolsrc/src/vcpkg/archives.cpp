@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include <vcpkg/base/archives.h>
+#include <vcpkg/archives.h>
 #include <vcpkg/commands.h>
 
 namespace vcpkg::Archives
@@ -21,7 +21,7 @@ namespace vcpkg::Archives
             static bool recursion_limiter_sevenzip_old = false;
             Checks::check_exit(VCPKG_LINE_INFO, !recursion_limiter_sevenzip_old);
             recursion_limiter_sevenzip_old = true;
-            const auto nuget_exe = Commands::Fetch::get_tool_path(paths, Tools::NUGET);
+            const auto nuget_exe = paths.get_tool_exe(Tools::NUGET);
 
             const std::string stem = archive.stem().u8string();
             // assuming format of [name].[version in the form d.d.d]
@@ -56,7 +56,7 @@ namespace vcpkg::Archives
             static bool recursion_limiter_sevenzip = false;
             Checks::check_exit(VCPKG_LINE_INFO, !recursion_limiter_sevenzip);
             recursion_limiter_sevenzip = true;
-            const auto seven_zip = Commands::Fetch::get_tool_path(paths, Tools::SEVEN_ZIP);
+            const auto seven_zip = paths.get_tool_exe(Tools::SEVEN_ZIP);
             const auto code_and_output = System::cmd_execute_and_capture_output(Strings::format(
                 R"("%s" x "%s" -o"%s" -y)", seven_zip.u8string(), archive.u8string(), to_path_partial.u8string()));
             Checks::check_exit(VCPKG_LINE_INFO,
@@ -103,5 +103,4 @@ namespace vcpkg::Archives
                            to_path.u8string(),
                            ec.message());
     }
-
 }

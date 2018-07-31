@@ -13,6 +13,7 @@ vcpkg_apply_patches(
     PATCHES
         "${CMAKE_CURRENT_LIST_DIR}/0001-fix-uwp-build.patch"
         "${CMAKE_CURRENT_LIST_DIR}/find-package-freetype-2.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/glib-cmake.patch"
 )
 
 SET(HB_HAVE_ICU "OFF")

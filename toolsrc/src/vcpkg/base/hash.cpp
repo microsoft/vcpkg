@@ -4,10 +4,16 @@
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
-#include <vcpkg/commands.h>
-#include <vcpkg/help.h>
 
-namespace vcpkg::Commands::Hash
+#if defined(_WIN32)
+#include <bcrypt.h>
+
+#ifndef NT_SUCCESS
+#define NT_SUCCESS(Status) (((NTSTATUS)(Status)) >= 0)
+#endif
+#endif
+
+namespace vcpkg::Hash
 {
     static void verify_has_only_allowed_chars(const std::string& s)
     {
@@ -18,17 +24,7 @@ namespace vcpkg::Commands::Hash
                            "    % s",
                            s);
     }
-}
-
 #if defined(_WIN32)
-#include <bcrypt.h>
-
-#ifndef NT_SUCCESS
-#define NT_SUCCESS(Status) (((NTSTATUS)(Status)) >= 0)
-#endif
-
-namespace vcpkg::Commands::Hash
-{
     namespace
     {
         std::string to_hex(const unsigned char* string, const size_t bytes)
@@ -165,11 +161,8 @@ namespace vcpkg::Commands::Hash
         verify_has_only_allowed_chars(s);
         return BCryptHasher{hash_type}.hash_string(s);
     }
-}
 
 #else
-namespace vcpkg::Commands::Hash
-{
     static std::string get_digest_size(const std::string& hash_type)
     {
         if (!Strings::case_insensitive_ascii_starts_with(hash_type, "SHA"))
@@ -217,28 +210,5 @@ namespace vcpkg::Commands::Hash
         const std::string cmd_line = Strings::format(R"(echo -n "%s" | shasum -a %s)", s, digest_size);
         return run_shasum_and_post_process(cmd_line);
     }
-}
 #endif
-
-namespace vcpkg::Commands::Hash
-{
-    const CommandStructure COMMAND_STRUCTURE = {
-        Strings::format("The argument should be a file path\n%s",
-                        Help::create_example_string("hash boost_1_62_0.tar.bz2")),
-        1,
-        2,
-        {},
-        nullptr,
-    };
-
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
-    {
-        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
-
-        const fs::path file_to_hash = args.command_arguments[0];
-        const std::string algorithm = args.command_arguments.size() == 2 ? args.command_arguments[1] : "SHA512";
-        const std::string hash = get_file_hash(paths.get_filesystem(), file_to_hash, algorithm);
-        System::println(hash);
-        Checks::exit_success(VCPKG_LINE_INFO);
-    }
 }

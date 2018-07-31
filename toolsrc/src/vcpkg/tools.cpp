@@ -1,16 +1,19 @@
 #include "pch.h"
 
-#include <vcpkg/base/archives.h>
+#include <vcpkg/archives.h>
+#include <vcpkg/tools.h>
+#include <vcpkg/vcpkgpaths.h>
+
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/downloads.h>
+#include <vcpkg/base/files.h>
+#include <vcpkg/base/optional.h>
 #include <vcpkg/base/stringrange.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
-#include <vcpkg/commands.h>
-#include <vcpkg/help.h>
 
-namespace vcpkg::Commands::Fetch
+namespace vcpkg
 {
     struct ToolData
     {
@@ -307,7 +310,7 @@ namespace vcpkg::Commands::Fetch
                 }
 
                 /* Sample output:
-1.8.2
+    1.8.2
                     */
                 return rc.output;
             }
@@ -348,11 +351,11 @@ namespace vcpkg::Commands::Fetch
                 }
 
                 /* Sample output:
-NuGet Version: 4.6.2.5055
-usage: NuGet <command> [args] [options]
-Type 'NuGet help <command>' for help on a specific command.
+    NuGet Version: 4.6.2.5055
+    usage: NuGet <command> [args] [options]
+    Type 'NuGet help <command>' for help on a specific command.
 
-[[[List of available commands follows]]]
+    [[[List of available commands follows]]]
                     */
                 return StringRange::find_exactly_one_enclosed(rc.output, "NuGet Version: ", "\n").to_string();
             }
@@ -393,7 +396,7 @@ Type 'NuGet help <command>' for help on a specific command.
                 }
 
                 /* Sample output:
-git version 2.17.1.windows.2
+    git version 2.17.1.windows.2
                     */
                 const auto idx = rc.output.find("git version ");
                 Checks::check_exit(VCPKG_LINE_INFO,
@@ -446,7 +449,7 @@ git version 2.17.1.windows.2
                 }
 
                 /* Sample output:
-3.1.81
+    3.1.81
                     */
                 return rc.output;
             }
@@ -478,55 +481,54 @@ git version 2.17.1.windows.2
         }
     }
 
-    fs::path get_tool_path(const VcpkgPaths& paths, const std::string& tool)
+    struct ToolCacheImpl final : ToolCache
     {
-        // First deal with specially handled tools.
-        // For these we may look in locations like Program Files, the PATH etc as well as the auto-downloaded location.
-        if (tool == Tools::SEVEN_ZIP) return get_7za_path(paths);
-        if (tool == Tools::CMAKE) return CMake::get_path(paths).path;
-        if (tool == Tools::GIT) return Git::get_path(paths).path;
-        if (tool == Tools::NINJA) return Ninja::get_path(paths).path;
-        if (tool == Tools::NUGET) return Nuget::get_path(paths).path;
-        if (tool == Tools::IFW_INSTALLER_BASE) return IfwInstallerBase::get_path(paths).path;
-        if (tool == Tools::IFW_BINARYCREATOR)
-            return IfwInstallerBase::get_path(paths).path.parent_path() / "binarycreator.exe";
-        if (tool == Tools::IFW_REPOGEN) return IfwInstallerBase::get_path(paths).path.parent_path() / "repogen.exe";
+        vcpkg::Cache<std::string, fs::path> path_only_cache;
+        vcpkg::Cache<std::string, PathAndVersion> path_version_cache;
 
-        // For other tools, we simply always auto-download them.
-        const ToolData tool_data = parse_tool_data_from_xml(paths, tool);
-        if (paths.get_filesystem().exists(tool_data.exe_path))
+        virtual const fs::path& get_tool_path(const VcpkgPaths& paths, const std::string& tool) const override
         {
-            return tool_data.exe_path;
+            return path_only_cache.get_lazy(tool, [&]() {
+                // First deal with specially handled tools.
+                // For these we may look in locations like Program Files, the PATH etc as well as the auto-downloaded
+                // location.
+                if (tool == Tools::SEVEN_ZIP) return get_7za_path(paths);
+                if (tool == Tools::CMAKE || tool == Tools::GIT || tool == Tools::NINJA || tool == Tools::NUGET ||
+                    tool == Tools::IFW_INSTALLER_BASE)
+                    return get_tool_pathversion(paths, tool).path;
+                if (tool == Tools::IFW_BINARYCREATOR)
+                    return IfwInstallerBase::get_path(paths).path.parent_path() / "binarycreator.exe";
+                if (tool == Tools::IFW_REPOGEN)
+                    return IfwInstallerBase::get_path(paths).path.parent_path() / "repogen.exe";
+
+                // For other tools, we simply always auto-download them.
+                const ToolData tool_data = parse_tool_data_from_xml(paths, tool);
+                if (paths.get_filesystem().exists(tool_data.exe_path))
+                {
+                    return tool_data.exe_path;
+                }
+                return fetch_tool(paths, tool, tool_data);
+            });
         }
-        return fetch_tool(paths, tool, tool_data);
-    }
 
-    std::string get_tool_version(const VcpkgPaths& paths, const std::string& tool)
-    {
-        if (tool == Tools::CMAKE) return CMake::get_path(paths).version;
-        if (tool == Tools::GIT) return Git::get_path(paths).version;
-        if (tool == Tools::NINJA) return Ninja::get_path(paths).version;
-        if (tool == Tools::NUGET) return Nuget::get_path(paths).version;
-        if (tool == Tools::IFW_INSTALLER_BASE) return IfwInstallerBase::get_path(paths).version;
+        const PathAndVersion& get_tool_pathversion(const VcpkgPaths& paths, const std::string& tool) const
+        {
+            return path_version_cache.get_lazy(tool, [&]() {
+                if (tool == Tools::CMAKE) return CMake::get_path(paths);
+                if (tool == Tools::GIT) return Git::get_path(paths);
+                if (tool == Tools::NINJA) return Ninja::get_path(paths);
+                if (tool == Tools::NUGET) return Nuget::get_path(paths);
+                if (tool == Tools::IFW_INSTALLER_BASE) return IfwInstallerBase::get_path(paths);
 
-        Checks::exit_with_message(VCPKG_LINE_INFO, "Finding version for %s is not implemented yet.", tool);
-    }
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Finding version for %s is not implemented yet.", tool);
+            });
+        }
 
-    const CommandStructure COMMAND_STRUCTURE = {
-        Strings::format("The argument should be tool name\n%s", Help::create_example_string("fetch cmake")),
-        1,
-        1,
-        {},
-        nullptr,
+        virtual const std::string& get_tool_version(const VcpkgPaths& paths, const std::string& tool) const override
+        {
+            return get_tool_pathversion(paths, tool).version;
+        }
     };
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
-    {
-        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
-
-        const std::string tool = args.command_arguments[0];
-        const fs::path tool_path = get_tool_path(paths, tool);
-        System::println(tool_path.u8string());
-        Checks::exit_success(VCPKG_LINE_INFO);
-    }
+    std::unique_ptr<ToolCache> get_tool_cache() { return std::make_unique<ToolCacheImpl>(); }
 }
