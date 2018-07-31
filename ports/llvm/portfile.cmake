@@ -1,3 +1,6 @@
+include(CMakeParseArguments)
+include(vcpkg_common_functions)
+
 # LLVM documentation recommends always using static library linkage when
 #   building with Microsoft toolchain; it's also the default on other platforms
 set(VCPKG_LIBRARY_LINKAGE static)
@@ -7,16 +10,6 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "llvm cannot currently be built for UWP")
 endif()
 
-include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/llvm-${LLVM_VERSION}.src)
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://releases.llvm.org/${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz"
-    FILENAME "llvm-${LLVM_VERSION}.src.tar.xz"
-    SHA512 cbbb00eb99cfeb4aff623ee1a5ba075e7b5a76fc00c5f9f539ff28c108598f5708a0369d5bd92683def5a20c2fe60cab7827b42d628dbfcc79b57e0e91b84dd9
-)
-vcpkg_extract_source_archive(${ARCHIVE})
-
-include(CMakeParseArguments)
 function(llvm_download)
     cmake_parse_arguments(PARSE_ARGV 0 VCPKG_LLVM_DL "" "NAME;SHA512;PKG_NAME;EXTRACT_TO;FOLDER_NAME" "")
     if ("${VCPKG_LLVM_DL_PKG_NAME}" STREQUAL "")
@@ -44,6 +37,21 @@ function(llvm_download)
         file(RENAME ${VCPKG_LLVM_DL_FOLDER_BASE}/${VCPKG_LLVM_DL_PKG_NAME}-${LLVM_VERSION}.src ${VCPKG_LLVM_DL_FOLDER_TEST})
     endif()  
 endfunction(llvm_download)
+
+# Install must-have software
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
+set(ENV{PYTHON_HOME} "${PYTHON3_DIR}")
+
+# Download and extract the main LLVM project
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/llvm-${LLVM_VERSION}.src)
+vcpkg_download_distfile(ARCHIVE
+    URLS "http://releases.llvm.org/${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz"
+    FILENAME "llvm-${LLVM_VERSION}.src.tar.xz"
+    SHA512 cbbb00eb99cfeb4aff623ee1a5ba075e7b5a76fc00c5f9f539ff28c108598f5708a0369d5bd92683def5a20c2fe60cab7827b42d628dbfcc79b57e0e91b84dd9
+)
+vcpkg_extract_source_archive(${ARCHIVE})
 
 # Handle features
 set(_COMPONENT_FLAGS "")
@@ -144,6 +152,7 @@ foreach(_feature IN LISTS ALL_FEATURES)
     endif()
 endforeach()
 
+# Appyl patches
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
@@ -152,10 +161,7 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/force-bigobj-platform-msvc.patch
 )
 
-vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
-
+# Configure LLVM
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -166,6 +172,7 @@ vcpkg_configure_cmake(
         -DLLVM_TOOLS_INSTALL_DIR=tools/llvm
 )
 
+# Invoke install
 vcpkg_install_cmake()
 
 file(GLOB EXE ${CURRENT_PACKAGES_DIR}/bin/*)
