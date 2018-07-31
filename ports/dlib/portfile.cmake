@@ -8,8 +8,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO davisking/dlib
-    REF v19.13
-    SHA512 3b6869cb9b08d98152bc0d474714f5d342e3d35e6226e5eeb54216ad64d0d0a48a5bf0e78a7db68540b5f593c74f2b3cefac2f545e4038130283c127a16cd00f
+    REF v19.15
+    SHA512 e815d4cd3cf75de4bf3df25597f1b13e831129b8e780909194be05bde4c811792886e7370980edf0fe294aa1ad7a69ba9b9ca729e05713d3ee4f6aa4236baaf7
     HEAD_REF master
 )
 
@@ -63,13 +63,14 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_cu
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_cuda)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_cpp11)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_avx)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_sse4)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/dlib/external/libpng/arm)
 
 # Dlib encodes debug/release in its config.h. Patch it to respond to the NDEBUG macro instead.
 file(READ ${CURRENT_PACKAGES_DIR}/include/dlib/config.h _contents)
 string(REPLACE "/* #undef ENABLE_ASSERTS */" "#if defined(_DEBUG)\n#define ENABLE_ASSERTS\n#endif" _contents ${_contents})
 string(REPLACE "#define DLIB_DISABLE_ASSERTS" "#if !defined(_DEBUG)\n#define DLIB_DISABLE_ASSERTS\n#endif" _contents ${_contents})
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/dlib/config.h ${_contents})
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/dlib/config.h "${_contents}")
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/dlib/dlib.cmake _contents)
 string(REPLACE

@@ -2,8 +2,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fmtlib/fmt
-    REF 5.0.0
-    SHA512 1ce93648ab7aca6082767ff009d5836e226fa42f183852ca15230f371ef0a34878110ca63d8669a68de7f115c137fdaa11de998986a9440f08d50f0f214ebb90
+    REF 5.1.0
+    SHA512 b759a718353254fa8cd981e483bf01a45af0fc76901216404ace5e47f5d3edf43d42422184e5413c221e49832322fdf60d1860e8ec87349c674511064b31e5d6
     HEAD_REF master
 )
 
@@ -14,6 +14,7 @@ vcpkg_configure_cmake(
         -DFMT_CMAKE_DIR=share/fmt
         -DFMT_TEST=OFF
         -DFMT_DOC=OFF
+        -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
 )
 
 vcpkg_install_cmake()

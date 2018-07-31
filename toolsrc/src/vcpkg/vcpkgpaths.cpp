@@ -93,7 +93,13 @@ namespace vcpkg
 
     const fs::path& VcpkgPaths::get_tool_exe(const std::string& tool) const
     {
-        return this->tool_paths.get_lazy(tool, [&]() { return Commands::Fetch::get_tool_path(*this, tool); });
+        if (!m_tool_cache) m_tool_cache = get_tool_cache();
+        return m_tool_cache->get_tool_path(*this, tool);
+    }
+    const std::string& VcpkgPaths::get_tool_version(const std::string& tool) const
+    {
+        if (!m_tool_cache) m_tool_cache = get_tool_cache();
+        return m_tool_cache->get_tool_version(*this, tool);
     }
 
     const Toolset& VcpkgPaths::get_toolset(const Build::PreBuildInfo& prebuildinfo) const

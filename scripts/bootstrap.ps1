@@ -333,7 +333,7 @@ $vcpkgReleaseDir = "$vcpkgSourcesPath\release"
 if ($win64)
 {
     $architecture=(Get-WmiObject win32_operatingsystem | Select-Object osarchitecture).osarchitecture
-    if ($architecture -ne "64-bit")
+    if (-not $architecture -like "*64*")
     {
         throw "Cannot build 64-bit on non-64-bit system"
     }
@@ -345,7 +345,7 @@ if ($win64)
 $arguments = (
 "`"/p:VCPKG_VERSION=-nohash`"",
 "`"/p:DISABLE_METRICS=$disableMetricsValue`"",
-"/p:Configuration=release",
+"/p:Configuration=Release",
 "/p:Platform=$platform",
 "/p:PlatformToolset=$platformToolset",
 "/p:TargetPlatformVersion=$windowsSDK",

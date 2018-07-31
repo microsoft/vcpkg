@@ -141,7 +141,7 @@ function(vcpkg_from_github)
         endif()
 
         set(${_vdud_OUT_SOURCE_PATH} "${SOURCE_PATH}" PARENT_SCOPE)
-
+        message(STATUS "Using source at ${SOURCE_PATH}")
         return()
     endif()
 
@@ -205,4 +205,5 @@ function(vcpkg_from_github)
         PATCHES ${_vdud_PATCHES}
     )
     set(${_vdud_OUT_SOURCE_PATH} "${TEMP_SOURCE_PATH}" PARENT_SCOPE)
+    message(STATUS "Using source at ${TEMP_SOURCE_PATH}")
 endfunction()

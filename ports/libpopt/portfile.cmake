@@ -5,7 +5,9 @@ set(LIBPOPT_HASH bae2dd4e5d682ef023fdc77ae60c4aad01a3a576d45af9d78d22490c11e410e
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/popt-${LIBPOPT_VERSION})
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://rpm5.org/files/popt/popt-${LIBPOPT_VERSION}.tar.gz"
+    URLS
+        "http://rpm5.org/files/popt/popt-${LIBPOPT_VERSION}.tar.gz"
+        "https://ftp.openbsd.org/pub/OpenBSD/distfiles/popt-${LIBPOPT_VERSION}.tar.gz"
     FILENAME "popt-${LIBPOPT_VERSION}.tar.gz"
     SHA512 ${LIBPOPT_HASH}
 )
