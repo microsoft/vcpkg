@@ -124,6 +124,10 @@ foreach(_feature IN LISTS ALL_FEATURES)
                 EXTRACT_TO projects
                 SHA512 abb956583e5d11d0c6f6d97183c081d658616a74933be884a591eaa3d8c4bb04f08f02016d2c86d7384c7ff1aa44fb949b0d967fc0ff50e3132aaba412e9add8
             )
+
+            vcpkg_find_acquire_program(PERL)
+            get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
+            set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH}")
         #elseif ("${_feature}" STREQUAL "libcxx")
         # TODO must be compiled with CLANG when using ninja
         #    llvm_download(
