@@ -8,8 +8,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO davisking/dlib
-    REF v19.14
-    SHA512 ef4f7b109112c12cecf35543ff81c5d7c7a1f0cadca53eb6302f58329b875af3fa95f3da002e4d66e2d9f4b81256245b016e97b3e3c90f0bfcb94568328175ca
+    REF v19.15
+    SHA512 e815d4cd3cf75de4bf3df25597f1b13e831129b8e780909194be05bde4c811792886e7370980edf0fe294aa1ad7a69ba9b9ca729e05713d3ee4f6aa4236baaf7
     HEAD_REF master
 )
 
