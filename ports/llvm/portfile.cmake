@@ -187,7 +187,7 @@ foreach(_feature IN LISTS ALL_FEATURES)
 
             if ("${_featureValue}" STREQUAL "debugger")
                 list(APPEND _COMPONENT_FLAGS "-DLIBOMP_USE_DEBUGGER=ON")
-            elseif ("${_featureValue}" STREQUAL "debugger")
+            elseif ("${_featureValue}" STREQUAL "stats")
                 list(APPEND _COMPONENT_FLAGS "-DLIBOMP_STATS=ON")
             endif()
         elseif ("${_feature}" STREQUAL "doxygen")
