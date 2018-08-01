@@ -55,6 +55,7 @@ vcpkg_extract_source_archive(${ARCHIVE})
 # Handle features
 set(_COMPONENT_FLAGS "")
 set(_COMPONENT_PATCHES "")
+
 foreach(_feature IN LISTS ALL_FEATURES)
     # Uppercase the feature name and replace "-" with "_"
     string(TOUPPER "${_feature}" _FEATURE)
@@ -125,11 +126,14 @@ foreach(_feature IN LISTS ALL_FEATURES)
             )
         elseif ("${_feature}" STREQUAL "libunwind")
             llvm_download(
-                NAME lld
-                SHA512 856ccc125255ab6184919f1424372f0f8a5de8477777047e2ab1a131a2ecec0caa9b5163d01409c7c510df9c794f0bc8d65cc904df2baf6462ef53bc163e002a
+                NAME libunwind
+                SHA512 78568c28720abdd1f8471c462421df9965e05e1db048689d16ac85378716c4080ec1723af78e9f61d133b0ff82ac8c1f0dde7fd42d194485f62c1a17c02db37f
             )
             list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_CROSS_UNWINDING=ON")
             list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_ARM_WMMX=ON")
+            if ("compiler-rt" IN_LIST FEATURES)
+                list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_USE_COMPILER_RT=ON")
+            endif() 
         elseif ("${_feature}" STREQUAL "libomp")
             llvm_download(
                 NAME openmp
