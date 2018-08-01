@@ -113,7 +113,7 @@ foreach(_feature IN LISTS ALL_FEATURES)
                 NAME lld
                 SHA512 856ccc125255ab6184919f1424372f0f8a5de8477777047e2ab1a131a2ecec0caa9b5163d01409c7c510df9c794f0bc8d65cc904df2baf6462ef53bc163e002a
             )
-        elseif ("${_feature}" STREQUAL "plo")
+        elseif ("${_feature}" STREQUAL "polly")
             llvm_download(
                 NAME polly
                 SHA512 1851223653f8c326ddf39f5cf9fc18a2310299769c011795d8e1a5abef2834d2c800fae318e6370547d3b6b35199ce29fe76582b64493ab8fa506aff59272539

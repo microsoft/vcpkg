@@ -20,7 +20,7 @@ Feature: lldb
 Description: Build with LLDB debugger.
 Build-Depends: llvm[clang]
 
-Feature: plo
+Feature: polly
 Description: Build with Poly-Loop-Optimizer.
 
 Feature: compiler-rt
