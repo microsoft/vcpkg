@@ -45,6 +45,7 @@ Description: Build with LLVM Unwinder.
 
 Feature: libomp
 Description: Build with OpenMP support.
+Build-Depends: llvm[clang]
 
 Feature: libomp-debugger
 Description: Build with OpenMP with debugger interface support.
@@ -52,6 +53,10 @@ Build-Depends: llvm[libomp]
 
 Feature: libomp-stats
 Description: Build with OpenMP with Stats-Gathering functionality support.
+Build-Depends: llvm[libomp]
+
+Feature: libomp-ompt-off
+Description: Build without support for the OpenMP Tools Interface (OMPT).
 Build-Depends: llvm[libomp]
 
 Feature: doxygen
