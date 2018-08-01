@@ -165,18 +165,20 @@ foreach(_feature IN LISTS ALL_FEATURES)
                 SHA512 69850c1ad92c66977fa217cbfb42a6a3f502fbe3d1a08daa7fc4cfeb617a7736d231f8ad8d93b10b1ae29bd753315d2a2d70f9ff1f4d18a9a7cc81758d91f963
             )
         elseif ("${_feature}" STREQUAL "libunwind")
-            message(WARNING "The LLVM's libunwind does not work with Visual Studio sadly :(")
-        #    llvm_download(
-        #        NAME libunwind
-        #        SHA512 78568c28720abdd1f8471c462421df9965e05e1db048689d16ac85378716c4080ec1723af78e9f61d133b0ff82ac8c1f0dde7fd42d194485f62c1a17c02db37f
-        #    )
-        #    list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_CROSS_UNWINDING=ON")
-        #    list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_ARM_WMMX=ON")
-        #    if ("compiler-rt" IN_LIST FEATURES)
-        #        list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_USE_COMPILER_RT=ON")
-        #    endif()
-        #    list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_STATIC=ON")
-        #    list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_SHARED=OFF")
+            message(WARNING "The LLVM's libunwinder does not work with Visual Studio yet.")
+            if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+                llvm_download(
+                    NAME libunwind
+                    SHA512 78568c28720abdd1f8471c462421df9965e05e1db048689d16ac85378716c4080ec1723af78e9f61d133b0ff82ac8c1f0dde7fd42d194485f62c1a17c02db37f
+                )
+                list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_CROSS_UNWINDING=ON")
+                list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_ARM_WMMX=ON")
+                if ("compiler-rt" IN_LIST FEATURES)
+                    list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_USE_COMPILER_RT=ON")
+                endif()
+                list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_STATIC=ON")
+                list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_SHARED=OFF")
+            endif()
         elseif ("${_feature}" STREQUAL "libomp")
             llvm_download(
                 NAME openmp
