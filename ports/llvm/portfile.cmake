@@ -54,6 +54,7 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 # Handle features
 set(_COMPONENT_FLAGS "")
+set(_COMPONENT_PATCHES "")
 foreach(_feature IN LISTS ALL_FEATURES)
     # Uppercase the feature name and replace "-" with "_"
     string(TOUPPER "${_feature}" _FEATURE)
@@ -99,11 +100,7 @@ foreach(_feature IN LISTS ALL_FEATURES)
             list(APPEND _COMPONENT_FLAGS "-DPYTHON_HOME=${PYTHON3_DIR}")
             # Based on https://github.com/llvm-mirror/lldb/commit/b16e8c12330ba21fb45b7d8b1e6ee3f8510b2846
             # Only applies for LLDB 6.x version
-            vcpkg_apply_patches(
-                SOURCE_PATH ${SOURCE_PATH}
-                PATCHES
-                    ${CMAKE_CURRENT_LIST_DIR}/lldb-mi-signal-msvc.patch
-            )
+            list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/lldb-mi-signal-msvc.patch")
         elseif ("${_feature}" STREQUAL "test-suite")
             llvm_download(
                 NAME test-suite
@@ -166,6 +163,7 @@ vcpkg_apply_patches(
         ${CMAKE_CURRENT_LIST_DIR}/install-cmake-modules-to-share.patch
         ${CMAKE_CURRENT_LIST_DIR}/force-bigobj-modules-llvm-options.patch
         ${CMAKE_CURRENT_LIST_DIR}/force-bigobj-platform-msvc.patch
+        ${_COMPONENT_PATCHES}
 )
 
 # Configure LLVM
