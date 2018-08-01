@@ -1,15 +1,20 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/laszip-src-3.2.2)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/LASzip/LASzip/releases/download/3.2.2/laszip-src-3.2.2.tar.gz"
-    FILENAME "laszip-src-3.2.2.tar.gz"
-    SHA512 e89707c0569c6435394a3a07ba5e6ea972d65cf793c157a698d1ec293f5477deccd613733cb544b907d6c1f13d0313f0d24ae7e5dddc426d7bdb9a7e58709cf8
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO LASzip/LASzip
+    REF 3.2.2
+    SHA512 c4dac1fd525b1889fa8cc77f168bc3c83053619402ec13ac0ae58665cfd4440b9135ce30c4ade925a0ac9db7e3f717344859e511b2207841c84dc2453c6cf7f7
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LASZIP_BUILD_STATIC)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    PREFER_NINJA
+    OPTIONS
+        -DLASZIP_BUILD_STATIC=${LASZIP_BUILD_STATIC}
 )
 
 vcpkg_install_cmake()
