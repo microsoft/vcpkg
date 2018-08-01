@@ -19,11 +19,11 @@ Build-Depends: llvm[clang]
 
 Feature: lldb-python2
 Description: Build with LLDB debugger with Python 2 support.
-Build-Depends: python2 llvm[lldb]
+Build-Depends: python2,llvm[lldb]
 
 Feature: lldb-python3
 Description: Build with LLDB debugger with Python 3 support.
-Build-Depends: python3 llvm[lldb]
+Build-Depends: python3,llvm[lldb]
 
 Feature: polly
 Description: Build with Poly-Loop-Optimizer.
