@@ -3,11 +3,10 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/protobuf
-    REF v3.6.0.1
-    SHA512 63cd799d5d6edbb05a87bc07992271c5bdb9595366d698b4dc5476cc89dc278d1c43186b9e56340958aefea2ce23e15a9c3a550158414add868b56e789ceafe4
+    REF v3.6.1
+    SHA512 1bc175d24b49de1b1e41eaf39598194e583afffb924c86c8d2e569d935af21874be76b2cbd4d9655a1d38bac3d4cd811de88bc2c72d81bad79115e69e5b0d839
     HEAD_REF master
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/js-embed.patch"
         "${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch"
 )
 
