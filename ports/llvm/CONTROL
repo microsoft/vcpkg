@@ -2,7 +2,6 @@ Source: llvm
 Version: 6.0.1-1
 Description: The LLVM Compiler Infrastructure
 Build-Depends: atlmfc (windows)
-Default-Features: abi-breaking-checks-off
 
 Feature: clang
 Description: Build with Clang.

@@ -42,8 +42,6 @@ endfunction(llvm_download)
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
-set(ENV{PYTHON_HOME} "${PYTHON3_DIR}")
-# TODO: Find a way to set the PYTHON_HOME for LLDB package
 
 # Download and extract the main LLVM project
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/llvm-${LLVM_VERSION}.src)
@@ -98,7 +96,14 @@ foreach(_feature IN LISTS ALL_FEATURES)
                 NAME lldb
                 SHA512 93ee2efea07276f8838bc2b3ff039cab8c7a1a6965647aaa4dee99f55c6465d5584ed3be87b144e2e32b5acc7db9cec56d89404de764a2f53643ed154d213721
             )
-            message(WARNING "The LLDB feature does not support Python yet.")
+            list(APPEND _COMPONENT_FLAGS "-DPYTHON_HOME=${PYTHON3_DIR}")
+            # Based on https://github.com/llvm-mirror/lldb/commit/b16e8c12330ba21fb45b7d8b1e6ee3f8510b2846
+            # Only applies for LLDB 6.x version
+            vcpkg_apply_patches(
+                SOURCE_PATH ${SOURCE_PATH}
+                PATCHES
+                    ${CMAKE_CURRENT_LIST_DIR}/lldb-mi-signal-msvc.patch
+            )
         elseif ("${_feature}" STREQUAL "test-suite")
             llvm_download(
                 NAME test-suite
@@ -109,7 +114,7 @@ foreach(_feature IN LISTS ALL_FEATURES)
             llvm_download(
                 NAME lld
                 SHA512 856ccc125255ab6184919f1424372f0f8a5de8477777047e2ab1a131a2ecec0caa9b5163d01409c7c510df9c794f0bc8d65cc904df2baf6462ef53bc163e002a
-            )
+            )  
         elseif ("${_feature}" STREQUAL "plo")
             llvm_download(
                 NAME polly

@@ -1,0 +1,16 @@
+diff --git a/tools/lldb/tools/lldb-mi/MIDriverMain.cpp b/tools/lldb/tools/lldb-mi/MIDriverMain.cpp
+index eda6778..3b38291 100644
+--- a/tools/lldb/tools/lldb-mi/MIDriverMain.cpp
++++ b/tools/lldb/tools/lldb-mi/MIDriverMain.cpp
+@@ -26,11 +26,6 @@
+ //                  MICmdBase.h / .cpp
+ //                  MICmdCmd.h / .cpp
+ 
+-#if defined(_MSC_VER)
+-#define _INC_SIGNAL // Stop window's signal.h being included -
+-                    // CODETAG_IOR_SIGNALS
+-#endif              // _MSC_VER
+-
+ // Third party headers:
+ #include "lldb/API/SBHostOS.h"
+ #include <atomic>
