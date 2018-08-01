@@ -22,6 +22,7 @@ Build-Depends: llvm[clang]
 
 Feature: polly
 Description: Build with Poly-Loop-Optimizer.
+Build-Depends: llvm[enable-eh]
 
 Feature: compiler-rt
 Description: Build with Compiler-RT.
@@ -37,9 +38,10 @@ Description: Build in C++1y mode, if available.
 
 Feature: enable-eh
 Description: Build LLVM with exception-handling support. This is necessary if you wish to link against LLVM libraries and make use of C++ exceptions in your own code that need to propagate through LLVM code.
+Build-Depends: llvm[enable-rtti]
 
 Feature: enable-rtti
-Description: Build LLVM with run-time type information. Defaults to disabled.
+Description: Build LLVM with run-time type information.
 
 Feature: enable-expensive-checks
 Description: Build LLVM with additional time/memory expensive checking.
