@@ -6,9 +6,11 @@ include(vcpkg_common_functions)
 set(VCPKG_LIBRARY_LINKAGE static)
 set(LLVM_VERSION "6.0.1")
 
-# what about LLVM_BUILD_STATIC?
-# llvm dynamic library?
-# Not supported on windows
+# TODO: 
+# what about LLVM_BUILD_STATIC? --- make it on base of the triplet name
+# Not supported on windows, but can be used on linux/mac
+# LTO must be also static when triplet is static
+# list(APPEND _COMPONENT_FLAGS "-DLLVM_BUILD_STATIC=ON")
 # list(APPEND _COMPONENT_FLAGS "-DLIBOMP_ENABLE_SHARED=OFF")
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -213,6 +215,9 @@ foreach(_feature IN LISTS ALL_FEATURES)
         #        EXTRACT_TO projects
         #        SHA512 bbb4c7b412e295cb735f637df48a83093eef45ed5444f7766790b4b047f75fd5fd634d8f3a8ac33a5c1407bd16fd450ba113f60a9bcc1d0a911fe0c54e9c81f2
         #    )
+        elseif ("${_feature}" STREQUAL "lto-static")
+            # Based on https://github.com/numba/llvmlite/blob/master/conda-recipes/llvm-lto-static.patch
+            list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/llvm-lto-static.patch")
         endif()
     endif()
 endforeach()
