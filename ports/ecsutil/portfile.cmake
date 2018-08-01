@@ -12,8 +12,8 @@
 
 include(vcpkg_common_functions)
 
-set(ECSUTIL_VERSION "0.9.0.9")
-set(ECSUtil_HASH 69163ecc1333a5e926bb333a99c32ac86ddf61b57834b776c23cd1e638222d7959108c7f7606a59918129a894c63aa86047afcc54399d160c93d1e1a6a292f11)
+set(ECSUTIL_VERSION "1.0.0.1")
+set(ECSUtil_HASH 02e1e507f4a91622e5f8c15a46c46648f013c7416417562093cd48318ff091dce2b7f8b2b6f470e5f24a48ebdf3d1120b6e2634b619ce769ca4e5706f41a9c1a)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src)
 
 #architecture detection
@@ -39,7 +39,7 @@ else()
 endif()
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://bobk2824.github.io/ecs-object-client-windows-cpp.${ECSUTIL_VERSION}.zip"
+    URLS "https://github.com/EMCECS/ecs-object-client-windows-cpp/releases/download/${ECSUTIL_VERSION}/ecs-object-client-windows-cpp.${ECSUTIL_VERSION}.zip"
     FILENAME "ecs-object-client-windows-cpp.${ECSUTIL_VERSION}.zip"
     SHA512 ${ECSUtil_HASH}
 )
