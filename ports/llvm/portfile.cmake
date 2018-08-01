@@ -124,7 +124,7 @@ foreach(_feature IN LISTS ALL_FEATURES)
 
             # Requires python and swig
             string(REPLACE "lldb-python" "" _featureValue "${_feature}")
-            find_package (Python${_featureValue} COMPONENTS Interpreter Development)
+            find_package (Python${_featureValue} COMPONENTS Development)
             list(APPEND _COMPONENT_FLAGS "-DPYTHON_HOME=${Python${_featureValue}_ROOT_DIR}")
             list(APPEND _COMPONENT_FLAGS "-DLLDB_BUILD_FRAMEWORK=ON")
         elseif ("${_feature}" STREQUAL "lld")
