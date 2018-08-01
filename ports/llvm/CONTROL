@@ -18,6 +18,7 @@ Description: Build with LLD linker.
 
 Feature: lldb
 Description: Build with LLDB debugger.
+Build-Depends: llvm[clang]
 
 Feature: plo
 Description: Build with Poly-Loop-Optimizer.

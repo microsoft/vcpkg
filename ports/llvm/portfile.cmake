@@ -111,7 +111,7 @@ foreach(_feature IN LISTS ALL_FEATURES)
             llvm_download(
                 NAME lld
                 SHA512 856ccc125255ab6184919f1424372f0f8a5de8477777047e2ab1a131a2ecec0caa9b5163d01409c7c510df9c794f0bc8d65cc904df2baf6462ef53bc163e002a
-            )  
+            )
         elseif ("${_feature}" STREQUAL "plo")
             llvm_download(
                 NAME polly
