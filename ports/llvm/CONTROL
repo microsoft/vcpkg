@@ -10,9 +10,6 @@ Feature: clang-tools-extra
 Description: Build with extra tools for Clang.
 Build-Depends: llvm[clang]
 
-Feature: test-suite
-Description: Build with LLVM Test Suite.
-
 Feature: lld
 Description: Build with LLD linker.
 
@@ -20,9 +17,25 @@ Feature: lldb
 Description: Build with LLDB debugger.
 Build-Depends: llvm[clang]
 
+Feature: lldb-python2
+Description: Build with LLDB debugger with Python 2 support.
+Build-Depends: python2 llvm[lldb]
+
+Feature: lldb-python3
+Description: Build with LLDB debugger with Python 3 support.
+Build-Depends: python3 llvm[lldb]
+
 Feature: polly
 Description: Build with Poly-Loop-Optimizer.
 Build-Depends: llvm[enable-eh]
+
+Feature: polly-gpu-cuda
+Description: Build with Poly-Loop-Optimizer using CUDA/OpenCL. This feature requires CUDA installed.
+Build-Depends: llvm[polly]
+
+Feature: polly-gpu-opencl
+Description: Build with Poly-Loop-Optimizer using CUDA/OpenCL. This feature requires OpenCL installed.
+Build-Depends: llvm[polly]
 
 Feature: compiler-rt
 Description: Build with Compiler-RT.
@@ -32,6 +45,17 @@ Description: Build with LLVM Unwinder.
 
 Feature: libomp
 Description: Build with OpenMP support.
+
+Feature: libomp-debugger
+Description: Build with OpenMP with debugger interface support.
+Build-Depends: llvm[libomp]
+
+Feature: libomp-stats
+Description: Build with OpenMP with Stats-Gathering functionality support.
+Build-Depends: llvm[libomp]
+
+Feature: doxygen
+Description: Build with doxygen documentation.
 
 Feature: enable-cxx1y
 Description: Build in C++1y mode, if available.
