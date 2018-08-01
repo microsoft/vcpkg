@@ -7,8 +7,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xz-mirror/xz
-    REF 06eebd4543196ded36fa9b8b9544195b38b24ef2
-    SHA512 978f49412bb8edaf3ca9b3db958f2f558cceb674a8b1dc641e8030249e48a08a14ed4a637140a922ac2a873fc66a610e4bb87bcb8812f80a072caa29403fdc8c
+    REF v5.2.4
+    SHA512 fce7dc65e77a9b89dbdd6192cb37efc39e3f2cf343f79b54d2dfcd845025dab0e1d5b0f59c264eab04e5cbaf914eeb4818d14cdaac3ae0c1c5de24418656a4b7
     HEAD_REF master
 )
 
