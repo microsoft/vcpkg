@@ -63,6 +63,7 @@ Description: Build LLVM's LTO as static library.
 
 Feature: libclang-static
 Description: Build libclang as static library.
+Build-Depends: llvm[clang]
 
 Feature: enable-cxx1y
 Description: Build in C++1y mode, if available.
