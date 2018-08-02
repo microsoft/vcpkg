@@ -61,6 +61,9 @@ Description: Build with doxygen documentation.
 Feature: lto-static
 Description: Build LLVM's LTO as static library.
 
+Feature: libclang-static
+Description: Build libclang as static library.
+
 Feature: enable-cxx1y
 Description: Build in C++1y mode, if available.
 

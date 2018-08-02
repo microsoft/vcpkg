@@ -13,6 +13,13 @@ set(LLVM_VERSION "6.0.1")
 # list(APPEND _COMPONENT_FLAGS "-DLLVM_BUILD_STATIC=ON")
 # list(APPEND _COMPONENT_FLAGS "-DLIBOMP_ENABLE_SHARED=OFF")
 
+# CLANG_ANALYZER_BUILD_Z3
+# CLANG_ENABLE_PROTO_FUZZER
+
+# Clang maybe use stage2?
+# https://github.com/llvm-mirror/clang/tree/master/cmake/caches
+# CLANG_ENABLE_BOOTSTRAP
+
 if("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "WindowsStore")
     message(FATAL_ERROR "llvm cannot currently be built for UWP")
 endif()
@@ -210,6 +217,8 @@ foreach(_feature IN LISTS ALL_FEATURES)
         elseif ("${_feature}" STREQUAL "lto-static")
             # Based on https://github.com/numba/llvmlite/blob/master/conda-recipes/llvm-lto-static.patch
             list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/llvm-lto-static.patch")
+        elseif ("${_feature}" STREQUAL "libclang-static")
+            list(APPEND _COMPONENT_FLAGS "-DLIBCLANG_BUILD_STATIC=ON")
         endif()
     endif()
 endforeach()
