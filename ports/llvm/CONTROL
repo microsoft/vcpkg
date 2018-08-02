@@ -10,6 +10,10 @@ Feature: clang-tools-extra
 Description: Build with extra tools for Clang.
 Build-Depends: llvm[clang]
 
+Feature: clang-protobuf-fuzzer
+Description: Build Clang with fuzzer using protobuf.
+Build-Depends: protobuf
+
 Feature: lld
 Description: Build with LLD linker.
 
@@ -58,13 +62,6 @@ Build-Depends: llvm[libomp]
 Feature: doxygen
 Description: Build with doxygen documentation.
 
-Feature: lto-static
-Description: Build LLVM's LTO as static library.
-
-Feature: libclang-static
-Description: Build libclang as static library.
-Build-Depends: llvm[clang]
-
 Feature: enable-cxx1y
 Description: Build in C++1y mode, if available.
 
@@ -77,6 +74,9 @@ Description: Build LLVM with run-time type information.
 
 Feature: enable-expensive-checks
 Description: Build LLVM with additional time/memory expensive checking.
+
+Feature: clang-enable-z3-analyzer
+Description: Build Clang with z3 theorem prover from Microsoft Research as an external constraint solver.
 
 Feature: single
 Description: Build all of LLVM's components in a single shared library.
@@ -131,3 +131,21 @@ Description: Build with X86 target.
 
 Feature: target-xcore
 Description: Build with XCore target.
+
+Feature: use-sanitizer-addr
+Description: Use address sanitizer to build LLVM binaries.
+
+Feature: use-sanitizer-mem
+Description: Use memory sanitizer to build LLVM binaries.
+
+Feature: use-sanitizer-mem-origins
+Description: Use memory with origins sanitizer to build LLVM binaries.
+
+Feature: use-sanitizer-undef
+Description: Use undefined sanitizer to build LLVM binaries.
+
+Feature: use-sanitizer-thread
+Description: Use thread sanitizer to build LLVM binaries.
+
+Feature: use-sanitizer-addr-undef
+Description: Use address and undefined sanitizers to build LLVM binaries.

@@ -60,6 +60,15 @@ function(llvm_download)
     endif()  
 endfunction(llvm_download)
 
+function(llvm_assert_array)
+    cmake_parse_arguments(PARSE_ARGV 0 VCPKG_LLVM_AA "" "WHERE;MATCH;NAME" "")
+    foreach(_component IN LISTS VCPKG_LLVM_AA_WHERE)
+        if ("${_component}" MATCHES "^${VCPKG_LLVM_AA_MATCH}")
+            message(FATAL_ERROR "The ${VCPKG_LLVM_AA_NAME} is already set.")
+        endif()
+    endforeach()
+endfunction(llvm_assert_array)
+
 # Install must-have software
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
@@ -76,24 +85,26 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 # From: https://github.com/llvm-mirror/llvm/blob/master/CMakeLists.txt
 set(_LLVM_ALL_TARGETS
-  AArch64
-  AMDGPU
-  ARM
-  BPF
-  Hexagon
-  Lanai
-  Mips
-  MSP430
-  NVPTX
-  PowerPC
-  Sparc
-  SystemZ
-  X86
-  XCore
+    AArch64
+    AMDGPU
+    ARM
+    BPF
+    Hexagon
+    Lanai
+    Mips
+    MSP430
+    NVPTX
+    PowerPC
+    Sparc
+    SystemZ
+    X86
+    XCore
 )
+
 set(_COMPONENT_FLAGS "")
 set(_COMPONENT_PATCHES "")
 set(_COMPONENT_TARGETS "")
+set(_COMPONENT_SANITIZER "")
 
 foreach(_feature IN LISTS FEATURES)
     if ("${_feature}" MATCHES "^enable-")
@@ -104,12 +115,11 @@ foreach(_feature IN LISTS FEATURES)
         list(APPEND _COMPONENT_FLAGS "-DLLVM_${_FEATURE}=ON")
     elseif ("${_feature}" MATCHES "^abi-breaking-checks-")
         string(REPLACE "abi-breaking-checks-" "" _featureValue "${_feature}")
-        foreach(_components IN LISTS _COMPONENT_FLAGS)
-            if ("${_components}" MATCHES "^-DLLVM_ABI_BREAKING_CHECKS=")
-                string(REPLACE "-${_featureValue}" "" _featureName "${_feature}")
-                message(FATAL_ERROR "The feature ${_featureName} is already set.")
-            endif()
-        endforeach()
+        llvm_assert_array(
+            NAME "abi-breaking-checks"
+            WHERE ${_COMPONENT_FLAGS}
+            MATCH "-DLLVM_ABI_BREAKING_CHECKS="
+        )
         if ("${_featureValue}" STREQUAL "on")
             list(APPEND _COMPONENT_FLAGS "-DLLVM_ABI_BREAKING_CHECKS=FORCE_ON")
         elseif ("${_featureValue}" STREQUAL "off")
@@ -127,6 +137,9 @@ foreach(_feature IN LISTS FEATURES)
             PKG_NAME cfe
             SHA512 f64ba9290059f6e36fee41c8f32bf483609d31c291fcd2f77d41fecfdf3c8233a5e23b93a1c73fed03683823bd6e72757ed993dd32527de3d5f2b7a64bb031b9
         )
+        list(APPEND _COMPONENT_FLAGS "-DLIBCLANG_BUILD_STATIC=ON")
+    elseif ("${_feature}" STREQUAL "clang-protobuf-fuzzer")
+        list(APPEND _COMPONENT_FLAGS "-DCLANG_ENABLE_PROTO_FUZZER=ON")
     elseif ("${_feature}" STREQUAL "clang-tools-extra")
         llvm_download(
             NAME clang-tools-extra
@@ -135,6 +148,8 @@ foreach(_feature IN LISTS FEATURES)
             FOLDER_NAME extra
         )
         list(APPEND _COMPONENT_FLAGS "-DCLANG_ENABLE_STATIC_ANALYZER=ON")
+    elseif ("${_feature}" STREQUAL "clang-enable-z3-analyzer")
+        ist(APPEND _COMPONENT_FLAGS "-DCLANG_ANALYZER_BUILD_Z3=ON")
     elseif ("${_feature}" STREQUAL "lldb")
         llvm_download(
             NAME lldb
@@ -208,7 +223,17 @@ foreach(_feature IN LISTS FEATURES)
         vcpkg_find_acquire_program(PERL)
         get_filename_component(PERL_PATH ${PERL} DIRECTORY)
         set(ENV{PATH} "$ENV{PATH};${PERL_PATH}")
+
+        # If libomp-ompt-off is defined, that will be ignored
         list(APPEND _COMPONENT_FLAGS "-DLIBOMP_OMPT_OPTIONAL=ON")
+
+        # On Windows libomp does not support static linkage
+        if ("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "")
+            message(STATUS "Warning: On Windows platform libomp does not support static linkage. ")
+        else()
+            list(APPEND _COMPONENT_FLAGS "-DLIBOMP_ENABLE_SHARED=OFF")
+        endif()
+
     elseif ("${_feature}" MATCHES "^libomp-")
         string(REPLACE "libomp-" "" _featureValue "${_feature}")
 
@@ -256,11 +281,6 @@ foreach(_feature IN LISTS FEATURES)
     #        EXTRACT_TO projects
     #        SHA512 bbb4c7b412e295cb735f637df48a83093eef45ed5444f7766790b4b047f75fd5fd634d8f3a8ac33a5c1407bd16fd450ba113f60a9bcc1d0a911fe0c54e9c81f2
     #    )
-    elseif ("${_feature}" STREQUAL "lto-static")
-        # Based on https://github.com/numba/llvmlite/blob/master/conda-recipes/llvm-lto-static.patch
-        list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/llvm-lto-static.patch")
-    elseif ("${_feature}" STREQUAL "libclang-static")
-        list(APPEND _COMPONENT_FLAGS "-DLIBCLANG_BUILD_STATIC=ON")
     elseif ("${_feature}" MATCHES "^target-")
         string(REPLACE "target-" "" _featureValue "${_feature}")
         foreach(_TARGETNAME IN LISTS _LLVM_ALL_TARGETS)
@@ -271,12 +291,45 @@ foreach(_feature IN LISTS FEATURES)
                 break()
             endif()
         endforeach()
+    elseif ("${_feature}" MATCHES "^use-sanitizer-")
+        llvm_assert_array(
+            NAME "sanitizer"
+            WHERE ${_COMPONENT_FLAGS}
+            MATCH "-DLLVM_USE_SANITIZER="
+        )
+
+        string(REPLACE "use-sanitizer-" "" _featureValue "${_feature}")
+        if ("${_featureValue}" STREQUAL "addr")
+            list(APPEND _COMPONENT_FLAGS "-DLLVM_USE_SANITIZER=Address")
+        elseif ("${_featureValue}" STREQUAL "mem")
+            list(APPEND _COMPONENT_FLAGS "-DLLVM_USE_SANITIZER=Memory")
+        elseif ("${_featureValue}" STREQUAL "mem-origins")
+            list(APPEND _COMPONENT_FLAGS "-DLLVM_USE_SANITIZER=MemoryWithOrigins")
+        elseif ("${_featureValue}" STREQUAL "undef")
+            list(APPEND _COMPONENT_FLAGS "-DLLVM_USE_SANITIZER=Undefined")
+        elseif ("${_featureValue}" STREQUAL "thread")
+            list(APPEND _COMPONENT_FLAGS "-DLLVM_USE_SANITIZER=Thread")
+        elseif ("${_featureValue}" STREQUAL "addr-undef")
+            list(APPEND _COMPONENT_FLAGS "-DLLVM_USE_SANITIZER=Address\;Undefined")
+        endif()
+
+        list(APPEND _COMPONENT_FLAGS "-DLLVM_USE_SANITIZE_COVERAGE=ON")
+
+        if ("compiler-rt" IN_LIST FEATURES)
+            message(STATUS "Warning: Avoiding building the sanitizers themselves with sanitizers enabled because of \"compiler-rt\" is enabled.")
+            list(APPEND _COMPONENT_FLAGS "-DLLVM_BUILD_RUNTIME=OFF")
+        endif()
     endif()
 endforeach()
 
+# If the "all" target is defined in FEATURES, replace _COMPONENT_TARGETS
 if ("all" IN_LIST _COMPONENT_TARGETS OR "target-all" IN_LIST FEATURES)
     set(_COMPONENT_TARGETS "all")
 endif()
+
+# Based on https://github.com/numba/llvmlite/blob/master/conda-recipes/llvm-lto-static.patch
+list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/llvm-lto-static.patch")
+list(APPEND _COMPONENT_FLAGS "-DLLVM_BUILD_STATIC=ON")
 
 # Appyl patches
 vcpkg_apply_patches(
