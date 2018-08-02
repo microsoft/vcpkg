@@ -104,7 +104,6 @@ set(_LLVM_ALL_TARGETS
 set(_COMPONENT_FLAGS "")
 set(_COMPONENT_PATCHES "")
 set(_COMPONENT_TARGETS "")
-set(_COMPONENT_SANITIZER "")
 
 foreach(_feature IN LISTS FEATURES)
     if ("${_feature}" MATCHES "^enable-")
