@@ -20,6 +20,14 @@ set(LLVM_VERSION "6.0.1")
 # https://github.com/llvm-mirror/clang/tree/master/cmake/caches
 # CLANG_ENABLE_BOOTSTRAP
 
+# Doxygen requires Graphviz (dot) - Add to PATH
+# https://ci.appveyor.com/api/buildjobs/w96x513p36twogfm/artifacts/graphviz-windows.zip
+# Make Graphviz multiplatform
+
+# Selecting targets does not work, whatever I make its passes as "-DLLVM_TARGETS_TO_BUILD="Mips" "X86""
+# and not as -DLLVM_TARGETS_TO_BUILD="Mips;X86".
+# It's a CMake bug or VCPKG?
+
 if("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "WindowsStore")
     message(FATAL_ERROR "llvm cannot currently be built for UWP")
 endif()
@@ -66,162 +74,209 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-# Handle features
+# From: https://github.com/llvm-mirror/llvm/blob/master/CMakeLists.txt
+set(_LLVM_ALL_TARGETS
+  AArch64
+  AMDGPU
+  ARM
+  BPF
+  Hexagon
+  Lanai
+  Mips
+  MSP430
+  NVPTX
+  PowerPC
+  Sparc
+  SystemZ
+  X86
+  XCore
+)
 set(_COMPONENT_FLAGS "")
 set(_COMPONENT_PATCHES "")
 set(_COMPONENT_TARGETS "")
 
-foreach(_feature IN LISTS ALL_FEATURES)
-    # Uppercase the feature name and replace "-" with "_"
-    string(TOUPPER "${_feature}" _FEATURE)
-    string(REPLACE "-" "_" _FEATURE "${_FEATURE}")
+foreach(_feature IN LISTS FEATURES)
+    if ("${_feature}" MATCHES "^enable-")
+        # Uppercase the feature name and replace "-" with "_"
+        string(TOUPPER "${_feature}" _FEATURE)
+        string(REPLACE "-" "_" _FEATURE "${_FEATURE}")
 
-    if(_feature IN_LIST FEATURES)
-        if ("${_feature}" MATCHES "^enable-")
-            list(APPEND _COMPONENT_FLAGS "-DLLVM_${_FEATURE}=ON")
-        elseif ("${_feature}" MATCHES "^abi-breaking-checks-")
-            string(REPLACE "abi-breaking-checks-" "" _featureValue "${_feature}")
-            foreach(_components IN LISTS _COMPONENT_FLAGS)
-                if ("${_components}" MATCHES "^-DLLVM_ABI_BREAKING_CHECKS=")
-                    string(REPLACE "-${_featureValue}" "" _featureName "${_feature}")
-                    message(FATAL_ERROR "The feature ${_featureName} is already set.")
-                endif()
-            endforeach()
-            if ("${_featureValue}" STREQUAL "on")
-                list(APPEND _COMPONENT_FLAGS "-DLLVM_ABI_BREAKING_CHECKS=FORCE_ON")
-            elseif ("${_featureValue}" STREQUAL "off")
-                list(APPEND _COMPONENT_FLAGS "-DLLVM_ABI_BREAKING_CHECKS=FORCE_OFF")
+        list(APPEND _COMPONENT_FLAGS "-DLLVM_${_FEATURE}=ON")
+    elseif ("${_feature}" MATCHES "^abi-breaking-checks-")
+        string(REPLACE "abi-breaking-checks-" "" _featureValue "${_feature}")
+        foreach(_components IN LISTS _COMPONENT_FLAGS)
+            if ("${_components}" MATCHES "^-DLLVM_ABI_BREAKING_CHECKS=")
+                string(REPLACE "-${_featureValue}" "" _featureName "${_feature}")
+                message(FATAL_ERROR "The feature ${_featureName} is already set.")
             endif()
-        elseif ("${_feature}" STREQUAL "single")
-            list(APPEND _COMPONENT_FLAGS "-DLLVM_LINK_LLVM_DYLIB=ON")
-        elseif ("${_feature}" STREQUAL "clang")
-            llvm_download(
-                NAME clang
-                PKG_NAME cfe
-                SHA512 f64ba9290059f6e36fee41c8f32bf483609d31c291fcd2f77d41fecfdf3c8233a5e23b93a1c73fed03683823bd6e72757ed993dd32527de3d5f2b7a64bb031b9
-            )
-        elseif ("${_feature}" STREQUAL "clang-tools-extra")
-            llvm_download(
-                NAME clang-tools-extra
-                SHA512 cf29d117b6dabcb7a8e5f6dab5016ce5a5c8f475679001a43fd5c935f2c368f37cdef50aae2080a1e4524f647f6d83458d4a5dec5b45d03fb374f463caf7c3f5
-                EXTRACT_TO tools/clang/tools
-                FOLDER_NAME extra
-            )
-            list(APPEND _COMPONENT_FLAGS "-DCLANG_ENABLE_STATIC_ANALYZER=ON")
-        elseif ("${_feature}" STREQUAL "lldb")
-            llvm_download(
-                NAME lldb
-                SHA512 93ee2efea07276f8838bc2b3ff039cab8c7a1a6965647aaa4dee99f55c6465d5584ed3be87b144e2e32b5acc7db9cec56d89404de764a2f53643ed154d213721
-            )
-            # Based on https://github.com/llvm-mirror/lldb/commit/b16e8c12330ba21fb45b7d8b1e6ee3f8510b2846
-            # Only applies for LLDB 6.x version
-            list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/lldb-mi-signal-msvc.patch")
-
-            if (NOT "lldb-python3" IN_LIST FEATURES OR NOT "lldb-python2" IN_LIST FEATURES)
-                list(APPEND _COMPONENT_FLAGS "-DLLDB_DISABLE_PYTHON=ON")
-            endif()
-        elseif ("${_feature}" MATCHES "^lldb-python")
-            if ("-DLLDB_BUILD_FRAMEWORK=ON" IN_LIST _COMPONENT_FLAGS)
-                message(FATAL_ERROR "You can not compile lldb with support for python2 and python3. Please select only one version.")
-            endif()
-
-            vcpkg_find_acquire_program(SWIG)
-            get_filename_component(SWIG_DIR "${SWIG}" DIRECTORY)
-            set(ENV{PATH} "$ENV{PATH};${SWIG_DIR}")
-
-            # Requires python and swig
-            string(REPLACE "lldb-python" "" _featureValue "${_feature}")
-            find_package (Python${_featureValue} COMPONENTS Development)
-            list(APPEND _COMPONENT_FLAGS "-DPYTHON_HOME=${Python${_featureValue}_ROOT_DIR}")
-            list(APPEND _COMPONENT_FLAGS "-DLLDB_BUILD_FRAMEWORK=ON")
-        elseif ("${_feature}" STREQUAL "lld")
-            llvm_download(
-                NAME lld
-                SHA512 856ccc125255ab6184919f1424372f0f8a5de8477777047e2ab1a131a2ecec0caa9b5163d01409c7c510df9c794f0bc8d65cc904df2baf6462ef53bc163e002a
-            )
-        elseif ("${_feature}" STREQUAL "polly")
-            llvm_download(
-                NAME polly
-                SHA512 1851223653f8c326ddf39f5cf9fc18a2310299769c011795d8e1a5abef2834d2c800fae318e6370547d3b6b35199ce29fe76582b64493ab8fa506aff59272539
-            )
-        elseif ("${_feature}" STREQUAL "polly-gpu")
-            if (NOT "nvptx" IN_LIST _COMPONENT_TARGETS)
-                list(APPEND _COMPONENT_TARGETS "nvptx")
-            endif()
-            list(APPEND _COMPONENT_FLAGS "-DPOLLY_ENABLE_GPGPU_CODEGEN=ON")
-        elseif ("${_feature}" STREQUAL "compiler-rt")
-            llvm_download(
-                NAME compiler-rt
-                EXTRACT_TO projects
-                SHA512 69850c1ad92c66977fa217cbfb42a6a3f502fbe3d1a08daa7fc4cfeb617a7736d231f8ad8d93b10b1ae29bd753315d2a2d70f9ff1f4d18a9a7cc81758d91f963
-            )
-        elseif ("${_feature}" STREQUAL "libunwind")
-            message(WARNING "The LLVM's libunwinder does not work with Visual Studio yet.")
-            if (NOT "${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "")
-                llvm_download(
-                    NAME libunwind
-                    SHA512 78568c28720abdd1f8471c462421df9965e05e1db048689d16ac85378716c4080ec1723af78e9f61d133b0ff82ac8c1f0dde7fd42d194485f62c1a17c02db37f
-                )
-                list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_CROSS_UNWINDING=ON")
-                list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_ARM_WMMX=ON")
-                if ("compiler-rt" IN_LIST FEATURES)
-                    list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_USE_COMPILER_RT=ON")
-                endif()
-                list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_STATIC=ON")
-                list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_SHARED=OFF")
-            endif()
-        elseif ("${_feature}" STREQUAL "libomp")
-            llvm_download(
-                NAME openmp
-                EXTRACT_TO projects
-                SHA512 abb956583e5d11d0c6f6d97183c081d658616a74933be884a591eaa3d8c4bb04f08f02016d2c86d7384c7ff1aa44fb949b0d967fc0ff50e3132aaba412e9add8
-            )
-            vcpkg_find_acquire_program(PERL)
-            get_filename_component(PERL_PATH ${PERL} DIRECTORY)
-            set(ENV{PATH} "$ENV{PATH};${PERL_PATH}")
-            list(APPEND _COMPONENT_FLAGS "-DLIBOMP_OMPT_OPTIONAL=ON")
-        elseif ("${_feature}" MATCHES "^libomp-")
-            string(REPLACE "libomp-" "" _featureValue "${_feature}")
-
-            if ("${_featureValue}" STREQUAL "debugger")
-                list(APPEND _COMPONENT_FLAGS "-DLIBOMP_USE_DEBUGGER=ON")
-            elseif ("${_featureValue}" STREQUAL "stats")
-                if ("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "")
-                    message(WARNING "The stats-gathering code does not work with Visual Studio yet.")
-                else()
-                    list(APPEND _COMPONENT_FLAGS "-DLIBOMP_STATS=ON")
-                endif()
-            elseif ("${_featureValue}" STREQUAL "ompt-off")
-                list(APPEND _COMPONENT_FLAGS "-DLIBOMP_OMPT_SUPPORT=OFF")
-            endif()
-        elseif ("${_feature}" STREQUAL "doxygen")
-            vcpkg_find_acquire_program(DOXYGEN)
-            get_filename_component(DOXYGEN_PATH ${DOXYGEN} DIRECTORY)
-            set(ENV{PATH} "$ENV{PATH};${DOXYGEN_PATH}")
-
-            list(APPEND _COMPONENT_FLAGS "-DLLVM_BUILD_DOCS=ON")
-            list(APPEND _COMPONENT_FLAGS "-DLLVM_ENABLE_DOXYGEN=ON")
-            list(APPEND _COMPONENT_FLAGS "-DLLVM_DOXYGEN_SVG=ON")
-        #elseif ("${_feature}" STREQUAL "libcxx")
-        # TODO must be compiled with CLANG when using ninja
-        #    llvm_download(
-        #        NAME libcxx
-        #        EXTRACT_TO projects
-        #        SHA512 c04f628b0924d76f035f615b59d19ce42dfc19c9a8eea4fe2b22a95cfe5a037ebdb30943fd741443939df5b4cf692bc1e51c840fefefbd134e3afbe2a75fe875
-        #    )
-        #    llvm_download(
-        #        NAME libcxxabi
-        #        EXTRACT_TO projects
-        #        SHA512 bbb4c7b412e295cb735f637df48a83093eef45ed5444f7766790b4b047f75fd5fd634d8f3a8ac33a5c1407bd16fd450ba113f60a9bcc1d0a911fe0c54e9c81f2
-        #    )
-        elseif ("${_feature}" STREQUAL "lto-static")
-            # Based on https://github.com/numba/llvmlite/blob/master/conda-recipes/llvm-lto-static.patch
-            list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/llvm-lto-static.patch")
-        elseif ("${_feature}" STREQUAL "libclang-static")
-            list(APPEND _COMPONENT_FLAGS "-DLIBCLANG_BUILD_STATIC=ON")
+        endforeach()
+        if ("${_featureValue}" STREQUAL "on")
+            list(APPEND _COMPONENT_FLAGS "-DLLVM_ABI_BREAKING_CHECKS=FORCE_ON")
+        elseif ("${_featureValue}" STREQUAL "off")
+            list(APPEND _COMPONENT_FLAGS "-DLLVM_ABI_BREAKING_CHECKS=FORCE_OFF")
         endif()
+    elseif ("${_feature}" STREQUAL "single")
+        if ("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "")
+            message(FATAL_ERROR "The libLVVM (single shared library) does not work on Windows yet.")
+        else()
+            list(APPEND _COMPONENT_FLAGS "-DLLVM_LINK_LLVM_DYLIB=ON")
+        endif()
+    elseif ("${_feature}" STREQUAL "clang")
+        llvm_download(
+            NAME clang
+            PKG_NAME cfe
+            SHA512 f64ba9290059f6e36fee41c8f32bf483609d31c291fcd2f77d41fecfdf3c8233a5e23b93a1c73fed03683823bd6e72757ed993dd32527de3d5f2b7a64bb031b9
+        )
+    elseif ("${_feature}" STREQUAL "clang-tools-extra")
+        llvm_download(
+            NAME clang-tools-extra
+            SHA512 cf29d117b6dabcb7a8e5f6dab5016ce5a5c8f475679001a43fd5c935f2c368f37cdef50aae2080a1e4524f647f6d83458d4a5dec5b45d03fb374f463caf7c3f5
+            EXTRACT_TO tools/clang/tools
+            FOLDER_NAME extra
+        )
+        list(APPEND _COMPONENT_FLAGS "-DCLANG_ENABLE_STATIC_ANALYZER=ON")
+    elseif ("${_feature}" STREQUAL "lldb")
+        llvm_download(
+            NAME lldb
+            SHA512 93ee2efea07276f8838bc2b3ff039cab8c7a1a6965647aaa4dee99f55c6465d5584ed3be87b144e2e32b5acc7db9cec56d89404de764a2f53643ed154d213721
+        )
+        # Based on https://github.com/llvm-mirror/lldb/commit/b16e8c12330ba21fb45b7d8b1e6ee3f8510b2846
+        # Only applies for LLDB 6.x version
+        list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/lldb-mi-signal-msvc.patch")
+
+        if (NOT "lldb-python3" IN_LIST FEATURES OR NOT "lldb-python2" IN_LIST FEATURES)
+            list(APPEND _COMPONENT_FLAGS "-DLLDB_DISABLE_PYTHON=ON")
+        endif()
+    elseif ("${_feature}" MATCHES "^lldb-python")
+        if ("-DLLDB_BUILD_FRAMEWORK=ON" IN_LIST _COMPONENT_FLAGS)
+            message(FATAL_ERROR "You can not compile lldb with support for python2 and python3. Please select only one version.")
+        endif()
+
+        vcpkg_find_acquire_program(SWIG)
+        get_filename_component(SWIG_DIR "${SWIG}" DIRECTORY)
+        set(ENV{PATH} "$ENV{PATH};${SWIG_DIR}")
+
+        # Requires python and swig
+        string(REPLACE "lldb-python" "" _featureValue "${_feature}")
+        find_package (Python${_featureValue} COMPONENTS Development)
+        list(APPEND _COMPONENT_FLAGS "-DPYTHON_HOME=${Python${_featureValue}_ROOT_DIR}")
+        list(APPEND _COMPONENT_FLAGS "-DLLDB_BUILD_FRAMEWORK=ON")
+    elseif ("${_feature}" STREQUAL "lld")
+        llvm_download(
+            NAME lld
+            SHA512 856ccc125255ab6184919f1424372f0f8a5de8477777047e2ab1a131a2ecec0caa9b5163d01409c7c510df9c794f0bc8d65cc904df2baf6462ef53bc163e002a
+        )
+    elseif ("${_feature}" STREQUAL "polly")
+        llvm_download(
+            NAME polly
+            SHA512 1851223653f8c326ddf39f5cf9fc18a2310299769c011795d8e1a5abef2834d2c800fae318e6370547d3b6b35199ce29fe76582b64493ab8fa506aff59272539
+        )
+    elseif ("${_feature}" STREQUAL "polly-gpu")
+        if ("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "")
+            message(FATAL_ERROR "The polly-gpu does not work on Windows yet.")
+        else()
+            list(APPEND _COMPONENT_FLAGS "-DPOLLY_ENABLE_GPGPU_CODEGEN=ON")
+        endif()
+    elseif ("${_feature}" STREQUAL "compiler-rt")
+        llvm_download(
+            NAME compiler-rt
+            EXTRACT_TO projects
+            SHA512 69850c1ad92c66977fa217cbfb42a6a3f502fbe3d1a08daa7fc4cfeb617a7736d231f8ad8d93b10b1ae29bd753315d2a2d70f9ff1f4d18a9a7cc81758d91f963
+        )
+    elseif ("${_feature}" STREQUAL "libunwind")
+        if ("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "")
+            message(FATAL_ERROR "The libunwind does not work on Windows yet.")
+        else()
+            llvm_download(
+                NAME libunwind
+                SHA512 78568c28720abdd1f8471c462421df9965e05e1db048689d16ac85378716c4080ec1723af78e9f61d133b0ff82ac8c1f0dde7fd42d194485f62c1a17c02db37f
+            )
+            list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_CROSS_UNWINDING=ON")
+            list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_ARM_WMMX=ON")
+            if ("compiler-rt" IN_LIST FEATURES)
+                list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_USE_COMPILER_RT=ON")
+            endif()
+            list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_STATIC=ON")
+            list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_SHARED=OFF")
+        endif()
+    elseif ("${_feature}" STREQUAL "libomp")
+        llvm_download(
+            NAME openmp
+            EXTRACT_TO projects
+            SHA512 abb956583e5d11d0c6f6d97183c081d658616a74933be884a591eaa3d8c4bb04f08f02016d2c86d7384c7ff1aa44fb949b0d967fc0ff50e3132aaba412e9add8
+        )
+        vcpkg_find_acquire_program(PERL)
+        get_filename_component(PERL_PATH ${PERL} DIRECTORY)
+        set(ENV{PATH} "$ENV{PATH};${PERL_PATH}")
+        list(APPEND _COMPONENT_FLAGS "-DLIBOMP_OMPT_OPTIONAL=ON")
+    elseif ("${_feature}" MATCHES "^libomp-")
+        string(REPLACE "libomp-" "" _featureValue "${_feature}")
+
+        if ("${_featureValue}" STREQUAL "debugger")
+            if ("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "")
+                message(FATAL_ERROR "The libomp-debugger does not work on Windows yet.")
+            else()
+                list(APPEND _COMPONENT_FLAGS "-DLIBOMP_USE_DEBUGGER=ON")
+            endif()
+        elseif ("${_featureValue}" STREQUAL "stats")
+            if ("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "")
+                message(FATAL_ERROR "The stats-gathering code does not work on Windows yet.")
+            else()
+                list(APPEND _COMPONENT_FLAGS "-DLIBOMP_STATS=ON")
+            endif()
+        elseif ("${_featureValue}" STREQUAL "ompt-off")
+            list(APPEND _COMPONENT_FLAGS "-DLIBOMP_OMPT_SUPPORT=OFF")
+        endif()
+    elseif ("${_feature}" STREQUAL "doxygen")
+        vcpkg_find_acquire_program(DOXYGEN)
+        get_filename_component(DOXYGEN_PATH ${DOXYGEN} DIRECTORY)
+        set(ENV{PATH} "$ENV{PATH};${DOXYGEN_PATH}")
+
+        set(_GRAPHVIZ_PATH ${CURRENT_BUILDTREES_DIR}/graphviz)
+        vcpkg_download_distfile(GRAPHVIZ_ARCHIVE
+            URLS "https://ci.appveyor.com/api/buildjobs/w96x513p36twogfm/artifacts/graphviz-windows.zip"
+            FILENAME "graphviz-windows.zip"
+            SHA512 b5b17e2986772237556ba93b91bd9dab49c60d41c169a9b3cd7faa14db5a7fcb0d6fe3ddc087e5e2424b62bc01ca5c8b686f11c9a7f52b449fb7a5d69ce2a0c1
+        )
+        vcpkg_extract_source_archive(${GRAPHVIZ_ARCHIVE} ${_GRAPHVIZ_PATH})
+        set(ENV{PATH} "$ENV{PATH};${_GRAPHVIZ_PATH}/Graphviz/bin")
+
+        list(APPEND _COMPONENT_FLAGS "-DLLVM_BUILD_DOCS=ON")
+        list(APPEND _COMPONENT_FLAGS "-DLLVM_ENABLE_DOXYGEN=ON")
+        list(APPEND _COMPONENT_FLAGS "-DLLVM_DOXYGEN_SVG=ON")
+    #elseif ("${_feature}" STREQUAL "libcxx")
+    # TODO must be compiled with CLANG when using ninja
+    #    llvm_download(
+    #        NAME libcxx
+    #        EXTRACT_TO projects
+    #        SHA512 c04f628b0924d76f035f615b59d19ce42dfc19c9a8eea4fe2b22a95cfe5a037ebdb30943fd741443939df5b4cf692bc1e51c840fefefbd134e3afbe2a75fe875
+    #    )
+    #    llvm_download(
+    #        NAME libcxxabi
+    #        EXTRACT_TO projects
+    #        SHA512 bbb4c7b412e295cb735f637df48a83093eef45ed5444f7766790b4b047f75fd5fd634d8f3a8ac33a5c1407bd16fd450ba113f60a9bcc1d0a911fe0c54e9c81f2
+    #    )
+    elseif ("${_feature}" STREQUAL "lto-static")
+        # Based on https://github.com/numba/llvmlite/blob/master/conda-recipes/llvm-lto-static.patch
+        list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/llvm-lto-static.patch")
+    elseif ("${_feature}" STREQUAL "libclang-static")
+        list(APPEND _COMPONENT_FLAGS "-DLIBCLANG_BUILD_STATIC=ON")
+    elseif ("${_feature}" MATCHES "^target-")
+        string(REPLACE "target-" "" _featureValue "${_feature}")
+        foreach(_TARGETNAME IN LISTS _LLVM_ALL_TARGETS)
+            string(TOLOWER "${_TARGETNAME}" _targetName)
+            message(STATUS "${_targetName}-${_TARGETNAME}")
+            if ("${_featureValue}" STREQUAL "${_targetName}")
+                list(APPEND _COMPONENT_TARGETS "${_TARGETNAME}")
+                break()
+            endif()
+        endforeach()
     endif()
 endforeach()
+
+if ("all" IN_LIST _COMPONENT_TARGETS OR "target-all" IN_LIST FEATURES)
+    set(_COMPONENT_TARGETS "all")
+endif()
 
 # Appyl patches
 vcpkg_apply_patches(
@@ -238,6 +293,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        # "-DLLVM_TARGETS_TO_BUILD=${_COMPONENT_TARGETS}"
         ${_COMPONENT_FLAGS}
         -DLLVM_INCLUDE_TESTS=OFF
         -DLLVM_INCLUDE_EXAMPLES=OFF
