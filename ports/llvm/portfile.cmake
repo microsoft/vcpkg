@@ -137,27 +137,11 @@ foreach(_feature IN LISTS ALL_FEATURES)
                 NAME polly
                 SHA512 1851223653f8c326ddf39f5cf9fc18a2310299769c011795d8e1a5abef2834d2c800fae318e6370547d3b6b35199ce29fe76582b64493ab8fa506aff59272539
             )
-        elseif ("${_feature}" MATCHES "^polly-gpu-")
-            if ("-DPOLLY_ENABLE_GPGPU_CODEGEN=ON" IN_LIST _COMPONENT_FLAGS)
-                message(FATAL_ERROR "The polly feature can not be build with OpencCL and CUDA together.")
-            endif()
+        elseif ("${_feature}" STREQUAL "polly-gpu")
             if (NOT "nvptx" IN_LIST _COMPONENT_TARGETS)
                 list(APPEND _COMPONENT_TARGETS "nvptx")
             endif()
             list(APPEND _COMPONENT_FLAGS "-DPOLLY_ENABLE_GPGPU_CODEGEN=ON")
-
-            string(REPLACE "polly-gpu-" "" _featureValue "${_feature}")
-            if ("${_featureValue}" STREQUAL "cuda")
-                check_language(CUDA)
-                if(NOT CMAKE_CUDA_COMPILER)
-                    message(FATAL_ERROR "CUDA must be installed for polly feature.")
-                endif()
-            elseif ("${_featureValue}" STREQUAL "opencl")
-                find_package(OpenCL REQUIRED)
-                if(NOT OpenCL_FOUND)
-                    message(FATAL_ERROR "OpenCL must be installed for polly feature.")
-                endif()
-            endif()
         elseif ("${_feature}" STREQUAL "compiler-rt")
             llvm_download(
                 NAME compiler-rt

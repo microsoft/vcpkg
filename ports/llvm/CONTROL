@@ -29,12 +29,8 @@ Feature: polly
 Description: Build with Poly-Loop-Optimizer.
 Build-Depends: llvm[enable-eh]
 
-Feature: polly-gpu-cuda
-Description: Build with Poly-Loop-Optimizer using CUDA/OpenCL. This feature requires CUDA installed.
-Build-Depends: llvm[polly]
-
-Feature: polly-gpu-opencl
-Description: Build with Poly-Loop-Optimizer using CUDA/OpenCL. This feature requires OpenCL installed.
+Feature: polly-gpu
+Description: Build with Poly-Loop-Optimizer with CUDA/OpenCL runtime for GPGPU CodeGen.
 Build-Depends: llvm[polly]
 
 Feature: compiler-rt
