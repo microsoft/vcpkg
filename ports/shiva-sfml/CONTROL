@@ -1,0 +1,4 @@
+Source: shiva-sfml
+Version: 0.7
+Description: Modern C++ Game Engine
+Build-Depends: sfml (windows), shiva
