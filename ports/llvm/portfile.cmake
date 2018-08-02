@@ -149,7 +149,7 @@ foreach(_feature IN LISTS FEATURES)
         )
         list(APPEND _COMPONENT_FLAGS "-DCLANG_ENABLE_STATIC_ANALYZER=ON")
     elseif ("${_feature}" STREQUAL "clang-enable-z3-analyzer")
-        ist(APPEND _COMPONENT_FLAGS "-DCLANG_ANALYZER_BUILD_Z3=ON")
+        list(APPEND _COMPONENT_FLAGS "-DCLANG_ANALYZER_BUILD_Z3=ON")
     elseif ("${_feature}" STREQUAL "lldb")
         llvm_download(
             NAME lldb
