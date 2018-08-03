@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Milerius/shiva
-        REF 0.3
-        SHA512 1ffb89019bceaa5d7968f812d33dbadbba847c510fefb43774a9a0a5a970190d166f9f0f43069f3d0e5e8ce6d9c1b103f77f063bfb11223439c09dc2b1e52f6d
+        REF 0.7
+        SHA512 08591ce23ef717330c2fdc0518c383bebeda1a5eed93011b44280a409154729add70a0e913c2dae0d8332f4d6aee931ab8ba9957097435eadcff38e692e348ec
         HEAD_REF master
 )
 

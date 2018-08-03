@@ -7,6 +7,10 @@ Default-Features:
 Feature: bullet
 Description: BulletIntegration library
 Build-Depends: bullet3
+
+Feature: glm
+Description: GlmIntegration library
+Build-Depends: glm
 #Feature: ovr
 #Description: OvrIntegration library
 #Build-Depends: ovrsdk

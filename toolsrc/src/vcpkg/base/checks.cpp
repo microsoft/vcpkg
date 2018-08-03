@@ -14,12 +14,12 @@ namespace vcpkg::Checks
         if (have_entered) std::terminate();
         have_entered = true;
 
-        const auto elapsed_us = GlobalState::timer.lock()->microseconds();
+        const auto elapsed_us_inner = GlobalState::timer.lock()->microseconds();
 
-        Debug::println("Exiting after %d us", static_cast<int>(elapsed_us));
+        bool debugging = GlobalState::debugging;
 
         auto metrics = Metrics::g_metrics.lock();
-        metrics->track_metric("elapsed_us", elapsed_us);
+        metrics->track_metric("elapsed_us", elapsed_us_inner);
         GlobalState::debugging = false;
         metrics->flush();
 
@@ -27,6 +27,12 @@ namespace vcpkg::Checks
         SetConsoleCP(GlobalState::g_init_console_cp);
         SetConsoleOutputCP(GlobalState::g_init_console_output_cp);
 #endif
+
+        auto elapsed_us = GlobalState::timer.lock()->microseconds();
+        if (debugging)
+            System::println("[DEBUG] Exiting after %d us (%d us)",
+                            static_cast<int>(elapsed_us),
+                            static_cast<int>(elapsed_us_inner));
 
         fflush(nullptr);
 

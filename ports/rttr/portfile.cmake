@@ -38,7 +38,14 @@ if(REL_EXES)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/rttr)
     file(COPY ${REL_EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/rttr)
 endif()
-file(REMOVE ${REL_EXES} ${DBG_EXES})
+
+if(REL_EXES)
+	file(REMOVE ${REL_EXES})
+endif(REL_EXES)
+
+if(DBG_EXES)
+	file(REMOVE ${DBG_EXES})
+endif(DBG_EXES)
 
 #Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/rttr)

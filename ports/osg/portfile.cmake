@@ -19,11 +19,9 @@ endif()
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO openscenegraph/OpenSceneGraph
-	REF OpenSceneGraph-3.5.6
-	SHA512 bfd52115bc1f48dfb6eaeae1d8c62741c6487e6a8933b5ef97c979800b285e3a5300c9d55eb961e1973314c06b2525b547db683b0395c1f44b46d17cded38dba
+	REF OpenSceneGraph-3.6.2-rc3
+	SHA512 369c0790ad990cc0f5403209b6e8afe73069f4a467883f9031ac0539bdd090f2cd71487285e515da39bb5a5f67a15548edd479d489dc57374b481ed32ebed0eb
 	HEAD_REF master
-	PATCHES
-        "${CURRENT_PORT_DIR}/fix-C2039.patch"
 )
 
 vcpkg_configure_cmake(
@@ -49,12 +47,12 @@ file(REMOVE_RECURSE ${OSG_TOOLS})
 file(GLOB OSG_TOOLS_DBG ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
 file(REMOVE_RECURSE ${OSG_TOOLS_DBG})
 
-file(GLOB OSG_PLUGINS_DBG ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-3.5.6/*.dll)
-file(COPY ${OSG_PLUGINS_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/osg/osgPlugins-3.5.6)
-file(GLOB OSG_PLUGINS_REL ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-3.5.6/*.dll)
-file(COPY ${OSG_PLUGINS_REL} DESTINATION ${OSG_TOOL_PATH}/osgPlugins-3.5.6)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-3.5.6/)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-3.5.6/)
+file(GLOB OSG_PLUGINS_DBG ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-3.6.2/*.dll)
+file(COPY ${OSG_PLUGINS_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/osg/osgPlugins-3.6.2)
+file(GLOB OSG_PLUGINS_REL ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-3.6.2/*.dll)
+file(COPY ${OSG_PLUGINS_REL} DESTINATION ${OSG_TOOL_PATH}/osgPlugins-3.6.2)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/osgPlugins-3.6.2/)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/osgPlugins-3.6.2/)
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/osg)
