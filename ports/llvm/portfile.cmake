@@ -87,6 +87,9 @@ set(_LLVM_ALL_TARGETS
 )
 
 set(_COMPONENT_FLAGS "")
+set(_COMPONENT_DEBUG_FLAGS "")
+set(_COMPONENT_RELEASE_FLAGS "")
+
 set(_COMPONENT_PATCHES "")
 set(_COMPONENT_TARGETS "")
 set(_COMPONENT_SANITIZERS "")
@@ -282,7 +285,7 @@ foreach(_feature IN LISTS FEATURES)
     elseif ("${_feature}" MATCHES "^use-sanitizer-")
         llvm_assert_array(
             NAME "sanitizer"
-            WHERE ${_COMPONENT_FLAGS}
+            WHERE ${_COMPONENT_RELEASE_FLAGS}
             MATCH "-DLLVM_USE_SANITIZE_COVERAGE=ON$"
         )
 
@@ -301,11 +304,11 @@ foreach(_feature IN LISTS FEATURES)
             set(_COMPONENT_SANITIZERS "Address;Undefined")
         endif()
 
-        list(APPEND _COMPONENT_FLAGS "-DLLVM_USE_SANITIZE_COVERAGE=ON")
+        list(APPEND _COMPONENT_RELEASE_FLAGS "-DLLVM_USE_SANITIZE_COVERAGE=ON")
 
         if ("compiler-rt" IN_LIST FEATURES)
             message(STATUS "Warning: Avoiding building the sanitizers themselves with sanitizers enabled because of \"compiler-rt\" is enabled.")
-            list(APPEND _COMPONENT_FLAGS "-DLLVM_BUILD_RUNTIME=OFF")
+            list(APPEND _COMPONENT_RELEASE_FLAGS "-DLLVM_BUILD_RUNTIME=OFF")
         endif()
     endif()
 endforeach()
@@ -325,6 +328,7 @@ endif()
 
 if (NOT "${_COMPONENT_SANITIZERS}" STREQUAL "")
     set(ENV{LLVM_USE_SANITIZER} "${_COMPONENT_SANITIZERS}")
+    message(STATUS "Warning: Sanitizers will be compiled in Release build.")
 endif()
 
 # Based on https://github.com/numba/llvmlite/blob/master/conda-recipes/llvm-lto-static.patch
@@ -350,6 +354,10 @@ vcpkg_configure_cmake(
         -DLLVM_INCLUDE_TESTS=OFF
         -DLLVM_INCLUDE_EXAMPLES=OFF
         -DLLVM_TOOLS_INSTALL_DIR=tools/llvm
+    OPTIONS_RELEASE 
+        ${_COMPONENT_RELEASE_FLAGS}
+    OPTIONS_DEBUG
+        ${_COMPONENT_DEBUG_FLAGS}
 )
 
 # Invoke install
