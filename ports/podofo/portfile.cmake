@@ -1,8 +1,8 @@
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/podofo-0.9.6)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://sourceforge.net/projects/podofo/files/podofo/0.9.6/podofo-0.9.6.tar.gz/download"
-    FILENAME "podofo.tar.gz"
+    URLS "https://sourceforge.net/projects/podofo/files/podofo/0.9.6/podofo-0.9.6.tar.gz/download"
+    FILENAME "podofo-0.9.6.tar.gz"
     SHA512 35c1a457758768bdadc93632385f6b9214824fead279f1b85420443fb2135837cefca9ced476df0d47066f060e9150e12fcd40f60fa1606b177da433feb20130
 )
 vcpkg_extract_source_archive(${ARCHIVE})
