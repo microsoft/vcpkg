@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f8da6cf..9ae2c1c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -359,6 +359,11 @@ option(LLVM_ENABLE_THREADS "Use threads if available." ON)
+ 
+ option(LLVM_ENABLE_ZLIB "Use zlib for compression/decompression if available." ON)
+ 
++# Set LLVM_TARGETS_TO_BUILD from ENV
++if(NOT "$ENV{LLVM_TARGETS_TO_BUILD}" STREQUAL "")
++  set(LLVM_TARGETS_TO_BUILD "$ENV{LLVM_TARGETS_TO_BUILD}")
++endif()
++
+ if( LLVM_TARGETS_TO_BUILD STREQUAL "all" )
+   set( LLVM_TARGETS_TO_BUILD ${LLVM_ALL_TARGETS} )
+ endif()
+@@ -437,6 +442,11 @@ option(LLVM_USE_SPLIT_DWARF
+ option(LLVM_POLLY_LINK_INTO_TOOLS "Statically link Polly into tools (if available)" ON)
+ option(LLVM_POLLY_BUILD "Build LLVM with Polly" ON)
+ 
++# Set LLVM_USE_SANITIZER from ENV
++if(NOT "$ENV{LLVM_USE_SANITIZER}" STREQUAL "")
++  set(LLVM_USE_SANITIZER "$ENV{LLVM_USE_SANITIZER}")
++endif()
++
+ if (EXISTS ${LLVM_MAIN_SRC_DIR}/tools/polly/CMakeLists.txt)
+   set(POLLY_IN_TREE TRUE)
+ elseif(LLVM_EXTERNAL_POLLY_SOURCE_DIR)

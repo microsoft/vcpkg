@@ -7,26 +7,11 @@ set(VCPKG_LIBRARY_LINKAGE static)
 set(LLVM_VERSION "6.0.1")
 
 # TODO: 
-# what about LLVM_BUILD_STATIC? --- make it on base of the triplet name
-# Not supported on windows, but can be used on linux/mac
-# LTO must be also static when triplet is static
-# list(APPEND _COMPONENT_FLAGS "-DLLVM_BUILD_STATIC=ON")
 # list(APPEND _COMPONENT_FLAGS "-DLIBOMP_ENABLE_SHARED=OFF")
-
-# CLANG_ANALYZER_BUILD_Z3
-# CLANG_ENABLE_PROTO_FUZZER
-
-# Clang maybe use stage2?
-# https://github.com/llvm-mirror/clang/tree/master/cmake/caches
-# CLANG_ENABLE_BOOTSTRAP
 
 # Doxygen requires Graphviz (dot) - Add to PATH
 # https://ci.appveyor.com/api/buildjobs/w96x513p36twogfm/artifacts/graphviz-windows.zip
 # Make Graphviz multiplatform
-
-# Selecting targets does not work, whatever I make its passes as "-DLLVM_TARGETS_TO_BUILD="Mips" "X86""
-# and not as -DLLVM_TARGETS_TO_BUILD="Mips;X86".
-# It's a CMake bug or VCPKG?
 
 if("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "WindowsStore")
     message(FATAL_ERROR "llvm cannot currently be built for UWP")
@@ -104,6 +89,7 @@ set(_LLVM_ALL_TARGETS
 set(_COMPONENT_FLAGS "")
 set(_COMPONENT_PATCHES "")
 set(_COMPONENT_TARGETS "")
+set(_COMPONENT_SANITIZERS "")
 
 foreach(_feature IN LISTS FEATURES)
     if ("${_feature}" MATCHES "^enable-")
@@ -136,7 +122,10 @@ foreach(_feature IN LISTS FEATURES)
             PKG_NAME cfe
             SHA512 f64ba9290059f6e36fee41c8f32bf483609d31c291fcd2f77d41fecfdf3c8233a5e23b93a1c73fed03683823bd6e72757ed993dd32527de3d5f2b7a64bb031b9
         )
-        list(APPEND _COMPONENT_FLAGS "-DLIBCLANG_BUILD_STATIC=ON")
+        list(APPEND _COMPONENT_FLAGS
+            "-DLIBCLANG_BUILD_STATIC=ON"
+            "-DCLANG_ENABLE_BOOTSTRAP=ON"
+        )
     elseif ("${_feature}" STREQUAL "clang-protobuf-fuzzer")
         list(APPEND _COMPONENT_FLAGS "-DCLANG_ENABLE_PROTO_FUZZER=ON")
     elseif ("${_feature}" STREQUAL "clang-tools-extra")
@@ -229,6 +218,7 @@ foreach(_feature IN LISTS FEATURES)
         # On Windows libomp does not support static linkage
         if ("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "")
             message(STATUS "Warning: On Windows platform libomp does not support static linkage. ")
+            list(APPEND _COMPONENT_FLAGS "-DLIBOMP_ENABLE_STATIC=OFF")
         else()
             list(APPEND _COMPONENT_FLAGS "-DLIBOMP_ENABLE_SHARED=OFF")
         endif()
@@ -284,7 +274,6 @@ foreach(_feature IN LISTS FEATURES)
         string(REPLACE "target-" "" _featureValue "${_feature}")
         foreach(_TARGETNAME IN LISTS _LLVM_ALL_TARGETS)
             string(TOLOWER "${_TARGETNAME}" _targetName)
-            message(STATUS "${_targetName}-${_TARGETNAME}")
             if ("${_featureValue}" STREQUAL "${_targetName}")
                 list(APPEND _COMPONENT_TARGETS "${_TARGETNAME}")
                 break()
@@ -294,23 +283,22 @@ foreach(_feature IN LISTS FEATURES)
         llvm_assert_array(
             NAME "sanitizer"
             WHERE ${_COMPONENT_FLAGS}
-            MATCH "-DLLVM_USE_SANITIZER="
+            MATCH "-DLLVM_USE_SANITIZE_COVERAGE=ON$"
         )
 
         string(REPLACE "use-sanitizer-" "" _featureValue "${_feature}")
         if ("${_featureValue}" STREQUAL "addr")
-            list(APPEND _COMPONENT_FLAGS "-DLLVM_USE_SANITIZER=Address")
+            set(_COMPONENT_SANITIZERS "Address")
         elseif ("${_featureValue}" STREQUAL "mem")
-            list(APPEND _COMPONENT_FLAGS "-DLLVM_USE_SANITIZER=Memory")
+            set(_COMPONENT_SANITIZERS "Memory")
         elseif ("${_featureValue}" STREQUAL "mem-origins")
-            list(APPEND _COMPONENT_FLAGS "-DLLVM_USE_SANITIZER=MemoryWithOrigins")
+            set(_COMPONENT_SANITIZERS "MemoryWithOrigins")
         elseif ("${_featureValue}" STREQUAL "undef")
-            list(APPEND _COMPONENT_FLAGS "-DLLVM_USE_SANITIZER=Undefined")
+            set(_COMPONENT_SANITIZERS "Undefined")
         elseif ("${_featureValue}" STREQUAL "thread")
-            list(APPEND _COMPONENT_FLAGS "-DLLVM_USE_SANITIZER=Thread")
+            set(_COMPONENT_SANITIZERS "Thread")
         elseif ("${_featureValue}" STREQUAL "addr-undef")
-            # list(APPEND _COMPONENT_FLAGS "-DLLVM_USE_SANITIZER=Address\;Undefined")
-            message(FATAL_ERROR "The feature use-sanitizer-addr-undef is not supported yet.")
+            set(_COMPONENT_SANITIZERS "Address;Undefined")
         endif()
 
         list(APPEND _COMPONENT_FLAGS "-DLLVM_USE_SANITIZE_COVERAGE=ON")
@@ -325,6 +313,18 @@ endforeach()
 # If the "all" target is defined in FEATURES, replace _COMPONENT_TARGETS
 if ("all" IN_LIST _COMPONENT_TARGETS OR "target-all" IN_LIST FEATURES)
     set(_COMPONENT_TARGETS "all")
+endif()
+
+if (NOT "${_COMPONENT_TARGETS}" STREQUAL "" OR NOT "${_COMPONENT_SANITIZERS}" STREQUAL "")
+    list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/llvm-set-using-env.patch")
+endif()
+
+if (NOT "${_COMPONENT_TARGETS}" STREQUAL "")
+    set(ENV{LLVM_TARGETS_TO_BUILD} "${_COMPONENT_TARGETS}")
+endif()
+
+if (NOT "${_COMPONENT_SANITIZERS}" STREQUAL "")
+    set(ENV{LLVM_USE_SANITIZER} "${_COMPONENT_SANITIZERS}")
 endif()
 
 # Based on https://github.com/numba/llvmlite/blob/master/conda-recipes/llvm-lto-static.patch
@@ -346,7 +346,6 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        # "-DLLVM_TARGETS_TO_BUILD=${_COMPONENT_TARGETS}"
         ${_COMPONENT_FLAGS}
         -DLLVM_INCLUDE_TESTS=OFF
         -DLLVM_INCLUDE_EXAMPLES=OFF
