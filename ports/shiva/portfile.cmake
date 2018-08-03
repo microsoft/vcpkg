@@ -4,7 +4,7 @@ vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Milerius/shiva
         REF 0.7
-        SHA512 2f2717d860ad55ca97f2a6e9ee50a82f88def78585feafb2fb961fd16a3d239607807a1352f1988f081c6375670bcbe409e27b9786547b83762702dbdfbbfe82
+        SHA512 08591ce23ef717330c2fdc0518c383bebeda1a5eed93011b44280a409154729add70a0e913c2dae0d8332f4d6aee931ab8ba9957097435eadcff38e692e348ec
         HEAD_REF master
 )
 
