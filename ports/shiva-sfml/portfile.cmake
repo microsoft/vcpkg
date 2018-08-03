@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Milerius/shiva
-        REF 0.7
-        SHA512 08591ce23ef717330c2fdc0518c383bebeda1a5eed93011b44280a409154729add70a0e913c2dae0d8332f4d6aee931ab8ba9957097435eadcff38e692e348ec
+        REF 0.7.2
+        SHA512 0bd1543ba6067d303640820a17a24ec02c6ab8333f86bd3431c09f5a2ea4ca47379ec06a90e3a0658dba967504cb8a63f85c2f0cbfb51a7c59130b235948d600
         HEAD_REF master
 	)
 
@@ -22,9 +22,30 @@ file(GLOB PLUGINS ${SOURCE_PATH}/bin/systems/*)
 message(STATUS "PLUGINS -> ${PLUGINS}")
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/shiva-sfml)
 
+
+##! Pre removing
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
+
+##! Include
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib)
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include/shiva-sfml)
-file(COPY ${PLUGINS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+
+##! Release
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/shiva)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/shiva/plugins)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/shiva/plugins/shiva-sfml)
+
+##! Debug
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/shiva)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/shiva/plugins)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/shiva/plugins/shiva-sfml)
+
+##! Copy Plugins
+file(COPY ${PLUGINS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib/shiva/plugins/shiva-sfml)
+file(COPY ${PLUGINS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/shiva/plugins/shiva-sfml)
+
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/shiva-sfml/empty.h "")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/shiva-sfml/copyright "")
