@@ -1,11 +1,11 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/check-0.12.0)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/libcheck/check/releases/download/0.12.0/check-0.12.0.tar.gz"
-    FILENAME "check-0.12.0.zip"
-    SHA512 403454d166ddd4e25f96d6c52028f4173f4a5ad4a249dd782e3a8d5db1ad0178956d74577cf0d4c963a5a7d09077a59042a74f74d6b528b7212e18ab5def1dd9
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO libcheck/check
+    REF 0.12.0
+    SHA512 f7b6452b69f999a90e86a8582d980c0c1b74ba5629ee34455724463ba62bfe3501ad0415aa771170f5c638a7a253f123bf87cbef25aadc6569a7a3a4d10fce90
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -14,18 +14,13 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# make share
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/check)
-file(INSTALL ${CURRENT_PACKAGES_DIR}/cmake/check.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/check)
-file(INSTALL ${CURRENT_PACKAGES_DIR}/cmake/check-debug.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/check)
+file(RENAME ${CURRENT_PACKAGES_DIR}/cmake/check.cmake ${CURRENT_PACKAGES_DIR}/cmake/check-config.cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
 # cleanup
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING.LESSER DESTINATION ${CURRENT_PACKAGES_DIR}/share/check RENAME copyright)
-
 
 vcpkg_copy_pdbs()
