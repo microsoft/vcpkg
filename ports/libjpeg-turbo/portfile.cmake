@@ -5,10 +5,6 @@ vcpkg_from_github(
     REF 2.0.0
     SHA512 e280d94ed35d41a881dfe78048620ab0345449137237cab3505ca3afed28dd11a9b6cb249406121ab79ad07f12bf4df6d29bfdbe0bb719c2169b5d5ce2aa33d0
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/add-options-for-exes-docs-headers.patch"
 )
 
