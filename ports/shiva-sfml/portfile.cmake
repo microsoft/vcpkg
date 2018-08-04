@@ -18,34 +18,44 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(GLOB PLUGINS ${SOURCE_PATH}/bin/systems/*)
+
+if (VCPKG_CMAKE_SYSTEM_NAME)
+  file(GLOB PLUGINS ${SOURCE_PATH}/bin/systems/*)
+else()
+  file(GLOB PLUGINS ${SOURCE_PATH}/bin/systems/*.dll)
+endif()
 message(STATUS "PLUGINS -> ${PLUGINS}")
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/shiva-sfml)
 
 
+if (VCPKG_CMAKE_SYSTEM_NAME)
+  set(SUFFIX_BINARY lib)
+else()
+  set(SUFFIX_BINARY bin)
+endif()
 ##! Pre removing
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/${SUFFIX_BINARY})
 
 ##! Include
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include/shiva-sfml)
 
 ##! Release
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/shiva)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/shiva/plugins)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/shiva/plugins/shiva-sfml)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/${SUFFIX_BINARY})
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/${SUFFIX_BINARY}/shiva)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/${SUFFIX_BINARY}/shiva/plugins)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/${SUFFIX_BINARY}/shiva/plugins/shiva-sfml)
 
 ##! Debug
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/shiva)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/shiva/plugins)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/shiva/plugins/shiva-sfml)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/${SUFFIX_BINARY})
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/${SUFFIX_BINARY}/shiva)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/${SUFFIX_BINARY}/shiva/plugins)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/${SUFFIX_BINARY}/shiva/plugins/shiva-sfml)
 
 ##! Copy Plugins
-file(COPY ${PLUGINS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib/shiva/plugins/shiva-sfml)
-file(COPY ${PLUGINS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/shiva/plugins/shiva-sfml)
+file(COPY ${PLUGINS} DESTINATION ${CURRENT_PACKAGES_DIR}/${SUFFIX_BINARY}/shiva/plugins/shiva-sfml)
+file(COPY ${PLUGINS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/${SUFFIX_BINARY}/shiva/plugins/shiva-sfml)
 
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/shiva-sfml/empty.h "")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/shiva-sfml/copyright "")
