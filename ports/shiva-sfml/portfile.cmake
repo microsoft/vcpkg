@@ -32,7 +32,6 @@ message(STATUS "PLUGINS_DEBUG -> ${PLUGINS_DEBUG}")
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/shiva-sfml)
 
 
-
 if (VCPKG_CMAKE_SYSTEM_NAME)
   set(SUFFIX_BINARY lib)
 else()
@@ -106,9 +105,9 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME)
 	find_file(LUADLL_D lua.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
 	find_file(FMTDLL_D fmtd.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
 	find_file(FLACDLL_D FLAC.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-	find_file(FREETYPEDLL_D freetyped.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-	find_file(LIBBZ2DLL_D libbz2d.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-	find_file(LIBPNG16DLL_D libpng16d.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
+	find_file(FREETYPEDLL_D freetype.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
+	find_file(LIBBZ2DLL_D libbz2.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
+	find_file(LIBPNG16DLL_D libpng16.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
 	find_file(OGGDLL_D ogg.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
 	find_file(OPENAL32DLL_D OpenAL32.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
 	find_file(SFMLAUDIO2DLL_D sfml-audio-d-2.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
@@ -118,7 +117,7 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME)
 	find_file(VORBISDLL_D vorbis.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
 	find_file(VORBISENCDLL_D vorbisenc.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
 	find_file(VORBISFILEDLL_D vorbisfile.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-	find_file(ZLIB1DLL_D zlibd1.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
+	find_file(ZLIB1DLL_D zlib1.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
 	set(DEPENDANCIES_DEBUG_DLL
 		${LUADLL_D}
 		${FMTDLL_D}
