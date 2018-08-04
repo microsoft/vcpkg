@@ -32,6 +32,7 @@ message(STATUS "PLUGINS_DEBUG -> ${PLUGINS_DEBUG}")
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/shiva-sfml)
 
 
+
 if (VCPKG_CMAKE_SYSTEM_NAME)
   set(SUFFIX_BINARY lib)
 else()
