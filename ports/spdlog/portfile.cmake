@@ -17,9 +17,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# Move cmake files, ensuring they will be 3 directories up the import prefix
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/spdlog)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/spdlog/ ${CURRENT_PACKAGES_DIR}/share/spdlog/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/spdlog)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
