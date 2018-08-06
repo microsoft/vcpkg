@@ -12,19 +12,12 @@ vcpkg_from_github(
     SHA512 e470050b89289908ec64dafaa954ad9bfc8f557ba7dafcab440d9efde474f736c025d8202bfd81a508070d9cf678f3fb1f3687d72a849ce86edd1ee90ad13c3b
     HEAD_REF master)
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "shared" BUILD_SHARED_LIBS)
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS 
         -DBUILD_CLAR=OFF
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
-    OPTIONS_DEBUG
-        -DBUILD_CLAR=OFF
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
 )
-	
 
 vcpkg_install_cmake()
 
