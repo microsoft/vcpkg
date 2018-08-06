@@ -296,53 +296,49 @@ set(ul_HEADERS
     src/util/ulRTTI.h)
 
 # Create and configure the targets
-add_library(fnt STATIC ${fnt_SOURCES} ${fnt_HEADERS})
-target_include_directories(fnt PRIVATE src/sg)
-target_include_directories(fnt PRIVATE src/util)
+add_library(plib_fnt STATIC ${fnt_SOURCES} ${fnt_HEADERS})
+target_include_directories(plib_fnt PRIVATE src/sg src/util)
 
-add_library(js STATIC ${js_SOURCES} ${js_HEADERS})
-target_include_directories(js PRIVATE src/util)
+add_library(plib_js STATIC ${js_SOURCES} ${js_HEADERS})
+target_include_directories(plib_js PRIVATE src/util)
 
-add_library(net STATIC ${net_SOURCES} ${net_HEADERS})
-target_include_directories(net PRIVATE src/util)
+add_library(plib_net STATIC ${net_SOURCES} ${net_HEADERS})
+target_include_directories(plib_net PRIVATE src/util)
 
-add_library(psl STATIC ${psl_SOURCES} ${psl_HEADERS})
-target_include_directories(psl PRIVATE src/util)
+add_library(plib_psl STATIC ${psl_SOURCES} ${psl_HEADERS})
+target_include_directories(plib_psl PRIVATE src/util)
 
-add_library(puAux STATIC ${puAux_SOURCES} ${puAux_HEADERS})
-target_include_directories(puAux PRIVATE src/fnt)
-target_include_directories(puAux PRIVATE src/pui)
-target_include_directories(puAux PRIVATE src/sg)
-target_include_directories(puAux PRIVATE src/util)
+add_library(plib_puAux STATIC ${puAux_SOURCES} ${puAux_HEADERS})
+target_include_directories(plib_puAux PRIVATE
+    src/fnt
+    src/pui
+    src/sg
+    src/util
+)
 
-add_library(pui STATIC ${pui_SOURCES} ${pui_HEADERS})
-target_include_directories(pui PRIVATE src/fnt)
-target_include_directories(pui PRIVATE src/sg)
-target_include_directories(pui PRIVATE src/util)
+add_library(plib_pui STATIC ${pui_SOURCES} ${pui_HEADERS})
+target_include_directories(plib_pui PRIVATE src/fnt src/sg src/util)
 
-add_library(pw STATIC ${pw_SOURCES} ${pw_HEADERS})
-target_include_directories(pw PRIVATE src/util)
+add_library(plib_pw STATIC ${pw_SOURCES} ${pw_HEADERS})
+target_include_directories(plib_pw PRIVATE src/util)
 
-add_library(sg STATIC ${sg_SOURCES} ${sg_HEADERS})
-target_include_directories(sg PRIVATE src/util)
+add_library(plib_sg STATIC ${sg_SOURCES} ${sg_HEADERS})
+target_include_directories(plib_sg PRIVATE src/util)
 
-add_library(sl STATIC ${sl_SOURCES} ${sl_HEADERS})
-target_include_directories(sl PRIVATE src/util)
+add_library(plib_sl STATIC ${sl_SOURCES} ${sl_HEADERS})
+target_include_directories(plib_sl PRIVATE src/util)
 
-add_library(ssg STATIC ${ssg_SOURCES} ${ssg_HEADERS})
-target_include_directories(ssg PRIVATE src/sg)
-target_include_directories(ssg PRIVATE src/util)
+add_library(plib_ssg STATIC ${ssg_SOURCES} ${ssg_HEADERS})
+target_include_directories(plib_ssg PRIVATE src/sg src/util)
 
-add_library(ssgAux STATIC ${ssgAux_SOURCES} ${ssgAux_HEADERS})
-target_include_directories(ssgAux PRIVATE src/sg)
-target_include_directories(ssgAux PRIVATE src/ssg)
-target_include_directories(ssgAux PRIVATE src/util)
+add_library(plib_ssgAux STATIC ${ssgAux_SOURCES} ${ssgAux_HEADERS})
+target_include_directories(plib_ssgAux PRIVATE src/sg src/ssg src/util)
 
-add_library(ul STATIC ${ul_SOURCES} ${ul_HEADERS})
+add_library(plib_ul STATIC ${ul_SOURCES} ${ul_HEADERS})
 
 # Install
 install(
-    TARGETS fnt js net psl puAux pui pw sg sl ssg ssgAux ul
+    TARGETS plib_fnt plib_js plib_net plib_psl plib_puAux plib_pui plib_pw plib_sg plib_sl plib_ssg plib_ssgAux plib_ul
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
