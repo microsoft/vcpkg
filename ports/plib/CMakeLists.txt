@@ -344,6 +344,8 @@ add_library(ul STATIC ${ul_SOURCES} ${ul_HEADERS})
 install(
     TARGETS fnt js net psl puAux pui pw sg sl ssg ssgAux ul
     ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
 )
 
 install(
