@@ -3,13 +3,16 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(VCPKG_LIBRARY_LINKAGE "static")
 endif()
 
+# The current Live555 version from http://www.live555.com/liveMedia/public/
+set(LIVE_VERSION 2018.07.07)
+set(LIVE_SHA e7d4ddf51e9666c6ebe9a46976035b68fea94be54825535ffb04006cd242b9d3ad08250305206442bed3500d1e8d628ccf44302c485f63a9e244b3f8b1e27fe4)
+
 include(vcpkg_common_functions)
-set(LIVE_VERSION 2018.02.28)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${LIVE_VERSION}/live)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.live555.com/liveMedia/public/live.${LIVE_VERSION}.tar.gz"
     FILENAME "live.${LIVE_VERSION}.tar.gz"
-    SHA512 0e445d0b494d82e5826ecea2ec4196472781d3524d2fea95efef83ec5dc0d211334e3ea34dc83b758ed847e2b4290727b299b4118133ca2468911c7cb2053a55
+    SHA512 ${LIVE_SHA}
 )
 vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src/${LIVE_VERSION})
 

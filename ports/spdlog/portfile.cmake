@@ -3,9 +3,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gabime/spdlog
-    REF v0.17.0
-    SHA512 c3d7c7b2d221b33ad4f4685207ff606d271635bd1ad7edab763a823880386f604d264343139f37b36a3e8654d6382dbed0d431556728676523e390b8fb4b2aef
-    HEAD_REF master
+    REF v1.0.0
+    SHA512 4d3cbc1926be513256b5837a53fce425f6d352bb4ab262074f205450cd4eadc09feea9dc8d8c03b3f1e9792bcfbcff414be79e51d58234f540946428bbd88cd1
+    HEAD_REF v1.x
 )
 
 vcpkg_configure_cmake(
@@ -17,9 +17,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# Move cmake files, ensuring they will be 3 directories up the import prefix
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/spdlog)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake/spdlog/ ${CURRENT_PACKAGES_DIR}/share/spdlog/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/spdlog)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)

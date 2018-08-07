@@ -42,6 +42,12 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/share
     ${CURRENT_PACKAGES_DIR}/share
 )
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/tiff)
+configure_file(
+    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
+    ${CURRENT_PACKAGES_DIR}/share/tiff
+    @ONLY
+)
 file(INSTALL
     ${SOURCE_PATH}/COPYRIGHT
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/tiff

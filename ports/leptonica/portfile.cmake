@@ -6,13 +6,10 @@ vcpkg_from_github(
     REF 1.74.4
     SHA512 3b9d0be937883f733f72cbdf0b624ec245d9256a8b4622997f437d309efd7ad9695ad1cbe2224d543eb3ef8c44833567b3cc9a95e9a774ef9046b7acaf0ae744
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/fix-cmakelists.patch
         ${CMAKE_CURRENT_LIST_DIR}/use-tiff-libraries.patch
+        ${CMAKE_CURRENT_LIST_DIR}/find-dependency.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC)

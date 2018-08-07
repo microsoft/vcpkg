@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF v1.60
-    SHA512  405b79ced59b4e4e45eebdbf278435f325a553e04338702dbdd3f30c7a39cb52a4dad91443bd99d19f61e60cd78d544fc1436ae2d10fef7c3a8a46cbb62685d9
+    REF v1.62
+    SHA512  aa9701481d108e6b2f030cac71fdef49e299cfa930c8ec7e74847757a059b8c629f09cb7d7d1eb4cb9d3ef263404906dfa52670850c6a490d56eaff981d56049
     HEAD_REF master
 )
 

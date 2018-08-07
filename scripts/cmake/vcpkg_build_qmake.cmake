@@ -33,7 +33,6 @@ function(vcpkg_build_qmake)
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${LOG_SUFFIX}
             LOGNAME package-${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX}
         )
-        message(STATUS "Package ${LOG_PREFIX}-${TARGET_TRIPLET}-${LOG_SUFFIX} done")
     endfunction()
 
     # This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings

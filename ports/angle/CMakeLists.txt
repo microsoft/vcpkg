@@ -295,6 +295,8 @@ if(NOT DISABLE_INSTALL_HEADERS)
         DESTINATION include
         FILES_MATCHING PATTERN "*.h"
         PATTERN "GLSLANG" EXCLUDE
+        PATTERN "EGL" EXCLUDE
+        PATTERN "KHR" EXCLUDE
         PATTERN "export.h" EXCLUDE
     )
 endif()

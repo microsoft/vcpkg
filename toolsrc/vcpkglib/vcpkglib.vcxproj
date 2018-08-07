@@ -137,7 +137,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\include\pch.h" />
-    <ClInclude Include="..\include\vcpkg\base\archives.h" />
+    <ClInclude Include="..\include\vcpkg\archives.h" />
+    <ClInclude Include="..\include\vcpkg\base\cache.h" />
     <ClInclude Include="..\include\vcpkg\base\checks.h" />
     <ClInclude Include="..\include\vcpkg\base\chrono.h" />
     <ClInclude Include="..\include\vcpkg\base\cofffilereader.h" />
@@ -147,6 +148,7 @@
     <ClInclude Include="..\include\vcpkg\base\expected.h" />
     <ClInclude Include="..\include\vcpkg\base\files.h" />
     <ClInclude Include="..\include\vcpkg\base\graphs.h" />
+    <ClInclude Include="..\include\vcpkg\base\hash.h" />
     <ClInclude Include="..\include\vcpkg\base\lazy.h" />
     <ClInclude Include="..\include\vcpkg\base\lineinfo.h" />
     <ClInclude Include="..\include\vcpkg\base\machinetype.h" />
@@ -180,6 +182,7 @@
     <ClInclude Include="..\include\vcpkg\sourceparagraph.h" />
     <ClInclude Include="..\include\vcpkg\statusparagraph.h" />
     <ClInclude Include="..\include\vcpkg\statusparagraphs.h" />
+    <ClInclude Include="..\include\vcpkg\tools.h" />
     <ClInclude Include="..\include\vcpkg\triplet.h" />
     <ClInclude Include="..\include\vcpkg\update.h" />
     <ClInclude Include="..\include\vcpkg\userconfig.h" />
@@ -196,13 +199,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\src\vcpkg\base\archives.cpp" />
+    <ClCompile Include="..\src\vcpkg\archives.cpp" />
     <ClCompile Include="..\src\vcpkg\base\checks.cpp" />
     <ClCompile Include="..\src\vcpkg\base\chrono.cpp" />
     <ClCompile Include="..\src\vcpkg\base\cofffilereader.cpp" />
     <ClCompile Include="..\src\vcpkg\base\downloads.cpp" />
     <ClCompile Include="..\src\vcpkg\base\enums.cpp" />
     <ClCompile Include="..\src\vcpkg\base\files.cpp" />
+    <ClCompile Include="..\src\vcpkg\base\hash.cpp" />
     <ClCompile Include="..\src\vcpkg\base\lineinfo.cpp" />
     <ClCompile Include="..\src\vcpkg\base\machinetype.cpp" />
     <ClCompile Include="..\src\vcpkg\base\stringrange.cpp" />
@@ -221,8 +225,6 @@
     <ClCompile Include="..\src\vcpkg\commands.edit.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.env.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.exportifw.cpp" />
-    <ClCompile Include="..\src\vcpkg\commands.fetch.cpp" />
-    <ClCompile Include="..\src\vcpkg\commands.hash.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.import.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.integrate.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.list.cpp" />
@@ -249,6 +251,7 @@
     <ClCompile Include="..\src\vcpkg\sourceparagraph.cpp" />
     <ClCompile Include="..\src\vcpkg\statusparagraph.cpp" />
     <ClCompile Include="..\src\vcpkg\statusparagraphs.cpp" />
+    <ClCompile Include="..\src\vcpkg\tools.cpp" />
     <ClCompile Include="..\src\vcpkg\triplet.cpp" />
     <ClCompile Include="..\src\vcpkg\update.cpp" />
     <ClCompile Include="..\src\vcpkg\userconfig.cpp" />

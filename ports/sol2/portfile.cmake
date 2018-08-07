@@ -3,12 +3,9 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ThePhD/sol2
-    REF v2.20.3
-    SHA512 f1d39a6762c7c9c40bffd08129a80c4c8dd70ffcaadc195cbcd681471e6978176d0ae06d4b8db6aabc05b0ae2670c10bd287b9e859ec7810f2441c3c6c8fe521
+    REF 7f1c2e3ecfc2b78e396c60e067f6486ae1df66c5
+    SHA512 a7e84d3eca26fb3cd4eb73ce0daa2f6f41136e9e919f27713d2d903ec7793017dfd87e7c4fdf54b9ee9b601da1412dad02a191dd614661dfa96da521dfc58a65
     HEAD_REF develop
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/sol2_fix_targets.patch
-        ${CMAKE_CURRENT_LIST_DIR}/sol2_fix_install_interface.patch
 )
 
 vcpkg_configure_cmake(
