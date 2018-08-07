@@ -1,9 +1,9 @@
 #include "pch.h"
 
-#include <vcpkg/base/hash.h>
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/enums.h>
+#include <vcpkg/base/hash.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/stringliteral.h>
 #include <vcpkg/base/system.h>
@@ -473,11 +473,6 @@ namespace vcpkg::Build
         abi_tag_entries.emplace_back(
             AbiEntry{"control", vcpkg::Hash::get_file_hash(fs, config.port_dir / "CONTROL", "SHA1")});
 
-        if (pre_build_info.cmake_system_name == "Linux")
-        {
-            abi_tag_entries.emplace_back(AbiEntry{"toolchain", "1"});
-        }
-
         abi_tag_entries.emplace_back(AbiEntry{"triplet", pre_build_info.triplet_abi_tag});
 
         const std::string features = Strings::join(";", config.feature_list);
@@ -798,21 +793,6 @@ namespace vcpkg::Build
         const fs::path ports_cmake_script_path = paths.scripts / "get_triplet_environment.cmake";
         const fs::path triplet_file_path = paths.triplets / (triplet.canonical_name() + ".cmake");
 
-        const std::string triplet_abi_tag = [&]() {
-            static std::map<fs::path, std::string> s_hash_cache;
-
-            auto it_hash = s_hash_cache.find(triplet_file_path);
-            if (it_hash != s_hash_cache.end())
-            {
-                return it_hash->second;
-            }
-            auto hash = Hash::get_file_hash(paths.get_filesystem(), triplet_file_path, "SHA1");
-            s_hash_cache.emplace(triplet_file_path, hash);
-            return hash;
-
-            return std::string();
-        }();
-
         const auto cmd_launch_cmake = System::make_cmake_cmd(cmake_exe_path,
                                                              ports_cmake_script_path,
                                                              {
@@ -824,7 +804,6 @@ namespace vcpkg::Build
         const std::vector<std::string> lines = Strings::split(ec_data.output, "\n");
 
         PreBuildInfo pre_build_info;
-        pre_build_info.triplet_abi_tag = triplet_abi_tag;
 
         const auto e = lines.cend();
         auto cur = std::find(lines.cbegin(), e, FLAG_GUID);
@@ -899,6 +878,47 @@ namespace vcpkg::Build
 
             Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown variable name %s", line);
         }
+
+        pre_build_info.triplet_abi_tag = [&]() {
+            const auto& fs = paths.get_filesystem();
+            static std::map<fs::path, std::string> s_hash_cache;
+
+            auto it_hash = s_hash_cache.find(triplet_file_path);
+            if (it_hash != s_hash_cache.end())
+            {
+                return it_hash->second;
+            }
+            auto hash = Hash::get_file_hash(fs, triplet_file_path, "SHA1");
+
+            if (auto p = pre_build_info.external_toolchain_file.get())
+            {
+                hash += "-";
+                hash += Hash::get_file_hash(fs, *p, "SHA1");
+            }
+            else if (pre_build_info.cmake_system_name == "Linux")
+            {
+                hash += "-";
+                hash += Hash::get_file_hash(fs, paths.scripts / "toolchains" / "linux.cmake", "SHA1");
+            }
+            else if (pre_build_info.cmake_system_name == "Darwin")
+            {
+                hash += "-";
+                hash += Hash::get_file_hash(fs, paths.scripts / "toolchains" / "osx.cmake", "SHA1");
+            }
+            else if (pre_build_info.cmake_system_name == "FreeBSD")
+            {
+                hash += "-";
+                hash += Hash::get_file_hash(fs, paths.scripts / "toolchains" / "freebsd.cmake", "SHA1");
+            }
+            else if (pre_build_info.cmake_system_name == "Android")
+            {
+                hash += "-";
+                hash += Hash::get_file_hash(fs, paths.scripts / "toolchains" / "android.cmake", "SHA1");
+            }
+
+            s_hash_cache.emplace(triplet_file_path, hash);
+            return hash;
+        }();
 
         return pre_build_info;
     }
