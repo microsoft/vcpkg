@@ -8,6 +8,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         "${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch"
+        # Remove the following patch when updating protobuf to the next version (line and file)
+        "${CMAKE_CURRENT_LIST_DIR}/fix-iterators.patch"
 )
 
 if(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
