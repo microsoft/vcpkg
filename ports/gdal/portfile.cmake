@@ -37,6 +37,7 @@ foreach(BUILD_TYPE debug release)
         PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-debug-crt-flags.patch
         ${CMAKE_CURRENT_LIST_DIR}/no-my-bool.patch
+		${CMAKE_CURRENT_LIST_DIR}/ecw.patch
     )
 endforeach()
 
@@ -223,6 +224,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
   file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdal.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gdald.lib)
 else()
   file(GLOB EXE_FILES ${CURRENT_PACKAGES_DIR}/bin/*.exe)
+  file(COPY ${EXE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/gdal) 
   file(REMOVE ${EXE_FILES} ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)
   file(COPY ${SOURCE_PATH_DEBUG}/gdal${GDAL_VERSION_LIB}.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
   file(COPY ${SOURCE_PATH_DEBUG}/gdal_i.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
