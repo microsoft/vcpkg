@@ -8,14 +8,14 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgit2/libgit2
-    REF v0.27.3
-    SHA512 e470050b89289908ec64dafaa954ad9bfc8f557ba7dafcab440d9efde474f736c025d8202bfd81a508070d9cf678f3fb1f3687d72a849ce86edd1ee90ad13c3b
+    REF v0.27.4
+    SHA512 d27db86eb1b9f0d4057f8538ba1985ee76c3ca106e57d417fa9bff79d575f91a07ad28693112b58dc1d61d68116a82e6a145f12276158f2806b6c4964d741f61
     HEAD_REF master)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS 
+    OPTIONS
         -DBUILD_CLAR=OFF
 )
 
