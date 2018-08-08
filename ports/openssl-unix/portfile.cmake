@@ -60,4 +60,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/openssl)
 endif()
 
-vcpkg_test_cmake(PACKAGE_NAME "OpenSSL")
+vcpkg_test_cmake(PACKAGE_NAME OpenSSL MODULE)
