@@ -11,8 +11,8 @@ vcpkg_from_github(
         "${CMAKE_CURRENT_LIST_DIR}/uwp-createfile-getfilesize-addendum.patch"
 )
 
-string(COMPARE "${VCPKG_CRT_LINKAGE}" "static" CRT_LIB_STATIC)
-string(COMPARE "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" CRT_LIB_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
 option(BUILD_EXECUTABLES "Build sndfile tools and install to folder tools" OFF)
 
