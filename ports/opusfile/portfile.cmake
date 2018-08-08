@@ -12,8 +12,16 @@ vcpkg_from_github(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
+if("opusurl" IN_LIST FEATURES)
+    set(BUILD_OPUSURL ON)
+else()
+    set(BUILD_OPUSURL OFF)
+endif()
+
 vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH} 
-    PREFER_NINJA 
+    PREFER_NINJA
+    OPTIONS
+        -DBUILD_OPUSURL=${BUILD_OPUSURL} 
     OPTIONS_DEBUG 
         -DOPUSFILE_SKIP_HEADERS=ON)
 
