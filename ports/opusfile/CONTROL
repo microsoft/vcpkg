@@ -1,4 +1,8 @@
 Source: opusfile
-Version: 0.9-1
+Version: 0.9-3
 Description: Stand-alone decoder library for .opus streams
-Build-Depends: libogg, opus, openssl
+Build-Depends: libogg, opus
+
+Feature: opusurl
+Description: Support decoding of http(s) streams
+Build-Depends: openssl
