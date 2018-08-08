@@ -24,7 +24,7 @@ install(TARGETS opusfile
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib)
 
-if(OPUSFILE_WITH_OPENSSL)
+if(BUILD_OPUSURL)
     find_package(OpenSSL MODULE REQUIRED)
 
     add_library(opusurl
