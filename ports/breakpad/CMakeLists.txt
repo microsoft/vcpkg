@@ -59,7 +59,7 @@ install(TARGETS libbreakpad libbreakpad_client EXPORT unofficial-breakpad-target
 )
 
 if(INSTALL_HEADERS)
-    install(DIRECTORY src/client src/common src/google_breakpad  DESTINATION include/breakpad
+    install(DIRECTORY src/client src/common src/google_breakpad  DESTINATION include/
         FILES_MATCHING PATTERN "*.h"
         REGEX "/apple|/ios|/linux|/mac|/solaris|/android|/dwarf|/tests|/testdata|/unittests" EXCLUDE
     )
