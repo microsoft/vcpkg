@@ -117,7 +117,8 @@ function(vcpkg_from_github)
         # Hash the archive hash along with the patches. Take the first 10 chars of the hash
         set(PATCHSET_HASH "${_vdud_SHA512}")
         foreach(PATCH IN LISTS _vdud_PATCHES)
-            file(SHA512 ${PATCH} CURRENT_HASH)
+            get_filename_component(ABSOLUTE_PATCH "${PATCH}" ABSOLUTE BASE_DIR "${CURRENT_PORT_DIR}")
+            file(SHA512 ${ABSOLUTE_PATCH} CURRENT_HASH)
             string(APPEND PATCHSET_HASH ${CURRENT_HASH})
         endforeach()
 
