@@ -2,7 +2,10 @@ cmake_minimum_required(VERSION 3.0)
 project(cairo C)
 
 # Add include directories
-include_directories("." "./win32")
+include_directories(".")
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  include_directories("./win32")
+endif()
 
 file(GLOB SOURCES
 "cairo-analysis-surface.c"
@@ -112,15 +115,6 @@ file(GLOB SOURCES
 "cairo-user-font.c"
 "cairo-version.c"
 "cairo-wideint.c"
-# win32
-"win32/cairo-win32-debug.c"
-"win32/cairo-win32-device.c"
-"win32/cairo-win32-gdi-compositor.c"
-"win32/cairo-win32-system.c"
-"win32/cairo-win32-surface.c"
-"win32/cairo-win32-display-surface.c"
-"win32/cairo-win32-printing-surface.c"
-"win32/cairo-win32-font.c"
 # generic font support
 "cairo-cff-subset.c"
 "cairo-scaled-font-subsets.c"
@@ -148,6 +142,22 @@ file(GLOB SOURCES
 "cairo-ft-font.c"
 )
 
+# win32
+file(GLOB PLATFORM_SOURCES_WIN32
+"win32/cairo-win32-debug.c"
+"win32/cairo-win32-device.c"
+"win32/cairo-win32-gdi-compositor.c"
+"win32/cairo-win32-system.c"
+"win32/cairo-win32-surface.c"
+"win32/cairo-win32-display-surface.c"
+"win32/cairo-win32-printing-surface.c"
+"win32/cairo-win32-font.c"
+)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  list(APPEND SOURCES ${PLATFORM_SOURCES_WIN32})
+endif()
+
 set(CMAKE_DEBUG_POSTFIX "d")
 
 find_package(ZLIB REQUIRED)
@@ -172,10 +182,27 @@ add_definitions(
 # Find FontConfig
 find_library(FONTCONFIG_LIBRARY fontconfig)
 
+# additional features for macOS
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+  add_definitions(
+      -DHAVE_INTTYPES_H=1
+      -DHAVE_STDINT_H=1
+      -DHAVE_SYS_TYPES_H=1
+      -DHAVE_UINT64_T=1
+      -DHAVE_UNISTD_H=1
+      -DCAIRO_HAS_PTHREAD=1
+      -DCAIRO_HAS_REAL_PTHREAD=1)
+endif()
+
 add_library(cairo ${SOURCES})
-# cairo produces a lot of warnings which are disabled here because they otherwise fill up the log files
-target_compile_options(cairo PUBLIC "/wd4244" PUBLIC "/wd4146" PUBLIC "/wd4312" PUBLIC "/wd4267" 
-                             PUBLIC "/wd4996" PUBLIC "/wd4311" PUBLIC "/wd4334" PUBLIC "/wd4101")
+
+if(MSVC)
+  # cairo produces a lot of warnings which are disabled here because they otherwise fill up the log files
+  # NOTE: options only available to MSVC, clang in macOS doesn't understand these flags
+  target_compile_options(cairo PUBLIC "/wd4244" PUBLIC "/wd4146" PUBLIC "/wd4312" PUBLIC "/wd4267" 
+                               PUBLIC "/wd4996" PUBLIC "/wd4311" PUBLIC "/wd4334" PUBLIC "/wd4101")
+endif()
+
 target_link_libraries(cairo gdi32 msimg32 user32 ZLIB::ZLIB PNG::PNG freetype ${PIXMAN_LIBRARY} ${FONTCONFIG_LIBRARY})
 
 install(TARGETS cairo

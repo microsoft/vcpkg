@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO eclipse/paho.mqtt.c
-  REF v1.2.0
-  SHA512 ffad01a8f9f41049dd008e163136e4ecb8c7c51f7b49917201593b0844b15a8d2a413ddec06fa5b2d77e432f0603b71664a23afbb7c215121cebd7d419ccacfa
+  REF v1.2.1
+  SHA512 98828852ecd127445591df31416adaebebd30848c027361ae62af6b14b84e3cf2a4b90cab692b983148cbf93f710a9e2dd722a3da8c4fd17eb2149e4227a8860
   HEAD_REF master
 )
 
@@ -14,15 +14,14 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PAHO_BUILD_STATIC)
 vcpkg_apply_patches(
   SOURCE_PATH ${SOURCE_PATH}
   PATCHES
-  "${CMAKE_CURRENT_LIST_DIR}/disable_tests.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/remove_compiler_options.patch"
+  "${CMAKE_CURRENT_LIST_DIR}/remove_compiler_options.patch"
 )
 
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
-  OPTIONS -DPAHO_WITH_SSL=TRUE -DPAHO_BUILD_STATIC=${PAHO_BUILD_STATIC}
+  OPTIONS -DPAHO_WITH_SSL=TRUE -DPAHO_BUILD_STATIC=${PAHO_BUILD_STATIC} -DPAHO_ENABLE_TESTING=FALSE
 )
 
 

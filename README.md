@@ -1,7 +1,7 @@
 # Vcpkg <a href="#">![](https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/8476/badge)</a>
 
 ## Overview
-Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This tool and ecosystem are currently in a preview state; your involvement is vital to its success!
+Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This tool and ecosystem are constantly evolving; your involvement is vital to its success!
 
 For short description of available commands, run `vcpkg help`.
 
@@ -14,14 +14,14 @@ Prerequisites:
 
 To get started:
 ```
-> git clone https://github.com/Microsoft/vcpkg
+> git clone https://github.com/Microsoft/vcpkg.git
 > cd vcpkg
 
 PS> .\bootstrap-vcpkg.bat
 Ubuntu:~/$ ./bootstrap-vcpkg.sh
 ```
 
-Then, to hook up user-wide integration, run (note: requires admin on first use)
+Then, to hook up user-wide [integration](docs/users/integration.md), run (note: requires admin on first use)
 ```
 PS> .\vcpkg integrate install
 Ubuntu:~/$ ./vcpkg integrate install
@@ -37,7 +37,7 @@ The best way to use installed libraries with CMake is via the toolchain file `sc
 
 In Visual Studio, you can create a New Project (or open an existing one). All installed libraries are immediately ready to be `#include`'d and used in your project without additional configuration.
 
-For more information, see our [using a package](docs/examples/using-sqlite.md) example for the specifics. 
+For more information, see our [using a package](docs/examples/using-sqlite.md) example for the specifics.
 
 Additional notes on macOS and Linux support can be found in the [official announcement](https://blogs.msdn.microsoft.com/vcblog/2018/04/24/announcing-a-single-c-library-manager-for-linux-macos-and-windows-vcpkg/).
 

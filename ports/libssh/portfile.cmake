@@ -5,7 +5,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
 endif()
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libssh-0.7.5)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://red.libssh.org/attachments/download/218/libssh-0.7.5.tar.xz"
+    URLS "https://www.libssh.org/files/0.7/libssh-0.7.5.tar.xz"
     FILENAME "libssh-0.7.5.tar.xz"
     SHA512 6c7f539899caaedf13d66fa2e0fac1a475ecdfe389131abcbdf908bdebc50a0b9e6b0d43e67e52aea85c32f6aa68e46ca2f50695992f82ded83489f445a8e775
 )

@@ -5,6 +5,7 @@
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/metrics.h>
 #include <vcpkg/userconfig.h>
 
 namespace vcpkg::Commands::Integrate
@@ -369,6 +370,43 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 #endif
 
 #if defined(_WIN32)
+    static void integrate_powershell(const VcpkgPaths& paths)
+    {
+        static constexpr StringLiteral TITLE = "PowerShell Tab-Completion";
+        const fs::path script_path = paths.scripts / "addPoshVcpkgToPowershellProfile.ps1";
+
+        // Console font corruption workaround
+        SetConsoleCP(437);
+        SetConsoleOutputCP(437);
+
+        const std::string cmd = Strings::format(
+            R"(powershell -NoProfile -ExecutionPolicy Bypass -Command "& {& '%s' %s}")", script_path.u8string(), "");
+        const int rc = System::cmd_execute(cmd);
+
+        SetConsoleCP(CP_UTF8);
+        SetConsoleOutputCP(CP_UTF8);
+
+        if (rc)
+        {
+            System::println(System::Color::error,
+                            "%s\n"
+                            "Could not run:\n"
+                            "    '%s'",
+                            TITLE,
+                            script_path.generic_string());
+
+            {
+                auto locked_metrics = Metrics::g_metrics.lock();
+                locked_metrics->track_property("error", "powershell script failed");
+                locked_metrics->track_property("title", TITLE);
+            }
+        }
+
+        Checks::exit_with_code(VCPKG_LINE_INFO, rc);
+    }
+#endif
+
+#if defined(_WIN32)
     const char* const INTEGRATE_COMMAND_HELPSTRING =
         "  vcpkg integrate install         Make installed packages available user-wide. Requires admin privileges on "
         "first use\n"
@@ -423,9 +461,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         }
         if (args.command_arguments[0] == Subcommand::POWERSHELL)
         {
-            System::powershell_execute("PowerShell Tab-Completion",
-                                       paths.scripts / "addPoshVcpkgToPowershellProfile.ps1");
-            Checks::exit_success(VCPKG_LINE_INFO);
+            return integrate_powershell(paths);
         }
 #endif
 

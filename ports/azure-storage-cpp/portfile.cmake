@@ -7,14 +7,10 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-storage-cpp
-    REF v3.2.1
-    SHA512 8d1e8de439e52f53eb28b77e8adf394468f4861c2c4c1f79ec1437c72e3fc0bc871e4e2662ee58090748915b0f12ce6736a7cc6ede619d332686b9fb6a026c9f
+    REF v5.0.0
+    SHA512 730d082b4bf4ef73ee8aa5f8c87927149e4c2b65fc58dc9609f992ab8fcdd7e9fdbc4b77fbc46378ebd575196477dee7943db5d43724591d505aba511fe3052a
     HEAD_REF master
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/cmake.patch
-        ${CMAKE_CURRENT_LIST_DIR}/static-builds.patch
-        ${CMAKE_CURRENT_LIST_DIR}/support-cpprest-findpackage.patch
-        ${CMAKE_CURRENT_LIST_DIR}/glibmm-cmake.patch
         ${CMAKE_CURRENT_LIST_DIR}/pplx-do-while.patch
 )
 

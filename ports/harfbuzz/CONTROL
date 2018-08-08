@@ -1,4 +1,16 @@
 Source: harfbuzz
-Version: 1.7.6-1
+Version: 1.8.4
 Description: HarfBuzz OpenType text shaping engine
-Build-Depends: freetype, ragel, glib (windows)
+Build-Depends: freetype, ragel
+Default-Features: ucdn
+
+Feature: icu
+Build-Depends: icu
+Description: icu support for harfbuzz
+
+Feature: ucdn
+Description: Builtin (UCDN) Unicode callbacks support
+
+Feature: glib
+Build-Depends: glib
+Description: Glib Unicode callbacks support
