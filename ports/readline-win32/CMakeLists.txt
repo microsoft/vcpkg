@@ -5,15 +5,10 @@ add_definitions(-DREADLINE_LIBRARY)
 add_definitions(-DHAVE_CONFIG_H)
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
-if(CMAKE_BUILD_TYPE STREQUAL Debug)
-    add_definitions(-D_DEBUG)
-endif()
-
-add_definitions(-D_WINDOWS)
 if(BUILD_SHARED_LIBS)
     add_definitions(-DBUILD_READLINE_DLL)
-    add_definitions(-D_USRDLL)
-    add_definitions(-DREADLINE_EXPORTS)
+else()
+    add_definitions(-DREADLINE_STATIC)
 endif()
 
 include_directories(
