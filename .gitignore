@@ -277,14 +277,14 @@ __pycache__/
 
 .vscode/
 *.code-workspace
-buildtrees/
-build*/
-downloads/
-installed*/
-packages/
-scripts/buildsystems/tmp/
+/buildtrees/
+/build*/
+/downloads/
+/installed*/
+/packages/
+/scripts/buildsystems/tmp/
 #ignore custom triplets
-triplets/*
+/triplets/*
 #add vcpkg-designed triplets back in
 !triplets/arm-uwp.cmake
 !triplets/arm-windows.cmake
