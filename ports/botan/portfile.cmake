@@ -1,20 +1,13 @@
 include(vcpkg_common_functions)
 
-set(BOTAN_VERSION 2.6.0)
-set(BOTAN_HASH 2082b4aaac0802f117a5f75c67a69e6d364b436a0ebe543032e370c3f085752bbe1ca48051462066e13bd42e47573ebc532d1d45074fe406df032f33346ee645)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/Botan-${BOTAN_VERSION})
+set(BOTAN_VERSION 2.8.0)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://botan.randombit.net/releases/Botan-${BOTAN_VERSION}.tgz"
-    FILENAME "Botan-${BOTAN_VERSION}.tgz"
-    SHA512 ${BOTAN_HASH}
-)
-vcpkg_extract_source_archive(${ARCHIVE})
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}/src/build-data
-	PATCHES
-		${CMAKE_CURRENT_LIST_DIR}/fix-C2338.patch
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO randombit/botan
+    REF cb14e9ce95bcaae2ada7ffe96ef0cce6a2b38593
+    SHA512 3d8fbf1c65e2b0259f225db46ffa4a7eb989a518b230574e94f82dc13afd7dc32cfe6a8a0127e7dd0dea30e06f3946db78db50e107937382eff8ed823e996dc3
+    HEAD_REF master
 )
 
 vcpkg_find_acquire_program(JOM)

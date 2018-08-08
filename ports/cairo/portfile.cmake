@@ -19,6 +19,7 @@ vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/export-only-in-shared-build.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/0001_fix_osx_defined.patch"
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/src)

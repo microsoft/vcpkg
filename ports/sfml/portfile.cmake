@@ -5,13 +5,16 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REF 2.5.0
     HEAD_REF master
     SHA512 94306dcbed7d68bb7e226cd91e25950a07bcf393988c4bb79f9de3555c18c78cae4573e911235f712e711a7c02a614bf370df32b8d85240d2f08142327e05076
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/portfile.cmake"
+    PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/use-system-freetype.patch"
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/extlibs)
 # Without this, we get error: list sub-command REMOVE_DUPLICATES requires list to be present.
 file(MAKE_DIRECTORY ${SOURCE_PATH}/extlibs/libs)
 file(WRITE ${SOURCE_PATH}/extlibs/libs/x "")
+# The embedded FindFreetype doesn't properly handle debug libraries
+file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/Modules/FindFreetype.cmake)
 
 if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message("SFML currently requires the following libraries from the system package manager:\n    libudev\n    libx11\n    libxrandr\n    opengl\n\nThese can be installed on Ubuntu systems via apt-get install libx11-dev libxrandr-dev libxi-dev libudev-dev mesa-common-dev")

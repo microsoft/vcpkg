@@ -15,8 +15,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/ChakraCore
-    REF v1.10.0
-    SHA512 7bf8abe425ba35d31afff467bbfc0a1b44ceb5a66460f399ea3860d40233ccba9b70a380309a395ed028e876473a546baee49b4da5974798d97d129f8612f8f2
+    REF v1.10.1
+    SHA512 e3a9a9e6506b603922e5a5ed1fb900d43dfd6c8e5e091e12bf902dbe58cd12753e6b7f59a895081cea880eb78bcc55571ee561fe03c96d6312608626a5b653f2
     HEAD_REF master
 )
 
