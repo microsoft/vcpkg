@@ -1,11 +1,14 @@
-# vcpkg_build_msbuild
+# vcpkg_install_msbuild
 
-Build an msbuild-based project. Deprecated in favor of `vcpkg_install_msbuild()`.
+Build and install an msbuild-based project. This replaces `vcpkg_build_msbuild()`.
 
 ## Usage
 ```cmake
-vcpkg_build_msbuild(
-    PROJECT_PATH <${SOURCE_PATH}/port.sln>
+vcpkg_install_msbuild(
+    SOURCE_PATH <${SOURCE_PATH}>
+    PROJECT_SUBPATH <port.sln>
+    [INCLUDES_SUBPATH <include>]
+    [LICENSE_SUBPATH <LICENSE>]
     [RELEASE_CONFIGURATION <Release>]
     [DEBUG_CONFIGURATION <Debug>]
     [TARGET <Build>]
@@ -16,17 +19,38 @@ vcpkg_build_msbuild(
     [OPTIONS_RELEASE </p:ZLIB_LIB=X>...]
     [OPTIONS_DEBUG </p:ZLIB_LIB=X>...]
     [USE_VCPKG_INTEGRATION]
+    [ALLOW_ROOT_INCLUDES | REMOVE_ROOT_INCLUDES]
 )
 ```
 
 ## Parameters
+### SOURCE_PATH
+The path to the root of the source tree.
+
+Because MSBuild uses in-source builds, the source tree will be copied into a temporary location for the build. This
+parameter is the base for that copy and forms the base for all XYZ_SUBPATH options.
+
 ### USE_VCPKG_INTEGRATION
 Apply the normal `integrate install` integration for building the project.
 
 By default, projects built with this command will not automatically link libraries or have header paths set.
 
-### PROJECT_PATH
-The path to the solution (`.sln`) or project (`.vcxproj`) file.
+### PROJECT_SUBPATH
+The subpath to the solution (`.sln`) or project (`.vcxproj`) file relative to `SOURCE_PATH`.
+
+### LICENSE_SUBPATH
+The subpath to the license file relative to `SOURCE_PATH`.
+
+### INCLUDES_SUBPATH
+The subpath to the includes directory relative to `SOURCE_PATH`.
+
+This parameter should be a directory and should not end in a trailing slash.
+
+### ALLOW_ROOT_INCLUDES
+Indicates that top-level include files (e.g. `include/zlib.h`) should be allowed.
+
+### REMOVE_ROOT_INCLUDES
+Indicates that top-level include files (e.g. `include/Makefile.am`) should be removed.
 
 ### RELEASE_CONFIGURATION
 The configuration (``/p:Configuration`` msbuild parameter) used for Release builds.
@@ -58,8 +82,7 @@ Additional options passed to msbuild for Debug builds. These are in addition to 
 
 ## Examples
 
-* [chakracore](https://github.com/Microsoft/vcpkg/blob/master/ports/chakracore/portfile.cmake)
-* [cppunit](https://github.com/Microsoft/vcpkg/blob/master/ports/cppunit/portfile.cmake)
+* [libimobiledevice](https://github.com/Microsoft/vcpkg/blob/master/ports/libimobiledevice/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_build_msbuild.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_build_msbuild.cmake)
+[scripts/cmake/vcpkg_install_msbuild.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_install_msbuild.cmake)
