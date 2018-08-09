@@ -9,8 +9,19 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     # Thrift isn't a very good candidate to become a dynamic library. No attempts are made to preserve binary compatibility, or to provide a C / COM-like interface to make binary compatibility easy.
 endif()
 
-vcpkg_find_acquire_program(FLEX)
-vcpkg_find_acquire_program(BISON)
+if (WIN32)
+    vcpkg_find_acquire_program(FLEX)
+    vcpkg_find_acquire_program(BISON)
+else()
+    find_program(FLEX flex)
+    if(NOT FLEX)
+        message(FATAL_ERROR "Could not find flex. Please install it through your package manager.")
+    endif()
+    find_program(BISON bison)
+    if(NOT BISON)
+        message(FATAL_ERROR "Could not find bison. Please install it through your package manager.")
+    endif()
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
