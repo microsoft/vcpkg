@@ -1,4 +1,0 @@
-Source: redshell
-Version: 1.1.2
-Description: RedShell C++ SDK. Steam attribution tracking, www.redshell.io
-# Built-Using: openssl (= 1.0.2m), cpprestsdk (= 2.10.0), boost (= 1.65.1-3), websocketpp (= 0.7.0-1), zlib (= 1.2.11-3), bzip2 (= 1.0.6-2) 
