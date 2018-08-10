@@ -21,12 +21,13 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
-file(COPY ${CURRENT_PACKAGES_DIR}/lib/fastrtps DESTINATION ${CURRENT_PACKAGES_DIR}/share)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/fastrtps/cmake)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/examples)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/LICENSE)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/examples)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/fastrtps)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/fastrtps)
 
 file(RENAME ${CURRENT_PACKAGES_DIR}/LICENSE ${CURRENT_PACKAGES_DIR}/share/fastrtps/copyright)
