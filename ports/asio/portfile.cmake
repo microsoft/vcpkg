@@ -3,7 +3,7 @@ include(vcpkg_common_functions)
 
 vcpkg_download_distfile(
 	ARCHIVE_FILE
-	URLS "https://netix.dl.sourceforge.net/project/asio/asio/1.12.1%20%28Stable%29/asio-1.12.1.zip"
+	URLS "https://sourceforge.net/projects/asio/files/asio/1.12.1%20%28Stable%29/asio-1.12.1.zip/download"
 	FILENAME "asio-1.12.1.zip"
 	SHA512 f35a519cde88824f65bde095c19d69449d0779e75da9e9ebb6a04f4847802213e8730715756a21632c4d27722cd5568ff7878d656ac79165a8bdf8652fbc1bd8
 )
