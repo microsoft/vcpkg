@@ -7,6 +7,7 @@ vcpkg_from_github(
     SHA512 1bc175d24b49de1b1e41eaf39598194e583afffb924c86c8d2e569d935af21874be76b2cbd4d9655a1d38bac3d4cd811de88bc2c72d81bad79115e69e5b0d839
     HEAD_REF master
     PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/js-embed.patch"
         "${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch"
 )
 
