@@ -1,7 +1,7 @@
 Source: harfbuzz
 Version: 1.8.4
 Description: HarfBuzz OpenType text shaping engine
-Build-Depends: freetype, ragel
+Build-Depends: freetype
 Default-Features: ucdn
 
 Feature: icu
