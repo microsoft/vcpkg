@@ -1,9 +1,9 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/embree-2.16.4)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/embree-3.2.0)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/embree/embree/archive/v2.16.4.zip"
-    FILENAME "embree-2.16.4.zip"
-    SHA512 d26d31c7866c072d562dd824af02c90a1bc0302a2765fa6101925956f9b61870e45a4f0a54edae87d07a63aa4687f4244e3e5554491729ea31b617e87d02fb11
+    URLS "https://github.com/embree/embree/archive/v3.2.0.zip"
+    FILENAME "embree-3.2.0.zip"
+    SHA512 75a969f5bb452986c3123543623a315172b7e1dac1d1017559d3d202ccf028d216337952e2b0b1df73975ac8d3928f06028d4a2f1a5d1a4210e80f818c416958
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
