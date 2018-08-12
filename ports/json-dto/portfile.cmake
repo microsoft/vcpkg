@@ -1,14 +1,11 @@
 include(vcpkg_common_functions)
 
-set(JSON_DTO_VERSION 0.2.6)
-
 vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sobjectizerteam/json_dto-0.2
-    REF v.${JSON_DTO_VERSION}
+    REF v.0.2.6
     SHA512 f6562b6177c941a9b898013eacb4bd78f2b8d460a82b773824bf51e106a92c27c52dca4ab6dd07a2d5e063ca3442a20c27dfd80bdcd78207e65f328b95972890
 )
-
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/dev
