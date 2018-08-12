@@ -1,10 +1,9 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(STATUS "Warning: Dynamic building not supported yet. Building static.")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
 include(vcpkg_common_functions)
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+# This snippet is a workaround for users who are upgrading from an extremely old version of this
+# port, which cloned directly into `src\`
 if(EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
 endif()
@@ -15,8 +14,7 @@ vcpkg_from_github(
     REF v1.14.1
     SHA512 f0e4fe9777ebc3316a85cb581edad19fef785cdcd2859b1dc54bf7407aa2ba804718973661595e318ea62463620f30ca828e5d7638798cca154af5e1d456ed1e
     HEAD_REF master
-    PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/fix-uwp.patch
+    PATCHES fix-uwp.patch
 )
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
