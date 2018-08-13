@@ -20,11 +20,11 @@ set(ICU_VERSION_MAJOR 61)
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/icu-${VERSION}/icu)
 vcpkg_download_distfile(
-	ARCHIVE
+    ARCHIVE
     URLS "http://download.icu-project.org/files/icu4c/${VERSION}/icu4c-${VERSION2}-src.tgz"
     FILENAME "icu4c-${VERSION2}-src.tgz"
     SHA512 4c37691246db802e4bae0c8c5f6ac1dac64c5753b607e539c5c1c36e361fcd9dd81bd1d3b5416c2960153b83700ccdb356412847d0506ab7782ae626ac0ffb94
-	)
+)
 vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src/icu-${VERSION})
 
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
@@ -43,83 +43,83 @@ set(CONFIGURE_OPTIONS_DEBUG  "--enable-debug --disable-release --prefix=${CURREN
 
 if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 
-set(BASH bash)
+    set(BASH bash)
 
-# Configure release
-message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-set(ENV{CFLAGS} "-O2 ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE}")
-set(ENV{CXXFLAGS} "-O2 ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_RELEASE}")
-vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc -c
-        "${SOURCE_PATH}/source/runConfigureICU Linux ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_RELASE}"
-    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-    LOGNAME "configure-${TARGET_TRIPLET}-rel")
-message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
+    # Configure release
+    message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
+    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+    set(ENV{CFLAGS} "-O2 ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE}")
+    set(ENV{CXXFLAGS} "-O2 ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_RELEASE}")
+    vcpkg_execute_required_process(
+        COMMAND ${BASH} --noprofile --norc -c
+            "${SOURCE_PATH}/source/runConfigureICU Linux ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_RELASE}"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+        LOGNAME "configure-${TARGET_TRIPLET}-rel")
+    message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
 
-# Configure debug
-message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-set(ENV{CFLAGS} "-O0 -g ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG}")
-set(ENV{CXXFLAGS} "-O0 -g ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_DEBUG}")
-vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc -c
-        "${SOURCE_PATH}/source/runConfigureICU Linux ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_DEBUG}"
-    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-    LOGNAME "configure-${TARGET_TRIPLET}-dbg")
-message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
+    # Configure debug
+    message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
+    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+    set(ENV{CFLAGS} "-O0 -g ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG}")
+    set(ENV{CXXFLAGS} "-O0 -g ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_DEBUG}")
+    vcpkg_execute_required_process(
+        COMMAND ${BASH} --noprofile --norc -c
+            "${SOURCE_PATH}/source/runConfigureICU Linux ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_DEBUG}"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
+        LOGNAME "configure-${TARGET_TRIPLET}-dbg")
+    message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
 
-else() # not Linux:
-
-set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --host=i686-pc-mingw32")
-
-# Acquire tools
-vcpkg_acquire_msys(MSYS_ROOT PACKAGES make automake1.15)
-
-# Insert msys into the path between the compiler toolset and windows system32. This prevents masking of "link.exe" but DOES mask "find.exe".
-string(REPLACE ";$ENV{SystemRoot}\\system32;" ";${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "$ENV{PATH}")
-string(REPLACE ";$ENV{SystemRoot}\\System32;" ";${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\System32;" NEWPATH "${NEWPATH}")
-set(ENV{PATH} "${NEWPATH}")
-set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
-
-set(AUTOMAKE_DIR ${MSYS_ROOT}/usr/share/automake-1.15)
-file(COPY ${AUTOMAKE_DIR}/config.guess ${AUTOMAKE_DIR}/config.sub DESTINATION ${SOURCE_PATH}/source)
-
-if(VCPKG_CRT_LINKAGE STREQUAL static)
-    set(ICU_RUNTIME "-MT")
 else()
-    set(ICU_RUNTIME "-MD")
-endif()
 
-# Configure release
-message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-set(ENV{CFLAGS} "${ICU_RUNTIME} -O2 -Oi -Zi ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE}")
-set(ENV{CXXFLAGS} "${ICU_RUNTIME} -O2 -Oi -Zi ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_RELEASE}")
-set(ENV{LDFLAGS} "-DEBUG -INCREMENTAL:NO -OPT:REF -OPT:ICF")
-vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc -c
-        "${SOURCE_PATH}/source/runConfigureICU MSYS/MSVC ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_RELASE}"
-    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-    LOGNAME "configure-${TARGET_TRIPLET}-rel")
-message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
+    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --host=i686-pc-mingw32")
 
-# Configure debug
-message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-set(ENV{CFLAGS} "${ICU_RUNTIME}d -Od -Zi -RTC1 ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG}")
-set(ENV{CXXFLAGS} "${ICU_RUNTIME}d -Od -Zi -RTC1 ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_DEBUG}")
-set(ENV{LDFLAGS} "-DEBUG")
-vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc -c
-        "${SOURCE_PATH}/source/runConfigureICU MSYS/MSVC ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_DEBUG}"
-    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-    LOGNAME "configure-${TARGET_TRIPLET}-dbg")
-message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
+    # Acquire tools
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make automake1.15)
+
+    # Insert msys into the path between the compiler toolset and windows system32. This prevents masking of "link.exe" but DOES mask "find.exe".
+    string(REPLACE ";$ENV{SystemRoot}\\system32;" ";${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "$ENV{PATH}")
+    string(REPLACE ";$ENV{SystemRoot}\\System32;" ";${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\System32;" NEWPATH "${NEWPATH}")
+    set(ENV{PATH} "${NEWPATH}")
+    set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+
+    set(AUTOMAKE_DIR ${MSYS_ROOT}/usr/share/automake-1.15)
+    file(COPY ${AUTOMAKE_DIR}/config.guess ${AUTOMAKE_DIR}/config.sub DESTINATION ${SOURCE_PATH}/source)
+
+    if(VCPKG_CRT_LINKAGE STREQUAL static)
+        set(ICU_RUNTIME "-MT")
+    else()
+        set(ICU_RUNTIME "-MD")
+    endif()
+
+    # Configure release
+    message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
+    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+    set(ENV{CFLAGS} "${ICU_RUNTIME} -O2 -Oi -Zi ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE}")
+    set(ENV{CXXFLAGS} "${ICU_RUNTIME} -O2 -Oi -Zi ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_RELEASE}")
+    set(ENV{LDFLAGS} "-DEBUG -INCREMENTAL:NO -OPT:REF -OPT:ICF")
+    vcpkg_execute_required_process(
+        COMMAND ${BASH} --noprofile --norc -c
+            "${SOURCE_PATH}/source/runConfigureICU MSYS/MSVC ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_RELASE}"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+        LOGNAME "configure-${TARGET_TRIPLET}-rel")
+    message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
+
+    # Configure debug
+    message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
+    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+    set(ENV{CFLAGS} "${ICU_RUNTIME}d -Od -Zi -RTC1 ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG}")
+    set(ENV{CXXFLAGS} "${ICU_RUNTIME}d -Od -Zi -RTC1 ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_DEBUG}")
+    set(ENV{LDFLAGS} "-DEBUG")
+    vcpkg_execute_required_process(
+        COMMAND ${BASH} --noprofile --norc -c
+            "${SOURCE_PATH}/source/runConfigureICU MSYS/MSVC ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_DEBUG}"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
+        LOGNAME "configure-${TARGET_TRIPLET}-dbg")
+    message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
 
 endif()
 
