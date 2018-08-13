@@ -5,8 +5,8 @@ set(VCPKG_LIBRARY_LINKAGE static)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ARMmbed/mbedtls
-    REF mbedtls-2.6.1
-    SHA512 06f8ba2a453164bac01d20ca6f5c80e691857977ef501d56685e81a0e90dddae1bedeab46c18c22f9a3b72894d45d7466f76a5c404417b6613ddae0ee4a881c8
+    REF mbedtls-2.12.0
+    SHA512 c7c2aeb1717886ad87486af2dccb05b2f051372c69fc914f30e4ace1067f5be39ba04e093ad522f904e23a576c1ff430bd772e77823d0f4720f6fc5c1b8aa98c
     HEAD_REF master
 )
 
