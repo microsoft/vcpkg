@@ -1,17 +1,14 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message(STATUS "Celero currently can only be built statically")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DigitalInBlue/Celero
-    REF v2.2.0
-    SHA512 6fac1fa949b18caabf59f3675c6e592cfadc3efa5e674b1f8b183e728ec880a4f5616d5d41c97f8fc26ef9520284188f519b7634209d0a56fb38a6993a9e9680
+    REF v2.3.0
+    SHA512 bc145f9823b1e4bc03f13da9b9af986d6cc151b1edfc01384c4e90bcf0488f867ec2bdc39733f263c7ddda526645dd11a7c6051c73eb8657bc4442b448732242
     HEAD_REF master
 )
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" CELERO_COMPILE_DYNAMIC_LIBRARIES)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -20,6 +17,7 @@ vcpkg_configure_cmake(
         -DCELERO_ENABLE_EXPERIMENTS=OFF
         -DCELERO_ENABLE_TESTS=OFF
         -DCELERO_RUN_EXAMPLE_ON_BUILD=OFF
+        -DCELERO_COMPILE_DYNAMIC_LIBRARIES=${CELERO_COMPILE_DYNAMIC_LIBRARIES}
 )
 
 vcpkg_install_cmake()

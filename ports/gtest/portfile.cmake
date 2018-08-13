@@ -7,14 +7,11 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/googletest
-    REF release-1.8.0
-    SHA512 1dbece324473e53a83a60601b02c92c089f5d314761351974e097b2cf4d24af4296f9eb8653b6b03b1e363d9c5f793897acae1f0c7ac40149216035c4d395d9d
+    REF ba96d0b1161f540656efdaed035b3c062b60e006
+    SHA512 ce78098f973b45f4a177db387c42a56d5ea34407a2af278760b850c326e8450760a58991d62a5408f5df79f89fefd10fee71745b7e8669b2a6f74fa63a259600
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/0001-Enable-C-11-features-for-VS2015-fix-appveyor-fail.patch
+	PATCHES
+			${CMAKE_CURRENT_LIST_DIR}/0001-Enable-C-11-features-for-VS2015-fix-appveyor-fail.patch
             ${CMAKE_CURRENT_LIST_DIR}/0002-Fix-z7-override.patch
 )
 

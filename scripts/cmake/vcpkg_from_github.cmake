@@ -10,6 +10,7 @@
 ##     [REF <v2.0.0>]
 ##     [SHA512 <45d0d7f8cc350...>]
 ##     [HEAD_REF <master>]
+##     [PATCHES <patch1.patch> <patch2.patch>...]
 ## )
 ## ```
 ##
@@ -23,7 +24,7 @@
 ## The organization or user and repository on GitHub.
 ##
 ## ### REF
-## A stable git commit-ish (ideally a tag) that will not change contents. **This should not be a branch.**
+## A stable git commit-ish (ideally a tag or commit) that will not change contents. **This should not be a branch.**
 ##
 ## For repositories without official releases, this can be set to the full commit id of the current latest master.
 ##
@@ -38,6 +39,11 @@
 ## The unstable git commit-ish (ideally a branch) to pull for `--head` builds.
 ##
 ## For most projects, this should be `master`. The chosen branch should be one that is expected to be always buildable on all supported platforms.
+##
+## ### PATCHES
+## A list of patches to be applied to the extracted sources.
+##
+## Relative paths are based on the port directory.
 ##
 ## ## Notes:
 ## At least one of `REF` and `HEAD_REF` must be specified, however it is preferable for both to be present.
@@ -117,7 +123,8 @@ function(vcpkg_from_github)
         # Hash the archive hash along with the patches. Take the first 10 chars of the hash
         set(PATCHSET_HASH "${_vdud_SHA512}")
         foreach(PATCH IN LISTS _vdud_PATCHES)
-            file(SHA512 ${PATCH} CURRENT_HASH)
+            get_filename_component(ABSOLUTE_PATCH "${PATCH}" ABSOLUTE BASE_DIR "${CURRENT_PORT_DIR}")
+            file(SHA512 ${ABSOLUTE_PATCH} CURRENT_HASH)
             string(APPEND PATCHSET_HASH ${CURRENT_HASH})
         endforeach()
 
@@ -141,7 +148,7 @@ function(vcpkg_from_github)
         endif()
 
         set(${_vdud_OUT_SOURCE_PATH} "${SOURCE_PATH}" PARENT_SCOPE)
-
+        message(STATUS "Using source at ${SOURCE_PATH}")
         return()
     endif()
 
@@ -205,4 +212,5 @@ function(vcpkg_from_github)
         PATCHES ${_vdud_PATCHES}
     )
     set(${_vdud_OUT_SOURCE_PATH} "${TEMP_SOURCE_PATH}" PARENT_SCOPE)
+    message(STATUS "Using source at ${TEMP_SOURCE_PATH}")
 endfunction()

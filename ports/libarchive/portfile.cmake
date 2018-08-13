@@ -9,14 +9,13 @@ vcpkg_from_github(
     REPO libarchive/libarchive
     REF v3.3.2
     SHA512 7bc17d6f742080278e35f86b0233d70045df0ca1578cd427126e0acce183709bf33ecca689db65e2e67bdfaf687c04d36cae1202a926beeebc88076648aa40bc
-    HEAD_REF master)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
+    HEAD_REF master
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/fix-buildsystem.patch
         ${CMAKE_CURRENT_LIST_DIR}/fix-dependencies.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-lz4.patch)
+        ${CMAKE_CURRENT_LIST_DIR}/fix-lz4.patch
+        ${CMAKE_CURRENT_LIST_DIR}/no-werror.patch
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

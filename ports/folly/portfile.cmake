@@ -17,8 +17,8 @@ set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF v2018.05.14.00
-    SHA512 ea03bdd239a637729aa863034f2ff679fcb5b982d0ebb015d45b84317afa0faec31595a2069b6553e1cc265272783926e370888f046b8d0bbd7833af2b985cb1
+    REF v2018.07.30.00
+    SHA512 38e7b713572d4af0a6453d001eddc32c74b4ec100158300c0a3a61a88ec546b449f1973c2b624273da4278173782aa71695d981dba3c8f423f5b76ed1375d286
     HEAD_REF master
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/find-gflags.patch
@@ -65,6 +65,7 @@ vcpkg_configure_cmake(
         -DLIBAIO_FOUND=OFF
         -DLIBURCU_FOUND=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_LibURCU=ON
+        -DCMAKE_INSTALL_DIR=share/folly
         ${FEATURE_OPTIONS}
 )
 
@@ -72,7 +73,7 @@ vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/folly)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/folly)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

@@ -25,17 +25,7 @@ namespace vcpkg::Commands
 
     namespace CI
     {
-        struct UnknownCIPortsResults
-        {
-            std::vector<PackageSpec> unknown;
-            std::map<PackageSpec, Build::BuildResult> known;
-        };
-
         extern const CommandStructure COMMAND_STRUCTURE;
-        UnknownCIPortsResults find_unknown_ports_for_ci(const VcpkgPaths& paths,
-                                                        const std::set<std::string>& exclusions,
-                                                        const Dependencies::PortFileProvider& provider,
-                                                        const std::vector<FeatureSpec>& fspecs);
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, const Triplet& default_triplet);
     }
 
@@ -131,16 +121,11 @@ namespace vcpkg::Commands
 
     namespace Hash
     {
-        std::string get_string_hash(const std::string& s, const std::string& hash_type);
-        std::string get_file_hash(const Files::Filesystem& fs, const fs::path& path, const std::string& hash_type);
-
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 
     namespace Fetch
     {
-        std::vector<Toolset> find_toolset_instances_preferred_first(const VcpkgPaths& paths);
-        fs::path get_tool_path(const VcpkgPaths& paths, const std::string& tool);
         void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
     }
 

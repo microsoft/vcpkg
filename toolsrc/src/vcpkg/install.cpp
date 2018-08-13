@@ -588,7 +588,10 @@ namespace vcpkg::Install
             Util::Enum::to_enum<Build::AllowDownloads>(!no_downloads),
             Build::CleanBuildtrees::NO,
             Build::CleanPackages::NO,
-            download_tool};
+            download_tool,
+            GlobalState::g_binary_caching ? Build::BinaryCaching::YES : Build::BinaryCaching::NO,
+            Build::FailOnTombstone::NO,
+        };
 
         auto all_ports = Paragraphs::load_all_ports(paths.get_filesystem(), paths.ports);
         std::unordered_map<std::string, SourceControlFile> scf_map;

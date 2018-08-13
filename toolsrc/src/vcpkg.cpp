@@ -104,7 +104,7 @@ static void inner(const VcpkgCmdArguments& args)
                        "Error: Invalid vcpkg root directory %s: %s",
                        vcpkg_root_dir.string(),
                        expected_paths.error().message());
-    const VcpkgPaths paths = expected_paths.value_or_exit(VCPKG_LINE_INFO);
+    const VcpkgPaths& paths = expected_paths.value_or_exit(VCPKG_LINE_INFO);
 
 #if defined(_WIN32)
     const int exit_code = _wchdir(paths.root.c_str());
