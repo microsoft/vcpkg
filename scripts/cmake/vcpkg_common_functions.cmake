@@ -1,4 +1,5 @@
 include(vcpkg_acquire_msys)
+include(vcpkg_append_to_path)
 include(vcpkg_check_linkage)
 include(vcpkg_download_distfile)
 include(vcpkg_extract_source_archive)
