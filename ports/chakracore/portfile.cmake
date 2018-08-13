@@ -2,8 +2,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     message(STATUS "Warning: Static building not supported yet. Building dynamic.")
     set(VCPKG_LIBRARY_LINKAGE dynamic)
 endif()
-if(VCPKG_CRT_LINKAGE STREQUAL static)
-    message(FATAL_ERROR "Static linking of the CRT is not yet supported.")
+
+set(CHAKRA_RUNTIME_LIB "static_library") # ChakraCore default is static CRT linkage
+if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+	set(CHAKRA_RUNTIME_LIB "dynamic_library")
 endif()
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -32,7 +34,7 @@ file(COPY ${SOURCE_PATH}/ DESTINATION ${BUILDTREE_PATH})
 
 vcpkg_build_msbuild(
     PROJECT_PATH ${BUILDTREE_PATH}/Build/Chakra.Core.sln
-    OPTIONS "/p:DotNetSdkRoot=${NETFXSDK_PATH}/" "/p:CustomBeforeMicrosoftCommonTargets=${CMAKE_CURRENT_LIST_DIR}/no-warning-as-error.props"
+    OPTIONS "/p:DotNetSdkRoot=${NETFXSDK_PATH}/" "/p:CustomBeforeMicrosoftCommonTargets=${CMAKE_CURRENT_LIST_DIR}/no-warning-as-error.props" "/p:RuntimeLib=${CHAKRA_RUNTIME_LIB}"
 )
 
 file(INSTALL
