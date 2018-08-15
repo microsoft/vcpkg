@@ -1,11 +1,12 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/embree-2.16.4)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/embree/embree/archive/v2.16.4.zip"
-    FILENAME "embree-2.16.4.zip"
-    SHA512 d26d31c7866c072d562dd824af02c90a1bc0302a2765fa6101925956f9b61870e45a4f0a54edae87d07a63aa4687f4244e3e5554491729ea31b617e87d02fb11
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO embree/embree
+    REF v3.2.0
+    SHA512 296617251e4a9a95a5ceec10ce8f23daf180a8a61fd78bc5782dca7d5b15bddaa0b6f352e47d657a366ef9176a730ef2edc42451fbad8071c5ce8fbfb4515e51
+    HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 file(REMOVE ${SOURCE_PATH}/common/cmake/FindTBB.cmake)
 
