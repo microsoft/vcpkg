@@ -1,0 +1,3 @@
+Source: tinyb
+Version: 0.5.1
+Description: TinyB exposes the BLE GATT API for C++, Java and other languages, using BlueZ over DBus.
