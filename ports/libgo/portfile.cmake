@@ -1,9 +1,6 @@
 include(vcpkg_common_functions)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message("libgo currently only supports static linkage")
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -11,7 +8,9 @@ vcpkg_from_github(
     REF v2.8
     SHA512 44784de4aec36ea321195c11c99a73de4f6f51285febdf6980e8aaced1fdfc0a34c6b1a8acc8c6b424e747310a1d7fb1604f722084c28ab91f8ebee15667d59b
     HEAD_REF master
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/cmake.patch
+    PATCHES
+        cmake.patch
+        boost-168.patch
 )
 
 vcpkg_download_distfile(ARCHIVE
