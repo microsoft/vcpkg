@@ -4,8 +4,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 endif()
 
 # The current Live555 version from http://www.live555.com/liveMedia/public/
-set(LIVE_VERSION 2018.07.07)
-set(LIVE_SHA e7d4ddf51e9666c6ebe9a46976035b68fea94be54825535ffb04006cd242b9d3ad08250305206442bed3500d1e8d628ccf44302c485f63a9e244b3f8b1e27fe4)
+set(LIVE_VERSION 2018.08.05)
+set(LIVE_SHA 2d7de75d91567a7a8a8982ea414f4bf403cb3d3efcc5183c2b55c5ac6b7b18f8f93f50c4fe762078c6e799b66835d5436be99f32db8becb735507ccf559c544e)
 
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${LIVE_VERSION}/live)
