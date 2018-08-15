@@ -9,9 +9,9 @@ endif()
 include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/ACE_wrappers/ace)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://download.dre.vanderbilt.edu/previous_versions/ACE-6.5.0.zip"
-    FILENAME "ACE-6.5.0.zip"
-    SHA512 e50fd042a1c875dab64f5eec79d2ea74470a76346a9212bfbc47478882b3aeb9d850d2646da7995655f1901905cecfd73185b146b3ee7b38fec80df42330d528
+    URLS "http://download.dre.vanderbilt.edu/previous_versions/ACE-6.5.1.zip"
+    FILENAME "ACE-6.5.1.zip"
+    SHA512 b6444b183a356f4a9fc4af57ccc239a400121fbb00547ff9d13c51f0fc20f38b0aa87b9568531472e5f7fde82deea3d4c3d91d7504aca89799a2505ba492c73a
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 

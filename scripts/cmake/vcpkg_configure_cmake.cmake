@@ -62,6 +62,12 @@ function(vcpkg_configure_cmake)
         set(_csc_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITECTURE})
     endif()
 
+    if(CMAKE_HOST_WIN32)
+        set(_PATHSEP ";")
+    else()
+        set(_PATHSEP ":")
+    endif()
+
     set(NINJA_CAN_BE_USED ON) # Ninja as generator
     set(NINJA_HOST ON) # Ninja as parallel configurator
     if(_csc_HOST_ARCHITECTURE STREQUAL "x86")
@@ -114,7 +120,7 @@ function(vcpkg_configure_cmake)
     if(GENERATOR STREQUAL "Ninja")
         vcpkg_find_acquire_program(NINJA)
         get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
-        set(ENV{PATH} "$ENV{PATH};${NINJA_PATH}")
+        set(ENV{PATH} "$ENV{PATH}${_PATHSEP}${NINJA_PATH}")
         list(APPEND _csc_OPTIONS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
     endif()
 
@@ -210,7 +216,7 @@ function(vcpkg_configure_cmake)
 
         vcpkg_find_acquire_program(NINJA)
         get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
-        set(ENV{PATH} "$ENV{PATH};${NINJA_PATH}")
+        set(ENV{PATH} "$ENV{PATH}${_PATHSEP}${NINJA_PATH}")
 
         #parallelize the configure step
         set(_contents
