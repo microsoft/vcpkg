@@ -155,7 +155,7 @@ namespace vcpkg::Export
         const int exit_code = System::cmd_execute_clean(cmd_line);
         Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: NuGet package creation failed");
 
-        const fs::path output_path = output_dir / (nuget_id + ".nupkg");
+        const fs::path output_path = output_dir / (nuget_id + "." + nuget_version + ".nupkg");
         return output_path;
     }
 
