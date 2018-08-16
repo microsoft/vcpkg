@@ -12,7 +12,7 @@ include(vcpkg_common_functions)
 # Required to run build/generate_escape_tables.py et al.
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
+vcpkg_add_to_path("${PYTHON3_DIR}")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -21,7 +21,8 @@ vcpkg_from_github(
     SHA512 38e7b713572d4af0a6453d001eddc32c74b4ec100158300c0a3a61a88ec546b449f1973c2b624273da4278173782aa71695d981dba3c8f423f5b76ed1375d286
     HEAD_REF master
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/find-gflags.patch
+        find-gflags.patch
+        no-werror.patch
 )
 
 file(COPY
