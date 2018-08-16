@@ -21,6 +21,11 @@ if("icu" IN_LIST FEATURES)
     SET(HB_HAVE_ICU "ON")
 endif()
 
+SET(HB_HAVE_GRAPHITE2 "OFF")
+if("graphite2" IN_LIST FEATURES)
+    SET(HB_HAVE_GRAPHITE2 "ON")
+endif()
+
 ## Unicode callbacks
 
 # Builtin (UCDN)
@@ -48,6 +53,7 @@ vcpkg_configure_cmake(
         -DHB_BUILTIN_UCDN=${BUILTIN_UCDN}
         -DHB_HAVE_ICU=${HB_HAVE_ICU}
         -DHB_HAVE_GLIB=${HAVE_GLIB}
+        -DHB_HAVE_GRAPHITE2=${HB_HAVE_GRAPHITE2}
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
 )
