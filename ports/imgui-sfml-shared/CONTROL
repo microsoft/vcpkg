@@ -1,0 +1,4 @@
+Source: imgui-sfml-shared
+Version: 1.0
+Description: imgui dll for sfml usage
+Build-Depends: sfml (windows), imgui
