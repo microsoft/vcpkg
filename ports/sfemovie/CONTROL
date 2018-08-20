@@ -1,0 +1,4 @@
+Source: sfemovie
+Version: 1.0
+Description: SFML video player
+Build-Depends: ffmpeg (windows), sfml (windows)
