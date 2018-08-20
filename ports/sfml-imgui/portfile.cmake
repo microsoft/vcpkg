@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Milerius/imgui-sfml-shared
-        REF 1.0
-        SHA512 d6c1f218a84a400749b7e26aa79319c25c5d01026b95405d3d444845ca6bdff4e0885b714390ada95ee6d03609ca0ef6089a4c7b3afdf780b08b30ce18231169
+        REF 1.1
+        SHA512  191184f7b302f643bd7c241b69d9f9edc0d03c6f5a0b3a49f57ac84f3828202f8065291fb17993073a2c07f1237ba491de677c47e2f8160dc70ea77f20eb1946
         HEAD_REF master
 )
 
@@ -19,5 +19,5 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sfml-imgui)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/imgui-sfml-shared)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/imgui-sfml-shared/LICENSE ${CURRENT_PACKAGES_DIR}/share/imgui-sfml-shared/copyright)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/sfml-imgui)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/sfml-imgui/LICENSE ${CURRENT_PACKAGES_DIR}/share/sfml-imgui/copyright)
