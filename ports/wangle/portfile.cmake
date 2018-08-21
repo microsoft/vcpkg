@@ -6,14 +6,15 @@ vcpkg_from_github(
     REF v2018.07.30.00
     SHA512 f83378a8751b47fac2c862e07ffeb2750fd681735e66d778657d7624fe3e839b2e2bfcb049ecd3a3516c206d93f9c168144599ded823720967e44037b536ba5d
     HEAD_REF master
-    PATCHES build.patch
+    PATCHES
+        build.patch
+        gflags.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}/wangle"
     PREFER_NINJA
     OPTIONS
-        -DGFLAGS_PREFER_EXPORTED_GFLAGS_CMAKE_CONFIGURATION=OFF
         -DBUILD_TESTS=OFF
     OPTIONS_DEBUG
         -DDISABLE_INSTALL_HEADERS=ON
