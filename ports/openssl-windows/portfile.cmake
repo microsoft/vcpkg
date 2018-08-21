@@ -3,7 +3,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME)
 endif()
 
 include(vcpkg_common_functions)
-set(OPENSSL_VERSION 1.0.2o)
+set(OPENSSL_VERSION 1.0.2p)
 set(MASTER_COPY_SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-${OPENSSL_VERSION})
 
 vcpkg_find_acquire_program(PERL)
