@@ -27,6 +27,12 @@ vcpkg_fixup_cmake_targets()
 
 vcpkg_copy_pdbs()
 
+# Disable auto-linking (#4113)
+file(READ ${CURRENT_PACKAGES_DIR}/include/CGAL/auto_link/auto_link.h _contents)
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/CGAL/auto_link/auto_link.h "// vcpkg: disable auto-linking (#4113)\n")
+file(APPEND ${CURRENT_PACKAGES_DIR}/include/CGAL/auto_link/auto_link.h "#ifndef CGAL_NO_AUTOLINK\n#define CGAL_NO_AUTOLINK\n#endif\n\n")
+file(APPEND ${CURRENT_PACKAGES_DIR}/include/CGAL/auto_link/auto_link.h "${_contents}")
+
 # Clean
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
