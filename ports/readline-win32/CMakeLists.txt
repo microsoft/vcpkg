@@ -1,22 +1,15 @@
 cmake_minimum_required(VERSION 3.0)
 project(readline C)
 
-if(CMAKE_BUILD_TYPE STREQUAL Debug)
-    set(LIB_SUFFIX d)
-endif()
-
 add_definitions(-DREADLINE_LIBRARY)
-add_definitions(-DBUILD_READLINE_DLL)
 add_definitions(-DHAVE_CONFIG_H)
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
-if(CMAKE_BUILD_TYPE STREQUAL Debug)
-    add_definitions(-D_DEBUG)
+if(BUILD_SHARED_LIBS)
+    add_definitions(-DBUILD_READLINE_DLL)
+else()
+    add_definitions(-DREADLINE_STATIC)
 endif()
-
-add_definitions(-D_WINDOWS)
-add_definitions(-D_USRDLL)
-add_definitions(-DREADLINE_EXPORTS)
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR} # thats where the config.h is located

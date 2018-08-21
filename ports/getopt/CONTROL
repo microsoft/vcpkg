@@ -1,3 +1,4 @@
 Source: getopt
-Version: 0.1
+Version: 0
 Description: The getopt and getopt_long functions automate some of the chore involved in parsing typical unix command line options.
+Build-Depends: getopt-win32 (windows)
