@@ -1,34 +1,29 @@
 cmake_minimum_required (VERSION 3.9)
-project (libmaxminddb)
+project(maxminddb C)
+
+set(CMAKE_DEBUG_POSTFIX d)
+set(CMAKE_SHARED_LIBRARY_PREFIX lib)
+set(CMAKE_STATIC_LIBRARY_PREFIX lib)
 
 if(MSVC)
-  add_compile_options(/W4 -D_CRT_SECURE_NO_WARNINGS)
+  add_compile_options(-D_CRT_SECURE_NO_WARNINGS)
 endif()
 
-
-set (SRCS
-src/maxminddb.c
-src/data-pool.c
+set(SRCS
+  src/maxminddb.c
+  src/data-pool.c
 )
-
 
 include_directories(. src include projects/VS12)
 
-if(BUILD_SHARED_LIBS)
-  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif()
-
-
-add_library(libmaxminddb ${SRCS})
+add_library(maxminddb ${SRCS})
 
 if(WIN32)
-  target_link_libraries(libmaxminddb ws2_32)
+  target_link_libraries(maxminddb ws2_32)
 endif()
 
-
-
 install(
-  TARGETS libmaxminddb
+  TARGETS maxminddb
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
