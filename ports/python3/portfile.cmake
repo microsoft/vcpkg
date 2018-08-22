@@ -79,8 +79,10 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME)
     endif()
 
 else()
-    #linux/osx
-    set(BASH bash)
+    #linux (maybe osx)
+    set(VCPKG_LIBRARY_LINKAGE dynamic) # need to install python interpreter for boost-python to find 
+
+    set(BASH bash) 
 
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
@@ -125,7 +127,7 @@ else()
     message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
 
 
-    # Build release ... agonizingly slow. Is there a way to just build libraries???
+    # Build release ... 
     message(STATUS "Package ${TARGET_TRIPLET}-rel")
     vcpkg_execute_required_process(
         COMMAND ${BASH} --noprofile --norc -c "make && make install"
@@ -133,7 +135,7 @@ else()
         LOGNAME "build-${TARGET_TRIPLET}-rel")
     message(STATUS "Package ${TARGET_TRIPLET}-rel done")
 
-    # Build debug ... agonizingly slow. Is there a way to just build libraries???
+    # Build debug ... 
     message(STATUS "Package ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_required_process(
         COMMAND ${BASH} --noprofile --norc -c "make && make install"
