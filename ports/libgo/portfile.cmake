@@ -5,12 +5,10 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yyzybb537/libgo
-    REF v2.8
-    SHA512 44784de4aec36ea321195c11c99a73de4f6f51285febdf6980e8aaced1fdfc0a34c6b1a8acc8c6b424e747310a1d7fb1604f722084c28ab91f8ebee15667d59b
-    HEAD_REF master
+    REF v3.0-beta
+    SHA512 b60803a8dcaac942fce23d101e8563ec4d850c9d477dc3d116db7f104404acc89a589ac7a0577c2425f2f65a79da211343fa5491cb3ee11c2b34af6883b4e4ba
+    HEAD_REF v3.0-beta
     PATCHES
-        cmake.patch
-        boost-168.patch
 )
 
 vcpkg_download_distfile(ARCHIVE
@@ -19,19 +17,15 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 1bcf320f50cff13d92013a9f0ab5c818c2b6b63e9c1ac18c5dd69189e448d7a848f1678389d8b2c08c65f907afb3909e743f6c593d9cfb21e2bb67d5c294a166
 )
 
-file(REMOVE_RECURSE ${SOURCE_PATH}/third_party)
-
-vcpkg_extract_source_archive(${ARCHIVE} ${SOURCE_PATH}/third_party)
-file(RENAME ${SOURCE_PATH}/third_party/xhook-e18c450541892212ca4f11dc91fa269fabf9646f ${SOURCE_PATH}/third_party/xhook)
+#vcpkg_extract_source_archive(${ARCHIVE} ${SOURCE_PATH}/third_party/xhook)
+#file(REMOVE_RECURSE ${SOURCE_PATH}/third_party/xhook)
+#file(RENAME ${SOURCE_PATH}/third_party/xhook-e18c450541892212ca4f11dc91fa269fabf9646f ${SOURCE_PATH}/third_party/xhook)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DDISABLE_ADJUST_COMMAND_LINE_FLAGS=ON
-        -DDISABLE_DYNAMIC_LIB=ON
-        -DENABLE_BOOST_CONTEXT=ON
-        -DFORCE_UNIX_TARGETS=ON
         -DDISABLE_SYSTEMWIDE=ON
 )
 
@@ -39,20 +33,13 @@ vcpkg_install_cmake()
 
 # remove duplicated include files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/libgo/disable_hook)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/libgo/netio/unix/static_hook)
 
-file(GLOB REL_MAIN ${CURRENT_PACKAGES_DIR}/lib/libgo_main.lib ${CURRENT_PACKAGES_DIR}/lib/liblibgo_main.a)
-if(REL_MAIN)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
-    file(COPY ${REL_MAIN} DESTINATION ${CURRENT_PACKAGES_DIR}/lib/manual-link)
-    file(REMOVE ${REL_MAIN})
-endif()
-
-file(GLOB DBG_MAIN ${CURRENT_PACKAGES_DIR}/debug/lib/libgo_main.lib ${CURRENT_PACKAGES_DIR}/debug/lib/liblibgo_main.a)
-if(DBG_MAIN)
+file(GLOB DBG_STATICHOOK ${CURRENT_PACKAGES_DIR}/debug/lib/libgo_static_hook.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libstatic_hook.a)
+if(DBG_STATICHOOK)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
-    file(COPY ${DBG_MAIN} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
-    file(REMOVE ${DBG_MAIN})
+    file(COPY ${DBG_STATICHOOK} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+    file(REMOVE ${DBG_STATICHOOK})
 endif()
 
 # Handle copyright
