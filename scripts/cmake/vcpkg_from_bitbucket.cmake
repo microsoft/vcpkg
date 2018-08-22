@@ -115,7 +115,7 @@ function(vcpkg_from_bitbucket)
             string(REGEX REPLACE "\"hash\": \"([a-f0-9]+)\"" "\\1" _version ${x})
             string(SUBSTRING ${_version} 0 12 _version) # Get the 12 first numbers from commit hash
         else()
-            set(_version ${_vdud_REF})
+            string(SUBSTRING ${_vdud_REF} 0 12 _version) # Get the 12 first numbers from commit hash
         endif()
 
         vcpkg_download_distfile(ARCHIVE
