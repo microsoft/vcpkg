@@ -93,7 +93,7 @@ Enabling user-wide integration (`vcpkg integrate install`) changes the default f
 ## Why not NuGet?
 NuGet is a package manager for .NET libraries with a strong dependency on MSBuild. It does not meet the specific needs of Native C++ customers in at least three ways.
 
-- **Compilation Flavors**. With so many possible combinations of compilation options, the task of providing a truly complete set of options is intrinsicly impossible. Furthermore, the download size for reasonably complete binary packages becomes enormous. This makes it a requirement to split the results into multiple packages, but then searching becomes very difficult.
+- **Compilation Flavors**. With so many possible combinations of compilation options, the task of providing a truly complete set of options is intrinsically impossible. Furthermore, the download size for reasonably complete binary packages becomes enormous. This makes it a requirement to split the results into multiple packages, but then searching becomes very difficult.
 
 - **Binary vs Source**. Very closely tied to the first point, NuGet is designed from the ground up to provide relatively small, prebuilt binaries. Due to the nature of native code, developers need to have access to the source code to ensure ABI compatibility, performance, integrity, and debuggability.
 
