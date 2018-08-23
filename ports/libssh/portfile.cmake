@@ -3,11 +3,11 @@ include(vcpkg_common_functions)
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     message(FATAL_ERROR "WindowsStore not supported")
 endif()
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libssh-0.7.5)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/libssh-0.8.1)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.libssh.org/files/0.7/libssh-0.7.5.tar.xz"
-    FILENAME "libssh-0.7.5.tar.xz"
-    SHA512 6c7f539899caaedf13d66fa2e0fac1a475ecdfe389131abcbdf908bdebc50a0b9e6b0d43e67e52aea85c32f6aa68e46ca2f50695992f82ded83489f445a8e775
+    URLS "https://www.libssh.org/files/0.8/libssh-0.8.1.tar.xz"
+    FILENAME "libssh-0.8.1.tar.xz"
+    SHA512 6630d0b101dc109116ba7a6cffb00db1bc9b5bc6004c843c5361d3d97c6cf4c323129ebf3bbf25ab2fc1961b74520490d7a16999504849c07b26a25679724b93
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
@@ -25,6 +25,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DWITH_STATIC_LIB=${WITH_STATIC_LIB}
+        -DWITH_MBEDTLS=ON
         -DWITH_EXAMPLES=OFF
         -DWITH_TESTING=OFF
         -DWITH_NACL=OFF
