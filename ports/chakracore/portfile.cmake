@@ -1,16 +1,10 @@
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(STATUS "Warning: Static building not supported yet. Building dynamic.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-endif()
-if(VCPKG_CRT_LINKAGE STREQUAL static)
-    message(FATAL_ERROR "Static linking of the CRT is not yet supported.")
-endif()
-
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "UWP is not currently supported.")
 endif()
 
 include(vcpkg_common_functions)
+
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -30,9 +24,17 @@ set(BUILDTREE_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 file(REMOVE_RECURSE ${BUILDTREE_PATH})
 file(COPY ${SOURCE_PATH}/ DESTINATION ${BUILDTREE_PATH})
 
+set(CHAKRA_RUNTIME_LIB "static_library") # ChakraCore default is static CRT linkage
+if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+	set(CHAKRA_RUNTIME_LIB "dynamic_library")
+endif()
+
 vcpkg_build_msbuild(
     PROJECT_PATH ${BUILDTREE_PATH}/Build/Chakra.Core.sln
-    OPTIONS "/p:DotNetSdkRoot=${NETFXSDK_PATH}/" "/p:CustomBeforeMicrosoftCommonTargets=${CMAKE_CURRENT_LIST_DIR}/no-warning-as-error.props"
+    OPTIONS
+        "/p:DotNetSdkRoot=${NETFXSDK_PATH}/"
+        "/p:CustomBeforeMicrosoftCommonTargets=${CMAKE_CURRENT_LIST_DIR}/no-warning-as-error.props"
+        "/p:RuntimeLib=${CHAKRA_RUNTIME_LIB}"
 )
 
 file(INSTALL
@@ -68,6 +70,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         ${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/GCStress.exe
         ${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/rl.exe
         DESTINATION ${CURRENT_PACKAGES_DIR}/tools/chakracore)
+    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/chakracore)
 endif()
 
 vcpkg_copy_pdbs()
