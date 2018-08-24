@@ -1,0 +1,54 @@
+diff --git a/wangle/CMakeLists.txt b/wangle/CMakeLists.txt
+index 0302249..3bf1e6c 100644
+--- a/wangle/CMakeLists.txt
++++ b/wangle/CMakeLists.txt
+@@ -38,9 +38,9 @@ endif()
+ 
+ find_package(Boost REQUIRED COMPONENTS system thread filesystem regex context)
+ find_package(OpenSSL REQUIRED)
+-find_package(Glog REQUIRED)
+-find_package(Gflags REQUIRED)
+-find_package(Libevent REQUIRED)
++find_package(Glog CONFIG REQUIRED)
++find_package(Gflags CONFIG REQUIRED)
++find_package(Libevent CONFIG REQUIRED)
+ find_package(DoubleConversion REQUIRED)
+ find_package(Threads REQUIRED)
+ if (UNIX AND NOT APPLE)
+@@ -116,11 +116,9 @@ if (BUILD_SHARED_LIBS)
+     PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION 1)
+ endif()
+ 
+-target_include_directories(
+-  wangle
+-  PUBLIC
+-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/..>
+-    $<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}>
++include_directories(
++   "${CMAKE_SOURCE_DIR}/.."
++   ${INCLUDE_INSTALL_DIR}
+     ${FOLLY_INCLUDE_DIR}
+     ${Boost_INCLUDE_DIR}
+     ${OPENSSL_INCLUDE_DIR}
+@@ -143,15 +141,19 @@ target_link_libraries(wangle PUBLIC
+ install(
+   TARGETS wangle
+   EXPORT wangle-exports
+-  DESTINATION ${LIB_INSTALL_DIR}
++  RUNTIME DESTINATION bin
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib
+ )
+ # We unfortunately cannot install wangle's headers with the install()
+ # statement above.  install(TARGETS) appears to only support installing
+ # PUBLIC_HEADER in a flat include directory, and not a deeper tree.
++if(NOT DISABLE_INSTALL_HEADERS)
+ foreach(dir ${WANGLE_HEADER_DIRS})
+-  install(DIRECTORY ${dir} DESTINATION "${INCLUDE_INSTALL_DIR}/wangle"
++  install(DIRECTORY ${dir} DESTINATION "include/wangle"
+           FILES_MATCHING PATTERN "*.h")
+ endforeach()
++endif()
+ 
+ # Install CMake package configuration files for wangle
+ include(CMakePackageConfigHelpers)
