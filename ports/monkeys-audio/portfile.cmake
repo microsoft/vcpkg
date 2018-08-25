@@ -47,9 +47,15 @@ file(COPY
      DESTINATION ${CURRENT_PACKAGES_DIR}/lib
 )
 
-file(INSTALL ${PROJECT_PATH}/Console/Release/Console.exe
-     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/monkeys-audio
-     RENAME mac.exe)
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+    file(INSTALL ${PROJECT_PATH}/Console/x64/Release/Console.exe
+        DESTINATION ${CURRENT_PACKAGES_DIR}/tools/monkeys-audio
+        RENAME mac.exe)
+else()
+    file(INSTALL ${PROJECT_PATH}/Console/Release/Console.exe
+        DESTINATION ${CURRENT_PACKAGES_DIR}/tools/monkeys-audio
+        RENAME mac.exe)
+endif()
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/license DESTINATION ${CURRENT_PACKAGES_DIR}/share/monkeys-audio RENAME copyright)
