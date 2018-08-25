@@ -1,0 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8c475d9..31025fe 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -51,6 +51,7 @@ message("  CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
+ message("----------------------------------")
+ 
+ configure_file(${PROJECT_SOURCE_DIR}/libgo/common/cmake_config.h.in ${PROJECT_BINARY_DIR}/libgo/common/cmake_config.h)
++include_directories(${PROJECT_BINARY_DIR}/libgo/common)
+ message("----------------------------------")
+ 
+ if (UNIX)
+@@ -153,5 +154,6 @@ elseif (WIN32)
+     install(DIRECTORY ${PROJECT_SOURCE_DIR}/libgo/ DESTINATION "include/libgo" FILES_MATCHING PATTERN "*.h")
+     set_target_properties("${STATIC_T}" PROPERTIES COMPILE_FLAGS "/wd4819 /wd4267")
+ endif()
++install(FILES ${PROJECT_BINARY_DIR}/libgo/common/cmake_config.h DESTINATION include/libgo/common)
+ 
+ #add_subdirectory(${PROJECT_SOURCE_DIR}/libgo/main)
