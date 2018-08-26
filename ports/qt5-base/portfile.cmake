@@ -61,6 +61,21 @@ set(CORE_OPTIONS
     -nomake examples -nomake tests
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    set(CORE_OPTIONS
+        ${CORE_OPTIONS}
+        -static
+        -no-sqlite
+    )
+else()
+    set(CORE_OPTIONS
+        ${CORE_OPTIONS}
+        -sql-sqlite
+        -sql-psql
+        -system-sqlite
+    )
+endif()
+
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     if(VCPKG_PLATFORM_TOOLSET MATCHES "v140")
         set(PLATFORM "win32-msvc2015")
@@ -69,53 +84,27 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
     elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v120")
         set(PLATFORM "win32-msvc2013")
     endif()
-	if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-		configure_qt(
-			SOURCE_PATH ${SOURCE_PATH}
-			PLATFORM ${PLATFORM}
-			OPTIONS
-				${CORE_OPTIONS}
-				-static
-				-no-sqlite
-				-mp
-				-opengl desktop # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
-				LIBJPEG_LIBS="-ljpeg"
-			OPTIONS_RELEASE
-				ZLIB_LIBS="-lzlib"
-				LIBPNG_LIBS="-llibpng16"
-				FREETYPE_LIBS="-lfreetype"
-				PSQL_LIBS="-llibpq"
-			OPTIONS_DEBUG
-				ZLIB_LIBS="-lzlibd"
-				LIBPNG_LIBS="-llibpng16d"
-				PSQL_LIBS="-llibpqd"
-				FREETYPE_LIBS="-lfreetyped"
-		)
-	else()
-		configure_qt(
-			SOURCE_PATH ${SOURCE_PATH}
-			PLATFORM ${PLATFORM}
-			OPTIONS
-				${CORE_OPTIONS}
-				-sql-sqlite
-				-sql-psql
-				-system-sqlite
-				-mp
-				-opengl desktop # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
-				-D_DISABLE_EXTENDED_ALIGNED_STORAGE
-				LIBJPEG_LIBS="-ljpeg"
-			OPTIONS_RELEASE
-				ZLIB_LIBS="-lzlib"
-				LIBPNG_LIBS="-llibpng16"
-				FREETYPE_LIBS="-lfreetype"
-				PSQL_LIBS="-llibpq"
-			OPTIONS_DEBUG
-				ZLIB_LIBS="-lzlibd"
-				LIBPNG_LIBS="-llibpng16d"
-				PSQL_LIBS="-llibpqd"
-				FREETYPE_LIBS="-lfreetyped"
-		)
-	endif()
+
+    configure_qt(
+        SOURCE_PATH ${SOURCE_PATH}
+        PLATFORM ${PLATFORM}
+        OPTIONS
+            ${CORE_OPTIONS}
+            -mp
+            -opengl desktop # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
+            LIBJPEG_LIBS="-ljpeg"
+        OPTIONS_RELEASE
+            ZLIB_LIBS="-lzlib"
+            LIBPNG_LIBS="-llibpng16"
+            FREETYPE_LIBS="-lfreetype"
+            PSQL_LIBS="-llibpq"
+        OPTIONS_DEBUG
+            ZLIB_LIBS="-lzlibd"
+            LIBPNG_LIBS="-llibpng16d"
+            PSQL_LIBS="-llibpqd"
+            FREETYPE_LIBS="-lfreetyped"
+    )
+
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     configure_qt(
         SOURCE_PATH ${SOURCE_PATH}
