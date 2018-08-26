@@ -7,23 +7,19 @@ if(BUILDTREES_PATH_LENGTH GREATER 37 AND CMAKE_HOST_WIN32)
     )
 endif()
 
-if((NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(FATAL_ERROR "Qt5 doesn't currently support static builds. Please use a dynamic triplet instead.")
-endif()
-
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 include(configure_qt)
 include(install_qt)
 
-set(SRCDIR_NAME "qtbase-5.9.2")
-set(ARCHIVE_NAME "qtbase-opensource-src-5.9.2")
+set(SRCDIR_NAME "qtbase-5.11.1")
+set(ARCHIVE_NAME "qtbase-everywhere-src-5.11.1")
 set(ARCHIVE_EXTENSION ".tar.xz")
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${SRCDIR_NAME})
 vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "http://download.qt.io/official_releases/qt/5.9/5.9.2/submodules/${ARCHIVE_NAME}${ARCHIVE_EXTENSION}"
+    URLS "http://download.qt.io/official_releases/qt/5.11/5.11.1/submodules/${ARCHIVE_NAME}${ARCHIVE_EXTENSION}"
     FILENAME ${SRCDIR_NAME}${ARCHIVE_EXTENSION}
-    SHA512 a2f965871645256f3d019f71f3febb875455a29d03fccc7a3371ddfeb193b0af12394e779df05adf69fd10fe7b0d966f3915a24528ec7eb3bc36c2db6af2b6e7
+    SHA512 5f45405872e541565d811c1973ae95b0f19593f4495375306917b72e21146e14fe8f7db5fbd629476476807f89ef1679aa59737ca5efdd9cbe6b14d7aa371b81
 )
 vcpkg_extract_source_archive(${ARCHIVE_FILE})
 if (EXISTS ${CURRENT_BUILDTREES_DIR}/src/${ARCHIVE_NAME})
@@ -42,10 +38,10 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/include/QtZlib)
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/fix-system-pcre2.patch"
         "${CMAKE_CURRENT_LIST_DIR}/fix-system-freetype.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/fix-system-pcre2.patch"
         "${CMAKE_CURRENT_LIST_DIR}/fix-system-pcre2-linux.patch"
-		"${CMAKE_CURRENT_LIST_DIR}/fix-C3615.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/fix-msvc2017.patch"
 )
 
 # This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
@@ -73,27 +69,53 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
     elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v120")
         set(PLATFORM "win32-msvc2013")
     endif()
-    configure_qt(
-        SOURCE_PATH ${SOURCE_PATH}
-        PLATFORM ${PLATFORM}
-        OPTIONS
-            ${CORE_OPTIONS}
-            -sql-sqlite
-            -sql-psql
-            -system-sqlite
-            -mp
-            -opengl desktop # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
-            LIBJPEG_LIBS="-ljpeg"
-        OPTIONS_RELEASE
-            ZLIB_LIBS="-lzlib"
-            LIBPNG_LIBS="-llibpng16"
-            FREETYPE_LIBS="-lfreetype"
-        OPTIONS_DEBUG
-            ZLIB_LIBS="-lzlibd"
-            LIBPNG_LIBS="-llibpng16d"
-            PSQL_LIBS="-llibpqd"
-            FREETYPE_LIBS="-lfreetyped"
-    )
+	if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+		configure_qt(
+			SOURCE_PATH ${SOURCE_PATH}
+			PLATFORM ${PLATFORM}
+			OPTIONS
+				${CORE_OPTIONS}
+				-static
+				-no-sqlite
+				-mp
+				-opengl desktop # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
+				LIBJPEG_LIBS="-ljpeg"
+			OPTIONS_RELEASE
+				ZLIB_LIBS="-lzlib"
+				LIBPNG_LIBS="-llibpng16"
+				FREETYPE_LIBS="-lfreetype"
+				PSQL_LIBS="-llibpq"
+			OPTIONS_DEBUG
+				ZLIB_LIBS="-lzlibd"
+				LIBPNG_LIBS="-llibpng16d"
+				PSQL_LIBS="-llibpqd"
+				FREETYPE_LIBS="-lfreetyped"
+		)
+	else()
+		configure_qt(
+			SOURCE_PATH ${SOURCE_PATH}
+			PLATFORM ${PLATFORM}
+			OPTIONS
+				${CORE_OPTIONS}
+				-sql-sqlite
+				-sql-psql
+				-system-sqlite
+				-mp
+				-opengl desktop # other options are "-no-opengl", "-opengl angle", and "-opengl desktop"
+				-D_DISABLE_EXTENDED_ALIGNED_STORAGE
+				LIBJPEG_LIBS="-ljpeg"
+			OPTIONS_RELEASE
+				ZLIB_LIBS="-lzlib"
+				LIBPNG_LIBS="-llibpng16"
+				FREETYPE_LIBS="-lfreetype"
+				PSQL_LIBS="-llibpq"
+			OPTIONS_DEBUG
+				ZLIB_LIBS="-lzlibd"
+				LIBPNG_LIBS="-llibpng16d"
+				PSQL_LIBS="-llibpqd"
+				FREETYPE_LIBS="-lfreetyped"
+		)
+	endif()
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     configure_qt(
         SOURCE_PATH ${SOURCE_PATH}
@@ -169,6 +191,15 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/qtmain.lib)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.lib)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/qtmaind.prl)
 endif()
+
+#---------------------------------------------------------------------------
+# Qt5Bootstrap: only used to bootstrap qmake dependencies
+#---------------------------------------------------------------------------
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.lib)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.prl)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/Qt5Bootstrap.lib)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/Qt5Bootstrap.prl)
+#---------------------------------------------------------------------------
 
 file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/debug/lib/*.prl")
 file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/lib" CMAKE_RELEASE_LIB_PATH)
