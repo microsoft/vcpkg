@@ -28,7 +28,9 @@ vcpkg_download_distfile(
 vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src/icu-${VERSION})
 
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/disable-escapestr-tool.patch)
+    PATCHES ${CMAKE_CURRENT_LIST_DIR}/disable-escapestr-tool.patch
+            ${CMAKE_CURRENT_LIST_DIR}/remove-MD-from-configure.patch
+)
 
 set(CONFIGURE_OPTIONS "--disable-samples --disable-tests")
 
@@ -44,6 +46,8 @@ set(CONFIGURE_OPTIONS_DEBUG  "--enable-debug --disable-release --prefix=${CURREN
 if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 
     set(BASH bash)
+    set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -fPIC")
+    set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -fPIC")
 
     # Configure release
     message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
