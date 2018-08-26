@@ -25,7 +25,7 @@ index 79682b69..0141f666 100644
 -  typedef typename superclass::pointer pointer;
 -  typedef typename superclass::difference_type difference_type;
 +  typedef std::random_access_iterator_tag iterator_category;
-+  typedef Element value_type;
++  typename std::remove_const<Element>::type value_type;
 +  typedef std::ptrdiff_t difference_type;
 +  typedef Element* pointer;
 +  typedef Element& reference;
@@ -53,7 +53,7 @@ index 79682b69..0141f666 100644
 -  typedef typename superclass::pointer pointer;
 -  typedef typename superclass::difference_type difference_type;
 +  typedef std::random_access_iterator_tag iterator_category;
-+  typedef Element value_type;
++  typename std::remove_const<Element>::type value_type;
 +  typedef std::ptrdiff_t difference_type;
 +  typedef Element* pointer;
 +  typedef Element& reference;
