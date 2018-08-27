@@ -77,6 +77,7 @@ function(boost_modular_build)
                 "-DB2_EXE=${B2_EXE}"
                 "-DSOURCE_PATH=${_bm_SOURCE_PATH}"
                 "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
+                "-DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}"
                 ${fragment_option}
         )
         vcpkg_install_cmake()
