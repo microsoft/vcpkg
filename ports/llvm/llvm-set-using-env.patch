@@ -2,13 +2,18 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index f8da6cf..9ae2c1c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -359,6 +359,11 @@ option(LLVM_ENABLE_THREADS "Use threads if available." ON)
+@@ -359,6 +359,16 @@ option(LLVM_ENABLE_THREADS "Use threads if available." ON)
  
  option(LLVM_ENABLE_ZLIB "Use zlib for compression/decompression if available." ON)
  
 +# Set LLVM_TARGETS_TO_BUILD from ENV
 +if(NOT "$ENV{LLVM_TARGETS_TO_BUILD}" STREQUAL "")
 +  set(LLVM_TARGETS_TO_BUILD "$ENV{LLVM_TARGETS_TO_BUILD}")
++endif()
++
++# Set LLVM_EXPERIMENTAL_TARGETS_TO_BUILD from ENV
++if(NOT "$ENV{LLVM_EXPERIMENTAL_TARGETS_TO_BUILD}" STREQUAL "")
++  set(LLVM_EXPERIMENTAL_TARGETS_TO_BUILD "$ENV{LLVM_EXPERIMENTAL_TARGETS_TO_BUILD}")
 +endif()
 +
  if( LLVM_TARGETS_TO_BUILD STREQUAL "all" )

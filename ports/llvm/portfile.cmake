@@ -13,10 +13,12 @@ set(LLVM_VERSION "6.0.1")
 # https://ci.appveyor.com/api/buildjobs/w96x513p36twogfm/artifacts/graphviz-windows.zip
 # Make Graphviz multiplatform
 
+# LLVM can not be compiled for UWP apps
 if("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "WindowsStore")
     message(FATAL_ERROR "llvm cannot currently be built for UWP")
 endif()
 
+# A function for downloading LLVM projects
 function(llvm_download)
     cmake_parse_arguments(PARSE_ARGV 0 VCPKG_LLVM_DL "" "NAME;SHA512;PKG_NAME;EXTRACT_TO;FOLDER_NAME" "")
     if ("${VCPKG_LLVM_DL_PKG_NAME}" STREQUAL "")
@@ -45,6 +47,7 @@ function(llvm_download)
     endif()  
 endfunction(llvm_download)
 
+# Assert function for detecting flags
 function(llvm_assert_array)
     cmake_parse_arguments(PARSE_ARGV 0 VCPKG_LLVM_AA "" "WHERE;MATCH;NAME" "")
     foreach(_component IN LISTS VCPKG_LLVM_AA_WHERE)
@@ -66,6 +69,8 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "llvm-${LLVM_VERSION}.src.tar.xz"
     SHA512 cbbb00eb99cfeb4aff623ee1a5ba075e7b5a76fc00c5f9f539ff28c108598f5708a0369d5bd92683def5a20c2fe60cab7827b42d628dbfcc79b57e0e91b84dd9
 )
+
+# Extract main LLVM project
 vcpkg_extract_source_archive(${ARCHIVE})
 
 # From: https://github.com/llvm-mirror/llvm/blob/master/CMakeLists.txt
@@ -86,14 +91,33 @@ set(_LLVM_ALL_TARGETS
     XCore
 )
 
+set(_LLVM_ALL_EXPERIMENTAL_TARGETS
+    ARC
+    AVR
+    Nios2
+    RISCV
+    WebAssembly
+)
+
+# An array of component-specific flags used for debug and release builds
 set(_COMPONENT_FLAGS "")
+
+# An array of component-specific flags used only for debug build
 set(_COMPONENT_DEBUG_FLAGS "")
+
+# An array of component-specific flags used only for release build
 set(_COMPONENT_RELEASE_FLAGS "")
 
+# An array of component-specific patches
 set(_COMPONENT_PATCHES "")
-set(_COMPONENT_TARGETS "")
-set(_COMPONENT_SANITIZERS "")
 
+# An array of build targets
+set(_COMPONENT_TARGETS "")
+
+# An array of build experimental targets
+set(_COMPONENT_EXPERIMENTAL_TARGETS "")
+
+# Iterate through all user-defined features and parse it
 foreach(_feature IN LISTS FEATURES)
     if ("${_feature}" MATCHES "^enable-")
         # Uppercase the feature name and replace "-" with "_"
@@ -101,6 +125,27 @@ foreach(_feature IN LISTS FEATURES)
         string(REPLACE "-" "_" _FEATURE "${_FEATURE}")
 
         list(APPEND _COMPONENT_FLAGS "-DLLVM_${_FEATURE}=ON")
+    elseif ("${_feature}" MATCHES "^target-exp-")
+        string(REPLACE "target-exp-" "" _featureValue "${_feature}")
+        if ("${_featureValue}" STREQUAL "wasm")
+            set(_featureValue "webassembly")
+        endif()
+        foreach(_TARGETNAME IN LISTS _LLVM_ALL_EXPERIMENTAL_TARGETS)
+            string(TOLOWER "${_TARGETNAME}" _targetName)
+            if ("${_featureValue}" STREQUAL "${_targetName}")
+                list(APPEND _COMPONENT_EXPERIMENTAL_TARGETS "${_TARGETNAME}")
+                break()
+            endif()
+        endforeach()
+    elseif ("${_feature}" MATCHES "^target-")
+        string(REPLACE "target-" "" _featureValue "${_feature}")
+        foreach(_TARGETNAME IN LISTS _LLVM_ALL_TARGETS)
+            string(TOLOWER "${_TARGETNAME}" _targetName)
+            if ("${_featureValue}" STREQUAL "${_targetName}")
+                list(APPEND _COMPONENT_TARGETS "${_TARGETNAME}")
+                break()
+            endif()
+        endforeach()
     elseif ("${_feature}" MATCHES "^abi-breaking-checks-")
         string(REPLACE "abi-breaking-checks-" "" _featureValue "${_feature}")
         llvm_assert_array(
@@ -167,6 +212,7 @@ foreach(_feature IN LISTS FEATURES)
         find_package (Python${_featureValue} COMPONENTS Development)
         list(APPEND _COMPONENT_FLAGS "-DPYTHON_HOME=${Python${_featureValue}_ROOT_DIR}")
         list(APPEND _COMPONENT_FLAGS "-DLLDB_BUILD_FRAMEWORK=ON")
+        list(APPEND _COMPONENT_FLAGS "-DLLDB_RELOCATABLE_PYTHON=ON")
     elseif ("${_feature}" STREQUAL "lld")
         llvm_download(
             NAME lld
@@ -178,11 +224,7 @@ foreach(_feature IN LISTS FEATURES)
             SHA512 1851223653f8c326ddf39f5cf9fc18a2310299769c011795d8e1a5abef2834d2c800fae318e6370547d3b6b35199ce29fe76582b64493ab8fa506aff59272539
         )
     elseif ("${_feature}" STREQUAL "polly-gpu")
-        if ("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "")
-            message(FATAL_ERROR "The polly-gpu does not work on Windows yet.")
-        else()
-            list(APPEND _COMPONENT_FLAGS "-DPOLLY_ENABLE_GPGPU_CODEGEN=ON")
-        endif()
+        list(APPEND _COMPONENT_FLAGS "-DPOLLY_ENABLE_GPGPU_CODEGEN=ON")
     elseif ("${_feature}" STREQUAL "compiler-rt")
         llvm_download(
             NAME compiler-rt
@@ -244,23 +286,12 @@ foreach(_feature IN LISTS FEATURES)
         elseif ("${_featureValue}" STREQUAL "ompt-off")
             list(APPEND _COMPONENT_FLAGS "-DLIBOMP_OMPT_SUPPORT=OFF")
         endif()
-    elseif ("${_feature}" STREQUAL "doxygen")
+    elseif ("${_feature}" STREQUAL "documentation")
         vcpkg_find_acquire_program(DOXYGEN)
         get_filename_component(DOXYGEN_PATH ${DOXYGEN} DIRECTORY)
         set(ENV{PATH} "$ENV{PATH};${DOXYGEN_PATH}")
-
-        set(_GRAPHVIZ_PATH ${CURRENT_BUILDTREES_DIR}/graphviz)
-        vcpkg_download_distfile(GRAPHVIZ_ARCHIVE
-            URLS "https://ci.appveyor.com/api/buildjobs/w96x513p36twogfm/artifacts/graphviz-windows.zip"
-            FILENAME "graphviz-windows.zip"
-            SHA512 b5b17e2986772237556ba93b91bd9dab49c60d41c169a9b3cd7faa14db5a7fcb0d6fe3ddc087e5e2424b62bc01ca5c8b686f11c9a7f52b449fb7a5d69ce2a0c1
-        )
-        vcpkg_extract_source_archive(${GRAPHVIZ_ARCHIVE} ${_GRAPHVIZ_PATH})
-        set(ENV{PATH} "$ENV{PATH};${_GRAPHVIZ_PATH}/Graphviz/bin")
-
         list(APPEND _COMPONENT_FLAGS "-DLLVM_BUILD_DOCS=ON")
-        list(APPEND _COMPONENT_FLAGS "-DLLVM_ENABLE_DOXYGEN=ON")
-        list(APPEND _COMPONENT_FLAGS "-DLLVM_DOXYGEN_SVG=ON")
+        list(APPEND _COMPONENT_FLAGS "-DLLVM_INCLUDE_DOCS=ON")
     #elseif ("${_feature}" STREQUAL "libcxx")
     # TODO must be compiled with CLANG when using ninja
     #    llvm_download(
@@ -273,43 +304,6 @@ foreach(_feature IN LISTS FEATURES)
     #        EXTRACT_TO projects
     #        SHA512 bbb4c7b412e295cb735f637df48a83093eef45ed5444f7766790b4b047f75fd5fd634d8f3a8ac33a5c1407bd16fd450ba113f60a9bcc1d0a911fe0c54e9c81f2
     #    )
-    elseif ("${_feature}" MATCHES "^target-")
-        string(REPLACE "target-" "" _featureValue "${_feature}")
-        foreach(_TARGETNAME IN LISTS _LLVM_ALL_TARGETS)
-            string(TOLOWER "${_TARGETNAME}" _targetName)
-            if ("${_featureValue}" STREQUAL "${_targetName}")
-                list(APPEND _COMPONENT_TARGETS "${_TARGETNAME}")
-                break()
-            endif()
-        endforeach()
-    elseif ("${_feature}" MATCHES "^use-sanitizer-")
-        llvm_assert_array(
-            NAME "sanitizer"
-            WHERE ${_COMPONENT_RELEASE_FLAGS}
-            MATCH "-DLLVM_USE_SANITIZE_COVERAGE=ON$"
-        )
-
-        string(REPLACE "use-sanitizer-" "" _featureValue "${_feature}")
-        if ("${_featureValue}" STREQUAL "addr")
-            set(_COMPONENT_SANITIZERS "Address")
-        elseif ("${_featureValue}" STREQUAL "mem")
-            set(_COMPONENT_SANITIZERS "Memory")
-        elseif ("${_featureValue}" STREQUAL "mem-origins")
-            set(_COMPONENT_SANITIZERS "MemoryWithOrigins")
-        elseif ("${_featureValue}" STREQUAL "undef")
-            set(_COMPONENT_SANITIZERS "Undefined")
-        elseif ("${_featureValue}" STREQUAL "thread")
-            set(_COMPONENT_SANITIZERS "Thread")
-        elseif ("${_featureValue}" STREQUAL "addr-undef")
-            set(_COMPONENT_SANITIZERS "Address;Undefined")
-        endif()
-
-        list(APPEND _COMPONENT_RELEASE_FLAGS "-DLLVM_USE_SANITIZE_COVERAGE=ON")
-
-        if ("compiler-rt" IN_LIST FEATURES)
-            message(STATUS "Warning: Avoiding building the sanitizers themselves with sanitizers enabled because of \"compiler-rt\" is enabled.")
-            list(APPEND _COMPONENT_RELEASE_FLAGS "-DLLVM_BUILD_RUNTIME=OFF")
-        endif()
     endif()
 endforeach()
 
@@ -318,30 +312,45 @@ if ("all" IN_LIST _COMPONENT_TARGETS OR "target-all" IN_LIST FEATURES)
     set(_COMPONENT_TARGETS "all")
 endif()
 
-if (NOT "${_COMPONENT_TARGETS}" STREQUAL "" OR NOT "${_COMPONENT_SANITIZERS}" STREQUAL "")
-    list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/llvm-set-using-env.patch")
+# If the "all" target is defined in FEATURES, replace _COMPONENT_EXPERIMENTAL_TARGETS
+if ("target-exp-all" IN_LIST FEATURES)
+    set(_COMPONENT_EXPERIMENTAL_TARGETS "${_LLVM_ALL_EXPERIMENTAL_TARGETS}")
 endif()
 
+# Set ENV for LLVM_TARGETS_TO_BUILD
 if (NOT "${_COMPONENT_TARGETS}" STREQUAL "")
     set(ENV{LLVM_TARGETS_TO_BUILD} "${_COMPONENT_TARGETS}")
 endif()
 
-if (NOT "${_COMPONENT_SANITIZERS}" STREQUAL "")
-    set(ENV{LLVM_USE_SANITIZER} "${_COMPONENT_SANITIZERS}")
-    message(STATUS "Warning: Sanitizers will be compiled in Release build.")
+# Set EVN for LLVM_EXPERIMENTAL_TARGETS_TO_BUILD
+if (NOT "${_COMPONENT_EXPERIMENTAL_TARGETS}" STREQUAL "")
+    set(ENV{LLVM_EXPERIMENTAL_TARGETS_TO_BUILD} "${_COMPONENT_EXPERIMENTAL_TARGETS}")
 endif()
-
-# Based on https://github.com/numba/llvmlite/blob/master/conda-recipes/llvm-lto-static.patch
-list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/llvm-lto-static.patch")
-list(APPEND _COMPONENT_FLAGS "-DLLVM_BUILD_STATIC=ON")
 
 # Appyl patches
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
+        # Patch cmake modules to point to the share folder
         ${CMAKE_CURRENT_LIST_DIR}/install-cmake-modules-to-share.patch
+
+        # Add bigobj for llvm compilation on MSVC
         ${CMAKE_CURRENT_LIST_DIR}/force-bigobj-modules-llvm-options.patch
+
+        # Fix compilation problem on MSVC
         ${CMAKE_CURRENT_LIST_DIR}/force-bigobj-platform-msvc.patch
+
+        # Add patch for settings LLVM_TARGETS_TO_BUILD, LLVM_EXPERIMENTAL_TARGETS_TO_BUILD from ENV
+        ${CMAKE_CURRENT_LIST_DIR}/llvm-set-using-env.patch
+        
+        # Based on https://github.com/numba/llvmlite/blob/master/conda-recipes/llvm-lto-static.patch
+        ${CMAKE_CURRENT_LIST_DIR}/llvm-lto-static.patch
+
+        # Fixes build of the experimental target Nios2
+        # https://github.com/llvm-mirror/llvm/commit/91518dd4d4f19ab723562376e8b1dfe89e5d2770
+        ${CMAKE_CURRENT_LIST_DIR}/fix-experimental-target-nios2-build.patch
+
+        # Component-specific patches
         ${_COMPONENT_PATCHES}
 )
 
@@ -350,13 +359,27 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        ${_COMPONENT_FLAGS}
+        # Build LLVM as static
+        -DLLVM_BUILD_STATIC=ON
+
+        # Disable LLVM tests
         -DLLVM_INCLUDE_TESTS=OFF
+
+        # Disable LLVM examples
         -DLLVM_INCLUDE_EXAMPLES=OFF
+
+        # Change tool installation directory
         -DLLVM_TOOLS_INSTALL_DIR=tools/llvm
-    OPTIONS_RELEASE 
+
+        # Component-specific compilation flags for debug and release
+        ${_COMPONENT_FLAGS}
+
+    OPTIONS_RELEASE
+        # Component-specific compilation flags for release only
         ${_COMPONENT_RELEASE_FLAGS}
+
     OPTIONS_DEBUG
+        # Component-specific compilation flags for debug only
         ${_COMPONENT_DEBUG_FLAGS}
 )
 

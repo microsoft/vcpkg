@@ -59,8 +59,8 @@ Feature: libomp-ompt-off
 Description: Build without support for the OpenMP Tools Interface (OMPT).
 Build-Depends: llvm[libomp]
 
-Feature: doxygen
-Description: Build with doxygen documentation.
+Feature: documentation
+Description: Build with documentation.
 
 Feature: enable-cxx1y
 Description: Build in C++1y mode, if available.
@@ -91,14 +91,17 @@ Description: Used to decide if LLVM should be built with ABI breaking checks or 
 Feature: target-all
 Description: Build with all targets.
 
-Feature: target-aarch64
-Description: Build with AArch64 target.
+Feature: target-exp-all
+Description: Build with all experimental targets.
 
 Feature: target-amdgpu
 Description: Build with AMDGPU target.
 
 Feature: target-arm
 Description: Build with ARM target.
+
+Feature: target-aarch64
+Description: Build with AArch64 target.
 
 Feature: target-bpf
 Description: Build with BPF target.
@@ -133,20 +136,17 @@ Description: Build with X86 target.
 Feature: target-xcore
 Description: Build with XCore target.
 
-Feature: use-sanitizer-addr
-Description: Use address sanitizer to build LLVM binaries.
+Feature: target-exp-riscv
+Description: Build with experimental RISCV target.
 
-Feature: use-sanitizer-mem
-Description: Use memory sanitizer to build LLVM binaries.
+Feature: target-exp-avr
+Description: Build with experimental AVR target.
 
-Feature: use-sanitizer-mem-origins
-Description: Use memory with origins sanitizer to build LLVM binaries.
+Feature: target-exp-arc
+Description: Build with experimental ARC target.
 
-Feature: use-sanitizer-undef
-Description: Use undefined sanitizer to build LLVM binaries.
+Feature: target-exp-nios2
+Description: Build with experimental Nios2 target.
 
-Feature: use-sanitizer-thread
-Description: Use thread sanitizer to build LLVM binaries.
-
-Feature: use-sanitizer-addr-undef
-Description: Use address and undefined sanitizers to build LLVM binaries.
+Feature: target-exp-wasm
+Description: Build with experimental WebAssembly target.

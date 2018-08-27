@@ -1,0 +1,58 @@
+From 91518dd4d4f19ab723562376e8b1dfe89e5d2770 Mon Sep 17 00:00:00 2001
+From: Peter Collingbourne <peter@pcc.me.uk>
+Date: Tue, 15 May 2018 20:21:58 +0000
+Subject: [PATCH] Nios2: Unbreak build.
+
+git-svn-id: https://llvm.org/svn/llvm-project/llvm/trunk@332391 91177308-0d34-0410-b5e6-96231b3b80d8
+---
+ lib/Target/Nios2/MCTargetDesc/Nios2AsmBackend.cpp | 6 +++---
+ lib/Target/Nios2/MCTargetDesc/Nios2MCTargetDesc.h | 5 +++--
+ 2 files changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/lib/Target/Nios2/MCTargetDesc/Nios2AsmBackend.cpp b/lib/Target/Nios2/MCTargetDesc/Nios2AsmBackend.cpp
+index 3971630c6beb..52fd344e7e2a 100644
+--- a/lib/Target/Nios2/MCTargetDesc/Nios2AsmBackend.cpp
++++ b/lib/Target/Nios2/MCTargetDesc/Nios2AsmBackend.cpp
+@@ -19,6 +19,7 @@
+ #include "llvm/MC/MCELFObjectWriter.h"
+ #include "llvm/MC/MCFixupKindInfo.h"
+ #include "llvm/MC/MCObjectWriter.h"
++#include "llvm/MC/MCSubtargetInfo.h"
+ 
+ using namespace llvm;
+ 
+@@ -123,9 +124,8 @@ bool Nios2AsmBackend::writeNopData(uint64_t Count, MCObjectWriter *OW) const {
+ 
+ // MCAsmBackend
+ MCAsmBackend *llvm::createNios2AsmBackend(const Target &T,
++                                          const MCSubtargetInfo &STI,
+                                           const MCRegisterInfo &MRI,
+-                                          const Triple &TT, StringRef CPU,
+                                           const MCTargetOptions &Options) {
+-
+-  return new Nios2AsmBackend(T, TT.getOS());
++  return new Nios2AsmBackend(T, STI.getTargetTriple().getOS());
+ }
+diff --git a/lib/Target/Nios2/MCTargetDesc/Nios2MCTargetDesc.h b/lib/Target/Nios2/MCTargetDesc/Nios2MCTargetDesc.h
+index d918a066acae..e5fec96bfee2 100644
+--- a/lib/Target/Nios2/MCTargetDesc/Nios2MCTargetDesc.h
++++ b/lib/Target/Nios2/MCTargetDesc/Nios2MCTargetDesc.h
+@@ -20,6 +20,7 @@ namespace llvm {
+ class MCAsmBackend;
+ class MCObjectWriter;
+ class MCRegisterInfo;
++class MCSubtargetInfo;
+ class MCTargetOptions;
+ class Target;
+ class Triple;
+@@ -28,8 +29,8 @@ class raw_pwrite_stream;
+ 
+ Target &getTheNios2Target();
+ 
+-MCAsmBackend *createNios2AsmBackend(const Target &T, const MCRegisterInfo &MRI,
+-                                    const Triple &TT, StringRef CPU,
++MCAsmBackend *createNios2AsmBackend(const Target &T, const MCSubtargetInfo &STI,
++                                    const MCRegisterInfo &MRI,
+                                     const MCTargetOptions &Options);
+ 
+ std::unique_ptr<MCObjectWriter>
