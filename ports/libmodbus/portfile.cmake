@@ -14,12 +14,11 @@ vcpkg_configure_cmake(
   SOURCE_PATH "${SOURCE_PATH}"
   PREFER_NINJA
   OPTIONS_DEBUG
-  -DDISABLE_INSTALL_HEADERS=ON
+    -DDISABLE_INSTALL_HEADERS=ON
 )
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake")
 
