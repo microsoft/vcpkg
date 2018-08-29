@@ -2,10 +2,10 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO xiangfan-ms/hana
-    REF caa985795ab6c4b2c7bcf1458ccbb6ded65c15cb
-    SHA512 7ed65bda17042c42f7a76d88e66df61155800066119f6b256e20cf04dcd18d46584d3e44ad6555e9a17d9c0bf85fbf173ae6079f5a4a878341f959c855ebee6b
-    HEAD_REF master
+    REPO boostorg/hana
+    REF 7f1ae3b1bb52f6eb329300a93dc02309c94dfe01
+    SHA512 5fe1962ae270901b58eec83750edd02cc7192b4fae4add72849efbb9989dd5f9a0e3a85f3e3a7525fce38e6ef5bca210993b89d04a1c39bd0421bd0a6f4c92cb
+    HEAD_REF develop
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
