@@ -4,12 +4,12 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 endif()
 
 if(NOT VCPKG_USE_HEAD_VERSION)
-	message(FATAL_ERROR "Please re-run the installation with --head.")
-else()	
+	message(FATAL_ERROR "Live555 does not have persistent releases. Please re-run the installation with --head.")
+else()
 	# The current Live555 version from http://www.live555.com/liveMedia/public/
 	set(LIVE_VERSION latest)
 
-	include(vcpkg_common_functions)	
+	include(vcpkg_common_functions)
 	set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${LIVE_VERSION}/live)
 	vcpkg_download_distfile(ARCHIVE
 		URLS "http://www.live555.com/liveMedia/public/live555-${LIVE_VERSION}.tar.gz"
