@@ -5,7 +5,7 @@
 ## ## Usage:
 ## ```cmake
 ## vcpkg_from_gitlab(
-##     GITLAB_INSTANCE <https://gitlab.com>
+##     GITLAB_URL <https://gitlab.com>
 ##     OUT_SOURCE_PATH <SOURCE_PATH>
 ##     REPO <gitlab-org/gitlab-ce>
 ##     [REF <v10.7.3>]

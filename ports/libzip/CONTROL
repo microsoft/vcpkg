@@ -1,4 +1,4 @@
 Source: libzip
-Version: rel-1-5-1
+Version: rel-1-5-1-vcpkg1
 Build-Depends: zlib
 Description: A library for reading, creating, and modifying zip archives.

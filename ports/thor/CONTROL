@@ -1,4 +1,4 @@
 Source: thor
-Version: 2.0-1
+Version: 2.0-2
 Description: Extends the multimedia library SFML with higher-level features
 Build-Depends: sfml, aurora

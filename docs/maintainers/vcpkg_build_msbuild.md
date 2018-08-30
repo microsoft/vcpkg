@@ -1,6 +1,6 @@
 # vcpkg_build_msbuild
 
-Build an msbuild-based project.
+Build an msbuild-based project. Deprecated in favor of `vcpkg_install_msbuild()`.
 
 ## Usage
 ```cmake
@@ -15,6 +15,7 @@ vcpkg_build_msbuild(
     [OPTIONS </p:ZLIB_INCLUDE_PATH=X>...]
     [OPTIONS_RELEASE </p:ZLIB_LIB=X>...]
     [OPTIONS_DEBUG </p:ZLIB_LIB=X>...]
+    [USE_VCPKG_INTEGRATION]
 )
 ```
 
