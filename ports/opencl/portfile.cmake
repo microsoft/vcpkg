@@ -47,7 +47,7 @@ message(STATUS "Generating OpenCL C++ headers done")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/OpenCL-ICD-Loader
-    REF 26a38983cbe5824fd5be03eab8d037758fc44360
+    REF b342ff7b7f70a4b3f2cfc53215af8fa20adc3d86
     SHA512 3029f758ff0c39b57aa10d881af68e73532fd179c54063ed1d4529b7d6e27a5219e3c24b7fb5598d790ebcdc2441e00001a963671dc90fef2fc377c76d724f54
     HEAD_REF master
 )
