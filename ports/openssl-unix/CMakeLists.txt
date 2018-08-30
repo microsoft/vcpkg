@@ -115,7 +115,7 @@ add_custom_command(
 
 add_custom_target(depend
     COMMAND ${ENV_COMMAND} "PATH=${MSYS_BIN_DIR}${PATH_VAR}"
-    COMMAND "${MAKE}" links # depend MAKEDEPPROG=${CMAKE_C_COMPILER}
+    COMMAND "${MAKE}" -j links # depend MAKEDEPPROG=${CMAKE_C_COMPILER}
     VERBATIM
     WORKING_DIRECTORY "${BUILDDIR}"
     DEPENDS "${BUILDDIR}/Makefile"
@@ -123,7 +123,7 @@ add_custom_target(depend
 add_custom_target(build_libs ALL
     COMMAND ${ENV_COMMAND} "PATH=${MSYS_BIN_DIR}${PATH_VAR}"
     COMMAND "${CMAKE_COMMAND}" -E touch "${BUILDDIR}/krb5.h"
-    COMMAND "${MAKE}" build_libs
+    COMMAND "${MAKE}" -j build_libs
     VERBATIM
     WORKING_DIRECTORY "${BUILDDIR}"
     DEPENDS depend
