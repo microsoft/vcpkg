@@ -3,7 +3,7 @@ set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://android.googlesource.com/platform/external/fdlibm/+archive/59f7335e4dd8275a7dc2f8aeb4fd00758fde37ac.tar.gz"
     FILENAME "fdlibm-59f7335e4dd8275a7dc2f8aeb4fd00758fde37ac.tar.gz"
-    SHA512 9ce2547ae73d6e92a587654c63fc1b216cf51cf67a4a937a0184bdae794c0d0e21451ae302fe9e11640ee6f15f21fb59d2e21bd754a997a9be3250ce7d061f2e
+    SHA512 bb998648429c8977a7d574e01689ef6ee04b4b25c0850a61087a5c79fa91e0e43da99061fd38bcff56c8e7a8347cf8c176c873bc8b05c3d3b036943c0734c7dd
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
