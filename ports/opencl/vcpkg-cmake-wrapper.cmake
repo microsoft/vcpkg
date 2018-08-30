@@ -1,0 +1,7 @@
+_find_package(${ARGS})
+if(TARGET OpenCL::OpenCL)
+    set_property(TARGET OpenCL::OpenCL APPEND PROPERTY INTERFACE_LINK_LIBRARIES ${CMAKE_DL_LIBS})
+endif()
+if(OpenCL_LIBRARIES)
+    list(APPEND OpenCL_LIBRARIES ${CMAKE_DL_LIBS})
+endif()
