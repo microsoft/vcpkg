@@ -20,6 +20,7 @@ vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src/icu-${VERS
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/disable-escapestr-tool.patch
             ${CMAKE_CURRENT_LIST_DIR}/remove-MD-from-configure.patch
+            ${CMAKE_CURRENT_LIST_DIR}/fixed_parallel_build_on_windows.patch
 )
 
 set(CONFIGURE_OPTIONS "--disable-samples --disable-tests")
