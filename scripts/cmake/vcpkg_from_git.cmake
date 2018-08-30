@@ -6,7 +6,7 @@
 ## ```cmake
 ## vcpkg_from_git(
 ##     OUT_SOURCE_PATH <SOURCE_PATH>
-##     URL https://android.googlesource.com/platform/external/fdlibm
+##     URL <https://android.googlesource.com/platform/external/fdlibm>
 ##     [REF <59f7335e4d...>]
 ##     [PATCHES <patch1.patch> <patch2.patch>...]
 ## )
@@ -54,8 +54,7 @@ function(vcpkg_from_git)
   endif()
 
   string(REPLACE "/" "-" SANITIZED_REF "${_vdud_REF}")
-  set(FILENAME "${PORT}-${SANITIZED_REF}.tar.gz")
-  set(ARCHIVE "${DOWNLOADS}/${FILENAME}")
+  set(ARCHIVE "${DOWNLOADS}/${PORT}-${SANITIZED_REF}.tar.gz")
   set(TEMP_SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src/${SANITIZED_REF}")
 
   if(NOT EXISTS "${ARCHIVE}")
