@@ -4,13 +4,13 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/OpenCL-Headers
-    REF f039db6764d52388658ef15c30b2237bbda49803
+    REF a749dc6b85b3dcb57a54b17fcbf279c4f7198648
     SHA512 5909a85f96477d731059528303435f06255e98ed8df9d4cd2b62c744b5fe41408c69c0d4068421a2813eb9ad9d70d7f1bace9ebf0db19cc09e71bb8066127c5f
     HEAD_REF master
 )
 
 file(INSTALL
-        "${SOURCE_PATH}/opencl22/CL"
+        "${SOURCE_PATH}/CL"
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/include
 )
