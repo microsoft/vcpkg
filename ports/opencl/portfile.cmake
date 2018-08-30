@@ -19,7 +19,7 @@ file(INSTALL
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/OpenCL-CLHPP
-    REF 5dd8bb9e32a8e2f72621566b296ac8143a554270
+    REF bbccc50adcd667d4f7c58960b586bdc60c13f7f0
     SHA512 2909fe2b979b52724ef8d285180d8bfd30bdd56cb79da4effc9e03b576ec7edb5497c99a9fa30541fe63037c84ddef21d4a73e7927f3813baab2a2afeecd55ab
     HEAD_REF master
 )
