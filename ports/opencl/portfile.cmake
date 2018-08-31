@@ -86,7 +86,7 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME) # Empty when Windows
 endif()
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
   if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(LibraryName "OpenCL.a")
+    set(LibraryName "libOpenCL.a")
   elseif()
     set(LibraryName "libOpenCL.so")
   endif()
