@@ -52,10 +52,15 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-#if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND CMAKE_SYSTEM_NAME STREQUAL "Windows")
-#    message(STATUS "Building the ICD loader as a static library on Windows is not supported. Building as DLLs instead.")
-#    set(VCPKG_LIBRARY_LINKAGE "dynamic")
-#endif()
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/do-not-enforce-dynamic-library.patch"
+)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND (NOT VCPKG_CMAKE_SYSTEM_NAME)) # Empty when Windows
+    message(STATUS "Building the ICD loader as a static library on Windows is not supported. Building as DLLs instead.")
+    set(VCPKG_LIBRARY_LINKAGE "dynamic")
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -66,17 +71,38 @@ vcpkg_configure_cmake(
 
 vcpkg_build_cmake(TARGET OpenCL)
 
-file(INSTALL
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/OpenCL.lib"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/lib
-)
+if(NOT VCPKG_CMAKE_SYSTEM_NAME) # Empty when Windows
+  file(INSTALL
+          "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/OpenCL.lib"
+      DESTINATION
+          ${CURRENT_PACKAGES_DIR}/lib
+  )
+  
+  file(INSTALL
+          "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/OpenCL.lib"
+      DESTINATION
+          ${CURRENT_PACKAGES_DIR}/debug/lib
+  )
+endif()
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(LibraryName "OpenCL.a")
+  elseif()
+    set(LibraryName "libOpenCL.so")
+  endif()
 
-file(INSTALL
-        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/OpenCL.lib"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/debug/lib
-)
+  file(INSTALL
+          "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${LibraryName}"
+      DESTINATION
+          ${CURRENT_PACKAGES_DIR}/lib
+  )
+  
+  file(INSTALL
+          "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${LibraryName}"
+      DESTINATION
+          ${CURRENT_PACKAGES_DIR}/debug/lib
+  )
+endif()
 
 file(INSTALL
         "${SOURCE_PATH}/LICENSE.txt"
@@ -85,6 +111,12 @@ file(INSTALL
 )
 file(COPY
         ${CMAKE_CURRENT_LIST_DIR}/usage
+    DESTINATION
+        ${CURRENT_PACKAGES_DIR}/share/${PORT}
+)
+
+file(COPY
+        ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/share/${PORT}
 )

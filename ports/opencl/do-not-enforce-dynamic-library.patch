@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 84a03f0..fb79ebf 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -22,7 +22,7 @@ endif ()
+ 
+ include_directories (${OPENCL_INCLUDE_DIRS})
+ 
+-add_library (OpenCL SHARED ${OPENCL_ICD_LOADER_SOURCES})
++add_library (OpenCL ${OPENCL_ICD_LOADER_SOURCES})
+ set_target_properties (OpenCL PROPERTIES VERSION "1.2" SOVERSION "1")
+ 
+ if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
