@@ -15,8 +15,8 @@ vcpkg_download_distfile(ARCHIVE
 # license not exist in antlr folder.
 vcpkg_download_distfile(LICENSE
     URLS https://raw.githubusercontent.com/antlr/antlr4/${VERSION}/LICENSE.txt
-    FILENAME "antlr4-copyright"
-    SHA512 c72ae3d5c9f3f07160405b5ca44f01116a9602d82291d6cd218fcc5ec6e8baf985e4baa2acf3d621079585385708bd171c96ef44dd808e60c40a48bc1f56c9ae
+    FILENAME "antlr4-copyright-${VERSION}"
+    SHA512 1e8414de5fdc211e3188a8ec3276c6b3c55235f5edaf48522045ae18fa79fd9049719cb8924d25145016f223ac9a178defada1eeb983ccff598a08b0c0f67a3b
 )
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${VERSION})
