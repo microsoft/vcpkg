@@ -52,8 +52,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message(STATUS "Building the ICD loader as a static library is not supported. Building as DLLs instead.")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    message(STATUS "Building the ICD loader as a static library on Windows is not supported. Building as DLLs instead.")
     set(VCPKG_LIBRARY_LINKAGE "dynamic")
 endif()
 
