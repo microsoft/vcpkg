@@ -85,20 +85,14 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME) # Empty when Windows
   )
 endif()
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(LibraryName "libOpenCL.a")
-  elseif()
-    set(LibraryName "libOpenCL.so")
-  endif()
-
   file(INSTALL
-          "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${LibraryName}"
+          "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libOpenCL.a"
       DESTINATION
           ${CURRENT_PACKAGES_DIR}/lib
   )
   
   file(INSTALL
-          "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${LibraryName}"
+          "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libOpenCL.a"
       DESTINATION
           ${CURRENT_PACKAGES_DIR}/debug/lib
   )
