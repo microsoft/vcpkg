@@ -10,6 +10,7 @@ and the CMake v3.7 and beyond imported target syntax
     target_link_libraries(main PRIVATE OpenCL::OpenCL)
 
 This package is only an OpenCL SDK. To actually run OpenCL code you also need to install an implementation.
-WINDOWS: implementations typically ship with the drivers of you CPU/GPU vendors.
-LINUX: implementations may be installed from your distro's repo or manually. There are too many to count.
-APPLE: consult your distribution vendor on the state of OpenCL support: https://support.apple.com/en-us/HT202823
+
+    WINDOWS: implementations typically ship with the drivers of you CPU/GPU vendors.
+    LINUX: implementations may be installed from your distro's repo or manually. There are too many to count.
+    APPLE: consult your distribution vendor on the state of OpenCL support: https://support.apple.com/en-us/HT202823
