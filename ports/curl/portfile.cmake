@@ -1,14 +1,11 @@
 include(vcpkg_common_functions)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF curl-7_61_0
     SHA512 b6d2f57059e72139540cb93b945703857cb447920ed9b283993611453fed623432290adc5a3558181e3decc15c7cf54fff475010d922957807a37d1a1449be6c
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/0001_cmake.patch
         ${CMAKE_CURRENT_LIST_DIR}/0002_fix_uwp.patch
@@ -135,3 +132,5 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/include/curl/curl.h "${CURL_H}")
 vcpkg_copy_pdbs()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+
+vcpkg_test_cmake(PACKAGE_NAME CURL MODULE)
