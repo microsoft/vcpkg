@@ -56,7 +56,9 @@ foreach(INCDIR ${CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES})
 endforeach()
 
 if(APPLE)
-  set(CXXFLAGS "${CXXFLAGS} <compileflags>-D_DARWIN_C_SOURCE")
+    set(CXXFLAGS "${CXXFLAGS} <compileflags>-D_DARWIN_C_SOURCE")
+else()
+    set(CXXFLAGS "${CXXFLAGS} <cxxflags>-std=c++11")
 endif()
 
 find_library(ZLIB_LIBPATH z)
