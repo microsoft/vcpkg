@@ -57,9 +57,9 @@ endforeach()
 
 if(APPLE)
     set(CXXFLAGS "${CXXFLAGS} <compileflags>-D_DARWIN_C_SOURCE")
-else()
-    set(CXXFLAGS "${CXXFLAGS} <cxxflags>-std=c++11")
 endif()
+
+set(CXXFLAGS "${CXXFLAGS} <cxxflags>-std=c++11")
 
 find_library(ZLIB_LIBPATH z)
 list(APPEND B2_OPTIONS
@@ -84,18 +84,9 @@ endif()
 
 configure_file(${CMAKE_CURRENT_LIST_DIR}/user-config.jam ${CMAKE_CURRENT_BINARY_DIR}/user-config.jam @ONLY)
 
-set(NUMBER_OF_PROCESSORS 1)
-if(DEFINED ENV{NUMBER_OF_PROCESSORS})
-    set(NUMBER_OF_PROCESSORS $ENV{NUMBER_OF_PROCESSORS})
-elseif(CMAKE_HOST_LINUX)
-    execute_process(
-        COMMAND nproc
-        OUTPUT_VARIABLE NUMBER_OF_PROCESSORS
-    )
-    string(REPLACE "\n" "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
-    string(REPLACE " " "" NUMBER_OF_PROCESSORS "${NUMBER_OF_PROCESSORS}")
-endif()
-if(NOT NUMBER_OF_PROCESSORS)
+include(ProcessorCount)
+ProcessorCount(NUMBER_OF_PROCESSORS)
+if(NUMBER_OF_PROCESSORS EQUAL 0)
     set(NUMBER_OF_PROCESSORS 1)
 endif()
 

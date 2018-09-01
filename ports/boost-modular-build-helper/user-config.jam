@@ -1,4 +1,5 @@
 import toolset ;
+import os ;
 
 if "@VCPKG_PLATFORM_TOOLSET@" != "external"
 {
@@ -6,6 +7,16 @@ if "@VCPKG_PLATFORM_TOOLSET@" != "external"
     <setup>"@NOTHING_BAT@"
     @TOOLSET_OPTIONS@
     ;
+}
+else if [ os.name ] = MACOSX
+{
+
+    using clang : : @CMAKE_CXX_COMPILER@
+        :
+        <ranlib>@CMAKE_RANLIB@
+        <archiver>@CMAKE_AR@
+        @CXXFLAGS@
+        ;
 }
 else
 {
@@ -52,16 +63,16 @@ lib icuuc : : <toolset>msvc
               <runtime-link>"@LIB_RUNTIME_LINK@"
               <library>advapi32 ;
 
-lib icuuc : : <search>"@CURRENT_INSTALLED_DIR@/debug/lib" : :
-              <variant>debug
+lib icuuc : : <search>"@CURRENT_INSTALLED_DIR@/debug/lib"
+              <variant>debug : :
               <runtime-link>"@LIB_RUNTIME_LINK@" ;
 
 lib icuin : : <toolset>msvc
               <search>"@CURRENT_INSTALLED_DIR@/lib" : :
               <runtime-link>"@LIB_RUNTIME_LINK@" ;
 
-lib icuin : : <search>"@CURRENT_INSTALLED_DIR@/lib" : :
-              <name>icui18n
+lib icuin : : <search>"@CURRENT_INSTALLED_DIR@/lib"
+              <name>icui18n : :
               <runtime-link>"@LIB_RUNTIME_LINK@" ;
 
 lib icuin : : <toolset>msvc
@@ -70,12 +81,18 @@ lib icuin : : <toolset>msvc
               <name>icuind : :
               <runtime-link>"@LIB_RUNTIME_LINK@" ;
 
-lib icuin : : <search>"@CURRENT_INSTALLED_DIR@/debug/lib" : :
+lib icuin : : <search>"@CURRENT_INSTALLED_DIR@/debug/lib"
               <variant>debug
-              <name>icui18n
+              <name>icui18n : :
               <runtime-link>"@LIB_RUNTIME_LINK@" ;
 
-lib icudt : : <search>"@CURRENT_INSTALLED_DIR@/lib" : :
+lib icudt : : <search>"@CURRENT_INSTALLED_DIR@/lib"
+              <name>icudata : :
+              <runtime-link>"@LIB_RUNTIME_LINK@" ;
+
+lib icudt : : <toolset>msvc
+              <search>"@CURRENT_INSTALLED_DIR@/lib"
+              <name>icudt : :
               <runtime-link>"@LIB_RUNTIME_LINK@" ;
 
 lib icudt : : <toolset>msvc
@@ -84,8 +101,9 @@ lib icudt : : <toolset>msvc
               <name>icudtd : :
               <runtime-link>"@LIB_RUNTIME_LINK@" ;
 
-lib icudt : : <search>"@CURRENT_INSTALLED_DIR@/debug/lib" : :
+lib icudt : : <search>"@CURRENT_INSTALLED_DIR@/debug/lib"
               <variant>debug
+              <name>icudata : :
               <runtime-link>"@LIB_RUNTIME_LINK@" ;
 
 lib iconv : : <file>"@LIBICONV_LIBRARY@" <link>shared <runtime-link>shared <variant>release : : ;
