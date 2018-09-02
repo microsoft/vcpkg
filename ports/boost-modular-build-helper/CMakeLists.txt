@@ -59,7 +59,7 @@ if(APPLE)
     set(CXXFLAGS "${CXXFLAGS} <compileflags>-D_DARWIN_C_SOURCE")
 endif()
 
-set(CXXFLAGS "${CXXFLAGS} <cxxflags>-std=c++11")
+set(CXXFLAGS "${CXXFLAGS} <cxxflags>-std=c++14")
 
 find_library(ZLIB_LIBPATH z)
 list(APPEND B2_OPTIONS
