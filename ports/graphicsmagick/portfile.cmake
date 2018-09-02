@@ -19,6 +19,15 @@ vcpkg_apply_patches(
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/dynamic_bzip2.patch)
 
+# Bake GM's own modules into the .dll itself.  This fixes a bug whereby
+# 'vcpkg install graphicsmagick' did not lead to a copy of GM that could
+# load either PNG or JPEG files (due to missing GM Modules, with names
+# matching "IM_*.DLL").
+vcpkg_apply_patches(
+    SOURCE_PATH ${SOURCE_PATH}
+    PATCHES
+        ${CMAKE_CURRENT_LIST_DIR}/disable_graphicsmagick_modules.patch)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS_DEBUG -DINSTALL_HEADERS=OFF
