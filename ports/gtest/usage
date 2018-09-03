@@ -2,5 +2,5 @@ The package gtest is compatible with built-in CMake targets:
 
     enable_testing()
     find_package(GTest REQUIRED)
-    target_link_libraries(main PRIVATE GTest::GTest GTest::Main)
+    target_link_libraries(main PRIVATE GTest::gtest_main) # or GTest::gmock_main
     add_test(AllTestsInMain main)
