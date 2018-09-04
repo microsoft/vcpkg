@@ -80,7 +80,7 @@ function(vcpkg_extract_source_archive_ex)
     string(SUBSTRING ${SANITIZED_REF} ${FROM_REF} ${REF_LENGTH} SHORTENED_SANITIZED_REF)
 
     # Hash the archive hash along with the patches. Take the first 10 chars of the hash
-    file(SHA512 ${ARCHIVE} PATCHSET_HASH)
+    file(SHA512 ${_vesae_ARCHIVE} PATCHSET_HASH)
     foreach(PATCH IN LISTS _vesae_PATCHES)
         get_filename_component(ABSOLUTE_PATCH "${PATCH}" ABSOLUTE BASE_DIR "${CURRENT_PORT_DIR}")
         file(SHA512 ${ABSOLUTE_PATCH} CURRENT_HASH)
