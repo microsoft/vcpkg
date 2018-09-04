@@ -1,0 +1,23 @@
+--- a/nmake.opt	2018-05-04 09:05:46.000000000 +0200
++++ b/nmake.opt	2018-07-30 09:44:00.299913400 +0200
+@@ -303,14 +303,12 @@
+ 							
+ # Uncomment the following and update to enable ECW read support with the 
+ # 4.1+ readonly SDK
+-#ECWDIR  = 	"c:/Program Files/ERDAS/ERDAS ECW JPEG2000 Read SDK"
+-#ECWFLAGS =	-DECWSDK_VERSION=41 \
+-#		-I$(ECWDIR)\include \
+-#		-I$(ECWDIR)\include/NCSECW/api -I$(ECWDIR)\include/NCSECW/jp2 \
+-#		-I$(ECWDIR)\include/NCSECW/ecw
+-#ECWLIB  = 	$(ECWDIR)\lib\vc90\win32\NCSEcw4_RO.lib \
+-#		$(ECWDIR)\lib\vc90\win32\NCSUtil4.lib \
+-#		$(ECWDIR)\lib\vc90\win32\NCScnet4.lib
++ECWDIR  =  "C:\Users\toh\AppData\Local\Hexagon\ERDAS ECW JPEG 2000 SDK 5.4.0\Desktop Read-Only"
++ECWFLAGS = -DECWSDK_VERSION=54 \
++       -I$(ECWDIR)\include \
++       -I$(ECWDIR)\include/NCSECW/api -I$(ECWDIR)\include/NCSECW/jp2 \
++       -I$(ECWDIR)\include/NCSECW/ecw
++ECWLIB  =  $(ECWDIR)\lib\vc141\x64\NCSEcw.lib
+ 
+ # To add Write support, use the write SDK, change NCSEcw4_RO.lib to 
+ # NCSEcw4.lib, and add -DHAVE_COMPRESS to ECWFLAGS.  The ECWDIR setting will
