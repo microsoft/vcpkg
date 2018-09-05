@@ -82,6 +82,10 @@ else()
     endif()
 endif()
 
+file(GLOB HDRS LIST_DIRECTORIES true ${CURRENT_PACKAGES_DIR}/include/antlr4-runtime/*)
+file(COPY ${HDRS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/antlr4-runtime)
+
 vcpkg_copy_pdbs()
 
 file(INSTALL ${LICENSE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/antlr4 RENAME copyright)
