@@ -11,38 +11,34 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 include(configure_qt)
 include(install_qt)
 
-set(SRCDIR_NAME "qtbase-5.11.1")
-set(ARCHIVE_NAME "qtbase-everywhere-src-5.11.1")
-set(ARCHIVE_EXTENSION ".tar.xz")
+set(MAJOR_MINOR 5.11)
+set(FULL_VERSION ${MAJOR_MINOR}.1)
+set(ARCHIVE_NAME "qtbase-everywhere-src-${FULL_VERSION}.tar.xz")
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${SRCDIR_NAME})
 vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "http://download.qt.io/official_releases/qt/5.11/5.11.1/submodules/${ARCHIVE_NAME}${ARCHIVE_EXTENSION}"
-    FILENAME ${SRCDIR_NAME}${ARCHIVE_EXTENSION}
+    URLS "http://download.qt.io/official_releases/qt/${MAJOR_MINOR}/${FULL_VERSION}/submodules/${ARCHIVE_NAME}"
+    FILENAME ${ARCHIVE_NAME}
     SHA512 5f45405872e541565d811c1973ae95b0f19593f4495375306917b72e21146e14fe8f7db5fbd629476476807f89ef1679aa59737ca5efdd9cbe6b14d7aa371b81
 )
-vcpkg_extract_source_archive(${ARCHIVE_FILE})
-if (EXISTS ${CURRENT_BUILDTREES_DIR}/src/${ARCHIVE_NAME})
-    file(RENAME ${CURRENT_BUILDTREES_DIR}/src/${ARCHIVE_NAME} ${CURRENT_BUILDTREES_DIR}/src/${SRCDIR_NAME})
-endif()
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE "${ARCHIVE_FILE}"
+    REF ${FULL_VERSION}
+    PATCHES
+        fix-system-freetype.patch
+        fix-system-pcre2.patch
+        fix-system-pcre2-linux.patch
+        fix-msvc2017.patch
+)
 
 # Remove vendored dependencies to ensure they are not picked up by the build
-foreach(DEPENDENCY freetype zlib harfbuzzng libjpeg libpng double-conversion)
+foreach(DEPENDENCY freetype zlib harfbuzzng libjpeg libpng double-conversion sqlite)
     if(EXISTS ${SOURCE_PATH}/src/3rdparty/${DEPENDENCY})
         file(REMOVE_RECURSE ${SOURCE_PATH}/src/3rdparty/${DEPENDENCY})
     endif()
 endforeach()
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/include/QtZlib)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/fix-system-freetype.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/fix-system-pcre2.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/fix-system-pcre2-linux.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/fix-msvc2017.patch"
-)
 
 # This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
 set(ENV{_CL_} "/utf-8")
@@ -58,18 +54,17 @@ set(CORE_OPTIONS
     -system-harfbuzz
     -system-doubleconversion
     -no-fontconfig
-    -nomake examples -nomake tests
+    -nomake examples
+    -nomake tests
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(CORE_OPTIONS
-        ${CORE_OPTIONS}
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    list(APPEND CORE_OPTIONS
         -static
         -no-sqlite
     )
 else()
-    set(CORE_OPTIONS
-        ${CORE_OPTIONS}
+    list(APPEND CORE_OPTIONS
         -sql-sqlite
         -sql-psql
         -system-sqlite
