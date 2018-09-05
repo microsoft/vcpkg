@@ -19,12 +19,13 @@ vcpkg_download_distfile(LICENSE
     SHA512 1e8414de5fdc211e3188a8ec3276c6b3c55235f5edaf48522045ae18fa79fd9049719cb8924d25145016f223ac9a178defada1eeb983ccff598a08b0c0f67a3b
 )
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${VERSION})
-vcpkg_extract_source_archive(${ARCHIVE} ${SOURCE_PATH})
-
-vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
-                    PATCHES ${CMAKE_CURRENT_LIST_DIR}/fixed_build.patch
-                    PATCHES ${CMAKE_CURRENT_LIST_DIR}/uuid_discovery_fix.patch
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    NO_REMOVE_ONE_LEVEL
+    REF ${VERSION}
+    PATCHES fixed_build.patch
+            uuid_discovery_fix.patch
 )
 
 vcpkg_configure_cmake(
