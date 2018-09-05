@@ -24,15 +24,8 @@ vcpkg_extract_source_archive(${ARCHIVE} ${SOURCE_PATH})
 
 vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH}
                     PATCHES ${CMAKE_CURRENT_LIST_DIR}/fixed_build.patch
+                    PATCHES ${CMAKE_CURRENT_LIST_DIR}/uuid_discovery_fix.patch
 )
-
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL Linux)
-    find_package(PkgConfig REQUIRED)
-    pkg_check_modules(UUID uuid)
-    if (NOT UUID_FOUND)
-        message(FATAL_ERROR "Unable to find uuid library. You can execute 'sudo apt-get install uuid-dev'.")
-    endif()
-endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
