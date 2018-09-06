@@ -6,7 +6,7 @@ index 490cc19..51c0a92 100644
    find_package(NGHTTP2 REQUIRED)
    include_directories(${NGHTTP2_INCLUDE_DIRS})
    list(APPEND CURL_LIBS ${NGHTTP2_LIBRARIES})
-+  if(CURL_STATICLIB)
++  if(NOT BUILD_SHARED_LIBS)
 +    add_definitions(-DNGHTTP2_STATICLIB)
 +  endif()
  endif()
