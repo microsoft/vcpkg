@@ -1,10 +1,14 @@
 Source: llvm
 Version: 6.0.1-1
-Description: The LLVM Compiler Infrastructure
-Build-Depends: atlmfc (windows)
+Description: The LLVM Compiler Infrastructure with all targets
+Build-Depends: atlmfc (windows),liblzma,zlib,libiconv,libxml2
 
 Feature: clang
 Description: Build with Clang.
+
+Feature: clang-stage2
+Description: Build using stage2 compiler.
+Build-Depends: llvm[clang]
 
 Feature: clang-tools-extra
 Description: Build with extra tools for Clang.
@@ -12,7 +16,7 @@ Build-Depends: llvm[clang]
 
 Feature: clang-protobuf-fuzzer
 Description: Build Clang with fuzzer using protobuf.
-Build-Depends: protobuf
+Build-Depends: llvm[clang],protobuf
 
 Feature: lld
 Description: Build with LLD linker.
@@ -35,7 +39,7 @@ Build-Depends: llvm[enable-eh]
 
 Feature: polly-gpu
 Description: Build with Poly-Loop-Optimizer with CUDA/OpenCL runtime for GPGPU CodeGen.
-Build-Depends: llvm[polly] llvm[target-nvptx]
+Build-Depends: llvm[polly],llvm[target-nvptx]
 
 Feature: compiler-rt
 Description: Build with Compiler-RT.
@@ -45,7 +49,7 @@ Description: Build with LLVM Unwinder.
 
 Feature: libomp
 Description: Build with OpenMP support.
-Build-Depends: llvm[clang]
+Build-Depends: llvm[clang],llvm[enable-eh]
 
 Feature: libomp-debugger
 Description: Build with OpenMP with debugger interface support.
@@ -62,6 +66,10 @@ Build-Depends: llvm[libomp]
 Feature: documentation
 Description: Build with documentation.
 
+Feature: enable-ffi
+Description: Build in C++1y mode, if available.
+Build-Depends: libffi
+
 Feature: enable-cxx1y
 Description: Build in C++1y mode, if available.
 
@@ -77,10 +85,7 @@ Description: Build LLVM with additional time/memory expensive checking.
 
 Feature: clang-enable-z3-analyzer
 Description: Build Clang with z3 theorem prover from Microsoft Research as an external constraint solver.
-Build-Depends: llvm[clang] z3
-
-Feature: single
-Description: Build all of LLVM's components in a single shared library.
+Build-Depends: llvm[clang],z3
 
 Feature: abi-breaking-checks-on
 Description: Used to decide if LLVM should be built with ABI breaking checks or not. A version of LLVM built with ABI breaking checks is not ABI compatible with a version built without it.

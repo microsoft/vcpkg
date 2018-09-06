@@ -1,0 +1,13 @@
+diff --git a/projects/compiler-rt/CMakeLists.txt b/projects/compiler-rt/CMakeLists.txt
+index 4b953b2..e961e1f 100644
+--- a/projects/compiler-rt/CMakeLists.txt
++++ b/projects/compiler-rt/CMakeLists.txt
+@@ -227,7 +227,7 @@ if(MSVC)
+   # Replace the /M[DT][d] flags with /MT, and strip any definitions of _DEBUG,
+   # which cause definition mismatches at link time.
+   # FIXME: In fact, sanitizers should support both /MT and /MD, see PR20214.
+-  if(COMPILER_RT_HAS_MT_FLAG)
++  if(NOT COMPILER_RT_HAS_MT_FLAG)
+     foreach(flag_var
+       CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
+       CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO

@@ -1,0 +1,15 @@
+diff --git a/tools/clang/cmake/modules/ProtobufMutator.cmake b/tools/clang/cmake/modules/ProtobufMutator.cmake
+index 5f23f33..577d83e 100644
+--- a/tools/clang/cmake/modules/ProtobufMutator.cmake
++++ b/tools/clang/cmake/modules/ProtobufMutator.cmake
+@@ -8,8 +8,10 @@ ExternalProject_Add(${PBM_PREFIX}
+   GIT_REPOSITORY https://github.com/google/libprotobuf-mutator.git
+   GIT_TAG master
+   CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
++             -DVCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET}
+   CMAKE_CACHE_ARGS -DCMAKE_C_COMPILER:FILEPATH=${CMAKE_C_COMPILER}
+                    -DCMAKE_CXX_COMPILER:FILEPATH=${CMAKE_CXX_COMPILER}
++                   -DCMAKE_TOOLCHAIN_FILE:FILEPATH=${CMAKE_TOOLCHAIN_FILE}
+   BUILD_BYPRODUCTS ${PBM_LIB_PATH} ${PBM_FUZZ_LIB_PATH}
+   UPDATE_COMMAND ""
+   INSTALL_COMMAND ""

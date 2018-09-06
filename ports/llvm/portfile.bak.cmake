@@ -5,11 +5,7 @@ include(vcpkg_common_functions)
 
 # LLVM documentation recommends always using static library linkage when
 #   building with Microsoft toolchain; it's also the default on other platforms
-# /ML - statically linked, single-threaded library
-# /MT - statically linked, multi-threaded library
-# /MD - dynamically linked library
-# vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_STATIC_CRT)
-# Static linkage exceed memory :D more than 32GB
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_STATIC_CRT)
 
 # Use only release, because debug takes too long and does not work with compiler-rt
 set(VCPKG_BUILD_TYPE release)
@@ -17,8 +13,47 @@ set(VCPKG_BUILD_TYPE release)
 # Latest version of LLVM
 set(LLVM_VERSION "6.0.1")
 
+# Shared patches for LLVM and clang-stage2
+set(LLVM_SHARED_PATCHES
+    # Patch cmake modules to point to the share folder
+    ${CMAKE_CURRENT_LIST_DIR}/install-cmake-modules-to-share.patch
+
+    # Add bigobj for llvm compilation on MSVC
+    ${CMAKE_CURRENT_LIST_DIR}/force-bigobj-modules-llvm-options.patch
+
+    # Fix compilation problem on MSVC
+    ${CMAKE_CURRENT_LIST_DIR}/force-bigobj-platform-msvc.patch
+
+    # Fixes build of the experimental target Nios2
+    # https://github.com/llvm-mirror/llvm/commit/91518dd4d4f19ab723562376e8b1dfe89e5d2770
+    ${CMAKE_CURRENT_LIST_DIR}/fix-experimental-target-nios2-build.patch
+
+    # Based on https://github.com/numba/llvmlite/blob/master/conda-recipes/llvm-lto-static.patch
+    ${CMAKE_CURRENT_LIST_DIR}/llvm-lto-static.patch
+)
+
+# Shared cmake options for compiling LLVM and clang-stage2
+set(LLVM_SHARED_CMAKE_OPTS
+    # Disable LLVM tests
+    -DLLVM_INCLUDE_TESTS=OFF
+
+    # Disable LLVM examples
+    -DLLVM_INCLUDE_EXAMPLES=OFF
+
+    # Enable static build
+    -DLLVM_BUILD_STATIC=ON
+
+    # Use LLD linker
+    -DLLVM_ENABLE_LLD=ON 
+
+    # Bugfix
+    "-DCMAKE_CL_SHOWINCLUDES_PREFIX=Note: including file:"
+)
+
 # TODO: 
 # list(APPEND _COMPONENT_FLAGS "-DLIBOMP_ENABLE_SHARED=OFF")
+
+# TODO: Do better static checking. Allow only for static linage
 
 # Doxygen requires Graphviz (dot) - Add to PATH
 # https://ci.appveyor.com/api/buildjobs/w96x513p36twogfm/artifacts/graphviz-windows.zip
@@ -35,12 +70,6 @@ endif()
 string(FIND "${FEATURES}" "target-" _hasTarget)
 if (${_hasTarget} EQUAL -1)
   message(FATAL_ERROR "You need specify one or more targets to build!")
-endif()
-
-if ("${VCPKG_CRT_LINKAGE}" STREQUAL "static")
-    set(LLVM_CRT MT)
-else()
-    set(LLVM_CRT MD)
 endif()
 
 # A function for downloading LLVM projects
@@ -143,23 +172,14 @@ set(_COMPONENT_TARGETS "")
 # An array of build experimental targets
 set(_COMPONENT_EXPERIMENTAL_TARGETS "")
 
-# List with all warnings
-set(_COMPONENT_WARNINGS "")
-
 # Iterate through all user-defined features and parse it
 foreach(_feature IN LISTS FEATURES)
     if ("${_feature}" MATCHES "^enable-")
         # Uppercase the feature name and replace "-" with "_"
-        string(REPLACE "enable-" "" _featureValue "${_feature}")
         string(TOUPPER "${_feature}" _FEATURE)
         string(REPLACE "-" "_" _FEATURE "${_FEATURE}")
 
         list(APPEND _COMPONENT_FLAGS "-DLLVM_${_FEATURE}=ON")
-
-        if ("${_featureValue}" STREQUAL "ffi")
-            list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/llvm-fix-libffi.patch")
-        endif()
-
     elseif ("${_feature}" MATCHES "^target-exp-")
         string(REPLACE "target-exp-" "" _featureValue "${_feature}")
         if ("${_featureValue}" STREQUAL "wasm")
@@ -199,31 +219,9 @@ foreach(_feature IN LISTS FEATURES)
             PKG_NAME cfe
             SHA512 f64ba9290059f6e36fee41c8f32bf483609d31c291fcd2f77d41fecfdf3c8233a5e23b93a1c73fed03683823bd6e72757ed993dd32527de3d5f2b7a64bb031b9
         )
-        if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
-            #TODO: Add check if is windows and check if stage2 fixes that problem
-            list(APPEND _COMPONENT_FLAGS "-DLIBCLANG_BUILD_STATIC=ON")
-            list(APPEND _COMPONENT_WARNINGS "The libclang library doesn't support static linkage on Windows platform.")
-        else()
-            list(APPEND _COMPONENT_FLAGS "-DLIBCLANG_BUILD_STATIC=OFF")
-        endif()
-        list(APPEND _COMPONENT_FLAGS "-DCLANG_ENABLE_ARCMT=ON")
-        list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/clang-protobuf-vcpkg.patch")
-        list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/clang-libclang-link-fix-carcmttest.patch")
-        list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/clang-libclang-link-fix-cindextest.patch")
-    elseif ("${_feature}" STREQUAL "clang-stage2")
-        set (LLVM_ENABLE_STAGE2 ON)
-        list(APPEND _COMPONENT_FLAGS "-DCLANG_ENABLE_BOOTSTRAP=ON")
-
-        # Use LLD linker
-        list(APPEND _COMPONENT_FLAGS "-DLLVM_ENABLE_LLD=ON")
+        list(APPEND _COMPONENT_FLAGS "-DLIBCLANG_BUILD_STATIC=ON")
     elseif ("${_feature}" STREQUAL "clang-protobuf-fuzzer")
-        if ("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "" AND NOT "clang-stage2" IN_LIST FEATURES)
-            # https://github.com/google/libprotobuf-mutator
-            # it's not supported because of sanitizers and other EXTRA_FLAGS.
-            list(APPEND _COMPONENT_WARNINGS "The clang-protobuf-fuzzer is not supported by MSVC compiler. Try to use stage2 compiler.")
-        else()
-            list(APPEND _COMPONENT_FLAGS "-DCLANG_ENABLE_PROTO_FUZZER=ON")
-        endif()
+        list(APPEND _COMPONENT_FLAGS "-DCLANG_ENABLE_PROTO_FUZZER=ON")
     elseif ("${_feature}" STREQUAL "clang-tools-extra")
         llvm_download(
             NAME clang-tools-extra
@@ -245,11 +243,6 @@ foreach(_feature IN LISTS FEATURES)
 
         if (NOT "lldb-python3" IN_LIST FEATURES OR NOT "lldb-python2" IN_LIST FEATURES)
             list(APPEND _COMPONENT_FLAGS "-DLLDB_DISABLE_PYTHON=ON")
-        endif()
-
-        if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
-            # TODO: Check if stage2 fixes that problem, also define if is windows.
-            list(APPEND _COMPONENT_WARNINGS "The liblldb library doesn't support static linkage on Windows platform.")
         endif()
     elseif ("${_feature}" MATCHES "^lldb-python")
         if ("-DLLDB_BUILD_FRAMEWORK=ON" IN_LIST _COMPONENT_FLAGS)
@@ -284,7 +277,6 @@ foreach(_feature IN LISTS FEATURES)
             EXTRACT_TO projects
             SHA512 69850c1ad92c66977fa217cbfb42a6a3f502fbe3d1a08daa7fc4cfeb617a7736d231f8ad8d93b10b1ae29bd753315d2a2d70f9ff1f4d18a9a7cc81758d91f963
         )
-        list(APPEND _COMPONENT_FLAGS "-DLLVM_INCLUDE_RUNTIMES=ON")
     elseif ("${_feature}" STREQUAL "libunwind")
         if ("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "")
             message(FATAL_ERROR "The libunwind does not work on Windows yet.")
@@ -295,18 +287,11 @@ foreach(_feature IN LISTS FEATURES)
             )
             list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_CROSS_UNWINDING=ON")
             list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_ARM_WMMX=ON")
-
             if ("compiler-rt" IN_LIST FEATURES)
                 list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_USE_COMPILER_RT=ON")
             endif()
-
-            if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
-                list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_STATIC=ON")
-                list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_SHARED=OFF")
-            else()
-                list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_STATIC=OFF")
-                list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_SHARED=ON")
-            endif()
+            list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_STATIC=ON")
+            list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_SHARED=OFF")
         endif()
     elseif ("${_feature}" STREQUAL "libomp")
         llvm_download(
@@ -320,17 +305,9 @@ foreach(_feature IN LISTS FEATURES)
 
         # If libomp-ompt-off is defined, that will be ignored
         list(APPEND _COMPONENT_FLAGS "-DLIBOMP_OMPT_OPTIONAL=ON")
+
+        message(STATUS "Warning: On Windows platform libomp does not support static linkage. ")
         list(APPEND _COMPONENT_FLAGS "-DLIBOMP_ENABLE_SHARED=ON")
-
-        # clang-cl on Windows https://reviews.llvm.org/D38185#985251
-        if ("target-exp-all" IN_LIST FEATURES)
-            list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/kmp-stage2-fix.patch")
-        endif()
-
-        if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
-            # TODO: check if stage2 fixes that problem also define for Windows platform
-            list(APPEND _COMPONENT_WARNINGS "The libomp library doesn't support static linkage on Windows platform.")
-        endif()
     elseif ("${_feature}" MATCHES "^libomp-")
         string(REPLACE "libomp-" "" _featureValue "${_feature}")
 
@@ -377,37 +354,15 @@ if (NOT "${_COMPONENT_EXPERIMENTAL_TARGETS}" STREQUAL "")
     set(ENV{LLVM_EXPERIMENTAL_TARGETS_TO_BUILD} "${_COMPONENT_EXPERIMENTAL_TARGETS}")
 endif()
 
-# If using static linkage, the LLVM's lto can be also build as static library.
-if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
-    # Based on https://github.com/numba/llvmlite/blob/master/conda-recipes/llvm-lto-static.patch
-    list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/llvm-lto-static.patch")
-endif()
-
 # Appyl patches
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        # Patch cmake modules to point to the share folder
-        ${CMAKE_CURRENT_LIST_DIR}/install-cmake-modules-to-share.patch
-
-        # Add bigobj for llvm compilation on MSVC
-        ${CMAKE_CURRENT_LIST_DIR}/force-bigobj-modules-llvm-options.patch
-
-        # Fix compilation problem on MSVC
-        ${CMAKE_CURRENT_LIST_DIR}/force-bigobj-platform-msvc.patch
-
-        # Fixes build of the experimental target Nios2
-        # https://github.com/llvm-mirror/llvm/commit/91518dd4d4f19ab723562376e8b1dfe89e5d2770
-        ${CMAKE_CURRENT_LIST_DIR}/fix-experimental-target-nios2-build.patch
+        # Patch LLVM
+        ${LLVM_SHARED_PATCHES}
 
         # Add patch for settings LLVM_TARGETS_TO_BUILD, LLVM_EXPERIMENTAL_TARGETS_TO_BUILD from ENV
         ${CMAKE_CURRENT_LIST_DIR}/llvm-set-using-env.patch
-
-        # Fix typo in LLVM-Config.cmake
-        ${CMAKE_CURRENT_LIST_DIR}/llvm-config-fix-typo.patch
-
-        # Enable zlib, iconv and libxml2 support
-        # ${CMAKE_CURRENT_LIST_DIR}/llvm-enable-zlib-iconv-libxml2.patch
 
         # Component-specific patches
         ${_COMPONENT_PATCHES}
@@ -415,20 +370,61 @@ vcpkg_apply_patches(
 
 #LLVM_BUILD_EXTERNAL_COMPILER_RT
 
-# Print all warnings before configuring
-foreach(_warning IN LISTS _COMPONENT_WARNINGS)
-    message(STATUS "Warning: ${_warning}")
-endforeach()
+if ("clang-stage2" IN_LIST FEATURES)
+    set(CLANG_STAGE2_BASE_SRC_DIR ${CURRENT_BUILDTREES_DIR}/src/stage2)
+    set(CLANG_STAGE2_SRC_DIR ${CLANG_STAGE2_BASE_SRC_DIR}/llvm-${LLVM_VERSION}.src)
+    set(CLANG_STAGE2_DIR ${CURRENT_BUILDTREES_DIR}/stage2-${TARGET_TRIPLET})
+    set(CLANG_STAGE2_DONE "${CLANG_STAGE2_DIR}/done")
 
-if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
-    # Enable static build
-    list(APPEND _COMPONENT_FLAGS "-DLLVM_BUILD_STATIC=ON")
-else()
-    # Disable static build
-    #list(APPEND _COMPONENT_FLAGS "-DLLVM_BUILD_STATIC=OFF")
+    if (NOT EXISTS ${CLANG_STAGE2_DONE})
+        # Extract main LLVM project
+        vcpkg_extract_source_archive(${LLVM_ARCHIVE} ${CLANG_STAGE2_BASE_SRC_DIR})
 
-    # LLVM_BUILD_LLVM_DYLIB is not supported by MSVC.
-    #list(APPEND _COMPONENT_FLAGS "-DLLVM_LINK_LLVM_DYLIB=ON")
+        # Extract clang project
+        vcpkg_extract_source_archive(${CLANG_ARCHIVE} ${CLANG_STAGE2_SRC_DIR}/tools)
+        file(RENAME ${CLANG_STAGE2_SRC_DIR}/tools/cfe-${LLVM_VERSION}.src ${CLANG_STAGE2_SRC_DIR}/tools/clang)
+
+        # Appyl patches
+        vcpkg_apply_patches(
+            SOURCE_PATH ${CLANG_STAGE2_SRC_DIR}
+            PATCHES ${LLVM_SHARED_PATCHES}
+        )
+
+        message(STATUS "---- Building Clang stage2 compiler.")
+
+        # -DCMAKE_C_COMPILER="PATH to the C" -DCMAKE_CXX_COMPILER="PATH to the C++"
+        #TODO: Change compiler?!
+        #set CC=..\build32_stage0\bin\clang-cl
+        #set CXX=..\build32_stage0\bin\clang-cl
+        # 
+
+        #list( _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_STATIC=ON")
+
+        message(STATUS "---- Configure clang-stage2...")
+        # Prepare stage2 compiler for release
+        file(MAKE_DIRECTORY ${CLANG_STAGE2_DIR})
+        vcpkg_execute_required_process(
+            COMMAND cmake -G Ninja ${LLVM_SHARED_CMAKE_OPTS} -DCMAKE_BUILD_TYPE=MINSIZEREL -DCLANG_ENABLE_BOOTSTRAP=ON ${CLANG_STAGE2_SRC_DIR}
+            WORKING_DIRECTORY ${CLANG_STAGE2_DIR}
+            LOGNAME config-stage2-${TARGET_TRIPLET}
+        )
+
+        message(STATUS "---- Building clang-stage2...")
+        # Build stage2 compiler for release
+        vcpkg_execute_required_process(
+            COMMAND ninja stage2
+            WORKING_DIRECTORY ${CLANG_STAGE2_DIR}
+            LOGNAME build-stage2-${TARGET_TRIPLET}
+        )
+        file(TOUCH "${CLANG_STAGE2_DIR}/done")
+    else()
+        message(STATUS "The clang-stage2 is already compiled.")
+    endif()
+
+    list(APPEND _COMPONENT_FLAGS "-DCMAKE_CXX_COMPILER=${CLANG_STAGE2_DIR}/tools/clang/stage2-bins/bin/clang-cl.exe")
+    list(APPEND _COMPONENT_FLAGS "-DCMAKE_C_COMPILER=${CLANG_STAGE2_DIR}/tools/clang/stage2-bins/bin/clang-cl.exe")
+    list(APPEND _COMPONENT_FLAGS "-DCMAKE_ASM_COMPILER=${CLANG_STAGE2_DIR}/tools/clang/stage2-bins/bin/clang-cl.exe")
+    # use stage2 compiler for compiling the project.
 endif()
 
 # Configure LLVM
@@ -436,29 +432,13 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        # Disable LLVM tests
-        -DLLVM_INCLUDE_TESTS=OFF
+        # Use shared cmake options
+        ${LLVM_SHARED_CMAKE_OPTS}
 
-        # Disable LLVM examples
-        -DLLVM_INCLUDE_EXAMPLES=OFF
-
-        # Include utils
-        -DLLVM_INCLUDE_UTILS=ON
-
-        # Bugfix
-        "-DCMAKE_CL_SHOWINCLUDES_PREFIX=Note: including file:"
+        -DCLANG_ENABLE_BOOTSTRAP=ON
 
         # Change tool installation directory
         -DLLVM_TOOLS_INSTALL_DIR=tools/llvm
-
-        # Speedup build in Debug mode
-        -DLLVM_OPTIMIZED_TABLEGEN=ON
-
-        # Configure CRT
-        -DLLVM_USE_CRT_DEBUG=${LLVM_CRT}d
-        -DLLVM_USE_CRT_RELEASE=${LLVM_CRT}
-        -DLLVM_USE_CRT_MINSIZEREL=${LLVM_CRT}
-        -DLLVM_USE_CRT_RELWITHDEBINFO=${LLVM_CRT}
 
         # Component-specific compilation flags for debug and release
         ${_COMPONENT_FLAGS}
@@ -473,12 +453,7 @@ vcpkg_configure_cmake(
 )
 
 # Invoke install
-if (LLVM_ENABLE_STAGE2)
-    vcpkg_build_cmake(TARGET stage2)
-    vcpkg_build_cmake(TARGET stage2 install)
-else()
-    vcpkg_install_cmake()
-endif()
+vcpkg_install_cmake()
 
 file(GLOB EXE ${CURRENT_PACKAGES_DIR}/bin/*)
 file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/bin/*)

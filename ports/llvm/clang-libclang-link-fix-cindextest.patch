@@ -1,0 +1,13 @@
+diff --git a/tools/clang/tools/c-index-test/CMakeLists.txt b/tools/clang/tools/c-index-test/CMakeLists.txt
+index d38c7bb..1d8c5fe 100644
+--- a/tools/clang/tools/c-index-test/CMakeLists.txt
++++ b/tools/clang/tools/c-index-test/CMakeLists.txt
+@@ -17,7 +17,7 @@ endif()
+ if (LLVM_BUILD_STATIC)
+   target_link_libraries(c-index-test
+     PRIVATE
+-    libclang_static
++    libclang
+     clangCodeGen
+     clangIndex
+   )

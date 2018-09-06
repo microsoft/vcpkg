@@ -1,0 +1,13 @@
+diff --git a/projects/openmp/runtime/src/kmp_platform.h b/projects/openmp/runtime/src/kmp_platform.h
+index 534409e..320a7cc 100644
+--- a/projects/openmp/runtime/src/kmp_platform.h
++++ b/projects/openmp/runtime/src/kmp_platform.h
+@@ -24,7 +24,7 @@
+ #define KMP_OS_CNK 0
+ #define KMP_OS_UNIX 0 /* disjunction of KMP_OS_LINUX, KMP_OS_DARWIN etc. */
+ 
+-#ifdef _WIN32
++#ifdef _WIN32 || WIN32 || _WINNT || _WINDOWS
+ #undef KMP_OS_WINDOWS
+ #define KMP_OS_WINDOWS 1
+ #endif

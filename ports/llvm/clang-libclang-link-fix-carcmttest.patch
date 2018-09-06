@@ -1,0 +1,26 @@
+diff --git a/tools/clang/tools/c-arcmt-test/CMakeLists.txt b/tools/clang/tools/c-arcmt-test/CMakeLists.txt
+index 08ac93c..d2d7317 100644
+--- a/tools/clang/tools/c-arcmt-test/CMakeLists.txt
++++ b/tools/clang/tools/c-arcmt-test/CMakeLists.txt
+@@ -2,17 +2,10 @@ add_clang_executable(c-arcmt-test
+   c-arcmt-test.c
+   )
+ 
+-if (LLVM_BUILD_STATIC)
+-  target_link_libraries(c-arcmt-test
+-    PRIVATE
+-    libclang_static
+-    )
+-else()
+-  target_link_libraries(c-arcmt-test
+-    PRIVATE
+-    libclang
+-    )
+-endif()
++target_link_libraries(c-arcmt-test
++  PRIVATE
++  libclang
++  )
+ 
+ set_target_properties(c-arcmt-test
+   PROPERTIES
