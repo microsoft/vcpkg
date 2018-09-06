@@ -1,4 +1,4 @@
 Source: io2d
-Version: 0
-Description: a lightweight, cross platform drawing library with support for hardware and software rendering
+Version: 0.1
+Description: a lightweight, cross platform drawing library
 Build-Depends: cairo, graphicsmagick
