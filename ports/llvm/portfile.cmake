@@ -8,8 +8,8 @@ include(vcpkg_common_functions)
 # /ML - statically linked, single-threaded library
 # /MT - statically linked, multi-threaded library
 # /MD - dynamically linked library
-# vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_STATIC_CRT)
-# Static linkage exceed memory :D more than 32GB
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_STATIC_CRT)
 
 # Use only release, because debug takes too long and does not work with compiler-rt
 set(VCPKG_BUILD_TYPE release)
@@ -37,11 +37,8 @@ if (${_hasTarget} EQUAL -1)
   message(FATAL_ERROR "You need specify one or more targets to build!")
 endif()
 
-if ("${VCPKG_CRT_LINKAGE}" STREQUAL "static")
-    set(LLVM_CRT MT)
-else()
-    set(LLVM_CRT MD)
-endif()
+# set CRT to statically linked, multi-threaded library
+set(LLVM_CRT MT)
 
 # A function for downloading LLVM projects
 function(llvm_download)
@@ -199,17 +196,13 @@ foreach(_feature IN LISTS FEATURES)
             PKG_NAME cfe
             SHA512 f64ba9290059f6e36fee41c8f32bf483609d31c291fcd2f77d41fecfdf3c8233a5e23b93a1c73fed03683823bd6e72757ed993dd32527de3d5f2b7a64bb031b9
         )
-        if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
-            #TODO: Add check if is windows and check if stage2 fixes that problem
-            list(APPEND _COMPONENT_FLAGS "-DLIBCLANG_BUILD_STATIC=ON")
-            list(APPEND _COMPONENT_WARNINGS "The libclang library doesn't support static linkage on Windows platform.")
-        else()
-            list(APPEND _COMPONENT_FLAGS "-DLIBCLANG_BUILD_STATIC=OFF")
-        endif()
+        list(APPEND _COMPONENT_FLAGS "-DLIBCLANG_BUILD_STATIC=ON")
         list(APPEND _COMPONENT_FLAGS "-DCLANG_ENABLE_ARCMT=ON")
         list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/clang-protobuf-vcpkg.patch")
         list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/clang-libclang-link-fix-carcmttest.patch")
         list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/clang-libclang-link-fix-cindextest.patch")
+
+        list(APPEND _COMPONENT_WARNINGS "The libclang library doesn't support static linkage on Windows platform.")
     elseif ("${_feature}" STREQUAL "clang-stage2")
         set (LLVM_ENABLE_STAGE2 ON)
         list(APPEND _COMPONENT_FLAGS "-DCLANG_ENABLE_BOOTSTRAP=ON")
@@ -247,10 +240,8 @@ foreach(_feature IN LISTS FEATURES)
             list(APPEND _COMPONENT_FLAGS "-DLLDB_DISABLE_PYTHON=ON")
         endif()
 
-        if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
-            # TODO: Check if stage2 fixes that problem, also define if is windows.
-            list(APPEND _COMPONENT_WARNINGS "The liblldb library doesn't support static linkage on Windows platform.")
-        endif()
+        # TODO: Check if stage2 fixes that problem, also define if is windows.
+        list(APPEND _COMPONENT_WARNINGS "The liblldb library doesn't support static linkage on Windows platform.")
     elseif ("${_feature}" MATCHES "^lldb-python")
         if ("-DLLDB_BUILD_FRAMEWORK=ON" IN_LIST _COMPONENT_FLAGS)
             message(FATAL_ERROR "You can not compile lldb with support for python2 and python3. Please select only one version.")
@@ -300,13 +291,8 @@ foreach(_feature IN LISTS FEATURES)
                 list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_USE_COMPILER_RT=ON")
             endif()
 
-            if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
-                list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_STATIC=ON")
-                list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_SHARED=OFF")
-            else()
-                list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_STATIC=OFF")
-                list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_SHARED=ON")
-            endif()
+            list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_STATIC=ON")
+            list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_SHARED=OFF")
         endif()
     elseif ("${_feature}" STREQUAL "libomp")
         llvm_download(
@@ -327,10 +313,7 @@ foreach(_feature IN LISTS FEATURES)
             list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/kmp-stage2-fix.patch")
         endif()
 
-        if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
-            # TODO: check if stage2 fixes that problem also define for Windows platform
-            list(APPEND _COMPONENT_WARNINGS "The libomp library doesn't support static linkage on Windows platform.")
-        endif()
+        list(APPEND _COMPONENT_WARNINGS "The libomp library doesn't support static linkage on Windows platform.")
     elseif ("${_feature}" MATCHES "^libomp-")
         string(REPLACE "libomp-" "" _featureValue "${_feature}")
 
@@ -377,12 +360,6 @@ if (NOT "${_COMPONENT_EXPERIMENTAL_TARGETS}" STREQUAL "")
     set(ENV{LLVM_EXPERIMENTAL_TARGETS_TO_BUILD} "${_COMPONENT_EXPERIMENTAL_TARGETS}")
 endif()
 
-# If using static linkage, the LLVM's lto can be also build as static library.
-if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
-    # Based on https://github.com/numba/llvmlite/blob/master/conda-recipes/llvm-lto-static.patch
-    list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/llvm-lto-static.patch")
-endif()
-
 # Appyl patches
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
@@ -403,6 +380,9 @@ vcpkg_apply_patches(
         # Add patch for settings LLVM_TARGETS_TO_BUILD, LLVM_EXPERIMENTAL_TARGETS_TO_BUILD from ENV
         ${CMAKE_CURRENT_LIST_DIR}/llvm-set-using-env.patch
 
+        # Based on https://github.com/numba/llvmlite/blob/master/conda-recipes/llvm-lto-static.patch
+        ${CMAKE_CURRENT_LIST_DIR}/llvm-lto-static.patch
+
         # Fix typo in LLVM-Config.cmake
         ${CMAKE_CURRENT_LIST_DIR}/llvm-config-fix-typo.patch
 
@@ -420,17 +400,6 @@ foreach(_warning IN LISTS _COMPONENT_WARNINGS)
     message(STATUS "Warning: ${_warning}")
 endforeach()
 
-if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
-    # Enable static build
-    list(APPEND _COMPONENT_FLAGS "-DLLVM_BUILD_STATIC=ON")
-else()
-    # Disable static build
-    #list(APPEND _COMPONENT_FLAGS "-DLLVM_BUILD_STATIC=OFF")
-
-    # LLVM_BUILD_LLVM_DYLIB is not supported by MSVC.
-    #list(APPEND _COMPONENT_FLAGS "-DLLVM_LINK_LLVM_DYLIB=ON")
-endif()
-
 # Configure LLVM
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -444,6 +413,12 @@ vcpkg_configure_cmake(
 
         # Include utils
         -DLLVM_INCLUDE_UTILS=ON
+
+        # Enable static build
+        -DLLVM_BUILD_STATIC=ON
+
+        # Enable LLVM-C dynamic library
+        -DLLVM_LINK_LLVM_DYLIB=ON
 
         # Bugfix
         "-DCMAKE_CL_SHOWINCLUDES_PREFIX=Note: including file:"
