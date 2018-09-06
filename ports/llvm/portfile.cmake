@@ -1,8 +1,6 @@
 include(CMakeParseArguments)
 include(vcpkg_common_functions)
 
-#TODO: compiler-rt does not work with Debug, exclude or patch COMPILER_RT_HAS_MT_FLAG to negation (line 230)
-
 # LLVM documentation recommends always using static library linkage when
 #   building with Microsoft toolchain; it's also the default on other platforms
 # /ML - statically linked, single-threaded library
@@ -17,12 +15,9 @@ set(VCPKG_BUILD_TYPE release)
 # Latest version of LLVM
 set(LLVM_VERSION "6.0.1")
 
-# TODO: 
-# list(APPEND _COMPONENT_FLAGS "-DLIBOMP_ENABLE_SHARED=OFF")
-
 # Doxygen requires Graphviz (dot) - Add to PATH
 # https://ci.appveyor.com/api/buildjobs/w96x513p36twogfm/artifacts/graphviz-windows.zip
-# Make Graphviz multiplatform
+# TODO: Make Graphviz multiplatform for documentation
 
 message (STATUS "LLVM will be build only for release.")
 
@@ -36,9 +31,6 @@ string(FIND "${FEATURES}" "target-" _hasTarget)
 if (${_hasTarget} EQUAL -1)
   message(FATAL_ERROR "You need specify one or more targets to build!")
 endif()
-
-# set CRT to statically linked, multi-threaded library
-set(LLVM_CRT MT)
 
 # A function for downloading LLVM projects
 function(llvm_download)
@@ -428,12 +420,6 @@ vcpkg_configure_cmake(
 
         # Speedup build in Debug mode
         -DLLVM_OPTIMIZED_TABLEGEN=ON
-
-        # Configure CRT
-        -DLLVM_USE_CRT_DEBUG=${LLVM_CRT}d
-        -DLLVM_USE_CRT_RELEASE=${LLVM_CRT}
-        -DLLVM_USE_CRT_MINSIZEREL=${LLVM_CRT}
-        -DLLVM_USE_CRT_RELWITHDEBINFO=${LLVM_CRT}
 
         # Component-specific compilation flags for debug and release
         ${_COMPONENT_FLAGS}
