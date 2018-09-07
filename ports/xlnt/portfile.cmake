@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tfussell/xlnt
-    REF v1.2.0
-    SHA512 e95eeb23ffe0bd68081a3a1dccfc2164697d4fac4386ddb9cc1029180a499de250c28df34d1b3971ff26e95a55d822f43efe032aa989321ee29d3d3e7a8b5587
+    REF v1.3.0
+    SHA512 716b93a6138daf1e293980a3c26801bfd00aa713afdd9cbe9be672ccff8c86b69b26eb0f3e8259bd0844e04d0e6148b64467d7db6815c76ecf412715d506786f
     HEAD_REF master
 )
 
