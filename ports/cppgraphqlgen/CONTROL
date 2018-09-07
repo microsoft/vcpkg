@@ -1,0 +1,4 @@
+Source: cppgraphqlgen
+Version: v0.2
+Build-Depends: graphqlparser
+Description: C++ GraphQL schema service generator

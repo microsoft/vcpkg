@@ -1,0 +1,86 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fce642b..a46d77a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -25,19 +25,44 @@ target_include_directories(graphqlservice SYSTEM PUBLIC ${CMAKE_PREFIX_PATH}/inc
+ target_link_libraries(graphqlservice ${CPPRESTSDK_LIB} ${GRAPHQLPARSER})
+ target_link_libraries(schemagen ${CPPRESTSDK_LIB} ${GRAPHQLPARSER})
+ 
+-add_custom_command(
+-  OUTPUT IntrospectionSchema.cpp IntrospectionSchema.h
+-  COMMAND schemagen
+-  DEPENDS schemagen
+-  COMMENT "Generating IntrospectionSchema files"
+-)
+-
+-add_custom_command(
+-  OUTPUT TodaySchema.cpp TodaySchema.h
+-  COMMAND schemagen ${CMAKE_SOURCE_DIR}/schema.today.graphql Today today
+-  DEPENDS schemagen schema.today.graphql
+-  COMMENT "Generating mock TodaySchema files"
+-)
++if(UNIX)
++  add_custom_command(
++    OUTPUT IntrospectionSchema.cpp IntrospectionSchema.h
++    COMMAND schemagen
++    DEPENDS schemagen
++    COMMENT "Generating IntrospectionSchema files"
++  )
++
++  add_custom_command(
++    OUTPUT TodaySchema.cpp TodaySchema.h
++    COMMAND schemagen ${CMAKE_SOURCE_DIR}/schema.today.graphql Today today
++    DEPENDS schemagen schema.today.graphql
++    COMMENT "Generating mock TodaySchema files"
++  )
++elseif(WIN32)
++  # VCPKG is going to put all of the DLLs it installed in the binaries directory on Win32
++  set(VCPKG_DLL_PATH "")
++  foreach(PREFIX_PATH ${CMAKE_PREFIX_PATH})
++    list(APPEND VCPKG_DLL_PATH ${PREFIX_PATH}/bin)
++  endforeach(PREFIX_PATH)
++  set(PATH_VAR "${VCPKG_DLL_PATH};$ENV{PATH}")
++
++  add_custom_command(
++    OUTPUT IntrospectionSchema.cpp IntrospectionSchema.h
++	COMMAND set "PATH=${PATH_VAR}"
++    COMMAND schemagen
++    DEPENDS schemagen
++    COMMENT "Generating IntrospectionSchema files"
++  )
++
++  add_custom_command(
++    OUTPUT TodaySchema.cpp TodaySchema.h
++	COMMAND set "PATH=${PATH_VAR}"
++    COMMAND schemagen ${CMAKE_SOURCE_DIR}/schema.today.graphql Today today
++    DEPENDS schemagen schema.today.graphql
++    COMMENT "Generating mock TodaySchema files"
++  )
++endif()
+ 
+ add_library(todaygraphql SHARED
+   TodaySchema.cpp
+@@ -80,14 +105,19 @@ if(UNIX)
+   target_compile_options(tests PRIVATE -std=c++11)
+ endif()
+ 
+-install(TARGETS graphqlservice schemagen
++install(TARGETS graphqlservice
+   RUNTIME DESTINATION bin
+   LIBRARY DESTINATION lib)
+ 
+-install(FILES GraphQLService.h Introspection.h IntrospectionSchema.h
+-  DESTINATION include/graphqlservice)
++install(TARGETS schemagen
++  RUNTIME DESTINATION tools/cppgraphqlgen
++  CONFIGURATIONS Release)
++
++install(FILES GraphQLService.h Introspection.h ${CMAKE_BINARY_DIR}/IntrospectionSchema.h
++  DESTINATION include/graphqlservice
++  CONFIGURATIONS Release)
+ 
+-install(FILES IntrospectionSchema.h IntrospectionSchema.cpp TodaySchema.h TodaySchema.cpp
++install(FILES ${CMAKE_BINARY_DIR}/IntrospectionSchema.h ${CMAKE_BINARY_DIR}/IntrospectionSchema.cpp ${CMAKE_BINARY_DIR}/TodaySchema.h ${CMAKE_BINARY_DIR}/TodaySchema.cpp
+   DESTINATION ${CMAKE_SOURCE_DIR}/samples)
+ 
+ if(WIN32)
