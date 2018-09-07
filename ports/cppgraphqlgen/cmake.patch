@@ -84,3 +84,15 @@ index fce642b..a46d77a 100644
    DESTINATION ${CMAKE_SOURCE_DIR}/samples)
  
  if(WIN32)
+diff --git a/SchemaGenerator.cpp b/SchemaGenerator.cpp
+index 6def1b9..5ec5f36 100644
+--- a/SchemaGenerator.cpp
++++ b/SchemaGenerator.cpp
+@@ -9,6 +9,7 @@
+ #include <fstream>
+ #include <sstream>
+ #include <cctype>
++#include <cstring>
+ 
+ #include <graphqlparser/GraphQLParser.h>
+ 
