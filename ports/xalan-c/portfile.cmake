@@ -30,7 +30,14 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-ALLOW_RTCc_IN_STL.patch")
+    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-ALLOW_RTCc_IN_STL.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/0002-no-mfc.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/0003-char16_t.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/0004-macosx-dyld-fallback.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/0005-fix-ftbfs-ld-as-needed.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/0006-fix-testxslt-segfault.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/0007-fix-readme-typos.patch"
+            )
 
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
     set(BUILD_ARCH "Win32")
