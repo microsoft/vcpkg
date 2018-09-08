@@ -1,0 +1,4 @@
+Source: wangle
+Version: v2018.07.30.00-1
+Build-Depends: folly, openssl, gtest, glog, libevent, double-conversion
+Description: Wangle is a framework providing a set of common client/server abstractions for building services in a consistent, modular, and composable way.

@@ -3,7 +3,7 @@
 ### Bootstrap with `create`
 First, locate a globally accessible archive of the library's sources. Zip, gzip, and bzip are all supported. Strongly prefer official sources or mirrors over unofficial mirrors.
 
-*Looking at zlib's website, the URL http://zlib.net/zlib128.zip looks appropriate.*
+*Looking at zlib's website, the URL http://zlib.net/zlib1211.zip looks appropriate.*
 
 Second, determine a suitable package name. This should be ASCII, lowercase, and recognizable to someone who knows the library's "human name". If the library is already packaged in another package manager, prefer that name.
 
@@ -11,7 +11,7 @@ Second, determine a suitable package name. This should be ASCII, lowercase, and 
 
 Finally, if the server's name for the archive is not very descriptive (such as downloading a zipped commit or branch from GitHub), choose a nice archive name of the form `<packagename>-<version>.zip`.
 
-*`zlib128.zip` is a fine name, so no change needed.*
+*`zlib1211.zip` is a fine name, so no change needed.*
 
 All this information can then be passed into the `create` command, which will download the sources and bootstrap the packaging process inside `ports\<packagename>`.
 
@@ -26,7 +26,7 @@ In addition to the generated `ports\<package>\portfile.cmake`, we also need a `p
 *For zlib2, we'll create the file `ports\zlib2\CONTROL` with the following contents:*
 ```no-highlight
 Source: zlib2
-Version: 1.2.8
+Version: 1.2.11
 Description: A Massively Spiffy Yet Delicately Unobtrusive Compression Library
 ```
 

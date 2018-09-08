@@ -80,16 +80,16 @@ function(vcpkg_from_github)
     string(REGEX REPLACE "/.*" "" ORG_NAME ${_vdud_REPO})
 
     macro(set_TEMP_SOURCE_PATH BASE BASEREF)
-    set(TEMP_SOURCE_PATH "${BASE}/${REPO_NAME}-${BASEREF}")
-    if(NOT EXISTS ${TEMP_SOURCE_PATH})
-        # Sometimes GitHub strips a leading 'v' off the REF.
-        string(REGEX REPLACE "^v" "" REF ${BASEREF})
-        string(REPLACE "/" "-" REF ${REF})
-        set(TEMP_SOURCE_PATH "${BASE}/${REPO_NAME}-${REF}")
+        set(TEMP_SOURCE_PATH "${BASE}/${REPO_NAME}-${BASEREF}")
         if(NOT EXISTS ${TEMP_SOURCE_PATH})
-            message(FATAL_ERROR "Could not determine source path: '${BASE}/${REPO_NAME}-${BASEREF}' does not exist")
+            # Sometimes GitHub strips a leading 'v' off the REF.
+            string(REGEX REPLACE "^v" "" REF ${BASEREF})
+            string(REPLACE "/" "-" REF ${REF})
+            set(TEMP_SOURCE_PATH "${BASE}/${REPO_NAME}-${REF}")
+            if(NOT EXISTS ${TEMP_SOURCE_PATH})
+                message(FATAL_ERROR "Could not determine source path: '${BASE}/${REPO_NAME}-${BASEREF}' does not exist")
+            endif()
         endif()
-    endif()
     endmacro()
 
     if(VCPKG_USE_HEAD_VERSION AND NOT DEFINED _vdud_HEAD_REF)
@@ -111,44 +111,14 @@ function(vcpkg_from_github)
             FILENAME "${ORG_NAME}-${REPO_NAME}-${SANITIZED_REF}.tar.gz"
         )
 
-        # Take the last 10 chars of the REF
-        set(REF_MAX_LENGTH 10)
-        string(LENGTH ${SANITIZED_REF} REF_LENGTH)
-        math(EXPR FROM_REF ${REF_LENGTH}-${REF_MAX_LENGTH})
-        if(FROM_REF LESS 0)
-            set(FROM_REF 0)
-        endif()
-        string(SUBSTRING ${SANITIZED_REF} ${FROM_REF} ${REF_LENGTH} SHORTENED_SANITIZED_REF)
-
-        # Hash the archive hash along with the patches. Take the first 10 chars of the hash
-        set(PATCHSET_HASH "${_vdud_SHA512}")
-        foreach(PATCH IN LISTS _vdud_PATCHES)
-            get_filename_component(ABSOLUTE_PATCH "${PATCH}" ABSOLUTE BASE_DIR "${CURRENT_PORT_DIR}")
-            file(SHA512 ${ABSOLUTE_PATCH} CURRENT_HASH)
-            string(APPEND PATCHSET_HASH ${CURRENT_HASH})
-        endforeach()
-
-        string(SHA512 PATCHSET_HASH ${PATCHSET_HASH})
-        string(SUBSTRING ${PATCHSET_HASH} 0 10 PATCHSET_HASH)
-        set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src/${SHORTENED_SANITIZED_REF}-${PATCHSET_HASH}")
-
-        if(NOT EXISTS ${SOURCE_PATH})
-            set(TEMP_DIR "${CURRENT_BUILDTREES_DIR}/src/TEMP")
-            file(REMOVE_RECURSE ${TEMP_DIR})
-            vcpkg_extract_source_archive_ex(ARCHIVE "${ARCHIVE}" WORKING_DIRECTORY ${TEMP_DIR})
-            set_TEMP_SOURCE_PATH(${CURRENT_BUILDTREES_DIR}/src/TEMP ${SANITIZED_REF})
-
-            vcpkg_apply_patches(
-                SOURCE_PATH ${TEMP_SOURCE_PATH}
-                PATCHES ${_vdud_PATCHES}
-            )
-
-            file(RENAME ${TEMP_SOURCE_PATH} ${SOURCE_PATH})
-            file(REMOVE_RECURSE ${TEMP_DIR})
-        endif()
+        vcpkg_extract_source_archive_ex(
+            OUT_SOURCE_PATH SOURCE_PATH
+            ARCHIVE "${ARCHIVE}"
+            REF "${SANITIZED_REF}"
+            PATCHES ${_vdud_PATCHES}
+        )
 
         set(${_vdud_OUT_SOURCE_PATH} "${SOURCE_PATH}" PARENT_SCOPE)
-        message(STATUS "Using source at ${SOURCE_PATH}")
         return()
     endif()
 
@@ -189,11 +159,6 @@ function(vcpkg_from_github)
         )
     endif()
 
-    vcpkg_extract_source_archive_ex(
-        ARCHIVE "${ARCHIVE}"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/head"
-    )
-
     # Parse the github refs response with regex.
     # TODO: use some JSON swiss-army-knife utility instead.
     file(READ "${ARCHIVE_VERSION}" _contents)
@@ -206,11 +171,12 @@ function(vcpkg_from_github)
         set(VCPKG_HEAD_VERSION ${_version} PARENT_SCOPE)
     endif()
 
-    set_TEMP_SOURCE_PATH(${CURRENT_BUILDTREES_DIR}/src/head ${SANITIZED_HEAD_REF})
-    vcpkg_apply_patches(
-        SOURCE_PATH ${TEMP_SOURCE_PATH}
+    vcpkg_extract_source_archive_ex(
+        OUT_SOURCE_PATH SOURCE_PATH
+        ARCHIVE "${downloaded_file_path}"
+        REF "${SANITIZED_HEAD_REF}"
+        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src/head
         PATCHES ${_vdud_PATCHES}
     )
-    set(${_vdud_OUT_SOURCE_PATH} "${TEMP_SOURCE_PATH}" PARENT_SCOPE)
-    message(STATUS "Using source at ${TEMP_SOURCE_PATH}")
+    set(${_vdud_OUT_SOURCE_PATH} "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()
