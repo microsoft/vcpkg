@@ -65,10 +65,12 @@
       <AdditionalLibraryDirectories Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug'">%(AdditionalLibraryDirectories);$(VcpkgRoot)debug\lib;$(VcpkgRoot)debug\lib\manual-link</AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(VcpkgRoot)include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug'">%(AdditionalIncludeDirectories);$(VcpkgRoot)include;$(VcpkgRoot)debug\lib\mswud</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(VcpkgNormalizedConfiguration)' == 'Release'">%(AdditionalIncludeDirectories);$(VcpkgRoot)include;$(VcpkgRoot)lib\mswu</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(VcpkgRoot)include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug'">%(AdditionalIncludeDirectories);$(VcpkgRoot)include;$(VcpkgRoot)debug\lib\mswud</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(VcpkgNormalizedConfiguration)' == 'Release'">%(AdditionalIncludeDirectories);$(VcpkgRoot)include;$(VcpkgRoot)lib\mswu</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
 
