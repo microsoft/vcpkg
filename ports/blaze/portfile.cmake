@@ -3,16 +3,11 @@ include(vcpkg_common_functions)
 vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO blaze-lib/blaze
-    REF v3.3
-    SHA512 1210db57fca04832ff9382cbb904f22f70eab3acbc355a1d22435bfe042d6acac7f86a908d8654cf49517c2ad825cd8be19f85b20b1ebd46a79d474a424653c8
+    REF bbe39c81b68eb0d8647da703899e1ee4a82cdfd3
+    SHA512 84eb8226672d9d11d194d165e7aaa333a0d49ca090bb94472f19242e5f2ad0c3e08a30cdafe055cff51b210b603533f879800bd6784f3ffdb0d9eeca65d58b25
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/no-absolute-paths-in-install.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/no-generate-to-source-dir.patch"
+        avoid-src-dir-generation.patch
 )
 
 vcpkg_configure_cmake(

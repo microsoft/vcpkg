@@ -41,6 +41,16 @@ This can be set to `v141`, `v140`, or left blank. If left blank, we select the l
 Visual Studio 2015 platform toolset is `v140`  
 Visual Studio 2017 platform toolset is `v141`
 
+### VCPKG_VISUAL_STUDIO_PATH
+Specifies the Visual Studio installation to use.
+
+When unspecified, a Visual Studio instance is selected automatically, preferring Stable 2017, then Preview 2017, then 2015.
+
+The path should be absolute, formatted with backslashes, and have no trailing slash:
+```cmake
+set(VCPKG_VISUAL_STUDIO_PATH "C:\\Program Files (x86)\\Microsoft Visual Studio\\Preview\\Community")
+```
+
 ### VCPKG_CHAINLOAD_TOOLCHAIN_FILE
 Specifies an alternate CMake Toolchain file to use.
 

@@ -14,8 +14,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ChaiScript/ChaiScript
-    REF v6.0.0
-    SHA512 612c175b9ee357512addcbe9ce0e2b9c34c40a45b5be85a3f75e2c0d391bc845996e2559c401e4899088b3e641c6c5b34af233bf2fd48d4de4531ea2815e2a96
+    REF v6.1.0
+    SHA512 7728abd8d3e1e8007f4d95c8065ba5a9154583bcd1d493bfd96d608ff91f4c9bb23e538378b77c1cfd6c637d6b4885af94ac0a2a9a34b6bae19581d9f1a831cc
     HEAD_REF master
 )
 

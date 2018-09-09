@@ -5,12 +5,13 @@
 ## ## Usage:
 ## ```cmake
 ## vcpkg_from_gitlab(
-##     GITLAB_INSTANCE <https://gitlab.com>
+##     GITLAB_URL <https://gitlab.com>
 ##     OUT_SOURCE_PATH <SOURCE_PATH>
 ##     REPO <gitlab-org/gitlab-ce>
 ##     [REF <v10.7.3>]
 ##     [SHA512 <45d0d7f8cc350...>]
 ##     [HEAD_REF <master>]
+##     [PATCHES <patch1.patch> <patch2.patch>...]
 ## )
 ## ```
 ##
@@ -45,6 +46,11 @@
 ##
 ## For most projects, this should be `master`. The chosen branch should be one that is expected to be always buildable on all supported platforms.
 ##
+## ### PATCHES
+## A list of patches to be applied to the extracted sources.
+##
+## Relative paths are based on the port directory.
+##
 ## ## Notes:
 ## At least one of `REF` and `HEAD_REF` must be specified, however it is preferable for both to be present.
 ##
@@ -76,27 +82,13 @@ function(vcpkg_from_gitlab)
         message(FATAL_ERROR "At least one of REF and HEAD_REF must be specified.")
     endif()
 
-    string(REGEX REPLACE ".*/" "" REPO_NAME ${_vdud_REPO})
-    string(REGEX REPLACE "/.*" "" ORG_NAME ${_vdud_REPO})
-
-    macro(set_TEMP_SOURCE_PATH BASE)
-        file(GLOB _ARCHIVE_FILES "${BASE}/${REPO_NAME}*")
-        foreach(dir ${_ARCHIVE_FILES})
-            if (IS_DIRECTORY ${dir})
-                list(APPEND _ARCHIVE_DIRS "${dir}")
-            endif()
-        endforeach()
-        list(LENGTH _ARCHIVE_DIRS _NUM_ARCHIVE_DIRS)
-        if(NOT 1 EQUAL ${_NUM_ARCHIVE_DIRS})
-            message(FATAL_ERROR "Could not determine source path: There were ${_NUM_ARCHIVE_DIRS} directories extracted from the archive that start with the repo name.")
-        endif()
-        list(GET _ARCHIVE_DIRS 0 TEMP_SOURCE_PATH)
-    endmacro()
-
     if(VCPKG_USE_HEAD_VERSION AND NOT DEFINED _vdud_HEAD_REF)
         message(STATUS "Package does not specify HEAD_REF. Falling back to non-HEAD version.")
         set(VCPKG_USE_HEAD_VERSION OFF)
     endif()
+
+    string(REGEX REPLACE ".*/" "" REPO_NAME ${_vdud_REPO})
+    string(REGEX REPLACE "/.*" "" ORG_NAME ${_vdud_REPO})
 
     # Handle --no-head scenarios
     if(NOT VCPKG_USE_HEAD_VERSION)
@@ -112,43 +104,14 @@ function(vcpkg_from_gitlab)
             FILENAME "${ORG_NAME}-${REPO_NAME}-${SANITIZED_REF}.tar.gz"
         )
 
-        # Take the last 10 chars of the REF
-        set(REF_MAX_LENGTH 10)
-        string(LENGTH ${SANITIZED_REF} REF_LENGTH)
-        math(EXPR FROM_REF ${REF_LENGTH}-${REF_MAX_LENGTH})
-        if(FROM_REF LESS 0)
-            set(FROM_REF 0)
-        endif()
-        string(SUBSTRING ${SANITIZED_REF} ${FROM_REF} ${REF_LENGTH} SHORTENED_SANITIZED_REF)
-
-        # Hash the archive hash along with the patches. Take the first 10 chars of the hash
-        set(PATCHSET_HASH "${_vdud_SHA512}")
-        foreach(PATCH IN LISTS _vdud_PATCHES)
-            file(SHA512 ${PATCH} CURRENT_HASH)
-            string(APPEND PATCHSET_HASH ${CURRENT_HASH})
-        endforeach()
-
-        string(SHA512 PATCHSET_HASH ${PATCHSET_HASH})
-        string(SUBSTRING ${PATCHSET_HASH} 0 10 PATCHSET_HASH)
-        set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src/${SHORTENED_SANITIZED_REF}-${PATCHSET_HASH}")
-
-        if(NOT EXISTS ${SOURCE_PATH})
-            set(TEMP_DIR "${CURRENT_BUILDTREES_DIR}/src/TEMP")
-            file(REMOVE_RECURSE ${TEMP_DIR})
-            vcpkg_extract_source_archive_ex(ARCHIVE "${ARCHIVE}" WORKING_DIRECTORY ${TEMP_DIR})
-            set_TEMP_SOURCE_PATH(${CURRENT_BUILDTREES_DIR}/src/TEMP ${SANITIZED_REF})
-
-            vcpkg_apply_patches(
-                SOURCE_PATH ${TEMP_SOURCE_PATH}
-                PATCHES ${_vdud_PATCHES}
-            )
-
-            file(RENAME ${TEMP_SOURCE_PATH} ${SOURCE_PATH})
-            file(REMOVE_RECURSE ${TEMP_DIR})
-        endif()
+        vcpkg_extract_source_archive_ex(
+            OUT_SOURCE_PATH SOURCE_PATH
+            ARCHIVE "${ARCHIVE}"
+            REF "${SANITIZED_REF}"
+            PATCHES ${_vdud_PATCHES}
+        )
 
         set(${_vdud_OUT_SOURCE_PATH} "${SOURCE_PATH}" PARENT_SCOPE)
-
         return()
     endif()
 
@@ -182,10 +145,6 @@ function(vcpkg_from_gitlab)
         )
     endif()
 
-    vcpkg_extract_source_archive_ex(
-        ARCHIVE "${ARCHIVE}"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/head"
-    )
     # There are issues with the Gitlab API project paths being URL-escaped, so we use git here to get the head revision
     execute_process(COMMAND ${GIT} ls-remote
         "${_vdud_GITLAB_URL}/${ORG_NAME}/${REPO_NAME}.git" "${_vdud_HEAD_REF}"
@@ -199,10 +158,12 @@ function(vcpkg_from_gitlab)
         set(VCPKG_HEAD_VERSION ${_version} PARENT_SCOPE)
     endif()
 
-    set_TEMP_SOURCE_PATH(${CURRENT_BUILDTREES_DIR}/src/head ${SANITIZED_HEAD_REF})
-    vcpkg_apply_patches(
-        SOURCE_PATH ${TEMP_SOURCE_PATH}
+    vcpkg_extract_source_archive_ex(
+        OUT_SOURCE_PATH SOURCE_PATH
+        ARCHIVE "${downloaded_file_path}"
+        REF "${SANITIZED_HEAD_REF}"
+        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src/head
         PATCHES ${_vdud_PATCHES}
     )
-    set(${_vdud_OUT_SOURCE_PATH} "${TEMP_SOURCE_PATH}" PARENT_SCOPE)
+    set(${_vdud_OUT_SOURCE_PATH} "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()

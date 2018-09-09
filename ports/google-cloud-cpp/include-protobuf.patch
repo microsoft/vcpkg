@@ -1,0 +1,24 @@
+diff --git a/bigtable/CMakeLists.txt b/bigtable/CMakeLists.txt
+index 1b8089f..771e1ec 100644
+--- a/bigtable/CMakeLists.txt
++++ b/bigtable/CMakeLists.txt
+@@ -69,6 +69,10 @@ set(PROTOBUF_IMPORT_DIRS "${PROJECT_THIRD_PARTY_DIR}/googleapis" "${PROJECT_SOUR
+ if(GRPC_ROOT_DIR)
+     list(INSERT PROTOBUF_IMPORT_DIRS 0 "${GRPC_ROOT_DIR}/third_party/protobuf/src")
+ endif(GRPC_ROOT_DIR)
++find_path(PROTO_INCLUDE_DIR google/protobuf/descriptor.proto)
++if(PROTO_INCLUDE_DIR)
++    list(INSERT PROTOBUF_IMPORT_DIRS 0 "${PROTO_INCLUDE_DIR}")
++endif()
+ 
+ # Get the destination directories based on the GNU recommendations.
+ include(GNUInstallDirs)
+@@ -110,7 +114,7 @@ enable_testing()
+ 
+ # Capture the compiler version and the git revision into variables, then
+ # generate a config file with the values.
+-if (IS_DIRECTORY ${PROJECT_SOURCE_DIR}/.git)
++if (IS_DIRECTORY ${PROJECT_SOURCE_DIR}/.git AND 0)
+     execute_process(COMMAND git rev-parse --short HEAD
+             OUTPUT_VARIABLE GIT_HEAD_LOG ERROR_VARIABLE GIT_HEAD_LOG)
+ else ()

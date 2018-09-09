@@ -2,9 +2,9 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO behdad/harfbuzz
-    REF 1.8.2
-    SHA512 83a5126f17e57b05c36779f91ea9c2454731d7e6f514fce134ae5e652972a8231723773e0e0f64bfe8588f8cfcf2e041031a3328ee3102d440b2ac427aa1d764
+    REPO harfbuzz/harfbuzz
+    REF 1.8.4
+    SHA512 92742b754713d1df8975d4d8467de04765784d7fd566b7e07e7e7a261b0338e997a5fc11fa4fe282d6d5540d242db40c993812fbc4a881becd95fd3aae598c80
     HEAD_REF master
 )
 
@@ -13,11 +13,17 @@ vcpkg_apply_patches(
     PATCHES
         "${CMAKE_CURRENT_LIST_DIR}/0001-fix-uwp-build.patch"
         "${CMAKE_CURRENT_LIST_DIR}/find-package-freetype-2.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/glib-cmake.patch"
 )
 
 SET(HB_HAVE_ICU "OFF")
 if("icu" IN_LIST FEATURES)
     SET(HB_HAVE_ICU "ON")
+endif()
+
+SET(HB_HAVE_GRAPHITE2 "OFF")
+if("graphite2" IN_LIST FEATURES)
+    SET(HB_HAVE_GRAPHITE2 "ON")
 endif()
 
 ## Unicode callbacks
@@ -47,6 +53,7 @@ vcpkg_configure_cmake(
         -DHB_BUILTIN_UCDN=${BUILTIN_UCDN}
         -DHB_HAVE_ICU=${HB_HAVE_ICU}
         -DHB_HAVE_GLIB=${HAVE_GLIB}
+        -DHB_HAVE_GRAPHITE2=${HB_HAVE_GRAPHITE2}
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
 )

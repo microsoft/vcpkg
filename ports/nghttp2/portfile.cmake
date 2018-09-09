@@ -1,7 +1,7 @@
 include(vcpkg_common_functions)
 
 set(LIB_NAME nghttp2)
-set(LIB_VERSION 1.32.0)
+set(LIB_VERSION 1.33.0)
 
 set(LIB_FILENAME ${LIB_NAME}-${LIB_VERSION}.tar.gz)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${LIB_NAME}-${LIB_VERSION})
@@ -9,7 +9,7 @@ set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${LIB_NAME}-${LIB_VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/nghttp2/nghttp2/releases/download/v${LIB_VERSION}/${LIB_FILENAME}"
     FILENAME "${LIB_FILENAME}"
-    SHA512 f5bd36230cd42bd544d75b71af44f2fa2798363ddc1efb05499f6c8e86d54acfe6fde20f3d544ed560324a30141408dba6bc7e03e5f03ee7f7df532fb21aecbd
+    SHA512 39c37a6579d1da6a6bcfb32c822f59943796ef4c11d82146924b8e279653c4afca496b6cc7fd65b0181f95fa5007a2dd0589038d6f4354c75d65e60d29528268
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
