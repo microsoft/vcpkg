@@ -57,9 +57,11 @@ function(qt_modular_library NAME HASH)
 
     file(GLOB_RECURSE MAKEFILES ${DEBUG_DIR}/*Makefile* ${RELEASE_DIR}/*Makefile*)
 
-    #Set the correct install directory to packages
     foreach(MAKEFILE ${MAKEFILES})
-        vcpkg_replace_string(${MAKEFILE} "(INSTALL_ROOT)${INSTALLED_DIR_WITHOUT_DRIVE}" "(INSTALL_ROOT)${PACKAGES_DIR_WITHOUT_DRIVE}")
+        file(READ "${MAKEFILE}" _contents)
+        #Set the correct install directory to packages
+        string(REPLACE "(INSTALL_ROOT)${INSTALLED_DIR_WITHOUT_DRIVE}" "(INSTALL_ROOT)${PACKAGES_DIR_WITHOUT_DRIVE}" _contents "${_contents}")
+        file(WRITE "${MAKEFILE}" "${_contents}")
     endforeach()
 
     #Install the module files
