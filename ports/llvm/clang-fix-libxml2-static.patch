@@ -1,0 +1,25 @@
+diff --git a/tools/clang/CMakeLists.txt b/tools/clang/CMakeLists.txt
+index 2eee8e6..23252f6 100644
+--- a/tools/clang/CMakeLists.txt
++++ b/tools/clang/CMakeLists.txt
+@@ -186,11 +186,16 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
+ 
+ # Don't look for libxml if we're using MSan, since uninstrumented third party
+ # code may call MSan interceptors like strlen, leading to false positives.
+-if(NOT LLVM_USE_SANITIZER MATCHES "Memory.*")
+-  set (LIBXML2_FOUND 0)
+-  find_package(LibXml2 2.5.3 QUIET)
+-  if (LIBXML2_FOUND)
+-    set(CLANG_HAVE_LIBXML 1)
++if(NOT LLVM_USE_SANITIZER MATCHES "Memory.*" AND LLVM_ENABLE_LIBXML2)
++  find_package(LibXml2 REQUIRED)
++  set(CLANG_HAVE_LIBXML 1)
++  if (LLVM_BUILD_STATIC)
++    if (NOT LLVM_ENABLE_ZLIB)
++      message(FATAL_ERROR "Static build needs LLVM_ENABLE_ZLIB enabled for LibXML2 library.")
++    endif()
++    find_package(ZLIB REQUIRED)
++    include_directories(SYSTEM ${ZLIB_INCLUDE_DIRS})
++    set(LIBXML2_LIBRARIES ${LIBXML2_LIBRARIES} ${ZLIB_LIBRARIES})
+   endif()
+ endif()

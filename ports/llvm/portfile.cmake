@@ -6,20 +6,38 @@ include(vcpkg_common_functions)
 # /ML - statically linked, single-threaded library
 # /MT - statically linked, multi-threaded library
 # /MD - dynamically linked library
+# TODO: https://reviews.llvm.org/file/data/2qtc3w55zzofywc6j57h/PHID-FILE-neg4vzuekfhktco4gxvn/D45106.diff
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_STATIC_CRT)
 
 # Use only release, because debug takes too long and does not work with compiler-rt
 set(VCPKG_BUILD_TYPE release)
+set(VCPKG_POLICY_ONLY_RELEASE_CRT enabled)
 
 # Latest version of LLVM
 set(LLVM_VERSION "6.0.1")
+
+# At the end this directories should be deleted.
+set (EMPTY_DIRECTORIES
+    "include/llvm/BinaryFormat/WasmRelocs"
+    "include/llvm/MC/MCAnalysis"
+    "tools/msbuild-bin"
+    "bin"
+    "msbuild-bin"
+)
 
 # Doxygen requires Graphviz (dot) - Add to PATH
 # https://ci.appveyor.com/api/buildjobs/w96x513p36twogfm/artifacts/graphviz-windows.zip
 # TODO: Make Graphviz multiplatform for documentation
 
+# Enables UCRT: -DCMAKE_INSTALL_UCRT_LIBRARIES=ON
+# TODO: -DLLVM_FORCE_BUILD_RUNTIME=ON
+# LLVM_FORCE_BUILD_RUNTIME should be fixed soon
+
 message (STATUS "LLVM will be build only for release.")
+
+# Cleanup everything
+file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
 
 # LLVM can not be compiled for UWP apps
 if("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "WindowsStore")
@@ -143,6 +161,14 @@ foreach(_feature IN LISTS FEATURES)
         string(TOUPPER "${_feature}" _FEATURE)
         string(REPLACE "-" "_" _FEATURE "${_FEATURE}")
 
+        if (LLVM_CXX_ENABLED)
+            message(FATAL_ERROR "Please select one compilation mode (cxx1y or cxx1z)")
+        endif()
+
+        if ("${_featureValue}" MATCHES "^cxx1")
+            set(LLVM_CXX_ENABLED ON)
+        endif()
+
         list(APPEND _COMPONENT_FLAGS "-DLLVM_${_FEATURE}=ON")
 
         if ("${_featureValue}" STREQUAL "ffi")
@@ -188,19 +214,30 @@ foreach(_feature IN LISTS FEATURES)
             PKG_NAME cfe
             SHA512 f64ba9290059f6e36fee41c8f32bf483609d31c291fcd2f77d41fecfdf3c8233a5e23b93a1c73fed03683823bd6e72757ed993dd32527de3d5f2b7a64bb031b9
         )
-        list(APPEND _COMPONENT_FLAGS "-DLIBCLANG_BUILD_STATIC=ON")
         list(APPEND _COMPONENT_FLAGS "-DCLANG_ENABLE_ARCMT=ON")
+        list(APPEND _COMPONENT_FLAGS "-DLIBCLANG_BUILD_STATIC=ON")
+
         list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/clang-protobuf-vcpkg.patch")
         list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/clang-libclang-link-fix-carcmttest.patch")
         list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/clang-libclang-link-fix-cindextest.patch")
-
-        list(APPEND _COMPONENT_WARNINGS "The libclang library doesn't support static linkage on Windows platform.")
+        list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/clang-fix-libxml2.patch")
+        list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/clang-libclang-static.patch")
+        list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/clang-libclang-static-platform-fix.patch")
+        #list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/clang-fix-libxml2-static.patch")
     elseif ("${_feature}" STREQUAL "clang-stage2")
         set (LLVM_ENABLE_STAGE2 ON)
         list(APPEND _COMPONENT_FLAGS "-DCLANG_ENABLE_BOOTSTRAP=ON")
 
         # Use LLD linker
         list(APPEND _COMPONENT_FLAGS "-DLLVM_ENABLE_LLD=ON")
+
+        # Enable full LTO compilation
+        list(APPEND _COMPONENT_FLAGS "-D-DLLVM_ENABLE_LTO=Full")
+
+        # Currently works only on clang-stage2
+        if ("libunwind" IN_LIST FEATURES OR "libcxxabi" IN_LIST FEATURES OR "libcxx" IN_LIST FEATURES)
+            list(APPEND _COMPONENT_FLAGS "-DLLVM_FORCE_BUILD_RUNTIME=ON")
+        endif()
     elseif ("${_feature}" STREQUAL "clang-protobuf-fuzzer")
         if ("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "" AND NOT "clang-stage2" IN_LIST FEATURES)
             # https://github.com/google/libprotobuf-mutator
@@ -268,24 +305,22 @@ foreach(_feature IN LISTS FEATURES)
             SHA512 69850c1ad92c66977fa217cbfb42a6a3f502fbe3d1a08daa7fc4cfeb617a7736d231f8ad8d93b10b1ae29bd753315d2a2d70f9ff1f4d18a9a7cc81758d91f963
         )
         list(APPEND _COMPONENT_FLAGS "-DLLVM_INCLUDE_RUNTIMES=ON")
+        list(APPEND _COMPONENT_FLAGS "-DSANITIZER_USE_COMPILER_RT=ON")
     elseif ("${_feature}" STREQUAL "libunwind")
-        if ("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "")
-            message(FATAL_ERROR "The libunwind does not work on Windows yet.")
-        else()
-            llvm_download(
-                NAME libunwind
-                SHA512 78568c28720abdd1f8471c462421df9965e05e1db048689d16ac85378716c4080ec1723af78e9f61d133b0ff82ac8c1f0dde7fd42d194485f62c1a17c02db37f
-            )
-            list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_CROSS_UNWINDING=ON")
-            list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_ARM_WMMX=ON")
+        llvm_download(
+            NAME libunwind
+            EXTRACT_TO projects
+            SHA512 78568c28720abdd1f8471c462421df9965e05e1db048689d16ac85378716c4080ec1723af78e9f61d133b0ff82ac8c1f0dde7fd42d194485f62c1a17c02db37f
+        )
+        list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_CROSS_UNWINDING=ON")
+        list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_ARM_WMMX=ON")
 
-            if ("compiler-rt" IN_LIST FEATURES)
-                list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_USE_COMPILER_RT=ON")
-            endif()
-
-            list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_STATIC=ON")
-            list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_SHARED=OFF")
+        if ("compiler-rt" IN_LIST FEATURES)
+            list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_USE_COMPILER_RT=ON")
         endif()
+
+        list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_STATIC=ON")
+        list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_SHARED=OFF")
     elseif ("${_feature}" STREQUAL "libomp")
         llvm_download(
             NAME openmp
@@ -331,6 +366,23 @@ foreach(_feature IN LISTS FEATURES)
         vcpkg_add_to_path(PREPEND ${DOXYGEN_PATH})
         list(APPEND _COMPONENT_FLAGS "-DLLVM_BUILD_DOCS=ON")
         list(APPEND _COMPONENT_FLAGS "-DLLVM_INCLUDE_DOCS=ON")
+    elseif ("${_feature}" STREQUAL "libcxx")
+        llvm_download(
+            NAME libcxx
+            EXTRACT_TO projects
+            SHA512 c04f628b0924d76f035f615b59d19ce42dfc19c9a8eea4fe2b22a95cfe5a037ebdb30943fd741443939df5b4cf692bc1e51c840fefefbd134e3afbe2a75fe875
+        )
+        list(APPEND _COMPONENT_FLAGS "-DLLVM_ENABLE_LIBCXX=ON")
+        # -DLIBCXX_ENABLE_SHARED=YES              ^
+        # -DLIBCXX_ENABLE_STATIC=NO               ^
+        # -DLIBCXX_ENABLE_EXPERIMENTAL_LIBRARY=NO ^
+    elseif ("${_feature}" STREQUAL "libcxxabi")
+        llvm_download(
+            NAME libcxxabi
+            EXTRACT_TO projects
+            SHA512 bbb4c7b412e295cb735f637df48a83093eef45ed5444f7766790b4b047f75fd5fd634d8f3a8ac33a5c1407bd16fd450ba113f60a9bcc1d0a911fe0c54e9c81f2
+        )
+        list(APPEND _COMPONENT_FLAGS "-DLIBCXXABI_USE_LLVM_UNWINDER=ON")
     endif()
 endforeach()
 
@@ -372,14 +424,17 @@ vcpkg_apply_patches(
         # Add patch for settings LLVM_TARGETS_TO_BUILD, LLVM_EXPERIMENTAL_TARGETS_TO_BUILD from ENV
         ${CMAKE_CURRENT_LIST_DIR}/llvm-set-using-env.patch
 
-        # Based on https://github.com/numba/llvmlite/blob/master/conda-recipes/llvm-lto-static.patch
-        ${CMAKE_CURRENT_LIST_DIR}/llvm-lto-static.patch
-
         # Fix typo in LLVM-Config.cmake
         ${CMAKE_CURRENT_LIST_DIR}/llvm-config-fix-typo.patch
 
+        # Based on https://github.com/numba/llvmlite/blob/master/conda-recipes/llvm-lto-static.patch
+        ${CMAKE_CURRENT_LIST_DIR}/llvm-lto-static.patch
+
+        # Fix shlib for shared build
+        # ${CMAKE_CURRENT_LIST_DIR}/llvm-fix-shlib.patch
+
         # Enable zlib, iconv and libxml2 support
-        # ${CMAKE_CURRENT_LIST_DIR}/llvm-enable-zlib-iconv-libxml2.patch
+        #${CMAKE_CURRENT_LIST_DIR}/llvm-enable-zlib-iconv-libxml2.patch
 
         # Component-specific patches
         ${_COMPONENT_PATCHES}
@@ -397,22 +452,36 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        # Disable LLVM tests
+        # Disable things
         -DLLVM_INCLUDE_TESTS=OFF
-
-        # Disable LLVM examples
+        -DLLVM_INCLUDE_BENCHMARKS=OFF
+        -DLLVM_INCLUDE_GO_TESTS=OFF
         -DLLVM_INCLUDE_EXAMPLES=OFF
+        -DLLVM_ENABLE_PIC=OFF
 
-        # Include utils
-        -DLLVM_INCLUDE_UTILS=ON
+        -DLLVM_TOOL_CLANG_TOOLS_EXTRA_BUILD=ON
+        -DLLVM_TOOL_DRAGONEGG_BUILD=ON
+        -DLLVM_TOOL_LLDB_BUILD=ON
+        -DLLVM_TOOL_LLD_BUILD=ON
+        -DLLVM_TOOL_LLGO_BUILD=ON
+        -DLLVM_TOOL_OPENMP_BUILD=ON
+        -DLLVM_TOOL_PARALLEL_LIBS_BUILD=ON
 
-        # Enable static build
+        
+        # Disable libxml and zlib (need patch)
+        -DLLVM_ENABLE_LIBXML2=OFF
+        -DLLVM_ENABLE_ZLIB=OFF
+
+        # Exclude utils
+        -DLLVM_INCLUDE_UTILS=OFF
+
+        # Force static build
         -DLLVM_BUILD_STATIC=ON
 
-        # Enable LLVM-C dynamic library
-        -DLLVM_LINK_LLVM_DYLIB=ON
+        # Enable this when the project will be included - this should works on Windows
+        #-DLLVM_ENABLE_LIBCXX=ON
 
-        # Bugfix
+        # Bugfix (from LLVM script)
         "-DCMAKE_CL_SHOWINCLUDES_PREFIX=Note: including file:"
 
         # Change tool installation directory
@@ -420,6 +489,10 @@ vcpkg_configure_cmake(
 
         # Speedup build in Debug mode
         -DLLVM_OPTIMIZED_TABLEGEN=ON
+
+        # Enable build caching on Linux or macos
+        #-DLLVM_CCACHE_BUILD=ON
+        #"-DLLVM_CCACHE_DIR=${CURRENT_BUILDTREES_DIR}/ccache"
 
         # Component-specific compilation flags for debug and release
         ${_COMPONENT_FLAGS}
@@ -433,42 +506,37 @@ vcpkg_configure_cmake(
         ${_COMPONENT_DEBUG_FLAGS}
 )
 
+# More info about stage2 compiling: https://fuchsia.googlesource.com/docs/+/sandbox/jakehehrlich/asan/toolchain.md
 # Invoke install
 if (LLVM_ENABLE_STAGE2)
-    vcpkg_build_cmake(TARGET stage2)
     vcpkg_build_cmake(TARGET stage2 install)
 else()
-    vcpkg_install_cmake()
+    vcpkg_build_cmake(TARGET install)
 endif()
-
-file(GLOB EXE ${CURRENT_PACKAGES_DIR}/bin/*)
-file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/bin/*)
-file(COPY ${EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/llvm)
-file(COPY ${DEBUG_EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/llvm)
-file(REMOVE ${EXE})
-file(REMOVE ${DEBUG_EXE})
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/clang TARGET_PATH share/clang)
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/llvm)
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/llvm)
 
-file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/tools
-    ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/debug/bin
-    ${CURRENT_PACKAGES_DIR}/debug/msbuild-bin
-    ${CURRENT_PACKAGES_DIR}/bin
-    ${CURRENT_PACKAGES_DIR}/msbuild-bin
-    ${CURRENT_PACKAGES_DIR}/tools/msbuild-bin
-    ${CURRENT_PACKAGES_DIR}/include/llvm/BinaryFormat/WasmRelocs
-)
+# Move only exe files to the tools
+file(GLOB BINARIES ${CURRENT_PACKAGES_DIR}/bin/*)
+file(COPY ${BINARIES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/llvm)
+file(REMOVE ${BINARIES})
+
+# Move all DLLs from lib folder like:
+# clang_rt.asan_dynamic-x86_64.dll (has also static version)
+# 
+file(GLOB_RECURSE DYNAMIC_LIBRARIES ${CURRENT_PACKAGES_DIR}/lib/*.dll)
+file(COPY ${DYNAMIC_LIBRARIES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/llvm)
+file(REMOVE ${DYNAMIC_LIBRARIES})
 
 # Remove one empty include subdirectory if it is indeed empty
-file(GLOB MCANALYSISFILES ${CURRENT_PACKAGES_DIR}/include/llvm/MC/MCAnalysis/*)
-if(NOT MCANALYSISFILES)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/llvm/MC/MCAnalysis)
-endif()
+foreach(EMPTY_DIRECTORY IN LISTS EMPTY_DIRECTORIES)
+    file(GLOB EMPTY_DIRECTORY_GLOB ${CURRENT_PACKAGES_DIR}/${EMPTY_DIRECTORY}/*)
+    if(NOT EMPTY_DIRECTORY_GLOB)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/${EMPTY_DIRECTORY})
+    endif()
+endforeach()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/llvm RENAME copyright)

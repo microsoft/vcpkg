@@ -1,0 +1,13 @@
+diff --git a/tools/clang/tools/libclang/CMakeLists.txt b/tools/clang/tools/libclang/CMakeLists.txt
+index 4440637..a8e67c5 100644
+--- a/tools/clang/tools/libclang/CMakeLists.txt
++++ b/tools/clang/tools/libclang/CMakeLists.txt
+@@ -77,7 +77,7 @@ if( LLVM_ENABLE_PIC )
+   set(ENABLE_SHARED SHARED)
+ endif()
+ 
+-if((NOT LLVM_ENABLE_PIC OR LIBCLANG_BUILD_STATIC) AND NOT WIN32)
++if(NOT LLVM_ENABLE_PIC OR LIBCLANG_BUILD_STATIC)
+   set(ENABLE_STATIC STATIC)
+ endif()
+ 

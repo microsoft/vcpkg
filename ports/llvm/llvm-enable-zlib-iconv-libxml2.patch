@@ -1,8 +1,42 @@
 diff --git a/cmake/config-ix.cmake b/cmake/config-ix.cmake
-index b4b0c1f..c98c364 100644
+index b4b0c1f..7bc9750 100644
 --- a/cmake/config-ix.cmake
 +++ b/cmake/config-ix.cmake
-@@ -130,17 +130,14 @@ endif()
+@@ -43,6 +43,13 @@ function(check_type_exists type files variable)
+     " ${variable})
+ endfunction()
+ 
++# Don't look for these libraries if we're using MSan, since uninstrumented third
++# party code may call MSan interceptors like strlen, leading to false positives.
++if(NOT LLVM_USE_SANITIZER MATCHES "Memory.*" AND LLVM_ENABLE_ZLIB)
++  find_package(ZLIB REQUIRED)
++  include_directories(SYSTEM ${ZLIB_INCLUDE_DIRS})
++endif()
++
+ # include checks
+ check_include_file(dirent.h HAVE_DIRENT_H)
+ check_include_file(dlfcn.h HAVE_DLFCN_H)
+@@ -71,7 +78,19 @@ check_include_file(sys/uio.h HAVE_SYS_UIO_H)
+ check_include_file(termios.h HAVE_TERMIOS_H)
+ check_include_file(unistd.h HAVE_UNISTD_H)
+ check_include_file(valgrind/valgrind.h HAVE_VALGRIND_VALGRIND_H)
++
++if (ZLIB_FOUND)
++  set(CMAKE_REQUIRED_LIBRARIES ${ZLIB_LIBRARIES})
++  set(CMAKE_REQUIRED_INCLUDES ${ZLIB_INCLUDE_DIRS})
++endif()
++
+ check_include_file(zlib.h HAVE_ZLIB_H)
++
++if (ZLIB_FOUND)
++  list(REMOVE_ITEM CMAKE_REQUIRED_LIBRARIES ${ZLIB_LIBRARIES})
++  list(REMOVE_ITEM CMAKE_REQUIRED_INCLUDES ${ZLIB_INCLUDE_DIRS})
++endif()
++
+ check_include_file(fenv.h HAVE_FENV_H)
+ check_symbol_exists(FE_ALL_EXCEPT "fenv.h" HAVE_DECL_FE_ALL_EXCEPT)
+ check_symbol_exists(FE_INEXACT "fenv.h" HAVE_DECL_FE_INEXACT)
+@@ -130,17 +149,19 @@ endif()
  # Don't look for these libraries if we're using MSan, since uninstrumented third
  # party code may call MSan interceptors like strlen, leading to false positives.
  if(NOT LLVM_USE_SANITIZER MATCHES "Memory.*")
@@ -15,25 +49,28 @@ index b4b0c1f..c98c364 100644
 -        set(HAVE_LIBZ 1)
 -        set(ZLIB_LIBRARIES "${library}")
 -        break()
--      endif()
++  find_library(ICONV_LIBRARY_PATH NAMES iconv libiconv libiconv-2 c)
++  set(LLVM_LIBXML2_ENABLED 0)
++  if(LLVM_ENABLE_LIBXML2 AND ((ICONV_LIBRARY_PATH) OR APPLE))
++    find_package(LibXml2 REQUIRED)
++    set(LLVM_LIBXML2_ENABLED 1)
++    if (LLVM_BUILD_STATIC)
++      if (NOT LLVM_ENABLE_ZLIB)
++        message(FATAL_ERROR "Static build needs LLVM_ENABLE_ZLIB enabled for LibXML2 library.")
+       endif()
 -    endforeach()
-+  set(HAVE_LIBZ 0)
-+  if (LLVM_ENABLE_ZLIB AND ZLIB_LIBRARY_PATH)
-+    find_library(ZLIB_LIBRARY_PATH NAMES z zlib)
-+    include_directories(${ZLIB_INCLUDE_DIRS})
-+  	 check_library_exists(${ZLIB_LIBRARY_PATH} compress2 "" HAVE_LIBZ)
-+    if (HAVE_LIBZ)
-+      set(ZLIB_LIBRARIES "${ZLIB_LIBRARIES}")
++      set(LIBXML2_LIBRARIES ${LIBXML2_LIBRARIES} ${ZLIB_LIBRARIES})
 +    endif()
++    include_directories(SYSTEM ${LIBXML2_INCLUDE_DIR})
++    set(LIBXML2_LIBS ${LIBXML2_LIBRARIES})
    endif()
  
    # Don't look for these libraries on Windows.
-@@ -165,17 +159,17 @@ if(NOT LLVM_USE_SANITIZER MATCHES "Memory.*")
+@@ -165,18 +186,6 @@ if(NOT LLVM_USE_SANITIZER MATCHES "Memory.*")
      else()
        set(HAVE_TERMINFO 0)
      endif()
-+  endif()
- 
+-
 -    find_library(ICONV_LIBRARY_PATH NAMES iconv libiconv libiconv-2 c)
 -    set(LLVM_LIBXML2_ENABLED 0)
 -    set(LIBXML2_FOUND 0)
@@ -44,15 +81,16 @@ index b4b0c1f..c98c364 100644
 -        include_directories(${LIBXML2_INCLUDE_DIR})
 -        set(LIBXML2_LIBS "xml2")
 -      endif()
-+  find_library(ICONV_LIBRARY_PATH NAMES iconv libiconv libiconv-2 c)
-+  set(LLVM_LIBXML2_ENABLED 0)
-+  set(LIBXML2_FOUND 0)
-+  if((LLVM_ENABLE_LIBXML2) AND ((ICONV_LIBRARY_PATH) OR APPLE))
-+    find_package(LibXml2)
-+    if (LIBXML2_FOUND)
-+      set(LLVM_LIBXML2_ENABLED 1)
-+      include_directories(${LIBXML2_INCLUDE_DIR})
-+      set(LIBXML2_LIBS "${LIBXML2_LIBRARIES}")
-     endif()
+-    endif()
+   endif()
+ endif()
+ 
+@@ -541,7 +550,7 @@ endif()
+ 
+ if (LLVM_ENABLE_ZLIB )
+   # Check if zlib is available in the system.
+-  if ( NOT HAVE_ZLIB_H OR NOT HAVE_LIBZ )
++  if ( NOT HAVE_ZLIB_H )
+     set(LLVM_ENABLE_ZLIB 0)
    endif()
  endif()

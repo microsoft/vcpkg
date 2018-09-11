@@ -1,7 +1,7 @@
 Source: llvm
 Version: 6.0.1-1
 Description: The LLVM Compiler Infrastructure with all targets
-Build-Depends: atlmfc (windows),liblzma,zlib,libiconv,libxml2
+Build-Depends: atlmfc (windows)
 
 Feature: clang
 Description: Build with Clang.
@@ -43,9 +43,19 @@ Build-Depends: llvm[polly],llvm[target-nvptx]
 
 Feature: compiler-rt
 Description: Build with Compiler-RT.
+Build-Depends: llvm[clang]
 
 Feature: libunwind
 Description: Build with LLVM Unwinder.
+Build-Depends: llvm[clang-stage2]
+
+Feature: libcxx
+Description: Build with libc++.
+Build-Depends: llvm[clang-stage2]
+
+Feature: libcxxabi
+Description: Build with libc++abi.
+Build-Depends: llvm[libcxx]
 
 Feature: libomp
 Description: Build with OpenMP support.
@@ -72,6 +82,9 @@ Build-Depends: libffi
 
 Feature: enable-cxx1y
 Description: Build in C++1y mode, if available.
+
+Feature: enable-cxx1z
+Description: Build in C++1z mode, if available.
 
 Feature: enable-eh
 Description: Build LLVM with exception-handling support. This is necessary if you wish to link against LLVM libraries and make use of C++ exceptions in your own code that need to propagate through LLVM code.

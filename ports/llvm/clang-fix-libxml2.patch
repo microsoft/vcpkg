@@ -1,0 +1,29 @@
+diff --git a/tools/clang/CMakeLists.txt b/tools/clang/CMakeLists.txt
+index 2eee8e6..f2e6adb 100644
+--- a/tools/clang/CMakeLists.txt
++++ b/tools/clang/CMakeLists.txt
+@@ -184,11 +184,22 @@ endif()
+ # we can include cmake files from this directory.
+ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
+ 
++if (DEFINED LLVM_ENABLE_LIBXML2)
++	set(default_CLANG_ENABLE_LIBXML2 ${LLVM_ENABLE_LIBXML2})
++else()
++	set(default_CLANG_ENABLE_LIBXML2 OFF)
++endif()
++set(CLANG_ENABLE_LIBXML2 "${default_CLANG_ENABLE_LIBXML2}" CACHE STRING "Use libxml2 if available. Can be ON, OFF, or FORCE_ON")
++
+ # Don't look for libxml if we're using MSan, since uninstrumented third party
+ # code may call MSan interceptors like strlen, leading to false positives.
+-if(NOT LLVM_USE_SANITIZER MATCHES "Memory.*")
++if(NOT LLVM_USE_SANITIZER MATCHES "Memory.*" AND ("${CLANG_ENABLE_LIBXML2}" STREQUAL "ON" OR "${CLANG_ENABLE_LIBXML2}" STREQUAL "FORCE_ON"))
+   set (LIBXML2_FOUND 0)
+-  find_package(LibXml2 2.5.3 QUIET)
++  if (${CLANG_ENABLE_LIBXML2} STREQUAL "FORCE_ON")
++  	find_package(LibXml2 2.5.3 REQUIRE)
++  else()
++  	find_package(LibXml2 2.5.3 QUIET)
++  endif()
+   if (LIBXML2_FOUND)
+     set(CLANG_HAVE_LIBXML 1)
+   endif()
