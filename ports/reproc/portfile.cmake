@@ -23,12 +23,14 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # CMake Files
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/reproc/cmake)
+
 file(GLOB DEBUG_CMAKE_FILES "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/reproc/*")
-file(COPY ${DEBUG_CMAKE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share/reproc/)
+file(COPY ${DEBUG_CMAKE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share/reproc/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 
 file(GLOB RELEASE_CMAKE_FILES "${CURRENT_PACKAGES_DIR}/lib/cmake/reproc/*")
-file(COPY ${RELEASE_CMAKE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share/reproc/)
+file(COPY ${RELEASE_CMAKE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share/reproc/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
 
 # Handle License
