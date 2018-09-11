@@ -24,7 +24,6 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # CMake Files
 file(GLOB DEBUG_CMAKE_FILES "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/reproc/*")
-message(STATUS ${DEBUG_CMAKE_FILES})
 file(COPY ${DEBUG_CMAKE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share/reproc/)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 
