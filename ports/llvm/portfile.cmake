@@ -20,7 +20,15 @@ include(vcpkg_common_functions)
 # /MD - dynamically linked library
 # TODO: https://reviews.llvm.org/file/data/2qtc3w55zzofywc6j57h/PHID-FILE-neg4vzuekfhktco4gxvn/D45106.diff
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_STATIC_CRT)
+# Verify linkage only on Windows platform
+if ("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "")
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_STATIC_CRT)
+endif()
+
+# LLVM can not be compiled for UWP apps
+if("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "WindowsStore")
+    message(FATAL_ERROR "llvm cannot currently be built for UWP")
+endif()
 
 # Use only release, because debug takes too long and does not work with compiler-rt
 set(VCPKG_BUILD_TYPE release)
@@ -54,11 +62,6 @@ message (STATUS "LLVM will be build only for release.")
 
 # Cleanup everything
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
-
-# LLVM can not be compiled for UWP apps
-if("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "WindowsStore")
-    message(FATAL_ERROR "llvm cannot currently be built for UWP")
-endif()
 
 # Check if user specified target
 string(FIND "${FEATURES}" "target-" _hasTarget)
