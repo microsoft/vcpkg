@@ -76,6 +76,9 @@ Build-Depends: llvm[libomp]
 Feature: documentation
 Description: Build with documentation.
 
+Feature: disable-parallel
+Description: Disable parallel build.
+
 Feature: enable-ffi
 Description: Build in C++1y mode, if available.
 Build-Depends: libffi

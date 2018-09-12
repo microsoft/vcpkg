@@ -1,3 +1,15 @@
+# Common Ambient Variables:
+#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
+#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
+#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
+#   PORT                      = current port name (zlib, etc)
+#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
+#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
+#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
+#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
+#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
+#
+
 include(CMakeParseArguments)
 include(vcpkg_common_functions)
 
@@ -21,7 +33,11 @@ set(LLVM_VERSION "6.0.1")
 set (EMPTY_DIRECTORIES
     "include/llvm/BinaryFormat/WasmRelocs"
     "include/llvm/MC/MCAnalysis"
+    "include/lldb/Host/windows/getopt"
+    "include/lldb/Host/msvc"
+    "include/lldb/Host/mingw"
     "tools/msbuild-bin"
+    "tools/msbuild"
     "bin"
     "msbuild-bin"
 )
@@ -153,6 +169,11 @@ set(_COMPONENT_EXPERIMENTAL_TARGETS "")
 # List with all warnings
 set(_COMPONENT_WARNINGS "")
 
+# Flag for disabling parallel builds
+set(_COMPONENT_PARALLEL_DISABLED "")
+
+set(_COMPONENT_CXX_ENABLED OFF)
+
 # Iterate through all user-defined features and parse it
 foreach(_feature IN LISTS FEATURES)
     if ("${_feature}" MATCHES "^enable-")
@@ -161,12 +182,11 @@ foreach(_feature IN LISTS FEATURES)
         string(TOUPPER "${_feature}" _FEATURE)
         string(REPLACE "-" "_" _FEATURE "${_FEATURE}")
 
-        if (LLVM_CXX_ENABLED)
-            message(FATAL_ERROR "Please select one compilation mode (cxx1y or cxx1z)")
-        endif()
-
         if ("${_featureValue}" MATCHES "^cxx1")
-            set(LLVM_CXX_ENABLED ON)
+            if (_COMPONENT_CXX_ENABLED)
+                message(FATAL_ERROR "Please select only one compilation mode (cxx1y or cxx1z)")
+            endif()
+            set(_COMPONENT_CXX_ENABLED ON)
         endif()
 
         list(APPEND _COMPONENT_FLAGS "-DLLVM_${_FEATURE}=ON")
@@ -174,7 +194,12 @@ foreach(_feature IN LISTS FEATURES)
         if ("${_featureValue}" STREQUAL "ffi")
             list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/llvm-fix-libffi.patch")
         endif()
+    elseif ("${_feature}" MATCHES "^disable-")
+        string(REPLACE "disable-" "" _featureValue "${_feature}")
 
+        if ("${_featureValue}" STREQUAL "parallel")
+            set(_COMPONENT_PARALLEL_DISABLED "DISABLE_PARALLEL") 
+        endif()
     elseif ("${_feature}" MATCHES "^target-exp-")
         string(REPLACE "target-exp-" "" _featureValue "${_feature}")
         if ("${_featureValue}" STREQUAL "wasm")
@@ -242,10 +267,10 @@ foreach(_feature IN LISTS FEATURES)
         if ("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "" AND NOT "clang-stage2" IN_LIST FEATURES)
             # https://github.com/google/libprotobuf-mutator
             # it's not supported because of sanitizers and other EXTRA_FLAGS.
-            list(APPEND _COMPONENT_WARNINGS "The clang-protobuf-fuzzer is not supported by MSVC compiler. Try to use stage2 compiler.")
-        else()
-            list(APPEND _COMPONENT_FLAGS "-DCLANG_ENABLE_PROTO_FUZZER=ON")
+            message(FATAL_ERROR "The clang-protobuf-fuzzer is not supported by MSVC compiler. Try to use stage2 compiler.")
         endif()
+
+        list(APPEND _COMPONENT_FLAGS "-DCLANG_ENABLE_PROTO_FUZZER=ON")
     elseif ("${_feature}" STREQUAL "clang-tools-extra")
         llvm_download(
             NAME clang-tools-extra
@@ -265,12 +290,13 @@ foreach(_feature IN LISTS FEATURES)
         # Only applies for LLDB 6.x version
         list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/lldb-mi-signal-msvc.patch")
 
+        # Enables static liblldb
+        list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/lldb-liblldb-static.patch")
+        list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/lldb-liblldb-static-defines.patch")
+
         if (NOT "lldb-python3" IN_LIST FEATURES OR NOT "lldb-python2" IN_LIST FEATURES)
             list(APPEND _COMPONENT_FLAGS "-DLLDB_DISABLE_PYTHON=ON")
         endif()
-
-        # TODO: Check if stage2 fixes that problem, also define if is windows.
-        list(APPEND _COMPONENT_WARNINGS "The liblldb library doesn't support static linkage on Windows platform.")
     elseif ("${_feature}" MATCHES "^lldb-python")
         if ("-DLLDB_BUILD_FRAMEWORK=ON" IN_LIST _COMPONENT_FLAGS)
             message(FATAL_ERROR "You can not compile lldb with support for python2 and python3. Please select only one version.")
@@ -297,6 +323,14 @@ foreach(_feature IN LISTS FEATURES)
             SHA512 1851223653f8c326ddf39f5cf9fc18a2310299769c011795d8e1a5abef2834d2c800fae318e6370547d3b6b35199ce29fe76582b64493ab8fa506aff59272539
         )
     elseif ("${_feature}" STREQUAL "polly-gpu")
+        if ("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "")
+            message(FATAL_ERROR "polly-gpu is not compilable on windows platform")
+        endif()
+
+        if ("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x86")
+            message(FATAL_ERROR "NVidia does not support x86 platform anymore")
+        endif()
+        
         list(APPEND _COMPONENT_FLAGS "-DPOLLY_ENABLE_GPGPU_CODEGEN=ON")
     elseif ("${_feature}" STREQUAL "compiler-rt")
         llvm_download(
@@ -315,7 +349,7 @@ foreach(_feature IN LISTS FEATURES)
         list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_CROSS_UNWINDING=ON")
         list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_ENABLE_ARM_WMMX=ON")
 
-        if ("compiler-rt" IN_LIST FEATURES)
+        if ("compiler-rt" IN_LIST FEATURES AND "clang-stage2" IN_LIST FEATURES)
             list(APPEND _COMPONENT_FLAGS "-DLIBUNWIND_USE_COMPILER_RT=ON")
         endif()
 
@@ -335,11 +369,13 @@ foreach(_feature IN LISTS FEATURES)
         list(APPEND _COMPONENT_FLAGS "-DLIBOMP_OMPT_OPTIONAL=ON")
         list(APPEND _COMPONENT_FLAGS "-DLIBOMP_ENABLE_SHARED=ON")
 
-        # clang-cl on Windows https://reviews.llvm.org/D38185#985251
-        if ("target-exp-all" IN_LIST FEATURES)
-            list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/kmp-stage2-fix.patch")
-        endif()
+        # Include utils
+        list(APPEND _COMPONENT_FLAGS "-DLLVM_INCLUDE_UTILS=ON")
 
+        # clang-cl on Windows https://reviews.llvm.org/D38185#985251
+        list(APPEND _COMPONENT_PATCHES "${CMAKE_CURRENT_LIST_DIR}/kmp-stage2-fix.patch")
+
+        # Add warning to list
         list(APPEND _COMPONENT_WARNINGS "The libomp library doesn't support static linkage on Windows platform.")
     elseif ("${_feature}" MATCHES "^libomp-")
         string(REPLACE "libomp-" "" _featureValue "${_feature}")
@@ -373,9 +409,9 @@ foreach(_feature IN LISTS FEATURES)
             SHA512 c04f628b0924d76f035f615b59d19ce42dfc19c9a8eea4fe2b22a95cfe5a037ebdb30943fd741443939df5b4cf692bc1e51c840fefefbd134e3afbe2a75fe875
         )
         list(APPEND _COMPONENT_FLAGS "-DLLVM_ENABLE_LIBCXX=ON")
-        # -DLIBCXX_ENABLE_SHARED=YES              ^
-        # -DLIBCXX_ENABLE_STATIC=NO               ^
-        # -DLIBCXX_ENABLE_EXPERIMENTAL_LIBRARY=NO ^
+        list(APPEND _COMPONENT_FLAGS "-DLIBCXX_ENABLE_STATIC=ON")
+        list(APPEND _COMPONENT_FLAGS "-DLIBCXX_ENABLE_EXPERIMENTAL_LIBRARY=ON")
+        list(APPEND _COMPONENT_FLAGS "-DLIBCXX_ENABLE_SHARED=OFF")
     elseif ("${_feature}" STREQUAL "libcxxabi")
         llvm_download(
             NAME libcxxabi
@@ -394,6 +430,10 @@ endif()
 # If the "all" target is defined in FEATURES, replace _COMPONENT_EXPERIMENTAL_TARGETS
 if ("target-exp-all" IN_LIST FEATURES)
     set(_COMPONENT_EXPERIMENTAL_TARGETS "${_LLVM_ALL_EXPERIMENTAL_TARGETS}")
+endif()
+
+if (NOT "-DLLVM_INCLUDE_UTILS=ON" IN_LIST _COMPONENT_FLAGS)
+    list(APPEND _COMPONENT_FLAGS "-DLLVM_INCLUDE_UTILS=OFF")
 endif()
 
 # Set ENV for LLVM_TARGETS_TO_BUILD, defaultly don't build any
@@ -466,20 +506,13 @@ vcpkg_configure_cmake(
         -DLLVM_TOOL_LLGO_BUILD=ON
         -DLLVM_TOOL_OPENMP_BUILD=ON
         -DLLVM_TOOL_PARALLEL_LIBS_BUILD=ON
-
-        
+  
         # Disable libxml and zlib (need patch)
         -DLLVM_ENABLE_LIBXML2=OFF
         -DLLVM_ENABLE_ZLIB=OFF
 
-        # Exclude utils
-        -DLLVM_INCLUDE_UTILS=OFF
-
         # Force static build
         -DLLVM_BUILD_STATIC=ON
-
-        # Enable this when the project will be included - this should works on Windows
-        #-DLLVM_ENABLE_LIBCXX=ON
 
         # Bugfix (from LLVM script)
         "-DCMAKE_CL_SHOWINCLUDES_PREFIX=Note: including file:"
@@ -509,9 +542,9 @@ vcpkg_configure_cmake(
 # More info about stage2 compiling: https://fuchsia.googlesource.com/docs/+/sandbox/jakehehrlich/asan/toolchain.md
 # Invoke install
 if (LLVM_ENABLE_STAGE2)
-    vcpkg_build_cmake(TARGET stage2 install)
+    vcpkg_build_cmake(${_COMPONENT_PARALLEL_DISABLED} TARGET stage2 install)
 else()
-    vcpkg_build_cmake(TARGET install)
+    vcpkg_build_cmake(${_COMPONENT_PARALLEL_DISABLED} TARGET install)
 endif()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/clang TARGET_PATH share/clang)
@@ -527,8 +560,10 @@ file(REMOVE ${BINARIES})
 # clang_rt.asan_dynamic-x86_64.dll (has also static version)
 # 
 file(GLOB_RECURSE DYNAMIC_LIBRARIES ${CURRENT_PACKAGES_DIR}/lib/*.dll)
-file(COPY ${DYNAMIC_LIBRARIES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/llvm)
-file(REMOVE ${DYNAMIC_LIBRARIES})
+if (DYNAMIC_LIBRARIES)
+    file(COPY ${DYNAMIC_LIBRARIES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/llvm)
+    file(REMOVE ${DYNAMIC_LIBRARIES})
+endif()
 
 # Remove one empty include subdirectory if it is indeed empty
 foreach(EMPTY_DIRECTORY IN LISTS EMPTY_DIRECTORIES)
