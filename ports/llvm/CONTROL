@@ -47,11 +47,11 @@ Build-Depends: llvm[clang]
 
 Feature: libunwind
 Description: Build with LLVM Unwinder.
-Build-Depends: llvm[clang-stage2]
+Build-Depends: llvm[clang-stage2] (windows)
 
 Feature: libcxx
 Description: Build with libc++.
-Build-Depends: llvm[clang-stage2]
+Build-Depends: llvm[clang-stage2] (windows)
 
 Feature: libcxxabi
 Description: Build with libc++abi.
