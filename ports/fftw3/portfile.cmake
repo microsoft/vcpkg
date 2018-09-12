@@ -1,5 +1,5 @@
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fftw-3.3.7)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/fftw-3.3.8)
 
 # This can be removed in the next source code update
 if(EXISTS "${SOURCE_PATH}/CMakeLists.txt")
@@ -10,9 +10,9 @@ if(EXISTS "${SOURCE_PATH}/CMakeLists.txt")
 endif()
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.fftw.org/fftw-3.3.7.tar.gz"
-    FILENAME "fftw-3.3.7.tar.gz"
-    SHA512 a5db54293a6d711408bed5894766437eee920be015ad27023c7a91d4581e2ff5b96e3db0201e6eaccf7b064c4d32db1a2a8fab3e6813e524b4743ddd6216ba77
+    URLS "http://www.fftw.org/fftw-3.3.8.tar.gz"
+    FILENAME "fftw-3.3.8.tar.gz"
+    SHA512 ab918b742a7c7dcb56390a0a0014f517a6dff9a2e4b4591060deeb2c652bf3c6868aa74559a422a276b853289b4b701bdcbd3d4d8c08943acf29167a7be81a38
 )
 
 vcpkg_extract_source_archive(${ARCHIVE})
