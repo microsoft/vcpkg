@@ -1,0 +1,36 @@
+From 210f16960b3d4bab2485d49fffd2731fc4b099f3 Mon Sep 17 00:00:00 2001
+From: Shoaib Meenai <smeenai@fb.com>
+Date: Tue, 24 Apr 2018 19:47:39 +0000
+Subject: [PATCH] [cmake] Fix libc++ detection
+
+-stdlib=libc++ is added to both the compilation and the link flags, but
+the logic for adding it was only checking if it was supported during
+compilation and not linking. This could lead to false positives, for
+example when using clang with libstdc++ (where the compiler would
+support -stdlib=libc++ but then linking would fail because of libc++
+actually being unavailable).
+
+git-svn-id: https://llvm.org/svn/llvm-project/llvm/trunk@330761 91177308-0d34-0410-b5e6-96231b3b80d8
+---
+ cmake/modules/HandleLLVMStdlib.cmake | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/cmake/modules/HandleLLVMStdlib.cmake b/cmake/modules/HandleLLVMStdlib.cmake
+index c0512ac34f6d..a0706d8e0846 100644
+--- a/cmake/modules/HandleLLVMStdlib.cmake
++++ b/cmake/modules/HandleLLVMStdlib.cmake
+@@ -13,10 +13,12 @@ if(NOT DEFINED LLVM_STDLIB_HANDLED)
+   endfunction()
+ 
+   include(CheckCXXCompilerFlag)
++  include(CheckLinkerFlag)
+   if(LLVM_ENABLE_LIBCXX)
+     if(LLVM_COMPILER_IS_GCC_COMPATIBLE)
+-      check_cxx_compiler_flag("-stdlib=libc++" CXX_SUPPORTS_STDLIB)
+-      if(CXX_SUPPORTS_STDLIB)
++      check_cxx_compiler_flag("-stdlib=libc++" CXX_COMPILER_SUPPORTS_STDLIB)
++      check_linker_flag("-stdlib=libc++" CXX_LINKER_SUPPORTS_STDLIB)
++      if(CXX_COMPILER_SUPPORTS_STDLIB AND CXX_LINKER_SUPPORTS_STDLIB)
+         append("-stdlib=libc++"
+           CMAKE_CXX_FLAGS CMAKE_EXE_LINKER_FLAGS CMAKE_SHARED_LINKER_FLAGS
+           CMAKE_MODULE_LINKER_FLAGS)

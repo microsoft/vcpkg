@@ -464,6 +464,9 @@ vcpkg_apply_patches(
         # https://github.com/llvm-mirror/llvm/commit/91518dd4d4f19ab723562376e8b1dfe89e5d2770
         ${CMAKE_CURRENT_LIST_DIR}/fix-experimental-target-nios2-build.patch
 
+        # https://github.com/llvm-mirror/llvm/commit/210f16960b3d4bab2485d49fffd2731fc4b099f3
+        ${CMAKE_CURRENT_LIST_DIR}/llvm-fix-libcxx.patch
+
         # Add patch for settings LLVM_TARGETS_TO_BUILD, LLVM_EXPERIMENTAL_TARGETS_TO_BUILD from ENV
         ${CMAKE_CURRENT_LIST_DIR}/llvm-set-using-env.patch
 
