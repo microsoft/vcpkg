@@ -38,12 +38,23 @@ add_library(libhwloc
     src/traversal.c
     src/dolib.c)
 
+add_executable(hwloc-info
+    utils/hwloc/hwloc-info.c)
+
 set_target_properties(libhwloc PROPERTIES DEFINE_SYMBOL _USRDLL)
-target_include_directories(libhwloc PRIVATE ./include ./src ${CMAKE_CURRENT_BINARY_DIR}/include)
-target_compile_definitions(libhwloc PRIVATE _CRT_SECURE_NO_WARNINGS)
+
+foreach(Target IN ITEMS libhwloc hwloc-info)
+    target_include_directories(${Target} PRIVATE ./include ./src ${CMAKE_CURRENT_BINARY_DIR}/include)
+    target_compile_definitions(${Target} PRIVATE _CRT_SECURE_NO_WARNINGS)
+endforeach(Target)
 
 install(TARGETS libhwloc
     RUNTIME DESTINATION bin
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib)
+
+install(TARGETS hwloc-info
+    RUNTIME DESTINATION tools/hwloc
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib)
 
