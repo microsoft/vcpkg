@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project(hwloc
     LANGUAGES C
-    VERSION 1.11.7
-    HOMEPAGE_URL http://portablecl.org)
+    VERSION 1.11.7)
 
 configure_file(contrib/windows/hwloc_config.h include/hwloc/autogen/config.h COPYONLY)
 configure_file(contrib/windows/static-components.h include/static-components.h COPYONLY)
@@ -38,10 +37,12 @@ add_library(libhwloc
     src/traversal.c
     src/dolib.c)
 
+set_target_properties(libhwloc PROPERTIES DEFINE_SYMBOL _USRDLL)
+
 add_executable(hwloc-info
     utils/hwloc/hwloc-info.c)
 
-set_target_properties(libhwloc PROPERTIES DEFINE_SYMBOL _USRDLL)
+target_link_libraries(hwloc-info PRIVATE libhwloc)
 
 foreach(Target IN ITEMS libhwloc hwloc-info)
     target_include_directories(${Target} PRIVATE ./include ./src ${CMAKE_CURRENT_BINARY_DIR}/include)
@@ -54,9 +55,12 @@ install(TARGETS libhwloc
     LIBRARY DESTINATION lib)
 
 install(TARGETS hwloc-info
-    RUNTIME DESTINATION tools/hwloc
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib)
+    RUNTIME DESTINATION tools/hwloc)
+if(BUILD_SHARED_LIBS)
+    install(TARGETS libhwloc
+        RUNTIME DESTINATION tools/hwloc)
+endif(BUILD_SHARED_LIBS)
+
 
 if(NOT HWLOC_SKIP_INCLUDES)
     install(FILES include/hwloc.h DESTINATION include)
