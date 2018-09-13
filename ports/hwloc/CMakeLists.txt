@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
-project(hwloc C)
+project(hwloc LANGUAGES C
+              VERSION 1.11.7)
 
 configure_file(contrib/windows/hwloc_config.h include/hwloc/autogen/config.h COPYONLY)
 configure_file(contrib/windows/static-components.h include/static-components.h COPYONLY)
