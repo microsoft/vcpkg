@@ -14,6 +14,7 @@ vcpkg_apply_patches(
         "${CMAKE_CURRENT_LIST_DIR}/0001-fix-uwp-build.patch"
         "${CMAKE_CURRENT_LIST_DIR}/find-package-freetype-2.patch"
         "${CMAKE_CURRENT_LIST_DIR}/glib-cmake.patch"
+        "${CMAKE_CURRENT_LIST_DIR}/0001-fix-cmake-export.patch"
 )
 
 SET(HB_HAVE_ICU "OFF")
@@ -59,6 +60,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/harfbuzz)
 vcpkg_copy_pdbs()
 
 # Handle copyright
