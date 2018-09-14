@@ -22,6 +22,7 @@ vcpkg_apply_patches(
     SOURCE_PATH ${MASTER_COPY_SOURCE_PATH}
     PATCHES ${CMAKE_CURRENT_LIST_DIR}/ConfigureIncludeQuotesFix.patch
             ${CMAKE_CURRENT_LIST_DIR}/STRINGIFYPatch.patch
+            ${CMAKE_CURRENT_LIST_DIR}/EnableWinARM32.patch
             ${CMAKE_CURRENT_LIST_DIR}/EmbedSymbolsInStaticLibsZ7.patch
 )
 
@@ -44,6 +45,13 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(OPENSSL_ARCH VC-WIN64A)
     set(OPENSSL_DO "ms\\do_win64a.bat")
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+    set(OPENSSL_ARCH VC-WIN32)
+    set(OPENSSL_DO "ms\\do_ms.bat")
+    set(CONFIGURE_COMMAND ${CONFIGURE_COMMAND}
+        no-asm
+        -D_ARM_WINAPI_PARTITION_DESKTOP_SDK_AVAILABLE
+    )
 else()
     message(FATAL_ERROR "Unsupported target architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
