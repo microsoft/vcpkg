@@ -6,19 +6,16 @@ vcpkg_from_github(
     REF pcl-1.8.1
     SHA512 9e7c87fb750a176712f08d215a906012c9e8174b687bbc8c08fa65de083b4468951bd8017b10409015d5eff0fc343885d2aae5c340346118b1a251af7bdd5cd7
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/cmakelists.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/config.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/config_install.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/find_flann.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/find_qhull.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/find_openni2.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/find_cuda.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/vs2017-15.4-workaround.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/boost_uuid_random_generator_compat.patch"
+    PATCHES cmakelists.patch
+            config.patch
+            config_install.patch
+            find_flann.patch
+            find_qhull.patch
+            find_openni2.patch
+            find_cuda.patch
+            vs2017-15.4-workaround.patch
+            boost_uuid_random_generator_compat.patch
+            uuid-detail-sha1.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)

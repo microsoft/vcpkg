@@ -7,7 +7,7 @@ vcpkg_from_github(
     REPO libimobiledevice-win32/libideviceactivation
     REF 1.0.38
     SHA512 2fd2d5636e83a6740251dca58c04429628f47661a56e573fc14f45ef68c54990717515305902cf04759a7c8fd19e66a30c8eb2ea20e6257d2c5405b690ea25a6
-    HEAD_REF master
+    HEAD_REF msvc-master
 )
 
 vcpkg_install_msbuild(

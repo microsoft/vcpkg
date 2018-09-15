@@ -1,24 +1,18 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT_DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
 include(vcpkg_common_functions)
 
-vcpkg_from_gitlab(
+set(VERSION 7.0)
+
+# Note: upstream GitLab instance at https://graphics.rwth-aachen.de:9000 often goes down
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://www.openmesh.org/media/Releases/${VERSION}/OpenMesh-${VERSION}.tar.gz"
+    FILENAME "OpenMesh-${VERSION}.tar.gz"
+    SHA512 29280c8fe7208d39bd923c4d0444a24463e36b95402e6a75f42adc27bc1b261df9113442f69e1001dc1a8b1198488069ffb049742dcf6eac6ac1ecf4f216fad8
+)
+
+vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    GITLAB_URL "https://graphics.rwth-aachen.de:9000"
-    REPO "OpenMesh/OpenMesh"
-    REF "OpenMesh-7.0"
-    HEAD_REF "master"
-    SHA512 "70e414088c094199af31a8694fb91fa5f9b574b3cc86b30b3fb64d938e6a218f9f38d857c559f958276b01ec9263ef71cd4039444e50a8cb38e820243aac7956"
+    ARCHIVE "${ARCHIVE}"
+    REF "${VERSION}"
 )
 
 vcpkg_configure_cmake(
