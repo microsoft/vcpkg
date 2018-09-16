@@ -30,15 +30,21 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/flatbuffers")
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin AND NOT EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin/flatc)
+if(MSVC)
+    set(EXECUTABLE_SUFFIX ".exe")
+else()
+    set(EXECUTABLE_SUFFIX "")
+endif()
+
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin AND NOT EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin/flatc${EXECUTABLE_SUFFIX})
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
-if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/flatc.exe)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/flatc${EXECUTABLE_SUFFIX})
     make_directory(${CURRENT_PACKAGES_DIR}/tools/flatbuffers)
     file(
         RENAME
-        ${CURRENT_PACKAGES_DIR}/bin/flatc.exe
-        ${CURRENT_PACKAGES_DIR}/tools/flatbuffers/flatc.exe
+        ${CURRENT_PACKAGES_DIR}/bin/flatc${EXECUTABLE_SUFFIX}
+        ${CURRENT_PACKAGES_DIR}/tools/flatbuffers/flatc${EXECUTABLE_SUFFIX}
     )
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/flatbuffers)
@@ -49,3 +55,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 # Handle copyright
 file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/flatbuffers)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/flatbuffers/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/flatbuffers/copyright)
+
