@@ -4,8 +4,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/extra-cmake-modules
-    REF v5.40.0
-    SHA512 1f79d797770367e79c2c6dd73c125d32fcc5fe404b350d953b69cc6544babc1c73e2986c833635daaac85a5af966977e40fe41c01ac48ccc45d46d2e1636d21f
+    REF v5.50.0
+    SHA512 625f934b97c56cceed44d8fa0e335fb1f593806e52b8bfd2fd467561b4de2528940add756a8e903bd5502e912422cc3835e65e047cc4c205d3b8629452627abd
     HEAD_REF master
 )
 
