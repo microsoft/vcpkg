@@ -72,7 +72,7 @@ function getVisualStudioInstances()
     $vswhereExe = "$programFiles\Microsoft Visual Studio\Installer\vswhere.exe"
     if (Test-Path $vswhereExe)
     {
-        $output = & $vswhereExe -prerelease -legacy -products * -format xml
+        $output = & $vswhereExe -prerelease -legacy -all -products * -format xml
         [xml]$asXml = $output
 
         foreach ($instance in $asXml.instances.instance)
