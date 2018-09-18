@@ -61,8 +61,9 @@ set(CORE_OPTIONS
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND CORE_OPTIONS
         -static
-        -no-sqlite
+        -system-sqlite
     )
+    set(VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT enabled)
 else()
     list(APPEND CORE_OPTIONS
         -sql-sqlite
