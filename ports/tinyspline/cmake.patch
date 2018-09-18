@@ -1,7 +1,7 @@
-diff --git a//CMakeLists.txt b/CMakeLists.txt
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index 02dfb83..35e01f8 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
 @@ -387,6 +387,9 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
  	# TINYSPLINE_LIBRARY_C_FLAGS
  	set(TINYSPLINE_LIBRARY_C_FLAGS "${TINYSPLINE_LIBRARY_C_FLAGS} /Wall")
