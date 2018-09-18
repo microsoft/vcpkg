@@ -4,17 +4,32 @@
 ##
 ## ## Usage
 ## ```cmake
-## vcpkg_copy_pdbs()
+## vcpkg_copy_pdbs([BUILD_PATHS <${CURRENT_PACKAGES_DIR}/bin/*.dll> ...])
 ## ```
 ##
 ## ## Notes
 ## This command should always be called by portfiles after they have finished rearranging the binary output.
+##
+## ## Parameters
+## ### BUILD_PATHS
+## Path patterns passed to `file(GLOB_RECURSE)` for locating dlls.
+##
+## Defaults to `${CURRENT_PACKAGES_DIR}/bin/*.dll` and `${CURRENT_PACKAGES_DIR}/debug/bin/*.dll`.
 ##
 ## ## Examples
 ##
 ## * [zlib](https://github.com/Microsoft/vcpkg/blob/master/ports/zlib/portfile.cmake)
 ## * [cpprestsdk](https://github.com/Microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
 function(vcpkg_copy_pdbs)
+    cmake_parse_arguments(_vcp "" "" "BUILD_PATHS" ${ARGN})
+    
+    if(NOT _vcp_BUILD_PATHS)
+        set(
+            _vcp_BUILD_PATHS
+            ${CURRENT_PACKAGES_DIR}/bin/*.dll
+            ${CURRENT_PACKAGES_DIR}/debug/bin/*.dll
+        )
+    endif()
 
     function(merge_filelist OUTVAR INVAR)
         set(MSG "")
@@ -25,7 +40,7 @@ function(vcpkg_copy_pdbs)
     endfunction()
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(GLOB_RECURSE DLLS ${CURRENT_PACKAGES_DIR}/bin/*.dll ${CURRENT_PACKAGES_DIR}/debug/bin/*.dll)
+        file(GLOB_RECURSE DLLS ${_vcp_BUILD_PATHS})
 
         set(DLLS_WITHOUT_MATCHING_PDBS)
 

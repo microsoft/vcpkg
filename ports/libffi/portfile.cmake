@@ -16,14 +16,16 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 vcpkg_apply_patches(
     SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/export-global-data.patch)
+        ${CMAKE_CURRENT_LIST_DIR}/export-global-data.patch
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DFFI_CONFIG_FILE=${CMAKE_CURRENT_LIST_DIR}/fficonfig.h
     OPTIONS_DEBUG
-        -DFFI_SKIP_HEADERS=ON)
+        -DFFI_SKIP_HEADERS=ON
+)
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
@@ -32,7 +34,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     vcpkg_apply_patches(
         SOURCE_PATH ${CURRENT_PACKAGES_DIR}/include
         PATCHES
-            ${CMAKE_CURRENT_LIST_DIR}/auto-define-static-macro.patch)
+            ${CMAKE_CURRENT_LIST_DIR}/auto-define-static-macro.patch
+    )
 endif()
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libffi)

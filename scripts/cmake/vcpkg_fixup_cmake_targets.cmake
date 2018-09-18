@@ -28,6 +28,12 @@ function(vcpkg_fixup_cmake_targets)
     set(RELEASE_SHARE ${CURRENT_PACKAGES_DIR}/${_vfct_TARGET_PATH})
 
     if(_vfct_CONFIG_PATH AND NOT RELEASE_SHARE STREQUAL "${CURRENT_PACKAGES_DIR}/${_vfct_CONFIG_PATH}")
+        if(_vfct_CONFIG_PATH STREQUAL "share")
+            file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/debug/share2)
+            file(RENAME ${CURRENT_PACKAGES_DIR}/share ${CURRENT_PACKAGES_DIR}/share2)
+            set(_vfct_CONFIG_PATH share2)
+        endif()
+
         set(DEBUG_CONFIG ${CURRENT_PACKAGES_DIR}/debug/${_vfct_CONFIG_PATH})
         set(RELEASE_CONFIG ${CURRENT_PACKAGES_DIR}/${_vfct_CONFIG_PATH})
 
@@ -36,6 +42,7 @@ function(vcpkg_fixup_cmake_targets)
                 message(FATAL_ERROR "'${DEBUG_CONFIG}' does not exist.")
             endif()
 
+            # This roundabout handling enables CONFIG_PATH share
             file(MAKE_DIRECTORY ${DEBUG_SHARE})
             file(GLOB FILES ${DEBUG_CONFIG}/*)
             file(COPY ${FILES} DESTINATION ${DEBUG_SHARE})
@@ -76,7 +83,7 @@ function(vcpkg_fixup_cmake_targets)
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        if(NOT EXISTS ${DEBUG_SHARE})
+        if(NOT EXISTS "${DEBUG_SHARE}")
             message(FATAL_ERROR "'${DEBUG_SHARE}' does not exist.")
         endif()
     endif()

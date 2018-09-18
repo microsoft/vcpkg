@@ -16,7 +16,7 @@ endif()
 
 function(add_sublibrary LIB)
     file(GLOB_RECURSE SOURCES "absl/${LIB}/*.cc")
-    list(FILTER SOURCES EXCLUDE REGEX "_test(ing)?(_.+)?.cc$|_nonprod.cc$")
+    list(FILTER SOURCES EXCLUDE REGEX "_test(ing)?(_.+)?.cc$|_nonprod.cc$|test_util.cc$|_benchmark.cc$")
     file(GLOB HEADERS "absl/${LIB}/*.h" "absl/${LIB}/*.inc")
     file(GLOB INTERNAL_HEADERS "absl/${LIB}/internal/*.h")
 
@@ -75,6 +75,7 @@ add_sublibrary(utility)
 
 target_link_public_libraries(algorithm base meta)
 target_link_public_libraries(container algorithm base memory)
+target_link_public_libraries(debugging base)
 target_link_public_libraries(memory meta)
 target_link_public_libraries(meta base)
 target_link_public_libraries(numeric base)

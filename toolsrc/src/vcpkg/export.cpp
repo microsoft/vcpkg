@@ -1,8 +1,5 @@
 #include "pch.h"
 
-#include <vcpkg/base/stringliteral.h>
-#include <vcpkg/base/system.h>
-#include <vcpkg/base/util.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/export.h>
@@ -12,6 +9,10 @@
 #include <vcpkg/install.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/vcpkglib.h>
+
+#include <vcpkg/base/stringliteral.h>
+#include <vcpkg/base/system.h>
+#include <vcpkg/base/util.h>
 
 namespace vcpkg::Export
 {
@@ -68,11 +69,15 @@ namespace vcpkg::Export
     {
         static constexpr std::array<ExportPlanType, 2> ORDER = {ExportPlanType::ALREADY_BUILT,
                                                                 ExportPlanType::NOT_BUILT};
-        static constexpr Build::BuildPackageOptions BUILD_OPTIONS = {Build::UseHeadVersion::NO,
-                                                                     Build::AllowDownloads::YES,
-                                                                     Build::CleanBuildtrees::NO,
-                                                                     Build::CleanPackages::NO,
-                                                                     Build::DownloadTool::BUILT_IN};
+        static constexpr Build::BuildPackageOptions BUILD_OPTIONS = {
+            Build::UseHeadVersion::NO,
+            Build::AllowDownloads::YES,
+            Build::CleanBuildtrees::NO,
+            Build::CleanPackages::NO,
+            Build::DownloadTool::BUILT_IN,
+            Build::BinaryCaching::NO,
+            Build::FailOnTombstone::NO,
+        };
 
         for (const ExportPlanType plan_type : ORDER)
         {
@@ -150,7 +155,7 @@ namespace vcpkg::Export
         const int exit_code = System::cmd_execute_clean(cmd_line);
         Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: NuGet package creation failed");
 
-        const fs::path output_path = output_dir / (nuget_id + ".nupkg");
+        const fs::path output_path = output_dir / (nuget_id + "." + nuget_version + ".nupkg");
         return output_path;
     }
 
@@ -226,10 +231,6 @@ namespace vcpkg::Export
             {fs::path{"scripts"} / "buildsystems" / "msbuild" / "vcpkg.targets"},
             {fs::path{"scripts"} / "buildsystems" / "vcpkg.cmake"},
             {fs::path{"scripts"} / "cmake" / "vcpkg_get_windows_sdk.cmake"},
-            {fs::path{"scripts"} / "getWindowsSDK.ps1"},
-            {fs::path{"scripts"} / "getProgramFilesPlatformBitness.ps1"},
-            {fs::path{"scripts"} / "getProgramFiles32bit.ps1"},
-            {fs::path{"scripts"} / "VcpkgPowershellUtils.ps1"},
         };
 
         for (const fs::path& file : integration_files_relative_to_root)
