@@ -82,7 +82,7 @@ namespace vcpkg::VisualStudio
         if (fs.exists(vswhere_exe))
         {
             const auto code_and_output = System::cmd_execute_and_capture_output(
-                Strings::format(R"("%s" -prerelease -legacy -products * -format xml)", vswhere_exe.u8string()));
+                Strings::format(R"("%s" -all -prerelease -legacy -products * -format xml)", vswhere_exe.u8string()));
             Checks::check_exit(VCPKG_LINE_INFO,
                                code_and_output.exit_code == 0,
                                "Running vswhere.exe failed with message:\n%s",
