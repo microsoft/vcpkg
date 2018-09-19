@@ -3,9 +3,13 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
-    REF Release-1.9.2dev
-    SHA512 11293f09189f26a68e2e899e15081644c17f6ad1be070d090d9df133b98f7f30a09344a2b599c8b82dc8daba64847a9dfa278f9857bc110e975e9e06c3a2fa6f
+    REF Release-1.8.13
+    SHA512 578d039399846f994dd8e4b94a7b56f2bcec45571c2144705fc4e2fe6a3e1d878d79a96c0484350d54b46eef7796d46becda9f5d50f266cd730f63d97af0650e
     HEAD_REF master
+    PATCHES
+        # fix_libraw: replace 'LibRaw_r_LIBRARIES' occurences by 'LibRaw_LIBRARIES'
+        #             since libraw port installs 'raw_r' library as 'raw'
+        ${CMAKE_CURRENT_LIST_DIR}/fix_libraw.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -19,6 +23,12 @@ else()
     set(LINKSTATIC OFF)
 endif()
 
+# Features
+set(USE_LIBRAW OFF)
+if("libraw" IN_LIST FEATURES)
+    set(USE_LIBRAW ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -30,7 +40,7 @@ vcpkg_configure_cmake(
         -DUSE_FIELD3D=OFF
         -DUSE_FREETYPE=OFF
         -DUSE_GIF=OFF
-        -DUSE_LIBRAW=OFF
+        -DUSE_LIBRAW=${USE_LIBRAW}
         -DUSE_NUKE=OFF
         -DUSE_OCIO=OFF
         -DUSE_OPENCV=OFF
