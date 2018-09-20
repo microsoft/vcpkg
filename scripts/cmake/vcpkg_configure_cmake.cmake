@@ -170,6 +170,8 @@ function(vcpkg_configure_cmake)
         list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/toolchains/android.cmake")
     elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/toolchains/osx.cmake")
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+        list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/toolchains/emscripten.cmake")
     endif()
 
     list(APPEND _csc_OPTIONS
