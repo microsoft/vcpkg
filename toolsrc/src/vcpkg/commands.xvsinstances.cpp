@@ -16,6 +16,7 @@ namespace vcpkg::Commands::X_VSInstances
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
+#if defined(_WIN32)
         const ParsedArguments parsed_args = args.parse_arguments(COMMAND_STRUCTURE);
 
         const auto instances = vcpkg::VisualStudio::get_visual_studio_instances(paths);
@@ -25,5 +26,8 @@ namespace vcpkg::Commands::X_VSInstances
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
+#else
+        Checks::exit_with_message(VCPKG_LINE_INFO, "This command is not supported on non-windows platforms.");
+#endif
     }
 }

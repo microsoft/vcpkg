@@ -3,17 +3,13 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO emweb/wt
-    REF 4.0.3
-    SHA512 5985f72cbd3065ac696aad4d11711f2d69e066ee17141b56fd7c2616c7f7353586ab8d13db2baa90fa8f3cb116aa7c9044ee3cc42e99e8f5c8704f886ac3b2b6
+    REF 4.0.4
+    SHA512 7f9fee9b1c145adb610bf9b0860867a2f09699a1c914418938955c5648b3207db361ec48b3afe9e6faa6cc0b5874bedd44481fdd8adb8fc558cfc3dc17369ee7
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0001-boost-1.66.patch
-        ${CMAKE_CURRENT_LIST_DIR}/0002-link-glew.patch
-        ${CMAKE_CURRENT_LIST_DIR}/0003-disable-boost-autolink.patch
+        0001-boost-1.66.patch
+        0002-link-glew.patch
+        0003-disable-boost-autolink.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIBS)

@@ -8,14 +8,10 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rougier/freetype-gl
-    REF bcd2b5fb5d19f1ea5d384d0edbdda2f6d0590fa0
-    SHA512 10bd8e874598e796c3123c8bc277ecb6f5d95c924c6d6bab1bec4700864c83e2f71bf9ac45c15eadba9e150660cbe9debe3509428b10264eb6a8ba64a80f3651
+    REF 7a290ac372d2bd94137a9fed6b2f5a6ac4360ec2
+    SHA512 bcdd34b7cee1ebe01ae83211e7b772742f9740aa713298f6fb72e7076f5fecdb3aea12f67a5fe04e8606d9533a0ceef7c1152368643dc51a7339b0e5dd307afa
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-Use-external-Glew-and-Freetype.patch"
+    PATCHES 0001-Use-external-Glew-and-Freetype.patch
 )
 
 # make sure that no "internal" libraries are used by removing them
