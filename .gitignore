@@ -299,6 +299,8 @@ __pycache__/
 !triplets/x64-linux.cmake
 !triplets/x64-osx.cmake
 !triplets/x86-wasm.cmake
+!triplets/x64-ios.cmake
+!triplets/x86-ios.cmake
 *.exe
 *.zip
 
