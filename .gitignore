@@ -301,6 +301,7 @@ __pycache__/
 !triplets/x86-wasm.cmake
 !triplets/x64-ios.cmake
 !triplets/x86-ios.cmake
+!triplets/x64-android.cmake
 *.exe
 *.zip
 
