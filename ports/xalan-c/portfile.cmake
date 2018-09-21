@@ -1,43 +1,27 @@
-# Common Ambient Variables:
-#   CURRENT_BUILDTREES_DIR    = ${VCPKG_ROOT_DIR}\buildtrees\${PORT}
-#   CURRENT_PACKAGES_DIR      = ${VCPKG_ROOT_DIR}\packages\${PORT}_${TARGET_TRIPLET}
-#   CURRENT_PORT DIR          = ${VCPKG_ROOT_DIR}\ports\${PORT}
-#   PORT                      = current port name (zlib, etc)
-#   TARGET_TRIPLET            = current triplet (x86-windows, x64-windows-static, etc)
-#   VCPKG_CRT_LINKAGE         = C runtime linkage type (static, dynamic)
-#   VCPKG_LIBRARY_LINKAGE     = target library linkage type (static, dynamic)
-#   VCPKG_ROOT_DIR            = <C:\path\to\current\vcpkg>
-#   VCPKG_TARGET_ARCHITECTURE = target architecture (x64, x86, arm)
-#
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    message(STATUS "Only DLL builds are currently supported.")
-    set(VCPKG_LIBRARY_LINKAGE "dynamic")
-endif()
-
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    message(FATAL_ERROR "Only dynamic linking against the CRT is currently supported.")
-endif()
-
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/xalan-c-1.11)
+
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
+
+set(XALAN_C_VERSION 1.11)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www-us.apache.org/dist/xalan/xalan-c/sources/xalan_c-1.11-src.zip"
-    FILENAME "xalan_c-1.11-src.zip"
+    URLS "http://www-us.apache.org/dist/xalan/xalan-c/sources/xalan_c-${XALAN_C_VERSION}-src.zip"
+    FILENAME "xalan_c-${XALAN_C_VERSION}-src.zip"
     SHA512 2e79a2c8f755c9660ffc94b26b6bd4b140685e05a88d8e5abb19a2f271383a3f2f398b173ef403f65dc33af75206214bd21ac012c39b4c0051b3a9f61f642fe6
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-ALLOW_RTCc_IN_STL.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/0002-no-mfc.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/0003-char16_t.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/0004-macosx-dyld-fallback.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/0005-fix-ftbfs-ld-as-needed.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/0006-fix-testxslt-segfault.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/0007-fix-readme-typos.patch"
-            )
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${XALAN_C_VERSION}
+    PATCHES
+        0001-ALLOW_RTCc_IN_STL.patch
+        0002-no-mfc.patch
+        0003-char16_t.patch
+        0004-macosx-dyld-fallback.patch
+        0005-fix-ftbfs-ld-as-needed.patch
+        0006-fix-testxslt-segfault.patch
+        0007-fix-readme-typos.patch
+)
 
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
     set(BUILD_ARCH "Win32")
