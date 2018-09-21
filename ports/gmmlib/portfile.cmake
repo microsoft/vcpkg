@@ -29,14 +29,11 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-# file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/gmmlib RENAME copyright)
-
 vcpkg_download_distfile(LICENSE
     URLS "https://raw.githubusercontent.com/intel/gmmlib/intel-gmmlib-18.3.pre2/LICENSE.md"
     FILENAME "LICENSE.md"
     SHA512 7ccef6f0c48434aae9bed1169b8eef65890b0d782cd489997699f1c116e7a6658aa3cde4bb7efc7c67e28740b269b620e76b6459957f3ff7b756187a0269827e
 )
-
 
 file(INSTALL ${CURRENT_BUILDTREES_DIR}/src/gmmlib-intel-gmmlib-18.3.pre2/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/gmmlib RENAME copyright)
 
