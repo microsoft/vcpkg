@@ -298,10 +298,16 @@ __pycache__/
 !triplets/arm64-windows.cmake
 !triplets/x64-linux.cmake
 !triplets/x64-osx.cmake
-!triplets/x86-wasm.cmake
-!triplets/x64-ios.cmake
-!triplets/x86-ios.cmake
-!triplets/x64-android.cmake
+
+#ignore custom triplets
+/scripts/toolchains/*
+#add vcpkg-designed toolchains back in
+!scripts/toolchains/android.cmake
+!scripts/toolchains/freebsd.cmake
+!scripts/toolchains/linux.cmake
+!scripts/toolchains/osx.cmake
+!scripts/toolchains/windows.cmake
+
 *.exe
 *.zip
 
@@ -311,7 +317,7 @@ __pycache__/
 
 
 ############################################################
-# cmake and ninja - Start
+# cmake and ninja build artifacts - Start
 ############################################################
 
 .DS_Store
@@ -332,5 +338,5 @@ build.ninja
 rules.ninja
 
 ############################################################
-# cmake and ninja - End
+# cmake and ninja build artifacts - End
 ############################################################
