@@ -299,7 +299,7 @@ __pycache__/
 !triplets/x64-linux.cmake
 !triplets/x64-osx.cmake
 
-#ignore custom triplets
+#ignore custom toolchains
 /scripts/toolchains/*
 #add vcpkg-designed toolchains back in
 !scripts/toolchains/android.cmake
