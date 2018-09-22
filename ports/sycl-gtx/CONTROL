@@ -1,0 +1,3 @@
+Source: sycl-gtx
+Version: master
+Description: implementation of khronos sycl specification by codeplay
