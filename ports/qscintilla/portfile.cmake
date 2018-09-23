@@ -17,6 +17,7 @@ set(BUILD_OPTIONS
     "${SOURCE_PATH}/Qt4Qt5/qscintilla.pro"
     CONFIG+=build_all
     CONFIG-=hide_symbols
+    DEFINES += SCI_NAMESPACE
 )
 
 SET(ENV{PATH} "$ENV{PATH};${CURRENT_INSTALLED_DIR}/bin;${CURRENT_INSTALLED_DIR}/debug/bin")
@@ -30,6 +31,7 @@ vcpkg_configure_qmake(
     OPTIONS
         CONFIG+=build_all
         CONFIG-=hide_symbols
+        DEFINES += SCI_NAMESPACE
 )
 
 vcpkg_build_qmake(
