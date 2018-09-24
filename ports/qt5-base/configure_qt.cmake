@@ -36,7 +36,7 @@ function(configure_qt)
             -archdatadir ${CURRENT_INSTALLED_DIR}/share/qt5/debug
             -datadir ${CURRENT_INSTALLED_DIR}/share/qt5/debug
             -plugindir ${CURRENT_INSTALLED_DIR}/debug/plugins
-            -qmldir ${CURRENT_INSTALLED_DIR}/debug/qml
+            -qmldir ${CURRENT_INSTALLED_DIR}/qml
             -headerdir ${CURRENT_PACKAGES_DIR}/include
             -I ${CURRENT_INSTALLED_DIR}/include
             -L ${CURRENT_INSTALLED_DIR}/debug/lib
