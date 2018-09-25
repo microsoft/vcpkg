@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 43256fc04..204761256 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -49,7 +49,7 @@ option(WITH_SNAPPY "build with SNAPPY" OFF)
+ option(WITH_LZ4 "build with lz4" OFF)
+ option(WITH_ZLIB "build with zlib" OFF)
+ option(WITH_ZSTD "build with zstd" OFF)
+-if(MSVC)
++if(MSVC AND NOT VCPKG_TOOLCHAIN)
+   # Defaults currently different for GFLAGS.
+   #  We will address find_package work a little later
+   option(WITH_GFLAGS "build with GFlags" OFF)
