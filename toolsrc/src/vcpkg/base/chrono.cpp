@@ -58,8 +58,13 @@ namespace vcpkg::Chrono
     }
 
     std::string ElapsedTime::to_string() const { return format_time_userfriendly(as<std::chrono::nanoseconds>()); }
+    void ElapsedTime::to_string(std::string& into) const
+    {
+        into += format_time_userfriendly(as<std::chrono::nanoseconds>());
+    }
 
     std::string ElapsedTimer::to_string() const { return elapsed().to_string(); }
+    void ElapsedTimer::to_string(std::string& into) const { return elapsed().to_string(into); }
 
     Optional<CTime> CTime::get_current_date_time()
     {
@@ -115,12 +120,15 @@ namespace vcpkg::Chrono
         return ret;
     }
 
-    std::string CTime::to_string() const
+    std::string CTime::to_string() const { return this->to_string("%Y-%m-%dT%H:%M:%S.0Z"); }
+
+    std::string CTime::to_string(const char* format) const
     {
-        std::array<char, 80> date{};
-        strftime(&date[0], date.size(), "%Y-%m-%dT%H:%M:%S.0Z", &m_tm);
+        std::array<char, 80> date {};
+        strftime(&date[0], date.size(), format, &m_tm);
         return &date[0];
     }
+
     std::chrono::system_clock::time_point CTime::to_time_point() const
     {
         const time_t t = mktime(&m_tm);

@@ -1,8 +1,10 @@
 #pragma once
 
+#include <vcpkg/base/cstringview.h>
+#include <vcpkg/base/optional.h>
+
 #include <chrono>
 #include <string>
-#include <vcpkg/base/optional.h>
 
 namespace vcpkg::Chrono
 {
@@ -21,6 +23,7 @@ namespace vcpkg::Chrono
         }
 
         std::string to_string() const;
+        void to_string(std::string& into) const;
 
     private:
         std::chrono::high_resolution_clock::time_point::duration m_duration;
@@ -41,6 +44,7 @@ namespace vcpkg::Chrono
         double microseconds() const { return elapsed().as<std::chrono::duration<double, std::micro>>().count(); }
 
         std::string to_string() const;
+        void to_string(std::string& into) const;
 
     private:
         std::chrono::high_resolution_clock::time_point m_start_tick;
@@ -52,10 +56,11 @@ namespace vcpkg::Chrono
         static Optional<CTime> get_current_date_time();
         static Optional<CTime> parse(CStringView str);
 
-        constexpr CTime() noexcept : m_tm{0} {}
-        explicit constexpr CTime(tm t) noexcept : m_tm{t} {}
+        constexpr CTime() noexcept : m_tm {0} {}
+        explicit constexpr CTime(tm t) noexcept : m_tm {t} {}
 
         std::string to_string() const;
+        std::string to_string(const char* format) const;
 
         std::chrono::system_clock::time_point to_time_point() const;
 
