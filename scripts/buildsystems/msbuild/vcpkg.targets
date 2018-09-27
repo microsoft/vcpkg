@@ -1,4 +1,10 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <ItemGroup>
+    <PropertyPageSchema Include="C:\Sources\Extern\vcpkg\scripts\buildsystems\msbuild\vcpkg-general.xml">
+      <Context>Project</Context>
+    </PropertyPageSchema>
+  </ItemGroup>
+
   <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'Win32||'">
     <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
     <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x86-windows</VcpkgTriplet>

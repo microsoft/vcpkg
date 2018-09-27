@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Rule
+      Name="VcpkgGeneral"
+      DisplayName="Vcpkg"
+      PageTemplate="generic"
+      Description="Vcpkg"
+      xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule.Categories>
+    <Category Name="General" DisplayName="General" Description="General" />
+  </Rule.Categories>
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" Label="Vcpkg" />
+  </Rule.DataSource>
+
+  <BoolProperty Name="VcpkgEnabled" 
+                DisplayName="Use Vcpkg" 
+                Description="Use Vcpkg for includes and libraries." 
+                Category="General" 
+                Default="true">
+  </BoolProperty>
+  
+  <StringProperty Name="VcpkgTriplet"
+                  DisplayName="Vcpkg Triplet"
+                  Description="Specifies the triplet used by Vcpkg"
+                  Category="General"
+                  Default="$(Platform)-windows"
+                  Subtype="Text">
+  </StringProperty>
+
+   <StringProperty Name="VcpkgRoot"
+                DisplayName="Vcpkg Root"
+                Description="Defines the path to Vcpkg"
+                Category="General"
+                Default="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))\installed\$(VcpkgTriplet)\"
+				Subtype="folder">
+  </StringProperty>
+  
+  <BoolProperty Name="VcpkgAutoLink"
+                  DisplayName="Vcpkg AutoLink"
+                  Description="Enables automatic linking with libraries build with Vcpkg"
+                  Category="General"
+				  Default="true">
+  </BoolProperty>
+
+
+
+</Rule>
