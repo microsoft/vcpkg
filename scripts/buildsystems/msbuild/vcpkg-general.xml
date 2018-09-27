@@ -18,7 +18,12 @@
                 Category="General" 
                 Default="true">
   </BoolProperty>
-  
+  <BoolProperty Name="VcpkgUseStatic" 
+                DisplayName="Use static libraries" 
+                Description="Vcpkg can build static libraries (e.g. x64-windows-static). This options changes the default triplet to use these static libraries" 
+                Category="General" 
+                Default="false">
+  </BoolProperty>
   <StringProperty Name="VcpkgTriplet"
                   DisplayName="Vcpkg Triplet"
                   Description="Specifies the triplet used by Vcpkg"
@@ -42,6 +47,11 @@
 				  Default="true">
   </BoolProperty>
 
-
+  <EnumProperty Name="VcpkgConfiguration" DisplayName="Vcpkg Configuration" Description="Specifies the if release or debug libraries build with vcpkg should be used" Category="General">
+    <EnumValue Name="Release" Switch="Release" DisplayName="Release" Description="Uses release libraries">
+    </EnumValue>
+    <EnumValue Name="Debug" Switch="Debug" DisplayName="Debug" Description="Uses debug libraries">
+    </EnumValue>   
+  </EnumProperty>
 
 </Rule>

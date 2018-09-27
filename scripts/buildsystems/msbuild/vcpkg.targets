@@ -1,60 +1,30 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <ItemGroup>
-    <PropertyPageSchema Include="C:\Sources\Extern\vcpkg\scripts\buildsystems\msbuild\vcpkg-general.xml">
+    <PropertyPageSchema Include="$(VcpkgPageSchema)">
       <Context>Project</Context>
     </PropertyPageSchema>
   </ItemGroup>
-
-  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'Win32||'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x86-windows</VcpkgTriplet>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'Win32|Windows Store|10.0'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x86-uwp</VcpkgTriplet>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == '||'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x86-windows</VcpkgTriplet>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == '|Windows Store|10.0'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x86-uwp</VcpkgTriplet>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'x64||'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x64-windows</VcpkgTriplet>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'arm||'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">arm-windows</VcpkgTriplet>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'arm64||'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">arm64-windows</VcpkgTriplet>
-  </PropertyGroup>  
-
-  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'x64|Windows Store|10.0'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">x64-uwp</VcpkgTriplet>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'arm|Windows Store|10.0'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">arm-uwp</VcpkgTriplet>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == 'arm64|Windows Store|10.0'">
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">arm64-uwp</VcpkgTriplet>
-  </PropertyGroup>
-
+  
+	<PropertyGroup Condition="'$(VcpkgUseStatic)' == 'true'">
+		<VcpkgPlatformSufix Condition="'$(VcpkgPlatformSufix)' == ''">-static</VcpkgPlatformSufix>
+	</PropertyGroup>
+	  	
+	<PropertyGroup Condition="'$(Platform)' == 'Win32'">
+		<VcpkgPlatformPrefix Condition="'$(VcpkgPlatformPrefix)' == ''">x86</VcpkgPlatformPrefix>
+	</PropertyGroup>
+	
+	<PropertyGroup>
+		<VcpkgPlatformPrefix Condition="'$(VcpkgPlatformPrefix)' == ''">$(Platform)</VcpkgPlatformPrefix>
+	</PropertyGroup> 
+	
+	<PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == '|Windows Store|10.0'">
+		<VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgPlatformPrefix)-uwp$(VcpkgPlatformSufix)</VcpkgTriplet>
+	</PropertyGroup>
+	
+	<PropertyGroup>
+		<VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgPlatformPrefix)-windows$(VcpkgPlatformSufix)</VcpkgTriplet>
+	</PropertyGroup>
+	
   <PropertyGroup Condition="'$(VcpkgEnabled)' == 'true'">
     <VcpkgConfiguration Condition="'$(VcpkgConfiguration)' == ''">$(Configuration)</VcpkgConfiguration>
     <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Debug'))">Debug</VcpkgNormalizedConfiguration>
