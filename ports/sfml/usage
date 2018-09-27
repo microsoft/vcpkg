@@ -1,0 +1,4 @@
+The package sfml is compatible with built-in CMake targets:
+
+    find_package(SFML CONFIG REQUIRED COMPONENTS system window graphics network audio)
+    target_link_libraries(main PRIVATE sfml-system sfml-window sfml-network sfml-graphics sfml-audio)

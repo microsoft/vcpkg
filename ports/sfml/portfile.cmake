@@ -17,7 +17,7 @@ file(WRITE ${SOURCE_PATH}/extlibs/libs/x "")
 file(REMOVE_RECURSE ${SOURCE_PATH}/cmake/Modules/FindFreetype.cmake)
 
 if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message("SFML currently requires the following libraries from the system package manager:\n    libudev\n    libx11\n    libxrandr\n    opengl\n\nThese can be installed on Ubuntu systems via apt-get install libx11-dev libxrandr-dev libxi-dev libudev-dev mesa-common-dev")
+    message("SFML currently requires the following libraries from the system package manager:\n    libudev\n    libx11\n    libxrandr\n    opengl\n\nThese can be installed on Ubuntu systems via apt-get install libx11-dev libxrandr-dev libxi-dev libudev-dev mesa-common-dev libglvnd-dev\nOn older Ubuntu systems, you may need libgl1-mesa-dev instead of libglvnd-dev")
 endif()
 
 vcpkg_configure_cmake(
@@ -55,3 +55,4 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(INSTALL ${SOURCE_PATH}/license.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/sfml RENAME copyright)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/sfml)
