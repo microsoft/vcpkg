@@ -273,7 +273,7 @@ namespace vcpkg::Commands::Integrate
                                "\n");
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
-			
+
             const fs::path appdata_src_path2 = tmp_dir / "vcpkg.user.props";
             fs.write_contents(appdata_src_path2,
                               create_appdata_shortcut(paths.buildsystems_msbuild_props.u8string()));
@@ -333,6 +333,11 @@ CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s"
         const fs::path path = get_appdata_targets_path();
 
         was_deleted |= fs.remove(path, ec);
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Error: Unable to remove user-wide integration: %s", ec.message());
+
+        const fs::path path2 = get_appdata_props_path();
+
+        was_deleted |= fs.remove(path2, ec);
         Checks::check_exit(VCPKG_LINE_INFO, !ec, "Error: Unable to remove user-wide integration: %s", ec.message());
 #endif
 
