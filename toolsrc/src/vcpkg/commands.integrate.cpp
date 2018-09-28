@@ -274,14 +274,14 @@ namespace vcpkg::Commands::Integrate
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
 			
-			const fs::path appdata_src_path2 = tmp_dir / "vcpkg.user.props";
+            const fs::path appdata_src_path2 = tmp_dir / "vcpkg.user.props";
             fs.write_contents(appdata_src_path2,
                               create_appdata_shortcut(paths.buildsystems_msbuild_props.u8string()));
             auto appdata_dst_path2 = get_appdata_props_path();
 
             const auto rc2 = fs.copy_file(appdata_src_path2, appdata_dst_path2, fs::copy_options::overwrite_existing, ec);
 
-            if (!rc || ec)
+            if (!rc2 || ec)
             {
                 System::println(System::Color::error,
                                 "Error: Failed to copy file: %s -> %s",
