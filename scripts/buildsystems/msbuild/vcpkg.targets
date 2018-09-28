@@ -4,27 +4,29 @@
       <Context>Project</Context>
     </PropertyPageSchema>
   </ItemGroup>
-  
-	<PropertyGroup Condition="'$(VcpkgUseStatic)' == 'true'">
-		<VcpkgPlatformSufix Condition="'$(VcpkgPlatformSufix)' == ''">-static</VcpkgPlatformSufix>
-	</PropertyGroup>
-	  	
-	<PropertyGroup Condition="'$(Platform)' == 'Win32'">
-		<VcpkgPlatformPrefix Condition="'$(VcpkgPlatformPrefix)' == ''">x86</VcpkgPlatformPrefix>
-	</PropertyGroup>
-	
-	<PropertyGroup>
-		<VcpkgPlatformPrefix Condition="'$(VcpkgPlatformPrefix)' == ''">$(Platform)</VcpkgPlatformPrefix>
-	</PropertyGroup> 
-	
-	<PropertyGroup Condition="'$(ApplicationType)|$(ApplicationTypeRevision)' == 'Windows Store|10.0'">
-		<VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgPlatformPrefix)-uwp$(VcpkgPlatformSufix)</VcpkgTriplet>
-	</PropertyGroup>
-	
-	<PropertyGroup Condition="'$(ApplicationType)|$(ApplicationTypeRevision)' != 'Windows Store|10.0'">
-		<VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgPlatformPrefix)-windows$(VcpkgPlatformSufix)</VcpkgTriplet>
-	</PropertyGroup>
-	
+
+  <PropertyGroup Condition="'$(VcpkgUseStatic)' == 'true'">
+    <VcpkgTripletSufix>$(VcpkgTripletSufix)-static</VcpkgTripletSufix>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <VcpkgTripletPrefix Condition="'$(VcpkgTripletPrefix)' == ''">$(PlatformTarget)</VcpkgTripletPrefix>
+  </PropertyGroup> 
+
+  <PropertyGroup Condition="'$(ApplicationType)|$(ApplicationTypeRevision)' == 'Windows Store|10.0'">
+    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgTripletPrefix)-uwp$(VcpkgTripletSufix)</VcpkgTriplet>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(ApplicationType)|$(ApplicationTypeRevision)' != 'Windows Store|10.0'">
+    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgTripletPrefix)-windows$(VcpkgTripletSufix)</VcpkgTriplet>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <VcpkgBasePath Condition="'$(VcpkgBasePath)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))</VcpkgBasePath>
+    <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$(VcpkgBasePath)\installed\$(VcpkgTriplet)\</VcpkgRoot>
+    <VcpkgConfiguration Condition="'$(VcpkgConfiguration)' == ''">$(Configuration)</VcpkgConfiguration>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(VcpkgEnabled)' == 'true'">
     <VcpkgConfiguration Condition="'$(VcpkgConfiguration)' == ''">$(Configuration)</VcpkgConfiguration>
     <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Debug'))">Debug</VcpkgNormalizedConfiguration>
