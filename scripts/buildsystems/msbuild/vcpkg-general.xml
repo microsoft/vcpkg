@@ -56,10 +56,9 @@
   </StringProperty>
   <StringProperty Name="VcpkgRoot"
                   DisplayName="Package directory (VcpkgRoot)"
-                  Description="Defines the path to Vcpkg."
+                  Description="Defines the direct path to the installed Vcpkg packages. Only change this if you know what you are doing!"
                   Category="General"
-                  Subtype="folder"
-                  ReadOnly="true">
+                  Subtype="folder">
   </StringProperty>
 
   <EnumProperty Name="VcpkgConfiguration" DisplayName="Vcpkg Configuration" Description="Specifies if release or debug libraries build with vcpkg should be used." Category="General">
