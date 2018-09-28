@@ -6,15 +6,11 @@ vcpkg_from_github(
   REF v5.15.10
   SHA512 3faef43cc343c20e044f92af7cd9eae9783612d888bfe17b7d0ae6812090088f43a128e5686600ec56f5a88c100eaa893b2551f8c32df793a4ccd94330c07037
   HEAD_REF master
-)
-
-vcpkg_apply_patches(
-  SOURCE_PATH ${SOURCE_PATH}
   PATCHES
-    "${CMAKE_CURRENT_LIST_DIR}/0001-disable-gtest.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/0002-only-build-one-flavor.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/0003-zlib-findpackage.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/0004-use-find-package.patch"
+    0001-disable-gtest.patch
+    0002-only-build-one-flavor.patch
+    0003-zlib-findpackage.patch
+    0004-use-find-package.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/modules/Findzlib.cmake")
@@ -24,12 +20,7 @@ file(COPY
   DESTINATION "${SOURCE_PATH}/cmake/modules"
 )
 
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-  set(WITH_MD_LIBRARY OFF)
-else()
-  set(WITH_MD_LIBRARY ON)
-endif()
-
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" WITH_MD_LIBRARY)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ROCKSDB_DISABLE_INSTALL_SHARED_LIB)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ROCKSDB_DISABLE_INSTALL_STATIC_LIB)
 
@@ -80,3 +71,5 @@ file(INSTALL ${SOURCE_PATH}/LICENSE.Apache DESTINATION ${CURRENT_PACKAGES_DIR}/s
 file(INSTALL ${SOURCE_PATH}/LICENSE.leveldb DESTINATION ${CURRENT_PACKAGES_DIR}/share/rocksdb)
 
 vcpkg_copy_pdbs()
+
+vcpkg_test_cmake(PACKAGE_NAME rocksdb)
