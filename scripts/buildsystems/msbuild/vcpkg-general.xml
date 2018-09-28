@@ -20,38 +20,53 @@
   </BoolProperty>
   <BoolProperty Name="VcpkgUseStatic" 
                 DisplayName="Use static libraries" 
-                Description="Vcpkg can build static libraries (e.g. x64-windows-static). This options changes the default triplet to use these static libraries" 
+                Description="Vcpkg can build static libraries (e.g. x64-windows-static). This options changes the default triplet to use these static libraries by adding -static to $(VcpkgTripletSufix)" 
                 Category="General" 
                 Default="false">
   </BoolProperty>
-  <StringProperty Name="VcpkgTriplet"
-                  DisplayName="Vcpkg Triplet"
-                  Description="Specifies the triplet used by Vcpkg"
+  <BoolProperty Name="VcpkgAutoLink"
+                DisplayName="Use AutoLink"
+                Description="Enables automatic linking with libraries build using Vcpkg"
+                Category="General"
+                Default="true">
+  </BoolProperty>
+  <StringProperty Name="VcpkgTripletPrefix"
+                  DisplayName="VcpkgTripletPrefix"
+                  Description="Specifies the triplet prefix"
                   Category="General"
-                  Default="$(Platform)-windows"
                   Subtype="Text">
   </StringProperty>
-
-   <StringProperty Name="VcpkgRoot"
-                DisplayName="Vcpkg Root"
-                Description="Defines the path to Vcpkg"
-                Category="General"
-                Default="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))\installed\$(VcpkgTriplet)\"
-				Subtype="folder">
-  </StringProperty>
-  
-  <BoolProperty Name="VcpkgAutoLink"
-                  DisplayName="Vcpkg AutoLink"
-                  Description="Enables automatic linking with libraries build with Vcpkg"
+  <StringProperty Name="VcpkgTripletSufix"
+                  DisplayName="VcpkgTripletSufix"
+                  Description="Specifies the triplet sufix"
                   Category="General"
-				  Default="true">
-  </BoolProperty>
+                  Subtype="Text">
+  </StringProperty>
+  <StringProperty Name="VcpkgTriplet"
+                  DisplayName="Triplet"
+                  Description="Specifies the triplet used by Vcpkg"
+                  Category="General"
+                  Subtype="Text">
+  </StringProperty>
+  <StringProperty Name="VcpkgBasePath"
+                  DisplayName="Base Path"
+                  Description="Base path where Vcpkg is located. Be careful with changing this one. It is, for example, unable to update this property page from the new location without restarting visual studio."
+                  Category="General"
+                  Subtype="folder">
+  </StringProperty>
+  <StringProperty Name="VcpkgRoot"
+                  DisplayName="Package directory (VcpkgRoot)"
+                  Description="Defines the path to Vcpkg."
+                  Category="General"
+                  Subtype="folder"
+                  ReadOnly="true">
+  </StringProperty>
 
-  <EnumProperty Name="VcpkgConfiguration" DisplayName="Vcpkg Configuration" Description="Specifies the if release or debug libraries build with vcpkg should be used" Category="General">
+  <EnumProperty Name="VcpkgConfiguration" DisplayName="Vcpkg Configuration" Description="Specifies if release or debug libraries build with vcpkg should be used." Category="General">
     <EnumValue Name="Release" Switch="Release" DisplayName="Release" Description="Uses release libraries">
     </EnumValue>
     <EnumValue Name="Debug" Switch="Debug" DisplayName="Debug" Description="Uses debug libraries">
-    </EnumValue>   
+    </EnumValue>
   </EnumProperty>
 
 </Rule>
