@@ -17,11 +17,11 @@
 		<VcpkgPlatformPrefix Condition="'$(VcpkgPlatformPrefix)' == ''">$(Platform)</VcpkgPlatformPrefix>
 	</PropertyGroup> 
 	
-	<PropertyGroup Condition="'$(Platform)|$(ApplicationType)|$(ApplicationTypeRevision)' == '|Windows Store|10.0'">
+	<PropertyGroup Condition="'$(ApplicationType)|$(ApplicationTypeRevision)' == 'Windows Store|10.0'">
 		<VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgPlatformPrefix)-uwp$(VcpkgPlatformSufix)</VcpkgTriplet>
 	</PropertyGroup>
 	
-	<PropertyGroup>
+	<PropertyGroup Condition="'$(ApplicationType)|$(ApplicationTypeRevision)' != 'Windows Store|10.0'">
 		<VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgPlatformPrefix)-windows$(VcpkgPlatformSufix)</VcpkgTriplet>
 	</PropertyGroup>
 	
