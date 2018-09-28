@@ -1,34 +1,12 @@
---- a/src/CMakeLists.txt	Sun Jun 11 23:04:50 2017
-+++ b/src/CMakeLists.txt	Wed Aug 16 17:29:56 2017
-@@ -27,24 +27,31 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 945100a..6daad98 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -14,7 +14,6 @@ if (MSVC)
+     set_source_files_properties(${src} PROPERTIES LANGUAGE CXX)
  endif()
  
- if (GIF_LIBRARY)
-+    target_include_directories  (leptonica PUBLIC ${GIF_INCLUDE_DIR})
-     target_link_libraries       (leptonica ${GIF_LIBRARY})
- endif()
- if (JPEG_LIBRARY)
-+    target_include_directories  (leptonica PUBLIC ${JPEG_INCLUDE_DIR})
-     target_link_libraries       (leptonica ${JPEG_LIBRARY})
- endif()
- if (JP2K_FOUND)
-+    target_include_directories  (leptonica PUBLIC ${JP2K_INCLUDE_DIR})
-     target_link_libraries       (leptonica ${JP2K_LIBRARIES})
- endif()
- if (PNG_LIBRARY)
-+    target_include_directories  (leptonica PUBLIC ${PNG_INCLUDE_DIRS})
-     target_link_libraries       (leptonica ${PNG_LIBRARY})
- endif()
- if (TIFF_LIBRARY)
-+    target_include_directories  (leptonica PUBLIC ${TIFF_INCLUDE_DIR})
-     target_link_libraries       (leptonica ${TIFF_LIBRARY})
- endif()
- if (WEBP_FOUND)
-+    target_include_directories  (leptonica PUBLIC ${WEBP_INCLUDE_DIR})
-     target_link_libraries       (leptonica ${WEBP_LIBRARIES})
- endif()
- if (ZLIB_LIBRARY)
-+    target_include_directories  (leptonica PUBLIC ${ZLIB_INCLUDE_DIR})
-     target_link_libraries       (leptonica ${ZLIB_LIBRARY})
- endif()
+-string(REPLACE "-O3" "-O2" CMAKE_C_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
  
+ add_library                     (leptonica ${LIBRARY_TYPE} ${src} ${hdr})
+ set_target_properties           (leptonica PROPERTIES VERSION   ${VERSION_PLAIN})
