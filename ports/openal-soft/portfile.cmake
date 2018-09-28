@@ -57,7 +57,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/OpenAL)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/OpenAL TARGET_PATH share/openal)
 
 foreach(HEADER al.h alc.h)
     file(READ ${CURRENT_PACKAGES_DIR}/include/AL/${HEADER} AL_H)

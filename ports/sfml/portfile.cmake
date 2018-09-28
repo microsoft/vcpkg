@@ -38,6 +38,14 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     FILE(WRITE ${CURRENT_PACKAGES_DIR}/share/sfml/SFMLConfig.cmake "set(SFML_STATIC_LIBRARIES true)\n${SFML_CONFIG}")
 endif()
 
+file(GLOB FILES "${CURRENT_PACKAGES_DIR}/share/sfml/SFML*Targets.cmake")
+foreach(FILE ${FILES})
+    file(READ "${FILE}" _contents)
+    string(REPLACE "<LINK_ONLY:OpenAL>" "<LINK_ONLY:OpenAL::OpenAL>" _contents "${_contents}")
+    string(REPLACE "<LINK_ONLY:Vorbis>" "<LINK_ONLY:unofficial::vorbis::vorbisenc>;\$<LINK_ONLY:unofficial::vorbis::vorbisfile>" _contents "${_contents}")
+    file(WRITE "${FILE}" "${_contents}")
+endforeach()
+
 # move sfml-main to manual link dir
 if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/sfml-main.lib)
     file(COPY ${CURRENT_PACKAGES_DIR}/lib/sfml-main.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/manual-link)

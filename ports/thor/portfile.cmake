@@ -6,12 +6,16 @@ vcpkg_from_github(ARCHIVE
   REF v2.0
   SHA512 634fa5286405d9a8a837c082ace98bbb02e609521418935855b9e2fcad57003dbe35088bd771cf6a9292e55d3787f7e463d7a4cca0d0f007509de2520d9a8cf9
   HEAD_REF master
-  PATCHES "${CMAKE_CURRENT_LIST_DIR}/sfml-no-depend-libjpeg.patch"
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/extlibs)
 file(COPY ${CURRENT_INSTALLED_DIR}/include/Aurora DESTINATION ${SOURCE_PATH}/extlibs/aurora/include)
 file(WRITE "${SOURCE_PATH}/extlibs/aurora/License.txt")
+file(WRITE "${SOURCE_PATH}/cmake/Modules/FindSFML.cmake"
+"find_package(SFML CONFIG REQUIRED COMPONENTS audio graphics window system)
+set(SFML_INCLUDE_DIR \"${CURRENT_INSTALLED_DIR}/include\")
+set(SFML_LIBRARIES sfml-system sfml-window sfml-graphics sfml-audio)"
+)
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" THOR_STATIC_STD_LIBS)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" THOR_SHARED_LIBS)

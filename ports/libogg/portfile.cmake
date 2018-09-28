@@ -5,6 +5,7 @@ vcpkg_from_github(
     REF v1.3.3
     SHA512 0bd6095d647530d4cb1f509eb5e99965a25cc3dd9b8125b93abd6b248255c890cf20710154bdec40568478eb5c4cde724abfb2eff1f3a04e63acef0fbbc9799b
     HEAD_REF master
+    PATCHES targets.patch
 )
 
 vcpkg_configure_cmake(
@@ -16,8 +17,12 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-ogg TARGET_PATH share/unofficial-ogg)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_pdbs()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libogg RENAME copyright)
+
+vcpkg_test_cmake(PACKAGE_NAME unofficial-ogg)

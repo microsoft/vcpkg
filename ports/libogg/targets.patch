@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5ab14a2..7111fea 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -82,6 +82,7 @@ endif()
+ 
+ include_directories(include ${CMAKE_CURRENT_BINARY_DIR}/include)
+ add_library(ogg ${OGG_HEADERS} ${OGG_SOURCES})
++target_include_directories(ogg PUBLIC $<INSTALL_INTERFACE:include>)
+ 
+ get_version_info(OGG_VERSION_INFO "LIB_CURRENT" "LIB_AGE" "LIB_REVISION")
+ set_target_properties(
+@@ -105,6 +106,7 @@ endif()
+ configure_pkg_config_file(ogg.pc.in)
+ 
+ install(TARGETS ogg
++    EXPORT unofficial-ogg
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+@@ -114,3 +116,10 @@ install(TARGETS ogg
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ogg.pc
+     DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+ )
++
++install(
++    EXPORT unofficial-ogg
++    NAMESPACE unofficial::ogg::
++    FILE unofficial-ogg-config.cmake
++    DESTINATION share/unofficial-ogg
++)
