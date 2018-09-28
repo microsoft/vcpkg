@@ -1,31 +1,27 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
+    <VcpkgHasProps>true</VcpkgHasProps>
     <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
     <VcpkgAutoLink Condition="'$(VcpkgAutoLink)' == ''">true</VcpkgAutoLink>
     <VcpkgUseStatic Condition="'$(VcpkgUseStatic)' == ''">false</VcpkgUseStatic>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(VcpkgUseStatic)' == 'true'">
-    <VcpkgTripletSufix>$(VcpkgTripletSufix)-static</VcpkgTripletSufix>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <VcpkgTripletPrefix Condition="'$(VcpkgTripletPrefix)' == ''">$(PlatformTarget)</VcpkgTripletPrefix>
-  </PropertyGroup> 
-
-  <PropertyGroup Condition="'$(ApplicationType)|$(ApplicationTypeRevision)' == 'Windows Store|10.0'">
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgTripletPrefix)-uwp$(VcpkgTripletSufix)</VcpkgTriplet>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(ApplicationType)|$(ApplicationTypeRevision)' != 'Windows Store|10.0'">
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgTripletPrefix)-windows$(VcpkgTripletSufix)</VcpkgTriplet>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <VcpkgBasePath Condition="'$(VcpkgBasePath)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))</VcpkgBasePath>
+    <VcpkgConfiguration Condition="'$(VcpkgConfiguration)' == ''">$(Configuration)</VcpkgConfiguration>
+    <VcpkgPageSchema Condition="'$(VcpkgPageSchema)' == ''">$(VcpkgBasePath)\scripts\buildsystems\msbuild\vcpkg-general.xml</VcpkgPageSchema>
+  </PropertyGroup>
+
+  <!-- Set default OS Target-->
+  <PropertyGroup Condition="'$(ApplicationType)|$(ApplicationTypeRevision)' == 'Windows Store|10.0'">
+    <VcpkgOSTarget Condition="'$(VcpkgOSTarget)' == ''">uwp</VcpkgOSTarget>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VcpkgOSTarget Condition="'$(VcpkgOSTarget)' == ''">windows</VcpkgOSTarget>
+  </PropertyGroup>
+
+  <!-- Set other defaults-->
+  <PropertyGroup>
+    <VcpkgUserTriplet Condition="'$(VcpkgUserTriplet)' == ''">$(PlatformTarget)-$(VcpkgOSTarget)</VcpkgUserTriplet>
+    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgUserTriplet)</VcpkgTriplet>
     <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$(VcpkgBasePath)\installed\$(VcpkgTriplet)\</VcpkgRoot>
     <VcpkgPageSchema>$(VcpkgBasePath)\scripts\buildsystems\msbuild\vcpkg-general.xml</VcpkgPageSchema>
-    <VcpkgConfiguration Condition="'$(VcpkgConfiguration)' == ''">$(Configuration)</VcpkgConfiguration>
-  </PropertyGroup>
-
+  </PropertyGroup> 
 </Project>
