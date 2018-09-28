@@ -9,9 +9,8 @@
     <Category Name="General" DisplayName="General" Description="General" />
   </Rule.Categories>
   <Rule.DataSource>
-    <DataSource Persistence="ProjectFile" Label="Vcpkg" />
+    <DataSource Persistence="ProjectFile" Label="Vcpkg" HasConfigurationCondition="true" />
   </Rule.DataSource>
-
   <BoolProperty Name="VcpkgEnabled" 
                 DisplayName="Use Vcpkg" 
                 Description="Use Vcpkg for includes and libraries." 
@@ -20,7 +19,7 @@
   </BoolProperty>
   <BoolProperty Name="VcpkgUseStatic" 
                 DisplayName="Use static libraries" 
-                Description="Vcpkg can build static libraries (e.g. x64-windows-static). This options changes the default triplet to use these static libraries by adding -static to $(VcpkgTripletSufix)" 
+                Description="Vcpkg can build static libraries (e.g. x64-windows-static). This options changes the default triplet to use these static libraries by appending -static to $(VcpkgTriplet). This will not be shown in the evaluation of the Triplet within the UI." 
                 Category="General" 
                 Default="false">
   </BoolProperty>
@@ -30,19 +29,7 @@
                 Category="General"
                 Default="true">
   </BoolProperty>
-  <StringProperty Name="VcpkgTripletPrefix"
-                  DisplayName="VcpkgTripletPrefix"
-                  Description="Specifies the triplet prefix"
-                  Category="General"
-                  Subtype="Text">
-  </StringProperty>
-  <StringProperty Name="VcpkgTripletSufix"
-                  DisplayName="VcpkgTripletSufix"
-                  Description="Specifies the triplet sufix"
-                  Category="General"
-                  Subtype="Text">
-  </StringProperty>
-  <StringProperty Name="VcpkgTriplet"
+  <StringProperty Name="VcpkgUserTriplet"
                   DisplayName="Triplet"
                   Description="Specifies the triplet used by Vcpkg"
                   Category="General"
@@ -52,20 +39,19 @@
                   DisplayName="Base Path"
                   Description="Base path where Vcpkg is located. Be careful with changing this one. It is, for example, unable to update this property page from the new location without restarting visual studio."
                   Category="General"
-                  Subtype="folder">
+                  Subtype="folder"
+                  Visible="false">
   </StringProperty>
   <StringProperty Name="VcpkgRoot"
-                  DisplayName="Package directory (VcpkgRoot)"
+                  DisplayName="Package install directory (Sets VcpkgRoot)"
                   Description="Defines the direct path to the installed Vcpkg packages. Only change this if you know what you are doing!"
                   Category="General"
                   Subtype="folder">
   </StringProperty>
-
   <EnumProperty Name="VcpkgConfiguration" DisplayName="Vcpkg Configuration" Description="Specifies if release or debug libraries build with vcpkg should be used." Category="General">
     <EnumValue Name="Release" Switch="Release" DisplayName="Release" Description="Uses release libraries">
     </EnumValue>
     <EnumValue Name="Debug" Switch="Debug" DisplayName="Debug" Description="Uses debug libraries">
     </EnumValue>
   </EnumProperty>
-
 </Rule>
