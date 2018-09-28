@@ -6,13 +6,9 @@ vcpkg_from_github(
     REF 4f491249e6def236937dbfac7602852e7d99aff8
     SHA512 d3a61f8d8a8c11723064f3405f03eb838a2ac9aa574f86771b1db89a2dd81996b639215fe5d4465343b893bf71502da178c7af8d883c112c1e45f43c17d473b7
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/001-fix-unresolved-symbol.patch
-        ${CMAKE_CURRENT_LIST_DIR}/002-fix-install-path.patch
+        001-fix-unresolved-symbol.patch
+        002-fix-install-path.patch
 )
 
 vcpkg_configure_cmake(
@@ -37,7 +33,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 
 # Header-only style when DOCOPT_HEADER_ONLY is defined
-file(INSTALL
+file(COPY
     ${SOURCE_PATH}/docopt.cpp
     DESTINATION ${CURRENT_PACKAGES_DIR}/include/docopt)
 
@@ -47,3 +43,5 @@ file(INSTALL
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/docopt RENAME copyright)
 
 vcpkg_copy_pdbs()
+
+vcpkg_test_cmake(PACKAGE_NAME docopt)
