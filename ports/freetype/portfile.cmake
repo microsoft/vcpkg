@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 set(FT_VERSION 2.8.1)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/freetype-${FT_VERSION})
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://download.savannah.gnu.org/releases/freetype/freetype-${FT_VERSION}.tar.bz2"
+    URLS "https://download-mirror.savannah.gnu.org/releases/freetype/freetype-${FT_VERSION}.tar.bz2"
     FILENAME "freetype-${FT_VERSION}.tar.bz2"
     SHA512 ca59e47f0fceeeb9b8032be2671072604d0c79094675df24187829c05e99757d0a48a0f8062d4d688e056f783aa8f6090d732ad116562e94784fccf1339eb823
 )
