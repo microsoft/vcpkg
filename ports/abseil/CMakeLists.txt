@@ -3,7 +3,7 @@ project(abseil CXX)
 
 add_definitions(-DNOMINMAX -DWIN32_LEAN_AND_MEAN)
 
-if (NOT (CMAKE_CXX_STANDARD OR VCPKG_CXX_FLAGS MATCHES "-std=.*"))
+if (NOT (CMAKE_CXX_STANDARD OR VCPKG_CXX_FLAGS MATCHES "-std="))
     set(CMAKE_CXX_STANDARD 14)
 endif()
 
