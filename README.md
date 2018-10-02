@@ -18,19 +18,19 @@ To get started:
 > cd vcpkg
 
 PS> .\bootstrap-vcpkg.bat
-Ubuntu:~/$ ./bootstrap-vcpkg.sh
+Linux:~/$ ./bootstrap-vcpkg.sh
 ```
 
 Then, to hook up user-wide [integration](docs/users/integration.md), run (note: requires admin on first use)
 ```
 PS> .\vcpkg integrate install
-Ubuntu:~/$ ./vcpkg integrate install
+Linux:~/$ ./vcpkg integrate install
 ```
 
 Install any packages with
 ```
 PS> .\vcpkg install sdl2 curl
-Ubuntu:~/$ ./vcpkg install sdl2 curl
+Linux:~/$ ./vcpkg install sdl2 curl
 ```
 
 The best way to use installed libraries with CMake is via the toolchain file `scripts\buildsystems\vcpkg.cmake`. To use this file, you simply need to add it onto your CMake command line as `-DCMAKE_TOOLCHAIN_FILE=[vcpkg root]\scripts\buildsystems\vcpkg.cmake`.
