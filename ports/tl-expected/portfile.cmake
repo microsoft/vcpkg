@@ -1,4 +1,5 @@
 include(vcpkg_common_functions)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO TartanLlama/expected
@@ -7,17 +8,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
-      -DEXPECTED_ENABLE_TESTS=False
-      -DEXPECTED_ENABLE_DOCS=False
-)
-
 # Install header file
-file(INSTALL ${SOURCE_PATH}/tl DESTINATION ${CURRENT_PACKAGES_DIR}/include) 
+file(INSTALL ${SOURCE_PATH}/tl DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/tl-expected RENAME copyright)
-
