@@ -1,34 +1,29 @@
 include(vcpkg_common_functions)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/tinyutf8-2.1.1)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/DuffsDevice/tinyutf8/archive/v2.1.1.zip"
-    FILENAME "v2.1.1.zip"
-    SHA512 2da2577d35ff64cb383f729a662f05970c32319fbe0092915631f58c38d395133bbabd6da590566f9cced6b02ca15509a7ff6f1ef7f376c8fd5de91446eae74a
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO DuffsDevice/tinyutf8
+    REF v2.1.1
+    SHA512 0be9cebe1ac962c89e0620586d4f8d4f3059b52394e13506f19723855d146c35e6a1205ae5430a53ba95a89c60216054bfad9c4e8e8f1ec047f4096585de2efc
+    HEAD_REF master
+    PATCHES fixbuild.patch
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-    ${CMAKE_CURRENT_LIST_DIR}/fixbuild.patch
-)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" TINYUTF8_BUILD_STATIC)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=TRUE
+    PREFER_NINJA
+    OPTIONS -DTINYUTF8_BUILD_STATIC=${TINYUTF8_BUILD_STATIC}
 )
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENCE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tinyutf8 RENAME copyright)
+configure_file(${SOURCE_PATH}/LICENCE ${CURRENT_PACKAGES_DIR}/share/tinyutf8/copyright COPYONLY)
 
 # remove unneeded files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()

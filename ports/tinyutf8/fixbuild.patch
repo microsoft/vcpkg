@@ -2,24 +2,16 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 4ec8787..cfea5b3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1,12 +1,11 @@
+@@ -1,7 +1,7 @@
  cmake_minimum_required(VERSION 3.1)
  project(tinyutf8)
  
 -set(CMAKE_CXX_STANDARD 11)
 +set(CMAKE_CXX_STANDARD 17)
-+set(CMAKE_CXX_STANDARD_REQUIRED ON)
  
--option(TINYUTF8_BUILD_STATIC "Build as static library" On)
--
--if (${TINYUTF8_BUILD_STATIC})
--   set(LIB_BUILD_TYPE STATIC)
-+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-+    set(LIB_BUILD_TYPE STATIC)
- else()
-     set(LIB_BUILD_TYPE SHARED)
- endif()
-@@ -14,3 +13,14 @@ endif()
+ option(TINYUTF8_BUILD_STATIC "Build as static library" On)
+ 
+@@ -14,3 +14,14 @@ endif()
  add_library(tinyutf8 ${LIB_BUILD_TYPE} lib/tinyutf8.cpp)
  
  target_include_directories(tinyutf8 PUBLIC include)
