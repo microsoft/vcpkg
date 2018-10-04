@@ -92,8 +92,8 @@ namespace vcpkg::Commands::Edit
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        static const fs::path VS_CODE_INSIDERS = fs::path{"Microsoft VS Code Insiders"} / "Code - Insiders.exe";
-        static const fs::path VS_CODE = fs::path{"Microsoft VS Code"} / "Code.exe";
+        static const fs::path VS_CODE_INSIDERS = fs::path {"Microsoft VS Code Insiders"} / "Code - Insiders.exe";
+        static const fs::path VS_CODE = fs::path {"Microsoft VS Code"} / "Code.exe";
 
         auto& fs = paths.get_filesystem();
 
@@ -126,6 +126,14 @@ namespace vcpkg::Commands::Edit
         {
             candidate_paths.push_back(*pf / VS_CODE_INSIDERS);
             candidate_paths.push_back(*pf / VS_CODE);
+        }
+
+        const auto& app_data = System::get_environment_variable("APPDATA");
+        if (const auto* ad = app_data.get())
+        {
+            const fs::path default_base = fs::path {*ad}.parent_path() / "Local" / "Programs";
+            candidate_paths.push_back(default_base / VS_CODE_INSIDERS);
+            candidate_paths.push_back(default_base / VS_CODE);
         }
 
         const std::vector<fs::path> from_registry = find_from_registry();
