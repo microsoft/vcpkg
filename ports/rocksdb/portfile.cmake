@@ -68,8 +68,8 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/rocksdb)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.Apache DESTINATION ${CURRENT_PACKAGES_DIR}/share/rocksdb RENAME copyright)
-file(INSTALL ${SOURCE_PATH}/LICENSE.leveldb DESTINATION ${CURRENT_PACKAGES_DIR}/share/rocksdb)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${SOURCE_PATH}/LICENSE.leveldb DESTINATION ${CURRENT_PACKAGES_DIR}/share/rocksdb)
 
 vcpkg_copy_pdbs()
 
-vcpkg_test_cmake(PACKAGE_NAME rocksdb)
+vcpkg_test_cmake(PACKAGE_NAME RocksDB)
