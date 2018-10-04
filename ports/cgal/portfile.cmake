@@ -1,13 +1,12 @@
 include(vcpkg_common_functions)
 
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/CGAL-4.13)
-vcpkg_download_distfile(ARCHIVE
-    URLS 
-"https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-4.13/CGAL-4.13.zip"
-    FILENAME "CGAL-4.13.zip"
-    SHA512 f6d3477cf049272984d8d6d283a8b21413d87066f6c2a4b481abae58e35d7890ed22e4f8093a7a6f42c0728a9a3b4272d1bfbb9b72fa2811767372bf9d483f05)
-    
-vcpkg_extract_source_archive(${ARCHIVE})
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO CGAL/cgal
+    REF releases/CGAL-4.13
+    SHA512 3a12d7f567487c282928a162a47737c41c22258556ca0083b9cf492fc8f0a7c334b491b14dbfd6a62e71feeeb1b4995769c13a604e0882548f21c41b996d4eaf
+    HEAD_REF master
+)
 
 set(WITH_CGAL_Qt5  OFF)
 if("qt" IN_LIST FEATURES)
@@ -19,7 +18,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DCGAL_INSTALL_CMAKE_DIR=share/cgal
-        -DWITH_CGAL_Qt5==${WITH_CGAL_Qt5}
+        -DWITH_CGAL_Qt5=${WITH_CGAL_Qt5}
 )
 
 vcpkg_install_cmake()
@@ -31,17 +30,33 @@ vcpkg_copy_pdbs()
 # Clean
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+else()
+    foreach(ROOT ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+        file(REMOVE
+            ${ROOT}/cgal_create_CMakeLists
+            ${ROOT}/cgal_create_cmake_script
+            ${ROOT}/cgal_make_macosx_app
+        )
+    endforeach()
+endif()
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/cgal/CGALConfig.cmake _contents)
 string(REPLACE "CGAL_IGNORE_PRECONFIGURED_GMP" "1" _contents "${_contents}")
 string(REPLACE "CGAL_IGNORE_PRECONFIGURED_MPFR" "1" _contents "${_contents}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/lib/cgal/CGALConfig.cmake "${_contents}")
-file(COPY ${CURRENT_BUILDTREES_DIR}/src/CGAL-4.13/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cgal)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/cgal/LICENSE ${CURRENT_PACKAGES_DIR}/share/cgal/copyright)
-file(COPY ${SOURCE_PATH}/LICENSE.BSL DESTINATION ${CURRENT_PACKAGES_DIR}/share/cgal)
-file(COPY ${SOURCE_PATH}/LICENSE.FREE_USE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cgal)
-file(COPY ${SOURCE_PATH}/LICENSE.GPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/cgal)
-file(COPY ${SOURCE_PATH}/LICENSE.LGPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/cgal)
 
-# Handle copyright of suitesparse and metis
-#file(COPY ${SOURCE_PATH}/copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/cgal)
+file(COPY ${SOURCE_PATH}/Installation/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cgal)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/cgal/LICENSE ${CURRENT_PACKAGES_DIR}/share/cgal/copyright)
+
+file(
+    COPY
+        ${SOURCE_PATH}/Installation/LICENSE.BSL
+        ${SOURCE_PATH}/Installation/LICENSE.FREE_USE
+        ${SOURCE_PATH}/Installation/LICENSE.GPL
+        ${SOURCE_PATH}/Installation/LICENSE.LGPL
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/cgal
+)
+
+vcpkg_test_cmake(PACKAGE_NAME CGAL)
