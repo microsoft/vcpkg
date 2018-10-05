@@ -1,10 +1,10 @@
 # vcpkg portfile.cmake for GDAL
 #
 # NOTE: update the version and checksum for new GDAL release
-set(GDAL_VERSION_STR "2.3.0")
-set(GDAL_VERSION_PKG "230")
+set(GDAL_VERSION_STR "2.3.2")
+set(GDAL_VERSION_PKG "232")
 set(GDAL_VERSION_LIB "203")
-set(GDAL_PACKAGE_SUM "f3f790b7ecb28916d6d0628b15ddc6b396a25a8f1f374589ea5e95b5a50addc99e05e363113f907b6c96faa69870b5dc9fdf3d771f9c8937b4aa8819bd78b190")
+set(GDAL_PACKAGE_SUM "9eb26be57657b1f1eaada4794859584d53bd58e0d504eb12ab97e9c60353d0a565dc894a89829ee50fc549cb7d069a75b7895c0dd4cea887e010671f63e945b8")
 
 if (TRIPLET_SYSTEM_ARCH MATCHES "arm")
     message(FATAL_ERROR "ARM is currently not supported.")
@@ -29,14 +29,20 @@ vcpkg_download_distfile(ARCHIVE
 set(SOURCE_PATH_DEBUG   ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-debug/gdal-${GDAL_VERSION_STR})
 set(SOURCE_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-release/gdal-${GDAL_VERSION_STR})
 
-foreach(BUILD_TYPE debug release)
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+list(APPEND BUILD_TYPES "release")
+endif()
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+list(APPEND BUILD_TYPES "debug")
+endif()
+
+foreach(BUILD_TYPE IN LISTS BUILD_TYPES)
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE})
     vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE})
     vcpkg_apply_patches(
         SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}
         PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-debug-crt-flags.patch
-        ${CMAKE_CURRENT_LIST_DIR}/no-my-bool.patch
     )
 endforeach()
 
