@@ -58,5 +58,3 @@ file(
         ${SOURCE_PATH}/Installation/LICENSE.LGPL
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/cgal
 )
-
-vcpkg_test_cmake(PACKAGE_NAME CGAL)
