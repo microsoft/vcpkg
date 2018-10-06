@@ -28,7 +28,7 @@ vcpkg_configure_cmake(
         -DITK_USE_64BITS_IDS=ON
         -DITK_USE_CONCEPT_CHECKING=ON
         #-DITK_USE_SYSTEM_LIBRARIES=ON # enables USE_SYSTEM for all third party libraries, some of which do not have vcpkg ports such as CastXML, SWIG, MINC etc
-        -DITK_USE_SYSTEM_DOUBLECONVERSION=ON
+        #-DITK_USE_SYSTEM_DOUBLECONVERSION=ON
         -DITK_USE_SYSTEM_EXPAT=ON
         -DITK_USE_SYSTEM_JPEG=ON
         -DITK_USE_SYSTEM_PNG=ON
