@@ -1,0 +1,4 @@
+Source: kf5holidays
+Version: 5.50.0
+Description: Holiday calculation library
+Build-Depends: ecm, qt5-base, qt5-declarative, qt5-tools
