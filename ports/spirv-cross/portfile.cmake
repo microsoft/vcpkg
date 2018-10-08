@@ -18,7 +18,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DSPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS=ON
+        -DSPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS=OFF
 )
 
 vcpkg_install_cmake()
