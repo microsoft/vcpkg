@@ -179,29 +179,34 @@ set(NMAKE_OPTIONS_DBG
     LIBXML2_LIB=${XML2_LIBRARY_DBG}
     DEBUG=1
 )
-################
-# Release build
-################
-message(STATUS "Building ${TARGET_TRIPLET}-rel")
-vcpkg_execute_required_process(
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+  ################
+  # Release build
+  ################
+  message(STATUS "Building ${TARGET_TRIPLET}-rel")
+  vcpkg_execute_required_process(
     COMMAND ${NMAKE} -f makefile.vc
     "${NMAKE_OPTIONS_REL}"
     WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
     LOGNAME nmake-build-${TARGET_TRIPLET}-release
-)
-message(STATUS "Building ${TARGET_TRIPLET}-rel done")
+  )
+  message(STATUS "Building ${TARGET_TRIPLET}-rel done")
+endif()
 
-################
-# Debug build
-################
-message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-vcpkg_execute_required_process(
-  COMMAND ${NMAKE} /G -f makefile.vc
-  "${NMAKE_OPTIONS_DBG}"
-  WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-  LOGNAME nmake-build-${TARGET_TRIPLET}-debug
-)
-message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+  ################
+  # Debug build
+  ################
+  message(STATUS "Building ${TARGET_TRIPLET}-dbg")
+  vcpkg_execute_required_process(
+    COMMAND ${NMAKE} /G -f makefile.vc
+    "${NMAKE_OPTIONS_DBG}"
+    WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
+    LOGNAME nmake-build-${TARGET_TRIPLET}-debug
+  )
+  message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
+endif()
 
 message(STATUS "Packaging ${TARGET_TRIPLET}")
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/gdal/html)
@@ -218,16 +223,27 @@ vcpkg_execute_required_process(
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
   file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/gdal_i.lib)
-  file(COPY ${SOURCE_PATH_DEBUG}/gdal.lib   DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-  file(COPY ${SOURCE_PATH_RELEASE}/gdal.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdal.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gdald.lib)
+
+  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(COPY ${SOURCE_PATH_RELEASE}/gdal.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+  endif()
+
+  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(COPY ${SOURCE_PATH_DEBUG}/gdal.lib   DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdal.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gdald.lib)
+  endif()
 else()
   file(GLOB EXE_FILES ${CURRENT_PACKAGES_DIR}/bin/*.exe)
   file(REMOVE ${EXE_FILES} ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)
-  file(COPY ${SOURCE_PATH_DEBUG}/gdal${GDAL_VERSION_LIB}.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-  file(COPY ${SOURCE_PATH_DEBUG}/gdal_i.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gdal_i.lib ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdal_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gdald.lib)
+
+  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gdal_i.lib ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)
+  endif()
+  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(COPY ${SOURCE_PATH_DEBUG}/gdal${GDAL_VERSION_LIB}.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(COPY ${SOURCE_PATH_DEBUG}/gdal_i.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdal_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gdald.lib)
+  endif()
 endif()
 
 # Copy over PDBs

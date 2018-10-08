@@ -1,13 +1,36 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.67.0"
+    $version = "1.68.0"
 )
 
 $scriptsDir = split-path -parent $MyInvocation.MyCommand.Definition
 
-$libsDisabledInLinux = "python|fiber"
-$libsDisabledInUWP = "iostreams|filesystem|thread|context|contract|python|stacktrace|program[_-]options|coroutine`$|fiber|locale|test|type[_-]erasure|wave|log"
+function TransformReference()
+{
+    param (
+        [string]$library
+    )
+
+    if ($library -match "python|fiber")
+    {
+        # These two only work on windows desktop
+        "$library (windows)"
+    }
+    elseif ($library -match "thread|type[_-]erasure|contract")
+    {
+        # thread only works on x86-based processors
+        "$library (!arm)"
+    }
+    elseif ($library -match "iostreams|filesystem|context|stacktrace|coroutine`$|locale|test|wave|log`$")
+    {
+        "$library (!uwp)"
+    }
+    else
+    {
+        "$library"
+    }
+}
 
 function Generate()
 {
@@ -244,7 +267,7 @@ foreach ($library in $libraries)
     if (!(Test-Path $archive))
     {
         "Downloading boost/$library..."
-        & "$scriptsDir\..\..\downloads\tools\aria2-18.01.0-windows\aria2-1.33.1-win-32bit-build1\aria2c.exe" "https://github.com/boostorg/$library/archive/boost-$version.tar.gz" -d "$scriptsDir/downloads" -o "$library-boost-$version.tar.gz"
+        & @(vcpkg fetch aria2)[-1] "https://github.com/boostorg/$library/archive/boost-$version.tar.gz" -d "$scriptsDir/downloads" -o "$library-boost-$version.tar.gz"
     }
     $hash = vcpkg hash $archive
     $unpacked = "$scriptsDir/libs/$library-boost-$version"
@@ -266,10 +289,16 @@ foreach ($library in $libraries)
     try
     {
         $groups = $(
-            findstr /si /C:"#include <boost/" include/*
-            findstr /si /C:"#include <boost/" src/*
+            findstr /si /C:"include <boost/" include/*
+            findstr /si /C:"include <boost/" src/*
         ) |
-        % { $_ -replace "^[^:]*:","" -replace "boost/numeric/conversion/","boost/numeric_conversion/" -replace "boost/detail/([^/]+)/","boost/`$1/" -replace "#include ?<boost/([a-zA-Z0-9\._]*)(/|>).*", "`$1" -replace "/|\.hp?p?| ","" } | group | % name | % {
+        % { $_ `
+                -replace "^[^:]*:","" `
+                -replace "boost/numeric/conversion/","boost/numeric_conversion/" `
+                -replace "boost/functional/hash.hpp","boost/container_hash/hash.hpp" `
+                -replace "boost/detail/([^/]+)/","boost/`$1/" `
+                -replace "#include ?<boost/([a-zA-Z0-9\._]*)(/|>).*", "`$1" `
+                -replace "/|\.hp?p?| ","" } | group | % name | % {
             # mappings
             Write-Verbose "${library}: $_"
             if ($_ -match "aligned_storage") { "type_traits" }
@@ -308,14 +337,15 @@ foreach ($library in $libraries)
 
         $deps = @($groups | ? { $libraries_found -contains $_ })
 
-        if ($library -eq "regex")
-        {
-            $deps += @("container_hash")
-        }
-
         $deps = @($deps | ? {
             # Boost contains cycles, so remove a few dependencies to break the loop.
-            (($library -notmatch "core|assert|mpl|detail|type_traits") -or ($_ -notmatch "utility")) `
+            (($library -notmatch "core|assert|mpl|detail|throw_exception|type_traits") -or ($_ -notmatch "utility")) `
+            -and `
+            (($library -notmatch "range") -or ($_ -notmatch "algorithm"))`
+            -and `
+            (($library -ne "config") -or ($_ -notmatch "integer"))`
+            -and `
+            (($library -notmatch "random") -or ($_ -notmatch "multiprecision"))`
             -and `
             (($library -notmatch "lexical_cast") -or ($_ -notmatch "math"))`
             -and `
@@ -329,18 +359,7 @@ foreach ($library in $libraries)
             -and `
             (($library -notmatch "utility|concept_check") -or ($_ -notmatch "iterator"))
         } | % { "boost-$_" -replace "_","-" } | % {
-            if ($_ -match $libsDisabledInLinux -and $_ -match $libsDisabledInUWP)
-            {
-                "$_ (windows)"
-            }
-            elseif ($_ -match $libsDisabledInUWP)
-            {
-                "$_ (!uwp)"
-            }
-            else
-            {
-                $_
-            }
+            TransformReference $_
         })
 
         $deps += @("boost-vcpkg-helpers")
@@ -359,7 +378,7 @@ foreach ($library in $libraries)
         }
         elseif ($library -eq "iostreams")
         {
-            $deps += @("zlib", "bzip2")
+            $deps += @("zlib", "bzip2", "liblzma")
         }
         elseif ($library -eq "locale")
         {
@@ -380,19 +399,7 @@ foreach ($library in $libraries)
             -Depends $deps `
             -NeedsBuild $needsBuild
 
-        if ($library -match $libsDisabledInLinux -and $library -match $libsDisabledInUWP)
-        {
-            $libraries_in_boost_port += @("$library (windows)")
-        }
-        elseif ($library -match $libsDisabledInUWP)
-        {
-            $libraries_in_boost_port += @("$library (!uwp)")
-        }
-        else
-        {
-            $libraries_in_boost_port += @($library)
-        }
-
+        $libraries_in_boost_port += @(TransformReference $library)
     }
     finally
     {
