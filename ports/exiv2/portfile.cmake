@@ -16,6 +16,8 @@ vcpkg_apply_patches(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DEXIV2_ENABLE_WIN_UNICODE:BOOL=TRUE
 )
 
 vcpkg_install_cmake()
