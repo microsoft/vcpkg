@@ -7,12 +7,12 @@
 #
 
 include(vcpkg_common_functions)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/geos-3.6.2)
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/geos-3.6.3)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://download.osgeo.org/geos/geos-3.6.2.tar.bz2"
-    FILENAME "geos-3.6.2.tar.bz2"
-    SHA512 515d8700b8a28282678e481faee355e3a43d7b70160472a63335b8d7225d9ba10437be782378f18f31a15288118126d411a2d862f01ce35d27c96f6bc0a73016
+    URLS "http://download.osgeo.org/geos/geos-3.6.3.tar.bz2"
+    FILENAME "geos-3.6.3.tar.bz2"
+    SHA512 f88adcf363433e247a51fb1a2c0b53f39b71aba8a6c01dd08aa416c2e980fe274a195e6edcb5bb5ff8ea81b889da14a1a8fb2849e04669aeba3b6d55754dc96a
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 vcpkg_apply_patches(
@@ -23,11 +23,6 @@ SOURCE_PATH ${SOURCE_PATH}
 
 # NOTE: GEOS provides CMake as optional build configuration, it might not be actively
 # maintained, so CMake build issues may happen between releases.
-
-# Pull modules referred in the main CMakeLists.txt but missing from the released package.
-# TODO: GEOS 3.6.3 or later will include the missing script in release package.
-file(DOWNLOAD http://svn.osgeo.org/geos/branches/3.6/cmake/modules/GenerateSourceGroups.cmake
-    ${SOURCE_PATH}/cmake/modules/GenerateSourceGroups.cmake)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
