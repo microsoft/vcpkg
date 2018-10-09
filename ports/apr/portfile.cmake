@@ -4,13 +4,13 @@ endif()
 
 include(vcpkg_common_functions)
 
-set(VERSION 1.6.3)
+set(VERSION 1.6.5)
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/apr-${VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.apache.org/dist/apr/apr-${VERSION}.tar.bz2"
     FILENAME "apr-${VERSION}.tar.bz2"
-    SHA512 f6b8679ae7fafff793c825c78775c84a646267c441710a50664589850e13148719b4eab48ab6e7c95b7aed085cff831115687434a7b160dcc2faa0eae63ac996
+    SHA512 d3511e320457b5531f565813e626e7941f6b82864852db6aa03dd298a65dbccdcdc4bd580f5314f8be45d268388edab25efe88cf8340b7d2897a4dbe9d0a41fc
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
