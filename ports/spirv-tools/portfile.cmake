@@ -28,7 +28,6 @@ vcpkg_configure_cmake(
     OPTIONS
         -DSPIRV-Headers_SOURCE_DIR=${SPIRV_HEADERS_PATH}
         -DSPIRV_WERROR=OFF
-    OPTIONS_DEBUG -DSKIP_SPIRV_TOOLS_INSTALL=ON
 )
 
 vcpkg_install_cmake()
