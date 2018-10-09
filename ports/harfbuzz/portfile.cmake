@@ -56,11 +56,11 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-harfbuzz TARGET_PATH share/unofficial-harfbuzz)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/harfbuzz TARGET_PATH share/harfbuzz)
 vcpkg_copy_pdbs()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/harfbuzz)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/harfbuzz/COPYING ${CURRENT_PACKAGES_DIR}/share/harfbuzz/copyright)
 
-vcpkg_test_cmake(PACKAGE_NAME unofficial-harfbuzz)
+vcpkg_test_cmake(PACKAGE_NAME harfbuzz)
