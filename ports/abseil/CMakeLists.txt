@@ -1,3 +1,5 @@
+# Exports abseil targets into the unofficial::abseil:: namespace
+# To use, install with vcpkg install abseil and in your CMakeLists.txt file use find_package(unofficial-abseil)
 cmake_minimum_required(VERSION 3.8)
 project(abseil CXX)
 
