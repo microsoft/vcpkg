@@ -12,7 +12,7 @@ if(NOT MSVC)
 endif()
 
 if(WIN32)
-    include_directories(windows)
+    include_directories(windows/vs2017)
 else()
     include_directories(${CMAKE_CURRENT_BINARY_DIR})
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/config.h

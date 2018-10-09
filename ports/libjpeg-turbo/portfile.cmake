@@ -1,11 +1,4 @@
 include(vcpkg_common_functions)
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO libjpeg-turbo/libjpeg-turbo
-    REF 1.5.3
-    SHA512 0e7a2cd9943b610f49b562c20a5c350a50326a87bce1d39f14fe45760ed2f89a0d2d3e3f0de9f6a7714f566aabadec6b2422b592591ebb98bbad600ea411fea7
-    HEAD_REF master
-)
 
 vcpkg_download_distfile(GETENV_PATCH
     URLS "https://github.com/libjpeg-turbo/libjpeg-turbo/commit/bd96b30b74fe166fc94218cfc64a097fafdcc05f.diff"
@@ -13,10 +6,15 @@ vcpkg_download_distfile(GETENV_PATCH
     SHA512 4cd064521b5e4baba4adf972f9f574f6dd43a2cd3e3ad143ca2cdf0f165024406d4fd2ed094124d0c17c5370394140e82fdd892d3cdc49609acdf8f79db1758c
 )
 
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/add-options-for-exes-docs-headers.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/linux-cmake.patch"
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO libjpeg-turbo/libjpeg-turbo
+    REF 1.5.3
+    SHA512 0e7a2cd9943b610f49b562c20a5c350a50326a87bce1d39f14fe45760ed2f89a0d2d3e3f0de9f6a7714f566aabadec6b2422b592591ebb98bbad600ea411fea7
+    HEAD_REF master
+    PATCHES
+        add-options-for-exes-docs-headers.patch
+        linux-cmake.patch
         "${GETENV_PATCH}"
 )
 
@@ -67,3 +65,6 @@ file(COPY
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/libjpeg-turbo/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/libjpeg-turbo/copyright)
 vcpkg_copy_pdbs()
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/jpeg)
+
+vcpkg_test_cmake(PACKAGE_NAME JPEG MODULE)

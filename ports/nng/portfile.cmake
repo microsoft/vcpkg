@@ -11,6 +11,12 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" NNG_STATIC_LIB)
 
+if("mbedtls" IN_LIST FEATURES)
+    set(NNG_ENABLE_TLS ON)
+else()
+    set(NNG_ENABLE_TLS OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -19,6 +25,7 @@ vcpkg_configure_cmake(
         -DNNG_STATIC_LIB=${NNG_STATIC_LIB}
         -DNNG_TESTS=OFF
         -DNNG_ENABLE_NNGCAT=OFF
+        -DNNG_ENABLE_TLS=${NNG_ENABLE_TLS}
 )
 
 vcpkg_install_cmake()

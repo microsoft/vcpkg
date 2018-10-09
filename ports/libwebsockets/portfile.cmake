@@ -3,15 +3,11 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO warmcat/libwebsockets
-    REF v3.0.0
-    SHA512 626edd00cc4f7559c67fc1663cbc4679a3c4e7a1b60944a7cf6968c6676073bbc15f9b90f4f2ea629394ebbcf84856663ae032a3557bae383bd0db54838d30e8
+    REF v3.0.1
+    SHA512 ba96af918dc53e5fe15792985892e726154ec6cd8b0e6b71ec133e1ac53792c42276fd6ae2c48c274acf4163579d8326e403201a8090fc58be29518c9c5b4304
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/0001-Fix-UWP.patch
+        0001-Fix-UWP.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LWS_WITH_STATIC)
