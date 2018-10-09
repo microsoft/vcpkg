@@ -299,9 +299,45 @@ __pycache__/
 !triplets/arm64-windows.cmake
 !triplets/x64-linux.cmake
 !triplets/x64-osx.cmake
+
+#ignore custom toolchains
+/scripts/toolchains/*
+#add vcpkg-designed toolchains back in
+!scripts/toolchains/android.cmake
+!scripts/toolchains/freebsd.cmake
+!scripts/toolchains/linux.cmake
+!scripts/toolchains/osx.cmake
+!scripts/toolchains/windows.cmake
+
 *.exe
 *.zip
 
 ############################################################
 # vcpkg - End
+############################################################
+
+
+############################################################
+# cmake and ninja build artifacts - Start
+############################################################
+
+.DS_Store
+*.o
+**/build.*
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+.ninja_deps
+.ninja_log
+build.ninja
+rules.ninja
+
+############################################################
+# cmake and ninja build artifacts - End
 ############################################################
