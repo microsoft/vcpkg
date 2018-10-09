@@ -1,10 +1,6 @@
 include(vcpkg_common_functions)
 
-# only static build is supported
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  message(WARNING "Dynamic not supported. Building static")
-  set(VCPKG_LIBRARY_LINKAGE "static")
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -17,15 +13,18 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
-        -DSPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS=OFF
+    OPTIONS -DSPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS=OFF
 )
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
+foreach(COMPONENT core cpp glsl hlsl msl reflect util)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH share/spirv_cross_${COMPONENT}/cmake TARGET_PATH share/spirv_cross_${COMPONENT})
+endforeach()
+
 # cleanup
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/spirv-cross RENAME copyright)
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/spirv-cross/copyright COPYONLY)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
