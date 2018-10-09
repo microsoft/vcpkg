@@ -1,15 +1,7 @@
 cmake_minimum_required(VERSION 3.4)
-project(tinyfiledialogs)
+project(tinyfiledialogs C)
 
-set(HEADERS "tinyfiledialogs.h")
-
-set(SOURCES "tinyfiledialogs.c")
-
-option(BUILD_SHARED_LIBS "Build shared libs" OFF)
-
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
-add_library(tinyfiledialogs ${SOURCES})
+add_library(tinyfiledialogs tinyfiledialogs.c)
 
 install(
     TARGETS tinyfiledialogs
@@ -17,5 +9,3 @@ install(
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
 )
-
-install(FILES ${HEADERS} DESTINATION include)
