@@ -1,4 +1,4 @@
 Source: llvm
-Version: 6.0.0-1
+Version: 7.0.0
 Description: The LLVM Compiler Infrastructure
 Build-Depends: atlmfc (windows)
