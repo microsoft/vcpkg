@@ -440,7 +440,7 @@ namespace vcpkg::Build
             auto buildtree_files = fs.get_files_non_recursive(buildtrees_dir);
             for (auto&& file : buildtree_files)
             {
-                if (fs.is_directory(file) && file.filename() != "src")
+                if (fs.is_directory(file)) // Will only keep the logs
                 {
                     std::error_code ec;
                     fs.remove_all(file, ec);
