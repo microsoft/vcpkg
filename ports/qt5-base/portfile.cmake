@@ -181,10 +181,10 @@ endif()
 # Qt5Bootstrap: only used to bootstrap qmake dependencies
 #---------------------------------------------------------------------------
 #file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.lib ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrapd.lib)
-# file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.lib)
-# file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.prl)
-# file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/Qt5Bootstrap.lib)
-# file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/Qt5Bootstrap.prl)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.lib)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/Qt5Bootstrap.prl)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/Qt5Bootstrap.lib)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/Qt5Bootstrap.prl)
 #---------------------------------------------------------------------------
 
 file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/debug/lib/*.prl")
