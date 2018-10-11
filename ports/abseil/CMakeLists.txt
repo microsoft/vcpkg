@@ -85,9 +85,6 @@ target_link_public_libraries(utility base meta)
 target_link_public_libraries(time base numeric)
 target_link_public_libraries(synchronization base time)
 
-find_package(unofficial-cctz REQUIRED)
-target_link_libraries(time PUBLIC unofficial::cctz)
-
 install(
     EXPORT unofficial-abseil-targets
     FILE unofficial-abseil-config.cmake
