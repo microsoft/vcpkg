@@ -6,14 +6,11 @@ vcpkg_from_github(
     REF 1.8.4
     SHA512 92742b754713d1df8975d4d8467de04765784d7fd566b7e07e7e7a261b0338e997a5fc11fa4fe282d6d5540d242db40c993812fbc4a881becd95fd3aae598c80
     HEAD_REF master
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/0001-fix-uwp-build.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/find-package-freetype-2.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/glib-cmake.patch"
+        0001-fix-uwp-build.patch
+        find-package-freetype-2.patch
+        glib-cmake.patch
+        0001-fix-cmake-export.patch
 )
 
 SET(HB_HAVE_ICU "OFF")
@@ -59,8 +56,11 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/harfbuzz TARGET_PATH share/harfbuzz)
 vcpkg_copy_pdbs()
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/harfbuzz)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/harfbuzz/COPYING ${CURRENT_PACKAGES_DIR}/share/harfbuzz/copyright)
+
+vcpkg_test_cmake(PACKAGE_NAME harfbuzz)

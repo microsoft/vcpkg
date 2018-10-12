@@ -17,7 +17,7 @@ foreach ($name in $nameSet)
     }
 
     # PATH needs to be concatenated as it has values in both machine and user environment. Any other values should be set.
-    if ($name -match 'path')
+    if ($name -eq 'path')
     {
         $pathValuePartial = @()
         # Machine values before user values

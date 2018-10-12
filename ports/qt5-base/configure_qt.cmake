@@ -30,12 +30,13 @@ function(configure_qt)
     vcpkg_execute_required_process(
         COMMAND "${_csc_SOURCE_PATH}/${CONFIGURE_BAT}" ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}
             -debug
-            -prefix ${CURRENT_PACKAGES_DIR}/debug
-            -hostbindir ${CURRENT_PACKAGES_DIR}/debug/tools/qt5
-            -archdatadir ${CURRENT_PACKAGES_DIR}/share/qt5/debug
-            -datadir ${CURRENT_PACKAGES_DIR}/share/qt5/debug
-            -plugindir ${CURRENT_PACKAGES_DIR}/debug/plugins
-            -qmldir ${CURRENT_PACKAGES_DIR}/debug/qml
+            -prefix ${CURRENT_INSTALLED_DIR}/debug
+            -extprefix ${CURRENT_PACKAGES_DIR}/debug
+            -hostbindir ${CURRENT_INSTALLED_DIR}/debug/tools/qt5
+            -archdatadir ${CURRENT_INSTALLED_DIR}/share/qt5/debug
+            -datadir ${CURRENT_INSTALLED_DIR}/share/qt5/debug
+            -plugindir ${CURRENT_INSTALLED_DIR}/debug/plugins
+            -qmldir ${CURRENT_INSTALLED_DIR}/debug/qml
             -headerdir ${CURRENT_PACKAGES_DIR}/include
             -I ${CURRENT_INSTALLED_DIR}/include
             -L ${CURRENT_INSTALLED_DIR}/debug/lib
@@ -44,18 +45,19 @@ function(configure_qt)
         LOGNAME config-${TARGET_TRIPLET}-dbg
     )
     message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
-    
+
     message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
     vcpkg_execute_required_process(
         COMMAND "${_csc_SOURCE_PATH}/${CONFIGURE_BAT}" ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}
             -release
-            -prefix ${CURRENT_PACKAGES_DIR}
-            -hostbindir ${CURRENT_PACKAGES_DIR}/tools/qt5
-            -archdatadir ${CURRENT_PACKAGES_DIR}/share/qt5
-            -datadir ${CURRENT_PACKAGES_DIR}/share/qt5
-            -plugindir ${CURRENT_PACKAGES_DIR}/plugins
-            -qmldir ${CURRENT_PACKAGES_DIR}/qml
+            -prefix ${CURRENT_INSTALLED_DIR}
+            -extprefix ${CURRENT_PACKAGES_DIR}
+            -hostbindir ${CURRENT_INSTALLED_DIR}/tools/qt5
+            -archdatadir ${CURRENT_INSTALLED_DIR}/share/qt5
+            -datadir ${CURRENT_INSTALLED_DIR}/share/qt5
+            -plugindir ${CURRENT_INSTALLED_DIR}/plugins
+            -qmldir ${CURRENT_INSTALLED_DIR}/qml
             -I ${CURRENT_INSTALLED_DIR}/include
             -L ${CURRENT_INSTALLED_DIR}/lib
             -platform ${_csc_PLATFORM}

@@ -3,7 +3,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME)
 endif()
 
 include(vcpkg_common_functions)
-set(OPENSSL_VERSION 1.0.2o)
+set(OPENSSL_VERSION 1.0.2p)
 set(MASTER_COPY_SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/openssl-${OPENSSL_VERSION})
 
 vcpkg_find_acquire_program(PERL)
@@ -14,7 +14,7 @@ set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH}")
 vcpkg_download_distfile(OPENSSL_SOURCE_ARCHIVE
     URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.0.2/openssl-${OPENSSL_VERSION}.tar.gz"
     FILENAME "openssl-${OPENSSL_VERSION}.tar.gz"
-    SHA512 8a2c93657c85143e76785bb32ee836908c31a6f5f8db993fa9777acba6079e630cdddd03edbad65d1587199fc13a1507789eacf038b56eb99139c2091d9df7fd
+    SHA512 958c5a7c3324bbdc8f07dfb13e11329d9a1b4452c07cf41fbd2d42b5fe29c95679332a3476d24c2dc2b88be16e4a24744aba675a05a388c0905756c77a8a2f16
 )
 
 vcpkg_extract_source_archive(${OPENSSL_SOURCE_ARCHIVE})
@@ -57,72 +57,76 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 
 
-file(COPY ${MASTER_COPY_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-set(SOURCE_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/openssl-${OPENSSL_VERSION})
-set(OPENSSLDIR_RELEASE ${CURRENT_PACKAGES_DIR})
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(COPY ${MASTER_COPY_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+    set(SOURCE_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/openssl-${OPENSSL_VERSION})
+    set(OPENSSLDIR_RELEASE ${CURRENT_PACKAGES_DIR})
 
-message(STATUS "Configure ${TARGET_TRIPLET}-rel")
-vcpkg_execute_required_process(
-    COMMAND ${CONFIGURE_COMMAND} ${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_RELEASE}" "--openssldir=${OPENSSLDIR_RELEASE}" -FS
-    WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-    LOGNAME configure-perl-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-rel
-)
-vcpkg_execute_required_process(
-    COMMAND ${OPENSSL_DO}
-    WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-    LOGNAME configure-do-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-rel
-)
-message(STATUS "Configure ${TARGET_TRIPLET}-rel done")
+    message(STATUS "Configure ${TARGET_TRIPLET}-rel")
+    vcpkg_execute_required_process(
+        COMMAND ${CONFIGURE_COMMAND} ${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_RELEASE}" "--openssldir=${OPENSSLDIR_RELEASE}" -FS
+        WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+        LOGNAME configure-perl-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-rel
+    )
+    vcpkg_execute_required_process(
+        COMMAND ${OPENSSL_DO}
+        WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+        LOGNAME configure-do-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-rel
+    )
+    message(STATUS "Configure ${TARGET_TRIPLET}-rel done")
 
-message(STATUS "Build ${TARGET_TRIPLET}-rel")
-# Openssl's buildsystem has a race condition which will cause JOM to fail at some point.
-# This is ok; we just do as much work as we can in parallel first, then follow up with a single-threaded build.
-make_directory(${SOURCE_PATH_RELEASE}/inc32/openssl)
-execute_process(
-    COMMAND ${JOM} -k -j $ENV{NUMBER_OF_PROCESSORS} -f ${OPENSSL_MAKEFILE}
-    WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-    OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-out.log
-    ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-err.log
-)
-vcpkg_execute_required_process(
-    COMMAND nmake -f ${OPENSSL_MAKEFILE} install
-    WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-    LOGNAME build-${TARGET_TRIPLET}-rel-1)
+    message(STATUS "Build ${TARGET_TRIPLET}-rel")
+    # Openssl's buildsystem has a race condition which will cause JOM to fail at some point.
+    # This is ok; we just do as much work as we can in parallel first, then follow up with a single-threaded build.
+    make_directory(${SOURCE_PATH_RELEASE}/inc32/openssl)
+    execute_process(
+        COMMAND ${JOM} -k -j $ENV{NUMBER_OF_PROCESSORS} -f ${OPENSSL_MAKEFILE}
+        WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+        OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-out.log
+        ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-err.log
+    )
+    vcpkg_execute_required_process(
+        COMMAND nmake -f ${OPENSSL_MAKEFILE} install
+        WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
+        LOGNAME build-${TARGET_TRIPLET}-rel-1)
 
-message(STATUS "Build ${TARGET_TRIPLET}-rel done")
+    message(STATUS "Build ${TARGET_TRIPLET}-rel done")
+endif()
 
 
-message(STATUS "Configure ${TARGET_TRIPLET}-dbg")
-file(COPY ${MASTER_COPY_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-set(SOURCE_PATH_DEBUG ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/openssl-${OPENSSL_VERSION})
-set(OPENSSLDIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug)
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    message(STATUS "Configure ${TARGET_TRIPLET}-dbg")
+    file(COPY ${MASTER_COPY_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+    set(SOURCE_PATH_DEBUG ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/openssl-${OPENSSL_VERSION})
+    set(OPENSSLDIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug)
 
-vcpkg_execute_required_process(
-    COMMAND ${CONFIGURE_COMMAND} debug-${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_DEBUG}" "--openssldir=${OPENSSLDIR_DEBUG}" -FS
-    WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-    LOGNAME configure-perl-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-dbg
-)
-vcpkg_execute_required_process(
-    COMMAND ${OPENSSL_DO}
-    WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-    LOGNAME configure-do-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-dbg
-)
-message(STATUS "Configure ${TARGET_TRIPLET}-dbg done")
+    vcpkg_execute_required_process(
+        COMMAND ${CONFIGURE_COMMAND} debug-${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_DEBUG}" "--openssldir=${OPENSSLDIR_DEBUG}" -FS
+        WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
+        LOGNAME configure-perl-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-dbg
+    )
+    vcpkg_execute_required_process(
+        COMMAND ${OPENSSL_DO}
+        WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
+        LOGNAME configure-do-${TARGET_TRIPLET}-${CMAKE_BUILD_TYPE}-dbg
+    )
+    message(STATUS "Configure ${TARGET_TRIPLET}-dbg done")
 
-message(STATUS "Build ${TARGET_TRIPLET}-dbg")
-make_directory(${SOURCE_PATH_DEBUG}/inc32/openssl)
-execute_process(
-    COMMAND ${JOM} -k -j $ENV{NUMBER_OF_PROCESSORS} -f ${OPENSSL_MAKEFILE}
-    WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-    OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-out.log
-    ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-err.log
-)
-vcpkg_execute_required_process(
-    COMMAND nmake -f ${OPENSSL_MAKEFILE} install
-    WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-    LOGNAME build-${TARGET_TRIPLET}-dbg-1)
+    message(STATUS "Build ${TARGET_TRIPLET}-dbg")
+    make_directory(${SOURCE_PATH_DEBUG}/inc32/openssl)
+    execute_process(
+        COMMAND ${JOM} -k -j $ENV{NUMBER_OF_PROCESSORS} -f ${OPENSSL_MAKEFILE}
+        WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
+        OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-out.log
+        ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-err.log
+    )
+    vcpkg_execute_required_process(
+        COMMAND nmake -f ${OPENSSL_MAKEFILE} install
+        WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
+        LOGNAME build-${TARGET_TRIPLET}-dbg-1)
 
-message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
+    message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
+endif()
 
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -155,3 +159,5 @@ vcpkg_copy_pdbs()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${MASTER_COPY_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+vcpkg_test_cmake(PACKAGE_NAME OpenSSL MODULE)

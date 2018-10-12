@@ -11,6 +11,9 @@ vcpkg_from_github(
     PATCHES dllexport.patch
 )
 
+set(ENV{_CL_} "$ENV{_CL_} /GL-")
+set(ENV{_LINK_} "$ENV{_LINK_} /LTCG:OFF")
+
 vcpkg_install_msbuild(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH libplist.sln
