@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6556346..48ba95d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -42,11 +42,13 @@ include(cmake/GenerateTemplateExportHeader.cmake)
+ # 
+ 
+ # Get git revision
++if(NOT DEFINED GIT_REV)
+ get_git_head_revision(GIT_REFSPEC GIT_SHA1)
+ string(SUBSTRING "${GIT_SHA1}" 0 12 GIT_REV)
+ if(NOT GIT_SHA1)
+     set(GIT_REV "0")
+ endif()
++endif()
+ 
+ # Meta information about the project
+ set(META_PROJECT_NAME        "globjects")
+@@ -133,7 +135,7 @@ if("${CMAKE_INSTALL_PREFIX}" STREQUAL "/usr" OR "${CMAKE_INSTALL_PREFIX}" STREQU
+ endif()
+ 
+ # Installation paths
+-if(UNIX AND SYSTEM_DIR_INSTALL)
++if(1)
+     # Install into the system (/usr/bin or /usr/local/bin)
+     set(INSTALL_ROOT      "share/${project}")       # /usr/[local]/share/<project>
+     set(INSTALL_CMAKE     "share/${project}/cmake") # /usr/[local]/share/<project>/cmake
