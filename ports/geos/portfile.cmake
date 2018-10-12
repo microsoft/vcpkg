@@ -29,6 +29,7 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/geos-config)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/geos)
     file(RENAME ${CURRENT_PACKAGES_DIR}/bin/geos-config ${CURRENT_PACKAGES_DIR}/share/geos/geos-config)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/geos-config)
 endif()
