@@ -24,10 +24,7 @@ set(BUILDTREE_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 file(REMOVE_RECURSE ${BUILDTREE_PATH})
 file(COPY ${SOURCE_PATH}/ DESTINATION ${BUILDTREE_PATH})
 
-set(CHAKRA_RUNTIME_LIB "static_library") # ChakraCore default is static CRT linkage
-if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-	set(CHAKRA_RUNTIME_LIB "dynamic_library")
-endif()
+set(CHAKRA_RUNTIME_LIB "static_library") # ChakraCore only supports static CRT linkage
 
 vcpkg_build_msbuild(
     PROJECT_PATH ${BUILDTREE_PATH}/Build/Chakra.Core.sln
