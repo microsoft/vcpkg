@@ -468,18 +468,18 @@ namespace vcpkg::Build
         const Triplet& triplet = config.triplet;
         const std::string& name = config.scf.core_paragraph->name;
 
-        std::vector<AbiEntry> abi_tag_entries;
+        std::vector<AbiEntry> abi_tag_entries(dependency_abis.begin(), dependency_abis.end());
 
         abi_tag_entries.emplace_back(AbiEntry {"cmake", paths.get_tool_version(Tools::CMAKE)});
-
-        abi_tag_entries.insert(abi_tag_entries.end(), dependency_abis.begin(), dependency_abis.end());
 
         abi_tag_entries.emplace_back(
             AbiEntry {"portfile", vcpkg::Hash::get_file_hash(fs, config.port_dir / "portfile.cmake", "SHA1")});
         abi_tag_entries.emplace_back(
             AbiEntry {"control", vcpkg::Hash::get_file_hash(fs, config.port_dir / "CONTROL", "SHA1")});
 
-        abi_tag_entries.emplace_back(AbiEntry {"triplet", pre_build_info.triplet_abi_tag});
+        abi_tag_entries.emplace_back(AbiEntry{"vcpkg_fixup_cmake_targets", "1"});
+
+        abi_tag_entries.emplace_back(AbiEntry{"triplet", pre_build_info.triplet_abi_tag});
 
         const std::string features = Strings::join(";", config.feature_list);
         abi_tag_entries.emplace_back(AbiEntry {"features", features});
