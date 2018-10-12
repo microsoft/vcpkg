@@ -43,5 +43,3 @@ file(INSTALL
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/docopt RENAME copyright)
 
 vcpkg_copy_pdbs()
-
-vcpkg_test_cmake(PACKAGE_NAME docopt)
