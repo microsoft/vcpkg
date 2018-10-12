@@ -1,12 +1,7 @@
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 project(plustache LANGUAGES CXX)
 
-
-if (BUILD_SHARED_LIBS)
- set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
-endif()
-
-find_package(Boost REQUIRED Regex)
+find_package(Boost REQUIRED COMPONENTS regex)
 
 add_library(
 	plustache
