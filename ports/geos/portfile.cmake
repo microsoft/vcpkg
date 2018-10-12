@@ -25,7 +25,13 @@ vcpkg_configure_cmake(
         -DGEOS_ENABLE_TESTS=False
 )
 vcpkg_install_cmake()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/geos-config)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/geos-config ${CURRENT_PACKAGES_DIR}/share/geos/geos-config)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/geos-config)
+endif()
 
 # Handle copyright
 configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/geos/copyright COPYONLY)
