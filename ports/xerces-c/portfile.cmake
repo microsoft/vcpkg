@@ -46,5 +46,3 @@ file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/xerce
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/xerces-c/LICENSE ${CURRENT_PACKAGES_DIR}/share/xerces-c/copyright)
 
 vcpkg_copy_pdbs()
-
-vcpkg_test_cmake(PACKAGE_NAME XercesC)
