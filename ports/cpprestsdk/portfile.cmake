@@ -32,7 +32,14 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets()
+if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/share") # transition
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/share/cpprestsdk)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/share ${CURRENT_PACKAGES_DIR}/lib/share)
+else()
+    vcpkg_fixup_cmake_targets() # v2.10.6 and below
+endif()
+
+
 
 file(INSTALL
     ${SOURCE_PATH}/license.txt
