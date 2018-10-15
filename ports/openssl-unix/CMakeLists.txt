@@ -106,7 +106,7 @@ add_custom_command(
         no-md2
         ${PLATFORM}
         "--prefix=${CMAKE_INSTALL_PREFIX}"
-        "--openssldir=${CMAKE_INSTALL_PREFIX}"
+        "--openssldir=/etc/ssl"
         ${CFLAGS}
     COMMAND "${CMAKE_COMMAND}" "-DDIR=${BUILDDIR}" -P "${CMAKE_CURRENT_LIST_DIR}/remove-deps.cmake"
     VERBATIM
