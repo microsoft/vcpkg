@@ -1,0 +1,11 @@
+The package vulkan-memory-allocator is compatible with built-in CMake targets:
+
+    find_package(vulkan-memory-allocator CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE vulkan-memory-allocator)
+
+Including the header:
+    #include "vk_mem_alloc.h"
+
+Note that importing vulkan itself it not handled by this port. The header assumes that
+    #include <vulkan/vulkan.h>
+works.
